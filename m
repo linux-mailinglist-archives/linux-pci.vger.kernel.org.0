@@ -1,257 +1,301 @@
-Return-Path: <linux-pci+bounces-15646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13EBA9B6A1F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:05:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C7049B6AE2
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:22:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8D89282289
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 17:05:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F50E1C22D0F
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 17:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16107217912;
-	Wed, 30 Oct 2024 16:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 585292144CE;
+	Wed, 30 Oct 2024 17:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNX5OTQM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="grr4O0yN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0EA214415;
-	Wed, 30 Oct 2024 16:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35182144C9
+	for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 17:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730307304; cv=none; b=XO/mnd4c2PLga48Jii+f92eJdpMfdeQMC2ZrIlwys41s4INfWYcF5QVidflyeRz+Tw/9I25a7J96SLsPjCHw197rrvCBTiH/PDJE6TWC8zogVeD2RfvUA4UBIXDCf4e8YX2VYoLbT0vgXbsHmnS4Eh+Nfjxj/nvI0na3FNFEvyA=
+	t=1730308830; cv=none; b=czk3MrxeEBDj+Tw25cy9/UeeT4/5sSYxlhsvgfuDkOIzuJPCURZFcf4w4fPMZtOnZSUTf8+CTLb95Q01S2Y62Lk1s/U+qFEutDViertCRSZIpdTuXzkJYxIb+OUe8vNFGPYyktz0Yp+nZnO2vkg0fKglzWvlqocQAjc0gOce0pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730307304; c=relaxed/simple;
-	bh=FRMaysyJlopNPUOC0Ykzd1k5bKHrzJM5YjN8B17Xt+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Mc3vfEGEl/r94suCGHCroxU8rI9uy8gyd2JhPCURce/+lMV6mCYCfu6ZPFeycmS4zCJc37lhj0e5nS+8+bNqd35Y1Uu8LiTSj2ndVRVUKlALN2LnUaoeEnl1073rSdpC9MvVMrFw8bMX11K/A9EIx7tfnIDAepxuPuVZA5vklT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNX5OTQM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D4AC4CECE;
-	Wed, 30 Oct 2024 16:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730307303;
-	bh=FRMaysyJlopNPUOC0Ykzd1k5bKHrzJM5YjN8B17Xt+E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FNX5OTQM9O2wnnn6qBm4s0oPfWxcycl7RBrr1C7l68NDY/KX5AKcmjeUaIlBlcu5b
-	 z2rht4MLV5uHortvCwP9YWy5mZOsHJHKF8yi6X49/gnxf56iJByiGbf8bEqmGkYmyN
-	 MVv6yvRBQp5vZv7OQpFImdV/Wp7MO00y1F8hBh3SXCmTS95wiQXNYdr/Ah84tV8ppc
-	 HIQI/m70v6NJsOSd3wCEZTjWlB0MCPqZbE85RECgpvGdq+AT5JZwWwinCXNVXb9lmx
-	 npIoa5F2FT0tLRTmn4rmyXpLXImk087P0iqJEjhEU4XPugI6spd0nt2QT/nGsuGYZI
-	 1Dx/MkcknjlLQ==
-Date: Wed, 30 Oct 2024 11:55:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Michal Wajdeczko <michal.wajdeczko@intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v4 5/7] PCI/IOV: Check that VF BAR fits within the
- reservation
-Message-ID: <20241030165501.GA1205366@bhelgaas>
+	s=arc-20240116; t=1730308830; c=relaxed/simple;
+	bh=c5uBBXmB786143VLrY0CIm+7nTN9k4oCNbJgqLrT7To=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=RFcZvVlmlV8qnTUUKADLAZunYlDzP/Tw9NNbEauDrkfOJ9R0vhGaXfGcjEsg7Q3Hhz0gju4dVY6dEcItb/RnR2akcOYkmX3v2zZQlAKc4ae1zkMVwsxLX4yP9tJqpm4wfuakCZYgRUdGelyVLVK+CNKumUiwooderLEyOsw0044=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=grr4O0yN; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730308827; x=1761844827;
+  h=date:from:to:cc:subject:message-id;
+  bh=c5uBBXmB786143VLrY0CIm+7nTN9k4oCNbJgqLrT7To=;
+  b=grr4O0yNS9GdjAPW49gV6gfC2ehF7PeIXIzUVIZ5spAUQFcKEkwdDNvc
+   0BgmXTg95HPEfwZZZ1yzJgm8W7Lxn7s52IgYByEhuJR5mUWs841oITzec
+   AIYPxoXJpHOPWmECFHK/6Gp8d809gDfN+csu2f1O55ZIVl9qYopQX70h/
+   w7mnBpLewbheHLfwAbbQDuB/qgzIWLO2RbQEuWIjl1s/ZCzKcWIoAaEGj
+   xDmrz4bUlD07fUXmCdBW/19by50nXBxaqcuXEylBJ/82sJlQRMRfG/3If
+   GERf4uLt1G2q+jlHvAQ76Cl4LAtEYq73tOmYkubXz5ABRrGBiaFjXA2Hv
+   A==;
+X-CSE-ConnectionGUID: +TrxcNrxQqKiBKtKCQKbtw==
+X-CSE-MsgGUID: punb3H9DTxG+r8ckb/iDmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="33953019"
+X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
+   d="scan'208";a="33953019"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 10:20:26 -0700
+X-CSE-ConnectionGUID: jQrgmj06QjCcOVWjTolfnw==
+X-CSE-MsgGUID: HcW24VETQe2GXVJp7Ohzeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
+   d="scan'208";a="86927827"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 30 Oct 2024 10:20:25 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t6CMp-000f83-0B;
+	Wed, 30 Oct 2024 17:20:23 +0000
+Date: Thu, 31 Oct 2024 01:20:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:vpd] BUILD SUCCESS
+ 6ab1878a498b82561b811c5fdf68e3594788b4c7
+Message-ID: <202410310103.Opti5UvH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <zbazqug3u77eiydb7p6p6gexwowrjcdl52cszczuww4xow7ebc@tke7k5hewrn5>
 
-On Wed, Oct 30, 2024 at 12:43:19PM +0100, Michał Winiarski wrote:
-> On Mon, Oct 28, 2024 at 11:56:04AM -0500, Bjorn Helgaas wrote:
-> > On Fri, Oct 25, 2024 at 11:50:36PM +0200, Michał Winiarski wrote:
-> > > VF MMIO resource reservation, either created by system firmware and
-> > > inherited by Linux PCI subsystem or created by the subsystem itself,
-> > > should contain enough space to fit the BAR of all SR-IOV Virtual
-> > > Functions that can potentially be created (total VFs supported by the
-> > > device).
-> > 
-> > I don't think "VF resource reservation ... should contain enough
-> > space" is really accurate or actionable.  It would be *nice* if the PF
-> > BAR is large enough to accommodate the largest supported VF BARs for
-> > all possible VFs, but if it doesn't, it's not really an error.  It's
-> > just a reflection of the fact that resource space is limited.
-> 
-> From PCI perspective, you're right, IOV resources are optional, and it's
-> not really an error for PF device itself.
-> From IOV perspective - we do need those resources to be able to create
-> VFs.
-> 
-> All I'm trying to say here, is that the context of the change is the
-> "success" case, where the VF BAR reservation was successfully assigned,
-> and the PF will be able to create VFs.
-> The case where there were not enough resources for VF BAR (and PF won't
-> be able to create VFs) remains unchanged.
-> 
-> > > However, that assumption only holds in an environment where VF BAR size
-> > > can't be modified.
-> > 
-> > There's no reason to assume anything about how many VF BARs fit.  The
-> > existing code should avoid enabling the requested nr_virtfn VFs if the
-> > PF doesn't have enough space -- I think that's what the "if
-> > (res->parent)" is supposed to be checking.
-> > 
-> > The fact that you need a change here makes me suspect that we're
-> > missing some resource claim (and corresponding res->parent update)
-> > elsewhere when resizing the VF BAR.
-> 
-> My understanding is that res->parent is only expressing that the
-> resource is assigned.
-> We don't really want to change that, the resource is still there and is
-> assigned - we just want to make sure that VF enabling fails if the
-> caller wants to enable more VFs than possible for current resource size.
-> 
-> Let's use an example. A device with a single BAR.
-> initial_vf_bar_size = X
-> total_vfs = 4
-> supported_vf_resizable_bar_sizes = X, 2X, 4X
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git vpd
+branch HEAD: 6ab1878a498b82561b811c5fdf68e3594788b4c7  PCI/sysfs: Make VPD readable by unprivileged users
 
-In addition, IIUC we're assuming the PF BAR size is 4X, since the
-conclusion is that 4 VF BARs of size X fill it completely.
+elapsed time: 967m
 
-> With that - the initial underlying resource looks like this:
->             +----------------------+
->             |+--------------------+|
->             ||                    ||
->             |+--------------------+|
->             |+--------------------+|
->             ||                    ||
->             |+--------------------+|
->             |+--------------------+|
->             ||                    ||
->             |+--------------------+|
->             |+--------------------+|
->             ||                    ||
->             |+--------------------+|
->             +----------------------+
-> Its size is 4X, and it contains BAR for 4 VFs.
-> "resource_size >= vf_bar_size * num_vfs" is true for any num_vfs
-> Let's assume that there are enough resources to assign it.
-> 
-> Patch 4/7 allows to resize the entire resource (in addition to changing
-> the VF BAR size), which means that after calling:
-> pci_resize_resource() with size = 2X, the underlying resource will look
-> like this:
->             +----------------------+ 
->             |+--------------------+| 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             |+--------------------+| 
->             |+--------------------+| 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             |+--------------------+| 
->             |+--------------------+| 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             |+--------------------+| 
->             |+--------------------+| 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             ||                    || 
->             |+--------------------+| 
->             +----------------------+ 
-> Its size is 8X, and it contains BAR for 4 VFs.
-> "resource_size >= vf_bar_size * num_vfs" is true for any num_vfs
+configs tested: 208
+configs skipped: 5
 
-With the assumption that the PF BAR size is 4X, these VFs would no
-longer fit.  I guess that's basically what you say here:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> It does require an extra 4X of MMIO resources, so this can fail in
-> resource constrained environment, even though the original 4X resource
-> was able to be assigned.
-> 
-> The following patch 6/7 allows to change VF BAR size without touching
-> the underlying reservation size.
-> After calling pci_iov_vf_bar_set_size() to 4X and enabling a single VF,
-> the underlying resource will look like this:
->             +----------------------+ 
->             |+--------------------+| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             ||░░░░░░░░░░░░░░░░░░░░|| 
->             |+--------------------+| 
->             +----------------------+ 
-> Its size is 4X, but since pci_iov_vf_bar_set_size() was called, it is no
-> longer able to accomodate 4 VFs.
-> "resource_size >= vf_bar_size * num_vfs" is only true for num_vfs = 1
-> and any attempts to create more than 1 VF should fail.
-> We don't need to worry about being MMIO resource constrained, no extra
-> MMIO resources are needed.
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arc                          axs101_defconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                         haps_hs_defconfig    clang-20
+arc                     nsimosci_hs_defconfig    clang-20
+arc                   randconfig-001-20241030    gcc-14.1.0
+arc                   randconfig-002-20241030    gcc-14.1.0
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm                     am200epdkit_defconfig    clang-20
+arm                         axm55xx_defconfig    clang-20
+arm                         bcm2835_defconfig    clang-20
+arm                          collie_defconfig    clang-20
+arm                     davinci_all_defconfig    clang-15
+arm                                 defconfig    gcc-14.1.0
+arm                      jornada720_defconfig    clang-20
+arm                         lpc32xx_defconfig    clang-20
+arm                   milbeaut_m10v_defconfig    clang-15
+arm                             mxs_defconfig    clang-15
+arm                       netwinder_defconfig    clang-20
+arm                   randconfig-001-20241030    gcc-14.1.0
+arm                   randconfig-002-20241030    gcc-14.1.0
+arm                   randconfig-003-20241030    gcc-14.1.0
+arm                   randconfig-004-20241030    gcc-14.1.0
+arm                        realview_defconfig    clang-20
+arm                             rpc_defconfig    clang-20
+arm                         s3c6400_defconfig    clang-15
+arm                       spear13xx_defconfig    clang-20
+arm                           stm32_defconfig    clang-15
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+arm64                 randconfig-001-20241030    gcc-14.1.0
+arm64                 randconfig-002-20241030    gcc-14.1.0
+arm64                 randconfig-003-20241030    gcc-14.1.0
+arm64                 randconfig-004-20241030    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+csky                  randconfig-001-20241030    gcc-14.1.0
+csky                  randconfig-002-20241030    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+hexagon               randconfig-001-20241030    gcc-14.1.0
+hexagon               randconfig-002-20241030    gcc-14.1.0
+i386                             allmodconfig    clang-19
+i386                              allnoconfig    clang-19
+i386                             allyesconfig    clang-19
+i386        buildonly-randconfig-001-20241030    gcc-12
+i386        buildonly-randconfig-002-20241030    gcc-12
+i386        buildonly-randconfig-003-20241030    gcc-12
+i386        buildonly-randconfig-004-20241030    gcc-12
+i386        buildonly-randconfig-005-20241030    gcc-12
+i386        buildonly-randconfig-006-20241030    gcc-12
+i386                                defconfig    clang-19
+i386                  randconfig-001-20241030    gcc-12
+i386                  randconfig-002-20241030    gcc-12
+i386                  randconfig-003-20241030    gcc-12
+i386                  randconfig-004-20241030    gcc-12
+i386                  randconfig-005-20241030    gcc-12
+i386                  randconfig-006-20241030    gcc-12
+i386                  randconfig-011-20241030    gcc-12
+i386                  randconfig-012-20241030    gcc-12
+i386                  randconfig-013-20241030    gcc-12
+i386                  randconfig-014-20241030    gcc-12
+i386                  randconfig-015-20241030    gcc-12
+i386                  randconfig-016-20241030    gcc-12
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+loongarch             randconfig-001-20241030    gcc-14.1.0
+loongarch             randconfig-002-20241030    gcc-14.1.0
+m68k                             alldefconfig    clang-20
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                          amiga_defconfig    clang-15
+m68k                          amiga_defconfig    clang-20
+m68k                                defconfig    gcc-14.1.0
+m68k                          hp300_defconfig    clang-15
+m68k                       m5475evb_defconfig    clang-20
+m68k                        mvme16x_defconfig    clang-20
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                          ath25_defconfig    clang-15
+mips                         db1xxx_defconfig    clang-20
+mips                           ip30_defconfig    clang-20
+mips                           ip32_defconfig    clang-15
+mips                          rb532_defconfig    clang-20
+mips                       rbtx49xx_defconfig    clang-15
+mips                        vocore2_defconfig    clang-15
+nios2                         3c120_defconfig    clang-20
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+nios2                 randconfig-001-20241030    gcc-14.1.0
+nios2                 randconfig-002-20241030    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20241030    gcc-14.1.0
+parisc                randconfig-002-20241030    gcc-14.1.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                      arches_defconfig    clang-20
+powerpc                   bluestone_defconfig    clang-20
+powerpc                 canyonlands_defconfig    clang-20
+powerpc                       holly_defconfig    clang-20
+powerpc                     kmeter1_defconfig    clang-20
+powerpc                 mpc8313_rdb_defconfig    clang-15
+powerpc                     mpc83xx_defconfig    clang-20
+powerpc                    mvme5100_defconfig    clang-15
+powerpc                     ppa8548_defconfig    clang-15
+powerpc                     rainier_defconfig    clang-20
+powerpc               randconfig-001-20241030    gcc-14.1.0
+powerpc               randconfig-002-20241030    gcc-14.1.0
+powerpc               randconfig-003-20241030    gcc-14.1.0
+powerpc64             randconfig-001-20241030    gcc-14.1.0
+powerpc64             randconfig-002-20241030    gcc-14.1.0
+powerpc64             randconfig-003-20241030    gcc-14.1.0
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20241030    gcc-14.1.0
+riscv                 randconfig-002-20241030    gcc-14.1.0
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20241030    gcc-14.1.0
+s390                  randconfig-002-20241030    gcc-14.1.0
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                          landisk_defconfig    clang-15
+sh                            migor_defconfig    clang-20
+sh                    randconfig-001-20241030    gcc-14.1.0
+sh                    randconfig-002-20241030    gcc-14.1.0
+sh                           se7343_defconfig    clang-20
+sh                   secureedge5410_defconfig    clang-15
+sh                           sh2007_defconfig    clang-20
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20241030    gcc-14.1.0
+sparc64               randconfig-002-20241030    gcc-14.1.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20241030    gcc-14.1.0
+um                    randconfig-002-20241030    gcc-14.1.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20241030    gcc-12
+x86_64      buildonly-randconfig-002-20241030    gcc-12
+x86_64      buildonly-randconfig-003-20241030    gcc-12
+x86_64      buildonly-randconfig-004-20241030    gcc-12
+x86_64      buildonly-randconfig-005-20241030    gcc-12
+x86_64      buildonly-randconfig-006-20241030    gcc-12
+x86_64                              defconfig    clang-19
+x86_64                                  kexec    clang-19
+x86_64                                  kexec    gcc-12
+x86_64                randconfig-001-20241030    gcc-12
+x86_64                randconfig-002-20241030    gcc-12
+x86_64                randconfig-003-20241030    gcc-12
+x86_64                randconfig-004-20241030    gcc-12
+x86_64                randconfig-005-20241030    gcc-12
+x86_64                randconfig-006-20241030    gcc-12
+x86_64                randconfig-011-20241030    gcc-12
+x86_64                randconfig-012-20241030    gcc-12
+x86_64                randconfig-013-20241030    gcc-12
+x86_64                randconfig-014-20241030    gcc-12
+x86_64                randconfig-015-20241030    gcc-12
+x86_64                randconfig-016-20241030    gcc-12
+x86_64                randconfig-071-20241030    gcc-12
+x86_64                randconfig-072-20241030    gcc-12
+x86_64                randconfig-073-20241030    gcc-12
+x86_64                randconfig-074-20241030    gcc-12
+x86_64                randconfig-075-20241030    gcc-12
+x86_64                randconfig-076-20241030    gcc-12
+x86_64                               rhel-8.3    gcc-12
+x86_64                           rhel-8.3-bpf    clang-19
+x86_64                         rhel-8.3-kunit    clang-19
+x86_64                           rhel-8.3-ltp    clang-19
+x86_64                          rhel-8.3-rust    clang-19
+xtensa                            allnoconfig    gcc-14.1.0
+xtensa                  nommu_kc705_defconfig    clang-15
+xtensa                randconfig-001-20241030    gcc-14.1.0
+xtensa                randconfig-002-20241030    gcc-14.1.0
 
-IIUC this series only resizes VF BARs.  Those VF BARs are carved out
-of a PF BAR, and this series doesn't touch the PF BAR resizing path.
-I guess the driver might be able to increase the PF BAR size if
-necessary, and then increase the VF BAR size.
-
-It sounds like this patch is really a bug fix independent of VF BAR
-resizing.  If we currently allow enabling more VFs than will fit in a
-PF BAR, that sounds like a bug.
-
-So if we try to enable too many VFs, sriov_enable() should fail.  I
-still don't see why this check should change the res->parent test,
-though.
-
-> > > Add an additional check that verifies that VF BAR for all enabled VFs
-> > > fits within the underlying reservation resource.
-> > > 
-> > > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
-> > > ---
-> > >  drivers/pci/iov.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > > index 79143c1bc7bb4..5de828e5a26ea 100644
-> > > --- a/drivers/pci/iov.c
-> > > +++ b/drivers/pci/iov.c
-> > > @@ -645,10 +645,14 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
-> > >  
-> > >  	nres = 0;
-> > >  	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> > > +		int vf_bar_sz = pci_iov_resource_size(dev,
-> > > +						      pci_resource_to_iov(i));
-> > >  		bars |= (1 << pci_resource_to_iov(i));
-> > >  		res = &dev->resource[pci_resource_to_iov(i)];
-> > > -		if (res->parent)
-> > > -			nres++;
-> > > +		if (!res->parent || vf_bar_sz * nr_virtfn > resource_size(res))
-> > > +			continue;
-> > > +
-> > > +		nres++;
-> > >  	}
-> > >  	if (nres != iov->nres) {
-> > >  		pci_err(dev, "not enough MMIO resources for SR-IOV\n");
-> > > -- 
-> > > 2.47.0
-> > > 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
