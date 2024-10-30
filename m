@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-15616-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC6099B673A
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 16:16:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5CAD9B677D
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 16:21:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09CA41C219A7
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 15:16:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99BFF281ED1
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 15:21:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 333C0215F50;
-	Wed, 30 Oct 2024 15:13:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1F32194A4;
+	Wed, 30 Oct 2024 15:14:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4978F21503F;
-	Wed, 30 Oct 2024 15:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDBF218D7D;
+	Wed, 30 Oct 2024 15:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730301218; cv=none; b=eyqh1UOvIxa8bBucPlX9/5SGnwQLQyYNL1WSfkS7D7A9mhd8A7/Ooml6GQ7ZsINoaeL9xLQxrRrESrbj1KOFI2lXqnY+Z2HJSTHGPeC0TH8TL7w7wy/ssDDveBhzG8SgrXiqFGIb/LOdI1ZC1wegyfmzYREcS8VWRnvxeb2FXlA=
+	t=1730301254; cv=none; b=EoqMEOPYC1+wLJXbVIFQySkgEtMeEPnPSs+i3M9RP9q21wIAg1mVgmCOZgch0Flhz2qYO0Gq5Tbo26MBj1phdwu48nxRKcG9iMMQ77J/UzEsjPHEPIhezllaEadpfgXEbtV9tWn4f1XyksDrfjrOyE5SCVnAjBVITvsLIpIAK+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730301218; c=relaxed/simple;
-	bh=IgNI8lgYFQbAt0dJNQpNKncmbTgA/OCnxxHvT/Lwx9Q=;
+	s=arc-20240116; t=1730301254; c=relaxed/simple;
+	bh=ZmQNu2d+N/0t2jHPTpFE9ynfUCN3+h8ww7kE4zJqUI4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e9MzI+IcMOre4VObwGBRShcBLD2VxFro0jEzf8aNuFuXpUNfxTAwpwRILhoXrdB6iChxsLlZZg0vAMRisjrHRkMkybTnRnC+AHVnMYMdQ3cRnrVmOd+PiSHMUkDDVmYoKkul7OAhAqWu0oE5lyRw7aNFGJwRmXHk7y+qdxQJJq0=
+	 MIME-Version:Content-Type; b=kl/5XEmYpR3htPDxguKtZUVB/SPC/HHSTdk7BLazldmjqMvRlkTX64hlYycPojsrvtUI3EdM9rJGgmxiFbsW33euX1d5Otdo/8qLb3A7gsr3qmO8FYRohBKcCA/AxY2HVQ6PZlI0VG48zqLVx6rYAkmD9gYL0pk3sP3Z8c2F+vs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xdr9j3MWvz6GDsD;
-	Wed, 30 Oct 2024 23:08:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XdrBQ3P7wz6GDpd;
+	Wed, 30 Oct 2024 23:09:18 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC7FD140498;
-	Wed, 30 Oct 2024 23:13:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A7B9F140593;
+	Wed, 30 Oct 2024 23:14:09 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Oct
- 2024 16:13:31 +0100
-Date: Wed, 30 Oct 2024 15:13:30 +0000
+ 2024 16:14:08 +0100
+Date: Wed, 30 Oct 2024 15:14:07 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Terry Bowman <terry.bowman@amd.com>
 CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
@@ -49,12 +49,12 @@ CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
 	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
 	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
 	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v2 02/14] PCI/AER: Rename AER driver's interfaces to
- also indicate CXL PCIe port support
-Message-ID: <20241030151330.00005e54@Huawei.com>
-In-Reply-To: <20241025210305.27499-3-terry.bowman@amd.com>
+Subject: Re: [PATCH v2 01/14] PCI/AER: Introduce 'struct cxl_err_handlers'
+ and add to 'struct pci_driver'
+Message-ID: <20241030151407.0000227c@Huawei.com>
+In-Reply-To: <20241025210305.27499-2-terry.bowman@amd.com>
 References: <20241025210305.27499-1-terry.bowman@amd.com>
-	<20241025210305.27499-3-terry.bowman@amd.com>
+	<20241025210305.27499-2-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -68,22 +68,23 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 25 Oct 2024 16:02:53 -0500
+On Fri, 25 Oct 2024 16:02:52 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The AER service driver already includes support for CXL restricted host
-> (RCH) downstream port error handling. The current implementation is based
-> on CXL1.1 using a root complex event collector.
+> CXL.io provides PCIe like protocol error implementation, but CXL.io and
+> PCIe have different handling requirements.
 > 
-> Rename function interfaces and parameters where necessary to include
-> virtual hierarchy (VH) mode CXL PCIe port error handling alongside the RCH
-> handling.[1] The CXL PCIe port error handling will be added in a future
-> patch.
+> The PCIe AER service driver may attempt recovering PCIe devices with
+> uncorrectable errors while recovery is not used for CXL.io. Recovery is not
+> used in the CXL.io recovery because of the potential for corruption on
+> what can be system memory.
 > 
-> Limit changes to renaming variable and function names. No functional
-> changes are added.
+> Create pci_driver::cxl_err_handlers similar to pci_driver::error_handler.
+> Create handlers for correctable and uncorrectable CXL.io error
+> handling.
 > 
-> [1] CXL 3.1 Spec, 9.12.2 CXL Virtual Hierarchy
+> The CXL error handlers will be used in future patches adding CXL PCIe
+> port protocol error handling.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
