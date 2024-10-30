@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-15639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D33F9B688F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 16:57:09 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 544479B68B1
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 16:59:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51BC02866C7
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 15:57:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D25BFB2329C
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 15:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D616B213EF3;
-	Wed, 30 Oct 2024 15:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D895213EDC;
+	Wed, 30 Oct 2024 15:59:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2425D1F426F;
-	Wed, 30 Oct 2024 15:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA130213EFF;
+	Wed, 30 Oct 2024 15:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730303822; cv=none; b=oXMEd6adNJa6oUSrwLBornyAfx3QvGqcck1ScOWgEtfInW1eoqUGZhetQScWIGSfaHO0TWtxA5GB58/Xv7zHzSEES7xtHmCdiViHs9j0FDjL+loTUm21DPBsS2XvPNb4wPx/Vnec8teUPFlA6NlAKZPuxGp6lijqNegvAK0XhM4=
+	t=1730303946; cv=none; b=Vo8Lh3zXILVN15biyGrz2yy3EHwhgVe3qPuR1s/1soJUtuI83qiUljdi3vCFYYIEwDbWqVBOnmq8zSWW+OkmRsPUbWVrLyU4QdDo1UKh7iu9lQduWoGX3Syllfw/vM8gMy+wfI2WyDeDs6fL7WmsHbwluoBosqn3aO1dMwTpzb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730303822; c=relaxed/simple;
-	bh=lcdcICWIZgCkqKauCNeaI97hVgNLtvxkqm7Mte9DYXI=;
+	s=arc-20240116; t=1730303946; c=relaxed/simple;
+	bh=izOxNBnMwK2x6wyTuLbVwu4dfjX4Be2CqB/qIo5sb04=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eUSH8o0HB9SZGemg6iV1O4pqHhHDtjbpGTwg0Tr9Ts+YnzlrQA7u/pBoOfyLvgZvjANvSaGSLc6CrJDTIHBy5FKbw70dVFAAZFwpxgvj0rkH0xMwvPkexlBiH8idGecD2+YsDJZop0cu6Sc7LewpvhU9Lik1TlJSquG40TA9fBw=
+	 MIME-Version:Content-Type; b=diZbDK2+G/Vt3HMAMyjQBM9QUye4GvLCauMeze5dCs/cy5JCCGzDbqRF7p+USZLy/WThhHY7a8i6elhgU1PQ4F164KyY+otVUyu75eubwXBbW6AIYRld6ZGLgsXmwNhaByEB618csLUAWPZlqhin6GxOHVOclUNBT9RUeu/hJiE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XdsBZ015Dz6K5yj;
-	Wed, 30 Oct 2024 23:54:30 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XdsF13FGyz6K6XB;
+	Wed, 30 Oct 2024 23:56:37 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 71259140158;
-	Wed, 30 Oct 2024 23:56:55 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E06C9140453;
+	Wed, 30 Oct 2024 23:59:02 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Oct
- 2024 16:56:54 +0100
-Date: Wed, 30 Oct 2024 15:56:53 +0000
+ 2024 16:59:02 +0100
+Date: Wed, 30 Oct 2024 15:59:00 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Terry Bowman <terry.bowman@amd.com>
 CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
@@ -49,12 +49,12 @@ CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
 	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
 	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
 	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v2 10/14] cxl/pci: Map CXL PCIe upstream switch port RAS
- registers
-Message-ID: <20241030155653.000079e9@Huawei.com>
-In-Reply-To: <20241025210305.27499-11-terry.bowman@amd.com>
+Subject: Re: [PATCH v2 11/14] cxl/pci: Rename RAS handler interfaces to also
+ indicate CXL PCIe port support
+Message-ID: <20241030155900.00000867@Huawei.com>
+In-Reply-To: <20241025210305.27499-12-terry.bowman@amd.com>
 References: <20241025210305.27499-1-terry.bowman@amd.com>
-	<20241025210305.27499-11-terry.bowman@amd.com>
+	<20241025210305.27499-12-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -65,52 +65,34 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 25 Oct 2024 16:03:01 -0500
+On Fri, 25 Oct 2024 16:03:02 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> Add logic to map CXL PCIe upstream switch port (USP) RAS registers.
+Patch title looks unconnected to the patch. Cut and paste issue?
+
+
+> CXL PCIe port protocol error handling support will be added to the
+> CXL drivers in the future. In preparation, rename the existing
+> interfaces to support handling all CXL PCIe port protocol errors.
 > 
-> Introduce 'struct cxl_regs' member into 'struct cxl_port' to store a
-> pointer to the upstream port's mapped RAS registers.
+> The driver's RAS support functions currently rely on a 'struct
+> cxl_dev_state' type parameter, which is not available for CXL port
+> devices. However, since the same CXL RAS capability structure is
+> needed across most CXL components and devices, a common handling
+> approach should be adopted.
 > 
-> The upstream port may have multiple downstream endpoints. Before
-> mapping AER registers check if the registers are already mapped.
+> To accommodate this, update the __cxl_handle_cor_ras() and
+> __cxl_handle_ras() functions to use a `struct device` instead of
+> `struct cxl_dev_state`.
+> 
+> No functional changes are introduced.
+> 
+> [1] CXL 3.1 Spec, 8.2.4 CXL.cache and CXL.mem Registers
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/pci.c | 17 +++++++++++++++++
->  drivers/cxl/cxl.h      |  4 ++++
->  drivers/cxl/mem.c      |  3 +++
->  3 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 0bb61e39cf8f..53ca773557f3 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -773,6 +773,23 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
->  }
->  
-> +void cxl_uport_init_ras_reporting(struct cxl_port *port)
-> +{
-> +	/* uport may have more than 1 downstream EP. Check if already mapped. */
-> +	if (port->uport_regs.ras) {
-> +		dev_warn(&port->dev, "RAS is already mapped\n");
-As before, warn seems inappropriate from the comment.
-> +		return;
-> +	}
-> +
-> +	port->reg_map.host = &port->dev;
-> +	if (cxl_map_component_regs(&port->reg_map, &port->uport_regs,
-> +				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
-> +		dev_err(&port->dev, "Failed to map RAS capability.\n");
-> +		return;
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
-> +
+Otherwise looks fine
 
 
