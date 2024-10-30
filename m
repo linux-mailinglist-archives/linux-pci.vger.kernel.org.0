@@ -1,135 +1,178 @@
-Return-Path: <linux-pci+bounces-15563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15564-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFE899B5CB8
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 08:19:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C80FE9B5D05
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 08:37:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84D30284281
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 07:19:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BC77283E3D
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 07:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC2C1DE4FF;
-	Wed, 30 Oct 2024 07:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F16E1E0B82;
+	Wed, 30 Oct 2024 07:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uXHkZFXq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fIgjGzOW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA8E1D7E5B
-	for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 07:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02441DF723
+	for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 07:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730272743; cv=none; b=fhj0ZO/dRquubfisNiSwxgRGTKX4u8T/P8ES6pJMKEFNpOe5Ef3C9YF2JN4+wGg7eV76uBPXeFDA1wmLQXQrCyhkzQrQmpbMLPys6/Na4COHv2vPxANFEUdSij6mJuImwwY1Hny4idmPt65akik6yiV6ceQJ0ZYPi824kwLJHqI=
+	t=1730273766; cv=none; b=FB9aAyuU7e7by2AsP9k3LAADQe9KdMtONJxcznDdoU6Iq6LS/I8eiR0dGuNZ+PTCVCTxnTRSd92uogO4pgZoWPNxYlizX45p33IazzHcOq3319pLyeUggqhfmhdCSjdFSKPzVz1i0Sy0a3IvRVxuieMg2VcB+t+iOdU1k5ik+s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730272743; c=relaxed/simple;
-	bh=GRFuDEnjDgd4OvoRG285WDJtwuTF8sf2Dvf2JM1Qzcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pq2s+X++PAKNlfjqUtsLZn2NHfqa5YmOhw/uWiOzSLpKHtb4yiFIVdUv3G0gmXTBqUr6mN1GCiNPmnJPWwOR1ijCvDrSbJgsLuqFVRU7ovV11HT8yNvFdnPwNMUbBc0YggWGgiGPqW/7XPvlfcoGa3HBU7lkR8bMEtlJ2vTEgj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uXHkZFXq; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-20ca388d242so59299365ad.2
-        for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 00:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730272741; x=1730877541; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2HfyfhF6z0IsAsG7O1iQKmomQevqTeSun6SJPILAuAM=;
-        b=uXHkZFXqX77GhcG9bKQ/636UdZw45BxhQKW7dNrCZGkH1e7lD8+BxJM/Yc97+nL+H/
-         zSy7Rwz+PdBsfnjvgGwcAJgu+iRkgGLLa6P74LlhwjzglS2zrttpJy6dW+IlkTAz0BQw
-         tkfYHR+qmhPr7Qhdl1cYFES7WEIp/yLPaubLij4PyRhMF0EGZLi5DBe+TBaSZOP6xsdM
-         XWhYvZuI0l27nLC4oNx3azm8SA78oOOZTXrrJaK+k4MD0qunSRTM5KiB5eWDU+WNwlAo
-         0V/GoxnRt2Pr/CNYT7DgFwexU+dKQa6ht5hGjoayrkruuBW46Cbt2Ik0NgX6dWJF8KXG
-         Vukg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730272741; x=1730877541;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2HfyfhF6z0IsAsG7O1iQKmomQevqTeSun6SJPILAuAM=;
-        b=rz7XNQCk0uBiAdFxq0aO4xTDO8CklddGrZedzguHXzI9/oqMHnNQVGD9TMbI/9IgFp
-         PgqKUu15WKpOICDRAfGsw5ZO7NEyV3jGsTkkkWmFDEPFKnVtgoC10NKBWy/x91FCgijA
-         PsjGeID2siGTVNGZvSHad3Yc3tJJOFituJAsoQ33dengN4NoExctoVT9IhBjgv5r7P+g
-         a1cphiX8n0fQrRyX+YWBHshsIxPjIf58R69FK4QZcpsCKNbCjuMoPw4ltz4lAorANKAe
-         th7nMo21uaUnr0at+KBCozXfSM5qesczByjZAN+f7GtqbTCt5YZinmvva3gS5s0+1ELZ
-         1vkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuIL8w/2uJ+F9TgzVxiKFOWuLWDgiaGgl2kRP03b0jQONcAPB9Wtw+gNFaFXs3qKGSK12Wrbhhrlw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcGjLpKbwoO3vESZ/zfy9ZQE8lCKQ/8fAgDG41gzLwbvsME/wc
-	UCO6StrQKnVjmM9dVdzWM1o1PD18Ce+7mNkxDfSKq3n0vF1rAckhWmSeyhjdSg==
-X-Google-Smtp-Source: AGHT+IHTdvrxjuDcs8dqC3K9rXQG1LndTCbbKrjV+g4Yj/M49myE6Ugo2CkOqvAophLbqnU9pTQ4Xw==
-X-Received: by 2002:a17:903:2445:b0:20b:775f:506d with SMTP id d9443c01a7336-210c6c123f3mr211614765ad.34.1730272740962;
-        Wed, 30 Oct 2024 00:19:00 -0700 (PDT)
-Received: from thinkpad ([36.255.17.104])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bbf441bdsm75242015ad.52.2024.10.30.00.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 00:19:00 -0700 (PDT)
-Date: Wed, 30 Oct 2024 12:48:51 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Qiang Yu <quic_qianyu@quicinc.com>, vkoul@kernel.org, kishon@kernel.org,
-	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
-	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
-	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	johan+linaro@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v7 6/7] PCI: qcom: Disable ASPM L0s and remove BDF2SID
- mapping config for X1E80100 SoC
-Message-ID: <20241030071851.sdm3fu6ecaddoiit@thinkpad>
-References: <20241017030412.265000-1-quic_qianyu@quicinc.com>
- <20241017030412.265000-7-quic_qianyu@quicinc.com>
- <ZxJrUQDGMDw3wI3Q@hovoldconsulting.com>
- <91395c5e-22a0-4117-a4b5-4985284289ab@quicinc.com>
- <250bce05-a095-4eb3-a445-70bbf4366526@quicinc.com>
- <ZyHc-TkRtKxLU5-p@hovoldconsulting.com>
+	s=arc-20240116; t=1730273766; c=relaxed/simple;
+	bh=EEbInr2FopBCal5W/ZWNc4HM+Fm3bdPSC3TyQwKR3nk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kAMHwQJ/p1+zbd+IAb/tbE6ra7N6xUS8DEI61+Zte97MxxeNRYXOF8P9G4TsnzS/pm52svJE6wB0YCBmS2XYI+uGSUOwBVC3UtbDCvh79nyCu/yfIRA5tIKy/QhDWaBDw7yODm7DeB9bnCcA+hkSf4OFNmh4ZPFD5YyPNlrP7d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fIgjGzOW; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730273763; x=1761809763;
+  h=date:from:to:cc:subject:message-id;
+  bh=EEbInr2FopBCal5W/ZWNc4HM+Fm3bdPSC3TyQwKR3nk=;
+  b=fIgjGzOWsWzM3k+3guihxlSDi7kSxST1DeRvoeDVWGkHeflasySPMlon
+   TafVc3VskZbmmOc/xHqRxLFh5cSWcZvboDBEXLBym4R6s2DlF1slT9Eeo
+   gULT0S7WtwtmgrYCq+7lt7xO2c1mdmAjFGCffj/UPBzS1Yy5ZrP8+luQn
+   nty0ez20qg44EVCdklzuX2B9XNaUfu4VhujMwM8zhgUUslw1tJKemc4K3
+   BZpeFe5qaHGJjV2mWFSo2J35jPFT3NF/fynrmJq7D+DCKLEF7tIVBw1gc
+   69Czyzba8dFoJeXcroEF9xt/CMl3DcnbahupTDO1aJ+l0V+TxBedt/9aa
+   Q==;
+X-CSE-ConnectionGUID: H+/ApfAUTZ+xsmxBhRPIOQ==
+X-CSE-MsgGUID: XpWguIrMQBidwMUTDNUvlQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="47421317"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="47421317"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 00:36:03 -0700
+X-CSE-ConnectionGUID: 1yjHFYpoSyWXrO1DCTL+1w==
+X-CSE-MsgGUID: reOHVahzRVCQH3F7RqbAzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,244,1725346800"; 
+   d="scan'208";a="87361612"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 30 Oct 2024 00:36:01 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t63FG-000edI-0B;
+	Wed, 30 Oct 2024 07:35:58 +0000
+Date: Wed, 30 Oct 2024 15:35:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ f3c3ccc4fe49dbc560b01d16bebd1b116c46c2b4
+Message-ID: <202410301539.1KGySHwP-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZyHc-TkRtKxLU5-p@hovoldconsulting.com>
 
-On Wed, Oct 30, 2024 at 08:15:05AM +0100, Johan Hovold wrote:
-> On Wed, Oct 30, 2024 at 01:54:59PM +0800, Qiang Yu wrote:
-> > On 10/24/2024 2:42 PM, Qiang Yu wrote:
-> > > On 10/18/2024 10:06 PM, Johan Hovold wrote:
-> 
-> > >> Also say something about how L0s is broken so that it is more clear what
-> > >> the effect of this patch is. On sc8280xp enabling L0s lead to
-> > >> correctable errors for example.
-> 
-> > > Need more time to confirm the exact reason about disabling L0s.
-> > > Will update if get any progress
-> 
-> > I confirmed with HW team and SW team. L0s is not supported on X1E80100, 
-> > it is not fully verified. So we don't want to enable it.
-> 
-> Thanks for checking. A word about what can happen if not disabling it
-> may still be in place (e.g. the link state transition stats in debugfs
-> on x1e80100 looked pretty erratic with L0s enabled IIRC).
-> 
-> Also, are there any Qualcomm platforms that actually support L0s?
-> Perhaps we should just disable it everywhere?
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: f3c3ccc4fe49dbc560b01d16bebd1b116c46c2b4  PCI: Fix pci_enable_acs() support for the ACS quirks
 
-Most of the mobile chipsets from Qcom support L0s. It is not supported only on
-the compute ones. So we cannot disable it everywhere.
+elapsed time: 838m
 
-Again, it is not the hw issue but the PHY init sequence not tuned support L0s.
+configs tested: 85
+configs skipped: 2
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-மணிவண்ணன் சதாசிவம்
+tested configs:
+alpha                 allnoconfig    gcc-14.1.0
+alpha                allyesconfig    clang-20
+alpha                   defconfig    gcc-14.1.0
+arc                  allmodconfig    clang-20
+arc                   allnoconfig    gcc-14.1.0
+arc                  allyesconfig    clang-20
+arc              axs101_defconfig    clang-20
+arc                     defconfig    gcc-14.1.0
+arm                  allmodconfig    clang-20
+arm                   allnoconfig    gcc-14.1.0
+arm                  allyesconfig    clang-20
+arm             axm55xx_defconfig    clang-20
+arm                     defconfig    gcc-14.1.0
+arm             lpc32xx_defconfig    clang-20
+arm            realview_defconfig    clang-20
+arm           spear13xx_defconfig    clang-20
+arm64                allmodconfig    clang-20
+arm64                 allnoconfig    gcc-14.1.0
+arm64                   defconfig    gcc-14.1.0
+csky                  allnoconfig    gcc-14.1.0
+csky                    defconfig    gcc-14.1.0
+hexagon              allmodconfig    clang-20
+hexagon               allnoconfig    gcc-14.1.0
+hexagon              allyesconfig    clang-20
+hexagon                 defconfig    gcc-14.1.0
+i386                 allmodconfig    clang-19
+i386                  allnoconfig    clang-19
+i386                 allyesconfig    clang-19
+i386                    defconfig    clang-19
+loongarch            allmodconfig    gcc-14.1.0
+loongarch             allnoconfig    gcc-14.1.0
+loongarch               defconfig    gcc-14.1.0
+m68k                 allmodconfig    gcc-14.1.0
+m68k                  allnoconfig    gcc-14.1.0
+m68k                 allyesconfig    gcc-14.1.0
+m68k                    defconfig    gcc-14.1.0
+microblaze           allmodconfig    gcc-14.1.0
+microblaze            allnoconfig    gcc-14.1.0
+microblaze           allyesconfig    gcc-14.1.0
+microblaze              defconfig    gcc-14.1.0
+mips                  allnoconfig    gcc-14.1.0
+mips               ip30_defconfig    clang-20
+mips              rb532_defconfig    clang-20
+nios2             3c120_defconfig    clang-20
+nios2                 allnoconfig    gcc-14.1.0
+nios2                   defconfig    gcc-14.1.0
+openrisc              allnoconfig    clang-20
+openrisc             allyesconfig    gcc-14.1.0
+parisc               allmodconfig    gcc-14.1.0
+parisc                allnoconfig    clang-20
+parisc               allyesconfig    gcc-14.1.0
+parisc64                defconfig    gcc-14.1.0
+powerpc              allmodconfig    gcc-14.1.0
+powerpc               allnoconfig    clang-20
+powerpc              allyesconfig    gcc-14.1.0
+powerpc          arches_defconfig    clang-20
+powerpc       bluestone_defconfig    clang-20
+powerpc     canyonlands_defconfig    clang-20
+powerpc           holly_defconfig    clang-20
+powerpc         mpc83xx_defconfig    clang-20
+powerpc         rainier_defconfig    clang-20
+riscv                allmodconfig    gcc-14.1.0
+riscv                 allnoconfig    clang-20
+riscv                allyesconfig    gcc-14.1.0
+s390                 allmodconfig    clang-20
+s390                 allmodconfig    gcc-14.1.0
+s390                  allnoconfig    clang-20
+s390                 allyesconfig    gcc-14.1.0
+sh                   allmodconfig    gcc-14.1.0
+sh                    allnoconfig    gcc-14.1.0
+sh                   allyesconfig    gcc-14.1.0
+sh                migor_defconfig    clang-20
+sh               se7343_defconfig    clang-20
+sh               sh2007_defconfig    clang-20
+sparc                allmodconfig    gcc-14.1.0
+um                   allmodconfig    clang-20
+um                    allnoconfig    clang-20
+um                   allyesconfig    clang-20
+x86_64                allnoconfig    clang-19
+x86_64               allyesconfig    clang-19
+x86_64                  defconfig    clang-19
+x86_64                      kexec    clang-19
+x86_64                      kexec    gcc-12
+x86_64                   rhel-8.3    gcc-12
+xtensa                allnoconfig    gcc-14.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
