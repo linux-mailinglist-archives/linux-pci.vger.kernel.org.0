@@ -1,169 +1,177 @@
-Return-Path: <linux-pci+bounces-15651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8663A9B6C4B
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 19:46:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C74CA9B6E30
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 21:57:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEC681C20E65
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:46:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CBA21F216C2
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 20:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C8B21BD9F1;
-	Wed, 30 Oct 2024 18:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E411EC016;
+	Wed, 30 Oct 2024 20:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8/Ly+cO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3JtQJax"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A401BD9D1
-	for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 18:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6471BD9DF;
+	Wed, 30 Oct 2024 20:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730314003; cv=none; b=B4CPFfIxgv9aBfH5CUoEsuU0sOsfAuTJgOpsJ8JrlIxMM+bEiBjW+X8+91FD4pzXEA/3ZK90fdWkUjIhqIogcfRzEGFrG4zLJRiXZwC5tLDTnr4LEGvexRH4/5G7jrPW8lCRv51Ngt75tRkiNAYWOEJUqR0WRefL/ZUKMaRYHhs=
+	t=1730321826; cv=none; b=rRIL4Jn/Yg6xAr8AsK8qUpiUh15h9CaxA+Rfj76OhFcfDORcFpwf2GuoL3Gm+EFnt7lKf44w7U+eZvNJauRG5rlYK0QtCuqCaiimy7mZ1ETmvxq2DB2Gfo9IePhZT/DWqq1WeKxL4JnwpyyBFc9diC1JIxIZHPZT/HW9VEC10Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730314003; c=relaxed/simple;
-	bh=l+ecJbm/aUQtIvrPiYspqzUjap35Pt3yFHgDQiaSyhI=;
+	s=arc-20240116; t=1730321826; c=relaxed/simple;
+	bh=XPLETH6IvogiR50LRg6ev0FzS09rdHbQJGqQIAlUxgM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KUVNwwGkDDTOKbS37zUvfiVELBGj4wLeh5A/SguiVxykABCSpmMrKNDdnsXrY3FWdG1Ou+qqmkQyiep7uGlPKgv+OoHAwznT5nPoOTXSO4EwXHJmBkg0MOJfwicIiSsLJs0NWCRHbXIlrNTBwJXb1u2QvCxMEuOpI9RQP2+hjgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8/Ly+cO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B53C4CECE;
-	Wed, 30 Oct 2024 18:46:42 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=rSxvD4gfMhthYYx0Q0XAqvJ9ReeXKy6ygl3k+YQZ51IU8o2l8QxmXj161nn0k11WRERSa8ITv1XoaEbgD0LoMw4GeU1NPMdnroRqxWVMGqInCnHkF9TlEZna7R/ssIdPlZXQ4xvvVf0FH7wL8aQpdUaVybooSembj6flcuCBvME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3JtQJax; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9470BC4CECE;
+	Wed, 30 Oct 2024 20:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730314002;
-	bh=l+ecJbm/aUQtIvrPiYspqzUjap35Pt3yFHgDQiaSyhI=;
+	s=k20201202; t=1730321825;
+	bh=XPLETH6IvogiR50LRg6ev0FzS09rdHbQJGqQIAlUxgM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=D8/Ly+cOsDXI5VCy74m3maVFa6izmnu7c0Mj6hex6T1jRykWhJk5DPwnLkDUn+FJu
-	 hM5Nvn4lWhvc4g2B9FxPt5cHuIXDKMhHC8V7GXGlzQwuZsBGSSsNmryLGm9axCwLwM
-	 h/RsvaBeSCDtm0icbrp7D3Akn8SscQ8vL+1Xz0qEbJ4Ay2S+DoD3vv8Ksw8FRfreT3
-	 9/Q/bt5HaptPG/xmYbbMZKSdxWpt3lP1jH2jyEOAeNvYD0tBTuyzh7LdgdX08YMnUY
-	 QJyaGFCOSR6xQMuDsKKuGG1PynvvHLpq9Eux1lHB6Ggl5V7nEKJTGZikOuIMfo+Ga+
-	 nEO2jye0EdQBw==
-Date: Wed, 30 Oct 2024 13:46:41 -0500
+	b=k3JtQJaxR5Yk2wmxCZsDMiosrnNJmzWeCK7TqABeoRViZBcgxSR/Aj8Vb7FWRk1zG
+	 lxwqpBuqAYnnxDiaM8rCrhtZGb86GXYELynmh4xutm0dndQ3iBvycoAJw4+H8e6V7F
+	 ZRjtU1j9MqXPqxAykncoxHfLxYdv5OQipURElOwL2mjO21q2ICwVnTavLIx37ISErZ
+	 4jtVLwQDzAmKCx6DpFF94BwdToPDVGrzRJvelwX7Q8+aMM6PzysovbUrD5Osg01YO+
+	 Zs56hWd5drU+1q7H46BkMxfUq5qfTrQMwPgGFb6nUsfBrS8BK3Fpyd6wWrsHobhiYF
+	 F0BMRSSiCRMgw==
+Date: Wed, 30 Oct 2024 15:57:03 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org, Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Bao Cheng Su <baocheng.su@siemens.com>,
+	Hua Qian Li <huaqian.li@siemens.com>,
+	Diogo Ivo <diogo.ivo@siemens.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
- of same device
-Message-ID: <20241030184641.GA1210322@bhelgaas>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH v6 0/7] soc: ti: Add and use PVU on K3-AM65 for DMA
+ isolation
+Message-ID: <20241030205703.GA1219329@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <IA0PR11MB7185C903E9468C3221615F4FF84F2@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1725901439.git.jan.kiszka@siemens.com>
 
-On Fri, Oct 25, 2024 at 06:57:37AM +0000, Kasireddy, Vivek wrote:
-> > Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for
-> > functions of same device
-> > 
-> > On Thu, Oct 24, 2024 at 05:58:48AM +0000, Kasireddy, Vivek wrote:
-> > > > Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for
-> > > > functions of same device
-> > > >
-> > > > On Sun, Oct 20, 2024 at 10:21:29PM -0700, Vivek Kasireddy wrote:
-> > > > > Functions of the same PCI device (such as a PF and a VF) share the
-> > > > > same bus and have a common root port and typically, the PF provisions
-> > > > > resources for the VF. Therefore, they can be considered compatible
-> > > > > as far as P2P access is considered.
-> > 
-> > I don't understand the "therefore they can be considered compatible"
-> > conclusion.  The spec quote below seems like it addresses exactly this
-> > situation: it says ACS can control peer-to-peer requests between VFs.
->
-> I am only referring to the specific case where the PF is trying to
-> access (P2P) a VF's resource that the PF itself has provisioned.
-> Shouldn't this be considered a valid access?
+On Mon, Sep 09, 2024 at 07:03:53PM +0200, Jan Kiszka wrote:
+> Changes in v6:
+>  - make restricted DMA memory-region available to all pci-keystone
+>    devices, moving property to unconditional section (patch 2)
 > 
-> > > ...
-> > > > I'm not sure what you refer to by "PF provisions resources for the
-> > > > VF".  Isn't it *always* the case that the architected PCI
-> > > > resources (BARs) are configured by the PF?  It sounds like you're
-> > > > referring to something Intel GPU-specific beyond that?
-> > >
-> > > What I meant to say is that since PF provisions the resources for
-> > > the VF in a typical scenario,
-> > 
-> > Are you talking about BARs?  As far as I know, the PF BAR assignments
-> > always (not just in typical scenarios) determine the VF BAR
-> > assignments.
->
-> Right, I am indeed talking about BARs.
+> Changes in v5:
+>  - resolve review comments on pci-host bindings
+>  - reduce DMA memory regions to 1 - swiotlb does not support more
+>  - move activation into overlay (controlled via firmware)
+>  - use ks_init_vmap helper instead of loop in
+>    rework ks_init_restricted_dma
+>  - add more comments to pci-keystone
+>  - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
 > 
-> > Or are you referring to some other non-BAR resources?
-> > 
-> > > they should be automatically P2PDMA compatible particularly when the
-> > > provider is the VF and PF is the client. However, since this cannot
-> > > be guaranteed on all the PCI devices out there for various reasons,
-> > > my objective is to start including the ones that can be tested and
-> > > are known to be compatible (Intel GPUs).
-> > 
-> > Regardless of BAR or other VF resources, I don't think VFs are
-> > automatically P2PDMA compatible.
->
-> I agree that VFs in general are not automatically P2PDMA compatible
-> but a PF and a VF should be considered compatible particularly when the
-> provider is a VF and PF is the client.
+> Changes in v4:
+>  - reorder patch queue, moving all DTS changes to the back
+>  - limit activation to IOT2050 Advanced variants
+>  - move DMA pool to allow firmware-based expansion it up to 512M
 > 
-> > For example, PCIe r6.0, sec 6.12.1.2  says:
-> > 
-> >   For ACS requirements, single-Function devices that are SR-IOV
-> >   capable must be handled as if they were Multi-Function Devices.
-> > 
-> >   ...
-> > 
-> >   - ACS P2P Request Redirect: must be implemented by Functions that
-> >     support peer-to-peer traffic with other Functions. This includes
-> >     SR-IOV Virtual Functions (VFs).  ACS P2P Request Redirect is
-> >     subject to interaction with the ACS P2P Egress Control and ACS
-> >     Direct Translated P2P mechanisms (if implemented). Refer to
-> >     Section 6.12.3 for more information.  When ACS P2P Request
-> >     Redirect is enabled in a Multi-Function Device that is not an
-> >     RCiEP, peer-to-peer Requests (between Functions of the device)
-> >     must be redirected Upstream towards the RC.
-> > 
-> > Or do you mean something else by "P2PDMA compatible"?
->
-> I am no longer making any generic claims about devices' P2PDMA
-> compatibility. Instead, as mentioned above, I am only focused on the
-> interactions between a PF (client) and a VF (provider), particularly
-> with Intel GPUs. 
+> Changes in v3:
+>  - fix ti,am654-pvu.yaml according to review comments
+>  - address review comments on ti,am65-pci-host.yaml
+>  - differentiate between different compatibles in ti,am65-pci-host.yaml
+>  - move pvu nodes to k3-am65-main.dtsi
+>  - reorder patch series, pulling bindings and generic DT bits to the front
 > 
-> More specifically, I am trying to address a use-case where the VF
-> needs to share a buffer with the PF but is unsuccessful because
-> pci_p2pdma_distance_many(provider, client, 1, true) fails (due to
-> ACS redirect being set) although the buffer is located within a BAR
-> resource that the PF has provisioned and has full access to it.
-> Shouldn't this be allowed?
+> Changes in v2:
+>  - fix dt_bindings_check issues (patch 1)
+>  - address first review comments (patch 2)
+>  - extend ti,am65-pci-host bindings for PVU (new patch 3)
+> 
+> Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+> against DMA-based attacks of external PCI devices. The AM65 is without
+> an IOMMU, but it comes with something close to it: the Peripheral
+> Virtualization Unit (PVU).
+> 
+> The PVU was originally designed to establish static compartments via a
+> hypervisor, isolate those DMA-wise against each other and the host and
+> even allow remapping of guest-physical addresses. But it only provides
+> a static translation region, not page-granular mappings. Thus, it cannot
+> be handled transparently like an IOMMU.
+> 
+> Now, to use the PVU for the purpose of isolated PCI devices from the
+> Linux host, this series takes a different approach. It defines a
+> restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+> buffers from a static memory carve-out. And to enforce that the devices
+> actually follow this, a special PVU soc driver is introduced. The driver
+> permits access to the GIC ITS and otherwise waits for other drivers that
+> detect devices with constrained DMA to register pools with the PVU.
+> 
+> For the AM65, the first (and possibly only) driver where this is
+> introduced is the pci-keystone host controller. Finally, this series
+> provides a DT overlay for the IOT2050 Advanced devices (all have
+> MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+> Application of this overlay will be handled by firmware.
+> 
+> Due to the cross-cutting nature of these changes, multiple subsystems
+> are affected. However, I wanted to present the whole thing in one series
+> to allow everyone to review with the complete picture in hands. If
+> preferred, I can also split the series up, of course.
 
-IIUC you want the PF to be able to initiate a transaction on the PCIe
-link to access a VF BAR.  The address in that TLP will be inside the
-VF BAR (and also inside the space defined by the VF BAR<n> and the
-NumVFs value in the PF's SR-IOV Capability).
+I'm not sure where this ended up.
 
-In the PCIe world, I don't think a TLP can "loop back" to another
-function on the same device.  I think it has to go upstream at least
-to the Port above the originating function.  The Port works like a
-PCI-PCI bridge.  The TLP address will be inside a Port memory window,
-so in the absence of ACS, the Port would reflect the TLP back down the
-same link it came from.  I'm pretty sure an analyzer on the link would
-see two distinct TLPs.
+The pci-keystone.c patch looks OK to me, and I don't see any comments
+from the PCI folks who normally take care of host controller drivers.
 
-But as far as I can tell, when ACS P2P Request Redirect is enabled,
-the spec requires that the Port forward the TLP upstream (regardless
-of the TLP address) instead of reflecting it back to the downstream
-link.
+I guess it depends on the soc PVU driver, so I'll ack the keystone
+part and whoever takes the soc part can include it.
 
-Do you read the spec differently?
-
-Bjorn
+> CC: Bjorn Helgaas <bhelgaas@google.com>
+> CC: "Krzysztof Wilczyński" <kw@linux.com>
+> CC: linux-pci@vger.kernel.org
+> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> 
+> Jan Kiszka (7):
+>   dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+>   dt-bindings: PCI: ti,am65: Extend for use with PVU
+>   soc: ti: Add IOMMU-like PVU driver
+>   PCI: keystone: Add support for PVU-based DMA isolation on AM654
+>   arm64: dts: ti: k3-am65-main: Add PVU nodes
+>   arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+>   arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+>     behind PCI RC
+> 
+>  .../bindings/pci/ti,am65-pci-host.yaml        |  28 +-
+>  .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+>  arch/arm64/boot/dts/ti/Makefile               |   5 +
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+>  ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+>  drivers/pci/controller/dwc/pci-keystone.c     | 108 ++++
+>  drivers/soc/ti/Kconfig                        |   4 +
+>  drivers/soc/ti/Makefile                       |   1 +
+>  drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+>  include/linux/ti-pvu.h                        |  16 +
+>  10 files changed, 777 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+>  create mode 100644 drivers/soc/ti/ti-pvu.c
+>  create mode 100644 include/linux/ti-pvu.h
+> 
+> -- 
+> 2.43.0
+> 
 
