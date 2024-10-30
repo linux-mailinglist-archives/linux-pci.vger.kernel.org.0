@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-15573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B6339B5F66
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 10:57:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8829F9B5F6B
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 10:58:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F0E8283FCC
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 09:56:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC5B51C212AA
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 09:58:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D373B1E500F;
-	Wed, 30 Oct 2024 09:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4D8C1E6DD5;
+	Wed, 30 Oct 2024 09:55:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZHmvG5Ek"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="m8SjvAgK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2053.outbound.protection.outlook.com [40.107.247.53])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2089.outbound.protection.outlook.com [40.107.247.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFE81E5016;
-	Wed, 30 Oct 2024 09:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9930A1E572F;
+	Wed, 30 Oct 2024 09:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730282113; cv=fail; b=e71457GN/sLEXp+xpUC3/KrVVM4Ybci+j80vtKSAM3Nv2h/eUl/GdyUuei2mCWkLNM+Q75a1qEH1lNCq3h7Y6SODVg+28BwRpxp8P0I96VCfCordaJlkYJmsXpQ47YHRFqpfiFdxhNL+Gt9WLYp0fQFqPWI3MT2asCFDMIEvsLw=
+	t=1730282119; cv=fail; b=i18cT5ca52vewybYa1FiyPyf520sIsPZPz270tPKS82s4TrfkfzrsE1p42gKXpOW8HmSf2s7wNqqRBvo0abOlEIHpWroTUxGrCNkLwp3untIXsnsKK7Iz98GlaEQ9yE4vBt6OeCyMhxjwUQPGt3U6U+T+zqsx6cE8VxrSrS0qWc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730282113; c=relaxed/simple;
-	bh=wrv+kqkkPSZ6cvh0Xend1dn0/bI7PplICNknS9E+fQ0=;
+	s=arc-20240116; t=1730282119; c=relaxed/simple;
+	bh=NDR7LnrQ5T15luvLkGYarvUzp0hF1MlcF1z9FzpC34w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aBiks3nKnWvtadHaesKGOCQeYL4PHzmKc4tJNMzfMGllVP++unk90xA7B1S4lz16O4zgDrdllo353z7CNZfitbnRGlWmAIw1vwzi/zL2ZZmK0YI79/WS1bEIDbXHeoxlBPXiNXzzfYKPY+JY09M3/go3Azl9nyCuOfiWoUMMqyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ZHmvG5Ek; arc=fail smtp.client-ip=40.107.247.53
+	 Content-Type:MIME-Version; b=MjCKas4on0riHluJg+KcdQpsPHTsWwdgxJgVqTxNyCQKu+pO2g6hWtr5xdmSd7qGJat37xfON6A+OfEwvY/5oUEouIUVUpJOLAeAkQoc522YjmM7Zc9FebcgTHorqPmRR28/nM1+K/uUmwxN7QGb0e7Yl1+/gzIIEFFw1dCfxJ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=m8SjvAgK; arc=fail smtp.client-ip=40.107.247.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MKvnybDrIl26jxRDOxHx+ubdHz0bkMs/YLlvuYN4olo7LZN4gGxq9qRRxt8KRBL1HDPQKym8Jzpc7GmHOOnAsVF8BKZzcERngFfKEmGrUwcZgYdzySyXepMMPinLKYCHqgtGgpiZZ9nctjW4bVkzewG55O9Og+353qA0fZNhHst2Lwp18Xbq8bJ51t6Mnr0GhUQ1uW6/jsTqZqOV42t3tiEo+7XkmdHzGsWZ58GAtIJxeJjej+x8RXRj2S7iVoJiHnveoXkskjLX0LDyvJBQuIlIoqeSaUvfpJdT1dmYCpvoovKETVs+JUbXVWuNcZoOHfG+3MtwVctB0BvgAMIaMg==
+ b=MWycTAxpPFCfCAxVZHnKeyVuT7wYwNgmtfKcXD0hInxbQEb7NgWe2L5Ji9WyMj/9nYpAeDCjm2/HPRXfJK5zxohjtwRBcBtZ2c7mKdWCgUyRs7bBwtCilZBh4qAfJsTEoshdq2unRTLHVoGISwii5fLzFZdROJ5zsuzgbPahRCblJPCoEPVVQdZGdLfDsYhVBF5aNVgV6BndyHspNPWRwYXZ+OIULIukXs6uchpuCFYDwXdQ97qI6sLKqNacYb85vuWYwkh1vYzGHLBISKakyObUDJ5D6sH8JOpQik0irFbhCpFC+evm+p2H7U6WEfJUItlbZZlNeQ43V4Alv5UPLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ARbD14h42wKT+hoa9jYlex8DCEdlnracvHxWNYQo0Vc=;
- b=zRaaqvOhp/ffI/9NBjM5fO4qQis9dDiuPlTZ38Zg8pVVAbsKHg1Vdx3uTjmzKfkNXynZuJApTAtuPOaT7b3/ZrRed5C6w01+sGQpp8aiOU/UV3vQ82qWmB6oD4F5Vv3K0zV33vQmVd6AvJz29OUtv6dMmGl6VDeNgeibw/U/sV2dZh4nN2smmcvowahw4VyJF8C5ZWbpuCaM3OF07dPbivoK8LlkZx5EF2OWV2DE8bVtiprYJoRmtP2cs0WGqYkoT9d1qMh0D0ZNtAv7inXVf1Haaq0p24zhKos9qae/m/nBjGlLwC+B6KhzR2DL4SyRpYO07Fjh6yS2/Nk/ld8Cng==
+ bh=dzEAYbuzQq7kWIaCobdlMT1UGL+EjI3oUibzL60t2iM=;
+ b=L+43dDgcaiE5HnZ2nkwDA7iNm0U3DgiAah3Q4b6bmbEBF+uwfOTgS2aLAwfig55MXVKb9+rcdUzmB8Ow9NJDECJuXZSqdRajiczin2BtIFRS7vlQ3RwDGEISHNooKstzb1JnT1LDtHyw90kyxThtFDicy5U0jTfQQtGRfYV17mhD6boPvSzOkX/H0R1MVjAriN1bfX4mBU6TNln4QyoBwaRSWW5ZYGquOloBlnbddP/+8rBw9dQ7ppGDb4k6h4Gfherr8aUDG2gv6bPMid9DDYhz8ULy39hoFsDN8WnJPMBE8VCzm9W4f+UpN98O4GqfwitcxrpaBedCZsZ8q1bmBg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ARbD14h42wKT+hoa9jYlex8DCEdlnracvHxWNYQo0Vc=;
- b=ZHmvG5Ek5eNtu8xIJ+ufor5lbwCxdxuxA9HUM75KyvtMDhDy0vdNzyamjEokr9LqqXwsvVn+zq3XlPPWgWn3E8ntp/6CU3bDNh5QwkYZo11peSbMlx9gnjVDiad7Xyr+MbmdEROPysoZPNozTbUZJsCA0Qfgpw4HkAl5HodLvyJK1BNTdsOajMZU3eFKVCCwR933VZON7yvnM8r/iK0IvT9Qkf6pzUedV9AGihnI7YYJvJUzypsoXX9i3X7eQshsFVUT90Ka6A3n4WOq+nvx39pFW87UOty19WPpe7DBSS48GH1VdmVovg0FdsPL9WVWosFlNmAu2LOn2f1SlFvfeA==
+ bh=dzEAYbuzQq7kWIaCobdlMT1UGL+EjI3oUibzL60t2iM=;
+ b=m8SjvAgKP8CmTIb2CqaDKMIlXg+FDHv23XOnuqVECODjLmzB9utvReQ8T6pCJXbOCTl3niCDdod6bkCvCN+chxUaUMRv7WF2Kmsx+GoTOPhuI6FdEaoPDSOk8GmgvjVfDej8NWDSwYftZ0+FVPMnrIwFZBQVVJsQzrvb2zhdiXyj9pQ1Jrn0RXCdQ+JtegLA1jvkO0w5ngBrFF6qj7RB+TQdl7VNEhOxF0GJHPfssNbb79DZyuH3lnfBbCOKzlwuwaQCQay2S06tqVECzgOnMeFJbZruSdk2vdBCj4/HDpxvOVftHT6uJUv60XAThvBG+jJAZ7zxe3SojQMfzIOl0w==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
  by PA2PR04MB10347.eurprd04.prod.outlook.com (2603:10a6:102:424::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.32; Wed, 30 Oct
- 2024 09:55:06 +0000
+ 2024 09:55:12 +0000
 Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
  ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
  ([fe80::a7c2:e2fa:8e04:40db%7]) with mapi id 15.20.8093.027; Wed, 30 Oct 2024
- 09:55:06 +0000
+ 09:55:12 +0000
 From: Wei Fang <wei.fang@nxp.com>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -77,9 +77,9 @@ Cc: imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	alexander.stein@ew.tq-group.com
-Subject: [PATCH v6 net-next 04/12] net: enetc: add initial netc-blk-ctrl driver support
-Date: Wed, 30 Oct 2024 17:39:15 +0800
-Message-Id: <20241030093924.1251343-5-wei.fang@nxp.com>
+Subject: [PATCH v6 net-next 05/12] net: enetc: extract common ENETC PF parts for LS1028A and i.MX95 platforms
+Date: Wed, 30 Oct 2024 17:39:16 +0800
+Message-Id: <20241030093924.1251343-6-wei.fang@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241030093924.1251343-1-wei.fang@nxp.com>
 References: <20241030093924.1251343-1-wei.fang@nxp.com>
@@ -95,617 +95,800 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|PA2PR04MB10347:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97f6be59-d8e3-4c04-b90e-08dcf8c8eed2
+X-MS-Office365-Filtering-Correlation-Id: 2880330b-7bc8-4160-9ce5-08dcf8c8f275
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?y72Eqvoixa9EY6UCPONxyaiDuMKMBl7HTGVTOGItea7ZO1BGzqjDzf6E5cGx?=
- =?us-ascii?Q?myxGM5kUAOyWgqQ60M3DJZ5hEsRrDf2DEWykNYfXA8ViNRxmFrSyKFRLW6w4?=
- =?us-ascii?Q?/6Li9vsAH+GnJ+ehjy78wx1rYxNFmqRTGkhvu6yxDdkjhWWpPFlxIQ7vMo2k?=
- =?us-ascii?Q?FkBUDERVznzrvn3DtMbRNDnPFvUtEgrjln7av4SXmo2kz3hEsZVtIPdwMfwb?=
- =?us-ascii?Q?0bHdfAzTYduSrp+C6ZsUEkqhfv2Ixs1yngg/Gdmv0THr8a72Mlsxfz5Qna/d?=
- =?us-ascii?Q?+HcXdvxIZxKMXdebz4+LgKGAo7a2px7jUX0iK6tKrrxVmdmgWaDKdiN47IGe?=
- =?us-ascii?Q?I7WdtonomgUCMKPkgZF1c5/c1wSg7HnW3Mj76lgg4wkoeKrSdxtt41vy+Pj7?=
- =?us-ascii?Q?z5uGD9a4ms76DKwoyLBAIj2vLGB9XcOIFkfwVxukHyokqR4Z/+3DTXQRXpib?=
- =?us-ascii?Q?bSsz/6CNb4D+fuH/7bHRJqisewFfNt7fpzlV3IcM6ihhPMofiE6IEPj9NI1b?=
- =?us-ascii?Q?qrSq866wPyV59lxtBQmM6PUmQi81timwruNUjnP+oLNzh0x9TnM0IE8FPHQ6?=
- =?us-ascii?Q?ZxopEjAEvbz5k1Es18IouZNOAhiVvygW9jNftzccF3t/dbUbEem3Q1+avWgG?=
- =?us-ascii?Q?dPIlw/SCt4Gn/r94NXPdDdFQTtOz6IFRIP6wpjzLZ6YjGQvAKhOqOfpfGmam?=
- =?us-ascii?Q?bwWjylKz27uMASEVSwac6Akx0+iWhr6fh6qwn0OuZNI6gWFAzvt4W00rbZXl?=
- =?us-ascii?Q?iKaAncElJPPWb+Spr65JVVw3WN6m7MkkU4xdk/8ghQI9u/SvIQFMOjMgQHV9?=
- =?us-ascii?Q?OzupHd/AtRMABzneSXqto751jcc2scJZvmGh4QyET8QhkkUcYNkO/svVp0Nl?=
- =?us-ascii?Q?yRrm7ZCZ6Q35E4yu7P/mNRUyVxNKl3852RQCZPvtDdXtcIerydxXI5OIXchC?=
- =?us-ascii?Q?8YmKytHxY/NzsZBcYLXw62vX7kQ0wxwfER7d/PvS2URmR4twgjJ7S7QG3H2B?=
- =?us-ascii?Q?3jXC8qQfd9dLNU8du5oEHOFdgQpcF4KSbGccdT5Yn9IGb2G3Ev01JuSlNWXB?=
- =?us-ascii?Q?hXz6BvY/XDWyZdMZZWa11zRujkrnZUEo4alE5i1bKwfgxtm98sSh/tM6IAGX?=
- =?us-ascii?Q?5WxtWTDoSdrfBVmoPDR5n4IXccKhmtgfku0CDrA8/DdUDbQ4fVujzhkkkaSO?=
- =?us-ascii?Q?Uf1yn05QXs103O46nYe7ztoEv+Bxvaud+JnHqjlx2WC4Y/DSZT4TRT/eUcCV?=
- =?us-ascii?Q?xZXg8R1AScIGi7BE+K03T/noWIsJjxHUV/J//WKVNa8wf35YPko8C3OCJi+d?=
- =?us-ascii?Q?A3Pgco8wvvFeuivt60eHVOoMzzbCaw+EJThZ1wFHnMUKz8wbW9Qg/w/xSgNO?=
- =?us-ascii?Q?po3c5FSEvOa00SMJHoOZrOG/Gk1d?=
+	=?us-ascii?Q?OtgKcFTaPn/9XfFE+Hol3PVLubkADjJb6AXNzWoE3Pyh5EAZZedI4uD4zRiE?=
+ =?us-ascii?Q?JKhw8PUQf8VPNHX2a5D60/D/m9QUvmM+e2/YcTB32JRoK1lg1bMkPWgjw6Fc?=
+ =?us-ascii?Q?YZ84fAMbBvbm+neGErbjEJWO4hBS6PLP5GSeTgVP6p7lgQ9RvahLajf9cjG+?=
+ =?us-ascii?Q?WDXT1CuRgmY98P+Y4wwFpJ8/03gyMLiHXy+a6mB5eEUYut+8779F8DLCXVHs?=
+ =?us-ascii?Q?IvpUrFzR6G9pBEhlK10C8lMlWP3sUZ4if1VBuWt3WjBoI+LgU5i/xXqiNoJq?=
+ =?us-ascii?Q?tRO7mhjlHhGe5RHce5MvoCjvuy3ah5rQJ2wCSmhvc02UA/mZjViVql6k7G64?=
+ =?us-ascii?Q?nPVEP1FZhS6W+2GdaYxfIagOOU8DI1iOwDLkSZwdsZF8465m/xdoalw6KEGA?=
+ =?us-ascii?Q?Lk94kBmqpL7tdNRo8J+772KJ0qGLyZZpKtiJ8ltB4+QwRHq7r5YsHSXsv+v2?=
+ =?us-ascii?Q?taQyc3shyAnXMhMSWLwqYGCMJRI5qNA3FSzv/Mp8t1yqiux7iSFo7qx7Uh+a?=
+ =?us-ascii?Q?qZ8p1Ey2RluDtIJ/UcEBsP21w3UyVP5uwal54wuaOy8ZgdujmYG1ADgjLpz6?=
+ =?us-ascii?Q?pRWtQsNNbvtzPc5cBokkmk88iMKFM97XMO0erT+bbBUA0DGT62MSJbX6FMKU?=
+ =?us-ascii?Q?G9KEpNfoCWANGc6AcfV0QwszJpvSv+lGmdCGbaT3X/2BJ7ENCUAlnmmizF18?=
+ =?us-ascii?Q?eInLZTBBzshLXioKsECNo/LFAz25y6VbOxQVgDoesAmuXocpJHwCM2IEzVin?=
+ =?us-ascii?Q?apsossyFHdq8cH7aSXJ6Q0yVP84oNPe/iBhsgd585GH5Ds19qb1fsbgZzZfk?=
+ =?us-ascii?Q?m1USYQdEiD4OoQtz2Y8swB6Dc4RE7sknZlC0BiW61/wVUhbHMbAsKysGZ7ac?=
+ =?us-ascii?Q?Yqs/rxjSOz9L0IyJWu2hKQCzqBpDAENIy5Wph7UQBC3H30nEKNbOgeEt4MY6?=
+ =?us-ascii?Q?w1EEt74VdE9XXtU1VeuyND2tbsudMVu66OhhOptFRJvHRFPYtUVtCWUU/14V?=
+ =?us-ascii?Q?/OhRoKCv9eUdFlEsbhmM8F/9OiAFSe4AdLOEXPzv49i/8ty0dLzYDY3XjtLb?=
+ =?us-ascii?Q?XODiL7Jn7EhjPQ6rLCqMYPI4UmwoMIV9PAefyensKgFytlnwSmKeywi5RS02?=
+ =?us-ascii?Q?2LDTGwcO5ehbIuWPsPWn6w4W5XBcGQF8+hh9rbGha9qCtj5sUi+lO+6KvEjC?=
+ =?us-ascii?Q?vV+PFNoy7Qrpj0cuRCAqfhKeoaJeNUxZaYa0D5JXnWtze/qKc7MTMZqo9845?=
+ =?us-ascii?Q?Xbv1NmCMfj/cuz+GGMCMJzgFE6TVmoKOnhsT+RW6GpJ9oglICcY40dBh8iMg?=
+ =?us-ascii?Q?pXdmCYIuZWaJG7ve0gPXvzSFs5v25AhJH3JXfenX12CNC/fe/kS4dh05RfK4?=
+ =?us-ascii?Q?TcsQgFVH4cMcBE7hj0pxiw1X+R1f?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vy6Umd4q3DNXAJRIT0pfwpEM23xQfVLgPF3PtU400nSqCxtYxSRilsA1c4DO?=
- =?us-ascii?Q?g0GFRjeSYYSNM77ui3dCn+fy7mbtmZoYr0NGOYj74/j9ypwUftLnnvdlXBg5?=
- =?us-ascii?Q?uiNQtO/fIUFAl3dcY2FRkdXwR1H+E3bT0SnTsHxQBy3rooxeDB6/P7XxL1bt?=
- =?us-ascii?Q?Jbg5EDNrixIIinBNvZ4ZMmS3VWiQ93Nto84KYtEm6tpFm0n1hL9jlB93dTw/?=
- =?us-ascii?Q?6cCYBZECpTFQsRXioEO4jWp4H4AlM668QHhdLuPoSmvpk1hGAaKfOJwkvreA?=
- =?us-ascii?Q?fyrSsa3yOJ6B8q9dcMqs/TPczeVo8o6V4GPjy6eZrXo3znxpqhcU4zw3AwcO?=
- =?us-ascii?Q?VycgLGV6CxxHMBsFj80aeXJHuruF9Uz8ayrhS0N+ycVQtvThiLVIMNmba6Pp?=
- =?us-ascii?Q?iVNVDtXkJ8gQb6gQK13EzyFGa8Sx+tPlmPRzohN5KShANrLvsdpekIZjop/g?=
- =?us-ascii?Q?9+rVIKbJPfo1F+g5TrJftul7GCOSd1gAcZdanZ3uNC9YnfVVcUpYBvK1lojl?=
- =?us-ascii?Q?s0GayesPhQlYrlHPB83AcxBlc6OpZQVwmTdQRcRoNPOdz9mGRUlagPXq1UAz?=
- =?us-ascii?Q?XWDJ6we7WDUMdc1FXxBN1kwgRCW1cXivKG0udfz1pktncoe7quxqjTiQxpfh?=
- =?us-ascii?Q?MQ/ME+OWcSojsjXtbxeY0qmzh0qm3qNLm/rzb6vedK6HxpvLX8nZqV6zFpsf?=
- =?us-ascii?Q?4SJbQjB1lRfD1fwGWjFV/nnfTJ9cYYt+JdW5QSZV2f9NERfGPr7xGxib0YtY?=
- =?us-ascii?Q?V5amjXhqVkYovy2CFXpFEnxRGnuJgHdmKlLpG2Dkclwc+l3PQScvKFwteNBY?=
- =?us-ascii?Q?B+F+327sLYDcyylvlDaZMePFQQruf76R1Upd7rkG7eUl3VcqKi+8ExS3G+eY?=
- =?us-ascii?Q?gVzQduLeyF3qodTimdJhGGXOmvaFj8ZRrHBf4vuAdzbr6CfTI6nn5Ev7KvwY?=
- =?us-ascii?Q?PD+yuzoJPTiEKS9sHLBcMDmf98jVm3euWTGrd6mwC2wDPCRWGxZKFchFYSs5?=
- =?us-ascii?Q?sX8It8wA5W+xpNRn23B6/gh8TRLkXGEhvbnPk27r+6xFQeHNRacIXIVxvkrD?=
- =?us-ascii?Q?SJUdWtz6yrx8PWLjhdtDgxJygoV1SwNlekarDgQdIKB3h5Ed9O7pYPK2Z8Ci?=
- =?us-ascii?Q?ev7LyQPWTvfvstxWLHkt/rSnWcObM6VJIh+V0huqXs4/dXqsciP8jRu9Pupx?=
- =?us-ascii?Q?fGM4WKKewZjYz6WygGuCCzTTy2si4ujiAfh+pSO2a0ymdLlNhoPoIEZR3Q4c?=
- =?us-ascii?Q?OOyT2vMzIIvZrwP/MYGvwWe6tVffL0CR1GH5KIZhFRxFQIy7rro/QPOeQf6L?=
- =?us-ascii?Q?8ACa+anKVQ+OCnQYVi8+iYHi6HrgaqVT8mfLGxY9z0jSUWZBXVWCbE0Twdq4?=
- =?us-ascii?Q?TKZdBFTU5ETWWBDPBbe1/mE2bXb0ovp6mdCDKPOwT8/5n3Ps6jFMD2VBE3GL?=
- =?us-ascii?Q?n63TJ0hhSNZ8qDQWBNEKj/KA4v9DXHLayivuuW/cLaTP3TOEip1VOtXaYlEF?=
- =?us-ascii?Q?Mq3aPmQig3LtfY98CVdA+pLknZC8jUKmeZnZF2xMioDu1VEGQpimuPAT1yKI?=
- =?us-ascii?Q?pUBielf/JWozQ+AwAAu8mLDJhfS0je3vZS29nGZq?=
+	=?us-ascii?Q?7Vt2ZTa2dM2h7I/wBKEV6FheJPxbyt14DBZyVfmYaE/JlAiT4IxSLS/UKzKC?=
+ =?us-ascii?Q?5betKfJ+PFtQItN9NmtytakIO+VPX/bqoJggeAKvgBAERffco0Un+68JAE0D?=
+ =?us-ascii?Q?IxnVBW+oW/I1A1cbJuo1iR3LsdRtMGORvsSHzA+4pPIkHQVZro5FU78JsV1o?=
+ =?us-ascii?Q?aHxZBzAZwbxOwhauVs4E9C/TKUy1QQptYh55TimVGrb5FWD1r1LCVx8LLH2r?=
+ =?us-ascii?Q?YZwKnzreI6CHnYIA+UHAnSUwjEiWomPAQDpmyutGHkuQtPjUS/j9i0hZOLUK?=
+ =?us-ascii?Q?FMw0TQ8lbEbwXqhWQG/j/KsDw9Dfkb75Dr1OdL9GWYCF885HpxiQ2Octay7Y?=
+ =?us-ascii?Q?BMjJawy2nj6+S7TcDVekwSTQGzTQadTiL5BRW/jtMP2uIfnGKfMmeuE5aDoq?=
+ =?us-ascii?Q?biXN5TEfxK0QHlDw3Z4lJa59EnXWhlVqOhPOlq1WJM57uo1l/MEJ3ZWBgg/C?=
+ =?us-ascii?Q?kWTFVBo9viaMIPplxzrpxXs/tdtRPnInfZ3cf45SxQiwSi8BNO2A02eh8ft8?=
+ =?us-ascii?Q?5Hwqor7J3qrrQltUKZeVDA5mrxBWOCKTMeU9FVPbiq+azW9wGtm1Iz++g1wO?=
+ =?us-ascii?Q?WwbF/ap62THd29ZyB1bIayn4M656n+rBP/sBFms5YV8Iz2YIz12mSqwx916D?=
+ =?us-ascii?Q?RB00xUzVYbzV/ZqEhAOL762DapRTkej7DaG+vg5Ij4MtV9pyni0kRQ4gN9hn?=
+ =?us-ascii?Q?XSefaQq/+0FYjawhcZlVdaxR3Sho4tCpHjIUIhDIo0S+tuiNkOmSWf9qvEAa?=
+ =?us-ascii?Q?TOST8pzgaSUpLGLpVIBbV0vwRWWaQ5ZeDU8kIYuq/YPpY3n13WuJ3hiL81kr?=
+ =?us-ascii?Q?rbNuDMnvuN0vlVyjAidmYJhpzS/Mgru3s9rtIUClP+KRjthpG4VNYFHyfUsx?=
+ =?us-ascii?Q?6iQrRQ+n0kByRnQXX5cEc45JwIoJIRYZb6qPnYy6YmGoD+MXNAPuecqOcy/N?=
+ =?us-ascii?Q?XfSefGOC6/Y/PewdT4Zo3596dg2vAMzdFdC8+ZWZOzynZ22Locc5SRKT4ZeH?=
+ =?us-ascii?Q?s0fHbZgNYB308iYZ2VKtCSiVU71bpqdqKJFeJAmNmdUCXJ+fdJMRAOljNQ79?=
+ =?us-ascii?Q?jVp/ZIjp9g6hRr5Ku6R0Hx4cdAEJLJOVOxKlPrzkAinrmJYfHdJO/Uela4RI?=
+ =?us-ascii?Q?VckPewKuaEX+Xn4xdVSmPL9EvgEq98Eqj2SK+5Xhixn1LlxZr0Cn+Em9sdB+?=
+ =?us-ascii?Q?XOPxV9+/lqThGJqojYpMpXhWJ1VhXYgdzjIukiGTLqfb34jygL0W5JmzWP18?=
+ =?us-ascii?Q?yxWBdKB7IlG0EugfLm3MWQSdc/J5gZqCDEG+UjnL/rClP6tfFPx3oixURvZc?=
+ =?us-ascii?Q?gdCah5PVhOH6AWYF/qDl+jyHweV2XQDI/hb5Yn62CH+gUTVml7z2GkTrTT0z?=
+ =?us-ascii?Q?kbJZhbiYLnmbjrYMOw1X06iGRWaN0TZMCrbd8KtuPo/T0R0NfqDyhMSIfCaf?=
+ =?us-ascii?Q?vsianTjSJo7BqVJ5eLBpONKkE0wq/lCeIhIvvDVrU0Mf6edZnHOlfqgb8TYe?=
+ =?us-ascii?Q?f0fLVqluwWuU+aZvxy8SruzLT2+yz0NOvGloBA3Sy3j+htkwjQkJNZ0zxBUR?=
+ =?us-ascii?Q?kcISzfQcLzwm/B7qpVVlU5ZdWWOCnBxJYkUp6mwU?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97f6be59-d8e3-4c04-b90e-08dcf8c8eed2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2880330b-7bc8-4160-9ce5-08dcf8c8f275
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 09:55:06.6619
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 09:55:12.7514
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iOJim/FYDjGT4hKw85SJnK6cKwTr1UNIF/oNC7jHnFtDqswGZVPywSx7wLctqP1eOxMj1D5pd2xsbKswmoh44w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: jPt8zz2uTZvviF4/MqRxMmCssXh0iJschePCRN0/cNfPGFDA0GWc9sgnfIqGpoG3txohdhOL92GRDAdATVJ/hg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10347
 
-The netc-blk-ctrl driver is used to configure Integrated Endpoint
-Register Block (IERB) and Privileged Register Block (PRB) of NETC.
-For i.MX platforms, it is also used to configure the NETCMIX block.
-
-The IERB contains registers that are used for pre-boot initialization,
-debug, and non-customer configuration. The PRB controls global reset
-and global error handling for NETC. The NETCMIX block is mainly used
-to set MII protocol and PCS protocol of the links, it also contains
-settings for some other functions.
-
-Note the IERB configuration registers can only be written after being
-unlocked by PRB, otherwise, all write operations are inhibited. A warm
-reset is performed when the IERB is unlocked, and it results in an FLR
-to all NETC devices. Therefore, all NETC device drivers must be probed
-or initialized after the warm reset is finished.
+The ENETC PF driver of LS1028A (rev 1.0) is incompatible with the version
+used on the i.MX95 platform (rev 4.1), except for the station interface
+(SI) part. To reduce code redundancy and prepare for a new driver for rev
+4.1 and later, extract shared interfaces from enetc_pf.c and move them to
+enetc_pf_common.c. This refactoring lays the groundwork for compiling
+enetc_pf_common.c into a shared driver for both platforms' PF drivers.
 
 Signed-off-by: Wei Fang <wei.fang@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
-v6: only add some opening comments at the beginning of netc_blk_ctrl.c
+v6: 
+1. add enetc_pf_common.h and put the prototypes of functions exported by
+enetc_pf_common.c into enetc_pf_common.h
+2. add linux/of.h to enetc_pf.c due to undeclared function
+'of_device_is_available'
 ---
- drivers/net/ethernet/freescale/enetc/Kconfig  |  14 +
- drivers/net/ethernet/freescale/enetc/Makefile |   3 +
- .../ethernet/freescale/enetc/netc_blk_ctrl.c  | 445 ++++++++++++++++++
- include/linux/fsl/netc_global.h               |  19 +
- 4 files changed, 481 insertions(+)
- create mode 100644 drivers/net/ethernet/freescale/enetc/netc_blk_ctrl.c
- create mode 100644 include/linux/fsl/netc_global.h
+ drivers/net/ethernet/freescale/enetc/Makefile |   2 +-
+ .../net/ethernet/freescale/enetc/enetc_pf.c   | 300 +-----------------
+ .../freescale/enetc/enetc_pf_common.c         | 295 +++++++++++++++++
+ .../freescale/enetc/enetc_pf_common.h         |  17 +
+ 4 files changed, 319 insertions(+), 295 deletions(-)
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_pf_common.h
 
-diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
-index 4d75e6807e92..51d80ea959d4 100644
---- a/drivers/net/ethernet/freescale/enetc/Kconfig
-+++ b/drivers/net/ethernet/freescale/enetc/Kconfig
-@@ -75,3 +75,17 @@ config FSL_ENETC_QOS
- 	  enable/disable from user space via Qos commands(tc). In the kernel
- 	  side, it can be loaded by Qos driver. Currently, it is only support
- 	  taprio(802.1Qbv) and Credit Based Shaper(802.1Qbu).
-+
-+config NXP_NETC_BLK_CTRL
-+	tristate "NETC blocks control driver"
-+	help
-+	  This driver configures Integrated Endpoint Register Block (IERB) and
-+	  Privileged Register Block (PRB) of NETC. For i.MX platforms, it also
-+	  includes the configuration of NETCMIX block.
-+	  The IERB contains registers that are used for pre-boot initialization,
-+	  debug, and non-customer configuration. The PRB controls global reset
-+	  and global error handling for NETC. The NETCMIX block is mainly used
-+	  to set MII protocol and PCS protocol of the links, it also contains
-+	  settings for some other functions.
-+
-+	  If compiled as module (M), the module name is nxp-netc-blk-ctrl.
 diff --git a/drivers/net/ethernet/freescale/enetc/Makefile b/drivers/net/ethernet/freescale/enetc/Makefile
-index b13cbbabb2ea..737c32f83ea5 100644
+index 737c32f83ea5..8f4d8e9c37a0 100644
 --- a/drivers/net/ethernet/freescale/enetc/Makefile
 +++ b/drivers/net/ethernet/freescale/enetc/Makefile
-@@ -19,3 +19,6 @@ fsl-enetc-mdio-y := enetc_pci_mdio.o enetc_mdio.o
+@@ -4,7 +4,7 @@ obj-$(CONFIG_FSL_ENETC_CORE) += fsl-enetc-core.o
+ fsl-enetc-core-y := enetc.o enetc_cbdr.o enetc_ethtool.o
  
- obj-$(CONFIG_FSL_ENETC_PTP_CLOCK) += fsl-enetc-ptp.o
- fsl-enetc-ptp-y := enetc_ptp.o
-+
-+obj-$(CONFIG_NXP_NETC_BLK_CTRL) += nxp-netc-blk-ctrl.o
-+nxp-netc-blk-ctrl-y := netc_blk_ctrl.o
-diff --git a/drivers/net/ethernet/freescale/enetc/netc_blk_ctrl.c b/drivers/net/ethernet/freescale/enetc/netc_blk_ctrl.c
-new file mode 100644
-index 000000000000..bcb8eefeb93c
---- /dev/null
-+++ b/drivers/net/ethernet/freescale/enetc/netc_blk_ctrl.c
-@@ -0,0 +1,445 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * NXP NETC Blocks Control Driver
-+ *
-+ * Copyright 2024 NXP
-+ *
-+ * This driver is used for pre-initialization of NETC, such as PCS and MII
-+ * protocols, LDID, warm reset, etc. Therefore, all NETC device drivers can
-+ * only be probed after the netc-blk-crtl driver has completed initialization.
-+ * In addition, when the system enters suspend mode, IERB, PRB, and NETCMIX
-+ * will be powered off, except for WOL. Therefore, when the system resumes,
-+ * these blocks need to be reinitialized.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/debugfs.h>
-+#include <linux/delay.h>
-+#include <linux/fsl/netc_global.h>
-+#include <linux/module.h>
+ obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
+-fsl-enetc-y := enetc_pf.o
++fsl-enetc-y := enetc_pf.o enetc_pf_common.o
+ fsl-enetc-$(CONFIG_PCI_IOV) += enetc_msg.o
+ fsl-enetc-$(CONFIG_FSL_ENETC_QOS) += enetc_qos.o
+ 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index 8f6b0bf48139..36fc93725309 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -2,19 +2,17 @@
+ /* Copyright 2017-2019 NXP */
+ 
+ #include <linux/unaligned.h>
+-#include <linux/mdio.h>
+ #include <linux/module.h>
+-#include <linux/fsl/enetc_mdio.h>
 +#include <linux/of.h>
-+#include <linux/of_device.h>
+ #include <linux/of_platform.h>
+-#include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include <linux/pcs-lynx.h>
+ #include "enetc_ierb.h"
+-#include "enetc_pf.h"
++#include "enetc_pf_common.h"
+ 
+ #define ENETC_DRV_NAME_STR "ENETC PF driver"
+ 
+-static void enetc_pf_get_primary_mac_addr(struct enetc_hw *hw, int si, u8 *addr)
++void enetc_pf_get_primary_mac_addr(struct enetc_hw *hw, int si, u8 *addr)
+ {
+ 	u32 upper = __raw_readl(hw->port + ENETC_PSIPMAR0(si));
+ 	u16 lower = __raw_readw(hw->port + ENETC_PSIPMAR1(si));
+@@ -23,8 +21,8 @@ static void enetc_pf_get_primary_mac_addr(struct enetc_hw *hw, int si, u8 *addr)
+ 	put_unaligned_le16(lower, addr + 4);
+ }
+ 
+-static void enetc_pf_set_primary_mac_addr(struct enetc_hw *hw, int si,
+-					  const u8 *addr)
++void enetc_pf_set_primary_mac_addr(struct enetc_hw *hw, int si,
++				   const u8 *addr)
+ {
+ 	u32 upper = get_unaligned_le32(addr);
+ 	u16 lower = get_unaligned_le16(addr + 4);
+@@ -33,20 +31,6 @@ static void enetc_pf_set_primary_mac_addr(struct enetc_hw *hw, int si,
+ 	__raw_writew(lower, hw->port + ENETC_PSIPMAR1(si));
+ }
+ 
+-static int enetc_pf_set_mac_addr(struct net_device *ndev, void *addr)
+-{
+-	struct enetc_ndev_priv *priv = netdev_priv(ndev);
+-	struct sockaddr *saddr = addr;
+-
+-	if (!is_valid_ether_addr(saddr->sa_data))
+-		return -EADDRNOTAVAIL;
+-
+-	eth_hw_addr_set(ndev, saddr->sa_data);
+-	enetc_pf_set_primary_mac_addr(&priv->si->hw, 0, saddr->sa_data);
+-
+-	return 0;
+-}
+-
+ static void enetc_set_vlan_promisc(struct enetc_hw *hw, char si_map)
+ {
+ 	u32 val = enetc_port_rd(hw, ENETC_PSIPVMR);
+@@ -393,56 +377,6 @@ static int enetc_pf_set_vf_spoofchk(struct net_device *ndev, int vf, bool en)
+ 	return 0;
+ }
+ 
+-static int enetc_setup_mac_address(struct device_node *np, struct enetc_pf *pf,
+-				   int si)
+-{
+-	struct device *dev = &pf->si->pdev->dev;
+-	struct enetc_hw *hw = &pf->si->hw;
+-	u8 mac_addr[ETH_ALEN] = { 0 };
+-	int err;
+-
+-	/* (1) try to get the MAC address from the device tree */
+-	if (np) {
+-		err = of_get_mac_address(np, mac_addr);
+-		if (err == -EPROBE_DEFER)
+-			return err;
+-	}
+-
+-	/* (2) bootloader supplied MAC address */
+-	if (is_zero_ether_addr(mac_addr))
+-		enetc_pf_get_primary_mac_addr(hw, si, mac_addr);
+-
+-	/* (3) choose a random one */
+-	if (is_zero_ether_addr(mac_addr)) {
+-		eth_random_addr(mac_addr);
+-		dev_info(dev, "no MAC address specified for SI%d, using %pM\n",
+-			 si, mac_addr);
+-	}
+-
+-	enetc_pf_set_primary_mac_addr(hw, si, mac_addr);
+-
+-	return 0;
+-}
+-
+-static int enetc_setup_mac_addresses(struct device_node *np,
+-				     struct enetc_pf *pf)
+-{
+-	int err, i;
+-
+-	/* The PF might take its MAC from the device tree */
+-	err = enetc_setup_mac_address(np, pf, 0);
+-	if (err)
+-		return err;
+-
+-	for (i = 0; i < pf->total_vfs; i++) {
+-		err = enetc_setup_mac_address(NULL, pf, i + 1);
+-		if (err)
+-			return err;
+-	}
+-
+-	return 0;
+-}
+-
+ static void enetc_port_assign_rfs_entries(struct enetc_si *si)
+ {
+ 	struct enetc_pf *pf = enetc_si_priv(si);
+@@ -775,187 +709,6 @@ static const struct net_device_ops enetc_ndev_ops = {
+ 	.ndo_xdp_xmit		= enetc_xdp_xmit,
+ };
+ 
+-static void enetc_pf_netdev_setup(struct enetc_si *si, struct net_device *ndev,
+-				  const struct net_device_ops *ndev_ops)
+-{
+-	struct enetc_ndev_priv *priv = netdev_priv(ndev);
+-
+-	SET_NETDEV_DEV(ndev, &si->pdev->dev);
+-	priv->ndev = ndev;
+-	priv->si = si;
+-	priv->dev = &si->pdev->dev;
+-	si->ndev = ndev;
+-
+-	priv->msg_enable = (NETIF_MSG_WOL << 1) - 1;
+-	ndev->netdev_ops = ndev_ops;
+-	enetc_set_ethtool_ops(ndev);
+-	ndev->watchdog_timeo = 5 * HZ;
+-	ndev->max_mtu = ENETC_MAX_MTU;
+-
+-	ndev->hw_features = NETIF_F_SG | NETIF_F_RXCSUM |
+-			    NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX |
+-			    NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_LOOPBACK |
+-			    NETIF_F_HW_CSUM | NETIF_F_TSO | NETIF_F_TSO6;
+-	ndev->features = NETIF_F_HIGHDMA | NETIF_F_SG | NETIF_F_RXCSUM |
+-			 NETIF_F_HW_VLAN_CTAG_TX |
+-			 NETIF_F_HW_VLAN_CTAG_RX |
+-			 NETIF_F_HW_CSUM | NETIF_F_TSO | NETIF_F_TSO6;
+-	ndev->vlan_features = NETIF_F_SG | NETIF_F_HW_CSUM |
+-			      NETIF_F_TSO | NETIF_F_TSO6;
+-
+-	if (si->num_rss)
+-		ndev->hw_features |= NETIF_F_RXHASH;
+-
+-	ndev->priv_flags |= IFF_UNICAST_FLT;
+-	ndev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
+-			     NETDEV_XDP_ACT_NDO_XMIT | NETDEV_XDP_ACT_RX_SG |
+-			     NETDEV_XDP_ACT_NDO_XMIT_SG;
+-
+-	if (si->hw_features & ENETC_SI_F_PSFP && !enetc_psfp_enable(priv)) {
+-		priv->active_offloads |= ENETC_F_QCI;
+-		ndev->features |= NETIF_F_HW_TC;
+-		ndev->hw_features |= NETIF_F_HW_TC;
+-	}
+-
+-	/* pick up primary MAC address from SI */
+-	enetc_load_primary_mac_addr(&si->hw, ndev);
+-}
+-
+-static int enetc_mdio_probe(struct enetc_pf *pf, struct device_node *np)
+-{
+-	struct device *dev = &pf->si->pdev->dev;
+-	struct enetc_mdio_priv *mdio_priv;
+-	struct mii_bus *bus;
+-	int err;
+-
+-	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
+-	if (!bus)
+-		return -ENOMEM;
+-
+-	bus->name = "Freescale ENETC MDIO Bus";
+-	bus->read = enetc_mdio_read_c22;
+-	bus->write = enetc_mdio_write_c22;
+-	bus->read_c45 = enetc_mdio_read_c45;
+-	bus->write_c45 = enetc_mdio_write_c45;
+-	bus->parent = dev;
+-	mdio_priv = bus->priv;
+-	mdio_priv->hw = &pf->si->hw;
+-	mdio_priv->mdio_base = ENETC_EMDIO_BASE;
+-	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
+-
+-	err = of_mdiobus_register(bus, np);
+-	if (err)
+-		return dev_err_probe(dev, err, "cannot register MDIO bus\n");
+-
+-	pf->mdio = bus;
+-
+-	return 0;
+-}
+-
+-static void enetc_mdio_remove(struct enetc_pf *pf)
+-{
+-	if (pf->mdio)
+-		mdiobus_unregister(pf->mdio);
+-}
+-
+-static int enetc_imdio_create(struct enetc_pf *pf)
+-{
+-	struct device *dev = &pf->si->pdev->dev;
+-	struct enetc_mdio_priv *mdio_priv;
+-	struct phylink_pcs *phylink_pcs;
+-	struct mii_bus *bus;
+-	int err;
+-
+-	bus = mdiobus_alloc_size(sizeof(*mdio_priv));
+-	if (!bus)
+-		return -ENOMEM;
+-
+-	bus->name = "Freescale ENETC internal MDIO Bus";
+-	bus->read = enetc_mdio_read_c22;
+-	bus->write = enetc_mdio_write_c22;
+-	bus->read_c45 = enetc_mdio_read_c45;
+-	bus->write_c45 = enetc_mdio_write_c45;
+-	bus->parent = dev;
+-	bus->phy_mask = ~0;
+-	mdio_priv = bus->priv;
+-	mdio_priv->hw = &pf->si->hw;
+-	mdio_priv->mdio_base = ENETC_PM_IMDIO_BASE;
+-	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-imdio", dev_name(dev));
+-
+-	err = mdiobus_register(bus);
+-	if (err) {
+-		dev_err(dev, "cannot register internal MDIO bus (%d)\n", err);
+-		goto free_mdio_bus;
+-	}
+-
+-	phylink_pcs = lynx_pcs_create_mdiodev(bus, 0);
+-	if (IS_ERR(phylink_pcs)) {
+-		err = PTR_ERR(phylink_pcs);
+-		dev_err(dev, "cannot create lynx pcs (%d)\n", err);
+-		goto unregister_mdiobus;
+-	}
+-
+-	pf->imdio = bus;
+-	pf->pcs = phylink_pcs;
+-
+-	return 0;
+-
+-unregister_mdiobus:
+-	mdiobus_unregister(bus);
+-free_mdio_bus:
+-	mdiobus_free(bus);
+-	return err;
+-}
+-
+-static void enetc_imdio_remove(struct enetc_pf *pf)
+-{
+-	if (pf->pcs)
+-		lynx_pcs_destroy(pf->pcs);
+-	if (pf->imdio) {
+-		mdiobus_unregister(pf->imdio);
+-		mdiobus_free(pf->imdio);
+-	}
+-}
+-
+-static bool enetc_port_has_pcs(struct enetc_pf *pf)
+-{
+-	return (pf->if_mode == PHY_INTERFACE_MODE_SGMII ||
+-		pf->if_mode == PHY_INTERFACE_MODE_1000BASEX ||
+-		pf->if_mode == PHY_INTERFACE_MODE_2500BASEX ||
+-		pf->if_mode == PHY_INTERFACE_MODE_USXGMII);
+-}
+-
+-static int enetc_mdiobus_create(struct enetc_pf *pf, struct device_node *node)
+-{
+-	struct device_node *mdio_np;
+-	int err;
+-
+-	mdio_np = of_get_child_by_name(node, "mdio");
+-	if (mdio_np) {
+-		err = enetc_mdio_probe(pf, mdio_np);
+-
+-		of_node_put(mdio_np);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (enetc_port_has_pcs(pf)) {
+-		err = enetc_imdio_create(pf);
+-		if (err) {
+-			enetc_mdio_remove(pf);
+-			return err;
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+-static void enetc_mdiobus_destroy(struct enetc_pf *pf)
+-{
+-	enetc_mdio_remove(pf);
+-	enetc_imdio_remove(pf);
+-}
+-
+ static struct phylink_pcs *
+ enetc_pl_mac_select_pcs(struct phylink_config *config, phy_interface_t iface)
+ {
+@@ -1101,47 +854,6 @@ static const struct phylink_mac_ops enetc_mac_phylink_ops = {
+ 	.mac_link_down = enetc_pl_mac_link_down,
+ };
+ 
+-static int enetc_phylink_create(struct enetc_ndev_priv *priv,
+-				struct device_node *node)
+-{
+-	struct enetc_pf *pf = enetc_si_priv(priv->si);
+-	struct phylink *phylink;
+-	int err;
+-
+-	pf->phylink_config.dev = &priv->ndev->dev;
+-	pf->phylink_config.type = PHYLINK_NETDEV;
+-	pf->phylink_config.mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
+-		MAC_10 | MAC_100 | MAC_1000 | MAC_2500FD;
+-
+-	__set_bit(PHY_INTERFACE_MODE_INTERNAL,
+-		  pf->phylink_config.supported_interfaces);
+-	__set_bit(PHY_INTERFACE_MODE_SGMII,
+-		  pf->phylink_config.supported_interfaces);
+-	__set_bit(PHY_INTERFACE_MODE_1000BASEX,
+-		  pf->phylink_config.supported_interfaces);
+-	__set_bit(PHY_INTERFACE_MODE_2500BASEX,
+-		  pf->phylink_config.supported_interfaces);
+-	__set_bit(PHY_INTERFACE_MODE_USXGMII,
+-		  pf->phylink_config.supported_interfaces);
+-	phy_interface_set_rgmii(pf->phylink_config.supported_interfaces);
+-
+-	phylink = phylink_create(&pf->phylink_config, of_fwnode_handle(node),
+-				 pf->if_mode, &enetc_mac_phylink_ops);
+-	if (IS_ERR(phylink)) {
+-		err = PTR_ERR(phylink);
+-		return err;
+-	}
+-
+-	priv->phylink = phylink;
+-
+-	return 0;
+-}
+-
+-static void enetc_phylink_destroy(struct enetc_ndev_priv *priv)
+-{
+-	phylink_destroy(priv->phylink);
+-}
+-
+ /* Initialize the entire shared memory for the flow steering entries
+  * of this port (PF + VFs)
+  */
+@@ -1338,7 +1050,7 @@ static int enetc_pf_probe(struct pci_dev *pdev,
+ 	if (err)
+ 		goto err_mdiobus_create;
+ 
+-	err = enetc_phylink_create(priv, node);
++	err = enetc_phylink_create(priv, node, &enetc_mac_phylink_ops);
+ 	if (err)
+ 		goto err_phylink_create;
+ 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+new file mode 100644
+index 000000000000..925011b16563
+--- /dev/null
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+@@ -0,0 +1,295 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/* Copyright 2024 NXP */
++
++#include <linux/fsl/enetc_mdio.h>
++#include <linux/of_mdio.h>
 +#include <linux/of_net.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/seq_file.h>
++#include <linux/pcs-lynx.h>
 +
-+/* NETCMIX registers */
-+#define IMX95_CFG_LINK_IO_VAR		0x0
-+#define  IO_VAR_16FF_16G_SERDES		0x1
-+#define  IO_VAR(port, var)		(((var) & 0xf) << ((port) << 2))
++#include "enetc_pf_common.h"
 +
-+#define IMX95_CFG_LINK_MII_PROT		0x4
-+#define CFG_LINK_MII_PORT_0		GENMASK(3, 0)
-+#define CFG_LINK_MII_PORT_1		GENMASK(7, 4)
-+#define  MII_PROT_MII			0x0
-+#define  MII_PROT_RMII			0x1
-+#define  MII_PROT_RGMII			0x2
-+#define  MII_PROT_SERIAL		0x3
-+#define  MII_PROT(port, prot)		(((prot) & 0xf) << ((port) << 2))
-+
-+#define IMX95_CFG_LINK_PCS_PROT(a)	(0x8 + (a) * 4)
-+#define PCS_PROT_1G_SGMII		BIT(0)
-+#define PCS_PROT_2500M_SGMII		BIT(1)
-+#define PCS_PROT_XFI			BIT(3)
-+#define PCS_PROT_SFI			BIT(4)
-+#define PCS_PROT_10G_SXGMII		BIT(6)
-+
-+/* NETC privileged register block register */
-+#define PRB_NETCRR			0x100
-+#define  NETCRR_SR			BIT(0)
-+#define  NETCRR_LOCK			BIT(1)
-+
-+#define PRB_NETCSR			0x104
-+#define  NETCSR_ERROR			BIT(0)
-+#define  NETCSR_STATE			BIT(1)
-+
-+/* NETC integrated endpoint register block register */
-+#define IERB_EMDIOFAUXR			0x344
-+#define IERB_T0FAUXR			0x444
-+#define IERB_EFAUXR(a)			(0x3044 + 0x100 * (a))
-+#define IERB_VFAUXR(a)			(0x4004 + 0x40 * (a))
-+#define FAUXR_LDID			GENMASK(3, 0)
-+
-+/* Platform information */
-+#define IMX95_ENETC0_BUS_DEVFN		0x0
-+#define IMX95_ENETC1_BUS_DEVFN		0x40
-+#define IMX95_ENETC2_BUS_DEVFN		0x80
-+
-+/* Flags for different platforms */
-+#define NETC_HAS_NETCMIX		BIT(0)
-+
-+struct netc_devinfo {
-+	u32 flags;
-+	int (*netcmix_init)(struct platform_device *pdev);
-+	int (*ierb_init)(struct platform_device *pdev);
-+};
-+
-+struct netc_blk_ctrl {
-+	void __iomem *prb;
-+	void __iomem *ierb;
-+	void __iomem *netcmix;
-+
-+	const struct netc_devinfo *devinfo;
-+	struct platform_device *pdev;
-+	struct dentry *debugfs_root;
-+};
-+
-+static void netc_reg_write(void __iomem *base, u32 offset, u32 val)
++int enetc_pf_set_mac_addr(struct net_device *ndev, void *addr)
 +{
-+	netc_write(base + offset, val);
-+}
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++	struct sockaddr *saddr = addr;
 +
-+static u32 netc_reg_read(void __iomem *base, u32 offset)
-+{
-+	return netc_read(base + offset);
-+}
++	if (!is_valid_ether_addr(saddr->sa_data))
++		return -EADDRNOTAVAIL;
 +
-+static int netc_of_pci_get_bus_devfn(struct device_node *np)
-+{
-+	u32 reg[5];
-+	int error;
-+
-+	error = of_property_read_u32_array(np, "reg", reg, ARRAY_SIZE(reg));
-+	if (error)
-+		return error;
-+
-+	return (reg[0] >> 8) & 0xffff;
-+}
-+
-+static int netc_get_link_mii_protocol(phy_interface_t interface)
-+{
-+	switch (interface) {
-+	case PHY_INTERFACE_MODE_MII:
-+		return MII_PROT_MII;
-+	case PHY_INTERFACE_MODE_RMII:
-+		return MII_PROT_RMII;
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		return MII_PROT_RGMII;
-+	case PHY_INTERFACE_MODE_SGMII:
-+	case PHY_INTERFACE_MODE_2500BASEX:
-+	case PHY_INTERFACE_MODE_10GBASER:
-+	case PHY_INTERFACE_MODE_XGMII:
-+	case PHY_INTERFACE_MODE_USXGMII:
-+		return MII_PROT_SERIAL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int imx95_netcmix_init(struct platform_device *pdev)
-+{
-+	struct netc_blk_ctrl *priv = platform_get_drvdata(pdev);
-+	struct device_node *np = pdev->dev.of_node;
-+	phy_interface_t interface;
-+	int bus_devfn, mii_proto;
-+	u32 val;
-+	int err;
-+
-+	/* Default setting of MII protocol */
-+	val = MII_PROT(0, MII_PROT_RGMII) | MII_PROT(1, MII_PROT_RGMII) |
-+	      MII_PROT(2, MII_PROT_SERIAL);
-+
-+	/* Update the link MII protocol through parsing phy-mode */
-+	for_each_available_child_of_node_scoped(np, child) {
-+		for_each_available_child_of_node_scoped(child, gchild) {
-+			if (!of_device_is_compatible(gchild, "pci1131,e101"))
-+				continue;
-+
-+			bus_devfn = netc_of_pci_get_bus_devfn(gchild);
-+			if (bus_devfn < 0)
-+				return -EINVAL;
-+
-+			if (bus_devfn == IMX95_ENETC2_BUS_DEVFN)
-+				continue;
-+
-+			err = of_get_phy_mode(gchild, &interface);
-+			if (err)
-+				continue;
-+
-+			mii_proto = netc_get_link_mii_protocol(interface);
-+			if (mii_proto < 0)
-+				return -EINVAL;
-+
-+			switch (bus_devfn) {
-+			case IMX95_ENETC0_BUS_DEVFN:
-+				val = u32_replace_bits(val, mii_proto,
-+						       CFG_LINK_MII_PORT_0);
-+				break;
-+			case IMX95_ENETC1_BUS_DEVFN:
-+				val = u32_replace_bits(val, mii_proto,
-+						       CFG_LINK_MII_PORT_1);
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	/* Configure Link I/O variant */
-+	netc_reg_write(priv->netcmix, IMX95_CFG_LINK_IO_VAR,
-+		       IO_VAR(2, IO_VAR_16FF_16G_SERDES));
-+	/* Configure Link 2 PCS protocol */
-+	netc_reg_write(priv->netcmix, IMX95_CFG_LINK_PCS_PROT(2),
-+		       PCS_PROT_10G_SXGMII);
-+	netc_reg_write(priv->netcmix, IMX95_CFG_LINK_MII_PROT, val);
++	eth_hw_addr_set(ndev, saddr->sa_data);
++	enetc_pf_set_primary_mac_addr(&priv->si->hw, 0, saddr->sa_data);
 +
 +	return 0;
 +}
 +
-+static bool netc_ierb_is_locked(struct netc_blk_ctrl *priv)
++static int enetc_setup_mac_address(struct device_node *np, struct enetc_pf *pf,
++				   int si)
 +{
-+	return !!(netc_reg_read(priv->prb, PRB_NETCRR) & NETCRR_LOCK);
-+}
-+
-+static int netc_lock_ierb(struct netc_blk_ctrl *priv)
-+{
-+	u32 val;
-+
-+	netc_reg_write(priv->prb, PRB_NETCRR, NETCRR_LOCK);
-+
-+	return read_poll_timeout(netc_reg_read, val, !(val & NETCSR_STATE),
-+				 100, 2000, false, priv->prb, PRB_NETCSR);
-+}
-+
-+static int netc_unlock_ierb_with_warm_reset(struct netc_blk_ctrl *priv)
-+{
-+	u32 val;
-+
-+	netc_reg_write(priv->prb, PRB_NETCRR, 0);
-+
-+	return read_poll_timeout(netc_reg_read, val, !(val & NETCRR_LOCK),
-+				 1000, 100000, true, priv->prb, PRB_NETCRR);
-+}
-+
-+static int imx95_ierb_init(struct platform_device *pdev)
-+{
-+	struct netc_blk_ctrl *priv = platform_get_drvdata(pdev);
-+
-+	/* EMDIO : No MSI-X intterupt */
-+	netc_reg_write(priv->ierb, IERB_EMDIOFAUXR, 0);
-+	/* ENETC0 PF */
-+	netc_reg_write(priv->ierb, IERB_EFAUXR(0), 0);
-+	/* ENETC0 VF0 */
-+	netc_reg_write(priv->ierb, IERB_VFAUXR(0), 1);
-+	/* ENETC0 VF1 */
-+	netc_reg_write(priv->ierb, IERB_VFAUXR(1), 2);
-+	/* ENETC1 PF */
-+	netc_reg_write(priv->ierb, IERB_EFAUXR(1), 3);
-+	/* ENETC1 VF0 */
-+	netc_reg_write(priv->ierb, IERB_VFAUXR(2), 5);
-+	/* ENETC1 VF1 */
-+	netc_reg_write(priv->ierb, IERB_VFAUXR(3), 6);
-+	/* ENETC2 PF */
-+	netc_reg_write(priv->ierb, IERB_EFAUXR(2), 4);
-+	/* ENETC2 VF0 */
-+	netc_reg_write(priv->ierb, IERB_VFAUXR(4), 5);
-+	/* ENETC2 VF1 */
-+	netc_reg_write(priv->ierb, IERB_VFAUXR(5), 6);
-+	/* NETC TIMER */
-+	netc_reg_write(priv->ierb, IERB_T0FAUXR, 7);
-+
-+	return 0;
-+}
-+
-+static int netc_ierb_init(struct platform_device *pdev)
-+{
-+	struct netc_blk_ctrl *priv = platform_get_drvdata(pdev);
-+	const struct netc_devinfo *devinfo = priv->devinfo;
++	struct device *dev = &pf->si->pdev->dev;
++	struct enetc_hw *hw = &pf->si->hw;
++	u8 mac_addr[ETH_ALEN] = { 0 };
 +	int err;
 +
-+	if (netc_ierb_is_locked(priv)) {
-+		err = netc_unlock_ierb_with_warm_reset(priv);
-+		if (err) {
-+			dev_err(&pdev->dev, "Unlock IERB failed.\n");
++	/* (1) try to get the MAC address from the device tree */
++	if (np) {
++		err = of_get_mac_address(np, mac_addr);
++		if (err == -EPROBE_DEFER)
 +			return err;
-+		}
 +	}
 +
-+	if (devinfo->ierb_init) {
-+		err = devinfo->ierb_init(pdev);
++	/* (2) bootloader supplied MAC address */
++	if (is_zero_ether_addr(mac_addr))
++		enetc_pf_get_primary_mac_addr(hw, si, mac_addr);
++
++	/* (3) choose a random one */
++	if (is_zero_ether_addr(mac_addr)) {
++		eth_random_addr(mac_addr);
++		dev_info(dev, "no MAC address specified for SI%d, using %pM\n",
++			 si, mac_addr);
++	}
++
++	enetc_pf_set_primary_mac_addr(hw, si, mac_addr);
++
++	return 0;
++}
++
++int enetc_setup_mac_addresses(struct device_node *np, struct enetc_pf *pf)
++{
++	int err, i;
++
++	/* The PF might take its MAC from the device tree */
++	err = enetc_setup_mac_address(np, pf, 0);
++	if (err)
++		return err;
++
++	for (i = 0; i < pf->total_vfs; i++) {
++		err = enetc_setup_mac_address(NULL, pf, i + 1);
 +		if (err)
 +			return err;
 +	}
 +
-+	err = netc_lock_ierb(priv);
++	return 0;
++}
++
++void enetc_pf_netdev_setup(struct enetc_si *si, struct net_device *ndev,
++			   const struct net_device_ops *ndev_ops)
++{
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++
++	SET_NETDEV_DEV(ndev, &si->pdev->dev);
++	priv->ndev = ndev;
++	priv->si = si;
++	priv->dev = &si->pdev->dev;
++	si->ndev = ndev;
++
++	priv->msg_enable = (NETIF_MSG_WOL << 1) - 1;
++	ndev->netdev_ops = ndev_ops;
++	enetc_set_ethtool_ops(ndev);
++	ndev->watchdog_timeo = 5 * HZ;
++	ndev->max_mtu = ENETC_MAX_MTU;
++
++	ndev->hw_features = NETIF_F_SG | NETIF_F_RXCSUM |
++			    NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX |
++			    NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_LOOPBACK |
++			    NETIF_F_HW_CSUM | NETIF_F_TSO | NETIF_F_TSO6;
++	ndev->features = NETIF_F_HIGHDMA | NETIF_F_SG | NETIF_F_RXCSUM |
++			 NETIF_F_HW_VLAN_CTAG_TX |
++			 NETIF_F_HW_VLAN_CTAG_RX |
++			 NETIF_F_HW_CSUM | NETIF_F_TSO | NETIF_F_TSO6;
++	ndev->vlan_features = NETIF_F_SG | NETIF_F_HW_CSUM |
++			      NETIF_F_TSO | NETIF_F_TSO6;
++
++	if (si->num_rss)
++		ndev->hw_features |= NETIF_F_RXHASH;
++
++	ndev->priv_flags |= IFF_UNICAST_FLT;
++	ndev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
++			     NETDEV_XDP_ACT_NDO_XMIT | NETDEV_XDP_ACT_RX_SG |
++			     NETDEV_XDP_ACT_NDO_XMIT_SG;
++
++	if (si->hw_features & ENETC_SI_F_PSFP && !enetc_psfp_enable(priv)) {
++		priv->active_offloads |= ENETC_F_QCI;
++		ndev->features |= NETIF_F_HW_TC;
++		ndev->hw_features |= NETIF_F_HW_TC;
++	}
++
++	/* pick up primary MAC address from SI */
++	enetc_load_primary_mac_addr(&si->hw, ndev);
++}
++
++static int enetc_mdio_probe(struct enetc_pf *pf, struct device_node *np)
++{
++	struct device *dev = &pf->si->pdev->dev;
++	struct enetc_mdio_priv *mdio_priv;
++	struct mii_bus *bus;
++	int err;
++
++	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "Freescale ENETC MDIO Bus";
++	bus->read = enetc_mdio_read_c22;
++	bus->write = enetc_mdio_write_c22;
++	bus->read_c45 = enetc_mdio_read_c45;
++	bus->write_c45 = enetc_mdio_write_c45;
++	bus->parent = dev;
++	mdio_priv = bus->priv;
++	mdio_priv->hw = &pf->si->hw;
++	mdio_priv->mdio_base = ENETC_EMDIO_BASE;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
++
++	err = of_mdiobus_register(bus, np);
++	if (err)
++		return dev_err_probe(dev, err, "cannot register MDIO bus\n");
++
++	pf->mdio = bus;
++
++	return 0;
++}
++
++static void enetc_mdio_remove(struct enetc_pf *pf)
++{
++	if (pf->mdio)
++		mdiobus_unregister(pf->mdio);
++}
++
++static int enetc_imdio_create(struct enetc_pf *pf)
++{
++	struct device *dev = &pf->si->pdev->dev;
++	struct enetc_mdio_priv *mdio_priv;
++	struct phylink_pcs *phylink_pcs;
++	struct mii_bus *bus;
++	int err;
++
++	bus = mdiobus_alloc_size(sizeof(*mdio_priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "Freescale ENETC internal MDIO Bus";
++	bus->read = enetc_mdio_read_c22;
++	bus->write = enetc_mdio_write_c22;
++	bus->read_c45 = enetc_mdio_read_c45;
++	bus->write_c45 = enetc_mdio_write_c45;
++	bus->parent = dev;
++	bus->phy_mask = ~0;
++	mdio_priv = bus->priv;
++	mdio_priv->hw = &pf->si->hw;
++	mdio_priv->mdio_base = ENETC_PM_IMDIO_BASE;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-imdio", dev_name(dev));
++
++	err = mdiobus_register(bus);
 +	if (err) {
-+		dev_err(&pdev->dev, "Lock IERB failed.\n");
++		dev_err(dev, "cannot register internal MDIO bus (%d)\n", err);
++		goto free_mdio_bus;
++	}
++
++	phylink_pcs = lynx_pcs_create_mdiodev(bus, 0);
++	if (IS_ERR(phylink_pcs)) {
++		err = PTR_ERR(phylink_pcs);
++		dev_err(dev, "cannot create lynx pcs (%d)\n", err);
++		goto unregister_mdiobus;
++	}
++
++	pf->imdio = bus;
++	pf->pcs = phylink_pcs;
++
++	return 0;
++
++unregister_mdiobus:
++	mdiobus_unregister(bus);
++free_mdio_bus:
++	mdiobus_free(bus);
++	return err;
++}
++
++static void enetc_imdio_remove(struct enetc_pf *pf)
++{
++	if (pf->pcs)
++		lynx_pcs_destroy(pf->pcs);
++
++	if (pf->imdio) {
++		mdiobus_unregister(pf->imdio);
++		mdiobus_free(pf->imdio);
++	}
++}
++
++static bool enetc_port_has_pcs(struct enetc_pf *pf)
++{
++	return (pf->if_mode == PHY_INTERFACE_MODE_SGMII ||
++		pf->if_mode == PHY_INTERFACE_MODE_1000BASEX ||
++		pf->if_mode == PHY_INTERFACE_MODE_2500BASEX ||
++		pf->if_mode == PHY_INTERFACE_MODE_USXGMII);
++}
++
++int enetc_mdiobus_create(struct enetc_pf *pf, struct device_node *node)
++{
++	struct device_node *mdio_np;
++	int err;
++
++	mdio_np = of_get_child_by_name(node, "mdio");
++	if (mdio_np) {
++		err = enetc_mdio_probe(pf, mdio_np);
++
++		of_node_put(mdio_np);
++		if (err)
++			return err;
++	}
++
++	if (enetc_port_has_pcs(pf)) {
++		err = enetc_imdio_create(pf);
++		if (err) {
++			enetc_mdio_remove(pf);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++void enetc_mdiobus_destroy(struct enetc_pf *pf)
++{
++	enetc_mdio_remove(pf);
++	enetc_imdio_remove(pf);
++}
++
++int enetc_phylink_create(struct enetc_ndev_priv *priv, struct device_node *node,
++			 const struct phylink_mac_ops *ops)
++{
++	struct enetc_pf *pf = enetc_si_priv(priv->si);
++	struct phylink *phylink;
++	int err;
++
++	pf->phylink_config.dev = &priv->ndev->dev;
++	pf->phylink_config.type = PHYLINK_NETDEV;
++	pf->phylink_config.mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
++		MAC_10 | MAC_100 | MAC_1000 | MAC_2500FD;
++
++	__set_bit(PHY_INTERFACE_MODE_INTERNAL,
++		  pf->phylink_config.supported_interfaces);
++	__set_bit(PHY_INTERFACE_MODE_SGMII,
++		  pf->phylink_config.supported_interfaces);
++	__set_bit(PHY_INTERFACE_MODE_1000BASEX,
++		  pf->phylink_config.supported_interfaces);
++	__set_bit(PHY_INTERFACE_MODE_2500BASEX,
++		  pf->phylink_config.supported_interfaces);
++	__set_bit(PHY_INTERFACE_MODE_USXGMII,
++		  pf->phylink_config.supported_interfaces);
++	phy_interface_set_rgmii(pf->phylink_config.supported_interfaces);
++
++	phylink = phylink_create(&pf->phylink_config, of_fwnode_handle(node),
++				 pf->if_mode, ops);
++	if (IS_ERR(phylink)) {
++		err = PTR_ERR(phylink);
 +		return err;
 +	}
 +
-+	return 0;
-+}
-+
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+static int netc_prb_show(struct seq_file *s, void *data)
-+{
-+	struct netc_blk_ctrl *priv = s->private;
-+	u32 val;
-+
-+	val = netc_reg_read(priv->prb, PRB_NETCRR);
-+	seq_printf(s, "[PRB NETCRR] Lock:%d SR:%d\n",
-+		   (val & NETCRR_LOCK) ? 1 : 0,
-+		   (val & NETCRR_SR) ? 1 : 0);
-+
-+	val = netc_reg_read(priv->prb, PRB_NETCSR);
-+	seq_printf(s, "[PRB NETCSR] State:%d Error:%d\n",
-+		   (val & NETCSR_STATE) ? 1 : 0,
-+		   (val & NETCSR_ERROR) ? 1 : 0);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(netc_prb);
-+
-+static void netc_blk_ctrl_create_debugfs(struct netc_blk_ctrl *priv)
-+{
-+	struct dentry *root;
-+
-+	root = debugfs_create_dir("netc_blk_ctrl", NULL);
-+	if (IS_ERR(root))
-+		return;
-+
-+	priv->debugfs_root = root;
-+
-+	debugfs_create_file("prb", 0444, root, priv, &netc_prb_fops);
-+}
-+
-+static void netc_blk_ctrl_remove_debugfs(struct netc_blk_ctrl *priv)
-+{
-+	debugfs_remove_recursive(priv->debugfs_root);
-+	priv->debugfs_root = NULL;
-+}
-+
-+#else
-+
-+static void netc_blk_ctrl_create_debugfs(struct netc_blk_ctrl *priv)
-+{
-+}
-+
-+static void netc_blk_ctrl_remove_debugfs(struct netc_blk_ctrl *priv)
-+{
-+}
-+#endif
-+
-+static int netc_prb_check_error(struct netc_blk_ctrl *priv)
-+{
-+	if (netc_reg_read(priv->prb, PRB_NETCSR) & NETCSR_ERROR)
-+		return -1;
++	priv->phylink = phylink;
 +
 +	return 0;
 +}
 +
-+static const struct netc_devinfo imx95_devinfo = {
-+	.flags = NETC_HAS_NETCMIX,
-+	.netcmix_init = imx95_netcmix_init,
-+	.ierb_init = imx95_ierb_init,
-+};
-+
-+static const struct of_device_id netc_blk_ctrl_match[] = {
-+	{ .compatible = "nxp,imx95-netc-blk-ctrl", .data = &imx95_devinfo },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, netc_blk_ctrl_match);
-+
-+static int netc_blk_ctrl_probe(struct platform_device *pdev)
++void enetc_phylink_destroy(struct enetc_ndev_priv *priv)
 +{
-+	struct device_node *node = pdev->dev.of_node;
-+	const struct netc_devinfo *devinfo;
-+	struct device *dev = &pdev->dev;
-+	const struct of_device_id *id;
-+	struct netc_blk_ctrl *priv;
-+	struct clk *ipg_clk;
-+	void __iomem *regs;
-+	int err;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->pdev = pdev;
-+	ipg_clk = devm_clk_get_optional_enabled(dev, "ipg");
-+	if (IS_ERR(ipg_clk))
-+		return dev_err_probe(dev, PTR_ERR(ipg_clk),
-+				     "Set ipg clock failed\n");
-+
-+	id = of_match_device(netc_blk_ctrl_match, dev);
-+	if (!id)
-+		return dev_err_probe(dev, -EINVAL, "Cannot match device\n");
-+
-+	devinfo = (struct netc_devinfo *)id->data;
-+	if (!devinfo)
-+		return dev_err_probe(dev, -EINVAL, "No device information\n");
-+
-+	priv->devinfo = devinfo;
-+	regs = devm_platform_ioremap_resource_byname(pdev, "ierb");
-+	if (IS_ERR(regs))
-+		return dev_err_probe(dev, PTR_ERR(regs),
-+				     "Missing IERB resource\n");
-+
-+	priv->ierb = regs;
-+	regs = devm_platform_ioremap_resource_byname(pdev, "prb");
-+	if (IS_ERR(regs))
-+		return dev_err_probe(dev, PTR_ERR(regs),
-+				     "Missing PRB resource\n");
-+
-+	priv->prb = regs;
-+	if (devinfo->flags & NETC_HAS_NETCMIX) {
-+		regs = devm_platform_ioremap_resource_byname(pdev, "netcmix");
-+		if (IS_ERR(regs))
-+			return dev_err_probe(dev, PTR_ERR(regs),
-+					     "Missing NETCMIX resource\n");
-+		priv->netcmix = regs;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+	if (devinfo->netcmix_init) {
-+		err = devinfo->netcmix_init(pdev);
-+		if (err)
-+			return dev_err_probe(dev, err,
-+					     "Initializing NETCMIX failed\n");
-+	}
-+
-+	err = netc_ierb_init(pdev);
-+	if (err)
-+		return dev_err_probe(dev, err, "Initializing IERB failed\n");
-+
-+	if (netc_prb_check_error(priv) < 0)
-+		dev_warn(dev, "The current IERB configuration is invalid\n");
-+
-+	netc_blk_ctrl_create_debugfs(priv);
-+
-+	err = of_platform_populate(node, NULL, NULL, dev);
-+	if (err) {
-+		netc_blk_ctrl_remove_debugfs(priv);
-+		return dev_err_probe(dev, err, "of_platform_populate failed\n");
-+	}
-+
-+	return 0;
++	phylink_destroy(priv->phylink);
 +}
-+
-+static void netc_blk_ctrl_remove(struct platform_device *pdev)
-+{
-+	struct netc_blk_ctrl *priv = platform_get_drvdata(pdev);
-+
-+	of_platform_depopulate(&pdev->dev);
-+	netc_blk_ctrl_remove_debugfs(priv);
-+}
-+
-+static struct platform_driver netc_blk_ctrl_driver = {
-+	.driver = {
-+		.name = "nxp-netc-blk-ctrl",
-+		.of_match_table = netc_blk_ctrl_match,
-+	},
-+	.probe = netc_blk_ctrl_probe,
-+	.remove = netc_blk_ctrl_remove,
-+};
-+
-+module_platform_driver(netc_blk_ctrl_driver);
-+
-+MODULE_DESCRIPTION("NXP NETC Blocks Control Driver");
-+MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/include/linux/fsl/netc_global.h b/include/linux/fsl/netc_global.h
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h
 new file mode 100644
-index 000000000000..fdecca8c90f0
+index 000000000000..2ae9c87c8c8a
 --- /dev/null
-+++ b/include/linux/fsl/netc_global.h
-@@ -0,0 +1,19 @@
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h
+@@ -0,0 +1,17 @@
 +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/* Copyright 2024 NXP
-+ */
-+#ifndef __NETC_GLOBAL_H
-+#define __NETC_GLOBAL_H
++/* Copyright 2024 NXP */
 +
-+#include <linux/io.h>
++#include "enetc_pf.h"
 +
-+static inline u32 netc_read(void __iomem *reg)
-+{
-+	return ioread32(reg);
-+}
-+
-+static inline void netc_write(void __iomem *reg, u32 val)
-+{
-+	iowrite32(val, reg);
-+}
-+
-+#endif
++void enetc_pf_get_primary_mac_addr(struct enetc_hw *hw, int si, u8 *addr);
++void enetc_pf_set_primary_mac_addr(struct enetc_hw *hw, int si,
++				   const u8 *addr);
++int enetc_pf_set_mac_addr(struct net_device *ndev, void *addr);
++int enetc_setup_mac_addresses(struct device_node *np, struct enetc_pf *pf);
++void enetc_pf_netdev_setup(struct enetc_si *si, struct net_device *ndev,
++			   const struct net_device_ops *ndev_ops);
++int enetc_mdiobus_create(struct enetc_pf *pf, struct device_node *node);
++void enetc_mdiobus_destroy(struct enetc_pf *pf);
++int enetc_phylink_create(struct enetc_ndev_priv *priv, struct device_node *node,
++			 const struct phylink_mac_ops *ops);
++void enetc_phylink_destroy(struct enetc_ndev_priv *priv);
 -- 
 2.34.1
 
