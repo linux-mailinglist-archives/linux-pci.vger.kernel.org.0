@@ -1,66 +1,66 @@
-Return-Path: <linux-pci+bounces-15658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E1D9B6EF5
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 22:33:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A46A9B6F26
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 22:39:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8501280D60
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 21:33:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 493C12846B1
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 21:38:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E694621A4AB;
-	Wed, 30 Oct 2024 21:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5C721764C;
+	Wed, 30 Oct 2024 21:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ROU1knbs"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jvOCbekT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2043.outbound.protection.outlook.com [40.107.244.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0F219CA8;
-	Wed, 30 Oct 2024 21:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E2221765C;
+	Wed, 30 Oct 2024 21:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730323861; cv=fail; b=O9aKShoxSMA0LLtF5/f/+JJKTZCeB+VuiedrvoWSh2Gi+pyjofGNxr0mh7uULziHraxOUMOSrbfUI1bNC6I/EJ+cz7BsNurOHET9P23jXKCzSKkgjYqoZy4wq5JBMxRsUcx886/BjlUcITQlCWNRLKZxP9H58+k64H2Psgd00Go=
+	t=1730324100; cv=fail; b=UAfJ/nOh3fNEFF4xMlph7i9emqZIx91dSLly2c7KZoa7iacbYDm0JzZaNYvTFPATNIudRSL21/2JGPSfDksIa3brytWkSTwW+NmvL2ByYagP4IeCq8p4dAO7ox6vOvKElm+QJi58M3rMkILd2G/kEIih9hKl4LZAPRAu1DLNWQI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730323861; c=relaxed/simple;
-	bh=YwjwGURVaYC2NtWPudhe0HlK/UE8tyoomslccByC+Xw=;
+	s=arc-20240116; t=1730324100; c=relaxed/simple;
+	bh=1fW8A0vCuFzF5tTXG03/2QAuThLteg0IT59mQIBiuTE=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FpImNDhOfiZ0dO/L1GLEv8PKETe9lfZA/zf6AlNAdkvnj3D9dDzyTZar/OYxocJQcMRM24Hgl7rDaUqgamXiCjkqGOS/U8zvGZPsgdlDKpRZgei8BomXrLCYXZ1S0Xz5JET3jfbnTZxXCIyQD59RU+OOJf4jVtsilU13P63neII=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ROU1knbs; arc=fail smtp.client-ip=40.107.237.47
+	 Content-Type:MIME-Version; b=CMV1H+gNRGfpP6o33IUsvw5fXPwxy6HA/tedEcqS8CW4Ks/eRRSUCrkr4Vu9n7o6dY8IOe5ap6sVf0I40zw7ho7modiZWvo/8/rCMK0bfL1/BpD8Kt76mG+n7p2EDgxoWagiaYgqbi6q2GhCiENZe27EAUqwHOXsewdvBB6DuEs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jvOCbekT; arc=fail smtp.client-ip=40.107.244.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YzeoVP/7YG76ntKVuqwQamKZowZh+ShLqEgeHQVwUBefQ87NX/943C+hx1UIizFd7579Qim2nDzmmrarNWU07+aTA8s8T/dFWcyGslalqjEAS0/QLiKGpHlqXmm5iPT5BWT5VVtFCnUn8d2qtVJfy7nakvxRxG0kfjT440n6+W7yviRC5J6PYFJNzYRwQXmVADFa8BwgUXo5eI9uuI0fyiVfQJS/fb82yvsYc1tvhSLjcFN9eVcz9IwGxn803fv4ztuf7qk5AFBVLaTSXLXnarlMgFqjCEhDKVKozDkFAJ6yCJIrqWb0jleHJeXGzFhRZP+vuwQQDrPGyguyJcSIAw==
+ b=TZsZEIenFmwotdU0uJD//FVzOj5xOWg/qiCf2tYRQ9ksUgXjyMSj/5vPQ2bVuMxpqe9vuRZgueLQ7XpGvvR3caWewDCZy55+XlW7Kc8FYXxWP47QE8suvyoHCRLVxSHUVCThaXU5hwBR4LLZ5qdUb6BN0tyYY573EtWyqnplhGc4xsoBOO7XBL+A98KVVPm8GiiRIARwIp+E72pUCmNPin8hWskqrlzIPMnqz3D/2QKYx/q4lx2Pt2zHK5YjuSANXCCR2sHFawOoVKKtKawkElE1LozbW8QDFbPIT+lcALIIchZc0EI1+fckmWdSGZl2tZzVwTggw4aDdnjz8mAWag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VL4DPQGAOi61Kwhr8VVpUOJE6hK9LF+Gp+LRHby1160=;
- b=a3LLqHObeanybs7DXJS4w5VKfQZhc0CqFyQWcR7ZhLt3d5JoIqmhyYwQTMlLXm1oohtcsZN9Yuiu7c9cw4C6hz/39yubJPIlEZeSqiePRopwAjh3ntcV/NI3s8QlXwhLJPu/vxecB/T9755SsML+LGdQmIE5TtRMBw8wHgI3w9YMain3dpUPblB2r9LLhd6AJ7EU6f3Mj71h5xFW2AFvVoZizQ404gZbeh0vqUwhVc6qrEl8cD97LmmS0qr88kte6Ibw/jzIFKJ9+1ScsxS+uNLuG0/Wt2w2andYpQis1qosMOfEsqhLm9CF1jixZAYqe65tSXcxCACiHXFlMAXUiw==
+ bh=Bvr2poXScmdbd0z9krZT2guoeXvvv3e4b7fjKVxLbN0=;
+ b=sVNtfw+TwrXnuM+3MkdMRvPcBZKqTKnJF5imHQ/fDolyUxLQJOF6xuTQl0XdnuFNJk2zmbqKs3vKqLwYzAcwegnB/XlPBlSzTqTaE3yoxn6kXTwB/ZBV57xgZuXD47wA3Df4rEgyCyWd+nmjAdkpI4INIoBJJwrvPCeuQ0czBh9YKqNn9H1oX7kM5QVSMFquGD/Vsx0MJXoYTmoqKEnVshsHTQ0xjW+e4IUbuX69r2U/q2QvVIzaL29HwWPAHJMvbD2fxUtubk/XSHlPMxxnqM58nbaBIx+llbOv81xa3MdeVZb96qHgKozh9Rrw2DsJaK3fNB1PDieCYufBTS5ZKQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VL4DPQGAOi61Kwhr8VVpUOJE6hK9LF+Gp+LRHby1160=;
- b=ROU1knbs8bo8KRCdEF/8f1NBDXQz1j7ItUflihqjPwflre9jcr4qqKXBNHu61cSHDZMRPR7fVj/2dT4DqQUfx3dGY43lvXSt3aui0umVa7yfzXLyY0jIQ4Eyq739iUybkAV7HZOaD4HvgfHEgOVDLCAa7ui8YUPD/W2z6ILbtgM=
+ bh=Bvr2poXScmdbd0z9krZT2guoeXvvv3e4b7fjKVxLbN0=;
+ b=jvOCbekTY7HoZXd3cWzVAPjaXxytISJi7GP1DoCF4HfW7prh2biSwDEew35bOjZQiIGmPuTT/yCHVe04oqatTRnNMlci6TT4+qRjN2gk8cGaiuUeThI1B7Axp9ElFB4DCh9CrurW4d2KpWkKki8Ls5egw0L82KzGTOjt4kuwWls=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- SJ2PR12MB7989.namprd12.prod.outlook.com (2603:10b6:a03:4c3::13) with
+ SJ2PR12MB8651.namprd12.prod.outlook.com (2603:10b6:a03:541::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.27; Wed, 30 Oct
- 2024 21:30:56 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.32; Wed, 30 Oct
+ 2024 21:34:54 +0000
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8114.015; Wed, 30 Oct 2024
- 21:30:56 +0000
-Message-ID: <eee81573-6c87-4f20-afec-37f114fa7759@amd.com>
-Date: Wed, 30 Oct 2024 16:30:53 -0500
+ 21:34:54 +0000
+Message-ID: <995b6552-420e-4b8c-bb92-63a8666236ea@amd.com>
+Date: Wed, 30 Oct 2024 16:34:51 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/14] cxl/pci: Add trace logging for CXL PCIe port RAS
- errors
+Subject: Re: [PATCH v2 14/14] cxl/pci: Add support to assign and clear
+ pci_driver::cxl_err_handlers
 To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, dave@stgolabs.net,
@@ -68,18 +68,17 @@ Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
  dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
  ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
  rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, shiju.jose@huawei.com,
- M.Chehab@huawei.com
+ Smita.KoralahalliChannabasappa@amd.com
 References: <20241025210305.27499-1-terry.bowman@amd.com>
- <20241025210305.27499-14-terry.bowman@amd.com>
- <20241030160726.0000533e@Huawei.com>
+ <20241025210305.27499-15-terry.bowman@amd.com>
+ <20241030161120.000078b2@Huawei.com>
 Content-Language: en-US
 From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20241030160726.0000533e@Huawei.com>
+In-Reply-To: <20241030161120.000078b2@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7P220CA0016.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:806:123::21) To DS0PR12MB6390.namprd12.prod.outlook.com
+X-ClientProxiedBy: SN6PR08CA0019.namprd08.prod.outlook.com
+ (2603:10b6:805:66::32) To DS0PR12MB6390.namprd12.prod.outlook.com
  (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -88,228 +87,195 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ2PR12MB7989:EE_
-X-MS-Office365-Filtering-Correlation-Id: 640034cd-16ad-4c90-ea10-08dcf92a236c
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ2PR12MB8651:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd56064d-c55f-4ff9-f817-08dcf92ab139
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NkJsazNWcklpV042VFBhczBYd1UwNmYrSDFPeklIVjJMazJ6TTdoVlhxbFZU?=
- =?utf-8?B?NVhFOVNVM0dXMndWVXh6QmZIYlZLK0JoVHQ2MGhxcFBLWUl0YUZnaEdlQzYr?=
- =?utf-8?B?eXJRUkExVDlrQWx6M1BTRHQyaUNTMU1oOHR1UmdqS0lCdmxHWmtVSzFGMjdL?=
- =?utf-8?B?eGVmUk85cHcwV09NNmx5ZkUxUG9sMG52a2pEdzhuaVB6MGhrRkh5OTQrMWM5?=
- =?utf-8?B?eVJHTnNvbDE3bllYVTVyMFFqdk1vWmZ5UVlOeFRDU040OU5BVm5nUC91R3Jt?=
- =?utf-8?B?cGNESktMK3F3alMxSjJvZkJYYWFPODZ5cHhSc2lBS3ZBQTZodEVON0Y2dUxY?=
- =?utf-8?B?OEFPeDlodFhFd0pCVkMyY2xpRDk0SlVPdjduRWtVQUs3L1ViQTJzQ0JkQzhB?=
- =?utf-8?B?MkJZRWxNRkU2dHBqS3RxdnZmNXZseW1QaWFGQnhVMTd2MVNOaUFWUnZZOGNn?=
- =?utf-8?B?Sk9qQXZheTNHNlVXYlVIOEM5V0NObGszTjFadTgwOFVVZ25GMWpSZi9mcEVP?=
- =?utf-8?B?NnVmdlRYV3FFaXVPS3RzeG9YOFFjRWtlUXpEUWx4K3pwWGdZeVB2cXNwTndM?=
- =?utf-8?B?ZEs1TGF1V2piTXd4U1FmTVk3NWVSMmVjaFNUOExhNldNNGhWdEpPN3lSeDZ6?=
- =?utf-8?B?SHdDWlQrTzNKWUIrdmU3RjZuSVhFRmptV2p0MitONmM1SjFVWVUwQ1dncmZQ?=
- =?utf-8?B?VnBLQnZEdHc2a3NUYm1KNTdZaVdJTHdsOE9oaVRhQmRITnl4Qksxdm55OFVS?=
- =?utf-8?B?RnhiWG43a25nUlBFRi9hUGE2WkFoY1JnWGdrM0dkak1BN0ZJZHhvMUt0Mk9v?=
- =?utf-8?B?Z3NwY2gvZXRBRXgwdjRGcURYcmJ2M0owUE1Zd3o0eHlaL21Wa0I5NjRITjg3?=
- =?utf-8?B?TTc4OGlkRUZCS2FQQ1gzMncvU2xYRnZ2b0kxY00ybEJucFlnNWVJcWJTZXA4?=
- =?utf-8?B?RXNzVzFZSFprSThKTmFUeWNzcDNrSXZZK1dacE1tamZRKzlHNWVuUHR1QU5D?=
- =?utf-8?B?OXd5UGpvY2Z3YTNqak9DczJyeVpST0cxYmZ6emp3VldCZUFBNUJuYjliOVZO?=
- =?utf-8?B?ZUpSNmIvTzBtNU9qVlhFVUZaaW5adUVEdkduaEk0eG5iM1FPdFpCWXZyTUF6?=
- =?utf-8?B?TW5zN1U1TW1wNjE2RElINlpSeHF2RDhEVDZOeDNUZUJEWFozOFBZaXh6MFdY?=
- =?utf-8?B?NHpsV3ZkV0pJSjk2b2t1ZUJMMkJoVUtwZWhsKy9MckRVS1BWaUV6SmxtZjY3?=
- =?utf-8?B?S29WZzNidXJmaTNrdGtuUVlMWDV6ZSs1MzA4L3NoUmV1MkJoaC9laHg2VVE0?=
- =?utf-8?B?dHRNeERiRGh0OGdqSURzald5dnJkWnZ3TVpNV0lSU0lxSVVyc3BLMmg0clJn?=
- =?utf-8?B?bXhvSmlhZUdwd3lPRUQwMFl5Q0pHdXBsNmVsUmFLM1ZlUHp6dENOaVlTL3Zl?=
- =?utf-8?B?OUV5NFFlR21TV0lFVzhFbWNIdWkzNEdkUHh0a205dDZETGwzVDJBQ1R6dVJJ?=
- =?utf-8?B?a2c1YVVmWHdUMjlTOEhSUjFPYWU3amtORlI0N0w2aGZibXBQNUIxVExNREdD?=
- =?utf-8?B?L0ZIZmhhK0xPSjUwamFGMmtjOTNmbVRzejJNbU9pOW91cmh0TUhqQm92UFlP?=
- =?utf-8?B?VUsvdW16aU4yRjRCQjdHYUFvWkIrdGNaR2NJZEExUSs1WDJudVUyalUva2w0?=
- =?utf-8?B?VEdJSDZRb3Z3VDN0QmJUMEduUGQzSUpsc0c0Z1ZLVGNaeVU4dExWcVhKZFUz?=
- =?utf-8?Q?wYLNp2aARdJXs489Q4PaaI3apnOSqj3HDfNzWOE?=
+	=?utf-8?B?SDhRdG9DZWU4NjFWbzdGd3gxOTJ2NGp6ZU9hTkowUHIxMEJrRmZpYkpQQllF?=
+ =?utf-8?B?RnFQVUNRM2tWcDhJaFBzcTlkck1WSnNqak5ncWt4cVhnSS9LTmdKS2tRQ3dI?=
+ =?utf-8?B?aHY2MnlFY1M2OXdGVmRFZWxCTFNYMGZXMzFJVVZWNlY3aWxIekNLWjgvb09s?=
+ =?utf-8?B?T2NaTXNsNUlZNEw4YWJQQnpTSS9sMkdKMDg0RlQzWWpzRVltWjdPTlkyeFRU?=
+ =?utf-8?B?cjQwNzN0VjdydTl5bUJMRTFKTW1Gb0hWdi9PZlJrbTREMW5BZDBRNGdQTlpr?=
+ =?utf-8?B?RzlOaC9iRUY4ZnA0QUFwaE9PTWkrbUFkQm42MGE0YlBpbGVDMXk2S2p1dWpR?=
+ =?utf-8?B?Y21qaUhkcWZLeU9jVFN6THEwS2Y5WFNnY1AwcVZib3NYOEVoUnVrZis5RGc4?=
+ =?utf-8?B?NVJqWlNzbVpZZDVnRzAwa3dSTXc5UlJiRGdESmFPUHF1NGkwdWhjK3orR21O?=
+ =?utf-8?B?OXdlWERFQURGbzhINkRGb3ZHUi9XYWlTOUpraVFnWUdVQWdTQ2pQVkxRYXpQ?=
+ =?utf-8?B?MFVhSG9xK2l6MldEOC81UXVpMHN5b2dabWFhaGJ0YnpVZjVONlJTai9tVFA5?=
+ =?utf-8?B?d2JxbmtNSmhDTExEakgyR0JtbkQ4ZGp4NmlTVEJuRTR3aDJxNDJXSmcxM1NJ?=
+ =?utf-8?B?dUZLbE1DVTE5R1hUY0RjL0dVVEU4YnFlbFBGQzdZWHZvdDd2Y0g2aDViOEVt?=
+ =?utf-8?B?ckswcHlnQnRFNU1VRkR1TFloUDc5SkdiSGtEMkJ6NGMweXdjZmliS1M4MERm?=
+ =?utf-8?B?UUwzdXFXREUzRUpXZGdncmVnRHRrSWNCUENlZkVaWjR0U1JqRTdNcTVnK08v?=
+ =?utf-8?B?Tm9DTTByUlNLbWMvclBXVzl3R1gxTGNKM2dWd2FNOUJGMC9IdzYvSjNHNmNK?=
+ =?utf-8?B?US9ZSlY5VmtNczRjeC9vU2hUSWg4eDRpcy82Zjh0N1l2cUdKbEhzU09VeDdn?=
+ =?utf-8?B?Zm4wYzJZTVBnOVBPcFFBQlg3YUx5R2kvTlBpTkEzYzIwR2F5RVZrdmR2MGdj?=
+ =?utf-8?B?UWNhODYyd1BZellHamtuR0FOTnFoVTZ6WTVxUWZDVHRZdnM4Y0UvWDNRZW9M?=
+ =?utf-8?B?blBtR0ZFcGd5Y1dXN2pLdmVyU0hBOHhlUU5kb3EwaFZZTFNmeDc5NXUwRHRx?=
+ =?utf-8?B?Vms1OHhzOE1pZGJRdVRLczE1Y09PTGhmV3kveUtBK0FGWFVaOFpPQXNUT3RH?=
+ =?utf-8?B?bFpBVEpWUWxlbWV2cGlWQVVUeHBqaC9DR1pYS1dML1ZjNy9taHBQL1pyMk04?=
+ =?utf-8?B?aUJ6aHJOVUNiY3NaaXB0bnF6SkZzUXcrMTNhZEVQZzJwb3VmLytROFdqVTU5?=
+ =?utf-8?B?ZlozWGd5TWgyemlvdEtxSmQ3V0x3TzlPMjVLdzBWNmVLT2k1WmU1UnBnQWxq?=
+ =?utf-8?B?UDRTM1kvQmV3RnNzN3pMWlpLckU0cEQvMEcrZVBBNU1TN2JlczQ4VzE5dEpy?=
+ =?utf-8?B?K3orWGlyY1NGaTFCRGxYYk10eFc1Qmt1ZzZXdXZ5RUlGTjN2cWdNZVNyVDY5?=
+ =?utf-8?B?MXpoM2MrNXhGQ3h6eGNSMDBuK3gxUk5tY25GN2M5bkR3WEY1THFiTkdpK0JR?=
+ =?utf-8?B?KzdHbnh1bTVyZkdoNDM5bmNBQURXWU95VjBpVVBEd3QvLzk4N0N0S1ovUGpn?=
+ =?utf-8?B?dG1IUi9ZWnhVcENCTU05MjJ3SS91TXIzWmxBM05SUjNoUkxESUpZZytYOGI5?=
+ =?utf-8?B?U0MyNHpuWUFZY0hzVDhCbExNTnFKcktCWXdFOEFmNmliZVQxMUV2ZE9HOHNL?=
+ =?utf-8?Q?BifXxuo12FU3yP7McF0190aJI4+Qlezym6l4rBm?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QUJnN3RoYW1pd1lsd2ZHRmhzZVI4bjNuNDNzNzBzUk56TElibCswc2dwMWdm?=
- =?utf-8?B?czMrV0o0M05YeDZ3MUtSNGRZRS9VQkNvc2Y1M1RjWGRxcWs3U3pXM0VRbFNw?=
- =?utf-8?B?dTU1N3FqWWFhSkhMRXNLTWx3U2Nlb0JBcDVUVHdOZVplSURzSTljQTRoclB4?=
- =?utf-8?B?MEFxRDJoODdPTUFVOFYwSUdHQUYrM1FzVWJlVmluL0FQb3g2eVdOS1F4cldw?=
- =?utf-8?B?c0RBcFJIY3BWTjV3STc2Z1dBaVFFOGFGVDM1ZDREL0p3V1krOFAzcUx3Wnkz?=
- =?utf-8?B?UW1Rb2FFTjZEUXc2b3lFQTVaS0RHeHFIaEFHK1pRVnEwTzJ2Q2IzY2pGS2N3?=
- =?utf-8?B?ZFJhQjliWXFSK01obGF3VFBxaE1BcWlxMHZhcTJmbUhSWTFtb3lDWTE3S0do?=
- =?utf-8?B?WXdCWjcwcDV0M2o5VkRTQTlTK2FVSUFkOWFZRlhnL0FvU0ZOZy9UZWhYOXZH?=
- =?utf-8?B?SW1zU2p4TWhkamtBWWd5Vk56ZlNxTWljMC8yMVVmSWdaUmY5d0YrbmRzNEQ2?=
- =?utf-8?B?YWU4dVRmYXRncXVKMzVUMmJGTnkzUGJ4cjR0VVFKNDFQMXp2Nmx3cnp0dHZK?=
- =?utf-8?B?dXkzWVpPOU1XM3lIOHYzUnBYUUVrMVdOSGtaT3FBNEVtaWhodzQ3aXkxSGVi?=
- =?utf-8?B?SGFHTU1FMFJEaktzaWJJbnJEK1REbHk1eDNDLzNGVGdBb0ZVQWk5akgveVRH?=
- =?utf-8?B?OUIxR1M3WnZZZk8zb1BhRWl3RXV4Zm9wRG1iWnFDV3RaUG1pMU9wQkNlNHA4?=
- =?utf-8?B?Y2szcmIyRUM3VnhSWXVSb3pTcGFzTktrYm44K29nNjY1RDJCYkJDOTlaUzl2?=
- =?utf-8?B?a2g3NXFWMThMTEp3VmFIWEluK2w1WWV5endaa2tMaXp1MnRtNGdjTE5XVVRK?=
- =?utf-8?B?eDBIMjVUTFJ0ZFNBcmg1UDRiOW9NZm9pN0VtN0ROaW5iWVQyTHR5aEhjOGx1?=
- =?utf-8?B?TTNFUlRqN29TN0JHdkVqRGxjTUhzZkU1aTFlNkxvdTlCeXJHajBZbjZ6ejN3?=
- =?utf-8?B?WnV4djZiTFd5Q3BaUUVYOXhkLzB0Sy83VlRKZWVmVnFqdU1OUmVrUW9pMm15?=
- =?utf-8?B?THRJS3lTS3EyRmlvMitvM3ZhdWJ2NFVobytaTUpwSUVQVUE1Wi95TUZjMTdI?=
- =?utf-8?B?ZzdmSXIzYkdGOGYyejdmMk5NN0NlUXVpeTBZQUxaQllnUmN6TFN1UmdvWHpG?=
- =?utf-8?B?MmZxTllkMEFuaXlram9Ga3dpdVRKV1hNTHVMWm84ajlhUHBZbm5KSXJVeSs1?=
- =?utf-8?B?WFJRMkFvT3BqcGpLdllic0VMWmx2RVJqVDd6VE5lQmM1SXl3TUlRS1NGYTl4?=
- =?utf-8?B?clJUMGRJbFpnemtzNWh3VmZlU0l4MnZ5VVo5Y3VRUFhPalpVeS81TmFpa1NC?=
- =?utf-8?B?TjdsSWNyN050cjYvWVI3UGpXQmN3MW15eCsrTGQ3eWI1aDJQWGxONFJJY0li?=
- =?utf-8?B?aXJqVG9yQjNYZEFIbXdSd3pjTnZHNlpyRE5OdkR3c0NKSWpJd1lQVVZuS1ZI?=
- =?utf-8?B?aDVOajRvc1dtKzVCQkVaeDkzbWQ0NkhvSWZYMVRmWXZmeW5mWEdTaStEbjJl?=
- =?utf-8?B?amhRMnc4ZHdRQ0hBZ0w1TmNwazBnSnRYYTRUMmd3MUl6RkhLRWw5VUw3eWpt?=
- =?utf-8?B?SUVTUlIwSHFhaHFuUHJobHVpNmVETVdYVVFnT2hVdnpwU1JyT2N3MTBPT2hu?=
- =?utf-8?B?bFFuNkVBdUhveDNucmtHWm16YzI2VXhYS2ZaR3lwMUNzajZSdTlXSTJtTzg5?=
- =?utf-8?B?U3djbWtDQktzL1MvdDlCWE5KTVlOMUhQOVpBS25kcDhzVXZUR0Jkc1hPWVFl?=
- =?utf-8?B?Ukt4VjhWL1ZvblRCdWxSOHorc0pxNUlxb1ZYTm9rQ0RRR29CTllSTGZvMjdP?=
- =?utf-8?B?VkYzNDIrbEV1Qk5JWmEwakFzK0ZmRW41L3BDWUE5b0w1N3crQXV4cHlrUlhS?=
- =?utf-8?B?ZnhxYjBLZGxGT1hoRXc2QmFyd3U3Tnl0T2RQTnNiVGxVWWJRRVJNWnVVMUlE?=
- =?utf-8?B?S3A3cG40cFVUV2pZMmlWN2FMMG1JQXhYRnM2L1F3bndMWXJjNi84SnhCdHVW?=
- =?utf-8?B?cmhFSkNnY3hUZ2FuZGVWMGM2OE1BMEFhK3ZHaWIxMU1zN1k5RUxpNVNudjdn?=
- =?utf-8?Q?wxjrJFmkMCEsiuPwWVT915x4C?=
+	=?utf-8?B?UUx6V1NXVk53ZkRQbUtwb0dXaDhHcEt6bTFKL2ppSVNkZ3RjamNaaE1uNWR5?=
+ =?utf-8?B?ekUxcUFkWWtnMTYvbmYzWWJQbDRRSEtLdTJKaWlkOHlDRkVTSU5tVGk4VXp2?=
+ =?utf-8?B?M2RvWE1iaHY2Nkg0OS9VMWJZSWkxQjZXZm1JakFvVTIvMjRlTzJhWEpqblRn?=
+ =?utf-8?B?cXBIZ3AyYU1Gck1xZFFOMy9RbFZLbFNaUmQ1eU1NRlM2Z3V5KzJ5Q29Mdi9q?=
+ =?utf-8?B?VUppMnpDNm5FRWFIU2hQQnkyRW4xS0RXaitzSm1Sc0o5SlAzNnBWdC9BdjV0?=
+ =?utf-8?B?YWJ4RXloRjZxWG9wRm9LZVZ6MXhlcjJjclMvMnVuYndXUFc5TkhEYlNqb0F6?=
+ =?utf-8?B?c0ZZYllqc1JzUlFJNmE2NnBXaFZncXBUNHoxVVVwRTk1R3NsMGNmS0xBUHJT?=
+ =?utf-8?B?NDhEMVN1ajJSNlVSSC9zRUdVeSttZzVxZURvRzZod2FKQmJibW05WFRpUWwx?=
+ =?utf-8?B?NjUxNVU0ZHdmRHd6TFBJNE9CeWtqOWJhMkdzc3VYeDlwaXBwRUFYWXFJS1I5?=
+ =?utf-8?B?cW5ocnFySzZndGd5bDBOajFsdkJlYjhkWVZ3SGphTG54QnRHdlhtRTFtVkEv?=
+ =?utf-8?B?b0FhRnlLbkR4Q2t2TzBOWlFzWUlSSVhibytDTkxSU2NjM0dmSlpUeVBQNFNs?=
+ =?utf-8?B?ZHdDVzUyUWFtZlh6eGVXaEFtc0RUZENoNytuek1rVDByMjRsb2VsOGN3c2lK?=
+ =?utf-8?B?OVVBMTdpZU9sYWVtRGZNRXRhTW04eS9hRzIwZ2J0N1JRZFhCQ1U4cktRZXZK?=
+ =?utf-8?B?SFpnVGxaMWs5cVBORXpTKyt0NEdhVWhFT0hRcGlQZ2xTSDdPY0lDNGhpRy94?=
+ =?utf-8?B?ZS9ocytxaXRnQ1RJMEF1Vkt1NjIwTTRxZlhPOXFsWWc5amxUaVJsZ0NBM0hP?=
+ =?utf-8?B?aTdQUm1ZVnlpMXFmS0RhUUIxRGJtd2lYaVVZc1JlSi9GcUpSTzFHNm85RkM4?=
+ =?utf-8?B?RjhkWnBIZzFmM0cwdnZidjBtQkZMNlhhMDg5UzhKT003QnM4dmFLRzZxOTY0?=
+ =?utf-8?B?RktQRmEwNHdnQ3RTOWRlVEtRTnVwU2NZaWhDNWljbmpNR0Y5S0toOW11VDQ2?=
+ =?utf-8?B?Z0NLL2s1WTNONmRTdW5HSll3endLcnd0c1hwbnJHVVBJUENqajgxVzd1RXZN?=
+ =?utf-8?B?YjhiWGNRVXY3em83QlI0d1hyc1g1SC9lT2lQSFcrRlV6bGcxR2JFRXZRYkwx?=
+ =?utf-8?B?ODM3ZVJnT2NqTC84UHVIcWtGTTdLNmJURi9DK3J3VkExQXBZUjltaTBhK0RG?=
+ =?utf-8?B?V0ZNcFNtVEhqMUcrV3MvdWVXWVFvMVpSUW9KNll3QldtWE1UdmNyNitxdnZO?=
+ =?utf-8?B?cGNvMXpUMHdHRXpkcFVaSUxVb3prSnJmRUErN3FvRnZEK1Y1RFh5dDVwbXFq?=
+ =?utf-8?B?R3dFRnBLTjJMaHdGN3Faay93dDBxWUZhTmlyZU00d2NldDNpRHFwMUlsTFpF?=
+ =?utf-8?B?YVV0d3BoMVdKMkF2T2tiMVhyT0VlKzU4K0cyTjlZbjIzSE92Z2JwL1RZZVNi?=
+ =?utf-8?B?V0ptdGRhbjljMURjZ3JPS0oyOWo2Njlrcy9QL2xPUHVOZzh5Q0l4aXUwRll2?=
+ =?utf-8?B?SVVzRWNBV3k4MWNxdmFCV2FSSW1EK0ZZZ1pTN2pTYWFVakVXd3FNVTBGVzFL?=
+ =?utf-8?B?eTJaZXkwSFpTclhFQWFTdlhXL0JnNXhKNUhTNGNSai9vanZwUEtGRjJOMFo4?=
+ =?utf-8?B?MTMrdHRld2JILzZSVlRySURpZlF5cjV4amNncDdObGtzVkxQaWRYMUw3K1dQ?=
+ =?utf-8?B?dUpzbzJhSCtKOFBWM0RhZjFVVTJLK3JOTmtGMXg3VCs0TkkwUTJkZXJzdzdS?=
+ =?utf-8?B?TnVNdGxTeTZNVlowbWhsdFNLbHF3VGNwd3hEYTVlY05ublJQdWdVQUpXTm80?=
+ =?utf-8?B?aGEzMXpweENoRHZ1WGgwOWlsbVkyTnFOSnczWnh5RTZONk42cWgxc2dZOXpF?=
+ =?utf-8?B?MFB4Z2FWRk90TVk0enpBWEplL1NKNk9rNkdGS28waU5Hb1hUaFZtTnZ2bUtm?=
+ =?utf-8?B?V1hhUTJSVkVLTE84NkdybFhKdldleVBuUnQ2K0NndGNHU3JOVEFVZ2VzRmlj?=
+ =?utf-8?B?bTFZN3lUdlF5dHI0R1JXL2c5bmRiZGR0NjVkaUdueklxRlNUWUxzNDdNOVpo?=
+ =?utf-8?Q?KC/qhZ3gQwbBwkbgNHQPRe0S1?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 640034cd-16ad-4c90-ea10-08dcf92a236c
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd56064d-c55f-4ff9-f817-08dcf92ab139
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 21:30:55.9613
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 21:34:53.8621
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IpsQzqqVbZ4XDVhvgl1IkFwup2EW1urFlb8uLXhmjxHUSA1g91CtEC9p1MXXxOtRImdxQAXCtJSlIag4J/jEtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7989
+X-MS-Exchange-CrossTenant-UserPrincipalName: V4swhu+7jQTGE84LP7FLjpC2UKWRuR8pYRb2mjxrIlKIGnDfKPBXZlwHHmgfxwgxX8AokkqXsz/lQc+NH698tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8651
 
 Hi Jonathan,
 
-On 10/30/2024 11:07 AM, Jonathan Cameron wrote:
-> On Fri, 25 Oct 2024 16:03:04 -0500
+On 10/30/2024 11:11 AM, Jonathan Cameron wrote:
+> On Fri, 25 Oct 2024 16:03:05 -0500
 > Terry Bowman <terry.bowman@amd.com> wrote:
 >
->> The CXL drivers use kernel trace functions for logging endpoint and
->> RCH downstream port RAS errors. Similar functionality is
->> required for CXL root ports, CXL downstream switch ports, and CXL
->> upstream switch ports.
+>> pci_driver::cxl_err_handlers are not currrently assigned handler callbacks.
+>> The handlers can't be set in the pci_driver static definition because the
+>> CXL PCIe port devices are bound to the portdrv driver which is not CXL
+>> driver aware.
 >>
->> Introduce trace logging functions for both RAS correctable and
->> uncorrectable errors specific to CXL PCIe ports. Additionally, update
->> the PCIe port error handlers to invoke these new trace functions.
+>> Add cxl_assign_port_error_handlers() in the cxl_core module. This
+>> function will assign the default handlers for a CXL PCIe port device.
+>>
+>> When the CXL port (cxl_port or cxl_dport) is destroyed the CXL PCIe port
+>> device's pci_driver::cxl_err_handlers must be set to NULL to prevent future
+>> use. Create cxl_clear_port_error_handlers() and register it to be called
+>> when the CXL port device (cxl_port or cxl_dport) is destroyed.
 >>
 >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> +CC Mauro and Shiju to give the tracepoint a sanity check and for
-> awareness that we have something new to feed rasdaemon :)
->
-> Jonathan
->
+> One trivial comment inline. 
 >> ---
->>  drivers/cxl/core/pci.c   | 16 ++++++++++----
->>  drivers/cxl/core/trace.h | 47 ++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 59 insertions(+), 4 deletions(-)
+>>  drivers/cxl/core/pci.c | 35 +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
 >>
 >> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index adb184d346ae..eeb4a64ba5b5 100644
+>> index eeb4a64ba5b5..5f7570c6173c 100644
 >> --- a/drivers/cxl/core/pci.c
 >> +++ b/drivers/cxl/core/pci.c
->> @@ -661,10 +661,14 @@ static void __cxl_handle_cor_ras(struct device *dev,
->>  
->>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->>  	status = readl(addr);
->> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
->> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
->> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
->> +		return;
->> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
->> +
->> +	if (is_cxl_memdev(dev))
->>  		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
->> -	}
->> +	else if (dev_is_pci(dev))
-> How would you get here otherwise? Is it useful to know it is a pci device
-> here?
-This dev_is_pci() check is not necessary and can be removed.
-
->> +		trace_cxl_port_aer_correctable_error(dev, status);
+>> @@ -839,8 +839,36 @@ static bool cxl_port_error_detected(struct pci_dev *pdev)
+>>  	return ue;
 >>  }
 >>  
->>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
->> @@ -720,7 +724,11 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>> +static const struct cxl_error_handlers cxl_port_error_handlers = {
+>> +	.error_detected	= cxl_port_error_detected,
+>> +	.cor_error_detected	= cxl_port_cor_error_detected,
+> Odd spacing?  I'd just use a single space as aligning these almost
+> always makes for messy future patches.
+
+Thanks for pointing out. I'll fix it.
+
+Regards,
+Terry
+
+>> +};
+>> +
+>> +static void cxl_assign_port_error_handlers(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_driver *pdrv = pdev->driver;
+>> +
+>> +	if (!pdrv)
+>> +		return;
+>> +
+>> +	pdrv->cxl_err_handler = &cxl_port_error_handlers;
+>> +}
+>> +
+>> +static void cxl_clear_port_error_handlers(void *data)
+>> +{
+>> +	struct pci_dev *pdev = data;
+>> +	struct pci_driver *pdrv = pdev->driver;
+>> +
+>> +	if (!pdrv)
+>> +		return;
+>> +
+>> +	pdrv->cxl_err_handler = NULL;
+>> +}
+>> +
+>>  void cxl_uport_init_ras_reporting(struct cxl_port *port)
+>>  {
+>> +	struct pci_dev *pdev = to_pci_dev(port->uport_dev);
+>> +
+>>  	/* uport may have more than 1 downstream EP. Check if already mapped. */
+>>  	if (port->uport_regs.ras) {
+>>  		dev_warn(&port->dev, "RAS is already mapped\n");
+>> @@ -853,6 +881,9 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
+>>  		dev_err(&port->dev, "Failed to map RAS capability.\n");
+>>  		return;
 >>  	}
->>  
->>  	header_log_copy(ras_base, hl);
->> -	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
->> +	if (is_cxl_memdev(dev))
->> +		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
->> +	else if (dev_is_pci(dev))
-> as above.
-Got it and thank you.
->> +		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
 >> +
->>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>> +	cxl_assign_port_error_handlers(pdev);
+>> +	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
 >>  
->>  	return true;
->> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
->> index 8672b42ee4d1..1c4368a7b50b 100644
->> --- a/drivers/cxl/core/trace.h
->> +++ b/drivers/cxl/core/trace.h
->> @@ -48,6 +48,34 @@
->>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
->>  )
+>> @@ -865,6 +896,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+>>  {
+>>  	struct device *dport_dev = dport->dport_dev;
+>>  	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport_dev);
+>> +	struct pci_dev *pdev = to_pci_dev(dport_dev);
 >>  
->> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
->> +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
->> +	TP_ARGS(dev, status, fe, hl),
->> +	TP_STRUCT__entry(
->> +		__string(devname, dev_name(dev))
->> +		__string(host, dev_name(dev->parent))
->> +		__field(u32, status)
->> +		__field(u32, first_error)
->> +		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
->> +	),
->> +	TP_fast_assign(
->> +		__assign_str(devname);
->> +		__assign_str(host);
->> +		__entry->status = status;
->> +		__entry->first_error = fe;
->> +		/*
->> +		 * Embed the 512B headerlog data for user app retrieval and
->> +		 * parsing, but no need to print this in the trace buffer.
-> I'm not sure any printing as such goes on in the trace buffer. It is from
-> the data in the trace buffer I think.
-Right, the comment indicates it is not printed but included here because the buffer can be accessed by applications. Regards, Terry
->> +		 */
->> +		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
->> +	),
->> +	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
->> +		  __get_str(devname), __get_str(host),
->> +		  show_uc_errs(__entry->status),
->> +		  show_uc_errs(__entry->first_error)
->> +	)
->> +);
+>>  	if (dport->rch && host_bridge->native_aer) {
+>>  		cxl_dport_map_rch_aer(dport);
+>> @@ -883,6 +915,9 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+>>  		dev_err(dport_dev, "Failed to map RAS capability.\n");
+>>  		return;
+>>  	}
 >> +
->>  TRACE_EVENT(cxl_aer_uncorrectable_error,
->>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
->>  	TP_ARGS(cxlmd, status, fe, hl),
->> @@ -96,6 +124,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
->>  	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
->>  )
+>> +	cxl_assign_port_error_handlers(pdev);
+>> +	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
 >>  
->> +TRACE_EVENT(cxl_port_aer_correctable_error,
->> +	TP_PROTO(struct device *dev, u32 status),
->> +	TP_ARGS(dev, status),
->> +	TP_STRUCT__entry(
->> +		__string(devname, dev_name(dev))
->> +		__string(host, dev_name(dev->parent))
->> +		__field(u32, status)
->> +	),
->> +	TP_fast_assign(
->> +		__assign_str(devname);
->> +		__assign_str(host);
->> +		__entry->status = status;
->> +	),
->> +	TP_printk("device=%s host=%s status='%s'",
->> +		  __get_str(devname), __get_str(host),
->> +		  show_ce_errs(__entry->status)
->> +	)
->> +);
->> +
->>  TRACE_EVENT(cxl_aer_correctable_error,
->>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
->>  	TP_ARGS(cxlmd, status),
 
 
