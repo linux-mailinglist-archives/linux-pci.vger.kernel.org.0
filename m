@@ -1,172 +1,157 @@
-Return-Path: <linux-pci+bounces-15599-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15600-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11E909B63EC
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 14:19:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A92CB9B64C7
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 14:52:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 357711C20E24
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 13:19:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AB251F231C3
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 13:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 374DF56B81;
-	Wed, 30 Oct 2024 13:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F07A1F12FD;
+	Wed, 30 Oct 2024 13:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDQrniUO"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b="Yh3moyUG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0514117579;
-	Wed, 30 Oct 2024 13:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CA11F4FB5;
+	Wed, 30 Oct 2024 13:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730294340; cv=none; b=mmkB6FLqVR4vMGaY/ypsW7Pq8fIBgsmtCwPc+mtl6uKjwLS6fEuTCflR7UeyfKSverrfRVQydo/nndPhZnlyWMAPkvWGQNHfV6Tusu3RRHbvfFBlYWgA0GTXMVIgIAN5k6AutdSUfNhOAHhwRPk+dkQAzGGbiT5ijbxExiMdelY=
+	t=1730296246; cv=none; b=qghXuSt6HuEzojwTRh973jzdqy7nNtCYkUqx0GaKHENUeFa6JUwW5ALoCOCzd6idfJhKUnEMAipFjos6EuF467fTb3LIIwVmUBNk01AreMlQgEXW+Vy25l9rr/+MJjIrZBQT9o+E+OlYIOZyKKG6zVBcmn+Xi51rcrcU11vL3HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730294340; c=relaxed/simple;
-	bh=SGyl53QrSXt0NK+s0TZTOWpg5y0Q+SHCYZKlj5mUth0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TzKqStdT6uBNu1vvDwPrh45cE8dLbsvhiz1c3D0PTSwXxarEUt9hgsEygmSHNOvtiUcdT2lO+FvMrLNXVZ0ECQlW0jVxBz8JzNQ4HZohMBJM14GS8FzL8ly0/ZGLMwhK/UZZpzpaqx0oa4Yp/ly+rI39jwzH8pzzt67ka81vlGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDQrniUO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 935F4C4AF0D;
-	Wed, 30 Oct 2024 13:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730294338;
-	bh=SGyl53QrSXt0NK+s0TZTOWpg5y0Q+SHCYZKlj5mUth0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oDQrniUOEt7Nu28y198TARsKSRQWEdfQNjz1UvtRgj3V6Fjm2/R7sWOw9T+C6ThXx
-	 BZEDiiv8ygh26EMMY+Nsdx2qC0EIteHw3YbA7NjnVXaSgb4G5biqH5WACjYkYwKte0
-	 jzYcq76H8gAcf/eXJ/bxSkJwFSZFoo1ZGXAbvSzzCvOkS8tvsku06NpP2f6pDKmAK8
-	 ZaXBpd8DI0HhQ9vdurQzxnGa4hSmnomsT3Ome8uIZGQw+LtbtHDEzWs5eozLjpJaHz
-	 a8s/TlgOCJtfB1Jd/XJqzgc595L3LEhp1YzlEql3c9AnaSXNQu8d6dCpR7QmtXtuVO
-	 wIwxB80AejVQQ==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-539e13375d3so7481341e87.3;
-        Wed, 30 Oct 2024 06:18:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSOVLPK90vfmuX7CbMxGhyD50JjXb+9cQYFI3l35w5nuK4tSQR1pTPNrzIzoXPeW0amRzdexJ6MBRc@vger.kernel.org, AJvYcCVFyfGcq5NrBZVWlUeTRSj6l1TMLpNseJjXtUIyfdSGzCHJODvfxBh6hxt++JCeIt2iQSW+jcwX6I8f9s5z@vger.kernel.org, AJvYcCW/Am8t33Z+zUNuefygExMMzYCNH2lHfg9Wif7nXoTvMH8D0CTbYveoCyK1JGX689C1fA8Rn3V5kVA5sRfD73w=@vger.kernel.org, AJvYcCWFkoCnnT+3/EU4hcprgMmTMu9720lscy/Saf4VBVR8yNlE9i1BuububNVGVxi+ZimED0aoDfdRPrQ2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT46pjCZb+M9Rtmbhp6QCUUirrmZDTmLbI9yXAVizjZxMCrvbx
-	hjB26OWO9T6Yrn7ddDtGcFBZHVZ/+LlpyjSnx21SB1zjiFr2g1CqFDgbCQPGkRT/HlyFZH7uUv6
-	rR+frKO70QvU44aGkOtd4DnkSvg==
-X-Google-Smtp-Source: AGHT+IEVKvqZU3lwKIBTDRwXuRwrMn8l0pyFDoASwjFpuJlO7j5nl3i6/F0Uq11GWp7kjD53mP60fhBKM1x1llFdaqA=
-X-Received: by 2002:a05:6512:3ba7:b0:539:530e:9de5 with SMTP id
- 2adb3069b0e04-53b34b3bc7amr7674957e87.56.1730294336832; Wed, 30 Oct 2024
- 06:18:56 -0700 (PDT)
+	s=arc-20240116; t=1730296246; c=relaxed/simple;
+	bh=D7AqZoX4gYwteb6RFEF1+ZVpyBKM5MFuI9FZMJjT8pA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NzjIvZVrBwHJ8xA9b1jflLGbBGbyDeCdBsXczkVTfq6DGWyFDEQUxXMWrLpPYKX8nsF0K4h7egmwlLJOThCGYnehapTRYAOumIsplEJtzqK1R0st3fJI8ksRxhoB7iucIgYOcPoazSrt24PPRFIxx5UqI1jBla8YD0GGDLrrqZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b=Yh3moyUG; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1730296100; x=1730900900; i=metux@gmx.de;
+	bh=D7AqZoX4gYwteb6RFEF1+ZVpyBKM5MFuI9FZMJjT8pA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Yh3moyUGQiWIS5M+hsYMxsskv2Uv6AVjW1tdiExk6hc2qFHctV/5S+d5s0VDetbM
+	 ddXzSOgh4H9xiXZWdQQ9p/bxvJbpfC0cdzm2GjGMdqdGKR57jEv3O/HGnXyhdweD7
+	 ccaRv5YiORcBs53mTe9MAMZYMlaZpugACFe7+1ZbAb3e16vRosw+4uqYuCKyFoPSh
+	 ebsVFbcCQx46mA6re4AGlNQES/piXbnlltBhxqaooB41ez9ls791F95cmnbKf5nr/
+	 8wGbqi5BkhpQ516UfzX6Hh0kPqS8AZWmCVzVbglOwE3a8FbBCeynePOSL575ZcOid
+	 Dd1YAX2gyFNCokhe8Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.178] ([95.114.207.188]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3DO3-1t9iMT01nh-006fzu; Wed, 30
+ Oct 2024 14:48:20 +0100
+Message-ID: <b410a7fb-58c0-4d17-b818-54ec3476833a@gmx.de>
+Date: Wed, 30 Oct 2024 14:48:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-16-dakr@kernel.org>
- <42a5af26-8b86-45ce-8432-d7980a185bde@de.bosch.com> <Zx9lFG1XKnC_WaG0@pollux>
- <fd9f5a0e-b2d4-4b72-9f34-9d8fcc74c00c@de.bosch.com> <ZyCh4_hcr6qJJ8jw@pollux> <8d72e37e-9e27-4857-b0eb-0b1e98cc5610@de.bosch.com>
-In-Reply-To: <8d72e37e-9e27-4857-b0eb-0b1e98cc5610@de.bosch.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 30 Oct 2024 08:18:43 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL674Mf5_QcWxEn-oStMx45_VsaQfbN-Qzh3jEtXdsyYA@mail.gmail.com>
-Message-ID: <CAL_JsqL674Mf5_QcWxEn-oStMx45_VsaQfbN-Qzh3jEtXdsyYA@mail.gmail.com>
-Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
- driver abstractions
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com, 
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com, 
-	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com, 
-	lyude@redhat.com, daniel.almeida@collabora.com, saravanak@google.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel maintainer *CENSORED* on LKML [WAS: linux: Goodbye from a
+ Linux community volunteer]
+To: =?UTF-8?Q?Dragan_Milivojevi=C4=87?= <d.milivojevic@gmail.com>,
+ "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Peter Cai <peter@typeblog.net>, phoronix@phoronix.com,
+ Goran <g@odyss3us.net>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
+ Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
+ Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang
+ <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>,
+ netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Nikita Shubin <nikita.shubin@maquefel.me>,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io,
+ Linus Torvalds <torvalds@linux-foundation.org>, "[DNG]"
+ <dng@lists.dyne.org>, redaktion@golem.de, dev mail list <dev@suckless.org>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+ <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+ <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
+ <CALtW_agj1rurb3DRrPd9o2mkfku5fq_M3CEKY5sW+Zz7shKYHA@mail.gmail.com>
+ <6d37175d-1b0b-4b82-80f0-c5b4e61badbf@metux.net>
+ <2f12ee89-af9f-4af1-8ec8-ede1d5256592@metux.net>
+ <CALtW_agiJyX3sTaBKgwPF7X920=+fFrRgXMPt4x_GCDOMfZy_w@mail.gmail.com>
+ <CALtW_aimN531aZKSSG4hVLeQDk6bUoujopkhCh57xsaxfJrYgA@mail.gmail.com>
+Content-Language: tl
+From: metux <metux@gmx.de>
+In-Reply-To: <CALtW_aimN531aZKSSG4hVLeQDk6bUoujopkhCh57xsaxfJrYgA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:02/JYljBFpt12zmY0Go6Xkn401QYmKavoXnaT8EeSlrAHbRsx8n
+ Zdvv/lLJxVdM8nFQizZfTKEW37UKSRmLg/f7sd3o97CFe9/qm8RP0UtwctZ+qxVObR/jFNw
+ m13fSOqomvd7q+gMqAZ942T8v05wPOrYZpb9mIQDrg5MXcznAOy7aytPmL3VlgdapjHCO2n
+ gp70ijx1LoNifjgVmNeng==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XMcg9mQEW00=;8p/Sr9f43i/VMDKIw0uuN4zeFJj
+ 4TzNACOpE4r2YbLQxZ5xl1PnYM+gpaKmM07XslwcqNngCXLB/XttSLHNSdEvR8s3B47NjhE4Z
+ gzCXT1FKQIMCgB4RbRzC6MGKa+z4KYaV7xlHwMBOtWQFO7JG1x6IekOpKNRsdDBnGGQUPlX5Q
+ NpiKIH7f7dZZbkUks6KHEL7Cw1yhhM+DDxR9v+J8Y3EbhOl+pqDAa5zkW031TMU6RP1NAEh8L
+ w5W3BMaUImgWK3HjJCuWDQJW/uapa9utlZeZFhk75sKmzP+v1VvDNGawPrYnM7ZqwfhA2BDLH
+ xCLmFjHW61xtNh01x6lEDKLLctnwXP5AGjDyUp+umcxFONS2fffaPA+V8uvn5YPPgJmqGElw7
+ ALecE9QNd4O+9zMnfh5BS1I72wVO3CM0k8ewBwd2TTSh2X2ZZKSjE9eFtU23D8SV6SNHGq3VL
+ hAB1H7fXdigm8b9aLmTxZjJ/1RMDu8ef4YggBoz1+WVG2VnrSKtNta/WWzAI3QtcBoZnsWcrO
+ It2zyC6kJ8mGD8XBqofmwTlL3LP2+cvIE18rL7d36PTROQgvVSW7DFkJU1AspI6covtd35jCZ
+ FXHGPfFDc+r41fAp7tjNc4DHJlUFZ3ga4LaJitNOM1JvBfmrazXfH21sxmaO6nAmN2F7MmKun
+ 5BG2jzR0E2loJkz+FDYujXL4ittyLdbZ0KAQFKHl+5A+k48zyYBpc/peSRZITevB55Kav7VlS
+ TchpkcgA4n3JLFkMgA95jPXj+i2mXrTz9GOVbUHx3l0Nfa7L3hALf6Ni2Zqc97rk3b9xf1z4d
+ 4miKQK+swI7CsaCsEeJgfj+GwJ6elj8XkjCLKiEWjNXvk=
 
-On Tue, Oct 29, 2024 at 4:19=E2=80=AFAM Dirk Behme <dirk.behme@de.bosch.com=
-> wrote:
+On 29.10.24 20:33, Dragan Milivojevi=C4=87 wrote:
+
+Hi,
+
+>>> First I've thought it's just when replying specific mails, but now
+>>> turned out *all* my mails are blocked, even totally unrelated things.
+>>> I can confirm it's not by the message content, but my mail address or
+>>> domain. I'm blocked from whole kernel.org
+>>
+>> Same thing on my end, partial sample: https://imgur.com/a/l4Jcfhk
 >
-> On 29.10.2024 09:50, Danilo Krummrich wrote:
-> > On Tue, Oct 29, 2024 at 08:20:55AM +0100, Dirk Behme wrote:
-> >> On 28.10.2024 11:19, Danilo Krummrich wrote:
-> >>> On Thu, Oct 24, 2024 at 11:11:50AM +0200, Dirk Behme wrote:
-> >>>>> +/// IdTable type for platform drivers.
-> >>>>> +pub type IdTable<T> =3D &'static dyn kernel::device_id::IdTable<of=
-::DeviceId, T>;
-> >>>>> +
-> >>>>> +/// The platform driver trait.
-> >>>>> +///
-> >>>>> +/// # Example
-> >>>>> +///
-> >>>>> +///```
-> >>>>> +/// # use kernel::{bindings, c_str, of, platform};
-> >>>>> +///
-> >>>>> +/// struct MyDriver;
-> >>>>> +///
-> >>>>> +/// kernel::of_device_table!(
-> >>>>> +///     OF_TABLE,
-> >>>>> +///     MODULE_OF_TABLE,
-> >>>>
-> >>>> It looks to me that OF_TABLE and MODULE_OF_TABLE are quite generic n=
-ames
-> >>>> used here. Shouldn't they be somehow driver specific, e.g. OF_TABLE_=
-MYDRIVER
-> >>>> and MODULE_OF_TABLE_MYDRIVER or whatever? Same for the other
-> >>>> examples/samples in this patch series. Found that while using the *s=
-ame*
-> >>>> somewhere else ;)
-> >>>
-> >>> I think the names by themselves are fine. They're local to the module=
-. However,
-> >>> we stringify `OF_TABLE` in `module_device_table` to build the export =
-name, i.e.
-> >>> "__mod_of__OF_TABLE_device_table". Hence the potential duplicate symb=
-ols.
-> >>>
-> >>> I think we somehow need to build the module name into the symbol name=
- as well.
-> >>
-> >> Something like this?
-> >
-> > No, I think we should just encode the Rust module name / path, which sh=
-ould make
-> > this a unique symbol name.
-> >
-> > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-> > index 5b1329fba528..63e81ec2d6fd 100644
-> > --- a/rust/kernel/device_id.rs
-> > +++ b/rust/kernel/device_id.rs
-> > @@ -154,7 +154,7 @@ macro_rules! module_device_table {
-> >       ($table_type: literal, $module_table_name:ident, $table_name:iden=
-t) =3D> {
-> >           #[rustfmt::skip]
-> >           #[export_name =3D
-> > -            concat!("__mod_", $table_type, "__", stringify!($table_nam=
-e), "_device_table")
-> > +            concat!("__mod_", $table_type, "__", module_path!(), "_", =
-stringify!($table_name), "_device_table")
-> >           ]
-> >           static $module_table_name: [core::mem::MaybeUninit<u8>; $tabl=
-e_name.raw_ids().size()] =3D
-> >               unsafe { core::mem::transmute_copy($table_name.raw_ids())=
- };
-> >
-> > For the doctests for instance this
-> >
-> >    "__mod_of__OF_TABLE_device_table"
-> >
-> > becomes
-> >
-> >    "__mod_of__doctests_kernel_generated_OF_TABLE_device_table".
+> And it is spreading, previous message to dng@lists.dyne.org was rejected=
+ with:
 >
->
-> What implies *one* OF/PCI_TABLE per path (file)?
+> "Message rejected by filter rule match"
 
-It's generally one per module, but it's one per type because it is one
-type per driver. So platform (and most other) drivers can have $bus,
-DT, and ACPI tables.
+Do you have some evidence that Devuan's mail server is really blocking
+us ?
 
-While you could have 1 module with N drivers, I don't think I've ever
-seen that case and certainly not something we'd encourage. Perhaps it
-is just not possible to disallow in C, but we can in rust? That may be
-a benefit, not a limitation.
+If so, I'd be exceptionally surprised.
 
-Rob
+
+=2D-mtx
 
