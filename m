@@ -1,153 +1,169 @@
-Return-Path: <linux-pci+bounces-15650-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15651-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBA079B6C34
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 19:34:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8663A9B6C4B
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 19:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C10D282666
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:34:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEC681C20E65
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D86341CC15E;
-	Wed, 30 Oct 2024 18:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C8B21BD9F1;
+	Wed, 30 Oct 2024 18:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b="PxEy5NXZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8/Ly+cO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3301C8FD6;
-	Wed, 30 Oct 2024 18:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A401BD9D1
+	for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 18:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730313257; cv=none; b=B0KTBEc4E62GdwM7/Up6MXTpJoc1AU4/ArAVkSaWzlR6F2pua3xnNXQSJZVvX4uUnkK0a8IEhs6gCOjX/MJpzrCoipq6OcF2GXl8dfXoi3/MDDz6/xok48hyUBEYRP1xo6o9jLp24oLIZyHZ4z7DxWaiymeHtxc5S2iSEo65xEk=
+	t=1730314003; cv=none; b=B4CPFfIxgv9aBfH5CUoEsuU0sOsfAuTJgOpsJ8JrlIxMM+bEiBjW+X8+91FD4pzXEA/3ZK90fdWkUjIhqIogcfRzEGFrG4zLJRiXZwC5tLDTnr4LEGvexRH4/5G7jrPW8lCRv51Ngt75tRkiNAYWOEJUqR0WRefL/ZUKMaRYHhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730313257; c=relaxed/simple;
-	bh=qVSlmDSlEDWcfpve3SDrSeg/8UVEvUP9GHMSIPm116o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pUgiykXD8ZYfHcNKWjA03W96/5PVfA1CbEW4W/CmMvBKPAQuowXgHTTjKYT620nVQN2XXyxrMmc2667x27n9GX47FU3S7/E+9GzaTIucjPxq9qh9AwFRL0WDBYb9uQEEd0uvHGI2CahOPapHrUAGwor3MY6mXKESB7shde+IHMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b=PxEy5NXZ; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1730313146; x=1730917946; i=metux@gmx.de;
-	bh=qVSlmDSlEDWcfpve3SDrSeg/8UVEvUP9GHMSIPm116o=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=PxEy5NXZPnL/khf+ZM27BR9NEpxVSB3HZ/B8yIFsHo+4hMZE6ntqAJmMaxw7Xseo
-	 gaIIZIwwVO9VT8D2ZAyDVhi2PZiaScE1eknfpKrAKCIAemHMxOAxaoyTqpoE6Jeu7
-	 2U5iwP9MNWVVH34yc3A/eCCC2GfvO3KMgzMKRz4LtjlKhERpzpOUHDIyJEVFIhMaJ
-	 3r3mGdjZDZfdrTPKDAPGxgg+EXB4TEBE4sp9lE0/MkWyfyC3o93hE/PEShWUOIUZS
-	 sq3039eZOOaH0CEL5pPa8D+gdQAgjz3j5h71lTqlNcOunuwf9c5sdbaOcoAZ/KV7z
-	 GdU/W9tMEPE+WiJERw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.178] ([77.2.112.201]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mr9Bk-1tbeU32akI-00j5Eb; Wed, 30
- Oct 2024 19:32:25 +0100
-Message-ID: <2cf94b06-fbaf-4c04-941a-4de052a5c484@gmx.de>
-Date: Wed, 30 Oct 2024 19:32:59 +0100
+	s=arc-20240116; t=1730314003; c=relaxed/simple;
+	bh=l+ecJbm/aUQtIvrPiYspqzUjap35Pt3yFHgDQiaSyhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KUVNwwGkDDTOKbS37zUvfiVELBGj4wLeh5A/SguiVxykABCSpmMrKNDdnsXrY3FWdG1Ou+qqmkQyiep7uGlPKgv+OoHAwznT5nPoOTXSO4EwXHJmBkg0MOJfwicIiSsLJs0NWCRHbXIlrNTBwJXb1u2QvCxMEuOpI9RQP2+hjgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8/Ly+cO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B53C4CECE;
+	Wed, 30 Oct 2024 18:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730314002;
+	bh=l+ecJbm/aUQtIvrPiYspqzUjap35Pt3yFHgDQiaSyhI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=D8/Ly+cOsDXI5VCy74m3maVFa6izmnu7c0Mj6hex6T1jRykWhJk5DPwnLkDUn+FJu
+	 hM5Nvn4lWhvc4g2B9FxPt5cHuIXDKMhHC8V7GXGlzQwuZsBGSSsNmryLGm9axCwLwM
+	 h/RsvaBeSCDtm0icbrp7D3Akn8SscQ8vL+1Xz0qEbJ4Ay2S+DoD3vv8Ksw8FRfreT3
+	 9/Q/bt5HaptPG/xmYbbMZKSdxWpt3lP1jH2jyEOAeNvYD0tBTuyzh7LdgdX08YMnUY
+	 QJyaGFCOSR6xQMuDsKKuGG1PynvvHLpq9Eux1lHB6Ggl5V7nEKJTGZikOuIMfo+Ga+
+	 nEO2jye0EdQBw==
+Date: Wed, 30 Oct 2024 13:46:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
+ of same device
+Message-ID: <20241030184641.GA1210322@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel maintainer *CENSORED* on LKML [WAS: linux: Goodbye from a
- Linux community volunteer]
-To: =?UTF-8?Q?Dragan_Milivojevi=C4=87?= <d.milivojevic@gmail.com>,
- metux <metux@gmx.de>
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>,
- Peter Cai <peter@typeblog.net>, phoronix@phoronix.com, Goran
- <g@odyss3us.net>, James Bottomley <James.Bottomley@hansenpartnership.com>,
- Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
- Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
- Paul Burton <paulburton@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
- Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang
- <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>,
- netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
- Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Nikita Shubin <nikita.shubin@maquefel.me>,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io,
- Linus Torvalds <torvalds@linux-foundation.org>, "[DNG]"
- <dng@lists.dyne.org>, redaktion@golem.de, dev mail list <dev@suckless.org>
-References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
- <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
- <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
- <CALtW_agj1rurb3DRrPd9o2mkfku5fq_M3CEKY5sW+Zz7shKYHA@mail.gmail.com>
- <6d37175d-1b0b-4b82-80f0-c5b4e61badbf@metux.net>
- <2f12ee89-af9f-4af1-8ec8-ede1d5256592@metux.net>
- <CALtW_agiJyX3sTaBKgwPF7X920=+fFrRgXMPt4x_GCDOMfZy_w@mail.gmail.com>
- <CALtW_aimN531aZKSSG4hVLeQDk6bUoujopkhCh57xsaxfJrYgA@mail.gmail.com>
- <b410a7fb-58c0-4d17-b818-54ec3476833a@gmx.de>
- <CALtW_ah07h7h6eNHHGNNeKzVkNi7hVOG3q4Pv9DNacpXgve5Sw@mail.gmail.com>
-Content-Language: tl
-From: metux <metux@gmx.de>
-In-Reply-To: <CALtW_ah07h7h6eNHHGNNeKzVkNi7hVOG3q4Pv9DNacpXgve5Sw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RwtMXzTkBDRWvHmp0Kk6XRNw8KkUfi9Grj7L3bmCj6cM8b4QBRJ
- nNQyNDflw/d6PbexIox9ShCoDZ/pcYmmDaszMMRbbihXY91rMPHcT/ve1uP86sxKdRx1g1E
- LMIpkJ9atodTw+nhg14XzBrSVxLSAAYObFblsohBrRQc7SmScMKCDm1cN4U3B+pQtjnpw4U
- MI13I3wb6wItEr6vDq2pA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Ui1bpSsuH8A=;dfPECkdyGYjzvQovpk1mLrv2yHW
- Y6UHJ1D/kuELphaY3MXcMXRxjPPUeT4qliBwr9JiO9sSSiMATtjINoXzJwb//1wKiimLswgG4
- KDUFZoy+92BvMG+CVaIbYt4kN50oREhek7P4SWst1Gq32A+C0vNGj1E/0w6PCHq9Io9ZJfO1Q
- bDgdGgHMkRQP4TDh16fgjvk9XLm73lW1IiLywMwb+NAnzND/V6i9u73hcpclC4sKmB42YfOUP
- 3TDY4n8NPogsIMw+oAxoN3FAdnXbRgR+hiZfdYQdFrgyZNt69oCItyIphSgp9NNsaLpsDQbcd
- sOt72shhxR7lF3e8Pmsrc0osdQVDieXS1+Tf0Tf6tFeVvczmApP8pGBIXdDZe7KHQ0TaIDrSS
- hIa9kkTXO+J03hOC2vgze0XupDmJLEo6lzAXydh63tJyp4+B4Wvw11KH8YG5b09K/aeEMFNIA
- kbjVNCObPDtDfmcW8DVNFkVRzOGX3NgE2DGCtMdkjDXXTlE7C8gwDxeTiHZpfTyRh/ze0/wSh
- 43GBM3VR3f7DfeMf3FYyeUtAIjiLAbpeFjFvY0+0jcuf9YT8kiq6D3OEOkdMZWuirHh11f0Im
- EFP4HsracvNPaXIJAhWnNfwipO+FqRgiOoN5QRpQ/7JREIE5DlZC5k0p5HvwJlNjZpn1En4nH
- rgh9PWpEFZO48or7kZK4TJ4pUAje+KBL4bUX6rqdeVCJI1LGKwf5v9Kcw3fs56EuwMx/T6UBv
- hwxLAiR8QA7f+DL5wb9rPG+vvGcKkAh12qDvjGHGPER7zTudE+IvVxJamN3IX2COy9jQrLqUN
- Z0+GnYzHGDOFp8mvjBuCZmEA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA0PR11MB7185C903E9468C3221615F4FF84F2@IA0PR11MB7185.namprd11.prod.outlook.com>
 
-On 30.10.24 14:57, Dragan Milivojevi=C4=87 wrote:
-> On Wed, 30 Oct 2024 at 14:48, metux <metux@gmx.de> wrote:
+On Fri, Oct 25, 2024 at 06:57:37AM +0000, Kasireddy, Vivek wrote:
+> > Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for
+> > functions of same device
+> > 
+> > On Thu, Oct 24, 2024 at 05:58:48AM +0000, Kasireddy, Vivek wrote:
+> > > > Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for
+> > > > functions of same device
+> > > >
+> > > > On Sun, Oct 20, 2024 at 10:21:29PM -0700, Vivek Kasireddy wrote:
+> > > > > Functions of the same PCI device (such as a PF and a VF) share the
+> > > > > same bus and have a common root port and typically, the PF provisions
+> > > > > resources for the VF. Therefore, they can be considered compatible
+> > > > > as far as P2P access is considered.
+> > 
+> > I don't understand the "therefore they can be considered compatible"
+> > conclusion.  The spec quote below seems like it addresses exactly this
+> > situation: it says ACS can control peer-to-peer requests between VFs.
 >
->> Do you have some evidence that Devuan's mail server is really blocking
->> us ?
->>
->> If so, I'd be exceptionally surprised.
+> I am only referring to the specific case where the PF is trying to
+> access (P2P) a VF's resource that the PF itself has provisioned.
+> Shouldn't this be considered a valid access?
+> 
+> > > ...
+> > > > I'm not sure what you refer to by "PF provisions resources for the
+> > > > VF".  Isn't it *always* the case that the architected PCI
+> > > > resources (BARs) are configured by the PF?  It sounds like you're
+> > > > referring to something Intel GPU-specific beyond that?
+> > >
+> > > What I meant to say is that since PF provisions the resources for
+> > > the VF in a typical scenario,
+> > 
+> > Are you talking about BARs?  As far as I know, the PF BAR assignments
+> > always (not just in typical scenarios) determine the VF BAR
+> > assignments.
 >
-> Well it's blocking me that's for sure. Reject message attached.
+> Right, I am indeed talking about BARs.
+> 
+> > Or are you referring to some other non-BAR resources?
+> > 
+> > > they should be automatically P2PDMA compatible particularly when the
+> > > provider is the VF and PF is the client. However, since this cannot
+> > > be guaranteed on all the PCI devices out there for various reasons,
+> > > my objective is to start including the ones that can be tested and
+> > > are known to be compatible (Intel GPUs).
+> > 
+> > Regardless of BAR or other VF resources, I don't think VFs are
+> > automatically P2PDMA compatible.
+>
+> I agree that VFs in general are not automatically P2PDMA compatible
+> but a PF and a VF should be considered compatible particularly when the
+> provider is a VF and PF is the client.
+> 
+> > For example, PCIe r6.0, sec 6.12.1.2  says:
+> > 
+> >   For ACS requirements, single-Function devices that are SR-IOV
+> >   capable must be handled as if they were Multi-Function Devices.
+> > 
+> >   ...
+> > 
+> >   - ACS P2P Request Redirect: must be implemented by Functions that
+> >     support peer-to-peer traffic with other Functions. This includes
+> >     SR-IOV Virtual Functions (VFs).  ACS P2P Request Redirect is
+> >     subject to interaction with the ACS P2P Egress Control and ACS
+> >     Direct Translated P2P mechanisms (if implemented). Refer to
+> >     Section 6.12.3 for more information.  When ACS P2P Request
+> >     Redirect is enabled in a Multi-Function Device that is not an
+> >     RCiEP, peer-to-peer Requests (between Functions of the device)
+> >     must be redirected Upstream towards the RC.
+> > 
+> > Or do you mean something else by "P2PDMA compatible"?
+>
+> I am no longer making any generic claims about devices' P2PDMA
+> compatibility. Instead, as mentioned above, I am only focused on the
+> interactions between a PF (client) and a VF (provider), particularly
+> with Intel GPUs. 
+> 
+> More specifically, I am trying to address a use-case where the VF
+> needs to share a buffer with the PF but is unsuccessful because
+> pci_p2pdma_distance_many(provider, client, 1, true) fails (due to
+> ACS redirect being set) although the buffer is located within a BAR
+> resource that the PF has provisioned and has full access to it.
+> Shouldn't this be allowed?
 
-Are you subscribed to this list ?
+IIUC you want the PF to be able to initiate a transaction on the PCIe
+link to access a VF BAR.  The address in that TLP will be inside the
+VF BAR (and also inside the space defined by the VF BAR<n> and the
+NumVFs value in the PF's SR-IOV Capability).
 
-I recall something like it's subscribers-only (once fell into the trap
-and tried to post w/ wrong address).
+In the PCIe world, I don't think a TLP can "loop back" to another
+function on the same device.  I think it has to go upstream at least
+to the Port above the originating function.  The Port works like a
+PCI-PCI bridge.  The TLP address will be inside a Port memory window,
+so in the absence of ACS, the Port would reflect the TLP back down the
+same link it came from.  I'm pretty sure an analyzer on the link would
+see two distinct TLPs.
 
+But as far as I can tell, when ACS P2P Request Redirect is enabled,
+the spec requires that the Port forward the TLP upstream (regardless
+of the TLP address) instead of reflecting it back to the downstream
+link.
 
-=2D-mtx
+Do you read the spec differently?
+
+Bjorn
 
