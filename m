@@ -1,125 +1,99 @@
-Return-Path: <linux-pci+bounces-15648-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15649-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9206B9B6BA9
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 19:08:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B93F39B6BAF
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 19:09:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 499661F22387
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:08:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DF202811A4
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 18:09:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7F21B373A;
-	Wed, 30 Oct 2024 18:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 346581C3F0E;
+	Wed, 30 Oct 2024 18:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Th2/OQfg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uCQfUQc5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E1A19E99F;
-	Wed, 30 Oct 2024 18:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE681C3F00;
+	Wed, 30 Oct 2024 18:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730311677; cv=none; b=nOFfkk11NC6dFhyFK8RVrPs2VkhlIoIZ3ndpQxkBjzgrXH4UDoAFrv4LTfsB9ATLcaRaarLMdPK3VialW61UvcHFniuZYCWC51wAzaoaPVI/FX4R6vBFhYKpuNkbUBe/ae6TTQIlU+Fjic6nta2ZOBirdvQ71k0OhRXtE2axhpU=
+	t=1730311765; cv=none; b=K96wc6qZWUeirq0R9VYtHDPuO3KMMWXW3vhxopFpw1DSpksFYqDXirLAQqWAxbtCdLCDw1AeB5WVl8Fp7uEczShRErCnZql2c5QQadG1DZJ3C87IQPGBUQp5JG9q6uPdfQ95qUEv85EENKvWKOPpF/bNzEp1bHIWa8YJkqAqkkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730311677; c=relaxed/simple;
-	bh=DacE1b7YBHxbFapNdObTjtI7fWH1r3sD6tkMcvfimYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQANE8NsXrLZFgYPTkYaA5tW4nz0fMBl0IM+mEiURSwKBhE+2lQT/OrEzMM4CiOeRor72pQHadsbYLFL3sAaTub0FPDgtGZIZP0T6ptybIpyVL7hb38Dy42eN9mZ9TnWtiM++Tb4Nl5XrKVpScQ+PGPIgXDj9ChgI3VOAN889Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Th2/OQfg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F5EC4CED2;
-	Wed, 30 Oct 2024 18:07:51 +0000 (UTC)
+	s=arc-20240116; t=1730311765; c=relaxed/simple;
+	bh=J+D38Y++wLZFZ7gBnMBrr82e/+4yn1ZFl58LuVnWe8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=p4d96TlkI9hFmBuyi7Uqs7QNRborqTe6as/l/0NsQC/3uW4+AkDUskaUnXyYbd/N3xcKQN5aEc9yXyzVA/w8aHzzUYR4GlgvTuaZ2BP1erToqDxuRTCGRQ8AOwRkjXLRzhUqKRLk20sLteqae0mUUBQxhLWmKb1j67O9sr4SY/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uCQfUQc5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F825C4CECE;
+	Wed, 30 Oct 2024 18:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730311676;
-	bh=DacE1b7YBHxbFapNdObTjtI7fWH1r3sD6tkMcvfimYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Th2/OQfge7Cqb5FSvk4tgbZgUOx/XFaqwtFDnx7Na4WLRcSFpDC5YfkBqoNsXIkdE
-	 FeZAA2bNDZnLgebiYO1Z8Rw6relTq2lWLOpQtFH8HUNIWDVKgZjsNHFvmOXTPYO3yH
-	 Nh9cuArCAA8zc4efk+R/0kdcFR1AQPG42SHqggBqPyIUxp21fOLjdmB9Pb7Zw048Ff
-	 sXpF51GnDccvIrxGQHVw3njuZvS7nUUGMTge4EWjwBjDIHy0FjyeM13chZ1dX2NRiH
-	 6ROUWEWDciA/OI3Bc0CFLJHLEH3W6kx9URVlNLZZMo12G+Yn0JLksUocfe0Hwo3mzt
-	 Kdkw+BoC157Wg==
-Date: Wed, 30 Oct 2024 19:07:48 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
-	daniel.almeida@collabora.com, saravanak@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
- driver abstractions
-Message-ID: <ZyJ19GDyVrGPbSEM@pollux>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-16-dakr@kernel.org>
- <CAH5fLghVDqWiWfi2WKsNi3n=2pR_Hy3ZLwY8q2xfjAvpHuDx=w@mail.gmail.com>
+	s=k20201202; t=1730311764;
+	bh=J+D38Y++wLZFZ7gBnMBrr82e/+4yn1ZFl58LuVnWe8U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=uCQfUQc596x9T88iYcBrR/Nx9qqnXcoJ7ex0HlrxaxOZ1FMvHc998Kni/w376UxwY
+	 YdCePETd5+O1O0rF5O5acvvq6Q8FTjmfXamFoNrzee9VqJZZLVpXm2dNy8Jdqo7ncq
+	 yyjPJXSd5WDfgLghTq2yXSWTr03Jc/v3XsfHQDY7tmV3yC7IJuu1Uo0cCP08D8GL48
+	 QUzJRurD+39/cJM47lpwJa4xX76Vde/bYliu4/PkVrSAcv38PuRQc75RS3S/mW+Bqy
+	 /NVCVxZS3tvKOnJhwPWD4saXLGiDuL68C/hCOzbBlRy+X8NlOKy0uPTCxja2oPkvm5
+	 RZfq4Ckf/PbNw==
+Date: Wed, 30 Oct 2024 13:09:21 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] PCI/bwctrl: Check for error code from
+ devm_mutex_init() call
+Message-ID: <20241030180921.GA1210204@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLghVDqWiWfi2WKsNi3n=2pR_Hy3ZLwY8q2xfjAvpHuDx=w@mail.gmail.com>
+In-Reply-To: <20241030163139.2111689-1-andriy.shevchenko@linux.intel.com>
 
-On Wed, Oct 30, 2024 at 04:50:43PM +0100, Alice Ryhl wrote:
-> On Tue, Oct 22, 2024 at 11:33 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> > +/// Drivers must implement this trait in order to get a platform driver registered. Please refer to
-> > +/// the `Adapter` documentation for an example.
-> > +pub trait Driver {
-> > +    /// The type holding information about each device id supported by the driver.
-> > +    ///
-> > +    /// TODO: Use associated_type_defaults once stabilized:
-> > +    ///
-> > +    /// type IdInfo: 'static = ();
-> > +    type IdInfo: 'static;
-> > +
-> > +    /// The table of device ids supported by the driver.
-> > +    const ID_TABLE: IdTable<Self::IdInfo>;
-> > +
-> > +    /// Platform driver probe.
-> > +    ///
-> > +    /// Called when a new platform device is added or discovered.
-> > +    /// Implementers should attempt to initialize the device here.
-> > +    fn probe(dev: &mut Device, id_info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>>;
+On Wed, Oct 30, 2024 at 06:31:39PM +0200, Andy Shevchenko wrote:
+> Even if it's not critical, the avoidance of checking the error code
+> from devm_mutex_init() call today diminishes the point of using devm
+> variant of it. Tomorrow it may even leak something. Add the missed
+> check.
 > 
-> This forces the user to put their driver data in a KBox, but they
-> might want to use an Arc instead. You don't actually *need* a KBox -
-> any ForeignOwnable seems to fit your purposes.
+> Fixes: 9b3da6e19e4d ("PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This is intentional, I do need a `KBox` here.
+Squashed into 399ba413fa23 ("PCI/bwctrl: Add pcie_set_target_speed()
+to set PCIe Link Speed"), thanks, Andy.
 
-The reason is that I want to enforce that the returned `Pin<KBox<Self>>` has
-exactly the lifetime of the binding of the device and driver, i.e. from probe()
-until remove(). This is the lifetime the structure should actually represent.
-
-This way we can attach things like `Registration` objects to this structure, or
-anything else that should only exist from probe() until remove().
-
-If a driver needs some private driver data that needs to be reference counted,
-it is usually attached to the class representation of the driver.
-
-For instance, in Nova the reference counted stuff is attached to the DRM device
-and then I just have the DRM device (which itself is reference counted) embedded
-in the `Driver` structure.
-
-In any case, drivers can always embed a separate `Arc` in their `Driver`
-structure if they really have a need for that.
-
-- Danilo
-
+> ---
+>  drivers/pci/pcie/bwctrl.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> Please see my miscdevice and shrinker patchsets for examples of how
-> you can extend this to allow any ForeignOwnable.
-> 
-> Alice
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index 3a93ed0550c7..2a19e441a901 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -299,7 +299,10 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+> -	devm_mutex_init(&srv->device, &data->set_speed_mutex);
+> +	ret = devm_mutex_init(&srv->device, &data->set_speed_mutex);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = devm_request_threaded_irq(&srv->device, srv->irq, NULL,
+>  					pcie_bwnotif_irq_thread,
+>  					IRQF_SHARED | IRQF_ONESHOT,
+> -- 
+> 2.43.0.rc1.1336.g36b5255a03ac
 > 
 
