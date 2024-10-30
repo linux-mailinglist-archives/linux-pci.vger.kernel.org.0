@@ -1,173 +1,93 @@
-Return-Path: <linux-pci+bounces-15656-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15657-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB8C69B6E96
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 22:15:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEA539B6EB6
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 22:20:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81534B21BEF
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 21:15:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BCE21C21930
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 21:20:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69E651DF759;
-	Wed, 30 Oct 2024 21:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F69C1C460C;
+	Wed, 30 Oct 2024 21:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sn30FgKL"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Hn4eDVf8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C588194C75;
-	Wed, 30 Oct 2024 21:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF4B21747B
+	for <linux-pci@vger.kernel.org>; Wed, 30 Oct 2024 21:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730322932; cv=none; b=NHXChaR6TfwQAu9krlH2O6y3cJf03Odwwj24Wwr/Pu0csuQtws3MZ3N5LELj2N6R4V3SU0r/OExKwd4VLkocnJiTUtTBv7tH0F/JfKjuU0W2FDB3lvdtHQcWY3sTvM5K+Mf79CKQlahug8KeruJMO2HWxnqHJuuCcLQGzAqXKlk=
+	t=1730323221; cv=none; b=BjwfroVI4JdIlgplOfgXLU4nN6zy4bc3pPjQJ4vZuaFqUOOm8n1+8bqWJxSXiizbbP5tiCJ2PDsDo9wjphwe83ECXMaSe9wLPAxFDHHKvuz25rvetlp68KiLG+kTOHHPbQGNrYmDH7k+a6lcjnJYeRFH6K590Q87/IPexduC/vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730322932; c=relaxed/simple;
-	bh=E/1gsPMYddyGtV5nOIdJOU+wxqCAx3Iy9SGPQsxfff0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=GHlJ7tS9ioshbAjm5xbU5l2N7e4nMLci33KkYe6mku49OgOaRW02PvZbYl2AHB6HQKO8phu2wLYT0t+FnoIwRDzCKabU2E1G0ud6jnQtyEHozeoHP6uBPLepW/9oq7J4Ok9Ze3wT0KnRXSpZ6i4WTDkkW3C+dANtQRDJOdK7QiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn30FgKL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAABC4CECE;
-	Wed, 30 Oct 2024 21:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730322931;
-	bh=E/1gsPMYddyGtV5nOIdJOU+wxqCAx3Iy9SGPQsxfff0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Sn30FgKLhEeH/3+fVxl55wltUvnTtRFcf2H+jqIFpQVQhKjYIW2MIjJ3539zvlwQ7
-	 aFHSPzV9u60J7nm2OKTcxsIKIW9B/h8TKgg0haIAl5XKebYk2eKrBFum7KN5okpfQS
-	 uXBnPEzxTp/daAJBIhPlkPxnSYbkxhb8pli6PVbydIBSkf9C72yj893KtGZjymrKGY
-	 eqOWMmvDOxE+IHj+DNztzEWjjZFOM90eLUjBc2Rh+jEkFeSyCIpdXlNy6jy9pBvepb
-	 xl7mygLzXHIoY0zrMbCWEXS8poSRxssdex4GamVBZABlQn1T2unvlWdGDlbUQUEoJS
-	 lFdm13L90KFiQ==
-Date: Wed, 30 Oct 2024 16:15:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] PCI: Remove most pcim_iounmap_regions() users
-Message-ID: <20241030211529.GA1220902@bhelgaas>
+	s=arc-20240116; t=1730323221; c=relaxed/simple;
+	bh=Teay/SDFVQ3KrSrIP+rOxfqoHOvTS5vn0M/5NXbwQys=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=lDVgOJDa5tiNBb+I1aR6P76SpZQTYY+7zbJEIEyaHgnUOFyKTMRExjqsEKHrAKnUpq+5CGbAOsSH7I4/OBCUE2JP8R8m4VIhFJDN/gspNXfmgxk19Z9inA3q5K/nO02tcEWGbqoSUmb9x9va36Qe64D65n/rK28qNjXUPq09s3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=Hn4eDVf8; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=Teay/SDFVQ3KrSrIP+rOxfqoHOvTS5vn0M/5NXbwQys=; b=Hn4eDVf8odnXEa3gXEbm04F6LU
+	djR9gKjO57ul/d3FtdsFm/fG2y2ekwz4pJcTFtb+motJr/NBt6KmqAcxV1KLt9avHA0NOCJn3ZQSG
+	r6jMjNFU9Gl1dPQdEIyeQBvvfO0FzNk+n7yvYYeX6zX4w9+Zk6e9fUyfJZRQDVT0ENZjJq1iyauLk
+	4WUBCye/WmytimX1SwUvQ/abqFWff76EZkjWUJfB40m2CiYFAQ4QHHdjNvfd3Shc7WQyJX7Df+rF2
+	0LDZaEyjmQt5/wRxxvWuw0CGBAoMcpQPWC0xG8j7oN5MsD4x44FzNPKvN+E9m0/M8lM2lKrzgWvDq
+	7MUw87PA==;
+Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1t6G6q-004Cg7-17;
+	Wed, 30 Oct 2024 15:20:09 -0600
+Message-ID: <7e146e2f-5d7c-4f28-b801-360795b4cae7@deltatee.com>
+Date: Wed, 30 Oct 2024 15:20:02 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241016094911.24818-2-pstanner@redhat.com>
+User-Agent: Mozilla Thunderbird
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20241030184641.GA1210322@bhelgaas>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20241030184641.GA1210322@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 104.157.31.28
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, vivek.kasireddy@intel.com, dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, bhelgaas@google.com, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
+ of same device
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On Wed, Oct 16, 2024 at 11:49:03AM +0200, Philipp Stanner wrote:
-> Merge plan for this is the PCI-Tree.
-> 
-> After this series, only two users (net/ethernet/stmicro and
-> vdpa/solidrun) will remain to be ported in the subsequent merge window.
-> Doing them right now proved very difficult because of various conflicts
-> as they are currently also being reworked.
-> 
-> Changes in v8:
->   - Patch "gpio: ..": Fix a bug: don't print the wrong error code. (Simon)
->   - Split patch 1 into two patches to make adding of the new public API
->     obvious (Bartosz)
->   - Patch "ethernet: cavium: ...": Remove outdated sentences from the
->     commit message.
-> 
-> Changes in v7:
->   - Add Paolo's Acked-by.
->   - Rebase on current master; drop patch No.1 which made
->     pcim_request_region() public.
-> 
-> Changes in v6:
->   - Remove the patches for "vdpa: solidrun" since the maintainer seems
->     unwilling to review and discuss, not to mention approve, anything
->     that is part of a wider patch series across other subsystems.
->   - Change series's name to highlight that not all callers are removed
->     by it.
-> 
-> Changes in v5:
->   - Patch "ethernet: cavium": Re-add accidentally removed
->     pcim_iounmap_region(). (Me)
->   - Add Jens's Reviewed-by to patch "block: mtip32xx". (Jens)
-> 
-> Changes in v4:
->   - Drop the "ethernet: stmicro: [...] patch since it doesn't apply to
->     net-next, and making it apply to that prevents it from being
->     applyable to PCI ._. (Serge, me)
->   - Instead, deprecate pcim_iounmap_regions() and keep "ethernet:
->     stimicro" as the last user for now.
->   - ethernet: cavium: Use PTR_ERR_OR_ZERO(). (Andy)
->   - vdpa: solidrun (Bugfix) Correct wrong printf string (was "psnet" instead of
->     "snet"). (Christophe)
->   - vdpa: solidrun (Bugfix): Add missing blank line. (Andy)
->   - vdpa: solidrun (Portation): Use PTR_ERR_OR_ZERO(). (Andy)
->   - Apply Reviewed-by's from Andy and Xu Yilun.
-> 
-> Changes in v3:
->   - fpga/dfl-pci.c: remove now surplus wrapper around
->     pcim_iomap_region(). (Andy)
->   - block: mtip32xx: remove now surplus label. (Andy)
->   - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
->     occurs. (Andy, Christophe)
->   - Some minor wording improvements in commit messages. (Me)
-> 
-> Changes in v2:
->   - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
->     patch, put stable kernel on CC. (Christophe, Andy).
->   - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
->   - Consequently, drop patch "PCI: Make pcim_release_region() a public
->     function", since there's no user anymore. (obsoletes the squash
->     requested by Damien).
->   - vdap/solidrun:
->     • make 'i' an 'unsigned short' (Andy, me)
->     • Use 'continue' to simplify loop (Andy)
->     • Remove leftover blank line
->   - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
-> 
-> 
-> Important things first:
-> This series is based on [1] and [2] which Bjorn Helgaas has currently
-> queued for v6.12 in the PCI tree.
-> 
-> This series shall remove pcim_iounmap_regions() in order to make way to
-> remove its brother, pcim_iomap_regions().
-> 
-> Regards,
-> P.
-> 
-> [1] https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
-> [2] https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
-> 
-> Philipp Stanner (6):
->   PCI: Make pcim_iounmap_region() a public function
->   PCI: Deprecate pcim_iounmap_regions()
->   fpga/dfl-pci.c: Replace deprecated PCI functions
->   block: mtip32xx: Replace deprecated PCI functions
->   gpio: Replace deprecated PCI functions
->   ethernet: cavium: Replace deprecated PCI functions
-> 
->  drivers/block/mtip32xx/mtip32xx.c              | 18 ++++++++----------
->  drivers/fpga/dfl-pci.c                         | 16 ++++------------
->  drivers/gpio/gpio-merrifield.c                 | 15 ++++++++-------
->  .../net/ethernet/cavium/common/cavium_ptp.c    |  7 +++----
->  drivers/pci/devres.c                           |  8 ++++++--
->  include/linux/pci.h                            |  1 +
->  6 files changed, 30 insertions(+), 35 deletions(-)
 
-Applied to pci/devm for v6.13, thanks!
+
+On 2024-10-30 12:46, Bjorn Helgaas wrote:
+> On Fri, Oct 25, 2024 at 06:57:37AM +0000, Kasireddy, Vivek wrote:
+> In the PCIe world, I don't think a TLP can "loop back" to another
+> function on the same device.
+
+I'm not sure if the spec says anything that specifically denies this.
+But it seems to me that it would be possible for a multifunction device
+to handle a transfer to a neighbouring function internally and not
+actually involve the PCIe fabric. This seems like something we'd want to
+support if and when such a device were to be created.
+
+Logan
 
