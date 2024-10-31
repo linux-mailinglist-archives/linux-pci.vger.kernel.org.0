@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-15742-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15743-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FA9E9B8244
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:08:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED3689B8252
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:10:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8C621F234F8
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 18:08:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACCD0281B80
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 18:10:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630291CCEEA;
-	Thu, 31 Oct 2024 18:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1906E1C2456;
+	Thu, 31 Oct 2024 18:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOEUJVJL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXJthmwS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219C61C9DE9;
-	Thu, 31 Oct 2024 18:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6AD13AA4C;
+	Thu, 31 Oct 2024 18:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730398005; cv=none; b=iEoeQZWtCb5fSIYOwvniKEeJR8La15Izb/hzJk7zwvENrE43+Acc3dMXto9iw83nP0BAgAZedmTBJKQxDABA5n+t+dUK7olA7wAq3NDPCEzF1xuYU9gjvvVmTISOx8nes6NwIYC2k23QRtR2sW1WDLAMRQoutb/KAS2JDtHkZck=
+	t=1730398240; cv=none; b=dxriDFWQ/Epmlv6BZL2RzwkNYGGK2RIqCjCb9+lx+2/tXWlrbS3IoU9rKDbpr9DTWPFJpNamAFr5TZFGREjQm/+Ty1U2VbwOevYpXg8ddA2wQXvWapsP/0cxUus1MuYstBsTjCtJe1ZmBLtDtUR5dSn0/8AqLc7si3WEacB38KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730398005; c=relaxed/simple;
-	bh=YkqIfnPERjVeH87UZlXaT+hldz57EXPt5sjBOEZ5BXU=;
+	s=arc-20240116; t=1730398240; c=relaxed/simple;
+	bh=TcADyLHD8mzD4LXfNgzjzmkk0ShTNI6CxmZOgrOl91Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BjeI8ERZQ8OiNnmbCmipCzdIFTZmjuDUY064KtS3wCp0xQsPDifITaZF7fnJuSUmdHDJb6cH6dkMLAEyizdFLPFuFz3R/gEFH3cFFzWUTfyPXWWeMyjZL3q5+p3G6lJ7ZqND7MO+rcmCTMaB2/Ktzpt5a5oho3aspp80oEWpLn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOEUJVJL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0543C4CEC3;
-	Thu, 31 Oct 2024 18:06:34 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=I3hXINq4viJdW1rtmW3ZpBw7Vdy/Quv0hkpIrrzHBuEvG8sjhEdhMS6lXlXn6IRrfHBiun9HOSdnrK0MKCfMruWkJQvMsZsClJ6Ff/PHIC71aYERmT38J/ad2oJiBs3wYMoLPHyvH0pUX2Bv5unblGpaBMjbcW9fozbx1Nm72pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXJthmwS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D56BC4CEC3;
+	Thu, 31 Oct 2024 18:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730398003;
-	bh=YkqIfnPERjVeH87UZlXaT+hldz57EXPt5sjBOEZ5BXU=;
+	s=k20201202; t=1730398239;
+	bh=TcADyLHD8mzD4LXfNgzjzmkk0ShTNI6CxmZOgrOl91Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FOEUJVJLUu6H2xlON07EWbFSB0wfhN+LW4nBPcjoTnjogS+0iruhEg6/6p3mpnKUP
-	 GvWzVNJTmMPgssV+2aVw07LlAPR+K0iXo4N1wBmByy5m9jaUo1aTGeUHdJd1gJBMMn
-	 AYAKWyOq75bLr3htU7bltxKRYMuF7E1L2aOvUGi7SRUuyk54vccgPKssqvXmgP+FLT
-	 cHElgWNiZ1PPHIp/v9qZzZrV97Wago/qGMD+92gdK8nRxK8VobXRBWtYJ8cEe2kklI
-	 8icE+fe84qrjpc8AECZjdlmbQFdZbPdWhMB3lZNAIBdY2fw701JOo0VILonbVz9Adh
-	 eiwhUo6kf4C8A==
-Message-ID: <e2ce5f7a-6ef5-45e0-9868-11eb9106ace8@kernel.org>
-Date: Thu, 31 Oct 2024 19:06:32 +0100
+	b=XXJthmwS6o3ReObP4f5vEtGbvIS4QbrtRuVHmRJPFElJq2HrVTg2v+oj+pMvedhd+
+	 U5+0ZOd/SCvbWGtBSWZ75/SX344/FMigM4HugD571i8IuL/64S+hw0zbrlzl0bHnJa
+	 k62ZtOJkD5nY8Ze1pRnzSm6CUfzfe7eoUWmFVj7DFBsxE5X6kcKtsVGCFX9htGhHaM
+	 mTM/lf9Wa5+XMkXbnxl2Sx+MP4Z1LTgyvOcvCq+sqD65p8nNwgvfw9IbQBri6EUSsb
+	 cBs80OieUKe0sz2KTwhcG9ihP43F8/ItdW+WPyZOdexYUXRbiY4mSWFc/ezPU2hLKK
+	 eildUb86mFV8w==
+Message-ID: <cc2e1a17-c5b1-4608-8e32-a6dea23a7efb@kernel.org>
+Date: Thu, 31 Oct 2024 19:10:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/12] dt-bindings: pci: Add common schema for devices
- accessible through PCI BARs
+Subject: Re: [PATCH v3 02/12] dt-bindings: pinctrl: Add RaspberryPi RP1
+ gpio/pinctrl/pinmux bindings
 To: Andrea della Porta <andrea.porta@suse.com>
 Cc: Michael Turquette <mturquette@baylibre.com>,
  Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -77,9 +77,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
 References: <cover.1730123575.git.andrea.porta@suse.com>
- <2948fdf8ccf8d83f59814d0b2a85ce8dac938764.1730123575.git.andrea.porta@suse.com>
- <fwqcbnub36fk4abmhbtuwsoxdlf64mx4v65mxahsxmiv2sz6er@bfjddapvb75v>
- <ZyOSGgJ4zb31Posb@apocalypse>
+ <9a02498e0fbc135dcbe94adc7fc2d743cf190fac.1730123575.git.andrea.porta@suse.com>
+ <mjhopgkrjahaxydn3ckianqnvjn55kxrldulvjkpqivlz72uyi@57l5vhydpzc2>
+ <ZyOPHm7fl_vW7mAJ@apocalypse>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -125,64 +125,158 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <ZyOSGgJ4zb31Posb@apocalypse>
+In-Reply-To: <ZyOPHm7fl_vW7mAJ@apocalypse>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 31/10/2024 15:20, Andrea della Porta wrote:
+On 31/10/2024 15:07, Andrea della Porta wrote:
 > Hi Krzysztof,
 > 
-> On 08:28 Tue 29 Oct     , Krzysztof Kozlowski wrote:
->> On Mon, Oct 28, 2024 at 03:07:20PM +0100, Andrea della Porta wrote:
->>> Common YAML schema for devices that exports internal peripherals through
->>> PCI BARs. The BARs are exposed as simple-buses through which the
->>> peripherals can be accessed.
->>>
->>> This is not intended to be used as a standalone binding, but should be
->>> included by device specific bindings.
+> On 08:26 Tue 29 Oct     , Krzysztof Kozlowski wrote:
+>> On Mon, Oct 28, 2024 at 03:07:19PM +0100, Andrea della Porta wrote:
+>>> Add device tree bindings for the gpio/pin/mux controller that is part of
+>>> the RP1 multi function device, and relative entries in MAINTAINERS file.
 >>>
 >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 >>> ---
->>>  .../devicetree/bindings/pci/pci-ep-bus.yaml   | 58 +++++++++++++++++++
->>>  MAINTAINERS                                   |  1 +
->>>  2 files changed, 59 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>>>  .../pinctrl/raspberrypi,rp1-gpio.yaml         | 163 ++++++++++++++++++
+>>>  MAINTAINERS                                   |   2 +
+>>>  2 files changed, 165 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
 >>>
->>> diff --git a/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
 >>> new file mode 100644
->>> index 000000000000..e532621f226b
+>>> index 000000000000..465a53a6d84f
 >>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
->>> @@ -0,0 +1,58 @@
+>>> +++ b/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+>>> @@ -0,0 +1,163 @@
 >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 >>> +%YAML 1.2
 >>> +---
->>> +$id: http://devicetree.org/schemas/pci/pci-ep-bus.yaml#
+>>> +$id: http://devicetree.org/schemas/pinctrl/raspberrypi,rp1-gpio.yaml#
 >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >>> +
->>> +title: Common Properties for PCI MFD Endpoints with Peripherals Addressable from BARs
+>>> +title: RaspberryPi RP1 GPIO/Pinconf/Pinmux Controller submodule
 >>> +
 >>> +maintainers:
->>> +  - Andrea della Porta  <andrea.porta@suse.com>
+>>> +  - Andrea della Porta <andrea.porta@suse.com>
 >>> +
 >>> +description:
->>> +  Define a generic node representing a PCI endpoint which contains several sub-
->>> +  peripherals. The peripherals can be accessed through one or more BARs.
->>> +  This common schema is intended to be referenced from device tree bindings, and
+>>> +  The RP1 chipset is a Multi Function Device containing, among other sub-peripherals,
+>>> +  a gpio/pinconf/mux controller whose 54 pins are grouped into 3 banks. It works also
 >>
 >> Please wrap code according to coding style (checkpatch is not a coding
 >> style description but only a tool).
->>
->> Above applies to all places here and other bindings.
 > 
-> Are you referring to the title being longer than 80 column here, right?
-> Because the description seems correctly wrapped... or should I add a
-> newline for each paragraph?
+> Ack.
+> 
+>>
+>>> +  as an interrupt controller for those gpios.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: raspberrypi,rp1-gpio
+>>> +
+>>> +  reg:
+>>> +    maxItems: 3
+>>> +    description: One reg specifier for each one of the 3 pin banks.
+>>> +
+>>> +  '#gpio-cells':
+>>> +    description: The first cell is the pin number and the second cell is used
+>>> +      to specify the flags (see include/dt-bindings/gpio/gpio.h).
+>>> +    const: 2
+>>> +
+>>> +  gpio-controller: true
+>>> +
+>>> +  gpio-ranges:
+>>> +    maxItems: 1
+>>> +
+>>> +  gpio-line-names:
+>>> +    maxItems: 54
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 3
+>>> +    description: One interrupt specifier for each one of the 3 pin banks.
+>>> +
+>>> +  '#interrupt-cells':
+>>> +    description:
+>>> +      Specifies the Bank number [0, 1, 2] and Flags as defined in
+>>> +      include/dt-bindings/interrupt-controller/irq.h.
+>>> +    const: 2
+>>> +
+>>> +  interrupt-controller: true
+>>> +
+>>> +additionalProperties:
+>>
+>> Not much improved. You are supposed to have here pattern, just like
+>> other bindings. I asked for this last time.
+>>
+>> And there are examples using it - almost all or most of pinctrl
+>> bindings, including bindings having subnodes (but you do not use such
+>> case here).
+> 
+> This is the same approach used in [1], which seems quite recent. I did't
 
-Hmm, I might commented on wrong description. I just looked at patch #2
-and there it's passed 80.
+2021, so not that recent, but you are right that it's not the example I
+would recommend. See rather:
+git grep pins -- Documentation/devicetree/bindings/pinctrl/ | grep '\$'
 
-Here the title is not wrapped.
+
+pins, groups, states, etc.
+
+> use pattern because I wouldn't really want to enforce a particular naming
+> scheme. Subnodes are used, please see below. Since pinctrl.yaml explicitly
+
+But we want to enforce, because it brings uniformity and matches
+partially generic naming patterns.
+
+> says that there is no common binding but each device has its own, I
+> thought that was reasonable choice. Should I enforce some common pattern,
+> then?
+
+Yes, you should. Again, look at other bindings, e.g. qcom tlmm or lpass lpi.
+
+> 
+>>
+>>> +  anyOf:
+>>> +    - type: object
+>>> +      additionalProperties: false
+>>> +      allOf:
+>>> +        - $ref: pincfg-node.yaml#
+>>> +        - $ref: pinmux-node.yaml#
+>>> +
+>>> +      description:
+>>> +        Pin controller client devices use pin configuration subnodes (children
+>>> +        and grandchildren) for desired pin configuration.
+>>> +        Client device subnodes use below standard properties.
+>>> +
+>>> +      properties:
+>>> +        pins:
+>>> +          description:
+>>> +            A string (or list of strings) adhering to the pattern 'gpio[0-5][0-9]'
+>>> +        function: true
+>>> +        bias-disable: true
+>>> +        bias-pull-down: true
+>>> +        bias-pull-up: true
+>>> +        slew-rate:
+>>> +          description: 0 is slow slew rate, 1 is fast slew rate
+>>> +          enum: [ 0, 1 ]
+>>> +        drive-strength:
+>>> +          enum: [ 2, 4, 8, 12 ]
+>>> +
+>>> +    - type: object
+>>> +      additionalProperties:
+>>> +        $ref: "#/additionalProperties/anyOf/0"
+>>
+>> Your example does not use any subnodes, so this looks not needed.
+> 
+> The example has subnodes, as in the following excerpt from the example:
+
+I meant, you do not need properties in subnodes (1st level). You only
+want properties in subnodes of subnodes, so 2nd level. What is the point
+of allowing them in 1st level?
+
+
 
 Best regards,
 Krzysztof
