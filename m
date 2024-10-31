@@ -1,146 +1,115 @@
-Return-Path: <linux-pci+bounces-15711-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15712-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7F289B7C08
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 14:45:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CF3C9B7C4F
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 15:04:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9A0B1C21569
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 13:45:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 054081F21DB8
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 14:04:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB43E1A00F8;
-	Thu, 31 Oct 2024 13:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A3B19FA8D;
+	Thu, 31 Oct 2024 14:03:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yoCNsTYA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tnv8I/cO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2x67lOBd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C001F19EEC0;
-	Thu, 31 Oct 2024 13:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F22A14901B
+	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 14:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730382307; cv=none; b=PO4c+rpmqDEgR8okCGeIDGu7cg7rnsGaDYDVIgQSozUWTcH5kVYg55ZuEVZ0cP1TI8KBvIkiGJj5U5xaxQ64rIfTC4ajjhKKnR+fpk/DZwE9p4LU5bS/aSUve2t/y4AQhBTBZ38A1tFlpnXj8UjQFf6OiOzXvOCCwcpipiRRI9k=
+	t=1730383431; cv=none; b=Al14a7a2J/RFiNP8EHkcwZhnH432R5/5QS25Le5lQF19Ce9W6t0Ns9RJCcIREMoxE0nXZMYTTzeipZP14T4DRhVrpUZN7SPC/a30Ym4cYJIoNtg1RM38+4/k0MDJ0XmF5ZKiWZ3K2Nf6b119aTFP8hN8XOSmfWbv/z0egbD33XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730382307; c=relaxed/simple;
-	bh=SyiKIQDNVRhU2dYWC7KpnbYi2u+O8MurNHCaNdwZdao=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Jysb6iqz23lag5IlsmQUOz7/rXCj016mYBLVGtEpVA8Wj6unrULdgSB0vBvxgouO4TqAm4uM9ZpDYRPj8dKhlzEMYggkvKDY1hM89DZNMJANo+GWYNUjsnfqRcSuZ+oL+gmrex/V1utaUwUkf/cTdPbtN++bMDPCwmScGdR1Osc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yoCNsTYA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tnv8I/cO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1730382304;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eEO4GUXIuQTW+sY+/WiYJk1PjJtbzNP/nS0HeFEOI6A=;
-	b=yoCNsTYAFyyFk5pGSYkD1piEjw8MOo53vDo2YkXW02EDMHDlaOfzFQIBgvw62YeQnStj0R
-	qkY5Ky9UOyVC1w3OVKBzXSwejc99F3AGpf5zUOBwsDyJSVfTnZWMWet1KTbQJOfOLCVNhV
-	cy7TVNur5FmVBVRh+KOvfZ/CNyLR8SNv9i7yqNqrq5kD5xMENaMe0V6OpvokmfW/Ob9QM/
-	5un8Zwrlq9QRR3JPr7QuSkLpK98KMG43mFh0DMvW9yQHq+GuztrjGuFKrW+m4h5GhCy/Ac
-	kp1SwmKR/ksHOOv6R90FQYE4O+PRPlazUvlT9/6ThYdYhTcp0TO69X6RMhaPYQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1730382304;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eEO4GUXIuQTW+sY+/WiYJk1PjJtbzNP/nS0HeFEOI6A=;
-	b=tnv8I/cOG9O9Bmuz6A4PtC/V6UOPd//2+oyqsIznzxGGzis4KZd76yQ3kxGFswkP13hKpV
-	nr8ioE+FYr3wlOBw==
-To: Philipp Stanner <pstanner@redhat.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Sergey Shtylyov
- <s.shtylyov@omp.ru>, Basavaraj Natikar <basavaraj.natikar@amd.com>, Jiri
- Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alex Dubov <oakad@yahoo.com>, Sudarsana Kalluru <skalluru@marvell.com>,
- Manish Chopra <manishc@marvell.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rasesh Mody
- <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko
- <imitsyanko@quantenna.com>, Sergey Matyukevich <geomatsi@gmail.com>, Kalle
- Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>, Shyam
- Sundar S K <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave
- Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Alex Williamson
- <alex.williamson@redhat.com>, Juergen Gross <jgross@suse.com>, Stefano
- Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Chen Ni <nichen@iscas.ac.cn>, Mario Limonciello
- <mario.limonciello@amd.com>, Philipp Stanner <pstanner@redhat.com>, Ricky
- Wu <ricky_wu@realtek.com>, Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao
- <leitao@debian.org>, Kevin Tian <kevin.tian@intel.com>, Ilpo =?utf-8?Q?J?=
- =?utf-8?Q?=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Mostafa Saleh <smostafa@google.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>, Christian
- Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>, Eric
- Auger <eric.auger@redhat.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis
- Bossart <pierre-louis.bossart@linux.dev>, Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 01/13] PCI: Prepare removing devres from pci_intx()
-In-Reply-To: <20241015185124.64726-2-pstanner@redhat.com>
-References: <20241015185124.64726-1-pstanner@redhat.com>
- <20241015185124.64726-2-pstanner@redhat.com>
-Date: Thu, 31 Oct 2024 14:45:03 +0100
-Message-ID: <87cyjgwfmo.ffs@tglx>
+	s=arc-20240116; t=1730383431; c=relaxed/simple;
+	bh=/ujG1cezyJOLtrJGpOSVlHT/h9268ICutSdVP2Ou40Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TE7NJ6ESDXKtLCV7eEnTqOMkxQmhKvrQMI6yq6Ke+EBw3WKrUFMZBOsYxumvNBpD9u+3Q4SY+546R7iXF6bGsfgqbl4W7xkImLr9qKiZICYVuPM3IGB2hzyvHl1p1JeG2HptAuFhkU7zt7jrdihZ5igEv84NZgBRwJaCum4W3I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2x67lOBd; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43155abaf0bso8125405e9.0
+        for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 07:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730383426; x=1730988226; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/ujG1cezyJOLtrJGpOSVlHT/h9268ICutSdVP2Ou40Q=;
+        b=2x67lOBd4axvrilCA99OAdT7oI3WqCHOv0489EHHahjCpiaunmirfy+sxdvBwJ2w6G
+         BxaHxZf0VVqKeE7ISXJ2Oh+fLobtsO5QWFkQ3rqiuKrDw1F/UBrUavAAutOq2RgzkT8w
+         Zaco5TZLD4b+nDRs3jCoVJ4So4mal3miuJQgW5I3nTlBj9vH6Px3NwyKV1oSSvszHgL+
+         DEnqu6zj6C6PuzSpfSLY91IDglEy/1OXNkv84blfPSSF0FKSwP+JtljPBSCp31yRzm8W
+         vQC0q/XNe96/8WQTsOi+uJ+Oi4p8hM7ZCN1Uu9HODB4ZZlJEDL9LlY+pr0uc0zrx8xiS
+         H+UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730383426; x=1730988226;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/ujG1cezyJOLtrJGpOSVlHT/h9268ICutSdVP2Ou40Q=;
+        b=E/SYMVEUye+KTrI07bMsI+bA9DAz3RYRMSJJEUYUzP9Ki8+ywHFpPEVGq0t4gys/zj
+         mt7wk/Rp7GCGUVp3dibe+U4eoUgxQxPLlLGjHXn1kn/DdC6hchpdmeDPtw7od1uNPdpP
+         VOZLFth3vq61WQFF2NSqkO5MliXd+JT52cM8ivhrpEJoVXnPfN17SyT0vE5huSvRoAKV
+         QJKA6DIMMsB6t0RrJ19QTrr40us216NMn/6xmxv7o+VZZj402QkEiTdhuWgQooAGekHa
+         Aaf5nvtM6+VsruATm/ZhzZA2GYdQ5Bno48BCVivy3Jsue9ljqU8OhITmtBsXzEfD86s/
+         hjNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcIJVruKQ4lLUvuV94cnQsEmUbTLaEArUjeDzNRm5LCXbU3zSTXhnXxF/oUTY3xidDbKPAxIrq/8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywuw2jn/RuywbduZK0WSAgptZsiNQVRkwPcs2d3xzrcpVPtRZxu
+	qyspkM4LKLT4XimVrUilKmwyU+7KuC1xuTxz5qAJLe8iAescjmcVmv7Xak3/LJd5I4zqrxOE7Z5
+	U3XdZCc8yRvhDihPAGBZOUPxYqNSIePyazr7C
+X-Google-Smtp-Source: AGHT+IHf/f0WMGY5XNed4m51/xvXz/jJNZeXwlI9IFRgtvyFISoVvCcIb42ZBfoVHnQGnw0bffjs/1UKGO7A1p8T41g=
+X-Received: by 2002:a05:6000:1569:b0:37d:5103:8894 with SMTP id
+ ffacd0b85a97d-381c7aa4a56mr46347f8f.42.1730383426371; Thu, 31 Oct 2024
+ 07:03:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-11-dakr@kernel.org>
+In-Reply-To: <20241022213221.2383-11-dakr@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 31 Oct 2024 15:03:33 +0100
+Message-ID: <CAH5fLgj1rd3b4aaMj8b6Rs77_t+LZApxK-dmP2gk98L-NjFyWw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/16] rust: add devres abstraction
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com, 
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 15 2024 at 20:51, Philipp Stanner wrote:
-> +/**
-> + * pci_intx - enables/disables PCI INTx for device dev, unmanaged version
+On Tue, Oct 22, 2024 at 11:33=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> Add a Rust abstraction for the kernel's devres (device resource
+> management) implementation.
+>
+> The Devres type acts as a container to manage the lifetime and
+> accessibility of device bound resources. Therefore it registers a
+> devres callback and revokes access to the resource on invocation.
+>
+> Users of the Devres abstraction can simply free the corresponding
+> resources in their Drop implementation, which is invoked when either the
+> Devres instance goes out of scope or the devres callback leads to the
+> resource being revoked, which implies a call to drop_in_place().
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-mismatch vs. actual function name.
+How is this intended to be used? Every single field I add of this type
+is going to result in an additional synchronize_rcu() call in my
+destructor. Those calls are pretty expensive.
 
-> + * @pdev: the PCI device to operate on
-> + * @enable: boolean: whether to enable or disable PCI INTx
-> + *
-> + * Enables/disables PCI INTx for device @pdev
-> + *
-> + * This function behavios identically to pci_intx(), but is never managed with
-> + * devres.
-> + */
-> +void pci_intx_unmanaged(struct pci_dev *pdev, int enable)
-
-This is a misnomer. The function controls the INTX_DISABLE bit of a
-PCI device. Something like this:
-
-void __pci_intx_control()
-{
-}
-
-static inline void pci_intx_enable(d)
-{
-        __pci_intx_control(d, true);
-}
-
-.....
-
-makes it entirely clear what this is about.
-
-Hmm?
-
-Thanks,
-
-        tglx
+Alice
 
