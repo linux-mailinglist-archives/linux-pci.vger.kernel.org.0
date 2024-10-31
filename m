@@ -1,227 +1,367 @@
-Return-Path: <linux-pci+bounces-15700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC8A9B78E3
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 11:43:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD9879B7909
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 11:52:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C37851F25046
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 10:43:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1BED1C2011E
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 10:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BFB719993C;
-	Thu, 31 Oct 2024 10:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F2619994A;
+	Thu, 31 Oct 2024 10:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhyZMBug"
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="KPafeO0p";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ARvn1g4T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC631953A2
-	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 10:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BB4198E86;
+	Thu, 31 Oct 2024 10:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730371393; cv=none; b=O8Z41AKMwp6gp/E1i3f4or1R6b3R+lRHcKC4VRPqTiBavzmPOPK8ZfLCDKpsMV042vhb2t1p8nhTu2/8GvoO/UdduUCrD8koUmT8p4uFcAh7/OF81Y/QJZ4+fSYm5iyc6vG9J2xHsSPbLWWvskpTtSam1Hs16jPm3y1NHzAaGqA=
+	t=1730371941; cv=none; b=Aix0yBz/c2iBrPlDlx/CGLi/re1FXH03SJp7K9HTemgUzbT+gZHbFzOiL0jZn/sjpjiR6vU5grWsS9d7U1UCW6z9TJhA04Wf/bVEJSBAy+0OQqrgnMDx6nDYqXS4v7qbJIu+KTDaFNItg3Qv1liJElDXl64FXl1uauylWr+02Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730371393; c=relaxed/simple;
-	bh=iaKO07lkVHacYDcjDS+AtLCm0iagziA0Jr7M8qJ0jSA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=oUD5hpnE6IFXu+bzh15Og5BA+vliJVjykX8i0T+0SXYsAs2iXm2cdsRsXroS9OVX9PmOw+7m2DifdwKrja4nijGdwsfji80IAd/ZotplIUbX/x019W6NJRAIwHUhKcoqiAUYGAU7LN+Ed+WncIU8N9oIAp/IGSXy0DiwkXluh3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhyZMBug; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730371391; x=1761907391;
-  h=date:from:to:cc:subject:message-id;
-  bh=iaKO07lkVHacYDcjDS+AtLCm0iagziA0Jr7M8qJ0jSA=;
-  b=nhyZMBugjcoGxCZCD0mwdG8UjdTg0iUh2AC3GvLOzwa/p43wJwsQ1T3H
-   xtTWcfm4Z38+ZAhVZpGHMc1tYU+phKHRAoz3P9ONazT6dYOLDb6mV2Qjn
-   Xs2wyv5qPmyrFZzy1088fhZbe0YIYQ9KtwFtsKec/FxxTfi4J+8DtWNeR
-   p+K7YV+kB8rX4vzt64yUyGGpD7ZSw/Iav0om2bH4+RR+nzQn1gYv5k8J/
-   rtYNPLoMK9+hb4pgwTzrTK8D4W9zxkrW+cp8Spq0oyX0Ojgt1AbltJQIE
-   U3zuwdCdvp/d4ux8kVaW8fIovJLaohMeGDLTHEagl7uf7v+1JoaKnXeUN
-   Q==;
-X-CSE-ConnectionGUID: q9jth0S4R8y0dqV0RD0F1g==
-X-CSE-MsgGUID: p4h4G3d9R6yv9qguiGuNeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="55501208"
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="55501208"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:43:10 -0700
-X-CSE-ConnectionGUID: SCvrxgZdTfOi+OGbAgtvvw==
-X-CSE-MsgGUID: 18lHnZyHSpWMtQfrav+lhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="83395900"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 31 Oct 2024 03:43:09 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t6Sdu-000fzQ-2C;
-	Thu, 31 Oct 2024 10:43:06 +0000
-Date: Thu, 31 Oct 2024 18:42:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:devm] BUILD SUCCESS
- cd94c0b68dce4e751a51bd52fabde359842a3312
-Message-ID: <202410311821.C2s3dFG0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1730371941; c=relaxed/simple;
+	bh=n7e+fm2mj3BWSKI8X9sa6VztXoJLs9l2p+7n4TDJKKQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=b+eHFeRWQCL6Ng70KBLbgLWaNbt1BhD49TCKjexfxEp6LjKCCHAWGjmddhRfP57rY8fw8JqIkwCbP/o4O24uRdXVVTz6N5DIH4Zv4DbqmlbmBUnTXO0H19rjRgVayrkmaB08S3o6+Y5g4VUI5usrcQuEn86OYQWSjS9o7tLZLqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=KPafeO0p; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ARvn1g4T; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id E2AB025400C4;
+	Thu, 31 Oct 2024 06:52:16 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Thu, 31 Oct 2024 06:52:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1730371936;
+	 x=1730458336; bh=h1DcXwp3ose9PAVevSGggMI/uLCHuHYOrWE9mX99Mfk=; b=
+	KPafeO0pz/TGBLYkVAPr0VS0FFHrmIIpCpB0PCuLjG6u5m3VAZaKl5JVhAHg283J
+	nIFKqjmSyG0Y5G34A8mX/rh0U6Rs5108FxmznHJyJYpXWbmiLiQ3HWcOAHfGJXjF
+	v85gLi2LoLgDIb1zaGx28/iiyLdJxwKOJ5hjX4Rat0qJKzFkefC0Y0+owsvklCXx
+	ZJ58JcyZiKHi297/TS0xLRw56uHIIQlAFjSNhCbL/JI7r68VN173DbFXhW5WBett
+	33QXGH8S3PZfW2DUS97mCpy4CyhcxfS+PCZT/h2WC+7yN54n0x0dn1FaROj4Lrdc
+	flxoskAljWqcngR8jHnIEA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730371936; x=
+	1730458336; bh=h1DcXwp3ose9PAVevSGggMI/uLCHuHYOrWE9mX99Mfk=; b=A
+	Rvn1g4T4qHNkrbz5VEBFZApqTbUZQo+p0DbHJxEKXH0nEqXs0UMcvt+a/6Zomacg
+	jgn5UHtQLM5AhAyBZXrkD1rC9ai6WiHnak6N/DHq8z9bFxm6GMrCtl3AL9eTHp7I
+	SBL9eQm3/m7t8ILhvaj+zz9DBypcJILQCTh9EeV87VdFxQcXwNJkku86KFuIWOIH
+	Zf3RQ4RbJtkCDYJpK6lyvfTZrxAD3AAM/phUCTDJ/ADJUkaoBw7QcS7giUlpwUvW
+	O4uHMWCUpzZTnRPCeJaP5urolKwKlv8n0gYEsTA1uWduhwuUT141VgfFyw3cZj0J
+	IcEhtKro96BKx3Ekg7IhQ==
+X-ME-Sender: <xms:YGEjZ2rh0Nf6aWubaTlrxh2B3KcQSll3O_L8dwPiiVmHTrDk-gWspA>
+    <xme:YGEjZ0pSI5DsV-1mO2yKFBpFJMX09HBTLSmcNI7EIW3j-HcoWFGQjYfzV4BFvmBOl
+    ggZUbZVj32oK_Kr25A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekhedgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
+    hvqeenucggtffrrghtthgvrhhnpeekieeftdeltdevudeukeefleejjeeitedttdfhteek
+    jefhteduhffhjefhfeejjeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
+    dpghhithhlrggsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtoheple
+    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvgigrghnuggvrhdruggvuhgt
+    hhgvrhesrghmugdrtghomhdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllh
+    hosegrmhgurdgtohhmpdhrtghpthhtoheprghlvgiguggvuhgthhgvrhesghhmrghilhdr
+    tghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpth
+    htohepshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggv
+    vhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehkrg
+    hihhgvnhhgfhesnhhvihguihgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtih
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:YGEjZ7PdkBqBZi6Ut36ao10uaBpJkWRw-ICwMRCaXMyKjP7P673P1g>
+    <xmx:YGEjZ16jxFb0cNMT-71ch1wQzROEdFTp0EpOndt9SSjjcaXulIxWuA>
+    <xmx:YGEjZ17Ha_fTcvN2-Ox7MjfTqc-9GA_sdquqZCwO-YUlQ-ojNUjJyQ>
+    <xmx:YGEjZ1jzkP02oADOVz2V62snVHa-Q_ju1TZcunE1kUGVkl3u-P3shg>
+    <xmx:YGEjZwYDjtsWZyNwI2c7aRq-ecHfmrw4ZtNsbqjm-fUfN4MrRTui4m8X>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6F9523360079; Thu, 31 Oct 2024 06:52:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Date: Thu, 31 Oct 2024 11:51:56 +0100
+From: "Luke Jones" <luke@ljones.dev>
+To: "Kai-Heng Feng" <kaihengf@nvidia.com>,
+ "Alex Deucher" <alexdeucher@gmail.com>
+Cc: "Mario Limonciello" <superm1@kernel.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Alex Deucher" <alexander.deucher@amd.com>
+Message-Id: <52d9ff04-ef07-4251-b540-e3d3cdcd4c75@app.fastmail.com>
+In-Reply-To: <33d7c0ca-8459-4b85-a0e6-97f2e1e8db91@nvidia.com>
+References: <20241014152502.1477809-1-superm1@kernel.org>
+ <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
+ <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
+ <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
+ <fd7cae9a-5ee1-4e18-915d-4115f0a6a156@nvidia.com>
+ <CADnq5_NTBXPbW+u_AxTewH-aouLNn4gxebpzUSzsyev-VxOtcg@mail.gmail.com>
+ <46b487ec-e8a6-43fb-85d5-f264618f2e5d@nvidia.com>
+ <CADnq5_Mh7B8Kk144terpvV9kf2Z4xcQ0nhVakHOcDdwgd3Y1Fg@mail.gmail.com>
+ <33d7c0ca-8459-4b85-a0e6-97f2e1e8db91@nvidia.com>
+Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot VGA device
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devm
-branch HEAD: cd94c0b68dce4e751a51bd52fabde359842a3312  ethernet: cavium: Replace deprecated PCI functions
+On Thu, 31 Oct 2024, at 1:58 AM, Kai-Heng Feng wrote:
+> On 2024/10/25 8:55 PM, Alex Deucher wrote:
+>> External email: Use caution opening links or attachments
+>>=20
+>>=20
+>> On Fri, Oct 25, 2024 at 3:51=E2=80=AFAM Kai-Heng Feng <kaihengf@nvidi=
+a.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2024/10/23 11:27 PM, Alex Deucher wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> On Tue, Oct 22, 2024 at 9:27=E2=80=AFPM Kai-Heng Feng <kaihengf@nvi=
+dia.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2024/10/22 9:04 PM, Alex Deucher wrote:
+>>>>>> External email: Use caution opening links or attachments
+>>>>>>
+>>>>>>
+>>>>>> On Tue, Oct 22, 2024 at 2:31=E2=80=AFAM Kai-Heng Feng <kaihengf@n=
+vidia.com> wrote:
+>>>>>>>
+>>>>>>> Hi Luke,
+>>>>>>>
+>>>>>>> On 2024/10/15 4:04 PM, Luke Jones wrote:
+>>>>>>>> On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
+>>>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>>>>>
+>>>>>>>>> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI dis=
+play device.
+>>>>>>>>>
+>>>>>>>>> ```
+>>>>>>>>> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [=
+GeForce
+>>>>>>>>> RTX 4070 Max-Q / Mobile] (rev a1)
+>>>>>>>>> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/=
+ATI]
+>>>>>>>>> Strix [Radeon 880M / 890M] (rev c1)
+>>>>>>>>> ```
+>>>>>>>>>
+>>>>>>>>> The fallback logic in vga_is_boot_device() flags the NVIDIA dG=
+PU as the
+>>>>>>>>> boot VGA device, but really the eDP is connected to the AMD PC=
+I display
+>>>>>>>>> device.
+>>>>>>>>>
+>>>>>>>>> Drop this case to avoid marking the NVIDIA dGPU as the boot VG=
+A device.
+>>>>>>>>>
+>>>>>>>>> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+>>>>>>>>> Reported-by: Luke D. Jones <luke@ljones.dev>
+>>>>>>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
+>>>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>>>>> ---
+>>>>>>>>>      drivers/pci/vgaarb.c | 7 -------
+>>>>>>>>>      1 file changed, 7 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>>>>>>>> index 78748e8d2dba..05ac2b672d4b 100644
+>>>>>>>>> --- a/drivers/pci/vgaarb.c
+>>>>>>>>> +++ b/drivers/pci/vgaarb.c
+>>>>>>>>> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga=
+_device *vgadev)
+>>>>>>>>>                 return true;
+>>>>>>>>>         }
+>>>>>>>>>
+>>>>>>>>> -    /*
+>>>>>>>>> -     * Vgadev has neither IO nor MEM enabled.  If we haven't =
+found any
+>>>>>>>>> -     * other VGA devices, it is the best candidate so far.
+>>>>>>>>> -     */
+>>>>>>>>> -    if (!boot_vga)
+>>>>>>>>> -            return true;
+>>>>>>>>> -
+>>>>>>>>>         return false;
+>>>>>>>>>      }
+>>>>>>>>>
+>>>>>>>>> --
+>>>>>>>>> 2.43.0
+>>>>>>>>
+>>>>>>>> Hi Mario,
+>>>>>>>>
+>>>>>>>> I can verify that this does leave the `boot_vga` attribute set =
+as 0 for the NVIDIA device.
+>>>>>>>
+>>>>>>> Does the following diff work for you?
+>>>>>>> This variant should be less risky for most systems.
+>>>>>>>
+>>>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>>>>>> index 78748e8d2dba..3fb734cb9c1b 100644
+>>>>>>> --- a/drivers/pci/vgaarb.c
+>>>>>>> +++ b/drivers/pci/vgaarb.c
+>>>>>>> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_de=
+vice *vgadev)
+>>>>>>>                     return true;
+>>>>>>>             }
+>>>>>>>
+>>>>>>> +       if (vga_arb_integrated_gpu(&pdev->dev))
+>>>>>>> +               return true;
+>>>>>>> +
+>>>>>>
+>>>>>> The problem is that the integrated graphics does not support VGA.
+>>>>>
+>>>>> Right, so the check has to be used much earlier.
+>>>>>
+>>>>> I wonder does the integrated GFX have _DOD/_DOS while the discrete=
+ one doesn't?
+>>>>> If that's the case, vga_arb_integrated_gpu() can be used to differ=
+entiate which
+>>>>> one is the boot GFX.
+>>>>
+>>>> I think the problem is that the boot GPU is being conflated with vga
+>>>> arb.  In this case the iGPU has no VGA so has no reason to be invol=
+ved
+>>>> in vga arb.  Trying to mess with any vga related resources on it co=
+uld
+>>>> be problematic.  Do higher levels of the stack look at vga arb to
+>>>> determine the "primary" GPU?
+>>>
+>>> Hmm, I wonder if all those heuristic are needed for EFI based system?
+>>>
+>>> Can we assume that what being used by UEFI GOP is the primary GFX de=
+vice?
+>>=20
+>> Yes, I believe so.  The SBIOS should use the GOP device as determined
+>> by the user preference.  I.e.., in the bios configuration you can
+>> generally select iGPU or PEG for the primary display.
+>
+> UEFI spec, 10.3.3.1 ACPI _ADR Device Path
+>
+> "The _ADR device path is used to contain video output device attribute=
+s to=20
+> support the Graphics Output Protocol. The device path can contain mult=
+iple _ADR=20
+> entries if multiple video output devices are displaying the same outpu=
+t."
+>
+> Luke, can you please see what are the _ADR values of the iGPU and dGPU=
+?=20
+> Maybe we=20
+> can find which one was used by GOP this way.
 
-elapsed time: 766m
+I'm not sure what I'm looking at here, but initial search shows:
 
-configs tested: 134
-configs skipped: 4
+                Device (VGA)
+                {
+                    Name (_ADR, Zero)  // _ADR: Address
+                    Name (DOSA, Zero)
+                    Method (_DOS, 1, NotSerialized)  // _DOS: Disable Ou=
+tput Switching
+                    {
+                        DOSA =3D Arg0
+                    }
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+                    Method (_DOD, 0, NotSerialized)  // _DOD: Display Ou=
+tput Devices
+                    {
+                        M460 ("PLA-ASL-\\_SB.PCI0.GPPA.VGA._DOD\n", Zero=
+, Zero, Zero, Zero, Zero, Zero)
+                        Return (Package (0x07)
+                        {
+                            0x00010110,=20
+                            0x00010210,=20
+                            0x00010220,=20
+                            0x00010230,=20
+                            0x00010240,=20
+                            0x00031000,=20
+                            0x00032000
+                        })
+                    }
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arc                 nsimosci_hs_smp_defconfig    clang-20
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                        clps711x_defconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                         lpc18xx_defconfig    clang-20
-arm                            qcom_defconfig    clang-20
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          alldefconfig    clang-20
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-19
-i386                              allnoconfig    clang-19
-i386                             allyesconfig    clang-19
-i386        buildonly-randconfig-001-20241031    clang-19
-i386        buildonly-randconfig-002-20241031    clang-19
-i386        buildonly-randconfig-003-20241031    clang-19
-i386        buildonly-randconfig-004-20241031    clang-19
-i386        buildonly-randconfig-005-20241031    clang-19
-i386        buildonly-randconfig-006-20241031    clang-19
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241031    clang-19
-i386                  randconfig-002-20241031    clang-19
-i386                  randconfig-003-20241031    clang-19
-i386                  randconfig-004-20241031    clang-19
-i386                  randconfig-005-20241031    clang-19
-i386                  randconfig-006-20241031    clang-19
-i386                  randconfig-011-20241031    clang-19
-i386                  randconfig-012-20241031    clang-19
-i386                  randconfig-013-20241031    clang-19
-i386                  randconfig-014-20241031    clang-19
-i386                  randconfig-015-20241031    clang-19
-i386                  randconfig-016-20241031    clang-19
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                        stmark2_defconfig    clang-20
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                            gpr_defconfig    clang-20
-mips                          rb532_defconfig    clang-20
-mips                         rt305x_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                    ge_imp3a_defconfig    clang-20
-powerpc                       holly_defconfig    clang-20
-powerpc                     tqm8540_defconfig    clang-20
-powerpc                     tqm8560_defconfig    clang-20
-powerpc                 xes_mpc85xx_defconfig    clang-20
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                      rts7751r2d1_defconfig    clang-20
-sh                           se7721_defconfig    clang-20
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20241031    clang-19
-x86_64      buildonly-randconfig-002-20241031    clang-19
-x86_64      buildonly-randconfig-003-20241031    clang-19
-x86_64      buildonly-randconfig-004-20241031    clang-19
-x86_64      buildonly-randconfig-005-20241031    clang-19
-x86_64      buildonly-randconfig-006-20241031    clang-19
-x86_64                              defconfig    clang-19
-x86_64                                  kexec    clang-19
-x86_64                                  kexec    gcc-12
-x86_64                randconfig-001-20241031    clang-19
-x86_64                randconfig-002-20241031    clang-19
-x86_64                randconfig-003-20241031    clang-19
-x86_64                randconfig-004-20241031    clang-19
-x86_64                randconfig-005-20241031    clang-19
-x86_64                randconfig-006-20241031    clang-19
-x86_64                randconfig-011-20241031    clang-19
-x86_64                randconfig-012-20241031    clang-19
-x86_64                randconfig-013-20241031    clang-19
-x86_64                randconfig-014-20241031    clang-19
-x86_64                randconfig-015-20241031    clang-19
-x86_64                randconfig-016-20241031    clang-19
-x86_64                randconfig-071-20241031    clang-19
-x86_64                randconfig-072-20241031    clang-19
-x86_64                randconfig-073-20241031    clang-19
-x86_64                randconfig-074-20241031    clang-19
-x86_64                randconfig-075-20241031    clang-19
-x86_64                randconfig-076-20241031    clang-19
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.1.0
+                    Device (LCD)
+                    {
+                        Name (_ADR, 0x0110)  // _ADR: Address
+                        Name (BCLB, Package (0x34)
+                        {
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+https://gitlab.com/asus-linux/reverse-engineering/-/blob/master/uncatego=
+rized/GA605WI/dsdt.dsl?ref_type=3Dheads#L4666
+
+And:
+
+            Method (_DOD, 0, NotSerialized)  // _DOD: Display Output Dev=
+ices
+            {
+                Return (Package (0x01)
+                {
+                    0x8000A450
+                })
+            }
+
+            Device (LCD0)
+            {
+                Method (_ADR, 0, Serialized)  // _ADR: Address
+                {
+                    Return (0x8000A450)
+                }
+
+https://gitlab.com/asus-linux/reverse-engineering/-/blob/master/uncatego=
+rized/GA605WI/ssdt1.dsl?ref_type=3Dheads#L411
+
+The links are direct to the lines I thought were relevant in the dumped =
+DSDT.
+
+Luke.
+
+>
+> Kai-Heng
+>
+>>=20
+>> Alex
+>>=20
+>>>
+>>> Kai-Heng
+>>>
+>>>>
+>>>> Alex
+>>>>
+>>>>>
+>>>>> Kai-Heng
+>>>>>
+>>>>>>
+>>>>>> Alex
+>>>>>>
+>>>>>>>             /*
+>>>>>>>              * Vgadev has neither IO nor MEM enabled.  If we hav=
+en't found any
+>>>>>>>              * other VGA devices, it is the best candidate so fa=
+r.
+>>>>>>>
+>>>>>>>
+>>>>>>> Kai-Heng
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Tested-by: Luke D. Jones <luke@ljones.dev>
+>>>>>>>
+>>>>>
+>>>
 
