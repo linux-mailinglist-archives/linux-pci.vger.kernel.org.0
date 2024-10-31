@@ -1,147 +1,208 @@
-Return-Path: <linux-pci+bounces-15760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E60E09B8620
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 23:36:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB6F79B862C
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 23:41:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D7AB281CA5
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 22:36:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEB641C20E0A
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 22:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D50151957E7;
-	Thu, 31 Oct 2024 22:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A2C619F430;
+	Thu, 31 Oct 2024 22:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dejEHyY6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PZmsAdfT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEE51E481
-	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 22:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A570A1CB53B;
+	Thu, 31 Oct 2024 22:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730414214; cv=none; b=u1T/RjV/g7ukzvx2s070tB8V87UiGaAJi3MaA5yT+28qGdUeBDz7Ak1T9AJ46HFf54/AX96EM6/0dYI2vXvaykX7N2eUis0e9brOG19ZDnnSqDXR5Eo0ha2XzikfWCRZ2O2WuL/V8OiXTBbIKbq1O3kEDyL1TQ4lNG/qx1h1Zbw=
+	t=1730414462; cv=none; b=IUIKnknBEim/Rr8tyxfMWKyBzWzuogvVhQU4vJwbzU4XiSu5rhRmiQ5Sr5dE0VttSbO+RprbKKwd8awPF6Ki7yATvYkVwf3ArALMILO5e9sfbOnlSBMV0h4apNcqnzezIrEps2Vn8+quQcwFT/Nk+DFIVYzxhOizIxVRO1gCjkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730414214; c=relaxed/simple;
-	bh=lYt9NpvrHObsB/PZD9LC3arxhEdvOhbnU4iHtWBwdss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N1L3+nzWJ6olVN0o5LH8wStYn91pGTPhQIGq01PcaS1r3w/+CQLk8eUfWzYE4iSI0ecVu5Huoib3nYXsYLEo7S7ZMSGhZmXULEok4YulqeDdwXHBDOw+KZ7ac3p+smTVu/Mz9toangeLs2fhHZZkuz0JPkQYGKVmWt63O38eBcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dejEHyY6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5088C4CEC3;
-	Thu, 31 Oct 2024 22:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730414214;
-	bh=lYt9NpvrHObsB/PZD9LC3arxhEdvOhbnU4iHtWBwdss=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dejEHyY69fV4IOYikH0lDUEjmvb72tkOPCznqpit9EfDsqq7cONCCDPmLdhCnI/YC
-	 gObFWdUHxLh/VhrFamlh/IrJr0YPM6ONlc54hMfxmAcds2I1hTLbKLxRrnHX9cA3Ex
-	 vY5jBn5cwa4HKOR1kCqoS4qzESSUusbE4MAYso7lcyqYOizT0c6HsD2S1yy9JtZ92B
-	 0RUI763lxyBCLq1VmMnPoQ7B1PAV2Xv+6IonBPyi3ld2crBdoJdlopahY9TJp5raz5
-	 hYZ0DwkQ8Cg7sq3f5YnUUgoPp7RS4mWCnawKwsF4gL4zPS+us95ocwNkx+oqRLYssH
-	 dYq8aFYsp76wA==
-Message-ID: <7c30ed21-5d48-414a-a943-68ff74b4f23e@kernel.org>
-Date: Fri, 1 Nov 2024 07:36:51 +0900
+	s=arc-20240116; t=1730414462; c=relaxed/simple;
+	bh=TtX246/7V9tXd0BN+YUjyWwj/a3VQ2j7RYCFTjdfKgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vCR2cQlAqwZTcOzhHn/vNMYuSiKGDoAb2kuKnyRUX6HvHwBkOzXvjl6fXbi6BL7RAK3vay/zBa6mrKoDqzxznhWsQegdq8qtwu6KVD8Crcy794Ynbi55IGP2G0oalm8rHn6WUjStihXhdxPhp+wp73d5iuJpW1Qg6BN/d3kGdq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PZmsAdfT; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730414457; x=1761950457;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TtX246/7V9tXd0BN+YUjyWwj/a3VQ2j7RYCFTjdfKgs=;
+  b=PZmsAdfT3v2IINtcA2aZWBGiFceBZXQkuvFMmxQvSGFwxoxZc87RNNDK
+   MqkbBsA6/tLt8NKRpaOwphm5ykHju2lNCo9IqotjwyjfdYCr+SDdClv0a
+   kxoQtUzGV/3IA/wqBjP3q++Kg3Q1iujFVBHc6NEb/HerjkqTwF7xq1tiq
+   DqoCWr0fU3ho0t0Iv454dp3UTGCFwsaiGAF2KYjO5o8ZZGQNxvQUzaCS9
+   Sy5A35iLrvVaRc0PjWMZK7gzDdnpVfGtLKn+r5BVzGcGxEvjnhgXmxgxd
+   ePTkFpS3LVPbeEH+8bK9vXoVXjCTwBbO+2fUCjvW4v31VaCMQlOy4ZByc
+   w==;
+X-CSE-ConnectionGUID: bT1I4m5UR8Wp2ZFJXRQgIw==
+X-CSE-MsgGUID: 212Ceag/SK2OXrpj6ftqFg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="30294386"
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="30294386"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 15:40:56 -0700
+X-CSE-ConnectionGUID: wD6CisJHQ06wuSZ12h/+6A==
+X-CSE-MsgGUID: NsMJpRFKSGW57UVHodjKJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="120231292"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 31 Oct 2024 15:40:50 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t6dqR-000gnK-1T;
+	Thu, 31 Oct 2024 22:40:47 +0000
+Date: Fri, 1 Nov 2024 06:39:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
+	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+	frank.li@nxp.com, s.hauer@pengutronix.de, festevam@gmail.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	imx@lists.linux.dev, kernel@pengutronix.de,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v5 02/10] PCI: imx6: Add ref clock for i.MX95 PCIe
+Message-ID: <202411010605.6YPlxVeu-lkp@intel.com>
+References: <20241031080655.3879139-3-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] PCI: dwc: ep: Use align addr function for
- dw_pcie_ep_raise_{msi,msix}_irq()
-To: Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org
-References: <20241031202849.GA1266008@bhelgaas>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20241031202849.GA1266008@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241031080655.3879139-3-hongxing.zhu@nxp.com>
 
-On 11/1/24 05:28, Bjorn Helgaas wrote:
-> On Thu, Oct 17, 2024 at 03:20:55PM +0200, Niklas Cassel wrote:
->> Use the dw_pcie_ep_align_addr() function to calculate the alignment in
->> dw_pcie_ep_raise_{msi,msix}_irq() instead of open coding the same.
->>
->> Signed-off-by: Niklas Cassel <cassel@kernel.org>
->> ---
->>  .../pci/controller/dwc/pcie-designware-ep.c    | 18 +++++++++---------
->>  1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 20f67fd85e83..9bafa62bed1d 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -503,7 +503,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->>  	u32 msg_addr_lower, msg_addr_upper, reg;
->>  	struct dw_pcie_ep_func *ep_func;
->>  	struct pci_epc *epc = ep->epc;
->> -	unsigned int aligned_offset;
->> +	size_t msi_mem_size = epc->mem->window.page_size;
->> +	size_t offset;
->>  	u16 msg_ctrl, msg_data;
->>  	bool has_upper;
->>  	u64 msg_addr;
->> @@ -531,14 +532,13 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->>  	}
->>  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
->>  
->> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
->> -	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
->> +	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &msi_mem_size, &offset);
->>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
->> -				  epc->mem->window.page_size);
->> +				  msi_mem_size);
-> 
-> I haven't worked through this; just double checking that this is
-> correct.  Previously we did ALIGN_DOWN() here, but
-> dw_pcie_ep_align_addr() uses ALIGN() (not ALIGN_DOWN()).  Similar
-> below in dw_pcie_ep_raise_msix_irq().
+Hi Richard,
 
-The ALIGN() in dw_pcie_ep_align_addr() is for the mapping size. The address is
-aligned down manually:
+kernel test robot noticed the following build warnings:
 
-	return pci_addr & ~mask;
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus shawnguo/for-next mani-mhi/mhi-next linus/master v6.12-rc5 next-20241031]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So it is the same. We could change dw_pcie_ep_align_addr() to do:
+url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Zhu/dt-bindings-imx6q-pcie-Add-ref-clock-for-i-MX95-PCIe-RC/20241031-160000
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20241031080655.3879139-3-hongxing.zhu%40nxp.com
+patch subject: [PATCH v5 02/10] PCI: imx6: Add ref clock for i.MX95 PCIe
+config: um-allmodconfig (https://download.01.org/0day-ci/archive/20241101/202411010605.6YPlxVeu-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 639a7ac648f1e50ccd2556e17d401c04f9cce625)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241101/202411010605.6YPlxVeu-lkp@intel.com/reproduce)
 
-	return ALIGN_DOWN(pci_addr, epc->mem->window.page_size);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411010605.6YPlxVeu-lkp@intel.com/
 
-But given that the offset calculation needs the alignment mask anyway, using
-the mask variable directly seems natural.
+All warnings (new ones prefixed by >>):
 
-So this is functionnally identical for the PCI address being mapped, and it is
-even better for the mapping size since this was passing
-epc->mem->window.page_size before but if the PCI address range crosses over a
-page_size boundary, we actually need 2 x page_size as the mapping size...
+   In file included from drivers/pci/controller/dwc/pci-imx6.c:21:
+   In file included from include/linux/of_address.h:7:
+   In file included from include/linux/io.h:14:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/pci/controller/dwc/pci-imx6.c:21:
+   In file included from include/linux/of_address.h:7:
+   In file included from include/linux/io.h:14:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/pci/controller/dwc/pci-imx6.c:21:
+   In file included from include/linux/of_address.h:7:
+   In file included from include/linux/io.h:14:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     693 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     701 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     709 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     718 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     727 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     736 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   In file included from drivers/pci/controller/dwc/pci-imx6.c:22:
+   In file included from include/linux/pci.h:1645:
+   In file included from include/linux/dmapool.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/pci/controller/dwc/pci-imx6.c:1490:27: warning: unused variable 'imx95_ext_osc_clks' [-Wunused-const-variable]
+    1490 | static const char * const imx95_ext_osc_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"};
+         |                           ^~~~~~~~~~~~~~~~~~
+   14 warnings generated.
 
-Which makes me realized that there is something still wrong: the memory being
-mapped (ep->msi_mem) is at most one page:
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for MODVERSIONS
+   Depends on [n]: MODULES [=y] && !COMPILE_TEST [=y]
+   Selected by [y]:
+   - RANDSTRUCT_FULL [=y] && (CC_HAS_RANDSTRUCT [=y] || GCC_PLUGINS [=n]) && MODULES [=y]
+   WARNING: unmet direct dependencies detected for GET_FREE_REGION
+   Depends on [n]: SPARSEMEM [=n]
+   Selected by [m]:
+   - RESOURCE_KUNIT_TEST [=m] && RUNTIME_TESTING_MENU [=y] && KUNIT [=m]
 
-	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
-					     epc->mem->window.page_size);
-	if (!ep->msi_mem) {
-		ret = -ENOMEM;
-		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
-		goto err_exit_epc_mem;
-	}
 
-But we may need up to 2 pages depending on the PCI address we get for the
-MSI/MSIX. So we need to fix that as well I think.
+vim +/imx95_ext_osc_clks +1490 drivers/pci/controller/dwc/pci-imx6.c
 
-Niklas, thoughts ?
-
+  1483	
+  1484	static const char * const imx6q_clks[] = {"pcie_bus", "pcie", "pcie_phy"};
+  1485	static const char * const imx8mm_clks[] = {"pcie_bus", "pcie", "pcie_aux"};
+  1486	static const char * const imx8mq_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"};
+  1487	static const char * const imx6sx_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_inbound_axi"};
+  1488	static const char * const imx8q_clks[] = {"mstr", "slv", "dbi"};
+  1489	static const char * const imx95_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux", "ref"};
+> 1490	static const char * const imx95_ext_osc_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"};
+  1491	
 
 -- 
-Damien Le Moal
-Western Digital Research
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
