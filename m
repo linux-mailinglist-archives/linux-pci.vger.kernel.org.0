@@ -1,74 +1,48 @@
-Return-Path: <linux-pci+bounces-15741-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11DC69B8173
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 18:44:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FA9E9B8244
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:08:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B691C1F2114B
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 17:44:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8C621F234F8
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 18:08:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 355A91C2DB7;
-	Thu, 31 Oct 2024 17:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630291CCEEA;
+	Thu, 31 Oct 2024 18:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="dZqBiU8D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOEUJVJL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239541BE852
-	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 17:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219C61C9DE9;
+	Thu, 31 Oct 2024 18:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730396636; cv=none; b=M2XV1I/XhWWfz+woO897UXAT8nodIH+eB47fAypRp3X81wZpM+rZuz1KcY44D+uvH4qW/FCQ/iK74QPGgNaMoBxgIEvGp2bKdINDh92m6AW7rRQD1aghY4vtgOqri1hx1GwI2SG2/C2oGYBqZNIw+6VXsRI7U7YNctyVTrrvEZs=
+	t=1730398005; cv=none; b=iEoeQZWtCb5fSIYOwvniKEeJR8La15Izb/hzJk7zwvENrE43+Acc3dMXto9iw83nP0BAgAZedmTBJKQxDABA5n+t+dUK7olA7wAq3NDPCEzF1xuYU9gjvvVmTISOx8nes6NwIYC2k23QRtR2sW1WDLAMRQoutb/KAS2JDtHkZck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730396636; c=relaxed/simple;
-	bh=mhTsv1ygiWFnjDiVQe/E1G0vEfNsEKPKJTElZp6SXYc=;
+	s=arc-20240116; t=1730398005; c=relaxed/simple;
+	bh=YkqIfnPERjVeH87UZlXaT+hldz57EXPt5sjBOEZ5BXU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JwIJZqjY86TR/GfuHVWINlERooNKGzENwl7T0RD2DfJgDO63lz7NutnFjW372cxH4nKDAkkKRrxCdn5rMcJwEZu1spFJtPKIJ0vBprmoNhYmfE0ezyKulWL4kF6BFhJPf0nKdvpt9xxOllxHjR/7BFTCjzW2uc9KGA+fHXxVFoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=dZqBiU8D; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-8377fd760b0so44243539f.2
-        for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 10:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1730396633; x=1731001433; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cJN1S3OA8zjlhqH9iA1Z8bsg9GoFf4IOEEdKUROgci0=;
-        b=dZqBiU8DXpQWfL+3eDl4LNW0W8j+Gz/J02RI+YIltmvo+mXJ8sK+GXmVmFZki7saWo
-         EiOfNKfrdJx3cH16jzNPC4J1UW6Znf3Fl/LOGauWgtG+nlV9MvRTmmWSW6AdlRhGm/jV
-         PruJ2QGCXMvZiFufP41oXDueGWmKZx5GRxOMoWb0ks7naLXT2NhNcFb42vJMO6j/oPYs
-         sF3gAAC6PSuY+vA3Fy9x0bAH+9iJjo/A832nbSe1ZHD2UM/UnGW26frMvAhMmeuGc11m
-         XpHb/8EJldScXIeKUKhsgBZlD+JolvOaJA8QEP8jb3Jlp4Rr0giiK4Jb9loOapjHOiFD
-         oB+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730396633; x=1731001433;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cJN1S3OA8zjlhqH9iA1Z8bsg9GoFf4IOEEdKUROgci0=;
-        b=poWEteQn4xCvHACCzSRTSd9n0ArfTsRmz9AM1p0gje1aQCsPayyOjr0bK5D/EXbYDZ
-         VEsi8Cp/o6pXCVs8vJhQ1Yk2m9aiYA7UmWZoJ5Qh09nbkrpT+hhqd1K2NqY33NWXusB/
-         lPoUAElIPDldD2XfP+3Pa4geK81jL49P1EWzseD3lqKl53rsfWilRCKJTqcC5XgkV3M/
-         hvKRiM+lRwXTjI1vGnrrnkLKNgJKWNx/IOEPBwWAMh8K7LQkFgN6QdRm1ErAIDBoxDOP
-         Hly52lgXWgY3j1pN/tH/Pxa/dYOyAgJYfV2Doa/Yk1LXcAkpYsrdo726rZl3VUhpS/fg
-         Puiw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4i+JpHAYzZHj6WgAnMonNjLYLoBhAJmuE9o0csEZR9E+wie60WK08Kt91LKs0tzJhNCOjUextGrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAzW5rEK6LwooCZXpxQwKvtTTEstUz1Kiu1mZRfEbqpuXSEX4u
-	+kc0TRanybHsMKhJKxD1VhFYjNnbJHTHI6YBQuAjtb2XOkcad+GO7Y+xClHTB0o=
-X-Google-Smtp-Source: AGHT+IGqvDPac4jMToI9PP3ppL4bi2ob+amIyOKddZ0fGQ56qF7607m8ktK4Ur1sfUjByGfZ1fMmYA==
-X-Received: by 2002:a05:6602:6d0b:b0:83a:a9e9:6dc9 with SMTP id ca18e2360f4ac-83b1c4c27eemr2156317139f.12.1730396633080;
-        Thu, 31 Oct 2024 10:43:53 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4de048e3736sm379375173.81.2024.10.31.10.43.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2024 10:43:52 -0700 (PDT)
-Message-ID: <8b4500da-4ed8-4cd2-ba3b-0c2d0b5b4551@kernel.dk>
-Date: Thu, 31 Oct 2024 11:43:50 -0600
+	 In-Reply-To:Content-Type; b=BjeI8ERZQ8OiNnmbCmipCzdIFTZmjuDUY064KtS3wCp0xQsPDifITaZF7fnJuSUmdHDJb6cH6dkMLAEyizdFLPFuFz3R/gEFH3cFFzWUTfyPXWWeMyjZL3q5+p3G6lJ7ZqND7MO+rcmCTMaB2/Ktzpt5a5oho3aspp80oEWpLn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOEUJVJL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0543C4CEC3;
+	Thu, 31 Oct 2024 18:06:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730398003;
+	bh=YkqIfnPERjVeH87UZlXaT+hldz57EXPt5sjBOEZ5BXU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FOEUJVJLUu6H2xlON07EWbFSB0wfhN+LW4nBPcjoTnjogS+0iruhEg6/6p3mpnKUP
+	 GvWzVNJTmMPgssV+2aVw07LlAPR+K0iXo4N1wBmByy5m9jaUo1aTGeUHdJd1gJBMMn
+	 AYAKWyOq75bLr3htU7bltxKRYMuF7E1L2aOvUGi7SRUuyk54vccgPKssqvXmgP+FLT
+	 cHElgWNiZ1PPHIp/v9qZzZrV97Wago/qGMD+92gdK8nRxK8VobXRBWtYJ8cEe2kklI
+	 8icE+fe84qrjpc8AECZjdlmbQFdZbPdWhMB3lZNAIBdY2fw701JOo0VILonbVz9Adh
+	 eiwhUo6kf4C8A==
+Message-ID: <e2ce5f7a-6ef5-45e0-9868-11eb9106ace8@kernel.org>
+Date: Thu, 31 Oct 2024 19:06:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,63 +50,141 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
-To: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
- iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <cover.1730298502.git.leon@kernel.org>
- <3144b6e7-5c80-46d2-8ddc-a71af3c23072@kernel.dk>
- <20241031083450.GA30625@lst.de> <20241031090530.GC7473@unreal>
- <20241031092113.GA1791@lst.de> <20241031093746.GA88858@unreal>
+Subject: Re: [PATCH v3 03/12] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
+References: <cover.1730123575.git.andrea.porta@suse.com>
+ <2948fdf8ccf8d83f59814d0b2a85ce8dac938764.1730123575.git.andrea.porta@suse.com>
+ <fwqcbnub36fk4abmhbtuwsoxdlf64mx4v65mxahsxmiv2sz6er@bfjddapvb75v>
+ <ZyOSGgJ4zb31Posb@apocalypse>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20241031093746.GA88858@unreal>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <ZyOSGgJ4zb31Posb@apocalypse>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/31/24 3:37 AM, Leon Romanovsky wrote:
-> On Thu, Oct 31, 2024 at 10:21:13AM +0100, Christoph Hellwig wrote:
->> On Thu, Oct 31, 2024 at 11:05:30AM +0200, Leon Romanovsky wrote:
->>> This series is a subset of the series you tested and doesn't include the
->>> block layer changes which most likely were the cause of the performance
->>> regression.
+On 31/10/2024 15:20, Andrea della Porta wrote:
+> Hi Krzysztof,
+> 
+> On 08:28 Tue 29 Oct     , Krzysztof Kozlowski wrote:
+>> On Mon, Oct 28, 2024 at 03:07:20PM +0100, Andrea della Porta wrote:
+>>> Common YAML schema for devices that exports internal peripherals through
+>>> PCI BARs. The BARs are exposed as simple-buses through which the
+>>> peripherals can be accessed.
 >>>
->>> This is why I separated the block layer changes from the rest of the series
->>> and marked them as RFC.
+>>> This is not intended to be used as a standalone binding, but should be
+>>> included by device specific bindings.
 >>>
->>> The current patch set is viable for HMM and VFIO. Can you please retest
->>> only this series and leave the block layer changes for later till Christoph
->>> finds the answer for the performance regression?
+>>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+>>> ---
+>>>  .../devicetree/bindings/pci/pci-ep-bus.yaml   | 58 +++++++++++++++++++
+>>>  MAINTAINERS                                   |  1 +
+>>>  2 files changed, 59 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>>> new file mode 100644
+>>> index 000000000000..e532621f226b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>>> @@ -0,0 +1,58 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/pci/pci-ep-bus.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Common Properties for PCI MFD Endpoints with Peripherals Addressable from BARs
+>>> +
+>>> +maintainers:
+>>> +  - Andrea della Porta  <andrea.porta@suse.com>
+>>> +
+>>> +description:
+>>> +  Define a generic node representing a PCI endpoint which contains several sub-
+>>> +  peripherals. The peripherals can be accessed through one or more BARs.
+>>> +  This common schema is intended to be referenced from device tree bindings, and
 >>
->> As the subset doesn't touch block code or code called by block I don't
->> think we need Jens to benchmark it, unless he really wants to.
+>> Please wrap code according to coding style (checkpatch is not a coding
+>> style description but only a tool).
+>>
+>> Above applies to all places here and other bindings.
 > 
-> He wrote this sentence in his email, while responding on subset which
-> doesn't change anything in block layer: "just want to make sure
-> something like this doesn't get merged until that is both fully
-> understood and sorted out."
-> 
-> This series works like a charm for RDMA (HMM) and VFIO.
+> Are you referring to the title being longer than 80 column here, right?
+> Because the description seems correctly wrapped... or should I add a
+> newline for each paragraph?
 
-I don't care about rdma/vfio, nor do I test it, so you guys can do
-whatever you want there, as long as it doesn't regress the iommu side.
-The block series is separate, so we'll deal with that when we get there.
+Hmm, I might commented on wrong description. I just looked at patch #2
+and there it's passed 80.
 
-I don't know why you CC'ed linux-block on the series.
+Here the title is not wrapped.
 
--- 
-Jens Axboe
+Best regards,
+Krzysztof
+
 
