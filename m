@@ -1,105 +1,149 @@
-Return-Path: <linux-pci+bounces-15695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBAB69B77AF
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 10:37:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7FE09B785F
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 11:08:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2D111F21901
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 09:37:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BE3D281DCE
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 10:08:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8BA195962;
-	Thu, 31 Oct 2024 09:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FA681990BC;
+	Thu, 31 Oct 2024 10:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTQP7PS+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6vK9Blq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A7D18DF6B;
-	Thu, 31 Oct 2024 09:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3F7195FEC;
+	Thu, 31 Oct 2024 10:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730367471; cv=none; b=gnx3mAItE3349SQP3Nbx1fRxBv1HoyZZGYcG9npJiiHawN/o0qrNGeKQvxJ9rAXkGwt2WzzTO9Ng5wD15yaMTyq0sx0sbHMiI5ptaPAKV/LMysD+g48kXBGD9XFbmzi1lyAEmBPGI3nbfgj1DFvxIfiTrqHkZ3mV74UaC2TQJpc=
+	t=1730369311; cv=none; b=dWwEJ0PsJmdwIe5ss27hzmJWBjVjwFNJBi1Ejk7lvU+zHEp83/EMxl9YfQy87b9Ah+cXAUSiR1dJYfzcw4a3ePawpd2Io7p0v1e9tMfY9PpQmr2aqN+U3JaisfZurO5fZekpED2PjhOlH1LVb0JAkCPmxMNTKoPw0DO/4qE58O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730367471; c=relaxed/simple;
-	bh=tqzJLh5GYRL2KEmKB06uhDKvLABRYtBWXtB3Y8bMEKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=COhqTqf8iZbulguVzzjipvG112iSLyNCP7lYG/JfS/7MRWKU/0UTMrG94RvabryQB35LcklOkAPHfyhh93N5qV9Zi2SUdYT+a/cyf5QCGW4PFDaZ2vAK5t47+NsiG6Y6+485Fh/79wbseMnto1my9VEsHMGxDVQATasWRJ9H2bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTQP7PS+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04050C4CEC3;
-	Thu, 31 Oct 2024 09:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730367470;
-	bh=tqzJLh5GYRL2KEmKB06uhDKvLABRYtBWXtB3Y8bMEKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dTQP7PS+/MTyTtUMPwFCdUdEd1qWr3BPPQ8pvyYPVrtbourx/L8sdNPTr9lPj1QPB
-	 g933lrXQqvAJxMV1kQiG2xyG7NF8LnS9wKQBA9lsBXrn5RHD1+siwDoEBnl+zfB8NV
-	 DrhOyVxwnAVdg5G2IeaEo3cxX9HtNdkNEj0b51HcYMeCY5S9sSDgNsPLzN1l7uwEAl
-	 8UAGh7dlC4XLOOvyRno1rlDrgXdZkQFymJIkdmkKL/RzKkO8mH98WS4qTpitL+TrzB
-	 j4UfpaLbeZXfuUbC0SIp4WAe0T7KDxaEbIsTC03s3SAkoAGz9+Sya4ZfdJPQPVNS6T
-	 b1awtly2cL7Qw==
-Date: Thu, 31 Oct 2024 11:37:46 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
-Message-ID: <20241031093746.GA88858@unreal>
-References: <cover.1730298502.git.leon@kernel.org>
- <3144b6e7-5c80-46d2-8ddc-a71af3c23072@kernel.dk>
- <20241031083450.GA30625@lst.de>
- <20241031090530.GC7473@unreal>
- <20241031092113.GA1791@lst.de>
+	s=arc-20240116; t=1730369311; c=relaxed/simple;
+	bh=i+hteVqCnXc++rzyU2MY4vtu6c9jhIdsix/DJbeDlZE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=orR7RuFhQatmCps9fdNUkAk6OB/YmmoYlsfYEaDLVri7sNtPfaoIBPb9GtlCrDYUVOgXw7Bi9SuU3MEyATebw5TNQsxxLXK82Um2xBnLtDfvQhjTIYjjgyF3dPauSp/ARDOV0b2t81jRzDHZMGEgI3XVIs4ajZ6NHKnlwoEUD6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6vK9Blq; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730369309; x=1761905309;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=i+hteVqCnXc++rzyU2MY4vtu6c9jhIdsix/DJbeDlZE=;
+  b=e6vK9BlqsET8X8Rf5hpK1F5pLbmoB3bkfSDL8bCC/XNJqGwlcmGneWjd
+   Tscmx/eQLYq5nzGNQeJbaIPMtFT8bMpsMP5eFiv7/kaumckvM/w0nfJea
+   ud2rmmvepuIJWLkm3lJGtny6Qbjn5fNRWsYQGV8DrvEij7EfbPN+4M/sm
+   sQPogrGXrdf3ClVecn8mpzeF1eXpsxXdlJOQaZJWw0aaUDWV2O6y+F5aF
+   2FNrp2XnnKD7OlBdlQI5EDbRbiWsAcBGoHeeVQ5kmSzkFRUgC3AALBTs/
+   G+lwXvQc/6dDyEmnTHuzoD68JQH7nDq2Psik7Z3EjDl7TuA0nrlD7WtIr
+   Q==;
+X-CSE-ConnectionGUID: tJnErQwRQMmaiEnPWko7ow==
+X-CSE-MsgGUID: zFBxadd7TqquUNoPu9C1aA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29955805"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="29955805"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:08:29 -0700
+X-CSE-ConnectionGUID: W6SPskMlQiyn/wK1TPI9qw==
+X-CSE-MsgGUID: dWkMTl2ZTguOT55YPzXk+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="82742336"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.160])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:08:23 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 31 Oct 2024 12:08:20 +0200 (EET)
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, 
+    Yazen Ghannam <yazen.ghannam@amd.com>
+cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "Luck, Tony" <tony.luck@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+    "avadhut.naik@amd.com" <avadhut.naik@amd.com>, 
+    "john.allen@amd.com" <john.allen@amd.com>, 
+    "mario.limonciello@amd.com" <mario.limonciello@amd.com>, 
+    "bhelgaas@google.com" <bhelgaas@google.com>, 
+    "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>, 
+    "richard.gong@amd.com" <richard.gong@amd.com>, 
+    "jdelvare@suse.com" <jdelvare@suse.com>, 
+    "linux@roeck-us.net" <linux@roeck-us.net>, 
+    "clemens@ladisch.de" <clemens@ladisch.de>, 
+    "hdegoede@redhat.com" <hdegoede@redhat.com>, 
+    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+    "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    "naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>, 
+    "carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
+Subject: RE: [PATCH 06/16] x86/amd_nb: Simplify root device search
+In-Reply-To: <CY8PR11MB7134D716377B0C5E40E5C8FF89552@CY8PR11MB7134.namprd11.prod.outlook.com>
+Message-ID: <77c96d66-02b9-965d-4c43-c588aedd1d48@linux.intel.com>
+References: <20241023172150.659002-1-yazen.ghannam@amd.com> <20241023172150.659002-7-yazen.ghannam@amd.com> <CY8PR11MB7134D716377B0C5E40E5C8FF89552@CY8PR11MB7134.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241031092113.GA1791@lst.de>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Oct 31, 2024 at 10:21:13AM +0100, Christoph Hellwig wrote:
-> On Thu, Oct 31, 2024 at 11:05:30AM +0200, Leon Romanovsky wrote:
-> > This series is a subset of the series you tested and doesn't include the
-> > block layer changes which most likely were the cause of the performance
-> > regression.
-> > 
-> > This is why I separated the block layer changes from the rest of the series
-> > and marked them as RFC.
-> > 
-> > The current patch set is viable for HMM and VFIO. Can you please retest
-> > only this series and leave the block layer changes for later till Christoph
-> > finds the answer for the performance regression?
+On Thu, 31 Oct 2024, Zhuo, Qiuxu wrote:
+
+> > From: Yazen Ghannam <yazen.ghannam@amd.com>
+> > [...]
+> > +struct pci_dev *amd_node_get_root(u16 node) {
+> > +	struct pci_dev *df_f0 __free(pci_dev_put) = NULL;
 > 
-> As the subset doesn't touch block code or code called by block I don't
-> think we need Jens to benchmark it, unless he really wants to.
+> NULL pointer initialization is not necessary.
 
-He wrote this sentence in his email, while responding on subset which doesn't change
-anything in block layer: "just want to make sure something like this doesn't get merged
-until that is both fully understood and sorted out."
+It is, because __free() is used...
 
-This series works like a charm for RDMA (HMM) and VFIO.
+> > +	struct pci_dev *root;
+> > +	u16 cntl_off;
+> > +	u8 bus;
+> > +
+> > +	if (!boot_cpu_has(X86_FEATURE_ZEN))
+> > +		return NULL;
 
-Thanks
+...This would try to free() whatever garbage df_f0 holds...
+
+> > +	/*
+> > +	 * D18F0xXXX [Config Address Control] (DF::CfgAddressCntl)
+> > +	 * Bits [7:0] (SecBusNum) holds the bus number of the root device for
+> > +	 * this Data Fabric instance. The segment, device, and function will be
+> > 0.
+> > +	 */
+> > +	df_f0 = amd_node_get_func(node, 0);
+
+...However, the recommended practice when using __free() is this (as 
+documented in include/linux/cleanup.h):
+
+ * Given that the "__free(...) = NULL" pattern for variables defined at
+ * the top of the function poses this potential interdependency problem
+ * the recommendation is to always define and assign variables in one
+ * statement and not group variable definitions at the top of the
+ * function when __free() is used.
+
+I know the outcome will look undesirable to some, me included, but 
+there's little that can be done to that because there's no other way for 
+the compiler to infer the order.
+
+That being said, strictly speaking it isn't causing issue in this function 
+as is but it's still a bad pattern to initialize to = NULL because in 
+other instances it will cause problems. So better to steer away from the
+pattern entirely rather than depend on reviewers noticing the a cleaup 
+ordering problem gets introduced by some later change to the function.
+
+> > +	if (!df_f0)
+> > +		return NULL;
+
+
+-- 
+ i.
+
 
