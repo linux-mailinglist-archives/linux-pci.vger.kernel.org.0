@@ -1,113 +1,195 @@
-Return-Path: <linux-pci+bounces-15747-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15748-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A14059B832B
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:16:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA3359B8392
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:41:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21042B21FDD
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:15:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E59F1F22107
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:41:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859D3149C52;
-	Thu, 31 Oct 2024 19:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 311B413C3C2;
+	Thu, 31 Oct 2024 19:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HAO/lXId"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zf998KMt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7791E347C7;
-	Thu, 31 Oct 2024 19:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ACD8C0B;
+	Thu, 31 Oct 2024 19:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402154; cv=none; b=U4CbbPH3KHqOX1f3SeutZfuTk0KfHLbyw935gJG+RADZ+MTslZmzQEXEdI3phFYEcRzFH3OpLyNGySahL5PDiO+0F5wfBlgNAEQvkPQsXwVKEbXr0ZzWaDoGMssIqfFbdJszWe9Kynx5c0H1r3yxIiq8dPeIZ7UygqLUqxdPL5M=
+	t=1730403678; cv=none; b=MftF7duWJbx2rhM5A+c2OhP7lRQJgJZpuNsCux7o2r5h187YMZ9GdfzInPgC9hcR+s01xiDwvG8RwD30BL8uG8doTPCBwUdbwEdCVeodPb4EuwqvgtL55FBJHuhVVpPyLf3pT761nnEWpPUHdy3n5wejWgXNw6z3GAGn3Uc1KN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402154; c=relaxed/simple;
-	bh=iz/mcCGKzKAF+54183Qep4jiiK7skiftWfkF3ZQ9fck=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=D+BEr9nHiDAecP0GwEd3JjuWA6q0kTApWXSMY9vngc25MwiDPfsvyM5CKcVibLp8URtchZc2G7yBjw0Bsux1HjWbrTIznmay7GL3wPyFgTRMsRLXOpeGp2TMa9Q8stkdLWzkt9K9MRpPRTGDB5wnIPAk9E+196DfDIz9NFy+Cs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HAO/lXId; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8E54E40E021C;
-	Thu, 31 Oct 2024 19:15:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ODtb6AuBZVDC; Thu, 31 Oct 2024 19:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1730402142; bh=TjBac+vUXA/VaGYTwTi6FQkjFjIMoAJ+klVbchu+St0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=HAO/lXIdBMw3mLgc3LD9+uFBFW9EQDK2KX2jeJPdfe92n1O18NX440RAsMqu2qUmY
-	 J7DvHEU0App/3VYoCssSdJ/NrxFFZEdVW8sIhgfmoy6CwM0Iuqfj+ZCG6ivc8J72cV
-	 10ihGjL/FAFv1GH2Wi5EIz5P/oBuEHPnsO358Dc3Dm6DYXy06zBqGL5VSmmDIDvYNC
-	 l2GXMMAN56VMz3X/kYfU8FNLrLHKgyAkqnNJwnmztwRAlPTBNRfko79Aty0+JR9Xwt
-	 YBkwfJL92K+pRbcmvP9d6INbvsUb+pUVE2+ywlrhfWYP2KYRn9zcR/1BaiLpfvWY/x
-	 P0YXcmi45qC5jjwhDKvn1uzUTvUdPZfpaUhcZSu5VOtDZ6ylssbBuU1fovpvZe+x5K
-	 4Bsh/fWrnItoPSymNIaTMQm0noPkM5fW78zxq71os9XkbycSh0HzVpEtnSImIjjf8S
-	 /vZTn66Kzkyo04GAzIRZfiBUvWjRsDCxwKJcQKLG3gH/tX6XUL9VevKnSwrlncQMeR
-	 W96nGkXqaHuxtoRisIo5EHzIOCPcNJ3T5EPsh2401NKSrsp+irERAFk1+cOhrQ8+Yt
-	 9YM57SRGpAUxb6fO4wEzdgm19sVqS1uT0P2T6M0nPFrsLp1xym/Qhi5yRaI1iSwztx
-	 Cu8EgO60eyhxE5dQT77PGhGs=
-Received: from [IPv6:::1] (unknown [IPv6:2a02:3033:209:eccc:5132:adc4:8c65:1ae1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B42940E0219;
-	Thu, 31 Oct 2024 19:15:18 +0000 (UTC)
-Date: Thu, 31 Oct 2024 20:15:11 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sohil Mehta <sohil.mehta@intel.com>
-CC: Yazen Ghannam <yazen.ghannam@amd.com>, "Luck, Tony" <tony.luck@intel.com>,
- Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "avadhut.naik@amd.com" <avadhut.naik@amd.com>,
- "john.allen@amd.com" <john.allen@amd.com>,
- "mario.limonciello@amd.com" <mario.limonciello@amd.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
- "richard.gong@amd.com" <richard.gong@amd.com>,
- "jdelvare@suse.com" <jdelvare@suse.com>,
- "linux@roeck-us.net" <linux@roeck-us.net>,
- "clemens@ladisch.de" <clemens@ladisch.de>,
- "hdegoede@redhat.com" <hdegoede@redhat.com>,
- "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>,
- "carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/cpufeature=3A_Document_cpu?=
- =?US-ASCII?Q?=5Ffeature=5Fenabled=28=29_as_the_default_to_use?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <f9cd603d-8a3f-43fc-a670-75b4d9a6c729@intel.com>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com> <20241023172150.659002-4-yazen.ghannam@amd.com> <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local> <20241029143928.GA1011322@yaz-khff2.amd.com> <20241029150847.GLZyD6f-Hk6pRTEt2c@fat_crate.local> <SJ1PR11MB6083AA7B2E28F2DA24E4B456FC4B2@SJ1PR11MB6083.namprd11.prod.outlook.com> <20241030142138.GA1304646@yaz-khff2.amd.com> <c2894e47-f902-4603-84e7-a9aca545b18c@intel.com> <20241031103401.GBZyNdGQ-ZyXKyzC_z@fat_crate.local> <f9cd603d-8a3f-43fc-a670-75b4d9a6c729@intel.com>
-Message-ID: <74D1358D-952F-4D33-8A5A-1D6F87B49443@alien8.de>
+	s=arc-20240116; t=1730403678; c=relaxed/simple;
+	bh=JsM585WluehrN5H1BS8Ef1eqRWVfkvFHTb1kx9Sz8AE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=ZoDmIKjquye/p5zwhhOzJDmHJsKtqxfjil2LfKQ0ManCPvOcVhWNv05FlBGfH/jd9/e9gMAv2Pg7bUdadReDlA2iSZ/fxW9Ao4yeKuv3U82DHY9iKx/sduMTUwIvQMoufkqqCuP4RJuwIesXYhY8divHkiONWoPPAqi/QbEEUY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zf998KMt; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a99cc265e0aso198377566b.3;
+        Thu, 31 Oct 2024 12:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730403674; x=1731008474; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:autocrypt:subject:from
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YzNYu0/AjzJL7XVmohx4A6iJPqW08FCWPl6HVe70NGk=;
+        b=Zf998KMtjYlD2sJgHyMj/0x4xrM2TCZgWdfRw5kTGXP2J6xURmgp/RpLKfkP4XNVpb
+         eWTgGf7ZsQfAvdQy5LV+KY4v/AU/0YE1GtDZYAKmSeEnVvsp49M26D8zVJRhaAIUOpLt
+         pA9LJaUMIQKnLG3W/oP3fFBnEvUjQ9S74NZl9rj1p6Loe1mibKPe5QCuFe1DZE7UVByX
+         OJVe9Cc/vm7P2Ua2BTkv/gCVixOMKVOrOZY5qnXRaiHwD+gkjs2BrHLMYrl7qOQoLZd0
+         BeEhmaaKKuCKCDbJiMS9rQR9z8bsgV/nAS+J/NhaB+rHOszl9n8smrk6k5JZUEzFNuZk
+         5KtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730403674; x=1731008474;
+        h=content-transfer-encoding:cc:to:autocrypt:subject:from
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YzNYu0/AjzJL7XVmohx4A6iJPqW08FCWPl6HVe70NGk=;
+        b=ATY2NFiYkb94fGc2KgMowesPoOiWlHiim2rcdDshTBuGdkQ6fiB24sRszf9PoT8E3Q
+         grfVSk53YY4Kmp7maHzjdbVQJXW7ejdPJXWbkubvEFYkw4CQ6GBI3yrMfu3b7/G6r7kK
+         yByTjZwA2r5+AreawZevsaJFoFdhi6Mah3PoYWnAXRo27+bWAyYolGPuxqOj6z1WDaQg
+         wTXes4WgtYiREDzbYA725eQSn0J3ap8pYOY29S3HJo4YdlTtKQ/cf7t46EZdl3gI/hnv
+         57P2JEmdRna4ReVumQRhVhN7WQof8nj71IicMxOtwJYjbw6KRhIMXYmL6ADiQfBFGSYL
+         rG5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWIMOam4S8FOAbskeBTShiD2ULodM3lJmLeuIdmYs1tfcCGm8zevFAZ/7gFRkbVkw/Z7il9Ffwqdio=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yychf9bVaf/tP65R2BYtHXJoNCjIy/gT8qFy4DDocXOCuvrkIUg
+	t8YHV2T4bRrxpHJOdRfKJPsbcobuH4IgCFx305GwUneE23nFthrp
+X-Google-Smtp-Source: AGHT+IEkuXnrlxaCLjBLuYBguXJvces8GJgRGw1VoOzt+Jdq+aXyJiQCMpD5N87u8AmT0eczcgfS1A==
+X-Received: by 2002:a17:907:948c:b0:a99:f8db:68b2 with SMTP id a640c23a62f3a-a9de5ecca55mr2152582566b.18.1730403674181;
+        Thu, 31 Oct 2024 12:41:14 -0700 (PDT)
+Received: from ?IPV6:2a02:3100:af9e:3f00:f876:f664:2bd5:aff4? (dynamic-2a02-3100-af9e-3f00-f876-f664-2bd5-aff4.310.pool.telefonica.de. [2a02:3100:af9e:3f00:f876:f664:2bd5:aff4])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a9e566845c1sm97028166b.210.2024.10.31.12.41.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Oct 2024 12:41:13 -0700 (PDT)
+Message-ID: <11c60429-9435-4666-8e27-77160abef68e@gmail.com>
+Date: Thu, 31 Oct 2024 20:41:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] ALSA: hda: intel: Switch to pci_alloc_irq_vectors API
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, Philipp Stanner <pstanner@redhat.com>,
+ Bjorn Helgaas <helgaas@kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On October 31, 2024 7:26:27 PM GMT+01:00, Sohil Mehta <sohil=2Emehta@intel=
-=2Ecom> wrote:
->Does "default CPU feature testing macro" roll better than "default CPU
->features testing macro"?
+Switch from legacy pci_msi_enable()/pci_intx() API to the
+pci_alloc_irq_vectors API.
 
-Waaay too finicky to me=2E No one cares, I'd say=2E =F0=9F=A4=97=F0=9F=98=
-=82
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ sound/pci/hda/hda_intel.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 9fc5e6c5d..fc329b6a7 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -773,6 +773,14 @@ static void azx_clear_irq_pending(struct azx *chip)
+ static int azx_acquire_irq(struct azx *chip, int do_disconnect)
+ {
+ 	struct hdac_bus *bus = azx_bus(chip);
++	int ret;
++
++	if (!chip->msi || pci_alloc_irq_vectors(chip->pci, 1, 1, PCI_IRQ_MSI) < 0) {
++		ret = pci_alloc_irq_vectors(chip->pci, 1, 1, PCI_IRQ_INTX);
++		if (ret < 0)
++			return ret;
++		chip->msi = 0;
++	}
+ 
+ 	if (request_irq(chip->pci->irq, azx_interrupt,
+ 			chip->msi ? 0 : IRQF_SHARED,
+@@ -786,7 +794,6 @@ static int azx_acquire_irq(struct azx *chip, int do_disconnect)
+ 	}
+ 	bus->irq = chip->pci->irq;
+ 	chip->card->sync_irq = bus->irq;
+-	pci_intx(chip->pci, !chip->msi);
+ 	return 0;
+ }
+ 
+@@ -1879,13 +1886,9 @@ static int azx_first_init(struct azx *chip)
+ 		chip->gts_present = true;
+ #endif
+ 
+-	if (chip->msi) {
+-		if (chip->driver_caps & AZX_DCAPS_NO_MSI64) {
+-			dev_dbg(card->dev, "Disabling 64bit MSI\n");
+-			pci->no_64bit_msi = true;
+-		}
+-		if (pci_enable_msi(pci) < 0)
+-			chip->msi = 0;
++	if (chip->msi && chip->driver_caps & AZX_DCAPS_NO_MSI64) {
++		dev_dbg(card->dev, "Disabling 64bit MSI\n");
++		pci->no_64bit_msi = true;
+ 	}
+ 
+ 	pci_set_master(pci);
+@@ -2037,7 +2040,7 @@ static int disable_msi_reset_irq(struct azx *chip)
+ 	free_irq(bus->irq, chip);
+ 	bus->irq = -1;
+ 	chip->card->sync_irq = -1;
+-	pci_disable_msi(chip->pci);
++	pci_free_irq_vectors(chip->pci);
+ 	chip->msi = 0;
+ 	err = azx_acquire_irq(chip, 1);
+ 	if (err < 0)
+-- 
+2.47.0
+
 
