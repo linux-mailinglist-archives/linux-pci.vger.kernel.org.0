@@ -1,58 +1,76 @@
-Return-Path: <linux-pci+bounces-15751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5832B9B8459
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 21:28:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13B079B8488
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 21:43:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 027C71F228C6
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:28:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBF77281A34
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:43:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC2ED1B3B28;
-	Thu, 31 Oct 2024 20:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2401CC147;
+	Thu, 31 Oct 2024 20:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mu2sUAzl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lr7kPUgI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51881A2562
-	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 20:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4484149C55;
+	Thu, 31 Oct 2024 20:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730406532; cv=none; b=bw2aIOu3h323CLpsQFgB4J3SViT4FAMAvoC6jfLbg6uIzJ8U82qnnH5iXaFSmZ1O0ElfecTN7YRlrscrshr2AIM/2wWd+9woLm8yPF/Bvqncu/xN8rLj3wPMHC1WNkHsYNOfNxfxYRLdtKLRBrZjxr56AXqjoVrwtSLZWmlvEho=
+	t=1730407391; cv=none; b=NKI2eZTcXD4gGnQ966LEFxyxOQQE1uOmDpmih0aXhFnqDXs0qXpT/tqnr1ja1sYM9NqKu6O64NDv4bjvrq8Y/VGpEjABgGODWS1RZZxideCeTM4372rZLGT22XLmIEMQQ3h7ssAThUqauzBbEO3+lbw1i/PKmLI5grqyAKF8K8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730406532; c=relaxed/simple;
-	bh=BJPL8kgo7OWUIiGC/AcPCXchbICif4ZxCX6nWCdxrKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fMrEYL1zMBrHXwCOK7V54qG202qUNJfbA3Vzezn+4eRiHA9my4oKeWsBsAHG/8oj35getxdM7UXg58G480iTmukwi17kTHAZBdP9D1jyI7wGMBdfyyrx986jiHlZPbz4XSUXCzy2y/HjfuxhI4N+00Cvj1nocWjqZ0qj7oJBIbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mu2sUAzl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B06C4CEC3;
-	Thu, 31 Oct 2024 20:28:51 +0000 (UTC)
+	s=arc-20240116; t=1730407391; c=relaxed/simple;
+	bh=H9TYKTBvHoQ5rvWOlZrf5R8cp5gm744S0WtiOVj2YhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dQ6vyye8Y2R4V3qRUCATesG+f7RmUzE2M+Is2l+G1NUeK/6fHM7Qd/ZKl2NlNiRAbO8XyZNvOTYFegqzhiXJPT8kXgN87d7JSrcOjY6tw7PvylqA2DSCMULKkfWZnjov8kxP7DF5OGoAadJoji7wnuGIXVUbKiC3I+Kh7wTH9sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lr7kPUgI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7011FC4CEC3;
+	Thu, 31 Oct 2024 20:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730406532;
-	bh=BJPL8kgo7OWUIiGC/AcPCXchbICif4ZxCX6nWCdxrKI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mu2sUAzl0fmgU7gibHIAyzIAKu2aM0IXt8zoIz7tUDvrAz1Rzbxo2g/FKZc9uWX0o
-	 CZmUATvZFFR+mHQwZvy0L9S5uEWmvvsTM68hPUfw7fFWA9OP/iNjwe/RYkSW74rrzu
-	 32Wt7SKSiON2/gRBKdce1EbJkd0Nt3+XYBB12xZrWl/uOODLpgm4pvXM7Rh46M3oL+
-	 uEUGhdEpRiv79RpPAlZb8zgz1Avt1JAh6gjLf6VC7G8LYMD1eGTpy64ZSLUqPNr/Mt
-	 /fcQQy28QDU0DkmW+dTckFiFGQdMzp3d1R6OOeNHRAFUB3oilCOSxltoOdMe6wIifj
-	 dJbHgScy+Vo/Q==
-Date: Thu, 31 Oct 2024 15:28:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: dwc: ep: Use align addr function for
- dw_pcie_ep_raise_{msi,msix}_irq()
-Message-ID: <20241031202849.GA1266008@bhelgaas>
+	s=k20201202; t=1730407391;
+	bh=H9TYKTBvHoQ5rvWOlZrf5R8cp5gm744S0WtiOVj2YhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lr7kPUgI/7iVNgICJResGJ30FaV5ODcyHJ9WGRkVobW4I+2qmOuISPyR7TgVvtOL0
+	 SmzSJOoShZhbOMucGyUH2uuWA6uV+MEqkVpWqucL5pewOQIRjkLlpdRuvDl1QVDfWX
+	 j1897yIh4R6d4BkCIdg8zDSKqwvM5/ucAQVUt6ez1WZ9F859wkA3oJfZDIz3/BvZ9Q
+	 CFmDxviw5iM6FMEQKmQ/YcUbuNijZ7G5KlXaJgFBJfCLtyj90f3jtiAtedA93PWWwn
+	 Aojx0RCSHe5LU/8+xXjxLd+N9OOoZAjQdgre/g+5QavM+S81ng8FOAv7tC01+C4SFj
+	 e0eXzNVUyHdgQ==
+Date: Thu, 31 Oct 2024 22:43:06 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
+Message-ID: <20241031204306.GB88858@unreal>
+References: <cover.1730298502.git.leon@kernel.org>
+ <3144b6e7-5c80-46d2-8ddc-a71af3c23072@kernel.dk>
+ <20241031083450.GA30625@lst.de>
+ <20241031090530.GC7473@unreal>
+ <20241031092113.GA1791@lst.de>
+ <20241031093746.GA88858@unreal>
+ <8b4500da-4ed8-4cd2-ba3b-0c2d0b5b4551@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,84 +79,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241017132052.4014605-6-cassel@kernel.org>
+In-Reply-To: <8b4500da-4ed8-4cd2-ba3b-0c2d0b5b4551@kernel.dk>
 
-On Thu, Oct 17, 2024 at 03:20:55PM +0200, Niklas Cassel wrote:
-> Use the dw_pcie_ep_align_addr() function to calculate the alignment in
-> dw_pcie_ep_raise_{msi,msix}_irq() instead of open coding the same.
+On Thu, Oct 31, 2024 at 11:43:50AM -0600, Jens Axboe wrote:
+> On 10/31/24 3:37 AM, Leon Romanovsky wrote:
+> > On Thu, Oct 31, 2024 at 10:21:13AM +0100, Christoph Hellwig wrote:
+> >> On Thu, Oct 31, 2024 at 11:05:30AM +0200, Leon Romanovsky wrote:
+> >>> This series is a subset of the series you tested and doesn't include the
+> >>> block layer changes which most likely were the cause of the performance
+> >>> regression.
+> >>>
+> >>> This is why I separated the block layer changes from the rest of the series
+> >>> and marked them as RFC.
+> >>>
+> >>> The current patch set is viable for HMM and VFIO. Can you please retest
+> >>> only this series and leave the block layer changes for later till Christoph
+> >>> finds the answer for the performance regression?
+> >>
+> >> As the subset doesn't touch block code or code called by block I don't
+> >> think we need Jens to benchmark it, unless he really wants to.
+> > 
+> > He wrote this sentence in his email, while responding on subset which
+> > doesn't change anything in block layer: "just want to make sure
+> > something like this doesn't get merged until that is both fully
+> > understood and sorted out."
+> > 
+> > This series works like a charm for RDMA (HMM) and VFIO.
 > 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c    | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+> I don't care about rdma/vfio, nor do I test it, so you guys can do
+> whatever you want there, as long as it doesn't regress the iommu side.
+> The block series is separate, so we'll deal with that when we get there.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 20f67fd85e83..9bafa62bed1d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -503,7 +503,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	u32 msg_addr_lower, msg_addr_upper, reg;
->  	struct dw_pcie_ep_func *ep_func;
->  	struct pci_epc *epc = ep->epc;
-> -	unsigned int aligned_offset;
-> +	size_t msi_mem_size = epc->mem->window.page_size;
-> +	size_t offset;
->  	u16 msg_ctrl, msg_data;
->  	bool has_upper;
->  	u64 msg_addr;
-> @@ -531,14 +532,13 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	}
->  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
->  
-> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
-> -	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
-> +	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &msi_mem_size, &offset);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> -				  epc->mem->window.page_size);
-> +				  msi_mem_size);
+> I don't know why you CC'ed linux-block on the series.
 
-I haven't worked through this; just double checking that this is
-correct.  Previously we did ALIGN_DOWN() here, but
-dw_pcie_ep_align_addr() uses ALIGN() (not ALIGN_DOWN()).  Similar
-below in dw_pcie_ep_raise_msix_irq().
+Because of the second part, which is marked as RFC and based on this
+one. I think that it is better to present whole picture to everyone
+interested in the discussion.
 
->  	if (ret)
->  		return ret;
->  
-> -	writel(msg_data | (interrupt_num - 1), ep->msi_mem + aligned_offset);
-> +	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
->  
->  	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
->  
-> @@ -589,8 +589,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	struct pci_epf_msix_tbl *msix_tbl;
->  	struct dw_pcie_ep_func *ep_func;
->  	struct pci_epc *epc = ep->epc;
-> +	size_t msi_mem_size = epc->mem->window.page_size;
-> +	size_t offset;
->  	u32 reg, msg_data, vec_ctrl;
-> -	unsigned int aligned_offset;
->  	u32 tbl_offset;
->  	u64 msg_addr;
->  	int ret;
-> @@ -615,14 +616,13 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		return -EPERM;
->  	}
->  
-> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
-> -	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
-> +	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &msi_mem_size, &offset);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
->  				  epc->mem->window.page_size);
->  	if (ret)
->  		return ret;
->  
-> -	writel(msg_data, ep->msi_mem + aligned_offset);
-> +	writel(msg_data, ep->msi_mem + offset);
->  
->  	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
->  
+Thanks
+
+> 
 > -- 
-> 2.47.0
+> Jens Axboe
 > 
 
