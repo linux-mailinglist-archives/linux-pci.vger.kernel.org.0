@@ -1,217 +1,147 @@
-Return-Path: <linux-pci+bounces-15759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A89F29B8545
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 22:27:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E60E09B8620
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 23:36:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66975281E27
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 21:27:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D7AB281CA5
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 22:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B64061A76D5;
-	Thu, 31 Oct 2024 21:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D50151957E7;
+	Thu, 31 Oct 2024 22:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qtc8XRko"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dejEHyY6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F7016DEBD;
-	Thu, 31 Oct 2024 21:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEE51E481
+	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 22:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730410063; cv=none; b=F1QzcxK+TtkQ3KM536BPqHnNsPVoPg00Dw7HUZwRDNUrPaHmI5AUdTHIl+UpcGpUrfXIMdeP8tiNL5RJWEgIvRpiRXwQqGNDBHt5kmhbu0j06CsD6oLi4M/MO2Pl4K4DocVk/B8McgIsNiCjdgYRDzPCpayBlj0C8tO8Q8z2vLU=
+	t=1730414214; cv=none; b=u1T/RjV/g7ukzvx2s070tB8V87UiGaAJi3MaA5yT+28qGdUeBDz7Ak1T9AJ46HFf54/AX96EM6/0dYI2vXvaykX7N2eUis0e9brOG19ZDnnSqDXR5Eo0ha2XzikfWCRZ2O2WuL/V8OiXTBbIKbq1O3kEDyL1TQ4lNG/qx1h1Zbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730410063; c=relaxed/simple;
-	bh=bl44WVmaUULL8B5ir/xE2s0B1QEu/rRZUJxn5ctU5rM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZhhKcZhupTq2rgooBe2kWhTCibM7a7VF0VwLuUlPB2bbHFEDL9qZIPWX/BvuFofuoFqnEVDnZlMd5xmFfg98OuevdrzmZrKvmYeLtd36s3GwHp4YC+p3RuFgeLX8POMEoDFCyW5QOwa1yds0d+pt/Ss+b7dFdjs5Cd2LErHaW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qtc8XRko; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-718e9c8bd83so1925666b3a.1;
-        Thu, 31 Oct 2024 14:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730410057; x=1731014857; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gP3+/PsY3A1zi3YMA5waIl6JNl6hCrFJv9jzWk+G+kE=;
-        b=Qtc8XRkox/SbRUs6q0IckEQD/Ggfy6CF+I1jmOAoO5x2HytyWHI/jGtCcOaf2OS8IX
-         2VAurQVUFunrTch48mGaDghF1kFfA/ZrcN391iC1/mBGAqwo2czu1XRlIWxHWyR9grRJ
-         eKvtx4qk2MYgywUvzf7dvz/Kbx6ZVljZebCGg3lM7Ob2eqzaGzvr4zQCeWNvyMRh5eBJ
-         /G/6hLOxxK/jBw3zC2MuLQR+3O3EqEu6KWWRq6OZuIrU51BHV2NvpXWEBcGt0h+yYlJv
-         eMO3l0QRszBLMPFbbxLG+bZrRZFyhrHaKkUCwZhNs8tBQV5FRmbJgB7kqACvy1QwFU8P
-         3pDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730410057; x=1731014857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gP3+/PsY3A1zi3YMA5waIl6JNl6hCrFJv9jzWk+G+kE=;
-        b=T3C4XfLrOSd94L9bDiJjvN0zY3sgKs5xHRcoOCC9oX3Q+ZKKT71aGaAMH4Bocygj2E
-         TE/yZ97zjsZMtmM/OWj8Gu/fqK5a4UwGmvhSqL5GXMqsetPsvt+Ysdew8Gx/GOYYl7wm
-         0pLXnyYStVZ47MMrGiUXjCcK/jaJIPl6sGh+2IRl0HHHkyUfDChD+TUy8YaKYI9WBQm1
-         MYYAE+1pXMSDUZtgYL0wicU8Nq50ZWScUzNV9q6lCSNZ8sYODkPRH2nW0Q0lMa/xY0Hy
-         EqP5i9Rb4Z4Pr1nlVUEDT3+AlyfnJQL9NDkBcFtYQMZOcao8zJpMTpzofb6Ha/zgRIBv
-         MS+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUYQN2cRQHls1xnFLdmMPQVu+NtFwN4ERpgiBmZ9o9QKVnWc6ux3xZXPpcoDNcpc3Qs3oDVMs1igm13E6P2@vger.kernel.org, AJvYcCUcVBjjaQAKdf8sFPlc9LOLWweebPiotX3nVOz8YKe+AvBFifsb63b+Wu9ayUl/3zaWJgeD8l824BN1@vger.kernel.org, AJvYcCX4ClVjZO75No2KLusv7hdUWKqbmS/EOhsQ3dPiSegBaXmbuyrhjE3apeGzmw/9yhErwLw/UzFOm3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8Q5nYBeIe6J0Ue8xvvByWnipGwkU9kmPxkFUy8dcHib/4l6c0
-	lXCWHYVi+PSuPbNYr4zvRgOLPHD/dpnjp1jNc0nYmgg6Bry5/5I0kV3LGISs
-X-Google-Smtp-Source: AGHT+IEtn2vH5K/i/Z0Zxb70H9baohg/vqBNTSMXA6kbOU6qTZSpjUSinMN8Yx3+Pjj4JKspzImLUg==
-X-Received: by 2002:a05:6a20:a8a0:b0:1d9:167a:7890 with SMTP id adf61e73a8af0-1db94fbf902mr5710768637.11.1730410056810;
-        Thu, 31 Oct 2024 14:27:36 -0700 (PDT)
-Received: from fan ([2601:646:8f03:9fee:1a14:7759:606e:c90])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1e572dsm1577741b3a.66.2024.10.31.14.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 14:27:36 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 31 Oct 2024 14:27:33 -0700
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 04/14] PCI/AER: Modify AER driver logging to report
- CXL or PCIe bus error type
-Message-ID: <ZyP2Rda-92qdfi-N@fan>
-References: <20241025210305.27499-1-terry.bowman@amd.com>
- <20241025210305.27499-5-terry.bowman@amd.com>
+	s=arc-20240116; t=1730414214; c=relaxed/simple;
+	bh=lYt9NpvrHObsB/PZD9LC3arxhEdvOhbnU4iHtWBwdss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N1L3+nzWJ6olVN0o5LH8wStYn91pGTPhQIGq01PcaS1r3w/+CQLk8eUfWzYE4iSI0ecVu5Huoib3nYXsYLEo7S7ZMSGhZmXULEok4YulqeDdwXHBDOw+KZ7ac3p+smTVu/Mz9toangeLs2fhHZZkuz0JPkQYGKVmWt63O38eBcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dejEHyY6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5088C4CEC3;
+	Thu, 31 Oct 2024 22:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730414214;
+	bh=lYt9NpvrHObsB/PZD9LC3arxhEdvOhbnU4iHtWBwdss=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dejEHyY69fV4IOYikH0lDUEjmvb72tkOPCznqpit9EfDsqq7cONCCDPmLdhCnI/YC
+	 gObFWdUHxLh/VhrFamlh/IrJr0YPM6ONlc54hMfxmAcds2I1hTLbKLxRrnHX9cA3Ex
+	 vY5jBn5cwa4HKOR1kCqoS4qzESSUusbE4MAYso7lcyqYOizT0c6HsD2S1yy9JtZ92B
+	 0RUI763lxyBCLq1VmMnPoQ7B1PAV2Xv+6IonBPyi3ld2crBdoJdlopahY9TJp5raz5
+	 hYZ0DwkQ8Cg7sq3f5YnUUgoPp7RS4mWCnawKwsF4gL4zPS+us95ocwNkx+oqRLYssH
+	 dYq8aFYsp76wA==
+Message-ID: <7c30ed21-5d48-414a-a943-68ff74b4f23e@kernel.org>
+Date: Fri, 1 Nov 2024 07:36:51 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241025210305.27499-5-terry.bowman@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] PCI: dwc: ep: Use align addr function for
+ dw_pcie_ep_raise_{msi,msix}_irq()
+To: Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org
+References: <20241031202849.GA1266008@bhelgaas>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20241031202849.GA1266008@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 25, 2024 at 04:02:55PM -0500, Terry Bowman wrote:
-> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors.
+On 11/1/24 05:28, Bjorn Helgaas wrote:
+> On Thu, Oct 17, 2024 at 03:20:55PM +0200, Niklas Cassel wrote:
+>> Use the dw_pcie_ep_align_addr() function to calculate the alignment in
+>> dw_pcie_ep_raise_{msi,msix}_irq() instead of open coding the same.
+>>
+>> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+>> ---
+>>  .../pci/controller/dwc/pcie-designware-ep.c    | 18 +++++++++---------
+>>  1 file changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 20f67fd85e83..9bafa62bed1d 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -503,7 +503,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>  	u32 msg_addr_lower, msg_addr_upper, reg;
+>>  	struct dw_pcie_ep_func *ep_func;
+>>  	struct pci_epc *epc = ep->epc;
+>> -	unsigned int aligned_offset;
+>> +	size_t msi_mem_size = epc->mem->window.page_size;
+>> +	size_t offset;
+>>  	u16 msg_ctrl, msg_data;
+>>  	bool has_upper;
+>>  	u64 msg_addr;
+>> @@ -531,14 +532,13 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>  	}
+>>  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
+>>  
+>> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+>> -	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+>> +	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &msi_mem_size, &offset);
+>>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>> -				  epc->mem->window.page_size);
+>> +				  msi_mem_size);
 > 
-> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL devices.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
+> I haven't worked through this; just double checking that this is
+> correct.  Previously we did ALIGN_DOWN() here, but
+> dw_pcie_ep_align_addr() uses ALIGN() (not ALIGN_DOWN()).  Similar
+> below in dw_pcie_ep_raise_msix_irq().
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+The ALIGN() in dw_pcie_ep_align_addr() is for the mapping size. The address is
+aligned down manually:
 
->  drivers/pci/pcie/aer.c  | 14 ++++++++------
->  include/ras/ras_event.h |  9 ++++++---
->  2 files changed, 14 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index fe6edf26279e..53e9a11f6c0f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -699,13 +699,14 @@ static void __aer_print_error(struct pci_dev *dev,
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->  	int layer, agent;
->  	int id = pci_dev_id(dev);
->  	const char *level;
->  
->  	if (!info->status) {
-> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> -			aer_error_severity_string[info->severity]);
-> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> +			bus_type, aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
->  
-> @@ -714,8 +715,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
->  
-> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		   aer_error_severity_string[info->severity],
-> +	pci_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-> +		   bus_type, aer_error_severity_string[info->severity],
->  		   aer_error_layer[layer], aer_agent_string[agent]);
->  
->  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> @@ -730,7 +731,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	if (info->id && info->error_dev_num > 1 && info->id == id)
->  		pci_err(dev, "  Error of this Agent is reported first\n");
->  
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
->  			info->severity, info->tlp_header_valid, &info->tlp);
->  }
->  
-> @@ -764,6 +765,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		   struct aer_capability_regs *aer)
->  {
-> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->  	int layer, agent, tlp_header_valid = 0;
->  	u32 status, mask;
->  	struct aer_err_info info;
-> @@ -798,7 +800,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  	if (tlp_header_valid)
->  		__print_tlp_header(dev, &aer->header_log);
->  
-> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
->  			aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
-> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-> index e5f7ee0864e7..1bf8e7050ba8 100644
-> --- a/include/ras/ras_event.h
-> +++ b/include/ras/ras_event.h
-> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
->  
->  TRACE_EVENT(aer_event,
->  	TP_PROTO(const char *dev_name,
-> +		 const char *bus_type,
->  		 const u32 status,
->  		 const u8 severity,
->  		 const u8 tlp_header_valid,
->  		 struct pcie_tlp_log *tlp),
->  
-> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
->  
->  	TP_STRUCT__entry(
->  		__string(	dev_name,	dev_name	)
-> +		__string(	bus_type,	bus_type	)
->  		__field(	u32,		status		)
->  		__field(	u8,		severity	)
->  		__field(	u8, 		tlp_header_valid)
-> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
->  
->  	TP_fast_assign(
->  		__assign_str(dev_name);
-> +		__assign_str(bus_type);
->  		__entry->status		= status;
->  		__entry->severity	= severity;
->  		__entry->tlp_header_valid = tlp_header_valid;
-> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
->  		}
->  	),
->  
-> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
-> -		__get_str(dev_name),
-> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-> +		__get_str(dev_name), __get_str(bus_type),
->  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
->  			__entry->severity == AER_FATAL ?
->  			"Fatal" : "Uncorrected, non-fatal",
-> -- 
-> 2.34.1
-> 
+	return pci_addr & ~mask;
+
+So it is the same. We could change dw_pcie_ep_align_addr() to do:
+
+	return ALIGN_DOWN(pci_addr, epc->mem->window.page_size);
+
+But given that the offset calculation needs the alignment mask anyway, using
+the mask variable directly seems natural.
+
+So this is functionnally identical for the PCI address being mapped, and it is
+even better for the mapping size since this was passing
+epc->mem->window.page_size before but if the PCI address range crosses over a
+page_size boundary, we actually need 2 x page_size as the mapping size...
+
+Which makes me realized that there is something still wrong: the memory being
+mapped (ep->msi_mem) is at most one page:
+
+	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+					     epc->mem->window.page_size);
+	if (!ep->msi_mem) {
+		ret = -ENOMEM;
+		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+		goto err_exit_epc_mem;
+	}
+
+But we may need up to 2 pages depending on the PCI address we get for the
+MSI/MSIX. So we need to fix that as well I think.
+
+Niklas, thoughts ?
+
 
 -- 
-Fan Ni
+Damien Le Moal
+Western Digital Research
 
