@@ -1,337 +1,277 @@
-Return-Path: <linux-pci+bounces-15665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C27F39B716C
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 01:59:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DF1E9B71D1
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 02:26:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D29391F21BF4
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 00:59:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 506B6284EF1
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 01:26:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C3C1BC20;
-	Thu, 31 Oct 2024 00:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 078B428379;
+	Thu, 31 Oct 2024 01:26:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WrkL+r5J"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JTewcz07"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2054.outbound.protection.outlook.com [40.107.244.54])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2089.outbound.protection.outlook.com [40.107.22.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2645738384;
-	Thu, 31 Oct 2024 00:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74401BD9C0;
+	Thu, 31 Oct 2024 01:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730336339; cv=fail; b=U1/ztIQ3/NiUEBuq3SrG+neSlfW4y3+x9MQx9XsoBwhEjGL4cRBeYmHcCXsj/Uo0ls/Qa0iKftoMIDx+V1dnitfMOYaC8MVSKpTTZ5cDgOQXDzF353+aju5FakVDVA3KPAHCPSzwsr9QoSSofjmKTwwBMLqvFTAmvHypRe2hfyA=
+	t=1730337995; cv=fail; b=ME8SQY4UFvaXVbu+z1zNUgQh3YizYTJuUVrTOCi5TLcWXLBjKk54fcQE//Sreb/JkMiTJptx9QM3ujndqh8axuZVjxZnxxyT+fiNb8EOAUrJJTBG5L38ZsWT4LGf8emIXKl8nUbzX/aZDwgFUGjYucjnBypzFkMIWrxCRNUEVy0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730336339; c=relaxed/simple;
-	bh=CA/x/XW55ZkEPki84f4BDPhCbHZM5MuSqqxC7Bq/5e8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IeCZbqOMsRXrnlpShUy0OBeQWIXKuwApGVJB+1QrQHFK4UppmDhtPC/BpQ/dVvC5HmJdNCebSpThxKrFn/xGqr7IxJxj7BFScZuNZ6wPlBAv+tSPZLvZ11gHj7CkLon/TClE9aIotCu5FzlmyNZk4a0g4W3dJKwAOktQnBboicw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WrkL+r5J; arc=fail smtp.client-ip=40.107.244.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1730337995; c=relaxed/simple;
+	bh=b/LBAiV9aIUOGzqFU02EEkpjzw+zt9H2F73r92S1nIM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=t3rmY66r/sTVALfToXnma+HBoqYkmDydXdxqsRJ+UXlfeBzdvpeV3qA3ub9iVmfLIwhNOqicR7kDgpvt2MW4J2ZfKnQBjWL7xqyT6LANlphKY51dqf4fbYCJPemdHNVZ20dMswMAeS+FnQ7gYTvSqmk18kJLvUon9rfedCT7bS8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JTewcz07; arc=fail smtp.client-ip=40.107.22.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EufI2rmvSYjjKBEKKG2ukuofOLHZanPJwRLit4nJWlhqCjG28//r6YeUbIwY4Vk0qWhq+heYmXphZQ8m9fEX77Xbi9EROzDE0qRMQ6zs+vQCs0/sbRZTQfo5iK28Z0XCzg64CJYunxPoJzmfgyOB1NJD4uwejU+Gm6mMFvenqD1CxHMqpBDsM1fr3KbsooQ/by6LW1GqJSxBpOkvyDarflOaVhGrq9zR7tqPsU1truW01xKz9hiK/5groRjWZKZfbE3oCLR6EGYen8mbO0/r+qTUTHCY07LTqPYZg7Ynne0bEK/SPNaXKC7bEgbobseTp2MsjOSQDGQS4vVtHACHPg==
+ b=YeyV7lDpa0NOSm8qAfRDG+NLuH+BZbq1wECQMSyx5KWdOcACR1pLv7vMNCuTrAXVIa0id9CmRR/lfAIzIRA8IE41T54j1/4sV1OMcCTUSE/lzST4E0qbNe90/pLHzSTS506D4tHdUv2v97yKrUtxg6lGIZgdusGK3xHuDsfq0i1OsSRNGjbd6eYJGCgRkSsvdrdAq+Z5FJb89AVM9HeFLDtxMZwPBbpA6aDns8Z77y9Bh9NVYuLwnLuH5FvNJ/VVNxRRoJ+MS3XHLnNtZePsLn+ATL02dLs/Hy4I+p6JOPdADYk0Ba6+hxvyvWjHRav3AVzFAlMbPOkpC/2eZxJOvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EgI/CZtCrPbROhSuigz/4alQX1huY9smok7DJnODc8M=;
- b=uR0s4LckEgX2SzKCtKQILvYgAivNnr/ID12fqqzHnVSW0EfKzjlf9uC7wSWMheRfebSTB7UTD0lT1eYlEbCK7D0tSc/MGjFnB+Vz6Rha4Tnz5Kkr+zUyCaImHd9MWomYtmBy8S84pPxpCuysEsm9NLOApwAvmTlWDLeWWrNc2aZJz3R5E5lj3aWLqBier9ep8rM7+P9OLkOapfoOt5FhXSJs9I81pON3toDCQlXiAuF588jjAdOzDMacc0Fjs0F17RS6un+QOwx1+MZr14tHBjETv/VJUnPxsc/KQq2IcrjaWOP5VJHxoZcUoxciMtdaxfAsUKF7jwKhhmBV0tIbug==
+ bh=eF39aNChMfPHKung+CzUY3m5kV/Blgjnm9KWjy25JrU=;
+ b=Fd0Fds7144lCeunqMBZI3NeLbPO4FjLXLvAtACAsUKbMJ4FUmRHrpJbXjDSrRCapPKdeavEogYxCe02hdm6qP2k7hcR3BUv832ReaTuV7RHBLKXd+N9wiAK2Opa+p4YHumBjI4yu6toPlhdEfTHbwckUxkJDHh+D72LJQ/oNx8y3Laake2OVBdHtKjC0U24ebPNPO7firWEkgTP/Rss8lptO1Bt92SjMkL7u2Mp5ror+pi3MW+m4bGiMwIJP7NKmDf5G+4OCQ1ds21l0Th9O00OOyKsv15VXeM0uRj+ndReU1uai5pSoi1XG9pDyh4bEUNDsLswDMnLyGA4KCcmzEw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EgI/CZtCrPbROhSuigz/4alQX1huY9smok7DJnODc8M=;
- b=WrkL+r5JyY5OtMzmXWsrjSIQxgJHPvQQXFLYPQKvYOEwJRvhwwGKmuMlAsRC2NgNUwjqnu0oeLthgUy14Q4jmSY7EFqtu5rSkiSDTRGCi4XgRSFkoLJ4LGKyjymcD+iDDc558OVsPtCrOdHGXpl46VBOcFs+mFKbYY2oHWKZMJrmLKdTr+WER2w8jgWqh6b/ueoY7jJ6gqGJpidd3nUifaPNfHprQiEKELCUcvy5ctmKksKzAK8/1+rWJkppyPg2yTpCntO3DsdCPkuPA208pxp0fk/NK9CnbT/YX2toYRCVp13BaQx3cfy+YJrH2k4tD3LhDM9Ee4a3J9LNDAogVA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
- by DM6PR12MB4283.namprd12.prod.outlook.com (2603:10b6:5:211::21) with
+ bh=eF39aNChMfPHKung+CzUY3m5kV/Blgjnm9KWjy25JrU=;
+ b=JTewcz07TilrxHx2d56YlZU/C+obta115wT0+CzV98uMQ/gaUHlXAfOmyi80wwjryU6rFk+U1kl3S4vBlOpqgveU3aSTzU4S0UUKrB5eIL8uK/AFQSx3Nm6IjLJtJHzMQsine/pNQ4IFtppyM4qCcLojebL+gO5ofSmZGnnPdQnTk+srMHeqYbNIiQQ9UjPZqG1vQ2mJRQ/Ri6tGSg/1oK/AlsQVqAkdUeZZ4K8sXvp7GuJ9hZ61qfQ6M+pVj1+NjHOyuq767bjAvTgilA1OsgAEeQx1DITDmeFIV7+3FP2ua5wqIJjlyWErsPyWvvdSnv0u/+N/ICVPidcyasUTrQ==
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by DB9PR04MB9233.eurprd04.prod.outlook.com (2603:10a6:10:361::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.32; Thu, 31 Oct
- 2024 00:58:53 +0000
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::8998:fe5c:833c:f378]) by PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::8998:fe5c:833c:f378%4]) with mapi id 15.20.8093.021; Thu, 31 Oct 2024
- 00:58:53 +0000
-Message-ID: <33d7c0ca-8459-4b85-a0e6-97f2e1e8db91@nvidia.com>
-Date: Thu, 31 Oct 2024 08:58:48 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot
- VGA device
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Luke Jones <luke@ljones.dev>, Mario Limonciello <superm1@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
- Mario Limonciello <mario.limonciello@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>
-References: <20241014152502.1477809-1-superm1@kernel.org>
- <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
- <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
- <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
- <fd7cae9a-5ee1-4e18-915d-4115f0a6a156@nvidia.com>
- <CADnq5_NTBXPbW+u_AxTewH-aouLNn4gxebpzUSzsyev-VxOtcg@mail.gmail.com>
- <46b487ec-e8a6-43fb-85d5-f264618f2e5d@nvidia.com>
- <CADnq5_Mh7B8Kk144terpvV9kf2Z4xcQ0nhVakHOcDdwgd3Y1Fg@mail.gmail.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.25; Thu, 31 Oct
+ 2024 01:26:29 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%7]) with mapi id 15.20.8093.027; Thu, 31 Oct 2024
+ 01:26:28 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: Frank Li <frank.li@nxp.com>
+CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, Claudiu
+ Manoil <claudiu.manoil@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms@kernel.org"
+	<horms@kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>
+Subject: RE: [PATCH v6 net-next 11/12] net: enetc: add preliminary support for
+ i.MX95 ENETC PF
+Thread-Topic: [PATCH v6 net-next 11/12] net: enetc: add preliminary support
+ for i.MX95 ENETC PF
+Thread-Index: AQHbKrHn5Cx/gSzd1kS+DY84A/YsZ7KfZdwAgACrXCA=
+Date: Thu, 31 Oct 2024 01:26:28 +0000
+Message-ID:
+ <PAXPR04MB851050C8930CF89E7929850688552@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20241030093924.1251343-1-wei.fang@nxp.com>
+ <20241030093924.1251343-12-wei.fang@nxp.com>
+ <ZyJMAkNw+z9NuGGZ@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZyJMAkNw+z9NuGGZ@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
 Content-Language: en-US
-From: Kai-Heng Feng <kaihengf@nvidia.com>
-In-Reply-To: <CADnq5_Mh7B8Kk144terpvV9kf2Z4xcQ0nhVakHOcDdwgd3Y1Fg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TP0P295CA0033.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:4::14) To PH7PR12MB7914.namprd12.prod.outlook.com
- (2603:10b6:510:27d::13)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|DB9PR04MB9233:EE_
+x-ms-office365-filtering-correlation-id: e53f4294-9317-42ad-5824-08dcf94b0b03
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ubH3WEsVJRj6InfktQLB//awmDAMFBbWxlg5Kp0wluAa1r4yf+6c5TkuJ/oq?=
+ =?us-ascii?Q?+Wmc4FFT1pyhezFm39+5VsEiVwpmNfH1qFbxbtihjBopJUn0a4pFIopACwFO?=
+ =?us-ascii?Q?v6z1Ck3r9eQq+tDf/aEY03ZE3CnEdhLPYuMp1TXHHgFUR9P9V6lK6KK8+N59?=
+ =?us-ascii?Q?3DuUQeC3bzO2kPptEE9Fjgpw2ervJlgvnXi4rVpWTaK3HJKZrxTVZmsrOE1v?=
+ =?us-ascii?Q?iPjukGCEw0kb/JLC1biwCBaRs5xwDu4ydSxwbvSMiGyu/oL1xk46eXJkqV/R?=
+ =?us-ascii?Q?iho82xintOl0MbeYYmFxYuj4u82PoawwdD8lozCJrlkRMw9NFlgs6vu59Tfz?=
+ =?us-ascii?Q?L7qH+0W7241rhwL3yft8AejtfirioGw9DGEK2auV2/HxXsiL9EJiXFujX8Rl?=
+ =?us-ascii?Q?XAdSaigfo/rkgmOXcV3JTzUAztN0MDSQdDNGGW2jos1l3vqJBttVbP9h2Pnk?=
+ =?us-ascii?Q?mo+U2OchTdIdcrrJp3MBfmHIdlqxDdfcYh2SIlJpXumxqhQnXsJ0SKLnclJx?=
+ =?us-ascii?Q?PaB1SI8cBcC806O2rc++QRaKn0oEebNzQE6SPbxgepBMD9riGMH32ZPFY3LD?=
+ =?us-ascii?Q?RhNdm34BuP/zW+dxY++0FpjoNgRZ+S48EkfoKDIxCnoi+pR+cy/lieWaYbbB?=
+ =?us-ascii?Q?KRLjNrt/J4wsJ5FyNxCmvEdUmHud8RDoH73z/vVrfqze6Q882QNOuOxdY2Zz?=
+ =?us-ascii?Q?l8b0eN2HUI6yc7rp92QlLp7xLhZTJk+L2X3RL0wP+mAA6WEpyy9cwLQz89qB?=
+ =?us-ascii?Q?der5vvRNXVyVMoxosG0pBeT4v/y5NzvGsNResamgbXXxyiOQ97MxtoMa/ZsL?=
+ =?us-ascii?Q?BISZAYDZG0Jat04diMOk9UG93wLJ5g+BfkqZdeDB2nx8x6ACbm0O7cTnHA/c?=
+ =?us-ascii?Q?MM++disxSrsvKkFEVFx0YIkjmxs2ELS4m4CB+PMiFWrnEKZJNh15NRHUhiDt?=
+ =?us-ascii?Q?eykqHw6SsSknPK7z64PzJaos4eGBulDXUYfM9JU8UQiHXO8e9Qw3S45MpSzg?=
+ =?us-ascii?Q?8s1Sg0f/v/E3bCraPLIlqB7k/35wg31j+ofjJmfQcGcAwQ4RXxLrSaIiAgdU?=
+ =?us-ascii?Q?7dWZfa5QfTsCPf8/d5GpqPubtu6XHmct1tDlYRNOGNM0sWlCvE//aoSt9O/I?=
+ =?us-ascii?Q?5yy/Y6be6YmQOqAWVnyuU/WSpGAu5XfYgyljesRr0qJKYyP0bN2+HlkST1ug?=
+ =?us-ascii?Q?34z8fIALzfm99MQ0t7bHL5Luq9/53jET0FVbfa1m1Y/HsgWDb+IixzRSm6Wd?=
+ =?us-ascii?Q?R8kGyGhXTETy8SeC7ZTOWcO7NLwk4erm/rk47m7WHjmMJoG82YHGhMHe8AcY?=
+ =?us-ascii?Q?bqRT0oY3Qm44Lz6jxd6ciwJAyCZavYk/Ds4Gy0tjLxPU1zEMt16+bPu4pC9G?=
+ =?us-ascii?Q?dtHqap0=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?vO7s9AmGvrC4ap+fvJkUCTvQP9AnmbfGPdeeehEOVE4JP7iJG3rK+wqI7T3a?=
+ =?us-ascii?Q?+W98VJEiK32ghHQzuwwTdHimzoWk4bBSzTWL01a6hPHUvCLgaztE6XIPz5xf?=
+ =?us-ascii?Q?PAb0ui1HJdn6wU4YcpATjtd5FVxqZzsJ1B7jbBkFYJ5Z4RoWH9yAgqZl+tMq?=
+ =?us-ascii?Q?DjoAOh7W3D4nkvyaIfVPy2qHbl2GrMhUY6Eqo6Kum6uY4Ph2vkB5+mowX3pZ?=
+ =?us-ascii?Q?oDCRYI3J5/PfLVxp/VUPyhzh9frCyXB2q8GSCfDBAmCT8fy7ibJxatngbu2X?=
+ =?us-ascii?Q?D177beZuLl9ir/YrxrlycC5bhaWrkUL1Ns/q9JRmrlcm2WyjTSaMeOk3Cxib?=
+ =?us-ascii?Q?wU1JU7qQoFoYY1L45XdTkjXyiaED0hp75yhl3og0DuUPF+D/JX7I726igEf6?=
+ =?us-ascii?Q?744P1IzEM4e/hi5tNcZtMxyg3/3GOhZfXGtBwWyZ3giFyQHYSNU0KRC6BmiB?=
+ =?us-ascii?Q?2/6QiM/JbrJ+oRrqFPFjyAhR3FbEk3AdJhEPwbwrv2fMrxpWt708/4WppPw5?=
+ =?us-ascii?Q?q9D8UT6CCgP9pPctXmmpH5SdsRghkKN1LRRxUv+jPLfbkCBBjpcyyrvPmiGJ?=
+ =?us-ascii?Q?5t1JNrRNk4uUy3F03i9sJmV87x/ca1/Dnt20zQO8HHbBieumxckRvSpH5ICf?=
+ =?us-ascii?Q?9zriUwZd5Ulgzx6NyH0Cu5ptgrBle346uxuWDhwaoiw4NTAHGz8l9mJmUe3x?=
+ =?us-ascii?Q?Y70hzFfC7+k40CxBRgdECnjurq/H4VyHZ2lcSe9Ryb1nQi5n22KgyDzVX4BF?=
+ =?us-ascii?Q?TugpJkPGFgMPyDNElIuDD0yGTb54PR1FYjj3O51GQ17b9A/dBLU97ytDG1Gb?=
+ =?us-ascii?Q?gzJF2ZXgZi1m35X15K/o2PlVxOM0yIpyJeXIZNVY2cCDq0/5hJ/Jt0Xl0irJ?=
+ =?us-ascii?Q?VokBLh2AuMU0esb4cJLVBTL0Qu9Rmta25+YYUPfhNisD6ObUc2ZL8l4Qukz3?=
+ =?us-ascii?Q?IFsN1MzRptWZYO8QtoMZJa9l2cMSGDf/oV22zAwhvexbzi9i9s8by10ioSD3?=
+ =?us-ascii?Q?XK8LpawihdcRRqLJ71HwWyVyfqz9/dKScZRN4/rJqlNFHzkuEbhNYtsWBIHe?=
+ =?us-ascii?Q?1X8GXmb4edYvqRGzFT+ri8EhkwdljNw318t3Dfe/lgU2Wums6RooIg526+dQ?=
+ =?us-ascii?Q?KfbHdtbblS13OgtUZLlxKV2v8Ed7C/0lN9aoaWubzwEbRfuzBPLp3ezlcqzb?=
+ =?us-ascii?Q?6G6rp0Mi95jwH+P8tvdnMcNncizh9o0iUkcdUcg6cF2LlKcRA9IPPRPFRn50?=
+ =?us-ascii?Q?EIgnrRG3aGSmprG3fvGHcKhKhxhJ3ErDXlU1tC88VUFrmiqJa8EeezLkcnef?=
+ =?us-ascii?Q?fSFxrwTbiUM1LnIsouGyIo68h0+WzsVYkzHG6oTOYS7c5O3U/dc6wogaS2sb?=
+ =?us-ascii?Q?zQaSo19jT6wD3uwwj11+82/GLXHTSSSf/ARggbOFdyfzCvDc4E303XEXLIcC?=
+ =?us-ascii?Q?FfOkHB9SLcAnQgD7tAQE4VDktX4PcNa+mxba9Q334OZ4Puer1Bajirg8A/wn?=
+ =?us-ascii?Q?RCNn8QRJxiWMp+MGHVa6hbzF62DOIPOI6GMDRzIKSWY7tg1XZ87ZqMik7Sso?=
+ =?us-ascii?Q?iEpxQu91yy1KFJV+96M=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|DM6PR12MB4283:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7954e81-fa28-41a3-d1f4-08dcf9473092
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YWx5bGc3eUNRSUxWbFdNdlZpaGdpU3pCUGREU0ZKT0l4TlQvVHk3T21CN3h4?=
- =?utf-8?B?UmVSVy9YbkZVazVZL0VIRysvWjlIS1JaZmxSTkJieGl0cjVVOG5NYmRuSmpN?=
- =?utf-8?B?RUNJNkZ2QnVhdnIrSzRNc1RyMm5aMzhkb05EWm40b3Y4RjVFMTVzZlNWZnVS?=
- =?utf-8?B?YTRHdjlCMEUyOExjUmx6b1k4U1o5bXFZVmkyeHpWMzhOREhrWklvVThwN2NS?=
- =?utf-8?B?YUpDOWYwOUg2L2E5TVRsMW9kY3lFdCt0Mlg5MlVLSGVUR3hIZld6RVB0aUty?=
- =?utf-8?B?RllLVDRuZXEvQnJEbEhhYzIwcGV2K3F5MlJTU0YrMitSTEFMUTFaSUx2b2Za?=
- =?utf-8?B?MVZyRWVUSHl6NnRxdGNld3ErTTN3R29BbFlmRDRuNDgwSmJKWk5udG5PeFNp?=
- =?utf-8?B?NzMydS9GQ3U1T2tTcW5WM1BJcVdIVVRLbzRFZzlRcThKdVlyZXZES0FnWkh4?=
- =?utf-8?B?cmJrT3M2cTMwL1lFdEg3TXlVTFJKNE5lSWdYU3pvWExJcXBCbFkwT0lDM2tZ?=
- =?utf-8?B?TEExaGxRT1pMUG5RRnRqU0ZXbENhRDduc1hZZU9jR0Rucmh6Z0kybGI1OFN3?=
- =?utf-8?B?V1FrdFdUTlU2SDZMSldoL1FzeEpIaU9rZE9lblZvejFHUW5uMVNMdXFPZFl1?=
- =?utf-8?B?UWdwUWVBM0NpaWtCc2FyTkNpTkpQYnR0T0FVb1lhVnBZdDNnNWx6a0VlWmEw?=
- =?utf-8?B?R0YrVEF1K1lsT0pjS2MyaHZGZ2pTQTR2dmJsbGJJS0g3YVczRUxoZWttT2tP?=
- =?utf-8?B?VnlxZXphMWZZVVJwWVAxd0hGTEhLdUpWMG50b1NmTzBlNFcxbEM3a0VwUTNw?=
- =?utf-8?B?R093RmozTGhqTlNlcitxVUtiS3orQmZVU01qYmxjcGltclBRaC9ySDYzMTB0?=
- =?utf-8?B?OUVVcmFLb0N1bUh0b2VTNzN5NlVhcVd6OVcveU16UHlWNnAzVWJnakNtREIz?=
- =?utf-8?B?N0tGc0w4MjEya0UyVUNNaXBxOHZ0dVBySmRpWE9vYUlwcWdqWnZZaTdPUjRV?=
- =?utf-8?B?MGRMd2ZLSVdiOWpWRTZZV0NydEdqb3NTR2xrOGJRUzltQzV0RmxUVmpuMjJk?=
- =?utf-8?B?V0tIeGp2VDhUYWlnY2hlb1FJNXM4WmdKNCtaeXlDZUJnVGJXb1pxVkE5SW4w?=
- =?utf-8?B?ZzMyeTF3OVRvSEIvTjJMUnlJR3ArRkdxWlVxdFZYV0J1bllCUUNXalRLV0FE?=
- =?utf-8?B?VGtESDNBZGVLeE9vU1JJbkx1STdMTzFvcEtLUUx4cVlzblVUK2tRY0ZzMFhl?=
- =?utf-8?B?TEJnai82Y29CZURQdHlGS3E3aUh4Q1FvL0NwL3lKTGprNzZFYzZpcm0zNkoy?=
- =?utf-8?B?MkdoY2FBNEovSDByKzZSODM3TnFMV2ZJSnZkOWFpdEcrQVYyTG5sK1ZpOXp3?=
- =?utf-8?B?ZkVZcGlWeHFwUVJ3Y3RxN2lXMlJ0dlBUNkx4YkFVSVRqWEcvL1NybXZYS3Ju?=
- =?utf-8?B?b0IzYXJ3OUo1NktMZThhZ0cwd2pxRGhkRFJqYUNJeUJqWnVZeXRYOTVIOHI1?=
- =?utf-8?B?OWRjWnBpWEpoUFlCSHM5d3N2Y29FQ3JDOThmeVhlQWRZSDhKcERwUWRBbkw1?=
- =?utf-8?B?cFZRdXZ1bkV6cDdJWUlUNlFlN29TV0RkZWZoMGZlamI4UTUwTTNENDU2eHY0?=
- =?utf-8?B?cGRwb3R1VEJkeVIzNmtOOXRsVzIwSVVLM3pQOVZGa3pqVVJZMkNSTjdqd1Jh?=
- =?utf-8?B?WHFRZjcyaHdmT2o0b3NERVozMWZvZWlRZ3RTWTZSdk9YZFF2RitHOFlOcjZ6?=
- =?utf-8?Q?cvB0l5J/YUWhu3rmefNXgzd1f4RBoMnwFcprgwe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ckJpQ1R5Vm92THE2SjJoL2doQzhmRWVpQmhIZFhteUc2S0p6WloxeE5KcEk0?=
- =?utf-8?B?UDA0ZHg5Vm5SbGs1dElId3RORGRUWHcxVkllMkNSVlRwSmZIWFo0Ky95MHZS?=
- =?utf-8?B?UWVXWitRZEZFVGlUNnJlTkgvZzBqalVodDA4RDBMdzBUbDZKQkJPZEZYWUJa?=
- =?utf-8?B?b3BWbnFkdFNPQVZxUm53b2h0OGRkUlhVZVpiandpS3V3YkU0TlFxd0tXTkZW?=
- =?utf-8?B?OGhabFpOUGdldEN6VTFlcndadmNrOTVvcEJLUjRMbjd3U1ZOSGF0bEdjQ2pH?=
- =?utf-8?B?MVFyNi9Rc1BKd1pYMk9TU0ZtRFVady8zUHhOZW02L0RyNWFkbjdkL0piNHRx?=
- =?utf-8?B?ZUZ0aDlhL1ExODVPOTdUQ2x1NWRCUURqVXovcXNkRUFCZmk4VXhRdmtwckU3?=
- =?utf-8?B?RFBHSDVjMzJ5cDRmcjNIQWhtajNxYTdmR2JVczZ6YUhlSkpqbVJ4OVdTTURx?=
- =?utf-8?B?L05rNHpJRmZIN3RhL1NzYmF0TGhOcGtJOVRiOWJlVE95N1RpSkZJUm9pRnFm?=
- =?utf-8?B?cnVjRGVIcmRPd2FCS0cyZFJrMVV3MC9veWJvUEFqUHM2aytFY2MwWHJtNmdn?=
- =?utf-8?B?UjJETjBoZWVOY0x5S2NneGlxSDFUcHdkYzdkTlR2RHBBdFh4dDNmQWFsQjBD?=
- =?utf-8?B?T3RsMUcza2I4VmJaYUl4eUErcU1yZExCQ25IeG5XTDEraFdMcDVMSzRjQlZF?=
- =?utf-8?B?VUZiejZxQUY2ZHFKRVpyeG9GWlJiTU1tVW5OSUhYcjhTTXdBaUV0SkxVbm5m?=
- =?utf-8?B?NElNOHdHcTFld1JPUEYxZ3BIQ1FoSXUxK3VBMjErVkxOOVVKNlB0MXVqVDlw?=
- =?utf-8?B?d1dnM05WbVZldG1mNVJ6WlNaTDVmaTYzRWFJc3hIYWh0YWN2Y1FObWl0bmNt?=
- =?utf-8?B?M0MvSGQzT0xNRFFSUFV1UXVLVHZVMnNERGpGQmE1dE1YNDZKdHIxME0wYUYv?=
- =?utf-8?B?RVJ4SFlvdkx6TGdkL3Q2d0VXdmdHUWRpRzFrVTgvR2MrWC81ZDVPdGlnajRH?=
- =?utf-8?B?YitQMjU2Szl6TlZ3SmFGQUM3TGlrWnNXUFFJeElycWkxNXQxaWdiL1htQ0d3?=
- =?utf-8?B?eE12M2lzdGZZT2psaHVOY29paHBqTk9CdVZIQnFqRm1WM0VTamVCd3hjUlE1?=
- =?utf-8?B?d2w0cDZQdDBSYXhCallJalQ5dzVWOGJqUWhPbXRUV0JiNnNYWkxTeGZOTGNC?=
- =?utf-8?B?SWJpbVJacEVUbXZEdDVuNjBWUmQ4S25taUN1RkZRdTJXOWR3NXpvcklYSVhW?=
- =?utf-8?B?VUlNenVWdTgxM3pWaHVBQ3FEYTR4WG1vRjBtczFjWkU1M05vUThhR3Q3RSs1?=
- =?utf-8?B?NWhBZkcrbko5Yy9QMzA4RGVhUmM2dmVacUFtMUtsRmxZT2RadGxvcVliZkNk?=
- =?utf-8?B?UHlxaXpDeGxhN2FJb0dpMnhlTGxkcXNtVWJJNGlyK3ZGQUZuMk8vZ2dGaDRv?=
- =?utf-8?B?UTdsTmNjZEF2R3hVZURKRlgzYlZkdW1ZYS9IemFQLzRnaTJ5bXA5aXhuT3Jt?=
- =?utf-8?B?M0YyZ2s4VE4yWVpkUkV0b3pueTZZQXZpR09odFVQNzdCQjQ5aExyeXdQMS95?=
- =?utf-8?B?Tk05RHlpWGFoSFVFRGZ5eEFWZDRyMWxRclN5UVRiRnpoaE5rVmxWK3N0T0NO?=
- =?utf-8?B?T3ViQVA4dStyNnBQWnJCMkdNbTh3ZG16dTNzaWlNNkMvcGV4eFRwK1NidVdO?=
- =?utf-8?B?ZklqcVZ3MmJtcjFuQnBrTDRlZXIwOW53ZFNockpBTmVhcW9JaEVpMXpwK3N5?=
- =?utf-8?B?VmJiMDRheHlmTUduK0Fac2Rha1hGTVFMdnpBMFRtZDMrcUtOZXJ4dUFJc2ti?=
- =?utf-8?B?bjF1Y3o2aHpKMkR3VlNMa1o2MU1KamhlbytWLzNSR0JLNG9nNmJud1JzdmRx?=
- =?utf-8?B?bU9xcFlvRjdFLzVmak42aG9SSkphMkMyWGRMcU9rTEVEZkpJRGdjQi84dGtv?=
- =?utf-8?B?SHdsZDJidEgrNHVLTGVYbFpNdUdha3g0SXNleWgrNExMUVZZRTQ3YmNpOEEr?=
- =?utf-8?B?ZktET3VVdzA0WjdqNHlYQXhqZlc2aU5FbkZSckVEeXNXdkp0MHMwQmtua0Vs?=
- =?utf-8?B?b0xTNkdVVVhJVjlFVWxtdHpHblZobU1nK2lXWi9Ia1RPUG9hYW9xZURhNnpH?=
- =?utf-8?Q?dFwETQ/zR2rlIGbJ4sLZ2DZ91?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7954e81-fa28-41a3-d1f4-08dcf9473092
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 00:58:53.4268
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e53f4294-9317-42ad-5824-08dcf94b0b03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2024 01:26:28.2221
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jVrcrrF8Zi/JgwQOZLyinF3pw8B8wdZjqtFBDm5orc8uccGWvT4wbgjxjjrdYu39hs9Sg+bVLPFDMXv2/A0zDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4283
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: svDdnXL/PS05iJnQxerhymIx/9X7kVXmSy0ZIdaphEusP0tMY2mSXYYUvDIzl9qpYE52mXJFBJpbbZUmgKBDpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9233
 
+> On Wed, Oct 30, 2024 at 05:39:22PM +0800, Wei Fang wrote:
+> > The i.MX95 ENETC has been upgraded to revision 4.1, which is different
+> > from the LS1028A ENETC (revision 1.0) except for the SI part.
+> > Therefore, the fsl-enetc driver is incompatible with i.MX95 ENETC PF.
+> > So add new
+> > nxp-enetc4 driver to support i.MX95 ENETC PF, and this driver will be
+> > used to support the ENETC PF with major revision 4 for other SoCs in
+> > the future.
+> >
+> > Currently, the nxp-enetc4 driver only supports basic transmission
+> > feature for i.MX95 ENETC PF, the more basic and advanced features will
+> > be added in the subsequent patches. In addition, PCS support has not
+> > been added yet, so 10G ENETC (ENETC instance 2) is not supported now.
+> >
+> > Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> > ---
+> > v6:
+> > 1. remove pinctrl_pm_select_default_state() 2. add macros to define
+> > the vendor ID and device ID of ENETC PF
+> > ---
+> >  drivers/net/ethernet/freescale/enetc/Kconfig  |  17 +
+> >  drivers/net/ethernet/freescale/enetc/Makefile |   3 +
+> >  drivers/net/ethernet/freescale/enetc/enetc.c  |  86 +-
+> > drivers/net/ethernet/freescale/enetc/enetc.h  |  30 +-
+> > .../net/ethernet/freescale/enetc/enetc4_hw.h  | 155 ++++
+> > .../net/ethernet/freescale/enetc/enetc4_pf.c  | 756 ++++++++++++++++++
+> > .../ethernet/freescale/enetc/enetc_ethtool.c  |  35 +-
+> >  .../net/ethernet/freescale/enetc/enetc_hw.h   |  19 +-
+> >  .../net/ethernet/freescale/enetc/enetc_pf.c   |   7 +
+> >  .../net/ethernet/freescale/enetc/enetc_pf.h   |   9 +
+> >  .../freescale/enetc/enetc_pf_common.c         |  11 +-
+> >  .../freescale/enetc/enetc_pf_common.h         |   5 +
+> >  .../net/ethernet/freescale/enetc/enetc_qos.c  |   2 +-
+> >  .../net/ethernet/freescale/enetc/enetc_vf.c   |   6 +
+> >  14 files changed, 1113 insertions(+), 28 deletions(-)  create mode
+> > 100644 drivers/net/ethernet/freescale/enetc/enetc4_hw.h
+> >  create mode 100644 drivers/net/ethernet/freescale/enetc/enetc4_pf.c
+> >
+> > diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig
+> > b/drivers/net/ethernet/freescale/enetc/Kconfig
+> > index e1b151a98b41..6c2779047dcd 100644
+> > --- a/drivers/net/ethernet/freescale/enetc/Kconfig
+> > +++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+> > @@ -33,6 +33,23 @@ config FSL_ENETC
+> >
+> >  	  If compiled as module (M), the module name is fsl-enetc.
+> >
+> > +config NXP_ENETC4
+> > +	tristate "ENETC4 PF driver"
+> > +	depends on PCI_MSI
+> > +	select MDIO_DEVRES
+> > +	select FSL_ENETC_CORE
+> > +	select FSL_ENETC_MDIO
+> > +	select NXP_ENETC_PF_COMMON
+> > +	select PHYLINK
+> > +	select DIMLIB
+> > +	help
+> > +	  This driver supports NXP ENETC devices with major revision 4. ENETC=
+ is
+> > +	  as the NIC functionality in NETC, it supports virtualization/isolat=
+ion
+> > +	  based on PCIe Single Root IO Virtualization (SR-IOV) and a full ran=
+ge
+> > +	  of TSN standards and NIC offload capabilities.
+> > +
+> > +	  If compiled as module (M), the module name is nxp-enetc4.
+> > +
+> >  config FSL_ENETC_VF
+> >  	tristate "ENETC VF driver"
+> >  	depends on PCI_MSI
+> > diff --git a/drivers/net/ethernet/freescale/enetc/Makefile
+> > b/drivers/net/ethernet/freescale/enetc/Makefile
+> > index ebe232673ed4..6fd27ee4fcd1 100644
+> > --- a/drivers/net/ethernet/freescale/enetc/Makefile
+> > +++ b/drivers/net/ethernet/freescale/enetc/Makefile
+> > @@ -11,6 +11,9 @@ fsl-enetc-y :=3D enetc_pf.o
+> >  fsl-enetc-$(CONFIG_PCI_IOV) +=3D enetc_msg.o
+> >  fsl-enetc-$(CONFIG_FSL_ENETC_QOS) +=3D enetc_qos.o
+> >
+> > +obj-$(CONFIG_NXP_ENETC4) +=3D nxp-enetc4.o nxp-enetc4-y :=3D enetc4_pf=
+.o
+> > +
+> >  obj-$(CONFIG_FSL_ENETC_VF) +=3D fsl-enetc-vf.o  fsl-enetc-vf-y :=3D
+> > enetc_vf.o
+> >
+> > diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c
+> > b/drivers/net/ethernet/freescale/enetc/enetc.c
+> > index 89d919c713df..4be7c767d1e9 100644
+> > --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> > +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> > @@ -3,6 +3,7 @@
+> >
+> >  #include "enetc.h"
+>=20
+> nit: generally private header file  should be after common header file.
+> #include "..." should after #include <...>
+>=20
 
+Yeah, but this is not the change of this patch. We can fix this nit in the =
+future.
 
-On 2024/10/25 8:55 PM, Alex Deucher wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Fri, Oct 25, 2024 at 3:51 AM Kai-Heng Feng <kaihengf@nvidia.com> wrote:
->>
->>
->>
->> On 2024/10/23 11:27 PM, Alex Deucher wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Tue, Oct 22, 2024 at 9:27 PM Kai-Heng Feng <kaihengf@nvidia.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2024/10/22 9:04 PM, Alex Deucher wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> On Tue, Oct 22, 2024 at 2:31 AM Kai-Heng Feng <kaihengf@nvidia.com> wrote:
->>>>>>
->>>>>> Hi Luke,
->>>>>>
->>>>>> On 2024/10/15 4:04 PM, Luke Jones wrote:
->>>>>>> On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
->>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>>
->>>>>>>> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display device.
->>>>>>>>
->>>>>>>> ```
->>>>>>>> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeForce
->>>>>>>> RTX 4070 Max-Q / Mobile] (rev a1)
->>>>>>>> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
->>>>>>>> Strix [Radeon 880M / 890M] (rev c1)
->>>>>>>> ```
->>>>>>>>
->>>>>>>> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU as the
->>>>>>>> boot VGA device, but really the eDP is connected to the AMD PCI display
->>>>>>>> device.
->>>>>>>>
->>>>>>>> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA device.
->>>>>>>>
->>>>>>>> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
->>>>>>>> Reported-by: Luke D. Jones <luke@ljones.dev>
->>>>>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
->>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>> ---
->>>>>>>>      drivers/pci/vgaarb.c | 7 -------
->>>>>>>>      1 file changed, 7 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->>>>>>>> index 78748e8d2dba..05ac2b672d4b 100644
->>>>>>>> --- a/drivers/pci/vgaarb.c
->>>>>>>> +++ b/drivers/pci/vgaarb.c
->>>>>>>> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
->>>>>>>>                 return true;
->>>>>>>>         }
->>>>>>>>
->>>>>>>> -    /*
->>>>>>>> -     * Vgadev has neither IO nor MEM enabled.  If we haven't found any
->>>>>>>> -     * other VGA devices, it is the best candidate so far.
->>>>>>>> -     */
->>>>>>>> -    if (!boot_vga)
->>>>>>>> -            return true;
->>>>>>>> -
->>>>>>>>         return false;
->>>>>>>>      }
->>>>>>>>
->>>>>>>> --
->>>>>>>> 2.43.0
->>>>>>>
->>>>>>> Hi Mario,
->>>>>>>
->>>>>>> I can verify that this does leave the `boot_vga` attribute set as 0 for the NVIDIA device.
->>>>>>
->>>>>> Does the following diff work for you?
->>>>>> This variant should be less risky for most systems.
->>>>>>
->>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->>>>>> index 78748e8d2dba..3fb734cb9c1b 100644
->>>>>> --- a/drivers/pci/vgaarb.c
->>>>>> +++ b/drivers/pci/vgaarb.c
->>>>>> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
->>>>>>                     return true;
->>>>>>             }
->>>>>>
->>>>>> +       if (vga_arb_integrated_gpu(&pdev->dev))
->>>>>> +               return true;
->>>>>> +
->>>>>
->>>>> The problem is that the integrated graphics does not support VGA.
->>>>
->>>> Right, so the check has to be used much earlier.
->>>>
->>>> I wonder does the integrated GFX have _DOD/_DOS while the discrete one doesn't?
->>>> If that's the case, vga_arb_integrated_gpu() can be used to differentiate which
->>>> one is the boot GFX.
->>>
->>> I think the problem is that the boot GPU is being conflated with vga
->>> arb.  In this case the iGPU has no VGA so has no reason to be involved
->>> in vga arb.  Trying to mess with any vga related resources on it could
->>> be problematic.  Do higher levels of the stack look at vga arb to
->>> determine the "primary" GPU?
->>
->> Hmm, I wonder if all those heuristic are needed for EFI based system?
->>
->> Can we assume that what being used by UEFI GOP is the primary GFX device?
-> 
-> Yes, I believe so.  The SBIOS should use the GOP device as determined
-> by the user preference.  I.e.., in the bios configuration you can
-> generally select iGPU or PEG for the primary display.
-
-UEFI spec, 10.3.3.1 ACPI _ADR Device Path
-
-"The _ADR device path is used to contain video output device attributes to 
-support the Graphics Output Protocol. The device path can contain multiple _ADR 
-entries if multiple video output devices are displaying the same output."
-
-Luke, can you please see what are the _ADR values of the iGPU and dGPU? Maybe we 
-can find which one was used by GOP this way.
-
-Kai-Heng
-
-> 
-> Alex
-> 
->>
->> Kai-Heng
->>
->>>
->>> Alex
->>>
->>>>
->>>> Kai-Heng
->>>>
->>>>>
->>>>> Alex
->>>>>
->>>>>>             /*
->>>>>>              * Vgadev has neither IO nor MEM enabled.  If we haven't found any
->>>>>>              * other VGA devices, it is the best candidate so far.
->>>>>>
->>>>>>
->>>>>> Kai-Heng
->>>>>>
->>>>>>>
->>>>>>> Tested-by: Luke D. Jones <luke@ljones.dev>
->>>>>>
->>>>
->>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
 
