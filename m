@@ -1,129 +1,113 @@
-Return-Path: <linux-pci+bounces-15746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 360D89B8309
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:05:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A14059B832B
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:16:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF640282C08
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:05:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21042B21FDD
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 19:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D2C81C9EAA;
-	Thu, 31 Oct 2024 19:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859D3149C52;
+	Thu, 31 Oct 2024 19:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hpo6SU0a"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HAO/lXId"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1738980BF8;
-	Thu, 31 Oct 2024 19:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7791E347C7;
+	Thu, 31 Oct 2024 19:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730401544; cv=none; b=cy2mElxQsX1gBOfnOS9D4DD9Gzh2MX5rcvYoahRVUbQEVILv07QquuvqIhoSOoQdiBhY3xz+fD7vrn7/c6BAf3GKMvqyn6Ee9CTl5zw4a9NJJ0S8rySzjTLaCVv0xHRPlTwppN01mTug95spUMCwplXqhbuFLD0djathUajb7UY=
+	t=1730402154; cv=none; b=U4CbbPH3KHqOX1f3SeutZfuTk0KfHLbyw935gJG+RADZ+MTslZmzQEXEdI3phFYEcRzFH3OpLyNGySahL5PDiO+0F5wfBlgNAEQvkPQsXwVKEbXr0ZzWaDoGMssIqfFbdJszWe9Kynx5c0H1r3yxIiq8dPeIZ7UygqLUqxdPL5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730401544; c=relaxed/simple;
-	bh=zUCcq0xYQ2KKg0AT6UPYv9J6GsZf4ooeo11L3JZIdKE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=F0OOs7WmQ5t0ngfo0gbHUOx9YB0YDEEwS4g/6jUID/s8bVuYTymdcJJNKWvyxV81FoOQeCuwaffhJv0mvKwX9WPVoMJJiM4mgGCo55nTx15j97Hd6tMzbrcSAPcKPVDPeg2lh/GtMdB2eJISyyQVIzF7YLpXK37BDY7dCF2XzJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hpo6SU0a; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.35.166] (c-73-118-245-227.hsd1.wa.comcast.net [73.118.245.227])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 88002206941B;
-	Thu, 31 Oct 2024 12:05:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88002206941B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1730401542;
-	bh=cN8Xg10U0hJwzdbYn0VLyyefwmZ46aiJ79KkG/dl5eA=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=hpo6SU0afc10BLlq+7xOtaqNTlNryyZQ1hVTr2+F0JZkMwx6tqTL8xrReF0N6K2rS
-	 vHSMJHOSxp9ExDGq/GZb95dKbKIUW276jmEdymGvMLyCodqFAUiZhHl17EitlPUL5+
-	 XN7PgRReK+aW6PF7Bcp7ugC2kCaxM5XtYbtJB7r4=
-Message-ID: <fc47d535-ed52-4ca5-80cc-30003efdd464@linux.microsoft.com>
-Date: Thu, 31 Oct 2024 12:05:39 -0700
+	s=arc-20240116; t=1730402154; c=relaxed/simple;
+	bh=iz/mcCGKzKAF+54183Qep4jiiK7skiftWfkF3ZQ9fck=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=D+BEr9nHiDAecP0GwEd3JjuWA6q0kTApWXSMY9vngc25MwiDPfsvyM5CKcVibLp8URtchZc2G7yBjw0Bsux1HjWbrTIznmay7GL3wPyFgTRMsRLXOpeGp2TMa9Q8stkdLWzkt9K9MRpPRTGDB5wnIPAk9E+196DfDIz9NFy+Cs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HAO/lXId; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8E54E40E021C;
+	Thu, 31 Oct 2024 19:15:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ODtb6AuBZVDC; Thu, 31 Oct 2024 19:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1730402142; bh=TjBac+vUXA/VaGYTwTi6FQkjFjIMoAJ+klVbchu+St0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=HAO/lXIdBMw3mLgc3LD9+uFBFW9EQDK2KX2jeJPdfe92n1O18NX440RAsMqu2qUmY
+	 J7DvHEU0App/3VYoCssSdJ/NrxFFZEdVW8sIhgfmoy6CwM0Iuqfj+ZCG6ivc8J72cV
+	 10ihGjL/FAFv1GH2Wi5EIz5P/oBuEHPnsO358Dc3Dm6DYXy06zBqGL5VSmmDIDvYNC
+	 l2GXMMAN56VMz3X/kYfU8FNLrLHKgyAkqnNJwnmztwRAlPTBNRfko79Aty0+JR9Xwt
+	 YBkwfJL92K+pRbcmvP9d6INbvsUb+pUVE2+ywlrhfWYP2KYRn9zcR/1BaiLpfvWY/x
+	 P0YXcmi45qC5jjwhDKvn1uzUTvUdPZfpaUhcZSu5VOtDZ6ylssbBuU1fovpvZe+x5K
+	 4Bsh/fWrnItoPSymNIaTMQm0noPkM5fW78zxq71os9XkbycSh0HzVpEtnSImIjjf8S
+	 /vZTn66Kzkyo04GAzIRZfiBUvWjRsDCxwKJcQKLG3gH/tX6XUL9VevKnSwrlncQMeR
+	 W96nGkXqaHuxtoRisIo5EHzIOCPcNJ3T5EPsh2401NKSrsp+irERAFk1+cOhrQ8+Yt
+	 9YM57SRGpAUxb6fO4wEzdgm19sVqS1uT0P2T6M0nPFrsLp1xym/Qhi5yRaI1iSwztx
+	 Cu8EgO60eyhxE5dQT77PGhGs=
+Received: from [IPv6:::1] (unknown [IPv6:2a02:3033:209:eccc:5132:adc4:8c65:1ae1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B42940E0219;
+	Thu, 31 Oct 2024 19:15:18 +0000 (UTC)
+Date: Thu, 31 Oct 2024 20:15:11 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Sohil Mehta <sohil.mehta@intel.com>
+CC: Yazen Ghannam <yazen.ghannam@amd.com>, "Luck, Tony" <tony.luck@intel.com>,
+ Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "avadhut.naik@amd.com" <avadhut.naik@amd.com>,
+ "john.allen@amd.com" <john.allen@amd.com>,
+ "mario.limonciello@amd.com" <mario.limonciello@amd.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
+ "richard.gong@amd.com" <richard.gong@amd.com>,
+ "jdelvare@suse.com" <jdelvare@suse.com>,
+ "linux@roeck-us.net" <linux@roeck-us.net>,
+ "clemens@ladisch.de" <clemens@ladisch.de>,
+ "hdegoede@redhat.com" <hdegoede@redhat.com>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>,
+ "carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/cpufeature=3A_Document_cpu?=
+ =?US-ASCII?Q?=5Ffeature=5Fenabled=28=29_as_the_default_to_use?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <f9cd603d-8a3f-43fc-a670-75b4d9a6c729@intel.com>
+References: <20241023172150.659002-1-yazen.ghannam@amd.com> <20241023172150.659002-4-yazen.ghannam@amd.com> <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local> <20241029143928.GA1011322@yaz-khff2.amd.com> <20241029150847.GLZyD6f-Hk6pRTEt2c@fat_crate.local> <SJ1PR11MB6083AA7B2E28F2DA24E4B456FC4B2@SJ1PR11MB6083.namprd11.prod.outlook.com> <20241030142138.GA1304646@yaz-khff2.amd.com> <c2894e47-f902-4603-84e7-a9aca545b18c@intel.com> <20241031103401.GBZyNdGQ-ZyXKyzC_z@fat_crate.local> <f9cd603d-8a3f-43fc-a670-75b4d9a6c729@intel.com>
+Message-ID: <74D1358D-952F-4D33-8A5A-1D6F87B49443@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Subject: Re: [PATCH 0/5] Add new headers for Hyper-V Dom0
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, iommu@lists.linux.dev,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, virtualization@lists.linux.dev
-Cc: eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, catalin.marinas@arm.com,
- will@kernel.org, luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
- daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, arnd@arndb.de, sgarzare@redhat.com,
- jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mukeshrathor@microsoft.com,
- tyhicks@linux.microsoft.com
-References: <1727985064-18362-1-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <1727985064-18362-1-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 10/3/2024 12:50 PM, Nuno Das Neves wrote:
-> To support Hyper-V Dom0 (aka Linux as root partition), many new
-> definitions are required.
-> 
-> The plan going forward is to directly import headers from
-> Hyper-V. This is a more maintainable way to import definitions
-> rather than via the TLFS doc. This patch series introduces
-> new headers (hvhdk.h, hvgdk.h, etc, see patch #3) directly
-> derived from Hyper-V code.
-> 
-> This patch series replaces hyperv-tlfs.h with hvhdk.h, but only
-> in Microsoft-maintained Hyper-V code where they are needed. This
-> leaves the existing hyperv-tlfs.h in use elsewhere - notably for
-> Hyper-V enlightenments on KVM guests.
-> 
-> An intermediary header "hv_defs.h" is introduced to conditionally
-> include either hyperv-tlfs.h or hvhdk.h. This is required because
-> several headers which today include hyperv-tlfs.h, are shared
-> between Hyper-V and KVM code (e.g. mshyperv.h).
-> 
-> Summary:
-> Patch 1-2: Cleanup patches
-> Patch 3: Add the new headers (hvhdk.h, etc..) in include/hyperv/
-> Patch 4: Add hv_defs.h and use it in mshyperv.h, svm.h,
->          hyperv_timer.h
-> Patch 5: Switch to the new headers, only in Hyper-V code
-> 
-> Nuno Das Neves (5):
->   hyperv: Move hv_connection_id to hyperv-tlfs.h
->   hyperv: Remove unnecessary #includes
->   hyperv: Add new Hyper-V headers
->   hyperv: Add hv_defs.h to conditionally include hyperv-tlfs.h or
->     hvhdk.h
->   hyperv: Use hvhdk.h instead of hyperv-tlfs.h in Hyper-V code
->
+On October 31, 2024 7:26:27 PM GMT+01:00, Sohil Mehta <sohil=2Emehta@intel=
+=2Ecom> wrote:
+>Does "default CPU feature testing macro" roll better than "default CPU
+>features testing macro"?
 
-What is the model for Hyper-V code that has both guest and host roles
-where the corresponding hypercalls are available for both? As I
-understand it, those are supposed to be in hvgdk*.h.
+Waaay too finicky to me=2E No one cares, I'd say=2E =F0=9F=A4=97=F0=9F=98=
+=82
 
-For a specific example, IOMMU hypercalls can operate on stage 2 or stage
-1 translations depending on the role of the (hyper) caller and the input
-values provided. Should a driver using these hypercalls import both
-hvhdk* and hvgdk*? What about hyperv-tlfs?
-
-Patches 4 and 5 seem to draw a bright line between host and guest roles
-while the reality is more gray. Please do correct me if I'm wrong here,
-perhaps the picture would be clearer if Stas' suggestion of a new header
-file is implemented.
-
-Thanks,
-Easwar
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
 
