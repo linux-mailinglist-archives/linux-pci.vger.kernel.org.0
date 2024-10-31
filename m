@@ -1,88 +1,58 @@
-Return-Path: <linux-pci+bounces-15750-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15751-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4D929B844D
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 21:25:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5832B9B8459
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 21:28:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 844E8284834
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:25:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 027C71F228C6
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Oct 2024 20:28:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3A41CB521;
-	Thu, 31 Oct 2024 20:25:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC2ED1B3B28;
+	Thu, 31 Oct 2024 20:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHRPRDWL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mu2sUAzl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D93C1A2562;
-	Thu, 31 Oct 2024 20:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51881A2562
+	for <linux-pci@vger.kernel.org>; Thu, 31 Oct 2024 20:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730406331; cv=none; b=g/Cna2C+hgcjzn4iHA3QQGSKd2iT90sTpRlm/woBD7ylOkwtg0XLV3NWP9rJO7bc9FmvFvkqJIeopfHMIcCc4HMgtORhBm7B9bb/VxK1UeFl7p6qD6tty8B1TLNPWBGo0itWZtvj4GQhlyQYhBt1A+kNZIswxO3jFBad4AA4ang=
+	t=1730406532; cv=none; b=bw2aIOu3h323CLpsQFgB4J3SViT4FAMAvoC6jfLbg6uIzJ8U82qnnH5iXaFSmZ1O0ElfecTN7YRlrscrshr2AIM/2wWd+9woLm8yPF/Bvqncu/xN8rLj3wPMHC1WNkHsYNOfNxfxYRLdtKLRBrZjxr56AXqjoVrwtSLZWmlvEho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730406331; c=relaxed/simple;
-	bh=SXxJLnwmliE4sTl2okXJbGuvdeDDxukFYNzonEm748E=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lok3AgLYT6QVn0Iq3IOcXYeveMAxMLJ3ff5ol6ocr5z/uTwcYVt7+1z9ksol/vk6/7FZ/Fm577X2uQFjCm0H7I8X1cNrHFEhmvdTpLurI4Bm+jRsuMYAGJgK55E53JG560TyBU9ZBNscEute3Edesf7P8TN1+eZRoF8DfKs5CuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gHRPRDWL; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7eda47b7343so983609a12.0;
-        Thu, 31 Oct 2024 13:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730406328; x=1731011128; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JP9sRmcVEjno6np3uwfTiX/MWx/3bhU6Ar7kOBUlziU=;
-        b=gHRPRDWLWIi+6ZNr7zetxpitFexQpsD0OEYniV8N60NizWhvTbSfwDayANIw54aSb8
-         ALkDlhy+C/J+qzseVXR9q+oVfhQlbky3BI/k3ZsISALsUHuHMoidZqqEVpM74yaXp57X
-         /WA0Zg1S31SnlEzkCNmVU3AGNhAQbFUnNtQMsvcImSdaET63wPqus65mL4uOGXvVocKd
-         +MyerNgiNb+RVo+KG5AmFBTFjJ85FjEzuhC067zFN+5vjq7EDVbi39TSAEiR5zxuz3YI
-         io2YPUhRlDUtO7dY8udr5W1P5Va4rT2duMX+od0LhgbkGATHPNkUnJh5gNNX1BWQfvyE
-         OJzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730406328; x=1731011128;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JP9sRmcVEjno6np3uwfTiX/MWx/3bhU6Ar7kOBUlziU=;
-        b=kksiv1I0wrKwr8CHKdbg+dMvR2yZ5QBKGvVketRfMnwUUndOz0cEuj+rG2h/IVdA0N
-         MFt65RbeCSUtyXBOrL5B67+3ALNTOCtXLzJ7u+Hnvy8xzYcdwkt6j3CpSHO/46CupjLI
-         T7D4uVAZMoxksV9QTr+tX+LG2iMdlWH9bVL4AoP4IFAYK+sx8CTh07UgxSAFyD7Zw//h
-         QfkAW9GI11AeCb86IkEp2FslbUFPQUWwh1GInggUYaALxhicPWkXPviU9mvGSASoOpuS
-         pLrVD9HaYki0V1jVJuYMaNKYo2L81u3OYGROLWvNeLCJX19HeS5ubkFmajp99S1POVVx
-         aPlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVo2mbTKywVh41+BFe/YuPihXYfY4JhnFSlA6gZlDBkMWCvc23DqM7Rr/XC8EXv/RHdcclcTuxLZFmE@vger.kernel.org, AJvYcCWQ11fJs8+3f6vMSKePEcGwE94mBMQpdfRSFGJcQQvBwS2Cq8CpSvk88QRD/WJw0OSuikS0G1pD1l1ICYXS@vger.kernel.org, AJvYcCXzJ+q2vvuWOAYhjbasG6QmKCTqng1DyWlYniQeDMvQ85AVZZLsQlfN9HEIyz08tYrmxn4eGpH6AOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDc9uOE65TNnGGAjIenEmpGPMhujQoL8WOSygBE2SQzp+GJgDH
-	sBvLNXGVniLO5ShXUis0hMfy2YKxoBoD0P40itBxvrQCMywazz5buqiMcQ==
-X-Google-Smtp-Source: AGHT+IG2yf4+3tcnyIFunU30HkVWTtJjBqO29GTyQa5oE9K5gI36udLNH0NyRtVasXUOkjqBtZvKBg==
-X-Received: by 2002:a17:903:230d:b0:20b:8776:4902 with SMTP id d9443c01a7336-210c6c34577mr272895695ad.38.1730406328157;
-        Thu, 31 Oct 2024 13:25:28 -0700 (PDT)
-Received: from fan ([2601:646:8f03:9fee:1a14:7759:606e:c90])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057bfd09sm12324315ad.183.2024.10.31.13.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 13:25:27 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 31 Oct 2024 13:25:24 -0700
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 02/14] PCI/AER: Rename AER driver's interfaces to also
- indicate CXL PCIe port support
-Message-ID: <ZyPntFwZIxCv3hXr@fan>
-References: <20241025210305.27499-1-terry.bowman@amd.com>
- <20241025210305.27499-3-terry.bowman@amd.com>
+	s=arc-20240116; t=1730406532; c=relaxed/simple;
+	bh=BJPL8kgo7OWUIiGC/AcPCXchbICif4ZxCX6nWCdxrKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fMrEYL1zMBrHXwCOK7V54qG202qUNJfbA3Vzezn+4eRiHA9my4oKeWsBsAHG/8oj35getxdM7UXg58G480iTmukwi17kTHAZBdP9D1jyI7wGMBdfyyrx986jiHlZPbz4XSUXCzy2y/HjfuxhI4N+00Cvj1nocWjqZ0qj7oJBIbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mu2sUAzl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B06C4CEC3;
+	Thu, 31 Oct 2024 20:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730406532;
+	bh=BJPL8kgo7OWUIiGC/AcPCXchbICif4ZxCX6nWCdxrKI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mu2sUAzl0fmgU7gibHIAyzIAKu2aM0IXt8zoIz7tUDvrAz1Rzbxo2g/FKZc9uWX0o
+	 CZmUATvZFFR+mHQwZvy0L9S5uEWmvvsTM68hPUfw7fFWA9OP/iNjwe/RYkSW74rrzu
+	 32Wt7SKSiON2/gRBKdce1EbJkd0Nt3+XYBB12xZrWl/uOODLpgm4pvXM7Rh46M3oL+
+	 uEUGhdEpRiv79RpPAlZb8zgz1Avt1JAh6gjLf6VC7G8LYMD1eGTpy64ZSLUqPNr/Mt
+	 /fcQQy28QDU0DkmW+dTckFiFGQdMzp3d1R6OOeNHRAFUB3oilCOSxltoOdMe6wIifj
+	 dJbHgScy+Vo/Q==
+Date: Thu, 31 Oct 2024 15:28:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: dwc: ep: Use align addr function for
+ dw_pcie_ep_raise_{msi,msix}_irq()
+Message-ID: <20241031202849.GA1266008@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,108 +61,84 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241025210305.27499-3-terry.bowman@amd.com>
+In-Reply-To: <20241017132052.4014605-6-cassel@kernel.org>
 
-On Fri, Oct 25, 2024 at 04:02:53PM -0500, Terry Bowman wrote:
-> The AER service driver already includes support for CXL restricted host
-> (RCH) downstream port error handling. The current implementation is based
-> on CXL1.1 using a root complex event collector.
+On Thu, Oct 17, 2024 at 03:20:55PM +0200, Niklas Cassel wrote:
+> Use the dw_pcie_ep_align_addr() function to calculate the alignment in
+> dw_pcie_ep_raise_{msi,msix}_irq() instead of open coding the same.
 > 
-> Rename function interfaces and parameters where necessary to include
-> virtual hierarchy (VH) mode CXL PCIe port error handling alongside the RCH
-> handling.[1] The CXL PCIe port error handling will be added in a future
-> patch.
-> 
-> Limit changes to renaming variable and function names. No functional
-> changes are added.
-> 
-> [1] CXL 3.1 Spec, 9.12.2 CXL Virtual Hierarchy
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > ---
->  drivers/pci/pcie/aer.c | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
+>  .../pci/controller/dwc/pcie-designware-ep.c    | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 13b8586924ea..fe6edf26279e 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1029,7 +1029,7 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  	return 0;
->  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 20f67fd85e83..9bafa62bed1d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -503,7 +503,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	u32 msg_addr_lower, msg_addr_upper, reg;
+>  	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+> -	unsigned int aligned_offset;
+> +	size_t msi_mem_size = epc->mem->window.page_size;
+> +	size_t offset;
+>  	u16 msg_ctrl, msg_data;
+>  	bool has_upper;
+>  	u64 msg_addr;
+> @@ -531,14 +532,13 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
 >  
-> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
->  	/*
->  	 * Internal errors of an RCEC indicate an AER error in an
-> @@ -1052,30 +1052,30 @@ static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
->  	return *handles_cxl;
->  }
+> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> -	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+> +	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &msi_mem_size, &offset);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> -				  epc->mem->window.page_size);
+> +				  msi_mem_size);
+
+I haven't worked through this; just double checking that this is
+correct.  Previously we did ALIGN_DOWN() here, but
+dw_pcie_ep_align_addr() uses ALIGN() (not ALIGN_DOWN()).  Similar
+below in dw_pcie_ep_raise_msix_irq().
+
+>  	if (ret)
+>  		return ret;
 >  
-> -static bool handles_cxl_errors(struct pci_dev *rcec)
-> +static bool handles_cxl_errors(struct pci_dev *dev)
->  {
->  	bool handles_cxl = false;
+> -	writel(msg_data | (interrupt_num - 1), ep->msi_mem + aligned_offset);
+> +	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
 >  
-> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> -	    pcie_aer_is_native(rcec))
-> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> +	    pcie_aer_is_native(dev))
-> +		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
+>  	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
 >  
->  	return handles_cxl;
->  }
->  
-> -static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> +static void cxl_enable_internal_errors(struct pci_dev *dev)
->  {
-> -	if (!handles_cxl_errors(rcec))
-> +	if (!handles_cxl_errors(dev))
->  		return;
->  
-> -	pci_aer_unmask_internal_errors(rcec);
-> -	pci_info(rcec, "CXL: Internal errors unmasked");
-> +	pci_aer_unmask_internal_errors(dev);
-> +	pci_info(dev, "CXL: Internal errors unmasked");
->  }
->  
->  #else
-> -static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
-> -static inline void cxl_rch_handle_error(struct pci_dev *dev,
-> -					struct aer_err_info *info) { }
-> +static inline void cxl_enable_internal_errors(struct pci_dev *dev) { }
-> +static inline void cxl_handle_error(struct pci_dev *dev,
-> +				    struct aer_err_info *info) { }
->  #endif
->  
->  /**
-> @@ -1113,7 +1113,7 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> -	cxl_rch_handle_error(dev, info);
-> +	cxl_handle_error(dev, info);
->  	pci_aer_handle_error(dev, info);
->  	pci_dev_put(dev);
->  }
-> @@ -1491,7 +1491,7 @@ static int aer_probe(struct pcie_device *dev)
->  		return status;
+> @@ -589,8 +589,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	struct pci_epf_msix_tbl *msix_tbl;
+>  	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+> +	size_t msi_mem_size = epc->mem->window.page_size;
+> +	size_t offset;
+>  	u32 reg, msg_data, vec_ctrl;
+> -	unsigned int aligned_offset;
+>  	u32 tbl_offset;
+>  	u64 msg_addr;
+>  	int ret;
+> @@ -615,14 +616,13 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		return -EPERM;
 >  	}
 >  
-> -	cxl_rch_enable_rcec(port);
-> +	cxl_enable_internal_errors(port);
->  	aer_enable_rootport(rpc);
->  	pci_info(port, "enabled with IRQ %d\n", dev->irq);
->  	return 0;
+> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> -	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+> +	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &msi_mem_size, &offset);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>  				  epc->mem->window.page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> -	writel(msg_data, ep->msi_mem + aligned_offset);
+> +	writel(msg_data, ep->msi_mem + offset);
+>  
+>  	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
+>  
 > -- 
-> 2.34.1
+> 2.47.0
 > 
-
--- 
-Fan Ni
 
