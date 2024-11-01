@@ -1,240 +1,239 @@
-Return-Path: <linux-pci+bounces-15764-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15765-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C78C9B888F
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 02:35:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B05E9B893E
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 03:19:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 505851C21968
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 01:35:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4334B20CBD
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 02:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8E455896;
-	Fri,  1 Nov 2024 01:35:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE529132106;
+	Fri,  1 Nov 2024 02:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kas7r+OI"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="IQ2/N5px"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2089.outbound.protection.outlook.com [40.107.105.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820031EF1D;
-	Fri,  1 Nov 2024 01:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730424925; cv=none; b=LhvHcGLgBEEF8m43bccRTefLFUpCJECtMWI7ntDavfBAn2LKV/3qr094nFyRyhWkrQos5hCaTUglmKMFo3iUMDmJZ027m5h7Nnlwvxw1KfUmu1jgAwuYrIxSOaD4I+BgGIzxvwL1qA7cOeUiz/Z7xalYOwBtWYK6QXrBGPQhF4A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730424925; c=relaxed/simple;
-	bh=CHQYwTaOoB5G1FjEGqeMsZNtf+ecf+kThedH0H2MY50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Obx4bXU3GnlwnMuT4G/mwFg7CG0URlfem6B1ImT8kcLH0n6EG6Ae3Lsnvsf9zgJdMWwmw8kxNLcx+xUi8lW0yFgTO6T/FiCjWT40l6q4jyxi3hrmBlmw68v7B1YRs1i527yplW3RMY6z58OvpAmcdboWoH5BHXEAe0FWYPnNaI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kas7r+OI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49VMxlUe012383;
-	Fri, 1 Nov 2024 01:34:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	R790T1EHXVODECLYBvEJ72O5oSHDdrKj+hvqIaPzC/4=; b=kas7r+OIftD3Fbkz
-	N9PijBOLN6EhdBgJrt4OuEbBAlhFsEQ0QDpjW/jDa/8y9iVYT/s5pToAyLvzaYfW
-	RFeqLt6sz4TcbOqgJuPIg8TVzbqp9FD3aX1RCkrWpNyRTQgOft0/XPlYNbnjwxol
-	t5ATfqy8cAaPRKzIqu0rOWqw4Y813rp6Nr/3elnWLSjj2euE82vuhi2IUrdoJccu
-	N9D/G7lPC2M7f2KsHnG8HnijrjZEWz6P8jOoE72htrpocatHUQRDaHTTnhE6Rydk
-	02isenHI3Oii3HAyrFKL6Z+MsSGRhBy6LI+snXK3gmd/6txnYjHsiy3/nGwgbxw0
-	IQXPlA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42m65pakec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Nov 2024 01:34:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A11Ysvk018649
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 1 Nov 2024 01:34:54 GMT
-Received: from [10.216.14.24] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 31 Oct
- 2024 18:34:50 -0700
-Message-ID: <4f21ad43-294b-5ec0-4e92-c21d6b3cbe9a@quicinc.com>
-Date: Fri, 1 Nov 2024 07:04:46 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2211F374D1;
+	Fri,  1 Nov 2024 02:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730427544; cv=fail; b=kZ7DN1yVObI+d5oxugWm/CNmf8q2YiLjiys66E7nfnGoy/nFOSUT0M2Hc4Osj8ckmdTL0tLX+KqaMOWLmZLM8Ms8kSBEdezkJXPXhdH5SUmwEpamuolDvZ7n7aJQZTyEUd/mpuB31mprn9wj8VzqJ4x2UxkoZ/+PdAVoY3d/how=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730427544; c=relaxed/simple;
+	bh=PEbBcgBrKzgjCEmuvGHOmDmuIxbeqLEcPNQIaHBYjdo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=I67Iz6ov9UHdkHTYg3c6irMtrpefyC1qYmvvkm91/48hQdfm8clbp9VL7jP6EWlpBfHG1C3oiXfG6oUh4UprNa+znCJ3dvMg/VltzZW2JuDVi760RzsuB36mvGeXDL2FmK4VlPry0MUklPCmlaQT94BDL8oLVFIE0BX3ZMjRfww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=IQ2/N5px; arc=fail smtp.client-ip=40.107.105.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XFhXoeF8WZKlmUJmSPoXF6YsVm1Qh0M5VLbPZdvyxpUp4LW60al1Uk56Mb5DUkkmhufF2lH9IToKKdOi0Cd3PtpqxSAnjqoTz2u8o6mbfU/kIh0tDOiDeClOY2DwooXOcuXceCASOPHyqcdtApm8yBurkDxnphtnVqHGOfffIJa0fv6dLkgxuW6nrG/bjlWRxLXHv8yQlPqQiS+Sn8Pm83ZYblMQhWHUoEfKbz/qex6f9JLeylBY5MZpQojxQrath/y5pJq3F1ushbMbutMNiZP+dK2px5eQUd4aorFtg3ODHsAce6/E2JTY2aovyaSLZ6VxUsjbjuUHFIiwlraKjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PEbBcgBrKzgjCEmuvGHOmDmuIxbeqLEcPNQIaHBYjdo=;
+ b=iiU3bPSd2ZG9FRJbu55Ki9+sO35H0DssFgYBqbrNnWLD4BbSZKwiZzhjRxj9rrs6n6VmNE7QqioBQKfW5L7HM5b+tGEhvCwayrnT/P9BSMwpDtwsVnTb5YEXOWG7hSKJmAM1Rh+xsV5OGZX/XIjKrv9FGeU+CjLd1ptb8rN3Kbko1Xmbt0acPqIZiXqg7Rhwfxt0Plf1yoV9cq9STSjjp+/y8/bjo4ySLTGEVj7jicbYpHF5ZPn6xjv5MeiLvQzNOsBF9CEyztpVcEJarJjog/JjugCB2+4k3Tv1SFl1HDTq0ibC/oknyJHdszueVSUy4jVMJas4GHmHi4E2ugQPyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PEbBcgBrKzgjCEmuvGHOmDmuIxbeqLEcPNQIaHBYjdo=;
+ b=IQ2/N5px0bcz8NezTFse7B/fPQnmW/xLbl/OAdjHABKohLd7u+99Yk8/qSnawPWVZDCP7pdmUWkv5+/1QvYo+ua72nWGxyGLIA72QyHj0Qsc+MVoK4MkrJHd6yXwviyotRkL4x08zoYoANY6cc1maM+zXk4qu/KFg6fLg/I6cCnnsPwWMQJJQlivVKO2dqdTDbJ1Yf7D5gVvz4f+X3OjFFzLHhg8F19SF3jwWyx8QQtNb6VVOSCZCqhO/eECQrv7Um21jmBEKUyITlqX13lMUYskTcY2dvIYOA9V/c/Yqp9StSSn7I/Nxb+7wwjEnm/hQOZO+OsiaVlgVCyVOoDKjw==
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by AS8PR04MB8883.eurprd04.prod.outlook.com (2603:10a6:20b:42e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.32; Fri, 1 Nov
+ 2024 02:18:55 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%7]) with mapi id 15.20.8093.027; Fri, 1 Nov 2024
+ 02:18:55 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+CC: Krzysztof Kozlowski <krzk@kernel.org>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, Claudiu
+ Manoil <claudiu.manoil@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Frank Li
+	<frank.li@nxp.com>, "christophe.leroy@csgroup.eu"
+	<christophe.leroy@csgroup.eu>, "linux@armlinux.org.uk"
+	<linux@armlinux.org.uk>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"horms@kernel.org" <horms@kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>
+Subject: RE: [PATCH v4 net-next 03/13] dt-bindings: net: add bindings for NETC
+ blocks control
+Thread-Topic: [PATCH v4 net-next 03/13] dt-bindings: net: add bindings for
+ NETC blocks control
+Thread-Index:
+ AQHbJEi1opWCvzFL8kS18Y10TWXurLKT6McAgAAQObCAAgF4AIABJnHAgAAKx9CAAEkYuoAA5gGggAiCCgCAANxaMA==
+Date: Fri, 1 Nov 2024 02:18:55 +0000
+Message-ID:
+ <PAXPR04MB851041AFADEE8FC8790E90FF88562@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20241022055223.382277-1-wei.fang@nxp.com>
+ <20241022055223.382277-4-wei.fang@nxp.com>
+ <xx4l4bs4iqmtgafs63ly2labvqzul2a7wkpyvxkbde257hfgs2@xgfs57rcdsk6>
+ <PAXPR04MB851034FDAC4E63F1866356B4884D2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <20241024143214.qhsxghepykrxbiyk@skbuf>
+ <PAXPR04MB8510BE30C31D55831BB276B2884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <PAXPR04MB85102B944E851C315F4C5BE1884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <PAXPR04MB85102B944E851C315F4C5BE1884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <20241025130611.4em37ery2iwirsbf@skbuf>
+ <PAXPR04MB8510B731B4F27B1A45C1792588482@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <20241031124500.vxj7ppuhygh6lkpm@skbuf>
+In-Reply-To: <20241031124500.vxj7ppuhygh6lkpm@skbuf>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|AS8PR04MB8883:EE_
+x-ms-office365-filtering-correlation-id: ebdb98df-5935-454c-9db1-08dcfa1b8930
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?HIlybRPbpqdg84ELIIDWlukh+PhHMXOPDlJIW0xmpmHGRen9iCrawNR0tm0o?=
+ =?us-ascii?Q?vN3zYQo1LrZzGqW0bz8/8TP7qsWsL56asmUEtjV8hC0SxvWV7/uaCw4WJyyC?=
+ =?us-ascii?Q?v0yq5z8+k3uVPudIAI52sekQNKUOT34Rjn2xBy0QKvQcYihfAGo4mh72MqAp?=
+ =?us-ascii?Q?Gvs2ZqyfdP0LNtOSC78cjEkrPvc1cJli3sg1b7FtXflWB7gNsEmPjHjIR6Pz?=
+ =?us-ascii?Q?ojBKZwtAZrm49pvz80iSxGqbtZ0uf+bGR0ebJyO9yWmV+38ipjVF5IHNkgi/?=
+ =?us-ascii?Q?UFBEwuMEYutSq9kQuJ1PLeOhXW813gXJVomEUFaywQ6GhdghFg8g2cDTSPbz?=
+ =?us-ascii?Q?3SG/ZD0ny5r6ayGViZ2e0hVLMYrkDGhzspeCNe6/O2608669q5ZzNjE4Siba?=
+ =?us-ascii?Q?9ZVc+mNC8nZteq/kHAeNG3C+mfFBiaHN7r59KqJ+lGHu9qr8hmhPyIavH0Ne?=
+ =?us-ascii?Q?9sBSPYlCAsiuuRZ9Dru1RTiwagpIgd03nJIhOIpieos2kX79Vj5NKTvVW9vg?=
+ =?us-ascii?Q?NyeWr/UJP0OWBTsDNUnp29Zkm+HDVAqeGHfi8A7t7RAn7UIuurccqMUjsBg6?=
+ =?us-ascii?Q?uaEPuVnhtf0JkwwfQIrHKGKFLz7HFtTgAXXg3cQsCqXc4ZP4gMLpmP8oeRb5?=
+ =?us-ascii?Q?I3NZTo9B4dY4h9yANn3zFgPWRNmSyQER4QMb1fiDaymQMBZya16pCwiipyQo?=
+ =?us-ascii?Q?5EQ62zJ4ldi3yDbihEzT6AgHP7K9UhHiGQEveRPwDNpx1f1yh9FoZ7j5WmBt?=
+ =?us-ascii?Q?um8pU2VMdR4t5dPN2V3hTY80qUEOz/1EXlHQt+Q+X7f6iO620JcTGBgPDcss?=
+ =?us-ascii?Q?5Zk+vfVHfvJw8nb1NrDhzAHtXuCfOptxaeMYRa7AgahSyXf3Ou0u+An2FPM4?=
+ =?us-ascii?Q?mHPArvGj2OeuZoZVrttkf1Vy9iVs1z7MwrO24ADjlcPiq8jkkpUiql3/br5b?=
+ =?us-ascii?Q?H+o4ncMyw3rpTZOuZ8j95TCrRvlL522VPXhQesxiX6CqqG77hnkOqgu+Xuh4?=
+ =?us-ascii?Q?Is1dJDTrSlgiFGuKIoOG3MCEzbOesqVMGP3YQHr7bQYVxQmESJEUOQG75Bo+?=
+ =?us-ascii?Q?VxjNwSVQc+GqvCOfosHqfT4hSNyIBc5LTd2H1QVT45T0rDL6yS8Pfl/97ges?=
+ =?us-ascii?Q?zZ3jT2O6mD/9m6aiiQnKBX43rfue6Mm8v8aYxe5O3+CSp+EAtkqKxah4rLsy?=
+ =?us-ascii?Q?5kEna38OAg0b0DbJvh7SJENIzuvO1plSxaCMAYP6ADhepOKREn6O+6Fbk95e?=
+ =?us-ascii?Q?4eR6mr+ZXHT+C5QoaZrPu2fF8CfW/v4zDjo71aytgEJ6KK8NB175RjZ2rwwJ?=
+ =?us-ascii?Q?5l95r13ZwQAnrWeS5lMk+BKjs33m2kjDmcFcx8SmRdW0VygGAdzqKgfCAsQJ?=
+ =?us-ascii?Q?3v6rIlc=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?0oPZMCFNIXxMtFoBIZTvpPf3MhBZ1C+XmX4Dbuk61BRdgfE7uj+Gyf46MUH/?=
+ =?us-ascii?Q?IX/2/MCOrhgQHFUTWWrris+SrYzZTH2wrUiP12obqyi9iT+zb6dkG4Je6HOi?=
+ =?us-ascii?Q?QI0gI/Jb5JjhXR4OV3kTogrkBIODGGpeWazX2V701hGMn7XocR6NboMpefjZ?=
+ =?us-ascii?Q?j2Az1QJ7OCb61X/HmKRXFVF/aUWrvm8uFk5t5MLkA/tgeaebqdckwog/63Jz?=
+ =?us-ascii?Q?94RvTjlJpiO/wp5U25jX9ohO6sCahLMD8fxvYhRLaRp8MWAv/DTi+a7Eddwr?=
+ =?us-ascii?Q?LzGgf9EJ4qjQjFW4bsMWpD+Q5ReJ0zSLPETBtvap6+/3Pd62v/ThTRRZVmwU?=
+ =?us-ascii?Q?HjXFwwTRVq53lM+10lqwURW5BMwmK4H8PXj45fQaTyrfohs179ETLvXxcDIy?=
+ =?us-ascii?Q?hJBlx3etcwJRy1BsymtdeoCIj/LeNJfc5rJnO3QUbTf4xCa1CiOH4L1A5Yir?=
+ =?us-ascii?Q?lwdYBBI+Fy9bEB0YnXcdJpOHK4YKRu6woh98cMOUEkb7V1+OQTBKircQ/QzN?=
+ =?us-ascii?Q?JRxxcfidKeSvBg1TVlgnQAlxQzsBCzDE8ckrrCQ/ZVcmWhv1cjy5ceYRLX8H?=
+ =?us-ascii?Q?rJ3lqqSefLMggOaFrES9SAdy3l6l5wEXhEnj0xgHV2wGr/YsQpvhEt52WG4P?=
+ =?us-ascii?Q?xBUc6Zrg5U3C77VoN4TfqU65SUv6QxWgg+o6552TYju7vZbvHtLzPzDTY590?=
+ =?us-ascii?Q?BqG0CiEFeO5e0glf8c9gMhdMZEwqVoi590r4xfSrN7FlukJQ/q9iBnPJYXop?=
+ =?us-ascii?Q?+zIolEFy3SSGYw/QmAceW8MG6Oi0f5Xwcw8qP0vBItfkwg5p27HApfhgyHfh?=
+ =?us-ascii?Q?KgNU5WwfQm0ulGKc+fuF577ztk/nlEXL9pARourLTR9q67Cyt2y6mTitUgpJ?=
+ =?us-ascii?Q?b22A6aVzIZ/C70ISSLGJUlJFtd7Jg4J6cdLkfIEW11FleUN4Dap3nOP5Tcje?=
+ =?us-ascii?Q?91h+iETtZJhbLLJvFmQDSY5HIQ8ah0cBEAuCkAzTg3qvPpPwlss6lZyh1d9N?=
+ =?us-ascii?Q?SZNGIorCKJ2VeccPi+7GEVszq4LiiJtMBfQTk8mUSen5wpdTfXOIaVENrRRY?=
+ =?us-ascii?Q?NccuZ6XW9L/UjmFa92MgDaRK68xev2uB+GlBRGTmTZs1WMN96gwCRYYiZtbN?=
+ =?us-ascii?Q?8gGj5WN1ilG0easTb6udCKk/5hvAM/83ycC4f9/piwZdfNtlIaI+Bx43sXiS?=
+ =?us-ascii?Q?gWdHWrYqfOBB9LSZZlgRbpc0BKUMXJ0ddDuH1gZXCWLL8s0n/qWv4VfrAgRY?=
+ =?us-ascii?Q?0JEniEiMm8ZQZlsoMmvWI+y95oE9ycv6a2+6INKax8dby/ZDJ8/8hiwzz+w1?=
+ =?us-ascii?Q?mjso6eql7umVCtgbFhGGCkI0z6JSCze2Grt62Wp5naJet4zvIbL7wpFhJYB0?=
+ =?us-ascii?Q?rK99BTi6bLVBJE8SBDnaUlD5w4Wl6+1Cf2ubVNszdUPJFO0DKtiFyScOvGNB?=
+ =?us-ascii?Q?TAhq0WELzG2mzUJco+WbQjHIZ04sl0vrM5K1X/XGnIEkUKvZW0sNR4bEURa9?=
+ =?us-ascii?Q?TCOcix+7wUAXy9cWaHgTRZtRqugcPyO2lLvQ5oyWD0rN5i9ZpAWj42lUetdI?=
+ =?us-ascii?Q?Y3toBckljCWjPYxNPCQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 2/2] PCI: Enable runtime pm of the host bridge
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Kevin Xie <kevin.xie@starfivetech.com>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Rob Herring" <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        <Markus.Elfring@web.de>, <quic_mrana@quicinc.com>, <rafael@kernel.org>,
-        <m.szyprowski@samsung.com>, <linux-pm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20241029153546.GA1156846@bhelgaas>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20241029153546.GA1156846@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: spCg1FgvsLDzBvppsEly_fmvrt02yMC8
-X-Proofpoint-GUID: spCg1FgvsLDzBvppsEly_fmvrt02yMC8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- phishscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 suspectscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411010009
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebdb98df-5935-454c-9db1-08dcfa1b8930
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2024 02:18:55.2272
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qIcMa4Sc4VZfP07k6+K4GRPd67n/gtDQAQQBV/jWy7czyog8XA26Dd23iPecsG6gnViHXLXFnxxoh/Yf7tnwIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8883
 
+>=20
+> On Sat, Oct 26, 2024 at 06:01:37AM +0300, Wei Fang wrote:
+> > system-controller not only configure the endpoints of the NETC, but als=
+o
+> > can configure the ECAM space, such as the vendor ID, device ID, the RID
+> > of endpoint, VF stride and so on. For this perspective, I don't think t=
+he
+> > ECAM space should placed at the same hierarchical level with
+> system-controller.
+> >
+> > If they are placed at the same level, then before pci_host_common_probe=
+() is
+> > called, we need to ensure that IERB completes probe(), which means we n=
+eed
+> > to modify the PCI host common driver, component API or add a callback
+> function
+> > or something else, which I don't think is a good idea.
+>=20
+> Ok, that does sound important. If the NETCMIX block were to actually
+> modify the ECAM space, what would be the primary source of information
+> for how the ECAM device descriptions should look like?
+>=20
 
+I think the related info should be provided by DTS, but currently, we do no=
+t
+have such requirement that needs Linux to change the ECAM space, this may
+be supported in the future if we have the requirement.
 
-On 10/29/2024 9:05 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 17, 2024 at 09:05:51PM +0530, Krishna chaitanya chundru wrote:
->> The Controller driver is the parent device of the PCIe host bridge,
->> PCI-PCI bridge and PCIe endpoint as shown below.
->>
->>          PCIe controller(Top level parent & parent of host bridge)
->>                          |
->>                          v
->>          PCIe Host bridge(Parent of PCI-PCI bridge)
->>                          |
->>                          v
->>          PCI-PCI bridge(Parent of endpoint driver)
->>                          |
->>                          v
->>                  PCIe endpoint driver
->>
->> Now, when the controller device goes to runtime suspend, PM framework
->> will check the runtime PM state of the child device (host bridge) and
->> will find it to be disabled. So it will allow the parent (controller
->> device) to go to runtime suspend. Only if the child device's state was
->> 'active' it will prevent the parent to get suspended.
->>
->> It is a property of the runtime PM framework that it can only
->> follow continuous dependency chains.  That is, if there is a device
->> with runtime PM disabled in a dependency chain, runtime PM cannot be
->> enabled for devices below it and above it in that chain both at the
->> same time.
->>
->> Since runtime PM is disabled for host bridge, the state of the child
->> devices under the host bridge is not taken into account by PM framework
->> for the top level parent, PCIe controller. So PM framework, allows
->> the controller driver to enter runtime PM irrespective of the state
->> of the devices under the host bridge. And this causes the topology
->> breakage and also possible PM issues like controller driver goes to
->> runtime suspend while endpoint driver is doing some transfers.
->>
->> Because of the above, in order to enable runtime PM for a PCIe
->> controller device, one needs to ensure that runtime PM is enabled for
->> all devices in every dependency chain between it and any PCIe endpoint
->> (as runtime PM is enabled for PCIe endpoints).
->>
->> This means that runtime PM needs to be enabled for the host bridge
->> device, which is present in all of these dependency chains.
-> 
-> Earlier I asked about how we can verify that no other drivers need a
-> change like the starfive one:
-> https://lore.kernel.org/r/20241012140852.GA603197@bhelgaas
->
-Hi Bjorn,
+> I remember a use case being discussed internally a while ago was that
+> where the Cortex-A cores are only guests which only have ownership of
+> some Ethernet ports discovered through the ECAM, but not of the entire
+> NETCMIX block and not of physical Ethernet ports. How would that be
+> described in the device tree? The ECAM node would no longer be placed
+> under system-controller?
 
-I added those details in cover letter as you suggested to add them in
-cover letter.
-"PM framework expectes parent runtime pm enabled before enabling runtime
-pm of the child. As PCIe starfive device is enabling runtime pm after
-the pci_host_probe which enables runtime pm of the child device i.e for
-the bridge device a warning is shown saying "pcie-starfive 940000000.pcie:
-Enabling runtime PM for inactive device with active children" and also
-shows possible circular locking dependency detected message.
+Yes, we indeed have this use case on i.MX95, only the VFs of 10G ENETC
+are owned by Cortex-A, the entire ECAM space and other NETC devices
+are all owned by Cortex-M. In this case, the system-controller is no needed
+in DTS, because Linux have no permission to access these resources.
 
-As it is must to enable parent device's runtime PM before enabling child's
-runtime pm as the pcie-starfive device runtime pm is enabled after child
-runtime starfive device is seeing the warning.
+>=20
+> At what point does it simply just make more sense to have a different
+> PCIe ECAM driver than pcie-host-ecam-generic, which just handles
+> internally the entire NETCMIX?
 
-In the first patch fix the pcie-starfive driver by enabling runtime
-pm before calling pci_host_probe().
+Currently, I have not idea in what use case we need a different ECAM driver
+to handle internally the entire system-controller.
 
-All other PCIe controller drivers are enabling runtime pm before
-calling pci_host_probe() which is as expected so don't require any
-fix like pcie-starfive driver."
+For the use case I mentioned above, we use a different ECAM driver, which
+is implemented by RPMSG, because the entire ECAM space is owned by
+Cortex-M. So we use the ECAM driver to notify the Cortex-M to enable/disabl=
+e
+VFs or do FLR for VFs and so on. But this ECAM driver does not need to
+configure the system-controller.
 
-> I guess this sentence is basically how we verify all drivers are safe
-> with this change?
-> 
-> Since this patch adds devm_pm_runtime_enable() in pci_host_probe(),
-> can we expand this along the lines of this so it's more specific about
-> what we need to verify?
-> 
->    Every host bridge driver must call pm_runtime_enable() before
->    runtime PM is enabled by pci_host_probe().
-> 
-> Please correct me if that's not the right requirement.> 
-yes this is correct requirement only. Do you want us to add this for
-this patch .
-
-- Krishna Chaitanya.
->> After this change, the host bridge device will be runtime-suspended
->> by the runtime PM framework automatically after suspending its last
->> child and it will be runtime-resumed automatically before resuming its
->> first child which will allow the runtime PM framework to track
->> dependencies between the host bridge device and all of its
->> descendants.
->>
->> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->> Changes in v6:
->> - no change
->> Changes in v5:
->> - call pm_runtime_no_callbacks() as suggested by Rafael.
->> - include the commit texts as suggested by Rafael.
->> - Link to v4: https://lore.kernel.org/linux-pci/20240708-runtime_pm-v4-1-c02a3663243b@quicinc.com/
->> Changes in v4:
->> - Changed pm_runtime_enable() to devm_pm_runtime_enable() (suggested by mayank)
->> - Link to v3: https://lore.kernel.org/lkml/20240609-runtime_pm-v3-1-3d0460b49d60@quicinc.com/
->> Changes in v3:
->> - Moved the runtime API call's from the dwc driver to PCI framework
->>    as it is applicable for all (suggested by mani)
->> - Updated the commit message.
->> - Link to v2: https://lore.kernel.org/all/20240305-runtime_pm_enable-v2-1-a849b74091d1@quicinc.com
->> Changes in v2:
->> - Updated commit message as suggested by mani.
->> - Link to v1: https://lore.kernel.org/r/20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com
->> ---
->>   drivers/pci/probe.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 4f68414c3086..8409e1dde0d1 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -3106,6 +3106,11 @@ int pci_host_probe(struct pci_host_bridge *bridge)
->>   		pcie_bus_configure_settings(child);
->>   
->>   	pci_bus_add_devices(bus);
->> +
->> +	pm_runtime_set_active(&bridge->dev);
->> +	pm_runtime_no_callbacks(&bridge->dev);
->> +	devm_pm_runtime_enable(&bridge->dev);
->> +
->>   	return 0;
->>   }
->>   EXPORT_SYMBOL_GPL(pci_host_probe);
->>
->> -- 
->> 2.34.1
->>
 
