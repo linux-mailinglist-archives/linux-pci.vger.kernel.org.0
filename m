@@ -1,223 +1,140 @@
-Return-Path: <linux-pci+bounces-15801-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15802-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F1CE9B941D
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 16:13:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 287BE9B945C
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 16:26:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CBA1281F48
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 15:13:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CEFA11F21ADC
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 15:26:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 024951AC884;
-	Fri,  1 Nov 2024 15:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E530A1C68A6;
+	Fri,  1 Nov 2024 15:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GZ4McgdZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l17+oQiR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575A61AC8A2
-	for <linux-pci@vger.kernel.org>; Fri,  1 Nov 2024 15:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B718A1A3031;
+	Fri,  1 Nov 2024 15:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730474027; cv=none; b=GkRfxj9bjOFYK6GzsR0unk11T3zXgt7+FdhIbD6Oectp1l6ZtL+WFWlmt8ErRvzl8OY5NwiazzNAHqonKNyJvAxdV61dvJtIbEBobIYGR5N6SQSy1LI7o230g+y18u52T0mxDEQrX9Xb09tQx9afexX/Vnrqmq/KwIp58XVfYzk=
+	t=1730474801; cv=none; b=IZxfCuUHAYkR3zagp/CS0xxZv342fySe8aVp7cMoM55v6BdIKJfVeiTz00ArjD7z8TZWSbq2tv7QXl7w+pWMjRKc9Cg7pg59oLqwS+nTTIHnHL+HfTVB45+hK0Ib6XqlNchyoQJNBjnS3jJfx6/WX4dFkw3jaEPaweLKN92zVSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730474027; c=relaxed/simple;
-	bh=beZ8AWzr/vLUXWTw0mqth+TDySdgszndIhW4e33uZSk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mSn7c3DIJH11+ah38LsMNGPUxRPhLkK09ozaVIU86GE3DBgLw0SMxHXgr9esMd2KCZ8xWn/X5vdaXS4i5G72dN2kzqSYOHAaH8aAJVmFeri8PDQBT0QuKZscMRhn3jfwGUq5w5tkT3wiCCYjnpWe4GaKOysqbU1pXJGgHMjV+eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GZ4McgdZ; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730474025; x=1762010025;
-  h=date:from:to:cc:subject:message-id;
-  bh=beZ8AWzr/vLUXWTw0mqth+TDySdgszndIhW4e33uZSk=;
-  b=GZ4McgdZMVX2B+CKft0P+BnKAqDqJXlecEl7ZkzStVwINAlGKXrqm/J9
-   HL/JfNANSuSZXsZTyQrmdgrNa6tv+Ca/pwAoPoCoU4kdaCvXYJHD3jgxB
-   cth2QNyPhnD7jh3QPR+V5Vqbz3qQQjkOV0HFNDBRMBvvEVvymDlX+ZpCY
-   nS+NszAZZTgj5+qGBcq/jUKVx+4o0z3MZAbQl/z7OrqZwLdODmuqF8FCp
-   hGVEgXZmEI6pIQo5QBopLjggZhWPqbzfLhvcs8lwBdAevqRwly25s7QPf
-   01TZwi5PRbP5etNHveWrkgpTyAkIZ2DYkL1a6gORuiW/mOV7BHHQSLkM+
-   g==;
-X-CSE-ConnectionGUID: /68cZnDbRi68/m72Ox4mAQ==
-X-CSE-MsgGUID: D1SiRSqhRVGqP+jEw+dt1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11243"; a="30355151"
-X-IronPort-AV: E=Sophos;i="6.11,250,1725346800"; 
-   d="scan'208";a="30355151"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 08:13:45 -0700
-X-CSE-ConnectionGUID: cBvQntrwRq+aiJy7eC1pDQ==
-X-CSE-MsgGUID: tHiR1Ec1R/iFbepox/ah7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,250,1725346800"; 
-   d="scan'208";a="113821007"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 01 Nov 2024 08:13:44 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t6tLJ-000hgZ-2E;
-	Fri, 01 Nov 2024 15:13:41 +0000
-Date: Fri, 01 Nov 2024 23:13:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 87f9a42bd6c1a7258425715ff9cd77c7e6316b48
-Message-ID: <202411012313.Qu7YvAuV-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1730474801; c=relaxed/simple;
+	bh=vI/NQjc09w3VuPnsKmwpWg7tRMQmr0hd6fA4o85RJow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r3syZRa+oZQxKnh1BWGU+TM/sOqk+s158cDrNonOqT8RTaTjP1OrBjiJNJhL9hWCod/FiZr0emBbMsZRBDICdvceL1Amjx2qp9lRSUm2fuZ8JMHn/HW0+GmDOuzA7WiyBo/JOqgDujnUuPa3yc4ulahCGJD8qzyqe+BJJTWimlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l17+oQiR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9997AC4CECD;
+	Fri,  1 Nov 2024 15:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730474801;
+	bh=vI/NQjc09w3VuPnsKmwpWg7tRMQmr0hd6fA4o85RJow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l17+oQiRKK/3oQp/BNFD92/hhW0liTn0T4m/LgT3ZXrAvEFH1q+HhjWU8KvzZqMjB
+	 X3A/XR0gqiVN8nyxDO8hvEV4W97WPyPepjKr4b/1Z541TBKc0QIygoYa+jFKp6CI8I
+	 6UPt6Iz2Sa0LTiuQ/DM2uCh6SQMQw2e/KXwH1/NvZB+ZC0ZoKyU/vxRsz6EbdHRbS2
+	 X8DTxMdS1Fi51Ao+MYqkQdty4QP/+j1jLX/G1RY5q+XiBbcfa81prhYdQxEIY6gbCt
+	 TRahNAjSOoOhC+gh+P8ULxS2iIR3zFxedEVwOVOebmJ8yGuO10cyU1n3VVHLHrfw/r
+	 2csGzlh+TMC2A==
+Date: Fri, 1 Nov 2024 10:26:38 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v3 1/3] PCI: dwc: Skip waiting for link up if vendor
+ drivers can detect Link up event
+Message-ID: <ywuqtydbapfumelfu66237h65q2xb3rmvjtstiwvd24whn7rju@bcxldl2l4bv2>
+References: <20241101-remove_wait-v3-0-7accf27f7202@quicinc.com>
+ <20241101-remove_wait-v3-1-7accf27f7202@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241101-remove_wait-v3-1-7accf27f7202@quicinc.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 87f9a42bd6c1a7258425715ff9cd77c7e6316b48  Merge branch 'pci/misc'
+On Fri, Nov 01, 2024 at 05:04:12PM GMT, Krishna chaitanya chundru wrote:
+> If the vendor drivers can detect the Link up event using mechanisms
+> such as Link up IRQ and can the driver can enumerate downstream devices
+> instead of waiting here, then waiting for Link up during probe is not
+> needed here, which optimizes the boot time.
+> 
+> So skip waiting for link to be up if the driver supports 'linkup_irq'.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++--
+>  drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 3e41865c7290..26418873ce14 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -530,8 +530,14 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  			goto err_remove_edma;
+>  	}
+>  
+> -	/* Ignore errors, the link may come up later */
+> -	dw_pcie_wait_for_link(pci);
+> +	/*
+> +	 * Note: The link up delay is skipped only when a link up IRQ is present.
+> +	 * This flag should not be used to bypass the link up delay for arbitrary
+> +	 * reasons.
 
-elapsed time: 938m
+Perhaps by improving the naming of the variable, you don't need 3 lines
+of comment describing the conditional.
 
-configs tested: 130
-configs skipped: 4
+> +	 */
+> +	if (!pp->linkup_irq)
+> +		/* Ignore errors, the link may come up later */
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Does this mean that we will be able to start handling these errors?
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arc                    vdk_hs38_smp_defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                         assabet_defconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                          ep93xx_defconfig    clang-20
-arm                          exynos_defconfig    clang-20
-arm                            hisi_defconfig    clang-20
-arm                        keystone_defconfig    clang-20
-arm                           omap1_defconfig    gcc-14.1.0
-arm                         s5pv210_defconfig    clang-20
-arm                        vexpress_defconfig    clang-20
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-19
-i386                              allnoconfig    clang-19
-i386                             allyesconfig    clang-19
-i386        buildonly-randconfig-001-20241101    gcc-12
-i386        buildonly-randconfig-002-20241101    gcc-12
-i386        buildonly-randconfig-003-20241101    gcc-12
-i386        buildonly-randconfig-004-20241101    gcc-12
-i386        buildonly-randconfig-005-20241101    gcc-12
-i386        buildonly-randconfig-006-20241101    gcc-12
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241101    gcc-12
-i386                  randconfig-002-20241101    gcc-12
-i386                  randconfig-003-20241101    gcc-12
-i386                  randconfig-004-20241101    gcc-12
-i386                  randconfig-005-20241101    gcc-12
-i386                  randconfig-006-20241101    gcc-12
-i386                  randconfig-011-20241101    gcc-12
-i386                  randconfig-012-20241101    gcc-12
-i386                  randconfig-013-20241101    gcc-12
-i386                  randconfig-014-20241101    gcc-12
-i386                  randconfig-015-20241101    gcc-12
-i386                  randconfig-016-20241101    gcc-12
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-loongarch                 loongson3_defconfig    clang-20
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                           sun3_defconfig    gcc-14.1.0
-m68k                           virt_defconfig    clang-20
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-microblaze                      mmu_defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                           ci20_defconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-openrisc                    or1ksim_defconfig    gcc-14.1.0
-openrisc                 simple_smp_defconfig    gcc-14.1.0
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                    adder875_defconfig    clang-20
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                      cm5200_defconfig    clang-20
-powerpc               mpc834x_itxgp_defconfig    clang-20
-powerpc                 mpc836x_rdk_defconfig    clang-20
-powerpc                      ppc44x_defconfig    gcc-14.1.0
-powerpc                     sequoia_defconfig    clang-20
-powerpc                         wii_defconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-riscv             nommu_k210_sdcard_defconfig    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                        apsh4ad0a_defconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                            migor_defconfig    clang-20
-sh                           se7206_defconfig    clang-20
-sh                           se7343_defconfig    clang-20
-sh                            titan_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc                       sparc64_defconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                           alldefconfig    gcc-14.1.0
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64                              defconfig    clang-19
-x86_64                                  kexec    clang-19
-x86_64                                  kexec    gcc-12
-x86_64                               rhel-8.3    gcc-12
-x86_64                           rhel-8.3-bpf    clang-19
-x86_64                         rhel-8.3-kunit    clang-19
-x86_64                           rhel-8.3-ltp    clang-19
-x86_64                          rhel-8.3-rust    clang-19
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                         virt_defconfig    gcc-14.1.0
+> +		dw_pcie_wait_for_link(pci);
+>  
+>  	bridge->sysdata = pp;
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 347ab74ac35a..539c6d106bb0 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -379,6 +379,7 @@ struct dw_pcie_rp {
+>  	bool			use_atu_msg;
+>  	int			msg_atu_index;
+>  	struct resource		*msg_res;
+> +	bool			linkup_irq;
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Please name this for what it is, rather than some property from which
+some other decision should be derived. (And then you need a comment to
+describe how people should interpret and use it)
+
+Also, "linkup_irq" sound like an int carrying the interrupt number, not
+a boolean.
+
+
+Please call it "use_async_linkup", "use_linkup_irq" or something.
+
+Regards,
+Bjorn
+
+>  };
+>  
+>  struct dw_pcie_ep_ops {
+> 
+> -- 
+> 2.34.1
+> 
+> 
 
