@@ -1,190 +1,170 @@
-Return-Path: <linux-pci+bounces-15791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B27A9B8FEB
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 12:04:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34F6F9B8FF3
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 12:06:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2537C280DF6
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 11:04:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE5391F21B25
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2024 11:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E5415855D;
-	Fri,  1 Nov 2024 11:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0100E18594A;
+	Fri,  1 Nov 2024 11:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTwdqT2l"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F681531F2
-	for <linux-pci@vger.kernel.org>; Fri,  1 Nov 2024 11:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7F115A84E;
+	Fri,  1 Nov 2024 11:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730459073; cv=none; b=LBdr88TPaYrmbLPz8jrT0KVBCDtwz8S6pm6pJ4CzshntRlDNkp2YOAA0cIeQSTZLHDGxJLh1OGWC4WNVR6TIpAgTijvq3Us7MeSIPB5rgO6IhJn3Fmy+vKpLnq4iL5elMInqvPcoOgwmLERvDqMzaWWzmADkm3QEupe4fQiGrhE=
+	t=1730459188; cv=none; b=TJL1dCvv5mkQcVDVU/Ow/OAd0tupPSR7lBhD9BpEHAHbv5QFFUyVguv0JrcHLUfLbnfa6q+YCb9LwkcbxkRsx+em3OgG2L8wIFgeHECdHs/hL0ljrW8qGDd57oaOsHKL2h+3ZWr1zkUZfdVitaUpsgTI2sQ7PI09JlncflS8c1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730459073; c=relaxed/simple;
-	bh=xzBuTlr0pYA/HJF/w8w1gpEb9hgJlGLhx87pV4m9HN8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BL6hMYRP3pSqi4mCNDLUyAJ3d04UdK/3c7oXzodOpUNVpLdWoPrcANr/Ah1jImxwLbA0w0Vm3YlGqjaSLH1WRENWj/ydVlgURVAdFSc713dXtqpI0OiZP+Lj2ifUqElxBaIFkHSGoW+AHUgjTQgVaUFUDGA3SPiD1MSwmTrCtn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xfyc35vVgz6K7BD;
-	Fri,  1 Nov 2024 19:01:55 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0AB571400D3;
-	Fri,  1 Nov 2024 19:04:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 1 Nov
- 2024 12:04:26 +0100
-Date: Fri, 1 Nov 2024 11:04:25 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-CC: <linux-pci@vger.kernel.org>, <kw@linux.com>
-Subject: Re: [PATCH v4] Export PBEC Data register into sysfs
-Message-ID: <20241101110425.00005582@Huawei.com>
-In-Reply-To: <20240911012053.345286-1-kobayashi.da-06@fujitsu.com>
-References: <20240911012053.345286-1-kobayashi.da-06@fujitsu.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1730459188; c=relaxed/simple;
+	bh=4cdN8oppOPWY/v1yFlCvkKvAwOHnBpBM0oBxJMPVYLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bd1upij3ZOVN/YpuqY1CHtCZs1lx2H0ISbiSPaUPS+zpR0eh/vsqe8Bz+Jf+uinhjqCaq7tbk4UFWRD5wrrRiQwQuvGqzcj4Vh+G3uYInw6oY6ZGCVFY7b++Jh9f+DAjRKKHNFOMOYfxVqDPwYZHDI/jSZFzG9j454vCdn/APdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTwdqT2l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71C58C4CECD;
+	Fri,  1 Nov 2024 11:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730459188;
+	bh=4cdN8oppOPWY/v1yFlCvkKvAwOHnBpBM0oBxJMPVYLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CTwdqT2l5uk5gwpVRS10I7uPpizsb/hBcBKWekYNb0/1/xyMQmvvfagsufSNIp0+H
+	 St+9WxVL8pwKleCrfHfZOuVkWSULd6MySOeEWfvsCSV0bHUjeaV4Ap2L+3O8raqwIS
+	 p8YZpzpRR2xY/A6EMSIL/RHlUwRsD/PxD5D4If7Zj2eoCfoQV5qXib+WWg4KhvHw2Z
+	 saicJOq/ogsv1rxc7raI5JADLpXusjkRSrgZdWf1j6772wyPuX/i0FTrFjRY3w286B
+	 PjBi7Ma3lUD9gnl/JBiWlvccuEDx1UcX9zpXWH1OJeH3wNcgUidQmhlFlXz687wucc
+	 p44pH3kVnbTcg==
+Date: Fri, 1 Nov 2024 13:06:22 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 08/17] dma-mapping: add a dma_need_unmap helper
+Message-ID: <20241101110622.GD88858@unreal>
+References: <cover.1730298502.git.leon@kernel.org>
+ <00385b3557fa074865d37b0ac613d2cb28bcb741.1730298502.git.leon@kernel.org>
+ <7e362d8b-c02a-4327-9c5d-af1c4725ddc7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e362d8b-c02a-4327-9c5d-af1c4725ddc7@arm.com>
 
-On Wed, 11 Sep 2024 10:20:53 +0900
-"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
-
-> This proposal aims to add a feature that outputs PCIe device power 
-> consumption information to sysfs.
+On Thu, Oct 31, 2024 at 09:18:11PM +0000, Robin Murphy wrote:
+> On 30/10/2024 3:12 pm, Leon Romanovsky wrote:
+> > From: Christoph Hellwig <hch@lst.de>
+> > 
+> > Add helper that allows a driver to skip calling dma_unmap_*
+> > if the DMA layer can guarantee that they are no-nops.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> >   include/linux/dma-mapping.h |  5 +++++
+> >   kernel/dma/mapping.c        | 20 ++++++++++++++++++++
+> >   2 files changed, 25 insertions(+)
+> > 
+> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> > index 8074a3b5c807..6906edde505d 100644
+> > --- a/include/linux/dma-mapping.h
+> > +++ b/include/linux/dma-mapping.h
+> > @@ -410,6 +410,7 @@ static inline bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
+> >   {
+> >   	return dma_dev_need_sync(dev) ? __dma_need_sync(dev, dma_addr) : false;
+> >   }
+> > +bool dma_need_unmap(struct device *dev);
+> >   #else /* !CONFIG_HAS_DMA || !CONFIG_DMA_NEED_SYNC */
+> >   static inline bool dma_dev_need_sync(const struct device *dev)
+> >   {
+> > @@ -435,6 +436,10 @@ static inline bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
+> >   {
+> >   	return false;
+> >   }
+> > +static inline bool dma_need_unmap(struct device *dev)
+> > +{
+> > +	return false;
+> > +}
+> >   #endif /* !CONFIG_HAS_DMA || !CONFIG_DMA_NEED_SYNC */
+> >   struct page *dma_alloc_pages(struct device *dev, size_t size,
+> > diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> > index 864a1121bf08..daa97a650778 100644
+> > --- a/kernel/dma/mapping.c
+> > +++ b/kernel/dma/mapping.c
+> > @@ -442,6 +442,26 @@ bool __dma_need_sync(struct device *dev, dma_addr_t dma_addr)
+> >   }
+> >   EXPORT_SYMBOL_GPL(__dma_need_sync);
+> > +/**
+> > + * dma_need_unmap - does this device need dma_unmap_* operations
+> > + * @dev: device to check
+> > + *
+> > + * If this function returns %false, drivers can skip calling dma_unmap_* after
+> > + * finishing an I/O.  This function must be called after all mappings that might
+> > + * need to be unmapped have been performed.
 > 
-> Add support for PBEC (Power Budgeting Extended Capability) output 
-> to the PCIe driver. PBEC is defined in the 
-> PCIe specification(PCIe r6.0, sec 7.8.1) and is
-> a standard method for obtaining device power consumption information.
+> In terms of the unmap call itself, why don't we just use dma_skip_sync to
+> short-cut dma_direct_unmap_*() and make sure it's as cheap as possible?
+
+From what I see dma_skip_sync is not available when kernel is built
+without CONFIG_DMA_NEED_SYNC.
+
 > 
-> PCIe devices can significantly impact the overall power consumption of
-> a system. However, obtaining PCIe device power consumption information 
-> has traditionally been difficult. 
+> In terms of not having to unmap implying not having to store addresses at
+> all, it doesn't seem super-useful when you still have to store them for long
+> enough to find out that you don't :/
+
+Why? The decision if DMA addresses are needed is taken when allocating
+relevant arrays, before we have any DMA address to store. If we know
+that we don't need to unmap, we can skip allocation of the array for
+free. So what and when "you still have to store them"?
+
+Thanks
+
 > 
-> The PBEC Data register changes depending on the value of the PBEC Data 
-> Select register. To obtain all PBEC Data register values defined in the 
-> device, obtain the value of the PBEC Data register while changing the 
-> value of the PBEC Data Select register.
+> Thanks,
+> Robin.
 > 
-> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Hi,
-
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci | 17 +++++++++++++++
->  drivers/pci/pci-sysfs.c                 | 28 +++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
+> > + */
+> > +bool dma_need_unmap(struct device *dev)
+> > +{
+> > +	if (!dma_map_direct(dev, get_dma_ops(dev)))
+> > +		return true;
+> > +#ifdef CONFIG_DMA_NEED_SYNC
+> > +	if (!dev->dma_skip_sync)
+> > +		return true;
+> > +#endif
+> > +	return IS_ENABLED(CONFIG_DMA_API_DEBUG);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dma_need_unmap);
+> > +
+> >   static void dma_setup_need_sync(struct device *dev)
+> >   {
+> >   	const struct dma_map_ops *ops = get_dma_ops(dev);
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index ecf47559f495..be1911d948ef 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -500,3 +500,20 @@ Description:
->  		console drivers from the device.  Raw users of pci-sysfs
->  		resourceN attributes must be terminated prior to resizing.
->  		Success of the resizing operation is not guaranteed.
-> +
-> +What:		/sys/bus/pci/devices/.../power_budget
-> +Date:		September 2024
-> +Contact:	Kobayashi Daisuke <kobayashi.da-06@fujitsu.com>
-> +Description:
-> +		This file provides information about the PCIe power budget
-> +		for the device. It is a read-only file that outputs the values
-> +		of the Power Budgeting Data Register for each power state as a
-> +		series of 32-bit hexadecimal values. Each line represents a
-> +		single Power Budgeting Data register entry, containing the
-> +		power budget for a specific power state.
-> +
-> +		The specific interpretation of these values depends on the
-> +		device and the PCIe specification. Refer to the PCIe
-> +		specification for detailed information about the Power
-> +		Budgeting Data register, including the encoding	of power
-> +		states and the interpretation of Base Power and Data Scale.
-
-Is there precedence for similar register values just being available via
-sysfs?  This definitely isn't in keeping with general desirable sysfs
-interface characteristics.
-
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 2321fdfefd7d..c52814a33597 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -182,6 +182,33 @@ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(resource);
->  
-> +static ssize_t power_budget_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> +	size_t len = 0;
-> +	int i, pos;
-> +	u32 data;
-> +
-> +	pos = pci_find_ext_capability(pci_dev, PCI_EXT_CAP_ID_PWR);
-> +	if (!pos)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < 0xff; i++) {
-> +		pci_write_config_byte(pci_dev, pos + PCI_PWR_DSR, (u8)i);
-
-Why not make i a u8? Would remove need for cast and otherwise make no
-difference that I can see.
-
-> +		pci_read_config_dword(pci_dev, pos + PCI_PWR_DATA, &data);
-> +		if (!data) {
-> +			if (len == 0)
-> +				return -EINVAL;
-> +			break;
-> +		}
-> +		len += sysfs_emit_at(buf, len, "%04x\n", data);
-
-It's not user friendly to just output the register content, and this
-is breaking the one thing per sysfs file ABI rules.
-
-Various possible sysfs structures may make more sense.
-
-1) Directory with files for each entry found. Each file
-   is one thing so 
-   power_budget/X_power - maths done to take base power and apply the data scale.
-                X_pm_state
-                X_pm_substate
-                X_type - potentially with nice strings for each type.
-                X_rail  - 12V, 3,3V , 1.5V/1.8V, 48V, 5V, thermal
-                X_connector - 
-	        X_connector_type
-
-With the stuff in the extended bit only visible if flag in bit 31 is set.
-
-> +	}
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_RO(power_budget);
-> +
->  static ssize_t max_link_speed_show(struct device *dev,
->  				   struct device_attribute *attr, char *buf)
->  {
-> @@ -629,6 +656,7 @@ static struct attribute *pcie_dev_attrs[] = {
->  	&dev_attr_current_link_width.attr,
->  	&dev_attr_max_link_width.attr,
->  	&dev_attr_max_link_speed.attr,
-> +	&dev_attr_power_budget.attr,
->  	NULL,
->  };
->  
-
 
