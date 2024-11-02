@@ -1,254 +1,221 @@
-Return-Path: <linux-pci+bounces-15824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ADEA9B9DC1
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 08:39:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C0E29B9E2C
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 10:25:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E95D8B20E37
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 07:39:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CB011F213F6
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 09:25:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A33715688C;
-	Sat,  2 Nov 2024 07:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 314EF15B14B;
+	Sat,  2 Nov 2024 09:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vo9PwtDe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hw+0cfQT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEA41494B3
-	for <linux-pci@vger.kernel.org>; Sat,  2 Nov 2024 07:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344D015A856
+	for <linux-pci@vger.kernel.org>; Sat,  2 Nov 2024 09:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730533186; cv=none; b=d16WGPvB2ZE9m56e/L6KU7wBLXOyaDoaP0nGfjwUjmCc64y1mZ0Zgf5ASz7IZFE836E3rD/kIKE2CQ4vnh5D30J8WfLrd3TBYYP9sNpmyf06hJn/DRvziY2addCrIPdoZxbhJGfZLF7xIfX9VaWgI7A2jJWc1ke8mdcWgc6opNM=
+	t=1730539530; cv=none; b=jl2eSJpKCixWZTm1/vHXAxm7BeGTXcabb9KlbSTqGPZ3JLm2ldqgMrzwuuGWRLYPJs91QtI6yUhKzrdQNHjWHQQ3gaV+iXu/E0gH8G/kCVFCyEqlfxAzmjKsPIj6M6hpjFBz6cHoRAbcuCaH16wde4yDl3xS5bhy9CE0Zm29nY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730533186; c=relaxed/simple;
-	bh=PEb7dEPLpsiEUBwEV+omdt0TcIQ9CKXJLt8jWJGdcI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b3IJgndS2Kga1Fkik6BJ6tfOkZ2fDKA96s6myoTn1Mm6gKWObpPPX8OmT9Hqq87PtB/qxa3SJ+B3+YvRuoyH0EzfCh8E0NEHM5zAAt4NucDup5ZXRDQ9LwSS/YA9PFYOQkkl993QabRTR9A/nGznqP8AKd719iIl2SUZtevn7Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vo9PwtDe; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <f80e7b54-b897-4df2-a49d-bc6012640a8a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1730533181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zkq8x4dmz9yfUFHPf0EELUUQUn7E8nglf4dRQUS+EMY=;
-	b=Vo9PwtDerSGdplleUNX0Y/p+JDHIf70BdVvazCyN6y7vBeSmJN/2zQyKwdwVLMDJ75gcUi
-	p2dyDGNKJmn61rctVMXgRmkGSEuGDVdgsPLZmNxceQZmMQrgLWD8jMvyZRZxdxYdGOxMmE
-	AmgT0wss4pgZ2ZNAb8fYVAZQLqSC69g=
-Date: Sat, 2 Nov 2024 08:39:35 +0100
+	s=arc-20240116; t=1730539530; c=relaxed/simple;
+	bh=LRG80xSBeEN/AxWV3iuDVIep3gKS5ROkMIfMfw7sw20=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=LtZbFV1Zwc7I13pwcejdYWZX4hmwZjCZd89NPd45Yy3CHMdHUmL/tf8/wnQGHSt80O9fVlfDYxJYrki40d1qxWNizDm5Wq4GRmcQu7hPidm4hQGP+pp0z4iq2TZ4PnpQz4bOj+6u+Aixd5+N2rZrsE6NLWnyMoRqBKSdYOd2TNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hw+0cfQT; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730539528; x=1762075528;
+  h=date:from:to:cc:subject:message-id;
+  bh=LRG80xSBeEN/AxWV3iuDVIep3gKS5ROkMIfMfw7sw20=;
+  b=Hw+0cfQTA9WPI4FFHTDzgjaIS2XD0f19dJkO/IpQKhvqrmoxXevMZ8gH
+   7r/rjCMgIPu8ViPRz2wknmja8Bl8V5fBH2b/wNqH8yWoGBUJf2hNBO44Q
+   6Ba2/pu18LsYjzEmiiaOdpIIYf0OXCeopI8dXbG+EpB9vbgCV/RKHpHWL
+   dgam6R4h+uD1CC8XgHo8xe6SQizwn7jgxzXjh53qnKq1Wv8SAoe22m44z
+   V3MMBl4/zCqrDyUO6wGZ7lq3Rk3FfjayfdsiRGNtEb+uPInnOTZH9QyxV
+   eqoBL01lOzxTWZfb1cohwMcUpCOZTb1rO2DI6RXSTLe3egp+hjuwFzm4L
+   Q==;
+X-CSE-ConnectionGUID: P7r9Cm6IQuauzeZ56MG/7Q==
+X-CSE-MsgGUID: ooeyIYGzT2e/7xvNYkK8UQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30457548"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30457548"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2024 02:25:27 -0700
+X-CSE-ConnectionGUID: eT2syehgRSWJa7X9DFxDJQ==
+X-CSE-MsgGUID: 3/dpj1VOQJ24JtaUCLJGsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,252,1725346800"; 
+   d="scan'208";a="120645999"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 02 Nov 2024 02:25:26 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t7ANo-000ig6-0J;
+	Sat, 02 Nov 2024 09:25:24 +0000
+Date: Sat, 02 Nov 2024 17:24:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:typos] BUILD SUCCESS
+ 67096efe8d6564dda4aa4cbabe653add066ef850
+Message-ID: <202411021719.bJitLRvJ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [RFC PATCH 2/7] block: don't merge different kinds of P2P
- transfers in a single bio
-To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-Cc: Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
- iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <cover.1730037261.git.leon@kernel.org>
- <34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2024/10/27 15:21, Leon Romanovsky 写道:
-> From: Christoph Hellwig <hch@lst.de>
-> 
-> To get out of the dma mapping helpers having to check every segment for
-> it's P2P status, ensure that bios either contain P2P transfers or non-P2P
-> transfers, and that a P2P bio only contains ranges from a single device.
-> 
-> This means we do the page zone access in the bio add path where it should
-> be still page hot, and will only have do the fairly expensive P2P topology
-> lookup once per bio down in the dma mapping path, and only for already
-> marked bios.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->   block/bio.c               | 36 +++++++++++++++++++++++++++++-------
->   block/blk-map.c           | 32 ++++++++++++++++++++++++--------
->   include/linux/blk_types.h |  2 ++
->   3 files changed, 55 insertions(+), 15 deletions(-)
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index 2d3bc8bfb071..943a6d78cb3e 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -928,8 +928,6 @@ static bool bvec_try_merge_page(struct bio_vec *bv, struct page *page,
->   		return false;
->   	if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
->   		return false;
-> -	if (!zone_device_pages_have_same_pgmap(bv->bv_page, page))
-> -		return false;
->   
->   	*same_page = ((vec_end_addr & PAGE_MASK) == ((page_addr + off) &
->   		     PAGE_MASK));
-> @@ -993,6 +991,14 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
->   	if (bio->bi_vcnt > 0) {
->   		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
->   
-> +		/*
-> +		 * When doing ZONE_DEVICE-based P2P transfers, all pages in a
-> +		 * bio must be P2P pages from the same device.
-> +		 */
-> +		if ((bio->bi_opf & REQ_P2PDMA) &&
-> +		    !zone_device_pages_have_same_pgmap(bv->bv_page, page))
-> +			return 0;
-> +
->   		if (bvec_try_merge_hw_page(q, bv, page, len, offset,
->   				same_page)) {
->   			bio->bi_iter.bi_size += len;
-> @@ -1009,6 +1015,9 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
->   		 */
->   		if (bvec_gap_to_prev(&q->limits, bv, offset))
->   			return 0;
-> +	} else {
-> +		if (is_pci_p2pdma_page(page))
-> +			bio->bi_opf |= REQ_P2PDMA | REQ_NOMERGE;
->   	}
->   
->   	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, offset);
-> @@ -1133,11 +1142,24 @@ static int bio_add_page_int(struct bio *bio, struct page *page,
->   	if (bio->bi_iter.bi_size > UINT_MAX - len)
->   		return 0;
->   
-> -	if (bio->bi_vcnt > 0 &&
-> -	    bvec_try_merge_page(&bio->bi_io_vec[bio->bi_vcnt - 1],
-> -				page, len, offset, same_page)) {
-> -		bio->bi_iter.bi_size += len;
-> -		return len;
-> +	if (bio->bi_vcnt > 0) {
-> +		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
-> +
-> +		/*
-> +		 * When doing ZONE_DEVICE-based P2P transfers, all pages in a
-> +		 * bio must be P2P pages from the same device.
-> +		 */
-> +		if ((bio->bi_opf & REQ_P2PDMA) &&
-> +		    !zone_device_pages_have_same_pgmap(bv->bv_page, page))
-> +			return 0;
-> +
-> +		if (bvec_try_merge_page(bv, page, len, offset, same_page)) {
-> +			bio->bi_iter.bi_size += len;
-> +			return len;
-> +		}
-> +	} else {
-> +		if (is_pci_p2pdma_page(page))
-> +			bio->bi_opf |= REQ_P2PDMA | REQ_NOMERGE;
->   	}
->   
->   	if (bio->bi_vcnt >= bio->bi_max_vecs)
-> diff --git a/block/blk-map.c b/block/blk-map.c
-> index 0e1167b23934..03192b1ca6ea 100644
-> --- a/block/blk-map.c
-> +++ b/block/blk-map.c
-> @@ -568,6 +568,7 @@ static int blk_rq_map_user_bvec(struct request *rq, const struct iov_iter *iter)
->   	const struct queue_limits *lim = &q->limits;
->   	unsigned int nsegs = 0, bytes = 0;
->   	struct bio *bio;
-> +	int error;
->   	size_t i;
->   
->   	if (!nr_iter || (nr_iter >> SECTOR_SHIFT) > queue_max_hw_sectors(q))
-> @@ -588,15 +589,30 @@ static int blk_rq_map_user_bvec(struct request *rq, const struct iov_iter *iter)
->   	for (i = 0; i < nr_segs; i++) {
->   		struct bio_vec *bv = &bvecs[i];
->   
-> -		/*
-> -		 * If the queue doesn't support SG gaps and adding this
-> -		 * offset would create a gap, fallback to copy.
-> -		 */
-> -		if (bvprvp && bvec_gap_to_prev(lim, bvprvp, bv->bv_offset)) {
-> -			blk_mq_map_bio_put(bio);
-> -			return -EREMOTEIO;
-> +		error = -EREMOTEIO;
-> +		if (bvprvp) {
-> +			/*
-> +			 * If the queue doesn't support SG gaps and adding this
-> +			 * offset would create a gap, fallback to copy.
-> +			 */
-> +			if (bvec_gap_to_prev(lim, bvprvp, bv->bv_offset))
-> +				goto put_bio;
-> +
-> +			/*
-> +			 * When doing ZONE_DEVICE-based P2P transfers, all pages
-> +			 * in a bio must be P2P pages, and from the same device.
-> +			 */
-> +			if ((bio->bi_opf & REQ_P2PDMA) &&
-> +			    zone_device_pages_have_same_pgmap(bvprvp->bv_page,
-> +					bv->bv_page))
-> +				goto put_bio;
-> +		} else {
-> +			if (is_pci_p2pdma_page(bv->bv_page))
-> +				bio->bi_opf |= REQ_P2PDMA | REQ_NOMERGE;
->   		}
-> +
->   		/* check full condition */
-> +		error = -EINVAL;
->   		if (nsegs >= nr_segs || bytes > UINT_MAX - bv->bv_len)
->   			goto put_bio;
->   		if (bytes + bv->bv_len > nr_iter)
-> @@ -611,7 +627,7 @@ static int blk_rq_map_user_bvec(struct request *rq, const struct iov_iter *iter)
->   	return 0;
->   put_bio:
->   	blk_mq_map_bio_put(bio);
-> -	return -EINVAL;
-> +	return error;
->   }
->   
->   /**
-> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-> index dce7615c35e7..94cf146e8ce6 100644
-> --- a/include/linux/blk_types.h
-> +++ b/include/linux/blk_types.h
-> @@ -378,6 +378,7 @@ enum req_flag_bits {
->   	__REQ_DRV,		/* for driver use */
->   	__REQ_FS_PRIVATE,	/* for file system (submitter) use */
->   	__REQ_ATOMIC,		/* for atomic write operations */
-> +	__REQ_P2PDMA,		/* contains P2P DMA pages */
->   	/*
->   	 * Command specific flags, keep last:
->   	 */
-> @@ -410,6 +411,7 @@ enum req_flag_bits {
->   #define REQ_DRV		(__force blk_opf_t)(1ULL << __REQ_DRV)
->   #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
->   #define REQ_ATOMIC	(__force blk_opf_t)(1ULL << __REQ_ATOMIC)
-> +#define REQ_P2PDMA	(__force blk_opf_t)(1ULL << __REQ_P2PDMA)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git typos
+branch HEAD: 67096efe8d6564dda4aa4cbabe653add066ef850  PCI: Fix typos
 
-#define REQ_P2PDMA	(__force blk_opf_t)BIT_ULL(__REQ_P2PDMA)
+elapsed time: 770m
 
-Use BIT_ULL instead of direct left shit.
+configs tested: 128
+configs skipped: 4
 
-Zhu Yanjun
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->   
->   #define REQ_NOUNMAP	(__force blk_opf_t)(1ULL << __REQ_NOUNMAP)
->   
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                           tb10x_defconfig    clang-14
+arc                           tb10x_defconfig    gcc-14.1.0
+arc                        vdk_hs38_defconfig    clang-14
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm                                 defconfig    gcc-14.1.0
+arm                            dove_defconfig    gcc-14.1.0
+arm                       imx_v4_v5_defconfig    clang-14
+arm                        multi_v5_defconfig    gcc-14.1.0
+arm                        mvebu_v5_defconfig    clang-14
+arm                           sunxi_defconfig    clang-14
+arm                           tegra_defconfig    gcc-14.1.0
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             allmodconfig    clang-19
+i386                              allnoconfig    clang-19
+i386                             allyesconfig    clang-19
+i386        buildonly-randconfig-001-20241102    gcc-12
+i386        buildonly-randconfig-002-20241102    gcc-12
+i386        buildonly-randconfig-003-20241102    gcc-12
+i386        buildonly-randconfig-004-20241102    gcc-12
+i386        buildonly-randconfig-005-20241102    gcc-12
+i386        buildonly-randconfig-006-20241102    gcc-12
+i386                                defconfig    clang-19
+i386                  randconfig-001-20241102    gcc-12
+i386                  randconfig-002-20241102    gcc-12
+i386                  randconfig-003-20241102    gcc-12
+i386                  randconfig-004-20241102    gcc-12
+i386                  randconfig-005-20241102    gcc-12
+i386                  randconfig-006-20241102    gcc-12
+i386                  randconfig-011-20241102    gcc-12
+i386                  randconfig-012-20241102    gcc-12
+i386                  randconfig-013-20241102    gcc-12
+i386                  randconfig-014-20241102    gcc-12
+i386                  randconfig-015-20241102    gcc-12
+i386                  randconfig-016-20241102    gcc-12
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                         apollo_defconfig    clang-14
+m68k                                defconfig    gcc-14.1.0
+m68k                        m5307c3_defconfig    gcc-14.1.0
+m68k                        m5407c3_defconfig    gcc-14.1.0
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                        bcm63xx_defconfig    clang-14
+mips                           ip30_defconfig    gcc-14.1.0
+mips                        omega2p_defconfig    clang-14
+nios2                            alldefconfig    gcc-14.1.0
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+parisc                           alldefconfig    clang-14
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                      arches_defconfig    gcc-14.1.0
+powerpc                     mpc5200_defconfig    clang-14
+powerpc                    mvme5100_defconfig    gcc-14.1.0
+powerpc                      pasemi_defconfig    gcc-14.1.0
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                             espt_defconfig    gcc-14.1.0
+sh                 kfr2r09-romimage_defconfig    clang-14
+sh                          r7785rp_defconfig    clang-14
+sh                           se7619_defconfig    clang-14
+sh                           se7750_defconfig    clang-14
+sh                        sh7785lcr_defconfig    gcc-14.1.0
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                                  defconfig    gcc-12
+um                             i386_defconfig    clang-14
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64                              defconfig    clang-19
+x86_64                                  kexec    clang-19
+x86_64                                  kexec    gcc-12
+x86_64                               rhel-8.3    gcc-12
+x86_64                           rhel-8.3-bpf    clang-19
+x86_64                         rhel-8.3-kunit    clang-19
+x86_64                           rhel-8.3-ltp    clang-19
+x86_64                          rhel-8.3-rust    clang-19
+xtensa                            allnoconfig    gcc-14.1.0
+xtensa                       common_defconfig    clang-14
+xtensa                          iss_defconfig    gcc-14.1.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
