@@ -1,172 +1,152 @@
-Return-Path: <linux-pci+bounces-15847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 572349BA186
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 17:53:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAB209BA192
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 18:09:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE45CB20D4F
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 16:53:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 823B8281C3C
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Nov 2024 17:09:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA15D175D47;
-	Sat,  2 Nov 2024 16:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7B221A00DF;
+	Sat,  2 Nov 2024 17:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="syob1nQC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HZetXxDm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60396168483
-	for <linux-pci@vger.kernel.org>; Sat,  2 Nov 2024 16:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F242E189BB8
+	for <linux-pci@vger.kernel.org>; Sat,  2 Nov 2024 17:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730566401; cv=none; b=GEYBS4G088T38kGYe1PVT0XMadtWUw3wlFTsMbyNOWsBOy+IHZCqupqe5o86IEDHLCXX5idPeX/Vs5UHLNJmmFfEdeAgHPK38/V84eDuuiCrB40OfCMT+5trWf+TlfWCSsXe67o1izEGtiTOO5frikjFHrC5/JDdqMBJYPyz1EI=
+	t=1730567363; cv=none; b=AnFlYK0dbb+HWOGKXDvavnLDdfhQXli1N+2amfhU0WMIrXTS4vvSR+rWG/8aBxIvXXtOkrJPTXiOwUy5+nzw8ryCvvjVzOxi+TAXgO3eECxEYx/zO6O/ETGvimxvdF5rAOtMa/G9RgHDURJrY6r8MNaOxd6+asuVyZxLdV7IyMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730566401; c=relaxed/simple;
-	bh=MgDc+4RKY2xvcW0WbGDQ2dsnT9EDWAKtW3JAXLHOmds=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Vwz7WYOumPeFzLEaexsGJ7O6Ic6cezzHej9kR+yKreuYnLDyCwoE2bIUY8sw3aSk3qcUwZeaU0eXkQe0Wuy7beUlUpGWO5mu18e14Zav2MxL9o8EJGvmd/xAgzbiHcMMEb5moWiRGwRUbhW1btL+YBtKkUXnCe4Q2aOxbyWw4ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=syob1nQC; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1730566386; x=1731171186; i=wahrenst@gmx.net;
-	bh=MgDc+4RKY2xvcW0WbGDQ2dsnT9EDWAKtW3JAXLHOmds=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=syob1nQCX88zf2Gn8rKCgO9up0m1epSns2dVoyO4n0KfQrQEgDoScMwcSjeahWTu
-	 7Uj/1WFSkz36xdJi2lEWq91CAC+kn3V4zTIvjR3/2ElxPx+DY9WKh6zST+OcH5SPY
-	 m+OBbpNGcQeV0TYwND6ExmOYG9D7eL0Hdq+ULwNKnR7rVxFhs0+YdGbzz4GcN9GvD
-	 fBx4tM32Rv+HIA1/YSHvraWbRT0zW6845bq4hMCNLoENhhNwkwLPrEt0UIpcXRyLi
-	 yqCElWjQnqJcTsXAHSNd8/1Gz8vE5s74pJn+vDABvgemFlwNVXJS6MTksvaobfQcH
-	 LiHLQI0apDTIQLrI2Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.105] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mv31c-1ty8yP392u-014Qls; Sat, 02
- Nov 2024 17:53:05 +0100
-Message-ID: <dcd660fd-a265-4f47-8696-776a85e097a0@gmx.net>
-Date: Sat, 2 Nov 2024 17:53:04 +0100
+	s=arc-20240116; t=1730567363; c=relaxed/simple;
+	bh=Z4ujPaeRMEt6r7M7H1TsEVcv9xtm5hvQruVS6LMJgNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WC7CeEziYW8iEB4TKrKuh7iFaQaJLefO3pwqO7hw2zxwRjtUVVSFk7OgrVmJiFqT2RGCSAq6ZemRGkqCAWXMemB1pzQZGQHmCLbELJp71iNHMrF4jYCcXzwGkIKf7Ye0aatzIedccqqpMHfvMmnBNaDaXw1NwOf9mXK1VPadn6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HZetXxDm; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20cdbe608b3so30509875ad.1
+        for <linux-pci@vger.kernel.org>; Sat, 02 Nov 2024 10:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730567361; x=1731172161; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=niemCpBaWtNTD33HK4hY7EmVvjCf6wQeZoDXMitV7Gw=;
+        b=HZetXxDmN8QlshSNxk61fUsiuCnePcI18I10cz+pzFpr+14WVEiM39mazf6BBNEn2h
+         Ohk2XXW3EVZWFVBVUoQz3Pfo7SLXp2+pomwWdwL1qj4NJjJC2siL2ZI0CqUfWbLmvN+H
+         t2Xy0pfNFas3HqknRQgMVVva1eRgp3ZF6cXplHW8favIvAYICny5tyiHpqvjlmLvXMId
+         i/mJFBoZgG5iX0+Ty304/YEGG/bI6o+zR78E2QiDTPiPddGMAjNZrwXdr2V0OkuorvLR
+         0G25Z69OIMq6gmkQMSGyuIXjAPrlCnEAoa1u9R4L+R/zs95PB5i92aLURxawFfHyedAd
+         QObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730567361; x=1731172161;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=niemCpBaWtNTD33HK4hY7EmVvjCf6wQeZoDXMitV7Gw=;
+        b=mxlCLTifUuKsr+/OsfIysqt9Llm7Ioq3hPqqUArDpjKdrrC4OygfZHoUq/+Y1vjxom
+         tkP7cBOP2vAEszZhivmlqUhmrf+CRCJj/wEVqgUGGL/g8keG8wprPuhQ94tneUPuNdz5
+         dHyo7sblZLRxQ7PtUIJKmcRvThA53a55Wr5yDQuyYNwagBGf7guTemNIt0dTzCaV3IH5
+         EPnMyBlptwLVedrHNZe0jAnvXoTw8oCMCxaxFEXRSpo9F/aKRjsmFvE3CUPzyhE97d/7
+         41dG+NACZn/s8G7qNP9xY0Di2MSuch7/EZNPFD7nkjlhc+GzmxDzRzCq2mJV6n5udKhC
+         ca7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWcfbQ02yXJY1pK5/etguMUe2m7HhN8O2ZtumWCQGB7LxV2upnMJpJZJqsPoeVqcHTNdaJ9PytQ4Vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuR74rIIUQE+KVTJlo5gaZyNkXIUcZI5PXmqAzDEw5dg+Y3ysL
+	SinZuQ/P2QNFsnpvo3fcqHPq4YurIvYO+PcFoRDq8kOssRox4RtFEYNxYzNQTA==
+X-Google-Smtp-Source: AGHT+IE57YiawuzlnoPc/P8d7TUPT1NkGH0WXOgqoMFowdmCtN7jxWsbHJCr+a/Z5Z8OOuUwKEUShw==
+X-Received: by 2002:a17:902:e810:b0:210:e8b7:58c5 with SMTP id d9443c01a7336-210f76ff16fmr219810025ad.56.1730567361173;
+        Sat, 02 Nov 2024 10:09:21 -0700 (PDT)
+Received: from thinkpad ([220.158.156.209])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211056ed8efsm35882265ad.55.2024.11.02.10.09.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2024 10:09:20 -0700 (PDT)
+Date: Sat, 2 Nov 2024 22:39:08 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus
+ address to dynamic bridge nodes
+Message-ID: <20241102170908.fa5n6pz5ldxb66zk@thinkpad>
+References: <cover.1730123575.git.andrea.porta@suse.com>
+ <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>, Lukas Wunner <lukas@wunner.de>,
- linux-pci <linux-pci@vger.kernel.org>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>, kernel-list@raspberrypi.com
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: pcie_bwctrl fails to probe on Rpi 4 (linux-next-20241101)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Um/oWJLBebFe/k7pMcRumtOLH+wxRFMab0wEOJT1mBJf1UrRCkS
- Curs1cFiA8IFerU6XBmFxRCRIR5nlfo7o/iD+rCFXY58dGEFybUN4NjWft+YYkmKGjyvFYm
- OfvkGao/Y2qOAcu46SBssH6u923a4hO9W+bqIGsM1Z3dPToLvrOxGhgFKg8vHUKBSAp9yHd
- lljm4zvFlhEdpn0LlWV8A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:s5AIksf9fKo=;7fd/H3NLb69QkzxqFO+TWUEjJLN
- TA/APhNIJ203Fl4dZpDwpx/5zc0ZFqTrYDs/RTVS8BIuAQPOrbYd9ZfTdjTGruRrK1Wii0ddm
- 4w5JI88WnnGXpN18ftJazb08xqCxgyajBWVpmgzGSi4njyh6h6eqewMd5nN4fGZLNRugFyvUs
- g20UlM+G4qjeOhzR7vsICScDYvHahpM2FnpJgrm8iFblwNwOUJlM+EG4xL/nix8js3QldlI8h
- RQBWCSqs/jV8cGS6rLFPLGYVlJ2fKYhkEGjYnXg8bTgSwChfgwt9GVMcK5k1M67LJR8tsOt9U
- Tj1MOgvGYKPnYFc23QJ6DydM41kg3v54vQnI7go4qV5ErbpYltTzWfaknZtmVE66OXjv4CepM
- 8JE2mvl+e7rpflAb8mnUHC1A07JY0jf9AB5OMVNhQK/lbEOtLT7bCceq08lhxPV2SQH0YaU0x
- dRpZxADKa83iz43b2/WU3DCUNncBHoGigWKXlh9FAQAuxx8yniDbKvtIRY2uuf3Z8OEcyr+98
- AxBILtuU3EwQi74NZCPFvnHlRO27ed88OTC198H0xMz8X9ML2v4s/KMhaBSdtlop0rtJ6eXpC
- 4YU4yTgitR0EDDf5sufnyPszK1JjZz5JNtDKOHzR/cD6JGD1wqai9LOjIyxkBKSq33+eMy4Vy
- 6LnWebEnqYUHT5kWiKorQOskyaRfB0DpPzBB7XwscN3WvPXS5aMg6+n7OB4lq9DmeW+2yhBKk
- jOvzfTkBwZR8B+rux1HjU53LCpZD76AwnJN+qJEwd4BY+Nrd7FQIK2wIzP/6wMOb+AxiAr9F1
- g8Dc19Zue/8XqF0br5QFp50g==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
 
-Hi,
-I tested linux-next-20241101 with the Raspberry Pi 4 (8 GB RAM,
-arm64/defconfig) and during boot the driver pcie_bwctrl fails to probe.
-Since this driver is very new, I assume this never worked before:
+On Mon, Oct 28, 2024 at 03:07:22PM +0100, Andrea della Porta wrote:
+> When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
+> incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
+> bridge, the window should instead be in PCI address space. Call
+> pci_bus_address() on the resource in order to obtain the PCI bus
+> address.
+> 
 
-[=C2=A0=C2=A0=C2=A0 6.843802] brcm-pcie fd500000.pcie: host bridge /scb/pc=
-ie@7d500000
-ranges:
-[=C2=A0=C2=A0=C2=A0 6.843851] brcm-pcie fd500000.pcie:=C2=A0=C2=A0 No bus =
-range found for
-/scb/pcie@7d500000, using [bus 00-ff]
-[=C2=A0=C2=A0=C2=A0 6.843900] brcm-pcie fd500000.pcie:=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 MEM
-0x0600000000..0x0603ffffff -> 0x00f8000000
-[=C2=A0=C2=A0=C2=A0 6.843940] brcm-pcie fd500000.pcie:=C2=A0=C2=A0 IB MEM
-0x0000000000..0x00bfffffff -> 0x0400000000
-[=C2=A0=C2=A0=C2=A0 6.859915] vchiq: module is from the staging directory,=
- the quality
-is unknown, you have been warned.
-[=C2=A0=C2=A0=C2=A0 6.885670] brcm-pcie fd500000.pcie: PCI host bridge to =
-bus 0000:00
-[=C2=A0=C2=A0=C2=A0 6.885704] pci_bus 0000:00: root bus resource [bus 00-f=
-f]
-[=C2=A0=C2=A0=C2=A0 6.885725] pci_bus 0000:00: root bus resource [mem
-0x600000000-0x603ffffff] (bus address [0xf8000000-0xfbffffff])
-[=C2=A0=C2=A0=C2=A0 6.885823] pci 0000:00:00.0: [14e4:2711] type 01 class =
-0x060400 PCIe
-Root Port
-[=C2=A0=C2=A0=C2=A0 6.885858] pci 0000:00:00.0: PCI bridge to [bus 01]
-[=C2=A0=C2=A0=C2=A0 6.885876] pci 0000:00:00.0:=C2=A0=C2=A0 bridge window =
-[mem
-0x600000000-0x6000fffff]
-[=C2=A0=C2=A0=C2=A0 6.885954] pci 0000:00:00.0: PME# supported from D0 D3h=
-ot
-[=C2=A0=C2=A0=C2=A0 6.909911] pci_bus 0000:01: supply vpcie3v3 not found, =
-using dummy
-regulator
-[=C2=A0=C2=A0=C2=A0 6.910159] pci_bus 0000:01: supply vpcie3v3aux not foun=
-d, using
-dummy regulator
-[=C2=A0=C2=A0=C2=A0 6.910251] pci_bus 0000:01: supply vpcie12v not found, =
-using dummy
-regulator
-[=C2=A0=C2=A0=C2=A0 6.922254] mmc1: new high speed SDIO card at address 00=
-01
-[=C2=A0=C2=A0=C2=A0 7.013175] brcm-pcie fd500000.pcie: clkreq-mode set to =
-default
-[=C2=A0=C2=A0=C2=A0 7.015309] brcm-pcie fd500000.pcie: link up, 5.0 GT/s P=
-CIe x1 (SSC)
-[=C2=A0=C2=A0=C2=A0 7.015526] pci 0000:01:00.0: [1106:3483] type 00 class =
-0x0c0330 PCIe
-Endpoint
-[=C2=A0=C2=A0=C2=A0 7.015626] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00=
-000fff 64bit]
-[=C2=A0=C2=A0=C2=A0 7.015954] pci 0000:01:00.0: PME# supported from D0 D3h=
-ot
-[=C2=A0=C2=A0=C2=A0 7.062153] pci 0000:00:00.0: bridge window [mem
-0x600000000-0x6000fffff]: assigned
-[=C2=A0=C2=A0=C2=A0 7.062191] pci 0000:01:00.0: BAR 0 [mem 0x600000000-0x6=
-00000fff
-64bit]: assigned
-[=C2=A0=C2=A0=C2=A0 7.062221] pci 0000:00:00.0: PCI bridge to [bus 01]
-[=C2=A0=C2=A0=C2=A0 7.062237] pci 0000:00:00.0:=C2=A0=C2=A0 bridge window =
-[mem
-0x600000000-0x6000fffff]
-[=C2=A0=C2=A0=C2=A0 7.062255] pci_bus 0000:00: resource 4 [mem 0x600000000=
--0x603ffffff]
-[=C2=A0=C2=A0=C2=A0 7.062269] pci_bus 0000:01: resource 1 [mem 0x600000000=
--0x6000fffff]
-[=C2=A0=C2=A0=C2=A0 7.062590] pcieport 0000:00:00.0: enabling device (0000=
- -> 0002)
-[=C2=A0=C2=A0=C2=A0 7.062812] pcieport 0000:00:00.0: PME: Signaling with I=
-RQ 39
-[=C2=A0=C2=A0=C2=A0 7.072890] pcieport 0000:00:00.0: AER: enabled with IRQ=
- 39
-[=C2=A0=C2=A0=C2=A0 7.091767] v3d fec00000.gpu: [drm] Using Transparent Hu=
-gepages
-[=C2=A0=C2=A0=C2=A0 7.124274] genirq: Flags mismatch irq 39. 00002084 (PCI=
-e bwctrl) vs.
-00200084 (PCIe PME)
-[=C2=A0=C2=A0=C2=A0 7.124391] pcie_bwctrl 0000:00:00.0:pcie010: probe with=
- driver
-pcie_bwctrl failed with error -16
+of_pci_prop_ranges() could be called for PCI devices also (not just PCI
+bridges), right?
+
+- Mani
+
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  drivers/pci/of_property.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+> index 5a0b98e69795..886c236e5de6 100644
+> --- a/drivers/pci/of_property.c
+> +++ b/drivers/pci/of_property.c
+> @@ -126,7 +126,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
+>  		if (of_pci_get_addr_flags(&res[j], &flags))
+>  			continue;
+>  
+> -		val64 = res[j].start;
+> +		val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
+>  		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
+>  				   false);
+>  		if (pci_is_bridge(pdev)) {
+> -- 
+> 2.35.3
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
