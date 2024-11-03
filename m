@@ -1,295 +1,294 @@
-Return-Path: <linux-pci+bounces-15864-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15865-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 468249BA3ED
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 05:27:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3F5B9BA43E
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 07:16:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 639CC1C20748
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 04:27:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93FB9281D17
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 06:16:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D23445009;
-	Sun,  3 Nov 2024 04:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03834138490;
+	Sun,  3 Nov 2024 06:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gsJdRfMu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vjKdNDW4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D03F50F
-	for <linux-pci@vger.kernel.org>; Sun,  3 Nov 2024 04:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01B35695;
+	Sun,  3 Nov 2024 06:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730608035; cv=none; b=O/HeAQHAklFW+XFlQNV8ewxqkUFgMkfa8BKGNTT7F+4t/GpCHNTl8XcUut0fp2Jlr6xoDXmswys4Lp0RmJvZyLWSwANavgjkvVLwuukfiyqeXU8DqeMMW1WRNGOsDSYAzpOwQMCpib1kQEavnEYUbSmxoaa17SETVWjI4ZzRsA0=
+	t=1730614585; cv=none; b=Gt4Bau4WKNsO1VgqTZrDdyp6JUhpFi31WTyWt0CY6Ukp8/O+voFTHpM766faMmri1VSP5roYS1fxaNKTaT8FvqxcxVrlwg/+dxtrCLeOQM+UPfJA7lokqKLvxwv3XHlzpn3nV3ZQWAQIgYJOEK7KLTT3ey3uXUYa/B8eZzP6ypY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730608035; c=relaxed/simple;
-	bh=UGIr+gDieidpd1gubdIIqX0HrsfDDFVJdnInwcwfasw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hwV+3QkD8z6vK65q14IXfWzFeZePwF6ltGIcoqj9tp/7+44OFUQ6vfLj2kQKB+ynTUYoJs44P4diQDFxyXBUC+T5LjztOGeAnzqPlxFBzaX9GYVTbHjmOFKhzro6/mn0hruQmvfUxKyOy/tPLV37jdb90W8WvLWaHW3VI5PIcHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gsJdRfMu; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730608033; x=1762144033;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=UGIr+gDieidpd1gubdIIqX0HrsfDDFVJdnInwcwfasw=;
-  b=gsJdRfMuLywKI3vbHAbhgp8TfC4cNwAEW5BGbayy39cJlAXKw4QPcJ9f
-   qPt8dy3iVxNciv7N18Oap65tsBKPBkjYkoNct/kKcdiGFkbw8U8pKewSj
-   KF6bDYZBLMS+2GjU1dV6Cv/TLI2HjWgp9RcuYbpBnZFXVU4ny5KJzD3zT
-   Xsq61YGv4+KJeF4xKKZM6I7QY840CAia4MTMbVwrTHj062ubXrUnTVzrz
-   zUt/uwXW3Pz2tcy7n/sddUPgj7vP/X7s56mry0l4jPgKwT/bc9Icea1qi
-   Q7I6jYFtrw6egsTc+sEnvFh1VX7R/ldIDLgUvtw5a/eu2mxf0RICjE7Dm
-   Q==;
-X-CSE-ConnectionGUID: ZbMmrMkPQNaaNDbOOFCRVg==
-X-CSE-MsgGUID: dYA5AjDRQ4alhKI3T2Vo2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30281309"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30281309"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2024 21:27:12 -0700
-X-CSE-ConnectionGUID: CytO3iHPRV+UsVw62j8meQ==
-X-CSE-MsgGUID: UtadOs7XRtq26g7Q2x5tww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,254,1725346800"; 
-   d="scan'208";a="87258492"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 02 Nov 2024 21:27:11 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t7SCj-000jgj-1S;
-	Sun, 03 Nov 2024 04:27:09 +0000
-Date: Sun, 03 Nov 2024 12:26:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/qcom] BUILD SUCCESS
- ba4a2e2317b9faeca9193ed6d3193ddc3cf2aba3
-Message-ID: <202411031204.XOCg9gBM-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1730614585; c=relaxed/simple;
+	bh=X9o0eh7UIy5jiV5ZvNHOGYg1gpHiYb7fTqhaoZ8vVvU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Vnz0YoFlLO9yTZZXXcNzWqvBHlc2sJ8Oc8fz2EqmTfmFu6OU3TBMtMjtF8+B0LsfTQ9B8N38msb2le5m8UTmnhGOEd8aiSAL/UQCetiAkbgVGze8+hRx1gA00pTvCvKPur4hVfmvEfl0SSzaXjFvicdZBu+i+ok16lF4xqZ28eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vjKdNDW4; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4A36G5KK043083;
+	Sun, 3 Nov 2024 01:16:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1730614565;
+	bh=NYgEDruINISZGBX4Cd/tmdAf48brbc9RaFngJbqVRpo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vjKdNDW4H4csRBs5v/BeVjhF9h0DOHS8283o3D2szP1vy4rsEwr+y8auPAJVTJg0j
+	 uK6YW2xTixt7JzkDh1D655X6dpEmZefoCtHRRI9krRsLW1Or+kXbbM0HbZSE43DVbx
+	 IfWGDaKUXB0Y9ZjqXButh15PRr/W8el9SWVp2RbI=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4A36G5u7129759
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 3 Nov 2024 01:16:05 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 3
+ Nov 2024 01:16:04 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 3 Nov 2024 01:16:04 -0500
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A36Fxkc090807;
+	Sun, 3 Nov 2024 01:16:00 -0500
+Message-ID: <3d7abd75-68a2-4232-ad8c-e874c10df1ae@ti.com>
+Date: Sun, 3 Nov 2024 11:45:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/7] PCI: keystone: Add support for PVU-based DMA
+ isolation on AM654
+To: Jan Kiszka <jan.kiszka@siemens.com>, Nishanth Menon <nm@ti.com>,
+        Santosh
+ Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <kristo@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Bao Cheng Su
+	<baocheng.su@siemens.com>,
+        Hua Qian Li <huaqian.li@siemens.com>,
+        Diogo Ivo
+	<diogo.ivo@siemens.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas
+	<bhelgaas@google.com>
+References: <cover.1725901439.git.jan.kiszka@siemens.com>
+ <f6ea60ec075e981a9b587b42baec33649e3f3918.1725901439.git.jan.kiszka@siemens.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <f6ea60ec075e981a9b587b42baec33649e3f3918.1725901439.git.jan.kiszka@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
-branch HEAD: ba4a2e2317b9faeca9193ed6d3193ddc3cf2aba3  PCI: qcom: Enable MSI interrupts together with Link up if 'Global IRQ' is supported
 
-elapsed time: 729m
 
-configs tested: 200
-configs skipped: 7
+On 09/09/24 22:33, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
+> from untrusted PCI devices to selected memory regions this way. Use
+> static PVU-based protection instead. The PVU, when enabled, will only
+> accept DMA requests that address previously configured regions.
+> 
+> Use the availability of a restricted-dma-pool memory region as trigger
+> and register it as valid DMA target with the PVU. In addition, enable
+> the mapping of requester IDs to VirtIDs in the PCI RC. Use only a single
+> VirtID so far, catching all devices. This may be extended later on.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> CC: "Krzysztof Wilczyński" <kw@linux.com>
+> CC: Bjorn Helgaas <bhelgaas@google.com>
+> CC: linux-pci@vger.kernel.org
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c | 108 ++++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 2219b1a866fa..a5954cae6d5d 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/msi.h>
+>  #include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/phy/phy.h>
+> @@ -26,6 +27,7 @@
+>  #include <linux/regmap.h>
+>  #include <linux/resource.h>
+>  #include <linux/signal.h>
+> +#include <linux/ti-pvu.h>
+>  
+>  #include "../../pci.h"
+>  #include "pcie-designware.h"
+> @@ -111,6 +113,16 @@
+>  
+>  #define PCI_DEVICE_ID_TI_AM654X		0xb00c
+>  
+> +#define KS_PCI_VIRTID			0
+> +
+> +#define PCIE_VMAP_xP_CTRL		0x0
+> +#define PCIE_VMAP_xP_REQID		0x4
+> +#define PCIE_VMAP_xP_VIRTID		0x8
+> +
+> +#define PCIE_VMAP_xP_CTRL_EN		BIT(0)
+> +
+> +#define PCIE_VMAP_xP_VIRTID_VID_MASK	0xfff
+> +
+>  struct ks_pcie_of_data {
+>  	enum dw_pcie_device_mode mode;
+>  	const struct dw_pcie_host_ops *host_ops;
+> @@ -1125,6 +1137,96 @@ static const struct of_device_id ks_pcie_of_match[] = {
+>  	{ },
+>  };
+>  
+> +#ifdef CONFIG_TI_PVU
+> +static int ks_init_vmap(struct platform_device *pdev, const char *vmap_name)
+> +{
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	u32 val;
+> +
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Nit:
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arc                   randconfig-001-20241103    gcc-14.1.0
-arc                   randconfig-002-20241103    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                         assabet_defconfig    gcc-14.1.0
-arm                         bcm2835_defconfig    gcc-14.1.0
-arm                     davinci_all_defconfig    gcc-14.1.0
-arm                                 defconfig    gcc-14.1.0
-arm                         lpc32xx_defconfig    gcc-14.1.0
-arm                   milbeaut_m10v_defconfig    gcc-14.1.0
-arm                        multi_v5_defconfig    gcc-14.1.0
-arm                       netwinder_defconfig    gcc-14.1.0
-arm                          pxa168_defconfig    gcc-14.1.0
-arm                   randconfig-001-20241103    gcc-14.1.0
-arm                   randconfig-002-20241103    gcc-14.1.0
-arm                   randconfig-003-20241103    gcc-14.1.0
-arm                   randconfig-004-20241103    gcc-14.1.0
-arm                         s3c6400_defconfig    gcc-14.1.0
-arm                        spear6xx_defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-arm64                 randconfig-001-20241103    gcc-14.1.0
-arm64                 randconfig-002-20241103    gcc-14.1.0
-arm64                 randconfig-003-20241103    gcc-14.1.0
-arm64                 randconfig-004-20241103    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-csky                  randconfig-001-20241103    gcc-14.1.0
-csky                  randconfig-002-20241103    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-hexagon               randconfig-001-20241103    gcc-14.1.0
-hexagon               randconfig-002-20241103    gcc-14.1.0
-i386                             allmodconfig    clang-19
-i386                              allnoconfig    clang-19
-i386                             allyesconfig    clang-19
-i386        buildonly-randconfig-001-20241103    clang-19
-i386        buildonly-randconfig-002-20241103    clang-19
-i386        buildonly-randconfig-003-20241103    clang-19
-i386        buildonly-randconfig-004-20241103    clang-19
-i386        buildonly-randconfig-005-20241103    clang-19
-i386        buildonly-randconfig-006-20241103    clang-19
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241103    clang-19
-i386                  randconfig-002-20241103    clang-19
-i386                  randconfig-003-20241103    clang-19
-i386                  randconfig-004-20241103    clang-19
-i386                  randconfig-005-20241103    clang-19
-i386                  randconfig-006-20241103    clang-19
-i386                  randconfig-011-20241103    clang-19
-i386                  randconfig-012-20241103    clang-19
-i386                  randconfig-013-20241103    clang-19
-i386                  randconfig-014-20241103    clang-19
-i386                  randconfig-015-20241103    clang-19
-i386                  randconfig-016-20241103    clang-19
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-loongarch             randconfig-001-20241103    gcc-14.1.0
-loongarch             randconfig-002-20241103    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                       bvme6000_defconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                          hp300_defconfig    gcc-14.1.0
-m68k                            mac_defconfig    gcc-14.1.0
-m68k                           virt_defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                          ath25_defconfig    gcc-14.1.0
-mips                  cavium_octeon_defconfig    gcc-14.1.0
-mips                          eyeq5_defconfig    gcc-14.1.0
-mips                           gcw0_defconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-nios2                 randconfig-001-20241103    gcc-14.1.0
-nios2                 randconfig-002-20241103    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-openrisc                 simple_smp_defconfig    gcc-14.1.0
-openrisc                       virt_defconfig    gcc-14.1.0
-parisc                           alldefconfig    gcc-14.1.0
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20241103    gcc-14.1.0
-parisc                randconfig-002-20241103    gcc-14.1.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                          g5_defconfig    gcc-14.1.0
-powerpc                    gamecube_defconfig    gcc-14.1.0
-powerpc                   motionpro_defconfig    gcc-14.1.0
-powerpc                      pasemi_defconfig    gcc-14.1.0
-powerpc                      pmac32_defconfig    gcc-14.1.0
-powerpc                       ppc64_defconfig    gcc-14.1.0
-powerpc                      ppc6xx_defconfig    gcc-14.1.0
-powerpc               randconfig-001-20241103    gcc-14.1.0
-powerpc               randconfig-002-20241103    gcc-14.1.0
-powerpc               randconfig-003-20241103    gcc-14.1.0
-powerpc                     redwood_defconfig    gcc-14.1.0
-powerpc                     tqm8541_defconfig    gcc-14.1.0
-powerpc                 xes_mpc85xx_defconfig    gcc-14.1.0
-powerpc64                        alldefconfig    gcc-14.1.0
-powerpc64             randconfig-001-20241103    gcc-14.1.0
-powerpc64             randconfig-002-20241103    gcc-14.1.0
-powerpc64             randconfig-003-20241103    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-riscv             nommu_k210_sdcard_defconfig    gcc-14.1.0
-riscv                 randconfig-001-20241103    gcc-14.1.0
-riscv                 randconfig-002-20241103    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20241103    gcc-14.1.0
-s390                  randconfig-002-20241103    gcc-14.1.0
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                ecovec24-romimage_defconfig    gcc-14.1.0
-sh                    randconfig-001-20241103    gcc-14.1.0
-sh                    randconfig-002-20241103    gcc-14.1.0
-sh                          rsk7269_defconfig    gcc-14.1.0
-sh                           se7705_defconfig    gcc-14.1.0
-sh                     sh7710voipgw_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20241103    gcc-14.1.0
-sparc64               randconfig-002-20241103    gcc-14.1.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                             i386_defconfig    gcc-14.1.0
-um                    randconfig-001-20241103    gcc-14.1.0
-um                    randconfig-002-20241103    gcc-14.1.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20241103    clang-19
-x86_64      buildonly-randconfig-002-20241103    clang-19
-x86_64      buildonly-randconfig-003-20241103    clang-19
-x86_64      buildonly-randconfig-004-20241103    clang-19
-x86_64      buildonly-randconfig-005-20241103    clang-19
-x86_64      buildonly-randconfig-006-20241103    clang-19
-x86_64                              defconfig    clang-19
-x86_64                                  kexec    clang-19
-x86_64                randconfig-001-20241103    clang-19
-x86_64                randconfig-002-20241103    clang-19
-x86_64                randconfig-003-20241103    clang-19
-x86_64                randconfig-004-20241103    clang-19
-x86_64                randconfig-005-20241103    clang-19
-x86_64                randconfig-006-20241103    clang-19
-x86_64                randconfig-011-20241103    clang-19
-x86_64                randconfig-012-20241103    clang-19
-x86_64                randconfig-013-20241103    clang-19
-x86_64                randconfig-014-20241103    clang-19
-x86_64                randconfig-015-20241103    clang-19
-x86_64                randconfig-016-20241103    clang-19
-x86_64                randconfig-071-20241103    clang-19
-x86_64                randconfig-072-20241103    clang-19
-x86_64                randconfig-073-20241103    clang-19
-x86_64                randconfig-074-20241103    clang-19
-x86_64                randconfig-075-20241103    clang-19
-x86_64                randconfig-076-20241103    clang-19
-x86_64                               rhel-8.3    gcc-12
-x86_64                           rhel-8.3-bpf    clang-19
-x86_64                         rhel-8.3-kunit    clang-19
-x86_64                           rhel-8.3-ltp    clang-19
-x86_64                          rhel-8.3-rust    clang-19
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                  cadence_csp_defconfig    gcc-14.1.0
-xtensa                randconfig-001-20241103    gcc-14.1.0
-xtensa                randconfig-002-20241103    gcc-14.1.0
-xtensa                    smp_lx200_defconfig    gcc-14.1.0
-xtensa                    xip_kc705_defconfig    gcc-14.1.0
+	if (!IS_ENABLED(CONFIG_TI_PVU))
+		return 0;
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+this looks cleaner than #ifdef.. #else..#endif .
+
+
+Rest LGTM
+
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, vmap_name);
+> +	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	writel(0, base + PCIE_VMAP_xP_REQID);
+> +
+> +	val = readl(base + PCIE_VMAP_xP_VIRTID);
+> +	val &= ~PCIE_VMAP_xP_VIRTID_VID_MASK;
+> +	val |= KS_PCI_VIRTID;
+> +	writel(val, base + PCIE_VMAP_xP_VIRTID);
+> +
+> +	val = readl(base + PCIE_VMAP_xP_CTRL);
+> +	val |= PCIE_VMAP_xP_CTRL_EN;
+> +	writel(val, base + PCIE_VMAP_xP_CTRL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ks_init_restricted_dma(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct of_phandle_iterator it;
+> +	struct resource phys;
+> +	int err;
+> +
+> +	/* Only process the first restricted dma pool, more are not allowed */
+> +	of_for_each_phandle(&it, err, dev->of_node, "memory-region",
+> +			    NULL, 0) {
+> +		if (of_device_is_compatible(it.node, "restricted-dma-pool"))
+> +			break;
+> +	}
+> +	if (err)
+> +		return err == -ENOENT ? 0 : err;
+> +
+> +	err = of_address_to_resource(it.node, 0, &phys);
+> +	if (err < 0) {
+> +		dev_err(dev, "failed to parse memory region %pOF: %d\n",
+> +			it.node, err);
+> +		return 0;
+> +	}
+> +
+> +	/* Map all incoming requests on low and high prio port to virtID 0 */
+> +	err = ks_init_vmap(pdev, "vmap_lp");
+> +	if (err)
+> +		return err;
+> +	err = ks_init_vmap(pdev, "vmap_hp");
+> +	if (err)
+> +		return err;
+> +
+> +	/*
+> +	 * Enforce DMA pool usage with the help of the PVU.
+> +	 * Any request outside will be dropped and raise an error at the PVU.
+> +	 */
+> +	return ti_pvu_create_region(KS_PCI_VIRTID, &phys);
+> +}
+> +
+> +static void ks_release_restricted_dma(struct platform_device *pdev)
+> +{
+> +	struct of_phandle_iterator it;
+> +	struct resource phys;
+> +	int err;
+> +
+> +	of_for_each_phandle(&it, err, pdev->dev.of_node, "memory-region",
+> +			    NULL, 0) {
+> +		if (of_device_is_compatible(it.node, "restricted-dma-pool") &&
+> +		    of_address_to_resource(it.node, 0, &phys) == 0) {
+> +			ti_pvu_remove_region(KS_PCI_VIRTID, &phys);
+> +			break;
+> +		}
+> +	}
+> +}
+> +#else
+> +static inline int ks_init_restricted_dma(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void ks_release_restricted_dma(struct platform_device *pdev)
+> +{
+> +}
+> +#endif
+> +
+>  static int ks_pcie_probe(struct platform_device *pdev)
+>  {
+>  	const struct dw_pcie_host_ops *host_ops;
+> @@ -1273,6 +1375,10 @@ static int ks_pcie_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		goto err_get_sync;
+>  
+> +	ret = ks_init_restricted_dma(pdev);
+> +	if (ret < 0)
+> +		goto err_get_sync;
+> +
+>  	switch (mode) {
+>  	case DW_PCIE_RC_TYPE:
+>  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_HOST)) {
+> @@ -1354,6 +1460,8 @@ static void ks_pcie_remove(struct platform_device *pdev)
+>  	int num_lanes = ks_pcie->num_lanes;
+>  	struct device *dev = &pdev->dev;
+>  
+> +	ks_release_restricted_dma(pdev);
+> +
+>  	pm_runtime_put(dev);
+>  	pm_runtime_disable(dev);
+>  	ks_pcie_disable_phy(ks_pcie);
+
+-- 
+Regards
+Vignesh
 
