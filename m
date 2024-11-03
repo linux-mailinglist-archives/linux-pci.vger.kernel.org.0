@@ -1,294 +1,172 @@
-Return-Path: <linux-pci+bounces-15865-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15866-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3F5B9BA43E
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 07:16:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F49D9BA442
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 07:23:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93FB9281D17
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 06:16:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE787B21202
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 06:23:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03834138490;
-	Sun,  3 Nov 2024 06:16:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 265B514F12C;
+	Sun,  3 Nov 2024 06:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vjKdNDW4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xuJG6UZ8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01B35695;
-	Sun,  3 Nov 2024 06:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C809143C4C
+	for <linux-pci@vger.kernel.org>; Sun,  3 Nov 2024 06:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730614585; cv=none; b=Gt4Bau4WKNsO1VgqTZrDdyp6JUhpFi31WTyWt0CY6Ukp8/O+voFTHpM766faMmri1VSP5roYS1fxaNKTaT8FvqxcxVrlwg/+dxtrCLeOQM+UPfJA7lokqKLvxwv3XHlzpn3nV3ZQWAQIgYJOEK7KLTT3ey3uXUYa/B8eZzP6ypY=
+	t=1730614998; cv=none; b=ReHZXW3acrqItiffSQ4Uu9JsghLAErVkSCXAPpxKX08S/Lc0dwClqZbhBRTKYv8JpBw7KiNqPba1v8kepd79bIchD3F/dsJmibaKS9yoMXfhG9lKDIv2hdqmtRmQJTvj5alQ7DLKLD5ojNrbn3qxzQ+SXO8ntWDSPAwRO4y304k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730614585; c=relaxed/simple;
-	bh=X9o0eh7UIy5jiV5ZvNHOGYg1gpHiYb7fTqhaoZ8vVvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Vnz0YoFlLO9yTZZXXcNzWqvBHlc2sJ8Oc8fz2EqmTfmFu6OU3TBMtMjtF8+B0LsfTQ9B8N38msb2le5m8UTmnhGOEd8aiSAL/UQCetiAkbgVGze8+hRx1gA00pTvCvKPur4hVfmvEfl0SSzaXjFvicdZBu+i+ok16lF4xqZ28eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vjKdNDW4; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4A36G5KK043083;
-	Sun, 3 Nov 2024 01:16:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1730614565;
-	bh=NYgEDruINISZGBX4Cd/tmdAf48brbc9RaFngJbqVRpo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=vjKdNDW4H4csRBs5v/BeVjhF9h0DOHS8283o3D2szP1vy4rsEwr+y8auPAJVTJg0j
-	 uK6YW2xTixt7JzkDh1D655X6dpEmZefoCtHRRI9krRsLW1Or+kXbbM0HbZSE43DVbx
-	 IfWGDaKUXB0Y9ZjqXButh15PRr/W8el9SWVp2RbI=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4A36G5u7129759
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 3 Nov 2024 01:16:05 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 3
- Nov 2024 01:16:04 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 3 Nov 2024 01:16:04 -0500
-Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A36Fxkc090807;
-	Sun, 3 Nov 2024 01:16:00 -0500
-Message-ID: <3d7abd75-68a2-4232-ad8c-e874c10df1ae@ti.com>
-Date: Sun, 3 Nov 2024 11:45:58 +0530
+	s=arc-20240116; t=1730614998; c=relaxed/simple;
+	bh=Q56+5QNfRtOM8EEn8fU4O4IQMvKqEAw92GjD4833tHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cWVEGLREr/QZ8k0f/aOhdH8pSEo0Y8rTiJQxOMBG0AOmtXG9gQ0ltoN3vhLtXlfsATEWK93NPo3j/MFburTVF19MRb3Qe02KjF9ZsK81Ojva6fn8p64/4c2RaW7KrRlou2JTizFZWm4Puq/t/EtjGpitQVu2CeJbHtDBuFDdZA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xuJG6UZ8; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-71e4244fdc6so2528687b3a.0
+        for <linux-pci@vger.kernel.org>; Sat, 02 Nov 2024 23:23:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730614996; x=1731219796; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5Qhm+LitePBXQsySKsmg7fuQgH8MGcEsYsJ0eyWGhL0=;
+        b=xuJG6UZ8VtzxTVgERfs7qZZeGhHiw/U4eMd3IMpjkh7OLc7Qxtrwjg4Q7BfvvJHUAU
+         a4CLGpqnpq6OEcpQzlmNWF/6mgWTRyo4S9bx9lqvD7CehhjeA5s6yeK6SWeFQEx65FIx
+         aGlxTlHS2Q2wYuaafoHKjs5ksU99HnWjHg5jMKhamxqqKDRMDz4a5zHq2k3z6QNQHbWI
+         YgMiWKaAlZc3/jny2wmom32eAeEQK9q11ZyByGZpm1mvWIdTFd0uTBkGuHguhTsZ2Zif
+         zhBzAfYA6nMC3QJK11OgNS6O0Fe5U0M6hmHmKbzGvwSdBoMAjCynFQVE6ytTC+d5lIlS
+         Wjmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730614996; x=1731219796;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Qhm+LitePBXQsySKsmg7fuQgH8MGcEsYsJ0eyWGhL0=;
+        b=QAGMbbmBSvRycBX2nYihnWqZQZrP2vJud1weZXCvZNMiMRPntd+tIpIE2KyBrKYiFN
+         /e7/njwrsRG/IGsYrTHGvjiR/xM5NiWpM8qStVUqrs6gyaRIKI7AyfoUcB65tK51loKw
+         5nKnP6VjyfbPnd43bYGOtQ9YOp3bQ8Kcm7u2Fy8hIp59w0N7wz/XGXY5Ya9EFcRns5Vy
+         vp9kf4U5WjSA0qXHaEzCJsVcbOGXRmR95eoOq1Tsv9d29ZJAQ/27wviF82DMsEUpUzz8
+         Pq7yy4jaEbXEl1UNSc0ykGG/xXekEANjbRmvzT2VZBBvLp8kTJVk6I+6iq8zDLhyZtM6
+         E6yg==
+X-Forwarded-Encrypted: i=1; AJvYcCXt6kG7XZwqxOGftkFfGLLAjxZLR3rm6wPHLriv2nMXHpmnyzbAsb50zUmJMZiF591mG5Di7UT/rfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlS+d37NPlZ36DTe3KoZV//2ie0GZSfVznWR4iCmZ2vk7A2ajn
+	rQIlBYBuO0KmrClJJyyi6QKQo7d2XlLK2OGR+gP2mNfR17XNd9yAB7MgqH6srA==
+X-Google-Smtp-Source: AGHT+IG4AFUZuM3edwnngjVKBU1jcTHodIw4RW2EypyrkFK7ELfPVwTprbngwCPD9smyqFMmdBqcAQ==
+X-Received: by 2002:a05:6a20:d70b:b0:1d9:77c0:61c6 with SMTP id adf61e73a8af0-1dba50bad20mr13962806637.0.1730614995661;
+        Sat, 02 Nov 2024 23:23:15 -0700 (PDT)
+Received: from thinkpad ([220.158.156.209])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee455a4994sm4819369a12.43.2024.11.02.23.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2024 23:23:15 -0700 (PDT)
+Date: Sun, 3 Nov 2024 11:53:05 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	robin.murphy@arm.com, will@kernel.org
+Subject: Re: [PATCH v3 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
+ i.MX95
+Message-ID: <20241103062305.6cqftpv4bwneg2mo@thinkpad>
+References: <20241024-imx95_lut-v3-0-7509c9bbab86@nxp.com>
+ <20241024-imx95_lut-v3-2-7509c9bbab86@nxp.com>
+ <20241102114937.w7jt7n7zr3ext5jo@thinkpad>
+ <ZyZg1nlSPf5rvm8q@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/7] PCI: keystone: Add support for PVU-based DMA
- isolation on AM654
-To: Jan Kiszka <jan.kiszka@siemens.com>, Nishanth Menon <nm@ti.com>,
-        Santosh
- Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <kristo@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Bao Cheng Su
-	<baocheng.su@siemens.com>,
-        Hua Qian Li <huaqian.li@siemens.com>,
-        Diogo Ivo
-	<diogo.ivo@siemens.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas
-	<bhelgaas@google.com>
-References: <cover.1725901439.git.jan.kiszka@siemens.com>
- <f6ea60ec075e981a9b587b42baec33649e3f3918.1725901439.git.jan.kiszka@siemens.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <f6ea60ec075e981a9b587b42baec33649e3f3918.1725901439.git.jan.kiszka@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <ZyZg1nlSPf5rvm8q@lizhi-Precision-Tower-5810>
 
+On Sat, Nov 02, 2024 at 01:26:46PM -0400, Frank Li wrote:
 
+[...]
 
-On 09/09/24 22:33, Jan Kiszka wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
+> > > +
+> > > +	target = NULL;
+> > > +	err_i = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", &target, &sid_i);
+> > > +	target = NULL;
+> >
+> > What is the point in passing 'target' here?
 > 
-> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
-> from untrusted PCI devices to selected memory regions this way. Use
-> static PVU-based protection instead. The PVU, when enabled, will only
-> accept DMA requests that address previously configured regions.
+> See https://lore.kernel.org/imx/b479cad6-e0c5-48fb-bb8f-a70f7582cfd5@arm.com/
+> Marc Zyngier's comments:
 > 
-> Use the availability of a restricted-dma-pool memory region as trigger
-> and register it as valid DMA target with the PVU. In addition, enable
-> the mapping of requester IDs to VirtIDs in the PCI RC. Use only a single
-> VirtID so far, catching all devices. This may be extended later on.
+> "Perhaps it is reasonable to assume that i.MX95 will never have SMMU/ITS
+> mappings for low-numbered devices on bus 0, but in general this isn't
+> very robust, and either way it's certainly not all that clear at first
+> glance what assmuption is actually being made here. If it's significant
+> whether a mapping actually exists or not for the given ID then you
+> should really use the "target" argument of of_map_id() to determine that."
 > 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
-> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> CC: "Krzysztof Wilczyński" <kw@linux.com>
-> CC: Bjorn Helgaas <bhelgaas@google.com>
-> CC: linux-pci@vger.kernel.org
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 108 ++++++++++++++++++++++
->  1 file changed, 108 insertions(+)
+> See v4 https://lore.kernel.org/imx/20241101-imx95_lut-v4-2-0fdf9a2fe754@nxp.com/
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 2219b1a866fa..a5954cae6d5d 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -19,6 +19,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/msi.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_pci.h>
->  #include <linux/phy/phy.h>
-> @@ -26,6 +27,7 @@
->  #include <linux/regmap.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
-> +#include <linux/ti-pvu.h>
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> @@ -111,6 +113,16 @@
->  
->  #define PCI_DEVICE_ID_TI_AM654X		0xb00c
->  
-> +#define KS_PCI_VIRTID			0
-> +
-> +#define PCIE_VMAP_xP_CTRL		0x0
-> +#define PCIE_VMAP_xP_REQID		0x4
-> +#define PCIE_VMAP_xP_VIRTID		0x8
-> +
-> +#define PCIE_VMAP_xP_CTRL_EN		BIT(0)
-> +
-> +#define PCIE_VMAP_xP_VIRTID_VID_MASK	0xfff
-> +
->  struct ks_pcie_of_data {
->  	enum dw_pcie_device_mode mode;
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1125,6 +1137,96 @@ static const struct of_device_id ks_pcie_of_match[] = {
->  	{ },
->  };
->  
-> +#ifdef CONFIG_TI_PVU
-> +static int ks_init_vmap(struct platform_device *pdev, const char *vmap_name)
-> +{
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	u32 val;
-> +
 
-Nit:
+Okay, thanks! I was confused by the fact that you never used 'target' in this
+version. But v4 clears it up.
 
-	if (!IS_ENABLED(CONFIG_TI_PVU))
-		return 0;
+- Mani
 
-
-this looks cleaner than #ifdef.. #else..#endif .
-
-
-Rest LGTM
-
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, vmap_name);
-> +	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	writel(0, base + PCIE_VMAP_xP_REQID);
-> +
-> +	val = readl(base + PCIE_VMAP_xP_VIRTID);
-> +	val &= ~PCIE_VMAP_xP_VIRTID_VID_MASK;
-> +	val |= KS_PCI_VIRTID;
-> +	writel(val, base + PCIE_VMAP_xP_VIRTID);
-> +
-> +	val = readl(base + PCIE_VMAP_xP_CTRL);
-> +	val |= PCIE_VMAP_xP_CTRL_EN;
-> +	writel(val, base + PCIE_VMAP_xP_CTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ks_init_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct of_phandle_iterator it;
-> +	struct resource phys;
-> +	int err;
-> +
-> +	/* Only process the first restricted dma pool, more are not allowed */
-> +	of_for_each_phandle(&it, err, dev->of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (of_device_is_compatible(it.node, "restricted-dma-pool"))
-> +			break;
-> +	}
-> +	if (err)
-> +		return err == -ENOENT ? 0 : err;
-> +
-> +	err = of_address_to_resource(it.node, 0, &phys);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to parse memory region %pOF: %d\n",
-> +			it.node, err);
-> +		return 0;
-> +	}
-> +
-> +	/* Map all incoming requests on low and high prio port to virtID 0 */
-> +	err = ks_init_vmap(pdev, "vmap_lp");
-> +	if (err)
-> +		return err;
-> +	err = ks_init_vmap(pdev, "vmap_hp");
-> +	if (err)
-> +		return err;
+> +	target = NULL;
+> +	err_m = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", &target, &sid_m);
 > +
 > +	/*
-> +	 * Enforce DMA pool usage with the help of the PVU.
-> +	 * Any request outside will be dropped and raise an error at the PVU.
+> +	 * Return failure if msi-map exist and no entry for rid because dwc common
+> +	 * driver will skip setting up built-in MSI controller if msi-map existed.
+> +	 *
+> +	 *   err_m      target
+> +	 *	0	NULL		Return failure, function not work.
+> +	 *      !0      NULL		msi-map not exist, use built-in MSI.
+> +	 *	0	!NULL		Find one entry.
+> +	 *	!0	!NULL		Invalidate case.
 > +	 */
-> +	return ti_pvu_create_region(KS_PCI_VIRTID, &phys);
-> +}
-> +
-> +static void ks_release_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct of_phandle_iterator it;
-> +	struct resource phys;
-> +	int err;
-> +
-> +	of_for_each_phandle(&it, err, pdev->dev.of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (of_device_is_compatible(it.node, "restricted-dma-pool") &&
-> +		    of_address_to_resource(it.node, 0, &phys) == 0) {
-> +			ti_pvu_remove_region(KS_PCI_VIRTID, &phys);
-> +			break;
-> +		}
-> +	}
-> +}
-> +#else
-> +static inline int ks_init_restricted_dma(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void ks_release_restricted_dma(struct platform_device *pdev)
-> +{
-> +}
-> +#endif
-> +
->  static int ks_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1273,6 +1375,10 @@ static int ks_pcie_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		goto err_get_sync;
->  
-> +	ret = ks_init_restricted_dma(pdev);
-> +	if (ret < 0)
-> +		goto err_get_sync;
-> +
->  	switch (mode) {
->  	case DW_PCIE_RC_TYPE:
->  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_HOST)) {
-> @@ -1354,6 +1460,8 @@ static void ks_pcie_remove(struct platform_device *pdev)
->  	int num_lanes = ks_pcie->num_lanes;
->  	struct device *dev = &pdev->dev;
->  
-> +	ks_release_restricted_dma(pdev);
-> +
->  	pm_runtime_put(dev);
->  	pm_runtime_disable(dev);
->  	ks_pcie_disable_phy(ks_pcie);
+> 
+> 
+> >
+> > > +	err_m = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", &target, &sid_m);
+> > > +
+> > > +
+> > > +	/*
+> > > +	 * msi-map        iommu-map
+> > > +	 *   Y                Y            ITS + SMMU, require the same sid
+> > > +	 *   Y                N            ITS
+> > > +	 *   N                Y            DWC MSI Ctrl + SMMU
+> > > +	 *   N                N            DWC MSI Ctrl
+> > > +	 */
+> > > +	if (!err_i && !err_m)
+> > > +		if ((sid_i & IMX95_SID_MASK) != (sid_m & IMX95_SID_MASK)) {
+> > > +			dev_err(dev, "its and iommu stream id miss match, please check dts file\n");
+> >
+> > "iommu-map and msi-map entries mismatch!"
+> >
+> > - Mani
+> >
+> > --
+> > மணிவண்ணன் சதாசிவம்
 
 -- 
-Regards
-Vignesh
+மணிவண்ணன் சதாசிவம்
 
