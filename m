@@ -1,70 +1,74 @@
-Return-Path: <linux-pci+bounces-15887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C73219BA7FC
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 21:37:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D67B9BA7FF
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 21:40:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6747E1F2189E
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 20:37:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60C8C1C20C4F
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 20:40:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A399918BB84;
-	Sun,  3 Nov 2024 20:37:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527D418B478;
+	Sun,  3 Nov 2024 20:40:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DAC18B462;
-	Sun,  3 Nov 2024 20:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FD413CA81;
+	Sun,  3 Nov 2024 20:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730666239; cv=none; b=rErR2ZxyN91k+0LgjF3ZJCzBz4tExjyo9VN4T713Hk7xfgXlOefPZeYt1nkkT5SuBY0heavH4F5vki5BXiZyPan7xZ8Ip7mtiQymUR0BldAoWsI78bPPv9UxkCjJrXw2yIz2IcVLd00HEAv0/uYa3QOhVe3+cGey5C43Q2GXqqo=
+	t=1730666406; cv=none; b=iLPnPr6P9rWx1eehBiigMHoGyIIVSk3dggIsNJtIlK7Pn5qDhiZVaTdc3s1ykS0sukfv9dhRFYXLTTpn42nsbiwhl+kN4p1jc33qJwZAcIavCrqgRfB2v7Am2VQfiFeizSf29gdxE03sK+93ddlojbc/UF0MqABy7qZx5ldL35Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730666239; c=relaxed/simple;
-	bh=A9EOa4JBXmYSS3mlfar36oAEApc9f8pq693+5pqpFOY=;
+	s=arc-20240116; t=1730666406; c=relaxed/simple;
+	bh=GSarkLPmvDaBMltvi5Mhfo6hZhmOmxfUo6vNa4mMo98=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I5rZ4Z0GM4BN4bJDXnzNRB3NioTfG65v0OyrUgT0MMKJnNjSmDOoHLg0Rdo7fKtzWVnJJJELt41ppb1f3Hxw29fJjnxAwXS4XVYDzxhx4Da7vvE+gR6Ya77w4+04suNH/35FXVghPEx5+JRISyqp6MnJQB6KX8lvQclK/TiX8/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=P9Huc/y3bdYMXA4JRRUsKWFRKrfPtYILeGottTTjURV9JC5BXBpdcCH1lXqCOmaEvgyByUzw+uMkrYWaiAezeIpfJJtVboHy37e66IiWaVohTY4vWvyGo5Kd7I86ivgv7nUfb8CrkrfLSlo4w7QXdT2NSbw0TEv0C/BrRXxPuPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e3d523a24dso2728199a91.0;
-        Sun, 03 Nov 2024 12:37:17 -0800 (PST)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-720aa3dbda5so2582109b3a.1;
+        Sun, 03 Nov 2024 12:40:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730666237; x=1731271037;
+        d=1e100.net; s=20230601; t=1730666404; x=1731271204;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8ap+wpMERUFPUBtGPkZlL7XELI5aXcin9wACcBysLF4=;
-        b=Y7J6dI8hkBXCaaw/9p9AAtoOSsBCUaiXGvTl4dGL7gPAP6PLhWYTQMP2WD7h7U9HUd
-         MxUZ8/aZVNvRh48guIPgTL+nwMQIxLv/1890A4QWHoaFtt86a2n5g44kij5kIYS8EJVG
-         SV+zkcQj025FLdhT98HXz5n64dEz9HU+pLy89C7A8PUdk5Mk/A3boQXKJ/4Z4J+Ja2oi
-         x/NXGsCRXLr4NpDMrr7cdq/Du6K8PtDykqBAMFDuhUHuAEO62dAXxXaG0u4AzSfiTsQv
-         QzZGVotzFDNULsSxcRgMTV8OPnvVQmjUHajEU9BUA2KYjxcAw1zvf0BDqBq2+a8w6h77
-         U1LA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDBFPt4VHQjv6MIKgeOF+0vPLaL0W0nc7UJ9UVKzL7gLuOkefXUg2tGyzZ2Zeh+Z0QR6sbBjN9MCxZ@vger.kernel.org, AJvYcCWar2xuE2hGe5exlzO3k0FRLTvf5SSvMfvTLYB/bzBtDleIWZBaTY5rhHJQwHwz7ULmXmk22ESvrklkbqmW@vger.kernel.org, AJvYcCXDB02S4NQltQB9rloJmTs85G+EmTn3yDACLrweHOQq/XVWEYkKz2J4T6cZJu60i1gem2CT3FlCn42DL/XL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYs/9DAqNxV+oQoeFdRRhl96yB4ipniF/gvVcXoEcc5bkKBbNs
-	Tefj+zpbx/2DaMv/IWkuXn05jf5GmgHQU+rVxY36UgJQrbzRd5vzzQtMKfiz
-X-Google-Smtp-Source: AGHT+IG5esVoMq/DaiOQmxqQEXp3jMVEBPKwUD7klezgZxrekNOSjh60GNrmUcy5NcNXROlqRPek/g==
-X-Received: by 2002:a17:90b:3848:b0:2e0:5748:6ea1 with SMTP id 98e67ed59e1d1-2e8f11dcec5mr33727475a91.37.1730666237381;
-        Sun, 03 Nov 2024 12:37:17 -0800 (PST)
+        bh=mFXU6wo9Kd7zGBArigdoomzEjsk9nF09DhLxwhjB1Ww=;
+        b=AmdBnwr9wIbhrGqrlhcUkeUES0aCuxnx0J1wZAAAP7CNiv2m8t+kVkUwQu9Pb4ZbS2
+         nRxtzfil2ojItzS5eN7eI4r4kSkCuLp+WG2bq2ahsG+p7zE9DffQf/2hLjmyXXwqCI0E
+         Ed7Ri0i00rarKpAG0v1keYf3R0ma/JopfPpwGTiPKJ2Yk8oLTwrgbbpwDPxtg1kDfIFq
+         Yq4uxHi0S/Z1s+Hu9aeoXWO4hQvjF2LklAAgnzO3b1zOJ9ayyChqZNMxEcP7/fzcKWxR
+         wwVQb7/oIqzS13PlJhvNTbFKtikg76A9WdSJlNKgvCkqMd9gBmWtqaXpGMGCXRYfzG0k
+         oUrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxJ+ORnJ8xLUobjgBy3sN9573aH3eM+v2iad/vNWA+Fksvgtt8BgDSL85RzvxPHsPVpyhojkNrbZKD0LU=@vger.kernel.org, AJvYcCWgyG10pjbvY++skV1r9HHIjcs3sHUDEMaDiJCBZ8NFTzMoyten07Xq1DaoUQ8s4DLozUHrnZkGDHyh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxhgj5CYgCPkZDtMm4u3C32Bf9BRByuPtRSbMQP34uaKWl68Tel
+	sbVd5dgfU6qLZR5+MMgGaBhEB5GjZ9mqIOkm5+bUulEBOCmJUBFg
+X-Google-Smtp-Source: AGHT+IGpLILXncZsOHNshkTXbKIftpldXVh89X9bH6aP6ZYQ7s1fzNCSCLTl/BKJFBvINnXCY33zxw==
+X-Received: by 2002:a05:6a00:2e2a:b0:71e:755c:6dad with SMTP id d2e1a72fcca58-720ab39e7c4mr22967832b3a.5.1730666404150;
+        Sun, 03 Nov 2024 12:40:04 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e92fc0084asm8461758a91.51.2024.11.03.12.37.16
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc315ac5sm5961164b3a.200.2024.11.03.12.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2024 12:37:16 -0800 (PST)
-Date: Mon, 4 Nov 2024 05:37:14 +0900
+        Sun, 03 Nov 2024 12:40:03 -0800 (PST)
+Date: Mon, 4 Nov 2024 05:40:01 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2] PCI: qcom: Enable MSI interrupts together with Link
- up if 'Global IRQ' is supported
-Message-ID: <20241103203714.GC237624@rocinante>
-References: <20241007051255.4378-1-manivannan.sadhasivam@linaro.org>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux@endlessos.org
+Subject: Re: [PATCH v12 1/3] PCI: vmd: Set PCI devices to D0 before enable
+ PCI PM's L1 substates
+Message-ID: <20241103204001.GD237624@rocinante>
+References: <20241001083438.10070-2-jhp@endlessos.org>
+ <20241001083438.10070-4-jhp@endlessos.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,35 +77,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241007051255.4378-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20241001083438.10070-4-jhp@endlessos.org>
 
 Hello,
 
-> Currently, if 'Global IRQ' is supported by the platform, only the Link up
-> interrupt is enabled in the PARF_INT_ALL_MASK register. This masks MSIs
-> on some platforms. The MSI bits in PARF_INT_ALL_MASK register are enabled
-> by default in the hardware, but commit 4581403f6792 ("PCI: qcom: Enumerate
-> endpoints based on Link up event in 'global_irq' interrupt") disabled them
-> and enabled only the Link up interrupt. While MSI continued to work on the
-> SM8450 platform that was used to test the offending commit, on other
-> platforms like SM8250, X1E80100, MSIs are getting masked. And they require
-> enabling the MSI interrupt bits in the register to unmask (enable) the
-> MSIs.
+> The remapped PCIe Root Port and the child device have PCI PM L1 substates
+> capability, but they are disabled originally.
 > 
-> Even though the MSI interrupt enable bits in PARF_INT_ALL_MASK are
-> described as 'diagnostic' interrupts in the internal documentation,
-> disabling them masks MSI on these platforms. Due to this, MSIs were not
-> reported to be received these platforms while supporting 'Global IRQ'.
+> Here is a failed example on ASUS B1400CEAE:
 > 
-> So enable the MSI interrupts along with the Link up interrupt in the
-> PARF_INT_ALL_MASK register if 'Global IRQ' is supported. This ensures that
-> the MSIs continue to work and also the driver is able to catch the Link
-> up interrupt for enumerating endpoint devices.
+> Capabilities: [900 v1] L1 PM Substates
+> 	L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+> 		  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+> 	L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> 		   T_CommonMode=0us LTR1.2_Threshold=101376ns
+> 	L1SubCtl2: T_PwrOn=50us
+> 
+> Power on all of the VMD remapped PCI devices to D0 before enable PCI-PM L1
+> PM Substates by following "PCIe r6.0, sec 5.5.4".
 
-Applied to controller/qcom, thank you!
+Applied to controller/vmd, thank you!
 
-[01/01] PCI: qcom: Enable MSI interrupts together with Link up if 'Global IRQ' is supported
-        https://git.kernel.org/pci/pci/c/ba4a2e2317b9
+[01/01] PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
+        https://git.kernel.org/pci/pci/c/c8d39213cb70
 
 	Krzysztof
 
