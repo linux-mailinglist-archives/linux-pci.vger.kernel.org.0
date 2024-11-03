@@ -1,73 +1,70 @@
-Return-Path: <linux-pci+bounces-15886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 630039BA7F9
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 21:34:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C73219BA7FC
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 21:37:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AB981F21503
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 20:34:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6747E1F2189E
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 20:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2501189BB2;
-	Sun,  3 Nov 2024 20:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A399918BB84;
+	Sun,  3 Nov 2024 20:37:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682FE13CA81;
-	Sun,  3 Nov 2024 20:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DAC18B462;
+	Sun,  3 Nov 2024 20:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730666033; cv=none; b=ti4VvUpXBoSlcCmiYd4Pl+VVX/tIhL3ZlvSVHPpoA6H0BCyZU5ICwUU6kXBqHwskvPxLoykU2LVtxdSxEfkl+PQbJ6j77iBkAIc5AkZzvBIXvgNvFahYQ8SnInVLbEL4FSs4UDJxIHu32ge8xzq9DlmIwK8fDXDg3hCuCBsVfc8=
+	t=1730666239; cv=none; b=rErR2ZxyN91k+0LgjF3ZJCzBz4tExjyo9VN4T713Hk7xfgXlOefPZeYt1nkkT5SuBY0heavH4F5vki5BXiZyPan7xZ8Ip7mtiQymUR0BldAoWsI78bPPv9UxkCjJrXw2yIz2IcVLd00HEAv0/uYa3QOhVe3+cGey5C43Q2GXqqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730666033; c=relaxed/simple;
-	bh=zyKOX1l9EDUUW1CnR4CP0Y8Xy5LN2KHQ1PxZ2Q8CNuc=;
+	s=arc-20240116; t=1730666239; c=relaxed/simple;
+	bh=A9EOa4JBXmYSS3mlfar36oAEApc9f8pq693+5pqpFOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ld2d/zy7d7AVPylyekvoTpMSAsgiJM/bO80YAsFezK8xsQMQdsqhZl0+IgzzUSMeMR9v6qU02DpRAK/eoj8FGkqjOcgEafelLnmySBV7/vTQwS3h84D/H3nnonjk7L4Zxjx47nWD1qTfvhGLv2YV1OGlf0x+LXCb6Pz96QwBWOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=I5rZ4Z0GM4BN4bJDXnzNRB3NioTfG65v0OyrUgT0MMKJnNjSmDOoHLg0Rdo7fKtzWVnJJJELt41ppb1f3Hxw29fJjnxAwXS4XVYDzxhx4Da7vvE+gR6Ya77w4+04suNH/35FXVghPEx5+JRISyqp6MnJQB6KX8lvQclK/TiX8/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7203c431f93so3006859b3a.1;
-        Sun, 03 Nov 2024 12:33:52 -0800 (PST)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e3d523a24dso2728199a91.0;
+        Sun, 03 Nov 2024 12:37:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730666032; x=1731270832;
+        d=1e100.net; s=20230601; t=1730666237; x=1731271037;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a8QpXUygT8E3xJqn9zK+Q/xiZQlIIE8OfSERVNNTif4=;
-        b=wTwEmkmx1ul3VsNKHvLu32GY5zwBgvqdaVoVKfo17wKvCsR+9gN6YlqlrCLm0IbFtw
-         x6JYZeJwEwNM0DxzYRase4DaXbSXBBKKxA+B5ml1AR7aCTIrjj6FbeCEf20jld6PNBe8
-         vYJxU4P7YpPuicc6AVG2xkhi3f9OuDYnJvkKRDkKw4uqdWnotOf6RUykilgVjW9BIO9S
-         Sq0T/dGkaSFtuPvtesbSFh8ulC21NjlWjvJAqz4xU9eYWT1mSNRKQYK/jezeZ2OTkG1I
-         AACd41kD5kDijPaQNruSWc1tvdTPhztooGOWSOx6jPECFVjXvoynSOt9ilhzIObNVzmR
-         x7NA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXAzJuHAUNsoDerGRCpLDM/GxwrMt3MAsvmOlZFUGYiwMd+qVkTudxv0sJC9lTk0hmUUFfPOZmIkfkM1fiug==@vger.kernel.org, AJvYcCUwOEwiSYbhi6vSXR5FraBJZeN5EmXxkFONhm6KR4dZgMJSUG7I+dbXC220KKhv77AYnxL527A91Lga@vger.kernel.org, AJvYcCXIoQX5XiEBkuO+fpKm4vS/JrhbW9v/wtPqt/SUsPNlqsEzEnE7h0198A4pNImwNOKRqWth5+X//tbn@vger.kernel.org, AJvYcCXZhAqRWUXIK7pL33CjY3vzLrFiB0IB/bbT5JhFXBBbm3At+cXRZ3ejrj0TfN2IS34Vki0n1+3CjCMSSWFJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOGNvzhmt+tBLO2lwaLi2eegHovSRso0ku9Cl/Z84K8ptLILBo
-	gyYg0eYN57ZAcHmeahP0K0uaS9ab7UqswkJX17WG+lA79nPiLFIf
-X-Google-Smtp-Source: AGHT+IGzzwYBTBG4rFNV5xILV5YIzjBZZZKs3ztrovEKzIUWSy9GwthWVItvL5JATeaIF996p4ANbA==
-X-Received: by 2002:a05:6a21:6da5:b0:1db:dc9d:47e9 with SMTP id adf61e73a8af0-1dbdc9d486amr1352422637.32.1730666031635;
-        Sun, 03 Nov 2024 12:33:51 -0800 (PST)
+        bh=8ap+wpMERUFPUBtGPkZlL7XELI5aXcin9wACcBysLF4=;
+        b=Y7J6dI8hkBXCaaw/9p9AAtoOSsBCUaiXGvTl4dGL7gPAP6PLhWYTQMP2WD7h7U9HUd
+         MxUZ8/aZVNvRh48guIPgTL+nwMQIxLv/1890A4QWHoaFtt86a2n5g44kij5kIYS8EJVG
+         SV+zkcQj025FLdhT98HXz5n64dEz9HU+pLy89C7A8PUdk5Mk/A3boQXKJ/4Z4J+Ja2oi
+         x/NXGsCRXLr4NpDMrr7cdq/Du6K8PtDykqBAMFDuhUHuAEO62dAXxXaG0u4AzSfiTsQv
+         QzZGVotzFDNULsSxcRgMTV8OPnvVQmjUHajEU9BUA2KYjxcAw1zvf0BDqBq2+a8w6h77
+         U1LA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDBFPt4VHQjv6MIKgeOF+0vPLaL0W0nc7UJ9UVKzL7gLuOkefXUg2tGyzZ2Zeh+Z0QR6sbBjN9MCxZ@vger.kernel.org, AJvYcCWar2xuE2hGe5exlzO3k0FRLTvf5SSvMfvTLYB/bzBtDleIWZBaTY5rhHJQwHwz7ULmXmk22ESvrklkbqmW@vger.kernel.org, AJvYcCXDB02S4NQltQB9rloJmTs85G+EmTn3yDACLrweHOQq/XVWEYkKz2J4T6cZJu60i1gem2CT3FlCn42DL/XL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYs/9DAqNxV+oQoeFdRRhl96yB4ipniF/gvVcXoEcc5bkKBbNs
+	Tefj+zpbx/2DaMv/IWkuXn05jf5GmgHQU+rVxY36UgJQrbzRd5vzzQtMKfiz
+X-Google-Smtp-Source: AGHT+IG5esVoMq/DaiOQmxqQEXp3jMVEBPKwUD7klezgZxrekNOSjh60GNrmUcy5NcNXROlqRPek/g==
+X-Received: by 2002:a17:90b:3848:b0:2e0:5748:6ea1 with SMTP id 98e67ed59e1d1-2e8f11dcec5mr33727475a91.37.1730666237381;
+        Sun, 03 Nov 2024 12:37:17 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1e5e11sm6019125b3a.50.2024.11.03.12.33.50
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e92fc0084asm8461758a91.51.2024.11.03.12.37.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2024 12:33:51 -0800 (PST)
-Date: Mon, 4 Nov 2024 05:33:49 +0900
+        Sun, 03 Nov 2024 12:37:16 -0800 (PST)
+Date: Mon, 4 Nov 2024 05:37:14 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom,pcie-sm8550: add SAR2130P
- compatible
-Message-ID: <20241103203349.GB237624@rocinante>
-References: <20241017-sar2130p-pci-v1-1-5b95e63d9624@linaro.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2] PCI: qcom: Enable MSI interrupts together with Link
+ up if 'Global IRQ' is supported
+Message-ID: <20241103203714.GC237624@rocinante>
+References: <20241007051255.4378-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,18 +73,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241017-sar2130p-pci-v1-1-5b95e63d9624@linaro.org>
+In-Reply-To: <20241007051255.4378-1-manivannan.sadhasivam@linaro.org>
 
 Hello,
 
-> On the Qualcomm SAR2130P platform the PCIe host is compatible with the
-> DWC controller present on the SM8550 platorm, just using one additional
-> clock.
+> Currently, if 'Global IRQ' is supported by the platform, only the Link up
+> interrupt is enabled in the PARF_INT_ALL_MASK register. This masks MSIs
+> on some platforms. The MSI bits in PARF_INT_ALL_MASK register are enabled
+> by default in the hardware, but commit 4581403f6792 ("PCI: qcom: Enumerate
+> endpoints based on Link up event in 'global_irq' interrupt") disabled them
+> and enabled only the Link up interrupt. While MSI continued to work on the
+> SM8450 platform that was used to test the offending commit, on other
+> platforms like SM8250, X1E80100, MSIs are getting masked. And they require
+> enabling the MSI interrupt bits in the register to unmask (enable) the
+> MSIs.
+> 
+> Even though the MSI interrupt enable bits in PARF_INT_ALL_MASK are
+> described as 'diagnostic' interrupts in the internal documentation,
+> disabling them masks MSI on these platforms. Due to this, MSIs were not
+> reported to be received these platforms while supporting 'Global IRQ'.
+> 
+> So enable the MSI interrupts along with the Link up interrupt in the
+> PARF_INT_ALL_MASK register if 'Global IRQ' is supported. This ensures that
+> the MSIs continue to work and also the driver is able to catch the Link
+> up interrupt for enumerating endpoint devices.
 
-Applied to dt-bindings, thank you!
+Applied to controller/qcom, thank you!
 
-[01/01] dt-bindings: PCI: qcom,pcie-sm8550: Add SAR2130P compatible
-        https://git.kernel.org/pci/pci/c/d38cc57c14ff
+[01/01] PCI: qcom: Enable MSI interrupts together with Link up if 'Global IRQ' is supported
+        https://git.kernel.org/pci/pci/c/ba4a2e2317b9
 
 	Krzysztof
 
