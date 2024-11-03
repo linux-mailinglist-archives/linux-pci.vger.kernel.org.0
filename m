@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-15863-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15864-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27B129BA3EC
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 05:23:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468249BA3ED
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 05:27:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EDDE1C20A60
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 04:23:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 639CC1C20748
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 04:27:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD80D433AB;
-	Sun,  3 Nov 2024 04:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D23445009;
+	Sun,  3 Nov 2024 04:27:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kaTnz2ue"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gsJdRfMu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B0FF50F
-	for <linux-pci@vger.kernel.org>; Sun,  3 Nov 2024 04:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D03F50F
+	for <linux-pci@vger.kernel.org>; Sun,  3 Nov 2024 04:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730607794; cv=none; b=d/izNrOCkk2pSK3LvlxS6fEnkcdKC209YN5Fn9GY3QXhfQnDJ9eW6xyfrGSTWtHoMD+DaAZi4WEDNhwhBN2U3sJ+kZw44uuX9C5E2bwHblqKTU0ljF1WR7VGKqfL58YFtzFJB7eSCYLwcYb0mKBHEFcgVlnENPej8vL0di1jMlI=
+	t=1730608035; cv=none; b=O/HeAQHAklFW+XFlQNV8ewxqkUFgMkfa8BKGNTT7F+4t/GpCHNTl8XcUut0fp2Jlr6xoDXmswys4Lp0RmJvZyLWSwANavgjkvVLwuukfiyqeXU8DqeMMW1WRNGOsDSYAzpOwQMCpib1kQEavnEYUbSmxoaa17SETVWjI4ZzRsA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730607794; c=relaxed/simple;
-	bh=MIBpsqRGYOt35iddOOE24wyiDIqq8TtCm4Tt77bgz0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=t76jqKu6OeDRMXIYX1N8K9omxx89zMFjEeiA/pq6Mbmt32/MdPX+zCoLONR5qHEn4KAaFuaQrOWc5tTJEo3ywpOjf91YbeoDoUqYLoZZnvvh/IqMK8s17YkJWG/YykZJg+50HtGhJSmqgbH5zhdg6VvYD4qm2/P5Cu0yy0AjodA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kaTnz2ue; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1730608035; c=relaxed/simple;
+	bh=UGIr+gDieidpd1gubdIIqX0HrsfDDFVJdnInwcwfasw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hwV+3QkD8z6vK65q14IXfWzFeZePwF6ltGIcoqj9tp/7+44OFUQ6vfLj2kQKB+ynTUYoJs44P4diQDFxyXBUC+T5LjztOGeAnzqPlxFBzaX9GYVTbHjmOFKhzro6/mn0hruQmvfUxKyOy/tPLV37jdb90W8WvLWaHW3VI5PIcHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gsJdRfMu; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730607793; x=1762143793;
+  t=1730608033; x=1762144033;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=MIBpsqRGYOt35iddOOE24wyiDIqq8TtCm4Tt77bgz0s=;
-  b=kaTnz2ueZg97gs4J9IiB+nMwb8laK/kAV3J1O2Drlb/OnCz21/Hojr4Q
-   h63pr1aRcA2EiD5h7+mv2W2+MS56AEATn8nQXwk64Y/+76weLu4JLFnsp
-   qGWsFkNVhZLUdaa8uPvwe4ylgyPz4ls+yD40MfZAJjgsw/B6xsdUaTUV1
-   Lvms6gteKWaTOvrTomJVwDkmRgyk0af1zIX5a5XeLDtBcX/AAkZyxdZXP
-   9OpLpI2i2yGnH7Lpd5u4FiGRTJ6Uj77gMTCUVzByJ+Egp9dEtVskjnuCU
-   21kqvJn/meoJxalFK52VS1uRZBTMChaWDVeMHWewRAPwCxnBqIRQF4wtF
+  bh=UGIr+gDieidpd1gubdIIqX0HrsfDDFVJdnInwcwfasw=;
+  b=gsJdRfMuLywKI3vbHAbhgp8TfC4cNwAEW5BGbayy39cJlAXKw4QPcJ9f
+   qPt8dy3iVxNciv7N18Oap65tsBKPBkjYkoNct/kKcdiGFkbw8U8pKewSj
+   KF6bDYZBLMS+2GjU1dV6Cv/TLI2HjWgp9RcuYbpBnZFXVU4ny5KJzD3zT
+   Xsq61YGv4+KJeF4xKKZM6I7QY840CAia4MTMbVwrTHj062ubXrUnTVzrz
+   zUt/uwXW3Pz2tcy7n/sddUPgj7vP/X7s56mry0l4jPgKwT/bc9Icea1qi
+   Q7I6jYFtrw6egsTc+sEnvFh1VX7R/ldIDLgUvtw5a/eu2mxf0RICjE7Dm
    Q==;
-X-CSE-ConnectionGUID: 8OKUocK/TNqFyTwAFOfG3Q==
-X-CSE-MsgGUID: jVkm2bqlQxyjYpC/pV6Qdw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11244"; a="40904424"
-X-IronPort-AV: E=Sophos;i="6.11,254,1725346800"; 
-   d="scan'208";a="40904424"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2024 21:23:12 -0700
-X-CSE-ConnectionGUID: 4EERaNN+QKKVj9QIj8pVNw==
-X-CSE-MsgGUID: rihOLbC/TmasZPhtVmakVA==
+X-CSE-ConnectionGUID: ZbMmrMkPQNaaNDbOOFCRVg==
+X-CSE-MsgGUID: dYA5AjDRQ4alhKI3T2Vo2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30281309"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30281309"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2024 21:27:12 -0700
+X-CSE-ConnectionGUID: CytO3iHPRV+UsVw62j8meQ==
+X-CSE-MsgGUID: UtadOs7XRtq26g7Q2x5tww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,254,1725346800"; 
-   d="scan'208";a="82853674"
+   d="scan'208";a="87258492"
 Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 02 Nov 2024 21:23:11 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 02 Nov 2024 21:27:11 -0700
 Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1t7S8r-000jgN-15;
-	Sun, 03 Nov 2024 04:23:09 +0000
-Date: Sun, 03 Nov 2024 12:22:17 +0800
+	id 1t7SCj-000jgj-1S;
+	Sun, 03 Nov 2024 04:27:09 +0000
+Date: Sun, 03 Nov 2024 12:26:18 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:aspm] BUILD SUCCESS
- 1f37e72d586f280049e7c177bd47d6350cfbd494
-Message-ID: <202411031203.obrfz6j7-lkp@intel.com>
+Subject: [pci:controller/qcom] BUILD SUCCESS
+ ba4a2e2317b9faeca9193ed6d3193ddc3cf2aba3
+Message-ID: <202411031204.XOCg9gBM-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -76,10 +76,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aspm
-branch HEAD: 1f37e72d586f280049e7c177bd47d6350cfbd494  PCI/ASPM: Make pci_save_aspm_l1ss_state save both child and parent's L1SS configuration
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+branch HEAD: ba4a2e2317b9faeca9193ed6d3193ddc3cf2aba3  PCI: qcom: Enable MSI interrupts together with Link up if 'Global IRQ' is supported
 
-elapsed time: 725m
+elapsed time: 729m
 
 configs tested: 200
 configs skipped: 7
