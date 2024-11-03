@@ -1,117 +1,119 @@
-Return-Path: <linux-pci+bounces-15870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15871-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7B7F9BA58B
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 14:07:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E409BA5DA
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 14:58:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40388B20A39
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 13:07:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EB381F217DE
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 13:58:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3555816DEB3;
-	Sun,  3 Nov 2024 13:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9C817333A;
+	Sun,  3 Nov 2024 13:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xoores.cz header.i=@xoores.cz header.b="stz/t4mI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAAG+Oa2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpx012.webglobe.com (smtpx012.webglobe.com [62.109.150.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE96A23774
-	for <linux-pci@vger.kernel.org>; Sun,  3 Nov 2024 13:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.109.150.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFF8E552;
+	Sun,  3 Nov 2024 13:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730639231; cv=none; b=TAdp3M2yQ722fHS50B7R28gdw1+nZnLqQuvK4Td1yFVkcIdUDqiwnRR0Qc3VDx0snJBQiuuCy678v7qW2M/W1OJEKWBSc91iA3J4N+UuaAexsLhj72IZ9ufFF44exMNb9JU26Kb/J2mpV3A0Z0qIyvs5iaEiqsHBN8/zNqL/mfs=
+	t=1730642322; cv=none; b=ktDJxTysvazNOAIN81oArGydgVwhuvpTYyFruKfoK83/q9jg3Do1PbFocrFYm/1E/Zp1MqBbtyj4wONhFUAogvzLyS+hVe+Xeh8LTb9whYDe9iFq1tWAZVP2moFg3NzKxlNjzljdKSnEaDPzTNTM7gDbgmRnNWZedi62uLjBAHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730639231; c=relaxed/simple;
-	bh=0+WL+i9QZoQCHsgL5hUT3TEsNaFGEUJmq1M56akl3/g=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=sh107LhTDHgwYMeCPWvUWdwRVraal2xDUcqp31Wrntav5NC2l+L77iQytYs+7U+Uu9+36XgE8N2DRnT9nPQ4o+yliWoW7++6JUIR2K/jAHQU3DWoEqHM56jixICKW7X+c2h+omfCwfia2bNB6njy32+9K+wzTfXuss08r8i7tR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xoores.cz; spf=pass smtp.mailfrom=xoores.cz; dkim=pass (1024-bit key) header.d=xoores.cz header.i=@xoores.cz header.b=stz/t4mI; arc=none smtp.client-ip=62.109.150.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xoores.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xoores.cz
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xoores.cz;
-	s=default; h=MIME-Version:Content-Transfer-Encoding:Content-Type:Date:To:From
-	:Subject:Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=0+WL+i9QZoQCHsgL5hUT3TEsNaFGEUJmq1M56akl3/g=; b=stz/t4mIND+LF4T4ASZvsebqoY
-	T1OtZ87VzQo1+XiUceXovW5x720faiNZrEXF8moAPL639HCOIAowsfr2jt4oXiOe7fvphoZuIv8Yw
-	LUlKG63ZnqxWIJOWd2KnVvLlUWHi2Etps+Zgt+f+hn4Kat9oVLdFudT6jfItqPEgYzJw=;
-Received: from [62.109.151.61] (helo=mailproxy11.webglobe.com)
-	by smtpx012.webglobe.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <me@xoores.cz>)
-	id 1t7a5j-00CBdD-UO
-	for linux-pci@vger.kernel.org; Sun, 03 Nov 2024 13:52:27 +0100
-Received: from 160-218-189-249.rea.o2.cz ([160.218.189.249])
-	by mailproxy11.webglobe.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <me@xoores.cz>)
-	id 1t7a5h-003A1M-6Z
-	for linux-pci@vger.kernel.org; Sun, 03 Nov 2024 13:52:27 +0100
-Message-ID: <117b71d187214442cbcec407a618ff546e5d4386.camel@xoores.cz>
-Subject: IWL errors when reading PCI config through /sys
-From: Jan =?iso-8859-2?Q?=A9=EDdlo?= <me@xoores.cz>
-To: linux-pci@vger.kernel.org
-Date: Sun, 03 Nov 2024 13:52:24 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 
+	s=arc-20240116; t=1730642322; c=relaxed/simple;
+	bh=b+RF7lm6Z+FCvqTFgFQeWEcA4ixEZihhp0KC6dDlaK0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EE2OtEsWonJf8tEAAydvAj6wXvmUxgQV1ReeZnQtdn5Cfvu7j7ZntH22BEfjl0fkZAZjzXa385aYUUGdm7ixXYoTbO9PtAXCmuEpK1aySlrRl6IIQyUuBbM4BdOXp6bnr6XgZJpNHqjxc8anCy3fiZPtJb6aq12srzXQ8oE/qoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAAG+Oa2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E47C4CECD;
+	Sun,  3 Nov 2024 13:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730642321;
+	bh=b+RF7lm6Z+FCvqTFgFQeWEcA4ixEZihhp0KC6dDlaK0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rAAG+Oa2ZJrDzl4OpS4oFv01B7VwCbJhH76WJxNefzhamcNgHbPty1p0119lJCChl
+	 y7So3fRyIejrH1zj8qOeyU8Mh2EeAm16VmTFTc8aORuoDZpGX3lxbRuh6hDJMKWjSg
+	 tjPPxkYVnrX3tfZ+GwZKTo2Lt1WYUn/TVWIK8NqfMBy1tsOVZtQceie/YAo03kYT3a
+	 LZZfHER+Z+blPlr6S1YsHyugH9YgzQYj1I6tcBYuUtycj9SsjdQs2WWY7XPUEv1AGO
+	 zi1Vjw30g7rSl6fGGOTaVcvpSBUI92dOj6V9f9Q3cCVBCudi5s+qjAr7if1/LfxRG3
+	 +1L1aY9Pn88Bg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1t7b7n-009Kpi-3B;
+	Sun, 03 Nov 2024 13:58:39 +0000
+Date: Sun, 03 Nov 2024 13:58:38 +0000
+Message-ID: <86h68o1ks1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,	Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,	Shawn Guo <shawnguo@kernel.org>,	Sascha
+ Hauer <s.hauer@pengutronix.de>,	Pengutronix Kernel Team
+ <kernel@pengutronix.de>,	Fabio Estevam <festevam@gmail.com>,
+	linux-pci@vger.kernel.org,	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	imx@lists.linux.dev,
+	Frank.li@nxp.com,	alyssa@rosenzweig.io,	bpf@vger.kernel.org,
+	broonie@kernel.org,	jgg@ziepe.ca,	joro@8bytes.org,	lgirdwood@gmail.com,
+	p.zabel@pengutronix.de,	robin.murphy@arm.com,	will@kernel.org
+Subject: Re: [PATCH v4 1/2] PCI: Add enable_device() and disable_device() callbacks for bridges
+In-Reply-To: <20241101-imx95_lut-v4-1-0fdf9a2fe754@nxp.com>
+References: <20241101-imx95_lut-v4-0-0fdf9a2fe754@nxp.com>
+	<20241101-imx95_lut-v4-1-0fdf9a2fe754@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Authenticated-Id: me@xoores.cz
-X-Mailuser-Id: 694419
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, bhelgaas@google.com, hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, Frank.li@nxp.com, alyssa@rosenzweig.io, bpf@vger.kernel.org, broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org, lgirdwood@gmail.com, p.zabel@pengutronix.de, robin.murphy@arm.com, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello,
+On Fri, 01 Nov 2024 21:04:39 +0000,
+Frank Li <Frank.Li@nxp.com> wrote:
+> 
+> Some PCIe host bridges require special handling when enabling or disabling
+> PCIe Endpoints. For example, the i.MX95 platform has a lookup table to map
+> Requester IDs to StreamIDs, which are used by the SMMU and MSI controller
+> to identify the source of DMA accesses.
+> 
+> Without this mapping, DMA accesses may target unintended memory, which
+> would corrupt memory or read the wrong data.
+> 
+> Add a host bridge .enable_device() hook the imx6 driver can use to
+> configure the Requester ID to StreamID mapping. The hardware table isn't
+> big enough to map all possible Requester IDs, so this hook may fail if no
+> table space is available. In that case, return failure from
+> pci_enable_device().
+> 
+> It might make more sense to make pci_set_master() decline to enable bus
+> mastering and return failure, but it currently doesn't have a way to return
+> failure.
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-I'm not sure if this is the right place - if not, I'm sorry! It is the firs=
-t time I'm trying to join a linux
-mailing list so I may have missed something or I may have done something in=
-correctly. I'm not even sure if
-this is the right way to send a message, but I have to start somewhere :)
+I converted the fruity PCIe controller over to this infrastructure,
+and things seem to work fine. FWIW:
 
-I'm trying to hunt down few issues with my new-ish HP ZBook not wanting to =
-go to deeper C-stsates, which is
-kind of painful for a laptop (battery drain is ~5-10%/hour). For this I cre=
-ated a little python script that
-gathers all the info about all the components from the system and periodica=
-lly reports the status (every 3s or
-so) including PCI and USB devices. To gather some information (specifically=
- about ASPM) I'm reading /config
-file for each PCI device in /sys device tree and parsing it. I'm not readin=
-g only /config but it is a prime
-suspect, because I excluded WLAN card from this reading routine and the cra=
-sh took much longer to occur -
-hours instead of minutes.
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
 
-When I run this script, the IWL subsystem crashes after some time (minutes =
-to hours). There is clearly
-something going on the PCI bus that I don't really understand. Since the er=
-ror I get from IWL is changing, I
-suspect there is some kind of race condition that is triggered by my script=
-. I opened a bug [1] and after some
-back and forth with Emmanuel Grumbach, he said that this kind of error is c=
-aused by IWL not being able to talk
-to the WLAN device (at all) and to try to get your opinion on the matter :)
+	M.
 
-I have tried two different kernel versions (6.11.5 and 6.10.10), two differ=
-ent WLAN cards (BE200NGW and
-AX211NGW) and multiple versions of firmware for the cards. The error is sti=
-ll present, so I would say I'd need
-to dig deeper, but I'm not really familiar with PCI subsystem and how to de=
-bug it efficiently given the amount
-of data going through.
-
-What can I do to debug this issue further?
-
-Thanks
-Jan
-
-1 - https://bugzilla.kernel.org/show_bug.cgi?id=3D219457
+-- 
+Without deviation from the norm, progress is not possible.
 
