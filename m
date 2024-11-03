@@ -1,431 +1,249 @@
-Return-Path: <linux-pci+bounces-15868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15869-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01A9A9BA500
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 10:50:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CBA49BA569
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 13:33:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23D911C2040F
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 09:50:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E73ECB20F9C
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Nov 2024 12:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13490142633;
-	Sun,  3 Nov 2024 09:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D3DA63A9;
+	Sun,  3 Nov 2024 12:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="dOzJp+mw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiJHNLPT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2041.outbound.protection.outlook.com [40.107.20.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9C58614E;
-	Sun,  3 Nov 2024 09:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730627408; cv=fail; b=N0Q1TH46vDsg+6BX6R1Pk9iN24nDc8ASv2gL0RtZ0OGBu12Ai5a+qcerVHGd2OLolSutpuhXFfW/GyqPqIIX/jNPXynBXdJjR8BR5I+Cvl+4l6YZmuaO6HE96kPD3HR58HmbSioTGdCh64dldxc+lhO3josu8GJ3U/YZTO2YEYg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730627408; c=relaxed/simple;
-	bh=yV6G2tasLKUakTtA6GjY14+jEjwal1f4qY8/XgmGWKo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NKcMKzC2j4E08ozm9TfzGn22vpGeb4mk3RmoDZO0bYhA0jX/QRCeejH6taTVBNv2rWr4jdDKYtC9PHCLcNs0WPZcvhCkNYVJl+IXiG0GHYc64LHlEeG56Xsga+Z1CDfIAVBjyO+SNUGlV+ZCj7V7amIdqnYYjGt1j95qjdGkKEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=dOzJp+mw; arc=fail smtp.client-ip=40.107.20.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iVTXqh1XMVwi1eijMrzhUH22aS/3j1/5yg8FTF3JfDlxYM+sviA8PEh5KPnKLAPz+qIN9e9WRUu5esqi/7ko8Z2B0ExeSUmYO2VeObZg7v/REd/ko/E093izhaeEE0hFFZjSa1SEZpllptl3H42m+4uNALKNuE7Zg/eAkmAhGMISWq5eYIfYGP+b5DF8nDO7QlJ5jsPoyJI65jaeBO6rAT6Il6iJvjP82GKxXacjEnCRA7Jq8PZC/T2RaBZGC3L8BlPEe+uxV9Hz1Cwkd+TuunRGsYHq4A9f5q7aF9DUB0TM34SZN0izoe2O13kmIpCrrAk3K+gLNzAOiUNL2HL6rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BR2SfInFHY9B+gWDDTVfcuHH6i9pFcH6/L8TyfJ54uI=;
- b=VCrlgv0obFSEV7yWRkoGZwwKpPlTWL0pk2HZn9ewuPjlI8XykmTizB8dehYfrERrz5IIWEQFj5AC5wXQLnYb0vGYy4Qt/ly2OgXafLrE5Qo++hnHvI+r5DCBqcZk3JkkM4bumL61afgBzkW+dQ+xweScaK/iuBfDcypzZSjAah+RTVpNXygiqFHZzt76T0++l7D68Xu6a6hQ7jmUYV6rFuYFbjNLxPk/yw5uGEh9whUFCIg7Yfbx9wZVzUomUhc6+EnNYvoH4Wwa+owjgzDHOB5MqWU1d6167m8yA0sKOEhpbdooVubjsppUfHK+LkuldzpvT1RrqkH7Opr3z+7AOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BR2SfInFHY9B+gWDDTVfcuHH6i9pFcH6/L8TyfJ54uI=;
- b=dOzJp+mwkG8DHyXIDo7zWasjkO8qHgIIa7S6rWaT+Nz5PHtp0uCx5F++EXfK6+2hhgN8nkp4dS0HwIVfAvtJXbPAhbc3Xj/mLPdRqKq2E3EzsZ930CL7f5IyOw821GUGv4k5foxRSy49VIDRLmRx0XiThPvpJrzmXKXTBXJocBeUqxTnXTSNbM2wXpdVe2chbjGvUV25dEdnpe9X5krnMZE0CqaYPKAxCqCjIu4p4MKH9vPtAvzl+9tSDG/sF+BHClajs8nmCkbEU4O0p365p0OtlKsQqKhv8wj3VSoH/pwQcMfROrcD/tPAT6C3V+4znyN18bibpHAqTtGqdoV/Ag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
- by VI1PR10MB3278.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:137::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.15; Sun, 3 Nov
- 2024 09:50:03 +0000
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8fe1:7e71:cf4a:7408]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8fe1:7e71:cf4a:7408%5]) with mapi id 15.20.8137.014; Sun, 3 Nov 2024
- 09:50:03 +0000
-Message-ID: <4fa5b5f5-6e76-4d3f-b3b4-1e977b7d3c4a@siemens.com>
-Date: Sun, 3 Nov 2024 10:50:01 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/7] PCI: keystone: Add support for PVU-based DMA
- isolation on AM654
-To: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
- Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <kristo@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Siddharth Vadapalli <s-vadapalli@ti.com>,
- Bao Cheng Su <baocheng.su@siemens.com>, Hua Qian Li
- <huaqian.li@siemens.com>, Diogo Ivo <diogo.ivo@siemens.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <cover.1725901439.git.jan.kiszka@siemens.com>
- <f6ea60ec075e981a9b587b42baec33649e3f3918.1725901439.git.jan.kiszka@siemens.com>
- <3d7abd75-68a2-4232-ad8c-e874c10df1ae@ti.com>
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Content-Language: en-US
-Autocrypt: addr=jan.kiszka@siemens.com; keydata=
- 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
-In-Reply-To: <3d7abd75-68a2-4232-ad8c-e874c10df1ae@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0149.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b8::15) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:588::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631F015A8;
+	Sun,  3 Nov 2024 12:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730637230; cv=none; b=D9VrpNbLRcGdrlEmuVmWgc1tLp6zY8KPt6gwVEy6Q7BJbGKQFUmMu1V2F4z3V1XpNn1SuvMXh036ROjCFUjxHfDut9dTx8AmXynVRGQ3AztvTE6Fg7hwyLNIX2rRiCwJCDKiRlAzsKJC9F605IPRrq2aMZMFi09V6WBhFyTYC3w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730637230; c=relaxed/simple;
+	bh=uwpetMsMwbnA2n9wFjVxct2il4YG+otS1qBAi7Q8uzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+Fk9pQwo0oqL8C3NJrD/YOtFWAvUwM+6BwOxHLE4sZKktxJoB28pfeYPTslq//GJmKco9nt+iPhu/0dS9R3dvC+aCpNOq0MtJiIFbX6CoNP+0QTwf8ztm6u2C2j5UF8G69ljUkiowUUEaqfVl5KnY8OnAN1I5lWcvYfiibGZdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiJHNLPT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F80C4CECD;
+	Sun,  3 Nov 2024 12:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730637229;
+	bh=uwpetMsMwbnA2n9wFjVxct2il4YG+otS1qBAi7Q8uzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hiJHNLPTkh4rMHm3TM7JdIRs39HkXSCVsqTXYAh5z1n5R9N8tcqtom6JdGM+9To28
+	 hvmgajN9ppmpXIvDFBXxWztaZRpBjs8SQxnfA2uAx+uPD/d6yiU++mbKtw0lIsRtd7
+	 O7FxE/tjIe9fKXgqSGtOgbEfISpj7/V2+ubYvedjr4UgjNbrI3b88RnqYPa47iq12+
+	 z7Na4KfLJTSUmJSBbzFY4lXqTZpO/K2BXcXlvuo81oKAeRuL9ej33VjT4moas1tLsh
+	 bB7MYlaYJGkgnWJf2O34LrQe8t328YUT78WlIxR1Bdypsr/NQMiveIf1MTntrxHpYZ
+	 ZN+0AP9JGtk9A==
+Date: Sun, 3 Nov 2024 14:33:44 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Fix read permissions for VPD attributes
+Message-ID: <20241103123344.GA42867@unreal>
+References: <20241101143300.GA339254@unreal>
+ <20241101164737.GA1308861@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|VI1PR10MB3278:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e776285-81ae-4932-dfe9-08dcfbece38d
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?KzNsWWlBeXdZcG1UUUdaYWE4bXdpUmxXT1lReDNOUG1pR2hKOFlvU05sWlVi?=
- =?utf-8?B?V3lZNFUvVVdSOTd0dDRwMmJCYWNDeXp4dnd2NjhZZFEvcjcyajhaQ09zWGtE?=
- =?utf-8?B?T2pnWklNWE9RY1F1eTFNYlpkWGNBNTVaRHIxbTRmV3ZxL1M2T1Bad0JzbXR1?=
- =?utf-8?B?aUFNU21OenZDbS9IRjVpWThoSStlc2ltcjFvWldSVWRxRXVUTDRsQVlxSmEv?=
- =?utf-8?B?WFVCVVozMkJ2VW51VFVTTVdjVXZ4UWo5YzNKZWY1Mnc3WXNuczdQRWRTRmk0?=
- =?utf-8?B?UUpCRmN3aWdQQ2ppK1lvaFpGc280UE8rR2dqQnlqZU0rVHJuWFJYMWxHVjZM?=
- =?utf-8?B?MTdSdTJYNlhaZzFITVpCZnQ0ZFRBcHZGUWJDQmhuUnM2MUZRcjkxWFVPYU9R?=
- =?utf-8?B?ZlVyc2NzYjVrZDVOYU9EVUQvR0JxMXA1cVBUQlh1c2N5M2dXdGY3ZG5VVnZV?=
- =?utf-8?B?cllHT1BEdGcxWmlZOGNaaEtwSGQ2K2RsWmtFMDk1TzFXZGZVQ2tXb1g4ZmxP?=
- =?utf-8?B?cGw3eitEZHpEVHBOZWZsc2tOOGZuWjFRaDE0QlJOLzdrT3RXNm1tQ242RFdt?=
- =?utf-8?B?eWpnMDVGN2paSHc0bTU5eWZ4Z3MwdHc0ZFBYUXcrVm9vaGh1U2Nmd1p2S0V6?=
- =?utf-8?B?blEwN1E2S2xFYm96ZHBIaUtpTUxsdkxadG05eEtaeFlaNzVPVkZXWjNmUWlP?=
- =?utf-8?B?K05tVTdzVVZKbWFHMXhrcyszU3N6TTVZWVdtVC9UWXhTWHZERWRqdHdDVll2?=
- =?utf-8?B?TFJhTTllY042dnFJYjhYT0k0NjVSNkN0ekNSYlhiUmNyRmw1U2VvWUlZczdn?=
- =?utf-8?B?b3BpR0FPTGlDWmJkK0szZkhqcW5qY0FZYTltSWJkMytsa1RPYmhJOEVYR3N3?=
- =?utf-8?B?UlVQUUpOZzVNRmxxQkw3S0NBWHB3TDhPd3RaeEE0a1BSTVh5TmRKTVh6YnAv?=
- =?utf-8?B?YStNYkl4Tzd2d1dnR1ZrSzhNV0VZczZra3RTYy9LT1EzbGhjL01xTG9iNUk5?=
- =?utf-8?B?MlFiLzFzb1pzS0V2NWIxL2xmbXFaZG1WVGlsdHZhMDZEb042aTNxa1JGM3d4?=
- =?utf-8?B?SVoweEl0bXpNZzUzektGSnV3WlRRcXlNcFdvd3JUa05lYmNzdzlETUFNQ1pp?=
- =?utf-8?B?Z0ZsTFpzdXhxVFRkN1VOMG9wYUNETFN3Z2UvenVmSkZtRnhqU1cwQ3pSeDJP?=
- =?utf-8?B?UXZKNXdKWk4zN3IzZTRhbmlDMFVWS1JPRENHb1NwOFRBd2w4aU5sM3hOQ1FW?=
- =?utf-8?B?ajFWK2RXSFZsT3RHY2puLzlnQ1BsQmM5TzNobkRLbjJVMmhFUVJrb01DYUJl?=
- =?utf-8?B?Sk1GQ004VjlXM2lwc1NFcVIxTUNjYkppWlI0dTd1L1FWRTNPNzVxL256WjdB?=
- =?utf-8?B?R2NIcGtnVHdsV0xJb0RMWXZkTUpRRGdNejFML1BXdFNab2UveXZoeTkxWkI1?=
- =?utf-8?B?TkUwTGZ2YkU5QjdUSlpxQnJpVStkRUpKSFdyTGdsSGFOMG51QkhUODFQQUVz?=
- =?utf-8?B?UlkvZVh3RkVVdVJkSDR1YzM4ME9NeTVKZXBpNVNPaE5YT1V6UmVBcTREWHlx?=
- =?utf-8?B?a1RvWTlxbzljU3c1Z1hGZ1J4VndJYWh1Q2dZbm1PcGdaK2hrK0N3OWx4NUJK?=
- =?utf-8?B?MkJlWWlKOTQyRHNNQnVEVitRQ2NCQVdCWS94RW5lcy9LdEJIWjZLT1JvblVo?=
- =?utf-8?B?SWl1NjhIMkVnWnNSd3ZWTzR0TnNmYi9FTlFsK2pPQk9aVzZHcXpuSUJHWDNj?=
- =?utf-8?Q?Z5FcquFxBKJ4+bUHuSqKhPE9/3D/XbT6wYeec4n?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ujd3blZ1ZWYvd29RT25SK1FiTXV4WTN4QVIxVC9jQ0kyWjJ1RTlXNWZ3VDRz?=
- =?utf-8?B?QmpwN3NZdlJINE1GdjFwTXNvR01XZzJJZm81V2RpTHVCMHkvOWtSNDZDNWIw?=
- =?utf-8?B?Ym1Ob29oNkxjdVY5WkRHa2VIWUhrWHlzbEVmTFMzNVpOREZ6QkRva3dWS2w3?=
- =?utf-8?B?RE9hUzBlZVdxMFpqUjB6UmVqQ1RKb0NDS0hUWjFHb2ZQRUt1NUlDaUZESU9p?=
- =?utf-8?B?WTBVZkNUbXZhcmxlbmdLK2JhMFdtU0dscE9jc2ZYdzUwcThSUDlsNmxCTkt5?=
- =?utf-8?B?YjRIRGgzWWJ5R1VLd2tLRDhHdjFuMGp4Z0orZnpJRU5GM2pmYUc3REZjd0RI?=
- =?utf-8?B?SlErVDdGbDh6RVhiZHRCYXdCWS9mTTViSkd4WjV6dkl5Uk1RdlYyQXBLL3Ba?=
- =?utf-8?B?OFpyeGtmVjhtMWY3c2FYTkFpeHIrVE1SR2lob3J1Rnd6S2liaitJbzZ3RzZz?=
- =?utf-8?B?OFpGc29JaEpQMk1INk1xYW1aamIyWnZUNVcwaXkxVFVDQ3Q2UlFJL01UTEJR?=
- =?utf-8?B?T09Ma0kxc29odkpYZnZGelRIN1N0cVVpOUN5MkhOTXZ1NExQaUlCWDM4VHJx?=
- =?utf-8?B?TnlPUU5HTmpBeUJHR21Kb2dCRDMzb21JbzFjTTRaemY3cFY0bHZ5MC9WTWZZ?=
- =?utf-8?B?YkdRZGQ4STFKeGlMQ0ZHSWc1SVlnM3BiSGkyMk1ibFc2YmZDZ3ZicVh2WVpr?=
- =?utf-8?B?K3NzRjZZaXg5dkV2YkdoK0hTTGpBVVcwaVZieGJoa2V4ZVBBNVdrZUNEUkQy?=
- =?utf-8?B?a1M1UUkwODFKYTlpeFZaWWpFRFFrYi9EMEJUemplQmdlK2ZiYWUyanJXNUxL?=
- =?utf-8?B?NE1NcGY4c0hnSmE1bXZLZnpCTTVVbjRsZ3pNdjBRQmprVEhDUjVDMlJiWFJN?=
- =?utf-8?B?MTNBNFMwUUl2WjR1WDRUb3U5YkhWa0VGUExmT3dQU3NZYzZVdk5tQTRvRW9Q?=
- =?utf-8?B?LzBZYTRJeSs2NVRJUXJvc0tXWjFRN1U4UzVWNXJMcGlYcGZqa3ZTNkVNN2JT?=
- =?utf-8?B?SGZlTjJBdW1tY3BiT0lWM2hzeE40QXlwM3gwaXk5OVR0NUhHZlJHYjNvNk1F?=
- =?utf-8?B?NnJ6WVNVQ3luOGtucmZTZSt3dDN2NWtRcDNWbnJxZllnMkxTamlPb2VvYU5Z?=
- =?utf-8?B?cThEWVNPMlFhU1c0c01wcHBWWnQ0K0d0QVBIblhENFI5QVdWendmUkxMa2NS?=
- =?utf-8?B?YTV6TFh6WnluVG40S000bDJrd0pCbytWcjJ5bDlYWC9SODM4UGRuMnRRUm5H?=
- =?utf-8?B?UkFqTkpNTVQ2RW5FL1U4aGJqL010V3RyaERiMFZZc1BsbTl1cHAwblI0Nm5E?=
- =?utf-8?B?WU9SZkF3YnNBTWF4dXNUVWhqN1NockRRMjVLNC9CSFI2ZFFpY01PbjhFV0xt?=
- =?utf-8?B?Ly81Tzd2eTg0YVBJcDlWUFlRa2pXZmxxcmFEay9qcXgraXpYWXE4Y0pIcWFU?=
- =?utf-8?B?VkZvT0taSk85YVJMVmRVQ2JFdW9YbnRodTdYOUJpcWhzb3M3aGE5cTJ5b3A0?=
- =?utf-8?B?c3ZVbXNJMHV3UmhhOVg3dEJWek44M0h2NWhndDF0RXo3M0lFempzQ2FXYTF3?=
- =?utf-8?B?M1I1M1Ezbm14eWlleEVua2hndVFGOXBScklWTEk1QnVvTGFzTFBtMHZGRisr?=
- =?utf-8?B?djlTaXpkMDlBZ2xxc0czaHJWY2xHZTZYVEZjOFIrM1dXQVJiT1lBd1hlNUZp?=
- =?utf-8?B?TWdUYkhacFpEUVBKdjlUc3NOV1dEMmNFVTljN0EzYmR3WTRUQWdBYit6VW4x?=
- =?utf-8?B?VHRKUXNWdTQzNmRtY3JEU1drU1hRNkdPa1NhQTUrWGIzTVdrb1ZSbWVDUmJY?=
- =?utf-8?B?OEVxUllMakFvNUtTL2R2ZzZpem5MamFQU0I3Vy9BV0dqQVlBN1JZcisrbHVw?=
- =?utf-8?B?M2djMlFXTnM5bE9ZWE5GTm1oUkkzcnZZbVdqZlFZUUx0eDZEV3lWazhFNUlk?=
- =?utf-8?B?MVEyK21nUXIzWklZdjA3NFEvaWl3Zjh2OGNCOHphVzQyMFV5aWt1TFVyNEMr?=
- =?utf-8?B?TjhZK2ZEL1NpUVpBVGV3amcvU0ZVcDk5RzlLdFJad0Yxb09FR0Y1OGFkamlU?=
- =?utf-8?B?dFk4aWtncWlKR3hHT1B5OFNId1hrd3ZMZlVPRzU5ZlJSVVlVSVVNRlUwcmlQ?=
- =?utf-8?Q?4nHAhwD28gCjqi6N4uCih66rl?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e776285-81ae-4932-dfe9-08dcfbece38d
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2024 09:50:02.9865
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4bpdW8i91i74RCOuoLJyWtbxUEOW6ICTLnh9kbftvEWgHbEki1uCirsAG1xtW8qB7uuyH5MEC31Jnosjk9z2gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3278
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241101164737.GA1308861@bhelgaas>
 
-On 03.11.24 07:15, Vignesh Raghavendra wrote:
-> 
-> 
-> On 09/09/24 22:33, Jan Kiszka wrote:
->> From: Jan Kiszka <jan.kiszka@siemens.com>
->>
->> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
->> from untrusted PCI devices to selected memory regions this way. Use
->> static PVU-based protection instead. The PVU, when enabled, will only
->> accept DMA requests that address previously configured regions.
->>
->> Use the availability of a restricted-dma-pool memory region as trigger
->> and register it as valid DMA target with the PVU. In addition, enable
->> the mapping of requester IDs to VirtIDs in the PCI RC. Use only a single
->> VirtID so far, catching all devices. This may be extended later on.
->>
->> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->> ---
->> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
->> CC: "Krzysztof Wilczyński" <kw@linux.com>
->> CC: Bjorn Helgaas <bhelgaas@google.com>
->> CC: linux-pci@vger.kernel.org
->> ---
->>  drivers/pci/controller/dwc/pci-keystone.c | 108 ++++++++++++++++++++++
->>  1 file changed, 108 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
->> index 2219b1a866fa..a5954cae6d5d 100644
->> --- a/drivers/pci/controller/dwc/pci-keystone.c
->> +++ b/drivers/pci/controller/dwc/pci-keystone.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/mfd/syscon.h>
->>  #include <linux/msi.h>
->>  #include <linux/of.h>
->> +#include <linux/of_address.h>
->>  #include <linux/of_irq.h>
->>  #include <linux/of_pci.h>
->>  #include <linux/phy/phy.h>
->> @@ -26,6 +27,7 @@
->>  #include <linux/regmap.h>
->>  #include <linux/resource.h>
->>  #include <linux/signal.h>
->> +#include <linux/ti-pvu.h>
->>  
->>  #include "../../pci.h"
->>  #include "pcie-designware.h"
->> @@ -111,6 +113,16 @@
->>  
->>  #define PCI_DEVICE_ID_TI_AM654X		0xb00c
->>  
->> +#define KS_PCI_VIRTID			0
->> +
->> +#define PCIE_VMAP_xP_CTRL		0x0
->> +#define PCIE_VMAP_xP_REQID		0x4
->> +#define PCIE_VMAP_xP_VIRTID		0x8
->> +
->> +#define PCIE_VMAP_xP_CTRL_EN		BIT(0)
->> +
->> +#define PCIE_VMAP_xP_VIRTID_VID_MASK	0xfff
->> +
->>  struct ks_pcie_of_data {
->>  	enum dw_pcie_device_mode mode;
->>  	const struct dw_pcie_host_ops *host_ops;
->> @@ -1125,6 +1137,96 @@ static const struct of_device_id ks_pcie_of_match[] = {
->>  	{ },
->>  };
->>  
->> +#ifdef CONFIG_TI_PVU
->> +static int ks_init_vmap(struct platform_device *pdev, const char *vmap_name)
->> +{
->> +	struct resource *res;
->> +	void __iomem *base;
->> +	u32 val;
->> +
-> 
-> Nit:
-> 
-> 	if (!IS_ENABLED(CONFIG_TI_PVU))
-> 		return 0;
-> 
-> 
-> this looks cleaner than #ifdef.. #else..#endif .
-> 
+On Fri, Nov 01, 2024 at 11:47:37AM -0500, Bjorn Helgaas wrote:
+> On Fri, Nov 01, 2024 at 04:33:00PM +0200, Leon Romanovsky wrote:
+> > On Thu, Oct 31, 2024 at 06:22:52PM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Oct 29, 2024 at 07:04:50PM -0500, Bjorn Helgaas wrote:
+> > > > On Mon, Oct 28, 2024 at 10:05:33AM +0200, Leon Romanovsky wrote:
+> > > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > > > 
+> > > > > The Virtual Product Data (VPD) attribute is not readable by regular
+> > > > > user without root permissions. Such restriction is not really needed,
+> > > > > as data presented in that VPD is not sensitive at all.
+> > > > > 
+> > > > > This change aligns the permissions of the VPD attribute to be accessible
+> > > > > for read by all users, while write being restricted to root only.
+> > > > > 
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Fixes: d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
+> > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > > 
+> > > > Applied to pci/vpd for v6.13, thanks!
+> > > 
+> > > I think this deserves a little more consideration than I gave it
+> > > initially.
+> > > 
+> > > Obviously somebody is interested in using this; can we include some
+> > > examples so we know there's an actual user?
+> > 
+> > I'll provide it after the weekend.
 
-Can be done, but it would move the stubbing to include/linux/ti-pvu.h
-and ti_pvu_create_region and ti_pvu_remove_region.
+As it is seen through lspci, nothing criminal here.
+08:00.0 Ethernet controller: Mellanox Technologies MT2910 Family [ConnectX-7]
+...
+        Capabilities: [48] Vital Product Data
+                Product Name: NVIDIA ConnectX-7 HHHL adapter Card, 200GbE / NDR200 IB, Dual-port QSFP112, PCIe 5.0 x16 with x16 PCIe extension option, Crypto, Secure Boot Capable
+                Read-only fields:
+                        [PN] Part number: MCX713106AEHEA_QP1
+                        [EC] Engineering changes: A5
+                        [V2] Vendor specific: MCX713106AEHEA_QP1
+                        [SN] Serial number: MT2314XZ0JUZ
+                        [V3] Vendor specific: 0a5efb8958deed118000946dae7db798
+                        [VA] Vendor specific: MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A
+                        [V0] Vendor specific: PCIeGen5 x16
+                        [VU] Vendor specific: MT2314XZ0JUZMLNXS0D0F0
+                        [RV] Reserved: checksum good, 1 byte(s) reserved
+                End
 
-Jan
+> > 
+> > > Are we confident that VPD never contains anything sensitive?  It may
+> > > contain arbitrary vendor-specific information, so we can't know what
+> > > might be in that part.
+> > 
+> > It depends on the vendor, but I'm pretty confident that any sane vendor who
+> > read the PCI spec will not put sensitive information in the VPD. The
+> > spec is very clear that this open to everyone.
+> 
+> I don't think the spec really defines "everyone" in this context, does
+> it?  The concept of privileged vs unprivileged users is an OS
+> construct, not really something the PCIe spec covers.
+
+Agree that it OS specific, but for me, the fields like manufacturer ID,
+serial number e.t.c shows that the VPD doesn't contain sensitive information.
 
 > 
-> Rest LGTM
+> > > Reading VPD is fairly complicated and we've had problems in the past
+> > > (we have quirk_blacklist_vpd() for devices that behave
+> > > "unpredictably"), so it's worth considering whether allowing non-root
+> > > to do this could be exploited or could allow DOS attacks.
+> > 
+> > It is not different from any other PCI field. If you are afraid of DOS,
+> > you should limit to read all other fields too.
 > 
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, vmap_name);
->> +	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
->> +	if (IS_ERR(base))
->> +		return PTR_ERR(base);
->> +
->> +	writel(0, base + PCIE_VMAP_xP_REQID);
->> +
->> +	val = readl(base + PCIE_VMAP_xP_VIRTID);
->> +	val &= ~PCIE_VMAP_xP_VIRTID_VID_MASK;
->> +	val |= KS_PCI_VIRTID;
->> +	writel(val, base + PCIE_VMAP_xP_VIRTID);
->> +
->> +	val = readl(base + PCIE_VMAP_xP_CTRL);
->> +	val |= PCIE_VMAP_xP_CTRL_EN;
->> +	writel(val, base + PCIE_VMAP_xP_CTRL);
->> +
->> +	return 0;
->> +}
->> +
->> +static int ks_init_restricted_dma(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct of_phandle_iterator it;
->> +	struct resource phys;
->> +	int err;
->> +
->> +	/* Only process the first restricted dma pool, more are not allowed */
->> +	of_for_each_phandle(&it, err, dev->of_node, "memory-region",
->> +			    NULL, 0) {
->> +		if (of_device_is_compatible(it.node, "restricted-dma-pool"))
->> +			break;
->> +	}
->> +	if (err)
->> +		return err == -ENOENT ? 0 : err;
->> +
->> +	err = of_address_to_resource(it.node, 0, &phys);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to parse memory region %pOF: %d\n",
->> +			it.node, err);
->> +		return 0;
->> +	}
->> +
->> +	/* Map all incoming requests on low and high prio port to virtID 0 */
->> +	err = ks_init_vmap(pdev, "vmap_lp");
->> +	if (err)
->> +		return err;
->> +	err = ks_init_vmap(pdev, "vmap_hp");
->> +	if (err)
->> +		return err;
->> +
->> +	/*
->> +	 * Enforce DMA pool usage with the help of the PVU.
->> +	 * Any request outside will be dropped and raise an error at the PVU.
->> +	 */
->> +	return ti_pvu_create_region(KS_PCI_VIRTID, &phys);
->> +}
->> +
->> +static void ks_release_restricted_dma(struct platform_device *pdev)
->> +{
->> +	struct of_phandle_iterator it;
->> +	struct resource phys;
->> +	int err;
->> +
->> +	of_for_each_phandle(&it, err, pdev->dev.of_node, "memory-region",
->> +			    NULL, 0) {
->> +		if (of_device_is_compatible(it.node, "restricted-dma-pool") &&
->> +		    of_address_to_resource(it.node, 0, &phys) == 0) {
->> +			ti_pvu_remove_region(KS_PCI_VIRTID, &phys);
->> +			break;
->> +		}
->> +	}
->> +}
->> +#else
->> +static inline int ks_init_restricted_dma(struct platform_device *pdev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static inline void ks_release_restricted_dma(struct platform_device *pdev)
->> +{
->> +}
->> +#endif
->> +
->>  static int ks_pcie_probe(struct platform_device *pdev)
->>  {
->>  	const struct dw_pcie_host_ops *host_ops;
->> @@ -1273,6 +1375,10 @@ static int ks_pcie_probe(struct platform_device *pdev)
->>  	if (ret < 0)
->>  		goto err_get_sync;
->>  
->> +	ret = ks_init_restricted_dma(pdev);
->> +	if (ret < 0)
->> +		goto err_get_sync;
->> +
->>  	switch (mode) {
->>  	case DW_PCIE_RC_TYPE:
->>  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_HOST)) {
->> @@ -1354,6 +1460,8 @@ static void ks_pcie_remove(struct platform_device *pdev)
->>  	int num_lanes = ks_pcie->num_lanes;
->>  	struct device *dev = &pdev->dev;
->>  
->> +	ks_release_restricted_dma(pdev);
->> +
->>  	pm_runtime_put(dev);
->>  	pm_runtime_disable(dev);
->>  	ks_pcie_disable_phy(ks_pcie);
+> Reading VPD is much different than reading things from config space.
 > 
+> To read VPD, software needs to:
+> 
+>   - Mutex with any other read/write path
+> 
+>   - Write the VPD address to read to the VPD Address register, with F
+>     bit clear
+> 
+>   - Wait (with timeout) for hardware to set the F bit of VPD Address
+>     register
+> 
+>   - Read VPD information from the VPD Data register
+> 
+>   - Repeat as necessary
+> 
+> The address is 15 bits wide, so there may be up to 32KB of VPD data.
+> The only way to determine the actual length is to read the data and
+> parse the data items, which is vulnerable to corrupted EEPROMs and
+> hardware issues if we read beyond the implemented size.
+> 
+> The PCI core currently doesn't touch VPD until a driver or userspace
+> (via sysfs) reads or writes it, so this path is not tested on most
+> devices.
 
+The patch yes, but the flow is tested very well. It is hard to imagine
+situation where "lspci -vv" or corresponding library, never used to read
+data from device. Maybe it is not used daily on all computers, but all
+devices at least once in their lifetime were accessed.
 
--- 
-Siemens AG, Technology
-Linux Expert Center
+> 
+> > > For reference, here are the fields defined in PCIe r6.0, sec 6.27.2
+> > > (although VPD can contain anything a manufacturer wants to put there):
+> > > 
+> > >   PN Add-in Card Part Number
+> > >   EC Engineering Change Level of the Add-in Card
+> > >   FG Fabric Geography
+> > >   LC Location
+> > >   MN Manufacture ID
+> > >   PG PCI Geography
+> > >   SN Serial Number
+> > >   TR Thermal Reporting
+> > >   Vx Vendor Specific
+> > >   CP Extended Capability
+> > >   RV Checksum and Reserved
+> > >   FF Form Factor
+> > >   Yx System Specific
+> > >   YA Asset Tag Identifier
+> > >   RW Remaining Read/Write Area
+> > > 
+> > > The Conventional PCI spec, r3.0, sec 6.4, says:
+> > > 
+> > >   Vital Product Data (VPD) is the information that uniquely defines
+> > >   items such as the hardware, software, and microcode elements of a
+> > >   system. The VPD provides the system with information on various FRUs
+> > >   (Field Replaceable Unit) including Part Number, Serial Number, and
+> > >   other detailed information. VPD also provides a mechanism for
+> > >   storing information such as performance and failure data on the
+> > >   device being monitored. The objective, from a system point of view,
+> > >   is to collect this information by reading it from the hardware,
+> > >   software, and microcode components.
+> > > 
+> > > Some of that, e.g., performance and failure data, might be considered
+> > > sensitive in some environments.
+> > 
+> > I'm enabling it for modern device which is compliant to PCI spec v6.0.
+> > Do you want me to add quirk_allow_vpd() to allow only specific devices to
+> > read that field? It is doable but not scalable.
+> 
+> None of these questions really has to do with old vs new devices.  An
+> "allow-list" quirk is possible, but I agree it would be a maintenance
+> headache.  To me it feels like VPD is kind of in the same category as
+> dmesg logs.  We try to avoid putting secret stuff in dmesg, but
+> generally distros still don't make it completely public.
+
+They hide it as dmesg already exposes a lot of sensitive data. For
+example, the kernel panic reveals a lot of such data. It is definitely
+not the case for VPD, and VPD vs. dmesg comparison is not correct one.
+
+Thanks
+
+> 
+> > > > > ---
+> > > > > I added stable@ as it was discovered during our hardware ennoblement
+> > > > > and it is important to be picked by distributions too.
+> > > > > ---
+> > > > >  drivers/pci/vpd.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > > > > index e4300f5f304f..2537685cac90 100644
+> > > > > --- a/drivers/pci/vpd.c
+> > > > > +++ b/drivers/pci/vpd.c
+> > > > > @@ -317,7 +317,7 @@ static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
+> > > > >  
+> > > > >  	return ret;
+> > > > >  }
+> > > > > -static BIN_ATTR(vpd, 0600, vpd_read, vpd_write, 0);
+> > > > > +static BIN_ATTR_RW(vpd, 0);
+> > > > >  
+> > > > >  static struct bin_attribute *vpd_attrs[] = {
+> > > > >  	&bin_attr_vpd,
+> > > > > -- 
+> > > > > 2.46.2
+> > > > > 
 
