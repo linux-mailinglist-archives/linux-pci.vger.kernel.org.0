@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-15912-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15913-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E0829BADA8
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 09:06:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 275049BADB2
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 09:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0384F281977
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 08:06:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58F6B1C2132D
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 08:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4598319D07C;
-	Mon,  4 Nov 2024 08:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42E21A4F2F;
+	Mon,  4 Nov 2024 08:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WZTLngU3"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SIdWyorj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB92F18C038;
-	Mon,  4 Nov 2024 08:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3F61A265B;
+	Mon,  4 Nov 2024 08:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730707598; cv=none; b=ZnlzMT9oaPmvGy0L6bnJmH0VQ9C4TsDwFv2k/emAS9HZeN6+5amy0F/CoOYKGTr5uDSlCJS/HosGZ/xpgxoD1L9sJdn3tuI3V4i1y/b31Szr+bqcG2mq0wCmi5rFeVEoTNWFmVeIe+LiW+V16+Vh/mgmOs9l4GOhsQVU17wQ/MQ=
+	t=1730707733; cv=none; b=dsTLTTtch0q3KiACS0kMJRueB/AQw9jWVw4eEAjACjRSYFKb3Q/bC1ujf5mgW3XfL/DEXtUWjpV7KxQqUGUgwLx0w3SX+MRWpkcaMEXCNHuwj2mwki2ZHIVj8va6cyJIr3F3ibZKO1jF0T7R/fNHUvzLBFIStGF0MP0GLbG6fRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730707598; c=relaxed/simple;
-	bh=ovlxMEF1fdY8GrNXop7zVMItJBA531CYe2fyXnuBqYI=;
+	s=arc-20240116; t=1730707733; c=relaxed/simple;
+	bh=HBYtum1Ynsn4iu51DsI1XEnzBgbV3hzsfpO6QgW+HNs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NwqtyqTSbILDtfMPY5kTI/Xy1pYv1VP17Sr4dNv9IFF4JH32FGfpNe8Jew3527l0uIcmg2lNucqSTc+efKI9E2sO4HZvZSqc4h+4xrmHcIpOtN8iSNANwtV+Wi+joKTJzS1i89MI06y1+eQWpyC1IioQ2Ce4Cb9lW5tHv+avw4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WZTLngU3; arc=none smtp.client-ip=217.70.183.198
+	 MIME-Version:Content-Type; b=BxXQvXRUTTqaMJef9E1mrYE76cngT6ncY3V7ZuOSN6JLMnCjtJkOXSgRtWAwqzzFCjIaT1PIK8FZbhuvlKPT5ux9U96kC0WgJBDeV4n3Fb1QMm2DPZNpgy1zGg1TsIbfPcyqVbN3FegvCKZ/xNugmXqJTM1EVOhHe3V16UDdOzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SIdWyorj; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3FA7DC0006;
-	Mon,  4 Nov 2024 08:06:24 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0275320004;
+	Mon,  4 Nov 2024 08:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1730707587;
+	t=1730707723;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q3ntq14sieQxa1nhBG/basKlbuGIdYqCF0ESPB8PElU=;
-	b=WZTLngU33wA/P1ULCFNo2JgdIohqG7zwdBL8zM67L7WMw9uEJiGJ9vs/OEHt1kdDHJa3QH
-	1RDHwkC98KU6BybAQtrUfrhAa/EyKK7JFMlLJ1jVtsenVJZXYmui7HcXnZRUyksclcqJnP
-	8Kxn7QV/GcKQat03HHpO1AUb86XPr0H8Kmt31fxqcq3vxWSwm3lGDQ0aUWlv3Wa45ECESx
-	fLoTMGLcZQEE66wwOMWKZkgmalP6q6Xix7rUtKvVYj5nQGbsZLApYLepj0aGZStJ78Bb6t
-	AkKE3j/Lt/y/SNGcvYbq8UX14Bj/rv1riWsKEyNWSVzs0YnpwrMeLhHeIgT7KQ==
-Date: Mon, 4 Nov 2024 09:06:23 +0100
+	bh=Zv8rMTk3N7pFqyJ5F+rYbHLRRYuoS1UjcvDvJw/Onhk=;
+	b=SIdWyorjKqnlPI7Gzi6+hxmova0tlKlf/AzdxmIej8e10BPvpHz9k0pmcOiTRH7mBA214H
+	yw4Ai9P2CVM0ErItdQLx+D5B8btJqj1D7q2ENmdxMjGMFLicikAe47i4RUceWPmGDlofRv
+	foQ5UIcIGXQrmEaHgfN0dAiv+V7RkWAbkOdj6CGW+C0Pyvx7sNMVHzoWVnTLZgIvJwFijo
+	+rTYEWtjvgmX1jMOC4c9z9p0RYanCXFEJJg+vGagwzSG5lxqa1hYgxED26UqENW1xgyRm9
+	lNq/wMMqiX4U24QFgPQaKPV6Tv13jObGJuNZ+OHC00gRio8n272H9ub0jqOvkg==
+Date: Mon, 4 Nov 2024 09:08:39 +0100
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrea della Porta <andrea.porta@suse.com>
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
@@ -67,12 +67,12 @@ Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Luca Ceresoli
  <luca.ceresoli@bootlin.com>, Thomas Petazzoni
  <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU
- bus address to dynamic bridge nodes
-Message-ID: <20241104090623.53f73d75@bootlin.com>
-In-Reply-To: <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
+Subject: Re: [PATCH v3 06/12] of: address: Preserve the flags portion on 1:1
+ dma-ranges mapping
+Message-ID: <20241104090839.5b9b4bdd@bootlin.com>
+In-Reply-To: <3029857353c9499659369c1540ba887d7860670f.1730123575.git.andrea.porta@suse.com>
 References: <cover.1730123575.git.andrea.porta@suse.com>
-	<f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
+	<3029857353c9499659369c1540ba887d7860670f.1730123575.git.andrea.porta@suse.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -87,14 +87,19 @@ X-GND-Sasl: herve.codina@bootlin.com
 
 Hi Andrea,
 
-On Mon, 28 Oct 2024 15:07:22 +0100
+On Mon, 28 Oct 2024 15:07:23 +0100
 Andrea della Porta <andrea.porta@suse.com> wrote:
 
-> When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
-> incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
-> bridge, the window should instead be in PCI address space. Call
-> pci_bus_address() on the resource in order to obtain the PCI bus
-> address.
+> A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
+> translations. In this specific case, the current behaviour is to zero out
+> the entire specifier so that the translation could be carried on as an
+> offset from zero.  This includes address specifier that has flags (e.g.
+> PCI ranges).
+> Once the flags portion has been zeroed, the translation chain is broken
+> since the mapping functions will check the upcoming address specifier
+> against mismatching flags, always failing the 1:1 mapping and its entire
+> purpose of always succeeding.
+> Set to zero only the address portion while passing the flags through.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
