@@ -1,192 +1,208 @@
-Return-Path: <linux-pci+bounces-15922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90D289BAF3F
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 10:11:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D94BE9BAF5C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 10:14:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B30D11C240B0
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 09:11:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 090A71C2471C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 09:14:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400401AD3E1;
-	Mon,  4 Nov 2024 09:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE941AB6F1;
+	Mon,  4 Nov 2024 09:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPAliAyp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B9C1AD418;
-	Mon,  4 Nov 2024 09:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E21514B06C
+	for <linux-pci@vger.kernel.org>; Mon,  4 Nov 2024 09:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730711458; cv=none; b=TOuCSDfwYhxGmjmKnOgIucdReToMksZWs0hVmlsdIoLo3CPajuQvgmGKmjh51wbYkj4EcPH/DJ2EjmvOkcpIDzdIdAmTkXSMfh1Cdzl/hCTL9Y5Dxts/7G/BXHKUJT18Z1a+bcQuuSedPdzYPKw+0u5mpZzDcEkvQJ0xNqHgXuI=
+	t=1730711679; cv=none; b=VuK1PKYCrjqQYfAkTJZvzoaaqAd9nt+3yGSj6GiQVQTxxCIhDu+IZi2amyeAZpmXeHDUacv3D4HPl/dMR4G0vjNFYNOOdK1Py0dXtvKKykcOT6gwqSnqm39jreWGogVWR0XYVR4yueTPc4ssXUCPl5nTN/paLtAlz1zNvMZwxXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730711458; c=relaxed/simple;
-	bh=ZoNqXnHnnGF8lSD/qckoW6yk9+u13clamPp4V/MBF+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hu+B62kFxZkhzOGDzq1ntQlQbhzW+Ln3LaDYmxnCWulp+JQ54v4eBITnwAN9L+78iDLjd52EVZ/KfIdRYAYyc5EbG/lY4PsyFLAiu65lsBIOE9GYlNVYPu1Qy5fcSZTmzWVWJWtTcUlBH3EJ37kBT7pEqWsxfsa3SXKez17omD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 69D09227AAD; Mon,  4 Nov 2024 10:10:49 +0100 (CET)
-Date: Mon, 4 Nov 2024 10:10:48 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 07/17] dma-mapping: Implement link/unlink ranges API
-Message-ID: <20241104091048.GA25041@lst.de>
-References: <cover.1730298502.git.leon@kernel.org> <f8c7f160c9ae97fef4ccd355f9979727552c7374.1730298502.git.leon@kernel.org> <51c5a5d5-6f90-4c42-b0ef-b87791e00f20@arm.com>
+	s=arc-20240116; t=1730711679; c=relaxed/simple;
+	bh=hiHsPauRi7s7KPRKqYRrT/HM9VquDPkYW1yuB7BDXOQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ilotW268OzGISduG4XwZM5Gg1s52MStEnoyRkSEMF0KQnpl1CDMX7J/tr4BQf8PjuPQ7bacf/qT5y+2WgG4MqTUKuwFTBvZPWI0ut2mjXwZnJRXUr0ceTvqeROXOgI32eC1VJc/Qb8g2jdEoFTgrF89jDTU93hvpOK9EYNilD0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iPAliAyp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730711675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtE4zaC+EvvYENi1cZzK3nZQgfkXnUy5NNza5i8H9P4=;
+	b=iPAliAypOtF8lencyKAO9eMAXqSkBIBRRz2UPM/dq/+0fH8jQh97djRijqboRmtx3ZsfX7
+	5KQznTzEJrUiA9W8w/XnYYtiAw/wjP3ftxJKQp6CZX1mlbMo1CXdHAmD+6IGSfImf8LAxV
+	PwVmBNTzvp6I8ZeBogEbD5iCNNYpLoE=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-279-q80zzFl4NOeNcdWo8M_FZg-1; Mon, 04 Nov 2024 04:14:32 -0500
+X-MC-Unique: q80zzFl4NOeNcdWo8M_FZg-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-539e4cd976dso2290326e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 04 Nov 2024 01:14:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730711671; x=1731316471;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NtE4zaC+EvvYENi1cZzK3nZQgfkXnUy5NNza5i8H9P4=;
+        b=dDa4zptA15wGGQRT8e/3+yQQcpq6oBf4vgPMwBtABKuI44bY8EWChj8aCN9/823qcl
+         FbFy79+u4U0/C2GEbmqFB0CsNO5f8PqBlzKuHbU4NIfah3Hy/fjuLJDZQX5GITnKKgeR
+         Sz6EZHxYMxn+n6Wmwz94CLOEizCOZocciNGb263sKrZKO6X1/kVJ659IGuZHvgA2XC6H
+         5oMOHjbwmtZHM84RxBsc4dwAEARUCE+cB1pcoY/0e77hFdgsFMKUlUqoMcq5crKN8NUs
+         oFtJ8De0NfnHpDt90gvrTPLCe4aljz9rAD0jMfk7Nm9vGNwzlZysND7Rtw69oax0++v8
+         Nj+A==
+X-Gm-Message-State: AOJu0YxHCAiu4EabYH3AVWiVdlgXYKKmvtx7N+drLHjAbhK0H5cyoiji
+	sN7WFqV2hIiJMD6wUw5XRW5s6GkzgcxpniQKzyUEG2aAeyW76MrXIc1mD7wG972UcCMIE8U6nr1
+	5/F4qTjN6qpfMhu0wURjFCDLc7ftos2JgBDhS7Mm/uJBSNBsIaKxa6pfT8JNya8fKkA==
+X-Received: by 2002:a05:6512:2396:b0:53b:4899:9be9 with SMTP id 2adb3069b0e04-53b8903e4b4mr9227370e87.59.1730711670853;
+        Mon, 04 Nov 2024 01:14:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHwE8PfdjYGs1eURMRKPA4hivs/ziQVbeixVH0+VkgT93/eTPTzRsRq2A2vaf12NdpQdoUvgw==
+X-Received: by 2002:a05:6512:2396:b0:53b:4899:9be9 with SMTP id 2adb3069b0e04-53b8903e4b4mr9227351e87.59.1730711670400;
+        Mon, 04 Nov 2024 01:14:30 -0800 (PST)
+Received: from ?IPv6:2001:16b8:2d7f:e400:7f8:722c:bb2e:bb7f? (200116b82d7fe40007f8722cbb2ebb7f.dip.versatel-1u1.de. [2001:16b8:2d7f:e400:7f8:722c:bb2e:bb7f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c113e5d6sm12631719f8f.76.2024.11.04.01.14.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 01:14:29 -0800 (PST)
+Message-ID: <61ef07331f843c25b19e5a6f68419e0a607a1b0b.camel@redhat.com>
+Subject: Re: [PATCH v2] PCI: Restore the original INTX_DISABLE bit by
+ pcim_intx()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Takashi Iwai <tiwai@suse.de>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 04 Nov 2024 10:14:28 +0100
+In-Reply-To: <20241031134300.10296-1-tiwai@suse.de>
+References: <20241031134300.10296-1-tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51c5a5d5-6f90-4c42-b0ef-b87791e00f20@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Oct 31, 2024 at 09:18:07PM +0000, Robin Murphy wrote:
->>   +static int __dma_iova_link(struct device *dev, dma_addr_t addr,
->> +		phys_addr_t phys, size_t size, enum dma_data_direction dir,
->> +		unsigned long attrs)
->> +{
->> +	bool coherent = dev_is_dma_coherent(dev);
->> +
->> +	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
->
-> If you really imagine this can support non-coherent operation and 
-> DMA_ATTR_SKIP_CPU_SYNC, where are the corresponding explicit sync 
-> operations? dma_sync_single_*() sure as heck aren't going to work...
->
-> In fact, same goes for SWIOTLB bouncing even in the coherent case.
+On Thu, 2024-10-31 at 14:42 +0100, Takashi Iwai wrote:
+> pcim_intx() tries to restore the INTx bit at removal via devres, but
+> there is a chance that it restores a wrong value.
+> Because the value to be restored is blindly assumed to be the
+> negative
+> of the enable argument, when a driver calls pcim_intx() unnecessarily
+> for the already enabled state, it'll restore to the disabled state in
+> turn.=C2=A0 That is, the function assumes the case like:
+>=20
+> =C2=A0 // INTx =3D=3D 1
+> =C2=A0 pcim_intx(pdev, 0); // old INTx value assumed to be 1 -> correct
+>=20
+> but it might be like the following, too:
+>=20
+> =C2=A0 // INTx =3D=3D 0
+> =C2=A0 pcim_intx(pdev, 0); // old INTx value assumed to be 1 -> wrong
+>=20
+> Also, when a driver calls pcim_intx() multiple times with different
+> enable argument values, the last one will win no matter what value it
+> is.=C2=A0 This can lead to inconsistency, e.g.
+>=20
+> =C2=A0 // INTx =3D=3D 1
+> =C2=A0 pcim_intx(pdev, 0); // OK
+> =C2=A0 ...
+> =C2=A0 pcim_intx(pdev, 1); // now old INTx wrongly assumed to be 0
+>=20
+> This patch addresses those inconsistencies by saving the original
+> INTx state at the first pcim_intx() call.=C2=A0 For that,
+> get_or_create_intx_devres() is folded into pcim_intx() caller side;
+> it allows us to simply check the already allocated devres and record
+> the original INTx along with the devres_alloc() call.
+>=20
+> Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
+> Cc: stable@vger.kernel.org=C2=A0# 6.11+
+> Link: https://lore.kernel.org/87v7xk2ps5.wl-tiwai@suse.de
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
-No with explicit sync operations.  But plain map/unmap works, I've
-actually verified that with nvme.  And that's a pretty large use
-case.
+Reviewed-by: Philipp Stanner <pstanner@redhat.com>
 
->> +		arch_sync_dma_for_device(phys, size, dir);
->
-> Plus if the aim is to pass P2P and whatever arbitrary physical addresses 
-> through here as well, how can we be sure this isn't going to explode?
+Nice!
 
-That's a good point.  Only mapped through host bridge P2P can even
-end up here, so the address is a perfectly valid physical address
-in the host.  But I'm not sure if all arch_sync_dma_for_device
-implementations handle IOMMU memory fine.
-
->> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
->> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
->> +	struct iova_domain *iovad = &cookie->iovad;
->> +	size_t iova_start_pad = iova_offset(iovad, phys);
->> +	size_t iova_end_pad = iova_offset(iovad, phys + size);
->
-> I thought the code below was wrong until I double-checked and realised that 
-> this is not what its name implies it to be...
-
-Which variable does this refer to, and what would be a better name?
-
->> +		phys = iommu_iova_to_phys(domain, addr);
->> +		if (WARN_ON(!phys))
->> +			continue;
->> +		len = min_t(size_t,
->> +			end - addr, iovad->granule - iova_start_pad);
->> +
->> +		if (!dev_is_dma_coherent(dev) &&
->> +		    !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
->> +			arch_sync_dma_for_cpu(phys, len, dir);
->> +
->> +		swiotlb_tbl_unmap_single(dev, phys, len, dir, attrs);
->
-> How do you know that "phys" and "len" match what was originally allocated 
-> and bounced in, and this isn't going to try to bounce out too much, free 
-> the wrong slot, or anything else nasty? If it's not supposed to be 
-> intentional that a sub-granule buffer can be linked to any offset in the 
-> middle of the IOVA range as long as its original physical address is 
-> aligned to the IOVA granule size(?), why try to bounce anywhere other than 
-> the ends of the range at all?
-
-Mostly because the code is simpler and unless misused it just works.
-But it might be worth adding explicit checks for the start and end.
-
->> +static void __iommu_dma_iova_unlink(struct device *dev,
->> +		struct dma_iova_state *state, size_t offset, size_t size,
->> +		enum dma_data_direction dir, unsigned long attrs,
->> +		bool free_iova)
->> +{
->> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
->> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
->> +	struct iova_domain *iovad = &cookie->iovad;
->> +	dma_addr_t addr = state->addr + offset;
->> +	size_t iova_start_pad = iova_offset(iovad, addr);
->> +	struct iommu_iotlb_gather iotlb_gather;
->> +	size_t unmapped;
->> +
->> +	if ((state->__size & DMA_IOVA_USE_SWIOTLB) ||
->> +	    (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC)))
->> +		iommu_dma_iova_unlink_range_slow(dev, addr, size, dir, attrs);
->> +
->> +	iommu_iotlb_gather_init(&iotlb_gather);
->> +	iotlb_gather.queued = free_iova && READ_ONCE(cookie->fq_domain);
->
-> Is is really worth the bother?
-
-Worth what?
-
->> +	size = iova_align(iovad, size + iova_start_pad);
->> +	addr -= iova_start_pad;
->> +	unmapped = iommu_unmap_fast(domain, addr, size, &iotlb_gather);
->> +	WARN_ON(unmapped != size);
->> +
->> +	if (!iotlb_gather.queued)
->> +		iommu_iotlb_sync(domain, &iotlb_gather);
->> +	if (free_iova)
->> +		iommu_dma_free_iova(cookie, addr, size, &iotlb_gather);
->
-> There's no guarantee that "size" is the correct value here, so this has 
-> every chance of corrupting the IOVA domain.
-
-Yes, but the same is true for every users of the iommu_* API as well.
-
->> +/**
->> + * dma_iova_unlink - Unlink a range of IOVA space
->> + * @dev: DMA device
->> + * @state: IOVA state
->> + * @offset: offset into the IOVA state to unlink
->> + * @size: size of the buffer
->> + * @dir: DMA direction
->> + * @attrs: attributes of mapping properties
->> + *
->> + * Unlink a range of IOVA space for the given IOVA state.
->
-> If I initially link a large range in one go, then unlink a small part of 
-> it, what behaviour can I expect?
-
-As in map say 128k and then unmap 4k?  It will just work, even if that
-is not the intended use case, which is either map everything up front
-and unmap everything together, or the HMM version of random constant
-mapping and unmapping at page size granularity.
+> ---
+> v1->v2: refactoring, fold get_or_create_intx_devres() into the caller
+> instead of retrieving the original INTx there.
+> Also add comments and improve the patch description.
+>=20
+> =C2=A0drivers/pci/devres.c | 34 +++++++++++++++++++---------------
+> =C2=A01 file changed, 19 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index b133967faef8..c93d4d4499a0 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -438,19 +438,12 @@ static void pcim_intx_restore(struct device
+> *dev, void *data)
+> =C2=A0	__pcim_intx(pdev, res->orig_intx);
+> =C2=A0}
+> =C2=A0
+> -static struct pcim_intx_devres *get_or_create_intx_devres(struct
+> device *dev)
+> +static void save_orig_intx(struct pci_dev *pdev, struct
+> pcim_intx_devres *res)
+> =C2=A0{
+> -	struct pcim_intx_devres *res;
+> +	u16 pci_command;
+> =C2=A0
+> -	res =3D devres_find(dev, pcim_intx_restore, NULL, NULL);
+> -	if (res)
+> -		return res;
+> -
+> -	res =3D devres_alloc(pcim_intx_restore, sizeof(*res),
+> GFP_KERNEL);
+> -	if (res)
+> -		devres_add(dev, res);
+> -
+> -	return res;
+> +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> +	res->orig_intx =3D !(pci_command & PCI_COMMAND_INTX_DISABLE);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/**
+> @@ -466,12 +459,23 @@ static struct pcim_intx_devres
+> *get_or_create_intx_devres(struct device *dev)
+> =C2=A0int pcim_intx(struct pci_dev *pdev, int enable)
+> =C2=A0{
+> =C2=A0	struct pcim_intx_devres *res;
+> +	struct device *dev =3D &pdev->dev;
+> =C2=A0
+> -	res =3D get_or_create_intx_devres(&pdev->dev);
+> -	if (!res)
+> -		return -ENOMEM;
+> +	/*
+> +	 * pcim_intx() must only restore the INTx value that existed
+> before the
+> +	 * driver was loaded, i.e., before it called pcim_intx() for
+> the
+> +	 * first time.
+> +	 */
+> +	res =3D devres_find(dev, pcim_intx_restore, NULL, NULL);
+> +	if (!res) {
+> +		res =3D devres_alloc(pcim_intx_restore, sizeof(*res),
+> GFP_KERNEL);
+> +		if (!res)
+> +			return -ENOMEM;
+> +
+> +		save_orig_intx(pdev, res);
+> +		devres_add(dev, res);
+> +	}
+> =C2=A0
+> -	res->orig_intx =3D !enable;
+> =C2=A0	__pcim_intx(pdev, enable);
+> =C2=A0
+> =C2=A0	return 0;
 
 
