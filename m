@@ -1,73 +1,71 @@
-Return-Path: <linux-pci+bounces-15952-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15953-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EBFA9BB5CD
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:21:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DD709BB5D8
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:23:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2ADE01F2234A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 13:21:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0CAAB2386C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 13:23:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55487DA7F;
-	Mon,  4 Nov 2024 13:20:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F11578C6C;
+	Mon,  4 Nov 2024 13:22:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB7C42A91;
-	Mon,  4 Nov 2024 13:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB747083F;
+	Mon,  4 Nov 2024 13:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730726450; cv=none; b=u+CfXAJpyQ1+F2qxwr2/6jGrJuruP4f8hT7ZhZ/izjOtq75P52SXDrQQpXwlFS50dwwNzaog3iVO4BMyBJryC0pmmQ3BxdZTRKlyDUackEnhJ7OCwH8lmw75sFnLn91FHNlc6KWwH2KSYdjJ7gwOZ0zS2nGXDKQtirWcFYh9Ics=
+	t=1730726545; cv=none; b=p0yc7OTKj7cPQ3fhE2mmgKU5XoE4XzH70tAe518zZGuJLt8NrBOaUkcyCkWXyXGMc5KQVpjQhmqaadppBowOhL/F7Y0iaS9zTN9lNe0IIz+rh0GBKBTkanlObV3UCRbh98a9qWJqW7HBDT0EQTpgGE47pUW0SF5gu8ddzw2aP+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730726450; c=relaxed/simple;
-	bh=oIoDtIF+2GZDMiRu2wj9nD2wnJGR5s9ZmdKIifr2wDE=;
+	s=arc-20240116; t=1730726545; c=relaxed/simple;
+	bh=dVzhkYwajzOcp/k61L3BTjdvz62YtWheav4zFKEnZAo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGERdU2KdyhtXY+O8fEdhRvwVilViWY1DrpM4vgl66p4iWdNdewSHOMuiPhipQijneTw7ol10V0E8sr1trf9mPDGZ60qcCAJPoX874JRHmkCTUXKbFCzsdACRNz2VoEJgT73pVinFYDLsSXnR8ISNZ8A2uuvocCWYYL1gTE7WWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixM1hu+L7Qq0s2+O3i7x/M1Hkzv0EWaaqkPPRX+yCOg40YUFKXVvuT1gkaiTp2F7tlwcIrXtG9G7zeZR/hwZTR/FA+mQbwq8NNMaFIdNmvEJNw0S5XXcXx5IS850e9Rtx+5ZJgWiZQ4VaD7t+iS8BjyhS33jY4yxFoDm2rg8VSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21116b187c4so26972425ad.3;
-        Mon, 04 Nov 2024 05:20:48 -0800 (PST)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2110a622d76so31727775ad.3;
+        Mon, 04 Nov 2024 05:22:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730726448; x=1731331248;
+        d=1e100.net; s=20230601; t=1730726543; x=1731331343;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bAYbSq5mlU7adPkgvorpMNMhcx0QaHzk2bxUeWeRhik=;
-        b=aXPFevXK6rwJx7n3n4rwU9mdH/sc6Sf7mgcO1YjbblS0RnRcDrkQO1O0ENHFPgsXgb
-         +xP+0QBRrFVIitvO083UwSl6IQkQKWGL8NFgWTKDBBOrEd/LUj7tBbKSZDl6HUYOUm2G
-         x5QFYT5HgSQG7FdaAxH8lezaQ1Tov9MelXZSviClmi8ORLN/iBDq/eJyGsyUlt5ildl2
-         GQpFzyMKA2q75G4fn0uTanrc/08iOOV+KM8N1cPsJlEDQsDzGNPltK0m9xrlxxertdO+
-         j3btN6cGOaX8dpKFXcYPs2T7lmwJhKVWld6tMGDoq0cek9ifMxil/FzyWH6vFYOY68Hw
-         +gJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB75mXU1ZdlhgFRHJjiP4hvjgQyhf3o3hPrJxhiCjrsszpjQNbb2EiYP1Ag3uu0wpqOMJoLRxk9u7Fsbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRN31ixaKvxKSZgETA34kru1lFRQ8qlhHm5vTHGVI42X2uHEro
-	PpB2JPwMR6SnHGLt8E/MCE8EFvRNP8fcENsocfCZQ9RDyM/GoPoX
-X-Google-Smtp-Source: AGHT+IFPbiyTwQNpyLarXOasgjJJbddopeoCOOsJvaCh85ieSNwN3SrqIlcdYNIvZeGmYFnzFxul9w==
-X-Received: by 2002:a17:902:ce8c:b0:20c:e262:2560 with SMTP id d9443c01a7336-2111b0078bdmr151908315ad.50.1730726448397;
-        Mon, 04 Nov 2024 05:20:48 -0800 (PST)
+        bh=UiVWnP7kdfguO3vKrywHszcKuT/ax89aUHhWpqrDlzU=;
+        b=ZHJ8FQr7rPQgMwo3jvx6htS35KBdjsJCKia4jjaCUONhR+y9PJ09oFdu5C2W2yqnwA
+         2P90UBpoVljN9Qe8Kh91McHrni3gCUr/JAFKGQCz1Zaq9vGEE261NcFm4+cp5RBME9MO
+         PU62nVhw9sFs1thR1/uLWlZzlEZhPJe1SzQBTy16dfgWIdwd4IUZU0PA78KMEckXEw8v
+         jP9iYQC+lHRUElc+Hn77NPSqmlULgj1jp7KZiWinHwfC5XxtvUSIgQysijlpAxiUXDOI
+         SX71hXgkdBLI7YwciS/cCDVq933y4sJrdGL7t+sar0OZhZSO+oFtjE7+4iHjX2MCqBp/
+         mYQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxVmjcLJmzrVmDIak/j36DMqHkyz0/bYSKITM90k6a+Wcy1grqPUNfUFOPsSRUOzP8C3AMggvWt1XlK8Q=@vger.kernel.org, AJvYcCWr+9BoELMbKmQyzV1YZUpGnWJLSbzb7ctbdbT2CpzeMBXq7KkVPjeUn/5DImilRU/joUV32cAcNnIddg==@vger.kernel.org, AJvYcCXqOTVREsgHR2UVuXaE/uTnC7ld5lewHgDnSuxdFPAvbo6szTaPzL5MKiDe+S/gYB0WILnj9gFeorqf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5uMMfcoAqvc+iWHnMvy6cuk9BhjKBUZMazMt7Xnv+sjOFXa0z
+	BkkciUxgQ+sw1YRWSMsfYVtSqR0r3J1Bmru7S3Zs/TUK+ytrWfsS
+X-Google-Smtp-Source: AGHT+IHpDIGv2RScWEaNKHsryqx6v1lrXJOztR/qFFp197CdN99mxwH5uovMf6w+lDn72OzEgzUsUA==
+X-Received: by 2002:a17:903:2bce:b0:20c:f27f:fbf with SMTP id d9443c01a7336-210c6ae7f15mr465977105ad.25.1730726543312;
+        Mon, 04 Nov 2024 05:22:23 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e93db18128sm7460203a91.36.2024.11.04.05.20.47
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057f3dd1sm60195775ad.308.2024.11.04.05.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 05:20:47 -0800 (PST)
-Date: Mon, 4 Nov 2024 22:20:46 +0900
+        Mon, 04 Nov 2024 05:22:22 -0800 (PST)
+Date: Mon, 4 Nov 2024 22:22:21 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com, lpieralisi@kernel.org, robh@kernel.org,
-	bhelgaas@google.com, matthias.bgg@gmail.com,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
-	fshao@chromium.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 2/2] PCI: mediatek-gen3: Add support for restricting
- link width
-Message-ID: <20241104132046.GA2504924@rocinante>
-References: <20241104114935.172908-1-angelogioacchino.delregno@collabora.com>
- <20241104114935.172908-3-angelogioacchino.delregno@collabora.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
+	vigneshr@ti.com, manivannan.sadhasivam@linaro.org,
+	kishon@kernel.org, thomas.richard@bootlin.com,
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH v2] PCI: j721e: Deassert PERST# after a delay of
+ PCIE_T_PVPERL_MS ms
+Message-ID: <20241104132221.GB2504924@rocinante>
+References: <20241104074420.1862932-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,38 +74,21 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104114935.172908-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20241104074420.1862932-1-s-vadapalli@ti.com>
 
 Hello,
 
-> +	ret = of_property_read_u32(dev->of_node, "num-lanes", &num_lanes);
-> +	if (ret == 0) {
-> +		if (num_lanes == 0 || num_lanes > 16 || (num_lanes != 1 && num_lanes % 2))
-> +			dev_warn(dev, "Invalid num-lanes, using controller defaults\n");
-> +		else
-> +			pcie->num_lanes = num_lanes;
-> +	}
-> +
->  	return 0;
->  }
+> According to Section 2.2 of the PCI Express Card Electromechanical
+> Specification (Revision 5.1), in order to ensure that the power and the
+> reference clock are stable, PERST# has to be deasserted after a delay of
+> 100 milliseconds (TPVPERL). Currently, it is being assumed that the power
+> is already stable, which is not necessarily true. Hence, change the delay
+> to PCIE_T_PVPERL_MS to guarantee that power and reference clock are stable.
 
-If you were to handle non-zero return value as an error here, perhaps the
-property has not been set, then we could reduce the indentation here.
+Applied to controller/j721e, thank you!
 
-Something like this, perhaps?
-
-  ret = of_property_read_u32(dev->of_node, "num-lanes", &num_lanes);
-  if (ret) {
-          dev_err(dev, "Failed to read num-lanes: %d\n", ret);
-          return ret;
-  }
-  
-  if (!num_lanes || num_lanes > 16 || (num_lanes != 1 && num_lanes % 2))
-  	dev_warn(dev, "Invalid num-lanes, using controller defaults\n");
-  else
-  	pcie->num_lanes = num_lanes;
-
-Does this make sense here?  Thoughts?
+[01/01] PCI: j721e: Deassert PERST# after a delay of PCIE_T_PVPERL_MS milliseconds
+        https://git.kernel.org/pci/pci/c/22a9120479a4
 
 	Krzysztof
 
