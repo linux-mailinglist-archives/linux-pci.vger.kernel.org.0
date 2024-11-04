@@ -1,146 +1,103 @@
-Return-Path: <linux-pci+bounces-15954-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E33C89BB5DB
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:23:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D802A9BB5E6
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:25:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7BA0280A0B
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 13:23:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8477B1F21F56
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 13:25:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E172128E37;
-	Mon,  4 Nov 2024 13:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qUQ0XOtU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bI37hxgQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oH/oeR7u";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kQM+343q"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996DFB644;
+	Mon,  4 Nov 2024 13:25:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB2B1F942;
-	Mon,  4 Nov 2024 13:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3960342A91;
+	Mon,  4 Nov 2024 13:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730726573; cv=none; b=gfeswtxb6vz4sy2s4MeMpFS5nrs+ZxuW+tf9/gv7mxuBl4++xtmHR2Nn46BgCzDpvqzMLuppu1E3OPj5ZJ9isYbONyaE8MGRa2fTp63A4Uiq5kELJAUeh54buLUI8sb+ro3fjg85nxIcdNaVU9K8LyOGtk8L3hyZEA/RrAUzaIU=
+	t=1730726716; cv=none; b=ee+ktT3myF+WFr3C2DI5eMBYNyvwwsYlVgyZMZ4p3Lthd/5chsxQfBrG6S4tiA/Xx2KI6wnBjmUXgstNfntRaFe3ooj78vT7nyC6iIiiySSIZUs2FJ9zaOEmQ+8lkHhLkZbWHqxBioZuPlUzZ8yd80VlTjeHNC6HU0c6nETkTzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730726573; c=relaxed/simple;
-	bh=jENhgwjHfHLpHVisFsFtPBea2iPPH9L7WxXFlxC/V3Q=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t2mp99Ufwy20cbL67bQso0bAbJWMaR8kxDe0AwNWpkVQwJMnktNuJTTJREN4lPiDCbIvt3UCmILawCRjX92cL7kb4Fp8aLvLr+iQJ0Z24BU4BLMCYMDFNJtcoOge9+bTtuJJQ53JPCV2GpL3ec4jcFse7tRt3snj1MVyifr/DB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qUQ0XOtU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bI37hxgQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oH/oeR7u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kQM+343q; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F287A21DDA;
-	Mon,  4 Nov 2024 13:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730726570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP+efpquukK7qg3JnxY1hr4qsWnRjhge2MvS9FSY9/c=;
-	b=qUQ0XOtUdinGwezHfnWUXA5NDMJ/C+BBx27+prfmP+NIVJcjswH1qjJV9TpuuXlZNKA88I
-	6YCoIDe5kYc70gTLKBYPuvF1PZQmYsYKNglP5QGRU2hWwFjx5rWFcz2tJs3Kyl0NDAB72z
-	QPu2N3aWpYpb/Sle+cItWfTkjnthl70=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730726570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP+efpquukK7qg3JnxY1hr4qsWnRjhge2MvS9FSY9/c=;
-	b=bI37hxgQwD4SwPOJCZaZPz5j73gndAJf0YwYSMDcapUbBwnAfEKqjuIVmr4Um6vpDpRCM8
-	tjdcGMhgDHo8xLDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730726568; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP+efpquukK7qg3JnxY1hr4qsWnRjhge2MvS9FSY9/c=;
-	b=oH/oeR7usF+voNP+XTXuKI7mw/9d7LgEztFgn6okOXIIE36ss3CeSDxUyaHMMv80zdVNeS
-	E4R+1At0xM4LLL1qYRtBRTlULedPj87tWw6vyHnRFRiYjLlIFWdk6vcPdg1rNcqDhPROSO
-	UGtQsulyIeNykZxciJFKaT9ijzRpEVg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730726568;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP+efpquukK7qg3JnxY1hr4qsWnRjhge2MvS9FSY9/c=;
-	b=kQM+343q3q4lySrJ7LeVVMwpXjDtfpRrNtELi1ZezM2yQia6+NTVhuZAzDwXuryIc26SQu
-	EQi2qx4bj6J7ryCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BDF941373E;
-	Mon,  4 Nov 2024 13:22:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id L7oxLajKKGd0aQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 04 Nov 2024 13:22:48 +0000
-Date: Mon, 04 Nov 2024 14:23:54 +0100
-Message-ID: <87r07rb09h.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: hda: intel: Switch to pci_alloc_irq_vectors API
-In-Reply-To: <11c60429-9435-4666-8e27-77160abef68e@gmail.com>
-References: <11c60429-9435-4666-8e27-77160abef68e@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1730726716; c=relaxed/simple;
+	bh=knMCDx/yzXtOgURCBEpaUlIYJ4+xSLkmDKxAPvCkc3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UOgUvXRpFsXDRcqb8jNdti3F32LVpQXSlhuh3OB9ZiwSROhPQbm9lyOPPYKYCjvdowymSxzjG86tE2yVKQIkFo3xFkpHMco77uqAutUNhYGl+ta7hs7+Qm01af2cYpyRtjL9k6ZpcMG1mNDrkXPZ4iKUQ1DoKT6gkRa6AvmUMew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7ede6803585so3716703a12.0;
+        Mon, 04 Nov 2024 05:25:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730726714; x=1731331514;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ogMhvqORaTIS8b73g96qmwe2RrdnQeAUHycFc2Jb3Ok=;
+        b=lFmUJYm8iBP/PtpcxIg9eUBnt49X2/FlJZUwAHbaKApAP6UPg462a4EWTHvKfNPNEr
+         RMtAgPI+I7SD5FnAkKBwbGhJUjMsJVUH8PDIJrFLBQUI8FuOINUl/fXoU6qUHHbUH8pZ
+         85AHszzjpscMzCcNM/6MQEPWRNeRSBUh/Qi05DcO30hEeeeGdQkMfDyUpXeFYuZpiPQs
+         8iebwfyCvwFej7wZ/9QdcZ5vFQxCwNyXiFylFJC0tZ9UJJT7dZPyhsbpFm7uh9FEa0Bh
+         AoDbesvmzKeP/hkcSZZKf5XmqvJU2gp4wgSin5/aaJTVahbWbjIOCtK0OI+alfVyMb1f
+         rLkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUl9s6Y8cjtMQq08Sd6mSf9np+VZ8TPbHcI5epNpWnkLuVj3/HHYHHoFmSe2i2RCpEsxf1Q/Eo2fx/R5BQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtRihLhybfOnmXL0oyFkKAf4VhgNhHPmfwbD9Ly6bHkM4ScMAZ
+	XC0MAbAdjY2ys5wIY6LE+azY0BtPXEf1Nuj1wHTMgViY3nTukdj1
+X-Google-Smtp-Source: AGHT+IEqHvQAsYUPGy9siYTWfU1O6jle+f0vsrJdgHDRINQIgi6G1CiPymMKxPiB4GdjdkvcxWZqCQ==
+X-Received: by 2002:a17:90b:278c:b0:2e3:bc3e:feef with SMTP id 98e67ed59e1d1-2e93e0589dcmr22435187a91.3.1730726714356;
+        Mon, 04 Nov 2024 05:25:14 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e92fa2576dsm9473273a91.16.2024.11.04.05.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 05:25:14 -0800 (PST)
+Date: Mon, 4 Nov 2024 22:25:12 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com, lpieralisi@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, matthias.bgg@gmail.com,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
+	fshao@chromium.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 1/2] PCI: mediatek-gen3: Add support for setting
+ max-link-speed limit
+Message-ID: <20241104132512.GC2504924@rocinante>
+References: <20241104114935.172908-1-angelogioacchino.delregno@collabora.com>
+ <20241104114935.172908-2-angelogioacchino.delregno@collabora.com>
+ <D5DF0QIO2UZQ.29U999LYCC05M@rocinante>
+ <f8ca0f82-2851-40d9-983b-2a143b44263a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8ca0f82-2851-40d9-983b-2a143b44263a@collabora.com>
 
-On Thu, 31 Oct 2024 20:41:12 +0100,
-Heiner Kallweit wrote:
+Hello,
+
+> > I wonder if this debug message would be better served as a warning to let
+> > the user know that the speed has been overridden due to the platform
+> > limitation.  Thoughts?
+> > 
+> > Also, there is no need to sent a new series if you fine with the
+> > suggestions.  I will mend the code on the branch when applying.
+> > 
 > 
-> Switch from legacy pci_msi_enable()/pci_intx() API to the
-> pci_alloc_irq_vectors API.
+> A warning seems to be a bit too much and would appear like something to worry
+> about (or something unintended)...
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Perhaps a dev_info() would work better here?
 
-Applied to for-next branch now.  Thanks.
+Sounds good!  Thank you!
 
+Will handle the necessary changes while applying the series.
 
-Takashi
+	Krzysztof
 
