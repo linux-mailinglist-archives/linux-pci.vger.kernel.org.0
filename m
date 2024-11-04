@@ -1,59 +1,72 @@
-Return-Path: <linux-pci+bounces-15979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A6429BBAE9
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 18:02:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF2649BBAF6
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 18:03:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29A3D1F21A28
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 17:02:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 744641F21D06
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 17:03:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECE71C57A5;
-	Mon,  4 Nov 2024 17:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkU4byX2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F961C9B68;
+	Mon,  4 Nov 2024 17:02:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396051C3034
-	for <linux-pci@vger.kernel.org>; Mon,  4 Nov 2024 17:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE941C8315;
+	Mon,  4 Nov 2024 17:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730739710; cv=none; b=lMcqkCrqQuDI/2n1/KYGyumXcM5kqQ80p5/7M19A9G8qc+8UGSSGxrgZz4zJAGYfyeype51Paa+Sd7siHzm18JZkoRdgq1GJhOSLJ0I8sfUOXyIoYhDHqkdwmqyxq0stAhz6TR4uCQPXBuN2pdF1vkv6w/02e7QvaUdgJAQdjQ0=
+	t=1730739753; cv=none; b=AyWoE0p+sfjupNTotlcO4LEEW1D6/59tLapG23pFKkq3hcsD7RcOlPuRiAzgwxSoMcpcveKF1hKeRvAASzbDZZ6DO3qzuwg7y4MZa2sHwnj1t+lBx+1iMwxIqnanec1H4WysITh5P1PGxfxIIE+nmWd+whU00N7zgthWpz/b6VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730739710; c=relaxed/simple;
-	bh=LQWfiUupE4ccCGTVBGP1X+xVSUhT/AgTuBEY0/IdKEc=;
+	s=arc-20240116; t=1730739753; c=relaxed/simple;
+	bh=FUAmzJQokXIilKtGylKNmbl49NYmqnYgsB1F30UCmMw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cmz5Jwdum4oW797/QFvVcUCKQ6duG17zojFQwTiR/CJ7HK8md6E9L1POV+Fcm1rRr2T6q8zcuvfJ7FOzDkXsssFN/n4YCOz57bnaBtfgGVKFrozWugRH6aSYeyq4slepOZM2XvCwvrUavydM5hhguA6jDfCA7eh6jXtHpej5NKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkU4byX2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45420C4CECE;
-	Mon,  4 Nov 2024 17:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730739709;
-	bh=LQWfiUupE4ccCGTVBGP1X+xVSUhT/AgTuBEY0/IdKEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SkU4byX2GTFWbHlL9JXJrg4Hou9t0rb/xxfYPe60+fWRSDuCLERrcOTfjqJKlTpvi
-	 JIct5t5UGIGAWWkmKI8gOG7q0m5luZNo2BoPRC00KFbrjCsfvOBKe0kudxHrgXQ/cR
-	 g2zPuWsGMFp3vsb26eOYwqPHkziyNxXpXmaXRVUwHV1W/QtKW+MS3czHL8oT17eEC1
-	 FXwsdJNhuQYmbpveCS4BNPsWiP5hNRr+vFLlRRW2KxVaYvZGI+iWQqPM/Kch/J/TLm
-	 OPWtvw8zpXyAYjegPwi4WFXmAsS3/ah5vhFQbLcN7HROhuVcHTPidT/67RbynoUde/
-	 Js3m2PnbXrRGQ==
-Date: Mon, 4 Nov 2024 10:01:47 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, alex.williamson@redhat.com,
-	ameynarkhede03@gmail.com, raphael.norwitz@nutanix.com
-Subject: Re: [PATCHv2 2/2] pci: warn if a running device is unaware of reset
-Message-ID: <Zyj9-1kB3VhL6iZR@kbusch-mbp>
-References: <20241025222755.3756162-1-kbusch@meta.com>
- <20241025222755.3756162-2-kbusch@meta.com>
- <471500804dff90f31320a2a53a48724fffe318b6.camel@linux.ibm.com>
- <ZyUqKquBudn3hh5_@kbusch-mbp.dhcp.thefacebook.com>
- <d69d959038c80026a3f21811a126676d2b25b7c3.camel@linux.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j754qKYFCGWd4xLHquDx88xdRLa+lm4a1Sbty3Pk7BuOS9dR4j0qCqGdRTvNCjXxijJRNfNpo9A1Gpel77mwfkpCuLi2XOs2UYMVYCrVxdpjF+8j38cfM17mecGO88ETFsueAlRFcMpWNVrJ8AkvfLwoAzagQmbQE6vPAqRY/o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20bb39d97d1so41525765ad.2;
+        Mon, 04 Nov 2024 09:02:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730739751; x=1731344551;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GUaqYPQBom3i3u/a7qeeh7UaJt4FVAg2tfUFfji99rs=;
+        b=QP6h52npDgKf6Hv7UAzMbfNKcVm3oUe0L9hSoRtxUeBn5hZ+n88UiyA5lytgHKdBI1
+         5ZmIVGJCbBYUhcDwbZioheAf8wYrc1yzZWrvcB56Dmy1sxWDSDxv4qTXr/7icP38whd/
+         lwwA7eP9Pca7m3qa9xVmlOOIxeaUUg++f0AFuzQWQzDZw4X+OhEUW+0XFSjAxniSh3fQ
+         Z8V+m/gSDJhRsj/DZdDzHR05DU1TrM775ED0f+CMRcljW/Mdjyex3IMNYpftChDibiUC
+         TYWV44Ou765YSJm+5FwlVqD5DiWKIRCZn2DMhSgP3OCQ2ghOjzOOmJQSxTzuVgURD7JT
+         q+rw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSGt29fZBu7RzcdnqCRylUT+PDonQ/5OA/OzV0xzzY3WtauwIYssM3JoaXk7ttFx3q9AY0k3SMaGcYRWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX67SBCUIk2leIcqc9pH7Cu+FGbKWBRBAm6kH8CDPChXt+5xPE
+	k9ThKh8s2qXdeH58LoN5inm7tdq54yQhh/4pxPrYVLgxcW1uY+jB
+X-Google-Smtp-Source: AGHT+IFb59G7c0c6LtAW+eFwRHDEioTFdbtbcVJx/y76Cx5c5DKoXHLI8G5B+DhlD1xdKyYaLYMoBA==
+X-Received: by 2002:a17:902:db05:b0:20b:8a93:eeff with SMTP id d9443c01a7336-210f76d6845mr260100015ad.37.1730739750977;
+        Mon, 04 Nov 2024 09:02:30 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057d3bb8sm63610785ad.246.2024.11.04.09.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 09:02:29 -0800 (PST)
+Date: Tue, 5 Nov 2024 02:02:28 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com, lpieralisi@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, matthias.bgg@gmail.com,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
+	fshao@chromium.org
+Subject: Re: [PATCH v4 0/2] PCI: mediatek-gen3: Support limiting link speed
+ and width
+Message-ID: <20241104170228.GB4055778@rocinante>
+References: <20241104114935.172908-1-angelogioacchino.delregno@collabora.com>
+ <20241104170005.GA4055778@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,22 +75,44 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d69d959038c80026a3f21811a126676d2b25b7c3.camel@linux.ibm.com>
+In-Reply-To: <20241104170005.GA4055778@rocinante>
 
-On Mon, Nov 04, 2024 at 10:44:23AM +0100, Niklas Schnelle wrote:
+Hello,
+
+> > Changes in v4:
+> >  - Addressed comments from Jianjun Wang's review on v3
+> > 
+> > Changes in v3:
+> >  - Addressed comments from Fei Shao's review on v2
+> > 
+> > Changes in v2:
+> >  - Rebased on next-20240917
+> > 
+> > This series adds support for limiting the PCI-Express link speed
+> > (or PCIe gen restriction) and link width (number of lanes) in the
+> > pcie-mediatek-gen3 driver.
+> > 
+> > The maximum supported pcie gen is read from the controller itself,
+> > so defining a max gen through platform data for each SoC is avoided.
+> > 
+> > Both are done by adding support for the standard devicetree properties
+> > `max-link-speed` and `num-lanes`.
+> > 
+> > Please note that changing the bindings is not required, as those do
+> > already allow specifying those properties for this controller.
 > 
-> One more question though, what would happen with this reset for a bus
-> with an SR-IOV device with more than 256 VFs i.e. where
-> pci_iov_virtfn_bus() returns anything other than 0. I'm guessing since
-> VFs are physically still controlled by the bridge all VFs would be
-> reset but at the same time virtfn_add_bus() sets the bridge device for
-> the added bus as NULL so I think it might look odd in sysfs, sadly I
-> don't have such a device to test with. Still, this might actually be an
-> argument for having the attribute on the bridge.
+> Applied to controller/mediatek, thank you!
+> 
+> [01/02] PCI: mediatek-gen3: Add support for setting max-link-speed limit
+>         https://git.kernel.org/pci/pci/c/ade7da14954a
+> 
+> [02/02] PCI: mediatek-gen3: Add support for restricting link width
+>         https://git.kernel.org/pci/pci/c/6e73c5898973
 
-I assume everything is reset at the PCI level.
+Angelo,
 
-Are you asking what the kernel does? I don't think it does anything
-special with SR-IOV functions. Those pci_dev's aren't attached to the
-bridge pci_dev; you have to go through the pci_bus' children instead.
+I made some small changes to the code, per the suggestions.  Let me know if
+you are fine with these, or not.  Thank you!
+
+	Krzysztof
 
