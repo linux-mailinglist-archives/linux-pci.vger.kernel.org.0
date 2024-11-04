@@ -1,152 +1,124 @@
-Return-Path: <linux-pci+bounces-15933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF1A09BB06B
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 10:58:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B55F79BB0AA
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 11:10:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F11341C21C66
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 09:58:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20616B23D66
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 10:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3737A1AF0B8;
-	Mon,  4 Nov 2024 09:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C56171AF4EF;
+	Mon,  4 Nov 2024 10:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnyjXEyt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0431F1AC43A;
-	Mon,  4 Nov 2024 09:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749A51AF0DC;
+	Mon,  4 Nov 2024 10:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730714322; cv=none; b=V73v9GV5bllLdY5Tsdl4wamL1QtjxwKIqfd7qzOdplSj3vOD7Uut4XkdT2N3PCwvj4ymQ4no3NdDY1TQPpdKhshBVroo76t3unchcHXORlJjMu4jS4avEzigsUeZvzux9p4bryI0iOOK5Ek4nlToL1f7nYiZjUloHxeMyPhTk+c=
+	t=1730715021; cv=none; b=ZKRIC2uIUivd8c4DnvvkCE90lUYOG/DqIxSnRaKzZ+8rfBOd8pJwU6qWwhoSdh+ccNEkybrmNYS/VHRekicExhTjkdZFsPvtnXlMXFOb3C4nEKwcC7e72fwhlXmlGP+6XMPJWRhjERyBpWr3trl7wscLZIIo67KAVer2QQhiGcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730714322; c=relaxed/simple;
-	bh=cGc3p1RFcABDoSgLbkrGYjJv7Mesj0EoAuHiRfKkhAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r5JeEGzYWMvq9KMV6l6lu6ywy5BptCkhHy+dSFPzflj+VtaNNrSN2tm398mpI1d4fC9/aDsPFa5MLrFx5VBjMegLZo2Ug45+5l30KCx6YNhcyv0tSLZOmsSPoUkYuhBaCJy0fUuVqSTuW9ZgVJjWayxo17Zi/DwVocIIKaQF1gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id EF664227AAD; Mon,  4 Nov 2024 10:58:31 +0100 (CET)
-Date: Mon, 4 Nov 2024 10:58:31 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
-Message-ID: <20241104095831.GA28751@lst.de>
-References: <cover.1730298502.git.leon@kernel.org> <3567312e-5942-4037-93dc-587f25f0778c@arm.com>
+	s=arc-20240116; t=1730715021; c=relaxed/simple;
+	bh=6ml2BT2raqF8G8x+buM0eWiADTiQBARWLyqnb/h1l28=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=EuwFiSOnN85sye116QaX0287SVGFNSW72ry4WqvYCJ1J35Mnt8zuuxMMXGrLovS9qY34pGpq8b7gHGuxqwzEljLyPmS4sE0N18XY4Oleg46GYFCIvnw6yO/Lai2Xurov1hNo1bv9x1KW7+BgimpzJaaK6rm4fHxiB5wVSiU4i+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnyjXEyt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E603FC4CECE;
+	Mon,  4 Nov 2024 10:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730715021;
+	bh=6ml2BT2raqF8G8x+buM0eWiADTiQBARWLyqnb/h1l28=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jnyjXEytSg4Dm0xzK4vuTLgkBxwZ/GX7mBQWaqRAntPAIU1v59qxD3oNhcM18YxMX
+	 r546u+w39gMnchf3pd1bD9X3zBzJKFO6DJnRj2Cx2KF7afLAlpWhGXhJjQ6ZevXFQ7
+	 q/h6iJTvDEcTw7VqawGHV4R5zuTQ9XoHe3TU5Kk2OAToHLmkLGpAHM8lQZdthSO6Gy
+	 ZEVU61Xgq1630a9a1eFAaG/3Y5ASwCNWo9rnrzL9QsKiYWByPwoXLFqBQOMi/EXnCP
+	 viQ3Ar0siICl5XbP7Y/S+GmsLhT0cZHUbz0gdoiphvkwAGRAgrTvMLaOA05AxcCeni
+	 Oh3+bqznOu8nA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF403805CC0;
+	Mon,  4 Nov 2024 10:10:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3567312e-5942-4037-93dc-587f25f0778c@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v6 net-next 00/12] add basic support for i.MX95 NETC
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173071502951.4013812.6348392511340491502.git-patchwork-notify@kernel.org>
+Date: Mon, 04 Nov 2024 10:10:29 +0000
+References: <20241030093924.1251343-1-wei.fang@nxp.com>
+In-Reply-To: <20241030093924.1251343-1-wei.fang@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, xiaoning.wang@nxp.com,
+ Frank.Li@nxp.com, christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
+ horms@kernel.org, imx@lists.linux.dev, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, alexander.stein@ew.tq-group.com
 
-On Thu, Oct 31, 2024 at 09:17:45PM +0000, Robin Murphy wrote:
-> The hilarious amount of work that iommu_dma_map_sg() does is pretty much 
-> entirely for the benefit of v4l2 and dma-buf importers who *depend* on 
-> being able to linearise a scatterlist in DMA address space. TBH I doubt 
-> there are many actual scatter-gather-capable devices with significant 
-> enough limitations to meaningfully benefit from DMA segment combining these 
-> days - I've often thought that by now it might be a good idea to turn that 
-> behaviour off by default and add an attribute for callers to explicitly 
-> request it.
+Hello:
 
-Even when devices are not limited they often perform significantly better
-when IOVA space is not completely fragmented.  While the dma_map_sg code
-is a bit gross due to the fact that it has to deal with unaligned segments,
-the coalescing itself often is a big win.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Note that dma_map_sg also has two other very useful features:  batching
-of the iotlb flushing, and support for P2P, which to be efficient also
-requires batching the lookups.
+On Wed, 30 Oct 2024 17:39:11 +0800 you wrote:
+> This is first time that the NETC IP is applied on i.MX MPU platform.
+> Its revision has been upgraded to 4.1, which is very different from
+> the NETC of LS1028A (its revision is 1.0). Therefore, some existing
+> drivers of NETC devices in the Linux kernel are not compatible with
+> the current hardware. For example, the fsl-enetc driver is used to
+> drive the ENETC PF of LS1028A, but for i.MX95 ENETC PF, its registers
+> and tables configuration are very different from those of LS1028A,
+> and only the station interface (SI) part remains basically the same.
+> For the SI part, Vladimir has separated the fsl-enetc-core driver, so
+> we can reuse this driver on i.MX95. However, for other parts of PF,
+> the fsl-enetc driver cannot be reused, so the nxp-enetc4 driver is
+> added to support revision 4.1 and later.
+> 
+> [...]
 
->> This uniqueness has been a long standing pain point as the scatterlist API
->> is mandatory, but expensive to use.
->
-> Huh? When and where has anything ever called it mandatory? Nobody's getting 
-> sent to DMA jail for open-coding:
+Here is the summary with links:
+  - [v6,net-next,01/12] dt-bindings: net: add compatible string for i.MX95 EMDIO
+    https://git.kernel.org/netdev/net-next/c/da98dbbc2c74
+  - [v6,net-next,02/12] dt-bindings: net: add i.MX95 ENETC support
+    https://git.kernel.org/netdev/net-next/c/db2fb74c8560
+  - [v6,net-next,03/12] dt-bindings: net: add bindings for NETC blocks control
+    https://git.kernel.org/netdev/net-next/c/f70384e53b09
+  - [v6,net-next,04/12] net: enetc: add initial netc-blk-ctrl driver support
+    https://git.kernel.org/netdev/net-next/c/fe5ba6bf91b3
+  - [v6,net-next,05/12] net: enetc: extract common ENETC PF parts for LS1028A and i.MX95 platforms
+    https://git.kernel.org/netdev/net-next/c/80c8c852615e
+  - [v6,net-next,06/12] net: enetc: build enetc_pf_common.c as a separate module
+    https://git.kernel.org/netdev/net-next/c/3774409fd4c6
+  - [v6,net-next,07/12] net: enetc: remove ERR050089 workaround for i.MX95
+    https://git.kernel.org/netdev/net-next/c/86831a3f4cd4
+  - [v6,net-next,08/12] net: enetc: add i.MX95 EMDIO support
+    https://git.kernel.org/netdev/net-next/c/a52201fb9caa
+  - [v6,net-next,09/12] net: enetc: extract enetc_int_vector_init/destroy() from enetc_alloc_msix()
+    https://git.kernel.org/netdev/net-next/c/b4bfd0a904e9
+  - [v6,net-next,10/12] net: enetc: optimize the allocation of tx_bdr
+    https://git.kernel.org/netdev/net-next/c/9e7f2116199d
+  - [v6,net-next,11/12] net: enetc: add preliminary support for i.MX95 ENETC PF
+    https://git.kernel.org/netdev/net-next/c/99100d0d9922
+  - [v6,net-next,12/12] MAINTAINERS: update ENETC driver files and maintainers
+    https://git.kernel.org/netdev/net-next/c/f488649e40f8
 
-You don't get sent to jail.  But you do not get batched iotlb sync, you
-don't get properly working P2P, and you don't get IOVA coalescing.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
->> Several approaches have been explored to expand the DMA API with additional
->> scatterlist-like structures (BIO, rlist), instead split up the DMA API
->> to allow callers to bring their own data structure.
->
-> And this line of reasoning is still "2 + 2 = Thursday" - what is to say 
-> those two notions in any way related? We literally already have one generic 
-> DMA operation which doesn't operate on struct page, yet needed nothing 
-> "split up" to be possible.
-
-Yeah, I don't really get the struct page argument.  In fact if we look
-at the nitty-gritty details of dma_map_page it doesn't really need a
-page at all.  I've been looking at cleaning some of this up and providing
-a dma_map_phys/paddr which would be quite handy in a few places.  Note
-because we don't have a struct page for the memory, but because converting
-to/from it all the time is not very efficient.
-
->>   2. VFIO PCI live migration code is building a very large "page list"
->>      for the device. Instead of allocating a scatter list entry per allocated
->>      page it can just allocate an array of 'struct page *', saving a large
->>      amount of memory.
->
-> VFIO already assumes a coherent device with (realistically) an IOMMU which 
-> it explicitly manages - why is it even pretending to need a generic DMA 
-> API?
-
-AFAIK that does isn't really vfio as we know it but the control device
-for live migration.  But Leon or Jason might fill in more.
-
-The point is that quite a few devices have these page list based APIs
-(RDMA where mlx5 comes from, NVMe with PRPs, AHCI, GPUs).
-
->
->>   3. NVMe PCI demonstrates how a BIO can be converted to a HW scatter
->>      list without having to allocate then populate an intermediate SG table.
->
-> As above, given that a bio_vec still deals in struct pages, that could 
-> seemingly already be done by just mapping the pages, so how is it proving 
-> any benefit of a fragile new interface?
-
-Because we only need to preallocate the tiny constant sized dma_iova_state
-as part of the request instead of an additional scatterlist that requires
-sizeof(struct page *) + sizeof(dma_addr_t) + 3 * sizeof(unsigned int)
-per segment, including a memory allocation per I/O for that.
-
-> My big concern here is that a thin and vaguely-defined wrapper around the 
-> IOMMU API is itself a step which smells strongly of "abuse and design 
-> mistake", given that the basic notion of allocating DMA addresses in 
-> advance clearly cannot generalise. Thus it really demands some considered 
-> justification beyond "We must do something; This is something; Therefore we 
-> must do this." to be convincing.
-
-At least for the block code we have a nice little core wrapper that is
-very easy to use, and provides a great reduction of memory use and
-allocations.  The HMM use case I'll let others talk about.
 
 
