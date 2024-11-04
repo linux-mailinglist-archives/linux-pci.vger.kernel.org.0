@@ -1,437 +1,301 @@
-Return-Path: <linux-pci+bounces-15905-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 327CA9BAC51
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 07:06:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E29C9BAC5E
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 07:10:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E53BA281E0E
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 06:06:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB1F7281C9F
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 06:10:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8253218BB82;
-	Mon,  4 Nov 2024 06:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA20317A922;
+	Mon,  4 Nov 2024 06:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T7vRxL0x"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QPHDYCKd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA6B6FC5
-	for <linux-pci@vger.kernel.org>; Mon,  4 Nov 2024 06:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30226FC5;
+	Mon,  4 Nov 2024 06:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730700408; cv=none; b=DL8bhP2IW7ZJgDZt1Qg6F0SJH0OHmDrqhPLRfvi9L1Q5s4EYaKxme4Gh5JAei+R4ilgRQIJTIqqIz1JOjSiXyty0pQcdxBD30Y3RrLOqfFLk44Y9E0+PLF6Rnaib/wIsKhGHV8b77bNLBXZ6fIGbxxRWpBulSJ/ri8i8lrzA724=
+	t=1730700609; cv=none; b=d+ZoVGGJ7zvUXcm2T4ubDQx6oUnEoSnUXiwVc3ArY6aKCHjqofz39CwItR0lMs0yp5yvIL3Z+NXJNmaCC4EmGtdG/k6ief+cBoxRnZQoeLLJaDnNdhNqPjxoDF94NN9Dit85hYkQBHhjBN4m8ukxWV6fV65ykLHMQ16RUhkM9w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730700408; c=relaxed/simple;
-	bh=cn1Pxm/UDdq45+jKyhojyir0BhxJVvPNCKCW9rbn4Dg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PhKOfhnBW8g+G0Fv4aU8OzYloLvpCxEBAKCh7W8hSMHD/QkcZnuIgjODo5lVpFaWJ9xwf7CJbWjecWlpGRCQcz6eqrgFEFb425id79kmF4B3LbICS+MWQyG0qEKLVV6KRtWt2w3K+5dsPNSOFjszjSJwzqHXb/geo+WM1OUJm8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T7vRxL0x; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730700406; x=1762236406;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cn1Pxm/UDdq45+jKyhojyir0BhxJVvPNCKCW9rbn4Dg=;
-  b=T7vRxL0x4e/SzW114K8WkQ+3Jpm5wPiftZ/RtKcjMPX7Q8HcRmLpaTJY
-   CbIyJQq+WoNdhURNT2Ktmd5sS+0LxCIW/oaI5TTSdveSlsWr4MUGpKwVG
-   wvgVSPEjDeSsbt+n4S702DLApWzDt2Ld1LbF4ldkeBoRpXofcBlWZcwkc
-   feruLr8TokkU+q8uGU5HIV8kMkqaZm1pWOFCsrhCRJ4uX8OqUmOKteC9Y
-   Vqq2JXu+3ceUhtvPLmMPnugNo4o9YfVU6NTKSs8HRTuSDsxFDNj6WW1JO
-   kPM27+LpQJcrhifZ0liEDzv8xCIVganbUiQE8urjFqFO3/HLFYxNs0Wie
-   w==;
-X-CSE-ConnectionGUID: x2OGw43wQfikHdlIIqUsfA==
-X-CSE-MsgGUID: MoxzFEbKSVyb0wUSx1eHpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11245"; a="41774380"
-X-IronPort-AV: E=Sophos;i="6.11,256,1725346800"; 
-   d="scan'208";a="41774380"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2024 22:06:46 -0800
-X-CSE-ConnectionGUID: ahtjgCzERRilbZfqKyaOmg==
-X-CSE-MsgGUID: PSyZYQAZTLu6yVL04FWjtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,256,1725346800"; 
-   d="scan'208";a="83660400"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 03 Nov 2024 22:06:44 -0800
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t7qEc-000kWR-17;
-	Mon, 04 Nov 2024 06:06:42 +0000
-Date: Mon, 04 Nov 2024 14:05:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/tegra194] BUILD SUCCESS
- 40e2125381dc11379112485e3eefdd25c6df5375
-Message-ID: <202411041452.jD3v7gAS-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1730700609; c=relaxed/simple;
+	bh=O31O2O5Ml9DeUY+KrstEERdkkjDklegiNijd/LOR5Sk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FOaTIZUIvAdMr1SyPrHJqraC2KflIZYMXq3d7yTRxhcT4HvjkcTQ9NIm+QWCok7+iuOqdPC14hU/Xbvt8zyCkVuWVVrQkWmCmo9BkqrXuBRr4lwTzqwlggwBcpKoHIgGWIeBDifxuEmD22vww/u56cVbWZD0ptbbeUbMZQCTCCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QPHDYCKd; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A3Nmqms007472;
+	Mon, 4 Nov 2024 06:09:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sUEJwqIyHQe/eNtDprQ+WF121QuOoETVna1GcAuX+eU=; b=QPHDYCKdJt828Z+2
+	kki706orZdDmVzjxCgD+UX6rQrITSLRwubhqaQQtofr6erCJLyy46i6gFotg9HPw
+	kmdY8zWoge0/VXse2lS3rYvgXR6mfHX16fK7Qs6OWkjldkG5HWOgVev9Hr6O/8VM
+	wK21UMeaaVCeWHe6VgMqIZu9d4JWdR9kdjT/pvqpV9weY9JhRprx57j3cv1XCGrR
+	kWg8uS3iXY7MObt5sMoVLFE20XIE4+qd/El3aqaEexMDzywBmVCj1U2VAzAM/CL+
+	sXJSYkwrP/Zb9t7sVw+J+ZnTyK+PaC5FLSlg5aD63YTaBWEs9n2pekgA9CXDXtdk
+	2YYJOg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42nd2s37s8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Nov 2024 06:09:40 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A469cK2007605
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Nov 2024 06:09:39 GMT
+Received: from [10.216.5.99] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 3 Nov 2024
+ 22:09:34 -0800
+Message-ID: <629873af-74f1-0c31-5239-b2703fe6405a@quicinc.com>
+Date: Mon, 4 Nov 2024 11:39:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 2/2] PCI: Enable runtime pm of the host bridge
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Kevin Xie <kevin.xie@starfivetech.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Rob Herring" <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        <Markus.Elfring@web.de>, <quic_mrana@quicinc.com>, <rafael@kernel.org>,
+        <m.szyprowski@samsung.com>, <linux-pm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20241101222019.GA1318435@bhelgaas>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20241101222019.GA1318435@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: x91juxvf9rHHA_HdXc-ZrGVh5K_kJ7O2
+X-Proofpoint-GUID: x91juxvf9rHHA_HdXc-ZrGVh5K_kJ7O2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2409260000 definitions=main-2411040053
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/tegra194
-branch HEAD: 40e2125381dc11379112485e3eefdd25c6df5375  PCI: tegra194: Move controller cleanups to pex_ep_event_pex_rst_deassert()
 
-elapsed time: 1233m
 
-configs tested: 342
-configs skipped: 13
+On 11/2/2024 3:50 AM, Bjorn Helgaas wrote:
+> On Fri, Nov 01, 2024 at 07:04:46AM +0530, Krishna Chaitanya Chundru wrote:
+>> On 10/29/2024 9:05 PM, Bjorn Helgaas wrote:
+>>> On Thu, Oct 17, 2024 at 09:05:51PM +0530, Krishna chaitanya chundru wrote:
+>>>> The Controller driver is the parent device of the PCIe host bridge,
+>>>> PCI-PCI bridge and PCIe endpoint as shown below.
+>>>>
+>>>>           PCIe controller(Top level parent & parent of host bridge)
+>>>>                           |
+>>>>                           v
+>>>>           PCIe Host bridge(Parent of PCI-PCI bridge)
+>>>>                           |
+>>>>                           v
+>>>>           PCI-PCI bridge(Parent of endpoint driver)
+>>>>                           |
+>>>>                           v
+>>>>                   PCIe endpoint driver
+>>>>
+>>>> Now, when the controller device goes to runtime suspend, PM framework
+>>>> will check the runtime PM state of the child device (host bridge) and
+>>>> will find it to be disabled. So it will allow the parent (controller
+>>>> device) to go to runtime suspend. Only if the child device's state was
+>>>> 'active' it will prevent the parent to get suspended.
+>>>>
+>>>> It is a property of the runtime PM framework that it can only
+>>>> follow continuous dependency chains.  That is, if there is a device
+>>>> with runtime PM disabled in a dependency chain, runtime PM cannot be
+>>>> enabled for devices below it and above it in that chain both at the
+>>>> same time.
+>>>>
+>>>> Since runtime PM is disabled for host bridge, the state of the child
+>>>> devices under the host bridge is not taken into account by PM framework
+>>>> for the top level parent, PCIe controller. So PM framework, allows
+>>>> the controller driver to enter runtime PM irrespective of the state
+>>>> of the devices under the host bridge. And this causes the topology
+>>>> breakage and also possible PM issues like controller driver goes to
+>>>> runtime suspend while endpoint driver is doing some transfers.
+>>>>
+>>>> Because of the above, in order to enable runtime PM for a PCIe
+>>>> controller device, one needs to ensure that runtime PM is enabled for
+>>>> all devices in every dependency chain between it and any PCIe endpoint
+>>>> (as runtime PM is enabled for PCIe endpoints).
+>>>>
+>>>> This means that runtime PM needs to be enabled for the host bridge
+>>>> device, which is present in all of these dependency chains.
+>>>
+>>> Earlier I asked about how we can verify that no other drivers need a
+>>> change like the starfive one:
+>>> https://lore.kernel.org/r/20241012140852.GA603197@bhelgaas
+>>
+>> I added those details in cover letter as you suggested to add them in
+>> cover letter.
+> 
+> Indeed I did suggest it for the cover letter, sorry for my confusion
+> at not finding it in the commit log.
+> 
+> I actually think we need something in the patch commit log itself,
+> since the cover letter doesn't make it into git.
+> 
+> And probably a comment in the code as well, since this seems to change
+> the requirements on the callers of pci_host_probe().
+> 
+ack
+>> "PM framework expectes parent runtime pm enabled before enabling runtime
+>> pm of the child. As PCIe starfive device is enabling runtime pm after
+>> the pci_host_probe which enables runtime pm of the child device i.e for
+>> the bridge device a warning is shown saying "pcie-starfive 940000000.pcie:
+>> Enabling runtime PM for inactive device with active children" and also
+>> shows possible circular locking dependency detected message.
+>>
+>> As it is must to enable parent device's runtime PM before enabling child's
+>> runtime pm as the pcie-starfive device runtime pm is enabled after child
+>> runtime starfive device is seeing the warning.
+>>
+>> In the first patch fix the pcie-starfive driver by enabling runtime
+>> pm before calling pci_host_probe().
+>>
+>> All other PCIe controller drivers are enabling runtime pm before
+>> calling pci_host_probe() which is as expected so don't require any
+>> fix like pcie-starfive driver."
+> 
+> I'm sure that you looked at the following paths through
+> pci_host_common_probe(), which as far as I can tell, do not call
+> pm_runtime_enable() before pci_host_probe():
+> 
+>    apple_pcie_probe
+>      pci_host_common_probe
+>        pci_host_probe
+> 
+>    mc_host_probe
+>      pci_host_common_probe
+>        pci_host_probe
+> 
+> And the following use pci_host_common_probe() directly as their
+> .probe() method:
+> 
+>    gen_pci_driver in pci-host-common.c
+>    thunder_ecam_driver in pci-thunder-ecam.c
+>    thunder_pem_driver in pci-thunder-pem.c
+>    hisi_pcie_almost_ecam_driver in dwc/pcie-hisi.c
+>    
+> Are all these safe as well?  These all end up in pci_host_probe()
+> without having done anything to enable runtime PM on the
+> PCIe controller platform_device.
+> 
+these drivers are not calling runtime_pm_enable in their drivers and
+due to that it will not have any impact on these drivers.
+> Looking at your diagram above, IIUC this patch enables runtime PM for
+> the PCIe host bridge, and the requirement is that runtime PM is
+> already enabled for the PCIe controller above it?
+> 
+> Is it always *possible* for that PCIe controller to enable runtime PM?
+> Might there exist PCIe controllers that cannot enable runtime PM
+> because they lack something in hardware or in the driver?
+> 
+> Maybe this patch should only enable runtime PM for the host bridge if
+> the controller already has runtime PM enabled?
+> 
+irrespective of the controller runtime pm, we can enable host bridge
+runtime pm. if the controller driver want to enable runtime pm they
+need to make sure runtime pm is enabled before we enable the runtime
+of the host bridge, otherwise it will not have any impact as they are
+not even registering with runtime pm here.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>>> I guess this sentence is basically how we verify all drivers are safe
+>>> with this change?
+>>>
+>>> Since this patch adds devm_pm_runtime_enable() in pci_host_probe(),
+>>> can we expand this along the lines of this so it's more specific about
+>>> what we need to verify?
+>>>
+>>>     Every host bridge driver must call pm_runtime_enable() before
+>>>     runtime PM is enabled by pci_host_probe().
+>>>
+>>> Please correct me if that's not the right requirement.>
+>>
+>> yes this is correct requirement only. Do you want us to add this for
+>> this patch .
+> 
+> I would like to have a one-sentence statement of what the callers need
+> to do, including the actual function names.  Otherwise it's a pretty
+> big burden on reviewers to verify things.
+> 
+ack, once above discussions gets concluded I will send a new patch
+series with these details.
 
-tested configs:
-alpha                             allnoconfig    gcc-13.3.0
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                              allyesconfig    gcc-13.2.0
-arc                      axs103_smp_defconfig    gcc-13.2.0
-arc                                 defconfig    gcc-14.1.0
-arc                   randconfig-001-20241103    gcc-14.1.0
-arc                   randconfig-001-20241104    gcc-14.1.0
-arc                   randconfig-002-20241103    gcc-14.1.0
-arc                   randconfig-002-20241104    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                              allyesconfig    gcc-14.1.0
-arm                     am200epdkit_defconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                       netwinder_defconfig    gcc-14.1.0
-arm                         nhk8815_defconfig    clang-20
-arm                          pxa168_defconfig    gcc-13.2.0
-arm                   randconfig-001-20241103    gcc-14.1.0
-arm                   randconfig-001-20241104    gcc-14.1.0
-arm                   randconfig-002-20241103    gcc-14.1.0
-arm                   randconfig-002-20241104    gcc-14.1.0
-arm                   randconfig-003-20241103    gcc-14.1.0
-arm                   randconfig-003-20241104    gcc-14.1.0
-arm                   randconfig-004-20241103    gcc-14.1.0
-arm                   randconfig-004-20241104    gcc-14.1.0
-arm                           sama5_defconfig    gcc-13.2.0
-arm                           spitz_defconfig    gcc-14.1.0
-arm                       versatile_defconfig    clang-20
-arm                         wpcm450_defconfig    clang-20
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-arm64                 randconfig-001-20241103    gcc-14.1.0
-arm64                 randconfig-001-20241104    gcc-14.1.0
-arm64                 randconfig-002-20241103    gcc-14.1.0
-arm64                 randconfig-002-20241104    gcc-14.1.0
-arm64                 randconfig-003-20241103    gcc-14.1.0
-arm64                 randconfig-003-20241104    gcc-14.1.0
-arm64                 randconfig-004-20241103    gcc-14.1.0
-arm64                 randconfig-004-20241104    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-csky                  randconfig-001-20241103    gcc-14.1.0
-csky                  randconfig-001-20241104    gcc-14.1.0
-csky                  randconfig-002-20241103    gcc-14.1.0
-csky                  randconfig-002-20241104    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-hexagon               randconfig-001-20241103    gcc-14.1.0
-hexagon               randconfig-001-20241104    gcc-14.1.0
-hexagon               randconfig-002-20241103    gcc-14.1.0
-hexagon               randconfig-002-20241104    gcc-14.1.0
-i386                             allmodconfig    clang-19
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-19
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-19
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20241103    clang-19
-i386        buildonly-randconfig-001-20241103    gcc-12
-i386        buildonly-randconfig-001-20241104    gcc-12
-i386        buildonly-randconfig-002-20241103    clang-19
-i386        buildonly-randconfig-002-20241104    gcc-12
-i386        buildonly-randconfig-003-20241103    clang-19
-i386        buildonly-randconfig-003-20241103    gcc-11
-i386        buildonly-randconfig-003-20241104    gcc-12
-i386        buildonly-randconfig-004-20241103    clang-19
-i386        buildonly-randconfig-004-20241103    gcc-12
-i386        buildonly-randconfig-004-20241104    gcc-12
-i386        buildonly-randconfig-005-20241103    clang-19
-i386        buildonly-randconfig-005-20241104    gcc-12
-i386        buildonly-randconfig-006-20241103    clang-19
-i386        buildonly-randconfig-006-20241103    gcc-12
-i386        buildonly-randconfig-006-20241104    gcc-12
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241103    clang-19
-i386                  randconfig-001-20241103    gcc-12
-i386                  randconfig-001-20241104    gcc-12
-i386                  randconfig-002-20241103    clang-19
-i386                  randconfig-002-20241103    gcc-12
-i386                  randconfig-002-20241104    gcc-12
-i386                  randconfig-003-20241103    clang-19
-i386                  randconfig-003-20241104    gcc-12
-i386                  randconfig-004-20241103    clang-19
-i386                  randconfig-004-20241104    gcc-12
-i386                  randconfig-005-20241103    clang-19
-i386                  randconfig-005-20241103    gcc-12
-i386                  randconfig-005-20241104    gcc-12
-i386                  randconfig-006-20241103    clang-19
-i386                  randconfig-006-20241103    gcc-11
-i386                  randconfig-006-20241104    gcc-12
-i386                  randconfig-011-20241103    clang-19
-i386                  randconfig-011-20241104    gcc-12
-i386                  randconfig-012-20241103    clang-19
-i386                  randconfig-012-20241104    gcc-12
-i386                  randconfig-013-20241103    clang-19
-i386                  randconfig-013-20241103    gcc-12
-i386                  randconfig-013-20241104    gcc-12
-i386                  randconfig-014-20241103    clang-19
-i386                  randconfig-014-20241104    gcc-12
-i386                  randconfig-015-20241103    clang-19
-i386                  randconfig-015-20241103    gcc-12
-i386                  randconfig-015-20241104    gcc-12
-i386                  randconfig-016-20241103    clang-19
-i386                  randconfig-016-20241103    gcc-12
-i386                  randconfig-016-20241104    gcc-12
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-loongarch             randconfig-001-20241103    gcc-14.1.0
-loongarch             randconfig-001-20241104    gcc-14.1.0
-loongarch             randconfig-002-20241103    gcc-14.1.0
-loongarch             randconfig-002-20241104    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                         apollo_defconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                        m5307c3_defconfig    gcc-14.1.0
-m68k                            q40_defconfig    gcc-14.1.0
-m68k                        stmark2_defconfig    gcc-13.2.0
-m68k                           virt_defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                        bcm47xx_defconfig    clang-20
-mips                        bcm63xx_defconfig    gcc-13.2.0
-mips                         bigsur_defconfig    clang-20
-mips                          eyeq5_defconfig    gcc-14.1.0
-mips                           ip27_defconfig    gcc-13.2.0
-mips                           ip28_defconfig    gcc-14.1.0
-mips                           ip30_defconfig    clang-20
-mips                        maltaup_defconfig    gcc-14.1.0
-mips                           mtx1_defconfig    gcc-13.2.0
-mips                       rbtx49xx_defconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-nios2                 randconfig-001-20241103    gcc-14.1.0
-nios2                 randconfig-001-20241104    gcc-14.1.0
-nios2                 randconfig-002-20241103    gcc-14.1.0
-nios2                 randconfig-002-20241104    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-openrisc                  or1klitex_defconfig    gcc-14.1.0
-openrisc                    or1ksim_defconfig    gcc-14.1.0
-openrisc                       virt_defconfig    gcc-13.2.0
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20241103    gcc-14.1.0
-parisc                randconfig-001-20241104    gcc-14.1.0
-parisc                randconfig-002-20241103    gcc-14.1.0
-parisc                randconfig-002-20241104    gcc-14.1.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                    adder875_defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                    amigaone_defconfig    gcc-14.1.0
-powerpc                      arches_defconfig    gcc-14.1.0
-powerpc                      ep88xc_defconfig    gcc-14.1.0
-powerpc                        fsp2_defconfig    gcc-13.2.0
-powerpc                        fsp2_defconfig    gcc-14.1.0
-powerpc                          g5_defconfig    gcc-14.1.0
-powerpc                    ge_imp3a_defconfig    gcc-14.1.0
-powerpc                        icon_defconfig    clang-20
-powerpc                        icon_defconfig    gcc-14.1.0
-powerpc                      katmai_defconfig    clang-20
-powerpc                 linkstation_defconfig    gcc-14.1.0
-powerpc                 mpc832x_rdb_defconfig    gcc-14.1.0
-powerpc                     mpc83xx_defconfig    clang-20
-powerpc                  mpc866_ads_defconfig    gcc-14.1.0
-powerpc                      ppc64e_defconfig    gcc-14.1.0
-powerpc                     rainier_defconfig    gcc-14.1.0
-powerpc               randconfig-001-20241103    gcc-14.1.0
-powerpc               randconfig-001-20241104    gcc-14.1.0
-powerpc               randconfig-002-20241103    gcc-14.1.0
-powerpc               randconfig-002-20241104    gcc-14.1.0
-powerpc               randconfig-003-20241103    gcc-14.1.0
-powerpc               randconfig-003-20241104    gcc-14.1.0
-powerpc                     redwood_defconfig    gcc-13.2.0
-powerpc                    socrates_defconfig    clang-20
-powerpc                  storcenter_defconfig    clang-20
-powerpc                     taishan_defconfig    gcc-14.1.0
-powerpc                     tqm8541_defconfig    gcc-14.1.0
-powerpc                     tqm8555_defconfig    gcc-14.1.0
-powerpc                         wii_defconfig    gcc-14.1.0
-powerpc64             randconfig-001-20241103    gcc-14.1.0
-powerpc64             randconfig-001-20241104    gcc-14.1.0
-powerpc64             randconfig-002-20241103    gcc-14.1.0
-powerpc64             randconfig-002-20241104    gcc-14.1.0
-powerpc64             randconfig-003-20241103    gcc-14.1.0
-powerpc64             randconfig-003-20241104    gcc-14.1.0
-riscv                            allmodconfig    clang-20
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20241103    gcc-14.1.0
-riscv                 randconfig-001-20241104    gcc-14.1.0
-riscv                 randconfig-002-20241103    gcc-14.1.0
-riscv                 randconfig-002-20241104    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20241103    gcc-14.1.0
-s390                  randconfig-001-20241104    gcc-14.1.0
-s390                  randconfig-002-20241103    gcc-14.1.0
-s390                  randconfig-002-20241104    gcc-14.1.0
-sh                               alldefconfig    gcc-13.2.0
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                ecovec24-romimage_defconfig    gcc-14.1.0
-sh                        edosk7760_defconfig    gcc-14.1.0
-sh                          landisk_defconfig    gcc-14.1.0
-sh                     magicpanelr2_defconfig    gcc-13.2.0
-sh                          r7785rp_defconfig    gcc-14.1.0
-sh                    randconfig-001-20241103    gcc-14.1.0
-sh                    randconfig-001-20241104    gcc-14.1.0
-sh                    randconfig-002-20241103    gcc-14.1.0
-sh                    randconfig-002-20241104    gcc-14.1.0
-sh                          rsk7201_defconfig    gcc-14.1.0
-sh                          rsk7269_defconfig    gcc-14.1.0
-sh                           se7705_defconfig    gcc-13.2.0
-sh                           se7750_defconfig    gcc-14.1.0
-sh                     sh7710voipgw_defconfig    clang-20
-sh                   sh7724_generic_defconfig    gcc-14.1.0
-sh                            shmin_defconfig    gcc-13.2.0
-sh                            shmin_defconfig    gcc-14.1.0
-sh                              ul2_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                          alldefconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20241103    gcc-14.1.0
-sparc64               randconfig-001-20241104    gcc-14.1.0
-sparc64               randconfig-002-20241103    gcc-14.1.0
-sparc64               randconfig-002-20241104    gcc-14.1.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20241103    gcc-14.1.0
-um                    randconfig-001-20241104    gcc-14.1.0
-um                    randconfig-002-20241103    gcc-14.1.0
-um                    randconfig-002-20241104    gcc-14.1.0
-um                           x86_64_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-14.1.0
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20241103    clang-19
-x86_64      buildonly-randconfig-001-20241104    gcc-12
-x86_64      buildonly-randconfig-002-20241103    clang-19
-x86_64      buildonly-randconfig-002-20241104    gcc-12
-x86_64      buildonly-randconfig-003-20241103    clang-19
-x86_64      buildonly-randconfig-003-20241104    gcc-12
-x86_64      buildonly-randconfig-004-20241103    clang-19
-x86_64      buildonly-randconfig-004-20241104    gcc-12
-x86_64      buildonly-randconfig-005-20241103    clang-19
-x86_64      buildonly-randconfig-005-20241104    gcc-12
-x86_64      buildonly-randconfig-006-20241103    clang-19
-x86_64      buildonly-randconfig-006-20241104    gcc-12
-x86_64                              defconfig    clang-19
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-19
-x86_64                                  kexec    gcc-12
-x86_64                randconfig-001-20241103    clang-19
-x86_64                randconfig-001-20241104    gcc-12
-x86_64                randconfig-002-20241103    clang-19
-x86_64                randconfig-002-20241104    gcc-12
-x86_64                randconfig-003-20241103    clang-19
-x86_64                randconfig-003-20241104    gcc-12
-x86_64                randconfig-004-20241103    clang-19
-x86_64                randconfig-004-20241104    gcc-12
-x86_64                randconfig-005-20241103    clang-19
-x86_64                randconfig-005-20241104    gcc-12
-x86_64                randconfig-006-20241103    clang-19
-x86_64                randconfig-006-20241104    gcc-12
-x86_64                randconfig-011-20241103    clang-19
-x86_64                randconfig-011-20241104    gcc-12
-x86_64                randconfig-012-20241103    clang-19
-x86_64                randconfig-012-20241104    gcc-12
-x86_64                randconfig-013-20241103    clang-19
-x86_64                randconfig-013-20241104    gcc-12
-x86_64                randconfig-014-20241103    clang-19
-x86_64                randconfig-014-20241104    gcc-12
-x86_64                randconfig-015-20241103    clang-19
-x86_64                randconfig-015-20241104    gcc-12
-x86_64                randconfig-016-20241103    clang-19
-x86_64                randconfig-016-20241104    gcc-12
-x86_64                randconfig-071-20241103    clang-19
-x86_64                randconfig-071-20241104    gcc-12
-x86_64                randconfig-072-20241103    clang-19
-x86_64                randconfig-072-20241104    gcc-12
-x86_64                randconfig-073-20241103    clang-19
-x86_64                randconfig-073-20241104    gcc-12
-x86_64                randconfig-074-20241103    clang-19
-x86_64                randconfig-074-20241104    gcc-12
-x86_64                randconfig-075-20241103    clang-19
-x86_64                randconfig-075-20241104    gcc-12
-x86_64                randconfig-076-20241103    clang-19
-x86_64                randconfig-076-20241104    gcc-12
-x86_64                               rhel-8.3    gcc-12
-x86_64                           rhel-8.3-bpf    clang-19
-x86_64                         rhel-8.3-kunit    clang-19
-x86_64                           rhel-8.3-ltp    clang-19
-x86_64                          rhel-8.3-rust    clang-19
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                  cadence_csp_defconfig    gcc-13.2.0
-xtensa                generic_kc705_defconfig    gcc-14.1.0
-xtensa                randconfig-001-20241103    gcc-14.1.0
-xtensa                randconfig-001-20241104    gcc-14.1.0
-xtensa                randconfig-002-20241103    gcc-14.1.0
-xtensa                randconfig-002-20241104    gcc-14.1.0
-xtensa                    smp_lx200_defconfig    gcc-13.2.0
-xtensa                         virt_defconfig    clang-20
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Krishna chaitanya
+>>>> After this change, the host bridge device will be runtime-suspended
+>>>> by the runtime PM framework automatically after suspending its last
+>>>> child and it will be runtime-resumed automatically before resuming its
+>>>> first child which will allow the runtime PM framework to track
+>>>> dependencies between the host bridge device and all of its
+>>>> descendants.
+>>>>
+>>>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>>> ---
+>>>> Changes in v6:
+>>>> - no change
+>>>> Changes in v5:
+>>>> - call pm_runtime_no_callbacks() as suggested by Rafael.
+>>>> - include the commit texts as suggested by Rafael.
+>>>> - Link to v4: https://lore.kernel.org/linux-pci/20240708-runtime_pm-v4-1-c02a3663243b@quicinc.com/
+>>>> Changes in v4:
+>>>> - Changed pm_runtime_enable() to devm_pm_runtime_enable() (suggested by mayank)
+>>>> - Link to v3: https://lore.kernel.org/lkml/20240609-runtime_pm-v3-1-3d0460b49d60@quicinc.com/
+>>>> Changes in v3:
+>>>> - Moved the runtime API call's from the dwc driver to PCI framework
+>>>>     as it is applicable for all (suggested by mani)
+>>>> - Updated the commit message.
+>>>> - Link to v2: https://lore.kernel.org/all/20240305-runtime_pm_enable-v2-1-a849b74091d1@quicinc.com
+>>>> Changes in v2:
+>>>> - Updated commit message as suggested by mani.
+>>>> - Link to v1: https://lore.kernel.org/r/20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com
+>>>> ---
+>>>>    drivers/pci/probe.c | 5 +++++
+>>>>    1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>>>> index 4f68414c3086..8409e1dde0d1 100644
+>>>> --- a/drivers/pci/probe.c
+>>>> +++ b/drivers/pci/probe.c
+>>>> @@ -3106,6 +3106,11 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+>>>>    		pcie_bus_configure_settings(child);
+>>>>    	pci_bus_add_devices(bus);
+>>>> +
+>>>> +	pm_runtime_set_active(&bridge->dev);
+>>>> +	pm_runtime_no_callbacks(&bridge->dev);
+>>>> +	devm_pm_runtime_enable(&bridge->dev);
+>>>> +
+>>>>    	return 0;
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(pci_host_probe);
+>>>>
+>>>> -- 
+>>>> 2.34.1
+>>>>
 
