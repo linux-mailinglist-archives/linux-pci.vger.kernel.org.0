@@ -1,166 +1,118 @@
-Return-Path: <linux-pci+bounces-15909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BCF79BAC72
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 07:18:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D86309BACF8
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 08:08:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 157EFB2130C
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 06:18:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99A4A2821D8
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 07:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C1718D63C;
-	Mon,  4 Nov 2024 06:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66BDA18FC7C;
+	Mon,  4 Nov 2024 07:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hd1zx2oS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s5xFpAYw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F386818CC00;
-	Mon,  4 Nov 2024 06:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB5018C91E;
+	Mon,  4 Nov 2024 07:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730701086; cv=none; b=ZjUuIxYtu6kOqZRbL/qoTfwYE4rhpYK2NZ4NiULcha6jUchV7peXptJHVldJleiI+hg+/89JXUHHm1uRhs6HL+dn208wEPkr3Z/9SK/sU5teZ0qjU7K7/TBZBdAWpnbN8azpV6SinbPs3FxhPUT3ndDmlfHNSM+DvzehgT04xus=
+	t=1730704132; cv=none; b=r9fqCkLPKE4zcTvyc85tHi01iJYLBZtxibWphRBeiAApNmvDSiPC+kLg2+D29H1dCFc+Obtr3rnKBGGv7Cb1SzUCzNuIWM2Rm5sci9RXt3zcEX4/qXeL1LXHdRjmxLuDnwaNLytOtQBP2CeRXlThmrWOpKS1liDwP4A/FKwPbt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730701086; c=relaxed/simple;
-	bh=kf73lXDv9ocArmuhHShudHik5NcfKKXQBWihK/qUA38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZZfCLhLE/4sE4j6zSt/p2Vi1x3VgZGPS+mnj0GIfOjrWWrGQfXvwdvfz6Y0pPH16ALubEjA3GOTaTz72/Anm1+uwjWn8xcHMhx+RO+q9gx2M5EY1prQlhOzuC9Syfh25sfDpj17+pqfl3hEx8hRntdHY3yxWunCnSuKubDoIfCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hd1zx2oS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A3MZbQi028240;
-	Mon, 4 Nov 2024 06:17:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vFI/LlS1kryxpKHTB9pMut6HZM5dbPiK54teYpQZJbY=; b=hd1zx2oSdZQ1ga7V
-	vnRmRrrQxh70yH/y9RrvWjnQgllmxnyspnVlTD3MOHeMb0m0vp7nqM4gQMkV/vgx
-	9cfNwkh1TyM88awhY3p1xtBqTukTZHuNEEdwkH3vUOHjqrTDHTqp7UF7RKmCS9ze
-	iI//z14drMrek2Re+pPKru+SG954E+EeO6quGgTz+uHduuXDnUBofAEy5qZ5GBwu
-	1bWPGrjDBSCRLhp2SmE/65Fj7hdFdiehldgY3sn+cZgsvNUW8hapPX0p17fTYNP2
-	mijxGLBO4k0oHnoHWQhWAexT+qi434xfkbb+TVpvtnRkscIwg8Xf7lQ03KWerKuq
-	pX5oMQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42nd4uk851-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Nov 2024 06:17:51 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A46Hogw014307
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Nov 2024 06:17:50 GMT
-Received: from [10.216.5.99] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 3 Nov 2024
- 22:17:46 -0800
-Message-ID: <aea4b392-3e1a-c8aa-f5da-99ec7d8e0d38@quicinc.com>
-Date: Mon, 4 Nov 2024 11:47:43 +0530
+	s=arc-20240116; t=1730704132; c=relaxed/simple;
+	bh=78dbEaDmmE2c/pfPzbqF7TCsLAdRn7fUv12BsV3tLmA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lp23W+KNGRwb+s6RQ0E3CsanOBaIYAy2wTdGYH/uiSYjzfc7245xUfm+BQQ6mTIN8Y8toSo8rFrhJw2sJDjVNWbiGkfk/EY2DbwsyH59ngjOeE1wtWyDk4xuZJys6gxQmJxhaTgEQv+OC3LF3eXRDwJ2kJp8Mb3xFF7xkWCY4qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=s5xFpAYw; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4A478MPl070079;
+	Mon, 4 Nov 2024 01:08:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1730704102;
+	bh=3ytsICwmTbJhe85HPhytqFuyJa0/WkZiLuqCFnEPxn0=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=s5xFpAYwqov6w9bqiEVDICYvep4sREnxXz8Fw6lR2kSGs1cjNSkRVo801ESLL+cFy
+	 mnSajd+duQpzSHmvMeXychgOlCxTZry4THM9mxAyEn8y0uLwTlu9Eh7EEIzYpdrmfk
+	 H2aNAq+AtESPh2JjHTvkjcXBtFP0EfMWN31lCaH0=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4A478MmU096909
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 4 Nov 2024 01:08:22 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 4
+ Nov 2024 01:08:22 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 4 Nov 2024 01:08:22 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A478L0p003184;
+	Mon, 4 Nov 2024 01:08:21 -0600
+Date: Mon, 4 Nov 2024 12:38:20 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <bhelgaas@google.com>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>, <vigneshr@ti.com>,
+        <manivannan.sadhasivam@linaro.org>, <thomas.richard@bootlin.com>,
+        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH] PCI: j721e: Deassert PERST# after a delay of
+ PCIE_T_PVPERL_MS ms
+Message-ID: <f2af6cea-8365-42eb-be53-634eb0fe7cab@ti.com>
+References: <20241022083147.2773123-1-s-vadapalli@ti.com>
+ <20241102141914.GA3440781@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 2/3] PCI: qcom: Set linkup_irq if global IRQ handler is
- present
-Content-Language: en-US
-To: Bjorn Andersson <andersson@kernel.org>
-CC: Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_mrana@quicinc.com>,
-        <quic_vbadigan@quicinc.com>
-References: <20241101-remove_wait-v3-0-7accf27f7202@quicinc.com>
- <20241101-remove_wait-v3-2-7accf27f7202@quicinc.com>
- <rbykc6qnqechpru4sehjvdo6iedeo4cankp3mwesdfnxyxsgs7@vj2p7wwfdqm7>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <rbykc6qnqechpru4sehjvdo6iedeo4cankp3mwesdfnxyxsgs7@vj2p7wwfdqm7>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HAyAWGsjm5SWCq3nSvybY51u5DwEafJe
-X-Proofpoint-ORIG-GUID: HAyAWGsjm5SWCq3nSvybY51u5DwEafJe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=0 spamscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411040055
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241102141914.GA3440781@rocinante>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-On 11/1/2024 9:00 PM, Bjorn Andersson wrote:
-> On Fri, Nov 01, 2024 at 05:04:13PM GMT, Krishna chaitanya chundru wrote:
->> In cases where a global IRQ handler is present to manage link up
->> interrupts, it may not be necessary to wait for the link to be up
->> during PCI initialization which optimizes the bootup time.
->>
->> So, set linkup_irq flag if global IRQ is present and In order to set the
->> linkup_irq flag before calling dw_pcie_host_init() API, which waits for
->> link to be up, move platform_get_irq_byname_optional() API
->> above dw_pcie_host_init().
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index ef44a82be058..474b7525442d 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -1692,6 +1692,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->>   
->>   	platform_set_drvdata(pdev, pcie);
->>   
->> +	irq = platform_get_irq_byname_optional(pdev, "global");
->> +	if (irq > 0)
->> +		pp->linkup_irq = true;
+On Sat, Nov 02, 2024 at 11:19:14PM +0900, Krzysztof Wilczyński wrote:
+> Hello,
 > 
-> This seems to only ever being used in dw_pcie_host_init(), would it make
-> sense to use a argument to the function to pass the parameter instead of
-> stashing it in the persistent data structure?
+> > According to Section 2.2 of the PCI Express Card Electromechanical
+> > Specification (Revision 5.1), in order to ensure that the power and the
+> > reference clock are stable, PERST# has to be deasserted after a delay of
+> > 100 milliseconds (TPVPERL). Currently, it is being assumed that the power
+> > is already stable, which is not necessarily true. Hence, change the delay
+> > to PCIE_T_PVPERL_MS to guarantee that power and reference clock are stable.
+> [...]
+> > This patch is based on commit
+> > c2ee9f594da8 KVM: selftests: Fix build on on non-x86 architectures
+> > of Mainline Linux.
 > 
-dw_pcie_host_init() API is being used by multiple vendors under
-drivers/pci/controller/dwc/* it may not be ideal to change the argument
-here.
+> Why KVM?  Do you have the link to this commit handy?
 
-- Krishna Chaitanya.
-> Regards,
-> Bjorn
+Since this is a fix, I had based the patch on the latest Mainline Linux
+with the head corresponding to the aforementioned commit. Link:
+https://github.com/torvalds/linux/commit/c2ee9f594da8
+
 > 
->> +
->>   	ret = dw_pcie_host_init(pp);
->>   	if (ret) {
->>   		dev_err(dev, "cannot initialize host\n");
->> @@ -1705,7 +1709,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->>   		goto err_host_deinit;
->>   	}
->>   
->> -	irq = platform_get_irq_byname_optional(pdev, "global");
->>   	if (irq > 0) {
->>   		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
->>   						qcom_pcie_global_irq_thread,
->>
->> -- 
->> 2.34.1
->>
->>
+> [...]
+> >  		if (pcie->reset_gpio) {
+> > -			fsleep(PCIE_T_PERST_CLK_US);
+> > +			msleep(PCIE_T_PVPERL_MS);
+> 
+> fsleep() with the same macro and for the same reason is also used in the
+> j721e_pcie_probe() callback.  I think, we would want both changed.
+
+Thank you for pointing this out. I will update it in the v2 patch.
+
+Regards,
+Siddharth.
 
