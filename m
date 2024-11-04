@@ -1,144 +1,263 @@
-Return-Path: <linux-pci+bounces-15969-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4AA39BB7F1
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 15:36:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 669C79BB857
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 15:57:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10A771C231D4
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:36:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E152D1F2250C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:57:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD3551BE841;
-	Mon,  4 Nov 2024 14:35:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20117469D;
+	Mon,  4 Nov 2024 14:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8U5cxqK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KCQWT2lJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8563B1B3F3D;
-	Mon,  4 Nov 2024 14:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730730928; cv=none; b=kEtDjaMuly/n8ftQrEXu5NmcuffF1Xdw9SYfeTh6nArZXdm/Gej5ZzdbARs7rB1FPnK2T6F8fZ3h5DylDZ31rNxFUxZhy1d3p7V57UeHMbL94El+44HlbW9o3QfAdA5QTHIKqbCgRVq7QgQi0vlmIgQXSa4JuGY1dLjDDgkZGzY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730730928; c=relaxed/simple;
-	bh=eXPI8qxXkARRJv6XlO2w7vOxmVFZ4CQ/UGlKNBeaFLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7I5zAAVbny3KUBykSPf/L/TkEyVzp6b68T8TZ/BHbMUxCWHDxToEpgOA9qdRlAsBtLJUMjOp9Uv5HsMg4DEFE0pf/BRJhErrRBcCysk09QV5+CYw9zWQoS1uy1JZuy/yPCfme8UYzAs5Ci/oReJ/DGyOG9B/uJQ0mj3735bzRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8U5cxqK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF07C4CECE;
-	Mon,  4 Nov 2024 14:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730730926;
-	bh=eXPI8qxXkARRJv6XlO2w7vOxmVFZ4CQ/UGlKNBeaFLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y8U5cxqKgBeidDWvBqbZfYkcFafSMpOczE+HNoD2bqT3hSp7UMnGBt8X0yIKFflXI
-	 PBDDSHxD8STQoB3gDLCgH2gGSZsUUbv4Zgj/px9xSXRU5XKYqcRCmdKyNNYHI9CoO/
-	 DrW6pbmwYf5LfA7FL0KGAvYPSiOkgF+wBcn/Wjh3z3j/yerMwP2tTSDo53lPc1khtN
-	 +DmwKWPfnM055gQqegq3VNdigIGf/WRgaY+DOibRZR0syX9P+ZAx9y4egmqsYgepWe
-	 fFeem8xZkRkedmH75K+6KyzQEmaApbRe3sWIJYCkZNgSLb/Ozgqi+lQgy/ZGixQRqa
-	 tm71nlPo+M2Aw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1t7yAu-000000008HJ-1mv2;
-	Mon, 04 Nov 2024 15:35:24 +0100
-Date: Mon, 4 Nov 2024 15:35:24 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
-	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
-	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
-	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	johan+linaro@kernel.org
-Subject: Re: [PATCH v8 5/5] arm64: dts: qcom: x1e80100: Add support for PCIe3
- on x1e80100
-Message-ID: <ZyjbrLEn8oSJjaZN@hovoldconsulting.com>
-References: <20241101030902.579789-1-quic_qianyu@quicinc.com>
- <20241101030902.579789-6-quic_qianyu@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AA61B85EB;
+	Mon,  4 Nov 2024 14:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730732248; cv=fail; b=EHhw49HzBIS/La9VLVzcZQSqg+7hEklgufXxbGYUw2+xynJUOdA8aRZq/pAbe96jAkiwj7WwboREzX6fsRhCxf6eDBGd7+jqmu7a0BTkuHJvQv1DZ9btkiMj7TMJ0oibw8isyvb16hxqTQuGzd+/nK/z0Vu94kuMlvyFV3tWvVE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730732248; c=relaxed/simple;
+	bh=O3dJir/KSdlul1WDSa0ZEXg0XB4G6gZesm0ZOB1r3M4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PvoQCx6FVj9ol5QIv1Wzgzp5N6LB3gPG71md/CB5ijhEhErDa4g4N2iaGYzVwKlZ+eXhdM0ie38ZG26JH+p+dPMCXT/1RIP4aGEWCP1swKz09YVqCPa7PNAvUhxbdJAsNXB2CWlvf+XDKCL4r9oxIuNXS4BvBdVeNwGrJ+h1ZQ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KCQWT2lJ; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730732246; x=1762268246;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=O3dJir/KSdlul1WDSa0ZEXg0XB4G6gZesm0ZOB1r3M4=;
+  b=KCQWT2lJWYciTkrz21M6xzGsSB9MYLFf5EmTUrWV3WxN1gFSyTdeSONL
+   VhpDH/25FY0FlZx6RL8nAWECcF+apf6PtMl8U65eU1xZOyOiPIGv0RV0a
+   Kl0bmHkv/OWX5adws7aVJ+50+M+ayqgyFE/4siy4sTEJIwMwa2gjfXf21
+   aWfxYIIWbI6fGJ9y5pEU6eVe55/mTd0Z7v8gB6ilQECBqWUl26ntOGcYJ
+   E/7A9SLExqfeYuIds2zIfAifbNDv0g2fAJhXDk9uZipK/PebycagxbO74
+   cvj+PufMrdooSaJjpvtxt+6DoSRTAuwfZooJcElaIAtnnv7tjmAWwe+a/
+   g==;
+X-CSE-ConnectionGUID: NrtWv/Q3SPWrOmSaRU4tlw==
+X-CSE-MsgGUID: DOpP2eTPTJ2yNpegc4CgbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30284820"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30284820"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 06:57:21 -0800
+X-CSE-ConnectionGUID: TrS2NTCrRIChl9Ysb0Bklg==
+X-CSE-MsgGUID: 0u7Un4bCTHW45Zjmg6pMzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,257,1725346800"; 
+   d="scan'208";a="83198288"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Nov 2024 06:57:18 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 4 Nov 2024 06:57:09 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 4 Nov 2024 06:57:09 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.175)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 4 Nov 2024 06:57:08 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aF9gHprkjrW931VLb7NYk4ztMX12dEcgrtJlL0d07if41jIAdJlEuhep6AszQjuHXMx1j502knXhi4cIbJYF4groqcBbc6YnUc/PpHuP/Db7bsxUcUbSP9uxp4GMcyMwmDPNPTE/NetOcOzN7gUJxgaTYdDmrPRfCLzlNlbPnepo3iqBj0i0+bRK7ESL3eTm7WDrOTPaY1eWJJHfsYdk3y5aO7g1+c+jOo9Mk8s8sNt3/uslno4cxu5XeCRvF43IwmVGIujGuo0C3BDDtIXiI23GORePxF4n9Kpbg8Lb6IE6KiGIehHsQN2uCpqdHwJVwOVD0gjdx92s7m0XvdGMew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5SsjHU4oKkp3cEqMwqLGTXX+kXj1c66K5N47hwN1nz4=;
+ b=ygEZEWxmmqoTHztbcu9TWXJBhqOF93ZO1vF1u+665fJBs4i2n4uhU7COpFI4HBRP6ypoWhOi6F8Kh/50r2J1HDYFgmSVbBZTTyBvL/nqkY6+mNlTwdMaMEm4QkxqI5N9BG4DaYMZB+4RNSgM/SS/b5bCzWKJd9CT8b4fj11DjXi8WNF47W1340LMOvTV97PCj0iI4pyHw1OfA8hxGPQDOInck/DTG5bwVRZyHAJsYTcNHRcRdc5nj/xZgqXKGQWba3mSUHrddTG/6TPj0ARjd4yoKWSbcKS19YfazBiA0rMYktp/8cJM5ghOk3Oxywe0Jt9EesSPorPy2tEMcdMKIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by BL3PR11MB6506.namprd11.prod.outlook.com (2603:10b6:208:38d::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.31; Mon, 4 Nov
+ 2024 14:57:06 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8114.028; Mon, 4 Nov 2024
+ 14:57:06 +0000
+Date: Mon, 4 Nov 2024 08:56:56 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla
+	<srinivas.kandagatla@linaro.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	"Vishal Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"Alex Deucher" <alexander.deucher@amd.com>, Christian
+ =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Xinhui Pan
+	<Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>, Dennis Dalessandro
+	<dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, "Naveen Krishna
+ Chatradhi" <naveenkrishna.chatradhi@amd.com>, Carlos Bilbao
+	<carlos.bilbao.osdev@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
+ =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, "David E. Box"
+	<david.e.box@linux.intel.com>, "James E.J. Bottomley"
+	<James.Bottomley@hansenpartnership.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, Richard Henderson
+	<richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, "Frederic
+ Barrat" <fbarrat@linux.ibm.com>, Andrew Donnellan <ajd@linux.ibm.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, Logan Gunthorpe <logang@deltatee.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, "Wei
+ Liu" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+CC: Dan Williams <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-rdma@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+	<platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>, <linux-alpha@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-hyperv@vger.kernel.org>, Thomas
+ =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback of
+ bin_is_visible()
+Message-ID: <6728e0b819e9_14084029463@iweiny-mobl.notmuch>
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+ <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+X-ClientProxiedBy: MW4PR04CA0269.namprd04.prod.outlook.com
+ (2603:10b6:303:88::34) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241101030902.579789-6-quic_qianyu@quicinc.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BL3PR11MB6506:EE_
+X-MS-Office365-Filtering-Correlation-Id: 394334bb-617c-406a-4a05-08dcfce0f2f6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?vJKBUHqLzVwEAEzq733lKf0tp5JwYIBdn0zPoaIPb5prUy9Ut/DhlGgd1e?=
+ =?iso-8859-1?Q?ojol/tDSApvJaNPVmBdxq0RoifhlZleKhKnT5adclLryOVD1C7aZcIV8Fz?=
+ =?iso-8859-1?Q?GkWVSelyWa2nXLUenHYPPYyg72c3zm66Tq7sFNTf2zDHSicZE8+ZMoC1uP?=
+ =?iso-8859-1?Q?tr7iYkaTXug76dxMXnWUevfPZwDZ6SgEvh8ujFUcJlxL4FYxHJTxXlINkd?=
+ =?iso-8859-1?Q?W7uxw3WHfulGPuacTuHy82LGmhUHVcKPInMQQNcls1WzH1Q+Yz2j5dJ4Ra?=
+ =?iso-8859-1?Q?f3KNxfzIJ5LI7u6KxqB4i7gL0WuzyqbJL0+u+Uy+62CtwlYX4cBlH35+bA?=
+ =?iso-8859-1?Q?PV1TOc5t+1a63dHHk09S/Ey3vXvZC2rNS2ea8cdRFhyMTL0v6gy/iJ8N4C?=
+ =?iso-8859-1?Q?azAWQ85pDDitoJa5PDKO/4ZoRMwV6llBTNG0SecOcN2XRL18f4d5EHZuNl?=
+ =?iso-8859-1?Q?H9MgQubBw71XF0VrDDqfHDKpsuN2f7Obq18lVKod4fkghmIaD9cqEuiYJv?=
+ =?iso-8859-1?Q?j033A+Kxpaz3NY+qCRErT+Rl76NjmccrSi93ZQ6Bn81N9uU5Amu6lmlP4k?=
+ =?iso-8859-1?Q?QhqAdiGv9ofOYBocsd2nzSP4kAstMB3eSa0wl6ZIZywqJP1J/3S/EwGLsB?=
+ =?iso-8859-1?Q?Z8YRBTlX3InZJ0okavTOSn5ZZttvM0i4BUPBjsf+6LS/PbmwUV7QOCeqpx?=
+ =?iso-8859-1?Q?ps+FRQQLlYrX5r3t0Hl2ThfTAC0Od6wRgLMb8uHlUD7VHgWAjjpTmtw7Ik?=
+ =?iso-8859-1?Q?eCMg8Yb6UA6e4rY2ecZyh191/giB8v85xm856PKX+8stZEbrkNmHM43Lk+?=
+ =?iso-8859-1?Q?zwVjYuhVTJUQhvYz+ch0+k6dB6fnCf6ryCEHMwJcp4o3I2vQMC7meRjB4c?=
+ =?iso-8859-1?Q?hc02ynucy2pbsLAukNQWhkceAnT4SUUSSWJO5Zr0xgvKocuCAKxcaYFiO8?=
+ =?iso-8859-1?Q?EY1PaYi26o3q7Oy2GKCEC1g0TPktx/4BzljYs9cOjqbqt4GsagfeMUgbtw?=
+ =?iso-8859-1?Q?j2lVq7YGSFccWvyWv5i7LykNLVQtC0A/m6W4dd5bP8tn9/VVzWbZnK2lFm?=
+ =?iso-8859-1?Q?wW/1g6OSre3NLjQsNwgb9/AhusfJpDN0jnirMkjK6cBCSt/KUggKqE3EVt?=
+ =?iso-8859-1?Q?nBJKJSnPfBi5KS3BWBis/UfGy00nzDgR1zIFXbyzi+tixBejf/kBDfEfgB?=
+ =?iso-8859-1?Q?FHlzK+GmGm+VsR4AcpYhZrBPZOUPPugyiD+ZOhc+MvvOr9Ib4z75hIvhhb?=
+ =?iso-8859-1?Q?ypyRIDv0Xy/HpBcQCDCUIWfY/s6TTV5AlW7/aowCCZFSIhmfTReDgtj25H?=
+ =?iso-8859-1?Q?bgS0Zk7kTzcdkx15x+e820vAOdh/5baD7S+i5lsHp11JLJVqPUrQeNykQP?=
+ =?iso-8859-1?Q?4Su3fUfYSFJrX+X5+wMJflvyUwMaInzyWHga35oBlUh9+T4Vc+0rY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?GARdDiJWX5sL1joXISNrkwxtLuwdL8g8wiIIyjdGRlZDwQC6AlSkvunnYB?=
+ =?iso-8859-1?Q?qfQ/DE2dKXkItT/Tueu0VxJwRiicYRdxsgrEFtmuKZguIF8cTt99UQhblj?=
+ =?iso-8859-1?Q?468ZCVrpADOJ/Zq4P147/4xS7L/jc6y8PLM4adpodgNVoyqNx2mOxnueAP?=
+ =?iso-8859-1?Q?nb5FHRDJyBW74y1S4LcVehsIUIjBwyt57HPDTKcPSVgYwASzofggwHdfXr?=
+ =?iso-8859-1?Q?wEDOdmyCyVfpE7ddTyu/YLNfUb3Vskd0b+1ShxuhvKqdzRW1atWjV9JcIB?=
+ =?iso-8859-1?Q?7UhsttQeav9ujn+m+zrH/xNsHFALF3noifVararFVO9ULptYXkUvdjQKoA?=
+ =?iso-8859-1?Q?B7pv/4IYWil7gBsw7GAUx821yTNFBxrvIBYHs8veqSEWZ3MjabdPzoM/df?=
+ =?iso-8859-1?Q?Fp4jozEUKdFqddvdPbliGynZeLKOEINQQuoKNcxVJEXnk+jLE7/B0sFuX+?=
+ =?iso-8859-1?Q?o9/PBAqt+kWRk44n4CLu58azUk/mTkEPXa7ZBqaY27xlcBNAF0l+OgxfdO?=
+ =?iso-8859-1?Q?jUuzEQDiR1a/UdJejJFYoHUv33A4ExyOiFTCuLlrahAM9lwOjzZNoD6GSg?=
+ =?iso-8859-1?Q?SE+JbPrDgiismuzjFjN+Mx3/rtwSbEdQDqtVN7g+w2/o6BOM18pFzGfyYF?=
+ =?iso-8859-1?Q?uNsXSgSdlvitB4zej8pFraj5iL5NhFMPWo6jiXdULDdEb5UqJDboVNIhEJ?=
+ =?iso-8859-1?Q?oeeVMNRyKxv0Va6vHZl2rzagzCW0lt4Ox4AE0+Pf/vFvdvfnM51CczptkS?=
+ =?iso-8859-1?Q?nCifu1oMecL/+qglga8zNGsZA8/kGGQP5Duwj6kLcBp+FipZ6DTI7216rY?=
+ =?iso-8859-1?Q?f5okT4PwD4co0Vt0qVLhpv9lHHEfB/b25axl0bipXV/k+GLzlpIfSGHSzS?=
+ =?iso-8859-1?Q?vYZokP3ETM83bf5WFjeuAunPcxGDnbrV6fM0AKDZGVF9H3c6WtmHG1/Xw1?=
+ =?iso-8859-1?Q?cPi9KWN7oiEJ46Q9gmUeVb6+bS3KHDunvVPCPeRdxv5wr0cFSfz0qmQMc9?=
+ =?iso-8859-1?Q?zvKtOpou8wsD60F+TfLPCWeAtATSU4svUk8sSHTuV004qnI794piWie6Ky?=
+ =?iso-8859-1?Q?QY5bIHXGVXM/9KU2eQJMEcjSePTHtnBdlcl7tdExkQxX4QlzM37NNQMkjE?=
+ =?iso-8859-1?Q?NxIAI+WI02XQ7MiIFviqNrbu5a2f5uYb2TURz3n+a7stwyDKfrgiGvg9jc?=
+ =?iso-8859-1?Q?9tccF2aTZLCzlRn876lNJGmgs7AahkV0tGCW5HXZ270scxzdlutZAvRvz+?=
+ =?iso-8859-1?Q?/TWZhs3nP/dFSAMGJh6OjZn1u/GPNIo0zm6duwi6NQx7o4iVAlQpiIlJew?=
+ =?iso-8859-1?Q?u2cDM+7DWOwT71fXysa5fVHErH0H2ZpXC0YMFSLQS+wXnzgT9TtIjmx92e?=
+ =?iso-8859-1?Q?Xpsoqc3MTgc+blggAqjtup6rlxz0x1EjuVZZ7FA619YzD+lD5SnKcd8BzZ?=
+ =?iso-8859-1?Q?Ua9NP3wVQaCX1M3nQ2invGtYKa7Z5olVSh3qKU+P/MH4wkuuCopIy+XCcC?=
+ =?iso-8859-1?Q?lrPa8pYWDAy81twDg8oSmbVHw/2L5yF9ImN37/364/fnwEUzKF9XJ8l7N1?=
+ =?iso-8859-1?Q?qnSKPx24dBn/fxB5ZepBmNrNt3/AAllvcs6HYVYthwnCIqb3ADNwvqBixR?=
+ =?iso-8859-1?Q?t11PxE+OBNEsUvTgQ8k20eKRHWo9ucIcHm?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 394334bb-617c-406a-4a05-08dcfce0f2f6
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2024 14:57:06.1368
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fk1dpWhHGyReCgCtYvz28Nh10DH2ABl39CsVZtuijEtq6iDAADmiWcbYxY135NfbpszdLILdTdSQ7mlpu9RstQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6506
+X-OriginatorOrg: intel.com
 
-On Thu, Oct 31, 2024 at 08:09:02PM -0700, Qiang Yu wrote:
-> Describe PCIe3 controller and PHY. Also add required system resources like
-> regulators, clocks, interrupts and registers configuration for PCIe3.
+Thomas Weiﬂschuh wrote:
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
 > 
-> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
- 
-> +		pcie3: pcie@1bd0000 {
-> +			device_type = "pci";
-> +			compatible = "qcom,pcie-x1e80100";
-> +			reg = <0x0 0x01bd0000 0x0 0x3000>,
-> +			      <0x0 0x78000000 0x0 0xf1d>,
-> +			      <0x0 0x78000f40 0x0 0xa8>,
-> +			      <0x0 0x78001000 0x0 0x1000>,
-> +			      <0x0 0x78100000 0x0 0x100000>,
-> +			      <0x0 0x01bd3000 0x0 0x1000>;
-> +			reg-names = "parf",
-> +				    "dbi",
-> +				    "elbi",
-> +				    "atu",
-> +				    "config",
-> +				    "mhi";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x78200000 0x0 0x100000>,
-> +				 <0x02000000 0x0 0x78300000 0x0 0x78300000 0x0 0x3d00000>,
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> ---
+>  drivers/cxl/port.c                      |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |  2 +-
+>  drivers/infiniband/hw/qib/qib_sysfs.c   |  2 +-
+>  drivers/mtd/spi-nor/sysfs.c             |  2 +-
+>  drivers/nvmem/core.c                    |  3 ++-
+>  drivers/pci/pci-sysfs.c                 |  2 +-
+>  drivers/pci/vpd.c                       |  2 +-
+>  drivers/platform/x86/amd/hsmp.c         |  2 +-
+>  drivers/platform/x86/intel/sdsi.c       |  2 +-
+>  drivers/scsi/scsi_sysfs.c               |  2 +-
+>  drivers/usb/core/sysfs.c                |  2 +-
+>  include/linux/sysfs.h                   | 30 +++++++++++++++---------------
+>  12 files changed, 27 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 9dc394295e1fcd1610813837b2f515b66995eb25..24041cf85cfbe6c54c467ac325e48c775562b938 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -173,7 +173,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
+>  static BIN_ATTR_ADMIN_RO(CDAT, 0);
+>  
+>  static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int i)
+> +					    const struct bin_attribute *attr, int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct cxl_port *port = to_cxl_port(dev);
 
-Can you double check the size here so that it is indeed correct and not
-just copied from the other nodes which initially got it wrong:
+For CXL
 
-	https://lore.kernel.org/lkml/20240710-topic-barman-v1-1-5f63fca8d0fc@linaro.org/
-
-> +				 <0x03000000 0x7 0x40000000 0x7 0x40000000 0x0 0x40000000>;
-> +			bus-range = <0x00 0xff>;
-
-> +			clocks = <&gcc GCC_PCIE_3_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_3_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_3_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_3_SLV_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_3_SLV_Q2A_AXI_CLK>,
-> +				 <&gcc GCC_CFG_NOC_PCIE_ANOC_NORTH_AHB_CLK>,
-> +				 <&gcc GCC_CNOC_PCIE_NORTH_SF_AXI_CLK>;
-> +			clock-names = "aux",
-> +				      "cfg",
-> +				      "bus_master",
-> +				      "bus_slave",
-> +				      "slave_q2a",
-> +				      "noc_aggr",
-> +				      "cnoc_sf_axi";
-> +
-> +			assigned-clocks = <&gcc GCC_PCIE_3_AUX_CLK>;
-> +			assigned-clock-rates = <19200000>;
-> +
-> +			interconnects = <&pcie_south_anoc MASTER_PCIE_3 QCOM_ICC_TAG_ALWAYS
-
-This should be &pcie_north_anoc
-
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-> +					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-> +					 &cnoc_main SLAVE_PCIE_3 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "pcie-mem",
-> +					     "cpu-pcie";
-
-With the above addressed, feel free to keep my Reviewed-by tag.
-
-Johan
+Acked-by: Ira Weiny <ira.weiny@intel.com>
 
