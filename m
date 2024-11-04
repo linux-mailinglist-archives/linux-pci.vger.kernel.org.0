@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-15996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAD9A9BBEA2
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 21:15:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2983B9BBEB3
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 21:20:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A61BB210ED
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 20:15:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C727C1F22B1C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 20:20:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D621D0E26;
-	Mon,  4 Nov 2024 20:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653CA1E3768;
+	Mon,  4 Nov 2024 20:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnM6j3fz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsfWxSZx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC811D63C1;
-	Mon,  4 Nov 2024 20:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B1A1E25F1;
+	Mon,  4 Nov 2024 20:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730751310; cv=none; b=Sq/c2jeFbo56rvPtWpNgNj/fA8eVeN8yBdKKUM4nqxutAYuoCG5HiGMjbOhdiq4mhWCqWVwGJwY9XUINDdmQEt2z88yT5ZOdAI9TyNTGe+YCHgzhpA3ERVF+c4TcgBwWdnbB3NNw+NbK41dTfh1q5yZJ9+RjWmIfZ3uywfb3Ci8=
+	t=1730751611; cv=none; b=HYTTpfKyKv6BOJqq4dP526jDEOOS8jFr9aZSSqk6MACy+FASRHvxXjYw8ezhnGWSWY8kqqdU8Z59ujfGZg70hiGShY+LtdrrrANoQ+pWEyZy6kl+Rf6kETV+uSLUrbVQ7JJyFvWJHISfcsTPVES1QsE66M6MXvEhHIUxOWesOl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730751310; c=relaxed/simple;
-	bh=epYdnbJKU5FFn0DdbqGPLAEbaoHaijlXYQL/Bm7Cau8=;
+	s=arc-20240116; t=1730751611; c=relaxed/simple;
+	bh=F35QXu0CPb2RNTi9cqqHOPETxQ69DznhMqoB8u7EK/k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RyLceI+s3rXfoaTrSb7C7MOprKJgPJKHY43gvqiaSQFElQiqkUB1tprBNI1b/75L9PMcUiB/RVq9n0qlzJ/Qm6nYVJz89eGl1xaIZSQPfbuyztiOkJ6nuwEIKx5HLJwBEOrsQdoWU4XRf/XFWBMHPPyta4GWds8Z1uqdkHkoVj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnM6j3fz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4DFC4CED0;
-	Mon,  4 Nov 2024 20:15:09 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRWhGUen4bT6GXg3eZhO1BQ4agN55/jZLrIHB1TYCn+YnND1iVrwCVEXgwTJFFHqEa0yMDi5C16wt9vl36CBiV836NhFmZUk7aq6BcaHby+0iVHYThxruflabKIN8p169uxwqjYmXDyL/5D+N5j71u/PZuVbINj9HGt3xQxPi1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsfWxSZx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88909C4CECE;
+	Mon,  4 Nov 2024 20:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730751309;
-	bh=epYdnbJKU5FFn0DdbqGPLAEbaoHaijlXYQL/Bm7Cau8=;
+	s=k20201202; t=1730751610;
+	bh=F35QXu0CPb2RNTi9cqqHOPETxQ69DznhMqoB8u7EK/k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nnM6j3fzhItRQO5T1tU17ntZzU8f5Tc6ZU6O1wzMJOULCAzSrHhQfJExxf2QzBZK3
-	 wEXua2Zi4E3XxZSYkJaIVrF5sHuOHiuzpTDVXF4J9xxAbWxON06jLeUBiBMthPGesA
-	 aaCmujVHtM1VTcDe95Wid6c6I9XNqpNzeZV8FxCWUU1JlHl62j17YSDlemuOShJRaO
-	 0Rv7wMspOakg8qVM2sqT/tRPhXqQp7u59QMIOYMyb3thmDxv9z1pgXNuQnJpEk7724
-	 1zsj+lRXjuHyGxybLtREvi8sK4taD/LXU4iOmclFdMQglsjorc1hhO9AUWYTpLec7m
-	 gA96o9JSLKW6w==
-Date: Mon, 4 Nov 2024 14:15:07 -0600
+	b=EsfWxSZxcLob+OpZQ/6kbeznGeNpk12qsGwzGZQQkwQCFfQv4+n7/UuPxDhC8ZLuN
+	 LVONQaZrfhhnRtFu3RcJKdQ34vOBPhLr/g0U8Rcn/BW2RVHx2ZvRvgv0eXVGWGBVIC
+	 LojWYoLqFkP4jEiG53jwIwRW6Pl6QMy1U0/lKkAgs8E8PueJYc++VDvXYNBKz3ZFwe
+	 XuJI3NW2XZllYTLrRXChbGsMwwCiSrP8NcYu2bky7Kyla7nIacFa/ltzkhFWIBRJUu
+	 FnP40w1Bq37G4EPw8KAe5X6KjceW84wHqKVkTKJe7bRh7DriDS8p6bcWBJUk0aEQra
+	 c/rrnl387nMlg==
+Date: Mon, 4 Nov 2024 14:20:08 -0600
 From: Rob Herring <robh@kernel.org>
 To: Herve Codina <herve.codina@bootlin.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -53,11 +53,13 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Allan Nielsen <allan.nielsen@microchip.com>,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 0/6] Add support for the root PCI bus device-tree node
- creation.
-Message-ID: <20241104201507.GA361448-robh@kernel.org>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 2/6] PCI: of: Use device_{add,remove}_of_node() to attach
+ of_node to existing device
+Message-ID: <20241104202008.GB361448-robh@kernel.org>
 References: <20241104172001.165640-1-herve.codina@bootlin.com>
+ <20241104172001.165640-3-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,53 +68,58 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104172001.165640-1-herve.codina@bootlin.com>
+In-Reply-To: <20241104172001.165640-3-herve.codina@bootlin.com>
 
-On Mon, Nov 04, 2024 at 06:19:54PM +0100, Herve Codina wrote:
-> Hi,
+On Mon, Nov 04, 2024 at 06:19:56PM +0100, Herve Codina wrote:
+> The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> creates of_node for PCI devices. The newly created of_node is attached
+> to an existing device. This is done setting directly pdev->dev.of_node
+> in the code.
 > 
-> This series adds support for creating a device-tree node for a root PCI
-> bus on non device-tree based system.
+> Even if pdev->dev.of_node cannot be previously set, this doesn't handle
+> the fwnode field of the struct device. Indeed, this field needs to be
+> set if it hasn't already been set.
 > 
-> Creating device-tree nodes for PCI devices already exists upstream. It
-> was added in commit 407d1a51921e ("PCI: Create device tree node for
-> bridge"). Created device-tree nodes need a parent node to be attached
-> to. For the first level devices, on device-tree based system, this
-> parent node (i.e. the root PCI bus) is described in the base device-tree
-> (PCI controller).
+> device_{add,remove}_of_node() have been introduced to handle this case.
 > 
-> The LAN966x PCI device driver was recently accepted [1] and relies on
-> this feature.
+> Use them instead of the direct setting.
 > 
-> On system where the base hardware is not described by a device-tree, the
-> root PCI bus node to which first level created PCI devices need to be
-> attach to does not exist. This is the case for instance on ACPI
-> described systems such as x86.
-> 
-> This series goal is to handle this case.
-> 
-> In order to have the root PCI bus device-tree node available even on
-> x86, this top level node is created (if not already present) based on
-> information computed by the PCI core. It follows the same mechanism as
-> the one used for PCI devices device-tree node creation.
-> 
-> In order to have this feature available, a number of changes are needed:
->   - Patch 1 and 2: Introduce and use device_{add,remove}_of_node().
->     This function will also be used in the root PCI bus node creation.
-> 
->   - Patch 3 and 4: Improve existing functions to reuse them in the root
->     PCI bus node creation.
-> 
->   - Patch 5: Update the default value used when #address-cells is not
->     available in the device-tree root node.
-> 
->   - Patch 6: The root PCI bus device-tree node creation itself.
-> 
-> With those modifications, the LAN966x PCI device is working on x86 systems.
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Cc: stable@vger.kernel.org
 
-That's nice, but I don't have a LAN966x device nor do I want one. We 
-already have the QEMU PCI test device working with the existing PCI 
-support. Please ensure this series works with it as well.
+I don't think this is stable material. What exactly would is broken 
+which would be fixed by just the first 2 patches?
 
-Rob
+
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/pci/of.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index dacea3fc5128..141ffbb1b3e6 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -655,8 +655,8 @@ void of_pci_remove_node(struct pci_dev *pdev)
+>  	np = pci_device_to_OF_node(pdev);
+>  	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+>  		return;
+> -	pdev->dev.of_node = NULL;
+>  
+> +	device_remove_of_node(&pdev->dev);
+>  	of_changeset_revert(np->data);
+>  	of_changeset_destroy(np->data);
+>  	of_node_put(np);
+> @@ -713,7 +713,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>  		goto out_free_node;
+>  
+>  	np->data = cset;
+> -	pdev->dev.of_node = np;
+> +	device_add_of_node(&pdev->dev, np);
+>  	kfree(name);
+>  
+>  	return;
+> -- 
+> 2.46.2
+> 
 
