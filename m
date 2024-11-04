@@ -1,108 +1,108 @@
-Return-Path: <linux-pci+bounces-15988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F37FF9BBC1E
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 18:36:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF6579BBD5B
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 19:36:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3107A1C20BED
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 17:36:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C9641C2103F
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 18:36:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 782DF1C3027;
-	Mon,  4 Nov 2024 17:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62B61CB537;
+	Mon,  4 Nov 2024 18:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikj/qr/S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVgmsW2B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A53433FE;
-	Mon,  4 Nov 2024 17:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8551CB9E9;
+	Mon,  4 Nov 2024 18:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730741780; cv=none; b=uH14Td2/4uDsyCU3ufcot47WpmbyljMfpA7USvzfxT7K1S8WvOYaNJ/I0p6fIIi+Ul+TfK+1BUx4tI9wkKruJAYp/EKw4icMZx0iqOlUyFc7nDT8Fa+twScMy5ne5ipskckrwn4foByAt3ij+smAjGJUMwAM9wDdoRIUhrd4q58=
+	t=1730745407; cv=none; b=nkuV8wEnp0EkY2PMaYGFnT3L4Dpb7DzVwUuv6LwDJ0mm5OqTjUFAmXrfG/tVHIKLV8+tRvKxC7cpDYum6zXWXwGPZn5ndyDSlefFKuyfPuiGjLhAyA9GP1CQHpZYqPSYEGFK4soN42Dl2i2UBTkJkbZnMpOHoHW/57lCEBdc6zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730741780; c=relaxed/simple;
-	bh=14Y2C3CtK6n0zKXAiwUiWs4AmbFkmgaPQlfz0wwA+rY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cgQMMkXXNc4Cdt7b9vISuwVIPZa4iWVKR+GupkvTl4p1gYkUIttZPJRoOG91UpbSMGvJwxJxXfyKnyZbsjPIOvmGJWMlbzoG7TMPfW+K8rekfeTSlOMLywxoAe8SfHg1ZF69WpG7GFWprGRy6AdVp957J9CF7MLZEtcGcjDieEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikj/qr/S; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2e2da8529e1so415194a91.1;
-        Mon, 04 Nov 2024 09:36:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730741778; x=1731346578; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=14Y2C3CtK6n0zKXAiwUiWs4AmbFkmgaPQlfz0wwA+rY=;
-        b=ikj/qr/SvHqevBrclbV99++lcRbn7OG1R0kjisqEszgBIeBaOe47rkrMH6N7oGuC2Z
-         //eSyCye0y0sErok0X8G/tg/90lAwenpEcFMcVellNf8hlhoC2+POmQDNM2NvWsKDP6q
-         CmChLxqcQeqSYDy+m4MoR2D5Af36X6DgMtryDa5Lx3m3R9/MaEhFLWhUsve0OnMqJLYh
-         RmOK5cH9MsfEMZ1EivaOp8XA9dWWFLMS5UR8XFXOQdcO8xnamaGFqXBzlsA6qtwePy0B
-         +wEzKJjpNoV56I8zQOg+JdDpQqUnAYw/lKi5rTrWV3TA4Pf1XfrM5jIH4FqVDwrOKcPj
-         M09Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730741778; x=1731346578;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=14Y2C3CtK6n0zKXAiwUiWs4AmbFkmgaPQlfz0wwA+rY=;
-        b=PtqJE20NLggcxRPdtX/U7UEdau6YLnxAkvlKp1L/lw1o0sPfQCMMw73AyFENPJFB/4
-         sz80wsbG1VKw6KR8fBfGnxF5w43UxdWBDHFzNMgP+rZh1JM8QvaQUlS84apKZzIwZ3dc
-         h8ggtrQ4m6G2i1dq6qz/FcQYSmdAp4dpjmcTg6Xd5MEBqhzAbQAq2rtDJvTxnqcVyNIH
-         y2R18q38HGUMmCWQhy+oR3UL5lm7SBWSRMcMMryMY8RM8MJODf/7ntUmWCP67VGgsWxy
-         8/QqNp+tK4bWmJAoHXJxJQV0vzlU3GQKEGR0M6d+mx6cl5ZNt5RCnQROSMIFa4Bxi1ri
-         lQnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMI+gkRliGOc4a+8jpwVv1UqQWWxqmHyzpGafblN9ZFT62LgvuHz17EHEzx1bq2vgTu4S2XTb15EVz@vger.kernel.org, AJvYcCV4boliGxRO0V5rPH8eJCpW/bgYBP0R1gssx9YWO/EutCTFpbZsayeOJb/rZfIYXChC+PstuY6i4AC6R6/+zOg=@vger.kernel.org, AJvYcCVl+TPfGxnAnEbjFuCx4afwXvAvTiv7y5SstJxCOyDBak2W5cDH719wl5sYa7b47WieA+stSiK2OS0W@vger.kernel.org, AJvYcCXbn7pJcVDlPNqndCfU+S5j/e6mv+YatC0sMD4MGJARY4HBUBNdhUMQ6Xt4eiCcpCNg339gyccsbwEh64o4@vger.kernel.org
-X-Gm-Message-State: AOJu0YycIlEjjvuNqYr5VFBGA872qHt0tfVAMxKtc8WKICo2ZJLIRch3
-	cTsMjcWLzlrmJ5bYc0ixdOjCRbaIBbeNN/AwjZlSX9j2HkmdqQy0v/nqlaQUulvaXvUip9dKy1S
-	hUq1MbkEekX2Es3KuaiJdSrpWGm0=
-X-Google-Smtp-Source: AGHT+IFYUp8Z31hGCqN7mtBnIVFG458aQgB2jJN9y0AHvYhO6ezYNnK1zqkRnPaCXsvZOB/Saq/9VW1K8wEZC65yQms=
-X-Received: by 2002:a17:90a:780b:b0:2e2:b20b:59de with SMTP id
- 98e67ed59e1d1-2e8f1068be8mr16152054a91.3.1730741778234; Mon, 04 Nov 2024
- 09:36:18 -0800 (PST)
+	s=arc-20240116; t=1730745407; c=relaxed/simple;
+	bh=vPRT5Ok0iatDoQ8sYX0E41DsuqQx7MZ4e798ogKn4/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PaTuR2q0Jq0wK+QeNT2qM7lIHYYy3w1H5zsAn7gDlhVNbk1iMKayexmuPhITHEE/UcwviRLhjFZyJMoq/hay1sLHrs06BQvxESEwFGG5dKlFYuNugp+KSRV7fIB/z4D/rB01oDoEeH4lxFchcDw6t2lya7oEA4l2V29Mh8xHj48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVgmsW2B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0225EC4CECE;
+	Mon,  4 Nov 2024 18:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730745407;
+	bh=vPRT5Ok0iatDoQ8sYX0E41DsuqQx7MZ4e798ogKn4/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jVgmsW2Byap2nnAfgufOvQ6Dpy7iyqqiToopnq65zidrTpwXgwtIVPK0ml8Iu6GCx
+	 stpnzW9oUHh5kee4Yu9lJVNGX5YTebI4svUGRjAQxjt5lq//OQ8Vpyh3MhwyNizZS5
+	 /grbqBTU7Kz2x8xB9NSkwSBxEPh+aup6JP+Zy+3RjhKf4Yk6EPVbFeL4wjkhIsFlKP
+	 /6AwfvMevgm15vuacpc6arPHEx2dVpHdOGGyI9fPcxkO8+HgeFJenejfE+vywh/qjS
+	 SIeE11M9rNMaYK3ClW0Ymbpl5k+m7f+z6f7kV9jFb/GoOFWLlz4Ut2yOkrQutU0GN5
+	 +iHIsuyT4n8mw==
+Date: Mon, 4 Nov 2024 19:36:43 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] ata: ahci: Don't call pci_intx() directly
+Message-ID: <ZykUO31aOfnCIkUH@ryzen>
+References: <c604a8ac-8025-4078-ab90-834d95872e31@gmail.com>
+ <ZyiGNtLMSY1vTQH7@ryzen>
+ <8acdd01c-1744-4545-9cc7-0a60e83a5d4d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-3-dakr@kernel.org>
- <CAH5fLghQ3Rdgk+xzz9RzNzTs4vYLMO0q-SkDOrnb1u4TkPQVUA@mail.gmail.com> <2024110425-overfill-follicle-c963@gregkh>
-In-Reply-To: <2024110425-overfill-follicle-c963@gregkh>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 4 Nov 2024 18:36:05 +0100
-Message-ID: <CANiq72nh5KMDHhnD_06CqVDNU4SvRaghpfY4_K1U8GxYjDky5g@mail.gmail.com>
-Subject: Re: [PATCH v3 02/16] rust: introduce `InPlaceModule`
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, ojeda@kernel.org, 
-	rafael@kernel.org, bhelgaas@google.com, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com, 
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
-	daniel.almeida@collabora.com, saravanak@google.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	Wedson Almeida Filho <walmeida@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8acdd01c-1744-4545-9cc7-0a60e83a5d4d@gmail.com>
 
-On Mon, Nov 4, 2024 at 6:48=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> If no one objects, I'll just add this to the char/misc tree that already
-> has the other misc device rust code in it.
+On Mon, Nov 04, 2024 at 02:23:43PM +0100, Heiner Kallweit wrote:
+> On 04.11.2024 09:30, Niklas Cassel wrote:
+> > On Fri, Nov 01, 2024 at 11:38:53PM +0100, Heiner Kallweit wrote:
+> >> pci_intx() should be called by PCI core and some virtualization code
+> >> only. In PCI device drivers use the appropriate pci_alloc_irq_vectors()
+> >> call.
+> > 
+> > Hello Heiner,
+> > 
+> > as you might or might not know, this patch conflicts with a Philipp's
+> > already acked patch:
+> > https://lore.kernel.org/linux-ide/20241015185124.64726-10-pstanner@redhat.com/
+> > 
+> I know, therefore he's on cc. Fully migrating PCI device drivers to the
+> pci_alloc_irq_vectors() should be done anyway and is the cleaner
+> alternative to changing pci_intx(). However for some drivers this is a rather
+> complex task, therefore I understand Philipp's approach to adjust pci_intx()
+> first. He's incorporating other review feedback in his series, so with the
+> next re-spin he could remove the ahci patch from his series.
 
-Sounds good, thanks! I gave it a quick spin (on top of `rust-next`)
-just in case it triggered lints etc.:
+Well, if you look at Philipp's patch it:
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
+1) Doesn't only update drivers/ata/ahci.c,
+it also updates:
+drivers/ata/ata_piix.c
+drivers/ata/pata_rdc.c
+drivers/ata/sata_sil24.c
+drivers/ata/sata_sis.c
+drivers/ata/sata_uli.c
+drivers/ata/sata_vsc.c
 
-Cheers,
-Miguel
+Why don't you update the other drivers in drivers/ata/* ?
+
+
+2) Doesn't just bother to fix a single subsystem (drivers/ata/),
+it is actually part of a series that fixes all affected subsystems.
+
+Why don't you send out this fix as part of a series that fixes all the
+affected subsystems?
+
+
+Kind regards,
+Niklas
 
