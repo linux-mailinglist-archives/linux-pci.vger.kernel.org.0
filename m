@@ -1,120 +1,113 @@
-Return-Path: <linux-pci+bounces-15951-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15952-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 245B79BB574
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:10:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EBFA9BB5CD
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 14:21:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DEEA1C210B8
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 13:10:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2ADE01F2234A
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 13:21:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06BEC1B81C1;
-	Mon,  4 Nov 2024 13:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GbGCE6C8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55487DA7F;
+	Mon,  4 Nov 2024 13:20:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D691B6CFB;
-	Mon,  4 Nov 2024 13:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB7C42A91;
+	Mon,  4 Nov 2024 13:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730725829; cv=none; b=lyRnO+PT8WZtCSBYf2MPL8bFS31D4D5+RJjT8KDoBJs64YPauR/jnpYW6X0VRgmt16YwBDufQhaWdA5W2fgDmXNCGix1KrMnsu5hZz21ksTlT2R5S6bBPN2xa1CKU5oby60BqCHdtitWXm7fTpQCA2RHCoQa9nqjDI843ZgDti0=
+	t=1730726450; cv=none; b=u+CfXAJpyQ1+F2qxwr2/6jGrJuruP4f8hT7ZhZ/izjOtq75P52SXDrQQpXwlFS50dwwNzaog3iVO4BMyBJryC0pmmQ3BxdZTRKlyDUackEnhJ7OCwH8lmw75sFnLn91FHNlc6KWwH2KSYdjJ7gwOZ0zS2nGXDKQtirWcFYh9Ics=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730725829; c=relaxed/simple;
-	bh=9HrB0hRfb9MPWXWPeZXQEXRRgtlF7QfDTCZF/aQwKS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfrIXc+jXmpZcP9PJlqG4nbXQa6in6pJdUYw2He6RzDFi/GEKJeRKVSRQcFbYBRmoxrII/8Q5mlTfyiKsPkbfUa58Rm+rh29H6VMMt3WJvTvNsoa06MVLr91ThuxKZf3gRO/4+UsBoSoS0PmAYw5b3DwHi5udKgjQ/e8V6B9ikQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GbGCE6C8; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1730725823;
-	bh=9HrB0hRfb9MPWXWPeZXQEXRRgtlF7QfDTCZF/aQwKS8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GbGCE6C8wudOGBSfu79muvMfKAR2yVIJY6fKZ3raaCqVJIaEX6fTCGnObJv5S9xT/
-	 LVcV69AQ/8Ic/fjsFUkOGpfUa3ye/hkVUzvgxHf635JfVvPj5givJN5R5OfiwMp2og
-	 oaMIEKQMW9AhQOWlVCztjeRseIPGGqaMZNn1ZUxi0LSKrqvvhbl+PFidY8kbPL9EkL
-	 gzC73UaJQr/1jJgT+Q1E8BDKjvymTZgHsGT1U2WBKNzN2cyPugLZUWGYIekG3XEJFQ
-	 Ni+VH9w3FQR2vuUZVrhyehfa3m76omIpOFcT3SmARcIwp93kKL4J75Yj1VI9Y74iFI
-	 1uM9UR5RxPozA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3BBBB17E3630;
-	Mon,  4 Nov 2024 14:10:23 +0100 (CET)
-Message-ID: <f8ca0f82-2851-40d9-983b-2a143b44263a@collabora.com>
-Date: Mon, 4 Nov 2024 14:10:22 +0100
+	s=arc-20240116; t=1730726450; c=relaxed/simple;
+	bh=oIoDtIF+2GZDMiRu2wj9nD2wnJGR5s9ZmdKIifr2wDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGERdU2KdyhtXY+O8fEdhRvwVilViWY1DrpM4vgl66p4iWdNdewSHOMuiPhipQijneTw7ol10V0E8sr1trf9mPDGZ60qcCAJPoX874JRHmkCTUXKbFCzsdACRNz2VoEJgT73pVinFYDLsSXnR8ISNZ8A2uuvocCWYYL1gTE7WWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21116b187c4so26972425ad.3;
+        Mon, 04 Nov 2024 05:20:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730726448; x=1731331248;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bAYbSq5mlU7adPkgvorpMNMhcx0QaHzk2bxUeWeRhik=;
+        b=aXPFevXK6rwJx7n3n4rwU9mdH/sc6Sf7mgcO1YjbblS0RnRcDrkQO1O0ENHFPgsXgb
+         +xP+0QBRrFVIitvO083UwSl6IQkQKWGL8NFgWTKDBBOrEd/LUj7tBbKSZDl6HUYOUm2G
+         x5QFYT5HgSQG7FdaAxH8lezaQ1Tov9MelXZSviClmi8ORLN/iBDq/eJyGsyUlt5ildl2
+         GQpFzyMKA2q75G4fn0uTanrc/08iOOV+KM8N1cPsJlEDQsDzGNPltK0m9xrlxxertdO+
+         j3btN6cGOaX8dpKFXcYPs2T7lmwJhKVWld6tMGDoq0cek9ifMxil/FzyWH6vFYOY68Hw
+         +gJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVB75mXU1ZdlhgFRHJjiP4hvjgQyhf3o3hPrJxhiCjrsszpjQNbb2EiYP1Ag3uu0wpqOMJoLRxk9u7Fsbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRN31ixaKvxKSZgETA34kru1lFRQ8qlhHm5vTHGVI42X2uHEro
+	PpB2JPwMR6SnHGLt8E/MCE8EFvRNP8fcENsocfCZQ9RDyM/GoPoX
+X-Google-Smtp-Source: AGHT+IFPbiyTwQNpyLarXOasgjJJbddopeoCOOsJvaCh85ieSNwN3SrqIlcdYNIvZeGmYFnzFxul9w==
+X-Received: by 2002:a17:902:ce8c:b0:20c:e262:2560 with SMTP id d9443c01a7336-2111b0078bdmr151908315ad.50.1730726448397;
+        Mon, 04 Nov 2024 05:20:48 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e93db18128sm7460203a91.36.2024.11.04.05.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 05:20:47 -0800 (PST)
+Date: Mon, 4 Nov 2024 22:20:46 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com, lpieralisi@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, matthias.bgg@gmail.com,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
+	fshao@chromium.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 2/2] PCI: mediatek-gen3: Add support for restricting
+ link width
+Message-ID: <20241104132046.GA2504924@rocinante>
+References: <20241104114935.172908-1-angelogioacchino.delregno@collabora.com>
+ <20241104114935.172908-3-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] PCI: mediatek-gen3: Add support for setting
- max-link-speed limit
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-pci@vger.kernel.org
-Cc: ryder.lee@mediatek.com, jianjun.wang@mediatek.com, lpieralisi@kernel.org,
- robh@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
- fshao@chromium.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20241104114935.172908-1-angelogioacchino.delregno@collabora.com>
- <20241104114935.172908-2-angelogioacchino.delregno@collabora.com>
- <D5DF0QIO2UZQ.29U999LYCC05M@rocinante>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <D5DF0QIO2UZQ.29U999LYCC05M@rocinante>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241104114935.172908-3-angelogioacchino.delregno@collabora.com>
 
-Il 04/11/24 14:06, Krzysztof Wilczyński ha scritto:
-> Hello,
-> 
->> +	if (err > 0) {
-> 
-> You could drop > 0 here.
-> 
+Hello,
 
-I have no strong opinions about that, would be fine for me.
+> +	ret = of_property_read_u32(dev->of_node, "num-lanes", &num_lanes);
+> +	if (ret == 0) {
+> +		if (num_lanes == 0 || num_lanes > 16 || (num_lanes != 1 && num_lanes % 2))
+> +			dev_warn(dev, "Invalid num-lanes, using controller defaults\n");
+> +		else
+> +			pcie->num_lanes = num_lanes;
+> +	}
+> +
+>  	return 0;
+>  }
 
->> +		/* Get the maximum speed supported by the controller */
->> +		max_speed = mtk_pcie_get_controller_max_link_speed(pcie);
->> +
->> +		/* Set max_link_speed only if the controller supports it */
->> +		if (max_speed >= 0 && max_speed <= err) {
->> +			pcie->max_link_speed = err;
->> +			dev_dbg(pcie->dev,
->> +				"Max controller link speed Gen%d, override to Gen%u",
->> +				max_speed, pcie->max_link_speed);
->> +		}
->> +	}
-> 
-> I wonder if this debug message would be better served as a warning to let
-> the user know that the speed has been overridden due to the platform
-> limitation.  Thoughts?
-> 
-> Also, there is no need to sent a new series if you fine with the
-> suggestions.  I will mend the code on the branch when applying.
-> 
+If you were to handle non-zero return value as an error here, perhaps the
+property has not been set, then we could reduce the indentation here.
 
-A warning seems to be a bit too much and would appear like something to worry
-about (or something unintended)...
+Something like this, perhaps?
 
-Perhaps a dev_info() would work better here?
+  ret = of_property_read_u32(dev->of_node, "num-lanes", &num_lanes);
+  if (ret) {
+          dev_err(dev, "Failed to read num-lanes: %d\n", ret);
+          return ret;
+  }
+  
+  if (!num_lanes || num_lanes > 16 || (num_lanes != 1 && num_lanes % 2))
+  	dev_warn(dev, "Invalid num-lanes, using controller defaults\n");
+  else
+  	pcie->num_lanes = num_lanes;
 
-Thanks,
-Angelo
+Does this make sense here?  Thoughts?
 
-> 	Krzysztof
-
-
-
+	Krzysztof
 
