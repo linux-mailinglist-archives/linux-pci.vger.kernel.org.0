@@ -1,65 +1,70 @@
-Return-Path: <linux-pci+bounces-15997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2983B9BBEB3
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 21:20:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF2CB9BBF03
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 21:49:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C727C1F22B1C
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 20:20:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E2D2B2185B
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2024 20:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653CA1E3768;
-	Mon,  4 Nov 2024 20:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsfWxSZx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D35F1F7543;
+	Mon,  4 Nov 2024 20:48:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B1A1E25F1;
-	Mon,  4 Nov 2024 20:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A061F7547;
+	Mon,  4 Nov 2024 20:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730751611; cv=none; b=HYTTpfKyKv6BOJqq4dP526jDEOOS8jFr9aZSSqk6MACy+FASRHvxXjYw8ezhnGWSWY8kqqdU8Z59ujfGZg70hiGShY+LtdrrrANoQ+pWEyZy6kl+Rf6kETV+uSLUrbVQ7JJyFvWJHISfcsTPVES1QsE66M6MXvEhHIUxOWesOl0=
+	t=1730753320; cv=none; b=QiWk4R0KP1QFi9GTQ/HIwKDOU0V1ILc3r7ksIV45Kgv0dLzC2bqvl/e0g/gO3+uWwtlCULydY6aH28qRrmzoeRLhLZ9+l/sqRht1TgzPdI2Fsnlcyyuk+KBuDexilmat/OeV8JB7Q0Bn0z28d/xLi8KX/zx39kQsS+Tv9Tx4myM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730751611; c=relaxed/simple;
-	bh=F35QXu0CPb2RNTi9cqqHOPETxQ69DznhMqoB8u7EK/k=;
+	s=arc-20240116; t=1730753320; c=relaxed/simple;
+	bh=VaqaM023lhEKbr7Y7rD9K+Ec8+G7Ce3Hpvo6c1CTAPU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRWhGUen4bT6GXg3eZhO1BQ4agN55/jZLrIHB1TYCn+YnND1iVrwCVEXgwTJFFHqEa0yMDi5C16wt9vl36CBiV836NhFmZUk7aq6BcaHby+0iVHYThxruflabKIN8p169uxwqjYmXDyL/5D+N5j71u/PZuVbINj9HGt3xQxPi1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsfWxSZx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88909C4CECE;
-	Mon,  4 Nov 2024 20:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730751610;
-	bh=F35QXu0CPb2RNTi9cqqHOPETxQ69DznhMqoB8u7EK/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EsfWxSZxcLob+OpZQ/6kbeznGeNpk12qsGwzGZQQkwQCFfQv4+n7/UuPxDhC8ZLuN
-	 LVONQaZrfhhnRtFu3RcJKdQ34vOBPhLr/g0U8Rcn/BW2RVHx2ZvRvgv0eXVGWGBVIC
-	 LojWYoLqFkP4jEiG53jwIwRW6Pl6QMy1U0/lKkAgs8E8PueJYc++VDvXYNBKz3ZFwe
-	 XuJI3NW2XZllYTLrRXChbGsMwwCiSrP8NcYu2bky7Kyla7nIacFa/ltzkhFWIBRJUu
-	 FnP40w1Bq37G4EPw8KAe5X6KjceW84wHqKVkTKJe7bRh7DriDS8p6bcWBJUk0aEQra
-	 c/rrnl387nMlg==
-Date: Mon, 4 Nov 2024 14:20:08 -0600
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 2/6] PCI: of: Use device_{add,remove}_of_node() to attach
- of_node to existing device
-Message-ID: <20241104202008.GB361448-robh@kernel.org>
-References: <20241104172001.165640-1-herve.codina@bootlin.com>
- <20241104172001.165640-3-herve.codina@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FVy9ZQynhzU4oFbQFmJn3jm19DmeLU3czf2e59r6bFzQe96PYcthILpnwQ/HAjA/wl2rppvtYmmfzOrM8BSFahxgAWO0YzHtjYXVa9HwPoisowLYnQU0hxBneUYZKsioW6A8S8uWI5R1TzOQu9tYWYn4+oIabZ++bkW76ZRKbxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7203c431f93so3983984b3a.1;
+        Mon, 04 Nov 2024 12:48:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730753318; x=1731358118;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0vBKcQx+a24oOYGC6Ct1dCMKy+5lXC86wL5OdVFwb1o=;
+        b=l7XEzLjShTO9InlrUpVMw9EHH0r7HZlNabxQtGOk2zDMfwzuyC/EUorhGbwS9zvgZf
+         I/dmrf9rqL99SkASUyJ2bCExAMxWU9RnJIfdS2EvIVQThU/tH4oL8AEVY0K+0mXjiHGv
+         cArRFsp4vyoxbSE3K7qSajtk3GPKnxfVkueyvTqNsFcwi6e5SuoD+8D7JOFJCgR0AE7B
+         q9iMbfbX13Ah7HJO+U7HKK5aT8lFDEvl54YN/BAhOoIGJI4r4v579MszK+gqbesInfkQ
+         TIhxZMtlxfvUD/N8K4DS9bMtSTJG9AvMpDp+VMdbucACikZeEjvErtBVVIrmBOmD1QX0
+         Qxvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUetqudEQxTfKYOd73JjtUWaislgZ6D9nT09PJiPO6pReNvdb9UabD9BqyeoGf57lixVtBQI5lBti+5@vger.kernel.org, AJvYcCWc5GJqIcd5H/prdwjmOg/So97OJuYK2e517SJgNHhLYzmtrbhjb4C1w5rpWfBNtD+8+1PkIE4+n02M4BY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNlrmpzMOHpKG8NAerYvqWm9flKZl9oBZIu2GFIil+XDQhp40W
+	O3PAuCLnCEK9sReRncb46InzaLrPyzz3VDhGp5KiE8MtcVRxiWO8
+X-Google-Smtp-Source: AGHT+IEAVAQ2x5eEQk+m3dWGwSLaXPJKZ8NiC3Y118imnegOesysarCkdhwdiiKo3RWjRGAStZuxZw==
+X-Received: by 2002:a05:6a00:190f:b0:71e:795f:92f0 with SMTP id d2e1a72fcca58-720b9b84653mr25117272b3a.3.1730753318533;
+        Mon, 04 Nov 2024 12:48:38 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1b892bsm8303361b3a.13.2024.11.04.12.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 12:48:37 -0800 (PST)
+Date: Tue, 5 Nov 2024 05:48:36 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Use of_property_present() for non-boolean
+ properties
+Message-ID: <20241104204836.GA880663@rocinante>
+References: <20241104190714.275977-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,58 +73,18 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104172001.165640-3-herve.codina@bootlin.com>
+In-Reply-To: <20241104190714.275977-1-robh@kernel.org>
 
-On Mon, Nov 04, 2024 at 06:19:56PM +0100, Herve Codina wrote:
-> The commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> creates of_node for PCI devices. The newly created of_node is attached
-> to an existing device. This is done setting directly pdev->dev.of_node
-> in the code.
-> 
-> Even if pdev->dev.of_node cannot be previously set, this doesn't handle
-> the fwnode field of the struct device. Indeed, this field needs to be
-> set if it hasn't already been set.
-> 
-> device_{add,remove}_of_node() have been introduced to handle this case.
-> 
-> Use them instead of the direct setting.
-> 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Cc: stable@vger.kernel.org
+Hello,
 
-I don't think this is stable material. What exactly would is broken 
-which would be fixed by just the first 2 patches?
+> The use of of_property_read_bool() for non-boolean properties is
+> deprecated in favor of of_property_present() when testing for property
+> presence.
 
+Applied to controller/dwc, thank you!
 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/pci/of.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index dacea3fc5128..141ffbb1b3e6 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -655,8 +655,8 @@ void of_pci_remove_node(struct pci_dev *pdev)
->  	np = pci_device_to_OF_node(pdev);
->  	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
->  		return;
-> -	pdev->dev.of_node = NULL;
->  
-> +	device_remove_of_node(&pdev->dev);
->  	of_changeset_revert(np->data);
->  	of_changeset_destroy(np->data);
->  	of_node_put(np);
-> @@ -713,7 +713,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->  		goto out_free_node;
->  
->  	np->data = cset;
-> -	pdev->dev.of_node = np;
-> +	device_add_of_node(&pdev->dev, np);
->  	kfree(name);
->  
->  	return;
-> -- 
-> 2.46.2
-> 
+[01/01] PCI: dwc: Use of_property_present() for non-boolean properties
+        https://git.kernel.org/pci/pci/c/6734997ebd6e
+
+	Krzysztof
 
