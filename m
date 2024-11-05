@@ -1,63 +1,74 @@
-Return-Path: <linux-pci+bounces-16083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16084-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADA8C9BD7B3
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 22:33:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 075309BD839
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 23:12:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 727F2283F58
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 21:33:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C01392842B6
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 22:12:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 733D921217A;
-	Tue,  5 Nov 2024 21:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpTsH1qX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F79A216203;
+	Tue,  5 Nov 2024 22:12:17 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A91383;
-	Tue,  5 Nov 2024 21:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE331FBCA3;
+	Tue,  5 Nov 2024 22:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730842422; cv=none; b=QAgj92uhsWihc/rvmnhyjm5rOBNgb1h5wxo4F9gGfnaq5Rz9o9SBzQOGrS47KeGCmNxCswQY9DdCJOMJJ/dZLJPJLaPgCEZw+8zD96wBP7/TENE/mSwbPKezb72nREtq0YH0bG1KNNsXEa0BVByKnwn7+6hquGGr5FfDw8Kyj1g=
+	t=1730844737; cv=none; b=SjQC1VGT+MuZeMyZNVI6HK1UgTMnHbfTfCFoI3S6dB69+MKW1zbcMhgitqHajp2BxarykNPzDlDHx1MJ+5AAOgKOvvAw4/sRb5ckIoDmp5ZWGN40+SCx1q1WlhOL8/5JdNW7XpxtHftAsBcLpvwdilKou+McAdtTN0l10axpDtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730842422; c=relaxed/simple;
-	bh=gmEfvmYRrOEhveo9TzLIdRgKJt2TtDdbk0WfhRNwuI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TNWAnCVMlZYJAXCKi0KHGZQHSUCFz7SlEYdr7eLI4J+AlHEmjCY68Tu729cm4OtGrzNJonzY91aitm4k+NOMSDa/ug9YTUR0oqdB4jH9OYjKdH4bjZ4VAWAO8TMa0UBRYZTJbAyAXH9Et9+wAZFYWvQYY/zA9moY97vRCiduRjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpTsH1qX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE83C4CECF;
-	Tue,  5 Nov 2024 21:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730842421;
-	bh=gmEfvmYRrOEhveo9TzLIdRgKJt2TtDdbk0WfhRNwuI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=LpTsH1qXgUEO/6AX3Gjk6Gez6UQYdz2/PVOr2RWndY80oROZTmtVVLyukEQQ77FkS
-	 KZdPmSwEsWysVQqbIbK3pfo3x3WeJztIjavT9TKoFMAxuSnYN1vLhLfunkCgNhOGFs
-	 8rHH+ay6kDRpx4WPWuexRXrXypaAWMx7HQO+GZ9Lry6Oovht9hYbKFeeJWBtRl7WE4
-	 qfsTLJIVzIX3mMhTk1J2Vq5a6MPp3oEdBsGgyJ6mDjuE7PGEFxDdjQ7AIFxjAj1Syp
-	 G3cBczYSaetEPKeLpDib+9v1H0fpvLSLhg/Snmui41Dqpk+Vmr0oE6oWM5f5q9W1xM
-	 wbdONkM9kF1Tw==
-Date: Tue, 5 Nov 2024 15:33:39 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-Subject: Re: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
-Message-ID: <20241105213339.GA1487624@bhelgaas>
+	s=arc-20240116; t=1730844737; c=relaxed/simple;
+	bh=cd+NpLk0DVP4MnNZwOfkwMmMxg0c4b8a5Oo85O8W3SA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lVoodeY8SylT7UF1uXnyod8PL9KiTzKK7A44lvRgN94zbtspocj+OXOSJvTHEP/HLsxpgWtmmoQhZi5jx9fZeWKnQdNPQVt+G5FQjUQv8Ayso5WZZsEl9plLn2ewDAvt9FePZSx56cNHVnde7s4w5W86nOaBKcolN+weKt1ikLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-71e52582cf8so5204962b3a.2;
+        Tue, 05 Nov 2024 14:12:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730844735; x=1731449535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ksD1ZvJrcU44thyxRfGTGYSQMrepj3N5lKWUPdqxZ4=;
+        b=JSo0gLyXqO/6fmMnHRO2roIqY61xSq14ZTyMmHkrC1KDNH8yIc8uxWijq2fD3yfWtx
+         55/cjnxCjtgddL1sHQ2Ou10kMa8sWqYC74/5aH+AHIp6bt8rBJkj4Dk7rLST2nJtRPKn
+         1mBs0SgXdnajhrW28d0YCrNdXZdrdUTi2sVW6uTnopCcONb706BGJ4wbonBLn9UoS435
+         z/UfMawwXm37VtCOxOENPIUW0P2TQWDQMuFf5p8RtXC6t8E4bhPs2eeqAoU9s3RKIDZW
+         h4Q5tt3rI9VoXwIMHBO9FuBll3MYWZVu4L2syd8N4k0Iq255+DH9/obmPlBRdOGLnGHx
+         T5Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCURcVUJHkHLaA5LCoqI3Gj3WQQ0qZ7DwLN9axbnm+t6Ob7Ts56EungrqUTZbRCIRsuPRIicFZlN+hD/@vger.kernel.org, AJvYcCVIAeKaoBjKvai4o2QoEIqgwtz0EB+tfdKEQi2S1KkW8mR9/7thXR5+gokH1++mDMjNeIWCa0o8cgtAHaG4@vger.kernel.org, AJvYcCWt29ugU0MSj6DGUmI15J8clI6NUKksViGwzCKSFa5wmwfcGH54IrIGxgc0L6eQLS/kxQsXYBCY8rSG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlSNbUlwh51A5j4VzPa4Epx9TEwETgT5ttJ+Xg7jAVMbtPL9sN
+	vYWLkKfd9lQ5b80x7zDr/xd092v0u2vTsgPB0bZQ/OlTDR+N13j1
+X-Google-Smtp-Source: AGHT+IF29PlhC1/J3xdbpFkXUMNCkz2+BRJ9IFwswl1OWFPanYs98/Dws5pyMh0FKH4nDQt+cwuxEA==
+X-Received: by 2002:a05:6a20:431b:b0:1db:e922:9eaf with SMTP id adf61e73a8af0-1dbe922b072mr9595005637.27.1730844734882;
+        Tue, 05 Nov 2024 14:12:14 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee452ac9b1sm9596817a12.31.2024.11.05.14.12.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2024 14:12:14 -0800 (PST)
+Date: Wed, 6 Nov 2024 07:12:12 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: snps,dw-pcie: Drop "#interrupt-cells"
+ from example
+Message-ID: <20241105221212.GA878254@rocinante>
+References: <20241105213217.442809-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,56 +77,18 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aca00bd672ee576ad96d279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org>
+In-Reply-To: <20241105213217.442809-1-robh@kernel.org>
 
-[+cc Jim, Krishna, Vidya, Shashank]
+Hello,
 
-On Wed, Jul 03, 2024 at 06:12:44PM +0200, Lorenzo Bianconi wrote:
-> Introduce support for Airoha EN7581 PCIe controller to mediatek-gen3
-> PCIe controller driver.
+> "#interrupt-cells" is not valid without a corresponding "interrupt-map"
+> or "interrupt-controller" property. As the example has neither, drop
+> "#interrupt-cells". This fixes a dtc interrupt_provider warning.
 
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+Applied to dt-bindings, thank you!
 
-> +#define PCIE_EQ_PRESET_01_REG		0x100
-> +#define PCIE_VAL_LN0_DOWNSTREAM		GENMASK(6, 0)
-> +#define PCIE_VAL_LN0_UPSTREAM		GENMASK(14, 8)
-> +#define PCIE_VAL_LN1_DOWNSTREAM		GENMASK(22, 16)
-> +#define PCIE_VAL_LN1_UPSTREAM		GENMASK(30, 24)
-> ...
+[01/01] dt-bindings: PCI: snps,dw-pcie: Drop "#interrupt-cells" from example
+        https://git.kernel.org/pci/pci/c/718c157a0b94
 
-> +static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
-> +{
-> ...
-
-> +	val = FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
-> +	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
-> +	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
-> +	      FIELD_PREP(PCIE_VAL_LN1_UPSTREAM, 0x41);
-> +	writel_relaxed(val, pcie->base + PCIE_EQ_PRESET_01_REG);
-
-This looks like it might be for the Lane Equalization Control
-registers (PCIe r6.0, sec 7.7.3.4)?
-
-I would expect those values (0x47, 0x41) to be related to the platform
-design, so maybe not completely determined by the SoC itself?  Jim and
-Krishna have been working on DT schema for the equalization values,
-which seems like the right place for them:
-
-https://lore.kernel.org/linux-pci/20241018182247.41130-2-james.quinlan@broadcom.com/
-https://lore.kernel.org/r/77d3a1a9-c22d-0fd3-5942-91b9a3d74a43@quicinc.com
-
-Maybe that would be applicable here as well?  It would at least be
-nice to use a common #define for the Lane Equalization Control
-register offset from the capability base.
-
-Although I see that no such #define exists in pci_regs.h, so I guess
-there's nothing to do here yet.
-
-The only users of equalization settings I could find so far are:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-tegra194.c?id=v6.11#n832
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-qcom-common.c?id=v6.12-rc1#n11
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mediatek-gen3.c?id=v6.12-rc1#n909
-
-Bjorn
+	Krzysztof
 
