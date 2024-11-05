@@ -1,211 +1,138 @@
-Return-Path: <linux-pci+bounces-16070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 203B69BD585
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 19:59:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A8E9BD5C6
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 20:22:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 794BDB20E56
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 18:59:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F5831F23831
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 19:22:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A061E907E;
-	Tue,  5 Nov 2024 18:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BB8D1EBA13;
+	Tue,  5 Nov 2024 19:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jr0bXlD+"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZJ17AfwW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759E61E47B6;
-	Tue,  5 Nov 2024 18:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79AF17BEB7;
+	Tue,  5 Nov 2024 19:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730833143; cv=none; b=XjLPeEo2Oy904wH3xi75uOaqYIr2AMWBQVNhKtgtRCBX7aNjcCKYlKUklurRWOw3GugMV75jVs444waM1UoeUunpeaAVH82zVOsBX7Rx85AOrCFusYuvDRJhhWySwdLKhh9qdka7DKTthylByPKnaua7gy8baZcVTWFQnkDtcwk=
+	t=1730834520; cv=none; b=TwEiXNiXADuA5tDl4CGZXoUzhBrGpl3A7k/kBN5HRN/XS3HRG908tdnnTIGy8l9bU+O28QnAkbWCyqGiSaQLDobYBvWH635KGDkItTDGTv05jhSwkzGIgaVdW4H9IrmeIJx/uDtr+6ktScMRlinoOdc4BfgzoTbsDLsZugJB4fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730833143; c=relaxed/simple;
-	bh=3zdgXCPPKSD1xfYxWDmC/EUuKY/QlMHd4XNXizG5HRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H+GEmQzBgPyDsthBbfvLbG8NHALqstYKQyQr8x9P7SGgY5dWOhiZIrHG/5aF7xYwKQu1A20YRf077Zyt+9irbvkxMoXxEtMrJObxwtKb0xeMepNuIBwg/Tn+5CeYhhNJlFZQDi49LP0KIqKL6YR41as0sNsiPtjwqc0WrWrEMM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jr0bXlD+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D7DC4CED3;
-	Tue,  5 Nov 2024 18:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730833143;
-	bh=3zdgXCPPKSD1xfYxWDmC/EUuKY/QlMHd4XNXizG5HRI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jr0bXlD+Y7HkfD1pk02WZCFcYoAvd8GiC4vkRusK24T0PRzsD9KtF4hLRr5dZO9IS
-	 bZ/PrWY8eNQO8dhzBPBmrX7B2+720xztPGp0PAN2fcSeGaeoJ4cmFse9ffXMcQyuQT
-	 LUyC9h64eAWM1D4/uuhY5lhIK4WmDegV9FCVjBhZ+FBZxZEcffibZWdudJqwO7wYIE
-	 fLcqtO4IUQNZhsQXQRX9US6uT7ZRxD7LVQEdjtpipSJFLtchuwTMojzr7UFWhHoQ/y
-	 M2ESLiYty9uLngtbi49nBOXsywBwIYGtepxOoGuG7rQEbubfbKELjJEaC5elt1CHIO
-	 NlTFRHAzxjVkw==
-Date: Tue, 5 Nov 2024 12:59:01 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 6/6] PCI: of: Create device-tree root bus node
-Message-ID: <20241105185901.GA1479626@bhelgaas>
+	s=arc-20240116; t=1730834520; c=relaxed/simple;
+	bh=rjSmDAqas44E73Jc89rJS4/Gi+iOC33uC+9A+dpOFLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gnQGClNHCyNKYHMIqjyEOU3//nHCWb9+PZUERkvNBbYAqOIPl8ER0u86PM2hT30srqyUvyg7PGUh2PNGQBfoSfd+4WrhDe1NZXM0xZ7G56cZMv30wEA4pzeQYN4sm1YZFTkGb31b9PAoPMsk86hu+H/5ynJvcOYwY474mnx0r/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZJ17AfwW; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5B77640E0191;
+	Tue,  5 Nov 2024 19:21:55 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5ILfy9COutIC; Tue,  5 Nov 2024 19:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1730834511; bh=ioOwYX7zIxRjEwWRkmoYKIBtPhnM5jWoFFIAP6pf7+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZJ17AfwWZkQt6i/32mOI1xzrqkSltK/Z9h/F7OPbMbfJxM50Y1MtQ6OEymCAJDMWj
+	 snOjxzT7GmAt44c47R8JQJFv9FkeoXbRCOBS9lR7JTAmrmP/dQAS/Ok7eIlNB0HTy5
+	 BVECZL5upaAJcc+uNuNLh/Yyt2j7+a4QLVXZVe/cVSIh79JnoD+QwQ7wOA9xhkD08x
+	 ztJeQVenWIeST16Ja55l5qo6QWhDEVJcC+t1sAsV+jY4aLWQM8Ey44nwRIE+fH9UGR
+	 OD8BzfK/tf7A+iOmEnNRiX+CCUyDeZ1t4vLxZZFfBCPXJyRdDQ9IdlOl0CV659yxi2
+	 LD2k6Iyx6/enHx6usys64T3ZI1Ug/Vg0zVumbVrShy01p8inaMyW5o+kAzdevSrFtX
+	 39mLiE95vrpVjcpgMfQoE6VufwsJGVgyMkeH+1gvYQQ6XEyuw17QU+Mzv+jJuUY2fq
+	 f/+vaOl0ot5jd7UvxvaMuL3tyfOLebB9vaGdmXuTkXTuD2ZSbHxG5ON2aV6k5pG1lA
+	 /hsSJIcC9QrMWr7kSNNNJc04lOy5WGJzHrjhFT+RcGi2L+HdSOqgRT3nBnDV8BT+HE
+	 9Mhh2C82SmkuJ00n/dgsHk3HDAaaF3tudvsVchLpHgufr4KX8j6BaOHP1/fmi4rD7W
+	 4uxJsgwH2ndzWf2PikfHehmc=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C33D540E0028;
+	Tue,  5 Nov 2024 19:21:29 +0000 (UTC)
+Date: Tue, 5 Nov 2024 20:21:24 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tony.luck@intel.com, x86@kernel.org, avadhut.naik@amd.com,
+	john.allen@amd.com, mario.limonciello@amd.com, bhelgaas@google.com,
+	Shyam-sundar.S-k@amd.com, richard.gong@amd.com, jdelvare@suse.com,
+	linux@roeck-us.net, clemens@ladisch.de, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	naveenkrishna.chatradhi@amd.com, carlos.bilbao.osdev@gmail.com
+Subject: Re: [PATCH 16/16] x86/amd_smn: Add support for debugfs access to SMN
+ registers
+Message-ID: <20241105192124.GXZypwNJ26qqahcpOZ@fat_crate.local>
+References: <20241023172150.659002-1-yazen.ghannam@amd.com>
+ <20241023172150.659002-17-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241104172001.165640-7-herve.codina@bootlin.com>
+In-Reply-To: <20241023172150.659002-17-yazen.ghannam@amd.com>
 
-On Mon, Nov 04, 2024 at 06:20:00PM +0100, Herve Codina wrote:
-> PCI devices device-tree nodes can be already created. This was
-> introduced by commit 407d1a51921e ("PCI: Create device tree node for
-> bridge").
-
-I guess 407d1a51921e creates device tree nodes for bridges, including
-Root Ports, which are enumerated as PCI-to-PCI bridges, right?
-
-> In order to have device-tree nodes related to PCI devices attached on
-> their PCI root bus, a root bus device-tree node is needed. This root bus
-> node will be used as the parent node of the first level devices scanned
-> on the bus.
->
-> On non device-tree based system (such as ACPI), a device-tree node for
-> the PCI root bus does not exist.  ...
-
-I'm wondering if "root bus" is the right description for this patch
-and whether "PCI host bridge" might be more accurate.  The bus itself
-doesn't really have a physical counterpart other than being the
-secondary side of a PCI host bridge where the primary side is some
-kind of CPU bus.
-
-An ACPI namespace doesn't include a "root bus" object, but it *does*
-include a PCI host bridge (PNP0A03) object, which is where any address
-translation between the CPU bus and the PCI hierarchy is described.
-
-I suspect this patch is adding a DT node that corresponds to the
-PNP0A03 host bridge object, and the "ranges" property of the new node
-will describe the mapping from the CPU address space to the PCI
-address space.
-
-> Indeed, this component is not described
-> in a device-tree used at boot.
-
-But maybe I'm on the wrong track, because obviously PCI host
-controllers *are* described in DTs used at boot.
-
-> The device-tree PCI root bus node creation needs to be done at runtime.
-> This is done in the same way as for the creation of the PCI device
-> nodes. I.e. node and properties are created based on computed
-> information done by the PCI core.
-
-See address translation question below.
-
-> +void of_pci_make_root_bus_node(struct pci_bus *bus)
+On Wed, Oct 23, 2024 at 05:21:50PM +0000, Yazen Ghannam wrote:
+> +static ssize_t smn_value_write(struct file *file, const char __user *userbuf,
+> +			       size_t count, loff_t *ppos)
 > +{
-> +	struct device_node *np = NULL;
-> +	struct of_changeset *cset;
-> +	const char *name;
+> +	u32 val;
 > +	int ret;
 > +
-> +	/*
-> +	 * If there is already a device tree node linked to this device,
-> +	 * return immediately.
-> +	 */
-> +	if (pci_bus_to_OF_node(bus))
-> +		return;
+> +	ret = kstrtouint_from_user(userbuf, count, 0, &val);
+> +	if (ret)
+> +		return ret;
 > +
-> +	/* Check if there is a DT root node to attach this created node */
-> +	if (!of_root) {
-> +		pr_err("of_root node is NULL, cannot create PCI root bus node");
-> +		return;
-> +	}
-> +
-> +	name = kasprintf(GFP_KERNEL, "pci-root@%x,%x", pci_domain_nr(bus),
-> +			 bus->number);
+> +	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
 
-Should this be "pci%d@%x,%x" to match the typical descriptions of PCI
-host bridges in DT?
+That looks like a TAINT_CPU_OUT_OF_SPEC to me.
 
-> +static int of_pci_root_bus_prop_ranges(struct pci_bus *bus,
-> +				       struct of_changeset *ocs,
-> +				       struct device_node *np)
-> +{
-> +	struct pci_host_bridge *bridge = to_pci_host_bridge(bus->bridge);
-> +	struct resource_entry *window;
-> +	unsigned int ranges_sz = 0;
-> +	unsigned int n_range = 0;
-> +	struct resource *res;
-> +	int n_addr_cells;
-> +	u32 *ranges;
-> +	u64 val64;
-> +	u32 flags;
-> +	int ret;
+> +	ret = amd_smn_write(debug_node, debug_address, val);
+> +	if (ret)
+> +		return ret;
 > +
-> +	n_addr_cells = of_n_addr_cells(np);
-> +	if (n_addr_cells <= 0 || n_addr_cells > 2)
-> +		return -EINVAL;
-> +
-> +	resource_list_for_each_entry(window, &bridge->windows) {
-> +		res = window->res;
-> +		if (!of_pci_is_range_resource(res, &flags))
-> +			continue;
-> +		n_range++;
-> +	}
-> +
-> +	if (!n_range)
-> +		return 0;
-> +
-> +	ranges = kcalloc(n_range,
-> +			 (OF_PCI_ADDRESS_CELLS + OF_PCI_SIZE_CELLS +
-> +			  n_addr_cells) * sizeof(*ranges),
-> +			 GFP_KERNEL);
-> +	if (!ranges)
-> +		return -ENOMEM;
-> +
-> +	resource_list_for_each_entry(window, &bridge->windows) {
-> +		res = window->res;
-> +		if (!of_pci_is_range_resource(res, &flags))
-> +			continue;
-> +
-> +		/* PCI bus address */
-> +		val64 = res->start;
-> +		of_pci_set_address(NULL, &ranges[ranges_sz], val64, 0, flags, false);
-> +		ranges_sz += OF_PCI_ADDRESS_CELLS;
-> +
-> +		/* Host bus address */
-> +		if (n_addr_cells == 2)
-> +			ranges[ranges_sz++] = upper_32_bits(val64);
-> +		ranges[ranges_sz++] = lower_32_bits(val64);
-
-IIUC this sets both the parent address (the host bus (CPU) physical
-address) and the child address (PCI bus address) to the same value.
-
-I think that's wrong because these addresses need not be identical.
-
-I think the parent address should be the res->start value, and the
-child address should be "res->start - window->offset", similar to
-what's done by pcibios_resource_to_bus().
-
-> +		/* Size */
-> +		val64 = resource_size(res);
-> +		ranges[ranges_sz] = upper_32_bits(val64);
-> +		ranges[ranges_sz + 1] = lower_32_bits(val64);
-> +		ranges_sz += OF_PCI_SIZE_CELLS;
-> +	}
-> +
-> +	ret = of_changeset_add_prop_u32_array(ocs, np, "ranges", ranges, ranges_sz);
-> +	kfree(ranges);
-> +	return ret;
+> +	return count;
 > +}
+> +
+> +DEFINE_SHOW_STORE_ATTRIBUTE(smn_node);
+> +DEFINE_SHOW_STORE_ATTRIBUTE(smn_address);
+> +DEFINE_SHOW_STORE_ATTRIBUTE(smn_value);
+> +
+>  static int amd_cache_roots(void)
+>  {
+>  	u16 node, num_nodes = amd_num_nodes();
+> @@ -180,6 +257,12 @@ static int __init amd_smn_init(void)
+>  	if (err)
+>  		return err;
+>  
+> +	debugfs_dir = debugfs_create_dir("amd_smn", arch_debugfs_dir);
+> +
+> +	debugfs_create_file("node",	0600, debugfs_dir, NULL, &smn_node_fops);
+> +	debugfs_create_file("address",	0600, debugfs_dir, NULL, &smn_address_fops);
+> +	debugfs_create_file("value",	0600, debugfs_dir, NULL, &smn_value_fops);
+
+Can we pls stick this behind a module param which is off by default? I don't
+want that crap exposed even in debugfs, by default.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
