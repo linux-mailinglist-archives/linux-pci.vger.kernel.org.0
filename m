@@ -1,108 +1,138 @@
-Return-Path: <linux-pci+bounces-16061-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16062-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 143519BD21A
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 17:17:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B16A99BD24C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 17:27:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96B25B21EFE
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 16:17:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EA0128478F
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 16:27:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37645170A2A;
-	Tue,  5 Nov 2024 16:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBCCA1D516F;
+	Tue,  5 Nov 2024 16:27:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZfgdHdL0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2GqNkwT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD4513E3EF;
-	Tue,  5 Nov 2024 16:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55CD17E918;
+	Tue,  5 Nov 2024 16:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730823422; cv=none; b=cs5u18JSxuUMblj948cBXm5auw/KiJakkd4CFho/YyW69mROSqALvdWvWhWxYuXlpJJv8Kh0xrPotph+s/huSfQbGMOn5tCf+p4OcGoQqOQ0bwGd2KAFlAaRdNl9ScHS+8vQi+jhMToB8zganCDgcspQixtZlDlZuizY0Mnn/Wk=
+	t=1730824024; cv=none; b=YFqX7W8kYZF798V2VWpFemDmLzQYCZasEjdXIYrUIOA5Lx07JoOp/S497gPkEJIzW6h06nYwFHR3sckvizavgqAT8lB8w3bCMZNIqhDbQ4ifVLyec8nuwZcKzmIu74DEcJiPjsD9sk8++RlY10H7R0YUoml4njfmCA2zkamZtVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730823422; c=relaxed/simple;
-	bh=r1tcWWlCoiF7Her/h61mI6QbANQB+2UXYZ63skQz0jk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lJEUtP87VF0yUbrnjoxnOCn72oZOxJC8wQAUR2GhKWtL4nib5+S6LSQZulOQLcGIX804bCX562n4Mvs4S+HeI18/wOLhFqudpW1kjs05+xSKnktyUmcefE6F7QoRLnb5JpRouDlxyMI+gpgQbKEDJegzUMejXxL2aFGT95Mw1Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZfgdHdL0; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D741DC0002;
-	Tue,  5 Nov 2024 16:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1730823415;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b9i1yywh+snSHoIlcvM9qG34+tz1N/7OY25hu/QBJ3s=;
-	b=ZfgdHdL0YSm0aQHA/bZ2tNWpbxLtSOSTU1WoOJrA6XZOxkyL9kUpHIyR5/5Y8mM7jrCbz6
-	DbVC1Itgpu5qGotLJMyW5FJzO2bsi26OU7pRBWMucG0EWFiR+h4kggVoFA6JiwP1nCg4L3
-	+l08sMlkw45HFTOizi3s3ocrTuvv2G+FSFFu/zbCvlpxR82Gs17HUvvaadDBOjitqU+tqL
-	hckqk0cMESGnE9a81dF3cnPE4T4p5wcneVlU2yR6p0grolRNZWVRIHOXZJQCFx4Bbz4DlE
-	FgwGXgXqKZJGZu9AtprrgXcs08OBLCvqC8x0lmRdcu7muMLMWuMlA6FT/zpEDQ==
-Date: Tue, 5 Nov 2024 17:16:54 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/6] PCI: of: Use device_{add,remove}_of_node() to
- attach of_node to existing device
-Message-ID: <20241105171654.3c45c80e@bootlin.com>
-In-Reply-To: <20241104202008.GB361448-robh@kernel.org>
-References: <20241104172001.165640-1-herve.codina@bootlin.com>
-	<20241104172001.165640-3-herve.codina@bootlin.com>
-	<20241104202008.GB361448-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1730824024; c=relaxed/simple;
+	bh=zLwVcEjh9yWNXilTeR+g455DWA7UySuShh8IESXwvGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kg6VDPHaXLaNMxqSkH6m3dk7eYKhoigQAC0z2NuRykAVMZR9uhKGjmhz5DvJ+tQRfXH2Aug4rqnhQM8hz175HQUO7vnyhrI4Gpy+4xJujWS1GC2Yg/YQW3FN2DN8Wwv90Fd9g7LKsMNJF3eQfU/iUczXOpU1OYx4CZR/MQS+coI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2GqNkwT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED80DC4CECF;
+	Tue,  5 Nov 2024 16:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730824024;
+	bh=zLwVcEjh9yWNXilTeR+g455DWA7UySuShh8IESXwvGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l2GqNkwTrMZhZ1ZDZUSs6eFUDXePYn9gzOno71yKgNycLbkXK8TsDEvRwPATmJALs
+	 q0YU9s3xAXUMCDuGIJ1DBak4vL0uKKGqRioqKNMwYRoQghkAGRnAQNlmQReIFNs2oA
+	 xYODkhIej1U8k31XPM1prEcuiuFyOBQZAHqs0J7ajR4N+CyDCpxtZGs9e3SRyaiLOW
+	 9YdvNRK8sgLH1IiQVmB2fpDoTrM8Myfq19GjVSdppzPNIb+QcOQBgZC8+BAjgAtYP1
+	 5DcmSEn7T2VDz9rn1xTK/5ZIBCw0ffjrKnNVGWfI/XrHpC7OKzHShgrSrboAVlq/6B
+	 X6t/zNfDelveg==
+Date: Tue, 5 Nov 2024 18:26:55 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Fix read permissions for VPD attributes
+Message-ID: <20241105162655.GG311159@unreal>
+References: <20241105075130.GD311159@unreal>
+ <20241105152455.GA1472398@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241105152455.GA1472398@bhelgaas>
 
-Hi Rob,
-
-On Mon, 4 Nov 2024 14:20:08 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Mon, Nov 04, 2024 at 06:19:56PM +0100, Herve Codina wrote:
-> > The commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> > creates of_node for PCI devices. The newly created of_node is attached
-> > to an existing device. This is done setting directly pdev->dev.of_node
-> > in the code.
-> > 
-> > Even if pdev->dev.of_node cannot be previously set, this doesn't handle
-> > the fwnode field of the struct device. Indeed, this field needs to be
-> > set if it hasn't already been set.
-> > 
-> > device_{add,remove}_of_node() have been introduced to handle this case.
-> > 
-> > Use them instead of the direct setting.
-> > 
-> > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> > Cc: stable@vger.kernel.org  
+On Tue, Nov 05, 2024 at 09:24:55AM -0600, Bjorn Helgaas wrote:
+> On Tue, Nov 05, 2024 at 09:51:30AM +0200, Leon Romanovsky wrote:
+> > On Mon, Nov 04, 2024 at 06:10:27PM -0600, Bjorn Helgaas wrote:
+> > > On Sun, Nov 03, 2024 at 02:33:44PM +0200, Leon Romanovsky wrote:
+> > > > On Fri, Nov 01, 2024 at 11:47:37AM -0500, Bjorn Helgaas wrote:
+> > > > > On Fri, Nov 01, 2024 at 04:33:00PM +0200, Leon Romanovsky wrote:
+> > > > > > On Thu, Oct 31, 2024 at 06:22:52PM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Tue, Oct 29, 2024 at 07:04:50PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > On Mon, Oct 28, 2024 at 10:05:33AM +0200, Leon Romanovsky wrote:
+> > > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > > > > > > > 
+> > > > > > > > > The Virtual Product Data (VPD) attribute is not
+> > > > > > > > > readable by regular user without root permissions.
+> > > > > > > > > Such restriction is not really needed, as data
+> > > > > > > > > presented in that VPD is not sensitive at all.
+> > > > > > > > > 
+> > > > > > > > > This change aligns the permissions of the VPD
+> > > > > > > > > attribute to be accessible for read by all users,
+> > > > > > > > > while write being restricted to root only.
+> > ...
 > 
-> I don't think this is stable material. What exactly would is broken 
-> which would be fixed by just the first 2 patches?
+> > > What's the use case?  How does an unprivileged user use the VPD
+> > > information?
+> > 
+> > We have to add new field keyword=value in VA section of VPD, which
+> > will indicate very specific sub-model for devices used as a bridge.
+> > 
+> > > I can certainly imagine using VPD for bug reporting, but that
+> > > would typically involve dmesg, dmidecode, lspci -vv, etc, all of
+> > > which already require privilege, so it's not clear to me how
+> > > public VPD info would help in that scenario.
+> > 
+> > I'm targeting other scenario - monitoring tool, which doesn't need
+> > root permissions for reading data. It needs to distinguish between
+> > NIC sub-models.
+> 
+> Maybe the driver could expose something in sysfs?  Maybe the driver
+> needs to know the sub-model as well, and reading VPD once in the
+> driver would make subsequent userspace sysfs reads trivial and fast.
 
-Hum indeed, I haven't observed a broken behavior in current kernel.
-I will remove Fixes and Cc in the next iteration.
+Our PCI driver lays in netdev subsystem and they have long-standing
+position do not allow any custom sysfs files. To be fair, we (RDMA)
+don't allow custom sysfs files too.
 
-Best regards,
-Hervé
+Driver doesn't need to know this information as it is extra key=value in
+existing [VA] field, while driver relies on multiple FW capabilities
+to enable/disable functionality.
+
+Current [VA] line:
+"[VA] Vendor specific: MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A"
+Future [VA] line:
+"[VA] Vendor specific: MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A,SMDL=SOMETHING"
+
+Also the idea that we will duplicate existing functionality doesn't
+sound like a good approach to me, and there is no way that it is
+possible to expose as subsystem specific file.
+
+What about to allow existing VPD sysfs file to be readable for everyone for our devices?
+And if this allow list grows to much, we will open it for all devices in the world?
+
+Thanks
+
+> 
+> Bjorn
 
