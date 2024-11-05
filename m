@@ -1,116 +1,108 @@
-Return-Path: <linux-pci+bounces-16060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8C799BD20B
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 17:15:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 143519BD21A
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 17:17:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05A581C20E26
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 16:15:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96B25B21EFE
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 16:17:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69C931714B6;
-	Tue,  5 Nov 2024 16:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37645170A2A;
+	Tue,  5 Nov 2024 16:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWLIMHKb"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZfgdHdL0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B4DB640;
-	Tue,  5 Nov 2024 16:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD4513E3EF;
+	Tue,  5 Nov 2024 16:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730823352; cv=none; b=E2va0RqQ54SmErZxgcQ8w5y33kD0adEc6B1e2HLSn/6mNk5zCFaCMREa8zAJafk3vlp1ZFAAtEwnEKoPRoWa+wG2+QJz+nOdGOQ+RJ84Hq2FYIeHgT5N4JYrgwvT5eODeFdIJLYe1PKUoVtPEsNXvfNwNsw7OdyxZRPlHDQ4aRI=
+	t=1730823422; cv=none; b=cs5u18JSxuUMblj948cBXm5auw/KiJakkd4CFho/YyW69mROSqALvdWvWhWxYuXlpJJv8Kh0xrPotph+s/huSfQbGMOn5tCf+p4OcGoQqOQ0bwGd2KAFlAaRdNl9ScHS+8vQi+jhMToB8zganCDgcspQixtZlDlZuizY0Mnn/Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730823352; c=relaxed/simple;
-	bh=I7deoQiI/I0s0AnBYc3st405nHQMaQq7EvD2UtzD7R0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ndU7gzsCbS9ljoMeoXBjG4L3h9DjMfM/zCGBYxukw4BtF1VzHMZGpUYkIXhQM5JldvGdjoUJ1BNdERSmoK132St7r9GPQDdAlE4a5pILQ7DEU5PWcsA/1Zek/1dYT4x7J/HML/6CdLEQt5FP3VZw8O/6r9XfzSF5iHXSKixlaLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWLIMHKb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D505C4CECF;
-	Tue,  5 Nov 2024 16:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730823351;
-	bh=I7deoQiI/I0s0AnBYc3st405nHQMaQq7EvD2UtzD7R0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sWLIMHKbpYnvH6vRYHC5fNsdXCCNIXg5Ll5/2V0vc6iO6jH8ObMQ4Be/2WJlSRkFO
-	 96/qxRGVh6YcfDqHdyjqlzEV4fxUjiBENL+duJ1uiL+Rqhoa3pZpaqTPPM+IhiqIFZ
-	 1Sk/o475+agOHv0qmgOhR36E0RtNgKxTuBr1ZJhfrXdvCOWlPgobXmSzUv+OFDnq3o
-	 nfjm0YQ6eFyuk0wALiKZYhYt2TgA8p2WUZTSSBteEaJwAKQSjXx+/iCrS96AAI40Ua
-	 e4I7EQ0gtyiErnCjgLdP+OJ0QkEAmXj83mHJYpDx6YeObr9yAZURKrOoBK0wWz3FbB
-	 ACYyypzEASVoA==
-Date: Tue, 5 Nov 2024 10:15:50 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Frederic Barrat <fbarrat@linux.ibm.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] sysfs: constify struct bin_attribute (Part 1)
-Message-ID: <20241105161550.GA1474637@bhelgaas>
+	s=arc-20240116; t=1730823422; c=relaxed/simple;
+	bh=r1tcWWlCoiF7Her/h61mI6QbANQB+2UXYZ63skQz0jk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lJEUtP87VF0yUbrnjoxnOCn72oZOxJC8wQAUR2GhKWtL4nib5+S6LSQZulOQLcGIX804bCX562n4Mvs4S+HeI18/wOLhFqudpW1kjs05+xSKnktyUmcefE6F7QoRLnb5JpRouDlxyMI+gpgQbKEDJegzUMejXxL2aFGT95Mw1Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZfgdHdL0; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D741DC0002;
+	Tue,  5 Nov 2024 16:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1730823415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b9i1yywh+snSHoIlcvM9qG34+tz1N/7OY25hu/QBJ3s=;
+	b=ZfgdHdL0YSm0aQHA/bZ2tNWpbxLtSOSTU1WoOJrA6XZOxkyL9kUpHIyR5/5Y8mM7jrCbz6
+	DbVC1Itgpu5qGotLJMyW5FJzO2bsi26OU7pRBWMucG0EWFiR+h4kggVoFA6JiwP1nCg4L3
+	+l08sMlkw45HFTOizi3s3ocrTuvv2G+FSFFu/zbCvlpxR82Gs17HUvvaadDBOjitqU+tqL
+	hckqk0cMESGnE9a81dF3cnPE4T4p5wcneVlU2yR6p0grolRNZWVRIHOXZJQCFx4Bbz4DlE
+	FgwGXgXqKZJGZu9AtprrgXcs08OBLCvqC8x0lmRdcu7muMLMWuMlA6FT/zpEDQ==
+Date: Tue, 5 Nov 2024 17:16:54 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/6] PCI: of: Use device_{add,remove}_of_node() to
+ attach of_node to existing device
+Message-ID: <20241105171654.3c45c80e@bootlin.com>
+In-Reply-To: <20241104202008.GB361448-robh@kernel.org>
+References: <20241104172001.165640-1-herve.codina@bootlin.com>
+	<20241104172001.165640-3-herve.codina@bootlin.com>
+	<20241104202008.GB361448-robh@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Sun, Nov 03, 2024 at 05:03:29PM +0000, Thomas Weißschuh wrote:
-> struct bin_attribute contains a bunch of pointer members, which when
-> overwritten by accident or malice can lead to system instability and
-> security problems.
-> Moving the definitions of struct bin_attribute to read-only memory
-> makes these modifications impossible.
-> The same change has been performed for many other structures in the
-> past. (struct class, struct ctl_table...)
+Hi Rob,
 
-Throughout series, it would be more readable if you added blank lines
-between paragraphs.
+On Mon, 4 Nov 2024 14:20:08 -0600
+Rob Herring <robh@kernel.org> wrote:
+
+> On Mon, Nov 04, 2024 at 06:19:56PM +0100, Herve Codina wrote:
+> > The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> > creates of_node for PCI devices. The newly created of_node is attached
+> > to an existing device. This is done setting directly pdev->dev.of_node
+> > in the code.
+> > 
+> > Even if pdev->dev.of_node cannot be previously set, this doesn't handle
+> > the fwnode field of the struct device. Indeed, this field needs to be
+> > set if it hasn't already been set.
+> > 
+> > device_{add,remove}_of_node() have been introduced to handle this case.
+> > 
+> > Use them instead of the direct setting.
+> > 
+> > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> > Cc: stable@vger.kernel.org  
+> 
+> I don't think this is stable material. What exactly would is broken 
+> which would be fixed by just the first 2 patches?
+
+Hum indeed, I haven't observed a broken behavior in current kernel.
+I will remove Fixes and Cc in the next iteration.
+
+Best regards,
+Hervé
 
