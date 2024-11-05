@@ -1,64 +1,69 @@
-Return-Path: <linux-pci+bounces-16065-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16066-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC9089BD34C
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 18:23:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A1A69BD391
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 18:38:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B2651C20CDD
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 17:23:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 404181F23549
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 17:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223991E201E;
-	Tue,  5 Nov 2024 17:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgLLV1rY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B05B1E285D;
+	Tue,  5 Nov 2024 17:38:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E171E0DBF
-	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 17:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AB21E282C;
+	Tue,  5 Nov 2024 17:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730827377; cv=none; b=TVQpbpnCiR91A9AJSBAd7bN9LJ2WL0Q3eSemEt5kgYlU0WAfQk5oNJd1clRH8adcyS7Q0h7q80zFMc9DbKCxKomvXmUOA+FGmxNRLhl0YFE7l+2RQ/97THyrP9GYGegPAl6VOuNPrdVIcjSIg2eTbwsaDjPbTRIYlt9BllFmWWM=
+	t=1730828330; cv=none; b=h0Si992cCl7jnCoaB1vEV7nk+eLZun7lVZEpik+bxnqzsG7kgXj39Y/2pYQtt/Z9+pIrdFWO1V1WLi8ztA9Bi9/T/gp2VauKdEMtyQdo5NTPABvpcjOG9f9CPgcm+9rjyvgOfQkFy69ko2WzSdRh5giy7grOQ+phD5xEiMPygTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730827377; c=relaxed/simple;
-	bh=zvORLLKvLulrWcA4oBGbbnyMDidVWOv949NeC6tWnAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cwde4M/i9XXHT+z8hmqsFC8Nguil+tWV2et/VNnzJoZDaNayBcU0GglR2MDYoDNzhxyCpLNwI4LN4FagbVDOkGy+OUc2qy/fX2QrM+Zep0LRMSC4Be7WPAaZy6vo1LNt0/H0/cwmKZCS4YjpLqqmSrllU/XHOjlJZsTAaZwtb/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgLLV1rY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B07C4CED1;
-	Tue,  5 Nov 2024 17:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730827376;
-	bh=zvORLLKvLulrWcA4oBGbbnyMDidVWOv949NeC6tWnAI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mgLLV1rYaK4NSUvwU8HUu+uY2sk/iLccv6x0HEZ3C/4GIC2IKZKNxUxtVvFBv0gOm
-	 6Qf0GKQ+LtlWolM6z/6H4Bq+BXV63UTpm6Jxrk6ZjFhZeY2UOt+wBLNprG7k15UKTZ
-	 c0l2IbGJrylHWqfK8kTtB/hbsUiHPDU0PKn2BvNGBTNEP9BhZQlqRXr5I/XjDka7WP
-	 GmiR1JSv6NpFrcjDIe0Gyb1vRl5oQF432oHAn7Dsr+LpGZEd9NoQF0Wc1FVgv90BiK
-	 9TU34deY3A6C9jNM4+YM0adRUoUSzbJyaC8LmGlulGYawiqnOS01XRXWYjtRGBX1xP
-	 muE70Tfv2SpzA==
-Date: Tue, 5 Nov 2024 11:22:54 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Christian Marangi <ansuelsmth@gmail.com>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
-	Hui Ma <hui.ma@airoha.com>
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Avoid PCIe resetting via
- PCIE_RSTB for Airoha EN7581 SoC
-Message-ID: <20241105172254.GA1447085@bhelgaas>
+	s=arc-20240116; t=1730828330; c=relaxed/simple;
+	bh=4lVqMlvbVeIaLRC8JY24fuipuiQcsU90cbAOjOhbmfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KlYA9Sj6MIER7Jp7TW2qk94qA7Q1+KVxvzk4Q7+DKcxxAxzSIWk71Hh0BAeeBatMYlJMDMfIiG69Mn3rOz4HbvFEnfuDNI45B82tbPRfhLlrllMLalb724+2oImRQx5Z9IXz8C/GR+GGIVw2By2/wnPFS4paDJlFwko7e0azS+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71e4244fdc6so4558995b3a.0;
+        Tue, 05 Nov 2024 09:38:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730828329; x=1731433129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PD7THQBIWGT0uMZ+0fdmv+Bq/KO1hinbqgfjxdPvwIM=;
+        b=m7Zf8j769mUlbBGtxbcQKZewZdw5xUrSpY2jtE2IDYtwmv/8bO2p2rOcoci/MOMC9q
+         RG3JHlRcGBAloJtEqz1uK1obXk0lDkCaKjq5yFiqIcte6lSe8pjxQnAEtfx5xAFd75vR
+         leyqe81x/75IZ8aLFdmb8wx+oVWd2w8x/r8DTn8DiTlVoonf0rW5Ym/ivthFm7AfLtC3
+         FuqhgMDgzxZb7LgNEONDUmafAyKCtGnODSDAfCGwcbFnu3ouJQCfItU8XnamghU2dA6v
+         U/mXF0leSBw9eB5+qz2LI3JsEfia87u2uk/H5pVGwZSFhG2t34Xzoc6Z2PuYs8fDn0OB
+         b0yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjq8nCuM9S5MHaNqTsWEeZdV7G8MnOCMyWa454hkV6WSBvhzVqExMQYfzjb3H443S3B6es6u03BOds@vger.kernel.org, AJvYcCX7JIyIQfNA4s9oOsbAKi4vmtma8tCRysZfj02p3oW9ssS21R3CjULNz0GqLHXeSAP2qUrZQ06LW4oXqn8r@vger.kernel.org, AJvYcCXXO8sOqEeBAfENtRHEwEPVZNVsRInDw0zQrN9VWm/WxlP3CjjKYYrGcskL7piJftEMMC93HqvB97sU1bRY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTjs0q7ewtcfUqxXNuN0swTqt/EkJ926siUok5pAcA3/61Rf1E
+	oNUDT4NES2xD4HAUe9zyeDxwYaw0SQaAqQrsYJkIseXVptlCNfbe
+X-Google-Smtp-Source: AGHT+IG+ht2m85l7VwQoVcTgAteAcpdGNxxC01z797LcY7Qet5QMRhqLO5vLNbROnpbC+W9JL8/TXw==
+X-Received: by 2002:a05:6a20:7351:b0:1db:ec7f:609e with SMTP id adf61e73a8af0-1dbec801b78mr6496376637.41.1730828328809;
+        Tue, 05 Nov 2024 09:38:48 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee45296c97sm9294730a12.14.2024.11.05.09.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2024 09:38:48 -0800 (PST)
+Date: Wed, 6 Nov 2024 02:38:46 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org,
+	bhelgaas@google.com, lpieralisi@kernel.org, dlemoal@kernel.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: epf-mhi: Fix potential NULL dereference in
+ pci_epf_mhi_bind()
+Message-ID: <20241105173846.GB448500@rocinante>
+References: <20241105120735.1240728-1-quic_zhonhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,155 +72,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104-pcie-en7581-rst-fix-v2-1-ffe5839c76d8@kernel.org>
+In-Reply-To: <20241105120735.1240728-1-quic_zhonhan@quicinc.com>
 
-On Mon, Nov 04, 2024 at 11:00:05PM +0100, Lorenzo Bianconi wrote:
-> Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> causing occasional PCIe link down issues. In order to overcome the
-> problem, PCIE_RSTB signals are not asserted/released during device probe or
-> suspend/resume phase and the PCIe block is reset using REG_PCI_CONTROL
-> (0x88) and REG_RESET_CONTROL (0x834) registers available via the clock
-> module.
-> Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
-> specify per-SoC capabilities.
+Hello,
 
-Add blank lines between paragraphs so we know where they end.
+> If platform_get_resource_byname() fails and returns NULL, dereferencing
+> res->start will cause a NULL pointer access. Add a check to prevent it.
 
-Where does this alternate way of doing reset (using REG_PCI_CONTROL
-and REG_RESET_CONTROL) happen?  Why isn't there something in this
-patch to use that alternate method at the same points where
-PCIE_PE_RSTB is used?
+Applied to endpoint, thank you!
 
-If we don't need to assert reset for Airoha EN7581, why do we need to
-do it for the other SoCs?
+[01/01] PCI: endpoint: epf-mhi: Fix potential NULL dereference in pci_epf_mhi_bind()
+        https://git.kernel.org/pci/pci/c/ff977d1bf478
 
-> Tested-by: Hui Ma <hui.ma@airoha.com>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
-> Changes in v2:
-> - introduce flags field in mtk_gen3_pcie_flags struct instead of adding
->   reset callback
-> - fix the leftover case in mtk_pcie_suspend_noirq routine
-> - add more comments
-> - Link to v1: https://lore.kernel.org/r/20240920-pcie-en7581-rst-fix-v1-1-1043fb63ffc9@kernel.org
-> ---
->  drivers/pci/controller/pcie-mediatek-gen3.c | 59 ++++++++++++++++++++---------
->  1 file changed, 41 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index 66ce4b5d309bb6d64618c70ac5e0a529e0910511..8e4704ff3509867fc0ff799e9fb99e71e46756cd 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -125,10 +125,18 @@
->  
->  struct mtk_gen3_pcie;
->  
-> +enum mtk_gen3_pcie_flags {
-> +	SKIP_PCIE_RSTB	= BIT(0), /* skip PCIE_RSTB signals configuration
-> +				   * during device probing or suspend/resume
-> +				   * phase in order to avoid hw bugs/issues.
-> +				   */
-> +};
-> +
->  /**
->   * struct mtk_gen3_pcie_pdata - differentiate between host generations
->   * @power_up: pcie power_up callback
->   * @phy_resets: phy reset lines SoC data.
-> + * @flags: pcie device flags.
->   */
->  struct mtk_gen3_pcie_pdata {
->  	int (*power_up)(struct mtk_gen3_pcie *pcie);
-> @@ -136,6 +144,7 @@ struct mtk_gen3_pcie_pdata {
->  		const char *id[MAX_NUM_PHY_RESETS];
->  		int num_resets;
->  	} phy_resets;
-> +	u32 flags;
->  };
->  
->  /**
-> @@ -402,22 +411,33 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
->  	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
->  	writel_relaxed(val, pcie->base + PCIE_MISC_CTRL_REG);
->  
-> -	/* Assert all reset signals */
-> -	val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> -	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
-> -	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> -
->  	/*
-> -	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
-> -	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
-> -	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
-> -	 * for the power and clock to become stable.
-> +	 * Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> +	 * causing occasional PCIe link down. In order to overcome the issue,
-> +	 * PCIE_RSTB signals are not asserted/released at this stage and the
-> +	 * PCIe block is reset using REG_PCI_CONTROL (0x88) and
-> +	 * REG_RESET_CONTROL (0x834) registers available via the clock module.
->  	 */
-> -	msleep(100);
-> -
-> -	/* De-assert reset signals */
-> -	val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB);
-> -	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> +	if (!(pcie->soc->flags & SKIP_PCIE_RSTB)) {
-> +		/* Assert all reset signals */
-> +		val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> +		val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
-> +		       PCIE_PE_RSTB;
-> +		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> +
-> +		/*
-> +		 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
-> +		 * and 2.2.1 (Initial Power-Up (G3 to S0)).
-> +		 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
-> +		 * for the power and clock to become stable.
-
-Blank line between paragraphs.
-
-> +		 */
-> +		msleep(PCIE_T_PVPERL_MS);
-> +
-> +		/* De-assert reset signals */
-> +		val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
-> +			 PCIE_PE_RSTB);
-> +		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> +	}
->  
->  	/* Check if the link is up or not */
->  	err = readl_poll_timeout(pcie->base + PCIE_LINK_STATUS_REG, val,
-> @@ -1160,10 +1180,12 @@ static int mtk_pcie_suspend_noirq(struct device *dev)
->  		return err;
->  	}
->  
-> -	/* Pull down the PERST# pin */
-> -	val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> -	val |= PCIE_PE_RSTB;
-> -	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> +	if (!(pcie->soc->flags & SKIP_PCIE_RSTB)) {
-> +		/* Pull down the PERST# pin */
-> +		val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> +		val |= PCIE_PE_RSTB;
-> +		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> +	}
->  
->  	dev_dbg(pcie->dev, "entered L2 states successfully");
->  
-> @@ -1214,6 +1236,7 @@ static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_en7581 = {
->  		.id[2] = "phy-lane2",
->  		.num_resets = 3,
->  	},
-> +	.flags = SKIP_PCIE_RSTB,
->  };
->  
->  static const struct of_device_id mtk_pcie_of_match[] = {
-> 
-> ---
-> base-commit: 3102ce10f3111e4c3b8fb233dc93f29e220adaf7
-> change-id: 20240920-pcie-en7581-rst-fix-8161658c13c4
-> 
-> Best regards,
-> -- 
-> Lorenzo Bianconi <lorenzo@kernel.org>
-> 
+	Krzysztof
 
