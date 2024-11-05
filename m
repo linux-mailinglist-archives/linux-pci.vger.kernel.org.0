@@ -1,159 +1,112 @@
-Return-Path: <linux-pci+bounces-16050-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16051-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B5B99BD046
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 16:22:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58C089BD048
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 16:24:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E0651C2177B
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 15:22:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 01B861F235F8
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 15:24:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5825D1D63F7;
-	Tue,  5 Nov 2024 15:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8333A1D27B1;
+	Tue,  5 Nov 2024 15:24:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTVWkpuq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3kKuKbH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3261D27B1
-	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 15:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA263BB21;
+	Tue,  5 Nov 2024 15:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730820157; cv=none; b=UzxYyjOEkDC/lHzLQr3Us0CXfgd/hC5MJZUGwub0NnPbax3Co0DwhEVmvTV7frjdJ/TyEvg4AEhxpi0JJ//u67V1kqH3BhdlS8tj7lBs/tBhv5nB/xUXD0t4MRKMMMS0LgRZYPnfQFcB5wZftyCzllkrnp2FC8Yo6W3VwDfK0Xo=
+	t=1730820297; cv=none; b=CZK6ivHTLqqIlr4c4cJ+CpkId9GuoCvSDziRqxrdhUYjgE1GeO/RE7smvY2FdDj7vamWlwdqF3MrRsEgFXaPu6FhPM4WJ6mk9rMUcYS7jkDUn4OTHUFz5td3ZrBpS4X7h1pjZ9o6zcQBo3ZnYvR3/m5jRGSxOrX49EwJFMkMfEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730820157; c=relaxed/simple;
-	bh=J/Cn+gQJjs8O0udBl12rjA2zyfXqMWTlT/bnowID+gI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UsJpkJF173iB8ETNhsGHxMb5+BOeZwZxowFeQBWkBK7hzHIWSlkz7Wb/Caw2ScHuOvRv2laoLr1pkb9Qr5CT+8AsoA4YtZDIUHuHmvDqvhzEQW6S0Q2oHpGtQTAY2pHokLN3GA1kGz46nrzsWgIE4aWH4kWnWH4xu5iMPq/ogLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LTVWkpuq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730820154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J/Cn+gQJjs8O0udBl12rjA2zyfXqMWTlT/bnowID+gI=;
-	b=LTVWkpuqIc+51qVixguPygZ+BIeUmsYxQBh7IgZ7h7WfCQei/a38ncGSsPt+KBIj9Bruli
-	4PNevtZW2yazz7opaJY5Uy2UVF7i1WNI5a0W5BbbwBhZyAw9qTklXlISsHOabqwOlsoFdS
-	qQaLARfObdTnONbvn63As3nIv+idyR4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-196--JHh8IQKN5a5zYT2y70_jw-1; Tue, 05 Nov 2024 10:22:33 -0500
-X-MC-Unique: -JHh8IQKN5a5zYT2y70_jw-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4315b7b0c16so38572525e9.1
-        for <linux-pci@vger.kernel.org>; Tue, 05 Nov 2024 07:22:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730820152; x=1731424952;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J/Cn+gQJjs8O0udBl12rjA2zyfXqMWTlT/bnowID+gI=;
-        b=OnnHpgmT5fRCLh7sAfYTt/wEuTnXjlIqpr1TIJqrZpfUwTpqEacK2zf/myrYTQcf1p
-         DwOBgy1LFJ8Zco01SCfZJpjdRrCb/Dl+TNIB0oto/jPq/Lu1cmZPktcsm9xKLlNtJPkG
-         lb5HM3gxQeve2DoGVhxrprKGfAskNyuGBejKQncxtpqHljKNuAhy0diw6v41RxsbiJKz
-         dAatbvS8Lz77siybiIfrRnUqIqGNf3146WiBgeEs6kqq6OKLisrVpzcKPUnDoUuemSdu
-         3KPuFyF+0ZG6KslcD/R+x34AKGWInCmtuu3xvnSeg3musfpMgSl1qjZXQIse5vLiprqy
-         xiZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDyP0Vg97CY4tiI7z/rW4NyCP2iCMGCBLgep/o2Ju0eW2X8+tBuFIWJwrIC6PLLxSrFxxwROnT6Kc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdunrPiVbZvzLq89x6nbHxwF9MzClHMbxECKDALr3fNHTuUGwP
-	7HOWmMzx4MRrkKrUZR//9mfSJP1D9PxvN9Z8ohNu9HfsLW3OVKub2wGnTNxCLCCPbJ6N2qlS9Nz
-	3zO4zIzhHosSLn/kNJybTx9UeCaNyKM+vQCkwmp5rirQDYKDopDuQdd0CUw==
-X-Received: by 2002:a05:600c:46c8:b0:42c:b905:2bf9 with SMTP id 5b1f17b1804b1-4319acb17a9mr336934245e9.16.1730820152205;
-        Tue, 05 Nov 2024 07:22:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IESQ7aNdNMQ+yS9mWi/GMzoK5+gV12kGb+PXB2HlOt3GR7/1Mrt4xjaoBjofBs5I6bu5on/CA==
-X-Received: by 2002:a05:600c:46c8:b0:42c:b905:2bf9 with SMTP id 5b1f17b1804b1-4319acb17a9mr336933935e9.16.1730820151632;
-        Tue, 05 Nov 2024 07:22:31 -0800 (PST)
-Received: from [10.32.64.16] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7c38sm16466726f8f.24.2024.11.05.07.22.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 07:22:31 -0800 (PST)
-Message-ID: <5e56bf9bd7b65ecbf1bdb0af8569c4548c335220.camel@redhat.com>
-Subject: Re: [PATCH] ata: ahci: Don't call pci_intx() directly
-From: Philipp Stanner <pstanner@redhat.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>, Niklas Cassel <cassel@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org, 
- "linux-pci@vger.kernel.org"
-	 <linux-pci@vger.kernel.org>
-Date: Tue, 05 Nov 2024 16:22:30 +0100
-In-Reply-To: <8acdd01c-1744-4545-9cc7-0a60e83a5d4d@gmail.com>
-References: <c604a8ac-8025-4078-ab90-834d95872e31@gmail.com>
-	 <ZyiGNtLMSY1vTQH7@ryzen> <8acdd01c-1744-4545-9cc7-0a60e83a5d4d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1730820297; c=relaxed/simple;
+	bh=1iekeL2Za9+ifD3DUVEh/34YJHWRDoMORGZyPsah7qQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Dfnho9D6+nkfC5nhUl7sjOQha3eLK0HeLz4Z9LwVoi00eg+10gFidQlfG5sd2BbqMvWOssZ0qbAu/U4EkqzZCNNMrCh0WDn5so8kdumiUKTUJsg0kjRxcj+rTBv7k+SZT3zEwIHeH33a5+sNGjGImWoXNNMXwKIH9E0KLcJUs8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3kKuKbH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E41C4CECF;
+	Tue,  5 Nov 2024 15:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730820296;
+	bh=1iekeL2Za9+ifD3DUVEh/34YJHWRDoMORGZyPsah7qQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=q3kKuKbH7YxY1oQuKykEW6dUwc3kuigmWbpok4ZuDVmWd1t5vS82mD0Z1Tw2388w0
+	 BQrw3cIyS6RQp9OV9eFQBYCSvVAhTrYu1Fp2deahiEAHlKOkQcD1KcOrNJDptBGtVv
+	 Q8Fdv1jEnqv1ogqPFZGfbfybABpxgVipL4eJZvSmDnHb3VZd/PPCwJU7RxwNLRJ4u8
+	 QbaqGTbOrh6AZVKT6uPMGsDs9VlAteni6Eq8tzBzl6uAiBcnrP0KXPYSQXaNwD+x/B
+	 85SjevA+we6kUSjRnejOpqrKqap6UkY7CQgc/IGyQ32MnkjwyMGbYprwgHXwOFfFge
+	 +D5CqF/RHcHhA==
+Date: Tue, 5 Nov 2024 09:24:55 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Fix read permissions for VPD attributes
+Message-ID: <20241105152455.GA1472398@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241105075130.GD311159@unreal>
 
-On Mon, 2024-11-04 at 14:23 +0100, Heiner Kallweit wrote:
-> On 04.11.2024 09:30, Niklas Cassel wrote:
-> > On Fri, Nov 01, 2024 at 11:38:53PM +0100, Heiner Kallweit wrote:
-> > > pci_intx() should be called by PCI core and some virtualization
-> > > code
-> > > only. In PCI device drivers use the appropriate
-> > > pci_alloc_irq_vectors()
-> > > call.
-> >=20
-> > Hello Heiner,
-> >=20
-> > as you might or might not know, this patch conflicts with a
-> > Philipp's
-> > already acked patch:
-> > https://lore.kernel.org/linux-ide/20241015185124.64726-10-pstanner@redh=
-at.com/
-> >=20
-> I know, therefore he's on cc. Fully migrating PCI device drivers to
-> the
-> pci_alloc_irq_vectors() should be done anyway and is the cleaner
-> alternative to changing pci_intx(). However for some drivers this is
-> a rather
-> complex task, therefore I understand Philipp's approach to adjust
-> pci_intx()
-> first. He's incorporating other review feedback in his series, so
-> with the
-> next re-spin he could remove the ahci patch from his series.
+On Tue, Nov 05, 2024 at 09:51:30AM +0200, Leon Romanovsky wrote:
+> On Mon, Nov 04, 2024 at 06:10:27PM -0600, Bjorn Helgaas wrote:
+> > On Sun, Nov 03, 2024 at 02:33:44PM +0200, Leon Romanovsky wrote:
+> > > On Fri, Nov 01, 2024 at 11:47:37AM -0500, Bjorn Helgaas wrote:
+> > > > On Fri, Nov 01, 2024 at 04:33:00PM +0200, Leon Romanovsky wrote:
+> > > > > On Thu, Oct 31, 2024 at 06:22:52PM -0500, Bjorn Helgaas wrote:
+> > > > > > On Tue, Oct 29, 2024 at 07:04:50PM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Mon, Oct 28, 2024 at 10:05:33AM +0200, Leon Romanovsky wrote:
+> > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > > > > > > 
+> > > > > > > > The Virtual Product Data (VPD) attribute is not
+> > > > > > > > readable by regular user without root permissions.
+> > > > > > > > Such restriction is not really needed, as data
+> > > > > > > > presented in that VPD is not sensitive at all.
+> > > > > > > > 
+> > > > > > > > This change aligns the permissions of the VPD
+> > > > > > > > attribute to be accessible for read by all users,
+> > > > > > > > while write being restricted to root only.
+> ...
 
-As I have stated before, this is not just about cleaning up pci_intx().
+> > What's the use case?  How does an unprivileged user use the VPD
+> > information?
+> 
+> We have to add new field keyword=value in VA section of VPD, which
+> will indicate very specific sub-model for devices used as a bridge.
+> 
+> > I can certainly imagine using VPD for bug reporting, but that
+> > would typically involve dmesg, dmidecode, lspci -vv, etc, all of
+> > which already require privilege, so it's not clear to me how
+> > public VPD info would help in that scenario.
+> 
+> I'm targeting other scenario - monitoring tool, which doesn't need
+> root permissions for reading data. It needs to distinguish between
+> NIC sub-models.
 
-Again:
-pci_alloc_irq_vectors() USES pci_intx(), and my series does address
-that in its MSI patch.
+Maybe the driver could expose something in sysfs?  Maybe the driver
+needs to know the sub-model as well, and reading VPD once in the
+driver would make subsequent userspace sysfs reads trivial and fast.
 
-If you want to help, a careful review of the MSI bits would be helpful.
-Your patch here uses pci_intx(), you just don't see it anymore.
-
-That said, in principle it's of course possible for me to drop patches
-while we're still in review, but I tend to think that it's causing both
-you and me more work if the pci_intx() vs. pci_alloc_irq_vectors() is
-worked on out of all times right now.
-
-It also causes more work load for the reviewers, since they'd have
-reviewed my patch for nothing and would have to review yours then.
-
-Also be aware that I am not yet sure whether the devres aspect should
-also be removed or made more explicit in MSI. Take a look at
-pcim_setup_msi_release().
-
-In the worst case you might just replace one problem with another
-before we figured it all out.
-
-Regards,
-P.
-
-> >=20
-> > Kind regards,
-> > Niklas
->=20
-> Heiner
->=20
-
+Bjorn
 
