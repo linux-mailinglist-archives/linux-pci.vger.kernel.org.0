@@ -1,223 +1,194 @@
-Return-Path: <linux-pci+bounces-16074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F9529BD62A
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 20:54:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B00879BD639
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 20:56:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BF02B222D1
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 19:54:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 411871F23D51
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 19:56:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CC6521442A;
-	Tue,  5 Nov 2024 19:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBE32144CD;
+	Tue,  5 Nov 2024 19:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cCnrWGzn"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="l2Ol/MqE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0E2212F07
-	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 19:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730836443; cv=none; b=A9tLuStKYZYtWK0xdvblXEf2qd1jToA1AJ6G7w20eeGJ6uAGixUEz8QX4oYVRdlNW+e/7V1YvZTU430g/ZPBLUtbRFoGrVKJJ79d8BJNJivyo4bPsNyHoHT3XTHLdlT81ROKcc2O/sjpGezINGNzBLsVn5YwMezZ/pnkhuV7JLQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730836443; c=relaxed/simple;
-	bh=q3kRFS0aC9llW2hXigplm+6X6nuxwR5TAuU7KtMvtNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kaOBDMS+RgvB+UR8oJpOsZywJZAKaDjKVQSZUkqryO324kaCz2n5CFyfRtA/v9FO/YovoFXz/anulds2gWSmWpZW7NWG8qKMX0dj7tkEMWnK7x6ZFmdoDwpvTVYi6oRjpt9LmH+EipELA1iPwFUM98E6mxPPVU5nar3d8TFdi28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=cCnrWGzn; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6cbcc2bd800so1619806d6.0
-        for <linux-pci@vger.kernel.org>; Tue, 05 Nov 2024 11:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1730836439; x=1731441239; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+fX00798BJ3ATWBHAwavTUTImd2ssZMf/WzAfMHnat0=;
-        b=cCnrWGznqeSBxBybSIX9KF2jm+YHihlVV6QSsqvER5HCYWOvEMYWGMMrUPl6GATwiZ
-         srLlBdBWXyC4dDZ9YWe3VWgJGOBPRvDEFxnahCiNSoGSK8bsmnQxtRiboeppWUadKGCS
-         P0/6mWuTEfwnZ1pXQCym0DsT+gHAJHBeVYSJiwS3/eJ6vh4YNHNi7skohTpFGvza6lWl
-         fkKSEpvQfMWtstvuZMSaGHptv80S6FNKODFfEMfpGP7fRaQ/eU4VJbTXyRIKbK2qiPC3
-         5qsFAaTWTC9aUfiNVu8c4B7nPODBl1MRoHORCscuhmjiWPpV8Au1arDi3GEwmKgoOGUS
-         NoAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730836439; x=1731441239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+fX00798BJ3ATWBHAwavTUTImd2ssZMf/WzAfMHnat0=;
-        b=gRv9bn7C1ZK+FpouwhBXld8gcsqcSrAae3mToTyS8fa2pa0etmGuBCRRvVwgWGVqz2
-         vLy3xTDMe5MqQUL3pwGpQaUwKcwg9qOyCuH3HGdc+NAJ96PFPJufNbQ2wcB7krMHkgqA
-         TpsUyxln+iZezZqAkVhBmzC1ahq40fIGm935F6bUx4yvUNJYdS/i0i3IVoXX5Lx6y9jf
-         JMZNjghnICape2pBjEjh6ASOFHo/brwS8YGxBlFB6mS5Z5gdTFW+yrK03lN36eqK16TT
-         +A4/qT/TEhXSFHz8Yb6iUxI83kPMDrR1Jq2UHf0dU9Lk1txllyQ4zN/2N4/3lZRKhfzk
-         Knxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEvJdw6QV+j7S2kmSH9ZaucFMNXmbV+/bZ6gWv00HiFj2kqUKj9aIsKkOVftmGl1bMw4oPkE2BqHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5L24oPgoVA5Pfp3k4u2NKf56dfs8Y4lrAMkY42N5TksnyRp3h
-	JUdsw0IQ2IrfsVfcQ6awSefodQLsIUtPBfm9Yok96YDasQq2dcrv6ZE9w+E1ZPw=
-X-Google-Smtp-Source: AGHT+IEaav3D7n+muLVYjXAvVqOfQiyB3KvOcn2o5SW6dcKTwKh96GbO3Tfnssa4/aNZfrPdV+MQVQ==
-X-Received: by 2002:ad4:4eeb:0:b0:6cb:ed27:145c with SMTP id 6a1803df08f44-6d35b9510a3mr302739006d6.19.1730836438787;
-        Tue, 05 Nov 2024 11:53:58 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d35415a62asm63870536d6.80.2024.11.05.11.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 11:53:58 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1t8Pcj-000000023mq-1vDZ;
-	Tue, 05 Nov 2024 15:53:57 -0400
-Date: Tue, 5 Nov 2024 15:53:57 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>, Leon Romanovsky <leon@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
-Message-ID: <20241105195357.GI35848@ziepe.ca>
-References: <cover.1730298502.git.leon@kernel.org>
- <3567312e-5942-4037-93dc-587f25f0778c@arm.com>
- <20241104095831.GA28751@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0426213EE3;
+	Tue,  5 Nov 2024 19:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730836592; cv=fail; b=LBXPauKh7zizT8dYiam6gW6WhrcoGzg4omJfSkxIZa/0z8ywjD8ZBusnuUOl7E5SmBkkmjVrB55I3HFlzDvWUP7RHaqIIioF5pqKA3NaZnzyqMfYIXbcsK7vm3iNMNlPLPh1Vk3tiOfCpI2Y+SUd5E2OR3ICQMT1Bs3BH/lZA4I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730836592; c=relaxed/simple;
+	bh=CI9C60FZYN56Tnrvu8Vmp7ndBOsjPVCw16Q4mkSaKrc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=W2NAyOySEL/Ye0L4wfMGVtospToZZE324fI7KyJ05ZRCIBABrAZ06ycTSudXQ+GaU9aRO2f8YBH0OddLoYl/2Sl4AWBNqZtvpafPS30zxmWsM92tT4mIl/3bGlZNZZRPZPgQEkYkVEWo32hiwCAlsXrofYyHs5/PrMV+EPTpHlo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=l2Ol/MqE; arc=fail smtp.client-ip=40.107.94.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LXXm45hlMW0wKmbeYOLY8ioZFQ48f70ZCjG5NV4Ffg2k3n6eoNof11ZHRVW9u7vjYvuTSepUiuxhiHYWYIzSWMoBkun/gVP8OT0AxZ9CHKDQeO9yBLWHLid1eaPI1dOs3rmspyc8oP/XRzAGssyxAE77TMxmNKHduhQpEJHwcmY4BqrRnNKTNSMMahiW05m052+sVbCuxOO03sUntmSATr71H2rnVQZL+YqVWEBo9V/KaWDAkuZvSuo+scutbzGgmCQDZxPhgNBlVH386Rop66IjnwwFllY8SVaCmTeyvE6BM+6bcHzsGVmQMjvKbB2DBa1eRCHRupoSfm3QnlCFjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g00vfo64mOZC37j83ijFQApPVByPVw2wOQJ3Spcjkv0=;
+ b=cSkj/djX8AQRGMzKzY5gUz53GhpFvyOEK359iWpk7vBTil5YiinP8vv33cTWk+/2YowHKBTlsT0ESR1JGtw6rUgfkY/Nu8R4jkKF1yn7EZnkcWZ3oluLoMQPDpSK3VTJAl1xEnEjEsoV1HrZz0vv0LdFZNs5mf3NBANJV+APQN1/ccdUkup4RUIOblv50bHqeKdKaHj44uINpecvyMBZK1QX103+Pi98WIKiwZYO0gzA8k1idTm7bQK672Qvo1kALAKEq0X0UGWO4yoOdUhGAJeQYRH4mP6w7IivneO46xKqEOZkGMY1ZMKa/ckCJ1MIGOZH9BPyIQoJyoeW23cxpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g00vfo64mOZC37j83ijFQApPVByPVw2wOQJ3Spcjkv0=;
+ b=l2Ol/MqE3Y/yfBbin1nOY3TkgzA/9XYuCIm9UXnWCa8nw8NHx5Nwwx9eC2Q65A6q2+ae3dRfy17BU0ORF7NEwfb8/PTX4IZYsHaxilTgJSlVCQY5oEVOQoLxetY92ooU+Pe0eEOZDtYeTv231qC4Ewd+hhT9nZJAakKbjegtU4k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ2PR12MB8062.namprd12.prod.outlook.com (2603:10b6:a03:4c8::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30; Tue, 5 Nov
+ 2024 19:56:27 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
+ 19:56:25 +0000
+Message-ID: <9137b724-d342-4f35-b554-0e56ef37b2d9@amd.com>
+Date: Tue, 5 Nov 2024 13:56:23 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 16/16] x86/amd_smn: Add support for debugfs access to SMN
+ registers
+To: Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
+ avadhut.naik@amd.com, john.allen@amd.com, bhelgaas@google.com,
+ Shyam-sundar.S-k@amd.com, richard.gong@amd.com, jdelvare@suse.com,
+ linux@roeck-us.net, clemens@ladisch.de, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ naveenkrishna.chatradhi@amd.com, carlos.bilbao.osdev@gmail.com
+References: <20241023172150.659002-1-yazen.ghannam@amd.com>
+ <20241023172150.659002-17-yazen.ghannam@amd.com>
+ <20241105192124.GXZypwNJ26qqahcpOZ@fat_crate.local>
+ <2b539169-8acd-40c6-9261-47c0252df91a@amd.com>
+ <20241105195329.GHZyp3uVMKHAF3BEmV@fat_crate.local>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20241105195329.GHZyp3uVMKHAF3BEmV@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0184.namprd04.prod.outlook.com
+ (2603:10b6:806:126::9) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241104095831.GA28751@lst.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ2PR12MB8062:EE_
+X-MS-Office365-Filtering-Correlation-Id: a66e5448-f269-44d1-d681-08dcfdd3ee29
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZTlJcHVzckVhT0YweUQ4UDRJRzJsaSs4UHZ0clZmdjZXT1QyVHVmaEp6Mi9C?=
+ =?utf-8?B?S1RRR0JLTGljZXdHQklQUUxTNzF5cm8rZ2xCWUlzcUJaOGdKa08wZDMyaE1k?=
+ =?utf-8?B?NEt2RlQ5eXg3Q2pNVWw3YXhNcCtVdmZJdC9Mc3NvekkyWjRwRmprS2czTFpq?=
+ =?utf-8?B?SksxWkdwRE1IbjNzN1JZUTZhL0tOZG4wT2tDQ3RsZGxuYTA0RWJONEx4RTRi?=
+ =?utf-8?B?VS82L0k0YmlETlpDVEsycmZSaUxiQVNXNHdydjQybmtsVTQxWWtqMk5Oc0px?=
+ =?utf-8?B?QStZTjRzUG9yMVZOMVdTcWc4T2tCREdUYVdWVlJGUDkvYlBNSEhjNjFLOHIw?=
+ =?utf-8?B?U1JIcnhndENtK3NQcmc2SFVJeEF4QlM4Ri9sK05oWnlQZjFKSnFMdThvdC85?=
+ =?utf-8?B?ZkZZR0tabUNpb2RyUlVseTlGL1RhRFF4cWgxTmhacVNuRnR1c3RXMXFSdXNv?=
+ =?utf-8?B?RjdPVGFuUW85MG41MUtNNldsSXloNjJUSkV0a0c5a2x2K09XTjlnWGVwM00v?=
+ =?utf-8?B?UVE0aitoUDhEZEhBUTgrYnVPYVYwWjRoa2phRjc1VC9EUS90NU9Sa0oyQkZV?=
+ =?utf-8?B?ekdQN05WbXRzSXJYdGNGMlJWdjM4U2ZwUGRacVpMVU9pSExDUVdhcDQyNk1h?=
+ =?utf-8?B?Q3pONTMzWDVIZ3lsbnBETDh6YlFzdDlCbURESEh6RmlyK1hVcUwvaWg0L2JD?=
+ =?utf-8?B?b2xHYXJxR0dkcisrd1RoSkM3VEtMR0FuNXkzVHU3TEJWc3JZTUNpUFRKQks5?=
+ =?utf-8?B?VTc2N2I5eVBvRkc2a2QvSVdvemZxTjU4cDlWaDFCYUxFUEcrbEVSYllpeU1m?=
+ =?utf-8?B?cUlsSjNGRHpVbGtjVm90dHZrQW82SzNFYjg1cEpxa2M5WU4rOTEzSWZrQ3Rt?=
+ =?utf-8?B?NzA2MzBnQzdpemttdGFhUE5vdDNZb2kvRDAxYmwxem9aZmU4eVlJTlV5KzNZ?=
+ =?utf-8?B?TUZvL0sxZk1sQ1NteWpRM1UwcWd6cktCMkFDcURaOURHUjJVdXZuVFE5SzlZ?=
+ =?utf-8?B?MVVuZ0dFYTRnME5WbmlRVzI5Z09HZjJrZDJxZTVhVmdjcUh1Ym9IT0Y2RW9E?=
+ =?utf-8?B?MkZyaGs4YmcwV2ZQTmRmYjN6ZlFya0FSSzlVME5MK3c3M1BkSVRKbEZTTHBp?=
+ =?utf-8?B?V3ZLL0lhS3pxU2h5YnFTNkdUSDB4UzNRMFUrbUErNWwzeVNTZzlPZkRvS2kx?=
+ =?utf-8?B?dWkrdUtNbmRoN093MUxHYVR0RjhmTHgrSWdPNHd2cENVZSswaUo5bXhjS0Uz?=
+ =?utf-8?B?amVCcE9pMlA3aSt4L1ZzTStzdWNkT3BFMVU0bkZvL1RaS09mZHYyamozazZF?=
+ =?utf-8?B?NUl6UWo5dUxtcGVtRUl5UldYK2xGNjZxSldISFY5dkhxZ3JZZmM2bGdjRUpO?=
+ =?utf-8?B?VkxMMjZMc1JXZnkvLzF0NWxUNTFYQUVDTy9seDdCRndMZU1tMC9ub2tnYmJG?=
+ =?utf-8?B?VXp2NCtJWDBTR2sxZkVCM1dzMzE0THlRK2dxSUtVNjJzMWhLVnNtejVwaFZV?=
+ =?utf-8?B?dHBnbFNFbHBaQ2taa2R4R1BSOTNPWVRwWnhkL3B5c2NNdzhCWFRJMFR4eEdN?=
+ =?utf-8?B?OXdpK3B2R0tEL0w1QmdNVnp6c2JKNEw4dDUxNGFBLzlQVEc5a0FOa0Z2QWRv?=
+ =?utf-8?B?enVuUW5uUWVZbFVNRzFnakxUUW54MlZtMURROVJDWi9XQlVkcnJSQkRFQTNh?=
+ =?utf-8?B?dHNmNGU2dDI1TThkWnBQcGUwWWFiODV3bEdROC90Q0FEQXdZcldxc0xPWk4z?=
+ =?utf-8?Q?K78tZ0IQ161DCSlH//4eAMFGOWVdRNrR8k5bwG1?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?czFVdkR4RHVTNUhJSjBRVUlMc2p2QWJlSk1nbzR6aU1YNnRtZVc3RVRsd2NC?=
+ =?utf-8?B?dXJ5aUtQNjd3RXhTWGxBNWhJMkpXODQwMWtWREphRGlndE9LbEtCVThMeVR6?=
+ =?utf-8?B?MUwrUnFxN2QrZk9mVUtVSmN0eCt0b3hXM1VSUkMyNEZYUFJVRy9HaHA2UGc0?=
+ =?utf-8?B?UU5sSXNRLy9wZlNJNzRxWjNvSzFvV09jRmphbTRJRndxaW9mZ1lHVXNIanVy?=
+ =?utf-8?B?eHJhc0s2WUhhVTRTQVl2dE03WW91YU9iZ2Q3WDhVcVBkbmtkdE1UM2N5b0tF?=
+ =?utf-8?B?RTkzV1M5b1NoU0FEYnZVYnZOMDZTdnNFYTU1LzNyQnVIV2lPbTdyRWJYS0hr?=
+ =?utf-8?B?Y2s0dWZUd2E3WkV2Y0NBU1ZQWGlQUTI1NTNqeHJCYVZGd3BDSzRQa1A4NElG?=
+ =?utf-8?B?ZXhnUjdHeUxxZmt1eXBpWHhMUFRXREtGMGh2QjJYeWhpMWt2TmltdVlRWFI4?=
+ =?utf-8?B?cXZQVmNyaUpxRktlRjFOOVNlSVhpRGhwZ05uYzRtTmNJVEQrVzVNQm5zL0V6?=
+ =?utf-8?B?S2FaMmJvYXpaSWordmJQZ0RwQ0Y0L0NRZmRmRHhiNGs3QW5NaU5rc3JveStp?=
+ =?utf-8?B?eElxT1hud2RTTnZKdW5YbEk0MWJZQ0Z3WGRmcXVFbjBXUmgzaWRzbGQ5ajVI?=
+ =?utf-8?B?T2l2dm83dEtJTjBwTktEVE9UQVpPR3FjTy91eEtLZ1FXcUVzUE1qTGxZMlAz?=
+ =?utf-8?B?S1pkQVlHcVJFRHdrTUlmMlByTG5mYld0STFudVBSM3BRd1hXSU1ycktSZjNV?=
+ =?utf-8?B?c0dWV0kvSE5vYjBQYkQwUitBalA5VjVOMHBYOVh5ZWxmWDJ4cUxYQnkyMGdY?=
+ =?utf-8?B?dktjWFRKSkI3ZDhQMHNkb2xCS3pYcTh5Q1BPNFJ6T3MyeFJ3M3BzeWZ3ZzN6?=
+ =?utf-8?B?SExBdG52QmM2ZG1CYkcxcUNYWE1VKzdXM3VRMzZPcWZBSnRPL1JmcEdTRm9Y?=
+ =?utf-8?B?RzYwTHc4bERHcE43dVFPQTR1QzVaMWZ5Mkhyczc0RTNiVm1CcHZrVkVBeDdt?=
+ =?utf-8?B?QVFvTnRqTHI2VVVOOVAvTVVHLy93R3YwRjhQaGxQaUpBSHhoaWhiSTAwUnJl?=
+ =?utf-8?B?ZDk4b3hqb0daMHNlQ3pubEdtTDBiL2Q5WHlmL1M0T3RxMUYyT0Y1VGhla0pJ?=
+ =?utf-8?B?UmpNSE1lLzJEaEhHOVB5R29DbG5LN1o1ZnlleHM3UWVSUTVuSHVmeVRhOVhR?=
+ =?utf-8?B?MG5mWi9TOVZVQjNzdU82azBQSlZ3QVJLcEgwZlRwYzdUb0dMMlhqNG8wbWlR?=
+ =?utf-8?B?TXdlTlFSWko3K2UrTjh3YnBEL1NMblluS0NDdVNyZVFHc2MxT1pCSWt1SUMz?=
+ =?utf-8?B?RWc0aUFmYWJZRW51Rm9ZYXJyNG5HK2VKdGplbFhDYmtta1E3NlVuNWlyTXRo?=
+ =?utf-8?B?SnRwQjJoaGhScU5GRFJGcktSMzZIZXBKeGJuNGRjTGdCQVRWeTlLT3Jxbkgy?=
+ =?utf-8?B?YXI4Zm0wZmZldk5VakhrRkE3cGs4ZUdvTW9Nc1hGY3FmMWVYam55UU40Y2Rm?=
+ =?utf-8?B?ZFRCQnlaUWxyZndrR1RqZGU0amJOYXlqMjhQUFU3Mm54ckpIdm05cHVvZzNR?=
+ =?utf-8?B?UVUrV2NkbTlIZjVqbUExYnRSQ2N0S0YweDI2MjJ6MW5NZllJdGJ3MUJKRWov?=
+ =?utf-8?B?OEVCY200ZXNYR2J6cGJwTVpCZVBQUnJFL0V6bHlqUGMyTTlGTjQwQ2J4TXFS?=
+ =?utf-8?B?ZjNiLzBISTBhWVV1Y0EzQU14bjZCTWRYTEJQUkN1TGYzbHVnOG9ITGcwblQw?=
+ =?utf-8?B?MEJBREpyalZrL01yVFU3V0M2aTN2TVJmTmJxdzR0aytBV0ZhUTJvRTJpemdM?=
+ =?utf-8?B?RmtRbHdReEFuaWltMUN2T2g5Ri9MKzZsb3hwTXRNUk53YWJ6LzdSMDNhSUZo?=
+ =?utf-8?B?UWdqakxYM2pka0hVZC9YdjJrY09iSGo3UTVvWkVIbUdIMU5FMXhJbkh0WHNN?=
+ =?utf-8?B?bnFIOUR4U2pGNThMRXc5SnJ1UGtXejdhczltNWgyUHBVU2xlbWRXSVdDYXV4?=
+ =?utf-8?B?WTVwOThUMkpmcDh6ZWErb3NZUnoyL1Vkdytva3N2emdoNjZpM3kwb1FlVHBN?=
+ =?utf-8?B?STk4QWJ0UWV6Q3NkWDlZcFo3Y1RCZTdqejBIdFhUMXk5dDk0aGt3Z3RGa1Na?=
+ =?utf-8?Q?SawnwoTgOOrF7PMsS+JOfv/6R?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a66e5448-f269-44d1-d681-08dcfdd3ee29
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 19:56:25.7464
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7k3KPpFpQVFjfd/kDgs3h01okfDsL6ePqSQt3sijnGJQdF908DxH+UNGmMzqrfwX3UoKbb0Dnbl+vtoorU3hew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8062
 
-On Mon, Nov 04, 2024 at 10:58:31AM +0100, Christoph Hellwig wrote:
-> On Thu, Oct 31, 2024 at 09:17:45PM +0000, Robin Murphy wrote:
-> > The hilarious amount of work that iommu_dma_map_sg() does is pretty much 
-> > entirely for the benefit of v4l2 and dma-buf importers who *depend* on 
-> > being able to linearise a scatterlist in DMA address space. TBH I doubt 
-> > there are many actual scatter-gather-capable devices with significant 
-> > enough limitations to meaningfully benefit from DMA segment combining these 
-> > days - I've often thought that by now it might be a good idea to turn that 
-> > behaviour off by default and add an attribute for callers to explicitly 
-> > request it.
+On 11/5/2024 13:53, Borislav Petkov wrote:
+> On Tue, Nov 05, 2024 at 01:46:46PM -0600, Mario Limonciello wrote:
+>> Why the worry about it being in debugfs by default?
 > 
-> Even when devices are not limited they often perform significantly better
-> when IOVA space is not completely fragmented.  While the dma_map_sg code
-> is a bit gross due to the fact that it has to deal with unaligned segments,
-> the coalescing itself often is a big win.
-
-RDMA is like this too, Almost all the MR HW gets big wins if the
-entire scatter list is IOVA contiguous. One of the future steps I'd
-like to see on top of this is to fine tune the IOVA allocation backing
-MRs to exactly match the HW needs. Having proper alignment and
-contiguity can be huge reduction in device overhead, like a 100MB MR
-may need to store 200K of mapping information on-device, but with a
-properly aligned IOVA this can be reduced to only 16 bytes.
-
-Avoiding a double translation tax when the iommu HW is enabled is
-potentially significant. We have some RDMA workloads with VMs where
-the NIC is holding ~1GB of memory just for translations, but the iommu
-is active as the S2. ie we are paying a double tax on translation.
-
-It could be a very interesting trade off to reduce the NIC side to
-nothing and rely on the CPU IOMMU with nested translation instead.
-
-> Note that dma_map_sg also has two other very useful features:  batching
-> of the iotlb flushing, and support for P2P, which to be efficient also
-> requires batching the lookups.
-
-This is the main point, and I think, is the uniqueness Leon is talking
-about. We don't get those properties through any other API and this
-one series preserves them.
-
-In fact I would say that is the entire point of this series: preserve
-everything special about dma_map_sg() compared to dma_map_page() but
-don't require a scatterlist.
-
-> >> Several approaches have been explored to expand the DMA API with additional
-> >> scatterlist-like structures (BIO, rlist), instead split up the DMA API
-> >> to allow callers to bring their own data structure.
-> >
-> > And this line of reasoning is still "2 + 2 = Thursday" - what is to say 
-> > those two notions in any way related? We literally already have one generic 
-> > DMA operation which doesn't operate on struct page, yet needed nothing 
-> > "split up" to be possible.
+> I want people to *actively* and *explicitly* do something before they can
+> brick their systems.
 > 
-> Yeah, I don't really get the struct page argument.  In fact if we look
-> at the nitty-gritty details of dma_map_page it doesn't really need a
-> page at all. 
 
-Today, if you want to map a P2P address you must have a struct page,
-because page->pgmap is the only source of information on the P2P
-topology.
+OK got it.  Considering that I think after this series lands we need to 
+re-open the conversation about PCI config space access to userspace; 
+particularly on regions that have been marked as exclusions.
 
-So the logic is, to get P2P without struct page we need a way to have
-all the features of dma_map_sg() but without a mandatory scatterlist
-because we cannot remove struct page from scatterlist.
-
-This series gets to the first step - no scatterlist. There will need
-to be another series to provide an alternative to page->pgmap to get
-the P2P information. Then we really won't have struct page dependence
-in the DMA API.
-
-I actually once looked at how to enhance dma_map_resource() to support
-P2P and it was not very nice, the unmap side became quite complex. I
-think this is a more elgant solution than what I was sketching.
-
-> >>      for the device. Instead of allocating a scatter list entry per allocated
-> >>      page it can just allocate an array of 'struct page *', saving a large
-> >>      amount of memory.
-> >
-> > VFIO already assumes a coherent device with (realistically) an IOMMU which 
-> > it explicitly manages - why is it even pretending to need a generic DMA 
-> > API?
-> 
-> AFAIK that does isn't really vfio as we know it but the control device
-> for live migration.  But Leon or Jason might fill in more.
-
-Yes, this is the control side of the VFIO live migration driver that
-needs rather a lot of memory to store the migration blob. There is
-definitely an iommu, and the VF function is definitely translating,
-but it doesn't mean the PF function is using dma-iommu.c, it is often
-in iommu passthrough/identity and using DMA direct.
-
-It was done as an alternative example on how to use the API. Again
-there are more improvements possible there, the driver does not take
-advantage of contiguity or alignment when programming the HW.
-
-> Because we only need to preallocate the tiny constant sized dma_iova_state
-> as part of the request instead of an additional scatterlist that requires
-> sizeof(struct page *) + sizeof(dma_addr_t) + 3 * sizeof(unsigned int)
-> per segment, including a memory allocation per I/O for that.
-
-Right, eliminating scatterlist entirely on fast paths is a big
-point. I recall Chuck was keen on the same thing for NFSoRDMA as well.
-
-> At least for the block code we have a nice little core wrapper that is
-> very easy to use, and provides a great reduction of memory use and
-> allocations.  The HMM use case I'll let others talk about.
-
-I saw the Intel XE team make a complicated integration with the DMA
-API that wasn't so good. They were looking at an earlier version of
-this and I think the feedback was positive. It should make a big
-difference, but we will need to see what they come up and possibly
-tweak things.
-
-Jason
+By that grounds a taint is definitely not enough for that either.
 
