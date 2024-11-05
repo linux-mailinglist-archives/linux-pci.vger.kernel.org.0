@@ -1,275 +1,140 @@
-Return-Path: <linux-pci+bounces-16068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AF7A9BD44F
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 19:13:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43CC39BD564
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 19:52:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92DD61C22FF3
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 18:13:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0729A282F1C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 18:52:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC20F17BEB7;
-	Tue,  5 Nov 2024 18:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64C31EC004;
+	Tue,  5 Nov 2024 18:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqSCKavn"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MwMI3f1F"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70AD4D8D0
-	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 18:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0971EC00A
+	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 18:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730830435; cv=none; b=rL6qCcKP+XMNDxan/HQbQWCAV4aYsxxjIQ4tBjLelR/UxohrWGSpTGpnWo2X44J0NRlnSt7BKD6CmRka/GWpzjZ8QCXSBDJLyh7+wJI1/dVVRk/vj33k+r9nxICi9p8z9Z29R1pxRFujmkmFBxXjOyugZ1pG2RqGL76aKmWNBrc=
+	t=1730832666; cv=none; b=hG8Q4yqrlSaTl9kNgptmD3KtsZ04zGEpHKBmY3LX2puhXCJ7pRuUxExZfgd3EYfhEIco7cwhj2B893fOADciIkSHT7b33jj8kyG7hzMjmPl/E6MHaFtwy8yAz/t5btytshK1tQFLRbKcJdSYhBsRbLdk65AiHdMbfdoAu/sThUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730830435; c=relaxed/simple;
-	bh=Xen1diBQCGTGkPai9ifyoSgzJwfYP1crTTlWxSXYi88=;
+	s=arc-20240116; t=1730832666; c=relaxed/simple;
+	bh=nJnTbD5cGZ0OfD00jTtdrajsLazl3DFTJAxArG9Ps+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d0i4gjqoXw/h0PrSL7mUu5PJcHpgDE8zIok9V0CSib+oAnu4Y4i64NOFZkrNBRG5zzKjzzZoaNAoBeiIO1k9Am/AmsMTD+8G2bwZcMBofc+ozuMHqQfDVlwVn/x8obSqe5ADGQHC84q98vRrvyoqaSWnWxdEkFkeJDH2XKf7JaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqSCKavn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD60C4CED1;
-	Tue,  5 Nov 2024 18:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730830435;
-	bh=Xen1diBQCGTGkPai9ifyoSgzJwfYP1crTTlWxSXYi88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SqSCKavngCVgtakBFoK/QNvcJ95y8UC2eRzb2nESbNueDZokzXwbZhNU6eXkXGDIE
-	 PmbAaOwf33zXa3RPAIQnzyiJ/RiZlzbVC8kX/ByVVWiUEFrmMENr1ZX06kWa3OFlg7
-	 Dxy3Zp/ruYbsfdTCbPXEoHeuxSMzhwAASoZQsAD0LDuFY37y2oDkVl1cjET1dPJl3e
-	 fnnWCUK7WOyKctQABU15LbyG4ZhFemim+6MEvOW22b9MnmvDzR93XHU/oPnWhfVZmZ
-	 HjVV7nGe3krmgq14Iv5e6kwqk/FdaL1XQuitcu87xe1YT4s9mi1uK45zfPkinl4CBy
-	 Scj+bvKXgmu7w==
-Date: Tue, 5 Nov 2024 19:13:52 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Christian Marangi <ansuelsmth@gmail.com>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
-	Hui Ma <hui.ma@airoha.com>
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Avoid PCIe resetting via
- PCIE_RSTB for Airoha EN7581 SoC
-Message-ID: <ZypgYOn7dcYIoW4i@lore-desk>
-References: <20241104-pcie-en7581-rst-fix-v2-1-ffe5839c76d8@kernel.org>
- <20241105172254.GA1447085@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCJrMyr2aTzlegLfXvUm7bJOT8lenJuU6/NlPVfZjLxyOBIWfX/ZCAovOtgE7JE1xWCFFmH0GjFngaqvUdX8UgsLfaZ8AGnB/clmB1YhRXTPoPgfi8hsR71iCYpzY5pSYLp4O9O+aLUGTih6V/gBhIByu1MuM9M4loXlpCE/uaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=MwMI3f1F; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7b1488fde46so452141785a.2
+        for <linux-pci@vger.kernel.org>; Tue, 05 Nov 2024 10:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1730832663; x=1731437463; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C194RVyLAfjN0SwVJhWOGUoO0421PCIPswUt8quSHT8=;
+        b=MwMI3f1FiJtKbSb+104JZqGid1wfIf3uJt8Wjuw4Mn8iu/DsebWaYWZdRPs8idwCnR
+         G+I7AF7bhCUUSUBNQw+QPCmepNj+NeS+8V7uRjlg5iaVIA9CPV//gHtzykp6RFpWjSB3
+         bEjGvNxbf2LnXaftz75p065/1sD/GAPsEOMMNpMZ5UjmD4y8a40GfLBTM1Qq2oU8QdZ3
+         J8GIR4YQWuWl6Dtsf0Dy0aRq1Eila20Aj2m0v4hcEgmRZY3sAHdnp8RqfyrRoDjZYtzT
+         ObzFuPZUFv04pc7JsyasDhZ57mi4ATensZ+Vjda89fVA64rlDYTQ6JD+3xUJlCux182V
+         pzZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730832663; x=1731437463;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C194RVyLAfjN0SwVJhWOGUoO0421PCIPswUt8quSHT8=;
+        b=SzMvwYIwPRAHja8DAlFssI/J74J4HegVvbW8vHsW6oBiMbLh+PIUgKHBLykH9jCyKD
+         UEffud7+qRrj5VWMPMVf6kYpHrRvJWgZ11rLFXwpT6KUEMPj/GBYvJ2t8p9ndvjEDKd/
+         JQGTUannqiyE6sHUNadNlHDx+WaAP+WwYS6g/Wmb2q+YdDBntX0v+lvtpZSnA7Hh+4G8
+         e3HrQG9P/gD8PgoNwjequD2heo/WXsfl39ZaWuZ5zCuOYL0z22E9iakG2POxxiierytq
+         hj2r/yAZPSqM3pK85XZy8YMFVwd6E3wzxdK6BXjAGSD7HLxrdWnwEGVbCd5GO3kSmuYL
+         8lKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEp+8yLw4d79Ny+m/fSQLlyiQfwFh+LwGtXQ/gobMv1EF2zsZ0IiBxwaoeybc4hW7NYiupnxa+PfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhwnaiQLqeoidNGpGexLQDWp/TbfQQfyGF3yMgFbvUbE63+cP/
+	zs8uIzXTrqsUYHNGP14dQPKwDAWYUPBb4q94IcY4RFOB8PgB5nZ+I15uce5hJno=
+X-Google-Smtp-Source: AGHT+IGWpBzbxGzBgv9Gx5tLlQAZYsSh7jgfOX8tW5mq4qsvhcUPgq93VZEIR90XeqIlAFYpEQmgSA==
+X-Received: by 2002:a05:620a:1908:b0:7b1:481f:b89c with SMTP id af79cd13be357-7b193f0a206mr4853751585a.35.1730832662826;
+        Tue, 05 Nov 2024 10:51:02 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b2f3a70971sm549852785a.77.2024.11.05.10.51.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2024 10:51:01 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1t8Odp-000000023WW-0CZJ;
+	Tue, 05 Nov 2024 14:51:01 -0400
+Date: Tue, 5 Nov 2024 14:51:01 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
+Message-ID: <20241105185101.GH35848@ziepe.ca>
+References: <cover.1730298502.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vqWK8aRdzgQTTEkC"
-Content-Disposition: inline
-In-Reply-To: <20241105172254.GA1447085@bhelgaas>
-
-
---vqWK8aRdzgQTTEkC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cover.1730298502.git.leon@kernel.org>
 
-> On Mon, Nov 04, 2024 at 11:00:05PM +0100, Lorenzo Bianconi wrote:
-> > Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> > causing occasional PCIe link down issues. In order to overcome the
-> > problem, PCIE_RSTB signals are not asserted/released during device prob=
-e or
-> > suspend/resume phase and the PCIe block is reset using REG_PCI_CONTROL
-> > (0x88) and REG_RESET_CONTROL (0x834) registers available via the clock
-> > module.
-> > Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
-> > specify per-SoC capabilities.
->=20
-> Add blank lines between paragraphs so we know where they end.
+On Wed, Oct 30, 2024 at 05:12:46PM +0200, Leon Romanovsky wrote:
 
-ack, I will fix it in v2.
+>  Documentation/core-api/dma-api.rst   |  70 ++++
+>  drivers/infiniband/core/umem_odp.c   | 250 +++++----------
+>  drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+>  drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+>  drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+>  drivers/iommu/dma-iommu.c            | 459 +++++++++++++++++++++++----
+>  drivers/iommu/iommu.c                |  65 ++--
+>  drivers/pci/p2pdma.c                 |  38 +--
+>  drivers/vfio/pci/mlx5/cmd.c          | 373 +++++++++++-----------
+>  drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+>  drivers/vfio/pci/mlx5/main.c         |  87 +++--
+>  include/linux/dma-map-ops.h          |  54 ----
+>  include/linux/dma-mapping.h          |  85 +++++
+>  include/linux/hmm-dma.h              |  32 ++
+>  include/linux/hmm.h                  |  16 +
+>  include/linux/iommu.h                |   4 +
+>  include/linux/pci-p2pdma.h           |  84 +++++
+>  include/rdma/ib_umem_odp.h           |  25 +-
+>  kernel/dma/direct.c                  |  44 +--
+>  kernel/dma/mapping.c                 |  20 ++
+>  mm/hmm.c                             | 231 +++++++++++++-
 
->=20
-> Where does this alternate way of doing reset (using REG_PCI_CONTROL
-> and REG_RESET_CONTROL) happen?  Why isn't there something in this
-> patch to use that alternate method at the same points where
-> PCIE_PE_RSTB is used?
+This is touching alot of subsystems, at least two are mine :)
 
-REG_RESET_CONTROL (0x834) is already asserted/released in the following flo=
-w:
+Who is in the hot seat to merge this? Are we expecting it this merge
+window?
 
-mtk_pcie_en7581_power_up() -> reset_control_bulk_deassert() -> en7523_reset=
-_update()
-https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#L470
+I've read through past versions and am happy with the general
+concept. Would like to read it again in details.
 
-REG_PCI_CONTROL (0x88) is already asserted/released in the following flow:
-mtk_pcie_en7581_power_up() -> clk_bulk_enable() -> en7581_pci_enable()
-https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#L385
-
-
->=20
-> If we don't need to assert reset for Airoha EN7581, why do we need to
-> do it for the other SoCs?
-
-I guess the other SoCs (mtk ones) do not have the same hw issue with
-PCIE_PE_RSTB (but I am not sure about it).
-
-Regards,
-Lorenzo
-
->=20
-> > Tested-by: Hui Ma <hui.ma@airoha.com>
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> > Changes in v2:
-> > - introduce flags field in mtk_gen3_pcie_flags struct instead of adding
-> >   reset callback
-> > - fix the leftover case in mtk_pcie_suspend_noirq routine
-> > - add more comments
-> > - Link to v1: https://lore.kernel.org/r/20240920-pcie-en7581-rst-fix-v1=
--1-1043fb63ffc9@kernel.org
-> > ---
-> >  drivers/pci/controller/pcie-mediatek-gen3.c | 59 ++++++++++++++++++++-=
---------
-> >  1 file changed, 41 insertions(+), 18 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
-controller/pcie-mediatek-gen3.c
-> > index 66ce4b5d309bb6d64618c70ac5e0a529e0910511..8e4704ff3509867fc0ff799=
-e9fb99e71e46756cd 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -125,10 +125,18 @@
-> > =20
-> >  struct mtk_gen3_pcie;
-> > =20
-> > +enum mtk_gen3_pcie_flags {
-> > +	SKIP_PCIE_RSTB	=3D BIT(0), /* skip PCIE_RSTB signals configuration
-> > +				   * during device probing or suspend/resume
-> > +				   * phase in order to avoid hw bugs/issues.
-> > +				   */
-> > +};
-> > +
-> >  /**
-> >   * struct mtk_gen3_pcie_pdata - differentiate between host generations
-> >   * @power_up: pcie power_up callback
-> >   * @phy_resets: phy reset lines SoC data.
-> > + * @flags: pcie device flags.
-> >   */
-> >  struct mtk_gen3_pcie_pdata {
-> >  	int (*power_up)(struct mtk_gen3_pcie *pcie);
-> > @@ -136,6 +144,7 @@ struct mtk_gen3_pcie_pdata {
-> >  		const char *id[MAX_NUM_PHY_RESETS];
-> >  		int num_resets;
-> >  	} phy_resets;
-> > +	u32 flags;
-> >  };
-> > =20
-> >  /**
-> > @@ -402,22 +411,33 @@ static int mtk_pcie_startup_port(struct mtk_gen3_=
-pcie *pcie)
-> >  	val |=3D PCIE_DISABLE_DVFSRC_VLT_REQ;
-> >  	writel_relaxed(val, pcie->base + PCIE_MISC_CTRL_REG);
-> > =20
-> > -	/* Assert all reset signals */
-> > -	val =3D readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> > -	val |=3D PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
-> > -	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> > -
-> >  	/*
-> > -	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
-> > -	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
-> > -	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
-> > -	 * for the power and clock to become stable.
-> > +	 * Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> > +	 * causing occasional PCIe link down. In order to overcome the issue,
-> > +	 * PCIE_RSTB signals are not asserted/released at this stage and the
-> > +	 * PCIe block is reset using REG_PCI_CONTROL (0x88) and
-> > +	 * REG_RESET_CONTROL (0x834) registers available via the clock module.
-> >  	 */
-> > -	msleep(100);
-> > -
-> > -	/* De-assert reset signals */
-> > -	val &=3D ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RS=
-TB);
-> > -	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> > +	if (!(pcie->soc->flags & SKIP_PCIE_RSTB)) {
-> > +		/* Assert all reset signals */
-> > +		val =3D readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> > +		val |=3D PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
-> > +		       PCIE_PE_RSTB;
-> > +		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> > +
-> > +		/*
-> > +		 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
-> > +		 * and 2.2.1 (Initial Power-Up (G3 to S0)).
-> > +		 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
-> > +		 * for the power and clock to become stable.
->=20
-> Blank line between paragraphs.
->=20
-> > +		 */
-> > +		msleep(PCIE_T_PVPERL_MS);
-> > +
-> > +		/* De-assert reset signals */
-> > +		val &=3D ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
-> > +			 PCIE_PE_RSTB);
-> > +		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> > +	}
-> > =20
-> >  	/* Check if the link is up or not */
-> >  	err =3D readl_poll_timeout(pcie->base + PCIE_LINK_STATUS_REG, val,
-> > @@ -1160,10 +1180,12 @@ static int mtk_pcie_suspend_noirq(struct device=
- *dev)
-> >  		return err;
-> >  	}
-> > =20
-> > -	/* Pull down the PERST# pin */
-> > -	val =3D readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> > -	val |=3D PCIE_PE_RSTB;
-> > -	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> > +	if (!(pcie->soc->flags & SKIP_PCIE_RSTB)) {
-> > +		/* Pull down the PERST# pin */
-> > +		val =3D readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
-> > +		val |=3D PCIE_PE_RSTB;
-> > +		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> > +	}
-> > =20
-> >  	dev_dbg(pcie->dev, "entered L2 states successfully");
-> > =20
-> > @@ -1214,6 +1236,7 @@ static const struct mtk_gen3_pcie_pdata mtk_pcie_=
-soc_en7581 =3D {
-> >  		.id[2] =3D "phy-lane2",
-> >  		.num_resets =3D 3,
-> >  	},
-> > +	.flags =3D SKIP_PCIE_RSTB,
-> >  };
-> > =20
-> >  static const struct of_device_id mtk_pcie_of_match[] =3D {
-> >=20
-> > ---
-> > base-commit: 3102ce10f3111e4c3b8fb233dc93f29e220adaf7
-> > change-id: 20240920-pcie-en7581-rst-fix-8161658c13c4
-> >=20
-> > Best regards,
-> > --=20
-> > Lorenzo Bianconi <lorenzo@kernel.org>
-> >=20
-
---vqWK8aRdzgQTTEkC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZypgYAAKCRA6cBh0uS2t
-rPhYAP9axhSDdzxRbZRh8iXInGX5fkpcShFz0VS//r43s9MZfgEAoiTiyWcze16t
-KArG5YUlc0vzQp3pjMwBStrRVcFhVQA=
-=qiMV
------END PGP SIGNATURE-----
-
---vqWK8aRdzgQTTEkC--
+Thanks,
+Jason
 
