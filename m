@@ -1,188 +1,250 @@
-Return-Path: <linux-pci+bounces-16044-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16045-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8820F9BCE2B
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 14:40:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9DDF9BCF58
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 15:31:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB9041C211BA
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 13:40:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79AFE284762
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2024 14:31:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA0251D799D;
-	Tue,  5 Nov 2024 13:40:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2306D14A91;
+	Tue,  5 Nov 2024 14:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="czOjtMi6"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A/L5QOZ3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084E51D6DBB
-	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 13:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBE71D54EF
+	for <linux-pci@vger.kernel.org>; Tue,  5 Nov 2024 14:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730814004; cv=none; b=sKlSVgv4W4pN46huu6ZuG19ZIGqQcwn97qdp5YnYAiz7SGv75mmtU75WHp2v9VwMeq4QD0juzfxsRxGvoqC06IcAStQPPf9kJxQ8SQTJE2Q0B4EovGdh4FW9xYGecu2wo2sO2ei3JiSXy9/j0vWHaOKBhhUF6I6g1HvvaXlHWfI=
+	t=1730817077; cv=none; b=iUMSYaNmE65WQG7Lu2fO2rNXbItt93Z+GaV7Idsf+ocL77DndRCyl6vWX5dl9bxlygH3yLuVNHb2bUjgN+kOuJero81fZEcDe62xvflfe14Wew7d2YICjCRsn3TKwCGx4tfk+8DbfIN3/oN1UqedipuD46cG9IhBI+HhXMp6E1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730814004; c=relaxed/simple;
-	bh=pc5QJzuXwNlHJJNRBB9dWq4/nKpDZi0X5IjQ8l1OEGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1RJbgKcgj3UjisBx5lZcHvAfRjtRrbcJmAgMj1Jv4D4FBWFXbQl0/Gut7EDp/m6Wd5FgX3BTSO8Rpa4j9Oe8cgafGg+oPr3fwC4vn2gWdiiZaC3pN5HA/oYWq+lE37Xg4z2wba5WPS2GNf4fyVvHM6aGiLl9eOWm7hIjZjy3U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=czOjtMi6; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539e690479cso5711784e87.3
-        for <linux-pci@vger.kernel.org>; Tue, 05 Nov 2024 05:40:01 -0800 (PST)
+	s=arc-20240116; t=1730817077; c=relaxed/simple;
+	bh=XN8QvmjRYeFWUTEFIpNV8i5a0X+dKopOVH8Kub55aIU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sTK/NyoefJpFZmN9G78k/vnxEToryI9RqlZcW249FLobBAS4E73smBu/gPxM7Pm0YzMZbp4pxopczsEqE1pO4Ci04KqDZxUUKirQeK18gIdaoK8ANhua5ATprLM/YPXqGtCE4DSLo8/hrMhw1ZEMtEXxZifLrPUR9BKv1GZfiJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A/L5QOZ3; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a99f3a5a44cso754860066b.3
+        for <linux-pci@vger.kernel.org>; Tue, 05 Nov 2024 06:31:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730814000; x=1731418800; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1730817073; x=1731421873; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LffWa1BzTn4fklrk0q0HnGOjhdsWJeiG56vukgWRGWI=;
-        b=czOjtMi6bkXjHX7UK6AWIgYs5vPbOOrUEAQ/GzPPkQkbCTNTYMATivJyJ1oVm7dm1A
-         lUSiMa6NH6iSvPvGEIN+Rc3OBSxkVfRzJaXeoyDxPMKzEZPsC6Pv5eM2ROBbhBnHHVOr
-         80sMUkJDXJAR7uqoC82LfooM3e4erwm/xTr/rGCzvBtl7zA4KVDzDcNEyASbdRlsL5dv
-         I9wN7Ha1PLLeITDfG1SjgUqPoJCJYlgnWn8guj0HwtfxtunKnT8gKY1snIQ7AB8bH6R9
-         ymVxrmRZ5vzOIl1Us3dtuLAJfxvOr+srbBOGBCgDxlvTBt3FSsaINAu85JYuA7kBpfpo
-         GPhg==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Ta4J6k5jVAMZKZSpLijGX731ZlTwallmszrkrr+XXw=;
+        b=A/L5QOZ3FSpiHDXbZMSm2ijbcoVoXzXe47BZ9yCDwi8Chh3/inu1cZz4j1apI+mLFf
+         +ldKcFDRxhcM5U1APtwjtvVlQ4MemvkjLV5xwkTjivxpueHC9GQxLKUo+ipmAvaxippx
+         rvef1HLhWwmcpPtrG5w6w65LOLWx+kZebs7Ppg1ladFgfm5My80N3NOPMAqLBkM84fOH
+         0dwiOUeGgEXiW0niK/60jrWWxbjWbztW62yTZWpCsd0k4AZ4J9zeT5457vwJewwIJ2Lp
+         uaf181cqCfERC9Jw5PF1JgCEWEvxXKLIQ1qC2oRV6+3tiPyt5OdjBEcQ6wvUDhXD59BZ
+         MGuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730814000; x=1731418800;
+        d=1e100.net; s=20230601; t=1730817073; x=1731421873;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LffWa1BzTn4fklrk0q0HnGOjhdsWJeiG56vukgWRGWI=;
-        b=mUmLgEpqJ8dqiaw6+4kAUjhJWqiFPQyuIbycEiL9l4My95egOFDX78NxfIj6r5QrIS
-         ulhho7qlaFM040TtXjqU1PqqJKABqbJ1HqP9YD0226ZAnTGXGmaE7fQMBSTOEIWRuJ2B
-         sbf/rc4HWuIsbF3Oz6Fyz9V4U0h+hYcfp6L9RkWZfDxDCd/6rh72CAXvmDf4IaWMW7rv
-         l5WaDoZzdVn8CXrY6PH8Uf9/pLFRxK3kjFM+oBOu1+Is/+o1El7bRdRvK7pYpi2hahnU
-         ACx7yhMLqcoRUTMjwsy4M/I4C74mINGnd7dXHqs/6QzTD9PNv9r09A/HYtC32NynypZE
-         B9hg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0YW0k/2oflff7ZFvUDSNfUADjTquhzCWzip19Rou2ydK28+bNQKr6DK0gopKE93nOjNTVQ2v/G90=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu9vhIBsHsXs8jqfWTRQ6PvyuTTMp0djGSt23O4glRVtk7QTKV
-	at12t0QYpYQVJGCl61cjgpiMeEwJlZ8tc1wIZdB/Kh++CGWBZFde92TjRdCZMKs=
-X-Google-Smtp-Source: AGHT+IHl77Byq+byhY/wXdB0y1Azbt7HrbTOfHMoIQJkrWEh+tNwRQzlzXIOjX8IX57/1IHIMDKq+A==
-X-Received: by 2002:a05:651c:2210:b0:2fb:5035:7e4 with SMTP id 38308e7fff4ca-2fedb75775fmr82247141fa.5.1730814000074;
-        Tue, 05 Nov 2024 05:40:00 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:5c5c:563d:c49f:6070])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cee6a9a36dsm1330624a12.9.2024.11.05.05.39.58
+        bh=4Ta4J6k5jVAMZKZSpLijGX731ZlTwallmszrkrr+XXw=;
+        b=m5TokHGNUm5u1/ThTs25gjPzT+2C2lXfB2WZfBCxnWFN4rekJGUzNjhVpSC8UUu9Y9
+         5lU4Md23f+Xp/bRnVszmLalrtiwgL7NkTeu5ccUP6WXWHo+cIsEGZWtEe7Syz1WVkCOz
+         GEbOZ0IOHtL5svHslCpDhAUzyEIYm8S7SnakPYkZZzRSsXiztnZ1n7lQO9C/FjWuYQv9
+         pJOYR+7hCrZQW/OYIgHQHoynJV+/pEtTgTfgUAmDW7v34ePuPlX17pAGXRJeTw1Z1OEn
+         /tY94eAhLFtxcV9/i6P1MDxPYtXAZbDU/1k+qxQpsBq9iEXGYP22fhTj0bWpCtCe/wyT
+         owww==
+X-Forwarded-Encrypted: i=1; AJvYcCVxiEXV0PBAfdUtp/Pc47KxlPBeL/r0k1RdZJ3ErNj0WaLOoMlkWbwKzXv9BmDr/GM8u18f9HSfYC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6d4qi6gbfj25QB/CB6pt59Emi1EwmiGpEJ1tGqU2h0u7I0Unb
+	wnBbHVgrUsSdcNKc4E7EwKSkWcuMT5BtACLazRar+SLZU0XITToiP3G6KK1Fqe8=
+X-Google-Smtp-Source: AGHT+IGfFIA7pHiw/bQC/D2ASD/c0vYvs4DJcTYAQN6+XwmdDdmF15vw/BW0JRu8bqizSc9PGJFmeA==
+X-Received: by 2002:a17:906:a84a:b0:a9e:8522:19e1 with SMTP id a640c23a62f3a-a9e85221c0cmr968110466b.62.1730817073143;
+        Tue, 05 Nov 2024 06:31:13 -0800 (PST)
+Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9eb169fc18sm140394466b.10.2024.11.05.06.31.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 05:39:59 -0800 (PST)
-Date: Tue, 5 Nov 2024 14:39:56 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pwm: Replace deprecated PCI functions
-Message-ID: <w35is7slftofgexvxqtmz22nabb7g6c2euihmq5yprlninqjhm@2lqsxedcjy6o>
-References: <20241105092641.49541-2-pstanner@redhat.com>
+        Tue, 05 Nov 2024 06:31:12 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 5 Nov 2024 15:31:38 +0100
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 09/12] arm64: dts: rp1: Add support for RaspberryPi's
+ RP1 device
+Message-ID: <ZyosSv4ecKxohSrM@apocalypse>
+References: <cover.1730123575.git.andrea.porta@suse.com>
+ <1f4cec50493ec5d3168735c0a005771787e5cd59.1730123575.git.andrea.porta@suse.com>
+ <4a474dae-6669-4678-87dd-e0e9692a749b@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ikkfvdzkvbg27veq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241105092641.49541-2-pstanner@redhat.com>
+In-Reply-To: <4a474dae-6669-4678-87dd-e0e9692a749b@suse.de>
 
+Hi Stan,
 
---ikkfvdzkvbg27veq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: Replace deprecated PCI functions
-MIME-Version: 1.0
+On 15:29 Mon 04 Nov     , Stanimir Varbanov wrote:
+> Hi Andrea,
+> 
+> On 10/28/24 16:07, Andrea della Porta wrote:
+> > RaspberryPi RP1 is a multi function PCI endpoint device that
+> > exposes several subperipherals via PCI BAR.
+> > Add a dtb overlay that will be compiled into a binary blob
+> > and linked in the RP1 driver.
+> > This overlay offers just minimal support to represent the
+> > RP1 device itself, the sub-peripherals will be added by
+> > future patches.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> > NOTE: this patch should be taken by the same maintainer that will take
+> > "[PATCH v3 10/12] misc: rp1: RaspberryPi RP1 misc driver", since they
+> > are closely related in terms of compiling.
+> > 
+> >  MAINTAINERS                           |  1 +
+> >  arch/arm64/boot/dts/broadcom/rp1.dtso | 61 +++++++++++++++++++++++++++
+> >  2 files changed, 62 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 06277969a522..510a071ede78 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19383,6 +19383,7 @@ F:	include/uapi/linux/media/raspberrypi/
+> >  RASPBERRY PI RP1 PCI DRIVER
+> >  M:	Andrea della Porta <andrea.porta@suse.com>
+> >  S:	Maintained
+> > +F:	arch/arm64/boot/dts/broadcom/rp1.dtso
+> >  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> >  F:	Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+> >  F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> > diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > new file mode 100644
+> > index 000000000000..8d1bbf207a30
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > @@ -0,0 +1,61 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/clock/raspberrypi,rp1-clocks.h>
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +
+> > +/ {
+> > +	fragment@0 {
+> > +		target-path="";
+> > +		__overlay__ {
+> > +			compatible = "pci1de4,1";
+> > +			#address-cells = <3>;
+> > +			#size-cells = <2>;
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <2>;
+> > +
+> > +			pci_ep_bus: pci-ep-bus@1 {
+> > +				compatible = "simple-bus";
+> > +				ranges = <0xc0 0x40000000
+> > +					  0x01 0x00 0x00000000
+> > +					  0x00 0x00400000>;
+> > +				dma-ranges = <0x10 0x00000000
+> > +					      0x43000000 0x10 0x00000000
+> > +					      0x10 0x00000000>;
+> > +				#address-cells = <2>;
+> > +				#size-cells = <2>;
+> > +
+> > +				rp1_clocks: clocks@c040018000 {
+> > +					compatible = "raspberrypi,rp1-clocks";
+> > +					reg = <0xc0 0x40018000 0x0 0x10038>;
+> 
+> shouldn't this be:
+> 
+> 	rp1_clocks: clocks@18000 {
+> 		reg = <0x00 0x00018000 0x0 0x10038>;
+> 		...
+> 	}
+> 
+> ?
+> 
+> And for other nodes too...
 
-Hello,
+For that to be @18000 instead of @c040018000, you should also change
+the "ranges" entry in pci-ep-bus node, as follows:
 
-[adding Bjorn and linux-pci to Cc:]
+ranges = <0x00 0x00018000	//This was: 0xc0 0x40000000
+          0x01 0x00 0x00000000
+          0x00 0x00400000>;
 
-On Tue, Nov 05, 2024 at 10:26:42AM +0100, Philipp Stanner wrote:
-> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-> index fb3eadf6fbc4..9101a89447d6 100644
-> --- a/drivers/pwm/pwm-dwc.c
-> +++ b/drivers/pwm/pwm-dwc.c
-> @@ -66,20 +66,16 @@ static int dwc_pwm_probe(struct pci_dev *pci, const s=
-truct pci_device_id *id)
-> =20
->  	pci_set_master(pci);
-> =20
-> -	ret =3D pcim_iomap_regions(pci, BIT(0), pci_name(pci));
-> -	if (ret)
-> -		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
-> -
->  	info =3D (const struct dwc_pwm_info *)id->driver_data;
->  	ddata =3D devm_kzalloc(dev, struct_size(ddata, chips, info->nr), GFP_KE=
-RNEL);
->  	if (!ddata)
->  		return -ENOMEM;
-> =20
-> -	/*
-> -	 * No need to check for pcim_iomap_table() failure,
-> -	 * pcim_iomap_regions() already does it for us.
-> -	 */
-> -	ddata->io_base =3D pcim_iomap_table(pci)[0];
-> +	ddata->io_base =3D pcim_iomap_region(pci, 0, "pwm-dwc");
-> +	ret =3D PTR_ERR_OR_ZERO(ddata->io_base);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
+which is of course feasible, but I prefer to use addresses that 
+resemble (at least to some extent) the ones in RP1 docs.
 
-I'd say the following is more natural:
+Many thanks,
+Andrea
 
-	ddata->io_base =3D pcim_iomap_region(pci, 0, "pwm-dwc");
-	if (IS_ERR(ddata->io_base))
-		return dev_err_probe(dev, PTR_ERR(ddata->io_base), "Failed to iomap PCI B=
-AR\n");
-
-(maybe with a local variable for ddata->io_base?)
-
-> +
->  	ddata->info =3D info;
-> =20
->  	for (idx =3D 0; idx < ddata->info->nr; idx++) {
-> diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-> index f7ece2809e6b..823f570afb80 100644
-> --- a/drivers/pwm/pwm-lpss-pci.c
-> +++ b/drivers/pwm/pwm-lpss-pci.c
-> [...]
-> @@ -25,12 +26,12 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
->  	if (err < 0)
->  		return err;
-> =20
-> -	err =3D pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
-> -	if (err)
-> -		return err;
-> +	io_base =3D pcim_iomap_region(pdev, 0, "pwm-lpss");
-> +	if (IS_ERR(io_base))
-> +		return PTR_ERR(io_base);
-> =20
->  	info =3D (struct pwm_lpss_boardinfo *)id->driver_data;
-> -	chip =3D devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], inf=
-o);
-> +	chip =3D devm_pwm_lpss_probe(&pdev->dev, io_base, info);
->  	if (IS_ERR(chip))
->  		return PTR_ERR(chip);
-
-I remember I didn't like it when pcim_iomap_table(pdev)[0] was
-introduced. Glad it can go away.
-
-Best regards
-Uwe
-
---ikkfvdzkvbg27veq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcqICkACgkQj4D7WH0S
-/k6hCwf9FfFhJr9/q/dxxwMCa3IIMUvzzWR1wnuu/eyV0aJrBVzqqdLDfpQcTRm8
-0Natb8Lv6Puqpl13cjMNV6V07ikxM85O++K/L+HrpgkdHSxCahTUQ8wZ3z44l9g+
-/7GDgvG5Wr0T5cu4vobs6Wnr7QtChVRpj+uAMONujzJypk905MISAy6Yq+olRefx
-3278plHKVr8jDtgIc4wWXggDCrvl0tBEdjbC8z9aEgzSqFGilc12FeM+BQdhlZeF
-dVuJG4rgpq1Z0Wrbfb6/SZsi6j1ro61Qz+CKer6TaXcno7WBt72rtSL9SzkmheOK
-dA29yo+cB1Uy7ipBoD+f156EJaSpbw==
-=Y5xS
------END PGP SIGNATURE-----
-
---ikkfvdzkvbg27veq--
+> 
+> ~Stan
+> 
+> > +					#clock-cells = <1>;
+> > +					clocks = <&clk_rp1_xosc>;
+> > +					clock-names = "xosc";
+> > +					assigned-clocks = <&rp1_clocks RP1_PLL_SYS_CORE>,
+> > +							  <&rp1_clocks RP1_PLL_SYS>,
+> > +							  <&rp1_clocks RP1_CLK_SYS>;
+> > +					assigned-clock-rates = <1000000000>, // RP1_PLL_SYS_CORE
+> > +							       <200000000>,  // RP1_PLL_SYS
+> > +							       <200000000>;  // RP1_CLK_SYS
+> > +				};
+> > +
+> > +				rp1_gpio: pinctrl@c0400d0000 {
+> > +					compatible = "raspberrypi,rp1-gpio";
+> > +					reg = <0xc0 0x400d0000  0x0 0xc000>,
+> > +					      <0xc0 0x400e0000  0x0 0xc000>,
+> > +					      <0xc0 0x400f0000  0x0 0xc000>;
+> > +					gpio-controller;
+> > +					#gpio-cells = <2>;
+> > +					interrupt-controller;
+> > +					#interrupt-cells = <2>;
+> > +					interrupts = <0 IRQ_TYPE_LEVEL_HIGH>,
+> > +						     <1 IRQ_TYPE_LEVEL_HIGH>,
+> > +						     <2 IRQ_TYPE_LEVEL_HIGH>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> 
 
