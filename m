@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-16174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16170-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 838D99BF904
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:15:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1DEC9BF8F8
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:14:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5B921C21E31
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:15:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D715B229D4
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:14:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7854B20E316;
-	Wed,  6 Nov 2024 22:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7DAA20CCD6;
+	Wed,  6 Nov 2024 22:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h2DjztTd"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e8vktU4V"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EDA20E024;
-	Wed,  6 Nov 2024 22:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2A20C48E;
+	Wed,  6 Nov 2024 22:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730931260; cv=none; b=NIDGLL43CdhpGQlO8pxPLT4Vmzm7YgMAO1Kpwql72dcPmgkL1UFNaJYEnCUSDiMzGY3+3wqkr5Rf9WwdyaS13ukA6Xw5k5gGa4PUjpU73PZ2CiGm79obvdSaKiQdg5sp4/a/rz/43RxwXKS+IZ1zPMOybbICx8QaeFJH+3nYopw=
+	t=1730931254; cv=none; b=ZqCuiWrUxyd1o6V+o418U9XuacOBdWU9gxur2VgHPye7DuGMUABfzef8ECM/gLST+9wz2OV3v2L5S9ugX3p6K9QuWHzpskpqiXeGJE1vRvM7Ze+7RoYpkx+6VrMWJgZlMwISce3rIKXDOLHxzHPeXSe4mjExy8uv5MnLFdVMr9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730931260; c=relaxed/simple;
-	bh=U1E/PezRK3mMBWpMpVz/1ucpQWl6Z7F3QZxkC8Xgi5A=;
+	s=arc-20240116; t=1730931254; c=relaxed/simple;
+	bh=rTLsE1kldVPsuTTbdVYCd0WFm5cpz7uOaVeMlPNdVbo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kGGdxiBJm8uymyfpW1bEbrF6m+ueOqKcFuqQ9ty1Ky+UG8qjb+2OlxeIgPz6D8Dp8Q97idcKPFvp2tOaannjh0WCG3ghza0XD02UFgikJLCt1iny/ZXuzj5NVH41FOBWdqBLyarWX1DeMe53NSk+7WEmbDmO6a5IQHw7ad5nXcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h2DjztTd; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=AMSFMPO0iNlYsU2lVQP6ePHCa4epgEzuCmxEaBK3cpDfriwpvi10RWmpCUBVdEB0t3Ij98yJOzKxgL9SGORtNM4GMDCsaXSztc/0/WnwEvTQDmxlrx2GS8aFxgnKfp1RB6k21AjVk82DJyE1/pixcioOSc1NLcobNuqoucmILyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e8vktU4V; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A6AekBn002679;
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A6KwCk0016645;
 	Wed, 6 Nov 2024 22:14:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MkSO+TBW1zgiT3/tc5z3LLX3s+rIQIg7Fh/Fgi6sldE=; b=h2DjztTdFcjJn3fB
-	wXxLjgBn3/DiqinPwrt4IcEYaHZ+8FbffJ34IhsqAHLXoX2iuugos5raUP1VzFSO
-	fITBQLP6lS890aBvWXfnP7zetzrv7wCE9x2Qgy/TBsaEFXPvLLb2wdnSUV3yOBIm
-	dNHJcXf2XtzF78ekJDhvyJa4STRLjeYu5sVE/OJYOPFlfJu+WRUuzXapJgJ36GqR
-	lFeaRK/LO6BX2VH89gijSpxLegTccD4SuepPO3gQIvfK/twWUtm0EzedRy/x7n2k
-	DCFn84RsV6O18Vstoun37jC366/6QMguyPzuujt+s3W1ObXiB3Xd5JsmP0qJ22PO
-	yxDXYw==
+	5nR6+V6U7q0J7E2kZg8qsGgrETSooB11Sn3Bhng7/uo=; b=e8vktU4V9ujGREw4
+	+kPEtu98leAAZ8vRum1WQc0Y1qxdaNofBOM/p3oKQA6fSRLdbC5ZNDaxDqVIvbLb
+	G3bQdnDdB5OQZcyVKgRlESD6wfWDYNRsOL5jysXhf9r4kV0rdPILm9j/hJiQ7ctC
+	09lHO/4EclHoqKzlKoyo4sLypATPfP9c2+89qYZsFyUlLQE2SkJdQZDXyfh4ok90
+	69WYDUZGpR1fGsXFOYjlRNwNVoo3E3qVDpxfAYJaq9TU+9f/OnaqvZProOAxkSVY
+	0j5Zxm9/1n3/UvaKSBENa5W5PdTylmLkI+FaZOg2Dfp60u94aEfvX/cRTbVew9wS
+	I3NmgA==
 Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42qvhd39pv-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42qvg3u8jf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 22:14:05 +0000 (GMT)
+	Wed, 06 Nov 2024 22:14:06 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A6ME5iZ011723
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A6ME5M1011726
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 6 Nov 2024 22:14:05 GMT
 Received: from hu-mrana-lv.qualcomm.com (10.49.16.6) by
@@ -64,9 +64,9 @@ CC: <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <quic_krichai@quicinc.com>,
         Mayank Rana
 	<quic_mrana@quicinc.com>
-Subject: [PATCH v3 3/4] dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM compliant PCIe root complex
-Date: Wed, 6 Nov 2024 14:13:40 -0800
-Message-ID: <20241106221341.2218416-4-quic_mrana@quicinc.com>
+Subject: [PATCH v3 4/4] PCI: qcom: Add Qualcomm SA8255p based PCIe root complex functionality
+Date: Wed, 6 Nov 2024 14:13:41 -0800
+Message-ID: <20241106221341.2218416-5-quic_mrana@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241106221341.2218416-1-quic_mrana@quicinc.com>
 References: <20241106221341.2218416-1-quic_mrana@quicinc.com>
@@ -82,136 +82,236 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: fTOlyan0p4NGzWp9R_Mp7f47Z_4IWwA7
-X-Proofpoint-GUID: fTOlyan0p4NGzWp9R_Mp7f47Z_4IWwA7
+X-Proofpoint-ORIG-GUID: 0bfY7odcx6WSLLzI9n4dO-rIcgJR0G0U
+X-Proofpoint-GUID: 0bfY7odcx6WSLLzI9n4dO-rIcgJR0G0U
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 adultscore=0 clxscore=1015 mlxscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 malwarescore=0
- impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2411060170
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 spamscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411060170
 
-On SA8255p, PCIe root complex is managed by firmware using power-domain
-based handling. This root complex is configured as ECAM compliant.
-Document required configuration to enable PCIe root complex.
+On SA8255p ride platform, PCIe root complex is firmware managed as well
+configured into ECAM compliant mode. This change adds functionality to
+enable resource management (system resource as well PCIe controller and
+PHY configuration) through firmware, and enumerating ECAM compliant root
+complex.
 
 Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
 ---
- .../bindings/pci/qcom,pcie-sa8255p.yaml       | 103 ++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
+ drivers/pci/controller/dwc/Kconfig     |   1 +
+ drivers/pci/controller/dwc/pcie-qcom.c | 116 +++++++++++++++++++++++--
+ 2 files changed, 108 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
-new file mode 100644
-index 000000000000..9b09c3923ba0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/qcom,pcie-sa8255p.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index b6d6778b0698..0fe76bd39d69 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -275,6 +275,7 @@ config PCIE_QCOM
+ 	select PCIE_DW_HOST
+ 	select CRC8
+ 	select PCIE_QCOM_COMMON
++	select PCI_HOST_COMMON
+ 	help
+ 	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
+ 	  PCIe controller uses the DesignWare core plus Qualcomm-specific
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index ef44a82be058..2cb74f902baf 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -21,7 +21,9 @@
+ #include <linux/limits.h>
+ #include <linux/init.h>
+ #include <linux/of.h>
++#include <linux/of_pci.h>
+ #include <linux/pci.h>
++#include <linux/pci-ecam.h>
+ #include <linux/pm_opp.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/platform_device.h>
+@@ -254,10 +256,12 @@ struct qcom_pcie_ops {
+   * @ops: qcom PCIe ops structure
+   * @override_no_snoop: Override NO_SNOOP attribute in TLP to enable cache
+   * snooping
++  * @firmware_managed: Set if PCIe root complex is firmware managed
+   */
+ struct qcom_pcie_cfg {
+ 	const struct qcom_pcie_ops *ops;
+ 	bool override_no_snoop;
++	bool firmware_managed;
+ 	bool no_l0s;
+ };
+ 
+@@ -1415,6 +1419,10 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
+ 	.no_l0s = true,
+ };
+ 
++static const struct qcom_pcie_cfg cfg_fw_managed = {
++	.firmware_managed = true,
++};
 +
-+title: Qualcomm SA8255p based firmware managed and ECAM compliant PCIe Root Complex
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = qcom_pcie_link_up,
+ 	.start_link = qcom_pcie_start_link,
+@@ -1566,6 +1574,51 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void qcom_pci_free_msi(void *ptr)
++{
++	struct dw_pcie_rp *pp = (struct dw_pcie_rp *)ptr;
 +
-+maintainers:
-+  - Bjorn Andersson <andersson@kernel.org>
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++	if (pp && pp->has_msi_ctrl)
++		dw_pcie_free_msi(pp);
++}
 +
-+description:
-+  Qualcomm SA8255p SoC PCIe root complex controller is based on the Synopsys
-+  DesignWare PCIe IP which is managed by firmware, and configured in ECAM mode.
++static int qcom_pcie_ecam_host_init(struct pci_config_window *cfg)
++{
++	struct device *dev = cfg->parent;
++	struct dw_pcie_rp *pp;
++	struct dw_pcie *pci;
++	int ret;
 +
-+properties:
-+  compatible:
-+    const: qcom,pcie-sa8255p
++	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
++	if (!pci)
++		return -ENOMEM;
 +
-+  reg:
-+    description:
-+      The Configuration Space base address and size, as accessed from the parent
-+      bus. The base address corresponds to the first bus in the "bus-range"
-+      property. If no "bus-range" is specified, this will be bus 0 (the
-+      default).
-+    maxItems: 1
++	pci->dev = dev;
++	pp = &pci->pp;
++	pci->dbi_base = cfg->win;
++	pp->num_vectors = MSI_DEF_NUM_VECTORS;
 +
-+  ranges:
-+    description:
-+      As described in IEEE Std 1275-1994, but must provide at least a
-+      definition of non-prefetchable memory. One or both of prefetchable Memory
-+      may also be provided.
-+    minItems: 1
-+    maxItems: 2
++	ret = dw_pcie_msi_host_init(pp);
++	if (ret)
++		return ret;
 +
-+  interrupts:
-+    minItems: 8
-+    maxItems: 8
++	pp->has_msi_ctrl = true;
++	dw_pcie_msi_init(pp);
 +
-+  interrupt-names:
-+    items:
-+      - const: msi0
-+      - const: msi1
-+      - const: msi2
-+      - const: msi3
-+      - const: msi4
-+      - const: msi5
-+      - const: msi6
-+      - const: msi7
++	ret = devm_add_action_or_reset(dev, qcom_pci_free_msi, pp);
++	return ret;
++}
 +
-+  power-domains:
-+    maxItems: 1
++/* ECAM ops */
++const struct pci_ecam_ops pci_qcom_ecam_ops = {
++	.init		= qcom_pcie_ecam_host_init,
++	.pci_ops	= {
++		.map_bus	= pci_ecam_map_bus,
++		.read		= pci_generic_config_read,
++		.write		= pci_generic_config_write,
++	}
++};
 +
-+  dma-coherent: true
-+  iommu-map: true
+ static int qcom_pcie_probe(struct platform_device *pdev)
+ {
+ 	const struct qcom_pcie_cfg *pcie_cfg;
+@@ -1580,11 +1633,52 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	char *name;
+ 
+ 	pcie_cfg = of_device_get_match_data(dev);
+-	if (!pcie_cfg || !pcie_cfg->ops) {
+-		dev_err(dev, "Invalid platform data\n");
++	if (!pcie_cfg) {
++		dev_err(dev, "No platform data\n");
++		return -EINVAL;
++	}
 +
-+required:
-+  - compatible
-+  - reg
-+  - ranges
-+  - power-domains
++	if (!pcie_cfg->firmware_managed && !pcie_cfg->ops) {
++		dev_err(dev, "No platform ops\n");
+ 		return -EINVAL;
+ 	}
+ 
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0)
++		goto err_pm_runtime_put;
 +
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
++	if (pcie_cfg->firmware_managed) {
++		struct pci_host_bridge *bridge;
++		struct pci_config_window *cfg;
 +
-+unevaluatedProperties: false
++		bridge = devm_pci_alloc_host_bridge(dev, 0);
++		if (!bridge) {
++			ret = -ENOMEM;
++			goto err_pm_runtime_put;
++		}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++		of_pci_check_probe_only();
++		/* Parse and map our Configuration Space windows */
++		cfg = gen_pci_init(dev, bridge, &pci_qcom_ecam_ops);
++		if (IS_ERR(cfg)) {
++			ret = PTR_ERR(cfg);
++			goto err_pm_runtime_put;
++		}
 +
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++		bridge->sysdata = cfg;
++		bridge->ops = (struct pci_ops *)&pci_qcom_ecam_ops.pci_ops;
++		bridge->msi_domain = true;
 +
-+        pci@1c00000 {
-+           compatible = "qcom,pcie-sa8255p";
-+           reg = <0x4 0x00000000 0 0x10000000>;
-+           device_type = "pci";
-+           #address-cells = <3>;
-+           #size-cells = <2>;
-+           ranges = <0x02000000 0x0 0x40100000 0x0 0x40100000 0x0 0x1ff00000>,
-+                    <0x43000000 0x4 0x10100000 0x4 0x10100000 0x0 0x40000000>;
-+           bus-range = <0x00 0xff>;
-+           dma-coherent;
-+           linux,pci-domain = <0>;
-+           power-domains = <&scmi5_pd 0>;
-+           iommu-map = <0x0 &pcie_smmu 0x0000 0x1>,
-+                       <0x100 &pcie_smmu 0x0001 0x1>;
-+           interrupt-parent = <&intc>;
-+           interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+           interrupt-names = "msi0", "msi1", "msi2", "msi3",
-+                                  "msi4", "msi5", "msi6", "msi7";
-+        };
-+    };
++		ret = pci_host_probe(bridge);
++		if (ret) {
++			dev_err(dev, "pci_host_probe() failed:%d\n", ret);
++			goto err_pm_runtime_put;
++		}
++
++		return ret;
++	}
++
+ 	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+ 	if (!pcie)
+ 		return -ENOMEM;
+@@ -1593,11 +1687,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	if (!pci)
+ 		return -ENOMEM;
+ 
+-	pm_runtime_enable(dev);
+-	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
+-		goto err_pm_runtime_put;
+-
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 	pp = &pci->pp;
+@@ -1739,9 +1828,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 
+ static int qcom_pcie_suspend_noirq(struct device *dev)
+ {
+-	struct qcom_pcie *pcie = dev_get_drvdata(dev);
++	struct qcom_pcie *pcie;
+ 	int ret = 0;
+ 
++	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sa8255p"))
++		return 0;
++
++	pcie = dev_get_drvdata(dev);
+ 	/*
+ 	 * Set minimum bandwidth required to keep data path functional during
+ 	 * suspend.
+@@ -1795,9 +1888,13 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+ 
+ static int qcom_pcie_resume_noirq(struct device *dev)
+ {
+-	struct qcom_pcie *pcie = dev_get_drvdata(dev);
++	struct qcom_pcie *pcie;
+ 	int ret;
+ 
++	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sa8255p"))
++		return 0;
++
++	pcie = dev_get_drvdata(dev);
+ 	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+ 		ret = icc_enable(pcie->icc_cpu);
+ 		if (ret) {
+@@ -1830,6 +1927,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+ 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+ 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
++	{ .compatible = "qcom,pcie-sa8255p", .data = &cfg_fw_managed },
+ 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+ 	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_34_0},
+ 	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
 -- 
 2.25.1
 
