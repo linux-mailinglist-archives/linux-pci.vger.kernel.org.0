@@ -1,114 +1,103 @@
-Return-Path: <linux-pci+bounces-16158-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16159-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F6CA9BF424
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 18:16:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 871CE9BF456
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 18:32:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B12311C23888
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 17:16:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B27071C20911
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 17:32:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C62B1DFE3A;
-	Wed,  6 Nov 2024 17:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6DD206957;
+	Wed,  6 Nov 2024 17:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwOWV687"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T8Uyp6C4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eFBp7CVc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F271632F1;
-	Wed,  6 Nov 2024 17:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E46F20514A;
+	Wed,  6 Nov 2024 17:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730913366; cv=none; b=YPueNkaNtjXmhPXuo0/Kyj9q451OAF0gSAohfBvW65BxvfPsSs+9GvQu07bsL1Wnr/2U+xX4EYJsuAGkWS9RnZJ16EIR/ba+4xTLz1pMYWTrIV8ecl5odjU43RyOH/23BYg4u9V7/Xt4/KY9X1Yo4oIKa9E4OlZ8RtJVAmfy820=
+	t=1730914357; cv=none; b=tdJWeJus567Qd8+4g/qgI4lHn7oAGD6rwe5IdeeshbLB6Dl4IJWqqsMtLaCvXZLuhaL7tA8TODAZHMCRdHuGCSpGD6sNXNWSC3AnSWgvmqumhRWGV2bhqyTFlHFIpC7p7m1fOUUgzm5IxZYuM4SpYGfXHk1RxLHIbM55p358WUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730913366; c=relaxed/simple;
-	bh=zrY9tDf1KcMuOejBIoRaGmD6eUvRgew+/hXls8OMK5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kzb3c01ujMrcSpgjQItN470RJSpADd5SnSM2uZDXdS9mqTXCZIQRkW0hQswZOYTyjOTjFgCOE9LvCaXrMGUaBjG8pAqODHJ0WzM2MRcfN3Fuoa8qxnP491vn8fhfPOwoGCnYHYsGVygcJ3e17xcdrC6TMmDbiOSF/v3cbvuyxEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwOWV687; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73FFCC4CEC6;
-	Wed,  6 Nov 2024 17:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730913365;
-	bh=zrY9tDf1KcMuOejBIoRaGmD6eUvRgew+/hXls8OMK5c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gwOWV687ClrucQmZOgJVj/bfAIzP8wCM/NY+p4UGqa3cXvWuKIai8aQl71CS/hM7Z
-	 pucbWJrvxt7Ge2OVrax/4VW52iu4t6Uxb1gE+HsRwVtNPYT1Pf1XoFB7FXwY5+oqQz
-	 TmSown4jb/rHpiRPHayERLZ47vgv9aQWZ9X31vcgXk/FYXj9MMBRmNH3bnstD6ij7/
-	 GLB/uA4e4PTGMuCR2nqbMLk6Cgf1JhqLV3C+kV0C7r8oOs5/tCij+Fy2ynhlSUZCAI
-	 36WpPCvowapRSrRTJOE6/l6MrHyYJoWzuGXVyl2+UL2CW43eysuLVs/sjMtvYgchvl
-	 i5D7veOWqRspQ==
-Date: Wed, 6 Nov 2024 11:16:04 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jian-Hong Pan <jhp@endlessos.org>, Johan Hovold <johan@kernel.org>,
-	David Box <david.e.box@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux@endlessos.org
-Subject: Re: [PATCH v12 3/3] PCI/ASPM: Make pci_save_aspm_l1ss_state save
- both child and parent's L1SS configuration
-Message-ID: <20241106171604.GA1529996@bhelgaas>
+	s=arc-20240116; t=1730914357; c=relaxed/simple;
+	bh=xDZD3EROPfjZQNOBw9AkJKWkWGR9TfTMeO1dSl47/V8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qpaB5EBATia8weXUi8CySbVMfTrzydkOzDYYNDmCJiLx25ZgUBQlhqLiQ/tFNj6jXY/61T2wYfPZQbs+Bl/BDgxGTOothHJvcucyGXLRofLO59VwwlMoX+mMQf/DZlqT2fVo495tYy4+mgszXu+6Re8koGSksivVHU76Ejn7Ff4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T8Uyp6C4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eFBp7CVc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1730914350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=enKlAVpEQ+kwM5vK2Sd+XWtklCNXXXGMYN0op4Beiow=;
+	b=T8Uyp6C4ctAbWbTk5TzvbS7Z54be78i3lxDLpzwLC/L+YgmgDAmE5YPvye211wc+QPQrRa
+	08MRJD9Jk4VApAjXueE9D6vDp1J1QuwXvrGtvJlF/EzYAIh4zVQlJdGMeuBirGTOPEQ57A
+	UB/UX545jEe3cI21gdUIdK4UTJ0S+dPx3zrNgaEenWW7Z0ZN+vzs5GVzHOfsjscjfkLMwC
+	6M2Nup8PhbPe+W5Sdnfuap8XarffE+QJoQbjSIrj8UvWk1yz3Ukm2VDgGZQjFXyngvX6BZ
+	HPkeJaOFzf2vWhhU4sivfsH+UKbfKOtTX+MrEcHoqC1kXQGEa4UWJacNK6u+DQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1730914350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=enKlAVpEQ+kwM5vK2Sd+XWtklCNXXXGMYN0op4Beiow=;
+	b=eFBp7CVcGEzjt4ouE4j7hSpkMyrNQEZ/KY7B0pOp9SVNrk/5rDPbmYbJ/BNXrxWQvYZIO7
+	SHFfnA9Bs/mleiCw==
+To: Dullfire <dullfire@yahoo.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: davem@davemloft.net, sparclinux@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: Kernel panic with niu module
+In-Reply-To: <973e2e20-51d9-4fe4-a361-0e07bcf95bab@yahoo.com>
+References: <20241104234412.GA1446170@bhelgaas> <87fro4pe6i.ffs@tglx>
+ <973e2e20-51d9-4fe4-a361-0e07bcf95bab@yahoo.com>
+Date: Wed, 06 Nov 2024 18:32:01 +0100
+Message-ID: <87cyj8p8tq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <04b86150-c6f5-2898-5b43-dcf14c19845e@linux.intel.com>
+Content-Type: text/plain
 
-On Wed, Nov 06, 2024 at 12:54:12PM +0200, Ilpo Järvinen wrote:
-> On Tue, 5 Nov 2024, Bjorn Helgaas wrote:
-> > On Tue, Oct 01, 2024 at 04:34:42PM +0800, Jian-Hong Pan wrote:
-> > > PCI devices' parameters on the VMD bus have been programmed properly
-> > > originally. But, cleared after pci_reset_bus() and have not been restored
-> > > correctly. This leads the link's L1.2 between PCIe Root Port and child
-> > > device gets wrong configs.
-> ...
+On Wed, Nov 06 2024 at 10:04, dullfire@yahoo.com wrote:
+>> 7d5ec3d36123 had the mask_all() invocation _before_ setting up the the
+>> entries and reading back the descriptors. So that commit cannot break
+>> the niu device when your problem analysis is correct.
+>
+> In 7d5ec3d36123 (and later) msix_mask_all() only writes to
+> PCI_MSIX_ENTRY_VECTOR_CTRL. I have tried all the MSIX registers, and only 
+> writes to PCI_MSIX_ENTRY_DATA were able to prevent a fatal trap on a read.
+> However the only write to PCI_MSIX_ENTRY_DATA I see is in
+> __pci_write_msi_msg() for 7d5ec3d36123, or pci_write_msg_msix(), in 6.11.5.
 
-> > > So, if the PCI device has a parent, make pci_save_aspm_l1ss_state() save
-> > > the parent's L1SS configuration, too. This is symmetric on
-> > > pci_restore_aspm_l1ss_state().
+Yuck. They really went a great lenght to make this hard to handle.
 
-> > I see the suggestion for a helper here, but I'm not convinced.
-> > pci_save_aspm_l1ss_state() and pci_restore_aspm_l1ss_state() should
-> > *look* similar, and a helper makes them less similar.
-> > 
-> > I think you should go to some effort to follow the
-> > pci_restore_aspm_l1ss_state() structure, as much as possible doing the
-> > same declarations, checks, and lookups in the same order, e.g.:
-> >
-> >   struct pci_cap_saved_state *pl_save_state, *cl_save_state;
-> >   struct pci_dev *parent = pdev->bus->self;
-> > 
-> >   if (pcie_downstream_port(pdev) || !parent)
-> > 	  return;
-> > 
-> >   if (!pdev->l1ss || !parent->l1ss)
-> > 	  return;
-> > 
-> >   cl_save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
-> >   pl_save_state = pci_find_saved_ext_cap(parent, PCI_EXT_CAP_ID_L1SS);
-> >   if (!cl_save_state || !pl_save_state)
-> > 	  return;
-> 
-> I understand I'm not the one who has the final say in this, but the reason 
-> why restore has to be done the way it is (the long way), is because of the 
-> strict ordering requirement of operations it performs.
-> 
-> There are no similar ordering requirements on the save side AFAIK.
+Something like the obviously uncompiled below should work.
 
-I'm not suggesting any change to the restore side.  The commit log
-says we're making save/restore symmetric, but IMO they end up looking
-very asymmetric.
+Thanks,
 
-Bjorn
+        tglx
+---
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -611,6 +611,8 @@ void msix_prepare_msi_desc(struct pci_de
+ 	if (desc->pci.msi_attrib.can_mask) {
+ 		void __iomem *addr = pci_msix_desc_addr(desc);
+ 
++		if (dev->dev_flags & PCI_MSIX_TOUCH_ENTRY_DATA_FIRST)
++			writel(0x0, addr + PCI_MSIX_ENTRY_DATA);
+ 		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
+ 	}
+ }
+
 
