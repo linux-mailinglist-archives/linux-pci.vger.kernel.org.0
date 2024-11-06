@@ -1,171 +1,227 @@
-Return-Path: <linux-pci+bounces-16133-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A40039BE8E6
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 13:28:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F38459BEB93
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 13:59:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3F4D1C215D7
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 12:28:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 319D11C234BF
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 12:59:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C0B1DF986;
-	Wed,  6 Nov 2024 12:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492751F81B8;
+	Wed,  6 Nov 2024 12:46:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GGzIxi9w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/DZp64n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17C418C00E
-	for <linux-pci@vger.kernel.org>; Wed,  6 Nov 2024 12:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5401EC01E
+	for <linux-pci@vger.kernel.org>; Wed,  6 Nov 2024 12:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730896110; cv=none; b=gyMjSOHdvKSAlXKj4KZUSxmjLjAI03TX4ri5mjrtZZxArpO5pFIww+jffOUIgF6ViHEhN5SjSY2aRry0JbwZKGrUZ8ZnQZqOeTZ6zNx3Zi9rNa7LmlQr4sOKeQDx+b+bB9ayl1kWAuZ5+sP/mnYmL+sZJnFZaHyt1gG+mqmpB5c=
+	t=1730897163; cv=none; b=KRSJakfWV8P3KfjHiPXtydIAToXE0YOuG++uFI1hsOC3tmhrTMs0p1Yyqe10HifBYBXxIGTDEIGvU1MVoaoYeYzRFnTREcDkAaZjR3hl1WABgSvxn0mhFmaKShEY4cKk6PbqvMi0eSlj7xhFMCd5wNuvL0oxE2chyh1Ebr0Mqz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730896110; c=relaxed/simple;
-	bh=22mEWvI6gKzd1z8uuif4HIEMa2HjcN13Aq6+BkotBAo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIsBGSUZ5A2HmDJFxQaB4oLVk+QA9Omeo3RJxhXgqChfKmpDaj0egsmR8TWIo1yibiyH4w93h0snrHmZUgMa+gj/O0PELpa4VlJ0bbN1zfI6272KniE7dMBz2rZsch49UCrHwBN228OvE4gX5It3x4TZ8qEH5ZCP4Kk+jR1H/RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GGzIxi9w; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2feeb1e8edfso58826741fa.1
-        for <linux-pci@vger.kernel.org>; Wed, 06 Nov 2024 04:28:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1730896107; x=1731500907; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iWIaYuWanDJCXpP4xKD1ILcaU1UBHWm0pC+lsLc+oFM=;
-        b=GGzIxi9wSjK7EMLAQNNRGmx+pgC1QgBi54CMvKZmndWXcBWWQT/ZTjD0vSysyNKw5X
-         c1s7eoHhJLBJdfnl3Sos36Y12HiugpBcok5kmjA3ldeA/aLiZuUtzg5hc1tcSY7f1Qc6
-         edj5GuOiDg26qVDx0mfFGBU8/pF49BW1lgSWnOMqHwoXMWSNaRsG5QYxhu8Zk/qa+Nwv
-         G8gLR1TXnvfYSebIpWCPSluZHQ1OtDRTnMRXy7Xgp9vIW58c9MUjrzMvvqz/Pp3iDGVQ
-         Kv9WtjWAgQ4lsfXdUirGUQakHl0frudojCg0Ece6j0fXbIu3/bePCJOhoP94FexYvYAH
-         D5Lg==
+	s=arc-20240116; t=1730897163; c=relaxed/simple;
+	bh=oZEJpWFGDHrs92+9VxEMzdkrrPrA1W8Jk3Vu/SgYHOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VDLV4YhoA5hKCohVRcuS35RLLBmg7JLQlu7HdT4ZXSON4XBZpkxW9GP0Mnm28MO+x63yYhTdpfSmJ0voOxWYdxVoQBBl55JqktV9eM05CrvW9TJGSrEL7e9tMoaJ7iWUzSNCBt3AOATgWltFj9w0j8fgK/zXLlvirm7lYLfio9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b/DZp64n; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730897160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hNg/n323bdqLDvtiYjZOYqtT4/DprftsEjfi06zMFo4=;
+	b=b/DZp64nFRIidN/7BeVPdDtgQhCoE396tuCojdBZL/04HrGdXxXlbFtGq5Z+KT/pqYYD7r
+	ZHaOXoMLr+xZwZw9ASC+qsyslSA6/BNhd2/+s96rByNVhjCIOsZoRIMQjffzx9YdRqpEXm
+	zg5E0MBiQ82DCC5QYbuqLl3QuLZpCSk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-84-U1_ycqE9OPSbdz-TB2HTaw-1; Wed, 06 Nov 2024 07:45:59 -0500
+X-MC-Unique: U1_ycqE9OPSbdz-TB2HTaw-1
+X-Mimecast-MFC-AGG-ID: U1_ycqE9OPSbdz-TB2HTaw
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-431518e6d8fso44137775e9.0
+        for <linux-pci@vger.kernel.org>; Wed, 06 Nov 2024 04:45:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730896107; x=1731500907;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iWIaYuWanDJCXpP4xKD1ILcaU1UBHWm0pC+lsLc+oFM=;
-        b=Je0XT7CmN35ga44negl7M0RE1/4ET+QlwxB8LBPxjGL70xeqeCZCxTiPF99QgVi/T5
-         Q4rJY9FalviXqe2Q8xUwtZHVcwoDO+QuT8h4Y8+pTRxyAlvKwLMFwJzh3DktRdaQVnGD
-         tcXrRFyMiUeH6jClmJgXMqBi9FoF0IvI9yrzbyuBfFlHNfACURSZ11jI6TvvotiN2SQh
-         o246CVHXE+DznLq4FJ32b26jI23EeRL+tbN0KJ5rfzgp+JI2dAwXG8XkgG8RySjGeTNT
-         dt5JW5vDrGJIxyvrCol0Kkpz9sgMoEEpHNuFIyJ6OLPw96+M139RArhgDhbyatn0t70q
-         ozXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVm19/4VdiX/Ys2hEU/6cEAUJ7SqdL8FMomHLcOHdKTIw08EopyVe6ie8w7s4/InauGDzxFeAD0U3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmoIo0b2qNE5QIvWuupw41rJ3LT1cPWoBS5V3oZ8Yoj9n3kSqC
-	apt131amHYQANDzCXDK/46JzJVZBrBT7tr6rexvYTEB1RsYhS7BsCOJbBoMmTwM=
-X-Google-Smtp-Source: AGHT+IH01edGD9WqoLaLqcgKuDB7Exq8qeJnSC4L0C1q00at8YKTkQgYxMxULRDTQH3U47fkcdWNvw==
-X-Received: by 2002:a2e:a545:0:b0:2fa:fcf0:7c2a with SMTP id 38308e7fff4ca-2fedb7ca5b3mr158144621fa.24.1730896106943;
-        Wed, 06 Nov 2024 04:28:26 -0800 (PST)
-Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9eb17d0adasm272575766b.111.2024.11.06.04.28.26
+        d=1e100.net; s=20230601; t=1730897158; x=1731501958;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hNg/n323bdqLDvtiYjZOYqtT4/DprftsEjfi06zMFo4=;
+        b=pdPa+LTZ+qrj/76YdjnzARyl5erAfEqj5JuT0TuEW1CyqHZ5Yr7epItQ9DgHHi+Llo
+         y2W1d40d0SAFutfpX1oqN3t/Qaf8VdLasoO6DroKEaR1m2mjoOfCC7IVyhTaEaSgJ7Bp
+         7AvkfIPD6aVvNhMEpmZxAGNiXSgucL9kOp7Gr3NHc3ysSf8zIgZC94zCa8Uuyos7kkjb
+         4g70z+DXmdsoxJC0o2KRrUPvAFCX8CP4osvQHQvVx13pC/cI4jPwL4H9/RL5vL7RC0XD
+         6EYOBF7RLvz+Qvi5lja3++TynYxuzx8BAGizctAVrI3IRe8Q4omH1serkwsnZti+kmue
+         fCqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxyvl8zL4vo+T0cIo9tts8M7XQ8edtR/Hct4S5OdbO1CUFPIJNTR1CraLcrBufD6wNGxQnZzwYN2k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzjm/o5jUdlUgKHTeggfpDbuXQzsjRmxOR+J9Uv62eYjRGUfsf6
+	AON3oRXLFTDHSGTZI5J6//piqpSzttB/kskUlIl+8YyCGHFINkyvS6MuJngGDeQYdc7uoju1YWG
+	rVPX1snaTwWRoXUqVNyh60/xwjkgsHt6MtmvcKLP4pY6v8mXv09Y6kWAbHw==
+X-Received: by 2002:a05:600c:45ce:b0:431:4f29:9542 with SMTP id 5b1f17b1804b1-4328323f81amr157382815e9.6.1730897157684;
+        Wed, 06 Nov 2024 04:45:57 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEQfzB4j6wZKp9l6UIeDmRJ4LIJfr9Pqvgh4gQlUv5xd8QSovnwaJl6hUPwGQpd2nurQexrTg==
+X-Received: by 2002:a05:600c:45ce:b0:431:4f29:9542 with SMTP id 5b1f17b1804b1-4328323f81amr157382555e9.6.1730897157284;
+        Wed, 06 Nov 2024 04:45:57 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.142.6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432aa6b60e9sm21059855e9.14.2024.11.06.04.45.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 04:28:26 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 6 Nov 2024 13:28:52 +0100
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Stanimir Varbanov <svarbanov@suse.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 09/12] arm64: dts: rp1: Add support for RaspberryPi's
- RP1 device
-Message-ID: <ZythBBrjwxxCnzCZ@apocalypse>
-References: <cover.1730123575.git.andrea.porta@suse.com>
- <1f4cec50493ec5d3168735c0a005771787e5cd59.1730123575.git.andrea.porta@suse.com>
- <4a474dae-6669-4678-87dd-e0e9692a749b@suse.de>
- <ZyosSv4ecKxohSrM@apocalypse>
+        Wed, 06 Nov 2024 04:45:56 -0800 (PST)
+Date: Wed, 6 Nov 2024 13:45:54 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Frauke =?iso-8859-1?Q?J=E4ger?= <frauke@linutronix.de>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
+Subject: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux Kernel
+ VII edition (OSPM-summit 2025)
+Message-ID: <ZytlAkTiuZApK23Y@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZyosSv4ecKxohSrM@apocalypse>
+Content-Transfer-Encoding: 8bit
 
-Hi Stan,
+Power Management and Scheduling in the Linux Kernel (OSPM-summit) VII edition
 
-On 15:31 Tue 05 Nov     , Andrea della Porta wrote:
-> Hi Stan,
-> 
-> On 15:29 Mon 04 Nov     , Stanimir Varbanov wrote:
-> > Hi Andrea,
-> >
+March 18-20, 2025
+Alte Fabrik
+Uhldingen-Mühlhofen, Germany
 
-...
+---
 
-> > shouldn't this be:
-> > 
-> > 	rp1_clocks: clocks@18000 {
-> > 		reg = <0x00 0x00018000 0x0 0x10038>;
-> > 		...
-> > 	}
-> > 
-> > ?
-> > 
-> > And for other nodes too...
-> 
-> For that to be @18000 instead of @c040018000, you should also change
-> the "ranges" entry in pci-ep-bus node, as follows:
-> 
-> ranges = <0x00 0x00018000	//This was: 0xc0 0x40000000
->           0x01 0x00 0x00000000
->           0x00 0x00400000>;
-> 
-> which is of course feasible, but I prefer to use addresses that 
-> resemble (at least to some extent) the ones in RP1 docs.
-> 
-> Many thanks,
-> Andrea
+.:: FOCUS
 
-Sorry, this should be like this 
+OSPM is moving to Germany!
 
-ranges = <0x00 0x00000000	//This was: 0xc0 0x40000000
-          0x01 0x00 0x00000000
-          0x00 0x00400000>;
+The VII edition of the Power Management and Scheduling in the Linux
+Kernel (OSPM) summit aims at fostering discussions on power management
+and (real-time) scheduling techniques. Summit will be held in Uhldingen
+(Germany) on March 18-20, 2025.
 
-i.e. the child address in the range should be 0 and not 0x18000.
-Anyway you got the point: in theory we can replace that address
-with whatever placeholder we want and from a functional perspective,
-it will work, as long as you change all the relevant mappings.
-After some brainstorming we've decided to choose a simpler scheme
-that will resemble more the internal address described in the RP1
-reference manual. 0xC040000000 will become 0x40000000.
+We welcome anybody interested in having discussions on the broad scope
+of scheduler techniques for reducing energy consumption while meeting
+performance and latency requirements, real-time systems, real-time and
+non-real-time scheduling, tooling, debugging and tracing.
 
-Many thanks,
-Andrea
+Feel free to take a look at what happened previous years:
 
-...
+ I   edition - https://lwn.net/Articles/721573/
+ II  edition - https://lwn.net/Articles/754923/
+ III edition - https://lwn.net/Articles/793281/
+ IV  edition - https://lwn.net/Articles/820337/ (online)
+ V   edition - https://lwn.net/Articles/934142/
+               https://lwn.net/Articles/934459/
+               https://lwn.net/Articles/935180/
+ VI  edition - https://lwn.net/Articles/981371/
+
+.:: FORMAT
+
+The summit is organized to cover three days of discussions and talks.
+
+The list of topics of interest includes (but it is not limited to):
+
+ * Power management techniques
+ * Scheduling techniques (real-time and non real-time)
+ * Energy consumption and CPU capacity aware scheduling
+ * Real-time virtualization
+ * Mobile/Server power management real-world use cases (successes and
+   failures)
+ * Power management and scheduling tooling (configuration, integration,
+   testing, etc.)
+ * Tracing
+ * Recap/lightning talks
+
+Presentations (50 min) can cover recently developed technologies,
+ongoing work and new ideas. Please understand that this workshop is not
+intended for presenting sales and marketing pitches.
+
+.:: SUBMIT A TOPIC/PRESENTATION
+
+To submit a topic/presentation use the form available at
+https://forms.gle/Vbvpxsh8pqBffx8b6.
+
+Or, if you prefer, simply reply (only to me, please :) to this email
+specifying:
+
+- name/surname
+- affiliation
+- short bio
+- email address
+- title
+- abstract
+
+Deadline for submitting topics/presentations is December 9, 2024.
+Notifications for accepted topics/presentations will be sent out
+December 16, 2024.
+
+.:: ATTENDING
+
+Attending the OSPM-summit is free of charge, but registration to the
+event is mandatory. The event can allow a maximum of 50 people (so, be
+sure to register early!).
+
+Registrations open on December 16, 2024.
+To register fill in the registration form available at
+https://forms.gle/Yvk7aS79pvNR6hbv8.
+
+While it is not strictly required to submit a topic/presentation,
+registrations with a topic/presentation proposal will take precedence.
+
+.:: VENUE
+
+The conference will take place at Alte Fabrik [1], Daisendorfer Str. 4,
+88689 Uhldingen-Mühlhofen, Germany
+
+The conference venue is located in a 2 minute walking distance [2] to
+the Hotel Sternen [3] that has been pre-reserved for the participants.
+Since it is a very rural area, we recommend booking this hotel as it is
+close to the conference room. The price ranges per night incl. breakfast
+between 85€ (Standard Single Room) up to 149€ (Junior Suite). There is
+an availability of 37 rooms in the hotel. Another 13 rooms are
+pre-reserved in the Hotel Kreuz which is also a 5min walking distance to
+the conference location [4]. Cost is 75€ inkl. breakfast. Please choose
+your hotel (and room) and arrange booking yourself. We recommend arrival
+on March 17 and departure on March 21 due to the length of the trip.
+
+Please use the code ‘LINUTRONIX’ when booking your hotel room. 
+Deadline for hotel booking in Hotel Sternen is February 28, 2025.
+Deadline for hotel booking in Hotel Kreuz is January 17, 2025.  
+After these dates, cancellations are not free of charge anymore.
+
+You can reach Uhldingen-Mühlhofen best from Zürich Airport [5] or
+Friedrichshafen Airport [6]. From both airports there are train and/or
+bus connections to Uhldingen-Mühlhofen which you can check here [7]. The
+rides are quite long, so another possibility is to organize yourself in
+groups and share a taxi/shuttle [8].
+
+[1] https://www.fabrik-muehlhofen.de/
+[2] https://maps.app.goo.gl/S6cnTgx1KJAGRkMr7
+[3] https://www.steAlte Fabrik Mühlhofenrnen-muehlhofen.de/
+[4] https://www.bodensee-hotel-kreuz.de/
+[5] https://www.flughafen-zuerich.ch/de/passagiere/praktisches/parking-und-transport/zug-tram-und-bus
+[6] https://www.bodensee-airport.eu/passagiere-besucher/anreise-parken-uebernachten/
+[7] https://www.bahn.de/
+[8] https://airporttaxi24.ch/?gad_source=1&gclid=EAIaIQobChMIo_y9l56iiQMVfp6DBx16NxPtEAAYAiAAEgJOO_D_BwE
+
+.:: ORGANIZERS
+
+Juri Lelli (Red Hat)
+Frauke Jäger (Linutronix)
+Tommaso Cucinotta (SSSA)
+Lorenzo Pieralisi (Linaro)
+
 
