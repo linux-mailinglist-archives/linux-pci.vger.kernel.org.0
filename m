@@ -1,227 +1,218 @@
-Return-Path: <linux-pci+bounces-16134-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16114-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F38459BEB93
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 13:59:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 046FC9BE5E8
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 12:50:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 319D11C234BF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 12:59:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 446CDB231D9
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 11:50:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492751F81B8;
-	Wed,  6 Nov 2024 12:46:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B252A1DED76;
+	Wed,  6 Nov 2024 11:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/DZp64n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERS90dte"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5401EC01E
-	for <linux-pci@vger.kernel.org>; Wed,  6 Nov 2024 12:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA591DE3B5;
+	Wed,  6 Nov 2024 11:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730897163; cv=none; b=KRSJakfWV8P3KfjHiPXtydIAToXE0YOuG++uFI1hsOC3tmhrTMs0p1Yyqe10HifBYBXxIGTDEIGvU1MVoaoYeYzRFnTREcDkAaZjR3hl1WABgSvxn0mhFmaKShEY4cKk6PbqvMi0eSlj7xhFMCd5wNuvL0oxE2chyh1Ebr0Mqz4=
+	t=1730893793; cv=none; b=cxzN+E1IQOcdOp+pTh3e21hy6jBSDPCUHFdVkTJJJNeqHE2X6wu+SZnQRuz7y3ZPXl4vPBEO7HOqXEkgapEwrMexpSgmb4jjNwupwmRbGISGTH/RScg0Ox3XIb6ReDOwbacPvxnUhZazdVd5EJPPRv/7nZrr9CZZYybt6mv9oCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730897163; c=relaxed/simple;
-	bh=oZEJpWFGDHrs92+9VxEMzdkrrPrA1W8Jk3Vu/SgYHOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VDLV4YhoA5hKCohVRcuS35RLLBmg7JLQlu7HdT4ZXSON4XBZpkxW9GP0Mnm28MO+x63yYhTdpfSmJ0voOxWYdxVoQBBl55JqktV9eM05CrvW9TJGSrEL7e9tMoaJ7iWUzSNCBt3AOATgWltFj9w0j8fgK/zXLlvirm7lYLfio9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b/DZp64n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730897160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hNg/n323bdqLDvtiYjZOYqtT4/DprftsEjfi06zMFo4=;
-	b=b/DZp64nFRIidN/7BeVPdDtgQhCoE396tuCojdBZL/04HrGdXxXlbFtGq5Z+KT/pqYYD7r
-	ZHaOXoMLr+xZwZw9ASC+qsyslSA6/BNhd2/+s96rByNVhjCIOsZoRIMQjffzx9YdRqpEXm
-	zg5E0MBiQ82DCC5QYbuqLl3QuLZpCSk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-84-U1_ycqE9OPSbdz-TB2HTaw-1; Wed, 06 Nov 2024 07:45:59 -0500
-X-MC-Unique: U1_ycqE9OPSbdz-TB2HTaw-1
-X-Mimecast-MFC-AGG-ID: U1_ycqE9OPSbdz-TB2HTaw
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-431518e6d8fso44137775e9.0
-        for <linux-pci@vger.kernel.org>; Wed, 06 Nov 2024 04:45:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730897158; x=1731501958;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hNg/n323bdqLDvtiYjZOYqtT4/DprftsEjfi06zMFo4=;
-        b=pdPa+LTZ+qrj/76YdjnzARyl5erAfEqj5JuT0TuEW1CyqHZ5Yr7epItQ9DgHHi+Llo
-         y2W1d40d0SAFutfpX1oqN3t/Qaf8VdLasoO6DroKEaR1m2mjoOfCC7IVyhTaEaSgJ7Bp
-         7AvkfIPD6aVvNhMEpmZxAGNiXSgucL9kOp7Gr3NHc3ysSf8zIgZC94zCa8Uuyos7kkjb
-         4g70z+DXmdsoxJC0o2KRrUPvAFCX8CP4osvQHQvVx13pC/cI4jPwL4H9/RL5vL7RC0XD
-         6EYOBF7RLvz+Qvi5lja3++TynYxuzx8BAGizctAVrI3IRe8Q4omH1serkwsnZti+kmue
-         fCqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxyvl8zL4vo+T0cIo9tts8M7XQ8edtR/Hct4S5OdbO1CUFPIJNTR1CraLcrBufD6wNGxQnZzwYN2k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzjm/o5jUdlUgKHTeggfpDbuXQzsjRmxOR+J9Uv62eYjRGUfsf6
-	AON3oRXLFTDHSGTZI5J6//piqpSzttB/kskUlIl+8YyCGHFINkyvS6MuJngGDeQYdc7uoju1YWG
-	rVPX1snaTwWRoXUqVNyh60/xwjkgsHt6MtmvcKLP4pY6v8mXv09Y6kWAbHw==
-X-Received: by 2002:a05:600c:45ce:b0:431:4f29:9542 with SMTP id 5b1f17b1804b1-4328323f81amr157382815e9.6.1730897157684;
-        Wed, 06 Nov 2024 04:45:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEQfzB4j6wZKp9l6UIeDmRJ4LIJfr9Pqvgh4gQlUv5xd8QSovnwaJl6hUPwGQpd2nurQexrTg==
-X-Received: by 2002:a05:600c:45ce:b0:431:4f29:9542 with SMTP id 5b1f17b1804b1-4328323f81amr157382555e9.6.1730897157284;
-        Wed, 06 Nov 2024 04:45:57 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.142.6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432aa6b60e9sm21059855e9.14.2024.11.06.04.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 04:45:56 -0800 (PST)
-Date: Wed, 6 Nov 2024 13:45:54 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Frauke =?iso-8859-1?Q?J=E4ger?= <frauke@linutronix.de>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
-Subject: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux Kernel
- VII edition (OSPM-summit 2025)
-Message-ID: <ZytlAkTiuZApK23Y@jlelli-thinkpadt14gen4.remote.csb>
+	s=arc-20240116; t=1730893793; c=relaxed/simple;
+	bh=LOOaR/Cqen3lSPEtbXmj2LYeQ66sd5JLSJFcTPBnlJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E3/06DvCZ9s+YyCxCEGgwYEkjrGdbMYEnuondvqHqFjDJlNOKhcTo0NIMppc/kgQkmKnfVXQ7PAtBQWWB00MBWXeV81Vd7zZP06tinSddrRMeo0HWLu5Jo/GqWt89qXuzuBFGtgoby9ZbjpzdmVp8EZIdvPQrRh+DOK9ODraaJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERS90dte; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C3BC4CECD;
+	Wed,  6 Nov 2024 11:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730893793;
+	bh=LOOaR/Cqen3lSPEtbXmj2LYeQ66sd5JLSJFcTPBnlJY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ERS90dteSEkeiIG3qMeK5Ko7Wp7kiDP3nC4ZN+5RRyIx6t5Jz5vvRmybMfQ3ggiSL
+	 jcxvuTqAmuDgdbeJJrfgTkWJ72idW2fQ/kNgWmyy5ll9wjylo3WgzFlM4kb5zbOCcY
+	 U26/ap6/h1kZj3RgffyAbhy1dhRMr3M5b3udG6YKZuJp40Egc8TPBia0xdV3zmGLvZ
+	 +zXa14tlVjTrF0h+3WfX7GBnnRGTXA4R4nS5g1EnPW4ItnFuPHlYEtdXt002N7ZhZB
+	 1qrIJr8yLBcsmQHYitFBr6XP0X7CdiCSp3iZ4va0QOHEiro3xYFV7vd3IAAnFTWJfp
+	 RArpJxygzHQXQ==
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2 00/17] Provide a new two step DMA mapping API
+Date: Wed,  6 Nov 2024 15:49:28 +0200
+Message-ID: <cover.1730892663.git.leon@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Power Management and Scheduling in the Linux Kernel (OSPM-summit) VII edition
+Changelog:
+v2:
+ * Fixed docs file as Randy suggested
+ * Fixed releases of memory in HMM path. It was allocated with kv..
+   variants but released with kfree instead of kvfree.
+ * Slightly changed commit message in VFIO patch.
+v1: https://lore.kernel.org/all/cover.1730298502.git.leon@kernel.org
+ * Squashed two VFIO patches into one
+ * Added Acked-by/Reviewed-by tags
+ * Fix docs spelling errors
+ * Simplified dma_iova_sync() API
+ * Added extra check in dma_iova_destroy() if mapped size to make code more clear
+ * Fixed checkpatch warnings in p2p patch
+ * Changed implementation of VFIO mlx5 mlx5vf_add_migration_pages() to
+   be more general
+ * Reduced the number of changes in VFIO patch
+v0: https://lore.kernel.org/all/cover.1730037276.git.leon@kernel.org
 
-March 18-20, 2025
-Alte Fabrik
-Uhldingen-Mühlhofen, Germany
+----------------------------------------------------------------------------
+The code can be downloaded from:
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git tag:dma-split-nov-06
 
----
+Christoph,
 
-.:: FOCUS
+Can you please take this series through your DMA mapping tree, so it
+will soak enough time in linux-next before sending PR to Linus?
 
-OSPM is moving to Germany!
+Thanks
+----------------------------------------------------------------------------
+Currently the only efficient way to map a complex memory description through
+the DMA API is by using the scatterlist APIs. The SG APIs are unique in that
+they efficiently combine the two fundamental operations of sizing and allocating
+a large IOVA window from the IOMMU and processing all the per-address
+swiotlb/flushing/p2p/map details.
 
-The VII edition of the Power Management and Scheduling in the Linux
-Kernel (OSPM) summit aims at fostering discussions on power management
-and (real-time) scheduling techniques. Summit will be held in Uhldingen
-(Germany) on March 18-20, 2025.
+This uniqueness has been a long standing pain point as the scatterlist API
+is mandatory, but expensive to use. It prevents any kind of optimization or
+feature improvement (such as avoiding struct page for P2P) due to the impossibility
+of improving the scatterlist.
 
-We welcome anybody interested in having discussions on the broad scope
-of scheduler techniques for reducing energy consumption while meeting
-performance and latency requirements, real-time systems, real-time and
-non-real-time scheduling, tooling, debugging and tracing.
+Several approaches have been explored to expand the DMA API with additional
+scatterlist-like structures (BIO, rlist), instead split up the DMA API
+to allow callers to bring their own data structure.
 
-Feel free to take a look at what happened previous years:
+The API is split up into parts:
+ - Allocate IOVA space:
+    To do any pre-allocation required. This is done based on the caller
+    supplying some details about how much IOMMU address space it would need
+    in worst case.
+ - Map and unmap relevant structures to pre-allocated IOVA space:
+    Perform the actual mapping into the pre-allocated IOVA. This is very
+    similar to dma_map_page().
 
- I   edition - https://lwn.net/Articles/721573/
- II  edition - https://lwn.net/Articles/754923/
- III edition - https://lwn.net/Articles/793281/
- IV  edition - https://lwn.net/Articles/820337/ (online)
- V   edition - https://lwn.net/Articles/934142/
-               https://lwn.net/Articles/934459/
-               https://lwn.net/Articles/935180/
- VI  edition - https://lwn.net/Articles/981371/
+In this and the next series [1], examples of three different users are converted
+to the new API to show the benefits and its versatility. Each user has a unique
+flow:
+ 1. RDMA ODP is an example of "SVA mirroring" using HMM that needs to
+    dynamically map/unmap large numbers of single pages. This becomes
+    significantly faster in the IOMMU case as the map/unmap is now just
+    a page table walk, the IOVA allocation is pre-computed once. Significant
+    amounts of memory are saved as there is no longer a need to store the
+    dma_addr_t of each page.
+ 2. VFIO PCI live migration code is building a very large "page list"
+    for the device. Instead of allocating a scatter list entry per allocated
+    page it can just allocate an array of 'struct page *', saving a large
+    amount of memory.
+ 3. NVMe PCI demonstrates how a BIO can be converted to a HW scatter
+    list without having to allocate then populate an intermediate SG table.
 
-.:: FORMAT
+To make the use of the new API easier, HMM and block subsystems are extended
+to hide the optimization details from the caller. Among these optimizations:
+ * Memory reduction as in most real use cases there is no need to store mapped
+   DMA addresses and unmap them.
+ * Reducing the function call overhead by removing the need to call function
+   pointers and use direct calls instead.
 
-The summit is organized to cover three days of discussions and talks.
+This step is first along a path to provide alternatives to scatterlist and
+solve some of the abuses and design mistakes, for instance in DMABUF's P2P
+support.
 
-The list of topics of interest includes (but it is not limited to):
+Thanks
 
- * Power management techniques
- * Scheduling techniques (real-time and non real-time)
- * Energy consumption and CPU capacity aware scheduling
- * Real-time virtualization
- * Mobile/Server power management real-world use cases (successes and
-   failures)
- * Power management and scheduling tooling (configuration, integration,
-   testing, etc.)
- * Tracing
- * Recap/lightning talks
+[1] This still points to v0, as the change is just around handling dma_iova_sync():
+https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org
 
-Presentations (50 min) can cover recently developed technologies,
-ongoing work and new ideas. Please understand that this workshop is not
-intended for presenting sales and marketing pitches.
+Christoph Hellwig (6):
+  PCI/P2PDMA: Refactor the p2pdma mapping helpers
+  dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+  iommu: generalize the batched sync after map interface
+  iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+  dma-mapping: add a dma_need_unmap helper
+  docs: core-api: document the IOVA-based API
 
-.:: SUBMIT A TOPIC/PRESENTATION
+Leon Romanovsky (11):
+  dma-mapping: Add check if IOVA can be used
+  dma: Provide an interface to allow allocate IOVA
+  dma-mapping: Implement link/unlink ranges API
+  mm/hmm: let users to tag specific PFN with DMA mapped bit
+  mm/hmm: provide generic DMA managing logic
+  RDMA/umem: Store ODP access mask information in PFN
+  RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+    linkage
+  RDMA/umem: Separate implicit ODP initialization from explicit ODP
+  vfio/mlx5: Explicitly use number of pages instead of allocated length
+  vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+  vfio/mlx5: Enable the DMA link API
 
-To submit a topic/presentation use the form available at
-https://forms.gle/Vbvpxsh8pqBffx8b6.
+ Documentation/core-api/dma-api.rst   |  70 ++++
+ drivers/infiniband/core/umem_odp.c   | 250 +++++----------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+ drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+ drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+ drivers/iommu/dma-iommu.c            | 459 +++++++++++++++++++++++----
+ drivers/iommu/iommu.c                |  65 ++--
+ drivers/pci/p2pdma.c                 |  38 +--
+ drivers/vfio/pci/mlx5/cmd.c          | 373 +++++++++++-----------
+ drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+ drivers/vfio/pci/mlx5/main.c         |  87 +++--
+ include/linux/dma-map-ops.h          |  54 ----
+ include/linux/dma-mapping.h          |  85 +++++
+ include/linux/hmm-dma.h              |  32 ++
+ include/linux/hmm.h                  |  16 +
+ include/linux/iommu.h                |   4 +
+ include/linux/pci-p2pdma.h           |  84 +++++
+ include/rdma/ib_umem_odp.h           |  25 +-
+ kernel/dma/direct.c                  |  44 +--
+ kernel/dma/mapping.c                 |  20 ++
+ mm/hmm.c                             | 231 +++++++++++++-
+ 21 files changed, 1377 insertions(+), 684 deletions(-)
+ create mode 100644 include/linux/hmm-dma.h
 
-Or, if you prefer, simply reply (only to me, please :) to this email
-specifying:
-
-- name/surname
-- affiliation
-- short bio
-- email address
-- title
-- abstract
-
-Deadline for submitting topics/presentations is December 9, 2024.
-Notifications for accepted topics/presentations will be sent out
-December 16, 2024.
-
-.:: ATTENDING
-
-Attending the OSPM-summit is free of charge, but registration to the
-event is mandatory. The event can allow a maximum of 50 people (so, be
-sure to register early!).
-
-Registrations open on December 16, 2024.
-To register fill in the registration form available at
-https://forms.gle/Yvk7aS79pvNR6hbv8.
-
-While it is not strictly required to submit a topic/presentation,
-registrations with a topic/presentation proposal will take precedence.
-
-.:: VENUE
-
-The conference will take place at Alte Fabrik [1], Daisendorfer Str. 4,
-88689 Uhldingen-Mühlhofen, Germany
-
-The conference venue is located in a 2 minute walking distance [2] to
-the Hotel Sternen [3] that has been pre-reserved for the participants.
-Since it is a very rural area, we recommend booking this hotel as it is
-close to the conference room. The price ranges per night incl. breakfast
-between 85€ (Standard Single Room) up to 149€ (Junior Suite). There is
-an availability of 37 rooms in the hotel. Another 13 rooms are
-pre-reserved in the Hotel Kreuz which is also a 5min walking distance to
-the conference location [4]. Cost is 75€ inkl. breakfast. Please choose
-your hotel (and room) and arrange booking yourself. We recommend arrival
-on March 17 and departure on March 21 due to the length of the trip.
-
-Please use the code ‘LINUTRONIX’ when booking your hotel room. 
-Deadline for hotel booking in Hotel Sternen is February 28, 2025.
-Deadline for hotel booking in Hotel Kreuz is January 17, 2025.  
-After these dates, cancellations are not free of charge anymore.
-
-You can reach Uhldingen-Mühlhofen best from Zürich Airport [5] or
-Friedrichshafen Airport [6]. From both airports there are train and/or
-bus connections to Uhldingen-Mühlhofen which you can check here [7]. The
-rides are quite long, so another possibility is to organize yourself in
-groups and share a taxi/shuttle [8].
-
-[1] https://www.fabrik-muehlhofen.de/
-[2] https://maps.app.goo.gl/S6cnTgx1KJAGRkMr7
-[3] https://www.steAlte Fabrik Mühlhofenrnen-muehlhofen.de/
-[4] https://www.bodensee-hotel-kreuz.de/
-[5] https://www.flughafen-zuerich.ch/de/passagiere/praktisches/parking-und-transport/zug-tram-und-bus
-[6] https://www.bodensee-airport.eu/passagiere-besucher/anreise-parken-uebernachten/
-[7] https://www.bahn.de/
-[8] https://airporttaxi24.ch/?gad_source=1&gclid=EAIaIQobChMIo_y9l56iiQMVfp6DBx16NxPtEAAYAiAAEgJOO_D_BwE
-
-.:: ORGANIZERS
-
-Juri Lelli (Red Hat)
-Frauke Jäger (Linutronix)
-Tommaso Cucinotta (SSSA)
-Lorenzo Pieralisi (Linaro)
+-- 
+2.47.0
 
 
