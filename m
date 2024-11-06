@@ -1,201 +1,179 @@
-Return-Path: <linux-pci+bounces-16109-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16110-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 606259BE21B
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 10:15:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D68109BE239
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 10:19:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 835241C23122
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 09:15:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 960992852E8
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 09:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 702D51D9339;
-	Wed,  6 Nov 2024 09:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C6E21D9591;
+	Wed,  6 Nov 2024 09:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6YU4Ku6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDEhK9dB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4069B1D9329;
-	Wed,  6 Nov 2024 09:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570921D958B
+	for <linux-pci@vger.kernel.org>; Wed,  6 Nov 2024 09:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730884533; cv=none; b=f62hp4xkf7ZWPUxw+016rUtprF5U+WhTrjLqnOytDx53PGefD8AG7msMYkMNxqbBzwCKZx+eGc1YUDXFk4WPQ1xyUnLzLxmUsy9VL+K/3Vyi5BYeAMJAHXPxiLc5NGVB7SKLluZpwyRzZ50Ks+jnneqHOqqSPN7zpHd6hFYvNYc=
+	t=1730884690; cv=none; b=W/O3y3Hs2+YNJHoN9FSDfLEIKqwD4xaYBsqQ9tZ4qdcOx5TfozuxtT8srpfOzK2JtbS6Ny9jrwvuTi30r8s/MBraSwbc7wd8OUG1b40LXpA9BGDsAupvuUyUG6vOLGpKhlC0+qtP/wDNPDLX7Wx52uYwnN5mwIdd3h7LYa8rihI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730884533; c=relaxed/simple;
-	bh=EwAJq0GjySd0IJ1U4/MaQRX0fXrzwNh3orlaf6pjFQE=;
+	s=arc-20240116; t=1730884690; c=relaxed/simple;
+	bh=4NMKth/+tbq9G9afQXTfm7cy85P47LqxOouOqVfZs1s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXWi2PcGjhEV4cZHArjfpKlrlR17MTw8dYvo0xNOwE9Dj7JedOhnSELxXO++IsHS6R6Sp/XHkP2itCymqimJ8tpNqZE+5n5NZs4BgTEoiBQ0GYaaKrwX4PtFXk5hqR/QMvH6Hwj9QfaAluHXdo552JogBHsEeg7dvDOkdogMsQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6YU4Ku6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3742C4CECD;
-	Wed,  6 Nov 2024 09:15:29 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQei/Dj2Y1S+VKYWtxqzf77gQhKfbyBYRSLzvL6MrMYYMqbXwXdUTOEXUFI6lHAUoAnaPHS/dQVgKTvGmIpkhJY7+h3ii5dqRyAJMOkt63C/wjq4CDsK/rSLCrnQmokcV3pWnlm+/Xd3UXzydL4F28b0/MriP7kJDVb67zZeQjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDEhK9dB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972DDC4CECD;
+	Wed,  6 Nov 2024 09:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730884532;
-	bh=EwAJq0GjySd0IJ1U4/MaQRX0fXrzwNh3orlaf6pjFQE=;
+	s=k20201202; t=1730884689;
+	bh=4NMKth/+tbq9G9afQXTfm7cy85P47LqxOouOqVfZs1s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e6YU4Ku6I+ni7xq3vLu1huym1FyGpwUtUsFP63qGYPPMcZSYcOAPNCOAGyE2tnOD+
-	 kFp9NuFnyTUGRaydRbvD6qlYt/52XljzLEIsUrpcqHk+nPE70OuiwTo9TX7Gl3FnqQ
-	 nCgWygWxFML+BPzrzkG/5Ou5wfHWMigdLdOr4szqgDNxLDipbfMtd5yIHquZirXFMh
-	 2e864SNAHbTFdfVNTWpOhIsAHXpd9REuWS66FGdKYT2QIkIj/0cLXkGe20zTwectbe
-	 5HjavNReU71zkSJRIlq0SxnPawGfkgQLd0z1hcltKYl19B2IsLUTWRTWJtf9zMKHbn
-	 9phjPbWRwVi5g==
-Date: Wed, 6 Nov 2024 10:15:27 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	b=hDEhK9dBQa10BBr5wtDZqdVJA8bS/eSLMaeRQUS9pkzteq6yS1EWPPJaoIh1qR/XJ
+	 4pDiuI8um12Mvaqxra6zF2EVHhbgHx759vBgncXdJXwCYgTGvHWusoeZwdXTPeeBs3
+	 zUD1Qw0qhplRnGMAF76ym23PzBu9yeV4Ph1TwcvWaN5DCRIDUn/LUCYNd+yK5IO65f
+	 lrA7+HhbfyePkV8TDM3yD6h/5A4XDPNsWE9iUuMEdQX7SLlLTLXAtld27jDJcse18e
+	 5jqbQIhk5EezNYY4+jYDpc7ZbNq/WZ3tqgT3GSNCuejkkjSB93lb9YalZdAafoQJyw
+	 EGr+b7KD3sq+g==
+Date: Wed, 6 Nov 2024 10:18:07 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
-	tglx@linutronix.de, jdmason@kudzu.us
-Subject: Re: [PATCH v4 0/5] PCI: EP: Add RC-to-EP doorbell with platform MSI
- controller
-Message-ID: <Zyszr3Cqg8UXlbqw@ryzen>
-References: <20241031-ep-msi-v4-0-717da2d99b28@nxp.com>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Christian Marangi <ansuelsmth@gmail.com>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
+	Hui Ma <hui.ma@airoha.com>
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Avoid PCIe resetting via
+ PCIE_RSTB for Airoha EN7581 SoC
+Message-ID: <Zys0T-aDIilOpq0I@lore-desk>
+References: <ZypgYOn7dcYIoW4i@lore-desk>
+ <20241105205748.GA1484220@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qV7Iu35SJTZV/AHc"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241031-ep-msi-v4-0-717da2d99b28@nxp.com>
-
-Hello Frank,
-
-On Thu, Oct 31, 2024 at 12:26:59PM -0400, Frank Li wrote:
-> ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
-> │            │   │                                   │   │                │
-> │            │   │ PCI Endpoint                      │   │ PCI Host       │
-> │            │   │                                   │   │                │
-> │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
-> │            │   │                                   │   │                │
-> │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
-> │ Controller │   │   update doorbell register address│   │                │
-> │            │   │   for BAR                         │   │                │
-> │            │   │                                   │   │ 3. Write BAR<n>│
-> │            │◄──┼───────────────────────────────────┼───┤                │
-> │            │   │                                   │   │                │
-> │            ├──►│ 4.Irq Handle                      │   │                │
-> │            │   │                                   │   │                │
-> │            │   │                                   │   │                │
-> └────────────┘   └───────────────────────────────────┘   └────────────────┘
-> 
-> This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
-> 
-> Original patch only target to vntb driver. But actually it is common
-> method.
-> 
-> This patches add new API to pci-epf-core, so any EP driver can use it.
-> 
-> Previous v2 discussion here.
-> https://lore.kernel.org/imx/20230911220920.1817033-1-Frank.Li@nxp.com/
-> 
-> Changes in v4:
-> - Remove patch genirq/msi: Add cleanup guard define for msi_lock_descs()/msi_unlock_descs()
-> - Use new method to avoid compatible problem.
->   Add new command DOORBELL_ENABLE and DOORBELL_DISABLE.
->   pcitest -B send DOORBELL_ENABLE first, EP test function driver try to
-> remap one of BAR_N (except test register bar) to ITS MSI MMIO space. Old
-> driver don't support new command, so failure return, not side effect.
->   After test, DOORBELL_DISABLE command send out to recover original map, so
-> pcitest bar test can pass as normal.
-> - Other detail change see each patches's change log
-> - Link to v3: https://lore.kernel.org/r/20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com
-> 
-> Change from v2 to v3
-> - Fixed manivannan's comments
-> - Move common part to pci-ep-msi.c and pci-ep-msi.h
-> - rebase to 6.12-rc1
-> - use RevID to distingiush old version
-> 
-> mkdir /sys/kernel/config/pci_ep/functions/pci_epf_test/func1
-> echo 16 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/msi_interrupts
-> echo 0x080c > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/deviceid
-> echo 0x1957 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/vendorid
-> echo 1 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/revid
-> ^^^^^^ to enable platform msi support.
-> ln -s /sys/kernel/config/pci_ep/functions/pci_epf_test/func1 /sys/kernel/config/pci_ep/controllers/4c380000.pcie-ep
-
-Perhaps drop these steps, to not confuse the reader.
-They are no longer relevant with the latest revision anyway.
-
-> 
-> - use new device ID, which identify support doorbell to avoid broken
-> compatility.
-> 
->     Enable doorbell support only for PCI_DEVICE_ID_IMX8_DB, while other devices
->     keep the same behavior as before.
-> 
->            EP side             RC with old driver      RC with new driver
->     PCI_DEVICE_ID_IMX8_DB          no probe              doorbell enabled
->     Other device ID             doorbell disabled*       doorbell disabled*
-> 
->     * Behavior remains unchanged.
-> 
-> Change from v1 to v2
-> - Add missed patch for endpont/pci-epf-test.c
-> - Move alloc and free to epc driver from epf.
-> - Provide general help function for EPC driver to alloc platform msi irq.
-> - Fixed manivannan's comments.
-
-I wanted to try this series on rk3588, which has a MSI controller as part of the GIC
-using Interrupt Translation Services (ITS), for the Root Complex DT node:
-https://github.com/torvalds/linux/blob/v6.12-rc6/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi#L164
-https://github.com/torvalds/linux/blob/v6.12-rc6/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi#L1981-L1999
-
-There isn't any reference to a MSI controller in the Endpoint DT node:
-https://github.com/torvalds/linux/blob/v6.12-rc6/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi#L189
-
-When testing your series, I get an error in
-platform_device_msi_init_and_alloc_irqs(), because no domain is found.
-
-I assume that is it "msi-parent" that we should add here.
-
-However, looking at:
-$ git grep -p msi-parent arch/arm64/boot/dts/freescale/
-
-I do not see any freescale/iMX platform specifying a msi-parent for the EP node.
-
-Is there any additional DTS changes needed for iMX that is not part of this series,
-or what am I missing?
-
-When adding "msi-parent = <&its1 0x0000>;
-to the EP node
-(this is just a guess since RC node has: msi-map = <0x0000 &its1 0x0000 0x1000>;)
-
-I do get a domain, but I do not get any IRQ on the EP side when the RC side is
-writing the doorbell (as part of pcitest -B),
-
-[    7.978984] pci_epc_alloc_doorbell: num_db: 1
-[    7.979545] pci_epf_test_bind: doorbell_addr: 0x40
-[    7.979978] pci_epf_test_bind: doorbell_data: 0x0
-[    7.980397] pci_epf_test_bind: doorbell_bar: 0x1
-[   21.114613] pci_epf_enable_doorbell db_bar: 1
-[   21.115001] pci_epf_enable_doorbell: doorbell_addr: 0xfe650040
-[   21.115512] pci_epf_enable_doorbell: phys_addr: 0xfe650000
-[   21.115994] pci_epf_enable_doorbell: success
-
-# cat /proc/interrupts | grep epc
-117:          0          0          0          0          0          0          0          0  ITS-pMSI-a40000000.pcie-ep   0 Edge      pci-epc-doorbell0
-
-Even if I try to write the doorbell manually from EP side using devmem:
-
-# devmem 0xfe670040 32 1
-
-it still doesn't trigger a IRQ on the EP side:
-# cat /proc/interrupts | grep epc
-117:          0          0          0          0          0          0          0          0  ITS-pMSI-a40000000.pcie-ep   0 Edge      pci-epc-doorbell0
-
-Any ideas?
+In-Reply-To: <20241105205748.GA1484220@bhelgaas>
 
 
-Kind regards,
-Niklas
+--qV7Iu35SJTZV/AHc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> On Tue, Nov 05, 2024 at 07:13:52PM +0100, Lorenzo Bianconi wrote:
+> > > On Mon, Nov 04, 2024 at 11:00:05PM +0100, Lorenzo Bianconi wrote:
+> > > > Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
+> > > > causing occasional PCIe link down issues. In order to overcome the
+> > > > problem, PCIE_RSTB signals are not asserted/released during device =
+probe or
+> > > > suspend/resume phase and the PCIe block is reset using REG_PCI_CONT=
+ROL
+> > > > (0x88) and REG_RESET_CONTROL (0x834) registers available via the cl=
+ock
+> > > > module.
+> > > > Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
+> > > > specify per-SoC capabilities.
+> > >=20
+> > > Where does this alternate way of doing reset (using REG_PCI_CONTROL
+> > > and REG_RESET_CONTROL) happen?  Why isn't there something in this
+> > > patch to use that alternate method at the same points where
+> > > PCIE_PE_RSTB is used?
+> >=20
+> > REG_RESET_CONTROL (0x834) is already asserted/released in the following=
+ flow:
+> >=20
+> > mtk_pcie_en7581_power_up() -> reset_control_bulk_deassert() -> en7523_r=
+eset_update()
+> > https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#=
+L470
+> >=20
+> > REG_PCI_CONTROL (0x88) is already asserted/released in the following fl=
+ow:
+> > mtk_pcie_en7581_power_up() -> clk_bulk_enable() -> en7581_pci_enable()
+> > https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#=
+L385
+>=20
+> So IIUC, you're saying that on EN7581, the PCI hierarchy is reset by
+> the soc->power_up() callback, mtk_pcie_en7581_power_up(), via
+> REG_PCI_CONTROL and REG_RESET_CONTROL.
+
+yes, correct.
+
+>=20
+> I assume the hierarchy is also reset by the non-EN7581 .power_up()
+> callback, mtk_pcie_power_up()?
+
+as pointed out by Jianjun Wang, non-EN7581 family is reset via PCIE_RSTB
+signals and .power_up() callback is used just for initialization.
+For EN7581 family we need to reset the device via .power_up() callback
+since we have a hw issue with PCIE_PE_RSTB signal (at least this is my
+take-away :))
+
+>=20
+> And prior to this patch, we reset the hierarchy *again* in
+> mtk_pcie_startup_port() via PCIE_RST_CTRL_REG, but this causes
+> occasional "link down" issues because of a EN7581 hardware defect.
+
+yes, correct
+
+>=20
+> So for EN7581, this patch skips the PCIE_RST_CTRL_REG reset in
+> mtk_pcie_startup_port().
+
+yes, correct
+
+>=20
+> .power_up() and mtk_pcie_startup_port() are used both at probe time
+> and in mtk_pcie_resume_noirq().  So after this patch, I assume:
+>=20
+>   - EN7581 resets the hierarchy once at probe and resume instead of
+>     twice.
+
+yes, correct
+
+>=20
+>   - Non-EN7581 resets the hierarchy twice at probe and resume.
+
+nope, just once since .power_up() does not reset the device.
+
+Regards,
+Lorenzo
+
+>=20
+> I assume I'm missing something (maybe mtk_pcie_power_up() doesn't
+> actually reset the hierarchy?) because I don't see why we would reset
+> the hierarchy twice for either controller.
+>=20
+> Bjorn
+
+--qV7Iu35SJTZV/AHc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZys0TwAKCRA6cBh0uS2t
+rOs7AP9NYd+xfPZYqk/9uJmxY7WUn9qLDa6qujJG0QUeuNH09wD+IXpITgFNY5yk
+GuelOGXgAUV65fTPir1SMcf5eaviiAY=
+=XurC
+-----END PGP SIGNATURE-----
+
+--qV7Iu35SJTZV/AHc--
 
