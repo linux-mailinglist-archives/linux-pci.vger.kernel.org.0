@@ -1,214 +1,165 @@
-Return-Path: <linux-pci+bounces-16177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6347F9BF964
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 97DE09BF993
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 00:00:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB4B01F225ED
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:40:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FD2C1F22187
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA8B1DDC33;
-	Wed,  6 Nov 2024 22:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7AE21DE2CD;
+	Wed,  6 Nov 2024 23:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ejqg1IDH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ekx2C9jZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5AA1917F3;
-	Wed,  6 Nov 2024 22:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2303813A244;
+	Wed,  6 Nov 2024 23:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730932831; cv=none; b=M3vcjkTSm/oxqaM/nWvv2ux0/fpsMAfWvLlK1kI33ERXb2JybSOaKFcBdxLZYtB0YjTzyLfvy+XeWl540fTuzVCKME90sFwzGtNZkWranLI6g1tPdGbHlWzaEof1c9yRD0NaHS48c4vlGBbhawy928PDUSXXwAy9GxIQ5S1rRvw=
+	t=1730934022; cv=none; b=Zgk3prvk8jSR1DFVC0a11kS2J1fZer5nGoXAuOB6fHTWMfB1i+q7M5UUvHBtKUYYjKbRnJfKDX9FU5M+2eqDMZG6mOVm8YQjZB/CBau3sXCjMCSpq1gQm1yIg8zWMxO3hMseT31SHahOG/nE0yyaedRnmxVkb/cVd5PekVcpbyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730932831; c=relaxed/simple;
-	bh=zlGCzVAGRGtkQDBPcQQg/UhnzVd+u1CKmbHht0FUdm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k2Amll/nbhlOSPk3jPt7mrw8Yp068AFkycrxLzuT8jm/su12/Z69ztsSDtubpX460UeUg0Xk+KDPenax6sf+owHVrwhaEStJt0ei7ropUCeSU0ecRCpAS1PBM7mpHL7LpWGBRxY09E6U7VDi3Rc5ClAKZCGkRLdX5SolLZCYkME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ejqg1IDH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94ADC4CECD;
-	Wed,  6 Nov 2024 22:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730932831;
-	bh=zlGCzVAGRGtkQDBPcQQg/UhnzVd+u1CKmbHht0FUdm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ejqg1IDHwzlcXm+gTVfHyG/fH9dn2aye1emFSVwYUpLaRVBns6ZFdN+jTqji92nya
-	 wNQ8OtReYzup80Z6PZqSGQrtWd5UQzSLLE20QAcOrK8hj36qEdKBDwf+F5g45svYtZ
-	 iJeMOJ19xgjWFFl2DmzcFcGF2pMeb/wBmIvFyFDK770WA4yBTnl7QWhm7sRWWLgZ9p
-	 46AHtzrmU3TgQdA+CkQnW9tLM7ai2LBbo+FCgDYU3HG2Q/v+6dQQ6kln27zonzGsOr
-	 B3URqqckrkan9d5iqjFR2+Jas0sW+GHEmAVYWMXYXtGXMyrbGyd+K+faKSkFK/oP7m
-	 u1um5ZFqX0uQg==
-Date: Wed, 6 Nov 2024 23:40:28 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com
-Subject: Re: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
-Message-ID: <ZyvwXHMRz0kI0J5O@lore-desk>
-References: <aca00bd672ee576ad96d279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org>
- <20241106203219.GA1530199@bhelgaas>
+	s=arc-20240116; t=1730934022; c=relaxed/simple;
+	bh=ekYSaQc3UpI6lAdcOHKDSEFeDzRTnrJnU6bzQ5VCZ+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OaihDPO4JdnPZ3THx3IVW2aClCQI19yJ3a7qOe2eetBCL8EYQj1PMC0+2vZk04IK/e+D5I7M66jihHnBnyk2PxjvXPseCxRk+T1wtl3RkIzHc2S8m+Qs2RUOJYQTjNjaoX7nJzlBITMbGg6SPU05/nW9preNUP2wFfVzFCQ4Z0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ekx2C9jZ; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-84ff612ca93so134618241.0;
+        Wed, 06 Nov 2024 15:00:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730934020; x=1731538820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mCr20x8z8sRkhTPvZqrUzLvN/Ib1WmukL+yzAP4ZNi0=;
+        b=Ekx2C9jZLNuWC9K1Bjd59xLxpbjIMy4oBU+7KMnFb4Y73uxXPWVLYEv75dXnsvl1Sn
+         dA2Vn2Dyzeqw8Om4dwfTf+oEQGI606edBvTICalpyMIFFZsYNzlndxFXF/Q1TFeBMO3w
+         syEB4Q5mrqaVxUQPvDTwwcQ2tQhO6BPIt+EW4mNZfd0co9MF+UzxfhOiGltj22r90sQ1
+         sczGE6MhwiGqeyc5uj56wQhXepB16V8VUuSZcK+pSpn6huwFdbyMCBl1aJNeCMjKe/02
+         zS8tdmL4iQpK9sKiEJqYg7TRQ9SQ2JpQIBavCKJeJgaemxn7bPma5AyEEd12cJHt6fc6
+         8jdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730934020; x=1731538820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mCr20x8z8sRkhTPvZqrUzLvN/Ib1WmukL+yzAP4ZNi0=;
+        b=T3yj2HidSI/YzVMYWHsr8yFbql8DBsmYLldRtbwpjNgeCfRETZWIS9KQGp6G7aVVYf
+         BauYTNKNibymdGnLd5vENtrE7Oyd9AmGlBirpqpzgYRwTJkKLHaHLiJl3n4yvMirQ4dd
+         +88O3kX0LUl4JA4vrj8puLCS09e+QMIK8pS+vJOX7FdQzdnD/EbIQdzv6Hxtf5BiOThV
+         JJ4+jif+aVaoz6F1npyc/wMQc51V5awM5hnEEB4hafb5GBNH5RXmxDIjKHOX/e2Xe5PD
+         aI2CB8hi7W1RjeKY7yOFdyhzurXBTLe0nuvuZpCRyN0/4a95MQAtacYPVykwxlD6Hd0K
+         XP5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVBeiftRjYlQO+4tZpsjSVJU5BbFgJo3xpGEgPDZxgTbYS/Vg2mfffvt+p346bbabYWTFy6Og01QNBb@vger.kernel.org, AJvYcCWCfwkt2KyE0T6qhiBCGgQi4pS6Xb0bTerztAYSSmJu2unJFo1OF9PubLPlYBwLV45QK5YT6lvkonmv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWehM2oMwiR2D0dEN5edpFfeKGYErPYp3LtLawetIZZz5pEXJN
+	NS00kkjkHOxXn6mQHOxWqWWz2ME/9gUvyk1Xr+/QPdRxwsG90jBE3g1ORUtnAS0H5ogOs9wWG30
+	BhAxMpdMeQjX/m/KrgQXOovaYWd8=
+X-Google-Smtp-Source: AGHT+IFo1RR/AdVhpssmUpxzpPIge7KofwhVYW5Ad3uzitsFg+8Ea84XoncezE1UFB6bQpJj6zNAhVjXGdNO8YtEVEY=
+X-Received: by 2002:a05:6102:cd2:b0:4a5:ada5:7b27 with SMTP id
+ ada2fe7eead31-4a8cfb4c602mr40754597137.9.1730934019692; Wed, 06 Nov 2024
+ 15:00:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ICCrOV43i12jfSvz"
-Content-Disposition: inline
-In-Reply-To: <20241106203219.GA1530199@bhelgaas>
-
-
---ICCrOV43i12jfSvz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <aca00bd672ee576ad96d279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org>
+ <20241105213339.GA1487624@bhelgaas>
+In-Reply-To: <20241105213339.GA1487624@bhelgaas>
+From: Jim Quinlan <jim2101024@gmail.com>
+Date: Wed, 6 Nov 2024 18:00:08 -0500
+Message-ID: <CANCKTBuxKA8JdfYMCcGS=CpyuXGiLz1NdereCjqo-_2Er3Pfww@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>, linux-pci@vger.kernel.org, ryder.lee@mediatek.com, 
+	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com, 
+	robh@kernel.org, bhelgaas@google.com, linux-mediatek@lists.infradead.org, 
+	lorenzo.bianconi83@gmail.com, linux-arm-kernel@lists.infradead.org, 
+	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org, nbd@nbd.name, 
+	dd@embedd.com, upstream@airoha.com, angelogioacchino.delregno@collabora.com, 
+	Jim Quinlan <james.quinlan@broadcom.com>, 
+	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, Nov 5, 2024 at 4:33=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> [+cc Jim, Krishna, Vidya, Shashank]
+>
 > On Wed, Jul 03, 2024 at 06:12:44PM +0200, Lorenzo Bianconi wrote:
 > > Introduce support for Airoha EN7581 PCIe controller to mediatek-gen3
 > > PCIe controller driver.
+>
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+>
+> > +#define PCIE_EQ_PRESET_01_REG                0x100
+> > +#define PCIE_VAL_LN0_DOWNSTREAM              GENMASK(6, 0)
+> > +#define PCIE_VAL_LN0_UPSTREAM                GENMASK(14, 8)
+> > +#define PCIE_VAL_LN1_DOWNSTREAM              GENMASK(22, 16)
+> > +#define PCIE_VAL_LN1_UPSTREAM                GENMASK(30, 24)
 > > ...
->=20
+>
 > > +static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
 > > +{
-> > +	struct device *dev =3D pcie->dev;
-> > +	int err;
-> > +	u32 val;
-> > +
-> > +	/*
-> > +	 * Wait for the time needed to complete the bulk assert in
-> > +	 * mtk_pcie_setup for EN7581 SoC.
-> > +	 */
-> > +	mdelay(PCIE_EN7581_RESET_TIME_MS);
+> > ...
+>
+> > +     val =3D FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
+> > +           FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
+> > +           FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
+> > +           FIELD_PREP(PCIE_VAL_LN1_UPSTREAM, 0x41);
+> > +     writel_relaxed(val, pcie->base + PCIE_EQ_PRESET_01_REG);
 
-Hi Bjorn,
+Not sure it is worth the trouble to define fields.  In fact, you are
+already combining fields (rec+trans) so why not go further and just
+write each lane as a u16?
+>
+> This looks like it might be for the Lane Equalization Control
+> registers (PCIe r6.0, sec 7.7.3.4)?
+>
+> I would expect those values (0x47, 0x41) to be related to the platform
+> design, so maybe not completely determined by the SoC itself?  Jim and
+> Krishna have been working on DT schema for the equalization values,
+> which seems like the right place for them:
+>
+> https://lore.kernel.org/linux-pci/20241018182247.41130-2-james.quinlan@br=
+oadcom.com/
+> https://lore.kernel.org/r/77d3a1a9-c22d-0fd3-5942-91b9a3d74a43@quicinc.co=
+m
+>
+> Maybe that would be applicable here as well?  It would at least be
+> nice to use a common #define for the Lane Equalization Control
+> register offset from the capability base.
 
->=20
-> It looks wrong to me to do the assert and deassert in different
-> places:
->=20
->   mtk_pcie_setup
->     reset_control_bulk_assert(pcie->phy_resets)        <--
->     mtk_pcie_en7581_power_up
->       mdelay(PCIE_EN7581_RESET_TIME_MS)
->       reset_control_bulk_deassert(pcie->phy_resets)    <--
->       mdelay(PCIE_EN7581_RESET_TIME_MS)
->=20
-> That makes the code hard to understand.
-
-The phy reset line was already asserted running reset_control_assert() in
-mtk_pcie_setup() and de-asserted running reset_control_deassert() in
-mtk_pcie_power_up() before adding EN7581 support. Moreover, EN7581 requires
-to run phy_init()/phy_power_on() before de-asserting the phy reset lines.
-I guess I can add a comment to make it more clear. Agree?
-
->=20
-> > +	err =3D phy_init(pcie->phy);
-> > +	if (err) {
-> > +		dev_err(dev, "failed to initialize PHY\n");
-> > +		return err;
-> > +	}
-> > +
-> > +	err =3D phy_power_on(pcie->phy);
-> > +	if (err) {
-> > +		dev_err(dev, "failed to power on PHY\n");
-> > +		goto err_phy_on;
-> > +	}
-> > +
-> > +	err =3D reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets,=
- pcie->phy_resets);
-> > +	if (err) {
-> > +		dev_err(dev, "failed to deassert PHYs\n");
-> > +		goto err_phy_deassert;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Wait for the time needed to complete the bulk de-assert above.
-> > +	 * This time is specific for EN7581 SoC.
-> > +	 */
-> > +	mdelay(PCIE_EN7581_RESET_TIME_MS);
-> > +
-> > +	pm_runtime_enable(dev);
-> > +	pm_runtime_get_sync(dev);
-> > +
->=20
-> > +	err =3D clk_bulk_prepare(pcie->num_clks, pcie->clks);
-> > +	if (err) {
-> > +		dev_err(dev, "failed to prepare clock\n");
-> > +		goto err_clk_prepare;
-> > +	}
-> > +
-> > +	val =3D FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
-> > +	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
-> > +	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
-> > +	      FIELD_PREP(PCIE_VAL_LN1_UPSTREAM, 0x41);
-> > +	writel_relaxed(val, pcie->base + PCIE_EQ_PRESET_01_REG);
-> > +
-> > +	val =3D PCIE_K_PHYPARAM_QUERY | PCIE_K_QUERY_TIMEOUT |
-> > +	      FIELD_PREP(PCIE_K_PRESET_TO_USE_16G, 0x80) |
-> > +	      FIELD_PREP(PCIE_K_PRESET_TO_USE, 0x2) |
-> > +	      FIELD_PREP(PCIE_K_FINETUNE_MAX, 0xf);
-> > +	writel_relaxed(val, pcie->base + PCIE_PIPE4_PIE8_REG);
->=20
-> Why is this equalization stuff in the middle between
-> clk_bulk_prepare() and clk_bulk_enable()?  Is the split an actual
-> requirement, or could we use clk_bulk_prepare_enable() here, like we
-> do in mtk_pcie_power_up()?
-
-Nope, we can replace clk_bulk_enable() with clk_bulk_prepare_enable() and
-remove clk_bulk_prepare() in mtk_pcie_en7581_power_up() since we actually
-implements just enable callback for EN7581 in clk-en7523.c.
-
->=20
-> If the split is required, a comment about why would be helpful.
->=20
-> > +	err =3D clk_bulk_enable(pcie->num_clks, pcie->clks);
-> > +	if (err) {
-> > +		dev_err(dev, "failed to prepare clock\n");
-> > +		goto err_clk_enable;
-> > +	}
->=20
-> Per https://lore.kernel.org/r/ZypgYOn7dcYIoW4i@lore-desk,
-> REG_PCI_CONTROL is asserted/deasserted here by en7581_pci_enable().
-
-correct
-
->=20
-> Is this where PERST# is asserted?  If so, a comment to that effect
-> would be helpful.  Where is PERST# deasserted?  Where are the required
-> delays before deassert done?
-
-I can add a comment in en7581_pci_enable() describing the PERST issue for
-EN7581. Please note we have a 250ms delay in en7581_pci_enable() after
-configuring REG_PCI_CONTROL register.
-
-https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#L396
+FWIW, these registers are HwInit/RO.  In our (Broadcom) case we have
+to write them using an internal  register block that is not visible in
+the config space.  In other words, we do not use the cap offset.
 
 Regards,
-Lorenzo
-
->=20
+Jim
+Broadcom STB/CM
+>
+> Although I see that no such #define exists in pci_regs.h, so I guess
+> there's nothing to do here yet.
+>
+> The only users of equalization settings I could find so far are:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/pci/controller/dwc/pcie-tegra194.c?id=3Dv6.11#n832
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/pci/controller/dwc/pcie-qcom-common.c?id=3Dv6.12-rc1#n11
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/pci/controller/pcie-mediatek-gen3.c?id=3Dv6.12-rc1#n909
+>
 > Bjorn
-
---ICCrOV43i12jfSvz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZyvwXAAKCRA6cBh0uS2t
-rEp6AQCtSYy3YAUzds8hvCM6UpvkI2xTYG22JsIAv0MIYQIuXgEA0T+smyZrSC8l
-SWuzngL5C7nN60iXccYVAU+/Lr2MsAs=
-=FAIL
------END PGP SIGNATURE-----
-
---ICCrOV43i12jfSvz--
+>
 
