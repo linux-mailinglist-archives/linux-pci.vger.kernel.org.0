@@ -1,210 +1,201 @@
-Return-Path: <linux-pci+bounces-16108-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16109-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2BFD9BE1BF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 10:07:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 606259BE21B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 10:15:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 438B6B227CE
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 09:07:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 835241C23122
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 09:15:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B69E1DE88E;
-	Wed,  6 Nov 2024 09:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 702D51D9339;
+	Wed,  6 Nov 2024 09:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dA+D8MA+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6YU4Ku6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB371D9337;
-	Wed,  6 Nov 2024 09:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4069B1D9329;
+	Wed,  6 Nov 2024 09:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730883843; cv=none; b=aSC95aOcOBum6RlRZslH15nHWbstqrTCouvZKjFcRQoV870s8yfYdBEhebXOBSYsjsuwSWGjEtxAd5zdxV07IIgtkYCABSV9SO6Ye+ZlWawaHRJJh6NC9q7VlgejLHRuC5EI9FaeiErI6i1Z4YtMwIcSKM748qPt99gs+leDcrs=
+	t=1730884533; cv=none; b=f62hp4xkf7ZWPUxw+016rUtprF5U+WhTrjLqnOytDx53PGefD8AG7msMYkMNxqbBzwCKZx+eGc1YUDXFk4WPQ1xyUnLzLxmUsy9VL+K/3Vyi5BYeAMJAHXPxiLc5NGVB7SKLluZpwyRzZ50Ks+jnneqHOqqSPN7zpHd6hFYvNYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730883843; c=relaxed/simple;
-	bh=6cwVqwRy1wuBgGHHjAPhRk6T+e2OlsLMv98lUlJ1Mvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YnwdGR8R28rCh9T+BMzTBlklAUzdQlFVx1FWpWkz0mxBeWV5wrX907zRDbft1/iRMBiKq8PLJmetiwJUYm63vH568BuYJ+aQKI8nJd7aqvTwFKQJjtdvaTRhycWR5HKhfbN59VnSRS4+3qdVa9PsplUwdhj+zMh/cr2mk2oLL30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dA+D8MA+; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1730883833; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Z+sxZ++Zk/sXquFko87mDs4djKewv/tiZai6wAuYD2I=;
-	b=dA+D8MA+u1EivGpXdqXtyxoSMEr7sdEvK2Q91Iw0WLcnsqZBnMtDo+EMXdhtPVduAuG79J2riXn4LwiQkWU2hyGraoQ6RvYa3PKabkN76WXW3iul17I183rhjUOJWm31cYBIg0PMqkyZS15Ne/qV2OQsXiQUodp5sLmo84V5VmM=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WIqmpDn_1730883831 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 06 Nov 2024 17:03:52 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Cc: bhelgaas@google.com,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	xueshuai@linux.alibaba.com
-Subject: [RFC PATCH v1 2/2] PCI/AER: report fatal errors of RCiEP and EP if link recoverd
-Date: Wed,  6 Nov 2024 17:03:39 +0800
-Message-ID: <20241106090339.24920-3-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20241106090339.24920-1-xueshuai@linux.alibaba.com>
-References: <20241106090339.24920-1-xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1730884533; c=relaxed/simple;
+	bh=EwAJq0GjySd0IJ1U4/MaQRX0fXrzwNh3orlaf6pjFQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qXWi2PcGjhEV4cZHArjfpKlrlR17MTw8dYvo0xNOwE9Dj7JedOhnSELxXO++IsHS6R6Sp/XHkP2itCymqimJ8tpNqZE+5n5NZs4BgTEoiBQ0GYaaKrwX4PtFXk5hqR/QMvH6Hwj9QfaAluHXdo552JogBHsEeg7dvDOkdogMsQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6YU4Ku6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3742C4CECD;
+	Wed,  6 Nov 2024 09:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730884532;
+	bh=EwAJq0GjySd0IJ1U4/MaQRX0fXrzwNh3orlaf6pjFQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e6YU4Ku6I+ni7xq3vLu1huym1FyGpwUtUsFP63qGYPPMcZSYcOAPNCOAGyE2tnOD+
+	 kFp9NuFnyTUGRaydRbvD6qlYt/52XljzLEIsUrpcqHk+nPE70OuiwTo9TX7Gl3FnqQ
+	 nCgWygWxFML+BPzrzkG/5Ou5wfHWMigdLdOr4szqgDNxLDipbfMtd5yIHquZirXFMh
+	 2e864SNAHbTFdfVNTWpOhIsAHXpd9REuWS66FGdKYT2QIkIj/0cLXkGe20zTwectbe
+	 5HjavNReU71zkSJRIlq0SxnPawGfkgQLd0z1hcltKYl19B2IsLUTWRTWJtf9zMKHbn
+	 9phjPbWRwVi5g==
+Date: Wed, 6 Nov 2024 10:15:27 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
+	tglx@linutronix.de, jdmason@kudzu.us
+Subject: Re: [PATCH v4 0/5] PCI: EP: Add RC-to-EP doorbell with platform MSI
+ controller
+Message-ID: <Zyszr3Cqg8UXlbqw@ryzen>
+References: <20241031-ep-msi-v4-0-717da2d99b28@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241031-ep-msi-v4-0-717da2d99b28@nxp.com>
 
-The AER driver has historically avoided reading the configuration space of an
-endpoint or RCiEP that reported a fatal error, considering the link to that
-device unreliable. Consequently, when a fatal error occurs, the AER and DPC
-drivers do not report specific error types, resulting in logs like:
+Hello Frank,
 
-[  245.281980] pcieport 0000:30:03.0: EDR: EDR event received
-[  245.287466] pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
-[  245.295372] pcieport 0000:30:03.0: DPC: ERR_FATAL detected
-[  245.300849] pcieport 0000:30:03.0: AER: broadcast error_detected message
-[  245.307540] nvme nvme0: frozen state error detected, reset controller
-[  245.722582] nvme 0000:34:00.0: ready 0ms after DPC
-[  245.727365] pcieport 0000:30:03.0: AER: broadcast slot_reset message
+On Thu, Oct 31, 2024 at 12:26:59PM -0400, Frank Li wrote:
+> ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
+> │            │   │                                   │   │                │
+> │            │   │ PCI Endpoint                      │   │ PCI Host       │
+> │            │   │                                   │   │                │
+> │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
+> │            │   │                                   │   │                │
+> │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
+> │ Controller │   │   update doorbell register address│   │                │
+> │            │   │   for BAR                         │   │                │
+> │            │   │                                   │   │ 3. Write BAR<n>│
+> │            │◄──┼───────────────────────────────────┼───┤                │
+> │            │   │                                   │   │                │
+> │            ├──►│ 4.Irq Handle                      │   │                │
+> │            │   │                                   │   │                │
+> │            │   │                                   │   │                │
+> └────────────┘   └───────────────────────────────────┘   └────────────────┘
+> 
+> This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
+> 
+> Original patch only target to vntb driver. But actually it is common
+> method.
+> 
+> This patches add new API to pci-epf-core, so any EP driver can use it.
+> 
+> Previous v2 discussion here.
+> https://lore.kernel.org/imx/20230911220920.1817033-1-Frank.Li@nxp.com/
+> 
+> Changes in v4:
+> - Remove patch genirq/msi: Add cleanup guard define for msi_lock_descs()/msi_unlock_descs()
+> - Use new method to avoid compatible problem.
+>   Add new command DOORBELL_ENABLE and DOORBELL_DISABLE.
+>   pcitest -B send DOORBELL_ENABLE first, EP test function driver try to
+> remap one of BAR_N (except test register bar) to ITS MSI MMIO space. Old
+> driver don't support new command, so failure return, not side effect.
+>   After test, DOORBELL_DISABLE command send out to recover original map, so
+> pcitest bar test can pass as normal.
+> - Other detail change see each patches's change log
+> - Link to v3: https://lore.kernel.org/r/20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com
+> 
+> Change from v2 to v3
+> - Fixed manivannan's comments
+> - Move common part to pci-ep-msi.c and pci-ep-msi.h
+> - rebase to 6.12-rc1
+> - use RevID to distingiush old version
+> 
+> mkdir /sys/kernel/config/pci_ep/functions/pci_epf_test/func1
+> echo 16 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/msi_interrupts
+> echo 0x080c > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/deviceid
+> echo 0x1957 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/vendorid
+> echo 1 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/revid
+> ^^^^^^ to enable platform msi support.
+> ln -s /sys/kernel/config/pci_ep/functions/pci_epf_test/func1 /sys/kernel/config/pci_ep/controllers/4c380000.pcie-ep
 
-But, if the link recovered after hot reset, we can safely access AER status of
-the error device. In such case, report fatal error which helps to figure out the
-error root case.
+Perhaps drop these steps, to not confuse the reader.
+They are no longer relevant with the latest revision anyway.
 
-After this patch, the logs like:
+> 
+> - use new device ID, which identify support doorbell to avoid broken
+> compatility.
+> 
+>     Enable doorbell support only for PCI_DEVICE_ID_IMX8_DB, while other devices
+>     keep the same behavior as before.
+> 
+>            EP side             RC with old driver      RC with new driver
+>     PCI_DEVICE_ID_IMX8_DB          no probe              doorbell enabled
+>     Other device ID             doorbell disabled*       doorbell disabled*
+> 
+>     * Behavior remains unchanged.
+> 
+> Change from v1 to v2
+> - Add missed patch for endpont/pci-epf-test.c
+> - Move alloc and free to epc driver from epf.
+> - Provide general help function for EPC driver to alloc platform msi irq.
+> - Fixed manivannan's comments.
 
-[  414.356755] pcieport 0000:30:03.0: EDR: EDR event received
-[  414.362240] pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
-[  414.370148] pcieport 0000:30:03.0: DPC: ERR_FATAL detected
-[  414.375642] pcieport 0000:30:03.0: AER: broadcast error_detected message
-[  414.382335] nvme nvme0: frozen state error detected, reset controller
-[  414.645413] pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
-[  414.788016] nvme 0000:34:00.0: ready 0ms after DPC
-[  414.796975] nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
-[  414.807312] nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
-[  414.815305] nvme 0000:34:00.0:    [ 4] DLP                    (First)
-[  414.821768] pcieport 0000:30:03.0: AER: broadcast slot_reset message
+I wanted to try this series on rk3588, which has a MSI controller as part of the GIC
+using Interrupt Translation Services (ITS), for the Root Complex DT node:
+https://github.com/torvalds/linux/blob/v6.12-rc6/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi#L164
+https://github.com/torvalds/linux/blob/v6.12-rc6/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi#L1981-L1999
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- drivers/pci/pci.h      |  1 +
- drivers/pci/pcie/aer.c | 50 ++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pcie/err.c |  6 +++++
- 3 files changed, 57 insertions(+)
+There isn't any reference to a MSI controller in the Endpoint DT node:
+https://github.com/torvalds/linux/blob/v6.12-rc6/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi#L189
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 0866f79aec54..143f960a813d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -505,6 +505,7 @@ struct aer_err_info {
- };
- 
- int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
-+int aer_get_device_fatal_error_info(struct pci_dev *dev, struct aer_err_info *info);
- void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
- #endif	/* CONFIG_PCIEAER */
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 13b8586924ea..0c1e382ce117 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1252,6 +1252,56 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 	return 1;
- }
- 
-+/**
-+ * aer_get_device_fatal_error_info - read fatal error status from EP or RCiEP
-+ * and store it to info
-+ * @dev: pointer to the device expected to have a error record
-+ * @info: pointer to structure to store the error record
-+ *
-+ * Return 1 on success, 0 on error.
-+ *
-+ * Note that @info is reused among all error devices. Clear fields properly.
-+ */
-+int aer_get_device_fatal_error_info(struct pci_dev *dev, struct aer_err_info *info)
-+{
-+	int type = pci_pcie_type(dev);
-+	int aer = dev->aer_cap;
-+	u32 aercc;
-+
-+	pci_info(dev, "type :%d\n", type);
-+
-+	/* Must reset in this function */
-+	info->status = 0;
-+	info->tlp_header_valid = 0;
-+	info->severity = AER_FATAL;
-+
-+	/* The device might not support AER */
-+	if (!aer)
-+		return 0;
-+
-+
-+	if (type == PCI_EXP_TYPE_ENDPOINT || type == PCI_EXP_TYPE_RC_END) {
-+		/* Link is healthy for IO reads now */
-+		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
-+			&info->status);
-+		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-+			&info->mask);
-+		if (!(info->status & ~info->mask))
-+			return 0;
-+
-+		/* Get First Error Pointer */
-+		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &aercc);
-+		info->first_error = PCI_ERR_CAP_FEP(aercc);
-+
-+		if (info->status & AER_LOG_TLP_MASKS) {
-+			info->tlp_header_valid = 1;
-+			pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG, &info->tlp);
-+		}
-+	}
-+
-+	return 1;
-+}
-+
- static inline void aer_process_err_devices(struct aer_err_info *e_info)
- {
- 	int i;
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 31090770fffc..a74ae6a55064 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	struct pci_dev *bridge;
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
- 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-+	struct aer_err_info info;
- 
- 	/*
- 	 * If the error was detected by a Root Port, Downstream Port, RCEC,
-@@ -223,6 +224,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 			pci_warn(bridge, "subordinate device reset failed\n");
- 			goto failed;
- 		}
-+
-+		/* Link recovered, report fatal errors on RCiEP or EP */
-+		if (aer_get_device_fatal_error_info(dev, &info))
-+			aer_print_error(dev, &info);
- 	} else {
- 		pci_walk_bridge(bridge, report_normal_detected, &status);
- 	}
-@@ -259,6 +264,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	if (host->native_aer || pcie_ports_native) {
- 		pcie_clear_device_status(dev);
- 		pci_aer_clear_nonfatal_status(dev);
-+		pci_aer_clear_fatal_status(dev);
- 	}
- 
- 	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
--- 
-2.39.3
+When testing your series, I get an error in
+platform_device_msi_init_and_alloc_irqs(), because no domain is found.
 
+I assume that is it "msi-parent" that we should add here.
+
+However, looking at:
+$ git grep -p msi-parent arch/arm64/boot/dts/freescale/
+
+I do not see any freescale/iMX platform specifying a msi-parent for the EP node.
+
+Is there any additional DTS changes needed for iMX that is not part of this series,
+or what am I missing?
+
+When adding "msi-parent = <&its1 0x0000>;
+to the EP node
+(this is just a guess since RC node has: msi-map = <0x0000 &its1 0x0000 0x1000>;)
+
+I do get a domain, but I do not get any IRQ on the EP side when the RC side is
+writing the doorbell (as part of pcitest -B),
+
+[    7.978984] pci_epc_alloc_doorbell: num_db: 1
+[    7.979545] pci_epf_test_bind: doorbell_addr: 0x40
+[    7.979978] pci_epf_test_bind: doorbell_data: 0x0
+[    7.980397] pci_epf_test_bind: doorbell_bar: 0x1
+[   21.114613] pci_epf_enable_doorbell db_bar: 1
+[   21.115001] pci_epf_enable_doorbell: doorbell_addr: 0xfe650040
+[   21.115512] pci_epf_enable_doorbell: phys_addr: 0xfe650000
+[   21.115994] pci_epf_enable_doorbell: success
+
+# cat /proc/interrupts | grep epc
+117:          0          0          0          0          0          0          0          0  ITS-pMSI-a40000000.pcie-ep   0 Edge      pci-epc-doorbell0
+
+Even if I try to write the doorbell manually from EP side using devmem:
+
+# devmem 0xfe670040 32 1
+
+it still doesn't trigger a IRQ on the EP side:
+# cat /proc/interrupts | grep epc
+117:          0          0          0          0          0          0          0          0  ITS-pMSI-a40000000.pcie-ep   0 Edge      pci-epc-doorbell0
+
+Any ideas?
+
+
+Kind regards,
+Niklas
 
