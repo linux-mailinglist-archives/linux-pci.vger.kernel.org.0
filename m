@@ -1,134 +1,214 @@
-Return-Path: <linux-pci+bounces-16176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCACD9BF94A
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:29:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6347F9BF964
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:40:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 841351F228BB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:29:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB4B01F225ED
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:40:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A73FA20CCD8;
-	Wed,  6 Nov 2024 22:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA8B1DDC33;
+	Wed,  6 Nov 2024 22:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwBqoK48"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ejqg1IDH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FA120C313;
-	Wed,  6 Nov 2024 22:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5AA1917F3;
+	Wed,  6 Nov 2024 22:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730932176; cv=none; b=N4iyeq79SeU26g/MZjModXsbkkjO0Be9fhQgvAAHA0nSLxWu8UaYNrj5QS4jJglCG7C+FSuWpYwDKEvnIUbFbXjuVdFEi/yGQO3fZlKr+taRkUyP1Cf+wrUbYtu6fiKsUKrrd571zh6aXKBlKoo5d9JxcPiu2gRQGsScATmIWew=
+	t=1730932831; cv=none; b=M3vcjkTSm/oxqaM/nWvv2ux0/fpsMAfWvLlK1kI33ERXb2JybSOaKFcBdxLZYtB0YjTzyLfvy+XeWl540fTuzVCKME90sFwzGtNZkWranLI6g1tPdGbHlWzaEof1c9yRD0NaHS48c4vlGBbhawy928PDUSXXwAy9GxIQ5S1rRvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730932176; c=relaxed/simple;
-	bh=FHEZ8Db5PTgMmVRyesXrgUdXjQUoWglkt/etn3U6PNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eWdni2068q5zQxvNyP2ssIxY2BcrgQFyp0mAxCatkdwKvPY5b/EqfpEA9AR70qTsPdN32rHt56jqap1KJQjN9cwcpd2jNsi83nBeVbgqut3i57nzihmqcuAdS0TUD61aPTI0R87WVjzJR2Fg0VufrGME9jFgwTo7oAflR6nSxYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwBqoK48; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B420EC4CEC6;
-	Wed,  6 Nov 2024 22:29:35 +0000 (UTC)
+	s=arc-20240116; t=1730932831; c=relaxed/simple;
+	bh=zlGCzVAGRGtkQDBPcQQg/UhnzVd+u1CKmbHht0FUdm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2Amll/nbhlOSPk3jPt7mrw8Yp068AFkycrxLzuT8jm/su12/Z69ztsSDtubpX460UeUg0Xk+KDPenax6sf+owHVrwhaEStJt0ei7ropUCeSU0ecRCpAS1PBM7mpHL7LpWGBRxY09E6U7VDi3Rc5ClAKZCGkRLdX5SolLZCYkME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ejqg1IDH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94ADC4CECD;
+	Wed,  6 Nov 2024 22:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730932175;
-	bh=FHEZ8Db5PTgMmVRyesXrgUdXjQUoWglkt/etn3U6PNE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VwBqoK488rj4i5ZAs5nN/uCeP7h7zth66K1wgO39pGpLfXIiXeWtenBjfJhyvMNe7
-	 mv07rsD6goSN/i0a8VR0F/IyfTPfMRI2Dv8i/Pvw8CLQaASyp4rwG1bScAnkMmqQ61
-	 v60vLFFo0q2VvD6AucpE0Tj5ln7xxE813lpwCzQGU0oJO0flmfj5X8mLi9v7BMW9Sz
-	 xSDL7J8lSfqV8JVK+mJBUZOmu2Je/8o5LQXTVqoEjnqjbMahPp4xtaqDCdfSInx1lT
-	 QPZVvbKUkgWbaDLDo2fR+Yic0+RMp1Gh3L2ncFFu7w90J4AGSqJZPCfpdZ5jMow2Ra
-	 S2rstTiEMhKzw==
-Date: Wed, 6 Nov 2024 16:29:33 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-	Frank Li <frank.li@nxp.com>, "mani@kernel.org" <mani@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH v2] PCI: dwc: Fix resume failure if no EP is connected at
- some platforms
-Message-ID: <20241106222933.GA1543549@bhelgaas>
+	s=k20201202; t=1730932831;
+	bh=zlGCzVAGRGtkQDBPcQQg/UhnzVd+u1CKmbHht0FUdm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ejqg1IDHwzlcXm+gTVfHyG/fH9dn2aye1emFSVwYUpLaRVBns6ZFdN+jTqji92nya
+	 wNQ8OtReYzup80Z6PZqSGQrtWd5UQzSLLE20QAcOrK8hj36qEdKBDwf+F5g45svYtZ
+	 iJeMOJ19xgjWFFl2DmzcFcGF2pMeb/wBmIvFyFDK770WA4yBTnl7QWhm7sRWWLgZ9p
+	 46AHtzrmU3TgQdA+CkQnW9tLM7ai2LBbo+FCgDYU3HG2Q/v+6dQQ6kln27zonzGsOr
+	 B3URqqckrkan9d5iqjFR2+Jas0sW+GHEmAVYWMXYXtGXMyrbGyd+K+faKSkFK/oP7m
+	 u1um5ZFqX0uQg==
+Date: Wed, 6 Nov 2024 23:40:28 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com,
+	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
+	angelogioacchino.delregno@collabora.com
+Subject: Re: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
+Message-ID: <ZyvwXHMRz0kI0J5O@lore-desk>
+References: <aca00bd672ee576ad96d279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org>
+ <20241106203219.GA1530199@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ICCrOV43i12jfSvz"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676998092241543AEABFAAB8C532@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <20241106203219.GA1530199@bhelgaas>
 
-On Wed, Nov 06, 2024 at 01:59:41AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 2024年11月6日 7:27
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: kwilczynski@kernel.org; bhelgaas@google.com;
-> > lorenzo.pieralisi@arm.com; Frank Li <frank.li@nxp.com>; mani@kernel.org;
-> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; kernel@pengutronix.de; imx@lists.linux.dev
-> > Subject: Re: [PATCH v2] PCI: dwc: Fix resume failure if no EP is connected at
-> > some platforms
-> > 
-> > On Mon, Jul 22, 2024 at 02:15:13PM +0800, Richard Zhu wrote:
-> > > The dw_pcie_suspend_noirq() function currently returns success
-> > > directly if no endpoint (EP) device is connected. However, on some
-> > > platforms, power loss occurs during suspend, causing dw_resume() to do
-> > > nothing in this case.
-> > > This results in a system halt because the DWC controller is not
-> > > initialized after power-on during resume.
 
-> > > @@ -933,23 +933,23 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-> > >  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) &
-> > PCI_EXP_LNKCTL_ASPM_L1)
-> > >  		return 0;
-> > >
-> > > -	if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
-> > > -		return 0;
-> > > -
-> > > -	if (pci->pp.ops->pme_turn_off)
-> > > -		pci->pp.ops->pme_turn_off(&pci->pp);
-> > > -	else
-> > > -		ret = dw_pcie_pme_turn_off(pci);
-> > > +	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
-> > > +		/* Only send out PME_TURN_OFF when PCIE link is up */
-> > > +		if (pci->pp.ops->pme_turn_off)
-> > > +			pci->pp.ops->pme_turn_off(&pci->pp);
-> > > +		else
-> > > +			ret = dw_pcie_pme_turn_off(pci);
-> > 
-> > This looks possibly racy since the link can go down at any point.
->
-> When link is down and without this commit changes,
-> dw_pcie_suspend_noirq() return directly, and the PME_TURN_OFF
-> wouldn't be kicked off.
+--ICCrOV43i12jfSvz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right, that's the code change.
+> On Wed, Jul 03, 2024 at 06:12:44PM +0200, Lorenzo Bianconi wrote:
+> > Introduce support for Airoha EN7581 PCIe controller to mediatek-gen3
+> > PCIe controller driver.
+> > ...
+>=20
+> > +static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+> > +{
+> > +	struct device *dev =3D pcie->dev;
+> > +	int err;
+> > +	u32 val;
+> > +
+> > +	/*
+> > +	 * Wait for the time needed to complete the bulk assert in
+> > +	 * mtk_pcie_setup for EN7581 SoC.
+> > +	 */
+> > +	mdelay(PCIE_EN7581_RESET_TIME_MS);
 
-> I change the behavior to issue the PME_TURN_OFF when link is up
-> here.
+Hi Bjorn,
 
-But I don't think you responded to the race question.  What happens
-here?
+>=20
+> It looks wrong to me to do the assert and deassert in different
+> places:
+>=20
+>   mtk_pcie_setup
+>     reset_control_bulk_assert(pcie->phy_resets)        <--
+>     mtk_pcie_en7581_power_up
+>       mdelay(PCIE_EN7581_RESET_TIME_MS)
+>       reset_control_bulk_deassert(pcie->phy_resets)    <--
+>       mdelay(PCIE_EN7581_RESET_TIME_MS)
+>=20
+> That makes the code hard to understand.
 
-  if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
-    --> link goes down here <--
-    pci->pp.ops->pme_turn_off(&pci->pp);
+The phy reset line was already asserted running reset_control_assert() in
+mtk_pcie_setup() and de-asserted running reset_control_deassert() in
+mtk_pcie_power_up() before adding EN7581 support. Moreover, EN7581 requires
+to run phy_init()/phy_power_on() before de-asserting the phy reset lines.
+I guess I can add a comment to make it more clear. Agree?
 
-You decide the LTSSM is active and the link is up.  Then the link goes
-down.  Then you send PME_Turn_off.  Now what?
+>=20
+> > +	err =3D phy_init(pcie->phy);
+> > +	if (err) {
+> > +		dev_err(dev, "failed to initialize PHY\n");
+> > +		return err;
+> > +	}
+> > +
+> > +	err =3D phy_power_on(pcie->phy);
+> > +	if (err) {
+> > +		dev_err(dev, "failed to power on PHY\n");
+> > +		goto err_phy_on;
+> > +	}
+> > +
+> > +	err =3D reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets,=
+ pcie->phy_resets);
+> > +	if (err) {
+> > +		dev_err(dev, "failed to deassert PHYs\n");
+> > +		goto err_phy_deassert;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Wait for the time needed to complete the bulk de-assert above.
+> > +	 * This time is specific for EN7581 SoC.
+> > +	 */
+> > +	mdelay(PCIE_EN7581_RESET_TIME_MS);
+> > +
+> > +	pm_runtime_enable(dev);
+> > +	pm_runtime_get_sync(dev);
+> > +
+>=20
+> > +	err =3D clk_bulk_prepare(pcie->num_clks, pcie->clks);
+> > +	if (err) {
+> > +		dev_err(dev, "failed to prepare clock\n");
+> > +		goto err_clk_prepare;
+> > +	}
+> > +
+> > +	val =3D FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
+> > +	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
+> > +	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
+> > +	      FIELD_PREP(PCIE_VAL_LN1_UPSTREAM, 0x41);
+> > +	writel_relaxed(val, pcie->base + PCIE_EQ_PRESET_01_REG);
+> > +
+> > +	val =3D PCIE_K_PHYPARAM_QUERY | PCIE_K_QUERY_TIMEOUT |
+> > +	      FIELD_PREP(PCIE_K_PRESET_TO_USE_16G, 0x80) |
+> > +	      FIELD_PREP(PCIE_K_PRESET_TO_USE, 0x2) |
+> > +	      FIELD_PREP(PCIE_K_FINETUNE_MAX, 0xf);
+> > +	writel_relaxed(val, pcie->base + PCIE_PIPE4_PIE8_REG);
+>=20
+> Why is this equalization stuff in the middle between
+> clk_bulk_prepare() and clk_bulk_enable()?  Is the split an actual
+> requirement, or could we use clk_bulk_prepare_enable() here, like we
+> do in mtk_pcie_power_up()?
 
-If it's safe to try to send PME_Turn_off regardless of whether the
-link is up or down, there would be no need to test the LTSSM state.
+Nope, we can replace clk_bulk_enable() with clk_bulk_prepare_enable() and
+remove clk_bulk_prepare() in mtk_pcie_en7581_power_up() since we actually
+implements just enable callback for EN7581 in clk-en7523.c.
 
-Bjorn
+>=20
+> If the split is required, a comment about why would be helpful.
+>=20
+> > +	err =3D clk_bulk_enable(pcie->num_clks, pcie->clks);
+> > +	if (err) {
+> > +		dev_err(dev, "failed to prepare clock\n");
+> > +		goto err_clk_enable;
+> > +	}
+>=20
+> Per https://lore.kernel.org/r/ZypgYOn7dcYIoW4i@lore-desk,
+> REG_PCI_CONTROL is asserted/deasserted here by en7581_pci_enable().
+
+correct
+
+>=20
+> Is this where PERST# is asserted?  If so, a comment to that effect
+> would be helpful.  Where is PERST# deasserted?  Where are the required
+> delays before deassert done?
+
+I can add a comment in en7581_pci_enable() describing the PERST issue for
+EN7581. Please note we have a 250ms delay in en7581_pci_enable() after
+configuring REG_PCI_CONTROL register.
+
+https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#L396
+
+Regards,
+Lorenzo
+
+>=20
+> Bjorn
+
+--ICCrOV43i12jfSvz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZyvwXAAKCRA6cBh0uS2t
+rEp6AQCtSYy3YAUzds8hvCM6UpvkI2xTYG22JsIAv0MIYQIuXgEA0T+smyZrSC8l
+SWuzngL5C7nN60iXccYVAU+/Lr2MsAs=
+=FAIL
+-----END PGP SIGNATURE-----
+
+--ICCrOV43i12jfSvz--
 
