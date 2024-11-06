@@ -1,52 +1,50 @@
-Return-Path: <linux-pci+bounces-16160-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16161-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05AF59BF45E
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 18:36:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E0CE9BF49B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 18:51:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30CF91C21D32
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 17:36:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98547B23C34
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 17:51:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE919645;
-	Wed,  6 Nov 2024 17:36:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8553A2071E2;
+	Wed,  6 Nov 2024 17:51:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HYuQmoUT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHyA8XQo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0352038A6;
-	Wed,  6 Nov 2024 17:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3B42036E2;
+	Wed,  6 Nov 2024 17:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730914593; cv=none; b=XJZgO1sYqsTjzJfg9PVweQNwQfC0cgbdUSsfDvERfmvCQ7XHOwjL8Bx4xgy6FjWWTpW5n1PIy6AiUQyb0mgz93IcIHmceYTI+9ZggMjhvZbxPYuIwQrcZSVzQaKZnpQRIpIS1ERmdeHC6eb1w+Wn/sRrMy+NddwxBHD3C5TXKAs=
+	t=1730915461; cv=none; b=n2SnmmDtGGqa0iTtotDdZ8z0BRKSsz50QqvO3YQQr9bIM8Nlsn3lU4JvXQt7IIMJ8/Lq2pdlsZZP+OXU9RvkMv0eFrXi9PsBQT3qoLm6X9sqx+KNjgIkR0Q9iXj0Q+TePRQIZQM9ppkethi7obp5X6MUWan/fNnerZqSR7xLwf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730914593; c=relaxed/simple;
-	bh=1pOmjwpfNyCJNXJY7y/BgWxROZPdpotF0MYZpYajSzc=;
+	s=arc-20240116; t=1730915461; c=relaxed/simple;
+	bh=eGE+JvjEAxRC3XXv8UCLb6VqT7OxpYjwPHHZhlH0s2s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XJ6TMou+MDL/Q0TeRcKPRGvelrNRr9kl+Qr4q+NL1PcI46c/lz89yrcblCgNaL/JF0X9IF6TTGuJdxIClmp7kwaqvEkUXHvavoVsjEe8z5PeUQ9c7kcC6yl3L4m8KqVqKynjDa3WXvdGiy89TQxNNpZQW3pgdqzOwYnwpjhZuco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HYuQmoUT; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=gxTmyUAb89AtPdb+rKahOvBdQ8TDjXHqHlVhRRQ/Uxk=; b=HYuQmoUTGKqkwWsdYILgYJo0bQ
-	KCMaAFPzaF/zxbaCdhV2zLQIT6Hh5xA8tkxMhTcxm+zSV+/QFMgdCrLJxj15iXBKkKqeMWuPU0MtL
-	kACNvID0k+hI99OFEjuyz+bHtAzO7ILoykpJY7mi/zzW//ZogxWkFbEuMWLYJn73kJE8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1t8jx3-00CMX8-0D; Wed, 06 Nov 2024 18:36:17 +0100
-Date: Wed, 6 Nov 2024 18:36:16 +0100
-From: Andrew Lunn <andrew@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVGiamzPoJDu2OJ2gwphUHrLW+F+vvVMW/fvmReX+7z+G7/gVK22zzApdwjWpC7NYswzk45/C4MDq4tCsVRts1f+3p2AOOfkhSoF5UNd/6nKhPro6jaDbwq9sOUikTL0C5qTemPvgEbeUBqaxAQXPGOb6sUp8q3Mf5VZR4Du02g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHyA8XQo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101C6C4CED0;
+	Wed,  6 Nov 2024 17:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730915460;
+	bh=eGE+JvjEAxRC3XXv8UCLb6VqT7OxpYjwPHHZhlH0s2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pHyA8XQoMkIT6nDYTR4tSxHXWA160F57jbl6rLg0o95nxKlPKgKn/svyWJYzvM54y
+	 48JVbg4rtQbeUQN6/de/EIxk1gFquy03qwH0BglNNrw572JbcKk5ZD66T8vehqPwJe
+	 ucX4PSKLfiMy8DR+GFSivshfKXVU8NMqM+qreEFD/1QN7JmoTcnoM08NmFBMse4sq9
+	 EARL8AUb83hldPhpOnK01rfBQPBNd2z2S+ywjvKWrpE4FvkE+tz7bTKqwi0wt3Gmwz
+	 U6QVswTEzRiK44rVR/vmOVGcrOi7aZm0IthSICKttOHGb095Vyi7xwLHUtrSroWmM8
+	 Cwkcmxe97OOCg==
+Date: Wed, 6 Nov 2024 19:50:54 +0200
+From: Leon Romanovsky <leon@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
+Cc: Sanman Pradhan <sanman.p211993@gmail.com>,
 	Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
 	alexanderduyck@fb.com, kuba@kernel.org, kernel-team@meta.com,
 	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
@@ -56,7 +54,7 @@ Cc: Leon Romanovsky <leon@kernel.org>,
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
 Subject: Re: [PATCH net-next] eth: fbnic: Add PCIe hardware statistics
-Message-ID: <76fdd29a-c7fa-4b99-ae63-cce17c91dae9@lunn.ch>
+Message-ID: <20241106175054.GG5006@unreal>
 References: <20241106122251.GC5006@unreal>
  <20241106171257.GA1529850@bhelgaas>
 Precedence: bulk
@@ -88,13 +86,16 @@ On Wed, Nov 06, 2024 at 11:12:57AM -0600, Bjorn Helgaas wrote:
 > How would this be done in the PCI core?  As far as I can tell, all
 > these registers are device-specific and live in some device BAR.
 
-Is this a licences PCIe core?
+I would expect some sysfs file/directory exposed through PCI core.
+That sysfs needs to be connected to the relevant device through
+callback, like we are doing with .sriov_configure(). So every PCI
+device will be able to expose statistics without relation to netdev.
 
-Could the same statistics appear in other devices which licence the
-same core? Maybe this needs pulling out into a helper? If this is
-true, other uses of this core might not be networking hardware, so
-ethtool -S would not be the best interfaces. Then they should appear
-in debugfs?
+That interface should provide read access and write access with zero
+value to reset the counter/counters.
 
-	Andrew
+Thanks
+
+> 
+> Bjorn
 
