@@ -1,142 +1,183 @@
-Return-Path: <linux-pci+bounces-16182-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16183-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B00349BFA57
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 00:45:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B6D89BFA83
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 00:57:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E26E51C22381
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:45:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2D3B1F22BB2
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B45A1DE4C7;
-	Wed,  6 Nov 2024 23:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C336820E00A;
+	Wed,  6 Nov 2024 23:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="cTT8TQfj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJXoojrA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746E61D966A;
-	Wed,  6 Nov 2024 23:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730936724; cv=pass; b=Uauh3+XaJpJd72NhRdR4poz5Y3GD3O7QwzuLJ5J+7J15Ej637oqRFBm0qDff5VG0FnhesuY+L1kmtJjYRqjXf+I2BDwrUToJszvUtzMbTDfTSo3cnqP+UlZk2RO0pHojsv2G8sfW/dL7oY1Vu3RdM4hne4lWMh/vSSWY8fzlgjk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730936724; c=relaxed/simple;
-	bh=w9RBdGBrQqRvP4QVYXJHPuVD77PpiUcpzIMOVebp6nc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=bNBKlThnjCcfs7Wz8afDAV4W0HIFj08nVMG4aXpHPU8wbZoevv+jWTV5k5JHX0rzDyZIBtQ1UOABH4i0i/+qahVXbYqs3opL+1FzUmOFXTY34bVsXFNCj7hTfx06I+Vyff6lL4O24KYSVXM5HByCIWifGuBcrpgbhMxsCxjp7qs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=cTT8TQfj; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1730936695; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=R6HMMUHtc1LGPVEXrD5PNCVUxuA7BNkb7qJL3b0pLjLv8KPrIoadLVYSoabQ3Z+dYr67mzJPDqk/klYxmCyN1pZjEL4TFpbrIa/ruLX0WAV5YTwj4qgQXrVd1NZP9xJ/sg3VtgwMoaE2n2XRNUbiyFJfhoPtoeSxNv7H4Xsf8c8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1730936695; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=w9RBdGBrQqRvP4QVYXJHPuVD77PpiUcpzIMOVebp6nc=; 
-	b=RXsjqdDFZQ9QelySvS1PT8h+kkEyaqZOHzHv477RVO68k+djASH4mQZcOoGs4jU7GagDjlOuSd/TDOH6AgQ0wSgDtC60AmAog+s3Ux5EmBnHhhCPpkU3CNN47P9ocdI2umln9L1hWbpG9cqA8CiSj2cAoJ/K2xa2WHvbG58n/nc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1730936695;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=w9RBdGBrQqRvP4QVYXJHPuVD77PpiUcpzIMOVebp6nc=;
-	b=cTT8TQfjqYSX70R+jyXBXf3BreIvqkS/bPYdo1zcpQqYXavSLEcTWfuKhcb/sFB/
-	c9+YbkfqcF5ndTea00wwVd7HXbcGw7u9YZr3XhaKwno6pflglCl+Kr+3fHn9/GkfQ6x
-	IfqTxL1p3uzUoEE0DKAu4CHGUxwEeNcfWMmQdFfU=
-Received: by mx.zohomail.com with SMTPS id 1730936692453913.7917799009244;
-	Wed, 6 Nov 2024 15:44:52 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963171E04AC;
+	Wed,  6 Nov 2024 23:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730937442; cv=none; b=sFp3WW8teyLe2JBuO+8yz76adzKkGzDsM0gnuRhJyDZwqXfirl/b7E4oryHEanjYr4z6Qy4D6XWtdJAcZsqigER5yyk3SGS0vV4gKiZ1XsuyvwEnayAX8ftq00xZxM2DNhz3YVqOWEoJSksrNzLFCHRDZslgAjTAwioYLygiGew=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730937442; c=relaxed/simple;
+	bh=DonF2tK19bktznYDKFtWKjb2A0DFq9+Zr6P6AntNTwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbnJshI/1ZZHc3q45Wm63t05sAjQeTEI9OdsrkNXEwjNhcpUAN/E3z9jcVPQ+4QllTI7Qzodi34Z4LKDvoh8XvAypfezcI2O3hknkSVI2LD83+DQDsj2OqGLGM5DMP2iaj3+r1XkqxRJZVdW7Nxsfl4350xiQUCby6If2LXQ/aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJXoojrA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516A1C4CEC6;
+	Wed,  6 Nov 2024 23:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730937442;
+	bh=DonF2tK19bktznYDKFtWKjb2A0DFq9+Zr6P6AntNTwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hJXoojrAHfDtNDjbnHxFOTC/qc4NT08zXBL0OK2PX5didTEGluMMZUhzwmj06YkWu
+	 ZN5K6sNJTXYhcr0k03da080+Qe3NWw0iSeQ+XXnbN6l9M4MPTE5bRFnLF5kuwUGl7a
+	 QEUKJ/3HkurqQNoAhuZDLm/MmQG/JHH5/EoLjPt6t8LfSX+HzAoyJINSSU2mDyPiWz
+	 NUrcDOkmk5UPELqWtg0Lfr3PBtoVEN5V0EfZEzWfSdyLlCM9P20ujAjcaSAmwVo7Ti
+	 o3s2YjS/OFKi5cYtvJqS9lUZEq6zc1gJgEmltf89JjPo7B9WsB7RsvBmSrTZtB6968
+	 /+kTV1Uw3FwrQ==
+Date: Thu, 7 Nov 2024 00:57:16 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
+	tglx@linutronix.de, jdmason@kudzu.us
+Subject: Re: [PATCH v4 0/5] PCI: EP: Add RC-to-EP doorbell with platform MSI
+ controller
+Message-ID: <ZywCXOjuTTiayIxd@ryzen>
+References: <20241031-ep-msi-v4-0-717da2d99b28@nxp.com>
+ <Zyszr3Cqg8UXlbqw@ryzen>
+ <Zys4qs-uHvISaaPB@ryzen>
+ <ZyujpT+4bd7TwbcM@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Re: [PATCH v3 09/16] rust: add `io::Io` base type
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CAH5fLgjC5Rcq5VJbEFSVP_rE0xjj8CGdqxZexhPVsGcTZ+85HA@mail.gmail.com>
-Date: Wed, 6 Nov 2024 20:44:35 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- gregkh@linuxfoundation.org,
- rafael@kernel.org,
- bhelgaas@google.com,
- ojeda@kernel.org,
- alex.gaynor@gmail.com,
- boqun.feng@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- benno.lossin@proton.me,
- tmgross@umich.edu,
- a.hindborg@samsung.com,
- airlied@gmail.com,
- fujita.tomonori@gmail.com,
- lina@asahilina.net,
- pstanner@redhat.com,
- ajanulgu@redhat.com,
- lyude@redhat.com,
- robh@kernel.org,
- saravanak@google.com,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A309C141-E390-44C1-A2B7-A7A9CDB132D7@collabora.com>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-10-dakr@kernel.org>
- <CAH5fLggFD7pq0WCfMPYTZcFkvrXajPbxTBtkvSeh-N2isT1Ryw@mail.gmail.com>
- <ZyCo9SRP4aFZ6KsZ@pollux>
- <CAH5fLgjC5Rcq5VJbEFSVP_rE0xjj8CGdqxZexhPVsGcTZ+85HA@mail.gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-X-Mailer: Apple Mail (2.3826.200.121)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZyujpT+4bd7TwbcM@lizhi-Precision-Tower-5810>
 
-Sorry, I didn=E2=80=99t see this:
+On Wed, Nov 06, 2024 at 12:13:09PM -0500, Frank Li wrote:
+> On Wed, Nov 06, 2024 at 10:36:42AM +0100, Niklas Cassel wrote:
+> > On Wed, Nov 06, 2024 at 10:15:27AM +0100, Niklas Cassel wrote:
+> > >
+> > > I do get a domain, but I do not get any IRQ on the EP side when the RC side is
+> > > writing the doorbell (as part of pcitest -B),
+> > >
+> > > [    7.978984] pci_epc_alloc_doorbell: num_db: 1
+> > > [    7.979545] pci_epf_test_bind: doorbell_addr: 0x40
+> > > [    7.979978] pci_epf_test_bind: doorbell_data: 0x0
+> > > [    7.980397] pci_epf_test_bind: doorbell_bar: 0x1
+> > > [   21.114613] pci_epf_enable_doorbell db_bar: 1
+> > > [   21.115001] pci_epf_enable_doorbell: doorbell_addr: 0xfe650040
+> > > [   21.115512] pci_epf_enable_doorbell: phys_addr: 0xfe650000
+> > > [   21.115994] pci_epf_enable_doorbell: success
+> > >
+> > > # cat /proc/interrupts | grep epc
+> > > 117:          0          0          0          0          0          0          0          0  ITS-pMSI-a40000000.pcie-ep   0 Edge      pci-epc-doorbell0
+> > >
+> > > Even if I try to write the doorbell manually from EP side using devmem:
+> > >
+> > > # devmem 0xfe670040 32 1
+> >
+> > Sorry, this should of course have been:
+> > # devmem 0xfe650040 32 1
+> 
+> Thank you test it. You can't write it at EP side. ITS identify the bus
+> master. master ID (streamid) of CPU is the diffference with PCI master's
+> ID (streamid). You set msi-parent = <&its0 0x0000>, not sure if 0x0000 is
+> validate stream.
 
-> On 29 Oct 2024, at 07:18, Alice Ryhl <aliceryhl@google.com> wrote:
->=20
-> What you're doing now is a bit awkward to use. You have to make sure
-> that it never escapes the struct it's created for, so e.g. you can't
-> give out a mutable reference as the user could otherwise `mem::swap`
-> it with another Io. Similarly, the Io can never be in a public field.
-> Your safety comment on Io::new really needs to say something like
-> "while this struct exists, the `addr` must be a valid I/O region",
-> since I assume such regions are not valid forever? Similarly if we
+I see, this makes sense since the ITS converts BDF to an MSI specifier.
 
-Io is meant to be a private member within a wrapper type that actually
-acquires the underlying I/O region, like `pci::Bar` or =
-`Platform::IoMem`.
 
-Doesn=E2=80=99t that fix the above?
+> 
+> You have to run at RC side, "devmem (Bar1+0x40) 32 0".  So PCIe EP
+> controller can use EP streamid.
+> 
+> some system need special register to config stream id, you can refer host
+> side's settings.
 
-> look at [1], the I/O region actually gets unmapped *before* the Io is
-> destroyed since IoMem::drop runs before the fields of IoMem are
-> destroyed, so you really need something like "until the last use of
-> this Io" and not "until this Io is destroyed" in the safety comment.
->=20
-> If you compare similar cases in Rust, then they also do what I
-> suggested. For example, Vec<T> holds a raw pointer, and it uses unsafe
-> to assert that it's valid on each use of the raw pointer - it does not
-> create e.g. an `&'static mut [T]` to hold in a field of the Vec<T>.
-> Having an IoRaw<S> and an Io<'a, S> corresponds to what Vec<T> does
-> with IoRaw being like NonNull<T> and Io<'a, S> being like &'a T.
->=20
-> [1]: =
-https://lore.kernel.org/all/20241024-topic-panthor-rs-platform_io_support-=
-v1-1-3d1addd96e30@collabora.com/
+> <&its0 0x0000>,  second argument is your PCIe controller's stream ID. You
+> can ref RC side.
 
-What I was trying to say in my last message is that the wrapper type, =
-i.e.:
-IoMem and so on, should not have a lifetime parameter, but IIUC this is =
-not
-what you=E2=80=99re suggesting here, right?
+The RC node looks like this:
+msi-map = <0x0000 &its1 0x0000 0x1000>;
+So it does indeed use 0x0 as the MSI specifier.
 
-=E2=80=94 Daniel=
+
+> 
+> >
+> > Considering that the RC node is using &its1, that is probably
+> > also what should be used in the EP node when running the controller
+> > in EP mode instead of RC mode.
+> 
+> Generally,  RC node should use smmu-map, instead &its1. Or your PCI
+> controller direct use 16bit RID as streamid.
+
+smmu-map? Do you mean iommu-map?
+
+I don't see why we would need to have the SMMU enabled to use ITS.
+The iommu is currently disabled on my platform.
+
+I did enable the iommu, and all BAR tests, read tests, write tests,
+and copy tests pass. However I get an iommu error when the RC is
+writing the doorbell. Perhaps you need to do dma_map_single() on
+the address that you are setting the inbound address translation to?
+
+
+
+Without the IOMMU, if I modify pci_endpoint_test.c to not send the
+DISABLE_DOORBELL command on error (so that EP side still has DB enabled),
+I can read all BARs except BAR1 (which was used for the doorbell):
+[   21.077417] pci 0000:01:00.0: BAR 0 [mem 0xf0300000-0xf03fffff]: assigned
+[   21.078029] pci 0000:01:00.0: BAR 1 [mem 0xf0400000-0xf04fffff]: assigned
+[   21.078640] pci 0000:01:00.0: BAR 2 [mem 0xf0500000-0xf05fffff]: assigned
+[   21.079250] pci 0000:01:00.0: BAR 3 [mem 0xf0600000-0xf06fffff]: assigned
+[   21.079860] pci 0000:01:00.0: BAR 5 [mem 0xf0700000-0xf07fffff]: assigned
+# pcitest -B
+[   25.156623] COMMAND_ENABLE_DOORBELL complete - status: 0x440
+[   25.157131] db_bar: 1 addr: 0x40 data: 0x0
+[   25.157501] setting irq_type to: 1
+[   25.157802] writing: 0x0 to offset: 0x40 in BAR: 1
+[   35.300676] we wrote to the BAR, status is now: 0x0
+
+status is not updated after writing to DB,
+and /proc/interrupts on EP side is not incrementing.
+
+# devmem 0xf0300000
+0x00000000
+# devmem 0xf0400040
+0xFFFFFFFF
+# devmem 0xf0500000
+0x00000000
+# devmem 0xf0600000
+0x00000000
+# devmem 0xf0700000
+0x00000000
+
+So there does seem to be something wrong with the inbound translation,
+at least when testing on rk3588 which only uses 1MB fixed size BARs:
+https://github.com/torvalds/linux/blob/v6.12-rc6/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L276-L281
+
+
+
+You also didn't answer which imx platform that you are using to test this,
+I don't see a single imx platform that specifies "msi-parent".
+
+
+Kind regards,
+Niklas
 
