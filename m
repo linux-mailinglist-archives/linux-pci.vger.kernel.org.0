@@ -1,218 +1,202 @@
-Return-Path: <linux-pci+bounces-16179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC0209BFA1B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 00:31:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2F49BFA33
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 00:33:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEFF61C2106E
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:31:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 911031F22BC6
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:33:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0D1168BD;
-	Wed,  6 Nov 2024 23:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D283220F5A6;
+	Wed,  6 Nov 2024 23:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCgtgnXS"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="c23dkm1D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17451DD525;
-	Wed,  6 Nov 2024 23:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730935885; cv=none; b=hVodPhMS4jqFey/85jodeg9BLn1yqHjNsuHvZVOFd/2bRf9GXRL1MUK73vxt2ZgYQQxYRd5J8MmgKeJEU4qIYgwW9vn2QrSyqnt2lt0mGyDo85acB+eaMEjXzyN9Q02URRZ4fg8kXcN3w2vxPi5ufnQRVQOV6Uv2pglmmY7V7ak=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730935885; c=relaxed/simple;
-	bh=+oR0lbPCxYDktvmqYyECp9ARZ9ditH6+Br5Ol+YacvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OEX1LkpgbzIfuP5iwB5M/0NYN7gaRnLKRbeWylvEc4t9BWE5bZcaP3U/WcMwKR8x9bTx9oX/gU31rHBX7rvcepICeOF7R0Hd2moEZ9NBEtM8VvjcGdjWpKxpXHMC5/VFcgBpzCXj/qD1wsrTiX8zFOE8God3DXfgIn9qbOzfsUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCgtgnXS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1246CC4CEC6;
-	Wed,  6 Nov 2024 23:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730935885;
-	bh=+oR0lbPCxYDktvmqYyECp9ARZ9ditH6+Br5Ol+YacvE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=LCgtgnXS34KEat08WBk8VotJAgkfFpyDt5i9Kouaaf6tnp9SHAgfDj0KqqL2yJTDh
-	 lerVJDtrdpB5Ycw//ZLmMjPqQi+eAcKj7FZlcnBor6fq+3bR87ouHP/72UDCXf3M+l
-	 0Ule8IdT/y6HHNlAmx+T0+2MXGOoIPpUMhfmL6jY8g10pQWMo0KgTZOYTOqyVV+nT0
-	 CDMgjNkdPuNMctOMPxJSq4ubzD2Mp8jVHLp9qY/5mo+QjL4i5L9Fjt0Ku3fEskl18P
-	 2cliTAd14yWndNICp5mNbQcjy5B3MG1l3RRs6/pHZXPz1i9x7TXMomJOvL8sJhuJD1
-	 Gp64oydk5Nicg==
-Date: Wed, 6 Nov 2024 17:31:23 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com
-Subject: Re: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
-Message-ID: <20241106233123.GA1580663@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D14220E303;
+	Wed,  6 Nov 2024 23:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730935960; cv=pass; b=TXnkgze0Q9EgLfdlXIEQJU545XiGJZKUloB/MVPIDyxbn4Gb9fASYVtoIBzMSKvJhHtvBC8Rtr7RCwTc6ASn9OshZbS8z7m8rHw3FYVNo4UMmYcLkcEMG08zujo+fjakQYQlEQhaOUcmoq8XBLzqAWtor1D038Ewc8P0B1OjEVw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730935960; c=relaxed/simple;
+	bh=KIJ3PZEYHZzSKqlk7pSylcibSpSuclteWz3lwPm7zJA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NTBS+erHzVQrB0IYFIGBTUfIZHijD0uI4xaUAmHsRJjZ/QSWAdlSoza3bHCdYvCI3dd2NHCrKN0KaGyevoUdb36uefnqQ28TR1xoeOLEh64dIIy4al2sfO37XNRq9Vkn8PGooN+5BvngHUJh6qQ3akkDeT4qUMSVSNkNtrwFHkE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=c23dkm1D; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1730935925; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=gIxp/k1/AT16DGs/9OuFQuqu4DZfyvzhzu8KIzsQ2ux4cdYB50FV+qfI9PFTR721KkXAQCIQVHWZSuP4dpUeUfphIMZysakBuXIA7pgKJFy1SSnKUasH4f2o/drfXP8KxrN68c2m5qlQFgnd1EmpDVU2Ht/3XNgkYvjqp1KHUv0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1730935925; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yFsTqCsvyoWKOmvFZ59RIJPhJzOGv5NnUYCSCIgnK6c=; 
+	b=KZ8iOWcQHZyUTVZOiIGhvDY9cEdr+DKIHqKMDXlllv6YOaUF0GRMIaAInOvmRT8N+pUh4i4RAnovlbu357vWGulWhPpKi7TdHXX6Bg8eT8pqkTzLeY+5s62v8Z5O/WFtFHgElDbmGuPWQDu60RXa8eFeIK6uSJWG7DNuIIrmr/M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1730935925;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=yFsTqCsvyoWKOmvFZ59RIJPhJzOGv5NnUYCSCIgnK6c=;
+	b=c23dkm1Dw2W5xTizFmk+vWd2IEtJdCM1bZGoA6ugcd3JTE/KPLx2iwJB461yQWIL
+	jGo/K/uZNevCCqQUrMj7O9ZpcGaQfwWE/0ibbbImgWiQQtz7m9L9YtJUFxDLTiwaZjQ
+	EHN3SvmljdMW7y23egyEzh42cs5U9Qc2cQ5fC8HQ=
+Received: by mx.zohomail.com with SMTPS id 1730935922326552.8283967488513;
+	Wed, 6 Nov 2024 15:32:02 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZyvwXHMRz0kI0J5O@lore-desk>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v3 09/16] rust: add `io::Io` base type
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CAH5fLggFD7pq0WCfMPYTZcFkvrXajPbxTBtkvSeh-N2isT1Ryw@mail.gmail.com>
+Date: Wed, 6 Nov 2024 20:31:44 -0300
+Cc: Danilo Krummrich <dakr@kernel.org>,
+ gregkh@linuxfoundation.org,
+ rafael@kernel.org,
+ bhelgaas@google.com,
+ ojeda@kernel.org,
+ alex.gaynor@gmail.com,
+ boqun.feng@gmail.com,
+ gary@garyguo.net,
+ bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me,
+ tmgross@umich.edu,
+ a.hindborg@samsung.com,
+ airlied@gmail.com,
+ fujita.tomonori@gmail.com,
+ lina@asahilina.net,
+ pstanner@redhat.com,
+ ajanulgu@redhat.com,
+ lyude@redhat.com,
+ robh@kernel.org,
+ saravanak@google.com,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <04E0C753-9D96-4D99-992E-63E36C0F1904@collabora.com>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-10-dakr@kernel.org>
+ <CAH5fLggFD7pq0WCfMPYTZcFkvrXajPbxTBtkvSeh-N2isT1Ryw@mail.gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+X-Mailer: Apple Mail (2.3826.200.121)
+X-ZohoMailClient: External
 
-On Wed, Nov 06, 2024 at 11:40:28PM +0100, Lorenzo Bianconi wrote:
-> > On Wed, Jul 03, 2024 at 06:12:44PM +0200, Lorenzo Bianconi wrote:
-> > > Introduce support for Airoha EN7581 PCIe controller to mediatek-gen3
-> > > PCIe controller driver.
-> > > ...
-> > 
-> > > +static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
-> > > +{
-> > > +	struct device *dev = pcie->dev;
-> > > +	int err;
-> > > +	u32 val;
-> > > +
-> > > +	/*
-> > > +	 * Wait for the time needed to complete the bulk assert in
-> > > +	 * mtk_pcie_setup for EN7581 SoC.
-> > > +	 */
-> > > +	mdelay(PCIE_EN7581_RESET_TIME_MS);
-> 
-> > It looks wrong to me to do the assert and deassert in different
-> > places:
-> > 
-> >   mtk_pcie_setup
-> >     reset_control_bulk_assert(pcie->phy_resets)        <--
-> >     mtk_pcie_en7581_power_up
-> >       mdelay(PCIE_EN7581_RESET_TIME_MS)
-> >       reset_control_bulk_deassert(pcie->phy_resets)    <--
-> >       mdelay(PCIE_EN7581_RESET_TIME_MS)
-> > 
-> > That makes the code hard to understand.
-> 
-> The phy reset line was already asserted running reset_control_assert() in
-> mtk_pcie_setup() and de-asserted running reset_control_deassert() in
-> mtk_pcie_power_up() before adding EN7581 support. Moreover, EN7581 requires
-> to run phy_init()/phy_power_on() before de-asserting the phy reset lines.
-> I guess I can add a comment to make it more clear. Agree?
+Hi,
 
-I assume the first deassert(phy_resets) in mtk_pcie_setup() is not
-paired with anything in this driver.
+> On 28 Oct 2024, at 12:43, Alice Ryhl <aliceryhl@google.com> wrote:
+>=20
+> On Tue, Oct 22, 2024 at 11:33=E2=80=AFPM Danilo Krummrich =
+<dakr@kernel.org> wrote:
+>>=20
+>> I/O memory is typically either mapped through direct calls to =
+ioremap()
+>> or subsystem / bus specific ones such as pci_iomap().
+>>=20
+>> Even though subsystem / bus specific functions to map I/O memory are
+>> based on ioremap() / iounmap() it is not desirable to re-implement =
+them
+>> in Rust.
+>>=20
+>> Instead, implement a base type for I/O mapped memory, which =
+generically
+>> provides the corresponding accessors, such as `Io::readb` or
+>> `Io:try_readb`.
+>>=20
+>> `Io` supports an optional const generic, such that a driver can =
+indicate
+>> the minimal expected and required size of the mapping at compile =
+time.
+>> Correspondingly, calls to the 'non-try' accessors, support compile =
+time
+>> checks of the I/O memory offset to read / write, while the 'try'
+>> accessors, provide boundary checks on runtime.
+>=20
+> And using zero works because the user then statically knows that zero
+> bytes are available ... ?
+>=20
+>> `Io` is meant to be embedded into a structure (e.g. pci::Bar or
+>> io::IoMem) which creates the actual I/O memory mapping and =
+initializes
+>> `Io` accordingly.
+>>=20
+>> To ensure that I/O mapped memory can't out-live the device it may be
+>> bound to, subsystems should embedd the corresponding I/O memory type
+>> (e.g. pci::Bar) into a `Devres` container, such that it gets revoked
+>> once the device is unbound.
+>=20
+> I wonder if `Io` should be a reference type instead. That is:
+>=20
+> struct Io<'a, const SIZE: usize> {
+>    addr: usize,
+>    maxsize: usize,
+>    _lifetime: PhantomData<&'a ()>,
+> }
+>=20
+> and then the constructor requires "addr must be valid I/O mapped
+> memory for maxsize bytes for the duration of 'a". And instead of
+> embedding it in another struct, the other struct creates an `Io` on
+> each access?
 
-I think it would be better to pair the other assert/deasserts in the
-same functions like the below.  Then it's easy to see the matching.
+Please let=E2=80=99s not add a lifetime here. Drivers will usually have =
+this mapped
+at probe time and it will usually remain mapped until remove(), so I =
+think this
+works fine the way it is.
 
-While looking at this, I noticed that we assert(mac_reset) in
-mtk_pcie_setup(), but it's never deasserted for EN7581.
+>=20
+>> Co-developed-by: Philipp Stanner <pstanner@redhat.com>
+>> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>=20
+> [...]
+>=20
+>> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+>> new file mode 100644
+>> index 000000000000..750af938f83e
+>> --- /dev/null
+>> +++ b/rust/kernel/io.rs
+>> @@ -0,0 +1,234 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! Memory-mapped IO.
+>> +//!
+>> +//! C header: =
+[`include/asm-generic/io.h`](srctree/include/asm-generic/io.h)
+>> +
+>> +use crate::error::{code::EINVAL, Result};
+>> +use crate::{bindings, build_assert};
+>> +
+>> +/// IO-mapped memory, starting at the base address @addr and =
+spanning @maxlen bytes.
+>> +///
+>> +/// The creator (usually a subsystem / bus such as PCI) is =
+responsible for creating the
+>> +/// mapping, performing an additional region request etc.
+>> +///
+>> +/// # Invariant
+>> +///
+>> +/// `addr` is the start and `maxsize` the length of valid I/O mapped =
+memory region of size
+>> +/// `maxsize`.
+>=20
+> Do you not also need an invariant that `SIZE <=3D maxsize`?
+>=20
+> Alice
 
-  mtk_pcie_setup
-    reset_control_bulk_deassert(phy_resets)
-    mtk_pcie_en7581_power_up
-      reset_control_bulk_assert(phy_resets)  # move here
-      reset_control_assert(mac_reset)        # move here
-      mdelay(PCIE_EN7581_RESET_TIME_MS)
-      phy_init
-      phy_power_on
-      reset_control_deassert(mac_reset)      # add; seems missing?
-      reset_control_bulk_deassert(phy_resets)
-      mdelay(PCIE_EN7581_RESET_TIME_MS)
 
-  mtk_pcie_setup
-    reset_control_bulk_deassert(phy_resets)
-    mtk_pcie_power_up
-      reset_control_bulk_assert(phy_resets)  # move here
-      reset_control_assert(mac_reset)        # move here
-      reset_control_bulk_deassert(phy_resets)
-      phy_init
-      phy_power_on
-      reset_control_deassert(mac_reset)
-
-> > > +	err = phy_init(pcie->phy);
-> > > +	if (err) {
-> > > +		dev_err(dev, "failed to initialize PHY\n");
-> > > +		return err;
-> > > +	}
-> > > +
-> > > +	err = phy_power_on(pcie->phy);
-> > > +	if (err) {
-> > > +		dev_err(dev, "failed to power on PHY\n");
-> > > +		goto err_phy_on;
-> > > +	}
-> > > +
-> > > +	err = reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
-> > > +	if (err) {
-> > > +		dev_err(dev, "failed to deassert PHYs\n");
-> > > +		goto err_phy_deassert;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Wait for the time needed to complete the bulk de-assert above.
-> > > +	 * This time is specific for EN7581 SoC.
-> > > +	 */
-> > > +	mdelay(PCIE_EN7581_RESET_TIME_MS);
-> > > +
-> > > +	pm_runtime_enable(dev);
-> > > +	pm_runtime_get_sync(dev);
-> > > +
-> > 
-> > > +	err = clk_bulk_prepare(pcie->num_clks, pcie->clks);
-> > > +	if (err) {
-> > > +		dev_err(dev, "failed to prepare clock\n");
-> > > +		goto err_clk_prepare;
-> > > +	}
-> > > +
-> > > +	val = FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
-> > > +	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
-> > > +	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
-> > > +	      FIELD_PREP(PCIE_VAL_LN1_UPSTREAM, 0x41);
-> > > +	writel_relaxed(val, pcie->base + PCIE_EQ_PRESET_01_REG);
-> > > +
-> > > +	val = PCIE_K_PHYPARAM_QUERY | PCIE_K_QUERY_TIMEOUT |
-> > > +	      FIELD_PREP(PCIE_K_PRESET_TO_USE_16G, 0x80) |
-> > > +	      FIELD_PREP(PCIE_K_PRESET_TO_USE, 0x2) |
-> > > +	      FIELD_PREP(PCIE_K_FINETUNE_MAX, 0xf);
-> > > +	writel_relaxed(val, pcie->base + PCIE_PIPE4_PIE8_REG);
-> > 
-> > Why is this equalization stuff in the middle between
-> > clk_bulk_prepare() and clk_bulk_enable()?  Is the split an actual
-> > requirement, or could we use clk_bulk_prepare_enable() here, like we
-> > do in mtk_pcie_power_up()?
-> 
-> Nope, we can replace clk_bulk_enable() with clk_bulk_prepare_enable() and
-> remove clk_bulk_prepare() in mtk_pcie_en7581_power_up() since we actually
-> implements just enable callback for EN7581 in clk-en7523.c.
-> 
-> > If the split is required, a comment about why would be helpful.
-> > 
-> > > +	err = clk_bulk_enable(pcie->num_clks, pcie->clks);
-> > > +	if (err) {
-> > > +		dev_err(dev, "failed to prepare clock\n");
-> > > +		goto err_clk_enable;
-> > > +	}
-> > 
-> > Per https://lore.kernel.org/r/ZypgYOn7dcYIoW4i@lore-desk,
-> > REG_PCI_CONTROL is asserted/deasserted here by en7581_pci_enable().
-> 
-> correct
-> 
-> > Is this where PERST# is asserted?  If so, a comment to that effect
-> > would be helpful.  Where is PERST# deasserted?  Where are the required
-> > delays before deassert done?
-> 
-> I can add a comment in en7581_pci_enable() describing the PERST issue for
-> EN7581. Please note we have a 250ms delay in en7581_pci_enable() after
-> configuring REG_PCI_CONTROL register.
-> 
-> https://github.com/torvalds/linux/blob/master/drivers/clk/clk-en7523.c#L396
-
-Does that 250ms delay correspond to a PCIe mandatory delay, e.g.,
-something like PCIE_T_PVPERL_MS?  I think it would be nice to have the
-required PCI delays in this driver if possible so it's easy to verify
-that they are all covered.
-
-Bjorn
 
