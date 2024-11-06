@@ -1,267 +1,158 @@
-Return-Path: <linux-pci+bounces-16138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55B2D9BEFFF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 15:22:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF50B9BF073
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 15:35:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB67C1F236EB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 14:22:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F300F1C21449
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 14:35:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA171E04B2;
-	Wed,  6 Nov 2024 14:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85EF20126D;
+	Wed,  6 Nov 2024 14:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XWmkzm1A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kwhu1hMd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DAB1D63DF;
-	Wed,  6 Nov 2024 14:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DDD200CB7
+	for <linux-pci@vger.kernel.org>; Wed,  6 Nov 2024 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730902943; cv=none; b=iZ3/o3vmT4EAs7fX8lpGI9zBVdfmDPI85toplKGBQy+D7pE1+kJBZEeDdNRbceLF6PMDpHQH6Xnc1QypX4qeVWX7/f+lzmLD5lGTX2jI6k+zDrDE9z8zCuhCVJWLo1xfZECoJsPEtje7P/a2y35oyAu4wAvzz0gMl4LtwskF+hc=
+	t=1730903717; cv=none; b=kFHHqT9oqOoibRPoJXdWMjRqbESVfZnzqVr6dItMRWFlDhV/Ybu/5BhIcg1UE2rEzrZnQSdutas35/8/b1eduqo+9rBsEhywwfYU3h59F2VQ1nSppDU14GWcykYMK4YyhipJbbMf4LSk6uWKCZDcc49axyc/Z6+w4dHMASG8NEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730902943; c=relaxed/simple;
-	bh=blyV21pOL2y4toKMXZqzAR7kHNfiD1J9G7pj6duc0Xs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EptYsZ/dWlKffcTYHSsjo4YFMynw2HDYALF57ocH+e2c1raX1M3M1bw7MUQW4aSexHW/QWBWBlE2PbcPv/xuGb2unwFMB/OOQ+1yVKwS0WA5AlX5MX7d9sQ+SF+27pxSZvKCTK8X9UhIFrdLAOlUbmNn81lugjOHXrQnvwjqYAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XWmkzm1A; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730902941; x=1762438941;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=blyV21pOL2y4toKMXZqzAR7kHNfiD1J9G7pj6duc0Xs=;
-  b=XWmkzm1AUvbFUHfLkJH5j8u4ikyHBxXFlEDTv3JVn3pGHVaSfUAgQmaN
-   76fPjmJ1aXtfTJ5ODNYwiy0wPwWatSUGerCb656Dz1WtB/xP1IcZTpmLT
-   8qor4fhIUR9Ka/8HMNAbrYG0mXMgmcfmnt3Hl+NqdsO27nQZphevLSHie
-   Awr/aqmY5UibFop/x+TdxqxPX3ZqIz6sLS9ZxFs7BvaqM68yGIkbaO0XM
-   z3Tx9IWFQ2IRO6mpnLTqoRqX5WQGLgYEPJ/MlFNCE3/3YA9Jy8Qn46xtR
-   pXbBfO85JU1AHjytOn1D3xzqMLWdDqtxKA+DM3v/LnEUfiADOW3PjgMOy
-   Q==;
-X-CSE-ConnectionGUID: sAEquJfSSFaaCco+XaLOkg==
-X-CSE-MsgGUID: wml7z93FTWSKGk7k0BxEUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30883638"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30883638"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 06:22:21 -0800
-X-CSE-ConnectionGUID: UwKRJ8uRSZ+2+qrrIYU1Xw==
-X-CSE-MsgGUID: qzYBqoG/RmmQbgpoe8GEFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,263,1725346800"; 
-   d="scan'208";a="89689153"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.110])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 06:22:15 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 6 Nov 2024 16:22:11 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v4 3/7] PCI: Add a helper to convert between standard
- and IOV resources
-In-Reply-To: <20241025215038.3125626-4-michal.winiarski@intel.com>
-Message-ID: <10b4f173-619a-9913-99de-5d08b3fc854c@linux.intel.com>
-References: <20241025215038.3125626-1-michal.winiarski@intel.com> <20241025215038.3125626-4-michal.winiarski@intel.com>
+	s=arc-20240116; t=1730903717; c=relaxed/simple;
+	bh=pQjjbYSj4ZS6KPiNFYIWrrPq6MbXf9GGUul0EVfRfJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOAeI4wSPdckfzO42iR2/4ObE9mgcWxwEB5cwGVgKGPA/lR2zEeU4TO+CDY5m3LS5ZtM/3YWtglSi33Px8SaZxSw7CW/VsLRx5VTt4pYT5axuYXrqVbynocml7iUQMihwRlPJdl0Ln8gCpdFN11bNPMAPnWuBtvRXQsUqQU9yj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kwhu1hMd; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-539f0f9ee49so7776301e87.1
+        for <linux-pci@vger.kernel.org>; Wed, 06 Nov 2024 06:35:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730903714; x=1731508514; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bnXDazCQ0RtTKBnn8REjgqiFnugp5BLQz0FcP1jAvLs=;
+        b=kwhu1hMdYaqiDRrEWOEtqnnrD6fpYEThus7x6Rqi81/29HRpJPnDRjkE31H3Xoei5F
+         n8DZKxZ1L2kIgxv2Gv10StnMIpAlsTyKg6UyveFt1hJ/BIdm/tlYpDicN4REVZnxZsYK
+         jT3dAX4rsC+Rc+s3l0/3/aSWEsR0k3MvPQLCzxUc3VWCihlIk22HBdudHDMxxjCL9TXN
+         6w8AQys05SJ3UXZcgsZaFJJtKGLibYlLz5GFr1+sMUxLcCpJhcJZwSYLGbUwuMIz6S5T
+         F+/j7YLRMZ+SGhsUMZoakXD9gPAbVKPL/WNvF3/EkcTWr8sibqImD8Q+klOpx7I0bvsk
+         Yx5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730903714; x=1731508514;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bnXDazCQ0RtTKBnn8REjgqiFnugp5BLQz0FcP1jAvLs=;
+        b=t0sOUx/nfPnZNniIYYckG9sOl3U+pW2uhzcyKNxBr+HT2dbky/sh6FskrFDZcTlulL
+         X4CyZ1hTXIxC/g7D7Hr7iY/CFI9ScPGa2yTbBzLJGz6+lV5CcGm5G9idEt/KhCO/Qp29
+         CL/mKGd3+T0EZuNZfq4vUE71hGoTkyyPNIg7OmJR+8Xl7wBUkwSY+sqFss8n4sjrKV4L
+         McshgMbsbMgUyNrDNf1et+OUL8HINL6BABaucyEC0auQ3c9BbVeecXIBnOeplkZSsQ5j
+         kCIAVQoLxe0ZKnm1l3tk3Rfqyq1fYRu/F/+wnbCupMyLrszlM/t5Jd9b7uV3XKJNLLMY
+         XLYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdGsJAEsxSOAh9WDPxaq4e1YbmUWN8KTK+x9jsdiSXy4jG3MRatlxZccoQ7uZ3lofindeKdaow2D8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX+i0inSwFBP6lL/Qj+Mp1Jh0jjXIp1COPGzCWWFtv96hAtvn3
+	BW9gxyN7QX+yi3Gy48IXx15t7xE/eqRcQ7+cTDec9+IseC9C3aRVwyfdqsgZZQ==
+X-Google-Smtp-Source: AGHT+IFY7xsniFJYwZTMCPs0XA34VZgv3LQnQ0nmsY4lMKbdJP685p4rmkNLWAvlojUA7tIwGlZepw==
+X-Received: by 2002:a05:6512:1324:b0:539:8980:2009 with SMTP id 2adb3069b0e04-53b348e76femr20895757e87.36.1730903714190;
+        Wed, 06 Nov 2024 06:35:14 -0800 (PST)
+Received: from thinkpad ([89.101.134.25])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432aa7378e9sm26380495e9.37.2024.11.06.06.35.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 06:35:13 -0800 (PST)
+Date: Wed, 6 Nov 2024 14:35:11 +0000
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus
+ address to dynamic bridge nodes
+Message-ID: <20241106143511.2ao7nwjrxi3tiatt@thinkpad>
+References: <20241104150521.r4hbsurw4dbzlxpg@thinkpad>
+ <20241104234937.GA1446920@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-462573539-1730902526=:928"
-Content-ID: <adfb3f5d-d535-38e5-e92a-584ac4f25d5d@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241104234937.GA1446920@bhelgaas>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Nov 04, 2024 at 05:49:37PM -0600, Bjorn Helgaas wrote:
+> On Mon, Nov 04, 2024 at 08:35:21PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Nov 04, 2024 at 09:54:57AM +0100, Andrea della Porta wrote:
+> > > On 22:39 Sat 02 Nov     , Manivannan Sadhasivam wrote:
+> > > > On Mon, Oct 28, 2024 at 03:07:22PM +0100, Andrea della Porta wrote:
+> > > > > When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
+> > > > > incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
+> > > > > bridge, the window should instead be in PCI address space. Call
+> > > > > pci_bus_address() on the resource in order to obtain the PCI bus
+> > > > > address.
+> > > > 
+> > > > of_pci_prop_ranges() could be called for PCI devices also (not just PCI
+> > > > bridges), right?
+> > > 
+> > > Correct. Please note however that while the PCI-PCI bridge has the parent
+> > > address in CPU space, an endpoint device has it in PCI space: here we're
+> > > focusing on the bridge part. It probably used to work before since in many
+> > > cases the CPU and PCI address are the same, but it breaks down when they
+> > > differ.
+> > 
+> > When you say 'focusing', you are specifically referring to the
+> > bridge part of this API I believe. But I don't see a check for the
+> > bridge in your change, which is what concerning me. Am I missing
+> > something?
+> 
+> I think we want this change for all devices in the PCI address
+> domain, including PCI-PCI bridges and endpoints, don't we?  All those
+> "ranges" addresses should be in the PCI domain.
+> 
 
---8323328-462573539-1730902526=:928
-Content-Type: text/plain; CHARSET=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d0ba6583-b7ea-d045-07b3-24d2b563b362@linux.intel.com>
+Yeah, right. I was slightly confused by the commit message. Maybe including a
+sentence about how the change will work fine for endpoint devices would help.
+Also, why it went unnoticed till now (ie., both CPU and PCI addresses are same
+in many SoCs).
 
-On Fri, 25 Oct 2024, Micha=B3 Winiarski wrote:
+Also there should be a fixes tag (also CC stable) since this is a potential bug
+fix.
 
-> There are multiple places where conversions between IOV resources and
-> standard resources are done.
->=20
-> Extract the logic to pci_resource_to_iov() and pci_resource_from_iov()
-> helpers.
->=20
-> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Micha=B3 Winiarski <michal.winiarski@intel.com>
-> ---
->  drivers/pci/iov.c       | 20 ++++++++++----------
->  drivers/pci/pci.h       | 18 ++++++++++++++++++
->  drivers/pci/setup-bus.c |  2 +-
->  3 files changed, 29 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 6bdc9950b9787..eedc1df56c49e 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -151,7 +151,7 @@ resource_size_t pci_iov_resource_size(struct pci_dev =
-*dev, int resno)
->  =09if (!dev->is_physfn)
->  =09=09return 0;
-> =20
-> -=09return dev->sriov->barsz[resno - PCI_IOV_RESOURCES];
-> +=09return dev->sriov->barsz[pci_resource_from_iov(resno)];
->  }
-> =20
->  static void pci_read_vf_config_common(struct pci_dev *virtfn)
-> @@ -322,12 +322,12 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  =09virtfn->multifunction =3D 0;
-> =20
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09res =3D &dev->resource[pci_resource_to_iov(i)];
->  =09=09if (!res->parent)
->  =09=09=09continue;
->  =09=09virtfn->resource[i].name =3D pci_name(virtfn);
->  =09=09virtfn->resource[i].flags =3D res->flags;
-> -=09=09size =3D pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
-> +=09=09size =3D pci_iov_resource_size(dev, pci_resource_to_iov(i));
->  =09=09virtfn->resource[i].start =3D res->start + size * id;
->  =09=09virtfn->resource[i].end =3D virtfn->resource[i].start + size - 1;
->  =09=09rc =3D request_resource(res, &virtfn->resource[i]);
-> @@ -624,8 +624,8 @@ static int sriov_enable(struct pci_dev *dev, int nr_v=
-irtfn)
-> =20
->  =09nres =3D 0;
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09bars |=3D (1 << (i + PCI_IOV_RESOURCES));
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09bars |=3D (1 << pci_resource_to_iov(i));
-> +=09=09res =3D &dev->resource[pci_resource_to_iov(i)];
->  =09=09if (res->parent)
->  =09=09=09nres++;
->  =09}
-> @@ -786,8 +786,8 @@ static int sriov_init(struct pci_dev *dev, int pos)
-> =20
->  =09nres =3D 0;
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> -=09=09res_name =3D pci_resource_name(dev, i + PCI_IOV_RESOURCES);
-> +=09=09res =3D &dev->resource[pci_resource_to_iov(i)];
-> +=09=09res_name =3D pci_resource_name(dev, pci_resource_to_iov(i));
-> =20
->  =09=09/*
->  =09=09 * If it is already FIXED, don't change it, something
-> @@ -844,7 +844,7 @@ static int sriov_init(struct pci_dev *dev, int pos)
->  =09dev->is_physfn =3D 0;
->  failed:
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09res =3D &dev->resource[pci_resource_to_iov(i)];
->  =09=09res->flags =3D 0;
->  =09}
-> =20
-> @@ -906,7 +906,7 @@ static void sriov_restore_state(struct pci_dev *dev)
->  =09pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, ctrl);
-> =20
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++)
-> -=09=09pci_update_resource(dev, i + PCI_IOV_RESOURCES);
-> +=09=09pci_update_resource(dev, pci_resource_to_iov(i));
-> =20
->  =09pci_write_config_dword(dev, iov->pos + PCI_SRIOV_SYS_PGSIZE, iov->pgs=
-z);
->  =09pci_iov_set_numvfs(dev, iov->num_VFs);
-> @@ -972,7 +972,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int=
- resno)
->  {
->  =09struct pci_sriov *iov =3D dev->is_physfn ? dev->sriov : NULL;
->  =09struct resource *res =3D dev->resource + resno;
-> -=09int vf_bar =3D resno - PCI_IOV_RESOURCES;
-> +=09int vf_bar =3D pci_resource_from_iov(resno);
->  =09struct pci_bus_region region;
->  =09u16 cmd;
->  =09u32 new;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 48d345607e57e..1f8d88f0243b7 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -584,6 +584,15 @@ static inline bool pci_resource_is_iov(int resno)
->  {
->  =09return resno >=3D PCI_IOV_RESOURCES && resno <=3D PCI_IOV_RESOURCE_EN=
-D;
->  }
-> +static inline int pci_resource_to_iov(int resno)
-> +{
-> +=09return resno + PCI_IOV_RESOURCES;
-> +}
-> +
-> +static inline int pci_resource_from_iov(int resno)
-> +{
-> +=09return resno - PCI_IOV_RESOURCES;
-> +}
+- Mani
 
-to/from feels wrong way around for me. What is named as "PCI resource from=
-=20
-IOV" converts from PCI resource indexing to IOV compatible indexing, and=20
-vice versa.
-
->  extern const struct attribute_group sriov_pf_dev_attr_group;
->  extern const struct attribute_group sriov_vf_dev_attr_group;
->  #else
-> @@ -608,6 +617,15 @@ static inline bool pci_resource_is_iov(int resno)
->  {
->  =09return false;
->  }
-> +static inline int pci_resource_to_iov(int resno)
-> +{
-> +=09return -ENODEV;
-> +}
-> +
-> +static inline int pci_resource_from_iov(int resno)
-> +{
-> +=09return -ENODEV;
-> +}
-
-These seem dangerous as the errors are not checked by the callers. Perhaps=
-=20
-put something like BUG_ON(1) there instead as it really is something that=
-=20
-should never be called for real if CONFIG_PCI_IOV is not enabled, they are=
-=20
-just to make compiler happy without #ifdefs in C code.
-
---=20
- i.
-
->  #endif /* CONFIG_PCI_IOV */
-> =20
->  #ifdef CONFIG_PCIE_PTM
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index ba293df10c050..c5ad7c4ad6eb1 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1778,7 +1778,7 @@ static int iov_resources_unassigned(struct pci_dev =
-*dev, void *data)
->  =09bool *unassigned =3D data;
-> =20
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09struct resource *r =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09struct resource *r =3D &dev->resource[pci_resource_to_iov(i)];
->  =09=09struct pci_bus_region region;
-> =20
->  =09=09/* Not assigned or rejected by kernel? */
->=20
---8323328-462573539-1730902526=:928--
+-- 
+மணிவண்ணன் சதாசிவம்
 
