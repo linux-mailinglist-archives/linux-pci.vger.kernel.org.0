@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-16171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16173-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13B849BF8FB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:14:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF2C99BF901
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 23:14:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98A721F23050
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:14:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CE2E1C21DD5
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2024 22:14:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47DF520D4EE;
-	Wed,  6 Nov 2024 22:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB90220E300;
+	Wed,  6 Nov 2024 22:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jLhjvmot"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jlJ6rgur"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA2320CCC6;
-	Wed,  6 Nov 2024 22:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397B920E00C;
+	Wed,  6 Nov 2024 22:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730931256; cv=none; b=YJOS/gxah+5tqY0c05s4CJGeB+kwg7yuSR0jbTmIO+hDJl0TxWgxJRP4lMnzbjpu5HRZxdmvBpHqWEO3duWwqsljd85aJyt+yaU+6hoRgLF/v3UKeWVj8v4w94MNtW4xj7IUVEJg0MD6bMf4u+DmPxOiHNy1hGubijSZw9OV0cs=
+	t=1730931259; cv=none; b=WSzLHPmxbMSK4U+4EVJSaUrgUlQX+6rmByTXrR20YzwZCWI468dIbaqrwaLsBDR2BFZzKL15dR1GTdEQ2WPfErWCSNZZFkm0GbbZM5zN1T1cFcW/AxP/hiM54KYGjkprYkKrm8DfyzfSIPXgUuIGi6SCmOB5NIKhu0jzMYpxNPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730931256; c=relaxed/simple;
-	bh=KRGj942UvE+uLjnvQ1RnPKt7mrlSaWFQ5enJ5cOt4xQ=;
+	s=arc-20240116; t=1730931259; c=relaxed/simple;
+	bh=Y6LScksg2j214FZ2e3xWv+35HKasJ2WnUvOLl4WuLSE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gu0gWJprPGJJEDY9qskeGDd1X3xTK86agcBk3lzjFG0sR8SAUv6neY77nxZmuzyV17dPiSd8OdPS7M3Md5W8KQv68Cw1sXoLaKS1+hQJcO5g6pt9LtaCxOVDYC0MzmSDx12nZv4+q6SJHHSkzBz4v6ZzK5Wma+XroFfLmf2sKCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jLhjvmot; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=CjPA21Kh48yREfn2hlQdWD3QkIR4iTWUxjshcqpmflwONEfjBJTR/gSTXIfLfbNLJHkohVV59N31b7mJOhqT1V4Vp6Lizdd0mOlUNTdbdqCVhABPhtctNAIIZeXzFAoHGRqaDfSOnnP2ACyDg7CYZ3PsMMAi916jJeaPlk/KWTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jlJ6rgur; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A6G2ocd013219;
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A69plnL015613;
 	Wed, 6 Nov 2024 22:14:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bIcFx6LoYs55AK/fOEYhEuqBF9RZPZfLcL/g1CWM5l4=; b=jLhjvmotv9OMm+oC
-	yYwQeKqfojVBCy7HdSy1kwNQPvcD3i+XkHbQJQNzuO21zy9WyVcrvMdv/40epKq+
-	N6YcfIprpiWBajYsiDknjBtjALo9Fc2dAZvrzUs5p9TXWuPA0EOUxe6YgbefjZgE
-	PLgDmemE5vL0PdWgikElxCYq429QW2tIQzNpdCQNFv8IJf/CSXGlyjs7hTWNA8YH
-	bgEqbzfOIU4Eb3DWAiwIwga1ZZMtKaooLa1iBzqFycTp7KQKL3y0GU9w+4T/GbRX
-	CwwwxI76Jx6zCjrigeFEomi68Ti7jyzr+HlFQS8g6+yIhSWHPgCVdnqhGxU+fnkR
-	uXEB+g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42qp2rvcgf-1
+	4HHoFSioX8ZCazDOVUQkvJrNCnJaYY5Xp1d5eH1BtVQ=; b=jlJ6rgurSHUbvoZs
+	B0sm4HXHv1Xsw1TZzq1VFov3stno9FSn6IfBPTiOqpRDPQDhL53SVqBkTmlOVCEQ
+	KW0qk0Gvc8I9yQnWfz0AHmQ9IRiGQurmMCrZ3n8FA0uWeRzj81WghLaHbQimdDva
+	AGv1u3lxd6XpCMJS0URogfnN7+VifYf4vUxqNoJa3r7i9VAhmqSxpDqBLokwW0PS
+	FoQA9yKybJZF4b3j18Drh+gkOY5eFiP1X/S6icFTbZjreJbJ/FBYKUBq9d+FWKOY
+	ysLuLoXiI5avIAg5vN4FATRPtKUk/RA7nC938RmL/bUf/Ta/tQ2VQi8beHBMeAQg
+	IXmSyw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42q5n8q0yt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 22:14:06 +0000 (GMT)
+	Wed, 06 Nov 2024 22:14:05 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A6ME4Qv016602
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A6ME56a011643
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Nov 2024 22:14:04 GMT
+	Wed, 6 Nov 2024 22:14:05 GMT
 Received: from hu-mrana-lv.qualcomm.com (10.49.16.6) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -64,9 +64,9 @@ CC: <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <quic_krichai@quicinc.com>,
         Mayank Rana
 	<quic_mrana@quicinc.com>
-Subject: [PATCH v3 1/4] PCI: dwc: Export dwc MSI controller related APIs
-Date: Wed, 6 Nov 2024 14:13:38 -0800
-Message-ID: <20241106221341.2218416-2-quic_mrana@quicinc.com>
+Subject: [PATCH v3 2/4] PCI: host-generic: Export gen_pci_init() API to allow ECAM creation
+Date: Wed, 6 Nov 2024 14:13:39 -0800
+Message-ID: <20241106221341.2218416-3-quic_mrana@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241106221341.2218416-1-quic_mrana@quicinc.com>
 References: <20241106221341.2218416-1-quic_mrana@quicinc.com>
@@ -82,157 +82,60 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TTf5raw4Njl36L2INkEmqzpX-JNJz01M
-X-Proofpoint-ORIG-GUID: TTf5raw4Njl36L2INkEmqzpX-JNJz01M
+X-Proofpoint-GUID: ccNrpXjmagCKBYi2_Etdkoaus7xo4kJX
+X-Proofpoint-ORIG-GUID: ccNrpXjmagCKBYi2_Etdkoaus7xo4kJX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- bulkscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2409260000 definitions=main-2411060170
 
-To allow dwc PCIe controller based MSI functionality from ECAM pcie
-driver, export dw_pcie_msi_host_init(), dw_pcie_msi_init() and
-dw_pcie_msi_free() APIs. Also move MSI IRQ related initialization code
-into dw_pcie_msi_init() as this code executes before dw_pcie_msi_init()
-API to use with ECAM driver.
+Export gen_pci_init() API to create ECAM and initialized ECAM OPs
+from PCIe driver which don't have way to populate driver_data as
+just ECAM ops.
 
 Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 38 ++++++++++---------
- drivers/pci/controller/dwc/pcie-designware.h  | 14 +++++++
- 2 files changed, 34 insertions(+), 18 deletions(-)
+ drivers/pci/controller/pci-host-common.c | 3 ++-
+ include/linux/pci-ecam.h                 | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 3e41865c7290..25020a090db8 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -250,7 +250,7 @@ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
- 	return 0;
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index cf5f59a745b3..b9460a4c5b7e 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -20,7 +20,7 @@ static void gen_pci_unmap_cfg(void *ptr)
+ 	pci_ecam_free((struct pci_config_window *)ptr);
  }
  
--static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-+void dw_pcie_free_msi(struct dw_pcie_rp *pp)
+-static struct pci_config_window *gen_pci_init(struct device *dev,
++struct pci_config_window *gen_pci_init(struct device *dev,
+ 		struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops)
  {
- 	u32 ctrl;
+ 	int err;
+@@ -48,6 +48,7 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
  
-@@ -263,19 +263,34 @@ static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
- 	irq_domain_remove(pp->msi_domain);
- 	irq_domain_remove(pp->irq_domain);
+ 	return cfg;
  }
-+EXPORT_SYMBOL_GPL(dw_pcie_free_msi);
++EXPORT_SYMBOL_GPL(gen_pci_init);
  
--static void dw_pcie_msi_init(struct dw_pcie_rp *pp)
-+void dw_pcie_msi_init(struct dw_pcie_rp *pp)
+ int pci_host_common_probe(struct platform_device *pdev)
  {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	u64 msi_target = (u64)pp->msi_data;
-+	u32 ctrl, num_ctrls;
- 
- 	if (!pci_msi_enabled() || !pp->has_msi_ctrl)
- 		return;
- 
-+	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-+
-+	/* Initialize IRQ Status array */
-+	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
-+		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
-+				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-+				    pp->irq_mask[ctrl]);
-+		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
-+				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-+				    ~0);
-+	}
-+
- 	/* Program the msi_data */
- 	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_LO, lower_32_bits(msi_target));
- 	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
- 
- static int dw_pcie_parse_split_msi_irq(struct dw_pcie_rp *pp)
- {
-@@ -317,7 +332,7 @@ static int dw_pcie_parse_split_msi_irq(struct dw_pcie_rp *pp)
- 	return 0;
- }
- 
--static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-+int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct device *dev = pci->dev;
-@@ -391,6 +406,7 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_host_init);
- 
- static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
- {
-@@ -802,7 +818,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	u32 val, ctrl, num_ctrls;
-+	u32 val;
- 	int ret;
- 
- 	/*
-@@ -813,20 +829,6 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 
- 	dw_pcie_setup(pci);
- 
--	if (pp->has_msi_ctrl) {
--		num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
--
--		/* Initialize IRQ Status array */
--		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
--			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
--					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
--					    pp->irq_mask[ctrl]);
--			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
--					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
--					    ~0);
--		}
--	}
--
- 	dw_pcie_msi_init(pp);
- 
- 	/* Setup RC BARs */
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 347ab74ac35a..ef748d82c663 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -679,6 +679,9 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
- 
- #ifdef CONFIG_PCIE_DW_HOST
- irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
-+void dw_pcie_msi_init(struct dw_pcie_rp *pp);
-+int dw_pcie_msi_host_init(struct dw_pcie_rp *pp);
-+void dw_pcie_free_msi(struct dw_pcie_rp *pp);
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
- int dw_pcie_host_init(struct dw_pcie_rp *pp);
- void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
-@@ -691,6 +694,17 @@ static inline irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp)
- 	return IRQ_NONE;
- }
- 
-+static void dw_pcie_msi_init(struct dw_pcie_rp *pp)
-+{ }
-+
-+static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-+{
-+	return -ENODEV;
-+}
-+
-+static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-+{ }
-+
- static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
- 	return 0;
+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+index 3a4860bd2758..386c08349169 100644
+--- a/include/linux/pci-ecam.h
++++ b/include/linux/pci-ecam.h
+@@ -94,5 +94,7 @@ extern const struct pci_ecam_ops loongson_pci_ecam_ops; /* Loongson PCIe */
+ /* for DT-based PCI controllers that support ECAM */
+ int pci_host_common_probe(struct platform_device *pdev);
+ void pci_host_common_remove(struct platform_device *pdev);
++struct pci_config_window *gen_pci_init(struct device *dev,
++		struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops);
+ #endif
+ #endif
 -- 
 2.25.1
 
