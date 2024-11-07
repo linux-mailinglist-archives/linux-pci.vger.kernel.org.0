@@ -1,126 +1,160 @@
-Return-Path: <linux-pci+bounces-16215-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16216-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3516F9C0192
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 10:54:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 746D89C01EF
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 11:10:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6649B1C20C7E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 09:54:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03D5C1F2280B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 10:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754FD1EF943;
-	Thu,  7 Nov 2024 09:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B996E1EABA1;
+	Thu,  7 Nov 2024 10:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NaH/jdYG"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hQqbUVZv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C531EF941
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 09:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FDF1E7C21;
+	Thu,  7 Nov 2024 10:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730973170; cv=none; b=ordXFDYED0y4bNl76vIxKtEcjTP+wfXJLl6eZ7nS7MZqeQsJlKGOaewVsxPir/Pv+Waj13JTzz7OCfR+PV7emsKVNVl1Xgn6JKXPWqGJaQGvGD1O32lbNDdqDAdyHUbgu7+SP53SSzl5XB60vfW/CR0WPn0/Rmrbk/ycDtik+TI=
+	t=1730974226; cv=none; b=pp2z9DVzhQBY7YL93edlT/TXcqkpTJiCzh2V5T6nCt/kPW5RQf0m/Y6f0haIG7tOTxzfCFcPaVCh8b08BXirQKK0Ew0AGyPbp1g5LJv0T/jqmFSHju0kuDNastnVCwRY2BQQuxwBPfPG8yv1VA2uY+vcmlAOLFcAmslwA/QXmxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730973170; c=relaxed/simple;
-	bh=lwkS4VJfaJEucEu5sjIf8kNJ80mve52KW6NV0UYNB8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hVi74eAJREliHbU5Jtxqc/wcBwxVv+bjze3nZkx1q9B43webIFClv4aLPn4kD14d/Ia71rFSGMiU7P9jWKY5Gxnmrj79fmjY3m4QIgLw07qScCHoi9yPA/78S0B4+adB2XenIbnZ1yKQ5sT2WBvVrHdq5Ioyahm1Dz5fbhfgnEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NaH/jdYG; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-539e4b7409fso861273e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2024 01:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730973167; x=1731577967; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IA66ioYkj3vj3gACNMRiFPoKPNWp3AWQcm6mCZSqbfc=;
-        b=NaH/jdYGTYkBmUyJs74b+/ex71quTl5uzSC92GKcZChVf/XxVQRQUeFUaY8Wh557qv
-         zV9CX0d/IpapeSwP6N2cu1g08841CnRj0+z+UytkV7FeqkVD60X46jcxMoSVchlnG5lC
-         zrqNjLuKaVPFc6WxUX1touZXuXCQruG56nbH0FGrk2TUJJH+HN23IPzJqwiAu28bjSHl
-         uF5kwgHeL69CtXCZl0pGOYvHD8oD5loDQAWiEGg6diRyt3Iv7V5sag8Wi8KimSKyR8cn
-         Y4UQlr52erRzkMf6qGdBluG2OBr09sfcM1G1+5XXXjbHbAPRkQzDKqMeP4p3E/q+9ZDH
-         1nFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730973167; x=1731577967;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IA66ioYkj3vj3gACNMRiFPoKPNWp3AWQcm6mCZSqbfc=;
-        b=Es9MViD2dxa2RYjjChsYzQdHDhwcqt6/o2NJ9Sr8OEbpxQ1/bNV4xUVCMI0Xpbq1GS
-         mgqquxhPwRuy5jtoyVu1GDxDzWl5nGU8ZiErjAgymNRxS0DwzoP2x0F5f39ZBtm0GDcw
-         ykI+DfqTPgZ4jtQzG0SAr4TC00GvNKHXrWNz0zSbJpFYoe5Yu2jCm5uCcwDqtYc6Lvvz
-         rzRdqZO2vV7bKrrMcg8EJr5/K28e/rEb9RTew7e77aVK46uAaqb1F+EZMPpFj00VBxUb
-         fbHQeh41dS3LV29v2u+XH02QlcqOjks6pI9JGQxQHwZGNsS+UUut1ocm6//GJpJlLKhE
-         FNWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzRJUAu1JAwBWE/oodOCQJhywU9BPvASWoGq049iDBIRF3SnWxEY5LFMF8XM097AFBIVzlgguqu0g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzei+GIhJMdoaZ+YKpd85XuBbEtiPYIF3pM3hvxEFQCBwUNCXkQ
-	CRfmsHuH44WskW6pBVjxnMdtLIr2epfTnosue7ZQ4TMevH7sBJv9Ma/2iTUCsDd+2gsmAkvmZGN
-	D0+mWLlB61A0vxut3SjBuqEEnWo3mssNzDBt2UQ==
-X-Google-Smtp-Source: AGHT+IGoIjWDtseFdv8HQtxmB05m0ChWJ9ovwz6pG0rW7iORfMGi+Nv+cmXMOQUFwz4dLK8J9uZOk8L+1MSKQszJKqI=
-X-Received: by 2002:a05:6512:230e:b0:53b:48f2:459b with SMTP id
- 2adb3069b0e04-53d81994c48mr849244e87.23.1730973166565; Thu, 07 Nov 2024
- 01:52:46 -0800 (PST)
+	s=arc-20240116; t=1730974226; c=relaxed/simple;
+	bh=msc86oRzL9FywZHqS0FL90gtHxzg49aOeCnhOGI+pXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KYhLR8ISUbeH/QHW+QgRM1BaTABCvn+Y8C0bR9IIox5fKl72tfQ7mrRkpTNYCkOJsD3GyoPNeV0RsjqgiBC4mtmKzKxSPvTyMUMSQtH+CtFyJaGQuxpRMU2crqePZBMz97iJus8gF+Gry9VKSyPtdAd743H0sX2keLlOapHjljY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hQqbUVZv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7A1hcf003908;
+	Thu, 7 Nov 2024 10:09:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yKRbTpsOlrQFMGwumFxHCmnCrDbJmLnmHs587Xaf1rs=; b=hQqbUVZvt4gnRIo9
+	hSf34TNlBb5VLPuKN2QUfO51sVgJA6QQ0oa5YSwBbfo7OJ/41H8NVemCEAnywAWf
+	w4EUDh7JDvEaJdzawNgx/UJBLaVoR4N8wrVZr1E5D/QXg0RPVpaGCPqxi8mkbpgd
+	NIv6G+W8sPn/vDSv0K4RxVe9Y6+ZKmPkD9rWyVc6WrqdgJqv0geDMmyIzNXmW2Yb
+	3jCsDY7vzMhEnJghf3iCvJo+0TCZR7LInILkJJPcPhDIe5MxFtGRLfe1QB8VE6zk
+	hEUqsw8rF8L2YVRb9inh/aISn5UHYlUJzXIeHbYswKnEmjAm/7BeVc8MK50Geu2b
+	qpiagw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42qfdx74m3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Nov 2024 10:09:40 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A7A9epm031791
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 7 Nov 2024 10:09:40 GMT
+Received: from [10.216.52.65] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 7 Nov 2024
+ 02:09:36 -0800
+Message-ID: <94ed3622-a46e-a593-43f1-4ed7b0eba10a@quicinc.com>
+Date: Thu, 7 Nov 2024 15:39:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025-pci-pwrctl-rework-v2-2-568756156cbe@linaro.org> <20241106212826.GA1540916@bhelgaas>
-In-Reply-To: <20241106212826.GA1540916@bhelgaas>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 7 Nov 2024 10:52:35 +0100
-Message-ID: <CAMRc=Mcy8eo-nHFj+s8TO_NekTz6x-y=BYevz5Z2RTwuUpdcbA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] PCI/pwrctl: Create pwrctl devices only if at least
- one power supply is present
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: manivannan.sadhasivam@linaro.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, stable+noautosel@kernel.org, 
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1] PCI: dwc: Clean up some unnecessary codes in
+ dw_pcie_suspend_noirq()
+To: Richard Zhu <hongxing.zhu@nxp.com>, <jingoohan1@gmail.com>,
+        <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <frank.li@nxp.com>
+CC: <imx@lists.linux.dev>, <kernel@pengutronix.de>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20241107084455.3623576-1-hongxing.zhu@nxp.com>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20241107084455.3623576-1-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3sjGHSqe2sd3aWp7NgWGYs3-YIPy0BkB
+X-Proofpoint-ORIG-GUID: 3sjGHSqe2sd3aWp7NgWGYs3-YIPy0BkB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411070078
 
-On Wed, Nov 6, 2024 at 10:28=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Fri, Oct 25, 2024 at 01:24:52PM +0530, Manivannan Sadhasivam via B4 Re=
-lay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >
-> > Currently, pwrctl devices are created if the corresponding PCI nodes ar=
-e
-> > defined in devicetree. But this is not correct, because not all PCI nod=
-es
-> > defined in devicetree require pwrctl support. Pwrctl comes into picture
-> > only when the device requires kernel to manage its power state. This ca=
-n
-> > be determined using the power supply properties present in the devicetr=
-ee
-> > node of the device.
->
-> > +bool of_pci_is_supply_present(struct device_node *np)
-> > +{
-> > +     struct property *prop;
-> > +     char *supply;
-> > +
-> > +     if (!np)
-> > +             return false;
->
-> Why do we need to test !np here?  It should always be non-NULL.
->
 
-Right, I think this can be dropped. We check for the OF node in the
-function above.
 
-Bart
+On 11/7/2024 2:14 PM, Richard Zhu wrote:
+> Before sending PME_TURN_OFF, don't test the LTSSM stat. Since it's safe
+> to send PME_TURN_OFF message regardless of whether the link is up or
+> down. So, there would be no need to test the LTSSM stat before sending
+> PME_TURN_OFF message.
+> 
+> Remove the L2 poll too, after the PME_TURN_OFF message is sent out.
+> Because the re-initialization would be done in dw_pcie_resume_noirq().
+>
+we should not remove the poll here, it is required for the endpoint
+to go gracefully in to L2. Some endpoints can have some cleanups needs
+to be done before entering into L2 or L3. For the PME turnoff message,
+the endpoints needs to send L23 ack which indicates endpoint is
+ready to L2 without that it will not be gracefull D3cold sequence.
+
+-Krishna Chaitanya.
+
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>   .../pci/controller/dwc/pcie-designware-host.c | 20 ++++---------------
+>   1 file changed, 4 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f86347452026..64c49adf81d2 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -917,7 +917,6 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
+>   int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>   {
+>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> -	u32 val;
+>   	int ret = 0;
+>   
+>   	/*
+> @@ -927,23 +926,12 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>   	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+>   		return 0;
+>   
+> -	/* Only send out PME_TURN_OFF when PCIE link is up */
+> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
+> -		if (pci->pp.ops->pme_turn_off)
+> -			pci->pp.ops->pme_turn_off(&pci->pp);
+> -		else
+> -			ret = dw_pcie_pme_turn_off(pci);
+> -
+> +	if (pci->pp.ops->pme_turn_off) {
+> +		pci->pp.ops->pme_turn_off(&pci->pp);
+> +	} else {
+> +		ret = dw_pcie_pme_turn_off(pci);
+>   		if (ret)
+>   			return ret;
+> -
+> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> -		if (ret) {
+> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> -			return ret; > -		}>   	}
+>   
+>   	dw_pcie_stop_link(pci);
 
