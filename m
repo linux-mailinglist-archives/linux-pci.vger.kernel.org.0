@@ -1,193 +1,134 @@
-Return-Path: <linux-pci+bounces-16267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A9AA9C0BB2
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 17:31:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 682CB9C0BD2
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 17:37:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E26B1C23679
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:31:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C2A5284F25
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:37:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5669200B9A;
-	Thu,  7 Nov 2024 16:31:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875FC212D22;
+	Thu,  7 Nov 2024 16:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T4CdXoO+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7JZeh+I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F307E215F6E
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 16:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638D321219F
+	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 16:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730997067; cv=none; b=qKFbro+GU+Aq5BWNUJ55aklnV1rM5kBFTTsylmbCYP6+X+6gFSgdksggF8erlzcwYccO/UGyTcJYh5LqAjQImqaDhk2dq7tH4T/ARF69L12fHo8arAQCXvZ30o7tNwPDGMZFjKVvbD7cBFgP2MYQ+YvpmloxdvtM/IzFlvyhDyI=
+	t=1730997460; cv=none; b=EGDeYcF4M12dLsabunNyJxuZDCdyyWL28g4YgBFIMQwdbmYMNZDjiRUtpzFHXJ6oaywI8PwkZMU4pi3gLsfBARSWAfDThuS5A2oyO8rmi/1VHar1TjltlMvHlXk4/h2vhPHrtSUYtFO+ttZVwzr+MvgBGw2EB0+mLLhrJmwqO7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730997067; c=relaxed/simple;
-	bh=t3GKQ93gnY+IQZ99F1ny/61LvAa2Wpx/BVP9oL9INX8=;
+	s=arc-20240116; t=1730997460; c=relaxed/simple;
+	bh=LOjqdLJXd4OpI4uxoxe81wuTDGMChDa9G9O5Hv18mqc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gIKLkG3aH8c6Miz9OS+kWtL3MymkZwTSnGb9LO+brxU5T1YIEq/akBYodPaEVarf3q91z5XPzEAXpKlS2q+etu8oZWokgzXy87ODFhaHFDehHglg2byIp+4AQb+Y9b7veAqSM3tQDgqnQkzs42/EG/L2tKESf8Mu37MPov0lZbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T4CdXoO+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43159c9f617so9084195e9.2
-        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2024 08:31:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730997061; x=1731601861; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eGn2f45tYzpwIDupkR6z6PhyeqcvE77Fm8hNIVc/RIg=;
-        b=T4CdXoO+4qs6FHPcC/ndsC7AQiyZo+lPd89xjy04bb+Wce7rFaJwvLX6Zy/+ZsEijD
-         oUfkO/WhWVAorxoEGSGLRGU1MfgJrcf/QWPeVMfd3T0qqTua8dyY5z8+ISO9Mg5cNHeL
-         zb0oo6eHT0ughD2m4BeKQKQngi2itS0MJoadFTH8KXjGQmukTp72HTP1vnzY/kmgSL4u
-         gauE+/Qx5IzKgGsexXSfDH1ayyf4yiEOCMwhaGjICpntS61M0qXW4WweE42S5Ah0oSD+
-         NZkmUozetfaaK5nTDQzcvCvp5ivGcp+wl8/k3mmS9Ew0bu6ygjo7Hqw8KL1qOlKyg3V7
-         3mbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730997061; x=1731601861;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eGn2f45tYzpwIDupkR6z6PhyeqcvE77Fm8hNIVc/RIg=;
-        b=n8Enzvibzjh8NlKEvOuc2GsZwiACfii2P8Msu4oZ3eY+HeMEqF09MkZVNFSGNMdnZw
-         Kbv7JdNhyBjvlX7WBtmuuB4tA53H2sIiYxl1F+CPBouhpfqbB39RN4w5hrgt7jsUB+HF
-         +aq1gxmWX/CWhi+c/A8pVswOWTAHovxQPLuFd/eNechxgvUD4+U6dBvWoMw8aj8TJVSN
-         11OY7iW3vFQMRREvNm5cu2ecbcCf6+dFA3Nd7By48m4JmOzttEyk9Wpvo2H5tvD9FV1Z
-         jXpsMd/5KdHFHjEW7/kw9SAG7+k0hJ4lYPUhHEV7ej3QcE1L1wc/NgPoCaMQfn9v4Wey
-         fWGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcy82jrF6sy7Up/aUyV3f3fjXdL4T09q682II0AP9FQtZtDRI2cvP3mSAU5NXkuq0cdRPn90LWP+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxttu5u8bUHZFdgIGYSM/05SmAk+HEqbMg5TsNkKUoFnbwW0RHk
-	RYFI/r+CZKbf6T4QPSFNdynNmCj07it6eLj5DVp3tcw9OnR2+TxQb4anheIhoQ==
-X-Google-Smtp-Source: AGHT+IFn8hMMlS1vuzDlBFPgri4GJhUAcCDVni34CQZgGkvMHUH9vsy1be+oNOc80rBebleeE6GosQ==
-X-Received: by 2002:adf:f784:0:b0:37d:4aa5:eae5 with SMTP id ffacd0b85a97d-38061221e2cmr29305957f8f.55.1730997061238;
-        Thu, 07 Nov 2024 08:31:01 -0800 (PST)
-Received: from thinkpad ([89.101.241.141])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381eda13780sm2103038f8f.109.2024.11.07.08.30.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 08:31:00 -0800 (PST)
-Date: Thu, 7 Nov 2024 16:30:59 +0000
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, jingoohan1@gmail.com,
-	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, imx@lists.linux.dev, kernel@pengutronix.de,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] PCI: dwc: Clean up some unnecessary codes in
- dw_pcie_suspend_noirq()
-Message-ID: <20241107163059.q64qebgwzn377fwb@thinkpad>
-References: <20241107084455.3623576-1-hongxing.zhu@nxp.com>
- <20241107111334.n23ebkbs3uhxivvm@thinkpad>
- <ZyzmBQlt5WJ+D9xM@lizhi-Precision-Tower-5810>
+	 Content-Type:Content-Disposition:In-Reply-To; b=o1KylpbkBsClvr6fvYbYvZJaQEfYqDRbaEwioEm3ySfrfwHpoQYzUeLLNMsV1vvOdiJFHMK/elG4UDVaES4bU4/wqf518ibqKILInUmqZ9j7ZS3fV4mFjBJKUwMLXCXXLD219tL14BktPC14eMQyQ97RmwFA2x01rHIj5nun0fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7JZeh+I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7414BC4CECC;
+	Thu,  7 Nov 2024 16:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730997458;
+	bh=LOjqdLJXd4OpI4uxoxe81wuTDGMChDa9G9O5Hv18mqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j7JZeh+IeOQECb17zMO1os2mGY6G+f6EoIue5B4gZosgSMwIpCGGbBLQ+Uj44FyKB
+	 kx2qRP2QsXarPtPq83HZfuTIw0oKgoaMBvwTFSaytiqZWeSv9ynVCkznF7QUw2+nA0
+	 KRMDLUUIwF19Qe5it6+LiYDv99TmVVPvhyWScNXKhZh+1Nn+T/pSEnJbq2SJdbPQSG
+	 P6DAdIN3UVCP7BqNE5tZmty2KfOibSFfVi4HKOpbQncHTKGzJlZQaCGa4uUND3i9j5
+	 FoJsKWmfl8SLKxBEMX1OKtRDkamva2Bbpq0y7jEtNi41LT0qPcfpT0v+fkriLLNU2G
+	 foC8On6Dsg00A==
+Date: Thu, 7 Nov 2024 17:37:36 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] PCI: mediatek-gen3: Move reset/assert callbacks in
+ .power_up()
+Message-ID: <Zyzs0E6c6FZNK6j9@lore-desk>
+References: <ZyzmFyRYDHX0W6bB@lore-desk>
+ <20241107162136.GA1618287@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jWe0TsNLQ5QwO6hz"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZyzmBQlt5WJ+D9xM@lizhi-Precision-Tower-5810>
+In-Reply-To: <20241107162136.GA1618287@bhelgaas>
 
-On Thu, Nov 07, 2024 at 11:08:37AM -0500, Frank Li wrote:
-> On Thu, Nov 07, 2024 at 11:13:34AM +0000, Manivannan Sadhasivam wrote:
-> > On Thu, Nov 07, 2024 at 04:44:55PM +0800, Richard Zhu wrote:
-> > > Before sending PME_TURN_OFF, don't test the LTSSM stat. Since it's safe
-> > > to send PME_TURN_OFF message regardless of whether the link is up or
-> > > down. So, there would be no need to test the LTSSM stat before sending
-> > > PME_TURN_OFF message.
-> > >
-> >
-> > What is the incentive to send PME_Turn_Off when link is not up?
-> 
-> see Bjorn's comments in https://lore.kernel.org/imx/20241106222933.GA1543549@bhelgaas/
-> 
 
-Thanks for the pointer. Let me reply there itsef.
+--jWe0TsNLQ5QwO6hz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Mani
+On Nov 07, Bjorn Helgaas wrote:
+> On Thu, Nov 07, 2024 at 05:08:55PM +0100, Lorenzo Bianconi wrote:
+> > > On Thu, Nov 07, 2024 at 02:50:55PM +0100, Lorenzo Bianconi wrote:
+> > > > In order to make the code more readable, move phy and mac reset lin=
+es
+> > > > assert/de-assert configuration in .power_up callback
+> > > > (mtk_pcie_en7581_power_up/mtk_pcie_power_up).
+> > ...
+>=20
+> > > Is there a requirement that the PHY and MAC reset ordering be
+> > > different for EN7581 vs other chips?
+> > >=20
+> > > EN7581:
+> > >=20
+> > >   assert PHY reset
+> > >   assert MAC reset
+> > >   power on PHY
+> > >   deassert PHY reset
+> > >   deassert MAC reset
+> > >=20
+> > > others:
+> > >=20
+> > >   assert PHY reset
+> > >   assert MAC reset
+> > >   deassert PHY reset
+> > >   power on PHY
+> > >   deassert MAC reset
+> > >=20
+> > > Is there one order that would work for both?
+> >=20
+> > EN7581 requires to run phy_init()/phy_power_on() before deassert PHY re=
+set
+> > lines.
+>=20
+> And the other chips require the PHY power-on to be *after* deasserting
+> PHY reset?
 
-> "But I don't think you responded to the race question.  What happens
-> here?
-> 
->   if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
->     --> link goes down here <--
->     pci->pp.ops->pme_turn_off(&pci->pp);
-> 
-> You decide the LTSSM is active and the link is up.  Then the link goes
-> down.  Then you send PME_Turn_off.  Now what?
-> 
-> If it's safe to try to send PME_Turn_off regardless of whether the
-> link is up or down, there would be no need to test the LTSSM state."
-> 
-> I think it may happen if EP device HOT remove/reset after if check.
-> 
-> Frank
-> >
-> > > Remove the L2 poll too, after the PME_TURN_OFF message is sent out.
-> > > Because the re-initialization would be done in dw_pcie_resume_noirq().
-> > >
-> >
-> > As Krishna explained, host needs to wait until the endpoint acks the message
-> > (just to give it some time to do cleanups). Then only the host can initiate
-> > D3Cold. It matters when the device supports L2.
-> >
-> > - Mani
-> >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > ---
-> > >  .../pci/controller/dwc/pcie-designware-host.c | 20 ++++---------------
-> > >  1 file changed, 4 insertions(+), 16 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index f86347452026..64c49adf81d2 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -917,7 +917,6 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
-> > >  int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-> > >  {
-> > >  	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > -	u32 val;
-> > >  	int ret = 0;
-> > >
-> > >  	/*
-> > > @@ -927,23 +926,12 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-> > >  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
-> > >  		return 0;
-> > >
-> > > -	/* Only send out PME_TURN_OFF when PCIE link is up */
-> > > -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
-> > > -		if (pci->pp.ops->pme_turn_off)
-> > > -			pci->pp.ops->pme_turn_off(&pci->pp);
-> > > -		else
-> > > -			ret = dw_pcie_pme_turn_off(pci);
-> > > -
-> > > +	if (pci->pp.ops->pme_turn_off) {
-> > > +		pci->pp.ops->pme_turn_off(&pci->pp);
-> > > +	} else {
-> > > +		ret = dw_pcie_pme_turn_off(pci);
-> > >  		if (ret)
-> > >  			return ret;
-> > > -
-> > > -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
-> > > -					PCIE_PME_TO_L2_TIMEOUT_US/10,
-> > > -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-> > > -		if (ret) {
-> > > -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-> > > -			return ret;
-> > > -		}
-> > >  	}
-> > >
-> > >  	dw_pcie_stop_link(pci);
-> > > --
-> > > 2.37.1
-> > >
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
+I am not sure about it, this is the only Airoha device I have.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Lorenzo
+
+--jWe0TsNLQ5QwO6hz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZyzs0AAKCRA6cBh0uS2t
+rOdGAP9wZ3x/72rt3z5VA+CvmxyOE+smiIxqdLcxqQ5DYJYKKQD+OzuuGmCFKK6b
+otItaue3hFQPfCMyI9kM/cMtpP5dYQI=
+=M/rn
+-----END PGP SIGNATURE-----
+
+--jWe0TsNLQ5QwO6hz--
 
