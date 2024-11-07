@@ -1,134 +1,131 @@
-Return-Path: <linux-pci+bounces-16268-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16269-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 682CB9C0BD2
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 17:37:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2933E9C0BE1
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 17:42:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C2A5284F25
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:37:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98BB6B20F32
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875FC212D22;
-	Thu,  7 Nov 2024 16:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF455215F6C;
+	Thu,  7 Nov 2024 16:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7JZeh+I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PACSSb+f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638D321219F
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 16:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A76A1BD007;
+	Thu,  7 Nov 2024 16:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730997460; cv=none; b=EGDeYcF4M12dLsabunNyJxuZDCdyyWL28g4YgBFIMQwdbmYMNZDjiRUtpzFHXJ6oaywI8PwkZMU4pi3gLsfBARSWAfDThuS5A2oyO8rmi/1VHar1TjltlMvHlXk4/h2vhPHrtSUYtFO+ttZVwzr+MvgBGw2EB0+mLLhrJmwqO7M=
+	t=1730997741; cv=none; b=qv2RjRZmrPZg9L/6dpLvwponwQuY+nQKI+HfwIcShaJWrGqpyFUClgIKB1PR0zaCHaLpR3e2np4MwVkN7Uhs9KGTY0r3ZxduPV3C7kkXiHj2HQU6vwHnZmdmIgnQFN0lcTerW4T1SNxskYLOhDslKZSyx60WtzjOLznsGA9nNqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730997460; c=relaxed/simple;
-	bh=LOjqdLJXd4OpI4uxoxe81wuTDGMChDa9G9O5Hv18mqc=;
+	s=arc-20240116; t=1730997741; c=relaxed/simple;
+	bh=WdyKJtb8azsZYUqpDghR52nsf2xjEriGSxLwMe1jM+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1KylpbkBsClvr6fvYbYvZJaQEfYqDRbaEwioEm3ySfrfwHpoQYzUeLLNMsV1vvOdiJFHMK/elG4UDVaES4bU4/wqf518ibqKILInUmqZ9j7ZS3fV4mFjBJKUwMLXCXXLD219tL14BktPC14eMQyQ97RmwFA2x01rHIj5nun0fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7JZeh+I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7414BC4CECC;
-	Thu,  7 Nov 2024 16:37:38 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOElM6KrOSI4KaTsLjEKLodjH7pIHLJO/ebG1TtXTfq0l326D7neBZh6DxHI7uf/F+JOA17dCfadhACNvOxKr0dzSfP4YLm7m6ybnF3hXel9jIziVZS/f3B1SwDkB4pLwOY61QaduDKlZmDkRBHbOJvhHp8uNxYd8vPNdk4gjAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PACSSb+f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2188C4CECC;
+	Thu,  7 Nov 2024 16:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730997458;
-	bh=LOjqdLJXd4OpI4uxoxe81wuTDGMChDa9G9O5Hv18mqc=;
+	s=k20201202; t=1730997741;
+	bh=WdyKJtb8azsZYUqpDghR52nsf2xjEriGSxLwMe1jM+I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7JZeh+IeOQECb17zMO1os2mGY6G+f6EoIue5B4gZosgSMwIpCGGbBLQ+Uj44FyKB
-	 kx2qRP2QsXarPtPq83HZfuTIw0oKgoaMBvwTFSaytiqZWeSv9ynVCkznF7QUw2+nA0
-	 KRMDLUUIwF19Qe5it6+LiYDv99TmVVPvhyWScNXKhZh+1Nn+T/pSEnJbq2SJdbPQSG
-	 P6DAdIN3UVCP7BqNE5tZmty2KfOibSFfVi4HKOpbQncHTKGzJlZQaCGa4uUND3i9j5
-	 FoJsKWmfl8SLKxBEMX1OKtRDkamva2Bbpq0y7jEtNi41LT0qPcfpT0v+fkriLLNU2G
-	 foC8On6Dsg00A==
-Date: Thu, 7 Nov 2024 17:37:36 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] PCI: mediatek-gen3: Move reset/assert callbacks in
- .power_up()
-Message-ID: <Zyzs0E6c6FZNK6j9@lore-desk>
-References: <ZyzmFyRYDHX0W6bB@lore-desk>
- <20241107162136.GA1618287@bhelgaas>
+	b=PACSSb+fkWRl1il2twepV9lGk0DfomBOx8yQJfl8C+dbvcTbwd81LLg+GMQ06POoq
+	 ll5wofgywYTaRdTplbtJTlrZM5TGL12Jo0XdF0qEjyxxz3NPAeOgG5ewqVbkY+yQnc
+	 NDm6HvvJna0JwBNQuL6bBOFizP86JAudh9Txo/Hs0cPSfsPJeSH9MRFSmY2ibQkbjS
+	 mqZ3aOkw7PF3Kl1A9ExApW/bOjmeNCQQLRTKsyKnIfBkhgcpRMzDpnTcMJP4yTeJS9
+	 EhpbgDoTgBboKn8tUXhknXtZyWa1NscBKBTa+h9+UHB72ISRrcY0x6Va2r/LLKi4JS
+	 MwIbf4felViAA==
+Date: Thu, 7 Nov 2024 18:42:13 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Andrew Lunn <andrew@lunn.ch>, Bjorn Helgaas <helgaas@kernel.org>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+	alexanderduyck@fb.com, kernel-team@meta.com, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, mohsin.bashr@gmail.com, sanmanpradhan@meta.com,
+	andrew+netdev@lunn.ch, jdamato@fastly.com, sdf@fomichev.me,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next] eth: fbnic: Add PCIe hardware statistics
+Message-ID: <20241107164213.GA189042@unreal>
+References: <20241106122251.GC5006@unreal>
+ <20241106171257.GA1529850@bhelgaas>
+ <76fdd29a-c7fa-4b99-ae63-cce17c91dae9@lunn.ch>
+ <20241106160958.6d287fd8@kernel.org>
+ <20241107082327.GI5006@unreal>
+ <b35f536e-1eb0-4b7b-85f4-df94d76927d6@linux.dev>
+ <20241107120357.GL5006@unreal>
+ <20241107074009.5712809a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jWe0TsNLQ5QwO6hz"
-Content-Disposition: inline
-In-Reply-To: <20241107162136.GA1618287@bhelgaas>
-
-
---jWe0TsNLQ5QwO6hz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241107074009.5712809a@kernel.org>
 
-On Nov 07, Bjorn Helgaas wrote:
-> On Thu, Nov 07, 2024 at 05:08:55PM +0100, Lorenzo Bianconi wrote:
-> > > On Thu, Nov 07, 2024 at 02:50:55PM +0100, Lorenzo Bianconi wrote:
-> > > > In order to make the code more readable, move phy and mac reset lin=
-es
-> > > > assert/de-assert configuration in .power_up callback
-> > > > (mtk_pcie_en7581_power_up/mtk_pcie_power_up).
-> > ...
->=20
-> > > Is there a requirement that the PHY and MAC reset ordering be
-> > > different for EN7581 vs other chips?
-> > >=20
-> > > EN7581:
-> > >=20
-> > >   assert PHY reset
-> > >   assert MAC reset
-> > >   power on PHY
-> > >   deassert PHY reset
-> > >   deassert MAC reset
-> > >=20
-> > > others:
-> > >=20
-> > >   assert PHY reset
-> > >   assert MAC reset
-> > >   deassert PHY reset
-> > >   power on PHY
-> > >   deassert MAC reset
-> > >=20
-> > > Is there one order that would work for both?
-> >=20
-> > EN7581 requires to run phy_init()/phy_power_on() before deassert PHY re=
-set
-> > lines.
->=20
-> And the other chips require the PHY power-on to be *after* deasserting
-> PHY reset?
+On Thu, Nov 07, 2024 at 07:40:09AM -0800, Jakub Kicinski wrote:
+> On Thu, 7 Nov 2024 14:03:57 +0200 Leon Romanovsky wrote:
+> > > [root@host ~]# ethtool -i eth0 | grep driver
+> > > driver: mlx5_core
+> > > [root@host ~]# ethtool -S eth0 | grep pci
+> > >      rx_pci_signal_integrity: 1
+> > >      tx_pci_signal_integrity: 1471
+> > >      outbound_pci_stalled_rd: 0
+> > >      outbound_pci_stalled_wr: 0
+> > >      outbound_pci_stalled_rd_events: 0
+> > >      outbound_pci_stalled_wr_events: 0
+> > > 
+> > > Isn't it a PCIe statistics?  
+> > 
+> > I didn't do full archaeological research and stopped at 2017 there these
+> > counters were updated to use new API, but it looks like they there from
+> > stone age.
+> > 
+> > It was a mistake to put it there and they should be moved to PCI core
+> > together with other hundreds debug counters which ConnectX devices have
+> > but don't expose yet.
+> 
+> Whatever hand-waving you do now, it's impossible to take you seriously
+> where the device driver of which you are a maintainer does the same
+> thing. 
 
-I am not sure about it, this is the only Airoha device I have.
+I said that it is a mistake and can add that we can move it to new infrastructure.
 
-Regards,
-Lorenzo
+> And your direction going forward for PCIe debug, AFAIU, is the
+> proprietary fwctl stuff. Please stop.
 
---jWe0TsNLQ5QwO6hz
-Content-Type: application/pgp-signature; name="signature.asc"
+Nice, and we are returning back to the discussion of evil vendors vs.
+good people who are working in cloud companies which produce hardware
+for themselves but don't call themselves vendors.
 
------BEGIN PGP SIGNATURE-----
+The latter can do whatever they want, but vendors are doing only crap.
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZyzs0AAKCRA6cBh0uS2t
-rOdGAP9wZ3x/72rt3z5VA+CvmxyOE+smiIxqdLcxqQ5DYJYKKQD+OzuuGmCFKK6b
-otItaue3hFQPfCMyI9kM/cMtpP5dYQI=
-=M/rn
------END PGP SIGNATURE-----
+The patch author added these debug counters, and magically it is fine for you:
++   These counters indicate PCIe resource exhaustion events:
++        - pcie_ob_rd_no_tag: Read requests dropped due to tag unavailability
++        - pcie_ob_rd_no_cpl_cred: Read requests dropped due to completion credit exhaustion
++        - pcie_ob_rd_no_np_cred: Read requests dropped due to non-posted credit exhaustion
 
---jWe0TsNLQ5QwO6hz--
+For example, mlx5 devices and Broadcom have two simple PCIe counters: rx_errors and tx_errors,
+which have nothing to do with fwctl.
+
+And the idea, what you can take mistakes from the past, ignore the
+feedback and repeat these mistakes, fills me with amazement.
+
+So why don't you allow module parameters? Many drivers have them, but
+new are not allowed. If I claim that "vendor XXX has it, can I add it
+too?", we all know the answer.
+
+Thanks
 
