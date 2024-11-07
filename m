@@ -1,184 +1,215 @@
-Return-Path: <linux-pci+bounces-16230-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16231-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4884A9C040E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 12:32:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C2399C04E7
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 12:52:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD1EC1F236EF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 11:32:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B5A32820BB
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 11:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C95209F32;
-	Thu,  7 Nov 2024 11:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC8B820F5D3;
+	Thu,  7 Nov 2024 11:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Is85sQl8"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WKtYcyJu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6y9VBDS0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WKtYcyJu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6y9VBDS0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3251208999
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 11:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A58620C31F;
+	Thu,  7 Nov 2024 11:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730979127; cv=none; b=Tj//FZThDdGOJv6Yow3oiQ8DkvxSerMcIg30ZJGk+EhgwCVd+UdUielFB5IYOPw21vdyLUAvLYGIDVt206ttpea7GacyorNQ7iS5urR1CI54fkuZUqaBfYTb8HMa6rno2NHZ+70e17oN8hsszK9/8/IMANkoCayLvscOmIfQQgU=
+	t=1730980303; cv=none; b=FNkMX1/brfXYASlJiLOtpsJehdC/JfARFNwMOkvFyZFfHkOK7mEIqqIZmnkTHCz/HKrv8T9fhkVA9zsmMaIBWJIziVKcbERQ4/hArTfz7pFHt/eejRkg26pTJ/Nr1O6+cq0EdpW4/GeW85rmieIeg7VK0FlVNLRE1dbiAgFVo4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730979127; c=relaxed/simple;
-	bh=++vQ0lzeG3Jrqx6fHr8hPgQgL6xBFVlHG0RR8npbujE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NrO5jchgEy/8rUX0sjcPyfTko9hGlDIAWRvwtCKJAVWVKkDWOCY5KT0jNSoFgM723XTgRwUSwrXXrjrI109nd2eCxRPHAM/HD1WfaYeXAA7sNpF9NX2vKDOm1SWghtaEn9BEsmepVd+1I2eHNpcb0B/SBZnvda5kjX0Iu2IXXbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Is85sQl8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB27C4AF0B;
-	Thu,  7 Nov 2024 11:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730979126;
-	bh=++vQ0lzeG3Jrqx6fHr8hPgQgL6xBFVlHG0RR8npbujE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Is85sQl8V1y4p9Ke3aIamTV0pXATg8O7UhHBzwsv89xiqctJLHGiSupmRs8KGFf8C
-	 pI381yE5fqBFDu1da/97yQCOhTZ1ZbUPOXzbTbemCceEzdCaESotCcbyuAOBV3sMb7
-	 6kfbEocu0N/R6j1RDPhT7nSGHXFG9iKMb4Zt8qmEMRyQ8yfbUyxn9fA/qwixiEZy2T
-	 sMCUISxOXP9FbjIRci6CnTIDoCqiOC7lAaOCQ7qj086Xdgib422AD73sDPK+J0L1C+
-	 Jg1qGaO+3A5TIWs29vpyx3Qvb5Un51KlX0wweYVvZFzuM/yeihAXX+HwZRbjKEsaRV
-	 CP5IbA/cxt09Q==
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 2804C120006C;
-	Thu,  7 Nov 2024 06:32:05 -0500 (EST)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-03.internal (MEProxy); Thu, 07 Nov 2024 06:32:05 -0500
-X-ME-Sender: <xms:NaUsZ5jXCfx1YLBRih7P_dQok3HqV6uj3nBJ563PnIsvB2A-f6RC5g>
-    <xme:NaUsZ-B3-f-I-v-ZYKLZIQ2Rtqa7tgYlJKE6pxZIwo7rI5g2nFGJ7S7xeA1IEofoo
-    LcJeYuyojvdDaz9KNU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtdeggddvlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdfnvghonhcutfhomhgrnhhovhhskhihfdcuoehlvghonheskhgvrhhnvg
-    hlrdhorhhgqeenucggtffrrghtthgvrhhnpeekgfduveffueffveduleefgfejhfevfedu
-    ueeiueetleeugeeivdfhfedvgeeuhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhgvohhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdeftdehfeelkeegqddvje
-    ejleejjedvkedqlhgvohhnpeepkhgvrhhnvghlrdhorhhgsehlvghonhdrnhhupdhnsggp
-    rhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhonhhnhi
-    gtsegrmhgriihonhdrtghomhdprhgtphhtthhopehmtggrrhhlshhonhessghrohgruggt
-    ohhmrdgtohhmpdhrtghpthhtohepkhgrihdrhhgvnhhgrdhfvghnghestggrnhhonhhitg
-    grlhdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdp
-    rhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohephh
-    gvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhifsehlihhnuhigrdgt
-    ohhmpdhrtghpthhtoheprggvrghsihesmhgrrhhvvghllhdrtghomhdprhgtphhtthhope
-    grphhrrggshhhunhgvsehnvhhiughirgdrtghomh
-X-ME-Proxy: <xmx:NaUsZ5Giy9j3ajjZsZkQXlmPsPUX80BWvmsueyxnnsMZFqvsFbDwrA>
-    <xmx:NaUsZ-TpUSNntRKiLL8Gt5t8jMk641Y7Jy92DgQUo0sD_ufYIy16Hw>
-    <xmx:NaUsZ2wydzRwe6i8PFdfLp003BxLGKg7R_xBpBru2_3vFgzwtVj0Tg>
-    <xmx:NaUsZ04chBJT_iS7UfWqrHerXpO1K0p4awauJMsQ2rN0anHpFgh-yQ>
-    <xmx:NaUsZ7yyM8K09kwVSKQ2FifmB1-tJhC4-SDYvnG5VdECGo_z0UKH0Z-b>
-Feedback-ID: i927946fb:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id EC77B1C20066; Thu,  7 Nov 2024 06:32:04 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1730980303; c=relaxed/simple;
+	bh=2EuzFuovwEC1kBPfLIPJmD2qUpzwJPFM0FDC9Dkau7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q4Qh44Orqph4JXWYsb/c9n0M5X+aGQQXKGU8fEW3gl9AWDOFrvu3Vw5wuLcGx3dhugwdgwO+TEl2l0KlFbl2CgZTpXMbub4QhTMrT8uY8ycbNUP4qjaFgy4UEfHzgEsu31ZebA/glQ7szDmfo/GU0Ua5PaXM3VsAqGI2w80VyTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WKtYcyJu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6y9VBDS0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WKtYcyJu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6y9VBDS0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 357D221E89;
+	Thu,  7 Nov 2024 11:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1730980300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TVxag8U9jM75UljVybG40T486hx4iXnhCGVMNG4jU7M=;
+	b=WKtYcyJuRmqBS3wgJmdiVAEnAF9xdtDvh65mXQjicVeYTeafMBIe0Hx7hZgKjsTezRkblW
+	Wk0Ja3RTnsFBvX4jq/ez4kVZdf0a71Cm0+xEdcB7oZ11DJutMxZQX+bmzulAUQPEdaXMNx
+	vaBWhG7miv+uB9cO2d2kbBKW2pbgtFQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1730980300;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TVxag8U9jM75UljVybG40T486hx4iXnhCGVMNG4jU7M=;
+	b=6y9VBDS0rtz+KzPrMSFQsof1tuHYCDd2aDlgjyBFIEcheGKdjWTJQlGjNIj0J3wqo2YB7B
+	nuIuiUn2iT52tiDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=WKtYcyJu;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=6y9VBDS0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1730980300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TVxag8U9jM75UljVybG40T486hx4iXnhCGVMNG4jU7M=;
+	b=WKtYcyJuRmqBS3wgJmdiVAEnAF9xdtDvh65mXQjicVeYTeafMBIe0Hx7hZgKjsTezRkblW
+	Wk0Ja3RTnsFBvX4jq/ez4kVZdf0a71Cm0+xEdcB7oZ11DJutMxZQX+bmzulAUQPEdaXMNx
+	vaBWhG7miv+uB9cO2d2kbBKW2pbgtFQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1730980300;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TVxag8U9jM75UljVybG40T486hx4iXnhCGVMNG4jU7M=;
+	b=6y9VBDS0rtz+KzPrMSFQsof1tuHYCDd2aDlgjyBFIEcheGKdjWTJQlGjNIj0J3wqo2YB7B
+	nuIuiUn2iT52tiDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CAC3B139B3;
+	Thu,  7 Nov 2024 11:51:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xRswL8qpLGeLJQAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Thu, 07 Nov 2024 11:51:38 +0000
+Message-ID: <49aeb2b6-3635-4094-97bd-cbff506f017c@suse.de>
+Date: Thu, 7 Nov 2024 13:51:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 07 Nov 2024 13:31:44 +0200
-From: "Leon Romanovsky" <leon@kernel.org>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-pci@vger.kernel.org, "Ariel Almog" <ariela@nvidia.com>,
- "Aditya Prabhune" <aprabhune@nvidia.com>, "Hannes Reinecke" <hare@suse.de>,
- "Heiner Kallweit" <hkallweit1@gmail.com>, "Arun Easi" <aeasi@marvell.com>,
- "Jonathan Chocron" <jonnyc@amazon.com>,
- "Bert Kenward" <bkenward@solarflare.com>,
- "Matt Carlson" <mcarlson@broadcom.com>,
- "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
- "Jean Delvare" <jdelvare@suse.de>,
- "Alex Williamson" <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
-Message-Id: <1d4df22e-3783-4081-b57b-ac03cd894cb5@app.fastmail.com>
-In-Reply-To: <20241105162655.GG311159@unreal>
-References: <20241105075130.GD311159@unreal>
- <20241105152455.GA1472398@bhelgaas> <20241105162655.GG311159@unreal>
-Subject: Re: [PATCH] PCI/sysfs: Fix read permissions for VPD attributes
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus
+ address to dynamic bridge nodes
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>,
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
+References: <20241104150521.r4hbsurw4dbzlxpg@thinkpad>
+ <20241104234937.GA1446920@bhelgaas>
+ <20241106143511.2ao7nwjrxi3tiatt@thinkpad>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <20241106143511.2ao7nwjrxi3tiatt@thinkpad>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 357D221E89
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[35];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmx.net];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.com,baylibre.com,kernel.org,broadcom.com,linux.com,google.com,linaro.org,arm.com,bgdev.pl,amd.com,arndb.de,linuxfoundation.org,vger.kernel.org,lists.infradead.org,gmx.net,bootlin.com,lunn.ch];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TAGGED_RCPT(0.00)[dt];
+	R_RATELIMIT(0.00)[to_ip_from(RLd4hfed5x1rwp7wawiizx89ec)];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Tue, Nov 5, 2024, at 18:26, Leon Romanovsky wrote:
-> On Tue, Nov 05, 2024 at 09:24:55AM -0600, Bjorn Helgaas wrote:
->> On Tue, Nov 05, 2024 at 09:51:30AM +0200, Leon Romanovsky wrote:
->> > On Mon, Nov 04, 2024 at 06:10:27PM -0600, Bjorn Helgaas wrote:
->> > > On Sun, Nov 03, 2024 at 02:33:44PM +0200, Leon Romanovsky wrote:
->> > > > On Fri, Nov 01, 2024 at 11:47:37AM -0500, Bjorn Helgaas wrote:
->> > > > > On Fri, Nov 01, 2024 at 04:33:00PM +0200, Leon Romanovsky wrote:
->> > > > > > On Thu, Oct 31, 2024 at 06:22:52PM -0500, Bjorn Helgaas wrote:
->> > > > > > > On Tue, Oct 29, 2024 at 07:04:50PM -0500, Bjorn Helgaas wrote:
->> > > > > > > > On Mon, Oct 28, 2024 at 10:05:33AM +0200, Leon Romanovsky wrote:
->> > > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
->> > > > > > > > > 
->> > > > > > > > > The Virtual Product Data (VPD) attribute is not
->> > > > > > > > > readable by regular user without root permissions.
->> > > > > > > > > Such restriction is not really needed, as data
->> > > > > > > > > presented in that VPD is not sensitive at all.
->> > > > > > > > > 
->> > > > > > > > > This change aligns the permissions of the VPD
->> > > > > > > > > attribute to be accessible for read by all users,
->> > > > > > > > > while write being restricted to root only.
->> > ...
->> 
->> > > What's the use case?  How does an unprivileged user use the VPD
->> > > information?
->> > 
->> > We have to add new field keyword=value in VA section of VPD, which
->> > will indicate very specific sub-model for devices used as a bridge.
->> > 
->> > > I can certainly imagine using VPD for bug reporting, but that
->> > > would typically involve dmesg, dmidecode, lspci -vv, etc, all of
->> > > which already require privilege, so it's not clear to me how
->> > > public VPD info would help in that scenario.
->> > 
->> > I'm targeting other scenario - monitoring tool, which doesn't need
->> > root permissions for reading data. It needs to distinguish between
->> > NIC sub-models.
->> 
->> Maybe the driver could expose something in sysfs?  Maybe the driver
->> needs to know the sub-model as well, and reading VPD once in the
->> driver would make subsequent userspace sysfs reads trivial and fast.
->
-> Our PCI driver lays in netdev subsystem and they have long-standing
-> position do not allow any custom sysfs files. To be fair, we (RDMA)
-> don't allow custom sysfs files too.
->
-> Driver doesn't need to know this information as it is extra key=value in
-> existing [VA] field, while driver relies on multiple FW capabilities
-> to enable/disable functionality.
->
-> Current [VA] line:
-> "[VA] Vendor specific: 
-> MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A"
-> Future [VA] line:
-> "[VA] Vendor specific: 
-> MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A,SMDL=SOMETHING"
->
-> Also the idea that we will duplicate existing functionality doesn't
-> sound like a good approach to me, and there is no way that it is
-> possible to expose as subsystem specific file.
->
-> What about to allow existing VPD sysfs file to be readable for everyone 
-> for our devices?
-> And if this allow list grows to much, we will open it for all devices 
-> in the world?
+Hi Mani,
 
-Bjorn,
+On 11/6/24 16:35, Manivannan Sadhasivam wrote:
+> On Mon, Nov 04, 2024 at 05:49:37PM -0600, Bjorn Helgaas wrote:
+>> On Mon, Nov 04, 2024 at 08:35:21PM +0530, Manivannan Sadhasivam wrote:
+>>> On Mon, Nov 04, 2024 at 09:54:57AM +0100, Andrea della Porta wrote:
+>>>> On 22:39 Sat 02 Nov     , Manivannan Sadhasivam wrote:
+>>>>> On Mon, Oct 28, 2024 at 03:07:22PM +0100, Andrea della Porta wrote:
+>>>>>> When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
+>>>>>> incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
+>>>>>> bridge, the window should instead be in PCI address space. Call
+>>>>>> pci_bus_address() on the resource in order to obtain the PCI bus
+>>>>>> address.
+>>>>>
+>>>>> of_pci_prop_ranges() could be called for PCI devices also (not just PCI
+>>>>> bridges), right?
+>>>>
+>>>> Correct. Please note however that while the PCI-PCI bridge has the parent
+>>>> address in CPU space, an endpoint device has it in PCI space: here we're
+>>>> focusing on the bridge part. It probably used to work before since in many
+>>>> cases the CPU and PCI address are the same, but it breaks down when they
+>>>> differ.
+>>>
+>>> When you say 'focusing', you are specifically referring to the
+>>> bridge part of this API I believe. But I don't see a check for the
+>>> bridge in your change, which is what concerning me. Am I missing
+>>> something?
+>>
+>> I think we want this change for all devices in the PCI address
+>> domain, including PCI-PCI bridges and endpoints, don't we?  All those
+>> "ranges" addresses should be in the PCI domain.
+>>
+> 
+> Yeah, right. I was slightly confused by the commit message. Maybe including a
+> sentence about how the change will work fine for endpoint devices would help.
+> Also, why it went unnoticed till now (ie., both CPU and PCI addresses are same
+> in many SoCs).
 
-I don't see this patch in https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=next
-So what did you decide? How can we enable existing VPD access to regular users?
+Most probably it is unnoticed because until now nobody has enabled
+/selected CONFIG_PCI_DYNAMIC_OF_NODES ?
 
-Thanks
-
->
-> Thanks
->
->> 
->> Bjorn
+~Stan
 
