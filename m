@@ -1,101 +1,91 @@
-Return-Path: <linux-pci+bounces-16237-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16238-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CCB19C0812
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 14:50:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F38099C081B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 14:51:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 454141F22D16
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 13:50:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA9071F23419
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 13:51:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BD0121265A;
-	Thu,  7 Nov 2024 13:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D422114;
+	Thu,  7 Nov 2024 13:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1OiSVUq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5A3212630;
-	Thu,  7 Nov 2024 13:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8C212D22
+	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 13:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730987436; cv=none; b=Q/S/ZMD1m0iubazk22sMU3LGYFJHPFpBpVCt9Y0A0Pp9NC6GdJpfO4LxENHGnItsHes9CPVMuit5x5NhXCL0ISdY6ZcurdzUuVcD+n2Bjx+wkoC34U2FxHeZTRGjUbN3eus3PiIkJ17pBN2UNKc9xhKEaIxUKYkf8Bp+Ht3jdLs=
+	t=1730987482; cv=none; b=Z4c21lwSECp9IgLGPr4Nzw1GH/tFdtbhlN5RUvq240TsZekxAn3MHpmd6D2sWR7MXpNgK+UeoW6OVBcH3Jnt2R5wI3B84RugEzpgGMzipl/YVTIJ8D0rGqvGV3T2ad6OJz4ursVUcL5CMS8EWQH6jbXp6eKTTpZ3AaarYaONgb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730987436; c=relaxed/simple;
-	bh=fgn4sel1p5t88qRO7ExDxdwas+YGL5pgazTpkpcAbsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcpimXPVJD83fYXhJFY+17l/p+NaV6tC+Z2cqNF9OVbYx6B61qgYsWRbahep1NQCupPVFr152ApssVBReAs6J7qodQvhf6AqjSa17VVB6yF0uES4V4i2xxkpYfH+eq/yKDoEM1hQcUQAhTWPw9Dglcxs8tJgEbuQ6PygakgDQXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id A292468C4E; Thu,  7 Nov 2024 14:50:25 +0100 (CET)
-Date: Thu, 7 Nov 2024 14:50:25 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
-	Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org, matthew.brost@intel.com,
-	Thomas.Hellstrom@linux.intel.com, brian.welty@intel.com,
-	himal.prasad.ghimiray@intel.com, krishnaiah.bommu@intel.com,
-	niranjana.vishwanathapura@intel.com
-Subject: Re: [PATCH v1 00/17] Provide a new two step DMA mapping API
-Message-ID: <20241107135025.GA14996@lst.de>
-References: <cover.1730298502.git.leon@kernel.org> <3567312e-5942-4037-93dc-587f25f0778c@arm.com> <20241104095831.GA28751@lst.de> <20241105195357.GI35848@ziepe.ca> <20241107083256.GA9071@lst.de> <20241107132808.GK35848@ziepe.ca>
+	s=arc-20240116; t=1730987482; c=relaxed/simple;
+	bh=dLpTfBzBR4l3dk9jBKmt+I9L2IwzEPpeAgKAP5o9ehU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DsRqG8hwDRV6zsyjwFaE9fxOBxfGmvV92gZxofRjTs6jao7vA1AvfoEt2ym5uocv1PSI+MyOTWl8B6yulZj9WUHURq7xPjMSpNCzBnQFko4aQ+8gTGvM3Dah0qPjh7QDP2+wJMGf9FsD7kavJ8+Ook1kDwikOQjSC8OGGn+kcss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1OiSVUq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F2D1C4CED0;
+	Thu,  7 Nov 2024 13:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730987481;
+	bh=dLpTfBzBR4l3dk9jBKmt+I9L2IwzEPpeAgKAP5o9ehU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=T1OiSVUqVLAXBaN/1uR2cwpX8Y8CSgSn93azivwoF7bOH8onOWdu+1rmVKVYfXcZq
+	 u8pEb8u1xDgsH0eauIFXgmyuIbPf2ErEYsQRP/DsvUC/jKoAM3+V2xkkrvgFZmDS8w
+	 ZEZbJ8VHWK123nH9VvhBGcAC4hWTOSbSlWVeOqnX+S6rB0qrqziv2GhwjwMG2uCr5u
+	 rY9slBGbl9/qhIf8Wcv4OGI9i0fduvlUTg1fngPI+Q50zsCYP5P6HtD4bsGGS2kIdY
+	 eMb8u8GAGkYchsT5qsZfqtR17Is0hOSMcm201ahVo7HA+LBP4oVze4hKTl8afU3XVt
+	 m3iTBD4GwgEnQ==
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH 0/3] PCI: mediatek-gen3: mtk_pcie_en7581_power_up code
+ refactoring
+Date: Thu, 07 Nov 2024 14:50:52 +0100
+Message-Id: <20241107-pcie-en7581-fixes-v1-0-af0c872323c7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241107132808.GK35848@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALzFLGcC/x3LTQqAIBBA4avIrBtQy/6uEi3CxpqNiQMRhHdPW
+ n483gtCmUlgVi9kuln4ihWmUeDPLR6EvFeD1bYzRg+YPBNSHNxoMPBDgnbqnXZht61roX4p0x/
+ qtqylfD+3Q5BjAAAA
+X-Change-ID: 20241107-pcie-en7581-fixes-296505fd2353
+To: Ryder Lee <ryder.lee@mediatek.com>, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, Lorenzo Bianconi <lorenzo@kernel.org>
+X-Mailer: b4 0.14.2
 
-On Thu, Nov 07, 2024 at 09:28:08AM -0400, Jason Gunthorpe wrote:
-> Once we are freed from scatterlist we can explore a design that would
-> pass the P2P routing information directly. For instance imagine
-> something like:
-> 
->    dma_map_p2p(dev, phys, p2p_provider);
-> 
-> Then dma_map_page(dev, page) could be something like
-> 
->    if (is_pci_p2pdma_page(page))
->       dev_map_p2p(dev, page_to_phys(page), page->pgmap->p2p_provider)
+Minor fixes and code refactoring in mtk_pcie_en7581_power_up routine
 
-One thing that this series does is to move the P2P mapping decisions out
-of the low-level dma mapping helpers and into the caller (again) for
-the non-sg callers and moves the special switch based bus mapping into
-a routine that can be called directly.
+---
+Lorenzo Bianconi (3):
+      PCI: mediatek-gen3: Add missing reset_control_deassert for mac_rst in mtk_pcie_en7581_power_up
+      PCI: mediatek-gen3: rely on clk_bulk_prepare_enable in mtk_pcie_en7581_power_up
+      PCI: mediatek-gen3: Move reset/assert callbacks in .power_up()
 
-Take a look at blk_rq_dma_map_iter_start, which now literally uses
-dma_map_page for the no-iommu, no-switch P2P case.  It also is a good
-use case for the proposed dma_map_phys.
+ drivers/pci/controller/pcie-mediatek-gen3.c | 42 ++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+---
+base-commit: 3102ce10f3111e4c3b8fb233dc93f29e220adaf7
+change-id: 20241107-pcie-en7581-fixes-296505fd2353
 
-> GPU driver
-> 
-> https://lore.kernel.org/dri-devel/20240117221223.18540-7-oak.zeng@intel.com/
-
-Eww, that's horrible.  Converting this to Leon's new hmm helpers
-would be really nice (and how that they are useful for more than
-mlx5).
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
 
 
