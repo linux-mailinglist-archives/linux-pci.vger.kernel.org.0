@@ -1,123 +1,235 @@
-Return-Path: <linux-pci+bounces-16282-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16283-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 681BD9C0EB7
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 20:17:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8B2A9C0FC8
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 21:32:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7879B20B6E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 19:17:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79E131F23AB4
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 20:32:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3914194AD6;
-	Thu,  7 Nov 2024 19:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D35A51D5CCF;
+	Thu,  7 Nov 2024 20:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RT0L2w+7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1111E7E782;
-	Thu,  7 Nov 2024 19:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5DE195FE8;
+	Thu,  7 Nov 2024 20:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731007011; cv=none; b=L5Ah4EFVfmqhDhI6AuqXTNvrdPTtO3htqhwn1sRh2DF2TqFUohwvCFLf/AArd1skxSpoAiDFD1lFspM5nq71BnP1q34yOUrQMsFJ3tB7T1j0kn6XNn100vfdkaVvkVqzEiK9fxMLhv6X/2sVC4szrLJs+hf9oGuJJFUo2erdBX4=
+	t=1731011574; cv=none; b=F9X7dswfkbFu+cnE5USsnOmdDJzPB2XENMMVTK8WFsNbKt9swVm7lus1r5/bZ089zbTAG/rzoZWSa46EXKUAKc/1cfIyDjIY/aBDnRkufFJpLGAgWaLwW1vropUFFdHYmWs/i0QoQ9mLQ5hfWyVDL5c0w4YcMD4c9fhuM/4gl2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731007011; c=relaxed/simple;
-	bh=y3gkMo4Cj0Srr0WYmUy9TiG4S7ye6PwjdqFvk7yAVeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lKhyt3MzmTm/1Ee7DYyVjfrok65y4W47UuEt8Q6Jxk/XGZS8IU5vJ+L5zu7l4FLwQYdtzQUcyOfDR9J52w5R8ktPJwmQTl73PTRF7+du8XRKvqT0ViiMbwlP6EmeY4CW6CL5oF7N+qNqH2tQcTdEbAAa1AbZsjOTpSC/AuCdKTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20c70abba48so14265115ad.0;
-        Thu, 07 Nov 2024 11:16:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731007009; x=1731611809;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=shJRP66gOhT4DazMS1XuGuw7WkBdrSKa9fDvAIGOtx8=;
-        b=XB2tSbvr0VDjNpUknJJDF2yzGgZimSGWfa8wWzP0XtamMz7R3F/fSBMqKtp+1auXHO
-         r/zVXKXTgDS9HaUVtTwpfPMFY0sxw2HOlXOpds4rYjqlMHDbrgE1o5cL2g1pNpzt3yKI
-         JkNuOzriOcRVcmrFj/5fkRFy8ugwTVVhjkSmfz+kG32ZNTdOfnDlqMwDZNBb5si6ViJr
-         JxZCeW/a72Y1LlyiQgfPPs2bvdoa6DHxLvDYbi7btL1JWU5G7LGvxY+5cIMn8YCe/zeq
-         ppEqDdJccjLEAb1D7i0dDmJ7e1gsmGWimmg5CWRuV9/bHJsRqyQzFyAwmQGSOLGdZ6gn
-         flfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqjdb86sTwqUi/Nnu7/3z5ZPT4lm+mJKI3dCWAYNLWxCOQOG0azT5X9lFMH8KQMxnSIpWKTsRXOIy8@vger.kernel.org, AJvYcCXwTMZtJ9dAEz/buCnOrEYQkVrHTgXLMf74H1dvsRehVqeOFJNRhWG8J4mONBS/hnOUKRmbpUIhNxwLOAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDs3EkmQtE/1mgUV2O8eid6iabsQxPZjwnoWCt2txDd3FtnbTb
-	rbq4ZGtgn98xm2l3LBv/PfznwZO9/sQhyxtgw76iTdaoGsqYHfnH
-X-Google-Smtp-Source: AGHT+IHCwxuyvUx7QMGwsvCo5NxhXWDcduS3t5NeeWQsOyZnHRWMAi39zpy99fSjHtRjJzPSmc4iOQ==
-X-Received: by 2002:a17:902:e747:b0:20c:79f1:fee9 with SMTP id d9443c01a7336-211834e1040mr259375ad.11.1731007009332;
-        Thu, 07 Nov 2024 11:16:49 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177dc7e44sm15883785ad.6.2024.11.07.11.16.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 11:16:48 -0800 (PST)
-Date: Fri, 8 Nov 2024 04:16:47 +0900
-From: Krzysztof =?utf-8?B?V2lsY3p577+977+9c2tp?= <kw@linux.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Hongxing Zhu <hongxing.zhu@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH v2] PCI: dwc: Fix resume failure if no EP is connected at
- some platforms
-Message-ID: <20241107191647.GA1869604@rocinante>
-References: <AS8PR04MB8676998092241543AEABFAAB8C532@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20241106222933.GA1543549@bhelgaas>
- <AS8PR04MB8676C98C4001DDC4851035B18C5C2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20241107072005.GA378841@rocinante>
- <AS8PR04MB8676F00E8F76B695772EB3B18C5C2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <AS8PR04MB86765B904FEC1AA88F6F83468C5C2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20241107163058.GD1297107@rocinante>
- <ZyzxdnC4mm4GwoOx@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1731011574; c=relaxed/simple;
+	bh=/VKLG9ZssjgBYteVEXpiKEX9bT8mHEulWP8vHOPAros=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=s9znKoU3R5OZ5/xbN603NVxxpteGvO1hh6mCHYpr8xensxeIQeh6Dy1qzl21FnbpSsZM/2/pqKgoJQZJB4InaSIiRYYMAj3Sx3bevnS5BRqjI+cn9FYAq1BmFXgo2jtHRtqXctGsnm9Mov3S3JCOTTCZouMQxV+gPx9O5mzEduU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RT0L2w+7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08282C4CECE;
+	Thu,  7 Nov 2024 20:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731011574;
+	bh=/VKLG9ZssjgBYteVEXpiKEX9bT8mHEulWP8vHOPAros=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RT0L2w+74MzSa7cQYf3SjO9jw1bMU3KWpwW05vTQJ1urJp3p6oyeNpGWiMu3wqaQ9
+	 SV4g/kV0uwTtavhfWS2vhatdmzibnLwG+z+Ccw8Z2exnPJDKSQv08kIVKTq7erovG+
+	 Y4zG9FJvVlKlHAQPoAxWzAfZViE//xCHB2UsfM4HMgd6X/ig1KxjrForHl3AhBO5i7
+	 t4ZuTIB71M9xJBuXWiPAEBOOam5Ue3pMl0cPdHGTbk/5v6yJZxi2uwsXTZI/m6FhrC
+	 gC5UvR7WX35HW2zChA96ZG0yHBB92I6UccE+ifKWWzVDtt+S9nT4UQB3BIz2gWOawi
+	 PwqNVuI3nACbA==
+Date: Thu, 7 Nov 2024 14:32:52 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shijith Thotton <sthotton@marvell.com>
+Cc: bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
+	Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, rafael@kernel.org,
+	scott@os.amperecomputing.com, jerinj@marvell.com,
+	schalla@marvell.com, vattunuru@marvell.com
+Subject: Re: [PATCH v3] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+Message-ID: <20241107203252.GA1623581@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZyzxdnC4mm4GwoOx@lizhi-Precision-Tower-5810>
+In-Reply-To: <20240826104531.1232136-1-sthotton@marvell.com>
 
-Hello,
+On Mon, Aug 26, 2024 at 04:15:03PM +0530, Shijith Thotton wrote:
+> This patch introduces a PCI hotplug controller driver for the OCTEON
+> PCIe device, a multi-function PCIe device where the first function acts
+> as a hotplug controller. It is equipped with MSI-x interrupts to notify
+> the host of hotplug events from the OCTEON firmware.
 
-[...]
-> > > > > If the changes aren't too involved, then I would rather fix it or drop
-> > > > > the not needed code now, before we sent the Pull Request.
-> > > > >
-> > > > > So, feel free to sent a small patch against the current branch, or
-> > > > > simply let me know how do you wish the current code to be changed, so
-> > > > > I can do it against the current branch.
-> > > > Thanks for your kindly reminder.
-> > > > This clean up small patch is on the way.
-> > > Here it is.
-> > > https://lkml.org/lkml/2024/11/7/409
-> >
-> > Thank you!
-> >
-> > That said, there here have been some concerns raised following a review of
-> > the new patch, see:
-> >
-> >   - https://lore.kernel.org/linux-pci/20241107084455.3623576-1-hongxing.zhu@nxp.com
-> >
-> > Hence, I wonder whether we should drop this patch and then focus on
-> > refinements to the new version, and perhaps, once its ready, then we
-> > will include it—this might have to be for the next release at this
-> > point, sadly.
+s/MSI-x/MSI-X/ to match spec and other uses
+
+> The driver facilitates the hotplugging of non-controller functions
+> within the same device. During probe, non-controller functions are
+> removed and registered as PCI hotplug slots. The slots are added back
+> only upon request from the device firmware. The driver also allows the
+> enabling and disabling of the slots via sysfs slot entries, provided by
+> the PCI hotplug framework.
 > 
-> I think we can continue discussion at refine patch. Add kept this patch
-> because it really fix some important problem. Refine patch is just make it
-> better.
+> Signed-off-by: Shijith Thotton <sthotton@marvell.com>
+> Co-developed-by: Vamsi Attunuru <vattunuru@marvell.com>
+> Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
 
-Sounds good!  Thank you!
+This order is incorrect because the handler (Shijith in this case)
+should be last in the chain; see
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.11#n396
 
-	Krzysztof
+> This patch introduces a PCI hotplug controller driver for OCTEON PCIe hotplug
+> controller. The OCTEON PCIe device is a multi-function device where the first
+> function acts as a PCI hotplug controller.
+> 
+>               +--------------------------------+
+>               |           Root Port            |
+>               +--------------------------------+
+>                               |
+>                              PCIe
+>                               |
+> +---------------------------------------------------------------+
+> |              OCTEON PCIe Multifunction Device                 |
+> +---------------------------------------------------------------+
+>             |                    |              |            |
+>             |                    |              |            |
+> +---------------------+  +----------------+  +-----+  +----------------+
+> |      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
+> | (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
+> +---------------------+  +----------------+  +-----+  +----------------+
+>             |
+>             |
+> +-------------------------+
+> |   Controller Firmware   |
+> +-------------------------+
+> 
+> The hotplug controller driver facilitates the hotplugging of non-controller
+> functions in the same device. During the probe of the driver, the non-controller
+> function are removed and registered as PCI hotplug slots. They are added back
+> only upon request from the device firmware. The driver also allows the user to
+> enable/disable the functions using sysfs slot entries provided by PCI hotplug
+> framework.
+
+I think the diagram and this text would be useful in the commit log.
+
+I would rephrase "functions are removed ..." as "the driver removes
+functions" to make it clear that this is purely a software thing and
+there's no PCIe-level change.  Similar for adding them back.
+
+> This solution adopts a hardware + software approach for several reasons:
+> 
+> 1. To reduce hardware implementation cost. Supporting complete hotplug
+>    capability within the card would require a PCI switch implemented within.
+> 
+> 2. In the multi-function device, non-controller functions can act as emulated
+>    devices. The firmware can dynamically enable or disable them at runtime.
+> 
+> 3. Not all root ports support PCI hotplug. This approach provides greater
+>    flexibility and compatibility across different hardware configurations.
+
+The downside of all this is the need for special-purpose software,
+which slows things down (you need to develop it, others need to review
+it) and burdens everybody with ongoing maintenance, e.g., changes to
+PCI device removal, resource assignment, slot registration, etc. now
+have to consider another case.
+
+> The hotplug controller function is lightweight and is equipped with MSI-x
+> interrupts to notify the host about hotplug events. Upon receiving an
+> interrupt, the hotplug register is read, and the required function is enabled
+> or disabled.
+> 
+> This driver will be beneficial for managing PCI hotplug events on the OCTEON
+> PCIe device without requiring complex hardware solutions.
+
+> +config HOTPLUG_PCI_OCTEONEP
+> +	bool "OCTEON PCI device Hotplug controller driver"
+
+s/Marvell PCI device/Cavium OCTEON PCI/ to match other entries.
+
+This Kconfig file isn't completely sorted, but if you move this above
+SHPC, it will at least be closer.
+
+> +static int octep_hp_pci_probe(struct pci_dev *pdev,
+> +			      const struct pci_device_id *id)
+> +{
+> +	struct octep_hp_controller *hp_ctrl;
+> +	struct pci_dev *tmp_pdev = NULL;
+> +	struct octep_hp_slot *hp_slot;
+> +	u16 slot_number = 0;
+> +	int ret;
+> +
+> +	hp_ctrl = devm_kzalloc(&pdev->dev, sizeof(*hp_ctrl), GFP_KERNEL);
+> +	if (!hp_ctrl)
+> +		return -ENOMEM;
+> +
+> +	ret = octep_hp_controller_setup(pdev, hp_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Register all hotplug slots. Hotplug controller is the first function
+> +	 * of the PCI device. The hotplug slots are the remaining functions of
+> +	 * the PCI device. They are removed from the bus and are added back when
+> +	 * the hotplug event is triggered.
+
+"Logically removed," I guess?  Obviously the PCIe Link remains up
+since function 0 is still alive, and I assume these other functions
+would still respond to config accesses.
+
+> +	 */
+> +	for_each_pci_dev(tmp_pdev) {
+
+Ugh.  We should avoid for_each_pci_dev() when possible.
+
+IIUC you only care about other functions of *this* device, and those
+functions should all be on the bus->devices list.  There are many
+instances of this, which I think would be sufficient:
+
+  list_for_each_entry(dev, &bus->devices, bus_list)
+
+> +		if (!octep_hp_is_slot(hp_ctrl, tmp_pdev))
+> +			continue;
+
+Which would make this check mostly unnecessary.
+
+> +		hp_slot = octep_hp_register_slot(hp_ctrl, tmp_pdev, slot_number);
+> +		if (IS_ERR(hp_slot))
+> +			return dev_err_probe(&pdev->dev, PTR_ERR(hp_slot),
+> +					     "Failed to register hotplug slot %u\n",
+> +					     slot_number);
+> +
+> +		ret = devm_add_action(&pdev->dev, octep_hp_deregister_slot,
+> +				      hp_slot);
+> +		if (ret)
+> +			return dev_err_probe(&pdev->dev, ret,
+> +					     "Failed to add action for deregistering slot %u\n",
+> +					     slot_number);
+> +		slot_number++;
+> +	}
+
+AFAICS this driver logs nothing at all in dmesg (except for errors and
+a few dev_dbg() uses).  Seems like it might be useful to have some
+hints there about the hotplug controller existence, possibly the
+connection between the slot name used in sysfs and the PCI function,
+and maybe even hot-add and hot-remove events.
+
+> +	return 0;
+> +}
+> +
+> +#define OCTEP_DEVID_HP_CONTROLLER 0xa0e3
+
+Even though this is a private #define, I think something like
+PCI_DEVICE_ID_CAVIUM_OCTEP_HP_CTLR would be nice because that's the
+typical pattern of include/linux/pci_ids.h.
+
+> +static struct pci_device_id octep_hp_pci_map[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_DEVID_HP_CONTROLLER) },
+> +	{ },
+> +};
 
