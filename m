@@ -1,134 +1,102 @@
-Return-Path: <linux-pci+bounces-16241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16242-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00E839C081E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 14:51:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F8EC9C08BB
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:18:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 908D9B21D14
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 13:51:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79182B23031
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 14:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACDB212658;
-	Thu,  7 Nov 2024 13:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zikc2VXF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0049B212D2D;
+	Thu,  7 Nov 2024 14:17:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FC821264D
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 13:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742BA212D16
+	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 14:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730987490; cv=none; b=r+ItomCpjBiZXaACu02daTW/Qfaoy2IqPEqFvji07z9XWizoSQbRw/vzvT54Q01ddaZ0nSUGPxkpP/3WUcEgKLTdF/D2NWaj0cSr99pEoA1psy+MX+bxjsuvxE5FZdvROWzufr21BywSIXdLG6QQ+Kf9GxtBU/kfvRgBwHc5drc=
+	t=1730989072; cv=none; b=gwdW4PSMH4nPvdPM/4hJuj8SvtO/syrYY9SKzgUpsyF3VhLTjJVHx9qNRlefhqWpejPw44RmjdXDmxSrrFEbu5p+I0jWpcwDGbU9jnkfB2ubqBIzoYU6pcqxM9Tj8wG04jTq71SmlnvMlFfiyWEawQnOvn9+0lWKjThjqlvtovY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730987490; c=relaxed/simple;
-	bh=btGOvKZTxZhuaxAnzRi1ntXNxujI8W8vvUilrAMbVOE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ivxG6hFB+Zs7idXfIiFDb9a96GL9KzcJnWFUUzhBjTWqVrIBV9vvIm5EEyrLJZK0G9wI3scvEfiiU7wjoJPror6hBl+ZDIiRNCoVwR0DIMCtHDfxqn2RwUYUedosz8uTZYzCtu28lMWPuqNw4WhVg17ZalEukpfSm3oUMoobeZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zikc2VXF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E196BC4CECC;
-	Thu,  7 Nov 2024 13:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730987490;
-	bh=btGOvKZTxZhuaxAnzRi1ntXNxujI8W8vvUilrAMbVOE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Zikc2VXFiWG6/99xKSMZnRo6dLllsbHAsCjJjy7JHGNrfbHuwtWCrEQcLnJ5Xp+ID
-	 /VYRfkguYkSTn/d6DCMrjYv4Scq8fIshoRYWkg45ttHdpuIdGluoJLVsCZy5Q4QhJ6
-	 sXK/hFtofEGozO18hsVQnDNcrnKu36od0fVooytjIAddhozdY5CFXaml6RGoxXbRaC
-	 iBZg6gxCBMmWN0wVHfk7Q/iwuRj8v8YleKr7zoO8IZMZEkNGy71tLinT65t4z3u+pr
-	 cxuHCc0fNRJVcssxCE1A5/HPOJz2Ubn43OknWXDQkxH4X7bD389u2zHn48KceYGQzn
-	 24uMjxTfiiFJg==
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Thu, 07 Nov 2024 14:50:55 +0100
-Subject: [PATCH 3/3] PCI: mediatek-gen3: Move reset/assert callbacks in
- .power_up()
+	s=arc-20240116; t=1730989072; c=relaxed/simple;
+	bh=rrWDaP6KlllODxsfeLIwF8b7UiCLWLUZGjSPTK7BuX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OToylsG1ghVm3Fn03DOMalhEh9VTbywB53pFcGOYdxpetT5FR0iiJiIIJj0KGNbgy8lPxC1BFkcZ+fkw4rn6O2Kb0CX5MdKW5EnquL4co5fDrybnrf+g6Nrnss5nV8szkUXO1nurN1a4vk450pwEdyJwzXDnocUHVqxKUZ/KiCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7AB753000A468;
+	Thu,  7 Nov 2024 15:06:57 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 691C11783C; Thu,  7 Nov 2024 15:06:57 +0100 (CET)
+Date: Thu, 7 Nov 2024 15:06:57 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	Keith Busch <kbusch@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCHv3 1/5] pci: make pci_stop_dev concurrent safe
+Message-ID: <ZyzJgaEOJOKmh_xw@wunner.de>
+References: <20241022224851.340648-1-kbusch@meta.com>
+ <20241022224851.340648-2-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241107-pcie-en7581-fixes-v1-3-af0c872323c7@kernel.org>
-References: <20241107-pcie-en7581-fixes-v1-0-af0c872323c7@kernel.org>
-In-Reply-To: <20241107-pcie-en7581-fixes-v1-0-af0c872323c7@kernel.org>
-To: Ryder Lee <ryder.lee@mediatek.com>, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, Lorenzo Bianconi <lorenzo@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241022224851.340648-2-kbusch@meta.com>
 
-In order to make the code more readable, move phy and mac reset lines
-assert/de-assert configuration in .power_up callback
-(mtk_pcie_en7581_power_up/mtk_pcie_power_up).
+On Tue, Oct 22, 2024 at 03:48:47PM -0700, Keith Busch wrote:
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -31,18 +31,16 @@ static int pci_pwrctl_unregister(struct device *dev, void *data)
+>  
+>  static void pci_stop_dev(struct pci_dev *dev)
+>  {
+> -	pci_pme_active(dev, false);
+> -
+> -	if (pci_dev_is_added(dev)) {
+> -		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> -				      pci_pwrctl_unregister);
+> -		device_release_driver(&dev->dev);
+> -		pci_proc_detach_device(dev);
+> -		pci_remove_sysfs_dev_files(dev);
+> -		of_pci_remove_node(dev);
+> +	if (!pci_dev_test_and_clear_added(dev))
+> +		return;
+>  
+> -		pci_dev_assign_added(dev, false);
+> -	}
+> +	pci_pme_active(dev, false);
+> +	device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> +			      pci_pwrctl_unregister);
+> +	device_release_driver(&dev->dev);
+> +	pci_proc_detach_device(dev);
+> +	pci_remove_sysfs_dev_files(dev);
+> +	of_pci_remove_node(dev);
+>  }
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/pci/controller/pcie-mediatek-gen3.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+The above is now queued for v6.13 as commit 6d6d962a8dc2 on pci/locking.
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 8c8c733a145634cdbfefd339f4a692f25a6e24de..c0127d0fb4f059b9f9e816360130e183e8f0e990 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -867,6 +867,13 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
- 	int err;
- 	u32 val;
- 
-+	/*
-+	 * The controller may have been left out of reset by the bootloader
-+	 * so make sure that we get a clean start by asserting resets here.
-+	 */
-+	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
-+				  pcie->phy_resets);
-+	reset_control_assert(pcie->mac_reset);
- 	/*
- 	 * Wait for the time needed to complete the bulk assert in
- 	 * mtk_pcie_setup for EN7581 SoC.
-@@ -941,6 +948,15 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
- 	struct device *dev = pcie->dev;
- 	int err;
- 
-+	/*
-+	 * The controller may have been left out of reset by the bootloader
-+	 * so make sure that we get a clean start by asserting resets here.
-+	 */
-+	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
-+				  pcie->phy_resets);
-+	reset_control_assert(pcie->mac_reset);
-+	usleep_range(10, 20);
-+
- 	/* PHY power on and enable pipe clock */
- 	err = reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
- 	if (err) {
-@@ -1013,14 +1029,6 @@ static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
- 	 * counter since the bulk is shared.
- 	 */
- 	reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
--	/*
--	 * The controller may have been left out of reset by the bootloader
--	 * so make sure that we get a clean start by asserting resets here.
--	 */
--	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
--
--	reset_control_assert(pcie->mac_reset);
--	usleep_range(10, 20);
- 
- 	/* Don't touch the hardware registers before power up */
- 	err = pcie->soc->power_up(pcie);
+I note there's a behavioral change here:
 
--- 
-2.47.0
+Previously "pci_pme_active(dev, false)" was called unconditionally,
+now only if the "added" flag has been set.  The commit message
+doesn't explain why this change is fine, so perhaps it's inadvertent?
 
+Thanks,
+
+Lukas
 
