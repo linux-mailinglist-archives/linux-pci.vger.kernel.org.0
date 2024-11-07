@@ -1,190 +1,151 @@
-Return-Path: <linux-pci+bounces-16261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 748989C0B67
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 17:22:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D223D9C0B7B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 17:24:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97B721C2074E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:22:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89E901F24175
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:24:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CB6216E1E;
-	Thu,  7 Nov 2024 16:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 032C7218585;
+	Thu,  7 Nov 2024 16:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="puP4CLiX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXtOYSPT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE44E216E1D
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 16:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD88B217307;
+	Thu,  7 Nov 2024 16:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730996144; cv=none; b=XQNKFQ5UfvpNTQr2Gi05FREkO3xKEAda1/Ac+a5vUAsWRXeDUIxPoltISVg4WT5htgXZxdfun0PVJf5J8dUMhLJ2pth+OvJU0rjXy/i6Yd+mHT0mAgiJhjGSV0EcdGNYU8SS8G1gVshQw/BcN9ua3sU3IKkXoRkHRvjzotZqLFw=
+	t=1730996381; cv=none; b=MU2hTd72o+1o5Rf3jpFjwBgdo+dQja7ngkZ+1S7WLb6mtwwKNFRZJq5eCr85ScEopSo/XCU4dGvysPMhKVuC+q1TPr/AP/ZLsam2iG46REes+iUdHgp5vjvemcRa7R/agttks6vFbQB6O9kMoQbk4yNvF7ar/5cnuUtxMegv+qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730996144; c=relaxed/simple;
-	bh=/JHbrVBz2Bo2uwzJibGD3yQrJO7xpQxhyq0XORPDEeg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=csHGCuckPnhrsQu4vaXM6pOBt3oSmPTIeEIfVFJroVnLCTwGRmEw7RYgjtwWv1z4GNWy7Ny4MrGs1kKnHcfrn9HAVIFeOYD/4fr15naLcHrJnYB3lneCphZdOYZ0WC1QqbijRF5bIo2KbXC6oD3i0g9GPjopjmbmBbMr4s8ON+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=puP4CLiX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9C45C4CECC;
-	Thu,  7 Nov 2024 16:15:43 +0000 (UTC)
+	s=arc-20240116; t=1730996381; c=relaxed/simple;
+	bh=SqxOv6okU/sodRwTyM+r4oFEioQMmC22R+3bohK4KUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=L2zPJtM++JcAXt9t33isI2v6YXLcXg7CB5OdO2Ce58rJcCv60xfbnWvGTQA+VzmFLSX5agZE5O8uNgm0CwTZhRYoR2X187ix17NxQJQXk0scKndu9Q19AIgnR2MKJMwRsvLjNjhWMwjDjxn1ew5Hx0GtrSLu/EpgVmCNs1P3VzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXtOYSPT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ED68C4CECC;
+	Thu,  7 Nov 2024 16:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730996144;
-	bh=/JHbrVBz2Bo2uwzJibGD3yQrJO7xpQxhyq0XORPDEeg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=puP4CLiX/e4MecRjAuSVaSWWW7nZu+8pJoibFMTZQykgv9iIBQZgamRntJxHF6Vyq
-	 PuCTA1zkdlOHf+wN041F13ru1J37+jVlzMcmOTBCdbTo3gxksjRwpQCRMCIqI/GWCa
-	 2exiS1aETENvLkLzkgj8zb+MJyxEwnGYpuOUZwUlCYyfbbNLuQSeF9fLZRvGAXK0E6
-	 bizQXinuKQia4jr2CL36sI1cVUNPV2UY5Z1TwF58FXJdcLffvOEyKGdnXDDojto4iV
-	 L/wRzrS0n6rrCP3Cmt6y4PcRUqIBPQ8lMW0kzGsCHWkdJCd9C4++DwqKaAVX2xFJBL
-	 AoCaMI5MUYeVQ==
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id D35E41200043;
-	Thu,  7 Nov 2024 11:15:42 -0500 (EST)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-03.internal (MEProxy); Thu, 07 Nov 2024 11:15:42 -0500
-X-ME-Sender: <xms:rucsZwBtICAjNcYVMsVhPYQYFduaIoQl9v1pYNldWotQ8wEN2LjMdg>
-    <xme:rucsZyiFspNLK8cwk74ZaOzrmEJS-shtoEedYq7QeLQBgVETlIJD8-KFTqS5Yz13-
-    YEfU680Vzo-nfJS5bQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtdeggdekhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdfnvghonhcutfhomhgrnhhovhhskhihfdcuoehlvghonheskhgvrhhnvg
-    hlrdhorhhgqeenucggtffrrghtthgvrhhnpeekgfduveffueffveduleefgfejhfevfedu
-    ueeiueetleeugeeivdfhfedvgeeuhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhgvohhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdeftdehfeelkeegqddvje
-    ejleejjedvkedqlhgvohhnpeepkhgvrhhnvghlrdhorhhgsehlvghonhdrnhhupdhnsggp
-    rhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhonhhnhi
-    gtsegrmhgriihonhdrtghomhdprhgtphhtthhopehmtggrrhhlshhonhessghrohgruggt
-    ohhmrdgtohhmpdhrtghpthhtohepkhgrihdrhhgvnhhgrdhfvghnghestggrnhhonhhitg
-    grlhdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdp
-    rhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohephh
-    gvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhifsehlihhnuhigrdgt
-    ohhmpdhrtghpthhtoheprggvrghsihesmhgrrhhvvghllhdrtghomhdprhgtphhtthhope
-    grphhrrggshhhunhgvsehnvhhiughirgdrtghomh
-X-ME-Proxy: <xmx:rucsZzn65K58BLlUjkqLeLKc2YUo8W8Y_T1aLbKdg2qgVrkdRLV2VA>
-    <xmx:rucsZ2wsvY_eluDBM1LhU6kFHIzVBJZEZuL2qZRKqPhraSZDYuM__A>
-    <xmx:rucsZ1S2SAG54bJm-eRvw6WsBIdmg0_8NWlk8iC3bW9_ltr0Lwy8_w>
-    <xmx:rucsZxa2G06vXOsgY5mFAuLfXpgriEEPg2XAy71a_zIFUSOletuCFA>
-    <xmx:rucsZ-TcSYqZ1mGOm3owX9RkcnMZ_VHxhcuHdm0nG-Mdf75eHQjJ0mQs>
-Feedback-ID: i927946fb:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A8C031C20066; Thu,  7 Nov 2024 11:15:42 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1730996381;
+	bh=SqxOv6okU/sodRwTyM+r4oFEioQMmC22R+3bohK4KUo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GXtOYSPT/H3r3SnyRnmLkGXZaW31eJexqtj829FQ1pCaIQBJOu1cV9PhStGxpY6ZN
+	 Bb21beAvVycEuV6K7ZTGhXlazBtYOCHmi2mcueLIWdYCQFCsJWuJ81a83lG24EcUJV
+	 +qkLwkysKWz+if7+TZV9P4BdsgCCYFUgO59gReLMFwKbj8oX4fWVoaLuENDN6I8mIv
+	 wsD3H98n+WJrIZxxfLol5NtKAtCH1YSpNiEQgNLi+0X61rGJ2vh66xxnsrR1cuE4kq
+	 LJqpU8MR+d7AqAYkvkAaQm8xNjNYWfBcDe3AGAMIhtOhGsTLHVjSRU79qpNRaPEUjm
+	 7+L1JZkquSGLg==
+Date: Thu, 7 Nov 2024 10:19:39 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Joerg Roedel <jroedel@suse.de>, Rob Herring <robh@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Anders Roxell <anders.roxell@linaro.org>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Xingang Wang <wangxingang5@huawei.com>
+Subject: Re: [PATCH RESEND] iommu/of: Fix pci_request_acs() before
+ enumerating PCI devices
+Message-ID: <20241107161939.GA1618126@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 07 Nov 2024 18:15:22 +0200
-From: "Leon Romanovsky" <leon@kernel.org>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-pci@vger.kernel.org, "Ariel Almog" <ariela@nvidia.com>,
- "Aditya Prabhune" <aprabhune@nvidia.com>, "Hannes Reinecke" <hare@suse.de>,
- "Heiner Kallweit" <hkallweit1@gmail.com>, "Arun Easi" <aeasi@marvell.com>,
- "Jonathan Chocron" <jonnyc@amazon.com>,
- "Bert Kenward" <bkenward@solarflare.com>,
- "Matt Carlson" <mcarlson@broadcom.com>,
- "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
- "Jean Delvare" <jdelvare@suse.de>,
- "Alex Williamson" <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
-Message-Id: <e786be1c-c368-4731-a495-b562c87e9f67@app.fastmail.com>
-In-Reply-To: <20241107145941.GA1613712@bhelgaas>
-References: <20241107145941.GA1613712@bhelgaas>
-Subject: Re: [PATCH] PCI/sysfs: Fix read permissions for VPD attributes
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com>
 
+On Thu, Nov 07, 2024 at 01:29:15PM +0530, Pavankumar Kondeti wrote:
+> From: Xingang Wang <wangxingang5@huawei.com>
+> 
+> When booting with devicetree, the pci_request_acs() is called after the
+> enumeration and initialization of PCI devices, thus the ACS is not
+> enabled. And ACS should be enabled when IOMMU is detected for the
+> PCI host bridge, so add check for IOMMU before probe of PCI host and call
+> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
+> devices.
+> 
+> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when configuring IOMMU linkage")
+> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+> Signed-off-by: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
+> ---
+> Earlier this patch made it to linux-next but got dropped later as it
+> broke PCI on ARM Juno R1 board. AFAICT, this issue is never root caused,
+> so resending this patch to get attention again.
+> 
+> https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com/
+> 
+> The original problem that is being fixed by this patch still exists. In
+> my use case, all the PCI VF(s) assigned to a VM are sharing the same
+> group since these functions are attached under a Multi function PCIe root port 
 
+FWIW, here are the problem reports (which are buried in the thread
+above):
 
-On Thu, Nov 7, 2024, at 16:59, Bjorn Helgaas wrote:
-> On Thu, Nov 07, 2024 at 01:31:44PM +0200, Leon Romanovsky wrote:
->> On Tue, Nov 5, 2024, at 18:26, Leon Romanovsky wrote:
->> > On Tue, Nov 05, 2024 at 09:24:55AM -0600, Bjorn Helgaas wrote:
->> >> On Tue, Nov 05, 2024 at 09:51:30AM +0200, Leon Romanovsky wrote:
->> >> > On Mon, Nov 04, 2024 at 06:10:27PM -0600, Bjorn Helgaas wrote:
->> >> > > On Sun, Nov 03, 2024 at 02:33:44PM +0200, Leon Romanovsky wrote:
->> >> > > > On Fri, Nov 01, 2024 at 11:47:37AM -0500, Bjorn Helgaas wrote:
->> >> > > > > On Fri, Nov 01, 2024 at 04:33:00PM +0200, Leon Romanovsky wrote:
->> >> > > > > > On Thu, Oct 31, 2024 at 06:22:52PM -0500, Bjorn Helgaas wrote:
->> >> > > > > > > On Tue, Oct 29, 2024 at 07:04:50PM -0500, Bjorn Helgaas wrote:
->> >> > > > > > > > On Mon, Oct 28, 2024 at 10:05:33AM +0200, Leon Romanovsky wrote:
->> >> > > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
->> >> > > > > > > > > 
->> >> > > > > > > > > The Virtual Product Data (VPD) attribute is not
->> >> > > > > > > > > readable by regular user without root permissions.
->> >> > > > > > > > > Such restriction is not really needed, as data
->> >> > > > > > > > > presented in that VPD is not sensitive at all.
->> >> > > > > > > > > 
->> >> > > > > > > > > This change aligns the permissions of the VPD
->> >> > > > > > > > > attribute to be accessible for read by all users,
->> >> > > > > > > > > while write being restricted to root only.
->> >> > ...
->> >> 
->> >> > > What's the use case?  How does an unprivileged user use the VPD
->> >> > > information?
->> >> > 
->> >> > We have to add new field keyword=value in VA section of VPD, which
->> >> > will indicate very specific sub-model for devices used as a bridge.
->> >> > 
->> >> > > I can certainly imagine using VPD for bug reporting, but that
->> >> > > would typically involve dmesg, dmidecode, lspci -vv, etc, all of
->> >> > > which already require privilege, so it's not clear to me how
->> >> > > public VPD info would help in that scenario.
->> >> > 
->> >> > I'm targeting other scenario - monitoring tool, which doesn't need
->> >> > root permissions for reading data. It needs to distinguish between
->> >> > NIC sub-models.
->> >> 
->> >> Maybe the driver could expose something in sysfs?  Maybe the driver
->> >> needs to know the sub-model as well, and reading VPD once in the
->> >> driver would make subsequent userspace sysfs reads trivial and fast.
->> >
->> > Our PCI driver lays in netdev subsystem and they have long-standing
->> > position do not allow any custom sysfs files. To be fair, we (RDMA)
->> > don't allow custom sysfs files too.
->> >
->> > Driver doesn't need to know this information as it is extra key=value in
->> > existing [VA] field, while driver relies on multiple FW capabilities
->> > to enable/disable functionality.
->> >
->> > Current [VA] line:
->> > "[VA] Vendor specific: 
->> > MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A"
->> > Future [VA] line:
->> > "[VA] Vendor specific: 
->> > MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX713106A,SMDL=SOMETHING"
->> >
->> > Also the idea that we will duplicate existing functionality doesn't
->> > sound like a good approach to me, and there is no way that it is
->> > possible to expose as subsystem specific file.
->> >
->> > What about to allow existing VPD sysfs file to be readable for everyone 
->> > for our devices?
->> > And if this allow list grows to much, we will open it for all devices 
->> > in the world?
->> 
->> Bjorn,
->> 
->> I don't see this patch in
->> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=next
->> So what did you decide? How can we enable existing VPD access to
->> regular users?
->
-> I think it's too risky to enable VPD to be readable by all users.
+  https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com/ (Marek)
+  https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com/ (Anders)
 
-So what about to enable it for mlx5 devices?
+Given problem reports, the fact that the patch was acked and reviewed
+earlier means nothing.  We have to ensure that any issues are resolved
+before considering this patch again.
 
-Thanks
-
->
-> Bjorn
+> emulated by the QEMU. This patch fixes that problem.
+> ---
+>  drivers/iommu/of_iommu.c | 1 -
+>  drivers/pci/of.c         | 8 +++++++-
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index e7a6a1611d19..f19db52388f5 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -141,7 +141,6 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+>  			.np = master_np,
+>  		};
+>  
+> -		pci_request_acs();
+>  		err = pci_for_each_dma_alias(to_pci_dev(dev),
+>  					     of_pci_iommu_init, &info);
+>  		of_pci_check_device_ats(dev, master_np);
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index dacea3fc5128..dc90f4e45dd3 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -637,9 +637,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+>  
+>  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
+>  {
+> -	if (!dev->of_node)
+> +	struct device_node *node = dev->of_node;
+> +
+> +	if (!node)
+>  		return 0;
+>  
+> +	/* Detect IOMMU and make sure ACS will be enabled */
+> +	if (of_property_read_bool(node, "iommu-map"))
+> +		pci_request_acs();
+> +
+>  	bridge->swizzle_irq = pci_common_swizzle;
+>  	bridge->map_irq = of_irq_parse_and_map_pci;
+>  
+> 
+> ---
+> base-commit: 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+> change-id: 20241107-pci_acs_fix-2239e0fb1768
+> 
+> Best regards,
+> -- 
+> Pavankumar Kondeti <quic_pkondeti@quicinc.com>
+> 
 
