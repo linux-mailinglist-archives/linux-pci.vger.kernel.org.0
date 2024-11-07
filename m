@@ -1,68 +1,56 @@
-Return-Path: <linux-pci+bounces-16257-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16258-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C90A99C0A83
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:56:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC9939C0A87
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:56:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C77C2827EF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:56:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91E862835C3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:56:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197962144CD;
-	Thu,  7 Nov 2024 15:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDBEA2144C7;
+	Thu,  7 Nov 2024 15:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FX3snTDu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFC02144C6
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 15:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986E71F130F
+	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 15:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730994962; cv=none; b=NvlDYx0alxx1fHpVl3YbNUQfQZ4NzfaYvIVJjkTJKEowK/RG5ED7+l0woYmw/Sers79Ewinga11lS6XsuAy4/ovsoSg1Y1GDL8N/LAHhP480wWtVp6nAiT92fcDyhuUfAa98P5O3yLCNusDNczAc1TNBEMopjByw2zCMdb8p8y4=
+	t=1730994989; cv=none; b=QQeuHqh17qcmeD0XvoFOMlHuCWHHEwATw81p97FZ9krb+jEA4hi50SCc5uby+MxzzqD+ngFamiYyvbvGxEJ6ylNF5JDnjm2pKlwwTVzwPUiX1HgJ220Ra7iVFtMnkxsdpHzh1b6XTCN6cYLzeKxUHqe1egi9RB9EzOSTqKcnNwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730994962; c=relaxed/simple;
-	bh=nbcBYhrouVHNSl/xQv7ZeM1wvzejIJBUFUArRL8PRz8=;
+	s=arc-20240116; t=1730994989; c=relaxed/simple;
+	bh=RkkfI5UO2nTSAXfhoL5HO5B1/RvsgR1jSCcyQrhSgSQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+7V+ybBf4YPgP/zA645hsDtNTVdFt0OaSCbEhAAhVDmvz9s7pB6XvODIBiKOZ0hCFgKaRBW4QSItn3DGzAXLXMziBR1o0oju3bM1yJjkUzEJRoyi2cbYq55SFOVtwFJdMZ/gnLVfNKwK/JZh9tycpDSfv1GPq1uJCHTrOUPYCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-71e953f4e7cso886595b3a.3
-        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2024 07:56:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730994960; x=1731599760;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QMqePYMz3QKtUK1mA1YGP8NO47W40BzsFQKsk+ayoxc=;
-        b=PuR/9JJFKhzdUBlZ8gfCOrBcT9RwWBwUXvdDZY+ywV2aoFNppS5i8wfQGsFCnrKOO/
-         eReQcpAMNExPHLPYwuBC/dtb8Ig8zz4qQ/VA/rOx3xKnyb6aa/zwB6/nfg+sFtn47CHn
-         PI4QXxhwaGXuiYKhRS6ggruKT+G0RUJ8xvHFn+LS321gKshc926pCa/MNtS5O5gaxyv2
-         5RY+rCJTBp8fob+lqeKLFp3K/2pBULUtqYnHMaO/lJD0aJd+dG3HRKWnbisJfKb2Zcse
-         cUOIdVc1h/MsavkZ26FttebGGW3AtnFAac+wq6fDaTR+C5ItWJT4+ofiIjOz1/9eIeW/
-         v8pA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2WWxgCNqgeRRATqYpCRfPc4aPy6/lb0CzqZ7baYZTJfbIedyT0E1I7Vi6IB9L3bs/DxnUTstFxi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLe0nXl/hkd3kxp8/afNAfTzuAgu57cjvQEfXmSIoHV6dAFxSg
-	GAvcSOaCpANip7nTh6dir5Z5aSWESXk6DTYYjqARhY9NaMBH/7fg
-X-Google-Smtp-Source: AGHT+IF8o1Mutw3voEYEdoYMnJF4UgOqA3A4A1j9I7FBtpB66MhUi9qysswt8V9EKdfHW6SbzwwX+Q==
-X-Received: by 2002:a17:903:187:b0:211:31ac:89eb with SMTP id d9443c01a7336-21131ac8e59mr228031495ad.11.1730994959873;
-        Thu, 07 Nov 2024 07:55:59 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e59df0sm13763085ad.189.2024.11.07.07.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 07:55:59 -0800 (PST)
-Date: Fri, 8 Nov 2024 00:55:58 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-Cc: 'Jonathan Cameron' <Jonathan.Cameron@huawei.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4] Export PBEC Data register into sysfs
-Message-ID: <20241107155558.GC1297107@rocinante>
-References: <20240911012053.345286-1-kobayashi.da-06@fujitsu.com>
- <20241101110425.00005582@Huawei.com>
- <OSAPR01MB7182C8F253B9FC6044ECEA8EBA532@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pDNPfe02lfO/E/xZJJd9uNQH8y7OTcYeFUZE8m5mkQ4ZjtKG1lHKrRF8XNhvjczoIMiuILIgrlq8zN14UTOr+WuT7+g4ch7g+7TBMxDfHXiUSJCCpxb9gEAmb8RbiOrq8+WcX/IDVw/hP6OCAtX3qRx6k27vUznMGzmRzdWHucY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FX3snTDu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6F1C4CECD;
+	Thu,  7 Nov 2024 15:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730994989;
+	bh=RkkfI5UO2nTSAXfhoL5HO5B1/RvsgR1jSCcyQrhSgSQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FX3snTDudaOv+7R5uAzNjJrKKsJ4aqPxTxBfHHn4kdrNz0hz2poKRvJTBiNr5JHfZ
+	 ++Sm7L3O7Cl/LitHREM9ahj98AeOstGfSqLrtVF4OIW6bxEKNLnxugB9RaQ5W9ZDLt
+	 hjoQdB7h1DrHwm74/o9njG/Uwwq0RWWTtSEV3I/IJCRoGvGnsoIbpqoSOcrzc24xAJ
+	 jGGrrq5HuO0ecAYFZH4x3xBNRAF8XBJDn1vkAY3oLr/yhTPt6q7Djw3VRRu+jfbTkx
+	 eIq3T65yY9PmvmkUIwuwSjj1D1LxXQRcuQvI8F64MtvJ+II5AIHtKv1ghPtRa0wQb+
+	 mRe+gsR6kF6MA==
+Date: Thu, 7 Nov 2024 08:56:26 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
+	bhelgaas@google.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCHv3 1/5] pci: make pci_stop_dev concurrent safe
+Message-ID: <ZyzjKrNPxn5Vw7cF@kbusch-mbp>
+References: <20241022224851.340648-1-kbusch@meta.com>
+ <20241022224851.340648-2-kbusch@meta.com>
+ <ZyzJgaEOJOKmh_xw@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,19 +59,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <OSAPR01MB7182C8F253B9FC6044ECEA8EBA532@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+In-Reply-To: <ZyzJgaEOJOKmh_xw@wunner.de>
 
-Hello,
+On Thu, Nov 07, 2024 at 03:06:57PM +0100, Lukas Wunner wrote:
+> On Tue, Oct 22, 2024 at 03:48:47PM -0700, Keith Busch wrote:
+> > --- a/drivers/pci/remove.c
+> > +++ b/drivers/pci/remove.c
+> > @@ -31,18 +31,16 @@ static int pci_pwrctl_unregister(struct device *dev, void *data)
+> >  
+> >  static void pci_stop_dev(struct pci_dev *dev)
+> >  {
+> > -	pci_pme_active(dev, false);
+> > -
+> > -	if (pci_dev_is_added(dev)) {
+> > -		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> > -				      pci_pwrctl_unregister);
+> > -		device_release_driver(&dev->dev);
+> > -		pci_proc_detach_device(dev);
+> > -		pci_remove_sysfs_dev_files(dev);
+> > -		of_pci_remove_node(dev);
+> > +	if (!pci_dev_test_and_clear_added(dev))
+> > +		return;
+> >  
+> > -		pci_dev_assign_added(dev, false);
+> > -	}
+> > +	pci_pme_active(dev, false);
+> > +	device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> > +			      pci_pwrctl_unregister);
+> > +	device_release_driver(&dev->dev);
+> > +	pci_proc_detach_device(dev);
+> > +	pci_remove_sysfs_dev_files(dev);
+> > +	of_pci_remove_node(dev);
+> >  }
+> 
+> The above is now queued for v6.13 as commit 6d6d962a8dc2 on pci/locking.
+> 
+> I note there's a behavioral change here:
+> 
+> Previously "pci_pme_active(dev, false)" was called unconditionally,
+> now only if the "added" flag has been set.  The commit message
+> doesn't explain why this change is fine, so perhaps it's inadvertent?
 
-[...]
-> We will modify the implementation to follow that "one thing per sysfs file" rules.
-
-A favour to ask of you: if possible, when sending another version of this
-patch, if you could include a changelog as the comment, then it would be
-great.  This way it would be easy to follow-up on what changes were made
-since last version.
-
-Thank you!
-
-	Krzysztof
+Hm, not exactly intentional. It doesn't appear to accomplish anything to
+call it multiple times, but it also looks hamrless to do so.  Looking at
+the history of this, it looks like it was purposefully done
+unconditionally with the understanding it's "safe" to do that. With that
+in mind, I'm happy to move it back where it was.
 
