@@ -1,172 +1,185 @@
-Return-Path: <linux-pci+bounces-16287-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16288-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E97E9C1165
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 22:56:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB0ED9C11BA
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 23:33:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25C0F1F26930
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 21:56:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 901AE283D38
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 22:33:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5114218932;
-	Thu,  7 Nov 2024 21:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D16219C9B;
+	Thu,  7 Nov 2024 22:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snaNZ8tS"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E85Vpx1X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2792170C2;
-	Thu,  7 Nov 2024 21:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34B832194A6;
+	Thu,  7 Nov 2024 22:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731016582; cv=none; b=FFHzczQo7gj++4XB+weDzNgNsANyWOhziJMuVGBihyehLeC2B6HR+/rJAJYsyVLw5BLhgEfpjLCNIlLo4BXWL+sctgFWYg8p5vwsFLMxtcQHHCM0/kIE9GDIqpfV1yFWxtP375izsOGe82bdPIdgAPuPuXL5Gs2iGYvjg+3m0P0=
+	t=1731018759; cv=none; b=HlLt9PNEcNkanV/ObtH5eiDtOtB8jt58aJkOof/Ohc1AoqIc6URtKUnM0UpIGzz5JOZOj7Y1HfeYbmwu49R0SJ5T/cKbfKYNrH7rwSvEpEctBqYUTyrS61zfC+g62WvuVN+R+KMN3/xl1t1SZyshsL0qqIkjyd8OiTfZKYHXnKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731016582; c=relaxed/simple;
-	bh=5Eo6qcoFVa2y7T4CA1LjJm2ItuxSl1cXVLYwgGdG78A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQRhbCF3e6Ar5o5sRQE8VnAcNDQsYtjepnLBGAzrFCGf1nBrHYncIgAZqtITJBCuoo1AAcsBVOTiAKAbmhV+qpvpCUDW5RTOVuM9CFHLh6qwbbTrVv8dVOSBz078+PklUo2xigEdsXHlh+GLu+Mkqb2W5IspDqCvFz+Xo74wbas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snaNZ8tS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D54C4CECC;
-	Thu,  7 Nov 2024 21:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731016582;
-	bh=5Eo6qcoFVa2y7T4CA1LjJm2ItuxSl1cXVLYwgGdG78A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=snaNZ8tSicUvWD7PrD0LYJBkh3bGKBJbprEa1e+L3I9yynNSTobD5JQQuUlyw1qa4
-	 Dee43LquYgLNye0D58HYWkPeK3vv1Fjl0PXXslYuvC/3FzXfQISP8Pcb0zMXYgFz6m
-	 cHamLikSD3g7zIowC61gJhcQ6Dzrt2BQgKRDoFdySc2MndGz9iPb5vcRGQdzAvC7Z6
-	 HGDMn/bHcXYLINTIT8HTZQ+glD+27KI5EUbkg5H4pd2BskirInQW74jUwTvq/3MSq1
-	 MHi0wzGVR3iunnxMS2AQJf0gXVODH79ifsLJyVx7jKw2SbAk3eVgwUXVxrhrF6xmBt
-	 22vW8hoSJemEg==
-Date: Thu, 7 Nov 2024 22:56:19 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
+	s=arc-20240116; t=1731018759; c=relaxed/simple;
+	bh=3axHTgWvPaJXU6x/HwYNyCImPTdzE7DJqPuDZ6F6AzE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=fXJr0IiAV0cpTIlsanSD2sh+/NW+SL9MLqf3Y+HxDssH74J2LWCiaq0vv7TojBwx3z0ZawPrjiuNjvxtEvd82K+HYPkDiPwETQ3tnfKnllAvu67wmRbpaiHjfH2t5CJLHbGnGo0rLKgQddLgYpdkT5hme3bowV+UjoX/8L64+Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=E85Vpx1X; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A7369212C4BF;
+	Thu,  7 Nov 2024 14:32:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A7369212C4BF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1731018750;
+	bh=dXEOtZcKhs1OyrLOGbwwuM7yb0GGsFy0HJU2nlATJVM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E85Vpx1XKF/7gIXBsoZOI6XnWD4pHDLIv62Hmm0sqgJpnOf8/Cgg8V/QCKee3Vppr
+	 ry4FPI40feJ1miQYl+Dx+/AvjsAcrxqUrJygt4jVjT3OJnYKE30CU4CoZ3KZny5GG9
+	 XD4lpSNQQEk/X8UUGLdqFqJ/fa8hg8d9V2jWrOLw=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com, Hui.Ma@airoha.com
-Subject: Re: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
-Message-ID: <Zy03gz7czVIMQUcD@lore-desk>
-References: <ZyzpGSyAVe6bz9H2@lore-desk>
- <20241107164624.GA1618716@bhelgaas>
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	iommu@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	virtualization@lists.linux.dev
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	mhklinux@outlook.com,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	luto@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	seanjc@google.com,
+	pbonzini@redhat.com,
+	peterz@infradead.org,
+	daniel.lezcano@linaro.org,
+	joro@8bytes.org,
+	robin.murphy@arm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	arnd@arndb.de,
+	sgarzare@redhat.com,
+	jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com,
+	skinsburskii@linux.microsoft.com,
+	mukeshrathor@microsoft.com,
+	vkuznets@redhat.com,
+	ssengar@linux.microsoft.com,
+	apais@linux.microsoft.com
+Subject: [PATCH v2 0/4] Add new headers for Hyper-V Dom0
+Date: Thu,  7 Nov 2024 14:32:22 -0800
+Message-Id: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1W+fFQH7ARG+B5PJ"
-Content-Disposition: inline
-In-Reply-To: <20241107164624.GA1618716@bhelgaas>
 
+To support Hyper-V Dom0 (aka Linux as root partition), many new
+definitions are required.
 
---1W+fFQH7ARG+B5PJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The plan going forward is to directly import definitions from
+Hyper-V code without waiting for them to land in the TLFS document.
+This is a quicker and more maintainable way to import definitions,
+and is a step toward the eventual goal of exporting headers directly
+from Hyper-V for use in Linux.
 
-> On Thu, Nov 07, 2024 at 05:21:45PM +0100, Lorenzo Bianconi wrote:
-> > On Nov 07, Bjorn Helgaas wrote:
-> > > On Thu, Nov 07, 2024 at 08:39:43AM +0100, Lorenzo Bianconi wrote:
-> > > > > On Wed, Nov 06, 2024 at 11:40:28PM +0100, Lorenzo Bianconi wrote:
-> > > > > > > On Wed, Jul 03, 2024 at 06:12:44PM +0200, Lorenzo Bianconi wr=
-ote:
-> > > > > > > > Introduce support for Airoha EN7581 PCIe controller to medi=
-atek-gen3
-> > > > > > > > PCIe controller driver.
-> > > > > > > > ...
-> > >=20
-> > > > > > > Is this where PERST# is asserted?  If so, a comment to that e=
-ffect
-> > > > > > > would be helpful.  Where is PERST# deasserted?  Where are the=
- required
-> > > > > > > delays before deassert done?
-> > > > > >=20
-> > > > > > I can add a comment in en7581_pci_enable() describing the PERST=
- issue for
-> > > > > > EN7581. Please note we have a 250ms delay in en7581_pci_enable(=
-) after
-> > > > > > configuring REG_PCI_CONTROL register.
-> > > > > >=20
-> > > > > > https://github.com/torvalds/linux/blob/master/drivers/clk/clk-e=
-n7523.c#L396
-> > > > >=20
-> > > > > Does that 250ms delay correspond to a PCIe mandatory delay, e.g.,
-> > > > > something like PCIE_T_PVPERL_MS?  I think it would be nice to hav=
-e the
-> > > > > required PCI delays in this driver if possible so it's easy to ve=
-rify
-> > > > > that they are all covered.
-> > > >=20
-> > > > IIRC I just used the delay value used in the vendor sdk. I do not
-> > > > have a strong opinion about it but I guess if we move it in the
-> > > > pcie-mediatek-gen3 driver, we will need to add it in each driver
-> > > > where this clock is used. What do you think?
-> > >=20
-> > > I don't know what the 250ms delay is for.  If it is for a required PCI
-> > > delay, we should use the relevant standard #define for it, and it
-> > > should be in the PCI controller driver.  Otherwise it's impossible to
-> > > verify that all the drivers are doing the correct delays.
-> >=20
-> > ack, fine to me. Do you prefer to keep 250ms after clk_bulk_prepare_ena=
-ble()
-> > in mtk_pcie_en7581_power_up() or just use PCIE_T_PVPERL_MS (100)?
-> > I can check if 100ms works properly.
->=20
-> It's not clear to me where the relevant events are for these chips.
->=20
-> Do you have access to the PCIe CEM spec?  The diagram in r6.0, sec
-> 2.2.1, is helpful.  It shows the required timings for Power Stable,
-> REFCLK Stable, PERST# deassert, etc.
->=20
-> Per sec 2.11.2, PERST# must be asserted for at least 100us (T_PERST),
-> PERST# must be asserted for at least 100ms after Power Stable
-> (T_PVPERL), and PERST# must be asserted for at least 100us after
-> REFCLK Stable.
->=20
-> It would be helpful if we could tell by reading the source where some
-> of these critical events happen, and that the relevant delays are
-> there.  For example, if PERST# is asserted/deasserted by
-> "clk_enable()" or similar, it's not at all obvious from the code, so
-> we should have a comment to that effect.
+This patch series introduces new headers (hvhdk.h, hvgdk.h, etc,
+see patch #3) derived directly from Hyper-V code. hyperv-tlfs.h is
+replaced with hvhdk.h (which includes the other new headers)
+everywhere.
 
-I reviewed the vendor sdk and it just do something like in clk_enable():
+No functional change is expected.
 
-	...
-	val =3D readl(0x88);
-	writel(val | BIT(16) | BIT(29) | BIT(26), 0x88);
-	/*wait link up*/
-	mdelay(1000);
-	...
+Summary:
+Patch 1-2: Minor cleanup patches
+Patch 3: Add the new headers (hvhdk.h, etc..) in include/hyperv/
+Patch 4: Switch to the new headers
 
-@Hui.Ma: is it fine use msleep(100) (so PCIE_T_PVPERL_MS) instead of msleep=
-(1000)
-(so PCIE_LINK_RETRAIN_TIMEOUT_MS)?
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+Changelog:
+v2:
+- Rework the series to simply use the new headers everywhere
+  instead of fiddling around to keep hyperv-tlfs.h used in some
+  places, suggested by Michael Kelley and Easwar Hariharan
+- Fix compilation errors with some configs by adding missing
+  definitions and changing some names, thanks to Simon Horman for
+  catching those
+- Add additional definitions to the new headers to support them now
+  replacing hyperv-tlfs.h everywhere
+- Add additional context in the commit messages for patches #3 and #4
+- In patch #2, don't remove indirect includes. Only remove includes
+  which truly aren't used, suggested by Michael Kelley
 
-Regards,
-Lorenzo
+---
+Nuno Das Neves (4):
+  hyperv: Move hv_connection_id to hyperv-tlfs.h
+  hyperv: Clean up unnecessary #includes
+  hyperv: Add new Hyper-V headers in include/hyperv
+  hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h
 
->=20
-> Bjorn
+ arch/arm64/hyperv/hv_core.c        |    3 +-
+ arch/arm64/hyperv/mshyperv.c       |    4 +-
+ arch/arm64/include/asm/mshyperv.h  |    2 +-
+ arch/x86/hyperv/hv_apic.c          |    1 -
+ arch/x86/hyperv/hv_init.c          |   21 +-
+ arch/x86/hyperv/hv_proc.c          |    3 +-
+ arch/x86/hyperv/ivm.c              |    1 -
+ arch/x86/hyperv/mmu.c              |    1 -
+ arch/x86/hyperv/nested.c           |    2 +-
+ arch/x86/include/asm/kvm_host.h    |    3 +-
+ arch/x86/include/asm/mshyperv.h    |    3 +-
+ arch/x86/include/asm/svm.h         |    2 +-
+ arch/x86/kernel/cpu/mshyperv.c     |    2 +-
+ arch/x86/kvm/vmx/hyperv_evmcs.h    |    2 +-
+ arch/x86/kvm/vmx/vmx_onhyperv.h    |    2 +-
+ arch/x86/mm/pat/set_memory.c       |    2 -
+ drivers/clocksource/hyperv_timer.c |    2 +-
+ drivers/hv/hv_balloon.c            |    4 +-
+ drivers/hv/hv_common.c             |    2 +-
+ drivers/hv/hv_kvp.c                |    2 +-
+ drivers/hv/hv_snapshot.c           |    2 +-
+ drivers/hv/hyperv_vmbus.h          |    2 +-
+ include/asm-generic/hyperv-tlfs.h  |    9 +
+ include/asm-generic/mshyperv.h     |    2 +-
+ include/clocksource/hyperv_timer.h |    2 +-
+ include/hyperv/hvgdk.h             |  303 +++++++
+ include/hyperv/hvgdk_ext.h         |   46 +
+ include/hyperv/hvgdk_mini.h        | 1295 ++++++++++++++++++++++++++++
+ include/hyperv/hvhdk.h             |  733 ++++++++++++++++
+ include/hyperv/hvhdk_mini.h        |  310 +++++++
+ include/linux/hyperv.h             |   11 +-
+ net/vmw_vsock/hyperv_transport.c   |    2 +-
+ 32 files changed, 2729 insertions(+), 52 deletions(-)
+ create mode 100644 include/hyperv/hvgdk.h
+ create mode 100644 include/hyperv/hvgdk_ext.h
+ create mode 100644 include/hyperv/hvgdk_mini.h
+ create mode 100644 include/hyperv/hvhdk.h
+ create mode 100644 include/hyperv/hvhdk_mini.h
 
---1W+fFQH7ARG+B5PJ
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.34.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZy03gwAKCRA6cBh0uS2t
-rJ64AP40vgr/oweTeYBRjXYZBVQY5QwDDuhEhSNWwtsmfHK6fAEAtiON0J6fTwIC
-3wlDpNdKoaRVFQc7zFP/K1csNJqSNgk=
-=KhIT
------END PGP SIGNATURE-----
-
---1W+fFQH7ARG+B5PJ--
 
