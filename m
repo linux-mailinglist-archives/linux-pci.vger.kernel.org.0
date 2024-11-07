@@ -1,102 +1,141 @@
-Return-Path: <linux-pci+bounces-16242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F8EC9C08BB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:18:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E3B59C0911
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:38:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79182B23031
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 14:18:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB6FE1F21043
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 14:38:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0049B212D2D;
-	Thu,  7 Nov 2024 14:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10363212D0B;
+	Thu,  7 Nov 2024 14:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EzIyusrH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742BA212D16
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 14:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42331F8EFF
+	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 14:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730989072; cv=none; b=gwdW4PSMH4nPvdPM/4hJuj8SvtO/syrYY9SKzgUpsyF3VhLTjJVHx9qNRlefhqWpejPw44RmjdXDmxSrrFEbu5p+I0jWpcwDGbU9jnkfB2ubqBIzoYU6pcqxM9Tj8wG04jTq71SmlnvMlFfiyWEawQnOvn9+0lWKjThjqlvtovY=
+	t=1730990296; cv=none; b=QkrkWupQUemkN0n5YJ7KEdbUlro4z+R/aM2ZFDYGC0Zuuj9eLrwmOeYmvARsj8/Gg+PwE3+BhqXEnoPH3Ahk17k0mHCLWGsSROwbdkLfvdYyi+BgLp9XBcAHzkRCxnl4fNu4c94ZNaCCmj22XYPYaH5lYLtt8uCFIy4hjw2ovO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730989072; c=relaxed/simple;
-	bh=rrWDaP6KlllODxsfeLIwF8b7UiCLWLUZGjSPTK7BuX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OToylsG1ghVm3Fn03DOMalhEh9VTbywB53pFcGOYdxpetT5FR0iiJiIIJj0KGNbgy8lPxC1BFkcZ+fkw4rn6O2Kb0CX5MdKW5EnquL4co5fDrybnrf+g6Nrnss5nV8szkUXO1nurN1a4vk450pwEdyJwzXDnocUHVqxKUZ/KiCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7AB753000A468;
-	Thu,  7 Nov 2024 15:06:57 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 691C11783C; Thu,  7 Nov 2024 15:06:57 +0100 (CET)
-Date: Thu, 7 Nov 2024 15:06:57 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	Keith Busch <kbusch@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCHv3 1/5] pci: make pci_stop_dev concurrent safe
-Message-ID: <ZyzJgaEOJOKmh_xw@wunner.de>
-References: <20241022224851.340648-1-kbusch@meta.com>
- <20241022224851.340648-2-kbusch@meta.com>
+	s=arc-20240116; t=1730990296; c=relaxed/simple;
+	bh=+//tYRZ2pj95k/0HCphckqrFk8TZ2PPvWYm549pQdRw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=HOcUkxptNwKAsToFVCm5eGe10zE+7ulee9BvsfRjzT+Zowb56R90yvfQrFAo9XgHaXMyrHSbVlHq5SpZfjakAOQ4+JISvJQJyiCqG1Y9SVaZqq+7chY89Yhq759A0Cl2bXd+X6pvbbd++bohJqiLjuxijaHLFHmr1Nk52tSoiPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EzIyusrH; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-720e94d36c8so1977968b3a.1
+        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2024 06:38:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1730990292; x=1731595092; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wL5FDRhPfeyJSPnDftlIi6tQzypn+DUnCGufSshoMeI=;
+        b=EzIyusrHV94mk4XVJUBBEGWKqlESovVcB0Ns6bS50L0rklCD0grAN0X/eM4hluy5KG
+         ozXNR8HlIXUE+0J5LyPlw5OC99vjmz6dLZ5+l15hnx3X7ENTt0Puy+tYWj3h04fCZhB2
+         lSd6nYJN7VYRe+IWpdiZUxC3e0Djsav/wCLLM8gU2pj9uGF2+1ehnsjs6bNAaaRK9blr
+         s9EU3aCKiOpxF+swNULGBGmLyCBB6QlfdrU+Cosdsxr4FbN9Zm137FDdingqm7Oc92AP
+         oahhqPGAQwra4KdTAS2CkhA8NcZyHwP8Za1IbaqvJz//D4H6bvfyq0B0JI25mBp/mymY
+         1SGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730990292; x=1731595092;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wL5FDRhPfeyJSPnDftlIi6tQzypn+DUnCGufSshoMeI=;
+        b=ZHgQiOWaPnkzDBXefVhieFc0Eeukk+LdzwvCZeBGLdLBlAZ/6NnKPssr1HQ2wngYUB
+         pGeS4fX8CMyNMW/kd+t0dC72G23jgud00VwnCPzqolaCGhshZxDkjleTZuXABvFysGcZ
+         HF7uG5YfydSKfPDN8/YKFXncazQY7XIdpnjqaivou6m2OrcBlda4EQ+ZHIuygIGZZCrN
+         8KAZ2QKF3my2Db2etr++mdUSI2ufsPqYEo3Ul0s4IGOmqGgUVkvqUvi9WQ6e7NLFJ2rZ
+         gR1FOpTVV7YSOKl3nyQ5ius/Uc9FRy7eBOBFcyvvJjqbgf0rCfuXBH/5+qzFvZKzkKp7
+         xhqw==
+X-Gm-Message-State: AOJu0YyHwmsKGXXRS2xAMsR7lhfuFTZ87pBIsLSA6xB1M9Akkjlxk3V/
+	j1b44qgEUZ3YwejjNX7riKFKx9ex1wszWf6StPPV86i2rDje3NuonY2kH6K3cHU=
+X-Google-Smtp-Source: AGHT+IG20qa8SvuiM/MDu1UgLQkGwgxBXyCUgUI6UBnitN6mJQysCwLmO4P4trtchp727A7EvWqetQ==
+X-Received: by 2002:a05:6a20:d81a:b0:1d9:3acf:8bdd with SMTP id adf61e73a8af0-1dc1e465066mr272204637.22.1730990292157;
+        Thu, 07 Nov 2024 06:38:12 -0800 (PST)
+Received: from 5CG3510V44-KVS.localdomain ([203.208.189.12])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7f41f5e9eb5sm1478629a12.45.2024.11.07.06.38.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2024 06:38:11 -0800 (PST)
+From: Jinhui Guo <guojinhui.liam@bytedance.com>
+To: bhelgaas@google.com,
+	macro@orcam.me.uk
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	guojinhui.liam@bytedance.com
+Subject: [RFC] PCI: Fix the issue of link speed downgrade after link retraining
+Date: Thu,  7 Nov 2024 22:37:58 +0800
+Message-Id: <20241107143758.12643-1-guojinhui.liam@bytedance.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241022224851.340648-2-kbusch@meta.com>
 
-On Tue, Oct 22, 2024 at 03:48:47PM -0700, Keith Busch wrote:
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -31,18 +31,16 @@ static int pci_pwrctl_unregister(struct device *dev, void *data)
->  
->  static void pci_stop_dev(struct pci_dev *dev)
->  {
-> -	pci_pme_active(dev, false);
-> -
-> -	if (pci_dev_is_added(dev)) {
-> -		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
-> -				      pci_pwrctl_unregister);
-> -		device_release_driver(&dev->dev);
-> -		pci_proc_detach_device(dev);
-> -		pci_remove_sysfs_dev_files(dev);
-> -		of_pci_remove_node(dev);
-> +	if (!pci_dev_test_and_clear_added(dev))
-> +		return;
->  
-> -		pci_dev_assign_added(dev, false);
-> -	}
-> +	pci_pme_active(dev, false);
-> +	device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
-> +			      pci_pwrctl_unregister);
-> +	device_release_driver(&dev->dev);
-> +	pci_proc_detach_device(dev);
-> +	pci_remove_sysfs_dev_files(dev);
-> +	of_pci_remove_node(dev);
->  }
+The link speed is downgraded to 2.5 GT/s when a Samsung NVMe device
+is hotplugged into a Intel PCIe root port [8086:0db0].
 
-The above is now queued for v6.13 as commit 6d6d962a8dc2 on pci/locking.
+```
++-[0000:3c]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d
+|           ...
+|           +02.0-[3d]----00.0  Samsung Electronics Co Ltd Device a80e
+```
 
-I note there's a behavioral change here:
+Some printing information can be obtained when the issue emerges.
+"Card present" is reported twice via external interrupts due to
+a slight tremor when the Samsung NVMe device is plugged in.
+The failure of the link activation for the first time leads to
+the link speed of the root port being mistakenly downgraded to 2.5G/s.
 
-Previously "pci_pme_active(dev, false)" was called unconditionally,
-now only if the "added" flag has been set.  The commit message
-doesn't explain why this change is fine, so perhaps it's inadvertent?
+```
+[ 8223.419682] pcieport 0000:3d:02.0: pciehp: Slot(1): Card present
+[ 8224.449714] pcieport 0000:3d:02.0: broken device, retraining non-functional downstream link at 2.5GT/s
+[ 8225.518723] pcieport 0000:3d:02.0: pciehp: Slot(1): Card present
+[ 8225.518726] pcieport 0000:3d:02.0: pciehp: Slot(1): Link up
+```
 
-Thanks,
+To avoid wrongly setting the link speed to 2.5GT/s, only allow
+specific pcie devices to perform link retrain.
 
-Lukas
+Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+Signed-off-by: Jinhui Guo <guojinhui.liam@bytedance.com>
+---
+ drivers/pci/quirks.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index dccb60c1d9cc..59858156003b 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -91,7 +91,8 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+ 	int ret = -ENOTTY;
+ 
+ 	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+-	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
++	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting ||
++		!pci_match_id(ids, dev))
+ 		return ret;
+ 
+ 	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+@@ -119,8 +120,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+ 	}
+ 
+ 	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+-	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+-	    pci_match_id(ids, dev)) {
++	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT) {
+ 		u32 lnkcap;
+ 
+ 		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
+-- 
+2.20.1
+
 
