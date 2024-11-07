@@ -1,160 +1,185 @@
-Return-Path: <linux-pci+bounces-16216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 746D89C01EF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 11:10:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F084F9C02DC
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 11:49:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03D5C1F2280B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 10:10:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80D601F21851
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 10:49:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B996E1EABA1;
-	Thu,  7 Nov 2024 10:10:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFDA1F4289;
+	Thu,  7 Nov 2024 10:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hQqbUVZv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SnxxY7Ps"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FDF1E7C21;
-	Thu,  7 Nov 2024 10:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8B21EF958
+	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 10:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730974226; cv=none; b=pp2z9DVzhQBY7YL93edlT/TXcqkpTJiCzh2V5T6nCt/kPW5RQf0m/Y6f0haIG7tOTxzfCFcPaVCh8b08BXirQKK0Ew0AGyPbp1g5LJv0T/jqmFSHju0kuDNastnVCwRY2BQQuxwBPfPG8yv1VA2uY+vcmlAOLFcAmslwA/QXmxI=
+	t=1730976525; cv=none; b=jD+xW5yoKFP9BmeNyqWcevmu/+qxDlYMy0YkExSCBLkBeUpEO+051c7Rv3N+9SzOYvZuT5FeUIU0YeXHkehvvI6nCvQIUmxnOJj5hKMIB82es3ll2cbCgKt59IZS9BZ2iijVJU1WXnM8jxIykiygQnUrPnen0QR7jvCM/Q+9zo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730974226; c=relaxed/simple;
-	bh=msc86oRzL9FywZHqS0FL90gtHxzg49aOeCnhOGI+pXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KYhLR8ISUbeH/QHW+QgRM1BaTABCvn+Y8C0bR9IIox5fKl72tfQ7mrRkpTNYCkOJsD3GyoPNeV0RsjqgiBC4mtmKzKxSPvTyMUMSQtH+CtFyJaGQuxpRMU2crqePZBMz97iJus8gF+Gry9VKSyPtdAd743H0sX2keLlOapHjljY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hQqbUVZv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7A1hcf003908;
-	Thu, 7 Nov 2024 10:09:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yKRbTpsOlrQFMGwumFxHCmnCrDbJmLnmHs587Xaf1rs=; b=hQqbUVZvt4gnRIo9
-	hSf34TNlBb5VLPuKN2QUfO51sVgJA6QQ0oa5YSwBbfo7OJ/41H8NVemCEAnywAWf
-	w4EUDh7JDvEaJdzawNgx/UJBLaVoR4N8wrVZr1E5D/QXg0RPVpaGCPqxi8mkbpgd
-	NIv6G+W8sPn/vDSv0K4RxVe9Y6+ZKmPkD9rWyVc6WrqdgJqv0geDMmyIzNXmW2Yb
-	3jCsDY7vzMhEnJghf3iCvJo+0TCZR7LInILkJJPcPhDIe5MxFtGRLfe1QB8VE6zk
-	hEUqsw8rF8L2YVRb9inh/aISn5UHYlUJzXIeHbYswKnEmjAm/7BeVc8MK50Geu2b
-	qpiagw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42qfdx74m3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Nov 2024 10:09:40 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A7A9epm031791
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 7 Nov 2024 10:09:40 GMT
-Received: from [10.216.52.65] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 7 Nov 2024
- 02:09:36 -0800
-Message-ID: <94ed3622-a46e-a593-43f1-4ed7b0eba10a@quicinc.com>
-Date: Thu, 7 Nov 2024 15:39:33 +0530
+	s=arc-20240116; t=1730976525; c=relaxed/simple;
+	bh=MBPycbdj9FiE3ovlDl7f7aUyiX0+YRucuRI+BpDOsbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgvxeajsYhOlI8C5QAjQe1QQ86XeDPJh5N8/1pymRFactebrSOJmUTVsqkmVUzNZuN8+XbArOKVO/4vkUd0BCuB8TPx8u6k3m77XH+SxXkFLMnme+SRFc3AgbZiZ2U2ymUo7ZrnHUU3LlEFmGiCL3zlf7liORFFXocxrj1vr3vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SnxxY7Ps; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37d4fd00574so439020f8f.0
+        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2024 02:48:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730976521; x=1731581321; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nQgl/AX8mMVE9EUDQBv/3f4z18FoWTN9mAKyzIZgOL4=;
+        b=SnxxY7Psu9NGwS38KYnUTgPhdDrP4TdkvC83Z5zLLYx74zNeHCaxHnKWZv20hXa/c4
+         lDBKuolBIRM/DP5ouXZnqqOOzuP1ityhY8zMBoynQFufQL5/qX7KOW7Ffmj4uJMHW79C
+         pXs1wqPyetNJx3uZ7LouUru86E9v4dcpKYjAsYVgqlzWABIJzOJVNTPqmrBGngkcjcao
+         H/0EhLNrGsZ2Xi0+6wGvBJA8pujqU98AEW3oS9efjVuPgerJP3JLF5JxQQ6agAUTPAfo
+         ZgZS3/vxtgJOvPaRdvkeZR0z+DIsOR4kC48USvMpmtChnyTlSUZb1zTcji0+Q6mWc6Qs
+         CVPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730976521; x=1731581321;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nQgl/AX8mMVE9EUDQBv/3f4z18FoWTN9mAKyzIZgOL4=;
+        b=HeHI9V7Y4g2jCmJhjsNzUUsvtZm/kBlFlT4MLB7g/oXmnyT65YM6rJ4X8zWPvpN+eA
+         KVfHm1HzbOgOjXczvMdpRwNV+kQLkdu3+u8HOoZZS2W3d5fHXE4dA+Qs1mSqJQyKoHl2
+         lqM6gKVFnSp94MaoUTO49FXBG5AfXhCHK76XQ0QMZwFq6SrQSZIVUQGFqRQdCPlwvlJd
+         tm9NKud4fFRisgKv76Xg5WnN/OSUgI9XqwKG0TrebhwnipIo1lxUgVD9csNovJ9juSFb
+         p8Ue6hRMjB1exZYz2DUoWqQ491+uUvqL08MopAFTr/mub5i8zF7UTuwotyi0QIney0M5
+         XZvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoEoy1TQvmRq1OtR1DXe2kzgR3nLlbhydSVTipW6XtCkEOvkckS2GDMhmLnG2neq3h7zbGgYFcnsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxhw4+iOJ23LAyOzr0DmoHClpEqgpKbueaKcfr1aJ8CW2ckurIW
+	47DHWGSmbRGHXP+kcMFB+qUGxEN6E5Dhhqm1X19GVNt2z7eDH+uK9ycz6OYbbg==
+X-Google-Smtp-Source: AGHT+IHB/YpX7yDBIiMKQf1XABXotq1JmIw871lEb1D2SOU7hMooBIqwLjF+jMYHMwzyvT2gdYzl5g==
+X-Received: by 2002:a05:6000:400e:b0:381:eba9:12c7 with SMTP id ffacd0b85a97d-381ec61f7aemr2189560f8f.27.1730976521502;
+        Thu, 07 Nov 2024 02:48:41 -0800 (PST)
+Received: from thinkpad ([154.14.63.34])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432b054a5ccsm19688595e9.11.2024.11.07.02.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2024 02:48:40 -0800 (PST)
+Date: Thu, 7 Nov 2024 10:48:37 +0000
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus
+ address to dynamic bridge nodes
+Message-ID: <20241107104837.pre7tgc3mdb7lyit@thinkpad>
+References: <20241104150521.r4hbsurw4dbzlxpg@thinkpad>
+ <20241104234937.GA1446920@bhelgaas>
+ <20241106143511.2ao7nwjrxi3tiatt@thinkpad>
+ <ZyyDLaWsikcNw4wT@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v1] PCI: dwc: Clean up some unnecessary codes in
- dw_pcie_suspend_noirq()
-To: Richard Zhu <hongxing.zhu@nxp.com>, <jingoohan1@gmail.com>,
-        <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <frank.li@nxp.com>
-CC: <imx@lists.linux.dev>, <kernel@pengutronix.de>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20241107084455.3623576-1-hongxing.zhu@nxp.com>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20241107084455.3623576-1-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 3sjGHSqe2sd3aWp7NgWGYs3-YIPy0BkB
-X-Proofpoint-ORIG-GUID: 3sjGHSqe2sd3aWp7NgWGYs3-YIPy0BkB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- lowpriorityscore=0 suspectscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 mlxscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411070078
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZyyDLaWsikcNw4wT@apocalypse>
 
-
-
-On 11/7/2024 2:14 PM, Richard Zhu wrote:
-> Before sending PME_TURN_OFF, don't test the LTSSM stat. Since it's safe
-> to send PME_TURN_OFF message regardless of whether the link is up or
-> down. So, there would be no need to test the LTSSM stat before sending
-> PME_TURN_OFF message.
+On Thu, Nov 07, 2024 at 10:06:53AM +0100, Andrea della Porta wrote:
+> Hi Manivannan,
 > 
-> Remove the L2 poll too, after the PME_TURN_OFF message is sent out.
-> Because the re-initialization would be done in dw_pcie_resume_noirq().
->
-we should not remove the poll here, it is required for the endpoint
-to go gracefully in to L2. Some endpoints can have some cleanups needs
-to be done before entering into L2 or L3. For the PME turnoff message,
-the endpoints needs to send L23 ack which indicates endpoint is
-ready to L2 without that it will not be gracefull D3cold sequence.
-
--Krishna Chaitanya.
-
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->   .../pci/controller/dwc/pcie-designware-host.c | 20 ++++---------------
->   1 file changed, 4 insertions(+), 16 deletions(-)
+> On 14:35 Wed 06 Nov     , Manivannan Sadhasivam wrote:
+> > On Mon, Nov 04, 2024 at 05:49:37PM -0600, Bjorn Helgaas wrote:
+> > > On Mon, Nov 04, 2024 at 08:35:21PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Mon, Nov 04, 2024 at 09:54:57AM +0100, Andrea della Porta wrote:
+> > > > > On 22:39 Sat 02 Nov     , Manivannan Sadhasivam wrote:
+> > > > > > On Mon, Oct 28, 2024 at 03:07:22PM +0100, Andrea della Porta wrote:
+> > > > > > > When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
+> > > > > > > incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
+> > > > > > > bridge, the window should instead be in PCI address space. Call
+> > > > > > > pci_bus_address() on the resource in order to obtain the PCI bus
+> > > > > > > address.
+> > > > > > 
+> > > > > > of_pci_prop_ranges() could be called for PCI devices also (not just PCI
+> > > > > > bridges), right?
+> > > > > 
+> > > > > Correct. Please note however that while the PCI-PCI bridge has the parent
+> > > > > address in CPU space, an endpoint device has it in PCI space: here we're
+> > > > > focusing on the bridge part. It probably used to work before since in many
+> > > > > cases the CPU and PCI address are the same, but it breaks down when they
+> > > > > differ.
+> > > > 
+> > > > When you say 'focusing', you are specifically referring to the
+> > > > bridge part of this API I believe. But I don't see a check for the
+> > > > bridge in your change, which is what concerning me. Am I missing
+> > > > something?
+> > > 
+> > > I think we want this change for all devices in the PCI address
+> > > domain, including PCI-PCI bridges and endpoints, don't we?  All those
+> > > "ranges" addresses should be in the PCI domain.
+> > > 
+> > 
+> > Yeah, right. I was slightly confused by the commit message. Maybe including a
+> > sentence about how the change will work fine for endpoint devices would help.
+> > Also, why it went unnoticed till now (ie., both CPU and PCI addresses are same
+> > in many SoCs).
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index f86347452026..64c49adf81d2 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -917,7 +917,6 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
->   int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->   {
->   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> -	u32 val;
->   	int ret = 0;
->   
->   	/*
-> @@ -927,23 +926,12 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->   	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
->   		return 0;
->   
-> -	/* Only send out PME_TURN_OFF when PCIE link is up */
-> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
-> -		if (pci->pp.ops->pme_turn_off)
-> -			pci->pp.ops->pme_turn_off(&pci->pp);
-> -		else
-> -			ret = dw_pcie_pme_turn_off(pci);
-> -
-> +	if (pci->pp.ops->pme_turn_off) {
-> +		pci->pp.ops->pme_turn_off(&pci->pp);
-> +	} else {
-> +		ret = dw_pcie_pme_turn_off(pci);
->   		if (ret)
->   			return ret;
-> -
-> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
-> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
-> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-> -		if (ret) {
-> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-> -			return ret; > -		}>   	}
->   
->   	dw_pcie_stop_link(pci);
+> Sorry for the (admittedly) confusing explanation from my side. What I would
+> have really liked to convey is that although the root complex (that is itself
+> a bridge) is the ultimate 'translator' between CPU and PCI addresses, all the
+> other entities are of course under PCI address space. In fact, any resource
+> submitted to of_pci_set_address() is intended to be a PCI bus address,
+> and this is valid for both sub-bridges and EPs.
+> 
+
+Sounds good. We usually have empty ranges for PCI bridges (1:1 mapping), so that
+also lead to the confusion at my end.
+
+> > 
+> > Also there should be a fixes tag (also CC stable) since this is a potential bug
+> > fix.
+> 
+> Sure. I think it could be better to resend this specific patch (and maybe also the 
+> patch "of: address: Preserve the flags portion on 1:1 dma-ranges mapping", which
+> is also a kind of bugfix) as standalone ones instead of prerequisites for the RP1
+> patchset, if it's not a concern to anyone...
+> 
+
+In fact, it is recommended to send fixes separately (or at the start of the
+series). So there should be no concerns.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
