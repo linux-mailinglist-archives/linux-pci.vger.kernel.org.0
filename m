@@ -1,483 +1,412 @@
-Return-Path: <linux-pci+bounces-16290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16293-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22BAB9C11C2
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 23:33:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C6179C11F1
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 23:44:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D61DC284792
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 22:33:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 690CE1C22420
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 22:44:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB6C21A4B4;
-	Thu,  7 Nov 2024 22:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8580621766E;
+	Thu,  7 Nov 2024 22:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="q2fZw2+p"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="AUDT83gX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34A0421949F;
-	Thu,  7 Nov 2024 22:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731018759; cv=none; b=auhUXnoe/11A1njOvxM/e4zbFV60+HBznQM7K8AbNLAAymKG59iHgMmn5H6TS1gg1yJY8mCRiOV61XN3ecEM3WC1jTv0eqj01RubFWnfV6HXpkQViFcH0ukzuQ9aCFKpBpb9EVQIkDJG4zV2qRlXV9YeP+WrP4I71A/bf9EdXks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731018759; c=relaxed/simple;
-	bh=tR8iXEBwpD0LLZrxVx5lj9uYsF9RR9qjPp+THKUJDCU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=mctsSRi0iyxQANyA9mm22dGvLDEE9oC6Gpt7pBSkH/WH3FyVeb5EyBzhxrzWVHAq6vpGyGwbDCVmDY4CuOOtVbChLGrDB/cuxJH8yYKI4OQEMkq7RcW8CL1NZdHcI/haI8c2BtpNcKbLVHkyMp/SOQAb/2Un4Vc7UbFx3oBAWxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=q2fZw2+p; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 33511212D51C;
-	Thu,  7 Nov 2024 14:32:31 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 33511212D51C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1731018751;
-	bh=Vq/vY32w9rdlY2b2Ixvmg38QFVQo19hztVIF2ZppY04=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q2fZw2+p4MhkKXpeMpBulSAJuqQjsv3OM3ZlhDaf8mki62T1uBMZTZFltc09Mt6+u
-	 UnVQu9d9eeshje+J0+Tw+8stPdcGuYGXQXq66vOxRNEI08/x05ryp01bHy4L8N5dCM
-	 PBrswxheYJzMbGyVyQRBLlodSJc3NM40TYGSvleU=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	iommu@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	virtualization@lists.linux.dev
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	mhklinux@outlook.com,
-	decui@microsoft.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	luto@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	daniel.lezcano@linaro.org,
-	joro@8bytes.org,
-	robin.murphy@arm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	arnd@arndb.de,
-	sgarzare@redhat.com,
-	jinankjain@linux.microsoft.com,
-	muminulrussell@gmail.com,
-	skinsburskii@linux.microsoft.com,
-	mukeshrathor@microsoft.com,
-	vkuznets@redhat.com,
-	ssengar@linux.microsoft.com,
-	apais@linux.microsoft.com
-Subject: [PATCH v2 4/4] hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h
-Date: Thu,  7 Nov 2024 14:32:26 -0800
-Message-Id: <1731018746-25914-5-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
-References: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2073.outbound.protection.outlook.com [40.107.103.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA58D218929;
+	Thu,  7 Nov 2024 22:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731019479; cv=fail; b=BMCbHANJE8QXDR2tM1hBJdHgLVbYlWTiXuU+ptU7uX4zhjWgmueP7NeyoeYB1p01n0zoxNxxEJweCh7V5S2e1GoZmZdTSyatuby0p1pdMMKoU97c8p7dFVJD5zXbYQ1RI8yD7UhghinSVo89KUrjVQjhetK5AEOtQAXj9CpQ2I0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731019479; c=relaxed/simple;
+	bh=fumhcU8Fz/+D16bGVITRglLVuBNXhM8SofMlo/CTh6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DA0SHJRmVDcf4allJVIW/kvx8s/UWGS9IqpsRT0UtE0jOGvxyRGaFPcJAkLvFEHX6PGEPC/CMhK3hTsvZcyNjYHr6Q5YmpzYWTSjfp/6fUnetOSKPlMUeKSESnYh4v2vofdqsbEgSU1yAk5P3qUfur4FOVS59dhzbUsGp8OeI7E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=AUDT83gX; arc=fail smtp.client-ip=40.107.103.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XKsCDh8wTJTooyrsP6EqeUpm4I1Xlom7CjsW270WbAc4D+VSyoMUU1cjX8yxtuS1R63xXUvcgvENU5AROLl+HoSsT+dbvnz54YZvXgZhCDJfwLyT60GkTmdfsvnQE+Kb8LvHf1NYyF7OsRgxUadDGigF3DyXRw+EXk1SaVZB+NzRSnhXErka1srS3040lwqOZV48Oa4kqXovwWNtA9yekqINrJ3BspD/EGP/vIj2v6jrJQIhoVry+rncPIUpngEnbW2Pdp+cPvels9AFDRr6fBNq1CwgdzuwsaEEM8++GENz/iXv37TYHPN9Q5wkB7HMsukvfWSjmTzGU7n2I82beQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ogQE+qqKOp89z1iQujXIVRcn2gzAEcF1r3bFmZ3WeZo=;
+ b=oGUUUtEhR/Z+x+jBqK2Lf9Ejp5e+sjyAk6qjwpeo6RVUXX9B1TEkC4GRdHS8EypwA2M/g+oWkM+dF7uI7X0CKUzPIORSVf93cTAIQhcJHwqF8ZTgPahq9czf6Da8KSDNvSdgn2WSM/gy9CniXVPrhRSpOkxb1mo6oedNCdzJkHJZ+JOAalCs1w/fe4zKEDvozXOpMTfwu5/GBkz0KGsmVa9LnhrUGTeUyBAAcYjBKr/xHsO2qu9ETCRvzR45QoFuYGCEZl9ZS/qi1i7p6Jufu7eHcSNPeNcQxCBueAY4rx49maybdIOryre4P7nRqn/xUo1miXAtK9cRbgB1aDKnZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ogQE+qqKOp89z1iQujXIVRcn2gzAEcF1r3bFmZ3WeZo=;
+ b=AUDT83gXbz59oeCPslPH13QiMw5XuYQ/HEusZtb0j3WMZowPaBOKvJAscBOiPcCSRGWccC6/CKNREFor/w9egrG0HxZ4anXnhkpXVXn8V0XUsgZdxXtSP/ohTrKVgz8TxC8IDoptbq1lkMeCUUCcLQdDjybhZQ6Kp5/5H2724hPTgusGa1/Y7y3Z6OMfH5exP+ia4qeQZ4i/TOFnR+/t0LZj2KDy6I3KrM3fb6FWnO2HD/sKqWpDD4tPIIn7n03XbrV8IHjFn+U0m8JI0FE16k/oDAOPT5zaSuyiuD3D7TDMbZ2FuQ6uISXyW87yqX6zYVQUgJ5nlA4/Ny+e3EGbyA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBAPR04MB7240.eurprd04.prod.outlook.com (2603:10a6:10:1af::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.20; Thu, 7 Nov
+ 2024 22:44:30 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8137.018; Thu, 7 Nov 2024
+ 22:44:30 +0000
+Date: Thu, 7 Nov 2024 17:44:22 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
+	tglx@linutronix.de, jdmason@kudzu.us
+Subject: Re: [PATCH v4 3/5] PCI: endpoint: pci-epf-test: Add doorbell test
+ support
+Message-ID: <Zy1CxtKSgRuEPX5A@lizhi-Precision-Tower-5810>
+References: <20241031-ep-msi-v4-0-717da2d99b28@nxp.com>
+ <20241031-ep-msi-v4-3-717da2d99b28@nxp.com>
+ <Zy02mPTvaPAFFxGi@ryzen>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zy02mPTvaPAFFxGi@ryzen>
+X-ClientProxiedBy: BYAPR07CA0039.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7240:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02b6c424-8e78-4d84-264e-08dcff7dbe07
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|7416014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?G/G7Ap8Glir5kW4FNEMhjXp2lZyg33oK8YLvstggsmZF/Wq2Oonjh3wI8msn?=
+ =?us-ascii?Q?F0kNfVkM6JIbmL1CMcN/tUPn6JHjncuQZBRyoNaIMw5nAifVV9QfMp47VjDh?=
+ =?us-ascii?Q?Om3XBh0sUrryUSkFYXnZ4GDVlh7CiTRi22jk5RDSq3RCRtNYHmZb0ChxDaoa?=
+ =?us-ascii?Q?/fiU6Kw/cm0N1vqXIF5vHoAlcYBXGsBDKmbnjOQgB4Cl77jV3SdwlyqchUQL?=
+ =?us-ascii?Q?xacAwtvzrZljABZfun/XgzVJTSx135+blix2Q9eySiZqdsmRAiJkpNsTXY8n?=
+ =?us-ascii?Q?yH3tauUIjuyNjEx+53hKOULXHDPi+Oj2r437NNGYdi/Yt8N9AjH2Qm/YMoz1?=
+ =?us-ascii?Q?pgAaA5iX7iZyAghEZqUh9difj+2GlaKnymqnRzRPub1NjOdobprVuCDmdRqZ?=
+ =?us-ascii?Q?Cfj7324Fkl1lUB271PeliDTEh9ATwxudKrj7NTnbZBXx+tgdHqQ0cP9boRrB?=
+ =?us-ascii?Q?mwiIJOF4euEFJ39zeh+Np2EK8sy2R/BfyL2OVQhhhQ11fPmzaK9y3dmbXAae?=
+ =?us-ascii?Q?6dmfCxB/fnAxnWFVB0tT/WD0qzoUUYRMhtunBq8Bh3wexu939Lw+st0XzF/y?=
+ =?us-ascii?Q?qOSNCKAnB7WWTBK0ui35aw2BFg5FSn1rMiTa+m5ENywp4eV3c9cMo/iZi8Jg?=
+ =?us-ascii?Q?Ns/NP/4Zi60MP0+eP9QTD4gKV6ANkzd759q7Z7i97/XtXIu/+A6SBEaPKQOQ?=
+ =?us-ascii?Q?wJcs1symVbI8WT53IaE/QGHTZET7oEJnr4+v31AnTK/hzAi4s3JtTiwr+GIy?=
+ =?us-ascii?Q?tmaWafMklBvabxPpptydCMp/wSWhT0SRTi6ZUmZXfb9pGJpVH0t14rBn9HAR?=
+ =?us-ascii?Q?dwl33MYQxiN2MdT625QODZyUMdXQRu5GaamkyXGODldnTslNidJV4d4uMJlY?=
+ =?us-ascii?Q?42gXC//lgvn+7ABF68drJZ78FZiQ+AMBMsMLaP0ZhqOlxdmM9DKrNeBpI9m/?=
+ =?us-ascii?Q?XeBN3xkRC68KqILXiLnL/AE0D3OM5YV0kQIxyEPwWUNmWplFm3xY70LJZr+K?=
+ =?us-ascii?Q?EVBdGIC6ekPye0oeGu7ErzZsUNWw+BNUPS+Bf2gDIakRXbaVSNMLTbRizki1?=
+ =?us-ascii?Q?ZXonAVNmyHLe+ofgPOLvyIgapDINYJeFTqaO2fFgVcLij81kXQHlMahAGBxO?=
+ =?us-ascii?Q?38GG8TeWdbib7b/0cN3nzChMF//vP8Pf9PUvk8v4isAkKSexo9nIGTRaS8lk?=
+ =?us-ascii?Q?lgEP8s/VQxS7ImA/x9oazs5Ec0IIsV65Z5kT4RU5flEJmyoNHQHs5Pj7RpSy?=
+ =?us-ascii?Q?YsVg5Enebl0azIvn+4AzMMtKlc47vWieHVtH2QacgX9kd90Jj9ZFsyvQ7one?=
+ =?us-ascii?Q?ZzOr7HNYgF0Oay0pLwdRiRQwlom5plhAbfevBUhs8vmzTAgJMUqcUfi8auzy?=
+ =?us-ascii?Q?lXUjVCg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?v9hQXxUh1CkdI2Kr4g1f052NVlNUGPl3vv6BgZw9QlCpmJhHoUt1TuInHZwL?=
+ =?us-ascii?Q?iJ01i9tMRJ3DoZIBXNkgxBqli+lVB/DC0+wZDTnKbv22g5rjwkdJ1OvhBiC/?=
+ =?us-ascii?Q?85tOKmHb4nNDrMwr58wW2dizSefjszdSS24WjAXDkrXGyaC8yKApMl1MzeH3?=
+ =?us-ascii?Q?wQsJJxByzpqkzFtzohlGy9NEW1nFUbcLzJcyWKRdE+jbNMurCmxcxhtwf+H1?=
+ =?us-ascii?Q?IP95KGvDt4KMj6tDOOzBBC74DFApIQUHYABUGq0TCakQ8lOBWHMIbNmF1OuK?=
+ =?us-ascii?Q?MynVvPZDz4Pn9pyXwlotU/ZX0V5u+cWTCyuMahzkP4ztR8zJei7lza7ERNP6?=
+ =?us-ascii?Q?y1IHUktc+l+PbnSdQgGuxPbL5vBs6+1MMRJNZ7+w/qZOGWbbqkGBcBqQc+sE?=
+ =?us-ascii?Q?YzsUXG/266PBLs7zkiudhNrpk2c6fWctUvH5LSo8ruIlaSDcsN4sEgrQdfu8?=
+ =?us-ascii?Q?lj/tezCCDIpEofpUKeHammDipWzDCCQ4Odqjq4/klWJ+i+Z5GE9rlcVOxAqm?=
+ =?us-ascii?Q?URLN+C6pk6knfwAujsHxPpMaCzNcg8OktsMeth+NUZQSv3pPmdbq2C39+/xj?=
+ =?us-ascii?Q?CLTVSe3cl0WjHSj+QFMf918uGj0VfQ9R9kKF/gVKjFjGZtAzn+yXCqV8832W?=
+ =?us-ascii?Q?MNbU8aqWOSvnVU1GYMAJEJHeyeZzHpwl74cuE4wKfAJOVngS37GRupJv5XIG?=
+ =?us-ascii?Q?6FTYiD4iJMmcK+VXiXrSggK9R8HtTLRqu8C98kinuzwcXihRX6jbEBOpe01G?=
+ =?us-ascii?Q?J5MXpIbroT3EfYhi3MAOaa/kPM2KP1DpLoaJ3y39X8ahrLXGx5a0GI8JtEr7?=
+ =?us-ascii?Q?LE5EQydhheJZeL01E5g9dBowPKWdZxcaczuObN8Ksg1tLTMY8zMb8LVAygEv?=
+ =?us-ascii?Q?fsKDcy5OTFFyUeyOZ5JLg9c4ZBO49EZNRzc5UKyyT8BJWfr7tIp7hQSNWTUn?=
+ =?us-ascii?Q?PsPA5W2jWGuwn4WA+T6+C9lFb4BFVGcu+iyF/eMWOyzIdzYfW28WQKRL4wGJ?=
+ =?us-ascii?Q?yL9utxURoJ1FT8HYt5XL+VRn3JakoU6ptnrYArm0URwzHWQjBaAwRl+D8t2d?=
+ =?us-ascii?Q?3BfqE3DKxLGb/XuI4Ds2jaZvn9xb3jyxHumIxbK5aAtvu7Ed3ydr8S58sMWR?=
+ =?us-ascii?Q?baKLWMuPVOK+gFDdc97AMV0CxqTPMrtFTgQIwEyZpBhCaXHdjiPguBE3qVHa?=
+ =?us-ascii?Q?vYzrsjsPmtc5U2KXypgsc4hhFi6xrKLCvkQb+3GRaKU8eii8qlAHX+oK7Tpr?=
+ =?us-ascii?Q?DPg4rhAO0zTz8a3rgoPdgal2WYuLHkTtrToN3w+PP1tHSMgqyIQ4qXnSo0v7?=
+ =?us-ascii?Q?OTEdM9zhoH+AzzeN8G0QYjQaIRXZY/iHQlHUTq4RBIu4P094w6gKHCdMZ4EK?=
+ =?us-ascii?Q?ESBOx2sjySTV6WSRua7/awzzi+ZNTRiMg7UakYBKS1U98oIjIK667kys+sB0?=
+ =?us-ascii?Q?FAyfPtpNPC7mbxyslARWNthZJw+TiI+s6s90M8fX8RAx7lSHkvIXiNToSlt5?=
+ =?us-ascii?Q?Z6TLpe9xXK5MuFxbEsCcCVK/GBie2q0RfJeN+Npkl2hymWFMFoTdK5wwa7jE?=
+ =?us-ascii?Q?DD2MloNonFbmNfHbORwurzkCaNWvlEBrscv2ZYW0?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02b6c424-8e78-4d84-264e-08dcff7dbe07
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 22:44:30.5527
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y0Zyq2ZQOP7HNJaH4NpCMSZnkOrVvFpIVDrK6pKLjnjL/eMU63MqYY/sQphSlJ6//gqKSCc7KpsUes4jHG/R/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7240
 
-Switch to using hvhdk.h everywhere in the kernel. This header includes
-all the new Hyper-V headers in include/hyperv, which form a superset of
-the definitions found in hyperv-tlfs.h.
+On Thu, Nov 07, 2024 at 10:52:24PM +0100, Niklas Cassel wrote:
+> On Thu, Oct 31, 2024 at 12:27:02PM -0400, Frank Li wrote:
+> > Add three registers: doorbell_bar, doorbell_addr, and doorbell_data,
+> > along with doorbell_done. Use pci_epf_alloc_doorbell() to allocate a
+> > doorbell address space.
+> >
+> > Enable the Root Complex (RC) side driver to trigger pci-epc-test's doorbell
+> > callback handler by writing doorbell_data to the mapped doorbell_bar's
+> > address space.
+> >
+> > Set doorbell_done in the doorbell callback to indicate completion.
+> >
+> > To avoid broken compatibility, add new command COMMAND_ENABLE_DOORBELL
+> > and COMMAND_DISABLE_DOORBELL. Host side need send COMMAND_ENABLE_DOORBELL
+> > to map one bar's inbound address to MSI space. the command
+> > COMMAND_DISABLE_DOORBELL to recovery original inbound address mapping.
+> >
+> > 	 	Host side new driver	Host side old driver
+> >
+> > EP: new driver      S				F
+> > EP: old driver      F				F
+> >
+> > S: If EP side support MSI, 'pcitest -B' return success.
+> >    If EP side doesn't support MSI, the same to 'F'.
+> >
+> > F: 'pcitest -B' return failure, other case as usual.
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > change from v3 to v4
+> > - remove revid requirement
+> > - Add command COMMAND_ENABLE_DOORBELL and COMMAND_DISABLE_DOORBELL.
+> > - call pci_epc_set_bar() to map inbound address to MSI space only at
+> > COMMAND_ENABLE_DOORBELL.
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 104 ++++++++++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> >
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > index 7c2ed6eae53ad..dcb69921497fd 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -11,12 +11,14 @@
+> >  #include <linux/dmaengine.h>
+> >  #include <linux/io.h>
+> >  #include <linux/module.h>
+> > +#include <linux/msi.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/pci_ids.h>
+> >  #include <linux/random.h>
+> >
+> >  #include <linux/pci-epc.h>
+> >  #include <linux/pci-epf.h>
+> > +#include <linux/pci-ep-msi.h>
+> >  #include <linux/pci_regs.h>
+> >
+> >  #define IRQ_TYPE_INTX			0
+> > @@ -29,6 +31,8 @@
+> >  #define COMMAND_READ			BIT(3)
+> >  #define COMMAND_WRITE			BIT(4)
+> >  #define COMMAND_COPY			BIT(5)
+> > +#define COMMAND_ENABLE_DOORBELL		BIT(6)
+> > +#define COMMAND_DISABLE_DOORBELL	BIT(7)
+> >
+> >  #define STATUS_READ_SUCCESS		BIT(0)
+> >  #define STATUS_READ_FAIL		BIT(1)
+> > @@ -39,6 +43,11 @@
+> >  #define STATUS_IRQ_RAISED		BIT(6)
+> >  #define STATUS_SRC_ADDR_INVALID		BIT(7)
+> >  #define STATUS_DST_ADDR_INVALID		BIT(8)
+> > +#define STATUS_DOORBELL_SUCCESS		BIT(9)
+> > +#define STATUS_DOORBELL_ENABLE_SUCCESS	BIT(10)
+> > +#define STATUS_DOORBELL_ENABLE_FAIL	BIT(11)
+> > +#define STATUS_DOORBELL_DISABLE_SUCCESS BIT(12)
+> > +#define STATUS_DOORBELL_DISABLE_FAIL	BIT(13)
+> >
+> >  #define FLAG_USE_DMA			BIT(0)
+> >
+> > @@ -74,6 +83,9 @@ struct pci_epf_test_reg {
+> >  	u32	irq_type;
+> >  	u32	irq_number;
+> >  	u32	flags;
+> > +	u32	doorbell_bar;
+> > +	u32	doorbell_addr;
+> > +	u32	doorbell_data;
+> >  } __packed;
+> >
+> >  static struct pci_epf_header test_header = {
+> > @@ -630,6 +642,60 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
+> >  	}
+> >  }
+> >
+> > +static void pci_epf_enable_doorbell(struct pci_epf_test *epf_test, struct pci_epf_test_reg *reg)
+> > +{
+> > +	enum pci_barno bar = reg->doorbell_bar;
+> > +	struct pci_epf *epf = epf_test->epf;
+> > +	struct pci_epc *epc = epf->epc;
+> > +	struct pci_epf_bar db_bar;
+> > +	struct msi_msg *msg;
+> > +	u64 doorbell_addr;
+> > +	u32 align;
+> > +	int ret;
+> > +
+> > +	align = epf_test->epc_features->align;
+> > +	align = align ? align : 128;
+> > +
+> > +	if (bar < BAR_0 || bar == epf_test->test_reg_bar || !epf->db_msg) {
+> > +		reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
+> > +		return;
+> > +	}
+> > +
+> > +	msg = &epf->db_msg[0].msg;
+> > +	doorbell_addr = msg->address_hi;
+> > +	doorbell_addr <<= 32;
+> > +	doorbell_addr |= msg->address_lo;
+> > +
+> > +	db_bar.phys_addr = round_down(doorbell_addr, align);
+> > +	db_bar.barno = bar;
+> > +	db_bar.size = epf->bar[bar].size;
+> > +	db_bar.flags = epf->bar[bar].flags;
+> > +	db_bar.addr = NULL;
+> > +
+> > +	ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &db_bar);
+> > +	if (!ret)
+> > +		reg->status |= STATUS_DOORBELL_ENABLE_SUCCESS;
+> > +}
+> > +
+> > +static void pci_epf_disable_doorbell(struct pci_epf_test *epf_test, struct pci_epf_test_reg *reg)
+> > +{
+> > +	enum pci_barno bar = reg->doorbell_bar;
+> > +	struct pci_epf *epf = epf_test->epf;
+> > +	struct pci_epc *epc = epf->epc;
+> > +	int ret;
+> > +
+> > +	if (bar < BAR_0 || bar == epf_test->test_reg_bar || !epf->db_msg) {
+> > +		reg->status |= STATUS_DOORBELL_DISABLE_FAIL;
+> > +		return;
+> > +	}
+> > +
+> > +	ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &epf->bar[bar]);
+> > +	if (ret)
+> > +		reg->status |= STATUS_DOORBELL_DISABLE_FAIL;
+> > +	else
+> > +		reg->status |= STATUS_DOORBELL_DISABLE_SUCCESS;
+> > +}
+> > +
+> >  static void pci_epf_test_cmd_handler(struct work_struct *work)
+> >  {
+> >  	u32 command;
+> > @@ -676,6 +742,14 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+> >  		pci_epf_test_copy(epf_test, reg);
+> >  		pci_epf_test_raise_irq(epf_test, reg);
+> >  		break;
+> > +	case COMMAND_ENABLE_DOORBELL:
+> > +		pci_epf_enable_doorbell(epf_test, reg);
+> > +		pci_epf_test_raise_irq(epf_test, reg);
+> > +		break;
+> > +	case COMMAND_DISABLE_DOORBELL:
+> > +		pci_epf_disable_doorbell(epf_test, reg);
+> > +		pci_epf_test_raise_irq(epf_test, reg);
+> > +		break;
+> >  	default:
+> >  		dev_err(dev, "Invalid command 0x%x\n", command);
+> >  		break;
+> > @@ -810,11 +884,24 @@ static int pci_epf_test_link_down(struct pci_epf *epf)
+> >  	return 0;
+> >  }
+> >
+> > +static int pci_epf_test_doorbell(struct pci_epf *epf, int index)
+> > +{
+> > +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> > +	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> > +	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> > +
+> > +	reg->status |= STATUS_DOORBELL_SUCCESS;
+> > +	pci_epf_test_raise_irq(epf_test, reg);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct pci_epc_event_ops pci_epf_test_event_ops = {
+> >  	.epc_init = pci_epf_test_epc_init,
+> >  	.epc_deinit = pci_epf_test_epc_deinit,
+> >  	.link_up = pci_epf_test_link_up,
+> >  	.link_down = pci_epf_test_link_down,
+> > +	.doorbell = pci_epf_test_doorbell,
+> >  };
+> >
+> >  static int pci_epf_test_alloc_space(struct pci_epf *epf)
+> > @@ -909,6 +996,23 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> >  	if (ret)
+> >  		return ret;
+> >
+> > +	ret = pci_epf_alloc_doorbell(epf, 1);
+>
+> Calling pci_epf_alloc_doorbell() unconditionally from bind will lead to the
+> following print for all platforms that have not configured a msi-parent:
+> [   64.543388] a40000000.pcie-ep: Failed to allocate MSI
+>
+> In ealier discussions, I thought that you wanted to call
+> pci_epf_alloc_doorbell() in pci_epf_enable_doorbell(), and then let
+> pci_epf_enable_doorbell() return STATUS_DOORBELL_ENABLE_FAIL
+> if pci_epf_enable_doorbell() failed.
+>
+>
+> Perhaps you could modify pci_epf_enable_doorbell() to also check if
+> dev->msi.domain is NULL, before calling pci_epc_alloc_doorbell(),
+> and if dev->msi.domain is NULL, perhaps print a clearer error,
+> e.g. "no msi domain found, is 'msi-parent' device tree property missing?"
+> Or put the text in a comment next to the error check, if you think that a
+> print seems too silly.
 
-This makes it easier to add new Hyper-V interfaces without being
-restricted to those in the TLFS doc (reflected in hyperv-tlfs.h).
+I think resource should be allocated in bind. it may be too frequent to
+allocate and free msi resources when call pci_epf_enable_doorbell()/
+pci_epf_disable_doorbell().
 
-To be more consistent with the original Hyper-V code, the names of some
-definitions are changed slightly. Update those where needed.
+If you think "a40000000.pcie-ep: Failed to allocate MSI" a noise, I think
+we can add a msi_domain check in pci_epc_alloc_doorbell() and print a nice
+message at pci_epc_alloc_doorbell().
 
-hyperv-tlfs.h is no longer included anywhere - hvhdk.h can serve
-the same role, but with an easier path for adding new definitions.
+It should be similar as eDMA detect. It'd better show captiblity
+information at beginning instead of defer to when use it.
 
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
- arch/arm64/hyperv/hv_core.c        |  2 +-
- arch/arm64/hyperv/mshyperv.c       |  4 ++--
- arch/arm64/include/asm/mshyperv.h  |  2 +-
- arch/x86/hyperv/hv_init.c          | 20 ++++++++++----------
- arch/x86/hyperv/hv_proc.c          |  2 +-
- arch/x86/hyperv/nested.c           |  2 +-
- arch/x86/include/asm/kvm_host.h    |  2 +-
- arch/x86/include/asm/mshyperv.h    |  2 +-
- arch/x86/include/asm/svm.h         |  2 +-
- arch/x86/kernel/cpu/mshyperv.c     |  2 +-
- arch/x86/kvm/vmx/hyperv_evmcs.h    |  2 +-
- arch/x86/kvm/vmx/vmx_onhyperv.h    |  2 +-
- drivers/clocksource/hyperv_timer.c |  2 +-
- drivers/hv/hv_balloon.c            |  4 ++--
- drivers/hv/hv_common.c             |  2 +-
- drivers/hv/hv_kvp.c                |  2 +-
- drivers/hv/hv_snapshot.c           |  2 +-
- drivers/hv/hyperv_vmbus.h          |  2 +-
- include/asm-generic/mshyperv.h     |  2 +-
- include/clocksource/hyperv_timer.h |  2 +-
- include/linux/hyperv.h             |  2 +-
- net/vmw_vsock/hyperv_transport.c   |  2 +-
- 22 files changed, 33 insertions(+), 33 deletions(-)
-
-diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
-index 7a746a5a6b42..69004f619c57 100644
---- a/arch/arm64/hyperv/hv_core.c
-+++ b/arch/arm64/hyperv/hv_core.c
-@@ -14,7 +14,7 @@
- #include <linux/arm-smccc.h>
- #include <linux/module.h>
- #include <asm-generic/bug.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- 
- /*
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index b1a4de4eee29..fc49949b7df6 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -49,12 +49,12 @@ static int __init hyperv_init(void)
- 	hv_set_vpreg(HV_REGISTER_GUEST_OS_ID, guest_id);
- 
- 	/* Get the features and hints from Hyper-V */
--	hv_get_vpreg_128(HV_REGISTER_FEATURES, &result);
-+	hv_get_vpreg_128(HV_REGISTER_PRIVILEGES_AND_FEATURES_INFO, &result);
- 	ms_hyperv.features = result.as32.a;
- 	ms_hyperv.priv_high = result.as32.b;
- 	ms_hyperv.misc_features = result.as32.c;
- 
--	hv_get_vpreg_128(HV_REGISTER_ENLIGHTENMENTS, &result);
-+	hv_get_vpreg_128(HV_REGISTER_FEATURES_INFO, &result);
- 	ms_hyperv.hints = result.as32.a;
- 
- 	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, hints 0x%x, misc 0x%x\n",
-diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-index a975e1a689dd..7595fb35fae6 100644
---- a/arch/arm64/include/asm/mshyperv.h
-+++ b/arch/arm64/include/asm/mshyperv.h
-@@ -20,7 +20,7 @@
- 
- #include <linux/types.h>
- #include <linux/arm-smccc.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- /*
-  * Declare calls to get and set Hyper-V VP register values on ARM64, which
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 1a6354b3e582..3f9aef157c88 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -19,7 +19,7 @@
- #include <asm/sev.h>
- #include <asm/ibt.h>
- #include <asm/hypervisor.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- #include <asm/idtentry.h>
- #include <asm/set_memory.h>
-@@ -416,24 +416,24 @@ static void __init hv_get_partition_id(void)
- static u8 __init get_vtl(void)
- {
- 	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
--	struct hv_get_vp_registers_input *input;
--	struct hv_get_vp_registers_output *output;
-+	struct hv_input_get_vp_registers *input;
-+	struct hv_register_assoc *output;
- 	unsigned long flags;
- 	u64 ret;
- 
- 	local_irq_save(flags);
- 	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	output = (struct hv_get_vp_registers_output *)input;
-+	output = (struct hv_register_assoc *)input;
- 
--	memset(input, 0, struct_size(input, element, 1));
--	input->header.partitionid = HV_PARTITION_ID_SELF;
--	input->header.vpindex = HV_VP_INDEX_SELF;
--	input->header.inputvtl = 0;
--	input->element[0].name0 = HV_X64_REGISTER_VSM_VP_STATUS;
-+	memset(input, 0, struct_size(input, names, 1));
-+	input->partition_id = HV_PARTITION_ID_SELF;
-+	input->vp_index = HV_VP_INDEX_SELF;
-+	input->input_vtl.as_uint8 = 0;
-+	input->names[0] = HV_X64_REGISTER_VSM_VP_STATUS;
- 
- 	ret = hv_do_hypercall(control, input, output);
- 	if (hv_result_success(ret)) {
--		ret = output->as64.low & HV_X64_VTL_MASK;
-+		ret = output->value.reg8 & HV_X64_VTL_MASK;
- 	} else {
- 		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
- 		BUG();
-diff --git a/arch/x86/hyperv/hv_proc.c b/arch/x86/hyperv/hv_proc.c
-index b74c06c04ff1..ac4c834d4435 100644
---- a/arch/x86/hyperv/hv_proc.c
-+++ b/arch/x86/hyperv/hv_proc.c
-@@ -176,7 +176,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
- 		input->partition_id = partition_id;
- 		input->vp_index = vp_index;
- 		input->flags = flags;
--		input->subnode_type = HvSubnodeAny;
-+		input->subnode_type = HV_SUBNODE_ANY;
- 		input->proximity_domain_info = hv_numa_node_to_pxm_info(node);
- 		status = hv_do_hypercall(HVCALL_CREATE_VP, input, NULL);
- 		local_irq_restore(irq_flags);
-diff --git a/arch/x86/hyperv/nested.c b/arch/x86/hyperv/nested.c
-index 9dc259fa322e..1083dc8646f9 100644
---- a/arch/x86/hyperv/nested.c
-+++ b/arch/x86/hyperv/nested.c
-@@ -11,7 +11,7 @@
- 
- 
- #include <linux/types.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- #include <asm/tlbflush.h>
- 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 3627eab994a3..38cd609f37c7 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -34,7 +34,7 @@
- #include <asm/asm.h>
- #include <asm/kvm_page_track.h>
- #include <asm/kvm_vcpu_regs.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #define __KVM_HAVE_ARCH_VCPU_DEBUGFS
- 
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 47ca48062547..f0564e599b7f 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -6,9 +6,9 @@
- #include <linux/nmi.h>
- #include <linux/msi.h>
- #include <linux/io.h>
--#include <asm/hyperv-tlfs.h>
- #include <asm/nospec-branch.h>
- #include <asm/paravirt.h>
-+#include <hyperv/hvhdk.h>
- 
- /*
-  * Hyper-V always provides a single IO-APIC at this MMIO address.
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index f0dea3750ca9..913af68ad660 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -5,7 +5,7 @@
- #include <uapi/asm/svm.h>
- #include <uapi/asm/kvm.h>
- 
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- /*
-  * 32-bit intercept words in the VMCB Control Area, starting
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index e0fd57a8ba84..be0d1f4491d9 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -20,7 +20,7 @@
- #include <linux/random.h>
- #include <asm/processor.h>
- #include <asm/hypervisor.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- #include <asm/desc.h>
- #include <asm/idtentry.h>
-diff --git a/arch/x86/kvm/vmx/hyperv_evmcs.h b/arch/x86/kvm/vmx/hyperv_evmcs.h
-index a543fccfc574..6536290f4274 100644
---- a/arch/x86/kvm/vmx/hyperv_evmcs.h
-+++ b/arch/x86/kvm/vmx/hyperv_evmcs.h
-@@ -6,7 +6,7 @@
- #ifndef __KVM_X86_VMX_HYPERV_EVMCS_H
- #define __KVM_X86_VMX_HYPERV_EVMCS_H
- 
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #include "capabilities.h"
- #include "vmcs12.h"
-diff --git a/arch/x86/kvm/vmx/vmx_onhyperv.h b/arch/x86/kvm/vmx/vmx_onhyperv.h
-index eb48153bfd73..2b94ff301712 100644
---- a/arch/x86/kvm/vmx/vmx_onhyperv.h
-+++ b/arch/x86/kvm/vmx/vmx_onhyperv.h
-@@ -3,7 +3,7 @@
- #ifndef __ARCH_X86_KVM_VMX_ONHYPERV_H__
- #define __ARCH_X86_KVM_VMX_ONHYPERV_H__
- 
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- 
- #include <linux/jump_label.h>
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index b2a080647e41..c1cc96a168c7 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -23,7 +23,7 @@
- #include <linux/acpi.h>
- #include <linux/hyperv.h>
- #include <clocksource/hyperv_timer.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- 
- static struct clock_event_device __percpu *hv_clock_event;
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index c38dcdfcb914..d792df113962 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -28,7 +28,7 @@
- #include <linux/sizes.h>
- 
- #include <linux/hyperv.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #include <asm/mshyperv.h>
- 
-@@ -1585,7 +1585,7 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
- 		return -ENOSPC;
- 	}
- 
--	hint->type = HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD;
-+	hint->heat_type = HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
- 	hint->reserved = 0;
- 	for_each_sg(sgl, sg, nents, i) {
- 		union hv_gpa_page_range *range;
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 9c452bfbd571..9ea05cbbf50d 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -28,7 +28,7 @@
- #include <linux/slab.h>
- #include <linux/dma-map-ops.h>
- #include <linux/set_memory.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- #include <asm/mshyperv.h>
- 
- /*
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index d35b60c06114..bfb7a518b4ed 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -27,7 +27,7 @@
- #include <linux/connector.h>
- #include <linux/workqueue.h>
- #include <linux/hyperv.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #include "hyperv_vmbus.h"
- #include "hv_utils_transport.h"
-diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
-index 0d2184be1691..097ebd58f14e 100644
---- a/drivers/hv/hv_snapshot.c
-+++ b/drivers/hv/hv_snapshot.c
-@@ -12,7 +12,7 @@
- #include <linux/connector.h>
- #include <linux/workqueue.h>
- #include <linux/hyperv.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #include "hyperv_vmbus.h"
- #include "hv_utils_transport.h"
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 76ac5185a01a..2bea654858e3 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -15,10 +15,10 @@
- #include <linux/list.h>
- #include <linux/bitops.h>
- #include <asm/sync_bitops.h>
--#include <asm/hyperv-tlfs.h>
- #include <linux/atomic.h>
- #include <linux/hyperv.h>
- #include <linux/interrupt.h>
-+#include <hyperv/hvhdk.h>
- 
- #include "hv_trace.h"
- 
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 8fe7aaab2599..138e416a0f9c 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -25,7 +25,7 @@
- #include <linux/cpumask.h>
- #include <linux/nmi.h>
- #include <asm/ptrace.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #define VTPM_BASE_ADDRESS 0xfed40000
- 
-diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
-index 6cdc873ac907..a4c81a60f53d 100644
---- a/include/clocksource/hyperv_timer.h
-+++ b/include/clocksource/hyperv_timer.h
-@@ -15,7 +15,7 @@
- 
- #include <linux/clocksource.h>
- #include <linux/math64.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #define HV_MAX_MAX_DELTA_TICKS 0xffffffff
- #define HV_MIN_DELTA_TICKS 1
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index d0893ec488ae..ed65b20defea 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -24,7 +24,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/interrupt.h>
- #include <linux/reciprocal_div.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- #define MAX_PAGE_BUFFER_COUNT				32
- #define MAX_MULTIPAGE_BUFFER_COUNT			32 /* 128K */
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index e2157e387217..152b6ed8877d 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -13,7 +13,7 @@
- #include <linux/hyperv.h>
- #include <net/sock.h>
- #include <net/af_vsock.h>
--#include <asm/hyperv-tlfs.h>
-+#include <hyperv/hvhdk.h>
- 
- /* Older (VMBUS version 'VERSION_WIN10' or before) Windows hosts have some
-  * stricter requirements on the hv_sock ring buffer size of six 4K pages.
--- 
-2.34.1
-
+Frank
+>
+>
+> > +	if (!ret) {
+> > +		struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> > +		struct msi_msg *msg = &epf->db_msg[0].msg;
+> > +		u32 align = epc_features->align;
+> > +		u64 doorbell_addr;
+> > +
+> > +		align = align ? align : 128;
+> > +		doorbell_addr = msg->address_hi;
+> > +		doorbell_addr <<= 32;
+> > +		doorbell_addr |= msg->address_lo;
+> > +
+> > +		reg->doorbell_addr = doorbell_addr & (align - 1);
+> > +		reg->doorbell_data = msg->data;
+> > +		reg->doorbell_bar = pci_epc_get_next_free_bar(epc_features, test_reg_bar + 1);
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >
+> >
+> > --
+> > 2.34.1
+> >
 
