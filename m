@@ -1,159 +1,131 @@
-Return-Path: <linux-pci+bounces-16250-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16251-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDC0E9C0A1C
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:29:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 911089C0A25
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 16:33:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AC121C21BAF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:29:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 490401F22F4D
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2024 15:33:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E29D31714DF;
-	Thu,  7 Nov 2024 15:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E15212D07;
+	Thu,  7 Nov 2024 15:33:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OiZblABR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUwBRMfX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4D138DC8
-	for <linux-pci@vger.kernel.org>; Thu,  7 Nov 2024 15:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA54629CF4;
+	Thu,  7 Nov 2024 15:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730993342; cv=none; b=HRC7r8d12mrLQr07/V42cTapPze8Grm4XohMztmzh80990hADHdz1/dCki1p7/rijPxvxtGTRoyh5OprATs7GGng6W+nhcMV9h/I5VSQcOgbC0+LWOITO7PauOUQ0AW92x0X3h+pFO2ixoTN118TXdcmOw4y9mm+cBPUHi9qnjo=
+	t=1730993593; cv=none; b=GkMjakIkEJt4xOc0iiK5Mu4U9N+hJyNcrB9lcmelmURnFDx2wHTWgbXcO76Hb7/EBLvR8YnjgdubxxaCq/96eQ0wffw39wnCwrBU6PCfQykCOSWeuGDTiHievZT2VstM8W8uq53fPxEDxdOdRte/g1QwbeJGSPcvdkSALMJu50k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730993342; c=relaxed/simple;
-	bh=i18faHWRnV4eHB93H4auKl9l5lsG8izxHR+bYJX1GZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4/z0UxyIFzygTt363/owwbYGSRYB+ivNb/dOmC/SHFOjdrbAQOo4a1Aa/o7QzaVI5uYKfKFwje8RonMzYMgNebsO/6u6OjeiFZRvt0Y62nmyAgfYLsnk5+fCY9bd9xbJquOq8x00lqfZ4wgxTw+723fShm6Z0YZUlR0Coxg7C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiZblABR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6366C4CECC;
-	Thu,  7 Nov 2024 15:29:00 +0000 (UTC)
+	s=arc-20240116; t=1730993593; c=relaxed/simple;
+	bh=b2xKdidBH48y+1hjUYSNmGCdaQIGQdqE3pXSKipDMPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L2ttboy/0v3RxCyfKuEylUhZ2EvHKS5NdBJpbTLFZ8JbHTmb0tVDiwMXDmG5LaqHq6+ZeYsRrFwun8+Qaludt5sTt6pIBr3OsaZFqm5YuN6DrneObgKUDIyX28Dv+o+eUL5xsMKe/W5UWBQz9KeqS1CgjoHwf+sBtvw6wIlw3qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUwBRMfX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B255C4CECC;
+	Thu,  7 Nov 2024 15:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730993342;
-	bh=i18faHWRnV4eHB93H4auKl9l5lsG8izxHR+bYJX1GZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OiZblABRlEI6/1E/4sy0X6jbZkCmR8JiTxWKaP/AjbE2aje70Q8g0RUDY9tRam6TZ
-	 fqK/ngzlOCE9diDF6pl5jOWxuLhJhitbyWuZK0jk2uYYC5O/Z3NFLhB4scWBe5X2rW
-	 PFnxFLlkBuK7xgiv7rZsTEvI+2cMQDM/7dUNj+s0a7sUm8OAqoGZE+C6CFnKBZVMAT
-	 PR61jHJ5Z6n0f3n9eCjE3W+SZoqWWFaoyeBV44mYj6YR7Q0m8xkKK5LGP6tZkND+4h
-	 kk3tBk2vJZdhxM3z7lFLZg1fced1qSjHU9JWp2nVWZCOVo0xh6WruonlmMRx2TiSQt
-	 HAzrhq/G7lcyQ==
-Date: Thu, 7 Nov 2024 16:28:58 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
+	s=k20201202; t=1730993592;
+	bh=b2xKdidBH48y+1hjUYSNmGCdaQIGQdqE3pXSKipDMPc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LUwBRMfX2EQZ8YknvydxZ7++w9PLidGNiajYSyTi3cygoA7t2zRgiho6AOcDZ9WiD
+	 cj6Eg7Bz3kgMkfRqZouFi83/NuorOzc4GEclfKzZUe6h0YogWoosAzECkB3mC3EULA
+	 kR4WxQNm9XVMKZ/Ww+jwzhFJ9TR4oTr4sNf6RT232XrxvnpRoPOiKbJEUGZrzSSZFn
+	 rNkVAVN9pnww6DmYhNHqSNXgUtZbW3BlfJ8l88yMNG7toSKxBFgGEQTO2ourPp4z5z
+	 3Suo10102Sj+qeHd4bsgywz0WxGSJm9u8zQN3OQxgLuZOtZqtzp/GdLnAsGGZJrZ1/
+	 +5jNIKwRRNi4Q==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] PCI: mediatek-gen3: rely on clk_bulk_prepare_enable
- in mtk_pcie_en7581_power_up
-Message-ID: <ZyzcuqwjqBEBMx8g@lore-desk>
-References: <20241107-pcie-en7581-fixes-v1-2-af0c872323c7@kernel.org>
- <20241107151953.GA1614560@bhelgaas>
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"
+Date: Thu,  7 Nov 2024 09:32:55 -0600
+Message-ID: <20241107153255.2740610-1-robh@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="H/ItTzle+i5kLD9o"
-Content-Disposition: inline
-In-Reply-To: <20241107151953.GA1614560@bhelgaas>
+Content-Transfer-Encoding: 8bit
 
+The mvebu "ranges" is a bit unusual with its own encoding of addresses,
+but it's still just normal "ranges" as far as parsing is concerned.
+Convert mvebu_get_tgt_attr() to use the for_each_of_range() iterator
+instead of open coding the parsing.
 
---H/ItTzle+i5kLD9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Compile tested only.
+---
+ drivers/pci/controller/pci-mvebu.c | 26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
-> On Thu, Nov 07, 2024 at 02:50:54PM +0100, Lorenzo Bianconi wrote:
-> > Squash clk_bulk_prepare and clk_bulk_enable in
-> > clk_bulk_prepare_enable in mtk_pcie_en7581_power_up routine
->=20
-> Thank you, this is much better.
->=20
-> Can you add "()" after function names in subject and commit logs here
-> and in other patches?
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index 29fe09c99e7d..d4e3f1e76f84 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -1179,37 +1179,29 @@ static int mvebu_get_tgt_attr(struct device_node *np, int devfn,
+ 			      unsigned int *tgt,
+ 			      unsigned int *attr)
+ {
+-	const int na = 3, ns = 2;
+-	const __be32 *range;
+-	int rlen, nranges, rangesz, pna, i;
++	struct of_range range;
++	struct of_range_parser parser;
+ 
+ 	*tgt = -1;
+ 	*attr = -1;
+ 
+-	range = of_get_property(np, "ranges", &rlen);
+-	if (!range)
++	if (of_pci_range_parser_init(&parser, np))
+ 		return -EINVAL;
+ 
+-	pna = of_n_addr_cells(np);
+-	rangesz = pna + na + ns;
+-	nranges = rlen / sizeof(__be32) / rangesz;
+-
+-	for (i = 0; i < nranges; i++, range += rangesz) {
+-		u32 flags = of_read_number(range, 1);
+-		u32 slot = of_read_number(range + 1, 1);
+-		u64 cpuaddr = of_read_number(range + na, pna);
++	for_each_of_range(&parser, &range) {
+ 		unsigned long rtype;
++		u32 slot = upper_32_bits(range.bus_addr);
+ 
+-		if (DT_FLAGS_TO_TYPE(flags) == DT_TYPE_IO)
++		if (DT_FLAGS_TO_TYPE(range.flags) == DT_TYPE_IO)
+ 			rtype = IORESOURCE_IO;
+-		else if (DT_FLAGS_TO_TYPE(flags) == DT_TYPE_MEM32)
++		else if (DT_FLAGS_TO_TYPE(range.flags) == DT_TYPE_MEM32)
+ 			rtype = IORESOURCE_MEM;
+ 		else
+ 			continue;
+ 
+ 		if (slot == PCI_SLOT(devfn) && type == rtype) {
+-			*tgt = DT_CPUADDR_TO_TARGET(cpuaddr);
+-			*attr = DT_CPUADDR_TO_ATTR(cpuaddr);
++			*tgt = DT_CPUADDR_TO_TARGET(range.cpu_addr);
++			*attr = DT_CPUADDR_TO_ATTR(range.cpu_addr);
+ 			return 0;
+ 		}
+ 	}
+-- 
+2.45.2
 
-sure, I will do in v2.
-
-Regards,
-Lorenzo
-
->=20
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  drivers/pci/controller/pcie-mediatek-gen3.c | 14 +++-----------
-> >  1 file changed, 3 insertions(+), 11 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
-controller/pcie-mediatek-gen3.c
-> > index 0fac0b9fd785e463d26d29d695b923db41eef9cc..8c8c733a145634cdbfefd33=
-9f4a692f25a6e24de 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -903,12 +903,6 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen=
-3_pcie *pcie)
-> >  	pm_runtime_enable(dev);
-> >  	pm_runtime_get_sync(dev);
-> > =20
-> > -	err =3D clk_bulk_prepare(pcie->num_clks, pcie->clks);
-> > -	if (err) {
-> > -		dev_err(dev, "failed to prepare clock\n");
-> > -		goto err_clk_prepare;
-> > -	}
-> > -
-> >  	val =3D FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
-> >  	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
-> >  	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
-> > @@ -921,17 +915,15 @@ static int mtk_pcie_en7581_power_up(struct mtk_ge=
-n3_pcie *pcie)
-> >  	      FIELD_PREP(PCIE_K_FINETUNE_MAX, 0xf);
-> >  	writel_relaxed(val, pcie->base + PCIE_PIPE4_PIE8_REG);
-> > =20
-> > -	err =3D clk_bulk_enable(pcie->num_clks, pcie->clks);
-> > +	err =3D clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
-> >  	if (err) {
-> >  		dev_err(dev, "failed to prepare clock\n");
-> > -		goto err_clk_enable;
-> > +		goto err_clk_init;
-> >  	}
-> > =20
-> >  	return 0;
-> > =20
-> > -err_clk_enable:
-> > -	clk_bulk_unprepare(pcie->num_clks, pcie->clks);
-> > -err_clk_prepare:
-> > +err_clk_init:
-> >  	pm_runtime_put_sync(dev);
-> >  	pm_runtime_disable(dev);
-> >  	reset_control_assert(pcie->mac_reset);
-> >=20
-> > --=20
-> > 2.47.0
-> >=20
-
---H/ItTzle+i5kLD9o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZyzcugAKCRA6cBh0uS2t
-rHNYAP4izFeIALB2fJZjBjL5FEJFYYnPEQAtEvUU1M+XANkcNwD/bj7ZFmIGEzRe
-lW3qqkFAghafQ6mO8XHHsNN0u3SqWQA=
-=rPvS
------END PGP SIGNATURE-----
-
---H/ItTzle+i5kLD9o--
 
