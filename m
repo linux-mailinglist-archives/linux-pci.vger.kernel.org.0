@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-16331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 784A29C1F6C
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 15:36:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE3179C1F6D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 15:36:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29D2D1F26105
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 14:36:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B1CB1F25FF4
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 14:36:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1ED71F667F;
-	Fri,  8 Nov 2024 14:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51CC91F6699;
+	Fri,  8 Nov 2024 14:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oGfE/lo0"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IquwqNOR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0391F4709;
-	Fri,  8 Nov 2024 14:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2971F4295;
+	Fri,  8 Nov 2024 14:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731076571; cv=none; b=YlTgF0hUoziFC5d9UBQ19I1cHKN6ZUYLR14CUzuUP9x3Pf73QlBKakBeBs30+OnjYRXxECljkRB1WYJ7lPFLs8y0vDb8gsnwlvsA1oMU/2F3zvXtGai1h5/GGc5+XJqJY//g1A1TUSdoreBH72BbF/bp5fWZnnYNlBLjw3m0NOU=
+	t=1731076572; cv=none; b=a4yxyYoqvdbD0S68ONqFQootnhYnopVPSseBI/ibjD0LPYleeKSHSMReHrjJ2uMq36FN/z0YFM82OsYzxf4fjwbUmWlAdgbrP4VO7kMwnfLNQfyv6lluMPKggsd9G4+tJ8TpbgnoIgJ3fZf9ZurpMCr1nha8YxPAAo7VnRW7BLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731076571; c=relaxed/simple;
-	bh=fYwE5EjMh19lhQDnSaq4yYULUe6QFJR/LjTL/pR+GRg=;
+	s=arc-20240116; t=1731076572; c=relaxed/simple;
+	bh=6slO009d/9VQJg5blm25QM7TQPdNoNYn/yLCwGyNYeE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U3+zVKUBxhT++XPsHBCsS5hjMOnzbejrIY7ofqBMsKfywEFTc1m/x3cBLojlKWw88BrrZ3AdJC3a+PWlh9H8YdjGcR5kQXc4j6VjAIygwN35bLN8yDWDjwVEwysGIkx6Rb5gBRJdzt8I/r0808GSZqg2EvheroAmX577+nEEn9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oGfE/lo0; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=cLwew3yqleV1dvE8ceCUUZ0IOMG7TrvXFj9cztR9RYDXTuponZFCeZRqhK28VuEu81rRmztNGtbNkGnB0Kht5RELf5GPHrYnoSNc6TjzLzaDvxSB0J0JoShDyN+kMnFPW/Mqq1neADh/DdPHNq1QayygcvRyE0xjkR3IHxTtACs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IquwqNOR; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 8B1A820009;
-	Fri,  8 Nov 2024 14:36:06 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 722B420004;
+	Fri,  8 Nov 2024 14:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1731076567;
+	t=1731076568;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GxzxY5tO2wGGtnAYK1ZdH8OX9CY4/fDjyHiH50aTJak=;
-	b=oGfE/lo0wsEqQ1FNpOVEjJlANoPwJhdtUYaUscQOsX+VfPWa33C8o0n28vyCJnEWJXLXr3
-	aJgHWSPWMXgFRBhV3bCe9tLDIoXxIUtIVxXc8xjt4z6rw4LyqETvvTXZBRMKpyGEoWbsDD
-	Kwh7OB3omL5E0hdtk86yXWn2cKlZLvx4GmIEEJ7EEE1L8fGvUruNvxqyVzTE+g6pyNsg/j
-	WY9b3LdAWeUksbEk5YWWT5fZl9wft/UR+cPAp5J89/ZKbsOFvIzS1w82Qo8gCvSJeeW7/n
-	OJoi7P/SvdO5kEJfONJbCULTb48pIjWmSAJvYvc9jwQgw1k7U6H8C6UVZvePDA==
+	bh=7OgyLhE+jNXZk7m4HF7bpGki7AeOrZWO847eMX6Y0+o=;
+	b=IquwqNOR4EnGHdegHxI9dVN3UTG9kf0ueY3C6wpWTPwhdamaUcup9x5YbQk8EnZhjWcOZw
+	GcEfTFf6G8MNjEbOEawHlWM1gVcLVVdxCLOgeFHWh0MxI7lIdjDqEqeehLDf4M8Z+FGEcW
+	9d/okO+nvGOl/KCZBvMCI2NXOOavUzhEpr0yu38qYr8V3hPpkQyNx1SbpNrlFo4xxD2XCe
+	3jVBsmmZUctWM5pA2F1omGiM7YWFhxe3+Jw6XymaId4crtdxHsmTDG7x+XTnb56/E7NiSj
+	FNpnF05NV0uTeMQHxLukYkzge1HCAnxf3KDD3dMop6wiJkL11jUQTBHR9qCYBg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v2 4/6] PCI: of_property: Constify parameter in of_pci_get_addr_flags()
-Date: Fri,  8 Nov 2024 15:35:57 +0100
-Message-ID: <20241108143600.756224-5-herve.codina@bootlin.com>
+Subject: [PATCH v2 5/6] of: Add #address-cells/#size-cells in the device-tree root empty node
+Date: Fri,  8 Nov 2024 15:35:58 +0100
+Message-ID: <20241108143600.756224-6-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241108143600.756224-1-herve.codina@bootlin.com>
 References: <20241108143600.756224-1-herve.codina@bootlin.com>
@@ -75,30 +75,62 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The res parameter has no reason to be a pointer to an un-const struct
-resource. Indeed, struct resource is not supposed to be modified by the
-function.
+On systems where ACPI is enabled or when a device-tree is not passed to
+the kernel by the bootloader, a device-tree root empty node is created.
+This device-tree root empty node doesn't have the #address-cells and the
 
-Constify the res parameter.
+This leads to the use of the default address cells and size cells values
+which are defined in the code to 1 for address cells and 1 for size cells
+
+According to the devicetree specification and the OpenFirmware standard
+(IEEE 1275-1994) the default value for #address-cells should be 2.
+
+Also, according to the devicetree specification, the #address-cells and
+the #size-cells are required properties in the root node.
+
+Modern implementation should have the #address-cells and the #size-cells
+properties set and should not rely on default values.
+
+On x86, this root empty node is used and the code default values are
+used.
+
+In preparation of the support for device-tree overlay on PCI devices
+feature on x86 (i.e. the creation of the PCI root bus device-tree node),
+the default value for #address-cells needs to be updated. Indeed, on
+x86_64, addresses are on 64bits and the upper part of an address is
+needed for correct address translations. On x86_32 having the default
+value updated does not lead to issues while the uppert part of a 64bits
+address is zero.
+
+Changing the default value for all architectures may break device-tree
+compatibility. Indeed, existing dts file without the #address-cells
+property set in the root node will not be compatible with this
+modification.
+
+Instead of updating default values, add required #address-cells and
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/pci/of_property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/empty_root.dts | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index 59cc5c851fc3..e56159cc48e8 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -69,7 +69,7 @@ static void of_pci_set_address(struct pci_dev *pdev, u32 *prop, u64 addr,
- 	}
- }
+diff --git a/drivers/of/empty_root.dts b/drivers/of/empty_root.dts
+index cf9e97a60f48..5017579f34dc 100644
+--- a/drivers/of/empty_root.dts
++++ b/drivers/of/empty_root.dts
+@@ -2,5 +2,11 @@
+ /dts-v1/;
  
--static int of_pci_get_addr_flags(struct resource *res, u32 *flags)
-+static int of_pci_get_addr_flags(const struct resource *res, u32 *flags)
- {
- 	u32 ss;
- 
+ / {
+-
++	/*
++	 * #address-cells/#size-cells are required properties at root node
++	 * according to the devicetree specification. Use same values as default
++	 * values mentioned for #address-cells/#size-cells properties.
++	 */
++	#address-cells = <0x02>;
++	#size-cells = <0x01>;
+ };
 -- 
 2.46.2
 
