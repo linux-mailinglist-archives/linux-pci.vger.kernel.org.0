@@ -1,198 +1,167 @@
-Return-Path: <linux-pci+bounces-16340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D22D9C2215
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 17:29:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AD0B9C2229
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 17:33:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2202B2847B7
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 16:29:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D7971C2428D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 16:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9640D192584;
-	Fri,  8 Nov 2024 16:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A655B1FB;
+	Fri,  8 Nov 2024 16:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZHNQ5and"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lv9ltHn0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2207F187FE4;
-	Fri,  8 Nov 2024 16:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266C11BD9DB;
+	Fri,  8 Nov 2024 16:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731083393; cv=none; b=rXjdTIYs1m8K8FjLzTv583SJms3Nt09WC9zMLPx0wmhSsYZVJDL3qT76Re+ZZyxGjkFHcls0Rdh+dpcNHhJm0CtdVRDdryiUAS3XoOrHxeNWCXn8U0tUpQbvEJLCfgUT1iw/+wvI3JZ4wqWcucWotrjFwu0X0jZfsKeOog42MFE=
+	t=1731083620; cv=none; b=QovavDLXiXKE2mVM5zvl87z63WLtfQKWZtJMX5AMoPppkNMjSeocHQpFmazwwzy86R8sV3lJ7MFPYrfJPiZv0G9EBVcmxs4aRne/kNCcpmSSCN+5FRMmo46a5Xbz+cMIjrTTkFlhBmIadyyRhU0Gglsmg7VzYWBfXtvQ3bomhvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731083393; c=relaxed/simple;
-	bh=DNG0fhk9qlX9wvnac6CmQX+5HHoCd1PixPcukAAxAbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FqiL0epFq2Uu9eukWiBlLEcpmygAiqNcHqxFsmu6ZKBW/jYxzuwOVt+VrVN5M1RIyNvMCJH/0/3Cyv09Q/cKDxc4Nq0uHyzp1IZ56HEU6rOeT4/irNUhJWfM8GWu2g08gg7fCYc9+9YZyNYvxjI9ZEH341VuLNVMh56WM2CQ4z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZHNQ5and; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C1771C0003;
-	Fri,  8 Nov 2024 16:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1731083388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SNv0XZ9+/yD94EzPzcVjyKNuEO41gbMIYl9M0TKDnlY=;
-	b=ZHNQ5andb//fQ6/+jxYn/+OPoSdSGOeFUiiZNi6z26S/XjrKcFCTYfH8z0sDGohKEpdDNF
-	XnsKSi0776p2f/hOyHZtURKABa7emm8YbXZ8I4gEo03qZiV5TKQG+eSoguH/gn6MhfFO+R
-	kbo4W/uhXmETgZgmaHOIDU12xGRg0e6v7OXTBFl/IEV6pECCnLp7HnjtIfAYw+Us7cF40d
-	XEeuCyEbOXnIYggWSAQHpihdQhqMl/fxXX9RF5o+C5lLbZYywL8KD8LY5sbGE+JfWhe+DM
-	Yy4CC1NpdwEosL/1GPGaAx8V2MdX6NJsBTvw6c/ZJ7M6n7fwT3CHYWbTa856Pg==
-Date: Fri, 8 Nov 2024 17:29:46 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 5/6] of: Add #address-cells/#size-cells in the
- device-tree root empty node
-Message-ID: <20241108172946.7233825e@bootlin.com>
-In-Reply-To: <CAL_JsqJ-05tB7QSjmGvFLbKFGmzezJhukDGS3fP9GFtp2=BWOA@mail.gmail.com>
-References: <20241108143600.756224-1-herve.codina@bootlin.com>
-	<20241108143600.756224-6-herve.codina@bootlin.com>
-	<CAL_JsqJ-05tB7QSjmGvFLbKFGmzezJhukDGS3fP9GFtp2=BWOA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1731083620; c=relaxed/simple;
+	bh=Xy9SXkJxDKG4wi0f9Sva0OdceC+je7kXOaR1Fvhuk4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ZaMwaPu/9JcGl4PBrq4ncsWAGSiu4/pwnDWQDs5DVFBAfTsDLiohRNNt6pdgu6OKdlB1dNq0PjTFU6KmX6N831MqJox8gYFUABR1EmMo7ffcEQKI+uv3Ecu+zryrXGP6BVlgyp0TcjAMiL+9MWljutSI6ADDtzviS/mrxeLuxSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lv9ltHn0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87664C4CED3;
+	Fri,  8 Nov 2024 16:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731083619;
+	bh=Xy9SXkJxDKG4wi0f9Sva0OdceC+je7kXOaR1Fvhuk4Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lv9ltHn0wFgSpHXb8kslpVm8PArdkSIuQuJE5snpS1yI2IVOWksdVjn8nUo7aykjq
+	 VF3j8ToVG0p5CUcoMmdui72l9m+UABLLU+2fviSDfOQwzw5La16QIau1UGD1TpY+4m
+	 Wpgfwsi2SUAzEOunb8IhHZWjJIgl9vK6FWbxUZVcMGXhWZOD2FFiNqROABA2M8BsdU
+	 J/bByy2pPBtM+wRvtPfQkEjUNJ9VdOlrD/PdgKJiBhCPEc1AJnHa9yeTVQbni7lfhR
+	 BWx5efRqQx6QPf/CAKmr07g17TCcFAyzUDRXIa7NPlqjO3g5NUbd9/6zcb01tNejWM
+	 nV2w2n4JvRklQ==
+Date: Fri, 8 Nov 2024 10:33:38 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hui Ma =?utf-8?B?KOmprOaFpyk=?= <Hui.Ma@airoha.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Ryder Lee <Ryder.Lee@mediatek.com>,
+	Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"nbd@nbd.name" <nbd@nbd.name>, "dd@embedd.com" <dd@embedd.com>,
+	upstream <upstream@airoha.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQw==?= =?utf-8?Q?H?= v4 4/4] PCI:
+ mediatek-gen3: Add Airoha EN7581 support
+Message-ID: <20241108163338.GA1663274@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <KL1PR03MB6350EF22DE289B293D34FD6FFF5D2@KL1PR03MB6350.apcprd03.prod.outlook.com>
 
-Hi Rob,
-
-On Fri, 8 Nov 2024 10:03:31 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Fri, Nov 8, 2024 at 8:36 AM Herve Codina <herve.codina@bootlin.com> wrote:
+On Fri, Nov 08, 2024 at 01:23:35AM +0000, Hui Ma (马慧) wrote:
+> > On Thu, Nov 07, 2024 at 05:21:45PM +0100, Lorenzo Bianconi wrote:
+> > > On Nov 07, Bjorn Helgaas wrote:
+> > > > On Thu, Nov 07, 2024 at 08:39:43AM +0100, Lorenzo Bianconi wrote:
+> > > > > > On Wed, Nov 06, 2024 at 11:40:28PM +0100, Lorenzo Bianconi wrote:
+> > > > > > > > On Wed, Jul 03, 2024 at 06:12:44PM +0200, Lorenzo Bianconi wrote:
+> > > > > > > > > Introduce support for Airoha EN7581 PCIe controller to 
+> > > > > > > > > mediatek-gen3 PCIe controller driver.
+> > > > > > > > > ...
+> > > > 
+> > > > > > > > Is this where PERST# is asserted?  If so, a comment to 
+> > > > > > > > that effect would be helpful.  Where is PERST# deasserted?  
+> > > > > > > > Where are the required delays before deassert done?
+> > > > > > > 
+> > > > > > > I can add a comment in en7581_pci_enable() describing the 
+> > > > > > > PERST issue for EN7581. Please note we have a 250ms delay in 
+> > > > > > > en7581_pci_enable() after configuring REG_PCI_CONTROL register.
+> > > > > > > 
+> > > > > > > https://github.com/torvalds/linux/blob/master/drivers/clk/cl
+> > > > > > > k-en7523.c#L396
+> > > > > > 
+> > > > > > Does that 250ms delay correspond to a PCIe mandatory delay, 
+> > > > > > e.g., something like PCIE_T_PVPERL_MS?  I think it would be 
+> > > > > > nice to have the required PCI delays in this driver if 
+> > > > > > possible so it's easy to verify that they are all covered.
+> > > > > 
+> > > > > IIRC I just used the delay value used in the vendor sdk. I
+> > > > > do not have a strong opinion about it but I guess if we move
+> > > > > it in the pcie-mediatek-gen3 driver, we will need to add it
+> > > > > in each driver where this clock is used. What do you think?
+> > > > 
+> > > > I don't know what the 250ms delay is for.  If it is for a required 
+> > > > PCI delay, we should use the relevant standard #define for it, and 
+> > > > it should be in the PCI controller driver.  Otherwise it's 
+> > > > impossible to verify that all the drivers are doing the correct delays.
+> > > 
+> > > ack, fine to me. Do you prefer to keep 250ms after 
+> > > clk_bulk_prepare_enable() in mtk_pcie_en7581_power_up() or just use PCIE_T_PVPERL_MS (100)?
+> > > I can check if 100ms works properly.
+> > 
+> > It's not clear to me where the relevant events are for these chips.
+> > 
+> > Do you have access to the PCIe CEM spec?  The diagram in r6.0, sec 
+> > 2.2.1, is helpful.  It shows the required timings for Power Stable, 
+> > REFCLK Stable, PERST# deassert, etc.
+> > 
+> > Per sec 2.11.2, PERST# must be asserted for at least 100us (T_PERST), 
+> > PERST# must be asserted for at least 100ms after Power Stable 
+> > (T_PVPERL), and PERST# must be asserted for at least 100us after 
+> > REFCLK Stable.
+> > 
+> > It would be helpful if we could tell by reading the source where some 
+> > of these critical events happen, and that the relevant delays are 
+> > there.  For example, if PERST# is asserted/deasserted by 
+> > "clk_enable()" or similar, it's not at all obvious from the code, so 
+> > we should have a comment to that effect.
+> 
+> >I reviewed the vendor sdk and it just do something like in clk_enable():
 > >
-> > On systems where ACPI is enabled or when a device-tree is not passed to
-> > the kernel by the bootloader, a device-tree root empty node is created.
-> > This device-tree root empty node doesn't have the #address-cells and the  
-> 
-> and the?
-
-#size-cells properties.
-
-Will be updated.
-
-> 
-> > This leads to the use of the default address cells and size cells values
-> > which are defined in the code to 1 for address cells and 1 for size cells  
-> 
-> Missing period.
-
-Will be updated.
-
-> 
+> >	...
+> >	val = readl(0x88);
+> >	writel(val | BIT(16) | BIT(29) | BIT(26), 0x88);
+> >	/*wait link up*/
+> >	mdelay(1000);
+> >	...
 > >
-> > According to the devicetree specification and the OpenFirmware standard
-> > (IEEE 1275-1994) the default value for #address-cells should be 2.
-> >
-> > Also, according to the devicetree specification, the #address-cells and
-> > the #size-cells are required properties in the root node.
-> >
-> > Modern implementation should have the #address-cells and the #size-cells
-> > properties set and should not rely on default values.
-> >
-> > On x86, this root empty node is used and the code default values are
-> > used.
-> >
-> > In preparation of the support for device-tree overlay on PCI devices
-> > feature on x86 (i.e. the creation of the PCI root bus device-tree node),
-> > the default value for #address-cells needs to be updated. Indeed, on
-> > x86_64, addresses are on 64bits and the upper part of an address is
-> > needed for correct address translations. On x86_32 having the default
-> > value updated does not lead to issues while the uppert part of a 64bits  
-> 
-> upper
+> >@Hui.Ma: is it fine use msleep(100) (so PCIE_T_PVPERL_MS) instead
+> >of msleep(1000) (so PCIE_LINK_RETRAIN_TIMEOUT_MS)?
+>
+> 	I think msleep(1000) will be safer, because some device won't
+> 	link up with msleep(100).
 
-Will be updated.
+Do you have details about this?  I guess it only hurts mediatek, but
+increasing the minimum time to bring up a PCI hierarchy by almost an
+entire second is a pretty big deal.
 
-> 
-> > address is zero.
-> >
-> > Changing the default value for all architectures may break device-tree
-> > compatibility. Indeed, existing dts file without the #address-cells
-> > property set in the root node will not be compatible with this
-> > modification.
-> >
-> > Instead of updating default values, add required #address-cells and  
-> 
-> and?
+If this delay corresponds to the required T_PVPERL delay and 100ms
+isn't enough for some endpoints, those endpoints should fail with many
+host controllers, not just mediatek, so I would suspect the mediatek
+controller or a certain platform, not the endpoint itself.
 
-#size-cells properties in the device-tree empty root node.
+If this corresponds to T_PVPERL and mediatek needs longer, I would
+document that by using "PCIE_T_PVPERL_MS * 10" and adding a comment
+about why (affected platform/device, hardware erratum, etc).
 
-Will be updated.
+Bottom line, I don't really care what the value is, but I *would* like
+to be able to read pcie-mediatek-gen3.c and see the point where PCI
+power is stable, a delay of at least T_PVPERL, and where PERST# is
+deasserted because that's the main timing requirement on software.
 
-> 
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  drivers/of/empty_root.dts | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/empty_root.dts b/drivers/of/empty_root.dts
-> > index cf9e97a60f48..5017579f34dc 100644
-> > --- a/drivers/of/empty_root.dts
-> > +++ b/drivers/of/empty_root.dts
-> > @@ -2,5 +2,11 @@
-> >  /dts-v1/;
-> >
-> >  / {
-> > -
-> > +       /*
-> > +        * #address-cells/#size-cells are required properties at root node
-> > +        * according to the devicetree specification. Use same values as default
-> > +        * values mentioned for #address-cells/#size-cells properties.  
-> 
-> Which default? We have multiple...
-
-I will reword:
-  Use values mentioned in the devicetree specification as default values
-  for #address-cells and #size-cells properties
-
-
-> 
-> There's also dtc's idea of default which IIRC is 2 and 1 like OpenFirmware.
-
-I can re-add this part in the commit log:
-  The device tree compiler already uses 2 as default value for address cells
-  and 1 for size cells. The powerpc PROM code also use 2 as default value
-  for #address-cells and 1 for #size-cells. Modern implementation should
-  have the #address-cells and the #size-cells properties set and should
-  not rely on default values.
-
-In your opinion, does it make sense?
-
-> 
-> > +        */
-> > +       #address-cells = <0x02>;
-> > +       #size-cells = <0x01>;  
-> 
-> I think we should just do 2 cells for size.
-
-Why using 2 for #size-cells?
-
-I understand that allows to have size defined on 64bits but is that needed?
-How to justify this value here?
-
-Best regards,
-Hervé
+Bjorn
 
