@@ -1,159 +1,198 @@
-Return-Path: <linux-pci+bounces-16339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A11E9C2184
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 17:04:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D22D9C2215
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 17:29:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C0C22867C3
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 16:04:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2202B2847B7
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 16:29:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8298A86250;
-	Fri,  8 Nov 2024 16:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9640D192584;
+	Fri,  8 Nov 2024 16:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5A5yZT1"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZHNQ5and"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E44784A3E;
-	Fri,  8 Nov 2024 16:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2207F187FE4;
+	Fri,  8 Nov 2024 16:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731081823; cv=none; b=luiGfxlOKSOnBGSjVSeo0bqednajaKgnosFqHpz0fUWVPgivatN1+DRjKelujfkdOHpdO+gcsbAAvWG5+HIJ8mQ4sIrKfwUMZAM7j3yaLLqZKXjdTsJ6OLJD/Jv4oqg7/z7msQtznRvfYGfZzXHmk3lrG1nAYwAdoCJdA7ToX30=
+	t=1731083393; cv=none; b=rXjdTIYs1m8K8FjLzTv583SJms3Nt09WC9zMLPx0wmhSsYZVJDL3qT76Re+ZZyxGjkFHcls0Rdh+dpcNHhJm0CtdVRDdryiUAS3XoOrHxeNWCXn8U0tUpQbvEJLCfgUT1iw/+wvI3JZ4wqWcucWotrjFwu0X0jZfsKeOog42MFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731081823; c=relaxed/simple;
-	bh=maMZkEugr9XaHE38h7W9LihVbwTF3bu+pXRtcFwJZn4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i9MQ9urlgkvwA/6hqIRY8wrnDwjW1q19zbScl6X8PKnSanPLUCjC22ZRuDBU9WHHk8yiXjWykxFuXH2FqTpLvqP14ekq411KqelEBuZRkNpxVEVU7VQWUjtBX8O4n5Z57OufQ5+1tlKn7j3Krmnjz0qMQeZSYpKABAsgtMYk/iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5A5yZT1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A23C4AF0B;
-	Fri,  8 Nov 2024 16:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731081823;
-	bh=maMZkEugr9XaHE38h7W9LihVbwTF3bu+pXRtcFwJZn4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s5A5yZT16dxdKIQzyyfIHAEJywy0ymtVJT/p2XBKpcRvGNXwNPwKfmSHkmMBV+VLE
-	 7MDgtslW1h2LyFTDtKCeoBHxFHWq1DE3/OygRaNRe48Uptm+hT2iGRsmgGqkxMGTLO
-	 g1AnmeHI/D3QCGLTjp57CPHfRU/qzFJPdI3coalOXsZN2aysPoJAUkfAOuFpyY+go5
-	 bGZ6qLXihovzRTxfQwevNhod9uT3tw6QSle/ixHAmkdzPhjbTlFq5EiAVjYYKiXAKU
-	 Tj4/EYzXqYkzzpkIo8DZL+WsqCvtlNkoITyyNbzy2uyGm8iR6GN1/+Mj3oIS4fwEFy
-	 sqZ3otD3WMnBA==
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e30d821c3e0so2294958276.1;
-        Fri, 08 Nov 2024 08:03:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV001P4iQivTPhaKugy16inA/w7G71nAowZeKYjnhDkQPsB+R5a3Zd7x18c83NK0h2k/ua2/g/JaeNh@vger.kernel.org, AJvYcCW1LKsUHK/VlB4nPYqlQPEEq3N9OFKGp7WYYKIyZuW2Yd6rd5UhRMEebj0Af2xpEUmijJg8uvK5YUEw@vger.kernel.org, AJvYcCW9vpIN0MX9XXGm5DvIaeajOtYz26q9bDF1XvYMHpqwuyCdpqvzQOmEkUYjsJGxk4Ah7ocksjG6QFKHkBkQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1lxCKc4UhlVLCghOIfVc65KYjcngUqTT1Nsnp2m7BeL0FfWGN
-	EbulQLjLDPOLicz5x4uuWDd32kg0Vz1mMCGhj5sVwgxwSLKfHTqHXfAeoPiwsq1N5+rBm1XJ6rn
-	effJj9AW7k7YPPJ15kcsaGTVJXQ==
-X-Google-Smtp-Source: AGHT+IH2U9EUnCV98zgKoRRMSggJstFM3Mb3m+gw5EJ9rqdsBqYdZQCvPu7KqnlK3tLQNCNIxdGvFFXJXrU2mmN5zSg=
-X-Received: by 2002:a05:690c:4d05:b0:6ea:7c35:e2ab with SMTP id
- 00721157ae682-6eaddd94216mr40875087b3.15.1731081822222; Fri, 08 Nov 2024
- 08:03:42 -0800 (PST)
+	s=arc-20240116; t=1731083393; c=relaxed/simple;
+	bh=DNG0fhk9qlX9wvnac6CmQX+5HHoCd1PixPcukAAxAbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FqiL0epFq2Uu9eukWiBlLEcpmygAiqNcHqxFsmu6ZKBW/jYxzuwOVt+VrVN5M1RIyNvMCJH/0/3Cyv09Q/cKDxc4Nq0uHyzp1IZ56HEU6rOeT4/irNUhJWfM8GWu2g08gg7fCYc9+9YZyNYvxjI9ZEH341VuLNVMh56WM2CQ4z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZHNQ5and; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C1771C0003;
+	Fri,  8 Nov 2024 16:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1731083388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SNv0XZ9+/yD94EzPzcVjyKNuEO41gbMIYl9M0TKDnlY=;
+	b=ZHNQ5andb//fQ6/+jxYn/+OPoSdSGOeFUiiZNi6z26S/XjrKcFCTYfH8z0sDGohKEpdDNF
+	XnsKSi0776p2f/hOyHZtURKABa7emm8YbXZ8I4gEo03qZiV5TKQG+eSoguH/gn6MhfFO+R
+	kbo4W/uhXmETgZgmaHOIDU12xGRg0e6v7OXTBFl/IEV6pECCnLp7HnjtIfAYw+Us7cF40d
+	XEeuCyEbOXnIYggWSAQHpihdQhqMl/fxXX9RF5o+C5lLbZYywL8KD8LY5sbGE+JfWhe+DM
+	Yy4CC1NpdwEosL/1GPGaAx8V2MdX6NJsBTvw6c/ZJ7M6n7fwT3CHYWbTa856Pg==
+Date: Fri, 8 Nov 2024 17:29:46 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 5/6] of: Add #address-cells/#size-cells in the
+ device-tree root empty node
+Message-ID: <20241108172946.7233825e@bootlin.com>
+In-Reply-To: <CAL_JsqJ-05tB7QSjmGvFLbKFGmzezJhukDGS3fP9GFtp2=BWOA@mail.gmail.com>
+References: <20241108143600.756224-1-herve.codina@bootlin.com>
+	<20241108143600.756224-6-herve.codina@bootlin.com>
+	<CAL_JsqJ-05tB7QSjmGvFLbKFGmzezJhukDGS3fP9GFtp2=BWOA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108143600.756224-1-herve.codina@bootlin.com> <20241108143600.756224-6-herve.codina@bootlin.com>
-In-Reply-To: <20241108143600.756224-6-herve.codina@bootlin.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 8 Nov 2024 10:03:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ-05tB7QSjmGvFLbKFGmzezJhukDGS3fP9GFtp2=BWOA@mail.gmail.com>
-Message-ID: <CAL_JsqJ-05tB7QSjmGvFLbKFGmzezJhukDGS3fP9GFtp2=BWOA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] of: Add #address-cells/#size-cells in the
- device-tree root empty node
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lizhi Hou <lizhi.hou@amd.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, Nov 8, 2024 at 8:36=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
-om> wrote:
->
-> On systems where ACPI is enabled or when a device-tree is not passed to
-> the kernel by the bootloader, a device-tree root empty node is created.
-> This device-tree root empty node doesn't have the #address-cells and the
+Hi Rob,
 
-and the?
+On Fri, 8 Nov 2024 10:03:31 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> This leads to the use of the default address cells and size cells values
-> which are defined in the code to 1 for address cells and 1 for size cells
+> On Fri, Nov 8, 2024 at 8:36 AM Herve Codina <herve.codina@bootlin.com> wrote:
+> >
+> > On systems where ACPI is enabled or when a device-tree is not passed to
+> > the kernel by the bootloader, a device-tree root empty node is created.
+> > This device-tree root empty node doesn't have the #address-cells and the  
+> 
+> and the?
 
-Missing period.
+#size-cells properties.
 
->
-> According to the devicetree specification and the OpenFirmware standard
-> (IEEE 1275-1994) the default value for #address-cells should be 2.
->
-> Also, according to the devicetree specification, the #address-cells and
-> the #size-cells are required properties in the root node.
->
-> Modern implementation should have the #address-cells and the #size-cells
-> properties set and should not rely on default values.
->
-> On x86, this root empty node is used and the code default values are
-> used.
->
-> In preparation of the support for device-tree overlay on PCI devices
-> feature on x86 (i.e. the creation of the PCI root bus device-tree node),
-> the default value for #address-cells needs to be updated. Indeed, on
-> x86_64, addresses are on 64bits and the upper part of an address is
-> needed for correct address translations. On x86_32 having the default
-> value updated does not lead to issues while the uppert part of a 64bits
+Will be updated.
 
-upper
+> 
+> > This leads to the use of the default address cells and size cells values
+> > which are defined in the code to 1 for address cells and 1 for size cells  
+> 
+> Missing period.
 
-> address is zero.
->
-> Changing the default value for all architectures may break device-tree
-> compatibility. Indeed, existing dts file without the #address-cells
-> property set in the root node will not be compatible with this
-> modification.
->
-> Instead of updating default values, add required #address-cells and
+Will be updated.
 
-and?
+> 
+> >
+> > According to the devicetree specification and the OpenFirmware standard
+> > (IEEE 1275-1994) the default value for #address-cells should be 2.
+> >
+> > Also, according to the devicetree specification, the #address-cells and
+> > the #size-cells are required properties in the root node.
+> >
+> > Modern implementation should have the #address-cells and the #size-cells
+> > properties set and should not rely on default values.
+> >
+> > On x86, this root empty node is used and the code default values are
+> > used.
+> >
+> > In preparation of the support for device-tree overlay on PCI devices
+> > feature on x86 (i.e. the creation of the PCI root bus device-tree node),
+> > the default value for #address-cells needs to be updated. Indeed, on
+> > x86_64, addresses are on 64bits and the upper part of an address is
+> > needed for correct address translations. On x86_32 having the default
+> > value updated does not lead to issues while the uppert part of a 64bits  
+> 
+> upper
 
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/of/empty_root.dts | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/empty_root.dts b/drivers/of/empty_root.dts
-> index cf9e97a60f48..5017579f34dc 100644
-> --- a/drivers/of/empty_root.dts
-> +++ b/drivers/of/empty_root.dts
-> @@ -2,5 +2,11 @@
->  /dts-v1/;
->
->  / {
-> -
-> +       /*
-> +        * #address-cells/#size-cells are required properties at root nod=
-e
-> +        * according to the devicetree specification. Use same values as =
-default
-> +        * values mentioned for #address-cells/#size-cells properties.
+Will be updated.
 
-Which default? We have multiple...
+> 
+> > address is zero.
+> >
+> > Changing the default value for all architectures may break device-tree
+> > compatibility. Indeed, existing dts file without the #address-cells
+> > property set in the root node will not be compatible with this
+> > modification.
+> >
+> > Instead of updating default values, add required #address-cells and  
+> 
+> and?
 
-There's also dtc's idea of default which IIRC is 2 and 1 like OpenFirmware.
+#size-cells properties in the device-tree empty root node.
 
-> +        */
-> +       #address-cells =3D <0x02>;
-> +       #size-cells =3D <0x01>;
+Will be updated.
 
-I think we should just do 2 cells for size.
+> 
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > ---
+> >  drivers/of/empty_root.dts | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/empty_root.dts b/drivers/of/empty_root.dts
+> > index cf9e97a60f48..5017579f34dc 100644
+> > --- a/drivers/of/empty_root.dts
+> > +++ b/drivers/of/empty_root.dts
+> > @@ -2,5 +2,11 @@
+> >  /dts-v1/;
+> >
+> >  / {
+> > -
+> > +       /*
+> > +        * #address-cells/#size-cells are required properties at root node
+> > +        * according to the devicetree specification. Use same values as default
+> > +        * values mentioned for #address-cells/#size-cells properties.  
+> 
+> Which default? We have multiple...
 
-Rob
+I will reword:
+  Use values mentioned in the devicetree specification as default values
+  for #address-cells and #size-cells properties
+
+
+> 
+> There's also dtc's idea of default which IIRC is 2 and 1 like OpenFirmware.
+
+I can re-add this part in the commit log:
+  The device tree compiler already uses 2 as default value for address cells
+  and 1 for size cells. The powerpc PROM code also use 2 as default value
+  for #address-cells and 1 for #size-cells. Modern implementation should
+  have the #address-cells and the #size-cells properties set and should
+  not rely on default values.
+
+In your opinion, does it make sense?
+
+> 
+> > +        */
+> > +       #address-cells = <0x02>;
+> > +       #size-cells = <0x01>;  
+> 
+> I think we should just do 2 cells for size.
+
+Why using 2 for #size-cells?
+
+I understand that allows to have size defined on 64bits but is that needed?
+How to justify this value here?
+
+Best regards,
+Hervé
 
