@@ -1,156 +1,137 @@
-Return-Path: <linux-pci+bounces-16321-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16322-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F2FE9C1AD4
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 11:39:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4D1A9C1C0D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 12:19:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FADEB21959
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 10:39:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68080281F4D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 11:19:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9EE1E3793;
-	Fri,  8 Nov 2024 10:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bzeI5eWa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A41811E2831;
+	Fri,  8 Nov 2024 11:19:00 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A121E32A7
-	for <linux-pci@vger.kernel.org>; Fri,  8 Nov 2024 10:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5481E285C;
+	Fri,  8 Nov 2024 11:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731062342; cv=none; b=CODS+CcDueS3J5Qq4YYESOWBDyePPhQ2vZdg+tPuDP0QpENIQOzODU8Lmva4ahuIn6hjVj7oL+eK8kEd8EiSuP8PssqDbpq75KEeE2ss7IXpjl4pGKpoNQEkmkv1b4svQB3AaMyYotTVwWXs6VhHY59nOYaw0v+mHQFqZ/J9dII=
+	t=1731064740; cv=none; b=eSr4YUcHqDU4QijD3WoWhhwX/4qghEfqnKrDfTn26sMOCe6HdhP13iLpbxwaKL/ivkDao5r0nK3wzpCDcrfpLFQ48E/rBTegxzTSx6RshRCqi70bJl/hxE7LWg2Ol35BbbYbrEAtOILXIw4vzxtnQ4Wr5I7iekfvEXu37hAfnBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731062342; c=relaxed/simple;
-	bh=ZI7tjvx/GWaHe2pXNRvmtZniWMOO8iY8D9CppSRXIQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=InVGwIBLkqVw9k+StlqOadZK1Fzx/wrs/lPWNkta2+dePANm+bxumeNZ1N5MktygWtIk6Fak0u/XRU5SvxKurKcgkuAoKiREh2EwuC2+CSsWEDPb5bXj5fvFKuf9eh+HvgJ86XVAAs8jcvskd45nqRhpclkFSRAv6F+JsqcPGa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bzeI5eWa; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9eb68e0bd1so271438166b.3
-        for <linux-pci@vger.kernel.org>; Fri, 08 Nov 2024 02:39:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1731062339; x=1731667139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJXmxMV9Abc1uTINb2xUxHegsV2x5Sbl3192+49JM4w=;
-        b=bzeI5eWayKRUIUnkStz9uK6qAc3mCR+mwYLXPT5Xr9wsT7e9mbuXJY387vQ1qpMqdG
-         7CoKfTw4c1OgblCTKPT6OaXzkjSlAmsBGm7Sj4LeNFO9FojlDMaV5Lt1i6Dw4AELDkDj
-         On7R+UqoRVjGgxj7XcIdvMQt3Bfu1LHrjUz0FJWxuEsMBrn1/zPrmJV+ayKQHCet8xF9
-         iu4oJGUU1U8h4/3dpiHA1blQTvqJTTXx70SJniHB0y58kSndJU7KeazMZhht+oWRDS5N
-         c9urFsK6pdjsKq4yjztcgW/QhLa4YGVwMUd9SEkGdj6N04/sYGSnzSl4zkf0x+UhXJ1Q
-         shxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731062339; x=1731667139;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jJXmxMV9Abc1uTINb2xUxHegsV2x5Sbl3192+49JM4w=;
-        b=loAvdQ6NlY11KeP1Un3V/NyWuSdbGqFGWdHmPgfXuM3+kHe/lIYrZQCL8eDQB8BljG
-         SENViQ2j3Wx4ZKVbiGsB5E/VdSo7yawteX30USxPJ0YLKveoyUbkem4wdcBVpeXmrF91
-         K/ONjEtcqdjBdlvCVEuPp6hlcvkMzh00DQeulGR3xKwzSYiRv5/QxJmZUxhYNsbmwEos
-         vG87Mt7bDMYkGOhdXjcj/m/hCVDxWBKVvYSc2ZTpbCJEWPbhmfm+fIeis3eCeTDjsc1Q
-         X3Gpoclz2fVY1W89pWd70qGOANMVajR7v2+Ng8/oOqaQXePyS+nt14ihDvUlej8ADVIo
-         KFDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEkk3opVxsM//ZsXs81G+PuP4I0jtBq1IEv6+RzTwEDQXePlZFzxkszcVLtO9U0kC32jl8+8ispV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeHiP6tvUp0wHDaXYWxlIzXXAhVz+IVbCsJew2pWiIIztGddJF
-	sexe1nkO2Nni8SkLMFxGNJQxl5ZUjOOBk9iw3jSgj1/CXOy+nZyTmZ3BDbBsi7A=
-X-Google-Smtp-Source: AGHT+IHiQxW5gF9yi4X8bacvXjxGkk6fIrYEA4STUTYGNxpcC1/v9Tb+L2h7W5kVMF2aOK5bJYki5Q==
-X-Received: by 2002:a17:906:eecb:b0:a9e:b150:a99d with SMTP id a640c23a62f3a-a9eefeb4d57mr208775166b.5.1731062338980;
-        Fri, 08 Nov 2024 02:38:58 -0800 (PST)
-Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0a188besm213593566b.8.2024.11.08.02.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 02:38:58 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1731064740; c=relaxed/simple;
+	bh=lzajTq3NPaWceLttO7cSJGMerS6oHXpB7S54deIwj4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mfn4PjEN03lsJs+9rYvXI/kiNVFnjgvLgj527JX7Dss8OjhkAm1Ivq7K1Z2n/phALwZXoLPhhHa1AOUvc3fUOz9ueD9Fwiy/IHhjNsLnhes7Z8FHB+6ixyVtMU0fTmVFF0izehLWBClraMYGKBSl/6aKSGhPwH4ndy1Tlm1IA/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 388BE102CFECE;
+	Fri,  8 Nov 2024 12:11:57 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 1035C31BA42; Fri,  8 Nov 2024 12:11:57 +0100 (CET)
+Date: Fri, 8 Nov 2024 12:11:57 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Jinhui Guo <guojinhui.liam@bytedance.com>, bhelgaas@google.com,
+	macro@orcam.me.uk, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] of: address: Preserve the flags portion on 1:1 dma-ranges mapping
-Date: Fri,  8 Nov 2024 11:39:21 +0100
-Message-ID: <ae3363eb212b356d526e9cfa7775c6dfea33e372.1731060031.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1731060031.git.andrea.porta@suse.com>
-References: <cover.1731060031.git.andrea.porta@suse.com>
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC] PCI: Fix the issue of link speed downgrade after link
+ retraining
+Message-ID: <Zy3x_QK0vZHOFZvF@wunner.de>
+References: <20241107143758.12643-1-guojinhui.liam@bytedance.com>
+ <20241107153438.GA1614749@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241107153438.GA1614749@bhelgaas>
 
-A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
-translations. In this specific case, the current behaviour is to zero out
-the entire specifier so that the translation could be carried on as an
-offset from zero.  This includes address specifier that has flags (e.g.
-PCI ranges).
-Once the flags portion has been zeroed, the translation chain is broken
-since the mapping functions will check the upcoming address specifier
-against mismatching flags, always failing the 1:1 mapping and its entire
-purpose of always succeeding.
-Set to zero only the address portion while passing the flags through.
+[+cc Maciej, Ilpo]
 
-Fixes: dbbdee94734b ("of/address: Merge all of the bus translation code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-Tested-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/of/address.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, Nov 07, 2024 at 09:34:38AM -0600, Bjorn Helgaas wrote:
+> On Thu, Nov 07, 2024 at 10:37:58PM +0800, Jinhui Guo wrote:
+> > The link speed is downgraded to 2.5 GT/s when a Samsung NVMe device
+> > is hotplugged into a Intel PCIe root port [8086:0db0].
+> > 
+> > ```
+> > +-[0000:3c]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d
+> > |           ...
+> > |           +02.0-[3d]----00.0  Samsung Electronics Co Ltd Device a80e
+> > ```
+> > 
+> > Some printing information can be obtained when the issue emerges.
+> > "Card present" is reported twice via external interrupts due to
+> > a slight tremor when the Samsung NVMe device is plugged in.
+> > The failure of the link activation for the first time leads to
+> > the link speed of the root port being mistakenly downgraded to 2.5G/s.
+> > 
+> > ```
+> > [ 8223.419682] pcieport 0000:3d:02.0: pciehp: Slot(1): Card present
+> > [ 8224.449714] pcieport 0000:3d:02.0: broken device, retraining non-functional downstream link at 2.5GT/s
+> > [ 8225.518723] pcieport 0000:3d:02.0: pciehp: Slot(1): Card present
+> > [ 8225.518726] pcieport 0000:3d:02.0: pciehp: Slot(1): Link up
+> > ```
+> > 
+> > To avoid wrongly setting the link speed to 2.5GT/s, only allow
+> > specific pcie devices to perform link retrain.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 286f0c161e33..72b6accff21c 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -455,7 +455,8 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
- 	}
- 	if (ranges == NULL || rlen == 0) {
- 		offset = of_read_number(addr, na);
--		memset(addr, 0, pna * 4);
-+		/* copy the address while preserving the flags */
-+		memset(addr + pbus->flag_cells, 0, (pna - pbus->flag_cells) * 4);
- 		pr_debug("empty ranges; 1:1 translation\n");
- 		goto finish;
- 	}
--- 
-2.35.3
+With which kernel version are you seeing this?
 
+A set of fixes for the 2.5GT/s retraining feature appeared in v6.12-rc1,
+specifically f68dea13405c ("PCI: Revert to the original speed after PCIe
+failed link retraining").
+
+Have you tested whether the latest v6.12 rc is still affected?
+
+Thanks,
+
+Lukas
+
+> > Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+> > Signed-off-by: Jinhui Guo <guojinhui.liam@bytedance.com>
+> > ---
+> >  drivers/pci/quirks.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index dccb60c1d9cc..59858156003b 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -91,7 +91,8 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+> >  	int ret = -ENOTTY;
+> >  
+> >  	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+> > -	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
+> > +	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting ||
+> > +		!pci_match_id(ids, dev))
+> >  		return ret;
+> >  
+> >  	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+> > @@ -119,8 +120,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+> >  	}
+> >  
+> >  	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+> > -	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+> > -	    pci_match_id(ids, dev)) {
+> > +	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT) {
+> >  		u32 lnkcap;
+> >  
+> >  		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
+> > -- 
+> > 2.20.1
 
