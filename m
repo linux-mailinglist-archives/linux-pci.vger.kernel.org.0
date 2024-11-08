@@ -1,295 +1,188 @@
-Return-Path: <linux-pci+bounces-16326-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16327-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96ABF9C1D78
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 14:00:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40E439C1F60
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 15:36:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 070941C22C86
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 13:00:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B97601F2605A
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 14:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0378C1E9066;
-	Fri,  8 Nov 2024 13:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD941F4701;
+	Fri,  8 Nov 2024 14:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVgQ+iHS"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZhyO61ff"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F667137E
-	for <linux-pci@vger.kernel.org>; Fri,  8 Nov 2024 13:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7261F12FD;
+	Fri,  8 Nov 2024 14:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731070824; cv=none; b=qNHBXW4o+6/QPg40ACYlISGz4kCTJ8lK4LLnS1Ptc/Q2esIHWKkjY15PWDsRsmXbDVX7CRi+k+qv24x6EiQsfpMRkw0xE9YQ3AFr0fLefx/Ol19E9G5wg5NhH4O4M47g9+JqYjYXdqzODdbR+cMevfeMv4uu2c9wyZzF+vpOl/w=
+	t=1731076569; cv=none; b=k2BImEwCrNXm3e1rLI3Wv4CEsNvMjuaWcOeVPlhH2sKEs/IAG4rZXSxNsiru7pLRjcg8ry09M5CGVzUKIQumR3pmqoH+1SZgxzmkaxhvu5lHfEwJknGVb0Rg6ULzVmfg5HicpKFTtxL4eicX0/Qc4Lf6RX4DVGMDSbbddisprA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731070824; c=relaxed/simple;
-	bh=GDkmaioCO9odCDMYaQUcJIF/BETChlzOSKDA24JplMA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=p5uDHDz49rL0lFgMFBv1mLveWKj5i5Q32AdWMrBhu1+inlawQQKkWmchGaqKtJ/XlPAiXpUN78ASYh++cDp0re5oX+lrYf9jetIdseFCW/1hktiBntRlU6YGZXEzxrNZUgujUqwEmVcU0UlT3s9MQqWRd8Ha593Dn9CYjQR/KWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVgQ+iHS; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731070823; x=1762606823;
-  h=date:from:to:cc:subject:message-id;
-  bh=GDkmaioCO9odCDMYaQUcJIF/BETChlzOSKDA24JplMA=;
-  b=jVgQ+iHSFdH5mkEiEur4RkDg7pqEtIoO9dhjOqhMdkGgvpF7r54Y/ZWe
-   6/X6NAgT6YSVmor2aKMx8WyOWVHpInyLwYB07sgx+ZXrEMgyykb7nnDHe
-   DsGuFkMpMYTMiAgSdJyVzCynY3uFPkfQ4p+vwd6XgFoBipC8hAEqnPs+r
-   pGxOMbYtfT2khpvGJdSfsCCohyUJN6zKuEvPcC+iHbdXJaR8DQsall3Aj
-   KpR4bhJQSnWN2lOV9zBuINnJ0nCgYDt2eayU+eHD4Ag9NGAvwtsrJNTFa
-   CSB6iju9NxCjfWsVen/PMYeHZT2sE8phQ8WJF5TmE5TDsYjCBrLOGPGAP
-   w==;
-X-CSE-ConnectionGUID: 4ujtap3dStG0Xu4OuC78HQ==
-X-CSE-MsgGUID: ZCfNFnRgSZGPNN5VwPeOBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30806861"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30806861"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2024 05:00:07 -0800
-X-CSE-ConnectionGUID: 01WUE+frRnevuiOybjV5xA==
-X-CSE-MsgGUID: /fdtu15CSHmorFx363r7yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,138,1728975600"; 
-   d="scan'208";a="123079593"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 08 Nov 2024 05:00:05 -0800
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t9Oao-000rRA-1q;
-	Fri, 08 Nov 2024 13:00:02 +0000
-Date: Fri, 08 Nov 2024 20:59:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- ddbf8b2f0c40d91e76950f1b5f0ef1139d35b132
-Message-ID: <202411082018.jgePHyMS-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1731076569; c=relaxed/simple;
+	bh=BgKcz9L2ts5PvR9+5uwub0a+ugZVC/vGXTZMum44wMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rJ5Ty26DTGvWORLjTfnL9g6KWALkci7e8meBrnC8WOwK0MtBpPwi38oBU6ojKvwv3SOJYXFcFWUr5Gana8UCxFj6ugTf5CX6z7Z7oolNz8xaaDUbT5XPs2yKEBknypfFY9doTQPYXMSZjuIc5wh1x7mZCJicF9DPLEXXkO9hY7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZhyO61ff; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPA id 28C8320008;
+	Fri,  8 Nov 2024 14:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1731076564;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=39PhuNNlTUkyPBAcnLEBVhfzRUsBonILfFfD3PYHodI=;
+	b=ZhyO61ffrbRWuH/9QMUF5Pf0ZeE395/y2VPtTeQrnv2Wx0ZpZpxHCfwQNDYyzbcYTcxK7E
+	cdqMKxARttYqcMbz9h30K6dnU7uTpekEA6EswwQDYlMrP0W0NM38y2lSZEjZ6BuPh8dgHH
+	ZRprefWjaCl+5XMNtAs+6rOk2YRobSeKSCD+pm2ZIGvmkqqy2LBJcVjXI5T9JBUEobZqWd
+	LpWax32JQcEXDc9eCixyNhVcwmldjU6RkMFvarbbCSfmTH9hku2An3n6RIEU7Yk9kyyTcF
+	dMZWy57L3luT6W+vnPgxGNK/GYipYJN/qybFAE1wuRYAOc6g0AG9y+1D9isVcA==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v2 0/6] Add support for the PCI host bridge device-tree node creation.
+Date: Fri,  8 Nov 2024 15:35:53 +0100
+Message-ID: <20241108143600.756224-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: ddbf8b2f0c40d91e76950f1b5f0ef1139d35b132  Merge branch 'pci/typos'
+Hi,
 
-elapsed time: 731m
+This series adds support for creating a device-tree node for the PCI
+host bridge on non device-tree based system.
 
-configs tested: 202
-configs skipped: 5
+Creating device-tree nodes for PCI devices and PCI-PCI bridges already
+exists upstream. It was added in commit 407d1a51921e ("PCI: Create
+device tree node for bridge"). Created device-tree nodes need a parent
+node to be attached to. For the first level devices, on device-tree
+based system, this parent node (i.e. the PCI host bridge) is described
+in the base device-tree. The PCI bus related to this bridge (PCI root
+bus) inherit of the PCI host bridge device-tree node.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The LAN966x PCI device driver was recently accepted [1] and relies on
+this feature.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-20
-arc                      axs103_smp_defconfig    clang-20
-arc                                 defconfig    gcc-14.2.0
-arc                            hsdk_defconfig    clang-14
-arc                 nsimosci_hs_smp_defconfig    clang-20
-arc                   randconfig-001-20241108    gcc-14.2.0
-arc                   randconfig-002-20241108    gcc-14.2.0
-arc                    vdk_hs38_smp_defconfig    clang-20
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.2.0
-arm                            dove_defconfig    clang-14
-arm                          ep93xx_defconfig    clang-14
-arm                        keystone_defconfig    clang-20
-arm                            mmp2_defconfig    clang-20
-arm                       multi_v4t_defconfig    clang-20
-arm                        multi_v5_defconfig    clang-20
-arm                         orion5x_defconfig    clang-20
-arm                   randconfig-001-20241108    gcc-14.2.0
-arm                   randconfig-002-20241108    gcc-14.2.0
-arm                   randconfig-003-20241108    gcc-14.2.0
-arm                   randconfig-004-20241108    gcc-14.2.0
-arm                           sama7_defconfig    clang-14
-arm                           sunxi_defconfig    clang-20
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20241108    gcc-14.2.0
-arm64                 randconfig-002-20241108    gcc-14.2.0
-arm64                 randconfig-003-20241108    gcc-14.2.0
-arm64                 randconfig-004-20241108    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20241108    gcc-14.2.0
-csky                  randconfig-002-20241108    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20241108    gcc-14.2.0
-hexagon               randconfig-002-20241108    gcc-14.2.0
-i386                             allmodconfig    clang-19
-i386                              allnoconfig    clang-19
-i386                             allyesconfig    clang-19
-i386        buildonly-randconfig-001-20241108    clang-19
-i386        buildonly-randconfig-002-20241108    clang-19
-i386        buildonly-randconfig-003-20241108    clang-19
-i386        buildonly-randconfig-004-20241108    clang-19
-i386        buildonly-randconfig-005-20241108    clang-19
-i386        buildonly-randconfig-006-20241108    clang-19
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241108    clang-19
-i386                  randconfig-002-20241108    clang-19
-i386                  randconfig-003-20241108    clang-19
-i386                  randconfig-004-20241108    clang-19
-i386                  randconfig-005-20241108    clang-19
-i386                  randconfig-006-20241108    clang-19
-i386                  randconfig-011-20241108    clang-19
-i386                  randconfig-012-20241108    clang-19
-i386                  randconfig-013-20241108    clang-19
-i386                  randconfig-014-20241108    clang-19
-i386                  randconfig-015-20241108    clang-19
-i386                  randconfig-016-20241108    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20241108    gcc-14.2.0
-loongarch             randconfig-002-20241108    gcc-14.2.0
-m68k                             alldefconfig    clang-20
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                       m5475evb_defconfig    clang-20
-m68k                          sun3x_defconfig    clang-20
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                            gpr_defconfig    clang-20
-mips                      maltaaprp_defconfig    clang-14
-mips                         rt305x_defconfig    clang-20
-mips                   sb1250_swarm_defconfig    clang-14
-nios2                         10m50_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20241108    gcc-14.2.0
-nios2                 randconfig-002-20241108    gcc-14.2.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-openrisc                       virt_defconfig    clang-14
-parisc                           alldefconfig    clang-20
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20241108    gcc-14.2.0
-parisc                randconfig-002-20241108    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                    amigaone_defconfig    clang-14
-powerpc                      cm5200_defconfig    clang-20
-powerpc                   currituck_defconfig    clang-20
-powerpc                 linkstation_defconfig    clang-20
-powerpc                   lite5200b_defconfig    clang-14
-powerpc                     mpc512x_defconfig    clang-14
-powerpc               mpc834x_itxgp_defconfig    clang-14
-powerpc                  mpc885_ads_defconfig    clang-20
-powerpc                      pasemi_defconfig    clang-20
-powerpc               randconfig-001-20241108    gcc-14.2.0
-powerpc               randconfig-002-20241108    gcc-14.2.0
-powerpc               randconfig-003-20241108    gcc-14.2.0
-powerpc                     sequoia_defconfig    clang-14
-powerpc                  storcenter_defconfig    clang-20
-powerpc                     taishan_defconfig    clang-20
-powerpc                     tqm8541_defconfig    clang-20
-powerpc64             randconfig-001-20241108    gcc-14.2.0
-powerpc64             randconfig-002-20241108    gcc-14.2.0
-powerpc64             randconfig-003-20241108    gcc-14.2.0
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20241108    gcc-14.2.0
-riscv                 randconfig-002-20241108    gcc-14.2.0
-s390                             alldefconfig    clang-14
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20241108    gcc-14.2.0
-s390                  randconfig-002-20241108    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                               j2_defconfig    clang-20
-sh                          kfr2r09_defconfig    clang-14
-sh                            migor_defconfig    clang-14
-sh                          r7785rp_defconfig    clang-20
-sh                    randconfig-001-20241108    gcc-14.2.0
-sh                    randconfig-002-20241108    gcc-14.2.0
-sh                   rts7751r2dplus_defconfig    clang-20
-sh                          sdk7786_defconfig    clang-20
-sh                            titan_defconfig    clang-20
-sparc                            allmodconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20241108    gcc-14.2.0
-sparc64               randconfig-002-20241108    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20241108    gcc-14.2.0
-um                    randconfig-002-20241108    gcc-14.2.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20241108    clang-19
-x86_64      buildonly-randconfig-002-20241108    clang-19
-x86_64      buildonly-randconfig-003-20241108    clang-19
-x86_64      buildonly-randconfig-004-20241108    clang-19
-x86_64      buildonly-randconfig-005-20241108    clang-19
-x86_64      buildonly-randconfig-006-20241108    clang-19
-x86_64                              defconfig    clang-19
-x86_64                                  kexec    clang-19
-x86_64                                  kexec    gcc-12
-x86_64                randconfig-001-20241108    clang-19
-x86_64                randconfig-002-20241108    clang-19
-x86_64                randconfig-003-20241108    clang-19
-x86_64                randconfig-004-20241108    clang-19
-x86_64                randconfig-005-20241108    clang-19
-x86_64                randconfig-006-20241108    clang-19
-x86_64                randconfig-011-20241108    clang-19
-x86_64                randconfig-012-20241108    clang-19
-x86_64                randconfig-013-20241108    clang-19
-x86_64                randconfig-014-20241108    clang-19
-x86_64                randconfig-015-20241108    clang-19
-x86_64                randconfig-016-20241108    clang-19
-x86_64                randconfig-071-20241108    clang-19
-x86_64                randconfig-072-20241108    clang-19
-x86_64                randconfig-073-20241108    clang-19
-x86_64                randconfig-074-20241108    clang-19
-x86_64                randconfig-075-20241108    clang-19
-x86_64                randconfig-076-20241108    clang-19
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                generic_kc705_defconfig    clang-20
-xtensa                randconfig-001-20241108    gcc-14.2.0
-xtensa                randconfig-002-20241108    gcc-14.2.0
-xtensa                         virt_defconfig    clang-14
+On system where the base hardware is not described by a device-tree, the
+PCI host bridge to which first level created PCI devices need to be
+attach to does not exist. This is the case for instance on ACPI
+described systems such as x86.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This series goal is to handle this case.
+
+In order to have the PCI host bridge device-tree node available even
+on x86, this top level node is created (if not already present) based on
+information computed by the PCI core. It follows the same mechanism as
+the one used for PCI devices device-tree node creation.
+
+As for device-tree based system, the PCI root bus handled by the PCI
+host bridge inherit of this created node.
+
+In order to have this feature available, a number of changes are needed:
+  - Patch 1 and 2: Introduce and use device_{add,remove}_of_node().
+    This function will also be used in the root PCI bus node creation.
+
+  - Patch 3 and 4: Improve existing functions to reuse them in the root
+    PCI bus node creation.
+
+  - Patch 5: Set #address-cells and #size-cells in the empty device-tree
+    root node.
+
+  - Patch 6: The PCI host bridge device-tree node creation itself.
+
+With those modifications, the LAN966x PCI device is working on x86 systems
+and all device-tree kunit tests (including the of_unittest_pci_node test)
+pass successfully with the following command:
+  qemu-system-x86_64 -machine q35 -nographic \
+    -kernel arch/x86_64/boot/bzImage --append console=ttyS0 \
+    -device pcie-root-port,port=0x10,chassis=9,id=pci.9,bus=pcie.0,multifunction=on,addr=0x3 \
+    -device pcie-root-port,port=0x11,chassis=10,id=pci.10,bus=pcie.0,addr=0x3.0x1 \
+    -device x3130-upstream,id=pci.11,bus=pci.9,addr=0x0 \
+    -device xio3130-downstream,port=0x0,chassis=11,id=pci.12,bus=pci.11,multifunction=on,addr=0x0 \
+    -device i82801b11-bridge,id=pci.13,bus=pcie.0,addr=0x4 \
+    -device pci-bridge,chassis_nr=14,id=pci.14,bus=pci.13,addr=0x0 \
+    -device pci-testdev,bus=pci.12,addr=0x0
+
+[1] https://lore.kernel.org/lkml/7512cbb7911b8395d926e9e9e390fbb55ce3aea9.camel@pengutronix.de/
+
+Compare to previous iteration, this v2 series mainly:
+  - Adds #address-cells/#size-cells in the empty root DT node.
+  - Creates the device-tree node for the PCI root bridge and reuses it
+    for the PCI root bus instead of just creating it for the PCI root
+    bus.
+
+Best regards,
+Hervé Codina
+
+Changes v1 -> v2
+  v1: https://lore.kernel.org/lkml/20241104172001.165640-1-herve.codina@bootlin.com/
+
+  - Patch 1
+    Remove Cc: stable
+
+  - Patch 2
+    Remove Fixup tag and Cc: stable
+
+  - Patches 3 and 4
+    No changes
+
+  - Patch 5
+    Add #address-cells/#size-cells in the empty root DT node instead of
+    updating default values for x86.
+    Update commit log and commit title.
+
+  - Patch 6
+    Create device-tree node for the PCI host bridge and reuse it for
+    the PCI root bus. Rename functions accordingly.
+    Use "pci" instead of "pci-root" for the PCI host bridge node name.
+    Use "res->start - windows->offset" for the PCI bus addresses.
+    Update commit log and commit title.
+
+Herve Codina (6):
+  driver core: Introduce device_{add,remove}_of_node()
+  PCI: of: Use device_{add,remove}_of_node() to attach of_node to
+    existing device
+  PCI: of_property: Add support for NULL pdev in of_pci_set_address()
+  PCI: of_property: Constify parameter in of_pci_get_addr_flags()
+  of: Add #address-cells/#size-cells in the device-tree root empty node
+  PCI: of: Create device-tree PCI host bridge node
+
+ drivers/base/core.c       |  52 +++++++++++++++++
+ drivers/of/empty_root.dts |   8 ++-
+ drivers/pci/of.c          |  98 +++++++++++++++++++++++++++++++-
+ drivers/pci/of_property.c | 114 ++++++++++++++++++++++++++++++++++++--
+ drivers/pci/pci.h         |   6 ++
+ drivers/pci/probe.c       |   2 +
+ drivers/pci/remove.c      |   2 +
+ include/linux/device.h    |   2 +
+ 8 files changed, 276 insertions(+), 8 deletions(-)
+
+-- 
+2.46.2
+
 
