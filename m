@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-16346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B056C9C22C0
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 18:16:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C4F19C22C6
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 18:17:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E11421C23523
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 17:16:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E600528319D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2024 17:17:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E44718E36D;
-	Fri,  8 Nov 2024 17:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96FFE199953;
+	Fri,  8 Nov 2024 17:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDKJrTqY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiY6rnqG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C05208C4
-	for <linux-pci@vger.kernel.org>; Fri,  8 Nov 2024 17:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7286E208C4
+	for <linux-pci@vger.kernel.org>; Fri,  8 Nov 2024 17:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731086162; cv=none; b=qWOExbvj1TX7OrvuDQTouGKSPeXRCvco1q7oyYygfml4iRRUceiVEP6le3WCov1zsvBRRqMfrXvh1cGsapIlX7p9ivZRUfGc+wO46/ZucrlMXL6VV66IPwsKmGFsylsp7AHLmSZ4JdP/jHZw1kQ5lPurqm6Kk5rgtNq/fitSUfw=
+	t=1731086232; cv=none; b=ODo6hSPW/pUq1jlPnajy7O3ssVzhCPklyU1vqywM9N1yKSfnuGsMRDjS+lFY36uV5nIwBEdOZSKk/aJKwp5/wuoAmr84MohldiWB6bi5Pw17uT0ur4nXi8geXKYlNhahhf66Om9gRcVVm0gmXmXH/bCCKkSRTP21s+DHbnp5mA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731086162; c=relaxed/simple;
-	bh=k0xll76MHqvxLaZR25USTSXDgvhxHc72FiFw4Fp/71A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G3iffgj7lx/8btmetmIx8SXZ/pqZIBt5IuwSos2/lByVxLbNnmkojth70zHiKQpYxs5CddP+1RjMY4qrbujCtwUn4XIsjfww9eKw7l4LidJfhdPEpxID0tVgRE88XGmsfJtD+NQXhhuBR7dDPingtePD2L2zJHNKNJ4S4l2fggI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDKJrTqY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4152FC4CECF;
-	Fri,  8 Nov 2024 17:16:01 +0000 (UTC)
+	s=arc-20240116; t=1731086232; c=relaxed/simple;
+	bh=8HG59M124RFlrjV+ts8vrVvvJqG6N9I7IeFFJaZ90+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XKSfpBwC79/fIShWcjcC2VFm+o9o8piHXAkOifuA0OBJc7uUpUKGy9R+CexA2e4XktOuQhxvroKHQv+spoMuGsBBSLxIoCEUz3QzwtnPOllyssXFJjjdPAnjnVj4kLDQHjR7PnhLqYy5AJhMCufKKDBAO8GKbK06nIlJ5fC4/z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiY6rnqG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA24C4CECF;
+	Fri,  8 Nov 2024 17:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731086161;
-	bh=k0xll76MHqvxLaZR25USTSXDgvhxHc72FiFw4Fp/71A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cDKJrTqY9lsU0wTCPUufm/SLE0KgoPrvYKHTcmvQeJesbathuWJAXlH81TBPfK6rt
-	 sRs3q/tFTfK/OjSPDeKcMI4ekfFAmTsZoUtpNwTx+iYOOx4K3VYC/7tTlvILv/s6a5
-	 YtT7IBC/eB/2EBrCtXluhRED/BTPA+LQ3PfIbfehODeAdw5g9jLYVargM2yRYzIS5o
-	 s8ntQ4j+1Vfy16yK27X/iUcxDhm9wmTFb0n7q3smUg030tcJHMk0bZtwyoD+7JN8tn
-	 9uc71RHlIAnM/5SlLo0h3PVCweaXSy8jQY7K3ulH88x0Bky+QmL2zRe3SdKFEJIjZd
-	 wqG2FTiWdEHgg==
-Date: Fri, 8 Nov 2024 18:15:59 +0100
-From: "lorenzo@kernel.org" <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
+	s=k20201202; t=1731086232;
+	bh=8HG59M124RFlrjV+ts8vrVvvJqG6N9I7IeFFJaZ90+Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MiY6rnqG5QpUZhzQ9P6UXTncPAkwwkHtwQPVH3TrqaChe0MswOGEcyZ5ao1yIPLBW
+	 IqpMOqbYYj1rggkiogb8X6nP2i54rRD0Xx30n0hmeb561BBh6EUgjqlein3bkFzJmJ
+	 VMFxU/eAdfgWcljOkmqElAj2gFw1W09EHLe5uXfxrS8P0lMHWPPqpUxCdyxsrli6Am
+	 szVb42VDXy6jSOdb8ihxkKRINQlHlAZl32oYryU63DdoYfZuAD2U3iqlB0feWG/o7t
+	 ZWkDtQzJ4RGqYC3ERFBaGgLFytRG4YGDj3+SxtrhNUtBTDbb8ODRdFink55+lnOHlD
+	 vVay2AiMFLBcA==
+Date: Fri, 8 Nov 2024 11:17:10 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "lorenzo@kernel.org" <lorenzo@kernel.org>
 Cc: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
 	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
 	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
@@ -58,97 +58,63 @@ Cc: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
 	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 Subject: Re: [PATCH 3/3] PCI: mediatek-gen3: Move reset/assert callbacks in
  .power_up()
-Message-ID: <Zy5HT63apyjYWJ-6@lore-desk>
-References: <547216d36f8eaa313690ff8b52407ae46b8e9c40.camel@mediatek.com>
- <20241108164817.GA1665283@bhelgaas>
+Message-ID: <20241108171710.GA1667022@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mP5VRDHikAF8nc1W"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241108164817.GA1665283@bhelgaas>
+In-Reply-To: <Zy5EjY_oQaRbb5MY@lore-desk>
 
+On Fri, Nov 08, 2024 at 06:04:13PM +0100, lorenzo@kernel.org wrote:
+> > On Fri, Nov 08, 2024 at 09:39:41AM +0100, lorenzo@kernel.org wrote:
+> > > > On Thu, 2024-11-07 at 17:08 +0100, Lorenzo Bianconi wrote:
+> > > > > > On Thu, Nov 07, 2024 at 02:50:55PM +0100, Lorenzo Bianconi wrote:
+> > > > > > > In order to make the code more readable, move phy and mac
+> > > > > > > reset lines assert/de-assert configuration in .power_up
+> > > > > > > callback (mtk_pcie_en7581_power_up/mtk_pcie_power_up).
+> > 
+> > > > > > > +	/*
+> > > > > > > +	 * The controller may have been left out of reset by the
+> > > > > > > bootloader
+> > > > > > > +	 * so make sure that we get a clean start by asserting resets
+> > > > > > > here.
+> > > > > > > +	 */
+> > > > > > > +	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
+> > > > > > > +				  pcie->phy_resets);
+> > > > > > > +	reset_control_assert(pcie->mac_reset);
+> > > > > > > +	usleep_range(10, 20);
+> > > > > > 
+> > > > > > Unrelated to this patch, but since you're moving it, do you
+> > > > > > know what this delay is for?  Can we add a #define and a spec
+> > > > > > citation for it?
+> > > > > 
+> > > > > I am not sure about it, this was already there.  @Jianjun Wang:
+> > > > > any input on it?
+> > > > 
+> > > > This delay is used to ensure the reset is effective. A delay of
+> > > > 10us should be sufficient in this scenario.
+> > > 
+> > > ack, so we can introduce a marco like:
+> > > 
+> > > #define PCIE_RESET_TIME_US	10
+> > > ...
+> > > 
+> > > usleep_range(PCIE_RESET_TIME_US, 2 * PCIE_RESET_TIME_US);
+> > 
+> > Unless this corresponds to a value specified by the PCIe base spec
+> > or CEM spec, this macro should be internal to
+> > pcie-mediatek-gen3.c.
+> 
+> My plan is to add it in pcie-mediatek-gen3.c. Do you think
+> PCIE_RESET_TIME_US is too generic?
 
---mP5VRDHikAF8nc1W
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's generic, but so are most of the other #defines in
+pcie-mediatek-gen3.c, so I'd follow suit.
 
-On Nov 08, Bjorn Helgaas wrote:
-> On Fri, Nov 08, 2024 at 02:51:15AM +0000, Jianjun Wang (=E7=8E=8B=E5=BB=
-=BA=E5=86=9B) wrote:
-> > On Thu, 2024-11-07 at 10:21 -0600, Bjorn Helgaas wrote:
-> > > On Thu, Nov 07, 2024 at 05:08:55PM +0100, Lorenzo Bianconi wrote:
-> > > > > On Thu, Nov 07, 2024 at 02:50:55PM +0100, Lorenzo Bianconi wrote:
-> > > > > > In order to make the code more readable, move phy and mac
-> > > > > > reset lines assert/de-assert configuration in .power_up
-> > > > > > callback (mtk_pcie_en7581_power_up/mtk_pcie_power_up).
-> > > >=20
-> > > > ...
-> > > > > Is there a requirement that the PHY and MAC reset ordering be
-> > > > > different for EN7581 vs other chips?
-> > > > >=20
-> > > > > EN7581:
-> > > > >=20
-> > > > >   assert PHY reset
-> > > > >   assert MAC reset
-> > > > >   power on PHY
-> > > > >   deassert PHY reset
-> > > > >   deassert MAC reset
-> > > > >=20
-> > > > > others:
-> > > > >=20
-> > > > >   assert PHY reset
-> > > > >   assert MAC reset
-> > > > >   deassert PHY reset
-> > > > >   power on PHY
-> > > > >   deassert MAC reset
-> > > > >=20
-> > > > > Is there one order that would work for both?
-> > > >=20
-> > > > EN7581 requires to run phy_init()/phy_power_on() before deassert
-> > > > PHY reset lines.
-> > >=20
-> > > And the other chips require the PHY power-on to be *after*
-> > > deasserting PHY reset?
-> >=20
-> > For MediaTek's chips, the reset will clear all register values and
-> > reset the hardware state. Therefore, we can only initialize and
-> > power-on the MAC and PHY after deasserting their resets.
->=20
-> OK, it sounds like you're saying the Airoha EN7581 is not a MediaTek
-> chip and does require a different ordering of PHY reset deassert and
-> PHY power-on:
->=20
->   - EN7581 requires PHY power-on before PHY reset deassert,
->=20
->   - other chips require PHY reset deassert before PHY power-on.
->=20
-> That's fine and probably worth a short comment in
-> mtk_pcie_en7581_power_up(), e.g., "Unlike the MediaTek controllers,
-> the Airoha EN7581 requires PHY power-on before PHY reset deassert".
->=20
-> Bjorn
-
-ack, I will add it.
-
-Regards,
-Lorenzo
-
---mP5VRDHikAF8nc1W
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZy5HTgAKCRA6cBh0uS2t
-rMXUAPwKaa0k+wzeRsFnVFQl6FYhu8AAuAyB7EJEhAKPeWFLRgEAvNRquIoimvKX
-1geNkZm6VWuYNkLa0MCU4Xkk/Y7xfw8=
-=E6vM
------END PGP SIGNATURE-----
-
---mP5VRDHikAF8nc1W--
+Connect it to language in the MediaTek spec if possible, i.e., if the
+spec names this parameter, try to use the same name.
 
