@@ -1,131 +1,177 @@
-Return-Path: <linux-pci+bounces-16376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E204A9C301E
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 00:46:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BC369C3024
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 01:16:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DA611F21813
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Nov 2024 23:46:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A86341F2181E
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 00:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CCF91A08B2;
-	Sat,  9 Nov 2024 23:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82F4E4A32;
+	Sun, 10 Nov 2024 00:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mkNnBGwF"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pHjQfAnI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC0319F411;
-	Sat,  9 Nov 2024 23:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C397D139B;
+	Sun, 10 Nov 2024 00:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731195971; cv=none; b=TR3audH/RGREwaJeE4SeLd/EXAZThlgbew4jJzRIzA0HyqLpSTjJ3iRKskFy7Z+1Gj7aScIJcpMoprnNu6DvqPrCNVm5AwbY1abs+PeTxw6zU8tzv0xC2i+zXCBOk+K13uFri5AM5+oUSsPZAiWwb7MBKtnlhhpO9pn5KDWOzug=
+	t=1731197757; cv=none; b=YDdNLwVj6a3O2lqOefQuYeUEtXPWeCWd2XKChNt0818mUZG9Pe8VazWqhYTBovNOnlop9I2uECVvFU3XNYFW3AzpEmyXryGJuhC8yznIAwdHsCJXfgIFRAazwCGFFXnxr3o17Aq9Edlnm6vRepIvUZ6UqbNmjVwCAlJA/dmsN/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731195971; c=relaxed/simple;
-	bh=pYLrqg0RBAlLP/P2QvwUbnmxPxiYUQ+kcVAYOcIZwxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B5G1cB7J/wq4BWcNFz4QoZ574rsK++IZ+k+aJWxbTM5A+6ddLNkbbAe+m4P88JQ1NVD0U2+oU/mhKTwRvyAc1U+wZ2ExGAfZPcldtCWf9Xj+DfEslKYLOFZMQZQuQCbxvOqbNivGTJTZpzbK9+5xDOsa8mbJJBZuAf+Gp4etAIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mkNnBGwF; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731195969; x=1762731969;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pYLrqg0RBAlLP/P2QvwUbnmxPxiYUQ+kcVAYOcIZwxE=;
-  b=mkNnBGwFB01WYZGC2QpJ9FeaoqfW2Mqw+ID3Nh/UqVGYbp44AyhycZTl
-   V1fbrwsRvnvq3u3KlpFjzbLwuXAAOZ/jDghX47YstsUx3OBirvfaQ0O3u
-   2XEE8zuqHbX6svsix6rybGE1SawXyu81h0e9f4SYXJTpmerYi9+4Lu2+3
-   NVlZV8heiD+HL1jKIK6eGfIU5TfZ2CYFMNf0WIRRXBif3UCv0gwW+LZX8
-   VYKd40hRbG+ouhlZdcxwkzdDC9spL8LlUtUHdOkgs80h+0++D+F8520DO
-   IASp+btaYxNN6liFy0fz9+J2z0xllxr0wo2mlYjfk7wd2Um+qJl9ocoSk
-   A==;
-X-CSE-ConnectionGUID: Ff+ILeE9RgO0J4Fvplw5PQ==
-X-CSE-MsgGUID: 1fUHTcHPSVKdvZekRb4czQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="53608772"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="53608772"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2024 15:46:09 -0800
-X-CSE-ConnectionGUID: x6nyOXvNS5aYX9Aia9e2fg==
-X-CSE-MsgGUID: eo7rNjmZR0K0Dz6J4HwabA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,142,1728975600"; 
-   d="scan'208";a="86303661"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 09 Nov 2024 15:46:05 -0800
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t9v9X-000smE-0F;
-	Sat, 09 Nov 2024 23:46:03 +0000
-Date: Sun, 10 Nov 2024 07:45:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mayank Rana <quic_mrana@quicinc.com>, jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org, will@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, krzk@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_krichai@quicinc.com, Mayank Rana <quic_mrana@quicinc.com>
-Subject: Re: [PATCH v3 4/4] PCI: qcom: Add Qualcomm SA8255p based PCIe root
- complex functionality
-Message-ID: <202411100738.kCgjRkIv-lkp@intel.com>
-References: <20241106221341.2218416-5-quic_mrana@quicinc.com>
+	s=arc-20240116; t=1731197757; c=relaxed/simple;
+	bh=Rb8SiGYOX43++2/BqPnrgCCSzHRP+Qz05NJ1JzZ5Ukc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KpFFAlP/Q69TbqDxpQ6ZNlXxs8+FAJO68J2c40ue0yxephSkswYKNfPoBQI/9ux2MbZ4Tu93Ps/1g9hQNtA0YNk0pHibrYJmhyom4ZQTvDyzN0C5QExTfLEbXDrHQjqAwT03AqXBFN00XsB+7bHgfWyivpUzmQ8GCd0GRs35aDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pHjQfAnI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AA00vxk008738;
+	Sun, 10 Nov 2024 00:10:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0R1LwNN6Jg7sQ4eONRG8zvoQUl0N1Po3ICzKDF5OXQ0=; b=pHjQfAnISj7pMSDN
+	YRQulXbAkn0/XdFn2S/pg1QKQ7IY0MrH/0JEFqmfnZgziydnmec984q1ZRntkgFB
+	snGNzaVtHbXsEDrUemcMuX5tgQwLXtpYlYbODGcpIZctpTGShLpOsKd06Zuxhr8J
+	+Zj8jriiN/Y+e73wPhDNV9dLT3vB7T6GQ/jD0aDXkQxzR+3bXTeit1hFA7VEo4wM
+	0Akz/WMZcVgJa0wU/0F1L2uTrOz22q3bTMOlxNovWR/6dHfzksPyB2VoQq+KGATH
+	ItaZ9t5m5x/My7cZKM5lzGaifW7suVdQOItGhnT67UbYBNyl2EJ19FegTXrd+1IG
+	0Ai+uQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42t118188v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 10 Nov 2024 00:10:18 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AA0AHMr015043
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 10 Nov 2024 00:10:17 GMT
+Received: from [10.216.56.133] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 9 Nov 2024
+ 16:10:13 -0800
+Message-ID: <b5f56ec9-9b5f-5369-52ed-bcf0c8012dbb@quicinc.com>
+Date: Sun, 10 Nov 2024 05:40:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241106221341.2218416-5-quic_mrana@quicinc.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1] PCI: dwc: Clean up some unnecessary codes in
+ dw_pcie_suspend_noirq()
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>
+CC: Richard Zhu <hongxing.zhu@nxp.com>, <jingoohan1@gmail.com>,
+        <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <frank.li@nxp.com>, <imx@lists.linux.dev>,
+        <kernel@pengutronix.de>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20241108002425.GA1631063@bhelgaas>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20241108002425.GA1631063@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: cv0K1P0V45jW6BqOaeNPerbxNVQSxtJ6
+X-Proofpoint-GUID: cv0K1P0V45jW6BqOaeNPerbxNVQSxtJ6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411090210
 
-Hi Mayank,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus mani-mhi/mhi-next robh/for-next linus/master v6.12-rc6 next-20241108]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 11/8/2024 5:54 AM, Bjorn Helgaas wrote:
+> On Thu, Nov 07, 2024 at 11:13:34AM +0000, Manivannan Sadhasivam wrote:
+>> On Thu, Nov 07, 2024 at 04:44:55PM +0800, Richard Zhu wrote:
+>>> Before sending PME_TURN_OFF, don't test the LTSSM stat. Since it's
+>>> safe to send PME_TURN_OFF message regardless of whether the link
+>>> is up or down. So, there would be no need to test the LTSSM stat
+>>> before sending PME_TURN_OFF message.
+>>
+>> What is the incentive to send PME_Turn_Off when link is not up?
+> 
+> There's no need to send PME_Turn_Off when link is not up.
+> 
+> But a link-up check is inherently racy because the link may go down
+> between the check and the PME_Turn_Off.  Since it's impossible for
+> software to guarantee the link is up, the Root Port should be able to
+> tolerate attempts to send PME_Turn_Off when the link is down.
+> 
+> So IMO there's no need to check whether the link is up, and checking
+> gives the misleading impression that "we know the link is up and
+> therefore sending PME_Turn_Off is safe."
+> 
+Hi Bjorn,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mayank-Rana/PCI-dwc-Export-dwc-MSI-controller-related-APIs/20241107-061634
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20241106221341.2218416-5-quic_mrana%40quicinc.com
-patch subject: [PATCH v3 4/4] PCI: qcom: Add Qualcomm SA8255p based PCIe root complex functionality
-config: powerpc-randconfig-r131-20241109 (https://download.01.org/0day-ci/archive/20241110/202411100738.kCgjRkIv-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce: (https://download.01.org/0day-ci/archive/20241110/202411100738.kCgjRkIv-lkp@intel.com/reproduce)
+I agree that link-up check is racy but once link is up and link has
+gone down due to some reason the ltssm state will not move detect quiet
+or detect act, it will go to pre detect quiet (i.e value 0f 0x5).
+we can assume if the link is up LTSSM state will greater than detect act
+even if the link was down.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411100738.kCgjRkIv-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/dwc/pcie-qcom.c:1613:27: sparse: sparse: symbol 'pci_qcom_ecam_ops' was not declared. Should it be static?
-
-vim +/pci_qcom_ecam_ops +1613 drivers/pci/controller/dwc/pcie-qcom.c
-
-  1611	
-  1612	/* ECAM ops */
-> 1613	const struct pci_ecam_ops pci_qcom_ecam_ops = {
-  1614		.init		= qcom_pcie_ecam_host_init,
-  1615		.pci_ops	= {
-  1616			.map_bus	= pci_ecam_map_bus,
-  1617			.read		= pci_generic_config_read,
-  1618			.write		= pci_generic_config_write,
-  1619		}
-  1620	};
-  1621	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Krishna Chaitanya.
+>>> Remove the L2 poll too, after the PME_TURN_OFF message is sent
+>>> out.  Because the re-initialization would be done in
+>>> dw_pcie_resume_noirq().
+>>
+>> As Krishna explained, host needs to wait until the endpoint acks the
+>> message (just to give it some time to do cleanups). Then only the
+>> host can initiate D3Cold. It matters when the device supports L2.
+> 
+> The important thing here is to be clear about the *reason* to poll for
+> L2 and the *event* that must wait for L2.
+> 
+> I don't have any DesignWare specs, but when dw_pcie_suspend_noirq()
+> waits for DW_PCIE_LTSSM_L2_IDLE, I think what we're doing is waiting
+> for the link to be in the L2/L3 Ready pseudo-state (PCIe r6.0, sec
+> 5.2, fig 5-1).
+> 
+> L2 and L3 are states where main power to the downstream component is
+> off, i.e., the component is in D3cold (r6.0, sec 5.3.2), so there is
+> no link in those states.
+> 
+> The PME_Turn_Off handshake is part of the process to put the
+> downstream component in D3cold.  I think the reason for this handshake
+> is to allow an orderly shutdown of that component before main power is
+> removed.
+> 
+> When the downstream component receives PME_Turn_Off, it will stop
+> scheduling new TLPs, but it may already have TLPs scheduled but not
+> yet sent.  If power were removed immediately, they would be lost.  My
+> understanding is that the link will not enter L2/L3 Ready until the
+> components on both ends have completed whatever needs to be done with
+> those TLPs.  (This is based on the L2/L3 discussion in the Mindshare
+> PCIe book; I haven't found clear spec citations for all of it.)
+> 
+> I think waiting for L2/L3 Ready is to keep us from turning off main
+> power when the components are still trying to dispose of those TLPs.
+> 
+> So I think every controller that turns off main power needs to wait
+> for L2/L3 Ready.
+> 
+> There's also a requirement that software wait at least 100 ns after
+> L2/L3 Ready before turning off refclock and main power (sec
+> 5.3.3.2.1).
+> 
+> Bjorn
+> 
 
