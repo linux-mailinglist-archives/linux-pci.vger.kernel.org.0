@@ -1,96 +1,46 @@
-Return-Path: <linux-pci+bounces-16379-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE9FC9C317E
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 10:41:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D2719C318A
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 11:12:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B36C1C20A3A
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 09:41:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFE622817C6
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 10:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C89F1537CB;
-	Sun, 10 Nov 2024 09:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808631534FB;
+	Sun, 10 Nov 2024 10:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vc85F1+q";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xbtDXHoB";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SIg2cies";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e7ZZrLlE"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ax4X/MJW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94431537AA;
-	Sun, 10 Nov 2024 09:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7875914264A;
+	Sun, 10 Nov 2024 10:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731231688; cv=none; b=EYgVOsEaN2b2GhdGgbsY8JlSasX5EAQ89PWRR86qEjWnVx9GIr4AS9r10os0SPY5L1ugPLnRrx3T1KV/nPrhDSZxCJf3xCNsfmnNKgLeCzLVT0oSRC1SS8XTm6PL87vo4gWhAFj0d4EMrhAY/BD45RUVB5Wods4yST3NzXNwDb8=
+	t=1731233544; cv=none; b=pGrVQFawn7qevGgr785qMm/KFqCBpZ8sttCx7qYI1NyJ19qokaCmEyfzLtCk0YObrWqKa+b7YNvthS/B8KsJ1iN/d0CyoSp19xtkV/sdqyxdjRVtpc0ZgHFzPg4yT3UJ+N6W/qjLo0VN0ODNj7/OeEQvrZZeU/1ebs1ckvghF+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731231688; c=relaxed/simple;
-	bh=4qvdpQkT3SlRFIlu6TD25SeR7NwDjNqtyUfySTP5Dbw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OiW+cJPKTgX00WHUWDl0kdg7n/uobAm+4Ju5w6rlAXq6c625RJ2ker7VeMNB3ahyBFLWQt2KN6ZED52TEk/2EuyUDWnX6tYVtLTvKE1h+EHOQmihykHUUfsvhL63cGCHSsEQhP2Q0Qof1Ps9NVLzaqvj0ohBny5TlHAw5QWhS+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vc85F1+q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xbtDXHoB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SIg2cies; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e7ZZrLlE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CC68921A73;
-	Sun, 10 Nov 2024 09:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731231685; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVJB3Qkd5+VbKsHz2eRls6oNz9FZXUF6a+d/UpC1v0A=;
-	b=vc85F1+qXSlODxZaLhmNcZrstutruYw4x2I0CBroDXHmysmrEDftTJABxh9ZovWyDp/kYa
-	hAHrpOfIzZAtsoPFkLxL3ASV/DSv8R4HvP9asGScEqI8e/BrEGrJViIXTG1tb/UyouURWZ
-	bDj0mPuAuPA/5oSpeGuMfbZ3fQcrcAc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731231685;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVJB3Qkd5+VbKsHz2eRls6oNz9FZXUF6a+d/UpC1v0A=;
-	b=xbtDXHoBGiX6KQaqAz0fV/teTf19uPjPeWisqeq4Va4sKwKMIR6cGCxbfB9wsnF8t4DaQM
-	u+HESoWYH0ETEeAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=SIg2cies;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=e7ZZrLlE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731231684; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVJB3Qkd5+VbKsHz2eRls6oNz9FZXUF6a+d/UpC1v0A=;
-	b=SIg2ciesrB2kCBhM4fo5FIaTlEodFUvLoaQrC3cx2yA8YwIfKP1VFZEYoYGkcyk5vMqESM
-	DGacZ+DeJgSQ3BY3HXyqBK3lAaAfkNriiQSEeCKYmXNh95ebcx4h0DoKuuFUFJnKQ867i7
-	fAfPURE0kigQaZPnz1TgoJlnNmz03/Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731231684;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVJB3Qkd5+VbKsHz2eRls6oNz9FZXUF6a+d/UpC1v0A=;
-	b=e7ZZrLlEkEfpRFMd1jnS8waLpaAogHYsT9Klum1apOlrYGFGliQr3gykKwWvKnC6lG2+aa
-	QAFl9wRDGAd41XDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D018C13980;
-	Sun, 10 Nov 2024 09:41:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7erzL8N/MGfcFQAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Sun, 10 Nov 2024 09:41:23 +0000
-Message-ID: <3724f8ff-4b89-465c-ac9d-1dec7c86fb62@suse.de>
-Date: Sun, 10 Nov 2024 11:41:11 +0200
+	s=arc-20240116; t=1731233544; c=relaxed/simple;
+	bh=QMjMp7BR5MB0OOm8XJfoI23UUhzdB6Mcvc+azu+SEH4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IHLWviH5RpmsiZUpn7yLiNmyTFn2QftrfQaops6SAbmc/T4lkK23tA5aE3tKH64ab1JWew2S2MM5rzymWNl/GlgziiQteuGauo3Qp0sUszRSMtQ6+VotAtDzL5bUvz7lpBzxHrZEmeaHj4ZsIAGYCUDWuBeEMEw9RxQFnRqSMq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ax4X/MJW; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1731233531; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
+	bh=o5Y8PKrty30UjY9+NIazgy7rrfgHtN8kD0lwJP9nY+U=;
+	b=ax4X/MJW8JLtAPKAIR6Va04fseTOEhx58Ei1N3C/pP/aDxNsQmYY487141Fv5dZTaeV1Ga3kNQZLiCt2jo44Vt/jWB+8alTaGUgsFQvCZSEJ/S80i9CDk4q/5amYfEdDpP5rmjfvDjS9P+5DvdwnXPWgwvW4AvcruDAaaf/M6dQ=
+Received: from 30.246.162.170(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJ2WLGS_1731233530 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 10 Nov 2024 18:12:11 +0800
+Message-ID: <faccb715-8d9f-4761-855a-0fb8be2ebad4@linux.alibaba.com>
+Date: Sun, 10 Nov 2024 18:12:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,80 +48,128 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/10] PCI: brcmstb: Enable external MSI-X if available
-To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-References: <20241025124515.14066-1-svarbanov@suse.de>
- <20241025124515.14066-7-svarbanov@suse.de>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20241025124515.14066-7-svarbanov@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CC68921A73
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: Re: [RFC PATCH] PCI: pciehp: Generate a RAS tracepoint for hotplug
+ event
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de
+References: <20241108030939.75354-1-xueshuai@linux.alibaba.com>
+ <Zy-hbwLohwf-_hCN@wunner.de>
+In-Reply-To: <Zy-hbwLohwf-_hCN@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-Jim, Florian there is no review comments on this patch. Could you please
-take a look.
 
-regards,
-~Stan
-
-On 10/25/24 15:45, Stanimir Varbanov wrote:
-> On RPi5 there is an external MIP MSI-X interrupt controller
-> which can handle up to 64 interrupts.
+在 2024/11/10 01:52, Lukas Wunner 写道:
+> On Fri, Nov 08, 2024 at 11:09:39AM +0800, Shuai Xue wrote:
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/types.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pci.h>
+>> +#include <ras/ras_event.h>
+>>   #include "pciehp.h"
 > 
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> ---
-> v3 -> v4:
->  - no changes.
-> 
->  drivers/pci/controller/pcie-brcmstb.c | 63 +++++++++++++++++++++++++--
->  1 file changed, 59 insertions(+), 4 deletions(-)
-> 
+> Hm, why does the TRACE_EVENT() definition have to live in ras_event.h?
+> Why not, say, in pciehp.h?
 
-<cut>
+IMHO, it is a type of RAS related event, so I add it in ras_event.h, similar to
+other events like aer_event and memory_failure_event.
+
+I could move it to pciehp.h, if the maintainers prefer that location.
+
+> 
+>> @@ -245,6 +246,8 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   		if (events & PCI_EXP_SLTSTA_PDC)
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +		trace_pciehp_event(dev_name(&ctrl->pcie->port->dev),
+>> +				   slot_name(ctrl), ON_STATE, events);
+>>   		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>>   		break;
+>>   	default:
+> 
+> I'd suggest using pci_name() instead of dev_name() as it's a little shorter.
+
+Will use pci_name() instead.
+
+> 
+> Passing ON_STATE here isn't always accurate because there's
+> "case BLINKINGOFF_STATE" with a fallthrough preceding the
+> above code block.
+
+Yes, you are right, I missed the above fallthrough case.
+
+> 
+> Wouldn't it be more readable to just log the event that occured
+> as a string, e.g. "Surprise Removal" (and "Insertion" or "Hot Add"
+> for the other trace event you're introducing) instead of the state?
+> 
+> Otherwise you see "ON_STATE" in the log but that's actually the
+> *old* value so you have to mentally convert this to "previously ON,
+> so now must be transitioning to OFF".
+
+I see your point. "Surprise Removal" or "Insertion" is indeed the exact state
+transition. However, I am concerned that using a string might make it difficult
+for user space tools like rasdaemon to parse.
+
+How about adding a new enum for state transition? For example:
+
+	enum pciehp_trans_type {
+		PCIEHP_SAFE_REMOVAL,
+		PCIEHP_SURPRISE_REMOVAL,
+		PCIEHP_Hot_Add,
+	...
+	}
+
+And define the state transition as a int type for tracepoint, then rasdaemon
+can parse the value easily.
+
+	trace_pciehp_event(pci_name(&ctrl->pcie->port->dev),
+		slot_name(ctrl), PCIEHP_SAFE_REMOVAL, events);
+
+And TP_printk with symbolic name of the state transition.
+
+	TRACE_EVENT(pciehp_event,
+		TP_PROTO(const char *port_name,
+			 const char *slot,
+			 const int trans_state),
+	
+		TP_ARGS(port_name, slot, trans_state),
+	
+		TP_STRUCT__entry(
+			__string(	port_name,	port_name	)
+			__string(	slot,		slot		)
+			__field(	int,		trans_state	)
+		),
+	
+		TP_fast_assign(
+			__assign_str(port_name, port_name);
+			__assign_str(slot, slot);
+			__entry->trans_state	= trans_state;
+		),
+	
+		TP_printk("%s slot:%s, state:%d, events:%d\n",
+			__get_str(port_name),
+			__get_str(slot),
+			__print_symbolic(__entry->trans_state, PCIEHP_SURPRISE_REMOVAL),
+	);
+
+> 
+> I'm fine with adding trace points to pciehp, I just want to make sure
+> we do it in a way that's easy to parse for admins.
+
+Thank you for the positive feedback :)
+
+> 
+> Thanks,
+> 
+> Lukas
+
+Best Regards,
+Shuai
 
