@@ -1,175 +1,123 @@
-Return-Path: <linux-pci+bounces-16380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D2719C318A
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 11:12:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 538209C31A5
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 11:41:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFE622817C6
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 10:12:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5489A1C20A10
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2024 10:41:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808631534FB;
-	Sun, 10 Nov 2024 10:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D75615443F;
+	Sun, 10 Nov 2024 10:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ax4X/MJW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JW8duPR4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7875914264A;
-	Sun, 10 Nov 2024 10:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D367142E7C;
+	Sun, 10 Nov 2024 10:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731233544; cv=none; b=pGrVQFawn7qevGgr785qMm/KFqCBpZ8sttCx7qYI1NyJ19qokaCmEyfzLtCk0YObrWqKa+b7YNvthS/B8KsJ1iN/d0CyoSp19xtkV/sdqyxdjRVtpc0ZgHFzPg4yT3UJ+N6W/qjLo0VN0ODNj7/OeEQvrZZeU/1ebs1ckvghF+c=
+	t=1731235298; cv=none; b=TZnUl+2jMH5+ry0rhEY8QcMtRNsMd2mYwDslnS8SlQCgY3/YwGGmsF+MsCPD8g4DHkmjCXrU1c3W71kXJckTmOEjS/KLvDUzkw+mZriIVkZ/LGNy1dS2EUBfww7RN3tm+WSONcrvbluncK+qx1QkXqZzsIfI5tC4aqimg8W5PMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731233544; c=relaxed/simple;
-	bh=QMjMp7BR5MB0OOm8XJfoI23UUhzdB6Mcvc+azu+SEH4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IHLWviH5RpmsiZUpn7yLiNmyTFn2QftrfQaops6SAbmc/T4lkK23tA5aE3tKH64ab1JWew2S2MM5rzymWNl/GlgziiQteuGauo3Qp0sUszRSMtQ6+VotAtDzL5bUvz7lpBzxHrZEmeaHj4ZsIAGYCUDWuBeEMEw9RxQFnRqSMq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ax4X/MJW; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1731233531; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=o5Y8PKrty30UjY9+NIazgy7rrfgHtN8kD0lwJP9nY+U=;
-	b=ax4X/MJW8JLtAPKAIR6Va04fseTOEhx58Ei1N3C/pP/aDxNsQmYY487141Fv5dZTaeV1Ga3kNQZLiCt2jo44Vt/jWB+8alTaGUgsFQvCZSEJ/S80i9CDk4q/5amYfEdDpP5rmjfvDjS9P+5DvdwnXPWgwvW4AvcruDAaaf/M6dQ=
-Received: from 30.246.162.170(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJ2WLGS_1731233530 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 10 Nov 2024 18:12:11 +0800
-Message-ID: <faccb715-8d9f-4761-855a-0fb8be2ebad4@linux.alibaba.com>
-Date: Sun, 10 Nov 2024 18:12:09 +0800
+	s=arc-20240116; t=1731235298; c=relaxed/simple;
+	bh=KJTVz52sJu2oQj0BOPzh46r/ng+VWSz4cJfy6f2DTow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rrjRRUscW6sF9gtF1X9gjp6Q+I7nc8kjMLZPgBtFLcGwpGfE8Gg+IIfTLigpkDs5F2KTOB91TKSKiDoD+3A1Y1fK707EhgsjdWVJhI70O49Kgen0CTfg8PgSYluf9kDtxqCo16iNqbpsl9SF52gNTfxTzwt7cv3Iw7FFM698Gnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JW8duPR4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A12DC4CECD;
+	Sun, 10 Nov 2024 10:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731235297;
+	bh=KJTVz52sJu2oQj0BOPzh46r/ng+VWSz4cJfy6f2DTow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JW8duPR4zgtshHYsGnyTHtlzUbI9C7VSu6DKWCkFGrApkoWJWSxhGLCw5xgUraK37
+	 KyNCPb36UhLBki49PXkqcD2sBnsPb3pSEYoDPi+P4LFHLRa96gSHPosI6C7dqbYMip
+	 vIVxA0qXAzTZEbJq1b7ufQuqLIfu45BQHuHyL9EX1PQY+YtgJ833g0BRQjd7iEAg3m
+	 WndbNLaXlStjkG2lTw6sbX+1iBBO11XE41go4jd7Z15Ik1RN38Prs+eyzYb42sG812
+	 MOTUu7mg3HBNZVbtRKgzK0VBiDj1HOzE5fnpSg4ms0Wa3VJ7O+NYsKsaWDPF/fo35+
+	 lxhrXIwkV8nJA==
+Date: Sun, 10 Nov 2024 12:41:30 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 09/17] docs: core-api: document the IOVA-based API
+Message-ID: <20241110104130.GA19265@unreal>
+References: <cover.1730298502.git.leon@kernel.org>
+ <881ef0bcf9aa971e995fbdd00776c5140a7b5b3d.1730298502.git.leon@kernel.org>
+ <87ttchwmde.fsf@trenco.lwn.net>
+ <20241108200355.GC189042@unreal>
+ <87h68hwkk8.fsf@trenco.lwn.net>
+ <20241108202736.GD189042@unreal>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [RFC PATCH] PCI: pciehp: Generate a RAS tracepoint for hotplug
- event
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, bhelgaas@google.com, tony.luck@intel.com,
- bp@alien8.de
-References: <20241108030939.75354-1-xueshuai@linux.alibaba.com>
- <Zy-hbwLohwf-_hCN@wunner.de>
-In-Reply-To: <Zy-hbwLohwf-_hCN@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241108202736.GD189042@unreal>
 
-
-
-在 2024/11/10 01:52, Lukas Wunner 写道:
-> On Fri, Nov 08, 2024 at 11:09:39AM +0800, Shuai Xue wrote:
->> --- a/drivers/pci/hotplug/pciehp_ctrl.c
->> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/types.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pci.h>
->> +#include <ras/ras_event.h>
->>   #include "pciehp.h"
+On Fri, Nov 08, 2024 at 10:27:36PM +0200, Leon Romanovsky wrote:
+> On Fri, Nov 08, 2024 at 01:13:27PM -0700, Jonathan Corbet wrote:
+> > Leon Romanovsky <leon@kernel.org> writes:
+> > 
+> > >> So, I see that you have nice kernel-doc comments for these; why not just
+> > >> pull them in here with a kernel-doc directive rather than duplicating
+> > >> the information?
+> > >
+> > > Can I you please point me to commit/lore link/documentation with example
+> > > of such directive and I will do it?
+> > 
+> > Documentation/doc-guide/kernel-doc.rst has all the information you need.
+> > It could be as simple as replacing your inline descriptions with:
+> > 
+> >   .. kernel-doc:: drivers/iommu/dma-iommu.c
+> >      :export:
+> > 
+> > That will pull in documentation for other, unrelated functions, though;
+> > assuming you don't want those, something like:
+> > 
+> >   .. kernel-doc:: drivers/iommu/dma-iommu.c
+> >      :identifiers: dma_iova_try_alloc dma_iova_free ...
+> > 
+> > Then do a docs build and see the nice results you get :)
 > 
-> Hm, why does the TRACE_EVENT() definition have to live in ras_event.h?
-> Why not, say, in pciehp.h?
+> Thanks for the explanation, will change it.
 
-IMHO, it is a type of RAS related event, so I add it in ras_event.h, similar to
-other events like aer_event and memory_failure_event.
+Jonathan,
 
-I could move it to pciehp.h, if the maintainers prefer that location.
+I tried this today and the output (HTML) in the new section looks
+so different from the rest of dma-api.rst that I lean to leave
+the current doc implementation as is.
 
-> 
->> @@ -245,6 +246,8 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->>   		if (events & PCI_EXP_SLTSTA_PDC)
->>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->>   				  slot_name(ctrl));
->> +		trace_pciehp_event(dev_name(&ctrl->pcie->port->dev),
->> +				   slot_name(ctrl), ON_STATE, events);
->>   		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
->>   		break;
->>   	default:
-> 
-> I'd suggest using pci_name() instead of dev_name() as it's a little shorter.
-
-Will use pci_name() instead.
+Thanks
 
 > 
-> Passing ON_STATE here isn't always accurate because there's
-> "case BLINKINGOFF_STATE" with a fallthrough preceding the
-> above code block.
-
-Yes, you are right, I missed the above fallthrough case.
-
+> > 
+> > Thanks,
+> > 
+> > jon
 > 
-> Wouldn't it be more readable to just log the event that occured
-> as a string, e.g. "Surprise Removal" (and "Insertion" or "Hot Add"
-> for the other trace event you're introducing) instead of the state?
-> 
-> Otherwise you see "ON_STATE" in the log but that's actually the
-> *old* value so you have to mentally convert this to "previously ON,
-> so now must be transitioning to OFF".
-
-I see your point. "Surprise Removal" or "Insertion" is indeed the exact state
-transition. However, I am concerned that using a string might make it difficult
-for user space tools like rasdaemon to parse.
-
-How about adding a new enum for state transition? For example:
-
-	enum pciehp_trans_type {
-		PCIEHP_SAFE_REMOVAL,
-		PCIEHP_SURPRISE_REMOVAL,
-		PCIEHP_Hot_Add,
-	...
-	}
-
-And define the state transition as a int type for tracepoint, then rasdaemon
-can parse the value easily.
-
-	trace_pciehp_event(pci_name(&ctrl->pcie->port->dev),
-		slot_name(ctrl), PCIEHP_SAFE_REMOVAL, events);
-
-And TP_printk with symbolic name of the state transition.
-
-	TRACE_EVENT(pciehp_event,
-		TP_PROTO(const char *port_name,
-			 const char *slot,
-			 const int trans_state),
-	
-		TP_ARGS(port_name, slot, trans_state),
-	
-		TP_STRUCT__entry(
-			__string(	port_name,	port_name	)
-			__string(	slot,		slot		)
-			__field(	int,		trans_state	)
-		),
-	
-		TP_fast_assign(
-			__assign_str(port_name, port_name);
-			__assign_str(slot, slot);
-			__entry->trans_state	= trans_state;
-		),
-	
-		TP_printk("%s slot:%s, state:%d, events:%d\n",
-			__get_str(port_name),
-			__get_str(slot),
-			__print_symbolic(__entry->trans_state, PCIEHP_SURPRISE_REMOVAL),
-	);
-
-> 
-> I'm fine with adding trace points to pciehp, I just want to make sure
-> we do it in a way that's easy to parse for admins.
-
-Thank you for the positive feedback :)
-
-> 
-> Thanks,
-> 
-> Lukas
-
-Best Regards,
-Shuai
 
