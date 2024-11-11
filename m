@@ -1,172 +1,109 @@
-Return-Path: <linux-pci+bounces-16449-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16450-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A84539C412E
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 15:43:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39A509C4156
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 15:59:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA2B61C21952
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 14:43:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4D4A1F221D4
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 14:59:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A23619F10A;
-	Mon, 11 Nov 2024 14:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7DB71A08C2;
+	Mon, 11 Nov 2024 14:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tAPLUC2w"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="U7Qof0wu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD9B14EC55;
-	Mon, 11 Nov 2024 14:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD2B1E481;
+	Mon, 11 Nov 2024 14:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731336198; cv=none; b=SwmdpLB2o0+BA2Qc2R268huL68/MD/56N6AS+SuDjsd56evFM6264GHkNMkRNc6K/83pCi4BJqvqkvISdlCQvnDFTPZJrkA0tcmfLIBAuNXGiOxSkm6vS9PttfsAEeKlNgBuef1OE55NxjslaZM5wJfWub1BG9y+MQ7l0Gjz8Ks=
+	t=1731337169; cv=none; b=MtwU2kB5x4wUnF5zREa89UWPM4AlGiKzSef9HxYRmj/9wdAJ6Z/KOGLEO0TSMO68UoqDOISjUqFyxZMEkl6iJqB3BYBmWPoHZ2/wDsJyyR8vMHn+nDfyXpCvOtImR419J1TSw1vujD9hhTd7vgQkCLF6nz40gVMfVT0bemjpwaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731336198; c=relaxed/simple;
-	bh=IvgpzAjrbobQhEQYMR1QAcU4uwyiBVZfhHgYMl4JV5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHT8rUSoaLxvfqJ82wSCbk5YT6Mtc6rPrzSBaL+9KFtL/lxTWf7DPb43XI0KmIcbNEJMJa4DSWJb4FcCZMuq4j36UMYAZh/HYNbyK8+nZazx2MZv5Y3oOZjZAKfzGy/5idJGk/cGK6Dlxk4V4FQaHWWyy0PN7D0xQJiwayjHcPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tAPLUC2w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC22DC4CED5;
-	Mon, 11 Nov 2024 14:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731336197;
-	bh=IvgpzAjrbobQhEQYMR1QAcU4uwyiBVZfhHgYMl4JV5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tAPLUC2wmFDUkOdXA+48dkkNBwQCz2AXPrtymXSzntSk/d84qFI8HoqdRHAhjogpq
-	 GK512d1P3+miEouEyxWdcChgBIVCQEH6e4zkipex+ga2Ze+5wYakEgkCR8+yaqL8HW
-	 B8Dh3L6L+GGopl7KhicGrnCapiGSgM8DJHwqBZSmtYWta5Yyb4Cp6UZHsyO6WAIrdB
-	 hbonzP4Bo3oSISi0V6IuDGobeDvcPdqKnCKUhSRxajFR7Ivtqq8xzIJB7bUOrnfea/
-	 8u3Y548L2IN4XhIkKRHrEEbaeST5lMivnaeKeViiZRPueNE1HpOKEy906Vio78oj7c
-	 2/k/vJ7bcC1Bg==
-Date: Mon, 11 Nov 2024 15:43:12 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
-	tglx@linutronix.de, jdmason@kudzu.us
-Subject: Re: [PATCH v5 3/5] PCI: endpoint: pci-epf-test: Add doorbell test
- support
-Message-ID: <ZzIYAIGjHQJqR5Qt@ryzen>
-References: <20241108-ep-msi-v5-0-a14951c0d007@nxp.com>
- <20241108-ep-msi-v5-3-a14951c0d007@nxp.com>
+	s=arc-20240116; t=1731337169; c=relaxed/simple;
+	bh=gg3nV1iKgs4bbxPK/uru5pPDw51yAhWHVenuhfd8RSY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=E1hbJAEALqlb5yL56DaF3Qdv35CRbOZUjo41njnTAapQEJ0PfjTeAMJlktQn6zFocYAD5AcntSDzEzxG0egw/joVNiqqGP+s2PtjzedHUpp4kPCeNPoPiPCIlkzq6cGu7gK+PF8oeOV3JldOMHb+qdPl62rL7Yt8XyMFS58xoNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=U7Qof0wu; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 45E36403F1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1731337167; bh=GwVTmx4eIglWLWGHYmk31OoK5pzNvXaKVe73vYEWSTk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=U7Qof0wuVnJGcnP06ChHK+MJPNdREQXE7RLUzC2W70ULBaY9a9VnJ9vQEtqDAf9Ah
+	 A3HwpVCu8PJVyEMghvrqu/hNDOC8sGYBt3mN173rM33gAFqU2dKpLTqp9ac4bjnapP
+	 A1UN+AgpzI588tU7KIuantdLBUeWBgXdiFu11n7kGDH4ZxFGW1T97qYFC9t3FAzyYo
+	 fgA7YQdK+SYmrHtsukzfx/wT5vFef/DoXSOK38XKAVdsxtI+fq2uPWuv8CV5NUKrxx
+	 iQj4S70o2yK54j7jT8p8fewkBThJBXMBi2CZoLIkGaK5OJDLnfOOJSXDckk3X1rExZ
+	 HhL9BYc+PyPqw==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 45E36403F1;
+	Mon, 11 Nov 2024 14:59:27 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: anish kumar <yesanishhere@gmail.com>, Christoph Hellwig <hch@lst.de>
+Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>, Joerg
+ Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
+ <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas
+ <yishaih@nvidia.com>, Shameer Kolothum
+ <shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, =?utf-8?B?SsOpcsO0bWU=?= Glisse
+ <jglisse@redhat.com>, Andrew
+ Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 09/17] docs: core-api: document the IOVA-based API
+In-Reply-To: <CABCoZhBVWY=aUQtQ5b=mF8hXqpgJw21_jAPf9YvEvdgPf_GALA@mail.gmail.com>
+References: <cover.1730298502.git.leon@kernel.org>
+ <881ef0bcf9aa971e995fbdd00776c5140a7b5b3d.1730298502.git.leon@kernel.org>
+ <87ttchwmde.fsf@trenco.lwn.net> <20241108200355.GC189042@unreal>
+ <87h68hwkk8.fsf@trenco.lwn.net> <20241108202736.GD189042@unreal>
+ <20241110104130.GA19265@unreal> <20241111063847.GB23992@lst.de>
+ <CABCoZhBVWY=aUQtQ5b=mF8hXqpgJw21_jAPf9YvEvdgPf_GALA@mail.gmail.com>
+Date: Mon, 11 Nov 2024 07:59:26 -0700
+Message-ID: <87o72lu88h.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241108-ep-msi-v5-3-a14951c0d007@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 08, 2024 at 02:43:30PM -0500, Frank Li wrote:
+anish kumar <yesanishhere@gmail.com> writes:
 
-(snip)
+> On Sun, Nov 10, 2024 at 10:39=E2=80=AFPM Christoph Hellwig <hch@lst.de> w=
+rote:
+>>
+>> On Sun, Nov 10, 2024 at 12:41:30PM +0200, Leon Romanovsky wrote:
+>> > I tried this today and the output (HTML) in the new section looks
+>> > so different from the rest of dma-api.rst that I lean to leave
+>> > the current doc implementation as is.
+>>
+>> Yeah.  The whole DMA API documentation shows it's age and could use
+>> a major revamp, but for now I'd prefer to stick to the way it is done.
+>>
+>> If we have any volunteers for bringing it up to standards I'd be glad
+>> to help with input and review.
+>
+> Jonathan, if you agree, I can take this up?
 
-> +static void pci_epf_enable_doorbell(struct pci_epf_test *epf_test, struct pci_epf_test_reg *reg)
-> +{
-> +	enum pci_barno bar = reg->doorbell_bar;
-> +	struct pci_epf *epf = epf_test->epf;
-> +	struct pci_epc *epc = epf->epc;
-> +	struct pci_epf_bar db_bar;
-> +	struct msi_msg *msg;
-> +	u64 doorbell_addr;
-> +	u32 align;
-> +	int ret;
-> +
-> +	align = epf_test->epc_features->align;
-> +	align = align ? align : 128;
-> +
-> +	if (epf_test->epc_features->bar[bar].type == BAR_FIXED)
-> +		align = max(epf_test->epc_features->bar[bar].fixed_size, align);
-> +
-> +	if (bar < BAR_0 || bar == epf_test->test_reg_bar || !epf->db_msg) {
-> +		reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
-> +		return;
-> +	}
-> +
-> +	msg = &epf->db_msg[0].msg;
-> +	doorbell_addr = msg->address_hi;
-> +	doorbell_addr <<= 32;
-> +	doorbell_addr |= msg->address_lo;
-> +
-> +	db_bar.phys_addr = round_down(doorbell_addr, align);
-> +	db_bar.barno = bar;
-> +	db_bar.size = epf->bar[bar].size;
-> +	db_bar.flags = epf->bar[bar].flags;
-> +	db_bar.addr = NULL;
+I am happy to see help with the documentation, but agreement from the
+authors and maintainers of the DMA-mapping documentation is rather more
+important than agreement from me.
 
-Some of the code above ...
-
-> +
-> +	ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &db_bar);
-> +	if (!ret)
-> +		reg->status |= STATUS_DOORBELL_ENABLE_SUCCESS;
-> +}
-> +
-
-
-
-> @@ -909,12 +998,46 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	if (ret)
->  		return ret;
->  
-> +	ret = pci_epf_alloc_doorbell(epf, 1);
-> +	if (!ret) {
-> +		struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +		struct msi_msg *msg = &epf->db_msg[0].msg;
-> +		u32 align = epc_features->align;
-> +		u64 doorbell_addr;
-> +		enum pci_barno bar;
-> +
-> +		bar = pci_epc_get_next_free_bar(epc_features, test_reg_bar + 1);
-> +
-> +		ret = request_irq(epf->db_msg[0].virq, pci_epf_test_doorbell_handler, 0,
-> +				  "pci-test-doorbell", epf_test);
-> +		if (ret) {
-> +			dev_err(&epf->dev,
-> +				"Failed to request irq %d, doorbell feature is not supported\n",
-> +				epf->db_msg[0].virq);
-> +			return 0;
-> +		}
-> +
-> +		align = align ? align : 128;
-> +
-> +		if (epf_test->epc_features->bar[bar].type == BAR_FIXED)
-> +			align = max(epf_test->epc_features->bar[bar].fixed_size, align);
-> +
-> +		doorbell_addr = msg->address_hi;
-> +		doorbell_addr <<= 32;
-> +		doorbell_addr |= msg->address_lo;
-> +
-> +		reg->doorbell_addr = doorbell_addr & (align - 1);
-> +		reg->doorbell_data = msg->data;
-> +		reg->doorbell_bar = bar;
-
-... seems to be duplicated in this function.
-
-Perhaps create a helper function so that you don't need to duplicate it.
-
-Also one function is doing:
-reg->doorbell_addr = doorbell_addr & (align - 1);
-
-to align, the other one is doing:
-round_down(doorbell_addr, align);
-
-Which seems to be a bit inconsistent.
-Anyway, if you move this to a helper, they will both use the same
-way to align the address.
-(May I suggest that you use ALIGN_DOWN() in the helper.)
-
-
-Kind regards,
-Niklas
+jon
 
