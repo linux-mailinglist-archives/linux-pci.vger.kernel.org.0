@@ -1,86 +1,180 @@
-Return-Path: <linux-pci+bounces-16443-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16444-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69FAE9C3EB9
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 13:50:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEE419C3F46
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 14:09:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F71C282763
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 12:50:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E795B21472
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 13:09:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D0B11850AF;
-	Mon, 11 Nov 2024 12:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7E3158558;
+	Mon, 11 Nov 2024 13:09:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC4315687C;
-	Mon, 11 Nov 2024 12:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C04153BED;
+	Mon, 11 Nov 2024 13:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731329440; cv=none; b=YzLtYXG+PYkCyMuQXM6K3qr03+K2dtA2GNPJq3XU/v1316DmK8nIpOSIPHZEODJd9ISg3yGRAaa2JgBmbl4Xhd9HBCv6sax6mpFljkw7ApH296zpE5hKNCsj98LxNKPjwuhlqFxT++q+fLpqP2iJv4wM8awaPQ7afHgceQ+JPJI=
+	t=1731330571; cv=none; b=XnfirOG/Idr8pLOHCoOtTLXn8WMDEyDNczLfsuUPgKIFRtKrj2RqAy4sQMA1cVIB+4RHcNbjx+mknfRht4gXrGobLrTJ6HTSuZEJrm1R7SclCZspyvZuBksi9u5VQoDtPs9+X7G9k5q4RFPKux6FzyrG1d9sRiCKK7PFs4Fodns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731329440; c=relaxed/simple;
-	bh=xuyTolcM5oeWzulx8gokCjIjisBFJI73ZxzAkg9MKi4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Q4bXWKdikPJvSHFot5SAw4jMSYZdhu5Mtjk7X2HD8Yq5kxA94tUD3Dvt6lYHQlCeoI9nzqX5HF3GmkOo+9++eCROzs2b3Ds+Y2KEPcpv80jOqAL1XQuDBBRcTMrToFUDT8PHzkCEJ6H6FQbkf5Dtexv5TMrlxZQET2ywzwic7b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 9454292009C; Mon, 11 Nov 2024 13:50:34 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 8E13592009B;
-	Mon, 11 Nov 2024 12:50:34 +0000 (GMT)
-Date: Mon, 11 Nov 2024 12:50:34 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <helgaas@kernel.org>, 
-    Jinhui Guo <guojinhui.liam@bytedance.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, 
-    Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC] PCI: Fix the issue of link speed downgrade after link
- retraining
-In-Reply-To: <Zy3x_QK0vZHOFZvF@wunner.de>
-Message-ID: <alpine.DEB.2.21.2411110503410.9262@angie.orcam.me.uk>
-References: <20241107143758.12643-1-guojinhui.liam@bytedance.com> <20241107153438.GA1614749@bhelgaas> <Zy3x_QK0vZHOFZvF@wunner.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1731330571; c=relaxed/simple;
+	bh=zAnfbjazIKCKkvUjNTVKN/Fduo3MPuJ3ZujI3eyZNtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OwUzxXsZUK3Nv9zzXB2qgXvZegQChzs7SQ/FpxrM1LQ9sZoLBk1o3E+CYHigxEiCMvdVvDv9uiC7j+3T0Ku4m5OeJgre2SX34G3mMtWSl9yr/Ja7nqe6gSF1k/Mx1kENJpzaf6nKJwKDIfML2gmiMoYhFgaP9G4RxZIjCO5zHLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 695071CE0;
+	Mon, 11 Nov 2024 05:09:55 -0800 (PST)
+Received: from [10.57.91.162] (unknown [10.57.91.162])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69E743F66E;
+	Mon, 11 Nov 2024 05:09:20 -0800 (PST)
+Message-ID: <a63e7c3b-ce96-47a5-b462-d5de3a2edb56@arm.com>
+Date: Mon, 11 Nov 2024 13:09:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFCv1 0/7] vfio: Allow userspace to specify the address
+ for each MSI vector
+To: Nicolin Chen <nicolinc@nvidia.com>, maz@kernel.org, tglx@linutronix.de,
+ bhelgaas@google.com, alex.williamson@redhat.com
+Cc: jgg@nvidia.com, leonro@nvidia.com, shameerali.kolothum.thodi@huawei.com,
+ dlemoal@kernel.org, kevin.tian@intel.com, smostafa@google.com,
+ andriy.shevchenko@linux.intel.com, reinette.chatre@intel.com,
+ eric.auger@redhat.com, ddutile@redhat.com, yebin10@huawei.com,
+ brauner@kernel.org, apatel@ventanamicro.com,
+ shivamurthy.shastri@linutronix.de, anna-maria@linutronix.de,
+ nipun.gupta@amd.com, marek.vasut+renesas@mailbox.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <cover.1731130093.git.nicolinc@nvidia.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <cover.1731130093.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 8 Nov 2024, Lukas Wunner wrote:
-
-> > > Some printing information can be obtained when the issue emerges.
-> > > "Card present" is reported twice via external interrupts due to
-> > > a slight tremor when the Samsung NVMe device is plugged in.
-
- What do you mean by "a slight tremor"?  Do the devices involved fail to 
-negotiate link in the time prescribed by the PCIe specification?  Why is 
-the interrupt sent twice?
-
-> > > To avoid wrongly setting the link speed to 2.5GT/s, only allow
-> > > specific pcie devices to perform link retrain.
+On 2024-11-09 5:48 am, Nicolin Chen wrote:
+> On ARM GIC systems and others, the target address of the MSI is translated
+> by the IOMMU. For GIC, the MSI address page is called "ITS" page. When the
+> IOMMU is disabled, the MSI address is programmed to the physical location
+> of the GIC ITS page (e.g. 0x20200000). When the IOMMU is enabled, the ITS
+> page is behind the IOMMU, so the MSI address is programmed to an allocated
+> IO virtual address (a.k.a IOVA), e.g. 0xFFFF0000, which must be mapped to
+> the physical ITS page: IOVA (0xFFFF0000) ===> PA (0x20200000).
+> When a 2-stage translation is enabled, IOVA will be still used to program
+> the MSI address, though the mappings will be in two stages:
+>    IOVA (0xFFFF0000) ===> IPA (e.g. 0x80900000) ===> 0x20200000
+> (IPA stands for Intermediate Physical Address).
 > 
-> With which kernel version are you seeing this?
+> If the device that generates MSI is attached to an IOMMU_DOMAIN_DMA, the
+> IOVA is dynamically allocated from the top of the IOVA space. If attached
+> to an IOMMU_DOMAIN_UNMANAGED (e.g. a VFIO passthrough device), the IOVA is
+> fixed to an MSI window reported by the IOMMU driver via IOMMU_RESV_SW_MSI,
+> which is hardwired to MSI_IOVA_BASE (IOVA==0x8000000) for ARM IOMMUs.
 > 
-> A set of fixes for the 2.5GT/s retraining feature appeared in v6.12-rc1,
-> specifically f68dea13405c ("PCI: Revert to the original speed after PCIe
-> failed link retraining").
+> So far, this IOMMU_RESV_SW_MSI works well as kernel is entirely in charge
+> of the IOMMU translation (1-stage translation), since the IOVA for the ITS
+> page is fixed and known by kernel. However, with virtual machine enabling
+> a nested IOMMU translation (2-stage), a guest kernel directly controls the
+> stage-1 translation with an IOMMU_DOMAIN_DMA, mapping a vITS page (at an
+> IPA 0x80900000) onto its own IOVA space (e.g. 0xEEEE0000). Then, the host
+> kernel can't know that guest-level IOVA to program the MSI address.
 > 
-> Have you tested whether the latest v6.12 rc is still affected?
+> To solve this problem the VMM should capture the MSI IOVA allocated by the
+> guest kernel and relay it to the GIC driver in the host kernel, to program
+> the correct MSI IOVA. And this requires a new ioctl via VFIO.
 
- Thanks for chiming in.  I do hope the fixes will have addressed issues 
-like one concerned here.
+Once VFIO has that information from userspace, though, do we really need 
+the whole complicated dance to push it right down into the irqchip layer 
+just so it can be passed back up again? AFAICS 
+vfio_msi_set_vector_signal() via VFIO_DEVICE_SET_IRQS already explicitly 
+rewrites MSI-X vectors, so it seems like it should be pretty 
+straightforward to override the message address in general at that 
+level, without the lower layers having to be aware at all, no?
 
- NB I have been fully booked recently due to an upcoming patch submission 
-deadline and will continue to be throughout this week, so I may be slow to 
-response.
+Thanks,
+Robin.
 
-  Maciej
+> Extend the VFIO path to allow an MSI target IOVA to be forwarded into the
+> kernel and pushed down to the GIC driver.
+> 
+> Add VFIO ioctl VFIO_IRQ_SET_ACTION_PREPARE with VFIO_IRQ_SET_DATA_MSI_IOVA
+> to carry the data.
+> 
+> The downstream calltrace is quite long from the VFIO to the ITS driver. So
+> in order to carry the MSI IOVA from the top to its_irq_domain_alloc(), add
+> patches in a leaf-to-root order:
+> 
+>    vfio_pci_core_ioctl:
+>      vfio_pci_set_irqs_ioctl:
+>        vfio_pci_set_msi_prepare:                           // PATCH-7
+>          pci_alloc_irq_vectors_iovas:                      // PATCH-6
+>            __pci_alloc_irq_vectors:                        // PATCH-5
+>              __pci_enable_msi/msix_range:                  // PATCH-4
+>                msi/msix_capability_init:                   // PATCH-3
+>                  msi/msix_setup_msi_descs:
+>                    msi_insert_msi_desc();                  // PATCH-1
+>                  pci_msi_setup_msi_irqs:
+>                    msi_domain_alloc_irqs_all_locked:
+>                      __msi_domain_alloc_locked:
+>                        __msi_domain_alloc_irqs:
+>                          __irq_domain_alloc_irqs:
+>                            irq_domain_alloc_irqs_locked:
+>                              irq_domain_alloc_irqs_hierarchy:
+>                                msi_domain_alloc:
+>                                  irq_domain_alloc_irqs_parent:
+>                                    its_irq_domain_alloc(); // PATCH-2
+> 
+> Note that this series solves half the problem, since it only allows kernel
+> to set the physical PCI MSI/MSI-X on the device with the correct head IOVA
+> of a 2-stage translation, where the guest kernel does the stage-1 mapping
+> that MSI IOVA (0xEEEE0000) to its own vITS page (0x80900000) while missing
+> the stage-2 mapping from that IPA to the physical ITS page:
+>    0xEEEE0000 ===> 0x80900000 =x=> 0x20200000
+> A followup series should fill that gap, doing the stage-2 mapping from the
+> vITS page 0x80900000 to the physical ITS page (0x20200000), likely via new
+> IOMMUFD ioctl. Once VMM sets up this stage-2 mapping, VM will act the same
+> as bare metal relying on a running kernel to handle the stage-1 mapping:
+>    0xEEEE0000 ===> 0x80900000 ===> 0x20200000
+> 
+> This series (prototype) is on Github:
+> https://github.com/nicolinc/iommufd/commits/vfio_msi_giova-rfcv1/
+> It's tested by hacking the host kernel to hard-code a stage-2 mapping.
+> 
+> Thanks!
+> Nicolin
+> 
+> Nicolin Chen (7):
+>    genirq/msi: Allow preset IOVA in struct msi_desc for MSI doorbell
+>      address
+>    irqchip/gic-v3-its: Bypass iommu_cookie if desc->msi_iova is preset
+>    PCI/MSI: Pass in msi_iova to msi_domain_insert_msi_desc
+>    PCI/MSI: Allow __pci_enable_msi_range to pass in iova
+>    PCI/MSI: Extract a common __pci_alloc_irq_vectors function
+>    PCI/MSI: Add pci_alloc_irq_vectors_iovas helper
+>    vfio/pci: Allow preset MSI IOVAs via VFIO_IRQ_SET_ACTION_PREPARE
+> 
+>   drivers/pci/msi/msi.h             |   3 +-
+>   include/linux/msi.h               |  11 +++
+>   include/linux/pci.h               |  18 ++++
+>   include/linux/vfio_pci_core.h     |   1 +
+>   include/uapi/linux/vfio.h         |   8 +-
+>   drivers/irqchip/irq-gic-v3-its.c  |  21 ++++-
+>   drivers/pci/msi/api.c             | 136 ++++++++++++++++++++----------
+>   drivers/pci/msi/msi.c             |  20 +++--
+>   drivers/vfio/pci/vfio_pci_intrs.c |  41 ++++++++-
+>   drivers/vfio/vfio_main.c          |   3 +
+>   kernel/irq/msi.c                  |   6 ++
+>   11 files changed, 212 insertions(+), 56 deletions(-)
+> 
+
 
