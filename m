@@ -1,120 +1,114 @@
-Return-Path: <linux-pci+bounces-16430-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16431-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F150A9C38EF
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 08:20:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5147A9C38F5
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 08:21:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E442B20C23
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 07:20:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 160FC2807F3
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 07:21:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 762EF158862;
-	Mon, 11 Nov 2024 07:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2RmQqTK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E36750276;
+	Mon, 11 Nov 2024 07:20:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B70154BFF;
-	Mon, 11 Nov 2024 07:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D645136A
+	for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2024 07:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731309603; cv=none; b=cHr8+TVze2RAQL+nSThBmDcuCVIDVm6ctBE5+ln9QzedQaoWJNOzuMmkqcO7BzcO37rvN3gqkxeVmnEH2egLaOzsL+EI7fwlhnUWIKi2LelCYxhw7CDd/QnqwFDREZ9fpdtJ/JtQ14n+UVhmdOpTVtxDL1eF7kKf3FUyfYkiJoc=
+	t=1731309659; cv=none; b=tQ7yQmCX96WSy+aTeaF8BZPOvYB8yJsfBOh+vbybrAjv976VY1OSdUnlHsV0K/yP00oKlNO9FG+jey/lB1kG84JoURHBSz1+zLTUYhMvKBlDWLX+sYsxlBBbSyURkop6CAZKtWb56HYwE9UrLPGhr2zCwF1u0YrQ6VYzAGmhE6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731309603; c=relaxed/simple;
-	bh=2rkhCrabTh+dME1AyXeh+UGUqDM4G2Qwh/eeTBLxHOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q6EhhXROBPwKBZVp6OEEVNVhfBqGX8htN8GO4ndW6ZmmLTb57qc+iM2Iu7QS49Ects0qhrICZaX4ACG2tPU2tzEGdpKA0XsNjv11cRqettA3wVI6gIA+oxg9AXqJyGZjMAHzVjxKcUZ/knhMghyadsmig4bJwMvavss+XIo1Dms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L2RmQqTK; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7f45ab88e7fso467767a12.1;
-        Sun, 10 Nov 2024 23:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731309601; x=1731914401; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WOmU+DqOTssuNxVDSw47mJh+RLlQKxt2hGA3wP7JifE=;
-        b=L2RmQqTK9Wjh02aoHCm+tihh3do5fBjvlJSbNcIiGrPFQtaYDWDY8yALCxaMhTkG4e
-         EsrTixWvGiydwQp5LSsvTvIjMFx34pczwzwrKxPJJcVoywalDU89kyRiov6/WDDRRPfp
-         QDXg02VzuHLdtRdxN1JUkDfQxBuyyMXYihEgnU6uigADRGFvDG9Gbsbtew7HotBxfop5
-         0almtxKQsAsAK3zuLbaFNPvxPlvFOxQeZMObxnoBHXUDLG8Il4z/52h3dp1JZ7pLRKZj
-         ftZgbZUZ6MzD+s6bqBhauDTT+P2Jp1uSMdrF49GMxu3GXLyaLtNWWFOoYqaTZs06gUEy
-         TvgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731309601; x=1731914401;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WOmU+DqOTssuNxVDSw47mJh+RLlQKxt2hGA3wP7JifE=;
-        b=XqcCpmmUEBxWGZqoBnztay4JwghJ3jG9SgFurZ5P75LSsTi/5XLtS+cAWPo8zu4/o+
-         rGcARBZrKBB7Fv/6ZppYTCST0iSYGH7xrUo5PeMgp57E+5eBKJVBd0N7z6ambkh9DxEQ
-         5AEJHkVrajcRelIg+iBQkYIa9sHODjOuAcFZoITzeHOEJCMLB9qYRzV2rcPyQZOWozTW
-         Xw2QOuIiAgXmM3fS75IPfeTTFuWkfrxrsv7PE+UQMpCtvPmjghj6+IAUAi57MLJzB8//
-         50XgLhsDm8ROrGeuNmftQ33E7nL9gDRh0N1+UTvn6WftGtJ9oA+khzfHwdvLcn99HWWD
-         LfUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvbZEbbeBSFK+dUQA9GDrfVKQ99W5UeSTp5Udx68OESljjB9JlNlxKimrgg0LMIjwtfZrQSViL9KPkXAM=@vger.kernel.org, AJvYcCW09/ecr8sfSxKyLFXOGiys0X8myX2no7joL1/U2PniEXSFeR2X/KJXwH4UGBTbr6HnmAOb5WA8S3i6@vger.kernel.org, AJvYcCXPPnEU/jd0eDGa1VoJLL1oPQP4NSQg9PyAJWtDC1Ej7D+m0u/cE2x8C0f957tTf1QEeac+lPzWobUA0Q==@vger.kernel.org, AJvYcCXQDw6QO6jlTllfm8aq5DCi27WhpPFJKyhNL3BKZmKxnO48E4ta4hEJXRsp4AHueRbkFuw=@vger.kernel.org, AJvYcCXe3CKp5mxhSW4cxE8DhwWPwhfh/C0MHkq7JViaMDjg7aPlG9qCI12jTejWaXRn79MMg281IHD4dBqI/xVy@vger.kernel.org, AJvYcCXhP9h2PLfzFkxIusU1wAY8aAX0s8EZGsOLNrcvNPHFI4x1uiRtfXoS5p7219+LQK3LCicg1Jak/EMv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJpsF9F2ds85IKGzCGkAFdmO6oUR8bxDoNz50yDuwmZIz9RoLB
-	0G5FX+cGFeMIURANWK3p5j947r6u/cFEyVX0AWYGeYBT1fqporW0T8sWDU3klGp+MWttnhisxul
-	LtNyL7yycDM1e7U8/v7yEYnVXI+M=
-X-Google-Smtp-Source: AGHT+IE2GbhyhHM7VLZoUXFICAIpmggZuUxeUy9Xke7HCQ1ScZ37Bf1N00DNPtc+BrABfZWGfVXnr9FTBKVDLWlkvX0=
-X-Received: by 2002:a05:6a20:6a1c:b0:1d8:d880:2069 with SMTP id
- adf61e73a8af0-1dc228395camr18138782637.3.1731309601118; Sun, 10 Nov 2024
- 23:20:01 -0800 (PST)
+	s=arc-20240116; t=1731309659; c=relaxed/simple;
+	bh=rdm+TB/OnvSr5WSGc45760YXsi20YR4gOv5i8N7UiDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=umAbB4+freRMTfZ98H2aVmGnFB2bHFmyh6p92oDh/637+7fOufqvNEgw5XMXaaGNrSZqw4HIynpVJj+mxnDVqlPb2lJ61/A5DIVMgHxKfc6FCcA3xXQ9A31izRWVbjMtf/42lVXXfZkS9T+MncrmjgAZF9lS6WCoxRzNwO/jLVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4E7B02800B49D;
+	Mon, 11 Nov 2024 08:20:52 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 4331F45FF15; Mon, 11 Nov 2024 08:20:52 +0100 (CET)
+Date: Mon, 11 Nov 2024 08:20:52 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
+	bhelgaas@google.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCHv3 1/5] pci: make pci_stop_dev concurrent safe
+Message-ID: <ZzGwVOJDRZ6vgKL5@wunner.de>
+References: <20241022224851.340648-1-kbusch@meta.com>
+ <20241022224851.340648-2-kbusch@meta.com>
+ <ZyzJgaEOJOKmh_xw@wunner.de>
+ <ZyzjKrNPxn5Vw7cF@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1730298502.git.leon@kernel.org> <9515f330b9615de92a1864ab46acbd95e32634b6.1730298502.git.leon@kernel.org>
- <5ea594b3-7451-4553-92c1-2590c8baef20@linux.dev> <20241111063932.GC23992@lst.de>
-In-Reply-To: <20241111063932.GC23992@lst.de>
-From: Greg Sword <gregsword0@gmail.com>
-Date: Mon, 11 Nov 2024 15:19:48 +0800
-Message-ID: <CAEz=LcshavSrtGDjhKBPZU9o+5Mr8rPiBPmVL4dxcOmEiqHQSQ@mail.gmail.com>
-Subject: Re: [PATCH v1 04/17] dma-mapping: Add check if IOVA can be used
-To: Christoph Hellwig <hch@lst.de>
-Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Leon Romanovsky <leonro@nvidia.com>, 
-	Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>, 
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>, 
-	Alex Williamson <alex.williamson@redhat.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZyzjKrNPxn5Vw7cF@kbusch-mbp>
 
-On Mon, Nov 11, 2024 at 2:39=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
-e:
->
-> On Sun, Nov 10, 2024 at 04:09:11PM +0100, Zhu Yanjun wrote:
-> >> +
-> >> +/*
-> >> + * Use the high bit to mark if we used swiotlb for one or more ranges=
-.
-> >> + */
-> >> +#define DMA_IOVA_USE_SWIOTLB                (1ULL << 63)
-> >
-> > A trivial problem.
-> > In the above macro, using BIT_ULL(63) is better?
->
-> No, and can people please stop suggesting it?  That macro is so fucking
-> pointless that it's revolting,
+On Thu, Nov 07, 2024 at 08:56:26AM -0700, Keith Busch wrote:
+> On Thu, Nov 07, 2024 at 03:06:57PM +0100, Lukas Wunner wrote:
+> > On Tue, Oct 22, 2024 at 03:48:47PM -0700, Keith Busch wrote:
+> > > --- a/drivers/pci/remove.c
+> > > +++ b/drivers/pci/remove.c
+> > > @@ -31,18 +31,16 @@ static int pci_pwrctl_unregister(struct device *dev, void *data)
+> > >  
+> > >  static void pci_stop_dev(struct pci_dev *dev)
+> > >  {
+> > > -	pci_pme_active(dev, false);
+> > > -
+> > > -	if (pci_dev_is_added(dev)) {
+> > > -		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> > > -				      pci_pwrctl_unregister);
+> > > -		device_release_driver(&dev->dev);
+> > > -		pci_proc_detach_device(dev);
+> > > -		pci_remove_sysfs_dev_files(dev);
+> > > -		of_pci_remove_node(dev);
+> > > +	if (!pci_dev_test_and_clear_added(dev))
+> > > +		return;
+> > >  
+> > > -		pci_dev_assign_added(dev, false);
+> > > -	}
+> > > +	pci_pme_active(dev, false);
+> > > +	device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> > > +			      pci_pwrctl_unregister);
+> > > +	device_release_driver(&dev->dev);
+> > > +	pci_proc_detach_device(dev);
+> > > +	pci_remove_sysfs_dev_files(dev);
+> > > +	of_pci_remove_node(dev);
+> > >  }
+> > 
+> > The above is now queued for v6.13 as commit 6d6d962a8dc2 on pci/locking.
+> > 
+> > I note there's a behavioral change here:
+> > 
+> > Previously "pci_pme_active(dev, false)" was called unconditionally,
+> > now only if the "added" flag has been set.  The commit message
+> > doesn't explain why this change is fine, so perhaps it's inadvertent?
+> 
+> Hm, not exactly intentional. It doesn't appear to accomplish anything to
+> call it multiple times, but it also looks hamrless to do so.  Looking at
+> the history of this, it looks like it was purposefully done
+> unconditionally with the understanding it's "safe" to do that. With that
+> in mind, I'm happy to move it back where it was.
 
-Why do you hate this macro so much, have you considered the feelings
-of the macro author?
+Yes I think it would be good if you could submit a fixup that Bjorn
+could fold into 6d6d962a8dc2, just to minimize regression potential.
 
->
->
+Thanks,
+
+Lukas
 
