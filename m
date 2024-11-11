@@ -1,56 +1,51 @@
-Return-Path: <linux-pci+bounces-16472-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16473-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF9CB9C466E
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 21:16:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C76A29C46B4
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 21:24:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD4C9B27707
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 20:14:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F4371F26AA5
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 20:24:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1D31AB6FB;
-	Mon, 11 Nov 2024 20:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1TBBsVa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1392A1A76DA;
+	Mon, 11 Nov 2024 20:20:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44322159596;
-	Mon, 11 Nov 2024 20:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2BF199238;
+	Mon, 11 Nov 2024 20:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731356090; cv=none; b=rFRn4jOVdzxCHIzUm/rrlpRXbrCnDLIv3KHs3ssRbxIUbCM3hZqx5tEu1KZkZHlHn+r3WEjMa6FQ6Px+XSm1H8bukW2w1cuploqtRvY9FEARZ056Tfm6Jo5vrg+oIyas2Ethuc2sX+yTqs0WLj+XFs6IC/slu5AJ7EVFpKcAYqQ=
+	t=1731356407; cv=none; b=CeV5frgeuf5MqOlunf1bhwQ4zRsSSvjIMm7YCFtaaJTLC0W/f32y69r0z0yIKaEaXYWhSTIOJpFvCUuDxLecZqAY3S1yIJ2sDeqh+WC+/4ABZQOkzUbCkoWlAIhmQYu8o1pKPHo9yAqV/AuLfuNbSAagbh/wvbjsguSI3sPeWic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731356090; c=relaxed/simple;
-	bh=SrjtaIdKJS7bJOBErGq8Is2rp89VJCeImbgSZk1ay5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fOJRewFW5mwTbzkgPSUyNhTymJPnViW4wnwsBqW2O9chPRiek2LVb3pwWp7+hYXW3wXgyaezG/TPv2acitRD25PauKb8WPfq2u8pDmzsj0Tvk1ej+Ln2bji522TWtGG9jQffR07cGQZXY1T2mif2HsmYsEkJ5WSMHvBT6gOncog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1TBBsVa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F47C4CECF;
-	Mon, 11 Nov 2024 20:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731356089;
-	bh=SrjtaIdKJS7bJOBErGq8Is2rp89VJCeImbgSZk1ay5I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=U1TBBsVadrFBK9AMqgxoUOkRkglr3lw7dCtJjYZWHxnzciqdmTwZcBTd5afj+uTot
-	 L5RQuj/df1gdzNKTUITykdlPIhZUt6yZjBhA3V/S0nqKP2rtvAWDEiacErhnLVHxG/
-	 QF7NJUHgiKd3i4vDgpOVUarnebuuev9j5AwYmq48Dcpgw94WaJEbM17tSwpomG8mjY
-	 aBIJE+KKljf0toznKVaF3D07qmgeJH8SUfmVkAAHU4kUaqipdy6lprLFeE7U/WoNxX
-	 CPVEbEb3EXS+rJjdrkc+q1J7S2XWavBNQ81qE61nRd2w9QNtqPe+wHX8baomWsgdeT
-	 lL1N3Jg03ukXQ==
-Date: Mon, 11 Nov 2024 14:14:48 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shijith Thotton <sthotton@marvell.com>
-Cc: bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
-	Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, rafael@kernel.org,
-	scott@os.amperecomputing.com, jerinj@marvell.com,
-	schalla@marvell.com, vattunuru@marvell.com
-Subject: Re: [PATCH v4] PCI: hotplug: Add OCTEON PCI hotplug controller driver
-Message-ID: <20241111201448.GA1814761@bhelgaas>
+	s=arc-20240116; t=1731356407; c=relaxed/simple;
+	bh=D2ab2YM8vmaSyptZkkkHd1LRPeWi6Ng0ReSBwZvF19o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U2NdFoR9fzIvmMMbfJJxySj2LyDBDLnGz7LG1H1Y1X0W1OtC6cn1m0T2m943/88SP9I7qoKS2QkpKPngVQZSlxQZKQ17vyn0AujQwv8FQOHrQnQBHJoGMKrUREmm3hE7mKPNG8jri0lRQrbI1YXscVvK2GzuL1/F7TF9iZxY/5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id C36622800B4B7;
+	Mon, 11 Nov 2024 21:19:53 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 95F152B3794; Mon, 11 Nov 2024 21:19:53 +0100 (CET)
+Date: Mon, 11 Nov 2024 21:19:53 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: lockdep warning in pciehp
+Message-ID: <ZzJm6QrQyT48jGuN@wunner.de>
+References: <f9f13728-ade8-c5b9-0cc3-2fb23db2f051@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,50 +54,44 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241111134523.2796699-1-sthotton@marvell.com>
+In-Reply-To: <f9f13728-ade8-c5b9-0cc3-2fb23db2f051@redhat.com>
 
-On Mon, Nov 11, 2024 at 07:15:11PM +0530, Shijith Thotton wrote:
-> This patch introduces a PCI hotplug controller driver for the OCTEON
-> PCIe device. The OCTEON PCIe device is a multi-function device where the
-> first function serves as the PCI hotplug controller.
+On Mon, Nov 11, 2024 at 06:58:40PM +0100, Sebastian Ott wrote:
+> I stumbled over this lockdep splat during pci hotplug:
+> [   26.016648] ======================================================
+> [   26.019646] WARNING: possible circular locking dependency detected
+> [   26.022785] 6.12.0-rc6+ #176 Not tainted
+> [   26.024776] ------------------------------------------------------
+> [   26.027909] irq/50-pciehp/57 is trying to acquire lock:
+> [   26.030559] ffff0000c02ad700 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_configure_device+0xe4/0x1a0
+> [   26.035423] [   26.035423] but task is already holding lock:
+> [   26.038505] ffff800082f819f8 (pci_rescan_remove_lock){+.+.}-{3:3}, at: pci_lock_rescan_remove+0x24/0x38
+> [   26.043512] [   26.043512] which lock already depends on the new lock.
+[...]
+> I don't think that this could actually happen since this is only called by a
+> single irq thread
+
+Correct, it's a false positive, see this earlier analysis from Oct 2023:
+
+https://lore.kernel.org/all/20231015093722.GA11283@wunner.de/
+
+
+> but this splat is kinda annoying and
+> pciehp_configure_device() doesn't seem to do much that
+> needs the reset_lock. How about this?
+> ---->8
+> [PATCH] pciehp: fix lockdep warning
 > 
->                +--------------------------------+
->                |           Root Port            |
->                +--------------------------------+
->                                |
->                               PCIe
->                                |
-> +---------------------------------------------------------------+
-> |              OCTEON PCIe Multifunction Device                 |
-> +---------------------------------------------------------------+
->              |                    |              |            |
->              |                    |              |            |
-> +---------------------+  +----------------+  +-----+  +----------------+
-> |      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
-> | (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
-> +---------------------+  +----------------+  +-----+  +----------------+
->              |
->              |
-> +-------------------------+
-> |   Controller Firmware   |
-> +-------------------------+
-> 
-> The hotplug controller driver enables hotplugging of non-controller
-> functions within the same device. During probing, the driver removes
-> the non-controller functions and registers them as PCI hotplug slots.
-> These slots are added back by the driver, only upon request from the
-> device firmware.
-> 
-> The controller uses MSI-X interrupts to notify the host of hotplug
-> events initiated by the OCTEON firmware. Additionally, the driver
-> allows users to enable or disable individual functions via sysfs slot
-> entries, as provided by the PCI hotplug framework.
+> Call pciehp_configure_device() without reset_lock being held to
+> fix the following lockdep warning. The only action that seems to
+> require the reset_lock is writing to ctrl->dsn, so move that to
+> the caller that holds the lock.
 
-Can we say something here about what the benefit of this driver is?
-For example, does it save power?
+The point is to prevent a slot reset while the bus is being enumerated.
+It's not just for reading the Device Serial Number.  So unfortunately
+it's not that simple.
 
-What causes the function 0 firmware to request a hot-add or
-hot-removal of another function?
+Thanks,
 
-Bjorn
+Lukas
 
