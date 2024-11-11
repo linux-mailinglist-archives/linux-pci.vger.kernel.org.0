@@ -1,114 +1,110 @@
-Return-Path: <linux-pci+bounces-16431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5147A9C38F5
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 08:21:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AC3B9C38F7
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 08:21:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 160FC2807F3
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 07:21:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D45962807F3
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 07:21:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E36750276;
-	Mon, 11 Nov 2024 07:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 985E950276;
+	Mon, 11 Nov 2024 07:21:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D645136A
-	for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2024 07:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3818C136A;
+	Mon, 11 Nov 2024 07:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731309659; cv=none; b=tQ7yQmCX96WSy+aTeaF8BZPOvYB8yJsfBOh+vbybrAjv976VY1OSdUnlHsV0K/yP00oKlNO9FG+jey/lB1kG84JoURHBSz1+zLTUYhMvKBlDWLX+sYsxlBBbSyURkop6CAZKtWb56HYwE9UrLPGhr2zCwF1u0YrQ6VYzAGmhE6s=
+	t=1731309693; cv=none; b=hkT6Wo01I3xaNj8IwAUD6kS4WwYE3z40wWn0Rp1mlP9Bo8cETdQOW47AzjeSQ5NDBOB3AZZgg8lxk7elAufNGRfY29UofPUupd99mJfIEGinc3pM+G0NfUXs7+3TR5vYZyovWnQaD0J3hPpUVntRd+P8yt7ib9q9XFjYfAExcc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731309659; c=relaxed/simple;
-	bh=rdm+TB/OnvSr5WSGc45760YXsi20YR4gOv5i8N7UiDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=umAbB4+freRMTfZ98H2aVmGnFB2bHFmyh6p92oDh/637+7fOufqvNEgw5XMXaaGNrSZqw4HIynpVJj+mxnDVqlPb2lJ61/A5DIVMgHxKfc6FCcA3xXQ9A31izRWVbjMtf/42lVXXfZkS9T+MncrmjgAZF9lS6WCoxRzNwO/jLVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4E7B02800B49D;
-	Mon, 11 Nov 2024 08:20:52 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 4331F45FF15; Mon, 11 Nov 2024 08:20:52 +0100 (CET)
-Date: Mon, 11 Nov 2024 08:20:52 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCHv3 1/5] pci: make pci_stop_dev concurrent safe
-Message-ID: <ZzGwVOJDRZ6vgKL5@wunner.de>
-References: <20241022224851.340648-1-kbusch@meta.com>
- <20241022224851.340648-2-kbusch@meta.com>
- <ZyzJgaEOJOKmh_xw@wunner.de>
- <ZyzjKrNPxn5Vw7cF@kbusch-mbp>
+	s=arc-20240116; t=1731309693; c=relaxed/simple;
+	bh=fOsAPC1aCReILnAtNZ8hxSF319BoJu3a3LVc+79V7pw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VvNXJwBduUCH9em/2DlrFkOKY2O9m+gd2pT6ZedMOpmcIJ0rrIdvgGjlH7wn9/bK5AGhOF3VDOdlNF9f/JjR+cxb4n1qvZT5RTCecWq81ZHf6bSm3vvkMmJXUt9DXi8d12jdid6CfBxqooE5cBh79uVGjl/DLy4HGkXvoAq8VbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.53] (unknown [95.90.237.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8F3C661E5FE05;
+	Mon, 11 Nov 2024 08:21:05 +0100 (CET)
+Message-ID: <cb38ef85-363d-47aa-bc01-55a3fef5b0af@molgen.mpg.de>
+Date: Mon, 11 Nov 2024 08:21:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZyzjKrNPxn5Vw7cF@kbusch-mbp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Bluetooth: btintel_pcie: Support suspend-resume
+To: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+Cc: linux-bluetooth@vger.kernel.org,
+ Ravishankar Srivatsa <ravishankar.srivatsa@intel.com>,
+ Chethan Tumkur Narayan <chethan.tumkur.narayan@intel.com>,
+ Kiran K <kiran.k@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org
+References: <20241108143931.2422947-1-chandrashekar.devegowda@intel.com>
+ <693d09b6-edab-4ed4-8df5-11ca74bb02e6@molgen.mpg.de>
+ <PH0PR11MB5952C7090EAA4F6B75145611FC582@PH0PR11MB5952.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <PH0PR11MB5952C7090EAA4F6B75145611FC582@PH0PR11MB5952.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 07, 2024 at 08:56:26AM -0700, Keith Busch wrote:
-> On Thu, Nov 07, 2024 at 03:06:57PM +0100, Lukas Wunner wrote:
-> > On Tue, Oct 22, 2024 at 03:48:47PM -0700, Keith Busch wrote:
-> > > --- a/drivers/pci/remove.c
-> > > +++ b/drivers/pci/remove.c
-> > > @@ -31,18 +31,16 @@ static int pci_pwrctl_unregister(struct device *dev, void *data)
-> > >  
-> > >  static void pci_stop_dev(struct pci_dev *dev)
-> > >  {
-> > > -	pci_pme_active(dev, false);
-> > > -
-> > > -	if (pci_dev_is_added(dev)) {
-> > > -		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
-> > > -				      pci_pwrctl_unregister);
-> > > -		device_release_driver(&dev->dev);
-> > > -		pci_proc_detach_device(dev);
-> > > -		pci_remove_sysfs_dev_files(dev);
-> > > -		of_pci_remove_node(dev);
-> > > +	if (!pci_dev_test_and_clear_added(dev))
-> > > +		return;
-> > >  
-> > > -		pci_dev_assign_added(dev, false);
-> > > -	}
-> > > +	pci_pme_active(dev, false);
-> > > +	device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
-> > > +			      pci_pwrctl_unregister);
-> > > +	device_release_driver(&dev->dev);
-> > > +	pci_proc_detach_device(dev);
-> > > +	pci_remove_sysfs_dev_files(dev);
-> > > +	of_pci_remove_node(dev);
-> > >  }
-> > 
-> > The above is now queued for v6.13 as commit 6d6d962a8dc2 on pci/locking.
-> > 
-> > I note there's a behavioral change here:
-> > 
-> > Previously "pci_pme_active(dev, false)" was called unconditionally,
-> > now only if the "added" flag has been set.  The commit message
-> > doesn't explain why this change is fine, so perhaps it's inadvertent?
+Dear Chandrashekar,
+
+
+Thank you for your space.
+
+
+Am 11.11.24 um 07:33 schrieb Devegowda, Chandrashekar:
+
+>> -----Original Message-----
+
+>> Sent: Friday, November 08, 2024 2:49 PM
+>> To: Devegowda, Chandrashekar <chandrashekar.devegowda@intel.com>
+
+[…]
+
+>> Am 08.11.24 um 15:39 schrieb ChandraShekar Devegowda:
+>>
+>> The space in your name is still missing.
 > 
-> Hm, not exactly intentional. It doesn't appear to accomplish anything to
-> call it multiple times, but it also looks hamrless to do so.  Looking at
-> the history of this, it looks like it was purposefully done
-> unconditionally with the understanding it's "safe" to do that. With that
-> in mind, I'm happy to move it back where it was.
+> I have added my second name, my first name doesn’t have a space so
+> please consider ChandraShekar as a single name.
+Thank you. In your email you now do *not* use CamelCase, which is more 
+common in Western culture. (Of course you can write your name as you 
+want, and I just pointed it out.)
 
-Yes I think it would be good if you could submit a fixup that Bjorn
-could fold into 6d6d962a8dc2, just to minimize regression potential.
+>>> This patch contains the changes in driver for vendor specific handshake
+>>> during enter of D3 and D0 exit.
+>>
+>> Please document the datasheet name and revision.
+> 
+> Datasheet is internal to Intel, sorry wouldn't  be able to share at
+> the moment.
 
-Thanks,
+Although it is not public, the name would still be good to have. Intel 
+employees can probably get access more easily, and non-Intel folks could 
+directly approach with the name, and in the future it might be even made 
+public.
 
-Lukas
+[…]
+
+Thank you for acknowledging the other comments.
+
+
+Kind regards
+
+Paul
 
