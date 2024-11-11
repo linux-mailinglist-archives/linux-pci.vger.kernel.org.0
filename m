@@ -1,110 +1,106 @@
-Return-Path: <linux-pci+bounces-16432-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16433-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AC3B9C38F7
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 08:21:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DE759C3914
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 08:38:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D45962807F3
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 07:21:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4A7E1F21C1B
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 07:38:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 985E950276;
-	Mon, 11 Nov 2024 07:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B06152517;
+	Mon, 11 Nov 2024 07:38:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3818C136A;
-	Mon, 11 Nov 2024 07:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C24E545
+	for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2024 07:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731309693; cv=none; b=hkT6Wo01I3xaNj8IwAUD6kS4WwYE3z40wWn0Rp1mlP9Bo8cETdQOW47AzjeSQ5NDBOB3AZZgg8lxk7elAufNGRfY29UofPUupd99mJfIEGinc3pM+G0NfUXs7+3TR5vYZyovWnQaD0J3hPpUVntRd+P8yt7ib9q9XFjYfAExcc8=
+	t=1731310695; cv=none; b=q2LGxC+VB/SyzrthVnOyMuiQXKXK7bvn4sJTKr4LCFXxcdrasMxFBU0gh5FTvbkId85LVhMlwDSOOWwTCkhaLWRp10mmNR8EiLwO52Z4p+DDkTCzSoHJsFKDu+/ftA4biEnUWfyW1DWiOePjE3ekQSiYcXWQ7UDx+WvqP4sL82w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731309693; c=relaxed/simple;
-	bh=fOsAPC1aCReILnAtNZ8hxSF319BoJu3a3LVc+79V7pw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VvNXJwBduUCH9em/2DlrFkOKY2O9m+gd2pT6ZedMOpmcIJ0rrIdvgGjlH7wn9/bK5AGhOF3VDOdlNF9f/JjR+cxb4n1qvZT5RTCecWq81ZHf6bSm3vvkMmJXUt9DXi8d12jdid6CfBxqooE5cBh79uVGjl/DLy4HGkXvoAq8VbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.53] (unknown [95.90.237.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8F3C661E5FE05;
-	Mon, 11 Nov 2024 08:21:05 +0100 (CET)
-Message-ID: <cb38ef85-363d-47aa-bc01-55a3fef5b0af@molgen.mpg.de>
-Date: Mon, 11 Nov 2024 08:21:04 +0100
+	s=arc-20240116; t=1731310695; c=relaxed/simple;
+	bh=UO/O99ikgykQsW4GjDY/rfrWpaUQNXiSt7vW+VoYEoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XhupDHEgIp6Gv+39mywwdTGo1u/wX8W3+7HuN4MOPB4t6bD+xQXytK11+MNVZ52y0zzt9avs9gcM9WzM+1MRFZZrBYAsDYplG7dBckmLKN69KY2QMSpvGO3skLL8YclZCzPUXxkgXvhjByJAs/NviKLiQF292pYe/pXeeVM7rZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id D3290101955E1;
+	Mon, 11 Nov 2024 08:38:03 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 90735DEE43; Mon, 11 Nov 2024 08:38:03 +0100 (CET)
+Date: Mon, 11 Nov 2024 08:38:03 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCHv2 1/2] PCI: pciehp: fix concurrent sub-tree removal
+ deadlock
+Message-ID: <ZzG0W7LGrggNa6Qi@wunner.de>
+References: <20240612181625.3604512-1-kbusch@meta.com>
+ <20240612181625.3604512-2-kbusch@meta.com>
+ <Zn0Y-UhMqCo2PCtM@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: btintel_pcie: Support suspend-resume
-To: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
-Cc: linux-bluetooth@vger.kernel.org,
- Ravishankar Srivatsa <ravishankar.srivatsa@intel.com>,
- Chethan Tumkur Narayan <chethan.tumkur.narayan@intel.com>,
- Kiran K <kiran.k@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org
-References: <20241108143931.2422947-1-chandrashekar.devegowda@intel.com>
- <693d09b6-edab-4ed4-8df5-11ca74bb02e6@molgen.mpg.de>
- <PH0PR11MB5952C7090EAA4F6B75145611FC582@PH0PR11MB5952.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <PH0PR11MB5952C7090EAA4F6B75145611FC582@PH0PR11MB5952.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zn0Y-UhMqCo2PCtM@wunner.de>
 
-Dear Chandrashekar,
-
-
-Thank you for your space.
-
-
-Am 11.11.24 um 07:33 schrieb Devegowda, Chandrashekar:
-
->> -----Original Message-----
-
->> Sent: Friday, November 08, 2024 2:49 PM
->> To: Devegowda, Chandrashekar <chandrashekar.devegowda@intel.com>
-
-[…]
-
->> Am 08.11.24 um 15:39 schrieb ChandraShekar Devegowda:
->>
->> The space in your name is still missing.
+On Thu, Jun 27, 2024 at 09:47:05AM +0200, Lukas Wunner wrote:
+> On Wed, Jun 12, 2024 at 11:16:24AM -0700, Keith Busch wrote:
+> > PCIe hotplug events modify the topology in their IRQ thread once it can
+> > acquire the global pci_rescan_remove_lock.
+> > 
+> > If a different removal event happens to acquire that lock first, and
+> > that removal event is for the parent device of the bridge processing the
+> > other hotplug event, then we are deadlocked: the parent removal will
+> > wait indefinitely on the child's IRQ thread because the parent is
+> > holding the global lock the child thread needs to make forward progress.
 > 
-> I have added my second name, my first name doesn’t have a space so
-> please consider ChandraShekar as a single name.
-Thank you. In your email you now do *not* use CamelCase, which is more 
-common in Western culture. (Of course you can write your name as you 
-want, and I just pointed it out.)
-
->>> This patch contains the changes in driver for vendor specific handshake
->>> during enter of D3 and D0 exit.
->>
->> Please document the datasheet name and revision.
+> Yes, that's a known problem.  I submitted a fix for it in 2018:
 > 
-> Datasheet is internal to Intel, sorry wouldn't  be able to share at
-> the moment.
+> https://lore.kernel.org/all/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
+> 
+> The patch I proposed was similar to yours, but was smaller and
+> confined to pciehp_pci.c.  It was part of a larger series and
+> when respinning that series I dropped the patch, which is the
+> reason it never got applied.  I explained the rationale for
+> dropping it in this message:
+> 
+> https://lore.kernel.org/all/20180906162634.ylyp3ydwujf5wuxx@wunner.de/
+> 
+> Basically all these proposals (both mine and yours) are not great
+> because they add another layer of duct tape without tackling the
+> underlying problem -- that pci_lock_rescan_remove() is way too
+> coarse-grained and needs to be replaced by finer-grained locking.
+> That however is a complex task that we haven't made significant
+> forward progress on in the last couple of years.  Something else
+> always seemed more important.
 
-Although it is not public, the name would still be good to have. Intel 
-employees can probably get access more easily, and non-Intel folks could 
-directly approach with the name, and in the future it might be even made 
-public.
+Thinking about this some more:
 
-[…]
+The problem is pci_lock_rescan_remove() is a single global lock.
 
-Thank you for acknowledging the other comments.
+What if we introduce a lock at each bridge or for each pci_bus.
+Before a portion of the hierarchy is removed, all locks in that
+sub-hierarchy are acquired bottom-up.
 
+I think that should avoid the deadlock.  Thoughts?
 
-Kind regards
+Thanks,
 
-Paul
+Lukas
 
