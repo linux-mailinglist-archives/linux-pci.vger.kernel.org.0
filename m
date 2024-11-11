@@ -1,96 +1,218 @@
-Return-Path: <linux-pci+bounces-16456-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16457-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1CD49C444E
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 18:59:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAAC79C44FA
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 19:30:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 867CC28A33F
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 17:59:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 837F9B324D3
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2024 18:00:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29EB21AA78D;
-	Mon, 11 Nov 2024 17:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7155B1A9B37;
+	Mon, 11 Nov 2024 17:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iraPhC48"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="U3qtqAJF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BD31AA1C4
-	for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2024 17:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4E491A76D5;
+	Mon, 11 Nov 2024 17:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731347954; cv=none; b=ne3Sool6IwT1zG/DxLJQt8WMwMsJSk28dKUDjm/G0pqJugUxKJaxxhujHVrD5032h4N/ZB2MiznPhgBZADXKO+rejlCYjlWNVyzbwisIJ0BFqCBGhmFt3OQtpniAF+quszzTFWcoxKvj12l61bR4yLORKxz5YgRbMZ2AQUrUJYM=
+	t=1731347992; cv=none; b=QIWsv0h8kTBllJAN6madciIUQ4tSyaMzdrK+zrMAcTZ6rDDWlH1nXVE6pw8D7RS57dRa/3s9EQUp53PoboW0r9qTGrEEil4Ce8QoxbHcR2ZC4E0KjVT2npQT1ABDyoYvQUR8USeJIV7luu2q2qD1J/LCHe2585zC9rcIwkgrr2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731347954; c=relaxed/simple;
-	bh=0NpiMVM81gqRJwJWhNlQr4rw8UjpuFF2SQ5zCr1nWHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fB4m59eDJvYVHn95GWZhfqPmve5vauHb+QMRPnK+duAS4o6/WVaFO9WwLaUXBvRp7oAMqr7uwLuD+OsoYyEQIhwKovrwHiP0dkFI5xl0lCUM4k+M3OQkyOuHGPDidFnDlDl54rzVdO0NIp1UTFZnrPpnKaHqaXZNFQqmtWm54tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iraPhC48; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B688C4CECF;
-	Mon, 11 Nov 2024 17:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731347953;
-	bh=0NpiMVM81gqRJwJWhNlQr4rw8UjpuFF2SQ5zCr1nWHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iraPhC48yeg9poA230RDcAtcqhNGIDGYWUBFRmkAM8beSubqzKQhVLmujZ8YNoizN
-	 kYYiJx+7tvfC9NecMX2GgDdYZ0yVzbE2CIdTfOxmcfjOnqld8GDVMoFBYx5HQbD039
-	 +OxUr1iI8A5ebRKB3a4KtNP5IiAPvUWOSOGrusS5ZIS3hOlG+/O22WhDSbgcjPYRvH
-	 G1q0rSH39P0HcBX+RME5N6BxNd3bL2YkBIBoed6dOL8T/U2Qi6YvI9pmbpKwbO4e8d
-	 2BAgL79krDGB87+4cyUEi8KlVe/ZVX2QZapse2kDtqf+l2UxbebyVTe8QzjaOhWa8M
-	 I7lvJP7JkpgiA==
-Date: Mon, 11 Nov 2024 10:59:11 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com
-Subject: Re: [PATCHv2 1/2] PCI: pciehp: fix concurrent sub-tree removal
- deadlock
-Message-ID: <ZzJF77YoNO-fdmow@kbusch-mbp.dhcp.thefacebook.com>
-References: <20240612181625.3604512-1-kbusch@meta.com>
- <20240612181625.3604512-2-kbusch@meta.com>
- <Zn0Y-UhMqCo2PCtM@wunner.de>
- <ZzG0W7LGrggNa6Qi@wunner.de>
- <ZzG5koPOn16KQ8uM@wunner.de>
+	s=arc-20240116; t=1731347992; c=relaxed/simple;
+	bh=OXz8PGAKsAmwwbSENzkyb9bWe6kDTj8N038P+dU8ZmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JFyVPD/nSkpCf55waimAGVY/IdKbXrMtbmYqDhon5OiW1uzRe0c5KgV0PWPeyjQvcu0IeCeaSeDc+opITtdA3CzV/SvotSA8J5Rw/lfmghhhSoKOG08IjdUpfWTh0ffapX7bFCnLYEuUma8jYDjcyw1BOyXGbYwu9kY/0aTGLA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=U3qtqAJF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.115] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 87E182171FA8;
+	Mon, 11 Nov 2024 09:59:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 87E182171FA8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1731347990;
+	bh=6ZtSE/zbiO29bga7So1mH/XX9EiAiKPJFgpQdc0RuDA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U3qtqAJFUvj3LJ7K80wastcf4faahRCEaDAvU1OUqLJOFFXiQxRXtoEbkc+o8UiRW
+	 muUgkxrJ+AhjB2NPxjjqj69Wen8GJPOLz+pk1e8fdEEhrAs1xmhsbaaMGp4k0wkyl8
+	 qTTxXXfKsEU7bfZh+sh8pnHWTh3MamDzBvSX5eXM=
+Message-ID: <8f0433ed-4d5a-4ec1-9552-86870419c79c@linux.microsoft.com>
+Date: Mon, 11 Nov 2024 09:59:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZzG5koPOn16KQ8uM@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] Add new headers for Hyper-V Dom0
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>
+References: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <BN7PR02MB41485DAD2E066D417FE12020D4582@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <BN7PR02MB41485DAD2E066D417FE12020D4582@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 11, 2024 at 09:00:18AM +0100, Lukas Wunner wrote:
-> On Mon, Nov 11, 2024 at 08:38:03AM +0100, Lukas Wunner wrote:
-> > Thinking about this some more:
-> > 
-> > The problem is pci_lock_rescan_remove() is a single global lock.
-> > 
-> > What if we introduce a lock at each bridge or for each pci_bus.
-> > Before a portion of the hierarchy is removed, all locks in that
-> > sub-hierarchy are acquired bottom-up.
-> > 
-> > I think that should avoid the deadlock.  Thoughts?
+On 11/10/2024 8:12 PM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, November 7, 2024 2:32 PM
+>>
+>> To support Hyper-V Dom0 (aka Linux as root partition), many new
+>> definitions are required.
 > 
-> I note that you attempted something similar back in July:
+> Using "dom0" terminology here and in the Subject: line is likely to
+> be confusing to folks who aren't intimately involved in Hyper-V work.
+> Previous Linux kernel commit messages and code for running in the
+> Hyper-V root partition use "root partition" terminology, and I couldn't
+> find "dom0" having been used before. "root partition" would be more
+> consistent, and it also matches the public documentation for Hyper-V.
+> "dom0" is Xen specific terminology, and having it show up in Hyper-V
+> patches would be confusing for the casual reader. I know "dom0" has
+> been used internally at Microsoft as shorthand for "Hyper-V root
+> partition", but it's probably best to completely avoid such shorthand
+> in public Linux kernel patches and code.
 > 
-> https://lore.kernel.org/all/20240722151936.1452299-9-kbusch@meta.com/
+> Just my $.02 ....
 > 
-> However I'd suggest to solve this differently:
-> 
-> Keep the pci_lock_rescan_remove() everywhere, don't add pci_lock_bus()
-> adjacent to it.
-> 
-> Instead, amend pci_lock_rescan_remove() to walk the sub-hierarchy
-> bottom-up and acquire all the bus locks.  Obviously you'll have to amend
-> pci_lock_rescan_remove() to accept a pci_dev which is the bridge atop
-> the sub-hierarchy.  (Or alternatively, the top-most pci_bus in the
-> sub-hierarchy.)
 
-I don't think we can walk the bus bottom-up without hitting the same
-deadlock I'm trying to fix.
+Noted - I will update the terminology in v3 and generally avoid "Dom0",
+except possibly by way of explanation (i.e. to compare it to Xen Dom0).
+
+Thanks
+Nuno
+
+>>
+>> The plan going forward is to directly import definitions from
+>> Hyper-V code without waiting for them to land in the TLFS document.
+>> This is a quicker and more maintainable way to import definitions,
+>> and is a step toward the eventual goal of exporting headers directly
+>> from Hyper-V for use in Linux.
+>>
+>> This patch series introduces new headers (hvhdk.h, hvgdk.h, etc,
+>> see patch #3) derived directly from Hyper-V code. hyperv-tlfs.h is
+>> replaced with hvhdk.h (which includes the other new headers)
+>> everywhere.
+>>
+>> No functional change is expected.
+>>
+>> Summary:
+>> Patch 1-2: Minor cleanup patches
+>> Patch 3: Add the new headers (hvhdk.h, etc..) in include/hyperv/
+>> Patch 4: Switch to the new headers
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> ---
+>> Changelog:
+>> v2:
+>> - Rework the series to simply use the new headers everywhere
+>>   instead of fiddling around to keep hyperv-tlfs.h used in some
+>>   places, suggested by Michael Kelley and Easwar Hariharan
+> 
+> Thanks! That should be simpler all around.
+> 
+> Michael
+> 
+>> - Fix compilation errors with some configs by adding missing
+>>   definitions and changing some names, thanks to Simon Horman for
+>>   catching those
+>> - Add additional definitions to the new headers to support them now
+>>   replacing hyperv-tlfs.h everywhere
+>> - Add additional context in the commit messages for patches #3 and #4
+>> - In patch #2, don't remove indirect includes. Only remove includes
+>>   which truly aren't used, suggested by Michael Kelley
+>>
+>> ---
+>> Nuno Das Neves (4):
+>>   hyperv: Move hv_connection_id to hyperv-tlfs.h
+>>   hyperv: Clean up unnecessary #includes
+>>   hyperv: Add new Hyper-V headers in include/hyperv
+>>   hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h
+>>
+>>  arch/arm64/hyperv/hv_core.c        |    3 +-
+>>  arch/arm64/hyperv/mshyperv.c       |    4 +-
+>>  arch/arm64/include/asm/mshyperv.h  |    2 +-
+>>  arch/x86/hyperv/hv_apic.c          |    1 -
+>>  arch/x86/hyperv/hv_init.c          |   21 +-
+>>  arch/x86/hyperv/hv_proc.c          |    3 +-
+>>  arch/x86/hyperv/ivm.c              |    1 -
+>>  arch/x86/hyperv/mmu.c              |    1 -
+>>  arch/x86/hyperv/nested.c           |    2 +-
+>>  arch/x86/include/asm/kvm_host.h    |    3 +-
+>>  arch/x86/include/asm/mshyperv.h    |    3 +-
+>>  arch/x86/include/asm/svm.h         |    2 +-
+>>  arch/x86/kernel/cpu/mshyperv.c     |    2 +-
+>>  arch/x86/kvm/vmx/hyperv_evmcs.h    |    2 +-
+>>  arch/x86/kvm/vmx/vmx_onhyperv.h    |    2 +-
+>>  arch/x86/mm/pat/set_memory.c       |    2 -
+>>  drivers/clocksource/hyperv_timer.c |    2 +-
+>>  drivers/hv/hv_balloon.c            |    4 +-
+>>  drivers/hv/hv_common.c             |    2 +-
+>>  drivers/hv/hv_kvp.c                |    2 +-
+>>  drivers/hv/hv_snapshot.c           |    2 +-
+>>  drivers/hv/hyperv_vmbus.h          |    2 +-
+>>  include/asm-generic/hyperv-tlfs.h  |    9 +
+>>  include/asm-generic/mshyperv.h     |    2 +-
+>>  include/clocksource/hyperv_timer.h |    2 +-
+>>  include/hyperv/hvgdk.h             |  303 +++++++
+>>  include/hyperv/hvgdk_ext.h         |   46 +
+>>  include/hyperv/hvgdk_mini.h        | 1295 ++++++++++++++++++++++++++++
+>>  include/hyperv/hvhdk.h             |  733 ++++++++++++++++
+>>  include/hyperv/hvhdk_mini.h        |  310 +++++++
+>>  include/linux/hyperv.h             |   11 +-
+>>  net/vmw_vsock/hyperv_transport.c   |    2 +-
+>>  32 files changed, 2729 insertions(+), 52 deletions(-)
+>>  create mode 100644 include/hyperv/hvgdk.h
+>>  create mode 100644 include/hyperv/hvgdk_ext.h
+>>  create mode 100644 include/hyperv/hvgdk_mini.h
+>>  create mode 100644 include/hyperv/hvhdk.h
+>>  create mode 100644 include/hyperv/hvhdk_mini.h
+>>
+>> --
+>> 2.34.1
+
 
