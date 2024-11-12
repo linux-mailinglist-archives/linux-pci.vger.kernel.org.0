@@ -1,133 +1,120 @@
-Return-Path: <linux-pci+bounces-16534-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2830E9C5909
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 14:29:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0897E9C5963
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 14:43:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1F6D28365E
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 13:29:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF27A1F21CF5
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 13:43:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03D7118991E;
-	Tue, 12 Nov 2024 13:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 872847083D;
+	Tue, 12 Nov 2024 13:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fijMChNm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b4Bq6TYI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5346188CD0;
-	Tue, 12 Nov 2024 13:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDA28614E;
+	Tue, 12 Nov 2024 13:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731418011; cv=none; b=HhDwbwYv8uMPR0HeLtlxWCHoKGg4tZOycJ+t3yAHmYC7clyO7zdy1MTFheqes4PBEGo8Ulm76pUcuWd7HLNCBiWQTBxZX5tlM7JhHEdUY9RCDsJ1WXZfDIoosAelxKSkbsZDMjwFUVqp5Fj62Nwjoal4cuLPSuytOQWy8fRFQTk=
+	t=1731418958; cv=none; b=uP6RUQj0YxudSnsCOUzIUgoEfJgBlMPIzH7jpRa9Ftt1+GcrWJKIk0M67ju/xgU09b9WYTd85AKIdsBI/O+zOfG6wmIlabb6B+mHPNR6d3t1En+fJGsCf3xC8ru7pPIG1/tukVkPWEwHEyLfnT1TWxCJR0U6ji07+KrDwmaGr6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731418011; c=relaxed/simple;
-	bh=hDUMtbUF9lOGt8Tp8509IEDUATl8eXb+DFyldkZ3kIc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Las6IgRgjU+gO9nxfrW5RxGZ4ZOksQacGYoyGzO74bQqM+qUhrIZZHHoxPoAP/PVKvZDI/JoWs80CQTRUZMU+kODJBGAiMA7dVOEmEWEXAv587vV30q3EDqQmILh3KMTgBJqBek4O7osf9+U4hNxGuy/oDR+q7M+iVGx1MLcqmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fijMChNm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FEFC4CECD;
-	Tue, 12 Nov 2024 13:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731418011;
-	bh=hDUMtbUF9lOGt8Tp8509IEDUATl8eXb+DFyldkZ3kIc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fijMChNmQC22mU/W+WLWR9c87pxD4L/Erddapj4nz4qucP4TLyvN9Uvv7CDW1Yd40
-	 KtAaVTdJhQ1rr3RbEiGOjLIy2569PJMmDobq0UQ0uGF+jROxW6GE4oce7WSnuq/v+O
-	 isV0N0hM2eFhGO0vXfX6JBVahgHI2R8wH8q6NkM6dCnC8xMSfKMU+tQ0AkPgncM44V
-	 v9hjvC3076NRGKOUi+SrjTmfdFKCRLSPycFwfgmGMZ/rG38Wiys2ucqNHyAcuXZLsY
-	 H04IO5uRWhiCGtABl013IommV/Zx7uVsfog6IEYDlh5Ndjt4QpOPxD2aqf+0zJ/d4X
-	 CUW2tXLVxXuYw==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Tue, 12 Nov 2024 14:26:22 +0100
-Subject: [PATCH v3 7/8] virtio: blk/scsi: replace blk_mq_virtio_map_queues
- with blk_mq_hctx_map_queues
+	s=arc-20240116; t=1731418958; c=relaxed/simple;
+	bh=7tbqlEq0BGuzVf0SVSuxaMB9hCOlShsw/+ReKdtFfzg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XOHV2G+WZL4q/rQ++1c2cqasZVnaQkjpj0qUjHXIec7L6s5C+5OeWTh8Yzf0AF3U4Rrb5oT905HdDYYtvPYLsRoSO0yrQVfU2tmNTDYVgH3wB7j+F89IWgbYiZuZ/dbcnV1lZtZRlFZgPD4OzlV8bF5+EKQUj9bvWoMaL1u0KHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b4Bq6TYI; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731418957; x=1762954957;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7tbqlEq0BGuzVf0SVSuxaMB9hCOlShsw/+ReKdtFfzg=;
+  b=b4Bq6TYIn9e/7o+0SecrlwCtIZ+hwe1BxO0MnjDMcAuZGxkqBXaWhQi9
+   dNWMTxpQPHU2DXXO9t13XGUk2/RsSBMohKZZomboG/TCszV/uAQEfnYi9
+   E9rKpHuRT65ntXRrYGQLPxUr/8dLT0eyPO/eFOa0hENqiTU9fRJCMc0OA
+   qW96Q0THDfWlDZuJd4khbaeKLVhz7WbNr6WngiXwaYDWWwgYVCAm5Tb9I
+   YP10RF8F3DA+0s7E+885dFFZJbOcaJZ4fW9qCtJYw97qqUcx3WOkUVUeq
+   de0MEahKE2bMu7IvHtm91SH9A+cIB9iCsxQWoCyiY/YuyMJdV85XHGXKJ
+   Q==;
+X-CSE-ConnectionGUID: Rw3vIpXjQ86Sux8Fy/OU1g==
+X-CSE-MsgGUID: cJDuN1HYRKausux1O6qMrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31213033"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="31213033"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 05:42:35 -0800
+X-CSE-ConnectionGUID: NEuytxN8TqiOZRnq950Cjg==
+X-CSE-MsgGUID: wn7vMLI6SwqMoaQvBsDduw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,148,1728975600"; 
+   d="scan'208";a="91499895"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 05:42:33 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH] PCI: Fix BAR resizing when VF BARs are assigned
+Date: Tue, 12 Nov 2024 15:42:25 +0200
+Message-Id: <20241112134225.9837-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241112-refactor-blk-affinity-helpers-v3-7-573bfca0cbd8@kernel.org>
-References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
-In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
- linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
- mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
- storagedev@microchip.com, linux-nvme@lists.infradead.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Replace all users of blk_mq_virtio_map_queues with the more generic
-blk_mq_hctx_map_queues. This in preparation to retire
-blk_mq_virtio_map_queues.
+__resource_resize_store() attempts to release all resources of the
+device before attempting the resize. The loop, however, only covers
+standard BARs (< PCI_STD_NUM_BARS). If a device has VF BARs that are
+assigned, pci_reassign_bridge_resources() finds the bridge window still
+has some assigned child resources and returns -NOENT which makes
+pci_resize_resource() to detect an error and abort the resize.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
+Similarly, an assigned Expansion ROM resource prevents the resize.
+
+Change the release loop to cover both the VF BARs and Expansion ROM
+which allows the resize operation to release the bridge windows and
+attempt to assigned them again with the different size.
+
+As __resource_resize_store() checks first that no driver is bound to
+the PCI device before resizing is allowed, SR-IOV cannot be enabled
+during resize so it is safe to release also the IOV resources.
+
+Fixes: 8bb705e3e79d ("PCI: Add pci_resize_resource() for resizing BARs")
+Reported-by: Michał Winiarski <michal.winiarski@intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/block/virtio_blk.c | 4 ++--
- drivers/scsi/virtio_scsi.c | 3 +--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 0e99a4714928478c1ba81777b8e98448eb5b992a..fd997e3381526eb3d7a21eda296b3a8a2998c696 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -13,7 +13,6 @@
- #include <linux/string_helpers.h>
- #include <linux/idr.h>
- #include <linux/blk-mq.h>
--#include <linux/blk-mq-virtio.h>
- #include <linux/numa.h>
- #include <linux/vmalloc.h>
- #include <uapi/linux/virtio_ring.h>
-@@ -1186,7 +1185,8 @@ static void virtblk_map_queues(struct blk_mq_tag_set *set)
- 		if (i == HCTX_TYPE_POLL)
- 			blk_mq_map_queues(&set->map[i]);
- 		else
--			blk_mq_virtio_map_queues(&set->map[i], vblk->vdev, 0);
-+			blk_mq_hctx_map_queues(&set->map[i],
-+					       &vblk->vdev->dev, 0);
- 	}
- }
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 5d0f4db1cab7..80b01087d3ef 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1440,7 +1440,7 @@ static ssize_t __resource_resize_store(struct device *dev, int n,
  
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index 8471f38b730e205eb57052305c154260864bee95..dcb83c15f90825bd7bdb3a5f541108b934a308f3 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -29,7 +29,6 @@
- #include <scsi/scsi_tcq.h>
- #include <scsi/scsi_devinfo.h>
- #include <linux/seqlock.h>
--#include <linux/blk-mq-virtio.h>
+ 	pci_remove_resource_files(pdev);
  
- #include "sd.h"
- 
-@@ -746,7 +745,7 @@ static void virtscsi_map_queues(struct Scsi_Host *shost)
- 		if (i == HCTX_TYPE_POLL)
- 			blk_mq_map_queues(map);
- 		else
--			blk_mq_virtio_map_queues(map, vscsi->vdev, 2);
-+			blk_mq_hctx_map_queues(map, &vscsi->vdev->dev, 2);
- 	}
- }
- 
-
+-	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
++	for (i = 0; i < PCI_BRIDGE_RESOURCES; i++) {
+ 		if (pci_resource_len(pdev, i) &&
+ 		    pci_resource_flags(pdev, i) == flags)
+ 			pci_release_resource(pdev, i);
 -- 
-2.47.0
+2.39.5
 
 
