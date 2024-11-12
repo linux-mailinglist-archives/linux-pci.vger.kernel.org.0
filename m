@@ -1,61 +1,56 @@
-Return-Path: <linux-pci+bounces-16599-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16601-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCDC59C635A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 22:24:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0019C637D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 22:36:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D1B128130F
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:24:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B25091F2557B
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:36:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CF321A4A3;
-	Tue, 12 Nov 2024 21:24:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F6321A4AD;
+	Tue, 12 Nov 2024 21:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtPc88R6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElakLreo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73242170DD;
-	Tue, 12 Nov 2024 21:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D3E204930;
+	Tue, 12 Nov 2024 21:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731446689; cv=none; b=Z4mgJ05NZOWI4u09sBwRqzr4tz8tZeBGoOMqd1/Z3if469h1WLDxWBAQj2I45gePKhFKHiXMGy4EFde5ZbiUGuo+6BT596psnmKxCeasKz8Z4SmH8tA2nRxO9nI72r35C8zHHDzNkH9hHmfRhCfmHJn51muE5sHocioV9t8HaUE=
+	t=1731447371; cv=none; b=d3o5nzPERcRBUzm7QXEzaUThJMPxytOcuE+reUgUDhn/0A+pFtHJJ81RIzrv0/qqkR0RaDBBTMBXfEXOIfJdSCyq3smNXw281o6/93cU9Cgc/uPVcBHYkbzQRLsfxdTPEtWpgKs4ADorB41csZ3V4w2pX1cYvZh4NVgwIul4nI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731446689; c=relaxed/simple;
-	bh=IcTJgLodvSURGaK4wqAzdTDDMij+U5Fu23bdAxDaorg=;
+	s=arc-20240116; t=1731447371; c=relaxed/simple;
+	bh=YT8QiaKYc6WikadvMwOhGhXCA4jctxjY4UC9dlIgrcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DWTEyq+Sd95Y7DQ8JMyZgSZ4MtZjkIxhmqxdoSM2FA9kz+1AyBjaRLMrSHRbduwM/FuJUnltNwXnDb9XLeWMZ3t0L0YHPx2bXrTfUcFfx2FhHe1hjDr9uY6CP6U29m3S83/+8gotlVIOLKITLZc/aNBqvoBpY0YGFLTfKSzSihM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtPc88R6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2543BC4CECD;
-	Tue, 12 Nov 2024 21:24:49 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=EShJxVWyaB0zaIMPJvNp+E+AhG6F1YEItRFFHT1Ok/WiGSOVMciDlpFj+aX7XCg4Crihmy12cGRwecyuOPXDDaTNuS6x4tChF20gKPU8OLKCcdXpNQqn/6SJIL+d90CvPQeIjCyeLGiWCj9MshmpddrMyE6pTT2ew6mBLFGnvzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElakLreo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BCFC4CECD;
+	Tue, 12 Nov 2024 21:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731446689;
-	bh=IcTJgLodvSURGaK4wqAzdTDDMij+U5Fu23bdAxDaorg=;
+	s=k20201202; t=1731447371;
+	bh=YT8QiaKYc6WikadvMwOhGhXCA4jctxjY4UC9dlIgrcA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QtPc88R6MNDMn8zqqI1B9uJrVb9jLqWL5ToBEKV+RxMCJW92huc1DxZg2adpjHUX6
-	 aZXq1kKE5zX0Ey1E4e4vSCGjuQHgMygguL5X0C657sxGqYbq8uohO+xYAJWTAq0DU8
-	 MN7w8BxC0H4dGiAF6lN4zyDAtx9UuMgT7D/NMc7vxIcaI6BGjRL9Ao7rwzzoySl0bm
-	 egE33GKzO7eo9qaJgvFU1cCBXXWbCOOhT+vWZJbaIKP+pqu9UXi864epLTZgyK+BtS
-	 g9zhmeVR3mFnD4xcc+F6UqPNkcqJ9X6nPcUKODln2QB8sd+DBYdTKPe2ULK6pmVXda
-	 JxCGpcywl/irA==
-Date: Tue, 12 Nov 2024 15:24:47 -0600
+	b=ElakLreoUElzFc7nu+uUsrDpPS++A0T23q9ciRXNhxC/vItSuDw56NpCqpiFxi7QK
+	 vEvTsi/Pbdi8S96yxwOII1A5naDXEQ4ffh+1vyaw3dpzrkGhsNb/Gc5mDahZOpP2cZ
+	 wJiVxI+shzQqIcniXTTKnr1NDwX7858vpglbmRj67KkQXYwoGke+TODCw0Gshy5FH8
+	 uVlyvrTpkWdyz/ZHXIi2JytmXQ7uIGo4+V9sGOy3/rUFVBD8TSM/ezEJrn9d/G1Wra
+	 d2rqYXbIpDZRPUHSUV7Zc+8/vY8bkhdq1VF7BwEfB8GYtgJFTZCsAj5lOKyDNcuwRL
+	 gwF3luLnvkVTQ==
+Date: Tue, 12 Nov 2024 15:36:08 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mathias Nyman <mathias.nyman@linux.intel.com>,
-	Fenghua Yu <fenghua.yu@intel.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Peter Chen <peter.chen@kernel.org>,
-	Pawel Laszczak <pawell@cadence.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Mathias Nyman <mathias.nyman@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 1/1] usb: cdns3: Synchronise PCI IDs via common data
- base
-Message-ID: <20241112212447.GA1861184@bhelgaas>
+To: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
+Cc: lpieralisi@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	salee@marvell.com, dingwei@marvell.com
+Subject: Re: [PATCH 1/1] PCI: armada8k: add device reset to link-down handle
+Message-ID: <20241112213608.GA1861480@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,172 +59,105 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241112160125.2340972-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20241112070310.757856-1-jpatel2@marvell.com>
 
-On Tue, Nov 12, 2024 at 06:01:25PM +0200, Andy Shevchenko wrote:
-> There are a few places in the kernel where PCI IDs for different Cadence
-> USB controllers are being used. Besides different naming, they duplicate
-> each other. Make this all in order by providing common definitions via
-> PCI IDs database and use in all users. While doing that, rename
-> definitions as Roger suggested.
-> 
-> Suggested-by: Roger Quadros <rogerq@kernel.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In subject, follow capitalization convention.  Use "git log
+--oneline".
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Nov 11, 2024 at 11:03:10PM -0800, Jenishkumar Maheshbhai Patel wrote:
+> Added pcie reset via gpio support as described in the
+> designware-pcie.txt DT binding document.
+> In cases link down cause still exist in device.
+> The device need to be reset to reestablish the link.
+> If reset-gpio pin provided in the device tree, then the linkdown
+> handle resets the device before reestablishing link.
 
-Looks like maybe something for the USB tree?
+s/pcie/PCIe/
+s/gpio/GPIO/
 
+Add blank lines between paragraphs.  Rewrap to fill 75 columns.
+
+> Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
 > ---
->  drivers/usb/cdns3/cdns3-pci-wrap.c       |  4 +---
->  drivers/usb/cdns3/cdnsp-pci.c            | 26 +++++++++---------------
->  drivers/usb/gadget/udc/cdns2/cdns2-pci.c |  3 +--
->  drivers/usb/host/xhci-pci.c              |  5 ++---
->  include/linux/pci_ids.h                  |  4 ++++
->  5 files changed, 18 insertions(+), 24 deletions(-)
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 24 ++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/usb/cdns3/cdns3-pci-wrap.c b/drivers/usb/cdns3/cdns3-pci-wrap.c
-> index 591d149de8f3..3b3b3dc75f35 100644
-> --- a/drivers/usb/cdns3/cdns3-pci-wrap.c
-> +++ b/drivers/usb/cdns3/cdns3-pci-wrap.c
-> @@ -37,8 +37,6 @@ struct cdns3_wrap {
->  #define PCI_DRIVER_NAME		"cdns3-pci-usbss"
->  #define PLAT_DRIVER_NAME	"cdns-usb3"
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index b1b48c2016f7..9a48ef60be51 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+> +#include <linux/of_gpio.h>
+
+Preserve (mostly) alpha sorted list of includes.
+
+>  #include "pcie-designware.h"
 >  
-> -#define PCI_DEVICE_ID_CDNS_USB3	0x0100
-> -
->  static struct pci_dev *cdns3_get_second_fun(struct pci_dev *pdev)
->  {
->  	struct pci_dev *func;
-> @@ -189,7 +187,7 @@ static void cdns3_pci_remove(struct pci_dev *pdev)
->  }
->  
->  static const struct pci_device_id cdns3_pci_ids[] = {
-> -	{ PCI_VDEVICE(CDNS, PCI_DEVICE_ID_CDNS_USB3) },
-> +	{ PCI_VDEVICE(CDNS, PCI_DEVICE_ID_CDNS_USBSS) },
->  	{ 0, }
+> @@ -37,6 +38,8 @@ struct armada8k_pcie {
+>  	struct regmap *sysctrl_base;
+>  	u32 mac_rest_bitmask;
+>  	struct work_struct recover_link_work;
+> +	enum of_gpio_flags flags;
+> +	struct gpio_desc *reset_gpio;
 >  };
 >  
-> diff --git a/drivers/usb/cdns3/cdnsp-pci.c b/drivers/usb/cdns3/cdnsp-pci.c
-> index 2d05368a6745..a51144504ff3 100644
-> --- a/drivers/usb/cdns3/cdnsp-pci.c
-> +++ b/drivers/usb/cdns3/cdnsp-pci.c
-> @@ -28,12 +28,6 @@
->  #define PCI_DRIVER_NAME		"cdns-pci-usbssp"
->  #define PLAT_DRIVER_NAME	"cdns-usbssp"
->  
-> -#define PCI_DEVICE_ID_CDNS_USB3		0x0100
-> -#define PCI_DEVICE_ID_CDNS_UDC		0x0200
-> -
-> -#define PCI_CLASS_SERIAL_USB_CDNS_USB3	(PCI_CLASS_SERIAL_USB << 8 | 0x80)
-> -#define PCI_CLASS_SERIAL_USB_CDNS_UDC	PCI_CLASS_SERIAL_USB_DEVICE
-> -
->  static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
->  {
->  	/*
-> @@ -41,10 +35,10 @@ static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
->  	 * Platform has two function. The fist keeps resources for
->  	 * Host/Device while the secon keeps resources for DRD/OTG.
->  	 */
-> -	if (pdev->device == PCI_DEVICE_ID_CDNS_UDC)
-> -		return pci_get_device(pdev->vendor, PCI_DEVICE_ID_CDNS_USB3, NULL);
-> -	if (pdev->device == PCI_DEVICE_ID_CDNS_USB3)
-> -		return pci_get_device(pdev->vendor, PCI_DEVICE_ID_CDNS_UDC, NULL);
-> +	if (pdev->device == PCI_DEVICE_ID_CDNS_USBSSP)
-> +		return pci_get_device(pdev->vendor, PCI_DEVICE_ID_CDNS_USBSS, NULL);
-> +	if (pdev->device == PCI_DEVICE_ID_CDNS_USBSS)
-> +		return pci_get_device(pdev->vendor, PCI_DEVICE_ID_CDNS_USBSSP, NULL);
->  
->  	return NULL;
->  }
-> @@ -221,12 +215,12 @@ static const struct dev_pm_ops cdnsp_pci_pm_ops = {
->  };
->  
->  static const struct pci_device_id cdnsp_pci_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_UDC),
-> -	  .class = PCI_CLASS_SERIAL_USB_CDNS_UDC },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_UDC),
-> -	  .class = PCI_CLASS_SERIAL_USB_CDNS_USB3 },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_USB3),
-> -	  .class = PCI_CLASS_SERIAL_USB_CDNS_USB3 },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_USBSSP),
-> +	  .class = PCI_CLASS_SERIAL_USB_DEVICE },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_USBSSP),
-> +	  .class = PCI_CLASS_SERIAL_USB_CDNS },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_USBSS),
-> +	  .class = PCI_CLASS_SERIAL_USB_CDNS },
->  	{ 0, }
->  };
->  
-> diff --git a/drivers/usb/gadget/udc/cdns2/cdns2-pci.c b/drivers/usb/gadget/udc/cdns2/cdns2-pci.c
-> index b1a8f772467c..e589593b4cbf 100644
-> --- a/drivers/usb/gadget/udc/cdns2/cdns2-pci.c
-> +++ b/drivers/usb/gadget/udc/cdns2/cdns2-pci.c
-> @@ -15,7 +15,6 @@
->  #include "cdns2-gadget.h"
->  
->  #define PCI_DRIVER_NAME		"cdns-pci-usbhs"
-> -#define PCI_DEVICE_ID_CDNS_USB2	0x0120
->  #define PCI_BAR_DEV		0
->  #define PCI_DEV_FN_DEVICE	0
->  
-> @@ -113,7 +112,7 @@ static const struct dev_pm_ops cdns2_pci_pm_ops = {
->  };
->  
->  static const struct pci_device_id cdns2_pci_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_USB2),
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_CDNS, PCI_DEVICE_ID_CDNS_USB),
->  	  .class = PCI_CLASS_SERIAL_USB_DEVICE },
->  	{ 0, }
->  };
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 47c4f70793e4..b21474e81482 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -82,8 +82,6 @@
->  #define PCI_DEVICE_ID_ASMEDIA_3042_XHCI			0x3042
->  #define PCI_DEVICE_ID_ASMEDIA_3242_XHCI			0x3242
->  
-> -#define PCI_DEVICE_ID_CDNS_SSP				0x0200
-> -
->  static const char hcd_name[] = "xhci_hcd";
->  
->  static struct hc_driver __read_mostly xhci_pci_hc_driver;
-> @@ -475,8 +473,9 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
->  		if (pdev->device == 0x9203)
->  			xhci->quirks |= XHCI_ZHAOXIN_TRB_FETCH;
+>  #define PCIE_VENDOR_REGS_OFFSET		0x8000
+> @@ -238,9 +241,18 @@ static void armada8k_pcie_recover_link(struct work_struct *ws)
 >  	}
+>  	pci_lock_rescan_remove();
+>  	pci_stop_and_remove_bus_device(root_port);
+> +	/* Reset device if reset gpio is set */
+> +	if (pcie->reset_gpio) {
+> +		/* assert and then deassert the reset signal */
+> +		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+> +		msleep(100);
+
+Needs some sort of #define for this 100 ms.
+
+> +		gpiod_set_value_cansleep(pcie->reset_gpio,
+> +					 (pcie->flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1);
+> +	}
+>  	/*
+> -	 * Sleep needed to make sure all pcie transactions and access
+> -	 * are flushed before resetting the mac
+> +	 * Sleep used for two reasons.
+> +	 * First make sure all pcie transactions and access are flushed before resetting the mac
+> +	 * and second to make sure pci device is ready in case we reset the device
+>  	 */
+>  	msleep(100);
+
+s/pcie/PCIe/ (throughout)
+s/mac/MAC/
+
+Explain the 100ms.  Hopefully this is something defined by PCIe base
+or CEM spec.  Use or add #define as needed.
+
+> @@ -376,6 +388,7 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  	struct armada8k_pcie *pcie;
+>  	struct device *dev = &pdev->dev;
+>  	struct resource *base;
+> +	int reset_gpio;
+>  	int ret;
+>  
+>  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> @@ -420,6 +433,13 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  		goto fail_clkreg;
+>  	}
+>  
+> +	/* Config reset gpio for pcie if the reset connected to gpio */
+> +	reset_gpio = of_get_named_gpio_flags(pdev->dev.of_node,
+> +					     "reset-gpios", 0,
+> +					     &pcie->flags);
+> +	if (gpio_is_valid(reset_gpio))
+> +		pcie->reset_gpio = gpio_to_desc(reset_gpio);
 > +
->  	if (pdev->vendor == PCI_VENDOR_ID_CDNS &&
-> -	    pdev->device == PCI_DEVICE_ID_CDNS_SSP)
-> +	    pdev->device == PCI_DEVICE_ID_CDNS_USBSSP)
->  		xhci->quirks |= XHCI_CDNS_SCTX_QUIRK;
->  
->  	/* xHC spec requires PCI devices to support D3hot and D3cold */
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index e4bddb927795..d2402bf4aea2 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -121,6 +121,7 @@
->  #define PCI_CLASS_SERIAL_USB_OHCI	0x0c0310
->  #define PCI_CLASS_SERIAL_USB_EHCI	0x0c0320
->  #define PCI_CLASS_SERIAL_USB_XHCI	0x0c0330
-> +#define PCI_CLASS_SERIAL_USB_CDNS	0x0c0380
->  #define PCI_CLASS_SERIAL_USB_DEVICE	0x0c03fe
->  #define PCI_CLASS_SERIAL_FIBER		0x0c04
->  #define PCI_CLASS_SERIAL_SMBUS		0x0c05
-> @@ -2421,6 +2422,9 @@
->  #define PCI_VENDOR_ID_QCOM		0x17cb
->  
->  #define PCI_VENDOR_ID_CDNS		0x17cd
-> +#define PCI_DEVICE_ID_CDNS_USBSS	0x0100
-> +#define PCI_DEVICE_ID_CDNS_USB		0x0120
-> +#define PCI_DEVICE_ID_CDNS_USBSSP	0x0200
->  
->  #define PCI_VENDOR_ID_ARECA		0x17d3
->  #define PCI_DEVICE_ID_ARECA_1110	0x1110
+>  	pcie->sysctrl_base = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+>  						       "marvell,system-controller");
+>  	if (IS_ERR(pcie->sysctrl_base)) {
 > -- 
-> 2.43.0.rc1.1336.g36b5255a03ac
+> 2.25.1
 > 
 
