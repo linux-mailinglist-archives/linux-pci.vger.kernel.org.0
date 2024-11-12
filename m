@@ -1,122 +1,122 @@
-Return-Path: <linux-pci+bounces-16487-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16488-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C97C9C4B01
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 01:35:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C82B79C4DD5
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 05:47:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45F601F23257
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 00:35:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 800EB1F24EFE
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 04:47:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2E471F7070;
-	Tue, 12 Nov 2024 00:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="XtuK8EZ5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B04E84C91;
+	Tue, 12 Nov 2024 04:47:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7B61F7066
-	for <linux-pci@vger.kernel.org>; Tue, 12 Nov 2024 00:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536EC19F13C;
+	Tue, 12 Nov 2024 04:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731371711; cv=none; b=Jew5x2wvI4u94olH+QGXc4LquTosPRkl55G8upBtigJijNumNqVqXw4I3FbhbpugP3ZsFaSQ5O0K6AlYo4CC3D+rMBSbjFxM0i/Fp5ar140oJ8C3f9eyiR2bH5obSC1Qznc+HcltjWAq85YltXFAZYaJ0aUZikDOvVoxZ7xA85k=
+	t=1731386864; cv=none; b=VN1xaRSzBBYvRGFKxkAm2murO4K2OWGhczd37OdvP/ByvCTiOQB613JII9cO+cUThCx++28pXq18stZF1UPTjIvwlhKkbTXkSAaShT8UbiUyjU53aevgZUzO75hhYNYwDnZmxLHoooAhByQXIAvcE5+vdRAeyfr5jo70/0UWe14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731371711; c=relaxed/simple;
-	bh=PkbyTMgFqOzcboehWlrrNjFh8Q2ib415gbHXRRFnbKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lHG/VOVj408i+ydn/VFAwBHNTgh6MxF/E1yp/4dwwtRqv7ZBkKWkKwavnhS/AB9XBRu9tNvpfeRfgBJCPkHRyOmlHXDLIQLYIk8FvuW7lxPuhfoGlmIg9OOGcx2Ik8Avb55X9VV0sS84YkZMq40hfIjHj6RZmMZ9suCnqW7ENeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=XtuK8EZ5; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20c693b68f5so52173385ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2024 16:35:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1731371709; x=1731976509; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EKgRrgLp424rRp+9+I/8Qg6L1UWiV8NeCx/IXJG06O4=;
-        b=XtuK8EZ5k0B8EVS8lRpTMmyiSJxFc1EDkFbTXoxtx9vK6MIba3rfrQYXjWN4wCFgNl
-         KVmV1YCHOlYfFs91bgsD5uZfXAX2RtJjDeT5rAGeWRHZS5wdYsjwH7xLuEdpLPFcbS2i
-         0IFXutOvz/P3fbHTY9RqSw8+v7wu2cqAI6sSRjsB9m9KrgMI+7BhShgk+hVKxn7R12Gw
-         FvhakkkgAhhjzy9SjtneVLmShHgl8tPNP1GUspDLXlM4IUJswOKOb9n1DzDBRptwLjXd
-         oNS9iSJ52FDxMepWV3f7L+2kvu6QuoeEdICOfnTthmTbqKslZ2P9BqzkPrw2Wp2twy07
-         xTPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731371709; x=1731976509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EKgRrgLp424rRp+9+I/8Qg6L1UWiV8NeCx/IXJG06O4=;
-        b=KyMsNgQEODZqIC59mi80VafyAqlYEdBFP1Q8LUzyxpAjot7NWmER3VfEL/hlsaOiH7
-         rpIz7ymX2XnPWwjQkOHH8gnFnqYneCeuTagjz0O8ZT2fRW0oDoPcuz/sPkKQQknZV1PB
-         DtcDU7AKeImO0loeD3NHlnCcsU+An+vQ8yagLNICsni2GYFddK3q1RU0Y2glN4tmfAyo
-         cOPrYNXFHbBwa3xhAAupyRkXVLDJve3t2KURNa0HTCjuh7kPUW3m+mkS0HYuTlHnw//e
-         L88GbRbgLd+bIp/rKyjuj0fSYtIc4jZPtdb8eYCxks/Iq/IqVcOZxYM15UvVASob+DSf
-         vdEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXg9H3AXffJEXm4FFKLvmX+jxHu6xwtypzUwXkh8Eu68Bg7bVhpxjiESJlTzGq/hTHTTcgjszQhOAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp3gEMUF/jlouhT0WSp4L9PQ2kcpL3nDAzOS07+1fVrn5TM/fZ
-	+zeJI3t3GzlkK1N+Q+m6Xke9S8Qkgv+vP31aXW94v3F4GN7L9O7GjQ70LKs4yIA=
-X-Google-Smtp-Source: AGHT+IGQTUP7sJ930EzsgxemjH6kwFcSH2PpZgSrP5gAgxNP+jgwhKNTZv9LbZwLWAoEXjOkZzUgZw==
-X-Received: by 2002:a17:902:d4d0:b0:20b:ab4b:5432 with SMTP id d9443c01a7336-211834f2d6bmr134631535ad.12.1731371709530;
-        Mon, 11 Nov 2024 16:35:09 -0800 (PST)
-Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177dc8376sm82809975ad.44.2024.11.11.16.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2024 16:35:09 -0800 (PST)
-Date: Mon, 11 Nov 2024 16:34:30 -0800
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
- Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
- linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>, Aditya Prabhune
- <aprabhune@nvidia.com>, Hannes Reinecke <hare@suse.de>, Heiner Kallweit
- <hkallweit1@gmail.com>, Arun Easi <aeasi@marvell.com>, Jonathan Chocron
- <jonnyc@amazon.com>, Bert Kenward <bkenward@solarflare.com>, Matt Carlson
- <mcarlson@broadcom.com>, Kai-Heng Feng <kai.heng.feng@canonical.com>, Jean
- Delvare <jdelvare@suse.de>, Alex Williamson <alex.williamson@redhat.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] PCI/sysfs: Change read permissions for VPD
- attributes
-Message-ID: <20241111163430.7fad2a2a@hermes.local>
-In-Reply-To: <20241111204104.GA1817395@bhelgaas>
-References: <f93e6b2393301df6ac960ef6891b1b2812da67f3.1731005223.git.leonro@nvidia.com>
- <20241111204104.GA1817395@bhelgaas>
+	s=arc-20240116; t=1731386864; c=relaxed/simple;
+	bh=LEqqJ4nFtPDR80cCFpUujkkjo5vD242bVGicW1R9Uwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQ0FKLCn0R1K/vkgh4DDcSEvJ9CfVJeAVVbW3m3Vv2qQr1VrYneOzi4SDg1W8DgEldUrYs51XZ0EIL29JEg4in/+yaB628tnBLwAQikKnYjnYlBjox78Cb7s+Zf0JOqIVrLY1SldnFqb0wMX5dUOBe+iazTYDIPGd3rqg7pXfSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 95CAB68D09; Tue, 12 Nov 2024 05:47:36 +0100 (CET)
+Date: Tue, 12 Nov 2024 05:47:36 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org,
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com,
+	linux-nvme@lists.infradead.org, Daniel Wagner <dwagner@suse.de>
+Subject: Re: [PATCH v2 1/6] blk-mq: introduce blk_mq_hctx_map_queues
+Message-ID: <20241112044736.GA8883@lst.de>
+References: <20241111-refactor-blk-affinity-helpers-v2-0-f360ddad231a@kernel.org> <20241111-refactor-blk-affinity-helpers-v2-1-f360ddad231a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241111-refactor-blk-affinity-helpers-v2-1-f360ddad231a@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, 11 Nov 2024 14:41:04 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Thu, Nov 07, 2024 at 08:56:56PM +0200, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > The Vital Product Data (VPD) attribute is not readable by regular
-> > user without root permissions. Such restriction is not really needed
-> > for many devices in the world, as data presented in that VPD is not
-> > sensitive and access to the HW is safe and tested.
-> > 
-> > This change aligns the permissions of the VPD attribute to be accessible
-> > for read by all users, while write being restricted to root only.
-> > 
-> > For the driver, there is a need to opt-in in order to allow this
-> > functionality.  
+On Mon, Nov 11, 2024 at 07:02:09PM +0100, Daniel Wagner wrote:
+> blk_mq_pci_map_queues and blk_mq_virtio_map_queues will create a CPU to
+> hardware queue mapping based on affinity information. These two function
+> share common code and only differ on how the affinity information is
+> retrieved. Also, those functions are located in the block subsystem
+> where it doesn't really fit in. They are virtio and pci subsystem
+> specific.
 > 
-> I don't think the use case is very strong (and not included at all
-> here).
+> Introduce a new callback in struct bus_type to get the affinity mask.
+> The callbacks can then be populated by the subsystem directly.
 > 
-> If we do need to do this, I think it's a property of the device, not
-> the driver.
+> All but one driver use the subsystem default affinity masks. hisi_sas v2
+> depends on a driver specific mapping, thus use the optional argument
+> get_queue_affinity to retrieve the mapping.
 
-I remember some broken PCI devices, which will crash if VPD is read.
-Probably not worth opening this can of worms.
+This seems to mix up a few different things:
+
+ 1) adding a new bus operation
+ 2) implementations of that operation for PCI and virtio
+ 3) a block layer consumer of the operation
+
+all these really should be separate per-subsystem patches.
+
+You'll also need to Cc the driver model maintainers.
+
+> +void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
+> +			    struct device *dev, unsigned int offset,
+> +			    get_queue_affinity_fn *get_irq_affinity)
+> +{
+> +	const struct cpumask *mask = NULL;
+> +	unsigned int queue, cpu;
+> +
+> +	for (queue = 0; queue < qmap->nr_queues; queue++) {
+> +		if (get_irq_affinity)
+> +			mask = get_irq_affinity(dev, queue + offset);
+> +		else if (dev->bus->irq_get_affinity)
+> +			mask = dev->bus->irq_get_affinity(dev, queue + offset);
+> +
+> +		if (!mask)
+> +			goto fallback;
+> +
+> +		for_each_cpu(cpu, mask)
+> +			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+> +	}
+
+This does different things with a NULL argument vs not.  Please split it
+into two separate helpers.  The non-NULL case is only uses in hisi_sas,
+so it might be worth just open coding it there as well.
+
+> +static const struct cpumask *pci_device_irq_get_affinity(struct device *dev,
+> +					unsigned int irq_vec)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	return pci_irq_get_affinity(pdev, irq_vec);
+
+Nit: this could be shortened to:
+
+	return pci_irq_get_affinity(to_pci_dev(dev), irq_vec);
+
 
