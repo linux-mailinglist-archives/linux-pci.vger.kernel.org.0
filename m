@@ -1,63 +1,61 @@
-Return-Path: <linux-pci+bounces-16561-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D37E9C60D3
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 19:52:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D37379C5FB3
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 18:59:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E20FB60A0D
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:04:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C9CC5B2BD30
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DF17205120;
-	Tue, 12 Nov 2024 15:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F25320409D;
+	Tue, 12 Nov 2024 16:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYOBihfF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBarR9QI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF9C20409A;
-	Tue, 12 Nov 2024 15:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CC51F7068;
+	Tue, 12 Nov 2024 16:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731427156; cv=none; b=aaNeMedXmHyYlJ2pk8yQ2V4tmx+0G3gBouKmFMMlBJYB4JUvtGwfp1i/p2TTQcqFvWPLHwv5EY/EMNVsdbIn5X1eyit1hLk1/JNmSTsUkm84lIuqBsdDk0W5HYxyNbY7GVZEcC+jGLNPb1iUth6PgmdAStXExd0v3nnStrHRiRM=
+	t=1731427716; cv=none; b=ttqlGAhV67vT8gEVHvrlWlRr62pTl4lWEgZgYh2LXPcypeFNyNkNVeqTkNi4Fp0Z2fxgFedSIlPFZaNlY8ZENBYuP9on+tQGuDAtQa/v7yqjJ2ORmWU7dmrRKgrkVJz8MfIPj5nmQwaGijVo7gmxLiMvh46mZddW1G1S07LOW2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731427156; c=relaxed/simple;
-	bh=BleI3g/9Mgelj0hSQNkzA4/4uDaRN4Z/XLhqKzmcEOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cazjbap+KJlvxcGfuRQUG2BPtDdbi8qHieJmpNgZVK3v8Mh1Q6evJIpBDDE7m66HsCAoshu/F1DNSDVyuThXWMn3NH2YQfPuRdqdhZYz7Ri5+oMcRKqVWL2gkePbtiolTiyeUdUz4mA8jpBb9IMassrE9qPc9ClgemRGO7m6kxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYOBihfF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6CB1C4CECD;
-	Tue, 12 Nov 2024 15:59:15 +0000 (UTC)
+	s=arc-20240116; t=1731427716; c=relaxed/simple;
+	bh=4/3U7giMwfegq1WrWjsH7KAiGA60faNeJ9nAsc/0ZQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=WxFGTh28M6yR7AHWgO2I6r6FvNSWaFpa+UxVlag27vfrUpqAQC8qJXQR97TiQMAWY64jDK+zX253CCa9K9UiChxjGHBy0KjmFs1Hxxq048v7ItXOD4fskuAZg4J7RZlNh/4sjRrPxveEkDa63ZJ73eMlQLCBFHEkgCapBopWSb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBarR9QI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC89C4CECD;
+	Tue, 12 Nov 2024 16:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731427155;
-	bh=BleI3g/9Mgelj0hSQNkzA4/4uDaRN4Z/XLhqKzmcEOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DYOBihfFEvWfaR9x6HoxpRiixjrLPzdHw3AC7d65JT0zJmFcqRaDU3DqumpVMuP3U
-	 L+dKz61++MfqjLtTY8YrAE+kOlFaGCXB6xfFwbOymCnKB0chgXMfkf9+lPjXgMO5+S
-	 cwZyeqY6VIAYir3vd2tPSscqw9BxZ/kEXtl8m0ZE7gFkcjlNef36otxZHhOX4dsyVl
-	 y8BRMr1SGH7a0VdwTaoU7QGu3Cob6eoURtLb6XqbXddsLah+3aeWxixUn/tyBgIxiT
-	 1mLoTxCaYtAYx9MyyXv4FzmlKk6pu8kBQOtIC8XOE+OciASiGo53fIb9IshrIi4kjj
-	 B9gyxnpKVOfxw==
-Date: Tue, 12 Nov 2024 09:59:13 -0600
-From: Rob Herring <robh@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
-	arnd@arndb.de, bhelgaas@google.com, unicorn_wang@outlook.com,
-	conor+dt@kernel.org, guoren@kernel.org, inochiama@outlook.com,
-	krzk+dt@kernel.org, lee@kernel.org, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, pbrobinson@gmail.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
-	fengchun.li@sophgo.com
-Subject: Re: [PATCH 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
-Message-ID: <20241112155913.GA973575-robh@kernel.org>
-References: <cover.1731303328.git.unicorn_wang@outlook.com>
- <1edbed1276a459a144f0cb0815859a1eb40bfcbf.1731303328.git.unicorn_wang@outlook.com>
+	s=k20201202; t=1731427714;
+	bh=4/3U7giMwfegq1WrWjsH7KAiGA60faNeJ9nAsc/0ZQM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=qBarR9QIQ7lfKBsN085qYcbiHiMDAJe38izCwS4bVr8PoNcOgOWPKLODJhjufAF7Y
+	 10/xo8Epsf2NUEuKi0xM7yI2ewuIrVjqZEMaN5I6z5B1doxYm1USGhLhOrxbjDfn9t
+	 AC8PQCvEXoBoY8SixtPLsgEdufNZN7B9Bou+66cH6MVQ9AFyO1+r0EjuC1p8yUCziS
+	 ekNEq4qgXSF7CzNuA2qjQzpgGMifciFXUWha41w3mxS8h8cQW/KmO9IjIVmiaIzZo2
+	 LZ9cSA88QcwwQj8rclF7NUtLgdIpEvrFWKo5L6bSrZsWiVno7tEa6v6Id607TyQ+Q8
+	 wa8RGVXubeHbA==
+Date: Tue, 12 Nov 2024 10:08:33 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shijith Thotton <sthotton@marvell.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"scott@os.amperecomputing.com" <scott@os.amperecomputing.com>,
+	Jerin Jacob <jerinj@marvell.com>,
+	Srujana Challa <schalla@marvell.com>,
+	Vamsi Krishna Attunuru <vattunuru@marvell.com>
+Subject: Re: [PATCH v4] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+Message-ID: <20241112160833.GA1845767@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,134 +64,103 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1edbed1276a459a144f0cb0815859a1eb40bfcbf.1731303328.git.unicorn_wang@outlook.com>
+In-Reply-To: <PH0PR18MB4425F2F17BA6CC582638F9D7D9592@PH0PR18MB4425.namprd18.prod.outlook.com>
 
-On Mon, Nov 11, 2024 at 01:59:37PM +0800, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
+On Tue, Nov 12, 2024 at 09:25:46AM +0000, Shijith Thotton wrote:
+> >> This patch introduces a PCI hotplug controller driver for the OCTEON
+> >> PCIe device. The OCTEON PCIe device is a multi-function device where the
+> >> first function serves as the PCI hotplug controller.
+> >>
+> >>                +--------------------------------+
+> >>                |           Root Port            |
+> >>                +--------------------------------+
+> >>                                |
+> >>                               PCIe
+> >>                                |
+> >> +---------------------------------------------------------------+
+> >> |              OCTEON PCIe Multifunction Device                 |
+> >> +---------------------------------------------------------------+
+> >>              |                    |              |            |
+> >>              |                    |              |            |
+> >> +---------------------+  +----------------+  +-----+  +----------------+
+> >> |      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
+> >> | (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
+> >> +---------------------+  +----------------+  +-----+  +----------------+
+> >>              |
+> >>              |
+> >> +-------------------------+
+> >> |   Controller Firmware   |
+> >> +-------------------------+
+> >>
+> >> The hotplug controller driver enables hotplugging of non-controller
+> >> functions within the same device. During probing, the driver removes
+> >> the non-controller functions and registers them as PCI hotplug slots.
+> >> These slots are added back by the driver, only upon request from the
+> >> device firmware.
+> >>
+> >> The controller uses MSI-X interrupts to notify the host of hotplug
+> >> events initiated by the OCTEON firmware. Additionally, the driver
+> >> allows users to enable or disable individual functions via sysfs slot
+> >> entries, as provided by the PCI hotplug framework.
+> >
+> >Can we say something here about what the benefit of this driver is?
+> >For example, does it save power?
 > 
-> Add binding for Sophgo SG2042 PCIe host controller.
+> The driver enables hotplugging of non-controller functions within the device
+> without requiring a fully implemented switch, reducing both power consumption
+> and product cost.
+
+Reduced product cost is motivation for the hardware design, not for
+this hotplug driver.
+
+You didn't explicitly say that when function 0 hot-removes another
+function, it reduces overall power consumption.  But I assume that's
+the case?
+
+> >What causes the function 0 firmware to request a hot-add or
+> >hot-removal of another function?
 > 
-> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
-> ---
->  .../bindings/pci/sophgo,sg2042-pcie-host.yaml | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml b/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..d4d2232f354f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/sophgo,sg2042-pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sophgo SG2042 PCIe Host (Cadence PCIe Wrapper)
-> +
-> +description: |+
+> The firmware will enable the required number of non-controller
+> functions based on runtime demand, allowing control over these
+> functions. For example, in a vDPA scenario, each function could act
+> as a different type of device (such as net, crypto, or storage)
+> depending on the firmware configuration.
 
-Don't need '|+'
+What is the path for this runtime demand?  I assume function 0
+provides some interface to request a specific kind of functionality
+(net, crypo, storage, etc)?
 
-> +  Sophgo SG2042 PCIe host controller is based on the Cadence PCIe core.
+I don't know anything about vDPA, so if that's important here, it
+needs a little more context.
 
-> +  It shares common features with the PCIe core and inherits common properties
-> +  defined in Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml.
+> Hot removal is useful in cases of live firmware updates.
 
-That's clear from the $ref. No need to say that in prose.
+So the idea is that function X is hot-removed, which forces the driver
+to let go of it, the firmware is updated, and X is hot-added again,
+and the driver binds to it again?
 
-> +
-> +maintainers:
-> +  - Chen Wang <unicorn_wang@outlook.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: sophgo,sg2042-pcie-host
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +    items:
-> +      - const: reg
-> +      - const: cfg
-> +
-> +  sophgo,syscon-pcie-ctrl:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to the SYSCON entry
+And somewhere in there is a reset of function X, and after the reset
+X is running the new firmware?
 
-Please describe what you need to access.
+Who/what initiates this whole path?  Some request to function 0,
+saying "please remove function X"?
 
-> +
-> +  sophgo,link-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Cadence IP link ID.
+But I guess maybe it doesn't go through function 0, since octeon_hp
+claims function 0, and it doesn't provide that functionality.  Maybe
+the individual drivers for *other* functions know how to initiate
+these things, and those functions internally communicate with function
+0 to ask it to start a hot-remove/hot-add sequence?
 
-Is this an index or related to the syscon? Nak for the former, use 
-linux,pci-domain. For the latter, add an arg to sophgo,syscon-pcie-ctrl.
+That wouldn't explain the power reduction plan, though.  A driver for
+function X could conceivably tell its device "I'm no longer needed"
+and function X could tell function 0 to remove it.  That might enable
+some power savings.  But that doesn't have a path to *re-enable*
+function X, since function X has been removed and there's no driver to
+ask for it to be hot-added again.
 
-> +
-> +  sophgo,internal-msi:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: Identifies whether the PCIE node uses internal MSI controller.
+Maybe there's some out-of-band management path that can tell function
+0 to do things, independent of PCIe?
 
-Wouldn't 'msi-parent' work for this purpose?
-
-> +
-> +  vendor-id:
-> +    const: 0x1f1c
-> +
-> +  device-id:
-> +    const: 0x2042
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    const: msi
-> +
-> +allOf:
-> +  - $ref: cdns-pcie-host.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - sophgo,syscon-pcie-ctrl
-> +  - sophgo,link-id
-> +  - vendor-id
-> +  - device-id
-> +  - ranges
-
-ranges is already required in the common schemas.
-
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    pcie@62000000 {
-> +      compatible = "sophgo,sg2042-pcie-host";
-> +      device_type = "pci";
-> +      reg = <0x62000000  0x00800000>,
-> +            <0x48000000  0x00001000>;
-> +      reg-names = "reg", "cfg";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      ranges = <0x81000000 0 0x00000000 0xde000000 0 0x00010000>,
-> +               <0x82000000 0 0xd0400000 0xd0400000 0 0x0d000000>;
-> +      bus-range = <0x80 0xbf>;
-> +      vendor-id = <0x1f1c>;
-> +      device-id = <0x2042>;
-> +      cdns,no-bar-match-nbits = <48>;
-> +      sophgo,link-id = <0>;
-> +      sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
-> +      sophgo,internal-msi;
-> +      interrupt-parent = <&intc>;
-> +    };
-> -- 
-> 2.34.1
-> 
+So confused,
+  Bjorn
 
