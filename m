@@ -1,89 +1,90 @@
-Return-Path: <linux-pci+bounces-16573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E4019C5F67
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 18:47:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94EFB9C5F6D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 18:49:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7BFE7BA0EA2
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:30:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54B64282708
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 17:48:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99DFE20607F;
-	Tue, 12 Nov 2024 16:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0AAE214406;
+	Tue, 12 Nov 2024 17:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Mj9lo3bW"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="d4KnvO/v"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013001.outbound.protection.outlook.com [52.101.67.1])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2085.outbound.protection.outlook.com [40.107.21.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96EC206067;
-	Tue, 12 Nov 2024 16:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A482141A6;
+	Tue, 12 Nov 2024 17:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731429017; cv=fail; b=mJSk23wq5RNWyiQhXBJEkoJHBv1S7oAdbxIX+cNZwgZYQdgwAEsHtGgXTklBXbNJRJePicWgWkTzMwNv67TV1fnaAx/zAKvmECf27Yvp9y+UPAKRGBzdPygS3b8tzjCJIyugGNJVVCWwNVzJc2qb5Dv7MDShybX+MB0kfgU0NfU=
+	t=1731433721; cv=fail; b=pdHJ54gK8IxruELV2nPvEPpzp+NA7Ttk6oE89QoPw2f8gsYkeI+8+rC9nbKWBhqOJ/8r5LsKHSrc0OJPdGTml4x0ZHQOiVYE5GL149S8gGFa+TIloRKtVpJJvZeg3GdSWuGaORv0ulB44plBDYtu620zM4QZF1AIkOacxT0klVk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731429017; c=relaxed/simple;
-	bh=z2gfUk6Iy0qpccEqgsQb1mQyi0vsw4beh4C3pSh0IPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bhG9N7ICsZv1t5OWEkdAfitohvkuOXKowUz+9Wy9hPXakwNyRw9MJnH6lJG9hzelAvZTXRdqGvWfm5wu6rjNrcJpB3MWWahBtQserKWnXzufLp3MvJonELZQFqR4aFNMtbrVpQMheMFLBdk4MU7re6JS6m+F+WNH43mwRlndeLc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Mj9lo3bW; arc=fail smtp.client-ip=52.101.67.1
+	s=arc-20240116; t=1731433721; c=relaxed/simple;
+	bh=s7YA9k95gePGlrukCgg8t7xSR4rhzh9vJYZCUX7nc+8=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=Qde9Reeqeg8O7Bf3LjnjQMFlz0JrsdQzT047dme1qjmJj8ymtzko1LxwwdZv7E6+dopZc1ucpp2yQ8rnKdrayNB1YiFb06W5or6yd8gFQsz4uIOvKTupH29jwU4dZPnUZfMuDboaDbUbjXX41zxDbB39bpdFPjLcYgSYfqCwXJE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=d4KnvO/v; arc=fail smtp.client-ip=40.107.21.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yDJvBD0o0Yuda4WWA+BJHGP4r7z0UJkcP1uLUVmGWCXCCAXnCuAetj/1GFpEL2ovz543aHvaqpx1D2Te3NHz0VQiG7Qezp3NCROkk1O1EvcEWPGV//SSBzKZwc7LPKHEJVSI+MwPqgIOK+lG4tYldwyQ12rIAH8QCE/9H0eU+m20yquHjMjijAQ7PqhcbvF4cDlX6+Kf1k/C5OASK0r1+ycN9R5bFZ2Hky5lC6bnpUUoLzCJYCIY3fw9J4RXYtheApkGD4CjEn/I1O1VBBjrMsUFRtro5WFg2jwnMY9fZnbFMWEMSgEkvDXRaB6ZVqkaWuE73H2dKMti+ifg9eQZ2A==
+ b=HuyrGUhsTcLaei//4aIhJGWD8va6dh4/9Ta1maT+nWEBss4TyOQq0sKUa9xoFpLSwTX6QcTCfuaFNC9GxnZUlXuEIPQwN9JzxDnSdQVa9cstjHs8Y6kl2UV4j5yV4RpEqEz7P97TfPZZIlW6rqSgY+qK66/BxC7Z9yCcywfSxRh+VvOa3jFALuv+YU+TV7Q7jZopf85PDoS6IHsdQB+g7ER5bifqpuyTXCjZTTOW3D99hdenkMv2JrHopys05IUBL9aVM0P2V+aM6eSA1GjkpbeMW7wVBaInEQ/YZtn2XQ7xX2Mb5rZRmjPm4XvpgWV01+H+nrHi68di6joS7rsUcQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a1bmd2vD5VP609WR7RU3xYIiH+QgBRe8pFTZ5gObnKg=;
- b=G9507+rH1C/kgShe/b3hzPy2488wv0ujVbgDPibJOmncNuc53LTPboIUtP+f15LWAWZaHInSjCd3gCCOzLUfzQdWtImeqO2eaMQGGw4stprJgGS1rQXoEucEF4KT1IKDF7n8UT/I380sx4i0pYM1OzsrVx9pw7cnGLEoEyosKa95NVb6+2Sct3501lgNdg41Ct4gJLLihT++8MaqMGezoo6FJpYE93HG/QMnPPxm7cfVC4bZbf9pA/yyzO11hsIxZ17Aur9nO6XttjPLM3jGkiB/YAkO5pm+ZWocCfOjSdaxKbmmclnKvwjiqKF2rbhrBSRllTgZ3horged4v0oY3g==
+ bh=OWIv2PzhaS+Jt/HY1K+wJQOwISmpbW/M7FrtGt+j5P4=;
+ b=mfXbtl+NqpI3hxIcnK0GBYoVMOZOlYf7f4JvDtPAirIfnFtrfBboKQsh096WD77R9bMBurRoHlB2FQAUwomgrX8ETKoHxD7KQ8dCKi+PPqCp4MNwvBigDFxIAfHN3UZmvuDsbbKu3GO06O2Y/rENt4vGMYmhBY75OfRbovuhA3opcn+5jtaLpTGhxx1BDtdRYGTjhckYw8fYeGBYhGgDIfZwRcA14qVWU6rbSlqzZDHP9Rj2ftI/bmCnQ96GNVdJO4l450nXrxwKxvF4u8hqoGZsH8Bc7GLRg+fg8LI67+CCpG0Rh0ElN+V8ViS+/juFltQdAca/WTWTXK2r+zIRXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a1bmd2vD5VP609WR7RU3xYIiH+QgBRe8pFTZ5gObnKg=;
- b=Mj9lo3bWyYL5RbHn1LSksoXE5/sJsJ79VwdQcJSF7fQdUm0NLmb2TUJOpK7SyefNeBjZNX7/3+kwPmL9kBcn7BQstJyzzvSx3caW46Q2TdH4QyFuBgqBNeNEEV7CfeehWbVjBcI3XZGOwTuNtsCiCaH9OoNdtpgyI18Uy0+po/kGXkJ3n0/o7/eiTk+PMtvIBdO27Cx3o8BaHloQDAOjb2xiqGlzcc6Kp9+BjnGyIOROIvt0fnwfB1gfjSvsMRxTeOe+MAK1+uVNkQsS6JUWfuRB2PuoGBFdgtpGCzklzEjLiUZwN7PFkhivFiayAsOubxeapz2uECbLQfMoRtyeag==
+ bh=OWIv2PzhaS+Jt/HY1K+wJQOwISmpbW/M7FrtGt+j5P4=;
+ b=d4KnvO/vh5B3gL4mDHXf+KERhBh381RtR6m/M6YRmjJ0RtZAKeYDKQ53bUADHxQUUC4SR32FHE/uuCB6wWwcZU5WJywqV7x2mnmgowHCz9bIoy64RwnfawPfQo6KGZ+LJsI6hWriF4ebouMvk5W/nwRVxx9zCpV7vwsK+42cBPuGvQ2/kaJAodJm03oY/7rDRwOi0iqYLVYaDMbWSaKB7Gjik3X7d/U5xZWLJLDl1/TJpTRyLQocNSe/aDc4PARNhi0g1nkaPIqmwfJb0z5G14COW62o/Gxe2czMHgm//gJO+xnkL3TI9ze/kOFurqg3z5BX4CUUOTYY/0k159SxuQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM8PR04MB7953.eurprd04.prod.outlook.com (2603:10a6:20b:246::23) with
+ by AS8PR04MB9510.eurprd04.prod.outlook.com (2603:10a6:20b:44a::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.29; Tue, 12 Nov
- 2024 16:30:11 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Tue, 12 Nov
+ 2024 17:48:35 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8137.027; Tue, 12 Nov 2024
- 16:30:11 +0000
-Date: Tue, 12 Nov 2024 11:30:03 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: dwc: Clean up some unnecessary codes in
- dw_pcie_suspend_noirq()
-Message-ID: <ZzOCi1RKvB9Siy1y@lizhi-Precision-Tower-5810>
-References: <20241107111334.n23ebkbs3uhxivvm@thinkpad>
- <20241108002425.GA1631063@bhelgaas>
- <20241111060902.mdbksegqj5rblqsn@thinkpad>
- <ZzJCGkenhxgJxoC4@lizhi-Precision-Tower-5810>
- <20241112080216.6kzdybe2su5ozp44@thinkpad>
- <AS8PR04MB86769CB7A25283A4E252477D8C592@AS8PR04MB8676.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+ 17:48:35 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v6 0/5] PCI: EP: Add RC-to-EP doorbell with platform MSI
+ controller
+Date: Tue, 12 Nov 2024 12:48:13 -0500
+Message-Id: <20241112-ep-msi-v6-0-45f9722e3c2a@nxp.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB86769CB7A25283A4E252477D8C592@AS8PR04MB8676.eurprd04.prod.outlook.com>
-X-ClientProxiedBy: SJ0PR03CA0236.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
+X-B4-Tracking: v=1; b=H4sIAN2UM2cC/1XMSw6CMBSF4a2Qjq3p7QNaR+7DOOhL6UAgrWkwh
+ L1bSAAdnpv7/RNKPgaf0KWaUPQ5pNB3ZdSnCtlWd0+PgysbUUI5ECDYD/iVApaGW20YM2A8Ks9
+ D9I8wrqHbvew2pHcfP2s3s+W6JcSWyAwTbL2zUmmoLehrNw5n27/QEsj8BzHYES+ogcZp6pQyV
+ P4jcSAgckeiIA1cCbDEEdIcaJ7nL32uBOAEAQAA
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, 
+ maz@kernel.org, tglx@linutronix.de, jdmason@kudzu.us, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731433711; l=6467;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=s7YA9k95gePGlrukCgg8t7xSR4rhzh9vJYZCUX7nc+8=;
+ b=cKELdhYPRgdy7l1CrZ0GGqbiKBhl82po+E7jkmWzhLSMR5hjTgcNIAlaDBeHCSHyNhCib4pKY
+ j70meHwH+AKCwrLdZ7JPuiSOhQgca1IVPjoil/tT3vUTNeGoXve2OGR
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR03CA0076.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -92,284 +93,223 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7953:EE_
-X-MS-Office365-Filtering-Correlation-Id: afff21be-8527-4add-5f21-08dd03374795
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB9510:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67493726-9531-4503-cfc3-08dd03423b4a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|1800799024|7416014|366016|38350700014;
+	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ckVmUjBsSitYd1o4bGlhU1B0MStEQUtVQWxoRjJETE5zYnIxeXpiRTR2Zk82?=
- =?utf-8?B?UXFrRU5VakM1OWpDQnpqNEVpMWV5QStrMWRjWit0bGFJNWNXMzFRTDhTdHhq?=
- =?utf-8?B?VmVGS0VNb1pNelNMcjA1UjdrN2VubXVhNk8zaWM2VGpwZFIwVWpaMi9menN5?=
- =?utf-8?B?UVRBRm55cUtDNzNRWkxzdjd0TGQvQm5EVWtDZk9FWitOZmhWWmhiQ2tjNE9z?=
- =?utf-8?B?YnRrNmZ3TVFJVE9HOEdqcUIzQUUxbnZHSHNsVDUweStseVlWdXhHekdHSHAx?=
- =?utf-8?B?eGpzZFI3U3VrZ21mZVIrWkI2QVlpcFpVZzMreVhlU08va2xKMFpDcWpmSUZT?=
- =?utf-8?B?MzJicERid2QwRHY0c3ZNVlpUT3lmRDdZcEY2aVFDOTIxMmJma3M0dVlvM0hU?=
- =?utf-8?B?TnpNejNLNkQrd09aaFlnbk15clJvWmpjU2E3U0JINVFmaTNNRkI5bERnK2w3?=
- =?utf-8?B?Vm1PN3BXYkVGdTQwNnFSbnJaQi9SNUJZOU1RbXJvLzc5aEtUcGQ3MmpZUXRu?=
- =?utf-8?B?c055T2xzdmZ6eEttQWlaOXVlRzF0UFE4U3NDcnkzL2U4cmxhWFU0SFFjTVBV?=
- =?utf-8?B?VGk0b1JQcXdueUEzdm1COWszczg0amlIdFVRd29ISXk1S3hTRG1JWXdpdHN3?=
- =?utf-8?B?SXFyTklxUDVjQ3YzdTdIYnFNWEVOVWNoWlNnWXJFcjc3OGlWb01yNTU3Ynpn?=
- =?utf-8?B?d3lMNFpZUVlLK25zaUZCQ3A4U3RZSGlMNmZaSjkzalE3UWlWWitCcVY5N2Np?=
- =?utf-8?B?V1lzalRMRERmUUlTK3BJbHZWV2VjOUtoZHZSLytjbklyMkpIY242Z2JlL0ZP?=
- =?utf-8?B?TzUwRWdRNC9ieXFVYzEvdmVPUXAzNFVRTjJ4R1hkdDJUbS9IdHBHTUI0bzJy?=
- =?utf-8?B?ZER4bnRueUZ1OUdRb0cyRDc3L1E1RUFyL3VtazlweUtIRFNQNFhYbk03QUdG?=
- =?utf-8?B?YXRxNHpDM1p1RWt5MVA1b2VCMWdPZFhLaXl3TmdLZkFmSnBqYmRzVTZka3gr?=
- =?utf-8?B?WUlOSmgvQnhkZDZLRnpMYW0zQWFYaUFRVW5SYWlmMHJZeTgxeTNoQkc5WHkw?=
- =?utf-8?B?cXlvZGQ5d3FySDFGZm4wYVVKejJONXJFbUtEWGs2RjZiNDdodG84Njh4cGY4?=
- =?utf-8?B?V2dzeUlIbmcrRUNGTnBSZ3JjbVNqcCttVW1qSWRjdmUzaTdQWURuZVZ2UWF3?=
- =?utf-8?B?dkYySmdKRTJSdG9iVGdmcENIUEQ0MUVPRms4ZTdPRVdjZWcyYnJUSm14NG1Z?=
- =?utf-8?B?MThxaVg4ckY3SjFUek1xZEpwelJpYXVtQkxyazNTTEdCbkxHMVNMOCtZNDdM?=
- =?utf-8?B?N0ViaHlFNWhrZmE5bTVWWWZKaEE3QmpVaURuN3QrZEJNMGF5VTZEM2hHSTMy?=
- =?utf-8?B?dnArN3pMY0QrWVJPSTViS2hkeU1xK0pEUGkyekM4RDJnTjlHTnVtalRMZmtJ?=
- =?utf-8?B?QmZackdObFNESTNqTXBQMnFFdVhBK3h4YzhFRkZSd2l1NFM5NDNNZU5CbEx5?=
- =?utf-8?B?Ulk4Q0trQTkxQ3VlRE5HM1FZYklWSGhNZFhEK0JoR0xCOUxRUHdkUUtvTDRK?=
- =?utf-8?B?SFlnTlFCb1JpVUhaMzR1WnR0M2prTDBrVGJXWVZ6RVdHSG9zRSthdTQ0TU14?=
- =?utf-8?B?aUZxbjdBSW45U2FWSEcyeHFBcDExZlFVcGpDU3ZXbHFWZUxlWDNBeWo0STYy?=
- =?utf-8?B?SytPN0t5bDREOU9YZ2k5M0ZyeCtPRWVPaFhNd3E4Sy90cWlzamVVK1FqRndO?=
- =?utf-8?B?TXVlVXVJamZ2WVFMTlg2d2piMUdEWWpwNEh0TTJFcXRJUENRY0JXaDlPZENi?=
- =?utf-8?Q?wcUYjPjl8ua9m5z8QcKLwGJi0LeeYSafJbUtU=3D?=
+	=?utf-8?B?ZXo1czd0U0JWZ284UW9SSWRoeW5hRVMzV1BkaUM3V3dQYW9DR0ltaUNMTWNp?=
+ =?utf-8?B?ZUVjalYvTEkxSG9YSUhkUDdmdHo2aGIyMVNRQkRDWXZwWnN4QjZnT2FBdWtK?=
+ =?utf-8?B?MnpycnRwWEFHcXR1UW5heTg3MlpjSnVHZTRtYW5uSUZoMDRoaVlrcHhsaGl3?=
+ =?utf-8?B?K2pxTXVMampBWGZ6aGIrT1dFR1JDMStxdnZTbnBBUnZGYkZrWndrMGNKV1Vx?=
+ =?utf-8?B?anRuSTVvWXg1YUYrd0NzSEZhdWNRc2dmN1NISEEyR0VRZGpoSFZLMmRiN1U1?=
+ =?utf-8?B?dFFiOHNsYjAyaVZxMzZwdEZTbFR0Y2Y5cmtTQjkrMHBZMWVORlBXOW9yQWYw?=
+ =?utf-8?B?bUg5WWpoZnpZbEJ6SlVna29nU08yeWsxUHBmbnlzSG9VUDkxc2IvbzMxVjlx?=
+ =?utf-8?B?V3BhZkkvV2VRbTcyNUV6N3E2QnI3MkJkL2p0TWNaZG9GMHVnMzhYbWVxZHJT?=
+ =?utf-8?B?ZzQ4Nm9HSHBPdFh4SGtVUWFFV1ZscFlMemxYMXYxa2VCQ080QW02THRlVHM4?=
+ =?utf-8?B?b1kvZFd6L21TR1k3Q21NbG1mbkhEUzRMNU9yYVN1KytsTXo4U01XQit4OFdq?=
+ =?utf-8?B?ZU5VdE9zcHcza0NSRG5YbFNXZ3BtczcyQTJqZnJEeHpMUVRIbkFBR3dLeWNp?=
+ =?utf-8?B?ME82dHRBcTJOdHdLeS84N2FYRXNvUHRRS1AzbFQ0Mll2ak11TXN6cmFPQmhJ?=
+ =?utf-8?B?MmpTVnpoeGJNY1p4c0dnQUEybjZ0SjhlMGpnOERDWnNyalFlY3Bxa1VFYjd2?=
+ =?utf-8?B?Q2NsdVhvb2k2L1NOazdqeXUxdFFPbHFPb1Q0ZFF2ckgxclI5UkVQQXU5bjRw?=
+ =?utf-8?B?djArSUFydFRnRnFXaTB1WlhmeldKd0ZmNEdoc3ZONGpHY21aQWY5VVlCYjZm?=
+ =?utf-8?B?WE41VHo1WG5UTnkyYXV1TytkNUdJdU1kNHBMeXNmWG4xK3IxenRxdXV4TGxo?=
+ =?utf-8?B?R0J3ZGpuMFd4eEpTNDVBYWZGM1p5d0NnSlRnc1ZXK1duUHBValRuc2dVdHl5?=
+ =?utf-8?B?N2FkMjE4MHUyS1dldHNhb1BaOWwvTlIzTmpDMFRWOU4zUGExN3ZWZ0hpZTBH?=
+ =?utf-8?B?dlJjeHNvVnBqQy96SlR6cUtraUdYUkRTWGp3dVNDYmhmS1lTT0RCR2RBNVl2?=
+ =?utf-8?B?NW05c2VXNXprSW12bFBVRHJqSVNaaC9Zb3h2VDU4Q1dGSGlnQW82dWFhRkVV?=
+ =?utf-8?B?Rnpqa2cxeG1IT2h1N2E2L01VdENKZlJIcjI5K3BGNk0weFFYK3dnUDZOVHRN?=
+ =?utf-8?B?bDVHeXhMM0JYeHl1NUJyTHdVdFU0eFdXQTlLQjQyWGFMbUZtdzVZZ1RIbTFa?=
+ =?utf-8?B?S0lhK0FIalJ3M0hLNVI5L0tCM0g0VjBvaXVCQzE1aWh6YWRDYUFDYTMzczBP?=
+ =?utf-8?B?d3Z2VEgyc1pCemlZK3NMMDZnYVlhVlpSMkt0VFd3UWFyblhscmFyYWZPZDl3?=
+ =?utf-8?B?UDdiWjBaSmwvOVlLUWJYbTd6eGkyU1J5ZHptTU1RcXpZWHJ3WWs4WmQ4ek1a?=
+ =?utf-8?B?Y2ZiZDdFOXpnVlJqcGVLM1UwUnE0YWxmK2k2a2dSRVpLcmc2UkFYellta29h?=
+ =?utf-8?B?MUVMR1ZvWDVZUDBpci80V2ErMjJrU1NVdHdwbE9HNm1UMlQzS0ZtM1lraTNh?=
+ =?utf-8?B?Uyt2OWpNRHlKTmpDd0lWQUJ5UjZVMW9QT281Zkd5OE9Xa2VrSkl3Sng5T0hM?=
+ =?utf-8?B?cEhPTEU2bTVMcUUwcTRMSHFTWGZXU0dMUXd1MXlFZ1ROUVJmYzBEQlkzZkVF?=
+ =?utf-8?B?NHBBcTRzU3NaYm90QWxCL2I5TTRZTWpzRHhiQnpyeEVRai9vaU5ja2pwYzE3?=
+ =?utf-8?B?RzBLNllhUzFpbUtNeElVbWt2L2Z3L1F3Ky9lSC9LUUdTZzl4enEvRnE0anh5?=
+ =?utf-8?Q?nh1qpqi1pRfyC?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R1FRSUhoZmdNdkpwRVV4dm1kcXdNQW1lYTljaThtZXJtczhHcVp0TVRVMlFl?=
- =?utf-8?B?ckl6RVNOZWVIa3VQbjVEaEc4bUdaMVVaWHFpamdHbHZTVkx6MlFhNmNvZHM4?=
- =?utf-8?B?bXdWMTdUSGkzSjZaQlJDdmFiakNxSlJ0NWhXU0Vhb2h1YnM5U3VySXY3aEFq?=
- =?utf-8?B?c210ZmJvZEpzOFJORzczYXkvWDZ5UE1xdWtJOFY1ZkN6cnpNcmFMK2F3V2NZ?=
- =?utf-8?B?cENXVi9IWWVPS1FncWIxV1dOUlBQYkszN0VveEFUbTZKVk52OGN3bmVDRzF1?=
- =?utf-8?B?aFlNZGxqbVNnaXhmamdIZmhGNTA0Q0NXQ2FpUEI4Q1F3RTZ4NEwzT2tyUDJM?=
- =?utf-8?B?bVRMcGM4anpWUDVjeUM1U0JRbVVpWkxGVHp5ODN6QkYzWmdIeVVhUi9iU1Fp?=
- =?utf-8?B?aWxuejNnYmRtanlWcEtwRGNtUHZmeGxIR204MGZNa2RsRnNncTRyajR4YWY0?=
- =?utf-8?B?c215cjJqdHFjeE55OE9CWE5TY0lvUjFtb1R0T016K01NMEgxckFnUC9sU3V4?=
- =?utf-8?B?aUxaS2twMXhNRW55eXdXYnNmdi9SaTM2K3NZeTA0Q2ZDVWVnMXM1V0hVVUVm?=
- =?utf-8?B?VXUrY0h2M290L0dzYUZiWWxmeDQzS2grcXFlT2txMWRxa1lDVWtzR1ZIWkJ0?=
- =?utf-8?B?QnNra0RDcmZ2RDRJSzgvRm1yK0VNbnM5ajVKQVNmMkNCSlNOUERXTGlLUDRV?=
- =?utf-8?B?cEp3em8ydG9Tb0xKV0l4Z2dEQnFhNzVrRXpNS3VtaWlYQVgwOEsrQ29UVzZH?=
- =?utf-8?B?YzZyUVkxY3JNcUQyT0tYYVNQdnZLK0ZOMlZHMFdTa0s4MGZiNDRYeHpYNkY2?=
- =?utf-8?B?cUNtSkt3SWRYcDhhL2JnQnFIYWNRbkk2UU5sVFB5NUVHNUdLVUtha2krbEZu?=
- =?utf-8?B?OStPcjJuaWhpOWM5RW1WWEgwUFhJa0xJbmRaVDBXbDdWRUwvVVR4bEVENEJi?=
- =?utf-8?B?aVovVTIwZnpWczc0WGg2K3JFVTF6K3R6T3BkMTRuTFlqRnJpK0crQnpsSHZo?=
- =?utf-8?B?dVdNdGtSOUVramlQMkJZNUg3OXhQSXZKTWF6c0tUUmEzTVM2MnN4VktYcjdQ?=
- =?utf-8?B?aitCbmlMTmVINU9qYzFGSkdqYVdQbFFtRHlyV0lza25sNmlVQm1FUDRFdkFM?=
- =?utf-8?B?eC9iM0p4UDNheDBieWVyYWxQNVYyMGlWdURGRTRvUVcxTWRVZmVPbFFTM2lM?=
- =?utf-8?B?VXRFYzFCQlUrNmp5RmZXYjFvTDd6djJnZ2ZFcFYrL0F4VEhlaXkwZklUdHhV?=
- =?utf-8?B?akx6WTE3emNtYThQMm9EKzRLZFVWMjRTTVN4RlZyUHArMWF6T0thQWk1Q0du?=
- =?utf-8?B?ZjYwRlZoc2FBRGwwSjFNZkE1ZnJWYkcrZ1BKNldKYi94c3lIWEJMOGViSHFq?=
- =?utf-8?B?VFl0QmtlNXJabUxOMHN6S1VXeDNKamdZSEZUalRuNDhPbHRneEZOL0hqYTRX?=
- =?utf-8?B?Tkt6YlZUVGhUZHVqU3R1RTlJUm40RDUxZmtOU3lMTC9xSUhIcWo0OE5BK3NV?=
- =?utf-8?B?elJ5MDhVYk04dXVSQjBUa0VEakNnWEx3YTlEYWRET2g3NDhkWTVyWUhiaHNV?=
- =?utf-8?B?NEJnbnBrKzA2R256U3JES29ETXZRNktNMUhnVnNBbFBYQlVVeWlKQ281Q0NT?=
- =?utf-8?B?R3kwcmZGZGJvSlcxRk9LMVZsdE81QWwzekFTT1RJcEU0UWVIUDkvWkhSdnBQ?=
- =?utf-8?B?eDgvY2k1bXFxMjV0QzFzNm51R1VZcExHZmljdEFqQTJULzNmNmdzODlyTHh2?=
- =?utf-8?B?RHBvbW5tenBKWlozRlpMT01aN0NET0lVL1VhMm52N2xzRENuSk9RZ0JVd3Na?=
- =?utf-8?B?aUsrK2o3QjhVR25mVkVnWEVCQk9SQ0RNZXJFOG5nVzJCbzl2NUFSOXBFbzdV?=
- =?utf-8?B?SGdmUUpBakFzSDVyQ2JsL2oySDIyMmN0Rk9GUFlqUkhSbjU4c01wT28wY0pX?=
- =?utf-8?B?YkEzYjlnQU9JalRxSmpCN0s2am1QTDhrL1N1UzFpdHlzYlFsbmJTelEzWmNr?=
- =?utf-8?B?RFVwaTBia0ZmZXYxZnF6akl0cUpXaHJaRExnTEdoTmwzTU9RQmpycHB1TUd1?=
- =?utf-8?B?MVVxNXlIUUNrMFpNQmRSdkZqM2ZWajkvRFdGM21mWWpoenRBdUw5eWhwMXBz?=
- =?utf-8?Q?HfLqZjnALGNzjkc30zHkZFvLw?=
+	=?utf-8?B?UGFEVmJ1NVJZZHJ1c3FNSlJzd2s0UE1xWnRVOW5nN2VrQTVCa1p6WXQxUzFS?=
+ =?utf-8?B?RmJjSVIzM3ZYbEh3WWdZWTZGUzF3YzhXNEczZndvejZXNlFOeVVTdXJsSVJt?=
+ =?utf-8?B?UTZQV3lHZE95WEhSbUpxN0tBaXRRUDg1dzc3RFQ0cmFXbmltWC84QnV2TmNV?=
+ =?utf-8?B?OFNVR2ZlTU5Id2grSnEva0VQSFpRR04yS1FqRGZEQ2IyeXphN2srcWNFOWJt?=
+ =?utf-8?B?MEo4SHFzaGVZaDVkS2tBK1VGdDQ0TTNVeURJVHhjUHV3RkhXNmh0ZC9QWFlJ?=
+ =?utf-8?B?VzRjOHRnR0ttRTFUTTN1eU92Ly82MFdORGFNZ2ZqTFl6WjJNUDY1YzM4MVVF?=
+ =?utf-8?B?M05mc3owOHNVTlpDNHBITHJOTTk1YUlNRVhhRjR4WFEzbFNoNDRONENzZzJ0?=
+ =?utf-8?B?VTRCMUliZlV1OHQ1dFRzbWxoYVVXSnRRbUxsdVo4ZCtuS0wvR1lIZ0lxR0Fx?=
+ =?utf-8?B?ZEFMTWhxTjYza21DcWJhZ0hJWXFyQi9ObkNzZnFiUi83cGEvN09IOCtob0F0?=
+ =?utf-8?B?ckNielBsb3FGbjdTaEVmeWVGQjNNWm43UnNUOXc3bWN0b3dLcXg3QnpaRWRj?=
+ =?utf-8?B?YU9JYlptVnhsdEo0cmFDNy9RWWY1bHBFNFJCbnUyM3hpQjJYQ242N2l3YVJE?=
+ =?utf-8?B?NlFCSitFSzc5anIyMzZhUU9NYnNCV3FNOFpkTGFSZHBMdkZrc1ZET0grU0FV?=
+ =?utf-8?B?eWd4QUlXUHc0bnJpaWExeUNiRFh0dk9NOStEUUdvY0RuaDdTcGl4RUVLeG9F?=
+ =?utf-8?B?a0xXdHl1eFlsaERUVFphb2MvQmFlOGN0aHlVN0oycEM1bjFvK2JaRkpvejky?=
+ =?utf-8?B?QXFVVFp0MExqelh4OEwyUnd4dHQra3dUcFQyVnZhUG1UbE1tUW5aNkRxZVNR?=
+ =?utf-8?B?cVhFUUt4UEZielRnVWNqR3lGTFdDRWFaMndOMEoreUp4dGdXNUxIV3VrVTFQ?=
+ =?utf-8?B?SEFKOXhoTGVCcGFhM3JXNCtzbFgwR1BXaXlEbkFjTFAwMVJhNm8xVnRUVi9Z?=
+ =?utf-8?B?d0MyMHZhbExwemlGSTM4dWJDazhDdGx3akkzekwwZkZNK3dZYlVDQ0RUWEUy?=
+ =?utf-8?B?RW82dGw0dVhXWkorSFRJU3V1QkEzN3o3bG1rMlROOHJxSnFWMExFbTRLeUFO?=
+ =?utf-8?B?MTRtQTM4OWU1K3kvektnczlOcldXSGRJN2FhaGxUUUpERXNCR1NBYVE4S2Fh?=
+ =?utf-8?B?MkdseGdUM1BiOVN1MUdJSUNlVEx0empLdml6dVc5d0IzVEw0MU5ncHZsTVhq?=
+ =?utf-8?B?d2EvaDltMHVHV0l1S2NJM3hCNXFNV2FmcHp5cExJZDA3Rlh2MjYraE1oZlVJ?=
+ =?utf-8?B?bnRaRnZRcTBpQnc5cnlqT1FWSXp6b3Z0TGc3NUpxSjdjZklGckZCZ3ozcWxi?=
+ =?utf-8?B?UnI3NzBNNUJvb3dPVm9sOXBYbTdnMUZEY3lxbEZZL0p3T1VqaTNKenEwVDVI?=
+ =?utf-8?B?d0VyVDFyUTZWMUszNFhMVDdSRURUeUlDTzlYajRvT0RoSSsyYVErWm5sOGdO?=
+ =?utf-8?B?YXlUWm1Ra0d3dkt3Skg1ODlaQjhGOFpGaVBPaFdPRDVFNmJpanVxT0VSQnJo?=
+ =?utf-8?B?UGp5aWRjcytxU1YyQVM2VmtMUWdWZTMyVkV1Q0k5R1kwUzJvWVRWNlFLQjNj?=
+ =?utf-8?B?WGh4RzZkclgzRjd2akxmd2pZYjZkSWwvcERsMXRPTW5kSm5mRVhiR2tSYXg3?=
+ =?utf-8?B?WlZXVzdvUE4rOGNlQVFPMEJXekpoVjR2QWRaUWQ3RXUrTHg3QmxqaXVoKzhW?=
+ =?utf-8?B?U05SUnpucThCQzRTZnhtVTlaNFhsMWRkNjUybUQxNjIyVHFUbGpTcnVydU5V?=
+ =?utf-8?B?Vno1Z0hVSUpBY3doUERRdnJGbmEyK1Z4dDlVL0VZa21nNEp4RW4zRHo4bWRl?=
+ =?utf-8?B?WnVCckdIdExSKzFMV2xJOVJvd3VkcWhFTjJ6RE5zK0VnVDdoa1RWTzRlSGh1?=
+ =?utf-8?B?ZXJlRWcvaXAvVGczeHAva1l6aGNpb0E5a05wMnFHM1ptekVlNW0yQTdkd1JP?=
+ =?utf-8?B?WmVNeHZud2VraFRMNGRGUFZSTFB0TGhXZmorUVRDbTUvakF0Y3lqYUhxVGdB?=
+ =?utf-8?B?QXdwUXNzbUJ2UGlUMGNEbFlpek5EVWNBekNOaE9BUENzTTBnYXBPeGVjQVU5?=
+ =?utf-8?Q?xZGA=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afff21be-8527-4add-5f21-08dd03374795
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67493726-9531-4503-cfc3-08dd03423b4a
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 16:30:11.6820
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 17:48:35.5109
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: en0yYgss90DPPaRBEyzd2wWDvJOc69aZvLg9UV9lQamKvvOLG7RjVqkr3+pnk4x02gIepNm6GmPlvBYWGbulrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7953
+X-MS-Exchange-CrossTenant-UserPrincipalName: BilsbOo9RD6uOPquw8akEE8YM8LV5d+V3UdBpMxwU/cEVzBTi3GI8d5Q3NmyLLVwa1tOaN+MbpixkgUiDbuDmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9510
 
-On Tue, Nov 12, 2024 at 09:15:25AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 2024年11月12日 16:02
-> > To: Frank Li <frank.li@nxp.com>
-> > Cc: Bjorn Helgaas <helgaas@kernel.org>; Hongxing Zhu
-> > <hongxing.zhu@nxp.com>; jingoohan1@gmail.com; bhelgaas@google.com;
-> > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org; imx@lists.linux.dev;
-> > kernel@pengutronix.de; linux-pci@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v1] PCI: dwc: Clean up some unnecessary codes in
-> > dw_pcie_suspend_noirq()
-> >
-> > On Mon, Nov 11, 2024 at 12:42:50PM -0500, Frank Li wrote:
-> > > On Mon, Nov 11, 2024 at 11:39:02AM +0530, Manivannan Sadhasivam
-> > wrote:
-> > > > On Thu, Nov 07, 2024 at 06:24:25PM -0600, Bjorn Helgaas wrote:
-> > > > > On Thu, Nov 07, 2024 at 11:13:34AM +0000, Manivannan Sadhasivam
-> > wrote:
-> > > > > > On Thu, Nov 07, 2024 at 04:44:55PM +0800, Richard Zhu wrote:
-> > > > > > > Before sending PME_TURN_OFF, don't test the LTSSM stat. Since
-> > > > > > > it's safe to send PME_TURN_OFF message regardless of whether
-> > > > > > > the link is up or down. So, there would be no need to test the
-> > > > > > > LTSSM stat before sending PME_TURN_OFF message.
-> > > > > >
-> > > > > > What is the incentive to send PME_Turn_Off when link is not up?
-> > > > >
-> > > > > There's no need to send PME_Turn_Off when link is not up.
-> > > > >
-> > > > > But a link-up check is inherently racy because the link may go
-> > > > > down between the check and the PME_Turn_Off.  Since it's
-> > > > > impossible for software to guarantee the link is up, the Root Port
-> > > > > should be able to tolerate attempts to send PME_Turn_Off when the link
-> > is down.
-> > > > >
-> > > > > So IMO there's no need to check whether the link is up, and
-> > > > > checking gives the misleading impression that "we know the link is
-> > > > > up and therefore sending PME_Turn_Off is safe."
-> > > > >
-> > > >
-> > > > I agree that the check is racy (not sure if there is a better way to
-> > > > avoid that), but if you send the PME_Turn_Off unconditionally, then
-> > > > it will result in
-> > > > L23 Ready timeout and users will see the error message.
-> > > >
-> > > > > > > Remove the L2 poll too, after the PME_TURN_OFF message is sent
-> > > > > > > out.  Because the re-initialization would be done in
-> > > > > > > dw_pcie_resume_noirq().
-> > > > > >
-> > > > > > As Krishna explained, host needs to wait until the endpoint acks
-> > > > > > the message (just to give it some time to do cleanups). Then
-> > > > > > only the host can initiate D3Cold. It matters when the device supports
-> > L2.
-> > > > >
-> > > > > The important thing here is to be clear about the *reason* to poll
-> > > > > for
-> > > > > L2 and the *event* that must wait for L2.
-> > > > >
-> > > > > I don't have any DesignWare specs, but when
-> > > > > dw_pcie_suspend_noirq() waits for DW_PCIE_LTSSM_L2_IDLE, I think
-> > > > > what we're doing is waiting for the link to be in the L2/L3 Ready
-> > > > > pseudo-state (PCIe r6.0, sec 5.2, fig 5-1).
-> > > > >
-> > > > > L2 and L3 are states where main power to the downstream component
-> > > > > is off, i.e., the component is in D3cold (r6.0, sec 5.3.2), so
-> > > > > there is no link in those states.
-> > > > >
-> > > > > The PME_Turn_Off handshake is part of the process to put the
-> > > > > downstream component in D3cold.  I think the reason for this
-> > > > > handshake is to allow an orderly shutdown of that component before
-> > > > > main power is removed.
-> > > > >
-> > > > > When the downstream component receives PME_Turn_Off, it will stop
-> > > > > scheduling new TLPs, but it may already have TLPs scheduled but
-> > > > > not yet sent.  If power were removed immediately, they would be
-> > > > > lost.  My understanding is that the link will not enter L2/L3
-> > > > > Ready until the components on both ends have completed whatever
-> > > > > needs to be done with those TLPs.  (This is based on the L2/L3
-> > > > > discussion in the Mindshare PCIe book; I haven't found clear spec
-> > > > > citations for all of it.)
-> > > > >
-> > > > > I think waiting for L2/L3 Ready is to keep us from turning off
-> > > > > main power when the components are still trying to dispose of those
-> > TLPs.
-> > > > >
-> > > >
-> > > > Not just disposing TLPs as per the spec, most endpoints also need to
-> > > > reset their state machine as well (if there is a way for the
-> > > > endpoint sw to delay sending
-> > > > L23 Ready).
-> > > >
-> > > > > So I think every controller that turns off main power needs to
-> > > > > wait for L2/L3 Ready.
-> > > > >
-> > > > > There's also a requirement that software wait at least 100 ns
-> > > > > after
-> > > > > L2/L3 Ready before turning off refclock and main power (sec
-> > > > > 5.3.3.2.1).
-> > > > >
-> > > >
-> > > > Right. Usually, the delay after PERST# assert would make sure this,
-> > > > but in layerscape driver (user of dw_pcie_suspend_noirq) I don't see
-> > > > power/refclk removal.
-> > > >
-> > > > Richard Zhu/Frank, thoughts?
-> > >
-> > > Generally, power/refclk remove when system enter sleep state. There is
-> > > signal "suspend_request_b", which connect to PMIC. After CPU trigger
-> > > this signnal, PMIC will turn off (pre fused) some power rail.
-> > >
-> > > Refclk(come from SOC chip), OSC will be shutdown when send out
-> > > "suspend_request_b".
-> > >
-> >
-> > Thanks for clarifying! Then it would be better to add the 100ns delay after
-> > receiving the L23 Ready message from endpoint.
-> Okay.
-> How about the following changes?
-> - Before dump error message, make sure link is up.
-> - Add 1us delay after L2/L3 Ready is received.
->
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -940,9 +940,16 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->                 ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
->                                         PCIE_PME_TO_L2_TIMEOUT_US/10,
->                                         PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
+│            │   │                                   │   │                │
+│            │   │ PCI Endpoint                      │   │ PCI Host       │
+│            │   │                                   │   │                │
+│            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
+│            │   │                                   │   │                │
+│ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
+│ Controller │   │   update doorbell register address│   │                │
+│            │   │   for BAR                         │   │                │
+│            │   │                                   │   │ 3. Write BAR<n>│
+│            │◄──┼───────────────────────────────────┼───┤                │
+│            │   │                                   │   │                │
+│            ├──►│ 4.Irq Handle                      │   │                │
+│            │   │                                   │   │                │
+│            │   │                                   │   │                │
+└────────────┘   └───────────────────────────────────┘   └────────────────┘
 
-My means change
-val == DW_PCIE_LTSSM_L2_IDLE || val == XXX
+This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
 
-XXX should be one of below value when linkdown, Maybe S_DISABLED or
-S_DETECT_QUIET
+Original patch only target to vntb driver. But actually it is common
+method.
 
-00_0000b - S_DETECT_QUIET
-00_0001b - S_DETECT_ACT
-00_0010b - S_POLL_ACTIVE
-00_0011b - S_POLL_COMPLIANCE
-00_0100b - S_POLL_CONFIG
-00_0101b - S_PRE_DETECT_QUIET
-00_0110b - S_DETECT_WAIT
-00_0111b - S_CFG_LINKWD_START
-00_1000b - S_CFG_LINKWD_ACEPT
-00_1001b - S_CFG_LANENUM_WAI
-00_1010b - S_CFG_LANENUM_ACEPT
-00_1011b - S_CFG_COMPLETE
-00_1100b - S_CFG_IDLE
-00_1101b - S_RCVRY_LOCK
-00_1110b - S_RCVRY_SPEED
-00_1111b - S_RCVRY_RCVRCFG
-01_0000b - S_RCVRY_IDLE
-01_0001b - S_L0
-01_0010b - S_L0S
-01_0011b - S_L123_SEND_EIDLE
-01_0100b - S_L1_IDLE
-01_0101b - S_L2_IDLE
-01_0110b - S_L2_WAKE
-01_0111b - S_DISABLED_ENTRY
-01_1000b - S_DISABLED_IDLE
-01_1001b - S_DISABLED
-01_1010b - S_LPBK_ENTRY
-01_1011b - S_LPBK_ACTIVE
-01_1100b - S_LPBK_EXIT
-01_1101b - S_LPBK_EXIT_TIMEOUT
-01_1110b - S_HOT_RESET_ENTRY
-01_1111b - S_HOT_RESET
-10_0000b - S_RCVRY_EQ0
-10_0001b - S_RCVRY_EQ1
-10_0010b - S_RCVRY_EQ2
-10_0011b - S_RCVRY_EQ3
+This patches add new API to pci-epf-core, so any EP driver can use it.
 
-> -               if (ret) {
-> +               if (ret && dw_pcie_link_up(pci)) {
->                         dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
->                         return ret;
-> +               } else {
-> +                       /*
-> +                        * Refer to r6.0, sec 5.3.3.2.1, software should wait at
-> +                        * least 100ns after L2/L3 Ready before turning off
-> +                        * refclock and main power.
-> +                        */
-> +                       udelay(1);
->
-> Best Regards
-> Richard Zhu
-> >
-> > - Mani
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
+Previous v2 discussion here.
+https://lore.kernel.org/imx/20230911220920.1817033-1-Frank.Li@nxp.com/
+
+Changes in v6:
+- change doorbell_addr to doorbell_offset
+- use round_down()
+- add Niklas's test by tag
+- rebase to pci/endpoint
+- Link to v5: https://lore.kernel.org/r/20241108-ep-msi-v5-0-a14951c0d007@nxp.com
+
+Changes in v5:
+- Move request_irq to epf test function driver for more flexiable user case
+- Add fixed size bar handler
+- Some minor improvememtn to see each patches's changelog.
+- Link to v4: https://lore.kernel.org/r/20241031-ep-msi-v4-0-717da2d99b28@nxp.com
+
+Changes in v4:
+- Remove patch genirq/msi: Add cleanup guard define for msi_lock_descs()/msi_unlock_descs()
+- Use new method to avoid compatible problem.
+  Add new command DOORBELL_ENABLE and DOORBELL_DISABLE.
+  pcitest -B send DOORBELL_ENABLE first, EP test function driver try to
+remap one of BAR_N (except test register bar) to ITS MSI MMIO space. Old
+driver don't support new command, so failure return, not side effect.
+  After test, DOORBELL_DISABLE command send out to recover original map, so
+pcitest bar test can pass as normal.
+- Other detail change see each patches's change log
+- Link to v3: https://lore.kernel.org/r/20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com
+
+Change from v2 to v3
+- Fixed manivannan's comments
+- Move common part to pci-ep-msi.c and pci-ep-msi.h
+- rebase to 6.12-rc1
+- use RevID to distingiush old version
+
+mkdir /sys/kernel/config/pci_ep/functions/pci_epf_test/func1
+echo 16 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/msi_interrupts
+echo 0x080c > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/deviceid
+echo 0x1957 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/vendorid
+echo 1 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/revid
+^^^^^^ to enable platform msi support.
+ln -s /sys/kernel/config/pci_ep/functions/pci_epf_test/func1 /sys/kernel/config/pci_ep/controllers/4c380000.pcie-ep
+
+- use new device ID, which identify support doorbell to avoid broken
+compatility.
+
+    Enable doorbell support only for PCI_DEVICE_ID_IMX8_DB, while other devices
+    keep the same behavior as before.
+
+           EP side             RC with old driver      RC with new driver
+    PCI_DEVICE_ID_IMX8_DB          no probe              doorbell enabled
+    Other device ID             doorbell disabled*       doorbell disabled*
+
+    * Behavior remains unchanged.
+
+Change from v1 to v2
+- Add missed patch for endpont/pci-epf-test.c
+- Move alloc and free to epc driver from epf.
+- Provide general help function for EPC driver to alloc platform msi irq.
+- Fixed manivannan's comments.
+
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof Wilczyński <kw@linux.com>
+To: Kishon Vijay Abraham I <kishon@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: Arnd Bergmann <arnd@arndb.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: imx@lists.linux.dev
+Cc: Niklas Cassel <cassel@kernel.org>
+Cc: cassel@kernel.org
+Cc: dlemoal@kernel.org
+Cc: maz@kernel.org
+Cc: tglx@linutronix.de
+Cc: jdmason@kudzu.us
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Frank Li (5):
+      PCI: endpoint: Add pci_epc_get_fn() API for customizable filtering
+      PCI: endpoint: Add RC-to-EP doorbell support using platform MSI controller
+      PCI: endpoint: pci-epf-test: Add doorbell test support
+      misc: pci_endpoint_test: Add doorbell test case
+      tools: PCI: Add 'B' option for test doorbell
+
+ drivers/misc/pci_endpoint_test.c              |  71 ++++++++++++++
+ drivers/pci/endpoint/Makefile                 |   2 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c | 129 ++++++++++++++++++++++++++
+ drivers/pci/endpoint/pci-ep-msi.c             |  99 ++++++++++++++++++++
+ drivers/pci/endpoint/pci-epc-core.c           |  23 ++++-
+ include/linux/pci-ep-msi.h                    |  15 +++
+ include/linux/pci-epc.h                       |   2 +
+ include/linux/pci-epf.h                       |  16 ++++
+ include/uapi/linux/pcitest.h                  |   1 +
+ tools/pci/pcitest.c                           |  16 +++-
+ 10 files changed, 370 insertions(+), 4 deletions(-)
+---
+base-commit: f5373677e13177cfc7875f44a864f9a1db751df9
+change-id: 20241010-ep-msi-8b4cab33b1be
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
 
