@@ -1,151 +1,203 @@
-Return-Path: <linux-pci+bounces-16564-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16566-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D78029C5CCE
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 17:07:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ED829C5F00
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 18:32:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B5D2283D03
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:07:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4095AB2CB9C
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:15:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 794DF204011;
-	Tue, 12 Nov 2024 16:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B27EA2038A7;
+	Tue, 12 Nov 2024 16:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kZuJTRYS"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u3cWQ+wM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vq25pLCB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u3cWQ+wM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vq25pLCB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4553204000;
-	Tue, 12 Nov 2024 16:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E92200B84;
+	Tue, 12 Nov 2024 16:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731427321; cv=none; b=LCJw0NX2csrGwZroY2FthDuCh2bERwHXDj4BCLbaGIlj8/KlXpek/UperEnoHxvLoc/rS5iW447vIqeb5WyYQKgdMxzmztLCc5/3oZZM5wXj+XfelQkPux6mS4ZIfWT+wRhJgnE6kZzUw9UIyhfTaS0D7pqAdkwd1h6P3rBMRwU=
+	t=1731428135; cv=none; b=enWez5u7taXM6CZi0l5Z3WrHLchUCUXJ3mfuI2E7w6YBx+jnk2Z1rYsu5UClRF9tyKf3Wrsm5H7RGcgseT76XvOLvfrWNF7lhVO7AXER4DJfQP1D0YKuo++s79tB1BQtBN7rYqlPamxjIamohbvrxyFgyxlNEmsbC1N5zs38i0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731427321; c=relaxed/simple;
-	bh=iaYaUStprZ8SceeIhaWWBwFLmxeVYeoQCC7M5tVJmxo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CeBIjAkT0Q0E9nhxRylBhcxQ2C3OKS40ZrMZuyiU57zowEgiFKw8vonSE9vYMWl/ehIT8bVgUaMfbQw/teGhcOb2azcNaLjUzNQKPrU5MOcerAS1kwoiNQ/hb6Dump+5XVFHKNcsqW9uxlAx+GKDnarWSZiKM8ZW+EbXwQjWmR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kZuJTRYS; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731427320; x=1762963320;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iaYaUStprZ8SceeIhaWWBwFLmxeVYeoQCC7M5tVJmxo=;
-  b=kZuJTRYSbdt4Dqm2BSkywySafk5A17AbojvKpvTbKjE22QWXF+OYHbRa
-   XV04rnxxMkC5zTwXIYlUmpyZz5g4kDyJwAwDjZ1euJp/pBFaAIQytS14M
-   G/fyQDirnAk+u6MMhEEG39/M1x7+fN7JIzf9eVQFbMtWIPQxxGeMyRdc/
-   HR1PaBiZ5S0GJF3/T4+dxiLNy59jQvggDOhuSFg6btMbY4QHMdCn/Uc+v
-   D6ZksUT9LAwb5ZLpd9ZpbxNc2oXp1hlJOWWRBNj4toHANn6hjLv6wA+8D
-   +fCL9sDx0kqBFYVBI32k80HJYV2g7LahTraxjIE52BpG9BQu7Mtmaczp1
-   A==;
-X-CSE-ConnectionGUID: hzfe6WZOTB2i8QU7k8axag==
-X-CSE-MsgGUID: jayRqt+KSOK63CAlG97FEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41831582"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="41831582"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 08:01:59 -0800
-X-CSE-ConnectionGUID: MweyGtHOTjm8Wi5P6z1maw==
-X-CSE-MsgGUID: 5dCRf5GdQ6GAPRIdDJIe+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,148,1728975600"; 
-   d="scan'208";a="87489721"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 08:01:53 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 12 Nov 2024 18:01:50 +0200 (EET)
-To: Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>
-cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-    Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
-    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
-    Alexandru Gagniuc <mr.nuke.me@gmail.com>, 
-    Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
-    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
-    Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Daniel Lezcano <daniel.lezcano@linaro.org>, 
-    Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-    Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v9 7/9] PCI/bwctrl: Add API to set PCIe Link Speed
-In-Reply-To: <ZzN4pO0lJDTSySaz@wunner.de>
-Message-ID: <4f4ee107-1b25-f866-832e-6a35c8c7c35a@linux.intel.com>
-References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com> <20241018144755.7875-8-ilpo.jarvinen@linux.intel.com> <ZzN4pO0lJDTSySaz@wunner.de>
+	s=arc-20240116; t=1731428135; c=relaxed/simple;
+	bh=FF32yP9KdVfRXMndbaibFOS0cSrXZc8DWTEIL7tpkb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPaBsPVdM82mNycU+YqkfXKFcQNDZx8ihHlybvCL8uWqDGOlgwElo1bkk6x5svENJfpdOT8rFpSixoPoa/JgDq19UM8LtJciCjE9pY/b3rmLaZpCS3xaI6kL2w/UIzpggQc/2V22jP0KpAx/0yxBrcpF+L/kfTAo45F9sus7A3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u3cWQ+wM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vq25pLCB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u3cWQ+wM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vq25pLCB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0CFB61F451;
+	Tue, 12 Nov 2024 16:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731428132; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPpDV4VXC/O5LDmKqzdbg/wDQnAvo0nuoIGwwECCHkw=;
+	b=u3cWQ+wMMzAJP2k50djmt7ul83n2pp3ULngZXQJrgOPferHT/zAjDf5sKR3BKNgjqIlg3S
+	M+lBeQTR6jkT80Vd1vaHM/5KjtEAa/DIdsKeTWkfvO7r/SmCcvpWJeuvLDh4X40hUYmW/2
+	/z8wG0vkcNSLPHUK9NJK8pfwjA4ZmVg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731428132;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPpDV4VXC/O5LDmKqzdbg/wDQnAvo0nuoIGwwECCHkw=;
+	b=Vq25pLCB8TEXXhq7TDInKAnh0I12FTfGKkf/m4FzXhXeiANtYeVEJWqoJIux3sK73MS32c
+	LrbEGMqGoC+sh8Aw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=u3cWQ+wM;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Vq25pLCB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731428132; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPpDV4VXC/O5LDmKqzdbg/wDQnAvo0nuoIGwwECCHkw=;
+	b=u3cWQ+wMMzAJP2k50djmt7ul83n2pp3ULngZXQJrgOPferHT/zAjDf5sKR3BKNgjqIlg3S
+	M+lBeQTR6jkT80Vd1vaHM/5KjtEAa/DIdsKeTWkfvO7r/SmCcvpWJeuvLDh4X40hUYmW/2
+	/z8wG0vkcNSLPHUK9NJK8pfwjA4ZmVg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731428132;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPpDV4VXC/O5LDmKqzdbg/wDQnAvo0nuoIGwwECCHkw=;
+	b=Vq25pLCB8TEXXhq7TDInKAnh0I12FTfGKkf/m4FzXhXeiANtYeVEJWqoJIux3sK73MS32c
+	LrbEGMqGoC+sh8Aw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC27013721;
+	Tue, 12 Nov 2024 16:15:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JJNjMyN/M2eAHAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 12 Nov 2024 16:15:31 +0000
+Date: Tue, 12 Nov 2024 17:15:31 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+	mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, 
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v3 4/8] blk-mp: introduce blk_mq_hctx_map_queues
+Message-ID: <5967d256-037e-4ac8-a509-c6955b03db05@flourine.local>
+References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
+ <20241112-refactor-blk-affinity-helpers-v3-4-573bfca0cbd8@kernel.org>
+ <2024111202-parish-prowess-78bc@gregkh>
+ <c8c671c1-267a-4aa7-a64b-51a461176ad3@flourine.local>
+ <2024111215-jury-unlighted-3953@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1027285098-1731427310=:13135"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024111215-jury-unlighted-3953@gregkh>
+X-Rspamd-Queue-Id: 0CFB61F451
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Nov 12, 2024 at 04:42:40PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Nov 12, 2024 at 04:33:09PM +0100, Daniel Wagner wrote:
+> > On Tue, Nov 12, 2024 at 02:58:43PM +0100, Greg Kroah-Hartman wrote:
+> > > > +void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
+> > > > +			    struct device *dev, unsigned int offset)
+> > > > +
+> > > > +{
+> > > > +	const struct cpumask *mask;
+> > > > +	unsigned int queue, cpu;
+> > > > +
+> > > > +	if (!dev->bus->irq_get_affinity)
+> > > > +		goto fallback;
+> > > 
+> > > I think this is better than hard-coding it, but are you sure that the
+> > > bus will always be bound to the device here so that you have a valid
+> > > bus-> pointer?
+> > 
+> > No, I just assumed the bus pointer is always valid. If it is possible to
+> > have a device without a bus, than I'll better extend the condition to
+> > 
+> > 	if (!dev->bus || !dev->bus->irq_get_affinity)
+> >         	goto fallback;
+> 
+> I don't know if it's possible as I don't know what codepaths are calling
+> this, it was hard to unwind.  But you should check "just to be safe" :)
 
---8323328-1027285098-1731427310=:13135
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+The main path to map_queues is via the probe functions. There are some
+more paths like when updating a tagset after the number of queues but
+that is all after the probe function.
 
-On Tue, 12 Nov 2024, Lukas Wunner wrote:
+nvme_probe
+  nvme_alloc_admin_tag_set
+    blk_mq_alloc_tag_set
+       blk_mq_update_queue_map
+          set->ops->map_queues
+	     blk_mq_htcx_map_queues
+  nvme_alloc_io_tag_set
+    blk_mq_alloc_tag_set
+      blk_mq_update_queue_map
+        set->ops->map_queues
+          blk_mq_htcx_map_queues
 
-> On Fri, Oct 18, 2024 at 05:47:53PM +0300, Ilpo J=E4rvinen wrote:
-> > +EXPORT_SYMBOL_GPL(pcie_set_target_speed);
->=20
-> My apologies for another belated comment on this series.
-> This patch is now a688ab21eb72 on pci/bwctrl:
->=20
-> I note that pcie_set_target_speed() is not called my a modular user
-> (CONFIG_PCIE_THERMAL is bool, not tristate), so the above-quoted export
-> isn't really necessary right now.  I don't know if it was added
-> intentionally because some modular user is expected to show up
-> in the near future.
+virtscsi_probe, hisi_sas_v3_probe, ...
+  scsi_add_host
+    scsi_add_host_with_dma
+      scsi_mq_setup_tags
+         blk_mq_alloc_tag_set
+           blk_mq_update_queue_map
+             set->ops->map_queues
+               blk_mq_htcx_map_queues
 
-Its probably a thinko to add it at all but then there have been talk about=
-=20
-other users interested in the API too so it's not far fetched we could see=
-=20
-a user. No idea about timelines though.
+virtblk_probe
+  blk_mq_alloc_tag_set
+    blk_mq_update_queue_map
+      set->ops->map_queues
+        blk_mq_htcx_map_queues
 
-There are some AMD GPU drivers tweaking the TLS field on their own but=20
-they also touch some HW specific registers (although, IIRC, they only=20
-touch Endpoint'sTLS). I was thinking of converting them but I'm unsure if=
-=20
-that yields something very straightforward and ends up producing a working=
-=20
-conversion or not (without ability to test with the HW). But TBH, not on=20
-my highest priority item.
-
-> > @@ -135,6 +296,7 @@ static int pcie_bwnotif_probe(struct pcie_device *s=
-rv)
-> >  =09if (!data)
-> >  =09=09return -ENOMEM;
-> > =20
-> > +=09devm_mutex_init(&srv->device, &data->set_speed_mutex);
-> >  =09ret =3D devm_request_threaded_irq(&srv->device, srv->irq, NULL,
-> >  =09=09=09=09=09pcie_bwnotif_irq_thread,
-> >  =09=09=09=09=09IRQF_SHARED | IRQF_ONESHOT,
->=20
-> We generally try to avoid devm_*() functions in port service drivers
-> because if we later on move them into the PCI core (which is the plan),
-> we'll have to unroll them.  Not the end of the world that they're used
-> here, just not ideal.
-
-I think Jonathan disagrees with you on that:
-
-https://lore.kernel.org/linux-pci/20241017114812.00005e67@Huawei.com/
-
-:-)
-
---=20
- i.
-
---8323328-1027285098-1731427310=:13135--
+Does this help?
 
