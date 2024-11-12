@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-16602-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16603-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9FA89C6395
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 22:39:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3C9D9C63A1
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 22:41:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D01C285137
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:39:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 886C1285153
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4EB219E34;
-	Tue, 12 Nov 2024 21:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71E4221A6F1;
+	Tue, 12 Nov 2024 21:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETc6dUJE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qK8PUPXg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F582170DF;
-	Tue, 12 Nov 2024 21:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A19F21A6ED;
+	Tue, 12 Nov 2024 21:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731447583; cv=none; b=PprZxGhWs3lV3mnvlL/OT8RrJ/hD2zI/JYdLROJyQPh0dkweGiD2W+z+PD7Zx63aqgaqExAvEHaD5y3oRM92d54/HfjFmmYvX0xLkoVS25xM0uVHhqZievbSnM7uSnIAn/46xuHOj7RNvg9/aO2z/tqRfr17iu1O/X2RbGsaPas=
+	t=1731447696; cv=none; b=h/rbQ40RM/Bah+BsCMZ0j8C/jNglbiAa4VhnE4sekJouiLE+Fgoc8Y4lFC+j+OHO9KTOZSWh2AYzr+fBEtS12o2ZFi0CpktaAI02aVlpXbsJKfB70nHoKOTbXeidJRMplU/e3hI6kdQdQcwjoPx5QwTgfUkgSuYC8nZZQCQblWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731447583; c=relaxed/simple;
-	bh=bpG4MJZvUxJRhkLBXeVj8tcIV5cdqWVlYHBeL3oM0AQ=;
+	s=arc-20240116; t=1731447696; c=relaxed/simple;
+	bh=+r1zjWFmIgf8fAjGCmjFjRtm3GAxhQNL1/z2KLtcs9g=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=scIdpljYZT4NwzNbTM7gj3fLXF+hU5EROdianPdOmamiZgXwlb7nM/zYJj4O1QngeO1sWmWQ6qWJJCVtFoh0I3T7y0d15Y7q6E0SkgYka07WxspSgRnL2qg+91973ZkbmPowM7DdA18NQAteqEQQMhnfnjHNu0upzAUXPsI8gwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETc6dUJE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D392BC4CECD;
-	Tue, 12 Nov 2024 21:39:42 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=t4klvUUvm/SuWr1kqku1ZZPdB1BswU3No7Lq84MLZwrEyLvFy9+7XP/YNNQjaZIzX0vgi2ZlCLpWhLMIeBZxGoplnYNvGbDSg//cQXqLyn+bVDN7QzlE0fkQZojHITrsLp0320zq/HFFLPN57KSVA4VrAoWc0/T5JgF1z3GWH1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qK8PUPXg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013FBC4CED6;
+	Tue, 12 Nov 2024 21:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731447583;
-	bh=bpG4MJZvUxJRhkLBXeVj8tcIV5cdqWVlYHBeL3oM0AQ=;
+	s=k20201202; t=1731447696;
+	bh=+r1zjWFmIgf8fAjGCmjFjRtm3GAxhQNL1/z2KLtcs9g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ETc6dUJEA/t7MXzRpXRDoNXZ0L/zTFivgsPdv7qn+yxjeZ/O1BJ6MHvV3/2SaUk4A
-	 pFEWe+1WGgd/ZcpnUqi/nCPDXM9ADsrWLq2+ZzRQGsuF05d+mmt+Q3vIn72Qz+vjnq
-	 HBdBFvcSlQldBlUOs9dw8SKM/IdUXeLjEQi5lAuev8hYrMvF/EBCZ2LyUUGz+en2N+
-	 sX3pcd0i4r12d/Hu3HFf+7mlG44TNfbJqXFLBlLV0UhOTD1G/NdzMfhtStJybZzupH
-	 6i16xHvL7tc4xWWj9FIFChWwXm3ZwztwodaRihZmQAaAVqZ2SMKlfeQSDHvm3Z7kF2
-	 JNNIRcKceo/TQ==
-Date: Tue, 12 Nov 2024 15:39:41 -0600
+	b=qK8PUPXg/DWALAXo3BBuqgdkp4YMaXv9aQkA5TNaW23k41Ku4q60rQWaXnQr7CvJX
+	 ZAI4TeJa5/FmFwju6GXCUUMDaYND+pA9iQxbI0MmLP6EpY5u3EflRf5tPGuHFe2wTO
+	 d+jnQ1f7iMEPiFCedEld/kRnoynqu127yAdbcCK9Tuj8eHSzOLhh1aftYo97RD+PeJ
+	 f/1XN91h0rk4beRpQuSgNVpYllOorY3XcGEx8hYD9Zr1ODKf/Nr5+YqGM4dANa4pEA
+	 AnBD+B6r+mMVvA7Im3xPW1v/AfE2Ia69phuOyxY9ACg3mka3hNV/Amw/lGyCvxmRNa
+	 89PVAabGdknsg==
+Date: Tue, 12 Nov 2024 15:41:34 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
 Cc: lpieralisi@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com,
@@ -49,8 +49,8 @@ Cc: lpieralisi@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com,
 	bhelgaas@google.com, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	salee@marvell.com, dingwei@marvell.com
-Subject: Re: [PATCH 1/1] PCI: armada8k: Fix bar assignment failure upon rescan
-Message-ID: <20241112213941.GA1861660@bhelgaas>
+Subject: Re: [PATCH 1/1] PCI: armada8k: use reset controller to reset mac
+Message-ID: <20241112214134.GA1861807@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,113 +59,101 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241112073227.769814-1-jpatel2@marvell.com>
+In-Reply-To: <20241112070745.759678-1-jpatel2@marvell.com>
 
-On Mon, Nov 11, 2024 at 11:32:27PM -0800, Jenishkumar Maheshbhai Patel wrote:
-> When the attached device recovers the link from
-> an external reset, the following error might be
-> seen upon pci rescan.
-> 
-> On link-down event, it's not necessary to remove
-> the root bus. Only the child buses or devices
-> should be wiped off. However, the rescan operation
-> should be performed only when the link could be
-> retained. Otherwise, it should be done by a user
-> manually after the link is finally recovered.
+Observe subject line capitalization convention.
 
-Wrap to fill 75 columns.
+On Mon, Nov 11, 2024 at 11:07:45PM -0800, Jenishkumar Maheshbhai Patel wrote:
+> change mac reset and mac reset bits to reset controller
 
-s/pci/PCI/
-s/bar/BAR/ (subject)
+Capitalize sentence.
 
-> ~# echo 1 > /sys/bus/pci/rescan
-> [  322.857504] pci 0000:01:00.0: [177d:b200] type 00 class 0x028000
-> [  322.863682] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x007fffff 64bit pref]
-> [  322.871031] pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x0fffffff 64bit pref]
-> [  322.878362] pci 0000:01:00.0: reg 0x20: [mem 0x00000000-0x03ffffff 64bit pref]
-> [  322.886845] pci 0000:01:00.0: reg 0x244: [mem 0x00000000-0x000fffff 64bit pref]
-> [  322.894193] pci 0000:01:00.0: VF(n) BAR0 space: [mem 0x00000000-0x007fffff 64bit pref] (contains BAR0 for 8 VFs)
-> [  322.905154] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x2 link at 0000:00:00.0 (capable of 63.008 Gb/s with 8.0 GT/s PCIe x8 link)
-> [  322.921371] pcieport 0000:00:00.0: BAR 15: no space for [mem size 0x18000000 64bit pref]
-> [  322.929507] pcieport 0000:00:00.0: BAR 15: failed to assign [mem size 0x18000000 64bit pref]
-> [  322.937999] pcieport 0000:00:00.0: BAR 15: no space for [mem size 0x18000000 64bit pref]
-> [  322.946131] pcieport 0000:00:00.0: BAR 15: failed to assign [mem size 0x18000000 64bit pref]
-> [  322.954614] pci 0000:01:00.0: BAR 2: no space for [mem size 0x10000000 64bit pref]
-> [  322.962225] pci 0000:01:00.0: BAR 2: failed to assign [mem size 0x10000000 64bit pref]
-> [  322.970193] pci 0000:01:00.0: BAR 4: no space for [mem size 0x04000000 64bit pref]
-> [  322.977804] pci 0000:01:00.0: BAR 4: failed to assign [mem size 0x04000000 64bit pref]
-> [  322.985766] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00800000 64bit pref]
-> [  322.993373] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00800000 64bit pref]
-> [  323.001331] pci 0000:01:00.0: BAR 7: no space for [mem size 0x00800000 64bit pref]
-> [  323.008938] pci 0000:01:00.0: BAR 7: failed to assign [mem size 0x00800000 64bit pref]
-> [  323.016903] pci 0000:01:00.0: BAR 2: no space for [mem size 0x10000000 64bit pref]
-> [  323.024511] pci 0000:01:00.0: BAR 2: failed to assign [mem size 0x10000000 64bit pref]
-> [  323.032469] pci 0000:01:00.0: BAR 4: no space for [mem size 0x04000000 64bit pref]
-> [  323.040079] pci 0000:01:00.0: BAR 4: failed to assign [mem size 0x04000000 64bit pref]
-> [  323.048037] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00800000 64bit pref]
-> [  323.055644] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00800000 64bit pref]
-> [  323.063601] pci 0000:01:00.0: BAR 7: no space for [mem size 0x00800000 64bit pref]
-> [  323.071211] pci 0000:01:00.0: BAR 7: failed to assign [mem size 0x00800000 64bit pref]
-> [  323.081914] pcieport 0002:02:03.0: devices behind bridge are unusable because [bus 03] cannot be assigned for them
-> [  323.092384] pcieport 0002:02:07.0: devices behind bridge are unusable because [bus 04] cannot be assigned for them
-> [  323.102857] pcieport 0002:01:00.0: bridge has subordinate 02 but max busn 04
+s/mac/MAC/
 
-Remove timestamps; they don't help us understand.  We probably don't
-need *all* the lines here to understand the problem.
+Explain why we want this.  Apparently you're changing from one MAC
+reset method to another method?
 
-Collect output from current kernel, which should use more useful
-labels than "reg 0x10", "BAR 15", etc.
+Collect these into a series instead of posting individual random
+patches.
 
 > Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
 > ---
->  drivers/pci/controller/dwc/pcie-armada8k.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 30 +++++++---------------
+>  1 file changed, 9 insertions(+), 21 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-> index f9d6907900d1..ca2dedaa69a4 100644
+> index 9a48ef60be51..f9d6907900d1 100644
 > --- a/drivers/pci/controller/dwc/pcie-armada8k.c
 > +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-> @@ -231,6 +231,7 @@ static void armada8k_pcie_recover_link(struct work_struct *ws)
->  	struct dw_pcie_rp *pp = &pcie->pci->pp;
->  	struct pci_bus *bus = pp->bridge->bus;
->  	struct pci_dev *root_port;
-> +	struct pci_dev *child, *tmp;
->  	int ret;
+> @@ -21,7 +21,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/resource.h>
+>  #include <linux/of_pci.h>
+> -#include <linux/mfd/syscon.h>
+> +#include <linux/reset.h>
+>  #include <linux/regmap.h>
+>  #include <linux/of_gpio.h>
 >  
->  	root_port = pci_get_slot(bus, 0);
-> @@ -239,7 +240,14 @@ static void armada8k_pcie_recover_link(struct work_struct *ws)
->  		return;
+> @@ -35,11 +35,10 @@ struct armada8k_pcie {
+>  	struct clk *clk_reg;
+>  	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
+>  	unsigned int phy_count;
+> -	struct regmap *sysctrl_base;
+> -	u32 mac_rest_bitmask;
+>  	struct work_struct recover_link_work;
+>  	enum of_gpio_flags flags;
+>  	struct gpio_desc *reset_gpio;
+> +	struct reset_control *reset;
+>  };
+>  
+>  #define PCIE_VENDOR_REGS_OFFSET		0x8000
+> @@ -257,12 +256,9 @@ static void armada8k_pcie_recover_link(struct work_struct *ws)
+>  	msleep(100);
+>  
+>  	/* Reset mac */
+> -	regmap_update_bits_base(pcie->sysctrl_base, UNIT_SOFT_RESET_CONFIG_REG,
+> -				pcie->mac_rest_bitmask, 0, NULL, false, true);
+> +	reset_control_assert(pcie->reset);
+>  	udelay(1);
+> -	regmap_update_bits_base(pcie->sysctrl_base, UNIT_SOFT_RESET_CONFIG_REG,
+> -				pcie->mac_rest_bitmask, pcie->mac_rest_bitmask,
+> -				NULL, false, true);
+> +	reset_control_deassert(pcie->reset);
+>  	udelay(1);
+>  
+>  	ret = dw_pcie_setup_rc(pp);
+> @@ -331,7 +327,7 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+>  		 * initiate a link retrain. If link retrains were
+>  		 * possible, that is.
+>  		 */
+> -		if (pcie->sysctrl_base && pcie->mac_rest_bitmask)
+> +		if (pcie->reset)
+>  			schedule_work(&pcie->recover_link_work);
+>  
+>  		dev_dbg(pci->dev, "%s: link went down\n", __func__);
+> @@ -440,18 +436,10 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  	if (gpio_is_valid(reset_gpio))
+>  		pcie->reset_gpio = gpio_to_desc(reset_gpio);
+>  
+> -	pcie->sysctrl_base = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> -						       "marvell,system-controller");
+> -	if (IS_ERR(pcie->sysctrl_base)) {
+> -		dev_warn(dev, "failed to find marvell,system-controller\n");
+> -		pcie->sysctrl_base = 0x0;
+> -	}
+> -
+> -	ret = of_property_read_u32(pdev->dev.of_node, "marvell,mac-reset-bit-mask",
+> -				   &pcie->mac_rest_bitmask);
+> -	if (ret < 0) {
+> -		dev_warn(dev, "couldn't find mac reset bit mask: %d\n", ret);
+> -		pcie->mac_rest_bitmask = 0x0;
+> +	pcie->reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> +	if (IS_ERR(pcie->reset)) {
+> +		dev_warn(dev, "failed to find mac reset\n");
+> +		pcie->reset = 0x0;
 >  	}
->  	pci_lock_rescan_remove();
-> -	pci_stop_and_remove_bus_device(root_port);
-> +
-> +	/* Remove all devices under root bus */
-> +	list_for_each_entry_safe(child, tmp,
-> +				 &root_port->subordinate->devices, bus_list) {
-> +		pci_stop_and_remove_bus_device(child);
-> +		dev_dbg(&child->dev, "removed\n");
-> +	}
-> +
->  	/* Reset device if reset gpio is set */
->  	if (pcie->reset_gpio) {
->  		/* assert and then deassert the reset signal */
-> @@ -279,11 +287,12 @@ static void armada8k_pcie_recover_link(struct work_struct *ws)
->  
->  	/* Wait until the link becomes active again */
->  	if (dw_pcie_wait_for_link(pcie->pci))
-> -		dev_err(pcie->pci->dev, "Link not up after reconfiguration\n");
-> +		goto fail;
-> +
-> +	dev_dbg(pcie->pci->dev, "%s: link has been recovered\n", __func__);
->  
-> -	bus = NULL;
-> -	while ((bus = pci_find_next_bus(bus)) != NULL)
-> -		pci_rescan_bus(bus);
-> +	/* Rescan the root bus only if link is retained */
-> +	pci_rescan_bus(bus);
->  
->  fail:
->  	pci_unlock_rescan_remove();
+>  	ret = armada8k_pcie_setup_phys(pcie);
+>  	if (ret)
 > -- 
 > 2.25.1
 > 
