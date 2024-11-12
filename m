@@ -1,120 +1,142 @@
-Return-Path: <linux-pci+bounces-16572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D00A19C5D48
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 17:30:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35F899C5DD4
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 17:56:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8954A1F23FC4
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:30:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E23E61F2186B
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:56:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E2492076B3;
-	Tue, 12 Nov 2024 16:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 163D62076AE;
+	Tue, 12 Nov 2024 16:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VEtNgY5Y"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YPpko2qb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FA320515D;
-	Tue, 12 Nov 2024 16:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE3820EA35;
+	Tue, 12 Nov 2024 16:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731428897; cv=none; b=SbnL9JEA1fzPigvDK8zuy4S7rSyo4sHy6zI/7WtKiknUQGDHD3aHYYlIDg2xXt/DJtrLPkjuun1vSfCnrzqjpTZtvCwjC7gu/VeivjnoYEOAbByrAllzkInDLp2kGoKB3H37kJWVKy4fRDt4Zp6LDzd6MA9AqJS0ZccRwZgCs58=
+	t=1731430431; cv=none; b=GgmjNDFhSNMHcnVBRP4z26fwrgMPUgKoVe0OBmTysRpufAqedHiTXvXxlL7WOOAbNKjyFokol4SC9yOGig1LRNThNb5SvnXZsELkB9iX6/Ib0wmUKSO7taMJeBAe6so+/Hx7KkhxJhgkhIsj+Wlo/La34hTXJnlE4MML9aajrB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731428897; c=relaxed/simple;
-	bh=t+xRugik8cMQGF+C24rVq81FmuqePhgwPQ6+NWjac+E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i0THLxqhPimRn7zoraZ/UKO2s1djF90ECQMWvuNzhbV3peloUNqQFWKqPAOmiUPKNlehtzF3MCENUh1613BSVte1lOiv/zGy3biaca4CNCE3naEfKeQ+cb2EnvZERNXMU6TLVvyN3JsUmq+tcgRvtUxmM2pqicPPmfq9lXb1MeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VEtNgY5Y; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ACFEmUT021877;
-	Tue, 12 Nov 2024 17:25:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	vBfUfNwcvx47MJ9lJL9jVaJ6m9ogByKNwXL/dt/Zq7s=; b=VEtNgY5Yyu/FYRf7
-	2khfLb5Lputi18f4dBs0Yb11TthYSy68v+Luc7bQYHFiOHczIPQkKqG38oIWvhgp
-	aHnlMWryk1K8NQ7yr8geVxHv96IoZMw2ZT+GHAQZI8cCgiZEyLD8a8yXcdWM6mrE
-	P3NoRZyunJCgIoDZbRr84IQ9Z6ZtWQXsgQDyE1Rz3vcC/RsOBdng0AfpbHIvY9Z2
-	6DqGobMNfZcohJIiO93lZpbFfRfszQBB5MJ+/ZKywzGKFvA3hlnkIcDLDIp+GoQq
-	8T3FSHYlwrsWbznGmc7Cp7BFO4ED/zA4KJkY1xg3q7J5OR5PuORKYdyUFLjRIUjY
-	xcTyfw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42tj64356f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Nov 2024 17:25:01 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7AD6540045;
-	Tue, 12 Nov 2024 17:23:37 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B7FB82CB0DD;
-	Tue, 12 Nov 2024 17:21:48 +0100 (CET)
-Received: from localhost (10.129.178.212) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Tue, 12 Nov
- 2024 17:21:48 +0100
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
-        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Christian Bruel <christian.bruel@foss.st.com>
-Subject: [PATCH 5/5] MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
-Date: Tue, 12 Nov 2024 17:19:25 +0100
-Message-ID: <20241112161925.999196-6-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241112161925.999196-1-christian.bruel@foss.st.com>
-References: <20241112161925.999196-1-christian.bruel@foss.st.com>
+	s=arc-20240116; t=1731430431; c=relaxed/simple;
+	bh=ODw1HrrVUx4XDdn+NA3ZiM07EdzE1pUd7SlEHngh474=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ld58Ybm/MAHieV267qpQSdC8nH1xbEtDduRvA4FZTQnDFY1AaRHLd0cMtHCSp2VZp4N4HPGVjd0drzkHsUceKTSJncr5+C1/7gcopjtmeQiOJDYf3z41gdpHOFMQKZqL6RrqEE6hiWuDxTcu2hdtcB4USdWPbGClW6hkp4AZGgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YPpko2qb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BF8C4CECD;
+	Tue, 12 Nov 2024 16:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1731430430;
+	bh=ODw1HrrVUx4XDdn+NA3ZiM07EdzE1pUd7SlEHngh474=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YPpko2qbSkx3B/Yke7goINBZ5S4Gf38HLGrkUd18K0+NDW5TDc2VM8SjUAEi81sCE
+	 VWJR7e47xV/EaMi8Ut+FCVeSu/Se2MCM1NoE5AuqTmi3OjltsAR34taDLR9bK7barr
+	 x0PRbnboZ7eYnBg6m7u87Mtvx+l0Csa6qtyBnsc0=
+Date: Tue, 12 Nov 2024 17:53:47 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Daniel Wagner <dwagner@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org,
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com,
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v3 4/8] blk-mp: introduce blk_mq_hctx_map_queues
+Message-ID: <2024111212-rash-suffocate-dc13@gregkh>
+References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
+ <20241112-refactor-blk-affinity-helpers-v3-4-573bfca0cbd8@kernel.org>
+ <2024111202-parish-prowess-78bc@gregkh>
+ <c8c671c1-267a-4aa7-a64b-51a461176ad3@flourine.local>
+ <2024111215-jury-unlighted-3953@gregkh>
+ <5967d256-037e-4ac8-a509-c6955b03db05@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5967d256-037e-4ac8-a509-c6955b03db05@flourine.local>
 
-Add myself as STM32MP25 PCIe host and PCIe endpoint drivers
+On Tue, Nov 12, 2024 at 05:15:31PM +0100, Daniel Wagner wrote:
+> On Tue, Nov 12, 2024 at 04:42:40PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Nov 12, 2024 at 04:33:09PM +0100, Daniel Wagner wrote:
+> > > On Tue, Nov 12, 2024 at 02:58:43PM +0100, Greg Kroah-Hartman wrote:
+> > > > > +void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
+> > > > > +			    struct device *dev, unsigned int offset)
+> > > > > +
+> > > > > +{
+> > > > > +	const struct cpumask *mask;
+> > > > > +	unsigned int queue, cpu;
+> > > > > +
+> > > > > +	if (!dev->bus->irq_get_affinity)
+> > > > > +		goto fallback;
+> > > > 
+> > > > I think this is better than hard-coding it, but are you sure that the
+> > > > bus will always be bound to the device here so that you have a valid
+> > > > bus-> pointer?
+> > > 
+> > > No, I just assumed the bus pointer is always valid. If it is possible to
+> > > have a device without a bus, than I'll better extend the condition to
+> > > 
+> > > 	if (!dev->bus || !dev->bus->irq_get_affinity)
+> > >         	goto fallback;
+> > 
+> > I don't know if it's possible as I don't know what codepaths are calling
+> > this, it was hard to unwind.  But you should check "just to be safe" :)
+> 
+> The main path to map_queues is via the probe functions. There are some
+> more paths like when updating a tagset after the number of queues but
+> that is all after the probe function.
+> 
+> nvme_probe
+>   nvme_alloc_admin_tag_set
+>     blk_mq_alloc_tag_set
+>        blk_mq_update_queue_map
+>           set->ops->map_queues
+> 	     blk_mq_htcx_map_queues
+>   nvme_alloc_io_tag_set
+>     blk_mq_alloc_tag_set
+>       blk_mq_update_queue_map
+>         set->ops->map_queues
+>           blk_mq_htcx_map_queues
+> 
+> virtscsi_probe, hisi_sas_v3_probe, ...
+>   scsi_add_host
+>     scsi_add_host_with_dma
+>       scsi_mq_setup_tags
+>          blk_mq_alloc_tag_set
+>            blk_mq_update_queue_map
+>              set->ops->map_queues
+>                blk_mq_htcx_map_queues
+> 
+> virtblk_probe
+>   blk_mq_alloc_tag_set
+>     blk_mq_update_queue_map
+>       set->ops->map_queues
+>         blk_mq_htcx_map_queues
+> 
+> Does this help?
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Ok, that seems fine.  Worst case, you crash and it's obvious that it
+needs to be checked in the future :)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4803908768e8..277e1cc0769e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17912,6 +17912,13 @@ L:	linux-samsung-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/controller/dwc/pci-exynos.c
- 
-+PCI DRIVER FOR STM32MP25
-+M:	Christian Bruel <christian.bruel@foss.st.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/st,stm32-pcie-*.yaml
-+F:	drivers/pci/controller/dwc/*stm32*
-+
- PCI DRIVER FOR SYNOPSYS DESIGNWARE
- M:	Jingoo Han <jingoohan1@gmail.com>
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
--- 
-2.34.1
+thanks,
 
+greg k-h
 
