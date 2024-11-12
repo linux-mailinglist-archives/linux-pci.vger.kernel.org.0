@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-16558-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16559-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F00F9C5C48
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:49:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90D959C5C6A
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 16:52:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B47621F236C6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 15:49:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD0D282296
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 15:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0C3202657;
-	Tue, 12 Nov 2024 15:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CF5420606A;
+	Tue, 12 Nov 2024 15:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Do/7rYUs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t08XEE5w"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9573202630;
-	Tue, 12 Nov 2024 15:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3A120402C;
+	Tue, 12 Nov 2024 15:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731426578; cv=none; b=sqc4nHfYV0zXuvIMfqEPWVhjef6rKvndNdafMKtZZ5xHEqdW/sHIE+bXE67zSZhZpkp21cVH7LxD/0RyJyXejqfoVYJy3qXQIdsa9dv7ngZ7rg9A+wUmwFwZCX4f4YXBG7hH1Pw7Z903GkMcCNFCzmvtfaOU/Kh+XL1Lzo31kPQ=
+	t=1731426596; cv=none; b=EsT9m7OfRYDH8bZs5keh4XuoZZOLPfR0w3DyAuDU1jYwMPnad4W2oCmkI7ImgU6oBULcreih89HyKIB549ijfSLlG2KBUROw6sei821OBdpVgqcdYSAyvxplsLgRIAkY85T8u5JiCirHE4YmiJYaXIqOMsNvb0Jz8UaErlgAZYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731426578; c=relaxed/simple;
-	bh=JPvp3Mh/bQjUYQkmm8hWLGL1nUaZ5fMwHjXvQSZsZYo=;
+	s=arc-20240116; t=1731426596; c=relaxed/simple;
+	bh=NHAnQSUL2/aylV2Ns82CTspJ8igarCg0VqlVO762LkI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ll8EE8V18W8UwEBwjVCn4+QpfbP0jygg/pfGLZEGjz7SIbQFtQwfZdhT34Gw6LGPL4cmaGrK/Ds3Is6IxzcNue8E0v8U3pgHF1/jI3hhiH8jc7eE6sfyxjeYZfenzoL2puT+5x0UiLhcGhkbOwpbXT70zihT01JeIZgiP9n0OuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Do/7rYUs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 267EAC4CECD;
-	Tue, 12 Nov 2024 15:49:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbizUDEn5t3hLPbzy+uR9R4uWTz169oXSDvs8EeAO3wxNOSH0zJhbxNYPozM3i9KGRF5pf/LvuKXiprMDJlYkQF51I1Vk84Oa+PjCaMjOQvwCbU13DuoxJR3BZwEGdNZhE8kvrbYhr4toEAj9Uof8B9GJ6ROmhvjK2fJ7loYh2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t08XEE5w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD2BC4CECD;
+	Tue, 12 Nov 2024 15:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731426577;
-	bh=JPvp3Mh/bQjUYQkmm8hWLGL1nUaZ5fMwHjXvQSZsZYo=;
+	s=k20201202; t=1731426596;
+	bh=NHAnQSUL2/aylV2Ns82CTspJ8igarCg0VqlVO762LkI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Do/7rYUspPeEoWMaeACCaJadOiUwHw3Kl4Zt5vQPquRqdxl0MH71LUywsjHIbnWi/
-	 hVsvPI7xTJ+iGVrd1kkonTi+JmIU2LhSSteoh/gUJaYCXQsq1D0bQsllo4MZYipyd7
-	 AY8+OpRMStTHprdVpkQ+LWAJuoneLKaU8YKUDYA3ESkvtVzhxHjBX/6IDeL9W8PjH/
-	 WVfp51P3KGpoF9XXkoDt0Gmp4zWhut0Ja9mudv1cq0+/jvFaC99FcTt1T6UYwg/BbL
-	 ie/vQh7A7ZffM1Zn5yjCvMVxYMxYpegnD8M8ybLiFYlkslQ7nzJ1BS6RC820PvGMGy
-	 Ibjy7Thz1wlag==
-Date: Tue, 12 Nov 2024 09:49:34 -0600
+	b=t08XEE5wlPypXrgKVLYYvo7gkFoMsSpJ2w3C1kJS06l6WSEOtMWdiGCeKGprjdNKk
+	 8JrzD8OnyL9aX6aAg1OYlrKfOZtpnYV5nVNS/A80nERyuEnuFmhiosYs/6JU7n+T9x
+	 xUC6mHBceaqYUH+0lymCorUlZVUe79Xh/kXoJvZs8w1SoRIW3LuZ3c+x4PhXFOxjGM
+	 9dvGV3Lc0/3pMj7ynjZl9geF99rfGQ/j+hIzkciKbLFWqNPBgW4myIiLNB6IGIr9CW
+	 iLk7oOknR/mPMlJhSwwfwjOahcm9mhmVrusjlhlsoc94R7QJlKOqDHRPA4tPiKhd9W
+	 vylSD9YM//b2Q==
+Date: Tue, 12 Nov 2024 09:49:53 -0600
 From: Bjorn Andersson <andersson@kernel.org>
 To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -52,11 +52,10 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, 
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] arm64: dts: qcom: qcs6490-rb3gen2: Add node for
- qps615
-Message-ID: <6lfxpzpfpfb2s2rhbf3ch4rgyegw6cehfbrj26sqodzr2vfi4q@hgc3ahuulwqv>
+Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
+Message-ID: <zxvg4s6jr3dpcffflif33i7mi3womsfkml2yj5vwaoj74zp6cr@6a2uzacppvcw>
 References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-2-29a1e98aa2b0@quicinc.com>
+ <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,181 +64,235 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241112-qps615_pwr-v3-2-29a1e98aa2b0@quicinc.com>
+In-Reply-To: <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
 
-On Tue, Nov 12, 2024 at 08:31:34PM +0530, Krishna chaitanya chundru wrote:
-> Add QPS615 PCIe switch node which has 3 downstream ports and in one
-> downstream port two embedded ethernet devices are present.
+On Tue, Nov 12, 2024 at 08:31:33PM +0530, Krishna chaitanya chundru wrote:
+> Add binding describing the Qualcomm PCIe switch, QPS615,
+> which provides Ethernet MAC integrated to the 3rd downstream port
+> and two downstream PCIe ports.
 > 
-> Power to the QPS615 is supplied through two LDO regulators, controlled
-> by two GPIOs, these are added as fixed regulators. And the QPS615 is
-> configured through i2c.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
 Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
 Regards,
 Bjorn
 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 115 +++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
->  2 files changed, 116 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/pci/qcom,qps615.yaml       | 205 +++++++++++++++++++++
+>  1 file changed, 205 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index 0d45662b8028..0e890841b600 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -202,6 +202,30 @@ vph_pwr: vph-pwr-regulator {
->  		regulator-min-microvolt = <3700000>;
->  		regulator-max-microvolt = <3700000>;
->  	};
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> new file mode 100644
+> index 000000000000..e6a63a0bb0f3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> @@ -0,0 +1,205 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	vdd_ntn_0p9: regulator-vdd-ntn-0p9 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDD_NTN_0P9";
-> +		gpio = <&pm8350c_gpios 2 GPIO_ACTIVE_HIGH>;
-> +		regulator-min-microvolt = <899400>;
-> +		regulator-max-microvolt = <899400>;
-> +		enable-active-high;
-> +		pinctrl-0 = <&ntn_0p9_en>;
-> +		pinctrl-names = "default";
-> +		regulator-enable-ramp-delay = <4300>;
-> +	};
+> +title: Qualcomm QPS615 PCIe switch
 > +
-> +	vdd_ntn_1p8: regulator-vdd-ntn-1p8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDD_NTN_1P8";
-> +		gpio = <&pm8350c_gpios 3 GPIO_ACTIVE_HIGH>;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		enable-active-high;
-> +		pinctrl-0 = <&ntn_1p8_en>;
-> +		pinctrl-names = "default";
-> +		regulator-enable-ramp-delay = <10000>;
-> +	};
->  };
->  
->  &apps_rsc {
-> @@ -684,6 +708,75 @@ &mdss_edp_phy {
->  	status = "okay";
->  };
->  
-> +&pcie1_port {
-> +	pcie@0,0 {
-> +		compatible = "pci1179,0623";
-> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
+> +maintainers:
+> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > +
-> +		device_type = "pci";
-> +		ranges;
-> +		bus-range = <0x2 0xff>;
+> +description: |
+> +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
+> +  ports. The 3rd downstream port has integrated endpoint device of
+> +  Ethernet MAC. Other two downstream ports are supposed to connect
+> +  to external device.
 > +
-> +		vddc-supply = <&vdd_ntn_0p9>;
-> +		vdd18-supply = <&vdd_ntn_1p8>;
-> +		vdd09-supply = <&vdd_ntn_0p9>;
-> +		vddio1-supply = <&vdd_ntn_1p8>;
-> +		vddio2-supply = <&vdd_ntn_1p8>;
-> +		vddio18-supply = <&vdd_ntn_1p8>;
+> +  The QPS615 PCIe switch can be configured through I2C interface before
+> +  PCIe link is established to change FTS, ASPM related entry delays,
+> +  tx amplitude etc for better power efficiency and functionality.
 > +
-> +		i2c-parent = <&i2c0 0x77>;
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - pci1179,0623
 > +
-> +		reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
+> +  reg:
+> +    maxItems: 1
 > +
-> +		pcie@1,0 {
-> +			reg = <0x20800 0x0 0x0 0x0 0x0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
+> +  i2c-parent:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      A phandle to the parent I2C node and the slave address of the device
+> +      used to do configure qps615 to change FTS, tx amplitude etc.
+> +    items:
+> +      - description: Phandle to the I2C controller node
+> +      - description: I2C slave address
 > +
-> +			device_type = "pci";
-> +			ranges;
-> +			bus-range = <0x3 0xff>;
-> +		};
+> +  vdd18-supply: true
 > +
-> +		pcie@2,0 {
-> +			reg = <0x21000 0x0 0x0 0x0 0x0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
+> +  vdd09-supply: true
 > +
-> +			device_type = "pci";
-> +			ranges;
-> +			bus-range = <0x4 0xff>;
-> +		};
+> +  vddc-supply: true
 > +
-> +		pcie@3,0 {
-> +			reg = <0x21800 0x0 0x0 0x0 0x0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			ranges;
-> +			bus-range = <0x5 0xff>;
+> +  vddio1-supply: true
 > +
-> +			pcie@0,0 {
-> +				reg = <0x50000 0x0 0x0 0x0 0x0>;
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				device_type = "pci";
-> +				ranges;
-> +			};
+> +  vddio2-supply: true
 > +
-> +			pcie@0,1 {
-> +				reg = <0x50100 0x0 0x0 0x0 0x0>;
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				device_type = "pci";
-> +				ranges;
-> +			};
-> +		};
-> +	};
-> +};
+> +  vddio18-supply: true
 > +
->  &pmk8350_rtc {
->  	status = "okay";
->  };
-> @@ -812,6 +905,28 @@ lt9611_rst_pin: lt9611-rst-state {
->  	};
->  };
->  
-> +&pm8350c_gpios {
-> +	ntn_0p9_en: ntn-0p9-en-state {
-> +		pins = "gpio2";
-> +		function = "normal";
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO controlling the RESX# pin.
 > +
-> +		bias-disable;
-> +		input-disable;
-> +		output-enable;
-> +		power-source = <0>;
-> +	};
+> +  qps615,axi-clk-freq-hz:
+> +    description:
+> +      AXI clock rate which is internal bus of the switch
+> +      The switch only runs in two frequencies i.e 250MHz and 125MHz.
+> +    enum: [125000000, 250000000]
 > +
-> +	ntn_1p8_en: ntn-1p8-en-state {
-> +		pins = "gpio3";
-> +		function = "normal";
+> +allOf:
+> +  - $ref: "#/$defs/qps615-node"
 > +
-> +		bias-disable;
-> +		input-disable;
-> +		output-enable;
-> +		power-source = <0>;
-> +	};
-> +};
+> +patternProperties:
+> +  "@1?[0-9a-f](,[0-7])?$":
+> +    description: child nodes describing the internal downstream ports
+> +      the qps615 switch.
+> +    type: object
+> +    $ref: "#/$defs/qps615-node"
+> +    unevaluatedProperties: false
 > +
->  &tlmm {
->  	lt9611_irq_pin: lt9611-irq-state {
->  		pins = "gpio24";
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index 3d8410683402..82434f085ff0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -2279,7 +2279,7 @@ pcie1: pcie@1c08000 {
->  
->  			status = "disabled";
->  
-> -			pcie@0 {
-> +			pcie1_port: pcie@0 {
->  				device_type = "pci";
->  				reg = <0x0 0x0 0x0 0x0 0x0>;
->  				bus-range = <0x01 0xff>;
+> +$defs:
+> +  qps615-node:
+> +    type: object
+> +
+> +    properties:
+> +      qcom,l0s-entry-delay-ns:
+> +        description: Aspm l0s entry delay.
+> +
+> +      qcom,l1-entry-delay-ns:
+> +        description: Aspm l1 entry delay.
+> +
+> +      qcom,tx-amplitude-millivolt:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Change Tx Margin setting for low power consumption.
+> +
+> +      qcom,no-dfe-support:
+> +        type: boolean
+> +        description: Disable DFE (Decision Feedback Equalizer), which mitigates
+> +          intersymbol interference and some reflections caused by impedance mismatches.
+> +
+> +      qcom,nfts:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          Number of Fast Training Sequence (FTS) used during L0s to L0 exit
+> +          for bit and Symbol lock.
+> +
+> +    allOf:
+> +      - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +required:
+> +  - vdd18-supply
+> +  - vdd09-supply
+> +  - vddc-supply
+> +  - vddio1-supply
+> +  - vddio2-supply
+> +  - vddio18-supply
+> +  - i2c-parent
+> +  - reset-gpios
+> +
+> +examples:
+> +  - |
+> +
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    pcie {
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +
+> +        pcie@0 {
+> +            device_type = "pci";
+> +            reg = <0x0 0x0 0x0 0x0 0x0>;
+> +
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            ranges;
+> +            bus-range = <0x01 0xff>;
+> +
+> +            pcie@0,0 {
+> +                compatible = "pci1179,0623";
+> +                reg = <0x10000 0x0 0x0 0x0 0x0>;
+> +                device_type = "pci";
+> +                #address-cells = <3>;
+> +                #size-cells = <2>;
+> +                ranges;
+> +                bus-range = <0x02 0xff>;
+> +
+> +                i2c-parent = <&qup_i2c 0x77>;
+> +
+> +                vdd18-supply = <&vdd>;
+> +                vdd09-supply = <&vdd>;
+> +                vddc-supply = <&vdd>;
+> +                vddio1-supply = <&vdd>;
+> +                vddio2-supply = <&vdd>;
+> +                vddio18-supply = <&vdd>;
+> +
+> +                reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
+> +
+> +                pcie@1,0 {
+> +                    reg = <0x20800 0x0 0x0 0x0 0x0>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    device_type = "pci";
+> +                    ranges;
+> +                    bus-range = <0x03 0xff>;
+> +
+> +                    qcom,no-dfe-support;
+> +                };
+> +
+> +                pcie@2,0 {
+> +                    reg = <0x21000 0x0 0x0 0x0 0x0>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    device_type = "pci";
+> +                    ranges;
+> +                    bus-range = <0x04 0xff>;
+> +
+> +                    qcom,nfts = <10>;
+> +                };
+> +
+> +                pcie@3,0 {
+> +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    device_type = "pci";
+> +                    ranges;
+> +                    bus-range = <0x05 0xff>;
+> +
+> +                    qcom,tx-amplitude-millivolt = <10>;
+> +                    pcie@0,0 {
+> +                        reg = <0x50000 0x0 0x0 0x0 0x0>;
+> +                        #address-cells = <3>;
+> +                        #size-cells = <2>;
+> +                        device_type = "pci";
+> +                        ranges;
+> +
+> +                        qcom,l1-entry-delay-ns = <10>;
+> +                    };
+> +
+> +                    pcie@0,1 {
+> +                        reg = <0x50100 0x0 0x0 0x0 0x0>;
+> +                        #address-cells = <3>;
+> +                        #size-cells = <2>;
+> +                        device_type = "pci";
+> +                        ranges;
+> +
+> +                        qcom,l0s-entry-delay-ns = <10>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
 > 
 > -- 
 > 2.34.1
