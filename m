@@ -1,254 +1,243 @@
-Return-Path: <linux-pci+bounces-16519-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16520-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CF6E9C5282
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 10:56:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D096C9C52B8
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 11:07:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D0D2283951
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 09:56:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 905C928399F
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 10:07:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0706E20E039;
-	Tue, 12 Nov 2024 09:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B3B21265F;
+	Tue, 12 Nov 2024 10:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W8UolzCV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="QwBa+r+q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E241E4AD
-	for <linux-pci@vger.kernel.org>; Tue, 12 Nov 2024 09:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406FA212EEF;
+	Tue, 12 Nov 2024 10:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731405375; cv=none; b=uiNSqP4wR3PML1aeqoZorggF5XWAsz2nFaDoFT8mKchyJVTRI6jfKAYFIskcGmr9cDLtFUBrZUyZRWCYgv8Gsju6KkAq3VNbetmLz8XJt0d0Rq5w0LonmxScOp8pDOYbvuVXEJygfanqrkwaiqAnkOn08+4mrvcOvN6mVJKqrUs=
+	t=1731405983; cv=none; b=p2/Ewwwz88mgpPIhqXPCFFrm1h34nirQlCK6X65GI9Te8EOEdwWdhLSkUM3KLm6H8gCJJpnCk/Bxlv5AOpBJIscBQ/HMkgA7dGLLEwPCqCI036B16XH4YBpLrcRMw2Ei2gW4McL5Z4LvSExPq9JFlI7PZRtTbuvnj+MURbuUI94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731405375; c=relaxed/simple;
-	bh=U4SJLESWn9LL0n0pngSMQw3DqsoaRNtseq+r6KGOoVo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZqBydKcHSkr/f1lMfeAZARcgjbmQRMhdfePC39ftse+NeA4j0USSZgTK5bO8sWmYHLpmXjO/KNrRZio9VCvOcBwVZuuDJwz8WzN/Avm5vEob83UMgBN+Yj8BrHkboqNo2wS8UmTLgQQ726G6WpycqrCuSTb5hkwmrAHfO1quFm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W8UolzCV; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731405374; x=1762941374;
-  h=date:from:to:cc:subject:message-id;
-  bh=U4SJLESWn9LL0n0pngSMQw3DqsoaRNtseq+r6KGOoVo=;
-  b=W8UolzCVb2BpqjcTzx763bhgK6OGC6njm+Hy3r7q0/OVJKBrRu5qD43g
-   3cSwfj6VEJ9BdlnaRRFvRI1l5G6tPEUT/IRYJ78nqyInWIMaTvYho8vf8
-   dt//XgKtT9G1vjalf1AeakKYF4JC14x6vsR7xKKXh9FobfcGGSAMTk0mq
-   O9BcL8OAfxv6+ifdort8nkAT5k88KM9hsYX86plcIq1hx6jomZsN9eQSK
-   trqzoAvkQWQD2xnWau8JscyqxVgUdfncRsRajty4GdLB+tTMedL56k+u1
-   wUqlsbD4mnZ3eBphPLmN6SOe2HPy8p9CRG8d0I5b1ar3yFNta7Vwupg75
-   Q==;
-X-CSE-ConnectionGUID: WHxpJl84SoCUI2Yvwkbz0Q==
-X-CSE-MsgGUID: gX6j/NfyTCGdq9T/8TkF3g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30996253"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30996253"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 01:56:13 -0800
-X-CSE-ConnectionGUID: TyP2xHMHQuKrZ0NLD6DqOA==
-X-CSE-MsgGUID: SIRR7beCS5yviJTA/yHMvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,147,1728975600"; 
-   d="scan'208";a="110647823"
-Received: from lkp-server01.sh.intel.com (HELO bcfed0da017c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 12 Nov 2024 01:56:12 -0800
-Received: from kbuild by bcfed0da017c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tAnd3-0000gr-2p;
-	Tue, 12 Nov 2024 09:56:09 +0000
-Date: Tue, 12 Nov 2024 17:55:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:locking] BUILD SUCCESS
- 38a18dfe9035d5a02a53271824de1854129c61dc
-Message-ID: <202411121722.lXbYm3yj-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1731405983; c=relaxed/simple;
+	bh=PtwouKHAn/VHkgGXa42Miuf+DbfWJ6bCaJAhn+NoCYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hotUHrQzg3mIrvt2v7BN+fBasWE4TPyECbjRFmsBtC/Ekzq2IZybyGdIefzS/DyknSFtk5USW2OVO6q5G9pKRYgjtCHTCMI3Q+BbdDM+gQczAhmcwLjBj8mqhllDY5Ad8P5lbT7IE1yNUySzqGIL21ztFGxJl46TDUNuCEeA6Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=QwBa+r+q; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qEqElcS5St5CaM+svgsscnrIfVD/nab9lkfJvbTL8nk=; b=QwBa+r+qb0XaTDVdiMDrGefwj7
+	HUS93wehrhz0EGkwpNhgYywnJpOi3YvldcYW9FOmgWEHoX3NE/upVkS2IzViaPwCE5u/6zQIHaD4b
+	Nw7VNVzwfcul5Chyb91FNpM3YvhzHW/8tCdn7aA1/F58l+G3EzfooWYzD8M8P/7zKzJ3Zl/ITXJhR
+	iP1KUmkMT1WuX928BXG3bsPfpHUMFXZNHOkSPtVzJUhTdkxJnod5gBd4E2wxDYQNaZNbHZqrh8KoC
+	LF1ftT7/1JwT51409ochdXi7RGjEc5R5OnBAG1gCBrXgLjFKY9WtdKR2txk6wu2f/f3km5LO5K6/e
+	GqGyKwfw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44242)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tAnml-0003tT-0t;
+	Tue, 12 Nov 2024 10:06:13 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tAnmj-0007Mx-14;
+	Tue, 12 Nov 2024 10:06:09 +0000
+Date: Tue, 12 Nov 2024 10:06:09 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
+Cc: lpieralisi@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	salee@marvell.com, dingwei@marvell.com
+Subject: Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
+Message-ID: <ZzMokT-2pop1Y5hh@shell.armlinux.org.uk>
+References: <20241112064813.751736-1-jpatel2@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241112064813.751736-1-jpatel2@marvell.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git locking
-branch HEAD: 38a18dfe9035d5a02a53271824de1854129c61dc  PCI: Unexport pci_walk_bus_locked()
+Overall, your recent patches look like they're part of a series - they
+are dependent on each other, but you haven't sent them as a series. They
+need to be sent as a series so people know what order these patches
+should be applied in, and that they're all related.
 
-elapsed time: 747m
+On Mon, Nov 11, 2024 at 10:48:13PM -0800, Jenishkumar Maheshbhai Patel wrote:
+> In PCIE ISR routine caused by RST_LINK_DOWN
+> we schedule work to handle the link-down procedure.
+> Link-down procedure will:
+> 1. Remove PCIe bus
+> 2. Reset the MAC
+> 3. Reconfigure link back up
+> 4. Rescan PCIe bus
+> 
+> Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 84 ++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index 07775539b321..b1b48c2016f7 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/resource.h>
+>  #include <linux/of_pci.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  #include "pcie-designware.h"
+>  
+> @@ -32,6 +34,9 @@ struct armada8k_pcie {
+>  	struct clk *clk_reg;
+>  	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
+>  	unsigned int phy_count;
+> +	struct regmap *sysctrl_base;
+> +	u32 mac_rest_bitmask;
+> +	struct work_struct recover_link_work;
+>  };
+>  
+>  #define PCIE_VENDOR_REGS_OFFSET		0x8000
+> @@ -72,6 +77,8 @@ struct armada8k_pcie {
+>  #define AX_USER_DOMAIN_MASK		0x3
+>  #define AX_USER_DOMAIN_SHIFT		4
+>  
+> +#define UNIT_SOFT_RESET_CONFIG_REG	0x268
+> +
+>  #define to_armada8k_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  static void armada8k_pcie_disable_phys(struct armada8k_pcie *pcie)
+> @@ -216,6 +223,65 @@ static int armada8k_pcie_host_init(struct dw_pcie_rp *pp)
+>  	return 0;
+>  }
+>  
+> +static void armada8k_pcie_recover_link(struct work_struct *ws)
+> +{
+> +	struct armada8k_pcie *pcie = container_of(ws, struct armada8k_pcie, recover_link_work);
+> +	struct dw_pcie_rp *pp = &pcie->pci->pp;
+> +	struct pci_bus *bus = pp->bridge->bus;
+> +	struct pci_dev *root_port;
+> +	int ret;
+> +
+> +	root_port = pci_get_slot(bus, 0);
+> +	if (!root_port) {
+> +		dev_err(pcie->pci->dev, "failed to get root port\n");
+> +		return;
+> +	}
+> +	pci_lock_rescan_remove();
+> +	pci_stop_and_remove_bus_device(root_port);
+> +	/*
+> +	 * Sleep needed to make sure all pcie transactions and access
+> +	 * are flushed before resetting the mac
+> +	 */
+> +	msleep(100);
+> +
+> +	/* Reset mac */
+> +	regmap_update_bits_base(pcie->sysctrl_base, UNIT_SOFT_RESET_CONFIG_REG,
+> +				pcie->mac_rest_bitmask, 0, NULL, false, true);
+> +	udelay(1);
+> +	regmap_update_bits_base(pcie->sysctrl_base, UNIT_SOFT_RESET_CONFIG_REG,
+> +				pcie->mac_rest_bitmask, pcie->mac_rest_bitmask,
+> +				NULL, false, true);
+> +	udelay(1);
+> +
+> +	ret = dw_pcie_setup_rc(pp);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	ret = armada8k_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(pcie->pci->dev, "failed to initialize host: %d\n", ret);
+> +		goto fail;
+> +	}
+> +
+> +	if (!dw_pcie_link_up(pcie->pci)) {
+> +		ret = dw_pcie_start_link(pcie->pci);
+> +		if (ret)
+> +			goto fail;
+> +	}
+> +
+> +	/* Wait until the link becomes active again */
+> +	if (dw_pcie_wait_for_link(pcie->pci))
+> +		dev_err(pcie->pci->dev, "Link not up after reconfiguration\n");
+> +
+> +	bus = NULL;
+> +	while ((bus = pci_find_next_bus(bus)) != NULL)
+> +		pci_rescan_bus(bus);
+> +
+> +fail:
+> +	pci_unlock_rescan_remove();
+> +	pci_dev_put(root_port);
+> +}
+> +
+>  static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+>  {
+>  	struct armada8k_pcie *pcie = arg;
+> @@ -253,6 +319,9 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+>  		 * initiate a link retrain. If link retrains were
+>  		 * possible, that is.
+>  		 */
+> +		if (pcie->sysctrl_base && pcie->mac_rest_bitmask)
+> +			schedule_work(&pcie->recover_link_work);
+> +
+>  		dev_dbg(pci->dev, "%s: link went down\n", __func__);
+>  	}
+>  
+> @@ -322,6 +391,8 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  
+>  	pcie->pci = pci;
+>  
+> +	INIT_WORK(&pcie->recover_link_work, armada8k_pcie_recover_link);
+> +
+>  	pcie->clk = devm_clk_get(dev, NULL);
+>  	if (IS_ERR(pcie->clk))
+>  		return PTR_ERR(pcie->clk);
+> @@ -349,6 +420,19 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  		goto fail_clkreg;
+>  	}
+>  
+> +	pcie->sysctrl_base = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +						       "marvell,system-controller");
+> +	if (IS_ERR(pcie->sysctrl_base)) {
+> +		dev_warn(dev, "failed to find marvell,system-controller\n");
+> +		pcie->sysctrl_base = 0x0;
+> +	}
+> +
+> +	ret = of_property_read_u32(pdev->dev.of_node, "marvell,mac-reset-bit-mask",
+> +				   &pcie->mac_rest_bitmask);
+> +	if (ret < 0) {
+> +		dev_warn(dev, "couldn't find mac reset bit mask: %d\n", ret);
+> +		pcie->mac_rest_bitmask = 0x0;
+> +	}
+>  	ret = armada8k_pcie_setup_phys(pcie);
+>  	if (ret)
+>  		goto fail_clkreg;
+> -- 
+> 2.25.1
+> 
+> 
+> 
 
-configs tested: 161
-configs skipped: 10
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-20
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.2.0
-arc                        nsimosci_defconfig    clang-20
-arc                   randconfig-001-20241112    gcc-14.2.0
-arc                   randconfig-002-20241112    gcc-14.2.0
-arc                           tb10x_defconfig    clang-20
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-20
-arm                         axm55xx_defconfig    clang-20
-arm                                 defconfig    gcc-14.2.0
-arm                      footbridge_defconfig    clang-20
-arm                   randconfig-001-20241112    gcc-14.2.0
-arm                   randconfig-002-20241112    gcc-14.2.0
-arm                   randconfig-003-20241112    gcc-14.2.0
-arm                   randconfig-004-20241112    gcc-14.2.0
-arm                       spear13xx_defconfig    clang-20
-arm                           sunxi_defconfig    clang-20
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20241112    gcc-14.2.0
-arm64                 randconfig-002-20241112    gcc-14.2.0
-arm64                 randconfig-003-20241112    gcc-14.2.0
-arm64                 randconfig-004-20241112    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20241112    gcc-14.2.0
-csky                  randconfig-002-20241112    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20241112    gcc-14.2.0
-hexagon               randconfig-002-20241112    gcc-14.2.0
-i386                             allmodconfig    clang-19
-i386                              allnoconfig    clang-19
-i386                             allyesconfig    clang-19
-i386        buildonly-randconfig-001-20241112    clang-19
-i386        buildonly-randconfig-002-20241112    clang-19
-i386        buildonly-randconfig-003-20241112    clang-19
-i386        buildonly-randconfig-004-20241112    clang-19
-i386        buildonly-randconfig-005-20241112    clang-19
-i386        buildonly-randconfig-006-20241112    clang-19
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241112    clang-19
-i386                  randconfig-002-20241112    clang-19
-i386                  randconfig-003-20241112    clang-19
-i386                  randconfig-004-20241112    clang-19
-i386                  randconfig-005-20241112    clang-19
-i386                  randconfig-006-20241112    clang-19
-i386                  randconfig-011-20241112    clang-19
-i386                  randconfig-012-20241112    clang-19
-i386                  randconfig-013-20241112    clang-19
-i386                  randconfig-014-20241112    clang-19
-i386                  randconfig-015-20241112    clang-19
-i386                  randconfig-016-20241112    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch                 loongson3_defconfig    clang-20
-loongarch             randconfig-001-20241112    gcc-14.2.0
-loongarch             randconfig-002-20241112    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           gcw0_defconfig    clang-20
-mips                           mtx1_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20241112    gcc-14.2.0
-nios2                 randconfig-002-20241112    gcc-14.2.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           alldefconfig    clang-20
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20241112    gcc-14.2.0
-parisc                randconfig-002-20241112    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                     akebono_defconfig    clang-20
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    clang-20
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                   lite5200b_defconfig    clang-20
-powerpc                 mpc8313_rdb_defconfig    clang-20
-powerpc                 mpc836x_rdk_defconfig    clang-20
-powerpc                      pasemi_defconfig    clang-20
-powerpc                      ppc64e_defconfig    clang-20
-powerpc               randconfig-001-20241112    gcc-14.2.0
-powerpc               randconfig-002-20241112    gcc-14.2.0
-powerpc               randconfig-003-20241112    gcc-14.2.0
-powerpc                        warp_defconfig    clang-20
-powerpc64             randconfig-001-20241112    gcc-14.2.0
-powerpc64             randconfig-002-20241112    gcc-14.2.0
-powerpc64             randconfig-003-20241112    gcc-14.2.0
-riscv                            allmodconfig    clang-20
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    clang-20
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20241112    gcc-14.2.0
-riscv                 randconfig-002-20241112    gcc-14.2.0
-s390                             allmodconfig    clang-20
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20241112    gcc-14.2.0
-s390                  randconfig-002-20241112    gcc-14.2.0
-s390                       zfcpdump_defconfig    clang-20
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                         ecovec24_defconfig    clang-20
-sh                    randconfig-001-20241112    gcc-14.2.0
-sh                    randconfig-002-20241112    gcc-14.2.0
-sh                          rsk7203_defconfig    clang-20
-sh                          rsk7264_defconfig    clang-20
-sh                           se7750_defconfig    clang-20
-sparc                            allmodconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20241112    gcc-14.2.0
-sparc64               randconfig-002-20241112    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20241112    gcc-14.2.0
-um                    randconfig-002-20241112    gcc-14.2.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64                              defconfig    clang-19
-x86_64                                  kexec    clang-19
-x86_64                                  kexec    gcc-12
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                  audio_kc705_defconfig    clang-20
-xtensa                randconfig-001-20241112    gcc-14.2.0
-xtensa                randconfig-002-20241112    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 
