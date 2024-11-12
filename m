@@ -1,191 +1,146 @@
-Return-Path: <linux-pci+bounces-16606-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16607-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B6ED9C63D9
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 22:55:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D43F09C640E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 23:08:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A5FF2816DB
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:55:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B47B1F22729
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 22:08:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA25219E34;
-	Tue, 12 Nov 2024 21:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BBC821A717;
+	Tue, 12 Nov 2024 22:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Ff1vJKgV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IVwNhomQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABAF1531C4;
-	Tue, 12 Nov 2024 21:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731448514; cv=fail; b=TA0SEfEMpk5DTTwLQgl0zelZYnvrbUDHhfLAukn8WLVREuLOFVWn1u0urR4BqlwStRucgRxPh1DSYGZ1XtF09OW5Q5z10AOek0VnWZrfbhwNEG4Z7lcqe27g5O6HxLjBDuVsfEFpNqem2t3BoFJ2HoAliLH2f3WsLhuKfMtPPsc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731448514; c=relaxed/simple;
-	bh=ryDd73zOQZtSkk99Ud9+cYwJUQfDAuIpuDeOhPcKHaQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X+Smn6xiiOVKloCHsqimOWeCCgd6ZPencUFy4pMPk0LTD+zbBqkb94JAqPZUO0MAqhsWq8WUVYDSz/FhYaoVNJLs5oz4RDUdnLsVaQue5CkEPmoneXse4NXgUvDstMartDN5c+JESSoP4Tke1ZlaX/UfRlFwonXPjjcsk6kZWtg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Ff1vJKgV; arc=fail smtp.client-ip=40.107.94.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k0C0ly4PaU6yRrAfDdWn5kgKpMrSe5ruArhmKcnFjzu33AcanOAobvq/EOriMZocDVCY8EGfoc4CwgnjYmcmoY5lOpcCycG1Sb5Qj6B6xSqiJi2U0nwK5zBKS9lp+tjyGPw0IH+opXtS3e7EOVGWXT8o59nVDTcYKm9PEELMIzwbb9i1lYLtXtbzkmb/rzmg6RoNARE23sd9D9XSjkPqIbyaS+jqmJv0Pckehck1tJR7t+mKaB3XlzfaB3zIz+R+FJk0c5PT00hsx9wsMGPcL2uIg6LFozGTXTsW3uQnjssQSVTGBme03yl2qLNgpu2ZONHMHa9n8Le9wnLmChhmDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BN9DpUb1p/C8Taze62acJebdHZiIr1mHnH7MHwbR3EA=;
- b=RjqkHEGlNbgrad/W4v95UgLpu3SXo7DK65ZtgVOb2zQZk2PQh0lmXS5F+z8eMgCnGkvCk29cwxM00D9WBvZyCkQUtGVFfH3XVixKBszFGqmKhDlkkZRHZgHdwzMFwcM/dLV7mSGEZOFSiktNW1zWdXfuKjPfWz1D6eVBL+MZ/ppu+r2UIum51YC4Qr7nPxwnpryWZt4GV95Z2s4BwU3HGHzj5YtvNQ1ccQKdVKc19ifrYV6Numi3B0WeVUB5dfPZVEZgft4E9xk+N19A0/bgSdx8kBoigevBtlay0VoRch937sM9uRSlFi2/S5BUWiZaRHYnr5wSZDqJ318wW00HZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BN9DpUb1p/C8Taze62acJebdHZiIr1mHnH7MHwbR3EA=;
- b=Ff1vJKgVzYy9bhnVRWYsWcEMchWECx03LZj/bAYVmBa0EHJKgd5u6+ENvFHJHxLYC91tiPQ0hKGHUl7b7DQrt0Rx+D7sCBdHgmtNaQpxhHTroeS2ZiSvidQnl5ogeNSNNcdUo4DcH7fhpTGO6fPVFmyu5/0HehjPUAEUDg5qzox0Dq848Vwnku5SKjVSOzr8JskGdASPH+77eQPLTwyvEgVv9cQEXmSWQnHJL7xPn+zs7kjdGmmddI6wIaQOes0qXsf7wCbOYhMuHWZiVdAqNUd6UZc61eL6lPCUKNqL16eyQHFcFToY/1FbW/PKzS7SkxejgUn1MNd+ljKbtYL4zg==
-Received: from SJ0PR03CA0163.namprd03.prod.outlook.com (2603:10b6:a03:338::18)
- by CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.20; Tue, 12 Nov
- 2024 21:55:09 +0000
-Received: from SJ1PEPF00002319.namprd03.prod.outlook.com
- (2603:10b6:a03:338:cafe::27) by SJ0PR03CA0163.outlook.office365.com
- (2603:10b6:a03:338::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.16 via Frontend
- Transport; Tue, 12 Nov 2024 21:55:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF00002319.mail.protection.outlook.com (10.167.242.229) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8158.14 via Frontend Transport; Tue, 12 Nov 2024 21:55:09 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 12 Nov
- 2024 13:55:02 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 12 Nov
- 2024 13:55:01 -0800
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
- Transport; Tue, 12 Nov 2024 13:55:00 -0800
-Date: Tue, 12 Nov 2024 13:54:58 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Robin Murphy <robin.murphy@arm.com>
-CC: <maz@kernel.org>, <tglx@linutronix.de>, <bhelgaas@google.com>,
-	<alex.williamson@redhat.com>, <jgg@nvidia.com>, <leonro@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <dlemoal@kernel.org>,
-	<kevin.tian@intel.com>, <smostafa@google.com>,
-	<andriy.shevchenko@linux.intel.com>, <reinette.chatre@intel.com>,
-	<eric.auger@redhat.com>, <ddutile@redhat.com>, <yebin10@huawei.com>,
-	<brauner@kernel.org>, <apatel@ventanamicro.com>,
-	<shivamurthy.shastri@linutronix.de>, <anna-maria@linutronix.de>,
-	<nipun.gupta@amd.com>, <marek.vasut+renesas@mailbox.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFCv1 0/7] vfio: Allow userspace to specify the address
- for each MSI vector
-Message-ID: <ZzPOsrbkmztWZ4U/@Asurada-Nvidia>
-References: <cover.1731130093.git.nicolinc@nvidia.com>
- <a63e7c3b-ce96-47a5-b462-d5de3a2edb56@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A6D21A707;
+	Tue, 12 Nov 2024 22:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731449310; cv=none; b=jw8FDydMtMnTUoW5ec78dDd5qIlyhTj0frvzQiapI4RClMuTwRZNHNyuEehqvN9JlOFfWKGU8iZZ99ROc+Ot9Vj6pWAOU1dJ186cJTOB8xbevqcsQo8BFzI0t3UL6ra2Kx5EyKH/WeB1h382SFgJSbdVctLThmkA0n5CSZ4sqHk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731449310; c=relaxed/simple;
+	bh=bwOLoyFxYfjUqtJNi/9ZCqz09dTnm3t/9bGtqoLlI8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0Y8I01wtlYn7nu2tmnvN7ktw+OPNB5VXtgstSmU0G9iz/6oei5kDNjkgzFIYmBlzUR0GYT9Jj4MbDMmA4EvLJSQCLcvYlBfIHfyFhmt2NeUrGd0haWlFcTA00CmwRpX58NlZCs+Bv+DXrocBzHGd4cKMiAP9beYidb/ErYqzdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IVwNhomQ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731449309; x=1762985309;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bwOLoyFxYfjUqtJNi/9ZCqz09dTnm3t/9bGtqoLlI8U=;
+  b=IVwNhomQF4zWvejcrdwszuAZZGj5KqtQ/UmeU88Yw7IJ0RjbOHxFqm1v
+   49CTwAyzSKjw+vliZjwNP3L/nXX/cqTLnxz7bJfwUkPjPWfwy3gpchnTR
+   P/m2vH4I59QnoULZBzWDNBe5aQeGMW7T6BeGEuVwm0HgxrXE5oZqHq7BP
+   dsIqY4o1SkbxPbOXO2Wf0l+X2M/neD7xmC6mhtSaB8gyPBvSFSDBH9LUr
+   qukDURu/Vfum2vAV876J8t+lC97simAyWSK+sVOHcgCyMH19dVOr443Jx
+   2lNPmnPpMXcBGg5ePayPlBPeO/52hGqXMbj32RaInN7kSbGwfvrDQfYoV
+   g==;
+X-CSE-ConnectionGUID: 3l5wpoqITy2Um7ytbQkcpg==
+X-CSE-MsgGUID: 7DsUB2CqTSCk5Zrms4A9zQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11254"; a="42722540"
+X-IronPort-AV: E=Sophos;i="6.12,149,1728975600"; 
+   d="scan'208";a="42722540"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 14:08:27 -0800
+X-CSE-ConnectionGUID: QGh9vjHLSpKorf74bKXSXg==
+X-CSE-MsgGUID: sKP0TcqbSXmgHwe8OkVCnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,149,1728975600"; 
+   d="scan'208";a="91712794"
+Received: from lkp-server01.sh.intel.com (HELO bcfed0da017c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 12 Nov 2024 14:08:16 -0800
+Received: from kbuild by bcfed0da017c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tAz3W-0001lf-1j;
+	Tue, 12 Nov 2024 22:08:14 +0000
+Date: Wed, 13 Nov 2024 06:07:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org,
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com,
+	linux-nvme@lists.infradead.org, Daniel Wagner <wagi@kernel.org>
+Subject: Re: [PATCH v3 3/8] virtio: hookup irq_get_affinity callback
+Message-ID: <202411130521.UOBdW8Rv-lkp@intel.com>
+References: <20241112-refactor-blk-affinity-helpers-v3-3-573bfca0cbd8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a63e7c3b-ce96-47a5-b462-d5de3a2edb56@arm.com>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002319:EE_|CY5PR12MB6429:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab79cad2-5814-4857-3739-08dd0364ad53
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6kOEMKY4KwO7xqVRobHnuZ+C0KtYNYid76AGXR+wqEn/o557vpz2RAuCjzjL?=
- =?us-ascii?Q?PHQxF5bRXRh0jn8vshrid5A7wx3wGsvN5E2+FAKGtv/zuu/Wtuu6Hw4PCVCs?=
- =?us-ascii?Q?BsnJ2Yd7yw4eNZuBwK9op51sYzzWvmadx4GP1qnXL/fmLPD36e00Ret3ZU4D?=
- =?us-ascii?Q?UL+tmPZEqdsVZUbRMV9IgWmphHhAVm1isbnLjUMyFSSf8B0X1r4s6LEM5rMU?=
- =?us-ascii?Q?sZz4geaw3GH2RnZH0QF9GT46i9rfwdzEXwu9HHy0G9CPEqnstdl1IbwRgcDR?=
- =?us-ascii?Q?Cd2dO2A2QuPvhm6K1xnn/TO0fcMvPGgi5r38fvocM1HQZncVXRx36sC/lcft?=
- =?us-ascii?Q?npJikIYyc6xR/s0e6VPYmBd/eNBmb/jNQy3JbEiuubAyqZmWOgXDl2flbloL?=
- =?us-ascii?Q?X+gxP/Ln66skLafiPLEUokL+d5FT9JBp4G8omtPTuefWPsdsfpBhXHUP5sjn?=
- =?us-ascii?Q?aPKCzYvtjMh6n5hLgAQD5s2mkL89KJFncc7B/nHgqPUsgItglZFNbnhS4h/u?=
- =?us-ascii?Q?ouB+WeE/UMQcaLAFbexaoSt1fLMehvZcSpv1ZZ/ko0EnmrQBnbI8NCtwyfHX?=
- =?us-ascii?Q?3APrc4hLEnUEncRujH9WuuSrcn8TZfWJlbTACzZiQnRfTyFjm/u+yQ+X0wyX?=
- =?us-ascii?Q?fhLsrwKKb7gtrZ3ci/j2SHoPKbfo5mAumWaqJDkvE4spJhitl0Rdp4LBArna?=
- =?us-ascii?Q?IhLXR7ojSvHxo1lIvoi34qQqjmHQvyeUfTw52mHk7hAzo4G1GdGS8CzWe50X?=
- =?us-ascii?Q?i7LTB6UR37XIkp9uyf4swKY7Yx4ykeqjSBhjhdmFOb+4JAkZFKF5q+72Oefm?=
- =?us-ascii?Q?smEKBz32VQE34WrSXGBttzgpc1d32nRS9vHfNDRyirayKYb7bTlo0+4eK+pr?=
- =?us-ascii?Q?P7JzNa4rvt83RoRTHyr72XIV3/4Spn7zcNzLXwqwAs6r3JQD+OzwzuHy9aFf?=
- =?us-ascii?Q?E2HO9fN0UeXCUESWkF7foKOT38ySWvgs4JXEo553ZbYRAd7958fulXgzvilV?=
- =?us-ascii?Q?jF4HTf9a4vD8WYl+kyo0H6Fusihx4Z6Jbj2/0mRWlAzeb1PD3OEkzGkhIMhk?=
- =?us-ascii?Q?da4d3aVAGKfsuYgNsdOzXQ/fobj/0sxTDHR6q1Lhgq5zy8xG9hYGLEWDq5EU?=
- =?us-ascii?Q?4kvZX1b04YaxIvqsmBhGoCuMKvUzdK48yH35JUOfBGCqd+MXV5vSbQjid4Yx?=
- =?us-ascii?Q?mHOD+ItkX/7qJ0wKHzPTnnjeYSqxDrc5gWPdfhIiThJO6oWZhN10X/Cuzklh?=
- =?us-ascii?Q?Ps/PWajNgcE48TsmCHoxmvAttkm7UkDNbAM/Rx/mAGdbe2hQ6gIhJxhbfsio?=
- =?us-ascii?Q?HgGZzAngtBrByHoHc1oGVjilbCTta9qLspuYWaWckT4kPXhUmT0Yz78XJod/?=
- =?us-ascii?Q?BTcauasfWckLBiXSXUUhtqEzzGKuBDiObM/5DhqFsfhAxBHtQg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 21:55:09.5690
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab79cad2-5814-4857-3739-08dd0364ad53
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002319.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6429
+In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-3-573bfca0cbd8@kernel.org>
 
-On Mon, Nov 11, 2024 at 01:09:20PM +0000, Robin Murphy wrote:
-> On 2024-11-09 5:48 am, Nicolin Chen wrote:
-> > To solve this problem the VMM should capture the MSI IOVA allocated by the
-> > guest kernel and relay it to the GIC driver in the host kernel, to program
-> > the correct MSI IOVA. And this requires a new ioctl via VFIO.
-> 
-> Once VFIO has that information from userspace, though, do we really need
-> the whole complicated dance to push it right down into the irqchip layer
-> just so it can be passed back up again? AFAICS
-> vfio_msi_set_vector_signal() via VFIO_DEVICE_SET_IRQS already explicitly
-> rewrites MSI-X vectors, so it seems like it should be pretty
-> straightforward to override the message address in general at that
-> level, without the lower layers having to be aware at all, no?
+Hi Daniel,
 
-Didn't see that clearly!! It works with a simple following override:
---------------------------------------------------------------------
-@@ -497,6 +497,10 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_core_device *vdev,
-                struct msi_msg msg;
+kernel test robot noticed the following build warnings:
 
-                get_cached_msi_msg(irq, &msg);
-+               if (vdev->msi_iovas) {
-+                       msg.address_lo = lower_32_bits(vdev->msi_iovas[vector]);
-+                       msg.address_hi = upper_32_bits(vdev->msi_iovas[vector]);
-+               }
-                pci_write_msi_msg(irq, &msg);
-        }
- 
---------------------------------------------------------------------
+[auto build test WARNING on c9af98a7e8af266bae73e9d662b8341da1ec5824]
 
-With that, I think we only need one VFIO change for this part :)
+url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Wagner/driver-core-bus-add-irq_get_affinity-callback-to-bus_type/20241112-213257
+base:   c9af98a7e8af266bae73e9d662b8341da1ec5824
+patch link:    https://lore.kernel.org/r/20241112-refactor-blk-affinity-helpers-v3-3-573bfca0cbd8%40kernel.org
+patch subject: [PATCH v3 3/8] virtio: hookup irq_get_affinity callback
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20241113/202411130521.UOBdW8Rv-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241113/202411130521.UOBdW8Rv-lkp@intel.com/reproduce)
 
-Thanks!
-Nicolin
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411130521.UOBdW8Rv-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/virtio/virtio.c:389: warning: Function parameter or struct member 'irq_veq' not described in 'virtio_irq_get_affinity'
+>> drivers/virtio/virtio.c:389: warning: Excess function parameter 'irq_vec' description in 'virtio_irq_get_affinity'
+
+
+vim +389 drivers/virtio/virtio.c
+
+   379	
+   380	/**
+   381	 * virtio_irq_get_affinity - get IRQ affinity mask for device
+   382	 * @_d: ptr to dev structure
+   383	 * @irq_vec: interrupt vector number
+   384	 *
+   385	 * Return the CPU affinity mask for @_d and @irq_vec.
+   386	 */
+   387	static const struct cpumask *virtio_irq_get_affinity(struct device *_d,
+   388							     unsigned int irq_veq)
+ > 389	{
+   390		struct virtio_device *dev = dev_to_virtio(_d);
+   391	
+   392		if (!dev->config->get_vq_affinity)
+   393			return NULL;
+   394	
+   395		return dev->config->get_vq_affinity(dev, irq_veq);
+   396	}
+   397	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
