@@ -1,70 +1,69 @@
-Return-Path: <linux-pci+bounces-16504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16506-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55E039C4F4D
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 08:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B1119C4F67
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 08:26:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DFA41F216B2
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 07:20:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C17B41F21AE6
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 07:26:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C20EA20A5EB;
-	Tue, 12 Nov 2024 07:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1584120ADE9;
+	Tue, 12 Nov 2024 07:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVmzKoMM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLCqXjqI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D81A83A14;
-	Tue, 12 Nov 2024 07:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA63D20A5E1;
+	Tue, 12 Nov 2024 07:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731396047; cv=none; b=WMvQMHYDY+eko0GGrrCR9VcX3kl/M62cKGUTuLJt9E2vD541N+O3Lw9D4Vo65eGUlZylLaKGUy2gwfhiF+kybUbQ+idnZs8vyo4C5Kc4HPNInlpkLdRz/u9UJTiS/+CcvzCFDJQkN29eNOUg/3DZcdDB7hKfnv9UbZ/t+dyyllY=
+	t=1731396372; cv=none; b=rwZrWqMrqTpWmO0j44kIutwWcZKZaky6M3KM/pshyJJtqtyPDnicD21I5KXenilhQjcdmCuK0+2KIF2agMM7tAnlUIBqHksed5gaOypRUGshcJjBXFf5U+IJkz31a8hTcwvtg1H+bEfVCKwyWfxlXNxmzYpNP7pmrTKO9o6Vkvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731396047; c=relaxed/simple;
-	bh=iebmt1JJ4nc2KqO33nu0BylpM0uwrbfzxJxK70i+S/0=;
+	s=arc-20240116; t=1731396372; c=relaxed/simple;
+	bh=q939O7A3qiW+xOn2fPn2cBuGqkR5Gzeo6xoDVmbknmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpEsODAwdz8M2xm+mUqQhNdBY8eiomYMqwm3lZKBREcg34xcePz9aF2KHH7CvZfrBu+01bWj0tFsFeHExaH4chAPrstMoq1OzQqBaCaboM0mPXpa5OEB4mwci/inrBQ5zj8f+fMk0LCcqzByHxH/h8IqsgmIYLHm6LrIEM+lSXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVmzKoMM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7FFC4CED6;
-	Tue, 12 Nov 2024 07:20:46 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=C81AlQb8xBxm3yLJwPIdvWRaLbCJc6ODapbcSGI6LgsHa3wGysqfZbDhiQqYEfq1d0Ue44xjzgd++bmdJtLvPK1Iltf6unPXs056ssvJB8MtecXY/ntacEn3db49XH4kNJRTexfwm1Ut8URluwqf22blCmEgchn1AFkQO5fys68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLCqXjqI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C782C4CECD;
+	Tue, 12 Nov 2024 07:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731396047;
-	bh=iebmt1JJ4nc2KqO33nu0BylpM0uwrbfzxJxK70i+S/0=;
+	s=k20201202; t=1731396371;
+	bh=q939O7A3qiW+xOn2fPn2cBuGqkR5Gzeo6xoDVmbknmM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dVmzKoMMLI1p5lld2AzbKA0OKhkaVTgahMbznY+ch5wqmWfYCEBoHJ5ZIQ8i4OEW7
-	 y0SB4PSstnJw8hURXljSVh3nG8HHVe3dC7gqHVMQQXmgFoRfx3x8hsZ36yggo7YlVq
-	 2q0lrQ8rdvyycCXVFgnX8tvivhS3iXRbVyFR1p3rkwOgGKPIQ2kftduBV0NwjkeMS6
-	 +NoAmsvdHq/cRMRpCO7yQhqTp7kgXfnEETQD/OipD9b2Ni66FEyjDAneYRjzAw6sNL
-	 U2vmfYx6TwAoyvedmOw9NUrF5kwpsNBTikX0r/vBN3EeyzUVC53eAjFgH0BRIJSoUB
-	 HtyTui/+hEy9g==
-Date: Tue, 12 Nov 2024 09:20:40 +0200
+	b=hLCqXjqIQFFw+fpLIsIXG+N+Xguv9JMHBtrDOPEYvW4911mX9wP6en3uCaEKs0mdX
+	 zZ/EkPJmMxhaes7WqdCH1RvAbJaTKg6PA06WG4dNXyfZz/Vh9TY6i2TsQv93S8F9kk
+	 PI3bgMw4pb+rouT12YM6GlWXsAjOK8MMgiXH11XLlAFAv4zWkZ9/tJezTgdTEf3dWY
+	 /ByujXynDnG/6/1YI+yGh7K682iZRbSr3aoPzZ/QgDEicUJ0at8HvCy6/dkYzOKwT2
+	 f8XZSXQ3aSM3D6GZwbvOKl3PPZXNey/x49VKlHTt1aCiW1HKhrJpfxObJHHW5IKP0C
+	 VgVbQ+ZqTv9yQ==
+Date: Tue, 12 Nov 2024 09:26:04 +0200
 From: Leon Romanovsky <leon@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Joerg Roedel <joro@8bytes.org>, ill Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
+To: Heiner Kallweit <hkallweit1@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: Stephen Hemminger <stephen@networkplumber.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>, Arun Easi <aeasi@marvell.com>,
+	Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
 	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 00/17] Provide a new two step DMA mapping API
-Message-ID: <20241112072040.GG71181@unreal>
-References: <cover.1731244445.git.leon@kernel.org>
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] PCI/sysfs: Change read permissions for VPD
+ attributes
+Message-ID: <20241112072604.GH71181@unreal>
+References: <f93e6b2393301df6ac960ef6891b1b2812da67f3.1731005223.git.leonro@nvidia.com>
+ <20241111204104.GA1817395@bhelgaas>
+ <20241111163430.7fad2a2a@hermes.local>
+ <18463054-abcf-4809-870c-051b16234e9c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,46 +72,52 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1731244445.git.leon@kernel.org>
+In-Reply-To: <18463054-abcf-4809-870c-051b16234e9c@gmail.com>
 
-On Sun, Nov 10, 2024 at 03:46:47PM +0200, Leon Romanovsky wrote:
+On Tue, Nov 12, 2024 at 07:44:09AM +0100, Heiner Kallweit wrote:
+> On 12.11.2024 01:34, Stephen Hemminger wrote:
+> > On Mon, 11 Nov 2024 14:41:04 -0600
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> >> On Thu, Nov 07, 2024 at 08:56:56PM +0200, Leon Romanovsky wrote:
+> >>> From: Leon Romanovsky <leonro@nvidia.com>
+> >>>
+> >>> The Vital Product Data (VPD) attribute is not readable by regular
+> >>> user without root permissions. Such restriction is not really needed
+> >>> for many devices in the world, as data presented in that VPD is not
+> >>> sensitive and access to the HW is safe and tested.
+> >>>
+> >>> This change aligns the permissions of the VPD attribute to be accessible
+> >>> for read by all users, while write being restricted to root only.
+> >>>
+> >>> For the driver, there is a need to opt-in in order to allow this
+> >>> functionality.  
+> >>
+> >> I don't think the use case is very strong (and not included at all
+> >> here).
+> >>
+> >> If we do need to do this, I think it's a property of the device, not
+> >> the driver.
+> > 
+> > I remember some broken PCI devices, which will crash if VPD is read.
+> > Probably not worth opening this can of worms.
+> 
+> These crashes shouldn't occur any longer. There are two problematic cases:
+> 1. Reading past end of VPD
+>    This used to crash certain devices and was fixed by stop reading at
+>    the VPD end tag.
+> 2. Accessing VPD if device firmware isn't correctly loaded and initialized
+>    This affects certain LSI devices, which are blacklisted so that PCI core
+>    prevents VPD access.
 
-<...>
+Thanks for the information.
 
-> ----------------------------------------------------------------------------
-> The code can be downloaded from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git tag:dma-split-nov-09
+Bjorn,
 
-<...>
+After this response, do you still think that v0 [1] is not the right way
+to change the read permission?
+
+[1] https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
 
 > 
-> Christoph Hellwig (6):
->   PCI/P2PDMA: Refactor the p2pdma mapping helpers
->   dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
->   iommu: generalize the batched sync after map interface
->   iommu/dma: Factor out a iommu_dma_map_swiotlb helper
->   dma-mapping: add a dma_need_unmap helper
->   docs: core-api: document the IOVA-based API
-> 
-> Leon Romanovsky (11):
->   dma-mapping: Add check if IOVA can be used
->   dma: Provide an interface to allow allocate IOVA
->   dma-mapping: Implement link/unlink ranges API
->   mm/hmm: let users to tag specific PFN with DMA mapped bit
->   mm/hmm: provide generic DMA managing logic
->   RDMA/umem: Store ODP access mask information in PFN
->   RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
->     linkage
->   RDMA/umem: Separate implicit ODP initialization from explicit ODP
->   vfio/mlx5: Explicitly use number of pages instead of allocated length
->   vfio/mlx5: Rewrite create mkey flow to allow better code reuse
->   vfio/mlx5: Enable the DMA link API
-
-Robin,
-
-All technical concerns were handled and this series is ready to be merged.
-
-Robin, can you please Ack the dma-iommu patches?
-
-Thanks
 
