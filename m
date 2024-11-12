@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-16530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B8C79C58F3
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 14:28:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61DAD9C58F8
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 14:28:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7C221F22761
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 13:28:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19E0C1F2178E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 13:28:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C0441632F9;
-	Tue, 12 Nov 2024 13:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA79916FF5F;
+	Tue, 12 Nov 2024 13:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2MuZjka"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HH25qsDA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0C01632EE;
-	Tue, 12 Nov 2024 13:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998C716F908;
+	Tue, 12 Nov 2024 13:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731418002; cv=none; b=pIhDcr3SycIvzSk/ArgOESQOlYml+ofi01t7oAK3F5ldOPGdQ6SUzSjpZkIzIgeUEDDXaucUNW7qgSvEw0bOBWbCOMfay94U04O+pqs1C8OEvI0fgM0o3WtsQ+Jki2vTZrFI5yBfzDqvDa3SpddhVtEOSsgKP3FxO8XUr4SPn2U=
+	t=1731418004; cv=none; b=sdaAarxXi+/CjND108VrMNGelmxKhx5YlHwG+Md7crZl9SPUlMDezTSBa1KfWhY2/dZQqfWFDho68TwBcoeTQtoFiTXHXenchgoqbfvoUTPBFTvFtn3OvpqAodApOkvSEdblM600/m7gS56snTUWayM04Y9Ak7wpGFRm9aWlbGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731418002; c=relaxed/simple;
-	bh=WzzdcfvW/fxEt9HmIi8FFjH8HF/HHHnW11D3o4S59RY=;
+	s=arc-20240116; t=1731418004; c=relaxed/simple;
+	bh=xQlr5yiD9yKMlDbh5o6l1hqfZK0gOUFQlPNBR5A5ThM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KAayAYjzC7PTf9AX0rI+MrL3zlsUPmXZWhb8LFbkqgwU8WpmCkQQGg9+2qzTjLIreaN04wG6KocEPvB5w/xuS4pWBFFtB2lI3Q0LNVBBpB+mQWKb0ysJVOuvwXz0kt5aMhi5dxCTdzzKPGOMjwKDDHNyfSovBfq2wEPOwe/V264=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2MuZjka; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F24C4CEDA;
-	Tue, 12 Nov 2024 13:26:41 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=uNrnwb3K5gFnrlXAHbj7pf+gyXGt5aJqVDhnVLqCEBs1yGibyPMxJFW7nvof3/9r1Q4JGDsJF6/N28DPipJR0OROisHyWx4JWJs13FOPV2E2p9oScDPlxnpYVJBQWhd1VrFHfsPJoo7QAFVXKwntoUEwY9BvnINCY7ypjJJslhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HH25qsDA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFFBC4CECD;
+	Tue, 12 Nov 2024 13:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731418001;
-	bh=WzzdcfvW/fxEt9HmIi8FFjH8HF/HHHnW11D3o4S59RY=;
+	s=k20201202; t=1731418004;
+	bh=xQlr5yiD9yKMlDbh5o6l1hqfZK0gOUFQlPNBR5A5ThM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=o2MuZjkaF69JbVoKSJRODwxcWDuZ7Of09DKzNyycoFpo6ok7x6GbhDhHUHWoVjuMV
-	 SggGGc8hgHPgF8b7nCIPC1oAElQHtAL6HxOpm25vhHRBk3dcwHLgF8S+gb4kXnLYzw
-	 eE3tinRurbLW40itCmvskntngcX/y4x+iGvKhMXlHawS1OXO0is01KSaFI+I7NkXwc
-	 nzAfM/rEpaWZjzeECqdJ3vt2qnAV3H1P41E+D61FLOOimJPdCZy0xwE+7nEZIJqw8+
-	 RnlxW9PDZLq4pM6BMf6eFmEBKmqwYHo2LHHeViPDOmJNPHhPhciL4yhkwy6fqZOlDh
-	 uRMpKBRnD+7Gw==
+	b=HH25qsDAavZqon0581kcvEeA5nW53Qrh5RfukjuKhQQLkLnEglYshIxke4thv9wPm
+	 xV3cgt1aK30eT14glESw8NZ8nKtYz7n9y8No0HmVOhej7FAqxlYQwVgImzHzN6/bwF
+	 9i0mddqUGSQ+Pluixc7yYt22Z6aDvufdaHWqJPqGP/5vAI8KNP9uzPwwXjMylOBBKn
+	 bvdRI2pqmAdLQ/mDV2BQaGmHtqh/NCE5Uc4AH3kra4rjBRYg0Y78MRZulgTbHXR3Ei
+	 eAcJqI9S4Kq1doloAC4yHQNs5Mf2QoYmZcj6P73Yx6PYBxVUjYVSlB4ObL8GYyBJ9i
+	 FsWLLr3p3OGxQ==
 From: Daniel Wagner <wagi@kernel.org>
-Date: Tue, 12 Nov 2024 14:26:18 +0100
-Subject: [PATCH v3 3/8] virtio: hookup irq_get_affinity callback
+Date: Tue, 12 Nov 2024 14:26:19 +0100
+Subject: [PATCH v3 4/8] blk-mp: introduce blk_mq_hctx_map_queues
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241112-refactor-blk-affinity-helpers-v3-3-573bfca0cbd8@kernel.org>
+Message-Id: <20241112-refactor-blk-affinity-helpers-v3-4-573bfca0cbd8@kernel.org>
 References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
 In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
 To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
@@ -71,51 +71,89 @@ Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
  Daniel Wagner <wagi@kernel.org>
 X-Mailer: b4 0.14.2
 
-struct bus_type has a new callback for retrieving the IRQ affinity for a
-device. Hook this callback up for virtio based devices.
+blk_mq_pci_map_queues and blk_mq_virtio_map_queues will create a CPU to
+hardware queue mapping based on affinity information. These two function
+share common code and only differ on how the affinity information is
+retrieved. Also, those functions are located in the block subsystem
+where it doesn't really fit in. They are virtio and pci subsystem
+specific.
+
+Thus introduce provide a generic mapping function which uses the
+irq_get_affinity callback from bus_type.
+
+Originally idea from Ming Lei <ming.lei@redhat.com>
 
 Signed-off-by: Daniel Wagner <wagi@kernel.org>
 ---
- drivers/virtio/virtio.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ block/blk-mq-cpumap.c  | 37 +++++++++++++++++++++++++++++++++++++
+ include/linux/blk-mq.h |  2 ++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-index b9095751e43bb7db5fc991b0cc0979d2e86f7b9b..7774aecdfe52d4dce11eb77e43864981a2e2b2bb 100644
---- a/drivers/virtio/virtio.c
-+++ b/drivers/virtio/virtio.c
-@@ -377,6 +377,24 @@ static void virtio_dev_remove(struct device *_d)
- 	of_node_put(dev->dev.of_node);
+diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
+index 9638b25fd52124f0173e968ebdca5f1fe0b42ad9..db22a7d523a2762b76398fdd768f55efd1d6d669 100644
+--- a/block/blk-mq-cpumap.c
++++ b/block/blk-mq-cpumap.c
+@@ -11,6 +11,7 @@
+ #include <linux/smp.h>
+ #include <linux/cpu.h>
+ #include <linux/group_cpus.h>
++#include <linux/device/bus.h>
+ 
+ #include "blk.h"
+ #include "blk-mq.h"
+@@ -54,3 +55,39 @@ int blk_mq_hw_queue_to_node(struct blk_mq_queue_map *qmap, unsigned int index)
+ 
+ 	return NUMA_NO_NODE;
  }
- 
++
 +/**
-+ * virtio_irq_get_affinity - get IRQ affinity mask for device
-+ * @_d: ptr to dev structure
-+ * @irq_vec: interrupt vector number
++ * blk_mq_hctx_map_queues - Create CPU to hardware queue mapping
++ * @qmap:	CPU to hardware queue map.
++ * @dev:	The device to map queues.
++ * @offset:	Queue offset to use for the device.
 + *
-+ * Return the CPU affinity mask for @_d and @irq_vec.
++ * Create a CPU to hardware queue mapping in @qmap. The struct bus_type
++ * irq_get_affinity callback will be used to retrieve the affinity.
 + */
-+static const struct cpumask *virtio_irq_get_affinity(struct device *_d,
-+						     unsigned int irq_veq)
++void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
++			    struct device *dev, unsigned int offset)
++
 +{
-+	struct virtio_device *dev = dev_to_virtio(_d);
++	const struct cpumask *mask;
++	unsigned int queue, cpu;
 +
-+	if (!dev->config->get_vq_affinity)
-+		return NULL;
++	if (!dev->bus->irq_get_affinity)
++		goto fallback;
 +
-+	return dev->config->get_vq_affinity(dev, irq_veq);
++	for (queue = 0; queue < qmap->nr_queues; queue++) {
++		mask = dev->bus->irq_get_affinity(dev, queue + offset);
++		if (!mask)
++			goto fallback;
++
++		for_each_cpu(cpu, mask)
++			qmap->mq_map[cpu] = qmap->queue_offset + queue;
++	}
++
++	return;
++
++fallback:
++	WARN_ON_ONCE(qmap->nr_queues > 1);
++	blk_mq_clear_mq_map(qmap);
 +}
-+
- static const struct bus_type virtio_bus = {
- 	.name  = "virtio",
- 	.match = virtio_dev_match,
-@@ -384,6 +402,7 @@ static const struct bus_type virtio_bus = {
- 	.uevent = virtio_uevent,
- 	.probe = virtio_dev_probe,
- 	.remove = virtio_dev_remove,
-+	.irq_get_affinity = virtio_irq_get_affinity,
- };
++EXPORT_SYMBOL_GPL(blk_mq_hctx_map_queues);
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 2035fad3131fb60781957095ce8a3a941dd104be..1a85fdcb443c154390cd29f2b1f2a807bf10bfe3 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -923,6 +923,8 @@ void blk_mq_unfreeze_queue_non_owner(struct request_queue *q);
+ void blk_freeze_queue_start_non_owner(struct request_queue *q);
  
- int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
+ void blk_mq_map_queues(struct blk_mq_queue_map *qmap);
++void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
++			    struct device *dev, unsigned int offset);
+ void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues);
+ 
+ void blk_mq_quiesce_queue_nowait(struct request_queue *q);
 
 -- 
 2.47.0
