@@ -1,168 +1,198 @@
-Return-Path: <linux-pci+bounces-16501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF1F99C4F21
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 08:08:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC1809C4F24
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 08:08:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FA2B1F22FBD
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 07:08:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 951A32836C8
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 07:08:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02453208217;
-	Tue, 12 Nov 2024 07:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1952620A5FA;
+	Tue, 12 Nov 2024 07:08:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OCKYIpaS"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sbMKW/ZZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CekAcoEJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sbMKW/ZZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CekAcoEJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E4A4C91;
-	Tue, 12 Nov 2024 07:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A5320896D;
+	Tue, 12 Nov 2024 07:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731395291; cv=none; b=BSG7RiGQMjxVFqa2kMZmi7LVPMqsV4X4LTQ7PyV0EDgidkwR/xcPXrBgFwBkbUHsBkADcu4eW0OFi71i62lQ16hFvw9be8bsib21IAacLIT+DuidWTtl9H/xurvUw+dcauoOt6t1FVrFdcHblSQVgKZvrqMHU0QQD42+rdt8z3g=
+	t=1731395315; cv=none; b=hLSCk3GvzqdE0ddtuVZ0PBML/fyhSMKHgrut9TKwWsiXA1ddjvAzsDDk8m0/iMfkxDPQf5TrSJW9jh/Pja/dextU1yrmgt2khskDZy9U+fpLHptqDvMjLevwTw7rWFAgrr/KAMReSp0tw0+TIihXCJW8h2I5msIn9Ktzur+ztro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731395291; c=relaxed/simple;
-	bh=hPJ9b+LAB8Cy/8kbisAyVbSJuv+QHdGjxX3F0YiWX0E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nKr6WaeC+YWjjdL68tLuC9DNaMuhjgWVWi/FASVRzflM/WTVvTMQm8Af7ToUE/mupIP50EQ+Du+F3/y+X/BVd77PvyQxGdd7ZuJt5axHwQA6Nr9Bf8WBWSGPlpY303GKBnJHOaAyAvQuktOMpTCQI082RAOFB/UaIFCVKFVBpKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=OCKYIpaS; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ABGFCSQ010340;
-	Mon, 11 Nov 2024 23:07:50 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=tNGtlJ859MOStlOAyMOnTuu
-	TvP/WK9GKtzqFV9IHsbk=; b=OCKYIpaS37KImCKR/doeRPfVwQUDWp0rpS69Kwv
-	+1SKPKgK5AaizvxhWG1m5p9HTU5qdWnHzO/k7hM0JrbDycALrPdY1m9Yusol0zyz
-	nt+v6816bLAm+Mwh7DBdH7nOy//HKU7TLTGeBBmZ/GllhMVqH3AkT3JM7nOlwv9S
-	DsvwMC3o/cMN+kiNB8D0pi3C9sjqtOwEusZwGoLmwIHwFrsD3akCc3GwxNMzAmrQ
-	0AAAH/PW5NZAqnHIgq440AfnqcET4xElkkYnudeJ8XdbAojlox8J6xO81dfsjKCm
-	zOyVlv/71tiNvMNWWcAjddXrP9hEnmi3T7c/oPtwA3W/54Q==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 42un9d1cf6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Nov 2024 23:07:49 -0800 (PST)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 11 Nov 2024 23:07:48 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 11 Nov 2024 23:07:48 -0800
-Received: from localhost.localdomain (unknown [10.111.135.16])
-	by maili.marvell.com (Postfix) with ESMTP id 2E4F43F707F;
-	Mon, 11 Nov 2024 23:07:48 -0800 (PST)
-From: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
-To: <lpieralisi@kernel.org>, <thomas.petazzoni@bootlin.com>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <salee@marvell.com>, <dingwei@marvell.com>,
-        Jenishkumar Maheshbhai Patel
-	<jpatel2@marvell.com>
-Subject: [PATCH 1/1] PCI: armada8k: use reset controller to reset mac
-Date: Mon, 11 Nov 2024 23:07:45 -0800
-Message-ID: <20241112070745.759678-1-jpatel2@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1731395315; c=relaxed/simple;
+	bh=vrQYPnvPkwnOGVbKZeFE2tdUgKOwZZe9NQSjPF85vu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ciVcMeObFQTNKBP7pCyAgP2NLEeBmT1ZTQ2WpbpLzZdcc9Rv8RxueWvauX51d7yjclioEWqh5LApFiLLzKN7jIYojAzsp/8KWBHdcbkufbIidiy4Cnh1e1nPDS7PzvbFeAhUBVaFhBT0pc769hw3VW0dn8maZnQ/CGCe97Qo3QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sbMKW/ZZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CekAcoEJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sbMKW/ZZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CekAcoEJ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 60AA91F392;
+	Tue, 12 Nov 2024 07:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731395311; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvwaZ5tqmJV+DDeMh7qgM/mceOFWLKmoe02o8C9+SaY=;
+	b=sbMKW/ZZt9DlH5SA+y/EXiSb5IMFILZ160su4hZf18CA0gzi77/hYrwEn0Bkt/MM2Hi5jC
+	dLWyfclPAPs+zHVAxEmnMUvTND+9YH4vIyvjm9b8qbDE/I2JY2gVe7H+diSd/yNyztF+tA
+	hX3RfYk35x+0KwAlTtmiJD6SbwKByY0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731395311;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvwaZ5tqmJV+DDeMh7qgM/mceOFWLKmoe02o8C9+SaY=;
+	b=CekAcoEJOUJ9J7pCi6NFhTQ/VeSvse/ODooMi1PugFpm2y4rQkrXI7Ong18HECFFbWoYWJ
+	gkqyJ76PrFfcOyCw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="sbMKW/ZZ";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CekAcoEJ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731395311; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvwaZ5tqmJV+DDeMh7qgM/mceOFWLKmoe02o8C9+SaY=;
+	b=sbMKW/ZZt9DlH5SA+y/EXiSb5IMFILZ160su4hZf18CA0gzi77/hYrwEn0Bkt/MM2Hi5jC
+	dLWyfclPAPs+zHVAxEmnMUvTND+9YH4vIyvjm9b8qbDE/I2JY2gVe7H+diSd/yNyztF+tA
+	hX3RfYk35x+0KwAlTtmiJD6SbwKByY0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731395311;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvwaZ5tqmJV+DDeMh7qgM/mceOFWLKmoe02o8C9+SaY=;
+	b=CekAcoEJOUJ9J7pCi6NFhTQ/VeSvse/ODooMi1PugFpm2y4rQkrXI7Ong18HECFFbWoYWJ
+	gkqyJ76PrFfcOyCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C7C013301;
+	Tue, 12 Nov 2024 07:08:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dpcTDO/+MmdYcAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 12 Nov 2024 07:08:31 +0000
+Date: Tue, 12 Nov 2024 08:08:30 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+	linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com, 
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v2 1/6] blk-mq: introduce blk_mq_hctx_map_queues
+Message-ID: <54e689a5-cb34-4039-a79e-92034ec8e2d7@flourine.local>
+References: <20241111-refactor-blk-affinity-helpers-v2-0-f360ddad231a@kernel.org>
+ <20241111-refactor-blk-affinity-helpers-v2-1-f360ddad231a@kernel.org>
+ <20241112044736.GA8883@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: XMOBZNRL9HXZhZ4epaptv3UUDHs_xQIu
-X-Proofpoint-ORIG-GUID: XMOBZNRL9HXZhZ4epaptv3UUDHs_xQIu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.687,Hydra:6.0.235,FMLib:17.0.607.475
- definitions=2020-10-13_15,2020-10-13_02,2020-04-07_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241112044736.GA8883@lst.de>
+X-Rspamd-Queue-Id: 60AA91F392
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-change mac reset and mac reset bits to reset controller
+On Tue, Nov 12, 2024 at 05:47:36AM +0100, Christoph Hellwig wrote:
+> This seems to mix up a few different things:
+> 
+>  1) adding a new bus operation
+>  2) implementations of that operation for PCI and virtio
+>  3) a block layer consumer of the operation
+> 
+> all these really should be separate per-subsystem patches.
+> 
+> You'll also need to Cc the driver model maintainers.
 
-Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
----
- drivers/pci/controller/dwc/pcie-armada8k.c | 30 +++++++---------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+Ok, will do.
 
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index 9a48ef60be51..f9d6907900d1 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -21,7 +21,7 @@
- #include <linux/platform_device.h>
- #include <linux/resource.h>
- #include <linux/of_pci.h>
--#include <linux/mfd/syscon.h>
-+#include <linux/reset.h>
- #include <linux/regmap.h>
- #include <linux/of_gpio.h>
- 
-@@ -35,11 +35,10 @@ struct armada8k_pcie {
- 	struct clk *clk_reg;
- 	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
- 	unsigned int phy_count;
--	struct regmap *sysctrl_base;
--	u32 mac_rest_bitmask;
- 	struct work_struct recover_link_work;
- 	enum of_gpio_flags flags;
- 	struct gpio_desc *reset_gpio;
-+	struct reset_control *reset;
- };
- 
- #define PCIE_VENDOR_REGS_OFFSET		0x8000
-@@ -257,12 +256,9 @@ static void armada8k_pcie_recover_link(struct work_struct *ws)
- 	msleep(100);
- 
- 	/* Reset mac */
--	regmap_update_bits_base(pcie->sysctrl_base, UNIT_SOFT_RESET_CONFIG_REG,
--				pcie->mac_rest_bitmask, 0, NULL, false, true);
-+	reset_control_assert(pcie->reset);
- 	udelay(1);
--	regmap_update_bits_base(pcie->sysctrl_base, UNIT_SOFT_RESET_CONFIG_REG,
--				pcie->mac_rest_bitmask, pcie->mac_rest_bitmask,
--				NULL, false, true);
-+	reset_control_deassert(pcie->reset);
- 	udelay(1);
- 
- 	ret = dw_pcie_setup_rc(pp);
-@@ -331,7 +327,7 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
- 		 * initiate a link retrain. If link retrains were
- 		 * possible, that is.
- 		 */
--		if (pcie->sysctrl_base && pcie->mac_rest_bitmask)
-+		if (pcie->reset)
- 			schedule_work(&pcie->recover_link_work);
- 
- 		dev_dbg(pci->dev, "%s: link went down\n", __func__);
-@@ -440,18 +436,10 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
- 	if (gpio_is_valid(reset_gpio))
- 		pcie->reset_gpio = gpio_to_desc(reset_gpio);
- 
--	pcie->sysctrl_base = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
--						       "marvell,system-controller");
--	if (IS_ERR(pcie->sysctrl_base)) {
--		dev_warn(dev, "failed to find marvell,system-controller\n");
--		pcie->sysctrl_base = 0x0;
--	}
--
--	ret = of_property_read_u32(pdev->dev.of_node, "marvell,mac-reset-bit-mask",
--				   &pcie->mac_rest_bitmask);
--	if (ret < 0) {
--		dev_warn(dev, "couldn't find mac reset bit mask: %d\n", ret);
--		pcie->mac_rest_bitmask = 0x0;
-+	pcie->reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-+	if (IS_ERR(pcie->reset)) {
-+		dev_warn(dev, "failed to find mac reset\n");
-+		pcie->reset = 0x0;
- 	}
- 	ret = armada8k_pcie_setup_phys(pcie);
- 	if (ret)
--- 
-2.25.1
+> > +void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
+> > +			    struct device *dev, unsigned int offset,
+> > +			    get_queue_affinity_fn *get_irq_affinity)
+> > +{
+> > +	const struct cpumask *mask = NULL;
+> > +	unsigned int queue, cpu;
+> > +
+> > +	for (queue = 0; queue < qmap->nr_queues; queue++) {
+> > +		if (get_irq_affinity)
+> > +			mask = get_irq_affinity(dev, queue + offset);
+> > +		else if (dev->bus->irq_get_affinity)
+> > +			mask = dev->bus->irq_get_affinity(dev, queue + offset);
+> > +
+> > +		if (!mask)
+> > +			goto fallback;
+> > +
+> > +		for_each_cpu(cpu, mask)
+> > +			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+> > +	}
+> 
+> This does different things with a NULL argument vs not.  Please split it
+> into two separate helpers.  The non-NULL case is only uses in hisi_sas,
+> so it might be worth just open coding it there as well.
 
+I'd like to avoid the open coding case, because this will make the
+following patches to support the isolated cpu  patches more complex.
+Having a central place where the all the mask operation are, makes it a
+bit simpler streamlined. But then I could open code that part as well.
+
+> > +static const struct cpumask *pci_device_irq_get_affinity(struct device *dev,
+> > +					unsigned int irq_vec)
+> > +{
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +
+> > +	return pci_irq_get_affinity(pdev, irq_vec);
+> 
+> Nit: this could be shortened to:
+> 
+> 	return pci_irq_get_affinity(to_pci_dev(dev), irq_vec);
+
+Ok.
+
+Thanks,
+Daniel
 
