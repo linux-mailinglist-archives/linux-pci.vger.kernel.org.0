@@ -1,56 +1,65 @@
-Return-Path: <linux-pci+bounces-16604-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E74319C6587
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 00:53:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61A279C6591
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 00:57:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A005B329A6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:43:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 428E0B267D8
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:48:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9698B20C460;
-	Tue, 12 Nov 2024 21:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892AB205ABD;
+	Tue, 12 Nov 2024 21:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zwgf7eGD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+BKtKOS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF7543AA1;
-	Tue, 12 Nov 2024 21:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9F61531C4;
+	Tue, 12 Nov 2024 21:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731447819; cv=none; b=tMtvVRKNTTmeDcZyx4jKSa5VP6bmAVerkGD9/OEbTsVP/N2DwoSGzr+NvEzo2DflQar8g/fAz3kkrjFPD/xCTR//XoN281g5PYtsG6Y17sAhZt6E5fSJKdD1+PekKrFfNKdkZ36gtblSny6ECCbJWYYWx1aJUAk1ONxP2snXXAQ=
+	t=1731448101; cv=none; b=JQ+0rsT/4Xcmgk4u3033hiTusMjFj7lXstYtcWwuzEzErTYJ3KbcPkPxErjqiLxeZKTkgVeDiqveQuPqz4VxaDbTvjUZT5NBVK12X+Vu0dKMSQQG6E0TTSgEXDgf5+B1JKXeRbxX0wSoOOi0nbjpLJ5ZzcpaZ5EbtXxrMkJ0kAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731447819; c=relaxed/simple;
-	bh=TSBvSL3F8utvdtRSv0V0b72Rr2Qwe8DnowxnXL+/4GU=;
+	s=arc-20240116; t=1731448101; c=relaxed/simple;
+	bh=lw8zICoswkgeMSGHN3Ubcpal3X9B8IwqRNZ1wT7ecpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Rf5kQjLJfgEAIN/XU6oM+X8askCTOT0HnVraWAS0SzShYHXsCOvrwDrYp30OYMvKdBqdvyBKjUb/8QOkbPKPPB0GUpesY/PbtiVAij2S7z29q2ezbQYvTjqZUeqO6+BpYMWNXhuZiTiL1oo9XtHB4RA8mK2591XBfT/53aJzUPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zwgf7eGD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE84EC4CECD;
-	Tue, 12 Nov 2024 21:43:38 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=rMeCJG0yRVmIUfFyt2POfZy0IgEK7dx35py88Cbnt0UFduAnvcYnFEN1bVfgDuQTw3kKjbmP+8yWiC2C6yGxV7xfFgNOaTvdlGim7Sg5JeWo2OMbIeJExcJyL10s3H5HTvGjakfyw0/MSsmseHm/BgHP1tmjP5YJMteikle9o5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+BKtKOS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFFDC4CECD;
+	Tue, 12 Nov 2024 21:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731447819;
-	bh=TSBvSL3F8utvdtRSv0V0b72Rr2Qwe8DnowxnXL+/4GU=;
+	s=k20201202; t=1731448100;
+	bh=lw8zICoswkgeMSGHN3Ubcpal3X9B8IwqRNZ1wT7ecpo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Zwgf7eGDinLJJQzHU5fzK0CcK8hMSQrpqCuhZlg5fCb9cZyYhPFFEaf5s1Jioe20y
-	 dtIgb9DZHNR3rivnptyX2Q3U9V6ySlrzPyuu2V9GbpfouD2cLKom+s8ZjMocS4Y5/7
-	 hlUW9sEc92udhXpwDVyMGoIdLA3/WShXbAxKRuUhIKuf9Y1shUh9VCV61EWCLjHLlD
-	 OUyFCvw7gNvZPdYLVoXY5BT84gPmgGkKoepMdRiKP+POu45iD+rN1eexkEVSX2M0A6
-	 XxfB/BW2DZZFZds0G7xrv/TpVMQd5k8AKjidTo5cOZHuWn6l8u8X0C8fbo9jFin1pq
-	 JNOvJD0KBeA7g==
-Date: Tue, 12 Nov 2024 15:43:37 -0600
+	b=Q+BKtKOSVQGX0Wy7XL5gB0l1an6/h1w0RDoCqOhLdPTNgWrZVTcPaCw7HdjoxOP2y
+	 H2+xkH9RpaBqyyQxmOPLIny93E1Rby0bF5eX/cEHHsLqW7frT43ztNiDaDxAxSCBU/
+	 s6KV7vX+HB6o0uA4hDi4Bfb1g/n+Bt+bh0C0D/EnI0TDBE/mssNimGcb0KXRWTKpB/
+	 qzIv9nBXtsdHoJVRE76ZUw4MoWcBW73s6p5A91kcwJ0BCcRKmiVpNiZvcg83g+shrj
+	 d1ySqhkmJZM14SeFwaWvV/VeQXSMYM2hErkoP2y2Z/vbOTZVLxdCYZ+UEvY3VeD8W9
+	 x5DcbIBHmQqIA==
+Date: Tue, 12 Nov 2024 15:48:19 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
-Cc: lpieralisi@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	salee@marvell.com, dingwei@marvell.com
-Subject: Re: [PATCH 1/1] PCI: armada8k: Disable LTSSM on link down interrupts
-Message-ID: <20241112214337.GA1861873@bhelgaas>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Stephen Hemminger <stephen@networkplumber.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>, Arun Easi <aeasi@marvell.com>,
+	Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] PCI/sysfs: Change read permissions for VPD
+ attributes
+Message-ID: <20241112214819.GA1862173@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,95 +68,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241112064241.749493-1-jpatel2@marvell.com>
+In-Reply-To: <20241112072604.GH71181@unreal>
 
-On Mon, Nov 11, 2024 at 10:42:41PM -0800, Jenishkumar Maheshbhai Patel wrote:
-> When a PCI link down condition is detected, the link training state
-> machine must be disabled immediately.
-
-Why?
-
-"Immediately" has no meaning here.  Arbitrary delays are possible and
-must not break anything.
-
-> Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
-> ---
->  drivers/pci/controller/dwc/pcie-armada8k.c | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+On Tue, Nov 12, 2024 at 09:26:04AM +0200, Leon Romanovsky wrote:
+> On Tue, Nov 12, 2024 at 07:44:09AM +0100, Heiner Kallweit wrote:
+> > On 12.11.2024 01:34, Stephen Hemminger wrote:
+> > > On Mon, 11 Nov 2024 14:41:04 -0600
+> > > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > 
+> > >> On Thu, Nov 07, 2024 at 08:56:56PM +0200, Leon Romanovsky wrote:
+> > >>> From: Leon Romanovsky <leonro@nvidia.com>
+> > >>>
+> > >>> The Vital Product Data (VPD) attribute is not readable by regular
+> > >>> user without root permissions. Such restriction is not really needed
+> > >>> for many devices in the world, as data presented in that VPD is not
+> > >>> sensitive and access to the HW is safe and tested.
+> > >>>
+> > >>> This change aligns the permissions of the VPD attribute to be accessible
+> > >>> for read by all users, while write being restricted to root only.
+> > >>>
+> > >>> For the driver, there is a need to opt-in in order to allow this
+> > >>> functionality.  
+> > >>
+> > >> I don't think the use case is very strong (and not included at all
+> > >> here).
+> > >>
+> > >> If we do need to do this, I think it's a property of the device, not
+> > >> the driver.
+> > > 
+> > > I remember some broken PCI devices, which will crash if VPD is read.
+> > > Probably not worth opening this can of worms.
+> > 
+> > These crashes shouldn't occur any longer. There are two problematic cases:
+> > 1. Reading past end of VPD
+> >    This used to crash certain devices and was fixed by stop reading at
+> >    the VPD end tag.
+> > 2. Accessing VPD if device firmware isn't correctly loaded and initialized
+> >    This affects certain LSI devices, which are blacklisted so that PCI core
+> >    prevents VPD access.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-> index b5c599ccaacf..07775539b321 100644
-> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
-> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-> @@ -53,6 +53,10 @@ struct armada8k_pcie {
->  #define PCIE_INT_C_ASSERT_MASK		BIT(11)
->  #define PCIE_INT_D_ASSERT_MASK		BIT(12)
->  
-> +#define PCIE_GLOBAL_INT_CAUSE2_REG	(PCIE_VENDOR_REGS_OFFSET + 0x24)
-> +#define PCIE_GLOBAL_INT_MASK2_REG	(PCIE_VENDOR_REGS_OFFSET + 0x28)
-> +#define PCIE_INT2_PHY_RST_LINK_DOWN	BIT(1)
-> +
->  #define PCIE_ARCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET + 0x50)
->  #define PCIE_AWCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET + 0x54)
->  #define PCIE_ARUSER_REG			(PCIE_VENDOR_REGS_OFFSET + 0x5C)
-> @@ -204,6 +208,11 @@ static int armada8k_pcie_host_init(struct dw_pcie_rp *pp)
->  	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
->  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
->  
-> +	/* Also enable link down interrupts */
-> +	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
-> +	reg |= PCIE_INT2_PHY_RST_LINK_DOWN;
-> +	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, reg);
-> +
->  	return 0;
->  }
->  
-> @@ -221,6 +230,35 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
->  	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG);
->  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG, val);
->  
-> +	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE2_REG);
-> +
-> +	if (PCIE_INT2_PHY_RST_LINK_DOWN & val) {
-> +		u32 ctrl_reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
-
-Add blank line.
-
-> +		/*
-> +		 * The link went down. Disable LTSSM immediately. This
-> +		 * unlocks the root complex config registers. Downstream
-> +		 * device accesses will return all-Fs
-> +		 */
-> +		ctrl_reg &= ~(PCIE_APP_LTSSM_EN);
-> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, ctrl_reg);
-
-And here.
-
-> +		/*
-> +		 * Mask link down interrupts. They can be re-enabled once
-> +		 * the link is retrained.
-> +		 */
-> +		ctrl_reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
-> +		ctrl_reg &= ~PCIE_INT2_PHY_RST_LINK_DOWN;
-> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, ctrl_reg);
-
-And here.  Follow existing coding style in this file.
-
-> +		/*
-> +		 * At this point a worker thread can be triggered to
-> +		 * initiate a link retrain. If link retrains were
-> +		 * possible, that is.
-> +		 */
-> +		dev_dbg(pci->dev, "%s: link went down\n", __func__);
-> +	}
-> +
-> +	/* Now clear the second interrupt cause. */
-> +	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE2_REG, val);
-> +
->  	return IRQ_HANDLED;
->  }
->  
-> -- 
-> 2.25.1
+> Thanks for the information.
 > 
+> Bjorn,
+> 
+> After this response, do you still think that v0 [1] is not the right way
+> to change the read permission?
+> 
+> [1] https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
+
+Yes, I still think it's unnecessarily risky to make VPD readable
+by ordinary users.  This is a pretty niche use case.
+
+Bjorn
 
