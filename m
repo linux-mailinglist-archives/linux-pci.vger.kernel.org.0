@@ -1,65 +1,62 @@
-Return-Path: <linux-pci+bounces-16605-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16612-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A279C6591
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 00:57:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1126A9C65D6
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 01:19:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 428E0B267D8
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 21:48:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 61121B27905
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 23:21:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892AB205ABD;
-	Tue, 12 Nov 2024 21:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B45521A4DB;
+	Tue, 12 Nov 2024 23:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+BKtKOS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGO4PHGY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9F61531C4;
-	Tue, 12 Nov 2024 21:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9831FCC7B;
+	Tue, 12 Nov 2024 23:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731448101; cv=none; b=JQ+0rsT/4Xcmgk4u3033hiTusMjFj7lXstYtcWwuzEzErTYJ3KbcPkPxErjqiLxeZKTkgVeDiqveQuPqz4VxaDbTvjUZT5NBVK12X+Vu0dKMSQQG6E0TTSgEXDgf5+B1JKXeRbxX0wSoOOi0nbjpLJ5ZzcpaZ5EbtXxrMkJ0kAs=
+	t=1731453686; cv=none; b=TZPKKKr4VbDTLICrQMud4OXn8MxtrRwXBsqVgDpgKJXRyUZ9UnzgzWhwrW0E/8cv+nFMiTHAwNe5TWyDGgCkzlrbwQcOkM9yPkathC+kRLZG9fJ4uBcDx2wRJgQMX3LMjP2oxtwJHPT1ESN9bN7nguE6EJtnlzH7Xnf5Ev4ZTFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731448101; c=relaxed/simple;
-	bh=lw8zICoswkgeMSGHN3Ubcpal3X9B8IwqRNZ1wT7ecpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rMeCJG0yRVmIUfFyt2POfZy0IgEK7dx35py88Cbnt0UFduAnvcYnFEN1bVfgDuQTw3kKjbmP+8yWiC2C6yGxV7xfFgNOaTvdlGim7Sg5JeWo2OMbIeJExcJyL10s3H5HTvGjakfyw0/MSsmseHm/BgHP1tmjP5YJMteikle9o5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+BKtKOS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFFDC4CECD;
-	Tue, 12 Nov 2024 21:48:20 +0000 (UTC)
+	s=arc-20240116; t=1731453686; c=relaxed/simple;
+	bh=pf5m812P4MpW8rpJVvllGJLZbUndrZP5mDpwz5bvzQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjrYJIxMEVfkds5QiT9RTOX/sWeP5lozoj3d52GEXXUWpkc+4+NejykB0m1yUf84IlzzlxIcM75Xh0mUY8V0eJ5oPDq2vzejULYMOhgVba4SJnKcgR7caN850sPzzsziKkjEOHp/AiC0YEOOOgYWrT2bGwgvn92GeyvJolkKVKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGO4PHGY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F084C4CECD;
+	Tue, 12 Nov 2024 23:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731448100;
-	bh=lw8zICoswkgeMSGHN3Ubcpal3X9B8IwqRNZ1wT7ecpo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Q+BKtKOSVQGX0Wy7XL5gB0l1an6/h1w0RDoCqOhLdPTNgWrZVTcPaCw7HdjoxOP2y
-	 H2+xkH9RpaBqyyQxmOPLIny93E1Rby0bF5eX/cEHHsLqW7frT43ztNiDaDxAxSCBU/
-	 s6KV7vX+HB6o0uA4hDi4Bfb1g/n+Bt+bh0C0D/EnI0TDBE/mssNimGcb0KXRWTKpB/
-	 qzIv9nBXtsdHoJVRE76ZUw4MoWcBW73s6p5A91kcwJ0BCcRKmiVpNiZvcg83g+shrj
-	 d1ySqhkmJZM14SeFwaWvV/VeQXSMYM2hErkoP2y2Z/vbOTZVLxdCYZ+UEvY3VeD8W9
-	 x5DcbIBHmQqIA==
-Date: Tue, 12 Nov 2024 15:48:19 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
-	Aditya Prabhune <aprabhune@nvidia.com>,
-	Hannes Reinecke <hare@suse.de>, Arun Easi <aeasi@marvell.com>,
-	Jonathan Chocron <jonnyc@amazon.com>,
-	Bert Kenward <bkenward@solarflare.com>,
-	Matt Carlson <mcarlson@broadcom.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Jean Delvare <jdelvare@suse.de>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] PCI/sysfs: Change read permissions for VPD
- attributes
-Message-ID: <20241112214819.GA1862173@bhelgaas>
+	s=k20201202; t=1731453685;
+	bh=pf5m812P4MpW8rpJVvllGJLZbUndrZP5mDpwz5bvzQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aGO4PHGYreJ8XxVHinU3igucwMCbUdi18QBVZzLsJfUEpNlXATUHnb8tGnJkEOyfe
+	 dgOMrh5LUehS/d982NRoNjRW2gmZ3ztSBIWQ5EruxZpI8VRJkLqTlpuh6l5TA/6Bgd
+	 8f5ZOe23ZvXY1SUp7hhAEiLe4Hf4W6vMkkvnJcu5JgezAxqwEBCK4wztiq4vqlZeFQ
+	 kOHEisXaMWl/rXhUWGHT+4K6FKrbJ06g6TCog2kTzk1It/UBD5o7nakcTZHO/vrBgo
+	 A1yeVjscWK5CJmKD0/eSo47aA2vPxH8504HdCki/ZVLfgCYZVtOQ8RmAgLOnMPAeo3
+	 K3cVluZFr5CIA==
+Date: Tue, 12 Nov 2024 17:21:22 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] PCI: pwrctl: Add power control driver for qps615
+Message-ID: <sfygtqch7ldrvtfdfumwmejkekv2j2hcoqemu4ne3bvejqdpdd@dons6axfbywx>
+References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
+ <20241112-qps615_pwr-v3-6-29a1e98aa2b0@quicinc.com>
+ <qyoh5vsdcih7vs3aq3ltw3dxkxqe6jdpugh64i2hyjm2in7bl3@okblag6jl4gv>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,56 +65,58 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241112072604.GH71181@unreal>
+In-Reply-To: <qyoh5vsdcih7vs3aq3ltw3dxkxqe6jdpugh64i2hyjm2in7bl3@okblag6jl4gv>
 
-On Tue, Nov 12, 2024 at 09:26:04AM +0200, Leon Romanovsky wrote:
-> On Tue, Nov 12, 2024 at 07:44:09AM +0100, Heiner Kallweit wrote:
-> > On 12.11.2024 01:34, Stephen Hemminger wrote:
-> > > On Mon, 11 Nov 2024 14:41:04 -0600
-> > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > 
-> > >> On Thu, Nov 07, 2024 at 08:56:56PM +0200, Leon Romanovsky wrote:
-> > >>> From: Leon Romanovsky <leonro@nvidia.com>
-> > >>>
-> > >>> The Vital Product Data (VPD) attribute is not readable by regular
-> > >>> user without root permissions. Such restriction is not really needed
-> > >>> for many devices in the world, as data presented in that VPD is not
-> > >>> sensitive and access to the HW is safe and tested.
-> > >>>
-> > >>> This change aligns the permissions of the VPD attribute to be accessible
-> > >>> for read by all users, while write being restricted to root only.
-> > >>>
-> > >>> For the driver, there is a need to opt-in in order to allow this
-> > >>> functionality.  
-> > >>
-> > >> I don't think the use case is very strong (and not included at all
-> > >> here).
-> > >>
-> > >> If we do need to do this, I think it's a property of the device, not
-> > >> the driver.
-> > > 
-> > > I remember some broken PCI devices, which will crash if VPD is read.
-> > > Probably not worth opening this can of worms.
+On Tue, Nov 12, 2024 at 09:51:42AM -0600, Bjorn Andersson wrote:
+> On Tue, Nov 12, 2024 at 08:31:38PM +0530, Krishna chaitanya chundru wrote:
+> > QPS615 is the PCIe switch which has one upstream and three downstream
+> > ports. To one of the downstream ports ethernet MAC is connected as endpoint
+> > device. Other two downstream ports are supposed to connect to external
+> > device. One Host can connect to QPS615 by upstream port. QPS615 switch
+> > needs to be configured after powering on and before PCIe link was up.
 > > 
-> > These crashes shouldn't occur any longer. There are two problematic cases:
-> > 1. Reading past end of VPD
-> >    This used to crash certain devices and was fixed by stop reading at
-> >    the VPD end tag.
-> > 2. Accessing VPD if device firmware isn't correctly loaded and initialized
-> >    This affects certain LSI devices, which are blacklisted so that PCI core
-> >    prevents VPD access.
+> > The PCIe controller driver already enables link training at the host side
+> > even before qps615 driver probe happens, due to this when driver enables
+> > power to the switch it participates in the link training and PCIe link
+> > may come up before configuring the switch through i2c. To prevent the
+> > host from participating in link training, disable link training on the
+> > host side to ensure the link does not come up before the switch is
+> > configured via I2C.
+> > 
+> > Based up on dt property and type of the port, qps615 is configured
+> > through i2c.
 > 
-> Thanks for the information.
+> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 > 
-> Bjorn,
-> 
-> After this response, do you still think that v0 [1] is not the right way
-> to change the read permission?
-> 
-> [1] https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
 
-Yes, I still think it's unnecessarily risky to make VPD readable
-by ordinary users.  This is a pretty niche use case.
+Sorry, while I think this looks okay, this patch still does not compile.
 
+Trying to compile this code with either clang 14 or 17 I still get the
+following error:
+
+  CC [M]  drivers/pci/pwrctl/pci-pwrctl-qps615.o
+In file included from drivers/pci/pwrctl/pci-pwrctl-qps615.c:6:
+In file included from ./include/linux/delay.h:13:
+In file included from ./include/linux/sched.h:13:
+In file included from ./arch/arm64/include/asm/processor.h:29:
+In file included from ./include/linux/cache.h:6:
+In file included from ./arch/arm64/include/asm/cache.h:43:
+In file included from ./arch/arm64/include/asm/cputype.h:228:
+In file included from ./arch/arm64/include/asm/sysreg.h:1129:
+./include/linux/bitfield.h:166:3: error: call to '__bad_mask' declared with 'error' attribute: bad bitfield mask
+  166 |                 __bad_mask();
+      |                 ^
+./include/linux/bitfield.h:166:3: error: call to '__bad_mask' declared with 'error' attribute: bad bitfield mask
+2 errors generated.
+make[5]: *** [scripts/Makefile.build:229: drivers/pci/pwrctl/pci-pwrctl-qps615.o] Error 1
+make[4]: *** [scripts/Makefile.build:478: drivers/pci/pwrctl] Error 2
+make[3]: *** [scripts/Makefile.build:478: drivers/pci] Error 2
+make[2]: *** [scripts/Makefile.build:478: drivers] Error 2
+make[1]: *** [/home/bjorn/sandbox/kernel/sm8150/Makefile:1946: .] Error 2
+make: *** [Makefile:224: __sub-make] Error 2
+
+This is caused by the way you invoke u32_replace_bits()
+
+Regards,
 Bjorn
 
