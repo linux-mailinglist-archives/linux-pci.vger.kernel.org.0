@@ -1,154 +1,110 @@
-Return-Path: <linux-pci+bounces-16525-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5968F9C5944
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 14:39:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 505069C58EA
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 14:27:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 211EBB2949B
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 11:59:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15BBF282E40
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2024 13:27:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2E5E1F77A6;
-	Tue, 12 Nov 2024 11:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E7215853E;
+	Tue, 12 Nov 2024 13:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NxR/95k/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RD0N/FH4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B061F778C;
-	Tue, 12 Nov 2024 11:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64C5157494;
+	Tue, 12 Nov 2024 13:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731412756; cv=none; b=QAj6vUzHo2/Kvq0QzHpk82K8SVV9tjRzWH3AayvMgQqLkmVF/ExktonBL0a9kL0QOD9DCUaWfFIKvTkJVz3X8GGB9rDaUtT7ITOyMSxKEJpzCs9EMHS2gcvcnMnVa3czoasiUP8anxWkTnxpnFvidSh7XtG3wxKBCDMxYWuw13U=
+	t=1731417997; cv=none; b=XGmfwygpGDRdTecBX1/wqbuQ9CFJeDS7uO2ROmgihMStk37a7WRuteBZ2iKC4s5gW63p7tX3yEZ1c8jJjHne5Joyk53yYZNCPjAziM0wi0U2ZlUHu5AV9yKdX7/nTdK5vFUw1tUlvRybWw4KGNY2JoqhWggnZrOr4XcPmJLxAZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731412756; c=relaxed/simple;
-	bh=MZPW3KmuIhosXQiR1sUnukYbEwz7Ryg7lEeyBumQp40=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iq1Ik83ncUoB5KpXZ4KwSF64IuwrQ+uJ5yD9que9bVxNVh10/LBssavEHkRHJ6d+mEAUyvUS2l+51G2Mqmz/8JQsPsHXe3uFf5Qxrcdd4f7Fqh/ybWNwBrqx0oBLVikpDyeatLtCYnQSLR2nAV+3FzUR5y/hbc2OvpHOa/jOl64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NxR/95k/; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1731412745; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=7E4XIGVwFEQzfYl+p4x9wcXN7MWG+kSABSQ6uIWRSCk=;
-	b=NxR/95k/U6jw94d2UPcWCY1K3lF9uGrIE7e183A1FdtzswL2uOyTKGBtk1ykqjMrlREU1W5FRlaLk0x6D6afQqrBK6bTer/ax/79XkplSxmjpYG1yTNOWvdFO1Wyt4HUDz49ziseVRoFjMhBZOei+zaYRaJ1G0+f/8YoNE4zsXs=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJHYqx9_1731412744 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Nov 2024 19:59:05 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org
-Cc: bhelgaas@google.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	xueshuai@linux.alibaba.com
-Subject: [PATCH v2 2/2] pci: pciehp: Generate tracepoints for hotplug event
-Date: Tue, 12 Nov 2024 19:58:52 +0800
-Message-ID: <20241112115852.52980-3-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20241112115852.52980-1-xueshuai@linux.alibaba.com>
-References: <20241112115852.52980-1-xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1731417997; c=relaxed/simple;
+	bh=TtWlAiC4IkXsj/3hib63zoCZd73AMtE9BF7/XoMzkf4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Fl35FozlFg4iuEPecHfirdevJDyLB++Qh4qgTIUgW6qSGeGxbv1m0b2JZ7dT6fMIolxGIRX0WokuDS9jKkl0p0ytpcb/+5s5mEF67OT8VMRlEFA2hIXJgRakc60KMHvQGD35zqRMTaMvjFYTTFTiN5O6NuHqD07UJ3LCBHV3hwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RD0N/FH4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206FEC4CED5;
+	Tue, 12 Nov 2024 13:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731417996;
+	bh=TtWlAiC4IkXsj/3hib63zoCZd73AMtE9BF7/XoMzkf4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RD0N/FH4ofVoZJX7eibNoMfJN5mHuobCy0Lmhle5DbJOR1LTalRqmqDV1Ygma74ut
+	 u16egC204lgYmJ6If+B/5QzAcn3M/oqNYHHUvGWoKO68QJdbTXElNXSna1y8CBe0D1
+	 IO8ggJS3dE9CPqfYsRdyN7dMqclXuCpfiSHWBlB33LVK8eqfHSoxeC+DUtvhLn7dI2
+	 1DcprriozAUN6Dp5Y4t5NGB6p5KVneqmhSmaTjt9mTLRlW77YAGJFHA+Jmq2elNMgZ
+	 LNBjlLuqhWRj/1kwf1/K9JFV3VUcSnVn1xBv4yU4NjyhNrDoXOsfyJVbr3/Qz+uaCl
+	 yeZT+Gc1Sk9bg==
+From: Daniel Wagner <wagi@kernel.org>
+Date: Tue, 12 Nov 2024 14:26:16 +0100
+Subject: [PATCH v3 1/8] driver core: bus: add irq_get_affinity callback to
+ bus_type
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241112-refactor-blk-affinity-helpers-v3-1-573bfca0cbd8@kernel.org>
+References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
+In-Reply-To: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+ mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
+ storagedev@microchip.com, linux-nvme@lists.infradead.org, 
+ Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-Generate tracepoints for hotplug event.
+Introducing a callback in struct bus_type so that a subsystem
+can hook up the getters directly. This approach avoids exposing
+random getters in any subsystems APIs.
 
-The output like below:
-
-$ echo 1 > /sys/kernel/debug/tracing/events/hotplug/pci_hp_event/enable
-$ cat /sys/kernel/debug/tracing/trace_pipe
-           <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, trans_state:Link Down
-
-           <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, trans_state:Card not present
-
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
 ---
- drivers/pci/hotplug/pciehp_ctrl.c | 33 +++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ include/linux/device/bus.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index dcdbfcf404dd..ba099cb19f5e 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -21,6 +21,9 @@
- #include <linux/pci.h>
- #include "pciehp.h"
+diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+index cdc4757217f9bb4b36b5c3b8a48bab45737e44c5..b18658bce2c3819fc1cbeb38fb98391d56ec3317 100644
+--- a/include/linux/device/bus.h
++++ b/include/linux/device/bus.h
+@@ -48,6 +48,7 @@ struct fwnode_handle;
+  *		will never get called until they do.
+  * @remove:	Called when a device removed from this bus.
+  * @shutdown:	Called at shut-down time to quiesce the device.
++ * @irq_get_affinity:	Get IRQ affinity mask for the device on this bus.
+  *
+  * @online:	Called to put the device back online (after offlining it).
+  * @offline:	Called to put the device offline for hot-removal. May fail.
+@@ -87,6 +88,8 @@ struct bus_type {
+ 	void (*sync_state)(struct device *dev);
+ 	void (*remove)(struct device *dev);
+ 	void (*shutdown)(struct device *dev);
++	const struct cpumask *(*irq_get_affinity)(struct device *dev,
++			unsigned int irq_vec);
  
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
- /* The following routines constitute the bulk of the
-    hotplug controller logic
-  */
-@@ -239,12 +242,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case ON_STATE:
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (events & PCI_EXP_SLTSTA_DLLSC)
-+		if (events & PCI_EXP_SLTSTA_DLLSC) {
- 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
- 				  slot_name(ctrl));
--		if (events & PCI_EXP_SLTSTA_PDC)
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_DOWN);
-+		}
-+		if (events & PCI_EXP_SLTSTA_PDC) {
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NO_PRESENT);
-+		}
- 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		break;
- 	default:
-@@ -264,6 +275,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 					      INDICATOR_NOOP);
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NO_PRESENT);
- 		}
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
-@@ -276,12 +290,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case OFF_STATE:
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (present)
-+		if (present) {
- 			ctrl_info(ctrl, "Slot(%s): Card present\n",
- 				  slot_name(ctrl));
--		if (link_active)
--			ctrl_info(ctrl, "Slot(%s): Link Up\n",
--				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_PRESENT);
-+		}
-+		if (link_active) {
-+			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_UP);
-+		}
- 		ctrl->request_result = pciehp_enable_slot(ctrl);
- 		break;
- 	default:
+ 	int (*online)(struct device *dev);
+ 	int (*offline)(struct device *dev);
+
 -- 
-2.39.3
+2.47.0
 
 
