@@ -1,194 +1,223 @@
-Return-Path: <linux-pci+bounces-16639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF1589C6F70
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 13:46:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4177C9C6F3B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 13:42:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2740B234E1
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 12:37:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB7E01F23C2C
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 12:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35D5F1DEFE0;
-	Wed, 13 Nov 2024 12:37:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EACB31FB89B;
+	Wed, 13 Nov 2024 12:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="x6Hpvg+b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H+jakr0R";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="x6Hpvg+b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H+jakr0R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAgrYLFa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D174C81;
-	Wed, 13 Nov 2024 12:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385D01DF75C
+	for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 12:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731501421; cv=none; b=D4oo6O7h8Us3OgiFAspbSiRgs88zYfmTNNCGjKOAHPPNI38sLGq6SW55kAoC31BQ7Jor4wKYBCWjBK20vPcIVAcaVxOROrCvwLj3VThpXcQX7IBIOtSWKsFaV5hwK1eQMSJHQD2g4ksJyUUeyb0QqX0jD3nNWaAMXs2xIvF6BCs=
+	t=1731501755; cv=none; b=PUwLjZTVhE7yBYCCmJzsjdnEnq9CJMz5PQnJrNq1GhIzUvkui8y/D9OmPjOQnkG60dlYOvSNDsQIqr7mHukoDu44xZ8bUgBI8ByKvif345SsQurpLEKUj2fKNm2I7ROJ3mkwyWwaLundUIs1KEpKDwQkbWjDd+/G1uni9eaQD+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731501421; c=relaxed/simple;
-	bh=18H6NJme3tzBH2IZVv/wJF8kQRj5I/k5ony15utzEWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rz5J0oN+jxeaOBnlYj60WqM7tp4P40kaCqbtONFNYoHJ6gc2qcfOUeRFrKmJUvePQ2mWq7HfHqA3kg8FZ2l9aF5eIncaoFmybKBiz8d6EkP4BZYfK3TLIgbDQ1y6LiLMqJNiZ0wVago8f5+JWPWuVEIiPXOOIQWM97d33xIl1os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=x6Hpvg+b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H+jakr0R; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=x6Hpvg+b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H+jakr0R; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C596E21133;
-	Wed, 13 Nov 2024 12:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731501416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwZyjST0MC2BE1Uhwog1+2weLgBQ8NK4rlxEdf5P7lU=;
-	b=x6Hpvg+bnpaEDcXzXshd05wx1g65KA0JAHTzWCKmfGtymmFhqrO8IbVOfmr8mtsZa7qs9R
-	FOHi2SSLS6XIfEgvSJr4L71aE2k13Ry6bqSbdTgR8X6XMsVeIumRyqy9GEhrlWjW46ul2a
-	cjVGBeyhOsJ+SBPxuBt6ydqkeqE1ynQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731501416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwZyjST0MC2BE1Uhwog1+2weLgBQ8NK4rlxEdf5P7lU=;
-	b=H+jakr0RcjllL8izGR9jTCON1XXq+u5x2wPmJHAmjtMb+r7Gyff6WddEB0fMF92Wh3NKTc
-	9OXiBDSeD2rJx/Dw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=x6Hpvg+b;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=H+jakr0R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731501416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwZyjST0MC2BE1Uhwog1+2weLgBQ8NK4rlxEdf5P7lU=;
-	b=x6Hpvg+bnpaEDcXzXshd05wx1g65KA0JAHTzWCKmfGtymmFhqrO8IbVOfmr8mtsZa7qs9R
-	FOHi2SSLS6XIfEgvSJr4L71aE2k13Ry6bqSbdTgR8X6XMsVeIumRyqy9GEhrlWjW46ul2a
-	cjVGBeyhOsJ+SBPxuBt6ydqkeqE1ynQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731501416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwZyjST0MC2BE1Uhwog1+2weLgBQ8NK4rlxEdf5P7lU=;
-	b=H+jakr0RcjllL8izGR9jTCON1XXq+u5x2wPmJHAmjtMb+r7Gyff6WddEB0fMF92Wh3NKTc
-	9OXiBDSeD2rJx/Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A225813A6E;
-	Wed, 13 Nov 2024 12:36:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cagvJWidNGdbLgAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Wed, 13 Nov 2024 12:36:56 +0000
-Date: Wed, 13 Nov 2024 13:36:55 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, 
-	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com, 
-	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v3 1/8] driver core: bus: add irq_get_affinity callback
- to bus_type
-Message-ID: <2d85aa5e-037a-45c3-9f2d-e46b2159b697@flourine.local>
-References: <20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org>
- <20241112-refactor-blk-affinity-helpers-v3-1-573bfca0cbd8@kernel.org>
- <76da6c05-4f28-41cc-a48e-da2ae16c64c4@oracle.com>
+	s=arc-20240116; t=1731501755; c=relaxed/simple;
+	bh=5Ui9MCE1qEQAOh4WSjvlu7OY8Q34KrD5J6SmFsm5KGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=spCsPAFeQgyNMcqqaccuP1FF5Zyjcw+uOAtURtB7Y32JZfgVOztjcGS12AFm1NRWG3MKyFGNJRlA2RLBbTIQNz/fEekrDw+v5BuaZrI2S6XNPyT1SJW1D9DBakjgZO5hvLm2qUf7n2xBzRfCNcCqAWzB/NJ3X1qTlhK/I+xgJUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAgrYLFa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731501753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gi/nDuPOQh+kW8YCVePTGgMsqduTQsEMI/h4REBTyU8=;
+	b=LAgrYLFa9w/He11GBOuRyIe9gRLR6HGgEYmiNCnGGck6hdMbjAjkCq3SWfWELAbubFTiB2
+	ZzvzDUL/3EfVfn2kf9k7YhofZNQ3zvW8sKn11cLpqHo3aunoExnrAdOmBI7d/Le6ksEycG
+	RADyIibJ6v4jolntIggwqXxHCWbhn6o=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-5JjbBlRoOsi4-1EJX3eTQg-1; Wed, 13 Nov 2024 07:42:32 -0500
+X-MC-Unique: 5JjbBlRoOsi4-1EJX3eTQg-1
+X-Mimecast-MFC-AGG-ID: 5JjbBlRoOsi4-1EJX3eTQg
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-37d662dd3c8so4027036f8f.1
+        for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 04:42:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731501751; x=1732106551;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gi/nDuPOQh+kW8YCVePTGgMsqduTQsEMI/h4REBTyU8=;
+        b=VKdqBM0zqfhHDw5HyiZlToZw5w9xgF0DvXYF3n+wK6XlUWsSeLnQwgkA1CgotnOTIl
+         O7JoDq+9hQ9ynteybuxnmwrDAJRw1ivjsq0vC/tMUZ5sn3WupJTkPpearEVk75qtT+KS
+         OoxdVVKkYAWqEXne4cZkqAJ5XSpDnvZyYpztEToafq8g4+yhho5S+r0EAdE190mhXEzI
+         GK9m8tf9pUFMrhuog9Ygeg5DRQc9TfI1rOLwDfnHJQgUPq4/ifRiHHeM3TGI1jGBQEEZ
+         FWtl4xO5eeyMqc1NVPwkc62JS+TZwrCxBdW23y3wxG9SFlz1/uNwVnCArEuwJnMd0N9g
+         lJ7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUe9he46tYkMCGqkEkPmTO9jmalCldsPbFe0gVcDFho7n8oTfQqG+SCYATEZEyxc2TO0gSnqhVl+v8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyijIEKvyg2MCF2KoxjmR1922fRaWlxA2PZ9xycRrH5+kQXrnDQ
+	tHFdIqhZpKN+bNxKTdcaNhwVWdDvjOgC1FxIFyXSdQQi2zZczWim9bsfAUk5OKC9giKAp0fbf7k
+	cEiLYVJHrsgRyw6KefnJJN5IGpkNdEb7+ImP1ugKdIBTOZelpqS3354RsGg==
+X-Received: by 2002:a5d:5f53:0:b0:381:f595:fd0a with SMTP id ffacd0b85a97d-3820810ffc0mr4675208f8f.16.1731501750695;
+        Wed, 13 Nov 2024 04:42:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEkW+KWr+FGBC4soAeZ9AbHODqoGfzXwj1GlUIlZwp3/7RfEbVzZfIvsQ3hNUEE9XJJckqbgQ==
+X-Received: by 2002:a5d:5f53:0:b0:381:f595:fd0a with SMTP id ffacd0b85a97d-3820810ffc0mr4675138f8f.16.1731501750223;
+        Wed, 13 Nov 2024 04:42:30 -0800 (PST)
+Received: from eisenberg.redhat.com (nat-pool-muc-u.redhat.com. [149.14.88.27])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381ed99aa18sm18023528f8f.61.2024.11.13.04.42.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2024 04:42:29 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Basavaraj Natikar <basavaraj.natikar@amd.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alex Dubov <oakad@yahoo.com>,
+	Sudarsana Kalluru <skalluru@marvell.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rasesh Mody <rmody@marvell.com>,
+	GR-Linux-NIC-Dev@marvell.com,
+	Igor Mitsyanko <imitsyanko@quantenna.com>,
+	Sergey Matyukevich <geomatsi@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Sanjay R Mehta <sanju.mehta@amd.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Chen Ni <nichen@iscas.ac.cn>,
+	Ricky Wu <ricky_wu@realtek.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Breno Leitao <leitao@debian.org>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mostafa Saleh <smostafa@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yi Liu <yi.l.liu@intel.com>,
+	Kunwu Chan <chentao@kylinos.cn>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Ye Bin <yebin10@huawei.com>
+Cc: linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH v2 00/11] Remove implicit devres from pci_intx()
+Date: Wed, 13 Nov 2024 13:41:48 +0100
+Message-ID: <20241113124158.22863-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76da6c05-4f28-41cc-a48e-da2ae16c64c4@oracle.com>
-X-Rspamd-Queue-Id: C596E21133
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 13, 2024 at 10:16:32AM +0000, John Garry wrote:
-> On 12/11/2024 13:26, Daniel Wagner wrote:
-> > Introducing a callback in struct bus_type so that a subsystem
-> > can hook up the getters directly. This approach avoids exposing
-> > random getters in any subsystems APIs.
-> > 
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> > ---
-> >   include/linux/device/bus.h | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-> > index cdc4757217f9bb4b36b5c3b8a48bab45737e44c5..b18658bce2c3819fc1cbeb38fb98391d56ec3317 100644
-> > --- a/include/linux/device/bus.h
-> > +++ b/include/linux/device/bus.h
-> > @@ -48,6 +48,7 @@ struct fwnode_handle;
-> >    *		will never get called until they do.
-> >    * @remove:	Called when a device removed from this bus.
-> 
-> My impression is that this would be better suited to "struct device_driver",
-> but I assume that there is a good reason to add to "struct bus_type".
+@Driver-Maintainers: Your driver might be touched by patch "Remove
+devres from pci_intx()". You might want to take a look.
 
-I think the main reason to put it here is that most of the drivers are
-happy with the getter on bus level and don't need special treatment. We
-don't have to touch all the drivers to hookup a common getter, nor do we
-have to install a default handler when the driver doesn't specify one.
-Having the callback in struct bus_driver avoids this. Though Christoph
-suggested it, so I can only guess.
+Changes in v2:
+  - Drop pci_intx() deprecation patch.
+  - ata: Add RB from Sergey and Niklas.
+  - wifi: Add AB by Kalle.
+  - Drop INTx deprecation patch
+  - Drop ALSA / hda_intel patch because pci_intx() was removed from
+    there in the meantime.
 
-But you bring up a good point, if we had also an irq_get_affinity
-callback in struct device_driver it would be possible for the
-hisi_sas v2 driver to provide a getter and blk_mq_hctx_map_queues could
-do:
+Changes since the RFC [1]:
+  - Add a patch deprecating pci{m}_intx(). (Heiner, Andy, Me)
+  - Add Acked-by's already given.
+  - Export pcim_intx() as a GPL function. (Alex)
+  - Drop patch for rts5280, since this driver will be removed quite
+    soon. (Philipp Hortmann, Greg)
+  - Use early-return in pci_intx_unmanaged() and pci_intx(). (Andy)
 
-	for (queue = 0; queue < qmap->nr_queues; queue++) {
-		if (dev->driver->irq_get_affinity)
-			mask = dev->driver->irq_get_affinity;
-		else if (dev->bus->irq_get_affinity)
-			mask = dev->bus->irq_get_affinity(dev, queue + offset);
-		if (!mask)
-			goto fallback;
+Hi all,
 
-		for_each_cpu(cpu, mask)
-			qmap->mq_map[cpu] = qmap->queue_offset + queue;
-	}
+this series removes a problematic feature from pci_intx(). That function
+sometimes implicitly uses devres for automatic cleanup. We should get
+rid of this implicit behavior.
 
-and with this in place the open coded version in hisi_sas v2 can also be
-replaced. If no one objects, I go ahead and add the callback to struct
-device_driver.
+To do so, a pci_intx() version that is always-managed, and one that is
+never-managed are provided. Then, all pci_intx() users are ported to the
+version they need. Afterwards, pci_intx() can be cleaned up and the
+users of the never-managed version be ported back to pci_intx().
+
+This way we'd get this PCI API consistent again.
+
+Patch "Remove devres from pci_intx()" obviously reverts the previous
+patches that made drivers use pci_intx_unmanaged(). But this way it's
+easier to review and approve. It also makes sure that each checked out
+commit should provide correct behavior, not just the entire series as a
+whole.
+
+Merge plan for this is to enter through the PCI tree.
+
+[1] https://lore.kernel.org/all/20241009083519.10088-1-pstanner@redhat.com/
+
+
+Regards,
+P.
+
+
+Philipp Stanner (11):
+  PCI: Prepare removing devres from pci_intx()
+  drivers/xen: Use never-managed version of pci_intx()
+  net/ethernet: Use never-managed version of pci_intx()
+  net/ntb: Use never-managed version of pci_intx()
+  misc: Use never-managed version of pci_intx()
+  vfio/pci: Use never-managed version of pci_intx()
+  PCI: MSI: Use never-managed version of pci_intx()
+  ata: Use always-managed version of pci_intx()
+  wifi: qtnfmac: use always-managed version of pcim_intx()
+  HID: amd_sfh: Use always-managed version of pcim_intx()
+  Remove devres from pci_intx()
+
+ drivers/ata/ahci.c                            |  2 +-
+ drivers/ata/ata_piix.c                        |  2 +-
+ drivers/ata/pata_rdc.c                        |  2 +-
+ drivers/ata/sata_sil24.c                      |  2 +-
+ drivers/ata/sata_sis.c                        |  2 +-
+ drivers/ata/sata_uli.c                        |  2 +-
+ drivers/ata/sata_vsc.c                        |  2 +-
+ drivers/hid/amd-sfh-hid/amd_sfh_pcie.c        |  4 ++--
+ drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c |  2 +-
+ .../wireless/quantenna/qtnfmac/pcie/pcie.c    |  2 +-
+ drivers/pci/devres.c                          | 24 +++----------------
+ drivers/pci/pci.c                             | 16 +++----------
+ include/linux/pci.h                           |  1 +
+ 13 files changed, 18 insertions(+), 45 deletions(-)
+
+-- 
+2.47.0
+
 
