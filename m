@@ -1,235 +1,249 @@
-Return-Path: <linux-pci+bounces-16713-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16714-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A15649C7E03
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 22:59:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFADF9C7ECD
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 00:32:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA3DDB23991
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 21:59:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B3ED1F22E1A
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 23:32:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F0A818E37D;
-	Wed, 13 Nov 2024 21:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9937318C913;
+	Wed, 13 Nov 2024 23:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wGdGsVGL"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="k8PVw4nb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE9C18C353;
-	Wed, 13 Nov 2024 21:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731535048; cv=fail; b=qzsNrNruVJE9S5XMgMl5xdJZheK1X9VKEJkBVoMsm++WloIzeNCrUY8UI+v52J36FVhPUCap0fNhuef7Ku1we1iVXb7Qr/r15/4ZdlwZlSxGcokIOW60z5Kdlnm3zQpq+1fDa8Ceabuk7x9vJNNPtuDHP9+cdYdkpUrJQdYH5Rk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731535048; c=relaxed/simple;
-	bh=002E3axX10NWwOscoE8If0labZQsL4xOCkKkWQEdYvY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VA7srIdCBQuzel5EQbkV3S2+U5oIzAI2e8W6JNmYOkAtUJWqe6gpzoj0Y+SuOJ9dhyF0sq1NaV+AqtvUPAm9y+wP2Fk4GbJPv3ZPyQj0eUZPAn0qqGJ6cGnmrAsQsSj0HmQEwDIRE+fPaed1DfMPR5f2sX2w9eSnkyT5jx6ehes=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wGdGsVGL; arc=fail smtp.client-ip=40.107.93.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LduOV1bm9ZG3KaFylspGoxzWkm+3LqobW5/uFuZ5IaqYo5h9mQElFUNnxYEyvB1KClakWKGIqfcVh0fFkLgOyqLOv7rpAQmlcZ0G3sP7cyeYEFBL6KGAMDMrljbi9e8pKT8XDvnsLhIRQj3LvPHm+SXF3EWGHiOU8x6Fmotufv5Xhzu9CgiXU7OshmiRzCcA/EtT3Ri7DuqjLbtRDbJmXzr0WczsmDRJQgv4lQjONyISFZ56HRCCqbPF9+bvlEtTOlmEkYOIkSh/1NgxXc52icnQmtf4tGdbNtAtK/ehqNoMhEEiSgIbDhVjWjv+i5lQlD2ib4fz7Q5b/F+M/DGh5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rYAGzdewKAuza5CtTWGSqPUeFUkzZSd2ZjnH9RcAT4Y=;
- b=DfmBv1G9eoy2/WFeF1rKcfKhldXs6Hw2CFNH5ALcK75IVef9tyDqrvTIizpqU3e9KVp3CNYWx3Q+Hmpms33NrIhRe4ctZkRKC99SnBlm6nvsvdXbaW5p4DzlWdfJyaeNQTtMO4CDIk4Ew7ubVf0LeDNCXy9jFqUpAcRWNU8q+i3DQauZ29GUXfwrip1FIbxX1CCTxG5dqEkXfeWdoYW88Eqzj25YKAaOM7dvKJdULYOgOYD/Pi5w29IyRoQPQgoHic7VDh0m4QGbBIFn4rEgKOBnbodH9O+aEZPJzRLHnaxxciA/K9YsOeGtZzhgyNIpVkVJo75MHpuiJqI6Ak8npQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rYAGzdewKAuza5CtTWGSqPUeFUkzZSd2ZjnH9RcAT4Y=;
- b=wGdGsVGLNciykq3HiBeAmvhHeM4bZSasyDISQ3ZcXMtNXjdnbn7lAYLQlHQeGoo3VQmNDge939MQXu7WLk2lQ4pUsITw2feodiXirKyl6+n7V6kNR8lcHEJ5kBuCKJ6KrNMfvflsGNGSPMpFGu+UZkgmDsM4SVOKf8soPWIHUuo=
-Received: from DS0PR17CA0016.namprd17.prod.outlook.com (2603:10b6:8:191::7) by
- SN7PR12MB8172.namprd12.prod.outlook.com (2603:10b6:806:352::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Wed, 13 Nov
- 2024 21:57:24 +0000
-Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
- (2603:10b6:8:191:cafe::e5) by DS0PR17CA0016.outlook.office365.com
- (2603:10b6:8:191::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.18 via Frontend
- Transport; Wed, 13 Nov 2024 21:57:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8158.14 via Frontend Transport; Wed, 13 Nov 2024 21:57:23 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 13 Nov
- 2024 15:57:22 -0600
-From: Terry Bowman <terry.bowman@amd.com>
-To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <ming4.li@intel.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>, <terry.bowman@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>
-Subject: [PATCH v3 15/15] PCI/AER: Enable internal errors for CXL upstream and downstream switch ports
-Date: Wed, 13 Nov 2024 15:54:29 -0600
-Message-ID: <20241113215429.3177981-16-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241113215429.3177981-1-terry.bowman@amd.com>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4B717C;
+	Wed, 13 Nov 2024 23:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731540759; cv=none; b=LUZACpPnuG9syEI2s5itnt0XKyP5mzcEBdEFzowj1YdNuVw9Ej4Wj7fjk0929uNp9sX7Br9BjTrE5A6o8j37FAGuPxD7AgSFNDO2R7vnYkmWgH2LGl4GZTsrwzTIv7SqhFAhqcK1hyDdRDbodQ3g+HabXn7nO7lCMZFRcnFewuk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731540759; c=relaxed/simple;
+	bh=BZz8M8dA30sPg7gVl2T2380eKnaxbf2iUQX4W3szZMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cfJfgzbsnGx+oQN1vJN1MnP1o2jIfnBqzqJ11nfBOX3GpM5IQe508yzZuUURpyNtxhJbZHMFYjB0IRQn9mVsIGo2hHHClEct/7gXUbve/aIF7Stkp9GCibuiyBr4PlP2WHyjX1Lro/9kyNZM5V1G9xbgIIxqTwsoAKl8f/x8x14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=k8PVw4nb; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.115] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 67C2C20BEBE8;
+	Wed, 13 Nov 2024 15:32:36 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 67C2C20BEBE8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1731540757;
+	bh=18HJxeyRm3uSI4Swy2JMMEvrdkL3oWWV9AKPCAM4Vjo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k8PVw4nbkREJts0W0LLdSZ42CRybu1r1Xhyg6//i5lh5h22jmKQC5Lcd8aMOB/jYM
+	 HLQu6/qNMJUeGZmWA1itysWr/etRtR5KK0CiaR/7bY7XLVFMzfApOBiyev/vQ/vj4+
+	 bnJU3aZtjNHiFSBT13DVIlauDGkjJGEyGoyLGSkQ=
+Message-ID: <6d2a6bd4-a7cf-4672-9fb0-975acdc8ed31@linux.microsoft.com>
+Date: Wed, 13 Nov 2024 15:32:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] hyperv: Add new Hyper-V headers in include/hyperv
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>
+References: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1731018746-25914-4-git-send-email-nunodasneves@linux.microsoft.com>
+ <BN7PR02MB4148025D8757B917013297E0D4582@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <b8ef1f71-9f13-48c3-adab-aa52b68d2e33@linux.microsoft.com>
+ <SN6PR02MB4157AA30A9F27ECCAE202BC2D4582@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157AA30A9F27ECCAE202BC2D4582@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|SN7PR12MB8172:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6e7dbb0-2c60-431c-216b-08dd042e2803
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b+B+qh+WCQURa1s/Jcx0djwOmhHTZteGI+I39UJDuGy1/bK90YhG/helZIxk?=
- =?us-ascii?Q?i77cX9TD/5yg7oABA/hqxvzEpwTrxAjoqMZryTwtLa1KMSUXiJUUh2TrhXek?=
- =?us-ascii?Q?HAP9P3U4rIZqKpkgLMMl8qMn4cZoOLFLb0okwzQ+yxKaKQr03xlPGc98JkhM?=
- =?us-ascii?Q?weB9UVo7T41eMDCpAKd52+qExQQS7wrW8fRh5TUGtt3vq8t+I1SVLy/oz5dn?=
- =?us-ascii?Q?lLBWKfRgM7jq4aENuvqde5kftVeaWtx3APryMe2TM6mvpQro7Tn7GcYQi7ad?=
- =?us-ascii?Q?kHB1wQONpK4wUOVeoq5QyRjkuSHeGzUugYulNPeSu2NV6NFmbcckKN7FJDrk?=
- =?us-ascii?Q?IGGKVp+2GBRZw9dMh+I3kUiu98TfG9wx+PRCKfkP6wPl5FK8Tz82bheQzQ9D?=
- =?us-ascii?Q?oxBP15smVvvw33DcKKBWNNLSDpD5Agu0FAX9qGBxdvzLpkmr9x0zDyxXVJJu?=
- =?us-ascii?Q?X93Wr32viuLWuRWejjJDDTuKNAZqnc2ZwogWufPN65EStAQ26Fn+pmMZu+dK?=
- =?us-ascii?Q?3KDdo7M3TbhtjiTvKkd+w6RP1lApwFNqol1RTEzTGDvdt56U1qaEKpZtwxaI?=
- =?us-ascii?Q?m5DVECSNZXsJejSjFJSVRJXPYDnpABwyKexufLaPrEauGNFLz2Z5UWOktmb8?=
- =?us-ascii?Q?LceD+xGObMj4My/7x6Kgzii6baZV0ALXN3Ui6bhSrqQV5eZvh4tT/t20YJCq?=
- =?us-ascii?Q?fmK6Ys5kA0JQFvjlisJQMlAvlJV8duhKCs4c4P/nJjlNoapczWlhLWGjbtgW?=
- =?us-ascii?Q?V160xqLXLuCmRBeRzBi2QYAvXEz+S0FDCySSXwnJlQ4T06/1T27pdkvMd2IL?=
- =?us-ascii?Q?zyQG4dnvbMSQ+tov63BaOY18OHdWiFAToW6tM+5C/pIgvp+cX3iD/Gpc3zkc?=
- =?us-ascii?Q?FT6iCbuYDZxV500SrFmapbKyuuL7tSXFoEWcNIQuTzxqypp3YvqWhW4/MFme?=
- =?us-ascii?Q?mIVDRjX6/TIhGoiF9j5ZctlSWRcS1unsLhgtoV667IhpPqFlwvABd5uHhPfC?=
- =?us-ascii?Q?260aNGaOiJVM9mqj/kWghRVMMNG5ovaSSgt77mqqF6Qd3Ii1HU0RYi8qJ6si?=
- =?us-ascii?Q?MXKdp0gQgnzyBgDZ8+E9EUaivNV60BTpnbFMphHIRcEZSn3J6hNBrdpZ4kpz?=
- =?us-ascii?Q?XXWzfJbogmlKbeminJVb5vjggQA8TYAJK2n57lfACI43899jWfqIXjZzwZkN?=
- =?us-ascii?Q?jS7+ukDIv8QQWuqi1MK1BU4dTz0YwKCyzmIjRhgCdMe7VF5LdDlRCBkHwl3E?=
- =?us-ascii?Q?Lth8FEvZdtRPYASAXJ12dBXEY2whP+XWzfwasj3RNdVG7ojGysl/b/mEtITf?=
- =?us-ascii?Q?+0rh83TbTXGzaRUXHPz/fIgFfhDUIf1QgbLWysEMpQJdlK5PKkHbpkVIT7Fo?=
- =?us-ascii?Q?UHBW2ujbdsM9jXJHBRCxJTPEMy3Sz9RBzu9FtkX1zIyOAmY/Oj5HVxJUOFHv?=
- =?us-ascii?Q?cL3PIhBfbiY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2024 21:57:23.9810
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6e7dbb0-2c60-431c-216b-08dd042e2803
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E1.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8172
 
-The AER service driver enables uncorrectable internal errors (UIE) and
-correctable internal errors (CIE) for CXL root ports and CXL RCEC's. The
-UIE and CIE are used in reporting CXL protocol errors. The same UIE/CIE
-enablement is needed for CXL PCIe upstream and downstream ports inorder to
-notify the associated root port and OS.[1]
+On 11/11/2024 11:31 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Monday, November 11, 2024 10:45 AM
+>>
+>> On 11/10/2024 8:13 PM, Michael Kelley wrote:
+>>> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday,
+>> November 7, 2024 2:32 PM
+>>>>
+>>>> These headers contain definitions for regular Hyper-V guests (as in
+>>>> hyperv-tlfs.h), as well as interfaces for more privileged guests like
+>>>> Dom0.
+>>>
+>>> See my comment on Patch 0/4 about use of "dom0" terminology.
+>>>
+>>
+>> Thanks, noted.
+>>
+>>>>
+>>>> These files are derived from headers exported from Hyper-V, rather than
+>>>> being derived from the TLFS document. (Although, to preserve
+>>>> compatibility with existing Linux code, some definitions are copied
+>>>> directly from hyperv-tlfs.h too).
+>>>>
+>>>> The new files follow a naming convention according to their original
+>>>> use:
+>>>> - hdk "host development kit"
+>>>> - gdk "guest development kit"
+>>>> With postfix "_mini" implying userspace-only headers, and "_ext" for
+>>>> extended hypercalls.
+>>>>
+>>>> These names should be considered a rough guide only - since there are
+>>>> many places already where both host and guest code are in the same
+>>>> place, hvhdk.h (which includes everything) can be used most of the time.
+>>>
+>>> Just curious -- are there really cases where hvhdk.h can't be used?
+>>> If so, could you summarize why?
+>>>
+>>
+>> No, there aren't cases where it "can't" be used. I suppose if someone
+>> doesn't want to include everything, perhaps they could just include
+>> hvgdk.h, for example. It doesn't really matter though.
+>>
+>>> I ask because it would be nice to expand slightly on your paragraph
+>>> below, as follows:  (if indeed what I've added is correct)
+>>>
+>>> The use of multiple files and their original names is primarily to
+>>> keep the provenance of exactly where they came from in Hyper-V
+>>> code, which is helpful for manual maintenance and extension
+>>> of these definitions. Microsoft maintainers importing new definitions
+>>> should take care to put them in the right file. However, Linux kernel code
+>>> that uses any of the definitions need not be aware of the multiple files
+>>> or assign any meaning to the new names. Linux kernel uses should
+>>> always just include hvhdk.h
+>>>
+>>
+>> Thanks, I think that additional sentence helps clarify things. I'll
+>> include it in the next version, and I think I can probably omit the prior
+>> paragraph: "These names should be considered a rough guide only...".
+>>
+> 
+> Omitting that prior paragraph is OK with me.  The key thoughts from my
+> standpoint are:
+> * The separation into multiple files and the file names come from
+>    the Windows Hyper-V world and are maintained to ease bringing
+>    the definitions over from that world
+>    
+> * Linux code can ignore the multiple files and their names. Just
+>    #include hvhdk.h.
+> 
 
-Export the AER service driver's pci_aer_unmask_internal_errors() function
-to CXL namsespace.
+Agreed, thanks for helping clarify the points.
 
-Remove the function's dependency on the CONFIG_PCIEAER_CXL kernel config
-because it is now an exported function.
+>>>>
+>>>> The original names are kept intact primarily to keep the provenance of
+>>>> exactly where they came from in Hyper-V code, which is helpful for
+>>>> manual maintenance and extension of these definitions. Microsoft
+>>>> maintainers importing new definitions should take care to put them in
+>>>> the right file.
+>>>>
+>>>> Note also that the files contain both arm64 and x86_64 code guarded by
+>>>> \#ifdefs, which is how the definitions originally appear in Hyper-V.
+>>>
+>>> Spurious backslash?
+>>>
+>>
+>> Indeed, thanks.
+>>
+>>> I would suggest some additional clarification:  The #ifdef guards are
+>>> employed minimally where necessary to prevent conflicts due to
+>>> different definitions for the same thing on x86_64 and arm64. Where
+>>> there are no conflicts, the union of x86_64 definitions and arm64
+>>> definitions is visible when building for either architecture. In other
+>>> words, not all definitions specific to x86_64 are protected by #ifdef
+>>> x86_64. Such unprotected definitions may be visible when building
+>>> for arm64. And vice versa.
+>>>
+>>
+>> Is there a reason you specifically want to point out that "Such
+>> unprotected definitions may be visible when building for arm64. And vice
+>> versa."? I think, in all the cases where #ifdefs are not used, an
+>> arch-specific prefix is used - hv_x64_ or hv_arm64_.
+>>
+>> The main thing I wanted to call out here was the reasoning for not
+>> splitting arch-specific definitions into separate files in arch/x86/
+>> and arch/arm64/ as is typical in Linux.
+>>
+>> Maybe this is a bit clearer:
+>> "
+>> Note the new headers contain both arm64 and x86_64 definitions. Some are
+>> guarded by #ifdefs, and some are instead prefixed with the architecture,
+>> e.g. hv_x64_*. These conventions are kept from Hyper-V code as another
+>> tactic to simplify the process of importing and maintaining the
+>> definitions, rather than splitting them up into their own files in
+>> arch/x86/ and arch/arm64/.
+>> "
+> 
+> Yes, your new paragraph works for me. Your original statement was
+> "the files contain both arm64 and x86_64 code guarded by #ifdefs",
+> which sounds like the more typical Linux approach of using #ifdefs
+> to segregate into x86-specific, arm64-specific, and common. I was
+> just trying to be explicit that full segregation isn't done, and isn't a
+> goal, because of wanting to maintain alignment with the original
+> Hyper-V definitions.
+> 
+> It's "Hey, we know we're not handling this in the typical Linux way,
+> and here's why". Your revised paragraph covers that in a less
+> heavyweight way than what I wrote. :-)
+> 
 
-Call pci_aer_unmask_internal_errors() during RAS initialization in:
-cxl_uport_init_ras_reporting() and cxl_dport_init_ras_reporting().
+Ok, great. I'll use that for the next version then.
 
-[1] PCIe Base Spec r6.2-1.0, 6.2.3.2.2 Masking Individual Errors
+Thanks again!
+Nuno
 
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
----
- drivers/cxl/core/pci.c | 2 ++
- drivers/pci/pcie/aer.c | 5 +++--
- include/linux/aer.h    | 1 +
- 3 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index af2ff6936a09..4ede038a7148 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -887,6 +887,7 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
- 
- 	cxl_assign_port_error_handlers(pdev);
- 	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
-+	pci_aer_unmask_internal_errors(pdev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
- 
-@@ -919,6 +920,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
- 
- 	cxl_assign_port_error_handlers(pdev);
- 	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
-+	pci_aer_unmask_internal_errors(pdev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 87fddd514030..1028814379e4 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -949,7 +949,6 @@ static bool is_internal_error(struct aer_err_info *info)
- 	return info->status & PCI_ERR_UNC_INTN;
- }
- 
--#ifdef CONFIG_PCIEAER_CXL
- /**
-  * pci_aer_unmask_internal_errors - unmask internal errors
-  * @dev: pointer to the pcie_dev data structure
-@@ -960,7 +959,7 @@ static bool is_internal_error(struct aer_err_info *info)
-  * Note: AER must be enabled and supported by the device which must be
-  * checked in advance, e.g. with pcie_aer_is_native().
-  */
--static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-+void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
- 	u32 mask;
-@@ -973,7 +972,9 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- 	mask &= ~PCI_ERR_COR_INTERNAL;
- 	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
- }
-+EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, CXL);
- 
-+#ifdef CONFIG_PCIEAER_CXL
- static bool is_cxl_mem_dev(struct pci_dev *dev)
- {
- 	/*
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 4b97f38f3fcf..093293f9f12b 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -55,5 +55,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- int cper_severity_to_aer(int cper_severity);
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
-+void pci_aer_unmask_internal_errors(struct pci_dev *dev);
- #endif //_AER_H_
- 
--- 
-2.34.1
+> Michael
+> 
+>>
+>> I hope it's reasonably clear that it's a good tradeoff to go against
+>> Linux convention in this case, to make it easy to import and maintain
+>> Hyper-V definitions.
+>>
+>> Thanks
+>> Nuno
+>>
 
 
