@@ -1,93 +1,92 @@
-Return-Path: <linux-pci+bounces-16682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1D119C7ACA
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 19:14:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B399C7A4C
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 18:52:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA3B3B2A1C5
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 17:49:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC13C284FFB
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 17:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDC42022E4;
-	Wed, 13 Nov 2024 17:48:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 813A22022D9;
+	Wed, 13 Nov 2024 17:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jr+Vm1qq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R37kXKK4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099D22022E2
-	for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 17:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7922022C7
+	for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 17:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731520135; cv=none; b=kEJmesN6GaWN/NXiOUgtXblZcmJ4N3991OeTjjTRbW47qgUH4yDw+RieoM49FApj8jNmmS2k9aQzIqM58yUrqq5XQZS/vyeHu7ged2wiQG4pHnSmYjuNNhoMYExJJxd2tyFRi9ParQG//XiNN0dopq3W8+NHwI/GHzweJn1k5mk=
+	t=1731520355; cv=none; b=CEM0vcCCkxEKiMQ+8SYqTuYnnj++FVQbCCnP1IfDIBpEB8l9kqq1/Qf9n3Eho4c/jOm2o57KpYNgzZKxmLvmAqytaYwtAr8xN8nERLdyPmd9VNSqv4NGIlZU4rNrQAwgeCgpdHNRzROkxVQ73chpIXd5DYg+c6S+QvhtHRIi3QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731520135; c=relaxed/simple;
-	bh=9qu0frD8NGZvMd+t0ojWG9jdk3Z4iUPQQmG4GYjaUSQ=;
+	s=arc-20240116; t=1731520355; c=relaxed/simple;
+	bh=Inl/RXGwUzYm2HBWsIzT7k2qdMRy01kK/7iMBmFrrI8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dp1T0y47SiRYLJTTlZ8Qfmw4XTmyWXTT8+iqflA+8CKd75AssGLTK3ft8TTAleNbRKxSpDeCOwWGGrFVt5EZRvH57tW8E1UdH4jETBKlhgNIy3X5JCRTFznKTIoS+LX52OrcLdsJUV8rD0Dsq9rwfmJD7MqR5oIdk6MSlNGKffw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jr+Vm1qq; arc=none smtp.client-ip=209.85.214.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=qQlDX4KMBw90W8F1B1b9DYw5PLgqpLID/oUzgKPFmv/TRZE6xhGcr04Kg4I0MpRieUHE2tiYTxlNcKpW6PPm7NXXjums7L6qeYekuXEMqf0+LUPaHJW9o/LucF/W76Mo/h7WFZD1TY0K2PhtmtiuttVfsiF09Ux6t0M6mGSWbFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R37kXKK4; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20cf6eea3c0so69473755ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 09:48:52 -0800 (PST)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20c70abba48so71198915ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 09:52:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731520132; x=1732124932; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1731520352; x=1732125152; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Y9rKfjR1HZdkhSoVFUPTH5q4XPsaUToI4Fa76nl271U=;
-        b=Jr+Vm1qqwXnYfZ1d/z3vZc4WujrYZyjxDs+G0OkcsjA9WWg46Hr7e4B0RwfrbvHWKe
-         5oLDIETHz9l8gqHHzhceUF7yW/rNeUKPraaKKacCREevYCt1Ccj3wp76LRm0ufNFI7F+
-         AmmFWgW7WnYYKhM4v20FpypvX3Qg/Ta3yGg7qPvKWpfFGeA1pFV9k37RyEX0h6rQ+19S
-         9JlAhx2on5RwZuUb/NV4rn5OAr3kSTYh1gS4+zBq05PsFV94cRU3/46cQry7Pr7sBqO5
-         Mh9dnlm8eVttooLzRHz05BgzOfTSKuvtN9vRfCLh86J6dY5d6mphIxSCELu0HzBQgAbp
-         4c1A==
+        bh=JzTYHEhyfkGjuQJogiAkXzIfpSGGRv5TA6Fn2K6bkhI=;
+        b=R37kXKK4p0L0hOfpGR685u3OFK/7OloWCnX6UsW37JhxxeTV0I6aK+2sT6fNYdwTxE
+         2cVtWanbcOvL1W26GtY++CUOEBoQ3RZkqnetMAFa5+EYFtYRKOzTB6mlQdK0QGvA0fmD
+         9thb1AnZmwxOPvSf3NjBIRD/tpcIKI7hrqgUUPXYW/FcbkpB+1EY6z7nAu24bDWqcHK6
+         cAPSrl+Vbt+ESpoMdmAfmAOiUUFwUxwF5Ts89c81Fc5/pvNPVZ7MA6liwtk9+V4G5ivw
+         uevKcbeCI8oI04rbaBBwWlFZXSyl8XlZaR07Y34WP3WnJTkR3rp4HGiAmnk22CGr/W9V
+         5gnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731520132; x=1732124932;
+        d=1e100.net; s=20230601; t=1731520352; x=1732125152;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9rKfjR1HZdkhSoVFUPTH5q4XPsaUToI4Fa76nl271U=;
-        b=F+Fy1U0/bLWzHji2JD8SjrGsH9f7h7aRnwNLCb17nKJJFGVoAnDtfvBbjtLdkGBLAY
-         ZP3PcOU4DB3TK4gxRvkx6TtdkQ3l22AEJaYwL54NW1/ETPO2do6rmRx54RKV9iPKjdGc
-         r0cc1ok45HNO8bh2SlrdjjD2MaZaQXJ7X+7X16zW8399jb5COg6EFsA/dHrFHCO1Agqx
-         3ApSFqlWf5jC1SBAHTTdpqzgJqD4AlPa4zqhXc+KJ51/ahHvbM5iDFeyoynRPEPtIy6j
-         KPnjUkRvw9/GBsncDreWPpzrBTHlk8QUQ0L2GFDd1DGIWCG8d2wJYdAVrhIlyI7m95Rp
-         sygA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKz3zMC0B5XFNh28zqtS01upudQRtjkLwuvOpMmcv3z9EVTFt3d65lDdnZ9dJZx4FH1oCp6i98hVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuTFMYtv1ztsleG5E+havNc/fY/V8+ApbJk2rkd6uvrOdd6T1F
-	yv3H/JZ2IDCkmDquRUxjHYhbggjWlA+ojpFmjsP+UEYE9y14LrHzsu0riz7kpQ==
-X-Google-Smtp-Source: AGHT+IGUx5vMux/zJWfHt+c3yDFnfCUQDJa3eB9NypPr2jzRRcay61/UDEWpDrYoWje8hXMYDmT3ow==
-X-Received: by 2002:a17:903:230b:b0:20b:9062:7b16 with SMTP id d9443c01a7336-211834e6c2amr288743745ad.9.1731520132170;
-        Wed, 13 Nov 2024 09:48:52 -0800 (PST)
+        bh=JzTYHEhyfkGjuQJogiAkXzIfpSGGRv5TA6Fn2K6bkhI=;
+        b=qnyhlqZ6hNs9C7FHR9K0hq1xUWigx8fPZpi2cj3WZ118Sr/ewxgKxh25hl9gzTkiKe
+         27f5DkVApmqLXNWOC8G0Els/zedIgkqUxyZum6Y7M2A4BzLIZGWXOwLj6KAZXwPn2bFb
+         ioqvfuOEaCga/GKxnAIbTfrJTezGs/rYnHdfXzlmkl3h8CEWBQ6/vEdF351t4hP3WnHt
+         eWEiBeSYtYeOGgBwBzvK8w/iRS6CkVEbIeS3zyXaaqIyXpRaYtMSqAxEVAhdoaoRBMtf
+         Ho1NuZ5fcVs1nFHgDBN5gEvHvqAEOhis2o2frPBOJW46LPJPD9lUt4f7/En9hwapklSI
+         vpGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYXuae6gdK9HUM5rMPVewF+g33+plQf3OGaQYxcC2r/InpFKah0R3dbcRfLqoOmT9y7CCdN6FMVM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2q8bwrzFlOhjKoDGslM+mh4HS4ztE2VV7P8vZJLgjKEOGUtwu
+	rI8boHC4q+d/VIblBMPwQQuHMHC3p/uu3TPECHStI7WrUXxabJo/qhxe3oybUw==
+X-Google-Smtp-Source: AGHT+IFXn5Zf9VFbyyoUdohwRmAq++a0UnSXGYIIwLIA7XmqWnin+uF/rmhGZoku3/76bqld4xAULA==
+X-Received: by 2002:a17:902:eccf:b0:20c:e2ff:4a2e with SMTP id d9443c01a7336-21183d7cf32mr329444555ad.53.1731520351829;
+        Wed, 13 Nov 2024 09:52:31 -0800 (PST)
 Received: from thinkpad ([117.213.102.160])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e8752asm110135085ad.282.2024.11.13.09.48.45
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e44586sm113178355ad.165.2024.11.13.09.52.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2024 09:48:51 -0800 (PST)
-Date: Wed, 13 Nov 2024 23:18:41 +0530
+        Wed, 13 Nov 2024 09:52:31 -0800 (PST)
+Date: Wed, 13 Nov 2024 23:22:22 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
-	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
-	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
-	robin.murphy@arm.com, will@kernel.org
-Subject: Re: [PATCH v5 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
- i.MX95
-Message-ID: <20241113174841.olnyu5l6rbmr3tqh@thinkpad>
-References: <20241104-imx95_lut-v5-0-feb972f3f13b@nxp.com>
- <20241104-imx95_lut-v5-2-feb972f3f13b@nxp.com>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v5 00/14] Fix and improve the Rockchip endpoint driver
+Message-ID: <20241113175222.eh76hksyj6sptwvo@thinkpad>
+References: <20241017015849.190271-1-dlemoal@kernel.org>
+ <117828c6-92c4-4af4-b47e-f049f9c2cb7b@kernel.org>
+ <ed723fe1-e243-4a9e-8d1c-f29461d07cb7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,258 +96,116 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241104-imx95_lut-v5-2-feb972f3f13b@nxp.com>
+In-Reply-To: <ed723fe1-e243-4a9e-8d1c-f29461d07cb7@kernel.org>
 
-On Mon, Nov 04, 2024 at 02:23:00PM -0500, Frank Li wrote:
-> For the i.MX95, configuration of a LUT is necessary to convert Bus Device
-> Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
-> This involves examining the msi-map and smmu-map to ensure consistent
-> mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
-> registers are configured. In the absence of an msi-map, the built-in MSI
-> controller is utilized as a fallback.
+On Wed, Nov 13, 2024 at 11:29:48PM +0900, Damien Le Moal wrote:
+> On 10/29/24 19:35, Damien Le Moal wrote:
+> > On 10/17/24 10:58, Damien Le Moal wrote:
+> >> This patch series fix the PCI address mapping handling of the Rockchip
+> >> PCI endpoint driver, refactor some of its code, improves link training
+> >> and adds handling of the PERST# signal.
+> >>
+> >> This series is organized as follows:
+> >>  - Patch 1 fixes the rockchip ATU programming
+> >>  - Patch 2, 3 and 4 introduce small code improvments
+> >>  - Patch 5 implements the .align_addr() operation to make the RK3399
+> >>    endpoint controller driver fully functional with the new
+> >>    pci_epc_mem_map() function
+> >>  - Patch 6 uses the new align_addr operation function to fix the ATU
+> >>    programming for MSI IRQ data mapping
+> >>  - Patch 7, 8, 9 and 10 refactor the driver code to make it more
+> >>    readable
+> >>  - Patch 11 introduces the .stop() endpoint controller operation to
+> >>    correctly disable the endpopint controller after use
+> >>  - Patch 12 improves link training
+> >>  - Patch 13 implements handling of the #PERST signal
+> >>  - Patch 14 adds a DT overlay file to enable EP mode and define the
+> >>    PERST# GPIO (reset-gpios) property.
+> >>
+> >> These patches were tested using a Pine Rockpro64 board used as an
+> >> endpoint with the test endpoint function driver and a prototype nvme
+> >> endpoint function driver.
+> > 
+> > Ping ? If there are no issues, can we get this queued up ?
 > 
-> Register a PCI bus callback function to handle enable_device() and
-> disable_device() operations, setting up the LUT whenever a new PCI device
-> is enabled.
+> Mani,
 > 
-> Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Some minor comments below. It'd be good to get Robin's Ack for this patch.
-
-> ---
-> Change from v4 to v5
-> - rework commt message
-> - add comment for mutex
-> - s/reqid/rid/
-> - keep only one loop when enable lut
-> - add warning when try to add duplicate rid
-> - Replace hardcode 0xffff with IMX95_PE0_LUT_MASK
-> - Fix some error message
+> Ping AGAIN !!!!
 > 
-> Change from v3 to v4
-> - Check target value at of_map_id().
-> - of_node_put() for target.
-> - add case for msi-map exist, but rid entry is not exist.
+> I do not see anything queued in pci/next. What is the blocker ?
+> These patches have been sitting on the list for nearly a month now, PLEASE DO
+> SOMETHING. Comment or apply, but please reply something.
 > 
-> Change from v2 to v3
-> - Use the "target" argument of of_map_id()
-> - Check if rid already in lut table when enable device
-> 
-> change from v1 to v2
-> - set callback to pci_host_bridge instead pci->ops.
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 176 +++++++++++++++++++++++++++++++++-
->  1 file changed, 175 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 94f3411352bf0..e75dc361e284e 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -55,6 +55,22 @@
->  #define IMX95_PE0_GEN_CTRL_3			0x1058
->  #define IMX95_PCIE_LTSSM_EN			BIT(0)
->  
-> +#define IMX95_PE0_LUT_ACSCTRL			0x1008
-> +#define IMX95_PEO_LUT_RWA			BIT(16)
-> +#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
-> +
-> +#define IMX95_PE0_LUT_DATA1			0x100c
-> +#define IMX95_PE0_LUT_VLD			BIT(31)
-> +#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
-> +#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
-> +
-> +#define IMX95_PE0_LUT_DATA2			0x1010
-> +#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
-> +#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
-> +
-> +#define IMX95_SID_MASK				GENMASK(5, 0)
-> +#define IMX95_MAX_LUT				32
-> +
->  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  enum imx_pcie_variants {
-> @@ -82,6 +98,7 @@ enum imx_pcie_variants {
->  #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
->  #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
->  #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
-> +#define IMX_PCIE_FLAG_HAS_LUT			BIT(8)
->  
->  #define imx_check_flag(pci, val)	(pci->drvdata->flags & val)
->  
-> @@ -134,6 +151,9 @@ struct imx_pcie {
->  	struct device		*pd_pcie_phy;
->  	struct phy		*phy;
->  	const struct imx_pcie_drvdata *drvdata;
-> +
-> +	/* Ensure that only one device's LUT is configured at any given time */
-> +	struct mutex		lock;
->  };
->  
->  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> @@ -925,6 +945,152 @@ static void imx_pcie_stop_link(struct dw_pcie *pci)
->  	imx_pcie_ltssm_disable(dev);
->  }
->  
-> +static int imx_pcie_add_lut(struct imx_pcie *imx_pcie, u16 rid, u8 sid)
-> +{
-> +	struct dw_pcie *pci = imx_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 data1, data2;
-> +	int free = -1;
-> +	int i;
-> +
-> +	if (sid >= 64) {
-> +		dev_err(dev, "Invalid SID for index %d\n", sid);
-> +		return -EINVAL;
-> +	}
-> +
-> +	guard(mutex)(&imx_pcie->lock);
-> +
-> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
-> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
-> +
-> +		if (!(data1 & IMX95_PE0_LUT_VLD)) {
-> +			if (free < 0)
-> +				free = i;
 
-So you don't increment 'free' once it becomes >=0? Why can't you use the loop
-iterator 'i' itself instead of 'free'?
+Damien,
 
-> +			continue;
-> +		}
-> +
-> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
-> +
-> +		/* Needn't add duplicated Request ID */
+Sorry for the late reply. Things got a bit hectic due to company onsite meeting.
+I'm going through my queue now.
 
-"Do not add duplicate RID"
-
-> +		if (rid == FIELD_GET(IMX95_PE0_LUT_REQID, data2)) {
-> +			dev_warn(dev, "Try to enable rid(%d) twice without disable it\n", rid);
-
-"Existing LUT entry available for RID (%d)\n"
-
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	if (free < 0) {
-> +		dev_err(dev, "LUT entry is not available\n");
-> +		return -EINVAL;
-
-ENOSPC?
-
-> +	}
-> +
-> +	data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
-> +	data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
-> +	data1 |= IMX95_PE0_LUT_VLD;
-> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
-> +
-> +	data2 = IMX95_PE0_LUT_MASK; /* Match all bits of rid */
-
-Please use 'RID' in comments everywhere.
-
-> +	data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, rid);
-> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
-> +
-> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, free);
-> +
-> +	return 0;
-> +}
-> +
-> +static void imx_pcie_remove_lut(struct imx_pcie *imx_pcie, u16 rid)
-> +{
-> +	u32 data2;
-> +	int i;
-> +
-> +	guard(mutex)(&imx_pcie->lock);
-> +
-> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
-> +
-
-Remove newline.
-
-> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
-> +		if (FIELD_GET(IMX95_PE0_LUT_REQID, data2) == rid) {
-> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, 0);
-> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, 0);
-> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
-> +
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +static int imx_pcie_enable_device(struct pci_host_bridge *bridge, struct pci_dev *pdev)
-> +{
-> +	struct imx_pcie *imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(bridge->sysdata));
-> +	u32 sid_i = 0, sid_m = 0, rid = pci_dev_id(pdev);
-
-No need to initialize sid_{i/m}.
-
-> +	struct device_node *target;
-> +	struct device *dev;
-> +	int err_i, err_m;
-> +
-> +	dev = imx_pcie->pci->dev;
-> +
-> +	target = NULL;
-> +	err_i = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", &target, &sid_i);
-> +	if (target)
-> +		of_node_put(target);
-> +	else
-> +		err_i = -EINVAL;
-> +
-> +	target = NULL;
-> +	err_m = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", &target, &sid_m);
-> +
-> +	/*
-> +	 * Return failure if msi-map exist and no entry for rid because dwc common
-> +	 * driver will skip setting up built-in MSI controller if msi-map existed.
-> +	 *
-> +	 *   err_m      target
-> +	 *	0	NULL		Return failure, function not work.
-> +	 *      !0      NULL		msi-map not exist, use built-in MSI.
-> +	 *	0	!NULL		Find one entry.
-> +	 *	!0	!NULL		Invalidate case.
-> +	 */
-> +	if (!err_m && !target)
-> +		return -EINVAL;
-> +	else if (target)
-> +		of_node_put(target); /* Find entry for rid in msi-map */
-> +
-> +	/*
-> +	 * msi-map        iommu-map
-> +	 *   Y                Y            ITS + SMMU, require the same sid
-> +	 *   Y                N            ITS
-> +	 *   N                Y            DWC MSI Ctrl + SMMU
-> +	 *   N                N            DWC MSI Ctrl
-> +	 */
-> +	if (!err_i && !err_m)
-> +		if ((sid_i & IMX95_SID_MASK) != (sid_m & IMX95_SID_MASK)) {
-> +			dev_err(dev, "iommu-map and msi-map entries mismatch!\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +	/*
-> +	 * Both iommu-map and msi-map not exist, use dwc built-in MSI
-> +	 * controller, do nothing here.
-> +	 */
-> +	if (err_i && err_m)
-> +		return 0;
-> +
-> +	if (!err_i)
-> +		return imx_pcie_add_lut(imx_pcie, rid, sid_i);
-> +	else if (!err_m)
-> +		/* Hardware auto add 2 bit controller id ahead of stream ID */
-
-What is this comment for? I don't find it relevant here.
+But FYI, I don't merge patches outside drivers/pci/endpoint/
 
 - Mani
+
+> > 
+> >>
+> >> Changes from v4:
+> >>  - Added patch 6
+> >>  - Added comments to patch 12 and 13 to clarify link training handling
+> >>    and PERST# GPIO use.
+> >>  - Added patch 14
+> >>
+> >> Changes from v3:
+> >>  - Addressed Mani's comments (see mailing list for details).
+> >>  - Removed old patch 11 (dt-binding changes) and instead use in patch 12
+> >>    the already defined reset_gpios property.
+> >>  - Added patch 6
+> >>  - Added review tags
+> >>
+> >> Changes from v2:
+> >>  - Split the patch series
+> >>  - Corrected patch 11 to add the missing "maxItem"
+> >>
+> >> Changes from v1:
+> >>  - Changed pci_epc_check_func() to pci_epc_function_is_valid() in patch
+> >>    1.
+> >>  - Removed patch "PCI: endpoint: Improve pci_epc_mem_alloc_addr()"
+> >>    (former patch 2 of v1)
+> >>  - Various typos cleanups all over. Also fixed some blank space
+> >>    indentation.
+> >>  - Added review tags
+> >>
+> >> Damien Le Moal (14):
+> >>   PCI: rockchip-ep: Fix address translation unit programming
+> >>   PCI: rockchip-ep: Use a macro to define EP controller .align feature
+> >>   PCI: rockchip-ep: Improve rockchip_pcie_ep_unmap_addr()
+> >>   PCI: rockchip-ep: Improve rockchip_pcie_ep_map_addr()
+> >>   PCI: rockchip-ep: Implement the pci_epc_ops::align_addr() operation
+> >>   PCI: rockchip-ep: Fix MSI IRQ data mapping
+> >>   PCI: rockchip-ep: Rename rockchip_pcie_parse_ep_dt()
+> >>   PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations
+> >>   PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() MSI-X hiding
+> >>   PCI: rockchip-ep: Refactor endpoint link training enable
+> >>   PCI: rockship-ep: Implement the pci_epc_ops::stop_link() operation
+> >>   PCI: rockchip-ep: Improve link training
+> >>   PCI: rockchip-ep: Handle PERST# signal in endpoint mode
+> >>   arm64: dts: rockchip: Add rockpro64 overlay for PCIe endpoint mode
+> >>
+> >>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+> >>  .../rockchip/rk3399-rockpro64-pcie-ep.dtso    |  20 +
+> >>  drivers/pci/controller/pcie-rockchip-ep.c     | 432 ++++++++++++++----
+> >>  drivers/pci/controller/pcie-rockchip-host.c   |   4 +-
+> >>  drivers/pci/controller/pcie-rockchip.c        |  21 +-
+> >>  drivers/pci/controller/pcie-rockchip.h        |  24 +-
+> >>  6 files changed, 406 insertions(+), 96 deletions(-)
+> >>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64-pcie-ep.dtso
+> >>
+> > 
+> > 
+> 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
 
 -- 
 மணிவண்ணன் சதாசிவம்
