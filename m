@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-16667-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FC189C75CF
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 16:14:42 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C4539C748B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 15:38:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85D34B291CD
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 14:30:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3338AB3930B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 14:30:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A383206060;
-	Wed, 13 Nov 2024 14:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0AC206955;
+	Wed, 13 Nov 2024 14:26:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIJjqnP8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hT05r/4A"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6D4200135;
-	Wed, 13 Nov 2024 14:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E521E1322;
+	Wed, 13 Nov 2024 14:26:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731508010; cv=none; b=YfndIt1sAEiIe5nCL1YEpSwYQHBjJEPQlYIeRllZ4qiwZETSEEvNROrD+v3y7mbXqRjTfdGyftgL7GrnKz1KOdTCdDPpl0Dy5a+gUm7TXiBhFpoHYtBHYaiOk5YGfESzSHupmbBA9Y+6SxV8ox522+CSdkBg65+h7MHQfQMAqxE=
+	t=1731508012; cv=none; b=eR+YRHPiTb87F4jSt08sHd3DALJuZgxAcDroupnQldj7CF69As8NAbnLci7HVAh0GO5YkDiqy7XfYu1D8gwMQjB5xfe3Bq4WvRtIrs0pGPk1HVJCAb0JCBP7yJPdh4q5wZE/XQhQD3o/Q5aoCaqSlYltzFdLj8J5h79WGiRuEIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731508010; c=relaxed/simple;
-	bh=jQ9O0QikRzwFUVzIaQzq4mxJR6t/DfALmYZuom48AdU=;
+	s=arc-20240116; t=1731508012; c=relaxed/simple;
+	bh=isXEskRzOrDBOyqDhvTRJ3NN+y1s+4Y0sHaHLEiBMKs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PtIMCgVeOczXRsMPsUMajKWM9CFpLjdtXWXAjnIPhLB0ZT7h4G3g8cPFH8sbPji6mP/bqXuB5EaQGUBPEnatQ1E9DWBIyfKa9Ayq7fS4v0XAMyxm/g1uADHrqsxv8wdLvRNk5Q2tVd9s3NzVvqNKHu3O03aQprke8d0U6/LY8bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIJjqnP8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8A1C4CECD;
-	Wed, 13 Nov 2024 14:26:49 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=RGB2FJeUmVMfLh7KDIofos06Y2gXe98BOq+6S43eaEHFwJgevxt3kUmvIMlPrJrKjxli3pGs5rDPeX8vfztHVwxO2kydqHuGQ9F0IfX5OUgEEUiVIfXHce3PQJTw0XgYcFOV2zb4EKfxyvm8fvm7Zw9/zH7KgsUrmspXEB9Uh7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hT05r/4A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0434CC4CEDA;
+	Wed, 13 Nov 2024 14:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731508009;
-	bh=jQ9O0QikRzwFUVzIaQzq4mxJR6t/DfALmYZuom48AdU=;
+	s=k20201202; t=1731508012;
+	bh=isXEskRzOrDBOyqDhvTRJ3NN+y1s+4Y0sHaHLEiBMKs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mIJjqnP8e0zg+ikPbF7mJOyRwyFO0IQkvRV2e0Ii8aI7cZlaZOBS76OEDGHSdCFIp
-	 uU19HusOCGY+xkhW5uWmMt4ershUb84JwC9VYC93Lh8/hnMQKlGHQXKi+D4swHaQ/M
-	 0nQixyLWVMDX4uopsItajbOn+HelSTRseCdxpvty4kOBtG8Xd/P+SmOPTFYJzUn822
-	 1Noyj3IXujIdtTntgphf1xR6hu4a2qcnsXv2tgnyyS4sCCe5iKbjgEmrn4B9hoSPhZ
-	 kmm6iVcH+4l3GPES5EChU1L6TH420EEfFyan4sR1m14AqY09RdyhuZCqBq6f0R9K6A
-	 keesib9JMbgrQ==
+	b=hT05r/4Akowv5UVtw0lSdIZdgwiRCwwLCv37jl9XxNv88QiC9l9qLh04+1MhTwjMF
+	 Q89DwJCvIqL4gy/gXSKsNyyLM3FgbQxKhkK9aX5TO7ZeP0QUjec5UtDvY8Aykt9C3c
+	 sk0v58pnjGGhYWio6I0GJQimNu2fjyQlUOafzmBPOQ0Mkw76PluwMximYB/rL4kDWZ
+	 JYV2sgYUvNtfCacR5AcE5D98hyOOHDNAV8O3boZcrPtV6YATTPNPW/mkFTRBlgMZg4
+	 izs2ObNZN1IydzY0qO2la2uDSTTzlDgTB405FCkvadf9pPpINSKwX/MyT5gCJTMlVB
+	 m8og4rB5WzOQQ==
 From: Daniel Wagner <wagi@kernel.org>
-Date: Wed, 13 Nov 2024 15:26:22 +0100
-Subject: [PATCH v4 08/10] nvme: replace blk_mq_pci_map_queues with
- blk_mq_hctx_map_queues
+Date: Wed, 13 Nov 2024 15:26:23 +0100
+Subject: [PATCH v4 09/10] virtio: blk/scsi: replace
+ blk_mq_virtio_map_queues with blk_mq_hctx_map_queues
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241113-refactor-blk-affinity-helpers-v4-8-dd3baa1e267f@kernel.org>
+Message-Id: <20241113-refactor-blk-affinity-helpers-v4-9-dd3baa1e267f@kernel.org>
 References: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
 In-Reply-To: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
 To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
@@ -73,51 +73,61 @@ Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
  Daniel Wagner <wagi@kernel.org>
 X-Mailer: b4 0.14.2
 
-Replace all users of blk_mq_pci_map_queues with the more generic
+Replace all users of blk_mq_virtio_map_queues with the more generic
 blk_mq_hctx_map_queues. This in preparation to retire
-blk_mq_pci_map_queues.
+blk_mq_virtio_map_queues.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Signed-off-by: Daniel Wagner <wagi@kernel.org>
 ---
- drivers/nvme/host/fc.c  | 1 -
- drivers/nvme/host/pci.c | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/block/virtio_blk.c | 4 ++--
+ drivers/scsi/virtio_scsi.c | 3 +--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index b81af7919e94c421387033bf8361a9cf8a867486..094be164ffdc0fb79050cfb92c32dfaee8d15622 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -16,7 +16,6 @@
- #include <linux/nvme-fc.h>
- #include "fc.h"
- #include <scsi/scsi_transport_fc.h>
--#include <linux/blk-mq-pci.h>
- 
- /* *************************** Data Structures/Defines ****************** */
- 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 4b9fda0b1d9a33af4d7030b72532835b205e9cbb..cb8ca574594d7eb5f959cf9eb03be445223b2666 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -8,7 +8,6 @@
- #include <linux/async.h>
- #include <linux/blkdev.h>
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 0e99a4714928478c1ba81777b8e98448eb5b992a..fd997e3381526eb3d7a21eda296b3a8a2998c696 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -13,7 +13,6 @@
+ #include <linux/string_helpers.h>
+ #include <linux/idr.h>
  #include <linux/blk-mq.h>
--#include <linux/blk-mq-pci.h>
- #include <linux/blk-integrity.h>
- #include <linux/dmi.h>
- #include <linux/init.h>
-@@ -457,7 +456,7 @@ static void nvme_pci_map_queues(struct blk_mq_tag_set *set)
- 		 */
- 		map->queue_offset = qoff;
- 		if (i != HCTX_TYPE_POLL && offset)
--			blk_mq_pci_map_queues(map, to_pci_dev(dev->dev), offset);
-+			blk_mq_hctx_map_queues(map, dev->dev, offset);
+-#include <linux/blk-mq-virtio.h>
+ #include <linux/numa.h>
+ #include <linux/vmalloc.h>
+ #include <uapi/linux/virtio_ring.h>
+@@ -1186,7 +1185,8 @@ static void virtblk_map_queues(struct blk_mq_tag_set *set)
+ 		if (i == HCTX_TYPE_POLL)
+ 			blk_mq_map_queues(&set->map[i]);
  		else
+-			blk_mq_virtio_map_queues(&set->map[i], vblk->vdev, 0);
++			blk_mq_hctx_map_queues(&set->map[i],
++					       &vblk->vdev->dev, 0);
+ 	}
+ }
+ 
+diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+index 8471f38b730e205eb57052305c154260864bee95..dcb83c15f90825bd7bdb3a5f541108b934a308f3 100644
+--- a/drivers/scsi/virtio_scsi.c
++++ b/drivers/scsi/virtio_scsi.c
+@@ -29,7 +29,6 @@
+ #include <scsi/scsi_tcq.h>
+ #include <scsi/scsi_devinfo.h>
+ #include <linux/seqlock.h>
+-#include <linux/blk-mq-virtio.h>
+ 
+ #include "sd.h"
+ 
+@@ -746,7 +745,7 @@ static void virtscsi_map_queues(struct Scsi_Host *shost)
+ 		if (i == HCTX_TYPE_POLL)
  			blk_mq_map_queues(map);
- 		qoff += map->nr_queues;
+ 		else
+-			blk_mq_virtio_map_queues(map, vscsi->vdev, 2);
++			blk_mq_hctx_map_queues(map, &vscsi->vdev->dev, 2);
+ 	}
+ }
+ 
 
 -- 
 2.47.0
