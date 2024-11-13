@@ -1,129 +1,355 @@
-Return-Path: <linux-pci+bounces-16681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D1FD9C7A11
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 18:38:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1D119C7ACA
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 19:14:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 431BC1F21390
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 17:38:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA3B3B2A1C5
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 17:49:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96600201011;
-	Wed, 13 Nov 2024 17:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDC42022E4;
+	Wed, 13 Nov 2024 17:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj7uk/Cy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jr+Vm1qq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BD77E111
-	for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 17:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099D22022E2
+	for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 17:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731519504; cv=none; b=To6fauhDoDjykOC+CvXFpUA4tOBrMB7+1BFQLYEMP4AHnJ32FtritZIZYnMqIRxq9wqYDZLOnrqn2Aptl79H7/Bud3NVJxT0pIj5CuIm7Mh8nHxRU4CACVEIcbcb7Dt681DKcjhKJtTXQfzpwrz0YvZR9ZWvy6afhdEmbvvJC0I=
+	t=1731520135; cv=none; b=kEJmesN6GaWN/NXiOUgtXblZcmJ4N3991OeTjjTRbW47qgUH4yDw+RieoM49FApj8jNmmS2k9aQzIqM58yUrqq5XQZS/vyeHu7ged2wiQG4pHnSmYjuNNhoMYExJJxd2tyFRi9ParQG//XiNN0dopq3W8+NHwI/GHzweJn1k5mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731519504; c=relaxed/simple;
-	bh=XcmuGxQ+lEuYXQBQ7q6CmInHfLNiLlOoFBAUSlNEibE=;
+	s=arc-20240116; t=1731520135; c=relaxed/simple;
+	bh=9qu0frD8NGZvMd+t0ojWG9jdk3Z4iUPQQmG4GYjaUSQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pE8aMtZ6kmswQ7VWJrqSf/z6IhsvfnXQphSjc3dNuR97LmjbIAe24SIV2uU1Ix9x+KRF5f40YUzECCwiYxc9Lo1/Jny+yhhnUYJhlDRENRULCIyzsTr27uLgenX8/sycoKIGF4mM4CD2ocVafDQhTHgTNSB2Rw4k4H++p+fKjf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj7uk/Cy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 877C2C4CEC3;
-	Wed, 13 Nov 2024 17:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731519504;
-	bh=XcmuGxQ+lEuYXQBQ7q6CmInHfLNiLlOoFBAUSlNEibE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dj7uk/Cyd0RW95H2xZZozoHBcRT9H2aMDWy5gEWR5YR4htAQPrLWjmRBU13xbkJSs
-	 fLwtSNmFrhZjGNajL5zoIO8f287nBdfX0b4I5b7XJVeplXxQWbB6UGDNpdEbXqagiI
-	 yP8EKvn4zyNYwLKCS8pCvXtZMl2zVR3QtXE9K5e5CGzHfz3G6Yfqf0u4RX38rkFzKl
-	 o4NIfvXn3+4WGR+YTk1EkcILi3VRbFOKdEYkNtH0UqeE+6DFjgmImMqHu35RPTklVO
-	 usTxn5RdxWHz+FBX5YFXf6voReDZj5TlCsNgl0fxidZ5JUQIwmV9V65zgXMgZLn4hb
-	 q2P/cFR6TUAsw==
-Date: Wed, 13 Nov 2024 10:38:21 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, alex.williamson@redhat.com,
-	ameynarkhede03@gmail.com, raphael.norwitz@nutanix.com
-Subject: Re: [PATCHv2 1/2] pci: provide bus reset attribute
-Message-ID: <ZzTkDVKI-v1TBRdO@kbusch-mbp>
-References: <20241025222755.3756162-1-kbusch@meta.com>
- <20241112231623.GA1866148@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dp1T0y47SiRYLJTTlZ8Qfmw4XTmyWXTT8+iqflA+8CKd75AssGLTK3ft8TTAleNbRKxSpDeCOwWGGrFVt5EZRvH57tW8E1UdH4jETBKlhgNIy3X5JCRTFznKTIoS+LX52OrcLdsJUV8rD0Dsq9rwfmJD7MqR5oIdk6MSlNGKffw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jr+Vm1qq; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20cf6eea3c0so69473755ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2024 09:48:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731520132; x=1732124932; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Y9rKfjR1HZdkhSoVFUPTH5q4XPsaUToI4Fa76nl271U=;
+        b=Jr+Vm1qqwXnYfZ1d/z3vZc4WujrYZyjxDs+G0OkcsjA9WWg46Hr7e4B0RwfrbvHWKe
+         5oLDIETHz9l8gqHHzhceUF7yW/rNeUKPraaKKacCREevYCt1Ccj3wp76LRm0ufNFI7F+
+         AmmFWgW7WnYYKhM4v20FpypvX3Qg/Ta3yGg7qPvKWpfFGeA1pFV9k37RyEX0h6rQ+19S
+         9JlAhx2on5RwZuUb/NV4rn5OAr3kSTYh1gS4+zBq05PsFV94cRU3/46cQry7Pr7sBqO5
+         Mh9dnlm8eVttooLzRHz05BgzOfTSKuvtN9vRfCLh86J6dY5d6mphIxSCELu0HzBQgAbp
+         4c1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731520132; x=1732124932;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y9rKfjR1HZdkhSoVFUPTH5q4XPsaUToI4Fa76nl271U=;
+        b=F+Fy1U0/bLWzHji2JD8SjrGsH9f7h7aRnwNLCb17nKJJFGVoAnDtfvBbjtLdkGBLAY
+         ZP3PcOU4DB3TK4gxRvkx6TtdkQ3l22AEJaYwL54NW1/ETPO2do6rmRx54RKV9iPKjdGc
+         r0cc1ok45HNO8bh2SlrdjjD2MaZaQXJ7X+7X16zW8399jb5COg6EFsA/dHrFHCO1Agqx
+         3ApSFqlWf5jC1SBAHTTdpqzgJqD4AlPa4zqhXc+KJ51/ahHvbM5iDFeyoynRPEPtIy6j
+         KPnjUkRvw9/GBsncDreWPpzrBTHlk8QUQ0L2GFDd1DGIWCG8d2wJYdAVrhIlyI7m95Rp
+         sygA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKz3zMC0B5XFNh28zqtS01upudQRtjkLwuvOpMmcv3z9EVTFt3d65lDdnZ9dJZx4FH1oCp6i98hVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuTFMYtv1ztsleG5E+havNc/fY/V8+ApbJk2rkd6uvrOdd6T1F
+	yv3H/JZ2IDCkmDquRUxjHYhbggjWlA+ojpFmjsP+UEYE9y14LrHzsu0riz7kpQ==
+X-Google-Smtp-Source: AGHT+IGUx5vMux/zJWfHt+c3yDFnfCUQDJa3eB9NypPr2jzRRcay61/UDEWpDrYoWje8hXMYDmT3ow==
+X-Received: by 2002:a17:903:230b:b0:20b:9062:7b16 with SMTP id d9443c01a7336-211834e6c2amr288743745ad.9.1731520132170;
+        Wed, 13 Nov 2024 09:48:52 -0800 (PST)
+Received: from thinkpad ([117.213.102.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e8752asm110135085ad.282.2024.11.13.09.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2024 09:48:51 -0800 (PST)
+Date: Wed, 13 Nov 2024 23:18:41 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	robin.murphy@arm.com, will@kernel.org
+Subject: Re: [PATCH v5 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
+ i.MX95
+Message-ID: <20241113174841.olnyu5l6rbmr3tqh@thinkpad>
+References: <20241104-imx95_lut-v5-0-feb972f3f13b@nxp.com>
+ <20241104-imx95_lut-v5-2-feb972f3f13b@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241112231623.GA1866148@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241104-imx95_lut-v5-2-feb972f3f13b@nxp.com>
 
-On Tue, Nov 12, 2024 at 05:16:23PM -0600, Bjorn Helgaas wrote:
-> On Fri, Oct 25, 2024 at 03:27:54PM -0700, Keith Busch wrote:
-> > From: Keith Busch <kbusch@kernel.org>
-> > 
-> > Resetting a bus from an end device only works if it's the only function
-> > on or below that bus.
+On Mon, Nov 04, 2024 at 02:23:00PM -0500, Frank Li wrote:
+> For the i.MX95, configuration of a LUT is necessary to convert Bus Device
+> Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
+> This involves examining the msi-map and smmu-map to ensure consistent
+> mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
+> registers are configured. In the absence of an msi-map, the built-in MSI
+> controller is utilized as a fallback.
 > 
-> Can we clarify this wording?  "Resetting a bus from an end device"?
-
-What I mean is, if you find a device you want to reset in the sysfs
-hierarchy, and find its reset method:
-
-  /sys/bus/pci/devices/<D:B:D.f>/reset_method
-
-If you request "bus", it only works if it is the only function on that bus.
-
-I agree my commit message there is a bit unclear, though. I was a bit to
-deep in that code when I wrote it.
- 
-> I guess this has something to do with pci_parent_bus_reset(dev), which
-> declines to call pci_bridge_secondary_bus_reset() if there are any
-> other devices on the same bus as "dev"? 
-
-Yep, exactly.
-
-> pci_parent_bus_reset() is only called from pci_reset_bus_function(),
-> which is used by the "bus" and "cxl_bus" reset methods.
+> Register a PCI bus callback function to handle enable_device() and
+> disable_device() operations, setting up the LUT whenever a new PCI device
+> is enabled.
 > 
-> So I guess the point is something like:
+> Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+Some minor comments below. It'd be good to get Robin's Ack for this patch.
+
+> ---
+> Change from v4 to v5
+> - rework commt message
+> - add comment for mutex
+> - s/reqid/rid/
+> - keep only one loop when enable lut
+> - add warning when try to add duplicate rid
+> - Replace hardcode 0xffff with IMX95_PE0_LUT_MASK
+> - Fix some error message
 > 
->   The "bus" and "cxl_bus" reset methods reset a device by asserting
->   Secondary Bus Reset on the bridge leading to the device.
->   pci_parent_bus_reset() only allows that if the device is the only
->   device below the bridge.
+> Change from v3 to v4
+> - Check target value at of_map_id().
+> - of_node_put() for target.
+> - add case for msi-map exist, but rid entry is not exist.
 > 
->   Add a sysfs attribute on bridges that can assert Secondary Bus Reset
->   regardless of how many devices are below the bridge.  This makes it
->   possible for users to reset multiple devices in a single command.
+> Change from v2 to v3
+> - Use the "target" argument of of_map_id()
+> - Check if rid already in lut table when enable device
 > 
-> I omitted "safely" because this doesn't do any checking to ensure
-> safety, so I don't know in what sense it is safe.
+> change from v1 to v2
+> - set callback to pci_host_bridge instead pci->ops.
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 176 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 175 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 94f3411352bf0..e75dc361e284e 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -55,6 +55,22 @@
+>  #define IMX95_PE0_GEN_CTRL_3			0x1058
+>  #define IMX95_PCIE_LTSSM_EN			BIT(0)
+>  
+> +#define IMX95_PE0_LUT_ACSCTRL			0x1008
+> +#define IMX95_PEO_LUT_RWA			BIT(16)
+> +#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
+> +
+> +#define IMX95_PE0_LUT_DATA1			0x100c
+> +#define IMX95_PE0_LUT_VLD			BIT(31)
+> +#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
+> +#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
+> +
+> +#define IMX95_PE0_LUT_DATA2			0x1010
+> +#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
+> +#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
+> +
+> +#define IMX95_SID_MASK				GENMASK(5, 0)
+> +#define IMX95_MAX_LUT				32
+> +
+>  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  enum imx_pcie_variants {
+> @@ -82,6 +98,7 @@ enum imx_pcie_variants {
+>  #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+>  #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
+>  #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
+> +#define IMX_PCIE_FLAG_HAS_LUT			BIT(8)
+>  
+>  #define imx_check_flag(pci, val)	(pci->drvdata->flags & val)
+>  
+> @@ -134,6 +151,9 @@ struct imx_pcie {
+>  	struct device		*pd_pcie_phy;
+>  	struct phy		*phy;
+>  	const struct imx_pcie_drvdata *drvdata;
+> +
+> +	/* Ensure that only one device's LUT is configured at any given time */
+> +	struct mutex		lock;
+>  };
+>  
+>  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+> @@ -925,6 +945,152 @@ static void imx_pcie_stop_link(struct dw_pcie *pci)
+>  	imx_pcie_ltssm_disable(dev);
+>  }
+>  
+> +static int imx_pcie_add_lut(struct imx_pcie *imx_pcie, u16 rid, u8 sid)
+> +{
+> +	struct dw_pcie *pci = imx_pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	u32 data1, data2;
+> +	int free = -1;
+> +	int i;
+> +
+> +	if (sid >= 64) {
+> +		dev_err(dev, "Invalid SID for index %d\n", sid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	guard(mutex)(&imx_pcie->lock);
+> +
+> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
+> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
+> +
+> +		if (!(data1 & IMX95_PE0_LUT_VLD)) {
+> +			if (free < 0)
+> +				free = i;
 
-By "safe", what I mean is the device is locked by the kernel, config
-space is saved and restored on either side of the reset, and the
-attached driver (if any) is notified this action is about to happen and
-when it completes so it do whatever quiescent and restoring actions it
-needs for a bus reset.
+So you don't increment 'free' once it becomes >=0? Why can't you use the loop
+iterator 'i' itself instead of 'free'?
 
-I can't say this is universally "safe" since it's a bit optomistic to
-assume everything affected by this action is going to work as the pci
-driver expects, but the alternatives (setpci) don't coordinate anything
-with the kernel, so it's "safe" relative to that :)
+> +			continue;
+> +		}
+> +
+> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
+> +
+> +		/* Needn't add duplicated Request ID */
 
-> It seems like this is partly just a convenience, to reset several
-> devices at once.
->
-> But I think it is *also* a new way to reset devices that we might not
-> be able to reset otherwise, e.g., if there's more than one device on
-> the bus, and they don't support ACPI, FLR, or PM reset, there
-> previously was no reset method that worked at all.  Right?
+"Do not add duplicate RID"
 
-Exactly! I have multi-function devices in a switch hierarchy where this
-unfortunately is really the only way to do it. They don't support
-resetting individual functions, so SBR is the only way we have to
-reliably reset the device.
+> +		if (rid == FIELD_GET(IMX95_PE0_LUT_REQID, data2)) {
+> +			dev_warn(dev, "Try to enable rid(%d) twice without disable it\n", rid);
+
+"Existing LUT entry available for RID (%d)\n"
+
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	if (free < 0) {
+> +		dev_err(dev, "LUT entry is not available\n");
+> +		return -EINVAL;
+
+ENOSPC?
+
+> +	}
+> +
+> +	data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
+> +	data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
+> +	data1 |= IMX95_PE0_LUT_VLD;
+> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
+> +
+> +	data2 = IMX95_PE0_LUT_MASK; /* Match all bits of rid */
+
+Please use 'RID' in comments everywhere.
+
+> +	data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, rid);
+> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
+> +
+> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, free);
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_pcie_remove_lut(struct imx_pcie *imx_pcie, u16 rid)
+> +{
+> +	u32 data2;
+> +	int i;
+> +
+> +	guard(mutex)(&imx_pcie->lock);
+> +
+> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
+> +
+
+Remove newline.
+
+> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
+> +		if (FIELD_GET(IMX95_PE0_LUT_REQID, data2) == rid) {
+> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, 0);
+> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, 0);
+> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
+> +
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +static int imx_pcie_enable_device(struct pci_host_bridge *bridge, struct pci_dev *pdev)
+> +{
+> +	struct imx_pcie *imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(bridge->sysdata));
+> +	u32 sid_i = 0, sid_m = 0, rid = pci_dev_id(pdev);
+
+No need to initialize sid_{i/m}.
+
+> +	struct device_node *target;
+> +	struct device *dev;
+> +	int err_i, err_m;
+> +
+> +	dev = imx_pcie->pci->dev;
+> +
+> +	target = NULL;
+> +	err_i = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", &target, &sid_i);
+> +	if (target)
+> +		of_node_put(target);
+> +	else
+> +		err_i = -EINVAL;
+> +
+> +	target = NULL;
+> +	err_m = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", &target, &sid_m);
+> +
+> +	/*
+> +	 * Return failure if msi-map exist and no entry for rid because dwc common
+> +	 * driver will skip setting up built-in MSI controller if msi-map existed.
+> +	 *
+> +	 *   err_m      target
+> +	 *	0	NULL		Return failure, function not work.
+> +	 *      !0      NULL		msi-map not exist, use built-in MSI.
+> +	 *	0	!NULL		Find one entry.
+> +	 *	!0	!NULL		Invalidate case.
+> +	 */
+> +	if (!err_m && !target)
+> +		return -EINVAL;
+> +	else if (target)
+> +		of_node_put(target); /* Find entry for rid in msi-map */
+> +
+> +	/*
+> +	 * msi-map        iommu-map
+> +	 *   Y                Y            ITS + SMMU, require the same sid
+> +	 *   Y                N            ITS
+> +	 *   N                Y            DWC MSI Ctrl + SMMU
+> +	 *   N                N            DWC MSI Ctrl
+> +	 */
+> +	if (!err_i && !err_m)
+> +		if ((sid_i & IMX95_SID_MASK) != (sid_m & IMX95_SID_MASK)) {
+> +			dev_err(dev, "iommu-map and msi-map entries mismatch!\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +	/*
+> +	 * Both iommu-map and msi-map not exist, use dwc built-in MSI
+> +	 * controller, do nothing here.
+> +	 */
+> +	if (err_i && err_m)
+> +		return 0;
+> +
+> +	if (!err_i)
+> +		return imx_pcie_add_lut(imx_pcie, rid, sid_i);
+> +	else if (!err_m)
+> +		/* Hardware auto add 2 bit controller id ahead of stream ID */
+
+What is this comment for? I don't find it relevant here.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
