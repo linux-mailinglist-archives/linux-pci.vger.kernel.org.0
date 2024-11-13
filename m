@@ -1,244 +1,172 @@
-Return-Path: <linux-pci+bounces-16669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C6289C7447
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 15:31:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D95F9C7460
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 15:33:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 960A71F220F8
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 14:30:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D773D2871BF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 14:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEAF12071E4;
-	Wed, 13 Nov 2024 14:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 020D5200127;
+	Wed, 13 Nov 2024 14:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTkzTU23"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCJHfNIb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB156206E9B;
-	Wed, 13 Nov 2024 14:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC3B1FCF78;
+	Wed, 13 Nov 2024 14:29:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731508015; cv=none; b=LECCbTVZ/jjzpe7+T9fFju97iCAQDYCZ3fiD+8Ws43QSpN9mTbXwPoHlxBF9n2fSCsyW/jYRUWlrTGZHRJ6WzR4ABZl6z5hO5nNqztzN/A0lg13RNC7UcaV3i+seJUbpi1NW/oFqsjQ2Iy7xO2+TMcs+89ohyNT4gQQEVsCNLM8=
+	t=1731508192; cv=none; b=blBVK3FOzQSaH1BEkUUO+mKz6qKmVs+7x8Kwb0oteoAjmZwBW4UVawEJmQaiyPHhtNYlex9FYXNu/UYwMko7TQa3C31NSenv1WiNRR7qvH9fyerrHZjROvi/6WDLe/dLG3cvjzyOm55dqJgwyJBYducBU5AJIZdocvdZtIuhgh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731508015; c=relaxed/simple;
-	bh=BgQfHLSyHthatLD+HxapCxTxAdxlPMnbJAVKOVCApgQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iNwVff45Q8pKfi+SOqA7SQotr4PIippsf5bfd2ET4IiPY1CoM6k93rtjg1RjQEmUjKURUZvZ3vgVz3zYHZY4ZGSM1xyKSc3P5SyNr8iQksHkH2MKxPP/zXeLqB7s9u/s2uZ/x6xQao7g1Q4jMeCYWzqoYA7/eGjvQueuFZIR8hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTkzTU23; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF8DC4CEC3;
-	Wed, 13 Nov 2024 14:26:54 +0000 (UTC)
+	s=arc-20240116; t=1731508192; c=relaxed/simple;
+	bh=1HnPuW8zkvLUT3DcdmESKxawgO3Bw//LMyl3qPeV9ms=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XdhZL+2c2aGsLl/KifqKFBzySiYsiE3Vx2cqRH3swF3MIpvwsO+oUJCkSl2ugt+uaUKEQwceOpDNOoNZJ6QbAdDV6gAUz3Uk9Hc7FFObsesNN3JyFU6Omg5CsmJYPfEdsua28Ji4lhDatuXI1gJW2kPKWChw5MIUeHtic72Qfaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCJHfNIb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425EFC4CEC3;
+	Wed, 13 Nov 2024 14:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731508015;
-	bh=BgQfHLSyHthatLD+HxapCxTxAdxlPMnbJAVKOVCApgQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VTkzTU23HoR+IS+QrQ8OgwA7GRqdmPBc2tTig6ePViNqfVIIZysgIgwCd7a3yVtN5
-	 3rpEg7XxPjHGn4EvFDlCP6Vtt+zbK6m4Ac9sbpqUlcnh0ew+PnNQYb6/rIYfQbm7OJ
-	 vqlGbS6mijUHKck9ItGfj7/r7LvjIwI3lbjTfMo2+vogVOJYjm3p5fiow1RaWNSutC
-	 z+BlHvmonTW+/V9ixHMr2g9//8iEMnYFSpvrNh/Hoa+rfEbJVaZ5j34j1rhulysze6
-	 sMMDM7dRRnXegwJrzjo6EzTMPSLJ+s5V2LYHS8G6SckxIdcZ79EM0bh7R0Bdu2/SxD
-	 xfGsJCILNr1Tg==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Wed, 13 Nov 2024 15:26:24 +0100
-Subject: [PATCH v4 10/10] blk-mq: remove unused queue mapping helpers
+	s=k20201202; t=1731508192;
+	bh=1HnPuW8zkvLUT3DcdmESKxawgO3Bw//LMyl3qPeV9ms=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=jCJHfNIbO6RqU3lbMet0zAy/a2SKrLodTPgT3kQ2bqYff6eYN9f2i07S2sNGNW3BP
+	 YpM9nWTBJ+pFmnZCfVTjnJ7f7zAC05eNRe7fHYZrzTKVIhB3W/5y7tbl2dwgtJJEn4
+	 kO9UQe7ji0Aodj4z68rDdgGnP2IrcxRJGpjTzy3tkjt6b4yThnr2AKletJCEiNrUek
+	 beSMyC6zuQCa49htnj7swt58BaIZCgHUUwA2sILlVWi0HxLthIpfZo8rm/q26Yfvy1
+	 D6Iz6NdOitppKRzD57mP1m8fqoo64VrKz6i/GcgGPWs6qeDVbbal9YZNEgHoJ1K9Wt
+	 R23IRNVw4lbIA==
+Message-ID: <ed723fe1-e243-4a9e-8d1c-f29461d07cb7@kernel.org>
+Date: Wed, 13 Nov 2024 23:29:48 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 00/14] Fix and improve the Rockchip endpoint driver
+From: Damien Le Moal <dlemoal@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ devicetree@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20241017015849.190271-1-dlemoal@kernel.org>
+ <117828c6-92c4-4af4-b47e-f049f9c2cb7b@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <117828c6-92c4-4af4-b47e-f049f9c2cb7b@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241113-refactor-blk-affinity-helpers-v4-10-dd3baa1e267f@kernel.org>
-References: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
-In-Reply-To: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hannes Reinecke <hare@suse.de>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
- linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
- mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
- storagedev@microchip.com, linux-nvme@lists.infradead.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
 
-There are no users left of the pci and virtio queue mapping helpers.
-Thus remove them.
+On 10/29/24 19:35, Damien Le Moal wrote:
+> On 10/17/24 10:58, Damien Le Moal wrote:
+>> This patch series fix the PCI address mapping handling of the Rockchip
+>> PCI endpoint driver, refactor some of its code, improves link training
+>> and adds handling of the PERST# signal.
+>>
+>> This series is organized as follows:
+>>  - Patch 1 fixes the rockchip ATU programming
+>>  - Patch 2, 3 and 4 introduce small code improvments
+>>  - Patch 5 implements the .align_addr() operation to make the RK3399
+>>    endpoint controller driver fully functional with the new
+>>    pci_epc_mem_map() function
+>>  - Patch 6 uses the new align_addr operation function to fix the ATU
+>>    programming for MSI IRQ data mapping
+>>  - Patch 7, 8, 9 and 10 refactor the driver code to make it more
+>>    readable
+>>  - Patch 11 introduces the .stop() endpoint controller operation to
+>>    correctly disable the endpopint controller after use
+>>  - Patch 12 improves link training
+>>  - Patch 13 implements handling of the #PERST signal
+>>  - Patch 14 adds a DT overlay file to enable EP mode and define the
+>>    PERST# GPIO (reset-gpios) property.
+>>
+>> These patches were tested using a Pine Rockpro64 board used as an
+>> endpoint with the test endpoint function driver and a prototype nvme
+>> endpoint function driver.
+> 
+> Ping ? If there are no issues, can we get this queued up ?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- block/Makefile                |  2 --
- block/blk-mq-pci.c            | 46 -------------------------------------------
- block/blk-mq-virtio.c         | 46 -------------------------------------------
- include/linux/blk-mq-pci.h    | 11 -----------
- include/linux/blk-mq-virtio.h | 11 -----------
- 5 files changed, 116 deletions(-)
+Mani,
 
-diff --git a/block/Makefile b/block/Makefile
-index ddfd21c1a9ffc9c4f49efca9875bd8a1cbf81e4d..33748123710b368a1a3a7b099bbd90d27b24c69b 100644
---- a/block/Makefile
-+++ b/block/Makefile
-@@ -27,8 +27,6 @@ bfq-y				:= bfq-iosched.o bfq-wf2q.o bfq-cgroup.o
- obj-$(CONFIG_IOSCHED_BFQ)	+= bfq.o
- 
- obj-$(CONFIG_BLK_DEV_INTEGRITY) += bio-integrity.o blk-integrity.o t10-pi.o
--obj-$(CONFIG_BLK_MQ_PCI)	+= blk-mq-pci.o
--obj-$(CONFIG_BLK_MQ_VIRTIO)	+= blk-mq-virtio.o
- obj-$(CONFIG_BLK_DEV_ZONED)	+= blk-zoned.o
- obj-$(CONFIG_BLK_WBT)		+= blk-wbt.o
- obj-$(CONFIG_BLK_DEBUG_FS)	+= blk-mq-debugfs.o
-diff --git a/block/blk-mq-pci.c b/block/blk-mq-pci.c
-deleted file mode 100644
-index d47b5c73c9eb715be7627a2952ad0ef921dd5bc6..0000000000000000000000000000000000000000
---- a/block/blk-mq-pci.c
-+++ /dev/null
-@@ -1,46 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (c) 2016 Christoph Hellwig.
-- */
--#include <linux/kobject.h>
--#include <linux/blkdev.h>
--#include <linux/blk-mq-pci.h>
--#include <linux/pci.h>
--#include <linux/module.h>
--
--#include "blk-mq.h"
--
--/**
-- * blk_mq_pci_map_queues - provide a default queue mapping for PCI device
-- * @qmap:	CPU to hardware queue map.
-- * @pdev:	PCI device associated with @set.
-- * @offset:	Offset to use for the pci irq vector
-- *
-- * This function assumes the PCI device @pdev has at least as many available
-- * interrupt vectors as @set has queues.  It will then query the vector
-- * corresponding to each queue for it's affinity mask and built queue mapping
-- * that maps a queue to the CPUs that have irq affinity for the corresponding
-- * vector.
-- */
--void blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
--			   int offset)
--{
--	const struct cpumask *mask;
--	unsigned int queue, cpu;
--
--	for (queue = 0; queue < qmap->nr_queues; queue++) {
--		mask = pci_irq_get_affinity(pdev, queue + offset);
--		if (!mask)
--			goto fallback;
--
--		for_each_cpu(cpu, mask)
--			qmap->mq_map[cpu] = qmap->queue_offset + queue;
--	}
--
--	return;
--
--fallback:
--	WARN_ON_ONCE(qmap->nr_queues > 1);
--	blk_mq_clear_mq_map(qmap);
--}
--EXPORT_SYMBOL_GPL(blk_mq_pci_map_queues);
-diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
-deleted file mode 100644
-index 68d0945c0b08a2be116125f46c3a56fcdb02aea8..0000000000000000000000000000000000000000
---- a/block/blk-mq-virtio.c
-+++ /dev/null
-@@ -1,46 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (c) 2016 Christoph Hellwig.
-- */
--#include <linux/device.h>
--#include <linux/blk-mq-virtio.h>
--#include <linux/virtio_config.h>
--#include <linux/module.h>
--#include "blk-mq.h"
--
--/**
-- * blk_mq_virtio_map_queues - provide a default queue mapping for virtio device
-- * @qmap:	CPU to hardware queue map.
-- * @vdev:	virtio device to provide a mapping for.
-- * @first_vec:	first interrupt vectors to use for queues (usually 0)
-- *
-- * This function assumes the virtio device @vdev has at least as many available
-- * interrupt vectors as @set has queues.  It will then query the vector
-- * corresponding to each queue for it's affinity mask and built queue mapping
-- * that maps a queue to the CPUs that have irq affinity for the corresponding
-- * vector.
-- */
--void blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
--		struct virtio_device *vdev, int first_vec)
--{
--	const struct cpumask *mask;
--	unsigned int queue, cpu;
--
--	if (!vdev->config->get_vq_affinity)
--		goto fallback;
--
--	for (queue = 0; queue < qmap->nr_queues; queue++) {
--		mask = vdev->config->get_vq_affinity(vdev, first_vec + queue);
--		if (!mask)
--			goto fallback;
--
--		for_each_cpu(cpu, mask)
--			qmap->mq_map[cpu] = qmap->queue_offset + queue;
--	}
--
--	return;
--
--fallback:
--	blk_mq_map_queues(qmap);
--}
--EXPORT_SYMBOL_GPL(blk_mq_virtio_map_queues);
-diff --git a/include/linux/blk-mq-pci.h b/include/linux/blk-mq-pci.h
-deleted file mode 100644
-index ca544e1d3508f34ab6e198b0bb17efe88de4d14d..0000000000000000000000000000000000000000
---- a/include/linux/blk-mq-pci.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _LINUX_BLK_MQ_PCI_H
--#define _LINUX_BLK_MQ_PCI_H
--
--struct blk_mq_queue_map;
--struct pci_dev;
--
--void blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
--			   int offset);
--
--#endif /* _LINUX_BLK_MQ_PCI_H */
-diff --git a/include/linux/blk-mq-virtio.h b/include/linux/blk-mq-virtio.h
-deleted file mode 100644
-index 13226e9b22dd53e4289d506d49c52671de036ee8..0000000000000000000000000000000000000000
---- a/include/linux/blk-mq-virtio.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _LINUX_BLK_MQ_VIRTIO_H
--#define _LINUX_BLK_MQ_VIRTIO_H
--
--struct blk_mq_queue_map;
--struct virtio_device;
--
--void blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
--		struct virtio_device *vdev, int first_vec);
--
--#endif /* _LINUX_BLK_MQ_VIRTIO_H */
+Ping AGAIN !!!!
+
+I do not see anything queued in pci/next. What is the blocker ?
+These patches have been sitting on the list for nearly a month now, PLEASE DO
+SOMETHING. Comment or apply, but please reply something.
+
+> 
+>>
+>> Changes from v4:
+>>  - Added patch 6
+>>  - Added comments to patch 12 and 13 to clarify link training handling
+>>    and PERST# GPIO use.
+>>  - Added patch 14
+>>
+>> Changes from v3:
+>>  - Addressed Mani's comments (see mailing list for details).
+>>  - Removed old patch 11 (dt-binding changes) and instead use in patch 12
+>>    the already defined reset_gpios property.
+>>  - Added patch 6
+>>  - Added review tags
+>>
+>> Changes from v2:
+>>  - Split the patch series
+>>  - Corrected patch 11 to add the missing "maxItem"
+>>
+>> Changes from v1:
+>>  - Changed pci_epc_check_func() to pci_epc_function_is_valid() in patch
+>>    1.
+>>  - Removed patch "PCI: endpoint: Improve pci_epc_mem_alloc_addr()"
+>>    (former patch 2 of v1)
+>>  - Various typos cleanups all over. Also fixed some blank space
+>>    indentation.
+>>  - Added review tags
+>>
+>> Damien Le Moal (14):
+>>   PCI: rockchip-ep: Fix address translation unit programming
+>>   PCI: rockchip-ep: Use a macro to define EP controller .align feature
+>>   PCI: rockchip-ep: Improve rockchip_pcie_ep_unmap_addr()
+>>   PCI: rockchip-ep: Improve rockchip_pcie_ep_map_addr()
+>>   PCI: rockchip-ep: Implement the pci_epc_ops::align_addr() operation
+>>   PCI: rockchip-ep: Fix MSI IRQ data mapping
+>>   PCI: rockchip-ep: Rename rockchip_pcie_parse_ep_dt()
+>>   PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations
+>>   PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() MSI-X hiding
+>>   PCI: rockchip-ep: Refactor endpoint link training enable
+>>   PCI: rockship-ep: Implement the pci_epc_ops::stop_link() operation
+>>   PCI: rockchip-ep: Improve link training
+>>   PCI: rockchip-ep: Handle PERST# signal in endpoint mode
+>>   arm64: dts: rockchip: Add rockpro64 overlay for PCIe endpoint mode
+>>
+>>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>>  .../rockchip/rk3399-rockpro64-pcie-ep.dtso    |  20 +
+>>  drivers/pci/controller/pcie-rockchip-ep.c     | 432 ++++++++++++++----
+>>  drivers/pci/controller/pcie-rockchip-host.c   |   4 +-
+>>  drivers/pci/controller/pcie-rockchip.c        |  21 +-
+>>  drivers/pci/controller/pcie-rockchip.h        |  24 +-
+>>  6 files changed, 406 insertions(+), 96 deletions(-)
+>>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64-pcie-ep.dtso
+>>
+> 
+> 
+
 
 -- 
-2.47.0
-
+Damien Le Moal
+Western Digital Research
 
