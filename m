@@ -1,94 +1,103 @@
-Return-Path: <linux-pci+bounces-16622-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16623-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A36459C6AC3
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 09:44:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DECC89C6ADE
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 09:49:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46FF4B21CA4
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 08:44:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D204B21ED3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 08:49:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4638E18A6D7;
-	Wed, 13 Nov 2024 08:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE7E7185936;
+	Wed, 13 Nov 2024 08:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mZUDjZ3A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77965185955;
-	Wed, 13 Nov 2024 08:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D751E188706;
+	Wed, 13 Nov 2024 08:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731487458; cv=none; b=A71GWSw8qucvoB+PKdk4tfo44H5FqTVoqHA6i/AWqlBi1HYAwVIZDSZavQPWD7gDXaoAcciQ4k5HQcHuV8ByZfqGijvPc9Nvwp1OlcLKmu+/HmrD1WfWKRx9w7Hx4yiBWlJ9b0PbaBt4ZIMniY7A4Vqj+o0g9HLQ/C2kKRUQu44=
+	t=1731487758; cv=none; b=LpgyFjZ8j4AJALqbmX9cTr/yRB8Z5xS4DKO0JXGXBb7RQ6Xxtum6nuKmncLkbdN1gYb8zyGlUeX2FMuV8kcKV/huQiEVnt7enO9i5rWwBtDAaDLDmea5dbLfLiVjMKN3hkaPltWU+IHqVcvbz1vfDK/qGxUWK0hnfmlvzhsVwiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731487458; c=relaxed/simple;
-	bh=02/dpSmbWQts+pjFlcYlfn4bGHtUtDohp05R4xagVy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ExNqqVneZPi5Mo9AGSraU0U3IKPN3+jAOKGku0g/KEENd6lGohu50yeHhOHU+PnyY3KmiO9VH0FWhaa5V5OZMfK92aKsuCQnXXEO8ccEsd556k1Md0v/bIB+EPdvuErHdSpV3IMOp5n6e2x7CKZD+JHwKfrrhvHWL1FF6ecxoag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id AF8E1102BCBBF;
-	Wed, 13 Nov 2024 09:44:05 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 72DDF21F84D; Wed, 13 Nov 2024 09:44:05 +0100 (CET)
-Date: Wed, 13 Nov 2024 09:44:05 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-kernel@vger.kernel.org, Amit Kucheria <amitk@kernel.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v9 8/9] thermal: Add PCIe cooling driver
-Message-ID: <ZzRm1SJTwEMRsAr8@wunner.de>
-References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com>
- <20241018144755.7875-9-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1731487758; c=relaxed/simple;
+	bh=jSmParmBON0VgUFC+Mx/yo9mY1y/AlAIgrDz1AJ5hSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lwP5B0dILClejkhHaoEpzXsG7YC69JwY2FeY8xwzlz4peJV7WbJbN19vPGyCEn1VlgY1HsL4PxYHRJKmCoRHvc7zkfD5wmPuQvpxGUu1+UDo38lVLG/5eoK2yDgme323PCTGj9t+ZPfm0uVZxNrc5e5lg0chgMXevQmSAsHWVLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mZUDjZ3A; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1731487755;
+	bh=jSmParmBON0VgUFC+Mx/yo9mY1y/AlAIgrDz1AJ5hSw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mZUDjZ3AmomdyDvJ4r5PVRRRNhRCKWV6nCFN3WTbLIzKeLbeWAWWrYz2+A+xzwL/3
+	 x8hSDVeuxFd0tbMq4TiP9ypb/mmiynaKGX/T5iHSDuHcVoJOCRXm+E8GAsCwfr/izi
+	 PhICQ+oMRoklrhxETnUsijNTF/DbJDhIPj0fNXYZT8lLoHN4Cn+oucd8U/I7TC7kq/
+	 D8AvoiD8EsqMtljqGWw5hjymtHAgKf4ezFM9vAYZkZHD/e0ba44cMVKxGcfdkI2IAC
+	 eewotvWbtWFvuJqBUJ4OHMOWVAhUaj5UdRiUTax6LOrAkicDSyHse7YmhKjlqAXYlf
+	 xpZEe041g3kyA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B31E817E1395;
+	Wed, 13 Nov 2024 09:49:14 +0100 (CET)
+Message-ID: <d5215862-2e46-48d2-9b12-2f59b78e0c59@collabora.com>
+Date: Wed, 13 Nov 2024 09:49:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241018144755.7875-9-ilpo.jarvinen@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] PCI: mediatek-gen3: Remove unneeded semicolon
+To: Yang Li <yang.lee@linux.alibaba.com>, matthias.bgg@gmail.com, kw@linux.com
+Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Abaci Robot <abaci@linux.alibaba.com>
+References: <20241111010935.20208-1-yang.lee@linux.alibaba.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20241111010935.20208-1-yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 18, 2024 at 05:47:54PM +0300, Ilpo Järvinen wrote:
->  static void pcie_bwnotif_remove(struct pcie_device *srv)
->  {
-> +	struct pcie_bwctrl_data *data = srv->port->link_bwctrl;
-> +
-> +	if (data->cdev)
-> +		pcie_cooling_device_unregister(data->cdev);
-> +
+Il 11/11/24 02:09, Yang Li ha scritto:
+> This patch removes an redundant semicolon.
+> 
+> ./drivers/pci/controller/pcie-mediatek-gen3.c:414:2-3: Unneeded
+> semicolon
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=11789
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-Just noting a minor nit here in what is now commit 7206400cda87
-on pci/bwctrl:  The NULL pointer check for data->cdev seems
-redundant as pcie_cooling_device_unregister() just calls
-thermal_cooling_device_unregister(), which in turn contains
-this at the top:
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-	if (!cdev)
-		return;
+> ---
+>   drivers/pci/controller/pcie-mediatek-gen3.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index f333afb92a21..be52e3a123ab 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -411,7 +411,7 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+>   		if (pcie->num_lanes > 1)
+>   			val |= FIELD_PREP(PCIE_SETTING_LINK_WIDTH,
+>   					  GENMASK(fls(pcie->num_lanes >> 2), 0));
+> -	};
+> +	}
+>   	writel_relaxed(val, pcie->base + PCIE_SETTING_REG);
+>   
+>   	/* Set Link Control 2 (LNKCTL2) speed restriction, if any */
 
-Thanks,
 
-Lukas
 
