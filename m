@@ -1,249 +1,251 @@
-Return-Path: <linux-pci+bounces-16714-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16715-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFADF9C7ECD
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 00:32:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BED549C7F1C
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 01:03:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B3ED1F22E1A
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2024 23:32:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EA5E2816B4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 00:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9937318C913;
-	Wed, 13 Nov 2024 23:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFD8C801;
+	Thu, 14 Nov 2024 00:03:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="k8PVw4nb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWEQKpoZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4B717C;
-	Wed, 13 Nov 2024 23:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E9E163;
+	Thu, 14 Nov 2024 00:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731540759; cv=none; b=LUZACpPnuG9syEI2s5itnt0XKyP5mzcEBdEFzowj1YdNuVw9Ej4Wj7fjk0929uNp9sX7Br9BjTrE5A6o8j37FAGuPxD7AgSFNDO2R7vnYkmWgH2LGl4GZTsrwzTIv7SqhFAhqcK1hyDdRDbodQ3g+HabXn7nO7lCMZFRcnFewuk=
+	t=1731542606; cv=none; b=iAijIQbVwuc7++iTwF1YxkrpHJDJNm3BvkGO/4JBj6I7NDoHRMjgm3db6XPbkZpGvLRfFuOJc0arVMIxJR+5QOFG8PzRB1Sy+JkGaMWtyWgoriuW1CP0HMcYSM/uIAPEJeGvoxKi7C/Whkbcz2wsGppHswumSBNiHuK6XDWUrXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731540759; c=relaxed/simple;
-	bh=BZz8M8dA30sPg7gVl2T2380eKnaxbf2iUQX4W3szZMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cfJfgzbsnGx+oQN1vJN1MnP1o2jIfnBqzqJ11nfBOX3GpM5IQe508yzZuUURpyNtxhJbZHMFYjB0IRQn9mVsIGo2hHHClEct/7gXUbve/aIF7Stkp9GCibuiyBr4PlP2WHyjX1Lro/9kyNZM5V1G9xbgIIxqTwsoAKl8f/x8x14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=k8PVw4nb; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.115] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 67C2C20BEBE8;
-	Wed, 13 Nov 2024 15:32:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 67C2C20BEBE8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1731540757;
-	bh=18HJxeyRm3uSI4Swy2JMMEvrdkL3oWWV9AKPCAM4Vjo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k8PVw4nbkREJts0W0LLdSZ42CRybu1r1Xhyg6//i5lh5h22jmKQC5Lcd8aMOB/jYM
-	 HLQu6/qNMJUeGZmWA1itysWr/etRtR5KK0CiaR/7bY7XLVFMzfApOBiyev/vQ/vj4+
-	 bnJU3aZtjNHiFSBT13DVIlauDGkjJGEyGoyLGSkQ=
-Message-ID: <6d2a6bd4-a7cf-4672-9fb0-975acdc8ed31@linux.microsoft.com>
-Date: Wed, 13 Nov 2024 15:32:32 -0800
+	s=arc-20240116; t=1731542606; c=relaxed/simple;
+	bh=6wE9w23E701SXVrE75griIgPVhRTJAA2DvIbf6ahBS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=OfoB0ZCzDnZwlqDen6Kb0dPwOnZvVtBT9/t9O8ot0iOXV4V2bL/hMXTIembEdazRBXM2ZS+n+rHe9JCSRiY9/iKgUzfMh3n18RdEItTjhMusDGkwEgSMjg4dNxxEUozUggeRkX4yItaUpLFWNyKGxt3cGUrIlw2NYlF6liljzD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWEQKpoZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40079C4CEC3;
+	Thu, 14 Nov 2024 00:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731542606;
+	bh=6wE9w23E701SXVrE75griIgPVhRTJAA2DvIbf6ahBS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=hWEQKpoZVBf20UTjgat6vFlP9N609q4Z+nI7WMZiukgkE3kCfYFcpUYWnHnuydxT+
+	 NqdxsWswL8gpG0clMECkO7VtHquvy6ScTJBRVQiyNHA3g8G12KOxMM+7YJ9yChcHAw
+	 0yOck1icEBD7uM8i7ptWHNRdzt9loqhGFxxVonBfOp4iqa/271i1qj+16JsdoE8jGy
+	 D4ENYBfqqmTdwYk9mblkCj0bfqclGvvQyZ45i5Iso6YbjewdgE/0cgZXGZjxE/TOta
+	 nWG1we/muqTgGNsivOyFVLTwF1P1Vbien35/EXHI7LAAHcEBfxKHuNq/dCXwOJXHgT
+	 iWGgJiqx7lM6g==
+Date: Wed, 13 Nov 2024 18:03:24 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shijith Thotton <sthotton@marvell.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"scott@os.amperecomputing.com" <scott@os.amperecomputing.com>,
+	Jerin Jacob <jerinj@marvell.com>,
+	Srujana Challa <schalla@marvell.com>,
+	Vamsi Krishna Attunuru <vattunuru@marvell.com>
+Subject: Re: [PATCH v4] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+Message-ID: <20241114000324.GA1967327@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] hyperv: Add new Hyper-V headers in include/hyperv
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "seanjc@google.com" <seanjc@google.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
- <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
- "vkuznets@redhat.com" <vkuznets@redhat.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "apais@linux.microsoft.com" <apais@linux.microsoft.com>
-References: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1731018746-25914-4-git-send-email-nunodasneves@linux.microsoft.com>
- <BN7PR02MB4148025D8757B917013297E0D4582@BN7PR02MB4148.namprd02.prod.outlook.com>
- <b8ef1f71-9f13-48c3-adab-aa52b68d2e33@linux.microsoft.com>
- <SN6PR02MB4157AA30A9F27ECCAE202BC2D4582@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157AA30A9F27ECCAE202BC2D4582@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR18MB4425C1F63EAFFA2AA3BFCBF2D95A2@PH0PR18MB4425.namprd18.prod.outlook.com>
 
-On 11/11/2024 11:31 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Monday, November 11, 2024 10:45 AM
->>
->> On 11/10/2024 8:13 PM, Michael Kelley wrote:
->>> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday,
->> November 7, 2024 2:32 PM
->>>>
->>>> These headers contain definitions for regular Hyper-V guests (as in
->>>> hyperv-tlfs.h), as well as interfaces for more privileged guests like
->>>> Dom0.
->>>
->>> See my comment on Patch 0/4 about use of "dom0" terminology.
->>>
->>
->> Thanks, noted.
->>
->>>>
->>>> These files are derived from headers exported from Hyper-V, rather than
->>>> being derived from the TLFS document. (Although, to preserve
->>>> compatibility with existing Linux code, some definitions are copied
->>>> directly from hyperv-tlfs.h too).
->>>>
->>>> The new files follow a naming convention according to their original
->>>> use:
->>>> - hdk "host development kit"
->>>> - gdk "guest development kit"
->>>> With postfix "_mini" implying userspace-only headers, and "_ext" for
->>>> extended hypercalls.
->>>>
->>>> These names should be considered a rough guide only - since there are
->>>> many places already where both host and guest code are in the same
->>>> place, hvhdk.h (which includes everything) can be used most of the time.
->>>
->>> Just curious -- are there really cases where hvhdk.h can't be used?
->>> If so, could you summarize why?
->>>
->>
->> No, there aren't cases where it "can't" be used. I suppose if someone
->> doesn't want to include everything, perhaps they could just include
->> hvgdk.h, for example. It doesn't really matter though.
->>
->>> I ask because it would be nice to expand slightly on your paragraph
->>> below, as follows:  (if indeed what I've added is correct)
->>>
->>> The use of multiple files and their original names is primarily to
->>> keep the provenance of exactly where they came from in Hyper-V
->>> code, which is helpful for manual maintenance and extension
->>> of these definitions. Microsoft maintainers importing new definitions
->>> should take care to put them in the right file. However, Linux kernel code
->>> that uses any of the definitions need not be aware of the multiple files
->>> or assign any meaning to the new names. Linux kernel uses should
->>> always just include hvhdk.h
->>>
->>
->> Thanks, I think that additional sentence helps clarify things. I'll
->> include it in the next version, and I think I can probably omit the prior
->> paragraph: "These names should be considered a rough guide only...".
->>
+On Wed, Nov 13, 2024 at 12:20:20PM +0000, Shijith Thotton wrote:
+> >> >> This patch introduces a PCI hotplug controller driver for the OCTEON
+> >> >> PCIe device. The OCTEON PCIe device is a multi-function device where the
+> >> >> first function serves as the PCI hotplug controller.
+> >> >>
+> >> >>                +--------------------------------+
+> >> >>                |           Root Port            |
+> >> >>                +--------------------------------+
+> >> >>                                |
+> >> >>                               PCIe
+> >> >>                                |
+> >> >> +---------------------------------------------------------------+
+> >> >> |              OCTEON PCIe Multifunction Device                 |
+> >> >> +---------------------------------------------------------------+
+> >> >>              |                    |              |            |
+> >> >>              |                    |              |            |
+> >> >> +---------------------+  +----------------+  +-----+  +----------------+
+> >> >> |      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
+> >> >> | (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
+> >> >> +---------------------+  +----------------+  +-----+  +----------------+
+> >> >>              |
+> >> >>              |
+> >> >> +-------------------------+
+> >> >> |   Controller Firmware   |
+> >> >> +-------------------------+
+> >> >>
+> >> >> The hotplug controller driver enables hotplugging of non-controller
+> >> >> functions within the same device. During probing, the driver removes
+> >> >> the non-controller functions and registers them as PCI hotplug slots.
+> >> >> These slots are added back by the driver, only upon request from the
+> >> >> device firmware.
+> >> >>
+> >> >> The controller uses MSI-X interrupts to notify the host of hotplug
+> >> >> events initiated by the OCTEON firmware. Additionally, the driver
+> >> >> allows users to enable or disable individual functions via sysfs slot
+> >> >> entries, as provided by the PCI hotplug framework.
+> >> >
+> >> >Can we say something here about what the benefit of this driver is?
+> >> >For example, does it save power?
+> >>
+> >> The driver enables hotplugging of non-controller functions within the device
+> >> without requiring a fully implemented switch, reducing both power
+> >consumption
+> >> and product cost.
+> >
+> >Reduced product cost is motivation for the hardware design, not for
+> >this hotplug driver.
+> >
+> >You didn't explicitly say that when function 0 hot-removes another
+> >function, it reduces overall power consumption.  But I assume that's
+> >the case?
+> >
 > 
-> Omitting that prior paragraph is OK with me.  The key thoughts from my
-> standpoint are:
-> * The separation into multiple files and the file names come from
->    the Windows Hyper-V world and are maintained to ease bringing
->    the definitions over from that world
->    
-> * Linux code can ignore the multiple files and their names. Just
->    #include hvhdk.h.
+> Yes, I will explain it in detail below
 > 
-
-Agreed, thanks for helping clarify the points.
-
->>>>
->>>> The original names are kept intact primarily to keep the provenance of
->>>> exactly where they came from in Hyper-V code, which is helpful for
->>>> manual maintenance and extension of these definitions. Microsoft
->>>> maintainers importing new definitions should take care to put them in
->>>> the right file.
->>>>
->>>> Note also that the files contain both arm64 and x86_64 code guarded by
->>>> \#ifdefs, which is how the definitions originally appear in Hyper-V.
->>>
->>> Spurious backslash?
->>>
->>
->> Indeed, thanks.
->>
->>> I would suggest some additional clarification:  The #ifdef guards are
->>> employed minimally where necessary to prevent conflicts due to
->>> different definitions for the same thing on x86_64 and arm64. Where
->>> there are no conflicts, the union of x86_64 definitions and arm64
->>> definitions is visible when building for either architecture. In other
->>> words, not all definitions specific to x86_64 are protected by #ifdef
->>> x86_64. Such unprotected definitions may be visible when building
->>> for arm64. And vice versa.
->>>
->>
->> Is there a reason you specifically want to point out that "Such
->> unprotected definitions may be visible when building for arm64. And vice
->> versa."? I think, in all the cases where #ifdefs are not used, an
->> arch-specific prefix is used - hv_x64_ or hv_arm64_.
->>
->> The main thing I wanted to call out here was the reasoning for not
->> splitting arch-specific definitions into separate files in arch/x86/
->> and arch/arm64/ as is typical in Linux.
->>
->> Maybe this is a bit clearer:
->> "
->> Note the new headers contain both arm64 and x86_64 definitions. Some are
->> guarded by #ifdefs, and some are instead prefixed with the architecture,
->> e.g. hv_x64_*. These conventions are kept from Hyper-V code as another
->> tactic to simplify the process of importing and maintaining the
->> definitions, rather than splitting them up into their own files in
->> arch/x86/ and arch/arm64/.
->> "
+> >> >What causes the function 0 firmware to request a hot-add or
+> >> >hot-removal of another function?
+> >>
+> >> The firmware will enable the required number of non-controller
+> >> functions based on runtime demand, allowing control over these
+> >> functions. For example, in a vDPA scenario, each function could act
+> >> as a different type of device (such as net, crypto, or storage)
+> >> depending on the firmware configuration.
+> >
+> >What is the path for this runtime demand?  I assume function 0
+> >provides some interface to request a specific kind of functionality
+> >(net, crypo, storage, etc)?
+> >
 > 
-> Yes, your new paragraph works for me. Your original statement was
-> "the files contain both arm64 and x86_64 code guarded by #ifdefs",
-> which sounds like the more typical Linux approach of using #ifdefs
-> to segregate into x86-specific, arm64-specific, and common. I was
-> just trying to be explicit that full segregation isn't done, and isn't a
-> goal, because of wanting to maintain alignment with the original
-> Hyper-V definitions.
+> Right now, it done via firmware management console.
 > 
-> It's "Hey, we know we're not handling this in the typical Linux way,
-> and here's why". Your revised paragraph covers that in a less
-> heavyweight way than what I wrote. :-)
+> >I don't know anything about vDPA, so if that's important here, it
+> >needs a little more context.
+> >
+> >> Hot removal is useful in cases of live firmware updates.
+> >
+> >So the idea is that function X is hot-removed, which forces the driver
+> >to let go of it, the firmware is updated, and X is hot-added again,
+> >and the driver binds to it again?
+> >
 > 
-
-Ok, great. I'll use that for the next version then.
-
-Thanks again!
-Nuno
-
-> Michael
+> I will explain the process in detail, which should also address the questions
+> below.
 > 
->>
->> I hope it's reasonably clear that it's a good tradeoff to go against
->> Linux convention in this case, to make it easy to import and maintain
->> Hyper-V definitions.
->>
->> Thanks
->> Nuno
->>
+> >And somewhere in there is a reset of function X, and after the reset
+> >X is running the new firmware?
+> >
+> >Who/what initiates this whole path?  Some request to function 0,
+> >saying "please remove function X"?
+> >
+> >But I guess maybe it doesn't go through function 0, since octeon_hp
+> >claims function 0, and it doesn't provide that functionality.  Maybe
+> >the individual drivers for *other* functions know how to initiate
+> >these things, and those functions internally communicate with function
+> >0 to ask it to start a hot-remove/hot-add sequence?
+> >
+> >That wouldn't explain the power reduction plan, though.  A driver for
+> >function X could conceivably tell its device "I'm no longer needed"
+> >and function X could tell function 0 to remove it.  That might enable
+> >some power savings.  But that doesn't have a path to *re-enable*
+> >function X, since function X has been removed and there's no driver to
+> >ask for it to be hot-added again.
+> >
+> >Maybe there's some out-of-band management path that can tell function
+> >0 to do things, independent of PCIe?
+> >
+> 
+> Our implementation aims to achieve two main objectives:
+> 
+> 1. Enable changing a function's personality at runtime.
+> 2. Reduce power consumption.
+> 
+> The OCTEON PCI device has multiple ARM cores running Linux, with its firmware
+> composed of multiple components. For example, the firmware includes components
+> like Virtio-net, NVMe, and Virtio-Crypto, which can be assigned to any function
+> at runtime. The device firmware is accessible via a management console, allowing
+> components to be started or stopped. For each component, an associated function
+> is hot-added on the host to expose its functionality. Initially, after boot, only
+> Function 0 and the controller firmware are active.
+> 
+> Here's a breakdown:
+> 
+> At Time 0:
+> - Linux boots on the device, starting the controller firmware.
+> 
+> At Time 1:
+> - The hotplug driver loads on the host, temporarily removing other functions.
+> 
+> At Time 2:
+> - A network device firmware component starts on an ARM core (initiated through
+>   a console command).
+> - This component sets up the Function 1 configuration space, data, and other
+>   request handlers for network processing.
+> - The firmware issues a hot-add request to Function 0 (hotplug driver) on the
+>   host to enable Function 1.
+> 
+> At Time 3:
+> - The Function 0 hotplug driver on the host receives the hot-add request and
+>   enables Function 1 on the host.
+> - A network driver binds to Function 1 based on device class and ID.
+> 
+> At Time 4:
+> - The network device firmware component receives a stop signal.
+> - The firmware issues a hot-remove request for Function 1 on the host.
+> - The firmware component halts, reducing the device's power consumption.
+> 
+> At Time 5:
+> - The Function 0 hotplug driver on the host receives the hot-remove request and
+>   disables Function 1 on the host.
+> 
+> At Time 6:
+> - A crypto device firmware component starts on an ARM core.
+> - This component configures the Function 1 configuration space for crypto
+>   processing and sets up the required firmware handlers.
+> - The firmware issues a hot-add request to enable Function 1 on the host.
+> 
+> At Time 7:
+> - The Function 0 hotplug driver on the host receives the hot-add request and                                                                                                                                                                                                      enables Function 1 on the host.
+> - A crypto driver binds to Function 1 based on device class and ID.
+> 
+> The firmware component for each function only runs and is hot-added when
+> needed. Only Function 0 and the controller firmware remain active
+> continuously. This dynamic control reduces power usage by keeping unnecessary
+> components off. Additionally, a single function can adapt its personality based
+> on the associated firmware component, enhancing flexibility. 
+>                                                                                                                                                                                                                    
+> I hope this clarifies the implementation. Let me know if you have any
+> questions.
 
+Thanks very much!  I propose adding text like this to the commit log:
+
+  There is an out-of-band management console interface to firmware
+  running on function 0 whereby an administrator can disable functions
+  to save power or enable them with one of several personalities
+  (virtio-net, virtio-crypto, NVMe, etc) for the other functions.
+  Function 0 initiates hotplug events handled by this driver when the
+  other functions are enabled or disabled.
+
+I provisionally applied this to pci/hotplug-octeon, but will be happy
+to update the text if necessary.
+
+Bjorn
 
