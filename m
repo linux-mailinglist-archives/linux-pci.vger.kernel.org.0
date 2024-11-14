@@ -1,123 +1,175 @@
-Return-Path: <linux-pci+bounces-16779-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3B509C907A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 18:06:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F2079C9041
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 17:56:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB4C9B28F63
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 16:52:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F34E41F25F7E
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 16:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2C25674E;
-	Thu, 14 Nov 2024 16:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04D618E750;
+	Thu, 14 Nov 2024 16:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jCJ5sEf0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8421E433C4;
-	Thu, 14 Nov 2024 16:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B25C188703;
+	Thu, 14 Nov 2024 16:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731603167; cv=none; b=G+1lWligXN+vc++/JsEDcrjzmzPVO1FWjF/L+nFklmlUfrtpdLRf0quQEolVVCcUYe3yGbWVrh1lJzRmBAIgy7AhxShMfs2Bfw8fg3HDFmGbbhHwxVqVHwPqjiW+fh5DUXRiWPWecvx1hVkL1bA/zzizI0Xm5vjphW8yQBqaI3I=
+	t=1731603304; cv=none; b=OwqQYottiLeT4K1M+c3s9T7/oTCWDB3qzwuCi2juaKYx+If4YOJEuZFASm5G9ZLW+9Uy87gqv3lApi0fP/SA+ubsA1Vns5fZW5mOSZxTutDXF5qjS37zJJNctZG5rg4t6hoIe9MhuykZ5xPMqEhiwxS41vtIxRDr8sGoollvfJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731603167; c=relaxed/simple;
-	bh=bsuMuwD42+4FRialWnLB2AnsZc+bTh1ZxNGzuNKBLeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wig6LNjgVHvMHuV8UbZMo2BNgZRaZMEvcjPZk+HYALHK4WnbJCiRk4EB9Od2AKNhutYlh60Tq/kOnMxcUg4wm+LLYm7tFOMcwF3uwBhzrHXyzCv2mYMbe1sf0mX3Hmod1aQYuohT0Ji8MvaL3q3tAFq7PiwZpoLp6DII3QvZV0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 82F5F100DECB0;
-	Thu, 14 Nov 2024 17:52:40 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 59F652F7900; Thu, 14 Nov 2024 17:52:40 +0100 (CET)
-Date: Thu, 14 Nov 2024 17:52:40 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v3 03/15] cxl/pci: Introduce PCIe helper functions
- pcie_is_cxl() and pcie_is_cxl_port()
-Message-ID: <ZzYq2GIUoD2kkUyK@wunner.de>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
- <20241113215429.3177981-4-terry.bowman@amd.com>
- <ZzYbHZvU_RFXZuk0@wunner.de>
- <ffd740e5-235a-4b74-8bf9-91331b619a7f@amd.com>
+	s=arc-20240116; t=1731603304; c=relaxed/simple;
+	bh=X1jO5oMtyP0jfnGU/DCU9nbdHu4XbZA426BHwEzqcTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cW2LlX22KdNZip7LzW/L9wkn41bug2BErGgo+BqpxonY2L8x0S7bE1Eb73X56AYMri2p68wNC+63m8E+c4UhtBHop3fJ4uqojkZOps10VzjfYUi1HhZ1q6dm/DLPY2x9AxGgQKtMLU2LUjjQvohzbJPSI7uBSn3+ZyJ+2F01kL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jCJ5sEf0; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPA id 1BC5BE0009;
+	Thu, 14 Nov 2024 16:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1731603294;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YlXInP/Xt7ICdvkV8lP0MjBbO+8189YppAjVn2WwHNM=;
+	b=jCJ5sEf09yZRkk9kiemm+UfpCRzPPrbXXusSXUjuasdCfNsdS086oGM9FkDHpM9HefbdFh
+	8w/HSVtL6/4syEPCGjtZcsjDKVjL4P8bSkt6WvGGcR4UVg52UuhYB2F2n8xUJxxToHriOV
+	jKcm7i2DO5s8nIwHQ3y1hmiKjlg/Vy6WyoGNVJyI1R8zwqQc1ka97K2Iv04fHOmrF/fVow
+	bpx56SchRzxYUvEMBqqsxFnvHzq4u6/vnZxVHuEWuzRRk5GnVWTRsh/nq+o5r43zGzABTu
+	xzVacbPSgxXw7vz+nirx5XEEnDTZdYH7X71nPfge/kjte4hsCnpc/p6/rzQbgQ==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v3 1/6] driver core: Introduce device_{add,remove}_of_node()
+Date: Thu, 14 Nov 2024 17:54:37 +0100
+Message-ID: <20241114165446.611458-2-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241114165446.611458-1-herve.codina@bootlin.com>
+References: <20241114165446.611458-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffd740e5-235a-4b74-8bf9-91331b619a7f@amd.com>
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, Nov 14, 2024 at 10:45:39AM -0600, Bowman, Terry wrote:
-> On 11/14/2024 9:45 AM, Lukas Wunner wrote:
-> > On Wed, Nov 13, 2024 at 03:54:17PM -0600, Terry Bowman wrote:
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -5038,6 +5038,20 @@ static u16 cxl_port_dvsec(struct pci_dev *dev)
-> > >  					 PCI_DVSEC_CXL_PORT);
-> > >  }
-> > >  
-> > > +bool pcie_is_cxl_port(struct pci_dev *dev)
-> > > +{
-> > > +	if (!pcie_is_cxl(dev))
-> > > +		return false;
-> > > +
-> > > +	if ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> > > +	    (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
-> > > +	    (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM))
-> > > +		return false;
-> > > +
-> > > +	return cxl_port_dvsec(dev);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(pcie_is_cxl_port);
-> > 
-> > The "!pcie_is_cxl(dev)" check at the top of the function is identical
-> > to the return value "cxl_port_dvsec(dev)".  This looks redundant.
-> > However one cannot call pci_pcie_type() without first checking
-> > pci_is_pcie().  So I'm wondering if the "!pcie_is_cxl(dev)" check
-> > is actually erroneous and supposed to be "!pci_is_pcie(dev)"?
-> > That would make more sense to me.
-> 
-> I see pcie_is_cxl(dev) is different than cxl_port_dvsec(dev).
-> They check different DVSECs.
+An of_node can be set to a device using device_set_node().
+This function cannot prevent any of_node and/or fwnode overwrites.
 
-Ah, sorry, I missed that.
+When adding an of_node on an already present device, the following
+operations need to be done:
+- Attach the of_node if no of_node were already attached
+- Attach the of_node as a fwnode if no fwnode were already attached
 
-> CXL flexbus DVSEC presence is cached in pci_dev::is_cxl and returned by
-> pcie_is_cxl(). This is used for indicating CXL device.
-> 
-> cxl_port_dvsec(dev) returns boolean based on presence of CXL port DVSEC to 
-> indicate a CXL port device.
-> 
-> I don't believe they are redundant if you consider you can have a CXL
-> device that 
-> is not a CXL port device.
+This is the purpose of device_add_of_node().
+device_remove_of_node() reverts the operations done by
+device_add_of_node().
 
-Can you have a CXL port that is not a CXL device?
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+---
+ drivers/base/core.c    | 52 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |  2 ++
+ 2 files changed, 54 insertions(+)
 
-If not, it would seem to me that checking for Flexbus DVSEC presence
-*is* redundant.  Or do you anticipate broken devices which lack the
-Flexbus DVSEC and that you explicitly want to exclude?
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 24c572031403..0aa63371f55d 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -5118,6 +5118,58 @@ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(set_secondary_fwnode);
+ 
++/**
++ * device_remove_of_node - Remove an of_node from a device
++ * @dev: device whose device-tree node is being removed
++ */
++void device_remove_of_node(struct device *dev)
++{
++	dev = get_device(dev);
++	if (!dev)
++		return;
++
++	if (!dev->of_node)
++		goto end;
++
++	if (dev->fwnode == of_fwnode_handle(dev->of_node))
++		dev->fwnode = NULL;
++
++	of_node_put(dev->of_node);
++	dev->of_node = NULL;
++
++end:
++	put_device(dev);
++}
++EXPORT_SYMBOL_GPL(device_remove_of_node);
++
++/**
++ * device_add_of_node - Add an of_node to an existing device
++ * @dev: device whose device-tree node is being added
++ * @of_node: of_node to add
++ */
++void device_add_of_node(struct device *dev, struct device_node *of_node)
++{
++	if (!of_node)
++		return;
++
++	dev = get_device(dev);
++	if (!dev)
++		return;
++
++	if (WARN(dev->of_node, "%s: Cannot replace node %pOF with %pOF\n",
++		 dev_name(dev), dev->of_node, of_node))
++		goto end;
++
++	dev->of_node = of_node_get(of_node);
++
++	if (!dev->fwnode)
++		dev->fwnode = of_fwnode_handle(of_node);
++
++end:
++	put_device(dev);
++}
++EXPORT_SYMBOL_GPL(device_add_of_node);
++
+ /**
+  * device_set_of_node_from_dev - reuse device-tree node of another device
+  * @dev: device whose device-tree node is being set
+diff --git a/include/linux/device.h b/include/linux/device.h
+index b4bde8d22697..e3aa25ce1f90 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1146,6 +1146,8 @@ int device_online(struct device *dev);
+ void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+ void device_set_node(struct device *dev, struct fwnode_handle *fwnode);
++void device_add_of_node(struct device *dev, struct device_node *of_node);
++void device_remove_of_node(struct device *dev);
+ void device_set_of_node_from_dev(struct device *dev, const struct device *dev2);
+ 
+ static inline struct device_node *dev_of_node(struct device *dev)
+-- 
+2.47.0
 
-Thanks,
-
-Lukas
 
