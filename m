@@ -1,250 +1,332 @@
-Return-Path: <linux-pci+bounces-16723-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16724-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E88A49C80C4
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 03:29:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E3F59C812A
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 03:54:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78A5E1F265F1
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 02:29:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE7F7B259EE
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 02:54:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 925E11E7C34;
-	Thu, 14 Nov 2024 02:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4B5F1E3DE8;
+	Thu, 14 Nov 2024 02:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="JWrzW6qZ"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="U5RadFiy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa4.fujitsucc.c3s2.iphmx.com (esa4.fujitsucc.c3s2.iphmx.com [68.232.151.214])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011035.outbound.protection.outlook.com [52.103.68.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CD41C1AB6
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 02:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.151.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEB21EABC2;
+	Thu, 14 Nov 2024 02:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731551318; cv=fail; b=eWBSCIerQWAa28OHjGgKEzdOPOWlYtiS23CZQKT2+XuAwaEW25NXsZoqnTnnRWrarRsP9871JmJDrO2VS73K/JlX8v2xejtU/IX08veuxXZ1fdhiMfaObwvfnxndufUsXVjYAsoqIOYs7jiLlaU7NRlMvfxUNmPoxB8ORsj2970=
+	t=1731552698; cv=fail; b=G7BTzTBGvrTYg8P4dRZLkLbT3/ParCs2lYGQSpOioUMHEwPpSdl/L/xjs8eLPOOm3eZPGysdn/0xFs55nwMOL0BvzvtFpPB7AIOr1EpC+uaFDIsFpIPyjeiu3PggMt1ITVyNaeeYyVcwVUXFAVkN0k4v/x6w/TPTfx3wzNOFr/g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731551318; c=relaxed/simple;
-	bh=RT204XJzudbz5s/DTw67mbD1KBoxth4CMYK7M2OhlwE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OQMiBeC95190V+KGCZfNpwTEAlpWB+bLuhjiV3JKiuW4xq7YrE+OsGoTnk6rAvtmkn4efGLQPkt2vSPLBp0NkrVpSrAOkOfArgtpv+CyYaVNhD4lMjlg8NNOI0X6CfkZcc7ewaE+qtJ1bvzT2RNVXG2+VzKa7mHiTUmA+/No/3c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=JWrzW6qZ; arc=fail smtp.client-ip=68.232.151.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1731551316; x=1763087316;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=RT204XJzudbz5s/DTw67mbD1KBoxth4CMYK7M2OhlwE=;
-  b=JWrzW6qZ2DdByhxLgwQR0St6gq5X+p3qjZz05FMVfAd5CNBatWeHhWW9
-   QqVsOt9GQHc3ahFwBEDejLTPrxFYrogQ0j3k6frezxuoI9Kf64plFzC1U
-   JjxsDxwKtllWTWKAjSvZWYR9WLJiDFHncIQSuyBVX2xV3ZSQclVJi3GkK
-   eUlI9wGKeedTcXdbAHv5bOcA4JXtVQyShTftan+UatYLd2q36J2xdiT1B
-   qF5SCKMqPEV4Eq8LRajnADQJrg2ETsu1wtyg+9ZEtX8dxtUgALu5kjmfW
-   obiXDPAOt/q+UZt2gsUU37d2oWh+PLWQiR+EVb0n8Tzb8N8xtmVgpGs2S
-   A==;
-X-CSE-ConnectionGUID: yxzMR0NaRcapzt0+nX1UNA==
-X-CSE-MsgGUID: 62SFo0hUS6GaDceWSt7pXw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11255"; a="49843203"
-X-IronPort-AV: E=Sophos;i="6.12,152,1728918000"; 
-   d="scan'208";a="49843203"
-Received: from mail-japaneastazlp17010000.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.0])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 11:27:23 +0900
+	s=arc-20240116; t=1731552698; c=relaxed/simple;
+	bh=KNQMGkTYMYrQyzPENwWjOC378oyAl/r+b+g25CLFtrQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Jl6ifvMEl+QDmV0zNFxDR9e6LjEhv557TMQI8G9aHjqRoFrTM5C4x+nLP5Ri3MuDIU0ZXSet9RQxwztZhDkX9nqAnHgt4sCugVvwxlP9h3nz0yE0EXQ7XzyiXiVP9wOjm5B9Huzfewkj8iaNfMzRE/tyIYSDPQrLASrYGaujVTw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=U5RadFiy; arc=fail smtp.client-ip=52.103.68.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jflxxhSCtAyq602X6i235Co7dDdwQqxyZAnSigVQOJ8d/7RO2Z1RPE5dvl5KpuMlHH09Z90wQzFbCO6ltUpGyExdIlvk/E9IfPLAMWXYRMt2kyYdoyMziK86Q4bOSdc3HJC+zSISzPvpD6nflqzFy1byJuMYS0byTxG7+tlxepQJY3lqVKwRLMEUF1+jx3lGK+Jpd+B1tNWHimg5EEmBLpJK4OnDWWA1wH05TYMon//6fTrHmVXsFNETFtGgeZKGJUksAkGYwYtwXJr8SVFjSF1e0QjS+NBTO+nX201r2Yf0kWU5XAaZucXeyVeaNID21OegXccE5LGuR/EC2CThfw==
+ b=d4+G8ZuaR6i/1YejgV6SkwapNFzP5Hz3lzWav/c7KYCtorBB+wsCwK1h8UzQscv8A1RM37bQ82+jWa6yOGCPAi4ss+xv7bZ+sVbzjzUToBQj9ia9iz0B0TmPpKHAZ7FLOd41ZFZV3jeFWHP3g5xBEJeYpPr9bT3FX/nmT9O0EU+Dla0yJHMf6iHYK5Fp4mEOd2aBzKl3UPxOjxIeD1Znb8vMtBPO9tYSKY3O37s9nDRV4ARq4hbJcdinyqMY2Aw+IN+bEYAET0VgoOhyjrzO32B6ispjFgYWES+l2q8xTeW0z+Jn+YDjc+HAQc9mPYy6idrNXE8TdFEgHUptwfFEZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8dD6jmCX9cDgH6Fg76/mDhDlOhrGgszhMvWpRI+eIn0=;
- b=Aqr5bSH9Ykf37Y4E/a7YOP0AQHZMkVuAdaygl5px2J4yv4UodkJ4+ceWItSl/yXJKfI9Z14m1GecQ/S5N/rpHc0O2ZR0jITaOQlJaE+ppDS4hspJKtpA0sFnsvsO0bgLm/BUkDwYXn6B2VZG1P78dRvL0ZwKmKvYLMS+YcAuo+ibI4z7/O4DDpU4y2qEHO4DMAoV9pP0hZMlrOkQwP/cdWy6G1DxwRL3S0IdkMLnt5IOwJSrkl23gvROEYytC3PQLXFHgd9Gu+ftcQVGnDkzzxBSKF/vksTjzffiGrs1PwNl2PGr5Hmu4Hqatwnq6KV/ssmvGGip1HZ4wWI72TEE/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
- by TYWPR01MB8840.jpnprd01.prod.outlook.com (2603:1096:400:16b::13) with
+ bh=6QmyrSexW1QmE6ipi3xh1tasNCzXUR0ei8apF5brOLg=;
+ b=xHfjLIcpV2dzaEkZRA284ABsyxagVy80agvig3EXlVzhp/cfi/c4w1yokPjwvAoGtp0ttId4cotQ6gWyssmZX1jNHgbORc7U+zNHz0IDyP7yJw4Ck29B/ZVKtEgXNJgtBin0/XkL7bqiH9YeB8rSrqwOXZXnva8hy7Yy8zJcjf1eHNtpOHBKXcFnMGjTcJ/y7R8ws1XONaLquAvtD6g9GRGEmKEj5yqMb5ST6PJv+6oVopj2y7YetECLQqbHSBo8O1e/fNixh+tirdqhCjvQE0mWF1MuMW99C7KAGPms742yMFDsZK0vCUw59pAhhJ35fZo0dLfdVJEYwsvlFVJ6oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6QmyrSexW1QmE6ipi3xh1tasNCzXUR0ei8apF5brOLg=;
+ b=U5RadFiyYMIjtpq8k1pMPYfSZeBswri7ywT4YCMqaUwOgt1dmjQEVfSAI38LzrRuY+ZvuU+5k1LAXcP3E1EZcBgr4EMG1g7MGy6C+iL+a0JYuJ2W1svB1Z5AIe00Plhfkmw8JNZsFS5EB4WCcDXONftN9aBqG0XcT8mFKRdCaKjSB2K5jksyiN9N+eNm+K93Afr2CQcPM1t46g3RH8M55m13x5eJ5gbFZKwJEZnNIcQTsJkxk80pL2RNm3biGQyctigtOEytbLDoHwewr+9ZH058Nr/qckQxw5EiKDTbeKVnPaOVLt7uO1JP1Pa++p1VUq9d4C5BHJZjAAqhI1Dl9Q==
+Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
+ by PN3P287MB2000.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1d2::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Thu, 14 Nov
- 2024 02:27:20 +0000
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::357a:7bf5:8d95:3cba]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::357a:7bf5:8d95:3cba%4]) with mapi id 15.20.8158.017; Thu, 14 Nov 2024
- 02:27:20 +0000
-From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kw@linux.com"
-	<kw@linux.com>
-Subject: RE: [PATCH v4] Export PBEC Data register into sysfs
-Thread-Topic: [PATCH v4] Export PBEC Data register into sysfs
-Thread-Index: AQHbA+h74ei4/Wguf0W/KiuMbwib67Kik86AgBPPI4A=
-Date: Thu, 14 Nov 2024 02:27:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.28; Thu, 14 Nov
+ 2024 02:51:27 +0000
+Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
+ ([fe80::a94:ad0a:9071:806c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
+ ([fe80::a94:ad0a:9071:806c%3]) with mapi id 15.20.8158.013; Thu, 14 Nov 2024
+ 02:51:26 +0000
 Message-ID:
- <OSAPR01MB7182F740B00B1A38AB84AB6DBA5B2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-References: <20240911012053.345286-1-kobayashi.da-06@fujitsu.com>
- <20241101110425.00005582@Huawei.com>
-In-Reply-To: <20241101110425.00005582@Huawei.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=True;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-11-14T02:27:19.882Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Standard;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYWPR01MB8840:EE_
-x-ms-office365-filtering-correlation-id: 0cbf7f48-ae96-483a-1746-08dd0453ddbc
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|1580799027|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?bmMyTGpDWmMrWXpjQ2FiQ1drSFRWZGxQNS9UaENVUnIwVkR0dmZ4b05D?=
- =?iso-2022-jp?B?ajd5dzNtZ016UVZjeTZubU1od2Y0LytoVWxPcldCYzhjb2IrU0lkYXl5?=
- =?iso-2022-jp?B?RTlSaGxRTWNRd2JYS013Nk82bmJvS1FUVURpY3ZkTEtZWWhYRWhvQTB4?=
- =?iso-2022-jp?B?d0t0ZDBnRW1VblNhNVhUb25lR3NoMTVsWEZPYVZxMHM0dmhEOW51OVZC?=
- =?iso-2022-jp?B?YmlHQzRYanRpcFNJN29qSzJXY2Yvdko3azZKNkhnem9YRHNrSWhMZ3NE?=
- =?iso-2022-jp?B?ZGN4bS9LbFEwUXlRWkpESTJEODVYeFVVdzNLSnNWc0p1bXd1ODlSQTJ1?=
- =?iso-2022-jp?B?dVdoclFaR3pSa1BLUU15UmtxWENGR0haOFhCQU1NSDNOUFV6MSt6bUk1?=
- =?iso-2022-jp?B?OFBzYjU0S21xSGlTMWcyV2VlbXdPT1VmTVprT21VbkFaaC81bStYQkl2?=
- =?iso-2022-jp?B?OUpLM3FoRGZNSFFFdFJZS3E2bFRieWpMMWszZjBaVGdNcnFweWsxY1NI?=
- =?iso-2022-jp?B?ekFtMDUvbmFjNjRHWFc3NVVHcDA2UG1Lb0pDczc0OXBJMEFhay8zYW1K?=
- =?iso-2022-jp?B?TjdYZkNRRkFTTkRCUEVuMGZhcjJwT3ZEb3ZCTllheXZlR1RMYllJRXZH?=
- =?iso-2022-jp?B?Y2swZ3RqWjVXbkp6UGFVNVdXV2RoUmo4NTV5SDN2SzJCVzFsa2NNaGh3?=
- =?iso-2022-jp?B?WDRNSWZiU2Q2YWk2Zm4vdnJBOVYzaFloZ2pmNXdSREgxRGw0YkhmWElu?=
- =?iso-2022-jp?B?NGorM2xBdDk3VkVudGs2d2lLcmZyd0JDcHA5c0xDVzdUNDNMRXpVV2lV?=
- =?iso-2022-jp?B?dThOOExwWnJsc096WmVNblZSeFlWa3g2Um1UblpwVkhXRzVyZVJMYUE2?=
- =?iso-2022-jp?B?cEtyKzhSVEZCSlhxT2FrNXg4U2JrNCs2TnZwcVkxVS9aNnljSUVGSkdL?=
- =?iso-2022-jp?B?WS8zODJ6SFFuSkZvSkdrcFJJTEZjRlN4dDZIK0luTFVvckJWZjUwMzgw?=
- =?iso-2022-jp?B?MXNHVy9DekNkV051MDdVZlErb1U0MjZFbWV0SVZFNlNxWkFmWHR1LzJS?=
- =?iso-2022-jp?B?SllCTVpQZFlMRVJBcnpOeldITGZEQi9GYXVjN1h4YXBsbkZ2bEdHWitq?=
- =?iso-2022-jp?B?S1lLa1o1azhRVnpYQlR3WmhNM3lXbktPUU5mNCtmdEQzRFYrc2NoU0NT?=
- =?iso-2022-jp?B?SDJEa2s3bjZKQzNSLzNkTFBKRW15Tm1SSzVERVRSM1VhajBYV2pxaDl3?=
- =?iso-2022-jp?B?enpINkV6NFdKcHJFUTVWWTFzWGFEY3pyZGZmRk1ublE4dWZzaHVrRmZB?=
- =?iso-2022-jp?B?ZzZkUkpMbVR4V0xtZnBKejNhTEVaRHREeXN6cHJHUzFKQ0tCd28yL2F3?=
- =?iso-2022-jp?B?MEU5T3V6ZzM2ZmpvZVhraFZRV2dtancwbGUvYnJ5ajJYRUJ2VkswTDRM?=
- =?iso-2022-jp?B?WE9QdjIzUXAxTE1DUDJFTkRLajRJV2djM2tZNHFFdTRrMjBWb1F2b2xH?=
- =?iso-2022-jp?B?MEJtbkhGeXF3NFA2ZXlENU5OZmU4NmdzU3RqaDBJdUcvRUJFYitpa2ls?=
- =?iso-2022-jp?B?TGZoZlUzUndVa3k5bW93NTdjVk1tYlVVY2NweEs5enpGckJXR0lEYWtP?=
- =?iso-2022-jp?B?dFlYS1ZXNkZYYVJnTEEvNHpUYTZWNVJ3NkRYZXR3Q0lRVG50a1lSSXpY?=
- =?iso-2022-jp?B?ZmtGNy8yNDdCMEhsZ2VoT3hrTys5aFV2S1k4dDh3bnJxcnR5TEZXOVNY?=
- =?iso-2022-jp?B?VHlBcVJZTTVNbVUxaEdubzBUN1BLZ3Z2RmhWRFdSWSswK3ZWK0VkQnFQ?=
- =?iso-2022-jp?B?SUZ3KzdVNzVxdTV3SEN6Ri9aVG9PMUUvbmdHSEk2dzduY1JDQmJoYklm?=
- =?iso-2022-jp?B?MCtuem0wdm1PdURjcjRBbUdZQ2szQnFNUFlCZmMrM0l2djI5bXNsQ3FV?=
- =?iso-2022-jp?B?ZHdPTEo2V3RIMExpZGxjWm9DaCt0MHNlbnU0OFJiK2NYTmh4NnZpdXJM?=
- =?iso-2022-jp?B?alh0RGhaQUlJc3JtZE1DaWtNV2lXWWljUjY3WXFLSmNLUHJad043YS81?=
- =?iso-2022-jp?B?YUE9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(1580799027)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?alRDMUZjZmlXelhvMjY1TDVyMWNLL0x2ZWdrWHNQd2tOT1JhYnhRQ3F3?=
- =?iso-2022-jp?B?c0p2T0JwbHg3a2lMdXZOUzVsTFNSYXlnbWtONm1CajRrUUpRWnVlZTM3?=
- =?iso-2022-jp?B?VXBrK0ZsQ0RFVS9Fem5PTlZvZlVPakRZaitERC9ibk51dkVBTk1RMlph?=
- =?iso-2022-jp?B?ajFyb1BDakFXODBrWHE1U1Z0YTI1MGdOZFd2MXZ3UkJKR0hGMjV1eXlt?=
- =?iso-2022-jp?B?eHpWbXhtM1dZdlJUZU83MWtoeW1qQmxsWHg1cE03aUgwWU9tYjNTSzk4?=
- =?iso-2022-jp?B?VTZvZ2ZjbTlpV3ZSWWJHaXpSRnJpbUR0OWhOQTZuLzYyTERsdkh4cHdh?=
- =?iso-2022-jp?B?S05iQXd0WThjbjBLSlRQVGY1V05idmRzZnhna2QwOFRpOVMxOFZuSEJh?=
- =?iso-2022-jp?B?Tk9mMTdaUFNLRStGTjQrVWtxYmEvNHQ5dG5zS29EeWUwdDRXUjl2WGJJ?=
- =?iso-2022-jp?B?TXRpZHZGcFZnYWorWTdwMG1xbnhVci84SmIvL1c3c3FMbXp2QSs2aVo0?=
- =?iso-2022-jp?B?NnRTSXhKazJnZTErb3k4cjh0RnFOdVJQbnB0WmNiOUNvUTJwa2NONnBw?=
- =?iso-2022-jp?B?VitsNFVLY1JFTkt1WTlwNmtuWDJ1RWJ6SFBuM3NkRTNwNG1hVmVMYVRH?=
- =?iso-2022-jp?B?cWR2TEh5NjU5WjZ3U3RoK0txL1NRK0g4Zld4UEc3WTh0Qkp4VTZsMTcx?=
- =?iso-2022-jp?B?WktGL3hzK2JoQmY0NTdDdWl0TGpUTFZpREV1cmRhZjRiWkJESldjb3Zp?=
- =?iso-2022-jp?B?T1RmY1pXZGtuaTBLaDdNNEs2L0J5aE96ZGdZVk5LS2QzOFZxMGxMM3dD?=
- =?iso-2022-jp?B?ZE5DVjRJbGVmbHc1a3VRZUZ2WHV6RjVtamRpZ0J2cTNaL3A4K0JKK05O?=
- =?iso-2022-jp?B?bktkZTc3Sk5OWlFDWEJRSitLU0VJNGF2a05EWEZGSEkySzVhRjhnRlo3?=
- =?iso-2022-jp?B?NGZ5YUxpK28yai8rSFkrQWt4bDJMUUxzaUdaNUpvM1plTmhiV0dCZ251?=
- =?iso-2022-jp?B?TnJraStIV1lXenN0UE9GWjlOODA4aXRxMmhZUzhvNVVUVElyRjdqWFdu?=
- =?iso-2022-jp?B?bGpCeHp6RkhqSEJDNENLZnI5d1BZYXRkRGxJT0NIMkF5dnlKRXJuRkZi?=
- =?iso-2022-jp?B?OFc2YkoxbWVGckN6dHRtY2EyTTBLa1Z0RU1XeUplRGFNeStzUEtZd1Nx?=
- =?iso-2022-jp?B?L2xBUUZ3cnRtRjV0YStaaXMzUGNyYitJSjN6RVNlV0QyYWVoOWdSbXAr?=
- =?iso-2022-jp?B?alVQd2ZKTXRrSy9VU2hRMGpGUEtacVJPeVBvb21JUGVQaFJGaUVkVUdR?=
- =?iso-2022-jp?B?WXZ5TTdpN3dPd2czbVdtSGpnWTBIcG54aTJXLzZpUWZhK0pveGowQmZp?=
- =?iso-2022-jp?B?ZitZZVlKVEg5NlhCK1FsREN0QjgwVjZLVm5Fa0sveURWUlZYVXNxblhp?=
- =?iso-2022-jp?B?cythWi8rQzI0eHVJUzhLTFlaL2FVcHZWUGIyZnoxcGRwaFlDZi9xM0t2?=
- =?iso-2022-jp?B?QUJTSzMrSm9wT3gzMEZuRE9aUy9YNUNTVVFlcGtiVE1ZaDEraDhkUjZQ?=
- =?iso-2022-jp?B?TEtReVFwakNXUTZSRThodjhNWmVZWTNQWGs5M2dza2I1YWFNdFB2aVYx?=
- =?iso-2022-jp?B?QUZsTGtoMWtGejN5WWFtREE4K1FtRi8zZnhiYjBEVzNzb1FMUFkzNG91?=
- =?iso-2022-jp?B?ODYyTUlPY2IzaGtDMUpKc0kyUGVFMGc2OWY1SE5uWmRNUlJIKzExWkJx?=
- =?iso-2022-jp?B?ai9yVk4zakUyV3IyUHdXS2NCVit6UGREY0RCT1JnSWV6QkxMVytvSDJI?=
- =?iso-2022-jp?B?SE40cm9oNTFTUVJHLzV6eTdiVXJlN3NlY0plWk5YSmpMNnZPUnJLNHIw?=
- =?iso-2022-jp?B?STQ4c0JkNzZHT0hibGk5ZHNPekowV0xrZzZiUUpMY1ZPeSsvdm8vVm81?=
- =?iso-2022-jp?B?TDFBZFlyeDVndHRGMVZCL29TWDRRUWoxcTcxbXpTWTBMZHFPTFU3QmJ1?=
- =?iso-2022-jp?B?eURMdVRpb2ZjRVl0OFMrWGlmNm5HQWlRd2JHelBJVS9ja25tNm9VODRP?=
- =?iso-2022-jp?B?dURkSGw1SHZvbDZQR1pwOWRlTlVsZHQxNUtPSTExOGhKK1k0ZGdxcjh0?=
- =?iso-2022-jp?B?aGhLQURXV3V0UExvekJFMDJyRGpnd1F1eVhnRTJHUElia1E2akZ3U21a?=
- =?iso-2022-jp?B?SEZOWGpvWmFwZUNhZWN3QU1yeG5nWDE4M0dvdHZWUGNGaE5sRG53MFZD?=
- =?iso-2022-jp?B?OFBoYndXZWlOLzdURWlqNWR2L0JzTlI1WkFLd1JqUC9HQXdOMlBzR1Vj?=
- =?iso-2022-jp?B?R09HSkZpT0JOdUFWU0kvZ0JpTGJHb0RxbXc9PQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ <MA0P287MB2822642BE6F4B448410A28FAFE5B2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
+Date: Thu, 14 Nov 2024 10:51:23 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
+To: Rob Herring <robh@kernel.org>, Chen Wang <unicornxw@gmail.com>
+Cc: kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+ arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
+ inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
+ lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, pbrobinson@gmail.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
+ xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
+References: <cover.1731303328.git.unicorn_wang@outlook.com>
+ <1edbed1276a459a144f0cb0815859a1eb40bfcbf.1731303328.git.unicorn_wang@outlook.com>
+ <20241112155913.GA973575-robh@kernel.org>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20241112155913.GA973575-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR04CA0157.apcprd04.prod.outlook.com (2603:1096:4::19)
+ To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
+X-Microsoft-Original-Message-ID:
+ <7cb6a172-33ea-414b-b105-40c3609327bb@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	2sHfD/yZALilZ/XIcCj+keFINbqiOcvYzy/ybRl+hTdB/4o0pbyRHg0PcNi0j8fu7CMEGDxsBcFEQiK4BQj0VcUsiD5pwaDqs6SLk3tf5sUURakSGTQ+DXxnTfqcxE13afW7qmMWikZCMMrSoTGusfpLNgLyRrcoMWvr/86ZkHQXNoRVJNE+4Bwm4yxdyigS3fpqLmRyQyUdTeLpJA5GMQ/VWp3C78Ccj9kEX9c6CH4UxCg8m10FFS9ayAt8nMAIZTN5MV81D2yBUKfjGRj5UYnGwID4qw0B+ycKfOdknFeK9ATCD67uUt16dhefoyUOrpVMXUz1c4XoHwQQLv0zF8Kg91yL5AaZw42uZ2oASoP17T6rDpyh97+sQwBQCdxMmUU81rLnStojoyvod+mrT5FeZmHjlEnLAlLY5WhBLd1Mer/E1fgehmKGwKhfGQ4Fs1/65Cq/7SaA8lO+RI4zrSTb7I31M0txPXNKpvY9M0NxUjL0Y+8zD6jNC5wVGC6gtK83MOItWfHcdm/ceTXq3WwypuX2XOxkLLIWp1XtWxZEOu78Vc0IxhGXYCZMCBUDloiO25DJRWbd4a4A4atjIGJ13D8ps3fPoSMq07ALUhIbygeBRp39oL9ysk2vJoYT
-X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|PN3P287MB2000:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0027114-1a80-4966-022a-08dd04573b9b
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|19110799003|461199028|5072599009|15080799006|8060799006|7092599003|4302099013|10035399004|3412199025|440099028|1602099012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cE1CZys4RTNuQVQwcU9XZ1pHU1NndXkwTUFLb0QrdmJoM002aWMwVUVycUw1?=
+ =?utf-8?B?SXJWY1VtaVdHRzVqbVlORXZYRUdFcHlCaWZhRTYydmM2cHB4a0JoZjNuTmdk?=
+ =?utf-8?B?anE3Z3Jabmw1d3UxTURQNXV0NmsxWHN4U3RkdTk3dkpHZ1VpTXEzazJncUph?=
+ =?utf-8?B?S0JzdVhxN0o3TjVTaVErUTBtR3VyemszVzUxc2lWRmdCYm1iVS9RQkg2c2N6?=
+ =?utf-8?B?RHNBRUlpdkVWY00rcWVVM0dacGdJVDFjYzZnZDdoTmFTcmp4ZW5YeWQ3UEY0?=
+ =?utf-8?B?R1R4MThENU1Oa040OGkwN1lyd0w1enpRT1pIczJHQlpkU0tKNFByY01vQ0NP?=
+ =?utf-8?B?RWRNN1puM2dKMnpqVzM3UXRMZnFoMlhPZWtvQlUxV0I1ZjdDWml5UytVTVk3?=
+ =?utf-8?B?alpGdGlrY0hSeXVKcFdZZTBpWnJPcFlKZDREZWhkWUI1bkhBVHdPdEw3eTc0?=
+ =?utf-8?B?N3VMVTl0bWNNU0ZKbUY0ZlhnMlkxcUx2cFd0Ym51SUNoRjJNWHdBT1lqQWxM?=
+ =?utf-8?B?VnB0V3NmbTUxK0VCYnAxUDArQU4xcFZlRFY2ZGJ0ZUNDeStoMmlrT002VzRE?=
+ =?utf-8?B?aDhQY1JYbWVOZmNkdURpVE96M2kvNjVNd20waFZBemNkZTlRcFNoSmFBOFhw?=
+ =?utf-8?B?elJXVEh6cmlQSHdMVi9KRXZab1NXaVBwSFhsR0Z6dm90TEQ3VU5RaG52M21F?=
+ =?utf-8?B?RUdla3oybHVQN2NiMDkvOHI5a0N3dEdJNXdHZ3ZaaFhrbUlqWUZURlZicHdG?=
+ =?utf-8?B?b2ltTnpaVzhrdW1ZNmhRRDJCanRERkd4N1ZGMGx3R2V5QTdYdDlCSTcxZ3lP?=
+ =?utf-8?B?QWRzZzg0VFllV3ZhTHRWOTkrY2dmaE1RYlRDWnhHRi9YYzZZQlV1VGJUOW5K?=
+ =?utf-8?B?SWFWVXZPWWk4WTYwaTRrbzJ4MTB6SjV4VHVKK2k1ZERvTnV3NzdFdFZBZ3R5?=
+ =?utf-8?B?UzRrSHllMzVjeVhYUlRnMXZETEJ3RVltYng1WFN6VnlYMlhsWmJCRmRGbi9t?=
+ =?utf-8?B?a0JSZnVYdUFZRkZLbXBITEIvUlhLd0YyV1ZPNzNzTEg3WnFHZ1c1azliaHIy?=
+ =?utf-8?B?bUpJQjk0aFZYdmdPVFhRVkd0N3YzeGRyRFpjUWptUGxmb3ZPQS9wdk9IU3JK?=
+ =?utf-8?B?elp3MDVxQ2VRSXRBSjM5R1BibzQrRkVtU1FtTHdOSFJmQWFsNWtJVGFmekQ4?=
+ =?utf-8?B?S1cyTk8xU0pCV2NjQm5sK0ovRy9PMUV2SFNQNjBWN2tCVE0veEtaY3hCelFJ?=
+ =?utf-8?B?Z2gxeExkRHRtaklwV0FqOENTbm0wR3RoRnFLMWl1NW0razZ4Njh3ZkpWWHp0?=
+ =?utf-8?B?aGJQR1gvRGxyMXUrQ2xLNzE1MW5LZ1B5U0NNaE9xMUZ5aDFUQUQyL0djVDZW?=
+ =?utf-8?B?Y2IyN0J3anBCOUZPUmExUDhCSTNhRlh0UCs5NTVqcGd1UFh1YjE2K2dJenhw?=
+ =?utf-8?B?UURzMjBTOXpsWmx4VHlMaS9MMWFJNnE1SDVQMFNpc1U0eW54eXViOURjT3F1?=
+ =?utf-8?B?S0lrckZ4UDhjUG9BSzhhZ2hXUEZjdllHRnY5NXY0STZSUVA2bS9zbUFjbHdu?=
+ =?utf-8?Q?9mBj5HLqJXRKWBwbS2zmCl3eKlFLoyiIMgfBwL2QnAZmFL?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dGFTbGt0UlNML2NuZlZZWWFiZGJyZzczcENqZmQwSU1rRUIrMEVSU2JhcG1v?=
+ =?utf-8?B?bis1TWZtZllxR1lHV3ZESVlmbXhEZ0VXYzBtK21HMnNlNyt0S2F5djlKSTQx?=
+ =?utf-8?B?T3l1YVM4TW9Sb2JJQW9BZEg0a012b3pDVWVNRldYQWJqWHBzVitma2c1SEVB?=
+ =?utf-8?B?TUtGc2tJbGhzTGx3NElKV0RtQUJqMXhzZ2h5bzdXdklSeHIvOWRMREppbUx0?=
+ =?utf-8?B?cjd2eEttbE1yUFcxZ3BuS1lDd2ZxS0NMNHNsZTZuTXBaNHRnODlWdUprTkVV?=
+ =?utf-8?B?SnZKR3pNdHhNR1lmZGRheFNKc3lOZW93OUxKUS8yd3RRM2prV3JiR1NmVGNN?=
+ =?utf-8?B?dlZHQVpvS0FsTTBNT3RTVUdvbU1iWWtmb3p0M1NnNFpBZXM0Rmd3cTVnZ1pG?=
+ =?utf-8?B?dUxxR0xHTTRPdGwyOW5SVFc1M25Na1VDRmg1dE51ZENDY004RG9YdlNwV0xk?=
+ =?utf-8?B?NE8zQXBaTTRuTnVCUjUrRjd0ZW5hVjl4V2NjcjVlb0hURit5MFVrbzdVWi9p?=
+ =?utf-8?B?Z1krVTA2bUZQWW1IZ3dURXd1dEVIUStiL3lmQjU4V0Q2aGlsVUlsWGxINWtO?=
+ =?utf-8?B?U09zTjREZTY3VG9PVnk1eTN5M01HRVY1OGFnQVdpbTNmWTgzdG4vRGsxZkE5?=
+ =?utf-8?B?cVJ5cllkTXJEd1dMU0R6N21ZbzJJemRLUWJhVmZ2U3pKTHlTQUNqekpFVU1W?=
+ =?utf-8?B?djdmb2FsTEpZNGczclBoZlZiRGsybjJvUUNrWVlCR0xXanUrd0xXQ2xhSGdv?=
+ =?utf-8?B?WjNvbUJNSDVEdFBRWlY0UVNub29ES0g0bjZLSTN5ZzIrblk0N3dOZnJhcStW?=
+ =?utf-8?B?My9zVG1CaHVTM3hEcU9zR0lRbTBDTmFlbEM5ankrd2E0UnROTnExdmpwczM1?=
+ =?utf-8?B?R3I1YlNwcWpFMnF5LzB1K0lIakt5WTc2TXRFOXdHdXZQWmlBakhlL21CRkp6?=
+ =?utf-8?B?WHAyUWcxalVXRVpBMXBiSS9zVVRjbGZSQ2xFRmF1cTdMcktKMFI1NGdvNHM1?=
+ =?utf-8?B?dzk0QVpHTXhVLzgwN3NvWkQyaTJjTXNRbU12VWd3eDBsVlhna002bWNyNG1j?=
+ =?utf-8?B?UnRLbXZzSU9XNW5qQ0l0eXEvckowNExEdTlYblh0K0diTkg3SGQ1OGdtckc2?=
+ =?utf-8?B?VVRzRTBjY0llUFp6YmJ2NDdLMFRWL2RHQzYyWmROaXQ5bXMzWEpVaXhCSit4?=
+ =?utf-8?B?aWd1Qm9PYWlHdTdFYW8wa01rR2lvVTBtMDI4TmJkQXZNT2QvSG1QNnA3SWRh?=
+ =?utf-8?B?VndBMUF3ZCt3MXhMVTVvTURDSzBqTGlTbXBwNG1IejdKTHpQaENqYytFVURW?=
+ =?utf-8?B?MHJOZGlhRm5KaGtvOW1RL0dvVndCWktDSUJUM2RhMW5DL3JZWTVBMjJEOGdJ?=
+ =?utf-8?B?c2VvbXN4MjBZMXZaMzdxTEMydUluVU11eGl6UHFqaDNJbCt1aUhtSDVFQ1ZW?=
+ =?utf-8?B?NFA0Rnk5RFg4TkJLQkpaMjB5VmtrSXhVRUxXSVl0RVF4REtFMmlUdm8rTCsz?=
+ =?utf-8?B?WHd3dWNTcEVFdGkzZlZQc0dHK2NrRGVDR1Z5WTlpOU1ZUFVHRTBFeXpaMXpS?=
+ =?utf-8?B?UWVVVDVtYWVzZEMySm4ycG9DV2RXMVo5ZXpPTlE5OW9wa1hLT3BCRXRDdlFv?=
+ =?utf-8?B?RHZ2dXg4YWorVDlTVWZuRVEybkVjQTRqVEF2MU8rcFE2dUhlS2J3WTBZMGo0?=
+ =?utf-8?Q?5xGOzFu3r4Xrn6VUpmll?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0027114-1a80-4966-022a-08dd04573b9b
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cbf7f48-ae96-483a-1746-08dd0453ddbc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2024 02:27:20.4766
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2024 02:51:26.7226
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Pi3+2nb/UWxTwQDUMDgO91xmkzBVmhjiEbNgyZiD+09PmcCaxvXTJHYB5H+v8m4ZKGWyXy2pJEfpHIf7VINYCLXzPvGWEYa86efaO0nmLyQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB8840
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB2000
 
-=0A=
-Jonathan Cameron wrote:=0A=
-> "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:=0A=
-> =0A=
-[...]=0A=
-> It's not user friendly to just output the register content, and this is b=
-reaking the=0A=
-> one thing per sysfs file ABI rules.=0A=
-> =0A=
-> Various possible sysfs structures may make more sense.=0A=
-> =0A=
-> 1) Directory with files for each entry found. Each file=0A=
->    is one thing so=0A=
->    power_budget/X_power - maths done to take base power and apply the=0A=
-> data scale.=0A=
->                 X_pm_state=0A=
->                 X_pm_substate=0A=
->                 X_type - potentially with nice strings for each type.=0A=
->                 X_rail  - 12V, 3,3V , 1.5V/1.8V, 48V, 5V, thermal=0A=
->                 X_connector -=0A=
-> 	        X_connector_type=0A=
-> =0A=
-> With the stuff in the extended bit only visible if flag in bit 31 is set.=
-=0A=
-=0A=
-Following the ABI rules, I propose the following directory structure, =0A=
-based on the suggestion provided. =0A=
-Please review it and let me know if you have any concerns. =0A=
-If there are no objections, I will implement this and release it as the nex=
-t v5 patch.=0A=
-=0A=
-power_budget=0A=
-    =1B$B('(!(!=1B(B 0   - The index number to be set in the Data Select Re=
-gister=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B power - Value considering base power an=
-d data scale=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B pm_state - D0, D1, D2, D3=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B pm_substate=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B type=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B rail - 12V, 3.3V, 1.5V/1.8V, 48V, 5V, T=
-hermal=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B connector=0A=
-    =1B$B("=1B(B   =1B$B(&(!(!=1B(B connector_type=0A=
-    =1B$B('(!(!=1B(B 1=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B power=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B pm_state=0A=
-    =1B$B("=1B(B   =1B$B('(!(!=1B(B =0A=
+
+On 2024/11/12 23:59, Rob Herring wrote:
+> On Mon, Nov 11, 2024 at 01:59:37PM +0800, Chen Wang wrote:
+>> From: Chen Wang <unicorn_wang@outlook.com>
+>>
+>> Add binding for Sophgo SG2042 PCIe host controller.
+>>
+>> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+>> ---
+>>   .../bindings/pci/sophgo,sg2042-pcie-host.yaml | 88 +++++++++++++++++++
+>>   1 file changed, 88 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml b/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+>> new file mode 100644
+>> index 000000000000..d4d2232f354f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+>> @@ -0,0 +1,88 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/sophgo,sg2042-pcie-host.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Sophgo SG2042 PCIe Host (Cadence PCIe Wrapper)
+>> +
+>> +description: |+
+> Don't need '|+'
+Got, thanks.
+>
+>> +  Sophgo SG2042 PCIe host controller is based on the Cadence PCIe core.
+>> +  It shares common features with the PCIe core and inherits common properties
+>> +  defined in Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml.
+> That's clear from the $ref. No need to say that in prose.
+Got, thanks.
+>
+>> +
+>> +maintainers:
+>> +  - Chen Wang <unicorn_wang@outlook.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: sophgo,sg2042-pcie-host
+>> +
+>> +  reg:
+>> +    maxItems: 2
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: reg
+>> +      - const: cfg
+>> +
+>> +  sophgo,syscon-pcie-ctrl:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description: Phandle to the SYSCON entry
+> Please describe what you need to access.
+>
+>> +
+>> +  sophgo,link-id:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: Cadence IP link ID.
+> Is this an index or related to the syscon? Nak for the former, use
+> linux,pci-domain. For the latter, add an arg to sophgo,syscon-pcie-ctrl.
+Let me give you some background info.
+
+SG2042 uses Cadence IP, every IP is composed of 2 cores(called link0 & 
+link1 as Cadence's term). The Cadence IP has two modes of operation, 
+selected by a strap pin.
+
+In the single-link mode, the Cadence PCIe core instance associated with 
+Link0 is connected to all the lanes and the Cadence PCIe core instance 
+associated with Link1 is inactive.
+
+In the dual-link mode, the Cadence PCIe core instance associated with 
+Link0 is connected to the lower half of the lanes and the Cadence PCIe 
+core instance associated with Link1 is connected to the upper half of 
+the lanes.
+
+SG2042 contains 2 Cadence IPs and configures the Cores as below:
+
+```
+                +-- Core(Link0) <---> pcie_rc0   +-----------------+
+Cadence IP 1 --+                                | cdns_pcie0_ctrl |
+                +-- Core(Link1) <---> disabled   +-----------------+
+                +-- Core(Link0) <---> pcie_rc1   +-----------------+
+Cadence IP 2 --+                                | cdns_pcie1_ctrl |
+                +-- Core(Link1) <---> pcie_rc2   +-----------------+
+```
+
+
+pcie_rcX is pcie node ("sophgo,sg2042-pcie-host") defined in DTS.
+cdns_pcie0_ctrl is syscon node ("sophgo,sg2042-pcie-ctrl") defined in DTS
+
+cdns_pcieX_ctrl contains some registers shared by pcie_rcX, even two 
+RC(Link)s may share different bits of the same register. For 
+example，cdns_pcie1_ctrl contains registers shared by link0 & link1 for 
+Cadence IP 2.
+
+So we defined "sophgo,link-id" to flag which core(link) the rc maps to, 
+with this we can know what registers(bits) we should use.
+
+That's why I don't use "linux,pci-domain" and also it's not proper to 
+define it as arg to "sophgo,syscon-pcie-ctrl".
+
+
+>> +
+>> +  sophgo,internal-msi:
+>> +    $ref: /schemas/types.yaml#/definitions/flag
+>> +    description: Identifies whether the PCIE node uses internal MSI controller.
+> Wouldn't 'msi-parent' work for this purpose?
+I will check it out, thanks.
+>
+>> +
+>> +  vendor-id:
+>> +    const: 0x1f1c
+>> +
+>> +  device-id:
+>> +    const: 0x2042
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-names:
+>> +    const: msi
+>> +
+>> +allOf:
+>> +  - $ref: cdns-pcie-host.yaml#
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - sophgo,syscon-pcie-ctrl
+>> +  - sophgo,link-id
+>> +  - vendor-id
+>> +  - device-id
+>> +  - ranges
+> ranges is already required in the common schemas.
+Got.
+>> +
+>> +additionalProperties: true
+>> +
+>> +examples:
+>> +  - |
+>> +    pcie@62000000 {
+>> +      compatible = "sophgo,sg2042-pcie-host";
+>> +      device_type = "pci";
+>> +      reg = <0x62000000  0x00800000>,
+>> +            <0x48000000  0x00001000>;
+>> +      reg-names = "reg", "cfg";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      ranges = <0x81000000 0 0x00000000 0xde000000 0 0x00010000>,
+>> +               <0x82000000 0 0xd0400000 0xd0400000 0 0x0d000000>;
+>> +      bus-range = <0x80 0xbf>;
+>> +      vendor-id = <0x1f1c>;
+>> +      device-id = <0x2042>;
+>> +      cdns,no-bar-match-nbits = <48>;
+>> +      sophgo,link-id = <0>;
+>> +      sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
+>> +      sophgo,internal-msi;
+>> +      interrupt-parent = <&intc>;
+>> +    };
+>> -- 
+>> 2.34.1
+>>
 
