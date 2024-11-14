@@ -1,162 +1,184 @@
-Return-Path: <linux-pci+bounces-16730-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16731-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A33489C8324
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 07:28:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A53CB9C83A8
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 08:06:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AD951F236BB
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 06:28:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 292261F235E8
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 07:06:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C89F1E9060;
-	Thu, 14 Nov 2024 06:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2631B1E8857;
+	Thu, 14 Nov 2024 07:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WVugLPoF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O925Po6W";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WVugLPoF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O925Po6W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpbg156.qq.com (smtpbg156.qq.com [15.184.82.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE2B1632E7;
-	Thu, 14 Nov 2024 06:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.82.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9801EBA11;
+	Thu, 14 Nov 2024 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731565728; cv=none; b=BK/UsoGAIaYtSy1kh3l0gQUHj1Qy76LqWLWAoPrRRddRe9ICLhbrrlfxS2CagwLu+diKwL7YCOjKVG70yKWpyKoZPoeiqFkvltNchYD2ETuNCClFftWX3O/Kd0j9o+EqeG4nsuSxnzNHeCJUSs8xuioKBjeTZSNMgTqVAA+RcA8=
+	t=1731568004; cv=none; b=UuTWzbv00uxiC/JbZP+MQEkcwjcORJlZgJHRaRDu4M0Tb2a6NTTRRy68J+PHti88dEhH0PLV2eJVeV49czCQxKcCNaJ9cd/KRZtnGDvvlXSemTZguwCo53qazjmkljjlici4b4NS9XIMplnrDWWupIxsujikUTquMTkfdsbsOkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731565728; c=relaxed/simple;
-	bh=vlBoSOwvXilp2dG7d2LFG604okbAkj9QIiGpkrwdLEY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ULzWoiWiIQXe5cwwNd0PXc92REN85jkbhRwoE46ZChp2MsQeCk+OelZ2RwAO3HYfpOtS5RA23+YlY32AAYaBDTyBZgLikdWNuJx5SxX/ViT59Fy7aZNUNzZbqAz2tvjxwlqZbpmANTYjIoEB77dYoDp0tbBD1bGRssi4cvNqhTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=15.184.82.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
-X-QQ-mid: bizesmtp81t1731565677td9i2fx4
-X-QQ-Originating-IP: MQFf11WvFEzut+oeB4G2ojO/800rQ6j2cC39VE37dvA=
-Received: from smtpclient.apple ( [115.200.246.212])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 14 Nov 2024 14:27:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3780668568037727963
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1731568004; c=relaxed/simple;
+	bh=/SG7Ig4cUtBXYK/1m515uXG2/KXqSgjybFUN+smF5KM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4N0HZm1tz/Q6gfCYLLBvkKYy6l+NP1VInVy5gedfzIv1+ilgynKZxn9V3G50Ml1E2qrR8PMpzc2Z9UIQ2b4XecFMujDaaQkvzUzNVFL3MVqMzn+p4eAfSfrov7BoWHupPnzIVk2rNXnwItpxbqCwDp2IeVZ0bM88DnZJx7cC3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WVugLPoF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O925Po6W; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WVugLPoF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O925Po6W; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 04DDB1F80A;
+	Thu, 14 Nov 2024 07:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731568000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3uC3SxsQS0t7XBZ9iU9FybgeRCb0qSAicxdaj6FRoik=;
+	b=WVugLPoFqQF1PdX/f38YjvPeYR176YqYihc/KyBjVIRxGOeaSfqdNsYHAbNpTzWZyKThIi
+	Gb8amy6LBGoNgb4EA2NEOGvSN/tlee8qByuWakHUZDbBjOuui/g1bnEdscfi83JLk2Np8Y
+	7mYHPior5SMInEd9Jyvb+q7Ln9zrK1M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731568000;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3uC3SxsQS0t7XBZ9iU9FybgeRCb0qSAicxdaj6FRoik=;
+	b=O925Po6WR2sVDfKkLBuXExNrBw2ibF87FCrLCbz6CHP/rKVRAU4t/w0yQxtLXKchaknQPq
+	PcvSu8c4UP150DCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=WVugLPoF;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=O925Po6W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731568000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3uC3SxsQS0t7XBZ9iU9FybgeRCb0qSAicxdaj6FRoik=;
+	b=WVugLPoFqQF1PdX/f38YjvPeYR176YqYihc/KyBjVIRxGOeaSfqdNsYHAbNpTzWZyKThIi
+	Gb8amy6LBGoNgb4EA2NEOGvSN/tlee8qByuWakHUZDbBjOuui/g1bnEdscfi83JLk2Np8Y
+	7mYHPior5SMInEd9Jyvb+q7Ln9zrK1M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731568000;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3uC3SxsQS0t7XBZ9iU9FybgeRCb0qSAicxdaj6FRoik=;
+	b=O925Po6WR2sVDfKkLBuXExNrBw2ibF87FCrLCbz6CHP/rKVRAU4t/w0yQxtLXKchaknQPq
+	PcvSu8c4UP150DCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4C4313794;
+	Thu, 14 Nov 2024 07:06:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Pg/rM3+hNWfoXAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 14 Nov 2024 07:06:39 +0000
+Date: Thu, 14 Nov 2024 08:06:39 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	John Garry <john.g.garry@oracle.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, 
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com, 
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v4 02/10] driver core: add irq_get_affinity callback
+ device_driver
+Message-ID: <d441a856-3c81-4db2-a904-5167d26aaf53@flourine.local>
+References: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
+ <20241113-refactor-blk-affinity-helpers-v4-2-dd3baa1e267f@kernel.org>
+ <ZzVX92YaqVpW9cPw@fedora>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH PCI] PCI: Add ACS quirk for Wangxun FF5XXX NICS
-From: "mengyuanlou@net-swift.com" <mengyuanlou@net-swift.com>
-In-Reply-To: <20241112174821.GA1849315@bhelgaas>
-Date: Thu, 14 Nov 2024 14:27:44 +0800
-Cc: linux-pci@vger.kernel.org,
- netdev@vger.kernel.org,
- jiawenwu@trustnetic.com,
- duanqiangwen@net-swift.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3D914272-CFAE-4B37-A07B-36CA77210110@net-swift.com>
-References: <20241112174821.GA1849315@bhelgaas>
-To: Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: NRLj+a+1JRyJKtew8dwzP3Cy7HfiEXivvg7X3Kv5wdBSRfxOtEAvh4gW
-	7Ov+EW5p59fE2VcAY0Raoxz/HfB3lNtgES53JRIHz9H17BSsRBmc6xpHtZo/AfhrenL8M27
-	mDP5w0X1zPo9UsnzqWq5kc3eDvopTK1nGzRXSQRbgrVR2FOCrkAUgUG1aOS4nM+Tp2wYCJR
-	trghrcqJkp/Hf/yxLfKwcAJLIrqTr5gza/jfmpBaByL/5Bzq7E85/HqFTltRBf5xaRsfhzX
-	2FXW+fUjAcIYtxQFpEBXLHS80oP2RRs1QlpPcHdiT5zoyBkSPBIbN4Xx77pNsLA6Ur57H0M
-	/oXnMWJz0uZaDoH4CZlwAjPyN0MuIvIuaFtdMNV0jDicBqVycX3ie99FC+4kEBOXZj1Amnp
-	OzrloRAdO5tyxGMWitN9W26R+xzmab6f7s+VGSR5P3u/7Upzs9rBF/kRuoUjssqaz6NEyAK
-	d7aaQwoePNAX/ADl42EYnQ+mmdmPNFTaN17OZ4fIbjCe0i7h/yy2Ccav9/KLxQBwHTITMfK
-	/NTuYZkMODq1uVmNwfIfrV/feI3TzG+Ve9UYpeKehpwapeFfrq8UYaX+61wF+X/XgDLszsf
-	ut5qtauSTxWUdrEFRgDykOqDsO+6E+buxCzoUnVMMfqUYPplwbAGAc2EIOCYuIFQ4pIlrxv
-	m2RaxxrzIsm4kEm2mQLMnkdSTioqDt/1g5kbZBJhSviTIxa273oAROOROyT8ETA50yRuAp+
-	DXtg8s2EjZn3c3LugkPIL+vhKsb+tWvR7mDomKnHd9/NEeUMADlC6mcdCnNiIxHO38OCnLs
-	Dbqn8IVzCnBSTQSBosg6uYFD/VMjWUDSqytoRQsMVGvvvpP1IMLYEVSTc/IHCgfoz+JnB6+
-	fSzMQWDXfFfBrEH4yeYgWahIaySwWK3CvwScAEVP1j1GiMpbGrIEXGN5WnqEVbH36Ope3AW
-	FnNATbN/tP+rzpTE5QN0poS7z1vbJ3jbLJqDEzdqzPRcAIXSbJ7/c6PNLjDaPB5o1aRw=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZzVX92YaqVpW9cPw@fedora>
+X-Rspamd-Queue-Id: 04DDB1F80A
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+On Thu, Nov 14, 2024 at 09:52:55AM +0800, Ming Lei wrote:
+> On Wed, Nov 13, 2024 at 03:26:16PM +0100, Daniel Wagner wrote:
+> > Introducing a callback in struct device_driver so that a device driver
+> > can hook up the getters directly. This approach avoids exposing random
+> > getters in drivers.
+> > 
+> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> > ---
+> >  include/linux/device/driver.h | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> > index 5c04b8e3833b995f9fd4d65b8732b3dfce2eba7e..0d1aee423f6c076ae102bdd0536233c259947fac 100644
+> > --- a/include/linux/device/driver.h
+> > +++ b/include/linux/device/driver.h
+> > @@ -74,6 +74,7 @@ enum probe_type {
+> >   * @suspend:	Called to put the device to sleep mode. Usually to a
+> >   *		low power state.
+> >   * @resume:	Called to bring a device from sleep mode.
+> > + * @irq_get_affinity:	Get IRQ affinity mask for the device.
+> >   * @groups:	Default attributes that get created by the driver core
+> >   *		automatically.
+> >   * @dev_groups:	Additional attributes attached to device instance once
+> > @@ -112,6 +113,8 @@ struct device_driver {
+> >  	void (*shutdown) (struct device *dev);
+> >  	int (*suspend) (struct device *dev, pm_message_t state);
+> >  	int (*resume) (struct device *dev);
+> > +	const struct cpumask *(*irq_get_affinity)(struct device *dev,
+> > +			unsigned int irq_vec);
+> >  	const struct attribute_group **groups;
+> >  	const struct attribute_group **dev_groups;
+> 
+> The patch looks fine, but if you put 1, 2 and 5 into single patch,
+> it will become much easier to review, anyway:
 
-Thanks for your review. It is indeed accurate.
+1 and 2 makes sense to merge. Christoph asked me to split 5 out 1 as it
+mixed different things together
 
-> 2024=E5=B9=B411=E6=9C=8813=E6=97=A5 01:48=EF=BC=8CBjorn Helgaas =
-<helgaas@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Tue, Nov 12, 2024 at 07:18:16PM +0800, Mengyuan Lou wrote:
->> Wangxun FF5XXX NICs are same as selection of SFxxx, RP1000 and
->> RP2000 NICS. They may be multi-function devices, but the hardware
->> does not advertise ACS capability.
->>=20
->> Add this ACS quirk for FF5XXX NICs in pci_quirk_wangxun_nic_acs
->> so the functions can be in independent IOMMU groups.
->>=20
->> Signed-off-by: Mengyuan Lou <mengyuanlou@net-swift.com>
->=20
-> I propose the following commit log and comment updates to be clear
-> that the hardware actually enforces this isolation.  Please
-> confirm that they are accurate.
->=20
->  PCI: Add ACS quirk for Wangxun FF5xxx NICs
->=20
->  Wangxun FF5xxx NICs are similar to SFxxx, RP1000 and RP2000 NICs.
->  They may be multi-function devices, but they do not advertise an ACS
->  capability.
->=20
->  But the hardware does isolate FF5xxx functions as though it had an
->  ACS capability and PCI_ACS_RR and PCI_ACS_CR were set in the ACS
->  Control register, i.e., all peer-to-peer traffic is directed
->  upstream instead of being routed internally.
->=20
->  Add ACS quirk for FF5xxx NICs in pci_quirk_wangxun_nic_acs() so the
->  functions can be in independent IOMMU groups.
->=20
->> ---
->> drivers/pci/quirks.c | 10 ++++++----
->> 1 file changed, 6 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index dccb60c1d9cc..d1973a8fd70c 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -4996,18 +4996,20 @@ static int pci_quirk_brcm_acs(struct pci_dev =
-*dev, u16 acs_flags)
->> }
->>=20
->> /*
->> - * Wangxun 10G/1G NICs have no ACS capability, and on multi-function
->> + * Wangxun 40G/25G/10G/1G NICs have no ACS capability, and on =
-multi-function
->>  * devices, peer-to-peer transactions are not be used between the =
-functions.
->>  * So add an ACS quirk for below devices to isolate functions.
->=20
->  Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
->  multi-function devices, the hardware isolates the functions by
->  directing all peer-to-peer traffic upstream as though PCI_ACS_RR and
->  PCI_ACS_CR were set.
->=20
->>  * SFxxx 1G NICs(em).
->>  * RP1000/RP2000 10G NICs(sp).
->> + * FF5xxx 40G/25G/10G NICs(aml).
->>  */
->> static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 =
-acs_flags)
->> {
->> switch (dev->device) {
->> - case 0x0100 ... 0x010F:
->> - case 0x1001:
->> - case 0x2001:
->> + case 0x0100 ... 0x010F: /* EM */
->> + case 0x1001: case 0x2001: /* SP */
->> + case 0x5010: case 0x5025: case 0x5040: /* AML */
->> + case 0x5110: case 0x5125: case 0x5140: /* AML */
->> return pci_acs_ctrl_enabled(acs_flags,
->> PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->> }
->> --=20
->> 2.43.2
-
-
+https://lore.kernel.org/linux-nvme/20241112044736.GA8883@lst.de/
 
