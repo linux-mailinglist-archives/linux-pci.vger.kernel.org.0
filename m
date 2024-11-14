@@ -1,158 +1,137 @@
-Return-Path: <linux-pci+bounces-16717-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16718-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 259F59C8012
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 02:40:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CB7E9C8028
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 02:46:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E4FA1F22380
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 01:40:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0895CB23597
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 01:46:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D7A1CD1ED;
-	Thu, 14 Nov 2024 01:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39AE117C20F;
+	Thu, 14 Nov 2024 01:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jgOUJShC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXV+56hl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD2D2EAE4;
-	Thu, 14 Nov 2024 01:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7EE42A9B
+	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 01:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731548399; cv=none; b=LhSduSNdBw6jpGMQiuHIAHz2vwK5vLcTebXFdiABtgjjLYMZr2eeMEYMKJExH/9112H0nH+C0nVV2xJrOjvbP7BMxEndaE+vvbADHFXV29QEwfn1r4f5ouNUvthxf5TlZd2HsM+Tzja8cdHjgHqYYV7PCrTnrQ0yH/FWJTDggWY=
+	t=1731548757; cv=none; b=hXiV3oQ6j6kSQD01dM8NfJTxeyRDQfg1Ee5AD/M2vz9pOvF7gsp+KnnPFQZTjTPml0Oz+w89Zzuunv/Clp/VmGmVCqtLjI+AnXTL6Q13o9tWf509MhDMRlAS66JGxUDxr2zLxQegIyfeLiu4WMa54MrtO+YHqsPiNE1Rc/yfGpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731548399; c=relaxed/simple;
-	bh=a2A54SSr0c1qCs3nPKNXpeh+74Tjkff3eIbfFePWiIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QCrBGRz/TIPrfjP8T0WZ9Awy5OolYAspu0fuVh10+OE7NiQo9a54PgJs04P/A4076CoAB3qalXAHxupYiHLReV3IPYnPaeJ9bMT5vH9unzH5Gb7vJMUIFSySpDkHJrCEAhFqvZMDIZbj0dPjr9vl1+6iO0Aze5C/Egl6XFScB6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jgOUJShC; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1731548394; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=P/hSXpVdo7PKZdAhKmI1GzhFLT4SslowHaqGplbep/s=;
-	b=jgOUJShCxLcQCXFvi25932L8X5Mr1hk8c0Vla4tC6AsHU8XSLY7s3r6ffCTd1imJoOxUwPqCEHdyXqZpQ0yfHmSnr2c0h/bs9WGDes6c4bI2lwfGCevfROduGnrypoQ88q9y+1K6gXoPlSctZ7QLQ0SvOBXo2gZJQPhR58lMgaM=
-Received: from 30.246.162.170(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJMVcJr_1731548392 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 14 Nov 2024 09:39:53 +0800
-Message-ID: <16bf61ae-fc95-4c44-a2b4-81f467537349@linux.alibaba.com>
-Date: Thu, 14 Nov 2024 09:39:52 +0800
+	s=arc-20240116; t=1731548757; c=relaxed/simple;
+	bh=bwGDRMVI7TyWZ6zyTO+7IA/7Wp5/HS+XvIpLC3KJ3dg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NwI25tW8Iq8VLSJUmf6mAICUuYuQHTAIu5FyQCju9wwKErlJUmEuCbEcfJSKuLD94esV6iQ1nCIlvn+j3HMLd7hVWpC/oZdyoTIDdYtE7aZu/ZUarn3/cwMS7lR0/qERX4tuP3LJevtnd0Tr+BzjPQwnh9X6t07rfg5VtjUsDJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DXV+56hl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731548754;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yR1GZUFS0LBQ/guHbrlldU7st7AuyATsxiMe8yNoBo0=;
+	b=DXV+56hllusqiksz4sbuDudGoz/R3YmZ83Vc1Eo3cjI7pK+sToapTP8AT0aO9ULouNAWS4
+	5+bfGSxRP0ENJ5wnKPIS07MKeEBkiWAhvnOn2BMRfzN1bNc53b+VPBZPDnjP46gLnIbIHQ
+	1vfAUSoBykUdIrVX8W1wNUjPs58zfAg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-237--a1l96hQNMq7uvZ2A6y2Xg-1; Wed,
+ 13 Nov 2024 20:45:50 -0500
+X-MC-Unique: -a1l96hQNMq7uvZ2A6y2Xg-1
+X-Mimecast-MFC-AGG-ID: -a1l96hQNMq7uvZ2A6y2Xg
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C22431955F41;
+	Thu, 14 Nov 2024 01:45:46 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.113])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C92A30000DF;
+	Thu, 14 Nov 2024 01:45:31 +0000 (UTC)
+Date: Thu, 14 Nov 2024 09:45:27 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	John Garry <john.g.garry@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org,
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com,
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v4 01/10] driver core: bus: add irq_get_affinity callback
+ to bus_type
+Message-ID: <ZzVWNy3oer4jFjFk@fedora>
+References: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
+ <20241113-refactor-blk-affinity-helpers-v4-1-dd3baa1e267f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, bhelgaas@google.com, tony.luck@intel.com,
- bp@alien8.de
-References: <ZzTTgOoCSqfC4cVR@wunner.de>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <ZzTTgOoCSqfC4cVR@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241113-refactor-blk-affinity-helpers-v4-1-dd3baa1e267f@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-
-
-在 2024/11/14 00:27, Lukas Wunner 写道:
-> On Tue, Nov 12, 2024 at 07:58:51PM +0800, Shuai Xue wrote:
->> Hotplug events are critical indicators for analyzing hardware health,
->> particularly in AI supercomputers where surprise link downs can
->> significantly impact system performance and reliability. The failure
->> characterization analysis illustrates the significance of failures
->> caused by the Infiniband link errors. Meta observes that 2% in a machine
->> learning cluster and 6% in a vision application cluster of Infiniband
->> failures co-occur with GPU failures, such as falling off the bus, which
->> may indicate a correlation with PCIe.[1]
->>
->> Add a generic RAS tracepoint for hotplug event to help healthy check.
+On Wed, Nov 13, 2024 at 03:26:15PM +0100, Daniel Wagner wrote:
+> Introducing a callback in struct bus_type so that a subsystem
+> can hook up the getters directly. This approach avoids exposing
+> random getters in any subsystems APIs.
 > 
-> It would be good if you could mention in the commit message that
-> you intend to use rasdaemon for monitoring these tracepoints
-> and that you're hence adding the enum to a uapi header.
-> So that if someone wonders later on why you chose a uapi header,
-> they will find breadcrumbs in the commit message.
-
-Got it, will add it.
-
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>  include/linux/device/bus.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> I think both patches can be squashed into one.
-
-Will do it.
-
-> 
-> I'm not an expert on tracepoints, so when respinning, perhaps you
-> could cc linux-trace-kernel@vger.kernel.org and maybe also tracing
-> maintainers so that subject matter experts can look the patch over
-> and ack it.
-
-Sorry, I forget it. Will add the maillist.
-
-> 
-> 
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM hotplug
-> 
-> Maybe "pci_hotplug" to differentiate this from, say, cpu hotplug?
-
-Yes, will fix it.
-
-> 
-> 
->> +#define PCI_HP_TRANS_STATE					\
->> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
->> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
->> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
->> +	EMe(PCI_HOTPLUG_CARD_NO_PRESENT,	"Card not present")
-> 
-> PCI_HOTPLUG_CARD_NOT_PRESENT would be neater I think.
-
-Ok, will rename it.
->                     ^
-> 
->> +PCI_HP_TRANS_STATE
-> 
-> Not sure what "trans state" stands for, maybe "state transition"?
-> What if we add tracepoints going forward which aren't for state
-> transitions but other types of events, such as "Power Failure"?
-> Perhaps something more generic such as "PCI_HOTPLUG_EVENT" would
-> be more apt?
+> diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+> index cdc4757217f9bb4b36b5c3b8a48bab45737e44c5..b18658bce2c3819fc1cbeb38fb98391d56ec3317 100644
+> --- a/include/linux/device/bus.h
+> +++ b/include/linux/device/bus.h
+> @@ -48,6 +48,7 @@ struct fwnode_handle;
+>   *		will never get called until they do.
+>   * @remove:	Called when a device removed from this bus.
+>   * @shutdown:	Called at shut-down time to quiesce the device.
+> + * @irq_get_affinity:	Get IRQ affinity mask for the device on this bus.
+>   *
+>   * @online:	Called to put the device back online (after offlining it).
+>   * @offline:	Called to put the device offline for hot-removal. May fail.
+> @@ -87,6 +88,8 @@ struct bus_type {
+>  	void (*sync_state)(struct device *dev);
+>  	void (*remove)(struct device *dev);
+>  	void (*shutdown)(struct device *dev);
+> +	const struct cpumask *(*irq_get_affinity)(struct device *dev,
+> +			unsigned int irq_vec);
+>  
+>  	int (*online)(struct device *dev);
+>  	int (*offline)(struct device *dev);
 > 
 
-I see, will rename as PCI_HOTPLUG_EVENT.
+Looks one nice abstraction,
 
-> 
->> +enum pci_hotplug_trans_type {
->> +	PCI_HOTPLUG_LINK_UP,
->> +	PCI_HOTPLUG_LINK_DOWN,
->> +	PCI_HOTPLUG_CARD_PRESENT,
->> +	PCI_HOTPLUG_CARD_NO_PRESENT,
->> +};
-> 
-> I note that this is called "pci_hotplug_trans_type", perhaps for
-> consistency use "pci_hotplug_trans_state" as everywhere else
-> (or whatever you choose to substitute the name for, see above).
-> 
-> Other than these cosmetic things, the patches LGTM.
-> Again, my knowledge on tracepoints is superficial, but broadly
-> it looks reasonable.
-> 
-> Thanks,
-> 
-> Lukas
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Thank you for valuable comments.
-
-Best Regards,
-Shuai
-
+-- 
+Ming
 
 
