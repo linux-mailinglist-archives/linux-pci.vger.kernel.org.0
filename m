@@ -1,169 +1,174 @@
-Return-Path: <linux-pci+bounces-16751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BC749C8857
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 12:04:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1486F9C8989
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 13:10:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 106662815C7
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 11:04:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 867EDB2C767
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 12:06:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7BC81F81AD;
-	Thu, 14 Nov 2024 11:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25E01F8EEE;
+	Thu, 14 Nov 2024 12:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F966ltl8"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0VIAq/Z1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XzbcY6XL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0VIAq/Z1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XzbcY6XL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3858139CFA
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 11:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B68018BC2C;
+	Thu, 14 Nov 2024 12:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731582226; cv=none; b=dSan6yjtVGcosSnBcZHYTFQXyPo/iOfjEDCs9Z6TJgp5V8xgqYJP0BlktaIwE5yjTkB28xDVGLtkBJoWmdg5/yMHAfn0+9lS0sGhKcf8bHeoI/O2gMSz3+FOCxEfzHoqiEPUlZhLSWDyxrr4deJucuVhqQJHEJm+fOeQ2BAjk60=
+	t=1731586013; cv=none; b=PIr3+L3FUV2KgbBBjcrFWcmiXcS4NpPM3fpD/iaiI3FHAAUHeie81I0/SRfk0ZcZoOtQo4W6pry2+S7hYHqGSFvwJR2TxnMghXVRk5lFS/S1zMVQgklUkwRdhmEqrMYLT1C/5zdRbW+VZCHWFPtVfFr2r8Dzmw0HxeoelUlmPZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731582226; c=relaxed/simple;
-	bh=abotO2HAnrJ6WH0HrCwpozQx2eXGtw03RjZB+isfNDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=olZ8g6KJidUMa/zmTRDutAgBx9T0Lr9+HHXE6vuE5XrrDosEvzzxJdygZTlX9lNvpz1GH7OEXD4B4WxBy26QXlGSW3zxktQSA1p9uwt4IFMn5CatC8EH+BN60C3zah+C+jDW4+y2pmpGlWognHh0i8bjUKP3/pUx4CaUqzio2ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F966ltl8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA58C4CED6;
-	Thu, 14 Nov 2024 11:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731582226;
-	bh=abotO2HAnrJ6WH0HrCwpozQx2eXGtw03RjZB+isfNDE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F966ltl8bfsTG7XYONHWalO/5MMWWXUQnGHZTVkN2XNC471h6Olk7fQkNPaRKy4n2
-	 jY1J31jU0wdOfb2kDLg7xTmt/BAVjImGRMO7i8+NotW4GvcpL7P71QWxeh1HGBd8bM
-	 Rr5zfq/yAaJyX6TXQ5A354UUH6z987bcACUVHjdXL6lDGT1qbfr6xtjek86ELmvhhw
-	 7jIeOtCLV9yXHxtI8HTFgM0dZeeHIZXVLOs9Lvxmlq1Dd2gRtqHvny6znhrktw5Km/
-	 HR3RVgRo3uJ54MF1fbHJ22WTjVt5tlAmDAUF3gDkOTVNYl1osXnEq5VtW7r+NY7gSE
-	 Ia7r1c8h5K6cg==
-From: Niklas Cassel <cassel@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] PCI: dwc: ep: Improve alignment check in dw_pcie_prog_ep_inbound_atu()
-Date: Thu, 14 Nov 2024 12:03:29 +0100
-Message-ID: <20241114110326.1891331-8-cassel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241114110326.1891331-5-cassel@kernel.org>
-References: <20241114110326.1891331-5-cassel@kernel.org>
+	s=arc-20240116; t=1731586013; c=relaxed/simple;
+	bh=FNcTQoUmRoStCmk8rcMy5T71OIia2xR3uqGNl1es7G4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=thDXmyIbkzAx1rn4/b5v84ZSQM5K5EUd0qdgWW9FjNRL46bUCixVG0IQBxIQzVFkge24rG7HgX8pjp5ZYW1Sn6p/eGw6CXzD7/DbviVutXH2wN2kWHvOrCR5nMpWKSJ4vDFwtWW2T54GrcSJ0sWYEq3jvndxNpyxTbxLU0GI2H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0VIAq/Z1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XzbcY6XL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0VIAq/Z1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XzbcY6XL; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A0D551F7D3;
+	Thu, 14 Nov 2024 12:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731586010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=0VIAq/Z1zWsxunVwtmQk8eFXwQ3Wk7OxJVvVmLKA0qLE5Df6BnOCpERT2Ndxrsz5b7cs05
+	L1Wpt98+DLywcAIM/G3y2sgPNFLq+U0v0QfS3sRcOG1n9jckxFXaTNQtgoUa/kO5b8oykm
+	iLKShhT3wjy0JpRU2PixX45cEu+kbUc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731586010;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=XzbcY6XLq/bVltPYJ6+zyOzgJiO0RvkBcUV23UCxFGniMN43TmHPgN8rfjsQ8bAGTM7syQ
+	808ssY14QUCvEyBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731586010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=0VIAq/Z1zWsxunVwtmQk8eFXwQ3Wk7OxJVvVmLKA0qLE5Df6BnOCpERT2Ndxrsz5b7cs05
+	L1Wpt98+DLywcAIM/G3y2sgPNFLq+U0v0QfS3sRcOG1n9jckxFXaTNQtgoUa/kO5b8oykm
+	iLKShhT3wjy0JpRU2PixX45cEu+kbUc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731586010;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02YKYpUDeKJg3ky6Nqo0pfIc/VYHigZfmBxiRwYrn9U=;
+	b=XzbcY6XLq/bVltPYJ6+zyOzgJiO0RvkBcUV23UCxFGniMN43TmHPgN8rfjsQ8bAGTM7syQ
+	808ssY14QUCvEyBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 79CE713721;
+	Thu, 14 Nov 2024 12:06:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YoW0HdrnNWfrQgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 14 Nov 2024 12:06:50 +0000
+Date: Thu, 14 Nov 2024 13:06:49 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	John Garry <john.g.garry@oracle.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, 
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com, 
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v4 05/10] blk-mq: introduce blk_mq_hctx_map_queues
+Message-ID: <4bd491e5-fab5-4e94-8719-560b5a4de01e@flourine.local>
+References: <20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org>
+ <20241113-refactor-blk-affinity-helpers-v4-5-dd3baa1e267f@kernel.org>
+ <ZzVZQbZOYhNF08LX@fedora>
+ <9fa26099-1922-4b99-883e-bd5f6c58162a@flourine.local>
+ <ZzW-9rWvKBxFZU1E@fedora>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4206; i=cassel@kernel.org; h=from:subject; bh=abotO2HAnrJ6WH0HrCwpozQx2eXGtw03RjZB+isfNDE=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJNb/zX5WnrrRL+UX+A8bZi5MrJblu2mcZaTNZ78fNXn srjNceOdJSyMIhxMciKKbL4/nDZX9ztPuW44h0bmDmsTCBDGLg4BWAizAWMDHOb/+u5Rv5vYuTi kjRR/rwz6k7C9wlbBPd8EbmUdfIQ0x+G/67rutQ3TM3Sfh288fHfmJavfqy5Oaab8pLfOqsxhpQ 28QIA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZzW-9rWvKBxFZU1E@fedora>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-dw_pcie_prog_ep_inbound_atu() is used to program an inbound iATU in
-"BAR Match Mode".
+On Thu, Nov 14, 2024 at 05:12:22PM +0800, Ming Lei wrote:
+> I feel driver should get higher priority, but in the probe() example,
+> call_driver_probe() actually tries bus->probe() first.
+> 
+> But looks not an issue for this patchset since only hisi_sas_v2_driver(platform_driver)
+> defines ->irq_get_affinity(), but the platform_bus_type doesn't have
+> the callback.
 
-While a memory address returned by kmalloc() is guaranteed to be naturally
-aligned (aligned to the size of the allocation), it is not guaranteed that
-the address that is supplied to pci_epc_set_bar() (and thus the addres that
-is supplied to dw_pcie_prog_ep_inbound_atu()) is naturally aligned.
+Oh, I was not aware of this ordering. And after digging this up here:
 
-See the register description for IATU_LWR_TARGET_ADDR_OFF_INBOUND_i,
-specifically fields LWR_TARGET_RW and LWR_TARGET_HW in the DWC Databook.
+https://lore.kernel.org/all/20060105142951.13.01@flint.arm.linux.org.uk/
 
-"Field size depends on log2(BAR_MASK+1) in BAR match mode."
+I don't think we it's worthwhile to add the callback to device_driver
+just for hisi_sas_v2. So I am going to drop this part again.
 
-I.e. only the upper bits are writable, and the number of writable bits is
-dependent on the configured BAR_MASK.
+> > This brings up another topic I left out in this series.
+> > blk_mq_map_queues does almost the same thing except it starts with the
+> > mask returned by group_cpus_evenely. If we figure out how this could be
+> > combined in a sane way it's possible to cleanup even a bit more. A bunch
+> > of drivers do
+> > 
+> > 		if (i != HCTX_TYPE_POLL && offset)
+> > 			blk_mq_hctx_map_queues(map, dev->dev, offset);
+> > 		else
+> > 			blk_mq_map_queues(map);
+> > 
+> > IMO it would be nice just to have one blk_mq_map_queues() which handles
+> > this correctly for both cases.
+> 
+> I guess it is doable, and the driver just setup the tag_set->map[], then call
+> one generic map_queues API to do everything?
 
-Add a check to ensure that the physical address programmed in the iATU is
-aligned to the size of the BAR (BAR_MASK+1), as without this, we can get
-hard to debug errors, as we could write to bits that are read-only (without
-getting a write error), which could cause the iATU to end up redirecting to
-a physical address that is different from the address that we intended.
-
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 8 +++++---
- drivers/pci/controller/dwc/pcie-designware.c    | 5 +++--
- drivers/pci/controller/dwc/pcie-designware.h    | 2 +-
- 3 files changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 507e40bd18c8f..4ad6ebd2ea320 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -128,7 +128,8 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- }
- 
- static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
--				  dma_addr_t cpu_addr, enum pci_barno bar)
-+				  dma_addr_t cpu_addr, enum pci_barno bar,
-+				  size_t size)
- {
- 	int ret;
- 	u32 free_win;
-@@ -145,7 +146,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
- 	}
- 
- 	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
--					  cpu_addr, bar);
-+					  cpu_addr, bar, size);
- 	if (ret < 0) {
- 		dev_err(pci->dev, "Failed to program IB window\n");
- 		return ret;
-@@ -229,7 +230,8 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	else
- 		type = PCIE_ATU_TYPE_IO;
- 
--	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
-+	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar,
-+				     size);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 6d6cbc8b5b2c6..3c683b6119c39 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -597,11 +597,12 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
- }
- 
- int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
--				int type, u64 cpu_addr, u8 bar)
-+				int type, u64 cpu_addr, u8 bar, size_t size)
- {
- 	u32 retries, val;
- 
--	if (!IS_ALIGNED(cpu_addr, pci->region_align))
-+	if (!IS_ALIGNED(cpu_addr, pci->region_align) ||
-+	    !IS_ALIGNED(cpu_addr, size))
- 		return -EINVAL;
- 
- 	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 347ab74ac35aa..fc08727116725 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -491,7 +491,7 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
- int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
- 			     u64 cpu_addr, u64 pci_addr, u64 size);
- int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
--				int type, u64 cpu_addr, u8 bar);
-+				int type, u64 cpu_addr, u8 bar, size_t size);
- void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
- void dw_pcie_setup(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
--- 
-2.47.0
-
+Yes, that is my idea. Just having one function which handles what
+blk_mq_map_queues and blk_mq_hctx_map_queues/blk_mq_map_hw_queues
+currently do.
 
