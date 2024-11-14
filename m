@@ -1,81 +1,85 @@
-Return-Path: <linux-pci+bounces-16793-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16795-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D21E59C90BF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 18:24:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE949C90E1
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 18:36:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D62A1F23AA8
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 17:24:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC9A91F23BD3
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 17:36:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3103918595B;
-	Thu, 14 Nov 2024 17:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F6EF18BB9F;
+	Thu, 14 Nov 2024 17:36:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2B36F2F3;
-	Thu, 14 Nov 2024 17:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E0B17557C;
+	Thu, 14 Nov 2024 17:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731605066; cv=none; b=JFmrYecGKkBCqTinhfVY0LyYTOahX3LE+nrXFlTMOl0iAkJQIzHsUgWs6c4Ry1ej3t5kIKJWEZq/ls5Jn/rDoSMcKsPyxkaD92FV9z5bBogSUHk9lsaa2nsuvLbzZr4ZPppHZKwtBJqcavs1J6pl5frnfMa17jAGf7mQRtV7tqk=
+	t=1731605781; cv=none; b=HIOjHLwjN15Y9L9cyNK8BGuaVqaYMkv63DwS/b7Xemdr305nsC9XXX8oOT8UWgM4zY0378IvnJFFWsyd/uKYSI2Ry8VRiM6DOEVIl7JWTMpD+KIxW311vI5wAYqs37r7U1MRlNvQN8Jfgmj/mhluNdazQJI/4GB4elQSFOwLZTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731605066; c=relaxed/simple;
-	bh=WbvPJ/1CZUfK3NNJ4mz4wNl1sWlz0r7+ODQKpS/WNUg=;
+	s=arc-20240116; t=1731605781; c=relaxed/simple;
+	bh=lmsX52l/1IXL6pVGf4OXq5b7cQpR1LL56F3YaTmwRUg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOjIh0CqxHu19T5IE8Fb4tGucr3ov82k3TDykMnNM+IH072MdtLYG2tFdegyRJvs8npM4XDgV41/KiOVpGzGf+ExCzAzkoXB8IeXxWzQTEinqiEqj+ig2APzHnbQnCnfFjZ60cnvxluJiMyJJkM8XyIaU51orKgWlrycHnOsOjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=LX2oqUQn3O/TZcRzSxCieA9h8lrUnZTPYdrKAFpfUCav8Ttq337gOLI65fmnhjASDIsm2VFOJubpC0kZOjtwzaA1gXECBrC5TmByetyPCQKkcFB5WoddyUkfRxEOYhTilGuAWaPCyuUNMEPCirJP5WvrWgDSMayjrNpvY1zpcdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20e576dbc42so10413115ad.0;
-        Thu, 14 Nov 2024 09:24:24 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20c9978a221so10667245ad.1;
+        Thu, 14 Nov 2024 09:36:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731605064; x=1732209864;
+        d=1e100.net; s=20230601; t=1731605779; x=1732210579;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4KfOJtzfwH/T6BnCgNIk5RTMp+CeuzSWNDpYp8Af7B0=;
-        b=HsHSAeqdAds16DMwNKeQJS0bWMsmOuEAeXlf2MShTAWXRTvw1iA0iI7iwNLhC66wmH
-         WlQ1XA6vkJDV45+0dQ7WRXnBjoDaBt0t/BrYQ6UiuC71pgVGyHinpkhII5k9VK8HKEb5
-         IACtAdPW2qAwuSlhfoqomuflYdhcbQTKGO9iQNXO1pdYsfY2vmmGA/Eb/UU1ck1hKBZy
-         XWLWlb1octl5L+iyneXxMxVQnbaNxdklt6aiLZaWBXP1zJemuFkripP604Q36uMDN8W8
-         kz+VGxwHCBPoJ2/Ds3cTMZueNMSa9QbNpBpX/pD4QwV6DSgNQlY07jKJpl2VcpTmybTn
-         FDwg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5pFgfpmWWsWD+Kua5WcRJEr4nReROddmdSZXqY2GNUi2ne/ylRBJfZ4My1tZP9A85ctUClDZhgAuP@vger.kernel.org, AJvYcCWkkLmkWTNrQNLKOspI6Un6omLLd8CovW5+RdZ8ipi6vsmGexxdJekHrNW7jC1H0FuqI3VmznlvvrOr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDBCuhh4WRAzP9lTEZt6yI0zDi+0rfp5DZ5PGHGn0pZPPqwA7l
-	QAOTugZ/dPohe90vU7rG6phfOsRdTTpIbU2TEIGyRPBaaRm8RC0/
-X-Google-Smtp-Source: AGHT+IHZa97Hmrsw68sqOZYGtSf6kmlJNEEpgylzpOkqT7/MU1vF03ZIjf4UlEa0R6ZwFWAsadnmHw==
-X-Received: by 2002:a17:902:c942:b0:20b:5231:cd61 with SMTP id d9443c01a7336-211b662f252mr88839895ad.24.1731605062296;
-        Thu, 14 Nov 2024 09:24:22 -0800 (PST)
+        bh=1kROUsWvWvV36Fo4a1GNoVZXpL3CbrLmIcvXu4sqcNw=;
+        b=f6Iy0GbWUcZsSv8uxxU/Iov/VYAbSulK5eRvEMme4bj4pI+BBLnM/TXr2sM4FL+dqT
+         ky9Ow7YVSpaDMMNa40qqXmeRmPooMGB9upCBfQxFXx6tsb+Z49xWe3NMs3xbu2N9cuxG
+         yAB7uwujmGwnXfFsQkafpM9imohJRPgi0ZXXypisW08ozErfDqHoCWg0vbQk7ALx6lBh
+         pncHQ32J7ZUUeJRezUT7gtc2SFz0BU/Q9YAjBbiQyE6sYpsqZrjbjOCya77FF9BPcy/G
+         nnAr94V8ZFte+1WuDqJxhiozuik90NHRLdghRpSFsn92ghvHfs+27+ie5rxY/oaO46PP
+         z6AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjQL/QmekrwMb9oS2VQPHsaItsw5H97xIODd54AII60IgXWSwXSJ1ECNPsk8T2bU4lGX8CXxebzfg=@vger.kernel.org, AJvYcCXZ0uAVZ4LJwVKl2VOImsIH3d6OjgB8f5iP+0zyoj93/d8/UVh1RRQmXViQKEvuhrrn3OfMDyDyW5p5@vger.kernel.org, AJvYcCXoT69FnSQ9hSeDTqGW2XGCCt8d8k7vqSly6ifQiGjOcDgurWw9ccSgAsI8oaNcClpgxm4iHqivlrqT3wI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxiw5qVfKRgo4YtLPyCcFyGpoZ6MBNswuwXQHBJQDh3ETrQrtBi
+	nnS7n8XJGQI/Ro2Hwfq6c6LPEkQODpUIr/9brSs0cLDzNcpLClTW
+X-Google-Smtp-Source: AGHT+IGjSKX8cn5jJR3CqDGzczAzuH5z+anCuroYAbhOAQpGkEuGTNFls7mnC61Ygcn+ZFL/FmnIvw==
+X-Received: by 2002:a17:902:f541:b0:20c:d072:c899 with SMTP id d9443c01a7336-21183cea4b2mr341784765ad.24.1731605779115;
+        Thu, 14 Nov 2024 09:36:19 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ea024bd2c7sm1585144a91.34.2024.11.14.09.24.21
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211c7d1ac30sm13218615ad.213.2024.11.14.09.36.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 09:24:21 -0800 (PST)
-Date: Fri, 15 Nov 2024 02:24:19 +0900
+        Thu, 14 Nov 2024 09:36:18 -0800 (PST)
+Date: Fri, 15 Nov 2024 02:36:17 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v5 00/14] Fix and improve the Rockchip endpoint driver
-Message-ID: <20241114172419.GB1489806@rocinante>
-References: <20241017015849.190271-1-dlemoal@kernel.org>
- <117828c6-92c4-4af4-b47e-f049f9c2cb7b@kernel.org>
- <ed723fe1-e243-4a9e-8d1c-f29461d07cb7@kernel.org>
- <20241113175222.eh76hksyj6sptwvo@thinkpad>
- <20241113205900.GA1184086@rocinante>
- <11cae8ab-a46b-47b4-b919-f7021057dc11@kernel.org>
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	linux-kernel@vger.kernel.org,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>
+Subject: Re: [PATCH v9 0/9] PCI: Add PCIe bandwidth controller
+Message-ID: <20241114173617.GC1489806@rocinante>
+References: <20241023221904.GA941054@bhelgaas>
+ <20241113214850.GA1912974@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,28 +88,31 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <11cae8ab-a46b-47b4-b919-f7021057dc11@kernel.org>
+In-Reply-To: <20241113214850.GA1912974@bhelgaas>
 
 Hello,
 
-> >> Sorry for the late reply. Things got a bit hectic due to company onsite meeting.
-> >> I'm going through my queue now.
-> > 
-> > Thank you, Mani!  I took this over and pulled this series.
-> > 
-> > You and Bjorn can have a look over the changes, if you have a moment.  That
-> > said, at least to me, the changes looked good.
+[...]
+> How attached are we to "bwctrl" and "pwrctl" as the names?
 > 
-> Thanks. But the kernel test robot already complained about a build failure for
-> the rockchip branch.
+> I just noticed that we have "ctrl" for bandwidth control but "ctl" for
+> power control, which is slightly annoying to keep straight.
+> 
+> "ctrl" is more common in the tree:
+> 
+>   $ find -name \*ctrl\*[ch] | wc -l
+>   691
+>   $ find -name \*ctl\*[ch] | wc -l
+>   291
+> 
+> so I would prefer that, although "pwrctl" is already in the tree (as
+> of v6.11), so it would be more disruptive to change it than to rename
+> "bwctrl".
 
-We did see this in our local testing environment, too.  Albeit, I didn't
-get around to moving the commits before bot picked the branch up.
-
-> The series needs to go through the endpoint branch as the .align_addr
-> method is only defined in that branch at the moment.
-
-The changes are now together.  Thank you!
+If I may, I would also lean towards the "pwrctrl" name.  The "ctl" suffix
+makes me think of a command-line utility, a CLI, so to speak, where such
+suffix is commonly used e.g., sysctl, etcdctl, kubectl; also, all the
+systemd binaries, etc.
 
 	Krzysztof
 
