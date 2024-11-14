@@ -1,192 +1,136 @@
-Return-Path: <linux-pci+bounces-16760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6F819C8C6B
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 15:05:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE7D9C8CC0
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 15:21:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66BEF1F21E87
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 14:05:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 541622870E2
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 14:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239641799B;
-	Thu, 14 Nov 2024 14:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D045F2EAE5;
+	Thu, 14 Nov 2024 14:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="drMuJ9tJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8rxRcd5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2049.outbound.protection.outlook.com [40.107.20.49])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB2171C9
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 14:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731593113; cv=fail; b=DJX/KJYCzpglaHEtuap8mLFKMpJmWVZhPe/WWX4Q3uI/z7li9it4BnFe9mlMgrRitlrUmS/inl40jhXM/X4G9+Ihq/rsm2gnPfVBI9jvUTe/liL+I8nxI6t0WZAOLqboSIYRpam+J7znTCQIkKs6ZUdrZcVS4+f05S89rCceFL8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731593113; c=relaxed/simple;
-	bh=dMES9XlAMIKvsP5JcBaDIO7CcWuYf0rXHiS0jvuGK5E=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AngslhGst+U05km2NDLBrJtUgO3YkaAzeNsRJ2Dox+qWoo159E10w/eephnOAbuz8UtT9P9hNDc8ZdHzu7/pmytpdyRCCck4K8QeVUoDdGYoq0+AXrkqXKe3o3/dANXaPDEwTKm+H8sAyySEemfgJZ/730t9uzy1r4tpksoUI0Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=drMuJ9tJ; arc=fail smtp.client-ip=40.107.20.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UfBoezkSaajXDQ6SwF9dMszlrTdiYak2Kpae16aVVDLUwBL29Xq+t0hDT6x925nfBQjmpkd80ZjMWNoosUeCbpEwGGjbnWEjm9cybAdO91haf5JxJv8mZKYchlSKAdUSpMGOuvAafpbmXAGU78aJ+YiEiw65IOxpM0hYfAaXOQd98rZJlSGnm0v+k6ksbXxNYiXiydTuDwGQE3HlYjHqVoHBGbetPUD7FZ1fw0/C8W2ggNWIH4UIqInpWZDKqLtarCWQfFEl5S7SScgywsdDRIwnVF1Ux4wuD/D/7yrbqC/oyBwqAIvrkkKrdM8sbdvuPoNOZJgTlF01UbgvpaNG5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oIRnTW5Hx6gcP4DXr9Cbz/n34W7+424J0P17CGvBRjs=;
- b=w8sedupZH8g8P5kMTzLyAQ/eGoibihWsseRiYux2gxKrUI7IBVtTwsmiV/3LJgiwTHgerkVxOungWyQQdkJ7MhufDembM9OZghXeGoHog/+tiWMlpTWNHBT88GgM9L4DVfA0X4ZaiKMXARgMSoOmvIrxPsF9BR/UzYNhSsc8CBe18e38KnaZqCmT4/TBKPZN5lppFaMBZKOisS1/msTRWCVEJEAewxm9ldf5Q+cNPMgWjxPcMoe4ZVJBG7SY9Uj+0osuZPhKvdCNn2ldpA/7YUaIJc+Aj0/5oXsu4FkjMR8ZmUTE5GBrXzHxsi4HSoZb2KVmvdRs/bU0uWA2HSfxlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oIRnTW5Hx6gcP4DXr9Cbz/n34W7+424J0P17CGvBRjs=;
- b=drMuJ9tJawmpxn5SYsjYsaHJfREOkNaml+FRPdS8O9l8yQ9WqiMTTD/+56ciNLDxOv+2/hPXMldFcURxT2m3ALTNOcp/0aIg8ntcLz0+ZTB4XimvRc/8OsuIUFwccGu3lpb18b1wPuLWekZwPzFQeIpmYrQ3BtiN4rnsIgdrR1bAwZSOShFVQED3iPurB0C+g/qFtFkL1q+kKcYyZx0WSRnCsyVh9tY5d20X5ri2lBmBKK8XWBBHSOEn8fusbLjBZDRFUnSY5FBdgETyYDEufzJk7e1NZCbJstzA3fc2dDpIfVZ67aCCbG4bXmrwmvfykXdZ3xW3mqaRx+Pb8w2rvw==
-Received: from PA4PR07MB8838.eurprd07.prod.outlook.com (2603:10a6:102:267::14)
- by DBBPR07MB7497.eurprd07.prod.outlook.com (2603:10a6:10:1ea::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.19; Thu, 14 Nov
- 2024 14:05:08 +0000
-Received: from PA4PR07MB8838.eurprd07.prod.outlook.com
- ([fe80::f9bd:132e:f310:90e3]) by PA4PR07MB8838.eurprd07.prod.outlook.com
- ([fe80::f9bd:132e:f310:90e3%2]) with mapi id 15.20.8137.027; Thu, 14 Nov 2024
- 14:05:08 +0000
-From: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
-To: "bhelgaas@google.com" <bhelgaas@google.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
- non-prefetchable
-Thread-Topic: Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
- non-prefetchable
-Thread-Index: Ads2njIfwP+JWslVRxGz+DAgijI5nQ==
-Date: Thu, 14 Nov 2024 14:05:08 +0000
-Message-ID:
- <PA4PR07MB883875A86213C568BC2E08E2FD5B2@PA4PR07MB8838.eurprd07.prod.outlook.com>
-Accept-Language: nl-NL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nokia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA4PR07MB8838:EE_|DBBPR07MB7497:EE_
-x-ms-office365-filtering-correlation-id: 75a1ca2e-8268-4abe-2a8a-08dd04b558b6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?AEhZCLUm93MFKf4Ri5G+3sb9bMCnz0iS7Je/2Z3VIwaLhzFsgFtGSn0GEIiW?=
- =?us-ascii?Q?kxwYvs7VmMGZuR8FwpsLL2+Lq5tkGRM52/EGnQui/mVB5Yav76EfdVhewCMT?=
- =?us-ascii?Q?JrdJTVUAdH0VMg9XOX2Cb007wYsn4parRzl+hdqEHR1Fuvq1r36Q9+Db/MD2?=
- =?us-ascii?Q?xprjoOozXrzA6z/q2lLqvltryzAyEpFQ7Gv9ZJB4UPURjX9fqaEEK9L5R3tn?=
- =?us-ascii?Q?cBv9FX8iWTOTC7+z2HfQE6YyQPoicPlmI3fZ/SLKRY6bLT5HNsfSgso47JfA?=
- =?us-ascii?Q?WHj+oSAZ7V9lRo4zegXBgAH/QVs3b/O8/PuEhevK+YPt1yqOw0vaKoirckAQ?=
- =?us-ascii?Q?iGrIkrnss+bBJzfgvoYXC2z+ZGVyrVQFcii8SB6pfU9YJ9uonFpJwMTRf8Fq?=
- =?us-ascii?Q?q6w+BtSZkiI69FOf+bHlpPloAHCan4r+o7CZXJt84IryJoWIm+AG8Thf5kTc?=
- =?us-ascii?Q?xSQnNih+uaUMfpCbh3w7CKuA1hj47LSTedaVNslZEk0BjecoSaO9Nr7y5Z41?=
- =?us-ascii?Q?aQ5foFURRdcxCGWvVM4fjPPlgZQ5OeGmhUy7t8AqBKcg++j0/7M5KCx+uO2e?=
- =?us-ascii?Q?IlO4VGZxm9iqk5Exv0mOiZrNnurq6pTjOF0JilqfcZgC+D2aPfn7RYkHPA5O?=
- =?us-ascii?Q?64Dw+sGPRsAF0xMXnlYHHOwCkgR5sMD2eyJYH8g1bONuOM2ayGfk8IHLTHIR?=
- =?us-ascii?Q?Zr2XcUPm7JfPlW6v/GEcyhOy0DCgr/W16LMmjdb2N8EtqpW8UkX2Oip/0F18?=
- =?us-ascii?Q?J2QYAsid0sQ3FTN1IpCZD8cL+4y1RtBqcEixwurL2s7vC18SinnTfvSPELsd?=
- =?us-ascii?Q?DBir0S4rcT7CJrxw0Pqe6ep4Cw6yUDyOqff562oqh1gF5uNQww/UvWiD0wZb?=
- =?us-ascii?Q?qmk7udc0Tkod1QWKIlTTqKMEKXK52qIO6GT+ZPxifczUcbpGOwP/tvylFf45?=
- =?us-ascii?Q?LxKkpqTGf+QrxWPjpZfnr/To+QxSuRW84LeGAjF/UWlEB2RUex5GHwhYnuQz?=
- =?us-ascii?Q?y2SF9EQDZnC/pdZGfExp+cGuYl+ip/+0OxaptE5K/BPPq5jsoCMd7iV7ISp7?=
- =?us-ascii?Q?T1VDH7iQPbprjJVZPa20lr/W3DpZ+G+GUEIo6Yi8I8zgSOC40i1nStML2F8S?=
- =?us-ascii?Q?d71vkijCEh+eUfj/GuwOcDWqVB/ns8AJF96hhUvre16Cg9eSryBpAYypZV6N?=
- =?us-ascii?Q?rwIJj1NZe78HIaU3bxGln78C2zaUd0aQlKGGdJiummIZq8i2gIQ+MqCSES2u?=
- =?us-ascii?Q?xKUF8JrnakqIPPDkTghL3zl+SPqq+xITZb03yEk6bHocbVGj8jwtgJcQI15N?=
- =?us-ascii?Q?n2Iw8sOzktF3OwQpUGr38ia/afE4TAK8LlYUqDPYYgkTlDFIlbz1liiZfOoq?=
- =?us-ascii?Q?V6qfRfQ=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR07MB8838.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7hNMkO85EL7/tF9N6yqNLVyNBSpP49mTooviX2Zw8dZXT5M/6kQYpfqFUmzq?=
- =?us-ascii?Q?RqVZksxe25UHo6hJbOCq9MdWxD7Xv3gRDdHZRyJ3CUxPifabRHrXs3vC50u3?=
- =?us-ascii?Q?V49x2CXeMKmSnyzGpkNU/JBLu+uYNEB3b4GQ1+FXxyL5jsT0hhj5yJZPL0au?=
- =?us-ascii?Q?P9xHaDYaahdjEYLqIQKDSAEJb8j7BTuiCOsY+NL7DKJnLBmGY2/+8pBpwpI5?=
- =?us-ascii?Q?dTsVsdKCgAWHQFIgi2FLL7/da+nvRxUuoHcE4uuz4Rp+TzllaLfOZdTNmXHp?=
- =?us-ascii?Q?ZropsjjfcuwfJympDvolbHCCL7jaM16FVpSdNJnMgjdnbnWWDFearc9n4is7?=
- =?us-ascii?Q?SZ8fk7sTqh2LXyvN5VAoOr3nap3cKweYzj+ebY3r0OtBtVPCXk593ZRWNFKm?=
- =?us-ascii?Q?Wp5v4fPXx0mYmVe0LtBkFQNDqVU84WpQccVWTR/4g5bxs9KmQL2pDdr2Osds?=
- =?us-ascii?Q?6znqknzx930agblohGejyUAqPYvAGZ2Jek9th/kXCHLNuVzx3CObaRJMkIkL?=
- =?us-ascii?Q?2Ll9H5A0loa8DDhYDcIy6N7uoYUp6+k1za01ZVmWuCFOf7D0BKlOsOFzIoJa?=
- =?us-ascii?Q?IgamsR3NtP9PARcw2ozxLLzWAE0cIYbuObGoeaSIk3xNhEaPcqtuuvp6KHvE?=
- =?us-ascii?Q?DD8WlIEKYpGs2t3zPgpNfDqxzk5OmrKtMn+hq7T3zwhdLxwfcI9pYk6UB9vk?=
- =?us-ascii?Q?WeV2mz13sppAUVmjacUIuv4ikgIpR+jI2ruX2EaVfn56tpq/gPbySW30k9Ts?=
- =?us-ascii?Q?7N0m1Ek+v2JoP9Nuah2t9bAZlVnJWMZRH6JNJFdhkbWZiW+q4+wi3RAEs9hB?=
- =?us-ascii?Q?1VuIrabHZezgOjbzSZRgmU0KoD0Ftnu7sKYm7L7KxgRE5hX5wXGskfEUzlRQ?=
- =?us-ascii?Q?jofXUXmnIZRrM2yskbdK80Mmy/MtArgyltmVxJonGvB28KSSh4afh2aeKeHs?=
- =?us-ascii?Q?OTHxvnWeOqGujIOZxlIVqa3MJJJ+nf5waiBkmoMGYUTFtkSNABagsACAkA6t?=
- =?us-ascii?Q?r9/vT/qCsV6MBCQc8+QJ2mCDMon9Rj8N2EXNTNC7lxgxDu9P6EL0M/1CIUd/?=
- =?us-ascii?Q?IwOv5CTyEgKUBuy0hgI77bChGEj9zLan79jU79nhoLkFICJWdGwPv4Kb2esx?=
- =?us-ascii?Q?oHQGOBImqVAn7bxRtkoDSu1KnUjPFvnYGZHladFSM4AnHNH1DLsYYr+Cxju1?=
- =?us-ascii?Q?d0jZlC5PEn04ToGoC2HTPPZfqR9VbhwHpqufGd6WTwnmKEqoGpzeX7jnw3Y5?=
- =?us-ascii?Q?4wrIYzhhPryle0eTf9FZ0G5+Y75MMkWo1oBc7H8CsTRk9uDm6Rk26cSYPZrL?=
- =?us-ascii?Q?BZP5I7l9t2taS4fJA4zym34PlXRDAuRfcMtFjyviZjB2ItpiCTVZDuktHDqi?=
- =?us-ascii?Q?/KMiu9COG29EzIAo2CL7TzQotU9hdU4NxqCKDsx5Iu0KLo9A1RoDINYnR4Ks?=
- =?us-ascii?Q?MwOGWQS1thaqq6D8FMTSs5h3XF4+glk96Cjwf/vT3m8+6TbYmvSmG9GrXKbs?=
- =?us-ascii?Q?1qUGJ/1sxPTjrtFjdtMtiS/x83agToOJN5bRY0+6N6/VQt+JdoR1fNlGF2Vx?=
- =?us-ascii?Q?QPzSJ+SwQc+u5U4M4aw7eutEBGJqJpD9oOh2o08b?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAF11D6AA;
+	Thu, 14 Nov 2024 14:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731594057; cv=none; b=J7T9JtAQfpRRBwyf1wI/diwdINaCEBJHEs0pTIEPeLAumhzhDps1kjfu6uW78UagNdCjSG9qDLT+t+W5ROwlNDR2vpZMJGgyFzwfLUQRfbYuAw9Veu7UC1/Y31tbz53zBz91vHvJGf0et3pvqTANwjHjemoDsSRdc/crjVIuFkI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731594057; c=relaxed/simple;
+	bh=6yIvZ0pCo5aclXx1uWNQvdqp1zKxk9m+lFaAMtMPHFU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=rvmJcywyW5yF2jmRRntDsjzdSKcHQ+7av5wsOqKoIqXrKXqrWpevmqiytbifTnpUFIABTwnbz2xT/zSHKDAl3Q3vdXNwMZuQlqpOXjKLszgrummtCebEXImfHDE9UqTuxEetb5mOc7q5cob1kUZ1ZItSS7WBDbYmJHvulVj+Z7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8rxRcd5; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731594051; x=1763130051;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6yIvZ0pCo5aclXx1uWNQvdqp1zKxk9m+lFaAMtMPHFU=;
+  b=X8rxRcd5psfKNlMV87FRVhisOiH97aYF3itADOvxHxvWfl3o+CJ2kdSx
+   yDVKmuhqAgQkWG/3g4Aj9TzUQP4hBLFMSkT4s3aWFxirQkg/ZpbQS1vTH
+   aB+GVD4ReL4yYAzYv6it4k4N3OkivfcCm5QZB6c+XIhyuYd24sddaAzTq
+   QGO7nY5gwOWl+0+VAu4NOXL7tpY34dwqlUqNF4XyG9WCpJkVOY+lCcRpm
+   cOPYe8t41vNDlySnNSnmP1D7ebSUSwZQLBHiGyiBRb54LGfs3FKwtzhIy
+   ss1xj+XQsQGJ3yv11dd46m+CP2R3Uy3yLjNqDxeR5pbE0AGDANYi+1sUz
+   A==;
+X-CSE-ConnectionGUID: 8PSWhxnbTQGRK5qsl2UOzw==
+X-CSE-MsgGUID: +utuqENSRVuvzXVAbM/f9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="42921023"
+X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
+   d="scan'208";a="42921023"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 06:20:49 -0800
+X-CSE-ConnectionGUID: pzrmDZIVSL25KYVnv+9KxQ==
+X-CSE-MsgGUID: CJcl3d2pR3qwVVEtwRMkZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
+   d="scan'208";a="92279339"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 06:20:46 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Stefan Wahren <wahrenst@gmx.net>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI/PME+pciehp: Request IRQF_ONESHOT because bwctrl shares IRQ
+Date: Thu, 14 Nov 2024 16:20:34 +0200
+Message-Id: <20241114142034.4388-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR07MB8838.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75a1ca2e-8268-4abe-2a8a-08dd04b558b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2024 14:05:08.0323
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PCP7jkG+t4oyDdSdI/kN/AoCp+lMRWcM7KsLj6FyO29bPIg57Ya/4DS4J/f3K5YeZsM+yh3dy69Z1LKN8bjQSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR07MB7497
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB non-prefetchable
-windows.
+PCIe BW controller uses IRQF_ONESHOT to solve the problem fixed by the
+commit 3e82a7f9031f ("PCI/LINK: Supply IRQ handler so level-triggered
+IRQs are acked"). The IRQ is shared with PME and PCIe hotplug. Due to
+probe order, PME and hotplug can request IRQ first without IRQF_ONESHOT
+and when BW controller requests IRQ later with IRQF_ONESHOT, the IRQ
+request fails. The problem is seen at least on Rasperry Pi 4:
 
-According to the PCIe spec, non-prefetchable memory supports only 32-bit
-BAR registers and are hence limited to 4 GiB. In the kernel there is a
-check that prints a warning if a non-prefetchable resource exceeds the
-32-bit limit.
+pcieport 0000:00:00.0: PME: Signaling with IRQ 39
+pcieport 0000:00:00.0: AER: enabled with IRQ 39
+genirq: Flags mismatch irq 39. 00002084 (PCIe bwctrl) vs.00200084 (PCIe PME)
+pcie_bwctrl 0000:00:00.0:pcie010: probe with driver pcie_bwctrl failed with error -16
 
-This check however prints a warning when a 4 GiB window on the host
-bridge is used. This is perfectly possible according to the PCIe spec,
-so in my opinion the warning is a bit too strict. This changeset
-subtracts 1 from the resource_size to avoid printing a warning in the
-case of a 4 GiB non-prefetchable window.
+BW controller is always enabled so change PME and pciehp too to use
+IRQF_ONESHOT.
 
-Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
+Fixes: 470b218c2bdf ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
+Reported-by: Stefan Wahren <wahrenst@gmx.net>
+Link: https://lore.kernel.org/linux-pci/dcd660fd-a265-4f47-8696-776a85e097a0@gmx.net/
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 3 ++-
+ drivers/pci/pcie/pme.c           | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index dacea3fc5128..ccbb1f1c2212 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -622,7 +622,7 @@ static int pci_parse_request_of_pci_ranges(struct devic=
-e *dev,
-            res_valid |=3D !(res->flags & IORESOURCE_PREFETCH);
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 736ad8baa2a5..0778305cff9d 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -68,7 +68,8 @@ static inline int pciehp_request_irq(struct controller *ctrl)
+ 
+ 	/* Installs the interrupt handler */
+ 	retval = request_threaded_irq(irq, pciehp_isr, pciehp_ist,
+-				      IRQF_SHARED, "pciehp", ctrl);
++				      IRQF_SHARED | IRQF_ONESHOT,
++				      "pciehp", ctrl);
+ 	if (retval)
+ 		ctrl_err(ctrl, "Cannot get irq %d for the hotplug controller\n",
+ 			 irq);
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index a2daebd9806c..04f0e5a7b74c 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -347,7 +347,8 @@ static int pcie_pme_probe(struct pcie_device *srv)
+ 	pcie_pme_interrupt_enable(port, false);
+ 	pcie_clear_root_pme_status(port);
+ 
+-	ret = request_irq(srv->irq, pcie_pme_irq, IRQF_SHARED, "PCIe PME", srv);
++	ret = request_irq(srv->irq, pcie_pme_irq, IRQF_SHARED | IRQF_ONESHOT,
++			  "PCIe PME", srv);
+ 	if (ret) {
+ 		kfree(data);
+ 		return ret;
+-- 
+2.39.5
 
-            if (!(res->flags & IORESOURCE_PREFETCH))
--               if (upper_32_bits(resource_size(res)))
-+               if (upper_32_bits(resource_size(res) - 1))
-                    dev_warn(dev, "Memory resource size exceeds max for 32 =
-bits\n");
-
-            break;
---
-2.39.3
 
