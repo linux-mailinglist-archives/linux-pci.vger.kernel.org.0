@@ -1,284 +1,192 @@
-Return-Path: <linux-pci+bounces-16759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13A329C8C26
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 14:50:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6F819C8C6B
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 15:05:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DCB01F2273A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 13:50:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66BEF1F21E87
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 14:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 381E21172A;
-	Thu, 14 Nov 2024 13:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239641799B;
+	Thu, 14 Nov 2024 14:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b="qkw68SgZ"
+	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="drMuJ9tJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2049.outbound.protection.outlook.com [40.107.20.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A97364BA
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 13:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731592222; cv=none; b=kj8cJor0eyVldNu/ay83rGJH9PsxvA5PGCr0s/+AMD8XbiatJkDszDBmC6YOm4jmo0DT7pRBYhxUTsnMHjXnHKxz9POAqJsP8AUVAioG6JbFZKRuvat8cNqUKHU4VyiV3xWZum0rIfjBqz8jJq+SSHlfMapHWzF+3JjxF8tuVZg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731592222; c=relaxed/simple;
-	bh=APcnk5ZMKvEXFMdalBXGnzEMd+iho/XuXvn4fchYtS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RToZp3TObaU5MyKwQylrws9KbB7v/rNn9ViIuiKpgQSgRHzFez3yRWFB7P1ocqh8jIbB9+O314srwmmBV2v3FkaI8k5N6HxmHBLQQmOi+5j1fdAvCtABOOr+Mf9hll3nQ4TB5Lp6d43stWh3KO4LA9elqUs2GePA3eetn/qVY3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b=qkw68SgZ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-431616c23b5so3875115e9.0
-        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 05:50:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1731592216; x=1732197016; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gRwLxVVOikcpu0xJcXEwFtC/CwhN4Tc4RzOrhjz2HYY=;
-        b=qkw68SgZqHEahM0BVQLJLoPfMEWc/meSU9/MpwKI3Ci2XoGZhA4tC/uEInEA8qZZ3k
-         ovHOTFPDeA6iyX/k62S0KVo92pKl6NvyReW5p4gdcq2g637mQ9ejXuYIjfgXjK5NM8mG
-         MaGuokZS5rRoUG9UgPSTQ80XHHUSNhdXeIhjw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731592216; x=1732197016;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gRwLxVVOikcpu0xJcXEwFtC/CwhN4Tc4RzOrhjz2HYY=;
-        b=EJmhp/VFJWCK93/LerBu/xJz8ub/Xv6ZMl9ryMHUm0Ez4SEnO05TnBDHAV5PGDcb4X
-         zAEY2uRJE3QoUIbPDWY8SvTkL6CuJ1SEwRdimxMswip22FpmjjTSu629Xz4hjxaGUylr
-         b3O7JoRNFVfSjhL0R+u9BmHULnRhEYF8CvTTeig6qHJZRHOnRzskttPUYUx3OedkiMuw
-         Hm/P2g88YKlh2rd0mlZl1ZYeufUKDvdnIm1WgpKDjIrSca7yIpWOBBcsPhdza2KYA43n
-         SPLjlUg1bhwErFYZfOXkyz4y+qGEsaM/cecxLDc1cq2+Rqcuh8tTjrMOtiyQMzk6QPzU
-         1e7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWeNr8Rugv5rU05okLcONQV/arEX8WKqAPSWyoKMglRk2nWZ0oob7GuBDUTHWjMnT+p7Tk2P3vk/jk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcuvfN4D23uNqZ16slWh9dXAgaJEJmUsqJcA/jDzrH+My7VqXg
-	aQw5gJubNQAzV3a7nfJif2IliIvww9AIG8nAh+EkYofRwqaeOdJi3z5JjH+tR1Y=
-X-Google-Smtp-Source: AGHT+IEtLmszdD8WXDnbZOwcZTTum9g1Zl8eCmPSfMCvtxFv43wZUU5YJUaWUE0Eb8EeeOLUimMLzA==
-X-Received: by 2002:a05:600c:40c4:b0:426:5e32:4857 with SMTP id 5b1f17b1804b1-432d95b4c54mr29744505e9.0.1731592216450;
-        Thu, 14 Nov 2024 05:50:16 -0800 (PST)
-Received: from ?IPV6:2a01:cb05:949d:5800:e3ef:2d7a:4131:71f? (2a01cb05949d5800e3ef2d7a4131071f.ipv6.abo.wanadoo.fr. [2a01:cb05:949d:5800:e3ef:2d7a:4131:71f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab72141sm21153705e9.1.2024.11.14.05.50.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2024 05:50:15 -0800 (PST)
-Message-ID: <2f715724-31c1-4228-b140-55aefb14af5c@smile.fr>
-Date: Thu, 14 Nov 2024 14:50:14 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB2171C9
+	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 14:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731593113; cv=fail; b=DJX/KJYCzpglaHEtuap8mLFKMpJmWVZhPe/WWX4Q3uI/z7li9it4BnFe9mlMgrRitlrUmS/inl40jhXM/X4G9+Ihq/rsm2gnPfVBI9jvUTe/liL+I8nxI6t0WZAOLqboSIYRpam+J7znTCQIkKs6ZUdrZcVS4+f05S89rCceFL8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731593113; c=relaxed/simple;
+	bh=dMES9XlAMIKvsP5JcBaDIO7CcWuYf0rXHiS0jvuGK5E=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AngslhGst+U05km2NDLBrJtUgO3YkaAzeNsRJ2Dox+qWoo159E10w/eephnOAbuz8UtT9P9hNDc8ZdHzu7/pmytpdyRCCck4K8QeVUoDdGYoq0+AXrkqXKe3o3/dANXaPDEwTKm+H8sAyySEemfgJZ/730t9uzy1r4tpksoUI0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=drMuJ9tJ; arc=fail smtp.client-ip=40.107.20.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UfBoezkSaajXDQ6SwF9dMszlrTdiYak2Kpae16aVVDLUwBL29Xq+t0hDT6x925nfBQjmpkd80ZjMWNoosUeCbpEwGGjbnWEjm9cybAdO91haf5JxJv8mZKYchlSKAdUSpMGOuvAafpbmXAGU78aJ+YiEiw65IOxpM0hYfAaXOQd98rZJlSGnm0v+k6ksbXxNYiXiydTuDwGQE3HlYjHqVoHBGbetPUD7FZ1fw0/C8W2ggNWIH4UIqInpWZDKqLtarCWQfFEl5S7SScgywsdDRIwnVF1Ux4wuD/D/7yrbqC/oyBwqAIvrkkKrdM8sbdvuPoNOZJgTlF01UbgvpaNG5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oIRnTW5Hx6gcP4DXr9Cbz/n34W7+424J0P17CGvBRjs=;
+ b=w8sedupZH8g8P5kMTzLyAQ/eGoibihWsseRiYux2gxKrUI7IBVtTwsmiV/3LJgiwTHgerkVxOungWyQQdkJ7MhufDembM9OZghXeGoHog/+tiWMlpTWNHBT88GgM9L4DVfA0X4ZaiKMXARgMSoOmvIrxPsF9BR/UzYNhSsc8CBe18e38KnaZqCmT4/TBKPZN5lppFaMBZKOisS1/msTRWCVEJEAewxm9ldf5Q+cNPMgWjxPcMoe4ZVJBG7SY9Uj+0osuZPhKvdCNn2ldpA/7YUaIJc+Aj0/5oXsu4FkjMR8ZmUTE5GBrXzHxsi4HSoZb2KVmvdRs/bU0uWA2HSfxlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oIRnTW5Hx6gcP4DXr9Cbz/n34W7+424J0P17CGvBRjs=;
+ b=drMuJ9tJawmpxn5SYsjYsaHJfREOkNaml+FRPdS8O9l8yQ9WqiMTTD/+56ciNLDxOv+2/hPXMldFcURxT2m3ALTNOcp/0aIg8ntcLz0+ZTB4XimvRc/8OsuIUFwccGu3lpb18b1wPuLWekZwPzFQeIpmYrQ3BtiN4rnsIgdrR1bAwZSOShFVQED3iPurB0C+g/qFtFkL1q+kKcYyZx0WSRnCsyVh9tY5d20X5ri2lBmBKK8XWBBHSOEn8fusbLjBZDRFUnSY5FBdgETyYDEufzJk7e1NZCbJstzA3fc2dDpIfVZ67aCCbG4bXmrwmvfykXdZ3xW3mqaRx+Pb8w2rvw==
+Received: from PA4PR07MB8838.eurprd07.prod.outlook.com (2603:10a6:102:267::14)
+ by DBBPR07MB7497.eurprd07.prod.outlook.com (2603:10a6:10:1ea::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.19; Thu, 14 Nov
+ 2024 14:05:08 +0000
+Received: from PA4PR07MB8838.eurprd07.prod.outlook.com
+ ([fe80::f9bd:132e:f310:90e3]) by PA4PR07MB8838.eurprd07.prod.outlook.com
+ ([fe80::f9bd:132e:f310:90e3%2]) with mapi id 15.20.8137.027; Thu, 14 Nov 2024
+ 14:05:08 +0000
+From: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
+To: "bhelgaas@google.com" <bhelgaas@google.com>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
+ non-prefetchable
+Thread-Topic: Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
+ non-prefetchable
+Thread-Index: Ads2njIfwP+JWslVRxGz+DAgijI5nQ==
+Date: Thu, 14 Nov 2024 14:05:08 +0000
+Message-ID:
+ <PA4PR07MB883875A86213C568BC2E08E2FD5B2@PA4PR07MB8838.eurprd07.prod.outlook.com>
+Accept-Language: nl-NL, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nokia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR07MB8838:EE_|DBBPR07MB7497:EE_
+x-ms-office365-filtering-correlation-id: 75a1ca2e-8268-4abe-2a8a-08dd04b558b6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?AEhZCLUm93MFKf4Ri5G+3sb9bMCnz0iS7Je/2Z3VIwaLhzFsgFtGSn0GEIiW?=
+ =?us-ascii?Q?kxwYvs7VmMGZuR8FwpsLL2+Lq5tkGRM52/EGnQui/mVB5Yav76EfdVhewCMT?=
+ =?us-ascii?Q?JrdJTVUAdH0VMg9XOX2Cb007wYsn4parRzl+hdqEHR1Fuvq1r36Q9+Db/MD2?=
+ =?us-ascii?Q?xprjoOozXrzA6z/q2lLqvltryzAyEpFQ7Gv9ZJB4UPURjX9fqaEEK9L5R3tn?=
+ =?us-ascii?Q?cBv9FX8iWTOTC7+z2HfQE6YyQPoicPlmI3fZ/SLKRY6bLT5HNsfSgso47JfA?=
+ =?us-ascii?Q?WHj+oSAZ7V9lRo4zegXBgAH/QVs3b/O8/PuEhevK+YPt1yqOw0vaKoirckAQ?=
+ =?us-ascii?Q?iGrIkrnss+bBJzfgvoYXC2z+ZGVyrVQFcii8SB6pfU9YJ9uonFpJwMTRf8Fq?=
+ =?us-ascii?Q?q6w+BtSZkiI69FOf+bHlpPloAHCan4r+o7CZXJt84IryJoWIm+AG8Thf5kTc?=
+ =?us-ascii?Q?xSQnNih+uaUMfpCbh3w7CKuA1hj47LSTedaVNslZEk0BjecoSaO9Nr7y5Z41?=
+ =?us-ascii?Q?aQ5foFURRdcxCGWvVM4fjPPlgZQ5OeGmhUy7t8AqBKcg++j0/7M5KCx+uO2e?=
+ =?us-ascii?Q?IlO4VGZxm9iqk5Exv0mOiZrNnurq6pTjOF0JilqfcZgC+D2aPfn7RYkHPA5O?=
+ =?us-ascii?Q?64Dw+sGPRsAF0xMXnlYHHOwCkgR5sMD2eyJYH8g1bONuOM2ayGfk8IHLTHIR?=
+ =?us-ascii?Q?Zr2XcUPm7JfPlW6v/GEcyhOy0DCgr/W16LMmjdb2N8EtqpW8UkX2Oip/0F18?=
+ =?us-ascii?Q?J2QYAsid0sQ3FTN1IpCZD8cL+4y1RtBqcEixwurL2s7vC18SinnTfvSPELsd?=
+ =?us-ascii?Q?DBir0S4rcT7CJrxw0Pqe6ep4Cw6yUDyOqff562oqh1gF5uNQww/UvWiD0wZb?=
+ =?us-ascii?Q?qmk7udc0Tkod1QWKIlTTqKMEKXK52qIO6GT+ZPxifczUcbpGOwP/tvylFf45?=
+ =?us-ascii?Q?LxKkpqTGf+QrxWPjpZfnr/To+QxSuRW84LeGAjF/UWlEB2RUex5GHwhYnuQz?=
+ =?us-ascii?Q?y2SF9EQDZnC/pdZGfExp+cGuYl+ip/+0OxaptE5K/BPPq5jsoCMd7iV7ISp7?=
+ =?us-ascii?Q?T1VDH7iQPbprjJVZPa20lr/W3DpZ+G+GUEIo6Yi8I8zgSOC40i1nStML2F8S?=
+ =?us-ascii?Q?d71vkijCEh+eUfj/GuwOcDWqVB/ns8AJF96hhUvre16Cg9eSryBpAYypZV6N?=
+ =?us-ascii?Q?rwIJj1NZe78HIaU3bxGln78C2zaUd0aQlKGGdJiummIZq8i2gIQ+MqCSES2u?=
+ =?us-ascii?Q?xKUF8JrnakqIPPDkTghL3zl+SPqq+xITZb03yEk6bHocbVGj8jwtgJcQI15N?=
+ =?us-ascii?Q?n2Iw8sOzktF3OwQpUGr38ia/afE4TAK8LlYUqDPYYgkTlDFIlbz1liiZfOoq?=
+ =?us-ascii?Q?V6qfRfQ=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR07MB8838.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?7hNMkO85EL7/tF9N6yqNLVyNBSpP49mTooviX2Zw8dZXT5M/6kQYpfqFUmzq?=
+ =?us-ascii?Q?RqVZksxe25UHo6hJbOCq9MdWxD7Xv3gRDdHZRyJ3CUxPifabRHrXs3vC50u3?=
+ =?us-ascii?Q?V49x2CXeMKmSnyzGpkNU/JBLu+uYNEB3b4GQ1+FXxyL5jsT0hhj5yJZPL0au?=
+ =?us-ascii?Q?P9xHaDYaahdjEYLqIQKDSAEJb8j7BTuiCOsY+NL7DKJnLBmGY2/+8pBpwpI5?=
+ =?us-ascii?Q?dTsVsdKCgAWHQFIgi2FLL7/da+nvRxUuoHcE4uuz4Rp+TzllaLfOZdTNmXHp?=
+ =?us-ascii?Q?ZropsjjfcuwfJympDvolbHCCL7jaM16FVpSdNJnMgjdnbnWWDFearc9n4is7?=
+ =?us-ascii?Q?SZ8fk7sTqh2LXyvN5VAoOr3nap3cKweYzj+ebY3r0OtBtVPCXk593ZRWNFKm?=
+ =?us-ascii?Q?Wp5v4fPXx0mYmVe0LtBkFQNDqVU84WpQccVWTR/4g5bxs9KmQL2pDdr2Osds?=
+ =?us-ascii?Q?6znqknzx930agblohGejyUAqPYvAGZ2Jek9th/kXCHLNuVzx3CObaRJMkIkL?=
+ =?us-ascii?Q?2Ll9H5A0loa8DDhYDcIy6N7uoYUp6+k1za01ZVmWuCFOf7D0BKlOsOFzIoJa?=
+ =?us-ascii?Q?IgamsR3NtP9PARcw2ozxLLzWAE0cIYbuObGoeaSIk3xNhEaPcqtuuvp6KHvE?=
+ =?us-ascii?Q?DD8WlIEKYpGs2t3zPgpNfDqxzk5OmrKtMn+hq7T3zwhdLxwfcI9pYk6UB9vk?=
+ =?us-ascii?Q?WeV2mz13sppAUVmjacUIuv4ikgIpR+jI2ruX2EaVfn56tpq/gPbySW30k9Ts?=
+ =?us-ascii?Q?7N0m1Ek+v2JoP9Nuah2t9bAZlVnJWMZRH6JNJFdhkbWZiW+q4+wi3RAEs9hB?=
+ =?us-ascii?Q?1VuIrabHZezgOjbzSZRgmU0KoD0Ftnu7sKYm7L7KxgRE5hX5wXGskfEUzlRQ?=
+ =?us-ascii?Q?jofXUXmnIZRrM2yskbdK80Mmy/MtArgyltmVxJonGvB28KSSh4afh2aeKeHs?=
+ =?us-ascii?Q?OTHxvnWeOqGujIOZxlIVqa3MJJJ+nf5waiBkmoMGYUTFtkSNABagsACAkA6t?=
+ =?us-ascii?Q?r9/vT/qCsV6MBCQc8+QJ2mCDMon9Rj8N2EXNTNC7lxgxDu9P6EL0M/1CIUd/?=
+ =?us-ascii?Q?IwOv5CTyEgKUBuy0hgI77bChGEj9zLan79jU79nhoLkFICJWdGwPv4Kb2esx?=
+ =?us-ascii?Q?oHQGOBImqVAn7bxRtkoDSu1KnUjPFvnYGZHladFSM4AnHNH1DLsYYr+Cxju1?=
+ =?us-ascii?Q?d0jZlC5PEn04ToGoC2HTPPZfqR9VbhwHpqufGd6WTwnmKEqoGpzeX7jnw3Y5?=
+ =?us-ascii?Q?4wrIYzhhPryle0eTf9FZ0G5+Y75MMkWo1oBc7H8CsTRk9uDm6Rk26cSYPZrL?=
+ =?us-ascii?Q?BZP5I7l9t2taS4fJA4zym34PlXRDAuRfcMtFjyviZjB2ItpiCTVZDuktHDqi?=
+ =?us-ascii?Q?/KMiu9COG29EzIAo2CL7TzQotU9hdU4NxqCKDsx5Iu0KLo9A1RoDINYnR4Ks?=
+ =?us-ascii?Q?MwOGWQS1thaqq6D8FMTSs5h3XF4+glk96Cjwf/vT3m8+6TbYmvSmG9GrXKbs?=
+ =?us-ascii?Q?1qUGJ/1sxPTjrtFjdtMtiS/x83agToOJN5bRY0+6N6/VQt+JdoR1fNlGF2Vx?=
+ =?us-ascii?Q?QPzSJ+SwQc+u5U4M4aw7eutEBGJqJpD9oOh2o08b?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/15] ARM: dts: Configure interconnect target module for
- dra7 sata
-To: Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
- linux-omap@vger.kernel.org
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
- devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- Kishon Vijay Abraham I <kishon@ti.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, linux-pci@vger.kernel.org,
- Kevin Hilman <khilman@baylibre.com>, Robin Murphy <robin.murphy@arm.com>
-References: <20210126124004.52550-1-tony@atomide.com>
- <20210126124004.52550-8-tony@atomide.com>
- <c583e1bb-f56b-4489-8012-ce742e85f233@smile.fr>
- <45e6b7d4-706e-4f91-b452-4fa80c25b944@kernel.org>
-Content-Language: fr
-From: Romain Naour <romain.naour@smile.fr>
-In-Reply-To: <45e6b7d4-706e-4f91-b452-4fa80c25b944@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR07MB8838.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75a1ca2e-8268-4abe-2a8a-08dd04b558b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2024 14:05:08.0323
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PCP7jkG+t4oyDdSdI/kN/AoCp+lMRWcM7KsLj6FyO29bPIg57Ya/4DS4J/f3K5YeZsM+yh3dy69Z1LKN8bjQSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR07MB7497
 
-Hi Roger, Robin, All,
+Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB non-prefetchable
+windows.
 
-Le 14/11/2024 à 12:02, Roger Quadros a écrit :
-> Hi Romain,
-> 
-> On 12/11/2024 16:15, Romain Naour wrote:
->> Hello Tony, Roger, All,
->>
->> Le 26/01/2021 à 13:39, Tony Lindgren a écrit :
->>> We can now probe devices with device tree only configuration using
->>> ti-sysc interconnect target module driver. Let's configure the
->>> module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
->>> time warnings. The legacy property will be removed in later patches
->>> together with the legacy platform data.
->>>
->>> Note that the old sysc register offset is wrong, the real offset is at
->>> 0x1100 as listed in TRM for SATA_SYSCONFIG register. Looks like we've been
->>> happily using sata on the bootloader configured sysconfig register and
->>> nobody noticed. Also the old register range for SATAMAC_wrapper registers
->>> is wrong at 7 while it should be 8. But that too seems harmless.
->>>
->>> There is also an L3 parent interconnect range that we don't seem to be
->>> using. That can be added as needed later on.
->>
->> Since the switch from a kernel 5.10 to 6.1, the dra7 (AM574x) sata interface
->> doesn't work as expected.
->>
->> Using a kernel 6.1 with a preformated ext4 SATA disc, any copied file will be
->> corrupted when the filesystem is umounted.
->>
->> mount /dev/sda1 /mnt
->> cp /<test_file> /mnt/
->> sync
->> sha256sum /mnt/<test_file> /<test_file>
->> <same hash>
->> umount /mnt
->>
->> mount /dev/sda1 /mnt
->> sha256sum /mnt/<test_file> /<test_file>
->> /mnt/<test_file> is corrupted.
->>
->> git bisect report 8af15365a368 ("ARM: dts: Configure interconnect target module
->> for dra7 sata") as the first bad commit [1] (merged in 5.13).
->>
->> While looking for existing SATA issue on dra7 SoC, I found this old patch:
->>
->> "On TI Platforms using LPAE, SATA breaks with 64-bit DMA. Restrict it to
->> 32-bit." [2].
->>
->> Even if it's not the correct fix, disabling 64-bit DMA allows to use the sata
->> disc correctly. The discussion about this issue seems to have stopped [3] and
->> the suggested change was never merged.
-> 
-> If I remember right the following commit fixed the issue back then.
-> 
-> cfb5d65f2595 ARM: dts: dra7: Add bus_dma_limit for L3 bus
-> 
-> But, when commit [1] moved the SATA node from L3 bus to L4_cfg it lost the bus_dma_limit
-> that we added at the L3 bus and hence the regression.
-> 
-> I think we should add the same 2GB dma ranges limit into l4_cfg bus so all modules
-> can inherit it.
+According to the PCIe spec, non-prefetchable memory supports only 32-bit
+BAR registers and are hence limited to 4 GiB. In the kernel there is a
+check that prints a warning if a non-prefetchable resource exceeds the
+32-bit limit.
 
-Thanks for your reply!
+This check however prints a warning when a 4 GiB window on the host
+bridge is used. This is perfectly possible according to the PCIe spec,
+so in my opinion the warning is a bit too strict. This changeset
+subtracts 1 from the resource_size to avoid printing a warning in the
+case of a 4 GiB non-prefetchable window.
 
-It seems l4_cfg can inherit dma-ranges property from ocp node using
-"dma-ranges;". But then segment@100000 node (0x4a100000) needs "dma-ranges;" too.
+Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
+---
+ drivers/pci/of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-With the following patch applied, the SATA drive works correctly.
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index dacea3fc5128..ccbb1f1c2212 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -622,7 +622,7 @@ static int pci_parse_request_of_pci_ranges(struct devic=
+e *dev,
+            res_valid |=3D !(res->flags & IORESOURCE_PREFETCH);
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 1aaffd034c39..3ac770298844 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -12,6 +12,7 @@ &l4_cfg {                                             /*
-0x4a000000 */
-        ranges = <0x00000000 0x4a000000 0x100000>,      /* segment 0 */
-                 <0x00100000 0x4a100000 0x100000>,      /* segment 1 */
-                 <0x00200000 0x4a200000 0x100000>;      /* segment 2 */
-+       dma-ranges;
+            if (!(res->flags & IORESOURCE_PREFETCH))
+-               if (upper_32_bits(resource_size(res)))
++               if (upper_32_bits(resource_size(res) - 1))
+                    dev_warn(dev, "Memory resource size exceeds max for 32 =
+bits\n");
 
-        segment@0 {                                     /* 0x4a000000 */
-                compatible = "simple-pm-bus";
-@@ -557,6 +558,7 @@ segment@100000 {                                    /*
-0x4a100000 */
-                         <0x0007e000 0x0017e000 0x001000>,      /* ap 124 */
-                         <0x00059000 0x00159000 0x001000>,      /* ap 125 */
-                         <0x0005a000 0x0015a000 0x001000>;      /* ap 126 */
-+               dma-ranges;
-
-                target-module@2000 {                    /* 0x4a102000, ap 27 3c.0 */
-                        compatible = "ti,sysc";
-
-
-Sorry, I'm not familliar with property inheritance between devicetree nodes,
-especially with dma-ranges. Does this change seem correct to you?
-
-Best regards,
-Romain
-
-
-> 
->>
->> The SATA port is unlikely not available on TI AM57 EVM boards or the beaglebone-AI.
->>
->> Any suggestion?
->>
->> [1]
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=8af15365a36845c4c15d4c8046ddccff331d5263
->> [2] https://lore.kernel.org/all/20200206111728.6703-1-rogerq@ti.com/T/
->> [3] https://lore.kernel.org/lkml/c753a232-403d-6ed2-89fd-09476c887391@ti.com/
->>
->> Best regards,
->> Romain
->>
->>
->>>
->>> Signed-off-by: Tony Lindgren <tony@atomide.com>
->>> ---
->>>  arch/arm/boot/dts/dra7-l4.dtsi | 29 ++++++++++++++++++++++++++---
->>>  arch/arm/boot/dts/dra7.dtsi    | 12 ------------
->>>  2 files changed, 26 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
->>> --- a/arch/arm/boot/dts/dra7-l4.dtsi
->>> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
->>> @@ -572,11 +572,34 @@ target-module@8000 {			/* 0x4a108000, ap 29 1e.0 */
->>>  		};
->>>  
->>>  		target-module@40000 {			/* 0x4a140000, ap 31 06.0 */
->>> -			compatible = "ti,sysc";
->>> -			status = "disabled";
->>> -			#address-cells = <1>;
->>> +			compatible = "ti,sysc-omap4", "ti,sysc";
->>> +			ti,hwmods = "sata";
->>> +			reg = <0x400fc 4>,
->>> +			      <0x41100 4>;
->>> +			reg-names = "rev", "sysc";
->>> +			ti,sysc-midle = <SYSC_IDLE_FORCE>,
->>> +					<SYSC_IDLE_NO>,
->>> +					<SYSC_IDLE_SMART>;
->>> +			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
->>> +					<SYSC_IDLE_NO>,
->>> +					<SYSC_IDLE_SMART>,
->>> +					<SYSC_IDLE_SMART_WKUP>;
->>> +			power-domains = <&prm_l3init>;
->>> +			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 0>;
->>> +			clock-names = "fck";
->>>  			#size-cells = <1>;
->>> +			#address-cells = <1>;
->>>  			ranges = <0x0 0x40000 0x10000>;
->>> +
->>> +			sata: sata@0 {
->>> +				compatible = "snps,dwc-ahci";
->>> +				reg = <0 0x1100>, <0x1100 0x8>;
->>> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>> +				phys = <&sata_phy>;
->>> +				phy-names = "sata-phy";
->>> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->>> +				ports-implemented = <0x1>;
->>> +			};
->>>  		};
->>>  
->>>  		target-module@51000 {			/* 0x4a151000, ap 33 50.0 */
->>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->>> --- a/arch/arm/boot/dts/dra7.dtsi
->>> +++ b/arch/arm/boot/dts/dra7.dtsi
->>> @@ -785,18 +785,6 @@ qspi: spi@0 {
->>>  			};
->>>  		};
->>>  
->>> -		/* OCP2SCP3 */
->>> -		sata: sata@4a141100 {
->>> -			compatible = "snps,dwc-ahci";
->>> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
->>> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>> -			phys = <&sata_phy>;
->>> -			phy-names = "sata-phy";
->>> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->>> -			ti,hwmods = "sata";
->>> -			ports-implemented = <0x1>;
->>> -		};
->>> -
->>>  		/* OCP2SCP1 */
->>>  		/* IRQ for DWC3_3 and DWC3_4 need IRQ crossbar */
->>>  
-> 
-
+            break;
+--
+2.39.3
 
