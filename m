@@ -1,163 +1,169 @@
-Return-Path: <linux-pci+bounces-16765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26D069C8DDF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 16:25:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F60B9C8DF4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 16:27:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9ED0D1F21AF8
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 15:25:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CECEB2DA32
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2024 15:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 843553B784;
-	Thu, 14 Nov 2024 15:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE8B8153803;
+	Thu, 14 Nov 2024 15:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R7dZLa0b"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T0lJt+QV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085C313AD29
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 15:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D78B13AD29
+	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 15:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731597934; cv=none; b=XslMGUzOuasJhHlPsQReDfMHFxhim2SXPDnHXYJ2H8dC7BJyPel0syFAuGq2+2SObdwhws7yUN9I8dviOE9jmPywCDlcrR4OLD6LSX1BHH92Md+OY1lWph80qSu/5z/OM7rmwsq7zbV8MGBbvTrYOQ8JNw5kGEdWfB3+ExBL/v4=
+	t=1731597978; cv=none; b=J8OPhemlk4TuKTajwO9xoSTUtiU5O1HVhXvhx9vzftaS3wN/M9xbS4l9jWNq5KnBxEZRPc2DdHOlFYkFNLF7Y+Qt7UkT+jdDmozVIUh9Iy6rQQH7E2YIAFWjZEiWikXTEOYi1l2XTd+XMLnwinRyqTzL7yWkoXHOGDXGT9aalrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731597934; c=relaxed/simple;
-	bh=yCNfpNDzwbET0LEuXl0osl4EyrXHRcoLor+RqoNIT9M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lkjnWl5LFM50+q4e1JEKk2DNZeq05BSkIJas5Ny5/C3kTy6DRSQVK0t1KxXk3cMfO+lhi6gdBBuHKFA3spWtEywMe7pkTlKRh9tLkpMCA+Jd+NwqwOg+yMnkE4RC159pKbG97W8tNaBbVUMeHa4CAnMZxEOqVKn34444fTu2WWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=fail smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R7dZLa0b; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AEA4gI0030056
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 15:25:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	77Uxb2WKa15F5RlNtYFFhLRjfJru9BUZrxBhSgyxq1Y=; b=R7dZLa0bxgFu8heQ
-	hYjjlXMBKY6UuVf7g7G/pBjXtCgqHWhO4/EjJuViaogxOKU7+qb+dmFlbA/3rkY6
-	hmD6yVU55eLplKiOr4u3MCTslUkcOItfLEwO4Wlus6/XsKN0z52Ymd3sx0duef+h
-	ZpMxNDMW+vdYi2oluKCYW/GSiJE44wVKe76rku89JCZC5ck5VHq4OBSZDk/a5yTm
-	Tpiirxm/RjJCBbosbOMSMmfZTk1bjfkip9sX4YuzsQDB4NbaCizDt4aUPxv852c2
-	bSB9s8n+dwDEZGoEOfFI8H9KnBJXPp51v3IqGderpIqpRZIxtv8OsnLVnPGypB0B
-	vqcFRw==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42w66gu7kv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 15:25:31 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-46086de3a40so1691351cf.3
-        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 07:25:31 -0800 (PST)
+	s=arc-20240116; t=1731597978; c=relaxed/simple;
+	bh=OXm964+HL/oy8I5JgLPsZUm+UieJrQIuj9T2oe/JmoI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plX3pgPkUzeRI5kW05PcSk7utvd16mrNhDkZOw2sb7O4YAtpjWNqs9FY1wdLZAO6r8KD1EmU6RtJN89/tYwDLjobH+H4lYXUqjo1A0M1Map8IWU0r1VKn8rQ2XbOVgBMr7gkMo6HyALOc1GZkBRMN76U5lb0WIXCMQhVLfwO1+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T0lJt+QV; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-a99f646ff1bso105301766b.2
+        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 07:26:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1731597975; x=1732202775; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BXfRuwtCQesbb+rpbVIxn9Ia55XQqIa+ED/3SCVnO+4=;
+        b=T0lJt+QVOgMpe98LyY/OQg5CauvRzz5aZotWG53qpiINIQPfuqm94oJDgqqTpxKQpy
+         VyPY7U+5O+0dC4OqfQqxD7ygF8MN4l31p3AAOahmwrJO8Jd/Zp5t1lx1dUKasPaKePKz
+         5u2zO7f6XsMG7Q/iCIl6hgyDRzi9MNPi/u0NjMCu8GgXrYxT4s+qzsU/tdKaHPLlG1TH
+         VTNCP7uaedHsnu4AIbUmGkCMNKJZTqEaX58qEthYKW73qRLo4BdAvR/OenXR7qAz4bQm
+         Jtb8z+RKl38uYnU4VOuJcnn7WfXWidfo4zsFFj8ZlEIoPZdxRc6NBYqiOkUt4Vg7iFb9
+         JjhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731597931; x=1732202731;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1731597975; x=1732202775;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=77Uxb2WKa15F5RlNtYFFhLRjfJru9BUZrxBhSgyxq1Y=;
-        b=tfTX4pYlpIe2RdwWeOqdefkIrzL9/6msnBZoFcdaMSRVmwKYd3qcBsTSO3SD7L6ZHM
-         aYoXzaipL3BtbhhPWygtBRoMjuP7AtxdCYUHTNiiPGqzXT5xIPhzz12rnU4sxIMtaJFq
-         YB2JSyQNH/wYKngcgKbDE3AUXINOHwFxD8uXYzZKWm6VzNL/V8A9eMWXQCTrjngSWYM1
-         kCCzXEPefdn0EmjMmZWf5KVbR9TO5J0iHSiFno7f1FwthYgn++iCKRj0zJQf7y2o8/s5
-         5atxeqLrh67cOqIVggGQIwA6ypO63ykQdqgz9BZAfmRWiQ45v/yCnc2EbfPMwsP38lju
-         FExQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ80l51HNQeQc6H1OOcxku/JNZVnkE0yFgt6+NEoJyNfmQh6rdjEIOu9ucZNSs3IgMQ5a7Gk2RV58=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfsd9u3hy8LiZMFE/zyGpjcql7qtztTlxnXoWsG/Odl4yJFrJ9
-	9kE4beQkT4WeumeJCaWciNpUlruvszcqqS3qMmAxLaN+8IOmeRA0cp2n/mHXo0POLUvws+lGJ59
-	dlkr4PI5IVoquvs/42GEN8vs6hFBLyvaXLU7clX6/IKSw45yOG1/C6wSH4uM=
-X-Gm-Gg: ASbGncsedDf3SSTcI7NA37vL757ZoeiHCebhX+eS+aBQpJhaa4tpbTAdxj5eRB/2dpj
-	EUWY9aCG81auYabk5tZtpyNXeqpa+Rz31HkRzkC1E6lzXeBmZGXCpOm/zVdT0WAKe6fIfZKl9De
-	FE36QacSZm8Qe/62J7Y4Uowz3Dk1tdjtEXgusHrib8I36Mt2dhmtyQ2lLZhJ/NlpMn06m/7r3Cp
-	cGmAkyKraUFF5Od/kYk7rYJ8ThTxH2U93yspUT+y7ao9QgM3KTtvT0ALtryFo4/O0CGqQCEaK9w
-	0Dc/oDyKNDAc8zX8L/iVpynDJKH10y0=
-X-Received: by 2002:ac8:5e4e:0:b0:463:5517:ffdf with SMTP id d75a77b69052e-46355180066mr29516141cf.16.1731597931051;
-        Thu, 14 Nov 2024 07:25:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFhRByPw5EKbcCygzJSeTHFTucdQZ7slWUPQDlZW+UZ6sjz9iRDzTlgGCHFVd6ZGQW1YCrwpw==
-X-Received: by 2002:ac8:5e4e:0:b0:463:5517:ffdf with SMTP id d75a77b69052e-46355180066mr29515961cf.16.1731597930690;
-        Thu, 14 Nov 2024 07:25:30 -0800 (PST)
-Received: from [192.168.212.120] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf79a44a9dsm700093a12.0.2024.11.14.07.25.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2024 07:25:30 -0800 (PST)
-Message-ID: <abf5b78f-95d6-44e6-93f6-616178ad328d@oss.qualcomm.com>
-Date: Thu, 14 Nov 2024 16:25:27 +0100
+        bh=BXfRuwtCQesbb+rpbVIxn9Ia55XQqIa+ED/3SCVnO+4=;
+        b=jbN+ifEiNvK/+ZcLVlENl4sPE+2KZQQR+elvw+d1hjuhJV6G9/VQaWDNLjEixAeq4N
+         RTnT7X+HH0N5sDdfboAB5lTSm3MXzilR+yZCg5Ih/gKswUa4S4ltDzyVIvxEyyFcsj1k
+         6dyXuZX+39MYdxKzmSNZqyv2Q8EHyqAII/xex28uXMZO65dSrt6YOj3v8fChAH1eYBIZ
+         QPGhps/muZL/0Cp5g8nSxRqkVSd+Yt+fAtofEQ3U50GSRlj1tpm+dU1EgmRePBA3xaBP
+         kk3sHGYxolSS6AN6NzjfcgZi05M0dm5z1Xhf8t8fhjnz5z+nEmAiO4bfGFVAv8G2K4vF
+         MppQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6FnqGEVjfon9IfYA/oONuIXl5J3BQKioFdQZUVAZhGdraLmCUs9uiN9iGYUyM+aHruNWZYHyqpSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziVjDWr6+6O4Hv94h0D+otl4HETriwqAAtXy6vRG0Sp6rkSFrb
+	ljvcBLfRicqvcoSNG+YpAUqM+5AtMvOGUDez3OITWnTINiOow+jGD8lAC4X6lRY=
+X-Google-Smtp-Source: AGHT+IGhM6/BPmoBjuRiiI1ewZRW9R+eE3BQ4H3+p/OJfSdyeRMIoasVpFD+sR2v6s9C5C6vSshsww==
+X-Received: by 2002:a17:907:7b95:b0:a9a:c691:dcbc with SMTP id a640c23a62f3a-aa1b1024b29mr1127309766b.12.1731597974922;
+        Thu, 14 Nov 2024 07:26:14 -0800 (PST)
+Received: from localhost (host-79-19-144-50.retail.telecomitalia.it. [79.19.144.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20e086ad4sm73543066b.199.2024.11.14.07.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2024 07:26:14 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 14 Nov 2024 16:26:42 +0100
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI: of_property: Assign PCI instead of CPU bus address
+ to dynamic PCI nodes
+Message-ID: <ZzYWso5jLkUMehQ6@apocalypse>
+References: <20241108094256.28933-1-andrea.porta@suse.com>
+ <20241108110938.622014f5@bootlin.com>
+ <Zy3koxz4KnV39__V@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/5] arm64: dts: qcom: x1e80100: Add support for PCIe3
- on x1e80100
-To: Qiang Yu <quic_qianyu@quicinc.com>, Johan Hovold <johan@kernel.org>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
-        robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
-        quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org, kw@linux.com,
-        lpieralisi@kernel.org, neil.armstrong@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        johan+linaro@kernel.org
-References: <20241101030902.579789-1-quic_qianyu@quicinc.com>
- <20241101030902.579789-6-quic_qianyu@quicinc.com>
- <ZyjbrLEn8oSJjaZN@hovoldconsulting.com>
- <de5f40ab-90b7-4c75-b981-dd5824650660@quicinc.com>
- <c558f9eb-d190-4b77-b5a3-7af6b7de68d8@quicinc.com>
- <ZzOQi0PpRZYts-B0@hovoldconsulting.com>
- <ef37236d-8856-4981-82fa-c0194d7b3dfc@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <ef37236d-8856-4981-82fa-c0194d7b3dfc@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 1WtnBXNxhmhQrmFlQxxAo8BbF05F4oMx
-X-Proofpoint-ORIG-GUID: 1WtnBXNxhmhQrmFlQxxAo8BbF05F4oMx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=937
- mlxscore=0 malwarescore=0 suspectscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 clxscore=1011 lowpriorityscore=0
- adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411140119
+In-Reply-To: <Zy3koxz4KnV39__V@apocalypse>
 
-On 13.11.2024 4:15 AM, Qiang Yu wrote:
+Hi,
+
+On 11:14 Fri 08 Nov     , Andrea della Porta wrote:
+> Hi herve,
 > 
-> On 11/13/2024 1:29 AM, Johan Hovold wrote:
->> On Mon, Nov 11, 2024 at 11:44:17AM +0800, Qiang Yu wrote:
->>> On 11/5/2024 1:28 PM, Qiang Yu wrote:
->>>> On 11/4/2024 10:35 PM, Johan Hovold wrote:
->>>>> On Thu, Oct 31, 2024 at 08:09:02PM -0700, Qiang Yu wrote:
->>>>>> +            ranges = <0x01000000 0x0 0x00000000 0x0 0x78200000 0x0
->>>>>> 0x100000>,
->>>>>> +                 <0x02000000 0x0 0x78300000 0x0 0x78300000 0x0
->>>>>> 0x3d00000>,
->>>>> Can you double check the size here so that it is indeed correct and not
->>>>> just copied from the other nodes which initially got it wrong:
->>>>>
->>>>>      https://lore.kernel.org/lkml/20240710-topic-barman-v1-1-5f63fca8d0fc@linaro.org/
->>> BTW, regions of PCIe6a, PCIe4, PCIe5 are 64MB, 32MB, 32MB, respectively.
->>> Why range size is set to 0x1d00000 for PCIe6a, any issue is reported on
->>> PCIe6a?
->> Thanks for checking. It seems the patch linked to above was broken for
->> PCIe6a then.
->>
->> We did see PCIe5 probe breaking due to the overlap with PCIe4 but the
->> patch predates PCIe5 support being posted and merged so it was probably
->> just based on inspection.
->>
->> Could you send a fix for PCIe6a?
-> Sure, will send the fix.
+> On 11:09 Fri 08 Nov     , Herve Codina wrote:
+> > Hi Andrea,
+> > 
+> > On Fri,  8 Nov 2024 10:42:56 +0100
+> > Andrea della Porta <andrea.porta@suse.com> wrote:
+> > 
+> > > When populating "ranges" property for a PCI bridge or endpoint,
+> > > of_pci_prop_ranges() incorrectly use the CPU bus address of the resource.
+> > > In such PCI nodes, the window should instead be in PCI address space. Call
+> > > pci_bus_address() on the resource in order to obtain the PCI bus
+> > > address.
+> > > 
+> > > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > Tested-by: Herve Codina <herve.codina@bootlin.com>
+> > > ---
+> > > This patch, originally preparatory for a bigger patchset (see [1]), has
+> > > been splitted in a standalone one for better management and because it
+> > > contains a bugfix which is probably of interest to stable branch.
+> > 
+> > Nothing to say for the patch itself.
+> > 
+> > Just here, you mentioned "see [1]" but you didn't provide the link.
+> > 
+> > IMHO, this is not blocking for applying the patch but, just for other people
+> > looking at this email in the mailing list, can you reply providing the link?
+> 
+> Thanks for pointing that out, sorry about that. Here it is:
+> 
+> [1] - https://lore.kernel.org/all/f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com/
 
-So the patch I posted made it match the DSDT/Windows state. I assumed
-there must have been something wrong as docs suggested the value that you
-did.
+Do I have to resubmit the patch with the referenced url fixed or is it
+ok as it is?
 
-But both work. In case any issues pop up, we can revisit this.
+Thanks,
+Andrea
 
-Konrad
+> 
+> Many thanks,
+> Andrea
+> 
+> > 
+> > Best regards,
+> > Herv�
 
