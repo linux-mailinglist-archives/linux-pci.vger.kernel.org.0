@@ -1,239 +1,104 @@
-Return-Path: <linux-pci+bounces-16835-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16836-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 236F69CDA87
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:32:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACD959CDAD4
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:47:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B9F91F23BA2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:32:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30412B25256
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF87C18C924;
-	Fri, 15 Nov 2024 08:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f8N1XZMx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D9718B494;
+	Fri, 15 Nov 2024 08:47:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA44188724
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 08:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D4418BBB0;
+	Fri, 15 Nov 2024 08:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731659547; cv=none; b=oXiG++VB9YM0qnibXACrKapoGY4NIY5YULg4g6n3qeLmTwZ6ElI+DTA+8uQOC0Q2WRE4atG0HAt7Sc+b6FAa+PveRc15bImfdZdb6hSp1YEQv8ugNpu2zmVtGf/76Wl7ZVN8OUxJs4R0oBHX4a8nTiWwphAvI2sGNtpDZ9Ea/bI=
+	t=1731660455; cv=none; b=eSdcZ6GkBnZ1IGUeVohx0+PpjgRQ8N6lytWnVz4gJPbC9InGElU6bz8kP6jf8BsNOsE/aijhmmUDlCiujwxzuiV9zcFJqGYUFnQskpHf+bsBp7C7AHe+EUSlswTvVRrGg13yKpoQU2RYLThtD/7U60FEF0e7XZMVre64MEkNI4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731659547; c=relaxed/simple;
-	bh=KwwtRZveGMe16US76kOe+Iauo+yTFHTCMml6hFlPRTY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kQ3LrtwfNTnHejwfehSY06P980NN+bKueqgCoX2vXUcB2FXqe0SwmWsYa1CjA0G3BlR8ESeXxINM/w16wK67gNA3yOYCyuXrkx/pTkNyIxl6Atuiqwu3PU9udF0OSLgcwYTsI/vKAcI5rNI4Wf3KYyq5b++NulsF2STBe+qysPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f8N1XZMx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731659544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KwwtRZveGMe16US76kOe+Iauo+yTFHTCMml6hFlPRTY=;
-	b=f8N1XZMxBN9C3i3Z2uPoHDfCCYGDGhzCAwc8eWU9L3bEJYRP8K47Fj5TIp7Hb8FT3efy30
-	jPW+tsZVyrCLQy7CjsxUgmhSW+R16/IozujoP39igvyH0jDWjGtdhSrz1o8s2KiEMCu6A6
-	hkr63THX/zhIFF9/5ZbE3oPlqWCwAr4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-9XAIg9gZOcyPT2kjw4OIhQ-1; Fri, 15 Nov 2024 03:32:22 -0500
-X-MC-Unique: 9XAIg9gZOcyPT2kjw4OIhQ-1
-X-Mimecast-MFC-AGG-ID: 9XAIg9gZOcyPT2kjw4OIhQ
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38223a3262bso267564f8f.0
-        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 00:32:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731659540; x=1732264340;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KwwtRZveGMe16US76kOe+Iauo+yTFHTCMml6hFlPRTY=;
-        b=FcsdCd5Yjk8R7i1uYjm3QZ4/EwI5W2vFagqR6SN2CRvHo85EWQyCaN6HPuqynjBYyL
-         kt6dp052rwjzj0I5TVQ7eK5BLagVjzZUun7QUP0GabD4GOfTUiqVpePpYdcCZuaDjS/X
-         jJaqlHykUcGSNJQp7/z3yyEvTaukqmHx5/UiGYq5kPGiC3Ryv2uBce1ud+cMDKlJcRrQ
-         LG4DR5mNdiA8St0QTl7vaOARtRGje4wOn4i0PF+mKOLYEPGP9voqUWTwM2Iz2QFvNoer
-         DfHmD3t63WOjTvlUIn5LbX6XKqdrFlaYC2ZiVfPAcHhIQIfPyTs6WxU6p0LtC0wxzcAa
-         2KXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPs5MWWxKqmJk50oEaMgu07ee47W7Z0iLasK+QrszczMXLKB+aoHdcGHkuzC+98A2+NiNE06B3c2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzITfxpDRP7SGuaN+PNvYLNQtf6wNCIokeGYmV8CXWVc3oy9cJo
-	2n8KTNwEycgcDWLEXWTjBDXWNeJraOTaoIg7+mH4WTQv0EORjQhIOqoudtq0sotSy90dNSDGCMp
-	9GeTERL5pdH2U+NYH0Ijc2h46OoysDDYYZbG8pvrleibYRlQZvGC1De/rgg==
-X-Received: by 2002:a5d:64c9:0:b0:37d:5173:7a54 with SMTP id ffacd0b85a97d-38225aafc0bmr1382362f8f.52.1731659540142;
-        Fri, 15 Nov 2024 00:32:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGdh/kmNlYkC/WQKFf2J1h1Btsr4ZUjp0WRHuv0DJX0wKMjNySBXwoM4GCHyqPFiIGeYI7IOw==
-X-Received: by 2002:a5d:64c9:0:b0:37d:5173:7a54 with SMTP id ffacd0b85a97d-38225aafc0bmr1382314f8f.52.1731659539626;
-        Fri, 15 Nov 2024 00:32:19 -0800 (PST)
-Received: from [10.200.68.91] (nat-pool-muc-u.redhat.com. [149.14.88.27])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ada2da2sm3716393f8f.15.2024.11.15.00.32.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 00:32:19 -0800 (PST)
-Message-ID: <ff7f7358cec4bb03423879a2e4efd16d0a3e8ed7.camel@redhat.com>
-Subject: Re: [PATCH v2 11/11] Remove devres from pci_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Damien Le Moal
- <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>, Basavaraj Natikar
- <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
- Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
- Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
- <manishc@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rasesh Mody
- <rmody@marvell.com>,  GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko
- <imitsyanko@quantenna.com>,  Sergey Matyukevich <geomatsi@gmail.com>, Kalle
- Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar
- S K <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Chen Ni <nichen@iscas.ac.cn>, Ricky Wu
- <ricky_wu@realtek.com>,  Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao
- <leitao@debian.org>, Kevin Tian <kevin.tian@intel.com>, Mostafa Saleh
- <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>, Kunwu Chan
- <chentao@kylinos.cn>, Ankit Agrawal <ankita@nvidia.com>, Christian Brauner
- <brauner@kernel.org>, Reinette Chatre <reinette.chatre@intel.com>, Eric
- Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, netdev@vger.kernel.org, 
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org,  kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org
-Date: Fri, 15 Nov 2024 09:32:16 +0100
-In-Reply-To: <8734jtl3xm.ffs@tglx>
-References: <20241113124158.22863-2-pstanner@redhat.com>
-	 <20241113124158.22863-13-pstanner@redhat.com> <87msi3ksru.ffs@tglx>
-	 <49bb6fc9ebff3cae844da0465ceadeef8d3217c7.camel@redhat.com>
-	 <8734jtl3xm.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1731660455; c=relaxed/simple;
+	bh=/DsROywAvHAkFdPe88DuYC+yrn7Ej88+9wfbHxvbTrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ze5YE3qbTH73XebPqVNxOEeYiPRIdYSwFITLseekTa2ySpw4p+wgHDZJQEtAw6hsZASkicJXsKxYjqKvBv6aIx1J69kZi2EdANOEq96wfvaAWQAZbCMUoHrdwLmeaN//u7cgyON9OOr3Q4A1Jp1epeLXmsXPBJ3tQBeruWJizaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 45E122800C7FC;
+	Fri, 15 Nov 2024 09:47:28 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2E7BC3D0537; Fri, 15 Nov 2024 09:47:28 +0100 (CET)
+Date: Fri, 15 Nov 2024 09:47:28 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
+	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
+Subject: Re: [PATCH v3 03/15] cxl/pci: Introduce PCIe helper functions
+ pcie_is_cxl() and pcie_is_cxl_port()
+Message-ID: <ZzcKoOXTVVj3bTnE@wunner.de>
+References: <20241113215429.3177981-1-terry.bowman@amd.com>
+ <20241113215429.3177981-4-terry.bowman@amd.com>
+ <ZzYbHZvU_RFXZuk0@wunner.de>
+ <ffd740e5-235a-4b74-8bf9-91331b619a7f@amd.com>
+ <ZzYq2GIUoD2kkUyK@wunner.de>
+ <e686016d-2670-4431-ad9d-3c189a48b1e4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e686016d-2670-4431-ad9d-3c189a48b1e4@amd.com>
 
-On Fri, 2024-11-15 at 01:46 +0100, Thomas Gleixner wrote:
-> On Thu, Nov 14 2024 at 10:05, Philipp Stanner wrote:
-> > On Wed, 2024-11-13 at 17:22 +0100, Thomas Gleixner wrote:
-> > > On Wed, Nov 13 2024 at 13:41, Philipp Stanner wrote:
-> > > > pci_intx() is a hybrid function which can sometimes be managed
-> > > > through
-> > > > devres. This hybrid nature is undesirable.
-> > > >=20
-> > > > Since all users of pci_intx() have by now been ported either to
-> > > > always-managed pcim_intx() or never-managed
-> > > > pci_intx_unmanaged(),
-> > > > the
-> > > > devres functionality can be removed from pci_intx().
-> > > >=20
-> > > > Consequently, pci_intx_unmanaged() is now redundant, because
-> > > > pci_intx()
-> > > > itself is now unmanaged.
-> > > >=20
-> > > > Remove the devres functionality from pci_intx(). Have all users
-> > > > of
-> > > > pci_intx_unmanaged() call pci_intx(). Remove
-> > > > pci_intx_unmanaged().
-> > > >=20
-> > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > > > ---
-> > > > =C2=A0drivers/misc/cardreader/rtsx_pcr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0drivers/misc/tifm_7xx1.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 6 +--
-> > > > =C2=A0.../net/ethernet/broadcom/bnx2x/bnx2x_main.c=C2=A0 |=C2=A0 2 =
-+-
-> > > > =C2=A0drivers/net/ethernet/brocade/bna/bnad.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0drivers/ntb/hw/amd/ntb_hw_amd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +-
-> > > > =C2=A0drivers/ntb/hw/intel/ntb_hw_gen1.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +-
-> > > > =C2=A0drivers/pci/msi/api.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0drivers/pci/msi/msi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 43 +----------
-> > > > ----
-> > > > ----
-> > > > =C2=A0drivers/vfio/pci/vfio_pci_core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A0drivers/vfio/pci/vfio_pci_intrs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 ++---
-> > > > =C2=A0drivers/xen/xen-pciback/conf_space_header.c=C2=A0=C2=A0 |=C2=
-=A0 2 +-
-> > > > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 -
-> > > > =C2=A014 files changed, 22 insertions(+), 62 deletions(-)
-> > >=20
-> > > Now I'm utterly confused. This undoes the pci_intx_unmanaged()
-> > > churn
-> > > which you carefully split into several patches first.
-> >=20
-> > Have you read the email I have linked?
-> >=20
-> > There is also the cover-letter (does anyone in the community ever
-> > read
-> > those?) which explicitly states:
-> >=20
-> > "Patch "Remove devres from pci_intx()" obviously reverts the
-> > previous
-> > patches that made drivers use pci_intx_unmanaged(). But this way
-> > it's
-> > easier to review and approve. It also makes sure that each checked
-> > out
-> > commit should provide correct behavior, not just the entire series
-> > as a
-> > whole."
->=20
-> I read it and I assume your intention was to force an eye on every
-> use
-> case of pci_intx() and not just on those which need to be converted
-> to
-> pcim_intx().
->=20
-> I'm not convinced that this is needed, but fair enough.
+On Thu, Nov 14, 2024 at 11:07:26AM -0600, Bowman, Terry wrote:
+> > Can you have a CXL port that is not a CXL device?
+> >
+> > If not, it would seem to me that checking for Flexbus DVSEC presence
+> > *is* redundant.  Or do you anticipate broken devices which lack the
+> > Flexbus DVSEC and that you explicitly want to exclude?
+> 
+> No, the CXL port device is always a CXL device per spec.
+> 
+> This was added to short-circuit the function by returning immediately
+> if the device is _not_ a CXL device. Otherwise for PCIe Port devices,
+> the CXL Port DVSEC will be searched. I was trying to avoid the unnecessary
+> CXL port DVSEC search unless the other criteria are met.
+> And I expect most cases will not be a CXL device.
+> 
+> I will remove the "if (!pcie_is_cxl(dev))" block as you suggested.
 
-Whether pcim_enable_device() is really not used could have been
-overlooked, or the driver could move to "managed mode" in parallel for
-v6.13 for example. Then a bug would be silently introduced into those
-drivers.
+Ah, this is meant as a speed-up.  Actually that makes sense,
+so feel free to keep it.
 
-Besides, me touching pci_intx() unfortunately caused a few explosions
-in the past already, in
+If you do remove it, I think you'll have to move the cxl_port_dvsec()
+invocation up in the function, in front of the pci_pcie_type() checks.
+The latter require that one first checks that the device is PCIe.
+That's done implicitly by cxl_port_dvsec() because it returns 0 in
+the non-PCIe case.  (Due to the "if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)"
+check in pci_find_next_ext_capability().)
 
-fc8c818e756991f5f50b8dfab07f970a18da2556 and
-00f89ae4e759a7eef07e4188e1534af7dd2c7e9c
+Another idea would be to put a "if (!pcie_is_cxl(dev)) return 0;" speed-up
+in cxl_port_dvsec() so that the other caller benefits from it as well.
 
-So this time I prefer to be rather safe than sorry.
+Thanks,
 
-
-BTW, if you can review the MSI patch and check whether removing devres
-from there really is fine, that would be helpful.
-
-
-Regards,
-P.
-
+Lukas
 
