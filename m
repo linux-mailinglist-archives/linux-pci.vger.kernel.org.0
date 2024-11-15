@@ -1,173 +1,201 @@
-Return-Path: <linux-pci+bounces-16831-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16832-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48DB99CD9F2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:31:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E44589CDA49
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:15:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0934C28247D
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 07:31:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B86F1F21D53
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:15:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB58C1714C0;
-	Fri, 15 Nov 2024 07:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B11288DA;
+	Fri, 15 Nov 2024 08:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ByiC8ZiP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkdyC5LW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAFA10F2
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 07:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440182B9B7
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 08:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731655878; cv=none; b=udzg2xVgujqSuuThtHuxbfry8lQSMu07wCpXcGh8BXqjtf6fuzhNfw/vhAwQYogI7eZE/7WtAjpzfUiTemVmQ+09+TWvT3q0Q/nmi9gg4kZdO5c+mVGVFxK3Ab6LBPhO8i1oOfUfv5vbxrYbqBdWvx9r0Ay4meOhQmMV8xjB5vo=
+	t=1731658540; cv=none; b=uHgXst3wpc9Xn3P89+5E+/poaHx6N84jz8z3DeQ01snSe+WaP0FegdGhUP0ZjnfgWBRZrMcQDtJFK/3m9CZB6ydjqJCFN0353qY7OIkrdRsgayb0mctVrYTA5HPmF3prrHM8gQjRfjfIZ35YGkVvQgLMbNlRnp+KGlUDKrNQFJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731655878; c=relaxed/simple;
-	bh=DEsujF0MhaoMw1D2S+efwZQTlULtnKNa5uC7aR9wgK8=;
+	s=arc-20240116; t=1731658540; c=relaxed/simple;
+	bh=qb1EqVjy+N6VtdnAaxbLLICIMKpDLDUxnqmDHbT7RsA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m5sUxvsxKDrgSqERgcwpScengX/Z61D0BvhLs5GCr5Zq21aZp7vOH5E5wQ7ma6YSvxcZB7/Vq+U/wLD2BxpCAdiav7CQP1J2QKivtUZuQSkBltGVztLZwnTQryJg6dKZ+0QR2BfI7h/zV1BYd9xY5B49PjBP/CQY4NOKdqp6gys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ByiC8ZiP; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20c6f492d2dso16996525ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 23:31:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731655876; x=1732260676; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HZktoj+DIyt/M5en/E9U1CXLfcta4k31BJ3MRv9v+lA=;
-        b=ByiC8ZiP2x0719d6do/v64i5dyCkYsWcbX7cOl3jh6w1+KSOEMvp7gqL1vuVIRY3O1
-         JkHB1f1hCqCJ5WulTj8UVa5q8Vmjnvr+eSNfcYaRrFMcKaA9S4XDHhaxqQgA3lsF31O0
-         zLfS2IlW9NeKYDrJ48I4zj3Bo+hEs+FLTlc0Wjkt2a4Mu3oEzLAtCWWAvLXCAhgDDIRb
-         PPPewAY8VAoJ4/GRCDYRN6WztolLMJU8RaYJMwVPn7zjWWgBgTsssZMbZxKpqonLUo8+
-         SLTL0YFdXdCMebsc5bxcRrIrIYuHihVSgDQmQpI5g1SCo3nmpJMRddF3jzVdMrxR+1Wm
-         2TLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731655876; x=1732260676;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZktoj+DIyt/M5en/E9U1CXLfcta4k31BJ3MRv9v+lA=;
-        b=o4sYJdWqI5S+EgvDWYsYsJ9lso8XuFoCkuW4AOdAbPENHSIPpiMSMqavuxR+OzBuVz
-         5J6QjAOdGUn2DOJZu3a6Gaxk35aFmY+k65T1Ivg6/J/II63JBdr8wasKL1DuaQfPRJ2/
-         ni/iUuzgeYP1kQWTD9+w15w/4CUfftWVMsfFoh9Exbch4cBRBzQnWFF3Ez4Azpwgf2QQ
-         ftb0RkZrkJUZkXU1gg0KFkxjCQDMv5B1BN3knhiqsIp6l2zJ4QNLaHzVtAUXWFmOaMTl
-         noxt6cTfuKVuMxUzcfRkvz+ACulYh7yB09H7/Ylb1T4EAKglTttC1Qa2FERhiKHs44zM
-         a5gw==
-X-Forwarded-Encrypted: i=1; AJvYcCVc1+m0ge0ccJSQsZtiNdpn2wg4sITgli10hYXSWjd3PGjBanTCgmmz3gA/76nYLcn7JT9mKmM8YeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynUyZzusWDNAjK+aVs3NGGUNfUYVHMu4bLiWmBXorSCduvmxKu
-	Li5/K3LnHDAdIDxw6jEeEgp6O+sJmQ0WHc+0MpA5HYXbteyvd5MFFinxk6jzbw==
-X-Google-Smtp-Source: AGHT+IGqasFmOrneoq4IblHicWacSTw8Y/GAFQYAAdde1mcCZ45w9edIxU/G+UXSRE3e1ost0zYZXQ==
-X-Received: by 2002:a17:903:22c4:b0:20b:861a:25c7 with SMTP id d9443c01a7336-211d0f1183dmr24007255ad.54.1731655876340;
-        Thu, 14 Nov 2024 23:31:16 -0800 (PST)
-Received: from thinkpad ([117.193.208.47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0dc3281sm6839075ad.30.2024.11.14.23.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 23:31:15 -0800 (PST)
-Date: Fri, 15 Nov 2024 13:01:04 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7NiMXnhg2Wk9nnzqySt7pkgMtSoLFvvWu9Lsrq0+VnEmx3yOdZES1lHJPiWe7tV4zqVHERJ7IjAyVE3yYJL7+2HtE2Dzkzg8AYZpH3ud5+dXMZXYBPUbXGeFggHJd/xHMC5rI3zmRynt/fUwgLBj8nNcGDCCNN+6ZxiOjik0fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkdyC5LW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DEDC4CECF;
+	Fri, 15 Nov 2024 08:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731658539;
+	bh=qb1EqVjy+N6VtdnAaxbLLICIMKpDLDUxnqmDHbT7RsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CkdyC5LWo4W6lwv6CrLNVysqfsQmMUHrY0vdSH3Okfh8kiwdgyRCiWLlGFoEAnrjn
+	 +lybZFX0YGkUz3sPiznvmG0HYM9sP5U1I9LMZzaiMdCfVOqrhpeMq1ZSyPhWhiZmFW
+	 EqveRvPrqwWlokhr9i3uL44Nj1xql+7TNX760VP9Nw1VXnGojvMC8MA/4tbx8h/0Mv
+	 NIOtpZVZ8I5n+M0+/fkZRU+QjeGD3sHQPpob7im9Vvk0B0J6+aiM23E1nRvH/4GUj3
+	 xSrCowOC5BctPfmP00HvefNqkMBjsgoW333dTH24QzrB88laoR4ITRNXwodJ7KCCQG
+	 80YFkAJJpeYJw==
+Date: Fri, 15 Nov 2024 09:15:34 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: Use for_each_of_range() iterator for parsing
- "ranges"
-Message-ID: <20241115073104.gsgf3xfbv4gg67ut@thinkpad>
-References: <20241107153255.2740610-1-robh@kernel.org>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] PCI: dwc: ep: Improve alignment check in
+ dw_pcie_prog_ep_inbound_atu()
+Message-ID: <ZzcDJo_U0zz3OQe7@ryzen>
+References: <20241114110326.1891331-5-cassel@kernel.org>
+ <20241114110326.1891331-8-cassel@kernel.org>
+ <ZzYxslV+c1QxsJCM@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241107153255.2740610-1-robh@kernel.org>
+In-Reply-To: <ZzYxslV+c1QxsJCM@lizhi-Precision-Tower-5810>
 
-On Thu, Nov 07, 2024 at 09:32:55AM -0600, Rob Herring (Arm) wrote:
-> The mvebu "ranges" is a bit unusual with its own encoding of addresses,
-> but it's still just normal "ranges" as far as parsing is concerned.
-> Convert mvebu_get_tgt_attr() to use the for_each_of_range() iterator
-> instead of open coding the parsing.
+On Thu, Nov 14, 2024 at 12:21:54PM -0500, Frank Li wrote:
+> On Thu, Nov 14, 2024 at 12:03:29PM +0100, Niklas Cassel wrote:
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-
-LGTM!
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Could someone please verify it on mvebu machine?
-
-- Mani
-
-> ---
-> Compile tested only.
-> ---
->  drivers/pci/controller/pci-mvebu.c | 26 +++++++++-----------------
->  1 file changed, 9 insertions(+), 17 deletions(-)
+> according to patch, subject look like
 > 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 29fe09c99e7d..d4e3f1e76f84 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -1179,37 +1179,29 @@ static int mvebu_get_tgt_attr(struct device_node *np, int devfn,
->  			      unsigned int *tgt,
->  			      unsigned int *attr)
->  {
-> -	const int na = 3, ns = 2;
-> -	const __be32 *range;
-> -	int rlen, nranges, rangesz, pna, i;
-> +	struct of_range range;
-> +	struct of_range_parser parser;
->  
->  	*tgt = -1;
->  	*attr = -1;
->  
-> -	range = of_get_property(np, "ranges", &rlen);
-> -	if (!range)
-> +	if (of_pci_range_parser_init(&parser, np))
->  		return -EINVAL;
->  
-> -	pna = of_n_addr_cells(np);
-> -	rangesz = pna + na + ns;
-> -	nranges = rlen / sizeof(__be32) / rangesz;
-> -
-> -	for (i = 0; i < nranges; i++, range += rangesz) {
-> -		u32 flags = of_read_number(range, 1);
-> -		u32 slot = of_read_number(range + 1, 1);
-> -		u64 cpuaddr = of_read_number(range + na, pna);
-> +	for_each_of_range(&parser, &range) {
->  		unsigned long rtype;
-> +		u32 slot = upper_32_bits(range.bus_addr);
->  
-> -		if (DT_FLAGS_TO_TYPE(flags) == DT_TYPE_IO)
-> +		if (DT_FLAGS_TO_TYPE(range.flags) == DT_TYPE_IO)
->  			rtype = IORESOURCE_IO;
-> -		else if (DT_FLAGS_TO_TYPE(flags) == DT_TYPE_MEM32)
-> +		else if (DT_FLAGS_TO_TYPE(range.flags) == DT_TYPE_MEM32)
->  			rtype = IORESOURCE_MEM;
->  		else
->  			continue;
->  
->  		if (slot == PCI_SLOT(devfn) && type == rtype) {
-> -			*tgt = DT_CPUADDR_TO_TARGET(cpuaddr);
-> -			*attr = DT_CPUADDR_TO_ATTR(cpuaddr);
-> +			*tgt = DT_CPUADDR_TO_TARGET(range.cpu_addr);
-> +			*attr = DT_CPUADDR_TO_ATTR(range.cpu_addr);
->  			return 0;
->  		}
->  	}
-> -- 
-> 2.45.2
-> 
+> "Add 'address' alignment to 'size' check in dw_pcie_prog_ep_inbound_atu()."
 
--- 
-மணிவண்ணன் சதாசிவம்
+Sure.
+
+
+> 
+> > dw_pcie_prog_ep_inbound_atu() is used to program an inbound iATU in
+> > "BAR Match Mode".
+> >
+> > While a memory address returned by kmalloc() is guaranteed to be naturally
+> > aligned (aligned to the size of the allocation), it is not guaranteed that
+> > the address that is supplied to pci_epc_set_bar() (and thus the addres that
+> > is supplied to dw_pcie_prog_ep_inbound_atu()) is naturally aligned.
+> 
+> short sentence may be better
+> 
+> The memory address returned by kmalloc() is guaranteed to be naturally
+> aligned (aligned to the size of the allocation), but it may not align when
+> pass to pci_epc_set_bar().
+
+I do not think that this is better.
+
+The memory address returned by kmalloc() is naturally aligned, and will still
+be naturally aligned when passed to pci_epc_set_bar().
+
+The problem is if the address supplied to pci_epc_set_bar() did not come from
+something that was kmalloc():ed. E.g. the ITS address.
+
+I can rephrase this sentence to make that clearer in v2.
+
+
+Kind regards,
+Niklas
+
+
+> 
+> >
+> > See the register description for IATU_LWR_TARGET_ADDR_OFF_INBOUND_i,
+> > specifically fields LWR_TARGET_RW and LWR_TARGET_HW in the DWC Databook.
+> >
+> > "Field size depends on log2(BAR_MASK+1) in BAR match mode."
+> >
+> > I.e. only the upper bits are writable, and the number of writable bits is
+> > dependent on the configured BAR_MASK.
+> >
+> > Add a check to ensure that the physical address programmed in the iATU is
+> > aligned to the size of the BAR (BAR_MASK+1), as without this, we can get
+> > hard to debug errors, as we could write to bits that are read-only (without
+> > getting a write error), which could cause the iATU to end up redirecting to
+> > a physical address that is different from the address that we intended.
+> >
+> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c | 8 +++++---
+> >  drivers/pci/controller/dwc/pcie-designware.c    | 5 +++--
+> >  drivers/pci/controller/dwc/pcie-designware.h    | 2 +-
+> >  3 files changed, 9 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 507e40bd18c8f..4ad6ebd2ea320 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -128,7 +128,8 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >  }
+> >
+> >  static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+> > -				  dma_addr_t cpu_addr, enum pci_barno bar)
+> > +				  dma_addr_t cpu_addr, enum pci_barno bar,
+> > +				  size_t size)
+> >  {
+> >  	int ret;
+> >  	u32 free_win;
+> > @@ -145,7 +146,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+> >  	}
+> >
+> >  	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
+> > -					  cpu_addr, bar);
+> > +					  cpu_addr, bar, size);
+> >  	if (ret < 0) {
+> >  		dev_err(pci->dev, "Failed to program IB window\n");
+> >  		return ret;
+> > @@ -229,7 +230,8 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >  	else
+> >  		type = PCIE_ATU_TYPE_IO;
+> >
+> > -	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
+> > +	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar,
+> > +				     size);
+> >  	if (ret)
+> >  		return ret;
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 6d6cbc8b5b2c6..3c683b6119c39 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -597,11 +597,12 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> >  }
+> >
+> >  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > -				int type, u64 cpu_addr, u8 bar)
+> > +				int type, u64 cpu_addr, u8 bar, size_t size)
+> >  {
+> >  	u32 retries, val;
+> >
+> > -	if (!IS_ALIGNED(cpu_addr, pci->region_align))
+> > +	if (!IS_ALIGNED(cpu_addr, pci->region_align) ||
+> > +	    !IS_ALIGNED(cpu_addr, size))
+> >  		return -EINVAL;
+> >
+> >  	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 347ab74ac35aa..fc08727116725 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -491,7 +491,7 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+> >  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> >  			     u64 cpu_addr, u64 pci_addr, u64 size);
+> >  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > -				int type, u64 cpu_addr, u8 bar);
+> > +				int type, u64 cpu_addr, u8 bar, size_t size);
+> >  void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+> >  void dw_pcie_setup(struct dw_pcie *pci);
+> >  void dw_pcie_iatu_detect(struct dw_pcie *pci);
+> > --
+> > 2.47.0
+> >
 
