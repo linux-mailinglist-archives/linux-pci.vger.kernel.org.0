@@ -1,249 +1,211 @@
-Return-Path: <linux-pci+bounces-16877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5F709CDFB0
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 14:15:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9B129CE06F
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 14:45:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47793B21568
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 13:15:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0C71288F5B
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 13:45:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52CE01B6CE0;
-	Fri, 15 Nov 2024 13:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F4511CF7AA;
+	Fri, 15 Nov 2024 13:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqRWThO4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V6i5qnmO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C09452F71
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 13:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8641CEAD7
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 13:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731676550; cv=none; b=KstfEB+cyCc7RenOy+JlXeSxf60qoQ4GW11RtcWxXI+Ll4JJPQkyveYAHXPOl2mGIitWc0k7w9I/2uQSnyx+fVeq2PGqzu6WqzrEPSzUb4lhujhcwbqv/uo16WpB06x2WhiFZ16HHxglI0Uwx5eXZRxU0dByT6E1o23iEUfRa2I=
+	t=1731678158; cv=none; b=bP/HKf5PpJ43hFrjfJLhGBLWtJVJSj/xx+Bx7WiKlIR4+rPHm4hGnght5XrnynGNiTSsVMxnd+MQc3/+Q1WIklt/65p6RJx1pZc2lt8djXf5YGhfrFqOC+M1Gt0OOwU45cEqMbhUW4FWLvHfPyDH6VJ0bgm40D/mWyfvrJFJ50E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731676550; c=relaxed/simple;
-	bh=70ptQYo30UwVusaCHZRa/EN+gh7OcDEFJVb5k9kd/W8=;
+	s=arc-20240116; t=1731678158; c=relaxed/simple;
+	bh=mW3MuLmfbgIMEqgVEGW9baS2AV3fJYbovPzK3y5vOSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FiW85Hg03Wsiz6CtSXOmbBINYAhe3dE0mUKrI/oJGuvB3CwgLA1bBlEHnU1dteI77tJL2/5XuIlw0EA5fD6oJz7qaxZCEHMDji8NI667po9wV0+J5AGAhkhGXdKybRSc7JfCOcnYs92XTST91ZwIvuqD7m6KvE3N5Jl/Y9GrGCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqRWThO4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4795C4CECF;
-	Fri, 15 Nov 2024 13:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731676549;
-	bh=70ptQYo30UwVusaCHZRa/EN+gh7OcDEFJVb5k9kd/W8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PqRWThO4yBC11BlqCVLdvCdiqntr2dtVg/ncjFDMvzDXzSMfdrNqx6YfIslFKNN+Y
-	 0taDWV3MkBOsEZJn2Hq93JcBQ5L/EguelK7R/c6ye/N6bJwLFIKFZ1tAXovsdR55QR
-	 Qg+hVCXH6nmQi4t9nyJtCIU2jWY3zUrsJ72DWfdI0CSpiVwI4oYgxW+NPX2Div5FA1
-	 Z4oU/RwvHbVlBjkC562ZQwZh9wbMkcyaqCCjXUFcaQ/LxAE8gTOo72U9V2cb9Kbtuk
-	 u9D12+eeLHqFr7hWWMWy9LW/82SL6w7jBGbCaAo12g4sc3p+Hqz1gYudvh+jSfXM6n
-	 bR5s+IFutX9oQ==
-Date: Fri, 15 Nov 2024 14:15:45 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] PCI: mediatek-gen3: Move reset/assert callbacks
- in .power_up()
-Message-ID: <ZzdJgeX2dp_z1QmJ@lore-rh-laptop>
-References: <20241109-pcie-en7581-fixes-v2-0-0ea3a4af994f@kernel.org>
- <20241109-pcie-en7581-fixes-v2-3-0ea3a4af994f@kernel.org>
- <20241115090231.nwmxl6acspxqflpc@thinkpad>
- <ZzcRG3OInXZ2TP-Z@lore-rh-laptop>
- <20241115123707.in4x27ub4wtwdggh@thinkpad>
+	 Content-Type:Content-Disposition:In-Reply-To; b=L+hJczLeGPvpnJqQe0Z/nKTCBoFxiZPwyVs0TfE1XWqtu9//Xuaaq7B6nqZYVt5n9iYZ5DxgMugGNDJtuViHrVc6SWArSvZoTlkx7GWeU9C+Zff2FQXnaOw+GlL+HbpIg+Dy3ee8fxNHM3cs0zW6zg9vvDeTf17LoOEwazG474I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V6i5qnmO; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7eb0bc007edso382835a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 05:42:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731678156; x=1732282956; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1FkyVdlsRATShGE8GfRS5lqV1OLED0nfmhN50QSZ3W4=;
+        b=V6i5qnmOEksL3X37vmLJT+98Tr24N10KWRVNBSW4ulKU9POP2zVc+v/3+7RwwpRCPk
+         fWaz3fsJHONVmf+6lP0933+wva7g9M3gR/4ytjlOJOCSwU0NOCZ9CftSP1gyfjgNCqOJ
+         t3FOr9kkL+GzqWlTsgnBYx+WydaL2KNybDEXVzorDBBkdJXClZErMEWn78qxr42IEkv1
+         I5ZSMbHwKd3zXBJPqK5aeQ11e2kjOwKdOGro12dBgnNU0PFtcB0UAiF/CoDgwCpt8gGT
+         s67mCcH0/WYC4PiRy5b3Fdol/O26WXr1ulUwX2dlEyhVsEq7+Koq5q5Bmt+r0Gu/0PCE
+         vSuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731678156; x=1732282956;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1FkyVdlsRATShGE8GfRS5lqV1OLED0nfmhN50QSZ3W4=;
+        b=V9PGrftmL8a5EImfQDgQ1v5+8gIA3tHGb1b+YyaylbRNOXAs7nA28uQHYipH7jLvpD
+         mj4S3ZOi5B1qsSdzlX0rbOLK8ROFnjP6ehME3Ei8I3ZtWa6YwzMuHPCqHGRLoCFjjeH0
+         G79Gpx4T7EuNDNlGV3J4jPjBG7X5rMDgPrsTBJO/pfquFyDW5Uhro8bhDLDNxKZnLuys
+         uXuJYaz+TdnHzKu6YSJ3kMPRpdhjvEL61Oht51wCeloaEpufxLRAo8Oy3jmXL0Ylk7uV
+         pIL8WuZCgbia7KLoiFUhqECXPSHbMxWA0eqcepRKTabTcjkeR9+c6nTvVqXp0BKDnaC+
+         7cng==
+X-Forwarded-Encrypted: i=1; AJvYcCXnH3JLvFlWnllB4RCVqgRGs/B1rRnDdjx+YD+VFuyMbgyUvAfMJRMZhIkpRo/FdP/5Sd97vgTBqzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEtrQDaaHfiK1W3sOB/YWXe5PQHkgTlOPkQlpZbiJRC3Db3tIo
+	hJ97WOgYKr2H0cIh5+DHJX4YWafwxl9+66YSF5JEK1ki0FvkM/SVa3KI2sbvZg==
+X-Google-Smtp-Source: AGHT+IGp/OjSmn7NxjC0IsG1rKt5fpJ1gFFvGf7ngcn+SVF2YiP5ayY+G6aeEVN7i6XGfOtMHxDk0Q==
+X-Received: by 2002:a05:6a20:12d1:b0:1c6:fb66:cfe with SMTP id adf61e73a8af0-1dc90b51f1fmr2758521637.21.1731678155980;
+        Fri, 15 Nov 2024 05:42:35 -0800 (PST)
+Received: from thinkpad ([117.193.215.93])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724771c0cb9sm1360035b3a.121.2024.11.15.05.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2024 05:42:35 -0800 (PST)
+Date: Fri, 15 Nov 2024 19:12:26 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: jingoohan1@gmail.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, frank.li@nxp.com,
+	imx@lists.linux.dev, kernel@pengutronix.de,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: Clean up some unnecessary codes in
+ dw_pcie_suspend_noirq()
+Message-ID: <20241115134226.w27n244spddoavqt@thinkpad>
+References: <20241115090321.527694-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Az29kcYdHjsISUBm"
-Content-Disposition: inline
-In-Reply-To: <20241115123707.in4x27ub4wtwdggh@thinkpad>
-
-
---Az29kcYdHjsISUBm
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241115090321.527694-1-hongxing.zhu@nxp.com>
 
-On Nov 15, Manivannan Sadhasivam wrote:
-> On Fri, Nov 15, 2024 at 10:15:07AM +0100, Lorenzo Bianconi wrote:
-> > > On Sat, Nov 09, 2024 at 10:28:39AM +0100, Lorenzo Bianconi wrote:
-> > > > In order to make the code more readable, move phy and mac reset lin=
-es
-> > > > assert/de-assert configuration in .power_up() callback
-> > > > (mtk_pcie_en7581_power_up()/mtk_pcie_power_up()).
-> > > >=20
-> > >=20
-> > > I don't understand how moving the code (duplicting it also) makes the=
- code more
-> > > readable. Could you please explain?
-> >=20
-> > Hi Manivannan,
-> >=20
-> > this has been requested by Bjorn in
-> > https://patchwork.kernel.org/project/linux-pci/patch/aca00bd672ee576ad9=
-6d279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org/#26110282
-> >=20
->=20
-> Ok. The description needs to state the reason i.e., the
-> reset_control_bulk_assert() is moved to make it pair with
-> reset_control_bulk_deassert() in mtk_pcie_setup() and
-> mtk_pcie_en7581_power_up().
+On Fri, Nov 15, 2024 at 05:03:21PM +0800, Richard Zhu wrote:
+> Before sending PME_TURN_OFF, don't test the LTSSM stat. Since it's safe
 
-ack, I will update the commit log.
+s/stat/state
 
->=20
-> Btw, could you explain why reset_control_bulk_deassert() is present in
-> mtk_pcie_setup()?
+here and below
 
-it is because the clock is shared for Airoha EN7581 and we need to be sure
-rstc->deassert_count is not 0 running reset_control_bulk_assert().
+> to send PME_TURN_OFF message regardless of whether the link is up or
+> down. So, there would be no need to test the LTSSM stat before sending
+> PME_TURN_OFF message.
+> 
+> Only dump the message when ltssm_stat is not in DETECT and POLL.
 
-https://github.com/torvalds/linux/blob/master/drivers/reset/core.c#L483
+s/dump/print
 
-Regards,
-Lorenzo
+> In the other words, there isn't a notification when no endpoint is
 
->=20
-> - Mani
->=20
-> > >=20
-> > > > Introduce PCIE_MTK_RESET_TIME_US macro for the time needed to
-> > > > complete PCIe reset on MediaTek controller.
-> > > >=20
-> > > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > > ---
-> > > >  drivers/pci/controller/pcie-mediatek-gen3.c | 28 +++++++++++++++++=
-+++--------
-> > > >  1 file changed, 20 insertions(+), 8 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/=
-pci/controller/pcie-mediatek-gen3.c
-> > > > index 8c8c733a145634cdbfefd339f4a692f25a6e24de..1ad93d2407810ba873d=
-9a16da96208b3cc0c3011 100644
-> > > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > > @@ -120,6 +120,9 @@
-> > > > =20
-> > > >  #define MAX_NUM_PHY_RESETS		3
-> > > > =20
-> > > > +/* Time in us needed to complete PCIe reset on MediaTek controller=
- */
-> > >=20
-> > > No need of this comment. Macro name itself is explanatory.
-> >=20
-> > ack, I will fix it.
-> >=20
-> > Regards,
-> > Lorenzo
-> >=20
-> > >=20
-> > > - Mani
-> > >=20
-> > > > +#define PCIE_MTK_RESET_TIME_US		10
-> > > > +
-> > > >  /* Time in ms needed to complete PCIe reset on EN7581 SoC */
-> > > >  #define PCIE_EN7581_RESET_TIME_MS	100
-> > > > =20
-> > > > @@ -867,6 +870,14 @@ static int mtk_pcie_en7581_power_up(struct mtk=
-_gen3_pcie *pcie)
-> > > >  	int err;
-> > > >  	u32 val;
-> > > > =20
-> > > > +	/*
-> > > > +	 * The controller may have been left out of reset by the bootload=
-er
-> > > > +	 * so make sure that we get a clean start by asserting resets her=
-e.
-> > > > +	 */
-> > > > +	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
-> > > > +				  pcie->phy_resets);
-> > > > +	reset_control_assert(pcie->mac_reset);
-> > > > +
-> > > >  	/*
-> > > >  	 * Wait for the time needed to complete the bulk assert in
-> > > >  	 * mtk_pcie_setup for EN7581 SoC.
-> > > > @@ -941,6 +952,15 @@ static int mtk_pcie_power_up(struct mtk_gen3_p=
-cie *pcie)
-> > > >  	struct device *dev =3D pcie->dev;
-> > > >  	int err;
-> > > > =20
-> > > > +	/*
-> > > > +	 * The controller may have been left out of reset by the bootload=
-er
-> > > > +	 * so make sure that we get a clean start by asserting resets her=
-e.
-> > > > +	 */
-> > > > +	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
-> > > > +				  pcie->phy_resets);
-> > > > +	reset_control_assert(pcie->mac_reset);
-> > > > +	usleep_range(PCIE_MTK_RESET_TIME_US, 2 * PCIE_MTK_RESET_TIME_US);
-> > > > +
-> > > >  	/* PHY power on and enable pipe clock */
-> > > >  	err =3D reset_control_bulk_deassert(pcie->soc->phy_resets.num_res=
-ets, pcie->phy_resets);
-> > > >  	if (err) {
-> > > > @@ -1013,14 +1033,6 @@ static int mtk_pcie_setup(struct mtk_gen3_pc=
-ie *pcie)
-> > > >  	 * counter since the bulk is shared.
-> > > >  	 */
-> > > >  	reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pci=
-e->phy_resets);
-> > > > -	/*
-> > > > -	 * The controller may have been left out of reset by the bootload=
-er
-> > > > -	 * so make sure that we get a clean start by asserting resets her=
-e.
-> > > > -	 */
-> > > > -	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets, pcie-=
->phy_resets);
-> > > > -
-> > > > -	reset_control_assert(pcie->mac_reset);
-> > > > -	usleep_range(10, 20);
-> > > > =20
-> > > >  	/* Don't touch the hardware registers before power up */
-> > > >  	err =3D pcie->soc->power_up(pcie);
-> > > >=20
-> > > > --=20
-> > > > 2.47.0
-> > > >=20
-> > >=20
-> > > --=20
-> > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
-=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
-=AE=E0=AF=8D
->=20
->=20
->=20
-> --=20
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+s/notification/error message
 
---Az29kcYdHjsISUBm
-Content-Type: application/pgp-signature; name="signature.asc"
+> connected at all.
+> 
+> When the endpoint is connected and after PME_TURN_OFF is issued. Just
+> print out one information instead of an error and exit, if the link
+> doesn't entry DW_PCIE_LTSSM_L2_IDLE stat. Since the recovery would be
+> done in the following closely dw_pcie_resume_noirq().
+> 
 
------BEGIN PGP SIGNATURE-----
+How about,
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZzdJfgAKCRA6cBh0uS2t
-rAc+AP9ub7dajbYVmtXzENOojOgxYKgGlbym8v7JFbk2MDEf7AEA72IU0ALoGmk1
-Uh4ep6rnZJgFC0aB3YAo3lXmumLpxww=
-=VKZA
------END PGP SIGNATURE-----
+"Also, when the endpoint is connected and PME_TURN_OFF is sent, do not return
+error if the link doesn't enter L2. Just print a warning and continue with the
+suspend as the link will be recovered in dw_pcie_resume_noirq(). "
 
---Az29kcYdHjsISUBm--
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-host.c | 37 ++++++++++---------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  2 files changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f7ceeb785fb0..c2053555c44b 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -927,23 +927,26 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+>  		return 0;
+>  
+> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
+> -		/* Only send out PME_TURN_OFF when PCIE link is up */
+> -		if (pci->pp.ops->pme_turn_off)
+> -			pci->pp.ops->pme_turn_off(&pci->pp);
+> -		else
+> -			ret = dw_pcie_pme_turn_off(pci);
+> -
+> -		if (ret)
+> -			return ret;
+> +	if (pci->pp.ops->pme_turn_off)
+> +		pci->pp.ops->pme_turn_off(&pci->pp);
+> +	else
+> +		ret = dw_pcie_pme_turn_off(pci);
+> +	if (ret)
+> +		return ret;
+>  
+> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> -		if (ret) {
+> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> -			return ret;
+> -		}
+> +	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> +				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> +				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> +	if (ret && (val > DW_PCIE_LTSSM_DETECT_WAIT))
+> +		/* Only dump message when ltssm_stat isn't in DETECT and POLL */
+> +		dev_info(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+
+dev_warn() would be more appropriate.
+
+- Mani
+
+> +	else
+> +		/*
+> +		 * Refer to r6.0, sec 5.3.3.2.1, software should wait at least
+> +		 * 100ns after L2/L3 Ready before turning off refclock and
+> +		 * main power. It's harmless too when no endpoint connected.
+> +		 */
+> +		udelay(1);
+>  	}
+>  
+>  	dw_pcie_stop_link(pci);
+> @@ -952,7 +955,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  
+>  	pci->suspended = true;
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 347ab74ac35a..bf036e66717e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -330,6 +330,7 @@ enum dw_pcie_ltssm {
+>  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
+>  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+>  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
+> +	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
+>  	DW_PCIE_LTSSM_L0 = 0x11,
+>  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+>  
+> -- 
+> 2.37.1
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
