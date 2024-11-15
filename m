@@ -1,77 +1,76 @@
-Return-Path: <linux-pci+bounces-16871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2C739CDDC2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 12:51:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 990319CDDE2
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 12:57:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3CE5CB2389B
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 11:51:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54254282A91
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 11:57:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77741B85F6;
-	Fri, 15 Nov 2024 11:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7EC1B86F7;
+	Fri, 15 Nov 2024 11:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vMzID8m6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dKZgfOol"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CA11B3948
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 11:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8671A3BB22
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 11:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731671475; cv=none; b=cLUsiZsq6gLuJeu5wot5c7H3BJkUCjqBecrbprxZn69ypvTww4298PpcHPGfOxVox5Ot9GxPjz4Hm32Ry4t3GjSad2ioCutoXf28NOmKqxjoObD5QBH7O94AyTjvcQxE/RVjalW3yTEwEDdfwn9xArPk7xovEyzhWhquhrmDXww=
+	t=1731671862; cv=none; b=Gwl54mdiSWcGo3d91ZJ1SFqO0sn6T4jN2fNpdg+JoaZ3+Oqj9cd36O/o7kgLb1u/0X6LVP7QNQPuSg64RGx+K8dFUNhCDSxaPG8V0V/zWAFiR8U6r9XPXnaieXrftKsFd1/wDNsj2TzlI+0kTry23+EhlTpzCj/gfTsnEaZkJn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731671475; c=relaxed/simple;
-	bh=sZdR9W40s3IqCSaLvH1Sa+P9DP69302jesYf4sRn+2g=;
+	s=arc-20240116; t=1731671862; c=relaxed/simple;
+	bh=3PCLc6JHg+/COPy9QtRHjUbcpWaJsoK4fEGCaAkvl28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dgkZ303mfg/vVHsdkUFil6PeDE45O6gYQSehB/kE18MoBsBpgP7QCIQGl5V5F6nh8ziu9PNes9BdKoml+hBedPrrMPE0cwKlWP1pmcFvQFXOgVBJHyNTnEmDOwj+eBXz5AE+BqR21bzzHIFilhtHvO9e9tCKgoXSvt6km3XHsk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vMzID8m6; arc=none smtp.client-ip=209.85.215.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=N2fN/jGXyzh2IIcsqHmRIsmsD5JRMjziSDsasdpqdsBM2kDE7njmnMl8sYylMulsbD2B7c4FfIDAzV28aQicseLqfF1qgH2uUm3O54Y/hs0pNHZ1UpCEG490f/7tCM/ZRK3k2HqFQmignf1mGWIsYwwK3vKOgopSdg4fbEfbxpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dKZgfOol; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7f3e30a43f1so1099393a12.1
-        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 03:51:13 -0800 (PST)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7eb0bc007edso283249a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 03:57:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731671473; x=1732276273; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1731671860; x=1732276660; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=0qz4zjxYN8EsB1sVFFLtbfHvdqNPBMDPqRlMkCvciKQ=;
-        b=vMzID8m6K3DMLchGm5z3M2nR5eVE8wC23baG//7YndEYtxnDR+Zh7u8NGd4uw5yNEF
-         vjxZDAZWxpCjbro5IEog6XXVzpQ1S+f1LlCyyhBlB1iG4XkQqMUjUp82BK2mjbHU6u0f
-         7+9FUPwlhuj+TQabd/D17p73qCHrSacflcYMpd/uSexbFL+WDcUvwZBfUlxXwKG+uYHf
-         Ocd/2jyjGUIPmZRFl6smiLW4yeEK3VdFEKLzcdElxKV1IhdsX7MlUcvk2atcPXnWHC8y
-         Xv1UaHOuQ9VT9vYSkv0kgm5xBQo6Bp+olbwLGtvyX6blL6Qfh3El0WKoFquEpFHgNcz/
-         vumw==
+        bh=uCt9k+GAVMzvIuNpb03E3RgPTB9WFljhPlJF2v+aDCY=;
+        b=dKZgfOolO+c2bPmaE3brJcaom5ZDEDsc2gYXh6n6KNDTWh5xSvFvxZFoYYSUfs7O4X
+         vSfL4hHIDhVLv0k5dCV3dWgKgt75TpTY4Sk+nUDvDte04GR3EDNsvm/zlA8ZRBOe+W2K
+         qFVF0feAhtdzDsdDBFk3bbCRIF9+2W5F4giNBXcTvhPbAgIyp5+poMdEgt3v/MJy3201
+         QfPjBDj1KRKdzVs5kYEE8AF+eQje4PRTU7O+rpQVEavETShlpzJYvK+jjGISi8xi0lMI
+         dOHSERuZAxAsVB/Le1kjA4ky3ARKfCccWKseEJLUsyd6qE4DLogT74Ex3FhmQXyjAdxH
+         oByw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731671473; x=1732276273;
+        d=1e100.net; s=20230601; t=1731671860; x=1732276660;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0qz4zjxYN8EsB1sVFFLtbfHvdqNPBMDPqRlMkCvciKQ=;
-        b=ooaosFj3JGxJZwRmGWEG1CTnsffFOgB8zrq72vJZq4pjgehdK51S/Iaw5CkAit42HO
-         /ZUDuAM3IRCd1nN752NgEn+0yBB9aw81jrIvGVT29nWMK73hb2B9hvNe6DITl4M1ep9W
-         /1yYY8PyEC+V2KqC9fFrJ03OqmicXwCyyKqkDn3e8334OPiWHmInU8PI5meBiPTfs2OV
-         fP1B8Ww9/1V50Za3ISQO5zBbVNmQXCDqwaTYywmrOaDPG5bh8nMMtTfJBJqN6mHOjHT3
-         vdg+TXqX4lo7gwpDlIagevUuc6VRUdDbw3+XAWCmP8A6oB+mCZR81Z77+jEAz1Y1hFER
-         c4tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ4kdJPgl8/U0NqN2rZ3ihNQf1hi9OVmencftfgBf/Ng9LjOdc588lwnbztw93jc1GQna/BnKohUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfwso4fvpgYPJ078Z4zoqJNMveHjYMjQmPe4CB9quwKK4RwOH9
-	b3HglE3sgQ6mkH5n5KdhU0Jl+m3qmlaPX0ZXx5RlgOrEdP3dCEbPflR+LV1HTQ==
-X-Google-Smtp-Source: AGHT+IHpT8ZeMKed/s/RPDlK9VLqV5kI+HNUu4iV8muOdZoUPUkSFT36NhvQLuLYGoL5BZzy2K3vgw==
-X-Received: by 2002:a05:6a20:3946:b0:1d9:1045:3ed5 with SMTP id adf61e73a8af0-1dc90b23572mr2838926637.11.1731671472789;
-        Fri, 15 Nov 2024 03:51:12 -0800 (PST)
+        bh=uCt9k+GAVMzvIuNpb03E3RgPTB9WFljhPlJF2v+aDCY=;
+        b=f3RAWuiegRfw7VXPRNAhuhA+x+s4BGsy8Ea8p+wd5cxbtCdetxNVZvSSOMRquIRbrr
+         2akcY7LhoCuEkVAov1zLHaHGvr4QP2YeDsEjaUAr9poV6hg2zAomONB3PxWls39VX/wn
+         PA4LacCHrqlVjlI4UGt9BtoyQHmAyx6jf/VRalw15Sp3mNTxkxcrKV/MhkFEy7yCMX/1
+         K8ZYP8PkuW95Mgy8LPnUEkKEkZI03rpWHVMonuReCaom9yO+L3y7ZqN6ADXtvEZHLqv1
+         0xR1QPMyQ+LDTLgZ5gpbUgRONL/nL8RO7NLXbDvASyREUSCY0JujFmgG+/37YT9UsdLU
+         Mp8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUXY1pHvGQyTw4mjwte1BacsiY0Ju/R1Katl3ZX89gXG+tm8UTpCHbP+zUOH/SvRpYlhw//S9d4Me8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVpxaC3AJObkuxBlmbSmVmNrCDjW/u7DqPj1qsXUXi7cXOPCHv
+	i4QdAi7DO/r2TWCUXhOaA36B4EMergXR+d8JmbZYjwrx64ikiB2PxtGOrcRWvw==
+X-Google-Smtp-Source: AGHT+IGONxEz4Z0w25YthV6ZO/ymo1g7k+IQunHl1+xp1hq6h5Cgn3STyd9w9skNnOvequTxeJmjdg==
+X-Received: by 2002:a05:6a21:32a0:b0:1d9:4837:ada2 with SMTP id adf61e73a8af0-1dc90bf799bmr2982887637.35.1731671859863;
+        Fri, 15 Nov 2024 03:57:39 -0800 (PST)
 Received: from thinkpad ([117.193.208.47])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724770eea1asm1200047b3a.28.2024.11.15.03.51.07
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724770eef6csm1177542b3a.17.2024.11.15.03.57.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 03:51:12 -0800 (PST)
-Date: Fri, 15 Nov 2024 17:21:04 +0530
+        Fri, 15 Nov 2024 03:57:39 -0800 (PST)
+Date: Fri, 15 Nov 2024 17:27:29 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
@@ -83,10 +82,11 @@ Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
 	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com,
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] PCI: Add new start_link() & stop_link function ops
-Message-ID: <20241115115104.hsa4udzkhhavahgi@thinkpad>
-References: <20241112-qps615_pwr-v3-3-29a1e98aa2b0@quicinc.com>
- <20241112234149.GA1868239@bhelgaas>
+Subject: Re: [PATCH v3 5/6] PCI: qcom: Add support for host_stop_link() &
+ host_start_link()
+Message-ID: <20241115115729.wmcohbbc6sl4il3e@thinkpad>
+References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
+ <20241112-qps615_pwr-v3-5-29a1e98aa2b0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,76 +96,108 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241112234149.GA1868239@bhelgaas>
+In-Reply-To: <20241112-qps615_pwr-v3-5-29a1e98aa2b0@quicinc.com>
 
-On Tue, Nov 12, 2024 at 05:41:49PM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 12, 2024 at 08:31:35PM +0530, Krishna chaitanya chundru wrote:
-> > Certain devices like QPS615 which uses PCI pwrctl framework
-> > needs to configure the device before PCI link is up.
-> > 
-> > If the controller driver already enables link training as part of
-> > its probe, after the device is powered on, controller and device
-> > participates in the link training and link can come up immediately
-> > and maynot have time to configure the device.
-> > 
-> > So we need to stop the link training by using stop_link() and enable
-> > them back after device is configured by using start_link().
+On Tue, Nov 12, 2024 at 08:31:37PM +0530, Krishna chaitanya chundru wrote:
+> For the switches like QPS615 which needs to configure it before
+> the PCIe link is established.
 > 
-> s/maynot/may not/
+> If the link is up, the boatloader might powered and configured the
+> endpoint/switch already. In that case don't touch PCIe link else
+> assert the PERST# and disable LTSSM bit so that PCIe controller
+> will not participate in the link training as part of host_stop_link().
 > 
-> I think I'm missing the point here.  My assumption is this:
+> De-assert the PERST# and enable LTSSM bit back in host_start_link().
 > 
-
-First controller driver probes, enables link training and scans the bus. When
-the PCI bridge is found, its child DT nodes will be scanned and pwrctl devices
-will be created if needed.
-
->   - device starts as powered off
->   - pwrctl turns on the power
->   - link trains automatically
->   - qcom driver claims device
-
-QPS615 driver will claim this device not controller driver.
-
->   - qcom needs to configure things that need to happen before link
->     train
+> Introduce ltssm_disable function op to stop the link training.
 > 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 39 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index ef44a82be058..048aea94e319 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -246,6 +246,7 @@ struct qcom_pcie_ops {
+>  	void (*host_post_init)(struct qcom_pcie *pcie);
+>  	void (*deinit)(struct qcom_pcie *pcie);
+>  	void (*ltssm_enable)(struct qcom_pcie *pcie);
+> +	void (*ltssm_disable)(struct qcom_pcie *pcie);
+>  	int (*config_sid)(struct qcom_pcie *pcie);
+>  };
+>  
+> @@ -617,6 +618,41 @@ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static int qcom_pcie_host_start_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +
+> +	if (!dw_pcie_link_up(pcie->pci))  {
 
-QPS615 driver needs to configure the switch before link training. So at this
-point, it stops the link training, configures the switch and starts it again.
-
-Patch description could be improved.
+I don't think the controller driver should worry about the bootloader
+initialization. You should export dw_pcie_link_up() as a callback and call
+start/stop link if only required (link not up) from the pwrctl driver.
 
 - Mani
 
-> but that can't be quite right because you wouldn't be able to fix it
-> by changing the qcom driver because it's not in the picture until the
-> link is already trained.
+> +		qcom_ep_reset_deassert(pcie);
+> +
+> +		if (pcie->cfg->ops->ltssm_enable)
+> +			pcie->cfg->ops->ltssm_enable(pcie);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_host_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +
+> +	if (!dw_pcie_link_up(pcie->pci))  {
+> +		qcom_ep_reset_assert(pcie);
+> +
+> +		if (pcie->cfg->ops->ltssm_disable)
+> +			pcie->cfg->ops->ltssm_disable(pcie);
+> +	}
+> +}
+> +
+> +static void qcom_pcie_2_3_2_ltssm_disable(struct qcom_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(pcie->parf + PARF_LTSSM);
+> +	val &= ~LTSSM_EN;
+> +	writel(val, pcie->parf + PARF_LTSSM);
+> +}
+> +
+>  static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+>  {
+>  	u32 val;
+> @@ -1361,6 +1397,7 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.host_post_init = qcom_pcie_host_post_init_2_7_0,
+>  	.deinit = qcom_pcie_deinit_2_7_0,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +	.ltssm_disable = qcom_pcie_2_3_2_ltssm_disable,
+>  	.config_sid = qcom_pcie_config_sid_1_9_0,
+>  };
+>  
+> @@ -1418,6 +1455,8 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  	.start_link = qcom_pcie_start_link,
+> +	.host_start_link = qcom_pcie_host_start_link,
+> +	.host_stop_link = qcom_pcie_host_stop_link,
+>  };
+>  
+>  static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
 > 
-> So maybe you can add a little more context here?
+> -- 
+> 2.34.1
 > 
-> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > ---
-> >  include/linux/pci.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 573b4c4c2be6..fe6a9b4b22ee 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -806,6 +806,8 @@ struct pci_ops {
-> >  	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
-> >  	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
-> >  	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-> > +	int (*start_link)(struct pci_bus *bus);
-> > +	void (*stop_link)(struct pci_bus *bus);
-> >  };
-> >  
-> >  /*
-> > 
-> > -- 
-> > 2.34.1
-> > 
 
 -- 
 மணிவண்ணன் சதாசிவம்
