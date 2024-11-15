@@ -1,133 +1,239 @@
-Return-Path: <linux-pci+bounces-16834-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16835-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 484999CDA79
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:30:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 236F69CDA87
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:32:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6B04B24420
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:30:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B9F91F23BA2
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:32:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEEA18A6BC;
-	Fri, 15 Nov 2024 08:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF87C18C924;
+	Fri, 15 Nov 2024 08:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="baiy+g4p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f8N1XZMx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490DC1E522;
-	Fri, 15 Nov 2024 08:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA44188724
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 08:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731659427; cv=none; b=Rr6iaX58wkpjq2TzAQvlqXFCL+JjKBNJ2yddo/P5wAGEBhd/iWCmqnjPQlXm74KFyYVEALIl8Gw5V/pemL2Pn2XuyPdw0UAqsfVSwBzRIVkUnGpXQi0sEkq0rAWiZmaPcSTsR1Nf6td6geNuTAk7Q+a6l43nsygLFYUc6IJktVk=
+	t=1731659547; cv=none; b=oXiG++VB9YM0qnibXACrKapoGY4NIY5YULg4g6n3qeLmTwZ6ElI+DTA+8uQOC0Q2WRE4atG0HAt7Sc+b6FAa+PveRc15bImfdZdb6hSp1YEQv8ugNpu2zmVtGf/76Wl7ZVN8OUxJs4R0oBHX4a8nTiWwphAvI2sGNtpDZ9Ea/bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731659427; c=relaxed/simple;
-	bh=AwNaowL+z3r5T3Dhk/DjATV1Gtv4vvKbU0QkuO3KiTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SqtYvrSDoTtqQXFPh5b5TukQXuU67fRJkbEetqUlVWOYd5IFwPMXPr9WpHpzc1VHm1puCxD4vBs4Ws4nCIGoqJHoHPUpu49f8J9S8uRdPCoBAJEnsy/s86RCzCzH3JDAWjewbKc7L/u+nCVuX5VYGW88LlofsX53g4obSfEjk8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=baiy+g4p; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AF80KYe008356;
-	Fri, 15 Nov 2024 09:29:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	hV7BxhQ3eifJYS/TNyu+Lmhdj2uo69md9n/Ratf2lvI=; b=baiy+g4pS4xqJe22
-	Z6PA5mWy2Cs7RSvM4GWc/IW5XjATX0WHk5aElMwUw/pwK9CpSSscsnc7jsM9CeyR
-	QEq2GV4QxD8TyYOW181ziqZmw5yhaaKydrpjuzIVukdoM1LOLT0M00b6LSK7BYDs
-	l0thJ4hekFeNA/SvfdvacMOkRUulYxED4boG5uqMuo4yk7hHl7HXMUpn0cIjjpwI
-	+AeXVvV9dd+rpoicCf30pqcuLp99gFd68FH9DmP7HITTjjpB2UuzfThRd+DJ3TGQ
-	/7eA1+kCT+AI7u9NVgv5359Vsk7melk4XVMB2WrFp7D29rfd+TjSf/eepa2oNHaZ
-	DeVOwg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42whe9ukqu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Nov 2024 09:29:48 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5632340053;
-	Fri, 15 Nov 2024 09:28:22 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 31155263566;
-	Fri, 15 Nov 2024 09:27:14 +0100 (CET)
-Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 15 Nov
- 2024 09:27:13 +0100
-Message-ID: <2b52093a-103f-4dd4-bb6d-c04dc9f68e98@foss.st.com>
-Date: Fri, 15 Nov 2024 09:27:05 +0100
+	s=arc-20240116; t=1731659547; c=relaxed/simple;
+	bh=KwwtRZveGMe16US76kOe+Iauo+yTFHTCMml6hFlPRTY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kQ3LrtwfNTnHejwfehSY06P980NN+bKueqgCoX2vXUcB2FXqe0SwmWsYa1CjA0G3BlR8ESeXxINM/w16wK67gNA3yOYCyuXrkx/pTkNyIxl6Atuiqwu3PU9udF0OSLgcwYTsI/vKAcI5rNI4Wf3KYyq5b++NulsF2STBe+qysPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f8N1XZMx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731659544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KwwtRZveGMe16US76kOe+Iauo+yTFHTCMml6hFlPRTY=;
+	b=f8N1XZMxBN9C3i3Z2uPoHDfCCYGDGhzCAwc8eWU9L3bEJYRP8K47Fj5TIp7Hb8FT3efy30
+	jPW+tsZVyrCLQy7CjsxUgmhSW+R16/IozujoP39igvyH0jDWjGtdhSrz1o8s2KiEMCu6A6
+	hkr63THX/zhIFF9/5ZbE3oPlqWCwAr4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-423-9XAIg9gZOcyPT2kjw4OIhQ-1; Fri, 15 Nov 2024 03:32:22 -0500
+X-MC-Unique: 9XAIg9gZOcyPT2kjw4OIhQ-1
+X-Mimecast-MFC-AGG-ID: 9XAIg9gZOcyPT2kjw4OIhQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38223a3262bso267564f8f.0
+        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 00:32:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731659540; x=1732264340;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KwwtRZveGMe16US76kOe+Iauo+yTFHTCMml6hFlPRTY=;
+        b=FcsdCd5Yjk8R7i1uYjm3QZ4/EwI5W2vFagqR6SN2CRvHo85EWQyCaN6HPuqynjBYyL
+         kt6dp052rwjzj0I5TVQ7eK5BLagVjzZUun7QUP0GabD4GOfTUiqVpePpYdcCZuaDjS/X
+         jJaqlHykUcGSNJQp7/z3yyEvTaukqmHx5/UiGYq5kPGiC3Ryv2uBce1ud+cMDKlJcRrQ
+         LG4DR5mNdiA8St0QTl7vaOARtRGje4wOn4i0PF+mKOLYEPGP9voqUWTwM2Iz2QFvNoer
+         DfHmD3t63WOjTvlUIn5LbX6XKqdrFlaYC2ZiVfPAcHhIQIfPyTs6WxU6p0LtC0wxzcAa
+         2KXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPs5MWWxKqmJk50oEaMgu07ee47W7Z0iLasK+QrszczMXLKB+aoHdcGHkuzC+98A2+NiNE06B3c2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzITfxpDRP7SGuaN+PNvYLNQtf6wNCIokeGYmV8CXWVc3oy9cJo
+	2n8KTNwEycgcDWLEXWTjBDXWNeJraOTaoIg7+mH4WTQv0EORjQhIOqoudtq0sotSy90dNSDGCMp
+	9GeTERL5pdH2U+NYH0Ijc2h46OoysDDYYZbG8pvrleibYRlQZvGC1De/rgg==
+X-Received: by 2002:a5d:64c9:0:b0:37d:5173:7a54 with SMTP id ffacd0b85a97d-38225aafc0bmr1382362f8f.52.1731659540142;
+        Fri, 15 Nov 2024 00:32:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGdh/kmNlYkC/WQKFf2J1h1Btsr4ZUjp0WRHuv0DJX0wKMjNySBXwoM4GCHyqPFiIGeYI7IOw==
+X-Received: by 2002:a5d:64c9:0:b0:37d:5173:7a54 with SMTP id ffacd0b85a97d-38225aafc0bmr1382314f8f.52.1731659539626;
+        Fri, 15 Nov 2024 00:32:19 -0800 (PST)
+Received: from [10.200.68.91] (nat-pool-muc-u.redhat.com. [149.14.88.27])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ada2da2sm3716393f8f.15.2024.11.15.00.32.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2024 00:32:19 -0800 (PST)
+Message-ID: <ff7f7358cec4bb03423879a2e4efd16d0a3e8ed7.camel@redhat.com>
+Subject: Re: [PATCH v2 11/11] Remove devres from pci_intx()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Damien Le Moal
+ <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>, Basavaraj Natikar
+ <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
+ Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
+ Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
+ <manishc@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rasesh Mody
+ <rmody@marvell.com>,  GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko
+ <imitsyanko@quantenna.com>,  Sergey Matyukevich <geomatsi@gmail.com>, Kalle
+ Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar
+ S K <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
+ <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, Mario Limonciello
+ <mario.limonciello@amd.com>, Chen Ni <nichen@iscas.ac.cn>, Ricky Wu
+ <ricky_wu@realtek.com>,  Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao
+ <leitao@debian.org>, Kevin Tian <kevin.tian@intel.com>, Mostafa Saleh
+ <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>, Kunwu Chan
+ <chentao@kylinos.cn>, Ankit Agrawal <ankita@nvidia.com>, Christian Brauner
+ <brauner@kernel.org>, Reinette Chatre <reinette.chatre@intel.com>, Eric
+ Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-input@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
+ linux-pci@vger.kernel.org,  kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Date: Fri, 15 Nov 2024 09:32:16 +0100
+In-Reply-To: <8734jtl3xm.ffs@tglx>
+References: <20241113124158.22863-2-pstanner@redhat.com>
+	 <20241113124158.22863-13-pstanner@redhat.com> <87msi3ksru.ffs@tglx>
+	 <49bb6fc9ebff3cae844da0465ceadeef8d3217c7.camel@redhat.com>
+	 <8734jtl3xm.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: PCI: Add STM32MP25 PCIe root complex
- bindings
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
-        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20241112182809.GA1853254@bhelgaas>
-Content-Language: en-US
-From: Christian Bruel <christian.bruel@foss.st.com>
-In-Reply-To: <20241112182809.GA1853254@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+
+On Fri, 2024-11-15 at 01:46 +0100, Thomas Gleixner wrote:
+> On Thu, Nov 14 2024 at 10:05, Philipp Stanner wrote:
+> > On Wed, 2024-11-13 at 17:22 +0100, Thomas Gleixner wrote:
+> > > On Wed, Nov 13 2024 at 13:41, Philipp Stanner wrote:
+> > > > pci_intx() is a hybrid function which can sometimes be managed
+> > > > through
+> > > > devres. This hybrid nature is undesirable.
+> > > >=20
+> > > > Since all users of pci_intx() have by now been ported either to
+> > > > always-managed pcim_intx() or never-managed
+> > > > pci_intx_unmanaged(),
+> > > > the
+> > > > devres functionality can be removed from pci_intx().
+> > > >=20
+> > > > Consequently, pci_intx_unmanaged() is now redundant, because
+> > > > pci_intx()
+> > > > itself is now unmanaged.
+> > > >=20
+> > > > Remove the devres functionality from pci_intx(). Have all users
+> > > > of
+> > > > pci_intx_unmanaged() call pci_intx(). Remove
+> > > > pci_intx_unmanaged().
+> > > >=20
+> > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > > > ---
+> > > > =C2=A0drivers/misc/cardreader/rtsx_pcr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > > =C2=A0drivers/misc/tifm_7xx1.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 6 +--
+> > > > =C2=A0.../net/ethernet/broadcom/bnx2x/bnx2x_main.c=C2=A0 |=C2=A0 2 =
++-
+> > > > =C2=A0drivers/net/ethernet/brocade/bna/bnad.c=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > > =C2=A0drivers/ntb/hw/amd/ntb_hw_amd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +-
+> > > > =C2=A0drivers/ntb/hw/intel/ntb_hw_gen1.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > > =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +-
+> > > > =C2=A0drivers/pci/msi/api.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > > =C2=A0drivers/pci/msi/msi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 43 +----------
+> > > > ----
+> > > > ----
+> > > > =C2=A0drivers/vfio/pci/vfio_pci_core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > > =C2=A0drivers/vfio/pci/vfio_pci_intrs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 ++---
+> > > > =C2=A0drivers/xen/xen-pciback/conf_space_header.c=C2=A0=C2=A0 |=C2=
+=A0 2 +-
+> > > > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 -
+> > > > =C2=A014 files changed, 22 insertions(+), 62 deletions(-)
+> > >=20
+> > > Now I'm utterly confused. This undoes the pci_intx_unmanaged()
+> > > churn
+> > > which you carefully split into several patches first.
+> >=20
+> > Have you read the email I have linked?
+> >=20
+> > There is also the cover-letter (does anyone in the community ever
+> > read
+> > those?) which explicitly states:
+> >=20
+> > "Patch "Remove devres from pci_intx()" obviously reverts the
+> > previous
+> > patches that made drivers use pci_intx_unmanaged(). But this way
+> > it's
+> > easier to review and approve. It also makes sure that each checked
+> > out
+> > commit should provide correct behavior, not just the entire series
+> > as a
+> > whole."
+>=20
+> I read it and I assume your intention was to force an eye on every
+> use
+> case of pci_intx() and not just on those which need to be converted
+> to
+> pcim_intx().
+>=20
+> I'm not convinced that this is needed, but fair enough.
+
+Whether pcim_enable_device() is really not used could have been
+overlooked, or the driver could move to "managed mode" in parallel for
+v6.13 for example. Then a bug would be silently introduced into those
+drivers.
+
+Besides, me touching pci_intx() unfortunately caused a few explosions
+in the past already, in
+
+fc8c818e756991f5f50b8dfab07f970a18da2556 and
+00f89ae4e759a7eef07e4188e1534af7dd2c7e9c
+
+So this time I prefer to be rather safe than sorry.
 
 
+BTW, if you can review the MSI patch and check whether removing devres
+from there really is fine, that would be helpful.
 
-On 11/12/24 19:28, Bjorn Helgaas wrote:
-> On Tue, Nov 12, 2024 at 05:19:21PM +0100, Christian Bruel wrote:
->> Document the bindings for STM32MP25 PCIe Controller configured in
->> root complex mode.
->> Supports 4 legacy interrupts and MSI interrupts from the ARM
->> GICv2m controller.
->>
->> Allow tuning to change payload (default 128B) thanks to the
->> st,max-payload-size entry.
->> Can also limit the Maximum Read Request Size on downstream devices to the
->> minimum possible value between 128B and 256B.
->>
->> STM32 PCIE may be in a power domain which is the case for the STM32MP25
->> based boards.
->> Supports wake# from wake-gpios
-> 
->> +  st,limit-mrrs:
->> +    description: If present limit downstream MRRS to 256B
->> +    type: boolean
->> +
->> +  st,max-payload-size:
->> +    description: Maximum Payload size to use
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    enum: [128, 256]
->> +    default: 128
-> 
-> MRRS and MPS are not specific to this device.  Not sure why you need
-> them, but if you do need them, I think they should be generic.
 
-Agree. On a second thought, this was to fix an old errata and can be 
-dropped now, as well as the associated quirks.
+Regards,
+P.
 
-Will re-post as generic if needed later on
-
-thanks,
-
-Christian
 
