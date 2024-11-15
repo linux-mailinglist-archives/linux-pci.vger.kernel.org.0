@@ -1,87 +1,85 @@
-Return-Path: <linux-pci+bounces-16830-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16831-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BDDA9CD9E0
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:26:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48DB99CD9F2
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:31:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DC5B1F21699
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 07:26:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0934C28247D
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 07:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0464618734F;
-	Fri, 15 Nov 2024 07:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB58C1714C0;
+	Fri, 15 Nov 2024 07:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NeneI/Xq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ByiC8ZiP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0A7523A
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 07:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAFA10F2
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 07:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731655573; cv=none; b=RrkpR85zSPCnv/4jMFiopu5DCAR0YPol4a/pUL6jMC6FHBN8zZGBAHZeQM0l3NHIHPPg8RaYvM5v6f743j/TzBf3K87ZpkfV6U6I6W/o8/9zGcIHn/93wI7PTSyQbKOuW66u9AE3z4zvpK4IjbFf1Kjqo8bAjBg/MeXJGNTcUUg=
+	t=1731655878; cv=none; b=udzg2xVgujqSuuThtHuxbfry8lQSMu07wCpXcGh8BXqjtf6fuzhNfw/vhAwQYogI7eZE/7WtAjpzfUiTemVmQ+09+TWvT3q0Q/nmi9gg4kZdO5c+mVGVFxK3Ab6LBPhO8i1oOfUfv5vbxrYbqBdWvx9r0Ay4meOhQmMV8xjB5vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731655573; c=relaxed/simple;
-	bh=kmy/XrVB2997ryrPkfAqlPTqEpXt76Ofqetkymj+YpU=;
+	s=arc-20240116; t=1731655878; c=relaxed/simple;
+	bh=DEsujF0MhaoMw1D2S+efwZQTlULtnKNa5uC7aR9wgK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cX5vMIIvXB7g+nIOm38Xd1eqq/KW4AHev7I5jnz/IaqjlHrxtwWWF8/oQOZlZrXnyhW2OnT0OTkhmEzFaUwQmG4GOmjMTn8i1Do8xLfL9zqRPFSKTBFga3vjPDrG5HfzGC/o0xDf/J+TTKraPA8YmjFTcGKWHOj7i8ntgThCII8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NeneI/Xq; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=m5sUxvsxKDrgSqERgcwpScengX/Z61D0BvhLs5GCr5Zq21aZp7vOH5E5wQ7ma6YSvxcZB7/Vq+U/wLD2BxpCAdiav7CQP1J2QKivtUZuQSkBltGVztLZwnTQryJg6dKZ+0QR2BfI7h/zV1BYd9xY5B49PjBP/CQY4NOKdqp6gys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ByiC8ZiP; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20cdb889222so3808235ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 23:26:12 -0800 (PST)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20c6f492d2dso16996525ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2024 23:31:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731655572; x=1732260372; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1731655876; x=1732260676; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=q/td2OHK6Uv6OlvtXPu6vE7g7uy24DWzvPVKBds7d3U=;
-        b=NeneI/Xq/z60FaJAiQ/u+pGPCFSLlGQY8wTLLxH5XrZAhGdnzyl6gduEnaPtPrpLkY
-         LdLcTj1EhHDYez440sF7qn3VC9gVU5n0KnSSxHnDBfleq0IPpjveHcvXCjUIYDYfQwEs
-         wvz8CIxDeHNBv53+VYEYCQERAOuEhsVRnuF4AZFj4oRvTnVHecowAgNILBL4kizu7mWv
-         5mzc/cgqx09cCOhQsjnW+cFid8PxSf5Zuqsl3ES56+D7pgBG8Ji/NXDCZrgpm7oKc5za
-         d4yV3E/Xr5U0LMJ5sVjh3JfaYpqTCueNETuWJkLY8C2Ya/KT9LZ1+6R2kXfEib0+/Vjh
-         T52w==
+        bh=HZktoj+DIyt/M5en/E9U1CXLfcta4k31BJ3MRv9v+lA=;
+        b=ByiC8ZiP2x0719d6do/v64i5dyCkYsWcbX7cOl3jh6w1+KSOEMvp7gqL1vuVIRY3O1
+         JkHB1f1hCqCJ5WulTj8UVa5q8Vmjnvr+eSNfcYaRrFMcKaA9S4XDHhaxqQgA3lsF31O0
+         zLfS2IlW9NeKYDrJ48I4zj3Bo+hEs+FLTlc0Wjkt2a4Mu3oEzLAtCWWAvLXCAhgDDIRb
+         PPPewAY8VAoJ4/GRCDYRN6WztolLMJU8RaYJMwVPn7zjWWgBgTsssZMbZxKpqonLUo8+
+         SLTL0YFdXdCMebsc5bxcRrIrIYuHihVSgDQmQpI5g1SCo3nmpJMRddF3jzVdMrxR+1Wm
+         2TLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731655572; x=1732260372;
+        d=1e100.net; s=20230601; t=1731655876; x=1732260676;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/td2OHK6Uv6OlvtXPu6vE7g7uy24DWzvPVKBds7d3U=;
-        b=v4ulDrSFa191Pml1fWtw1TvSRK9SXlT+A2g2JdJcfCs78eRkaJqkpcAbDKq5MKWag0
-         K4pd45UmActClaMv9nffM+OUI3zZJ6I4Zq06ZB2PDoAEDKUF5gUTdcGYx0EMa1Ik+aE1
-         qS6rbrus/lduuzVgs3GbneKiqhlJSSvsRmS4c14WmtL+abOCma25TR68f5zTJMqPBG/z
-         XBeh8MrmXcTBUmi9O+wwh1yw3wmjx67YhP25tLa9MIU2tHKUXsI1mO9vld4cc4n9860G
-         2asi2JFZmMb9f10S9iVUBGOYEsjf7x2vJlUyNEFmC2TRzoxeHBnsRK4pp9xkdlUbkt+x
-         KJ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUKL73fGI2roJqZK1yYAeJ/6gvmaJ48FyK3Hf2zSRGZY/WhUvd61vGDmr1TuCq85I5lYJaN0uSgte0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwljS7c5cMdDsSnNIxVSXk/gq6LTsV+hRip44my5pppdk0CUZ0w
-	GvboKXyKnixzzWMgw6rPInAyFLK8PF5qsmafZzGp7NBijYuDuTaMB2jkMWUcRw==
-X-Google-Smtp-Source: AGHT+IHF/h7Xa2A+zRkLdeKjCwTQRdlDQlAAp44kZhFqgVsoIp+fBjbt5btngDZE1kkJjv4kY/f0xQ==
-X-Received: by 2002:a17:903:2450:b0:211:ebd:e35f with SMTP id d9443c01a7336-211d0ecb12fmr20281755ad.39.1731655571824;
-        Thu, 14 Nov 2024 23:26:11 -0800 (PST)
+        bh=HZktoj+DIyt/M5en/E9U1CXLfcta4k31BJ3MRv9v+lA=;
+        b=o4sYJdWqI5S+EgvDWYsYsJ9lso8XuFoCkuW4AOdAbPENHSIPpiMSMqavuxR+OzBuVz
+         5J6QjAOdGUn2DOJZu3a6Gaxk35aFmY+k65T1Ivg6/J/II63JBdr8wasKL1DuaQfPRJ2/
+         ni/iUuzgeYP1kQWTD9+w15w/4CUfftWVMsfFoh9Exbch4cBRBzQnWFF3Ez4Azpwgf2QQ
+         ftb0RkZrkJUZkXU1gg0KFkxjCQDMv5B1BN3knhiqsIp6l2zJ4QNLaHzVtAUXWFmOaMTl
+         noxt6cTfuKVuMxUzcfRkvz+ACulYh7yB09H7/Ylb1T4EAKglTttC1Qa2FERhiKHs44zM
+         a5gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVc1+m0ge0ccJSQsZtiNdpn2wg4sITgli10hYXSWjd3PGjBanTCgmmz3gA/76nYLcn7JT9mKmM8YeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynUyZzusWDNAjK+aVs3NGGUNfUYVHMu4bLiWmBXorSCduvmxKu
+	Li5/K3LnHDAdIDxw6jEeEgp6O+sJmQ0WHc+0MpA5HYXbteyvd5MFFinxk6jzbw==
+X-Google-Smtp-Source: AGHT+IGqasFmOrneoq4IblHicWacSTw8Y/GAFQYAAdde1mcCZ45w9edIxU/G+UXSRE3e1ost0zYZXQ==
+X-Received: by 2002:a17:903:22c4:b0:20b:861a:25c7 with SMTP id d9443c01a7336-211d0f1183dmr24007255ad.54.1731655876340;
+        Thu, 14 Nov 2024 23:31:16 -0800 (PST)
 Received: from thinkpad ([117.193.208.47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0ecaad0sm6850975ad.100.2024.11.14.23.26.08
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0dc3281sm6839075ad.30.2024.11.14.23.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 23:26:11 -0800 (PST)
-Date: Fri, 15 Nov 2024 12:56:04 +0530
+        Thu, 14 Nov 2024 23:31:15 -0800 (PST)
+Date: Fri, 15 Nov 2024 13:01:04 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: snps,dw-pcie: Drop "#interrupt-cells"
- from example
-Message-ID: <20241115072604.yre2d7yiclt5d3w5@thinkpad>
-References: <20241105213217.442809-1-robh@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Use for_each_of_range() iterator for parsing
+ "ranges"
+Message-ID: <20241115073104.gsgf3xfbv4gg67ut@thinkpad>
+References: <20241107153255.2740610-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,36 +89,81 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241105213217.442809-1-robh@kernel.org>
+In-Reply-To: <20241107153255.2740610-1-robh@kernel.org>
 
-On Tue, Nov 05, 2024 at 03:32:16PM -0600, Rob Herring (Arm) wrote:
-> "#interrupt-cells" is not valid without a corresponding "interrupt-map"
-> or "interrupt-controller" property. As the example has neither, drop
-> "#interrupt-cells". This fixes a dtc interrupt_provider warning.
+On Thu, Nov 07, 2024 at 09:32:55AM -0600, Rob Herring (Arm) wrote:
+> The mvebu "ranges" is a bit unusual with its own encoding of addresses,
+> but it's still just normal "ranges" as far as parsing is concerned.
+> Convert mvebu_get_tgt_attr() to use the for_each_of_range() iterator
+> instead of open coding the parsing.
 > 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-But the DWC controllers have an in-built MSI controller. Shouldn't we add
-'interrrupt-controller' property then?
+LGTM!
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Could someone please verify it on mvebu machine?
 
 - Mani
 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 1 -
->  1 file changed, 1 deletion(-)
+> Compile tested only.
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 26 +++++++++-----------------
+>  1 file changed, 9 insertions(+), 17 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> index 548f59d76ef2..205326fb2d75 100644
-> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> @@ -230,7 +230,6 @@ examples:
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 29fe09c99e7d..d4e3f1e76f84 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -1179,37 +1179,29 @@ static int mvebu_get_tgt_attr(struct device_node *np, int devfn,
+>  			      unsigned int *tgt,
+>  			      unsigned int *attr)
+>  {
+> -	const int na = 3, ns = 2;
+> -	const __be32 *range;
+> -	int rlen, nranges, rangesz, pna, i;
+> +	struct of_range range;
+> +	struct of_range_parser parser;
 >  
->        interrupts = <25>, <24>;
->        interrupt-names = "msi", "hp";
-> -      #interrupt-cells = <1>;
+>  	*tgt = -1;
+>  	*attr = -1;
 >  
->        reset-gpios = <&port0 0 1>;
+> -	range = of_get_property(np, "ranges", &rlen);
+> -	if (!range)
+> +	if (of_pci_range_parser_init(&parser, np))
+>  		return -EINVAL;
 >  
+> -	pna = of_n_addr_cells(np);
+> -	rangesz = pna + na + ns;
+> -	nranges = rlen / sizeof(__be32) / rangesz;
+> -
+> -	for (i = 0; i < nranges; i++, range += rangesz) {
+> -		u32 flags = of_read_number(range, 1);
+> -		u32 slot = of_read_number(range + 1, 1);
+> -		u64 cpuaddr = of_read_number(range + na, pna);
+> +	for_each_of_range(&parser, &range) {
+>  		unsigned long rtype;
+> +		u32 slot = upper_32_bits(range.bus_addr);
+>  
+> -		if (DT_FLAGS_TO_TYPE(flags) == DT_TYPE_IO)
+> +		if (DT_FLAGS_TO_TYPE(range.flags) == DT_TYPE_IO)
+>  			rtype = IORESOURCE_IO;
+> -		else if (DT_FLAGS_TO_TYPE(flags) == DT_TYPE_MEM32)
+> +		else if (DT_FLAGS_TO_TYPE(range.flags) == DT_TYPE_MEM32)
+>  			rtype = IORESOURCE_MEM;
+>  		else
+>  			continue;
+>  
+>  		if (slot == PCI_SLOT(devfn) && type == rtype) {
+> -			*tgt = DT_CPUADDR_TO_TARGET(cpuaddr);
+> -			*attr = DT_CPUADDR_TO_ATTR(cpuaddr);
+> +			*tgt = DT_CPUADDR_TO_TARGET(range.cpu_addr);
+> +			*attr = DT_CPUADDR_TO_ATTR(range.cpu_addr);
+>  			return 0;
+>  		}
+>  	}
 > -- 
 > 2.45.2
 > 
