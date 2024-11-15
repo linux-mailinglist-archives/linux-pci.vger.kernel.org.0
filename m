@@ -1,52 +1,120 @@
-Return-Path: <linux-pci+bounces-16806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F8019CD598
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 03:47:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D18F9CD6A1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 06:46:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E77A6B213B5
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 02:47:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBCA51F224F1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 05:46:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F4542A8C;
-	Fri, 15 Nov 2024 02:46:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75E916F851;
+	Fri, 15 Nov 2024 05:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="IJe8p6gb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cBnMliZx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB0C28EF;
-	Fri, 15 Nov 2024 02:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5611C13C9A3;
+	Fri, 15 Nov 2024 05:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731638816; cv=none; b=gnZK5LmmWybXDs/gxb/Pv2LneGJ6qyOrNddZ19mps/6gvGo3OsLIBd89Bg3pApYxvzriZYd2KPhwQZ06upumiZs8d65UtMwUdLhe3BL3w8HBkKo6ELOEBzlhXMFKka+Px1iLD+jPPKOK7ZtWHM7C/f44rCK6YsoLorb4qLZ1MEs=
+	t=1731649590; cv=none; b=Ihqpb31kRfh9sbeQ/P4WFQnu0a/rkjAhpSv5DFfFqTDoHWSXsCZmBbH70ASQ+SsCjy4ztZj1sSUCWpbAzAnV9Pgeee7pETB9vaTILFEcTXQXgGlosukWOd1/ivgqBxPAWZ0osI6NwP2ReXEopfeeRfTHwEzJKrdTkPtpkcxxasA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731638816; c=relaxed/simple;
-	bh=IAiuFyp3E8W9vuvfCCVnB6Wz9h8JSHrPyDRUJkzoI38=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XM8md1ZyDYxbMIBSbNUe7PhI6dXE4U3Y51dwBkB9l2MW1MyT06BPlIy++a+pe9+0vfeUnAmQtI7Wzf6uFXtlQHUctO/NjSnl86U+LwsreTK/N5W+h+ctiaGss3cQi6M5V1iy53g3eEzPBw/AiTzHna0rwPxi1StqoXSLu1sDa+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
-X-QQ-mid: bizesmtpsz13t1731638776tf26ak
-X-QQ-Originating-IP: m+FaQT7FrJXF6yKa4W3dcPGuEsWgqna6Tk5+0LWIfnY=
-Received: from localhost.localdomain ( [115.206.160.29])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 15 Nov 2024 10:46:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 10350192324756698958
-From: Mengyuan Lou <mengyuanlou@net-swift.com>
-To: linux-pci@vger.kernel.org
-Cc: netdev@vger.kernel.org,
-	helgaas@kernel.org,
-	jiawenwu@trustnetic.com,
-	duanqiangwen@net-swift.com,
-	Mengyuan Lou <mengyuanlou@net-swift.com>
-Subject: [PATCH PCI v2] PCI: Add ACS quirk for Wangxun FF5XXX NICS
-Date: Fri, 15 Nov 2024 10:46:04 +0800
-Message-ID: <E16053DB2B80E9A5+20241115024604.30493-1-mengyuanlou@net-swift.com>
-X-Mailer: git-send-email 2.43.2
+	s=arc-20240116; t=1731649590; c=relaxed/simple;
+	bh=g+TWxp8r0cFE9e5Yx0soVZGR0BkCsV6nwR/mjiL69EE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cW1wHEhsUK2D+A7fLgSgmRJj5Onspmi0PeNbICaJ/3eOByFHmfKU9gjozPpsC96B3yx/N2R2hY+/I7JCvuwo7hNiA3RPKb9X2rIt5jAbpTkPBwSdD2JXMDrMNMEt0D+fzJUBt+F/eWps4olT1p9fOwkOMuYR7SbagfT8V9kVTVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=IJe8p6gb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cBnMliZx; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8A45B11400C6;
+	Fri, 15 Nov 2024 00:46:25 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Fri, 15 Nov 2024 00:46:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm3; t=1731649585; x=
+	1731735985; bh=sqvoc3APmGB5tb6niPFOzLw3Iq4+7kJyzp+d/Tks6Kc=; b=I
+	Je8p6gbq3nvB9BgRC5f4A1pfTDvNvVuF0aJxtTcqli/PZYLXzX3oD4m0L72SOrOa
+	+lmvcTCpKlqCimzJjUuZPmx0M8/c1V09dQKcxT/w5jTTyP3rRlHSgS4bTzXwENdr
+	R6fB7aqJh8IcswWbAhmy7cMpgfyXxchWQjTrkGKq/rKJWTzyahigEvmsf9lX2+9u
+	5dbgWcuImUleSslV5SB5/1VNrXx491TSlvnrglzzJRnJdxe36TAcVgbbx/75ZUY3
+	T+vMowkKT/pynqsdfwT8Wk9u95dZYMx9FNwBTxCmIhxr2DCF8Bl/iKhZZBeTHpvN
+	2vwnHbuHTx6fuRX5U4NPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1731649585; x=1731735985; bh=sqvoc3APmGB5tb6niPFOzLw3Iq4+
+	7kJyzp+d/Tks6Kc=; b=cBnMliZxbkCwPPbmV5tc2uyjB/Bdkj6HL77752R0hCsw
+	7L3WagOmJCuw1EC5CmvUecrrruu4mmg1jqgeWBwKdcyvat/bEGiQyzqEyTZS2KPZ
+	F5HfHbB8yiphSZxHuwnlT3FpZV8Kl/A3PH/RXlRccM7caJJ0VMnarEpY6GN/gDNg
+	4jW6JEH5g3s8pFYJYdnar71m5VtRkM7G5OI9376Q25jQObJUo7gI4TH/N2i8NhwC
+	p2ungSsAdB3V/lOI1QuJb+BPLoIx5j2OqQ4lQY9QKKO0MfGhiZ4VIc3am40bYGMJ
+	NVTyVYICo7sw9mwt7mzaFVhIKkO6QfmWyDvC7t5btw==
+X-ME-Sender: <xms:MOA2Z_EuOdSl_QSkyeNpNuVbLRExs8zTkOF2A5lxoRi_yLwgXW-XBg>
+    <xme:MOA2Z8Wep0iIb1VGpmqoLZjbREDv4ODx5ZOcyI1KTA7Af_sHq1sstfv_7wbrvNV-C
+    c-7Y88CbNJ1TaYBqII>
+X-ME-Received: <xmr:MOA2ZxLw_7LraFrDT_zK3UQoZ6jbju_IPz9i9CRHMc3wog1L1ELUYVAzwJzr1J0L3pbpbOOh0hzE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrvdefgdekhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefuff
+    fkofgtggfgsehtkeertdertdejnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghi
+    shcuoegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvgeqnecuggftrfgrthhtvg
+    hrnhepieekleektdfhveeludegleefuefffefhfeeuiedthefgheehveeuheekieejjeek
+    necuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdgumhhtfh
+    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvgdpnhgspghrtghpthhtohepvd
+    dtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehluhhkrghsseifuhhnnhgvrhdr
+    uggvpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvihdrtg
+    homhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
+    rdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtph
+    htthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    gsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:MOA2Z9HPJFoawqiA_3Tcl0tHN80FJ4Wls83zKgLhXGUJOaa-Ayg-zw>
+    <xmx:MOA2Z1UGUoOuaMUf2Lii_IPOctHlJjFlI1d41zIMja9ojTSz3mfTcQ>
+    <xmx:MOA2Z4Os36g_a0ZgMAx7qfbrJ7nQNKJRPQQF9Y58ukunVTaxBbjQ4Q>
+    <xmx:MOA2Z023m_GzIsIg5iDQbnu8LSCcukDYYqu_cstNZ9bn3HOksPgcgg>
+    <xmx:MeA2Zy1Kqoj4SDh1UXfs18B-ac3YT_oMCaqwehV03Lkuakw5fkFkyw1M>
+Feedback-ID: ifd214418:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 15 Nov 2024 00:46:18 -0500 (EST)
+From: Alistair Francis <alistair@alistair23.me>
+To: lukas@wunner.de,
+	Jonathan.Cameron@huawei.com,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Cc: bjorn3_gh@protonmail.com,
+	ojeda@kernel.org,
+	tmgross@umich.edu,
+	boqun.feng@gmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	wilfred.mallawa@wdc.com,
+	alistair23@gmail.com,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	aliceryhl@google.com,
+	Alistair Francis <alistair@alistair23.me>
+Subject: [RFC 0/6] lib: Rust implementation of SPDM
+Date: Fri, 15 Nov 2024 15:46:10 +1000
+Message-ID: <20241115054616.1226735-1-alistair@alistair23.me>
+X-Mailer: git-send-email 2.47.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,82 +122,87 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:net-swift.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: M9NnLm3GdbLblnwuwzDh1lvvan46j55EdPu/Tw3UrgSnUAYJ/p8hyr8g
-	DygslxdDA8OtNC0stBCDeLvxGrXPFYfzfMulV64nFA7pw3wMLjvyDr+deG8Afagy5hxzw8i
-	1UC34bWkeRMjWgM9a3cDL3bhQvJ5Y2pxO/+uaLEuIu/yIP9mslbMryP6ql+qszqFqEq5kZ1
-	x4VaF3AyUuRaoEEkgrz30nPVV5aVMGN5/l81TXZMmuseKkf708681kfEy0krfJvLKv+7vNt
-	2MkRKa0efpixwGXx+sCcc9RSnsDdgM/NLdfpcxjSQz49yQ4XMjcXulbAQ5Wffg69umFeplh
-	wSAnq1pBK+VqrcjBNo71Iwux0ikMCspRm4GapMzTEL2YmTMaLHx0Mxy15p6C17410+96oqG
-	hpLBUtIxmk1sn1kIIA6ul/U0QUy2e7gi9RZ8xZxuyMkzaC0LAPTnv2xcR9bWYV3cHxDGZPL
-	LFSjuE/5XaYTyQHRXJVNSSSsbCZYybVW0aCXr/DhS+oXhq5Pdt5bevT0AnUM2gvphLwCrCb
-	YHcklIq0dIKCihv3PRCREPGUMZbHG32X/0kIcYmPdThgSY6BCWa1fuFLl0k524zK5a4tLXg
-	bZg+iM11MZx6RAvaLLxyX0/rkN1BI04spyrQT4i92rCMDEej6Myguy0OWYG50WsJXHN2AUY
-	DYp00sdwtWzpa3gykcyShQgjSUMKCzIt30ufdLPFMt00Dmb0q5VEjbfi6/DXk5/GoqU+wgE
-	FUcVscM/HsYeYiRqlYLJ298T1Hcd/YIIaNuOvRD3DMQ6eLr5Sy928JXu9iyxKSVsaY1r99n
-	agKyVYzfdwd/F8LXrACJv5YrSvm7DDQk2YY8JvLMZvLLUOhKr+MeQG+CkATF207Ru/wx6nQ
-	054wQ9YNSxi29f0gs/x+ajc53/dtzMPXwJe50DE4PEnusFpsQhI4hIajUK7IM3YywPBKnPy
-	h2DkjAe4A3WlBS4oMi0iFWLUxHhcK47/t93wwjQ2KQRXRNDO78eoDJO/8
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
 
-Wangxun FF5xxx NICs are similar to SFxxx, RP1000 and RP2000 NICs.
-They may be multi-function devices, but they do not advertise an ACS
-capability.
+Security Protocols and Data Models (SPDM) [1] is used for authentication,
+attestation and key exchange. SPDM is generally used over a range of
+transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
 
-But the hardware does isolate FF5xxx functions as though it had an
-ACS capability and PCI_ACS_RR and PCI_ACS_CR were set in the ACS
-Control register, i.e., all peer-to-peer traffic is directed
-upstream instead of being routed internally.
+From the kernels perspective SPDM is used to authenticate and attest devices.
+In this threat model a device is considered untrusted until it can be verified
+by the kernel and userspace using SPDM. As such SPDM data is untrusted data
+that can be mallicious.
 
-Add ACS quirk for FF5xxx NICs in pci_quirk_wangxun_nic_acs() so the
-functions can be in independent IOMMU groups.
+The SPDM specification is also complex, with the 1.2.1 spec being almost 200
+pages and the 1.3.0 spec being almost 250 pages long.
 
-Signed-off-by: Mengyuan Lou <mengyuanlou@net-swift.com>
----
+As such we have the kernel parsing untrusted responses from a complex
+specification, which sounds like a possible exploit vector.
 
-v2:
-- Update commit and comment logs.
-v1:
-https://lore.kernel.org/linux-pci/3D914272-CFAE-4B37-A07B-36CA77210110@net-swift.com/T/#t
+As such this series implements a SPDM requester in Rust.
 
- drivers/pci/quirks.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+This is very similar to Lukas' implementation [2]. This series applies on top
+of Lukas' tree [3] and is heavily based on Lukas' work. At build time a user can
+choose to use either the Rust of the C SPDM implementation. The two are
+interchangable, although you can only use one at a time.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index dccb60c1d9cc..8103bc24a54e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4996,18 +4996,21 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- }
- 
- /*
-- * Wangxun 10G/1G NICs have no ACS capability, and on multi-function
-- * devices, peer-to-peer transactions are not be used between the functions.
-- * So add an ACS quirk for below devices to isolate functions.
-+ * Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
-+ * multi-function devices, the hardware isolates the functions by
-+ * directing all peer-to-peer traffic upstream as though PCI_ACS_RR and
-+ * PCI_ACS_CR were set.
-  * SFxxx 1G NICs(em).
-  * RP1000/RP2000 10G NICs(sp).
-+ * FF5xxx 40G/25G/10G NICs(aml).
-  */
- static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 acs_flags)
- {
- 	switch (dev->device) {
--	case 0x0100 ... 0x010F:
--	case 0x1001:
--	case 0x2001:
-+	case 0x0100 ... 0x010F: /* EM */
-+	case 0x1001: case 0x2001: /* SP */
-+	case 0x5010: case 0x5025: case 0x5040: /* AML */
-+	case 0x5110: case 0x5125: case 0x5140: /* AML */
- 		return pci_acs_ctrl_enabled(acs_flags,
- 			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- 	}
+To help with maintaining compatibility it's designed in a way to match Lukas'
+design and the state struct stores the same information, although in a Rust
+struct instead of the original C one.
+
+The Rust implementation currently supports less features, but my end goal
+is to consolidate to a single Rust implementation eventually. That will
+probably have to wait until Rust in the kernel is no longer experimental
+as SPDM is looking to be an important feature to support for all platforms.
+
+This series is based on the latest rust-next tree.
+
+This seris depends on the Untrusted abstraction work [4].
+
+This seris also depends on the recent bindgen support for static inlines  [5].
+
+The entire tree can be seen here: https://github.com/alistair23/linux/tree/alistair/spdm-rust
+
+based-on: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+based-on: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno.lossin@proton.me/
+based-on: https://lore.kernel.org/all/20241114005631.818440-1-alistair@alistair23.me/
+
+1: https://www.dmtf.org/standards/spdm
+2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+3: https://github.com/l1k/linux/commits/spdm-future/
+4: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno.lossin@proton.me/
+5: https://lore.kernel.org/all/20241114005631.818440-1-alistair@alistair23.me/
+
+Alistair Francis (6):
+  rust: bindings: Support SPDM bindings
+  drivers: pci: Change CONFIG_SPDM to a dependency
+  lib: rspdm: Initial commit of Rust SPDM
+  lib: rspdm: Support SPDM get_version
+  lib: rspdm: Support SPDM get_capabilities
+  lib: rspdm: Support SPDM negotiate_algorithms
+
+ MAINTAINERS                     |   6 +
+ drivers/pci/Kconfig             |   2 +-
+ lib/Kconfig                     |  47 ++-
+ lib/Makefile                    |   1 +
+ lib/rspdm/Makefile              |  11 +
+ lib/rspdm/consts.rs             | 123 +++++++
+ lib/rspdm/lib.rs                | 146 +++++++++
+ lib/rspdm/req-sysfs.c           | 174 ++++++++++
+ lib/rspdm/state.rs              | 556 ++++++++++++++++++++++++++++++++
+ lib/rspdm/sysfs.rs              |  27 ++
+ lib/rspdm/validator.rs          | 301 +++++++++++++++++
+ rust/bindgen_static_functions   |   4 +
+ rust/bindings/bindings_helper.h |   2 +
+ 13 files changed, 1384 insertions(+), 16 deletions(-)
+ create mode 100644 lib/rspdm/Makefile
+ create mode 100644 lib/rspdm/consts.rs
+ create mode 100644 lib/rspdm/lib.rs
+ create mode 100644 lib/rspdm/req-sysfs.c
+ create mode 100644 lib/rspdm/state.rs
+ create mode 100644 lib/rspdm/sysfs.rs
+ create mode 100644 lib/rspdm/validator.rs
+
 -- 
-2.43.2
+2.47.0
 
 
