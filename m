@@ -1,123 +1,129 @@
-Return-Path: <linux-pci+bounces-16897-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33E079CF37A
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 19:00:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C9A09CF3D0
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 19:22:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 660EDB4315A
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 16:38:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D3BAB27823
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 16:57:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8393D1D63CF;
-	Fri, 15 Nov 2024 16:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D5861D515A;
+	Fri, 15 Nov 2024 16:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTbph4s8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/DqiZsy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D5F1D63C6;
-	Fri, 15 Nov 2024 16:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4C21CEE9F;
+	Fri, 15 Nov 2024 16:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731688677; cv=none; b=M/CcrYrrYZ+qbAVs2FKEAt7EnHGM2lmIyQ8+qMHQCWhvm1QkUAUgKu2Jn9ZS4v7hInkoiJ4h7uD5lJUy+4im7HMU9ISpLdGWlrvZmPnk11U3hSSdlNnZHOMWEeB2RINLx83wQgUb8pLjQDf9qFrpQWKH97fup5bB/WS8UqWArJ0=
+	t=1731689849; cv=none; b=jN0i1Uf25GMTOpkvwUPhji9WtO/OB/RPT1a9Knf08tI4vfSkzgl+ozqWqbBSFcNlkIlkDen4CQM6OqmxG63VMmJ7j3XGh0sG5uCR/SJM838QPFi9YANaPCYNUwf68R1D3e+KURwOtv8JDVht2GMpMNAlLSyZs+d+ilEd6RvmFvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731688677; c=relaxed/simple;
-	bh=b3SULPoG7TV8R1Uq/VGS/o6LyNqWL9JV5NNkp2h0Sik=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZI4pJrypOE2HpQmjhtNDGjM6ii4bB8L/yC9XrXvzXChNHqxXKT13srfyZLIHzRoEAWYVQlN/2cpLizxr1uLDjRrCuIz1+6bP4bi/3IeZXen2x0G8PxZDbdDC0N23EuIbBGtxHV0Mnfd4h1CXaN4nEjwgVjzaE2x48oaKhXpCqag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTbph4s8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2B8C4CED5;
-	Fri, 15 Nov 2024 16:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731688677;
-	bh=b3SULPoG7TV8R1Uq/VGS/o6LyNqWL9JV5NNkp2h0Sik=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DTbph4s8r2YYm6XpOLpxDEG+pIi1dcJgbQwkP9r+Zngp08n26ZOADnmv92f0j85z4
-	 JNGF/J/dpE1AD5cwgXP8qLnQ4ZywSjqMMohihayeBVnPJf48hkcR0SxaFwYgiyNe85
-	 3YC8BBzhYRlazSVikpMbvUAGmeXY9OjEsQAHkPLMRq9efdbWznllS+VsjUv7EqJP0A
-	 OaT1HwEv+fjsGGs4dkVkzJ1nt+QrLDhNZHMAlVFOATSOTgQAY24V+vLOrpzqEG6Emv
-	 2oaT1J8BsdwiZ1wcghNFtVhCRIHeB/NWPL4s/j3Eid/fs0aASA/m3jbf7fvKHPDQU9
-	 A0ejAc9RlCnxQ==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Fri, 15 Nov 2024 17:37:46 +0100
-Subject: [PATCH v5 2/8] PCI: hookup irq_get_affinity callback
+	s=arc-20240116; t=1731689849; c=relaxed/simple;
+	bh=P9vPaqkvdnj3RZZRoSi57ArSc52yZfn5QJ1q2s/oo0o=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=stfRBATAm7UFyCECANwxBwphtcPUOK7CBc7rrfug3PUxrHVyTrZISpiW7ge/F9252y3VW1oU1Dh9vsHUyQYtQXvtwT6sSkKtmHEUooYL2avNoHZEpy3IKrTSObBm82g4qlXgGriLA/zPQ2jlCPZDVcCOliLAF+cLucmHeCGbNcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/DqiZsy; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731689848; x=1763225848;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=P9vPaqkvdnj3RZZRoSi57ArSc52yZfn5QJ1q2s/oo0o=;
+  b=f/DqiZsyKEsnTGTBqf4BGN1iTHcQsqMmyQMBoDi7/HEuCyOB0D7AnuKV
+   iu8QuxowgugXXa10Q8uZAHaRu5nBL4MeWxuhSRIqFyqmZWhWiCmNe0/NY
+   JZFITBUoZlgAbzYBa+jftAFnGFuouEQvO1oRM8XaKG9Va2RRk+NcQQ/he
+   lva+crIu04+P64tuX7B146JQVAE9+dhQ/wOzpaD2zI9+CXYmPSBwBZtjX
+   cd3kZkzj4WWfKVdk/EE4Y+WAWuDFWmYtJoZ2UWIWYW42M3p5yHfdXx2Q+
+   uXEzwnEGZwfJuPglVCLvetliAygjUUrF9oOnzNVbFzjDrv6v9CiqvZyjJ
+   w==;
+X-CSE-ConnectionGUID: XgGw5G78S0WmVoNiXO+2sA==
+X-CSE-MsgGUID: 4V7ojmreTISQURKM3iI3gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11257"; a="31773936"
+X-IronPort-AV: E=Sophos;i="6.12,157,1728975600"; 
+   d="scan'208";a="31773936"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 08:57:28 -0800
+X-CSE-ConnectionGUID: MNYqYWCgQrWW3QRvTO7RHw==
+X-CSE-MsgGUID: SvSO5lY9RdWbZeYtvZE5rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,157,1728975600"; 
+   d="scan'208";a="88615069"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.142])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 08:57:24 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Stefan Wahren <wahrenst@gmx.net>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] PCI/bwctrl: Remove IRQF_ONESHOT and handle hardirqs instead
+Date: Fri, 15 Nov 2024 18:57:17 +0200
+Message-Id: <20241115165717.15233-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241115-refactor-blk-affinity-helpers-v5-2-c472afd84d9f@kernel.org>
-References: <20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org>
-In-Reply-To: <20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
- linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
- mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
- storagedev@microchip.com, linux-nvme@lists.infradead.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-struct bus_type has a new callback for retrieving the IRQ affinity for a
-device. Hook this callback up for PCI based devices.
+bwctrl cannot use IRQF_ONESHOT because it shares interrupt with other
+service drivers that are not using IRQF_ONESHOT nor compatible with it.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
+Remove IRQF_ONESHOT from bwctrl and convert the irq thread to hardirq
+handler. Rename the handler to pcie_bwnotif_irq() to indicate its new
+purpose.
+
+The IRQ handler is simple enough to not require not require other
+changes.
+
+Fixes: 058a4cb11620 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
+Reported-by: Stefan Wahren <wahrenst@gmx.net>
+Link: https://lore.kernel.org/linux-pci/dcd660fd-a265-4f47-8696-776a85e097a0@gmx.net/
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/pci-driver.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/pci/pcie/bwctrl.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 35270172c833186995aebdda6f95ab3ffd7c67a0..a9cb0e3ad2e6eca58c34683303b1242228e96909 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1670,6 +1670,19 @@ static void pci_dma_cleanup(struct device *dev)
- 		iommu_device_unuse_default_domain(dev);
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index ff5d12e01f9c..a6c65bbe3735 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -230,7 +230,7 @@ static void pcie_bwnotif_disable(struct pci_dev *port)
+ 				   PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
  }
  
-+/**
-+ * pci_device_irq_get_affinity - get IRQ affinity mask for device
-+ * @dev: ptr to dev structure
-+ * @irq_vec: interrupt vector number
-+ *
-+ * Return the CPU affinity mask for @dev and @irq_vec.
-+ */
-+static const struct cpumask *pci_device_irq_get_affinity(struct device *dev,
-+					unsigned int irq_vec)
-+{
-+	return pci_irq_get_affinity(to_pci_dev(dev), irq_vec);
-+}
-+
- const struct bus_type pci_bus_type = {
- 	.name		= "pci",
- 	.match		= pci_bus_match,
-@@ -1677,6 +1690,7 @@ const struct bus_type pci_bus_type = {
- 	.probe		= pci_device_probe,
- 	.remove		= pci_device_remove,
- 	.shutdown	= pci_device_shutdown,
-+	.irq_get_affinity = pci_device_irq_get_affinity,
- 	.dev_groups	= pci_dev_groups,
- 	.bus_groups	= pci_bus_groups,
- 	.drv_groups	= pci_drv_groups,
-
+-static irqreturn_t pcie_bwnotif_irq_thread(int irq, void *context)
++static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
+ {
+ 	struct pcie_device *srv = context;
+ 	struct pcie_bwctrl_data *data = srv->port->link_bwctrl;
+@@ -302,10 +302,8 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = devm_request_threaded_irq(&srv->device, srv->irq, NULL,
+-					pcie_bwnotif_irq_thread,
+-					IRQF_SHARED | IRQF_ONESHOT,
+-					"PCIe bwctrl", srv);
++	ret = devm_request_irq(&srv->device, srv->irq, pcie_bwnotif_irq,
++			       IRQF_SHARED, "PCIe bwctrl", srv);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
-2.47.0
+2.39.5
 
 
