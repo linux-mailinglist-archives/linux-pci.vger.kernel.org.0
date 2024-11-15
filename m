@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-16808-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16809-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E0CD9CD6A5
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 06:46:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B4C679CD6A7
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 06:47:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AF291F225DD
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 05:46:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 302501F22796
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 05:47:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93078185B68;
-	Fri, 15 Nov 2024 05:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE5C17C22A;
+	Fri, 15 Nov 2024 05:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="WqmNLt35";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aJrWp73D"
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="gLcrIcKP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Iq4jmO6L"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39D9184520;
-	Fri, 15 Nov 2024 05:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD57D176AB5;
+	Fri, 15 Nov 2024 05:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731649595; cv=none; b=NKsf++y66RsS8hsyYXp+ijjOhIkCtMFTboyz3NjVeQ1iFA9GYxYyE9qas5C/uXbJdQrUrVlHE7GKNWRbdIhvEV8ruVVy3uU9wI/rv4UGDaOsZo2Z+FD2TS9MM3eofTP5D/5yMO7stK8PhURMC5iNawTvhCRNF/j0iENjsgoU810=
+	t=1731649602; cv=none; b=Nw/b3e3UFJrXaWgcdu/kYSXUIZp31QCQf+q5cOdebGyg6vKyDa9cSAXuqqpVE4bf1Q/TislRhZ36lVWLIMgfJTtO6IdScVD/ptBve8ungSSDjsIm+BsIm48zh5/jg62vXoyVcMJTihdDYVedweLXLvGvRf9sJ7jjQKXvI0vOgLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731649595; c=relaxed/simple;
-	bh=uISXudpg3a0EJMCxVtCbL+sgKNCu63mA4i4Vv1LuzRM=;
+	s=arc-20240116; t=1731649602; c=relaxed/simple;
+	bh=leWzt/xrFjcg4u9bxgDbzWvDHPOOrZF/NcEMBbRriSw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ELkuLljEkk7CoEpgEeK5ZR/XnsZPxmnk5b6GlRaaGVgOIJy5aJJ3tvLtLX00LfyHcOLS5XRIe086CVUMbMqksPPgJNqxrm8/BrEpDQuhEJBLZDYwmYDWv/sRUCBTOONxG9vMUkDL09sWLsGuD77caM1CDvO+bcVvHjyrQXuiuVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=WqmNLt35; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aJrWp73D; arc=none smtp.client-ip=202.12.124.148
+	 MIME-Version; b=pY/8EEkeWemn24bKN45lhLLOGLxzVispCGMDP1XGc4MUzz8N3z7T8FgervDF0JuwNitzY8TLsX6Oy02033P26F3+cp9kSKMd+onnFjRO7AfjW/d8PaKOODy2M4QSGn3oLpvOjJBv2fY1RHCVKEPDNDAbHSh0vVg+vmmtwLikfDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=gLcrIcKP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Iq4jmO6L; arc=none smtp.client-ip=202.12.124.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.stl.internal (Postfix) with ESMTP id 5B6C5114011D;
-	Fri, 15 Nov 2024 00:46:32 -0500 (EST)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 6E8B0114015A;
+	Fri, 15 Nov 2024 00:46:39 -0500 (EST)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Fri, 15 Nov 2024 00:46:32 -0500
+  by phl-compute-05.internal (MEProxy); Fri, 15 Nov 2024 00:46:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1731649592; x=
-	1731735992; bh=OgHEk/1EFc0QQfHGk/cY+OzZO//KmIr76oJXZzdsNVI=; b=W
-	qmNLt35g406bjVbSwZ2c+StCWCMZZRY7Y2Kba4Dbw+7MWyLXySPIq6iWDPB6H5vd
-	0fhp5bTbYMoQP3ZhSdmI/EFZ9/8rnceDHHG+DgI27gzWWI1JjqJR/Xq4kpdEWQsq
-	wBLq2zR44Kc0tiYc2ArMOEpBkZgBIPz40iTZT7YB4xb47nOvrQMq/BjG/9uTYMYR
-	zM/vV1dO13itutsyUcb7KtjBqNdmKVhzk+u3c7mJI31b7Gmn79xlShJL8m+Itpk+
-	tQHeu6/qBLhEHifNhplGHBbpVKRyJQW6U+2lg/JBLbWdMT5jSHhrLnQfN4xdr+E7
-	/Om2ndMtR2bPvTFLXNtZQ==
+	:reply-to:subject:subject:to:to; s=fm3; t=1731649599; x=
+	1731735999; bh=KQS6K/mOBwOucc6ITSv6JSX6O9Y50UxuLxtj1lVijiA=; b=g
+	LcrIcKPh/ZNS1g6AgJ599ZWmQnV5OgyUdKV7kKrmKgyfbsl00g0SxSRY4KXh8p3b
+	F08APbyCGcWAwGWnp0d7oFS0JK55zcaXdFQRgi1gZOEVzk8QcvmcUQyx9JH0YUhu
+	us7sSn6VsWnpLaqWFAMnFpi41vU8/Rr9Kbt0cWTcQNEsgK8uVuT0wQbm79CwByjL
+	3GgGquv6ng18rs7TUNtCo0brlj2sbilar2T8AahLkPU5lvLWw3hAJS5MJ8spGOaK
+	P2Lfb3y8Z8521s5/Yh6y/voBPgIKHsBT0KI2mxoRBIYgI8EO7XrgwRI3zocuPtXl
+	QANw9XllyA9Qem9wmxvYw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1731649592; x=1731735992; bh=O
-	gHEk/1EFc0QQfHGk/cY+OzZO//KmIr76oJXZzdsNVI=; b=aJrWp73D2uvFIOOm0
-	Xx26iKzJnNZ47h+xSxwr37w9soZ+8583+eY2iMotJi/s0bfqNQSie3x+qhkU9KrD
-	kFr679W+/orddB8Kb6dj2bqqKXBtYvSNz/Q9OV+6Ioy6lsrz2421I2ZOJYKnA5ZM
-	crvO8jUKFX0MVWm9BFP9+6JUx/VWANNIRxHi4847/uG443g0AHeY1RPuf0MSOT+A
-	TFVMSXNXQYzZJ0mMfsBoKHNH7cvbfg+jBtVe38TLXd9EaQpw6QQqM0WzG61PrwZC
-	kQbdd5h3Cr2jhMUaN1S32P8PlzjyKSMXR3O+ZZntqbrKqQgaSNCUrKR8tYSQ7C8U
-	V9sQA==
-X-ME-Sender: <xms:OOA2ZwaGDFsLapu8t5xJ43YSbmwkuWyIxIdQWzZqOHaFgwb4USU5fQ>
-    <xme:OOA2Z7aQPA6oRjnHneBuPIuW8eGwSgxFhMyDHoIMqJ_9a44kuSH8URIk7o1Z0YYxC
-    cw4D06bO6pKiYG1pWk>
-X-ME-Received: <xmr:OOA2Z6959aybJcrT8sYM9qq93IKt17T2PaIayrt-3dBAbi4yaSt7fhyRYN_Dlk9Nc-xuOuNZvpkG>
+	:x-me-sender:x-sasl-enc; s=fm3; t=1731649599; x=1731735999; bh=K
+	QS6K/mOBwOucc6ITSv6JSX6O9Y50UxuLxtj1lVijiA=; b=Iq4jmO6LlGzj3SeeD
+	iNI5QJRCtIx8DPKH0tMhiDTMOZEWRp0NfEDdCa/qr/CVV4y0TujvskqhHSIMITRU
+	1kkx/S1OrFDmEJ7ncw64zW3lCoZa/DqiXVLvJ+WQzAnctR5Gl+wzmAOQMANCf2xE
+	xRyHaQDX7Feo+TKlOHS/YJCL0YJL13fRCNTy9iY1Bc8tWBmwIDDNG7aHhtUJuD2C
+	VQW3KjJRmMQqgp8BwwEvu9KQ+vS9hNL6/FQlWKuDQH5PkFOuiCLmjuDrFfdAR8hX
+	tu+1SvJRoSj2Yy1YZTrkuz7VnKSR6wbCaVdL7gWfmBaDgydgxvCZ8PQLUmb48LtG
+	ZEcBg==
+X-ME-Sender: <xms:PuA2Z3tAw-IoR9egLmTdrpmzmer6tafQX6bE9C2qad7gDrfH_64ZNg>
+    <xme:PuA2Z4cSa1yOk3r4LVKHadVjcycgRD8Zj10WsFZy0BZZXt_rL7Ibh1ytBMFK9qeGL
+    lYXRuqghsU0sb1flog>
+X-ME-Received: <xmr:PuA2Z6yFEKqGaKbvplFToip0PCghKftPmgQWd98jT2y0Of-zL_8ppf29ns_1mup7SFNwl-LOKLUe>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrvdefgdekhecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
     tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefuff
@@ -82,14 +82,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrvdefgdekhecutefuodetggdote
     pehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
     hinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsjhho
     rhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
-X-ME-Proxy: <xmx:OOA2Z6p1D2Ql-hbkrslir1vxl9w3KtiT1pbaWizPrJmMuEsmFyF1WQ>
-    <xmx:OOA2Z7qZR590juV5obijsdbfKpPNRC3RCCd254CmFbvm6q4WTCR11Q>
-    <xmx:OOA2Z4Qs-Kl_pWy0LGqGh680D-pOKyx_89MQ-4khn89F3xU_msr8Bg>
-    <xmx:OOA2Z7od90rDmzyCSR5jt-Sk5xrCNrV6yiPxrP2Qz-nNO4Ljr2NNmA>
-    <xmx:OOA2Z3oOPbzHMTHZ4gqopqNGtsC6MiQF77wD5LzYkIgTy86G4embVUWT>
+X-ME-Proxy: <xmx:PuA2Z2PelOiiOoQU9_dyk3YXZBtfVOIsM01IUu_Gbxc86QidQgXnVA>
+    <xmx:PuA2Z39mt-C8IHKjODE8zDQW4LL9aPKAzncvPlgmr5PU9kYh52kxtA>
+    <xmx:PuA2Z2VaJ5SyY05_HygG6ezm2xxYzWKZ-bUNoGStgHPBzY61MNskTQ>
+    <xmx:PuA2Z4fMsc1uWHser_iSekicqZv8eZ5reB1uOrYVfh9hujCYYfaD3w>
+    <xmx:P-A2ZyefUcMF8EQdcqISWzxAjOGV90mYPL1I7cuRRnbtp-9JoSZ5jnXJ>
 Feedback-ID: ifd214418:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 15 Nov 2024 00:46:26 -0500 (EST)
+ 15 Nov 2024 00:46:33 -0500 (EST)
 From: Alistair Francis <alistair@alistair23.me>
 To: lukas@wunner.de,
 	Jonathan.Cameron@huawei.com,
@@ -111,9 +111,9 @@ Cc: bjorn3_gh@protonmail.com,
 	gary@garyguo.net,
 	aliceryhl@google.com,
 	Alistair Francis <alistair@alistair23.me>
-Subject: [RFC 1/6] rust: bindings: Support SPDM bindings
-Date: Fri, 15 Nov 2024 15:46:11 +1000
-Message-ID: <20241115054616.1226735-2-alistair@alistair23.me>
+Subject: [RFC 2/6] drivers: pci: Change CONFIG_SPDM to a dependency
+Date: Fri, 15 Nov 2024 15:46:12 +1000
+Message-ID: <20241115054616.1226735-3-alistair@alistair23.me>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241115054616.1226735-1-alistair@alistair23.me>
 References: <20241115054616.1226735-1-alistair@alistair23.me>
@@ -125,26 +125,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for a Rust SPDM library we need to include the SPDM
-functions in the Rust bindings.
+In preparation for adding a Rust SPDM library change SPDM to a
+dependency so that the user can select which SPDM library to use at
+build time.
 
 Signed-off-by: Alistair Francis <alistair@alistair23.me>
 ---
- rust/bindings/bindings_helper.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/Kconfig |  2 +-
+ lib/Kconfig         | 30 +++++++++++++++---------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 7847b2b3090b..8283e6a79ac9 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -24,6 +24,7 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/task.h>
- #include <linux/slab.h>
-+#include <linux/spdm.h>
- #include <linux/uaccess.h>
- #include <linux/wait.h>
- #include <linux/workqueue.h>
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index f1c39a6477a5..690a2a38cb52 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -128,7 +128,7 @@ config PCI_CMA
+ 	select CRYPTO_SHA256
+ 	select CRYPTO_SHA512
+ 	select PCI_DOE
+-	select SPDM
++	depends on SPDM
+ 	help
+ 	  Authenticate devices on enumeration per PCIe r6.2 sec 6.31.
+ 	  A PCI DOE mailbox is used as transport for DMTF SPDM based
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 68f46e4a72a6..4db9bc8e29f8 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -739,6 +739,21 @@ config LWQ_TEST
+ 	help
+           Run boot-time test of light-weight queuing.
+ 
++config SPDM
++	bool "SPDM"
++	select CRYPTO
++	select KEYS
++	select ASYMMETRIC_KEY_TYPE
++	select ASYMMETRIC_PUBLIC_KEY_SUBTYPE
++	select X509_CERTIFICATE_PARSER
++	help
++	  The Security Protocol and Data Model (SPDM) allows for device
++	  authentication, measurement, key exchange and encrypted sessions.
++
++	  Crypto algorithms negotiated with SPDM are limited to those enabled
++	  in .config.  Drivers selecting SPDM therefore need to also select
++	  any algorithms they deem mandatory.
++
+ endmenu
+ 
+ config GENERIC_IOREMAP
+@@ -777,18 +792,3 @@ config POLYNOMIAL
+ 
+ config FIRMWARE_TABLE
+ 	bool
+-
+-config SPDM
+-	tristate
+-	select CRYPTO
+-	select KEYS
+-	select ASYMMETRIC_KEY_TYPE
+-	select ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+-	select X509_CERTIFICATE_PARSER
+-	help
+-	  The Security Protocol and Data Model (SPDM) allows for device
+-	  authentication, measurement, key exchange and encrypted sessions.
+-
+-	  Crypto algorithms negotiated with SPDM are limited to those enabled
+-	  in .config.  Drivers selecting SPDM therefore need to also select
+-	  any algorithms they deem mandatory.
 -- 
 2.47.0
 
