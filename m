@@ -1,275 +1,182 @@
-Return-Path: <linux-pci+bounces-16893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16895-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4969D9CF193
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 17:36:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AB269CF1A1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 17:37:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF9C81F252E5
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 16:36:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BDBA1F21173
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 16:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59AAD1D5165;
-	Fri, 15 Nov 2024 16:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9B71D514F;
+	Fri, 15 Nov 2024 16:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H99tUUBj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ci0n79GX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2A21D47A0;
-	Fri, 15 Nov 2024 16:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071C61E4A6;
+	Fri, 15 Nov 2024 16:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731688566; cv=none; b=ra0hMr9O7DOoH2mBfzJtZSW/xjd43U9gMD+wOsueovBPfmZKeTYue4LSP2McG16K2Inm78tqgWrtQNgh+RkJyTSsb+qiEOHzk+wOLJuZaOQzMxWdXXxIlZ88zXCBZk2L3lyqvjVb8AVUXP1FGV5xImxNZ2Z/4cWzWadZlTF66QE=
+	t=1731688672; cv=none; b=HShJ6/cMsPBVYg+2QdOdDZR7VoZK7Gr2Lg58mclqNQt/grDNOr2Ga1kQIgcR9XB99U2lWgruUW/FXhYRhzmP2Md7krgD3HVq6rOP0rNntvRMnqdz8oCGmzzjHx+Su4XxkQj6dX0qPEk3KBzzyuzfdUU7d5JHIdsFYbMxjxaGY+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731688566; c=relaxed/simple;
-	bh=6yQrzL+pY0s5bWYhKAenvAd4K3vkSdTM9mFizd+1r8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YzBUFPLUuYzGgkOk7bUp/7lu42Y8IfKJA7EEGuU0Pykb35tohhsey+P8GV9z7vNvnH34Hm8iICqCX/cLS1zCXhzRlzqXeCikWhzDGNGQAZU+7RjIXl1aF2qfv6dP4JXFvcDiJSpxVXhiZoxV40toyWuhC1/WviB4OM9qusq+yYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H99tUUBj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E232C4CED5;
-	Fri, 15 Nov 2024 16:36:05 +0000 (UTC)
+	s=arc-20240116; t=1731688672; c=relaxed/simple;
+	bh=xPIEzNMgELR96A8fMGWEUYtmUX8fIT/IURHsLtPs3dE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=peUanB6/7XSZAIRlQedxKtdtUa/SeuGs1mUkGV75k9S1CiRrSvrRGQOjm9cEQAmYUwdBd06l2PJKj+L5iogK0VMReq/TVV1HVj28hTJhNsnSAGVoa+FZGFwX08VyH9ugqKL/b4IKhUWdfgNF529Ydk3D3nGfsriC/1iTOs7P/Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ci0n79GX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC11C4CED0;
+	Fri, 15 Nov 2024 16:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731688565;
-	bh=6yQrzL+pY0s5bWYhKAenvAd4K3vkSdTM9mFizd+1r8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H99tUUBjROYIibs7vXroxAi3KXnmtRNRe1yk//et3sKkQZfVPW2DCaDJlHgMsrnAK
-	 Y6iuBeAZFRfUzJZcbT2178fMPypgrYxiE/oWrhYWdNN0qbdZA+UsYJjonG5XV9hTnU
-	 ELMQnXVNxjU30qSBtvn1KcZyVyrzBjvk0LH6C2LXAMDqTMcdUj5/183weCY3T7jw8L
-	 RFds4A3qvgQD2FmsqcARtCjpAig8ANEpgfBcn7kfTUVGl7nS7Id4DXdqaAa7R84K+H
-	 yKEcNGIULnpqYwTkfwqboyI1zpC1GvA7Q5bkfAEy+QsJ/aToJ/Zuc4jZxaRvsIdG7E
-	 pNnt/nYpycq0Q==
-Date: Fri, 15 Nov 2024 10:36:03 -0600
-From: Rob Herring <robh@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	p.zabel@pengutronix.de, cassel@kernel.org,
-	quic_schintav@quicinc.com, fabrice.gasnier@foss.st.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: PCI: Add STM32MP25 PCIe root complex
- bindings
-Message-ID: <20241115163603.GA3188739-robh@kernel.org>
-References: <20241112161925.999196-1-christian.bruel@foss.st.com>
- <20241112161925.999196-2-christian.bruel@foss.st.com>
+	s=k20201202; t=1731688671;
+	bh=xPIEzNMgELR96A8fMGWEUYtmUX8fIT/IURHsLtPs3dE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ci0n79GXpD+jm0+r+F9HkavA5zO439RHVREHGgBezDSJywcwC8KeVPR4au0Y1sYTJ
+	 HJDSqAwJmQCITjKfF3xHy8cFlmW+EGi/mikoxmbtiNSW8oPHDVV9D44sOjBJ8LaFlJ
+	 d5J6hTkAq+ewYBE/A5z7RZwyPbxlnu46xg1pmS8KEAemlhufP8hw6IOZbGY7ApNBPo
+	 iBa4g2n5umIxHgJZRWtVWxHRxRYZXhDuxgvBX9Cb2s7Auy54QvYNxZXd4L3OVzVl6S
+	 26c7LlRuD9PBCtt34ywkFmUA/u/e9c5JvwlhIjy6V50k55ypwhP2ZZaJgTp3nTY5vs
+	 69P07L8RWI0fw==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH v5 0/8] blk: refactor queue affinity helpers
+Date: Fri, 15 Nov 2024 17:37:44 +0100
+Message-Id: <20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241112161925.999196-2-christian.bruel@foss.st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANh4N2cC/4XQza7CIBAF4FcxrMXw00rryvcwLoYyWGLTKlRyj
+ em731Gj1xsXZXcm5DsMN5YwBkxss7ixiDmkMPQUyuWCNS30B+TBUWZKqELUUvGIHppxiNx2Rw7
+ ehz6MV95id8KYuBFVbevSFlYKRsaJroefh7/bP3PE84Vqxr9hGxKB18cbsrxPX3V6pi5LLniFo
+ qy8MeCl2qZLwpVDdnezeluSzpylyPJ6LZwDp7SE7RFjj91qiIcnpz+5uZ/ImrjSaOsbEI111Rd
+ XfHKzmxbEOactgES1Nv4fN03TLx+3iBnKAQAA
+X-Change-ID: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
+To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+ mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
+ storagedev@microchip.com, linux-nvme@lists.infradead.org, 
+ Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-On Tue, Nov 12, 2024 at 05:19:21PM +0100, Christian Bruel wrote:
-> Document the bindings for STM32MP25 PCIe Controller configured in
-> root complex mode.
-> Supports 4 legacy interrupts and MSI interrupts from the ARM
-> GICv2m controller.
-> 
-> Allow tuning to change payload (default 128B) thanks to the
-> st,max-payload-size entry.
-> Can also limit the Maximum Read Request Size on downstream devices to the
-> minimum possible value between 128B and 256B.
-> 
-> STM32 PCIE may be in a power domain which is the case for the STM32MP25
-> based boards.
-> Supports wake# from wake-gpios
-> 
-> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-> ---
->  .../bindings/pci/st,stm32-pcie-host.yaml      | 149 ++++++++++++++++++
->  1 file changed, 149 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml b/Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..d7d360b63a08
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
-> @@ -0,0 +1,149 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/st,stm32-pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STM32MP25 PCIe root complex driver
-> +
-> +maintainers:
-> +  - Christian Bruel <christian.bruel@foss.st.com>
-> +
-> +description:
-> +  PCIe root complex controller based on the Synopsys DesignWare PCIe core.
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      const: st,stm32mp25-pcie-rc
-> +  required:
-> +    - compatible
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> +  - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
+It turns out, it's just not worth to add bits to the core just for
+hisi_sas_v2 driver. I dropped those changes.
 
-snps,dw-pcie.yaml instead of these 2.
+BTW, this series is based on linux-block/for-next from 2024-11-11. Not
+sure if this is the right base, if not please let me know which branch I
+should use.
 
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32mp25-pcie-rc
-> +
-> +  reg:
-> +    items:
-> +      - description: Data Bus Interface (DBI) registers.
-> +      - description: PCIe configuration registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: core
+Original cover letter:
 
--names with a single entry is kind of pointless.
+These patches were part of 'honor isolcpus configuration' [1] series. To
+simplify the review process I decided to send this as separate series
+because I think it's a nice cleanup independent of the isolcpus feature.
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: PCIe system clock
-> +
-> +  clock-names:
-> +    const: core
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie-phy
-> +
-> +  num-lanes:
-> +    const: 1
-> +
-> +  msi-parent:
-> +    maxItems: 1
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Changes in v5:
+- dropped the irq_get_affinity callback from struct device_driver
+  again.
+- s/blk_mq_hctx_map_queues/blk_mq_map_hw_queues/
+- collected tags
+- Link to v4: https://lore.kernel.org/r/20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org
 
-Just 'msi-parent: true'. It's already only ever 1 entry.
+Changes in v4:
+- added irq_get_affinity callback to struct device_driver
+- hisi_sas use dev pointer directly from hisi_hba.
+- blk_mq_hctx_map_queues: ty irq_get_affinity callback
+  from device_driver first then from bus_type
+- collected tags
+- fixed typos
+- Link to v3: https://lore.kernel.org/r/20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org
 
-> +
-> +  reset-gpios:
-> +    description: GPIO controlled connection to PERST# signal
-> +    maxItems: 1
-> +
-> +  wake-gpios:
-> +    description: GPIO controlled connection to WAKE# input signal
-> +    maxItems: 1
-> +
+Changes in v3:
+- dropped the additinal argument in blk_mq_hctx_map_queues.
+  leave open coded version in hisi_sas_v2.
+- splitted "blk-mp: introduce blk_mq_hctx_map_queues" patch into
+  three patches.
+- dropped local variable in pci_device_irq_get_affinity
+- Link to v2: https://lore.kernel.org/r/20241111-refactor-blk-affinity-helpers-v2-0-f360ddad231a@kernel.org
 
-> +  st,limit-mrrs:
-> +    description: If present limit downstream MRRS to 256B
-> +    type: boolean
-> +
-> +  st,max-payload-size:
-> +    description: Maximum Payload size to use
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [128, 256]
-> +    default: 128
+Changes in v2:
+- added new callback to struct bus_type and call directly the affinity
+  helpers from there.
+- Link to v1: https://lore.kernel.org/r/20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de
 
-IIRC, other hosts have similar restrictions, so you should be able to do 
-the same and imply it from the compatible. Though I'm open to a common 
-property as Bjorn suggested.
+Changes in v1:
+- renamed blk_mq_dev_map_queues to blk_mq_hctx_map_queues
+- squased 'virito: add APIs for retrieving vq affinity' into
+  'blk-mq: introduce blk_mq_hctx_map_queues'
+- moved hisi_sas changed into a new patch
+- hisi_sas use define instead of hard coded value
+- moved helpers into their matching subsystem, removed
+  blk-mq-pci and blk-mq-virtio files
+- fix spelling/typos
+- fixed long lines in docu (yep new lines in brief descriptions are
+  supported, tested ti)
+- based on the first part of
+  [1] https://lore.kernel.org/all/20240806-isolcpus-io-queues-v3-0-da0eecfeaf8b@suse.de
 
-> +
-> +  wakeup-source: true
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  access-controllers:
-> +    maxItems: 1
-> +
-> +if:
-> +  required:
-> +    - wakeup-source
-> +then:
-> +  required:
-> +    - wake-gpios
+---
+Daniel Wagner (8):
+      driver core: bus: add irq_get_affinity callback to bus_type
+      PCI: hookup irq_get_affinity callback
+      virtio: hookup irq_get_affinity callback
+      blk-mq: introduce blk_mq_map_hw_queues
+      scsi: replace blk_mq_pci_map_queues with blk_mq_map_hw_queues
+      nvme: replace blk_mq_pci_map_queues with blk_mq_map_hw_queues
+      virtio: blk/scsi: replace blk_mq_virtio_map_queues with blk_mq_map_hw_queues
+      blk-mq: remove unused queue mapping helpers
 
-This can be just:
+ block/Makefile                            |  2 --
+ block/blk-mq-cpumap.c                     | 37 +++++++++++++++++++++++++
+ block/blk-mq-pci.c                        | 46 -------------------------------
+ block/blk-mq-virtio.c                     | 46 -------------------------------
+ drivers/block/virtio_blk.c                |  4 +--
+ drivers/nvme/host/fc.c                    |  1 -
+ drivers/nvme/host/pci.c                   |  3 +-
+ drivers/pci/pci-driver.c                  | 14 ++++++++++
+ drivers/scsi/fnic/fnic_main.c             |  3 +-
+ drivers/scsi/hisi_sas/hisi_sas.h          |  1 -
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  4 +--
+ drivers/scsi/megaraid/megaraid_sas_base.c |  3 +-
+ drivers/scsi/mpi3mr/mpi3mr.h              |  1 -
+ drivers/scsi/mpi3mr/mpi3mr_os.c           |  2 +-
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  3 +-
+ drivers/scsi/pm8001/pm8001_init.c         |  2 +-
+ drivers/scsi/pm8001/pm8001_sas.h          |  1 -
+ drivers/scsi/qla2xxx/qla_nvme.c           |  3 +-
+ drivers/scsi/qla2xxx/qla_os.c             |  4 +--
+ drivers/scsi/smartpqi/smartpqi_init.c     |  7 ++---
+ drivers/scsi/virtio_scsi.c                |  3 +-
+ drivers/virtio/virtio.c                   | 19 +++++++++++++
+ include/linux/blk-mq-pci.h                | 11 --------
+ include/linux/blk-mq-virtio.h             | 11 --------
+ include/linux/blk-mq.h                    |  2 ++
+ include/linux/device/bus.h                |  3 ++
+ 26 files changed, 92 insertions(+), 144 deletions(-)
+---
+base-commit: c9af98a7e8af266bae73e9d662b8341da1ec5824
+change-id: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
 
-dependentRequired:
-  wakeup-source: [ wake-gpios ]
+Best regards,
+-- 
+Daniel Wagner <wagi@kernel.org>
 
-(dependentRequired supercedes dependencies)
-
-> +
-> +required:
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +  - ranges
-> +  - resets
-> +  - reset-names
-> +  - clocks
-> +  - clock-names
-> +  - phys
-> +  - phy-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/phy/phy.h>
-> +    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
-> +
-> +    pcie@48400000 {
-> +        compatible = "st,stm32mp25-pcie-rc";
-> +        device_type = "pci";
-> +        num-lanes = <1>;
-> +        reg = <0x48400000 0x400000>,
-> +              <0x10000000 0x10000>;
-> +        reg-names = "dbi", "config";
-> +        #interrupt-cells = <1>;
-> +        interrupt-map-mask = <0 0 0 7>;
-> +        interrupt-map = <0 0 0 1 &intc 0 0 GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0 0 0 2 &intc 0 0 GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0 0 0 3 &intc 0 0 GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0 0 0 4 &intc 0 0 GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        ranges = <0x01000000 0 0x10010000 0x10010000 0 0x10000>,
-> +                 <0x02000000 0 0x10020000 0x10020000 0 0x7fe0000>,
-> +                 <0x42000000 0 0x18000000 0x18000000 0 0x8000000>;
-> +        bus-range = <0x00 0xff>;
-
-Don't need this unless it's restricted to less than bus 0-255.
-
-> +        clocks = <&rcc CK_BUS_PCIE>;
-> +        clock-names = "core";
-> +        phys = <&combophy PHY_TYPE_PCIE>;
-> +        phy-names = "pcie-phy";
-> +        resets = <&rcc PCIE_R>;
-> +        reset-names = "core";
-> +        msi-parent = <&v2m0>;
-> +        wakeup-source;
-> +        wake-gpios = <&gpioh 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-> +        access-controllers = <&rifsc 76>;
-> +        power-domains = <&CLUSTER_PD>;
-> +    };
-> -- 
-> 2.34.1
-> 
 
