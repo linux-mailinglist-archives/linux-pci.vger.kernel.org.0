@@ -1,435 +1,226 @@
-Return-Path: <linux-pci+bounces-16938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33CAA9CF93B
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 23:10:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 175859CFA3B
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 23:41:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8D6E280F0D
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 22:10:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81B06B3477F
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 22:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F141E6DCF;
-	Fri, 15 Nov 2024 21:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73824202F8F;
+	Fri, 15 Nov 2024 21:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nq66PEso"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="duRMFPaJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2055.outbound.protection.outlook.com [40.92.19.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC30C1E630C;
-	Fri, 15 Nov 2024 21:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731707078; cv=none; b=WhPqcsS++aLrDTro+EdfiYXH1lMjIzWqSwFS6wfePdVeWJeeqOVD7c/5eeWeiUTJ1pNaSaHdmmDJkcTZ/EdkCplWiMZEh431TlVlEYZjnXl6h15K6r2Z7jh0QnP1DqLGTI83qMr3P/P/AINKwxiyT8rAMmHqcmS6v/hvbbCaFcY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731707078; c=relaxed/simple;
-	bh=0YbseWvtxysaIN0AmJOx3pHhLf/tcPB55zEQ97BIZWs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WAytFOZ5SKsduaa5LuWCvyIGUE8OA4g/qiWU+WNNFYd4Cerx4VlgkDCYVZ73fXPZIMm9e0D8kZ5MlbR+qmfdoxSsg6BmE2oaiqLWo9lpQe6MgE2DCd73W6L9OvT20dJAlV42vGlSjMCnd9tXAegvC0t2KX+371BmAeAhQOh0Jj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nq66PEso; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D5B8C4CECF;
-	Fri, 15 Nov 2024 21:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731707077;
-	bh=0YbseWvtxysaIN0AmJOx3pHhLf/tcPB55zEQ97BIZWs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nq66PEsoypBH0KHeQ9NrFF7ZfmhyErbVFksQ1MDQ8G6Ch8U6FJMXuLhPoW6Gf7Bxv
-	 CwVaLWuHlLDejzn2qFH9+vk3DueU7sPqhLPbjY00dkF7YFsIsmm9E337X/rHqfUH06
-	 /JieTNwyEJn4/g0p2O9ubZKjIPLWbErLvZB/2DjbzitZe4CjqhdWM6tNYl023heox+
-	 DQMxuGgck4Wwvf+gCa1JvYXv9pdCQRin6OyVzorbNU6SCihdHriz/0nkgReGkLieJH
-	 WSBFCsiXwvauy8LzDx07dENy5kAS+jvAnrrOb/49HzS6Z4e9RtpLnCYLh9J3kbXsW6
-	 PODXmYqOshWsA==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Amit Pundir <amit.pundir@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] PCI/pwrctrl: Rename pwrctrl functions and structures
-Date: Fri, 15 Nov 2024 15:44:28 -0600
-Message-Id: <20241115214428.2061153-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241115214428.2061153-1-helgaas@kernel.org>
-References: <20241115214428.2061153-1-helgaas@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD651FF05F;
+	Fri, 15 Nov 2024 21:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731707660; cv=fail; b=XelTVaFodj2zj75lwrXcp3iQqOmB6KP47QZpZniUcRhI2OdYUeE6IXODpffjOsZ3v5WPIvqxdSpjcmXswV281cf//fx2N2UXVBsR6jMdsskmD4eJPE2xsDESnZrqcyfoMPf8n0i6fr5/1Je202KWs04g/Tn/ZCXHMbyJ3ZqYFEk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731707660; c=relaxed/simple;
+	bh=OfAyidTgmnbKRVkYGEaFjQIIgjNw/dUA8oq/F4nKTVU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PXLDLBs/KLbpIZ3xk/U6/dR/c87KaNGAdju4P1yMPmWnOJx7WhEVZ8W773X92DqjhNeNY1/jab9jG3YnHUauxWZKVAhX2zkGWhNaBVHN7JvDhM112rrhb7CCGjZ1znU61ymOQGJKFY5fWhHFHsNwHxr8GhLIQXknSrv1d8ByAys=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=duRMFPaJ; arc=fail smtp.client-ip=40.92.19.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sJ0urfyn4LoGFKpM8nEm0ge4aNMWtQg8Hz2AeVJUhOGWgLXWvcH4cbDSuE31qifp62t4clv4E8YId5c7zIfNoviDKzgC5VVQ8KKPoeTKQOYk0/zag5U8wHhd5eB54nLlk59bjkzkI7gj0FFmfC6bc9zPYVuhzxUw/EuNzNXg2KSv+3s1guh60k/pwiDDzZmNlBxWzb74SY/rPdbnF7txXPWYqg+29T4Nf1tf/iSrO+tKUqFZmJZLuvov/DoRmIMa4UCdcVAj/Cro2fy8S4EA01ZdZN0Eu9jzUfCEQ1NiM0+E2fJpmZnZMYX5s87P3P44WKkih0D27Kj5jNqyoFHvjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OfAyidTgmnbKRVkYGEaFjQIIgjNw/dUA8oq/F4nKTVU=;
+ b=Gha1ESba3xrdhCTPm+Ieil4AYReZpaOrXSKmhNi0KAdCjDCalN6Imo8iyYkF6v3hmoZ3Um8o8stM60jV+MeXGGobtepvblMy/jJlMg9HRcWpXu6wHpe2cHNjIVXo9ZfpwLcHuSkFEVpb9WHxRzS/MAOzn3749h4CnE2yEM7YHYPtLC1NHSA8DM078ppJiuypj/IJIxnhWXKOfz63PYp0+3Q6SAPHtjctGGuEEmPuVN07MbqsOCTfOu5prYxfSOVGxIPcPmZ8seLA5/e2EVUscqEiAx8e0veXJTGeXdjl3w9hmGZPmrLgW8/GXwN8HW281YMyoivz02UyUqv0oxPk2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OfAyidTgmnbKRVkYGEaFjQIIgjNw/dUA8oq/F4nKTVU=;
+ b=duRMFPaJ7DcJuhefavE5+iJpkmzg9ygKeX5C2OxTYemt69QxsCygyeBFci7jI+kdD+2qYpTeR6jU7R+hF2QS0YJB59S11z6Zfd1ZSDAWUMPJuKWfJjpDg8DAg0UHxMUNj2f7fLgmDf0qJw/eOLOJhqKqneg6rV8953Si8cW8K2pfZwZvjoHS10qGknnKuXazpkj2+S96rIn/6zL+jh1K2n4sGSpIg495zuyJT5fbQeAcw/cl5O6fEJxoR5kV0RwydKWRCZeD/AKnzk/TPtoaeedC60U4YA0NE4yqpYH4881yMTkqQvJWaKAkEzc0KjGJbooMPAQsAhB2eTyaMtdp3g==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SN4PR0201MB8839.namprd02.prod.outlook.com (2603:10b6:806:206::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Fri, 15 Nov
+ 2024 21:54:15 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%6]) with mapi id 15.20.8158.017; Fri, 15 Nov 2024
+ 21:54:14 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "virtualization@lists.linux.dev"
+	<virtualization@lists.linux.dev>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
+	"luto@kernel.org" <luto@kernel.org>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "joro@8bytes.org"
+	<joro@8bytes.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
+	<robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"arnd@arndb.de" <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+	"jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+	"muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+	"mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>, "ssengar@linux.microsoft.com"
+	<ssengar@linux.microsoft.com>, "apais@linux.microsoft.com"
+	<apais@linux.microsoft.com>
+Subject: RE: [PATCH v2 4/4] hyperv: Switch from hyperv-tlfs.h to
+ hyperv/hvhdk.h
+Thread-Topic: [PATCH v2 4/4] hyperv: Switch from hyperv-tlfs.h to
+ hyperv/hvhdk.h
+Thread-Index: AQHbMWTxGjBzpDHZ/kaAtNrAPYWf6LKvtKFggAkvZwCAAAobgA==
+Date: Fri, 15 Nov 2024 21:54:14 +0000
+Message-ID:
+ <SN6PR02MB4157DE83D677F2E463774393D4242@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1731018746-25914-5-git-send-email-nunodasneves@linux.microsoft.com>
+ <BN7PR02MB4148513F8ABA50392E11C616D4582@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <e832dd94-04f3-413a-a1a9-870849b4bc53@linux.microsoft.com>
+In-Reply-To: <e832dd94-04f3-413a-a1a9-870849b4bc53@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SN4PR0201MB8839:EE_
+x-ms-office365-filtering-correlation-id: d7ee0d92-ccb2-4ea9-d988-08dd05c00bdc
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|15080799006|8060799006|461199028|19110799003|102099032|3412199025|440099028;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?b2Y1bEdGSUtrNnpxTUE2Qm1OMS9oMXV1WkdjSWlCeXVMU2M1SVVIa0ZNV0pE?=
+ =?utf-8?B?YjRZTzhoTTVPUGp1bGJWVUJrcDBMN3NUcU5UdktZYWVPaWV6UlpTczRzT1Rh?=
+ =?utf-8?B?cjk3djZqZVZLMkwvWC9PVklwdUNKNk9BRUwrblJVOEg1eURmL2FaUlp5djFL?=
+ =?utf-8?B?dHE5WDdzdVU0YnRHRWNpbVl5Q01HNWZxRmthdjlNc3VWanFEV2dkR0VYVmFE?=
+ =?utf-8?B?enl5RUVEaXBYSjJoS2V6TWpvK2VEYmYzVlg4cmtpdDI4N2p4ZERsWitwYnhH?=
+ =?utf-8?B?TUcrUG5NZ2ptbGdyLzd0ekljQkl6VjNGS0t1RGwyOHpHazFSZ0VWTWh5OVlk?=
+ =?utf-8?B?YXVSTVY2bHhLbjl2Z2ZFcUthcXE1aHVwWmlaU3prWWM2ZHREc2tKTzdrV1RY?=
+ =?utf-8?B?NnRJTFlEMlBteTV5MllYZElWRThnQ1NTdHVkTC82ZmxXdTA2aTk3NUFwSmNY?=
+ =?utf-8?B?L2JNdzg0UXRVcEtJZjFsY0NYSXpnS2IvU1NDY2hvNzEza1pIZEp2bWxUUnJu?=
+ =?utf-8?B?dG9qMDNWdVdrRFF4YjVTbkE3UU1OdytzK01yWk84cTdhK2RpR3RFWnhFSUpX?=
+ =?utf-8?B?YjlzUk9TUFBHNklHd3Y4b0tMdHMrVlFqUUczUy9ubWQxcmJic1BmQzZIN3lE?=
+ =?utf-8?B?RE1mSDdWN0FhN3BVSDZFc0dZejVDVWI4djNRR25wZ0RXMlpkSytVTGFRUThs?=
+ =?utf-8?B?QUxrcjlyZGFVL0dJanV3NHlTTXFhMnFxUmlyU2VnS0xYRTg5ODJ5M3VJbzdM?=
+ =?utf-8?B?V2tLdFhiQlZSeGtWcWdLbzU2anRVNmFNNWZMVGRjL1J3bWxtNUlaZWtEZHpN?=
+ =?utf-8?B?bWVXL3pxbFMrTzRCZ05NSjhkaGJqcUU2NmtNQ1kweU1iRzc4cUlJK3Zhc0ww?=
+ =?utf-8?B?R0xOVXd2b1M2eElFd0xaMFkyRmJsaXFrNVRNTHUvY1RaeDh4TjI0VmJrTlNT?=
+ =?utf-8?B?UTMxbmQ0ZHdzR1BaWDY4VlkwcXVYdldkcnUvTGplTHFXRVBhN1h5RXFORndz?=
+ =?utf-8?B?dG1ZZTZJcm41WDVjd25ZZUQrT0lFMkhmZGpDR3d0T3BsL2QvUTlRL3JIdWVu?=
+ =?utf-8?B?MGZrT1dsTTJ2TXgrbVQweTFHY3JHcEJUTzFSMUd5c2JxWXRBaWxJYW1rQjlX?=
+ =?utf-8?B?TTNCOE5jdWgzMHErVHZoeG15L2Rwb253TzROeHZ5bUdMNnk3Qm1Zekx5UVMr?=
+ =?utf-8?B?czFsaUpJVktvbXBHWW9wNk1PUTdBZm1zc0Q2N0drQUN3TXdpZDg3RnJXTnRz?=
+ =?utf-8?B?ZXFjblU2bE84Z3I5YzU4OTBiOUZsVUtYZEdsZVVJaGxMQnRCcGJaTkk1ZlhV?=
+ =?utf-8?Q?G3eNHu8u1cue+vMbP7WT9AJUFG+CDXz5iU?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?dmpxd0JOL1NqOXhNY0lPQlNwVG1QMWcrZUUwZVVFM210YTdGMlh2WG03cEpF?=
+ =?utf-8?B?cmlIMHBIWVdjODQxaEZ4QkpvcGVMc0JvTWJDTWlBZTdGM3E4OXkrWFVhdGdB?=
+ =?utf-8?B?SnF6ZTQzeUZwZU02b2dMb2dieFZ6UlpueW8za3U5SjY2MUlDb29ET1ZpcjM0?=
+ =?utf-8?B?Y1RWTHp3MVZud3dFT3E1cmQ5Y2xKdUpxc3hsbzZPSlRDdmo4NjZOeWN4Z0N0?=
+ =?utf-8?B?ZTlMMlhxcFJFOWFnQWlnOFJEZllkV2V5d0hqRHFCRW5MeGJ1K0hzMlpLRFha?=
+ =?utf-8?B?RTNaQnR1SG5ISW83VEtDVEhBdG9oanhHa1lWbXh2ZEtTVEplbEtlYVNlb2p2?=
+ =?utf-8?B?ZkhYZkdNSlUzVUFML3VOOUJrNUdESExZajlaejhCZFV6WHNGbkM1NHBSbUts?=
+ =?utf-8?B?U0NyWStSa3VlL0xWT3lFZ0xyd2RWalF6eXlLVDVUOTBoUFV0L3BDV05PZHVt?=
+ =?utf-8?B?TE1DVTBmQUtiZXRuM3lBSm9hN0JEMFd4ZW5KZFo5YzVuWUZSeVR5RmM3RnBx?=
+ =?utf-8?B?OWVXajNQQ0E4UmV0QUdpOXE5SFRNcGlCQUowY2F2MjZvRkJpU2tiUnhzWm50?=
+ =?utf-8?B?dFNYekIzYkVrY1hJbXcwYzN3bXNMUmFIcUo2ZHhiYzV6OXpSQnBJckdIUUVQ?=
+ =?utf-8?B?UHBXZmFMV0tueGdWdE5WVzNaY0MzejVUN1gxSzZIRml1M0J5WXQxb2E4bi8x?=
+ =?utf-8?B?RGxpY2FjMXRnNk9XUE81a2U2ZVo0ODFPcnFnUUN0T0YwREJMelBGdElqRUhG?=
+ =?utf-8?B?U1NCSzJLVWFjM29CeW9jMklaWktaZ0xPd0ozYkVQQ3JQL2ROaWFIZ2w5Z0VR?=
+ =?utf-8?B?Q2ROdG9oNjc5NzB0dmZ5blduZjUyeXpiQzNKdithYTVKU3lKQWNhc2NJS2RM?=
+ =?utf-8?B?eWNMa1dHKzVvZnlWMmJrR2Y2MHZ2eE5LVmhnSGVHc0dsYTNab2xwNlRLYzc1?=
+ =?utf-8?B?c2htbmx1QUFpc2UxWVlXNFVhUno0ZnppRzNERjJvbzlERDBKeVU3cXowNU9B?=
+ =?utf-8?B?VHNXZW8zblNSZ2l1NnJKdW83WjlRTEI0YWIxdkZCRVBwQzR4eFJrUGdRazJS?=
+ =?utf-8?B?VVVKUzU1aHFMYXNGZC9JY0drbGZTNU9nNWd6WEFqVFBkM09mdGhsbXI0emRN?=
+ =?utf-8?B?djBya21oWEp4enJ1RFczNmpPc00yOGo1M1BYNHVlR1laemZhNlZVTkZXN3Ft?=
+ =?utf-8?B?SkJ2UnN1Tm14aEgzUGhHcnUvVTdRRmhFbFp0UkRvWnBVN2hKZ2Z5emRjYis2?=
+ =?utf-8?B?Q2lSdDFoTysrencyOEh0bEc4WXhWdm0wNUxvR1lPRUZvTmRhbHhoMjJieDN2?=
+ =?utf-8?B?L2ZQU1krYzNrNXRaRTI5UmswckFYakd5YUcvQXhnQUpGM0hyV1huaktIVlZB?=
+ =?utf-8?B?cDEwZ2pheERqcHk4RldzT2xYZzhTZDlhaVJvUDlyRHplTzN1N1dQeFN0Skl6?=
+ =?utf-8?B?MXlJdUdHc0VnZ3M2Mi9HcFoyWVk2NENyenZxNHdHUkdZL2tUV1lJaFpsK0pl?=
+ =?utf-8?B?aDdHYmxKU25sSU1WbVVEa1VXWGs5WTA1RUhTTkY2MW5VUk05MG5IMExyV0RH?=
+ =?utf-8?B?MERTUlBzSzhLdkRnZG5zUnJqc2NERXc5Y3JlRHpzL25mMVJ3M3NjQ293UUZT?=
+ =?utf-8?Q?CsYUzqXgu45J8CdG2HN4ly+YrAfXqjVJAkuIFCkaU+P8=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7ee0d92-ccb2-4ea9-d988-08dd05c00bdc
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2024 21:54:14.7246
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8839
 
-From: Bjorn Helgaas <bhelgaas@google.com>
-
-Rename pwrctrl functions and structures from "pwrctl" to "pwrctrl" to match
-the similar file renames.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pwrctrl/core.c               | 86 ++++++++++++------------
- drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c | 32 ++++-----
- drivers/pci/remove.c                     |  4 +-
- include/linux/pci-pwrctrl.h              | 22 +++---
- 4 files changed, 72 insertions(+), 72 deletions(-)
-
-diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index 8a0b4219571d..a8c7f593af79 100644
---- a/drivers/pci/pwrctrl/core.c
-+++ b/drivers/pci/pwrctrl/core.c
-@@ -11,13 +11,13 @@
- #include <linux/property.h>
- #include <linux/slab.h>
- 
--static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
--			     void *data)
-+static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
-+			      void *data)
- {
--	struct pci_pwrctl *pwrctl = container_of(nb, struct pci_pwrctl, nb);
-+	struct pci_pwrctrl *pwrctrl = container_of(nb, struct pci_pwrctrl, nb);
- 	struct device *dev = data;
- 
--	if (dev_fwnode(dev) != dev_fwnode(pwrctl->dev))
-+	if (dev_fwnode(dev) != dev_fwnode(pwrctrl->dev))
- 		return NOTIFY_DONE;
- 
- 	switch (action) {
-@@ -34,14 +34,14 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
- 		dev->of_node_reused = true;
- 		break;
- 	case BUS_NOTIFY_BOUND_DRIVER:
--		pwrctl->link = device_link_add(dev, pwrctl->dev,
-+		pwrctrl->link = device_link_add(dev, pwrctrl->dev,
- 					       DL_FLAG_AUTOREMOVE_CONSUMER);
--		if (!pwrctl->link)
--			dev_err(pwrctl->dev, "Failed to add device link\n");
-+		if (!pwrctrl->link)
-+			dev_err(pwrctrl->dev, "Failed to add device link\n");
- 		break;
- 	case BUS_NOTIFY_UNBOUND_DRIVER:
--		if (pwrctl->link)
--			device_link_remove(dev, pwrctl->dev);
-+		if (pwrctrl->link)
-+			device_link_remove(dev, pwrctrl->dev);
- 		break;
- 	}
- 
-@@ -50,31 +50,31 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
- 
- static void rescan_work_func(struct work_struct *work)
- {
--	struct pci_pwrctl *pwrctl = container_of(work, struct pci_pwrctl, work);
-+	struct pci_pwrctrl *pwrctrl = container_of(work, struct pci_pwrctrl, work);
- 
- 	pci_lock_rescan_remove();
--	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
-+	pci_rescan_bus(to_pci_dev(pwrctrl->dev->parent)->bus);
- 	pci_unlock_rescan_remove();
- }
- 
- /**
-- * pci_pwrctl_init() - Initialize the PCI power control context struct
-+ * pci_pwrctrl_init() - Initialize the PCI power control context struct
-  *
-- * @pwrctl: PCI power control data
-+ * @pwrctrl: PCI power control data
-  * @dev: Parent device
-  */
--void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev)
-+void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
- {
--	pwrctl->dev = dev;
--	INIT_WORK(&pwrctl->work, rescan_work_func);
-+	pwrctrl->dev = dev;
-+	INIT_WORK(&pwrctrl->work, rescan_work_func);
- }
--EXPORT_SYMBOL_GPL(pci_pwrctl_init);
-+EXPORT_SYMBOL_GPL(pci_pwrctrl_init);
- 
- /**
-- * pci_pwrctl_device_set_ready() - Notify the pwrctl subsystem that the PCI
-+ * pci_pwrctrl_device_set_ready() - Notify the pwrctrl subsystem that the PCI
-  * device is powered-up and ready to be detected.
-  *
-- * @pwrctl: PCI power control data.
-+ * @pwrctrl: PCI power control data.
-  *
-  * Returns:
-  * 0 on success, negative error number on error.
-@@ -84,31 +84,31 @@ EXPORT_SYMBOL_GPL(pci_pwrctl_init);
-  * that the bus rescan was successfully started. The device will get bound to
-  * its PCI driver asynchronously.
-  */
--int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
-+int pci_pwrctrl_device_set_ready(struct pci_pwrctrl *pwrctrl)
- {
- 	int ret;
- 
--	if (!pwrctl->dev)
-+	if (!pwrctrl->dev)
- 		return -ENODEV;
- 
--	pwrctl->nb.notifier_call = pci_pwrctl_notify;
--	ret = bus_register_notifier(&pci_bus_type, &pwrctl->nb);
-+	pwrctrl->nb.notifier_call = pci_pwrctrl_notify;
-+	ret = bus_register_notifier(&pci_bus_type, &pwrctrl->nb);
- 	if (ret)
- 		return ret;
- 
--	schedule_work(&pwrctl->work);
-+	schedule_work(&pwrctrl->work);
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(pci_pwrctl_device_set_ready);
-+EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
- 
- /**
-- * pci_pwrctl_device_unset_ready() - Notify the pwrctl subsystem that the PCI
-+ * pci_pwrctrl_device_unset_ready() - Notify the pwrctrl subsystem that the PCI
-  * device is about to be powered-down.
-  *
-- * @pwrctl: PCI power control data.
-+ * @pwrctrl: PCI power control data.
-  */
--void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl)
-+void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
- {
- 	/*
- 	 * We don't have to delete the link here. Typically, this function
-@@ -116,41 +116,41 @@ void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl)
- 	 * it is being detached then the child PCI device must have already
- 	 * been unbound too or the device core wouldn't let us unbind.
- 	 */
--	bus_unregister_notifier(&pci_bus_type, &pwrctl->nb);
-+	bus_unregister_notifier(&pci_bus_type, &pwrctrl->nb);
- }
--EXPORT_SYMBOL_GPL(pci_pwrctl_device_unset_ready);
-+EXPORT_SYMBOL_GPL(pci_pwrctrl_device_unset_ready);
- 
--static void devm_pci_pwrctl_device_unset_ready(void *data)
-+static void devm_pci_pwrctrl_device_unset_ready(void *data)
- {
--	struct pci_pwrctl *pwrctl = data;
-+	struct pci_pwrctrl *pwrctrl = data;
- 
--	pci_pwrctl_device_unset_ready(pwrctl);
-+	pci_pwrctrl_device_unset_ready(pwrctrl);
- }
- 
- /**
-- * devm_pci_pwrctl_device_set_ready - Managed variant of
-- * pci_pwrctl_device_set_ready().
-+ * devm_pci_pwrctrl_device_set_ready - Managed variant of
-+ * pci_pwrctrl_device_set_ready().
-  *
-- * @dev: Device managing this pwrctl provider.
-- * @pwrctl: PCI power control data.
-+ * @dev: Device managing this pwrctrl provider.
-+ * @pwrctrl: PCI power control data.
-  *
-  * Returns:
-  * 0 on success, negative error number on error.
-  */
--int devm_pci_pwrctl_device_set_ready(struct device *dev,
--				     struct pci_pwrctl *pwrctl)
-+int devm_pci_pwrctrl_device_set_ready(struct device *dev,
-+				      struct pci_pwrctrl *pwrctrl)
- {
- 	int ret;
- 
--	ret = pci_pwrctl_device_set_ready(pwrctl);
-+	ret = pci_pwrctrl_device_set_ready(pwrctrl);
- 	if (ret)
- 		return ret;
- 
- 	return devm_add_action_or_reset(dev,
--					devm_pci_pwrctl_device_unset_ready,
--					pwrctl);
-+					devm_pci_pwrctrl_device_unset_ready,
-+					pwrctrl);
- }
--EXPORT_SYMBOL_GPL(devm_pci_pwrctl_device_set_ready);
-+EXPORT_SYMBOL_GPL(devm_pci_pwrctrl_device_set_ready);
- 
- MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
- MODULE_DESCRIPTION("PCI Device Power Control core driver");
-diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-index cc19ad61dd6e..e9f89866b7c2 100644
---- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-+++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-@@ -13,21 +13,21 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- 
--struct pci_pwrctl_pwrseq_data {
--	struct pci_pwrctl ctx;
-+struct pci_pwrctrl_pwrseq_data {
-+	struct pci_pwrctrl ctx;
- 	struct pwrseq_desc *pwrseq;
- };
- 
--static void devm_pci_pwrctl_pwrseq_power_off(void *data)
-+static void devm_pci_pwrctrl_pwrseq_power_off(void *data)
- {
- 	struct pwrseq_desc *pwrseq = data;
- 
- 	pwrseq_power_off(pwrseq);
- }
- 
--static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
-+static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
- {
--	struct pci_pwrctl_pwrseq_data *data;
-+	struct pci_pwrctrl_pwrseq_data *data;
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
-@@ -45,22 +45,22 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to power-on the device\n");
- 
--	ret = devm_add_action_or_reset(dev, devm_pci_pwrctl_pwrseq_power_off,
-+	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_pwrseq_power_off,
- 				       data->pwrseq);
- 	if (ret)
- 		return ret;
- 
--	pci_pwrctl_init(&data->ctx, dev);
-+	pci_pwrctrl_init(&data->ctx, dev);
- 
--	ret = devm_pci_pwrctl_device_set_ready(dev, &data->ctx);
-+	ret = devm_pci_pwrctrl_device_set_ready(dev, &data->ctx);
- 	if (ret)
- 		return dev_err_probe(dev, ret,
--				     "Failed to register the pwrctl wrapper\n");
-+				     "Failed to register the pwrctrl wrapper\n");
- 
- 	return 0;
- }
- 
--static const struct of_device_id pci_pwrctl_pwrseq_of_match[] = {
-+static const struct of_device_id pci_pwrctrl_pwrseq_of_match[] = {
- 	{
- 		/* ATH11K in QCA6390 package. */
- 		.compatible = "pci17cb,1101",
-@@ -78,16 +78,16 @@ static const struct of_device_id pci_pwrctl_pwrseq_of_match[] = {
- 	},
- 	{ }
- };
--MODULE_DEVICE_TABLE(of, pci_pwrctl_pwrseq_of_match);
-+MODULE_DEVICE_TABLE(of, pci_pwrctrl_pwrseq_of_match);
- 
--static struct platform_driver pci_pwrctl_pwrseq_driver = {
-+static struct platform_driver pci_pwrctrl_pwrseq_driver = {
- 	.driver = {
--		.name = "pci-pwrctl-pwrseq",
--		.of_match_table = pci_pwrctl_pwrseq_of_match,
-+		.name = "pci-pwrctrl-pwrseq",
-+		.of_match_table = pci_pwrctrl_pwrseq_of_match,
- 	},
--	.probe = pci_pwrctl_pwrseq_probe,
-+	.probe = pci_pwrctrl_pwrseq_probe,
- };
--module_platform_driver(pci_pwrctl_pwrseq_driver);
-+module_platform_driver(pci_pwrctrl_pwrseq_driver);
- 
- MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
- MODULE_DESCRIPTION("Generic PCI Power Control module for power sequenced devices");
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index e4ce1145aa3e..184ff85d8d4e 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -17,7 +17,7 @@ static void pci_free_resources(struct pci_dev *dev)
- 	}
- }
- 
--static int pci_pwrctl_unregister(struct device *dev, void *data)
-+static int pci_pwrctrl_unregister(struct device *dev, void *data)
- {
- 	struct device_node *pci_node = data, *plat_node = dev_of_node(dev);
- 
-@@ -35,7 +35,7 @@ static void pci_stop_dev(struct pci_dev *dev)
- 
- 	if (pci_dev_is_added(dev)) {
- 		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
--				      pci_pwrctl_unregister);
-+				      pci_pwrctrl_unregister);
- 		device_release_driver(&dev->dev);
- 		pci_proc_detach_device(dev);
- 		pci_remove_sysfs_dev_files(dev);
-diff --git a/include/linux/pci-pwrctrl.h b/include/linux/pci-pwrctrl.h
-index 0d23dddf59ec..7d439b0675e9 100644
---- a/include/linux/pci-pwrctrl.h
-+++ b/include/linux/pci-pwrctrl.h
-@@ -3,8 +3,8 @@
-  * Copyright (C) 2024 Linaro Ltd.
-  */
- 
--#ifndef __PCI_PWRCTL_H__
--#define __PCI_PWRCTL_H__
-+#ifndef __PCI_PWRCTRL_H__
-+#define __PCI_PWRCTRL_H__
- 
- #include <linux/notifier.h>
- #include <linux/workqueue.h>
-@@ -29,14 +29,14 @@ struct device_link;
-  */
- 
- /**
-- * struct pci_pwrctl - PCI device power control context.
-+ * struct pci_pwrctrl - PCI device power control context.
-  * @dev: Address of the power controlling device.
-  *
-  * An object of this type must be allocated by the PCI power control device and
-- * passed to the pwrctl subsystem to trigger a bus rescan and setup a device
-+ * passed to the pwrctrl subsystem to trigger a bus rescan and setup a device
-  * link with the device once it's up.
-  */
--struct pci_pwrctl {
-+struct pci_pwrctrl {
- 	struct device *dev;
- 
- 	/* Private: don't use. */
-@@ -45,10 +45,10 @@ struct pci_pwrctl {
- 	struct work_struct work;
- };
- 
--void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev);
--int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl);
--void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl);
--int devm_pci_pwrctl_device_set_ready(struct device *dev,
--				     struct pci_pwrctl *pwrctl);
-+void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev);
-+int pci_pwrctrl_device_set_ready(struct pci_pwrctrl *pwrctrl);
-+void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl);
-+int devm_pci_pwrctrl_device_set_ready(struct device *dev,
-+				     struct pci_pwrctrl *pwrctrl);
- 
--#endif /* __PCI_PWRCTL_H__ */
-+#endif /* __PCI_PWRCTRL_H__ */
--- 
-2.34.1
-
+RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
+ZW50OiBGcmlkYXksIE5vdmVtYmVyIDE1LCAyMDI0IDE6MTUgUE0NCj4gDQo+IE9uIDExLzEwLzIw
+MjQgODoxMyBQTSwgTWljaGFlbCBLZWxsZXkgd3JvdGU6DQo+ID4gRnJvbTogTnVubyBEYXMgTmV2
+ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBTZW50OiBUaHVyc2RheSwgTm92
+ZW1iZXIgNywgMjAyNCAyOjMyIFBNDQo+ID4+DQo+ID4+IFN3aXRjaCB0byB1c2luZyBodmhkay5o
+IGV2ZXJ5d2hlcmUgaW4gdGhlIGtlcm5lbC4gVGhpcyBoZWFkZXIgaW5jbHVkZXMNCj4gPj4gYWxs
+IHRoZSBuZXcgSHlwZXItViBoZWFkZXJzIGluIGluY2x1ZGUvaHlwZXJ2LCB3aGljaCBmb3JtIGEg
+c3VwZXJzZXQgb2YNCj4gPj4gdGhlIGRlZmluaXRpb25zIGZvdW5kIGluIGh5cGVydi10bGZzLmgu
+DQo+ID4+DQo+ID4+IFRoaXMgbWFrZXMgaXQgZWFzaWVyIHRvIGFkZCBuZXcgSHlwZXItViBpbnRl
+cmZhY2VzIHdpdGhvdXQgYmVpbmcNCj4gPj4gcmVzdHJpY3RlZCB0byB0aG9zZSBpbiB0aGUgVExG
+UyBkb2MgKHJlZmxlY3RlZCBpbiBoeXBlcnYtdGxmcy5oKS4NCj4gPj4NCj4gPj4gVG8gYmUgbW9y
+ZSBjb25zaXN0ZW50IHdpdGggdGhlIG9yaWdpbmFsIEh5cGVyLVYgY29kZSwgdGhlIG5hbWVzIG9m
+IHNvbWUNCj4gPj4gZGVmaW5pdGlvbnMgYXJlIGNoYW5nZWQgc2xpZ2h0bHkuIFVwZGF0ZSB0aG9z
+ZSB3aGVyZSBuZWVkZWQuDQo+ID4+DQo+ID4+IGh5cGVydi10bGZzLmggaXMgbm8gbG9uZ2VyIGlu
+Y2x1ZGVkIGFueXdoZXJlIC0gaHZoZGsuaCBjYW4gc2VydmUNCj4gPj4gdGhlIHNhbWUgcm9sZSwg
+YnV0IHdpdGggYW4gZWFzaWVyIHBhdGggZm9yIGFkZGluZyBuZXcgZGVmaW5pdGlvbnMuDQo+ID4N
+Cj4gPiBJcyBoeXBlcnYtdGxmcy5oIGFuZCBmcmllbmRzIGJlaW5nIGRlbGV0ZWQ/IElmIG5vdCwg
+dGhlIHJpc2sgaXMgdGhhdA0KPiA+IHNvbWVvbmUgYWRkcyBhIG5ldyAjaW5jbHVkZSBvZiBpdCB3
+aXRob3V0IHJlYWxpemluZyB0aGF0IGl0IGhhcyBiZWVuDQo+ID4gc3VwZXJzZWRlZCBieSBodmhk
+ay5oLg0KPiA+DQo+IA0KPiBJIHdhcyBoZXNpdGFudCB0byBkZWxldGUgaXQgYmVjYXVzZSBJIHRo
+b3VnaHQgc29tZW9uZSBtYXkgc3RpbGwgaGF2ZQ0KPiBhIHVzZSBmb3IgYSBoZWFkZXIgZmlsZSB0
+aGF0IChtb3N0bHkpIHJlZmxlY3RzIHRoZSBUTEZTIGRvY3VtZW50IGFuZA0KPiBub3RoaW5nIG1v
+cmUuDQo+IA0KPiBCdXQgaW4gcHJhY3RpY2FsIHRlcm1zLCB0aGlzIHBhdGNoc2V0IG1ha2VzIGl0
+IG11Y2ggbW9yZSBkaWZmaWN1bHQgdG8NCj4gdXNlIGJlY2F1c2UgYWxsIHRoZSBoZWxwZXIgY29k
+ZSAoaS5lLiBtc2h5cGVydi5oKSBub3cgdXNlcyBodmhkay5oLg0KPiBTbywgbWF5YmUgdGhlcmUg
+aXMgbm8gcG9pbnQga2VlcGluZyBpdC4NCj4gDQo+ID4gTm90ZSBhbHNvIHRoYXQgdGhpcyBwYXRj
+aCBkb2VzIG5vdCBhcHBseSBjbGVhbmx5IHRvIDYuMTIgcmMncywgb3IgdG8NCj4gPiBjdXJyZW50
+IGxpbnV4LW5leHQgdHJlZXMuIFRoZXJlJ3MgYW4gdW5yZWxhdGVkICNpbmNsdWRlIGFkZGVkIHRv
+DQo+ID4gYXJjaC94ODYvaW5jbHVkZS9hc20va3ZtX2hvc3QuaCB0aGF0IGNhdXNlcyBhIG1lcmdl
+IGZhaWx1cmUNCj4gPiBpbiB0aGF0IGZpbGUuDQo+ID4NCj4gDQo+IEkndmUgYmVlbiBkZXZlbG9w
+aW5nIHRoaXMgc2VyaWVzIGJhc2VkIG9uIGh5cGVydi1uZXh0LiBTaG91bGQgSSBiZQ0KPiBiYXNp
+bmcgaXQgb24gbGludXgtbmV4dD8NCj4gDQoNClllcywgYmFzZSBpdCBvbiBsaW51eC1uZXh0LiBo
+eXBlcnYtbmV4dCB3YXMgbGFzdCBzeW5jJ2VkIHdpdGgNCnVwc3RyZWFtIGF0IDYuMTEtcmM0IGJh
+Y2sgaW4gbWlkLUF1Z3VzdCwgc28gaXQncyBwcmV0dHkgZmFyDQpvdXQtb2YtZGF0ZS4gV2VpIHdp
+bGwgbmVlZCB0byBzeW5jIGl0IGJlZm9yZSBwaWNraW5nIHVwIGFueQ0KbmV3IHBhdGNoZXMuDQoN
+Ck1pY2hhZWwNCg==
 
