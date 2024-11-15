@@ -1,104 +1,104 @@
-Return-Path: <linux-pci+bounces-16836-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16837-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACD959CDAD4
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:47:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFDA69CDAD7
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:48:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30412B25256
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:47:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F8291F21464
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 08:48:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D9718B494;
-	Fri, 15 Nov 2024 08:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30521885BF;
+	Fri, 15 Nov 2024 08:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKimHKMv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D4418BBB0;
-	Fri, 15 Nov 2024 08:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D04F174EE4
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 08:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731660455; cv=none; b=eSdcZ6GkBnZ1IGUeVohx0+PpjgRQ8N6lytWnVz4gJPbC9InGElU6bz8kP6jf8BsNOsE/aijhmmUDlCiujwxzuiV9zcFJqGYUFnQskpHf+bsBp7C7AHe+EUSlswTvVRrGg13yKpoQU2RYLThtD/7U60FEF0e7XZMVre64MEkNI4M=
+	t=1731660488; cv=none; b=Tpgoo7M8DrreS1OGPwuKMtDlk/XIavNMyrdVt3wysg9Pav3jWLh30VNY/7YJlmrFK0xDiREbWntyKRcFU0xBMnpYexTVBxwzkgoyIEbn3JE4bK6SFxUgrY8WBERC/Jo2TPTu7Ws3ZeP1lELD0IoAvlwkWUYQC8yWeEVAMT1cjgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731660455; c=relaxed/simple;
-	bh=/DsROywAvHAkFdPe88DuYC+yrn7Ej88+9wfbHxvbTrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ze5YE3qbTH73XebPqVNxOEeYiPRIdYSwFITLseekTa2ySpw4p+wgHDZJQEtAw6hsZASkicJXsKxYjqKvBv6aIx1J69kZi2EdANOEq96wfvaAWQAZbCMUoHrdwLmeaN//u7cgyON9OOr3Q4A1Jp1epeLXmsXPBJ3tQBeruWJizaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 45E122800C7FC;
-	Fri, 15 Nov 2024 09:47:28 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 2E7BC3D0537; Fri, 15 Nov 2024 09:47:28 +0100 (CET)
-Date: Fri, 15 Nov 2024 09:47:28 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v3 03/15] cxl/pci: Introduce PCIe helper functions
- pcie_is_cxl() and pcie_is_cxl_port()
-Message-ID: <ZzcKoOXTVVj3bTnE@wunner.de>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
- <20241113215429.3177981-4-terry.bowman@amd.com>
- <ZzYbHZvU_RFXZuk0@wunner.de>
- <ffd740e5-235a-4b74-8bf9-91331b619a7f@amd.com>
- <ZzYq2GIUoD2kkUyK@wunner.de>
- <e686016d-2670-4431-ad9d-3c189a48b1e4@amd.com>
+	s=arc-20240116; t=1731660488; c=relaxed/simple;
+	bh=VP2MmCBnKiNgO1dlC1zhl6TzleAseMVYdB23HXBzFho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yckf0GeVandVgFUigKG7veJUsIGI5pFqRJmQ/2JmdZcPJq8+PU3hGHpNqseynKu3yByrdrylb41oJKue0PF2XW86U9Ss9qvabeYXfNQ1SKJsGpbcHHyYBoHtRWLfv4LWhrEBq+IhSFvMclcT2kgeOBeg7bqh+VNA/CC2wqgz4Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKimHKMv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C06C4CECF;
+	Fri, 15 Nov 2024 08:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731660488;
+	bh=VP2MmCBnKiNgO1dlC1zhl6TzleAseMVYdB23HXBzFho=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XKimHKMvNHjtWxlcdJYk3IbMKRCWxbLsF9E26t+la9BkdZRnMWmOU5bE2fLGB1Bis
+	 R91e+muxM3NkrCegYjHjpZ86i7edO0lSWryvcbK4C1HAwcZ5JP+EnqepjUzGDtwCEJ
+	 GgtTYYgLr8EmOg3hqM+1H0RFYMY4I12paUdN8UO86OY+s1XmNT5qjKFHpXAOanQnC9
+	 3g2vWWI3AJBi0efdOgXmj9ZT1wzRSCJhiWi6FeYwIaDVR/dUTFShMIMPmOv06+uAgd
+	 D2d6HOKYS8WeazjicgGnne9O+iSD4B+eSh/AMWA1Yx46xcJRDLStTXZgOt6+4dSjm3
+	 lwblsZtzeXyrw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@axis.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2 0/3] PCI endpoint additional pci_epc_set_bar() checks
+Date: Fri, 15 Nov 2024 09:47:49 +0100
+Message-ID: <20241115084749.1915915-5-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e686016d-2670-4431-ad9d-3c189a48b1e4@amd.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1154; i=cassel@kernel.org; h=from:subject; bh=VP2MmCBnKiNgO1dlC1zhl6TzleAseMVYdB23HXBzFho=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLNubZazI5UD8isc5zFt/1opXJ4ELOE0+p3oS9+Bu7/U /7Dg6uio5SFQYyLQVZMkcX3h8v+4m73KccV79jAzGFlAhnCwMUpABN5/J/hn3HXnvZNB5Y03ylW MTl4pva5YVYsy6bdZx6em3VPXvOCxgOG/yk3k/Z+6tq0luWcqPYK6/tLjZ7VrdMwMChTizXf8eX cAyYA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 14, 2024 at 11:07:26AM -0600, Bowman, Terry wrote:
-> > Can you have a CXL port that is not a CXL device?
-> >
-> > If not, it would seem to me that checking for Flexbus DVSEC presence
-> > *is* redundant.  Or do you anticipate broken devices which lack the
-> > Flexbus DVSEC and that you explicitly want to exclude?
-> 
-> No, the CXL port device is always a CXL device per spec.
-> 
-> This was added to short-circuit the function by returning immediately
-> if the device is _not_ a CXL device. Otherwise for PCIe Port devices,
-> the CXL Port DVSEC will be searched. I was trying to avoid the unnecessary
-> CXL port DVSEC search unless the other criteria are met.
-> And I expect most cases will not be a CXL device.
-> 
-> I will remove the "if (!pcie_is_cxl(dev))" block as you suggested.
+Hello all,
 
-Ah, this is meant as a speed-up.  Actually that makes sense,
-so feel free to keep it.
+This series adds some extra checks to ensure that it is not possible to
+program the iATU with an address which we did not intend to use.
 
-If you do remove it, I think you'll have to move the cxl_port_dvsec()
-invocation up in the function, in front of the pci_pcie_type() checks.
-The latter require that one first checks that the device is PCIe.
-That's done implicitly by cxl_port_dvsec() because it returns 0 in
-the non-PCIe case.  (Due to the "if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)"
-check in pci_find_next_ext_capability().)
+If these checks were in place when testing some of the earlier revisions
+of Frank's doorbell patches (which did not handle fixed BARs properly),
+we would gotten an error, rather than silently using an address which we
+did not intend to use.
 
-Another idea would be to put a "if (!pcie_is_cxl(dev)) return 0;" speed-up
-in cxl_port_dvsec() so that the other caller benefits from it as well.
+Having these checks in place will hopefully avoid similar debugging in the
+future.
 
-Thanks,
 
-Lukas
+Kind regards,
+Niklas
+
+Niklas Cassel (3):
+  PCI: artpec6: Implement dw_pcie_ep operation get_features
+  PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()
+  PCI: dwc: ep: Add 'address' alignment to 'size' check in
+    dw_pcie_prog_ep_inbound_atu()
+
+ drivers/pci/controller/dwc/pcie-artpec6.c       | 13 +++++++++++++
+ drivers/pci/controller/dwc/pcie-designware-ep.c |  8 +++++---
+ drivers/pci/controller/dwc/pcie-designware.c    |  5 +++--
+ drivers/pci/controller/dwc/pcie-designware.h    |  2 +-
+ drivers/pci/endpoint/pci-epc-core.c             | 11 +++++++++--
+ 5 files changed, 31 insertions(+), 8 deletions(-)
+
+-- 
+2.47.0
+
 
