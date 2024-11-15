@@ -1,288 +1,248 @@
-Return-Path: <linux-pci+bounces-16886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E4E79CE1A4
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 15:47:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 560009CE23C
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 15:50:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 259AF1F22ADB
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 14:47:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8D252824F6
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 14:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB75D1CDA2D;
-	Fri, 15 Nov 2024 14:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388561CF5C0;
+	Fri, 15 Nov 2024 14:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WCpdrqQW"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="YHi+gvWR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2014.outbound.protection.outlook.com [40.92.90.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE411CF5C0
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 14:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731682051; cv=none; b=LzqZu1WSvEgyVFsgGVWpStTWmG0HEmvy1Ct3UtYCTM50kIVGa040iyufkkhXCwCc88qh+7jv5IzEfd8NZ5+5WaGqt6fm5WSiPPRznd0Yoe9kZwbiFu9EnP6qDtNyYbbB/iCATanhzc4NXMedJw8UMEsy26EkhKs+/aAumCcHAYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731682051; c=relaxed/simple;
-	bh=RVzYRlazkAo7JLebKniY87msHKi2XN8n8ngTFYKi7pc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHr+fQOfwOm5DKufaqxknVQ3gC73neAe4+eNHeoPXsr3drW3kvFoelUBjMXDExXChgCJ6fiIMVzXulSNc1K9G6ar2rsG2nXjtvTPIf/oMtM4+hTFlqaRRIJTKWV/4eTspmL2gj19i1aa1muy9rN39KMPhEaTr1KGPbPupbPpaks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WCpdrqQW; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-211c1c144f5so15405025ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 06:47:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731682049; x=1732286849; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=28sARET1Qvfwc/kfA8YISTif9oxfXiX08KxWO0Zur2Q=;
-        b=WCpdrqQWZ23xSIAl+OrslAEHMA+oIILATYlpuVdIZya+cKybxbfzQrmIQ0t/cORiVe
-         5WZooVy+5hXfIJZsssuZxIaNiK03wZUesbdNvHTUkDvNi7fpU6EiM7JpVLuQPnJGaIuT
-         LHDwLPlMByiq0MkrDBcLxp6t9oIcL94YDmjkRy8IYFgwdYmqVZapFKbtKyj53Wot8xuK
-         5bfx6oPYuSz971/hco73BL3hubrLX2mt47Drw0ceMiPBkJwDSIlLUm05y9tmFOstgqX/
-         RLe4T6zeO33d/94p2G1hPPqXuYjpjjN/1jOtMLKjI19fCgR/OwIE/k5USi3kjT1ipHCI
-         RVuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731682049; x=1732286849;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=28sARET1Qvfwc/kfA8YISTif9oxfXiX08KxWO0Zur2Q=;
-        b=oMZn+ol0JF+j5HjyJOnbUqZDWPZ4n2jLvahlTR5GpKxHiJL3DJN/cjzkOSqRuJht0T
-         BvwWE6yumlV5f19iMx4kHU9Zkl27hcWpftXv4vMPTTVVoLocq/Qn4lxeSjhYqOaW+YCE
-         GN9pCzaLAXrrg+fyhWBgkq+66HE0pCslXzrvbBetRuJ06dgDWvAb1TCv4k3bTJpUktyl
-         FC8n8Kq+T+h14lyU5QTV45vzLEW+CA535+sjfF28BNjz40L6CSHc1tu7SL94z98PP/u9
-         34FKVZk1Dkue/w7Qex6ZaKRMbFuChozuqpAMytmX0RDtagKNyegv2Ba9eLt0ECOEuCvI
-         GF0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVpczZ7n0Oi91TZOP7eIudWzJSlYRSWPL+0z7+tiiXLoOSptVmKYMe1LGCyC4nf5ln6KYgjVBlIgGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLAO7GTsjbpXROr1+v+u9o0l1J1l7HbqyJLz4pAuoP8I9f7cJL
-	qUXwVWNYDkLna6LMgkjyI2UDSzRK/05ni+vzKjx8sKH8ZEloOf7XC67UsTbUmwWmmbmwgUnftRg
-	=
-X-Google-Smtp-Source: AGHT+IGRUIkevz/pH5H9stH+NwULAos/5+zuVi7FkeklDpdipWBtq5/BITL7lD88Phwhg2XyNYyRxQ==
-X-Received: by 2002:a17:902:ea04:b0:20a:fd4e:fef6 with SMTP id d9443c01a7336-211c0f1edf4mr113011435ad.8.1731682049251;
-        Fri, 15 Nov 2024 06:47:29 -0800 (PST)
-Received: from thinkpad ([117.193.215.93])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0f54a2csm12920475ad.256.2024.11.15.06.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 06:47:28 -0800 (PST)
-Date: Fri, 15 Nov 2024 20:17:20 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Peng Fan <peng.fan@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	"open list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-pci@vger.kernel.org>,
-	"moderated list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: check bridge->bus in pci_host_common_remove
-Message-ID: <20241115144720.ovsyq2ani47norby@thinkpad>
-References: <20241028084644.3778081-1-peng.fan@oss.nxp.com>
- <20241115062005.6ifvr6ens2qnrrrf@thinkpad>
- <PAXPR04MB8459D1507CA69498D8C38E0488242@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601411BBBE4;
+	Fri, 15 Nov 2024 14:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731682213; cv=fail; b=FkNLOmWPYnXQcLGA+k5ehLsJFR3WWc2A7Zu+Vy9IaW6sVQk9bFYG4DqCL2RouLIWAN89VjxY2My2Ah8p8cOpMP53fdTaTj7B3XSDf1/Eqo7NodfzNgjbTBK5d30lTBzPzAjq0AudUUctF+c8Gck9X4SASlCL2/dxfCXTvcvrya8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731682213; c=relaxed/simple;
+	bh=b56aKiBSIlMazrAK24dwQ7edzVG54ADAqXK9/BErIAc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=i0ptWp/0X0Cz1ItowHC11ObkSRfyaJd7eBYOE3mDv064BknoDwOogY8s/Z3SOLPkCxib2tlpA4oCysp6VWvJkOcDS5cCf3JsqaKfFgzJrsU/2VvE9dSp3flg+LDEg46A0RHcSIhZoWer/vB/CJcX/lQuXIM63oCxTaZtJmzPWDs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=YHi+gvWR; arc=fail smtp.client-ip=40.92.90.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zNtrWwmF8jB6ScX3NSJ2k9pLWnzP16AMIzTwpipeZzwfRujkt+lAf24HPIyjihZ9gjL7oUaNDle72febhTStf1a8hOHBVXjhiN+maiX9DmOZNONwSS1Z7Cw6KmO+NpeIPqvVvdoRqXAfI/uk5KuFxBQp10dLK3UaqOoXOIX90YtftGEXS3jVmuNfmGNnUx/hUFOAYbcEEcqUiVbdU/Y2vDnX32sb/agZDtHsjmTXrTgvoPcPzWfST4hQprchifU59cQKq7gZPtZzf5+0UDgxyFU64o861+cnB9s542TFvxeBacAi7+o9+yy8Ke3bpkWoWDiUgi2heKqte84b0vqKWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jJYJdWQQoISp42a3Q/a4PNkstwYsb1eKjDJHdXnl/CM=;
+ b=zB9If+zEtwoRp7iNBP3msGN+kdRo+wrAo3IB/0CZwDAMCugKxNF8aBxny283575vYscTYKj3in006UeFE5zZWQsPs8lnPRAHdCKEbPIa11Hjo4HjAI3+Qnj4C33FK3MO9HobaxRMtIpVnDKH1GrYbzG7YaLXvPDxyqFDezta7qr2/oS5ZAd57sydFii4/+ws1FYkFeiO4RaX/N9gCaQQk230PcQWLOuXL9Dl0ELenACFl5snDTLB7Dzlnh82iPcAkCptbyN9aFHBagEwt1Yp4+lu7xgOalMLz8wjY47W59yw1lUm9HugYfXaYHk0GiTK81qgVjp5zz6bjSQVp1K/yQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jJYJdWQQoISp42a3Q/a4PNkstwYsb1eKjDJHdXnl/CM=;
+ b=YHi+gvWRiXj1gJyuwPrhx4mjYUnXJB4Z6D28wMAjPKOnYKsmcZfBajJpvsAVtW7RYQ5l/l79LkghI+Ud9WxgjNE6LPlVbdJnDsZf6y6JM3+xWT40gdE41ojh7hzXJtazFtcsfuSsPkhcvOQhrFAYpESBJx0goy6AgePITNi0Y1HFibfT73XcptPyz3pIH8OInOenCt5WogAeAoDfPAUhpVVRUAFA+z7fz78lTbJcOSKVXPCyprL1zXh5t82YWNMg0yRo2BxU0GFvCHX/zB1F55pVS/cFTU6qsZkkDLL+v+eI4K0H8CZxVK5yKFGGWidlnfpXCrm+Ac4BuKLPqjJQkQ==
+Received: from VI1PR10MB2016.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:36::13)
+ by VI1PR10MB8064.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:1d2::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Fri, 15 Nov
+ 2024 14:50:07 +0000
+Received: from VI1PR10MB2016.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8597:8c28:89af:4616]) by VI1PR10MB2016.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8597:8c28:89af:4616%7]) with mapi id 15.20.8158.013; Fri, 15 Nov 2024
+ 14:50:07 +0000
+Message-ID:
+ <VI1PR10MB201607EB59D6C0884A57995CCE242@VI1PR10MB2016.EURPRD10.PROD.OUTLOOK.COM>
+Date: Fri, 15 Nov 2024 22:49:59 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/15] PCI/AER: Add CXL PCIe port correctable error
+ support in AER service driver
+To: "Bowman, Terry" <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com
+References: <20241113215429.3177981-1-terry.bowman@amd.com>
+ <20241113215429.3177981-6-terry.bowman@amd.com> <ZzYo5hNkcIjKAZ4i@wunner.de>
+ <7cfb4733-73a6-4a07-8afa-9c432f771bb0@amd.com>
+From: Li Ming <ming4.li@outlook.com>
+In-Reply-To: <7cfb4733-73a6-4a07-8afa-9c432f771bb0@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0223.apcprd06.prod.outlook.com
+ (2603:1096:4:68::31) To VI1PR10MB2016.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:36::13)
+X-Microsoft-Original-Message-ID:
+ <dba155bc-3c2d-4f7b-92ec-3a56eff32ded@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PAXPR04MB8459D1507CA69498D8C38E0488242@PAXPR04MB8459.eurprd04.prod.outlook.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR10MB2016:EE_|VI1PR10MB8064:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb6b1580-b820-433c-1bd2-08dd0584cbfa
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|461199028|19110799003|15080799006|5072599009|36102599003|8060799006|3430499032|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eDFrQkY1OXNtN2JWNzE2M3hkZzl2QTNuNjNZQ1lxRlU4dGpEUW91Qzd0YnpE?=
+ =?utf-8?B?ZjhIVDFpM2VxNGhFN3A0dXcvV1ZleWUrWUZVWHIzTTFqMmlxY1QrV1QrcnlP?=
+ =?utf-8?B?Q3JINkF3ODFvYVhCeFpadlNXcXdINnFHbjJxSUZ2cmlpMkdhaDB3R21QRjFa?=
+ =?utf-8?B?dTFvaFVWMUhSVE00WVVlbnBxMUdwSlVrN0E0ZmZna2ZmcmU3eFNYUUJUNFpv?=
+ =?utf-8?B?RkJpYzdyd3lER1hIL2pqdU9LbmdjY1BZVzJyQTBVazExWVBrWEg5RmhnSklY?=
+ =?utf-8?B?a29kN295OHJKNDk3QzVvMlh4OVV6dDZEeXpNZUtkVWJoZk9tZWlDeWhUU21U?=
+ =?utf-8?B?YzYwd3BoK0dQdThjTlc1RDFCUlhLUjEweFVyeXBvVWtvR3Noemx3ZEtxN0Rn?=
+ =?utf-8?B?SWxqQ2ZkR2VRMTg4TllvRGo3NkRaMzRKdHlxMEZUVld1dWFORi8wckh5TzBl?=
+ =?utf-8?B?ZEhZV0VaaFhEUFJZdGpVM09ScnIrRm51Smx6Mit1Sy9QQ1N0NmpVakpkeTFs?=
+ =?utf-8?B?bTdxU2ZLRmFEckd3ZjdtSFRQdFl6eUhJZDd2NDk0YVk4ZDFYMlZSR1diZHRk?=
+ =?utf-8?B?UUtkQmlhZ0VqTjc0aHpiSitsM0YyNEJqTFV6WVYrUUJUQUkrSFY3YVUzTkR0?=
+ =?utf-8?B?Q0Nzc2hoKzlBZDl2ZldhTlZ4cGtFR3JFNWkxMTlQNmR2VUlBNmlxOURRNzVu?=
+ =?utf-8?B?blVrclpNbTlxN0FxQ3I1dDNMZW0yUEp2ZUo4WC8yR25pVTYvdDBsZk5BMGoz?=
+ =?utf-8?B?cERKbndpWGpXQS9UZmNnZG1xK1JIRkUzMEV6UlU3OG9EU0VSZGdwblVOeklB?=
+ =?utf-8?B?d2Jvc2FTV2pyOFdBS2JhN09vVjdXOThEMnArcmJvSkxzT1d2bTlWY2JpM1ZH?=
+ =?utf-8?B?ZlFMMjhQOEFnL3VIOWFpTEx1MHFqTklUdDBnRVQwMXJHSEw4YjJwaU9YbThH?=
+ =?utf-8?B?TUxDa2NyMjY3VkNYeFREUklLcnlYenhzVVhZS21Wd0NpcmJGV3pEU2RISVpq?=
+ =?utf-8?B?RWFsVlJnSkxwS1d1eFFvY3phcHIwRmdvM1g5VmlvMEEwZmtRTjFwenVEbXBq?=
+ =?utf-8?B?cFFnL09HalBnNjRGejU1bXlHaWd6MnlnTmQxVEVyS2M1M09XLzFVWUJDM2VE?=
+ =?utf-8?B?d3lwOEtCa1QxMVF6OWREaWx5SjJjQXJ4QTY2aUtMQ3pnemFQVmZCRjdqODN1?=
+ =?utf-8?B?L1RydlFVaWUwZWwwMlZiWU13S0ZpYWFHK2VJR0Jya1lqazR5UlNDbUkwQVQx?=
+ =?utf-8?B?VUJRa3R4SGtRTkVkVzJxejlDNVhKSG5Qek9oNjgzOUNUbVdYdklyNjR1aUY4?=
+ =?utf-8?B?ZUVhQTRSc3VTQVJHN1FIUGJqcTlMTkYwZ1RFT1RKR3VRd3ZyL080U3VoZ3Fs?=
+ =?utf-8?B?VnJzK1pva0Jab3NUa0FlZU5tUVM2Z1J0QUc0OUhYcFFZQ2RFSlZkcWhXVzFK?=
+ =?utf-8?Q?c0UYUsxc?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cXhPTmVEa2FURmxMSnBwdVFwcG1GL0ljaHBKSFJxcHliZmhxN05Dcjg5dW0x?=
+ =?utf-8?B?L0R5ZzlFSmdxeTJMWjlmalBLQXRzVXV1bE1Kd3V0MnR6TmtNaktmSk9Dekxs?=
+ =?utf-8?B?blJNVG1uNGkyME5qNWVFZlhBenRoWDNyNGc5SCttZk1GWmg0VlRVbktaeU42?=
+ =?utf-8?B?TDNLU2J4ajNuanV0ajJMdVF4VVA4S3RFRWt0UFZtWjVnUEE4WFFuOGVkbXdF?=
+ =?utf-8?B?WEpvc1U4di8vWmVDN1RFaEJWcjZpTkluMDFzaDIxcW83NXVqakE3cldkaVZ4?=
+ =?utf-8?B?aTZ4bGR6R0ZBeVNDRmJaOXlVWXJHbmRTUmtMRXJ1NXBqK0w2RGdkRElmcWlH?=
+ =?utf-8?B?VzlITm5uL0lrYjZwNE1tRHpPOXhqZGp2cVNOZ2JvRDdpM0tDRTBXM2I2bTVB?=
+ =?utf-8?B?ejNpYXE3a0FTTkE1NUtxNy9rVW9uZ01iOUxUQW1sWmRqSTF5VVhyT3BrNWRl?=
+ =?utf-8?B?Zi81ZUJXOFB4ZWRIdlkyeStGNExBT0RiZGhMY2ZSaFJjT1h2MjRoKzI4NW1X?=
+ =?utf-8?B?TjQ1T2hzK1Z1MU9jWDdLUkhidVdlV1FLb0pIWVgrVmd6T1AwVTMrazd1NEFp?=
+ =?utf-8?B?ODBSeFdEOVdEaHVablYrb2tTV0V3SW91MnF5U0p1U25oZm9OWHF0UWQvNmRy?=
+ =?utf-8?B?bHhnZng3ZjhNZXlwSC9RRlFvbWV5VzN5bEEvSlpJSHR5Zlpyd2Nia1lCS2VQ?=
+ =?utf-8?B?ODVnYlBHQWdRWUdndkw3WDdaNGEzL1p2K24wVTBDN05vSDIzcTBUdmtHdlg3?=
+ =?utf-8?B?MWRDSEZtbTU0ZHhYOUNYZkpBai9hMDRQZEl2Y1dnSTVEWE80QWZKMk9taFRT?=
+ =?utf-8?B?VlE1UXhucTFlUktrSlBXbER5Nm51VXU4Vm4vM0lBS004Q0FIRkJzZGlyay90?=
+ =?utf-8?B?WUpOWTBiTDNWWDZaMDFiZkErOWRLOVloeUxTRFdibXZjUFlKZ3lmNjlTcHBQ?=
+ =?utf-8?B?VGxoMVRXMUhJUXRZRzNiS0VvYXp1ZDJxYm13N28zNUIzYVZid0R4RXVhREsy?=
+ =?utf-8?B?cXc4NnJLczBwZzA5VWtlaWVkQ3NRRVI0OGpGQURxdzVIbG9RSkltOTkwbEJF?=
+ =?utf-8?B?VDdyY3IrMlpsTDgzRlhKU3Izc0JKSjNPTVdnNTZhNDhZZGVlRWtSbHBnczdV?=
+ =?utf-8?B?eGxGemNYdkltTW51VUZNNUtsWUpya0tLcEZMQ3Y3dEVpSGY4dkljS0FhRWVv?=
+ =?utf-8?B?SVNzRXpvRXpqdExXaTNzSkROZWF3TEdCQWE1TDhSNmgrNFRzM2ZFb0tTRys0?=
+ =?utf-8?B?anBkYWdyekJHdkRSeUo0bXNQTXIySlpFTHZTSTBFbXRFQVJhbnlNNkNNYkd1?=
+ =?utf-8?B?YTFaOGI1dCs1VnNTdTZrTC82WlJMNzJFQ0FXMDV5NDR3RmxxRVJURFJQUVF5?=
+ =?utf-8?B?QyttOHFsYzhLRkEydTNmdzlzQWI2OXFsZHBNUEVRbDdZd3JMNmNsTjZtOXZs?=
+ =?utf-8?B?dnVYVEo4ZmlubHdEMzZtSElCQ1ZkNVVYelNjWnd6cmEwZ2MweExpNUhWSGJP?=
+ =?utf-8?B?czUzYmNBVVk2MGpqbjJpNTFZNTB2dTJ6SUpKUWpVT2QyNktrN0tBbGh3NnEx?=
+ =?utf-8?B?djF0VGl3UEFEN2Y1WGtCMDdjNDZDbnJqcnRSVmhDMENuSnRuWEp3dnFaUG52?=
+ =?utf-8?Q?m1zIxHQ6j0mw99P3LX7YVc0Q4iIdE6Sh5GGbFJXvOOuw=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb6b1580-b820-433c-1bd2-08dd0584cbfa
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR10MB2016.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2024 14:50:07.5786
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB8064
 
-On Fri, Nov 15, 2024 at 10:14:10AM +0000, Peng Fan wrote:
-> Hi Manivannan,
+
+
+On 2024/11/15 2:41, Bowman, Terry wrote:
+> Hi Lukas,
 > 
-> > Subject: Re: [PATCH] PCI: check bridge->bus in
-> > pci_host_common_remove
-> > 
-> > On Mon, Oct 28, 2024 at 04:46:43PM +0800, Peng Fan (OSS) wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > When PCI node was created using an overlay and the overlay is
-> > > reverted/destroyed, the "linux,pci-domain" property no longer exists,
-> > > so of_get_pci_domain_nr will return failure. Then
-> > > of_pci_bus_release_domain_nr will actually use the dynamic IDA,
-> > even
-> > > if the IDA was allocated in static IDA. So the flow is as below:
-> > > A: of_changeset_revert
-> > >     pci_host_common_remove
-> > >      pci_bus_release_domain_nr
-> > >        of_pci_bus_release_domain_nr
-> > >          of_get_pci_domain_nr      # fails because overlay is gone
-> > >          ida_free(&pci_domain_nr_dynamic_ida)
-> > >
-> > > With driver calls pci_host_common_remove explicity, the flow
-> > becomes:
-> > > B pci_host_common_remove
-> > >    pci_bus_release_domain_nr
-> > >     of_pci_bus_release_domain_nr
-> > >      of_get_pci_domain_nr      # succeeds in this order
-> > >       ida_free(&pci_domain_nr_static_ida)
-> > > A of_changeset_revert
-> > >    pci_host_common_remove
-> > >
-> > > With updated flow, the pci_host_common_remove will be called
-> > twice, so
-> > > need to check 'bridge->bus' to avoid accessing invalid pointer.
-> > >
-> > > Fixes: c14f7ccc9f5d ("PCI: Assign PCI domain IDs by ida_alloc()")
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > 
-> > I went through the previous discussion [1] and I couldn't see an
-> > agreement on the point raised by Bjorn on 'removing the host bridge
-> > before the overlay'.
+> I added comments below.
 > 
-> This patch is an agreement to Bjorn's idea. 
+> On 11/14/2024 10:44 AM, Lukas Wunner wrote:
+>> On Wed, Nov 13, 2024 at 03:54:19PM -0600, Terry Bowman wrote:
+>>> @@ -1115,8 +1131,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>   
+>>>   static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>>>   {
+>>> -	cxl_handle_error(dev, info);
+>>> -	pci_aer_handle_error(dev, info);
+>>> +	if (is_internal_error(info) && handles_cxl_errors(dev))
+>>> +		cxl_handle_error(dev, info);
+>>> +	else
+>>> +		pci_aer_handle_error(dev, info);
+>>> +
+>>>   	pci_dev_put(dev);
+>>>   }
+>> If you just do this at the top of cxl_handle_error()...
+>>
+>> 	if (!is_internal_error(info))
+>> 		return;
+>>
+>> ...you avoid the need to move is_internal_error() around and the
+>> patch becomes simpler and easier to review.
 > 
-> I have added pci_host_common_remove to remove host bridge
-> before removing overlay as I wrote in commit log.
+> If is_internal_error()==0, then pci_aer_handle_error() should be called to process the PCIe error. Your suggestion would require returning a value from cxl_handle_error(). And then more "if" logic would be required for the cxl_handle_error() return value. Should both is_internal_error() and handles_cxl_errors()be moved into cxl_handle_error()? Would give this:
 > 
-> But of_changeset_revert will still runs into pci_host_
-> common_remove to remove the host bridge again. Per
-> my view, the design of of_changeset_revert to remove
-> the device tree node will trigger device remove, so even
-> pci_host_common_remove was explicitly used before
-> of_changeset_revert. The following call to of_changeset_revert
-> will still call pci_host_common_remove.
-> 
-> So I did this patch to add a check of 'bus' to avoid remove again.
+>   static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>   {
+> -	cxl_handle_error(dev, info);
+> -	pci_aer_handle_error(dev, info);
+> +	if (!cxl_handle_error(dev, info))
+> +		pci_aer_handle_error(dev, info);
+> +
+>   	pci_dev_put(dev);
+>   }
 > 
 
-Ok. I think there was a misunderstanding. Bjorn's example driver,
-'i2c-demux-pinctrl' applies the changeset, then adds the i2c adapter for its
-own. And in remove(), it does the reverse.
+I think is_internal_error() can be moved into handles_cxl_errors(). 
+handles_cxl_errors() helps to check if the error is a CXL error, avoid 
+this detail which CXL error is an internal error in 
+handle_error_source(). Like this:
 
-But in your case, the issue is with the host bridge driver that gets probed
-because of the changeset. While with 'i2c-demux-pinctrl' driver, it only
-applies the changeset. So we cannot compare both drivers. I believe in your
-case, 'i2c-demux-pinctrl' becomes 'jailhouse', isn't it?
+    static void handle_error_source(struct pci_dev *dev, struct 
+aer_err_info *info)
+    {
+  -	cxl_handle_error(dev, info);
+  -	pci_aer_handle_error(dev, info);
+  +	if (handles_cxl_errors(dev, info))
+  +		cxl_handle_error(dev, info);
+  +	else
+  +		pci_aer_handle_error(dev, info);
+  +
+    	pci_dev_put(dev);
+    }
 
-So in your case, changeset is applied by jailhouse and that causes the
-platform device to be created for the host bridge and then the host bridge
-driver gets probed. So during destroy(), you call of_changeset_revert() that
-removes the platform device and during that process it removes the host bridge
-driver. The issue happens because during host bridge remove, it calls
-pci_remove_root_bus() and that tries to remove the domain_nr using
-pci_bus_release_domain_nr().
 
-But pci_bus_release_domain_nr() uses DT node to check whether to free the
-domain_nr from static IDA or dynamic IDA. And because there is no DT node exist
-at this time (it was already removed by of_changeset_revert()), it forces
-pci_bus_release_domain_nr() to use dynamic IDA even though the IDA was initially
-allocated from static IDA.
+Ming
 
-I think a neat way to solve this issue would be by removing the OF node only
-after removing all platform devices/drivers associated with that node. But I
-honestly do not know whether that is possible or not. Otherwise, any other
-driver that relies on the OF node in its remove() callback, could suffer from
-the same issue. And whatever fix we may come up with in PCI core, it will be a
-band-aid only.
-
-I'd like to check with Rob first about his opinion.
-
-- Mani
-
-> > 
-> > I do think this is a valid point and if you do not think so, please state
-> > the reason.
+>>
+>>> The AER service driver supports handling downstream port protocol errors in
+>>> restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
+>>> functionality for CXL PCIe ports operating in virtual hierarchy (VH)
+>>> mode.[1]
+>> This is somewhat minor but by convention, patches in the PCI subsystem
+>> adhere to spec language and capitalization, e.g. "Downstream Port"
+>> instead of "downstream port".  Makes it easier to connect the commit
+>> message or code comments to the spec.  So maybe you want to consider
+>> that if/when respinning.
+>>
+>> Thanks,
+>>
+>> Lukas
+> Thanks for pointing that out. I'll update as you suggest.
 > 
-> I agree Bjorn's view, this patch is output of agreement as I write above.
+> Regards,
+> Terry
 > 
-> Thanks,
-> Peng.
-> 
-> > 
-> > - Mani
-> > 
-> > [1]
-> > https://lore.kernel.org/lkml/20230913115737.GA426735@bhelgaas/
-> > 
-> > > ---
-> > >
-> > > V1:
-> > >  Not sure to keep the fixes here. I could drop the Fixes tag if it is
-> > > improper.
-> > >  This is to revisit the patch [1] which was rejected last year. This
-> > > new flow is using the suggest flow following Bjorn's suggestion.
-> > >  But of_changeset_revert will still invoke plaform_remove and then
-> > > pci_host_common_remove. So worked out this patch together with a
-> > patch
-> > > to jailhouse driver as below:
-> > >  static void destroy_vpci_of_overlay(void)  {
-> > > +       struct device_node *vpci_node = NULL;
-> > > +
-> > >         if (overlay_applied) {
-> > > +#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,6,0)
-> > > +               vpci_node = of_find_node_by_path("/pci@0");
-> > > +               if (vpci_node) {
-> > > +                       struct platform_device *pdev =
-> > of_find_device_by_node(vpci_node);
-> > > +                       if (!pdev)
-> > > +                               printk("Not found device for /pci@0\n");
-> > > +                       else {
-> > > +                               pci_host_common_remove(pdev);
-> > > +                               platform_device_put(pdev);
-> > > +                       }
-> > > +               }
-> > > +               of_node_put(vpci_node); #endif
-> > > +
-> > >                 of_changeset_revert(&overlay_changeset);
-> > >
-> > >  [1]
-> > >
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2F
-> > lore
-> > > .kernel.org%2Flkml%2F20230908224858.GA306960%40bhelgaas%2
-> > FT%2F%23md12e
-> > >
-> > 6097d91a012ede78c997fc5abf460029a569&data=05%7C02%7Cpeng.
-> > fan%40nxp.com
-> > > %7C025e209cf9264c4240fa08dd053d9211%7C686ea1d3bc2b4c6fa
-> > 92cd99c5c301635
-> > > %7C0%7C0%7C638672484189046564%7CUnknown%7CTWFpbGZsb
-> > 3d8eyJFbXB0eU1hcGki
-> > >
-> > OnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIl
-> > dUIjoyfQ
-> > > %3D%3D%7C0%7C%7C%7C&sdata=uCo5MO5fEqCjBzwZ8hdnsf3ORh
-> > SedhrJWvNOCCMNvG0%
-> > > 3D&reserved=0
-> > >
-> > >  drivers/pci/controller/pci-host-common.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-host-common.c
-> > > b/drivers/pci/controller/pci-host-common.c
-> > > index cf5f59a745b3..5a9c29fc57cd 100644
-> > > --- a/drivers/pci/controller/pci-host-common.c
-> > > +++ b/drivers/pci/controller/pci-host-common.c
-> > > @@ -86,8 +86,10 @@ void pci_host_common_remove(struct
-> > platform_device *pdev)
-> > >  	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-> > >
-> > >  	pci_lock_rescan_remove();
-> > > -	pci_stop_root_bus(bridge->bus);
-> > > -	pci_remove_root_bus(bridge->bus);
-> > > +	if (bridge->bus) {
-> > > +		pci_stop_root_bus(bridge->bus);
-> > > +		pci_remove_root_bus(bridge->bus);
-> > > +	}
-> > >  	pci_unlock_rescan_remove();
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(pci_host_common_remove);
-> > > --
-> > > 2.37.1
-> > >
-> > 
-> > --
-> > மணிவண்ணன் சதாசிவம்
 
--- 
-மணிவண்ணன் சதாசிவம்
 
