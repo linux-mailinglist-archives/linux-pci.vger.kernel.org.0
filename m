@@ -1,56 +1,63 @@
-Return-Path: <linux-pci+bounces-16925-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16926-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EC209CF3F2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 19:30:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D21329CF3FC
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 19:31:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 441C8283377
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 18:30:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92B482898C9
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 18:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CB2183CD9;
-	Fri, 15 Nov 2024 18:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742FE186E56;
+	Fri, 15 Nov 2024 18:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="HJt7jFjv"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Su2F9OOx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7BA17C7CA;
-	Fri, 15 Nov 2024 18:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FADB183088;
+	Fri, 15 Nov 2024 18:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731695410; cv=none; b=lgiHAO13zbUCNdN3TVV9r5lan6IWcPx1ZfLxFIyHiJxII3iMC/XTRMSpJj6IEF8u2lYFBAU1yp7AkfM6oQSDAuIJeeIE66JgH3C5FkYBwYCr3Ufy148rrcp7cNCy4Z9d4jEafYJ61ZTY9nw6GlP3aCX89rxNj3k6vLW6jDJAx7A=
+	t=1731695492; cv=none; b=AKGDvei2XPhfkl4cfiBHXTBJU1YcARRn71UkFJBvH5h03HD65EwtK7HmTgZkyuRzXRMcg/cCBpERLTiJ/oyw/WqGn7jYqjzrZ2iBeMWVRjU5Gy+HM5zkRmhl5s/zrQYwd0GHmy1i+gQu4Tkde7+63FoPvJlIBCwEmD5LPM1GoNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731695410; c=relaxed/simple;
-	bh=qQq/vi9e6m6ETqXrfSVF09C0+hl8OYr1A0nE5CcOm/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sh2gwPkY/vmAK1Ky036sUYK23lMWdBBeZ6SjN8LmSKjMrklWgbKluTF6caKu1gIXlKqJLIL2G6Egoft2VP5kWphD2EPQOcKwqN6WP2edeJDf/A5WkeZBPK7ytPwh7nZGW6HujZUBMOF7CgzN5ToEsZaJycwjp/7gsLVZnwY+jI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=HJt7jFjv; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1731695375; x=1732300175; i=wahrenst@gmx.net;
-	bh=vvYnkM/MjUNPD+tFi1nKdoNje94Yno5pUUbs2o5pcls=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=HJt7jFjv4FAGS/B0DvOzK4BzXII+HQHUpKbLrnd9N53IgdAt6cG6PE3MqFVGAa16
-	 47F6uRn/YPLE9m2WZtroVqFTE/+rgiwDbKaA+anIeML+/Ao14l6A3fUpx4/Z8Uy4Y
-	 t8ZtqCwnTOjmIlEsOJi60caJixxP1lZlPI1KshHTCj0kz9ErTgyPTVtG3iFYvZ2Z/
-	 2bGEqztgGqbnT1ZoBZpRDr5B9dcc23whPr4nd43PEpX1DZLAloeCnSGkpCRFhvkfA
-	 5/EPKGVgKWmUaIsBuoDCpOKtiXsaMDjZtCDa4mE+ayVTtr9y5egozJwrh/c88QbN4
-	 BjiHgIZAS0c+5Jn4Dw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.105] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N0G1n-1twP841BiB-00zHUJ; Fri, 15
- Nov 2024 19:29:35 +0100
-Message-ID: <eb1da92d-b7b7-43ae-959e-3f02c6e2c91d@gmx.net>
-Date: Fri, 15 Nov 2024 19:29:31 +0100
+	s=arc-20240116; t=1731695492; c=relaxed/simple;
+	bh=T7owxCrmzL9B2p4ropXht/ugb0EmftLWvXL/zuJ4ZCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bpras6NA04WBM3YogWQ5BkeA2O7+qCths2q94D9SXscLwOqWtLOev2At+5ohu4HCa7Cbcmi71bHYPxCRLmR57f0t5rbeEvvrssoXNYISzCvbYcBqEVPyUgaYEOxjitQsBzvio39TPJVr5ZbBHn/9YaYSyRDH457CLnKLs2haAZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Su2F9OOx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AFHoTLO018983;
+	Fri, 15 Nov 2024 18:31:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eC/JeM9/eX7GjpRqMmFKay7Cio3ltqUn4yMJhvyMtqM=; b=Su2F9OOx0tB27Lvz
+	J9zb/XXsr6/zEWz9rcbUcH+Al4pTlha96ay7PO8Y3v2TkKSzss/F/Q1pLEKei5ZA
+	f7ItdbHxzAGrlxFErFtvzyLzazISbnoC7LHygRJjBtdxIwnR2Y9lZ9QdX3vX0GFV
+	lZFep/buT5ApKq2ThiO0TOJwL/uBNMJ2SxZqtlXnmhqYosqGWzX++QGXYlnfHxHO
+	MyciJWFl34FIyytCSFJHwTZuDDkHTTIFv1mxLKrfdSnlMoF7RlpIgt9/uQekPGZJ
+	PsfUshICXbZnw2mii0HAkdQcIiAqnMVbxMiSJzsEyodeDAcPZi8VCu9ZQJe+osOu
+	OW6Jfg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42wex8w11u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Nov 2024 18:31:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AFIVJ2X004593
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Nov 2024 18:31:19 GMT
+Received: from [10.110.68.79] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 15 Nov
+ 2024 10:31:18 -0800
+Message-ID: <6e9db73e-0441-453c-978c-961f308f8a11@quicinc.com>
+Date: Fri, 15 Nov 2024 10:31:17 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,95 +65,146 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove IRQF_ONESHOT and handle hardirqs
- instead
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241115165717.15233-1-ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v3 0/4] Add Qualcomm SA8255p based firmware managed PCIe
+ root complex
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <jingoohan1@gmail.com>, <will@kernel.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <krzk@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_krichai@quicinc.com>
+References: <20241106221341.2218416-1-quic_mrana@quicinc.com>
+ <20241115112802.66xoxj4z5wsg4idl@thinkpad>
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20241115165717.15233-1-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:y8BOJwtYO3G/ANwm5CtFwOlPqscFlQ7Olc0lsAOfwe1+65GAPUA
- fpesKh7PrSU8eDdbRI5XEOpT+zIzgowbJeWNbF0AOBFst1ApmF6jouPcU0DwatmDUiQ1Yv2
- 3nzgTQ8Wi2lULemRbpXDWwlJ/r2VXFALczzILsWMi8sPKQqI8CHa1W+HVLTl7vYvuGhlmW0
- IbrQpuGkPz7bHCyluXm8Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pvVA6SMA3xg=;gAgsQ+bjUu1ieqEqIdbmBx5+GJ2
- n2mv3yvAaJJ+hmZn/36ldRNl4Yt8ZAT6Wzm1DeQe5nev5z8wGugcongNClTpDV7e7RHdsDktk
- umOYQSFTx2QhmSQkDaU9xZJ9U9fcvQ6bgi8TqClujMdxMrdFxGJSanjx2HV6zsVoKOsx9X1VD
- 5lbgKqHvTetoNRN78jVRqF+PWAaIuB0dyfXsVhiVBUPDyazyeTfLbFCqUuIETnpTGrodk8jX9
- L8zRi5D4okVtI8XuvgVcgyg7fhQBqBpVKDdha4A+vbQtIJZUx3zEFKKH3MmsO2+uoCclgGt9T
- EmIz1lYN7rDe4Vdsx0ijBf2zcFc2QE2Ze1ckx8uOQ0lqBlwRS+4Gjzis4nl0FNq1T0DMlyEoM
- WGDcmG16bQSzqjZPUq1QcD32/0DFT95PDXtmV8WgI3FWs1GFrjeEAUSnsAWUDddAHywztDjFg
- bpqX0rUpOdbJ3KM3DrKr3RMuwQKbNSCW4Juehi/7S3q0tuxdQvVea0zb1BckwcEzAQDdiXPOI
- uPCYFnuL2A3xrwJrf1jLGvIAubsg5Jc8EVD6QB8LY0zfs4C0WaMvcRQIsoYUrlkrmWFMg4o7L
- qxvZrcMyefJ0eWFOXlz1xXVIKXVWF8UPfOBUpCpVI5q0yDBu7JpCcDv/Y4L3fLUXM0oOTJSAM
- tRqaTZGuzbh5jMg1y19PvggJEk6IWMIi4RX6qorDkDITHLdpXWgGS/9+8no3fg49bP+yx/hyw
- /wVM/FxQ2nli95Jn9dF5iwOO7sS/rgZY4eCbueC8LYd/KYVOj5/1FUx/27ICRQBurTMbJ5E5D
- 2NVI31Gk4cU15A2rT4cd/aPUF+M7wjNR2x7mPgaGiSr3y+o+nYOjaYPeRuld8oqA8CbIY1grs
- s1XCk2k4LgIR0Ia089XtohSraVNx35cWS4/E8vmfgsnu+VTzTDboBls3w
+From: Mayank Rana <quic_mrana@quicinc.com>
+In-Reply-To: <20241115112802.66xoxj4z5wsg4idl@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Fq6JurJ4csMT-KotEN90S8nT27D7wtg9
+X-Proofpoint-ORIG-GUID: Fq6JurJ4csMT-KotEN90S8nT27D7wtg9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=946 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
+ definitions=main-2411150156
 
-Hi,
 
-Am 15.11.24 um 17:57 schrieb Ilpo J=C3=A4rvinen:
-> bwctrl cannot use IRQF_ONESHOT because it shares interrupt with other
-> service drivers that are not using IRQF_ONESHOT nor compatible with it.
->
-> Remove IRQF_ONESHOT from bwctrl and convert the irq thread to hardirq
-> handler. Rename the handler to pcie_bwnotif_irq() to indicate its new
-> purpose.
->
-> The IRQ handler is simple enough to not require not require other
-> changes.
->
-> Fixes: 058a4cb11620 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe=
- BW controller")
-> Reported-by: Stefan Wahren <wahrenst@gmx.net>
-> Link: https://lore.kernel.org/linux-pci/dcd660fd-a265-4f47-8696-776a85e0=
-97a0@gmx.net/
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-this fixed the probing issue. Thanks
 
-Tested-by: Stefan Wahren <wahrenst@gmx.net>
+On 11/15/2024 3:28 AM, Manivannan Sadhasivam wrote:
+> On Wed, Nov 06, 2024 at 02:13:37PM -0800, Mayank Rana wrote:
+>> Based on received feedback, this patch series adds support with existing
+>> Linux qcom-pcie.c driver to get PCIe host root complex functionality on
+>> Qualcomm SA8255P auto platform.
+>>
+>> 1. Interface to allow requesting firmware to manage system resources and
+>> performing PCIe Link up (devicetree binding in terms of power domain and
+>> runtime PM APIs is used in driver)
+>>
+>> 2. SA8255P is using Synopsys Designware PCIe controller which supports MSI
+>> controller. Using existing MSI controller based functionality by exporting
+>> important pcie dwc core driver based MSI APIs, and using those from
+>> pcie-qcom.c driver.
+>>
+>> Below architecture is used on Qualcomm SA8255P auto platform to get ECAM
+>> compliant PCIe controller based functionality. Here firmware VM based PCIe
+>> driver takes care of resource management and performing PCIe link related
+>> handling (D0 and D3cold). Linux pcie-qcom.c driver uses power domain to
+>> request firmware VM to perform these operations using SCMI interface.
+>> --------------------
+>>
+>>
+>>                                     ┌────────────────────────┐
+>>                                     │                        │
+>>    ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐
+>>    │     Firmware VM      │         │                        │            │         Linux VM         │
+>>    │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │
+>>    │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE Qcom    │    │
+>>    │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │    driver      │    │
+>>    │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │
+>>    │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │
+>>    │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │
+>>    │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │
+>>    │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │
+>>    │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │
+>>    │               │  │   │         │                        │            │       │          │       │
+>>    └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘
+>>                    │  │             │                        │                    │          │
+>>                    │  │             └────────────────────────┘                    │          │
+>>                    │  │                                                           │          │
+>>                    │  │                                                           │          │
+>>                    │  │                                                           │          │
+>>                    │  │                                                           │IRQ       │HVC
+>>                IRQ │  │HVC                                                        │          │
+>>                    │  │                                                           │          │
+>>                    │  │                                                           │          │
+>>                    │  │                                                           │          │
+>> ┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
+>> │                                                                                                          │
+>> │                                                                                                          │
+>> │                                      HYPERVISOR                                                          │
+>> │                                                                                                          │
+>> │                                                                                                          │
+>> │                                                                                                          │
+>> └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+>>                                                                                                              
+>>    ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐
+>>    │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │
+>>    │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │
+>>    └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘
+>>                                                                                                              
+> 
+> Thanks a lot for working on this Mayank! This version looks good to me. I've
+> left some comments, nothing alarming though.
+Thanks for reviewing change. I would address those in next patchset.
 
-Is there anything more I can/should test?
+> But I do want to hold up this series until we finalize the SCMI based design.
+ok. I want to send these changes which are prepared based on previously 
+provided feedback, to see if we have any major concern here in terms of 
+getting functionality.
 
-> ---
->   drivers/pci/pcie/bwctrl.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index ff5d12e01f9c..a6c65bbe3735 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -230,7 +230,7 @@ static void pcie_bwnotif_disable(struct pci_dev *por=
-t)
->   				   PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
->   }
->
-> -static irqreturn_t pcie_bwnotif_irq_thread(int irq, void *context)
-> +static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
->   {
->   	struct pcie_device *srv =3D context;
->   	struct pcie_bwctrl_data *data =3D srv->port->link_bwctrl;
-> @@ -302,10 +302,8 @@ static int pcie_bwnotif_probe(struct pcie_device *s=
-rv)
->   	if (ret)
->   		return ret;
->
-> -	ret =3D devm_request_threaded_irq(&srv->device, srv->irq, NULL,
-> -					pcie_bwnotif_irq_thread,
-> -					IRQF_SHARED | IRQF_ONESHOT,
-> -					"PCIe bwctrl", srv);
-> +	ret =3D devm_request_irq(&srv->device, srv->irq, pcie_bwnotif_irq,
-> +			       IRQF_SHARED, "PCIe bwctrl", srv);
->   	if (ret)
->   		return ret;
->
-
+Regards,
+Mayank
+> - Mani
+> 
+>> ----------
+>> Changes in V3:
+>> - Drop usage of PCIE host generic driver usage, and splitting of MSI functionality
+>> - Modified existing pcie-qcom.c driver to add support for getting ECAM compliant and firmware managed
+>> PCIe root complex functionality
+>> Link to v2: https://lore.kernel.org/linux-arm-kernel/925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com/T/
+>>
+>> Changes in V2:
+>> - Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
+>> - Add power domain based functionality within existing ECAM driver
+>> Link to v1: https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
+>>
+>> Tested:
+>> - Validated NVME functionality with PCIe0 on SA8255P-RIDE platform
+>>
+>> Mayank Rana (3):
+>>    PCI: dwc: Export dwc MSI controller related APIs
+>>    PCI: qcom: Add firmware managed ECAM compliant PCIe root complex
+>>      functionality
+>>    dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM compliant PCIe root
+>>      complex
+>>
+>>   .../devicetree/bindings/pci/qcom,pcie-sa8255p.yaml | 100 +++++++++++++++++++++
+>>   drivers/pci/controller/dwc/Kconfig                 |   1 +
+>>   drivers/pci/controller/dwc/pcie-designware-host.c  |  38 ++++----
+>>   drivers/pci/controller/dwc/pcie-designware.h       |  14 +++
+>>   drivers/pci/controller/dwc/pcie-qcom.c             |  69 ++++++++++++--
+>>   5 files changed, 199 insertions(+), 23 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
+>>
+>> -- 
+>> 2.7.4
+>>
+> 
 
