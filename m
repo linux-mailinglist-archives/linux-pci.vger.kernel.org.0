@@ -1,156 +1,135 @@
-Return-Path: <linux-pci+bounces-16805-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16806-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 819F09CD4CA
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 01:46:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F8019CD598
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 03:47:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCDE3B244BD
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 00:46:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E77A6B213B5
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 02:47:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D816E71747;
-	Fri, 15 Nov 2024 00:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QOnTTM3u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B6FonATM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F4542A8C;
+	Fri, 15 Nov 2024 02:46:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06C81EA84;
-	Fri, 15 Nov 2024 00:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB0C28EF;
+	Fri, 15 Nov 2024 02:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731631561; cv=none; b=A83j3i7xN++23o4chNbTfvFs8CMc7YwnQBkJAq+Wf5QoD2bCxA19dQssx+pGzSvwhuod/jjjPLDBUmVTcwC35Ye/TcShPQTQFDN0ylwM3b1VwOfZir92VlhiK/S0aABfBsHKY0I7RqAb8+ns/0swK2QfIq+VZ8vObohswGuT4v8=
+	t=1731638816; cv=none; b=gnZK5LmmWybXDs/gxb/Pv2LneGJ6qyOrNddZ19mps/6gvGo3OsLIBd89Bg3pApYxvzriZYd2KPhwQZ06upumiZs8d65UtMwUdLhe3BL3w8HBkKo6ELOEBzlhXMFKka+Px1iLD+jPPKOK7ZtWHM7C/f44rCK6YsoLorb4qLZ1MEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731631561; c=relaxed/simple;
-	bh=wmlctHEns5HH4kuTaBjX2JNcI1LzVOydASF++UAbmDY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=J6ZP0fgAXh4pOIEA1FkAq4AS0llScqZOcz1AFijov8qEZzxv8WsbPDx/Ysryx6HFPAJ+feXIKVa1r0rw14OT4qY+TBKQ61q5SKlpO5AknhQyKbssvUh5QEEgm4KlB4mbi//55EIJH97WKEv6GbGkSjG6oaOUMmKQSUhleMVQREc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QOnTTM3u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B6FonATM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1731631556;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wmlctHEns5HH4kuTaBjX2JNcI1LzVOydASF++UAbmDY=;
-	b=QOnTTM3upVgvLOqHHkULAR/Sd+IXv2/jwWShAxdu/d9Ou3VRQKwRFQcKkxYFlQbNCHuDKC
-	qmtZIl1QGU9LvuaVEHVi6mN8leBtPwfqyHUmV8sQ4okR7sVQBV4nqtQqHtK44NZWa+achm
-	KJtmcrXFernLrXFh8br79W+BBZcbUPnfW6G5ETbNxP5n4/wMMrok/VJbm/1lHIAX31JScD
-	X4TbcxeFRb0UaQ4ZOxoYrise9V26pZtUHGM6uIGxT7DAWZfdtWm58X+EkXZorarJx6j3sJ
-	jv7CYR1gtAzR1m3FucHfJnoCrMS9Ay9Ifg0KTixSjK7w1MQSxCZuE9xVfV0ltA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1731631556;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wmlctHEns5HH4kuTaBjX2JNcI1LzVOydASF++UAbmDY=;
-	b=B6FonATMAX4OxdtMR8JNBP8qWfBOIV1vFazP675PCOfWlXztCY+avvBu11Vcb9coe6V9WE
-	q7IVbFH9tV+539Aw==
-To: Philipp Stanner <pstanner@redhat.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Basavaraj Natikar
- <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>, Benjamin
- Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
- Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
- <manishc@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rasesh Mody
- <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko
- <imitsyanko@quantenna.com>, Sergey Matyukevich <geomatsi@gmail.com>, Kalle
- Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar
- S K <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Chen Ni <nichen@iscas.ac.cn>, Ricky Wu
- <ricky_wu@realtek.com>, Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao
- <leitao@debian.org>, Kevin Tian <kevin.tian@intel.com>, Mostafa Saleh
- <smostafa@google.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi
- Liu <yi.l.liu@intel.com>, Kunwu Chan <chentao@kylinos.cn>, Ankit Agrawal
- <ankita@nvidia.com>, Christian Brauner <brauner@kernel.org>, Reinette
- Chatre <reinette.chatre@intel.com>, Eric
- Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v2 11/11] Remove devres from pci_intx()
-In-Reply-To: <49bb6fc9ebff3cae844da0465ceadeef8d3217c7.camel@redhat.com>
-References: <20241113124158.22863-2-pstanner@redhat.com>
- <20241113124158.22863-13-pstanner@redhat.com> <87msi3ksru.ffs@tglx>
- <49bb6fc9ebff3cae844da0465ceadeef8d3217c7.camel@redhat.com>
-Date: Fri, 15 Nov 2024 01:46:13 +0100
-Message-ID: <8734jtl3xm.ffs@tglx>
+	s=arc-20240116; t=1731638816; c=relaxed/simple;
+	bh=IAiuFyp3E8W9vuvfCCVnB6Wz9h8JSHrPyDRUJkzoI38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XM8md1ZyDYxbMIBSbNUe7PhI6dXE4U3Y51dwBkB9l2MW1MyT06BPlIy++a+pe9+0vfeUnAmQtI7Wzf6uFXtlQHUctO/NjSnl86U+LwsreTK/N5W+h+ctiaGss3cQi6M5V1iy53g3eEzPBw/AiTzHna0rwPxi1StqoXSLu1sDa+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
+X-QQ-mid: bizesmtpsz13t1731638776tf26ak
+X-QQ-Originating-IP: m+FaQT7FrJXF6yKa4W3dcPGuEsWgqna6Tk5+0LWIfnY=
+Received: from localhost.localdomain ( [115.206.160.29])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 15 Nov 2024 10:46:07 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 10350192324756698958
+From: Mengyuan Lou <mengyuanlou@net-swift.com>
+To: linux-pci@vger.kernel.org
+Cc: netdev@vger.kernel.org,
+	helgaas@kernel.org,
+	jiawenwu@trustnetic.com,
+	duanqiangwen@net-swift.com,
+	Mengyuan Lou <mengyuanlou@net-swift.com>
+Subject: [PATCH PCI v2] PCI: Add ACS quirk for Wangxun FF5XXX NICS
+Date: Fri, 15 Nov 2024 10:46:04 +0800
+Message-ID: <E16053DB2B80E9A5+20241115024604.30493-1-mengyuanlou@net-swift.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:net-swift.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: M9NnLm3GdbLblnwuwzDh1lvvan46j55EdPu/Tw3UrgSnUAYJ/p8hyr8g
+	DygslxdDA8OtNC0stBCDeLvxGrXPFYfzfMulV64nFA7pw3wMLjvyDr+deG8Afagy5hxzw8i
+	1UC34bWkeRMjWgM9a3cDL3bhQvJ5Y2pxO/+uaLEuIu/yIP9mslbMryP6ql+qszqFqEq5kZ1
+	x4VaF3AyUuRaoEEkgrz30nPVV5aVMGN5/l81TXZMmuseKkf708681kfEy0krfJvLKv+7vNt
+	2MkRKa0efpixwGXx+sCcc9RSnsDdgM/NLdfpcxjSQz49yQ4XMjcXulbAQ5Wffg69umFeplh
+	wSAnq1pBK+VqrcjBNo71Iwux0ikMCspRm4GapMzTEL2YmTMaLHx0Mxy15p6C17410+96oqG
+	hpLBUtIxmk1sn1kIIA6ul/U0QUy2e7gi9RZ8xZxuyMkzaC0LAPTnv2xcR9bWYV3cHxDGZPL
+	LFSjuE/5XaYTyQHRXJVNSSSsbCZYybVW0aCXr/DhS+oXhq5Pdt5bevT0AnUM2gvphLwCrCb
+	YHcklIq0dIKCihv3PRCREPGUMZbHG32X/0kIcYmPdThgSY6BCWa1fuFLl0k524zK5a4tLXg
+	bZg+iM11MZx6RAvaLLxyX0/rkN1BI04spyrQT4i92rCMDEej6Myguy0OWYG50WsJXHN2AUY
+	DYp00sdwtWzpa3gykcyShQgjSUMKCzIt30ufdLPFMt00Dmb0q5VEjbfi6/DXk5/GoqU+wgE
+	FUcVscM/HsYeYiRqlYLJ298T1Hcd/YIIaNuOvRD3DMQ6eLr5Sy928JXu9iyxKSVsaY1r99n
+	agKyVYzfdwd/F8LXrACJv5YrSvm7DDQk2YY8JvLMZvLLUOhKr+MeQG+CkATF207Ru/wx6nQ
+	054wQ9YNSxi29f0gs/x+ajc53/dtzMPXwJe50DE4PEnusFpsQhI4hIajUK7IM3YywPBKnPy
+	h2DkjAe4A3WlBS4oMi0iFWLUxHhcK47/t93wwjQ2KQRXRNDO78eoDJO/8
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-T24gVGh1LCBOb3YgMTQgMjAyNCBhdCAxMDowNSwgUGhpbGlwcCBTdGFubmVyIHdyb3RlOg0KPiBP
-biBXZWQsIDIwMjQtMTEtMTMgYXQgMTc6MjIgKzAxMDAsIFRob21hcyBHbGVpeG5lciB3cm90ZToN
-Cj4+IE9uIFdlZCwgTm92IDEzIDIwMjQgYXQgMTM6NDEsIFBoaWxpcHAgU3Rhbm5lciB3cm90ZToN
-Cj4+ID4gcGNpX2ludHgoKSBpcyBhIGh5YnJpZCBmdW5jdGlvbiB3aGljaCBjYW4gc29tZXRpbWVz
-IGJlIG1hbmFnZWQNCj4+ID4gdGhyb3VnaA0KPj4gPiBkZXZyZXMuIFRoaXMgaHlicmlkIG5hdHVy
-ZSBpcyB1bmRlc2lyYWJsZS4NCj4+ID4gDQo+PiA+IFNpbmNlIGFsbCB1c2VycyBvZiBwY2lfaW50
-eCgpIGhhdmUgYnkgbm93IGJlZW4gcG9ydGVkIGVpdGhlciB0bw0KPj4gPiBhbHdheXMtbWFuYWdl
-ZCBwY2ltX2ludHgoKSBvciBuZXZlci1tYW5hZ2VkIHBjaV9pbnR4X3VubWFuYWdlZCgpLA0KPj4g
-PiB0aGUNCj4+ID4gZGV2cmVzIGZ1bmN0aW9uYWxpdHkgY2FuIGJlIHJlbW92ZWQgZnJvbSBwY2lf
-aW50eCgpLg0KPj4gPiANCj4+ID4gQ29uc2VxdWVudGx5LCBwY2lfaW50eF91bm1hbmFnZWQoKSBp
-cyBub3cgcmVkdW5kYW50LCBiZWNhdXNlDQo+PiA+IHBjaV9pbnR4KCkNCj4+ID4gaXRzZWxmIGlz
-IG5vdyB1bm1hbmFnZWQuDQo+PiA+IA0KPj4gPiBSZW1vdmUgdGhlIGRldnJlcyBmdW5jdGlvbmFs
-aXR5IGZyb20gcGNpX2ludHgoKS4gSGF2ZSBhbGwgdXNlcnMgb2YNCj4+ID4gcGNpX2ludHhfdW5t
-YW5hZ2VkKCkgY2FsbCBwY2lfaW50eCgpLiBSZW1vdmUgcGNpX2ludHhfdW5tYW5hZ2VkKCkuDQo+
-PiA+IA0KPj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFN0YW5uZXIgPHBzdGFubmVyQHJlZGhh
-dC5jb20+DQo+PiA+IC0tLQ0KPj4gPiDCoGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0c3hfcGNy
-LmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyICstDQo+PiA+IMKgZHJpdmVycy9taXNjL3Rp
-Zm1fN3h4MS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA2
-ICstLQ0KPj4gPiDCoC4uLi9uZXQvZXRoZXJuZXQvYnJvYWRjb20vYm54MngvYm54MnhfbWFpbi5j
-wqAgfMKgIDIgKy0NCj4+ID4gwqBkcml2ZXJzL25ldC9ldGhlcm5ldC9icm9jYWRlL2JuYS9ibmFk
-LmPCoMKgwqDCoMKgwqAgfMKgIDIgKy0NCj4+ID4gwqBkcml2ZXJzL250Yi9ody9hbWQvbnRiX2h3
-X2FtZC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNCArLQ0KPj4gPiDCoGRyaXZl
-cnMvbnRiL2h3L2ludGVsL250Yl9od19nZW4xLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAy
-ICstDQo+PiA+IMKgZHJpdmVycy9wY2kvZGV2cmVzLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNCArLQ0KPj4gPiDCoGRyaXZlcnMvcGNpL21z
-aS9hcGkuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
-wqAgMiArLQ0KPj4gPiDCoGRyaXZlcnMvcGNpL21zaS9tc2kuY8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMiArLQ0KPj4gPiDCoGRyaXZlcnMvcGNp
-L3BjaS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfCA0MyArLS0tLS0tLS0tLS0tLS0NCj4+ID4gLS0tLQ0KPj4gPiDCoGRyaXZlcnMvdmZp
-by9wY2kvdmZpb19wY2lfY29yZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDIgKy0N
-Cj4+ID4gwqBkcml2ZXJzL3ZmaW8vcGNpL3ZmaW9fcGNpX2ludHJzLmPCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfCAxMCArKy0tLQ0KPj4gPiDCoGRyaXZlcnMveGVuL3hlbi1wY2liYWNrL2NvbmZf
-c3BhY2VfaGVhZGVyLmPCoMKgIHzCoCAyICstDQo+PiA+IMKgaW5jbHVkZS9saW51eC9wY2kuaMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDEg
-LQ0KPj4gPiDCoDE0IGZpbGVzIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDYyIGRlbGV0aW9u
-cygtKQ0KPj4gDQo+PiBOb3cgSSdtIHV0dGVybHkgY29uZnVzZWQuIFRoaXMgdW5kb2VzIHRoZSBw
-Y2lfaW50eF91bm1hbmFnZWQoKSBjaHVybg0KPj4gd2hpY2ggeW91IGNhcmVmdWxseSBzcGxpdCBp
-bnRvIHNldmVyYWwgcGF0Y2hlcyBmaXJzdC4NCj4NCj4gSGF2ZSB5b3UgcmVhZCB0aGUgZW1haWwg
-SSBoYXZlIGxpbmtlZD8NCj4NCj4gVGhlcmUgaXMgYWxzbyB0aGUgY292ZXItbGV0dGVyIChkb2Vz
-IGFueW9uZSBpbiB0aGUgY29tbXVuaXR5IGV2ZXIgcmVhZA0KPiB0aG9zZT8pIHdoaWNoIGV4cGxp
-Y2l0bHkgc3RhdGVzOg0KPg0KPiAiUGF0Y2ggIlJlbW92ZSBkZXZyZXMgZnJvbSBwY2lfaW50eCgp
-IiBvYnZpb3VzbHkgcmV2ZXJ0cyB0aGUgcHJldmlvdXMNCj4gcGF0Y2hlcyB0aGF0IG1hZGUgZHJp
-dmVycyB1c2UgcGNpX2ludHhfdW5tYW5hZ2VkKCkuIEJ1dCB0aGlzIHdheSBpdCdzDQo+IGVhc2ll
-ciB0byByZXZpZXcgYW5kIGFwcHJvdmUuIEl0IGFsc28gbWFrZXMgc3VyZSB0aGF0IGVhY2ggY2hl
-Y2tlZCBvdXQNCj4gY29tbWl0IHNob3VsZCBwcm92aWRlIGNvcnJlY3QgYmVoYXZpb3IsIG5vdCBq
-dXN0IHRoZSBlbnRpcmUgc2VyaWVzIGFzIGENCj4gd2hvbGUuIg0KDQpJIHJlYWQgaXQgYW5kIEkg
-YXNzdW1lIHlvdXIgaW50ZW50aW9uIHdhcyB0byBmb3JjZSBhbiBleWUgb24gZXZlcnkgdXNlDQpj
-YXNlIG9mIHBjaV9pbnR4KCkgYW5kIG5vdCBqdXN0IG9uIHRob3NlIHdoaWNoIG5lZWQgdG8gYmUg
-Y29udmVydGVkIHRvDQpwY2ltX2ludHgoKS4NCg0KSSdtIG5vdCBjb252aW5jZWQgdGhhdCB0aGlz
-IGlzIG5lZWRlZCwgYnV0IGZhaXIgZW5vdWdoLg0KDQoNCg0KDQo=
+Wangxun FF5xxx NICs are similar to SFxxx, RP1000 and RP2000 NICs.
+They may be multi-function devices, but they do not advertise an ACS
+capability.
+
+But the hardware does isolate FF5xxx functions as though it had an
+ACS capability and PCI_ACS_RR and PCI_ACS_CR were set in the ACS
+Control register, i.e., all peer-to-peer traffic is directed
+upstream instead of being routed internally.
+
+Add ACS quirk for FF5xxx NICs in pci_quirk_wangxun_nic_acs() so the
+functions can be in independent IOMMU groups.
+
+Signed-off-by: Mengyuan Lou <mengyuanlou@net-swift.com>
+---
+
+v2:
+- Update commit and comment logs.
+v1:
+https://lore.kernel.org/linux-pci/3D914272-CFAE-4B37-A07B-36CA77210110@net-swift.com/T/#t
+
+ drivers/pci/quirks.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index dccb60c1d9cc..8103bc24a54e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4996,18 +4996,21 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ }
+ 
+ /*
+- * Wangxun 10G/1G NICs have no ACS capability, and on multi-function
+- * devices, peer-to-peer transactions are not be used between the functions.
+- * So add an ACS quirk for below devices to isolate functions.
++ * Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
++ * multi-function devices, the hardware isolates the functions by
++ * directing all peer-to-peer traffic upstream as though PCI_ACS_RR and
++ * PCI_ACS_CR were set.
+  * SFxxx 1G NICs(em).
+  * RP1000/RP2000 10G NICs(sp).
++ * FF5xxx 40G/25G/10G NICs(aml).
+  */
+ static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	switch (dev->device) {
+-	case 0x0100 ... 0x010F:
+-	case 0x1001:
+-	case 0x2001:
++	case 0x0100 ... 0x010F: /* EM */
++	case 0x1001: case 0x2001: /* SP */
++	case 0x5010: case 0x5025: case 0x5040: /* AML */
++	case 0x5110: case 0x5125: case 0x5140: /* AML */
+ 		return pci_acs_ctrl_enabled(acs_flags,
+ 			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 	}
+-- 
+2.43.2
+
 
