@@ -1,244 +1,207 @@
-Return-Path: <linux-pci+bounces-16849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C10949CDB3E
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 10:14:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D08899CDB40
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 10:15:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F370B23703
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:14:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 430EEB22148
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2024 09:15:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9906A18EFD4;
-	Fri, 15 Nov 2024 09:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7570E18A6AF;
+	Fri, 15 Nov 2024 09:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JCRM5k72"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UghehhMv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E860918A922
-	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 09:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE36189F39
+	for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 09:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731662070; cv=none; b=rH/SPsaUHq3Hz67qQ5k6CmjUEWbBu5orOGSgMbDYp+n6ZBokd3PnaLQy6wwr0aLvd7GpTJKeguCc/clSxABhAVB0139cB8NKhl5Gner3bV34g47GfbKYFa/H1nilUShHzlYZl27lcfga05Dkwn6h+cuj/ihjptgORDYdTO1adzw=
+	t=1731662113; cv=none; b=Jy69N6w4EZvUgzCuv9s6mzMJavEwKkUU6FLgOVYr+88OiApQJ7+N86NQwpQX1ucJvZOZo3NVQ54XnYM8KClBQ3krOvEiWFICujK+jWGLr7/pmd5GpNhKOCffytH10VQyJydABu62Vha+iw0WTCDLG9rcY/4L1VWv3d7NSJn360g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731662070; c=relaxed/simple;
-	bh=hwecmHve4AYzi3zhdSgFcUIpqnu5U8ofdUi5RzOnxe4=;
+	s=arc-20240116; t=1731662113; c=relaxed/simple;
+	bh=JGcQJOfvTUFJj/MD2Hu4QlmPKdgk9EdvvQsKVG943GQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZ7ItCqrtfDshvN1/QlACz0HkTaJNiBIH24kukZoxSk7nyvEvuqPwpf9xnMmq+A++5+9I53J5/U6eTddOjxkJxhjg4sa5jRoJx3rEyG8sZ1KielXjT7zZzKP7syVbVX6beAtWhS504HGYB0vrJZdBRlVgd/ZYcxMfVJbVSC+msM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JCRM5k72; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-211a4682fcaso11911655ad.2
-        for <linux-pci@vger.kernel.org>; Fri, 15 Nov 2024 01:14:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731662068; x=1732266868; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=N+Mfi619jV2ZU2LxquMSToNnF3nnJZBbCZyP7JQTlA0=;
-        b=JCRM5k72LIDRgFmhxvVVkKD+eub55ZNmi5KEiLJJQpMuAGauuAdXpZS/kxqY3V5PtH
-         MXHuxabF97/OjoE2GrC18EvkOuy2xQlW74ssbo9/QLXep/piQ4cYM2RxnuHEi5glg0Jd
-         cQk5gB0Jeb4/nHqh+JjUjZIH5GOkP7/qx+TkkuFsYHlbqlRGTtIb53LAwBPq1tmb4BAB
-         nuLFsd0W9A2MiolEONZBIPj8oz3oQYPbHV+pfUEj3uQZMUMxJ27AwztiAmGNgluy2XiQ
-         T/Q93BRzBs8T8ZU1i7NKV9qmjJLUn6Qdi7GzEg3hYps/WBLuEhZT5TkAmTTDKtDyZF0J
-         MV6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731662068; x=1732266868;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N+Mfi619jV2ZU2LxquMSToNnF3nnJZBbCZyP7JQTlA0=;
-        b=dDp/u+HZVJMaaE34qdLx6nBx/E2QCnW7z4uq8Tet5vOmyQI3mpWAheB5wsHELJU/zx
-         MSffVfl2t0vojCUxwCgSBSWX5630z89Xscj2jR1vRRyq5/ZT+ze6qghOB239AD561OEs
-         vu3yGBfeU4XoRUx4PEHqnFWDbhkg2XYl5P733kBkzII3z94IysC3ZZmWj/SEElyTwUaG
-         wcKy6a8uhPOJwAitMCvgNv1kMCazRKnm+8gzmPrCuAhkHdl/uZSe9fEo85up0k6Yh1z3
-         jBpPxlxu//SVYGJ8VJzCQuAERo8vvxUOUcyxuyrJzfwZNDZWGl5vbvUUWKOD1tQdS0Va
-         dGOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFhjLDoVzmGbPH/lH2CmQHGKj8MlisOZ9och/Sd1+sLqu4NiwIc4C7dVnopoFatQ8dnQ5/+/RXQMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGPZkq2koy8beieL0OboOYlNSmSnLGO0we9kDOW0uzmcOccAnB
-	RuO5U/JDhhikquIKSicM3AbAGWrY0tT0jPFwfZXTLntzCsNZcXFkQ9n8PQoAMQ==
-X-Google-Smtp-Source: AGHT+IFalRU+mwBU4W5KvAkQCdFoplxq4VGGIkYCsSP88HNIjh6dZDKwbkVdM9Nbr+j7d3y1wA/5bQ==
-X-Received: by 2002:a17:902:d505:b0:20c:cf39:fe3c with SMTP id d9443c01a7336-211d0ebf209mr26364095ad.41.1731662067691;
-        Fri, 15 Nov 2024 01:14:27 -0800 (PST)
-Received: from thinkpad ([117.193.208.47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0f346e2sm8163945ad.141.2024.11.15.01.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 01:14:27 -0800 (PST)
-Date: Fri, 15 Nov 2024 14:44:19 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mayank Rana <quic_mrana@quicinc.com>
-Cc: jingoohan1@gmail.com, will@kernel.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com, krzk@kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_krichai@quicinc.com
-Subject: Re: [PATCH v3 1/4] PCI: dwc: Export dwc MSI controller related APIs
-Message-ID: <20241115091419.tc4p2jwukjdo56of@thinkpad>
-References: <20241106221341.2218416-1-quic_mrana@quicinc.com>
- <20241106221341.2218416-2-quic_mrana@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fKcunjnc+DD4qJGn2Qk2E8/9T8F8ykBfqIgVPLZggf9SCspatpE/6e1whrv3BVZfdMxMIHT6tphbqSlbEuoKcx8RO4CyXkbrhjGnLEMXqiDiwcYOvSnSI8AsLdtsDIBX+ipZLFE/Na9llkWb26MQhJP0lr/I8si20FrpfGIIQ34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UghehhMv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AB1C4CECF;
+	Fri, 15 Nov 2024 09:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731662112;
+	bh=JGcQJOfvTUFJj/MD2Hu4QlmPKdgk9EdvvQsKVG943GQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UghehhMvUJ5PBZM8CrNVwIFy42gb08UP6dc0/9g2YGdqdREUxGWlj12E1EGdUUVPF
+	 uJFPsXWpSbxPIhvHFlmimdk6iP1KNt0fqFSkjXNKYP2pgiL+bPNfYpC3wLCpTb7Web
+	 EU2qGkQs4zIggLYPL1g3bNap5ezDYxfSOS/xxxqGm06CNxzM8Z8BQjK+UK2gzbLI+J
+	 HclkiEy+zyTvy5GbJlG05s4qwrf9R2LRDGNZuR0BVnlC0EsmPbSirMVhledONdtGjN
+	 FQxCBSbA/legB2u5Z6L15iNfUHOVTClLWuvxY6bhyDgyPsc1bmd7aRGc3WNJ39vQi3
+	 Ps8e8KNwg5YXA==
+Date: Fri, 15 Nov 2024 10:15:07 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/4] PCI: mediatek-gen3: Move reset/assert callbacks
+ in .power_up()
+Message-ID: <ZzcRG3OInXZ2TP-Z@lore-rh-laptop>
+References: <20241109-pcie-en7581-fixes-v2-0-0ea3a4af994f@kernel.org>
+ <20241109-pcie-en7581-fixes-v2-3-0ea3a4af994f@kernel.org>
+ <20241115090231.nwmxl6acspxqflpc@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SrMGir1++zYv7uQM"
+Content-Disposition: inline
+In-Reply-To: <20241115090231.nwmxl6acspxqflpc@thinkpad>
+
+
+--SrMGir1++zYv7uQM
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241106221341.2218416-2-quic_mrana@quicinc.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 06, 2024 at 02:13:38PM -0800, Mayank Rana wrote:
-> To allow dwc PCIe controller based MSI functionality from ECAM pcie
-> driver, export dw_pcie_msi_host_init(), dw_pcie_msi_init() and
-> dw_pcie_msi_free() APIs. Also move MSI IRQ related initialization code
-> into dw_pcie_msi_init() as this code executes before dw_pcie_msi_init()
-> API to use with ECAM driver.
-> 
-> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 38 ++++++++++---------
->  drivers/pci/controller/dwc/pcie-designware.h  | 14 +++++++
->  2 files changed, 34 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 3e41865c7290..25020a090db8 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -250,7 +250,7 @@ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> -static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-> +void dw_pcie_free_msi(struct dw_pcie_rp *pp)
->  {
->  	u32 ctrl;
->  
-> @@ -263,19 +263,34 @@ static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
->  	irq_domain_remove(pp->msi_domain);
->  	irq_domain_remove(pp->irq_domain);
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_free_msi);
->  
-> -static void dw_pcie_msi_init(struct dw_pcie_rp *pp)
-> +void dw_pcie_msi_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	u64 msi_target = (u64)pp->msi_data;
-> +	u32 ctrl, num_ctrls;
->  
->  	if (!pci_msi_enabled() || !pp->has_msi_ctrl)
->  		return;
->  
-> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> +
-> +	/* Initialize IRQ Status array */
-> +	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
-> +		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
-> +				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-> +				    pp->irq_mask[ctrl]);
-> +		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
-> +				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-> +				    ~0);
-> +	}
-> +
->  	/* Program the msi_data */
->  	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_LO, lower_32_bits(msi_target));
->  	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
->  
->  static int dw_pcie_parse_split_msi_irq(struct dw_pcie_rp *pp)
->  {
-> @@ -317,7 +332,7 @@ static int dw_pcie_parse_split_msi_irq(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> -static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> +int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct device *dev = pci->dev;
-> @@ -391,6 +406,7 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_msi_host_init);
->  
->  static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
->  {
-> @@ -802,7 +818,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -	u32 val, ctrl, num_ctrls;
-> +	u32 val;
->  	int ret;
->  
->  	/*
-> @@ -813,20 +829,6 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  
->  	dw_pcie_setup(pci);
->  
-> -	if (pp->has_msi_ctrl) {
-> -		num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> -
-> -		/* Initialize IRQ Status array */
-> -		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
-> -			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
-> -					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-> -					    pp->irq_mask[ctrl]);
-> -			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
-> -					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-> -					    ~0);
-> -		}
-> -	}
-> -
->  	dw_pcie_msi_init(pp);
->  
->  	/* Setup RC BARs */
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 347ab74ac35a..ef748d82c663 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -679,6 +679,9 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
->  
->  #ifdef CONFIG_PCIE_DW_HOST
->  irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
-> +void dw_pcie_msi_init(struct dw_pcie_rp *pp);
-> +int dw_pcie_msi_host_init(struct dw_pcie_rp *pp);
-> +void dw_pcie_free_msi(struct dw_pcie_rp *pp);
->  int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
->  int dw_pcie_host_init(struct dw_pcie_rp *pp);
->  void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
-> @@ -691,6 +694,17 @@ static inline irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp)
->  	return IRQ_NONE;
->  }
->  
-> +static void dw_pcie_msi_init(struct dw_pcie_rp *pp)
+> On Sat, Nov 09, 2024 at 10:28:39AM +0100, Lorenzo Bianconi wrote:
+> > In order to make the code more readable, move phy and mac reset lines
+> > assert/de-assert configuration in .power_up() callback
+> > (mtk_pcie_en7581_power_up()/mtk_pcie_power_up()).
+> >=20
+>=20
+> I don't understand how moving the code (duplicting it also) makes the cod=
+e more
+> readable. Could you please explain?
 
-Missing 'inline' here and below?
+Hi Manivannan,
 
-- Mani
+this has been requested by Bjorn in
+https://patchwork.kernel.org/project/linux-pci/patch/aca00bd672ee576ad96d27=
+9414fc0835ff31f637.1720022580.git.lorenzo@kernel.org/#26110282
 
-> +{ }
-> +
-> +static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-> +{ }
-> +
->  static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  {
->  	return 0;
-> -- 
-> 2.25.1
-> 
+>=20
+> > Introduce PCIE_MTK_RESET_TIME_US macro for the time needed to
+> > complete PCIe reset on MediaTek controller.
+> >=20
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek-gen3.c | 28 ++++++++++++++++++++-=
+-------
+> >  1 file changed, 20 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
+controller/pcie-mediatek-gen3.c
+> > index 8c8c733a145634cdbfefd339f4a692f25a6e24de..1ad93d2407810ba873d9a16=
+da96208b3cc0c3011 100644
+> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > @@ -120,6 +120,9 @@
+> > =20
+> >  #define MAX_NUM_PHY_RESETS		3
+> > =20
+> > +/* Time in us needed to complete PCIe reset on MediaTek controller */
+>=20
+> No need of this comment. Macro name itself is explanatory.
 
--- 
-மணிவண்ணன் சதாசிவம்
+ack, I will fix it.
+
+Regards,
+Lorenzo
+
+>=20
+> - Mani
+>=20
+> > +#define PCIE_MTK_RESET_TIME_US		10
+> > +
+> >  /* Time in ms needed to complete PCIe reset on EN7581 SoC */
+> >  #define PCIE_EN7581_RESET_TIME_MS	100
+> > =20
+> > @@ -867,6 +870,14 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen=
+3_pcie *pcie)
+> >  	int err;
+> >  	u32 val;
+> > =20
+> > +	/*
+> > +	 * The controller may have been left out of reset by the bootloader
+> > +	 * so make sure that we get a clean start by asserting resets here.
+> > +	 */
+> > +	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
+> > +				  pcie->phy_resets);
+> > +	reset_control_assert(pcie->mac_reset);
+> > +
+> >  	/*
+> >  	 * Wait for the time needed to complete the bulk assert in
+> >  	 * mtk_pcie_setup for EN7581 SoC.
+> > @@ -941,6 +952,15 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie =
+*pcie)
+> >  	struct device *dev =3D pcie->dev;
+> >  	int err;
+> > =20
+> > +	/*
+> > +	 * The controller may have been left out of reset by the bootloader
+> > +	 * so make sure that we get a clean start by asserting resets here.
+> > +	 */
+> > +	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
+> > +				  pcie->phy_resets);
+> > +	reset_control_assert(pcie->mac_reset);
+> > +	usleep_range(PCIE_MTK_RESET_TIME_US, 2 * PCIE_MTK_RESET_TIME_US);
+> > +
+> >  	/* PHY power on and enable pipe clock */
+> >  	err =3D reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets,=
+ pcie->phy_resets);
+> >  	if (err) {
+> > @@ -1013,14 +1033,6 @@ static int mtk_pcie_setup(struct mtk_gen3_pcie *=
+pcie)
+> >  	 * counter since the bulk is shared.
+> >  	 */
+> >  	reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->p=
+hy_resets);
+> > -	/*
+> > -	 * The controller may have been left out of reset by the bootloader
+> > -	 * so make sure that we get a clean start by asserting resets here.
+> > -	 */
+> > -	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets, pcie->phy=
+_resets);
+> > -
+> > -	reset_control_assert(pcie->mac_reset);
+> > -	usleep_range(10, 20);
+> > =20
+> >  	/* Don't touch the hardware registers before power up */
+> >  	err =3D pcie->soc->power_up(pcie);
+> >=20
+> > --=20
+> > 2.47.0
+> >=20
+>=20
+> --=20
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
+
+--SrMGir1++zYv7uQM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZzcRGAAKCRA6cBh0uS2t
+rIZRAP9lkLZ21zAHZX2cmYhCDHsB3Dka4V3SIPgL3D0ExpmzTgEAoZVmGhfQHuM2
+iBl8NcVaLGfGiQ8tT+Uf+4pk+FqFTgw=
+=ZgWM
+-----END PGP SIGNATURE-----
+
+--SrMGir1++zYv7uQM--
 
