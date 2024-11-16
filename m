@@ -1,109 +1,125 @@
-Return-Path: <linux-pci+bounces-16962-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16963-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6524F9CFD47
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 09:19:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E07DC9CFD9B
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 10:42:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B33C280FCB
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 08:19:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7BC05B28AE1
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 09:42:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F151922E8;
-	Sat, 16 Nov 2024 08:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE40192D86;
+	Sat, 16 Nov 2024 09:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHDw2jUn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILJKafl7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD6020DF4;
-	Sat, 16 Nov 2024 08:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECD18D625
+	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 09:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731745181; cv=none; b=ozZUCKmgcUrtaU1bbbK3/7v+/ogjxOaMx60V+EeRJazwoREEg2fjPJBbSs5JVzHjtce+xiSFzzTfUaMwAClZ9qZQpssIz+HkbVdOEMowsfPS+hJZDVdzATSYdWjGnWDof+qu28QhDxpw6oxVNbW/6E6Y6rdIrvK9Lap598WX1yQ=
+	t=1731750162; cv=none; b=CgGzFgBIpS3UpfldeiwSRpQkwDFEn21wmn+rgq/nRyMTwuOy7Sor98UlGT6zll7ND1DfGJAW3UBz4prqHRTC3/jjluZkmTfUViXpmk+5xdvu730jm59jvseq1q/y2py7UaoxDDpxsRYBwVTZKHUxUt1pjB0a9cRwJlLbFcTXk7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731745181; c=relaxed/simple;
-	bh=5ckEAFt3DCXgUGzrfG8vGUMcL5UShRW6eE3OUEf8DWo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q6I4+I6EWstrsdMNVHid3xnmNdehyIwGgdjhRk7IeBgUdFgVsdeaVOlDW5pI7ntN2ktzk1+uMDipeFXxx1ja13bXyFOzE8yDhg2eAWvNRg6zh3y60Gm60avNaUSR2BJV4Mnpu3T10wd443chq6cesNpJ4sjBjugZrqmP/D9cSa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHDw2jUn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711AAC4CEC3;
-	Sat, 16 Nov 2024 08:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731745180;
-	bh=5ckEAFt3DCXgUGzrfG8vGUMcL5UShRW6eE3OUEf8DWo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PHDw2jUn3ctkoH1Bf8Glb8QZo2OPAuZJaGTG7vPfibtyxjLOQiCuVCsGyzsPwbOX6
-	 XB6d99IK7HwSlgSHOwTylt7T+sI6dTABaHdgo19bW7Wq5kGcLGwBdSelmGHkxS6KkI
-	 WiDncig5kE5mXrxpaT+V2Cxbx3RQdgmWOVx0r5se2XMsqkrp9QODGvwQWtBPzqzrfM
-	 4GtSHbZ4XK2HY7qCBXCh17Bf57Uz53TMWL7zjiN9yCe3KKwzxZrroWjO8n6PmNfQdI
-	 xeZAg26j8FtuIB/x2xDJTXqa6h/vl4Fq0wLopnpw/Hh09kUiBFnjaXZ59daii1SJuk
-	 r8wLNAvQl1oWg==
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Sat, 16 Nov 2024 09:18:27 +0100
-Subject: [PATCH v3 6/6] PCI: mediatek-gen3: rely on msleep() in
- mtk_pcie_en7581_power_up()
+	s=arc-20240116; t=1731750162; c=relaxed/simple;
+	bh=ely5MYTLzQyvl+pvU2ClCkiagUqSAlSeX+ke/ZVqkqM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=rH2G38DFAraUPpO0L44ZvDqY+GDj75weIBqSnuGCpTx3lgdKtZFP00oKgfjczap2JIJf3/g7fI0ttph7sNvr8GvepF8f+h2nrEC8TuJAH5FWcOoSW4JPMzvwvfiEkgsu4f3LuR/njeoZoxUCtR5+EXEN4ege5SrZxZtZXYR5HcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILJKafl7; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53da2140769so359033e87.3
+        for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 01:42:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731750159; x=1732354959; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ely5MYTLzQyvl+pvU2ClCkiagUqSAlSeX+ke/ZVqkqM=;
+        b=ILJKafl79c9J9lRG1JiHQg7fTZLZZPbEAl3k9QDcnxbFBUzFEK+nJpl8FJSnpZXGPO
+         zf6Hbn/+9UQgiKuOwVPNaXkDEU8e87sXGtMtxpqygR1nx56dgsOO5/0KogwgGeAwgnBs
+         SdWWnyuu8cFtAJhAn/3GIF0nDC2w6iWhbs4ar9hDhDpnu/8x0V3Z6yOIM/ynPwIYPK3y
+         LnCjAPwJCEj2e7csEdN8Qje8sEjGmH3Vyk6oarC7Gl+cDCnPucSjgvK5fA+YSephc6TT
+         j4CcSHFJuEF9OtPA7sSL1bNdIfReHrpUeS54WutpQrMMal+KR2dg6bPyaZ/dZFexrGbq
+         qx7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731750159; x=1732354959;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ely5MYTLzQyvl+pvU2ClCkiagUqSAlSeX+ke/ZVqkqM=;
+        b=DFqQtpPMoWNTSdArnYezDkKfd1NO02SUbE0nYaKQG3qT1/YMt1i6khUYJEphmZmDdL
+         AaSZV/jntPJuVCqU/99DNCxEydb+7MPp39QUzlwBZUeL81GWgbkw6PVrvE6g3a2lUvh0
+         aoBd10KWk3SGHtTEHdSfZNIitSnpnZteGHzt6dB9AEt9GC2UzVQo0bCiey1mNi29oTkh
+         aNt6+FH8ENF7cSNlE7je7fxGstmwG0gLTZCUnE42Ol5bIxaoTB4AGDrN50SUK2lUS1Dp
+         embI3kwCoOPaT23cFKyI/DIDTP+i1/4OqccVNoW5ScEO9asAgIYzRYCzCaVLjLHi+xtD
+         tzrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVg5JdCd2p9P+ZKIDqICtHG998DXGv8QhtmOFWRLclb14Tryqe70evmGmmtbHAp20oNSuNLwJzb8PQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBcTA8yAsMVaQEpK0ltfxO9MOCMattqejruNmSrllg4TG3ylpm
+	66kdzRpZYr1XW9IHl7PC5cUxjIW/P0mtiyLG2V0j0cYTT2fPw8noAstdPj+EB1n+scisLgRyFDy
+	HXy/yhq65cNJa12JG0oa4b2H7RrLt3uZp
+X-Google-Smtp-Source: AGHT+IGUWBWfvq9M2jiG0ZpYLocsgxY6rUK8j72owtLTT0ESnP86jLUUlFLS0T9IFp3bU/r6TmKs5X4kfMZC5h4kRMU=
+X-Received: by 2002:a05:651c:1512:b0:2fb:2980:6e3d with SMTP id
+ 38308e7fff4ca-2ff6068171fmr23408361fa.15.1731750158979; Sat, 16 Nov 2024
+ 01:42:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241116-pcie-en7581-fixes-v3-6-f7add3afc27e@kernel.org>
-References: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
-In-Reply-To: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
-To: Ryder Lee <ryder.lee@mediatek.com>, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
- Lorenzo Bianconi <lorenzo@kernel.org>
-X-Mailer: b4 0.14.2
+From: Ajay Garg <ajaygargnsit@gmail.com>
+Date: Sat, 16 Nov 2024 15:12:26 +0530
+Message-ID: <CAHP4M8UZ2Yxo+M2vP8bwaN5869HN0rrje2d+gqe7EPghX35OCQ@mail.gmail.com>
+Subject: Query regarding mechanism of reading-from/writing-to PCI-device from
+ kernel-space VS user-space
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Since mtk_pcie_en7581_power_up() runs in non-atomic context, rely on
-msleep() routine instead of mdelay().
+Hi everyone.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/pci/controller/pcie-mediatek-gen3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+First, setting up context; kindly correct me if I am wrong :)
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 795f134e1970c504e8d9588c09a9c3ff51e5397e..aaec0cb6cc1c016d049e8a88148870de560b9ce2 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -926,7 +926,7 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
- 	 * Wait for the time needed to complete the bulk assert in
- 	 * mtk_pcie_setup for EN7581 SoC.
- 	 */
--	mdelay(PCIE_EN7581_RESET_TIME_MS);
-+	msleep(PCIE_EN7581_RESET_TIME_MS);
- 
- 	/*
- 	 * Unlike the MediaTek controllers, the Airoha EN7581 requires PHY
-@@ -954,7 +954,7 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
- 	 * Wait for the time needed to complete the bulk de-assert above.
- 	 * This time is specific for EN7581 SoC.
- 	 */
--	mdelay(PCIE_EN7581_RESET_TIME_MS);
-+	msleep(PCIE_EN7581_RESET_TIME_MS);
- 
- 	/* MAC power on and enable transaction layer clocks */
- 	reset_control_deassert(pcie->mac_reset);
+In kernel-space :
+-----------------------
 
--- 
-2.47.0
+*
+We use ioremap to map a BAR-area physical-memory into kernel's
+virtual-address space.
 
+*
+We then need to use *special* accessor-functions (ioread/iowrite and
+friends) to ensure that the I/O is propagated through fine via path
+kernel-virtual-memory <=> BAR-physical-memory <=> device
+
+
+In user-space :
+-----------------------
+
+*
+We mmap() a sysfs-file, which causes the kernel to map a userspace VMA
+to the same BAR-area physical-memory (using remap_pfn_range() or
+equivalent).
+
+*
+We then use *vanilla* dereferencing to read/write via path
+userspace-VMA <=> BAR-physical-memory <=> device.
+
+
+Now, my queries are regarding the usage of *special*
+accessor-functions in kernel-mode, versus *vanilla* dereferencing in
+user-mode.
+
+a)
+Firstly, is my assertion true? :)
+
+b)
+If yes, then how is the path userspace-VMA <=> BAR-physical-memory <=>
+device possible via *vanilla* dereferencing in user-mode?
+
+
+Will be grateful for insights ..
+
+Thanks and Regards,
+Ajay
 
