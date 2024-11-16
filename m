@@ -1,82 +1,46 @@
-Return-Path: <linux-pci+bounces-16965-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16966-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50B599CFE68
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 12:20:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 654549CFED8
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 13:45:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6E931F2525D
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 11:20:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3B911F211AA
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 12:45:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E2774E09;
-	Sat, 16 Nov 2024 11:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2451A193419;
+	Sat, 16 Nov 2024 12:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B7EnHEOv"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="MPc66hNV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B3E191F6A
-	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 11:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD3194A65;
+	Sat, 16 Nov 2024 12:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731755999; cv=none; b=DAixBaqfoON2JSxLKUf8RUzSlLfbaBBcKXA6TujEbfh0sdQQ6qvI3zMppPBpM2iMtjZ2X88MIesb5VRLoWwkBdcvv9td/FjW81reAscQfeys+DVWpjQ/CeRGLHIngpuMUBMQRMa2MWHuOwAi4FsE996TCVbStSck2y/DwiYB4/Q=
+	t=1731761100; cv=none; b=WxQU99ehTRMxZu/r9M8cOBoI1aI8nFaEC3I1H1UR+VczSJwB55lHG8KC4SN7WVbF5rh8765aD5Vzm+DXD0YCILOzW3+AGFJsxNVFHvIiN22dQDAzxJu+sFrMrFLGy003Q9LtoqJKzH0vR+K/coGosiSEtFKrxGuLVf7ZeaTcRTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731755999; c=relaxed/simple;
-	bh=J6kfy9ry4YBbCS1oLGeGeLUUisvy404awHC2dh+6QTk=;
+	s=arc-20240116; t=1731761100; c=relaxed/simple;
+	bh=01R6kCl32Rbc6gmDjQT6oBUa9YpvvlmRpA5saXtpNKk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KqaeyKAftq91EsK88tMjS26CQiNJ/l3MVUdW1LnMhq3h3nBvsErZ1Y9hdP2KckvFLoj0hDAN4i11XOPVr3RHoMNU1CBm8WGXKDWkjw0Ste+t3/V21wflhGRMEImg3RyBgU7x5/4kJ8MFtlrRdx2TU24+bfpFL9XePZwjoKGGK4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=fail smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B7EnHEOv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AG3qtYH026145
-	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 11:19:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Oq/B/suR0M71LPCQPb6fxgoh4cWfYRvCoyxYOV+0IY8=; b=B7EnHEOvrFowOXEK
-	k5oH1i/wQQ9QmFUaHW88uNiLPFO5EUGaxdhYxlTfch05PLvUxLJe26TkYg9JZ9CN
-	IfCxrIeJd/IK3BgMG2Wpdilvviebk/DVV3LBP7fHCCjslCEblsJ9qjfyiyQM6x8y
-	Sfe9Kt0on8oTqIrWnax4VbBaU66EIoGJr7TPtpGIgPf6MGKcDNxTpyqp08p7b678
-	X6zuUvXOLUCpZoDAEDjXPt8Z2ryn/4oSUe6mNGMhw96nZG6fxvR3tYg346fB57WM
-	7pAWQ7rS7T4YIHRgSvw4Ki3EoixgYeSG1r5C3f+ldI54/drbZCYyzRfqR+vrOJmq
-	U5ZjtA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42xkv9rnch-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 11:19:56 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6cbe6e6bcf2so6611356d6.2
-        for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 03:19:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731755993; x=1732360793;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oq/B/suR0M71LPCQPb6fxgoh4cWfYRvCoyxYOV+0IY8=;
-        b=AaQkhJcOP4ZutoWWoZbEoArJCTM9UHz4KOUmdr0u8X7N/byA4tdtxvuwfQryaUXibP
-         YGW4g0+pS0G6BQFmOozd979uw1/IhdiyKnhQG+/WhP9YmrWfMYVspHRL4C3h9I7Q507J
-         YGw69fCMzvmZkyMgL94PO15WLoZ6LVciDd5xjEQyCrbdF0iNn7layle5WCzo4wyx1nKF
-         6CaD3mrgyWd5jCNXXPqZPCjaXsAAb2Gay8MRzuWYkdsyLaEQzcUApLe3T/HwO86KkZAy
-         dPcAnW58BfbM9ncIyC5vt41HnPsWjjaqI1VmfCa+UJPlRGrmSPRwIGEuJcZ4s3nSr/xf
-         c00w==
-X-Forwarded-Encrypted: i=1; AJvYcCU+XhwefPAFoDNcgD5CxTvUaOOw2mfvNuZfwpjS2a61DFpcPMlZG5jYffe5qabN5Mk5cQS9XF5/JgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxijyMz0lmqbuRwzK7rdapmpxcVy9Fy1a/ohQxuHgOj+qUqgidd
-	qmUGZbEQ2LDhVC+jkfV9DSEj1aICf21YtHDWuQ3NXx7m94p68NELo+RUOVSOg0ukLta5RCeyMEQ
-	AuRVYs4ErMfIFUkHjIyjjqHFpNkp49WCzcrA3o9vMD0Vuz8yMFvSk6ZAxSZs=
-X-Received: by 2002:a05:620a:458e:b0:7b3:5cd2:783 with SMTP id af79cd13be357-7b3622aa78cmr314673285a.5.1731755993625;
-        Sat, 16 Nov 2024 03:19:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFR6XSRrca8UmpUuqRAeeQAihbCAS0Ja2wPQnLIo2nWzdYWymh1Oq227aZVjpMhi2PHlj2Jcg==
-X-Received: by 2002:a05:620a:458e:b0:7b3:5cd2:783 with SMTP id af79cd13be357-7b3622aa78cmr314671285a.5.1731755993178;
-        Sat, 16 Nov 2024 03:19:53 -0800 (PST)
-Received: from [192.168.212.120] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20dffd771sm294251066b.121.2024.11.16.03.19.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Nov 2024 03:19:52 -0800 (PST)
-Message-ID: <5648484f-38f2-4c75-b8a3-7a0148dc940b@oss.qualcomm.com>
-Date: Sat, 16 Nov 2024 12:19:49 +0100
+	 In-Reply-To:Content-Type; b=EF+66FDKN5g5mBBkv2x8THqbdf7WY2/ODDToVyuXVJmbOK6rRwRpkX/aU+qD3k4bydo4IU75LGwOuFJwhuAdnnzxhOVxh39Uc5qQ55nRTVREoxn0zMmtVz9Mqi/JktZZ70/WULW4rMZcp7ki1M0qeY3F7NtmIY2c43avgbH8yqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=MPc66hNV; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1731761092; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=vLuh1y2Va46zhl794h3M3rkZHy9DSRfMER9AY/fhJDQ=;
+	b=MPc66hNV9TWD1uFbjGkertIrwu4ISCvg9krgHKfl1ieL6f2CFGNO/4nsYizrjar2eWzF6yQib1mYq0hv6twWAQIDwqXGO1MStPShk4IVvKEUtt8fLCBb8DeFfIe9/DoXU55hS9m6Hw40aub3EaQa7oULaz4QEybUY6zUuIr4a+U=
+Received: from 30.246.162.170(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJWh6vw_1731761090 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 16 Nov 2024 20:44:51 +0800
+Message-ID: <22d27575-fc68-4a7f-9bce-45b91c7dfb98@linux.alibaba.com>
+Date: Sat, 16 Nov 2024 20:44:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,63 +48,149 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com, kernel@quicinc.com,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20241116-presets-v1-0-878a837a4fee@quicinc.com>
- <20241116-presets-v1-1-878a837a4fee@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20241116-presets-v1-1-878a837a4fee@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: Kxjjljh8fnjB0mJHpvJDq5-7ll_40k89
-X-Proofpoint-GUID: Kxjjljh8fnjB0mJHpvJDq5-7ll_40k89
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=897 priorityscore=1501 suspectscore=0
- malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 bulkscore=0
- clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411160096
+Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+To: "Bowman, Terry" <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ bhelgaas@google.com, kbusch@kernel.org, Lukas Wunner <lukas@wunner.de>
+Cc: mahesh@linux.ibm.com, oohall@gmail.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com
+References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
+ <20241112135419.59491-3-xueshuai@linux.alibaba.com>
+ <a76394c4-8746-46c0-9cb5-bf0e2e0aa9b5@amd.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <a76394c4-8746-46c0-9cb5-bf0e2e0aa9b5@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 16.11.2024 2:37 AM, Krishna chaitanya chundru wrote:
-> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
-> rates used in lane equalization procedure.
+
+
+在 2024/11/16 04:20, Bowman, Terry 写道:
+> Hi Shuai,
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index a36076e3c56b..6a2074297030 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -2993,6 +2993,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->  			phys = <&pcie6a_phy>;
->  			phy-names = "pciephy";
->  
-> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
+> On 11/12/2024 7:54 AM, Shuai Xue wrote:
+>> The AER driver has historically avoided reading the configuration space of
+>> an endpoint or RCiEP that reported a fatal error, considering the link to
+>> that device unreliable. Consequently, when a fatal error occurs, the AER
+>> and DPC drivers do not report specific error types, resulting in logs like:
+>>
+>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>    nvme nvme0: frozen state error detected, reset controller
+>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>
+>> AER status registers are sticky and Write-1-to-clear. If the link recovered
+>> after hot reset, we can still safely access AER status of the error device.
+>> In such case, report fatal errors which helps to figure out the error root
+>> case.
+>>
+>> After this patch, the logs like:
+>>
+>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>    nvme nvme0: frozen state error detected, reset controller
+>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> ---
+>>   drivers/pci/pci.h      |  3 ++-
+>>   drivers/pci/pcie/aer.c | 11 +++++++----
+>>   drivers/pci/pcie/dpc.c |  2 +-
+>>   drivers/pci/pcie/err.c |  9 +++++++++
+>>   4 files changed, 19 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 0866f79aec54..6f827c313639 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -504,7 +504,8 @@ struct aer_err_info {
+>>   	struct pcie_tlp_log tlp;	/* TLP Header */
+>>   };
+>>   
+>> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
+>> +			      bool link_healthy);
+>>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>>   #endif	/* CONFIG_PCIEAER */
+>>   
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index 13b8586924ea..97ec1c17b6f4 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
+>>    * aer_get_device_error_info - read error status from dev and store it to info
+>>    * @dev: pointer to the device expected to have a error record
+>>    * @info: pointer to structure to store the error record
+>> + * @link_healthy: link is healthy or not
+>>    *
+>>    * Return 1 on success, 0 on error.
+>>    *
+>>    * Note that @info is reused among all error devices. Clear fields properly.
+>>    */
+>> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
+>> +			      bool link_healthy)
+>>   {
+>>   	int type = pci_pcie_type(dev);
+>>   	int aer = dev->aer_cap;
+>> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>>   	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>>   		   type == PCI_EXP_TYPE_RC_EC ||
+>>   		   type == PCI_EXP_TYPE_DOWNSTREAM ||
+>> -		   info->severity == AER_NONFATAL) {
+>> +		   info->severity == AER_NONFATAL ||
+>> +		   (info->severity == AER_FATAL && link_healthy)) {
+>>   
+>>   		/* Link is still healthy for IO reads */
+>>   		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
+>> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
+>>   
+>>   	/* Report all before handle them, not to lost records by reset etc. */
+>>   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>> -		if (aer_get_device_error_info(e_info->dev[i], e_info))
+>> +		if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>>   			aer_print_error(e_info->dev[i], e_info);
+>>   	}
+> 
+> Would it be reasonable to detect if the link is intact and set the aer_get_device_error_info()
+> function's 'link_healthy' parameter accordingly? I was thinking the port upstream capability
+> link status register could be used to indicate the link viability.
+> 
+> Regards,
+> Terry
 
-If we make all of these presets u8 arrays, we can use the:
+Good idea. I think pciehp_check_link_active is a good implementation to check
+link_healthy in aer_get_device_error_info().
 
-property = [0xff 0xff 0xff 0xff];
+   int pciehp_check_link_active(struct controller *ctrl)
+   {
+   	struct pci_dev *pdev = ctrl_dev(ctrl);
+   	u16 lnk_status;
+   	int ret;
+   
+   	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+   	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
+   		return -ENODEV;
+   
+   	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+   	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
+   
+   	return ret;
+   }
 
-syntax
+Thank you for valuable comments.
 
-Konrad
+Best Regards
+Shuai
 
