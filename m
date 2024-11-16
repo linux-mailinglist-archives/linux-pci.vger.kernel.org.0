@@ -1,71 +1,71 @@
-Return-Path: <linux-pci+bounces-16986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F29559D0084
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 19:38:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFCBA9D0085
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 19:38:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8157286D39
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 18:38:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 771921F233A5
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 18:38:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E3EC19046E;
-	Sat, 16 Nov 2024 18:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AAC719046E;
+	Sat, 16 Nov 2024 18:38:37 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FAA18E361
-	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 18:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97BC8C7;
+	Sat, 16 Nov 2024 18:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731782278; cv=none; b=qub0WWPfXgAPBwaS9vgUW9gJeclzVLfazUQNG0TuL9ndQk+CvVhazeTAzzKSzvt4josibTs+8UkXo+XY0KNIQbtCapws/n88ul2AlS+crdXZxt0+oFC5u/lFtS6L9hrau5cvERtlW6yDWXq0Z2keExzFTrDnN6pgiPiVlronKKw=
+	t=1731782317; cv=none; b=M0I22QE7UIYMWDWA4aNnKifmUf3EGebC3TzL7iYbpWw7Ze5j/QprJLs5M6hq0HNLWCEstBykl0FJNefCOojbpPcspcDxLaRAZ32meNumvplT3yUHnl72+zhta316RNkqBEXkZFc8D7rxS3U0HTBGAJXsS1B/MlVrU+NwR497oJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731782278; c=relaxed/simple;
-	bh=OJD0HIYVluSfDAwsz03n40w1TA++lYn4bSEvEhoSc+s=;
+	s=arc-20240116; t=1731782317; c=relaxed/simple;
+	bh=0xsa1eGWQQgTpaUzAt7FclYb503yUFZilXozrXeqdQU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DKXFVMkPrx/531i8JUmGU21mD+mt7Mi/3ljzHqdzDx80Rta8RMlumUmv3CtlvLRiEGwRbyxuhEJpjiQ5VfhzFS2n0GMSw8k/foLBbhuTTrUKqcjMwc0F9d/gV0qAIDx9jAHmAaVS9Ph9M4piDOTEsg4PkS2XpKOL4QWCTU2Udd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPichG7gTfY58faU9+aeSrNmkPRu68IxNTdUxRs1yiz4pybgWw55rgB6I99u0yVeyrtITOgsy+y9o+D/8JIruT3SpHlxM5mqzQT7ggka4Fyoj/UOxGYKC7w7X91oLyEOwx2ib2CfmSzCgON8em39pc4ZsT9zT99ZtoHKg2jTfsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20ce5e3b116so4556685ad.1
-        for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 10:37:56 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21207f0d949so1352305ad.2;
+        Sat, 16 Nov 2024 10:38:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731782276; x=1732387076;
+        d=1e100.net; s=20230601; t=1731782315; x=1732387115;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ssDUbSFRnykumr6xwJvwrcFCjdAC9CfRw+lfy2PHrmc=;
-        b=uhBGULbQ997nAthc3OTUZuJvwXVUGi659NOmbmceY3YNYUoJOeMXn6ME/TELQaYkAa
-         FYgT1roHJ4JlqD9Qp5RfR/qcZPX8tUZt8uyIu6KAAsqiGjt15L8mNfgi4MySj1Fdwda3
-         G5PuI6Ja1Byq/5/esSV34yWXUCvDtAt7x7WFkaw8i0DNSGF+Muq5p7p2L+dJf4K9g0hN
-         B/+GwCFziDgQePPSbXegAWD73wmwB9UR83dR8StitTaMEFOfmyQiIshxKfcr+/ee9Op4
-         U8Q47QTxR2kAHtpdro1QpCgIKwJJhysVXkMOFOeWmCHjxU18DwsHO/qV52BqUva/OVXv
-         0k3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVba+CB9YsYQFR0xnxN+WRn9siORfjHIhzmIK/IeS4CXxNMQ6KRP8a7BsBeC8ay/uyhwn4UKPi+7qs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNaCG0FlweKVXiqn2fdZzFO/tpeJiiV4NJFVWFV2Hae7L7Guzp
-	qm0AANuW2+JyRgKvgVCcfT+IP8ZTUh2KHg1ObRdi1yR5l0hUuPvN
-X-Google-Smtp-Source: AGHT+IHV6hXfe3QxxmTqAy7LAxGmkB5x64aocEMuLdZWFq14pI6ldD5vJb9WHMCWbn6qe4dlXfxSkQ==
-X-Received: by 2002:a17:902:ea04:b0:20c:e262:2560 with SMTP id d9443c01a7336-211d0ed2754mr69429635ad.50.1731782275945;
-        Sat, 16 Nov 2024 10:37:55 -0800 (PST)
+        bh=5m7/YJOxEzK1/4/FwXTk3K3jZblGH0VWaE85X96sFhY=;
+        b=gQO10+QXdvdIo6AoMPUP6eZ4nzNuGzUp5JlMQQbkkqQ3VQv+AGwRU2b7dK7g1VoanB
+         HtfJYG82Zltei/IDofNv8n2bw0ZF+6Dwk/rQXf6uycrVjKks+JUZFzrAXeMqrZ8aEDeR
+         jSJt2ikfOMUJuUrsBzvvgKcHZYjWEJpbdlAiw9ZoT8maaAMZYV57C2S0C96lZeFA+Ix/
+         K1H4eb36UU9y1HGYHE/fm51RgdRbfjoGkQVEQ60uw/UNshsaptK7LkV5xLgOAJqYUvkZ
+         /J6vK9eueepRZc7+JHeyf3bwNz91fLyvwGzhvL+c2Cp/XAFwOWlDpY9htwzvmNP7rr0P
+         wwhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTOXYb1/1uKYAa1qYpxJl5MkmiGk0F4/ZVf0JbmDylNpXd9PIsST6wBuZVfwl2wvs3pv2dpbj7Izws@vger.kernel.org, AJvYcCX0TECSvTnrF32m/dhSRnBFL7RPDFJch4I05xFDc+6RupyYb0aLJLHg7KEld9wZdulJFBtqfdCFsgaCnlU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzW0q0vc94Cw3jpSAP3IEfMzKjl9E7eYq0KziDvqZsRri9ehDr
+	t+skGNkkKxiJJEnE1oBqrleIbmcp5Om2vpnz0sTpHvswPyzHtKye
+X-Google-Smtp-Source: AGHT+IEK0WhGqYxfVSmvxqa2UNwiRzUdq3ZzNmIj2MvqMTWnckxT+tV8qZHJRs9Uw5aIyeaVFpvApg==
+X-Received: by 2002:a17:902:d547:b0:212:500:74e with SMTP id d9443c01a7336-21205000ac5mr13252825ad.11.1731782315325;
+        Sat, 16 Nov 2024 10:38:35 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724771e2c17sm3340248b3a.160.2024.11.16.10.37.54
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724771c0dfcsm3425214b3a.106.2024.11.16.10.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2024 10:37:54 -0800 (PST)
-Date: Sun, 17 Nov 2024 03:37:52 +0900
+        Sat, 16 Nov 2024 10:38:34 -0800 (PST)
+Date: Sun, 17 Nov 2024 03:38:33 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Niklas Cassel <cassel@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: ep: Do not map more memory than needed to
- raise a MSI/MSI-X IRQ
-Message-ID: <20241116183752.GB890334@rocinante>
-References: <20241104205144.409236-2-cassel@kernel.org>
- <20241115071924.jn3xun6luqzd2ylp@thinkpad>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Use of_property_present() for non-boolean
+ properties
+Message-ID: <20241116183833.GC890334@rocinante>
+References: <20241104190714.275977-1-robh@kernel.org>
+ <20241115071708.nh6tnscmq5khr46o@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,49 +74,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241115071924.jn3xun6luqzd2ylp@thinkpad>
+In-Reply-To: <20241115071708.nh6tnscmq5khr46o@thinkpad>
 
 Hello,
 
-> > In dw_pcie_ep_init() we allocate memory from the EPC address space that we
-> > will later use to raise a MSI/MSI-X IRQ. This memory is only freed in
-> > dw_pcie_ep_deinit().
+> > The use of of_property_read_bool() for non-boolean properties is
+> > deprecated in favor of of_property_present() when testing for property
+> > presence.
 > > 
-> > Performing this allocation in dw_pcie_ep_init() is to ensure that we will
-> > not fail to allocate memory from the EPC address space when trying to raise
-> > a MSI/MSI-X IRQ.
-> > 
-> > We still map/unmap this memory every time we raise an IRQ, in order to not
-> > constantly occupy an iATU, especially for controllers with few iATUs.
-> > (So we can still fail to raise an MSI/MSI-X IRQ if all iATUs are occupied.)
-> > 
-> > When allocating this memory in dw_pcie_ep_init(), we allocate
-> > epc->mem->window.page_size memory, which is the smallest unit that we can
-> > allocate from the EPC address space.
-> > 
-> > However, when writing/sending the msg data, which is only 2 bytes for MSI,
-> > 4 bytes for MSI-X, in either case a single writel() is sufficient. Thus,
-> > the size that we need to map is a single PCI DWORD (4 bytes).
-> > 
-> > This is the size that we should send in to the pci_epc_ops::align_addr()
-> > API. It is align_addr()'s responsibility to return a size that is aligned
-> > to the EPC page size, for platforms that need a special alignment.
-> > 
-> > Modify the align_addr() call to send in the proper size that we need to
-> > map.
-> > 
-> > Before this patch on a system with a EPC page size 64k, we would
-> > incorrectly map 128k (which is larger than our allocation) instead of 64k.
-> > 
-> > After this patch, we will correctly map 64k (a single page). (We should
-> > never need to map more than a page to write a single DWORD.)
-> > 
-> > Fixes: f68da9a67173 ("PCI: dwc: ep: Use align addr function for dw_pcie_ep_raise_{msi,msix}_irq()")
-> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > 
-> FWIW,
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Picked this tag, too.  Thank you!
 
