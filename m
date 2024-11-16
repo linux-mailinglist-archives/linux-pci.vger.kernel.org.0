@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-16960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47D299CFD43
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 09:19:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D16529CFD46
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 09:19:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D572281208
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 08:19:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B295B24E63
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 08:19:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40469192D7E;
-	Sat, 16 Nov 2024 08:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA2781925BA;
+	Sat, 16 Nov 2024 08:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MO5STveO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tot5XOPX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1447338382;
-	Sat, 16 Nov 2024 08:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9059238382;
+	Sat, 16 Nov 2024 08:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731745172; cv=none; b=q0af4yUfRl+bqQ4gEeJuvDoBJZ+85ZGII+6g4RbbVkFk/9ZFud3x1H1ibGcRyKoY39gTLH+j5Rxx6OwkR1Ik4t9ohHAjt6I/zDVLT42tdZMp3oRzJ+jE7DHSggBTjzCHliTFYIBlhRjcXnQD+H5aDj2x/STA348TKAKcWK2ukVM=
+	t=1731745176; cv=none; b=gMEUcaLAzoAJZ2aYH/XmU2OXN+iGz7Plt6NbriFxam/R1oKcfBiSpV3kfSdYwwEuIyD16JQMAF1yw4z+7epj2v9ga/G/Z8JRhHsQVqpiew8h0HF27R5fDuhIFn5mdh7t+mvXVpH50MFrVb+ChjNLrdKr8HsSfFmsGa/yNxCeYDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731745172; c=relaxed/simple;
-	bh=GCOmRbv/GyYdnHeXa5q5vrx3cB5TAF+dSdL665F3kuE=;
+	s=arc-20240116; t=1731745176; c=relaxed/simple;
+	bh=L4hA2wy50Ckn1zmHwXFzkEw586yHIeg2jaZbtr70EFA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K1TioXjBQNablq1xwV47Ah76VLgN/mg6e7Kz+mU6QwhJuFJVHLluAp9QU+jFLlvD0/fbYn2lG+HbVc+VXY13ALp9SwraSBkSq3g7uPnRdSwVoekitHsF2SenwlmoZGnAWJCRuPinTrRB7LnYeCltZOaneqVMw1t6Qd2q4vJhhtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MO5STveO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D290C4CEC3;
-	Sat, 16 Nov 2024 08:19:31 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Lj5O/ELgxsfW1WuO4++0SqW6bw5UbDkzjt3zg1Lnxq7NjP4jLhJ2V4WFZ9qCJW8yILw5tgBuJPbwrVIttvf6P/oDhnW51kECEXjUrA//MZmbfTRtlqMK/0/VL65VlkhQ7VqZs25pJk7akAii8M5rRM/UqdMPCV6g5koZEo9embA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tot5XOPX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9F20C4CEC3;
+	Sat, 16 Nov 2024 08:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731745171;
-	bh=GCOmRbv/GyYdnHeXa5q5vrx3cB5TAF+dSdL665F3kuE=;
+	s=k20201202; t=1731745176;
+	bh=L4hA2wy50Ckn1zmHwXFzkEw586yHIeg2jaZbtr70EFA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MO5STveOVD0odbSgLIzSj/yq1GdC7poAi7FEnmHg+3sKxl4fm0Aqp6/mvYCGHq5Jo
-	 IlnRpPxwGsZZZbTCIqwFWml87iKrbTZOgXkT4x4SdPGCaSXxD+ySsinDvstOy4f20X
-	 QPAfXVTugoivf4Rt+OPYCJ2NUaNpec5IJbjGl+CIJXrBkzGSE/l91lRxft3DnOBpyA
-	 uBasviRc7HqVfUHf9t/oFITErP3ptGDhSZ2tcI8s01amyOWeHYM52rSaq80jxbC8Vi
-	 ME4uodSh3QS8xpRiNXtwRMQ3X544fERN1CrVKqNGZV/fLlwqcHYGH1Z8Qg2AlpB7nF
-	 MT9/VM5giFWXA==
+	b=Tot5XOPXlSP4EzGywdvLL4decfH9hIuKyEHI3PRdHkubDoyx33bpMTXP0dgB11FMB
+	 EpsB4VKPrkXoLLY5qJwPP8p0h8+TpXDY/yp5FC2aO3brEcSLtyY5QZ7BDAOKgFHNLI
+	 H5Iyi24/jXAfgzBd/GOikwpSz0UHunfxFvlugtVisUpWep3wEKXhpCOacmDT7hKoqO
+	 ZjUiFHuknfJknYCC+Cjv8suevXJ8DRM56ZDHePT1+eO6ROnL+Gve3Zx5gdrEr5Bbt0
+	 T6Xh/Dg+5Kpc89OnxvkEciq+6j+k4Je/M6Gie+eO64e+/xVG9YTYGFNkSYBAhAbrbl
+	 9Gn8m2hfOvxMA==
 From: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Sat, 16 Nov 2024 09:18:25 +0100
-Subject: [PATCH v3 4/6] PCI: mediatek-gen3: Add comment about
- initialization order in mtk_pcie_en7581_power_up()
+Date: Sat, 16 Nov 2024 09:18:26 +0100
+Subject: [PATCH v3 5/6] PCI: mediatek-gen3: Add reset delay in
+ mtk_pcie_en7581_power_up()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241116-pcie-en7581-fixes-v3-4-f7add3afc27e@kernel.org>
+Message-Id: <20241116-pcie-en7581-fixes-v3-5-f7add3afc27e@kernel.org>
 References: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
 In-Reply-To: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
 To: Ryder Lee <ryder.lee@mediatek.com>, 
@@ -72,31 +72,52 @@ Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
  Lorenzo Bianconi <lorenzo@kernel.org>
 X-Mailer: b4 0.14.2
 
-Add a comment in mtk_pcie_en7581_power_up() to clarify, unlike MediaTek
-PCIe controller, the Airoha EN7581 requires PHY initialization and
-power-on before PHY reset deassert.
+Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
+causing occasional PCIe link down issues. In order to overcome the
+problem, PCIe block is reset using REG_PCI_CONTROL (0x88) and
+REG_RESET_CONTROL (0x834) registers available in the clock module
+running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
+In order to make the code more readable, move the wait for the time
+needed to complete the PCIe reset from en7581_pci_enable() to
+mtk_pcie_en7581_power_up().
+Reduce reset timeout from 250ms to PCIE_T_PVPERL_MS (100ms).
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
- drivers/pci/controller/pcie-mediatek-gen3.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/clk-en7523.c                    | 1 -
+ drivers/pci/controller/pcie-mediatek-gen3.c | 7 +++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
+index 22fbea61c3dcc05e63f8fa37e203c62b2a6fe79e..bf9d9594bef8a54316e28e56a1642ecb0562377a 100644
+--- a/drivers/clk/clk-en7523.c
++++ b/drivers/clk/clk-en7523.c
+@@ -393,7 +393,6 @@ static int en7581_pci_enable(struct clk_hw *hw)
+ 	       REG_PCI_CONTROL_PERSTOUT;
+ 	val = readl(np_base + REG_PCI_CONTROL);
+ 	writel(val | mask, np_base + REG_PCI_CONTROL);
+-	msleep(250);
+ 
+ 	return 0;
+ }
 diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 2b80edd4462ad4e9f2a5d192db7f99307113eb8a..dd30530a43b1097871acc9e76a7534f30819432d 100644
+index dd30530a43b1097871acc9e76a7534f30819432d..795f134e1970c504e8d9588c09a9c3ff51e5397e 100644
 --- a/drivers/pci/controller/pcie-mediatek-gen3.c
 +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -928,6 +928,10 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
- 	 */
- 	mdelay(PCIE_EN7581_RESET_TIME_MS);
+@@ -980,6 +980,13 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+ 		goto err_clk_prepare_enable;
+ 	}
  
 +	/*
-+	 * Unlike the MediaTek controllers, the Airoha EN7581 requires PHY
-+	 * initialization and power-on before PHY reset deassert.
++	 * Airoha EN7581 performs PCIe reset via clk callabacks since it has a
++	 * hw issue with PCIE_PE_RSTB signal. Add wait for the time needed to
++	 * complete the PCIe reset.
 +	 */
- 	err = phy_init(pcie->phy);
- 	if (err) {
- 		dev_err(dev, "failed to initialize PHY\n");
++	msleep(PCIE_T_PVPERL_MS);
++
+ 	return 0;
+ 
+ err_clk_prepare_enable:
 
 -- 
 2.47.0
