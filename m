@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-16956-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16957-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E33B59CFD3B
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 09:19:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C99C79CFD3E
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 09:19:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92CDA280FCB
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 08:19:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DB97281287
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 08:19:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D30F438382;
-	Sat, 16 Nov 2024 08:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E74192B73;
+	Sat, 16 Nov 2024 08:19:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1ukALJL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIyUD/yv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A942520DF4;
-	Sat, 16 Nov 2024 08:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27D320DF4;
+	Sat, 16 Nov 2024 08:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731745153; cv=none; b=uG6Gh6+czUIytIGREvUKkXMJPnCFK42jwYAy0W8ue+c5aMup+sG29WkeSa0xppAQ5YVjZFFi6KK4K5EqCcn6YvNDkXjiZ5srvbDqxXVDzmCnij6ftGlHZHHhoc0pdk63hdnTrTDVCHFkowuhGwpMzQIUtPynxyrOR6QIUyPgTkQ=
+	t=1731745158; cv=none; b=kU4fs+ILH1iqBShvYQJeKjK+Wcs/t5RA/PvYdEZRp7VkNHXCvalbATCOkaVVOtkP0yc++bXJ52Em3RkNE1z9uoodzMHLN8x5EQd6E7nkNutME0K71f9dOeHJAABnDphunpnKfyVEJmpjzaqfDMzrEl5GOaAuMum0uF3Y5Yn8dyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731745153; c=relaxed/simple;
-	bh=ZPcVkadjDBIH9KyjVVtehzPEyudewRBoJZnsUiPtHcs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mg2TpPsmLB/S+iAIXBQugV2ogrT2jWDu7k+uDEjrtavBimiSO3PgWAEENqmkSc3Yf0V+8DDMcm1B0m0zCUoyJUfyNplsKkhy1cvV41WKCA0mC+XxGpkP6SIZvoKBIjA70KlMEBx88lkKIxxX1U14n0NkEveOhtpQiRzzee4Xoc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1ukALJL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BBA0C4CEC3;
-	Sat, 16 Nov 2024 08:19:12 +0000 (UTC)
+	s=arc-20240116; t=1731745158; c=relaxed/simple;
+	bh=J+DVNJlAR1atRomw7H5TuhZTdYIIbEgomihxOMAoX5M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=F3uwI+AE0t/bDT4/FDKuVTC3KUfqmezrM61UwQKgR2Vntaf0Vz+A/1lHJI97w4xvO8WRnrdB2c8duEpTmEkIOMbs1NVL8XRP/CI1ghLZ9Jp4OKo9tyiDbnor6K70on9rEA7XlNcE+nsKO3R0PxGOZpvR7gBpePOQ3yhOxiwxsb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIyUD/yv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0D1C4CEC3;
+	Sat, 16 Nov 2024 08:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731745153;
-	bh=ZPcVkadjDBIH9KyjVVtehzPEyudewRBoJZnsUiPtHcs=;
-	h=From:Subject:Date:To:Cc:From;
-	b=l1ukALJLq9djPcjX4RZX6DMrZfpGgYA09IdhhK6+OGzRNAWhBAYxuUwR8TkLIWtFH
-	 WrcgAkmJjiUqu3r1inlGlPL3/7NlwBASO3o+yn/e2lsLIawTCLuwQKfXZvyj0e7WM5
-	 3K57zhPE7Q1ILvzovVtOpgja7vLQE09/xfq/cIzkk+MQ+q9DQCrgDswoCqOGfXTPp3
-	 MUkrXzCIUfJZXl6dQxjzNazcDuhZCe9lEGc0JN6vaMqx0r1MkXp8AL77GXJUchvN5s
-	 nFPnp2wwKEvo7BtDIASih/0/TdE9mtX4C+z1gaNT/iY4JHUjUnB/TE2/q2EN/LgCO2
-	 4Lzqrl6Ovd+4Q==
+	s=k20201202; t=1731745157;
+	bh=J+DVNJlAR1atRomw7H5TuhZTdYIIbEgomihxOMAoX5M=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=uIyUD/yvUSrEoTE/S3wJaDxbs82yNXWlktu7Lm37wCtP7d42O4HY4HpHDRV9B7FDv
+	 iFaH9I84SURPSxIJxjmoVKcELPFdYuEYOX/5aCumHg3xFBUVCJ7cObU6jhyILcf86G
+	 VFb5dtUF+t3KIRokoM9wvcyN7WjW8x0IalhCmCuwaf7UQ4UPlL/5U+5DsRga8X+X1z
+	 8eRQw7iI/NqjesAlnHwmLxtR2eYq44eJAtL5D1csJvhc9XotIlYerliZZtbnpHsPVw
+	 wYaqC1I6BHQ2jYJ8Wgw7lKhWNNjMHSKbFs22kBzP272TCsa9oatmJ+xqjEfH/zI8Ek
+	 yJiGpPdpcHHBQ==
 From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH v3 0/6] PCI: mediatek-gen3: mtk_pcie_en7581_power_up() code
- refactoring
-Date: Sat, 16 Nov 2024 09:18:21 +0100
-Message-Id: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
+Date: Sat, 16 Nov 2024 09:18:22 +0100
+Subject: [PATCH v3 1/6] PCI: mediatek-gen3: Add missing
+ reset_control_deassert() for mac_rst in mtk_pcie_en7581_power_up()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,11 +53,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAE1VOGcC/33NQQ7CIBAF0KuYWYuBoUhx5T2MC0KHlmhoA4Zom
- t5d2pUmxuX/k/9mhkwpUIbTboZEJeQwxhrkfgdusLEnFrqaATk2QnDNJheIUdSqFcyHJ2WG5qi
- 48h1KJaHupkTboc4u15qHkB9jem0viljbf1oRjDPruWs1SpROn2+UIt0PY+ph5Qp+EuYXgZXgZ
- KVtrDem8V/Esixv6F0A+PYAAAA=
-X-Change-ID: 20241107-pcie-en7581-fixes-296505fd2353
+Message-Id: <20241116-pcie-en7581-fixes-v3-1-f7add3afc27e@kernel.org>
+References: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
+In-Reply-To: <20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org>
 To: Ryder Lee <ryder.lee@mediatek.com>, 
  Jianjun Wang <jianjun.wang@mediatek.com>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -74,39 +72,40 @@ Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
  Lorenzo Bianconi <lorenzo@kernel.org>
 X-Mailer: b4 0.14.2
 
-Minor fixes and code refactoring in mtk_pcie_en7581_power_up() routine
+Even if this is not a real issue since Airoha EN7581 SoC does not require
+the mac reset line, add missing reset_control_deassert() for mac reset
+line in mtk_pcie_en7581_power_up() callback.
 
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
-Changes in v3:
-- add trivial patches 5/6 and 6/6 to the series
-- rename err_clk_init in err_clk_prepare_enable
-- fix commit log for patches 2/6 and 3/6
-- Link to v2: https://lore.kernel.org/r/20241109-pcie-en7581-fixes-v2-0-0ea3a4af994f@kernel.org
+ drivers/pci/controller/pcie-mediatek-gen3.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changes in v2:
-- added trivial patch 4/4
-- improved commit logs and comments
-- introduced PCIE_MTK_RESET_TIME_US macro
-- Link to v1: https://lore.kernel.org/r/20241107-pcie-en7581-fixes-v1-0-af0c872323c7@kernel.org
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 64ef8ff71b0357b9bf9ad8484095b7aa60c22271..4d1c797a32c236faf79428eb8a83708e9c4f21d8 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -942,6 +942,9 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+ 	 */
+ 	mdelay(PCIE_EN7581_RESET_TIME_MS);
+ 
++	/* MAC power on and enable transaction layer clocks */
++	reset_control_deassert(pcie->mac_reset);
++
+ 	pm_runtime_enable(dev);
+ 	pm_runtime_get_sync(dev);
+ 
+@@ -976,6 +979,7 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+ err_clk_prepare:
+ 	pm_runtime_put_sync(dev);
+ 	pm_runtime_disable(dev);
++	reset_control_assert(pcie->mac_reset);
+ 	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
+ err_phy_deassert:
+ 	phy_power_off(pcie->phy);
 
----
-Lorenzo Bianconi (6):
-      PCI: mediatek-gen3: Add missing reset_control_deassert() for mac_rst in mtk_pcie_en7581_power_up()
-      PCI: mediatek-gen3: rely on clk_bulk_prepare_enable() in mtk_pcie_en7581_power_up()
-      PCI: mediatek-gen3: Move reset/assert callbacks in .power_up()
-      PCI: mediatek-gen3: Add comment about initialization order in mtk_pcie_en7581_power_up()
-      PCI: mediatek-gen3: Add reset delay in mtk_pcie_en7581_power_up()
-      PCI: mediatek-gen3: rely on msleep() in mtk_pcie_en7581_power_up()
-
- drivers/clk/clk-en7523.c                    |  1 -
- drivers/pci/controller/pcie-mediatek-gen3.c | 60 +++++++++++++++++++----------
- 2 files changed, 39 insertions(+), 22 deletions(-)
----
-base-commit: ac9626f643ea9cde795811d924388fa49f2c4c0c
-change-id: 20241107-pcie-en7581-fixes-296505fd2353
-
-Best regards,
 -- 
-Lorenzo Bianconi <lorenzo@kernel.org>
+2.47.0
 
 
