@@ -1,234 +1,275 @@
-Return-Path: <linux-pci+bounces-16953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FE719CFC35
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 02:39:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DDA09CFC94
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 04:21:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B1E08B22C43
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 01:39:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C280BB21867
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 03:20:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 439CE19343E;
-	Sat, 16 Nov 2024 01:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 025E733EC;
+	Sat, 16 Nov 2024 03:20:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YsiIcmyu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j05R2zBt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D44E194096;
-	Sat, 16 Nov 2024 01:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02A928FF
+	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 03:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731721096; cv=none; b=ET6FgXnwwxZ6oRAOcNJ7xpu7rZqrRwBtc6J5bUNyTjoSEFJmbpEAvj7bh9q06Ru5JvD5CGhKJ8ySh0K5DQrBsbKt3eTzeAsqzOAtakXB8i07PmRIX4kXDLfEfsS8x8teDsnS02xzkRc/niuudCgwKp9MUDPle+caKrfvGi8V6eU=
+	t=1731727253; cv=none; b=PEwNgsBmKKTAISAWHyjZj0k5e0WKjYsZv70FpWM9Y6aHzpg4OBsaeAx6FrZBaFSYGBYSE8JNPp3CLXPrDx2TiZ1yO3zrQGAgai7iEzdLjnkROEnye8gk9gg0/nAcdp8X+wIXNEjWsNbhHLPcexOHSfbb5a8ALzZesGUtpKDX8ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731721096; c=relaxed/simple;
-	bh=8z3ERRkzjY1Ds+rRxELQ1hmtyibkEmRtY8UUbg0rG50=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=JXNOalF5wtlSychubv9HqvhFg4ZVaLqqfpDctWxgaoce/4HJbNa3uG6iEA21YXArTpPOyvNbEkJZlLisdURokRhQvMcBkW1SH/ArOODhxEKWClEFjYCA/8bEwjrQSHuT41BepsCpdzx0r1gV/fM2q/vrcflEOnxsFNgVq7TI/Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YsiIcmyu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AFBsrd5002407;
-	Sat, 16 Nov 2024 01:38:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IIC8Klt4v5fdxPicO9OA39Kj1uKHyXLclhhigzYL8Os=; b=YsiIcmyuIxmP+W2n
-	B1mdfeJdpxxqqoW+UF7vq5d+6pySYsHJOdTWU+5dyanYfiUkZ7HNaayCbECWgNCd
-	XeK4LGq3MKXih01VuvoQvxQPs+pFKomkDqeOaxOrX344keBWddaRl4w1kbLMWR+m
-	cFvlV6fPdint0t2o0+5O6oV7mc4mX0xX0usE9ufFRSUsRgEyfHnU8mdTgUqwz4gc
-	qIVMNeteEcV/Ym8lQXzEtAVwIDd1WQnKAXvOrdl07ZN3g/pJ9n4vvivHLT0CvD5w
-	MYYyrmTLOzxypKs+iDaVCZRBuWLrOkw6C/NrpL2Gv2yrQ/T3kDAM+0W6SWbagNqr
-	2ipdvA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42ww6duan2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 16 Nov 2024 01:38:06 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AG1c5nq010577
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 16 Nov 2024 01:38:05 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 15 Nov 2024 17:37:58 -0800
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Sat, 16 Nov 2024 07:07:33 +0530
-Subject: [PATCH 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
+	s=arc-20240116; t=1731727253; c=relaxed/simple;
+	bh=5WlkffAhKKHuqRDbWKl5M7usgLVVILpnnAyCQjbD3SM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=StTPnjMe6LgE31/VHWPOgZQzCjlKoq7wOPB6e/5PLJuyTcfHhZ+ZbAgl9HtTpGDLQeylADdXAk+dd5Hjl6NoUenKfUAY/T3kvusFeu60QWwnr5bsfxgRKhOu4+Wjc6tHTTHlSmwYfqC6PGvKlxDcIEhPfT30nOVjdaShzI5qXjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j05R2zBt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39B35C4CECF;
+	Sat, 16 Nov 2024 03:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731727253;
+	bh=5WlkffAhKKHuqRDbWKl5M7usgLVVILpnnAyCQjbD3SM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j05R2zBtYjXRI7j0ABsC588d/bVbXEgYOfpt/A6dJDpfS7dX9Zf98eJ+npLXHPQxs
+	 JMcvtXVNPDYGUnaSrhgzZkmF/dSs9FpEb5VsAxC9Sx6AfA4THzqkiFaqcwRMky+yLi
+	 M6Je5P+mic8whVfE248nuUxxJHd9DJGNN8BSxjkjtBsvo8xtu0OcAaZOyC9FY1+y8b
+	 qU83+TKO4NLnRUI+9wS1VCTNWCLibV5D+hn8OUIfs1HdVVBqE7OZlyQadEqtudZeSr
+	 HBg+KiC02ologJYupu6Tx0ehouuoUz1eufNE3pxVaI0wbDSiH0wBi9hmb7YBE6F9ef
+	 5K3PF7X0p/Tkw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] misc: pci_endpoint_test: Add consecutive BAR test
+Date: Sat, 16 Nov 2024 04:20:45 +0100
+Message-ID: <20241116032045.2574168-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20241116-presets-v1-4-878a837a4fee@quicinc.com>
-References: <20241116-presets-v1-0-878a837a4fee@quicinc.com>
-In-Reply-To: <20241116-presets-v1-0-878a837a4fee@quicinc.com>
-To: <quic_mrana@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        <kernel@quicinc.com>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        "Krishna
- chaitanya chundru" <quic_krichai@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731721058; l=4479;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=8z3ERRkzjY1Ds+rRxELQ1hmtyibkEmRtY8UUbg0rG50=;
- b=4YaiMjYOXtW8LVMtjeU+YEUrg4BJC/xt/iE9onhzvsPUYX/SDYQ7bfUUNGRrr2AClqAcTpY3k
- DStROwP+KAWBK87JEaz3k8VEa8RKTUlaB9KLmTtul9RPnrEmx2r8W27
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: u1qz4OJ27PdUeMnkydVv8R8rlc6LIFvs
-X-Proofpoint-GUID: u1qz4OJ27PdUeMnkydVv8R8rlc6LIFvs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- phishscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 clxscore=1015 adultscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411160011
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6476; i=cassel@kernel.org; h=from:subject; bh=5WlkffAhKKHuqRDbWKl5M7usgLVVILpnnAyCQjbD3SM=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIt+HsP/8nzSep1u/zsc+zSCTOvaDGGzD73YmXry5Z9+ 1s3Fx1Q7ShlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBEvhsyMmw96JEu+yC69nuU ktrDeRsMkvap5015d6di1m9Ok9wQOVNGhv8nXO8tD5D13W+2V8NAg/nPlgCjJ7w17ezz8pbN5f/ UzAAA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-PCIe equalization presets are predefined settings used to optimize
-signal integrity by compensating for signal loss and distortion in
-high-speed data transmission.
+Add a more advanced BAR test that writes all BARs in one go, and then reads
+them back and verifies that the value matches the BAR number bitwise OR:ed
+with offset, this allows us to verify:
+-The BAR number was what we intended to read.
+-The offset was what we intended to read.
 
-Based upon the number of lanes and the data rate supported, read the
-devicetree property and write it in to the lane equalization control
-registers.
+This allows us to detect potential address translation issues on the EP.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Reading back the BAR directly after writing will not allow us to detect the
+case where inbound address translation on the endpoint incorrectly causes
+multiple BARs to be redirected to the same memory region (within the EP).
+
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 39 +++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
- include/uapi/linux/pci_regs.h                     |  3 ++
- 3 files changed, 45 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 88 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/pcitest.h     |  1 +
+ tools/pci/pcitest.c              | 16 +++++-
+ tools/pci/pcitest.sh             |  1 +
+ 4 files changed, 105 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 2cd0acbf9e18..2e6abcafbd79 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (pci->num_lanes < 1)
- 		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
- 
-+	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
-+	if (ret)
-+		goto err_free_msi;
-+
- 	/*
- 	 * Allocate the resource for MSG TLP before programming the iATU
- 	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-@@ -802,6 +806,40 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 	return 0;
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 3aaaf47fa4ee2..34cb54aef3d8b 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -322,6 +322,91 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+ 	return true;
  }
  
-+static void dw_pcie_program_presets(struct dw_pcie *pci, u8 cap_id, u8 lane_eq_offset,
-+				    u8 lane_reg_size, u8 *presets, u8 num_lanes)
++static u32 bar_test_pattern_with_offset(enum pci_barno barno, int offset)
 +{
-+	u32 cap;
-+	int i;
++	u32 val;
 +
-+	cap = dw_pcie_find_ext_capability(pci, cap_id);
-+	if (!cap)
-+		return;
++	/* Keep the BAR pattern in the top byte. */
++	val = bar_test_pattern[barno] & 0xff000000;
++	/* Store the (partial) offset in the remaining bytes. */
++	val |= offset & 0x00ffffff;
++
++	return val;
++}
++
++static bool pci_endpoint_test_bars_write_bar(struct pci_endpoint_test *test,
++					     enum pci_barno barno)
++{
++	struct pci_dev *pdev = test->pdev;
++	int j, size;
++
++	size = pci_resource_len(pdev, barno);
++
++	if (barno == test->test_reg_bar)
++		size = 0x4;
++
++	for (j = 0; j < size; j += 4)
++		writel_relaxed(bar_test_pattern_with_offset(barno, j),
++			       test->bar[barno] + j);
++
++	return true;
++}
++
++static bool pci_endpoint_test_bars_read_bar(struct pci_endpoint_test *test,
++					    enum pci_barno barno)
++{
++	struct pci_dev *pdev = test->pdev;
++	struct device *dev = &pdev->dev;
++	int j, size;
++	u32 val;
++
++	size = pci_resource_len(pdev, barno);
++
++	if (barno == test->test_reg_bar)
++		size = 0x4;
++
++	for (j = 0; j < size; j += 4) {
++		u32 expected = bar_test_pattern_with_offset(barno, j);
++
++		val = readl_relaxed(test->bar[barno] + j);
++		if (val != expected) {
++			dev_err(dev,
++				"BAR%d incorrect data at offset: %#x, got: %#x expected: %#x\n",
++				barno, j, val, expected);
++			return false;
++		}
++	}
++
++	return true;
++}
++
++static bool pci_endpoint_test_bars(struct pci_endpoint_test *test)
++{
++	enum pci_barno bar;
++	bool ret;
++
++	/* Write all BARs in order (without reading). */
++	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
++		if (test->bar[bar])
++			pci_endpoint_test_bars_write_bar(test, bar);
 +
 +	/*
-+	 * Write preset values to the registers byte-by-byte for the given
-+	 * number of lanes and register size.
++	 * Read all BARs in order (without writing).
++	 * If there is an address translation issue on the EP, writing one BAR
++	 * might have overwritten another BAR. Ensure that this is not the case.
++	 * (Reading back the BAR directly after writing can not detect this.)
 +	 */
-+	for (i = 0; i < num_lanes * lane_reg_size; i++)
-+		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
++	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
++		if (test->bar[bar]) {
++			ret = pci_endpoint_test_bars_read_bar(test, bar);
++			if (!ret)
++				return ret;
++		}
++	}
++
++	return true;
 +}
 +
-+static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
-+
-+	/* For data rate of 8 GT/S each lane equalization control is 16bits wide */
-+	if (speed >= PCIE_SPEED_8_0GT && pp->presets.eq_presets_8gts)
-+		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_SECPCI, PCI_SECPCI_LE_CTRL,
-+					0x2, (u8 *)pp->presets.eq_presets_8gts, pci->num_lanes);
-+
-+	/* For data rate of 16 GT/S each lane equalization control is 8bits wide */
-+	if (speed >= PCIE_SPEED_16_0GT && pp->presets.eq_presets_16gts)
-+		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_PL_16GT, PCI_PL_16GT_LE_CTRL,
-+					0x1, pp->presets.eq_presets_16gts, pci->num_lanes);
-+}
-+
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+ static bool pci_endpoint_test_intx_irq(struct pci_endpoint_test *test)
  {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -855,6 +893,7 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
- 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+ 	u32 val;
+@@ -768,6 +853,9 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 			goto ret;
+ 		ret = pci_endpoint_test_bar(test, bar);
+ 		break;
++	case PCITEST_BARS:
++		ret = pci_endpoint_test_bars(test);
++		break;
+ 	case PCITEST_INTX_IRQ:
+ 		ret = pci_endpoint_test_intx_irq(test);
+ 		break;
+diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
+index 94b46b043b536..acd261f498666 100644
+--- a/include/uapi/linux/pcitest.h
++++ b/include/uapi/linux/pcitest.h
+@@ -20,6 +20,7 @@
+ #define PCITEST_MSIX		_IOW('P', 0x7, int)
+ #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
+ #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
++#define PCITEST_BARS		_IO('P', 0xa)
+ #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
  
-+	dw_pcie_config_presets(pp);
- 	/*
- 	 * If the platform provides its own child bus config accesses, it means
- 	 * the platform uses its own address translation component rather than
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 500e793c9361..b12b33944df4 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -25,6 +25,8 @@
- #include <linux/pci-epc.h>
- #include <linux/pci-epf.h>
+ #define PCITEST_FLAGS_USE_DMA	0x00000001
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 470258009ddc2..2ce56ea56202c 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -22,6 +22,7 @@ static char *irq[] = { "LEGACY", "MSI", "MSI-X" };
+ struct pci_test {
+ 	char		*device;
+ 	char		barnum;
++	bool		consecutive_bar_test;
+ 	bool		legacyirq;
+ 	unsigned int	msinum;
+ 	unsigned int	msixnum;
+@@ -57,6 +58,15 @@ static int run_test(struct pci_test *test)
+ 			fprintf(stdout, "%s\n", result[ret]);
+ 	}
  
-+#include "../../pci.h"
++	if (test->consecutive_bar_test) {
++		ret = ioctl(fd, PCITEST_BARS);
++		fprintf(stdout, "Consecutive BAR test:\t\t");
++		if (ret < 0)
++			fprintf(stdout, "TEST FAILED\n");
++		else
++			fprintf(stdout, "%s\n", result[ret]);
++	}
 +
- /* DWC PCIe IP-core versions (native support since v4.70a) */
- #define DW_PCIE_VER_365A		0x3336352a
- #define DW_PCIE_VER_460A		0x3436302a
-@@ -379,6 +381,7 @@ struct dw_pcie_rp {
- 	bool			use_atu_msg;
- 	int			msg_atu_index;
- 	struct resource		*msg_res;
-+	struct pci_eq_presets	presets;
- };
+ 	if (test->set_irqtype) {
+ 		ret = ioctl(fd, PCITEST_SET_IRQTYPE, test->irqtype);
+ 		fprintf(stdout, "SET IRQ TYPE TO %s:\t\t", irq[test->irqtype]);
+@@ -172,7 +182,7 @@ int main(int argc, char **argv)
+ 	/* set default endpoint device */
+ 	test->device = "/dev/pci-endpoint-test.0";
  
- struct dw_pcie_ep_ops {
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 12323b3334a9..68fc8873bc60 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1118,6 +1118,9 @@
- #define PCI_DLF_CAP		0x04	/* Capabilities Register */
- #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+-	while ((c = getopt(argc, argv, "D:b:m:x:i:deIlhrwcs:")) != EOF)
++	while ((c = getopt(argc, argv, "D:b:Cm:x:i:deIlhrwcs:")) != EOF)
+ 	switch (c) {
+ 	case 'D':
+ 		test->device = optarg;
+@@ -182,6 +192,9 @@ int main(int argc, char **argv)
+ 		if (test->barnum < 0 || test->barnum > 5)
+ 			goto usage;
+ 		continue;
++	case 'C':
++		test->consecutive_bar_test = true;
++		continue;
+ 	case 'l':
+ 		test->legacyirq = true;
+ 		continue;
+@@ -230,6 +243,7 @@ int main(int argc, char **argv)
+ 			"Options:\n"
+ 			"\t-D <dev>		PCI endpoint test device {default: /dev/pci-endpoint-test.0}\n"
+ 			"\t-b <bar num>		BAR test (bar number between 0..5)\n"
++			"\t-C			Consecutive BAR test\n"
+ 			"\t-m <msi num>		MSI test (msi number between 1..32)\n"
+ 			"\t-x <msix num>	\tMSI-X test (msix number between 1..2048)\n"
+ 			"\t-i <irq type>	\tSet IRQ type (0 - Legacy, 1 - MSI, 2 - MSI-X)\n"
+diff --git a/tools/pci/pcitest.sh b/tools/pci/pcitest.sh
+index 75ed48ff29900..770f4d6df34b6 100644
+--- a/tools/pci/pcitest.sh
++++ b/tools/pci/pcitest.sh
+@@ -11,6 +11,7 @@ do
+ 	pcitest -b $bar
+ 	bar=`expr $bar + 1`
+ done
++pcitest -C
+ echo
  
-+/* Secondary PCIe Capability 8.0 GT/s */
-+#define PCI_SECPCI_LE_CTRL	0x0c /* Lane Equalization Control Register */
-+
- /* Physical Layer 16.0 GT/s */
- #define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
- #define  PCI_PL_16GT_LE_CTRL_DSP_TX_PRESET_MASK		0x0000000F
-
+ echo "Interrupt tests"
 -- 
-2.34.1
+2.47.0
 
 
