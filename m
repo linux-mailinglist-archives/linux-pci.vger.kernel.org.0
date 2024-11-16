@@ -1,113 +1,109 @@
-Return-Path: <linux-pci+bounces-16988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E09419D0087
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 19:41:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A15309D00B4
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 20:37:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57A7FB22499
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 18:41:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 227C5B256F6
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 19:37:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20361188735;
-	Sat, 16 Nov 2024 18:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6100119992B;
+	Sat, 16 Nov 2024 19:36:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2E018E35D;
-	Sat, 16 Nov 2024 18:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B5418FC9D;
+	Sat, 16 Nov 2024 19:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731782468; cv=none; b=jgZgExylpuhnECw//x1NZmcdn8uJPLOi/tS9ajymwrmx+i/Krhl7ytxaj6R+HzMl9Veu+BKFOl1ZaRLMAkCVf0XZZzRrc+iLHI/17bN9yLnX/nW7Sp8Uy+odmWbCn8FendTCaLQ1zrG5pFaU4tp5xu+Wbymlcvb3LThl49G/OpM=
+	t=1731785795; cv=none; b=j/PukrozJXixQTfL2GhPE86AwPIyPgR0pcVcqsP4W5kUAg6q8MG6NYZmE6ukhN6kx9BC8MMeInftALWsdoKBBxU9AIOhskb+ahaWDLuqVMIn+Y26RUElKkx6C4N9un1Tfe/Mke+lgt5oY1SrC4wQGgON51XaGSKSG17O8uFm0M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731782468; c=relaxed/simple;
-	bh=IRz7sUjYrGHPvsSE0pzBCsINEQiVvdX8CXirsCR5/M8=;
+	s=arc-20240116; t=1731785795; c=relaxed/simple;
+	bh=lkzI1wGADF/FnD/JFB81Gu0+wPQI69AT19bmSW6+APs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWkdCsmfzae7yGrIhC7Vw/fshSKlOQjeudUWdok2XrKro1x7yIkSSdCPFvuHpYti5/wp3IIR7aTK4og0MsivjXUvCT744Cl0tW5bcqKwCkE+402qsWB/26cpeNmLoFWKH78vN1UwGildbuL/MvUN9KSR4cQFV9xk+NdUZxqOFHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=ju85bF/OR9j/q+aD7Ci8i2rgxQ7I/7BdbwjZOZ6I0+BNKfwjEjhEbn2jNudq4H4qfnLDnKwTp8jFce4QdQB3R4SIE6N7+49pk0Oat/Xa/fZPTlw/TR2xnj/TNGOjrYW3iYineebmGVxYv3nht+EgpCKqie4Z5e6hZMPD6inWUIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20c7ee8fe6bso29601215ad.2;
-        Sat, 16 Nov 2024 10:41:06 -0800 (PST)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21200c749bfso2369045ad.1;
+        Sat, 16 Nov 2024 11:36:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731782466; x=1732387266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C6zrqPiWQC7rDWZoE/g4GnXAN9sjElaRR3twDuAtjOo=;
-        b=u5FZDY3vNKv9Vb2nxY9KTf2eYi0xTVCUpz2hdfjIv/93vJ0bEt115OOq7ECLAc7M/P
-         NLU9jhDSeVthdRwlAJDFDoXUAi3SH8z9XNUWfVA2KnL4Z1o5D2nq6hd8xsrGhkWh2CCT
-         lwCkzXwAgnpQE2yMFAa22kbwb39vzixMicxAsddw1Jro62tgqPXbHQW60pE2WXZZGCZd
-         GUyuRa7Tx2qZ31SXxgHN0/fauFPagsEh1DmlbxFB4ZESGkd1W/CgjfaWYfB0FJ11n3PE
-         6wEtu9aiFwkEiZsxHnye9jeQ6OYMx69MSH1Df61z625lNB+b/9MHEYDAlv5ZLolpNyPA
-         Crfw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2POhgZ58E/GWCHEslqOdgz8MGZFqDfmIbPp2Hj2TsXo9uGo/wVnv60ltMN4qX6J3uZpsenznWWhm+@vger.kernel.org, AJvYcCWIp5OugHzoh0N/73Lz/Fm5thEBTOtcPxU+8bQGk5osZxWop7fOc9fnMJ9ppVQj+RLUnU+EngUsOe7oY18=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTpZXYCMXzOJ474uEUJ+vn3dtXjRqsOpkWLsU1bu0oBXltcAfv
-	XV60yZ3sji7Mt15hiw7zJ1sbRC/ihKVj/2xy/YDk5l5FeARQKO0u
-X-Google-Smtp-Source: AGHT+IGklcX91lB3aw+DDj0CMsZ/9DbTURDoBMutuQQkQS6lg5ZoMyrEgDcYr82v0d6dAwEYAmdy0A==
-X-Received: by 2002:a17:902:ec92:b0:20e:57c8:6aae with SMTP id d9443c01a7336-211d0d62503mr101325775ad.3.1731782465801;
-        Sat, 16 Nov 2024 10:41:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731785793; x=1732390593;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gMBmeOFD+z1cJfWMZUY9U990QGj2e0dotHng27G4k6A=;
+        b=PEm4asYYuw2p5S7/SgF1udAevEb6R9AZ96mEqtFhnTVtUv+n/6fWmxuxLZmlNiChN7
+         JHzwoG7HwL87z3cgRg2BgEjrIsQAroyH1MpLgf8ZlNlV/fr8dqO1MBapuC0f/NF+moJW
+         7Xy1utgWG9RauCtCs/5G9TJBYDjmRaMCwRVkn0f2QWDcthO/sHRS1HvwFToRrDAZRDk5
+         4nchGrhLYSUoegcHthB8/IWWLSlNeJJnNjY7iRPr0D34pNUnD2OWtKA5BdfaMxSfa/De
+         U55tm671PbW4fqClNG3FTXmlOltE0UQ8iKpUZNw+LdzjLvK2Z2KyhMhJT8gQbPjMaq2+
+         YUrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlpwqOkeJzagNXGNZEumRykW0Tfc+MyB2k8BYK0Coj/Oc+e1GLpEUvTNPlZIyZuzH2cyrg3d7hYeA=@vger.kernel.org, AJvYcCWpaDIbcN4k3WiyBSsh3Es9urW3FEyhGGrhOI5R8EI90pr0EeoYHsCa3GtWCOduC+juG8gD0oi616UsnfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy40cBHEiteUsfUT7OKwYiNkrPPr0M5tpiZHHy7fBZUxws88CB4
+	7d2vsg+sFYsZX8nl/kWgNIpV6TAfpJOv+GK+/CcZ0LlaqS1t+XT9
+X-Google-Smtp-Source: AGHT+IH2xa4Z859I77fSb2uitgZNB6vfSu/UWkzL79Fv0vxy9lImJjzhsilgaLyM+W7uvphz5WRqcg==
+X-Received: by 2002:a17:902:d508:b0:20e:71ee:568e with SMTP id d9443c01a7336-211d0d7163amr96544395ad.13.1731785793046;
+        Sat, 16 Nov 2024 11:36:33 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0f5555esm30390095ad.259.2024.11.16.10.41.04
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211d0f583a1sm30773665ad.266.2024.11.16.11.36.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2024 10:41:05 -0800 (PST)
-Date: Sun, 17 Nov 2024 03:41:03 +0900
+        Sat, 16 Nov 2024 11:36:32 -0800 (PST)
+Date: Sun, 17 Nov 2024 04:36:30 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <helgaas@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	stable+noautosel@kernel.org,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: Re: [PATCH v2 2/5] PCI/pwrctl: Create pwrctl devices only if at
- least one power supply is present
-Message-ID: <20241116184103.GD890334@rocinante>
-References: <20241025-pci-pwrctl-rework-v2-2-568756156cbe@linaro.org>
- <20241106212826.GA1540916@bhelgaas>
- <CAMRc=Mcy8eo-nHFj+s8TO_NekTz6x-y=BYevz5Z2RTwuUpdcbA@mail.gmail.com>
- <20241107111538.2koeeb2gcch5zq3t@thinkpad>
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] PCI/pwrctrl: Rename pwrctl to pwrctrl
+Message-ID: <20241116193630.GE890334@rocinante>
+References: <20241115214428.2061153-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241107111538.2koeeb2gcch5zq3t@thinkpad>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241115214428.2061153-1-helgaas@kernel.org>
 
 Hello,
 
-[...]
-> > > > +bool of_pci_is_supply_present(struct device_node *np)
-> > > > +{
-> > > > +     struct property *prop;
-> > > > +     char *supply;
-> > > > +
-> > > > +     if (!np)
-> > > > +             return false;
-> > >
-> > > Why do we need to test !np here?  It should always be non-NULL.
-> > >
-> > 
-> > Right, I think this can be dropped. We check for the OF node in the
-> > function above.
-> > 
+> I'm sorry to propose this, but it seems like ongoing confusion to have
+> "pwrctl" and "bwctrl" (different ctl/ctrl suffixes).
 > 
-> I think it was a leftover that I didn't cleanup. But I do plan to move this API
-> to drivers/of once 6.13-rc1 is out. So even if it didn't get dropped now, I will
-> do it later.
+> pwrctl was merged for v6.11, so I would propose changing bwctrl to match it
+> except that we already have several "ctrl" files in PCI hotplug drivers,
+> and in the wider kernel, the "ctrl" filename suffix outnumbers "ctl" by
+> about two to one.
 
-I removed the NULL check directly on the branch.  Thank you!
+For the entire series:
+
+  Acked-by: Krzysztof Wilczyński <kw@linux.com>
 
 	Krzysztof
 
