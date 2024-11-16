@@ -1,96 +1,111 @@
-Return-Path: <linux-pci+bounces-16979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37EEE9CFFC9
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 17:10:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC4D69CFFDF
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 17:36:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9149B22237
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 16:10:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 354591F226CB
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 16:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8623EAF6;
-	Sat, 16 Nov 2024 16:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4401D85270;
+	Sat, 16 Nov 2024 16:36:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRajz0Ni"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0L3Lkfm"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CFD372;
-	Sat, 16 Nov 2024 16:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200FBF9CB
+	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 16:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731773412; cv=none; b=khR6oER5xfY5gnZtrgq7jhBOM3feZ5CE0Z/HTwxOYJ8C9SiV98fY2mcYYQLJbYOd1r9AmqzS8x/cWwCqKY1XAA8b+slukkz45iOrxXWmjKAzd87K7JYM7wIogv5KYlms3DnfE9y01Uu9hwqrGe1p6h4j0QNEbxi8hiHwW9vyaC8=
+	t=1731774976; cv=none; b=eD7B0Th5jXcZckK99RgEVrzIe4JYJZgRQ/Zr2Yd1lbxaXQzHWLaLx8B3p1R6xukauGK3+3WJYPZkuZrvRtabAMp+LikGi73v4q4MnlT1gjw8WlOwqVctOfIVYhebjmQ+9jZ5voGcrbPmMO/869EpXWH9JjK4a1wVVFlM2OSqX2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731773412; c=relaxed/simple;
-	bh=uQ2hZIbcyCdOT5tFiJM33Yw3IrjR5YjDThAnh5uBtiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lJDn+wYY7/H2Dc0jjqIB/evQ37UuCvvSLRcBT9WyfQZaW1LJWCUMUDjX1FVbFJY+Qc8+V0CmnWchpYtFrt/yHnHHa7dnpvofvKs8dfInu6xMcNMjURehu65eSg5RjjYS7MFAd32OWpQtm/jhnJLEztyGjLZtZHmQawvYpaHeV+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRajz0Ni; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11DAFC4CEC3;
-	Sat, 16 Nov 2024 16:10:11 +0000 (UTC)
+	s=arc-20240116; t=1731774976; c=relaxed/simple;
+	bh=CrOKokhowUuc7bYXcQFOSgq+WuD+i6huz5zS/SDjiG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gor/sWJrEjESl1QgvSq7PXa3Hzsjh8OrkfBQjtTjR7HcuDZ/JEXvIIPRKLkDoBjbDju0mUIyG1c3rMWZKmPqZYyB7jfjWmpzG0BUl2yOn+DXZansCGOmaW6vNVXE+X+L30Dbj+mrDrxtqEw/ynChHW1vBz+ot7hQcUE2CjgSGJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0L3Lkfm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F14ECC4CEC3;
+	Sat, 16 Nov 2024 16:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731773412;
-	bh=uQ2hZIbcyCdOT5tFiJM33Yw3IrjR5YjDThAnh5uBtiA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QRajz0Nivm/dImoTpjV42/bIEt+TN4wI5erATGPAjmhkw4ENo6FQbL/zjKdSdk9/6
-	 rn0k1xF+mSMKL6cU5xVSrKfo3x+h+SjTVOuoBAO/stWd1Rys7xrJl+LEQo9Rg6n3hv
-	 6odm8MoOr8UGB5CDGrdzSBjKEcT/69xpgr5sH/4D9FXboNLpoxyDzk4619ehBnqWuu
-	 tT/2dh3a6glt6l8+2O++2bgz9r02KQGcD3AoZpy48Ty+0K2vBzTJjdslVZCaRlQv1M
-	 NX7gdIHdPS2hb/Tvyfe2AxJsq0l3xI0DJzJoPaA22645pB1ZHifbDfVhb3i3vK4Chc
-	 81eb1N0jaQyBA==
-Date: Sat, 16 Nov 2024 10:10:10 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Stefan Wahren <wahrenst@gmx.net>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove IRQF_ONESHOT and handle hardirqs
- instead
-Message-ID: <20241116161010.GA2125250@bhelgaas>
+	s=k20201202; t=1731774975;
+	bh=CrOKokhowUuc7bYXcQFOSgq+WuD+i6huz5zS/SDjiG8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=m0L3Lkfm9UxqWp+NJLqTQw+uHr3x19dVCDGQkd5RnSXl1TgA619YqhUar2xGNzWHz
+	 N3UmzV0FZ7VY+cp7F84gyyiwfhFExmhfZ9MYnUcdhkk5QY2/OBCRTi91XulUhAMsb4
+	 fZtKBYmQSlx0T5hfYGPWzPX6emPL4U0nXk2Al2pMcELflGN92W1sT2+b9GuyBeWbwD
+	 m9EbtI7LKSgFfhOyhN+sBSPTgidkE8cS2ooMENgY2Qpm9hVLlYinoq48btk2W0V2zY
+	 0KSOGPx4pSUgrN7vbcov9sAZAKxQuFI1/zr4FLWJPVsW7KTedGBC6Wei4S6qLsel2b
+	 OGDYRdvIYf9kg==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@axis.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v3 0/4] PCI endpoint additional pci_epc_set_bar() checks
+Date: Sat, 16 Nov 2024 17:35:59 +0100
+Message-ID: <20241116163558.2606874-6-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1342; i=cassel@kernel.org; h=from:subject; bh=CrOKokhowUuc7bYXcQFOSgq+WuD+i6huz5zS/SDjiG8=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNItTr77EV0nY7TL1X0344Xu9Q4vzr9PKTf302QXNJ4lr Bn9feKZjlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExE5zjDHy4x3uXLVdXndl++ 9+/68ZLq9ynnTjefd/Wqr1uzhOPKfSaGPzwzY94a/53pVnrtFYdui8OU2Jbb7XEPXwtx9z9O3DT Nkh0A
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec7f9169-26dc-cc0e-e321-b66ca9d3f40e@linux.intel.com>
 
-On Sat, Nov 16, 2024 at 04:40:51PM +0200, Ilpo Järvinen wrote:
-> On Fri, 15 Nov 2024, Bjorn Helgaas wrote:
-> 
-> > On Fri, Nov 15, 2024 at 06:57:17PM +0200, Ilpo Järvinen wrote:
-> > > bwctrl cannot use IRQF_ONESHOT because it shares interrupt with other
-> > > service drivers that are not using IRQF_ONESHOT nor compatible with it.
-> > > 
-> > > Remove IRQF_ONESHOT from bwctrl and convert the irq thread to hardirq
-> > > handler. Rename the handler to pcie_bwnotif_irq() to indicate its new
-> > > purpose.
-> > > 
-> > > The IRQ handler is simple enough to not require not require other
-> > > changes.
-> > > 
-> > > Fixes: 058a4cb11620 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
-> > > Reported-by: Stefan Wahren <wahrenst@gmx.net>
-> > > Link: https://lore.kernel.org/linux-pci/dcd660fd-a265-4f47-8696-776a85e097a0@gmx.net/
-> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > 
-> > Squashed into 058a4cb11620, thanks!
-> > 
-> > Also added your tested-by, Stefan, thanks very much for doing that!
-> 
-> Hi Bjorn,
-> 
-> You might want to also remove "3) ..." part from the commit message as it 
-> still refers to threaded IRQ and IRQF_ONESHOT so it won't confuse anybody 
-> when looking at this years from now :-).
+Hello all,
 
-Removed, thanks for that!
+This series adds some extra checks to ensure that it is not possible to
+program the iATU with an address which we did not intend to use.
+
+If these checks were in place when testing some of the earlier revisions
+of Frank's doorbell patches (which did not handle fixed BARs properly),
+we would gotten an error, rather than silently using an address which we
+did not intend to use.
+
+Having these checks in place will hopefully avoid similar debugging in the
+future.
+
+
+Kind regards,
+Niklas
+
+
+Changes since v2:
+-Picked up tags.
+-Added patch 3/4, which checks that requested BAR size is a power of two.
+
+
+Niklas Cassel (4):
+  PCI: artpec6: Implement dw_pcie_ep operation get_features
+  PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()
+  PCI: endpoint: Verify that requested BAR size is a power of two
+  PCI: dwc: ep: Add 'address' alignment to 'size' check in
+    dw_pcie_prog_ep_inbound_atu()
+
+ drivers/pci/controller/dwc/pcie-artpec6.c       | 13 +++++++++++++
+ drivers/pci/controller/dwc/pcie-designware-ep.c |  8 +++++---
+ drivers/pci/controller/dwc/pcie-designware.c    |  5 +++--
+ drivers/pci/controller/dwc/pcie-designware.h    |  2 +-
+ drivers/pci/endpoint/pci-epc-core.c             | 14 ++++++++++++--
+ 5 files changed, 34 insertions(+), 8 deletions(-)
+
+-- 
+2.47.0
+
 
