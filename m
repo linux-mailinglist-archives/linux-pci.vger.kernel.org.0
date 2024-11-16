@@ -1,60 +1,76 @@
-Return-Path: <linux-pci+bounces-16977-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-16978-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8DE29CFF5F
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 15:51:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 991849CFFA9
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 16:41:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 957CD1F2214E
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 14:51:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 430A3B25FAA
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2024 15:41:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77C3199B8;
-	Sat, 16 Nov 2024 14:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F1512E5B;
+	Sat, 16 Nov 2024 15:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1saYiDhn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUibX5+D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B69101E6;
-	Sat, 16 Nov 2024 14:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98C1186E2D
+	for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 15:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731768666; cv=none; b=jJWFAT5XQzzsJWMgt1KU+F88t1+rYpszZecC6LvrN0ovBaCCTxvQgnHe7d1EvCWyq16GkL8LFIh23ypNuw+xJCiyoOC3ir81S2yxu6dBKu1DbNTDCgdk1O1RnlpVHBNqzk+cvbghtHtWNX8jZKjBsqBNuSrPvUtX+HorxZYX3ZU=
+	t=1731771651; cv=none; b=BMRJGcewqftn6wrjcwS1qAJQpfWUlgHXWMhKdTdtVQWAPNb0s9otulkQchHVnfT6tCMEuqpJba6oSpk5/eI2gwLHM5hHg4tcb0hh65YBmgmFFTRcyzvGWxhJ/sco7kvc52FifntKK5M2UPLl/5XP+zahchkXDKMrkS04T+lePJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731768666; c=relaxed/simple;
-	bh=49swYbXZyCUFCxRBsY8/lcKTq8X7PXyiOkldN8Pn+GU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7Iqd7qO3xedkCZnfzD5J5A1L6RcO1EU3Qo/LrwhIoqe2HL5T5XGumQIMBQ5nkiT/xZean0SXbQJyaIB6VmM7R+ueOlmM3+iMsjUdB+SbSN4guPkRbTHSha4rXAHRmb3Th3SZP5sCV0Wy2Y80+lJ3uZmr8qTPG8UR2hce255L/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1saYiDhn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58604C4CEC3;
-	Sat, 16 Nov 2024 14:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1731768665;
-	bh=49swYbXZyCUFCxRBsY8/lcKTq8X7PXyiOkldN8Pn+GU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1saYiDhnMeah99PwQuyAMKCP3uxNovFduDoB7sHzLKLdLp668trq9+eGI9fR5Ct6L
-	 1YlF7vD/y1zf2x9m062yD42XIETcWn3/RqVzv6ZyAAYZICYPnWAtdfX/qfR/SXyqOK
-	 2QX1J+X36McH1zCjP0xRmHI8SscHaPMPZ91Oj1t0=
-Date: Sat, 16 Nov 2024 15:50:42 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Janne Grunau <j@jannau.net>
-Cc: Danilo Krummrich <dakr@kernel.org>, rafael@kernel.org,
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com,
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
-	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com,
-	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com,
-	saravanak@google.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, asahi@lists.linux.dev
-Subject: Re: [PATCH v3 00/16] Device / Driver PCI / Platform Rust abstractions
-Message-ID: <2024111656-entrust-wincing-0c84@gregkh>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241116143240.GA1490760@robin.jannau.net>
+	s=arc-20240116; t=1731771651; c=relaxed/simple;
+	bh=Wd+7kLQISUZlzyPvYmSUTVOb8NV4Vyd3OpsFXw6X7a0=;
+	h=From:Message-ID:To:Subject:Date:MIME-Version:Content-Type; b=Ke7Ur2RIWnxrk/g1t+/YH/u4VQ2XHSGmihtNWFtvU9EALVh37iM4GEv45W48dtJWzdv+1GeOHCBVFJOyO9ZEyOntT6K24m+2N9ZEZgf2jGYDQADd1YzPwSHsRKGvz/LngVNQtWEwGuHIelqPsYUBQiFdtg1ZYvbc/aycRNbx0f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AUibX5+D; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21207f0d949so457525ad.2
+        for <linux-pci@vger.kernel.org>; Sat, 16 Nov 2024 07:40:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731771648; x=1732376448; darn=vger.kernel.org;
+        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XHEOkgJ64rwJ+cv0sVIqPUmbc8l+iTifR7HzGzNced0=;
+        b=AUibX5+D70Mq04sguSP6nJyPGy1lUy1bnzsA5Gr+hZs1lVfEGxDQI8vkiKif0WyF8K
+         /GGqrfGHjlGpVbKEUXL0bKAhlGLXdbwzJ4YfhZoDNRiX0kDbCDXeAu55dPo/3rO2kEkp
+         uUWRcQ30FSdgTbZZrjBEDN29QU4gq4VHnK9cKkaruNOhnISeyswQVwY3gn15ywWoM+Pd
+         haTGESqMMdDuYmID3mVtJdM9GlZ+V/83FyL6Gn07hjcJm3LW0cHsZNtmMeWeTXag8+kM
+         QifGAC91C0NPMSQfw35i8EFeLhKzmAQlRmWzOzJ1xTdpMTNxPe0io8lKdPV2slenNfuw
+         kwMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731771648; x=1732376448;
+        h=mime-version:date:subject:to:reply-to:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XHEOkgJ64rwJ+cv0sVIqPUmbc8l+iTifR7HzGzNced0=;
+        b=mywMMnF+gCRFDuHq+sHAwszll6L3SiGCir6ordZzaJL+Mz/TlBoceuwv6eEMSwU4Id
+         0xPMl2Bc0q6DCwNNgy4yje3jprGusmIpzE06n1/0mff6r0DtQQy531DxZAcscJGKERmw
+         gjJFPLfmlxHDDyDGY/VYhIS3js9wfvMaP4oNEmbU1oPC1+/6nyWQgbAyZn5EuT2JHS03
+         z5SNvbUdwqglzwrPWzoXUe0FvvLylZt1uu1muuOEzRTktpB2Z9va2P3mOFEQaZcOKwHB
+         cSkZxfXwpbrXLmpFJKNOOxHCFpPQ9D23i5+wKB4jL+iSc8MsAW6QCDqv9lAQeni2IPcz
+         qIKg==
+X-Gm-Message-State: AOJu0YwkehlvEZP6TsmEEetTevO/73J9hkej2XAdoiC0RjlLnaRUL3H9
+	qBvhlQnN8lJ97QFNZWX/rnoI7N2R/6O07sl309pP945WZ2BPu9+8zr83Mg==
+X-Google-Smtp-Source: AGHT+IEbPuYuYWDLhRiRjBJSp+Nt7cPDWnGsyx7KgIlscw6VPDwvfFh8u9mTfLEVevqjZJD/0OMZdg==
+X-Received: by 2002:a17:903:40d2:b0:20c:92ce:359d with SMTP id d9443c01a7336-211d0eeacc8mr88284805ad.45.1731771647738;
+        Sat, 16 Nov 2024 07:40:47 -0800 (PST)
+Received: from [103.67.163.162] ([103.67.163.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211f6b3efb5sm10090565ad.216.2024.11.16.07.40.46
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Nov 2024 07:40:46 -0800 (PST)
+From: "Van. HR" <harshilantil3867@gmail.com>
+X-Google-Original-From: "Van. HR" <infodesk@information.com>
+Message-ID: <9d47eedb4397c10c284425a1e0f11ebba5c33c1bd4ccca12f274ec7d2fd4d589@mx.google.com>
+Reply-To: dirofdptvancollin@gmail.com
+To: linux-pci@vger.kernel.org
+Subject: Nov:16:24
+Date: Sat, 16 Nov 2024 10:40:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,46 +78,14 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241116143240.GA1490760@robin.jannau.net>
 
-On Sat, Nov 16, 2024 at 03:32:40PM +0100, Janne Grunau wrote:
-> On Tue, Oct 22, 2024 at 11:31:37PM +0200, Danilo Krummrich wrote:
-> > This patch series implements the necessary Rust abstractions to implement
-> > device drivers in Rust.
-> > 
-> > This includes some basic generalizations for driver registration, handling of ID
-> > tables, MMIO operations and device resource handling.
-> > 
-> > Those generalizations are used to implement device driver support for two
-> > busses, the PCI and platfrom bus (with OF IDs) in order to provide some evidence
-> > that the generalizations work as intended.
-> > 
-> > The patch series also includes two patches adding two driver samples, one PCI
-> > driver and one platform driver.
-> > 
-> > The PCI bits are motivated by the Nova driver project [1], but are used by at
-> > least one more OOT driver (rnvme [2]).
-> > 
-> > The platform bits, besides adding some more evidence to the base abstractions,
-> > are required by a few more OOT drivers aiming at going upstream, i.e. rvkms [3],
-> > cpufreq-dt [4], asahi [5] and the i2c work from Fabien [6].
-> 
-> A rebase of the asahi driver onto this series still probes the platform
-> device and the driver works as expected.
-> 
-> Feel free to add
-> Tested-by: Janne Grunau <j@jannau>
-> 
-> We plan to import this series for the Asahi Linux downstream kernel
-> starting with v6.12 and replace the old rust-for-linux Device/Driver
-> abstractions with this.
+Hello,
+I am a private investment consultant representing the interest of a multinational  conglomerate that wishes to place funds into a trust management portfolio.
 
-Great!  I'll wait for the next respin of this as it seems there's been a
-lot of review already, and I've taken some of the patches already, so
-odds are after 6.13-rc1 is out the series can get a lot smaller.
+Please indicate your interest for additional information.
 
-thanks,
+Regards,
 
-greg k-h
+Van Collin.
+
 
