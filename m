@@ -1,108 +1,174 @@
-Return-Path: <linux-pci+bounces-17043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBE499D103C
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2024 12:54:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14ED59D1057
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2024 13:08:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68E2F1F23761
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2024 11:54:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C451628349D
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2024 12:08:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BE8192D80;
-	Mon, 18 Nov 2024 11:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD6F8190470;
+	Mon, 18 Nov 2024 12:08:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF01176AA9;
-	Mon, 18 Nov 2024 11:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DB3188A0D
+	for <linux-pci@vger.kernel.org>; Mon, 18 Nov 2024 12:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731930866; cv=none; b=eG3syhTDJSWIN0MUusCRISrHnQTmjcueme5zfb24ea4JFPzErRzzUHE4BjN2egsxFEd9Cuqdt5+LBZ5FDUxtjh0dAkA+nvewnAfGKBqJxKJa2PyD8oUSRvhZrOX6DgLU6c7QMAtc8fOnoAPniNu3UndpstB6l1MO/FCRInOLJN0=
+	t=1731931684; cv=none; b=UVB7vwmKEItN7x//cnPWEqCVQ42tLtVE328ThOA6B9p6yXn5xgihIfp1bf92Dmy6Qsy/h1nTwHHaxf6eeh7E10/N3XB1mfHnCghbbwIMlMDvCgKU8t9PNKRA4ButCkXQWmwFb1O1e3UlacCjfx+M+kmp3YDdxCWPnyUR430x8sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731930866; c=relaxed/simple;
-	bh=vbsFQ4wtDdiSJxS8w7T+TNXEWoASRuInqA3wQIlkhhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZuLsef0JNC0JpxfAnO/gE2ccidKHRmqpFhzworSJwilH7XsYEyR/XVG2KFGiqMI8JHsXUk2jxsj/Vp62RsXgBAbDnHS0EvhkWxTfzB0OmRpGIaPS7YW/zFIuukdHQJAFaQzW9tEV+ZTeHYoPz/PZi5p0qwlqnRd0B4ubHZi0Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A8725300034CC;
-	Mon, 18 Nov 2024 12:54:19 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 8C0A35FAC42; Mon, 18 Nov 2024 12:54:19 +0100 (CET)
-Date: Mon, 18 Nov 2024 12:54:19 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v3 15/15] PCI/AER: Enable internal errors for CXL
- upstream and downstream switch ports
-Message-ID: <Zzsq6-GN0GFKb3_S@wunner.de>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
- <20241113215429.3177981-16-terry.bowman@amd.com>
+	s=arc-20240116; t=1731931684; c=relaxed/simple;
+	bh=9317DECpVOPSVH/eS7BM0cm9sa6APpK76JtHQx2ovX8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aj1dfy/cU93iY5dFPQu6YPA+63NrpNXZ1JhnWskNXXScXnVy7Xf2VVfQ7k8dspaF7h45RsMUNRBMgXeLZFf/d7Lu9KMMWu2VwgfVty7twPo1oZBC+OfCwCL7JEypFcKK3W8Yh8BpwzDTJSMWORaaJTSYQmXpR9lGtSNMOgcCQnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tD0Xf-00009K-9Z; Mon, 18 Nov 2024 13:07:43 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tD0Xb-001OQe-2s;
+	Mon, 18 Nov 2024 13:07:39 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tD0Xb-0007J9-2a;
+	Mon, 18 Nov 2024 13:07:39 +0100
+Message-ID: <12ee035ae0ac88976a6521ee765c35c626494440.camel@pengutronix.de>
+Subject: Re: [PATCH v4 3/6] PCI: mediatek-gen3: Move reset/assert callbacks
+ in .power_up()
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
+ <jianjun.wang@mediatek.com>,  Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, linux-pci@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-clk@vger.kernel.org
+Date: Mon, 18 Nov 2024 13:07:39 +0100
+In-Reply-To: <ZzspgzXCyds04gTY@lore-desk>
+References: <20241118-pcie-en7581-fixes-v4-0-24bb61703ad7@kernel.org>
+	 <20241118-pcie-en7581-fixes-v4-3-24bb61703ad7@kernel.org>
+	 <2d7e1e5e09babb468199ac44520683fcb87d697c.camel@pengutronix.de>
+	 <ZzsC_hW-w6WSMYSO@lore-desk>
+	 <1fb3166c1f520a57c19bd3103b4585eee1e57fec.camel@pengutronix.de>
+	 <ZzspgzXCyds04gTY@lore-desk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241113215429.3177981-16-terry.bowman@amd.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 
-On Wed, Nov 13, 2024 at 03:54:29PM -0600, Terry Bowman wrote:
-> Export the AER service driver's pci_aer_unmask_internal_errors() function
-> to CXL namsespace.
-         ^^^^^^^^^^
-	 namespace
+On Mo, 2024-11-18 at 12:48 +0100, Lorenzo Bianconi wrote:
+> > On Mo, 2024-11-18 at 10:03 +0100, Lorenzo Bianconi wrote:
+> > > On Nov 18, Philipp Zabel wrote:
+> > > > On Mo, 2024-11-18 at 09:04 +0100, Lorenzo Bianconi wrote:
+> > > > > In order to make the code more readable, the
+> > > > > reset_control_bulk_assert()
+> > > > > for PHY reset lines is moved to make it pair with
+> > > > > reset_control_bulk_deassert() in mtk_pcie_power_up() and
+> > > > > mtk_pcie_en7581_power_up(). The same change is done for
+> > > > > reset_control_assert() used to assert MAC reset line.
+> > > > >=20
+> > > > > Introduce PCIE_MTK_RESET_TIME_US macro for the time needed to
+> > > > > complete PCIe reset on MediaTek controller.
+> > > > >=20
+> > > > > Reviewed-by: AngeloGioacchino Del Regno
+> > > > > <angelogioacchino.delregno@collabora.com>
+> > > > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > > > ---
+> > > > > =C2=A0drivers/pci/controller/pcie-mediatek-gen3.c | 27
+> > > > > +++++++++++++++++++--------
+> > > > > =C2=A01 file changed, 19 insertions(+), 8 deletions(-)
+> > > > >=20
+> > > > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > > b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > > index
+> > > > > 3cfcb45d31508142d28d338ff213f70de9b4e608..2b80edd4462ad4e9f2a
+> > > > > 5d192db7f99307113eb8a 100644
+> > > > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > > @@ -125,6 +125,8 @@
+> > > > > =C2=A0
+> > > > > =C2=A0#define MAX_NUM_PHY_RESETS		3
+> > > > > =C2=A0
+> > > > > +#define PCIE_MTK_RESET_TIME_US		10
+> > > > > +
+> > > > > =C2=A0/* Time in ms needed to complete PCIe reset on EN7581 SoC *=
+/
+> > > > > =C2=A0#define PCIE_EN7581_RESET_TIME_MS	100
+> > > > > =C2=A0
+> > > > > @@ -912,6 +914,14 @@ static int
+> > > > > mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+> > > > > =C2=A0	int err;
+> > > > > =C2=A0	u32 val;
+> > > > > =C2=A0
+> > > > > +	/*
+> > > > > +	 * The controller may have been left out of reset by
+> > > > > the bootloader
+> > > > > +	 * so make sure that we get a clean start by
+> > > > > asserting resets here.
+> > > > > +	 */
+> > > > > +	reset_control_bulk_assert(pcie->soc-
+> > > > > >phy_resets.num_resets,
+> > > > > +				  pcie->phy_resets);
+> > > > > +	reset_control_assert(pcie->mac_reset);
+> > > > > +
+> > > > > =C2=A0	/*
+> > > > > =C2=A0	 * Wait for the time needed to complete the bulk
+> > > > > assert in
+> > > > > =C2=A0	 * mtk_pcie_setup for EN7581 SoC.
+> > > >=20
+> > > > This comment is not correct anymore.
+> > >=20
+> > > I agree naming is hard, but I guess we can assume with 'bulk' we
+> > > refer to both
+> > > phy and mac reset (similar to what we have in
+> > > mtk_pcie_power_up()),
+> > > what do you think?
+> >=20
+> > My point is that the referenced (bulk) assert isn't in
+> > mtk_pcie_setup()
+> > anymore - it was just moved right above this comment.
+>=20
+> ok, thx. I got what you mean now, I will fix it.
+>=20
+> >=20
+> > I wonder why that delay is required at all, though. Does the reset
+> > controller driver return from reset_control_ops::assert before the
+> > reset line to the PCI controller is asserted?
+>=20
+> We discussed it in a previous revision and Bjorn requested to have
+> the required delaies=20
+> in the PCIe driver.
+>=20
+> https://patchwork.kernel.org/project/linux-pci/patch/aca00bd672ee576ad96d=
+279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org/#26110282
 
-> Remove the function's dependency on the CONFIG_PCIEAER_CXL kernel config
-> because it is now an exported function.
-[...]
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -949,7 +949,6 @@ static bool is_internal_error(struct aer_err_info *info)
->  	return info->status & PCI_ERR_UNC_INTN;
->  }
->  
-> -#ifdef CONFIG_PCIEAER_CXL
->  /**
->   * pci_aer_unmask_internal_errors - unmask internal errors
->   * @dev: pointer to the pcie_dev data structure
-> @@ -960,7 +959,7 @@ static bool is_internal_error(struct aer_err_info *info)
->   * Note: AER must be enabled and supported by the device which must be
->   * checked in advance, e.g. with pcie_aer_is_native().
->   */
-> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+Ok, thank you.
 
-Hm, it seems the reason why you're moving pci_aer_unmask_internal_errors()
-outside of "ifdef CONFIG_PCIEAER_CXL" is that drivers/cxl/core/pci.c
-is conditional on CONFIG_CXL_BUS, whereas CONFIG_PCIEAER_CXL depends
-on CONFIG_CXL_PCI.
-
-In other words, you need this to avoid build breakage if CONFIG_CXL_BUS
-is enabled but CONFIG_CXL_PCI is not.
-
-I'm wondering (as a CXL ignoramus) why that can happen in the first
-place, i.e. why is drivers/cxl/core/pci.c compiled at all if
-CONFIG_CXL_PCI is disabled?
-
-Thanks,
-
-Lukas
+regards
+Philipp
 
