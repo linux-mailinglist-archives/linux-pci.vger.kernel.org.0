@@ -1,127 +1,148 @@
-Return-Path: <linux-pci+bounces-17065-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17066-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87DC89D221B
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 10:05:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65BA49D2252
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 10:17:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 425D01F22122
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 09:05:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E29EC1F22BC2
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 09:17:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082721925B3;
-	Tue, 19 Nov 2024 09:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E90819AA5F;
+	Tue, 19 Nov 2024 09:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cv5uOTxS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDDYHoth"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA08812CDAE;
-	Tue, 19 Nov 2024 09:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63F213FD83
+	for <linux-pci@vger.kernel.org>; Tue, 19 Nov 2024 09:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732007116; cv=none; b=dPcJ2Di1l4gX2YzvAWHPAusCwrgJq3FipVXfOL8Smfr1vzUU4GCjIL/wDUfuUvxe7tKhQ0Rn2CDV/0/CuU9IDTXtYvZ2gm8wsfCJmd7+cVWsENFVftN4W6SKjnwEwXGizXx1qTiUz8+OQ+0ZmN5utXBalyRd24upnS25SPKcLKw=
+	t=1732007833; cv=none; b=pDAoV3w8aoNQpMKAlXNufIyZVnIRJvFWCI0ruG+RexLpKhFaQ0VIV/I/IGrXf04oULDsibN7UHXqLY9i446ARG2jWOZyoxfMhe6joFbj+FkMP+xkgMiw+fbxRj+DBKVnfN6uhobFmB+51nMNmXc+iJsJNZ7ID33dQGM4Wbh3wDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732007116; c=relaxed/simple;
-	bh=qslK9QNzD9RoFr7GVJ7I21Lqy9327g4qXpeTSoTD2Dk=;
+	s=arc-20240116; t=1732007833; c=relaxed/simple;
+	bh=g810kb0XgvzxYZQtrMTm+l/lpKzxxUTGIDTHgLMIkq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bBx7fjzcOnIjT7HCWSZovmpZqvzvvyBGJKuN5YjZqDWoUPswL/Zucmpd0DZEYywCPf9tf7KB279WJ2X+GCYqUqnjzq6n+VAR2pdOYxPBWJ91UlsznCrGH4C3YpJZrlPwWD5RNHYLw9n2G75cgJGyoxCM1kJqz1Y+v70Gt4OjNys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cv5uOTxS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76DCDC4CECF;
-	Tue, 19 Nov 2024 09:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732007116;
-	bh=qslK9QNzD9RoFr7GVJ7I21Lqy9327g4qXpeTSoTD2Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cv5uOTxSRP/Zlfyx8pwvQYettf0TzHwBftoQg8EWUdvGQSUrhYNTkJaHEMt90mnND
-	 dL/Xxm06c7d2j9I8IymnJyGN9CGYF9PZAP+AG1HVBzf8AUcthPJhAd+k/qmq8hUeYV
-	 2S4o5Gr48Y2AiD/EmI3wOWkLt4lpEWH0qz0kux7WL6fE8j+1ET//fwy1xbqVocSpXe
-	 Ab5mRo9pg4yNjvuqxi0jb4bhYoSNsM4y2N6QC7+4YGcXRWzqXSt7GwZXmZewEqB/OX
-	 /tdIXMaJ71vpUzz+qH2VBsIoFVA4QuLQubJhkLUBybYjH8dErW+BjxCo19oKKYayqc
-	 wfHTbIuJlL9Jg==
-Date: Tue, 19 Nov 2024 09:05:08 +0000
-From: Will Deacon <will@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 07/17] dma-mapping: Implement link/unlink ranges API
-Message-ID: <20241119090507.GB28466@willie-the-truck>
-References: <cover.1731244445.git.leon@kernel.org>
- <f8c7f160c9ae97fef4ccd355f9979727552c7374.1731244445.git.leon@kernel.org>
- <20241118145929.GB27795@willie-the-truck>
- <20241118185533.GA24154@unreal>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TmgdQanX2cRZn1d4dexr+OPfkB5+kiRHPqXVRSKE/RxVWwENb3YsqHknP4GIbCdgGanjjaggiuzAp8dcZU347/Pum3Wi87vrzWFo6WqEFUxfP2gibwG+lAjn5YuC/AHUM7fH9CGd4argXrgXBrHHAcWf5sahJxqn/zPr6uyUOWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tDDYHoth; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5ebc0c05e25so320229eaf.3
+        for <linux-pci@vger.kernel.org>; Tue, 19 Nov 2024 01:17:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732007831; x=1732612631; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mh9tKfQZDVb7Srbzricoyx+VzVp7BjyJVZmRNXjCsTY=;
+        b=tDDYHothy5Z8/MjQH9Uv+r7JVAFrKy+UcW1UzNJVH4LkuEjXwkswPEAwOqq0J4mGPr
+         xv8z1M4e+t/f1wEgLeW1FxNwrKFv/umbGPvkjvEm6DBD2mTUldApLSaUFuSUXN4kuAWH
+         Gw+kAnHWHhYd86+MVJGfFRjDxsavf8pMq1cO8Q2pwS2OdtBcRdEyWsNK025zOzDAIfG0
+         vjIyiZEXpv/youE5cTlbAKkyU7yEiYbDkCsHVd0nPMpSamHdjR6chHHicy+BM4wl5mWo
+         ZfpLIf4+2ahMBg+6iFmPOZItFS399UAoXqUxvd8JZzzHigus22NAWo7TRRXZlxF3BU3Y
+         EN0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732007831; x=1732612631;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mh9tKfQZDVb7Srbzricoyx+VzVp7BjyJVZmRNXjCsTY=;
+        b=NuGXJjACLZpGLb12xPoD/+iKsXrAoRhbXsr2C3uaODyP+lTJiLYEw0wRocL89xcTVa
+         98M4BpL4itxG9I5XsW2X5w2FX3/T08ggF9tqdQDbW9xepQpcqyzEkbm5q6dSwlHFdGCY
+         MR3gLCHn7GTOG98b3qb1claEJ59NgezWRLeGAjoVDJVLfxMGjgnFrotTAPlCGnAEXors
+         QVM3EALOvW1HskJFJu7sVlh8RLVCgS5BGUwb16VaTZCTbhyMoMSxXCBDK5+LvZ3ZLRti
+         5Z+ODO3mJh0+VHpMysyhTt19iL7dCQQQXzwbSIn1AEApcfTRFo9On+Jd5ZFPTY2TjDKZ
+         +mQA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1+jRLBTr269N1Geb1g85TIVTXV+lu8AnD6JU1xlLzo24UwbN0pZR7Dcf+em5Y98H3nwRmkpi32sM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZIIlRwYGbZf2y1HefJLMfVqF16HETkWk7EFSeGx/iXYUwUGs1
+	XPJrQ2/VWP0WVLdCtatqUL90Kk5bBlcudAwIX9G2cPg8T/euDzLShhj9k3gqcg==
+X-Google-Smtp-Source: AGHT+IF6oNS7zAaqiMj3qBtazoexGSI49TeW8s00tlEKm6P+2kEMfwF3rimz60UqsKAumxJWheQLUg==
+X-Received: by 2002:a05:6830:2a8f:b0:718:a3e:29b7 with SMTP id 46e09a7af769-71a779213bamr15070132a34.7.1732007830619;
+        Tue, 19 Nov 2024 01:17:10 -0800 (PST)
+Received: from thinkpad ([117.213.96.14])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7f8c1dade0esm7241941a12.66.2024.11.19.01.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2024 01:17:10 -0800 (PST)
+Date: Tue, 19 Nov 2024 14:46:59 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	robin.murphy@arm.com, will@kernel.org
+Subject: Re: [PATCH v5 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
+ i.MX95
+Message-ID: <20241119091659.rmdufvdi6jkynvfe@thinkpad>
+References: <20241104-imx95_lut-v5-0-feb972f3f13b@nxp.com>
+ <20241104-imx95_lut-v5-2-feb972f3f13b@nxp.com>
+ <20241113174841.olnyu5l6rbmr3tqh@thinkpad>
+ <ZzTrdUX0NUsHQLvd@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241118185533.GA24154@unreal>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZzTrdUX0NUsHQLvd@lizhi-Precision-Tower-5810>
 
-On Mon, Nov 18, 2024 at 08:55:33PM +0200, Leon Romanovsky wrote:
-> On Mon, Nov 18, 2024 at 02:59:30PM +0000, Will Deacon wrote:
-> > On Sun, Nov 10, 2024 at 03:46:54PM +0200, Leon Romanovsky wrote:
-> > > +static void __iommu_dma_iova_unlink(struct device *dev,
-> > > +		struct dma_iova_state *state, size_t offset, size_t size,
-> > > +		enum dma_data_direction dir, unsigned long attrs,
-> > > +		bool free_iova)
-> > > +{
-> > > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-> > > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-> > > +	struct iova_domain *iovad = &cookie->iovad;
-> > > +	dma_addr_t addr = state->addr + offset;
-> > > +	size_t iova_start_pad = iova_offset(iovad, addr);
-> > > +	struct iommu_iotlb_gather iotlb_gather;
-> > > +	size_t unmapped;
+On Wed, Nov 13, 2024 at 01:09:57PM -0500, Frank Li wrote:
+
+[...]
+
+> > > +	for (i = 0; i < IMX95_MAX_LUT; i++) {
+> > > +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
+> > > +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
 > > > +
-> > > +	if ((state->__size & DMA_IOVA_USE_SWIOTLB) ||
-> > > +	    (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC)))
-> > > +		iommu_dma_iova_unlink_range_slow(dev, addr, size, dir, attrs);
-> > > +
-> > > +	iommu_iotlb_gather_init(&iotlb_gather);
-> > > +	iotlb_gather.queued = free_iova && READ_ONCE(cookie->fq_domain);
-> > > +
-> > > +	size = iova_align(iovad, size + iova_start_pad);
-> > > +	addr -= iova_start_pad;
-> > > +	unmapped = iommu_unmap_fast(domain, addr, size, &iotlb_gather);
-> > > +	WARN_ON(unmapped != size);
-> > 
-> > Does the new API require that the 'size' passed to dma_iova_unlink()
-> > exactly match the 'size' passed to the corresponding call to
-> > dma_iova_link()? I ask because the IOMMU page-table code is built around
-> > the assumption that partial unmap() operations never occur (i.e.
-> > operations which could require splitting a huge mapping). We just
-> > removed [1] that code from the Arm IO page-table implementations, so it
-> > would be good to avoid adding it back for this.
+> > > +		if (!(data1 & IMX95_PE0_LUT_VLD)) {
+> > > +			if (free < 0)
+> > > +				free = i;
+> >
+> > So you don't increment 'free' once it becomes >=0? Why can't you use the loop
+> > iterator 'i' itself instead of 'free'?
 > 
-> dma_iova_link/dma_iova_unlink() don't have any assumptions in addition
-> to already existing for dma_map_sg/dma_unmap_sg(). In reality, it means
-> that all calls to unlink will have same size as for link.
+> It is used to find first free slot. This loop check if there are duplicated
+> entry. If no duplicated rid entry, then use first free slot.
+> 
 
-Ok, great. Any chance you could call that out in the documentation patch,
-please?
+Ah, so you have combined both in one loop. A comment on top would've been
+helpful to understand the logic.
 
-Will
+[...]
+
+> > > +	if (!err_i)
+> > > +		return imx_pcie_add_lut(imx_pcie, rid, sid_i);
+> > > +	else if (!err_m)
+> > > +		/* Hardware auto add 2 bit controller id ahead of stream ID */
+> >
+> > What is this comment for? I don't find it relevant here.
+> 
+> The comment for why need mask 2bits before config lut. for example, dts
+> set stream id is 0xC4, but lut only need 0x4.
+> 
+
+Ok. It was not super clear. Could you please reword it as below?
+
+"LUT only needs the lower 6 bits of the SID as it will prepend the 2 bit
+controller ID by default."
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
