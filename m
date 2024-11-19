@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-17095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17096-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A47A9D2F03
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 20:46:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7DB09D2F00
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 20:46:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E9AFB2555D
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 19:45:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6085B1F23841
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 19:46:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC3D1D3628;
-	Tue, 19 Nov 2024 19:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CDC41D435C;
+	Tue, 19 Nov 2024 19:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HHoDgQH5"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CYXh/0no"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2078.outbound.protection.outlook.com [40.107.20.78])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2041.outbound.protection.outlook.com [40.107.21.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9DF1D3588;
-	Tue, 19 Nov 2024 19:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F6B1D356F;
+	Tue, 19 Nov 2024 19:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732045494; cv=fail; b=CqA+3gTdQr7E25eYABsBOK14UWtS+l3zXlNZco+/XApJCeapF1dn3yUe5Qt3Uoxd5B9qi6DqRWmkGGW5DRGhpY6dSoeucZ1aGK/kn0kwuX+Sr+bck8RhdPX4JrJbsJlAAllkiDhqOBna+quxKHK379AVN5cu1v6WqULnDyG9x3c=
+	t=1732045500; cv=fail; b=s7KtpNc4A4OVowI/s20S4TaGrKg08GJiU4Ntv2Ynff8dkezyoD25/8LmuYrQvyNyc7IxmrgaDQ5G9O13GL2J8TPfDhU1K+35/k7wk6lreuBYc1LAesDrn5cY7aYlukSOCfAuHv2scHBPp93crTK9T0JNx5IODQy0EsnntHdr0S8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732045494; c=relaxed/simple;
-	bh=aXXX11evuoHeJzI2romv1WKj3Ah+7csb/vVjNpesoog=;
+	s=arc-20240116; t=1732045500; c=relaxed/simple;
+	bh=I0aB8s9mgt7c/wPNl4Q9fV9Vkbql7lyhVemIzXKa6vk=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=C1ly7GVfyfRU7quqzeTXH+NeCzjAG7zzkCdilb8N9hznTFqSslPeufLbM2X6UNIS7OkJJRpqdMPggrSouU9imVD4aPSp8NzgUKMNhqI4o4dhbXyxiOExyJ3xv3KpJollaUl67Ti4F+nCHl/Wl71aqVkXtxCsvHZaEmhD8kRyInE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HHoDgQH5; arc=fail smtp.client-ip=40.107.20.78
+	 To:Cc:MIME-Version; b=JQEF1QYI9cRqFfDH/spuHfboq7egfu5wbnvtVbVRv20yWJflvTzJm8TiBjqiSthd/nuDuflDwcogNcRxixPAv9VGDEFKS32hlRAjBhD3OOc7QWsApT6fqZrZZls33cA1vtiiFKylKKKvHN9JRxaqo8Kbb2FMfhYvlrdXEAcXm/s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CYXh/0no; arc=fail smtp.client-ip=40.107.21.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m+wPI0HzNlq+7iBN35nCWAB86weCdsa8GiVhpSD5fNaJCr60k03hk20/LtjT9A+wNwFySzEHQzj2DZY/h4mjgO7Ks+Wk/gGmTJdfHtGNN64YiG01ib+31yT7H5nb+IwblahauvCSlfuAvYz4+STPyNlBW7TP2eEqW9KzuGmLOyJmzV49OOxsmEcd9bd6YX8IRYR7RRMMB7X5uLNX36Po+VDkoIsDvBZ4OBsWkzi5hQdhrxUTUdQ0nR2RTQNCHBi/+k3DGQpMPLSSYclh+NpIIwCMtBa0P5TbjR8Mmp9jHbXXnQ4s/hWSy4RpgooGs0IpjPHiD6Ftfd96tsso5ktHpQ==
+ b=yqNPfHA2sfXqtikoV1IoTrufKV92+7vw5jN3ER4N5WWsu/2s87KOuoriVeWxULP9b0w2YcgX6j+stfOqCsGqov5h2rTvhxraVpNcOMIlpT5ked3DycBsyZbjIo1KwV8ztGXOgG/l4IAnWvnJnm2JHqDF83n8v35iYUNoC65v8aOCILsAghZqhqzIlc6utXt2yvB/MmqQLget9MwIapW3yA+X/bzH0fGyuK74hRXUUhyRFTXEH4+bHh/jLa8dZaUIMVeWDpJvVGjm7aCcNFISUHmh31O3qb7Vep6czBX1/G4t5cZyIMCIixjinGJPTBO8kKWKjJCBjE0Q73f9yQHgfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/Slmhx3u+CKxItrsOA2x6YrotWMug+CZlJbr0no/5ac=;
- b=aeJRrBlMNi19CMrNuigFkbjlvcI03IXMEnkhwOzySw7seFhVUyQjybmduU2oGmXou4vo2JQBjxFkUvsZnbt9f46IwtjhMUx4sZhCXoPuYfrjSsNXGp+drapvY+U55xbq2WqduFVRiU+uIFYsrRF6j5PZkUyWp4hzEgDyIFA8nyAqmuNowu1pESD35cgJDMGnzdC5vQ6+rqrjtIAzLyXSvG8HjNdGVIxrF2ek9zUS7ZdYd8N0YXjnrVUEK+3e76FmWfJCIkpBVCAn/yIPZu8guKujQ/UdG7K75hTaE0yTlnkOL6bz+AkfYn47bJwFvVGHqaPdCNTo6Z4X0fvq7ilJZg==
+ bh=5MDrE0QkVGaSwDsZhJXehBvAhAGHitWF51NhOtmt0vo=;
+ b=otFdApvdLt9UTSHrmZfyNknEveFMuEALSy7YMN4c2mWy6lf6wHNh79GOLwgC9xycgtp770Kaoh65bT7Wn1tQ6QSP4iAFBq2GguEEGVSpKRiQBi5T5t7KmJyg2WyhJSWJo5PjIZXHNj8SNFBLVbDpS/ux+Fn6yyyrsna0nABUaG8d9Q2vm7SuCCET/C+x77uAfdiUSVj9t5qeLUWizKrGDXciwQ0DgeR8fcUL6zbq/pZPqmqMu9+hEjh2/HudzozzvZ0qQuoD0uw6KuoYqBauWn97GucQ4cVwz0Oya4V01szVJnWq/LPyg4msOJXSkCLkTCUktXHeRtXtpzHG72JoCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Slmhx3u+CKxItrsOA2x6YrotWMug+CZlJbr0no/5ac=;
- b=HHoDgQH52Jtiv9D2AyZohgH2cQdx/h+uSghtSWxpL9jk/FrRyt1e9pd5pE3F1iDChj8TGct13cBD/eRWxk49rd6dbipsCMVZbgZILbRkcYp/WLl47ic+BLV997Uv6RWjQvv8UvevGuSzISGlPX4ktZFlkcRTo/QooDwQ9ilj6wz9S8+AJ1OG+YtA0BUjIkpbXMmFe3//ZjkCRnnHV3duoy37V2/8wzOQRwRJZ+g8tPZiB5r0HawEZOHB2XoEDItTtEv6q2/KksfQBuDVNRTMQyTcTlK6orBEVIuJWXPpKjK04CT/m7XWpcov0fZUNabVH1/02sGUzIXqjVkcN5wyYw==
+ bh=5MDrE0QkVGaSwDsZhJXehBvAhAGHitWF51NhOtmt0vo=;
+ b=CYXh/0noeP6atpqILw20anNKjQVxkadudOmfMRT+cyyyyIgDAGwAA2ihbjE4pKwGaFBHuFQPJ62wQffJGTxWOWxmZ5QefRfbm/9MwUd+oqcMnmwg8RNm4jBdb4u8DxvzVilb0zz6+jiMvzGEHSaxAn7ue3qAj8BR1m973j7heODhcT/MhasosEODOSdCs9kIAsEdNHtt1BqlXLd57vWM7bbSxt2OruqECRgcD7qhZfj1ZCrz8rKcBO+GRUaWeorAnxYooGlPopVJfCRsmaerBBdwpTYyoSjpy17fVjagoPau/qOzNNtQORA4LeRhHkwPmmiIIeX6ziyHNXbuI8MRTw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by GVXPR04MB11068.eurprd04.prod.outlook.com (2603:10a6:150:215::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.22; Tue, 19 Nov
- 2024 19:44:50 +0000
+ 2024 19:44:55 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8158.021; Tue, 19 Nov 2024
- 19:44:50 +0000
+ 19:44:55 +0000
 From: Frank Li <Frank.Li@nxp.com>
-Date: Tue, 19 Nov 2024 14:44:21 -0500
-Subject: [PATCH v8 3/7] PCI: dwc: ep: Add bus_addr_base for outbound window
+Date: Tue, 19 Nov 2024 14:44:22 -0500
+Subject: [PATCH v8 4/7] PCI: imx6: Remove cpu_addr_fixup()
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20241119-pci_fixup_addr-v8-3-c4bfa5193288@nxp.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241119-pci_fixup_addr-v8-4-c4bfa5193288@nxp.com>
 References: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
 In-Reply-To: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
 To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
@@ -78,11 +78,11 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1732045469; l=5694;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1732045469; l=2679;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=aXXX11evuoHeJzI2romv1WKj3Ah+7csb/vVjNpesoog=;
- b=qSrTkruYBvzE9sSni5f6eei2fmbhebzWj/98M3g1QQaBKtAYEoh0RQW17+6ziD0eBc56BsCry
- DVIq028IQf5Dqapv2Xn5Jx4tVQhrVkr76jseqgyHA4lqU226iE+iMqU
+ bh=I0aB8s9mgt7c/wPNl4Q9fV9Vkbql7lyhVemIzXKa6vk=;
+ b=MATppPIs138QqC88p86N6l8VmPqKeOgbQxRpSnrquzgj6hwnWbc9VRRhTp6OLF4zpVzKW09Zq
+ Yqe7zLnVjGwDjc9hjEsxIFWWIczSNm4brHolgj3ND93qUR2SBO6sH7V
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-ClientProxiedBy: SJ0PR05CA0009.namprd05.prod.outlook.com
@@ -96,239 +96,176 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GVXPR04MB11068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17c717f2-5ac8-4eb6-4aec-08dd08d2a168
+X-MS-Office365-Filtering-Correlation-Id: cc96936f-c6ec-446b-4bf7-08dd08d2a441
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YVJCa0xzNXlUQ0VrZ3BoaGZKQVlhdEVubEFRR3JmakwzdXhoVTQxS1lZVkZP?=
- =?utf-8?B?TmpxWlNVazc5b05KYTUzM2N1ZTB4aGhGcG5FR1Y5M0Zpazk4eDJKQXhyMTFj?=
- =?utf-8?B?OW4yUGd5ZEw4eXJaUEFRWkZEL2cvZDhrTENwZTQ3WlIvckJOSTBXZUwyVzZS?=
- =?utf-8?B?QnZja2JKN3NrMFduNWtuZWtCbkdxWVIzZkg1N2l0K1dMWFpYZEx5OVpTTTI4?=
- =?utf-8?B?ODZTUHpTS1NiTG5rWFM5bmtqVEcrNm4xV3hhdlFNMkIrR3RXTVVMUEpoVVhw?=
- =?utf-8?B?OVllaXlDRmpwbmFEajBLZGR6aU5hWHZlY01MYU1ZdGh1eEtMWUFnbDgrQmNj?=
- =?utf-8?B?OFZkano3bXNQRm1iWWQrTysrbGIveU9LMkN1NzVjMTlrcGJDVms3OG81aWY3?=
- =?utf-8?B?RGFmWkxDS2VuT3RlK0tQTldMZVhJM1ZsSFJ3T1AxL29OR0FwTDBveGJMYmJV?=
- =?utf-8?B?OXlHbTVCOHczcXB2Z29JRXlMSTdxM0lpcm5zL2l4eUZRRFowL1FHZ0xRdHUz?=
- =?utf-8?B?U21wZEpFd1RFQTV5cGE2aS9zZjVPSE5pYWJaUER6aGpqYXc2bmI4QloyRjE3?=
- =?utf-8?B?QzRBUXlaRUF1ZCtrc09EZ0FtbmpUazR2MVBCS0QrM0pTbCs2TmRhVFZCNE5B?=
- =?utf-8?B?Q3BuelQwT1VKb0pNTG1OK3pxZmpnaFdobmlKOHF5dkQrbkhjYUdZL0RSdVZI?=
- =?utf-8?B?SXlsUGRtaGExREJQeTE5VVdRdGgyU3VXRUI2NFR0bjBZRjF6elEwTkpxejZp?=
- =?utf-8?B?aUpsYXpDcUNsSEtCT2FuaG1YZ0wvNHBRakJESnBMbk5FT2Q4UFFuZCtkcEhh?=
- =?utf-8?B?aXhQeHFPTTVaSWg3NVM5NGxBeHhBTmthdEp1TUZaSU55amZMYUtoeHlScW5R?=
- =?utf-8?B?dERaUTVQdGV1b3hZUEx3bkZ2aUcvRTJzY1Z6Q0syWUxHd1lYQnBJMlVYckd1?=
- =?utf-8?B?N0JlNG9jaHQwM0VxVElrdTJ1SDJOZHJpNStSMndPRDVCNng4MWFFMmpOVFgy?=
- =?utf-8?B?NHN3RmJ1UXhFaTdkcmpwbVZ4RlFrM3FPV3orU2V6dlZFN2RLaHJkQXhkNlAv?=
- =?utf-8?B?QzBSSlN2MzVNZ1EwQ1VPUkNnQzkwNVM2aExKWUlwVi9hL3BnV1FMb0VteExF?=
- =?utf-8?B?Yytuc3NTL3pQZmhRTjYrdnNwSEsyNDFJVjNYRDFTS3BsRXl5ZSswSEt3dFV1?=
- =?utf-8?B?MFlyVllHTVg0YUhlN1dzWFhZNVBZWTlIMU83eElTbGROSFVjdEFSY0VhemtV?=
- =?utf-8?B?Smo3RDFVWWpHU1V6QVBKQlBRc1dDWmdHYWZKNzJPR1VCWW5aeTdlWUVHaDN6?=
- =?utf-8?B?Q1JrWG01UnZ1TlAwWXhpYytFaVh3Wk5tYTJKOU9RSE5CSlVKMVQ2ZGZ2VkFX?=
- =?utf-8?B?V0E4RndlS2tIalhsVDloWmduMUw3TUtxM3FJVnhrZm5SOGlsY2hnbEo5UGRv?=
- =?utf-8?B?ZzFUeElzaHNtTzJoVWxhVThNeGFNK2JGb1BSMWhuMlQxV2wyWVpvWW1hdExO?=
- =?utf-8?B?dTl2ejdGb1p6S2ZqOTdEdDlLbHR1cmkzTnVobm9OMiszanRlcWxsKzhPL1By?=
- =?utf-8?B?NTBCMDFIYlNmbzVFVXUweHphdWsvazBiRHVxbHhXQThyazBWOXpXSTBMazl6?=
- =?utf-8?B?VkxadHkzbEZlaEJ2TUdxS2pLNTRjVERiVFRjNm9aS280SFhiRmViZXRKZUdw?=
- =?utf-8?B?dmwyaUdBYkRaeFVIMk9EQkZsTG5HNmRKTzFOdU8rV1lpTUI1dmExQzFVekU2?=
- =?utf-8?B?S3VWZ0dKNE9hZU1BOW44cXFuaUovR0VRdElsT1d3OWpWc3hvdHd5OURBR1ZY?=
- =?utf-8?B?a2pZemE0Y1ZvQXFiT1BMbWIrVXdTanBGaThvNDJVMmtrVVRCTXhGb0FWY3VK?=
- =?utf-8?B?dzhjU1FSWUx5SmlZUHhjQkZ3R2N4QStmZlBKM3lsRDA2TWc9PQ==?=
+	=?utf-8?B?RWwvQVFQbXpMTFZPRTJCdWRZUURVQ3FoY2RRQ25tdmVad09wNFpjdE9XekNt?=
+ =?utf-8?B?UVRRRjBJSEsvdGRQSFNQOVBnTVZYakQxMU5qcis3aG8wRG9ZMFZLaWZDcWtD?=
+ =?utf-8?B?eVhrOTdZTkg5SVlwUTUzUGVjQUJLVVNxUVhTNFlQN3JzRTBGdkxWYlRhRTFD?=
+ =?utf-8?B?cXQ4OHdkWEdpWklvOVVndWxWM2x0MWdMck9pN3JRREdhd1hBRDV3UVlVWTEx?=
+ =?utf-8?B?N0JmdmswVzVHMERRR255ZHJjRStZNW9UWk43L0ZLM2tLZ2JKQXNzSDFITDJu?=
+ =?utf-8?B?RzZTK1J1QlFRTmtaTC9abkZ3eEQ0cTZuTjZYM3h4QmFDcWNXdVR3RjVHQWxF?=
+ =?utf-8?B?eXBPQ3VDVFJFck1aeWJzVUthVXJUYUVMYXJjeExTQklqd2xoSC9kaFc1NEF2?=
+ =?utf-8?B?dHJYSW9WRVhYd2tEUE03NEFBNnpETjdqSXczQXViWWQ0UUs4YkR4TnVnR2hz?=
+ =?utf-8?B?aDE4TmNFZk01RFNHN0ZYTlo0cEJqaGZ2N1Z6SUpyVU1RUDdTcGZVWndqcnZq?=
+ =?utf-8?B?bnhYTlhJbXFyazYrVjNpOFloUEF2blNtSEFtUWVVdVhtbS82MU0rTjc2RUZD?=
+ =?utf-8?B?ejRGZ3cxN0h1MEk3QmI4d2RJSkVuY3lpNENIdEgyTVRWK0VJTFNGblpWTG15?=
+ =?utf-8?B?TXdqKzVnY3pkdHREUUN2SGt6S2Z3U1lSK0hoZjR6RmNLeFh1VjRLS3c1Skg4?=
+ =?utf-8?B?ck1WRjVlWCtjRkJjMUt3WVJ6NFVYMXg0YzBMWTM1RGVxa1lLVlRwN1NMbXJi?=
+ =?utf-8?B?Qk90K2o5K0tRc1A0TnNpL0xIRDZ0c1phVkZxcko3aHJJK0s0bVlUT0ZKWm5H?=
+ =?utf-8?B?MHJOTnpsdTVuVGtxSUxweFNsMWxhUzNOajh2VWFhSG1BNWZjVDZNcU1OOUJh?=
+ =?utf-8?B?Z0ozYW5YM1Z6OEFRV1JTd2N6RG5Ub0NyNkE5V1NxQlBvN2Q1bHJpeXNQSXhy?=
+ =?utf-8?B?dm9vRDd4TG40TldtZDE5cFBCbTJlT0RtSTQ0bkVUTnM2NmVQZytJVFhPUEov?=
+ =?utf-8?B?cEFaYXZpcUtWdHZOdWtVeGJwWk82R2JDK1BiM1IyTGhyMm9YWWx1MGlLdmVP?=
+ =?utf-8?B?V3UxMjBDNUlLL1NZQldRM0tZWExjQXBINUVUclkzcFN6a1dFUHZHcFNlbkhi?=
+ =?utf-8?B?VFlDM3JsSEQ2UkQyeWpGOHQ5cWNDZnQ4TVVuWUNRZVZkVGNSeVkwK0NXSS82?=
+ =?utf-8?B?MjZxeE9kNElGRnRBTXd3MWwwamlGZEFSb1RpSXFBV0ZKZTZzdjBCMHlzSEpD?=
+ =?utf-8?B?MXB6YVZkaVZJd3loUmtNRkovVnEwRFZNbWhSV0ZUOW5FVzJEZ2VVWTdoNlVO?=
+ =?utf-8?B?b1orY1dFWHFsQ3NkZHZtTVVBMjB4bWNPZXdUYmEzUkFNaWJIbnFBRWtyKy9M?=
+ =?utf-8?B?QzVXbTBKWHZyaVI2YVpxOGFTR3d0N3YySVV2cWU2L2E1WXVQLzRvYkFjdXpC?=
+ =?utf-8?B?TCthQ29XS2E3M01QWEFhd3p1MUJOSFl1QVk0MVdZWm5JMFNWTmhyZ0lDVDNH?=
+ =?utf-8?B?eHFTMDVSc0Exa0dRYnJDa01EMlVWcGQrVlVFQkZraENNdkEyRDRVYmZudFFF?=
+ =?utf-8?B?SldYRlExekZQTWUva09WbXY1dVlSV3BtRlozZHRDYWpoeFBNOXlQdjV3aE9y?=
+ =?utf-8?B?MnJQVkl3R3dvRmkvb2JCSW1VMzVVRGxPV3dXSEcrWG1oUHRPVitQK1ZibXN6?=
+ =?utf-8?B?VXMyNUlaSjdvU1ZXbzMzelpGMVBvZ2FsOTdvdC9laTRPY2pJUHhyRTRoVGFy?=
+ =?utf-8?B?OVNmYmpkSDVNSEo1ZTBKQWhPczNIZ0ZzMU82ZnhQRHJ4eUZqaGlEczRuSTJS?=
+ =?utf-8?B?VVRqNlcvRVdqWEpEcEE1aHFIVkhGWm1aRU5lMWNmZWduZFJXNGhOaUNoTkhD?=
+ =?utf-8?Q?mbuEC0op+FN2C?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(921020)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VFROY0k1WGJINkV3ZnYxY2hjNDFvb2xuQjh3bkl0ODUweDhhaXpPbjVrakZp?=
- =?utf-8?B?YkVKZzNKd0Y0U0dzM2FUM1JGQmpYN2V3cGMxeEVpZVNXc1NRLzRlenNwRWY4?=
- =?utf-8?B?TllDUFJaV2YxaVVDMnJXdFlKYnJEUS9LaDFjUUkzWHlESHlFVE4rR3ltR2tT?=
- =?utf-8?B?QkphMGljTzZSaDhLUEZGNDE1S2lHdm5iSi8rTklRK1NqVWpGMDIzRTBFL0FL?=
- =?utf-8?B?NFFXRnB5SWE3azZ0NTF1QU5wdFE1RGhoZ3g2dW9xeTRvcWs0VU5QUlkwNXVZ?=
- =?utf-8?B?TEJKVEljKzc5b1NFa2xhcFhIQ2c2TnF4ODhNMzQ3TXFydUhXWno1bG5VUmdN?=
- =?utf-8?B?bUM2bDZjcDU2Z2lvMkFIMHM3dEhnaTZNcUpMMVVUTVM4Q0tQaVd4MG1hM3Vr?=
- =?utf-8?B?cGVYcWI5Z2Eva1k5cFVSV2xneWVxNXJCQ3pHQlk5S1NxcFA2S1FlREZtQW1m?=
- =?utf-8?B?bFgzT3FjRnJ2ZzVoUW5wQ0F0ajRWNVF5MnprbzR0cWw2Y04xQW1uWEhuK3Zp?=
- =?utf-8?B?YTlidWJQZ3E1V1VnNVBLTjFNZWkzUy9mVFBjbFo5SUt3YkgxY0R2NzRrekNR?=
- =?utf-8?B?RTZ6dkNSZC9WVXlibXo2L1RTa0FpNmRiYlJmbjh2VkpoS2JiUWxQd2NRMEE0?=
- =?utf-8?B?U3BoR0NlVUFkQTdIZDcrcWl6eXlQQmZjakVnREFLdjdzMHMvV2VDRW1XazB3?=
- =?utf-8?B?NzRjR0RyV1o3elJyOS82NUVyVi9zMzlkeDV3UXVTdUI0dlNDdnBadUZnV1Nv?=
- =?utf-8?B?Vll3UCsrT1pqd0dQNitVUERIdUhROFJVdXNuaTBQV2oxeE1HZDBjTmJDb3hT?=
- =?utf-8?B?c0FXbDIvSWZwZFZob1p6Y1BSR3BMZDQ5ZVI0bmxmSGs3TXJVTTBUL0gzdGVN?=
- =?utf-8?B?T1I0NUtwcnc4dHlDVGRUcUU5Mi9yNnRPaVk2Y1RzMEpIZTNvVU95SmcwSUJC?=
- =?utf-8?B?cFYzSnNwOXg1QSsyWG44SVpsMzUxalo1cEhQVURyT0UrbXNJeUhHSlNxU1JH?=
- =?utf-8?B?SmdLSk90ckp3cnFoQ01TbktQZzBudmgxQUE3ekMwaU42bjZYdUZ4NFUvZU0z?=
- =?utf-8?B?YVBpYkxMSThzTU00QW1kKzE4MXVKTWZmWkZTeHNpbWtHOGRiSUVDN1g5aHcy?=
- =?utf-8?B?YWQ0cEROYmpHcjU2UEtEZGNuWUdkUnlJckdFRWM2TDR2akJyKzY5bEVZaENX?=
- =?utf-8?B?Z3ZiUGVXR2FDWE5JMFdQOE5GOXF3TWpPTi9ua2NkZEpWOFh4dmtxalJSbUcy?=
- =?utf-8?B?V0M1V1dpOVdnTlV2aGtSVUswT2NRaVhBTm83bTZ1R3pQRTNKaU9teW1nYWxv?=
- =?utf-8?B?bmpmNkFaU0ZnTTdYUDRZbHJyaWtNOE9EZlcxaWx4TUtkWHg3Ym9scTRQUjgr?=
- =?utf-8?B?bDR1VG9rdU5EM0xrVEQwcXNjSXN3VEFKZk4vbERTbVFYS1NqbnBkM2pRZkRj?=
- =?utf-8?B?YnZPS2hwOEhaZ1dBVmhQZmJGNTNWQWRNRDdTN013U2dIbVE4cU5PcThDc0VZ?=
- =?utf-8?B?MGRMTUxwWnQxV1VCMmcvdUpGc1dDcXVVVmQyOFh5V21NN3dUUGpBUlJLMmFp?=
- =?utf-8?B?WUJtVjluKzhqZkd4d1dNVDN3Wm1aVGlnT05HL1ZxSXpCLzFlUHBKdFBBYkhm?=
- =?utf-8?B?cmVLOGxtWDdnMGhvRzI3cmx4eVUySlNyTTl5cGIzVUIxZlJMU2FTdVpRdlAr?=
- =?utf-8?B?eWtjTEpOWjJacDJRTlNzcFEwa3N2VDY0S0Zabnh5RnQ2SlRwMW5NY29MVWgw?=
- =?utf-8?B?d1ZwR1l2bHI4OEtmM1V3aWFkMVZNODBSdzhsNGYzcXArVlI3cis2SVJxeWRo?=
- =?utf-8?B?Z2dVRlJySUUwSS9pUllSMXROdHFNSnhkeGpmQnNvVGZoamVEZzlXMStHeHM5?=
- =?utf-8?B?L1NiNXpIellZRHZGZkRMZUd1UU9FM0ZPRjYzOHVtbytLN1F5U1o5Tm4zZ3FO?=
- =?utf-8?B?MEF1ZXVvY09OTTZyQjVZMEQ5RGZIOWxtZ0M5WGVONFdxZlQxZ2w2WGFwU3Uy?=
- =?utf-8?B?UFVMclpGU0d0bXJBK3N0d0FDbHVzeDErWk80YmltZVI0ZzlyVWNycEVYUGNI?=
- =?utf-8?B?aXZTQ0syNlpDWWYwbnFLZFg3Q3cxUFN5NTFYbE9CVzVDeXJYbHFiZFB5Y2dO?=
- =?utf-8?Q?bsqM=3D?=
+	=?utf-8?B?aVdCNkhWVkZISUFJY3BlTmJ0NHJOWVJsUGF0UTNkTkM0S2crL2RvTEtzaDNm?=
+ =?utf-8?B?c3M1Uko1aG8xcTlDc2p3VEMxemY1Rk1WdjNYRmN5cytXK1RPM0Z6ejEyeVMr?=
+ =?utf-8?B?bXVPSE5hU2oyRitJVXcvSTI5VmdGaUxTWEdOMjRITFNZT0lVa09uekhoQ3M4?=
+ =?utf-8?B?YTYyUjFRUTN6c0ZRU0NmdkYxbzlwdnF6cWM4S3hIbXMwS0IvRVVTOGdZbjg0?=
+ =?utf-8?B?Z0xFSTI0b0JBVGVHK2dwYlB4Y1VHUHRmTUsvWDJ6K2tCeHR5RFBrVVJBc0ND?=
+ =?utf-8?B?MmU3dk5GUi8rTmVhNDBsNURJRldoTUFJL3o4OWhwMWd3bERESmZEaGdBMzlv?=
+ =?utf-8?B?dWZlRUdIRE9EaG0rd1ZIYjhhbHM1ZWhlSk5SeWNOYXJyOVJ1TGlCZ2k5Uks2?=
+ =?utf-8?B?YjBHNk1TUU9YOWhDamNlKzNpRUJvdmViUGExT1ZYbHhTSUc4R216WWROdk1a?=
+ =?utf-8?B?WmRjTm1rTzhsMDNXNUk4RjhqNnViT1JTWURuZGU3bjllYnU1dkVKWWYrK0pT?=
+ =?utf-8?B?QWZUSi9TUjIyUWRhU280cWFadkVDWWJ4VVB6aVRtc0kwTldLcVUxY2duclhk?=
+ =?utf-8?B?NHAzMTdvdUo2dERYSG1Hajc4THNIZDVuSTNlUVdOSGxQU2pXUjkxRWduTzkr?=
+ =?utf-8?B?ejR3d2xpSDZZNkQ2YjBRemkxMzdxb0NIbk1oUUhmWXh5emVEWWZ5QVBuYXZD?=
+ =?utf-8?B?RGVua2QxdndqUHhET0RpSjY4NVVzT2FxWVFESVRnVnVwbDNTaFkzcDUrSW1a?=
+ =?utf-8?B?MGwwMnFkZEZubjAwbndVVWlWbWFrZEVLSHN1UmxMTENzR0wySUVmNXdnTHNS?=
+ =?utf-8?B?YzdpenlZem1jaTdML1RFT0dpc1hWZW9oK1djTnRQN1Y4V0xKRHZaV1FEWHIx?=
+ =?utf-8?B?TzZtQ3BkK09TSlJSRlhHS0hvYVRxd2Z3M3JWVzdSNE9pM2hzZURPYk01Tk9v?=
+ =?utf-8?B?Y1BoQnY0M0JidGRneHJzVzdLM2hiWEwycUZ6NWNmTitLVkMveGpKVmNvVGJY?=
+ =?utf-8?B?dncyQXhJcFdWYWJyTUo1Z1RLZGhOM1A4UnQ4MlNYSHl5TzlEQUs1dml3QXFX?=
+ =?utf-8?B?N0JEVllQc1pLYTV5RzI2OXZmVjYxWU9OQWFKUEtPeDJIWkM5RkVvM3o4bDd3?=
+ =?utf-8?B?ZTF2akQ0UUUvdzhFbGdGQUpkZjRsOWNVeFQwa2JYNVU4SVo4bHhXYU5ML3Y2?=
+ =?utf-8?B?QlROY29WUXkvbFZIS2xDcWk3K2kyanBIY2dSV3dnMFVTdGlrVFJqakx6S3pR?=
+ =?utf-8?B?VzhRbkZla0tueDFkSFZQa28yMmswZ0dVeWduMDdxL3VmbzBiUnk3Qk9qSnE3?=
+ =?utf-8?B?TXJrYnJQV0FHMSt4dnVnZ3N5bjFKb0ZMVWw1MEk0N3M1RzIzQ0JMamE5N1Nj?=
+ =?utf-8?B?UGZIc2g0RnZIbHhnaGRXbFFzY2ZRZWtjYVBERXJ3czV6U1FGNUVxa3FnVTJG?=
+ =?utf-8?B?VUYxdm52c25IZU5ROXc3R2YvcGpKZVFrQitCRkZtMWp2NXo5UU9URE1OMlda?=
+ =?utf-8?B?SkpmQW10MlE3d2hSN1NMVWlrY1JLMGVuOEV4OGRIQjg3U0J6UWhkT2dHV1Bp?=
+ =?utf-8?B?LzRhYzJNcEt3TGRiUEZybEU4YW8wZ0JhSStlUkNzcUFUem1pQzJyZ3VQMUpa?=
+ =?utf-8?B?eEVBelFRai9vajV2cG10WVp4emhmSzN4WTRsWmRTUGFLaXlYYTFDZ1BoRWNm?=
+ =?utf-8?B?U0NGWXZ0cjBzNXBVSGNreXE4UElZcllBcU84RmdPdHpyNmtkbVNoeGVPbkVt?=
+ =?utf-8?B?dG5DTy9XT0NOYjM0YkROcXFZTE85N3NkbHlaY3ZyVG5VVll1bitHeUNRYUY1?=
+ =?utf-8?B?UitjZFRUL0szRGpzR2gzT2NjbUx3eElZUHZyWHh2R290VSsvbUIwdjRCdGI4?=
+ =?utf-8?B?dU1KMzI3MWx4RkxrcE8wV0dTSzlSbmgzWFgzenlKTThpUlVvRXpxK0UwajA5?=
+ =?utf-8?B?akozc0FtNVVTcFF3RjRkV3pTKzhkVEYxU3VVSS9oMENMM2piSjJtRC9KaldP?=
+ =?utf-8?B?bTh5eVVjcmFtL2Z3bk5SQ3V1cVBoRzlhRFM1WEgyRFBaamxDTTVScW11T0Qr?=
+ =?utf-8?B?RG4vbzg4K1FQbjR1Y3FSc25XSXIyY0lQT09DdXhjb2FjNzdMUDB2dUdBZmJa?=
+ =?utf-8?Q?8YXY=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17c717f2-5ac8-4eb6-4aec-08dd08d2a168
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc96936f-c6ec-446b-4bf7-08dd08d2a441
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2024 19:44:50.1887
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2024 19:44:54.9924
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u/e0QEdPud2YhDTNNP4pXV4dlDdQUXde98+yGjX3wyyFn+xSyitXFDUMSvTk3s9kYOIX4t4H3Jd/1fM3n7+czw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: URTiZVC12JfT8kPndQFN71YIC24KE1jRBWlYIn7JmtNLeZA2gB0h1kaXQEQeodQ8feeaLkCHL2aiUXKaSS2Y3g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB11068
 
-                   Endpoint
-  ┌───────────────────────────────────────────────┐
-  │                             pcie-ep@5f010000  │
-  │                             ┌────────────────┐│
-  │                             │   Endpoint     ││
-  │                             │   PCIe         ││
-  │                             │   Controller   ││
-  │           bus@5f000000      │                ││
-  │           ┌──────────┐      │                ││
-  │           │          │ Outbound Transfer     ││
-  │┌─────┐    │  Bus     ┼─────►│ ATU  ──────────┬┬─────►
-  ││     │    │  Fabric  │Bus   │                ││PCI Addr
-  ││ CPU ├───►│          │Addr  │                ││0xA000_0000
-  ││     │CPU │          │0x8000_0000            ││
-  │└─────┘Addr└──────────┘      │                ││
-  │       0x7000_0000           └────────────────┘│
-  └───────────────────────────────────────────────┘
+Remove cpu_addr_fixup() because dwc common driver already handle address
+translate.
 
-Use 'ranges' property in DT to configure the iATU outbound window address.
-The bus fabric generally passes the same address to the PCIe EP controller,
-but some bus fabrics map the address before sending it to the PCIe EP
-controller.
-
-Above diagram, CPU write data to outbound windows address 0x7000_0000, Bus
-fabric map it to 0x8000_0000. ATU should use bus address 0x8000_0000 as
-input address and map to PCI address 0xA000_0000.
-
-Previously, 'cpu_addr_fixup()' was used to handle address conversion. Now,
-the device tree provides this information, preferring a common method.
-
-bus@5f000000 {
-	compatible = "simple-bus";
-	ranges = <0x80000000 0x0 0x70000000 0x10000000>;
-
-	pcie-ep@5f010000 {
-		reg = <0x80000000 0x10000000>;
-		reg-names ="addr_space";
-		...
-	};
-	...
-};
-
-'ranges' in bus@5f000000 descript how address map from CPU address to bus
-address.
-
-Use `of_property_read_reg()` to obtain the bus address and set it to the
-ATU correctly, eliminating the need for vendor-specific cpu_addr_fixup().
-
-Add 'using_dtbus_info' to indicate device tree reflect correctly bus
-address translation in case break compatibility.
-
+Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
 Change from v7 to v8
-- Add Mani's reviewedby tag
-- s/convert/map in commit message
-- update comments for of_property_read_reg()
-- use 'use_parent_dt_ranges'
+- add mani and richard's review/ack tag
+- use varible 'use_parent_dt_ranges'
 
-Change from v6 to v7
+Change from v2 to v7
 - none
-
-Change from v5 to v6
-- update diagram
-- Add comments for of_property_read_reg()
-- Remove unrelated 0x5f00_0000 in commit message
-
-Change from v3 to v4
-- change bus_addr_base to u64 to fix 32bit build error
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410230328.BTHareG1-lkp@intel.com/
-
-Change from v2 to v3
-- Add using_dtbus_info to control if use device tree bus ranges
-information.
+Change from v1 to v2
+- set using_dtbus_info true
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 18 +++++++++++++++++-
- drivers/pci/controller/dwc/pcie-designware.h    |  1 +
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 22 ++--------------------
+ 1 file changed, 2 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 43ba5c6738df1..42719ad263b11 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -9,6 +9,7 @@
- #include <linux/align.h>
- #include <linux/bitfield.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/platform_device.h>
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 808d1f1054173..cf033e672dbde 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -81,7 +81,6 @@ enum imx_pcie_variants {
+ #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+ #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
+ #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
+-#define IMX_PCIE_FLAG_CPU_ADDR_FIXUP		BIT(8)
  
- #include "pcie-designware.h"
-@@ -294,7 +295,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ #define imx_check_flag(pci, val)	(pci->drvdata->flags & val)
  
- 	atu.func_no = func_no;
- 	atu.type = PCIE_ATU_TYPE_MEM;
--	atu.cpu_addr = addr;
-+	atu.cpu_addr = addr - ep->phys_base + ep->bus_addr_base;
- 	atu.pci_addr = pci_addr;
- 	atu.size = size;
- 	ret = dw_pcie_ep_outbound_atu(ep, &atu);
-@@ -861,6 +862,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	struct device *dev = pci->dev;
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct device_node *np = dev->of_node;
-+	int index;
+@@ -1012,22 +1011,6 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
+ 		regulator_disable(imx_pcie->vpcie);
+ }
  
- 	INIT_LIST_HEAD(&ep->func_list);
+-static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+-{
+-	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
+-	struct dw_pcie_rp *pp = &pcie->pp;
+-	struct resource_entry *entry;
+-
+-	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
+-		return cpu_addr;
+-
+-	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+-	if (!entry)
+-		return cpu_addr;
+-
+-	return cpu_addr - entry->offset;
+-}
+-
+ static const struct dw_pcie_host_ops imx_pcie_host_ops = {
+ 	.init = imx_pcie_host_init,
+ 	.deinit = imx_pcie_host_exit,
+@@ -1036,7 +1019,6 @@ static const struct dw_pcie_host_ops imx_pcie_host_ops = {
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.start_link = imx_pcie_start_link,
+ 	.stop_link = imx_pcie_stop_link,
+-	.cpu_addr_fixup = imx_pcie_cpu_addr_fixup,
+ };
  
-@@ -873,6 +875,20 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		return -EINVAL;
+ static void imx_pcie_ep_init(struct dw_pcie_ep *ep)
+@@ -1446,6 +1428,7 @@ static int imx_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- 	ep->phys_base = res->start;
-+	ep->bus_addr_base = ep->phys_base;
-+
-+	if (pci->use_parent_dt_ranges) {
-+		index = of_property_match_string(np, "reg-names", "addr_space");
-+		if (index < 0)
-+			return -EINVAL;
-+
-+		/*
-+		 * Get the untranslated bus address from devicetree to use it
-+		 * as the iATU CPU address in dw_pcie_ep_map_addr().
-+		 */
-+		of_property_read_reg(np, index, &ep->bus_addr_base, NULL);
-+	}
-+
- 	ep->addr_size = resource_size(res);
- 
- 	if (ep->ops->pre_init)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 4f31d4259a0de..5c14ed2cb91ed 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -410,6 +410,7 @@ struct dw_pcie_ep {
- 	struct list_head	func_list;
- 	const struct dw_pcie_ep_ops *ops;
- 	phys_addr_t		phys_base;
-+	u64			bus_addr_base;
- 	size_t			addr_size;
- 	size_t			page_size;
- 	u8			bar_to_atu[PCI_STD_NUM_BARS];
++	pci->use_parent_dt_ranges = true;
+ 	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
+ 		ret = imx_add_pcie_ep(imx_pcie, pdev);
+ 		if (ret < 0)
+@@ -1585,8 +1568,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+ 	},
+ 	[IMX8Q] = {
+ 		.variant = IMX8Q,
+-		.flags = IMX_PCIE_FLAG_HAS_PHYDRV |
+-			 IMX_PCIE_FLAG_CPU_ADDR_FIXUP,
++		.flags = IMX_PCIE_FLAG_HAS_PHYDRV,
+ 		.clk_names = imx8q_clks,
+ 		.clks_cnt = ARRAY_SIZE(imx8q_clks),
+ 	},
 
 -- 
 2.34.1
