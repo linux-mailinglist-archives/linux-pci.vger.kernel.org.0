@@ -1,155 +1,273 @@
-Return-Path: <linux-pci+bounces-17088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C27079D2D7B
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 19:03:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D51FB9D2D9C
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 19:11:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D8751F262D2
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 18:03:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 580D21F27047
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2024 18:11:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF08C1D151B;
-	Tue, 19 Nov 2024 18:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D885D1D1F4B;
+	Tue, 19 Nov 2024 18:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ax4tTKun"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KFARJUTl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2064.outbound.protection.outlook.com [40.107.22.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB03C1D1514
-	for <linux-pci@vger.kernel.org>; Tue, 19 Nov 2024 18:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732039357; cv=none; b=n1Mig6N/BK0JN67XXn2nB4pvSlCo2wWsEQ6PPg+ja2NgPKvtzQvfUuweiGb8f0B9y1NgTT0rff1SgVcFn5537d7nDPQo48WzLwuITDFbyhKmC8yBw/pwt1IrfAX+Rw50LXfi/dTfavPyZE196CMnF+5/+w/B8mG3ZeSVkqTr2e8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732039357; c=relaxed/simple;
-	bh=AcS2DjT5b4E2qqL5Cpl9pjaV5209SgOpe5GsmPg53aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tm++iZuQJxJQUEY4AKmFGkzqSuNBagsotZS7Gbs2u/WwTpbwCJ1bl0zSe9BmDqvjPbOohOQVOrCK8m69OiGjkiwsQ+pgy6le+byIgw10XOxjkm+x/H3jvdDvPNYwfxJAJmJPFRW5iIehypbHfgdgdY5wX6Qb0juBitpMEk/Nt3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ax4tTKun; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21247C4CECF;
-	Tue, 19 Nov 2024 18:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732039357;
-	bh=AcS2DjT5b4E2qqL5Cpl9pjaV5209SgOpe5GsmPg53aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ax4tTKuna60TmfW9ZAngH0WV/atZmoTkkjPoeu+ar1sPtKZ5MxHRKrU8OzbvrJUU1
-	 9ZiyA0H88VBGj/NPJfwIxGJOg3mPnB5lgfiB12VfkNxPNHTROyIVyyfwy/lP5SbV2H
-	 W1vjDeH4TL7j2MBk134/mWImflkOkrEQqB6ZVBv1jrSDK7LwlkfzcsPvCnIP+RNCYG
-	 PsatnKOX8PqLDZae0goAkqtxSjtl3ax+NYg1utFHmPv7ksxqatrHC/8Ql7hBp3ZaHu
-	 tL0FWwMfqcaApApaZCx67P4XoVSzWpzaxyteLFJZfLw22IJpWBrdV2+ynxUN5FeUzN
-	 u4oAIJJwZ1Mgw==
-Date: Wed, 20 Nov 2024 03:02:35 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, linux-pci@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [pci:controller/rockchip] BUILD SUCCESS
- 592aac418ebdf451fe9b146bc2ca6dfc96921af0
-Message-ID: <20241119180235.GA199102@rocinante>
-References: <202411180006.ahFN8muC-lkp@intel.com>
- <20241119151925.GA2263235@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA931D1F79;
+	Tue, 19 Nov 2024 18:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732039800; cv=fail; b=cu8khN0zmFNwvdlSUHoGXzHytLxQeRG4EPTz69nIzxULFrtH/6Hzgr0k+RPl61hSg9ol7e01ECO/Rdonw5VfA2rC56PEwwRdAP6+bTAn9MI1nRqStU0ZmVLDe3PEgz+KLYAbc9nXN0rDOjJ4oqmijpnlt3MqluTEfqVa6Q41BI8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732039800; c=relaxed/simple;
+	bh=aZrGyK8j20DoyICIBq55xS5QUdvpcvmXC71UnQ4JICs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EDSBfXWs2IOamqxT3PfhkjdKgFtB9yN3dlFh869ujlTVc+ROyC42qof7EO/BwAfqDm0o9af0aX5PzdQWEkONWI5/+Y2pzjRyv8Tmdj/U1GXYFX7B3ho3RmRJSVawrbcxXu5vX3FkF8kkb4njgMrh1XM8Jc/m+2RNwKZP8UMOg7o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KFARJUTl; arc=fail smtp.client-ip=40.107.22.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xOR7QqoAZY2ONrgo0BDT7tbvgMRexatNp/X4Skm9kI2F2CKM5YjbXCh93nRZ0ZuRvQY8/yy3gtV0sAx/KvGeJ4LWavOJUudPTrpRTcy4YInWXEWEVZWSg8PTAwYFXiz/nJ+/yl1mPX/IcfK+TSkG42kcy3I63BQYypiieF7VGRHDmyBA9CYEHNSv1VNrymmFOExndd+Wt+/k+oc3tNzNlEk+8Y2l4roYxLGOkiOt6pLyWfZbGWVQ7KAjX7XH89pDaJXdW8Q7D3WnD53gEZpSVuifYdpibek2k74VUsImJJj3B5zGTtJbc3YdMq25bqZ9mOFiqTb1qK7+tJrtaTqIDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XYCanwXhKoDJbqsSW77qjjOrnTmnfTSPpBgyRJUOFGw=;
+ b=HuPLex2CPKe78reQe16R28ifOBs1O6eISEH8X9inn3arPZa7fzBLZfHYiYAa4OLbPnclQ6Kzw20k6yv6QgLesFHpW80KrfK1TZ8iTR1kGQGlaA0h1q2OSBtFAIdTPKEcJEwALGkpdwI61K2zEBC93D5dj3Bjh6MC6f66+OExoGMUKexuzg/YiqbCgsYJ/A7xtCu5jtG61gFayPTD9XZMoobvWldV2Xr+g24GvJ3MbVvg2eJTyRqdr1j85mefsrE4fREBaj2MUeVSH1csDIGgoFsTIeDG9q0B8/73dueGM8tiVyhfPFqhzvIwrEpgvmU3f8owaH0V22Eophk7KjIIIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XYCanwXhKoDJbqsSW77qjjOrnTmnfTSPpBgyRJUOFGw=;
+ b=KFARJUTl6fP/vqOyZDNB/TkJK/E61sLb311TgjOboSB+gXKclC9Wvq2y/QjooHVlHTcSz9ptevL4DwVj46D8Pwx0Q9oMFm6C3dZT8cDdXFu6J2edCT0t9kxw/be6fQaalDOxlr9rKa2YNn4DBUQHDudvrMb5nrHPVqieJQ1Cj7NJky//jDT5J/igtZoLd07UumOci92i0gXDps/QVytFLT3XSvV8WhVdZGR+f4/ECX6kdpeysCcNVvcCloXiR8zHwKanj8uWIp7aOrxTtFaIa1egc1mCnCvW4k9KuZveN8UqBZvrZgBmpF1peO0Dm1WeRtSdZTfT6vBI20LmiwujXg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7873.eurprd04.prod.outlook.com (2603:10a6:20b:247::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.24; Tue, 19 Nov
+ 2024 18:09:55 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8158.021; Tue, 19 Nov 2024
+ 18:09:55 +0000
+Date: Tue, 19 Nov 2024 13:09:47 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: jingoohan1@gmail.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	imx@lists.linux.dev, kernel@pengutronix.de,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: dwc: Clean up some unnecessary codes in
+ dw_pcie_suspend_noirq()
+Message-ID: <ZzzUa8Zs3qJiVPam@lizhi-Precision-Tower-5810>
+References: <20241118054447.2470345-1-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241118054447.2470345-1-hongxing.zhu@nxp.com>
+X-ClientProxiedBy: BYAPR07CA0104.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::45) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241119151925.GA2263235@bhelgaas>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7873:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b9b905e-22cd-49b6-cb8e-08dd08c55ed1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OpVVhFYdikT24VRJ4N+Yq6gEGjFlp4UN7y9NQndU3+JXjXyXvxGxfmyLXy3p?=
+ =?us-ascii?Q?VnCn2Ue2FDWruC9vvxEd7ooMaY6j0rrxZgyMmDDwQgWzFUbaj8wQWcyOvSbJ?=
+ =?us-ascii?Q?on7w6SQBcauk/XQsnyMJf6ksvStJwWU2haLhWcxDBRXZgvLJuf1lRsKPfNtY?=
+ =?us-ascii?Q?uNwJ7lysQ6v2Ldi6vC61uG0Ic1Mu6HFhkwKVnDF0tCqdK3Qi35RmmJQbgzJO?=
+ =?us-ascii?Q?EI1Tb3gWfx34PhYr5bO0fwcpyWzZSv/nJwm4qJFOzdtj0Nf27cvYv9zj3H3E?=
+ =?us-ascii?Q?DOeL+hi1G2di1MArhsMVDwa0xBzcjqUQrfh8JUgCEtCd0cMrZIklUdQMkSRS?=
+ =?us-ascii?Q?Kf9z1lqbBhkrPYmm0oSGv/h5ZU3aDpvXxoKziwDriKjpKPshMuoSHVVfdF0J?=
+ =?us-ascii?Q?wueXxLcF2HU4ZETraAidToRDcslcQbpE0CIVuBzL2ECxHWuhEhW9tymU0rTC?=
+ =?us-ascii?Q?o+8O2wCKfaKHuXUFoYZYRpeYuHWfblRjtBXdJ/z+fR4wt5xnzu1VRdlN8Fhb?=
+ =?us-ascii?Q?4u3JEc9PVL8Q5zHc9LTVcD6u3GSGd5E9Ax7mqk5p3a6dr4NEHqUv5zX7ffFa?=
+ =?us-ascii?Q?fhTEhVmfGuBxC58vThZxnyAupXx2O90BG8lYOFdimUgfF+pXqXro5HFikcjH?=
+ =?us-ascii?Q?GvxM/qS3NpI0ToP4t0ygchXx7JyY1Pkt2jeAWeURT9EzS8AtdDohmJpQ3dPq?=
+ =?us-ascii?Q?CBtSl0vuBNtVMMmla7qHCtazICus2vmdOD29GNho8NaN7+PZGX5EiuFFmazm?=
+ =?us-ascii?Q?dLx9XYSZ6GUSMemv6PpHyECXtv2/c20VxjO4rhtomvmtUUSoDOFlllQdmdeu?=
+ =?us-ascii?Q?enJEijtecDCsOHKVfd7aJ7uwT1kyXOHIpIbX2as6T+vG3RIawCBttlPGcC7C?=
+ =?us-ascii?Q?J06mp/SZ0h9U1Be/5q0drEV7fwDoXoCAlidMSdQaE+BIvNGjCCF9fKyXAynX?=
+ =?us-ascii?Q?Uigh6oIvC+ED+mdopLzomh51lSLrP99R46H/qkh3KojGNUbhEhk8bDxyJ7kx?=
+ =?us-ascii?Q?lLsV46qI3Bc6mOUeoR40nDC3Lrz+L+U4c3Pr7Xn2q35t7Ct3DqcTrl1l52l9?=
+ =?us-ascii?Q?Dqfq8YtReir3RQE0zHzCHEfb5aJrjNMshwk1o7KCw2+JdC2pSE5lSD+NGU4f?=
+ =?us-ascii?Q?5Evr8/MF757s2SmGn2FFMzAbf9pTfJw4Hb09X0go2l8Q8cyDGL6ArL5VHHgt?=
+ =?us-ascii?Q?aXsn6siHv43HJPv8K4IziQhFsfXQHxyvNCu/hnOV8x+hBenXmWI2noFH4gNv?=
+ =?us-ascii?Q?oxR96XZj9sU0ovL7tAxhK80c0s/zzg0JIwdBWXItZt9JBFHB4pPLi7wR8sN9?=
+ =?us-ascii?Q?Z6+rzcZKXe/Dpt1JZLrdPItKDV1mPhHTBkBIomYHSpNSfOCnrH+vXTfLGLpQ?=
+ =?us-ascii?Q?R2O7DZs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JSFYPIHInK1POhd0MRPw4axd2u1qXkvatoLCkvOjKlouyE0skkJMYWzTPtbU?=
+ =?us-ascii?Q?nLHXejssLUw6FpDf5E/zaOvj3iLzCuWUs3enYsNp/RMNdnrCVSUZ8UBqpvnj?=
+ =?us-ascii?Q?jX7uI6JtTLweihQa++EwFuofoGxUwvC6fRT/l1Txo8FU1nyiNNjCKSNZIQSy?=
+ =?us-ascii?Q?cTxI7KVKQBcAzNrFN8pKQfjID41bfABBhG6GubrKQ2s4MJB7KsCMKzaQ8i8L?=
+ =?us-ascii?Q?+1dPoQVlV79fW89gA+Ilv38ZHPBzjFbb/n2+HjfAGdwkO07xHK2JnrMceZsV?=
+ =?us-ascii?Q?typvgJPA/q+uQck39Y2I2NiyZ5Q1d5DpYLr0mRUhWx3WiJ4Xl7WgNuyIwGek?=
+ =?us-ascii?Q?S0EUrTxre9ukbCFhSPLbC5kTMtDF129+kcyGRduOhitKQhkagyNfpkumEH8s?=
+ =?us-ascii?Q?33oZuYKLpkBeniP1USCNztgQdYSni7sa6gJffHSLVYpErEaK/lu0VGK2TNjo?=
+ =?us-ascii?Q?4hQQWK5XOYe4rrsf0YtQq6AEE/gc9T7QoC1z8DghoyIiNDxWKeoeJwWQBr7W?=
+ =?us-ascii?Q?Kzhqs2NxgnFK6f+k0GZTTlQK+cHXXYp1a9Z664L6DY14A0mn29WPH0h6CR/G?=
+ =?us-ascii?Q?9bikO+H6ktTJ4d3xpsNKwYVwJsBemeifPvNI1rNUeJpsaCNZzXplp9HOPbu/?=
+ =?us-ascii?Q?4qNEA6ojxS0Odh7sqOlSjcIpKkP80/g0b4CA/AteaQZMfyaiMs6+n9XztKuj?=
+ =?us-ascii?Q?frmsfypKrTv81u5K0yP47sZLBtR9KNer9lv8bPWbg6kRikOoSaL7r3E1Anoo?=
+ =?us-ascii?Q?mBzGXBLx63a54G8Qj9IkaV4BNmbNgHwTevDM+nCYWUSmAbwWYs2AkwYNqNYR?=
+ =?us-ascii?Q?JYw6O+4uGy7RWoNlLBXVms/3NNrprpWKLuWA89k3lWEOAJseP8xKFW6WDumn?=
+ =?us-ascii?Q?z+nm95H3IX7Q5RYBrJTJibdJury14kZ9DI9tadUGl+ZtY7P0FG0uIgGtCdKv?=
+ =?us-ascii?Q?fGZedlPSQ5FBLiki4K9lQUQIM8IwAcjznRfeJnSHA+S8LvN2ymCyW+IkkBhi?=
+ =?us-ascii?Q?NbzBrDmJs5x8ZkBoEty7RX6WYORqLGcmK40UlH4BpFZnNwSYVtF1N5PXqjz8?=
+ =?us-ascii?Q?/OSYDboWDRVCrVrEJYk1s+DAgXEY8SX9uT2FCOU6jjlOKjb7J1oxY5dl21XQ?=
+ =?us-ascii?Q?5XVyF8ljA+rFgqw6QqcG4JFT4myADco6RSfgF9jyAuvVmmjRoEezpofw/Bt3?=
+ =?us-ascii?Q?ES8vjIYkmNWCD4ckNDxMCEYuly9i1i0YyxmeacwSWGP3EHxFYEoO5eTyYOvE?=
+ =?us-ascii?Q?TNd0FwBa9iMBsLYKKLUdppArb34mhexYEyDoRfIb/35IiAsku5oRgiXIYJU8?=
+ =?us-ascii?Q?E8f7dVwZXRej6YrRCUO5WXNZPdWQcJhnUT6L4AK1HrifD2oIbe/y/QjzPSr2?=
+ =?us-ascii?Q?63lyx927K78n76634PWOLUvblR4gJs0tAdlLjzUJTRUp5jaPVOHIB2lWiNZU?=
+ =?us-ascii?Q?kO/nKR/CGL2Wl9lXkjKsVniwdrTjUtEyKXG2SeChQBVtUh8a/qyT92mp1TtH?=
+ =?us-ascii?Q?v0hiFWHW541A5tBEN5b7n40P+o/oBymTtFYcUW3tkQqvN/ouzkAW/V8baopv?=
+ =?us-ascii?Q?kOMaehlUhlqT5fpk+OjVIty3mbHD0EdRZBJrc9m+?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b9b905e-22cd-49b6-cb8e-08dd08c55ed1
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2024 18:09:55.2224
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E2kgKdEFZ+mhJ3BjlG9I25C1/9gGPDticdI6Efy0al9xMFuIAOGcbsxEDoWRtkTa41Gzd9mVncoxBpDkoZnLyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7873
 
-Hello,
+On Mon, Nov 18, 2024 at 01:44:47PM +0800, Richard Zhu wrote:
+> Before sending PME_TURN_OFF, don't test the LTSSM state. Since it's safe
+> to send PME_TURN_OFF message regardless of whether the link is up or
+> down. So, there would be no need to test the LTSSM state before sending
+> PME_TURN_OFF message.
+>
+> Only print the message when ltssm_stat is not in DETECT and POLL.
+> In the other words, there isn't an error message when no endpoint is
+> connected at all.
+>
+> Also, when the endpoint is connected and PME_TURN_OFF is sent, do not return
+> error if the link doesn't enter L2. Just print a warning and continue with the
+> suspend as the link will be recovered in dw_pcie_resume_noirq().
+>
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+> v3 changes:
+> - Refine the commit message refer to Manivannan's comments.
+> - Regarding Frank's comments, avoid 10ms wait when no link up.
+> v2 changes:
+> - Don't remove L2 poll check.
+> - Add one 1us delay after L2 entry.
+> - No error return when L2 entry is timeout
+> - Don't print message when no link up.
+> ---
+>  .../pci/controller/dwc/pcie-designware-host.c | 40 ++++++++++---------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  2 files changed, 23 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 24e89b66b772..68fbc16199e8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -927,24 +927,28 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+>  		return 0;
+>
+> -	/* Only send out PME_TURN_OFF when PCIE link is up */
+> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
+> -		if (pci->pp.ops->pme_turn_off)
+> -			pci->pp.ops->pme_turn_off(&pci->pp);
+> -		else
+> -			ret = dw_pcie_pme_turn_off(pci);
+> -
+> -		if (ret)
+> -			return ret;
+> +	if (pci->pp.ops->pme_turn_off)
+> +		pci->pp.ops->pme_turn_off(&pci->pp);
+> +	else
+> +		ret = dw_pcie_pme_turn_off(pci);
+> +	if (ret)
+> +		return ret;
+>
+> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> -		if (ret) {
+> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> -			return ret;
+> -		}
+> -	}
+> +	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> +				val == DW_PCIE_LTSSM_L2_IDLE ||
+> +				val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> +				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> +				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> +	if (ret && (val > DW_PCIE_LTSSM_DETECT_WAIT))
 
-[...]
-> irq_set_irq_type() is declared in <linux/irq.h>.  On arm64, where this
-> driver is used, <linux/irq.h> is included via this path:
->=20
->   linux/pci.h
->     linux/interrupt.h
->       linux/hardirq.h
-> 	arch/arm64/include/asm/hardirq.h
-> 	  asm-generic/hardirq.h
-> 	    linux/irq.h
->=20
-> but on x86, arch/x86/include/asm/hardirq.h does not include
-> asm-generic/hardirq.h and therefore doesn't include <linux/irq.h>.
->=20
-> I'm confused about why the robot reported a successful build with
-> clang-19.  It seems like that should have the same problem I saw with
-> gcc, so I'd like to try it manually.
+if true of (val <= DW_PCIE_LTSSM_DETECT_WAIT), which means not device
+attached, 'ret' should be 0.
 
-I am not sure how the bot built this, too.  I can't seem to successfully
-built it either locally using LLVM 19, per:
+when ret is not 0, means, link up and not in L2 idle status. So check
+'(val > DW_PCIE_LTSSM_DETECT_WAIT)' is redundant.
 
-  drivers/pci/controller/pcie-rockchip-ep.o
-  # CC      drivers/pci/controller/pcie-rockchip-ep.o - due to target missi=
-ng
-    clang-19 -Wp,-MMD,drivers/pci/controller/.pcie-rockchip-ep.o.d -nostdin=
-c -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch=
-/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./=
-include/generated/uapi -include ./include/linux/compiler-version.h -include=
- ./include/linux/kconfig.h -include ./include/linux/compiler_types.h -D__KE=
-RNEL__ --target=3Dx86_64-linux-gnu -fintegrated-as -Werror=3Dunknown-warnin=
-g-option -Werror=3Dignored-optimization-argument -Werror=3Doption-ignored -=
-Werror=3Dunused-command-line-argument -fmacro-prefix-map=3D./=3D -std=3Dgnu=
-11 -fshort-wchar -funsigned-char -fno-common -fno-PIE -fno-strict-aliasing =
--mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -fcf-protection=3Dbranch -f=
-no-jump-tables -m64 -falign-loops=3D1 -mno-80387 -mno-fp-ret-in-387 -mstack=
--alignment=3D8 -mskip-rax-setup -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dk=
-ernel -Wno-sign-compare -fno-asynchronous-unwind-tables -mretpoline-externa=
-l-thunk -mindirect-branch-cs-prefix -mfunction-return=3Dthunk-extern -fpatc=
-hable-function-entry=3D16,16 -fno-delete-null-pointer-checks -O2 -fstack-pr=
-otector-strong -fomit-frame-pointer -ftrivial-auto-var-init=3Dzero -fno-sta=
-ck-clash-protection -falign-functions=3D16 -fstrict-flex-arrays=3D3 -fno-st=
-rict-overflow -fno-stack-check -Wall -Wundef -Werror=3Dimplicit-function-de=
-claration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=3Dstrict-pro=
-totypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address=
--of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-large=
-r-than=3D2048 -Wno-gnu -Wvla -Wno-pointer-sign -Wcast-function-type -Wimpli=
-cit-fallthrough -Werror=3Ddate-time -Werror=3Dincompatible-pointer-types -W=
-enum-conversion -Wextra -Wunused -Wno-unused-but-set-variable -Wno-unused-c=
-onst-variable -Wno-format-overflow -Wno-format-overflow-non-kprintf -Wno-fo=
-rmat-truncation-non-kprintf -Wno-override-init -Wno-pointer-to-enum-cast -W=
-no-tautological-constant-out-of-range-compare -Wno-unaligned-access -Wno-en=
-um-compare-conditional -Wno-enum-enum-conversion -Wno-missing-field-initial=
-izers -Wno-type-limits -Wno-shift-negative-value -Wno-sign-compare -Wno-unu=
-sed-parameter    -DKBUILD_MODFILE=3D'"drivers/pci/controller/pcie-rockchip-=
-ep"' -DKBUILD_BASENAME=3D'"pcie_rockchip_ep"' -DKBUILD_MODNAME=3D'"pcie_roc=
-kchip_ep"' -D__KBUILD_MODNAME=3Dkmod_pcie_rockchip_ep -c -o drivers/pci/con=
-troller/pcie-rockchip-ep.o drivers/pci/controller/pcie-rockchip-ep.c =20
-  drivers/pci/controller/pcie-rockchip-ep.c:640:2: error: call to undeclare=
-d function 'irq_set_irq_type'; ISO C99 and later do not support implicit fu=
-nction declarations [-Wimplicit-function-declaration]
-    640 |         irq_set_irq_type(ep->perst_irq,
-        |         ^
-  drivers/pci/controller/pcie-rockchip-ep.c:640:2: note: did you mean 'irq_=
-set_irq_wake'?
-  ./include/linux/interrupt.h:489:12: note: 'irq_set_irq_wake' declared here
-    489 | extern int irq_set_irq_wake(unsigned int irq, unsigned int on);
-        |            ^
-  drivers/pci/controller/pcie-rockchip-ep.c:672:2: error: call to undeclare=
-d function 'irq_set_status_flags'; ISO C99 and later do not support implici=
-t function declarations [-Wimplicit-function-declaration]
-    672 |         irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-        |         ^
-  drivers/pci/controller/pcie-rockchip-ep.c:672:38: error: use of undeclare=
-d identifier 'IRQ_NOAUTOEN'
-    672 |         irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-        |                                             ^
-  3 errors generated.
-  make[5]: *** [scripts/Makefile.build:229: drivers/pci/controller/pcie-roc=
-kchip-ep.o] Error 1
-  make[4]: *** [scripts/Makefile.build:478: drivers/pci/controller] Error 2
-  make[3]: *** [scripts/Makefile.build:478: drivers/pci] Error 2
-  make[2]: *** [scripts/Makefile.build:478: drivers] Error 2
-  make[1]: *** [/home/kwilczynski/Development/Pr
+NOT(val == DW_PCIE_LTSSM_L2_IDLE || val <= DW_PCIE_LTSSM_DETECT_WAIT)
+equal
+(val != DW_PCIE_LTSSM_L2_IDLE) && (val > DW_PCIE_LTSSM_DETECT_WAIT)
 
-Of course, adding the missing header fixes the build issue.  This is how
-I also fixed it on the branch itself, for reference.
+Frank
 
-	Krzysztof
+> +		/* Only dump message when ltssm_stat isn't in DETECT and POLL */
+> +		dev_warn(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> +	else
+> +		/*
+> +		 * Refer to r6.0, sec 5.3.3.2.1, software should wait at least
+> +		 * 100ns after L2/L3 Ready before turning off refclock and
+> +		 * main power. It's harmless too when no endpoint connected.
+> +		 */
+> +		udelay(1);
+>
+>  	dw_pcie_stop_link(pci);
+>  	if (pci->pp.ops->deinit)
+> @@ -952,7 +956,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>
+>  	pci->suspended = true;
+>
+> -	return ret;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 347ab74ac35a..bf036e66717e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -330,6 +330,7 @@ enum dw_pcie_ltssm {
+>  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
+>  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+>  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
+> +	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
+>  	DW_PCIE_LTSSM_L0 = 0x11,
+>  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+>
+> --
+> 2.37.1
+>
 
