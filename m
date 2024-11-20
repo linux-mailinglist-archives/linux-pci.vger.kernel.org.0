@@ -1,274 +1,226 @@
-Return-Path: <linux-pci+bounces-17107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 787D09D3ADD
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 13:43:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D39C9D3C72
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 14:18:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C9A91F21AFC
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 12:43:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3EA1AB21D2B
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 13:18:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D059D1A4E9D;
-	Wed, 20 Nov 2024 12:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF0919F43A;
+	Wed, 20 Nov 2024 13:17:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wSpFX51F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J45koYJ1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16EC15853A;
-	Wed, 20 Nov 2024 12:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E591991AA
+	for <linux-pci@vger.kernel.org>; Wed, 20 Nov 2024 13:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732106626; cv=none; b=pZBVJzwtzVr+2xOcOZBDk3hq+rJaE3WbqfNCoc39rd60dNHlVuVdGt2TBE8CzLvIaAxJAmQ9qzcdhgV4rOYsXyTkFkZ4m7p5PeG8OYCeplI1dtECBSGXieKekwnshdotkH1hMXAHDjSirprIALqXfbGf5mCdGNhILYGL0M4yYGI=
+	t=1732108677; cv=none; b=ps2wo33+ocaRg5LRDEwPBf8VJEgQFUFCl3htpA7pKAq5+7R+jYlNF4ojndgVPxOGq9sfUIkR+1tHho4nejcbpe9Hfr24lpw+/80KvcnL14mYQX3rY5xoyEOzv9TrJ6rwKO+EM0SAoVXV0FRtizq6MxI3ho+U/CvhmoWW2bo8Eo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732106626; c=relaxed/simple;
-	bh=Sy/24vCtalzBy9cewhxqpDBJTPMyuTbSN2ylAJAZPoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xk8bRh4sNtRn9EYi6zykxZIa0WZHPMW/GS6wG0WLunGU8myRnJBiiUGQD7NvI/e4+GXr/HMygbgLO+WoEb0c+90ryWYoT0Cq/5PWs1Wl5fP5Xtcb7kEI42+9QaYHw8bn6XuDXsLMH20jPaHwAsMiojpmA1FEbtcf2iLKLrlOcp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wSpFX51F; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1732106620; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=gLT40FZ+81v0Eqhr0GbgNNBehD1MtVLP6/eTiVEMBUc=;
-	b=wSpFX51FT6jyZllSzn++qrhUeydFzxRLiWytzBo2nbeHcOXndixin2tL9FWlS0JZL4qfneN9tzxAxDP6BcM8R6S0ZnNzVtbHRhBPGOQo7qfgg2AFpL+upiO4DJp2z4xUua4FxsOa2Y6kGjG7e3PGgPUBFoVXryVvcio8bPUPFZA=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJsTPTF_1732106617 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 20 Nov 2024 20:43:38 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: bhelgaas@google.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	xueshuai@linux.alibaba.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	oleg@redhat.com,
-	naveen@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com,
-	peterz@infradead.org
-Subject: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
-Date: Wed, 20 Nov 2024 20:43:28 +0800
-Message-ID: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1732108677; c=relaxed/simple;
+	bh=7pYmcfAOVL4lH7Ez8B+rVq5uAfANeVBdvrYZSZINoWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MomJvUJeOK4sWL5Qfg80KlyaXr4hv/iGwHIsKNp7MyBhIlngblnJBciPt9r2wpX+KzOniqniJSmkl31SqUcw3r+ht8dgkQLChh4Gs1wX4K6wr4MLDuvO4/qHAsNYHeqOESLkKnaXRLUrwuDinpxeOt03DH1aqeSr6Mg2UJZT150=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J45koYJ1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732108674;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7pYmcfAOVL4lH7Ez8B+rVq5uAfANeVBdvrYZSZINoWw=;
+	b=J45koYJ1PeRy3gxXljhYBc8JoEpVWN2xzgHF+2ZdPjVuRdkLXfB8QR+w6p5rWXAQFFN0ql
+	P6YS7Q+qJmAdZomUNMlk7o1SbBOpE7CL9kqls3u27ZIfeK7SCiPTbqiw3msbYjvn/DsLD8
+	+c4xHd/b9EvV/1mSRuL9v48T+C28+vY=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-E9D5JWMSMuakmaiWAOpifQ-1; Wed, 20 Nov 2024 08:17:53 -0500
+X-MC-Unique: E9D5JWMSMuakmaiWAOpifQ-1
+X-Mimecast-MFC-AGG-ID: E9D5JWMSMuakmaiWAOpifQ
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-46363ba4b31so76923971cf.3
+        for <linux-pci@vger.kernel.org>; Wed, 20 Nov 2024 05:17:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732108673; x=1732713473;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7pYmcfAOVL4lH7Ez8B+rVq5uAfANeVBdvrYZSZINoWw=;
+        b=rfrxzTisqqzroJpCKMuoABKtczuMUXjoVqbqtkD0OHTzm43p4qm7WiNCwBoKMHkovZ
+         vEC3ZvK15w+BPGXWXvptq8JDLfvxeJ52LkI7NJ/IMIJZD357Qy6+DqFsDL2F1qMCqjv/
+         h0Z3/bGJIWlHFdbSqtwEU9dIQ4OvKTal9W0J5OzbahTbtDk+YWD+M9Xb2ESQKjD43MH9
+         5kcXdnSsRdM1pbAhCt+OtNZaZ3MIo5NVTJqSJoKBStdPJcCSRLoQuOob3AzohiD6cAm4
+         /VVz5q1mnrx/eOv++8+BWU2MXPw2etFToLNFMpL5ObcqNBiqnOE5naLBiBU+KINAuPHF
+         ZduQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVGhmFTGAmlzQlWYEdj4JqZE+OZwHn8kHs6phOKqBOaXt0KdPKnd5tYJ/fHNuueVeLvH4AgjFu/HQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyujP319H4z+YwWh/yl3gQLXyt1oTeUqw8WfK6Q+5QSok54IcnM
+	HclZxqgl6Dh2HRZM9Kc8qeuETg/q88C+3/TWEuxgWmK7zZ6V1Nuq4fXUs79dP55Xad/b0pCQOxC
+	EphBifTp0gwBsyzvPo0iCCqawURDAqvJDlB0U9Pwwackj50RbtvLrSXsgwg==
+X-Received: by 2002:a05:6214:21a9:b0:6d4:10b0:c242 with SMTP id 6a1803df08f44-6d43782650cmr36004766d6.26.1732108673330;
+        Wed, 20 Nov 2024 05:17:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEoyaTxmYX8UT3QHHo+4fHJkXgTEZWD6Y5LfaFiT6Th8SIw6Ey1ch5deEOkok5XrGrNJJGMpw==
+X-Received: by 2002:a05:6214:21a9:b0:6d4:10b0:c242 with SMTP id 6a1803df08f44-6d43782650cmr36004416d6.26.1732108673005;
+        Wed, 20 Nov 2024 05:17:53 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d43812ab1csm10435266d6.93.2024.11.20.05.17.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2024 05:17:52 -0800 (PST)
+Message-ID: <66977090-d707-4585-b0c5-8b48f663827e@redhat.com>
+Date: Wed, 20 Nov 2024 14:17:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH RFCv1 0/7] vfio: Allow userspace to specify the address
+ for each MSI vector
+Content-Language: en-US
+To: Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, tglx@linutronix.de, maz@kernel.org,
+ bhelgaas@google.com, leonro@nvidia.com,
+ shameerali.kolothum.thodi@huawei.com, dlemoal@kernel.org,
+ kevin.tian@intel.com, smostafa@google.com,
+ andriy.shevchenko@linux.intel.com, reinette.chatre@intel.com,
+ ddutile@redhat.com, yebin10@huawei.com, brauner@kernel.org,
+ apatel@ventanamicro.com, shivamurthy.shastri@linutronix.de,
+ anna-maria@linutronix.de, nipun.gupta@amd.com,
+ marek.vasut+renesas@mailbox.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <cover.1731130093.git.nicolinc@nvidia.com>
+ <a63e7c3b-ce96-47a5-b462-d5de3a2edb56@arm.com>
+ <ZzPOsrbkmztWZ4U/@Asurada-Nvidia> <20241113013430.GC35230@nvidia.com>
+ <20241113141122.2518c55a.alex.williamson@redhat.com>
+ <2621385c-6fcf-4035-a5a0-5427a08045c8@arm.com>
+From: Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <2621385c-6fcf-4035-a5a0-5427a08045c8@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hotplug events are critical indicators for analyzing hardware health,
-particularly in AI supercomputers where surprise link downs can
-significantly impact system performance and reliability. The failure
-characterization analysis illustrates the significance of failures
-caused by the Infiniband link errors. Meta observes that 2% in a machine
-learning cluster and 6% in a vision application cluster of Infiniband
-failures co-occur with GPU failures, such as falling off the bus, which
-may indicate a correlation with PCIe.[1]
 
-To enhance hardware health monitoring and diagnostics, introduces a generic
-tracepoint for hotplug events. Additionally, specific tracepoints for PCIe
-hotplug events are generated. To enable userspace monitoring of these
-tracepoints, for instance using tools like rasdaemon, the
-`pci_hotplug_event` is included in the UAPI (User API) header.
 
-$ echo 1 > /sys/kernel/debug/tracing/events/hotplug/pci_hp_event/enable
-$ cat /sys/kernel/debug/tracing/trace_pipe
-           <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+On 11/14/24 16:35, Robin Murphy wrote:
+> On 13/11/2024 9:11 pm, Alex Williamson wrote:
+>> On Tue, 12 Nov 2024 21:34:30 -0400
+>> Jason Gunthorpe <jgg@nvidia.com> wrote:
+>>
+>>> On Tue, Nov 12, 2024 at 01:54:58PM -0800, Nicolin Chen wrote:
+>>>> On Mon, Nov 11, 2024 at 01:09:20PM +0000, Robin Murphy wrote:
+>>>>> On 2024-11-09 5:48 am, Nicolin Chen wrote:
+>>>>>> To solve this problem the VMM should capture the MSI IOVA
+>>>>>> allocated by the
+>>>>>> guest kernel and relay it to the GIC driver in the host kernel,
+>>>>>> to program
+>>>>>> the correct MSI IOVA. And this requires a new ioctl via VFIO.
+>>>>>
+>>>>> Once VFIO has that information from userspace, though, do we
+>>>>> really need
+>>>>> the whole complicated dance to push it right down into the irqchip
+>>>>> layer
+>>>>> just so it can be passed back up again? AFAICS
+>>>>> vfio_msi_set_vector_signal() via VFIO_DEVICE_SET_IRQS already
+>>>>> explicitly
+>>>>> rewrites MSI-X vectors, so it seems like it should be pretty
+>>>>> straightforward to override the message address in general at that
+>>>>> level, without the lower layers having to be aware at all, no?
+>>>>
+>>>> Didn't see that clearly!! It works with a simple following override:
+>>>> --------------------------------------------------------------------
+>>>> @@ -497,6 +497,10 @@ static int vfio_msi_set_vector_signal(struct
+>>>> vfio_pci_core_device *vdev,
+>>>>                  struct msi_msg msg;
+>>>>
+>>>>                  get_cached_msi_msg(irq, &msg);
+>>>> +               if (vdev->msi_iovas) {
+>>>> +                       msg.address_lo =
+>>>> lower_32_bits(vdev->msi_iovas[vector]);
+>>>> +                       msg.address_hi =
+>>>> upper_32_bits(vdev->msi_iovas[vector]);
+>>>> +               }
+>>>>                  pci_write_msi_msg(irq, &msg);
+>>>>          }
+>>>>   --------------------------------------------------------------------
+>>>>
+>>>> With that, I think we only need one VFIO change for this part :)
+>>>
+>>> Wow, is that really OK from a layering perspective? The comment is
+>>> pretty clear on the intention that this is to resync the irq layer
+>>> view of the device with the physical HW.
+>>>
+>>> Editing the msi_msg while doing that resync smells bad.
+>>>
+>>> Also, this is only doing MSI-X, we should include normal MSI as
+>>> well. (it probably should have a resync too?)
+>>
+>> This was added for a specific IBM HBA that clears the vector table
+>> during a built-in self test, so it's possible the MSI table being in
+>> config space never had the same issue, or we just haven't encountered
+>> it.  I don't expect anything else actually requires this.
+>
+> Yeah, I wasn't really suggesting to literally hook into this exact
+> case; it was more just a general observation that if VFIO already has
+> one justification for tinkering with pci_write_msi_msg() directly
+> without going through the msi_domain layer, then adding another
+> (wherever it fits best) can't be *entirely* unreasonable.
+>
+> At the end of the day, the semantic here is that VFIO does know more
+> than the IRQ layer, and does need to program the endpoint differently
+> from what the irqchip assumes, so I don't see much benefit in dressing
+> that up more than functionally necessary.
+>
+>>> I'd want Thomas/Marc/Alex to agree.. (please read the cover letter for
+>>> context)
+>>
+>> It seems suspect to me too.  In a sense it is still just synchronizing
+>> the MSI address, but to a different address space.
+>>
+>> Is it possible to do this with the existing write_msi_msg callback on
+>> the msi descriptor?  For instance we could simply translate the msg
+>> address and call pci_write_msi_msg() (while avoiding an infinite
+>> recursion).  Or maybe there should be an xlate_msi_msg callback we can
+>> register.  Or I suppose there might be a way to insert an irqchip that
+>> does the translation on write.  Thanks,
+>
+> I'm far from keen on the idea, but if there really is an appetite for
+> more indirection, then I guess the least-worst option would be yet
+> another type of iommu_dma_cookie to work via the existing
+> iommu_dma_compose_msi_msg() flow, with some interface for VFIO to
+> update per-device addresses direcitly. But then it's still going to
+> need some kind of "layering violation" for VFIO to poke the IRQ layer
+> into re-composing and re-writing a message whenever userspace feels
+> like changing an address, because we're fundamentally stepping outside
+> the established lifecycle of a kernel-managed IRQ around which said
+> layering was designed...
 
-           <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+for the record, the first integration was based on such distinct
+iommu_dma_cookie
 
-[1]https://arxiv.org/abs/2410.21680
+[PATCH v15 00/12] SMMUv3 Nested Stage Setup (IOMMU part) <https://lore.kernel.org/all/20210411111228.14386-1-eric.auger@redhat.com/#r>, patches 8 - 11
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
-changes since v2 per Lukas:
-- rewrite commit log to note why add pci_hotplug_event in the UAPI header.
-- define TRACE_SYSTEM as pci_hotplug to avoid conflict with other
-- squash previous two commits into one.
-- rename _TRANS_STATE as _EVENT
-- rename PCI_HOTPLUG_CARD_NO_PRESENT as PCI_HOTPLUG_CARD_NOT_PRESENT
----
- drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
- drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
- include/uapi/linux/pci.h          |  7 ++++
- 3 files changed, 102 insertions(+), 6 deletions(-)
- create mode 100644 drivers/pci/hotplug/trace.h
+Thanks
 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index dcdbfcf404dd..c836462ff067 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -21,6 +21,9 @@
- #include <linux/pci.h>
- #include "pciehp.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
- /* The following routines constitute the bulk of the
-    hotplug controller logic
-  */
-@@ -239,12 +242,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case ON_STATE:
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (events & PCI_EXP_SLTSTA_DLLSC)
-+		if (events & PCI_EXP_SLTSTA_DLLSC) {
- 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
- 				  slot_name(ctrl));
--		if (events & PCI_EXP_SLTSTA_PDC)
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_DOWN);
-+		}
-+		if (events & PCI_EXP_SLTSTA_PDC) {
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
-+		}
- 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		break;
- 	default:
-@@ -264,6 +275,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 					      INDICATOR_NOOP);
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
- 		}
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
-@@ -276,12 +290,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case OFF_STATE:
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (present)
-+		if (present) {
- 			ctrl_info(ctrl, "Slot(%s): Card present\n",
- 				  slot_name(ctrl));
--		if (link_active)
--			ctrl_info(ctrl, "Slot(%s): Link Up\n",
--				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_PRESENT);
-+		}
-+		if (link_active) {
-+			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_UP);
-+		}
- 		ctrl->request_result = pciehp_enable_slot(ctrl);
- 		break;
- 	default:
-diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-new file mode 100644
-index 000000000000..45e4ca8b83c4
---- /dev/null
-+++ b/drivers/pci/hotplug/trace.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_HW_EVENT_PCI_HP_H
-+
-+#include <linux/tracepoint.h>
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM pci_hotplug
-+
-+#define PCI_HOTPLUG_EVENT					\
-+	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-+	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-+	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-+	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-+
-+/* Enums require being exported to userspace, for user tool parsing */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+PCI_HOTPLUG_EVENT
-+
-+/*
-+ * Now redefine the EM() and EMe() macros to map the enums to the strings
-+ * that will be printed in the output.
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	{a, b},
-+#define EMe(a, b)	{a, b}
-+
-+TRACE_EVENT(pci_hp_event,
-+
-+	TP_PROTO(const char *port_name,
-+		 const char *slot,
-+		 const int event),
-+
-+	TP_ARGS(port_name, slot, event),
-+
-+	TP_STRUCT__entry(
-+		__string(	port_name,	port_name	)
-+		__string(	slot,		slot		)
-+		__field(	int,		event	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(port_name);
-+		__assign_str(slot);
-+		__entry->event = event;
-+	),
-+
-+	TP_printk("%s slot:%s, event:%s\n",
-+		__get_str(port_name),
-+		__get_str(slot),
-+		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
-+	)
-+);
-+
-+#endif /* _TRACE_HW_EVENT_PCI_HP_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-index a769eefc5139..4f150028965d 100644
---- a/include/uapi/linux/pci.h
-+++ b/include/uapi/linux/pci.h
-@@ -39,4 +39,11 @@
- #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
- #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
- 
-+enum pci_hotplug_event {
-+	PCI_HOTPLUG_LINK_UP,
-+	PCI_HOTPLUG_LINK_DOWN,
-+	PCI_HOTPLUG_CARD_PRESENT,
-+	PCI_HOTPLUG_CARD_NOT_PRESENT,
-+};
-+
- #endif /* _UAPILINUX_PCI_H */
--- 
-2.39.3
+Eric
+
+
+
+>
+> Thanks,
+> Robin.
+>
 
 
