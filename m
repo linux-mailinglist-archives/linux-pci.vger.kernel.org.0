@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-17115-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17116-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A98B9D3F8A
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 16:59:42 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A94829D402C
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 17:36:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC5421F221BC
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 15:59:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39ECAB3B40E
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 15:59:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B61E14C5AE;
-	Wed, 20 Nov 2024 15:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4177F149C7A;
+	Wed, 20 Nov 2024 15:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBeKdanb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJfEjjh7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60F814A0A4
-	for <linux-pci@vger.kernel.org>; Wed, 20 Nov 2024 15:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D84F13A25B
+	for <linux-pci@vger.kernel.org>; Wed, 20 Nov 2024 15:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732118264; cv=none; b=liz8ObPTcz7QTi4/++C67E7AttDHo2RE7TuKjnLX8uXm0cCS2HhTYvgLHZnkLWXEKH04supnSNGzvciDNqtsmF8T2P3h2MlJw/DaEgXdTpu8u2+ec8sOxLvREhuCfE8YOrYRDLIHDOdqUw1eluwsHojgo6rR1+5MrDb9+/lYoNI=
+	t=1732118266; cv=none; b=kKk0EQsACYbtvRRExGQNcHn3TGvwQZSkNtP3rLnfK9meCGJDMIumwfnRWcyF/DR0aVYxPjTMZPMfH5VEG3yJ+JeVSZ1SJOn9BRsBcj9WDFE5U3fOxWAvVNo2XZIrwLU7Jmk0PB4TQu1+RFrtXrlgNUnRk2m9CueeT5HeRYBAAvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732118264; c=relaxed/simple;
-	bh=4CRDnwDGmlemh5GmK8CvV/Hyvt/wr3PKJNOwBChRGqY=;
+	s=arc-20240116; t=1732118266; c=relaxed/simple;
+	bh=vgjEZ06WtivJBmgilAxgBhMJTjGi0+iBsBjubLsQj2M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eNHuAfN+3AmPaEmLgxFJiGVBL+nDlBqe95pL93NQBVopPIzjXHrAfFHG7IDtWPxKNj42S5Y56mbPx8CjiTiiylLgIBcrYQarNIYHrE2gyIcMLjAPdQa6DKtYBNlvAiISh5g64ypDgmnQaL9iECTF/VKHfjDKhwM881onUUxcCF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBeKdanb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47031C4CED3;
-	Wed, 20 Nov 2024 15:57:42 +0000 (UTC)
+	 MIME-Version; b=G2yC9SNLtXzEYYWCUvckVPDBprqMD37mcrKkTmXlavQNKE39KGHuTCBDGJwvFZHhm0KXlCnxJbQGEX3n3DEbdnV50RCSbzb70+RUAGtI1GXu8s0neei3tSqvda2K9NCQap36m8hZyJ/JYx8zmxpYopA1dMeYTHiW7xgGPXnZoH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJfEjjh7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4EEC4CED1;
+	Wed, 20 Nov 2024 15:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732118263;
-	bh=4CRDnwDGmlemh5GmK8CvV/Hyvt/wr3PKJNOwBChRGqY=;
+	s=k20201202; t=1732118265;
+	bh=vgjEZ06WtivJBmgilAxgBhMJTjGi0+iBsBjubLsQj2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SBeKdanbACAYxXYA0Mg/u3RijoD9rEb+FEtPh8gzdix58MZ5KD/fxox6BYXRc2HYl
-	 8PhV/aSO3yPrtHIXkYr0VPMuI7VnioQd2vRYNgBRe8qAHGwzjdYdo0jwRTSdUt8pWU
-	 YrQzv012J9rG9CzQ3sA24HouD56RportYbmMLyaE+pesWYrhjLi+CtV5pJ7BEbluSQ
-	 lrw48/dZJD2HsQezy3k8i1XTbMnfDiJM7nlbuF9iPM3cnIycYBgopqyxb321SGB49c
-	 cZXd8ZUZUuVAtBkK64YYkqYtVv4iHs8ica1UxvKixFzGfFYie+aCpEdh3gtB9sXpgR
-	 cgMvatMb6kYfg==
+	b=cJfEjjh7bLNI+qoyWMVHblEiHuRBf9UFZbl92UROyC4FUf9wMkL+lXQw6w/PLPhl5
+	 9iIN8dkuE9RovQk++ZgB9KHHNQbae1aBfl0/HTN7LBzx4vQfnWQNwos1XJL+C1KKHK
+	 vBSceoUmGxPcNPHGupGAolNt7Dm2boowk7Zn6eFsm4gu0uH8YVTTAKRHiaXz11MuzI
+	 i7nZkqYbPkU6U6GZ9fsFvaPvzbX/cUVgkMOVzaYbCNizPeIybwaR8wTpDON5Emlypt
+	 /GPv3UWSBO3yvCiRHiUtF3trabWDl95sxdJNnGCra7XhXSO14opGokc6T3ppLQUVv3
+	 uqJke6/WL+J3w==
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -49,9 +49,9 @@ Cc: Damien Le Moal <dlemoal@kernel.org>,
 	linux-pci@vger.kernel.org,
 	Frank Li <Frank.Li@nxp.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH 1/2] PCI: endpoint: pci-epf-test: Add support for capabilities
-Date: Wed, 20 Nov 2024 16:57:32 +0100
-Message-ID: <20241120155730.2833836-5-cassel@kernel.org>
+Subject: [PATCH 2/2] misc: pci_endpoint_test: Add support for capabilities
+Date: Wed, 20 Nov 2024 16:57:33 +0100
+Message-ID: <20241120155730.2833836-6-cassel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241120155730.2833836-4-cassel@kernel.org>
 References: <20241120155730.2833836-4-cassel@kernel.org>
@@ -61,76 +61,73 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2056; i=cassel@kernel.org; h=from:subject; bh=4CRDnwDGmlemh5GmK8CvV/Hyvt/wr3PKJNOwBChRGqY=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLt2F69yCq4KMZ0SH79hcxnIa2P9eM3v8teZ1nbNjc8R FunWDO4o5SFQYyLQVZMkcX3h8v+4m73KccV79jAzGFlAhnCwMUpABPxrGH4H7vpDuOtyzqr90SJ WepI2r2wWLTpYQu/XOaF1Q90zEpWbmf4H7V5W+kP4WB7hV8Wmb/Tb5fc0l7/51j/UzH/GVFbowN j+AA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2191; i=cassel@kernel.org; h=from:subject; bh=vgjEZ06WtivJBmgilAxgBhMJTjGi0+iBsBjubLsQj2M=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLt2F67GLoIuIWXrfiVPc9y+srlDY96lp9ZdNTF0zhgY tOT5xaXOkpZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjARvmqGf7ZHNJ+aOXxbyVO6 /A6X6c8oMelp2lwBi+TMxZj3VGdOjmRkmPzjotCfbYo3a5xfuN9+8/IGc3eEk8i5uDItifsC228 2cwEA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-The test BAR is allocated using pci_epf_alloc_space(), which allocates the
-backing memory using dma_alloc_coherent(), which will return zeroed memory
-regardless of __GFP_ZERO was set or not.
-
-This means that running a new version of pci-endpoint-test.c (host side)
-with and old version of pci-epf-test.c (EP side) will not see any
-capabilities being set (as intended), so this is backwards compatible.
+If running pci_endpoint_test.c (host side) against a version of
+pci-epf-test.c (EP side), we will not see any capabilities being set.
 
 For now, only add the CAP_HAS_ALIGN_ADDR capability.
 
+If the CAP_HAS_ALIGN_ADDR is set, that means that the EP side supports
+reading/writing to an address without any alignment requirements.
+
+Thus, if CAP_HAS_ALIGN_ADDR is set, make sure that we do not add any
+specific padding to the buffers that we allocate (which was only made
+in order to get the buffers to satisfy certain alignment requirements).
+
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index ef6677f34116..e3a74a6fcb24 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -44,6 +44,8 @@
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 3aaaf47fa4ee..ab2b322410fb 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -69,6 +69,9 @@
+ #define PCI_ENDPOINT_TEST_FLAGS			0x2c
+ #define FLAG_USE_DMA				BIT(0)
  
- #define TIMER_RESOLUTION		1
- 
-+#define CAP_HAS_ALIGN_ADDR		BIT(0)
++#define PCI_ENDPOINT_TEST_CAPS			0x30
++#define CAP_HAS_ALIGN_ADDR			BIT(0)
 +
- static struct workqueue_struct *kpcitest_workqueue;
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
+ #define PCI_DEVICE_ID_TI_J7200			0xb00f
+ #define PCI_DEVICE_ID_TI_AM64			0xb010
+@@ -805,6 +808,22 @@ static const struct file_operations pci_endpoint_test_fops = {
+ 	.unlocked_ioctl = pci_endpoint_test_ioctl,
+ };
  
- struct pci_epf_test {
-@@ -74,6 +76,7 @@ struct pci_epf_test_reg {
- 	u32	irq_type;
- 	u32	irq_number;
- 	u32	flags;
-+	u32	caps;
- } __packed;
- 
- static struct pci_epf_header test_header = {
-@@ -739,6 +742,20 @@ static void pci_epf_test_clear_bar(struct pci_epf *epf)
- 	}
- }
- 
-+static void pci_epf_test_set_capabilities(struct pci_epf *epf)
++static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
 +{
-+	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-+	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-+	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-+	struct pci_epc *epc = epf->epc;
-+	u32 caps = 0;
++	struct pci_dev *pdev = test->pdev;
++	struct device *dev = &pdev->dev;
++	u32 caps;
++	bool has_align_addr;
 +
-+	if (epc->ops->align_addr)
-+		caps |= CAP_HAS_ALIGN_ADDR;
++	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
 +
-+	reg->caps = cpu_to_le32(caps);
++	has_align_addr = caps & CAP_HAS_ALIGN_ADDR;
++	dev_dbg(dev, "CAP_HAS_ALIGN_ADDR: %d\n", has_align_addr);
++
++	if (has_align_addr)
++		test->alignment = 0;
 +}
 +
- static int pci_epf_test_epc_init(struct pci_epf *epf)
+ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+ 				   const struct pci_device_id *ent)
  {
- 	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-@@ -763,6 +780,8 @@ static int pci_epf_test_epc_init(struct pci_epf *epf)
- 		}
+@@ -906,6 +925,8 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+ 		goto err_kfree_test_name;
  	}
  
-+	pci_epf_test_set_capabilities(epf);
++	pci_endpoint_test_get_capabilities(test);
 +
- 	ret = pci_epf_test_set_bar(epf);
- 	if (ret)
- 		return ret;
+ 	misc_device = &test->miscdev;
+ 	misc_device->minor = MISC_DYNAMIC_MINOR;
+ 	misc_device->name = kstrdup(name, GFP_KERNEL);
 -- 
 2.47.0
 
