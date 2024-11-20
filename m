@@ -1,130 +1,188 @@
-Return-Path: <linux-pci+bounces-17112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 657A39D3EA6
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 16:11:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 54DE09D3F2C
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 16:36:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AB24281C21
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 15:11:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1427C2855B8
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2024 15:36:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38341C7610;
-	Wed, 20 Nov 2024 14:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DMgnCklC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498AE84037;
+	Wed, 20 Nov 2024 15:36:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA931B6CEE
-	for <linux-pci@vger.kernel.org>; Wed, 20 Nov 2024 14:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077814B5C1;
+	Wed, 20 Nov 2024 15:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732114768; cv=none; b=ZHerVIPc4THdJ6HmVRLefpJ6wxUk0FsMZoeaWL0+lnEkW3wpyQ6y8IHCokFtgwkWO/yQrJ82sbBg3VrhSUawe/20mM3qxuytwJYT5kG1f9LBmuOwgO+X8SDAwAYyHkNxyT6O8B/zKq2mWcORcWnUbESpkjeJY39w3pWh+oiY8yk=
+	t=1732116970; cv=none; b=B71chFISXtS2sI+/99oNur8MfqfJ8Z07qn+bvD/KW/EtcE0xKZbCGmfU/yPinyeC5jNlQqt88yhYff3u1wFs+ZqCQJDJ3os3mdht6hbEjgZnBdyk0VvfBcw8hIqJEADIL/rfkhSHFaJxdkM16bOJOL/J098LtnC87SGla4TgV6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732114768; c=relaxed/simple;
-	bh=xaPF0Xudp3d/bmQL2xmlO/yPfi+mdTitYGkLa2xjOtQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UAYKJujNxUR3WUFHOVNMLfwqjemLHYVt7NdL7EzAYZb/t1WykfKIQnCPG09sy2DtOgchUUPsR4w/seA/BBsalJ+jEtN5mlCoSstsg+dPwiopeOw5Hlau+F6V7ONqMUXKly8YsuMm7MqeHbn2TcA6RG5K2OdieLHs7t8XBvVBnAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DMgnCklC; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3824aef833bso2358518f8f.0
-        for <linux-pci@vger.kernel.org>; Wed, 20 Nov 2024 06:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732114765; x=1732719565; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VNySOlZ728Qwil3fWKGNJRdQ74n20bXi/RqzObtMGPg=;
-        b=DMgnCklCwPWA8R/TcT8KRb4dOYFxtWMdfQoseLOMPf/iwtwL5vlnT+krVo5VswsgXO
-         l0csqp+j3gORaOsBd2lrTxrhK0pyeCJwJ+bW1pss7I5K8GRKook/KP5pAlwJf5cSVVHs
-         YH4eZx9S5eCEurVUiQsvpmXGQ6mBgSh0gyeGfXOiXLhPIXBPl7wEA7DwYQctsfNHzk1D
-         cNvwdQUGNq/3C/QAhuqXnhTG3Ou2/xmkmN5ODN8nsGmtHHPmqjRfj9qdbEkyU7Fvo1QL
-         FZ+OQF6zM2iZmB+zuWz/Dx+48pmaBYwt6SsDvJlNWxGIYirf4WEIWp3aQoXCvbjM9p36
-         HUCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732114765; x=1732719565;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VNySOlZ728Qwil3fWKGNJRdQ74n20bXi/RqzObtMGPg=;
-        b=Hc/dKN2ikAEZpYA26YQi7s7zy6MeWQTiSkoNZW4m4ZWmyX1ELiHRzQ7HI7FGy/35L3
-         h20CbsUJnIwSRuf3RP1hPuFmMKD+/a2IMY9SYpiwgz55Vv/0/xkTofMOYla7kiuewFjI
-         OO4CY1H3uwFbIG70131Cdd5v7TPUn0Ty0p8eG2FZAn4uVPZrK/WK38F9C1A1NPkyJhY0
-         74dJ3VY3e5U9GNC6JmkAl0EmyyfGJVHFhjSmfI6ttgB/gRFmVFagB8TEvoETtL9L3o2d
-         JQ+p6x874ztKnM17sXn5aRxpfSJopTELSM0x3DMuvK/8KI1B3iJE/je4Cy1Tq4xQpycn
-         WOww==
-X-Forwarded-Encrypted: i=1; AJvYcCW0BTxT0u9pZebaTGuTcYdLKzUf8B/kaREOAIAEAngA/7CiyN5zShZA/C5zzXyy0KfQQskNMmL+nQA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyyzrEJ+P3EYLfl+ZAao1LHb1kCXVSmR8XZujDiuJkBwZB+GHt
-	zMKzG53WCKJzGBKf4IbO00O2H+xxOzkUhw4tn2ywiqkUBkLwQZbwWCkIKsxwips=
-X-Google-Smtp-Source: AGHT+IHQ2dmEzHfyh4PcYnC+LimJ6ZLtLl2LOMIvfxYsqrjiWJYRuSfmnpxmbQO+Vl8LsI0rFWX6gg==
-X-Received: by 2002:a05:6000:1541:b0:382:5177:3a4f with SMTP id ffacd0b85a97d-38254b21313mr2465999f8f.49.1732114765245;
-        Wed, 20 Nov 2024 06:59:25 -0800 (PST)
-Received: from localhost (p509159f1.dip0.t-ipconnect.de. [80.145.89.241])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38254905328sm2348689f8f.2.2024.11.20.06.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 06:59:24 -0800 (PST)
-Date: Wed, 20 Nov 2024 15:59:23 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] PCI: pwrctl: Add power control driver for qps615
-Message-ID: <j44dasmtyopz3i5dhwq75m2nr7bikcifka2zzvjr55wdlr6bhh@5c2ite46tvxu>
-References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-6-29a1e98aa2b0@quicinc.com>
+	s=arc-20240116; t=1732116970; c=relaxed/simple;
+	bh=swTyeX8ttuU4OwtnQseblGx+o5l7jjrnBWM77DTjarA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dfMV+6kYdsip2udwc1GSH9OwtzkqlIYNoG8wtbgeNNh5J7rsqL694GZ2LX+HWoakyMBTXcvlRwPgbgmLNhAxu+FSxjYpARKtxoOufEeLlTg1EJLyauEpUir65c2K4anQfRXPEbPAc0/drIdpmDQNvxL8a1EsSvfQ+f9XXUy3wz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xtlkz0yGcz6GD47;
+	Wed, 20 Nov 2024 23:33:47 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 57A62140B55;
+	Wed, 20 Nov 2024 23:36:04 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 20 Nov
+ 2024 16:36:03 +0100
+Date: Wed, 20 Nov 2024 15:36:01 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Lukas Wunner <lukas@wunner.de>, <linux-pci@vger.kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, "Maciej W .
+ Rozycki" <macro@orcam.me.uk>, Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>, Srinivas Pandruvada
+	<srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, <linux-pm@vger.kernel.org>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, LKML
+	<linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Christophe
+ JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v9 7/9] PCI/bwctrl: Add API to set PCIe Link Speed
+Message-ID: <20241120153601.00000fbf@huawei.com>
+In-Reply-To: <997f2c25-8a45-8dfd-cd94-bc37f2555e89@linux.intel.com>
+References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com>
+	<20241018144755.7875-8-ilpo.jarvinen@linux.intel.com>
+	<ZzN4pO0lJDTSySaz@wunner.de>
+	<4f4ee107-1b25-f866-832e-6a35c8c7c35a@linux.intel.com>
+	<20241118130332.00006da8@huawei.com>
+	<997f2c25-8a45-8dfd-cd94-bc37f2555e89@linux.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="me5utvjifrxgd6pz"
-Content-Disposition: inline
-In-Reply-To: <20241112-qps615_pwr-v3-6-29a1e98aa2b0@quicinc.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Mon, 18 Nov 2024 15:17:53 +0200 (EET)
+Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+
+> On Mon, 18 Nov 2024, Jonathan Cameron wrote:
+>=20
+> > On Tue, 12 Nov 2024 18:01:50 +0200 (EET)
+> > Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> >  =20
+> > > On Tue, 12 Nov 2024, Lukas Wunner wrote:
+> > >  =20
+> > > > On Fri, Oct 18, 2024 at 05:47:53PM +0300, Ilpo J=E4rvinen wrote:   =
+=20
+> > > > > +EXPORT_SYMBOL_GPL(pcie_set_target_speed);   =20
+> > > >=20
+> > > > My apologies for another belated comment on this series.
+> > > > This patch is now a688ab21eb72 on pci/bwctrl:
+> > > >=20
+> > > > I note that pcie_set_target_speed() is not called my a modular user
+> > > > (CONFIG_PCIE_THERMAL is bool, not tristate), so the above-quoted ex=
+port
+> > > > isn't really necessary right now.  I don't know if it was added
+> > > > intentionally because some modular user is expected to show up
+> > > > in the near future.   =20
+> > >=20
+> > > Its probably a thinko to add it at all but then there have been talk =
+about=20
+> > > other users interested in the API too so it's not far fetched we coul=
+d see=20
+> > > a user. No idea about timelines though.
+> > >=20
+> > > There are some AMD GPU drivers tweaking the TLS field on their own bu=
+t=20
+> > > they also touch some HW specific registers (although, IIRC, they only=
+=20
+> > > touch Endpoint'sTLS). I was thinking of converting them but I'm unsur=
+e if=20
+> > > that yields something very straightforward and ends up producing a wo=
+rking=20
+> > > conversion or not (without ability to test with the HW). But TBH, not=
+ on=20
+> > > my highest priority item.
+> > >  =20
+> > > > > @@ -135,6 +296,7 @@ static int pcie_bwnotif_probe(struct pcie_dev=
+ice *srv)
+> > > > >  	if (!data)
+> > > > >  		return -ENOMEM;
+> > > > > =20
+> > > > > +	devm_mutex_init(&srv->device, &data->set_speed_mutex);
+> > > > >  	ret =3D devm_request_threaded_irq(&srv->device, srv->irq, NULL,
+> > > > >  					pcie_bwnotif_irq_thread,
+> > > > >  					IRQF_SHARED | IRQF_ONESHOT,   =20
+> > > >=20
+> > > > We generally try to avoid devm_*() functions in port service drivers
+> > > > because if we later on move them into the PCI core (which is the pl=
+an),
+> > > > we'll have to unroll them.  Not the end of the world that they're u=
+sed
+> > > > here, just not ideal.   =20
+> > >=20
+> > > I think Jonathan disagrees with you on that:
+> > >=20
+> > > https://lore.kernel.org/linux-pci/20241017114812.00005e67@Huawei.com/=
+ =20
+> >=20
+> > Indeed - you beat me to it ;)
+> >=20
+> > There is no practical way to move most of the port driver code into the=
+ PCI
+> > core and definitely not interrupts. It is a shame though as I'd much pr=
+efer
+> > if we could do so.  At LPC other issues some as power management were c=
+alled
+> > out as being very hard to handle, but to me the interrupt bit is a sing=
+le
+> > relatively easy to understand blocker.
+> >=20
+> > I've been very slow on getting back to this, but my current plan would
+> >=20
+> > 1) Split up the bits of portdrv subdrivers that are actually core code
+> >    (things like the AER counters etc) The current mix in the same files
+> >    makes it hard to reason about lifetimes etc.
+> >=20
+> > 2) Squash all the portdrv sub drivers into simple library style calls so
+> >    no pretend devices, everything registered directly.  That cleans up
+> >    a lot of the layering and still provides reusable code if it makes
+> >    sense to have multiple drivers for ports or to reuse this code for
+> >    something else. Note that along the way I'll check we can build the
+> >    portdrv as a module - I don't plan to actually do that, but it shows
+> >    the layering / abstractions all work if it is possible.  That will
+> >    probably make use of devm_ where appropriate as it simplifies a lot
+> >    of paths. =20
+>=20
+> I'm sorry to be a bit of a spoilsport here but quirks make calls to ASPM=
+=20
+> code and now also to bwctrl set Link Speed API so I'm not entire sure if=
+=20
+> you can actual succeed in that module test.
+>=20
+> (It's just something that again indicates both would belong to PCI core
+> but sadly that direction is out of options).
+>=20
+It may involve some bodges, but it is still a path to checking the
+layer splits at least make 'some' sense.  Also that the resulting
+library style code is suitable for reuse.  Possibly with an exception
+for a few parts.
+
+Thanks for the pointers to where the pitfalls lie!
+
+Jonathan
 
 
---me5utvjifrxgd6pz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v3 6/6] PCI: pwrctl: Add power control driver for qps615
-MIME-Version: 1.0
-
-Hello,
-
-On Tue, Nov 12, 2024 at 08:31:38PM +0530, Krishna chaitanya chundru wrote:
-> +static struct platform_driver qps615_pwrctl_driver = {
-> [...]
-> +	.remove_new = qps615_pwrctl_remove,
-
-Please use .remove instead of .remove_new.
-
-Best regards
-Uwe
-
---me5utvjifrxgd6pz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmc9+UgACgkQj4D7WH0S
-/k5hBAf/axrIVl8P9918nf4b7oboxs1O5Z6BSG98CyDzUCKbeFYbtTiXpS/Q7Pk6
-q1/09KeLUNOwaVrFPByOIR6z/SXxVfkDzaqgC98TsgWxs9H3NeT8b9LjdAqPW0Lo
-T25ukMkxel8BsKQC8NREsjsgGEsNgZYsn5VWaMNQuOOX/rII7PLbe5FKtVT4y3mV
-gmttxug1BnPCj13ZrN/2s+mnuYeM03ziWa14rX/BAjWnjkGr3tuzt0y+oWTIgpMr
-5EipxngCY1/JS5UQ8rdgDBcyFAATut/c2s5SF1sONP1cdqkG1kVseZWvtHjrtpSe
-P1p8X2WkoG57A5eNnX20N+qjxvX35g==
-=rntr
------END PGP SIGNATURE-----
-
---me5utvjifrxgd6pz--
 
