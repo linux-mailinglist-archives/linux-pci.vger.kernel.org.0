@@ -1,96 +1,60 @@
-Return-Path: <linux-pci+bounces-17188-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17189-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A57F9D559B
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 23:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D8199D560E
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 00:10:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7EDD1B21533
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 22:44:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BFA5B2180F
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 23:10:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99C0E1DDC39;
-	Thu, 21 Nov 2024 22:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3rBFSj+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 332061DE2A1;
+	Thu, 21 Nov 2024 23:10:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DFE1D0E20
-	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 22:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7032C23098E;
+	Thu, 21 Nov 2024 23:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732229062; cv=none; b=dN6wqZIrR6QTNje58F/EefCqctybs+Mf/P4esl08792Nz45vx0CfpdanatQvbxuQ5wIPM+fC82AKbzFFkCUVbzGmVQ4syzgLameuMxeoHyU0Q19iGhDpEAywFJM8hx9zKdi5dc+CNtlHbBs/BsV4M6cAWmNFrpkcgVal9bvLg6w=
+	t=1732230604; cv=none; b=RMpN++g/wF2j/5YRpPB9sy62F2zGrJaAqvtC90enRcaYR6qnhZNaZ2hv8WrSrAotXZMJv8U6eX14Mzvl92WxjRqww5BIlQdwihY9yp5Bi01Yw75ebBc34EE43koTF4Jc3Oa+xLFdqZXUjsmYQSVDTyuZ4N8QK1jhONDoUOxWUkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732229062; c=relaxed/simple;
-	bh=UvqKl313UbCoQrV81fFTtqVbmffHswlTT+HQtjKyoJ0=;
+	s=arc-20240116; t=1732230604; c=relaxed/simple;
+	bh=6tTZz3sao9WY5s+VJbUEW5RMKf+iTRCr9kuCxAehess=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3WaT/+eDDuCPIkAixrHRA/qe432yLQnRUxwhfG5xFhpTvf5roYiz4XoiTp/CMG3I/BlSM5jqcqAzdkfFgSlP9gN5+hiy2OkF/8zEL6vACPgNLDf84KuV7B+Rzmh2uFuq8MeuEh+d2/Sp26qpk9CMZVFRD+6k45zwczgJYEaYlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g3rBFSj+; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb561f273eso17108401fa.2
-        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 14:44:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732229058; x=1732833858; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/Nja2Bb51yLaelcKPmFVLsubQx3+cZP82+7JwtW4Xk=;
-        b=g3rBFSj+cdb2AX+iX48C7PMjjZFTT9h1MTUkIcCOyk7kbfnHV0RQ98W6nG+aM+CHQi
-         3+9kVmMUWjQ2G8aecV0N1XMwYRQPZklcZ9ygPLE2/Fl3j0MUK3MZB4f36NMCdzX0EnNT
-         URfeh+mcVCEb8RdKF7Zl4xRAZUgDA6UTt5ateX3z3rmudcKaahZCy7GrUcODVke95y3h
-         O5MkiBqtIvIdfqR86hk433wRxWZxPAVkcr7YoPzkd5et3/aG4YuvCzZYRpW+StKni7NL
-         0RlVXsdrwTzq2P9UI6g3jzblCafTbRdWHLGlKTjheJjl5pcgfPyedBBD7CkWvSPCFQ2Q
-         OZZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732229058; x=1732833858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q/Nja2Bb51yLaelcKPmFVLsubQx3+cZP82+7JwtW4Xk=;
-        b=mRxl1nJ41+WeuqWfIeg18fIBd6XdORnVaXNviNZoBje8RzWP1OeygepNckSZF6htrP
-         fRRpNQrLEo5TrVVtAC8ya70pXaRtkX7TcsM4VDlCR64jMtV6V+ngmwnFjAz7Td6LlHTy
-         wmvw0OZzDJ7X4jhsaxLfm813wdwJJQpupQvYQjfqM4IKx6O91U0J1WWAtYic2hOs/qSm
-         7yGKRu6L13MHUuOhJmsyMMUKqFPlXCd4E0PsqXkTn8KoeicWBPLT0pEspRt+W/E/C/Lh
-         tPqOskcndkXuBC/L/UhFn8zyDTaTIcE+8GD+TFSrt+SxqzMa1nkGOudqnju5jk/QJtdn
-         4xxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSdJHLzOqddP47LBIyy9DSoa9GSfq/AjQemmrEjZ56BZqvqR5s78xViThGheKZmVNMtP/jkSmifjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8y3KQBM1two+wEAQ2P9sJPmwlSiKbXapF9Pui1Jlzn4aos0Gm
-	w1GuttpWNIvnELo87PAywyKCd0NJ/7rRTP6uO0NA5Jb9qfAXr15JqVv5SLZBhP8=
-X-Gm-Gg: ASbGnctS/woSYuLmu2GbW6tMuufoo/o+UqFnCaU+vmbRSHwbROxOqRETc98hFDuINuc
-	9ZCNzQmlCfFFVnGCx7ATwLRH+bNmh41Yl9CDwpepo5JtkydilRg7RzXwcvdeHP3IuKnRT3QhrOv
-	EtbRUsNiELEKjFYqlKQLFHzQvlrG/Lks1FkCUYv9R827WhO7EKAuTgX0/yMDzeLcUyEzl3Wotpm
-	w7JuPFBPfI3/v9RhSTkEb4udDXi09QGnnS0G8x7zEo4z4whR25Mz6+IQfekviCt1q0ri1rCdqel
-	ILmxBIC0cpWChlIOdtzeJv+HegyxpA==
-X-Google-Smtp-Source: AGHT+IGbReTR075Ouxz1EQlRJI//zuSXefAabMn1r5zxrv9eXDCoMRD5JejlOdypknkykXEjg8Eg3g==
-X-Received: by 2002:a05:651c:221b:b0:2fb:5723:c9ea with SMTP id 38308e7fff4ca-2ffa716ce5fmr1747681fa.30.1732229057836;
-        Thu, 21 Nov 2024 14:44:17 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ffa53769f2sm665281fa.77.2024.11.21.14.44.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2024 14:44:16 -0800 (PST)
-Date: Fri, 22 Nov 2024 00:44:14 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
-	andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] arm64: dts: qcom: qcs6490-rb3gen2: Add node for
- qps615
-Message-ID: <berrvurtuyujkgy7q7hn3flx5lfusrskxh5bo7xvp374zojcro@v5mkoea2xkds>
-References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-2-29a1e98aa2b0@quicinc.com>
- <ngjwfsymvo2sucvzyoanhezjisjqgfgnlixrzjgxjzlfchni7y@lvgrfslpnqmo>
- <yjwk3gnxkxmhnw36mawwvnpsckm3eier2smishlo2bdqa23jzu@mexrtjul2qlk>
- <a4146b5a-a229-4441-b123-d13e72ab4472@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqyGia3aGY2ubXtWg//hhiNMFs5j2CdhD+4dJdC3hsuXtw13RguTwiKDjdotFzz0833xK43yQarYE8JTdap/TDF1EnU1RF6+e3PUAgGoG8nW6waQo5yCawdZNbUgSdTp4vA/WqLergHwl2/+DCYt9+VM/2YhxYXVSRhXALbVHq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 33ECA102CB650;
+	Fri, 22 Nov 2024 00:09:51 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 075F04F1110; Fri, 22 Nov 2024 00:09:51 +0100 (CET)
+Date: Fri, 22 Nov 2024 00:09:50 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
+	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com, peterz@infradead.org
+Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <Zz-9vviSWP8oRPUx@wunner.de>
+References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
+ <Zz786zZljAy2J5i7@wunner.de>
+ <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
+ <20241121084354.4a554829@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,35 +63,42 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a4146b5a-a229-4441-b123-d13e72ab4472@kernel.org>
+In-Reply-To: <20241121084354.4a554829@gandalf.local.home>
 
-On Wed, Nov 20, 2024 at 02:28:29PM +0100, Krzysztof Kozlowski wrote:
-> On 20/11/2024 12:03, Dmitry Baryshkov wrote:
-> >>>  
-> >>>  &apps_rsc {
-> >>> @@ -684,6 +708,75 @@ &mdss_edp_phy {
-> >>>  	status = "okay";
-> >>>  };
-> >>>  
-> >>> +&pcie1_port {
-> >>> +	pcie@0,0 {
-> >>> +		compatible = "pci1179,0623";
-> >>
-> >> The switch is part of SoC or board? This is confusing, I thought QPS615
-> >> is the SoC.
+On Thu, Nov 21, 2024 at 08:43:54AM -0500, Steven Rostedt wrote:
+> On Thu, 21 Nov 2024 19:34:31 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> > Sure, I can reorganize the directory. You have two optional proposals:
 > > 
-> > QCS615 is the SoC, QPS615 is a switch.
-> OK, thanks for confirming. Just to be clear, I understand above as: it
-> is only the switch, nothing else.
+> > 1. /sys/kernel/debug/tracing/events/pci_hp_event
+> > 2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
+> > 
+> > I personally prefer the second approach.
+[...]
+> That said, is all these events going to be related to hotplug? If so, you
+> probably want "hotplug" or "hp" in the system name. If you make it just
+> "pci", then it will be expected that all the events will be related to PCI
+> in general.
 
-PCIe switch, networking interface, but not the SoC (and not a part of
-the SoC).
+Grouping them under "pci" probably makes more sense than grouping them
+under "hotplug".  A lot can be hotplugged (cpu, memory, PCI, USB, ...)
+but it's mostly unrelated hardware and enabling all their events at once
+doesn't seem to make much sense.  Whereas I can imagine people want to
+enable all PCI trace events.  We currently only have tracepoints for AER
+in the PCI core, but perhaps people will want to add new ones for
+power faults, DPC recovery, bandwidth control etc.
 
-> 
-> Best regards,
-> Krzysztof
+Would something like
 
--- 
-With best wishes
-Dmitry
+  /sys/kernel/debug/tracing/events/pci/hotplug_event
+
+be possible?  It would seem more elegant than
+
+  /sys/kernel/debug/tracing/events/pci/pci_hp_event
+
+because it avoids the duplication of "pci" in the path.
+
+Thanks,
+
+Lukas
 
