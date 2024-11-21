@@ -1,113 +1,115 @@
-Return-Path: <linux-pci+bounces-17131-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17132-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1EC19D4601
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 04:00:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35D5F9D4619
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 04:10:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B714F280DEE
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 03:00:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4E70B21FCD
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 03:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0442A33F9;
-	Thu, 21 Nov 2024 03:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C7C643ACB;
+	Thu, 21 Nov 2024 03:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4nJ+Uda"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TACpBHFk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43A714D6EF
-	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 03:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1855E2AD00
+	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 03:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732158010; cv=none; b=Xdh2WceH250sRcL2uHDEZkxxQQ3tNtMjRPuHskk6gGYpChomg7aHmLpZdmWTjXUeUHu+yU6Xk70Bs/kebbRx9kmTg4hoxaaOuACD/IAlWFlC96mZ33GVWAZhahZEIxg7AAacgYnTivDdcKNnFVUEI4ZxPnLWQ6QfnMYywnQmvV8=
+	t=1732158597; cv=none; b=YQbslGxfI7uO+6VNwt80VV6FVKvpIE/DupvHRsOe2ykdH38j9M0yYES6l7WiOI/eUvgWJ0PKk7OqZP+98/eKuQjpBSVxYdGMP7//D4H44k2qyWtpqxCGmfxKXgZTjPb7v8x7nrMoUdl37MuQ7e8g0NGyQATT5FsGlLwuSBtURDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732158010; c=relaxed/simple;
-	bh=f7u6KpkD6hknrvOT9+TyFzo7esUZxDOrkURMpRZHNOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kOBYFmiQl1Ham5RUD6NecjHVGpE00Th+QZ+IHN38s5/TW8i46fels/eCnbWO9++58A0vMEYWc6A9P8ih7lYBMxck4iPGj9gLPRP5arx3Mqpz+IkFl/a7undTlT7+v6FS7qs4RsDBIxQPDPj1+vrVhKcOolrJsoBOMN52gG1/LPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4nJ+Uda; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2097C4CECD;
-	Thu, 21 Nov 2024 03:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732158010;
-	bh=f7u6KpkD6hknrvOT9+TyFzo7esUZxDOrkURMpRZHNOU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l4nJ+UdaTNHFCVyyrI6Eik6V/f8jc0uvjRdBZ8uEp2A39LVJ0PQo3k8KEYMvTncES
-	 ZrmDQNPqxRxFQYqMzGPYACs8yiR0hkU/rTANtv4yBLSY/I4zLdk4YOp5d+e88CEEy+
-	 YN/RO21oShcoPdl7NWJgQZezGFDuajAeMiQENAZi43jtsc5Xxq+aX5bbtghE9z6wq5
-	 CbnLoPrja4ybp77SGCOtda+RLglYu39HE3yb8TXNeOujEP6hnbLXYDeKx1JmcratHV
-	 vLi+EcUm0QFtcGgyBDYDDEpDjWzjGUiOcqZJKaazk7aGLsX+cCIyJvtZfSXA8bxcG4
-	 kWC5myZjUIcSw==
-Message-ID: <2cb06027-f8d0-4a49-a48c-2f2b649141a7@kernel.org>
-Date: Thu, 21 Nov 2024 12:00:08 +0900
+	s=arc-20240116; t=1732158597; c=relaxed/simple;
+	bh=0H1m0NX8j7Q4v3rXNl3ISQx66VLYoAUVltruNmHwR78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e7FBZJZSFzYyezOY+tjTOsC+LwYtlOWFJWSaos5A0MDE2GWzHP/0hOEhRMfoby0Qkn3u8srUSulJb080rqh2epgRS1nzSmGYvsmtkDK1TJyfD67TdajHKAwrVOvvaaAuiO7aSEjvHj3FIbtpVaHMWWIzgVhnhDLbNt+vIcUir8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TACpBHFk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732158593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i7WppD/Sc+LMLfzM3iKsXvqQTAszek1AB3KYAwb4TXA=;
+	b=TACpBHFklx/3JXt0t9+wjq7ecOVuwSNuPFGemXPk1j+IyfO3bQe8+u/9R+P6eZln237siZ
+	SY+3JEDwPwK030CsqSuGFfK7GlZI+1Su3d63pSPYA1vaL3oknLjn+KKSBCrsobgq8FOcZW
+	6u+Y3JhkRwoPl1hGtQgi4FvlSMnU+ow=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-449-PVOQQv3VNfO2ZHF52GjPdA-1; Wed,
+ 20 Nov 2024 22:09:52 -0500
+X-MC-Unique: PVOQQv3VNfO2ZHF52GjPdA-1
+X-Mimecast-MFC-AGG-ID: PVOQQv3VNfO2ZHF52GjPdA
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A544219560A3;
+	Thu, 21 Nov 2024 03:09:48 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.87])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D18430000DF;
+	Thu, 21 Nov 2024 03:09:33 +0000 (UTC)
+Date: Thu, 21 Nov 2024 11:09:27 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	John Garry <john.g.garry@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org,
+	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
+	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com,
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v5 4/8] blk-mq: introduce blk_mq_map_hw_queues
+Message-ID: <Zz6kZ7QZV9HKSWVR@fedora>
+References: <20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org>
+ <20241115-refactor-blk-affinity-helpers-v5-4-c472afd84d9f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [pci:controller/rockchip] BUILD SUCCESS
- 592aac418ebdf451fe9b146bc2ca6dfc96921af0
-To: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <lkp@intel.com>
-Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>
-References: <20241119151925.GA2263235@bhelgaas>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20241119151925.GA2263235@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241115-refactor-blk-affinity-helpers-v5-4-c472afd84d9f@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 11/20/24 00:19, Bjorn Helgaas wrote:
-> On Mon, Nov 18, 2024 at 12:01:12AM +0800, kernel test robot wrote:
->> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
->> branch HEAD: 592aac418ebdf451fe9b146bc2ca6dfc96921af0  PCI: rockchip-ep: Handle PERST# signal in endpoint mode
+On Fri, Nov 15, 2024 at 05:37:48PM +0100, Daniel Wagner wrote:
+> blk_mq_pci_map_queues and blk_mq_virtio_map_queues will create a CPU to
+> hardware queue mapping based on affinity information. These two function
+> share common code and only differ on how the affinity information is
+> retrieved. Also, those functions are located in the block subsystem
+> where it doesn't really fit in. They are virtio and pci subsystem
+> specific.
 > 
->> x86_64                           allyesconfig    clang-19
+> Thus introduce provide a generic mapping function which uses the
+> irq_get_affinity callback from bus_type.
 > 
-> How can I reproduce this build?  Do you have a packaged clang-19
-> toolchain?
+> Originally idea from Ming Lei <ming.lei@redhat.com>
 > 
-> The x86_64 allyesconfig build succeeded for the robot, but when I
-> build on x86_64 with gcc-11.4.0, I get an error:
-> 
->   $ gcc -v
->   gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)
->   $ git checkout 592aac418ebd
->   $ make allyesconfig
->   $ make drivers/pci/controller/pcie-rockchip-ep.o
->     CC      drivers/pci/controller/pcie-rockchip-ep.o
->   drivers/pci/controller/pcie-rockchip-ep.c:640:9: error: implicit declaration of function ‘irq_set_irq_type’
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
 
-Using gcc v14.2 here (Fedora 40/41) and never saw this compilation error. Weird.
-
-> 
-> irq_set_irq_type() is declared in <linux/irq.h>.  On arm64, where this
-> driver is used, <linux/irq.h> is included via this path:
-> 
->   linux/pci.h
->     linux/interrupt.h
->       linux/hardirq.h
-> 	arch/arm64/include/asm/hardirq.h
-> 	  asm-generic/hardirq.h
-> 	    linux/irq.h
-> 
-> but on x86, arch/x86/include/asm/hardirq.h does not include
-> asm-generic/hardirq.h and therefore doesn't include <linux/irq.h>.
-> 
-> I'm confused about why the robot reported a successful build with
-> clang-19.  It seems like that should have the same problem I saw with
-> gcc, so I'd like to try it manually.
-> 
-> Bjorn
-
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 -- 
-Damien Le Moal
-Western Digital Research
+Ming
+
 
