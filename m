@@ -1,241 +1,208 @@
-Return-Path: <linux-pci+bounces-17164-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17165-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13BEE9D4E0D
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 14:46:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D05F09D4E53
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 15:11:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D6A01F2130A
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 13:46:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 574781F22E91
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 14:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719D31D0405;
-	Thu, 21 Nov 2024 13:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 205D41D89E2;
+	Thu, 21 Nov 2024 14:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Hxm+jn3s";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YGXSeOHa";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CGeu9KB/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K6ngicCq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A851230983
-	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 13:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358F81D79B0;
+	Thu, 21 Nov 2024 14:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732196787; cv=none; b=OUHG1ElkgvXtHN0JdTDZe9IzNsmM9ShX4SOSupz+jlLxMGumXp3qaLLsKW8u0goO3dtZxbtc04E2ZQs7WGHJ44hJ5mFENzOFC9X9ugKa3+Avs84QaBLG8dEbVXLLLXuEvnU/zegqZwwLyPmBhot3OEUv18VVI9wPwa1BdI5wa/Q=
+	t=1732198283; cv=none; b=RGWMPLYdgH5xXRzutbFjNkF3q+qygseP198Uq3YzgUiRduAMPXyaSprjf+EJ/AppI80qwmyvpzGxGvtdk5Qur0D7d/fvLN9BB6JJqx2o3F6piVbRGhJbb9saxRjpFORQVsV6MO3ZFc5xR6/DGTmcp3zYeJ5SXOa2pyJIrQQ+h9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732196787; c=relaxed/simple;
-	bh=XGTwLO/A7JGdGXM863bmWbSjL0u5sFOh+oyZwem/qOs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=N3WAXdIbLzd8mr5iNPzdymz0UkpwHv98jACp2DTmyVwCYhppVnjyPaeg73X+0XQHlDq3F37FqGqXzIRL+awq81UG1xXJSeXlaOadrmP28GY0EbR8IZE5AvO5pGCx/33PAYFtydgsANQEfBU8bN0hZxc6Lq7su0siQMGEiyr+WT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3a77a2d9601so9998565ab.3
-        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 05:46:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732196785; x=1732801585;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aeaUCVRvA2JA7iB9SOKNpFV0GIZ++rUQUyZ9/rH0aYI=;
-        b=DASyQcfg5tp7oxELDvgcdc5zsvfm03xq2FRw3Jw1ZTO6o8++kS1NgFTjHYcG59XLwP
-         VbyYAofz83mjaLf0iOlS2m/CHw52ynjN/AtZEmIruXbV8Bo8KN1TAaYzWIXxe3Pz70v4
-         yv0A3dfNLGRORjjyszMUwX1xwG/uTn7OO1l8elMa6yqh3fLe9PCzrbiaDEeadKiMbkkj
-         K1Dkk9OfLdvtuonuQnDLFScFM5JAytADWcUyPl2UpzWBHJnk1VVi8fa7IBJ5tanoZ+8N
-         fPN04meuxIVlDt5aT/71avVD0rn2d5D2lQDvxqfEWVD7YfwlfJkb93xeiyEMOqzVO3B6
-         jAOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUser05L9+Oc3yhuSS9Uy05uus8uOCg+3KhDUtwY3hXoZFleO0oCmnv4iEJDmtEmX57NL3UpQK44s8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTrSDCCzV+v59eo5+bT/0wqRacTiuhEbnLqvhesu0kM0hG/FDs
-	P+5fr0yzPgC/U+0TIH2vwVzjb+jZZ1cLiDjw71IcYXm1O4c1G2fFO7aNT0zM354WM532UWGhVdi
-	APuPIv3ngz6tYjgYP+NerEJSkSELsT9HoCOS3ZlGkS2UQb57/eBHrcRI=
-X-Google-Smtp-Source: AGHT+IHJ3MvkRDjuaZSA7995ihtx+znw6D89Hb+9wchR4KB0Sh4omPbeGzBUxQ7oHXgcqM9Itprz+FjSNBk/KNDMXhiNTTTN6arK
+	s=arc-20240116; t=1732198283; c=relaxed/simple;
+	bh=Ey0IAPn0edSlqo7bOQ+Oiyx7q+LGOFPvfHfglTadl48=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=avfNkRCA8Y59w8LCAy76PIfNZF9lbzOzPaJ3zczEUZAsphuTOK1HBKkGYs3pEnT/1fjmDKxnPY/u8gNEufRdJh4fIJ3Jipuk3+dqzEYyNr5JmV2IGS4/xq9hyAAAI1b4gbxAvR97MdXppfjYwR8Yhdwyx6tRsm0gNcvntibjoz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Hxm+jn3s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YGXSeOHa; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CGeu9KB/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K6ngicCq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1318F21A24;
+	Thu, 21 Nov 2024 14:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1732198279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=90qHUuZk+1shGNjirM2QL8Sq/3ge+2iP+PRdngdmwIc=;
+	b=Hxm+jn3syYbS/XV73a7xZR+I3qTeWIKIAL32wjjGghP/Q+pClw2UCrojhSIycO5T+VgQxc
+	4pw9T043OAd3pqQ/USAFQyhj06bSugJCCqCy089T5iCcwE3BGenx5H2sFJzdBT7OGKgUbr
+	90fIrko6yH8/4TThNXoj5T6pw7cPCzQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1732198279;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=90qHUuZk+1shGNjirM2QL8Sq/3ge+2iP+PRdngdmwIc=;
+	b=YGXSeOHa5HHOZMGy8Mc9vhsoUcaEWwniGYLfXV1/F12FnMwNZK83oA2hMdDm+1PSMiv2As
+	Fct9jTR6FxM2yfBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="CGeu9KB/";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=K6ngicCq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1732198278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=90qHUuZk+1shGNjirM2QL8Sq/3ge+2iP+PRdngdmwIc=;
+	b=CGeu9KB/AMGHF+y5efvIZEnWDHTbQKZ8oQCIjmZqD5nwHfeWl/URw0G90EkFlxg30vNNaP
+	qAM4V/jVeQf+sevvwynf3QQ/lsISGmUvkgscFY9I4OM8Mi+8Gcw1JSNWYCdhjBsJdlVijA
+	nWvsyiVEXLBEAp/JVJdcCpOJKqRodzU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1732198278;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=90qHUuZk+1shGNjirM2QL8Sq/3ge+2iP+PRdngdmwIc=;
+	b=K6ngicCqcSxUVrJ49BCm0nDvfriyWDmz7K6hkNWM3oB4Q2w4pFLaemKNuU1kMcVsD3lbWw
+	K+BQ5DoUsPdL/7Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 51B8513927;
+	Thu, 21 Nov 2024 14:11:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Xb3nEYU/P2doNQAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Thu, 21 Nov 2024 14:11:17 +0000
+Date: Thu, 21 Nov 2024 15:11:16 +0100
+From: Jean Delvare <jdelvare@suse.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRz?=
+ =?UTF-8?B?a2k=?= <kw@linux.com>, linux-pci@vger.kernel.org, Ariel Almog
+ <ariela@nvidia.com>, Aditya Prabhune <aprabhune@nvidia.com>, Hannes
+ Reinecke <hare@suse.de>, Heiner Kallweit <hkallweit1@gmail.com>, Arun Easi
+ <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>, Bert Kenward
+ <bkenward@solarflare.com>, Matt Carlson <mcarlson@broadcom.com>, Kai-Heng
+ Feng <kai.heng.feng@canonical.com>, Alex Williamson
+ <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Stephen Hemminger
+ <stephen@networkplumber.org>
+Subject: Re: [PATCH v2] PCI/sysfs: Change read permissions for VPD
+ attributes
+Message-ID: <20241121151116.4213c144@endymion.delvare>
+In-Reply-To: <20241121121301.GA160612@unreal>
+References: <61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org>
+	<20241121130127.5df61661@endymion.delvare>
+	<20241121121301.GA160612@unreal>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a67:b0:3a7:6636:eb48 with SMTP id
- e9e14a558f8ab-3a7865842b2mr66340925ab.18.1732196784796; Thu, 21 Nov 2024
- 05:46:24 -0800 (PST)
-Date: Thu, 21 Nov 2024 05:46:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <673f39b0.050a0220.363a1b.0126.GAE@google.com>
-Subject: [syzbot] [pci?] linux-next test error: general protection fault in of_pci_supply_present
-From: syzbot <syzbot+0058f72ff908dfa2dbf5@syzkaller.appspotmail.com>
-To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-next@vger.kernel.org, linux-pci@vger.kernel.org, sfr@canb.auug.org.au, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1318F21A24
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.com,vger.kernel.org,nvidia.com,suse.de,gmail.com,marvell.com,amazon.com,solarflare.com,broadcom.com,canonical.com,redhat.com,weissschuh.net,networkplumber.org];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,endymion.delvare:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello,
+On Thu, 21 Nov 2024 14:13:01 +0200, Leon Romanovsky wrote:
+> On Thu, Nov 21, 2024 at 01:01:27PM +0100, Jean Delvare wrote:
+> > On Wed, 13 Nov 2024 14:59:58 +0200, Leon Romanovsky wrote:  
+> > > --- a/drivers/pci/vpd.c
+> > > +++ b/drivers/pci/vpd.c
+> > > @@ -332,6 +332,14 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> > >  	if (!pdev->vpd.cap)
+> > >  		return 0;
+> > >  
+> > > +	/*
+> > > +	 * Mellanox devices have implementation that allows VPD read by
+> > > +	 * unprivileged users, so just add needed bits to allow read.
+> > > +	 */
+> > > +	WARN_ON_ONCE(a->attr.mode != 0600);
+> > > +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
+> > > +		return a->attr.mode + 0044;  
+> > 
+> > When manipulating bitfields, | is preferred. This would make the
+> > operation safe regardless of the initial value, so you can even get rid
+> > of the WARN_ON_ONCE() above.  
+> 
+> The WARN_ON_ONCE() is intended to catch future changes in VPD sysfs
+> attributes. My intention is that once that WARN will trigger, the
+> author will be forced to reevaluate the latter if ( ... PCI_VENDOR_ID_MELLANOX)
+> condition and maybe we won't need it anymore. Without WARN_ON_ONCE, it
+> is easy to miss that code.
 
-syzbot found the following issue on:
+The default permissions are 10 lines above in the same file. Doesn't
+seem that easy to miss to me.
 
-HEAD commit:    decc701f41d0 Add linux-next specific files for 20241121
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14bceb78580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=45719eec4c74e6ba
-dashboard link: https://syzkaller.appspot.com/bug?extid=0058f72ff908dfa2dbf5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+In my opinion, WARN_ON should be limited to cases where something really
+bad has happened. It's not supposed to be a reminder for developers to
+perform some code clean-up. Remember that WARN_ON has a run-time cost
+and it could be evaluated for a possibly large number of PCI devices
+(although admittedly VPD support seems to be present only in a limited
+number of PCI device).
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a9775a56bebc/disk-decc701f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/46688e4c6405/vmlinux-decc701f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0d11b152c43f/bzImage-decc701f.xz
+Assuming you properly use | instead of +, then nothing bad will happen
+if the default permissions change, the code will simply become a no-op,
+until someone notices and deletes it. No harm done.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0058f72ff908dfa2dbf5@syzkaller.appspotmail.com
+I'm not maintaining this part of the kernel so I can't speak or decide
+on behalf of the maintainers, but in my opinion, if you really want to
+leave a note for future developers, then a comment in the source code
+is a better way, as it has no run-time cost, and will also be found
+earlier by the developers (no need for run-time testing).
 
-NET: Registered PF_QIPCRTR protocol family
-dca service started, version 1.12.1
-PCI: Using configuration type 1 for base access
-HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
-HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
-HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
-HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
-cryptd: max_cpu_qlen set to 1000
-raid6: skipped pq benchmark and selected avx2x4
-raid6: using avx2x2 recovery algorithm
-ACPI: Added _OSI(Module Device)
-ACPI: Added _OSI(Processor Device)
-ACPI: Added _OSI(3.0 _SCP Extensions)
-ACPI: Added _OSI(Processor Aggregator Device)
-ACPI: 2 ACPI AML tables successfully acquired and loaded
-ACPI: Interpreter enabled
-ACPI: PM: (supports S0 S3 S4 S5)
-ACPI: Using IOAPIC for interrupt routing
-PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
-PCI: Ignoring E820 reservations for host bridge windows
-ACPI: Enabled 16 GPEs in block 00 to 0F
-ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI HPX-Type3]
-acpi PNP0A03:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
-acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended configuration space under this bridge
-PCI host bridge to bus 0000:00
-pci_bus 0000:00: Unknown NUMA node; performance will be reduced
-pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfefff window]
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
-pci 0000:00:01.0: [8086:7110] type 00 class 0x060100 conventional PCI endpoint
-pci 0000:00:01.3: [8086:7113] type 00 class 0x068000 conventional PCI endpoint
-pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
-pci 0000:00:03.0: [1af4:1004] type 00 class 0x000000 conventional PCI endpoint
-pci 0000:00:03.0: BAR 0 [io  0xc000-0xc03f]
-pci 0000:00:03.0: BAR 1 [mem 0xfe800000-0xfe80007f]
-pci 0000:00:04.0: [1af4:1000] type 00 class 0x020000 conventional PCI endpoint
-pci 0000:00:04.0: BAR 0 [io  0xc040-0xc07f]
-pci 0000:00:04.0: BAR 1 [mem 0xfe801000-0xfe80107f]
-pci 0000:00:05.0: [1ae0:a002] type 00 class 0x030000 conventional PCI endpoint
-pci 0000:00:05.0: BAR 0 [mem 0xfe000000-0xfe7fffff]
-pci 0000:00:05.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
-pci 0000:00:06.0: [1af4:1002] type 00 class 0x00ff00 conventional PCI endpoint
-pci 0000:00:06.0: BAR 0 [io  0xc080-0xc09f]
-pci 0000:00:07.0: [1af4:1005] type 00 class 0x00ff00 conventional PCI endpoint
-pci 0000:00:07.0: BAR 0 [io  0xc0a0-0xc0bf]
-pci 0000:00:07.0: BAR 1 [mem 0xfe802000-0xfe80203f]
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000000b: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000058-0x000000000000005f]
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.0-next-20241121-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
-RIP: 0010:of_pci_supply_present+0x25/0xe0
-Code: 90 90 90 90 90 66 0f 1f 00 55 41 56 53 48 89 fb 49 be 00 00 00 00 00 fc ff df e8 96 78 93 fc 48 83 c3 58 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 5c 69 fe fc 48 8b 1b 48 85 db 74
-RSP: 0000:ffffc90000066818 EFLAGS: 00010202
-RAX: 000000000000000b RBX: 0000000000000058 RCX: ffff88801bef0000
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: 0000000000000000
-RBP: ffff8881446f4488 R08: ffffffff8bbde83d R09: 1ffff11003ad2311
-R10: dffffc0000000000 R11: ffffed1003ad2312 R12: ffff8881446f4000
-R13: dffffc0000000000 R14: dffffc0000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000e736000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- pci_bus_add_device+0x1a9/0x340 drivers/pci/bus.c:408
- pci_bus_add_devices+0x94/0x1c0 drivers/pci/bus.c:439
- acpi_pci_root_add+0x2112/0x30f0 drivers/acpi/pci_root.c:761
- acpi_scan_attach_handler drivers/acpi/scan.c:2260 [inline]
- acpi_bus_attach+0x7ab/0xcb0 drivers/acpi/scan.c:2309
- device_for_each_child+0x118/0x1b0 drivers/base/core.c:3994
- acpi_dev_for_each_child+0xd0/0x110 drivers/acpi/bus.c:1157
- acpi_bus_attach+0x9f4/0xcb0 drivers/acpi/scan.c:2329
- device_for_each_child+0x118/0x1b0 drivers/base/core.c:3994
- acpi_dev_for_each_child+0xd0/0x110 drivers/acpi/bus.c:1157
- acpi_bus_attach+0x9f4/0xcb0 drivers/acpi/scan.c:2329
- acpi_bus_scan+0x12b/0x560 drivers/acpi/scan.c:2610
- acpi_scan_init+0x267/0x730 drivers/acpi/scan.c:2747
- acpi_init+0x159/0x240 drivers/acpi/bus.c:1466
- do_one_initcall+0x248/0x880 init/main.c:1266
- do_initcall_level+0x157/0x210 init/main.c:1328
- do_initcalls+0x3f/0x80 init/main.c:1344
- kernel_init_freeable+0x435/0x5d0 init/main.c:1577
- kernel_init+0x1d/0x2b0 init/main.c:1466
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:of_pci_supply_present+0x25/0xe0
-Code: 90 90 90 90 90 66 0f 1f 00 55 41 56 53 48 89 fb 49 be 00 00 00 00 00 fc ff df e8 96 78 93 fc 48 83 c3 58 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 5c 69 fe fc 48 8b 1b 48 85 db 74
-RSP: 0000:ffffc90000066818 EFLAGS: 00010202
-RAX: 000000000000000b RBX: 0000000000000058 RCX: ffff88801bef0000
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: 0000000000000000
-RBP: ffff8881446f4488 R08: ffffffff8bbde83d R09: 1ffff11003ad2311
-R10: dffffc0000000000 R11: ffffed1003ad2312 R12: ffff8881446f4000
-R13: dffffc0000000000 R14: dffffc0000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000e736000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	90                   	nop
-   1:	90                   	nop
-   2:	90                   	nop
-   3:	90                   	nop
-   4:	90                   	nop
-   5:	66 0f 1f 00          	nopw   (%rax)
-   9:	55                   	push   %rbp
-   a:	41 56                	push   %r14
-   c:	53                   	push   %rbx
-   d:	48 89 fb             	mov    %rdi,%rbx
-  10:	49 be 00 00 00 00 00 	movabs $0xdffffc0000000000,%r14
-  17:	fc ff df
-  1a:	e8 96 78 93 fc       	call   0xfc9378b5
-  1f:	48 83 c3 58          	add    $0x58,%rbx
-  23:	48 89 d8             	mov    %rbx,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 80 3c 30 00       	cmpb   $0x0,(%rax,%r14,1) <-- trapping instruction
-  2f:	74 08                	je     0x39
-  31:	48 89 df             	mov    %rbx,%rdi
-  34:	e8 5c 69 fe fc       	call   0xfcfe6995
-  39:	48 8b 1b             	mov    (%rbx),%rbx
-  3c:	48 85 db             	test   %rbx,%rbx
-  3f:	74                   	.byte 0x74
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
 
