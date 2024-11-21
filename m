@@ -1,70 +1,84 @@
-Return-Path: <linux-pci+bounces-17175-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17176-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97E659D5138
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 18:04:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4A969D5280
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 19:28:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8C164B2AEB0
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 17:01:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78493284089
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 18:28:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62F7819CD1D;
-	Thu, 21 Nov 2024 17:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iu6cVkon"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E3914BF87;
+	Thu, 21 Nov 2024 18:28:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3964E157485;
-	Thu, 21 Nov 2024 17:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC1B19FA93;
+	Thu, 21 Nov 2024 18:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732208427; cv=none; b=E0sUPSFiOcm6MKe+muKll2WF10E/uIEoXHuTm++x69IDi020qv6XcfBGL/fPLwewnraE6IMCEFEmTF7k5qeT4qiy7qA8YrBZ442vicl/UdRACl4m9jiMVEXGb9KkeMVPN7rNPDHC2YJIFGO9P7Uv4JiCh6NY40UsNyqbv5J9/k8=
+	t=1732213710; cv=none; b=ZGiWZk316K0aIjTc9HSCzCw2a2Meh4Yk/DxSARo7miXyhQ753GIHkbaUEmFfOKBqLfRqnpkDcNDkYDsKyWqot+wMVhCDPX/zPh34uG32SrAOq8/ldntGIaLmVQOLbK+J160ozORtq/CL3+Z8IX0SiD5VNZxN16NLUwNnqlXBvk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732208427; c=relaxed/simple;
-	bh=n8F8RjdeJDVgwm6h9A7zBEWYUMJ5Ij30BUILMFj2NZU=;
+	s=arc-20240116; t=1732213710; c=relaxed/simple;
+	bh=wzMBpikQ2npNr9/0hK5Jk2TmtPJk1ucHRZR7PwBRKrk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p17aEddB2hhCN5vFHk23zIj2mEdlanmZ3ZlX88HYNN5qv7UZmjpI2o5vAnFF0O+lqRy3mMg5/OiDONMX7WOAGobmc8h1fADAn9P4+n9dD5m0mkVm6cthPle1QF4Pd/aKgFemC+Ujv89CjYSl5KrLyfK9lq97S8DMTeJTcHL84Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iu6cVkon; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51205C4CECC;
-	Thu, 21 Nov 2024 17:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732208427;
-	bh=n8F8RjdeJDVgwm6h9A7zBEWYUMJ5Ij30BUILMFj2NZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iu6cVkonxdAz5QGbLucoWatLmqd+WFY0kmsGuRE6cpSQfhDhBf0VaO+MJ2J+izS8K
-	 9ajq6P2NTQ8br3KsnnHAzNb+zluBR1G4iPcVCmW/+tDqeIJGqK1rbM3cBAgpKp2n+K
-	 IXK5+4RoH8X6kQ01jNo097kLIQdwyHylEUEg3GdrZyXC0N78tgtOFOX9qVe/WDpu7y
-	 8x17DlJv/IJGzvIdBDEROAQXpASmU/XaiqzZ2AhxsYtLMeyAxX8iW3yKkSuSq4iyDU
-	 UPFCqFl2Dvt8lccQsHIJhO7BUGYXwCO40oAIuAVSPuLczm80d7K3Ody1PYZwrWz2He
-	 XOoo9a4kHdETQ==
-Date: Thu, 21 Nov 2024 19:00:20 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
-	Aditya Prabhune <aprabhune@nvidia.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
-	Bert Kenward <bkenward@solarflare.com>,
-	Matt Carlson <mcarlson@broadcom.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Jakub Kicinski <kuba@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [PATCH v2] PCI/sysfs: Change read permissions for VPD attributes
-Message-ID: <20241121170020.GB160612@unreal>
-References: <61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org>
- <20241121130127.5df61661@endymion.delvare>
- <20241121121301.GA160612@unreal>
- <20241121151116.4213c144@endymion.delvare>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bnYpXWylaK60BiaGyuLgXA/cl2FfAHSgLSd1KPPIm2axhy4XncWYrIwC3k/B+6JsMgjTNjyZtNUoEm21KGC7Ao8kUxDrlhq1z/Gegdpa1jW+zs69g0W8tSV5gIP3Pt50CLRNz2j/MvrO6ZZLwRwyALR8uV7Uk0qrWQtCs+QFZeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7f71f2b1370so1033942a12.1;
+        Thu, 21 Nov 2024 10:28:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732213708; x=1732818508;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fc3puHzPXmkH4hov69LjVs0wyGCY6QS1VrIR+xpLSpE=;
+        b=V49Ebu8f30AzuMSyi1kqd7tCcQqHlWuBmf3FWtS+1UccAKpYqWEygmqpgHYnbhuXw0
+         2B+WyKUkjFZNkE+nRldLvGtb/rdnFrY7jj3ibwv8KbQTZVL6QJnW0CLbVGhJryxKV1WX
+         b2PKqRIe/89c+6qG9yU2RBZeLCbqLlELfsAv7zfExI4aH89J8Om7rGeiyp1UG1OA55Zx
+         M8TVSXWoUZzZMjY8v8r3AdYAkCPdZeyq0YNhcPdvjg+hLBicEOjizJfvJiaTnAM8ACz6
+         B6vykBOvrVRgQgirebOqZlWy6X/Wpsh7sF3mrj8afszpSgnLNQRYPMJualysvPit0kwP
+         C6sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhEUzHXwYmiYtHMoFvYqALr/PL+6vkxHLRYBeQoZSxA+CmrK3HUwxroTo255fq5tCNOXt05E5Ljf+j9XI=@vger.kernel.org, AJvYcCWt/CcDBH+HaSXoVn/UQnB1vesrzrZwlpF/gDE1mlk71dDXz0c1fRlYdonH3tZLWm7fvj/hh3Vxh1lA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU7gcNw0UrLQPG8fLHMeAL2k67ZIiSYXlaSYJHa0LGy8Zik459
+	2qXx4tPQ/di6yHNYzDJee5lxbdroenJuDVGnRgiv3i2+4v7kWeUX
+X-Gm-Gg: ASbGncvx+zJWtMsToRC18F5oxHeq2yv1WKZqiws1B+7GOUKvknrAwcw+P3gtRD7pvwO
+	1ObjtS1u+Im6FpD8LSdTMHJ98RkVPaVIWk7zP5jaLRv5EstbcIKfRmohuOAYNFtJohbk7ewyu1p
+	LJZGsm8Vk1g1FMh2TmDGVwBfk7QDffo5snsH3tXAkYnTEA6ZiEA6fIKtM6YoXR7Z4KuQXMp72rr
+	D1/bb8kmci4f4vWRGK9As1DqjS+ubafo39RXlUJHNap4lu8DjNcJb/eZFZIpsS2tAgpo8wbP/7Z
+	l5TxhPs7
+X-Google-Smtp-Source: AGHT+IG4+g8fynFdOpAy//6pxtRCSM6qPyzx+6ZR7M7ejU5HZbYGyTtUqGKuRNecnqhLTbOVHAhvkg==
+X-Received: by 2002:a05:6a21:4d8b:b0:1db:dc67:1827 with SMTP id adf61e73a8af0-1ddaebd8dd5mr11513731637.25.1732213707724;
+        Thu, 21 Nov 2024 10:28:27 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de478f71sm71919b3a.58.2024.11.21.10.28.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2024 10:28:26 -0800 (PST)
+Date: Fri, 22 Nov 2024 03:28:24 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	stable+noautosel@kernel.org,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: Re: [PATCH v2 3/5] PCI/pwrctl: Ensure that the pwrctl drivers are
+ probed before the PCI client drivers
+Message-ID: <20241121182824.GA69684@rocinante>
+References: <20241120170232.flllyqcycsrsk6cj@thinkpad>
+ <20241120201839.GA2338274@bhelgaas>
+ <20241121120010.zjmo7sun2j7w2f5r@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,71 +87,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241121151116.4213c144@endymion.delvare>
+In-Reply-To: <20241121120010.zjmo7sun2j7w2f5r@thinkpad>
 
-On Thu, Nov 21, 2024 at 03:11:16PM +0100, Jean Delvare wrote:
-> On Thu, 21 Nov 2024 14:13:01 +0200, Leon Romanovsky wrote:
-> > On Thu, Nov 21, 2024 at 01:01:27PM +0100, Jean Delvare wrote:
-> > > On Wed, 13 Nov 2024 14:59:58 +0200, Leon Romanovsky wrote:  
-> > > > --- a/drivers/pci/vpd.c
-> > > > +++ b/drivers/pci/vpd.c
-> > > > @@ -332,6 +332,14 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
-> > > >  	if (!pdev->vpd.cap)
-> > > >  		return 0;
-> > > >  
-> > > > +	/*
-> > > > +	 * Mellanox devices have implementation that allows VPD read by
-> > > > +	 * unprivileged users, so just add needed bits to allow read.
-> > > > +	 */
-> > > > +	WARN_ON_ONCE(a->attr.mode != 0600);
-> > > > +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
-> > > > +		return a->attr.mode + 0044;  
-> > > 
-> > > When manipulating bitfields, | is preferred. This would make the
-> > > operation safe regardless of the initial value, so you can even get rid
-> > > of the WARN_ON_ONCE() above.  
-> > 
-> > The WARN_ON_ONCE() is intended to catch future changes in VPD sysfs
-> > attributes. My intention is that once that WARN will trigger, the
-> > author will be forced to reevaluate the latter if ( ... PCI_VENDOR_ID_MELLANOX)
-> > condition and maybe we won't need it anymore. Without WARN_ON_ONCE, it
-> > is easy to miss that code.
+Hello,
+
+[...]
+> > -			pci_err(dev, "failed to add device link between %s and %s\n",
+> > -				dev_name(&dev->dev), pdev->name);
+> > +			pci_err(dev, "failed to add device link to power control device %s\n",
 > 
-> The default permissions are 10 lines above in the same file. Doesn't
-> seem that easy to miss to me.
-> 
-> In my opinion, WARN_ON should be limited to cases where something really
-> bad has happened. It's not supposed to be a reminder for developers to
-> perform some code clean-up. Remember that WARN_ON has a run-time cost
-> and it could be evaluated for a possibly large number of PCI devices
-> (although admittedly VPD support seems to be present only in a limited
-> number of PCI device).
+> Maybe use 'pwrctrl' instead of 'power control'?
 
-Sorry about which run-time cost are you referring? This is slow path and
-extra if() inside WARN_ON which has unlikely keyword, makes no difference
-when accessing HW.
+Changed, thank you!  This makes the verbiage consistent with other
+messages, code comments, etc.
 
-In addition, this check is for devices which already known to have VPD
-(see pdev->vpd.cap check above).
-
-> 
-> Assuming you properly use | instead of +, then nothing bad will happen
-> if the default permissions change, the code will simply become a no-op,
-> until someone notices and deletes it. No harm done.
-> 
-> I'm not maintaining this part of the kernel so I can't speak or decide
-> on behalf of the maintainers, but in my opinion, if you really want to
-> leave a note for future developers, then a comment in the source code
-> is a better way, as it has no run-time cost, and will also be found
-> earlier by the developers (no need for run-time testing).
-
-I don't have any strong feelings about this WARN_ON_ONCE, will remove.
-
-Thanks
-
-> 
-> Thanks,
-> -- 
-> Jean Delvare
-> SUSE L3 Support
+	Krzysztof
 
