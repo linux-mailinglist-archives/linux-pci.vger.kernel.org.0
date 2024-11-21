@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-17130-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17131-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 339269D45F7
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 03:55:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1EC19D4601
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 04:00:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACBC8B23E2B
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 02:55:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B714F280DEE
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 03:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8F5513B584;
-	Thu, 21 Nov 2024 02:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0442A33F9;
+	Thu, 21 Nov 2024 03:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yx+QNjpH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4nJ+Uda"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC69524B4
-	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 02:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43A714D6EF
+	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 03:00:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732157690; cv=none; b=dq+MS4crVrc9PhXmY5JVDQX+WRVY9bFwRMHeLzsQawdlhILgEPPb7zcPoE4jymir/3ubASM9q7XD1BbsYZ66H3t9H40lqa016moZaH2wtOrM4sfci62tsh1dihLsgSrqYsU9u2Ioro1JldPN4OzvYJ29YnqeC6pFn1uGslrtYPs=
+	t=1732158010; cv=none; b=Xdh2WceH250sRcL2uHDEZkxxQQ3tNtMjRPuHskk6gGYpChomg7aHmLpZdmWTjXUeUHu+yU6Xk70Bs/kebbRx9kmTg4hoxaaOuACD/IAlWFlC96mZ33GVWAZhahZEIxg7AAacgYnTivDdcKNnFVUEI4ZxPnLWQ6QfnMYywnQmvV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732157690; c=relaxed/simple;
-	bh=4ww03cmlXBiyVOibj2SYlxr7RqhPF8+WXUfljLGMbg8=;
+	s=arc-20240116; t=1732158010; c=relaxed/simple;
+	bh=f7u6KpkD6hknrvOT9+TyFzo7esUZxDOrkURMpRZHNOU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jzyqXj771opCqRYzmTT3/e+LcNTY62liMFQ7yTA2bM/SkFGcGehoWr6xlcDVu3M8FKfmpdEUy7pu/vpqnNHeh+Wgvy+TW7Tk6cNx0C+LvzX9s6S1Vl4nMzFvG4zni3kbylANChwlmBG9KJuRQ2tshAxW0N5BZEVh0ISkfZ0yC+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yx+QNjpH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56551C4CECD;
-	Thu, 21 Nov 2024 02:54:49 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=kOBYFmiQl1Ham5RUD6NecjHVGpE00Th+QZ+IHN38s5/TW8i46fels/eCnbWO9++58A0vMEYWc6A9P8ih7lYBMxck4iPGj9gLPRP5arx3Mqpz+IkFl/a7undTlT7+v6FS7qs4RsDBIxQPDPj1+vrVhKcOolrJsoBOMN52gG1/LPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4nJ+Uda; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2097C4CECD;
+	Thu, 21 Nov 2024 03:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732157690;
-	bh=4ww03cmlXBiyVOibj2SYlxr7RqhPF8+WXUfljLGMbg8=;
+	s=k20201202; t=1732158010;
+	bh=f7u6KpkD6hknrvOT9+TyFzo7esUZxDOrkURMpRZHNOU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yx+QNjpH/VXV2o2SifOkJxRYJzIOqlONiV2rC3eAXSfT7yDi7mY66KPcFy5iEfour
-	 STLliBnv+FK+8CZTxdfl2yZ1o9n3f3w9XgnahqxATsST6Al5oFTJo/CJWjjVK6Hyms
-	 Xg9n6vIoqhZoHtK/ZTEABz/wOGnptZHM9K5JP4i3+/78WO8Cp3w553gxpH+FSuc/G+
-	 lTrVkropTOKk6CGkx1g5T5uWnmVIn7+lyo/qRTLqSH1XGODZ3x5fZ5JYLKyNhMj7K7
-	 EaEzBQiPVFB81qIpVXTvl7jGltKS2RpBX58yHYWvEQHxVvOxN8wX3/vKRUZrhmIQbD
-	 K1Nl8+LNczIvA==
-Message-ID: <00f1303d-7ab8-4cea-9491-5f689cbc423b@kernel.org>
-Date: Thu, 21 Nov 2024 11:54:48 +0900
+	b=l4nJ+UdaTNHFCVyyrI6Eik6V/f8jc0uvjRdBZ8uEp2A39LVJ0PQo3k8KEYMvTncES
+	 ZrmDQNPqxRxFQYqMzGPYACs8yiR0hkU/rTANtv4yBLSY/I4zLdk4YOp5d+e88CEEy+
+	 YN/RO21oShcoPdl7NWJgQZezGFDuajAeMiQENAZi43jtsc5Xxq+aX5bbtghE9z6wq5
+	 CbnLoPrja4ybp77SGCOtda+RLglYu39HE3yb8TXNeOujEP6hnbLXYDeKx1JmcratHV
+	 vLi+EcUm0QFtcGgyBDYDDEpDjWzjGUiOcqZJKaazk7aGLsX+cCIyJvtZfSXA8bxcG4
+	 kWC5myZjUIcSw==
+Message-ID: <2cb06027-f8d0-4a49-a48c-2f2b649141a7@kernel.org>
+Date: Thu, 21 Nov 2024 12:00:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,88 +50,61 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] misc: pci_endpoint_test: Add support for capabilities
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-pci@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-References: <20241120155730.2833836-4-cassel@kernel.org>
- <20241120155730.2833836-6-cassel@kernel.org>
+Subject: Re: [pci:controller/rockchip] BUILD SUCCESS
+ 592aac418ebdf451fe9b146bc2ca6dfc96921af0
+To: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <lkp@intel.com>
+Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>
+References: <20241119151925.GA2263235@bhelgaas>
 From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
 Organization: Western Digital Research
-In-Reply-To: <20241120155730.2833836-6-cassel@kernel.org>
+In-Reply-To: <20241119151925.GA2263235@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/21/24 00:57, Niklas Cassel wrote:
-> If running pci_endpoint_test.c (host side) against a version of
-> pci-epf-test.c (EP side), we will not see any capabilities being set.
+On 11/20/24 00:19, Bjorn Helgaas wrote:
+> On Mon, Nov 18, 2024 at 12:01:12AM +0800, kernel test robot wrote:
+>> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
+>> branch HEAD: 592aac418ebdf451fe9b146bc2ca6dfc96921af0  PCI: rockchip-ep: Handle PERST# signal in endpoint mode
 > 
-> For now, only add the CAP_HAS_ALIGN_ADDR capability.
+>> x86_64                           allyesconfig    clang-19
 > 
-> If the CAP_HAS_ALIGN_ADDR is set, that means that the EP side supports
-> reading/writing to an address without any alignment requirements.
+> How can I reproduce this build?  Do you have a packaged clang-19
+> toolchain?
 > 
-> Thus, if CAP_HAS_ALIGN_ADDR is set, make sure that we do not add any
-> specific padding to the buffers that we allocate (which was only made
-> in order to get the buffers to satisfy certain alignment requirements).
+> The x86_64 allyesconfig build succeeded for the robot, but when I
+> build on x86_64 with gcc-11.4.0, I get an error:
 > 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/misc/pci_endpoint_test.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 3aaaf47fa4ee..ab2b322410fb 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -69,6 +69,9 @@
->  #define PCI_ENDPOINT_TEST_FLAGS			0x2c
->  #define FLAG_USE_DMA				BIT(0)
->  
-> +#define PCI_ENDPOINT_TEST_CAPS			0x30
-> +#define CAP_HAS_ALIGN_ADDR			BIT(0)
-> +
->  #define PCI_DEVICE_ID_TI_AM654			0xb00c
->  #define PCI_DEVICE_ID_TI_J7200			0xb00f
->  #define PCI_DEVICE_ID_TI_AM64			0xb010
-> @@ -805,6 +808,22 @@ static const struct file_operations pci_endpoint_test_fops = {
->  	.unlocked_ioctl = pci_endpoint_test_ioctl,
->  };
->  
-> +static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
-> +{
-> +	struct pci_dev *pdev = test->pdev;
-> +	struct device *dev = &pdev->dev;
-> +	u32 caps;
-> +	bool has_align_addr;
-> +
-> +	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-> +
-> +	has_align_addr = caps & CAP_HAS_ALIGN_ADDR;
-> +	dev_dbg(dev, "CAP_HAS_ALIGN_ADDR: %d\n", has_align_addr);
-> +
-> +	if (has_align_addr)
+>   $ gcc -v
+>   gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)
+>   $ git checkout 592aac418ebd
+>   $ make allyesconfig
+>   $ make drivers/pci/controller/pcie-rockchip-ep.o
+>     CC      drivers/pci/controller/pcie-rockchip-ep.o
+>   drivers/pci/controller/pcie-rockchip-ep.c:640:9: error: implicit declaration of function ‘irq_set_irq_type’
 
-Shouldn't this be "if (!has_align_addr)" ?
+Using gcc v14.2 here (Fedora 40/41) and never saw this compilation error. Weird.
 
-> +		test->alignment = 0;
-> +}
-> +
->  static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  				   const struct pci_device_id *ent)
->  {
-> @@ -906,6 +925,8 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  		goto err_kfree_test_name;
->  	}
->  
-> +	pci_endpoint_test_get_capabilities(test);
-> +
->  	misc_device = &test->miscdev;
->  	misc_device->minor = MISC_DYNAMIC_MINOR;
->  	misc_device->name = kstrdup(name, GFP_KERNEL);
+> 
+> irq_set_irq_type() is declared in <linux/irq.h>.  On arm64, where this
+> driver is used, <linux/irq.h> is included via this path:
+> 
+>   linux/pci.h
+>     linux/interrupt.h
+>       linux/hardirq.h
+> 	arch/arm64/include/asm/hardirq.h
+> 	  asm-generic/hardirq.h
+> 	    linux/irq.h
+> 
+> but on x86, arch/x86/include/asm/hardirq.h does not include
+> asm-generic/hardirq.h and therefore doesn't include <linux/irq.h>.
+> 
+> I'm confused about why the robot reported a successful build with
+> clang-19.  It seems like that should have the same problem I saw with
+> gcc, so I'd like to try it manually.
+> 
+> Bjorn
 
 
 -- 
