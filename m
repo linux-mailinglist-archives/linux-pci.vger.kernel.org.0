@@ -1,61 +1,66 @@
-Return-Path: <linux-pci+bounces-17186-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17187-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EADD9D5580
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 23:32:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E4999D5590
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 23:41:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55FC11F242F6
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 22:32:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33534282F9B
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 22:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 084191917FE;
-	Thu, 21 Nov 2024 22:32:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CABD1D9324;
+	Thu, 21 Nov 2024 22:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e06pMEyX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E3E5695;
-	Thu, 21 Nov 2024 22:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C65B1D90DC;
+	Thu, 21 Nov 2024 22:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732228355; cv=none; b=COpUzA8AKQmk0OUYKLjeKlD4DPgB9A1zCSHGAO3RCqiPPvckabXqRCdlrpUTeRIzEh52sLRc+Y89cOWHIg7FcbOOqmcUkvFi4kviWYy5soNN6n1RgFGsiWf6bje10Wd21lZyy5m+Wfeag0GsC6YXVLUi0CBS2XJOksfxn74Sedg=
+	t=1732228905; cv=none; b=ozVJjzAEhSd1Z7kqd3EK9oB+rdX7VekYGp7YNT7rFBExeZS0tiKwwzd+FEnxzaii0BvTbqslnASbq1+TSdwQqrOHYgqkq0wTWe23+0znF1Ssbg3QQpLB+sPClLJjEfA9ff6ASiP2OX4euP0SKu2QtEcTBPOlCxqIsJQ4YaiWquI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732228355; c=relaxed/simple;
-	bh=OSDP648lDt7Tf3SrrgCOs+h8R2qVThcd7JCYaUNoemU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVtK2y0tnNH4YDj+VspJ2sL5NUdKZsSfArhShsa4Kj/49BGZa4mDmL4HyPTaeuADUOU8Wgn7f0A28pCqU2J3OQUL0Z3hQNiuxl471TjnXXpkyYWPHhxGZUYQ9CSDRPW1iEibI6sKO3CSAC5OLSZBcLWxnPEtXEQL2VztAbFVJOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A76A13000B9FB;
-	Thu, 21 Nov 2024 23:32:29 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 80A2631BB07; Thu, 21 Nov 2024 23:32:29 +0100 (CET)
-Date: Thu, 21 Nov 2024 23:32:29 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v3 15/15] PCI/AER: Enable internal errors for CXL
- upstream and downstream switch ports
-Message-ID: <Zz-0_RJGI0rbPHZx@wunner.de>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
- <20241113215429.3177981-16-terry.bowman@amd.com>
- <Zzsq6-GN0GFKb3_S@wunner.de>
- <4529f2a2-e655-4906-8e21-8d5d90db4468@amd.com>
+	s=arc-20240116; t=1732228905; c=relaxed/simple;
+	bh=H3cMHoF2yTikgTdMsVLzgXmeayix4GzbY+snFvGE5Js=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=YRsUI4hdV5FQBtxk8Y9ngpi83I/EOU/5gPQsRixMZvzM7SdogyfWtijKE2Ng6ocAQEnPQhQ/ki/ccJE01NZJFe+2CEmyAQtOPDau5PgsD7hx+D7bpyv/DXOKwu1dC/fzPAbjdNUWpSW5xdTuOcuNxR0gnShjoFj+gmoae4B/Tf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e06pMEyX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD8DC4CECC;
+	Thu, 21 Nov 2024 22:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732228904;
+	bh=H3cMHoF2yTikgTdMsVLzgXmeayix4GzbY+snFvGE5Js=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=e06pMEyXB4v/qSfE87VmPOBF+pXhY63w1hcIy1VsYFe4jZBlDUuL3VwU6xI5xHu52
+	 0qIW0GhI5ihpfA2LqABCQld1T9LNU79jgBFQxg3vGg/0X6ZvnyOhMzF4s3E68JoPDx
+	 lt4ul3NxYGDYylK2Umk7sJO1dkl2/+d7GV4SlWl/ikpQuTrYondR0wA/f6pqqE5WuV
+	 PX8CvyrT++kA8xsHKXpN+5aXytNOn9OhkImOwffOyVkB25X9pLGzoidcWyxeulWg99
+	 SCGy8/Tz8pi2hUjsVEgxYVaB9WYZRONpYDBYeQS3mZeEPGQueGr483fpWJX9tzegcg
+	 rSXXrubzozxAg==
+Date: Thu, 21 Nov 2024 16:41:42 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.de>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Subject: Re: [PATCH v2] PCI/sysfs: Change read permissions for VPD attributes
+Message-ID: <20241121224142.GA2401143@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,29 +69,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4529f2a2-e655-4906-8e21-8d5d90db4468@amd.com>
+In-Reply-To: <20241121121301.GA160612@unreal>
 
-On Thu, Nov 21, 2024 at 04:25:31PM -0600, Bowman, Terry wrote:
-> On 11/18/2024 5:54 AM, Lukas Wunner wrote:
-> > Hm, it seems the reason why you're moving pci_aer_unmask_internal_errors()
-> > outside of "ifdef CONFIG_PCIEAER_CXL" is that drivers/cxl/core/pci.c
-> > is conditional on CONFIG_CXL_BUS, whereas CONFIG_PCIEAER_CXL depends
-> > on CONFIG_CXL_PCI.
-> >
-> > In other words, you need this to avoid build breakage if CONFIG_CXL_BUS
-> > is enabled but CONFIG_CXL_PCI is not.
-> >
-> > I'm wondering (as a CXL ignoramus) why that can happen in the first
-> > place, i.e. why is drivers/cxl/core/pci.c compiled at all if
-> > CONFIG_CXL_PCI is disabled?
-[...]
-> The drivers/cxl/Makefile file shows CONFIG_CXL_PCI gates cxl_pci.c build with:
-> obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+On Thu, Nov 21, 2024 at 02:13:01PM +0200, Leon Romanovsky wrote:
+> On Thu, Nov 21, 2024 at 01:01:27PM +0100, Jean Delvare wrote:
+> > On Wed, 13 Nov 2024 14:59:58 +0200, Leon Romanovsky wrote:
+> > > --- a/drivers/pci/vpd.c
+> > > +++ b/drivers/pci/vpd.c
+> > > @@ -332,6 +332,14 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> > >  	if (!pdev->vpd.cap)
+> > >  		return 0;
+> > >  
+> > > +	/*
+> > > +	 * Mellanox devices have implementation that allows VPD read by
+> > > +	 * unprivileged users, so just add needed bits to allow read.
+> > > +	 */
+> > > +	WARN_ON_ONCE(a->attr.mode != 0600);
+> > > +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
+> > > +		return a->attr.mode + 0044;
+> ...
 
-I wasn't referring to drivers/cxl/pci.c, but drivers/cxl/core/pci.c.
-That's gated by CONFIG_CXL_BUS, not CONFIG_CXL_PCI, which seems weird.
+> I still didn't lost hope that at some point VPD will be open for read to
+> all kernel devices.
+> 
+> Bjorn, are you ok with this patch? If yes, I'll resend the patch with
+> the suggested change after the merge window.
 
-Thanks,
+Reading VPD is a fairly complicated dance that only works if the VPD
+data is well-formatted, and the benefit of unprivileged access seems
+pretty small, so the risk/reward tradeoff for making it unprivileged
+for all devices doesn't seem favorable in my mind.
 
-Lukas
+This quirk seems like the least bad option, so I guess I'm ok with it.
+
+Bjorn
 
