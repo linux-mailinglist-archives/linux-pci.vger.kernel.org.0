@@ -1,144 +1,133 @@
-Return-Path: <linux-pci+bounces-17170-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17171-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED6789D4FA1
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 16:23:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC9919D506F
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 17:05:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93BDC1F22E9B
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 15:23:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E40FB2841D
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 16:03:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF4713AD3F;
-	Thu, 21 Nov 2024 15:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJ3ASW38"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55DD519F462;
+	Thu, 21 Nov 2024 16:03:36 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9765327447
-	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 15:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCE119F12A;
+	Thu, 21 Nov 2024 16:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732202615; cv=none; b=M0EK2hMokEc9eMbuGtNMYil6U97hltpraP1ustsAvytcOsV7kSgZ2BJSOCmjQtG8WfeVSBj1pqm34ZYW2HzcG6Amu0vh1pddgo9ntLG8W9J7OvG9iDWcf2Dsv/4fHcmOCDYn/3LhDNXWynSJXJch0meZ/cucdmdgp5q7kuVi66g=
+	t=1732205016; cv=none; b=rd4RrRTOirXoOMVeNoQxN7BtCCGgTcDlYw8piRWKMFHrqB+7KldsKONcuPWaMHTUwyvhDAJc5ljesw8DMKSK5hYrIZSu1sBtZRj1OyAg/8SxRcSef65SVyZdbIimNtm/Or/69a/zKdA9pq2sODTXn+2shTGglzwg9T/Kl511XhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732202615; c=relaxed/simple;
-	bh=rsNaHFbLeBwoCGa60pK1KRQjSKtnvcjdh9MW8Fgv7go=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aklE5+HQw5sFJV5x+XIGQWnrz/z7wnv3gdwGKqnm8+m/fLmeHm8YHj9OXjpXF2lULW/wsqJKRxxpVe01YVgQC3Z4FyYSSH4Xi0+PG9QdSXOtjrP9yT4ed8e18hnk7uaHKcP0OTzqrya9vfzVKoGqrEbsZw8bO7wol2nawlzZcys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJ3ASW38; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3C04C4CED0;
-	Thu, 21 Nov 2024 15:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732202615;
-	bh=rsNaHFbLeBwoCGa60pK1KRQjSKtnvcjdh9MW8Fgv7go=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YJ3ASW386vS3ezmekHoVinsEZKrcweLV0w0wLi4PfPFdbgjthCFaIbH8B0XfNICe1
-	 uX8XNc47v91b2R42XFRoKPei9HtePaipqjP3xlUKZwcvhat5WB9rk4u3EIQyA+Qu8A
-	 hmNvA3Qm5VbMeLuoqVBVpVLiibYEWZt4gjCMAzLJ5Fo/tQxOlwFsPiEHubnT3+vHwK
-	 rAKPRybYJ68IK0YkWTmE1jkEc76JYckyZmFwQnKQ2N88uCMAnEKT4me9Hwas9LLI9T
-	 FwwUJ7E+exSr1xTXAp+T0iwuRRqyLo+b8nkEkfQ8NlxkarXJIAc2GHyyyxkPwrLO14
-	 0ZL0whacY4tYQ==
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Frank Li <Frank.Li@nxp.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v2 2/2] misc: pci_endpoint_test: Add support for capabilities
-Date: Thu, 21 Nov 2024 16:23:21 +0100
-Message-ID: <20241121152318.2888179-6-cassel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241121152318.2888179-4-cassel@kernel.org>
-References: <20241121152318.2888179-4-cassel@kernel.org>
+	s=arc-20240116; t=1732205016; c=relaxed/simple;
+	bh=6hBxZGNSaRRk/xb2CQzSEeUt3G9r3WBcA6t0UELd2Oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8x7DuZgC4sT6pJdbHe2f12GW9dtpr7rpvvT4cp4M4Vp9f9Q3mpG7DyFN08GXiouATmzbzxc69INEvDqeNxHMivaFEkBRC44p0wqYbF7wCuQ3BwkEw9dDxbDM6QrLsT1Z11L1GE4OqYjdhSHj5BzATeTXQ7H3Dtis8NN8Epb/8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7240fa50694so993971b3a.1;
+        Thu, 21 Nov 2024 08:03:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732205014; x=1732809814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DwJLzHBRW/tF4s1zzWI1Pa1QXiwfnJOVwrmhp2jROEk=;
+        b=ZqqvxRCf1KA0tqAVZjYRqnDAu3ujCE9YOVWBkmPMB4yHsORjhEjIJxSvILQF3wzsAy
+         g/oF8U+JCwbuixiYuH/MByGQ6P5ciZNEbEHa9X6d4q6hBqNg5yeuIvvSe34rrPd/coWi
+         q2VYp42SpsZDADntkHmFCTGbsc8jDtjRp4HbFvJEuXNhv+T3B/4mQyXKnFQTxow5p3Fh
+         5aphUP4UlFnIyg23A8N+wIC+xQSVKmuYy4IqBtWCU7tJPwMScEZzAPWEyVerqyLi7rUZ
+         TrnSKW/C/D6A1E03XdRwepOSFVHS/E1kOhs86j2HuG2tbLAI23mAbu4aU+vVjhEzkgaM
+         rCRg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1QqZaWo+SuoVnmMlS8UDtnyxecgwyV98qftVhncaCOP2ZdYIVwE2rsw5NV9Hz4LbLy9fRIBS6mDQO@vger.kernel.org, AJvYcCWPj5gOoU1AGoLKeSrr83ny41a/zuwaDi6LF1hNN9Z7b7v2v5+/+AB6hlFTYkn8HtTArb+f7EDCfobcdfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCSvy9rmHNxMyjkf36p/ylyNdqWuuY0W35dNox0SFHx9aZlcoW
+	XDY56FaOdv2WdbL3pgWeals+MTAU6oYo2Cao6owiRzU8Q5m3gjYD
+X-Gm-Gg: ASbGncsUasydkuxViC/dDJfg9yiV/lbX4H7xyE43wg3VoWIinnuGZcR9UpxITnz5dZo
+	y4wLni1sKygO2BXk96BoLGc2kZ2yKIk+kcca5hW1svNiDwRJPeGsmOegnzBYkC8x0+TkdZX/oiY
+	ejpcOGCeMlL8fQ0SnwYnQL3fgcX+F5pX0OdBJlp2fYa+viwoatrJ0qfSdfqKLm0mDH8GEwjXqKh
+	gbZcviSg7OSTmrgx6GUZKf7q9SXYj0QZ+3J7gNzq00EbIDrAxSX76X6iTjq1K+DDib0xw3/4hnQ
+	nTnOYFED
+X-Google-Smtp-Source: AGHT+IHITVlJdUuy9vXzR5CSv2Nmr3a/BW89tAkmDUvIfw/40J6yxYHpNVFPxhbmFrSFNKZ3dgKJNA==
+X-Received: by 2002:a05:6a00:b85:b0:71e:77e7:d60 with SMTP id d2e1a72fcca58-724bed7c51fmr10863603b3a.23.1732205013496;
+        Thu, 21 Nov 2024 08:03:33 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724bef11785sm3815016b3a.83.2024.11.21.08.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2024 08:03:32 -0800 (PST)
+Date: Fri, 22 Nov 2024 01:03:30 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	stable+noautosel@kernel.org,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: Re: [PATCH v2 2/5] PCI/pwrctl: Create pwrctl devices only if at
+ least one power supply is present
+Message-ID: <20241121160330.GA3239115@rocinante>
+References: <20241025-pci-pwrctl-rework-v2-2-568756156cbe@linaro.org>
+ <20241106212826.GA1540916@bhelgaas>
+ <CAMRc=Mcy8eo-nHFj+s8TO_NekTz6x-y=BYevz5Z2RTwuUpdcbA@mail.gmail.com>
+ <20241107111538.2koeeb2gcch5zq3t@thinkpad>
+ <20241116184103.GD890334@rocinante>
+ <a7b8f84d-efa6-490c-8594-84c1de9a7031@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2787; i=cassel@kernel.org; h=from:subject; bh=rsNaHFbLeBwoCGa60pK1KRQjSKtnvcjdh9MW8Fgv7go=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLtA7I2MXJsYI/mlv8lGnbkTGdWZUTlWg2f1nu723+a7 Y7gXz21o5SFQYyLQVZMkcX3h8v+4m73KccV79jAzGFlAhnCwMUpABMxU2T4XxficnjSnLylrR+2 r7LffCa9dfrLqUnvpvXtFlg/5Ut0oDkjw9Rz+SsfGS3+XvNl4bujbx5eKNre3N0RkpYY/ihF85X 0ViYA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7b8f84d-efa6-490c-8594-84c1de9a7031@gmail.com>
 
-The test BAR is on the EP side is allocated using pci_epf_alloc_space(),
-which allocates the backing memory using dma_alloc_coherent(), which will
-return zeroed memory regardless of __GFP_ZERO was set or not.
+Hello,
 
-This means that running a new version of pci-endpoint-test.c (host side)
-with an old version of pci-epf-test.c (EP side) will not see any
-capabilities being set (as intended), so this is backwards compatible.
+> > > > > > +bool of_pci_is_supply_present(struct device_node *np)
+> > > > > > +{
+> > > > > > +     struct property *prop;
+> > > > > > +     char *supply;
+> > > > > > +
+> > > > > > +     if (!np)
+> > > > > > +             return false;
+> > > > > 
+> > > > > Why do we need to test !np here?  It should always be non-NULL.
+> > > > > 
+> 
+> This doesn't appear to be the case, at least on my x86 machine and on x86
+> QEMU with CONFIG_OF enabled.
 
-Additionally, the EP side always allocates at least 128 bytes for the test
-BAR (excluding the MSI-X table), this means that adding another register at
-offset 0x30 is still within the 128 available bytes.
+Thank you for testing!  Much appreciated.
 
-For now, we only add the CAP_UNALIGNED_ACCESS capability.
+We've also received other signal about this, too, per:
 
-If CAP_UNALIGNED_ACCESS is set, that means that the EP side supports
-reading/writing to an address without any alignment requirements.
+  - https://lore.kernel.org/r/673f39b0.050a0220.363a1b.0126.GAE@google.com
+  - https://lore.kernel.org/r/CA+G9fYurbY3B6ahZ+k+Syp5bZ3a+YQdeX8DRb6Twi4BDEFbUsw@mail.gmail.com
 
-Thus, if CAP_UNALIGNED_ACCESS is set, make sure that the host side does
-not add any extra padding to the buffers that we allocate (which was only
-done in order to get the buffers to satisfy certain alignment requirements
-by the endpoint controller).
+> > > > Right, I think this can be dropped. We check for the OF node in the
+> > > > function above.
+> > > > 
+> > > 
+> > > I think it was a leftover that I didn't cleanup. But I do plan to move this API
+> > > to drivers/of once 6.13-rc1 is out. So even if it didn't get dropped now, I will
+> > > do it later.
+> > 
+> > I removed the NULL check directly on the branch.  Thank you!
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/misc/pci_endpoint_test.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+I added the NULL check back.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 3aaaf47fa4ee..caae815ab75a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -69,6 +69,9 @@
- #define PCI_ENDPOINT_TEST_FLAGS			0x2c
- #define FLAG_USE_DMA				BIT(0)
- 
-+#define PCI_ENDPOINT_TEST_CAPS			0x30
-+#define CAP_UNALIGNED_ACCESS			BIT(0)
-+
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- #define PCI_DEVICE_ID_TI_J7200			0xb00f
- #define PCI_DEVICE_ID_TI_AM64			0xb010
-@@ -805,6 +808,22 @@ static const struct file_operations pci_endpoint_test_fops = {
- 	.unlocked_ioctl = pci_endpoint_test_ioctl,
- };
- 
-+static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
-+{
-+	struct pci_dev *pdev = test->pdev;
-+	struct device *dev = &pdev->dev;
-+	u32 caps;
-+	bool ep_can_do_unaligned_access;
-+
-+	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-+
-+	ep_can_do_unaligned_access = caps & CAP_UNALIGNED_ACCESS;
-+	dev_dbg(dev, "CAP_UNALIGNED_ACCESS: %d\n", ep_can_do_unaligned_access);
-+
-+	if (ep_can_do_unaligned_access)
-+		test->alignment = 0;
-+}
-+
- static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 				   const struct pci_device_id *ent)
- {
-@@ -906,6 +925,8 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 		goto err_kfree_test_name;
- 	}
- 
-+	pci_endpoint_test_get_capabilities(test);
-+
- 	misc_device = &test->miscdev;
- 	misc_device->minor = MISC_DYNAMIC_MINOR;
- 	misc_device->name = kstrdup(name, GFP_KERNEL);
--- 
-2.47.0
-
+	Krzysztof
 
