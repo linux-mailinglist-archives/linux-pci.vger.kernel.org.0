@@ -1,159 +1,173 @@
-Return-Path: <linux-pci+bounces-17156-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17157-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A5FC9D4C73
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 13:00:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2DC09D4C76
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 13:01:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1052F2826B2
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 12:00:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87C4C1F21988
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 12:01:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6218C1D278D;
-	Thu, 21 Nov 2024 12:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8B601D2F64;
+	Thu, 21 Nov 2024 12:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhS0yCdw"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AV9Tk90u";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YGJwp7Gc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AV9Tk90u";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YGJwp7Gc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B071D4333
-	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 12:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E19E1D151F;
+	Thu, 21 Nov 2024 12:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732190429; cv=none; b=KXqonITJf/ACPBiThJyhfOb6iqFuEg5KHn8gbnlK31/nLT31AdzJJFvYBrh33sNsau0IUZGy9AaIOSeKZsIN3RLY6gfCWUEpEMFLJwd1XBxnoelblLZLDREIIEhWTz6YhVpP1R/0VkrdM8d8AVtbM/PfOSNRWQiw5gJwMEJTJ2E=
+	t=1732190494; cv=none; b=GdWLs59knyGsvqbsr+ZRdIQH2UcaIwCtgHkYfPxy29grCmS8t2VMR2N6H+A/uSJhovMYsHaJFKPqqphAKrOqs28UPPyC39vXK5nTjblLh+Ex8Um4gDesyZ2SX6boAI9UHA6x17m8QF+mt+CdzCx2ZhJGj/tqQQpNjk+Bx7eS8/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732190429; c=relaxed/simple;
-	bh=OoZJR2+ov3fDxBQH8pWZ/XmJj7qoEvI8McYAkI4dJ3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KrVnvJPguvVHfEqjc+bn/rFiepqUVrk08AdF5n7cTuDkqeYB2ZjNsbk5nEMIypblJ68aH7B1kO/QdXRkFgQXLOILJS7oS/rh+0HWyt0i4UlSLrv5aSHl2QCw8XRTfcqz7vdapqFHEAvU/bX2fnpdEHJdCielZjpOgacqNf64YQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JhS0yCdw; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7ea7e250c54so691537a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 04:00:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732190427; x=1732795227; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A0KaqIgWU78jGTLQV/ntlFCPMpX4M5t2dVVcePwkX5Q=;
-        b=JhS0yCdwmU2xJCtXwYNvnCA+2Y+Y43bPVUknf452bjy9TqmgWOPRornCLqHqJq3khX
-         jP3VqJ6mXTn+HFYNBDT07t+86TwVYY2LPM8cIui4wQ9Rtm6j4vpdjNXz9w/3FUYDai7m
-         zzs+drttdAB5m5UIR2y3I4syw0gWdLTiMAXZcLPlxXLM9WXGrIT9byOEBUobrkqkffKt
-         2FFkvyhE30IdweSU3lpzdj7zRsKAd1kEGejbOp/ZfFTA4P5m8cJonu05jlkl0H6x/FSS
-         mU3vIi0knGNTjmED7L+uHzjHf98K0vxpKJmY8AArJtRZzC6foebpClw/1ob3SgLmQ3PK
-         j+gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732190427; x=1732795227;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0KaqIgWU78jGTLQV/ntlFCPMpX4M5t2dVVcePwkX5Q=;
-        b=ZjG8c/xkweINYgkLmFDojCnnbLwjsmUgkC6v1YYznUlU2cMWA6eY1IEWruJJtxGnj+
-         fxuFuBPx2yF4CmKuV4VCgWGAGbK9f6nry0ChCpwsvVBEhe00RDcBVbyZUkswSTlco7h5
-         RaT6YCVkfBJFDh/15yowx8sc5IzvbWk6yLIGjifyvr7UULleg9sQpxyVW3UOlk3ObFiW
-         W74AFtXtX19/LsvJD+QkjdY4O+akXnDYO+8Ix30sHnDdMKH6phZ+jx7cWnLGOaFqRTw+
-         dndUeh9ynnssfQtTyi1zW4d6X0xiQ44cez3B4Ty48VW6OjZWInuK/W321DwpS4UxiOIV
-         DkWg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2DIUrxcq7Kgr2Af5e87RektiygBNp/Arm/rkxUaG6LEVc8tPk7c5GOkoL/pi5IvFwJ1MZKVwr8Rs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW4oN3Fw+trAgCWGMBm/V2+LKC0h/sGcD0hxXBDssx7a7XvWDP
-	3vJwnIXI9uWqmns7CmCrUV4g99D3Etx50xicfuP/KLbY5zrF+wElqe7LeqN3tw==
-X-Google-Smtp-Source: AGHT+IFqmjxDouxPX/74E997yYaCb6bWEwvPoG1rWG54LZgfgq2N/Y3XtIQ20mASvuKJapBPu4OW5Q==
-X-Received: by 2002:a05:6a20:6a20:b0:1db:e587:4c3d with SMTP id adf61e73a8af0-1ddaf399e1bmr9836982637.23.1732190427120;
-        Thu, 21 Nov 2024 04:00:27 -0800 (PST)
-Received: from thinkpad ([120.60.55.63])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbb64ef735sm1161644a12.18.2024.11.21.04.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2024 04:00:26 -0800 (PST)
-Date: Thu, 21 Nov 2024 17:30:10 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	stable+noautosel@kernel.org,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: Re: [PATCH v2 3/5] PCI/pwrctl: Ensure that the pwrctl drivers are
- probed before the PCI client drivers
-Message-ID: <20241121120010.zjmo7sun2j7w2f5r@thinkpad>
-References: <20241120170232.flllyqcycsrsk6cj@thinkpad>
- <20241120201839.GA2338274@bhelgaas>
+	s=arc-20240116; t=1732190494; c=relaxed/simple;
+	bh=PitWbxnrL3aZYw6vmt7mJkFGNEstgDny5hDwRsO5ikY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f49LzEA32dKeaH2Zfa34I1dCcykHWtIP8GQCEh2KXhjzkmLfnvinLs5nJcMrLJGq6gA5tHo5xEtfaBD/wQyiEDFlDgcuC1X5Qx8RriG7k67Si4rdQ/V1v4wYjyQC+oysIdgNPdyfS/W762kW8SxFh82h3F5usSkq7zntamwkW5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AV9Tk90u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YGJwp7Gc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AV9Tk90u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YGJwp7Gc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FC6221A14;
+	Thu, 21 Nov 2024 12:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1732190491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cqudnxx7QhMg21RnzN/JlCktLvQ8S8xJx9uySb2H+7U=;
+	b=AV9Tk90uD8l1aeZUmclFngo69O4Whbzmr9/wKwXQ4nwADzz9vnQuDngw9uGIfWvxPW0rKO
+	J8sJf/npH+X4r/bxRZTL6tORY5/H/4awzzwtLSOrtef3BS6t0iIJD2RQ7SIPqKk01EvqbP
+	vQv0yKR8qd0G9wUUph4bN8TuKl++oeo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1732190491;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cqudnxx7QhMg21RnzN/JlCktLvQ8S8xJx9uySb2H+7U=;
+	b=YGJwp7GctzpZ2oWi96BFxiNlt0kaiwV96iQmhlYHvuuLA6yCR8FkYjJdoJsZ6dFCFM3gbt
+	kkHIQsD222ciIwCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1732190491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cqudnxx7QhMg21RnzN/JlCktLvQ8S8xJx9uySb2H+7U=;
+	b=AV9Tk90uD8l1aeZUmclFngo69O4Whbzmr9/wKwXQ4nwADzz9vnQuDngw9uGIfWvxPW0rKO
+	J8sJf/npH+X4r/bxRZTL6tORY5/H/4awzzwtLSOrtef3BS6t0iIJD2RQ7SIPqKk01EvqbP
+	vQv0yKR8qd0G9wUUph4bN8TuKl++oeo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1732190491;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cqudnxx7QhMg21RnzN/JlCktLvQ8S8xJx9uySb2H+7U=;
+	b=YGJwp7GctzpZ2oWi96BFxiNlt0kaiwV96iQmhlYHvuuLA6yCR8FkYjJdoJsZ6dFCFM3gbt
+	kkHIQsD222ciIwCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 895F613927;
+	Thu, 21 Nov 2024 12:01:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0ow8HxohP2czDQAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Thu, 21 Nov 2024 12:01:30 +0000
+Date: Thu, 21 Nov 2024 13:01:27 +0100
+From: Jean Delvare <jdelvare@suse.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+ Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+ linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>, Aditya Prabhune
+ <aprabhune@nvidia.com>, Hannes Reinecke <hare@suse.de>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Arun Easi <aeasi@marvell.com>, Jonathan Chocron
+ <jonnyc@amazon.com>, Bert Kenward <bkenward@solarflare.com>, Matt Carlson
+ <mcarlson@broadcom.com>, Kai-Heng Feng <kai.heng.feng@canonical.com>, Alex
+ Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Stephen Hemminger
+ <stephen@networkplumber.org>
+Subject: Re: [PATCH v2] PCI/sysfs: Change read permissions for VPD
+ attributes
+Message-ID: <20241121130127.5df61661@endymion.delvare>
+In-Reply-To: <61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org>
+References: <61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241120201839.GA2338274@bhelgaas>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	HAS_ORG_HEADER(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,linux.com,vger.kernel.org,suse.de,gmail.com,marvell.com,amazon.com,solarflare.com,broadcom.com,canonical.com,redhat.com,weissschuh.net,networkplumber.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Wed, Nov 20, 2024 at 02:18:39PM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 20, 2024 at 10:32:32PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Nov 20, 2024 at 10:10:47AM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Oct 25, 2024 at 01:24:53PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > 
-> > > > As per the kernel device driver model, pwrctl device is the supplier for
-> > > > the PCI device. But the device link that enforces the supplier-consumer
-> > > > relationship is created inside the pwrctl driver currently. Due to this,
-> > > > the driver model doesn't prevent probing of the PCI client drivers before
-> > > > probing the corresponding pwrctl drivers. This may lead to a race condition
-> > > > if the PCI device was already powered on by the bootloader (before the
-> > > > pwrctl driver).
-> > > 
-> > > > +	 * Create a device link between the PCI device and pwrctl device (if
-> > > > +	 * exists). This ensures that the pwrctl drivers are probed before the
-> > > > +	 * PCI client drivers.
-> > > > +	 */
-> > > > +	pdev = of_find_device_by_node(dn);
-> > > > +	if (pdev) {
-> > > > +		if (!device_link_add(&dev->dev, &pdev->dev, DL_FLAG_AUTOREMOVE_CONSUMER))
-> > > > +			pci_err(dev, "failed to add device link between %s and %s\n",
-> > > > +				dev_name(&dev->dev), pdev->name);
-> > > 
-> > > This prints the name for "dev" twice (once by pci_err(dev) and again
-> > > from dev_name(&dev->dev)).  Is it helpful to see it twice here?
-> > 
-> > Hmm, not very much. It could be reworded as below:
-> > 
-> > 	pci_err(dev, "failed to link: %s\n", pdev->name);
-> 
-> OK.  I updated the comment and the message like this (also renamed
-> of_pci_is_supply_present() to of_pci_supply_present() so it reads more
-> naturally in "if" statements):
-> 
-> -	 * Create a device link between the PCI device and pwrctrl device (if
-> -	 * exists). This ensures that the pwrctrl drivers are probed before the
-> -	 * PCI client drivers.
-> +	 * If the PCI device is associated with a pwrctrl device with a
-> +	 * power supply, create a device link between the PCI device and
-> +	 * pwrctrl device.  This ensures that pwrctrl drivers are probed
-> +	 * before PCI client drivers.
->  	 */
->  	pdev = of_find_device_by_node(dn);
-> -	if (pdev) {
-> +	if (pdev && of_pci_supply_present(dn)) {
->  		if (!device_link_add(&dev->dev, &pdev->dev,
->  				     DL_FLAG_AUTOREMOVE_CONSUMER))
-> -			pci_err(dev, "failed to add device link between %s and %s\n",
-> -				dev_name(&dev->dev), pdev->name);
-> +			pci_err(dev, "failed to add device link to power control device %s\n",
+Hi Leon,
 
-Maybe use 'pwrctrl' instead of 'power control'?
+On Wed, 13 Nov 2024 14:59:58 +0200, Leon Romanovsky wrote:
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -332,6 +332,14 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+>  	if (!pdev->vpd.cap)
+>  		return 0;
+>  
+> +	/*
+> +	 * Mellanox devices have implementation that allows VPD read by
+> +	 * unprivileged users, so just add needed bits to allow read.
+> +	 */
+> +	WARN_ON_ONCE(a->attr.mode != 0600);
+> +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
+> +		return a->attr.mode + 0044;
 
-- Mani
+When manipulating bitfields, | is preferred. This would make the
+operation safe regardless of the initial value, so you can even get rid
+of the WARN_ON_ONCE() above.
+
+> +
+>  	return a->attr.mode;
+>  }
+>  
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Jean Delvare
+SUSE L3 Support
 
