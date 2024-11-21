@@ -1,104 +1,159 @@
-Return-Path: <linux-pci+bounces-17155-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17156-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6C3B9D4C0A
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 12:34:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A5FC9D4C73
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 13:00:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E9651F212D1
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 11:34:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1052F2826B2
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2024 12:00:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1D7B1CB316;
-	Thu, 21 Nov 2024 11:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6218C1D278D;
+	Thu, 21 Nov 2024 12:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZSycXVH6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhS0yCdw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07401C578C;
-	Thu, 21 Nov 2024 11:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B071D4333
+	for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 12:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732188889; cv=none; b=DN8aqKEtNOgVn0MlgL2KaH2uH1Y9hoBHshXp/F0b4sApsWQvlV+MdLncZcCDJh1tjW+QzvhCNErBVySR/iWTteCqdMR2i0UI1j6NKdMpg5ecLE/t9IA0PCGd6C6/uLMxAntDVTXnGDxhVucQ+lfhOSF2/0FozAK8hTBuqjJ9nGY=
+	t=1732190429; cv=none; b=KXqonITJf/ACPBiThJyhfOb6iqFuEg5KHn8gbnlK31/nLT31AdzJJFvYBrh33sNsau0IUZGy9AaIOSeKZsIN3RLY6gfCWUEpEMFLJwd1XBxnoelblLZLDREIIEhWTz6YhVpP1R/0VkrdM8d8AVtbM/PfOSNRWQiw5gJwMEJTJ2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732188889; c=relaxed/simple;
-	bh=vucmF/xedC4wjhdZeZ8wYdcTFDxnTsuYOSrTji52vVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V3bTVbZAifKBBDCIXoSK9LyjQtMf5yvmsIgtLBvBFxLMSSEyrjXZeTkeStPrshhUskt7VdxiOHSwhvhkimeUMWMcQ8+LmZWEgT8W+N/dd9RNJ6igWoYp0RfG0gcVrTX/cMIjyXQOXjG4EiLevzTJMEJDwYq1YdBfBuPJiSb8ouA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZSycXVH6; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1732188876; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=tInUvV9amHF6Ghq811sNVWZAtZ7ilPNUqZfPT4F1Dh4=;
-	b=ZSycXVH6C0oe/M1Ber23hbbme6aVdaeiYyIHOuwTqYI/qMM8VQtEN2m12MajUAkG/5LKZHIMuwcbzExoY0qM61YZffEK5cXtMtOsABvfLGeA/SVCTwV6SQTZ81sQEm5Hx6eAExmzRu8Ek6uMWiz7EOJFHKNum2MMK9HM4n0eybE=
-Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJwtBb2_1732188873 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 21 Nov 2024 19:34:35 +0800
-Message-ID: <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
-Date: Thu, 21 Nov 2024 19:34:31 +0800
+	s=arc-20240116; t=1732190429; c=relaxed/simple;
+	bh=OoZJR2+ov3fDxBQH8pWZ/XmJj7qoEvI8McYAkI4dJ3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KrVnvJPguvVHfEqjc+bn/rFiepqUVrk08AdF5n7cTuDkqeYB2ZjNsbk5nEMIypblJ68aH7B1kO/QdXRkFgQXLOILJS7oS/rh+0HWyt0i4UlSLrv5aSHl2QCw8XRTfcqz7vdapqFHEAvU/bX2fnpdEHJdCielZjpOgacqNf64YQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JhS0yCdw; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7ea7e250c54so691537a12.0
+        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2024 04:00:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732190427; x=1732795227; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A0KaqIgWU78jGTLQV/ntlFCPMpX4M5t2dVVcePwkX5Q=;
+        b=JhS0yCdwmU2xJCtXwYNvnCA+2Y+Y43bPVUknf452bjy9TqmgWOPRornCLqHqJq3khX
+         jP3VqJ6mXTn+HFYNBDT07t+86TwVYY2LPM8cIui4wQ9Rtm6j4vpdjNXz9w/3FUYDai7m
+         zzs+drttdAB5m5UIR2y3I4syw0gWdLTiMAXZcLPlxXLM9WXGrIT9byOEBUobrkqkffKt
+         2FFkvyhE30IdweSU3lpzdj7zRsKAd1kEGejbOp/ZfFTA4P5m8cJonu05jlkl0H6x/FSS
+         mU3vIi0knGNTjmED7L+uHzjHf98K0vxpKJmY8AArJtRZzC6foebpClw/1ob3SgLmQ3PK
+         j+gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732190427; x=1732795227;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A0KaqIgWU78jGTLQV/ntlFCPMpX4M5t2dVVcePwkX5Q=;
+        b=ZjG8c/xkweINYgkLmFDojCnnbLwjsmUgkC6v1YYznUlU2cMWA6eY1IEWruJJtxGnj+
+         fxuFuBPx2yF4CmKuV4VCgWGAGbK9f6nry0ChCpwsvVBEhe00RDcBVbyZUkswSTlco7h5
+         RaT6YCVkfBJFDh/15yowx8sc5IzvbWk6yLIGjifyvr7UULleg9sQpxyVW3UOlk3ObFiW
+         W74AFtXtX19/LsvJD+QkjdY4O+akXnDYO+8Ix30sHnDdMKH6phZ+jx7cWnLGOaFqRTw+
+         dndUeh9ynnssfQtTyi1zW4d6X0xiQ44cez3B4Ty48VW6OjZWInuK/W321DwpS4UxiOIV
+         DkWg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2DIUrxcq7Kgr2Af5e87RektiygBNp/Arm/rkxUaG6LEVc8tPk7c5GOkoL/pi5IvFwJ1MZKVwr8Rs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW4oN3Fw+trAgCWGMBm/V2+LKC0h/sGcD0hxXBDssx7a7XvWDP
+	3vJwnIXI9uWqmns7CmCrUV4g99D3Etx50xicfuP/KLbY5zrF+wElqe7LeqN3tw==
+X-Google-Smtp-Source: AGHT+IFqmjxDouxPX/74E997yYaCb6bWEwvPoG1rWG54LZgfgq2N/Y3XtIQ20mASvuKJapBPu4OW5Q==
+X-Received: by 2002:a05:6a20:6a20:b0:1db:e587:4c3d with SMTP id adf61e73a8af0-1ddaf399e1bmr9836982637.23.1732190427120;
+        Thu, 21 Nov 2024 04:00:27 -0800 (PST)
+Received: from thinkpad ([120.60.55.63])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbb64ef735sm1161644a12.18.2024.11.21.04.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2024 04:00:26 -0800 (PST)
+Date: Thu, 21 Nov 2024 17:30:10 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	stable+noautosel@kernel.org,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: Re: [PATCH v2 3/5] PCI/pwrctl: Ensure that the pwrctl drivers are
+ probed before the PCI client drivers
+Message-ID: <20241121120010.zjmo7sun2j7w2f5r@thinkpad>
+References: <20241120170232.flllyqcycsrsk6cj@thinkpad>
+ <20241120201839.GA2338274@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org
-References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
- <Zz786zZljAy2J5i7@wunner.de>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <Zz786zZljAy2J5i7@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241120201839.GA2338274@bhelgaas>
 
-
-
-在 2024/11/21 17:27, Lukas Wunner 写道:
-> On Wed, Nov 20, 2024 at 08:43:28PM +0800, Shuai Xue wrote:
->> $ echo 1 > /sys/kernel/debug/tracing/events/hotplug/pci_hp_event/enable
->                                                ^^^^^^^
-> I think this should now be "pci_hotplug" because you've renamed the
-> TRACE_SYSTEM in v3.
-
-Yes, you are right. Will fix it.
-
+On Wed, Nov 20, 2024 at 02:18:39PM -0600, Bjorn Helgaas wrote:
+> On Wed, Nov 20, 2024 at 10:32:32PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Nov 20, 2024 at 10:10:47AM -0600, Bjorn Helgaas wrote:
+> > > On Fri, Oct 25, 2024 at 01:24:53PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > As per the kernel device driver model, pwrctl device is the supplier for
+> > > > the PCI device. But the device link that enforces the supplier-consumer
+> > > > relationship is created inside the pwrctl driver currently. Due to this,
+> > > > the driver model doesn't prevent probing of the PCI client drivers before
+> > > > probing the corresponding pwrctl drivers. This may lead to a race condition
+> > > > if the PCI device was already powered on by the bootloader (before the
+> > > > pwrctl driver).
+> > > 
+> > > > +	 * Create a device link between the PCI device and pwrctl device (if
+> > > > +	 * exists). This ensures that the pwrctl drivers are probed before the
+> > > > +	 * PCI client drivers.
+> > > > +	 */
+> > > > +	pdev = of_find_device_by_node(dn);
+> > > > +	if (pdev) {
+> > > > +		if (!device_link_add(&dev->dev, &pdev->dev, DL_FLAG_AUTOREMOVE_CONSUMER))
+> > > > +			pci_err(dev, "failed to add device link between %s and %s\n",
+> > > > +				dev_name(&dev->dev), pdev->name);
+> > > 
+> > > This prints the name for "dev" twice (once by pci_err(dev) and again
+> > > from dev_name(&dev->dev)).  Is it helpful to see it twice here?
+> > 
+> > Hmm, not very much. It could be reworded as below:
+> > 
+> > 	pci_err(dev, "failed to link: %s\n", pdev->name);
 > 
-> I'm wondering if we'll have other categories besides "pci_hp_event"
-> below "pci_hotplug".  Maybe not.  Is it possible to omit the "pci_hotplug"
-> and make "pci_hp_event" top level?  Or should this be grouped below "pci"
-> instead of "pci_hotplug"?  I'm somewhat at a loss here as I'm not
-> familiar with the conventions used in the tracing subsystem.
-
-Sure, I can reorganize the directory. You have two optional proposals:
-
-1. /sys/kernel/debug/tracing/events/pci_hp_event
-2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
-
-I personally prefer the second approach. However, I'll defer the final decision
-to the tracing subsystem maintainer, considering their expertise and
-familiarity with the existing conventions.
-
+> OK.  I updated the comment and the message like this (also renamed
+> of_pci_is_supply_present() to of_pci_supply_present() so it reads more
+> naturally in "if" statements):
 > 
->  From a PCI hotplug perspective, this patch LGTM, so:
-> 
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> -	 * Create a device link between the PCI device and pwrctrl device (if
+> -	 * exists). This ensures that the pwrctrl drivers are probed before the
+> -	 * PCI client drivers.
+> +	 * If the PCI device is associated with a pwrctrl device with a
+> +	 * power supply, create a device link between the PCI device and
+> +	 * pwrctrl device.  This ensures that pwrctrl drivers are probed
+> +	 * before PCI client drivers.
+>  	 */
+>  	pdev = of_find_device_by_node(dn);
+> -	if (pdev) {
+> +	if (pdev && of_pci_supply_present(dn)) {
+>  		if (!device_link_add(&dev->dev, &pdev->dev,
+>  				     DL_FLAG_AUTOREMOVE_CONSUMER))
+> -			pci_err(dev, "failed to add device link between %s and %s\n",
+> -				dev_name(&dev->dev), pdev->name);
+> +			pci_err(dev, "failed to add device link to power control device %s\n",
 
+Maybe use 'pwrctrl' instead of 'power control'?
 
-Thank you.
+- Mani
 
-Best Regards,
-Shuai
+-- 
+மணிவண்ணன் சதாசிவம்
 
