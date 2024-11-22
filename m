@@ -1,144 +1,101 @@
-Return-Path: <linux-pci+bounces-17220-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17221-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14C729D62D0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 18:14:02 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB0199D6302
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 18:24:53 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D348116150F
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 17:24:23 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEDE91DEFC6;
+	Fri, 22 Nov 2024 17:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwEuj6ME"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88EC0B210CD
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 17:13:59 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFC21DF267;
-	Fri, 22 Nov 2024 17:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nk8/ZEKW"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20377080C
-	for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 17:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797FD15B10E;
+	Fri, 22 Nov 2024 17:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732295629; cv=none; b=Quo9iDcZjdB5cVf6vswxNeY5cDoq8nzuHgLAQZ38k2sc8TP9OecAg4tqIsGdhd6uqfHmrzXkPisgz9+z3zlH2p1iZEq7Hr/398HL5630PkMEhn5S+EjWNBdMPpr90NrI96D6O7krBjNyiNv2GgW6idMeL3CPmQtzZfaIt/+Z0I0=
+	t=1732296237; cv=none; b=XhEP2WsmyDxNWsDbE0q8Y5mUc6tQ+RcaD2TaDS7aWSu8K0OupX/puX78bJqWGf6pjdOqAQn2drah8rgWFmUpf7drzf9w1F9q8lOYUsRQusRZGO6jL1Gc464VxLTwLkQDMNj7ksZ5mVk2PvKIFjLVKxni++HfU9D6f7L/bSv66w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732295629; c=relaxed/simple;
-	bh=9Utb13MynaifzSiCb+13ADGTdToHf99pkQJS+1gzmyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYSFlk4iz96iRQXBHnni/7x57ETQBGvEZnjaeq1eChr07mTwkvBt9VeXhA/yCnUI4gRHv9P6c4tXs8EGmv/8IPlift4Dq/9fjBE3WyBgb1HsznpRXSgb16exZw6T7Iv1EuhyWLobyPoxMgYjLTRl8t9rsZNJvaydEFULPP6+6Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nk8/ZEKW; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-724ea6a8cfbso570605b3a.2
-        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 09:13:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732295626; x=1732900426; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=J3Ifp0rGPbm/e/7rhcYVsj05S6iHCWRwu0XzDIJa52Y=;
-        b=nk8/ZEKW2PV3KjMJXctgOrzTlgaBZUgzJz3Bex6+Zg4TREgegX7hDHKGr90Y1mSOTq
-         eySz0LamewHMbLT9WEoerK6BnyfPr7BbVv+wUIW8kv4WxprTnyf9XPfC98RkQwQJxu5n
-         SW08zcnHCoKpUNLqU54xXPAEbi2UyodstPc12E5k6m3wNIbG37ve+Psgk5X2LJS0oLgS
-         02YPD8Rswdf8+Q+ncJampQ3ceL0PHCwK7V3FhczW38z9sEP5JGPxjU/mB/p8wIWbvXG6
-         yBZVtvd17n0MkUhFghg/MRvrO2A/MtkdyReAym5XpINNNpeVoF+SWq3CQ51BAxQxHQUL
-         NarQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732295626; x=1732900426;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J3Ifp0rGPbm/e/7rhcYVsj05S6iHCWRwu0XzDIJa52Y=;
-        b=sdrYtBwAMZBCkWWSs0yAnfzbhGmx8qkj7uijgfAd9QhfjWKgLUg9WKDnjcL+p3aoD2
-         NlYg4gYpm50FUFfGKyQLGB4+RutlONObYLPOFORECceDCwb+bVNcSdplSiGjXuSOJ7e0
-         B9qLdeWyXsSZgUwudOyzSD0eMvUaY9xQcXzn+rgUaZnqKcjP1vCpaU5ZZl1voDo7nqgU
-         +cBh/6PDAV1CcxC8IqloTbP7H+4OpRgP+dV4IvOc/PwJXGBwmYxV+gnk9O/K9ISixfT7
-         A2QvQkpsdCUQEm/qXJIOCF75IK12Dc5LN9SpRCdDr7gWtTEmxhmM21vXkU4k08MBzL6x
-         qH2A==
-X-Forwarded-Encrypted: i=1; AJvYcCURvzodq2Z1Uh7ETFbxWk/X0xaVAm8GhW2+QpwJkAIAxEmdIlvE6BLvoQrgW8fGz5EZi+weMkNoNq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWc/P7Me9oYD8omgls3UrHzNJjs3M9TfJVXlVvp3pKIreCkyKk
-	IAf1d1VIoRhw9vGqWKujTYTent/FE6Q8945RKl3LVu/zqYCXUWVQ9ezDthptKw==
-X-Gm-Gg: ASbGnctWYhZYl4B/3KbgBaRpR0NUpXpE6unc61pUtjDGFrPqMBep1baInTdhR5+OkhE
-	nSUcsP8kMjkaxR/SsZ97QViDgNbI9FBGdR1a/Qkai+KUwDmbn7/RjMKAra5tP0cq2bz3jF/O71t
-	3Hr/EwOyB2NgOXPn4BeSZW28VDP81wswR6HqdnhdYvYs44EqYLJb8HDlkkXtd8EJ3nXYJQRzZkB
-	xT5dvlA9UTQ40Lx/0b02cgQcFoJnVHnxxJhID2FVz9qvXEwaQmxpK4uyYgN
-X-Google-Smtp-Source: AGHT+IFSLoW5PIBSR6LBkAITjbzrM29xeBOvFQPIeej5XJi4ofiDVZntpwn9iotOelT7YjAqhB/X7A==
-X-Received: by 2002:a05:6a00:a8f:b0:724:62b3:58da with SMTP id d2e1a72fcca58-724df5de418mr4726297b3a.6.1732295626152;
-        Fri, 22 Nov 2024 09:13:46 -0800 (PST)
-Received: from thinkpad ([49.207.202.49])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724e0fca304sm1684411b3a.175.2024.11.22.09.13.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 09:13:45 -0800 (PST)
-Date: Fri, 22 Nov 2024 22:43:40 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
-	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-	imx@lists.linux.dev, kernel@pengutronix.de,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 10/10] arm64: dts: imx95: Add ref clock for i.MX95 PCIe
-Message-ID: <20241122171340.4uwlddrwadg3vyz4@thinkpad>
-References: <20241101070610.1267391-1-hongxing.zhu@nxp.com>
- <20241101070610.1267391-11-hongxing.zhu@nxp.com>
- <20241115071605.qwy4hfqmrnaknokl@thinkpad>
- <ZzeE0lR8DGG214qq@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1732296237; c=relaxed/simple;
+	bh=xUQH7wkZP6c1QJgIdGzz5vXiO4U5IBoMGRWvx4uaTa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=i6PjS8jHK3xHT+xfi9GqBLuRkS5ea4U+rahaG31fNDQ9QD4rgr9Sqxc/bHaMqaOEBkB854LCgYexZyWLfjzRqhGWf3anTB0AcrPd4dRwKlbI9jMrb0fBOnnr6qsOR7118Pjdu0vnDOZxVKgtp2ebUR6nK7RSqbbuhWNm96Dv/2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwEuj6ME; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE712C4CECE;
+	Fri, 22 Nov 2024 17:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732296236;
+	bh=xUQH7wkZP6c1QJgIdGzz5vXiO4U5IBoMGRWvx4uaTa0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=YwEuj6MEYWiBmu+jfdgcxF9qNhVtLN7DQXODQxpKpxFTyJZFNz8hmVPm8eaD1Jpbe
+	 xVBnSpf9+L5ztlGo8f7pQfHRzjKJpl4MX/X9PWTf6oCH0/dveiZzazq1FitPPlcJh7
+	 04gqg25tkPs70Vm6TsGV8Hz7RJUyJ1VAKg5FNO1Cu4KPYy4+6BesasgUIB/fO36l5+
+	 uTgM2rhEBVWz5V1AIenoMK7iXeB33NsHAixKb6rikgA/tgOQk9dzHXqe2//XtAjImQ
+	 8gXBfGHtpPjWwq/0TGr8G+l565S6ngUXZP6GO6R30aJwxSUQytmVDb/8XLwbSNFYMh
+	 DDmgJLQP1aqyQ==
+Date: Fri, 22 Nov 2024 11:23:54 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Alistair Francis <alistair@alistair23.me>, lukas@wunner.de,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	bjorn3_gh@protonmail.com, ojeda@kernel.org, tmgross@umich.edu,
+	boqun.feng@gmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+	wilfred.mallawa@wdc.com, alistair23@gmail.com,
+	alex.gaynor@gmail.com, gary@garyguo.net, aliceryhl@google.com
+Subject: Re: [RFC 2/6] drivers: pci: Change CONFIG_SPDM to a dependency
+Message-ID: <20241122172354.GA2430869@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZzeE0lR8DGG214qq@lizhi-Precision-Tower-5810>
+In-Reply-To: <20241122153040.00006791@huawei.com>
 
-On Fri, Nov 15, 2024 at 12:28:50PM -0500, Frank Li wrote:
-> On Fri, Nov 15, 2024 at 12:46:05PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Nov 01, 2024 at 03:06:10PM +0800, Richard Zhu wrote:
-> > > Add ref clock for i.MX95 PCIe here, when the internal PLL is used as
-> > > PCIe reference clock.
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx95.dtsi | 18 ++++++++++++++----
-> > >  1 file changed, 14 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > index 03661e76550f..5cb504b5f851 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > @@ -1473,6 +1473,14 @@ smmu: iommu@490d0000 {
-> > >  			};
-> > >  		};
-> > >
-> > > +		hsio_blk_ctl: syscon@4c0100c0 {
-> > > +			compatible = "nxp,imx95-hsio-blk-ctl", "syscon";
-> > > +			reg = <0x0 0x4c0100c0 0x0 0x4>;
-> > > +			#clock-cells = <1>;
-> > > +			clocks = <&dummy>;
-> >
-> > What does this 'dummy' clock do? Looks like it doesn't have a frequency at all.
-> > Is bootloader updating it? But the name looks wierd.
+On Fri, Nov 22, 2024 at 03:30:40PM +0000, Jonathan Cameron wrote:
 > 
-> dummy clock is not used for this instance, which needn't at all. Leave here
-> just keep compatible with the other instance.
+> > > diff --git a/lib/Kconfig b/lib/Kconfig
+> > > index 68f46e4a72a6..4db9bc8e29f8 100644
+> > > --- a/lib/Kconfig
+> > > +++ b/lib/Kconfig
+> > > @@ -739,6 +739,21 @@ config LWQ_TEST
+> > >  	help
+> > >            Run boot-time test of light-weight queuing.
+> > >  
+> > > +config SPDM
+> > > +	bool "SPDM"  
+> > 
+> > If this appears in a menuconfig or similar menu, I think expanding
+> > "SPDM" would be helpful to users.
 > 
-> Some instance of "nxp,imx95-hsio-blk-ctl" required input clocks. but this
-> one is not, so put dummy here.
+> Not sure it will!  Security Protocol and Data Model
+> which to me is completely useless for hinting what it is ;)
 > 
+> Definitely keep (SPDM) on end of expanded name as I suspect most
+> people can't remember the terms (I had to look it up ;)
 
-DT should describe the hardware and hardware cannot have dummy clock. If the IP
-requires a clock, then pass relevant clock (even if it is a fixed-clock).
+Agree that the expansion doesn't add a whole lot, but I do think the
+unadorned "SPDM" config prompt is not quite enough since this is in
+the "Library routines" section and there's no useful context at all.
 
-- Mani
+Maybe a hint that it's related to PCIe (although I'm not sure it's
+*only* PCIe?) or device authentication or even some kind of general
+"security" connection?
 
--- 
-மணிவண்ணன் சதாசிவம்
+I admit that you're in good company; "parman" and "objagg" have zero
+context and not even any help text at all.
+
+Bjorn
 
