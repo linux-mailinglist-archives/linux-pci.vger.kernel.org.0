@@ -1,92 +1,102 @@
-Return-Path: <linux-pci+bounces-17216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 517DC9D62AA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 17:57:25 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2A8C9D62B8
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 18:07:43 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11B7B281D1B
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 16:57:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30BB61608B3
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 17:07:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65CFA13B797;
-	Fri, 22 Nov 2024 16:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9487C1DF972;
+	Fri, 22 Nov 2024 17:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DzN8NUdD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PkI1nmkF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED2F84D13
-	for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 16:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3B81DF970
+	for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 17:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732294641; cv=none; b=lTPrss56HbVFxsKsg1SdOmLXaORAd7ELhDUpQTbkhkVpgsxu3Z9pP8WDbMaaNeqizU/g8mcBmmGK7y3APAXDJQfR41o3Co68L9bH66CXYZsH/jpKcoU88DasAiQnutbxIqRzMewGAOUjL2tgqPxYfHI9oJkkuL5Ojsd1SDLEbto=
+	t=1732295252; cv=none; b=YRpFr8/1Rj+hOoFXxMiivga86btSabPwBL9bpVO9XvXsruMIRkFCNlpYFcHOcEDm7nEVprHHi1w0NU9ij6g3L0Ls2mYOomaOjJKSrG9mkc/Qkrm61zl2cM3RviELHxfLPj8irZSDaLrRfXZFHsBvr9eFDj3vHJxFn9QDQ9tENSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732294641; c=relaxed/simple;
-	bh=ZNhJ0AnnhsP1xQ5LpsDqA3efNo9VGhUGzrAteBE+23s=;
+	s=arc-20240116; t=1732295252; c=relaxed/simple;
+	bh=qHGeW+9YJHnoV8xlYG8Yntca2NxQVMAEhNoIhEt+6xM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aKk1FNXz+lcP9EHVKjdaC1uVcVMS8h8Nb85lG8HJGjqn7v+SFhDP/oriF9WCJTt3UZt6uM8S7qN6wCRe1VsbtiSrw2AEBz2lZ8gUkOqurxRoMPl0QeC/QBHGMZBiM6Al/4w9aGassJNpB49svoEE5ZOsEfhS+uqn+T4E/T7fU+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DzN8NUdD; arc=none smtp.client-ip=209.85.210.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBdGOsU28UlxU7zvBoEsl2XamH9HTwF8Zbzjo31wtmxYGJdsbkcEd1fS9iNs7skFV9U4tH7HoN53G7O0CR6NmhLo4vW30dUf3GuZTA5Q31yjyJqmc/Cf4d58dXOhMXYphfmIkK26xVzpt/Nxspex+4WcnMtUp+p2g/nAJyq4N84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PkI1nmkF; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72467c35ddeso2593464b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 08:57:19 -0800 (PST)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7240d93fffdso1936587b3a.2
+        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 09:07:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732294639; x=1732899439; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732295250; x=1732900050; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=FZwDSMvFnipM0RD36mLVFKH4L1T4MEAtnhkfsYAv+8A=;
-        b=DzN8NUdDbQpmQAdaoEpIXWnp08e/npx6EmJAM8JakMqMmqIppy50mR9ngjEDIvaWIn
-         5xM34u9ssPBDcvuhaHn+VcZC5j0VbJtDmQFJXJf4s1qf6I3rppcO/NIdalKYGx2n2voZ
-         Nb5b4iBo0iEtVNRgXQEd+LgEl1A4/sGRs/7aL7H2HFVX70JoerR8+RMfzPu+2krn47jH
-         fmwjOqZIdl2A2nED1Xgi+reld+CHBQwUAVVdIvGg8fJvpVV9SOTxJsHVINMofoxU7W1w
-         FtJpmskiJmsaM1HAPGqW8BrJR8e8kQk5l6fxLn0p+k+UQI76KYVta+/GklsaBcL7oZLN
-         kGhQ==
+        bh=0/2iR2t92OCH9/EybMxXNXRhh30tebsZGZl/G3WtQ4A=;
+        b=PkI1nmkFNbg40iAjHfbpK8fx/tPj5m3Sglq2emncXcuVpB+ur+6+vf1TAnWuhzV3tU
+         bWsMb99G6w6CIlxZCp8Fu0N1gyziWG2MPKCBVuStdw5dGBMH63tP0MUipwF5appfzShs
+         VKCLFlfuR+aTaNguGX/J80uPEXokG7qLwrIGH4K7zTonUi1cWvv6H9aYN8IQcRub+IgR
+         gYdGoxjYgKqyST98FvK7E9ebSOQZebSSGDf8Dd8ZXl5hamMqdChiSiumMHzbpsZ1PdTy
+         3mE1AQ0OwC1YquluK1kzLBXmmgVB1DnsnrUeXJ5VX1UwAfihzWfs/eGIrvPikv3bSNba
+         2AgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732294639; x=1732899439;
+        d=1e100.net; s=20230601; t=1732295250; x=1732900050;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FZwDSMvFnipM0RD36mLVFKH4L1T4MEAtnhkfsYAv+8A=;
-        b=rG7CykxQOELHS/wiq+bH7rAh45p+kG3azRJ2XI8GJBeOm3XfUkn+bbadk4xEaTqFD/
-         lJsU2oC6dpQgDzrwklbdlYIwJI5kMuSpxqsJjgZ9fl79bUg/mHRzTrqSLZpxeRyUpyQe
-         2OwRyIr7pow5aXp5O/Gy6TPzRlpdqt6zDeHTak9TQgiQARFqojOLoLuwxRsmq1Osfxo2
-         kzZ6vUd6qF5sU/20z2BPLG54g+QKUV8NfnooElouZPEeRNbIGRso2zmDNE1nH6Xkvq70
-         OR53o7lLP/l0WBS/EYOOUdOGu0nqgKnrJRk+zPGH+vv5FLNcBxHjC7IS/AfSLUEd+540
-         ji8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU18Z36IDF7q4rs1zYV8qFPehUxz07WQNxZyXV+BV6avEjMMdj1hn5qwTwp4mD5j9OVUtr358HEngo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjS6DFWX8LL1oQcSOFba2+Ql4pKc/DmB7zII6WeoQ8psUfrFHW
-	X1mz0/LswDzIx7HZTaBbHlAAKEPF6jjoXOSRbcgKG7mbhK7PI3ADWj8m3O2hug==
-X-Gm-Gg: ASbGncsIeenmTM7YD+sEQHUfcR36ywVIxQjbeDaByZPQgiu5nXX0hWQnOmkPCXhx0zJ
-	o4gYGbg79BjivNKUF2+UdQnqxSi56zBm+Bfh7fYl4uotMMSm9NL2he2Lz+9KwTTHfKNivJWsPTO
-	Ybps12ro1oOPp2lk1v+hLnW4+8VZrzkKlEu4I/0U47XdjT+cpXt90zV3+GUBIl+rezcoEg2H/dF
-	IJwJL6X8IeLgiOMH5bgKayUS9ZOW+OMblJIvtwYmPAf3rL0v2WlYXvhVUtb
-X-Google-Smtp-Source: AGHT+IEBQTm+mdF5/l17srn1QQIlJ8cpbCtyU3PjuFrTHKPmmM8RGnmeO63H3UfI8TU8tQ6zNeMktQ==
-X-Received: by 2002:a17:902:d2c3:b0:20c:6bff:fcb1 with SMTP id d9443c01a7336-2129fe0903emr55796195ad.1.1732294639012;
-        Fri, 22 Nov 2024 08:57:19 -0800 (PST)
+        bh=0/2iR2t92OCH9/EybMxXNXRhh30tebsZGZl/G3WtQ4A=;
+        b=nfQSkBp7T/aEgcLdb1vhkykHCuzleKxFU1OH4cEn0MM2kLChE4cNdyOnOpIPUvmTvD
+         XpKYpwnKSv0Hpmu0Pa5JoFhi7HcHZwpFur2+7bTvNPipwkJnG3WhfFUdQ0McvCVm4c+d
+         lPLu63ri7LAEysUjHlXlW860F6HfUdtRmB03/wJDORlaX+NyA+ws0+JDDVKjJlidVREm
+         vuZ9E7/B0n8bkFKgFdkcy8Ak6Vp/ercQXjAmKRhgk1ImjjxsyuL+W8elk8L9WEhuYHZv
+         W1cFhbiKvlJPKvrrKI5lOcLcCHeBcTDOs/zpJEQ4u3JeUsRGta4thmRKaPeigI8TBDhd
+         CjHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmplINClcLdVSJGdMyiHP6LfcfT+aStsU4eOuh6uI//fJYSj+tWdCZCkWsCdqVcyt/HAfiDxCsZEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7pl/6vTMeOMLS2gc97HvLAR27FVzNjzzY+yZKcqmFXSNxD14V
+	yP8tB311ougLFwRg5vQoUl9Yl+tm2Xoc7cdRQnpW2O6qASZE1xHaonBEoUa0wA==
+X-Gm-Gg: ASbGnctzbfAKOrL33ngFJAw3osBQ7Kkb/9Qkum7QplO1/jmua0l/e01QzONLpSGhUZY
+	KTV39dsqamgBW8eK6paORsug3w08KxRxtOqkQHC230GqZFn0d1u/oHA9/qadQDK99hDk5MZhNeb
+	cd5qpKWEu5l8o9OQ3jGd+B0/rYHKtIvKf6Bz3VzQsiPx2T5LxUIXbu9j6rBGKVgo159OD6VgSgI
+	h/q3oorjQKLuRXHU2oGZmc+Aq9spxforFwIjLJM7RwczEwZrT/UpFiSMv3J
+X-Google-Smtp-Source: AGHT+IGZvDpaoKhSksqbzMsm60Yp0W7DGNYEnn4YmD/coS4PDUIKaXASCZ3cNh00dMOu8rfdsP6n3g==
+X-Received: by 2002:a17:902:d4c6:b0:20e:a2f7:8ab9 with SMTP id d9443c01a7336-2129f6ac33amr44650405ad.27.1732295250203;
+        Fri, 22 Nov 2024 09:07:30 -0800 (PST)
 Received: from thinkpad ([49.207.202.49])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dc21a1asm18338035ad.222.2024.11.22.08.57.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dba1b40sm18541705ad.87.2024.11.22.09.07.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 08:57:18 -0800 (PST)
-Date: Fri, 22 Nov 2024 22:27:12 +0530
+        Fri, 22 Nov 2024 09:07:29 -0800 (PST)
+Date: Fri, 22 Nov 2024 22:37:23 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
-	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-	imx@lists.linux.dev, kernel@pengutronix.de,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 08/10] PCI: imx6: Use dwc common suspend resume method
-Message-ID: <20241122165712.5m7xuycxzjzatf35@thinkpad>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	Frank Li <frank.li@nxp.com>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 05/10] PCI: imx6: Make core reset assertion
+ deassertion symmetric
+Message-ID: <20241122170723.s43eokayvnuhas4r@thinkpad>
 References: <20241101070610.1267391-1-hongxing.zhu@nxp.com>
- <20241101070610.1267391-9-hongxing.zhu@nxp.com>
- <20241115070932.vt4cqshyjtks2hq4@thinkpad>
- <ZzeHGd/vfNFgsID2@lizhi-Precision-Tower-5810>
+ <20241101070610.1267391-6-hongxing.zhu@nxp.com>
+ <20241115065221.scfb2chnoetpdzu6@thinkpad>
+ <AS8PR04MB8676D25A87FBF45E2B1D26628C272@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,53 +106,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZzeHGd/vfNFgsID2@lizhi-Precision-Tower-5810>
+In-Reply-To: <AS8PR04MB8676D25A87FBF45E2B1D26628C272@AS8PR04MB8676.eurprd04.prod.outlook.com>
 
-On Fri, Nov 15, 2024 at 12:38:33PM -0500, Frank Li wrote:
-> On Fri, Nov 15, 2024 at 12:39:32PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Nov 01, 2024 at 03:06:08PM +0800, Richard Zhu wrote:
-> > > From: Frank Li <Frank.Li@nxp.com>
+On Mon, Nov 18, 2024 at 02:59:59AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Sent: 2024年11月15日 14:52
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: l.stach@pengutronix.de; bhelgaas@google.com; lpieralisi@kernel.org;
+> > kw@linux.com; robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > shawnguo@kernel.org; Frank Li <frank.li@nxp.com>;
+> > s.hauer@pengutronix.de; festevam@gmail.com; imx@lists.linux.dev;
+> > kernel@pengutronix.de; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v6 05/10] PCI: imx6: Make core reset assertion
+> > deassertion symmetric
+> > 
+> > On Fri, Nov 01, 2024 at 03:06:05PM +0800, Richard Zhu wrote:
+> > > Add apps_reset deassertion in the imx_pcie_deassert_core_reset(). Let
+> > > it be symmetric with imx_pcie_assert_core_reset().
 > > >
-> > > Call common dwc suspend/resume function. Use dwc common iATU method to
-> > > send out PME_TURN_OFF message. In Old DWC implementations,
-> > > PCIE_ATU_INHIBIT_PAYLOAD bit in iATU Ctrl2 register is reserved. So the
-> > > generic DWC implementation of sending the PME_Turn_Off message using a
-> > > dummy MMIO write cannot be used. Use previouse method to kick off
-> > > PME_TURN_OFF MSG for these platforms.
-> > >
-> > > Replace the imx_pcie_stop_link() and imx_pcie_host_exit() by
-> > > dw_pcie_suspend_noirq() in imx_pcie_suspend_noirq().
-> > >
-> > > Since dw_pcie_suspend_noirq() already does these, see below call stack:
-> > > dw_pcie_suspend_noirq()
-> > >   dw_pcie_stop_link();
-> > >     imx_pcie_stop_link();
-> > >   pci->pp.ops->deinit();
-> > >     imx_pcie_host_exit();
-> > >
-> > > Replace the imx_pcie_host_init(), dw_pcie_setup_rc() and
-> > > imx_pcie_start_link() by dw_pcie_resume_noirq() in
-> > > imx_pcie_resume_noirq().
-> > >
-> > > Since dw_pcie_resume_noirq() already does these, see below call stack:
-> > > dw_pcie_resume_noirq()
-> > >   pci->pp.ops->init();
-> > >     imx_pcie_host_init();
-> > >   dw_pcie_setup_rc();
-> > >   dw_pcie_start_link();
-> > >     imx_pcie_start_link();
-> > >
-> >
-> > Are these two changes (dw_pcie_suspend_noirq(), dw_pcie_resume_noirq()) related
-> > to this patch? If not, these should be in a separate patch.
-> 
-> 
-> Sorry, this patch have not touch dw_pcie_suspend_noirq() and
-> dw_pcie_resume_noirq()'s implement, just call it. I have not understood
-> what's your means.
+> > > In the commit first introduced apps_reset, apps_reset is asserted in
+> > > imx6_pcie_assert_core_reset(), but it is de-asserted in another place,
+> > > in
+> > 
+> > I'd suggest rewording like below to make it easy to understand,
+> > 
+> > "PCI: imx6: Deassert apps_reset in imx_pcie_assert_core_reset()
+> I'm very appreciate for your rewords. Should the imx_pcie_assert_core_reset()
+>  be imx_pcie_deassert_core_reset()?
 > 
 
-Sorry, I got confused. Please ignore above comment.
+Yeah!
 
 - Mani
 
