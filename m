@@ -1,130 +1,165 @@
-Return-Path: <linux-pci+bounces-17223-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17224-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D2019D641D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 19:23:00 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D925F1611B6
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 18:22:56 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7556B1DF961;
-	Fri, 22 Nov 2024 18:22:55 +0000 (UTC)
-X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B38BC9D646E
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 20:10:36 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE3F15CD60;
-	Fri, 22 Nov 2024 18:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F23DFB2184F
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 19:10:33 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A94551DEFC6;
+	Fri, 22 Nov 2024 19:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fWPXQKrp"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEBD1DFE03;
+	Fri, 22 Nov 2024 19:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732299775; cv=none; b=AK1TV7MDPo2e6EMXpRXUYXM18FrPxm3VXQDQPlqOkQnFPTWnV3T6XOwnJhuvYNFi9vw++MfFhrRWe/kCsXTeU420nd5itlUmctEQy5JB4SnPxYbJaDmg7WcQS2ZXfYgj1eiKtSenhoc6zbXCkoCMvHg5OjL3EDJ22LqUgmJ3pSQ=
+	t=1732302623; cv=none; b=aPiF/A+ENQGy0JJLS6lEpWtBPMjKeaMLXoZjgM6WQHKZZd9LYWrRAxYDSihFDjCi3oq7muc6fToF5Og/vC1CVpfmUaVR/eowBFgMCVmRhNs4FrVX0Bg2jrmjGwaK4bEroAIFpZUuw6kaE+gBB2Uck6J43pFhc3oMG2YVBHLe4nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732299775; c=relaxed/simple;
-	bh=KXwZiJFQRphelGCPCym0D1/HQX9H6TTWlpETErvkVLI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n0gWsKWOJ+0Z5i4avIuDPBUDMor87ulpeBlgRorBOjJ6vh0nbyKiM6uycmeG7uhCnbcYnZD4kMvm6nR3LcHcouXZkbYUwE9yK96ZIfqDfQZyHviRUJ9aeRNsXf25YcaKaAjpGEQi2wqqT9o7Ql2S/kWl/I8dwYweVU/OHOaz6II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xw3Nc04B8z67n0t;
-	Sat, 23 Nov 2024 02:22:24 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CACAD140C72;
-	Sat, 23 Nov 2024 02:22:49 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 22 Nov
- 2024 19:22:48 +0100
-Date: Fri, 22 Nov 2024 18:22:47 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Alistair Francis <alistair@alistair23.me>, <lukas@wunner.de>,
-	<linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <bhelgaas@google.com>,
-	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<bjorn3_gh@protonmail.com>, <ojeda@kernel.org>, <tmgross@umich.edu>,
-	<boqun.feng@gmail.com>, <benno.lossin@proton.me>, <a.hindborg@kernel.org>,
-	<wilfred.mallawa@wdc.com>, <alistair23@gmail.com>, <alex.gaynor@gmail.com>,
-	<gary@garyguo.net>, <aliceryhl@google.com>
-Subject: Re: [RFC 2/6] drivers: pci: Change CONFIG_SPDM to a dependency
-Message-ID: <20241122182247.00005ab0@huawei.com>
-In-Reply-To: <20241122172354.GA2430869@bhelgaas>
-References: <20241122153040.00006791@huawei.com>
-	<20241122172354.GA2430869@bhelgaas>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1732302623; c=relaxed/simple;
+	bh=84GZ+R2OqQE4rHqhAY6rc/ITnfPCkYF7wzsHxHXg78Y=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=qJT5sIcWpolsTL5iTCN4+ni3blNaCGKgeJ4MtGlzrcnBwMmr58eVI+fDXViTFPHVt0DszLblb3t4fA87KoxKtfuDTTjOhY/z29Z7nIdC2x69PjPjaURMJjys7pblGR9ml7f7p/XYAAg6CmwPLJTqQVNr+vfVo+hf1PqOtFHHz8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fWPXQKrp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AM7tZvi002213;
+	Fri, 22 Nov 2024 19:10:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=UThjkvtVgCIcIdz+X4z1bc
+	btxxw3djCQl/sVcWIyu3c=; b=fWPXQKrpOFOFX8tRbH34VoiDRyViRiAaZh18w8
+	E6ykIxoXxBU/+LG8hrFiVPjb/J0cqllUQGtu5iQL0U/+Ww7hwjUXbXN/17Zop509
+	Ue5luGFteEnC7vqHoKDQj+vDGfG7PmYRWsPc2MBOYPfifxYJcmvhtHSdF4Om5xDj
+	0fhE2sU5GbSonFsCV4KrgdSMCv26DWbGBRDdInXMSmiAZKT+gruC4NymlofEGCIl
+	FgpThH79pROXFB0DdTWfDo+VCAlPOc1ECmjQzn9yGArXZynoPuVBe72cVuyEJEaP
+	RsjS0wvz2QVR+6qteoRs2v49NgDuBof0aBPlMGhyvVz8f+zA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 432p0d9pnc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Nov 2024 19:10:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AMJABrt007593
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Nov 2024 19:10:11 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 22 Nov 2024 11:10:07 -0800
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v5 0/3] PCI: dwc: Skip waiting for link up if vendor
+ drivers can detect Link up event
+Date: Sat, 23 Nov 2024 00:39:58 +0530
+Message-ID: <20241123-remove_wait2-v5-0-b5f9e6b794c2@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-B4-Tracking: v=1; b=H4sIAAbXQGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyTHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDQyMj3aLU3Pyy1PjyxMwSI90UUwvDJBMDYwuD1EQloJaCotS0zAqwcdG
+ xtbUAabw//l4AAAA=
+To: Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kwilczynski@kernel.org>,
+        <andersson@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_mrana@quicinc.com>,
+        "Krishna chaitanya
+ chundru" <quic_krichai@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1732302606; l=2230;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=84GZ+R2OqQE4rHqhAY6rc/ITnfPCkYF7wzsHxHXg78Y=;
+ b=uMHF0GLlsaoaWCq0pHfuLO6JbdRpx/Bhlo6JURHw9Z1uqRT2Mg2lHUX+GrCJRNjnrIV63JKDB
+ VrxiwEzKFQbAJRJSKOMM//ShGxrUoUuJGS1KysAFkdhpmFuv3GciD6w
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: B98aWgXbqGtIxOc1vLzZ5FYwNOT5kHZl
+X-Proofpoint-GUID: B98aWgXbqGtIxOc1vLzZ5FYwNOT5kHZl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 lowpriorityscore=0 impostorscore=0 mlxlogscore=503
+ suspectscore=0 spamscore=0 phishscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411220161
 
-On Fri, 22 Nov 2024 11:23:54 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+If the vendor drivers can detect the Link up event using mechanisms
+such as Link up IRQ, then waiting for Link up during probe is not
+needed. if the drivers can be notified when the link comes up,
+vendor driver can enumerate downstream devices instead of waiting
+here, which optimizes the boot time.
 
-> On Fri, Nov 22, 2024 at 03:30:40PM +0000, Jonathan Cameron wrote:
-> >   
-> > > > diff --git a/lib/Kconfig b/lib/Kconfig
-> > > > index 68f46e4a72a6..4db9bc8e29f8 100644
-> > > > --- a/lib/Kconfig
-> > > > +++ b/lib/Kconfig
-> > > > @@ -739,6 +739,21 @@ config LWQ_TEST
-> > > >  	help
-> > > >            Run boot-time test of light-weight queuing.
-> > > >  
-> > > > +config SPDM
-> > > > +	bool "SPDM"    
-> > > 
-> > > If this appears in a menuconfig or similar menu, I think expanding
-> > > "SPDM" would be helpful to users.  
-> > 
-> > Not sure it will!  Security Protocol and Data Model
-> > which to me is completely useless for hinting what it is ;)
-> > 
-> > Definitely keep (SPDM) on end of expanded name as I suspect most
-> > people can't remember the terms (I had to look it up ;)  
-> 
-> Agree that the expansion doesn't add a whole lot, but I do think the
-> unadorned "SPDM" config prompt is not quite enough since this is in
-> the "Library routines" section and there's no useful context at all.
-> 
-> Maybe a hint that it's related to PCIe (although I'm not sure it's
-> *only* PCIe?) or device authentication or even some kind of general
-> "security" connection?
+So skip waiting for link to be up if the driver supports 'use_linkup_irq'.
 
-It's much broader than PCIe (I believe originated in USB before
-being standardized?)
+Currently, only Qcom RC driver supports the 'use_linkup_irq' as it can
+detect the Link Up event using its own 'global IRQ' interrupt. So set
+'use_linkup_irq' flag for QCOM drivers.
 
-Maybe something like...
+And as part of the PCIe link up event, the ICC and OPP values are updated.
 
-SPDM for security related message exchange (with devices)
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+Changes in v5:
+- update the commit text as suggested by (mani).
+Changes in v4:
+- change the linkup_irq name to use_linkup_irq a suggested by (bjorn
+  andresson)
+- update commit text as suggested by bjorn andresson.
+- Link to v3: https://lore.kernel.org/r/linux-arm-msm/20241101-remove_wait-v3-0-7accf27f7202@quicinc.com/T/
+Changes in v3:
+- seperate dwc changes and qcom changes as suggested (mani)
+- update commit & comments as suggested (mani & bjorn)
+- Link to v2: https://lore.kernel.org/linux-pci/20240920-remove_wait-v2-0-7c0fcb3b581d@quicinc.com/T/
+Changes in v2:
+- Updated the bypass_link_up_wait name to linkup_irq  & added comment as
+  suggested (mani).
+- seperated the icc and opp update patch (mani).
+- Link to v1: https://lore.kernel.org/r/20240917-remove_wait-v1-1-456d2551bc50@quicinc.com
 
-Attempting to distill the text in the Introduction of the spec.
+---
+Krishna chaitanya chundru (3):
+      PCI: dwc: Skip waiting for link up if vendor drivers can detect Link up event
+      PCI: qcom: Set use_linkup_irq if global IRQ handler is present
+      PCI: qcom: Update ICC and OPP values during link up event
 
-"The Security Protocol and Data Model (SPDM) Specification defines messages, data objects, and sequences for
-performing message exchanges over a variety of transport and physical media. The description of message
-exchanges includes authentication and provisioning of hardware identities, measurement for firmware identities,
-session key exchange protocols to enable confidentiality with integrity-protected data communication, and other
-related capabilities. The SPDM enables efficient access to low-level security capabilities and operations. Other
-mechanisms, including non-DMTF-defined mechanisms, can use the SPDM"
+ drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++--
+ drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+ drivers/pci/controller/dwc/pcie-qcom.c            |  7 ++++++-
+ 3 files changed, 15 insertions(+), 3 deletions(-)
+---
+base-commit: cfba9f07a1d6aeca38f47f1f472cfb0ba133d341
+change-id: 20241122-remove_wait2-d581b40380ea
 
-So clear as mud ;)
-
-J
-
-
-> 
-> I admit that you're in good company; "parman" and "objagg" have zero
-> context and not even any help text at all.
-> 
-> Bjorn
+Best regards,
+-- 
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
 
