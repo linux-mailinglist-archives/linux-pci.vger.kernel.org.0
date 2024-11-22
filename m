@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-17218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC9F9D62C4
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 18:10:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6285E9D62C7
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 18:10:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FE71B2201A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 17:10:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CECBFB21439
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 17:10:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F701DF250;
-	Fri, 22 Nov 2024 17:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C85A1DEFC8;
+	Fri, 22 Nov 2024 17:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DDW3fhV/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eEHbJ5Cn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2471DEFC7
-	for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 17:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2E61DE3D6
+	for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 17:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732295420; cv=none; b=MLdfRjPtn6swyWEfw8tnhu10P8do1uJPF2EkZBTV9mkmXk424otN19KnFcRpZ8S7JpE9WsOcefKyQX5KZukJwWNGnY7SV1mbmlRSw6MRkM5UnLDY4GbnlQyjTV9U7TIAGjkpOgQC/CMGO4i6fk615BKjco4BKTIH2zTOggTcUN0=
+	t=1732295452; cv=none; b=OzCtB7FczU1aV/QNwT6ObNgpUMOIsYYKRFgzpBP3R7aN3vx6X5iyFKDvC80con2JL75i3Vlr1r6J2yxeY5JQ/3qaBtHviirwixwnEu8MTnH4X1P3pbRLysG1/ywo2rljn5PtaIj34kdf0U/CtwLUKERRLHgIrvjtxcANtc94phQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732295420; c=relaxed/simple;
-	bh=G9cr1gHE3g36F9Cu85STAfJ/9tRuQumYU8/56wvDlXM=;
+	s=arc-20240116; t=1732295452; c=relaxed/simple;
+	bh=JSfJBNYEbA8FDDOxY/qXqSPsOBH8pc0lxdl5eHk3OHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FrRVtKrtA5Rn1Wiix4igKmtulmEhXNl+a2SXbo9yew0J0TE8AICUkU50x8H7IPeZouEEpOMgGLhs9FG4hH+3A/sYkUYAU0HZqV/oCW23eUzLAJcOeGOLGCJLaoQe32W3FKNxwcOntBqUmCUTHIaw0yhs4bazTjm5gOjOZMA7HFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DDW3fhV/; arc=none smtp.client-ip=209.85.210.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=VtxO1Yq7xw8Ja+ztjIpqlKWCwp9XkWQHtK1XSyiW23N76ujud1lbn4y30549iKvrUga3vx2CqoYn43k2Znnq782wEMi3BF9r5Z2oPCL7+KswTfPuuiUbTFTIeK8fHU6QqFndCa570fEVervzsEdgT5DmPs4CYL92lqcgkox7fKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eEHbJ5Cn; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-724e7d5d5b2so655993b3a.2
-        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 09:10:18 -0800 (PST)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7eb0bc007edso1631947a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2024 09:10:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732295418; x=1732900218; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732295450; x=1732900250; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=/UzD8Qbmoty9y3UdrVjMc3lCWpv9Zoxn+WCwHClf78I=;
-        b=DDW3fhV/HabYnNfPG57bMwzAfO2vait3ktXjV0wZeAnIK7hEyjzGCOCFijKlndLBl5
-         mT6sS2AtF62A6Qf7qm0p/kNYdURnNZvvMwjNZaWOCIVaZ5weeeysSJzhqq1JRMZ4znDf
-         Ke1DTDQYC0uIijbvhGmaHWsNCdbBi+Si1iyfTwrbXcr3QkCDbNZVGrkjILl7RwwxfHsg
-         SI5EfwHmhLABjEUYl9dvsFnqQruLCwi2f2OLP1nMcIObe9UYaWpBX+kaWOZp1Zxe1mJi
-         5vpb9TGzAXqI/RvNfY/ihN1LtjYVDsa8JlhG0XSJzynowFQP6q/6HPUP2Ks2uQPPMlVz
-         uGIA==
+        bh=m9Rzu/atJszaZiZQ8bphSysVEtM05e/rUjckRGXXQa8=;
+        b=eEHbJ5Cnr2LP8QZElbeawTkXgevrD8ABRlNJvZt1JkG9R+miEgmgPO82jiaFVKeau0
+         sYR9Qa3JIM8DlJuMwGsHosxuRynXh4QW0N4EmYr3ygqHL9zyXOp7JewevuBEPBhbpu2O
+         aYA9Ozni6L4o7LO8v6+UmOCogpUHNooCv5dRIG2YhOHIfkiyxG/VdL/Is7eNt7ePUccd
+         6c/2mxkv9oIeMW5N1VKoWnU0yxuIz/TnhuvOW/wUycHtIbCp+d0RyCcTgGBEb2OIGHZK
+         iMgJDM2WAF7Br9pBVBawATHk1B6eKy+KXtCkqpfURGwyNtZi2beo9VNsFDSo+Y7nav0m
+         Skzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732295418; x=1732900218;
+        d=1e100.net; s=20230601; t=1732295450; x=1732900250;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/UzD8Qbmoty9y3UdrVjMc3lCWpv9Zoxn+WCwHClf78I=;
-        b=VZ524VahBk1a++Ky0+91GMXG24tDEqpB8vICbNFJ/h/lr88xnq6360ossBvRIFd6Eh
-         Tv2LePvUD/oOTB0UlFTzEwQ6JPLxVTGsjhc5eKVeE2/lZWnqdUrRfW0gKLKly7JyHK+8
-         t1JzKpg8DyDLb7vNvGNiByrRfG6ScGwEKoImrH692fwvRqe2oNvX8m2YkX6tFsDjb6tm
-         hUoIcbZcPPgXiH0kVJ9DUtRr+9uFeOtoJOblWpRfYDFHggj9eXQzmFmuFhOH0zDXuy2B
-         jGc+rtBNA3U6U/g4diZ4QFhmN7uS30mQ3QS5Plqv8BTMOHHCaEJjemZGnnEHUxmxCFG+
-         Qxxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHHelpimUupEH+1Wg9JOaxZqsJZbBDM07//KLyYBgUyP67E35nzvbog70UQcS4Su1gQ6j7bxgtAro=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw27UsgeCSX1RyWfCx9003pJuP2VQM3+SRU/2WyYE95UUsOMBD+
-	4CA8h44IEJukVT0NG22+2ZfjrnVvte/MMulplh66Ae8GfsJ5Vhz9BumKy2f6+A==
-X-Gm-Gg: ASbGncsr+R4letcbbpSeS6t1mw1OvRHC19qg753+3lWRio9OPLDXWQNQ8MDViyPNUNU
-	CJV0K4QMT3jl3njqwIIlBsXAdNDxI0HPjekzvUj82CT7vr4JAwNYYGkKEKrmmbyVh8aEB7FyaCf
-	7CSGlGcknP+lVoh8+BNWCa3+wYOJm/L9hb7htZo4aEF4IitOlzdVhhmpAH2hH/vOuAEMbMXdu+R
-	Fp0lCgcDlTPut6wYBaMY4kbJkxOQp6+bR6MVwOS7iJrEQ7GHA/P3fn+gBtX
-X-Google-Smtp-Source: AGHT+IEwjs4uHZtrKVZd87ooqlW4TAiWtY5jzSaWXJxP5mRGV9M6kvrK8gtdD6fzbjrc4NKONPYTYQ==
-X-Received: by 2002:a17:902:cec9:b0:212:23e5:6202 with SMTP id d9443c01a7336-2129f67b3f6mr39737875ad.6.1732295417733;
-        Fri, 22 Nov 2024 09:10:17 -0800 (PST)
+        bh=m9Rzu/atJszaZiZQ8bphSysVEtM05e/rUjckRGXXQa8=;
+        b=MSLTUM4MTF8Nel+5Y4rCgFKlFfWfShC9yjm6qwJ7eyNZ1zqkxQ5ZQaL9+gw/5cbLWe
+         R63/F2nbgkj90eVYuOc85OMd7UXaqxEJR+/jLcFgxNMaYzGi4M6feoCBxsxxdrk3MDg7
+         2Dli5xqPEI4jrECM/aNxX5/4QQUK9dWqZDd0L93vl9AYx5J1DaTX2uMG9m7PsPK+fkk3
+         wKIrY06raYzSQq0BZMqCSzDqoph3/IunmNJR9j1/uijdkUaOn4LtaBPd9QFM6HVkdwVZ
+         soljF/vM+86wJD1DPqYmQ7bmal9bBIVWRouvvXMtgZFTFFwlscsfcgA4y+2Sf3qv5ONg
+         +ngw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWgdA4RqBdYCrxDGegNKwK/AdkgLk5obnC0m/4PoQbVQNJh3lHDpNBKs5CF9WK70PCEhPWClZMfEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfvObGwxVWp2Ia9Xqj6fbEYDMAfSzJf4/bl8xD3/AAKak386N8
+	pC6kpHPHDDsDGCVgrD3Mo0e0sg21PMPjE4BNr4e3onNMuDl7gNhqXobzJ6Hnlw==
+X-Gm-Gg: ASbGncsmKe1bBoLVhat2YXhWd/oC+/UNGk1TkhacVoukiHuKEt1xO+PwyIXo8A5GpgS
+	Z63NGX8J06WEvdFeZBNTLdS2LSkTmO7ye/6ruT+cRpp+sU1xncBgCcQr9AB7EwQ8ct5myCqznNX
+	+Kb61JAhTQxnwM5U0UPyFMhGhNhX0ldXYIJRql/zEXyQ9a1UB7r/yGrU6H6BKwQqB14T+ShUN1w
+	UlVDVXAMBA2EzPVhKjmWoUOImXUoqFBAP80JmTCLQmSU/pOMqq9ud2oJvWC
+X-Google-Smtp-Source: AGHT+IFIhc1R40hXLVSot1qpNb47cXTxZcrRwISXx0lJGKYTEDxVxH0DwKBYDolmma7+CJxTTAgLkQ==
+X-Received: by 2002:a05:6a20:d503:b0:1c6:fb66:cfe with SMTP id adf61e73a8af0-1e09e45ff0emr4838841637.21.1732295449974;
+        Fri, 22 Nov 2024 09:10:49 -0800 (PST)
 Received: from thinkpad ([49.207.202.49])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de531b82sm1911272b3a.102.2024.11.22.09.10.12
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de57a562sm1847026b3a.195.2024.11.22.09.10.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 09:10:17 -0800 (PST)
-Date: Fri, 22 Nov 2024 22:40:10 +0530
+        Fri, 22 Nov 2024 09:10:49 -0800 (PST)
+Date: Fri, 22 Nov 2024 22:40:43 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Hongxing Zhu <hongxing.zhu@nxp.com>
 Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
@@ -90,13 +90,13 @@ Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
 	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
 	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 03/10] PCI: imx6: Fetch dbi2 and iATU base addesses
- from DT
-Message-ID: <20241122171010.ze6iyxmgaq7g7yr6@thinkpad>
+Subject: Re: [PATCH v6 04/10] PCI: imx6: Correct controller_id generation
+ logic for i.MX7D
+Message-ID: <20241122171043.j2xh4fvdo6goq7o2@thinkpad>
 References: <20241101070610.1267391-1-hongxing.zhu@nxp.com>
- <20241101070610.1267391-4-hongxing.zhu@nxp.com>
- <20241115064106.iwrorgimt6yenalx@thinkpad>
- <AS8PR04MB86766F6553A36E75A2B1F6C78C272@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <20241101070610.1267391-5-hongxing.zhu@nxp.com>
+ <20241115064321.3cuqng7bzmphiomw@thinkpad>
+ <AS8PR04MB8676989276C723C26DADFB5D8C272@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -106,12 +106,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB86766F6553A36E75A2B1F6C78C272@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <AS8PR04MB8676989276C723C26DADFB5D8C272@AS8PR04MB8676.eurprd04.prod.outlook.com>
 
-On Mon, Nov 18, 2024 at 02:59:35AM +0000, Hongxing Zhu wrote:
+On Mon, Nov 18, 2024 at 02:59:48AM +0000, Hongxing Zhu wrote:
 > > -----Original Message-----
 > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 2024年11月15日 14:41
+> > Sent: 2024年11月15日 14:43
 > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
 > > Cc: l.stach@pengutronix.de; bhelgaas@google.com; lpieralisi@kernel.org;
 > > kw@linux.com; robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
@@ -120,97 +120,26 @@ On Mon, Nov 18, 2024 at 02:59:35AM +0000, Hongxing Zhu wrote:
 > > kernel@pengutronix.de; linux-pci@vger.kernel.org;
 > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
 > > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v6 03/10] PCI: imx6: Fetch dbi2 and iATU base addesses
-> > from DT
+> > Subject: Re: [PATCH v6 04/10] PCI: imx6: Correct controller_id generation
+> > logic for i.MX7D
 > > 
-> > On Fri, Nov 01, 2024 at 03:06:03PM +0800, Richard Zhu wrote:
-> > > Since dbi2 and atu regs are added for i.MX8M PCIes. Fetch the dbi2 and
-> > > iATU base addresses from DT directly, and remove the useless codes.
+> > On Fri, Nov 01, 2024 at 03:06:04PM +0800, Richard Zhu wrote:
+> > > i.MX7D only has one PCIe controller, so controller_id should always be 0.
+> > > The previous code is incorrect although yielding the correct result.
+> > > Fix by removing IMX7D from the switch case branch.
 > > >
 > > 
-> > It'd be useful to mention where the base addresses were extraced. Like by
-> > the DWC common driver.
-> You're right. How about change them to the below one?
-> The dw_pcie_get_resources() function of DWC core codes can fetch the dbi2 and
->  iATU base addresses from DT directly, and remove the useless codes here.
+> > Worth adding a fixes tag?
+> > 
+> It's originated from commit 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
+> 
+> How about to add one Fixes tag like this?
+> Fixes: commit 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
+> 
 
-"Since dw_pcie_get_resources() gets the dbi2 and iATU base addresses from DT,
-remove the code from imx6 driver that does the same."
+Okay.
 
 - Mani
-
-> 
-> > 
-> > > Upsteam dts's have not enabled EP function. So no function broken for
-> > > old upsteam's dtb.
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > 
-> > Reviewed-by: Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org>
-> > 
-> > - Mani
-> > 
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 20 --------------------
-> > >  1 file changed, 20 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > index bc8567677a67..462decd1d589 100644
-> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > @@ -1115,7 +1115,6 @@ static int imx_add_pcie_ep(struct imx_pcie
-> > *imx_pcie,
-> > >  			   struct platform_device *pdev)
-> > >  {
-> > >  	int ret;
-> > > -	unsigned int pcie_dbi2_offset;
-> > >  	struct dw_pcie_ep *ep;
-> > >  	struct dw_pcie *pci = imx_pcie->pci;
-> > >  	struct dw_pcie_rp *pp = &pci->pp;
-> > > @@ -1125,25 +1124,6 @@ static int imx_add_pcie_ep(struct imx_pcie
-> > *imx_pcie,
-> > >  	ep = &pci->ep;
-> > >  	ep->ops = &pcie_ep_ops;
-> > >
-> > > -	switch (imx_pcie->drvdata->variant) {
-> > > -	case IMX8MQ_EP:
-> > > -	case IMX8MM_EP:
-> > > -	case IMX8MP_EP:
-> > > -		pcie_dbi2_offset = SZ_1M;
-> > > -		break;
-> > > -	default:
-> > > -		pcie_dbi2_offset = SZ_4K;
-> > > -		break;
-> > > -	}
-> > > -
-> > > -	pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
-> > > -
-> > > -	/*
-> > > -	 * FIXME: Ideally, dbi2 base address should come from DT. But since only
-> > IMX95 is defining
-> > > -	 * "dbi2" in DT, "dbi_base2" is set to NULL here for that platform alone
-> > so that the DWC
-> > > -	 * core code can fetch that from DT. But once all platform DTs were fixed,
-> > this and the
-> > > -	 * above "dbi_base2" setting should be removed.
-> > > -	 */
-> > >  	if (device_property_match_string(dev, "reg-names", "dbi2") >= 0)
-> > >  		pci->dbi_base2 = NULL;
-> 
-> The check and the NULL assignment of "pci->dbi_base2" should be removed too
->  refer to FIXME listed above. Would updated in v7 later, Sorry about that.
-> 
-> Best Regards
-> Richard Zhu
-> > >
-> > > --
-> > > 2.37.1
-> > >
-> > 
-> > --
-> > மணிவண்ணன் சதாசிவம்
 
 -- 
 மணிவண்ணன் சதாசிவம்
