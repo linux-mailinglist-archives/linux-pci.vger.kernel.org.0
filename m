@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-17191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E2A99D57DF
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 02:55:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E73D49D5963
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 07:25:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C72F4B21C4A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 01:55:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86752B20D7B
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2024 06:25:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E10441779BD;
-	Fri, 22 Nov 2024 01:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B23A15E5CA;
+	Fri, 22 Nov 2024 06:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s2VpgaRV"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ElM9F3yH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BBB16BE14;
-	Fri, 22 Nov 2024 01:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC3222081;
+	Fri, 22 Nov 2024 06:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732240405; cv=none; b=PVh/xaJWaCfYHYq9W8IFoNXQ0Hx6jLvwnAayM4vE1r0yxwaeyg4Dj9lFBqXrv1KeQDRjk+605iQJ46WvtOeixpd6PYAhz3WUsf80lNJ3GULe5OqjPqJV5b6IyPfIjXMaHddfhBPmYivNwRTtjQP2m0ZPUGJzU7ZDU9bJS/f+I+8=
+	t=1732256750; cv=none; b=VtRvCnMsnCxV1mtM4uxjn0aiTPzHa85Y86LQjrXMOQwtVu8A+UP+veK14Q47CfMIMwNSEMxmmsGuUis+Pn8l46F5kj7aFRjt3aPkWiWrEFodnrBxaoXm5+Ywm++Gc6LWyvKtl5y1vu86LYEpcryoNwoxBLg7aQNqWFmzN9gtTcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732240405; c=relaxed/simple;
-	bh=mLlfRtBu8W4YXdufHsN+Hh7aEi5K5STCPwNPOH+/4ZM=;
+	s=arc-20240116; t=1732256750; c=relaxed/simple;
+	bh=JLGGC2upSRBy4NpebIatpx8yC3XQt7hVH/2hVqksfPA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UyA6Bn5GV/5XHwvyd/uMfDue91RQSaZf6IqR7z0qdIADv/vH7JK1gIZY81YWu3MTIyC2iL9wT/TTszBG2LegyhAhb4vluXXCub6BNXaIizmB7GEA7suxOHdTDyd+qXhEqiPbNwksyFhKSSBAN+4Lf5xz5aOgmVHk1MUTUXAKR/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s2VpgaRV; arc=none smtp.client-ip=115.124.30.130
+	 In-Reply-To:Content-Type; b=bmqN1L90Uf6BIUSbg+wlX1Ql9vpIkK/ZbFWpmAIi5vHOolfz9W3xiGzjFelrNmscLhwdMMYt+khc7TA7mRNO/uIG4EYaqcCcGJDBQJg3kIUB8qrUFTtfWeaQBsGqZ5SmXvhdUwtzvSS4LaP4OcjF8Al8KENRXeIrztdGNZ5F7yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ElM9F3yH; arc=none smtp.client-ip=115.124.30.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1732240394; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=0w7XvBE2P7BNoXQjEnWX/nWFWyUO7hkvrfRZsmxX9RM=;
-	b=s2VpgaRVQVXUwEqTy1NmuNoSe6VOJV5XqnBOqjANnqAyJJnzFzwaw82hQkIZOLCKkHjOmHgMmWFmhft6rrdtNYlz9aCq4BtvEcGHJ89oEWvPMEA12t6fp4KsqeUWupjzePABqENjGgZ1X0Iu4v3SFmHGZMZiSGDm3PYfWL+WjIc=
-Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJyg7UH_1732240390 cluster:ay36)
+	t=1732256737; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=nnbly2k9u+G1ysjd0T5docpjLl2DZDHcRC0xrhPVEsM=;
+	b=ElM9F3yHEeeqzbXFv4SnhcMYfFdYim22+rYUk5qraM3YZlPOKSegJizE4r41oCYzyPGjzv9cgrASxtKJhPQCSZj0YmyKmKFb/NG9zCCkccyDtYGe3q6hyMBi7AF7gSZwgPun3jm8yuIVjhHFP3d/3ssZM1XQTtMkYFD5e7RU6BI=
+Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJzY5u4_1732256734 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 22 Nov 2024 09:53:12 +0800
-Message-ID: <3f9b87c0-ff22-433f-adca-80716502c28f@linux.alibaba.com>
-Date: Fri, 22 Nov 2024 09:53:10 +0800
+          Fri, 22 Nov 2024 14:25:35 +0800
+Message-ID: <e96ed0ee-01c8-4429-a903-17bc7813d78a@linux.alibaba.com>
+Date: Fri, 22 Nov 2024 14:25:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,80 +60,51 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
  <Zz786zZljAy2J5i7@wunner.de>
  <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
- <20241121084354.4a554829@gandalf.local.home>
+ <20241121084354.4a554829@gandalf.local.home> <Zz-9vviSWP8oRPUx@wunner.de>
+ <20241121190826.78506b40@gandalf.local.home>
 From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20241121084354.4a554829@gandalf.local.home>
+In-Reply-To: <20241121190826.78506b40@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-在 2024/11/21 21:43, Steven Rostedt 写道:
-> On Thu, 21 Nov 2024 19:34:31 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+在 2024/11/22 08:08, Steven Rostedt 写道:
+> On Fri, 22 Nov 2024 00:09:50 +0100
+> Lukas Wunner <lukas@wunner.de> wrote:
 > 
->> Sure, I can reorganize the directory. You have two optional proposals:
+>> Would something like
 >>
->> 1. /sys/kernel/debug/tracing/events/pci_hp_event
-> 
-> I'm guessing the above has TRACING_SYSTEM = pci_hp_event ? That is, the
-> above is a system and not an event.
-> 
->> 2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
-> 
-> Whereas here, it's an event.
-> 
+>>    /sys/kernel/debug/tracing/events/pci/hotplug_event
 >>
->> I personally prefer the second approach. However, I'll defer the final decision
->> to the tracing subsystem maintainer, considering their expertise and
->> familiarity with the existing conventions.
+>> be possible?  It would seem more elegant than
+>>
+>>    /sys/kernel/debug/tracing/events/pci/pci_hp_event
+>>
+>> because it avoids the duplication of "pci" in the path.
 > 
-> Normally the system is determined by the users of the tracing
-> infrastructure and not the tracing maintainers. But I can give you some
-> guidelines.
+> Most events have the name of the system in it (see the sched events).
+> That's to prevent the duplicates in other places. Also, in the trace
+> output, only the event name is shown and not the system. That is, if you
+> have more than one "hotplug_event" enabled, the trace will not
+> differentiate them.
 > 
-> The "system" level:
-> 
->    /sys/kernel/tracing/events/<system>
-> 
-> is just a way to group like events making it easier to enable them all at once:
-> 
->   echo 1 > /sys/kernel/tracing/events/<system>/enable
-> 
-> or
-> 
->    trace-cmd start -e <system>
-> 
-> The name of the "system" should be something that all the events underneath
-> represent. Note, although events in two different systems can have the same
-> name, it's best to try to keep them all unique. That's because if you have:
-> 
-> 
->   systemA/foo  and systemB/foo
-> 
-> If you add to the kernel command line: trace_event=foo
-> it will enable both events. Although that could be fixed with: trace_event=systemA:foo
-> 
-> Note: trace_event=systemA  would enable all systemA events at boot.
-> 
-> That said, is all these events going to be related to hotplug? If so, you
-> probably want "hotplug" or "hp" in the system name. If you make it just
-> "pci", then it will be expected that all the events will be related to PCI
-> in general.
-
-I think Lukas is asking for a system for pci related tracepoint.
-
-> 
-> Does that help?
-
-Yes, it really does.
-
+> My suggestion is the "pci_hp_event" as it will be more obvious in the trace
+> output.
 > 
 > -- Steve
 
-Thanks a lot.
+Agreed. pci_hp_event is more reasonable. Than is:
 
+- system: pci
+- event: pci_hp_event
+
+/sys/kernel/debug/tracing/events/pci/pci_hp_event
+
+@Lukas, if you have any other concerns, please let me know.
+
+
+Thank you.
 Best Regards,
 Shuai
-
 
