@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-17233-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17234-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C9479D684C
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 10:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D2A69D684E
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 10:11:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08F821610E0
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 09:10:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E23711610D7
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 09:11:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99C76165F01;
-	Sat, 23 Nov 2024 09:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636A2132111;
+	Sat, 23 Nov 2024 09:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RBOkdZ8U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zeIfEInD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B0F132111
-	for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 09:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A66257D
+	for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 09:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732353035; cv=none; b=GVd81NSTcxHDZDnKju16k4SWSoOcyerEmeMAukcw+qAe1VZOAB8F4kRh6PVsBnR8uRjdevmI2pNgcw2sFJENJeEoiBDgDhysaMOYGOiMkn9+0Ui0tCdVOiCx+w7Pk17fkR0cI+p5+tUV7x/X6sYD/wAgKE6pdWp/wXc9pN1Vgos=
+	t=1732353075; cv=none; b=DhtxaBn2Wol9hVyzcu4yJrq/xGw5AQ3aF8ybLoFhmfmoidw+01uLO7E9WAc5YWv0mWXgW7R+8StUPtYLyYy7lw65ktk6KjpO8Oi0VuhNphHi80LXmBNqZPKgAhG034Bp63RyGNC7Gn6kY6IJEJsBtolEjny3sq2tkZp6WwR8PLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732353035; c=relaxed/simple;
-	bh=YrDXDQaF2u79zCUNwK+NQ/EBwGihi7NjZ43+gmAFMKs=;
+	s=arc-20240116; t=1732353075; c=relaxed/simple;
+	bh=yVWC+NTwGEIK2g8k/Fx61C9vuvFQGIEubVnwE8WWha0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GoGNfU3ddVgCPA9u2jeQHMWFRGfcsf4StBQeiGEoF9FVjG9+Cs/h4TK037tUo9gpsB4T7z9VJLVu0fiemilXuOQ5iCZh0PpzabFcg89nBCYkHNA/k9gYPTFXQaqY2U0Ji868RN40/b0Fene9k8WCCkysDqmC5U9ASt/wrOgswCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RBOkdZ8U; arc=none smtp.client-ip=209.85.210.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=n1YvJ49ehI11NK2mQB0TOjoRKmdvsokvyDHX6Quin0d4JnXp01RHzfXuDjIePWr/GaWKmX5hv0MnciCBkfnFHNB2uGEAnY4RWPoUH1gPgxrCjDXo3dv9LCMJfkd/RSjTBuaAuEWqPL7DpmwgGlBSwLwdaRC5ZuBshgEbm3Dj8eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zeIfEInD; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-724f1ce1732so347976b3a.1
-        for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 01:10:33 -0800 (PST)
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7f43259d220so2258550a12.3
+        for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 01:11:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732353033; x=1732957833; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732353073; x=1732957873; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=rKjam0B/w5hfD9V6wh4VdWDXNhOxELwdpw95PhwOCuE=;
-        b=RBOkdZ8UhHVKNl8jT5hMHkqwiq8CdAycMlwDMsNarAtUlsCWIgzyNZ+Pp+rQr9JLnz
-         oJiNRoXsyGjC/+i/kcjYqVxGdwjFlivu5kth6tAxZydDodFwJkob3+G/LA8cVdJrLhLi
-         GwW1ewTmmOtNQekxU5wWrlk/dwLRaRMGw208Es5xM9AUthU7a7e9JJ8dtXe1nyD8Dz3s
-         1mRCetuBK0X8YnEZzIED1aeOJVBCfMa2GDvr5QNDvvfeu4YEYhYJh1J7gY7h1o0lI4e0
-         fH5H9Ha3kFXIBwXi/d70LXDthDWdrOmm44sZIhK5GrpHhItMxu2r2HwrIddjdInsLJRf
-         AkSg==
+        bh=hth4LIFfFqiX8BxvmFXuMrsAdL3uE4QFJCpdQRVIJ/k=;
+        b=zeIfEInDCLrFgAVTEUgfp84DbqR6xpNCmFxTYXx5QFnsYUUFENcSeIQnsJq0FAo+Gg
+         MVpEe4WrRcgjQwFWjRCuF9S9CzHzjDl/9+Pf9md62kb8TOwrE4Cm4ot0Wrpn1bt+kwpy
+         qtjJK6tZ1Dgy2BONC7252sZmxU2U03KnI7JA/+riYb+waHC0KyWyGmwNTLp30h4C8GKO
+         WAK5lrr45zStuCAYq7VcC+DRG1D9D/qjdXi0JaQVDjqwhzf0M6MCCpPBbhcQLaTIA+yn
+         Jr6IH1rFSffcByfCa8vhDW/mskSjE9LyXDbtYWcvpOniVjlw2ibIxUE58tHbAs0EXZRr
+         3G/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732353033; x=1732957833;
+        d=1e100.net; s=20230601; t=1732353073; x=1732957873;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rKjam0B/w5hfD9V6wh4VdWDXNhOxELwdpw95PhwOCuE=;
-        b=Vhdo4K6/hSFl+PoYip9NiNrS8sY2QcMXVENd0mpuQT8zTqciIGzrd9/J8yL5xy9UPp
-         qvJWEuntc7HvdZGKEbPZ1G+wFfKPHNDDGF225+7d98VJ7KAQsFWRdC/BJJfr570hTSgD
-         O5W7PG+m0HnPIw3i8BPtbxblOkwA1hq2PG9fuvz6nQ0zhvRvkc52jDapOEY8xfpGwtzD
-         9vNiU5n8+uL0mmSQc4eoJ0Fj0PVnjx31uVtDn9+ZlJzCYLNIf7Cwvt6YQhcZdMziAE2y
-         Eyh4pi7DQayAA40YA307u0YZSI3esNn+4cZ1WCkmRsOm4HsBqUbkYUL0h/8tWbqBLUpu
-         0J6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWPEyE28H8RTtWG2965b4Yq8yR8t0lY5ym2U6LqYXJZTx24VLvJWzJxaFlQh3PtbFTlkHZdwMgMWEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxukzioiO4kpzaKAQD91D1MSsnE31nt4NGZi8cakMrIuidj6ixN
-	BXesv/6U/L2MU5RBSnQCNyIR+o3XAkppjcKVvBJNqA4MbpsRY778T+LRLvq19g==
-X-Gm-Gg: ASbGncuHdmXK9k2XQBS8v9ftzErIQIP2/IBctoO07MT+CG1i1OybXXdoMTLi+mUh6cc
-	/oDMib9BNHQikEmA4OAwNlOn27uURpnZnc7p5I1hgyfzvRaZBn5UMOiRKOL2zUsvBwb6Fn0ioFC
-	zfEhBE/y78QrEEjSCVj9lEZo9puH3upui59h7p9cqYiqmXjhxHpHausILu5uDkaFIFqhzFAvKS2
-	/YH+Zo3bo+Veoug1HLdyfcuTuFDkZIykhYxvJZ5rH/JvexaWWcZ9DzKd8gNE2lsYw==
-X-Google-Smtp-Source: AGHT+IHj2ihR3OTEsdM875zHnE9nbqW0UuK2wW3/aojdIeu60uxcPJQ+XX/fzZd0wj3T8K2tm2vwLg==
-X-Received: by 2002:a17:90a:d40b:b0:2ea:5dcf:6f5d with SMTP id 98e67ed59e1d1-2eb0e528054mr7801274a91.16.1732353033351;
-        Sat, 23 Nov 2024 01:10:33 -0800 (PST)
+        bh=hth4LIFfFqiX8BxvmFXuMrsAdL3uE4QFJCpdQRVIJ/k=;
+        b=MDbCB+Hs8SkcZnX26dAckUv/Z0KVQbuFAR2CUUn4zSRFLE4pg5lopfQcmMKr3rLaoc
+         c4/raMeSAUoNWz8nfCg8lstvx+b5W6W5kufhoOgKVj4DTd7ikwx5FwHBqzp21nV26W2k
+         V/itkP09wxzCoCmgum90txCktDVumQ1SQc/jgmiN7bpIyMswQqZvFh5K15Y9CrbvYbO+
+         Bn71TG4yvCzOhPkjA13/IbycJmLuIt+BwF5imlkkQf8522ZV7S+GgekcCG19QIw2lwsT
+         hfmHrS1KLEiMHZzUeaaPqnNk/6A9S1LH7BrYN08e0DLDewq2WXUZqmrStlSv1cYcX9OH
+         M0IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbvEnOKiMg9ofUI61WvDo7xNtAiHXNGKC5ipSVpZQItM9+kzcORmHBnBmbygecaitYISFen/YFjTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9XPy6v+/zn9wRS5XjvA1x7JGc9FH/es5W3DsUoGcmjjFxSDF/
+	oQAxvhfjqSXutqlIcNBEVxArAiCMhcpaeZSqRPH3nmuD884R4wcE9XIQbtb+8A==
+X-Gm-Gg: ASbGnct9PNqlE85S0PUNWH4sA7fupYAgOq/+2hDEf6TstFlM81eaiPTFBASRpIPa3ZN
+	L/be0oTR6sKKR23Mv876QFADEzJ3D4kgVguUvI2gsaGH08Blyn30SEIbTRYN1iFmKF/VTIsf6W5
+	ym+kLWu0oZryT7XZrHREreVWettQwBwqZnvfXejJ9iYZVDy6Y+G5APc+sXEmK4Ltl1rCH66JrDJ
+	gRnzlK2Y2jeMAKwvjO6J9Md3EO2ytRfFCh53XuVG9/6Fa8ysmc7WNpf12firtRWPg==
+X-Google-Smtp-Source: AGHT+IHSwQx5I6ydm2NN+J7aExyMX6mGiatTpiQcH3JLyc+Ei93oibZfVSEA6ImzJbB21LtSvMRsqw==
+X-Received: by 2002:a05:6a20:a112:b0:1dc:32a:d409 with SMTP id adf61e73a8af0-1e09e5cba7dmr7832706637.39.1732353073302;
+        Sat, 23 Nov 2024 01:11:13 -0800 (PST)
 Received: from thinkpad ([2409:40f2:101e:13d7:85cf:a1c4:6490:6f75])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2eb0cd35e98sm2942936a91.0.2024.11.23.01.10.28
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcbdb796esm2566484a12.0.2024.11.23.01.11.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2024 01:10:32 -0800 (PST)
-Date: Sat, 23 Nov 2024 14:40:26 +0530
+        Sat, 23 Nov 2024 01:11:12 -0800 (PST)
+Date: Sat, 23 Nov 2024 14:41:06 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Lorenzo Bianconi <lorenzo@kernel.org>
 Cc: Ryder Lee <ryder.lee@mediatek.com>,
@@ -86,11 +86,11 @@ Cc: Ryder Lee <ryder.lee@mediatek.com>,
 	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
 	linux-mediatek@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] PCI: mediatek-gen3: Add reset delay in
+Subject: Re: [PATCH v4 6/6] PCI: mediatek-gen3: rely on msleep() in
  mtk_pcie_en7581_power_up()
-Message-ID: <20241123091026.qxoeb2qye7kcwikj@thinkpad>
+Message-ID: <20241123091106.bpkzqjafvxa5yief@thinkpad>
 References: <20241118-pcie-en7581-fixes-v4-0-24bb61703ad7@kernel.org>
- <20241118-pcie-en7581-fixes-v4-5-24bb61703ad7@kernel.org>
+ <20241118-pcie-en7581-fixes-v4-6-24bb61703ad7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,24 +100,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241118-pcie-en7581-fixes-v4-5-24bb61703ad7@kernel.org>
+In-Reply-To: <20241118-pcie-en7581-fixes-v4-6-24bb61703ad7@kernel.org>
 
-On Mon, Nov 18, 2024 at 09:04:57AM +0100, Lorenzo Bianconi wrote:
-> Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> causing occasional PCIe link down issues. In order to overcome the
-> problem, PCIe block is reset using REG_PCI_CONTROL (0x88) and
-> REG_RESET_CONTROL (0x834) registers available in the clock module
-> running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
-> In order to make the code more readable, move the wait for the time
-> needed to complete the PCIe reset from en7581_pci_enable() to
-> mtk_pcie_en7581_power_up().
-> Reduce reset timeout from 250ms to PCIE_T_PVPERL_MS (100ms).
+On Mon, Nov 18, 2024 at 09:04:58AM +0100, Lorenzo Bianconi wrote:
+> Since mtk_pcie_en7581_power_up() runs in non-atomic context, rely on
+> msleep() routine instead of mdelay().
 > 
-
-and this reduced timeout has no impact on the behavior? If so, it'd be good to
-state it explicitly. But this information can be added while applying the patch,
-so no need to resend just for this.
-
 > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
@@ -126,40 +114,31 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  drivers/clk/clk-en7523.c                    | 1 -
->  drivers/pci/controller/pcie-mediatek-gen3.c | 7 +++++++
->  2 files changed, 7 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
-> index 22fbea61c3dcc05e63f8fa37e203c62b2a6fe79e..bf9d9594bef8a54316e28e56a1642ecb0562377a 100644
-> --- a/drivers/clk/clk-en7523.c
-> +++ b/drivers/clk/clk-en7523.c
-> @@ -393,7 +393,6 @@ static int en7581_pci_enable(struct clk_hw *hw)
->  	       REG_PCI_CONTROL_PERSTOUT;
->  	val = readl(np_base + REG_PCI_CONTROL);
->  	writel(val | mask, np_base + REG_PCI_CONTROL);
-> -	msleep(250);
->  
->  	return 0;
->  }
 > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index e4f890a73cb8ada7423301fa7a9acc3e177d0cad..f47c0f2995d94ea99bf41146657bd90b87781a7c 100644
+> index f47c0f2995d94ea99bf41146657bd90b87781a7c..69f3143783686e9ebcc7ce3dff1883fa6c80d0f4 100644
 > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
 > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -980,6 +980,13 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
->  		goto err_clk_prepare_enable;
->  	}
+> @@ -926,7 +926,7 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+>  	 * Wait for the time needed to complete the bulk assert in
+>  	 * mtk_pcie_setup for EN7581 SoC.
+>  	 */
+> -	mdelay(PCIE_EN7581_RESET_TIME_MS);
+> +	msleep(PCIE_EN7581_RESET_TIME_MS);
 >  
-> +	/*
-> +	 * Airoha EN7581 performs PCIe reset via clk callabacks since it has a
-> +	 * hw issue with PCIE_PE_RSTB signal. Add wait for the time needed to
-> +	 * complete the PCIe reset.
-> +	 */
-> +	msleep(PCIE_T_PVPERL_MS);
-> +
->  	return 0;
+>  	/*
+>  	 * Unlike the other MediaTek Gen3 controllers, the Airoha EN7581
+> @@ -954,7 +954,7 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+>  	 * Wait for the time needed to complete the bulk de-assert above.
+>  	 * This time is specific for EN7581 SoC.
+>  	 */
+> -	mdelay(PCIE_EN7581_RESET_TIME_MS);
+> +	msleep(PCIE_EN7581_RESET_TIME_MS);
 >  
->  err_clk_prepare_enable:
+>  	/* MAC power on and enable transaction layer clocks */
+>  	reset_control_deassert(pcie->mac_reset);
 > 
 > -- 
 > 2.47.0
