@@ -1,89 +1,96 @@
-Return-Path: <linux-pci+bounces-17230-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17231-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 393BC9D6844
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 10:01:30 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 728D89D6849
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 10:06:04 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCB6E281D7A
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 09:01:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE506161241
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Nov 2024 09:06:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B0BA16EB42;
-	Sat, 23 Nov 2024 09:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6CB17C9F1;
+	Sat, 23 Nov 2024 09:06:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vOoXWf9s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FNAJ981c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B3738DD3
-	for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 09:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA44E172BB9
+	for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 09:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732352484; cv=none; b=WjiBZ5keCu3xjzzK8GIQiH+rA6nE0yC7B3r8+smbAC6CwdDBOz1mGBt9Z650MQHhq3D2Bi4cKgtBrfPEQx2J9T0oqmeWk0S8aphmbp2mdmrJxyPvIEN2cYC23QmLwJ3z93coiW5gjVwPbib+ksMw3y7NnUHK4n0Fkp8p1a2a7E4=
+	t=1732352761; cv=none; b=ISzvrwHkn7AQO12mNn/RLcrDbHE43KA9kQdha5u9qn8FTdnIhSkfJRel9UszcsuY8vstZFPokPcn1l/n4HI5ahxzX6Pe0v/q+Ug10DpPrp7xHKZoEiaiPUBqujwMXAUosCXAtKWAFIm/yiJpEqCpmdKPXuGgbwHI49cshNCNjeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732352484; c=relaxed/simple;
-	bh=YrxCZr/zol9fbcvDQahSobhoJ5+oSaDlVLvBp197B2Y=;
+	s=arc-20240116; t=1732352761; c=relaxed/simple;
+	bh=Dca5lQQZBUuYnZig9XxYqsF1j66VHHMxoeFJ12Du3jU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJ9Ox3IWcWa58BDV8iwoQt9c9b6XBSEnItSao0zwqBHTLiZvcRAHYpuUjHhrbge3jvftJEhl4Ei1/KMAR4kQ2+wI2X8lj6EGA5knuU8HLN6Gxml6p2KNZI30hVutz7xmerSZ4U54FWaidm9bMOoJu0OCVgCaE97CNQC3ISx22fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vOoXWf9s; arc=none smtp.client-ip=209.85.210.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ebe/auDl8feXAw3VF1F5GchBmP/CB3oadwPGTDGBqRkNzLBU16cTNcf3ymYMsvyMoXNGj9AORAgFSlAAt3WMPTsYtSlFMWHu42cjwIVCWAG1dwVgdFUPTtLV0Q01NGuCfuUctJcKNciIp39YSPO4dWbZoFbdSjGreKC+PLVjDyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FNAJ981c; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-724e1b08fc7so1379881b3a.0
-        for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 01:01:21 -0800 (PST)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7246c8c9b1cso2397504b3a.3
+        for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 01:05:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732352481; x=1732957281; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732352759; x=1732957559; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=BBiKB3fBf+Bk4u52dSdkKE7lx9s1dAcTEPhof51kEoU=;
-        b=vOoXWf9sRH5ykOuEUMIWpCblSZ16I9TottUtP4tD3sFciGCUwD0ArJhMjszC7BeKam
-         fx/cZm4jOQcxQL0c23w4GBMjWa81MS7DHszaCwvQ7VKrVlm3e8ESW0kgeS6Kjk73090M
-         PTkdRHvbPosBN4SlsJN5OQXUdyLCz0WMT11d7PUqF+PiEe2OxwUmg3tnke+icU9Bu+FB
-         CCu5dqx5lTGQavSAOZAH7mbck8LIvGMtrUV/rpIaMWMomn1Gg2eoIo1XsaO/mMUySutc
-         Rf/Q6I3A3PwXhGr/rk3TK2+ISlSkAtFoEHqqGJwIHzct14g3tHRhJ+qrZss8CYE9VO+D
-         xmfA==
+        bh=xZiVNGou0sUPR+VUZtEVpUsLh0jpbMmext51WC1uOek=;
+        b=FNAJ981cPe5tnAAV6pv/2mxEsw61y+jFgByg064fT1NZqYLclaehCqF9Kr75HiJde4
+         dGG8EnDHyGqG69nFZgRosgL9Li85G54mzyKogPY5BEFxDF9dZnFI3q8+N6O7IUbL/r0e
+         /zAgMdhcAWgHEFzLX+nmoMlR8hCi9689OCW9a1w2ysjZJHjO2clBl0OZz8lbEqDiwhGx
+         dJjVojiBs0Cdl2zgtFA5rR6y3BqQHX0KefVPkXJKMrOAnxqjjTZt9EZoY3Vilo6UcQ+D
+         ql75GSbn9GLjDE1FxsbUktTzM4WtO9boCSopO1l9deRAC6H9FqJEHNUjP3WYcuawZZn6
+         rr2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732352481; x=1732957281;
+        d=1e100.net; s=20230601; t=1732352759; x=1732957559;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BBiKB3fBf+Bk4u52dSdkKE7lx9s1dAcTEPhof51kEoU=;
-        b=jMq5yuC1O4OrZflR1L6Gwpa6wZxBQO/ETFN9U3SLR0ZI5zy7MbBfU6k5XgoI7ZaBeA
-         WEIQ92O1m9QV3tHm3ijiWvBkOd4Y395XWWnozaAFmR7zDqWK1X+fnbU4yWV0OllTuofv
-         KbvF7tzkMDMSB2wO9ZIBkOGHiznf8B1+OkTo9SEIzr/Bpsk6EMuRrOmkRo+FeDxdeyNY
-         6KXtZtHzTOfzt6fE+kxYhl7qrswCMgtFqwQuD5NS70HJ04nPI06jn2aqy4UXVvdcAbC3
-         BuGYRzJiWPTliCCm65zGB5+oB/0Ayp5FwnVfwb5Jjr9K4ov0KJC8HfZDnJI1uDACC6cl
-         kIqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBKGwWJI/r45A0KPBR4t17BMIE0wrHO4evDNY0gn21uLhhn50TuMA4XzHEg8iHHb7xna0Ur9/bJ0E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZqF03ZoIGiLQhC/p+QXfkVznGoUKXQ77yKrB2Yh3AJBmKm/1f
-	gpmOFT6JVxi42LCROurC2H+Hu+MGCRucQDcUy8RjxsRt9nh1rWOGrxUYXKasYA==
-X-Gm-Gg: ASbGncuv4qZ3y3fXoliyNRRKKlfSCOoY0Unk9+Hm+VQS6z1CLgwQPnQ6GFbAIGBHWQv
-	cj0Q8GEdmE4nMuzPFqOcwazvUPm/nib6LfuSy730zK/80ypmziDNYwrCNPhLxWouNfmMcKMJqfl
-	ULEsjO5oVjR7i9umHZJsRkceHK4sum8J8ffuq6ThZNM5GWL4ifeOF+gkhMz0K5EX/gvz5KP+QPD
-	+umLBPs77Kk/rU9AhR5Vl+MpcR6rXuXZ+C9Gr7q0hQnWfOYNUAEXi11ZrVGI/Besw==
-X-Google-Smtp-Source: AGHT+IEXRKK5p3elatN9Cx1SAW9h5XDRG6j63BDSg8WgjcTkcpjwRut8X2gGXXHIdFCTSsoB7yX7Yg==
-X-Received: by 2002:a17:902:d2c5:b0:212:4751:ad7e with SMTP id d9443c01a7336-2129f7315dfmr69743785ad.8.1732352481266;
-        Sat, 23 Nov 2024 01:01:21 -0800 (PST)
+        bh=xZiVNGou0sUPR+VUZtEVpUsLh0jpbMmext51WC1uOek=;
+        b=u8hEKutQNdgS3iG8UtBbwwU8+W+6/MvsklwiQcJ7qGvzf3vjz1F7513Jwf3A7F4UKP
+         8n2OGQkGkiy0DY+KXIM4jGyJ9+26evrjHjx6mcL3z8ZXSLpzrf/22KCrHXTC3kEOdoNd
+         rYLlLHC79EQzlit/6sRq8JNGnZWxn8Il+NFrJkfVNh7peqn7dGvUFn8t0xrZObFQTK/m
+         4Suts7Vyjuemgd0XzzoNS3v39W6mGa1uXtwWDxooXYfkG4d63o2lpmGlRAwHbtEEe3LZ
+         DBERqxvkKw8zcsMWt0qzZRkkokSH5bcYfssw86kj1sZfi5zzjresZei6dMJlsCwE5dOi
+         60zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWO0PgebTGzETkAPGIg//hcLzQIiELe2zHZlqAqu7aQwfGTt6812nIzN024ARJzX7NUxw33NDfCOOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLicn7HqOir6lXCuc78kqViPok11/gGX3K0ybEQbqgG1W9nC6K
+	UMnW5zA/2tEe2no20lUpph6KOxlGs7mj3xxBYlCaa9/zZWyESiKjx8qh9GgrnQ==
+X-Gm-Gg: ASbGncvUORzQupWknmXZmWbh8KY42CqweQCt7ph2RXEpo+A20lb805m87P6V6p24tcH
+	4XnLoGro6neFMlgc4ySvqA+I3nnxyd0AAXGgnz31HNEKTHObemJql/IwrIX43TxFMEAgThkEPG3
+	hC8NNaQ5PQtCGEs8w43W5niEl7tmQatPB9StfT+w8d9fTlEqgGMSQbn8LhcrCctbFjHZhX+sKHc
+	JluMNyAqiAtDKRPPkXbtsLA4a4hZ0SmsdR/c4/oadfXIzzHcJUE9+l51+6nn5Nicw==
+X-Google-Smtp-Source: AGHT+IGmEszMNhZtwje0Xvl4SgF09bMp9/3Vg2UfRxuTgmP2VK0VjGMW/4vV+mCtT1R8tU+WzR0uag==
+X-Received: by 2002:a05:6a00:244e:b0:724:591e:ea20 with SMTP id d2e1a72fcca58-724df66d881mr7872246b3a.14.1732352758798;
+        Sat, 23 Nov 2024 01:05:58 -0800 (PST)
 Received: from thinkpad ([2409:40f2:101e:13d7:85cf:a1c4:6490:6f75])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dbff380sm28769635ad.114.2024.11.23.01.01.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de532db3sm2877085b3a.93.2024.11.23.01.05.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2024 01:01:20 -0800 (PST)
-Date: Sat, 23 Nov 2024 14:31:13 +0530
+        Sat, 23 Nov 2024 01:05:58 -0800 (PST)
+Date: Sat, 23 Nov 2024 14:35:49 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, andersson@kernel.org,
-	konradybcio@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by
- the user
-Message-ID: <20241123090113.semecglxaqjvlmzp@thinkpad>
-References: <20241118082344.8146-1-manivannan.sadhasivam@linaro.org>
- <20241122222050.GA2444028@bhelgaas>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] PCI: mediatek-gen3: rely on
+ clk_bulk_prepare_enable() in mtk_pcie_en7581_power_up()
+Message-ID: <20241123090549.epzrv5o2i5q2mgz7@thinkpad>
+References: <20241118-pcie-en7581-fixes-v4-0-24bb61703ad7@kernel.org>
+ <20241118-pcie-en7581-fixes-v4-2-24bb61703ad7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,143 +100,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241122222050.GA2444028@bhelgaas>
+In-Reply-To: <20241118-pcie-en7581-fixes-v4-2-24bb61703ad7@kernel.org>
 
-+ Ulf (also interested in this topic)
-
-On Fri, Nov 22, 2024 at 04:20:50PM -0600, Bjorn Helgaas wrote:
-> [+cc Rafael]
+On Mon, Nov 18, 2024 at 09:04:54AM +0100, Lorenzo Bianconi wrote:
+> Replace clk_bulk_prepare() and clk_bulk_enable() with
+> clk_bulk_prepare_enable() in mtk_pcie_en7581_power_up() routine.
 > 
-> On Mon, Nov 18, 2024 at 01:53:44PM +0530, Manivannan Sadhasivam wrote:
-> > PCI core allows users to configure the D3Cold state for each PCI device
-> > through the sysfs attribute '/sys/bus/pci/devices/.../d3cold_allowed'. This
-> > attribute sets the 'pci_dev:d3cold_allowed' flag and could be used by users
-> > to allow/disallow the PCI devices to enter D3Cold during system suspend.
-> >
-> > So make use of this flag in the NVMe driver to shutdown the NVMe device
-> > during system suspend if the user has allowed D3Cold for the device.
-> > Existing checks in the NVMe driver decide whether to shut down the device
-> > (based on platform/device limitations), so use this flag as the last resort
-> > to keep the existing behavior.
-> > 
-> > The default behavior of the 'pci_dev:d3cold_allowed' flag is to allow
-> > D3Cold and the users can disallow it through sysfs if they want.
-> 
-> What problem does this solve?  I guess there must be a case where
-> suspend leaves NVMe in a higher power state than you want?
-> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Yeah, this is the case for all systems that doesn't fit into the existing checks
-in the NVMe suspend path:
-
-1. ACPI based platforms
-2. Controller doesn't support NPSS (hardware issue/limitation)
-3. ASPM not enabled
-4. Devices/systems setting NVME_QUIRK_SIMPLE_SUSPEND flag
-
-In my case, all the Qualcomm SoCs using Devicetree doesn't fall into the above
-checks. Hence, they were not fully powered down during system suspend and always
-in low power state. This means, I cannot achieve 'CX power collapse', a Qualcomm
-specific SoC powered down state that consumes just enough power to wake up the
-SoC. Since the controller driver keeps the PCI resource vote because of NVMe,
-the firmware in the Qualcomm SoCs cannot put the SoC into above mentioned low
-power state.
-
-> What does it mean that this is the "last resort to keep the existing
-> behavior"?  All the checks are OR'd together and none have side
-> effects, so the order doesn't really matter.  It changes the existing
-> behavior *unless* the user has explicitly cleared d3cold_allowed via
-> sysfs.
-> 
-
-Since the checks are ORed, this new check is not going to change the existing
-behavior for systems satisfying above checks i.e., even if the user changes the
-flag to forbid D3Cold, it won't affect them and it *shoudn't*.
-
-> pdev->d3cold_allowed is set by default, so I guess this change means
-> that unless the user clears d3cold_allowed, we let the PCI core decide
-> the suspend state instead of managing it directly in nvme_suspend()?
-> 
-
-If 'pdev->d3cold_allowed' is set, then NVMe driver will shutdown the device and
-the PCI controller driver can turn off all bus specific resources. Otherwise,
-NVMe driver will put the device into low power mode and the controller driver
-has to do something similar to retain the device power.
-
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/nvme/host/pci.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> > index 4b9fda0b1d9a..a4d4687854bf 100644
-> > --- a/drivers/nvme/host/pci.c
-> > +++ b/drivers/nvme/host/pci.c
-> > @@ -3287,7 +3287,8 @@ static int nvme_suspend(struct device *dev)
-> >  	 */
-> >  	if (pm_suspend_via_firmware() || !ctrl->npss ||
-> >  	    !pcie_aspm_enabled(pdev) ||
-> > -	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND))
-> > +	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND) ||
-> > +	    pdev->d3cold_allowed)
-> >  		return nvme_disable_prepare_reset(ndev, true);
-> 
-> I guess your intent is that if users prevent use of D3cold via sysfs,
-> we'll use the NVMe-specific power states, and otherwise, the PCI core
-> will decide?
-> 
-
-Not PCI core, but the controller drivers actually which takes care of powering
-down the PCI bus resources.
-
-> I think returning 0 here means the PCI core decides what state to use
-> in the pci_pm_suspend_noirq() -> pci_prepare_to_sleep() path.  This
-> could be any state from D0 to D3cold depending on platform support and
-> wakeup considerations (see pci_target_state()).
-> 
-> I'm not sure the use of pdev->d3cold_allowed here really expresses
-> your underlying intent.  It suggests that you're really hoping for
-> D3cold, but that's only a possibility if firmware supports it, and we
-> have no visibility into that here.
-> 
-
-I'm not relying on firmware to do anything here. If firmware has to decide the
-suspend state, it should already satisfy the pm_suspend_via_firmware() check in
-nvme_suspend(). Here, the controller driver takes care of putting the device
-into D3Cold. Currently, the controller drivers cannot do it (on DT platforms)
-because of NVMe driver's behavior.
-
-> It also seems contrary to the earlier comment that suggests we prefer
-> host managed nvme power settings:
-> 
->   * The platform does not remove power for a kernel managed suspend so
->   * use host managed nvme power settings for lowest idle power if
->   * possible. This should have quicker resume latency than a full device
->   * shutdown.  But if the firmware is involved after the suspend or the
->   * device does not support any non-default power states, shut down the
->   * device fully.
-
-This above comment satisfies the ACPI platforms as the firmware controls the
-suspend state. On DT platforms, even though the firmware takes care of suspend
-state, it still relies on the controller driver to relinquish the votes for PCI
-resources. Only then, the firmware will put the whole SoC in power down mode
-a.k.a CX power collapse mode in Qcom SoCs.
-
-We did attempt so solve this problem in multiple ways, but the lesson learned
-was, kernel cannot decide the power mode without help from userspace. That's the
-reason I wanted to make use of this 'd3cold_allowed' sysfs attribute to allow
-userspace to override the D3Cold if it wants based on platform requirement.
-
-This is similar to how UFS allows users to configure power states of both the
-device and controller:
-
-/sys/bus/platform/drivers/ufshcd/*/spm_lvl
-/sys/bus/platform/devices/*.ufs/spm_lvl
-
-If the 'd3cold_allowed' attribute is not a good fit for this usecase, then I'd
-like to introduce a new attribute similar to UFS.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
+
+> ---
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index 4d1c797a32c236faf79428eb8a83708e9c4f21d8..3cfcb45d31508142d28d338ff213f70de9b4e608 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -948,12 +948,6 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+>  	pm_runtime_enable(dev);
+>  	pm_runtime_get_sync(dev);
+>  
+> -	err = clk_bulk_prepare(pcie->num_clks, pcie->clks);
+> -	if (err) {
+> -		dev_err(dev, "failed to prepare clock\n");
+> -		goto err_clk_prepare;
+> -	}
+> -
+>  	val = FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
+>  	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
+>  	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
+> @@ -966,17 +960,15 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+>  	      FIELD_PREP(PCIE_K_FINETUNE_MAX, 0xf);
+>  	writel_relaxed(val, pcie->base + PCIE_PIPE4_PIE8_REG);
+>  
+> -	err = clk_bulk_enable(pcie->num_clks, pcie->clks);
+> +	err = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (err) {
+>  		dev_err(dev, "failed to prepare clock\n");
+> -		goto err_clk_enable;
+> +		goto err_clk_prepare_enable;
+>  	}
+>  
+>  	return 0;
+>  
+> -err_clk_enable:
+> -	clk_bulk_unprepare(pcie->num_clks, pcie->clks);
+> -err_clk_prepare:
+> +err_clk_prepare_enable:
+>  	pm_runtime_put_sync(dev);
+>  	pm_runtime_disable(dev);
+>  	reset_control_assert(pcie->mac_reset);
+> 
+> -- 
+> 2.47.0
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
