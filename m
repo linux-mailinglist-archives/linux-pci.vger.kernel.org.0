@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-17267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5A079D77F0
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 20:33:51 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66FA99D77FB
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 20:41:43 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37E4B162D57
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 19:33:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DEC0281861
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 19:41:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFC2913C80E;
-	Sun, 24 Nov 2024 19:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201A7157A5C;
+	Sun, 24 Nov 2024 19:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WfzrmAZH"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WsgF/ZrB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A9A2F26;
-	Sun, 24 Nov 2024 19:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADAA15C15E;
+	Sun, 24 Nov 2024 19:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732476827; cv=none; b=YrZaVskwmZralYMIxyzDxMCH1H5if2E2cSyxE62ZsJxmgYajZpQofxJfGJTHo58EZXWUxyXj8QP8h3IRGF2d2qJHyHzW62ogtS7E8E7vwP+/eTFgrdFYkyY/0eWhz7X1Kt6+niYeHa/05DsIX7Fb/do8u/RCJ0KVlUneZptTQVc=
+	t=1732477298; cv=none; b=hYVrlmx1bFab1mbjWClEU9f3E417v9n0H6CsR2fLxflfrevnFfFEDF6DakVbgfWLPZovUKxIWCoUABZ/WSTP0rSQhviDqULHfL4/Eg85x7nOsUstbc4Lh/SfL6Jacgq9UZBuUfxQO6AOKjAhZ5aF4rMmqxHHYy/YvPPTE3vdLLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732476827; c=relaxed/simple;
-	bh=//zdK3ZOBVziM1Nu3lSrN7ceBulAvk9BvRWRpIS0JZ0=;
+	s=arc-20240116; t=1732477298; c=relaxed/simple;
+	bh=QrYMgzJLpxKeviaNXRthlaJUQ1IM1jjxvRYFRshggDc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GShJUahSXbLAFa2kaRKTgcb8CmrSwBgyUPQamZ8IVi6hGE5KFME1w+nDLJJirECnv1dfN0X2RBER5fXgJAaMHKbQtOX6UBJRhD9PgwZbNY5h+nwWQZelof/aSEyg9hnd4KgZHbvSurbls6FzrSew+x74dbSx0ZkYUDT7OQeSSHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WfzrmAZH; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=fZ4gy6K4buuKwYp7jzsuVTFg93TLPf9kCNgsqdCsTe9giTLUq8NUkdhuB0oirkoIufM4H0ye53489cwObGvkLBIwxksgF66qwLCESHukQaFTF+66qLMDOfEASUToLY/nG+svSJXPL3fjF7zbLX08/SJV5dfzxnYi1tYdRy6HadE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WsgF/ZrB; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -36,13 +36,13 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=aKguNnI8qbCJPOk/0OUXKJn6KyDqP8gDSUIL96BzNMY=; b=WfzrmAZH10Da3X0YvlIGVnGs1c
-	ukUvvwBFmPwrzs5GOSMIJbyXbEFVbwyj4A23Aq7F272ZGcLhLQOQW9VuR41FGxEk6K4M+j72XpJHn
-	sWh2LrElJYN7f71/4/hQaWrD28n8ZePFMpMAhiA+9ZxPSfufRcZoN5H3RBrF8TUS7qFM=;
+	bh=+GykA3KcCgiZFrIubEllhonhwTqAWArBryLo6OL2K7A=; b=WsgF/ZrBh40RGoTDGIj8izylFB
+	NPbyHzySRoNccf9RLlCl2XoPoDVvbXBoebGwykMuVwg9ueGS2YkG8g82X51zwJaL/D2+7LhLWcyGs
+	nR2h1WCN9quegZbNlrYg7eYVo7OEBTeYR2dRZ70erM5Vf3JDpX2JU3z4XMYUc0zGdeXo=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1tFIMU-00EJXe-0H; Sun, 24 Nov 2024 20:33:38 +0100
-Date: Sun, 24 Nov 2024 20:33:37 +0100
+	id 1tFIU1-00EJYp-SE; Sun, 24 Nov 2024 20:41:25 +0100
+Date: Sun, 24 Nov 2024 20:41:25 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Andrea della Porta <andrea.porta@suse.com>
 Cc: Michael Turquette <mturquette@baylibre.com>,
@@ -71,10 +71,11 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	Herve Codina <herve.codina@bootlin.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <e57c9c8b-2534-4d3a-b762-ca9c1f7dac40@lunn.ch>
+Subject: Re: [PATCH v4 09/10] arm64: dts: bcm2712: Add external clock for RP1
+ chipset on Rpi5
+Message-ID: <9abb376c-3399-4c2c-8e7c-cea1184ea370@lunn.ch>
 References: <cover.1732444746.git.andrea.porta@suse.com>
- <c48e6b9b178cdaa01b92ae82e8fd24c2ba5f170c.1732444746.git.andrea.porta@suse.com>
+ <8deccbd7ab8915957342a097410473445987b044.1732444746.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,25 +84,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c48e6b9b178cdaa01b92ae82e8fd24c2ba5f170c.1732444746.git.andrea.porta@suse.com>
+In-Reply-To: <8deccbd7ab8915957342a097410473445987b044.1732444746.git.andrea.porta@suse.com>
 
-> +++ b/drivers/misc/rp1/rp1-pci.dtso
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +
-> +/* the dts overlay is included from the dts directory so
-> + * it can be possible to check it with CHECK_DTBS while
-> + * also compile it from the driver source directory.
-> + */
-> +
-> +#include "arm64/broadcom/rp1.dtso"
+On Sun, Nov 24, 2024 at 11:51:46AM +0100, Andrea della Porta wrote:
+> The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
+> Add clk_rp1_xosc node to provide that.
 
-This is probably O.K, for now, but really the tooling should be
-extended so that DT files can be checked anywhere in the tree. I can
-see more such embedded DT overlays appearing with time, and there is
-nothing actually arm64 specific here, it is architecture agnostic. It
-is just a PCIe device, there is no reason it could not be used on a
-S390, Risc-V, or loongarch.
+I'm wondering if this is the correct place for this clock. From your
+description, the bcm2712 itself does not provide the clock. There is a
+crystal on the board. So the board provides the clock. What happens
+when the RP1 is used on other boards? Also, does the RP1 need an
+actual crystal, or can you feed it a clock? Often such inputs are
+flexible, you can connect a crystal across two pins, or you can feed a
+clock into one pin.
 
-      Andrew
+If a crystal is the only choice, i would probably have it part of the
+RP1 overlay. If a clock can be used, i would make it a board property.
+
+	Andrew
 
