@@ -1,95 +1,107 @@
-Return-Path: <linux-pci+bounces-17265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A3359D7559
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 16:36:17 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C14A9D77E5
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 20:26:31 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3A522875CE
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 15:36:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27CAF162BCF
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 19:26:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A1918A6DF;
-	Sun, 24 Nov 2024 15:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB3FE155A52;
+	Sun, 24 Nov 2024 19:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NS0edT7p"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PknNvkSM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7F218FC9F;
-	Sun, 24 Nov 2024 15:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E722500A6;
+	Sun, 24 Nov 2024 19:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732461976; cv=none; b=GkkwE0U0QTv56JolIB3Oje0CCPlp1Ck0l47K+v0wwsE4tYlsCvPr2s4qjJCyq4LJAJgXF5Sug6TypSr0oxpRAcC5HnJuS7ibLxrd4rUMREd///8HQkdLW3ECpqhI/ZePabFCtteML2Y/sZK2nNQwb/k4gmqfMPSkUTZUf9ZZreQ=
+	t=1732476383; cv=none; b=CbFG4sh5Nhfem4Is/OJJisgVKUI8t9RCbV1Oz9Hn7yEdUm35lTjcv+shfnf+pYqdjow8GnrTTfGjpYBOZ9ghJx+s3jhDrbtbsvDQPi3MBKnHSXCZKPMJqjd6dacK4UtXB3ndV6bothIckzYl8fWOv280BPH6Ig7xjrUGRGLUlxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732461976; c=relaxed/simple;
-	bh=x15zhF9GW0i/jB5F4aM+ww3ByyaY8y3kDOuMbCCVrlA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=qv01Z3eOm1A4kSFphAUm9Wzop6t2HrxWH8uC9HF1zmzS2/4+Ae1MbE7LvQo5Mbup+A8LVVr/lIR3g2EpzCR85g1FOmhVkPdkMHdyJUwCIhROrCBz2cujU5p2sUaofizgJQrV6MSJTZgxa3m7+hGW7TvAKoAUoOgdvjNasBh+kyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NS0edT7p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B2C9C4CECC;
-	Sun, 24 Nov 2024 15:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732461976;
-	bh=x15zhF9GW0i/jB5F4aM+ww3ByyaY8y3kDOuMbCCVrlA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=NS0edT7pdihHuaSLhTj0mB3QGaWr+bZiDWNrGAI9JoKJFBPTYkvoZqlknaRZETY8R
-	 legxidwxNwveE3K0UGcOWRLTF7eIS7G2aHw44AZUMjrhUpJOukQCNTvoMN+f/BEgt3
-	 3qNe6uvT9Po34PoCC4vLcG6+kI8U8lHp37c4Ke5ia4KSeiSkq6F06SBU0gUjS8wDDk
-	 DB/z8YHlm91qTEUS7+s/gRUGeWP2A+PnZ6dJJPa9gcZAccCi9iZaBxZ3frK7Ri4Xab
-	 4tjWSVMPvLK4Wmh5dzghFgdXKpfHB24wF5i18vfoqs4WuptKKMjiwevNK/bQquFe/p
-	 XUR0iJBIPGzQQ==
-Date: Sun, 24 Nov 2024 16:26:14 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Frank Li <Frank.Li@nxp.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, imx@lists.linux.dev,
- dlemoal@kernel.org, maz@kernel.org, tglx@linutronix.de, jdmason@kudzu.us
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v8_2/6=5D_PCI=3A_endpoint=3A_Add_RC-to-EP?=
- =?US-ASCII?Q?_doorbell_support_using_platform_MSI_controller?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20241124131701.yrb4bkhwigcux6b4@thinkpad>
-References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com> <20241116-ep-msi-v8-2-6f1f68ffd1bb@nxp.com> <20241124071100.ts34jbnosiipnx2x@thinkpad> <113B93C0-8384-431A-BE4D-AA98B67C342A@kernel.org> <20241124131701.yrb4bkhwigcux6b4@thinkpad>
-Message-ID: <066A8516-07D3-43F0-A135-9F4360FE9698@kernel.org>
+	s=arc-20240116; t=1732476383; c=relaxed/simple;
+	bh=1qIuIvpK2MuhI/SQRLZVbgKJw5u3DWeW/6z9aow2UFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j80rMhWZy638JeCQv7zjRBniX5IT5/1C0F9OIbCvmWrC2SnR7IkoHw1aU+yERvflJu2cheZy1otZ815SqJGXGb8IucKFUFEQygzM9YKoy1PXMVkEG63ueMbjUUUWi9FWTav+eeqh8jezB+VkhPVYHQPufNhkjz0ptuOWtSOpRLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PknNvkSM; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=i3bP0t16qsr90BwN1tiQOKPDR7z/6lXOBhQWdTBTAaU=; b=PknNvkSMC52LiAhA92txLc/aKX
+	447dPAd8ahF9BHssahwaLfnKSsifKDkUd4TYXyjF4o6JEW4XQQFdhGrop/Qf/mwgGR0oNpvHs7xh2
+	GcH42RuOLGW36Dks561K1Eb7Vf4RK/3p4gB49E1sC7CMYd+mADqhuVEbWT3QVXisIBZM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tFIF7-00EJWL-1B; Sun, 24 Nov 2024 20:26:01 +0100
+Date: Sun, 24 Nov 2024 20:26:01 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <22e08939-fa89-4781-824e-1ea01648fb1b@lunn.ch>
+References: <cover.1732444746.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1732444746.git.andrea.porta@suse.com>
 
+> This patchset is also a first attempt to be more agnostic wrt hardware
+> description standards such as OF devicetree and ACPI, where 'agnostic'
+> means "using DT in coexistence with ACPI", as been already promoted
+> by e.g. AL (see [4]). Although there's currently no evidence it will also
+> run out of the box on purely ACPI system, it is a first step towards
+> that direction.
 
+When combined with CONFIG_PCI_DYNAMIC_OF_NODES and this patch series:
 
-On 24 November 2024 14:17:01 CET, Manivannan Sadhasivam <manivannan=2Esadh=
-asivam@linaro=2Eorg> wrote:
->On Sun, Nov 24, 2024 at 10:56:38AM +0100, Niklas Cassel wrote:
->>=20
->> I'm okay to change the error print as you suggested, but in that case I=
- really think that we should add a comment above the check, something sugge=
-stive like:
->>=20
->> /*
->>  * The pcie_ep DT node has to specify
->>  * 'msi-parent' for EP doorbell support to work=2E
->>  * Right now only GIC ITS is supported=2E
->>  * If you have GIC ITS and reached this print,
->>  * perhaps you are missing 'msi-parent' in DT?
->>  */
->
->Looks good to me (except that the comment needs to fit 80 columns) :)
+https://patchwork.kernel.org/project/linux-pci/cover/20241114165446.611458-1-herve.codina@bootlin.com/
 
-Sorry about that, I wrote the reply from my phone :D
+It probably does work, or is very near to working. Bootlin appear to
+have the LAN966x working on an ACPI system, and what you are adding is
+not very different.
 
+I'm also currently playing around in this area, trying to instantiate
+some complex networking hardware using DT overlays on an ACPI system.
 
-Kind regards,
-Niklas
+     Andrew
 
