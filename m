@@ -1,119 +1,154 @@
-Return-Path: <linux-pci+bounces-17245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C845D9D6D5B
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 10:56:47 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDA5B9D6D74
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 11:05:16 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 567EDB20FA4
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 09:56:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FD0F1610F2
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 10:05:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95FFA14AD2D;
-	Sun, 24 Nov 2024 09:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AF211885AA;
+	Sun, 24 Nov 2024 10:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CH2EVsJ+"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TLKQGZKh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2EC33987;
-	Sun, 24 Nov 2024 09:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F8C155C8C
+	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 10:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732442201; cv=none; b=kwbDud8E3L+z6QKR7pP6CUS8Z4nV1Dz0hVjkrIuXdUdnPCAsjOjZc6mFvJt3xZUR0o7puv/ODHEVSZgTEP1aUFSynQH3ycZUV5fuy2U4zFRIhrCnotq7umpp+inMaBwAyllKAE/3Lgj18gNrpSvgU52CamspP7QBTfWb0UFEvS0=
+	t=1732442712; cv=none; b=Z1hkr8JSgnoGPS28fOl7P8s2oe1bSLr7ygF+xQPw4GOkT/OQyIstoRFXm8Bo+YtoXfcXWVrrkr61I3MIxTH56pnyhr4ou9SPg3OQsREU7uxpEzFZyVPCPm9206+gzIIMBsmih3oAcoUbxNntIKhOwtIfLYkL70KGd5jhm4WHY68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732442201; c=relaxed/simple;
-	bh=FtzR8QfDziwOhvMSs+hEciy3op5O9l9NexN6HGEXINU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=pB+wtr2zqrULM2+voyZ0HVo6EG/J63TVJqAId7CJujzak4pD63BOREZjEX/e+R9uCKU4c2Mku+PMfOMQNudfZAmGHCcxLypoo0CEmLhzXQcHt7H4VdNETujYt0dVfOQ55u8+RA+cDcRior674kCYuwlysFn1gxYXYu5CsBdK6bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CH2EVsJ+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D0F0C4CECC;
-	Sun, 24 Nov 2024 09:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732442200;
-	bh=FtzR8QfDziwOhvMSs+hEciy3op5O9l9NexN6HGEXINU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=CH2EVsJ+3DLtocLj3hzQF/BkwbSDoPw4qXznAW/a864sb3SRocV79ZZbt1Yu9x7FR
-	 +dBb4hhB3CiyRtE3NeDbzbNEEXNClNvsX1p3dzmutxrSiWLyhqb7tLFIHiG5Ix6y6W
-	 4WMEp7m5SVg/A8enQyqS7y6EBbzi8gzXQJvD2HgVv8wWFbpXdUHJZ7UqfqsLuz5H9z
-	 OCMVgS91Y3FaQWsFa6fKdlY6tt/iDZnWP8c8aAcoP6SB6T2Ztc5ppQC3HQS/aG5uSs
-	 Wslv6kOxZ5GF/SrhoJ7uiZtMqTV0KECJ/j1jDDHcjY1u2fAGVLxVY3EdKhJQZLtmzU
-	 SgYRe8X9bDGnw==
-Date: Sun, 24 Nov 2024 10:56:38 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Frank Li <Frank.Li@nxp.com>
-CC: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, imx@lists.linux.dev,
- dlemoal@kernel.org, maz@kernel.org, tglx@linutronix.de, jdmason@kudzu.us
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v8_2/6=5D_PCI=3A_endpoint=3A_Add_RC-to-EP?=
- =?US-ASCII?Q?_doorbell_support_using_platform_MSI_controller?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20241124071100.ts34jbnosiipnx2x@thinkpad>
-References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com> <20241116-ep-msi-v8-2-6f1f68ffd1bb@nxp.com> <20241124071100.ts34jbnosiipnx2x@thinkpad>
-Message-ID: <113B93C0-8384-431A-BE4D-AA98B67C342A@kernel.org>
+	s=arc-20240116; t=1732442712; c=relaxed/simple;
+	bh=xYyBbJ1bV1F/AvNsXaz4DN1NT7f6hP3J7eQ9A3tlTH4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=c7WlCStf+D8LAzt/hZslX+cQ6qf9FI3X7O3DD6wOjlWqHVupDdugVuo0RM30fwbM4u3wteAno4cE7nMKvZlN8hyNaMvQyF0U/hPQZSVortW7BE9O1Egq2aWBajv5Wc0Pduk11BGLof9DWkR+Ay5j6F5VfPP8W6R6E10tl2v3PBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TLKQGZKh; arc=none smtp.client-ip=209.85.218.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-a9e44654ae3so481177166b.1
+        for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 02:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1732442709; x=1733047509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rc/jEUsBswYkaNb52ief0DkwziwerNcpWx/rdhbBFpU=;
+        b=TLKQGZKh+ukC5GklXmw+ac1cisJMfJ/M6s7jxDRqmrl/2wE9o6QcwwPv2dvzgZPJXa
+         DazyQG9LwNsz7SQqZV3eq2KfztXmaGh7rT3wU8uP6gijFuhzjlIKvWwGLeWuz75FecLS
+         WLpcpZ1seh/UX1LbbyRXR+rAd4s8ltTJON0tKceFw1cfduXDH9GU/RQ9JGdx6PGvzJ2j
+         UoG0Q4v9tMq0XLmlHClz1y5CWirF+nOmbL9MdkWCb7MdkgFAmln758io8bywfuYT2PCV
+         wQnc3c+Ki/6NECj4RX6fFWvJFla8KVGE6wOd+WwnbqR8zA/uoD+B+1CZ3sHp73fqW0kV
+         JAow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732442709; x=1733047509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rc/jEUsBswYkaNb52ief0DkwziwerNcpWx/rdhbBFpU=;
+        b=wVjyC44x+m/bM1pn4Aj3vh6kogsNeOuk5SQtag+P3aU4bvZTbMuPNSDWOgLfkn+Z3p
+         RBCHEJkxI32jRErwoh+wdlKDfD5K1htEHVzWlNLz+PXqntUV5m9HldIGOO99apISlisn
+         FYu2gES3z+aZTr27yDx+JKkkvEeH6zZqddhye5G5dkFRJMjzKdmA+j3jhgEdX7S4O4mT
+         fzl2NkuHJnUrXHwnPPmiVk/D0yo2fMWunzVo4t+SAhrveUsIhQKaU2Zwb0uYPYYbM2VZ
+         4M7hVOr+4Ucu+Tq6xf06opXHGgu1onkKUZHt/EgCH03/r1fcxppjanE/+AZvP+kWauiu
+         Dkgw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/VPqXUyGAZtsZF/U0pBdEyjgQ6OHNZmcRnc8h/Ns0pMgB6E3/kv9lhm9x1+ugK2p6wo2BZQAcnoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgM49KrEmvS+BShMn8p11X41csOYvlsrpDkEdcODz09xz7uCie
+	qwENLtSeJTuytWd8XDh341T/FNiUt7zJgRq827rl8y4F83U0UPEDghQfRQ2TgMU=
+X-Gm-Gg: ASbGnctfdC7z2qaE1X5PHrWEFIiRYmguVwrpAk6Dh6RFOvJg/cUpj3IFkNA5XNoeFrF
+	ZieIqQnkrBnrmv13ABfXI15ifzyIl9TQtmwPvdjUVSPD9H44HXtCih4Dlw7EKfO3c2NiRzjFZvg
+	xE6+BFDrFDm6rFuyox3Jhm22OnH0y5/NIjbMyrh27fJSnjWUgRPHPJjZTRVNWATYq4GpDqZ3e4j
+	9hEF+WCayktWq3cBfekAE+B9cCikF9DPxV0KLMjotDKuKcirPNHNcusyZ88SczgtukCGEZTJUwD
+	HIO69I4YY3cXoE/b7BxJ
+X-Google-Smtp-Source: AGHT+IE6n1Sl2VjDnUF5IiR4wNGa1GDW8vw2+O+cu/s3Q+7FHS16Q8BL2O+lyk7mxoO9jBhc7KuPpQ==
+X-Received: by 2002:a17:907:77c9:b0:a9a:67aa:31f5 with SMTP id a640c23a62f3a-aa50990b2a9mr726045266b.10.1732442709155;
+        Sun, 24 Nov 2024 02:05:09 -0800 (PST)
+Received: from localhost (host-79-49-220-127.retail.telecomitalia.it. [79.49.220.127])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa51759732asm295266666b.14.2024.11.24.02.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2024 02:05:08 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 0/2] Preserve the flags portion on 1:1 dma-ranges mapping
+Date: Sun, 24 Nov 2024 11:05:35 +0100
+Message-ID: <cover.1732441813.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+
+Empty dma-ranges in DT nodes using 3-cell address spcifier cause the
+flag portion to be dropped by of_translate_one(), failing the translation
+chain. This patch aims at fixing this issue.
+
+Part of this patchset was originally preparatory for a bigger patchset
+(see [1]). It has been split in a standalone one for better management
+and because it contains a bugfix which is probably of interest to stable
+branch.
+I've also added new tests to unittest to prove it.
+
+Many thanks,
+Andrea
+
+References:
+[1] - https://lore.kernel.org/all/3029857353c9499659369c1540ba887d7860670f.1730123575.git.andrea.porta@suse.com/
 
 
+Changes in V2:
 
-On 24 November 2024 08:11:00 CET, Manivannan Sadhasivam <manivannan=2Esadh=
-asivam@linaro=2Eorg> wrote:
->On Sat, Nov 16, 2024 at 09:40:42AM -0500, Frank Li wrote:
->> +static int pci_epc_alloc_doorbell(struct pci_epc *epc, struct pci_epf =
-*epf)
->> +{
->> +	struct device *dev =3D epc->dev=2Eparent;
->> +	u16 num_db =3D epf->num_db;
->> +	int i =3D 0;
->> +	int ret;
->> +
->> +	guard(mutex)(&epc->lock);
->> +
->> +	ret =3D platform_device_msi_init_and_alloc_irqs(dev, num_db, pci_epc_=
-write_msi_msg);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to allocate MSI, may miss 'msi-parent' at your =
-DTS\n");
->
->No need to mention 'msi-parent'=2E Just 'Failed to allocate MSI' is enoug=
-h=2E
-
-If you look at the existing pcie_ep device tree nodes for all SoCs, you wi=
-ll see that it is very rare to see an EP node which specifies msi-parent=2E
-
-I guess that makes sense, since before this series, AFAICT, msi-parent was=
- completely unused, so there was no need for an EP node to specify it=2E
-
-I'm okay to change the error print as you suggested, but in that case I re=
-ally think that we should add a comment above the check, something suggesti=
-ve like:
-
-/*
- * The pcie_ep DT node has to specify
- * 'msi-parent' for EP doorbell support to work=2E
- * Right now only GIC ITS is supported=2E
- * If you have GIC ITS and reached this print,
- * perhaps you are missing 'msi-parent' in DT?
- */
-if (ret) {
-        dev_err(dev, "Failed to allocate MSI\n");
-        return -ENODEV;
-}
+- Added blank lines between paragraphs in commit message for patch 2
+- Fixed a comment to explain the code behaviour in a straighter way
 
 
-Kind regards,
-Niklas
+Andrea della Porta (2):
+  of/unittest: Add empty dma-ranges address translation tests
+  of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+
+ drivers/of/address.c                        |  3 +-
+ drivers/of/unittest-data/tests-address.dtsi |  2 ++
+ drivers/of/unittest.c                       | 39 +++++++++++++++++++++
+ 3 files changed, 43 insertions(+), 1 deletion(-)
+
+-- 
+2.35.3
+
 
