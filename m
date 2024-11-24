@@ -1,78 +1,77 @@
-Return-Path: <linux-pci+bounces-17242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05BA69D6CE6
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 08:11:35 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF8C49D6CEE
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 08:32:56 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A399160465
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 07:11:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F06CAB2117B
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 07:32:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E145C185B76;
-	Sun, 24 Nov 2024 07:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 809F63D0D5;
+	Sun, 24 Nov 2024 07:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OZKuuCYs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LJqG9dYu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66DB188926
-	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 07:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74833FBB3
+	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 07:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732432269; cv=none; b=t3MGxq3+DHBDd84v1PX8QbbPZS+D7GFLeyLrGtDBOFUbwps8izsPmxcm/kRhuNn1NFETjHqIKvJPoHdwOoYf8UEYVu7l3m3RXcmqQMOPbi15PwUgmLqrOMplR7t/wvWOl/tl1L6ptXiMZaIhGV+1PxbS/9v0uOiWZ0OBom6G3lY=
+	t=1732433569; cv=none; b=ah8u88p0CO+VBET1ML3pRMqyQMYQDF9VZ6LnqfvKxXuIwKxXtXrDDnP9EGl4pGW1WcabLIyB9oAk489o2e+JzVvE+sXIxx1l/jSl9QXr1FTUxqtz92oPWM8pO6o6y4QfbiiAGQg07s5wONYgdc4yAK4iCgIIRU00OavGwmRMZbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732432269; c=relaxed/simple;
-	bh=Jh4TFRyB38GkH9XMLtaVrr4by8pRBeNdveW6o8CV8Tg=;
+	s=arc-20240116; t=1732433569; c=relaxed/simple;
+	bh=jg1trj8SIK0uw3/nGerieNHfGI/GQeoYk99nBhnMeCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=saKaizq9inFDJc+7RlUbqv3zUW7JcQuBPdx8CQ3ZOyyfbnGZ+h5SYeWtE7d1nVa+E0tqUw/9HFg+MRaD2WHR/rIZKf17WNaOyxfSbCJ9tToocp2ANWhstRYrGpe6qK7+IVGJhB4QhQ+L6ekQCdohoio7QS82DkwRzMqs76lJPL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OZKuuCYs; arc=none smtp.client-ip=209.85.214.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=DbENzVVkTMdoQCbGF1FwBIpqf3wsu5WuY41Mwk8T9aFGJF3R31fQmaaatX1PWQpX/V9ax2saNlBzwT7mmcNdeLP7gYjtXuFyG/gaNG5R6Cso0x36D+nUi33rDDCpZhtFCrlkJjx17/6HVw9toB21nqZCW2YIg9IvqsvDm2CRRGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LJqG9dYu; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21145812538so27370325ad.0
-        for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 23:11:07 -0800 (PST)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-724d8422dbaso2577315b3a.0
+        for <linux-pci@vger.kernel.org>; Sat, 23 Nov 2024 23:32:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732432267; x=1733037067; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732433567; x=1733038367; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=CUBwayFAarPrS1JTjl9O+JdTBdqlG59MDYk/Wk5mK5c=;
-        b=OZKuuCYs5y+72T3NX0AE0lniUeJNg6nDxvtTAPHq3t/4DMyOSQWgJma1kP0hN9yf0j
-         TEbuW4aKrgK12GCKJPvn1GSuAYFN7Tw+vJWFg8zfcf8CgH2Edoc/2esD0vMT8BZzhEy7
-         ItSVUG8uqYIC/VoTSV/zWuDFOrOYlzYyP6uGeKu8ce5hEeuu8GlmV3AFlCz8LqVjG9Cz
-         8sVbNBYte5ZhmdbO8keylSlVx2U/hxrkoPfHmgOB7AHL79Pz8EprNsGw15XBjAsxmEKT
-         +M9kTYGewfpZqLpuiM4guDUARSi9TZh4icTL8nA4yIM1GlxTdd/5fjdus0qhg7V6NKya
-         2fLg==
+        bh=HyV5xr4Ha7tQT940pOqmrtctl45RuXMP89TFFW03cOU=;
+        b=LJqG9dYu0PU2DMKl0bZUKx5rAdymJguFuxSYM1lObK362atg+ubMtMkfgWs4FwUa2G
+         AGuyJPqIAthEji2vtwjVdaw4E4SK/X+CLJIfrEEOP/PQFKVEkI1BfXMcZ+gBgxGAsrIE
+         CUPq40GY0Y4FxvDLNJiD/69Ug4974MAtgJq2kgWxnODQtozLw8IpNjseKTe8ZfFI3Hyt
+         q1rker+jvkuuHLBV9TRMuEeYUmX9An+n+fSgspRLTt7WMCwobckuDHd+hv3cX+24iiQy
+         uWwfuiTYVVAyEHyzauw732hFN9lOLCTyXXkYdgPQyTxciDrXK+lvWimO8cPT0PST7i5d
+         4mMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732432267; x=1733037067;
+        d=1e100.net; s=20230601; t=1732433567; x=1733038367;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CUBwayFAarPrS1JTjl9O+JdTBdqlG59MDYk/Wk5mK5c=;
-        b=M58NA5fcxbuLTsz4ObODPlS0uEfQjKBAkH/aenNatx5jVdOgroGCSim41QtEqAm3JC
-         4eH6ARwtq+fMDvf0w3NE/i/2/A+JN9E5yN3XRfBeDU00c8kQBYcXcHL2L6wIZ65r9GDj
-         T05FQL/kq4O+p3u5JpJLulZRycmEN6UzFBM+9cNbvQDhVysT1zaLvcmfKBhjDeScmRnb
-         VaoD6dkg4M/A0NmyyuiSQ79qK0TmYR+gh6NoJidZ5AZyH4UR4tLGv3pQfUsqdEcjNAmt
-         XxIBVx8afzKn/LKYss0LgEtnBR4W06Bm/5WH9BwCHnXsCJmGgkrOMLho48REC5Iv7zyP
-         u8Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOMZreGEzr78RKsCqopYTbAO05PltZVbZdP+msAK4tzXJQx7o5Hg8J6KN2FejOCV5R35jVMj31+Co=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf0JZrVGwudYqn5Seoxgg5O4TKh/HaWy555+UmUkwUBryFkVP5
-	yJOn5SWqeu6sVwVwcbj38Xh6zax3ruIxH5d0xCbkMHa7XZQtFacPHh8Qg2P3vl2v1YvDTarXzfU
-	=
-X-Gm-Gg: ASbGncvjjuwx7fEGKNuWipZGo2VPDuP8+mXyX/rweEexHs3CJTQp0YTI18Qqo1DRmJT
-	kypVGBVL6WJvEoGyyh/x3Bh47N2s91j4v1bPPPLMFWMYyLyqReRWUD5PWTiM/GQ12KNpApw89eq
-	ictO87xig/xWgoIESqAS3DgZBH/3dxfgVOu75/UDjrmgcaAT6veNADKi4DELkxlCztAa+1tv/ZI
-	L7Ri2rf+vh4BZOBLRPuHM9eHem7UQ9RXGhI/pGvjyHEZD3mcpJwRrJBttTLHE7HQg==
-X-Google-Smtp-Source: AGHT+IFW+BG/x2A1btDFw10GDtMqQ0QNCfceMONDlBPPdj77feBstXz+Gq9nYXGSQ4wCKhzZmImimw==
-X-Received: by 2002:a17:903:230e:b0:212:3f13:d4d5 with SMTP id d9443c01a7336-2129fd22060mr116470595ad.27.1732432267264;
-        Sat, 23 Nov 2024 23:11:07 -0800 (PST)
+        bh=HyV5xr4Ha7tQT940pOqmrtctl45RuXMP89TFFW03cOU=;
+        b=RSoxJz35EP81PWMz0+epffoQanM+E7AaD6gSKtoNrBPSluVb8n2MQMIDWkOdRAkiiu
+         YitYtlNMZlIau1sLZUXxtKdBV56LVpa2QUUat6P08Z/nuPSAAQN8UNvLsk8Hm502If/9
+         ZLwV6OmzgTqLPAr6LQ7VFrjflbtTTxqMwEohn9iQWrPdc2sQBaA+Y6dhI8861Wi3zd+6
+         Vb/1MVyLqhX/Tp8DS0Qi3HNhpM3we2y3Aoh7iPnTy13l5xGcUaH9c6oGvUmAlplGzPYu
+         wHF9KuUZpjYPFdz1gujjiUX+F0pybiUgf066/P7nWkIO+OfGd8a9KrB4H+qdGqL1lW9F
+         dyMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGhURX4B3ItgrNc2P5f6SjAKEk9y3CO3g6bi1LOnSZO5lMrpfyyABUZ3N/9LnoGPym5UV8G5dUJus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMpO/+uOoI37yQT4ETeGxw+6u2iDIWwmgnPhkGxxoFCcDi5qGT
+	AdJuSlFh5TYySragvkpHGXzg8OJ+/p0V9mmCnBbofnYvpF7vl13KOxS0QN2NoA==
+X-Gm-Gg: ASbGncv4Ek8IOi/7wv4QxSoxOuYpBaa0qVTu5AmdhvA11aMvrWwxoPe13F0ga7CQdu/
+	XoFjcUbpoYfspjOFL9pkXwpl0HB17Sl5onODK17canK9302lJPMe0WLF9z+TCbxw5txAW02a5h2
+	IrJWnb0MO1eXAgfoIalKXbCWJdUFc0A+fXucqDaFVAmXaq286WDKsrFECOjbIV/xkvN4h+3u064
+	j81x53CvJyL6v6IqI9TfeDu8SkWzyJIP8J3z9EEBE9ZqNL+sujBcdGFSt7Lat5aGw==
+X-Google-Smtp-Source: AGHT+IH+PlSwlQjrB2gCDs+rD3Rjc8himwsAaIYeIcQh678cCt/hQCj5LyFfCLjmOQxDfzpEEgnsnw==
+X-Received: by 2002:a05:6a00:21c9:b0:71e:14c:8d31 with SMTP id d2e1a72fcca58-724df6677a1mr11545467b3a.16.1732433567075;
+        Sat, 23 Nov 2024 23:32:47 -0800 (PST)
 Received: from thinkpad ([2409:40f2:100d:708e:8ced:6048:5b4d:7203])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dba3044sm42219745ad.91.2024.11.23.23.11.02
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de55862esm4235213b3a.155.2024.11.23.23.32.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2024 23:11:06 -0800 (PST)
-Date: Sun, 24 Nov 2024 12:41:00 +0530
+        Sat, 23 Nov 2024 23:32:46 -0800 (PST)
+Date: Sun, 24 Nov 2024 13:02:39 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
@@ -83,11 +82,11 @@ Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
 	dlemoal@kernel.org, maz@kernel.org, tglx@linutronix.de,
 	jdmason@kudzu.us
-Subject: Re: [PATCH v8 2/6] PCI: endpoint: Add RC-to-EP doorbell support
- using platform MSI controller
-Message-ID: <20241124071100.ts34jbnosiipnx2x@thinkpad>
+Subject: Re: [PATCH v8 3/6] PCI: endpoint: Add pci_epf_align_addr() helper
+ for address alignment
+Message-ID: <20241124073239.5yl5zsmrrcrhmibh@thinkpad>
 References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com>
- <20241116-ep-msi-v8-2-6f1f68ffd1bb@nxp.com>
+ <20241116-ep-msi-v8-3-6f1f68ffd1bb@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,135 +96,128 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241116-ep-msi-v8-2-6f1f68ffd1bb@nxp.com>
+In-Reply-To: <20241116-ep-msi-v8-3-6f1f68ffd1bb@nxp.com>
 
-On Sat, Nov 16, 2024 at 09:40:42AM -0500, Frank Li wrote:
-> Doorbell feature is implemented by mapping the EP's MSI interrupt
-> controller message address to a dedicated BAR in the EPC core. It is the
-> responsibility of the EPF driver to pass the actual message data to be
-> written by the host to the doorbell BAR region through its own logic.
+On Sat, Nov 16, 2024 at 09:40:43AM -0500, Frank Li wrote:
+> Introduce the helper function pci_epf_align_addr() to adjust addresses
+
+pci_epf_align_inbound_addr()?
+
+> according to PCI BAR alignment requirements, converting addresses into base
+> and offset values.
 > 
-> Tested-by: Niklas Cassel <cassel@kernel.org>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> change from v5 to v8
-> -none
+> change from v7 to v8
+> - change name to pci_epf_align_inbound_addr()
+> - update comment said only need for memory, which not allocated by
+> pci_epf_alloc_space().
 > 
-> Change from v4 to v5
-> - Remove request_irq() in pci_epc_alloc_doorbell() and leave to EP function
-> driver, so ep function driver can register differece call back function for
-> difference doorbell events and set irq affinity to differece CPU core.
-> - Improve error message when MSI allocate failure.
-> 
-> Change from v3 to v4
-> - msi change to use msi_get_virq() avoid use msi_for_each_desc().
-> - add new struct for pci_epf_doorbell_msg to msi msg,virq and irq name.
-> - move mutex lock to epc function
-> - initialize variable at declear place.
-> - passdown epf to epc*() function to simplify code.
+> change from v6 to v7
+> - new patch
 > ---
->  drivers/pci/endpoint/Makefile     |  2 +-
->  drivers/pci/endpoint/pci-ep-msi.c | 99 +++++++++++++++++++++++++++++++++++++++
->  include/linux/pci-ep-msi.h        | 15 ++++++
->  include/linux/pci-epf.h           | 16 +++++++
->  4 files changed, 131 insertions(+), 1 deletion(-)
+>  drivers/pci/endpoint/pci-epf-core.c | 45 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pci-epf.h             | 14 ++++++++++++
+>  2 files changed, 59 insertions(+)
 > 
-> diff --git a/drivers/pci/endpoint/Makefile b/drivers/pci/endpoint/Makefile
-> index 95b2fe47e3b06..a1ccce440c2c5 100644
-> --- a/drivers/pci/endpoint/Makefile
-> +++ b/drivers/pci/endpoint/Makefile
-> @@ -5,4 +5,4 @@
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 8fa2797d4169a..4dfc218ebe20b 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -464,6 +464,51 @@ struct pci_epf *pci_epf_create(const char *name)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epf_create);
 >  
->  obj-$(CONFIG_PCI_ENDPOINT_CONFIGFS)	+= pci-ep-cfs.o
->  obj-$(CONFIG_PCI_ENDPOINT)		+= pci-epc-core.o pci-epf-core.o\
-> -					   pci-epc-mem.o functions/
-> +					   pci-epc-mem.o pci-ep-msi.o functions/
-> diff --git a/drivers/pci/endpoint/pci-ep-msi.c b/drivers/pci/endpoint/pci-ep-msi.c
-> new file mode 100644
-> index 0000000000000..7868a529dce37
-> --- /dev/null
-> +++ b/drivers/pci/endpoint/pci-ep-msi.c
-> @@ -0,0 +1,99 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI Endpoint *Controller* (EPC) MSI library
+> +/**
+> + * pci_epf_align_inbound_addr() - Get base address and offset that match bar's
+
+BAR's
+
+> + *			  alignment requirement
+> + * @epf: the EPF device
+> + * @addr: the address of the memory
+> + * @bar: the BAR number corresponding to map addr
+> + * @base: return base address, which match BAR's alignment requirement, nothing
+> + *	  return if NULL
+
+Below, you are updating 'base' only if it is not NULL. Why would anyone call
+this API with 'base' and 'offset' set to NULL?
+
+> + * @off: return offset, nothing return if NULL
 > + *
-> + * Copyright (C) 2024 NXP
-> + * Author: Frank Li <Frank.Li@nxp.com>
+> + * Helper function to convert input 'addr' to base and offset, which match
+> + * BAR's alignment requirement.
+> + *
+> + * The pci_epf_alloc_space() function already accounts for alignment. This is
+> + * primarily intended for use with other memory regions not allocated by
+> + * pci_epf_alloc_space(), such as peripheral register spaces or the trigger
+> + * address for a platform MSI controller.
 > + */
-> +
-> +#include <linux/cleanup.h>
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-
-Please sort alphabetically.
-
-> +#include <linux/module.h>
-> +#include <linux/msi.h>
-> +#include <linux/pci-epc.h>
-> +#include <linux/pci-epf.h>
-> +#include <linux/pci-ep-cfs.h>
-> +#include <linux/pci-ep-msi.h>
-> +
-> +static bool pci_epc_match_parent(struct device *dev, void *param)
+> +int pci_epf_align_inbound_addr(struct pci_epf *epf, enum pci_barno bar,
+> +			       u64 addr, u64 *base, size_t *off)
 > +{
-> +	return dev->parent == param;
+> +	const struct pci_epc_features *epc_features;
+> +	u64 align;
+> +
+> +	epc_features = pci_epc_get_features(epf->epc, epf->func_no, epf->vfunc_no);
+> +	if (!epc_features) {
+> +		dev_err(&epf->dev, "epc_features not implemented\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	align = epc_features->align;
+> +	align = align ? align : 128;
+> +	if (epc_features->bar[bar].type == BAR_FIXED)
+> +		align = max(epc_features->bar[bar].fixed_size, align);
+> +
+> +	if (base)
+> +		*base = round_down(addr, align);
+> +
+> +	if (off)
+> +		*off = addr & (align - 1);
+> +
+> +	return 0;
 > +}
+> +EXPORT_SYMBOL_GPL(pci_epf_align_inbound_addr);
 > +
-> +static void pci_epc_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-> +{
-> +	struct pci_epc *epc __free(pci_epc_put) = NULL;
-> +	struct pci_epf *epf;
+>  static void pci_epf_dev_release(struct device *dev)
+>  {
+>  	struct pci_epf *epf = to_pci_epf(dev);
+> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> index 5374e6515ffa0..eff73ccb5e702 100644
+> --- a/include/linux/pci-epf.h
+> +++ b/include/linux/pci-epf.h
+> @@ -238,6 +238,20 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>  			  enum pci_epc_interface_type type);
+>  void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+>  			enum pci_epc_interface_type type);
 > +
-> +	epc = pci_epc_get_fn(pci_epc_match_parent, desc->dev);
+> +int pci_epf_align_inbound_addr(struct pci_epf *epf, enum pci_barno bar,
+> +			       u64 addr, u64 *base, size_t *off);
+> +static inline int pci_epf_align_inbound_addr_lo_hi(struct pci_epf *epf, enum pci_barno bar,
+> +						   u32 low, u32 high, u64 *base, size_t *off)
 
-You were passing 'epc->dev.parent' to platform_device_msi_init_and_alloc_irqs().
-So 'desc->dev' should be the EPC parent, right? If so, you can do:
-
-	epc = pci_epc_get(dev_name(msi_desc_to_dev(desc)));
-
-since we are reusing the parent dev name for EPC.
-
-> +	if (!epc)
-> +		return;
-> +
-> +	/* Only support one EPF for doorbell */
-> +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-
-Why don't you impose this restriction in pci_epf_alloc_doorbell() itself?
-
-> +
-> +	if (epf && epf->db_msg && desc->msi_index < epf->num_db)
-> +		memcpy(&epf->db_msg[desc->msi_index].msg, msg, sizeof(*msg));
-> +}
-> +
-> +static void pci_epc_free_doorbell(struct pci_epc *epc, struct pci_epf *epf)
-> +{
-> +	guard(mutex)(&epc->lock);
-> +
-> +	platform_device_msi_free_irqs_all(epc->dev.parent);
-> +}
-> +
-> +static int pci_epc_alloc_doorbell(struct pci_epc *epc, struct pci_epf *epf)
-> +{
-> +	struct device *dev = epc->dev.parent;
-> +	u16 num_db = epf->num_db;
-> +	int i = 0;
-> +	int ret;
-> +
-> +	guard(mutex)(&epc->lock);
-> +
-> +	ret = platform_device_msi_init_and_alloc_irqs(dev, num_db, pci_epc_write_msi_msg);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to allocate MSI, may miss 'msi-parent' at your DTS\n");
-
-No need to mention 'msi-parent'. Just 'Failed to allocate MSI' is enough.
-
-> +		return -ENOMEM;
-
--ENODEV?
+Why can't you just use pci_epf_align_inbound_addr() directly? Or the caller
+could pass u64 address directly.
 
 - Mani
+
+> +{
+> +	u64 addr = high;
+> +
+> +	addr <<= 32;
+> +	addr |= low;
+> +
+> +	return pci_epf_align_inbound_addr(epf, bar, addr, base, off);
+> +}
+> +
+>  int pci_epf_bind(struct pci_epf *epf);
+>  void pci_epf_unbind(struct pci_epf *epf);
+>  int pci_epf_add_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
+> 
+> -- 
+> 2.34.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
