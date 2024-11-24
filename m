@@ -1,77 +1,78 @@
-Return-Path: <linux-pci+bounces-17262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6BD09D7539
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 16:31:51 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FDA29D7546
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 16:33:22 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96B7D28781F
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 15:31:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89B5E1686E4
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 15:33:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E660918C932;
-	Sun, 24 Nov 2024 14:33:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 114E51B412C;
+	Sun, 24 Nov 2024 14:38:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cn1PtsvZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EDQXtLg1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12D618BC19
-	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 14:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C3E1AAE28
+	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 14:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732458817; cv=none; b=VgSKmNZn2qVktA0VFoX3mLpUY0KrC948p8L6DvTyqXWzMydiIZrrYhIgpgkQp4N+6nroX/WAgWobrQ5TriTFZZukSH9/wwx2wQ3g9wVlnWDJFl1ADpANddpJEA5bzFa1MoGzPiyuUn2WHWUS/PYtg4WqI6cgd/+qtR3pnMpuUUo=
+	t=1732459132; cv=none; b=nZLZ+rVmJyNMDTx0jZXBhDZrqikcK4ektnuVoAtugvNh95ukNkg7rd2w2q3pnWzSADDkbeyIACvsRtdpOuW7zedpK87KbRdO88elBz7eRvYKXpaxtj3VM1PEX1nIobcGp9+XH4Y32gzk8EJZpV/JJM5y2sjs0xJkMNIKX2HRAFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732458817; c=relaxed/simple;
-	bh=u9yilslDcMuJJJ+0HtllR45tBWp0Y8R7N5Mva6i0fqk=;
+	s=arc-20240116; t=1732459132; c=relaxed/simple;
+	bh=isjGjqlidHC79ZLTF03jv/21hLxdq7ghhqNq50AP0SI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tC7bvQ+Wzlx4pZ0yw+WVmLHU+CebaJxLbbv/ywI3TxkCd2f+qToKjngvuZ9rQuCZSWjYBVeVWxKDl0ZkGPa1XYdLW32CiW9chhZ2iIR8gCnAgJrDBhJ6qrhaPYwe3ijn223TAFYA8LhUjYl6CmLkdZFZuuplNaXM/TJBEJOQ8hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cn1PtsvZ; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWJ8yppcwnVWG8uUBC45X7YwM+eYcWbu3hr5a2LzM6dsGO0CSAmFTFoCgdAoGurSxsuG+a5LUQXTF9dKCtISyZaFX1bVafEYp920AzgSTBGLhNhTH6YVzQ16DOoWEyqcPzk9ABfKKfwSFv1s/dpXe41tXoDL0KgblJvQKMYMNGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EDQXtLg1; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-720c286bcd6so3154572b3a.3
-        for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 06:33:35 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-724e1742d0dso1757562b3a.0
+        for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 06:38:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732458815; x=1733063615; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732459128; x=1733063928; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=qQsDVb7F2iz9b9KgCIAt+p1CapfKtmuyCi0nc0rEfIc=;
-        b=cn1PtsvZ3SBhXixGJmqOX3rBqaPRDx7tTWRip5G5F44/U957DuWPQs+pdBDlqepP7V
-         4uGjCFAh/K1FkSehYmRu5TTqHdgpiRUyo8L0w09EjF6ZrS7Kr+HB8ADmJeOHnGkUx1bt
-         SJFucBFWR0Jkbca/jp9YHxdBpTow3jPQ9LIr1CT4AA+8N+8ckNrc3fOuhBtWy4LEVtIK
-         JRdLBYuHisHa9gmd95461kHR6Ru8rSCXuCcINOgUzSAscDI0bqmFF47nDw7GecbsSH/c
-         LDrTwgIQP1ADUSphr908jmTf6uBhz//cceHophL4seeAhP2g967cG05oOcpHSeVQ7kOg
-         KxrQ==
+        bh=MXCY6EyQ5ICJyfv/tJQrr5Lem3XCz+vNyHRaV4HuQGs=;
+        b=EDQXtLg1YXfOBj/shliQbp1MYkIlAHn/iB2jEmoTfzmbwj1KkO7g31ZqqiUWZZ0ET/
+         zUXPdaM+BGzLmSz2gIr4btJQaNOvoewW43GIpvznPw1S8F5n3x/6soyNL2JAy12fxejX
+         +pM+L/XrV1iVP3cktEJs4yHbVLBXQ6HOE/Mu4DBHwTEiv4okXNpoeCyx78qbPGEuCCun
+         gUOvGbnQqLtZ7ee1NylXKGNR0nTrbiLpB6zlm7t1SEPOTvEU/a0+2cTJHXIVodoVVDiP
+         pr2EGmGX3f5YqclZ9C2mZMABP3F8abQp1Ks0bHUNoOK4Z6jQiIvfp0duvYEdYF484yTx
+         v5HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732458815; x=1733063615;
+        d=1e100.net; s=20230601; t=1732459128; x=1733063928;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQsDVb7F2iz9b9KgCIAt+p1CapfKtmuyCi0nc0rEfIc=;
-        b=aqLnSRWUiY/y2OBJPCb5pGcdZcT5926xh5q+ykHZpdRRjBRojITVmQhEVn462arYiy
-         DWoyCLG+h1CDdm+NPzEGoSlAbHsKPomDOZPJA6HEvzrAcjJur3tEisNxT93BgW0XcZoA
-         6C7hiYY9Ijw1wdtOv6XfLYa7L7zwXfMD11isDRYVU9OdZnTMwW7CNrwV3us1REnPslNx
-         jf4P1EVAjcS7VBD8GAi8wEH09b+LOK12n+SnXQWGAyIoBDYg4uNGueWRa01K4EOaIdXQ
-         PIwu+CDlk2tFKPkMn0qMeGra2jhpb9j+zhzsetO+VtIHQBYlVq8uRqIs7DN6PLX+rfb0
-         CYfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCbRhjchksQcs3G3O0MmohS2mdKnY/gVLxZBCA2O7ebVYrGWtVhOpusuMH3GK1GNCra9sqkZ9Mg6Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvTuwGmOjprs9T+va7/z1tcdVyHf/VjZGigrbuCgfNuuo/afYU
-	bOXlTB65Zhkr0tglz6T6cUrNNynzT9uXWCFOrTDN8BW9mkS9TwW8CLrualUP6A==
-X-Gm-Gg: ASbGncutdi+v66CJOvgm3cPFSoBkNnSAg9NPDKB7C3kzR0j9QFtuwMRoGQgxDjCs1Dm
-	A3PCkISI0uwrM2Z71UdSihXku3Z87uUJs/NUjnXM/zDLOl927Ih96T3ANl6TbVKjMfXW8dbVuD2
-	og381zo2Oo5yA5+fsplugBltyVJ8G791c3P3oCG5q4k+mOCsRUBqX1XUPaptGKBOmOMNQ+OGQEs
-	sLqh14qesot9bBFFEpI5WK+XbuoPJi1p//42R4cMwW2kqp6CXqNpNpAv6MU
-X-Google-Smtp-Source: AGHT+IEXdIY8HdO7q0GsWQpaA8gaDP2oPUf00iydOaa8Lv2vpwZRDX+byC5eu+a3QGb7Pw0MmbQxmg==
-X-Received: by 2002:a17:903:2cd:b0:20c:a387:7dc9 with SMTP id d9443c01a7336-2129f7b4e55mr144454115ad.29.1732458815130;
-        Sun, 24 Nov 2024 06:33:35 -0800 (PST)
+        bh=MXCY6EyQ5ICJyfv/tJQrr5Lem3XCz+vNyHRaV4HuQGs=;
+        b=PYlZIDfPDCSrb1FAdR/z9xmaYxjc+nl+gI6lnr1/Zouh2PUc4sStnqNwHcxZzkL823
+         T6X9PLsTocaHTpiR5550BJgDJSZUg34ufjPiRoAJyzWCSOyzyFnBcMt/q9QnC/A/NMEa
+         fRZcs9E1B3VGVHCckJeJDA+4X/p4aY+tcVVHX/ARsGWLzl1hHJKNPO6sUpJr55urY1OB
+         7oW2oyHHGlZw9G+r7eGftcSSunMs8rBfEB2Jl6cakRy+Ho80h7RFOpQR1+VC/F5RqjnA
+         Ur0T232I9MaPQN6h/f45fF95+QYnm2R/MpLucuI4F4m5nwEDCpLQTcJ6zUmpI+R4y8qT
+         Lwzw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+t7JcII/BqbiidlfLX+I5RCz1dCK1C5eGguRg4VN5cT0PEZYQmfTGUfEdqusAmymUt60KfjdmVAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFX4iQ4+iiOPAz70hXGB42a0G+3iSsohCv3lqhiIc7mXhO2yKg
+	b/GKBDaXB5+ju1/7gZ43Ck2kGom6LkhIvXRm8LHyp9CJFfqgKlTgJ7hq+kJ3N6tm1FtM2t2zI9U
+	=
+X-Gm-Gg: ASbGncvXwCvYOUFJhOTjpFbIb1cnXaJANRcUp82j4Gx/Q2nkaG0PzwtnswDRhRo7jSq
+	+DdNf4Iq0hkx+VTVHXIMtBb44+kB/qZSpWO3ypKps+C+sJcAsZOH5rumP2gqZcE48TADwXqOrBy
+	I+WjGtBw6SwyH3WyGmGqzza7w4Vknt6238ct1BVt2LEnTsrVkeOpj9olxLH1eOlSYGRMbq3KuiP
+	pPJ50OPM1CAe1t1XRo5C+3RCKbMv65tC9VbxWFKMGAPkgkVPx7H1CUk5HhN
+X-Google-Smtp-Source: AGHT+IGUYdNBQyl/4X7lky6FWTh3PlUIHJNEByI3IDGXwvkIIW1v1nfc0TsyL72NMdiksJeZISQVKA==
+X-Received: by 2002:a05:6a00:1709:b0:71e:98a:b6b4 with SMTP id d2e1a72fcca58-724df5ef7f8mr10750073b3a.11.1732459128405;
+        Sun, 24 Nov 2024 06:38:48 -0800 (PST)
 Received: from thinkpad ([36.255.17.192])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129db87dafsm47492325ad.43.2024.11.24.06.33.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de532d59sm4653362b3a.130.2024.11.24.06.38.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2024 06:33:34 -0800 (PST)
-Date: Sun, 24 Nov 2024 20:03:27 +0530
+        Sun, 24 Nov 2024 06:38:47 -0800 (PST)
+Date: Sun, 24 Nov 2024 20:08:39 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
@@ -86,12 +87,11 @@ Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v8 2/7] PCI: dwc: Use devicetree 'ranges' property to get
- rid of cpu_addr_fixup() callback
-Message-ID: <20241124143327.6cuxrw76pr6olfor@thinkpad>
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v8 0/7] PCI: dwc: opitimaze RC Host/EP pci_fixup_addr()
+Message-ID: <20241124143839.hg2yj462h22rftqa@thinkpad>
 References: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
- <20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,13 +101,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.com>
+In-Reply-To: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
 
-On Tue, Nov 19, 2024 at 02:44:20PM -0500, Frank Li wrote:
-> parent_bus_addr in struct of_range can indicate address information just
-> ahead of PCIe controller. Most system's bus fabric use 1:1 map between
-> input and output address. but some hardware like i.MX8QXP doesn't use 1:1
-> map. See below diagram:
+On Tue, Nov 19, 2024 at 02:44:18PM -0500, Frank Li wrote:
+> == RC side:
 > 
 >             ┌─────────┐                    ┌────────────┐
 >  ┌─────┐    │         │ IA: 0x8ff8_0000    │            │
@@ -126,225 +123,164 @@ On Tue, Nov 19, 2024 at 02:44:20PM -0500, Frank Li wrote:
 >                         IA: 0x8000_0000    │            │  0x8000_0000
 >                                            └────────────┘
 > 
-> bus@5f000000 {
-> 	compatible = "simple-bus";
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
-> 	ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+> Current dwc implimemnt, pci_fixup_addr() call back is needed when bus
+> fabric convert cpu address before send to PCIe controller.
 > 
-> 	pcie@5f010000 {
-> 		compatible = "fsl,imx8q-pcie";
-> 		reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
-> 		reg-names = "dbi", "config";
-> 		#address-cells = <3>;
-> 		#size-cells = <2>;
-> 		device_type = "pci";
-> 		bus-range = <0x00 0xff>;
-> 		ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
-> 			 <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+>     bus@5f000000 {
+>             compatible = "simple-bus";
+>             #address-cells = <1>;
+>             #size-cells = <1>;
+>             ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+> 
+>             pcie@5f010000 {
+>                     compatible = "fsl,imx8q-pcie";
+>                     reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
+>                     reg-names = "dbi", "config";
+>                     #address-cells = <3>;
+>                     #size-cells = <2>;
+>                     device_type = "pci";
+>                     bus-range = <0x00 0xff>;
+>                     ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
+>                              <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+>             ...
+>             };
+>     };
+> 
+> Device tree already can descript all address translate. Some hardware
+> driver implement fixup function by mask some bits of cpu address. Last
+> pci-imx6.c are little bit better by fetch memory resource's offset to do
+> fixup.
+> 
+> static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+> {
 > 	...
-> 	};
+> 	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> 	return cpu_addr - entry->offset;
+> }
+> 
+> But it is not good by using IORESOURCE_MEM to fix up io/cfg address map
+> although address translate is the same as IORESOURCE_MEM.
+> 
+> This patches to fetch untranslate range information for PCIe controller
+> (pcie@5f010000: ranges). So current config ATU without cpu_fixup_addr().
+> 
+> == EP side:
+> 
+>                    Endpoint
+>   ┌───────────────────────────────────────────────┐
+>   │                             pcie-ep@5f010000  │
+>   │                             ┌────────────────┐│
+>   │                             │   Endpoint     ││
+>   │                             │   PCIe         ││
+>   │                             │   Controller   ││
+>   │           bus@5f000000      │                ││
+>   │           ┌──────────┐      │                ││
+>   │           │          │ Outbound Transfer     ││
+>   │┌─────┐    │  Bus     ┼─────►│ ATU  ──────────┬┬─────►
+>   ││     │    │  Fabric  │Bus   │                ││PCI Addr
+>   ││ CPU ├───►│          │Addr  │                ││0xA000_0000
+>   ││     │CPU │          │0x8000_0000            ││
+>   │└─────┘Addr└──────────┘      │                ││
+>   │       0x7000_0000           └────────────────┘│
+>   └───────────────────────────────────────────────┘
+> 
+> bus@5f000000 {
+>         compatible = "simple-bus";
+>         ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+> 
+>         pcie-ep@5f010000 {
+>                 reg = <0x5f010000 0x00010000>,
+>                       <0x80000000 0x10000000>;
+>                 reg-names = "dbi", "addr_space";
+>                 ...                ^^^^
+>         };
+>         ...
 > };
 > 
-> Term internal address (IA) here means the address just before PCIe
-> controller. After ATU use this IA instead CPU address, cpu_addr_fixup() can
-> be removed.
+> Add `bus_addr_base` to configure the outbound window address for CPU write.
+> The BUS fabric generally passes the same address to the PCIe EP controller,
+> but some BUS fabrics convert the address before sending it to the PCIe EP
+> controller.
+> 
+> Above diagram, CPU write data to outbound windows address 0x7000_0000,
+> Bus fabric convert it to 0x8000_0000. ATU should use BUS address
+> 0x8000_0000 as input address and convert to PCI address 0xA000_0000.
+> 
+> Previously, `cpu_addr_fixup()` was used to handle address conversion. Now,
+> the device tree provides this information.
+> 
+> The both pave the road to eliminate ugle cpu_fixup_addr() callback function.
 > 
 
-The newly added warning should be mentioned in the commit message. But no need
-to respin just for this. I hope Krzysztof can add it while applying.
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Series looks good to me. Thanks a lot for your persistence! But it missed 6.13
+cycle. So let's get it merged early once 6.13-rc1 is out.
 
 - Mani
 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> Change from v7 to v8
-> - Add dev_warning_once at dw_pcie_iatu_detect() to reminder
-> cpu_addr_fixup() user to correct their code
-> - use 'use_parent_dt_ranges' control enable use dt parent bus node ranges.
-> - rename dw_pcie_get_untranslate_addr to dw_pcie_get_parent_addr().
-> - of_property_read_reg() already have comments, so needn't add more.
-> - return actual err code from function
+> Changes in v8:
+> - Add mani's review tages
+> - use rename use_dt_ranges to use_parent_dt_ranges
+> - Add dev_warn_once to reminder to fix their dt file and remove
+> cpu_fixup_addr() callback.
+> - rename dw_pcie_get_untranslate_addr() to dw_pcie_get_parent_addr()
+> - Link to v7: https://lore.kernel.org/r/20241029-pci_fixup_addr-v7-0-8310dc24fb7c@nxp.com
 > 
-> Change from v6 to v7
-> Add a resource_size_t parent_bus_addr local varible to fix 32bit build
-> error.
+> Changes in v7:
+> - fix
 > | Reported-by: kernel test robot <lkp@intel.com>
 > | Closes: https://lore.kernel.org/oe-kbuild-all/202410291546.kvgEWJv7-lkp@intel.com/
+> - Link to v6: https://lore.kernel.org/r/20241028-pci_fixup_addr-v6-0-ebebcd8fd4ff@nxp.com
 > 
-> Chagne from v5 to v6
-> -add comments for of_property_read_reg().
+> Changes in v6:
+> - merge RC and EP to one thread!
+> - Link to v5: https://lore.kernel.org/r/20241015-pci_fixup_addr-v5-0-ced556c85270@nxp.com
 > 
-> Change from v4 to v5
-> - remove confused 0x5f00_0000 range in sample dts.
-> - reorder address at above diagram.
+> Changes in v5:
+> - update address order in diagram patches.
+> - remove confused 0x5f00_0000 range
+> - update patch1's commit message.
+> - Link to v4: https://lore.kernel.org/r/20241008-pci_fixup_addr-v4-0-25e5200657bc@nxp.com
 > 
-> Change from v3 to v4
-> - none
+> Changes in v4:
+> - Improve commit message by add driver source code path.
+> - Link to v3: https://lore.kernel.org/r/20240930-pci_fixup_addr-v3-0-80ee70352fc7@nxp.com
 > 
-> Change from v2 to v3
-> - %s/cpu_untranslate_addr/parent_bus_addr/g
-> - update diagram.
-> - improve commit message.
+> Changes in v3:
+> - see each patch
+> - Link to v2: https://lore.kernel.org/r/20240926-pci_fixup_addr-v2-0-e4524541edf4@nxp.com
 > 
-> Change from v1 to v2
-> - update because patch1 change get untranslate address method.
-> - add using_dtbus_info in case break back compatibility for exited platform.
+> Changes in v2:
+> - see each patch
+> - Link to v1: https://lore.kernel.org/r/20240924-pci_fixup_addr-v1-0-57d14a91ec4f@nxp.com
+> 
 > ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 57 ++++++++++++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.c      |  9 ++++
->  drivers/pci/controller/dwc/pcie-designware.h      |  7 +++
->  3 files changed, 72 insertions(+), 1 deletion(-)
+> Frank Li (7):
+>       of: address: Add parent_bus_addr to struct of_pci_range
+>       PCI: dwc: Use devicetree 'ranges' property to get rid of cpu_addr_fixup() callback
+>       PCI: dwc: ep: Add bus_addr_base for outbound window
+>       PCI: imx6: Remove cpu_addr_fixup()
+>       dt-bindings: PCI: fsl,imx6q-pcie-ep: Add compatible string fsl,imx8q-pcie-ep
+>       PCI: imx6: Pass correct sub mode when calling phy_set_mode_ext()
+>       PCI: imx6: Add i.MX8Q PCIe Endpoint (EP) support
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 3e41865c72904..f882b11fd7b94 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -418,6 +418,34 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
->  	}
->  }
->  
-> +static int dw_pcie_get_parent_addr(struct dw_pcie *pci, resource_size_t pci_addr,
-> +				   resource_size_t *i_addr)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct of_range_parser parser;
-> +	struct of_range range;
-> +	int ret;
-> +
-> +	if (!pci->use_parent_dt_ranges) {
-> +		*i_addr = pci_addr;
-> +		return 0;
-> +	}
-> +
-> +	ret = of_range_parser_init(&parser, np);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for_each_of_pci_range(&parser, &range) {
-> +		if (pci_addr == range.bus_addr) {
-> +			*i_addr = range.parent_bus_addr;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -427,6 +455,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  	struct resource_entry *win;
->  	struct pci_host_bridge *bridge;
->  	struct resource *res;
-> +	int index;
->  	int ret;
->  
->  	raw_spin_lock_init(&pp->lock);
-> @@ -440,6 +469,20 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  		pp->cfg0_size = resource_size(res);
->  		pp->cfg0_base = res->start;
->  
-> +		if (pci->use_parent_dt_ranges) {
-> +			index = of_property_match_string(np, "reg-names", "config");
-> +			if (index < 0)
-> +				return -EINVAL;
-> +			/*
-> +			 * Retrieve the parent bus address of PCI config space.
-> +			 * If the parent bus ranges in the device tree provide
-> +			 * the correct address conversion information, set
-> +			 * 'use_parent_dt_ranges' to true, The
-> +			 * 'cpu_addr_fixup()' can be eliminated.
-> +			 */
-> +			of_property_read_reg(np, index, &pp->cfg0_base, NULL);
-> +		}
-> +
->  		pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
->  		if (IS_ERR(pp->va_cfg0_base))
->  			return PTR_ERR(pp->va_cfg0_base);
-> @@ -462,6 +505,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  		pp->io_base = pci_pio_to_address(win->res->start);
->  	}
->  
-> +	ret = dw_pcie_get_parent_addr(pci, pp->io_bus_addr, &pp->io_base);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Set default bus ops */
->  	bridge->ops = &dw_pcie_ops;
->  	bridge->child_ops = &dw_child_pcie_ops;
-> @@ -722,6 +769,8 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  
->  	i = 0;
->  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
-> +		resource_size_t parent_bus_addr;
-> +
->  		if (resource_type(entry->res) != IORESOURCE_MEM)
->  			continue;
->  
-> @@ -730,9 +779,15 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  
->  		atu.index = i;
->  		atu.type = PCIE_ATU_TYPE_MEM;
-> -		atu.cpu_addr = entry->res->start;
-> +		parent_bus_addr = entry->res->start;
->  		atu.pci_addr = entry->res->start - entry->offset;
->  
-> +		ret = dw_pcie_get_parent_addr(pci, entry->res->start, &parent_bus_addr);
-> +		if (ret)
-> +			return ret;
-> +
-> +		atu.cpu_addr = parent_bus_addr;
-> +
->  		/* Adjust iATU size if MSG TLP region was allocated before */
->  		if (pp->msg_res && pp->msg_res->parent == entry->res)
->  			atu.size = resource_size(entry->res) -
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 6d6cbc8b5b2c6..e1ac9c81ad531 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -840,6 +840,15 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
->  	pci->region_align = 1 << fls(min);
->  	pci->region_limit = (max << 32) | (SZ_4G - 1);
->  
-> +	if (pci->ops && pci->ops->cpu_addr_fixup) {
-> +		/*
-> +		 * If the parent 'ranges' property in DT correctly describes
-> +		 * the address translation, cpu_addr_fixup() callback is not
-> +		 * needed.
-> +		 */
-> +		dev_warn_once(pci->dev, "cpu_addr_fixup() usage detected. Please fix DT!\n");
-> +	}
-> +
->  	dev_info(pci->dev, "iATU: unroll %s, %u ob, %u ib, align %uK, limit %lluG\n",
->  		 dw_pcie_cap_is(pci, IATU_UNROLL) ? "T" : "F",
->  		 pci->num_ob_windows, pci->num_ib_windows,
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 347ab74ac35aa..4f31d4259a0de 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -463,6 +463,13 @@ struct dw_pcie {
->  	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
->  	struct gpio_desc		*pe_rst;
->  	bool			suspended;
-> +	/*
-> +	 * This flag indicates that the vendor driver uses devicetree 'ranges'
-> +	 * property to allow iATU to use the Intermediate Address (IA) for
-> +	 * outbound mapping. Using this flag also avoids the usage of
-> +	 * 'cpu_addr_fixup' callback implementation in the driver.
-> +	 */
-> +	bool			use_parent_dt_ranges;
->  };
->  
->  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml | 38 ++++++++++++++-
+>  drivers/of/address.c                               |  2 +
+>  drivers/pci/controller/dwc/pci-imx6.c              | 46 +++++++++--------
+>  drivers/pci/controller/dwc/pcie-designware-ep.c    | 18 ++++++-
+>  drivers/pci/controller/dwc/pcie-designware-host.c  | 57 +++++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.c       |  9 ++++
+>  drivers/pci/controller/dwc/pcie-designware.h       |  8 +++
+>  include/linux/of_address.h                         |  1 +
+>  8 files changed, 155 insertions(+), 24 deletions(-)
+> ---
+> base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+> change-id: 20240924-pci_fixup_addr-a8568f9bbb34
 > 
-> -- 
-> 2.34.1
+> Best regards,
+> ---
+> Frank Li <Frank.Li@nxp.com>
 > 
 
 -- 
