@@ -1,91 +1,97 @@
-Return-Path: <linux-pci+bounces-17261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55F0D9D76AD
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 18:28:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6BD09D7539
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 16:31:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACD1FB3939B
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 14:58:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96B7D28781F
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Nov 2024 15:31:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46153238F87;
-	Sun, 24 Nov 2024 13:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E660918C932;
+	Sun, 24 Nov 2024 14:33:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RfPNRz0x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cn1PtsvZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786122389D3
-	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 13:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12D618BC19
+	for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 14:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732456299; cv=none; b=mQ2YMCDULCrUwhhzuCBafRi1GrtmR9Q70PDzfAk4adVKh/VQltJ0mmBFc7Cg4g71jd10vrEgWCbxYlEFG1/5+8IV8acNL0R1WmLZE2PsAdlwSUz263dl/sqlX2Lw8oJ8Ul4JK3Nzx5+ZuSHWwnRQ5K2HqgaoeehQUpcVBhJ8O5o=
+	t=1732458817; cv=none; b=VgSKmNZn2qVktA0VFoX3mLpUY0KrC948p8L6DvTyqXWzMydiIZrrYhIgpgkQp4N+6nroX/WAgWobrQ5TriTFZZukSH9/wwx2wQ3g9wVlnWDJFl1ADpANddpJEA5bzFa1MoGzPiyuUn2WHWUS/PYtg4WqI6cgd/+qtR3pnMpuUUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732456299; c=relaxed/simple;
-	bh=RJsjqr4IiY7Cv7vF7lbpxYrASAZu+7fQCrywo7wd1cs=;
+	s=arc-20240116; t=1732458817; c=relaxed/simple;
+	bh=u9yilslDcMuJJJ+0HtllR45tBWp0Y8R7N5Mva6i0fqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LA5yfDhjeNpjBStlacTX03u2Ec5Ss8KQBZfT1O++UhZ2HNWOCbp47xrhABNR9jU2UamJU6p/nxcm7s+iwnqMKj5sOTPV7IxKsZM9iD5pfMvIPABXSncUTfKN8tCTu47hxmrTbkN8C3TCRoAh3CCpT65EIK/2maca2KUpGcIZTc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RfPNRz0x; arc=none smtp.client-ip=209.85.215.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=tC7bvQ+Wzlx4pZ0yw+WVmLHU+CebaJxLbbv/ywI3TxkCd2f+qToKjngvuZ9rQuCZSWjYBVeVWxKDl0ZkGPa1XYdLW32CiW9chhZ2iIR8gCnAgJrDBhJ6qrhaPYwe3ijn223TAFYA8LhUjYl6CmLkdZFZuuplNaXM/TJBEJOQ8hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cn1PtsvZ; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7e9e38dd5f1so3114534a12.0
-        for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 05:51:35 -0800 (PST)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-720c286bcd6so3154572b3a.3
+        for <linux-pci@vger.kernel.org>; Sun, 24 Nov 2024 06:33:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732456295; x=1733061095; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732458815; x=1733063615; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=SvwL6kRJHjUocjJpIPTlFq19Lrj3E/Hany+pDs45/JI=;
-        b=RfPNRz0xxjGkUukk2In6l/k+hHshtemkI7sP/bnALVANPNcaPYfZnuQNHuh73k1WVg
-         /P0NHyshz6CedPEjs65XbhIzktV2hlvdzYVniEyJeuOLVHRbuwM1dodDz0tZEz+31i/O
-         WmkKu9U/MvSeUh2qEcWglRHDeeSO4b3MMob06H6OkOJ4boYnIaCbZYSCpFOGg6/d+6XE
-         uL9BvWQhh2txuANQDHLcERBgAXugq1kJzpbxMgqErQGTYZag80jroDV5J5X3sS2JVD3S
-         id+7nlvq7B+S9z3ET7oiWfoX5DiH9oZqZZvpI2IX5dP4A8PltPT+eODuw/iph35SG4h/
-         eVkQ==
+        bh=qQsDVb7F2iz9b9KgCIAt+p1CapfKtmuyCi0nc0rEfIc=;
+        b=cn1PtsvZ3SBhXixGJmqOX3rBqaPRDx7tTWRip5G5F44/U957DuWPQs+pdBDlqepP7V
+         4uGjCFAh/K1FkSehYmRu5TTqHdgpiRUyo8L0w09EjF6ZrS7Kr+HB8ADmJeOHnGkUx1bt
+         SJFucBFWR0Jkbca/jp9YHxdBpTow3jPQ9LIr1CT4AA+8N+8ckNrc3fOuhBtWy4LEVtIK
+         JRdLBYuHisHa9gmd95461kHR6Ru8rSCXuCcINOgUzSAscDI0bqmFF47nDw7GecbsSH/c
+         LDrTwgIQP1ADUSphr908jmTf6uBhz//cceHophL4seeAhP2g967cG05oOcpHSeVQ7kOg
+         KxrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732456295; x=1733061095;
+        d=1e100.net; s=20230601; t=1732458815; x=1733063615;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SvwL6kRJHjUocjJpIPTlFq19Lrj3E/Hany+pDs45/JI=;
-        b=StH3WWMKWFQdTCqsbttfQXoP8cS9Ew+9/s56nUQxuB7FtK8UsTELvz9kEVL8mFQTlR
-         cEWwwuh8qzwLLSTAbwKtQg2jTIUTYNwu3+hjAdu/UClW4FQddoi+HzfzYbbbDIMMl1ZT
-         W6qEUFx1W6WfjLoT/5VNaU/debQWdGA2sZFoJ0XY6QrDkl//Fftp1GJ/HxxVxcWs3wYq
-         aFUBFcrY3URZgmtLcrWZIAq9WhbhUqosbXhAeZewbvP49mW+EHf32Pyizwu9RT9nobPv
-         Sy9OXsKO4G0UO+JWEO0VRmMUizKiilG2NnsQB8F6z+ZrLlWb2w5UT4zTxO5bvpCRyoCW
-         U8JA==
-X-Forwarded-Encrypted: i=1; AJvYcCWI/EP8w3IbAVpMMxP1Dj4PJfey/wlGhpDaYeMX74rALCuTqmatAnjbN0bMOcfY7Xs1Sp7e4EoKNw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi0SpHD+SRjrtKvsjVT0DdVu4bgmeVySgRYvq0hDcq6S2qe6ck
-	zL6F5Hfe+j7L+S/vzLEPmrmXutLCjBaJ9Tf6yvaa8R6uLIYubXCn/qN3B0I4xw==
-X-Gm-Gg: ASbGncuZN8ce+OS8PjBvLeAkvim8ELGdRYz4iM4J43+0UdW8Xe/cTaHQMPqOHUVZgYk
-	TYJB8DLD8gvyIUZiI3U7AB69EgnZ+Dv3gRSbqkkAOzsiFb/ifuCj09tvS//MQBIWWW0ny8tDH9l
-	1R4ziI4R/XqToyK3kUuottoJ0295wLuvdDFR6XhrMvkDfP8v5/lb5P5vOrcQhdPRCRSj40MJFB2
-	mtC5j3asCKSj0nQ9hfitGrffKcLKtZ0Q9NTS+C8bGulkZTMeySPvuDGa0PN
-X-Google-Smtp-Source: AGHT+IEzlys82+csTBT6VGLCobeegey4e2aYC2fZg5o/NAz2y+kFhnSKiB+ktDAdEDxDDXN3XKTHYA==
-X-Received: by 2002:a05:6a21:338e:b0:1d6:fb3e:78cf with SMTP id adf61e73a8af0-1e09e631698mr12401964637.41.1732456294822;
-        Sun, 24 Nov 2024 05:51:34 -0800 (PST)
+        bh=qQsDVb7F2iz9b9KgCIAt+p1CapfKtmuyCi0nc0rEfIc=;
+        b=aqLnSRWUiY/y2OBJPCb5pGcdZcT5926xh5q+ykHZpdRRjBRojITVmQhEVn462arYiy
+         DWoyCLG+h1CDdm+NPzEGoSlAbHsKPomDOZPJA6HEvzrAcjJur3tEisNxT93BgW0XcZoA
+         6C7hiYY9Ijw1wdtOv6XfLYa7L7zwXfMD11isDRYVU9OdZnTMwW7CNrwV3us1REnPslNx
+         jf4P1EVAjcS7VBD8GAi8wEH09b+LOK12n+SnXQWGAyIoBDYg4uNGueWRa01K4EOaIdXQ
+         PIwu+CDlk2tFKPkMn0qMeGra2jhpb9j+zhzsetO+VtIHQBYlVq8uRqIs7DN6PLX+rfb0
+         CYfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCbRhjchksQcs3G3O0MmohS2mdKnY/gVLxZBCA2O7ebVYrGWtVhOpusuMH3GK1GNCra9sqkZ9Mg6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvTuwGmOjprs9T+va7/z1tcdVyHf/VjZGigrbuCgfNuuo/afYU
+	bOXlTB65Zhkr0tglz6T6cUrNNynzT9uXWCFOrTDN8BW9mkS9TwW8CLrualUP6A==
+X-Gm-Gg: ASbGncutdi+v66CJOvgm3cPFSoBkNnSAg9NPDKB7C3kzR0j9QFtuwMRoGQgxDjCs1Dm
+	A3PCkISI0uwrM2Z71UdSihXku3Z87uUJs/NUjnXM/zDLOl927Ih96T3ANl6TbVKjMfXW8dbVuD2
+	og381zo2Oo5yA5+fsplugBltyVJ8G791c3P3oCG5q4k+mOCsRUBqX1XUPaptGKBOmOMNQ+OGQEs
+	sLqh14qesot9bBFFEpI5WK+XbuoPJi1p//42R4cMwW2kqp6CXqNpNpAv6MU
+X-Google-Smtp-Source: AGHT+IEXdIY8HdO7q0GsWQpaA8gaDP2oPUf00iydOaa8Lv2vpwZRDX+byC5eu+a3QGb7Pw0MmbQxmg==
+X-Received: by 2002:a17:903:2cd:b0:20c:a387:7dc9 with SMTP id d9443c01a7336-2129f7b4e55mr144454115ad.29.1732458815130;
+        Sun, 24 Nov 2024 06:33:35 -0800 (PST)
 Received: from thinkpad ([36.255.17.192])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcc3ddc8bsm4787668a12.60.2024.11.24.05.51.31
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129db87dafsm47492325ad.43.2024.11.24.06.33.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2024 05:51:34 -0800 (PST)
-Date: Sun, 24 Nov 2024 19:21:28 +0530
+        Sun, 24 Nov 2024 06:33:34 -0800 (PST)
+Date: Sun, 24 Nov 2024 20:03:27 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
-	dlemoal@kernel.org, maz@kernel.org, tglx@linutronix.de,
-	jdmason@kudzu.us
-Subject: Re: [PATCH v8 5/6] misc: pci_endpoint_test: Add doorbell test case
-Message-ID: <20241124135128.775zh3xqkrajzvn4@thinkpad>
-References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com>
- <20241116-ep-msi-v8-5-6f1f68ffd1bb@nxp.com>
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v8 2/7] PCI: dwc: Use devicetree 'ranges' property to get
+ rid of cpu_addr_fixup() callback
+Message-ID: <20241124143327.6cuxrw76pr6olfor@thinkpad>
+References: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
+ <20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,201 +101,251 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241116-ep-msi-v8-5-6f1f68ffd1bb@nxp.com>
+In-Reply-To: <20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.com>
 
-On Sat, Nov 16, 2024 at 09:40:45AM -0500, Frank Li wrote:
-> Add three registers: PCIE_ENDPOINT_TEST_DB_BAR, PCIE_ENDPOINT_TEST_DB_ADDR,
-> and PCIE_ENDPOINT_TEST_DB_DATA.
+On Tue, Nov 19, 2024 at 02:44:20PM -0500, Frank Li wrote:
+> parent_bus_addr in struct of_range can indicate address information just
+> ahead of PCIe controller. Most system's bus fabric use 1:1 map between
+> input and output address. but some hardware like i.MX8QXP doesn't use 1:1
+> map. See below diagram:
 > 
-> Trigger the doorbell by writing data from PCI_ENDPOINT_TEST_DB_DATA to the
-> address provided by PCI_ENDPOINT_TEST_DB_OFFSET and wait for endpoint
-> feedback.
+>             ┌─────────┐                    ┌────────────┐
+>  ┌─────┐    │         │ IA: 0x8ff8_0000    │            │
+>  │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
+>  └─────┘    │   │     │ IA: 0x8ff0_0000 │  │            │
+>   CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
+> 0x7ff8_0000─┼───┘  │  │             │   │  │            │
+>             │      │  │             │   │  │            │   PCI Addr
+> 0x7ff0_0000─┼──────┘  │             │   └──► IOSpace   ─┼────────────►
+>             │         │             │      │            │    0
+> 0x7000_0000─┼────────►├─────────┐   │      │            │
+>             └─────────┘         │   └──────► CfgSpace  ─┼────────────►
+>              BUS Fabric         │          │            │    0
+>                                 │          │            │
+>                                 └──────────► MemSpace  ─┼────────────►
+>                         IA: 0x8000_0000    │            │  0x8000_0000
+>                                            └────────────┘
 > 
-> Add two command to COMMAND_ENABLE_DOORBELL and COMMAND_DISABLE_DOORBELL
-> to enable EP side's doorbell support and avoid compatible problem.
+> bus@5f000000 {
+> 	compatible = "simple-bus";
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+> 
+> 	pcie@5f010000 {
+> 		compatible = "fsl,imx8q-pcie";
+> 		reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
+> 		reg-names = "dbi", "config";
+> 		#address-cells = <3>;
+> 		#size-cells = <2>;
+> 		device_type = "pci";
+> 		bus-range = <0x00 0xff>;
+> 		ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
+> 			 <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+> 	...
+> 	};
+> };
+> 
+> Term internal address (IA) here means the address just before PCIe
+> controller. After ATU use this IA instead CPU address, cpu_addr_fixup() can
+> be removed.
+> 
 
-Can you explain the 'compatible problem' and how this patch avoids it? Just for
-the sake of completeness.
+The newly added warning should be mentioned in the commit message. But no need
+to respin just for this. I hope Krzysztof can add it while applying.
 
-> 
-> 		Host side new driver	Host side old driver
-> EP: new driver		S			F
-> EP: old driver		F			F
-> 
-> S: If EP side support MSI, 'pcitest -B' return success.
->    If EP side doesn't support MSI, the same to 'F'.
-> 
-> F: 'pcitest -B' return failure, other case as usual.
-> 
-> Tested-by: Niklas Cassel <cassel@kernel.org>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change form v6 to v8
-> - none
-> 
-> Change from v5 to v6
-> - %s/PCI_ENDPOINT_TEST_DB_ADDR/PCI_ENDPOINT_TEST_DB_OFFSET/g
-> 
-> Change from v4 to v5
-> - remove unused varible
-> - add irq_type at pci_endpoint_test_doorbell();
-> 
-> change from v3 to v4
-> - Add COMMAND_ENABLE_DOORBELL and COMMAND_DISABLE_DOORBELL.
-> - Remove new DID requirement.
-> ---
->  drivers/misc/pci_endpoint_test.c | 71 ++++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/pcitest.h     |  1 +
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 3aaaf47fa4ee2..dc766055aa594 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -42,6 +42,8 @@
->  #define COMMAND_READ				BIT(3)
->  #define COMMAND_WRITE				BIT(4)
->  #define COMMAND_COPY				BIT(5)
-> +#define COMMAND_ENABLE_DOORBELL			BIT(6)
-> +#define COMMAND_DISABLE_DOORBELL		BIT(7)
->  
->  #define PCI_ENDPOINT_TEST_STATUS		0x8
->  #define STATUS_READ_SUCCESS			BIT(0)
-> @@ -53,6 +55,11 @@
->  #define STATUS_IRQ_RAISED			BIT(6)
->  #define STATUS_SRC_ADDR_INVALID			BIT(7)
->  #define STATUS_DST_ADDR_INVALID			BIT(8)
-> +#define STATUS_DOORBELL_SUCCESS			BIT(9)
-> +#define STATUS_DOORBELL_ENABLE_SUCCESS		BIT(10)
-> +#define STATUS_DOORBELL_ENABLE_FAIL		BIT(11)
-> +#define STATUS_DOORBELL_DISABLE_SUCCESS		BIT(12)
-> +#define STATUS_DOORBELL_DISABLE_FAIL		BIT(13)
->  
->  #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
->  #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
-> @@ -67,6 +74,10 @@
->  #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
->  
->  #define PCI_ENDPOINT_TEST_FLAGS			0x2c
-> +#define PCI_ENDPOINT_TEST_DB_BAR		0x30
-> +#define PCI_ENDPOINT_TEST_DB_OFFSET		0x34
-> +#define PCI_ENDPOINT_TEST_DB_DATA		0x38
-> +
->  #define FLAG_USE_DMA				BIT(0)
->  
->  #define PCI_DEVICE_ID_TI_AM654			0xb00c
-> @@ -108,6 +119,7 @@ enum pci_barno {
->  	BAR_3,
->  	BAR_4,
->  	BAR_5,
-> +	NO_BAR = -1,
 
-I really hate duplicating this enum definition both in EPF driver and here.
-Maybe we should move this to pci.h?
-
->  };
->  
->  struct pci_endpoint_test {
-> @@ -746,6 +758,62 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
->  	return false;
->  }
->  
-> +static bool pci_endpoint_test_doorbell(struct pci_endpoint_test *test)
-> +{
-> +	struct pci_dev *pdev = test->pdev;
-> +	struct device *dev = &pdev->dev;
-> +	int irq_type = test->irq_type;
-> +	enum pci_barno bar;
-> +	u32 data, status;
-> +	u32 addr;
-> +
-> +	if (irq_type < IRQ_TYPE_INTX || irq_type > IRQ_TYPE_MSIX) {
-> +		dev_err(dev, "Invalid IRQ type option\n");
-> +		return false;
-> +	}
-
-Is this check necessary?
-
-> +
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-> +				 COMMAND_ENABLE_DOORBELL);
-> +
-> +	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
-> +
-> +	status = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
-> +	if (status & STATUS_DOORBELL_ENABLE_FAIL)
-> +		return false;
-
-I think we should add a error print here and below.
-
-> +
-> +	data = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_DATA);
-> +	addr = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_OFFSET);
-> +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
-> +
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
-> +
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_STATUS, 0);
-> +
-> +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
-> +
-> +	writel(data, test->bar[bar] + addr);
-> +
-> +	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
-> +
-> +	status = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
-> +
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-> +				 COMMAND_DISABLE_DOORBELL);
-> +
-> +	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
-> +
-> +	status |= pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
-> +
-> +	if ((status & STATUS_DOORBELL_SUCCESS) &&
-> +	    (status & STATUS_DOORBELL_DISABLE_SUCCESS))
-> +		return true;
-
-Usual convention is to check for error and return true at the end.
-
-> +
-> +	return false;
-> +}
-> +
->  static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
->  				    unsigned long arg)
->  {
-> @@ -793,6 +861,9 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
->  	case PCITEST_CLEAR_IRQ:
->  		ret = pci_endpoint_test_clear_irq(test);
->  		break;
-> +	case PCITEST_DOORBELL:
-> +		ret = pci_endpoint_test_doorbell(test);
-> +		break;
->  	}
->  
->  ret:
-> diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
-> index 94b46b043b536..06d9f548b510e 100644
-> --- a/include/uapi/linux/pcitest.h
-> +++ b/include/uapi/linux/pcitest.h
-> @@ -21,6 +21,7 @@
->  #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
->  #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
->  #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
-> +#define PCITEST_DOORBELL	_IO('P', 0x11)
-
-I think defining PCITEST_CLEAR_IRQ as 0x10 was a mistake. It should've been 0xa.
-But since it is a uapi, we cannot change it. Atleast add new ones starting from
-0xa.
-
-Niklas's consecutive BAR patch adds a new ioctl for 0xa, but we can fix the
-conflict later depending on which patch gets merged first.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
+
+> ---
+> Change from v7 to v8
+> - Add dev_warning_once at dw_pcie_iatu_detect() to reminder
+> cpu_addr_fixup() user to correct their code
+> - use 'use_parent_dt_ranges' control enable use dt parent bus node ranges.
+> - rename dw_pcie_get_untranslate_addr to dw_pcie_get_parent_addr().
+> - of_property_read_reg() already have comments, so needn't add more.
+> - return actual err code from function
+> 
+> Change from v6 to v7
+> Add a resource_size_t parent_bus_addr local varible to fix 32bit build
+> error.
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202410291546.kvgEWJv7-lkp@intel.com/
+> 
+> Chagne from v5 to v6
+> -add comments for of_property_read_reg().
+> 
+> Change from v4 to v5
+> - remove confused 0x5f00_0000 range in sample dts.
+> - reorder address at above diagram.
+> 
+> Change from v3 to v4
+> - none
+> 
+> Change from v2 to v3
+> - %s/cpu_untranslate_addr/parent_bus_addr/g
+> - update diagram.
+> - improve commit message.
+> 
+> Change from v1 to v2
+> - update because patch1 change get untranslate address method.
+> - add using_dtbus_info in case break back compatibility for exited platform.
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 57 ++++++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.c      |  9 ++++
+>  drivers/pci/controller/dwc/pcie-designware.h      |  7 +++
+>  3 files changed, 72 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 3e41865c72904..f882b11fd7b94 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -418,6 +418,34 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
+>  	}
+>  }
+>  
+> +static int dw_pcie_get_parent_addr(struct dw_pcie *pci, resource_size_t pci_addr,
+> +				   resource_size_t *i_addr)
+> +{
+> +	struct device *dev = pci->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct of_range_parser parser;
+> +	struct of_range range;
+> +	int ret;
+> +
+> +	if (!pci->use_parent_dt_ranges) {
+> +		*i_addr = pci_addr;
+> +		return 0;
+> +	}
+> +
+> +	ret = of_range_parser_init(&parser, np);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for_each_of_pci_range(&parser, &range) {
+> +		if (pci_addr == range.bus_addr) {
+> +			*i_addr = range.parent_bus_addr;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -427,6 +455,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	struct resource_entry *win;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *res;
+> +	int index;
+>  	int ret;
+>  
+>  	raw_spin_lock_init(&pp->lock);
+> @@ -440,6 +469,20 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  		pp->cfg0_size = resource_size(res);
+>  		pp->cfg0_base = res->start;
+>  
+> +		if (pci->use_parent_dt_ranges) {
+> +			index = of_property_match_string(np, "reg-names", "config");
+> +			if (index < 0)
+> +				return -EINVAL;
+> +			/*
+> +			 * Retrieve the parent bus address of PCI config space.
+> +			 * If the parent bus ranges in the device tree provide
+> +			 * the correct address conversion information, set
+> +			 * 'use_parent_dt_ranges' to true, The
+> +			 * 'cpu_addr_fixup()' can be eliminated.
+> +			 */
+> +			of_property_read_reg(np, index, &pp->cfg0_base, NULL);
+> +		}
+> +
+>  		pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
+>  		if (IS_ERR(pp->va_cfg0_base))
+>  			return PTR_ERR(pp->va_cfg0_base);
+> @@ -462,6 +505,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  		pp->io_base = pci_pio_to_address(win->res->start);
+>  	}
+>  
+> +	ret = dw_pcie_get_parent_addr(pci, pp->io_bus_addr, &pp->io_base);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Set default bus ops */
+>  	bridge->ops = &dw_pcie_ops;
+>  	bridge->child_ops = &dw_child_pcie_ops;
+> @@ -722,6 +769,8 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>  
+>  	i = 0;
+>  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
+> +		resource_size_t parent_bus_addr;
+> +
+>  		if (resource_type(entry->res) != IORESOURCE_MEM)
+>  			continue;
+>  
+> @@ -730,9 +779,15 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>  
+>  		atu.index = i;
+>  		atu.type = PCIE_ATU_TYPE_MEM;
+> -		atu.cpu_addr = entry->res->start;
+> +		parent_bus_addr = entry->res->start;
+>  		atu.pci_addr = entry->res->start - entry->offset;
+>  
+> +		ret = dw_pcie_get_parent_addr(pci, entry->res->start, &parent_bus_addr);
+> +		if (ret)
+> +			return ret;
+> +
+> +		atu.cpu_addr = parent_bus_addr;
+> +
+>  		/* Adjust iATU size if MSG TLP region was allocated before */
+>  		if (pp->msg_res && pp->msg_res->parent == entry->res)
+>  			atu.size = resource_size(entry->res) -
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 6d6cbc8b5b2c6..e1ac9c81ad531 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -840,6 +840,15 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+>  	pci->region_align = 1 << fls(min);
+>  	pci->region_limit = (max << 32) | (SZ_4G - 1);
+>  
+> +	if (pci->ops && pci->ops->cpu_addr_fixup) {
+> +		/*
+> +		 * If the parent 'ranges' property in DT correctly describes
+> +		 * the address translation, cpu_addr_fixup() callback is not
+> +		 * needed.
+> +		 */
+> +		dev_warn_once(pci->dev, "cpu_addr_fixup() usage detected. Please fix DT!\n");
+> +	}
+> +
+>  	dev_info(pci->dev, "iATU: unroll %s, %u ob, %u ib, align %uK, limit %lluG\n",
+>  		 dw_pcie_cap_is(pci, IATU_UNROLL) ? "T" : "F",
+>  		 pci->num_ob_windows, pci->num_ib_windows,
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 347ab74ac35aa..4f31d4259a0de 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -463,6 +463,13 @@ struct dw_pcie {
+>  	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
+>  	struct gpio_desc		*pe_rst;
+>  	bool			suspended;
+> +	/*
+> +	 * This flag indicates that the vendor driver uses devicetree 'ranges'
+> +	 * property to allow iATU to use the Intermediate Address (IA) for
+> +	 * outbound mapping. Using this flag also avoids the usage of
+> +	 * 'cpu_addr_fixup' callback implementation in the driver.
+> +	 */
+> +	bool			use_parent_dt_ranges;
+>  };
+>  
+>  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> 
+> -- 
+> 2.34.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
