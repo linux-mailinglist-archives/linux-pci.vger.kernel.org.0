@@ -1,158 +1,122 @@
-Return-Path: <linux-pci+bounces-17278-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 864839D8639
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 14:22:16 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD2399D86B3
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 14:43:09 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CA9728B100
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 13:22:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CFF4164F82
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 13:43:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AD771B1D65;
-	Mon, 25 Nov 2024 13:21:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC9B51AB52F;
+	Mon, 25 Nov 2024 13:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkykpNRv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noW6Bvmd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F651ABEA0;
-	Mon, 25 Nov 2024 13:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5743D18872F;
+	Mon, 25 Nov 2024 13:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732540868; cv=none; b=aUaY3xT/o0cJLzCbDeXglCemjmEMvicq+vBSzAzD/dtB2Wx+kW530fcPIgLxkROZwZ2BHjz17kufh3b4xi+tl1SbgmgpApAjs6qfuR8s0H024e8Upf9P1D9wqSlHGQwWFd2dNp4uIYTbo3jqtwFDOdInGroRJfZKTS1QYyjzPE4=
+	t=1732542184; cv=none; b=ZTKwPWDoY7mP+j7olY4Qg+aU45KVIcOPdr7O/8xaN3AkvmuInvziP3g5/jeyPvFwQVolgGYQON7ZP0FTKM6V5LAHQRHr3jmrBzA0vOhQ1yrm6Vhr/XWIVbmhzdDosEhQGm93V6K1C3i4fyKpgPa2tO0p1VlsO+RnnsvLAjk76rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732540868; c=relaxed/simple;
-	bh=3Z560kziSQXi2my1WMJNnxEGuywtw7Uta9RcrJwEvHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SuooNe8ZwnTtoCOi9CmZaVxtI3RK4K5Q7VXDgNFl/4cisnYCLEltVo3upnd4MsGH9uqvaWCgZcUqIBBWREkcVxVBo2R+qRJY9YR5AL71vWj+oUW+hhKO9OvIiziennBN6Qy0GQ6zXn//BFbSF8CeBwA+qjP4FloJgegOLR388HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkykpNRv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610F7C4CED2;
-	Mon, 25 Nov 2024 13:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732540866;
-	bh=3Z560kziSQXi2my1WMJNnxEGuywtw7Uta9RcrJwEvHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YkykpNRv7e4NVi4Q3z8ffrcHtigFITXEIxN/5bTSjYdSwaphoIBGxqmG+/Xb46TI7
-	 lHS/FY0EsAUAz1aYRprNvi6QHcyObwv8xHeGqJ05oGkRLX0e0qKg8xflK6oz4lAXf7
-	 YhDyUrt9P4stTb7wr4Cj6faNKuabUVK/uT5TkuTTJ9M8Dgc7pTuXnnsJprFpWQcWsr
-	 oJtVByZrcaZVyAzTcmcBTi8a4HHu7UG0bHWY3Xph56B8h9135/UIM79mhNBzIGU96v
-	 JXhwAWUIHHY0CyLinhprle6eH9ZMJ6gAhhpTH9YT2OXbHgesMLMXeqrXQl9GDr9GhR
-	 cR4Addly+n0lQ==
-Date: Mon, 25 Nov 2024 07:21:04 -0600
-From: Rob Herring <robh@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Dragan Cvetic <dragan.cvetic@amd.com>, linux-gpio@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	linux-arm-kernel@lists.infradead.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Wilczynski <kw@linux.com>
-Subject: Re: [PATCH v4 04/10] dt-bindings: misc: Add device specific bindings
- for RaspberryPi RP1
-Message-ID: <20241125132104.GA1520508-robh@kernel.org>
-References: <cover.1732444746.git.andrea.porta@suse.com>
- <ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com>
- <173250040873.6640.9720381303445148722.robh@kernel.org>
- <Z0RAGkBc-yz5lqN6@apocalypse>
+	s=arc-20240116; t=1732542184; c=relaxed/simple;
+	bh=Vh96bJoOwrNFyO6Sp6Hhb3hniflnbzfSe79opOPAAMU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VgLtNDQtl9eG+j25bmu4QfMBjsUwB1KlGPFDECFuqGKNLMBQibX0x11PPlb5iNMij+kKghmzwtcM2TzCSBHDEB5ACM4ECPbvCtfaYDsX6Y3PEsGwnXf+EvcoKzIRhSIPj2RFjsCxnJB2tH6GAr7hMDC6WU1SyL+4NIHca8jeHPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noW6Bvmd; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ea33a70fdfso745121a91.2;
+        Mon, 25 Nov 2024 05:43:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732542182; x=1733146982; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vh96bJoOwrNFyO6Sp6Hhb3hniflnbzfSe79opOPAAMU=;
+        b=noW6Bvmdaa106xjizH8vxD6ha0cJauBwo+L+7I4cPb8XcFdE5CD9jg1rnSkO7PBC6g
+         FVLw5TQh53aC8Gd8lGI5sEGrbkoFc1DheD80KQAA9iBAGRA8K0is/AtjQHjGz7Y9Hw2h
+         k/nd8eT70bcVLFA9Fk16eJ9mzW6KdpsbvDBWW9ufMTehLbiF8PC9XULzhd1m3QtjamH1
+         L8wAq5gFmCPmXUYd7xQpnnz+CRunuzASD54dRGLe3M+TF5VYFtYO0I7pRGCRmaNd6kWW
+         9IsiGU2CcrDv7pQVXFRJhT3LrPB4wgoRsQr8a48Aqeifwds5W4eZCPHUJobxoZ1Gycx1
+         IIrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732542182; x=1733146982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vh96bJoOwrNFyO6Sp6Hhb3hniflnbzfSe79opOPAAMU=;
+        b=NKA9tz7ByTXcekBGab1dWYOfwc5yhiVB/5Bobe5Pp/xVmyfZ53Nx9XX8i9YiQa7K67
+         VH2QkDwUG7k7I3i1sxqaYliysQW6wDjn8mGr9WRhY5M/DoL8ia5yvJPV3Ip8lR/6mjpF
+         zAbnRt5Hj/kn1B3kbZjQs/Yt+3mBIhPgd5TTtsRDwFLEd9E4z9Z2A8ApnwHZhuQySMGI
+         qAhiwaAJBqkmE2OavapcEQbmYlG/qCQ8dM/ZxEeJzLHNqjkHWdF1SbXi2/Zd7/xZtVkb
+         gpnbyNIqLaLlx/H1OshAfw70oaBy8R8VsFSBeW9PDLMmZKoELmvu+zepfAMvcZTSemnA
+         UTmA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoKxkJVNr7juowc0bIt3lbygMfM54GOuNRF7Q8WTioR6tZyDBJyzYw5QnQCe5+oynuYGyO5X3k8Bw4@vger.kernel.org, AJvYcCW6InM7epr34y62uqmjodh4KMMDQH5XQ9Z5PPRNuu6Hb6uyGvIeg0Op8gEvFQigKScRNVyX4TywurWhOH/i@vger.kernel.org, AJvYcCWA/mmnEIOLDDqpe0Ru5I4wsTbnND41y9ax716GFwFN4n92/YIqaHEI1mOmtd4CtJEthfP2t+j0DwVqeQTEHlM=@vger.kernel.org, AJvYcCWLGwMN4ENLamSDGYlTlEwpjUwq/9v8KqvG2Fdyj36DqiQOTG6lCFUV4XRTLn0P2hYkdkhqWF4IbR+h@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNa4P5OpnhgNYwPo/x9HsKUClueQMTBknHpnIdnYn6DzmExeb2
+	8UWF30AZa656b3FuUx/AGkIzGmUaROtumuRDTt1+Vh5lOLs26gRikyw/09rUZZ2FU8Bw+EjlUe+
+	8tY2bWeOC204IJHQeZTYIAQQcb7o=
+X-Gm-Gg: ASbGncsWp2ogAmuC3RJ3rGxVfk7GTuCFqMTCcLmBNksFdsX5C2oRkZvh1BvIL9BXJTv
+	sSpkkHQhvYZIEKzr9AJT6tH30Vm9zLGw=
+X-Google-Smtp-Source: AGHT+IGY3uQ6gtttopQGEvmtnMN78gZwZv98uC/pEs79Qk0Z00BiITe4CR6H5hcbiNZimM0EEV3FxfcxB0atDxrBtDA=
+X-Received: by 2002:a17:90b:4d11:b0:2ea:c2d3:a079 with SMTP id
+ 98e67ed59e1d1-2ede7daaf62mr58486a91.3.1732542182583; Mon, 25 Nov 2024
+ 05:43:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z0RAGkBc-yz5lqN6@apocalypse>
+References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-6-dakr@kernel.org>
+In-Reply-To: <20241022213221.2383-6-dakr@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 25 Nov 2024 14:42:50 +0100
+Message-ID: <CANiq72moksyUHEYDXu3G_=FaLdXpNJrrihnw5QFhWaRZbdeT3A@mail.gmail.com>
+Subject: Re: [PATCH v3 05/16] rust: implement `IdArray`, `IdTable` and `RawDeviceId`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Fabien Parent <fabien.parent@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 25, 2024 at 10:15:06AM +0100, Andrea della Porta wrote:
-> Hi Rob,
-> 
-> On 20:06 Sun 24 Nov     , Rob Herring (Arm) wrote:
-> > 
-> > On Sun, 24 Nov 2024 11:51:41 +0100, Andrea della Porta wrote:
-> > > The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-> > > schema is intended as minimal support for the clock generator and
-> > > gpio controller peripherals which are accessible through BAR1.
-> > > 
-> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > ---
-> > >  .../devicetree/bindings/misc/pci1de4,1.yaml   | 74 +++++++++++++++++++
-> > >  MAINTAINERS                                   |  1 +
-> > >  2 files changed, 75 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> > > 
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> > 
-> > yamllint warnings/errors:
-> > 
-> > dtschema/dtc warnings/errors:
-> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/pci1de4,1.example.dtb: clocks@c040018000: 'clock-names' does not match any of the regexes: 'pinctrl-[0-9]+'
-> > 	from schema $id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+On Tue, Oct 22, 2024 at 11:33=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> +#![allow(stable_features)]
 
-The error comes from this schema and...
+This should be possible to remove (starting with v6.11 we do this in
+the command line).
 
-> > 
-> > doc reference errors (make refcheckdocs):
-> > 
-> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com
-> > 
-> > The base for the series is generally the latest rc1. A different dependency
-> > should be noted in *this* patch.
-> > 
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> > date:
-> > 
-> > pip3 install dtschema --upgrade
-> > 
-> > Please check and re-submit after running the above command yourself. Note
-> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> > your schema. However, it must be unset to test all examples with your schema.
-> > 
-> 
-> Sorry about that, but even if I see that this should be the case (I've dropped
-> the clock-name property from raspberrypi,rp1-clock.yaml), I can't reproduce it
-> with:
-> 
-> # make W=1 dt_binding_check DT_SCHEMA_FILES=pci1de4,1.yaml
+> +// Stable in Rust 1.83
+> +#![feature(const_mut_refs)]
+> +#![feature(const_ptr_write)]
+> +#![feature(const_maybe_uninit_as_mut_ptr)]
 
-You've limited testing to schema files matching pci1de4,1.yaml.
+`const_refs_to_cell` is also stable in 1.83, so you could move it also here=
+.
 
-> 
-> and the output is:
-> 
->   CHKDT   Documentation/devicetree/bindings
->   LINT    Documentation/devicetree/bindings
->   DTEX    Documentation/devicetree/bindings/misc/pci1de4,1.example.dts
->   DTC [C] Documentation/devicetree/bindings/misc/pci1de4,1.example.dtb
-> 
-> dt-schema seems up to date. Is my command line correct?
-> 
-> Many thanks,
-> Andrea
-> 
+Having said that, to be consistent, I would just put them above sorted
+with the rest -- the compiler can tell us and we track this elsewhere
+(just added the last two here to our issue #2 list). Either way, it is
+not a big deal, this list will be going away soon and we can
+celebrate! :)
+
+Thanks!
+
+Cheers,
+Miguel
 
