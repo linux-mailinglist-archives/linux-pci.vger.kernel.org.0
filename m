@@ -1,46 +1,48 @@
-Return-Path: <linux-pci+bounces-17270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 793F89D7B4F
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 06:44:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 140319D7C14
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 08:40:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9F6A1B20A76
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 05:43:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDE512814A2
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 07:40:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E3C45589B;
-	Mon, 25 Nov 2024 05:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1786113D26B;
+	Mon, 25 Nov 2024 07:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rDTL8yry"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnjVmaHC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F50D1E517;
-	Mon, 25 Nov 2024 05:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66DE82876;
+	Mon, 25 Nov 2024 07:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732513436; cv=none; b=A/VO6/cJE9FgFW1jodOQXArshE6nC4m1TZAbT9y9bQaDYhFT7RYcX9X/hz6+w7paP0yLeS9aqFouE46ofTc08T+qdg4YjKK4aFnWpYfSfUT7/w7f+vDuUj9AYcf7h8CnID9JqXFhU/iGoCu+pwLpsEihoENUJ5n56ukiTILi2Pc=
+	t=1732520446; cv=none; b=JjVwHaz3dl4Cc5qLxWGtzQiKYSUragmJ2NonOSkMPi2W4oxeWb5IyUn3yPZX0bdjDsAAt71KnsZbSv9Xce7ZEKxUMtbd71GOv2HOVM8ve1KhVcrl0GCgVkGmKzUTBsqMTvm7IVYnESu/fZ5ZkS6NQlzg8WrmeR/G1NiR6PNjKwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732513436; c=relaxed/simple;
-	bh=UbRWhvHD4DPQ5XrVr9EKz9M7tAQDDFsgZEUV6R4EMdQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=slgkcaX9GELACNlwqy8UenjREbqHb8UK3ObyRnhkBWy1ivDnWmW8ttnynTtVIYJe4fuBRqb29ZpzeDRelb8pwPIiTubh5Z9CFTeN57iwpL4TAW992lzpNTfN6JFiY1aCwQMlXpaSxMFO9CoKXhbBIvxxBJCcnBbHjBKFfSKeJD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rDTL8yry; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1732513425; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=6BZaEez2/onj6k/5ttKm7P3puppd4NcQlJSNto8o0cM=;
-	b=rDTL8yryVSwebbFsMb8RDKYrDDJZAKLjusxPOHa1PqRbEeEkulS+LiXpW7OV220vbLku1+9ahy7H90FsfxOG9K4ZY1/NlnYsp2H5urlOCRDBp00uAzXH2VP90TN4O0vjqJOc3lalRi5FNtbKJFgA5tkid68Si768Lhhf+9O5RH8=
-Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WK6G9Wy_1732513422 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 25 Nov 2024 13:43:44 +0800
-Message-ID: <11282df5-9126-4b5b-82ae-5f1ef3b8aaf5@linux.alibaba.com>
-Date: Mon, 25 Nov 2024 13:43:42 +0800
+	s=arc-20240116; t=1732520446; c=relaxed/simple;
+	bh=J07ooMYbifRO4lE86kyFEGuhqgft9JSr5J+0XMD81tk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bJAOeubr+i7u8j/tiC08969KXhYF7InL0b71EA6Bd9AnMo8dc+PkkyZ0qnpZBy86c6DeMbnKwAmFJmeamAPGmH4Khh0hVGnjbQh84O8rVBUBBsgt1roBemTvwLT3WHrtj14YbhuM4DWCdjRJQg8vWLoxgunVlUw6eCT5OXv28QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnjVmaHC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9F67C4CECE;
+	Mon, 25 Nov 2024 07:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732520445;
+	bh=J07ooMYbifRO4lE86kyFEGuhqgft9JSr5J+0XMD81tk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tnjVmaHCAF/N12A6/xDb6zRacrqU0g0YymkyDzbAkjKk0Z7HwrQawWfupj0xIjdwJ
+	 uSjDTGv9dAS2cJ+kBELh40JYQriAvfii4lrv4HttH627Za9Aw8JSHg384y/CmYWK9p
+	 0qLeLM+cNtOlkhKHVZBBhT7Vbhus4UUj57/UGKebEA26ticiZH1cUcvEHg7pKRfVNi
+	 wCKOI0bUX8ApNys7Xw+90eIvhjkLIaaDIa+ZBbdP7sLe99TePGxAYrysSkVunVurEq
+	 b8GwEdzR13B43N077x2vt8EWFVpwC786jg3BtEImgg4T4VHzJBRuACVCsDIRoUA05N
+	 Ri+yZrmRepn4w==
+Message-ID: <b203d90d-91bc-437b-9b91-1085034ed716@kernel.org>
+Date: Mon, 25 Nov 2024 08:40:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,176 +50,97 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- bhelgaas@google.com, kbusch@kernel.org, Lukas Wunner <lukas@wunner.de>
-Cc: mahesh@linux.ibm.com, oohall@gmail.com,
- sathyanarayanan.kuppuswamy@linux.intel.com
-References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
- <20241112135419.59491-3-xueshuai@linux.alibaba.com>
- <a76394c4-8746-46c0-9cb5-bf0e2e0aa9b5@amd.com>
- <22d27575-fc68-4a7f-9bce-45b91c7dfb98@linux.alibaba.com>
- <9810fadd-2b0b-410b-a8a6-89ddf7a103b9@linux.alibaba.com>
-In-Reply-To: <9810fadd-2b0b-410b-a8a6-89ddf7a103b9@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
+ <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
+ <poruhxgxnkhvqij5q7z4toxzcsk2gvkyj6ewicsfxj6xl3i3un@msgyeeyb6hsf>
+ <42425b92-6e0d-a77b-8733-e50614bcb3a8@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <42425b92-6e0d-a77b-8733-e50614bcb3a8@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-在 2024/11/17 21:36, Shuai Xue 写道:
-> 
-> 
-> 在 2024/11/16 20:44, Shuai Xue 写道:
+On 24/11/2024 02:41, Krishna Chaitanya Chundru wrote:
+>> ...
 >>
+>>> +  qps615,axi-clk-freq-hz:
 >>
->> 在 2024/11/16 04:20, Bowman, Terry 写道:
->>> Hi Shuai,
->>>
->>>
->>> On 11/12/2024 7:54 AM, Shuai Xue wrote:
->>>> The AER driver has historically avoided reading the configuration space of
->>>> an endpoint or RCiEP that reported a fatal error, considering the link to
->>>> that device unreliable. Consequently, when a fatal error occurs, the AER
->>>> and DPC drivers do not report specific error types, resulting in logs like:
->>>>
->>>>    pcieport 0000:30:03.0: EDR: EDR event received
->>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>>>    nvme nvme0: frozen state error detected, reset controller
->>>>    nvme 0000:34:00.0: ready 0ms after DPC
->>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>>>
->>>> AER status registers are sticky and Write-1-to-clear. If the link recovered
->>>> after hot reset, we can still safely access AER status of the error device.
->>>> In such case, report fatal errors which helps to figure out the error root
->>>> case.
->>>>
->>>> After this patch, the logs like:
->>>>
->>>>    pcieport 0000:30:03.0: EDR: EDR event received
->>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>>>    nvme nvme0: frozen state error detected, reset controller
->>>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
->>>>    nvme 0000:34:00.0: ready 0ms after DPC
->>>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
->>>>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
->>>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
->>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>>>
->>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>> ---
->>>>   drivers/pci/pci.h      |  3 ++-
->>>>   drivers/pci/pcie/aer.c | 11 +++++++----
->>>>   drivers/pci/pcie/dpc.c |  2 +-
->>>>   drivers/pci/pcie/err.c |  9 +++++++++
->>>>   4 files changed, 19 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->>>> index 0866f79aec54..6f827c313639 100644
->>>> --- a/drivers/pci/pci.h
->>>> +++ b/drivers/pci/pci.h
->>>> @@ -504,7 +504,8 @@ struct aer_err_info {
->>>>       struct pcie_tlp_log tlp;    /* TLP Header */
->>>>   };
->>>> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->>>> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->>>> +                  bool link_healthy);
->>>>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->>>>   #endif    /* CONFIG_PCIEAER */
->>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>> index 13b8586924ea..97ec1c17b6f4 100644
->>>> --- a/drivers/pci/pcie/aer.c
->>>> +++ b/drivers/pci/pcie/aer.c
->>>> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->>>>    * aer_get_device_error_info - read error status from dev and store it to info
->>>>    * @dev: pointer to the device expected to have a error record
->>>>    * @info: pointer to structure to store the error record
->>>> + * @link_healthy: link is healthy or not
->>>>    *
->>>>    * Return 1 on success, 0 on error.
->>>>    *
->>>>    * Note that @info is reused among all error devices. Clear fields properly.
->>>>    */
->>>> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->>>> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->>>> +                  bool link_healthy)
->>>>   {
->>>>       int type = pci_pcie_type(dev);
->>>>       int aer = dev->aer_cap;
->>>> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->>>>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>>>              type == PCI_EXP_TYPE_RC_EC ||
->>>>              type == PCI_EXP_TYPE_DOWNSTREAM ||
->>>> -           info->severity == AER_NONFATAL) {
->>>> +           info->severity == AER_NONFATAL ||
->>>> +           (info->severity == AER_FATAL && link_healthy)) {
->>>>           /* Link is still healthy for IO reads */
->>>>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->>>> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->>>>       /* Report all before handle them, not to lost records by reset etc. */
->>>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->>>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->>>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>>>               aer_print_error(e_info->dev[i], e_info);
->>>>       }
->>>
->>> Would it be reasonable to detect if the link is intact and set the aer_get_device_error_info()
->>> function's 'link_healthy' parameter accordingly? I was thinking the port upstream capability
->>> link status register could be used to indicate the link viability.
->>>
->>> Regards,
->>> Terry
+>> That's a downstream code you send us.
 >>
->> Good idea. I think pciehp_check_link_active is a good implementation to check
->> link_healthy in aer_get_device_error_info().
+>> Anyway, why assigned clock rates do not work for you? You are
+>> re-implementing legacy property now under different name :/
 >>
->>    int pciehp_check_link_active(struct controller *ctrl)
->>    {
->>        struct pci_dev *pdev = ctrl_dev(ctrl);
->>        u16 lnk_status;
->>        int ret;
->>        ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
->>        if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
->>            return -ENODEV;
->>        ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
->>        ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
->>        return ret;
->>    }
->>
->> Thank you for valuable comments.
->>
->> Best Regards
->> Shuai
-> 
-> Hi, Bowman,
-> 
-> After dive into the code details, I found that both dpc_reset_link() and
-> aer_root_reset() use pci_bridge_wait_for_secondary_bus() to wait for secondary
-> bus to be accessible. IMHO, pci_bridge_wait_for_secondary_bus() is better
-> robustness than function like pciehp_check_link_active(). So I think
-> reset_subordinates() is good boundary for delineating whether a link is
-> accessible.
-> 
-> Besides, for DPC driver, the link status of upstream port, e.g, rootport, is
-> inactive when DPC is triggered, and is recoverd to active until
-> dpc_reset_link() success. But for AER driver, the link is active before and
-> after aer_root_reset(). As a result, the AER status will be reported twice.
-> 
+>> The assigned clock rates comes in to the picture when we are using clock
+> framework to control the clocks. For this switch there are no clocks 
+> needs to be control, the moment we power on the switch clocks are
+> enabled by default. This switch provides a mechanism to control the
+> frequency using i2c. And switch supports only two frequencies i.e
 
 
-Hi, Bowman, and Bjorn,
+frequency of what, since there are no clocks?
 
-Do you have any feedback or other concern?
+> 125MHz and 250MHZ by default it runs on 250MHz, we can do one i2c
+> write with which switch runs in 125MHz.
 
-Thank you.
+How doing a write is relevant? Or you want to say you can control clock?
 
-Best Regards,
-Shuai
 
+
+Best regards,
+Krzysztof
 
