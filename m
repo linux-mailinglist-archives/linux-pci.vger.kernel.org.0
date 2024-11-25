@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-17274-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17275-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98AF29D7DCA
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 09:54:47 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 158779D7E99
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 09:57:39 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29FB11619ED
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 08:54:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5386DB24F4B
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2024 08:57:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142D718E023;
-	Mon, 25 Nov 2024 08:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0166E18E047;
+	Mon, 25 Nov 2024 08:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TYtW/zP3"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Dr/JP/rg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E46318CBF2
-	for <linux-pci@vger.kernel.org>; Mon, 25 Nov 2024 08:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B3A18FC84
+	for <linux-pci@vger.kernel.org>; Mon, 25 Nov 2024 08:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732524883; cv=none; b=haeU4Bwomxyknd0cugYDMchLLz6TNDUpyFSZzyZhOSo2mJhtxbXzJE2LvoUYXxk3SYFUHPZxnaWbu50yaQJEyBFKX5lT6ZRVZJDIK5bdAW0NbYBJhYnT5Xfm3XHk5oRHJP3q0Y2OYcMK9fQQiIcanpWtpDaxhSiOfdDchyHAW8c=
+	t=1732525035; cv=none; b=B0WWFrawYWqnnZSmzP9R/EMf7TLZk633vlDDGPMiFVWpwJG50BMhj5M3mCn8VG1vAjP5pm9ikQ0Iodic4waOt3UQQjF1zROPYpBTX/3cML+6DgWSEY0HIZCWRfBiWl2zQJ3vqC1ONYfNX2dcITaHb/K5bQGxDwSvaireMQcnoJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732524883; c=relaxed/simple;
-	bh=uZFCAWid8rhJHzelkWD3pFnre9T42ijXLP2LF1wPb9E=;
+	s=arc-20240116; t=1732525035; c=relaxed/simple;
+	bh=lGs7WCnVDsN7XxJSV5nbIsOaHiSpnOd0xbhnLSv2cgw=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nA1e4BxHEL0e78OfCrBLFkwtpKeHQiwK3tRsG+3b2Mv1FwGgsZwQdy1gwQsuDGniqhxN0xQ5FMM4/s0Gu1yAzFjVGX/vgGRXy4uxQg+tqYygxTSahwQsm3xQdo7Vh4G0GqnY99kbuZfKWNLo1aWiHWBGVRH0WKaG2wTIDp2be5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TYtW/zP3; arc=none smtp.client-ip=209.85.208.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gh8djZESwUYORP2Ore2kO5Kj8iT3mt6a+ctbsDljC28EbDsXeDY3MaT+N04R6RtDslvepT47ZQJVmNgk7wfna+XZDdR/rFA53GKFA2bb9yOZpQHg1aABhg7KHrbYPCwfx5UhJEvEJsVBJcOng+R4Zb8j/PLo6qVZvgSold/5y7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Dr/JP/rg; arc=none smtp.client-ip=209.85.208.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5cfcb7183deso8840627a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 25 Nov 2024 00:54:40 -0800 (PST)
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5cfa1ec3b94so5094088a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 25 Nov 2024 00:57:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1732524879; x=1733129679; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1732525032; x=1733129832; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mBZh/dlJgKLPhdmjnm36EVhHzC98YQaW9Lth/5vAKvc=;
-        b=TYtW/zP3oxM1vFpM4KM8y6kvAht7l8o2L3yAU4ZwzteZAKmcbfAw8/WaoqTT3dTtiC
-         cUftivx1BsOxrK0/JqNDCiJc366IyQbjOH4EI6rY7ZiYoX0xhGT2irkgFxMdJcmyAVel
-         c/sjwVbyA4syCPaIRvjcuuZOi6VOS9DkpMBAOnNcGvcnPFrn9zNn6z1FYBNEfhObgdnJ
-         rzU21xHVizGo+uiDf1yW/OlhTtMQ3w39bQL9SOVSncSGPWMPfFo43Nx2Q1m1p1HYCgIK
-         0jqtquHIKJIzjITbwZf4Aif6uFYkC8+8Fu3RC6hb9avaZ1Q0rGptY2c+B4ggNkffJ57D
-         J84Q==
+        bh=vNEkjXcR05MS0wp8vkwMgIPKD9D5sF3FToehB53AVps=;
+        b=Dr/JP/rgWuMDD8gXvo5DbToxBHJOsLqp363vitL2SMxDTGSnehP/kOR1YPCBdVCvZ+
+         +YQ1OFwBBCfdAoz5/6SGQYV3PufeSxM6fTDvRhebkdp6f3TaBSb+bDvqCmpPH1X5gACO
+         BJWyl00o9tsqeOcsE9ufEmEwbF2fxhJXTWK0cyojCBRwkR23UoCOdA2l4lSa/X+vU/dF
+         Av/TKXPbHZ+fUHdCWA7EPsGuMuOopLRmnuIGYlp2fydTIf4l74v5lTb3jTDHwZ9sBrcd
+         r3yvBMQTItzKpcxIGjhmHRz+T8TiRnSATxt9aLQvdaxhCagZ2rPv4+zLpsKGg7UA6qih
+         Q3jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732524879; x=1733129679;
+        d=1e100.net; s=20230601; t=1732525032; x=1733129832;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mBZh/dlJgKLPhdmjnm36EVhHzC98YQaW9Lth/5vAKvc=;
-        b=MSpzXnnI8nA2SeWqnQF57+pjp8rWD5YfXL6TtnBGuzWz2hbxaKEX8n4uV9BkQRsR5v
-         Otcfm7TkZBZYldHT4llJw01n1mKVOqanCJoTgXLHiHx4SlidCeh66s4TsTbCNRXhkofa
-         Jj6/+JLIXuptQ31o3G4EK3/rQrvzleyjFXTk1/J6785+WMR0GJek1rDAV9xEkW4T7qJN
-         TilTD4niJOsNM40bfdvcql1MqWzWRO6dgL+gdQq0C6l1wfzvh9quYiG7BF4VZocVQu92
-         6AOfzGWUVsXifJ71roAwyRdz9MMQUCtpgneI+sDaxNGH4Z2C45JnRLhk2H5rA9X99/2d
-         cC/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVtEw0PDruMgSCv4JICYiYnBD4UX40+Vk2jqlrjmHIOm1+K4Ei9QCuz6uFlZGrOolOs4bVr1rDdlLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztvH6AWhSnN8iH1totfLIMKlFJ2OqQHAZ3dJtDKjeLXcAK7/Ni
-	afxojOBD4SGxL6mNe/lzUokI8+lbU8O2GX1e6KK9NDM1+Djy0U1Sug6IXuOzH6w=
-X-Gm-Gg: ASbGncuAX/+9yCuRD0d2lC6XU8fVJQlKdGy17AqIRfbMPzJ5ij5wC050sDmoD+9SB2s
-	er3QOlRDwIqlzbI82MGC7kzoCv2Sh0yN8JctpLF7WhFT+1ih2tdntU9vUKBHUNW9mXaFA/Ifv+Q
-	oLVZEM6BQsl1rawcr9mfcWak8ooCDTegKeQTap93ONEXwTXP5oVDWxD8ilVdYFZiMtMEvm1Oiv7
-	mLX6j/5JmfdX4h3SBfEGPkome/RnyxB47+a8RUZ9yteYjOxjHqCUkI+dybznSgsfusPfyLxHeF7
-	hsVjOMx+kZJskXiNHcSc
-X-Google-Smtp-Source: AGHT+IFNCFEK1ia8R/Vdi4LB9FLJuTXnKmbw4fkVMzsCxQu2qYrzuZQkQ2EAs+H3uMAiTz2NmcDbIA==
-X-Received: by 2002:a17:907:60ce:b0:aa4:e53f:5fbe with SMTP id a640c23a62f3a-aa509a1c2f9mr1339686366b.19.1732524879322;
-        Mon, 25 Nov 2024 00:54:39 -0800 (PST)
+        bh=vNEkjXcR05MS0wp8vkwMgIPKD9D5sF3FToehB53AVps=;
+        b=ugLqTT+OkDFO8IXSC2r1a0h6gIY6TQC7Im2V0WddcbDHz5IgXUP/ugg/qkFvsDhCVc
+         hAKd40styDIigr45J63BpSLOCVmA+C920d0+z8YUOSXGVCMlGZkmIavoZI5qhSalpWuZ
+         tahc8gli3UXI+N81FWc61D6w1oo1LxcW2gOnoJY1qLeDMnazyNPW0UzpcLIj3hQQakaz
+         bFOhFKTvfCmDiZaM1lmv7IeaIZPv2NZjUlzgbJElpjz3nRI6WhwqiV+LspmiNzf21hhC
+         jNxTFKfIyUEdkZS+YwA908QSohq4hH4naVQb/gHtogRPi88Q2fd+NugsvdlXqdZhUjeJ
+         OtCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXe0cCR2mjYHtV0Fwp2Vpjg1pWCVCdBI7wAmonZtJQa4O5JqF6fFEr9vaQRXQQ9yvYJ/4CjMxAHaCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqnOZ3zC0mOW6kIzyeVk21wKDVL1YKe3IHnqPTOtSyANirH+JH
+	DkHqKIxaDEIX07SXvrl73ey8K4JsA07SFuhPXVvMgFIFihrm0IoKqWm5dzeaVew=
+X-Gm-Gg: ASbGnculi1JY69LCORvSnjqXUJCTC0h8JhUcLjy/Zl78OsK075lQnCDT66FOd+17Etj
+	1fLC628m0NjnqQpkjduFT/JWweLo8pKmIaVMbqjOqHcO+3yDdfBeEYMC75Ja9U76ET/sAQfKf5S
+	OLoaFJM7MMc060EiQsbkXm1Qw133SSXTZNAKG8RAS99UUK/Pj1YFtxWNDDTT7tLk4is/VMYETgM
+	l2064BMCKtGaC7H/kc32FDAz+o2w1NvVZ0Qf8NfZB0+9zSAtbXsKj8vgpgusn0Z2o42aiusDTxU
+	3VHvDND48Uzqnxbelgry
+X-Google-Smtp-Source: AGHT+IH55hAqFtF1SAZEH6TDiO7aHZVwXL0OCOENrWcyyZFBIRACNLLEe84rTZrGuYqyUatS9TtS7A==
+X-Received: by 2002:a17:906:292a:b0:aa5:1cbd:def8 with SMTP id a640c23a62f3a-aa51cbdeea1mr942300566b.17.1732525032462;
+        Mon, 25 Nov 2024 00:57:12 -0800 (PST)
 Received: from localhost (host-79-49-220-127.retail.telecomitalia.it. [79.49.220.127])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa51759732asm406733166b.14.2024.11.25.00.54.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b52f9b9sm442025666b.105.2024.11.25.00.57.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2024 00:54:38 -0800 (PST)
+        Mon, 25 Nov 2024 00:57:12 -0800 (PST)
 From: Andrea della Porta <andrea.porta@suse.com>
 X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 25 Nov 2024 09:55:11 +0100
+Date: Mon, 25 Nov 2024 09:57:45 +0100
 To: Andrew Lunn <andrew@lunn.ch>
 Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -102,12 +102,11 @@ Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Herve Codina <herve.codina@bootlin.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 09/10] arm64: dts: bcm2712: Add external clock for RP1
- chipset on Rpi5
-Message-ID: <Z0Q7b-Qgjqs7NLS2@apocalypse>
+Subject: Re: [PATCH v4 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <Z0Q8CekmPV4fAN6f@apocalypse>
 References: <cover.1732444746.git.andrea.porta@suse.com>
- <8deccbd7ab8915957342a097410473445987b044.1732444746.git.andrea.porta@suse.com>
- <9abb376c-3399-4c2c-8e7c-cea1184ea370@lunn.ch>
+ <22e08939-fa89-4781-824e-1ea01648fb1b@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -116,41 +115,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9abb376c-3399-4c2c-8e7c-cea1184ea370@lunn.ch>
+In-Reply-To: <22e08939-fa89-4781-824e-1ea01648fb1b@lunn.ch>
 
 Hi Andrew,
 
-On 20:41 Sun 24 Nov     , Andrew Lunn wrote:
-> On Sun, Nov 24, 2024 at 11:51:46AM +0100, Andrea della Porta wrote:
-> > The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-> > Add clk_rp1_xosc node to provide that.
+On 20:26 Sun 24 Nov     , Andrew Lunn wrote:
+> > This patchset is also a first attempt to be more agnostic wrt hardware
+> > description standards such as OF devicetree and ACPI, where 'agnostic'
+> > means "using DT in coexistence with ACPI", as been already promoted
+> > by e.g. AL (see [4]). Although there's currently no evidence it will also
+> > run out of the box on purely ACPI system, it is a first step towards
+> > that direction.
 > 
-> I'm wondering if this is the correct place for this clock. From your
-> description, the bcm2712 itself does not provide the clock. There is a
-> crystal on the board. So the board provides the clock. What happens
-> when the RP1 is used on other boards? Also, does the RP1 need an
-> actual crystal, or can you feed it a clock? Often such inputs are
-> flexible, you can connect a crystal across two pins, or you can feed a
-> clock into one pin.
+> When combined with CONFIG_PCI_DYNAMIC_OF_NODES and this patch series:
+> 
+> https://patchwork.kernel.org/project/linux-pci/cover/20241114165446.611458-1-herve.codina@bootlin.com/
 
-AFAICT the only choice would be a crystal (I'll try to confirm that with
-Rpi folksi, just to be sure).
-In fact, I've expressed your same concern in the dicsussion that followed 
-previous patchset revisions, and it seems that the preferred way is still
-to stick to the current hw: since the crystal is on the same board as bcm2712,
-it should not be described on the overaly.
-I think you're right though on moving the clock definition to the board dts.
-I'm still planning to define the clock in the rp1 overlay if any
-new PCI card will contain it in the future: after all it will not cause any
-clash with the clock defined in the board dts, which could be then removed
-gradually.
+That's great. I'll do some tests as soon as I can start my rpi5 from ACPI,
+I saw there has been some experimentation about it and should be feasible
+to run it succesfuly.
 
-Many thanks,
+> 
+> It probably does work, or is very near to working. Bootlin appear to
+> have the LAN966x working on an ACPI system, and what you are adding is
+> not very different.
+> 
+> I'm also currently playing around in this area, trying to instantiate
+> some complex networking hardware using DT overlays on an ACPI system.
+
+Nice!
+
+Cheers,
 Andrea
 
 > 
-> If a crystal is the only choice, i would probably have it part of the
-> RP1 overlay. If a clock can be used, i would make it a board property.
-> 
-> 	Andrew
+>      Andrew
 
