@@ -1,296 +1,232 @@
-Return-Path: <linux-pci+bounces-17330-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17336-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FFB29D9502
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 11:00:19 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA78D9D9604
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 12:10:44 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30D5B2837F1
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 10:00:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F2D166BFD
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 11:10:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4BF1B85E4;
-	Tue, 26 Nov 2024 10:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C874E1CDFA9;
+	Tue, 26 Nov 2024 11:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rja/+k7i"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cDdLH/zP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F551B4F08;
-	Tue, 26 Nov 2024 10:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5CC1C4A3D
+	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 11:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732615215; cv=none; b=qaxxEVVMB480G59hcEiisZjm8xuC3txIavd5ceaa+K+gIgyxyl4FpekpuE+lcq4rA8l3xR5bY/kQ4OI21OGLmde4O8i2OXEjOWol10RKCGwcpmBg5fSFeqIMyMUeLtBV4F7a01teulT/X4tM2hyj0cl0Veh+cCMwBGYiKyWD+vw=
+	t=1732619438; cv=none; b=IDvLYjI7GL+MZHHm+7naedOFjRu+/avarbyMPGjpTs3yCbwWZXhmiXABDkUjGY2v9uroouZbG1rQ+sGkAl0BsPZvlUOXiJL5uVgoA88gOkrGTN5Fu0nrSuuuCz6yxPsrm6mmcxkCz/mqFe385IJeUqR0lgGBk4RW9+BklOmXV0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732615215; c=relaxed/simple;
-	bh=mtGttjzXQNRJ1TECfxmaqrgito64kGtgG9AXu640lR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZEqjDSVK1nRcWIyUVS+DSChkojMDNZNyCPBQCaaim5IMhBpUGIT1p70WqEdl7I13sP5VFT3UYmU8ucCJhnitTEqo5D3x0KE02h6NMdV0MJ5ZN4q1mXbZt2H6QfJjFlOzCU/2whBKmXIoZyGF2BGu/7VVhBU3N8GU2jaYsqCLRIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rja/+k7i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB7FC4CECF;
-	Tue, 26 Nov 2024 10:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732615215;
-	bh=mtGttjzXQNRJ1TECfxmaqrgito64kGtgG9AXu640lR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rja/+k7iGLU+7lPFpMuV3Xh5wST3exoi0Es1fG/8rHlZ+6YdB/+JlhcRblAE+G6oy
-	 ezG/KFO+IffZ5yoG6wQWRS2g5m1Gt2oTzg5SapSCNr/ueadlAiBXNNwVNHTRxbj9Qc
-	 TIIe5ghqzGllJ6Hlf/fCzAbyhXFxU56yoaSRYlRePYz+68X6HQzfINo6vHB7jmfjlv
-	 5aTYMfO3Co8IjY3uuFf7MmsEEUQOYsaP1VkWWhPWiLVHfB7Jk5ODVvpD6N4Nfiq7zd
-	 sDGyQ7ABfyJ9xjNFRicn85DR7dPwroE7O+U4HRueX/pKdx4+dKf+ELYwXNop2FMXp/
-	 JV2pWUAWlELHw==
-Date: Tue, 26 Nov 2024 11:00:09 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Frank Li <Frank.li@nxp.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
-	tglx@linutronix.de, jdmason@kudzu.us
-Subject: Re: [PATCH v8 4/6] PCI: endpoint: pci-epf-test: Add doorbell test
- support
-Message-ID: <Z0WcKeM2630u_xSK@ryzen>
-References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com>
- <20241116-ep-msi-v8-4-6f1f68ffd1bb@nxp.com>
- <20241124075645.szue5nzm4gcjspxf@thinkpad>
- <Z0TNMIX4ehaB+mSn@lizhi-Precision-Tower-5810>
- <20241126042523.6qlmhkjfl5kwouth@thinkpad>
+	s=arc-20240116; t=1732619438; c=relaxed/simple;
+	bh=Ypev9a6WFoYIXfQoQHvxGPBdvitO6NBRqG8NApJYJw4=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=JOSDK99DdzSbyeJLC/xLJIuSRAZCGCsPfPddyNGMq2K7b24IKCgZBzTIytAyR9PFBXX1SkvxB/tPrek9+qKqtn8WJEuzZLlhGAkeWM/GIr1Acif4hQiwi8SUxBuTFg/X620E5WYi91l5C/vxYgQaD62mpIcImG2uECOfiyItRFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cDdLH/zP; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20241126111032epoutp0229e90d45afe558c54ef05b4d7ccc7839~LgDG48yig2826828268epoutp020
+	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 11:10:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20241126111032epoutp0229e90d45afe558c54ef05b4d7ccc7839~LgDG48yig2826828268epoutp020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1732619432;
+	bh=zHVQj8Mi51pPEJ8jZxMB7t75igtc/2ssLRlqmu7llEA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=cDdLH/zP58/DpFnHmjrHWsCSScg48UqfeylP4GRb13TpKbbWN94ZYS4HbAznBd0P+
+	 P4IN572Fz/aytEEVLCs6LloM3s9dVG4WKqn9gwc3zgZKNwkroVI8F1ccynJHGvO+WX
+	 iHkdWqVRiYbijK2XGHc22M5dJIK4ap0rmSrt8jKI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20241126111032epcas5p1f0bc7d3a0e251d66c4b7db8bd4d8c039~LgDGXw5-p0928209282epcas5p1G;
+	Tue, 26 Nov 2024 11:10:32 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4XyKcQ3L8Kz4x9Pp; Tue, 26 Nov
+	2024 11:10:30 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	94.A3.19710.6ACA5476; Tue, 26 Nov 2024 20:10:30 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20241126101541epcas5p4928126490d570998cf6ebef9a3b32e37~LfTOCSPiv2884528845epcas5p4N;
+	Tue, 26 Nov 2024 10:15:41 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20241126101541epsmtrp27646342c6d07f599f04c42e815c813b7~LfTOBaw6i1661016610epsmtrp2_;
+	Tue, 26 Nov 2024 10:15:41 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-eb-6745aca60f7d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	91.6D.19220.4BF95476; Tue, 26 Nov 2024 19:15:16 +0900 (KST)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20241126101511epsmtip1e0132b746acf41c301e2da353e8c5729~LfSx9NUOo2173021730epsmtip1O;
+	Tue, 26 Nov 2024 10:15:11 +0000 (GMT)
+From: "Shradha Todi" <shradha.t@samsung.com>
+To: "'Nitesh Gupta'" <quic_nitegupt@quicinc.com>, "'Krishna Chaitanya
+ Chundru'" <quic_krichai@quicinc.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Cc: <manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
+	<kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+	<jingoohan1@gmail.com>, <fancer.lancer@gmail.com>,
+	<yoshihiro.shimoda.uh@renesas.com>, <conor.dooley@microchip.com>,
+	<pankaj.dubey@samsung.com>, <gost.dev@samsung.com>
+In-Reply-To: <35395249-7aeb-459c-9c78-2cfdaad2bb6a@quicinc.com>
+Subject: RE: [PATCH v3 0/3] Add support for RAS DES feature in PCIe DW
+Date: Tue, 26 Nov 2024 15:45:10 +0530
+Message-ID: <085801db3fec$16b87260$44295720$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241126042523.6qlmhkjfl5kwouth@thinkpad>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQJJ5mIqR3PJIx/W7Cp/XOg5shxg3AHKwgKyAQ6dYEQB5w+8d7HGBrGA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRmVeSWpSXmKPExsWy7bCmpu6yNa7pBgdfCVssacqwmLJpB7vF
+	ho45rBY3D+xksljxZSa7RUPPb1aLy7vmsFmcnXeczaLlTwuLxd2WTlaLRVu/sFs8eFBp0Tnn
+	CLPF/z1ArV/3fmZz4PfYOesuu8eCTaUem1Z1snncubaHzePJlelMHnd+LGX0mLinzuPbmYks
+	Hn1bVjF6fN4kF8AVlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk
+	4hOg65aZA/SDkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafApECvODG3uDQvXS8v
+	tcTK0MDAyBSoMCE7Y99K+4IrshXNE9pZGhi/incxcnJICJhI3P67ib2LkYtDSGA3o8TxbZeZ
+	IZxPjBJvZr+CynxjlNizu5sFpuXjtWdQVXsZJVYefAvlvGCUePn2DRtIFZuAjsSTK3/AEiIC
+	qxklrn7ZCOYwC6xikrhw5AU7SBWngL3EswfHWEFsYQE3iZvdt8FsFgFViRd/F4BN4hWwlDjc
+	dYQdwhaUODnzCdgdzALaEssWvmaGuElB4ufTZawQcXGJoz97wOIiQDOvLGhnAVksIfCGQ2Lm
+	/INQDS4SO/s+skHYwhKvjm9hh7ClJD6/2wsVT5dYuXkGVH2OxLfNS5ggbHuJA1fmAA3lAFqm
+	KbF+lz5EWFZi6ql1TBA38En0/n4CVc4rsWMejK0s8eXvHmg4SkrMO3aZdQKj0iwkr81C8tos
+	JO/MQti2gJFlFaNkakFxbnpqsmmBYV5qOTzKk/NzNzGCE7mWyw7GG/P/6R1iZOJgPMQowcGs
+	JMLLJ+6cLsSbklhZlVqUH19UmpNafIjRFBjeE5mlRJPzgbkkryTe0MTSwMTMzMzE0tjMUEmc
+	93Xr3BQhgfTEktTs1NSC1CKYPiYOTqkGppouL4mX/uV99drGy0s/vuAq1y/PyPkpdKZgE9um
+	Y7KWP/6WHtDP+veg9LiCmMrGt4ePPNk5r2ix42TBty2m1Qcrn9x6oi1zpuzv0fNvetJMrjb+
+	/Zi9bcUD92t68XO5vT6WL7r44XORU6v2I6bSW2pfr95JFfR+e2lWFvP2W2+fuWz0+fBG3ElA
+	8XnTzo0C6+bE8a/V5q2aXGn95umDSl/RO5qzn3pY3lQvZymL+rH/gc3pK+2MypeUr7SbMzPX
+	ehlURe7IXPRd+ZG9dI5btHUl37uyJXfuHJS7spNhDp9sSRSjTUf38i/8ahcTYxNS7qx/L5Mc
+	7xq38/J3VVnPHj59pgPZYov67VSPNstPVmIpzkg01GIuKk4EAGjY4DFtBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWy7bCSnO7Z+a7pBjce6losacqwmLJpB7vF
+	ho45rBY3D+xksljxZSa7RUPPb1aLy7vmsFmcnXeczaLlTwuLxd2WTlaLRVu/sFs8eFBp0Tnn
+	CLPF/z1ArV/3fmZz4PfYOesuu8eCTaUem1Z1snncubaHzePJlelMHnd+LGX0mLinzuPbmYks
+	Hn1bVjF6fN4kF8AVxWWTkpqTWZZapG+XwJXxZNEP1oKlshXdV84yNzAeEO9i5OSQEDCR+Hjt
+	GTOILSSwm1Hi+QEriLikxOeL65ggbGGJlf+es3cxcgHVPGOU2HfwPiNIgk1AR+LJlT/MIAkR
+	gbWMEpOPvQBLMAtsY5K41M4H0fGZUWLaqwssIAlOAXuJZw+OsYLYwgJuEje7b4PZLAKqEi/+
+	LmADsXkFLCUOdx1hh7AFJU7OfMICMVRb4unNp3D2soWvmSHOU5D4+XQZK0RcXOLozx6wuAjQ
+	/CsL2lkmMArPQjJqFpJRs5CMmoWkfQEjyypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k/NxN
+	jOBY1tLawbhn1Qe9Q4xMHIyHGCU4mJVEePnEndOFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8357
+	3ZsiJJCeWJKanZpakFoEk2Xi4JRqYOKcsv/0pds17jyTjyWu0H+86b1d7PUu6bSE9IquArWn
+	LZpKvvO+vFi78qLPba4Y1Z68fUxPZ14ra8rqj4//Ml/LUHHRljDrzUof8z4lyUYuc/d6ftg6
+	skRnmgDjyrmMwq/upv5Wf9l82+yaie+5vS1rqmuiSvmem/z7uaROauNErjcLZ249lnt75pK2
+	eYb7As2eijnOjAljf5kl8TPkg+XEddKmXY0XOZ/8nt3tGaJ+2eTB6yVTXhQGFp19vUplmpFC
+	mYpDiIiKvL9ZaaF508U40dJ7z1kNFE6qBLjuuHR8k+kfqXWXd9oaypxhnv9i+ZfHVvImTzZp
+	n6rOKTFQ3ir2+GXP1NccF26smrrEp0+JpTgj0VCLuag4EQAX7b/IVAMAAA==
+X-CMS-MailID: 20241126101541epcas5p4928126490d570998cf6ebef9a3b32e37
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240625094434epcas5p2e48bda118809ccb841c983d737d4f09d
+References: <CGME20240625094434epcas5p2e48bda118809ccb841c983d737d4f09d@epcas5p2.samsung.com>
+	<20240625093813.112555-1-shradha.t@samsung.com>
+	<03c5bf0e-d65b-7ebb-d12d-3f9b3bae2a4c@quicinc.com>
+	<35395249-7aeb-459c-9c78-2cfdaad2bb6a@quicinc.com>
 
-On Tue, Nov 26, 2024 at 09:55:23AM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Nov 25, 2024 at 02:17:04PM -0500, Frank Li wrote:
-> > On Sun, Nov 24, 2024 at 01:26:45PM +0530, Manivannan Sadhasivam wrote:
-> > > On Sat, Nov 16, 2024 at 09:40:44AM -0500, Frank Li wrote:
-> > > > Add three registers: doorbell_bar, doorbell_addr, and doorbell_data,
-> > > > along with doorbell_done. Use pci_epf_alloc_doorbell() to allocate a
-> > >
-> > > I don't see 'doorbell_done' defined anywhere.
-> > >
-> > > > doorbell address space.
-> > > >
-> > > > Enable the Root Complex (RC) side driver to trigger pci-epc-test's doorbell
-> > > > callback handler by writing doorbell_data to the mapped doorbell_bar's
-> > > > address space.
-> > > >
-> > > > Set doorbell_done in the doorbell callback to indicate completion.
-> > > >
-> > >
-> > > Same here.
-> > >
-> > > > To avoid broken compatibility, add new command COMMAND_ENABLE_DOORBELL
-> > >
-> > > 'avoid breaking compatibility between host and endpoint,...'
-> > >
-> > > > and COMMAND_DISABLE_DOORBELL. Host side need send COMMAND_ENABLE_DOORBELL
-> > > > to map one bar's inbound address to MSI space. the command
-> > > > COMMAND_DISABLE_DOORBELL to recovery original inbound address mapping.
-> > > >
-> > > > 	 	Host side new driver	Host side old driver
-> > > >
-> > > > EP: new driver      S				F
-> > > > EP: old driver      F				F
-> > >
-> > > So the last case of old EP and host drivers will fail?
-> > 
-> > doorbell test will fail if old EP.
-> > 
-> 
-> How come there would be doorbell test if it is an old host driver?
+Hey Nitish,
 
-I also don't understand this.
+Due to some discussions about including this in the EDAC framework etc, the=
+ patches got
+delayed. Sorry about that. I am already working on the next version and wil=
+l post it by this
+Friday=21 Feel free to add review comments to the previous version if there=
+ are any so that
+I can include them in my next version.
 
-The new commands: DOORBELL_ENABLE / DOORBELL_DISABLE
-can only be sent if there is a new host driver.
+> -----Original Message-----
+> From: Nitesh Gupta <quic_nitegupt=40quicinc.com>
+> Sent: 26 November 2024 12:46
+> To: Krishna Chaitanya Chundru <quic_krichai=40quicinc.com>; Shradha Todi
+> <shradha.t=40samsung.com>; linux-kernel=40vger.kernel.org; linux-
+> pci=40vger.kernel.org
+> Cc: manivannan.sadhasivam=40linaro.org; lpieralisi=40kernel.org;
+> kw=40linux.com; robh=40kernel.org; bhelgaas=40google.com;
+> jingoohan1=40gmail.com; fancer.lancer=40gmail.com;
+> yoshihiro.shimoda.uh=40renesas.com; conor.dooley=40microchip.com;
+> pankaj.dubey=40samsung.com; gost.dev=40samsung.com
+> Subject: Re: =5BPATCH v3 0/3=5D Add support for RAS DES feature in PCIe D=
+W
+>=20
+> Hi Shradha,
+>=20
+> Can you please update on status of this Patch?
+>=20
+> Are you going to take it up or is it fine for us to take it up?
+>=20
+> -Nitesh Gupta
+>=20
+> On 11/26/2024 10:47 AM, Krishna Chaitanya Chundru wrote:
+> >
+> > forgot to add the email in the previous mail.
+> >
+> > - Krishna chaitanya.
+> > On 6/25/2024 3:08 PM, Shradha Todi wrote:
+> >> DesignWare controller provides a vendor specific extended capability
+> >> called RASDES as an IP feature. This extended capability provides
+> >> hardware information like:
+> >>   - Debug registers to know the state of the link or controller.
+> >>   - Error injection mechanisms to inject various PCIe errors
+> >> including
+> >>     sequence number, CRC
+> >>   - Statistical counters to know how many times a particular event
+> >>     occurred
+> >>
+> >> However, in Linux we do not have any generic or custom support to be
+> >> able to use this feature in an efficient manner. This is the reason
+> >> we are proposing this framework. Debug and bring up time of
+> >> high-speed IPs are highly dependent on costlier hardware analyzers
+> >> and this solution will in some ways help to reduce the HW analyzer usa=
+ge.
+> >>
+> >> The debugfs entries can be used to get information about underlying
+> >> hardware and can be shared with user space. Separate debugfs entries
+> >> has been created to cater to all the DES hooks provided by the control=
+ler.
+> >> The debugfs entries interacts with the RASDES registers in the
+> >> required sequence and provides the meaningful data to the user. This
+> >> eases the effort to understand and use the register information for
+> debugging.
+> >>
+> >> v2: https://lore.kernel.org/lkml/20240319163315.GD3297=40thinkpad/T/
+> >>
+> >> v1:
+> >> https://lore.kernel.org/all/20210518174618.42089-1-shradha.t=40samsung=
+.
+> >> com/T/
+> >>
+> >> Shradha Todi (3):
+> >>    PCI: dwc: Add support for vendor specific capability search
+> >>    PCI: debugfs: Add support for RASDES framework in DWC
+> >>    PCI: dwc: Create debugfs files in DWC driver
+> >>
+> >>   drivers/pci/controller/dwc/Kconfig            =7C   8 +
+> >>   drivers/pci/controller/dwc/Makefile           =7C   1 +
+> >>   .../controller/dwc/pcie-designware-debugfs.c  =7C 474
+> >> ++++++++++++++++++
+> >>   .../controller/dwc/pcie-designware-debugfs.h  =7C   0
+> >>   .../pci/controller/dwc/pcie-designware-host.c =7C   2 +
+> >>   drivers/pci/controller/dwc/pcie-designware.c  =7C  20 +
+> >>   drivers/pci/controller/dwc/pcie-designware.h  =7C  18 +
+> >>   7 files changed, 523 insertions(+)
+> >>   create mode 100644
+> >> drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> >>   create mode 100644
+> >> drivers/pci/controller/dwc/pcie-designware-debugfs.h
+> >>
 
-Sending DOORBELL_ENABLE / DOORBELL_DISABLE will obviously
-return "Invalid command" if the EP driver is old.
-
-If EP driver is new, DOORBELL_ENABLE will only return success if the SoC
-has support for GIC ITS and has configured DTS with msi-parent
-(i.e. if the pci_epf_alloc_doorbell() call was successful).
-
-
-> 
-> > >
-> > > >
-> > > > S: If EP side support MSI, 'pcitest -B' return success.
-> > > >    If EP side doesn't support MSI, the same to 'F'.
-> > > >
-> > > > F: 'pcitest -B' return failure, other case as usual.
-> > > >
-> > > > Tested-by: Niklas Cassel <cassel@kernel.org>
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > > Change from v7 to v8
-> > > > - rename to pci_epf_align_inbound_addr_lo_hi()
-> > > >
-> > > > Change from v6 to v7
-> > > > - use help function pci_epf_align_addr_lo_hi()
-> > > >
-> > > > Change from v5 to v6
-> > > > - rename doorbell_addr to doorbell_offset
-> > > >
-> > > > Chagne from v4 to v5
-> > > > - Add doorbell free at unbind function.
-> > > > - Move msi irq handler to here to more complex user case, such as differece
-> > > > doorbell can use difference handler function.
-> > > > - Add Niklas's code to handle fixed bar's case. If need add your signed-off
-> > > > tag or co-developer tag, please let me know.
-> > > >
-> > > > change from v3 to v4
-> > > > - remove revid requirement
-> > > > - Add command COMMAND_ENABLE_DOORBELL and COMMAND_DISABLE_DOORBELL.
-> > > > - call pci_epc_set_bar() to map inbound address to MSI space only at
-> > > > COMMAND_ENABLE_DOORBELL.
-> > > > ---
-> > > >  drivers/pci/endpoint/functions/pci-epf-test.c | 117 ++++++++++++++++++++++++++
-> > > >  1 file changed, 117 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > index ef6677f34116e..410b2f4bb7ce7 100644
-> > > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > @@ -11,12 +11,14 @@
-> > > >  #include <linux/dmaengine.h>
-> > > >  #include <linux/io.h>
-> > > >  #include <linux/module.h>
-> > > > +#include <linux/msi.h>
-> > > >  #include <linux/slab.h>
-> > > >  #include <linux/pci_ids.h>
-> > > >  #include <linux/random.h>
-> > > >
-> > > >  #include <linux/pci-epc.h>
-> > > >  #include <linux/pci-epf.h>
-> > > > +#include <linux/pci-ep-msi.h>
-> > > >  #include <linux/pci_regs.h>
-> > > >
-> > > >  #define IRQ_TYPE_INTX			0
-> > > > @@ -29,6 +31,8 @@
-> > > >  #define COMMAND_READ			BIT(3)
-> > > >  #define COMMAND_WRITE			BIT(4)
-> > > >  #define COMMAND_COPY			BIT(5)
-> > > > +#define COMMAND_ENABLE_DOORBELL		BIT(6)
-> > > > +#define COMMAND_DISABLE_DOORBELL	BIT(7)
-> > > >
-> > > >  #define STATUS_READ_SUCCESS		BIT(0)
-> > > >  #define STATUS_READ_FAIL		BIT(1)
-> > > > @@ -39,6 +43,11 @@
-> > > >  #define STATUS_IRQ_RAISED		BIT(6)
-> > > >  #define STATUS_SRC_ADDR_INVALID		BIT(7)
-> > > >  #define STATUS_DST_ADDR_INVALID		BIT(8)
-> > > > +#define STATUS_DOORBELL_SUCCESS		BIT(9)
-> > > > +#define STATUS_DOORBELL_ENABLE_SUCCESS	BIT(10)
-> > > > +#define STATUS_DOORBELL_ENABLE_FAIL	BIT(11)
-> > > > +#define STATUS_DOORBELL_DISABLE_SUCCESS BIT(12)
-> > > > +#define STATUS_DOORBELL_DISABLE_FAIL	BIT(13)
-> > > >
-> > > >  #define FLAG_USE_DMA			BIT(0)
-> > > >
-> > > > @@ -74,6 +83,9 @@ struct pci_epf_test_reg {
-> > > >  	u32	irq_type;
-> > > >  	u32	irq_number;
-> > > >  	u32	flags;
-> > > > +	u32	doorbell_bar;
-> > > > +	u32	doorbell_offset;
-> > > > +	u32	doorbell_data;
-> > > >  } __packed;
-> > > >
-> > > >  static struct pci_epf_header test_header = {
-> > > > @@ -642,6 +654,63 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
-> > > >  	}
-> > > >  }
-> > > >
-> > > > +static void pci_epf_enable_doorbell(struct pci_epf_test *epf_test, struct pci_epf_test_reg *reg)
-> > > > +{
-> > > > +	enum pci_barno bar = reg->doorbell_bar;
-> > > > +	struct pci_epf *epf = epf_test->epf;
-> > > > +	struct pci_epc *epc = epf->epc;
-> > > > +	struct pci_epf_bar db_bar;
-> > >
-> > > db_bar = {};
-> > >
-> > > > +	struct msi_msg *msg;
-> > > > +	size_t offset;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (bar < BAR_0 || bar == epf_test->test_reg_bar || !epf->db_msg) {
-> > >
-> > > What is the need of BAR check here and below? pci_epf_alloc_doorbell() should've
-> > > allocated proper BAR already.
-> > 
-> > Not check it at call pci_epf_alloc_doorbell() because it optional feature.
-> 
-> What is 'optional feature' here? allocating doorbell?
-> 
-> > It return failure when it actually use it.
-> > 
-> 
-> So host can call pci_epf_enable_doorbell() without pci_epf_alloc_doorbell()?
-
-This patch calls pci_epf_alloc_doorbell() in pci_epf_test_bind(), so at
-.bind() time.
-
-DOORBELL_ENABLE and DOORBELL_DISABLE are two new commands, so the host driver
-could theoretically send these even if pci_epf_alloc_doorbell() failed.
-
-
-pci_epf_test_cmd_handler() additions looks like this:
-
-+	case COMMAND_ENABLE_DOORBELL:
-+		pci_epf_enable_doorbell(epf_test, reg);
-+		pci_epf_test_raise_irq(epf_test, reg);
-+		break;
-+	case COMMAND_DISABLE_DOORBELL:
-+		pci_epf_disable_doorbell(epf_test, reg);
-+		pci_epf_test_raise_irq(epf_test, reg);
-+		break;
-
-so they will call pci_epf_enable_doorbell()/pci_epf_disable_doorbell()
-unconditionally, without any check to see if the doorbell was allocated.
-
-We could move the was doorbell allocated check (if (!epf->db_msg)) to
-pci_epf_test_cmd_handler(), but that would make pci_epf_test_cmd_handler()
-more messy, so personally I think it is fine to keep the doorbell allocated
-check in pci_epf_enable_doorbell()/pci_epf_disable_doorbell().
-
-
-I did earlier suggest to Frank to move the pci_epf_alloc_doorbell() call
-to pci_epf_enable_doorbell():
-https://lore.kernel.org/linux-pci/Zy02mPTvaPAFFxGi@ryzen/
-
-His reply is here::
-https://lore.kernel.org/linux-pci/Zy1CxtKSgRuEPX5A@lizhi-Precision-Tower-5810/
-
-"it may be too frequent to allocate and free msi resources when call
-pci_epf_enable_doorbell()/pci_epf_disable_doorbell()."
-
-I don't think that is a good argument, as presumably (in the normal case) an
-EPF driver will enable doorbell in the beginning, and then keep it enabled.
-
-However, one point could be that pci-epf-test currently does all allocations
-(the allocations for the backing memory) in .bind(), so in one way it makes
-sense to also allocate the doorbell in .bind().
-
-To play devil's advocate, I guess you could argue that doorbell feature is
-optional, while allocating backing memory for BARs is not, so it makes sense
-that they are not allocated at the same time.
-
-I guess it is up to the EPF maintainer to decide what he thinks is best :)
-
-
-Kind regards,
-Niklas
 
