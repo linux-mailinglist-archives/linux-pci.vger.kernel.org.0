@@ -1,258 +1,194 @@
-Return-Path: <linux-pci+bounces-17370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD5D19D9DDE
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 20:12:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BE0B9D9DE9
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 20:16:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB1F6B22166
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 19:07:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 683A1B214FE
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 19:16:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7778316F0E8;
-	Tue, 26 Nov 2024 19:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 541211DD9AD;
+	Tue, 26 Nov 2024 19:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cAIBjtrH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoEjGWG5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012024.outbound.protection.outlook.com [52.101.66.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2D81DDC2B;
-	Tue, 26 Nov 2024 19:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732648055; cv=fail; b=g07IOuH2drCE9i1AWWmStuL6M+wLXRLSpBAuyaRwDwIndWOtmpcfXoIkynJ2olaYVJQO/PXQ5T2RM8g3+QkSjo7+aW1x7hJwEEOlZiJU5Omn1HYJjYeDGeYzyUmxl5OUHlHHyyaAXq5KuL0kIkkYrDdAbZhuGw2BgUQexfrBFh4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732648055; c=relaxed/simple;
-	bh=vL2rfZTWi+3DmcdHa/rKmvCZ/I4ERSrxUDQgbhnmBRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bbk+3Y5tXlDp9f3Mn0QO8t6Cy+8BzVOExkDoJZVXOU53oD9w8MRWGnuDgJ5X0o99gDKMI/PN7e+zqX8mDyWTFJXGjwc1UlSfRqbI28EVI+DBnjUzxpDmDdGrCV9nzfBO33RfMtIhGXin+Y37zmmI0aWkcFnevHoB0olt+w6Y4Gg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cAIBjtrH; arc=fail smtp.client-ip=52.101.66.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uuFja1cflMJbqapsLFgV2HzzoqtDUGrp/zQ3RYMsLNhFgF9FqPvx0IgjVea9BLvn0ZLBNFhPbw8mQGqXvB19JkUH81hqzfEwyFJAE9aBUhrvMUmazZyyMEgU5vMcshl+m5uPE00bQIKniySyoW8+YW5vUVXYYnC9dHUx7WFhkF4uda55QqTzK81UE35CjLciAEpX+JntGEd5jVhQzguHecQ4z3KkvovHZSiBWHd0+7eDtscTvhShS+J3xIvKDZn7Cq/eX0Fb439vr4XxSkM3DZ92PK90nhiOABNyCJw6mCfIbG7tkhU8cjo8xUq++E+vKkn1MU4ZnMDMMS57ijhC9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FzCzbllZ5SY0hIbPtfcSdTm/1wVfi+K5Rxs5VsOwI4k=;
- b=av/jTIBFGFu3t2ri2TelB/oy764TLOF+0TAJ/WZlQaFyHMNy0xxf9XCvW9IK0cqQy+DQoZfKoQiDS4PjbVPXN589D4HCX0Y/pSI1QlvYlJ8E51ZYAH25IW1dHWrvCIiHYIgKP+fJeOiUehxld7EEB9Nor+5V5F9RM+CLTTAOtL/73tJpoVPM/Yefp6WwYUYxJg69EHKXTNQV4OhOFkZIWVjvwhza9pe3rq8fYMMPGH/MDmjW9Y7nnidwP5QGUYDYqeNnBy+ONNHCxT09kiNDZmQE1HU2IETmmoSXYqsJXMr51gr72e/s1hVF6T0JD4vdyLJG7/L/arIiewiMTbKWRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FzCzbllZ5SY0hIbPtfcSdTm/1wVfi+K5Rxs5VsOwI4k=;
- b=cAIBjtrHV/yKdEEp0o6wHZ4nJ8Vq8nevcrMrPgxKCUqPlB44IHaYCLcYeEP/lfIYu0hPoNCc1KXdfKGWimhPTNYdsu7N+4/f+ThEYi1UFl1GgdalS51fzKRt45ez8qi1pPXiiiEb19HA0oX0nHNaLkPwaZ0gw1t21hy+1V+hhW4GTOtnMPPvKHu9ssCLjPz+UPj8aEoFloxrUnv3jGRwqmrKoKhK/b+DVBREA9E+fQQkFXnJlY5nOcIrn0umOxEliI3Df/mJlYNtXvkfNgZdGoAIKf3i1qZ2ooRcUEA/uhJwaAoWrKsBPEGkieLmfB3/nPoaZKzJ4+mGxbhrPS6ttQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU2PR04MB9115.eurprd04.prod.outlook.com (2603:10a6:10:2f6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.21; Tue, 26 Nov
- 2024 19:07:29 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8182.019; Tue, 26 Nov 2024
- 19:07:29 +0000
-Date: Tue, 26 Nov 2024 14:07:21 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: jingoohan1@gmail.com, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	quic_krichai@quicinc.com, imx@lists.linux.dev,
-	kernel@pengutronix.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: dwc: Clean up some unnecessary codes in
- dw_pcie_suspend_noirq()
-Message-ID: <Z0YcaXU4LiR+kD07@lizhi-Precision-Tower-5810>
-References: <20241126073909.4058733-1-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241126073909.4058733-1-hongxing.zhu@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0055.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::30) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251A318858E;
+	Tue, 26 Nov 2024 19:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732648572; cv=none; b=SBlaERuG1xpHxS80i3PmIq5Nx9dG2Hsj7r2XaMh5/CJsOptH28YfZk6VzYpwjkwuuRafQns8barB9/PGhhmm5lpu0WZKjUfEZzdeACXquxh8M8a4gCz3Hh4ylN1bcdxZh9RQnWwBrZrk1qVkADShl/68KgtYWgE/fVSdIFNstpU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732648572; c=relaxed/simple;
+	bh=1TUlJKf5nQjkOH60EGQT6g00V3SndGrR+iyif5lajog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gAslMTgZJAwl/0tbv2UqUpJReQpKgr6cxmtVU2AK9gVlqKtG3li86wgdcHBRKd+830S1AvXsdl5/1CguSD/gF2n7BaJFHVg4QsXa6zLSg7Bkw3dV5Ib3fJV6Q/c+4QgnXrA29CItctCQizGJMpGi9JP7QUE1HGQ9orP5ch5DWGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoEjGWG5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A334CC4CEDE;
+	Tue, 26 Nov 2024 19:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732648571;
+	bh=1TUlJKf5nQjkOH60EGQT6g00V3SndGrR+iyif5lajog=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hoEjGWG5m4OidOkXh3CuRiD5M+R1koohQf3ZG7SeTyPQjWJQByP8NK0jLdOGEDpIH
+	 l9XklPzFRqQ1FH9DBeN5hoHlVHQH7VuLyZBRyDSOyTotnx94GMwBDKTKpbqyKwxm0p
+	 91H7NITpW7H8XGKXBS8j3L7kgfK7wlMP2cYMbRjHBHNR1BlcKYrpwlzYD3/hFep7Op
+	 ESEuTJikK6Ysc625JG4R97ykuKZ0qgbl5wNSctVKRdXJLoX4lRBotUhL3K6Qn5syYW
+	 Z/MqWtXjmsjkY4z6RNQ/x88vldOIxps1XiFH1qoXzMVaO2GsBLMWrCwzT4bkoFWd7w
+	 rfMlBgUqRVA9w==
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6ee7a48377cso56273417b3.3;
+        Tue, 26 Nov 2024 11:16:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUG/UJJDByr1W83Lxv8K9yfz31lzyuMK5jajCHdfie0nb+95gZCG+JlLlig66rjvkOSvLvVLsyNwWdZ+v40@vger.kernel.org, AJvYcCVg436dEOk3Z4HHyHBbqBSMO39WMUdotg2/M6L5HsVRlZM6ZTt54TMvizj2cZd3gZF8LC+JzOi7LD+G@vger.kernel.org, AJvYcCWzJgZYl8NY8XoGDtCaQFJjJ4IOgHt9yM+38eyixCX6fbd1vfekRT7GugPBK+otsXm9K7/v1AHikWLi@vger.kernel.org, AJvYcCXArw7azpaSDY7+539yMbsKJ9Cufp4Z3skdl2Nc0Bill+VlhQZxkhV+YGNEXGygmt0hCJcoICl2edCqpljqBK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywra98NW4T8nONqP2nFlrMDAT8ZKA8FVmRckCmjqm7YuuPUeYNX
+	wZhTlmyXQtkZhoG8fmKKnzf8EwJrkkiANcJfB+8C+EN6n5B4ZZwukfXYQOa+y1NzquFVPL5Q+4e
+	ofwLQy3yCBv5TsGwZqqDDODgEJA==
+X-Google-Smtp-Source: AGHT+IETEyEPXVtA8SN5jspf5+8jw4sIaeRGhfLum4QaxlBpG1gledPn1oBWZED7v15tAMHRuQ9YyLA2/RSuZ+ZVqsY=
+X-Received: by 2002:a05:690c:7009:b0:6e2:313a:a01e with SMTP id
+ 00721157ae682-6ef3727a856mr4520407b3.32.1732648570631; Tue, 26 Nov 2024
+ 11:16:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB9115:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee7a5c1e-be13-45e8-b1af-08dd0e4d92a6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zk8ZCl8y8WFRcJKLjGw8uln8kXmI3i+4gw4WpsXhHcV/sYymyicnb68S5yNO?=
- =?us-ascii?Q?Esg86mpE/xqBqMdaSh3c8leda2VyIkgv+A0CijgYwf+dby9fMXOaG/1yVwf1?=
- =?us-ascii?Q?kvKkjYK5cp1QTBLJFj+2+xJt7W2G86828TJ6wd40rUYTzaRKlVv/Aqsx5w6b?=
- =?us-ascii?Q?bHK6noZdjxO2EJNTlyrVXit2s54fcPHJ/JdtGduCzcjK2iMR/SszmWzhvGIn?=
- =?us-ascii?Q?UBV3z0F3GC7Y304ovwmt1/w6Hn7Gmk8Lx8SrRvHMDPTSdwED/DuW748mXriS?=
- =?us-ascii?Q?v8dZ++8kNs16ieu9lP9kBTygaxJb/o4Z1z55ufnsVXgoLETU1hRGXr6p72Xj?=
- =?us-ascii?Q?y1+RYutjLSrJH9ZjBi7ZYKhG0d6oq0rMPhv1qkexbyXEtA+bL6ErLOzt+hS0?=
- =?us-ascii?Q?WzS1RTKlcR+ThJaLyQdKQbl5TfWqtBVrSBYxjc6t/nIAXp5cyPfe0rZQ9bkB?=
- =?us-ascii?Q?U00jSGhyT0FxOJrjoM8heP/9ANX1C3Yidd9vFJE1fyau6mYtSdWzQngefwrP?=
- =?us-ascii?Q?sdz2YO34WtTOdCJ+QKHZgP34epHGZncF3N1cPNKPu+fu7Ky9qcXH/lLvSrLb?=
- =?us-ascii?Q?8xKaGwqN0EKRfzE+Kb9qDhF/0G9sEO2conkdHPOhlxSrAdzjPcYytrKIcW02?=
- =?us-ascii?Q?4hCABn8DHGHLmGQ/PV9IS+XBLgsAxq3efZzrR+qzgElZQcUC6DwI6hhapymx?=
- =?us-ascii?Q?E/zUa/uK4RxAcT2/Fq6N7Hge7WhSEnHuNQCpH2jjzM0tBB+9lnKIe1HCmnaT?=
- =?us-ascii?Q?joB2VVKmhx4cUUsIxg5wpUwKD3OHozdu13XN4aQgElVzTyIglFCoFmsKjaJv?=
- =?us-ascii?Q?GXL7C0fFuHykXExjFHFpPVsUdB62Y6J20vECzAkIdAfCIJDb57Pgk0ncSlmr?=
- =?us-ascii?Q?oK15zGFFGFB+Dmm8xqywClLJUcNIXCYZ5wohnYAXIssrd12VnmMcIArqbp0g?=
- =?us-ascii?Q?wKqsENG7kQ+wvULOFOvY7Cl4icOfVI1VxQAGKn02WHVXnSVwx1Y80jWthUtk?=
- =?us-ascii?Q?DQA2uWh/jMeJBhqcXk5YzhWAWN6XuwCDnc1QGL5O1t8ocrixDk5adlEk7enA?=
- =?us-ascii?Q?SK8Gss+hh60f5bFY2fWBklKuEPlGvYCa8dBfQPULThYmNYgRP6ZblLouFQ/O?=
- =?us-ascii?Q?B64KW/9DjliAbiGx//Ex96y+NwJ+ht8pUGC6tZJxytjZxSz/fDK9d+TeKQwC?=
- =?us-ascii?Q?An2P3H7eLs9j2/V6v83dsMmftJfVw/m33jU8HkO9ekkasgzUJD+DiCFSlqpb?=
- =?us-ascii?Q?5cxW4y6AWBSBV1T3iDvEbgF2M+VCj/W7Bo5hN9fpi++bu/yhSMdxtZsXxWMl?=
- =?us-ascii?Q?MsWP2YujdqlmMw0Id/IdmufFas4qKuEX3chzzn9yK6evKSqMLyhSbcCWMhLa?=
- =?us-ascii?Q?nKFxFmPU0E1cE/ZTreRpI/pXBbJ4093qNEPIVgdUTZtA5lgBHA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JS3hQ0oeCsp3W+Utfq91rYVl4pc8UlmvR8qDipnmMzHAPMleL6rbjM6FTiCk?=
- =?us-ascii?Q?C6/HPwCTi28WEk9Sv4sWBSVQTKAl+EtpvHB1OsEPnZ8sZP8XjtNA6sYlGp7v?=
- =?us-ascii?Q?j59YfuChwcwfYcsMiEOV4M4B9skcyGuRqRyoWtT1V/dfg184dXWEUMIZXy0P?=
- =?us-ascii?Q?GnKqccF+v+37kHarM/7n8V2PjdM35haG7T1abLLeApfwRLByvgbiWA4vBY/L?=
- =?us-ascii?Q?DpI61CtoHSwBOERz2OW30h/h3Qd6/92Llz6XlMZxsscH7SRpUDUeYaJXp5ZV?=
- =?us-ascii?Q?sdpDW/Sa5hL8zUTIxF7Rum8fwhZJAU4dRR7WoAT0tt/PJ8mwkavDtHXIKh/8?=
- =?us-ascii?Q?WIqsQvc/ODs0NUQqAZQfacCvhXeNiLgXER9iBb4yG6bHmRAsviuWBOSFWPmt?=
- =?us-ascii?Q?W5EGQdWyM5/D7tjaEP2didHJjiJtgcQtuJY8Y+5lbBSKbN8Q67tgSg+JypLt?=
- =?us-ascii?Q?3hr27iGs0fpSHTl7ru4BGfzs4LGT1Bnd0zQ8D4gNrxoLxb+3FEppHO3rO3iw?=
- =?us-ascii?Q?HAHFoBy5pM5tYe9kcSllrSikoFnE+2NG/SbyWXr2VLlOJX4bbT9BE0nwDQGZ?=
- =?us-ascii?Q?UGeDv+HdVj5ApVYw10EAc0o8+q5BNBsJawJcLD3zbrvq4jWN/QyBGf3vjr8D?=
- =?us-ascii?Q?NtqKkxhiIM+EZJZTLZ/2N91meeMESErVFX1sMcBjiwitdl+se+zWHwwWcYSI?=
- =?us-ascii?Q?cS9AUzk/QX72RzxxfbgRMiE3abH1yuhYNQO14pA7TOjmVJms/Ea9vCgPCrgt?=
- =?us-ascii?Q?bOWJoqCBdo1+162W7aOs/8mLAp9RQ193jQwiNmu6GWCe86mPj/7s+5X535QL?=
- =?us-ascii?Q?33iYDxLJ/BW2FKoIT4hHw4FkACZPoR3+HD1AgDoO8yGPj19Tk5H18Ow0nn6b?=
- =?us-ascii?Q?LiQCUlI9GHWbB6lwrMdHZV2IFIAZhspXJdP2ev1ZaT2SjQ8vJ7RNutq5LDge?=
- =?us-ascii?Q?9TGsfD0hSFgDxgW/gbRfPA3He/yh7VNl4IYzOBBcUyDm6rpXK4Huc2vYK3AY?=
- =?us-ascii?Q?nJnF3F6f1pUp0wxOGgfnhHJMfraaT5FeTFqWkfvbEYeA2/oFdI1SOv6I38iU?=
- =?us-ascii?Q?ZEYn6VUa7IrFY1Fm6h4LWy7ibvJByCOUYd5Ow6K3Ncz89mMgluuuEU8K/LVE?=
- =?us-ascii?Q?DZBdFgiKmTmhxDoVeN7ut5iCn7uQKTUv5sZQD/NgVvPLyW63QxSb4oaNu3Ae?=
- =?us-ascii?Q?zXrfgMsuaLUG3AWegayD3YhOeuATaiQSYVYsxjFZr3PSiWr9FWgA20TJlgiu?=
- =?us-ascii?Q?y3MqtgJ8YLQR3XG5ZmygcSFPPX/WI84Q/TU3YTgN53Z3idnnZRwTMTM06lAe?=
- =?us-ascii?Q?tQtSFmZENib1TkHetFR3GAsBVDxmTBoOg894Z/SySsfHbXfQ2RaZL+tnJKks?=
- =?us-ascii?Q?Ot705bszbmTJusc08GE9tn8JVacH77VTmyK84T5pzjlAp43lkCdrVrLeuHN/?=
- =?us-ascii?Q?KHeShHgmSmosXo24UUsPq8OjxoB0lGmm5/8bEZsTHE8supAsW7KyqbpPo6ji?=
- =?us-ascii?Q?RJ+8KtiIWTk80GOJiOE6o84jL3cSnXR/Xf0X90QQ8gLj2xRqLGgPvbaU8iTz?=
- =?us-ascii?Q?yxaCdjTKO0+tknHLOGej7qjn9m/1UY4PyBcL5ZKc?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee7a5c1e-be13-45e8-b1af-08dd0e4d92a6
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2024 19:07:29.3526
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xy8wfPbELVeCUhownw4RsRtClBg/SKHNtjXF+venr7rfPQTbrAUdc8w8UAAR8UO89wyyzJIkph48NIiXuCiqSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9115
+References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-16-dakr@kernel.org>
+ <20241022234712.GB1848992-robh@kernel.org> <ZxibWpcswZxz5A07@pollux>
+ <20241023142355.GA623906-robh@kernel.org> <Zx9kR4OhT1pErzEk@pollux>
+ <CAL_JsqLVdoQNSSDCfGcf0wCZE9VQphRhHKANxhpei_UoFzkN9g@mail.gmail.com>
+ <Z0XBbLb8NRQg_dek@cassiopeiae> <CAL_Jsq+TV486zw=hAWkFnNbPeA08mJh_4kVVJLSXiYkzWcOVDg@mail.gmail.com>
+ <Z0XmgXwwNikW6oJw@cassiopeiae>
+In-Reply-To: <Z0XmgXwwNikW6oJw@cassiopeiae>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 26 Nov 2024 13:15:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLohzzxDrJPFiQ6v8X=2i7pPUJdwzVLxShbcX-SCz_3Jg@mail.gmail.com>
+Message-ID: <CAL_JsqLohzzxDrJPFiQ6v8X=2i7pPUJdwzVLxShbcX-SCz_3Jg@mail.gmail.com>
+Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
+ driver abstractions
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, 
+	daniel.almeida@collabora.com, saravanak@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 26, 2024 at 03:39:09PM +0800, Richard Zhu wrote:
-> Before sending PME_TURN_OFF, don't test the LTSSM state. Since it's safe
-> to send PME_TURN_OFF message regardless of whether the link is up or
-> down. So, there would be no need to test the LTSSM state before sending
-> PME_TURN_OFF message.
+On Tue, Nov 26, 2024 at 9:17=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
-> Only print the message when ltssm_stat is not in DETECT and POLL.
-> In the other words, there isn't an error message when no endpoint is
-> connected at all.
+> On Tue, Nov 26, 2024 at 08:44:19AM -0600, Rob Herring wrote:
+> > > > > > The DT type and name fields are pretty much legacy, so I don't =
+think the
+> > > > > > rust bindings need to worry about them until someone converts S=
+parc and
+> > > > > > PowerMac drivers to rust (i.e. never).
+> > > > > >
+> > > > > > I would guess the PCI cases might be questionable, too. Like DT=
+, drivers
+> > > > > > may be accessing the table fields, but that's not best practice=
+. All the
+> > > > > > match fields are stored in pci_dev, so why get them from the ma=
+tch
+> > > > > > table?
+> > > > >
+> > > > > Fair question, I'd like to forward it to Greg. IIRC, he explicitl=
+y requested to
+> > > > > make the corresponding struct pci_device_id available in probe() =
+at Kangrejos.
+> >
+> > Making it available is not necessarily the same thing as passing it in
+> > via probe.
 >
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> IIRC, that was exactly the request.
+>
+> > I agree it may need to be available in probe(), but that
+> > can be an explicit call to get it.
+>
+> Sure, I did exactly that for the platform abstraction, because there we m=
+ay
+> probe through different ID tables.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+TBC, I think of_match_device() (both calling the C API and the method)
+should not be part of this series. I think we agreed on that already.
+Only if there is a need at some point later should we add it.
 
-> ---
-> v5 changes:
-> - Remove the redundant check "(val > DW_PCIE_LTSSM_DETECT_WAIT)".
-> v4 changes:
-> - Keep error return when L2 entry is failed and the endpoint is
->   connected refer to Krishna' comments. Thanks.
-> v3 changes:
-> - Refine the commit message refer to Manivannan's comments.
-> - Regarding Frank's comments, avoid 10ms wait when no link up.
-> v2 changes:
-> - Don't remove L2 poll check.
-> - Add one 1us delay after L2 entry.
-> - No error return when L2 entry is timeout
-> - Don't print message when no link up.
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 38 +++++++++++--------
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  2 files changed, 23 insertions(+), 16 deletions(-)
+> A `struct pci_driver`'s probe function has the following signature [1] th=
+ough:
 >
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 24e89b66b772..bbd0ee862c12 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -927,25 +927,31 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
->  		return 0;
+> `int (*probe)(struct pci_dev *dev, const struct pci_device_id *id)`
 >
-> -	/* Only send out PME_TURN_OFF when PCIE link is up */
-> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
-> -		if (pci->pp.ops->pme_turn_off)
-> -			pci->pp.ops->pme_turn_off(&pci->pp);
-> -		else
-> -			ret = dw_pcie_pme_turn_off(pci);
-> -
-> -		if (ret)
-> -			return ret;
-> +	if (pci->pp.ops->pme_turn_off)
-> +		pci->pp.ops->pme_turn_off(&pci->pp);
-> +	else
-> +		ret = dw_pcie_pme_turn_off(pci);
-> +	if (ret)
-> +		return ret;
+> [1] https://elixir.bootlin.com/linux/v6.12/source/include/linux/pci.h#L95=
+0
+
+We have a mixture of probe with and without the _device_id parameter.
+I'd question if we really want to keep that for PCI when we have a
+chance to align things with Rust. We can't really with C as it would
+be too many drivers to change. Passing the _device_id only works if
+firmware matching is never used which can change over time. But if
+aligning things is not something we want to do, then I'll shut up.
+
+> > > > Which table gets passed in though? Is the IdInfo parameter generic =
+and
+> > > > can be platform_device_id, of_device_id or acpi_device_id? Not sure=
+ if
+> > > > that's possible in rust or not.
+> > >
+> > > Not sure I can follow you here.
+> > >
+> > > The `IdInfo` parameter is of a type given by the driver for driver sp=
+ecific data
+> > > for a certain ID table entry.
+> > >
+> > > It's analogue to resolving `pci_device_id::driver_data` in C.
+> >
+> > As I said below, the PCI case is simpler than for platform devices.
+> > Platform devices have 3 possible match tables. The *_device_id type we
+> > end up with is determined at runtime (because matching is done at
+> > runtime), so IdInfo could be any of those 3 types.
 >
-> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
-> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
-> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-> -		if (ret) {
-> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-> -			return ret;
-> -		}
-> +	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
-> +				val == DW_PCIE_LTSSM_L2_IDLE ||
-> +				val <= DW_PCIE_LTSSM_DETECT_WAIT,
-> +				PCIE_PME_TO_L2_TIMEOUT_US/10,
-> +				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-> +	if (ret) {
-> +		/* Only dump message when ltssm_stat isn't in DETECT and POLL */
-> +		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-> +		return ret;
->  	}
+> `IdInfo` is *not* any of the three *_device_id types. It's the type of th=
+e
+> drivers private data associated with an entry of any of the three ID tabl=
+es.
+
+Ah yes, indeed. So no issue with the probe method.
+
+> It is true that a driver, which registers multiple out of those three tab=
+les is
+> currently forced to have the same private data type for all of them.
+
+I think that's a feature actually as it enforces best practices.
+
+> I don't think this is a concern, is it? If so, it's easily resolvable by =
+just
+> adding two more associated types, e.g. `PlatformIdInfo`, `DtIdInfo` and
+> `AcpiIdInfo`.
 >
-> +	/*
-> +	 * Refer to r6.0, sec 5.3.3.2.1, software should wait at least
-> +	 * 100ns after L2/L3 Ready before turning off refclock and
-> +	 * main power. It's harmless too when no endpoint connected.
-> +	 */
-> +	udelay(1);
-> +
->  	dw_pcie_stop_link(pci);
->  	if (pci->pp.ops->deinit)
->  		pci->pp.ops->deinit(&pci->pp);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 347ab74ac35a..bf036e66717e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -330,6 +330,7 @@ enum dw_pcie_ltssm {
->  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
->  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
->  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
-> +	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
->  	DW_PCIE_LTSSM_L0 = 0x11,
->  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+> In this case we would indeed need accessor functions like `dt_match_data`=
+,
+> `platform_match_data`, `acpi_match_data`, since we don't know the type at
+> compile time anymore.
+
+Do we need to split those out in rust or can we just call
+device_get_match_data()?
+
 >
-> --
-> 2.37.1
->
+> I don't think that's necessary though.
+
+Even if you don't support all 3 tables now, at a minimum I think you
+need to rename things to be clear what table type is supported and
+allow for adding the other types. For example, T::ID_TABLE needs to be
+renamed to be clear it's the of_device_id table.
+
+Rob
 
