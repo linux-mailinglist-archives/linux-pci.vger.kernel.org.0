@@ -1,228 +1,136 @@
-Return-Path: <linux-pci+bounces-17328-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A989D9310
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 09:07:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 306999D94A3
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 10:36:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 689CC283914
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 08:07:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA4CF283631
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 09:36:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFAF192D7C;
-	Tue, 26 Nov 2024 08:07:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B9D21BC063;
+	Tue, 26 Nov 2024 09:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFdqAbN8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i483S0mZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6816028FF
-	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 08:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7061BB6B3;
+	Tue, 26 Nov 2024 09:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732608420; cv=none; b=Wslryqsc42IVHBm0er/FBaXbhw5MvGPK4hUQzLGkXeDzQP/3AkU+q6YTzTcUYp6zV99jA+FBGzoaHnIkOhhQgCTCSJ82Jl1rl0V+7uyPtUJysLVptrjDHw7x6kXof2UUawtdbhMA7szxGb4BpsdZWDmFsGs0dajDs6loIecBp6w=
+	t=1732613780; cv=none; b=qD86TGTK+N47KHUjnGZ1l40faNsneEJcHhU6u/DLJFzoJWpGft0fjiRDpTpfPEt67HKMSXP6WYJ5c7tNRb/5VaUyaWjbaP5rmUeSiPpkdQOvWhv+ovcIVgWyJWjo7KXmHGuZ6tZbjZkgb4Q10J7d8ywRRdt1Q4di7MX/oUEFQ8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732608420; c=relaxed/simple;
-	bh=SoG39A8uS1oJuSuPR39TebUX2Q0kzJ6BwldjKMUMX8s=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=K6dmidAitB5lBi/SP969U52mKP8kG5BECgUzZJpgvxubhu/Z4IZCNA7HKl/SHjPd5IgGvfmxAgegvgcsVQtx1Hu2b0wyjdbR9+iMbv4dxq9HgQYOPq8kYDjn436+SKga6HaH/EoWaZSb3zlTLoOL+kLg2BlLqbgdphXb/oIL+eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFdqAbN8; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732608418; x=1764144418;
-  h=date:from:to:cc:subject:message-id;
-  bh=SoG39A8uS1oJuSuPR39TebUX2Q0kzJ6BwldjKMUMX8s=;
-  b=SFdqAbN8r063O2HO0gh/ogzR46Gwcmk+R9vEVnMO1ktyWHdbOCuj2GJW
-   qVWX8Ob19UQmEGPoF1O1CoZ5cGTdqpbyoNNF/e6n8qreTFCZi3LfhpYnn
-   PUmIjzSc7rCTte1G7G5HRmsxRj/HwpyWpwLHdlkG2oDSyjYYTWJxIYiQl
-   7hJWnavf5HSaRNn9zK9htVi+syNIIngMJIshq0u2yf1L/wR7sn4kbimsf
-   hcgc/SlV60r/h8qiPL2R8j6t20d1CJaOH11DJQw8PDl719/NaIS8/y+pZ
-   xZaZDGXNaVnkG4iQkwDzfqTVGzvBD8t8mfLAs7KCDon/50SfI/NIQaP5A
-   w==;
-X-CSE-ConnectionGUID: 9/Zq9jfEToCjybQF7qy2Sw==
-X-CSE-MsgGUID: kvCTtX/GQyOfQ/Px8g/9CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11267"; a="43819746"
-X-IronPort-AV: E=Sophos;i="6.12,185,1728975600"; 
-   d="scan'208";a="43819746"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 00:06:58 -0800
-X-CSE-ConnectionGUID: S6v6ldgjTOKWneDJNE3UUw==
-X-CSE-MsgGUID: gZavajwbRmOMgoC2hvSHTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,185,1728975600"; 
-   d="scan'208";a="91654282"
-Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 26 Nov 2024 00:06:57 -0800
-Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tFqb0-0007AP-2L;
-	Tue, 26 Nov 2024 08:06:54 +0000
-Date: Tue, 26 Nov 2024 16:05:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/rockchip] BUILD SUCCESS
- a7137cbf6bd53a9f9c40c64fc8b12b88289b3d4a
-Message-ID: <202411261602.5kbYZSvq-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1732613780; c=relaxed/simple;
+	bh=KVIfCGQmDp6Zc3maWEFRnxe4bj7QJ4bEIv2RSq4VTCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmRDIWb3xLft6AfZSwqndAzaiuKR7AwrBMMnyN8SAdkMiVcllkH7/gfbeMHZjzeP3OeJpgULtYeLduqGa4Asqv6dMKNGtyPLXxcR2VwqFql4TVoF96Gu7vdDkq3DfBjHLz9p2vq3GcCrZAVyUegFWa8BUE700A5QGMyvl8TNebU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i483S0mZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B88C4CECF;
+	Tue, 26 Nov 2024 09:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732613780;
+	bh=KVIfCGQmDp6Zc3maWEFRnxe4bj7QJ4bEIv2RSq4VTCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i483S0mZ90NIOez44lmtrk07Ib+MFFXS0ndoi0HcksmC2pemfEIJ0sWA+wO+4bv9X
+	 iTKq3YFgrWNF1eYgCesIo1VxYaJnn/EtyhLlGLybxSkeBFUnuDRsQJymBWMbAoAceo
+	 j7/wIK9Iu2AG2lCnSbiQToGKNvsy8sMxe6qlNgIWHs/V14AD2N4BXvHciQcjs14cuD
+	 k1AYLvqRRUXaXKegtZzlxzyFqSuMP6aR4gpXDuTfJplxGcDVJFQ+R+6ltNT4JNRk6i
+	 NrvtwUcwIHDSELdeUDEhnFRg3S692pOpWxv+W1Eu+xjf8/CLCAanfreCv+qxxkGAbS
+	 rL9mxFS35Fgqw==
+Date: Tue, 26 Nov 2024 10:36:14 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Frank Li <Frank.li@nxp.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
+	tglx@linutronix.de, jdmason@kudzu.us
+Subject: Re: [PATCH v8 3/6] PCI: endpoint: Add pci_epf_align_addr() helper
+ for address alignment
+Message-ID: <Z0WWjiamjkWfQXKk@ryzen>
+References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com>
+ <20241116-ep-msi-v8-3-6f1f68ffd1bb@nxp.com>
+ <20241124073239.5yl5zsmrrcrhmibh@thinkpad>
+ <Z0TOb0ErwuGQwF8G@lizhi-Precision-Tower-5810>
+ <20241126041903.lq6zunvzoc2mmgbl@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241126041903.lq6zunvzoc2mmgbl@thinkpad>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-branch HEAD: a7137cbf6bd53a9f9c40c64fc8b12b88289b3d4a  PCI: rockchip-ep: Handle PERST# signal in EP mode
+On Tue, Nov 26, 2024 at 09:49:03AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Nov 25, 2024 at 02:22:23PM -0500, Frank Li wrote:
+> > On Sun, Nov 24, 2024 at 01:02:39PM +0530, Manivannan Sadhasivam wrote:
+> > > On Sat, Nov 16, 2024 at 09:40:43AM -0500, Frank Li wrote:
+> > > > Introduce the helper function pci_epf_align_addr() to adjust addresses
+> > >
+> > > pci_epf_align_inbound_addr()?
+> > >
+> > > > according to PCI BAR alignment requirements, converting addresses into base
+> > > > and offset values.
+> > > >
+> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > ---
+> > > > change from v7 to v8
+> > > > - change name to pci_epf_align_inbound_addr()
+> > > > - update comment said only need for memory, which not allocated by
+> > > > pci_epf_alloc_space().
+> > > >
+> > > > change from v6 to v7
+> > > > - new patch
+> > > > ---
+> > > >  drivers/pci/endpoint/pci-epf-core.c | 45 +++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/pci-epf.h             | 14 ++++++++++++
+> > > >  2 files changed, 59 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> > > > index 8fa2797d4169a..4dfc218ebe20b 100644
+> > > > --- a/drivers/pci/endpoint/pci-epf-core.c
+> > > > +++ b/drivers/pci/endpoint/pci-epf-core.c
+> > > > @@ -464,6 +464,51 @@ struct pci_epf *pci_epf_create(const char *name)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(pci_epf_create);
+> > > >
+> > > > +/**
+> > > > + * pci_epf_align_inbound_addr() - Get base address and offset that match bar's
+> > >
+> > > BAR's
+> > >
+> > > > + *			  alignment requirement
+> > > > + * @epf: the EPF device
+> > > > + * @addr: the address of the memory
+> > > > + * @bar: the BAR number corresponding to map addr
+> > > > + * @base: return base address, which match BAR's alignment requirement, nothing
+> > > > + *	  return if NULL
+> > >
+> > > Below, you are updating 'base' only if it is not NULL. Why would anyone call
+> > > this API with 'base' and 'offset' set to NULL?
+> > 
+> > Some time, they may just want one of two.
+> > 
+> 
+> What would be the purpose? I fail to see it.
 
-elapsed time: 724m
+Currently, the only user of this function is the call:
+ret = pci_epf_align_inbound_addr_lo_hi(epf, bar, msg->address_lo, msg->address_hi,
+				       &db_bar.phys_addr, &offset);
 
-configs tested: 135
-configs skipped: 21
+Which doesn't send in NULL as either 'base' or 'offset', so these NULL
+checks do currently look meaningless to me. I suggest to just kill them.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-20
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-20
-arc                          axs101_defconfig    gcc-14.2.0
-arc                      axs103_smp_defconfig    gcc-13.2.0
-arc                     haps_hs_smp_defconfig    gcc-14.2.0
-arc                            hsdk_defconfig    gcc-14.2.0
-arc                        vdk_hs38_defconfig    gcc-14.2.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    clang-20
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-20
-arm                       aspeed_g5_defconfig    gcc-13.2.0
-arm                      integrator_defconfig    gcc-14.2.0
-arm                       multi_v4t_defconfig    clang-14
-arm                       multi_v4t_defconfig    gcc-13.2.0
-arm                       multi_v4t_defconfig    gcc-14.2.0
-arm                        mvebu_v5_defconfig    gcc-13.2.0
-arm                             mxs_defconfig    gcc-14.2.0
-arm                         s3c6400_defconfig    gcc-14.2.0
-arm                           sama7_defconfig    gcc-14.2.0
-arm                         vf610m4_defconfig    gcc-14.2.0
-arm                    vt8500_v6_v7_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    clang-14
-csky                              allnoconfig    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-20
-i386        buildonly-randconfig-001-20241126    gcc-12
-i386        buildonly-randconfig-002-20241126    gcc-12
-i386        buildonly-randconfig-003-20241126    gcc-12
-i386        buildonly-randconfig-004-20241126    gcc-12
-i386        buildonly-randconfig-005-20241126    gcc-12
-i386        buildonly-randconfig-006-20241126    gcc-12
-i386                  randconfig-001-20241126    gcc-12
-i386                  randconfig-002-20241126    gcc-12
-i386                  randconfig-003-20241126    gcc-12
-i386                  randconfig-004-20241126    gcc-12
-i386                  randconfig-005-20241126    gcc-12
-i386                  randconfig-006-20241126    gcc-12
-i386                  randconfig-011-20241126    gcc-12
-i386                  randconfig-012-20241126    gcc-12
-i386                  randconfig-013-20241126    gcc-12
-i386                  randconfig-014-20241126    gcc-12
-i386                  randconfig-015-20241126    gcc-12
-i386                  randconfig-016-20241126    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       bvme6000_defconfig    gcc-14.2.0
-m68k                       m5275evb_defconfig    gcc-14.2.0
-m68k                        stmark2_defconfig    gcc-13.2.0
-m68k                           virt_defconfig    clang-14
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                      mmu_defconfig    gcc-13.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                         db1xxx_defconfig    clang-20
-mips                         db1xxx_defconfig    gcc-14.2.0
-mips                           jazz_defconfig    gcc-14.2.0
-mips                      maltaaprp_defconfig    clang-14
-mips                         rt305x_defconfig    gcc-14.2.0
-mips                   sb1250_swarm_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                      bamboo_defconfig    gcc-14.2.0
-powerpc                   currituck_defconfig    gcc-14.2.0
-powerpc                     mpc5200_defconfig    clang-14
-powerpc                 mpc8315_rdb_defconfig    clang-14
-powerpc                 mpc837x_rdb_defconfig    gcc-14.2.0
-powerpc                      pcm030_defconfig    gcc-14.2.0
-powerpc                      pmac32_defconfig    gcc-14.2.0
-powerpc                      ppc6xx_defconfig    gcc-14.2.0
-powerpc                    socrates_defconfig    gcc-13.2.0
-powerpc                     tqm8541_defconfig    gcc-14.2.0
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    gcc-14.2.0
-s390                             allmodconfig    clang-20
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-sh                               alldefconfig    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                         ap325rxa_defconfig    gcc-13.2.0
-sh                        apsh4ad0a_defconfig    gcc-14.2.0
-sh                         ecovec24_defconfig    gcc-14.2.0
-sh                        edosk7760_defconfig    gcc-14.2.0
-sh                 kfr2r09-romimage_defconfig    gcc-14.2.0
-sh                          kfr2r09_defconfig    gcc-13.2.0
-sh                          kfr2r09_defconfig    gcc-14.2.0
-sh                          landisk_defconfig    gcc-13.2.0
-sh                          landisk_defconfig    gcc-14.2.0
-sh                     magicpanelr2_defconfig    gcc-13.2.0
-sh                          rsk7203_defconfig    gcc-13.2.0
-sh                          rsk7264_defconfig    gcc-14.2.0
-sh                   rts7751r2dplus_defconfig    gcc-14.2.0
-sh                          sdk7780_defconfig    gcc-14.2.0
-sh                        sh7763rdp_defconfig    gcc-13.2.0
-sh                            shmin_defconfig    clang-14
-sparc                            alldefconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                               allyesconfig    gcc-12
-x86_64                                  kexec    clang-19
-x86_64                               rhel-9.4    clang-19
-x86_64                               rhel-9.4    gcc-12
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                generic_kc705_defconfig    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kind regards,
+Niklas
 
