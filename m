@@ -1,228 +1,162 @@
-Return-Path: <linux-pci+bounces-17351-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17352-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE64F9D98A8
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 14:38:12 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49211162C5A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 13:38:09 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005638BEA;
-	Tue, 26 Nov 2024 13:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQ/6lplx"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 723BF9D9920
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 15:07:08 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AACB652
-	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 13:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFF81B22FF8
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 14:06:54 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE531D5170;
+	Tue, 26 Nov 2024 14:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHjEaR9E"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D96D528;
+	Tue, 26 Nov 2024 14:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732628289; cv=none; b=Rl+2BpE7BVqA34F8O363JzCDGgK+nNocnTVQq2NDffEO0ePRqvHjUavvYkWtTnIorueb+O+itbqXdCn4CMtfxHWuWHKKC9Gr0XgcM5xEsEFYoNhdBW+3PcjKXFtefENZ3VI8kuxM4mZL6x3p2PrY27yfAL6omgb3eybiPoNNwZ4=
+	t=1732630010; cv=none; b=Onz8botrJ8PGwJ1nbCtVAwTwZfEiERjUKLjPCTdEoNJ+1Q+NVX97MBnhlUhWMJMIb6CoEH07+qX79zKhGm0VFKvUkfbaX+qXTnEhncgJ+kW3jdvIl8RN6nyiYxz+my8gBZ7CTLAsi0rg616qzy+Kb5DMaiyLM4rIZpUPOArx+9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732628289; c=relaxed/simple;
-	bh=PB1F93ZazvqpK4AKyKJXsdXzq1MG8y7/zpath6/j4u0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=LLIbO4xUZ15VMhrbWRnamLjye4ZkvVw3m0c/T48p2cY+cj13S2YcNnDgFDqjyI+eTtUlTmfTCHqY6iONIFl+3HNy7yZDJYdJZ3COBW3Olr01kfjhkW0vgOfdijLHwjZJSpUS2yPGZCqo/G7Wke2KH6hqE2PsVOxVPz75HR/XKFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQ/6lplx; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732628289; x=1764164289;
-  h=date:from:to:cc:subject:message-id;
-  bh=PB1F93ZazvqpK4AKyKJXsdXzq1MG8y7/zpath6/j4u0=;
-  b=jQ/6lplxleJpv6p1x+d/9ds00ZiV90u2IS+KrOzGn3RjlZkDmfsGLcvD
-   lVC5tmSHPSzH1N2g8yb2YnraWNBz8UInzxh1UPKLeIntKGAYSg3uJsgJk
-   nt34tzmnZp730wU5SbWez3vjfaftdytidvzPw6P2siDysEqUC9vU0SvEM
-   +hDrzR0c6B8vtLazdWIojNV/a6K9BLDdKHySif9254aNZJNSAMr7iuoYy
-   hF5nPRTskhH/FKCd4a/B+49qRXTHbrs+Q1FeTxviztwhfFUHkoFtc/ZNo
-   6xxpt5WjQdDFY6Lhtly+sVEHn6igD3Aa3AaIWK3RJap+5efSfPLON8W22
-   g==;
-X-CSE-ConnectionGUID: VVLZfhGXRLO1c9xHsFq73Q==
-X-CSE-MsgGUID: BYBLI8ipRz+HUkkxLLYEsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="50313350"
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="50313350"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 05:38:08 -0800
-X-CSE-ConnectionGUID: shs/T5RrSp+cKWy97xD8UA==
-X-CSE-MsgGUID: GKiyNI41QTyvDzdurLyFew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="91235055"
-Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Nov 2024 05:38:07 -0800
-Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tFvlU-0007JN-1F;
-	Tue, 26 Nov 2024 13:38:04 +0000
-Date: Tue, 26 Nov 2024 21:36:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 10099266dec8275a6899e6a27dcdfebbcc726cc7
-Message-ID: <202411262157.MKO4PV0R-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1732630010; c=relaxed/simple;
+	bh=q3P3bD8s7pucDmumXMg6Ga4FB2wZ4IMiuEZe4IDTCmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tF1YO+4tVLG/UIVLXbMaAb4lx8Opbl5jtiRupHcDI1LdzaNWZTjpt2szxJc/NOHmRTrA75u52QBflu5YB5WWSbHhYTGbc8BtNBOvun4/6rHbcXUU5G5LUqdF3KZkt9hZAAHD8ShDAeJf4tMB3R/jPpRIR4WI96htAdAtpntzihI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHjEaR9E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4FF4C4CED7;
+	Tue, 26 Nov 2024 14:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732630009;
+	bh=q3P3bD8s7pucDmumXMg6Ga4FB2wZ4IMiuEZe4IDTCmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dHjEaR9EQsUyKZy1CnbOnQsXBlcuQFoH5boQpyGmn7Ll1MtOhoxex+5l0EG5bReKF
+	 VQ46JoFBUQteKqaKIzqIqEZul7AayLZ8R/ohaLtzuKHQ9NHutedWhoq3aLM23/qasP
+	 Vc7dCgBOQ5RBSHHOOoEuSLkgH/tLvqIlK9nZFchpArszPmeLvj9UkeNwmOoEuocn7C
+	 1rGG36onjPiTd0XbREjzyOhAmhWHbdmbpWgWcUiDgWm2H8qVWWQ7AiXpG+SENTU+8W
+	 TuxRI62cRTMdvpJHuuIbTAWPFRZJKMV4NfvOF4iHLss66jgyxlMKdfZQt8ErGuX+ID
+	 gpl5PjCOmIDWQ==
+Date: Tue, 26 Nov 2024 15:06:41 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 11/16] rust: pci: add basic PCI device / driver
+ abstractions
+Message-ID: <Z0XV8R8Sbgd9mAq7@cassiopeiae>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-12-dakr@kernel.org>
+ <Zx7B4Y5iegKVXpC4@Boquns-Mac-mini.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zx7B4Y5iegKVXpC4@Boquns-Mac-mini.local>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 10099266dec8275a6899e6a27dcdfebbcc726cc7  Merge branch 'pci/typos'
+On Sun, Oct 27, 2024 at 03:42:41PM -0700, Boqun Feng wrote:
+> Hi Danilo,
+> 
+> On Tue, Oct 22, 2024 at 11:31:48PM +0200, Danilo Krummrich wrote:
+> [...]
+> > +/// The PCI device representation.
+> > +///
+> > +/// A PCI device is based on an always reference counted `device:Device` instance. Cloning a PCI
+> > +/// device, hence, also increments the base device' reference count.
+> > +#[derive(Clone)]
+> > +pub struct Device(ARef<device::Device>);
+> > +
+> 
+> Similar to https://lore.kernel.org/rust-for-linux/ZgG7TlybSa00cuoy@boqun-archlinux/
+> 
+> Could you also avoid wrapping a point to a PCI device? Instead, wrap the
+> object type:
 
-elapsed time: 1054m
+It's not wrapping a pointer, but an `ARef<device::Device>`.
 
-configs tested: 135
-configs skipped: 18
+> 
+>     #[repr(transparent)]
+>     pub struct Device(Opaque<bindings::pci_dev>);
+> 
+>     impl AlwaysRefCounted for Device {
+>         <put_device() and get_device() on ->dev>
+>     }
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This implementation is currently implicit, since `pci::Device` just wraps an
+`ARef<device::Device>` (like any other bus specific device structure does), and
+hence increments and decrements the reference count of the underlying `struct
+device` automatically.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-20
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                      axs103_smp_defconfig    gcc-13.2.0
-arc                   randconfig-001-20241126    gcc-13.2.0
-arc                   randconfig-002-20241126    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-20
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                       aspeed_g5_defconfig    gcc-13.2.0
-arm                          ep93xx_defconfig    clang-14
-arm                       multi_v4t_defconfig    gcc-13.2.0
-arm                        mvebu_v5_defconfig    gcc-13.2.0
-arm                             pxa_defconfig    clang-14
-arm                   randconfig-001-20241126    clang-20
-arm                   randconfig-002-20241126    gcc-14.2.0
-arm                   randconfig-003-20241126    clang-20
-arm                   randconfig-004-20241126    clang-16
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20241126    gcc-14.2.0
-arm64                 randconfig-002-20241126    gcc-14.2.0
-arm64                 randconfig-003-20241126    gcc-14.2.0
-arm64                 randconfig-004-20241126    clang-20
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20241126    gcc-14.2.0
-csky                  randconfig-002-20241126    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-20
-hexagon               randconfig-001-20241126    clang-17
-hexagon               randconfig-002-20241126    clang-20
-i386        buildonly-randconfig-001-20241126    gcc-12
-i386        buildonly-randconfig-002-20241126    gcc-12
-i386        buildonly-randconfig-003-20241126    clang-19
-i386        buildonly-randconfig-003-20241126    gcc-12
-i386        buildonly-randconfig-004-20241126    gcc-12
-i386        buildonly-randconfig-005-20241126    clang-19
-i386        buildonly-randconfig-005-20241126    gcc-12
-i386        buildonly-randconfig-006-20241126    gcc-12
-i386                  randconfig-001-20241126    gcc-12
-i386                  randconfig-002-20241126    gcc-12
-i386                  randconfig-003-20241126    gcc-12
-i386                  randconfig-004-20241126    gcc-11
-i386                  randconfig-004-20241126    gcc-12
-i386                  randconfig-005-20241126    clang-19
-i386                  randconfig-005-20241126    gcc-12
-i386                  randconfig-006-20241126    clang-19
-i386                  randconfig-006-20241126    gcc-12
-i386                  randconfig-011-20241126    clang-19
-i386                  randconfig-011-20241126    gcc-12
-i386                  randconfig-012-20241126    clang-19
-i386                  randconfig-012-20241126    gcc-12
-i386                  randconfig-013-20241126    clang-19
-i386                  randconfig-013-20241126    gcc-12
-i386                  randconfig-014-20241126    gcc-12
-i386                  randconfig-015-20241126    clang-19
-i386                  randconfig-015-20241126    gcc-12
-i386                  randconfig-016-20241126    clang-19
-i386                  randconfig-016-20241126    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20241126    gcc-14.2.0
-loongarch             randconfig-002-20241126    gcc-14.2.0
-m68k                             alldefconfig    clang-14
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                        stmark2_defconfig    gcc-13.2.0
-m68k                          sun3x_defconfig    clang-14
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                      mmu_defconfig    gcc-13.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath79_defconfig    clang-14
-mips                         db1xxx_defconfig    clang-20
-mips                           xway_defconfig    clang-14
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20241126    gcc-14.2.0
-nios2                 randconfig-002-20241126    gcc-14.2.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20241126    gcc-14.2.0
-parisc                randconfig-002-20241126    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-20
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                      pmac32_defconfig    clang-14
-powerpc               randconfig-001-20241126    clang-20
-powerpc                    socrates_defconfig    gcc-13.2.0
-powerpc64             randconfig-001-20241126    clang-16
-riscv                            allmodconfig    clang-20
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-20
-riscv                            allyesconfig    gcc-14.2.0
-s390                             allmodconfig    clang-20
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                         ap325rxa_defconfig    gcc-13.2.0
-sh                            hp6xx_defconfig    clang-14
-sh                          kfr2r09_defconfig    gcc-13.2.0
-sh                          landisk_defconfig    gcc-13.2.0
-sh                     magicpanelr2_defconfig    gcc-13.2.0
-sh                          rsk7203_defconfig    gcc-13.2.0
-sh                   rts7751r2dplus_defconfig    gcc-14.2.0
-sh                        sh7763rdp_defconfig    gcc-13.2.0
-sparc                            allmodconfig    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                               allyesconfig    gcc-12
-x86_64                                  kexec    clang-19
-x86_64                               rhel-9.4    gcc-12
-xtensa                            allnoconfig    gcc-14.2.0
+However, what I dislike about it is that with that, `pci::Device` behaves like
+an `ARef<T>`, but isn't wrapped by `ARef` itself.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Just doing what you proposed is probably cleaner is this aspect, but generates a
+bit of duplicated code in reference counting the underlying `struct device`.
+
+- Danilo
+
+> 
+> Regards,
+> Boqun
+> 
+> > +impl Device {
+> > +    /// Create a PCI Device instance from an existing `device::Device`.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// `dev` must be an `ARef<device::Device>` whose underlying `bindings::device` is a member of
+> > +    /// a `bindings::pci_dev`.
+> > +    pub unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
+> > +        Self(dev)
+> > +    }
+> > +
+> > +    fn as_raw(&self) -> *mut bindings::pci_dev {
+> > +        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
+> > +        // embedded in `struct pci_dev`.
+> > +        unsafe { container_of!(self.0.as_raw(), bindings::pci_dev, dev) as _ }
+> > +    }
+> > +
+> > +    /// Enable memory resources for this device.
+> > +    pub fn enable_device_mem(&self) -> Result {
+> > +        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
+> > +        let ret = unsafe { bindings::pci_enable_device_mem(self.as_raw()) };
+> > +        if ret != 0 {
+> > +            Err(Error::from_errno(ret))
+> > +        } else {
+> > +            Ok(())
+> > +        }
+> > +    }
+> > +
+> > +    /// Enable bus-mastering for this device.
+> > +    pub fn set_master(&self) {
+> > +        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
+> > +        unsafe { bindings::pci_set_master(self.as_raw()) };
+> > +    }
+> > +}
+> > +
+> > +impl AsRef<device::Device> for Device {
+> > +    fn as_ref(&self) -> &device::Device {
+> > +        &self.0
+> > +    }
+> > +}
+> > -- 
+> > 2.46.2
+> > 
+> > 
+> 
 
