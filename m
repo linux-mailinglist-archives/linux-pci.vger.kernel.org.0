@@ -1,117 +1,189 @@
-Return-Path: <linux-pci+bounces-17338-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17339-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0A829D968A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 12:52:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46F909D9757
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 13:39:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5189B28BBA
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 11:49:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEA02284F19
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 12:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E5D31CEEB8;
-	Tue, 26 Nov 2024 11:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38E01BD012;
+	Tue, 26 Nov 2024 12:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TKBV0blt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSx3YnZF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5941CDA15
-	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 11:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B14A27442;
+	Tue, 26 Nov 2024 12:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732621774; cv=none; b=H6UXKJjh3QOQuKBWdauYQEKvcrdhT0dtrKacMuLFC9KGJ+xhSbd/v2Xgr8Jz9taT5IUZHLenjpyjMjUQfa4kAYBD6zrlCrbAV6B44e9ol/tSS20EbNToX6J9zisqUKeAS73ba4PcfoDyXym9RJqRbpoO5X7dIcRBaXBgQFqeCB0=
+	t=1732624756; cv=none; b=R2cfYO92f63XU4EbTZlV/Sbd71t6zXVT5QF6mnPpjmwZzri/wSL8uZtaPDw/57EFFT5eqr3LT/xDqUSigpXt2IG4yxaSjEH2yaSN6iJjeT18HR5wZZbCkWX0h70iAZxuCJ4Cl7Sf/zyHeE7IxCshWfESUyOxjCAdJlR9yFTXHpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732621774; c=relaxed/simple;
-	bh=DWw67zE2lJp2DCEzhU+vtzbe6cSTq0sENaYdnpP0uZo=;
+	s=arc-20240116; t=1732624756; c=relaxed/simple;
+	bh=mYv37OE2DecgbcMq0q2JvxnQqKQgrHopLS4szLMPhro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jup7kbP7m3uucWD2BZQDmUox1FjY0oAYnnzk3w87tocK4+7CtnLeY/OzhjvRGFFcgiVRR2VA2RF+dzqSiteXgDIDRG4hfzD1C9hftU2rCcTLDrLwPwBd1JkGi6ICuFertjqGFCVJMysUFEn1UpdGO9g2k7KA01DtiDIuuguK8XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TKBV0blt; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2fb388e64b0so59650041fa.0
-        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 03:49:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732621769; x=1733226569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J0808uU3LOgHtR0xR0Opk5zAIVpmbB5OAomrT6pxSII=;
-        b=TKBV0bltDmspAG7iSS+w1kD5wxJgo/T5eqP1+o0DirQ4d+PtiBVJ23fu5RT6+Q+ZtK
-         qob4kY8VWuAPkFvSBL7Xmbfj4mBN+amw+IturHQgPDbp2keJzN8LQazsucF5DOsAo3Jh
-         3OnzuSoISo/USTyrnXfz/TR7m10c7y/zXPht4nx4ZT6bICj3xOJ7hDF0fOlmbjedh9X0
-         YXhkhjBpvzpqnmOL+DPk9LI9g9WP1yJBuU0wEsvO6HBX4TPtbF2tTu4td1tV0IAtYZNZ
-         7yDKrL1nNiqjdbyBh8NvvRTAtkhB7YQrSwzXYrplOz7fOcvCB8VFIpAqwy7KdZPq7LGm
-         1Kng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732621769; x=1733226569;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0808uU3LOgHtR0xR0Opk5zAIVpmbB5OAomrT6pxSII=;
-        b=dq5zDmBzB3AXbkIjQ6xunBVfbMq7BuyFHztMYgmT52eqOCAI/YF3R53DL22Wit/i4X
-         Qzz2H5wIMmywoGseodzk+fj68nLhjkam1JkkafObPu4UXlo+QJc/c9opM8xPV8WVpF5Y
-         S3poMF135dh3CJTuGDg5EVmkuk4lmmN9DnHenKlrNUUgkA+xV0hIuHg670bbztgRRL+4
-         2l6dTFfery7CzSXZKBVuHMADVuxWuIQ99wU5gs3iKk/+qxHsUrTVFr4gAlzXwVoF2T+V
-         1qIZ47w3rVi5AvFq16UBLJHjhFi74ml6NWsvBnkn21l6Ju5OQHx8a9it8H3ZZjkHWDdq
-         4VRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNW2rj85+D/HDlPUyS+wq+q4Vj+5qS7viqyVTadJissXw3IacFViOxya7+7+UzA/NPxbIpRUqmtaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK2BRqMF1Jmp+2rMVh5yQ09wj36VY/tTSbLewbHP2awjPoT670
-	5l9Kuylb5dxdYerCaIiwuT4jT3XtoZ6y5j+iscPouBcxFil4omruCN+GsoU1+qo=
-X-Gm-Gg: ASbGncsa0struOe9p9tpOmJmLAgFBptiG+fOMxgJDoU9XLmwXINqwBmCr5UsDu/b96S
-	8DQRS9yehD1b8ZNJUI903JG+wOETkpekHqY8uPA3NziSpsPGUy4M8JW/cGLQ4MqcnN2BrGMTqSn
-	AZg+yvI/Nm0FcevNKg9sZ5o6xiSGL5wV3DSTrmU7ey/if/qUEM+KbtntA4dr8aMIy3ghnop/EEt
-	BfNiqOKbGYG+jq7w3+eedt4RzqQK9a68bliOAlIwNz8YaRn2LINYODSue7A/YQnyLB+Eb1auP/L
-	/L9AHUtOAoSRehYQN3+SK2esS/YZ9A==
-X-Google-Smtp-Source: AGHT+IEU7idZYH7tdB8+JrK/IxXdtauSD0OGplAdnzOdck3dh+fzMnfl7OJHmYrF/am6b8KRWcNcwg==
-X-Received: by 2002:a05:651c:984:b0:2ff:c6cb:60ba with SMTP id 38308e7fff4ca-2ffc6cb62c8mr38677691fa.34.1732621769421;
-        Tue, 26 Nov 2024 03:49:29 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ffa4d16f9bsm19527931fa.19.2024.11.26.03.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 03:49:28 -0800 (PST)
-Date: Tue, 26 Nov 2024 13:49:26 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: sm8550: Add 'global' interrupt to
- the PCIe RC nodes
-Message-ID: <f2tmdxywunlvyzr22f4uxh7yzha4i7azls6ssw6s3x32w37svl@f6pxwi55y7tt>
-References: <20241126-topic-sm8x50-pcie-global-irq-v1-0-4049cfccd073@linaro.org>
- <20241126-topic-sm8x50-pcie-global-irq-v1-2-4049cfccd073@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=f8N6oave+/K7bbJWLNsrs3zOiE4TKFqGKkYbmVxSOFT4IPiZhJ7Eoo9KZSvAi8PZj7luy0qs6v7hKd7Std9Ob+xGjWXVU33HzmNQw56Gm7gH+bu4IwlGCC3UIh5NxcwzAmSllDFYThdG7jWIFSl58lMKMV4QdjrIQFbSsf7rYx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSx3YnZF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55924C4CECF;
+	Tue, 26 Nov 2024 12:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732624756;
+	bh=mYv37OE2DecgbcMq0q2JvxnQqKQgrHopLS4szLMPhro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QSx3YnZFImp3n1I1cPNJF+hEd3oPLAUEogGS/AJ+DUecMoWGBtOvst9AUKC1tyYVp
+	 22sToN2aUViQ9J5UA1HB854ITvkbDXbWtCfpPx4pKGLb5qkGqKrQClsm/8htKh05VE
+	 AxeuVuC4tgM9EmeozEcuuxSO9DfjfbyY29oaeS2lpj25UidXUici9FqSYmTy6bMYSf
+	 ROWrp98amKd15GpfGj+cuTdEcPIF1afn+uzC4YKxhK955jsRqSykYs14/zFGyWt85+
+	 cZXCKRlDNqGpU3KPwoubus0gKREGC9TxoVGJZYqdz60P75fqe3hWvEuG92xOqlTfmm
+	 76IA9Zk8rTGeg==
+Date: Tue, 26 Nov 2024 13:39:08 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
+ driver abstractions
+Message-ID: <Z0XBbLb8NRQg_dek@cassiopeiae>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-16-dakr@kernel.org>
+ <20241022234712.GB1848992-robh@kernel.org>
+ <ZxibWpcswZxz5A07@pollux>
+ <20241023142355.GA623906-robh@kernel.org>
+ <Zx9kR4OhT1pErzEk@pollux>
+ <CAL_JsqLVdoQNSSDCfGcf0wCZE9VQphRhHKANxhpei_UoFzkN9g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241126-topic-sm8x50-pcie-global-irq-v1-2-4049cfccd073@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLVdoQNSSDCfGcf0wCZE9VQphRhHKANxhpei_UoFzkN9g@mail.gmail.com>
 
-On Tue, Nov 26, 2024 at 11:22:50AM +0100, Neil Armstrong wrote:
-> Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
-> to the host CPUs. This interrupt can be used by the device driver to
-> identify events such as PCIe link specific events, safety events, etc...
+On Wed, Oct 30, 2024 at 07:23:47AM -0500, Rob Herring wrote:
+> On Mon, Oct 28, 2024 at 5:15 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> >
+> > On Wed, Oct 23, 2024 at 09:23:55AM -0500, Rob Herring wrote:
+> > > On Wed, Oct 23, 2024 at 08:44:42AM +0200, Danilo Krummrich wrote:
+> > > > On Tue, Oct 22, 2024 at 06:47:12PM -0500, Rob Herring wrote:
+> > > > > On Tue, Oct 22, 2024 at 11:31:52PM +0200, Danilo Krummrich wrote:
+> > > > > > +///     ]
+> > > > > > +/// );
+> > > > > > +///
+> > > > > > +/// impl platform::Driver for MyDriver {
+> > > > > > +///     type IdInfo = ();
+> > > > > > +///     const ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
+> > > > > > +///
+> > > > > > +///     fn probe(
+> > > > > > +///         _pdev: &mut platform::Device,
+> > > > > > +///         _id_info: Option<&Self::IdInfo>,
+> > > > > > +///     ) -> Result<Pin<KBox<Self>>> {
+> > > > > > +///         Err(ENODEV)
+> > > > > > +///     }
+> > > > > > +/// }
+> > > > > > +///```
+> > > > > > +/// Drivers must implement this trait in order to get a platform driver registered. Please refer to
+> > > > > > +/// the `Adapter` documentation for an example.
+> > > > > > +pub trait Driver {
+> > > > > > +    /// The type holding information about each device id supported by the driver.
+> > > > > > +    ///
+> > > > > > +    /// TODO: Use associated_type_defaults once stabilized:
+> > > > > > +    ///
+> > > > > > +    /// type IdInfo: 'static = ();
+> > > > > > +    type IdInfo: 'static;
+> > > > > > +
+> > > > > > +    /// The table of device ids supported by the driver.
+> > > > > > +    const ID_TABLE: IdTable<Self::IdInfo>;
+> > >
+> > > Another thing. I don't think this is quite right. Well, this part is
+> > > fine, but assigning the DT table to it is not. The underlying C code has
+> > > 2 id tables in struct device_driver (DT and ACPI) and then the bus
+> > > specific one in the struct ${bus}_driver.
+> >
+> > The assignment of this table in `Adapter::register` looks like this:
+> >
+> > `pdrv.driver.of_match_table = T::ID_TABLE.as_ptr();`
+> >
+> > What do you think is wrong with this assignment?
 > 
-> Hence, add it to the PCIe RC node along with the existing MSI interrupts.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8550.dtsi | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
+> Every bus implementation will need the DT and ACPI tables, so they
+> should not be declared and assigned in platform driver code, but in
+> the generic device/driver abstractions just like the underlying C
+> code. The one here should be for platform_device_id. You could put all
+> 3 tables here, but that's going to be a lot of duplication I think.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+That's indeed true. But I'm not sure that at this point we need a generalized
+`Driver` abstraction just for assigning the DT and ACPI tables.
 
--- 
-With best wishes
-Dmitry
+Maybe it's better to do this in a subsequent series?
+
+> 
+> > >
+> > > > > > +
+> > > > > > +    /// Platform driver probe.
+> > > > > > +    ///
+> > > > > > +    /// Called when a new platform device is added or discovered.
+> > > > > > +    /// Implementers should attempt to initialize the device here.
+> > > > > > +    fn probe(dev: &mut Device, id_info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>>;
+> > > > > > +
+> > > > > > +    /// Find the [`of::DeviceId`] within [`Driver::ID_TABLE`] matching the given [`Device`], if any.
+> > > > > > +    fn of_match_device(pdev: &Device) -> Option<&of::DeviceId> {
+> > > > >
+> > > > > Is this visible to drivers? It shouldn't be.
+> > > >
+> > > > Yeah, I think we should just remove it. Looking at struct of_device_id, it
+> > > > doesn't contain any useful information for a driver. I think when I added this I
+> > > > was a bit in "autopilot" mode from the PCI stuff, where struct pci_device_id is
+> > > > useful to drivers.
+> > >
+> > > TBC, you mean other than *data, right? If so, I agree.
+> >
+> > Yes.
+> >
+> > >
+> > > The DT type and name fields are pretty much legacy, so I don't think the
+> > > rust bindings need to worry about them until someone converts Sparc and
+> > > PowerMac drivers to rust (i.e. never).
+> > >
+> > > I would guess the PCI cases might be questionable, too. Like DT, drivers
+> > > may be accessing the table fields, but that's not best practice. All the
+> > > match fields are stored in pci_dev, so why get them from the match
+> > > table?
+> >
+> > Fair question, I'd like to forward it to Greg. IIRC, he explicitly requested to
+> > make the corresponding struct pci_device_id available in probe() at Kangrejos.
+> 
+> Which table gets passed in though? Is the IdInfo parameter generic and
+> can be platform_device_id, of_device_id or acpi_device_id? Not sure if
+> that's possible in rust or not.
+
+Not sure I can follow you here.
+
+The `IdInfo` parameter is of a type given by the driver for driver specific data
+for a certain ID table entry.
+
+It's analogue to resolving `pci_device_id::driver_data` in C.
+
+> 
+> PCI is the exception, not the rule here, in that it only matches with
+> pci_device_id. At least I think that is the case currently, but it is
+> entirely possible we may want to do ACPI/DT matching like every other
+> bus. There are cases where PCI devices are described in DT.
+> 
+> Rob
+> 
 
