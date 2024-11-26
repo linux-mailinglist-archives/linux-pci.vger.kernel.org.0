@@ -1,138 +1,228 @@
-Return-Path: <linux-pci+bounces-17350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E8D9D9858
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 14:20:41 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE64F9D98A8
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 14:38:12 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49211162C5A
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 13:38:09 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005638BEA;
+	Tue, 26 Nov 2024 13:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQ/6lplx"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E83C282DAF
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 13:20:40 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95EE1D2B22;
-	Tue, 26 Nov 2024 13:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mK2YVYUt"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408631D27BB
-	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 13:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AACB652
+	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 13:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732627237; cv=none; b=jazzjGdAVqbfnvVJASX652BmURLhaevM0Vd7hkvZsLrdAyVGm0hDpSMDy1lSbMEOBvTWgpNNztxvmdmh1RhdDegQEhNvEcaqben8Pn9I4byT+mzwW0wbQjwLIym0HxnlxsntzVqcNzUtrIBoAoI8zEm/ttZ4q81i+yM4gCzBc6k=
+	t=1732628289; cv=none; b=Rl+2BpE7BVqA34F8O363JzCDGgK+nNocnTVQq2NDffEO0ePRqvHjUavvYkWtTnIorueb+O+itbqXdCn4CMtfxHWuWHKKC9Gr0XgcM5xEsEFYoNhdBW+3PcjKXFtefENZ3VI8kuxM4mZL6x3p2PrY27yfAL6omgb3eybiPoNNwZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732627237; c=relaxed/simple;
-	bh=KDm+Mq0a5lEfnpK/IGyKQJoyOpf9PXCVAPk6aBEyMRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fqqdp53HUx/6871YhP+DzruM+8nJhBgFAjbdsELuMINlrlcxIFMwpPBb/nCOTc92Fj92LxHv4CS7haXRK0lKz+c92Gfz7AEAHcfz03LE2S4J0Ci6goNA9hbOmIecJOy0dnFvdOWCIejOZPQyahfpwHMHILkklRyr3czKe4lDILs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mK2YVYUt; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7fc41dab8e3so724934a12.3
-        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 05:20:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732627235; x=1733232035; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7ZAZjsTcG8rmGX1lmOUx9+9I9EDjkqjr8nVDzMoOc8s=;
-        b=mK2YVYUtB6MXCFQFDN/n/2B833x7m9XiEty3ZTbc/xeNcG8sTckXG4xqslOpoqtxfK
-         7EtHp1SfWV3vemCXRseEFMQd3TURZ6JZbsR3ezlhl5W+zANaBumtDb8NGp9hHN0BDJ4G
-         yIu8o/+UVmfnIbSw73bIjo2Wfwx4lVsYEW6hRzrX7DJ2e7xeayr/vRNe1Vb49YqLSJpA
-         Q3Hm4mQEYVWW0D7K93WX3rc8Bz3CKjbI+252jOgrqRvxG1o7rWeR06wpxiZZFSi4PKEY
-         LuNOKERp4xMYUY10DSxpmgDVLS+lrfMLQE0ZR23PKlBK5C79LgI2G2w832Zv4SnrrF1A
-         EBjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732627235; x=1733232035;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7ZAZjsTcG8rmGX1lmOUx9+9I9EDjkqjr8nVDzMoOc8s=;
-        b=ndHEA38g8BJ67pOZApwHSQDMVA5W8t9JbB8gD/HfxUc0Xr8+fDzOicRXp0JLjOSZM1
-         r6EEMnvL5VWDoIIiQcEorntqKMcl0Gx0mkRSaT9Ogt20O9rvBML2iujw86xCCwQQYRd4
-         z3mpoKrz7qU1erG6nV7CeTgsPcs5nSWfeYwJ3BzcqBP+K+Tc/NBo4UMofZC2yNXMRlQt
-         eXkSAW+e9dQeiytoR8bdps69ClDkG5cNTR/xqo27bIwCs2NnRSNdQumcI/johlw3G/zY
-         pmR+5E0a2fZf4lnNJP7wGFnlees805biLdTFCDOKWnN8KXMIQDuqaWz3LwfQy8EcrxGE
-         hERg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/pJNVd+YfZ0BVPHY+zf1RLPcO+734aisxKwulYbdh1QhYjKsPy1uUsrXt0zNuENYsSlUSHubJ0xQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhC5CTsDuNjjtAohNr2olE5DooCaQWkebI4CNdEz9bC7jNHteE
-	Uyk8sG2R9oUUXTKGs2ClDsmf+hhTrlKCb3sda7BXLKAUoKywZibGvIHtQ8lFgA==
-X-Gm-Gg: ASbGncsAgxJvD0u4C9iXSTU/Mp1htCUFiPRian23Hteoa9roNwD4ReqatHxYdXa8u87
-	jj6HnXgXnRfsSZAaBstZF/sIxAR3havyJji+PlKiI0Xspk5gNdvRZRAdUEO/ydF/Zj6yht7WmXt
-	8xp/VCklT8D2xeLjVpz/EWtsk5YiL2ggNvLGOV5Wv1dRAK9XUoW8i7Xr1FBXdorQkq/9RIulynx
-	DLMrPYRKgo3e2cr+b+tkdwoHbH0lJT06OeU6GKQbDKFJi575xaeTxOosEyu
-X-Google-Smtp-Source: AGHT+IET0RgL1Oz/nFQSi7koI3C7X3ynD6Kn5BZCjzR9y5l02OedHw0Xt/TC1lpUE205Y9sZghFmkw==
-X-Received: by 2002:a17:90b:3b48:b0:2ea:4c8d:c7ad with SMTP id 98e67ed59e1d1-2eb0e8854d0mr21594882a91.35.1732627235499;
-        Tue, 26 Nov 2024 05:20:35 -0800 (PST)
-Received: from thinkpad ([120.60.136.64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2eb0d048e94sm8758055a91.40.2024.11.26.05.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 05:20:35 -0800 (PST)
-Date: Tue, 26 Nov 2024 18:50:20 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
-	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 0/2] PCI endpoint test: Add support for capabilities
-Message-ID: <20241126132020.efpyad6ldvvwfaki@thinkpad>
-References: <20241121152318.2888179-4-cassel@kernel.org>
+	s=arc-20240116; t=1732628289; c=relaxed/simple;
+	bh=PB1F93ZazvqpK4AKyKJXsdXzq1MG8y7/zpath6/j4u0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=LLIbO4xUZ15VMhrbWRnamLjye4ZkvVw3m0c/T48p2cY+cj13S2YcNnDgFDqjyI+eTtUlTmfTCHqY6iONIFl+3HNy7yZDJYdJZ3COBW3Olr01kfjhkW0vgOfdijLHwjZJSpUS2yPGZCqo/G7Wke2KH6hqE2PsVOxVPz75HR/XKFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQ/6lplx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732628289; x=1764164289;
+  h=date:from:to:cc:subject:message-id;
+  bh=PB1F93ZazvqpK4AKyKJXsdXzq1MG8y7/zpath6/j4u0=;
+  b=jQ/6lplxleJpv6p1x+d/9ds00ZiV90u2IS+KrOzGn3RjlZkDmfsGLcvD
+   lVC5tmSHPSzH1N2g8yb2YnraWNBz8UInzxh1UPKLeIntKGAYSg3uJsgJk
+   nt34tzmnZp730wU5SbWez3vjfaftdytidvzPw6P2siDysEqUC9vU0SvEM
+   +hDrzR0c6B8vtLazdWIojNV/a6K9BLDdKHySif9254aNZJNSAMr7iuoYy
+   hF5nPRTskhH/FKCd4a/B+49qRXTHbrs+Q1FeTxviztwhfFUHkoFtc/ZNo
+   6xxpt5WjQdDFY6Lhtly+sVEHn6igD3Aa3AaIWK3RJap+5efSfPLON8W22
+   g==;
+X-CSE-ConnectionGUID: VVLZfhGXRLO1c9xHsFq73Q==
+X-CSE-MsgGUID: BYBLI8ipRz+HUkkxLLYEsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="50313350"
+X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
+   d="scan'208";a="50313350"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 05:38:08 -0800
+X-CSE-ConnectionGUID: shs/T5RrSp+cKWy97xD8UA==
+X-CSE-MsgGUID: GKiyNI41QTyvDzdurLyFew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
+   d="scan'208";a="91235055"
+Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Nov 2024 05:38:07 -0800
+Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tFvlU-0007JN-1F;
+	Tue, 26 Nov 2024 13:38:04 +0000
+Date: Tue, 26 Nov 2024 21:36:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 10099266dec8275a6899e6a27dcdfebbcc726cc7
+Message-ID: <202411262157.MKO4PV0R-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241121152318.2888179-4-cassel@kernel.org>
 
-On Thu, Nov 21, 2024 at 04:23:19PM +0100, Niklas Cassel wrote:
-> Hello all,
-> 
-> The pci-epf-test driver recently moved to the pci_epc_mem_map() API.
-> This API call handle unaligned addresses seamlessly, if the EPC driver
-> being used has implemented the .align_addr callback.
-> 
-> This means that pci-epf-test no longer need any special padding to the
-> buffers that is allocated on the host side. (This was only done in order
-> to satisfy the EPC's alignment requirements.)
-> 
-> In fact, to test that the pci_epc_mem_map() API is working as intended,
-> it is important that the host side does not only provide buffers that
-> are nicely aligned.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 10099266dec8275a6899e6a27dcdfebbcc726cc7  Merge branch 'pci/typos'
 
-I don't agree with the idea of testing the endpoint internal API behavior with
-the pci_endpoint_test driver. The driver is supposed to test the functionality
-of the endpoint, which it already does. By adding these kind of checks, we are
-just going to make the driver bloat.
+elapsed time: 1054m
 
-I suppose if the API behavior is wrong, then it should be caught in the existing
-READ/WRITE tests, no?
+configs tested: 135
+configs skipped: 18
 
-> However, since not all EPC drivers have implemented the .align_addr
-> callback, add support for capabilities in pci-epf-test, and if the
-> EPC driver implements the .align_addr callback, set a new
-> CAP_UNALIGNED_ACCESS capability. If CAP_UNALIGNED_ACCESS is set, do not
-> allocate overly sized buffers on the host side.
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This also feels wrong to me. The host driver should care about the alignment
-restrictions of the endpoint and then allocate the buffers accordingly, not the
-other way.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-20
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                      axs103_smp_defconfig    gcc-13.2.0
+arc                   randconfig-001-20241126    gcc-13.2.0
+arc                   randconfig-002-20241126    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-20
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    gcc-14.2.0
+arm                       aspeed_g5_defconfig    gcc-13.2.0
+arm                          ep93xx_defconfig    clang-14
+arm                       multi_v4t_defconfig    gcc-13.2.0
+arm                        mvebu_v5_defconfig    gcc-13.2.0
+arm                             pxa_defconfig    clang-14
+arm                   randconfig-001-20241126    clang-20
+arm                   randconfig-002-20241126    gcc-14.2.0
+arm                   randconfig-003-20241126    clang-20
+arm                   randconfig-004-20241126    clang-16
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20241126    gcc-14.2.0
+arm64                 randconfig-002-20241126    gcc-14.2.0
+arm64                 randconfig-003-20241126    gcc-14.2.0
+arm64                 randconfig-004-20241126    clang-20
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20241126    gcc-14.2.0
+csky                  randconfig-002-20241126    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-20
+hexagon               randconfig-001-20241126    clang-17
+hexagon               randconfig-002-20241126    clang-20
+i386        buildonly-randconfig-001-20241126    gcc-12
+i386        buildonly-randconfig-002-20241126    gcc-12
+i386        buildonly-randconfig-003-20241126    clang-19
+i386        buildonly-randconfig-003-20241126    gcc-12
+i386        buildonly-randconfig-004-20241126    gcc-12
+i386        buildonly-randconfig-005-20241126    clang-19
+i386        buildonly-randconfig-005-20241126    gcc-12
+i386        buildonly-randconfig-006-20241126    gcc-12
+i386                  randconfig-001-20241126    gcc-12
+i386                  randconfig-002-20241126    gcc-12
+i386                  randconfig-003-20241126    gcc-12
+i386                  randconfig-004-20241126    gcc-11
+i386                  randconfig-004-20241126    gcc-12
+i386                  randconfig-005-20241126    clang-19
+i386                  randconfig-005-20241126    gcc-12
+i386                  randconfig-006-20241126    clang-19
+i386                  randconfig-006-20241126    gcc-12
+i386                  randconfig-011-20241126    clang-19
+i386                  randconfig-011-20241126    gcc-12
+i386                  randconfig-012-20241126    clang-19
+i386                  randconfig-012-20241126    gcc-12
+i386                  randconfig-013-20241126    clang-19
+i386                  randconfig-013-20241126    gcc-12
+i386                  randconfig-014-20241126    gcc-12
+i386                  randconfig-015-20241126    clang-19
+i386                  randconfig-015-20241126    gcc-12
+i386                  randconfig-016-20241126    clang-19
+i386                  randconfig-016-20241126    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20241126    gcc-14.2.0
+loongarch             randconfig-002-20241126    gcc-14.2.0
+m68k                             alldefconfig    clang-14
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-13.2.0
+m68k                          sun3x_defconfig    clang-14
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                      mmu_defconfig    gcc-13.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                          ath79_defconfig    clang-14
+mips                         db1xxx_defconfig    clang-20
+mips                           xway_defconfig    clang-14
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20241126    gcc-14.2.0
+nios2                 randconfig-002-20241126    gcc-14.2.0
+openrisc                          allnoconfig    clang-20
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-20
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20241126    gcc-14.2.0
+parisc                randconfig-002-20241126    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-20
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-20
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                      pmac32_defconfig    clang-14
+powerpc               randconfig-001-20241126    clang-20
+powerpc                    socrates_defconfig    gcc-13.2.0
+powerpc64             randconfig-001-20241126    clang-16
+riscv                            allmodconfig    clang-20
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                            allyesconfig    gcc-14.2.0
+s390                             allmodconfig    clang-20
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                         ap325rxa_defconfig    gcc-13.2.0
+sh                            hp6xx_defconfig    clang-14
+sh                          kfr2r09_defconfig    gcc-13.2.0
+sh                          landisk_defconfig    gcc-13.2.0
+sh                     magicpanelr2_defconfig    gcc-13.2.0
+sh                          rsk7203_defconfig    gcc-13.2.0
+sh                   rts7751r2dplus_defconfig    gcc-14.2.0
+sh                        sh7763rdp_defconfig    gcc-13.2.0
+sparc                            allmodconfig    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-17
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                               allyesconfig    gcc-12
+x86_64                                  kexec    clang-19
+x86_64                               rhel-9.4    gcc-12
+xtensa                            allnoconfig    gcc-14.2.0
 
-That being said, I really like to get rid of the hardcoded
-'pci_endpoint_test_data::alignment' field and make the driver learn about it
-dynamically. I'm just thinking out loud here.
-
-- Mani
- 
--- 
-மணிவண்ணன் சதாசிவம்
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
