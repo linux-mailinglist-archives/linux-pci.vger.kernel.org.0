@@ -1,140 +1,120 @@
-Return-Path: <linux-pci+bounces-17353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17354-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 245D09D9958
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 15:14:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72D439D99C0
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 15:38:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEFC9284212
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 14:14:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 370D928372A
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 14:38:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B8A1D6DB1;
-	Tue, 26 Nov 2024 14:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28CE11D5CC2;
+	Tue, 26 Nov 2024 14:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrUs2r8n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWGqYGU+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E47F1D5ABD;
-	Tue, 26 Nov 2024 14:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0001D5AB7;
+	Tue, 26 Nov 2024 14:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732630437; cv=none; b=coNsKyC+m/yXPqW6e/QFgSJA6JJAMEAYp2BttyCbsW29Sj3rwTiOj64SETNqUDvmksNtjmwf10hMIiZLIlZOlK5zZJt27m5JetNbsTFAof6lUkOi0pZxBoYAdP5LMxuqUoIl9EBsPbeAtaNnj/FRAEajqJeK0FCeDfqzFTAerhA=
+	t=1732631914; cv=none; b=MlAZjHVzTEBgv3leZR520gegyjfSeQigOkBVd2c/jwtGST9WgeFybcm9lu5bVKjmuroAt84hdH0zrgW7jCrjEjD5I9xpgh6BFx1S9hrcvbeC0b9ckKgDJwmHrVTVLowWG5aoispdo4soBvzOxrltcAcl8CgNLlNOxj7YouOsKxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732630437; c=relaxed/simple;
-	bh=ZJ2m72DenWAWcEv53PWHLtMe7bOXh8kD3LS1bOTBgiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e55U76WWNxjEP+QA5uirRjQUTPxaqeOCgyourrSzPYjGuAXOw/JSffebV/JcWsD9oDXk+pdRSmzE6QGy9GAXYo399oMaVoSFOLNp+upYHV3+On5XkWkF4ENVeF+I/Sr5KMQ1Xxe8Ht5X84vSONumxuMlJpvXJ/gLAEE4mkbq3LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrUs2r8n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BE1C4CED0;
-	Tue, 26 Nov 2024 14:13:51 +0000 (UTC)
+	s=arc-20240116; t=1732631914; c=relaxed/simple;
+	bh=gaEdBLAIz7P49l/o5H51QYLoUNT4ajXgna3oxySU6X0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=aKD0hrVrHitCyumxj3nDMMljUqveBMYCEGm2V8+r7qcDg8EMJes4NU+nJ3OEZevQp/9aT3q5Loe49Vwk8mFIvPAu6hucJt5MsibagJ+2OjNL/AIHzse9GA9N/iGjLFQzB5KfB6fYUnG7ki4FBcxFHgcpQ/u8yLG0kYytRNQbnPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWGqYGU+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54A0CC4CECF;
+	Tue, 26 Nov 2024 14:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732630436;
-	bh=ZJ2m72DenWAWcEv53PWHLtMe7bOXh8kD3LS1bOTBgiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OrUs2r8nvnRIKtjmFUd7JuGx+omnLjW6HwSoVSLEBGb6XNku8V97l/eGbFFlC/pAF
-	 9VB5LcIAop8/8ikGXfmCAsM/aEQOPbsD8CchBHQV/C2Z9bp/PqPFY9DpFzqtf+5ux2
-	 lb2dhUcxY90rTMJX+WkFIZyHAKiipOZKtOiNWYUzK7JZjoyUR8kLVbv4ffYEwy3FRF
-	 Hc6ZlWXrIwTfTw3fWdDwyiUQnNCFlV/bUHbxtEZoqTE3nWpoLQ3Zv8X0QVOD5NjYZN
-	 C/ji+5brGdvpKEi1PlTfsoYIcw0Ws+xvJ0cAoqCSnjrC6PXRJ5iewyilYTVFz2JJQa
-	 INHM6/P5EqokQ==
-Date: Tue, 26 Nov 2024 15:13:49 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
-	daniel.almeida@collabora.com, saravanak@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
- driver abstractions
-Message-ID: <Z0XXnazDo8SmDNXb@cassiopeiae>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-16-dakr@kernel.org>
- <CAH5fLghVDqWiWfi2WKsNi3n=2pR_Hy3ZLwY8q2xfjAvpHuDx=w@mail.gmail.com>
- <ZyJ19GDyVrGPbSEM@pollux>
- <CAH5fLgjADyNAmdNJG+cKRcpZPLx8iKbxAvm4ZQo=c+cVNjuw=w@mail.gmail.com>
+	s=k20201202; t=1732631913;
+	bh=gaEdBLAIz7P49l/o5H51QYLoUNT4ajXgna3oxySU6X0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=QWGqYGU+7lxDyWQ8GeVwa/EskJ57WuPDmJc0ZGG66OFNNvafWBoJ8aT/8lI8IH+3p
+	 2JIycrGmAyWX72drR7fejKuWiLjLnrXMX22HviT0VACSLoIa578e28lkp+11Abjxa2
+	 o0s9QLoEruipfKCI+6JkM16sxH1F9R7yYWPIK/B9ggQA0SET3+qyBgrmkb2FU/Vpwh
+	 ZJaUHYwB/AUh0ypc/4DMGeTZH4I0thXfJVdrI96162zNPbQIsB6T+yMcb+31Yhk03a
+	 WkgOUV4u90G7dE+WIZSKkmjL8FyvwcJjU0zMEcgQzVdpCo5nCnak43MCmOq4GMeBmr
+	 nAc0kUCrFYyug==
+Date: Tue, 26 Nov 2024 08:38:31 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgjADyNAmdNJG+cKRcpZPLx8iKbxAvm4ZQo=c+cVNjuw=w@mail.gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: bhelgaas@google.com, cassel@kernel.org, fabrice.gasnier@foss.st.com, 
+ quic_schintav@quicinc.com, linux-pci@vger.kernel.org, lpieralisi@kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, kw@linux.com, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ p.zabel@pengutronix.de, mcoquelin.stm32@gmail.com, krzk+dt@kernel.org, 
+ devicetree@vger.kernel.org, alexandre.torgue@foss.st.com, 
+ manivannan.sadhasivam@linaro.org
+To: Christian Bruel <christian.bruel@foss.st.com>
+In-Reply-To: <20241126130004.1570091-2-christian.bruel@foss.st.com>
+References: <20241126130004.1570091-1-christian.bruel@foss.st.com>
+ <20241126130004.1570091-2-christian.bruel@foss.st.com>
+Message-Id: <173263191160.224313.7510313063987746316.robh@kernel.org>
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: Add STM32MP25 PCIe root
+ complex bindings
 
-On Thu, Oct 31, 2024 at 09:23:58AM +0100, Alice Ryhl wrote:
-> On Wed, Oct 30, 2024 at 7:07 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On Wed, Oct 30, 2024 at 04:50:43PM +0100, Alice Ryhl wrote:
-> > > On Tue, Oct 22, 2024 at 11:33 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> > > > +/// Drivers must implement this trait in order to get a platform driver registered. Please refer to
-> > > > +/// the `Adapter` documentation for an example.
-> > > > +pub trait Driver {
-> > > > +    /// The type holding information about each device id supported by the driver.
-> > > > +    ///
-> > > > +    /// TODO: Use associated_type_defaults once stabilized:
-> > > > +    ///
-> > > > +    /// type IdInfo: 'static = ();
-> > > > +    type IdInfo: 'static;
-> > > > +
-> > > > +    /// The table of device ids supported by the driver.
-> > > > +    const ID_TABLE: IdTable<Self::IdInfo>;
-> > > > +
-> > > > +    /// Platform driver probe.
-> > > > +    ///
-> > > > +    /// Called when a new platform device is added or discovered.
-> > > > +    /// Implementers should attempt to initialize the device here.
-> > > > +    fn probe(dev: &mut Device, id_info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>>;
-> > >
-> > > This forces the user to put their driver data in a KBox, but they
-> > > might want to use an Arc instead. You don't actually *need* a KBox -
-> > > any ForeignOwnable seems to fit your purposes.
-> >
-> > This is intentional, I do need a `KBox` here.
-> >
-> > The reason is that I want to enforce that the returned `Pin<KBox<Self>>` has
-> > exactly the lifetime of the binding of the device and driver, i.e. from probe()
-> > until remove(). This is the lifetime the structure should actually represent.
-> >
-> > This way we can attach things like `Registration` objects to this structure, or
-> > anything else that should only exist from probe() until remove().
-> >
-> > If a driver needs some private driver data that needs to be reference counted,
-> > it is usually attached to the class representation of the driver.
-> >
-> > For instance, in Nova the reference counted stuff is attached to the DRM device
-> > and then I just have the DRM device (which itself is reference counted) embedded
-> > in the `Driver` structure.
-> >
-> > In any case, drivers can always embed a separate `Arc` in their `Driver`
-> > structure if they really have a need for that.
-> 
-> Is this needed for soundness of those registrations?
 
-Yes, we must ensure that the class is unregistered before the driver is removed.
+On Tue, 26 Nov 2024 14:00:00 +0100, Christian Bruel wrote:
+> Document the bindings for STM32MP25 PCIe Controller configured in
+> root complex mode.
+> 
+> Supports 4 legacy interrupts and MSI interrupts from the ARM
+> GICv2m controller.
+> 
+> STM32 PCIe may be in a power domain which is the case for the STM32MP25
+> based boards.
+> 
+> Supports wake# from wake-gpios
+> 
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> ---
+>  .../bindings/pci/st,stm32-pcie-common.yaml    | 45 +++++++++
+>  .../bindings/pci/st,stm32-pcie-host.yaml      | 99 +++++++++++++++++++
+>  2 files changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
+> 
 
-However, I just noticed that by letting class abstractions return the
-`Registration` without being wrapped as `Devres<Registration>` the driver can
-theoretically still stuff them in whatever other structure and keep the
-registration alive.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-So, maybe there is no way around `Devres` even for class registrations.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml:45:1: [warning] too many blank lines (2 > 1) (empty-lines)
 
-> 
-> Also, I've often seen drivers use devm_kzalloc or similar to allocate
-> exactly this object. KBox doesn't allow for that.
-> 
-> 
-> Alice
-> 
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml: 'oneOf' conditional failed, one must be fixed:
+	'unevaluatedProperties' is a required property
+	'additionalProperties' is a required property
+	hint: Either unevaluatedProperties or additionalProperties must be present
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241126130004.1570091-2-christian.bruel@foss.st.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
