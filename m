@@ -1,232 +1,143 @@
-Return-Path: <linux-pci+bounces-17336-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17331-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA78D9D9604
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 12:10:44 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F2D166BFD
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 11:10:41 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C874E1CDFA9;
-	Tue, 26 Nov 2024 11:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cDdLH/zP"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 902CB9D956E
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 11:23:37 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5CC1C4A3D
-	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 11:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B983BB2933E
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2024 10:23:09 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09B61C3023;
+	Tue, 26 Nov 2024 10:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a8+b3FQc"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536A01BDAAF
+	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 10:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732619438; cv=none; b=IDvLYjI7GL+MZHHm+7naedOFjRu+/avarbyMPGjpTs3yCbwWZXhmiXABDkUjGY2v9uroouZbG1rQ+sGkAl0BsPZvlUOXiJL5uVgoA88gOkrGTN5Fu0nrSuuuCz6yxPsrm6mmcxkCz/mqFe385IJeUqR0lgGBk4RW9+BklOmXV0I=
+	t=1732616579; cv=none; b=P3KS8h1jqRAjY0tUDrgCzkaqa0sxtHKFMxo/C5JXJrSfqoYVhf98/PsBI368g6SMjAd5AF2lFc/Z/PUhLRHztpdus5dTYIbo4pdHui9SSEogvKaGAAImX9ogxoT15Gbwn0YX2cpRD+0Qn5SV/erBi5e6hT+Gn9A5a9UQA6j3xVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732619438; c=relaxed/simple;
-	bh=Ypev9a6WFoYIXfQoQHvxGPBdvitO6NBRqG8NApJYJw4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=JOSDK99DdzSbyeJLC/xLJIuSRAZCGCsPfPddyNGMq2K7b24IKCgZBzTIytAyR9PFBXX1SkvxB/tPrek9+qKqtn8WJEuzZLlhGAkeWM/GIr1Acif4hQiwi8SUxBuTFg/X620E5WYi91l5C/vxYgQaD62mpIcImG2uECOfiyItRFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cDdLH/zP; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20241126111032epoutp0229e90d45afe558c54ef05b4d7ccc7839~LgDG48yig2826828268epoutp020
-	for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 11:10:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20241126111032epoutp0229e90d45afe558c54ef05b4d7ccc7839~LgDG48yig2826828268epoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1732619432;
-	bh=zHVQj8Mi51pPEJ8jZxMB7t75igtc/2ssLRlqmu7llEA=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=cDdLH/zP58/DpFnHmjrHWsCSScg48UqfeylP4GRb13TpKbbWN94ZYS4HbAznBd0P+
-	 P4IN572Fz/aytEEVLCs6LloM3s9dVG4WKqn9gwc3zgZKNwkroVI8F1ccynJHGvO+WX
-	 iHkdWqVRiYbijK2XGHc22M5dJIK4ap0rmSrt8jKI=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20241126111032epcas5p1f0bc7d3a0e251d66c4b7db8bd4d8c039~LgDGXw5-p0928209282epcas5p1G;
-	Tue, 26 Nov 2024 11:10:32 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4XyKcQ3L8Kz4x9Pp; Tue, 26 Nov
-	2024 11:10:30 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	94.A3.19710.6ACA5476; Tue, 26 Nov 2024 20:10:30 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20241126101541epcas5p4928126490d570998cf6ebef9a3b32e37~LfTOCSPiv2884528845epcas5p4N;
-	Tue, 26 Nov 2024 10:15:41 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20241126101541epsmtrp27646342c6d07f599f04c42e815c813b7~LfTOBaw6i1661016610epsmtrp2_;
-	Tue, 26 Nov 2024 10:15:41 +0000 (GMT)
-X-AuditID: b6c32a44-363dc70000004cfe-eb-6745aca60f7d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	91.6D.19220.4BF95476; Tue, 26 Nov 2024 19:15:16 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20241126101511epsmtip1e0132b746acf41c301e2da353e8c5729~LfSx9NUOo2173021730epsmtip1O;
-	Tue, 26 Nov 2024 10:15:11 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Nitesh Gupta'" <quic_nitegupt@quicinc.com>, "'Krishna Chaitanya
- Chundru'" <quic_krichai@quicinc.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Cc: <manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-	<jingoohan1@gmail.com>, <fancer.lancer@gmail.com>,
-	<yoshihiro.shimoda.uh@renesas.com>, <conor.dooley@microchip.com>,
-	<pankaj.dubey@samsung.com>, <gost.dev@samsung.com>
-In-Reply-To: <35395249-7aeb-459c-9c78-2cfdaad2bb6a@quicinc.com>
-Subject: RE: [PATCH v3 0/3] Add support for RAS DES feature in PCIe DW
-Date: Tue, 26 Nov 2024 15:45:10 +0530
-Message-ID: <085801db3fec$16b87260$44295720$@samsung.com>
+	s=arc-20240116; t=1732616579; c=relaxed/simple;
+	bh=1/Q61X77d+wJnDnxSzR1szzWu1q7VOUzcUHJ7AVCSHs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DtC3FID/0oPMj+XAsAYBU7YuTb8V0trfNyK8TS1A07YQ7Rw6m7dVDHzkCbehzR83G3dpSi+6wYcHGBMHSXllUSVnBirZbeLU4VJ8TDqLVKLj00OoGedGeC7e54T/+7ZHRAHmONoeNN47y/kq2+4wSO/igZr5VJVHaM9USOoWLOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a8+b3FQc; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4315e9e9642so50045085e9.0
+        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 02:22:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732616576; x=1733221376; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k0xLkYt2qRmhHcxTp08v9mIoJ8dCMB1v2JskS0o4438=;
+        b=a8+b3FQc03Ual1vUYqZp53I6txKAUHCZLRzy4JUhmGaxSarMa0KkYzSXVLBFyAHdV8
+         8QdC6x1svRO/5uLyQdJnzqKOFNT88js7G6ej0LsdXYOMCG8jYbQFklc9P2YlfDjZGOSh
+         QL4D2pzwxh1eQHSG0nwgohQk4xP8pynVY9wZWzKeJEp2d8VNQucIv7eH8zOcnitYr25/
+         tooE2ddUniyf5CljY1ijQatdPuaoHM0wfO2Z30gkl2DiCaORbL9MQ43dKyDDXvKLNbqd
+         O2JjsIrkQQvRMDln9w/5a0dz7QqdJjxu8xrJ+tA9kuZGBEeUowieVPaxVS212lH9mLPN
+         QZQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732616576; x=1733221376;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k0xLkYt2qRmhHcxTp08v9mIoJ8dCMB1v2JskS0o4438=;
+        b=DAdL4Z0siPuAvHlZaoD2/pWFl/2GbXw6P5rij+jXS/Lm2xeylzag7sVdHWn+7pCzQS
+         MLPeYh5IjLAbN5oZ03m8GuJtcyvsOGK8AftP5UKg2wS7dhPmeuLUksM6yXUgXu+6Lw3H
+         tcL3LT/dFzX8/0IDBRQHBS9RyVdu0it4GU83AKT9lPFQ9Cs2eRW0L6w7NJnsnJ3bhFDt
+         DhPUscOqvJG//gh/YeX/0ysX9z1RlQqk96jAFmk7pniLviXnCYJVF17oEtiS8VoVJAwS
+         n9ox75tDo7vwuSMQ7gkAa2AGAvXltz6kLji1ffOZ1aLM7rkuBocD1ROwvU4qgm4Pr7Ez
+         gSxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWK2s1fRhy5tnPVOiAZzgB7Q6Yz0btcFad/GPcfSjsR5E2NoyuZqTGMSUScoiP1eL8TAdz4aJSxkaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxALJqE+d97M5bsgzgmQ16UONiyfKj8pubiKYQoE1PThPCXC1rk
+	jjZMAE0aF6TQMYHqmuqqzMiNH6MybLL49ypcv4QcEchAjX17t7nYetpAvmPdpb4=
+X-Gm-Gg: ASbGnctHf1hnjEIjYx+/IB0519uco9jC+rUkbivY8oj2BxDQkejD3o8e889PTb6F0fb
+	2o2JmO6oJmF1dWuLSGQIMRGk4qfaye4xFEPvxCf1WVYjq5cc4Tm7O3HC6nhEKXVR1Gm+Gh0bGK+
+	tq7nkphQpP3v4Ng3iygsAquKSOwh8kUIxx4OUP+duBVI5S50AjfcO8GPqJt9Xcmqmp+UJSO/H06
+	rkLpstGeGd4+uhseRk/xJugTWTAN8IrffH4DzbiUBZtMOFPBQ+ECPX8SNKeW7+Sb3zC7xI=
+X-Google-Smtp-Source: AGHT+IHEmm5r+ZACNObMId0YdkCRExn4aSTNKuXwdL5JuzF4jUF9M5xtk4DUMu5W/U1bD4v2974C7Q==
+X-Received: by 2002:a05:600c:3b91:b0:434:a29d:6c71 with SMTP id 5b1f17b1804b1-434a29d6d6bmr37700835e9.27.1732616575739;
+        Tue, 26 Nov 2024 02:22:55 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b01e1046sm228378075e9.4.2024.11.26.02.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2024 02:22:55 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH 0/3] PCI: qcom-sm8[56]50: document and add 'global'
+ interrupt
+Date: Tue, 26 Nov 2024 11:22:48 +0100
+Message-Id: <20241126-topic-sm8x50-pcie-global-irq-v1-0-4049cfccd073@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQJJ5mIqR3PJIx/W7Cp/XOg5shxg3AHKwgKyAQ6dYEQB5w+8d7HGBrGA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRmVeSWpSXmKPExsWy7bCmpu6yNa7pBgdfCVssacqwmLJpB7vF
-	ho45rBY3D+xksljxZSa7RUPPb1aLy7vmsFmcnXeczaLlTwuLxd2WTlaLRVu/sFs8eFBp0Tnn
-	CLPF/z1ArV/3fmZz4PfYOesuu8eCTaUem1Z1snncubaHzePJlelMHnd+LGX0mLinzuPbmYks
-	Hn1bVjF6fN4kF8AVlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk
-	4hOg65aZA/SDkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafApECvODG3uDQvXS8v
-	tcTK0MDAyBSoMCE7Y99K+4IrshXNE9pZGhi/incxcnJICJhI3P67ib2LkYtDSGA3o8TxbZeZ
-	IZxPjBJvZr+CynxjlNizu5sFpuXjtWdQVXsZJVYefAvlvGCUePn2DRtIFZuAjsSTK3/AEiIC
-	qxklrn7ZCOYwC6xikrhw5AU7SBWngL3EswfHWEFsYQE3iZvdt8FsFgFViRd/F4BN4hWwlDjc
-	dYQdwhaUODnzCdgdzALaEssWvmaGuElB4ufTZawQcXGJoz97wOIiQDOvLGhnAVksIfCGQ2Lm
-	/INQDS4SO/s+skHYwhKvjm9hh7ClJD6/2wsVT5dYuXkGVH2OxLfNS5ggbHuJA1fmAA3lAFqm
-	KbF+lz5EWFZi6ql1TBA38En0/n4CVc4rsWMejK0s8eXvHmg4SkrMO3aZdQKj0iwkr81C8tos
-	JO/MQti2gJFlFaNkakFxbnpqsmmBYV5qOTzKk/NzNzGCE7mWyw7GG/P/6R1iZOJgPMQowcGs
-	JMLLJ+6cLsSbklhZlVqUH19UmpNafIjRFBjeE5mlRJPzgbkkryTe0MTSwMTMzMzE0tjMUEmc
-	93Xr3BQhgfTEktTs1NSC1CKYPiYOTqkGppouL4mX/uV99drGy0s/vuAq1y/PyPkpdKZgE9um
-	Y7KWP/6WHtDP+veg9LiCmMrGt4ePPNk5r2ix42TBty2m1Qcrn9x6oi1zpuzv0fNvetJMrjb+
-	/Zi9bcUD92t68XO5vT6WL7r44XORU6v2I6bSW2pfr95JFfR+e2lWFvP2W2+fuWz0+fBG3ElA
-	8XnTzo0C6+bE8a/V5q2aXGn95umDSl/RO5qzn3pY3lQvZymL+rH/gc3pK+2MypeUr7SbMzPX
-	ehlURe7IXPRd+ZG9dI5btHUl37uyJXfuHJS7spNhDp9sSRSjTUf38i/8ahcTYxNS7qx/L5Mc
-	7xq38/J3VVnPHj59pgPZYov67VSPNstPVmIpzkg01GIuKk4EAGjY4DFtBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWy7bCSnO7Z+a7pBjce6losacqwmLJpB7vF
-	ho45rBY3D+xksljxZSa7RUPPb1aLy7vmsFmcnXeczaLlTwuLxd2WTlaLRVu/sFs8eFBp0Tnn
-	CLPF/z1ArV/3fmZz4PfYOesuu8eCTaUem1Z1snncubaHzePJlelMHnd+LGX0mLinzuPbmYks
-	Hn1bVjF6fN4kF8AVxWWTkpqTWZZapG+XwJXxZNEP1oKlshXdV84yNzAeEO9i5OSQEDCR+Hjt
-	GTOILSSwm1Hi+QEriLikxOeL65ggbGGJlf+es3cxcgHVPGOU2HfwPiNIgk1AR+LJlT/MIAkR
-	gbWMEpOPvQBLMAtsY5K41M4H0fGZUWLaqwssIAlOAXuJZw+OsYLYwgJuEje7b4PZLAKqEi/+
-	LmADsXkFLCUOdx1hh7AFJU7OfMICMVRb4unNp3D2soWvmSHOU5D4+XQZK0RcXOLozx6wuAjQ
-	/CsL2lkmMArPQjJqFpJRs5CMmoWkfQEjyypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k/NxN
-	jOBY1tLawbhn1Qe9Q4xMHIyHGCU4mJVEePnEndOFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8357
-	3ZsiJJCeWJKanZpakFoEk2Xi4JRqYOKcsv/0pds17jyTjyWu0H+86b1d7PUu6bSE9IquArWn
-	LZpKvvO+vFi78qLPba4Y1Z68fUxPZ14ra8rqj4//Ml/LUHHRljDrzUof8z4lyUYuc/d6ftg6
-	skRnmgDjyrmMwq/upv5Wf9l82+yaie+5vS1rqmuiSvmem/z7uaROauNErjcLZ249lnt75pK2
-	eYb7As2eijnOjAljf5kl8TPkg+XEddKmXY0XOZ/8nt3tGaJ+2eTB6yVTXhQGFp19vUplmpFC
-	mYpDiIiKvL9ZaaF508U40dJ7z1kNFE6qBLjuuHR8k+kfqXWXd9oaypxhnv9i+ZfHVvImTzZp
-	n6rOKTFQ3ir2+GXP1NccF26smrrEp0+JpTgj0VCLuag4EQAX7b/IVAMAAA==
-X-CMS-MailID: 20241126101541epcas5p4928126490d570998cf6ebef9a3b32e37
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240625094434epcas5p2e48bda118809ccb841c983d737d4f09d
-References: <CGME20240625094434epcas5p2e48bda118809ccb841c983d737d4f09d@epcas5p2.samsung.com>
-	<20240625093813.112555-1-shradha.t@samsung.com>
-	<03c5bf0e-d65b-7ebb-d12d-3f9b3bae2a4c@quicinc.com>
-	<35395249-7aeb-459c-9c78-2cfdaad2bb6a@quicinc.com>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHihRWcC/x3MQQ5AMBAAwK/Inm2iG0p8RRyoxSZotSKSxt81j
+ nOZCIG9cIA2i+D5liD2SFB5BmYdjoVRpmSggkqlSONlnRgMe/NUBTojjMtmx2FD8SfWiiZdN2N
+ FpCEVzvMsz993/ft+VptvZm4AAAA=
+X-Change-ID: 20241126-topic-sm8x50-pcie-global-irq-712d678b5226
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1054;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=1/Q61X77d+wJnDnxSzR1szzWu1q7VOUzcUHJ7AVCSHs=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnRaF9Li69UPAhTjUCO90AsqcZajhzFAsAYvJ/Qtaj
+ L4YUEVaJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ0WhfQAKCRB33NvayMhJ0a5mEA
+ DQxIFxszCHIR66PIquhim8mW52Dc00Hwhwck0ElHJFzg3yTZBTClFgly2fq2QwDr8LIanA34qXR7xb
+ 1CK1kMoWSuJfAqg5kY+YaKBFrEKMiUb6PsjoLSUt/jRRV81wN2+hqSO8QRzTsGKblS2sFMy5vFnVyy
+ vTE8n20//6Q4txgXNubnlEdRnWG7Tn3BhtHTugkaLEZ19gpl7DXiamMR+YafbngHL+mxd6B6D+yiBP
+ X+4aX45qMvEKjvQpgEIC0DWgbhOQCmDcRVasqX6vjsJ0WHnZQ9RBb8LheC7aJ0phJHh1ZzNe0IhDRv
+ 3pCYjazWOu7JKI1xSGz7TRvtIxRHG5l5rXXBSo88dPqqiOP+C0y49oI10jrVxK0EgnC5dji2Iqab86
+ XPfF/isbTlXibM8YuPUkydkBcFHoHSSZOjuxq3D1erbJUBdRbdhmgEEMPCE7KYNoLWlWKPNRrQLlgo
+ EdL5FeQtpvu0rEkOHZ3jy8xeBP/yHsoJ4h1wUG8zNjX6qj5oirNthznB4NfPolm6w0cYBlQ2O2cqIl
+ 6YqzA+uCzf2Sve+h4sejJiuh6+f/OwfGqlFBQ9pKz911RCIqNpTBFRlIOu+nGWOC4u0EDc9fyesz1I
+ JMLwigtevzn/WNL1Qr4FVyxqH6WcbHuP8gGafllu0QiJmGGArXMKgPN75EsQ==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Hey Nitish,
+Following [1], document the global irq for the PCIe RC and
+add the interrupt for the SM8550 & SM8650 PCIe RC nodes.
 
-Due to some discussions about including this in the EDAC framework etc, the=
- patches got
-delayed. Sorry about that. I am already working on the next version and wil=
-l post it by this
-Friday=21 Feel free to add review comments to the previous version if there=
- are any so that
-I can include them in my next version.
+Tested on SM8550-QRD, SM8650-QRD and SM8650-HDK.
 
-> -----Original Message-----
-> From: Nitesh Gupta <quic_nitegupt=40quicinc.com>
-> Sent: 26 November 2024 12:46
-> To: Krishna Chaitanya Chundru <quic_krichai=40quicinc.com>; Shradha Todi
-> <shradha.t=40samsung.com>; linux-kernel=40vger.kernel.org; linux-
-> pci=40vger.kernel.org
-> Cc: manivannan.sadhasivam=40linaro.org; lpieralisi=40kernel.org;
-> kw=40linux.com; robh=40kernel.org; bhelgaas=40google.com;
-> jingoohan1=40gmail.com; fancer.lancer=40gmail.com;
-> yoshihiro.shimoda.uh=40renesas.com; conor.dooley=40microchip.com;
-> pankaj.dubey=40samsung.com; gost.dev=40samsung.com
-> Subject: Re: =5BPATCH v3 0/3=5D Add support for RAS DES feature in PCIe D=
-W
->=20
-> Hi Shradha,
->=20
-> Can you please update on status of this Patch?
->=20
-> Are you going to take it up or is it fine for us to take it up?
->=20
-> -Nitesh Gupta
->=20
-> On 11/26/2024 10:47 AM, Krishna Chaitanya Chundru wrote:
-> >
-> > forgot to add the email in the previous mail.
-> >
-> > - Krishna chaitanya.
-> > On 6/25/2024 3:08 PM, Shradha Todi wrote:
-> >> DesignWare controller provides a vendor specific extended capability
-> >> called RASDES as an IP feature. This extended capability provides
-> >> hardware information like:
-> >>   - Debug registers to know the state of the link or controller.
-> >>   - Error injection mechanisms to inject various PCIe errors
-> >> including
-> >>     sequence number, CRC
-> >>   - Statistical counters to know how many times a particular event
-> >>     occurred
-> >>
-> >> However, in Linux we do not have any generic or custom support to be
-> >> able to use this feature in an efficient manner. This is the reason
-> >> we are proposing this framework. Debug and bring up time of
-> >> high-speed IPs are highly dependent on costlier hardware analyzers
-> >> and this solution will in some ways help to reduce the HW analyzer usa=
-ge.
-> >>
-> >> The debugfs entries can be used to get information about underlying
-> >> hardware and can be shared with user space. Separate debugfs entries
-> >> has been created to cater to all the DES hooks provided by the control=
-ler.
-> >> The debugfs entries interacts with the RASDES registers in the
-> >> required sequence and provides the meaningful data to the user. This
-> >> eases the effort to understand and use the register information for
-> debugging.
-> >>
-> >> v2: https://lore.kernel.org/lkml/20240319163315.GD3297=40thinkpad/T/
-> >>
-> >> v1:
-> >> https://lore.kernel.org/all/20210518174618.42089-1-shradha.t=40samsung=
-.
-> >> com/T/
-> >>
-> >> Shradha Todi (3):
-> >>    PCI: dwc: Add support for vendor specific capability search
-> >>    PCI: debugfs: Add support for RASDES framework in DWC
-> >>    PCI: dwc: Create debugfs files in DWC driver
-> >>
-> >>   drivers/pci/controller/dwc/Kconfig            =7C   8 +
-> >>   drivers/pci/controller/dwc/Makefile           =7C   1 +
-> >>   .../controller/dwc/pcie-designware-debugfs.c  =7C 474
-> >> ++++++++++++++++++
-> >>   .../controller/dwc/pcie-designware-debugfs.h  =7C   0
-> >>   .../pci/controller/dwc/pcie-designware-host.c =7C   2 +
-> >>   drivers/pci/controller/dwc/pcie-designware.c  =7C  20 +
-> >>   drivers/pci/controller/dwc/pcie-designware.h  =7C  18 +
-> >>   7 files changed, 523 insertions(+)
-> >>   create mode 100644
-> >> drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> >>   create mode 100644
-> >> drivers/pci/controller/dwc/pcie-designware-debugfs.h
-> >>
+[1] https://lore.kernel.org/all/20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org/
+
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Neil Armstrong (3):
+      dt-bindings: PCI: qcom,pcie-sm8550: document 'global' interrupt
+      arm64: dts: qcom: sm8550: Add 'global' interrupt to the PCIe RC nodes
+      arm64: dts: qcom: sm8650: Add 'global' interrupt to the PCIe RC nodes
+
+ Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml |  9 ++++++---
+ arch/arm64/boot/dts/qcom/sm8550.dtsi                        | 12 ++++++++----
+ arch/arm64/boot/dts/qcom/sm8650.dtsi                        | 12 ++++++++----
+ 3 files changed, 22 insertions(+), 11 deletions(-)
+---
+base-commit: adc218676eef25575469234709c2d87185ca223a
+change-id: 20241126-topic-sm8x50-pcie-global-irq-712d678b5226
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
 
