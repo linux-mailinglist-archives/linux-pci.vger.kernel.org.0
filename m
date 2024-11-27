@@ -1,158 +1,163 @@
-Return-Path: <linux-pci+bounces-17388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB28C9DA240
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 07:20:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97DB09DA287
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 07:57:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A38B167E85
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 06:20:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 345A51649D5
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 06:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CD45148310;
-	Wed, 27 Nov 2024 06:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3FA144D0A;
+	Wed, 27 Nov 2024 06:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wLyBYW2G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgqLnyJX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B24145FE4
-	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 06:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E4B13BAE4
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 06:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732688421; cv=none; b=PmtJ0i4hla2BjazjtgEc4JyoewaHuQcFi/uAmdPhjxJPkDfa39cPTd2xpEmt0uPq4fLiOgrqhuI048AcTmDiIK5zDwTH4DmeZcwjowuS2IF71Qpe/arnWndWoNohUNI7q5U/vF3bSfVgeKMOdWd4d+tbMRSdtKFs3nvRmKCvJuo=
+	t=1732690633; cv=none; b=iwLZFmh0E4atuGTRjbrD+6Reug5ZNpRnJqaritpxmQXBoNQv4h9wjmv3yhIIbY0ZfzhMLqCT7TgE+jc22rqpFxL9jRIi/N3XhYorliQxHvJFsOl7uGhX0AvU3BYK/Lbp0yIdixLmwaC1jESBZn1BrdwWxcXYUOksvLVoGLM8HOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732688421; c=relaxed/simple;
-	bh=w/D8fsQPcNEG6MIfpMgWgqvfnTdWrpFGSFDTBCPsVec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRutfhFxK7ZA+CzRUtBI0hoPkx0zeD9d5Y3TQQd34mwujNXaxS+9Zf1nI17LhfgKx9GikKnds4c4tkBzc//Fwx38JvptFNSSnrFHrQ5kj4xZ00XyLqI2X9hUzqKu+MLdHbcmLmJ1EIkKAudDnjXaHBoqYIgByhUXR6v+Je82ZtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wLyBYW2G; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-724f41d550cso2539773b3a.2
-        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 22:20:19 -0800 (PST)
+	s=arc-20240116; t=1732690633; c=relaxed/simple;
+	bh=1iDQwyxsVBm3G7i0Sf1kwnVSt3fxxMTAzWdY7jRmaEA=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=a4qvhY0aqbhpmMQyjUkIIgEDbHrpo23UXDfkFW/R69JEWjp6q6AdFobsvTQicFonbL1j7SraMFTGhGMSJ6KKkA2gBkgTNjSUX/i8rGskxJfFrptOYX5xkhz4vqs+9dNbmpDMHxsvHktO6YQo6ygQ3HXJxz6F15MrJbdoQQ1r0Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KgqLnyJX; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-720cb6ac25aso5284202b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 22:57:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732688419; x=1733293219; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mLuEvPFQ6kcM1n0FkkyOUV7NsMkiebhxF8YqLhaowtw=;
-        b=wLyBYW2G4b2TFiIupMHb9I6+Xpi6Qo+9/uJGTc8WqwzStwhiacQP7Q0mVcO9AtdkDa
-         SiQWOLCSLpyu7AGwTrBG+wQMC3Y9AMeMEycywTZENgfHa6HCgwmZWQzLEZ0qQVcv8AR/
-         hIO+mmF8L9f6RLFwsmxnOCFrQDcreI2IE80lzrhEtLFgOHouYPym38kXxnoiKHSTFCPc
-         TbdA1HNH9/OyloqrQgSSN4OOH5JiOsDETVvTjWdHNj5aRL68m72RwSvYbsRyjjU2oOON
-         mhbnQ0CYUUpmXaIQkcUBKOcyOOvMeu66npOAY04QRx5/nXJ+HCmHPeIFYsg6CALrpjkF
-         q1MQ==
+        d=gmail.com; s=20230601; t=1732690631; x=1733295431; darn=vger.kernel.org;
+        h=to:date:message-id:subject:mime-version:content-transfer-encoding
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RXhYw2mO4o75ZSR9AXTguwhpgaoi+ZdT7OPTfLh1SZA=;
+        b=KgqLnyJXY3AZPw5Uwrsb6FC1kFhy6M7LWDkgyJnyNeUmpz410rtBpacTJA5eANujkg
+         AHEtBTeXU9xeCYBiiufTAHft4qxcECeL0bih84ytZNtgRXOKPfOv51AbikjBHjOgA76T
+         IJX3HrtmYbvi1Ca6Oh6lV0MDpF5Hg/yj7XwQS8/YKqeGScbXXAn2VU7jcURtECkn2CYQ
+         RcBES8eL4PLDCSoM/dz/qGNkYEdhQkEwWReomTzlIFtSgqH+XX8/+awjs+PXJP8F9BzP
+         Bk9JJmBYl+yLupGegqzDFPnF8M2YccaNe21+eGzOBuBU2s8dTy7iM8lAhbhA1xb1fGup
+         nMdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732688419; x=1733293219;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mLuEvPFQ6kcM1n0FkkyOUV7NsMkiebhxF8YqLhaowtw=;
-        b=wBdsO7L9pFmxAcK3Feubqqz1zZWwkxb10JPOSweKTNHUfnb+cytHcU2QsoGyXipe96
-         yf3lwpULO/uilnbeIbl4OohFEXq5LAaSG+wJvudMtjVg+NOuwe1M2l6RNmLnXhG/qp1+
-         G3oEWsm2GhqC2EKe1hw2LVsbsp6ahuz4D0qgLnc6UvO/gyp/zcsDWOVvJhbXAPpBORa7
-         9iVL1ufRQdtwoZfron4pOq7Hba+ZFe/aGLz8nGyatVcSkz4lkFZ5UTl2ScA7/X50IbfW
-         dIQyZyaBYZfZMD//vnAg7Wx4+mF60OB7RG7zQ1NzWgsVPr3L+8enhkXabV0Twuw6/DU6
-         J1Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQTrF1Zx9CkIZR1KJrNYTLlyukx3JpL1YOTkwV9DpOTYtQ9tvX2ala7daZMH4DTOCV9np3ttF7y2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa232413QGeQwRvZVOdh5/YsVzYfdC6ONINt7HJxGLunwHnM65
-	j2l/gZxi4x71zb/3G+1LJpIfl6KmOxl6G63ALcOuDUOy0x1YRC5Y2+wHgPu4OA==
-X-Gm-Gg: ASbGnctp2ScB4aq5OcMyqBoS8kKI4K9ZTiNwc9ChMMOo3Bt7uQWe2SAzD2w/1syLKrg
-	hbkU2ov8khx+UEcWv/JBDbnTCavoOniPuNSQcyx/FhS1Ywfgy3qfH35vJywVxnqMZe7/YLe9Ngj
-	AexhXROR7UzSMHfT2X5v33pp9pJsji4xhTxnTvobtu7JiPXh7xlHrGOhooM/jNGYFEhlBVnAdjU
-	VqWDJfjA9rPjgPquoIQYtYhyTIDVa+U1qSwG1a/GRl1oy4hRWP5odqurBAc
-X-Google-Smtp-Source: AGHT+IGMQz7BH6QCsJCOIshdD5nGI4ii2ks2kgkA1lV0ck1baioPhXJl9j4dkpEkR7e4LinD/4buOA==
-X-Received: by 2002:a05:6a00:ccf:b0:724:de1c:bac9 with SMTP id d2e1a72fcca58-7253007749fmr2753689b3a.13.1732688418746;
-        Tue, 26 Nov 2024 22:20:18 -0800 (PST)
-Received: from thinkpad ([120.60.136.64])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724eb65d2adsm8372423b3a.159.2024.11.26.22.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 22:20:18 -0800 (PST)
-Date: Wed, 27 Nov 2024 11:50:04 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
-	dlemoal@kernel.org, maz@kernel.org, tglx@linutronix.de,
-	jdmason@kudzu.us
-Subject: Re: [PATCH v8 2/6] PCI: endpoint: Add RC-to-EP doorbell support
- using platform MSI controller
-Message-ID: <20241127062004.oruhwkhj4zrvjx25@thinkpad>
-References: <20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com>
- <20241116-ep-msi-v8-2-6f1f68ffd1bb@nxp.com>
- <20241124071100.ts34jbnosiipnx2x@thinkpad>
- <Z0S7+U5W2DOmzdJL@lizhi-Precision-Tower-5810>
- <20241126041449.qouyatajd5rie5o2@thinkpad>
- <Z0YAChEOnmezCBcU@lizhi-Precision-Tower-5810>
+        d=1e100.net; s=20230601; t=1732690631; x=1733295431;
+        h=to:date:message-id:subject:mime-version:content-transfer-encoding
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RXhYw2mO4o75ZSR9AXTguwhpgaoi+ZdT7OPTfLh1SZA=;
+        b=IpF1Zaqv4LXjXxm1M97rHv+/1aasQcdKI0GdaBPeVerO5UU5jjhN8wDMYcId85UUT/
+         zZV60TzziwjDFyT1mBj5KciB/mxOVcEvH7ffLomC2L1YVkJOXBKUtuJukCwp6ORn6Tv2
+         KjMCJoR0hLAPpzttsnUMyxW5bSEkrpJPVVLM3Fj7vae5zt6BgdIdDhIm4sZsm8t4GnOH
+         0QO+0Mt/HUw3jYJuQEDKgx3GxHIY6NDu1T3Rj5OgjjZ25KpM8+teX3kmbp6bmpLBaQTF
+         bOOQ+2b6pZhMpnrmPsYGi6XIzrdVYFIVfGt8OfC3u2qPAlKo0Z5tuvv8debR7Z0y78sP
+         PBwg==
+X-Gm-Message-State: AOJu0YyeqwGlknrMTMylBXO6x+9bDxweJkoPl7jhHUE3funnwCdWyI9U
+	seLeK2jUIucL26YnWznjGmy+daKWzDrpUCyIBwPnvLy0TrWH7CvmGtMPsHN0
+X-Gm-Gg: ASbGncvPFfZ86gEemMoDkhlezwfCS0R5L/+QnFnvjDI/TxmNinPWHq4m6+rufbVUkD8
+	meP+UH38paG7qSMgd3Afsdm7z3kPxaqGeKM3Q/bfHPe/LS7QfUg++t6AbLT2J9LdbL/QPDJlyFG
+	Fkr9OC7hIxoqb/RWti0DYCVHH4LzlRYxfn1LLVHOgvoHa86GQCpsaOd3L7rLZqjShA+X41K8SB1
+	NKUCW+DS59DRyD6VxND/I1YimSaJWeY7DzkfZzFu8xLjFOkcxgJig==
+X-Google-Smtp-Source: AGHT+IGWpMRV/93yDVikpt7xTDmRUkQhJCcMv2VAUadCF18nNSPlmApfZdQSolRfSS7F979adBPhRw==
+X-Received: by 2002:a05:6a00:21ca:b0:724:f51c:8dc2 with SMTP id d2e1a72fcca58-72530024862mr2277677b3a.9.1732690631277;
+        Tue, 26 Nov 2024 22:57:11 -0800 (PST)
+Received: from smtpclient.apple ([2404:9dc0:cd01::14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de559763sm9519232b3a.162.2024.11.26.22.57.09
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2024 22:57:10 -0800 (PST)
+From: fengnan chang <fengnanchang@gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z0YAChEOnmezCBcU@lizhi-Precision-Tower-5810>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+Subject: Deadlock during PCIe hot remove and SPDK exit
+Message-Id: <D0B37524-9444-423B-9E48-406CF9A29A6A@gmail.com>
+Date: Wed, 27 Nov 2024 14:56:57 +0800
+To: linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
 
-On Tue, Nov 26, 2024 at 12:19:01PM -0500, Frank Li wrote:
+Dear PCI maintainers:
+   I'm having a deadlock issue, somewhat similar to a previous one =
+https://lore.kernel.org/linux-pci/CS1PR8401MB0728FC6FDAB8A35C22BD90EC95F10=
+@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM/#t=EF=BC=8C but my kernel =
+(6.6.40) already included the fix f5eff55.=20
+   Here is my test process, I=E2=80=99m running kernel with 6.6.40 and =
+SPDK v22.05:
+   1. SPDK use vfio driver to takeover two nvme disks, running some io =
+in nvme.
+   2. pull out two nvme disks
+   3. Try to kill -9 SPDK process.
+   Then deadlock issue happened. For now I can 100% reproduce this =
+problem. I=E2=80=99m not an export in PCI, but I did a brief analysis:
+   irq 149 thread take pci_rescan_remove_lock mutex lock, and wait for =
+SPDK to release vfio.
+   irq 148 thread take reset_lock of ctrl A, and wait for =
+psi_rescan_remove_lock
+   SPDK process try to release vfio driver, but wait for reset_lock of =
+ctrl A.
 
-[...]
 
-> > > > > +	/* Only support one EPF for doorbell */
-> > > > > +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-> > > >
-> > > > Why don't you impose this restriction in pci_epf_alloc_doorbell() itself?
-> > >
-> > > This is callback from platform_device_msi_init_and_alloc_irqs(). So it is
-> > > actually restriction at pci_epf_alloc_doorbell().
-> > >
-> >
-> > I don't know how to parse this last sentence. But my question was why don't you
-> > impose this one EPF restriction in pci_epf_alloc_doorbell() before allocating
-> > the MSI domain using platform_device_msi_init_and_alloc_irqs()? This way if
-> > someone calls pci_epf_alloc_doorbell() multi EPF, it will fail.
-> 
-> Yes, it is limitation for current platfrom msi framework. It is totally
-> equal.
-> 
-> call stack is
-> 	pci_epf_alloc_doorbell()
-> 	     platform_device_msi_init_and_alloc_irqs()
-> 		...
-> 		pci_epc_write_msi_msg()
-> 
-> 
-> 
-> It is totally equal return at pci_epc_write_msi_msg() or return before
-> platform_device_msi_init_and_alloc_irqs().
-> 
+irq/149-pciehp stack, cat /proc/514/stack,=20
+[<0>] pciehp_unconfigure_device+0x48/0x160 // wait for =
+pci_rescan_remove_lock
+[<0>] pciehp_disable_slot+0x6b/0x130       // hold reset_lock of ctrl A
+[<0>] pciehp_handle_presence_or_link_change+0x7d/0x4d0
+[<0>] pciehp_ist+0x236/0x260
+[<0>] irq_thread_fn+0x1b/0x60
+[<0>] irq_thread+0xed/0x190
+[<0>] kthread+0xe4/0x110
+[<0>] ret_from_fork+0x2d/0x50
+[<0>] ret_from_fork_asm+0x11/0x20
 
-No, these two are not the same. pci_epc_write_msi_msg() will only be called
-when enabling the MSI, which is too late IMO. Why are you insisting in
-calling platform_device_msi_init_and_alloc_irqs() for multi EPF? I don't quite
-understand.
 
-If the platform cannot support it, then it should not be called in first place.
+irq/148-pciehp stack, cat /proc/513/stack
+[<0>] vfio_unregister_group_dev+0x97/0xe0 [vfio]     //wait for=20
+[<0>] vfio_pci_core_unregister_device+0x19/0x80 [vfio_pci_core]
+[<0>] vfio_pci_remove+0x15/0x20 [vfio_pci]
+[<0>] pci_device_remove+0x39/0xb0
+[<0>] device_release_driver_internal+0xad/0x120
+[<0>] pci_stop_bus_device+0x5d/0x80
+[<0>] pci_stop_and_remove_bus_device+0xe/0x20
+[<0>] pciehp_unconfigure_device+0x91/0x160   //hold =
+pci_rescan_remove_lock, release reset_lock of ctrl B=20
+[<0>] pciehp_disable_slot+0x6b/0x130
+[<0>] pciehp_handle_presence_or_link_change+0x7d/0x4d0
+[<0>] pciehp_ist+0x236/0x260             //hold reset_lock of ctrl B=20
+[<0>] irq_thread_fn+0x1b/0x60
+[<0>] irq_thread+0xed/0x190
+[<0>] kthread+0xe4/0x110
+[<0>] ret_from_fork+0x2d/0x50
+[<0>] ret_from_fork_asm+0x11/0x20
 
-> why check epf in pci_epc_write_msi_msg() is because it use epf in here.
-> pci_epf_alloc_doorbell() never use epf variable. If check unused variable
-> in pci_epf_alloc_doorbell(), user don't know why and what's exactly
-> restrict it.
-> 
 
-This is not a good argument and doesn't make sense, sorry. You should not call
-platform_device_msi_init_and_alloc_irqs() for multi EPF.
+SPDK stack, cat /proc/166634/task/167181/stack
+[<0>] down_write_nested+0x1b7/0x1c0            //wait for reset_lock of =
+ctrl A.
+[<0>] pciehp_reset_slot+0x58/0x160
+[<0>] pci_reset_hotplug_slot+0x3b/0x60
+[<0>] pci_reset_bus_function+0x3b/0xb0
+[<0>] __pci_reset_function_locked+0x3e/0x60
+[<0>] vfio_pci_core_disable+0x3ce/0x400 [vfio_pci_core]
+[<0>] vfio_pci_core_close_device+0x67/0xc0 [vfio_pci_core]
+[<0>] vfio_df_close+0x79/0xd0 [vfio]
+[<0>] vfio_df_group_close+0x36/0x70 [vfio]
+[<0>] vfio_device_fops_release+0x20/0x40 [vfio]
+[<0>] __fput+0xec/0x290
+[<0>] task_work_run+0x61/0x90
+[<0>] do_exit+0x39c/0xc40
+[<0>] do_group_exit+0x33/0xa0
+[<0>] get_signal+0xd84/0xd90
+[<0>] arch_do_signal_or_restart+0x2a/0x260
+[<0>] exit_to_user_mode_prepare+0x1c7/0x240
+[<0>] syscall_exit_to_user_mode+0x2a/0x60
+[<0>] do_syscall_64+0x3e/0x90
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
