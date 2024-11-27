@@ -1,132 +1,131 @@
-Return-Path: <linux-pci+bounces-17424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2E089DAC34
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 18:05:32 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A63E69DAC58
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 18:22:57 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5079BB2308C
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 17:05:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2331E1668F8
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 17:22:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB86200BB4;
-	Wed, 27 Nov 2024 17:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22C120102C;
+	Wed, 27 Nov 2024 17:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFrxwoSZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8981F8F1A;
-	Wed, 27 Nov 2024 17:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103D4200BBA
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 17:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732727126; cv=none; b=qti1HAqi6N8qHoGO5njZR1G+tMyjBF0FvrgEZWkyT0jlNnSHUJUv1NHkQHqpuQ6MDoEkQogtQt6oT3JHVZ1BuTc3rWNAI34cdfLhPigr9/vNeCi2BZIvCSUTI0Xt6IehkeUSo9xsbfGxk4l4+LmiEZJVJliNS0or1IehF3smRqs=
+	t=1732728171; cv=none; b=KYpq/Yh2MqAJvdYLN7DtFiA0Ht5o27raqSdsCl40/RIni7tIuOCxiKmeHmpatnAP6iWQp7cGw0uCAOfEijHAiJOcWhxRq0R59CXWrVzSU98oVyCynUchwzjpi5DcllAVApOzoKUwE5HmOPnpuIpzxBmTHIVui/0IRHHygbnGrBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732727126; c=relaxed/simple;
-	bh=ercSyPeyYpT/8fKtZokf9SXq+xP8iulo3R4DX9zRtGQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MDn0zJ0OGj2SZs1bWttwDCebLb2/Qjhg7reIGfMstpHyXrvLDtdasxH1X10TlGOEwURP3cBtONS3dbfbW6Xl8V+IJNS9WzCq8eXHsnjd8FWdjQnnr2c4TsAqVDtjRHZ1uq/0Q/pDl7fJFueR7NYJz/e9AH2QMxRK+RuJihiz7Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xz5Qk6Mptz6D9Cw;
-	Thu, 28 Nov 2024 01:04:46 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 43FC7140390;
-	Thu, 28 Nov 2024 01:05:20 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 27 Nov
- 2024 18:05:19 +0100
-Date: Wed, 27 Nov 2024 17:05:18 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-CC: Lukas Wunner <lukas@wunner.de>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <ming4.li@intel.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>, "Shuai
- Xue" <xueshuai@linux.alibaba.com>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v3 06/15] PCI/AER: Change AER driver to read UCE fatal
- status for all CXL PCIe port devices
-Message-ID: <20241127170518.00003966@huawei.com>
-In-Reply-To: <c7c9d417-5c32-4354-825e-58f736726114@amd.com>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
-	<20241113215429.3177981-7-terry.bowman@amd.com>
-	<ZzcVzpCXk2IpR7U3@wunner.de>
-	<c7c9d417-5c32-4354-825e-58f736726114@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1732728171; c=relaxed/simple;
+	bh=udRSauQ8v0m45QJa02tpuWABp6MhR6MgqKOiA1qUWyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lX+hu8n8FQVA2pmK9X6KJEkaIUhg6bAN4hMvQamPp6OKFefa1OSzZ+3Y30H0TkxlRgqjjdgd0jeOn/jm1Dr/E0mXenjYjoEu1zDUGc6iMX7Bo3Fq4FORgmHq/Ir6wENLT8Y3bg/mxbe5AAuzj78dHPaJ3X1dkRebbEngPjlJ+ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TFrxwoSZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732728169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W9zax/CHaztlMaSgeA0GgU43P1mgjhVVVedx0D3zKOY=;
+	b=TFrxwoSZ4fgUQaOoWITnc+WOHu0yt3AsG4TMlb/ZqPquNE8Ouq7uLAy8cb3+scFGoNkf6U
+	RvHM0CKBiWGRTqielQ2TkBVv4BYZHm11o5zmEDaFU9L3nnDFTRuTp3shELnDKdM3Leh3Sm
+	7Ph4ZId2G/FV3XY/NQnnzA9r0lFOChw=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-19-c8glAXJLNcaynxsNsDnuRQ-1; Wed, 27 Nov 2024 12:22:47 -0500
+X-MC-Unique: c8glAXJLNcaynxsNsDnuRQ-1
+X-Mimecast-MFC-AGG-ID: c8glAXJLNcaynxsNsDnuRQ
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a7c836fda9so291325ab.0
+        for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 09:22:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732728166; x=1733332966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W9zax/CHaztlMaSgeA0GgU43P1mgjhVVVedx0D3zKOY=;
+        b=gKu+bxlAYaY5LMPQ9J45dAGW11a5cZILDxpgxxOWnnbc6K3PcBzL0ZEZV7ty4Ah1T9
+         W0lcyiunfQT23u8YlVSWkEwx/HNcpDvCbLeTWHAwRQBuaoPDeQE0AC1zdIA4B7W+0q2F
+         XJYfeGulW7VDrhO1vOimohSZJrOxjD8UMY6OyQhMeeC2N/G+PSfzlWZYCETWv2f1QxlK
+         uQtqJ4yD+27OMyfsc7dUUkQ5qnxI2EF9Q2vFvyF1oWq2d+qPHq/NIsa2eH38exYpkh4B
+         6/s37n6ANAfKmI/DAlNTTmfCDwbLZtV+kg0NR+pWcTBW7ej4ulScZU5or0LcSAK+xT3W
+         HmiQ==
+X-Gm-Message-State: AOJu0YxvXdoznflpx2RBFSo80xPDwtxd6J6yex8B8a0KnosrgzZt3lLc
+	PseJUr7cUkVWGAbPR8mY6Daa7CTN1qSK9J3qxqiSb3CRsL7FrQ+Hs/ldK+jBQiGLtHjDiscCaai
+	JptPCOgPOI8u1QUKr1dhX64dBG02bNzJyS0tWEKR1V3IFPrQA0+xJkBE1ZAZSHH2AKg==
+X-Gm-Gg: ASbGncu+d0ISzz9x2NqxyhHjpIR6eWGcb4B5166ZoERluNKOiJiYPiFfq0nI9UYb7nx
+	fTUmqzp1157hz79lmO2LZNBCIiwVF9IVAA3Hau95q29YDrJdR+dT4CZiM6W+Cbf79rmc6nlUUmC
+	FbpuLxgjmBDDiCbh7MeOTzdfXk0IM6/J+JkFQ6MQxMWAjWgdnGXPqkuAyNHali5hd/wlrf3Rl0R
+	9saioouI1mfjLNKuQVHOZJIKU+EImnnXOQsPg4CzelE4kowkvpH2g==
+X-Received: by 2002:a05:6e02:1785:b0:3a7:bd4c:b17e with SMTP id e9e14a558f8ab-3a7c544a689mr11641905ab.0.1732728166282;
+        Wed, 27 Nov 2024 09:22:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFgahiLZdXLot24IB4E3W1bQXNAY3TqwQBGglHBYwgd/Sn9n6D44soFsrc5jyVRxyY14SiM6Q==
+X-Received: by 2002:a05:6e02:1785:b0:3a7:bd4c:b17e with SMTP id e9e14a558f8ab-3a7c544a689mr11641795ab.0.1732728165925;
+        Wed, 27 Nov 2024 09:22:45 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3a79acbdf6asm27282405ab.77.2024.11.27.09.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2024 09:22:45 -0800 (PST)
+Date: Wed, 27 Nov 2024 10:22:43 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Mitchell Augustin <mitchell.augustin@canonical.com>
+Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: drivers/pci: (and/or KVM): Slow PCI initialization during VM
+ boot with passthrough of large BAR Nvidia GPUs on DGX H100
+Message-ID: <20241127102243.57cddb78.alex.williamson@redhat.com>
+In-Reply-To: <CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
+References: <CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEyZgQZub4mDRrV5w@mail.gmail.com>
+	<20241126103427.42d21193.alex.williamson@redhat.com>
+	<CAHTA-ubXiDePmfgTdPbg144tHmRZR8=2cNshcL5tMkoMXdyn_Q@mail.gmail.com>
+	<20241126154145.638dba46.alex.williamson@redhat.com>
+	<CAHTA-uZp-bk5HeE7uhsR1frtj9dU+HrXxFZTAVeAwFhPen87wA@mail.gmail.com>
+	<20241126170214.5717003f.alex.williamson@redhat.com>
+	<CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 21 Nov 2024 14:24:17 -0600
-"Bowman, Terry" <terry.bowman@amd.com> wrote:
+On Tue, 26 Nov 2024 19:12:35 -0600
+Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
 
-> On 11/15/2024 3:35 AM, Lukas Wunner wrote:
-> > On Wed, Nov 13, 2024 at 03:54:20PM -0600, Terry Bowman wrote:  
-> >> The AER service driver's aer_get_device_error_info() function doesn't read
-> >> uncorrectable (UCE) fatal error status from PCIe upstream port devices,
-> >> including CXL upstream switch ports. As a result, fatal errors are not
-> >> logged or handled as needed for CXL PCIe upstream switch port devices.
-> >>
-> >> Update the aer_get_device_error_info() function to read the UCE fatal
-> >> status for all CXL PCIe port devices. Make the change to not affect
-> >> non-CXL PCIe devices.
-> >>
-> >> The fatal error status will be used in future patches implementing
-> >> CXL PCIe port uncorrectable error handling and logging.  
-> > [...]  
-> >> --- a/drivers/pci/pcie/aer.c
-> >> +++ b/drivers/pci/pcie/aer.c
-> >> @@ -1250,7 +1250,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
-> >>  	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> >>  		   type == PCI_EXP_TYPE_RC_EC ||
-> >>  		   type == PCI_EXP_TYPE_DOWNSTREAM ||
-> >> -		   info->severity == AER_NONFATAL) {
-> >> +		   info->severity == AER_NONFATAL ||
-> >> +		   (pcie_is_cxl(dev) && type == PCI_EXP_TYPE_UPSTREAM)) {
-> >>  
-> >>  		/* Link is still healthy for IO reads */
-> >>  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,  
-> > Just a heads-up, there's another patch pending by Shuai Xue (+cc)
-> > which touches the same code lines.  It re-enables error reporting
-> > for PCIe Upstream Ports (as well as Endpoints) under certain
-> > conditions:
-> >
-> > https://lore.kernel.org/all/20241112135419.59491-3-xueshuai@linux.alibaba.com/
-> >
-> > That was originally disabled by Keith Busch (+cc) with commit
-> > 9d938ea53b26 ("PCI/AER: Don't read upstream ports below fatal errors").
-> >
-> > There's some merge conflict potential here if your series goes into
-> > the cxl tree and Shuai's patch into the pci tree in the next cycle.
-> >
-> > Thanks,
-> >
-> > Lukas  
-> Thanks Lukas I took a look at the patchset and reached out to Shuai (you're CC'd). Sorry, I thought
-> I responded here earlier.
-
-I'm guessing we might not need this change if we can base querying on the
-link being good.  If the error is on the CXL protocol side, the link should
-still be fine I think?
-
-Jonathan
-
+> Thanks for the breakdown!
 > 
-> Regards,
-> Terry
+> > That alone calls __pci_read_base() three separate times, each time
+> > disabling and re-enabling decode on the bridge. [...] So we're
+> > really being bitten that we toggle decode-enable/memory enable
+> > around reading each BAR size  
+> 
+> That makes sense to me. Is this something that could theoretically be
+> done in a less redundant way, or is there some functional limitation
+> that would prevent that or make it inadvisable? (I'm still new to pci
+> subsystem debugging, so apologies if that's a bit vague.)
+
+The only requirement is that decode should be disabled while sizing
+BARs, the fact that we repeat it around each BAR is, I think, just the
+way the code is structured.  It doesn't take into account that toggling
+the command register bit is not a trivial operation in a virtualized
+environment.  IMO we should push the command register manipulation up a
+layer so that we only toggle it once per device rather than once per
+BAR.  Thanks,
+
+Alex
 
 
