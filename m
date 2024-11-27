@@ -1,88 +1,89 @@
-Return-Path: <linux-pci+bounces-17386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 791449DA1E8
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 07:01:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 454409DA1FD
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 07:10:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 390C2284D90
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 06:01:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DE14284BF7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 06:10:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BAEF1465A5;
-	Wed, 27 Nov 2024 06:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C681474B2;
+	Wed, 27 Nov 2024 06:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lgCuCjMg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F/7Qhd03"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4285913B2AF
-	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 06:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C325FDF51
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 06:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732687306; cv=none; b=hqt4nqhiTOylAjcQ7b4HgeBJpG/TSYeSFPJlwxI5LRKd4C3nu/laEVZQYuqUJywTd5ucNFPup6DLEuGO9fRaRbiSLvIUneOBZ10//ZE7LM95ori/zl4Qt4mXLUMUCdZYl1CoRtwCUaJ5jSwUsaGX5epDDGQTA6T0etDJHkpkuqo=
+	t=1732687847; cv=none; b=GAaHypgQotuDHDTQoGkhPos/SmIMFFKpf0rC9zdWccO70k2U4XCfeilVNPAE5TYieKFwRW0Sjbamg5d4nRITAEksqt5P4gul9UvPVWG3t8vildMlKxly7HxcZuiOqXRPwIICQUgtrFg0AiR8+sDpci1frpYH3WogRo5THiNpGSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732687306; c=relaxed/simple;
-	bh=+pmdwmmhZdYr6Apa02nMXEwsIq+I1rZk5qVaZg/xJpc=;
+	s=arc-20240116; t=1732687847; c=relaxed/simple;
+	bh=cPdvo1SMZFEQqJn7eeSCQKo/FFcAMU9G1ZiW83fwums=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZDcIh6vspRQVyu5hZihDA6kebkktBi/s3teHBlyzjXEdM2WEy81hhOpCSfXBeVpzz1/Vheun5MB6nLKB/ADoUHELHDy3waahSEUTf2ZOspvtKWoYu1OYwpXQDaNp60FCNdapzcfYSGH5N+waUOst/GUZRGG4peEAzeRtjK1498=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lgCuCjMg; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q0tz8Z74tEQNWgn4pV5e2LBvWOSNdo5+6EiOkhsQomOYfqJznvF87aDJDzEyCJr8SOLrEvObUI59BFg+3y1WG9dQPWeP9pWU6yYmtdFDCOZFk81fpoHyAkpG9BYdzMmiM1kBeUU9RBAYCOPHeWj5zcU7UWXL7XJWPoJPagyMrWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F/7Qhd03; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2129fd7b1a5so46505105ad.1
-        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 22:01:43 -0800 (PST)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-724fee568aaso3501441b3a.1
+        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 22:10:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732687302; x=1733292102; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732687844; x=1733292644; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=ykkZstOa8bXXD8shy4Wz7LF8azAidbDjZzgBbS7DJo4=;
-        b=lgCuCjMg8lt1ERGSh/I/g2XeWt2DRWH1Mq3gosmavMfNPvHDDWXkQuvGq2e5Z0QfiZ
-         VWRCCbJaOlOXEkxiKgCp/rNXRd4pEsWY4otUnmEPDuDdxi3Ow66VZOidmq5kMymMV/5r
-         y2eWcrZaL8rCIhQtO4Tj32MxfG8nfAukJF0qeXgUzeFREEr2ZFRWI0nV949Sg1jAR63+
-         iOJwjBHXtpkB+O1vOtXRSnHezy0o5eznT6VsMxI8YmJ1OGMLOWz8uCdiufPAYRpMU9SP
-         kTg8dIty4ScvJe2iFU/kt/NPNh8zZOvZ4RWWcI/9/IELd2Y4GI5e571IanmqH5eZG/nZ
-         /kvg==
+        bh=zqa/SgF6yTly97ZL5Wo5M3cWThMFlMnzVOsX4J3DANc=;
+        b=F/7Qhd03NXlipv2FGM0SrftKWLCIuNM0ijMbYMipj5+dldrZHBUQYB3yiI/LtQ9g8G
+         1x0NVvi879HNPG72K8QRO0O/JRsEYW2Ce5x6urRYJNepNhj0LZyx5+jd3ed49Ah4O5sX
+         qn9lVRORxzhcB1v3tXodio6Yq91LE9S9vpe9Iz1/2nYgdOj8fR880rYv4gSnGqOZZs62
+         M7KA/eZM0dYRhqTwitQopU8Yd8to4aL8m6gl6XUpCa4MH8Lf/gtNbSOlPX2PmQh90ATN
+         /NzkRtzz9PpBoQmElhJRUNcxdNNc5nKAItHXAbcD70NKcHG2aAUZv5Vy/4NIeXOkpl9G
+         fiGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732687302; x=1733292102;
+        d=1e100.net; s=20230601; t=1732687844; x=1733292644;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ykkZstOa8bXXD8shy4Wz7LF8azAidbDjZzgBbS7DJo4=;
-        b=ogWlA8ShnR43OWmS3hX/Kn+SUqqn6WCAibJ6+WrRR+QgsHLuyIjh9piD2IMS+DKDFC
-         GZgwXSP/ndvusgEdTbgXIcwSUuKzliDxlllhdPrbrPfqbFnk7rK6/5Vk3gC658SKm6O+
-         ooUWyjoK9WCHn/0QZKEAvKfHVg8Jk8awhzCR22oTG/ONgm+1yDakBuG0e3E9QelmVpPH
-         2/8HzDnooFOYP8dcK5cdqCo3OwqdFEg8nT4t10FDKbim/3T75QuklKIWS01U+2NWybac
-         FW4f5lwkYQbBHWynDWZrebbL0ZrTd/DUlWayXCe5vgGfHHUSL6cI9Px7B97QGa1guhoS
-         TGAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWz5cy727ECOIT4DSBJ2bx/Rf+Np7TPz/bfB+TEgDonkpbGWtpCY97nEB0Gwq1XCw+bfaCxhd3NmGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHZPIxuf8R7s1laeAV75x5RuyCQlDWQf2tRcvnBlvVfTfsFrNP
-	UU8mQCjehjlKjPPUqMon6me98US8/8KpWkdaUqMXSl3xr+TtIKoB6xUnI7Iq0g==
-X-Gm-Gg: ASbGncu2c6/5KTe/WTRPm/eaAepDjIYWQAY8Zl8DzYcfOtKI16b6hpdxArh8KnWQQZn
-	lgfoPvbrVTo0XHq+9vnl+9r6viUqtlmKx199iSMxu+YY88mFS/zSskYXuAzlx70MF+O0WQP11QX
-	8RJeb4RgGl8T5+pt2P3RcMPVba+FhJU9tJPCRUrUS8zXuFpDBEu6WN2aKV4KcoTwLuQ//hGfz6F
-	LcaGCtQ/8E629us1qYRnpa0/87etFLBeNLaFyd3o2qvGESJUyuY0lPB4elK
-X-Google-Smtp-Source: AGHT+IElcgtOc9MKuqCcQKs788nAqHcwj4F+w9zIfHU7WoZTfiySo28O12pa/pXEa3gpawHEreJy/w==
-X-Received: by 2002:a17:902:d4c4:b0:212:48f2:9be9 with SMTP id d9443c01a7336-2150185797bmr20448515ad.30.1732687302401;
-        Tue, 26 Nov 2024 22:01:42 -0800 (PST)
+        bh=zqa/SgF6yTly97ZL5Wo5M3cWThMFlMnzVOsX4J3DANc=;
+        b=sAlK6pTPyreW+Cl8xP/mta938RDsTCoeu74KBXXzZQc0uIvN7TyBjMiHFXif3bxdYb
+         9K+oNHNdf1X7z0qRGNykk5p3R+03MLqVsNTXaTHNk0/ppHHGONE0IxSr9WglQt8TVAhh
+         utLGHmMToXb1GjpvaoRVZT0nYUXLdAVOIbI51B0iicjKA5jbl+swSlTUMN/c/TOblAeZ
+         cfMIzPBDR8m6MVKW/2wnicw43lv3RdMR/bDrxbuCckGV6yIC2zq2LUiHkdcvnVIiJCFs
+         cCQF1RIbn8F4KTDWG3zT+ddh+EYWqOW9yH8HatbnIAnpe/MDR9Em/51vpoypED2/WH6U
+         ZoKw==
+X-Forwarded-Encrypted: i=1; AJvYcCV14waIx9lSMkbLN7w+3pW4MvlZqjPsYKq8G63Xgo3ctCmrLBLcgwrHBGkp2hcti/2gdW8cpsz02bM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz+nz59WxejEK4XuXQ343JWd9zlSosE6FP0GnhPxz2XDRyVVtZ
+	hf09EeNjJvq3hhOmnAT0LZDP/o7dwPGhzYlVCY7Nq58dZWec1kQoeH6RUnjxDA==
+X-Gm-Gg: ASbGncvy5hKuQPRRwwImRCwUclTg/H4usSjHyXzAEJdJ5852XsDstcPQcF8on0RDpnG
+	7Dvd+/ebKIKY6UO9dKG8NNtvUzwLVlM2UqsFbSwpO+SIKue8ZsL9LmcvpsNAxzs/s5pn6uklG8Z
+	h4zBoOudYZj5tHOD4zZ3ucc8O1WDcVV1kh0BCE6SI6DwLxcN9fQuT7LqHq00ikV6mfNqLQbUiCD
+	5rJJMzlUBtyPpRWGJkF/qLwaA/iHPMFII2bPRYE1e8TqeU36yP0HHJZMCe5
+X-Google-Smtp-Source: AGHT+IGaHS3AyXRTU+a3Eu+LV+18G7egpriN+zK0KvIQMZt/bOebgNCGoDrBCNgxqRGORwKNCzNPfg==
+X-Received: by 2002:a05:6a00:13a7:b0:71e:f83:5c00 with SMTP id d2e1a72fcca58-72530014285mr2668234b3a.2.1732687844004;
+        Tue, 26 Nov 2024 22:10:44 -0800 (PST)
 Received: from thinkpad ([120.60.136.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dba345asm95076825ad.97.2024.11.26.22.01.38
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de474c9fsm9447348b3a.44.2024.11.26.22.10.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 22:01:41 -0800 (PST)
-Date: Wed, 27 Nov 2024 11:31:32 +0530
+        Tue, 26 Nov 2024 22:10:43 -0800 (PST)
+Date: Wed, 27 Nov 2024 11:40:39 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: jingoohan1@gmail.com, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, frank.li@nxp.com,
-	quic_krichai@quicinc.com, imx@lists.linux.dev,
-	kernel@pengutronix.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: dwc: Clean up some unnecessary codes in
- dw_pcie_suspend_noirq()
-Message-ID: <20241127060132.hsawrwlkxkgvvji5@thinkpad>
-References: <20241126073909.4058733-1-hongxing.zhu@nxp.com>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Hsin-Yi Wang <hsinyi@chromium.org>,
+	linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+	lukas@wunner.de
+Subject: Re: [PATCH v5] PCI: Allow PCI bridges to go to D3Hot on all
+ Devicetree based platforms
+Message-ID: <20241127061039.ls3ghxswft3hvww5@thinkpad>
+References: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,109 +93,84 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241126073909.4058733-1-hongxing.zhu@nxp.com>
+In-Reply-To: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
 
-On Tue, Nov 26, 2024 at 03:39:09PM +0800, Richard Zhu wrote:
-> Before sending PME_TURN_OFF, don't test the LTSSM state. Since it's safe
-> to send PME_TURN_OFF message regardless of whether the link is up or
-> down. So, there would be no need to test the LTSSM state before sending
-> PME_TURN_OFF message.
+On Tue, Nov 26, 2024 at 03:17:11PM -0800, Brian Norris wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Only print the message when ltssm_stat is not in DETECT and POLL.
-> In the other words, there isn't an error message when no endpoint is
-> connected at all.
+> Unlike ACPI based platforms, there are no known issues with D3Hot for
+> the PCI bridges in Device Tree based platforms. Past discussions (Link
+> [1]) determined the restrictions around D3 should be relaxed for all
+> Device Tree systems. So let's allow the PCI bridges to go to D3Hot
+> during runtime.
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> To match devm_pci_alloc_host_bridge() -> devm_of_pci_bridge_init(), we
+> look at the host bridge's parent when determining whether this is a
+> Device Tree based platform. Not all bridges have their own node, but the
+> parent (controller) should.
+> 
+> Link: https://lore.kernel.org/linux-pci/20240227225442.GA249898@bhelgaas/ [1]
+> Link: https://lore.kernel.org/linux-pci/20240828210705.GA37859@bhelgaas/ [2]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> [Brian: look at host bridge's parent, not bridge node; rewrite
+> description]
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Thanks for picking it up!
 
 - Mani
 
 > ---
-> v5 changes:
-> - Remove the redundant check "(val > DW_PCIE_LTSSM_DETECT_WAIT)".
-> v4 changes:
-> - Keep error return when L2 entry is failed and the endpoint is
->   connected refer to Krishna' comments. Thanks.
-> v3 changes:
-> - Refine the commit message refer to Manivannan's comments.
-> - Regarding Frank's comments, avoid 10ms wait when no link up.
-> v2 changes:
-> - Don't remove L2 poll check.
-> - Add one 1us delay after L2 entry.
-> - No error return when L2 entry is timeout
-> - Don't print message when no link up.
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 38 +++++++++++--------
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  2 files changed, 23 insertions(+), 16 deletions(-)
+> Based on prior work by Manivannan Sadhasivam that was part of a bigger
+> series that stalled:
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 24e89b66b772..bbd0ee862c12 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -927,25 +927,31 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
->  		return 0;
->  
-> -	/* Only send out PME_TURN_OFF when PCIE link is up */
-> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
-> -		if (pci->pp.ops->pme_turn_off)
-> -			pci->pp.ops->pme_turn_off(&pci->pp);
-> -		else
-> -			ret = dw_pcie_pme_turn_off(pci);
-> -
-> -		if (ret)
-> -			return ret;
-> +	if (pci->pp.ops->pme_turn_off)
-> +		pci->pp.ops->pme_turn_off(&pci->pp);
-> +	else
-> +		ret = dw_pcie_pme_turn_off(pci);
-> +	if (ret)
-> +		return ret;
->  
-> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
-> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
-> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-> -		if (ret) {
-> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-> -			return ret;
-> -		}
-> +	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
-> +				val == DW_PCIE_LTSSM_L2_IDLE ||
-> +				val <= DW_PCIE_LTSSM_DETECT_WAIT,
-> +				PCIE_PME_TO_L2_TIMEOUT_US/10,
-> +				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-> +	if (ret) {
-> +		/* Only dump message when ltssm_stat isn't in DETECT and POLL */
-> +		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-> +		return ret;
->  	}
->  
-> +	/*
-> +	 * Refer to r6.0, sec 5.3.3.2.1, software should wait at least
-> +	 * 100ns after L2/L3 Ready before turning off refclock and
-> +	 * main power. It's harmless too when no endpoint connected.
-> +	 */
-> +	udelay(1);
+> [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
+> https://lore.kernel.org/linux-pci/20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org/
+> 
+> I'm resubmitting this single patch, since it's useful and seemingly had
+> agreement. I massaged it a bit to relax some restrictions on how the
+> Device Tree should look.
+> 
+> Changes in v5:
+> - Pulled out of the larger series, as there were more controversial
+>   changes in there, while this one had agreement (Link [2]).
+> - Rewritten with a relaxed set of rules, because the above patch
+>   required us to modify many device trees to add bridge nodes.
+> 
+>  drivers/pci/pci.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e278861684bc..5d898f5ea155 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3018,6 +3018,8 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+>   */
+>  bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  {
+> +	struct pci_host_bridge *host_bridge;
 > +
->  	dw_pcie_stop_link(pci);
->  	if (pci->pp.ops->deinit)
->  		pci->pp.ops->deinit(&pci->pp);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 347ab74ac35a..bf036e66717e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -330,6 +330,7 @@ enum dw_pcie_ltssm {
->  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
->  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
->  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
-> +	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
->  	DW_PCIE_LTSSM_L0 = 0x11,
->  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+>  	if (!pci_is_pcie(bridge))
+>  		return false;
 >  
+> @@ -3038,6 +3040,15 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  		if (pci_bridge_d3_force)
+>  			return true;
+>  
+> +		/*
+> +		 * Allow D3 for all Device Tree based systems. We assume a host
+> +		 * bridge's parent will have a device node, even if this bridge
+> +		 * may not have its own.
+> +		 */
+> +		host_bridge = pci_find_host_bridge(bridge->bus);
+> +		if (dev_of_node(host_bridge->dev.parent))
+> +			return true;
+> +
+>  		/* Even the oldest 2010 Thunderbolt controller supports D3. */
+>  		if (bridge->is_thunderbolt)
+>  			return true;
 > -- 
-> 2.37.1
+> 2.47.0.338
 > 
 
 -- 
