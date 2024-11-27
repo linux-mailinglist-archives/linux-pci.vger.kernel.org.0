@@ -1,134 +1,184 @@
-Return-Path: <linux-pci+bounces-17407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17408-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A570A9DA637
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 11:54:54 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5387E163C46
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 10:54:51 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA63D1D4615;
-	Wed, 27 Nov 2024 10:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eeE2RndM"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F9049DA6D7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 12:25:48 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEDC1D5169
-	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 10:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90B1CB25C27
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 11:23:11 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F39C01F6677;
+	Wed, 27 Nov 2024 11:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaqlscfL"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4761F6671
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 11:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732704884; cv=none; b=Gb7YZya9L5Gk9xM+Q8llBhJYaEmmCbB5oEH9QiOpiLoiKR5dVRfMSbTIND0dyhin+2dA5k5iA395LGY2E1+z2z7AjbtYMFexcL0oBVKszHi6uci0odH1NE4/5BRNN++aGFhb3cOMjkO0KT92dadx9+6qF9wNCHbfnR9N0C78P3M=
+	t=1732706587; cv=none; b=PcaRBrnPM+TZ7vF/Yq0/mBdZQ/SOgPzwdHJofzhu8eAJUZ930OJDqzwKCr/NH0UJk1yboagFSfrh63660VU5KIX/lumadgHfUQZAF2xkZtkbDzLrntOdekc/6l+aAWFN1qjiYWEO1F5V51X/uG45+JSjWs4dW7kf1TQjZZR/9sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732704884; c=relaxed/simple;
-	bh=on/uFSvH0WFJfSPxLO994BjwJ4E0+PJmQ7buTab0NgA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Shnrg4vdebhnWjr4Ul2Nw+gbzxZLW5qzI0wZ70b51YnoK6IYSGGsKrGHSOhEt6w4scX3+INlJwSnHOSRVYd0irqFPaH6OZsPk/WfMfKi9K4bSWZNWTTavfgBUKb5LZcYW0PjayEXRvk2rDTn5ih/u4gd3TqD70wehUsdT+HFBco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eeE2RndM; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732704883; x=1764240883;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=on/uFSvH0WFJfSPxLO994BjwJ4E0+PJmQ7buTab0NgA=;
-  b=eeE2RndMx7JloSGTLry+etEKh9zN9gqq5E0eEaQsHfo8SH+tEpLK4Eu3
-   Wyy5FgLrexuMmNpoDt24NL2Ro0BXje6+ulKpiwbCc/WVkGpCdERtJCNLU
-   lqjiMidpYTHrtHz0PrlvhPwTxjdvuYcaEC2oS8J/UvpHOTs0TEhecLRoj
-   n/qls3B7Kqb/yC0agWY8DHO60uqDbGkwlqcMehYreNW5wkagBE0vccP5h
-   4i+YxV1469xgAVaguv5Q8RSy7nmczbeLlSslObl+HWiS94VD2i3TC9LYF
-   ERTkfayNT7Kd8RD1J763zG7a4Wt7YL/X9VtcPfhBw4erXHbNoup6ZbBsj
-   g==;
-X-CSE-ConnectionGUID: qU0m1U66Q2ychdjz0p0xYQ==
-X-CSE-MsgGUID: gkVlfFRLShiX1EQvMzaLBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="50430626"
-X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
-   d="scan'208";a="50430626"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:54:40 -0800
-X-CSE-ConnectionGUID: qJdBR+MET6CoGRahOuRrFQ==
-X-CSE-MsgGUID: Zy8KJdVJT124RcNVlRH4VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
-   d="scan'208";a="122742252"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.71])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:54:36 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 27 Nov 2024 12:54:33 +0200 (EET)
-To: Ajay Agarwal <ajayagarwal@google.com>, Jian-Hong Pan <jhp@endlessos.org>
-cc: "David E. Box" <david.e.box@linux.intel.com>, 
-    Johan Hovold <johan+linaro@kernel.org>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Manu Gautam <manugautam@google.com>, 
-    Sajid Dalvi <sdalvi@google.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
-    Vidya Sagar <vidyas@nvidia.com>, Shuai Xue <xueshuai@linux.alibaba.com>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: Save downstream port L1ss control when saving
- for upstream
-In-Reply-To: <20241127033758.3974931-1-ajayagarwal@google.com>
-Message-ID: <2aceef41-6d65-2eab-8339-07f874be6f41@linux.intel.com>
-References: <20241127033758.3974931-1-ajayagarwal@google.com>
+	s=arc-20240116; t=1732706587; c=relaxed/simple;
+	bh=IT3QjReXGUjxiyzn9kspMA2iuyuQI9MXxxMUpPpC0Js=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9S0RJUe7gvkSf/40bMLWqsc/yQ8cVTmNkjfe8dysCEm7jNvryeFmiLfYpp/1unUW5DjOCU+UfugQFWFL63MlvAJqIZcHNe94NxEOGvj6VAZBo+YCiUiqAMkpCggDgjdpQWhxep3PP0JXNjyNu3Yw9N85y69r6Ry8y98sSnuH2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaqlscfL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33F0C4CECC;
+	Wed, 27 Nov 2024 11:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732706587;
+	bh=IT3QjReXGUjxiyzn9kspMA2iuyuQI9MXxxMUpPpC0Js=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iaqlscfLBegiyEE4LudGyrVpnHYyW8enoocpU9CxD5U4E7gFYg5NHlJIlzBdcuII4
+	 SMqHlTjP29nLeWNWSAo7f+/I2a+5y7VMTpVoEq/5R9ezr00Iz57BW6GxM1W1rDyhga
+	 f1YwCzaIHTiwl7Qll9OGF9gHuIMi+ocgrgdrBLEueKCLXrZUHvjwvOT7dIf0Gqflz6
+	 /nihkgF6yZ+x/HuLSfjGaR9b2wNlXX+6S3uvRdWrNd/1dSDvaGMntYanlE4A1Agpvs
+	 Ne9xX20qH58cPN77AjqZa2UTKXUA8dCkNhp/UBiU7T5MIEU+pldSG1HCcochqXVkDX
+	 /vnWMa1cjwnWQ==
+Date: Wed, 27 Nov 2024 12:23:02 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 0/2] PCI endpoint test: Add support for capabilities
+Message-ID: <Z0cBFjK1WgSmg6k5@ryzen>
+References: <20241121152318.2888179-4-cassel@kernel.org>
+ <20241126132020.efpyad6ldvvwfaki@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241126132020.efpyad6ldvvwfaki@thinkpad>
 
-Adding Jian-Hong.
+Hello Mani,
 
-There's already another patch under discussion to the same problem:
-
-https://patchwork.kernel.org/project/linux-pci/patch/20241115072200.37509-3-jhp@endlessos.org/
-
--- 
- i.
-
-On Wed, 27 Nov 2024, Ajay Agarwal wrote:
-
-> It is possible that the downstream port's L1ss registers were not
-> saved after the initial configuration performed in the function
-> aspm_calc_l12_info() during the child bus probe. If the upstream
-> port config space is saved-restored due to some reason, the
-> downstream port L1ss registers will be overwritten with stale
-> configuration due to the logic present in
-> pci_restore_aspm_l1ss_state(). So, attempt to save the downstream
-> port L1ss registers when we are at the upstream component.
+On Tue, Nov 26, 2024 at 06:50:20PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Nov 21, 2024 at 04:23:19PM +0100, Niklas Cassel wrote:
+> > Hello all,
+> > 
+> > The pci-epf-test driver recently moved to the pci_epc_mem_map() API.
+> > This API call handle unaligned addresses seamlessly, if the EPC driver
+> > being used has implemented the .align_addr callback.
+> > 
+> > This means that pci-epf-test no longer need any special padding to the
+> > buffers that is allocated on the host side. (This was only done in order
+> > to satisfy the EPC's alignment requirements.)
+> > 
+> > In fact, to test that the pci_epc_mem_map() API is working as intended,
+> > it is important that the host side does not only provide buffers that
+> > are nicely aligned.
+> > 
 > 
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
->  drivers/pci/pcie/aspm.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> I don't agree with the idea of testing the endpoint internal API behavior with
+> the pci_endpoint_test driver. The driver is supposed to test the functionality
+> of the endpoint, which it already does. By adding these kind of checks, we are
+> just going to make the driver bloat.
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index cee2365e54b8..769a305fad63 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -99,6 +99,19 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
->  	cap = &save_state->cap.data[0];
->  	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
->  	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
-> +
-> +	/*
-> +	 * It is possible that the downstream port's L1ss registers were not
-> +	 * saved after the initial configuration performed in the function
-> +	 * aspm_calc_l12_info() during the child bus probe. If the upstream port
-> +	 * config space is saved-restored due to some reason, the downstream
-> +	 * port L1ss registers will be overwritten with stale configuration due
-> +	 * to the logic present in pci_restore_aspm_l1ss_state(). So, attempt to
-> +	 * save the downstream port L1ss registers when we are at the upstream
-> +	 * component.
-> +	 */
-> +	if (!pcie_downstream_port(pdev))
-> +		pci_save_aspm_l1ss_state(pdev->bus->self);
->  }
->  
->  void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
+> I suppose if the API behavior is wrong, then it should be caught in the existing
+> READ/WRITE tests, no?
+
+As of today, certain EPC drivers have implemented .align_addr():
+drivers/pci/controller/dwc/pcie-designware-ep.c (i.e. all DWC based EPC driver)
+drivers/pci/controller/pcie-rockchip-ep.c
+
+Drivers currently missing .align_addr():
+drivers/pci/controller/cadence/pcie-cadence-ep.c
+drivers/pci/controller/pcie-rcar-ep.c
+
+For drivers that are implementing .align_addr(), there is currently nothing
+that verifies that the .align_addr() is actually working
+(because the host side driver unconditionally adds padding for the buffers.)
+
+That is what this patch is trying to fix.
+
+
 > 
+> > However, since not all EPC drivers have implemented the .align_addr
+> > callback, add support for capabilities in pci-epf-test, and if the
+> > EPC driver implements the .align_addr callback, set a new
+> > CAP_UNALIGNED_ACCESS capability. If CAP_UNALIGNED_ACCESS is set, do not
+> > allocate overly sized buffers on the host side.
+> > 
+> 
+> This also feels wrong to me. The host driver should care about the alignment
+> restrictions of the endpoint and then allocate the buffers accordingly, not the
+> other way.
+
+In my opinion, originally the drivers/misc/pci_endpoint_test.c host side driver
+had no special padding of the allocated buffers on the host side.
+
+Then when support for an EPC which had an alignment requirement on the outbound
+iATU, Kishon decided to add padding to the host side buffers in commit:
+13107c60681f ("misc: pci_endpoint_test: Add support to provide aligned buffer addresses")
+
+such that the EP could perform I/O to the host without any changes needed on EP
+side. I think that this commit/approach was a mistake.
+
+The proper solution for this would have been to add an EPC side API which maps
+the "aligned" address, and then writes to an offset within that mapping.
+
+This is what we have implemented in commits (which is now in Torvalds tree):
+ce1dfe6d3289 ("PCI: endpoint: Introduce pci_epc_mem_map()/unmap()")
+and
+08cac1006bfc ("PCI: endpoint: test: Use pci_epc_mem_map/unmap()")
+
+
+IMO, an EPF driver should be able to write to any PCI address.
+(Especially since this can be solved trivially by EPF drivers simply using
+pci_epc_mem_map()/unmap())
+
+E.g. the upcoming NVMe EPF driver uses the NVMe host side driver.
+This host side driver does no magic padding on host side for endpoints
+(NVMe controllers) that have an iATU with outbound address alignment
+restriction.
+
+Imagine e.g. another EPF driver, for another existing protocol, e.g. AHCI.
+Modifying existing generic Linux drivers (e.g. the AHCI driver), simply because
+some random EPC driver has a specific outbound alignment requirement (that can
+simply be ignored by using pci_epc_mem_map/unmap()) does not make sense IMO.
+
+
+> 
+> That being said, I really like to get rid of the hardcoded
+> 'pci_endpoint_test_data::alignment' field and make the driver learn about it
+> dynamically. I'm just thinking out loud here.
+
+That would certainly be possible, by simply dedicating a new register to that
+in the test BAR (struct pci_epf_test_reg). However, I think that that would be
+a worse alternative compared to what this series is proposing.
+
+The only ugliness in my opinion is that we are setting the CAP_UNALIGNED_ACCESS
+capability based on if an EPC driver has implemented the .align_addr callback.
+
+If we could simply implement .align_addr() in the two missing EPC drivers:
+drivers/pci/controller/cadence/pcie-cadence-ep.c
+drivers/pci/controller/pcie-rcar-ep.c
+
+pci-epf-test.c could set the CAP_UNALIGNED_ACCESS capability unconditionally.
+
+However, I do not have the hardware for those two drivers, so I cannot
+implement .align_addr() for those myself.
+
+So in order to be able to move forward, I think that simply letting
+pci-epf-test.c check if the EPC driver which is currently in use has
+implemented the .align_addr callback, is a tolerable ugliness.
+
+Once all EPC drivers have implemented .align_addr(), we could change
+pci-epf-test.c to unconditionally set the CAP_UNALIGNED_ACCESS capability.
+
+
+Kind regards,
+Niklas
 
