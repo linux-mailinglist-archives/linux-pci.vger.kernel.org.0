@@ -1,337 +1,128 @@
-Return-Path: <linux-pci+bounces-17416-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17417-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6551D9DA85C
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 14:19:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEAD39DA863
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 14:20:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 066B216150F
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 13:19:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D82A162908
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 13:20:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D31F61FCF43;
-	Wed, 27 Nov 2024 13:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3D311FCF4F;
+	Wed, 27 Nov 2024 13:20:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORt6JtB7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZBXA3cOB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED8E1F9F7B;
-	Wed, 27 Nov 2024 13:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB931FC0F3
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 13:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732713549; cv=none; b=TFPpJR934kmNEbJWR4HDaSvU02HKUuAkw6HF/bFNDmIFqOTtomf70tJp4YRbMTz8u/1OIRFgatBa1JAfIAuWtAJnsMJ7TCyjybq0e9aaodifXgFnmwW2684NKJWSOymEL7Ut9wUClVlCBVsf6IW9WK94P0eKmhBlVWb+dFxvmPM=
+	t=1732713653; cv=none; b=rt7DUTl0v9tFlMBi8ZwTWIYogigmvlfDIxvfhxMMjREasCorZL7feOtWQ3wbetispWLDfdMO2DEW0uyxtaIVzjHli/wi+XB9FLKZgQ7dwPTEoVlaSvD9wU+7XKiJgak0qkVx1jEvGRdsCGiLIXFM+QakdN+MAnCaEecK2ITlHwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732713549; c=relaxed/simple;
-	bh=kxL0Zkeo5uAXQmY3VqSiVP2yx4xsPIvyi5uasz7Z0ac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jEo1CruuoC8NttK4fKKGv+6uO8N3XfJYrFAth1H1XRMkPHmIwldwoe0zI+t0+FchxMQEDsaJZ8bl83VBpOTxHrOMoxbXvLszPQmMydmbxustd+FU7UHWjJ+9y/bI4iF1PcHbH/cIKursLaQVRf9BCP0uLnlXcbh65DtgblMVyD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORt6JtB7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC04C4CECC;
-	Wed, 27 Nov 2024 13:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732713549;
-	bh=kxL0Zkeo5uAXQmY3VqSiVP2yx4xsPIvyi5uasz7Z0ac=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ORt6JtB7U+kKQVqsLrg/2z2unpSAKuiURGH9TN3R/vzbn2nYg1TIY8o3LgB063SWy
-	 V3ZPFzFI6d1hUzdmD/tJtbfAL43R+5I4dtDgYw4Mrsq8+jN81Alndgx/W66PRMrZ8m
-	 nFBZyIETqFx/tVb+MOyU0evcQMOoXLr8b38wYYmrT8/cRx8Y/e4b8+vlFDJmOIpSrE
-	 nIcjXBM8CKmgvETimKjWtm2c6z6yxunignSIh6wERI7sDR5bFCrasSPUti0WUa4uiC
-	 eYnKzKXKrXj3SHBwQand1QhFmGrTpn96wFXWeItINJuxa0bLPLlA81yNJqi6DVOF0X
-	 5cT+hcq0vYCvQ==
-Message-ID: <38d708b5-7a73-4736-909c-eefd3c938769@kernel.org>
-Date: Wed, 27 Nov 2024 14:19:02 +0100
+	s=arc-20240116; t=1732713653; c=relaxed/simple;
+	bh=WTt75bBcJkp5uZEdeVnXg+4b8wvHx7hFnzaZQb7uQHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HRUZHnfWS0mx4c5FcZvZ/sNx5PRr6DrZ9wT0RFtmD7T1p9tvIR+HJqtsH5xDkWoIBV27FlkO/wEMhtL8FsL0HIhREdKxpHTVfedH0C2G22UXaHgEclzcLOArUfiQNpbCwyDM0gHItMDzxS4cTjAtiiOo29j05GaDm5ptvYR0qs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZBXA3cOB; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38232cebb0cso5106397f8f.1
+        for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 05:20:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732713650; x=1733318450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HqRMluSX7bPKY9IoaSKl+6ql8Su2K5GfIIK1LXdOHlE=;
+        b=ZBXA3cOBEI5/Qe8ReYvO3hkSY90x55CeSTikUYNZ+2SLkoaOsLNLCPfD79SjZocmJz
+         40zR9+dniP1gZwe/pdfeOB7w6Gx29IqcDJiekO/zikrW6MkNpHeQjZ/cxVJQwwiwMlTN
+         d9t4JsWc4lQlJ7oV2etqBc328AJ48YgjkSdud9+zaa39EUyJjB6SelhwIZ8YQ0b0qnhr
+         jMceuX79rzufNjaGpLwnzeFSrwlI+D88SvGhuK8rY2DHWLi7aT/BmQTPGYxCU8PIC0wP
+         DYVZDN0J9FJe/ZQGnHe7vJcZvc/re1BM+evo8bHgMrwziHmQvdO0Ff93/sTAdmjZhtIu
+         +dMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732713650; x=1733318450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HqRMluSX7bPKY9IoaSKl+6ql8Su2K5GfIIK1LXdOHlE=;
+        b=V97JJpuR7ss5oCrsi3ccVfjThRq+rELHVBIfYq5/5J8bxUycTs8ZJ1EWDEkIrGHehr
+         KlNE8HwvlEPQ8hzATfBZ3lJ0BsztXoBbUnWRuIvX4DWcQCNgAk5rHoDAv9IGGUGiC0Dm
+         5POBBL/Ri2LnZ2AQgvCgewsrzCzeYr1Jn3XvmK9U/c0JOAGo1rG9A0aKdlvMBl8t3q3Q
+         WfveQzu0Q7vRywotZy00mP3hpyNK65B8hvJSShhmWM54D9eNj0srexQyFQid1zOoT+ID
+         DCR3dMn0q3Kes7JlcTyjoTqrEputdF7fLOiomI9A3oMODppDuFf97ytWK8RMGJ4bqiUU
+         dCWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCWJiEPoE+j4tm0iI4Namc1vGMQKKKVZa53Npgg1fokV0GxfIYHKhOvTWhK8M2znS7EQjJVXGKHBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO3rCMzfZphbvRnLU9oAMfbYjjep9yCWsvZWitgzNn8mdbpYpA
+	9+fhnf+tujhxPo7WpWTxximgR5Ho0wjRRdZ/hk/nlzhX5L4LrPMXwC7DpYtindBq+E4qISjtKOs
+	zEj+nMzHdaVdVdMyJVgx+cDnUiwQyAFj9NIXS
+X-Gm-Gg: ASbGnctmJiSqg3anz+fEV0aAW+LCxYRTRV3Q56OO9mrcqef4FbhBcrJseJhFgPeHBmI
+	WvVkxu6TXKOTsM6HtRDHPC6J3eDaps+Q0S57jYQn/m4UnuYPVQj+pat6veTHJBg==
+X-Google-Smtp-Source: AGHT+IG4+Q9bIy7rext2rN+trmXuD+MQjvH5vE635+hgAaEldDWE5YGrYgmPhGJKwuHwh/U+sltj/EcCSBTAHe6mJJI=
+X-Received: by 2002:a05:6000:1562:b0:382:383e:84e2 with SMTP id
+ ffacd0b85a97d-385c6edb2a4mr2585883f8f.46.1732713650357; Wed, 27 Nov 2024
+ 05:20:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-11-dakr@kernel.org>
+ <CAH5fLgjdKRCECmZbjC-+6SQffFtgimfxhDJ3grVw1_hbQec1-Q@mail.gmail.com> <38d708b5-7a73-4736-909c-eefd3c938769@kernel.org>
+In-Reply-To: <38d708b5-7a73-4736-909c-eefd3c938769@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 27 Nov 2024 14:20:38 +0100
+Message-ID: <CAH5fLgg9xkMeGZi_4aN60UMtpvOx2CY5JQc26swMtXTaJsE=-w@mail.gmail.com>
 Subject: Re: [PATCH v3 10/16] rust: add devres abstraction
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com,
- fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
- ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
- daniel.almeida@collabora.com, saravanak@google.com,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-11-dakr@kernel.org>
- <CAH5fLgjdKRCECmZbjC-+6SQffFtgimfxhDJ3grVw1_hbQec1-Q@mail.gmail.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <CAH5fLgjdKRCECmZbjC-+6SQffFtgimfxhDJ3grVw1_hbQec1-Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com, 
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/27/24 1:21 PM, Alice Ryhl wrote:
-> On Tue, Oct 22, 2024 at 11:33 PM Danilo Krummrich <dakr@kernel.org> wrote:
->>
->> Add a Rust abstraction for the kernel's devres (device resource
->> management) implementation.
->>
->> The Devres type acts as a container to manage the lifetime and
->> accessibility of device bound resources. Therefore it registers a
->> devres callback and revokes access to the resource on invocation.
->>
->> Users of the Devres abstraction can simply free the corresponding
->> resources in their Drop implementation, which is invoked when either the
->> Devres instance goes out of scope or the devres callback leads to the
->> resource being revoked, which implies a call to drop_in_place().
->>
->> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->> ---
->>   MAINTAINERS            |   1 +
->>   rust/helpers/device.c  |  10 +++
->>   rust/helpers/helpers.c |   1 +
->>   rust/kernel/devres.rs  | 180 +++++++++++++++++++++++++++++++++++++++++
->>   rust/kernel/lib.rs     |   1 +
->>   5 files changed, 193 insertions(+)
->>   create mode 100644 rust/helpers/device.c
->>   create mode 100644 rust/kernel/devres.rs
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 0a8882252257..97914d0752fb 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -6983,6 +6983,7 @@ F:        include/linux/property.h
->>   F:     lib/kobj*
->>   F:     rust/kernel/device.rs
->>   F:     rust/kernel/device_id.rs
->> +F:     rust/kernel/devres.rs
->>   F:     rust/kernel/driver.rs
->>
->>   DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
->> diff --git a/rust/helpers/device.c b/rust/helpers/device.c
->> new file mode 100644
->> index 000000000000..b2135c6686b0
->> --- /dev/null
->> +++ b/rust/helpers/device.c
->> @@ -0,0 +1,10 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/device.h>
->> +
->> +int rust_helper_devm_add_action(struct device *dev,
->> +                               void (*action)(void *),
->> +                               void *data)
->> +{
->> +       return devm_add_action(dev, action, data);
->> +}
->> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
->> index e2f6b2197061..3acb2b9e52ec 100644
->> --- a/rust/helpers/helpers.c
->> +++ b/rust/helpers/helpers.c
->> @@ -11,6 +11,7 @@
->>   #include "bug.c"
->>   #include "build_assert.c"
->>   #include "build_bug.c"
->> +#include "device.c"
->>   #include "err.c"
->>   #include "io.c"
->>   #include "kunit.c"
->> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
->> new file mode 100644
->> index 000000000000..b23559f55214
->> --- /dev/null
->> +++ b/rust/kernel/devres.rs
->> @@ -0,0 +1,180 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +//! Devres abstraction
->> +//!
->> +//! [`Devres`] represents an abstraction for the kernel devres (device resource management)
->> +//! implementation.
->> +
->> +use crate::{
->> +    alloc::Flags,
->> +    bindings,
->> +    device::Device,
->> +    error::{Error, Result},
->> +    prelude::*,
->> +    revocable::Revocable,
->> +    sync::Arc,
->> +};
->> +
->> +use core::ffi::c_void;
->> +use core::ops::Deref;
->> +
->> +#[pin_data]
->> +struct DevresInner<T> {
->> +    #[pin]
->> +    data: Revocable<T>,
->> +}
->> +
->> +/// This abstraction is meant to be used by subsystems to containerize [`Device`] bound resources to
->> +/// manage their lifetime.
->> +///
->> +/// [`Device`] bound resources should be freed when either the resource goes out of scope or the
->> +/// [`Device`] is unbound respectively, depending on what happens first.
->> +///
->> +/// To achieve that [`Devres`] registers a devres callback on creation, which is called once the
->> +/// [`Device`] is unbound, revoking access to the encapsulated resource (see also [`Revocable`]).
->> +///
->> +/// After the [`Devres`] has been unbound it is not possible to access the encapsulated resource
->> +/// anymore.
->> +///
->> +/// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
->> +/// [`Drop`] implementation.
->> +///
->> +/// # Example
->> +///
->> +/// ```no_run
->> +/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::Io};
->> +/// # use core::ops::Deref;
->> +///
->> +/// // See also [`pci::Bar`] for a real example.
->> +/// struct IoMem<const SIZE: usize>(Io<SIZE>);
->> +///
->> +/// impl<const SIZE: usize> IoMem<SIZE> {
->> +///     /// # Safety
->> +///     ///
->> +///     /// [`paddr`, `paddr` + `SIZE`) must be a valid MMIO region that is mappable into the CPUs
->> +///     /// virtual address space.
->> +///     unsafe fn new(paddr: usize) -> Result<Self>{
->> +///
->> +///         // SAFETY: By the safety requirements of this function [`paddr`, `paddr` + `SIZE`) is
->> +///         // valid for `ioremap`.
->> +///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE.try_into().unwrap()) };
->> +///         if addr.is_null() {
->> +///             return Err(ENOMEM);
->> +///         }
->> +///
->> +///         // SAFETY: `addr` is guaranteed to be the start of a valid I/O mapped memory region of
->> +///         // size `SIZE`.
->> +///         let io = unsafe { Io::new(addr as _, SIZE)? };
->> +///
->> +///         Ok(IoMem(io))
->> +///     }
->> +/// }
->> +///
->> +/// impl<const SIZE: usize> Drop for IoMem<SIZE> {
->> +///     fn drop(&mut self) {
->> +///         // SAFETY: Safe as by the invariant of `Io`.
->> +///         unsafe { bindings::iounmap(self.0.base_addr() as _); };
->> +///     }
->> +/// }
->> +///
->> +/// impl<const SIZE: usize> Deref for IoMem<SIZE> {
->> +///    type Target = Io<SIZE>;
->> +///
->> +///    fn deref(&self) -> &Self::Target {
->> +///        &self.0
->> +///    }
->> +/// }
->> +///
->> +/// # fn no_run() -> Result<(), Error> {
->> +/// # // SAFETY: Invalid usage; just for the example to get an `ARef<Device>` instance.
->> +/// # let dev = unsafe { Device::from_raw(core::ptr::null_mut()) };
->> +///
->> +/// // SAFETY: Invalid usage for example purposes.
->> +/// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
->> +/// let devres = Devres::new(&dev, iomem, GFP_KERNEL)?;
->> +///
->> +/// let res = devres.try_access().ok_or(ENXIO)?;
->> +/// res.writel(0x42, 0x0);
->> +/// # Ok(())
->> +/// # }
->> +/// ```
->> +pub struct Devres<T>(Arc<DevresInner<T>>);
->> +
->> +impl<T> DevresInner<T> {
->> +    fn new(dev: &Device, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
->> +        let inner = Arc::pin_init(
->> +            pin_init!( DevresInner {
->> +                data <- Revocable::new(data),
->> +            }),
->> +            flags,
->> +        )?;
->> +
->> +        // Convert `Arc<DevresInner>` into a raw pointer and make devres own this reference until
->> +        // `Self::devres_callback` is called.
->> +        let data = inner.clone().into_raw();
->> +
->> +        // SAFETY: `devm_add_action` guarantees to call `Self::devres_callback` once `dev` is
->> +        // detached.
->> +        let ret = unsafe {
->> +            bindings::devm_add_action(dev.as_raw(), Some(Self::devres_callback), data as _)
->> +        };
->> +
->> +        if ret != 0 {
->> +            // SAFETY: We just created another reference to `inner` in order to pass it to
->> +            // `bindings::devm_add_action`. If `bindings::devm_add_action` fails, we have to drop
->> +            // this reference accordingly.
->> +            let _ = unsafe { Arc::from_raw(data) };
->> +            return Err(Error::from_errno(ret));
->> +        }
->> +
->> +        Ok(inner)
->> +    }
->> +
->> +    #[allow(clippy::missing_safety_doc)]
->> +    unsafe extern "C" fn devres_callback(ptr: *mut c_void) {
->> +        let ptr = ptr as *mut DevresInner<T>;
->> +        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
->> +        // reference.
->> +        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
->> +        //         `DevresInner::new`.
->> +        let inner = unsafe { Arc::from_raw(ptr) };
->> +
->> +        inner.data.revoke();
->> +    }
->> +}
->> +
->> +impl<T> Devres<T> {
->> +    /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
->> +    /// returned `Devres` instance' `data` will be revoked once the device is detached.
->> +    pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
->> +        let inner = DevresInner::new(dev, data, flags)?;
->> +
->> +        Ok(Devres(inner))
->> +    }
->> +
->> +    /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
->> +    /// is owned by devres and will be revoked / dropped, once the device is detached.
->> +    pub fn new_foreign_owned(dev: &Device, data: T, flags: Flags) -> Result {
->> +        let _ = DevresInner::new(dev, data, flags)?;
->> +
->> +        Ok(())
->> +    }
->> +}
->> +
->> +impl<T> Deref for Devres<T> {
->> +    type Target = Revocable<T>;
->> +
->> +    fn deref(&self) -> &Self::Target {
->> +        &self.0.data
->> +    }
->> +}
->> +
->> +impl<T> Drop for Devres<T> {
->> +    fn drop(&mut self) {
->> +        // Revoke the data, such that it gets dropped already and the actual resource is freed.
->> +        // `DevresInner` has to stay alive until the devres callback has been called. This is
->> +        // necessary since we don't know when `Devres` is dropped and calling
->> +        // `devm_remove_action()` instead could race with `devres_release_all()`.
->> +        self.revoke();
-> 
-> When the destructor runs, it's guaranteed that nobody is accessing the
-> inner resource since the only way to do that is through the Devres
-> handle, but its destructor is running. Therefore, you can skip the
-> synchronize_rcu() call in this case.
+On Wed, Nov 27, 2024 at 2:19=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On 11/27/24 1:21 PM, Alice Ryhl wrote:
+> > On Tue, Oct 22, 2024 at 11:33=E2=80=AFPM Danilo Krummrich <dakr@kernel.=
+org> wrote:
+> >> +impl<T> Drop for Devres<T> {
+> >> +    fn drop(&mut self) {
+> >> +        // Revoke the data, such that it gets dropped already and the=
+ actual resource is freed.
+> >> +        // `DevresInner` has to stay alive until the devres callback =
+has been called. This is
+> >> +        // necessary since we don't know when `Devres` is dropped and=
+ calling
+> >> +        // `devm_remove_action()` instead could race with `devres_rel=
+ease_all()`.
+> >> +        self.revoke();
+> >
+> > When the destructor runs, it's guaranteed that nobody is accessing the
+> > inner resource since the only way to do that is through the Devres
+> > handle, but its destructor is running. Therefore, you can skip the
+> > synchronize_rcu() call in this case.
+>
+> Yeah, I think this optimization should be possible.
+>
+> We'd require `Revocable` to have a `revoke_nosync` method for that I gues=
+s...
 
-Yeah, I think this optimization should be possible.
+Agreed, you could have an unsafe method for revoking where you assert
+that nobody else is accessing the value.
 
-We'd require `Revocable` to have a `revoke_nosync` method for that I guess...
-
-> 
-> Alice
-> 
-
+Alice
 
