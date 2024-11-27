@@ -1,87 +1,88 @@
-Return-Path: <linux-pci+bounces-17385-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17386-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 162639DA1D9
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 06:52:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 791449DA1E8
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 07:01:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C274B243FB
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 05:52:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 390C2284D90
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 06:01:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6222213D89D;
-	Wed, 27 Nov 2024 05:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BAEF1465A5;
+	Wed, 27 Nov 2024 06:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ol4YEaIy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lgCuCjMg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E6813B588
-	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 05:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4285913B2AF
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 06:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732686760; cv=none; b=kARGxp9Fyqt+rJ7Gwh/tA0wOnROCtPdntD0JLjTbi1zcRkt0TcmkzDeQdHaWyRr0dK4uibzBDpLa/8u+6By7Cup7T4jg4HTxjkSTGKke632zE2u7ICeyZ24eC47dxpT+IB1aKQ+gHZLqC4MMgKroD5spXwoaJsm4Lr478f1cElw=
+	t=1732687306; cv=none; b=hqt4nqhiTOylAjcQ7b4HgeBJpG/TSYeSFPJlwxI5LRKd4C3nu/laEVZQYuqUJywTd5ucNFPup6DLEuGO9fRaRbiSLvIUneOBZ10//ZE7LM95ori/zl4Qt4mXLUMUCdZYl1CoRtwCUaJ5jSwUsaGX5epDDGQTA6T0etDJHkpkuqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732686760; c=relaxed/simple;
-	bh=8wSEK34xkLhZtXK37T+CTmIrQOnSc9SCmTBnCKGvzyc=;
+	s=arc-20240116; t=1732687306; c=relaxed/simple;
+	bh=+pmdwmmhZdYr6Apa02nMXEwsIq+I1rZk5qVaZg/xJpc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENUtF4PsvoJovL3BEQhtC57XNrV15S5vnKkNCEpfK/DnwmZI01/BAi4S0c48TQabf4NyNWL7zQzbsw6oRpo1bHnnVFg9Zjkll3DHtMsrveGTCGT2It8Pasr2FaSX9mB4nVJYGiXSx+pA//381y7so0YaegTomIt7DIhiIc9u2Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ol4YEaIy; arc=none smtp.client-ip=209.85.160.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZDcIh6vspRQVyu5hZihDA6kebkktBi/s3teHBlyzjXEdM2WEy81hhOpCSfXBeVpzz1/Vheun5MB6nLKB/ADoUHELHDy3waahSEUTf2ZOspvtKWoYu1OYwpXQDaNp60FCNdapzcfYSGH5N+waUOst/GUZRGG4peEAzeRtjK1498=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lgCuCjMg; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-29afb4ab611so867961fac.3
-        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 21:52:38 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2129fd7b1a5so46505105ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 26 Nov 2024 22:01:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732686757; x=1733291557; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732687302; x=1733292102; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=voChsGLrkE+GyaA+f7Vgob8Q+nkDeOaBSaxqsWvFCZw=;
-        b=ol4YEaIyHWy4qYTvNq/kWp1PjQWmCQ3vbU2NZiExLKWnsCdKhb3UdyjkIcmS+5hG+s
-         lvF2sDAuLdhbt656dYo1J9PonQsR4dHfY7fp6VIQkzqxoMBNZxhrNUxHGBYm4wgMXkcI
-         5B5GkEhp0zRmo3zdBxAiFu4eP8icsOzMEqsUrieNw/4gnyUnIS/Lj0Y0/YnhNVTpuWfv
-         0+UPt6nPW5KpnCi5tMj4IUgSJG3hAzVuQ/sD9byshMBDqjtTZFtG+fpomWkVKdVKVlnR
-         6OBG/yOJMOqfn4wLndp5gCF1qlOWjsNCgN7kE8cl/fOWSr/TNi/0QG3ToBgI8qhELfbV
-         0klA==
+        bh=ykkZstOa8bXXD8shy4Wz7LF8azAidbDjZzgBbS7DJo4=;
+        b=lgCuCjMg8lt1ERGSh/I/g2XeWt2DRWH1Mq3gosmavMfNPvHDDWXkQuvGq2e5Z0QfiZ
+         VWRCCbJaOlOXEkxiKgCp/rNXRd4pEsWY4otUnmEPDuDdxi3Ow66VZOidmq5kMymMV/5r
+         y2eWcrZaL8rCIhQtO4Tj32MxfG8nfAukJF0qeXgUzeFREEr2ZFRWI0nV949Sg1jAR63+
+         iOJwjBHXtpkB+O1vOtXRSnHezy0o5eznT6VsMxI8YmJ1OGMLOWz8uCdiufPAYRpMU9SP
+         kTg8dIty4ScvJe2iFU/kt/NPNh8zZOvZ4RWWcI/9/IELd2Y4GI5e571IanmqH5eZG/nZ
+         /kvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732686757; x=1733291557;
+        d=1e100.net; s=20230601; t=1732687302; x=1733292102;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=voChsGLrkE+GyaA+f7Vgob8Q+nkDeOaBSaxqsWvFCZw=;
-        b=UwpZrZl4TvbgzrDhsqX48HEZ0DZQ2qnwoBHpQfdKe57jtVzEj7248e2mcrgUOycsjT
-         N9ROYX0LA2mpHOjGV160cGxiNtXNdvKjhOq1vbp6SgrtXgK7xNduuBnGT7GUVyVzerYQ
-         I8SSAgo+OXsrSjANPkh0rw6f3frtgKELMc1gPlA4v34W1CqmGM4aM3CBQb6iHtb3Dv3G
-         1htCqYr/AVip/4PGeXldIrEutE2rBDJ62tbU9o22sZygLp+QpQsQnHBrEeEvTwX79DR4
-         IgSXQN619WOjIPM1rH+4xsd+3ew7KW0FR8OZ7pejIvdDmtpwYhhhMpRtA2SGjRIj9sJb
-         IF0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWEdQurNIC7zcKPi93qV+HjLcxgNj8JGPqDtupW0cH1OmquePgSXjfJQ6qxJSCJhunpHA33+AVmjjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVnnAWFRNEtQHApmGJTowFHiUkzF7FzipQlGHsHH/Cb421w7b3
-	iqHpxSEyU0AKJU9Gg/svu3J0P9R5u4eF0ER3/UXzxYbY6opmdPxZn55Rw8Bilw==
-X-Gm-Gg: ASbGnctM1Ra49KmNXGDs79K5ZTwT7ubkJ+Ptj3MjQsxgfIWsDVG7xv/cKOcbKywRcvH
-	8CBU0cVJhcYiT7m3qiYq9jFLAEDYQ2sSF306m7NGjQGI1fzzI3f07o792pqsTHfnkLSDRxPozgI
-	VGKQMnrCxMeNwBK4OPxIYltsGs3P9+bZVOfasXTG5mCIswioldImZqwfHMYpvOxpZKUdsCRORMh
-	FmYxeCBF+bFWNNUuFHoQRx5CvE6UzeAiHcE6JvcuroWBMa4r+mok3/auSo/
-X-Google-Smtp-Source: AGHT+IG7pDpk5fKyrnoUxeCSQMQse/GQ2TUI1vIZqymr1dnKy51d2wQ4iwswjQ06MZVyqtuFQ0gPXA==
-X-Received: by 2002:a05:6808:3087:b0:3ea:4c84:174b with SMTP id 5614622812f47-3ea6dd54d6fmr2023349b6e.31.1732686757722;
-        Tue, 26 Nov 2024 21:52:37 -0800 (PST)
+        bh=ykkZstOa8bXXD8shy4Wz7LF8azAidbDjZzgBbS7DJo4=;
+        b=ogWlA8ShnR43OWmS3hX/Kn+SUqqn6WCAibJ6+WrRR+QgsHLuyIjh9piD2IMS+DKDFC
+         GZgwXSP/ndvusgEdTbgXIcwSUuKzliDxlllhdPrbrPfqbFnk7rK6/5Vk3gC658SKm6O+
+         ooUWyjoK9WCHn/0QZKEAvKfHVg8Jk8awhzCR22oTG/ONgm+1yDakBuG0e3E9QelmVpPH
+         2/8HzDnooFOYP8dcK5cdqCo3OwqdFEg8nT4t10FDKbim/3T75QuklKIWS01U+2NWybac
+         FW4f5lwkYQbBHWynDWZrebbL0ZrTd/DUlWayXCe5vgGfHHUSL6cI9Px7B97QGa1guhoS
+         TGAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWz5cy727ECOIT4DSBJ2bx/Rf+Np7TPz/bfB+TEgDonkpbGWtpCY97nEB0Gwq1XCw+bfaCxhd3NmGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHZPIxuf8R7s1laeAV75x5RuyCQlDWQf2tRcvnBlvVfTfsFrNP
+	UU8mQCjehjlKjPPUqMon6me98US8/8KpWkdaUqMXSl3xr+TtIKoB6xUnI7Iq0g==
+X-Gm-Gg: ASbGncu2c6/5KTe/WTRPm/eaAepDjIYWQAY8Zl8DzYcfOtKI16b6hpdxArh8KnWQQZn
+	lgfoPvbrVTo0XHq+9vnl+9r6viUqtlmKx199iSMxu+YY88mFS/zSskYXuAzlx70MF+O0WQP11QX
+	8RJeb4RgGl8T5+pt2P3RcMPVba+FhJU9tJPCRUrUS8zXuFpDBEu6WN2aKV4KcoTwLuQ//hGfz6F
+	LcaGCtQ/8E629us1qYRnpa0/87etFLBeNLaFyd3o2qvGESJUyuY0lPB4elK
+X-Google-Smtp-Source: AGHT+IElcgtOc9MKuqCcQKs788nAqHcwj4F+w9zIfHU7WoZTfiySo28O12pa/pXEa3gpawHEreJy/w==
+X-Received: by 2002:a17:902:d4c4:b0:212:48f2:9be9 with SMTP id d9443c01a7336-2150185797bmr20448515ad.30.1732687302401;
+        Tue, 26 Nov 2024 22:01:42 -0800 (PST)
 Received: from thinkpad ([120.60.136.64])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72512262523sm4351749b3a.72.2024.11.26.21.52.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129dba345asm95076825ad.97.2024.11.26.22.01.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 21:52:37 -0800 (PST)
-Date: Wed, 27 Nov 2024 11:22:33 +0530
+        Tue, 26 Nov 2024 22:01:41 -0800 (PST)
+Date: Wed, 27 Nov 2024 11:31:32 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 6.13] PCI/pwrctrl: Skip NULL of_node when unregistering
-Message-ID: <20241127055233.zs5egsytrz7yorjh@thinkpad>
-References: <20241126210443.4052876-1-briannorris@chromium.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: jingoohan1@gmail.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, frank.li@nxp.com,
+	quic_krichai@quicinc.com, imx@lists.linux.dev,
+	kernel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] PCI: dwc: Clean up some unnecessary codes in
+ dw_pcie_suspend_noirq()
+Message-ID: <20241127060132.hsawrwlkxkgvvji5@thinkpad>
+References: <20241126073909.4058733-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,83 +92,110 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241126210443.4052876-1-briannorris@chromium.org>
+In-Reply-To: <20241126073909.4058733-1-hongxing.zhu@nxp.com>
 
-On Tue, Nov 26, 2024 at 01:04:34PM -0800, Brian Norris wrote:
-> of_find_device_by_node() doesn't like a NULL pointer, and may end up
-> identifying an arbitrary device, which we then start tearing down. We
-> should check for NULL first.
+On Tue, Nov 26, 2024 at 03:39:09PM +0800, Richard Zhu wrote:
+> Before sending PME_TURN_OFF, don't test the LTSSM state. Since it's safe
+> to send PME_TURN_OFF message regardless of whether the link is up or
+> down. So, there would be no need to test the LTSSM state before sending
+> PME_TURN_OFF message.
 > 
-> Resolves issues seen when doing `echo 1 > /sys/bus/pci/devices/.../remove`:
+> Only print the message when ltssm_stat is not in DETECT and POLL.
+> In the other words, there isn't an error message when no endpoint is
+> connected at all.
 > 
-> [  222.952201] ------------[ cut here ]------------
-> [  222.952218] WARNING: CPU: 0 PID: 5095 at drivers/regulator/core.c:5885 regulator_unregister+0x140/0x160
-> ...
-> [  222.953490] CPU: 0 UID: 0 PID: 5095 Comm: bash Tainted: G         C         6.12.0-rc1 #3
-> ...
-> [  222.954134] Call trace:
-> [  222.954150]  regulator_unregister+0x140/0x160
-> [  222.954186]  devm_rdev_release+0x1c/0x30
-> [  222.954215]  release_nodes+0x68/0x100
-> [  222.954249]  devres_release_all+0x98/0xf8
-> [  222.954282]  device_unbind_cleanup+0x20/0x70
-> [  222.954306]  device_release_driver_internal+0x1f4/0x240
-> [  222.954333]  device_release_driver+0x20/0x40
-> [  222.954358]  bus_remove_device+0xd8/0x170
-> [  222.954393]  device_del+0x154/0x380
-> [  222.954422]  device_unregister+0x28/0x88
-> [  222.954451]  of_device_unregister+0x1c/0x30
-> [  222.954488]  pci_stop_bus_device+0x154/0x1b0
-> [  222.954521]  pci_stop_and_remove_bus_device_locked+0x28/0x48
-> [  222.954553]  remove_store+0xa0/0xb8
-> [  222.954589]  dev_attr_store+0x20/0x40
-> [  222.954615]  sysfs_kf_write+0x4c/0x68
-> [  222.954644]  kernfs_fop_write_iter+0x128/0x200
-> [  222.954670]  do_iter_readv_writev+0xdc/0x1e0
-> [  222.954709]  vfs_writev+0x100/0x2a0
-> [  222.954742]  do_writev+0x84/0x130
-> [  222.954773]  __arm64_sys_writev+0x28/0x40
-> [  222.954808]  invoke_syscall+0x50/0x120
-> [  222.954845]  el0_svc_common.constprop.0+0x48/0xf0
-> [  222.954878]  do_el0_svc+0x24/0x38
-> [  222.954910]  el0_svc+0x34/0xe0
-> [  222.954945]  el0t_64_sync_handler+0x120/0x138
-> [  222.954978]  el0t_64_sync+0x190/0x198
-> [  222.955006] ---[ end trace 0000000000000000 ]---
-> [  222.965216] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000c0
-> ...
-> [  223.107395] CPU: 3 UID: 0 PID: 5095 Comm: bash Tainted: G        WC         6.12.0-rc1 #3
-> ...
-> [  223.227750] Call trace:
-> [  223.230501]  pci_stop_bus_device+0x190/0x1b0
-> [  223.235314]  pci_stop_and_remove_bus_device_locked+0x28/0x48
-> [  223.241672]  remove_store+0xa0/0xb8
-> [  223.245616]  dev_attr_store+0x20/0x40
-> [  223.249737]  sysfs_kf_write+0x4c/0x68
-> [  223.253859]  kernfs_fop_write_iter+0x128/0x200
-> [  223.253887]  do_iter_readv_writev+0xdc/0x1e0
-> [  223.263631]  vfs_writev+0x100/0x2a0
-> [  223.267550]  do_writev+0x84/0x130
-> [  223.271273]  __arm64_sys_writev+0x28/0x40
-> [  223.275774]  invoke_syscall+0x50/0x120
-> [  223.279988]  el0_svc_common.constprop.0+0x48/0xf0
-> [  223.285270]  do_el0_svc+0x24/0x38
-> [  223.288993]  el0_svc+0x34/0xe0
-> [  223.292426]  el0t_64_sync_handler+0x120/0x138
-> [  223.297311]  el0t_64_sync+0x190/0x198
-> [  223.301423] Code: 17fffff8 91030000 d2800101 f9800011 (c85f7c02)
-> [  223.308248] ---[ end trace 0000000000000000 ]---
-> 
-> Fixes: 681725afb6b9 ("PCI/pwrctl: Remove pwrctl device without iterating over all children of pwrctl parent")
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-
-Hmm, again of_find_device_by_node()...
-
-Thanks for the patch.
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
+
+> ---
+> v5 changes:
+> - Remove the redundant check "(val > DW_PCIE_LTSSM_DETECT_WAIT)".
+> v4 changes:
+> - Keep error return when L2 entry is failed and the endpoint is
+>   connected refer to Krishna' comments. Thanks.
+> v3 changes:
+> - Refine the commit message refer to Manivannan's comments.
+> - Regarding Frank's comments, avoid 10ms wait when no link up.
+> v2 changes:
+> - Don't remove L2 poll check.
+> - Add one 1us delay after L2 entry.
+> - No error return when L2 entry is timeout
+> - Don't print message when no link up.
+> ---
+>  .../pci/controller/dwc/pcie-designware-host.c | 38 +++++++++++--------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  2 files changed, 23 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 24e89b66b772..bbd0ee862c12 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -927,25 +927,31 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+>  		return 0;
+>  
+> -	/* Only send out PME_TURN_OFF when PCIE link is up */
+> -	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
+> -		if (pci->pp.ops->pme_turn_off)
+> -			pci->pp.ops->pme_turn_off(&pci->pp);
+> -		else
+> -			ret = dw_pcie_pme_turn_off(pci);
+> -
+> -		if (ret)
+> -			return ret;
+> +	if (pci->pp.ops->pme_turn_off)
+> +		pci->pp.ops->pme_turn_off(&pci->pp);
+> +	else
+> +		ret = dw_pcie_pme_turn_off(pci);
+> +	if (ret)
+> +		return ret;
+>  
+> -		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> -					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> -					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> -		if (ret) {
+> -			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> -			return ret;
+> -		}
+> +	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> +				val == DW_PCIE_LTSSM_L2_IDLE ||
+> +				val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> +				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> +				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> +	if (ret) {
+> +		/* Only dump message when ltssm_stat isn't in DETECT and POLL */
+> +		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> +		return ret;
+>  	}
+>  
+> +	/*
+> +	 * Refer to r6.0, sec 5.3.3.2.1, software should wait at least
+> +	 * 100ns after L2/L3 Ready before turning off refclock and
+> +	 * main power. It's harmless too when no endpoint connected.
+> +	 */
+> +	udelay(1);
+> +
+>  	dw_pcie_stop_link(pci);
+>  	if (pci->pp.ops->deinit)
+>  		pci->pp.ops->deinit(&pci->pp);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 347ab74ac35a..bf036e66717e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -330,6 +330,7 @@ enum dw_pcie_ltssm {
+>  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
+>  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+>  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
+> +	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
+>  	DW_PCIE_LTSSM_L0 = 0x11,
+>  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+>  
+> -- 
+> 2.37.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
