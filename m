@@ -1,102 +1,134 @@
-Return-Path: <linux-pci+bounces-17406-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17407-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D7519DA5CA
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 11:31:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A570A9DA637
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 11:54:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95AB116287E
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 10:31:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5387E163C46
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 10:54:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0FB919883C;
-	Wed, 27 Nov 2024 10:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA63D1D4615;
+	Wed, 27 Nov 2024 10:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMGRsGvb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eeE2RndM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D36918E0E
-	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 10:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEDC1D5169
+	for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2024 10:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732703449; cv=none; b=ToEX5oO+EyJ24kWlMEKYWX7u8PTZvcix6PYboAjThV6brCzrcCfCBLTfGiQl5xCJjkLr5xzc7XIkoWe/PSgOPwVHliAvsDsUwD20gT3d1U2NFFJvGC0E3gijWMC5a3Jdd6cGSUC9lf35MUevHHSWfJRzhO5IbhXU03CAZmSXP0M=
+	t=1732704884; cv=none; b=Gb7YZya9L5Gk9xM+Q8llBhJYaEmmCbB5oEH9QiOpiLoiKR5dVRfMSbTIND0dyhin+2dA5k5iA395LGY2E1+z2z7AjbtYMFexcL0oBVKszHi6uci0odH1NE4/5BRNN++aGFhb3cOMjkO0KT92dadx9+6qF9wNCHbfnR9N0C78P3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732703449; c=relaxed/simple;
-	bh=yoUldh/uZchEIwYIHV5nk8tHJLu9/aT+70+9evMH1PU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aME+cyEPobzSTjubLlQYJuoMF207LFdagJf9cy8utEVkL9khXdcbx555TDDvPVKWBjC1M3tkHgt37A6hsubML50E0LfZU+TNVJldRH7LJ8goFC0juiQ+llc6wDtOMV45lqgibz5qVaEKpXA2CZQ0do9AIBi5E0Q1h34pHkXNJTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMGRsGvb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FDEC4CECC;
-	Wed, 27 Nov 2024 10:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732703449;
-	bh=yoUldh/uZchEIwYIHV5nk8tHJLu9/aT+70+9evMH1PU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TMGRsGvb8RZNXqcTGn7DIxihj81lfuvyOTfiVf6Wlmyhq0BIfTtMIT9RV+fkjIB5U
-	 yPthu6bhlyWpJXvtnJ/qWinZQ7SyIjnEHmMrr3U+vdnfx6YvG6FmXQyojAGtL1+Vev
-	 OsfC3sfPRREmgPCXhGjqR1JFM4pQlCOkP7XjRIo1aAluGAJn/ZEwJAxPCYoYDo2YpI
-	 kZOgot/uNFmxu1GHUa1mHLUHkXTUp9tjpXTQRx6CCOxHQqmJhiI/DeVsmOtKNzqnsy
-	 KcJiY5d/TeuhjxND4XEVztFDnM8WNi5pPC0GhNm+BtH+dJZPbAyysBwm2rTUoEsG7j
-	 Sv1JZOyJVIyhw==
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v5 6/6] PCI: endpoint: Verify that requested BAR size is a power of two
-Date: Wed, 27 Nov 2024 11:30:22 +0100
-Message-ID: <20241127103016.3481128-14-cassel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241127103016.3481128-8-cassel@kernel.org>
-References: <20241127103016.3481128-8-cassel@kernel.org>
+	s=arc-20240116; t=1732704884; c=relaxed/simple;
+	bh=on/uFSvH0WFJfSPxLO994BjwJ4E0+PJmQ7buTab0NgA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Shnrg4vdebhnWjr4Ul2Nw+gbzxZLW5qzI0wZ70b51YnoK6IYSGGsKrGHSOhEt6w4scX3+INlJwSnHOSRVYd0irqFPaH6OZsPk/WfMfKi9K4bSWZNWTTavfgBUKb5LZcYW0PjayEXRvk2rDTn5ih/u4gd3TqD70wehUsdT+HFBco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eeE2RndM; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732704883; x=1764240883;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=on/uFSvH0WFJfSPxLO994BjwJ4E0+PJmQ7buTab0NgA=;
+  b=eeE2RndMx7JloSGTLry+etEKh9zN9gqq5E0eEaQsHfo8SH+tEpLK4Eu3
+   Wyy5FgLrexuMmNpoDt24NL2Ro0BXje6+ulKpiwbCc/WVkGpCdERtJCNLU
+   lqjiMidpYTHrtHz0PrlvhPwTxjdvuYcaEC2oS8J/UvpHOTs0TEhecLRoj
+   n/qls3B7Kqb/yC0agWY8DHO60uqDbGkwlqcMehYreNW5wkagBE0vccP5h
+   4i+YxV1469xgAVaguv5Q8RSy7nmczbeLlSslObl+HWiS94VD2i3TC9LYF
+   ERTkfayNT7Kd8RD1J763zG7a4Wt7YL/X9VtcPfhBw4erXHbNoup6ZbBsj
+   g==;
+X-CSE-ConnectionGUID: qU0m1U66Q2ychdjz0p0xYQ==
+X-CSE-MsgGUID: gkVlfFRLShiX1EQvMzaLBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="50430626"
+X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
+   d="scan'208";a="50430626"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:54:40 -0800
+X-CSE-ConnectionGUID: qJdBR+MET6CoGRahOuRrFQ==
+X-CSE-MsgGUID: Zy8KJdVJT124RcNVlRH4VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
+   d="scan'208";a="122742252"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.71])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:54:36 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 27 Nov 2024 12:54:33 +0200 (EET)
+To: Ajay Agarwal <ajayagarwal@google.com>, Jian-Hong Pan <jhp@endlessos.org>
+cc: "David E. Box" <david.e.box@linux.intel.com>, 
+    Johan Hovold <johan+linaro@kernel.org>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Manu Gautam <manugautam@google.com>, 
+    Sajid Dalvi <sdalvi@google.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+    Vidya Sagar <vidyas@nvidia.com>, Shuai Xue <xueshuai@linux.alibaba.com>, 
+    linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Save downstream port L1ss control when saving
+ for upstream
+In-Reply-To: <20241127033758.3974931-1-ajayagarwal@google.com>
+Message-ID: <2aceef41-6d65-2eab-8339-07f874be6f41@linux.intel.com>
+References: <20241127033758.3974931-1-ajayagarwal@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1205; i=cassel@kernel.org; h=from:subject; bh=yoUldh/uZchEIwYIHV5nk8tHJLu9/aT+70+9evMH1PU=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLdvuwL9V4w63ap//ytyo6T/aPtzrF9usD0e27O+Z3PA /nqwt5u6ihlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBEWkUYGe49mVCx+fTV+Wou itViLLytoQlKrxTmBWy7ON/DfXqkvC8jw+R23cPnVSc/yH48bbrgg0Jzi7071Fh6He39tuatNHT UYAEA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-When allocating a BAR using pci_epf_alloc_space(), there are checks that
-round up the size to a power of two.
+Adding Jian-Hong.
 
-However, there is no check in pci_epc_set_bar() which verifies that the
-requested BAR size is a power of two.
+There's already another patch under discussion to the same problem:
 
-Add a power of two check in pci_epc_set_bar(), so that we don't need to
-add such a check in each and every PCI endpoint controller driver.
+https://patchwork.kernel.org/project/linux-pci/patch/20241115072200.37509-3-jhp@endlessos.org/
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/pci-epc-core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index c69c133701c9..6062677e9ffe 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -622,6 +622,9 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	    (epc_features->bar[bar].fixed_size != epf_bar->size))
- 		return -EINVAL;
- 
-+	if (!is_power_of_2(epf_bar->size))
-+		return -EINVAL;
-+
- 	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
- 	    (flags & PCI_BASE_ADDRESS_SPACE_IO &&
- 	     flags & PCI_BASE_ADDRESS_IO_MASK) ||
 -- 
-2.47.0
+ i.
 
+On Wed, 27 Nov 2024, Ajay Agarwal wrote:
+
+> It is possible that the downstream port's L1ss registers were not
+> saved after the initial configuration performed in the function
+> aspm_calc_l12_info() during the child bus probe. If the upstream
+> port config space is saved-restored due to some reason, the
+> downstream port L1ss registers will be overwritten with stale
+> configuration due to the logic present in
+> pci_restore_aspm_l1ss_state(). So, attempt to save the downstream
+> port L1ss registers when we are at the upstream component.
+> 
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index cee2365e54b8..769a305fad63 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -99,6 +99,19 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+>  	cap = &save_state->cap.data[0];
+>  	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
+>  	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
+> +
+> +	/*
+> +	 * It is possible that the downstream port's L1ss registers were not
+> +	 * saved after the initial configuration performed in the function
+> +	 * aspm_calc_l12_info() during the child bus probe. If the upstream port
+> +	 * config space is saved-restored due to some reason, the downstream
+> +	 * port L1ss registers will be overwritten with stale configuration due
+> +	 * to the logic present in pci_restore_aspm_l1ss_state(). So, attempt to
+> +	 * save the downstream port L1ss registers when we are at the upstream
+> +	 * component.
+> +	 */
+> +	if (!pcie_downstream_port(pdev))
+> +		pci_save_aspm_l1ss_state(pdev->bus->self);
+>  }
+>  
+>  void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
+> 
 
