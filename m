@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-17380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 074139DA06D
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 02:42:52 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4D459DA080
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 02:58:37 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A72121658DA
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 01:42:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A8B92852B7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2024 01:58:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A3CA14263;
-	Wed, 27 Nov 2024 01:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A61F1BC3C;
+	Wed, 27 Nov 2024 01:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FJdg0jpL"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IDPNF800"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EEC28E8;
-	Wed, 27 Nov 2024 01:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AFF14F90;
+	Wed, 27 Nov 2024 01:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732671766; cv=none; b=ZuV5xc1HIQbniHP5aLGyw0PLEr0XRGecYgiM0WIwvJbmFxXu4klpM2O/E57xXsc33YCinS3YdSOoQdlY/EZdQaWR1XNTGA9c6wSBZQsurpg+PYlIP3l9fO9QEgZFd3UaoZWJZtTIg9Qr38ZLCFWUE2Yn6YrRz724IiXSuR7PhbA=
+	t=1732672713; cv=none; b=rnbvkRiso/PuOkMwdz5nFhwvZq3dIFWfvtZ8nPXn6HtsxShNU3oSDaQnYUV78i026/KNPhYt+zXLL1toU4fge2FShcmiq7Ss+5VwVQLvTJEFOmM/CeZtlp0kZM7yrTLYZq6DC9fgCo4KbbKRjpP+2X0PTAhlg8N+dL+ERM9KHz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732671766; c=relaxed/simple;
-	bh=W+y24p0JQZmblXrM2wuNDcuR7LGrAv4BH99beYTBo78=;
+	s=arc-20240116; t=1732672713; c=relaxed/simple;
+	bh=CvGs68H2xkIajgyJcmTQLagTvM0yJHf0yGkXqMt0NUI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rTxqlBWz3t0GKDb4XdzQvzN3hXpl4o5f0+wiMw4i9gkCsAiIJJca1YYnEMpQquT8RZHzcpoHN/045qystW3VSxp7bZeqDhqbMIsFx0OFxdQtMjbDm5WAJ7uA5L3H4sJuHnFdIJmDhTkIH7VraTz3fy7/lFezFgMaGxHBAaGdayk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FJdg0jpL; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=jtEMAf1kVuqIGeWmAP+zswy+ziToD6h8+l8/vxRSr0BiPXtG9M7uwC5uCCKy+4jvBU3k5OMLpf97lJNNukARAth9uTMNR8yOZ4Rm7b0e7IwqRfj+sDDbre3BEU6glqO6vden7ubz4rx/lChyVtuEF/H5iw+uA2EafCJIjUG89so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IDPNF800; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AQKKxGB028826;
-	Wed, 27 Nov 2024 01:42:34 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AQKL4ud005672;
+	Wed, 27 Nov 2024 01:58:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OrONQ+CWoo/0YARp8CoV9PkeUGcON1u1GMLGMH9wdJw=; b=FJdg0jpLsjECGTus
-	6WUCG60EtrjrkwHv0MWeSIbtXo9URssMwdyQAdiIVTYE2/MpYcrefnmVPIw94u3r
-	MWSoEEadVzmXHm4i3Gnu4vNuGqFtjiAMKpswIuZBfvtCtzaDjA20aLlGuHa4HjOC
-	hHydaZfN9WRUa8PViRvIm40fz8bfPun9EUf9xh7FidCun5dck2jpXyth7Wd6TY77
-	xhMf3EsFtp6blpKAhjmsCdWm0WLAGmlVrnecYO8v6dJR41YnJECZCEXqrVmki+Qu
-	kk5oX5iLR09MyoaMWUq5mJ6AlB4xIkEetWGMbZaEqguSkSoGrkCVloVoQAIejZnT
-	xYEnfQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 434nyg61tn-1
+	EmZqD7ocn3WRNDRezaNH3t2EaAWioA15EVm251HzGhE=; b=IDPNF800PH80Hch6
+	k8m5Iz6cS3qJUBsCcv3HNOkrZNik/VmLQjZdlCLSP6+wLtR7kiLHfqckvhRgY9z/
+	q905+EWwytRovJ9xfpYke/H7/Kf1mvWuZytARBs7sRfiUhO0ihPGkXIA9g1X8OU7
+	Pxtx2GhNn32qQTEcFzG2kiVw6s/aI7uqYVu97f7FZnzeOcKDcZxoeTdv+MZ0uuSp
+	64filq85ZiPXEr+4/NV214zwP9C7iB3I1Wryw9jkAUQm9FA84L/CjHtCd0KmobXF
+	yMeBbVljB8M+V3NLVPq3jcxhQjycDyF7Zjx4dvaynpbXqREviXx0I2ioBpndOGjU
+	mwH4WA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 434ts1mty7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Nov 2024 01:42:33 +0000 (GMT)
+	Wed, 27 Nov 2024 01:58:24 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AR1gRxW004857
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AR1wNEJ003150
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Nov 2024 01:42:27 GMT
+	Wed, 27 Nov 2024 01:58:23 GMT
 Received: from [10.216.8.10] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 26 Nov
- 2024 17:42:19 -0800
-Message-ID: <9ff459ed-4491-4bd4-1402-622d9c31cb71@quicinc.com>
-Date: Wed, 27 Nov 2024 07:12:16 +0530
+ 2024 17:58:14 -0800
+Message-ID: <7d905563-137d-5c0e-42a1-8b93f4d630ce@quicinc.com>
+Date: Wed, 27 Nov 2024 07:28:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,8 +66,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
+Subject: Re: [PATCH 2/4] PCI: of: Add API to retrieve equalization presets
+ from device tree
 Content-Language: en-US
 To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <quic_mrana@quicinc.com>,
         <quic_vbadigan@quicinc.com>, <kernel@quicinc.com>,
@@ -89,59 +89,80 @@ To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <quic_mrana@quicinc.com>,
 CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
 References: <20241116-presets-v1-0-878a837a4fee@quicinc.com>
- <20241116-presets-v1-1-878a837a4fee@quicinc.com>
- <5648484f-38f2-4c75-b8a3-7a0148dc940b@oss.qualcomm.com>
+ <20241116-presets-v1-2-878a837a4fee@quicinc.com>
+ <7dd7ecd2-c8a1-4800-8746-2b6166d3ae1c@oss.qualcomm.com>
 From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <5648484f-38f2-4c75-b8a3-7a0148dc940b@oss.qualcomm.com>
+In-Reply-To: <7dd7ecd2-c8a1-4800-8746-2b6166d3ae1c@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: wZDQKUsZMpz6e0I4pL6xTejUgl1-tWfW
-X-Proofpoint-ORIG-GUID: wZDQKUsZMpz6e0I4pL6xTejUgl1-tWfW
+X-Proofpoint-GUID: nvfwKvwjtjIuIw0O7P0xaRYojphJAjJp
+X-Proofpoint-ORIG-GUID: nvfwKvwjtjIuIw0O7P0xaRYojphJAjJp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxlogscore=768 clxscore=1015 mlxscore=0 adultscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411270012
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411270015
 
 
 
-On 11/16/2024 4:49 PM, Konrad Dybcio wrote:
+On 11/16/2024 4:29 PM, Konrad Dybcio wrote:
 > On 16.11.2024 2:37 AM, Krishna chaitanya chundru wrote:
->> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
->> rates used in lane equalization procedure.
+>> PCIe equalization presets are predefined settings used to optimize
+>> signal integrity by compensating for signal loss and distortion in
+>> high-speed data transmission.
+>>
+>> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+>> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+>> configure lane equalization presets for each lane to enhance the PCIe
+>> link reliability. Each preset value represents a different combination
+>> of pre-shoot and de-emphasis values. For each data rate, different
+>> registers are defined: for 8.0 GT/s, registers are defined in section
+>> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+>> an extra receiver preset hint, requiring 16 bits per lane, while the
+>> remaining data rates use 8 bits per lane.
+>>
+>> Based on the number of lanes and the supported data rate, this function
+>> reads the device tree property and stores in the presets structure.
 >>
 >> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 >> ---
->>   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
->>   1 file changed, 8 insertions(+)
+>>   drivers/pci/of.c  | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/pci/pci.h | 17 +++++++++++++--
+>>   2 files changed, 77 insertions(+), 2 deletions(-)
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->> index a36076e3c56b..6a2074297030 100644
->> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->> @@ -2993,6 +2993,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->>   			phys = <&pcie6a_phy>;
->>   			phy-names = "pciephy";
->>   
->> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
+>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+>> index dacea3fc5128..0d37bc231956 100644
+>> --- a/drivers/pci/of.c
+>> +++ b/drivers/pci/of.c
+>> @@ -826,3 +826,65 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>>   	return slot_power_limit_mw;
+>>   }
+>>   EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+>> +
+>> +int of_pci_get_equalization_presets(struct device *dev,
+>> +				    struct pci_eq_presets *presets,
+>> +				    int num_lanes)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (of_property_present(dev->of_node, "eq-presets-8gts")) {
+>> +		presets->eq_presets_8gts = devm_kzalloc(dev, sizeof(u16) * num_lanes, GFP_KERNEL);
+>> +		if (!presets->eq_presets_8gts)
 > 
-> If we make all of these presets u8 arrays, we can use the:
-> 
-> property = [0xff 0xff 0xff 0xff];
-> 
-> syntax
+> If you make this an array with enum indices, you can make a for loop and
+> read "eq-presets-%ugts", (8 << i)
 > 
 > Konrad
-we can't make the property as u8 as each index represents single lane
-and for 8 GT/s data rates each value needs 16bits. So for 8 GT/s we have
-to use u16 array only.
+as "eq-presets-8gts" is u16 array and other properties are u8 array.
+I will use as it is for "eq-presets-8gts", but for remaining properties
+I will use for loop as suggested by you.
 
 - Krishna Chaitanya.
 
