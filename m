@@ -1,84 +1,101 @@
-Return-Path: <linux-pci+bounces-17435-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17436-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 075AB9DB656
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 12:15:28 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE6F51653BC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 11:15:24 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 238891946A0;
-	Thu, 28 Nov 2024 11:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p1sHVd2n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CYR8n5Xj"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C8149DB87E
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 14:24:50 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F7684E1C;
-	Thu, 28 Nov 2024 11:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4C61B209D5
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 13:24:47 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96DB91A7AD0;
+	Thu, 28 Nov 2024 13:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFOLGqaM"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B49F19884B
+	for <linux-pci@vger.kernel.org>; Thu, 28 Nov 2024 13:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732792524; cv=none; b=pb5AyF5ogPk5pfSq84337yuC+7VT08W2ULOx9/Dc4Z3bxu9GbofynXkOAoNy/wtg2zdLfEalrK3xcPKcEB40UCRLXmC+C/QpMP+Pm9Oic/vjDoaPIMc8NesuHGh+xKd4jFfwxP8o7wwwUT3Mjg7FWyxxHHcLW7duV4GmyMCMyGY=
+	t=1732800283; cv=none; b=rWQPmlor6orTSvD7ixTgDgmM97ZL1pbqyRuHWpGh3NqG866Yps82/Zw5cmXfDFrCRtGJ9rIgz+ugzjKs+G+YCel9CQssrCmhRurYzcf4o47btNkLz0mASWmmBK/fyu5K4Rbacw1Zs4Xkf8tJZSkcqCJ0GA91BRDdTuunp4ZXiLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732792524; c=relaxed/simple;
-	bh=hc2eW85zH30ycpF7jG93e4JqdOgrxxqEdvi+gUlfo6k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pmC3aU6BMzEnw4nwdeoRBfXd3fJg6u8/0UoqaOlkeuSHHuEif/K+dirCn0WcI5vW9Zq34xSyMwYTbskxiAis6+zo8s5lfHUzF5M+wPMGjiCS9Ko2DZdgBX/+1ri8HlxU07/H1gxwNQTCi3wO8gxMNVlO1Ir92q8rusWyrv8JlBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p1sHVd2n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CYR8n5Xj; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1732792520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BepIv+zsVxwnGd+vRGJKobT/i3K2E0sdG4yWASd1NkE=;
-	b=p1sHVd2nF4+Wcf895ouKTQQoSekm/Z0/pHKLqMXZfyVoZtPx8ito7bNXqvpFFTTrgsBGir
-	z2WPrTjtm0R+7d4vtevK5z8bJb/Ic16GEiXqO0c2ssuAqKxgxC/+nTMGgX5EGx8eHVvEoQ
-	1JnFUDIuFcG4BarV6+JuDFjT+9lmHDBA3++qPXTgD3L+zDK62nsydQfuF+FA0CM16Pob+S
-	g6WljcbwJljkAvWZHAjAPwTnytNkqNEDAxaLlcGiAkNbZDS/dZMPL1RxbR7KBCAGBhPWJ2
-	ZNZAHvN4yWTGwIlyiyYK1p26sLaYMeM/YRaoszgZLqIR4lg0ozZLDS0ZsIabAA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1732792520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BepIv+zsVxwnGd+vRGJKobT/i3K2E0sdG4yWASd1NkE=;
-	b=CYR8n5Xj31ApiPOAIzYejnuG5cbHitE/iV/uP91bN59JLrhalJuYwg4IpOGHOFgzhEcEJu
-	BIP3cMUELs1sUDDg==
-To: Jason Gunthorpe <jgg@nvidia.com>, Eric Auger <eric.auger@redhat.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Alex Williamson
- <alex.williamson@redhat.com>, Nicolin Chen <nicolinc@nvidia.com>,
- maz@kernel.org, bhelgaas@google.com, leonro@nvidia.com,
- shameerali.kolothum.thodi@huawei.com, dlemoal@kernel.org,
- kevin.tian@intel.com, smostafa@google.com,
- andriy.shevchenko@linux.intel.com, reinette.chatre@intel.com,
- ddutile@redhat.com, yebin10@huawei.com, brauner@kernel.org,
- apatel@ventanamicro.com, shivamurthy.shastri@linutronix.de,
- anna-maria@linutronix.de, nipun.gupta@amd.com,
- marek.vasut+renesas@mailbox.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- kvm@vger.kernel.org
-Subject: Re: [PATCH RFCv1 0/7] vfio: Allow userspace to specify the address
- for each MSI vector
-In-Reply-To: <20241120140337.GA772273@nvidia.com>
-References: <cover.1731130093.git.nicolinc@nvidia.com>
- <a63e7c3b-ce96-47a5-b462-d5de3a2edb56@arm.com>
- <ZzPOsrbkmztWZ4U/@Asurada-Nvidia> <20241113013430.GC35230@nvidia.com>
- <20241113141122.2518c55a.alex.williamson@redhat.com>
- <2621385c-6fcf-4035-a5a0-5427a08045c8@arm.com>
- <66977090-d707-4585-b0c5-8b48f663827e@redhat.com>
- <20241120140337.GA772273@nvidia.com>
-Date: Thu, 28 Nov 2024 12:15:20 +0100
-Message-ID: <87frnby5h3.ffs@tglx>
+	s=arc-20240116; t=1732800283; c=relaxed/simple;
+	bh=EiQXqUxIixcM/WIqsE6yZhdRc2YDwoBwf0kwdTIOQLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBxvhyY47V7twEh3WRVENPh/QIxKbuXcGd44yXTIAGg1zjBgavjK0iBYsk2qeZ/ILm417Tcxpzl9Ix7ZOyGO4rrB07660ZmRhdXVr+11W6ywJDNqskThgaRTB1A/cDtiModjoswm8UvO6E0YPqmc1kFpYcyaS67nEPkCEML+u/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XFOLGqaM; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ee173d0480so612675a91.0
+        for <linux-pci@vger.kernel.org>; Thu, 28 Nov 2024 05:24:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732800281; x=1733405081; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=y/S3V26ZtpsH53gJ+nZdjF8Q8MrpcidP1Hfwlg06frY=;
+        b=XFOLGqaMrAgAs/EAVX2uU3saBP7riM6VcpUEb199Xd5CuFEEl11dLi29jPhaPv4cVL
+         7k4944aDxi19ky2rjhNM5Fcq9BJ9072A5+exeau8Qbwd8bAyO8VHmHzEdBG8JjvjlUlB
+         vqp6JKmQsxt3c0siN9cywgnGGYEo/xlCcYrf4zPactVn9tBwJy5yM99L0D+Ssv5y9Kd4
+         pXTmynrq0T7g6iSJT0oTOXJ5M+bUi+tPNQpTsXDzbn0e8633KWXvjxjVe9jwJoMHUJ5v
+         HWglMhN0Hq3+rg2NhoI2Rwe6asgpmeZxA1HS4Zm2fg1rZXXhDvAsjbUwH08zL3kLTFda
+         Uw8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732800281; x=1733405081;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y/S3V26ZtpsH53gJ+nZdjF8Q8MrpcidP1Hfwlg06frY=;
+        b=dlZAIm5Z076gvForcUWMJD40NcyNpgnjo1Pn3a9UGx/bfWlLpElUg63SmGuILnVc18
+         hiANU6DpwpSUSyWWW8efGy+5eF5xRGoWF7hWP3JRV5srZzrHKHee+kAUklx5pV8IyRRt
+         WYmFVVWMj4afWHP9t/BdGLwRTqL0otcEheAIQQk2QgtzVE7eiSO9XP0BwkVpSBbbfi6w
+         827EEuh2cF6BjeOTl6icAQbJosJIpt/l3O6u4CcH4+YKpwiIpNAuJIl9N6r4FOS5oR6M
+         yRcrjcCp4qv6OgyrDdkxIziKGhfdrYVuFDIq+QRHmiEws/up1nd2V/OZHiIhhCTmwoc8
+         LqgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfgVUH5BHTMCxkgvHPLJJrEIneDzf+lVZ0dwZSyFPCCenqXdczJo5LPZ+hHwG01T7nur+77dS3Qcs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr/l02lKHhuSrqlILGPRpYZPmWmbWZelEzFnDPJd9CTuWNdZ/W
+	eArrWZ69Vvp9n6Ve2RGa/HzGrf+7v4IDnt6lkvoMMhyM7sK2AFCMnaSoEUKmNg==
+X-Gm-Gg: ASbGncsZssHvCega02uEJ/edlUoc3d/hkZwVB1RhKSa7sqrJgYSqNGHQwCAu+Hn4jft
+	bVnG7xrCbYsOgUancEBZi39TsGwJx1D6CL9d9ojbguqrtlqkteJkYfW9O00sRT8v5D9miIe8rZs
+	DSrCyrNCKm0vMgXzvRb+nk4qgMNBNpT4WweDHBIQtrwHFy499CnFEGzca10wKWLwsBnS0LyIu+A
+	Ol0A1zVm87dtsvNe0HwAyRnfOfgW+vtepVZkP6NKJ2PT5Muyk8/2Yc/LtY2
+X-Google-Smtp-Source: AGHT+IHhjHrwJN/0a3LoxP1T5UBrL/PpHDbGZKXCNWeqjqOsCu7VZTYvWW+l6+4/H4GWb3YSpNc2tw==
+X-Received: by 2002:a17:90b:388a:b0:2ea:adaa:1a42 with SMTP id 98e67ed59e1d1-2ee08ecc3f2mr11264448a91.16.1732800281343;
+        Thu, 28 Nov 2024 05:24:41 -0800 (PST)
+Received: from thinkpad ([117.213.97.61])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ee2aff1f34sm1408085a91.5.2024.11.28.05.24.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2024 05:24:40 -0800 (PST)
+Date: Thu, 28 Nov 2024 18:54:32 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+	andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
+Message-ID: <20241128132432.fxvmjeluagignbph@thinkpad>
+References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
+ <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
+ <poruhxgxnkhvqij5q7z4toxzcsk2gvkyj6ewicsfxj6xl3i3un@msgyeeyb6hsf>
+ <42425b92-6e0d-a77b-8733-e50614bcb3a8@quicinc.com>
+ <b203d90d-91bc-437b-9b91-1085034ed716@kernel.org>
+ <cce7507f-a2c4-6f96-f993-b9a7e9217ffa@quicinc.com>
+ <c81b89ff-6eb5-4a01-af84-636aa2a02a34@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,68 +103,61 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c81b89ff-6eb5-4a01-af84-636aa2a02a34@kernel.org>
 
-On Wed, Nov 20 2024 at 10:03, Jason Gunthorpe wrote:
-> On Wed, Nov 20, 2024 at 02:17:46PM +0100, Eric Auger wrote:
->> > Yeah, I wasn't really suggesting to literally hook into this exact
->> > case; it was more just a general observation that if VFIO already has
->> > one justification for tinkering with pci_write_msi_msg() directly
->> > without going through the msi_domain layer, then adding another
->> > (wherever it fits best) can't be *entirely* unreasonable.
->
-> I'm not sure that we can assume VFIO is the only thing touching the
-> interrupt programming.
+On Tue, Nov 26, 2024 at 07:58:16AM +0100, Krzysztof Kozlowski wrote:
+> On 26/11/2024 07:50, Krishna Chaitanya Chundru wrote:
+> > 
+> > 
+> > On 11/25/2024 1:10 PM, Krzysztof Kozlowski wrote:
+> >> On 24/11/2024 02:41, Krishna Chaitanya Chundru wrote:
+> >>>> ...
+> >>>>
+> >>>>> +  qps615,axi-clk-freq-hz:
+> >>>>
+> >>>> That's a downstream code you send us.
+> >>>>
+> >>>> Anyway, why assigned clock rates do not work for you? You are 
+> >>>> re-implementing legacy property now under different name :/
+> >>>>
+> >>>> The assigned clock rates comes in to the picture when we are 
+> >>>> using clock
+> >>> framework to control the clocks. For this switch there are no 
+> >>> clocks needs to be control, the moment we power on the switch 
+> >>> clocks are enabled by default. This switch provides a mechanism to 
+> >>> control the frequency using i2c. And switch supports only two 
+> >>> frequencies i.e
+> >>
+> >>
+> >> frequency of what, since there are no clocks?
+> >>
+> > The axi clock frequency internal to the switch, host can't control
+> > the enablement of the clocks it can control only the frequency.
+> > 
+> > we already had a discussion on this on v2[1], and we taught you agreed
+> > on this property.
+> > 
+> > [1] 
+> > https://lore.kernel.org/netdev/d1af1eac-f9bd-7a8e-586b-5c2a76445145@codeaurora.org/T/#m3d5864c758f2e05fa15ba522aad6a37e3417bd9f
+> > 
+> 
+> This points something else. I diged v2 and found many unanswered
+> questions and unfinished discussion:
+> 
 
-Correct.
+The conversation is here:
+https://lore.kernel.org/linux-arm-msm/20240823094028.7xul4eoiexey5xjm@thinkpad/
 
-> I think there is a KVM path, and also the /proc/ path that will change
-> the MSI affinity on the fly for a VFIO created IRQ. If the platform
-> requires a MSI update to do this (ie encoding affinity in the
-> add/data, not using IRQ remapping HW) then we still need to ensure the
-> correct MSI address is hooked in.
+But there was no explicit agreement on the usage of 'qps615,axi-clk-freq-hz'.
 
-Yes.
+If describing the PCI device's internal clock frequency is not applicable, then
+I'd recommend to change the clock rate in the driver itself based on the number
+of DSPs enabled (or based on other configuration).
 
->> >> Is it possible to do this with the existing write_msi_msg callback on
->> >> the msi descriptor?=C2=A0 For instance we could simply translate the =
-msg
->> >> address and call pci_write_msi_msg() (while avoiding an infinite
->> >> recursion).=C2=A0 Or maybe there should be an xlate_msi_msg callback =
-we can
->> >> register.=C2=A0 Or I suppose there might be a way to insert an irqchi=
-p that
->> >> does the translation on write.=C2=A0 Thanks,
->> >
->> > I'm far from keen on the idea, but if there really is an appetite for
->> > more indirection, then I guess the least-worst option would be yet
->> > another type of iommu_dma_cookie to work via the existing
->> > iommu_dma_compose_msi_msg() flow,=20
->
-> For this direction I think I would turn iommu_dma_compose_msi_msg()
-> into a function pointer stored in the iommu_domain and have
-> vfio/iommufd provide its own implementation. The thing that is in
-> control of the domain's translation should be providing the msi_msg.
+- Mani
 
-Yes. The resulting cached message should be writeable as is.
-
->> > update per-device addresses direcitly. But then it's still going to
->> > need some kind of "layering violation" for VFIO to poke the IRQ layer
->> > into re-composing and re-writing a message whenever userspace feels
->> > like changing an address
->
-> I think we'd need to get into the affinity update path and force a MSI
-> write as well, even if the platform isn't changing the MSI for
-> affinity. Processing a vMSI entry update would be two steps where we
-> update the MSI addr in VFIO and then set the affinity.
-
-The affinity callback of the domain/chip can return IRQ_SET_MASK_OK_DONE
-which prevents recomposing and writing the message.
-
-So you want a explicit update/write of the message similar to what
-msi_domain_activate() does.
-
-Thanks,
-
-        tglx
+-- 
+மணிவண்ணன் சதாசிவம்
 
