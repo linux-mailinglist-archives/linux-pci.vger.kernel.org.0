@@ -1,169 +1,239 @@
-Return-Path: <linux-pci+bounces-17437-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17438-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D5399DB940
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 15:09:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 367159DBCA8
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 20:43:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D168D282478
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 14:09:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92CFCB213AD
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2024 19:43:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 488DF1AF0A3;
-	Thu, 28 Nov 2024 14:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342651C1F37;
+	Thu, 28 Nov 2024 19:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kIljuTQy"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eAUsbA6H";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8UZO/2Lo";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aU0deQYN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+9zgCbxh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305341AC428
-	for <linux-pci@vger.kernel.org>; Thu, 28 Nov 2024 14:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CB2AD4B;
+	Thu, 28 Nov 2024 19:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732802939; cv=none; b=f7K1kWGliHiWZnwqkKq3MNf4qz0xUJyg3tuKre5d2CHkGTAOJLg3fDcmccVYjVUDcQ4y5yGjG0Jwe+eYfWGV5G4ewxFNKCDLC7df9tbDl43aRTRHiaqrSwHsOQk9tz0fONEpUzl7y/0QjVzh7e0SRUuLXgV3+c/eisR+gCjVsqQ=
+	t=1732822979; cv=none; b=OyUJf5u/SEf/92xV6W7GIcvgQOQOa6FHpZsN4UpBN1WvohLwDzDiND39Eq/H0D0F9BhFV1/hEvyeRelCdD2LtQtGGMUvhCHPFqgeuqWFhMxSPhdb6B3a0D/+Z/siUxZe5OxNqWv6WFcOUf3EO9o9W1PTCi8WavDEg3RdTbY7zH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732802939; c=relaxed/simple;
-	bh=0ok8mB09tYX0tSoZPdXmhZOOKBchACeZU+icH4cRTi4=;
+	s=arc-20240116; t=1732822979; c=relaxed/simple;
+	bh=XyroRPpAI4edVZZ1GDOxrNCE8LX/EuOXr66TVhTl3hI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNkm2ybG3AUHebBkVSRW7wy9fJI5LFydNzBWgeuKOnnw5qH7511hP5AHqm0CqRYhSIWZ0Cqsyhu+XRlxbzgCPdEVsbcHLlkAwH9gdwxgGVTNtAFahoJyFAfZId4BoHV1MCrDYQ7JgU55e+zEVrb/0SClYXpUUc4uDiCiIkms1kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kIljuTQy; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53dd2fdcebcso990190e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 28 Nov 2024 06:08:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732802935; x=1733407735; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Zh9F51dD8gEZdCPo/hL/t9nKqjeg/ui1S+RxuDwcDmI=;
-        b=kIljuTQy2Ot6PjGU3aQZNxTwfY+nkallUJ/bg9t53r/yD+gaFSeLl+ZjdPy/4s2QrU
-         X4Osj4LFPg7qJ6Oi7sq5QxBMvvrzq/TtPUDf/DJsyJm8BikpELCpWtH9F/wplkPW/4WN
-         e8P0H5GklokVqcr0HjgKsQdm6L6IZGP54mKoQqw+3UJ4dg1bWuqCn1BdgYZ09XV6vSz8
-         MuVrtnv2kcoRcZL0ptiSC6q6JXwdgI+7MC6TQ4dbvuvjiSwVyqB99aT7Rhqsct9xZoso
-         vZgVtp3kgZyIrtezMAacVsXpRowTP7ygGCWRt5IJx2bOi4XBr5D7vOzfdnsJHRR6+OHG
-         pBWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732802935; x=1733407735;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zh9F51dD8gEZdCPo/hL/t9nKqjeg/ui1S+RxuDwcDmI=;
-        b=ucdk3erUfKtR3fR92gbflptbm9bEI16YH7CWK5UpKei9EU8FMlzud13nyVtp29OGCk
-         ofOPUz5K6bJUyHJoTqBI2dvgpdi4mNTebLCI3KeYHs/MjQlzGE7sDradLfuijFGHVAFS
-         ew2iDXPE21IETfPsc6TCOUgnitN0wjMkj+q8XZu2dp7oPl04lpJIWJ9djbzHsLkSXxHp
-         71izYekwGnBfj/NzPome9FO4qfKHGlBtjtxks09Ddvr0aVEm1taOKPi52uKbTGWjGfPx
-         Z0ebzeV5zEMYLdp2HZQHv7TkZMkfOmKlmYE4Qgfob7bodGI3y4kDbVr8qYDTg8R4KuRJ
-         7m8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWF0gBOddJrJt2ooB03Av/Se7qoYQekoiLYdZ7MlNZEq959YeP35yIvB0SWbVi0CFqdPDA6/Ehn/aU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMW8LvL7iRtWLectrbFYd9z/3mXvexwY06ZG7rFFRomdxoDeHp
-	siaxpQPNN67p6emwk/6JMjNSflwgdR6BbXKgTse1vxFUkD7k9eVBkyzFF81R3LQ=
-X-Gm-Gg: ASbGnctZrq6tiJopv1LiAQGyMTlGLj07/IRiS3z+iTXjHvbUYFriWSNjAGjBNn1VSEE
-	g9sIgXygVutirSigQ7mq627BnwZ+8BBIGuj97esDv7mujv12dPfce5FS1pcXWvvdX0K+5GfDtUi
-	pB3rgkn3P6GjXTb5QUBReuW4Db7I0xTDyaYELzbv20ccMph9lc715ITc81HreVNIReRbbJCgYxW
-	Ji+egQLcoMIKR5l+vqJoFd1SrSs4/4RJquiJc5rZ8K8aqeoz6+MTKIERG7zlTqS2HQnSvOwnDU2
-	7jaW5nbiRrvYdfvhrf/C/60PZbkCcw==
-X-Google-Smtp-Source: AGHT+IH/26if+yOX03OUutYredIEh7TylL/FBWS++pNsdNgznWWW3vF4i3JX3Bycrw39QliL0CzCVQ==
-X-Received: by 2002:a19:f51a:0:b0:53d:f983:a57 with SMTP id 2adb3069b0e04-53df9830acdmr265530e87.3.1732802935168;
-        Thu, 28 Nov 2024 06:08:55 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53df649687csm182457e87.209.2024.11.28.06.08.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 06:08:53 -0800 (PST)
-Date: Thu, 28 Nov 2024 16:08:52 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
-Message-ID: <dtr62oy4lcdqtyvh6ffr3c7rjz65h6bj4fkknf3rmgm65zhnpo@caqdpy7xi4ue>
-References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
- <poruhxgxnkhvqij5q7z4toxzcsk2gvkyj6ewicsfxj6xl3i3un@msgyeeyb6hsf>
- <42425b92-6e0d-a77b-8733-e50614bcb3a8@quicinc.com>
- <b203d90d-91bc-437b-9b91-1085034ed716@kernel.org>
- <cce7507f-a2c4-6f96-f993-b9a7e9217ffa@quicinc.com>
- <c81b89ff-6eb5-4a01-af84-636aa2a02a34@kernel.org>
- <20241128132432.fxvmjeluagignbph@thinkpad>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqpYxmUHKbdsKM6mB7tClLUgCPaWd4DJz0rXI48aSX+TrBxw5PG5V7ScVANkbP3ckXSTvZ9uxgY0cB8wdqsSVOyjbk4xWRtzAlVqB/Yj9m1qKPYFUUxgCqKqqTwzNDzz3vORMCS1Xi3rQzAR4y4CRq2Ie1D4OOsDNjiO2weN4jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eAUsbA6H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8UZO/2Lo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aU0deQYN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+9zgCbxh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from lion.mk-sys.cz (unknown [10.100.225.114])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 91E8B21190;
+	Thu, 28 Nov 2024 19:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1732822974; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u9QGgGdv77W2pOdQiAtUv+Iwdr6afjftqDVxt/e/CoM=;
+	b=eAUsbA6H44fzsfyPZVAkCfOY2dQVMh81CEEiZn1ASgrjy27e4E3fNbQDtacMzRI0AggFy0
+	i00+V0j/TymW0KKgRQ8FjRsQHsqjaGhfzx7PfLDsjjZzrT1XgGf4Y14/ZIU7Dg6WgkzhyQ
+	U1bcR57KCUzMXSyO2i1cFxo6bXeK24w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1732822974;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u9QGgGdv77W2pOdQiAtUv+Iwdr6afjftqDVxt/e/CoM=;
+	b=8UZO/2Lo+8a7sa07GlQNW0yJ4VFyXdh7IkNVDZbp4jI0atLqPulMdEnyUFn6rljxi6+MpG
+	yR3AkqCMjtlpCTCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1732822973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u9QGgGdv77W2pOdQiAtUv+Iwdr6afjftqDVxt/e/CoM=;
+	b=aU0deQYNIvJKoHIaKI++tY1aKJshwSf10+LLBLKhI/zcgVAr9WnBuNXA57wEp7YiSJ7KsT
+	WijkJt09dd9VgtdQ1IJ46w4quJ2nGWwgSXLZLzGVFysi3sfs67YrOjzU+9n1lFAIWQW5g8
+	e76q88pSZsBnctFfFczAwdKUgFVb05U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1732822973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u9QGgGdv77W2pOdQiAtUv+Iwdr6afjftqDVxt/e/CoM=;
+	b=+9zgCbxhh4S4CW4owkzqvtP8g7kHFSY7JD4fJHcV7e8UXHXlu6hN4MnfiaTVwsRJOJ8d3O
+	gRUdySmg52l/J2BA==
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+	id 7CDE22012C; Thu, 28 Nov 2024 20:42:53 +0100 (CET)
+Date: Thu, 28 Nov 2024 20:42:53 +0100
+From: Michal Kubecek <mkubecek@suse.cz>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v9 1/6] misc: Add support for LAN966x PCI device
+Message-ID: <dywwnh7ns47ffndsttstpcsw44avxjvzcddmceha7xavqjdi77@cqdgmpdtywol>
+References: <20241010063611.788527-1-herve.codina@bootlin.com>
+ <20241010063611.788527-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j7d5vatgnxlcdmpo"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241128132432.fxvmjeluagignbph@thinkpad>
+In-Reply-To: <20241010063611.788527-2-herve.codina@bootlin.com>
+X-Spam-Score: -4.40
+X-Spamd-Result: default: False [-4.40 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	TAGGED_RCPT(0.00)[dt];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	R_RATELIMIT(0.00)[to_ip_from(RLojywjshxai19ykpmbjx9w3ts)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-m68k.org,gmail.com,kernel.org,arndb.de,amd.com,linuxfoundation.org,google.com,pengutronix.de,microchip.com,davemloft.net,redhat.com,lunn.ch,vger.kernel.org,lists.infradead.org,bootlin.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lion.mk-sys.cz:helo,linuxfoundation.org:email,bootlin.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Nov 28, 2024 at 06:54:32PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Nov 26, 2024 at 07:58:16AM +0100, Krzysztof Kozlowski wrote:
-> > On 26/11/2024 07:50, Krishna Chaitanya Chundru wrote:
-> > > 
-> > > 
-> > > On 11/25/2024 1:10 PM, Krzysztof Kozlowski wrote:
-> > >> On 24/11/2024 02:41, Krishna Chaitanya Chundru wrote:
-> > >>>> ...
-> > >>>>
-> > >>>>> +  qps615,axi-clk-freq-hz:
-> > >>>>
-> > >>>> That's a downstream code you send us.
-> > >>>>
-> > >>>> Anyway, why assigned clock rates do not work for you? You are 
-> > >>>> re-implementing legacy property now under different name :/
-> > >>>>
-> > >>>> The assigned clock rates comes in to the picture when we are 
-> > >>>> using clock
-> > >>> framework to control the clocks. For this switch there are no 
-> > >>> clocks needs to be control, the moment we power on the switch 
-> > >>> clocks are enabled by default. This switch provides a mechanism to 
-> > >>> control the frequency using i2c. And switch supports only two 
-> > >>> frequencies i.e
-> > >>
-> > >>
-> > >> frequency of what, since there are no clocks?
-> > >>
-> > > The axi clock frequency internal to the switch, host can't control
-> > > the enablement of the clocks it can control only the frequency.
-> > > 
-> > > we already had a discussion on this on v2[1], and we taught you agreed
-> > > on this property.
-> > > 
-> > > [1] 
-> > > https://lore.kernel.org/netdev/d1af1eac-f9bd-7a8e-586b-5c2a76445145@codeaurora.org/T/#m3d5864c758f2e05fa15ba522aad6a37e3417bd9f
-> > > 
-> > 
-> > This points something else. I diged v2 and found many unanswered
-> > questions and unfinished discussion:
-> > 
-> 
-> The conversation is here:
-> https://lore.kernel.org/linux-arm-msm/20240823094028.7xul4eoiexey5xjm@thinkpad/
-> 
-> But there was no explicit agreement on the usage of 'qps615,axi-clk-freq-hz'.
-> 
-> If describing the PCI device's internal clock frequency is not applicable, then
-> I'd recommend to change the clock rate in the driver itself based on the number
-> of DSPs enabled (or based on other configuration).
 
-Sounds like the best approach. Otherwise it's not obvious, what is the
-criteria for selecting this or that clock value.
+--j7d5vatgnxlcdmpo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+On Thu, Oct 10, 2024 at 08:36:01AM +0200, Herve Codina wrote:
+> Add a PCI driver that handles the LAN966x PCI device using a device-tree
+> overlay. This overlay is applied to the PCI device DT node and allows to
+> describe components that are present in the device.
+>=20
+> The memory from the device-tree is remapped to the BAR memory thanks to
+> "ranges" properties computed at runtime by the PCI core during the PCI
+> enumeration.
+>=20
+> The PCI device itself acts as an interrupt controller and is used as the
+> parent of the internal LAN966x interrupt controller to route the
+> interrupts to the assigned PCI INTx interrupt.
+>=20
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# quirks.c
+> ---
+>  drivers/misc/Kconfig          |  24 ++++
+>  drivers/misc/Makefile         |   3 +
+>  drivers/misc/lan966x_pci.c    | 215 ++++++++++++++++++++++++++++++++++
+>  drivers/misc/lan966x_pci.dtso | 167 ++++++++++++++++++++++++++
+>  drivers/pci/quirks.c          |   1 +
+>  5 files changed, 410 insertions(+)
+>  create mode 100644 drivers/misc/lan966x_pci.c
+>  create mode 100644 drivers/misc/lan966x_pci.dtso
+>=20
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 3fe7e2a9bd29..8e5b06ac9b6f 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -610,6 +610,30 @@ config MARVELL_CN10K_DPI
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called mrvl_cn10k_dpi.
+> =20
+> +config MCHP_LAN966X_PCI
+> +	tristate "Microchip LAN966x PCIe Support"
+> +	depends on PCI
+> +	select OF
+> +	select OF_OVERLAY
 
--- 
-With best wishes
-Dmitry
+Are these "select" statements what we want? When configuring current
+mainline snapshot, I accidentally enabled this driver and ended up
+flooded with an enormous amount of new config options, most of which
+didn't make much sense on x86_64. It took quite long to investigate why.
+
+Couldn't we rather use
+
+	depends on PCI && OF && OF_OVERLAY
+
+like other drivers?
+
+Michal
+
+> +	select IRQ_DOMAIN
+> +	help
+> +	  This enables the support for the LAN966x PCIe device.
+> +	  This is used to drive the LAN966x PCIe device from the host system
+> +	  to which it is connected.
+> +
+> +	  This driver uses an overlay to load other drivers to support for
+> +	  LAN966x internal components.
+> +	  Even if this driver does not depend on these other drivers, in order
+> +	  to have a fully functional board, the following drivers are needed:
+> +	    - fixed-clock (COMMON_CLK)
+> +	    - lan966x-oic (LAN966X_OIC)
+> +	    - lan966x-cpu-syscon (MFD_SYSCON)
+> +	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
+> +	    - lan966x-pinctrl (PINCTRL_OCELOT)
+> +	    - lan966x-serdes (PHY_LAN966X_SERDES)
+> +	    - lan966x-miim (MDIO_MSCC_MIIM)
+> +	    - lan966x-switch (LAN966X_SWITCH)
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+[...]
+
+--j7d5vatgnxlcdmpo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmdIx7cACgkQ538sG/LR
+dpU7nAf/XBbO498856QKivFIfm7fBoDun6OltBIzDjQpOY3U424Hl6ZSYNW9Bovz
+KCS+Ca82RFcUPkWwtYkY1Wuu2xD2CZs2ChCPURibTrloed3inIAHnAIdplJJz1o1
+jzIFZhxvquaFI2GT+PS/Rn4EK/O00YA1YznI0w0EyCYUd4GPKiRvFDjihNvAjB0a
+BwFaqUpcXEMDBtwDJ7fSN2aKHllfQHfQGscAMuN6SwH9Fq1F8yEnPcOniequDyN2
+Vw68yNm2tVkouUWN9yaPX2LHS+0C0cqGjgu3GpNVkavhjFM9so07iJlXOQJxgSPJ
+UGMHSzZCvmGYJLZb39hHz9014QZU1g==
+=DdLR
+-----END PGP SIGNATURE-----
+
+--j7d5vatgnxlcdmpo--
 
