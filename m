@@ -1,102 +1,118 @@
-Return-Path: <linux-pci+bounces-17455-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17456-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7FCD9DE80C
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 14:51:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 322469DE886
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 15:30:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BE99B20C4A
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 13:51:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2922B2814E2
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 14:30:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F4119F429;
-	Fri, 29 Nov 2024 13:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303294EB45;
+	Fri, 29 Nov 2024 14:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rF25SOae"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TiaZ+6LR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CCC19F128;
-	Fri, 29 Nov 2024 13:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A415C22F11;
+	Fri, 29 Nov 2024 14:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732888292; cv=none; b=c71VYiFCNmbTpHYHU66ZRMZUc09Wa9ICNNawAswTnB0KnLv2VYskocT1HaV55TewaVnqdLDe/NHg/FML8Lof6toDPhY+36yCiQug7N/2dWDHHyJyR9A2ioeuL5vGiiaoMQ4dIOjlwmI6XwBu6dnSP51zTdwNy0e8QbbSR2K6J6Y=
+	t=1732890629; cv=none; b=jdm3l4sb0KJsykZlju/0jFpRpFM5HWk6ghsLcrto55wsZ6+ExFqlkZTjPHTSsPmIMfAtTLXcpK15C/GG7pL8F9mon12sblFqZV4FnxzPTroEVXCsyaJG46w0ysxt2vHfD+EeoV6RzCRxdFbp73CQ771rpSukkjWk6rwCPm2RG4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732888292; c=relaxed/simple;
-	bh=deRs1hGG1PSs4SEPBRCBgk0scOn/My5DCIijGShN4gU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MCJJKOx5K5Y2NSol/7TF79e7AwD8krhNTAHLQoPY/lmcOkhWiyk2W6dByvJNJzIFMdSfd9SIkUpVtbF5gD4Zhv1jjZhHZr64llB9VSJvikuKu/VqstoRcHqr7jsXAdozVj0d+BMoV6ND1x45g4mn7HmoLlkzL+EM5jw8nEKbF/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rF25SOae; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B935EC4CED2;
-	Fri, 29 Nov 2024 13:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732888291;
-	bh=deRs1hGG1PSs4SEPBRCBgk0scOn/My5DCIijGShN4gU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rF25SOaeNaT4zEs5vVRievv9ZSpIQNcUYbhfGsqmXNXCVaEPsgA97B3+7kPggmBHz
-	 Cylu/N6nRe5oekpMqzJzQlklJ02puBRPDBuqhGWSrGKHO/4V56+IIurdjsxkiRnrOk
-	 Uoy6P2/zxJR1a43Q0WPOzllZaE4FripkGV7/1uSk2b3LSpzyt83IYnJTwv81I5eDnB
-	 KTpMnRGroPS8Qm2T27zBi3wuV1i7sGwagwhOYWP5i00XJDiK1p/s/XGW8EIAt9sJEM
-	 PCZRwqA43jSP/SO6eutNECYUGZKeHziXxY/E9M/x3stxPblr4C3ceBlqcp55eeBOsQ
-	 714s4LRhUEfzg==
-Date: Fri, 29 Nov 2024 14:51:26 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
-	aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] selftests: pci_endpoint: Migrate to Kselftest
- framework
-Message-ID: <Z0nG3oAx66plv4qI@ryzen>
-References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
- <20241129092415.29437-5-manivannan.sadhasivam@linaro.org>
+	s=arc-20240116; t=1732890629; c=relaxed/simple;
+	bh=mI5lNGIrvnI0wLhpmyliPfoiK6Sq0DOPlU9HeeBbUv8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GQdKgGh6nF0eJcObTfrkhjTr+rD8cBq4TpLVKs5ZoQKTzhOhyTs4qx8feWHHhMk+5KX5rB+hnHCKNKWjxBfVgdQNo8mbpGCJvtg1oaX+xudNQyvyxxnyUDylJ84Q+bps1rcarr6VhuTPLHqNS7nUUYUKNU7SCvJ4Ev7jenejwgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TiaZ+6LR; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 21D7F2053077;
+	Fri, 29 Nov 2024 06:30:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 21D7F2053077
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1732890626;
+	bh=H1vVof/2pGhOEr3SPl2kANibaYCZWE2/N5q2dIXVdV8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TiaZ+6LRwZ7YFh9p7IDMuGe+3Z6kp0kXBnNaVP6yxnu2W0mQq1KAspKAfOYqNSKf+
+	 ufcEerFLuFrsI2IJP8L//soQPP9mK8vEswV/X0oyphYW5iIMK4WEusuu1u5XGrBAM1
+	 HOiQfbKoWIudkE9IMaooc4A/prj5NYE31ai0v650=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: bhelgaas@google.com,
+	kwilczynski@kernel.org,
+	bartosz.golaszewski@linaro.org,
+	manivannan.sadhasivam@linaro.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ssengar@microsoft.com
+Subject: [PATCH] PCI/pwrctrl: Check the device node exist before device removal
+Date: Fri, 29 Nov 2024 06:30:21 -0800
+Message-Id: <1732890621-19656-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241129092415.29437-5-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Mani,
+There can be scenarios where device node is NULL, in such cases
+of_node_clear_flag accessing the _flags object will cause a NULL
+pointer dereference.
 
-On Fri, Nov 29, 2024 at 02:54:15PM +0530, Manivannan Sadhasivam wrote:
-> Migrate the PCI endpoint test to Kselftest framework. All the tests that
-> were part of the previous pcitest.sh file were migrated.
-> 
-> Below is the exclusive list of tests:
-> 
-> 1. BAR Tests (BAR0 to BAR5)
-> 2. Legacy IRQ Tests
-> 3. MSI Interrupt Tests (MSI1 to MSI32)
-> 4. MSI-X Interrupt Tests (MSI-X1 to MSI-X2048)
-> 5. Read Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 6. Write Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 7. Copy Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 8. Read Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 9. Write Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 10. Copy Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+Add a check for NULL device node to fix this.
 
-I'm not sure if it is a great idea to add test case number 10.
+[  226.227601] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000c0
+[  226.330031] pc : pci_stop_bus_device+0xe4/0x178
+[  226.333117] lr : pci_stop_bus_device+0xd4/0x178
+[  226.389703] Call trace:
+[  226.391463]  pci_stop_bus_device+0xe4/0x178 (P)
+[  226.394579]  pci_stop_bus_device+0xd4/0x178 (L)
+[  226.397691]  pci_stop_and_remove_bus_device_locked+0x2c/0x58
+[  226.401717]  remove_store+0xac/0xc8
+[  226.404359]  dev_attr_store+0x24/0x48
+[  226.406929]  sysfs_kf_write+0x50/0x70
+[  226.409553]  kernfs_fop_write_iter+0x144/0x1e0
+[  226.412682]  vfs_write+0x250/0x3c0
+[  226.415003]  ksys_write+0x7c/0x120
+[  226.417827]  __arm64_sys_write+0x28/0x40
+[  226.420828]  invoke_syscall+0x74/0x108
+[  226.423681]  el0_svc_common.constprop.0+0x4c/0x100
+[  226.427205]  do_el0_svc+0x28/0x40
+[  226.429748]  el0_svc+0x40/0x148
+[  226.432295]  el0t_64_sync_handler+0x114/0x140
+[  226.435528]  el0t_64_sync+0x1b8/0x1c0
 
-While it will work if you use the "dummy memcpy" DMA channel which uses
-MMIO under the hood, if you actually enable a real DMA controller (which
-often sets the DMA_PRIVATE cap in the DMA controller driver (e.g. if you
-are using a DWC based PCIe EP controller and select CONFIG_DW_EDMA=y)),
-pci_epf_test_copy() will fail with:
-[   93.779444] pci_epf_test pci_epf_test.0: Cannot transfer data using DMA
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Fixes: 681725afb6b9 ("PCI/pwrctl: Remove pwrctl device without iterating over all children of pwrctl parent")
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ drivers/pci/remove.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-See:
-https://github.com/torvalds/linux/blob/v6.12/drivers/pci/endpoint/functions/pci-epf-test.c#L363-L368
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index 963b8d2855c1..474ec2453e4b 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -21,6 +21,9 @@ static void pci_pwrctrl_unregister(struct device *dev)
+ {
+ 	struct platform_device *pdev;
+ 
++	if (!dev_of_node(dev))
++		return;
++
+ 	pdev = of_find_device_by_node(dev_of_node(dev));
+ 	if (!pdev)
+ 		return;
+-- 
+2.43.0
 
-
-Kind regards,
-Niklas
 
