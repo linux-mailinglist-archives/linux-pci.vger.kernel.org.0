@@ -1,179 +1,161 @@
-Return-Path: <linux-pci+bounces-17446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B06E9DC164
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:23:53 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37D4716446B
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 09:23:49 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08022175D35;
-	Fri, 29 Nov 2024 09:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ddo/KhnB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tZt1gedD"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60DCA9DC16E
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:25:08 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90F5156F28;
-	Fri, 29 Nov 2024 09:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2037628344E
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 09:25:07 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDEF2183CB8;
+	Fri, 29 Nov 2024 09:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rPJBIuDy"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53A417C990
+	for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 09:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732872228; cv=none; b=WikJCEf4eglfAAwzIm4jeWP76ftVzYQxQiHuOlcPSuh75pauU5w8rj0BAuwEq2+c8T0Ld/x6slTAL2tV64yj5ZLyL2p6I2zU5+9P5vAmWIRiY0JjIOVW70sfKiFxcvWsRQfmHzgbhubtAR+di0i0BajYfmDOwlTz/CVsgiB+dvU=
+	t=1732872295; cv=none; b=YJQV/RyrUNNcnweoEbKuL8vchlm8L+SMlzUI66vsVF9DWKg1khP1jcLekqPDx0Zc0adLiy8DcZh2BzeyMXizq/OqvmRS6LJ4y1oM9Latf65STnenl4zrusRWQTUFpmrkCk/6GaXOq+uITymRPPcyPvSRQeL9zDqFvrKcqd744/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732872228; c=relaxed/simple;
-	bh=+B/4weM0/EUGguG/BqQcks88RtE9urCqPFe8Kwp9UB4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Io8EHP/KiFf6j0DecGR0qaSZ+xecyvzAZ09IuVtLR3kUpjItiH1S7uL4EypW0jY1aGM9KEo8VPfeK46UeWmvZtBX3SUlys+pWjVdlEsMNnQ7+GdXb4sRxW9bC3rttIlz43uDW8zM7uuCh62/4I67AZcZ2SicTKujqA0TwxfoKEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ddo/KhnB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tZt1gedD; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 07B7625400F5;
-	Fri, 29 Nov 2024 04:23:45 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 29 Nov 2024 04:23:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1732872224;
-	 x=1732958624; bh=6JoH9bTLLNPgqK4rstk02jf2g1g5I4XEBTfZgtUBOaU=; b=
-	Ddo/KhnB/zvVE0eA+K+XdWB/soHKnOPOOmDyAnGvTKmKSrM80jkWjrdR/eW1a10u
-	hDiS8ZljUw1ee79JC2JMlqXNmoaobS+MDnTY12XV74X4XwLdnde6lu0ZSHSp6FUt
-	zy4ZzgyPR53mKV55Ou4bprp1aNHmKyOveZrnHMV0KkaZMd1OGZD7PHnk4tbbFDzn
-	8AGWRZa+QMcLaqCZwiWqja7Zeeg88A8nO04bShOuxDtdQh3LvhjZpamuiQ34n0Cz
-	q4NJgVcskQ9QlbDExitYtLle3KEwjaVH1TB6yTIVkMdZZAhqR7RGHuc7D9kIcul/
-	t6gRhNARly08EZRGKWmIvQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1732872224; x=
-	1732958624; bh=6JoH9bTLLNPgqK4rstk02jf2g1g5I4XEBTfZgtUBOaU=; b=t
-	Zt1gedD41mirEjCd0k8Ry7bsJ7WNAJ5hzfyvUz1CaQtooYr7s+ENutSJHOma8PNS
-	XJ5XBgvqR3qTGxWzkTyzXnmz1ye31iWQAAauSFLt+z86xdXZSeFbWOOGDK9iFI2v
-	0F8NHUcYiBbgNxium9R7WKhJkShQVxdygDpHesV4HXP398wtx9paTpUnQfp0ArkM
-	Sk54toAgkqETaDfa2mGjiFxF2m3VQmF4N8+sIjOtywV1kVhQlNx39k34xpyhrZfL
-	S8YKy6XHHywCddE90HDC8O/iwgURjsmtPCe5YrbVY5ESGdepUSvWNilT2MS3o6Fi
-	sF3FYFZHRlbSiZq+e2FhQ==
-X-ME-Sender: <xms:H4hJZ2wScKKDoFkbmffti2XgLRon-rOtXwdmdn1I06hG8Y_7Rkiexg>
-    <xme:H4hJZyT8ysWmzOdm8l7RET9uRPFzX65262mo90h_HfZ2znHDnccno0AVXzZl3kqNM
-    MaAu3LYP0ILp3b4t_I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrheefgddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeen
-    ucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdrug
-    gvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeej
-    vdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeffedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhdrkhhivghrnhgrnhesrg
-    hmugdrtghomhdprhgtphhtthhopegurhgrghgrnhdrtghvvghtihgtsegrmhgurdgtohhm
-    pdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtg
-    hpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphht
-    thhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtph
-    htthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnugih
-    rdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopegshhgvlhhgrg
-    grshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhl
-    vgdrtghomh
-X-ME-Proxy: <xmx:H4hJZ4ULhjYre35Nr7LeimF34eDMT9QrYAEfvNLxQ4HCSaTeF-ZLPw>
-    <xmx:H4hJZ8jR697AYXyTB0_yJGKBx7Rr_wRabBiuDS9kaxfe5gelt6ANRA>
-    <xmx:H4hJZ4DGhdlI5HRWqxuGrW0gYHU11SKPh02XxTqCJ0hNpjkNIW8_fQ>
-    <xmx:H4hJZ9IgM013bnDtM7LQ9mwj85lQkdwUQ0OR4axgWyptEYcrYufw7A>
-    <xmx:IIhJZwa_k9cjV1TQWoNQPYleFfTjyB1NFLrbiBqw5uTGZlE1MY0Xmn5N>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B95212220071; Fri, 29 Nov 2024 04:23:43 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1732872295; c=relaxed/simple;
+	bh=EPOYQ7J1AVICpIBlMdqjCNQqUq72xOGPxY+KH3eq9Ec=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s4JGeIiLs1J2XKHI3RqTmjvF9zuZEGHoAc2duFVBmV4+Ej4vIeyDoc1I08CEWlaMStkwR+XTqOK7ubeLVsmOb0Z0S8ZkgXyMcKfDXcbCgcyQSbL2VYGZexktI403bQJDJNkQHcnYH2ZUbWSR16Dp3KByuP97R56du5qFu5r0Az8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rPJBIuDy; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-212a3067b11so16136225ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 01:24:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732872292; x=1733477092; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NBFDhI7b5AWyeGsQ8ROQM0HPo6lilFuo1cxDwHWp2j4=;
+        b=rPJBIuDy8t0tvF9/sdcNnocRfFprgCkyH6dYf7d4V7wjIcD/R87qjPn0Dz1grwMybg
+         h4UF+e9xEQqjZCrB42g3xDJJIrTWwQaxeM+9QUdlde+hI9x1FdLVy3Nnm5cUNK9c44gA
+         LkOuuIJw9umURNn6/Pf7ZakiGnMlAspAQXHT2uqa0STrfF/wTK99kP7EqdwJ5jLVaTcn
+         KL3bHmzl2MgfTgwWvIzAKJUHHQZOSM14VMSeCZvZwgBPDT5oilLjnp55pgjpOB/VGdTv
+         nLHk4MOqT3JWejQmlAXywc69q1gM/JAo8e82BBR+KEaaW3jaVE43mDDJC5YN86Lx+y/2
+         obzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732872292; x=1733477092;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NBFDhI7b5AWyeGsQ8ROQM0HPo6lilFuo1cxDwHWp2j4=;
+        b=B3HRCJk2HLUCIf+ubDLQq0//Wva10E6vYSbXjZYoyCEemnd2fXGG62qiRz4NEAFIhB
+         0WvCZvtrOPtExngW3emstx2FFgkBL4GNINU8j+lhGxgoMYL1Iyz1UV/ZO+GCZasy5SjG
+         JO49tiNnWHMRnw+IVIMg0ZtVzjo5mgoQWLY9CdJKA+d8LNWCi93XNIv1NfJ+8om2AXu4
+         3JCfMpvl4vnkeGYT/4hvDnKKeWlEKpWA+L34CHu1FfQuahRhTUZ2cg2Na8JDh6SLyvdN
+         qB4R/v347JQTbwi7nLrYssAelGQt2PFGCOwBrmYMLa71Wf0A2MdXQ+SH34z2g8RZXmJE
+         mPfg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7pxpFhsmN0c8BBJPqxmrxDupxa4Hqlp1nOjJwwSbezjzuE9iWUQqPtFNAsLLLIVF6LT+PNDjhN3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq7+7oiQ/+hbmcLWrqa7AS75xPq+O68hFia14dRNLLSKs99db1
+	eQuz36qdygZ9xdo1ehQEUqolSH84lFtxk/ApRkr/cVou41nBe0J9AZs5VYo24g==
+X-Gm-Gg: ASbGncsgcn9VYsEPcCpfLZCMg1rPY2EuebmmxrX5CaM8h9Fde3mGOrQtDQzO6vFDXkx
+	WC1P/22OeQgAn8egbEcD7FW7c1ym+6EqMcSF0rpcc+dk1wQEKUJB7AAwWN/X9pNcmJgA3PE7QWB
+	3YLI/cl1955dRHOyxYdr632tEiuxuARK7NeswMd1T1KdpbCFvFyL70ChV5vJcWHCAwzabpp04/X
+	EikZv2xzj9JhaXtcFuk+Hehccgz5K8pRNArA9PtTe3dI71TEQHL8zLjNBML2u9IdpIhRtbV5TeZ
+	DQ==
+X-Google-Smtp-Source: AGHT+IHPe3gGy8eM2V3S8JdaC3ZbTmVhZZjGLDLxeNc1ht3ObEkED7tiuJvhJ7t3tIl145CCUFCMfA==
+X-Received: by 2002:a17:903:228b:b0:20b:8ef3:67a with SMTP id d9443c01a7336-215010861bamr135066985ad.7.1732872292327;
+        Fri, 29 Nov 2024 01:24:52 -0800 (PST)
+Received: from localhost.localdomain ([117.213.97.61])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521987f17sm26648115ad.211.2024.11.29.01.24.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2024 01:24:51 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: kw@linux.com,
+	gregkh@linuxfoundation.org,
+	arnd@arndb.de,
+	lpieralisi@kernel.org,
+	shuah@kernel.org
+Cc: kishon@kernel.org,
+	aman1.gupta@samsung.com,
+	p.rajanbabu@samsung.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bhelgaas@google.com,
+	linux-arm-msm@vger.kernel.org,
+	robh@kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/4] Migrate PCI Endpoint Subsystem tests to Kselftest
+Date: Fri, 29 Nov 2024 14:54:11 +0530
+Message-Id: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 29 Nov 2024 10:23:23 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: "Herve Codina" <herve.codina@bootlin.com>,
- "Michal Kubecek" <mkubecek@suse.cz>,
- "Andy Shevchenko" <andy.shevchenko@gmail.com>,
- "Simon Horman" <horms@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Philipp Zabel" <p.zabel@pengutronix.de>,
- "Lars Povlsen" <lars.povlsen@microchip.com>,
- "Steen Hegelund" <Steen.Hegelund@microchip.com>,
- "Daniel Machon" <daniel.machon@microchip.com>,
- UNGLinuxDriver@microchip.com, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Saravana Kannan" <saravanak@google.com>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Horatiu Vultur" <horatiu.vultur@microchip.com>,
- "Andrew Lunn" <andrew@lunn.ch>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "Allan Nielsen" <allan.nielsen@microchip.com>,
- "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
-Message-Id: <93ad42dc-eac6-4914-a425-6dbcd5dccf44@app.fastmail.com>
-In-Reply-To: 
- <CAMuHMdWXgXiHNUhrXB9jT4opnOQYUxtW=Vh0yBQT0jJS49+zsw@mail.gmail.com>
-References: <20241010063611.788527-1-herve.codina@bootlin.com>
- <20241010063611.788527-2-herve.codina@bootlin.com>
- <dywwnh7ns47ffndsttstpcsw44avxjvzcddmceha7xavqjdi77@cqdgmpdtywol>
- <20241129091013.029fced3@bootlin.com>
- <1a895f7c-bbfc-483d-b36b-921788b07b36@app.fastmail.com>
- <CAMuHMdWXgXiHNUhrXB9jT4opnOQYUxtW=Vh0yBQT0jJS49+zsw@mail.gmail.com>
-Subject: Re: [PATCH v9 1/6] misc: Add support for LAN966x PCI device
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 29, 2024, at 09:44, Geert Uytterhoeven wrote:
-> On Fri, Nov 29, 2024 at 9:25=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Fri, Nov 29, 2024, at 09:10, Herve Codina wrote:
->> I would write in two lines as
->>
->>         depends on PCI
->>         depends on OF_OVERLAY
->>
->> since OF_OVERLAY already depends on OF, that can be left out.
->> The effect is the same as your variant though.
->
-> What about
->
->     depends on OF
->     select OF_OVERLAY
->
-> as "OF" is a clear bus dependency, due to the driver providing an OF
-> child bus (cfr. I2C or SPI bus controller drivers depending on I2C or
-> SPI), and OF_OVERLAY is an optional software mechanism?
+Hi,
 
-OF_OVERLAY is currently a user visible option, so I think it's
-intended to be used with 'depends on'. The only other callers
-of this interface are the kunit test modules that just leave
-out the overlay code if that is disabled.
+This series carries forward the effort to add Kselftest for PCI Endpoint
+Subsystem started by Aman Gupta [1] a while ago. I reworked the initial version
+based on another patch that fixes the return values of IOCTLs in
+pci_endpoint_test driver and did many cleanups. Since the resulting work
+modified the initial version substantially, I took over the authorship.
 
-If we decide to treat OF_OVERLAY as a library instead, it should
-probably become a silent Kconfig option that gets selected by
-all its users including the unit tests, and then we can remove
-the #ifdef checks there.
+This series also incorporates the review comment by Shuah Khan [2] to move the
+existing tests from 'tools/pci' to 'tools/testing/kselftest/pci_endpoint' before
+migrating to Kselftest framework. I made sure that the tests are executable in
+each commit and updated documentation accordingly.
 
-Since OF_OVERLAY pulls in OF_DYNAMIC, I would still prefer that
-to be a user choice. Silently enabling OF_OVERLAY definitely has
-a risk of introducing regressions since it changes some of the
-interesting code paths in the core, in particular it enables
-reference counting in of_node_get(), which many drivers get wrong.
+NOTE: Patch 1 is strictly not related to this series, but necessary to execute
+Kselftests with Qualcomm Endpoint devices. So this can be merged separately.
 
-      Arnd
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/20221007053934.5188-1-aman1.gupta@samsung.com
+[2] https://lore.kernel.org/linux-pci/b2a5db97-dc59-33ab-71cd-f591e0b1b34d@linuxfoundation.org
+
+Changes in v2:
+
+* Added a patch that fixes return values of IOCTL in pci_endpoint_test driver
+* Moved the existing tests to new location before migrating
+* Added a fix for BARs on Qcom devices
+* Updated documentation and also added fixture variants for memcpy & DMA modes
+
+Manivannan Sadhasivam (4):
+  PCI: qcom-ep: Mark BAR0/BAR2 as 64bit BARs and BAR1/BAR3 as RESERVED
+  misc: pci_endpoint_test: Fix the return value of IOCTL
+  selftests: Move PCI Endpoint tests from tools/pci to Kselftests
+  selftests: pci_endpoint: Migrate to Kselftest framework
+
+ Documentation/PCI/endpoint/pci-test-howto.rst | 144 +++-------
+ MAINTAINERS                                   |   2 +-
+ drivers/misc/pci_endpoint_test.c              | 236 ++++++++---------
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   4 +
+ tools/pci/Build                               |   1 -
+ tools/pci/Makefile                            |  58 ----
+ tools/pci/pcitest.c                           | 250 ------------------
+ tools/pci/pcitest.sh                          |  72 -----
+ tools/testing/selftests/Makefile              |   1 +
+ .../testing/selftests/pci_endpoint/.gitignore |   2 +
+ tools/testing/selftests/pci_endpoint/Makefile |   7 +
+ tools/testing/selftests/pci_endpoint/config   |   4 +
+ .../pci_endpoint/pci_endpoint_test.c          | 186 +++++++++++++
+ 13 files changed, 365 insertions(+), 602 deletions(-)
+ delete mode 100644 tools/pci/Build
+ delete mode 100644 tools/pci/Makefile
+ delete mode 100644 tools/pci/pcitest.c
+ delete mode 100644 tools/pci/pcitest.sh
+ create mode 100644 tools/testing/selftests/pci_endpoint/.gitignore
+ create mode 100644 tools/testing/selftests/pci_endpoint/Makefile
+ create mode 100644 tools/testing/selftests/pci_endpoint/config
+ create mode 100644 tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+
+-- 
+2.25.1
+
 
