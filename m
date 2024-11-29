@@ -1,178 +1,179 @@
-Return-Path: <linux-pci+bounces-17445-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17446-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 162B09DC14C
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:15:31 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B06E9DC164
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:23:53 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBA01280CB2
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 09:15:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37D4716446B
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 09:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC08156C52;
-	Fri, 29 Nov 2024 09:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08022175D35;
+	Fri, 29 Nov 2024 09:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fI6bzIiw"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ddo/KhnB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tZt1gedD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2052.outbound.protection.outlook.com [40.107.237.52])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0188C15C13F
-	for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 09:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732871727; cv=fail; b=BGGdqdMLojFaIbvYPYQp3SvnHBN0qCAVZng3ISOcj9nT8ccXZIYftprtmifx55vu2jCfW8ILg/DOgGitz9eMOniXpUEui88w2d+RiBd7P8EdZaBUS7z0RmQCFYew4jVKUfrsaGCxAZd1cYgQYlaJX4wrTcJdfANzHtSWtgXEEr4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732871727; c=relaxed/simple;
-	bh=nAf+orK4g5iZCh9kX/PvqJTSmnub3z+twwGJyN3uIis=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nZv5DNr4zPSHkrDtFlhKpyd1iAdEUGPlIctEZmoqecm3q6w0FCgZUeQpCVpDpFnD07L7sN2wKcfkQvTw6e6RaNIcCCN4RN4KLzhqKcgguQDOJjN1Rcl9hy/mPS8jA8tHIF+TghZg2WhAOMpWlznzM6kXg34yOLBnBhccMKd2rTw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fI6bzIiw; arc=fail smtp.client-ip=40.107.237.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NnEM53fpCHLqLAsB5H/9ElbwTvkSYLtJVT/iJmtXmJsFKsh86qbT5f6+pTEtR2H3dvz1fj1AhhAngbYEbyfJ/60t9PxzUvS96AziQYw0JZqeb0xOjRLS3rahMLw/HWexq8bZsni5OZ9szkN94gss6V7fZlv7CkPyvQMWleyagcKOFxAH13U2vz1VY9MCSSd332+PVmc2oHsirMgxojhg0/4fchQW3hAXvUg7KcrwW37H/9J2fDbwyazQIQZft319PSopx2XAH4fo5Llamf937WChHDNATYfg+ZWgKPvni607sRh1TNnsbH+HS7RCgw8468jk3Y/+w0b8v3EPwQhQOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c37aZF+4FOWAG051g9DOXO/Qz4KTXq06xurtibSAHDw=;
- b=MW73h3o8U6FATqg/IYiv9nvv9TNAh0yZFR0s6HrWwVQ3szmzRigD/XY76iE+SnBLmGpfXTs+8YKURvhQrVWEKuKPq/PIdi9kyjAmXwmkbWpoW1OL+xIOOPfbpmRoRpFjBNpMtvum0xMVmiNAOsp2AMtnYhRoP/ojiYRil5rM7lS0VW3v+HG+oCvDQkAsaeuYR66YZFNYATVDUBQQLIEemrvis3ShFz89c/QQBCBFXJ3o362spD8TLEdh+H2ESLB9tEi1eNp56Z75GIanK/EPEd+xk0TXKIyc6cRpTfATcjP0w5qStBP14NHhKf9n3O2Dq051BnYeUDxNS2FbuBDfKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c37aZF+4FOWAG051g9DOXO/Qz4KTXq06xurtibSAHDw=;
- b=fI6bzIiw9rI14/lCVpMunUaUs9ISYP7H2/4vQajDwtKOhi0Q3hklnHtnrb3U9VW1JwLpdwmtUY4L+ZT4oTlDPI1hc0YoyS41cOdWE8XI3y4QclKxOp9LOkWHb5LF3zfzuxq0MApktyJ5YGWnZvjR7Gjrfd8LF3zGeppSgbj2fXU=
-Received: from DM6PR02CA0121.namprd02.prod.outlook.com (2603:10b6:5:1b4::23)
- by DS0PR12MB8296.namprd12.prod.outlook.com (2603:10b6:8:f7::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8207.14; Fri, 29 Nov 2024 09:15:22 +0000
-Received: from DS1PEPF0001709B.namprd05.prod.outlook.com
- (2603:10b6:5:1b4:cafe::45) by DM6PR02CA0121.outlook.office365.com
- (2603:10b6:5:1b4::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.15 via Frontend Transport; Fri,
- 29 Nov 2024 09:15:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0001709B.mail.protection.outlook.com (10.167.18.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8207.12 via Frontend Transport; Fri, 29 Nov 2024 09:15:22 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 29 Nov
- 2024 03:15:21 -0600
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 29 Nov
- 2024 03:15:21 -0600
-Received: from xcbalucerop41x.xilinx.com (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Fri, 29 Nov 2024 03:15:20 -0600
-From: <alucerop@amd.com>
-To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-	<alison.schofield@intel.com>
-CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [PATCH] resource: harden resource_contains
-Date: Fri, 29 Nov 2024 09:15:12 +0000
-Message-ID: <20241129091512.15661-1-alucerop@amd.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90F5156F28;
+	Fri, 29 Nov 2024 09:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732872228; cv=none; b=WikJCEf4eglfAAwzIm4jeWP76ftVzYQxQiHuOlcPSuh75pauU5w8rj0BAuwEq2+c8T0Ld/x6slTAL2tV64yj5ZLyL2p6I2zU5+9P5vAmWIRiY0JjIOVW70sfKiFxcvWsRQfmHzgbhubtAR+di0i0BajYfmDOwlTz/CVsgiB+dvU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732872228; c=relaxed/simple;
+	bh=+B/4weM0/EUGguG/BqQcks88RtE9urCqPFe8Kwp9UB4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Io8EHP/KiFf6j0DecGR0qaSZ+xecyvzAZ09IuVtLR3kUpjItiH1S7uL4EypW0jY1aGM9KEo8VPfeK46UeWmvZtBX3SUlys+pWjVdlEsMNnQ7+GdXb4sRxW9bC3rttIlz43uDW8zM7uuCh62/4I67AZcZ2SicTKujqA0TwxfoKEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ddo/KhnB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tZt1gedD; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 07B7625400F5;
+	Fri, 29 Nov 2024 04:23:45 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 29 Nov 2024 04:23:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1732872224;
+	 x=1732958624; bh=6JoH9bTLLNPgqK4rstk02jf2g1g5I4XEBTfZgtUBOaU=; b=
+	Ddo/KhnB/zvVE0eA+K+XdWB/soHKnOPOOmDyAnGvTKmKSrM80jkWjrdR/eW1a10u
+	hDiS8ZljUw1ee79JC2JMlqXNmoaobS+MDnTY12XV74X4XwLdnde6lu0ZSHSp6FUt
+	zy4ZzgyPR53mKV55Ou4bprp1aNHmKyOveZrnHMV0KkaZMd1OGZD7PHnk4tbbFDzn
+	8AGWRZa+QMcLaqCZwiWqja7Zeeg88A8nO04bShOuxDtdQh3LvhjZpamuiQ34n0Cz
+	q4NJgVcskQ9QlbDExitYtLle3KEwjaVH1TB6yTIVkMdZZAhqR7RGHuc7D9kIcul/
+	t6gRhNARly08EZRGKWmIvQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1732872224; x=
+	1732958624; bh=6JoH9bTLLNPgqK4rstk02jf2g1g5I4XEBTfZgtUBOaU=; b=t
+	Zt1gedD41mirEjCd0k8Ry7bsJ7WNAJ5hzfyvUz1CaQtooYr7s+ENutSJHOma8PNS
+	XJ5XBgvqR3qTGxWzkTyzXnmz1ye31iWQAAauSFLt+z86xdXZSeFbWOOGDK9iFI2v
+	0F8NHUcYiBbgNxium9R7WKhJkShQVxdygDpHesV4HXP398wtx9paTpUnQfp0ArkM
+	Sk54toAgkqETaDfa2mGjiFxF2m3VQmF4N8+sIjOtywV1kVhQlNx39k34xpyhrZfL
+	S8YKy6XHHywCddE90HDC8O/iwgURjsmtPCe5YrbVY5ESGdepUSvWNilT2MS3o6Fi
+	sF3FYFZHRlbSiZq+e2FhQ==
+X-ME-Sender: <xms:H4hJZ2wScKKDoFkbmffti2XgLRon-rOtXwdmdn1I06hG8Y_7Rkiexg>
+    <xme:H4hJZyT8ysWmzOdm8l7RET9uRPFzX65262mo90h_HfZ2znHDnccno0AVXzZl3kqNM
+    MaAu3LYP0ILp3b4t_I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrheefgddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeen
+    ucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdrug
+    gvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeej
+    vdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeffedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhdrkhhivghrnhgrnhesrg
+    hmugdrtghomhdprhgtphhtthhopegurhgrghgrnhdrtghvvghtihgtsegrmhgurdgtohhm
+    pdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtg
+    hpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphht
+    thhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtph
+    htthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnugih
+    rdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopegshhgvlhhgrg
+    grshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhl
+    vgdrtghomh
+X-ME-Proxy: <xmx:H4hJZ4ULhjYre35Nr7LeimF34eDMT9QrYAEfvNLxQ4HCSaTeF-ZLPw>
+    <xmx:H4hJZ8jR697AYXyTB0_yJGKBx7Rr_wRabBiuDS9kaxfe5gelt6ANRA>
+    <xmx:H4hJZ4DGhdlI5HRWqxuGrW0gYHU11SKPh02XxTqCJ0hNpjkNIW8_fQ>
+    <xmx:H4hJZ9IgM013bnDtM7LQ9mwj85lQkdwUQ0OR4axgWyptEYcrYufw7A>
+    <xmx:IIhJZwa_k9cjV1TQWoNQPYleFfTjyB1NFLrbiBqw5uTGZlE1MY0Xmn5N>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B95212220071; Fri, 29 Nov 2024 04:23:43 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: alucerop@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001709B:EE_|DS0PR12MB8296:EE_
-X-MS-Office365-Filtering-Correlation-Id: dcb364e8-81dd-4649-0f71-08dd10565a19
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?z6l6GnAed0+qSEW5Q/Ct2j4VE5DlfGy9yALBxTxUIjFaZ37p0xXyNHnuXR1U?=
- =?us-ascii?Q?ldF0UJ52OOyYmmPBF7fMwGKvhQRsJzRLMGg0mQTdp0qOT5c+dikYMkVUZC5z?=
- =?us-ascii?Q?l0RWPOEVYB6MezxO1qMNIOB60GC+gLxEhLmWLzFv8ntVCcn9Mzb7mqFiPHm1?=
- =?us-ascii?Q?aWVHr8zkCL7An+a+lUjrR6b8r7GE2mun/5ZyBth9MfX1ecFMrCN4/pf0aJ7n?=
- =?us-ascii?Q?YKUxlMHEYuiqjy+IXN9cBM9Bukbxh0wjAl42pcq1pRDH5cyMWqLFRR+oxWzj?=
- =?us-ascii?Q?IQR/zJnvmIhmfnfB2ZXkxSYvc3q7B1D/dov+oTeRM4TYhU+C0WoT45UIOZbT?=
- =?us-ascii?Q?Yq3P4pdD/4SqgYvGMK2h4T+tRAQuEdiqzj/2c19x2E2CZR31c0OpG+5nMBpv?=
- =?us-ascii?Q?ke+2Qc9EN76n8Wy/ccB5AmAgcqXV8bMKzDparCkn039S1sH6WnHeZp+yZhTU?=
- =?us-ascii?Q?7gsBQREZKNpCqrt/ELNIsHzEQOYWWR1mn0LV3nvINgkeh3fJc7bC9WVWT3fZ?=
- =?us-ascii?Q?1J5m5SU6QTYn5bNtN1T3z3V84/1VgtMqvywu5bp14FloLyFsSZuUKgamxmTK?=
- =?us-ascii?Q?dXIMvoqY8i287E67G56k6//jb7nxCyPt/dtRqLxL7Px59KPDjybpSVJvoafc?=
- =?us-ascii?Q?hcUwN902mDpkcnli/CR4QsE0sBqrTmc3/0nE9yT1TIYlEvlkIbNycdFp+qA5?=
- =?us-ascii?Q?BuDLQZ3c/zbfIFhqjWd57n3am0CU2asnsDgM+PfMj/3rQkkkHj84nyeGSZpu?=
- =?us-ascii?Q?KdNLX0bUuWHMQwlUY0V7U53SlHRHYQinEArlQwjlbmj76PAMOUbA4+Kdn0Y7?=
- =?us-ascii?Q?bpCy9TFuH4Rl3gOrMPri8QtIZFh2Mm0P/xclkkxVkLqKlR4JuOD6by3lGNaI?=
- =?us-ascii?Q?zNhxfC71E5PQ/KlFC1580oH2+h4W3Bqbf35eoVx7Y01hsWWKEFEZITnQyXgz?=
- =?us-ascii?Q?SJnhTN0vnn06ouEnyEfbeHc+kLSCrb1kyNKpjTAVn4KE2I/gNif+eEms+AM0?=
- =?us-ascii?Q?/RHCnFqKN7MvHrdvnydoL/pQ4/T5j8z1NQIsF9hnsVbuwZi88W2NgLW55rD8?=
- =?us-ascii?Q?tAeMWOCP3OZvbmXt+42rSA/cdAIPVtwEXQxFKYStqx+/14Bz7kUc4Mh+0tLk?=
- =?us-ascii?Q?Dnoz/Epvt9jSOOyuOhOA12rUuCYWgC1V38B8AUHDGvS1tKnGySdw9TbhjS5u?=
- =?us-ascii?Q?9JAFSe75Ldaxs48V79SGM0U/SvWIJX0MAnLMm46zafn994NHVWPCFDfdHz+X?=
- =?us-ascii?Q?qGagaYiHQcJWFXwRn3TlbTNp0b2qj2fb+gedawPzX8/aj8o4NRJAI9Pibrj6?=
- =?us-ascii?Q?frV3yLjVfBu9X/bSGPwY2mCjgJDRK0t8/Sfzl69QuPVp1mUuqru5NVO0jEWD?=
- =?us-ascii?Q?veq1zWZ86F3EbEGGX27g+aBsaOYgO7kwX6h9UxR0JpFYZzBCOAWDeeB8Habf?=
- =?us-ascii?Q?UUjrCqx1njiyBi/oEwYi1lV5V/HuRJX3?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2024 09:15:22.0208
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcb364e8-81dd-4649-0f71-08dd10565a19
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001709B.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8296
+Date: Fri, 29 Nov 2024 10:23:23 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc: "Herve Codina" <herve.codina@bootlin.com>,
+ "Michal Kubecek" <mkubecek@suse.cz>,
+ "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+ "Simon Horman" <horms@kernel.org>, "Lee Jones" <lee@kernel.org>,
+ "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+ "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Lars Povlsen" <lars.povlsen@microchip.com>,
+ "Steen Hegelund" <Steen.Hegelund@microchip.com>,
+ "Daniel Machon" <daniel.machon@microchip.com>,
+ UNGLinuxDriver@microchip.com, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Horatiu Vultur" <horatiu.vultur@microchip.com>,
+ "Andrew Lunn" <andrew@lunn.ch>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Allan Nielsen" <allan.nielsen@microchip.com>,
+ "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
+Message-Id: <93ad42dc-eac6-4914-a425-6dbcd5dccf44@app.fastmail.com>
+In-Reply-To: 
+ <CAMuHMdWXgXiHNUhrXB9jT4opnOQYUxtW=Vh0yBQT0jJS49+zsw@mail.gmail.com>
+References: <20241010063611.788527-1-herve.codina@bootlin.com>
+ <20241010063611.788527-2-herve.codina@bootlin.com>
+ <dywwnh7ns47ffndsttstpcsw44avxjvzcddmceha7xavqjdi77@cqdgmpdtywol>
+ <20241129091013.029fced3@bootlin.com>
+ <1a895f7c-bbfc-483d-b36b-921788b07b36@app.fastmail.com>
+ <CAMuHMdWXgXiHNUhrXB9jT4opnOQYUxtW=Vh0yBQT0jJS49+zsw@mail.gmail.com>
+Subject: Re: [PATCH v9 1/6] misc: Add support for LAN966x PCI device
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Alejandro Lucero <alucerop@amd.com>
+On Fri, Nov 29, 2024, at 09:44, Geert Uytterhoeven wrote:
+> On Fri, Nov 29, 2024 at 9:25=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+>> On Fri, Nov 29, 2024, at 09:10, Herve Codina wrote:
+>> I would write in two lines as
+>>
+>>         depends on PCI
+>>         depends on OF_OVERLAY
+>>
+>> since OF_OVERLAY already depends on OF, that can be left out.
+>> The effect is the same as your variant though.
+>
+> What about
+>
+>     depends on OF
+>     select OF_OVERLAY
+>
+> as "OF" is a clear bus dependency, due to the driver providing an OF
+> child bus (cfr. I2C or SPI bus controller drivers depending on I2C or
+> SPI), and OF_OVERLAY is an optional software mechanism?
 
-While resource_contains checks for IORESOURCE_UNSET flag for the
-resources given, if r1 was initialized with 0 size, the function
-returns a false positive. This is so because resource start and
-end fields are unsigned with end initialised to size - 1 by current
-resource macros.
+OF_OVERLAY is currently a user visible option, so I think it's
+intended to be used with 'depends on'. The only other callers
+of this interface are the kunit test modules that just leave
+out the overlay code if that is disabled.
 
-Make the function to check for the resource size for both resources
-since r2 with size 0 should not be considered as valid for the function
-purpose.
+If we decide to treat OF_OVERLAY as a library instead, it should
+probably become a silent Kconfig option that gets selected by
+all its users including the unit tests, and then we can remove
+the #ifdef checks there.
 
-Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-Suggested-by: Alison Schofield <alison.schofield@intel.com>
----
- include/linux/ioport.h | 2 ++
- 1 file changed, 2 insertions(+)
+Since OF_OVERLAY pulls in OF_DYNAMIC, I would still prefer that
+to be a user choice. Silently enabling OF_OVERLAY definitely has
+a risk of introducing regressions since it changes some of the
+interesting code paths in the core, in particular it enables
+reference counting in of_node_get(), which many drivers get wrong.
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 6e9fb667a1c5..6cb8a8494508 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -264,6 +264,8 @@ static inline unsigned long resource_ext_type(const struct resource *res)
- /* True iff r1 completely contains r2 */
- static inline bool resource_contains(const struct resource *r1, const struct resource *r2)
- {
-+	if (!resource_size(r1) || !resource_size(r2))
-+		return false;
- 	if (resource_type(r1) != resource_type(r2))
- 		return false;
- 	if (r1->flags & IORESOURCE_UNSET || r2->flags & IORESOURCE_UNSET)
--- 
-2.17.1
-
+      Arnd
 
