@@ -1,947 +1,302 @@
-Return-Path: <linux-pci+bounces-17451-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17452-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1DA89DC180
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:27:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98C229DC1AA
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:51:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBE5816567E
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 09:27:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4708B162B2D
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 09:51:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 068B6176FB6;
-	Fri, 29 Nov 2024 09:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61426175D47;
+	Fri, 29 Nov 2024 09:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uoMwuLKS"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="VsIV0nnb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011026.outbound.protection.outlook.com [52.103.67.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B337D14F135
-	for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 09:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732872445; cv=none; b=s5rt6Bv8b/35K3AmEG72nryT5XAb/1AEO/8iQandeEKDHC3Y/hApEFhz8nRl/vPNNCigekkK9cimTIvw9NErOdohbSXPo9l1qMyhF5J1Kd0wkMYvbCb28FOgAcqeniKa2GozWewWwD8kUdbNbjHmlN38WRxsuDvfpalDwTGVDxI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732872445; c=relaxed/simple;
-	bh=o8FZ3XBbusz2U1sdZy/9uaM5BliAvGYuYlLhEWJZdMY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bSVI2LDJMuAEL4nCi8XliYsO9h0DMwoaAfHxiREHDliFpBDAk4wsbXHTBxcuW3Rm3y65JQUaLbiN8+gnJI07e565PrYwT7mL36mCzO9WnJ/I/40OpYl+wMX9588PU87yP6JMZMCx+9bMhZEUNc+gceC/wPyoy0l/lGVc9PDKnTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uoMwuLKS; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21290973bcbso14998155ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 01:27:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732872443; x=1733477243; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RVPpqyAoVeYI4oY5mv6ggxLLJLys0upGsDPS+yeHY7s=;
-        b=uoMwuLKSzCBVUDrA7pyPlkx1VstY1PXRQkoMFsRyM0CuSofu411QrlKgAND0E2FaKl
-         RosPyQaBfz6jdrzvAJCcAbcHVpB2Nbb1Drh+l21+S/suphsXF0FIWcXFL2FQ/NYjN3Kz
-         l+Bkjc7y5jVpiHWlH2y4iCS6PY4mAC5wFPUIcmJNEJm2ZVjXhiUjxGYCMvpsgoENASTm
-         hsJmALkVjHBA/oFo5Yvjx9dEQts6aWhpQinFfc/YXHK/ypjna/UvxVH/Q4AgKkVgouud
-         3W+VPQYmbQ9dBxxmgCF1cHgR/Kw1expK7RFu3vs+qDMT4Rd1k3CIMUiUG9/eYn91vMWu
-         y/gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732872443; x=1733477243;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RVPpqyAoVeYI4oY5mv6ggxLLJLys0upGsDPS+yeHY7s=;
-        b=lTz48nF2RyQv8ilZ15VfRg1wKfO2SaVIci7EVdrULxI4SCmgVCxVfRLo66Tyt3PI/g
-         pm62a+fY1CHvp8E4lAiCvP6p4wUva/cLRjUMhkoi0GahNRsn5AVL2+oNdg7NRfnAUEIQ
-         5k/Nm2VPNxHtHMDy9fmwektt69DX9q51gJiEiBqpt/GHa6w6qRtb9z6hUGWS/aNtJR02
-         /IHPWo/qMwtRb8tl3XEkf8ZmIV7DEbxtv+aUNjiPAiqtXz/EXso8RlShA3H831GI6g6Z
-         qHF+ew2MvvBrrse6/vq+/qOwdelTZXuns8FQdbWrsXBGKo4rOqHk1Qigru+RwLHwLis8
-         kvrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBhMD+TkxoIkJPgr5jq1M5kb+PUxAgcFJOwxZbjWkAKTDqjoRmvRlCFxRfXRRxiMK8Lh89HATaMHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbTI8Bxz/xAgITdR3wwjubwtJWVUqKePSyJAR2ZDPPJVHy/n3S
-	fJKd/MThYBCU3V/YvdS0SkvSKTbH8ZSACaxO76xHlEfduxst4VvVfEmtVj/5jQ==
-X-Gm-Gg: ASbGncsyN1EpxxBVsOyCxQEo2yG0a+vsnpmcKpYVWrDrTTiJNB+wylUKbg7Y7/ohkgz
-	QYDUdG4RY7bk2VCfh6GMbXTzg4Ui64dMcxF3RKk3jwfPlXMUJmLGYRUWKrAMUn8sOEyap3U5Om9
-	v0lvDUHdRfrw8CZOGigDI6KP6TOAa2te1A2HERQgFOwcytXvFi4EVE+dtUxqap226yyt/SE+VDp
-	BsGnTLO1LkPikP7i+ROcWvTbZTlATQ53yLamgM0WyeRoSdBDjf+kN++xqVCcapXOUqyQqOJro2a
-	Yg==
-X-Google-Smtp-Source: AGHT+IFu8G91fnQNF3sUzsm1Y95sMMH2FbSXiFjqBJg66hwN4zPqlJxBrsFUtO9996nBrQ2LGaaRAQ==
-X-Received: by 2002:a17:902:d488:b0:210:fce4:11db with SMTP id d9443c01a7336-21501097d0emr131596375ad.22.1732872443046;
-        Fri, 29 Nov 2024 01:27:23 -0800 (PST)
-Received: from localhost.localdomain ([117.213.97.61])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521987f17sm26648115ad.211.2024.11.29.01.26.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2024 01:27:22 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: kw@linux.com,
-	gregkh@linuxfoundation.org,
-	arnd@arndb.de,
-	lpieralisi@kernel.org,
-	shuah@kernel.org
-Cc: kishon@kernel.org,
-	aman1.gupta@samsung.com,
-	p.rajanbabu@samsung.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org,
-	robh@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 4/4] selftests: pci_endpoint: Migrate to Kselftest framework
-Date: Fri, 29 Nov 2024 14:54:15 +0530
-Message-Id: <20241129092415.29437-5-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
-References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221DC1547D5;
+	Fri, 29 Nov 2024 09:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732873915; cv=fail; b=WQBJNBgG5MJJhBfyR13tUuoNzbKbe7itTM03omU6tOrdxoQ44SL6K8PdledbtIR0razdfNiHokdcm3x/MKMUJeMbbDTv31N4PXqqvzU2gHYF7751lL1d90Z2q1SBd2GK1rV85vGN2eGG3k/CvPFBSTJw36OCriGwT3uVB5oX/0s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732873915; c=relaxed/simple;
+	bh=T6wl8GEbM6ZHlmVW2rJdCfk18Bep/L3Os+C4IXip/N0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QU52XjvdxcV5OJM4XzjRSLe0iiK+oN0KGtOD8//3HPUXYzzZafViATupKN+DAbc4TCChFkazXHNEVkI0KMoen38yaR24cPg9Ie6YYQ5T3dXQJhDi4dPUfCUiA9NnYzbPmBbMGRdbthBrWcLPN1By1TyDKqB/FXG+j39H9S52RMs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=VsIV0nnb; arc=fail smtp.client-ip=52.103.67.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ig1X5Uw/s2KpTdum1fqIIC0zd3C1x19e6hgZOvjgHe/4rGZK3tD4nK/xbEMYMKvbY8iewqSLCXzC1brCUzlzgaLkF0NdRPAAfpurcIiFrjK2C7vaHEuu4vtQukQRqp2+AcQMWO6QcAUgaVe/EE5fsUKPf3DWPO9DDEGLseDqdBRC6YfzZ4btlXAvS8JvzUvXsSE5UUelE/lEnoDmX2iXQo32vdVS8Kbvu9BNhD5uwnt6UAdnP+xZZPL/2KfSrgJXWYjsIDj/ijjfpoKpX8+PvRYYv1fhu9vZ9ACwDcNTnuBg7DnkX/UKpI2wksBPgb9jlbXdQi/+gIOvco4MGauLXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4SH+Npp7zGYpYM+WO4iZx2VW/zbMhGhXlzkbgJ821i4=;
+ b=Unkax42Rg8YvZxhNw3jEA0Ve4mYmq6AGUTI0p3ZLVMZ9O5Zn72xezETZ2Xmk21Rf3QmLbTjqjl1S5taDpmE4oFlZaR+DrnDK8c8XIcMqOQ6iJWcwXIALNcv/MGnOGt8pFqa3xBgn8jw/MZ3uqA/5OVwwXw18kLfC08fGlfBh4TmFD13DfF9g4EmiNa0QU6QsZHZJqZkbbPIK8dCR56EdtXyose4pUFwwzUiY1UlUanZh/EOgm9qGNxKwpcDywC8zscVck3BKOySdhPTc1gpmKJkgE8v2gp/YXbQYEkkgNLQyvBAsv0JQ1vACiJJoCHaj1T0Qx718fN6HkuEV/WBB8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4SH+Npp7zGYpYM+WO4iZx2VW/zbMhGhXlzkbgJ821i4=;
+ b=VsIV0nnbvIsd0fJ6aP18fY/U0+GiSICD184XhqlT+2Dc59pzaF7eFvNKUwvaxlAjDD6LDSNSEB8o8QOi18ICdDN82eVXtoF/ly593wzuucwdI2/h+BcD3q23vp011Je3og/5u5TFTmyR/hE7WO6tL6A0M/DHdr791FxRJ7kN/MlbLxK0hggWPk8DzdVWESS/EvVF+g7RGTfuJgu25wbP28XgwvxdqJ7/UEyOFY+zvjGWwtHxhu688YfuaqVGyxPCrAlTUGbRciNzBdxz3PYIyGzQkGeRt6yioHGodGDaMXprtOWf6mCusHhx0ZpjkUNDEtKDZc0DdigsTDUYIHycYA==
+Received: from MAXPR01MB3984.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:68::20)
+ by PN0PR01MB6547.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:74::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.15; Fri, 29 Nov
+ 2024 09:51:43 +0000
+Received: from MAXPR01MB3984.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::285f:e601:b80b:465a]) by MAXPR01MB3984.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::285f:e601:b80b:465a%6]) with mapi id 15.20.8207.010; Fri, 29 Nov 2024
+ 09:51:43 +0000
+Message-ID:
+ <MAXPR01MB3984C307B163E615811A25AAFE2A2@MAXPR01MB3984.INDPRD01.PROD.OUTLOOK.COM>
+Date: Fri, 29 Nov 2024 17:51:39 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+ arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
+ inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
+ lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+ chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
+References: <20241112212055.GA1859446@bhelgaas>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20241112212055.GA1859446@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR01CA0032.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::18) To MAXPR01MB3984.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:68::20)
+X-Microsoft-Original-Message-ID:
+ <2f2a60cb-265d-49db-af8d-72ca67d75a16@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MAXPR01MB3984:EE_|PN0PR01MB6547:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90278b0b-9649-4e6e-f44a-08dd105b6e30
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|19110799003|461199028|6090799003|8060799006|7092599003|15080799006|10035399004|3412199025|4302099013|440099028|1602099012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bTJxVHNlRW5SRlN1NUZpcjh1MjhiaGt4NW5MSENBbUduYzR2eFJhTlBqWm1B?=
+ =?utf-8?B?UGwzOExFcmFpN1hoMUpuRkdUazJvY0RpRzMrQ1NubFgrVFJqV3Q0V1cwelc0?=
+ =?utf-8?B?bXR1S0NCSVlvWkRkbXUrMlhqSzY5YXZzamhPOFprQkpOSE1RRmZDR2pGVUxw?=
+ =?utf-8?B?MjB1SVdlUEczNDdjdDZ3WVpsMnBBeDVOcXBuc3pJYmdlZk95OGlLTGVmR0JW?=
+ =?utf-8?B?RzJobm5JZ1BCNG9GdmdyTVNOdXR5bDhtaDBEa2hZbHplc0lQRWhDMUNUamRt?=
+ =?utf-8?B?OE5Uclp6eUZiZ3JjWkQxUmxLR0JlL2Z3Vzd1c1k2MERGWmNFTXdUTGVvOWJP?=
+ =?utf-8?B?cENWSEdtczAvUTcxU2Rsdnk4RzF1K1MvNFFwM2dZLzltVUdwZU41MjlvTnF1?=
+ =?utf-8?B?a2lNQXpMQ1cwVnRrZ09nZHVzTkZJV2hVL1krMDJEYVkvTG5WRGZBQTg0TC9r?=
+ =?utf-8?B?enFDdHN3ekhyS3pDYmtIaHAvVitKenRwQTVDaG9vZXZKcUtXRmZjd25TcVlh?=
+ =?utf-8?B?Z21ZZVhsL3BVTjR0ZlhRUUxDMjRNdXZUZFJyRVZ4akRUTjZxNEpjNmlNdGxa?=
+ =?utf-8?B?QjBsd2RsSmxzNEdxNUk2SzFYODZMQWFBS0ozRzQxZVVoL2d5RXh1ZDdhc2No?=
+ =?utf-8?B?MWpwVUM5TlVCTnBSU0F4cVVESWpaWUFkcVJad2h5UmNWSDd5Ly9TS1BWTnRC?=
+ =?utf-8?B?b0loREM3V3hyWDNqbjkwbWhhZ2IzQzR3ZStRZjFYOGFTYXM5VUxNOGh1VFFq?=
+ =?utf-8?B?QlRsaXcwQ3FiUWJTK0NDOWpHTm9rQSt6QjRkWXNZa0U4b3dFbmthcjVwSDlG?=
+ =?utf-8?B?RFlxckg2UnhUbktOMW1WRWV4dWFkSU93NmNBUGxYSHgwU1Q2SXY1TkdTRHJQ?=
+ =?utf-8?B?TnFzT0V3ZjB4bzdGVkhyTytPZXZ6M1lENEw3bXJDQmYwYzJBODVOZlRtQjh4?=
+ =?utf-8?B?OTNKWUFod1lHclpZZTYxSHNFeG83UE9JaVFnbTA3cEloK256OUt6dmlLQU5L?=
+ =?utf-8?B?MGs0bGxkV1E3RkE2RTlRNjAyREVQYzExZGVVYkcraFZTTy9sQmVOQjdHR1FD?=
+ =?utf-8?B?eUF2bHBjcW1RZEloWGpjZ1VtZ3I0K0RQK2ZLSThkMDZqNmRySmpOUm9uL2Q5?=
+ =?utf-8?B?aVBUM0pqMDZaOU9mZFFieHZtVW5uS3BaMGxQU1V4VmxycEllMExWcXRNcVpI?=
+ =?utf-8?B?eU1EWCtBK0YxTDRCQ21jTlZBWUY3OU1kbUhHSlVnWDVJaHNZZFdmL3pTTXVP?=
+ =?utf-8?B?dFI0RWVTQ1RVSDE5Tlp5RHpzVk0yeFJGcEVDSHF2em9RenAxUFJxUm5mT2RH?=
+ =?utf-8?B?N2NqcE1CUk1QV3g3TjBGZVhHV1lDRGR6MVRtWmk3NWFoVXdSR1dXZXRKQ2ZP?=
+ =?utf-8?B?dS9ybmZSS3VON1o2RU9NTnhoRUF1a2dKSWFjZE1YY05MQU5MQnFSaXNVOWN6?=
+ =?utf-8?B?L3Q4VWNZN0FTd1NJbTZoQ1ViZ1gycksyK0hBbERxS1RPVkxER3FzaEVBV3pr?=
+ =?utf-8?B?Q1FtOUpCYnQxK0N6ZklMSTd2S2JVM281Y3ozbzNWN2kzRU1PVDJmUDZsS1M3?=
+ =?utf-8?B?N2VCSnJqMVUxVUl3Z2pNdlpnLzVnWERLVjJRZ3lGOUxHKzBOcjVLc1h5Z3Rh?=
+ =?utf-8?Q?aN41BPNcMP5LQ/lbj+KcNlNKBCoVjQxFyhH75sfIFNtc=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U1V3Ykc4cDM2eTlGWjJKeU9WN3VuM1ZZc0xPVUFxSXE1OVgwc1VTOWVmWVAy?=
+ =?utf-8?B?UkZhZHRMWVhyY2NBS1pmZXN3bWJrdlVjZkY5bWFWaGZhbi9WbWNQVzFxbFpJ?=
+ =?utf-8?B?YU1VU3FnVnpuaW05WmNTZHpyeGltQ3BnT0xHTS90Q3hrRVVkbk51cjNtUEVH?=
+ =?utf-8?B?UUwycHZ3WEUvR1Ria25ONTBaRlBFVnkyRlluQzNET1AvK1Q2MlJwZTgzdTRU?=
+ =?utf-8?B?U3ZaVTFpZnh1L1JZMG01MktWM25xZk9uQS8zZlllT0p2YmV6VllwTEJVM0Vq?=
+ =?utf-8?B?UTNtcHJ0VWJqOHYzZTh5bjZ4YndvQ3VRL3NWbTFxd1REWGJzdzdNdk5mczYw?=
+ =?utf-8?B?QTEvQ3RIOEQzVTQ5cW9mWGlYYURGcFhNbm1VK3NJOVgzZi8rTFlSTXBxY0hv?=
+ =?utf-8?B?QWREeVVkUFRiYk1HVE9hemJ3SHFyVXYzYjh1TXoycnM0ZGYrZCtra2xBYmc0?=
+ =?utf-8?B?clhTVllmQ3o0eTJXanIzRHE2cGwzQzhtcUp5R0pxZW5ueGVUSTU1Vlladk9n?=
+ =?utf-8?B?b3hrYWtpdG9XR0NWSk9CN1pjN0Ewek5HTkU3c3VMM3lRTXE5dFQxZXl0YUla?=
+ =?utf-8?B?UGNYNnN0cDhSNVZ3UThjR3RaQXduVkdLcDBNVnlTMTJGMWYzY3pWU2JZdW1k?=
+ =?utf-8?B?MEl5aFF4ZEEzZFlmQ2U4d0xUZXVuS0l3VDc3TmFacThBakM5WlNzaXBkOFFy?=
+ =?utf-8?B?d0pqL1liWitFR0puMXZ2cTlqSHdDVXF5MVRySFhRT2pDMWdNQnpydTVqemJt?=
+ =?utf-8?B?Z0gveWJJVm96TU1LNDBhaEZ5QXQ2cGwrelh5OWVvc00wc1IyekxlZ2VGdWVE?=
+ =?utf-8?B?N3o2eDlwVlI2YmdKVEM5UG1TcFdvcHFsSG1tRGdVV3BobGdvZTRacVgrTnZO?=
+ =?utf-8?B?UnFUaW9iTFFWNnAyUXluNWJWeSs0bFdxdkZud0ZTVGtmUlFPc1oyY2ZtSjYy?=
+ =?utf-8?B?MmE2akZPa1dqejl0R2gwVC9ueDgrL1FvOE4zdWVHWnRrT1FYWmI0eUZnSk9V?=
+ =?utf-8?B?MGVOaVh5VDNHSFdlNi84VjhFa01XOFRpblZUTTB6ckZtZmk5dzBvdlhoUVZa?=
+ =?utf-8?B?MVRTMXVqYnRjbFJkcTBycE5uWVRkR2wwelRnZUVyTjQ0TE1SVWVHWjc3anJr?=
+ =?utf-8?B?KzFzZmxIKzljR2JaRjhocDlUUEJqbDh3bVAwYUJzdkowR3ovTUJzZDgyZ3Vq?=
+ =?utf-8?B?ZlhjTHNyRHExaXhaK1RVUjZsVDVNSG5IOE1vVVJQdHFGT3hnM3lzOUpwOG1F?=
+ =?utf-8?B?YTJxZFNxWjZybCthQlY0ZTExWVp4akdoM1hqRzhmdzllK2lOZW53bE54dXN4?=
+ =?utf-8?B?S0tKR0pmdzZCV1ZMQUgxVjdJWVlvQmw0bnlvZG42VGFYbzhPN0p2RElDekVU?=
+ =?utf-8?B?QllxN2FJOHNrWE5nMStXUzNrdzdvRGtvdjBnaHcvdGlHdnUrV01MRllpRG9G?=
+ =?utf-8?B?YlJud01oQVlNMmNSLzAvWS9ibEdzVmd0d2VvUXlwbUhYWXlIb0NuLytQMGhy?=
+ =?utf-8?B?K2tlL3hEcXo5Q2hUb1RHUG5xMGsvQ3hkMW1ZMm1RbGZwL2Z5YXlaN3R0enpj?=
+ =?utf-8?B?N2tuSmhreEdvNy9zeW9iekN4WGs3eHVUL01RWEJzQndhMmlrZ1VhSThTbG5G?=
+ =?utf-8?B?aFJZZFhPa0dLQWpONnNVb2hNVXFEV1YxT01xaUhVQ3NXelIxZlZNVGkzZ2F1?=
+ =?utf-8?Q?3zauP1m1V0FM6EtNJbC2?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90278b0b-9649-4e6e-f44a-08dd105b6e30
+X-MS-Exchange-CrossTenant-AuthSource: MAXPR01MB3984.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2024 09:51:43.7661
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB6547
 
-Migrate the PCI endpoint test to Kselftest framework. All the tests that
-were part of the previous pcitest.sh file were migrated.
+Hello~
 
-Below is the exclusive list of tests:
+On 2024/11/13 5:20, Bjorn Helgaas wrote:
+> On Mon, Nov 11, 2024 at 01:59:56PM +0800, Chen Wang wrote:
+>> From: Chen Wang <unicorn_wang@outlook.com>
+>>
+>> Add support for PCIe controller in SG2042 SoC. The controller
+>> uses the Cadence PCIe core programmed by pcie-cadence*.c. The
+>> PCIe controller will work in host mode only.
+>> +++ b/drivers/pci/controller/cadence/Kconfig
+>> @@ -67,4 +67,15 @@ config PCI_J721E_EP
+>>   	  Say Y here if you want to support the TI J721E PCIe platform
+>>   	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
+>>   	  core.
+>> +
+>> +config PCIE_SG2042
+>> +	bool "Sophgo SG2042 PCIe controller (host mode)"
+>> +	depends on ARCH_SOPHGO || COMPILE_TEST
+>> +	depends on OF
+>> +	select PCIE_CADENCE_HOST
+>> +	help
+>> +	  Say Y here if you want to support the Sophgo SG2042 PCIe platform
+>> +	  controller in host mode. Sophgo SG2042 PCIe controller uses Cadence
+>> +	  PCIe core.
+> Reorder to keep these menu items in alphabetical order by vendor.
 
-1. BAR Tests (BAR0 to BAR5)
-2. Legacy IRQ Tests
-3. MSI Interrupt Tests (MSI1 to MSI32)
-4. MSI-X Interrupt Tests (MSI-X1 to MSI-X2048)
-5. Read Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-6. Write Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-7. Copy Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-8. Read Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-9. Write Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-10. Copy Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+Sorry, I don't understand your question. I think the menu items in this 
+Kconfig file are already sorted alphabetically.
 
-DMA and MEMCPY tests are added as fixture variants and can be executed
-separately as below:
+>> +++ b/drivers/pci/controller/cadence/pcie-sg2042.c
+>> + * SG2042 PCIe controller supports two ways to report MSI:
+>> + * - Method A, the PICe controller implements an MSI interrupt controller inside,
+>> + *   and connect to PLIC upward through one interrupt line. Provides
+>> + *   memory-mapped msi address, and by programming the upper 32 bits of the
+>> + *   address to zero, it can be compatible with old pcie devices that only
+>> + *   support 32-bit msi address.
+>> + * - Method B, the PICe controller connects to PLIC upward through an
+>> + *   independent MSI controller "sophgo,sg2042-msi" on the SOC. The MSI
+>> + *   controller provides multiple(up to 32) interrupt sources to PLIC.
+>> + *   Compared with the first method, the advantage is that the interrupt source
+>> + *   is expanded, but because for SG2042, the msi address provided by the MSI
+>> + *   controller is fixed and only supports 64-bit address(> 2^32), it is not
+>> + *   compatible with old pcie devices that only support 32-bit msi address.
+>> + * Method A & B can be configured in DTS with property "sophgo,internal-msi",
+>> + * default is Method B.
+> s/PICe/PCIe/ (multiple)
+> s/msi/MSI/ (multiple)
+> s/pcie/PCIe/ (multiple)
+>
+> Wrap comment (and code below) to fit in 80 columns.  Add blank lines
+> between paragraphs.
+Got, will change.
+>
+>> +#define SG2042_CDNS_PLAT_CPU_TO_BUS_ADDR	0xCFFFFFFFFF
+> Remove (see below).
+Yes, after some testing, seems this address fixup is not need, will 
+remove it.
+>> +static void sg2042_pcie_msi_irq_compose_msi_msg(struct irq_data *d,
+>> +						struct msi_msg *msg)
+>> +{
+>> +	struct sg2042_pcie *pcie = irq_data_get_irq_chip_data(d);
+>> +	struct device *dev = pcie->cdns_pcie->dev;
+>> +
+>> +	msg->address_lo = lower_32_bits(pcie->msi_phys) + BYTE_NUM_PER_MSI_VEC * d->hwirq;
+>> +	msg->address_hi = upper_32_bits(pcie->msi_phys);
+>> +	msg->data = 1;
+>> +
+>> +	pcie->num_applied_vecs = d->hwirq;
+> This looks questionable.  How do you know d->hwirq increases every
+> time this is called?
+Thanks, it's a bug, I will fix it.
+>> +	dev_info(dev, "compose msi msg hwirq[%d] address_hi[%#x] address_lo[%#x]\n",
+>> +		 (int)d->hwirq, msg->address_hi, msg->address_lo);
+> This seems too verbose to be a dev_info().  Maybe a dev_dbg() or
+> remove it altogether.
+Will change it to dev_dbg.
+>> + * We use the usual two domain structure, the top one being a generic PCI/MSI
+>> + * domain, the bottom one being SG2042-specific and handling the actual HW
+>> + * interrupt allocation.
+>> + * At the same time, for internal MSI controller(Method A), bottom chip uses a
+>> + * chained handler to handle the controller's MSI IRQ edge triggered.
+> Add blank line between paragraphs.
+OK.
+>
+>> +static int sg2042_pcie_setup_msi_external(struct sg2042_pcie *pcie)
+>> +{
+>> +	struct device *dev = pcie->cdns_pcie->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct irq_domain *parent_domain;
+>> +	struct device_node *parent_np;
+>> +
+>> +	if (!of_find_property(np, "interrupt-parent", NULL)) {
+>> +		dev_err(dev, "Can't find interrupt-parent!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	parent_np = of_irq_find_parent(np);
+>> +	if (!parent_np) {
+>> +		dev_err(dev, "Can't find node of interrupt-parent!\n");
+> Can you use some kind of %pOF format to include more information here?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/core-api/printk-formats.rst?id=v6.11#n463
 
-$ pci_endpoint_test -V dma (excluding DMA tests)
-$ pci_endpoint_test -V memcpy (excluding MEMCPY tests)
+Thanks, will double check this.
 
-Co-developed-by: Aman Gupta <aman1.gupta@samsung.com>
-Signed-off-by: Aman Gupta <aman1.gupta@samsung.com>
-Co-developed-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-[mani: reworked based on the IOCTL fix, cleanups, documentation, commit message]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- Documentation/PCI/endpoint/pci-test-howto.rst | 143 +++-------
- tools/testing/selftests/Makefile              |   1 +
- .../testing/selftests/pci_endpoint/.gitignore |   3 +-
- tools/testing/selftests/pci_endpoint/Build    |   1 -
- tools/testing/selftests/pci_endpoint/Makefile |  59 +---
- tools/testing/selftests/pci_endpoint/config   |   4 +
- .../pci_endpoint/pci_endpoint_test.c          | 186 +++++++++++++
- .../testing/selftests/pci_endpoint/pcitest.c  | 251 ------------------
- .../testing/selftests/pci_endpoint/pcitest.sh |  72 -----
- 9 files changed, 239 insertions(+), 481 deletions(-)
- delete mode 100644 tools/testing/selftests/pci_endpoint/Build
- create mode 100644 tools/testing/selftests/pci_endpoint/config
- create mode 100644 tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
- delete mode 100644 tools/testing/selftests/pci_endpoint/pcitest.c
- delete mode 100644 tools/testing/selftests/pci_endpoint/pcitest.sh
+[......]
 
-diff --git a/Documentation/PCI/endpoint/pci-test-howto.rst b/Documentation/PCI/endpoint/pci-test-howto.rst
-index c4ae7af50ede..a0ff47cec605 100644
---- a/Documentation/PCI/endpoint/pci-test-howto.rst
-+++ b/Documentation/PCI/endpoint/pci-test-howto.rst
-@@ -123,9 +123,9 @@ above::
- Using Endpoint Test function Device
- -----------------------------------
- 
--pcitest.sh added in tools/testing/selftests/pci_endpoint can be used to run all
--the default PCI endpoint tests. To compile this tool the following commands
--should be used::
-+Kselftest added in tools/testing/selftests/pci_endpoint can be used to run all
-+the default PCI endpoint tests. To build the Kselftest for PCI endpoint
-+subsystem, the following commands should be used::
- 
- 	# cd <kernel-dir>
- 	# make -C tools/testing/selftests/pci_endpoint
-@@ -133,104 +133,47 @@ should be used::
- or if you desire to compile and install in your system::
- 
- 	# cd <kernel-dir>
--	# make -C tools/testing/selftests/pci_endpoint install
-+	# make -C tools/testing/selftests/pci_endpoint INSTALL_PATH=/usr/bin install
- 
--The tool and script will be located in <rootfs>/usr/bin/
-+The test will be located in <rootfs>/usr/bin/
- 
--
--pcitest.sh Output
--~~~~~~~~~~~~~~~~~
-+Kselftest Output
-+~~~~~~~~~~~~~~~~
- ::
- 
--	# pcitest.sh
--	BAR tests
--
--	BAR0:           OKAY
--	BAR1:           OKAY
--	BAR2:           OKAY
--	BAR3:           OKAY
--	BAR4:           NOT OKAY
--	BAR5:           NOT OKAY
--
--	Interrupt tests
--
--	SET IRQ TYPE TO LEGACY:         OKAY
--	LEGACY IRQ:     NOT OKAY
--	SET IRQ TYPE TO MSI:            OKAY
--	MSI1:           OKAY
--	MSI2:           OKAY
--	MSI3:           OKAY
--	MSI4:           OKAY
--	MSI5:           OKAY
--	MSI6:           OKAY
--	MSI7:           OKAY
--	MSI8:           OKAY
--	MSI9:           OKAY
--	MSI10:          OKAY
--	MSI11:          OKAY
--	MSI12:          OKAY
--	MSI13:          OKAY
--	MSI14:          OKAY
--	MSI15:          OKAY
--	MSI16:          OKAY
--	MSI17:          NOT OKAY
--	MSI18:          NOT OKAY
--	MSI19:          NOT OKAY
--	MSI20:          NOT OKAY
--	MSI21:          NOT OKAY
--	MSI22:          NOT OKAY
--	MSI23:          NOT OKAY
--	MSI24:          NOT OKAY
--	MSI25:          NOT OKAY
--	MSI26:          NOT OKAY
--	MSI27:          NOT OKAY
--	MSI28:          NOT OKAY
--	MSI29:          NOT OKAY
--	MSI30:          NOT OKAY
--	MSI31:          NOT OKAY
--	MSI32:          NOT OKAY
--	SET IRQ TYPE TO MSI-X:          OKAY
--	MSI-X1:         OKAY
--	MSI-X2:         OKAY
--	MSI-X3:         OKAY
--	MSI-X4:         OKAY
--	MSI-X5:         OKAY
--	MSI-X6:         OKAY
--	MSI-X7:         OKAY
--	MSI-X8:         OKAY
--	MSI-X9:         NOT OKAY
--	MSI-X10:        NOT OKAY
--	MSI-X11:        NOT OKAY
--	MSI-X12:        NOT OKAY
--	MSI-X13:        NOT OKAY
--	MSI-X14:        NOT OKAY
--	MSI-X15:        NOT OKAY
--	MSI-X16:        NOT OKAY
--	[...]
--	MSI-X2047:      NOT OKAY
--	MSI-X2048:      NOT OKAY
--
--	Read Tests
--
--	SET IRQ TYPE TO MSI:            OKAY
--	READ (      1 bytes):           OKAY
--	READ (   1024 bytes):           OKAY
--	READ (   1025 bytes):           OKAY
--	READ (1024000 bytes):           OKAY
--	READ (1024001 bytes):           OKAY
--
--	Write Tests
--
--	WRITE (      1 bytes):          OKAY
--	WRITE (   1024 bytes):          OKAY
--	WRITE (   1025 bytes):          OKAY
--	WRITE (1024000 bytes):          OKAY
--	WRITE (1024001 bytes):          OKAY
--
--	Copy Tests
--
--	COPY (      1 bytes):           OKAY
--	COPY (   1024 bytes):           OKAY
--	COPY (   1025 bytes):           OKAY
--	COPY (1024000 bytes):           OKAY
--	COPY (1024001 bytes):           OKAY
-+	# pci_endpoint_test
-+	TAP version 13
-+	1..10
-+	# Starting 10 tests from 3 test cases.
-+	#  RUN           pci_ep_basic.BAR_TEST ...
-+	#            OK  pci_ep_basic.BAR_TEST
-+	ok 1 pci_ep_basic.BAR_TEST
-+	#  RUN           pci_ep_basic.LEGACY_IRQ_TEST ...
-+	#            OK  pci_ep_basic.LEGACY_IRQ_TEST
-+	ok 2 pci_ep_basic.LEGACY_IRQ_TEST
-+	#  RUN           pci_ep_basic.MSI_TEST ...
-+	#            OK  pci_ep_basic.MSI_TEST
-+	ok 3 pci_ep_basic.MSI_TEST
-+	#  RUN           pci_ep_basic.MSIX_TEST ...
-+	#            OK  pci_ep_basic.MSIX_TEST
-+	ok 4 pci_ep_basic.MSIX_TEST
-+	#  RUN           pci_ep_data_transfer.memcpy.READ_TEST ...
-+	#            OK  pci_ep_data_transfer.memcpy.READ_TEST
-+	ok 5 pci_ep_data_transfer.memcpy.READ_TEST
-+	#  RUN           pci_ep_data_transfer.memcpy.WRITE_TEST ...
-+	#            OK  pci_ep_data_transfer.memcpy.WRITE_TEST
-+	ok 6 pci_ep_data_transfer.memcpy.WRITE_TEST
-+	#  RUN           pci_ep_data_transfer.memcpy.COPY_TEST ...
-+	#            OK  pci_ep_data_transfer.memcpy.COPY_TEST
-+	ok 7 pci_ep_data_transfer.memcpy.COPY_TEST
-+	#  RUN           pci_ep_data_transfer.dma.READ_TEST ...
-+	#            OK  pci_ep_data_transfer.dma.READ_TEST
-+	ok 8 pci_ep_data_transfer.dma.READ_TEST
-+	#  RUN           pci_ep_data_transfer.dma.WRITE_TEST ...
-+	#            OK  pci_ep_data_transfer.dma.WRITE_TEST
-+	ok 9 pci_ep_data_transfer.dma.WRITE_TEST
-+	#  RUN           pci_ep_data_transfer.dma.COPY_TEST ...
-+	#            OK  pci_ep_data_transfer.dma.COPY_TEST
-+	ok 10 pci_ep_data_transfer.dma.COPY_TEST
-+	# PASSED: 10 / 10 tests passed.
-+	# Totals: pass:10 fail:0 xfail:0 xpass:0 skip:0 error:0
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 363d031a16f7..d1c7089e7423 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -72,6 +72,7 @@ TARGETS += net/packetdrill
- TARGETS += net/rds
- TARGETS += net/tcp_ao
- TARGETS += nsfs
-+TARGETS += pci_endpoint
- TARGETS += perf_events
- TARGETS += pidfd
- TARGETS += pid_namespace
-diff --git a/tools/testing/selftests/pci_endpoint/.gitignore b/tools/testing/selftests/pci_endpoint/.gitignore
-index 29ab47c48484..6a4837a3e034 100644
---- a/tools/testing/selftests/pci_endpoint/.gitignore
-+++ b/tools/testing/selftests/pci_endpoint/.gitignore
-@@ -1,3 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--*.o
--pcitest
-+pci_endpoint_test
-diff --git a/tools/testing/selftests/pci_endpoint/Build b/tools/testing/selftests/pci_endpoint/Build
-deleted file mode 100644
-index c375aea21790..000000000000
---- a/tools/testing/selftests/pci_endpoint/Build
-+++ /dev/null
-@@ -1 +0,0 @@
--pcitest-y += pcitest.o
-diff --git a/tools/testing/selftests/pci_endpoint/Makefile b/tools/testing/selftests/pci_endpoint/Makefile
-index 3c6fe18e32cc..bf21ebf20b4a 100644
---- a/tools/testing/selftests/pci_endpoint/Makefile
-+++ b/tools/testing/selftests/pci_endpoint/Makefile
-@@ -1,58 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
--include ../../../scripts/Makefile.include
-+CFLAGS += -O2 -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
-+LDFLAGS += -lrt -lpthread -lm
- 
--bindir ?= /usr/bin
-+TEST_GEN_PROGS = pci_endpoint_test
- 
--ifeq ($(srctree),)
--srctree := $(patsubst %/tools/testing/selftests/,%,$(dir $(CURDIR)))
--endif
--
--# Do not use make's built-in rules
--# (this improves performance and avoids hard-to-debug behaviour);
--MAKEFLAGS += -r
--
--CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
--
--ALL_TARGETS := pcitest
--ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
--
--SCRIPTS := pcitest.sh
--
--all: $(ALL_PROGRAMS)
--
--export srctree OUTPUT CC LD CFLAGS
--include $(srctree)/tools/build/Makefile.include
--
--#
--# We need the following to be outside of kernel tree
--#
--$(OUTPUT)include/linux/: ../../../../include/uapi/linux/
--	mkdir -p $(OUTPUT)include/linux/ 2>&1 || true
--	ln -sf $(CURDIR)/../../../../include/uapi/linux/pcitest.h $@
--
--$(info ${CURDIR})
--prepare: $(OUTPUT)include/linux/
--
--PCITEST_IN := $(OUTPUT)pcitest-in.o
--$(PCITEST_IN): prepare FORCE
--	$(Q)$(MAKE) $(build)=pcitest
--$(OUTPUT)pcitest: $(PCITEST_IN)
--	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
--
--clean:
--	rm -f $(ALL_PROGRAMS)
--	rm -rf $(OUTPUT)include/
--	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
--
--install: $(ALL_PROGRAMS)
--	install -d -m 755 $(DESTDIR)$(bindir);		\
--	for program in $(ALL_PROGRAMS); do		\
--		install $$program $(DESTDIR)$(bindir);	\
--	done;						\
--	for script in $(SCRIPTS); do			\
--		install $$script $(DESTDIR)$(bindir);	\
--	done
--
--FORCE:
--
--.PHONY: all install clean FORCE prepare
-+include ../lib.mk
-diff --git a/tools/testing/selftests/pci_endpoint/config b/tools/testing/selftests/pci_endpoint/config
-new file mode 100644
-index 000000000000..7cdcf117db8d
---- /dev/null
-+++ b/tools/testing/selftests/pci_endpoint/config
-@@ -0,0 +1,4 @@
-+CONFIG_PCI_ENDPOINT=y
-+CONFIG_PCI_ENDPOINT_CONFIGFS=y
-+CONFIG_PCI_EPF_TEST=m
-+CONFIG_PCI_ENDPOINT_TEST=m
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-new file mode 100644
-index 000000000000..de6d70ba3079
---- /dev/null
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Kselftest for PCI Endpoint Subsystem
-+ *
-+ * Copyright (c) 2022 Samsung Electronics Co., Ltd.
-+ *             https://www.samsung.com
-+ * Author: Aman Gupta <aman1.gupta@samsung.com>
-+ *
-+ * Copyright (c) 2024, Linaro Ltd.
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+
-+#include "../../../../include/uapi/linux/pcitest.h"
-+
-+#include "../kselftest_harness.h"
-+
-+#define pci_ep_ioctl(cmd, arg)			\
-+({						\
-+	ret = ioctl(self->fd, cmd, arg);	\
-+	ret = ret < 0 ? -errno : 0;		\
-+})
-+
-+static const char *test_device = "/dev/pci-endpoint-test.0";
-+static const unsigned long test_size[5] = { 1, 1024, 1025, 1024000, 1024001 };
-+
-+FIXTURE(pci_ep_basic)
-+{
-+	int fd;
-+};
-+
-+FIXTURE_SETUP(pci_ep_basic)
-+{
-+	self->fd = open(test_device, O_RDWR);
-+
-+	ASSERT_NE(-1, self->fd) TH_LOG("Can't open PCI Endpoint Test device");
-+}
-+
-+FIXTURE_TEARDOWN(pci_ep_basic)
-+{
-+	close(self->fd);
-+}
-+
-+TEST_F(pci_ep_basic, BAR_TEST)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i <= 5; i++) {
-+		pci_ep_ioctl(PCITEST_BAR, i);
-+		EXPECT_FALSE(ret) TH_LOG("Test failed for BAR%d", i);
-+	}
-+}
-+
-+TEST_F(pci_ep_basic, LEGACY_IRQ_TEST)
-+{
-+	int ret;
-+
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 0);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set Legacy IRQ type");
-+
-+	pci_ep_ioctl(PCITEST_LEGACY_IRQ, 0);
-+	EXPECT_FALSE(ret) TH_LOG("Test failed for Legacy IRQ");
-+}
-+
-+TEST_F(pci_ep_basic, MSI_TEST)
-+{
-+	int ret, i;
-+
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+
-+	for (i = 1; i <= 32; i++) {
-+		pci_ep_ioctl(PCITEST_MSI, i);
-+		EXPECT_FALSE(ret) TH_LOG("Test failed for MSI%d", i);
-+	}
-+}
-+
-+TEST_F(pci_ep_basic, MSIX_TEST)
-+{
-+	int ret, i;
-+
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 2);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI-X IRQ type");
-+
-+	for (i = 1; i <= 2048; i++) {
-+		pci_ep_ioctl(PCITEST_MSIX, i);
-+		EXPECT_FALSE(ret) TH_LOG("Test failed for MSI-X%d", i);
-+	}
-+}
-+
-+FIXTURE(pci_ep_data_transfer)
-+{
-+	int fd;
-+};
-+
-+FIXTURE_SETUP(pci_ep_data_transfer)
-+{
-+	self->fd = open(test_device, O_RDWR);
-+
-+	ASSERT_NE(-1, self->fd) TH_LOG("Can't open PCI Endpoint Test device");
-+}
-+
-+FIXTURE_TEARDOWN(pci_ep_data_transfer)
-+{
-+	close(self->fd);
-+}
-+
-+FIXTURE_VARIANT(pci_ep_data_transfer)
-+{
-+	bool use_dma;
-+};
-+
-+FIXTURE_VARIANT_ADD(pci_ep_data_transfer, memcpy)
-+{
-+	.use_dma = false,
-+};
-+
-+FIXTURE_VARIANT_ADD(pci_ep_data_transfer, dma)
-+{
-+	.use_dma = true,
-+};
-+
-+TEST_F(pci_ep_data_transfer, READ_TEST)
-+{
-+	struct pci_endpoint_test_xfer_param param = {0};
-+	int ret, i;
-+
-+	if (variant->use_dma)
-+		param.flags = PCITEST_FLAGS_USE_DMA;
-+
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+
-+	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-+		param.size = test_size[i];
-+		pci_ep_ioctl(PCITEST_READ, &param);
-+		EXPECT_FALSE(ret) TH_LOG("Test failed for size (%ld)",
-+					 test_size[i]);
-+	}
-+}
-+
-+TEST_F(pci_ep_data_transfer, WRITE_TEST)
-+{
-+	struct pci_endpoint_test_xfer_param param = {0};
-+	int ret, i;
-+
-+	if (variant->use_dma)
-+		param.flags = PCITEST_FLAGS_USE_DMA;
-+
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+
-+	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-+		param.size = test_size[i];
-+		pci_ep_ioctl(PCITEST_WRITE, &param);
-+		EXPECT_FALSE(ret) TH_LOG("Test failed for size (%ld)",
-+					 test_size[i]);
-+	}
-+}
-+
-+TEST_F(pci_ep_data_transfer, COPY_TEST)
-+{
-+	struct pci_endpoint_test_xfer_param param = {0};
-+	int ret, i;
-+
-+	if (variant->use_dma)
-+		param.flags = PCITEST_FLAGS_USE_DMA;
-+
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+
-+	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-+		param.size = test_size[i];
-+		pci_ep_ioctl(PCITEST_COPY, &param);
-+		EXPECT_FALSE(ret) TH_LOG("Test failed for size (%ld)",
-+					 test_size[i]);
-+	}
-+}
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/pci_endpoint/pcitest.c b/tools/testing/selftests/pci_endpoint/pcitest.c
-deleted file mode 100644
-index 545e04ad63a2..000000000000
---- a/tools/testing/selftests/pci_endpoint/pcitest.c
-+++ /dev/null
-@@ -1,251 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/**
-- * Userspace PCI Endpoint Test Module
-- *
-- * Copyright (C) 2017 Texas Instruments
-- * Author: Kishon Vijay Abraham I <kishon@ti.com>
-- */
--
--#include <errno.h>
--#include <fcntl.h>
--#include <stdbool.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <sys/ioctl.h>
--#include <unistd.h>
--
--#include <linux/pcitest.h>
--
--static char *irq[] = { "LEGACY", "MSI", "MSI-X" };
--
--struct pci_test {
--	char		*device;
--	char		barnum;
--	bool		legacyirq;
--	unsigned int	msinum;
--	unsigned int	msixnum;
--	int		irqtype;
--	bool		set_irqtype;
--	bool		get_irqtype;
--	bool		clear_irq;
--	bool		read;
--	bool		write;
--	bool		copy;
--	unsigned long	size;
--	bool		use_dma;
--};
--
--static int run_test(struct pci_test *test)
--{
--	struct pci_endpoint_test_xfer_param param = {};
--	int ret = -EINVAL;
--	int fd;
--
--	fd = open(test->device, O_RDWR);
--	if (fd < 0) {
--		perror("can't open PCI Endpoint Test device");
--		return -ENODEV;
--	}
--
--	if (test->barnum >= 0 && test->barnum <= 5) {
--		ret = ioctl(fd, PCITEST_BAR, test->barnum);
--		fprintf(stdout, "BAR%d:\t\t", test->barnum);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->set_irqtype) {
--		ret = ioctl(fd, PCITEST_SET_IRQTYPE, test->irqtype);
--		fprintf(stdout, "SET IRQ TYPE TO %s:\t\t", irq[test->irqtype]);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->get_irqtype) {
--		ret = ioctl(fd, PCITEST_GET_IRQTYPE);
--		fprintf(stdout, "GET IRQ TYPE:\t\t");
--		if (ret < 0) {
--			fprintf(stdout, "NOT OKAY\n");
--		} else {
--			fprintf(stdout, "%s\n", irq[ret]);
--			ret = 0;
--		}
--	}
--
--	if (test->clear_irq) {
--		ret = ioctl(fd, PCITEST_CLEAR_IRQ);
--		fprintf(stdout, "CLEAR IRQ:\t\t");
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->legacyirq) {
--		ret = ioctl(fd, PCITEST_LEGACY_IRQ, 0);
--		fprintf(stdout, "LEGACY IRQ:\t");
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->msinum > 0 && test->msinum <= 32) {
--		ret = ioctl(fd, PCITEST_MSI, test->msinum);
--		fprintf(stdout, "MSI%d:\t\t", test->msinum);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->msixnum > 0 && test->msixnum <= 2048) {
--		ret = ioctl(fd, PCITEST_MSIX, test->msixnum);
--		fprintf(stdout, "MSI-X%d:\t\t", test->msixnum);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->write) {
--		param.size = test->size;
--		if (test->use_dma)
--			param.flags = PCITEST_FLAGS_USE_DMA;
--		ret = ioctl(fd, PCITEST_WRITE, &param);
--		fprintf(stdout, "WRITE (%7ld bytes):\t\t", test->size);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->read) {
--		param.size = test->size;
--		if (test->use_dma)
--			param.flags = PCITEST_FLAGS_USE_DMA;
--		ret = ioctl(fd, PCITEST_READ, &param);
--		fprintf(stdout, "READ (%7ld bytes):\t\t", test->size);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	if (test->copy) {
--		param.size = test->size;
--		if (test->use_dma)
--			param.flags = PCITEST_FLAGS_USE_DMA;
--		ret = ioctl(fd, PCITEST_COPY, &param);
--		fprintf(stdout, "COPY (%7ld bytes):\t\t", test->size);
--		if (ret < 0)
--			fprintf(stdout, "NOT OKAY\n");
--		else
--			fprintf(stdout, "OKAY\n");
--	}
--
--	fflush(stdout);
--	close(fd);
--	return ret;
--}
--
--int main(int argc, char **argv)
--{
--	int c;
--	struct pci_test *test;
--
--	test = calloc(1, sizeof(*test));
--	if (!test) {
--		perror("Fail to allocate memory for pci_test\n");
--		return -ENOMEM;
--	}
--
--	/* since '0' is a valid BAR number, initialize it to -1 */
--	test->barnum = -1;
--
--	/* set default size as 100KB */
--	test->size = 0x19000;
--
--	/* set default endpoint device */
--	test->device = "/dev/pci-endpoint-test.0";
--
--	while ((c = getopt(argc, argv, "D:b:m:x:i:deIlhrwcs:")) != EOF)
--	switch (c) {
--	case 'D':
--		test->device = optarg;
--		continue;
--	case 'b':
--		test->barnum = atoi(optarg);
--		if (test->barnum < 0 || test->barnum > 5)
--			goto usage;
--		continue;
--	case 'l':
--		test->legacyirq = true;
--		continue;
--	case 'm':
--		test->msinum = atoi(optarg);
--		if (test->msinum < 1 || test->msinum > 32)
--			goto usage;
--		continue;
--	case 'x':
--		test->msixnum = atoi(optarg);
--		if (test->msixnum < 1 || test->msixnum > 2048)
--			goto usage;
--		continue;
--	case 'i':
--		test->irqtype = atoi(optarg);
--		if (test->irqtype < 0 || test->irqtype > 2)
--			goto usage;
--		test->set_irqtype = true;
--		continue;
--	case 'I':
--		test->get_irqtype = true;
--		continue;
--	case 'r':
--		test->read = true;
--		continue;
--	case 'w':
--		test->write = true;
--		continue;
--	case 'c':
--		test->copy = true;
--		continue;
--	case 'e':
--		test->clear_irq = true;
--		continue;
--	case 's':
--		test->size = strtoul(optarg, NULL, 0);
--		continue;
--	case 'd':
--		test->use_dma = true;
--		continue;
--	case 'h':
--	default:
--usage:
--		fprintf(stderr,
--			"usage: %s [options]\n"
--			"Options:\n"
--			"\t-D <dev>		PCI endpoint test device {default: /dev/pci-endpoint-test.0}\n"
--			"\t-b <bar num>		BAR test (bar number between 0..5)\n"
--			"\t-m <msi num>		MSI test (msi number between 1..32)\n"
--			"\t-x <msix num>	\tMSI-X test (msix number between 1..2048)\n"
--			"\t-i <irq type>	\tSet IRQ type (0 - Legacy, 1 - MSI, 2 - MSI-X)\n"
--			"\t-e			Clear IRQ\n"
--			"\t-I			Get current IRQ type configured\n"
--			"\t-d			Use DMA\n"
--			"\t-l			Legacy IRQ test\n"
--			"\t-r			Read buffer test\n"
--			"\t-w			Write buffer test\n"
--			"\t-c			Copy buffer test\n"
--			"\t-s <size>		Size of buffer {default: 100KB}\n"
--			"\t-h			Print this help message\n",
--			argv[0]);
--		return -EINVAL;
--	}
--
--	return run_test(test);
--}
-diff --git a/tools/testing/selftests/pci_endpoint/pcitest.sh b/tools/testing/selftests/pci_endpoint/pcitest.sh
-deleted file mode 100644
-index 75ed48ff2990..000000000000
---- a/tools/testing/selftests/pci_endpoint/pcitest.sh
-+++ /dev/null
-@@ -1,72 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--
--echo "BAR tests"
--echo
--
--bar=0
--
--while [ $bar -lt 6 ]
--do
--	pcitest -b $bar
--	bar=`expr $bar + 1`
--done
--echo
--
--echo "Interrupt tests"
--echo
--
--pcitest -i 0
--pcitest -l
--
--pcitest -i 1
--msi=1
--
--while [ $msi -lt 33 ]
--do
--        pcitest -m $msi
--        msi=`expr $msi + 1`
--done
--echo
--
--pcitest -i 2
--msix=1
--
--while [ $msix -lt 2049 ]
--do
--        pcitest -x $msix
--        msix=`expr $msix + 1`
--done
--echo
--
--echo "Read Tests"
--echo
--
--pcitest -i 1
--
--pcitest -r -s 1
--pcitest -r -s 1024
--pcitest -r -s 1025
--pcitest -r -s 1024000
--pcitest -r -s 1024001
--echo
--
--echo "Write Tests"
--echo
--
--pcitest -w -s 1
--pcitest -w -s 1024
--pcitest -w -s 1025
--pcitest -w -s 1024000
--pcitest -w -s 1024001
--echo
--
--echo "Copy Tests"
--echo
--
--pcitest -c -s 1
--pcitest -c -s 1024
--pcitest -c -s 1025
--pcitest -c -s 1024000
--pcitest -c -s 1024001
--echo
--- 
-2.25.1
+>> +	if (pcie->link_id == 1) {
+>> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_LOW,
+>> +			     lower_32_bits(pcie->msi_phys));
+>> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_HIGH,
+>> +			     upper_32_bits(pcie->msi_phys));
+>> +
+>> +		regmap_read(pcie->syscon, REG_LINK1_MSI_ADDR_SIZE, &value);
+>> +		value = (value & REG_LINK1_MSI_ADDR_SIZE_MASK) | MAX_MSI_IRQS;
+>> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_SIZE, value);
+>> +	} else {
+>> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_LOW,
+>> +			     lower_32_bits(pcie->msi_phys));
+>> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_HIGH,
+>> +			     upper_32_bits(pcie->msi_phys));
+>> +
+>> +		regmap_read(pcie->syscon, REG_LINK0_MSI_ADDR_SIZE, &value);
+>> +		value = (value & REG_LINK0_MSI_ADDR_SIZE_MASK) | (MAX_MSI_IRQS << 16);
+>> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_SIZE, value);
+>> +	}
+> Lot of pcie->link_id checking going on here.  Consider saving these
+> offsets in the struct sg2042_pcie so you don't need to test
+> everywhere.
+
+Actually, there are not many places in the code to check link_id. If to 
+add storage information in struct sg2042_pcie, at least four  u32 are 
+needed. And this logic will only be called one time in the probe. So I 
+think it is better to keep the current method. What do you think?
+
+[......]
+
 
 
