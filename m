@@ -1,188 +1,97 @@
-Return-Path: <linux-pci+bounces-17469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17470-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6173A9DEC19
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 19:26:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6B139DEC48
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 20:09:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20AFB2827FB
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 18:26:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 377D5281DFB
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 19:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082561A08A8;
-	Fri, 29 Nov 2024 18:26:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13363156649;
+	Fri, 29 Nov 2024 19:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRII9fe2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAKh8Ysw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5351A01B8
-	for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 18:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA8B3224;
+	Fri, 29 Nov 2024 19:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732904780; cv=none; b=Hy7hJNDN9eteYR60Pw18x8eGW3kqCnoXGrtJzLC8zEqEvPHMJP4u/fq938ZuABC+AgjXNnLtc/tOmBoxWqhlHyVz2lgI9cvvW6h4IYhjvvnuANY4dvdR1pOJMQxbWGc8o3xNfSE77MJNQATqYt4I9nteXeVCtX79dbwS0ysbFWo=
+	t=1732907337; cv=none; b=bvSjqUNTITgRwZO1kgkXVw+DwBx4skehELCgZ6xxEj9Ju88uqLp7a8ojbnu8qoCs4wtANOy8AI6JsFvGOR0Yest4jaZ/IIC9HOXfbtd5hknPZRXZULrw27RrHGlljPnefsfhE5gU0Lama8U7dqmNBSZKZHUMjRGXLgAq20s07o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732904780; c=relaxed/simple;
-	bh=tjspvHACBeuFnwaCynG30mtPY9dmtEdqTx0lBS6qvmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EjvdWk0YN+cZxs6o9phZeGsKTgLYSIDR1PLwjbI7CHOa49flbRL0/fIl76TQKsDZmjaSx1CyNX6HZaj99sIJ9XdjkJcGdyADAPA2wL9FhRjsGqy+iW2+N6J4h/35GfZQ4WKoV8VhlDwHVdFjC3UDeSwNEkMkUUPiAvftMgT6di4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mRII9fe2; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21285c1b196so21139725ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2024 10:26:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732904778; x=1733509578; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FUqDieEaHq8j2cJhiW+HET9bXqMPuEtWZyclYt+rp+A=;
-        b=mRII9fe23Tr8+PGSXMMFh268bzplYwnqCGrap78IqKyfWo8aKIkxqmZRUEq74DRRDJ
-         swLEa6WskZyajXU0Kk6rDB1CDrfn+xniBcSg+i73ty0EpPDjpXtcoFbU56CKpy4fAOC1
-         2bETIinDI6aSxx+TNslFRI6FanNvOCuxMw3eTYtMBqfxPH7nIUitgkQMxO/nvg2haMSA
-         T1s/tJgb+vjKwnjrIQ2IYdKOXQ4diWwv6Tn8cxbLXATn6stLGLFDHc6cSpG+r0KRHEJS
-         Lv/BUEZftIDqBghb9vaQUmoC9+eae3upnhP6LFUyo2JrImSpZeh05mtfAA+LTtoTYAM0
-         uQ5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732904778; x=1733509578;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUqDieEaHq8j2cJhiW+HET9bXqMPuEtWZyclYt+rp+A=;
-        b=Piaczc3w8FFAw5p+5q98MwriJZlD+1j9D/VINOR42JfQjNTXnVvUHvANqF/IMk+l6/
-         rtTCw80CNbN3Ap5nByuMt0GAqIzWBUBpIfCAPqLAt9GoRA3xhsk7//RyWAa3zdeVsmdf
-         JS3ZGSzeJ9floczChywt06ZJbL7lPc2hoGhXqbws2Nj0CMedKS2N2gu6CU/gBkcTdgvI
-         wjS+2OR0xOiiYwXv0YQi9k67XXVT6ohTOVzc7uKLk5bbBC8ksRZTDRsQQeBpRpHdofWX
-         lEqQkLRgnUTsaesUW08MxEPVURzLj4BsYy1t6AGwFECInIKKhPbYUg/75f8/+fNM6+t3
-         FYKg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9pTpdkPl+K40cIIUm+oK9ejuQcolGHy/MMFBH6RvYE40YQ/Gyk/Q2JbHGmD+HaDdoA8wtmaZ/kKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQXp/5AHc+H8xuDzdS8M4fHC8ZPqTZWrq9BnoTQbO+SmaWjaB4
-	oLBGUW6QCT+VyGqdfCs59SYsQITKbzGkAIAqRavqQ5NQ4/MeZFE/rmXqHmMBQg==
-X-Gm-Gg: ASbGncvDyzUBbnLK7SyRs6/da6EQG6xSn+/k5K2BP/CD506I4jfJuU47tbFxjw+16iD
-	z+VThBouXQPir8HSDwnDJ2+r41cuZhepUxZ7Jo4V1LTvZI8E6CMPazBX9t58l5f/JAcJqxRsfDU
-	Ehcx2CGfYqU6hg3enhNPCD5p1EjIgjZ4+Lg6TLSE11UtfocDsj2c2xqNpmHsM4To+3XldQZJ4KU
-	Gr2mhklCkt9+6sVlhfh8TwCfRUIrwQbBfq9FBEJiTkOw2fOyVJvYKpPUKRn
-X-Google-Smtp-Source: AGHT+IH+zvrZZgMzaNl9B8zJJgiJwZioPP7Ew1oxT4/eC4rURgyODQYi5m7tRLX855mTtPxVC5cR1Q==
-X-Received: by 2002:a17:903:283:b0:214:f87b:c154 with SMTP id d9443c01a7336-21501087636mr171418375ad.5.1732904778593;
-        Fri, 29 Nov 2024 10:26:18 -0800 (PST)
-Received: from thinkpad ([120.60.57.102])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215218f511asm33707695ad.1.2024.11.29.10.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2024 10:26:18 -0800 (PST)
-Date: Fri, 29 Nov 2024 23:55:51 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
-	aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] selftests: pci_endpoint: Migrate to Kselftest
- framework
-Message-ID: <20241129182547.prc4bsmqjvylfymk@thinkpad>
-References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
- <20241129092415.29437-5-manivannan.sadhasivam@linaro.org>
- <Z0nG3oAx66plv4qI@ryzen>
- <20241129163555.apf35xa6x5joscha@thinkpad>
- <Z0nu8n5GEuZ0zaBD@ryzen>
- <20241129165256.dkzcbfdvmf2n4rxx@thinkpad>
- <Z0n2KIUVk2XqrH1p@ryzen>
+	s=arc-20240116; t=1732907337; c=relaxed/simple;
+	bh=W7Vm0c37DPHmUeeFB1k3BNHaU33p3uZ42pyukGFCFXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ED8s2xRZz//pw4gcZsW63uVIZu4XnD7Wl873H9RE4sbTdfmhUh7VC8JH3PUYkuSGkKb6WzYm61lQAnpMVs0TfLgUr09TYfDc4yQ5JisedZbL0bvq1rFuGS/6kdkqcwDGt794m6ZR8H5vV+fDGoYEA/dxgmz5oyKta4EVYJBDb+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAKh8Ysw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B19EDC4CECF;
+	Fri, 29 Nov 2024 19:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732907336;
+	bh=W7Vm0c37DPHmUeeFB1k3BNHaU33p3uZ42pyukGFCFXg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rAKh8YswPbE2+n1dh1WvdhRxb1FNWEpo1HfViFmvqPNcwxyIUGLG18AJEL1WaNkxh
+	 b4B1ACVZPMY8Zn9BIrw1NfHK2tzbG7Xf5FKc39/9GAz9DdEZZ6tsuG4OH7YZsThAwe
+	 3r+rIsGleh6dWlWL+1sB5gcfRcSktRcNNEBgvg/oWpZtg2squMHReRMERSa+5AuXRw
+	 WI3LTldvfQ/aqotz/54vcPmLicGf8CFz+k2eGEzG8FtEiV5jqqwHf/LEZB3l4qLuXz
+	 dzQ+tsDmV0jVPFI/dRGy1b8Rnvx8gzxcX7wCVGo4Fo5G43YumJ8XzQIaL+KmA9UD8a
+	 jw71Yaf5sQuIA==
+Date: Fri, 29 Nov 2024 13:08:54 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh+dt@kernel.org,
+	manivannan.sadhasivam@linaro.org, bhelgaas@google.com, kw@linux.com,
+	lpieralisi@kernel.org, quic_qianyu@quicinc.com, conor+dt@kernel.org,
+	neil.armstrong@linaro.org, andersson@kernel.org,
+	konradybcio@kernel.org, quic_tsoni@quicinc.com,
+	quic_shashim@quicinc.com, quic_kaushalk@quicinc.com,
+	quic_tdas@quicinc.com, quic_tingweiz@quicinc.com,
+	quic_aiquny@quicinc.com, kernel@quicinc.com,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 4/8] PCI: qcom: Add QCS8300 PCIe support
+Message-ID: <20241129190854.GA2768465@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z0n2KIUVk2XqrH1p@ryzen>
+In-Reply-To: <20241128081056.1361739-5-quic_ziyuzhan@quicinc.com>
 
-On Fri, Nov 29, 2024 at 06:13:12PM +0100, Niklas Cassel wrote:
-> On Fri, Nov 29, 2024 at 10:22:56PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Nov 29, 2024 at 05:42:26PM +0100, Niklas Cassel wrote:
-> > > On Fri, Nov 29, 2024 at 10:05:55PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Fri, Nov 29, 2024 at 02:51:26PM +0100, Niklas Cassel wrote:
-> > > > > Hello Mani,
-> > > > > 
-> > > > > On Fri, Nov 29, 2024 at 02:54:15PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > Migrate the PCI endpoint test to Kselftest framework. All the tests that
-> > > > > > were part of the previous pcitest.sh file were migrated.
-> > > > > > 
-> > > > > > Below is the exclusive list of tests:
-> > > > > > 
-> > > > > > 1. BAR Tests (BAR0 to BAR5)
-> > > > > > 2. Legacy IRQ Tests
-> > > > > > 3. MSI Interrupt Tests (MSI1 to MSI32)
-> > > > > > 4. MSI-X Interrupt Tests (MSI-X1 to MSI-X2048)
-> > > > > > 5. Read Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > > > > > 6. Write Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > > > > > 7. Copy Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > > > > > 8. Read Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > > > > > 9. Write Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > > > > > 10. Copy Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > > > > 
-> > > > > I'm not sure if it is a great idea to add test case number 10.
-> > > > > 
-> > > > > While it will work if you use the "dummy memcpy" DMA channel which uses
-> > > > > MMIO under the hood, if you actually enable a real DMA controller (which
-> > > > > often sets the DMA_PRIVATE cap in the DMA controller driver (e.g. if you
-> > > > > are using a DWC based PCIe EP controller and select CONFIG_DW_EDMA=y)),
-> > > > > pci_epf_test_copy() will fail with:
-> > > > > [   93.779444] pci_epf_test pci_epf_test.0: Cannot transfer data using DMA
-> > > > > 
-> > > > 
-> > > > So the idea is to exercise all the options provided by the epf-test driver. In
-> > > > that sense, we need to have the DMA COPY test. However, I do agree that the
-> > > > common DMA controllers will fail this case. So how about just simulating the DMA
-> > > > COPY for controllers implementing DMA_PRIVATE cap? I don't think it hurts to
-> > > > have this feature in test driver.
-> > > 
-> > > I guess you could modify pci-epf-test to simply do MMIO in test_copy(),
-> > > if USE_DMA && DMA_PRIVATE is set, as you suggest.
-> > > 
-> > 
-> > No not memcpy, but using the DMA to copy from src to local buf and then local
-> > buf to dst. This way, we do not need to fallback and at the same time simulate
-> > DMA COPY.
+[+cc linux-pci]
+
+On Thu, Nov 28, 2024 at 04:10:52PM +0800, Ziyue Zhang wrote:
+> Add support for QCS8300 SoC that uses controller version 5.90
+> reusing the 1.9.0 config.
 > 
-> Sounds very slow :)
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> What would be the value to add such code to pci-epf-test?
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index ef44a82be058..5932b228aa17 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1830,6 +1830,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-qcs8300", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+>  	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_34_0},
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+> -- 
+> 2.34.1
 > 
-
-Well, the test case is to test COPY functionality using DMA. Either we use
-MEM_TO_MEM if supported, or just do DMA from source to dst. Even if the
-performance is going to be half of what read/write would achieve separately, it
-would give users a real benchmark. Otherwise, we have to skip the test case
-altogether. Like,
-
-./pci_endpoint_test -f pci_ep_basic -v memcpy -T COPY_TEST -v dma
-
-Perhaps we should document this limitation and show above command to skip the
-COPY_TEST for DMA?
-
-> Sounds like we would just add a lot of extra code in pci-epf-test.c that
-> would not test anything new. (It would basically just be the DMA read test
-> followed by the DMA write test. If those tests pass, this new simulated
-> test should be guaranteed to pass.)
 > 
-> Wouldn't it make more sense to simply do something like:
-> 
-> if (use_dma && dma_prive) {
-> 	dev_warn(dev, "DEV_TO_DEV not supported with USE_DMA, falling back to MMIO\n");
-> 	use_dma = 0;
-> }
-> 
-
-Maybe yes, but memcpy is also doing the same. The problem with falling back is
-that, it provides a fake benchmark to the users which I want to avoid doing so.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
