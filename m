@@ -1,167 +1,245 @@
-Return-Path: <linux-pci+bounces-17453-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17454-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF7DA9DC220
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 11:30:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0D1B9DC265
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 11:51:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33953B226D2
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:30:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8248E2823FB
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:51:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B90D195F28;
-	Fri, 29 Nov 2024 10:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358751991B2;
+	Fri, 29 Nov 2024 10:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXd83j1N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8624318E34A;
-	Fri, 29 Nov 2024 10:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D271990DE;
+	Fri, 29 Nov 2024 10:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732876200; cv=none; b=IP1xJR8YG/qpbzfkEqcaUqjmXYwLNgm1eWMkCmkH/uGzfFeHFPy1gEKyeO+o1rmWt0Uc98VtOZeVIBkEDNqA/t1/m1djV8sJc5o/BzhLehKfzKierY3g1gWVPV6fcVzgufh+z82b7DLAhnmsQYgw14DFH+5aC4F0iAjIGNWjKDg=
+	t=1732877494; cv=none; b=nlMs2unGdD4h4cAst22AFbBF7TE35oLravX10I21b2SG6czPAskxkYxCOOHaqxb7SAp6cAvGAJAqLTgM7gShWsZjgUd1nja97RBDtNcq6KkEJer5aC7LDWY8aF8jomVlWAoIXau76fowcEcbmFecU4Gp2ZojGJHjqLKARz0uB6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732876200; c=relaxed/simple;
-	bh=yKaFp5yqzqpNtQG9D+9HKY/4P32rt1Zkitv2khOZdnc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JQNMJ//keQQlx6CkMYeqntuBbyU8kjRvS0Y8B81kIj9RdfEq5LK42xgIzN5u+YQHLwimVLb8113/opj/9DvfxSXXI9NiB2Drc5afLOpN48UQAEm/JTSEHO2Ai1dxFfa95FG42KRP9ouKm129kvKlPQfvNO/Kj3CPnOqeZ4FOvm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4aefdbf8134so458038137.2;
-        Fri, 29 Nov 2024 02:29:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732876196; x=1733480996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ppQhOfB0GTFohm0DRY2oBb++m5qCmhOXx8Ed8pgjkgA=;
-        b=DHMIT8k4sYePRRv8hv66Qno8wNI7NE0Zrr/tiwbLb744iEwuYKXPYspgI5pEhWS0c7
-         Myuzm9yUarMbgBi9HaZ3zIJ4UPxE9owX/SorYvXeo45uVXJO7dzaWsB+2MN4lIth8bej
-         +o3dTBPNTQWD3VdKFj5nnduW/jl8t8w2sByLNIHQQ1THm+unX1dtNoK2W0pHMo92dWhw
-         fqxv5EIuTh6o5ygFV0FYG1EbuG2Tg9psz35qPx3Cq9ufdxd6Zt7dIr5s+rhlJksjvAv9
-         juPnsKCKeDNcaxRIoSK2g06UcCj9WhaKM9MBwFJSaRVQw0/zuHRwkJiBhYZh6c8lOP0m
-         oRgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUN9E00vm6AdieskEI6TEUdfs9O6Ns+gBi3cu0/mudtYzoBv/MnWOvwdxIPplKS+Upq2EnCfty+0FB9equC@vger.kernel.org, AJvYcCUbF1M2fdVDEKpbIEzk2LFsP1V1v8oa6z6u/PGZ5FeEGP2H0/0wnwdafGHrJnRdk5w7qRp8gAAY@vger.kernel.org, AJvYcCW/r7E3X6bpVvgmp6RNd5tG0PnONgYBISOIBBwzhhCEQFRuiwgRSDWnv5bbmT93VR+WQG4LayJhpUVx@vger.kernel.org, AJvYcCW88Hm0ltFvxk5YMO/YYQrb2PXnTajwIOYw5QxlLxbTcIXQBGPazpBGBghQC5lE8Yv8FN4/MIr9YwgE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzomJh3CTG13xy/9dtE90TIPnPF4pGefi6QN6pjwmm3fqhB3VuT
-	NtXwzrX1BkeQM/ur9a4rDY2ClYa+76UF4vZCMpJARliP+e89HI5vuOMMxBr8nXI=
-X-Gm-Gg: ASbGnctN+t29dq+TLG92sgnpLQuF1uIIV6BzBRJlmRm6UelplZmF6Jo/dRWhepEuAnA
-	rhvmy9bq2w3HZ4nB5scXeW4F8eyk4hinNmKQ9CLTPZ1FsKB9gu5hDnJ/h9vhhBxy+J/HptUYPl+
-	E4j6aHgW7WI/aOEoTntHbjyKgQoWuqlC6IZMwscV0Ogm2p6W3sq0cQrZI8zetHjkWcrfWbyJwZD
-	ttMMXhYUJOldGuiuvuIQFZv56ZBIZ9etw4lIKioQI0v7dTWbApF6f9si43HB1smU/mUVuTekMGk
-	qBglVxcLLWTP
-X-Google-Smtp-Source: AGHT+IEcOE2rcIs0I6rQJgvoUwcTkXON9eIFaZI+35fuAr7ODGoHF8ouLi+Vszm+5v2BMc2RxdWmOA==
-X-Received: by 2002:a05:6102:151f:b0:4af:49cc:7515 with SMTP id ada2fe7eead31-4af49cc99d7mr12238631137.7.1732876196604;
-        Fri, 29 Nov 2024 02:29:56 -0800 (PST)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-85b82a0e475sm705843241.7.2024.11.29.02.29.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Nov 2024 02:29:56 -0800 (PST)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4af490d79d4so440648137.0;
-        Fri, 29 Nov 2024 02:29:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU9jRzhHmbRN2wsEyR8i39eKN+io8VF0TaUwkG1izGfX8CtQbMbRUtWX+KztDOdIWk2Zny2iA9jQDdz@vger.kernel.org, AJvYcCVF02p3pVmyWSXlRcQWEp3k8PFMlPzfFM5G731JBoPS/ZXPlPdv8eX/Rm9HUfFrearepLfW/nOoO8T+@vger.kernel.org, AJvYcCVV0DUPPKH99yGZYHMJFPT+Xh15odT9GrBv1uKgtbvgLP0oIph3hLQ1snaXARzgGlrrc522z07igTX442jK@vger.kernel.org, AJvYcCWYPFJrhZanAzsd2jHJ22gWA/SnebQppDd0t2v97QGlEMZN0yKDlGTzTQmasfWiaW7ZUvE8Lx1g@vger.kernel.org
-X-Received: by 2002:a05:6102:f07:b0:4a3:a014:38aa with SMTP id
- ada2fe7eead31-4af448a91b7mr13985272137.11.1732876195687; Fri, 29 Nov 2024
- 02:29:55 -0800 (PST)
+	s=arc-20240116; t=1732877494; c=relaxed/simple;
+	bh=Glmbj0DMfcjFxWhAUgiB2tFNmYA96JJlsXdCuhHmZKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C1qw4EkLyrxLgtRGdS2hvbbvSd63AyKbBhmcxYryps7ho+KDeIh3dYhN5pMBHVU7yFYEvTlAfzuYPBg6Z/nW235Wmoi9P8nRDujNrG7XYg1vqSoe6szcfi2TxROsel9307deX7z/UK6n2soKPZO89rc1n8n/J5Betrc1EiQ7vtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXd83j1N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7479DC4CED3;
+	Fri, 29 Nov 2024 10:51:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732877493;
+	bh=Glmbj0DMfcjFxWhAUgiB2tFNmYA96JJlsXdCuhHmZKQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FXd83j1NGaShS82H4l9sYzRPRuuyVzSptiwY6DSjJh1iWJrjZ5EL0ytG482OjlOPv
+	 UcJv0nbITSIAXPLFsCc0/vIg5zS5KrxqVz3u4/kf+5DtklZVeZBi8KGSZu6m7c2cPW
+	 15AbyA80ChUhTVt+nQaLFrt0mJ+itucL+F6az258Lqf4gluegv9wT7AdSkrirmLmsi
+	 EOTNFHuWqCcO8/SsDOL45qhVpK8G69Y08Vd/k+Ae4+IYCeZe4if3f62RZpKbwcr6Sp
+	 Oc4mRbaUnnqtiQOUq9Nr/p6eE+pMoYLBw0xnT96vqpXzWSLkm7wjiLyjRcMpOCMQNA
+	 jly3H5jjBw17Q==
+Message-ID: <ccd1587a-0368-4bde-9c72-4f10393c58b0@kernel.org>
+Date: Fri, 29 Nov 2024 19:51:30 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241010063611.788527-1-herve.codina@bootlin.com>
- <20241010063611.788527-2-herve.codina@bootlin.com> <dywwnh7ns47ffndsttstpcsw44avxjvzcddmceha7xavqjdi77@cqdgmpdtywol>
- <20241129091013.029fced3@bootlin.com> <1a895f7c-bbfc-483d-b36b-921788b07b36@app.fastmail.com>
- <CAMuHMdWXgXiHNUhrXB9jT4opnOQYUxtW=Vh0yBQT0jJS49+zsw@mail.gmail.com> <93ad42dc-eac6-4914-a425-6dbcd5dccf44@app.fastmail.com>
-In-Reply-To: <93ad42dc-eac6-4914-a425-6dbcd5dccf44@app.fastmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 29 Nov 2024 11:29:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWgqEZtd82hSp0iYahtTcTnORFytTm11EiZOjLf8V9tQw@mail.gmail.com>
-Message-ID: <CAMuHMdWgqEZtd82hSp0iYahtTcTnORFytTm11EiZOjLf8V9tQw@mail.gmail.com>
-Subject: Re: [PATCH v9 1/6] misc: Add support for LAN966x PCI device
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Herve Codina <herve.codina@bootlin.com>, Michal Kubecek <mkubecek@suse.cz>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>, 
-	"derek.kiernan@amd.com" <derek.kiernan@amd.com>, "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, 
-	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
-	UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] misc: pci_endpoint_test: Fix the return value of
+ IOCTL
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, kw@linux.com,
+ gregkh@linuxfoundation.org, arnd@arndb.de, lpieralisi@kernel.org,
+ shuah@kernel.org
+Cc: kishon@kernel.org, aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
+ <20241129092415.29437-3-manivannan.sadhasivam@linaro.org>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20241129092415.29437-3-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Arnd,
+On 11/29/24 18:24, Manivannan Sadhasivam wrote:
+> IOCTLs are supposed to return 0 for success and negative error codes for
+> failure. Currently, this driver is returning 0 for failure and 1 for
+> success, that's not correct. Hence, fix it!
+> 
+> Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Closes: https://lore.kernel.org/all/YvzNg5ROnxEApDgS@kroah.com
+> Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Fri, Nov 29, 2024 at 10:23=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
-> On Fri, Nov 29, 2024, at 09:44, Geert Uytterhoeven wrote:
-> > On Fri, Nov 29, 2024 at 9:25=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> w=
-rote:
-> >> On Fri, Nov 29, 2024, at 09:10, Herve Codina wrote:
-> >> I would write in two lines as
-> >>
-> >>         depends on PCI
-> >>         depends on OF_OVERLAY
-> >>
-> >> since OF_OVERLAY already depends on OF, that can be left out.
-> >> The effect is the same as your variant though.
-> >
-> > What about
-> >
-> >     depends on OF
-> >     select OF_OVERLAY
-> >
-> > as "OF" is a clear bus dependency, due to the driver providing an OF
-> > child bus (cfr. I2C or SPI bus controller drivers depending on I2C or
-> > SPI), and OF_OVERLAY is an optional software mechanism?
->
-> OF_OVERLAY is currently a user visible option, so I think it's
-> intended to be used with 'depends on'. The only other callers
-> of this interface are the kunit test modules that just leave
-> out the overlay code if that is disabled.
+Looks OK to me.
 
-Indeed, there are no real upstream users of OF_OVERLAY left.
-Until commit 1760eb547276299a ("drm: rcar-du: Drop leftovers
-dependencies from Kconfig"), the rcar-lvds driver selected OF_OVERLAY
-to be able to fix up old DTBs.
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
-> If we decide to treat OF_OVERLAY as a library instead, it should
-> probably become a silent Kconfig option that gets selected by
-> all its users including the unit tests, and then we can remove
-> the #ifdef checks there.
+One nit below.
 
-Yep.
+[...]
 
-> Since OF_OVERLAY pulls in OF_DYNAMIC, I would still prefer that
-> to be a user choice. Silently enabling OF_OVERLAY definitely has
-> a risk of introducing regressions since it changes some of the
-> interesting code paths in the core, in particular it enables
-> reference counting in of_node_get(), which many drivers get wrong.
+>  static void pci_endpoint_test_remove(struct pci_dev *pdev)
+> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+> index 470258009ddc..545e04ad63a2 100644
+> --- a/tools/pci/pcitest.c
+> +++ b/tools/pci/pcitest.c
+> @@ -16,7 +16,6 @@
+>  
+>  #include <linux/pcitest.h>
+>  
+> -static char *result[] = { "NOT OKAY", "OKAY" };
+>  static char *irq[] = { "LEGACY", "MSI", "MSI-X" };
+>  
+>  struct pci_test {
+> @@ -52,63 +51,65 @@ static int run_test(struct pci_test *test)
+>  		ret = ioctl(fd, PCITEST_BAR, test->barnum);
+>  		fprintf(stdout, "BAR%d:\t\t", test->barnum);
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
 
-Distro kernels will have to enable this anyway, if they want to
-support LAN966x...
+Maybe replace all this "if (ret < 0) ... else ..." and all the ones below with
+something a call to:
 
-Gr{oetje,eeting}s,
+static void test_result(int ret)
+{
+	fprintf(stdout, "%sOKAY\n", ret < 0 ? "NOT " : "");
+}
 
-                        Geert
+or simply with the call:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+	fprintf(stdout, "%sOKAY\n", ret < 0 ? "NOT " : "");
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+to avoid all these repetition.
+
+>  	}
+>  
+>  	if (test->set_irqtype) {
+>  		ret = ioctl(fd, PCITEST_SET_IRQTYPE, test->irqtype);
+>  		fprintf(stdout, "SET IRQ TYPE TO %s:\t\t", irq[test->irqtype]);
+>  		if (ret < 0)
+> -			fprintf(stdout, "FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->get_irqtype) {
+>  		ret = ioctl(fd, PCITEST_GET_IRQTYPE);
+>  		fprintf(stdout, "GET IRQ TYPE:\t\t");
+> -		if (ret < 0)
+> -			fprintf(stdout, "FAILED\n");
+> -		else
+> +		if (ret < 0) {
+> +			fprintf(stdout, "NOT OKAY\n");
+> +		} else {
+>  			fprintf(stdout, "%s\n", irq[ret]);
+> +			ret = 0;
+> +		}
+>  	}
+>  
+>  	if (test->clear_irq) {
+>  		ret = ioctl(fd, PCITEST_CLEAR_IRQ);
+>  		fprintf(stdout, "CLEAR IRQ:\t\t");
+>  		if (ret < 0)
+> -			fprintf(stdout, "FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->legacyirq) {
+>  		ret = ioctl(fd, PCITEST_LEGACY_IRQ, 0);
+>  		fprintf(stdout, "LEGACY IRQ:\t");
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->msinum > 0 && test->msinum <= 32) {
+>  		ret = ioctl(fd, PCITEST_MSI, test->msinum);
+>  		fprintf(stdout, "MSI%d:\t\t", test->msinum);
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->msixnum > 0 && test->msixnum <= 2048) {
+>  		ret = ioctl(fd, PCITEST_MSIX, test->msixnum);
+>  		fprintf(stdout, "MSI-X%d:\t\t", test->msixnum);
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->write) {
+> @@ -118,9 +119,9 @@ static int run_test(struct pci_test *test)
+>  		ret = ioctl(fd, PCITEST_WRITE, &param);
+>  		fprintf(stdout, "WRITE (%7ld bytes):\t\t", test->size);
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->read) {
+> @@ -130,9 +131,9 @@ static int run_test(struct pci_test *test)
+>  		ret = ioctl(fd, PCITEST_READ, &param);
+>  		fprintf(stdout, "READ (%7ld bytes):\t\t", test->size);
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	if (test->copy) {
+> @@ -142,14 +143,14 @@ static int run_test(struct pci_test *test)
+>  		ret = ioctl(fd, PCITEST_COPY, &param);
+>  		fprintf(stdout, "COPY (%7ld bytes):\t\t", test->size);
+>  		if (ret < 0)
+> -			fprintf(stdout, "TEST FAILED\n");
+> +			fprintf(stdout, "NOT OKAY\n");
+>  		else
+> -			fprintf(stdout, "%s\n", result[ret]);
+> +			fprintf(stdout, "OKAY\n");
+>  	}
+>  
+>  	fflush(stdout);
+>  	close(fd);
+> -	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+> +	return ret;
+>  }
+>  
+>  int main(int argc, char **argv)
+
+
+-- 
+Damien Le Moal
+Western Digital Research
 
