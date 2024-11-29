@@ -1,57 +1,61 @@
-Return-Path: <linux-pci+bounces-17476-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17477-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 340F39DECA3
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 21:22:11 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5561D9DECC1
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 21:58:30 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9D3216140E
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 20:22:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8DF52816EE
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 20:58:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 316F5155300;
-	Fri, 29 Nov 2024 20:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98AB715E5DC;
+	Fri, 29 Nov 2024 20:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dF5gR/Nw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQiVBSEX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EA9E545;
-	Fri, 29 Nov 2024 20:22:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A8E157A72;
+	Fri, 29 Nov 2024 20:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732911726; cv=none; b=BttE128UzlBSA32yf6RyPsphavLzVGNu6n03DYKvdBjfOVO5fbIkGsMZGfS9H2giOujc1mG59t+/AzJx2pr2XTSFxdvp3kY+lgRUu/Le+GKzYUjTGeeBF74AlsZgJwZwm3b1YXPdeRhpemWM9/ZwHR+2lz+cIuSAoZrcktMlqfo=
+	t=1732913905; cv=none; b=eObrHJ4L86JHCYZyyfD8AsQC/7LjwA35el1GQnRzvtP29GK4S2+q9bYVm1ouDGBuElr2JcIPVgrxAvcJbquWLL8p6KNX67wztxrRWrWum/rDTPjZpPYlRflgKcxNDsihopYeyH+aPjgw0QjfUSwtA5SREZLoREHgnYtz9w86iVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732911726; c=relaxed/simple;
-	bh=fy4e/x1/Z0FUaIbDJiNmJ65itWjY8DZ/a4+SMqhGJfI=;
+	s=arc-20240116; t=1732913905; c=relaxed/simple;
+	bh=zZKblG1oW6ilUbzaYkY0HepGVylQVjpGP80Xxjdr6Pk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pgarCHc5XtVvLY7jCkJa7BPW5TO3+dND35gW97r/imJ39KSEAm7dLtfDxcWNeiQsHXENyAqVig6kYBURDR5shepJlStZBp+GHNFeqX+Am+xq8Uz2uc4/wJSN38iOBWFlyZyN0UigUM1vQ0QopmwqyeCTr1hn9NNkvYPadeTRp7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dF5gR/Nw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4671FC4CECF;
-	Fri, 29 Nov 2024 20:22:05 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Cafm3HZ7tL43rJWN/rIEGYM5efIncBiW9YP/rI2BaUsSRjSZDdIi8ctVuUCYHWIUaNb0oteE0qsgEZOApHce6qOpnXT78bH0rsrXeXB4CJP2K1NUU0PHoeaq4tMCtXEsJxU0suJ1J7PSk40IOwmeMrmOzQcadUPIB1rzd2/YmRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQiVBSEX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B75BDC4CECF;
+	Fri, 29 Nov 2024 20:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732911725;
-	bh=fy4e/x1/Z0FUaIbDJiNmJ65itWjY8DZ/a4+SMqhGJfI=;
+	s=k20201202; t=1732913905;
+	bh=zZKblG1oW6ilUbzaYkY0HepGVylQVjpGP80Xxjdr6Pk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dF5gR/NwNESWEs8RCeEsxA+oTOQI4tl8Sfx7PNrT8uARwlI8bpuHLjHFSEmgkR5i0
-	 EhdoUDMFyKfM1q0ijxfIAwS/ult2roPBfLrem8CczQl5ACq6ElC1j9XYTdjydfJm1Y
-	 HOnvtLldocaYxILFtO3VK+lT4q0LfrOkayEhE66dRJxaGf92XFKsDvnACbeMWUI+Ud
-	 siz/fIGR+jVXxksRDR+YwAKBfbvqIvrVsn9jFmaU3qD77PnBoXU1PgkcQFaz4xxq9e
-	 MNMfT4bDChJjYZSV1xyaf+X1DSCEX4Qtls9lZJf8MzC2IYKE7BEVw782MvaBhMSD4E
-	 IhuvvuHRyfFew==
-Date: Fri, 29 Nov 2024 14:22:02 -0600
+	b=KQiVBSEXjNg3lOwoGvXRCuJjrm7xatbZwYoYfv8aYFd2HC0x5IJwKuqgoADK5cx9K
+	 +KX+jmQbgvhKJQM5fpzL2YlJNdEYoFU52WttObfeKoS51O5ro2RHnsjH0sbHk9v4jY
+	 mZ01idn5tzWZJrtgbtOuJnR9QciqUf3vbKpMkiMsrzTUEVedYbbKlXa+qwBpRIpc7o
+	 j+JCVS5cVlgBCevSGvuoEVGWDx9TIVWsyegp2YjjAfCfT4NCKKbPs/KphT0mSysSZW
+	 8jgaVREpqN7BRnHS8uFMKh7fbOU8g8VMxSepgeHdPF4OoFOGbZAZqPDYvxd+5nR92a
+	 F2eJxFgKs3hvQ==
+Date: Fri, 29 Nov 2024 14:58:22 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jingoohan1@gmail.com, michal.simek@amd.com,
-	bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH 2/2] PCI: amd-mdb: Add AMD MDB Root Port driver
-Message-ID: <20241129202202.GA2771092@bhelgaas>
+To: Christian Bruel <christian.bruel@foss.st.com>,
+	Rob Herring <robh+dt@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, p.zabel@pengutronix.de,
+	cassel@kernel.org, quic_schintav@quicinc.com,
+	fabrice.gasnier@foss.st.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] PCI: stm32: Add PCIe host support for STM32MP25
+Message-ID: <20241129205822.GA2772018@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,165 +64,71 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241127115804.2046576-3-thippeswamy.havalige@amd.com>
+In-Reply-To: <20241126155119.1574564-3-christian.bruel@foss.st.com>
 
-On Wed, Nov 27, 2024 at 05:28:04PM +0530, Thippeswamy Havalige wrote:
-> Add support for AMD MDB(Multimedia DMA Bridge) IP core as Root Port.
-> 
-> The Versal2 devices include MDB Module. The integrated block for MDB along
-> with the integrated bridge can function as PCIe Root Port controller at
-> Gen5 speed.
+[+to Rob, DMA mask question]
 
-What speed is Gen5?  Please include the numeric speed so we don't have
-to Google it.
+On Tue, Nov 26, 2024 at 04:51:16PM +0100, Christian Bruel wrote:
+> Add driver for the STM32MP25 SoC PCIe Gen2 controller based on the
+> DesignWare PCIe core.
 
-> Bridge error and legacy interrupts in Versal2 MDB are handled using Versal2
-> MDB specific interrupt line.
-> 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig        |  10 +
->  drivers/pci/controller/dwc/Makefile       |   1 +
->  drivers/pci/controller/dwc/pcie-amd-mdb.c | 455 ++++++++++++++++++++++
->  3 files changed, 466 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-amd-mdb.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index b6d6778b0698..e7ddab8da2c4 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -14,6 +14,16 @@ config PCIE_DW_EP
->  	bool
->  	select PCIE_DW
->  
-> +config PCIE_AMD_MDB
-> +	bool "AMD PCIe controller (host mode)"
-> +	depends on OF || COMPILE_TEST
-> +	depends on PCI && PCI_MSI
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Say Y here to enable PCIe controller support on AMD SoCs. The
-> +	  PCIe controller is based on DesignWare Hardware and uses AMD
-> +	  hardware wrappers.
+Can you include the numeric rate, not just "gen2", so we don't have to
+search for it?
 
-Alphabetize by vendor name.  I suppose "Advanced" *would* sort before
-"Amazon", but since "AMD" isn't spelled out, I think we have to sort
-by the initialism and put "Ama" before "AMD".
-
->  config PCIE_AL
->  	bool "Amazon Annapurna Labs PCIe controller"
->  	depends on OF && (ARM64 || COMPILE_TEST)
-
-> +static void amd_mdb_mask_leg_irq(struct irq_data *data)
-
-s/_leg_/_intx_/
-
+> +static int stm32_pcie_resume_noirq(struct device *dev)
 > +{
-> +	struct dw_pcie_rp *port = irq_data_get_irq_chip_data(data);
-> +	struct amd_mdb_pcie *pcie;
-> +	unsigned long flags;
-> +	u32 mask, val;
-> +
-> +	pcie = get_mdb_pcie(port);
-
-Here and elsewhere, this could be done in the automatic variable list
-above since this is non-interesting setup.
-
-> +static void amd_mdb_unmask_leg_irq(struct irq_data *data)
-
-Ditto.
-
-> +static struct irq_chip amd_mdb_leg_irq_chip = {
-
-Ditto.
-
-> +static int amd_mdb_pcie_rp_intx_map(struct irq_domain *domain,
-> +				    unsigned int irq, irq_hw_number_t hwirq)
-
-"_rp_" in name unnecessary.
-
-> +static irqreturn_t amd_mdb_pcie_rp_intr_handler(int irq, void *dev_id)
-> +{
-> +	struct dw_pcie_rp *port = dev_id;
-> +	struct amd_mdb_pcie *pcie;
-> +	struct device *dev;
-> +	struct irq_data *d;
-> +
-> +	pcie = get_mdb_pcie(port);
-> +	dev = pcie->pci.dev;
-> +
-> +	d = irq_domain_get_irq_data(pcie->mdb_domain, irq);
-> +	if (intr_cause[d->hwirq].str)
-> +		dev_warn(dev, "%s\n", intr_cause[d->hwirq].str);
-> +	else
-> +		dev_warn(dev, "Unknown IRQ %ld\n", d->hwirq);
-> +
-> +	return IRQ_HANDLED;
-
-I see that some of these messages are "Correctable/Non-Fatal/Fatal
-error message"; I assume this Root Port doesn't have an AER
-Capability, and this interrupt is the "System Error" controlled by the
-Root Control Error Enable bits in the PCIe Capability?  (See PCIe
-r6.0, sec 6.2.6)
-
-Is there any way to hook this into the AER handling so we can do
-something about it, since the devices *below* the Root Port may
-support AER and may have useful information logged?
-
-Since this is DWC-based, I suppose these are general questions that
-apply to all the similar drivers.
-
-> +static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
-> +				 struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = &pcie->pci;
+> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> +	struct dw_pcie *pci = stm32_pcie->pci;
 > +	struct dw_pcie_rp *pp = &pci->pp;
-> +	struct device *dev = &pdev->dev;
 > +	int ret;
 > +
-> +	pp->ops = &amd_mdb_pcie_host_ops;
+> +	/* init_state must be called first to force clk_req# gpio when no
+> +	 * device is plugged.
+> +	 */
 
-This is dw-related initialization; move it down just before the first
-use at dw_pcie_host_init().
+Use drivers/pci/ conventional comment style:
 
-> +	pcie->mdb_base = devm_platform_ioremap_resource_byname(pdev, "mdb_pcie_slcr");
-> +	if (IS_ERR(pcie->mdb_base))
-> +		return PTR_ERR(pcie->mdb_base);
+  /*
+   * text ...
+   */
+
+> +static bool is_stm32_pcie_driver(struct device *dev)
+> +{
+> +	/* PCI bridge */
+> +	dev = get_device(dev);
 > +
-> +	ret = amd_mdb_pcie_rp_init_irq_domain(pcie, pdev);
-
-Other drivers use "*_pcie_init_irq_domain" (without "rp").  It's
-helpful to use similar names so it's easier to compare
-implementations.
-
-Since amd_mdb_pcie_free_irq_domains() cleans this up, I think both
-should end with "domains" (with an "s") so they match.
-
-> +	if (ret)
-> +		return ret;
+> +	/* Platform driver */
+> +	dev = get_device(dev->parent);
 > +
-> +	amd_mdb_pcie_rp_init_port(pcie, pdev);
-
-Other drivers use "*_pcie_init_port" (without "rp").
-
-> +	ret = amd_mdb_setup_irq(pcie, pdev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set up interrupts\n");
-> +		goto out;
-> +	}
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize host\n");
-> +		goto out;
-> +	}
-> +
-> +	return 0;
-> +
-> +out:
-> +	amd_mdb_pcie_free_irq_domains(pcie);
-> +	return ret;
+> +	return (dev->driver == &stm32_pcie_driver.driver);
 > +}
+> +
+> +/*
+> + * DMA masters can only access the first 4GB of memory space,
+> + * so we setup the bus DMA limit accordingly.
+> + */
+> +static int stm32_dma_limit(struct pci_dev *pdev, void *data)
+> +{
+> +	dev_dbg(&pdev->dev, "disabling DMA DAC for device");
+> +
+> +	pdev->dev.bus_dma_limit = DMA_BIT_MASK(32);
 
-Bjorn
+I don't think this is the right way to do this.  Surely there's a way
+to describe the DMA capability of the bridge once instead of iterating
+over all the downstream devices?  This quirk can't work for hot-added
+devices anyway.
+
+> +	return 0;
+> +}
+> +
+> +static void quirk_stm32_dma_mask(struct pci_dev *pci)
+> +{
+> +	struct pci_dev *root_port;
+> +
+> +	root_port = pcie_find_root_port(pci);
+> +
+> +	if (root_port && is_stm32_pcie_driver(root_port->dev.parent))
+> +		pci_walk_bus(pci->bus, stm32_dma_limit, NULL);
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SYNOPSYS, 0x0550, quirk_stm32_dma_mask);
 
