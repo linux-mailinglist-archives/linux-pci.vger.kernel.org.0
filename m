@@ -1,245 +1,102 @@
-Return-Path: <linux-pci+bounces-17454-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17455-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0D1B9DC265
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 11:51:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7FCD9DE80C
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 14:51:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8248E2823FB
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 10:51:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BE99B20C4A
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2024 13:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358751991B2;
-	Fri, 29 Nov 2024 10:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F4119F429;
+	Fri, 29 Nov 2024 13:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXd83j1N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rF25SOae"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D271990DE;
-	Fri, 29 Nov 2024 10:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CCC19F128;
+	Fri, 29 Nov 2024 13:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732877494; cv=none; b=nlMs2unGdD4h4cAst22AFbBF7TE35oLravX10I21b2SG6czPAskxkYxCOOHaqxb7SAp6cAvGAJAqLTgM7gShWsZjgUd1nja97RBDtNcq6KkEJer5aC7LDWY8aF8jomVlWAoIXau76fowcEcbmFecU4Gp2ZojGJHjqLKARz0uB6I=
+	t=1732888292; cv=none; b=c71VYiFCNmbTpHYHU66ZRMZUc09Wa9ICNNawAswTnB0KnLv2VYskocT1HaV55TewaVnqdLDe/NHg/FML8Lof6toDPhY+36yCiQug7N/2dWDHHyJyR9A2ioeuL5vGiiaoMQ4dIOjlwmI6XwBu6dnSP51zTdwNy0e8QbbSR2K6J6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732877494; c=relaxed/simple;
-	bh=Glmbj0DMfcjFxWhAUgiB2tFNmYA96JJlsXdCuhHmZKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C1qw4EkLyrxLgtRGdS2hvbbvSd63AyKbBhmcxYryps7ho+KDeIh3dYhN5pMBHVU7yFYEvTlAfzuYPBg6Z/nW235Wmoi9P8nRDujNrG7XYg1vqSoe6szcfi2TxROsel9307deX7z/UK6n2soKPZO89rc1n8n/J5Betrc1EiQ7vtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXd83j1N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7479DC4CED3;
-	Fri, 29 Nov 2024 10:51:31 +0000 (UTC)
+	s=arc-20240116; t=1732888292; c=relaxed/simple;
+	bh=deRs1hGG1PSs4SEPBRCBgk0scOn/My5DCIijGShN4gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCJJKOx5K5Y2NSol/7TF79e7AwD8krhNTAHLQoPY/lmcOkhWiyk2W6dByvJNJzIFMdSfd9SIkUpVtbF5gD4Zhv1jjZhHZr64llB9VSJvikuKu/VqstoRcHqr7jsXAdozVj0d+BMoV6ND1x45g4mn7HmoLlkzL+EM5jw8nEKbF/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rF25SOae; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B935EC4CED2;
+	Fri, 29 Nov 2024 13:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732877493;
-	bh=Glmbj0DMfcjFxWhAUgiB2tFNmYA96JJlsXdCuhHmZKQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FXd83j1NGaShS82H4l9sYzRPRuuyVzSptiwY6DSjJh1iWJrjZ5EL0ytG482OjlOPv
-	 UcJv0nbITSIAXPLFsCc0/vIg5zS5KrxqVz3u4/kf+5DtklZVeZBi8KGSZu6m7c2cPW
-	 15AbyA80ChUhTVt+nQaLFrt0mJ+itucL+F6az258Lqf4gluegv9wT7AdSkrirmLmsi
-	 EOTNFHuWqCcO8/SsDOL45qhVpK8G69Y08Vd/k+Ae4+IYCeZe4if3f62RZpKbwcr6Sp
-	 Oc4mRbaUnnqtiQOUq9Nr/p6eE+pMoYLBw0xnT96vqpXzWSLkm7wjiLyjRcMpOCMQNA
-	 jly3H5jjBw17Q==
-Message-ID: <ccd1587a-0368-4bde-9c72-4f10393c58b0@kernel.org>
-Date: Fri, 29 Nov 2024 19:51:30 +0900
+	s=k20201202; t=1732888291;
+	bh=deRs1hGG1PSs4SEPBRCBgk0scOn/My5DCIijGShN4gU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rF25SOaeNaT4zEs5vVRievv9ZSpIQNcUYbhfGsqmXNXCVaEPsgA97B3+7kPggmBHz
+	 Cylu/N6nRe5oekpMqzJzQlklJ02puBRPDBuqhGWSrGKHO/4V56+IIurdjsxkiRnrOk
+	 Uoy6P2/zxJR1a43Q0WPOzllZaE4FripkGV7/1uSk2b3LSpzyt83IYnJTwv81I5eDnB
+	 KTpMnRGroPS8Qm2T27zBi3wuV1i7sGwagwhOYWP5i00XJDiK1p/s/XGW8EIAt9sJEM
+	 PCZRwqA43jSP/SO6eutNECYUGZKeHziXxY/E9M/x3stxPblr4C3ceBlqcp55eeBOsQ
+	 714s4LRhUEfzg==
+Date: Fri, 29 Nov 2024 14:51:26 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
+	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
+	aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] selftests: pci_endpoint: Migrate to Kselftest
+ framework
+Message-ID: <Z0nG3oAx66plv4qI@ryzen>
+References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
+ <20241129092415.29437-5-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] misc: pci_endpoint_test: Fix the return value of
- IOCTL
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, kw@linux.com,
- gregkh@linuxfoundation.org, arnd@arndb.de, lpieralisi@kernel.org,
- shuah@kernel.org
-Cc: kishon@kernel.org, aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
- <20241129092415.29437-3-manivannan.sadhasivam@linaro.org>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20241129092415.29437-3-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241129092415.29437-5-manivannan.sadhasivam@linaro.org>
 
-On 11/29/24 18:24, Manivannan Sadhasivam wrote:
-> IOCTLs are supposed to return 0 for success and negative error codes for
-> failure. Currently, this driver is returning 0 for failure and 1 for
-> success, that's not correct. Hence, fix it!
+Hello Mani,
+
+On Fri, Nov 29, 2024 at 02:54:15PM +0530, Manivannan Sadhasivam wrote:
+> Migrate the PCI endpoint test to Kselftest framework. All the tests that
+> were part of the previous pcitest.sh file were migrated.
 > 
-> Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Closes: https://lore.kernel.org/all/YvzNg5ROnxEApDgS@kroah.com
-> Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Below is the exclusive list of tests:
+> 
+> 1. BAR Tests (BAR0 to BAR5)
+> 2. Legacy IRQ Tests
+> 3. MSI Interrupt Tests (MSI1 to MSI32)
+> 4. MSI-X Interrupt Tests (MSI-X1 to MSI-X2048)
+> 5. Read Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> 6. Write Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> 7. Copy Tests - MEMCPY (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> 8. Read Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> 9. Write Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> 10. Copy Tests - DMA (For 1, 1024, 1025, 1024000, 1024001 Bytes)
 
-Looks OK to me.
+I'm not sure if it is a great idea to add test case number 10.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+While it will work if you use the "dummy memcpy" DMA channel which uses
+MMIO under the hood, if you actually enable a real DMA controller (which
+often sets the DMA_PRIVATE cap in the DMA controller driver (e.g. if you
+are using a DWC based PCIe EP controller and select CONFIG_DW_EDMA=y)),
+pci_epf_test_copy() will fail with:
+[   93.779444] pci_epf_test pci_epf_test.0: Cannot transfer data using DMA
 
-One nit below.
-
-[...]
-
->  static void pci_endpoint_test_remove(struct pci_dev *pdev)
-> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-> index 470258009ddc..545e04ad63a2 100644
-> --- a/tools/pci/pcitest.c
-> +++ b/tools/pci/pcitest.c
-> @@ -16,7 +16,6 @@
->  
->  #include <linux/pcitest.h>
->  
-> -static char *result[] = { "NOT OKAY", "OKAY" };
->  static char *irq[] = { "LEGACY", "MSI", "MSI-X" };
->  
->  struct pci_test {
-> @@ -52,63 +51,65 @@ static int run_test(struct pci_test *test)
->  		ret = ioctl(fd, PCITEST_BAR, test->barnum);
->  		fprintf(stdout, "BAR%d:\t\t", test->barnum);
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
-
-Maybe replace all this "if (ret < 0) ... else ..." and all the ones below with
-something a call to:
-
-static void test_result(int ret)
-{
-	fprintf(stdout, "%sOKAY\n", ret < 0 ? "NOT " : "");
-}
-
-or simply with the call:
-
-	fprintf(stdout, "%sOKAY\n", ret < 0 ? "NOT " : "");
-
-to avoid all these repetition.
-
->  	}
->  
->  	if (test->set_irqtype) {
->  		ret = ioctl(fd, PCITEST_SET_IRQTYPE, test->irqtype);
->  		fprintf(stdout, "SET IRQ TYPE TO %s:\t\t", irq[test->irqtype]);
->  		if (ret < 0)
-> -			fprintf(stdout, "FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->get_irqtype) {
->  		ret = ioctl(fd, PCITEST_GET_IRQTYPE);
->  		fprintf(stdout, "GET IRQ TYPE:\t\t");
-> -		if (ret < 0)
-> -			fprintf(stdout, "FAILED\n");
-> -		else
-> +		if (ret < 0) {
-> +			fprintf(stdout, "NOT OKAY\n");
-> +		} else {
->  			fprintf(stdout, "%s\n", irq[ret]);
-> +			ret = 0;
-> +		}
->  	}
->  
->  	if (test->clear_irq) {
->  		ret = ioctl(fd, PCITEST_CLEAR_IRQ);
->  		fprintf(stdout, "CLEAR IRQ:\t\t");
->  		if (ret < 0)
-> -			fprintf(stdout, "FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->legacyirq) {
->  		ret = ioctl(fd, PCITEST_LEGACY_IRQ, 0);
->  		fprintf(stdout, "LEGACY IRQ:\t");
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->msinum > 0 && test->msinum <= 32) {
->  		ret = ioctl(fd, PCITEST_MSI, test->msinum);
->  		fprintf(stdout, "MSI%d:\t\t", test->msinum);
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->msixnum > 0 && test->msixnum <= 2048) {
->  		ret = ioctl(fd, PCITEST_MSIX, test->msixnum);
->  		fprintf(stdout, "MSI-X%d:\t\t", test->msixnum);
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->write) {
-> @@ -118,9 +119,9 @@ static int run_test(struct pci_test *test)
->  		ret = ioctl(fd, PCITEST_WRITE, &param);
->  		fprintf(stdout, "WRITE (%7ld bytes):\t\t", test->size);
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->read) {
-> @@ -130,9 +131,9 @@ static int run_test(struct pci_test *test)
->  		ret = ioctl(fd, PCITEST_READ, &param);
->  		fprintf(stdout, "READ (%7ld bytes):\t\t", test->size);
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	if (test->copy) {
-> @@ -142,14 +143,14 @@ static int run_test(struct pci_test *test)
->  		ret = ioctl(fd, PCITEST_COPY, &param);
->  		fprintf(stdout, "COPY (%7ld bytes):\t\t", test->size);
->  		if (ret < 0)
-> -			fprintf(stdout, "TEST FAILED\n");
-> +			fprintf(stdout, "NOT OKAY\n");
->  		else
-> -			fprintf(stdout, "%s\n", result[ret]);
-> +			fprintf(stdout, "OKAY\n");
->  	}
->  
->  	fflush(stdout);
->  	close(fd);
-> -	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
-> +	return ret;
->  }
->  
->  int main(int argc, char **argv)
+See:
+https://github.com/torvalds/linux/blob/v6.12/drivers/pci/endpoint/functions/pci-epf-test.c#L363-L368
 
 
--- 
-Damien Le Moal
-Western Digital Research
+Kind regards,
+Niklas
 
