@@ -1,92 +1,91 @@
-Return-Path: <linux-pci+bounces-17489-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17490-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 666D09DEF4F
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 09:23:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6C649DEF54
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 09:24:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2607328191D
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 08:23:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12CE4B21D41
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 08:24:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1D72FC52;
-	Sat, 30 Nov 2024 08:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192D614B087;
+	Sat, 30 Nov 2024 08:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t/UjA+fm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="amrgLxTa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F67139D05
-	for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 08:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8129F146D57
+	for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 08:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732954998; cv=none; b=qWzAG0IJ19RjBVTbJMwK1VL6vCjgKrexxeaOti4oLH9W7z+fGb3KcnLV3EgsHoF6kqQDfWBZXuRmNFUuQFkeA8ki3x7gj6kMEuoZZ/r7PJAucNwt5DO4yhfWlEBTb4L0HAd89X/mCEBFfdyj1X67u/O+V4uEcH4EJ9GNQ4ZiFqI=
+	t=1732955081; cv=none; b=p2hogXC9iE+HsvguvuFulvzGGWs6QxeSDLkKO5s+QedyQJ8Qph/Gs6mLj7C8ciejbfbf9syKv2H+B/QGMgwmbvDlxiTuR9z9LozVx+STB77L0ja6+p3EJ3UmplfZyw2lIzIceCQTmE89l+z1LnRjX4uBzQWAjyGQuTtQ7gXgn4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732954998; c=relaxed/simple;
-	bh=ByrR8tIF411nep0B5oVqaD2d798WvXZ1DGKPUssEvM4=;
+	s=arc-20240116; t=1732955081; c=relaxed/simple;
+	bh=+9Rv1meKwFoGwBueJHF3aRtwWO2NMZMqX9fJgKowzDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5HZ51n3bv3/sLAIK1RXd39doXY1MgSdTcQyL1v///JSnWOO6gILJ9Cti7UFGgddfn1Jc4IKw9aebwWDZXgruZYl1keiLgpCJjy7qljvc8q6jnge6wMTm6DcVEt5/XBBH/4S9iS7Iw4ioI1RW1z42eHpR503Bg2rK7J1lhJion4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t/UjA+fm; arc=none smtp.client-ip=209.85.210.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bgnq9XlMFgK3uVJ7wfIqzgEotDP26P0BEPVGz5psIY+2pIGVtR3vvqqSqb61C2WgwC/TWK2A8h3f7mzx7pjfGXoRmVFkx9mIN6Xkqmg/khxlOZ0Ww98X9UyfGhStnPi1vzk4kBUG50z2iLO9biUsk5D9H+3lRqbNy19McZiSXks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=amrgLxTa; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-724fee568aaso2521834b3a.1
-        for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 00:23:15 -0800 (PST)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-212884028a3so16058015ad.0
+        for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 00:24:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732954995; x=1733559795; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732955079; x=1733559879; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Ey9mK2QYcDtPPCKwbACtibTYlsE29O14SbX2DFECs0A=;
-        b=t/UjA+fmy+MIwqa5sdxf64uRV+K4RY/hu6PCH7zEMAlm8LGXvoM4+qBoEXYVYjf8Yd
-         kyFP2jNFz/mWV2LMqi6g3tROItam0PCpSxhNUyLawoNmzEtfiVRF4k0vIDhMToJug7+g
-         HDILaVsF9/4HrTgFRMFraweM55a3jWSFrvWNYVYI9ZIwdttqupixF4enU2IBPJjmlhBS
-         Zrzn7tuoBEuBj8oFPflLKiiMjUz/pf5yx8+v+ZVMiLT8WdREJu9LpHNaxQj0yaN3ln97
-         fqLfHZgEcalNXqMlOi+kN88/2tFr2TLDGBu+U8lQAbPCnMKOkzR/k1cdvepiYwLBGHYn
-         ztMg==
+        bh=iFSlUwJW++7AImpDWJTjlpGnjU6KAdzveqanoZG7RC0=;
+        b=amrgLxTaTwoTLMW2gVdk8q3RMsEUI24efrtbc2+Bwu0XpIkqary6LtZqW7RvaCLeCm
+         SCmlig19ZHvEWQ3t6FG/LbcX51MwQvy5JpUgMrQls6AnMgwTpwtbPv7t+UheE4LNB5Nb
+         i+RqQvk/2kmXMDuxSpF8z+kP2Rx3QD4dnRvDjpKuansHxdE8Vdeh/bksvN0ReNLs7Ao3
+         XdAKPevIBZoic7r1Sqf8NBF34JE9Lr+cJhcvaBDSMHxH5euP+Uqb2bmCSCvysGCLQmnv
+         Ff1YMYoYgmrfj8NivmDMiGA+J55HgGCcC4uF3lapGa+pfK+jBPUt8n8+LYQ6KKjwc832
+         2kUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732954995; x=1733559795;
+        d=1e100.net; s=20230601; t=1732955079; x=1733559879;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ey9mK2QYcDtPPCKwbACtibTYlsE29O14SbX2DFECs0A=;
-        b=gS6OnoaoglYydvKKNPWVHfm5KUad65UXBEu+tT8a72wM/KIK6u7r3F+GLJN+z8nu/k
-         Lfvz4KR5T2bj4uJCO83NceGSqmrpoiDQwkgymSzssb6wP7l/mb83T5owMlJcIU3hT0Vl
-         TVoCCxKmUs+7aJlXwVhFGQkGVpNsXwc3bUbtRcyUGwAcyXHZsxMuKYjn/U+0ai/XPyuS
-         LL3SftdpzlaQry+Lbl7G7vPmQrNvk1RarG+MNrCMTjx7DPbJkF+XXjw+O68FCVutBCep
-         iNMGqI+VBQIqsXD/oFyJuHi2xGC/ni+fBBfdQ5+Sl0JR70MAK1zjq/XgWtPW+jKdBJJT
-         /BwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWi8eWezNBaAGW/xjIoPR0BitrPtDUYIAIshKZMFlvfOHiuq4bK8WXdyaZnOayUS1vowU6KXUnRAuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBAx6XJOwTCcqYivyHLjz5C42MNy3BrOysGdBuZ7GME3z8TpHE
-	c7It+C/OZeNBgw/4Upj1KmDLGZclG+XfuF8oPtew0rMcSS4v6rJnPbnlWa+kJQ==
-X-Gm-Gg: ASbGnct6Zxl3cBqc5k/sImECzuQE2EOzfJhywftLEgGmlzyzZn7cmbyBw0xsm9SMs+G
-	2Q/lHEELu1AqPEuedMSNDse5EU5X5xbsAvFqxKQe0PWgS+SJ/7NR1zHLhaTkfDuquuZn0A5gNdQ
-	f9SMgxXwPcGl1Lhm3S7eYUdxEr91fJYvoRogH/NLSlhIXqJ23leysDRMpdEMSXK4A3CasUF5/Io
-	rv11r8lu1eC2mmR39me5/982EhMMnKh1VIJL956d/SizoY3RtNt3NYW47fR
-X-Google-Smtp-Source: AGHT+IEevzG/vRxDLEDST9WWoqNiJfyVNndxBjogGzADGjYE/6vBufeiKYVrM7etFIzouaRIIo/thw==
-X-Received: by 2002:a05:6a00:2301:b0:724:63f1:a520 with SMTP id d2e1a72fcca58-7253014a0d1mr20309929b3a.18.1732954995303;
-        Sat, 30 Nov 2024 00:23:15 -0800 (PST)
+        bh=iFSlUwJW++7AImpDWJTjlpGnjU6KAdzveqanoZG7RC0=;
+        b=Eaey82QNzCh+hbgQufeI5+qmuHKBnLWCRtgUT+vz3Yyi4X/Hgf7oBS1iEKkSGoUZzR
+         ajUMzuxhfA5vbOFUg+4YQxDTHwqQm2cCde2pzu9OjxNtSPKWIx1PXblV1fE/USIzb79U
+         l62Oj5JqoG6/GzvoOA5Wlfnxeyi0J8xNwueHsC21rGsvUHxWka2hsv7N6wYN8LGMDtLb
+         fi9Cv5GyDk1/dYhOMIRJLQxj/6L/vCWlrziRuCCpYlp8rRurkORYI427CK9AP8xPbYg+
+         8QTyHAw4B/z0ybs7YhaSfGMefQ2VuIyGWjCr8GikC/2sDFqKjga1aOx3CyELyZF1PFVD
+         SBGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJyjs8gltOYOD71qh5tjQRYngUkIVUPWP4IYFwpSXFD8SNDY4cce+f48J3PQsJi+PVsLOv/p+iMfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+dLQaI/VqXkAOUG2bFJibMQvhShzoUJNTRnRpzulpMUhxnOR8
+	O0ljyx1JDbo9/61oqvZnDClF26joUC7iZnu6Xxxi2P6bW8xOvkrqXqsveqBrKg==
+X-Gm-Gg: ASbGncsDWRiViifdtKAxdz93vSKonVLM14rl4KbToNYUvhPfIWk7oqPWJ6DllqyYmuO
+	KTYcXBJl01DieH4WpmoFMtX6VXleGTGaYoQrQhStVJtIKt6gN63GphBGEZ2VYe4KrxRB2yl+tcf
+	5R7X/9sYlSQTgi8lGjN3RrfklqAJZKTgOc8EtiSnmBJG9BcNlehmlNeUHhFmcAqg0kjvvgco3pV
+	b0AF+9BELmR6hzcQj9A4kmKRuJTcaBlsIhjoN6kSzjJjXPRjBKUMzjuPKV0
+X-Google-Smtp-Source: AGHT+IHfNrECnT4m3BYbV3Axx7kNpuLJW72y34V5NO2563h7Tp0rnefPTP0jQMid5Kvoeys/xjIzJg==
+X-Received: by 2002:a17:902:db10:b0:215:65c2:f3f2 with SMTP id d9443c01a7336-21565c2f650mr10765265ad.6.1732955078727;
+        Sat, 30 Nov 2024 00:24:38 -0800 (PST)
 Received: from thinkpad ([120.60.57.102])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254176121asm4686980b3a.39.2024.11.30.00.23.08
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21548e144b0sm20218995ad.68.2024.11.30.00.24.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2024 00:23:14 -0800 (PST)
-Date: Sat, 30 Nov 2024 13:53:05 +0530
+        Sat, 30 Nov 2024 00:24:38 -0800 (PST)
+Date: Sat, 30 Nov 2024 13:54:29 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>, stable@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] PCI: dwc: ep: iATU registers must be written
- after the BAR_MASK
-Message-ID: <20241130082305.camrgbzloeev4pei@thinkpad>
+	Jon Mason <jdmason@kudzu.us>, Frank Li <Frank.Li@nxp.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 2/6] PCI: dwc: ep: Add missing checks when dynamically
+ changing a BAR
+Message-ID: <20241130082429.r7vm3dpzamzrbj5r@thinkpad>
 References: <20241127103016.3481128-8-cassel@kernel.org>
- <20241127103016.3481128-9-cassel@kernel.org>
+ <20241127103016.3481128-10-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,30 +95,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241127103016.3481128-9-cassel@kernel.org>
+In-Reply-To: <20241127103016.3481128-10-cassel@kernel.org>
 
-On Wed, Nov 27, 2024 at 11:30:17AM +0100, Niklas Cassel wrote:
-> The DWC Databook description for the LWR_TARGET_RW and LWR_TARGET_HW fields
-> in the IATU_LWR_TARGET_ADDR_OFF_INBOUND_i registers state that:
-> "Field size depends on log2(BAR_MASK+1) in BAR match mode."
+On Wed, Nov 27, 2024 at 11:30:18AM +0100, Niklas Cassel wrote:
+> In commit 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update
+> inbound map address") set_bar() was modified to support dynamically
+> changing the physical address of a BAR.
 > 
-> I.e. only the upper bits are writable, and the number of writable bits is
-> dependent on the configured BAR_MASK.
+> This means that set_bar() can be called twice, without ever calling
+> clear_bar(), as calling clear_bar() would clear the BAR's PCI address
+> assigned by the host).
 > 
-> If we do not write the BAR_MASK before writing the iATU registers, we are
-> relying the reset value of the BAR_MASK being larger than the requested
-> size of the first set_bar() call. The reset value of the BAR_MASK is SoC
-> dependent.
+> This can only be done if the new BAR configuration doesn't fundamentally
+> differ from the existing BAR configuration. Add these missing checks.
 > 
-> Thus, if the first set_bar() call requests a size that is larger than the
-> reset value of the BAR_MASK, the iATU will try to write to read-only bits,
-> which will cause the iATU to end up redirecting to a physical address that
-> is different from the address that was intended.
+> While at it, add comments which clarifies the support for dynamically
+> changing the physical address of a BAR. (Which was also missing.)
 > 
-> Thus, we should always write the iATU registers after writing the BAR_MASK.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: f8aed6ec624f ("PCI: dwc: designware: Add EP mode support")
+> Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
@@ -127,57 +120,42 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 28 ++++++++++---------
->  1 file changed, 15 insertions(+), 13 deletions(-)
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 22 ++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index f3ac7d46a855..bad588ef69a4 100644
+> index bad588ef69a4..01c739aaf61a 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
 > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -222,19 +222,10 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> @@ -222,8 +222,28 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
 >  	if ((flags & PCI_BASE_ADDRESS_MEM_TYPE_64) && (bar & 1))
 >  		return -EINVAL;
 >  
-> -	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> -
-> -	if (!(flags & PCI_BASE_ADDRESS_SPACE))
-> -		type = PCIE_ATU_TYPE_MEM;
-> -	else
-> -		type = PCIE_ATU_TYPE_IO;
-> -
-> -	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
-> -	if (ret)
-> -		return ret;
-> -
->  	if (ep->epf_bar[bar])
-> -		return 0;
-> +		goto config_atu;
+> -	if (ep->epf_bar[bar])
+> +	/*
+> +	 * Certain EPF drivers dynamically change the physical address of a BAR
+> +	 * (i.e. they call set_bar() twice, without ever calling clear_bar(), as
+> +	 * calling clear_bar() would clear the BAR's PCI address assigned by the
+> +	 * host).
+> +	 */
+> +	if (ep->epf_bar[bar]) {
+> +		/*
+> +		 * We can only dynamically change a BAR if the new configuration
+> +		 * doesn't fundamentally differ from the existing configuration.
+> +		 */
+> +		if (ep->epf_bar[bar]->barno != bar ||
+> +		    ep->epf_bar[bar]->size != size ||
+> +		    ep->epf_bar[bar]->flags != flags)
+> +			return -EINVAL;
 > +
-> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> +		/*
+> +		 * When dynamically changing a BAR, skip writing the BAR reg, as
+> +		 * that would clear the BAR's PCI address assigned by the host.
+> +		 */
+>  		goto config_atu;
+> +	}
 >  
->  	dw_pcie_dbi_ro_wr_en(pci);
->  
-> @@ -246,9 +237,20 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0);
->  	}
->  
-> -	ep->epf_bar[bar] = epf_bar;
->  	dw_pcie_dbi_ro_wr_dis(pci);
->  
-> +config_atu:
-> +	if (!(flags & PCI_BASE_ADDRESS_SPACE))
-> +		type = PCIE_ATU_TYPE_MEM;
-> +	else
-> +		type = PCIE_ATU_TYPE_IO;
-> +
-> +	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ep->epf_bar[bar] = epf_bar;
-> +
->  	return 0;
->  }
+>  	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
 >  
 > -- 
 > 2.47.0
