@@ -1,88 +1,88 @@
-Return-Path: <linux-pci+bounces-17487-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17488-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F53E9DEF4A
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 09:13:00 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D0329DEF4C
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 09:21:41 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBDB9B21BC8
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 08:12:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CCDD163779
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 08:21:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32923146D57;
-	Sat, 30 Nov 2024 08:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D53CF139D05;
+	Sat, 30 Nov 2024 08:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S3r45eFK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XsKPVIzh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676051C6A3
-	for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 08:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135D02FC52
+	for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 08:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732954374; cv=none; b=P1sgW4qqOftNKRr6yZqDPqaKVeRYLDcWpiIT3kuGqaiPT9iEzv8zytre13abwy6FIFUhrfX8dF5XALh2ur7xO3J0EVhH/oi9WzVzq7Nzja0Tf6kLBnWAwn5HQUpYEz3YNkButyBKzZv308i+f9hB78dkdATvB7hahx/tu8Jvzg8=
+	t=1732954897; cv=none; b=uPYmRaCrYaOX/0PbNAHmVpjUDI5L1NlOTeUvZjj79zanXWM0qJm2VbCD/u30P9fmuP4kMKCwOJ1BmT8Nk2FcKAKrQGrN/A8XtF0XKZnRLojU/+9RrWj1iveV8mhM7N/b9Hq5pdgXbgSEBJromx8r+WUicKhUO08HF7n7vJk5tSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732954374; c=relaxed/simple;
-	bh=OIHtBXdkWOwpiubtc3zpg5BHNakjxwv19TyLmcoFvx4=;
+	s=arc-20240116; t=1732954897; c=relaxed/simple;
+	bh=PRzunPHP4ujOrWmvocspceAeTjVvFMdFLuh9PhexXfg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMdj6JJ+33PehoUCS+8wa8yvYdxbWRBP39Xap3jn+92ihLXYDC4vi9YrR3XtO+F5FLZ6Mxh1ZoXeUtjuil+oI5yhlBAb0cZ20vQLQaHlq6xaXeT/NUpvg2thqDXoGYAJnUhdwt5Kh/dpmAqG9d0Jmjd3ahEoP62/tbh4Ca7orzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S3r45eFK; arc=none smtp.client-ip=209.85.214.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfaJpIQ08xB9s5fJY+21dvSXrU9uG300KJDzU5S7G56NP7bFwSgkdrENj6I/k+rh5m4UB9gfYI0e9VFPe213xtFT7VcbwqC2HFxj59A2LcAbmD2wvUDmkHSItfu7LyhG/ioFZTG1IrZhrIa0xxrMPyNgknMV0qn54IHzjAMBuKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XsKPVIzh; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-214f6ed9f17so23009365ad.1
-        for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 00:12:52 -0800 (PST)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-724d8422f37so2171817b3a.2
+        for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 00:21:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732954372; x=1733559172; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1732954895; x=1733559695; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=jMPVbGivyvevI+VJv0tQgtPO+LvKltTbKLDJeedtsaE=;
-        b=S3r45eFKMGu+ETZU17rJbtYeYeAGzYZqLFIEe8LyNO3+Y1tVy3BYIXhcooUPWwtQzN
-         7xaHWGdViq9DPZF7awfeqjv/6e5tGwHRcKhF6tdySMxLsJEA618RfDef5yx8ePV3b0HS
-         jkfb9kgaZyJ2s6aE4o6EbL41EibCOdPT2oqQYV1/6Ihy+EwWc4R6RuYMaNfwApxVQJKk
-         ABJqbCHXdFAQtheDZOW1l2OvclHVR5rBybyXQXRT7gcGBUYB9p4+qexVB5rrNacRybhZ
-         rhmqiY0UNQBN4QN50kkkzKmf5PYXvhgEgyCU60HY4CtZLKhDklGdreK1E5CCH2XOoiV3
-         52wQ==
+        bh=DaJm0nKnnksG9Jmzi9R8rKjQhCOefaYPRWz4WJaVqHI=;
+        b=XsKPVIzhaWFVp30eXEACcELcQNf4bKoA4qIo3X3ONcTNB2HqO5KRsEn+Tepi3eCGZR
+         XS3MsvqEWtOZOsIOYNTR2u1xdgGh9ovL3mQeu3okstodfhRz/K9jW/Okm/wMpA2ayuS6
+         +6pTIK6GpYFwrI+OFufzVlVI9/uBwISBbo8TTOEKq5AxcM+DlZhwDZrXKWgKZp4sW2zz
+         ITirDNz8NmtlJvgA2nr0fE7juoxZvwjFSML/aRt+esBoC5GtATiHPLKHITRkl9YozcRB
+         4H46ulFAsZzHgcgqXzb2f3vRD2FbzGAJ8ql32RlFF70964SYOb7tKhOjv7T337YzOMmV
+         tgdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732954372; x=1733559172;
+        d=1e100.net; s=20230601; t=1732954895; x=1733559695;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jMPVbGivyvevI+VJv0tQgtPO+LvKltTbKLDJeedtsaE=;
-        b=HmGoATgglodEsFFLMsuEaD2CQXfg2FKiIYQTtWCZ4Qos6skZsqT0EtB5nJ+37HG9iZ
-         2K1WgDvqj/pf4tQC1IsgEyPWOwJ1PxI1gAAxE0biKWcEgRLCbkxmYCP2oT2Bk0kszMqQ
-         9npmI8bDCyxhZ294oDuyMJqqhhr+nWE/kHIotDv1nT/rPHI+iEB3Uj1JANSP/qwO1OQF
-         EEKsA6WH+UMEvu1tpl7KkvFu08Fus3+xfR2iLU7LKlgY/JhPX/3Au2vT3ncIsa454x0Z
-         AjCiw32aOtb85q0CJNjXKdzfvygC3DD+oLSb7YAoHu6ZdXkqIuWjNzSMJxueHDH01wZG
-         igaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXN+rQ8d1gfY8gc625bERDpVN3PvrXutF1WV3NvxZXiGYypy+szLlXzhHOqiq5En4BwMSIMLB0c9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNYolpGnVJzGl0MMzDM31U4aQvockRC0VRaQ08QsOTpYlNL6Wn
-	k4KZoFc3AMfuiMe/9mZaSV5v6p9N7xil8aPU81WcmDg1Z1w9DmteIA9AGLQuHg==
-X-Gm-Gg: ASbGncuACvkwE3R4kGilyaAUSQYM3VAHJKbaYgHlSqWcpojMCrPbC0j+h2bT0dYamfq
-	1TMF0PZB5SfzBSmqiHSS0T828ZhUCBWJxPwAXekwQHCMcBd2FuMLouFCVVINnEH4WWIlyFDTDSS
-	Hv/1LKcTlA+SYFQYVweuoqmRUCeJ/OZjpU66hjInNMi/5i165ZL5EJw9jCa9kVHglF2ApgvdF1y
-	MJ05CLLMEtkPRQlFVSHq44sBRysIMWgdaW/u2zg1ljdUt+i7pPTPCPyOMmS
-X-Google-Smtp-Source: AGHT+IFC+o//XMY4b4nImA6Kytlzd4MoMtCF2tOENOpb/fh9X8LwZE4msIKMQFHOK8nMw3EPSaJFig==
-X-Received: by 2002:a17:90b:35c1:b0:2ea:3f3f:a3f0 with SMTP id 98e67ed59e1d1-2ee08eb2b1amr17330359a91.13.1732954371735;
-        Sat, 30 Nov 2024 00:12:51 -0800 (PST)
+        bh=DaJm0nKnnksG9Jmzi9R8rKjQhCOefaYPRWz4WJaVqHI=;
+        b=xFGIeIZo5+UiPgzjz7xs/JZpHE8u73Hlbd1SotKJYZ4DEndcYjv0WAo4VWYkjymIqW
+         ymNkdNLpnE2dneGepmMuO9YCzWccSxsvXHkLMzE37N84TwqlcPzL8lPxUWv+2TRxjphS
+         5XDJSmtgzGVqv/98Bwr7svUisZ31Yc8jAYENFOlWpfU5U4J1Kf9sAuyJaJrX6DVLdjQ4
+         C1xcDSIbIJVC92+bxAIGbSBCYpun8Z1LYnLem1mGivJENH8EGhRpkwmRFy/aDI5u5Pua
+         wEAtlmIkC08pT73fIGbC/dvqk64L830VDcr5EattCozMyzyGwfBeTgqFzChaTsVph9H/
+         so1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXwcLoOuZ6H3ORsLJ/74BVaZ7WJG4aRoOfZluYlM0u8AdCbQAsPYcvRMon7tXLrOQjf0gpitOv4eKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWN3IDkWmF9aGUBqA5MFOpBptxpaxPrdqSlv/80aa5yPHsACRr
+	VAYgdrRJ+Xb6rXqg1CJCO7h9kKzVxlkz/Xo7SMPeGYGhF2XRMcxD0ckkStmcYg==
+X-Gm-Gg: ASbGncsKnTDx43QpNpkIgldFqUXTaZQY3Ao0fNS37F272lZrIDtVcCbyhioVOWvLvWe
+	rnr0SFFlVgnzFiTzpqLFfD3d5HYgQBkdoOYE523s46MOfcV5egT6ndEXfgKZrXYcBUnmiuwtKLp
+	Y4Y4lfKfDr/p5SVTiUMzhqW4s9MjUAomynqq+y/ST7b2ghy+z3nkYNwKkiJ+n2BAuEk3nV7bP0+
+	PevWXMfHnD2v436Pr6Nfaum8Kxf43sj3GEdY2hm1TYKE1AsNYcUqbBd+3q/
+X-Google-Smtp-Source: AGHT+IHmFd1SG7Pf+M0+gG6hzoS6BYfXZZydcMDHjJ3ipvbUqu8AokzKf3/LIw6c/yeuLwniYkKMwg==
+X-Received: by 2002:a05:6a00:148e:b0:724:dba1:61ef with SMTP id d2e1a72fcca58-7253016e2ccmr20092948b3a.24.1732954895336;
+        Sat, 30 Nov 2024 00:21:35 -0800 (PST)
 Received: from thinkpad ([120.60.57.102])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ee88d986b2sm530525a91.38.2024.11.30.00.12.47
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72541849d6csm4851763b3a.182.2024.11.30.00.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2024 00:12:51 -0800 (PST)
-Date: Sat, 30 Nov 2024 13:42:45 +0530
+        Sat, 30 Nov 2024 00:21:34 -0800 (PST)
+Date: Sat, 30 Nov 2024 13:51:19 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
 	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 1/2] PCI: endpoint: pci-epf-test: Add support for
+Subject: Re: [PATCH v2 2/2] misc: pci_endpoint_test: Add support for
  capabilities
-Message-ID: <20241130081245.2gjrw26d5cbbsde5@thinkpad>
+Message-ID: <20241130082119.44zpza3ehlwf3zct@thinkpad>
 References: <20241121152318.2888179-4-cassel@kernel.org>
- <20241121152318.2888179-5-cassel@kernel.org>
+ <20241121152318.2888179-6-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,9 +92,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241121152318.2888179-5-cassel@kernel.org>
+In-Reply-To: <20241121152318.2888179-6-cassel@kernel.org>
 
-On Thu, Nov 21, 2024 at 04:23:20PM +0100, Niklas Cassel wrote:
+On Thu, Nov 21, 2024 at 04:23:21PM +0100, Niklas Cassel wrote:
 > The test BAR is on the EP side is allocated using pci_epf_alloc_space(),
 > which allocates the backing memory using dma_alloc_coherent(), which will
 > return zeroed memory regardless of __GFP_ZERO was set or not.
@@ -109,79 +109,61 @@ On Thu, Nov 21, 2024 at 04:23:20PM +0100, Niklas Cassel wrote:
 > 
 > For now, we only add the CAP_UNALIGNED_ACCESS capability.
 > 
-> Set CAP_UNALIGNED_ACCESS if the EPC driver can handle any address (because
-> it implements the .align_addr callback).
+> If CAP_UNALIGNED_ACCESS is set, that means that the EP side supports
+> reading/writing to an address without any alignment requirements.
+> 
+> Thus, if CAP_UNALIGNED_ACCESS is set, make sure that the host side does
+> not add any extra padding to the buffers that we allocate (which was only
+> done in order to get the buffers to satisfy certain alignment requirements
+> by the endpoint controller).
 > 
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Just a small nit below.
+One suggestion below.
 
 > ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>  drivers/misc/pci_endpoint_test.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index ef6677f34116..7351289ecddd 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -44,6 +44,8 @@
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 3aaaf47fa4ee..caae815ab75a 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -69,6 +69,9 @@
+>  #define PCI_ENDPOINT_TEST_FLAGS			0x2c
+>  #define FLAG_USE_DMA				BIT(0)
 >  
->  #define TIMER_RESOLUTION		1
->  
-> +#define CAP_UNALIGNED_ACCESS		BIT(0)
+> +#define PCI_ENDPOINT_TEST_CAPS			0x30
+> +#define CAP_UNALIGNED_ACCESS			BIT(0)
 > +
->  static struct workqueue_struct *kpcitest_workqueue;
+>  #define PCI_DEVICE_ID_TI_AM654			0xb00c
+>  #define PCI_DEVICE_ID_TI_J7200			0xb00f
+>  #define PCI_DEVICE_ID_TI_AM64			0xb010
+> @@ -805,6 +808,22 @@ static const struct file_operations pci_endpoint_test_fops = {
+>  	.unlocked_ioctl = pci_endpoint_test_ioctl,
+>  };
 >  
->  struct pci_epf_test {
-> @@ -74,6 +76,7 @@ struct pci_epf_test_reg {
->  	u32	irq_type;
->  	u32	irq_number;
->  	u32	flags;
-> +	u32	caps;
+> +static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
+> +{
+> +	struct pci_dev *pdev = test->pdev;
+> +	struct device *dev = &pdev->dev;
+> +	u32 caps;
+> +	bool ep_can_do_unaligned_access;
+> +
+> +	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
+> +
+> +	ep_can_do_unaligned_access = caps & CAP_UNALIGNED_ACCESS;
+> +	dev_dbg(dev, "CAP_UNALIGNED_ACCESS: %d\n", ep_can_do_unaligned_access);
 
-Can we rename the 'magic' register? It is not used since the beginning and I
-don't know if we will ever have a usecase for it.
+IDK if the users really need to know about this flag, nor it will assist in any
+debugging. Otherwise, I'd suggest to drop this debug print and just do:
+
+	if (pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS))
+		test->alignment = 0;
 
 - Mani
-
->  } __packed;
->  
->  static struct pci_epf_header test_header = {
-> @@ -739,6 +742,20 @@ static void pci_epf_test_clear_bar(struct pci_epf *epf)
->  	}
->  }
->  
-> +static void pci_epf_test_set_capabilities(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> +	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	struct pci_epc *epc = epf->epc;
-> +	u32 caps = 0;
-> +
-> +	if (epc->ops->align_addr)
-> +		caps |= CAP_UNALIGNED_ACCESS;
-> +
-> +	reg->caps = cpu_to_le32(caps);
-> +}
-> +
->  static int pci_epf_test_epc_init(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -763,6 +780,8 @@ static int pci_epf_test_epc_init(struct pci_epf *epf)
->  		}
->  	}
->  
-> +	pci_epf_test_set_capabilities(epf);
-> +
->  	ret = pci_epf_test_set_bar(epf);
->  	if (ret)
->  		return ret;
-> -- 
-> 2.47.0
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
