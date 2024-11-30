@@ -1,121 +1,92 @@
-Return-Path: <linux-pci+bounces-17491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20B899DEFC7
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 11:01:31 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99D739DEFED
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 11:28:22 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DB071636E1
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 10:28:19 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7AD3155C9A;
+	Sat, 30 Nov 2024 10:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkzg3Ng8"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D59C3281765
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2024 10:01:29 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F6915532A;
-	Sat, 30 Nov 2024 10:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xJDwtJWJ"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F4015530F
-	for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 10:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD5512B93;
+	Sat, 30 Nov 2024 10:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732960880; cv=none; b=LWxrmnfaruk6RmtyIk3W5CaoVtGBOsZJkvzsJhSwErJwHheUpfqRBLeumEqnQ+Z3yWu/TvrQMHA1ZpG2NBxDDmLHrTkpeJ2mcRfThmPcQ7R12V2vp+/fMQD9RpUSv84MfWXSES03WCSTLQT81B3v4YK4kNusjm+btHnoY+qMF+U=
+	t=1732962491; cv=none; b=bVG7tfFALRYC5vSURsIJ7eZsenFRhUu2UkVrBmQYVbCkdycnPYhoNwaFv2QXza9mmjauFEa6ZZNVfIHTBRi+3u+uuOaaJ5FydmzySSuMHpmYDosog/epnfeu/f4YG/86/ZGqoQobkGnYDUwa84yh3WQR4dYRUJgWVXrfg5wy31c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732960880; c=relaxed/simple;
-	bh=pwCVrSo2d63QozkbYlTrgoal5OaXwx+yCaGWKkdfnss=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=TGR4pDt6lyNukl1prsVwgZf/0C58yvRXabtrlx9xpnR+5GWEFCdwn7D12W7shSQeeihL2uxLt/YqddTWafHuXQZNxK0YkQ12A4r9kSPSzgNvTO7IqEb9D4JSV6ARjcp4m+V0q2AbQ1Tmr/hFGuixkIUxWm9f0NdnHXvYHq8B7fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xJDwtJWJ; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5ceb03aaddeso3154420a12.2
-        for <linux-pci@vger.kernel.org>; Sat, 30 Nov 2024 02:01:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732960877; x=1733565677; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aK0dV1gfejvgX5AVRAv0AO9jA2ssYUcI54wSBwP2RLM=;
-        b=xJDwtJWJ5nVVYoF8BeAwKwPx19hTzgGsYMyVveS/HUx/+9EhIYH5A/O1785udRsVQe
-         AMUgPTTC8wFIg11nGNEPm29CLucQOHlZWF6CaserezMgX9bMvWBoUoNCcldIi2m3Sxva
-         s0Vlif+LVIFuiamCOKtOPO9u37LmTIiu8HPte1A86ZgQPtVPjyuHvBoTZck3cOYfh5As
-         PowTScUTXytEOhD9GNC5CXfPs9AyhTbFsvMk1jbHGg/deDV0MhhNEYpziiF09MSb6B7s
-         Mx823j+dqBIkBVwLJfwWlAAC210nBtQWZy1IewM3Z4sXY2vg9CsvPZ/spqHsV+rx+CXl
-         WkuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732960877; x=1733565677;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aK0dV1gfejvgX5AVRAv0AO9jA2ssYUcI54wSBwP2RLM=;
-        b=KQ1fv1yjVyPsloELygACa0pFuSjtt3GMWbOBGUR0qWnGHk+41y/3KUwv7ye5ft1Lat
-         WOwfsO0OfqAwju1PHFksE/Xig6pqLF1rylqHFr1VAKGHdDwzSzsx4nCaw8c5NLO3m/WG
-         ztx/Jc58h6aXLGVQfBytKFlg2EPxl8K04CKj1+5rGMi145cG4pQRD6Fu+J4wdCy83bc1
-         Q9nNrOlsg7nvhhdf31TEO9Vh6H3/OEmkcI5XHbtlyTed9kFBVzsg0KStOEOMU9vjUPqS
-         TG3dEM8carI3AEae77cGN4JoMK5CANL9WlU01xGNyVZ9ZsPgkHXBhwq78NncyvaCE9PT
-         MIVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsoLDSGOvYUPCq1FMhglw3F/UiHLqo5F75+yvdltlWnsKp8xI09zdVx8J6QyG03p08CVqaFdaABGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8sL9UBv0LtqGNVM38tQRZ2xTxJtLdmC8DXiHkK9W/Zdz/NMqD
-	LvtW6FI/7HUO9aeBLjfaUM99g/DzPoXmhrvJpl1Sy0CG2Q5tOyfFZ8jc//ldY/gi2hCdYLZyLjU
-	ByvUy7A==
-X-Gm-Gg: ASbGnctfd02FwcQSyhUDuVl7MpjmjXRi/eXkuuugHslsk+E5b6W9VrcnuUCUZjd2leF
-	RBwYPuxB/cQzE9gyavSxuRsWBwQsgAGX1D0ScSi5iKWUBzMUL5CrZ499hvjq191cV0cJzoJLmq8
-	/kYwgafpvINbwYQvgjSokkd6xzkawZZWxY86K9jw6U5lm+yMH1lvZHNcyzmUtjLAJElnnlT10S1
-	ajjWCwDwwxCix4nW8cvGHcWdUdYl41bzMBoQDI7VPW0FEl5GDi5IaBluupYYK1C9f8Jwomk
-X-Google-Smtp-Source: AGHT+IEtv6gd869K+dRtqKZE6OGZWNVbaOzagbrsUDx5xx6VOeUmeXvzJOk8eFEsMgnWDlwVcluldw==
-X-Received: by 2002:a05:6402:2116:b0:5cf:e3cf:38af with SMTP id 4fb4d7f45d1cf-5d080b8d46fmr14459310a12.2.1732960876730;
-        Sat, 30 Nov 2024 02:01:16 -0800 (PST)
-Received: from localhost (h1109.n1.ips.mtn.co.ug. [41.210.145.9])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d097d9f5fdsm2670060a12.15.2024.11.30.02.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2024 02:01:16 -0800 (PST)
-Date: Sat, 30 Nov 2024 13:01:12 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] PCI: rockchip-ep: Fix error code in
- rockchip_pcie_ep_init_ob_mem()
-Message-ID: <8b0fefdf-0e5b-42bb-b1ee-ccdddd13856d@stanley.mountain>
+	s=arc-20240116; t=1732962491; c=relaxed/simple;
+	bh=H0noXI74C/Zki/cAOUy3v09yRzJnW9gLLKsDYh9ILj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VLRDghHp173EoweLDDMIkKmV0v6foZeoFiyAhqnQ8AcUlJHRr25SuBxC35efjUUGdUTCf2sKp5x0iS9X2n8HXySyzxj91mvWOawd/tdU1QL5mZU4wOJgEvX77bsrvyHm+rDjiK17MhpkD3MNx4XgtfVuoXAyp5W2KOAHEQ1Sr0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkzg3Ng8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCB4C4CECC;
+	Sat, 30 Nov 2024 10:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732962491;
+	bh=H0noXI74C/Zki/cAOUy3v09yRzJnW9gLLKsDYh9ILj0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lkzg3Ng8Nd3eRCvOR5+7VFIy11KPI7flKiR1AsNRfmZnUC/tuV7JKtiFhwetJbd9S
+	 oDjTgoxJaCaSuieHu+qpH2hzSkgS5BtmHYbHFQbdKSpbBNlSP6JRvmE+2dXmS6XLMR
+	 LEV7+x3VReDOmaNFj4CsWoDEkT6yIzhyeYOYoDa9nLM5YIu7br8Cwc4MB9RRQIRIth
+	 no0I+bfsXLu/F0V+Ed0EDXk1WHXb0PrPvPpYpCZg5wRAfSoyBjT6XXjL28yE7mXCnm
+	 hlTv1YOMDPxBEKA1uY56amW2K0UXZKSJk9pLnzsGqlH37gZKxhQEe2Mx7ndm7Vje3L
+	 0MKI+2noO14UQ==
+Message-ID: <db90b752-307c-4baa-9aea-c3fbb07e5cb3@kernel.org>
+Date: Sat, 30 Nov 2024 19:28:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] PCI: rockchip-ep: Fix error code in
+ rockchip_pcie_ep_init_ob_mem()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <8b0fefdf-0e5b-42bb-b1ee-ccdddd13856d@stanley.mountain>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <8b0fefdf-0e5b-42bb-b1ee-ccdddd13856d@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Return -ENOMEM if pci_epc_mem_alloc_addr() fails.  Don't return success.
+On 11/30/24 19:01, Dan Carpenter wrote:
+> Return -ENOMEM if pci_epc_mem_alloc_addr() fails.  Don't return success.
+> 
+> Fixes: c35a85126116 ("PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Fixes: c35a85126116 ("PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pci/controller/pcie-rockchip-ep.c | 1 +
- 1 file changed, 1 insertion(+)
+Oops. My bad :)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 1064b7b06cef..34162ca14093 100644
---- a/drivers/pci/controller/pcie-rockchip-ep.c
-+++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -784,6 +784,7 @@ static int rockchip_pcie_ep_init_ob_mem(struct rockchip_pcie_ep *ep)
- 						  SZ_1M);
- 	if (!ep->irq_cpu_addr) {
- 		dev_err(dev, "failed to reserve memory space for MSI\n");
-+		err = -ENOMEM;
- 		goto err_epc_mem_exit;
- 	}
- 
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+
+Note that this patch is in Linus tree now so the Fixes tag should be:
+
+Fixes: 945648019466 ("PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory
+allocations")
+
+Thanks !
+
 -- 
-2.45.2
-
+Damien Le Moal
+Western Digital Research
 
