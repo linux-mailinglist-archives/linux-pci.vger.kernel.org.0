@@ -1,250 +1,294 @@
-Return-Path: <linux-pci+bounces-17510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17511-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A41A09DFDD8
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 10:55:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 410FD9E010E
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 12:58:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6150E28061C
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 09:55:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11497B30470
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 11:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAA1E1FBE95;
-	Mon,  2 Dec 2024 09:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B49320010B;
+	Mon,  2 Dec 2024 11:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1oa8YSU"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TXu+Y0bo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6481FBC9B
-	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 09:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D835F1FDE2B
+	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 11:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733133324; cv=none; b=pliXXBZzB/uDgd10j82/KHWg4MGA3T2GazCIm7ffjOrfmvHAKDRHzXYuxu8pAX53H8T/Faw3zU4uFRFJeQTl6SxemeoHrVAhAo0hExmzIEQiG1dw8wY19IdustvGZnTZLQ/Q+BSmfGjGq8Eplc5/Nq1lbwUyKhpRElNEmv0eXHE=
+	t=1733138347; cv=none; b=rnHLGAnGLB/d7KywEd7kF8i4AdLrB2rEaDKExmwdf0dG7oeUUmo2etLTiwImIelWKACP1tYHOqe7UsBCfeH3E+2TjucwG3U1zkc3ceFZmmLrW+jt/KrXL3dUFNKqCrxVq2Js0uhbDLMloY/ntzWmSK+C66mxvjdG4ZLlqIYhVaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733133324; c=relaxed/simple;
-	bh=giKLGGK03twsti8r6koMTfcd/cXGRA56MS0yGykpzlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8JXjJuqdpsZVNcl2XyYDE35TJC+atfsVxCGfmXtBKa6bCO1Hh2kpLH5LVUoA21fVfO4paGZvRmgB0Y+DGiR4iV9TXVchcuyMlnTXc9woZCKKQkqSRqBTAaP6+uo4pz2AtiknDaIQNeOkd6mItzn/JL0lAjIKmvOnX5JVJLa2fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1oa8YSU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733133321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=09MvrDFOXfmr7yZyk+mt+cZonVT5Z8HMfNE6DtwKO3c=;
-	b=N1oa8YSUu+L64Qv5Asym44Y/0LcmySll4INfx6ooxSVGd0JKKUSr0pMnBpnjjrbyMMQ6GR
-	YW3oLIrIFeda5LsPcTyJiYYwp2Pq+GxERDlFtVI4S9ZllDlQhbF0jExzJwe4SwUZbdsUZG
-	iRRqlAxBkqbVeBbC5e5qUyVjWmplnsU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-134-WLZ7aDpzN7SzFs0WEL9A6Q-1; Mon, 02 Dec 2024 04:55:20 -0500
-X-MC-Unique: WLZ7aDpzN7SzFs0WEL9A6Q-1
-X-Mimecast-MFC-AGG-ID: WLZ7aDpzN7SzFs0WEL9A6Q
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-434a04437cdso29875055e9.2
-        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 01:55:20 -0800 (PST)
+	s=arc-20240116; t=1733138347; c=relaxed/simple;
+	bh=uCQAgYJ6+Mc+JfRJ9hb9AD/dXQ/2I9Ya9X92PLE+rv4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=pPa2Qfpc9LRKGDEmcFLWPBJBtGcdmuL7y8hY/kH8YUgghwzAfZo2rRzC/yAk7KkeI63Hw57/HRQ9QlFWI6N6BIBAfv6O+YfoIHCBRCLlwbBK12/U4AB7p0AjrQJR3twHvK0Z1mMmpmlfXGaCbBikZCI6CsePDwSTq5HMMOBLT9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TXu+Y0bo; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-a9f1c590ecdso697758866b.1
+        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 03:19:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1733138343; x=1733743143; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjHlwSiznG7ZMzHVL1AbaIvEmzPENJ2D8a0GdBICd5U=;
+        b=TXu+Y0bolKfe6SMv8VBE4+Tr1REpZgemdQnddEfgtX8TNnsmT8zpxnbF6849gOTDUQ
+         dZwlHbiRhZc+Dt/ns+DUamxgEXNNycl2AERaEszXt+R2eOL93ubajPS2IEUYE59GB1/w
+         AFDEye1nJfIHmuymBl9Jzjsp0p6QPe5Ani1IUbq2GF8GEb8uxrbD7hFsaNw62zRXPPkU
+         EWD/rMQ931QAUM9Oe3ezbVIDC8MPtzo+RqUem9Po1mkLQflVFWbX+KBBpJ6M3mnkZBK2
+         HhM4bfJaZARxdoNrtcgfy+i7LlwRHbIz4bhMz/pv9Zcla4Kv5A69VCtWqfj0g44yTqaV
+         hSZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733133319; x=1733738119;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=09MvrDFOXfmr7yZyk+mt+cZonVT5Z8HMfNE6DtwKO3c=;
-        b=BfKvAd+KFsqojN04Pb1XY8ZtTfjdJdfpqW6nzZM97tRpVz1zapSbvxQCbdPobHYiQF
-         ehcAjRd6pleT8MKDPBFN94AuYd1W6SBv8zUHMA2+ddbIyfDKB4T9loo55t6cOUeVsPCK
-         dqKnoVkvzowEsO1zAj9/PRA+1Dk1mIokn4R0DQ1XwLj2F+5MvGeEL41kiTDqlcB5YqH/
-         ioYLOIaFKcMUnHlhJVMlkOpbdcrwBHo/c1SCNQlEVoAhYZPCP2WJYPk6JU1115lNZ12s
-         873nxEbQftJT44VQovuk6aVs1XtnhwV+iBOxCgar1qKLRpVza2na+zaJDSepRIQ+YPf5
-         Vorg==
-X-Forwarded-Encrypted: i=1; AJvYcCUO9RSSb97VKQpCOOUWpZk+zCx+X73J5madNp8XZxbDaSelDrLPaSLinRRei6Lx2nkX8DgpXtPsltY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS1KdF6HLui1fpBiHlFX8+3y7+7rRpb8thgbE0ebHaHasP9pUj
-	LZjNA765fbzLKi8KEMZTyzGOhIc2MW0Aorbp879bps8QAgjn9UEyGtBSZpTsqql1wMZll2UfwRe
-	2UMu1M9m1ache7YOvdahjtmN0Csww+00Wy3dWFw7vsAPJJE+N7BtL5jIpEA==
-X-Gm-Gg: ASbGncviwRBYmcuOtdpwWs1KNgBNv5c34qZlzP+O7ei3fJF+H19/v2f+Plv1ohVjqOZ
-	8nVk6OcAPsan/qPMwXJQ9dwDBbK6S+unJjrizxIn6GlzUiZDCB+Wisu5qYyEz7Xpo5aq0FxRmpH
-	1ymaTt30WPPz6ea0W8TTCMsLyZNvT4Pkba+qvkae3gEp3PqIqg9elwCsYs0x3/cEWVP5aR+emgp
-	cmg5ia45dM3QGdp/zLADd5wRTtFnHJucNSXL9ZuuGYnE5EYwGRkXZZ1c1IvzwP6ySy1BGwZMkOe
-	Ci0=
-X-Received: by 2002:a05:600c:1c09:b0:431:44fe:fd9f with SMTP id 5b1f17b1804b1-434a9de8cc2mr172537515e9.23.1733133319113;
-        Mon, 02 Dec 2024 01:55:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFdrZW7CnHqIPba+h3rdUQEPKdX49BX6A51BtPfyAqpRIpHzFbEJP1x+SVenKFW+la85OBsJA==
-X-Received: by 2002:a05:600c:1c09:b0:431:44fe:fd9f with SMTP id 5b1f17b1804b1-434a9de8cc2mr172537265e9.23.1733133318732;
-        Mon, 02 Dec 2024 01:55:18 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.75.19])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434b0dbf95fsm144865155e9.15.2024.12.02.01.55.17
+        d=1e100.net; s=20230601; t=1733138343; x=1733743143;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjHlwSiznG7ZMzHVL1AbaIvEmzPENJ2D8a0GdBICd5U=;
+        b=atJCNUpD+/EEwCJQu7lY760wCihNBC7NTMMgpoWCVVHPgnvlT9fOYQiZYQciDRh1Vc
+         IAbga2Po1plIrd1kDDNgP797AwIzT0y1SS3r/BbdonpDdQcm5JjIipFkVogwiLwxxZGO
+         /iJdDymqmnDadKWCWk8agNj7oOXNrsv/lm2K4PIfShyc45d7cQCvgAFicea04jcRCGaB
+         J6xJi2f8eoXMSnP/Qot4ecpS7YRkiFe5PBD5ty6sdaP94N4G6UWJGgt+kBsGArrR7Jr0
+         Bj3tcmeLDzKndZeSt2D+739skbWEai3uMENXVqSgJE2C30mh8VIRX7TI/ZrfNT+zdFZ2
+         E6fg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6fzkWY8/BmRsPHhF6b1o7NVt04dA8+HRBb6CUMRtedqnRh0/xYzVrmTcXZT50L1UOh8/Lk1SScl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpYYCTH6VaX7DB7/M3CYk2x1qmtn9C43yQQDIcv3fggdX9J3sp
+	YFUntjmjQDvBkJLINXn0Wze4QToY0HmKRS7c7kLaCilV8sU5LATCnoIKIAv50jA=
+X-Gm-Gg: ASbGncsgYIfZv/JxoXaM03MNRmFBuMhxmCOw8zYLi32tumeSvHs9tFfiaWpp2tvR/PE
+	Zv8Q7WcLP7pGUo5qXLHqpGEMG9CD99jag7YZSDyT0YkTlVcW0AiPzV9/EO9b+Nauo+HK7OsFrMN
+	3yXWUjUBhS2ipQYhw18lvqa15nWdarxOIXs/Px66X2gtPXojBdKCDHHRzkzcHZzzXqb1QZEfynu
+	uQQ7/lSukm39m/KETm9SwHViM/3NCLQetZ1X4S1utfUmWa44s3OOnKPqFsURaGCWAlWR0mRFuSz
+	z3uV8PE57dAKssYXEMs/
+X-Google-Smtp-Source: AGHT+IEs4gB+Ysjlt8eU17nb3Ci2yczcmJ4H3W58u7P8uDa3tV/VvmLR86S0tSbUkR8W6jLjqNnUhQ==
+X-Received: by 2002:a17:906:32c3:b0:aa5:449e:1a1d with SMTP id a640c23a62f3a-aa580edd946mr1994683366b.2.1733138343233;
+        Mon, 02 Dec 2024 03:19:03 -0800 (PST)
+Received: from localhost (host-87-20-211-251.retail.telecomitalia.it. [87.20.211.251])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa5996dbee1sm496958166b.45.2024.12.02.03.19.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2024 01:55:17 -0800 (PST)
-Date: Mon, 2 Dec 2024 10:55:16 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-	Frauke =?iso-8859-1?Q?J=E4ger?= <frauke@linutronix.de>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
-Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
- Kernel VII edition (OSPM-summit 2025)
-Message-ID: <Z02EBA_0SwWPhTAi@jlelli-thinkpadt14gen4.remote.csb>
-References: <ZytlAkTiuZApK23Y@jlelli-thinkpadt14gen4.remote.csb>
+        Mon, 02 Dec 2024 03:19:02 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v5 00/10] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Mon,  2 Dec 2024 12:19:24 +0100
+Message-ID: <cover.1733136811.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZytlAkTiuZApK23Y@jlelli-thinkpadt14gen4.remote.csb>
 
-Hello Everybody,
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
 
-Quick reminder that deadline for topics submission is approaching
-(December 9, 2024 - next Monday).
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+Followup patches should add support for the several peripherals contained
+in RP1.
 
-Please use the form to submit your topic(s) or reply to me privately
-with topic's details.
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
 
-https://forms.gle/Vbvpxsh8pqBffx8b6
+The patches are ordered as follows:
 
-Don't wait until last minute or Santa will add you to the naughty list!
+-PATCHES 1 to 4: add binding schemas for clock, gpio and RP1 peripherals.
+ They are needed to support the other peripherals, e.g. the ethernet mac
+ depends on a clock generated by RP1 and the phy is reset though the
+ on-board gpio controller.
 
-Best,
-Juri
+-PATCH 5 and 6: add clock and gpio device drivers.
 
-On 06/11/24 13:45, Juri Lelli wrote:
-> Power Management and Scheduling in the Linux Kernel (OSPM-summit) VII edition
-> 
-> March 18-20, 2025
-> Alte Fabrik
-> Uhldingen-Mühlhofen, Germany
-> 
-> ---
-> 
-> .:: FOCUS
-> 
-> OSPM is moving to Germany!
-> 
-> The VII edition of the Power Management and Scheduling in the Linux
-> Kernel (OSPM) summit aims at fostering discussions on power management
-> and (real-time) scheduling techniques. Summit will be held in Uhldingen
-> (Germany) on March 18-20, 2025.
-> 
-> We welcome anybody interested in having discussions on the broad scope
-> of scheduler techniques for reducing energy consumption while meeting
-> performance and latency requirements, real-time systems, real-time and
-> non-real-time scheduling, tooling, debugging and tracing.
-> 
-> Feel free to take a look at what happened previous years:
-> 
->  I   edition - https://lwn.net/Articles/721573/
->  II  edition - https://lwn.net/Articles/754923/
->  III edition - https://lwn.net/Articles/793281/
->  IV  edition - https://lwn.net/Articles/820337/ (online)
->  V   edition - https://lwn.net/Articles/934142/
->                https://lwn.net/Articles/934459/
->                https://lwn.net/Articles/935180/
->  VI  edition - https://lwn.net/Articles/981371/
-> 
-> .:: FORMAT
-> 
-> The summit is organized to cover three days of discussions and talks.
-> 
-> The list of topics of interest includes (but it is not limited to):
-> 
->  * Power management techniques
->  * Scheduling techniques (real-time and non real-time)
->  * Energy consumption and CPU capacity aware scheduling
->  * Real-time virtualization
->  * Mobile/Server power management real-world use cases (successes and
->    failures)
->  * Power management and scheduling tooling (configuration, integration,
->    testing, etc.)
->  * Tracing
->  * Recap/lightning talks
-> 
-> Presentations (50 min) can cover recently developed technologies,
-> ongoing work and new ideas. Please understand that this workshop is not
-> intended for presenting sales and marketing pitches.
-> 
-> .:: SUBMIT A TOPIC/PRESENTATION
-> 
-> To submit a topic/presentation use the form available at
-> https://forms.gle/Vbvpxsh8pqBffx8b6.
-> 
-> Or, if you prefer, simply reply (only to me, please :) to this email
-> specifying:
-> 
-> - name/surname
-> - affiliation
-> - short bio
-> - email address
-> - title
-> - abstract
-> 
-> Deadline for submitting topics/presentations is December 9, 2024.
-> Notifications for accepted topics/presentations will be sent out
-> December 16, 2024.
-> 
-> .:: ATTENDING
-> 
-> Attending the OSPM-summit is free of charge, but registration to the
-> event is mandatory. The event can allow a maximum of 50 people (so, be
-> sure to register early!).
-> 
-> Registrations open on December 16, 2024.
-> To register fill in the registration form available at
-> https://forms.gle/Yvk7aS79pvNR6hbv8.
-> 
-> While it is not strictly required to submit a topic/presentation,
-> registrations with a topic/presentation proposal will take precedence.
-> 
-> .:: VENUE
-> 
-> The conference will take place at Alte Fabrik [1], Daisendorfer Str. 4,
-> 88689 Uhldingen-Mühlhofen, Germany
-> 
-> The conference venue is located in a 2 minute walking distance [2] to
-> the Hotel Sternen [3] that has been pre-reserved for the participants.
-> Since it is a very rural area, we recommend booking this hotel as it is
-> close to the conference room. The price ranges per night incl. breakfast
-> between 85€ (Standard Single Room) up to 149€ (Junior Suite). There is
-> an availability of 37 rooms in the hotel. Another 13 rooms are
-> pre-reserved in the Hotel Kreuz which is also a 5min walking distance to
-> the conference location [4]. Cost is 75€ inkl. breakfast. Please choose
-> your hotel (and room) and arrange booking yourself. We recommend arrival
-> on March 17 and departure on March 21 due to the length of the trip.
-> 
-> Please use the code ‘LINUTRONIX’ when booking your hotel room. 
-> Deadline for hotel booking in Hotel Sternen is February 28, 2025.
-> Deadline for hotel booking in Hotel Kreuz is January 17, 2025.  
-> After these dates, cancellations are not free of charge anymore.
-> 
-> You can reach Uhldingen-Mühlhofen best from Zürich Airport [5] or
-> Friedrichshafen Airport [6]. From both airports there are train and/or
-> bus connections to Uhldingen-Mühlhofen which you can check here [7]. The
-> rides are quite long, so another possibility is to organize yourself in
-> groups and share a taxi/shuttle [8].
-> 
-> [1] https://www.fabrik-muehlhofen.de/
-> [2] https://maps.app.goo.gl/S6cnTgx1KJAGRkMr7
-> [3] https://www.steAlte Fabrik Mühlhofenrnen-muehlhofen.de/
-> [4] https://www.bodensee-hotel-kreuz.de/
-> [5] https://www.flughafen-zuerich.ch/de/passagiere/praktisches/parking-und-transport/zug-tram-und-bus
-> [6] https://www.bodensee-airport.eu/passagiere-besucher/anreise-parken-uebernachten/
-> [7] https://www.bahn.de/
-> [8] https://airporttaxi24.ch/?gad_source=1&gclid=EAIaIQobChMIo_y9l56iiQMVfp6DBx16NxPtEAAYAiAAEgJOO_D_BwE
-> 
-> .:: ORGANIZERS
-> 
-> Juri Lelli (Red Hat)
-> Frauke Jäger (Linutronix)
-> Tommaso Cucinotta (SSSA)
-> Lorenzo Pieralisi (Linaro)
+-PATCH 7: the devicetree overlay describing the RP1 chipset. Please
+ note that this patch should be taken by the same maintainer that will
+ also take patch 11, since txeieh dtso is compiled in as binary blob and is
+ closely coupled to the driver.
+
+-PATCH 8: this is the main patch to support RP1 chipset and peripherals
+ enabling through dtb overlay. The dtso since is intimately coupled with
+ the driver and will be linked in as binary blob in the driver obj.
+ The real dtso is in devicetree folder while the dtso in driver folder is
+ just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+ The reason why drivers/misc has been selected as containing folder
+ for this driver can be seen in [6], [7] and [8].
+
+-PATCH 9: add the external clock node (used by RP1) to the main dts.
+
+-PATCH 10: add the relevant kernel CONFIG_ options to defconfig.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been already promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Please note that albeit this patchset has no prerequisites in order to
+be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
+PCIe controller (see [5]) in order to work at runtime.
+
+Many thanks,
+Andrea della Porta
+
+Links:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+- [6]: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+- [7]: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+- [8]: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+
+
+CHANGES IN V5:
+
+PATCH RELATED -------------------------------------------------
+
+- patch 1 and 2: added: 'Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>'
+
+- patch 6 and 10: added 'Reviewed-by: Stefan Wahren <wahrenst@gmx.net>'
+
+- rebased on v6.13-rc1
+
+
+KCONFIG -----------------------------------------
+
+- drivers/misc/rp1/Kconfig: leading spaces converted to tab
+
+
+RP1 MISC DRIVER -----------------------------------
+
+- added a comment to describe ovcs_id field from struct rp1_dev
+
+- added braces around a single line if statement followed by a braced
+  else condition
+
+- removed a double space character
+
+
+GPIO/PINCTRL --------------------------------------
+
+- moved a multiplication (*) sign to the line it belongs to (code style
+  fixup)
+
+
+DTS -----------------------------------------
+
+- Moved clk_rp1_xosc from SoC DTS to board DTS
+
+
+BINDINGS ------------------------------------
+
+- pci1de4,1.yaml: adjusted ranges and reg properties in the example
+  to better reflect the address from RP1 documentation. These refelcts
+  the same convention used in the dtso
+
+- raspberrypi,rp1-gpio.yaml: fixed 'pins' pattern to go at most up to 53
+
+- raspberrypi,rp1-gpio.yaml: using single quotes consistently over double
+  quotes
+
+- raspberrypi,rp1-gpio.yaml: added some pin config option supported by the
+  hw/driver but missing in the schema
+
+
+Andrea della Porta (10):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  dt-bindings: pci: Add common schema for devices accessible through PCI
+    BARs
+  dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   58 +
+ .../devicetree/bindings/misc/pci1de4,1.yaml   |   73 +
+ .../devicetree/bindings/pci/pci-ep-bus.yaml   |   58 +
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  198 +++
+ MAINTAINERS                                   |   14 +
+ .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |    7 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |   58 +
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/Kconfig                           |    9 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1527 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   21 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.dtso                 |    8 +
+ drivers/misc/rp1/rp1_pci.c                    |  366 ++++
+ drivers/misc/rp1/rp1_pci.h                    |   14 +
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   11 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  789 +++++++++
+ .../clock/raspberrypi,rp1-clocks.h            |   61 +
+ include/linux/pci_ids.h                       |    3 +
+ 24 files changed, 3286 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/misc/rp1/rp1_pci.c
+ create mode 100644 drivers/misc/rp1/rp1_pci.h
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+
+-- 
+2.35.3
 
 
