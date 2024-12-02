@@ -1,99 +1,130 @@
-Return-Path: <linux-pci+bounces-17549-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17551-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1119C9E0A43
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 18:40:14 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3566163D60
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 17:40:10 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9061DAC8D;
-	Mon,  2 Dec 2024 17:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwzL9nrR"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 314ED9E0B9F
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 20:06:00 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD031D61A2;
-	Mon,  2 Dec 2024 17:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E92E4280A20
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 19:05:58 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D821DE4CB;
+	Mon,  2 Dec 2024 19:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gAh+PeH8"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0E21DE3C8;
+	Mon,  2 Dec 2024 19:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733161209; cv=none; b=Ut5ScEp+iwRFIP1+tFposbgFWoPen+cryQl84XwkBTWl/BicqqDf02MW5jGE562LSshjDi8/7qR0rkbfPmgYXQ+gD7gZ38yk3sEUIB4am+eKNTzlRqq+bz4EOs5F23SG1aA0SdprhoCgIqF5BsBs1YrGsFGBgjqdK5qqQDVoB9w=
+	t=1733166181; cv=none; b=hSEV9IgOAmfHk1I3jDJejineZuHnfs4XfBFdWMtfnH1xNPV/n4Iotw669gz+GjKG4UDPYHGVxpgNwydmJqtmWRBEs/+euMHSS4p9u2IWmX/ZQIVH8W9i/wxAZtFhp23Ccq65IP9IxE1fqZlWnuFClaNfNyrNdaCjNjK0L0lKa2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733161209; c=relaxed/simple;
-	bh=eaL8cC21xnf23Ecwe2rInbBhfl0hfiNSoyNwp9NMFTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TMceABs4umpaqp3yM2a55HCLLh/qwzLlgvqqbg00mI9hkNuTccomuW8wyxA457rtUNE324znY+SOsrGnfZ7BIWBOk63cYxamAfvQj9Py7EikQ9AmcwM3iK/qCalqxFgypxosxQRPki0tagCcN2i2EwViwx0lbNo5R1OcdXbELXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwzL9nrR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02BA7C4CED1;
-	Mon,  2 Dec 2024 17:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733161209;
-	bh=eaL8cC21xnf23Ecwe2rInbBhfl0hfiNSoyNwp9NMFTI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XwzL9nrR46ZUQQBF/Cfqgfs1w85invh8HKkiybCnyLrEAtVqNB1p68veHs8gpbJ2A
-	 /hq1NkFqHuPqePepEotMIWmvb0CUvsez4rFylJtAuXgRW+lUMwYMxJp/ggkvrc04IO
-	 O7ZHYiWVvUfb2uxuewRaeY3txjgR9NxWbVj3I/aLJPus3ZRwAeV7y58XSBgx4e2G0W
-	 NSIMcaUOqF8bISHy7KoAjYmboKzhD7SjH6a1e4r/5B+Yncjp0auvf7p29ztozgTzmU
-	 ibMvf6dcSOaeByzIu8DgAVoeigO3Oo8ZO0Vfs7yza43w4TtijMK+7ZNc0kid2/gy1F
-	 74sTjn3Ni7ZcA==
-Date: Mon, 2 Dec 2024 11:40:07 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
-	aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-	linux-kselftest@vger.kernel.org, stable+noautosel@kernel.org
-Subject: Re: [PATCH v2 1/4] PCI: qcom-ep: Mark BAR0/BAR2 as 64bit BARs and
- BAR1/BAR3 as RESERVED
-Message-ID: <20241202174007.GA2902663@bhelgaas>
+	s=arc-20240116; t=1733166181; c=relaxed/simple;
+	bh=k1pJ4luVhcXBDfBpiVnJtsHgnGcvABs2ve248K8/HvI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mEgDfqGYf+gGZSz4mq3BfLFZukhK4z8APejR/qBwjeujv3ISydW5w6ZfDqjgObpYDehI0dJEGIoQ/9sk3swf1/y7IUJuO7DCGVzmLGTB5S89zL7ydjr69Lv/NjE+ANDXGQ2ZcTJvx8js+C2hckpa5mC7EGF0iwcr1lY/ZPUtB2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gAh+PeH8; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1733166178;
+	bh=k1pJ4luVhcXBDfBpiVnJtsHgnGcvABs2ve248K8/HvI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=gAh+PeH88LU3FtARYAKE6c8qWzlOUHigfxx+55tmH+ae6fISLMw/G2hSf4khhZlAh
+	 Qp7QaNxzVZuhCMXVmjmrBwVbBo/K3I5ujbYsnZQQ7Kk3pva6n5gITCTJ3K1k+fEuuO
+	 kJq2d06iSApUrTw9h1e6phSVnKCCrYfpP2GwRKhg=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 02 Dec 2024 20:02:58 +0100
+Subject: [PATCH 2/4] PCI/VPD: Constify 'struct bin_attribute'
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241202125845.rp4vc7ape52v4bwd@thinkpad>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20241202-sysfs-const-bin_attr-pci-v1-2-c32360f495a7@weissschuh.net>
+References: <20241202-sysfs-const-bin_attr-pci-v1-0-c32360f495a7@weissschuh.net>
+In-Reply-To: <20241202-sysfs-const-bin_attr-pci-v1-0-c32360f495a7@weissschuh.net>
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Logan Gunthorpe <logang@deltatee.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733166177; l=1980;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=k1pJ4luVhcXBDfBpiVnJtsHgnGcvABs2ve248K8/HvI=;
+ b=bBXG8cMXvBqNSmdvQe+DxGUV01eaAAhlF0GD9rEicmlXAOoOEpI/oTJiYtAXal5U6RSdf+XDb
+ v8xgnwHB9ePAaZ0zmS0AIvRD8ynG9zbrDl/208wQpvBnwgVqufnF3fA
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Mon, Dec 02, 2024 at 06:28:45PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Nov 29, 2024 at 01:55:37PM -0600, Bjorn Helgaas wrote:
-> > On Fri, Nov 29, 2024 at 02:54:12PM +0530, Manivannan Sadhasivam wrote:
-> > > On all Qcom endpoint SoCs, BAR0/BAR2 are 64bit BARs by default
-> > > and software cannot change the type. So mark the those BARs as
-> > > 64bit BARs and also mark the successive BAR1/BAR3 as RESERVED
-> > > BARs so that the EPF drivers cannot use them.
-> ...
+The sysfs core now allows instances of 'struct bin_attribute' to be
+moved into read-only memory. Make use of that to protect them against
+accidental or malicious modifications.
 
-> > > Cc: stable+noautosel@kernel.org # depends on patch introducing only_64bit flag
-> > 
-> > If stable maintainers need to act on this, do they need to search for
-> > the patch introducing only_64bit flag?  That seems onerous; is there a
-> > SHA1 that would make it easier?
-> 
-> But that's not the point of having noautosel tag, AFAIK.
-> 
-> Documentation/process/stable-kernel-rules.rst clearly says that this
-> tag is to be used when we do not want the stable team to backport
-> the commit due to a missing dependency.
-> ...
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/pci/vpd.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-> Here I did not intend to backport this change with commit adding
-> only_64bit flag because, I'm not sure if that dependency alone would
-> be sufficient. If someone really cares about backporting this
-> change, then they should figure out the dependencies, test the
-> functionality and then ask the stable team.
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index a469bcbc0da7f7677485c7f999f8dfb58b8ae8a3..3d29b2602d0fb760b81c374036a506a4ddb4b281 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -271,8 +271,8 @@ void pci_vpd_init(struct pci_dev *dev)
+ }
+ 
+ static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
+-			struct bin_attribute *bin_attr, char *buf, loff_t off,
+-			size_t count)
++			const struct bin_attribute *bin_attr, char *buf,
++			loff_t off, size_t count)
+ {
+ 	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
+ 	struct pci_dev *vpd_dev = dev;
+@@ -295,8 +295,8 @@ static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
+ }
+ 
+ static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
+-			 struct bin_attribute *bin_attr, char *buf, loff_t off,
+-			 size_t count)
++			 const struct bin_attribute *bin_attr, char *buf,
++			 loff_t off, size_t count)
+ {
+ 	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
+ 	struct pci_dev *vpd_dev = dev;
+@@ -317,9 +317,9 @@ static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
+ 
+ 	return ret;
+ }
+-static BIN_ATTR(vpd, 0600, vpd_read, vpd_write, 0);
++static const BIN_ATTR(vpd, 0600, vpd_read, vpd_write, 0);
+ 
+-static struct bin_attribute *vpd_attrs[] = {
++static const struct bin_attribute *const vpd_attrs[] = {
+ 	&bin_attr_vpd,
+ 	NULL,
+ };
+@@ -336,7 +336,7 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+ }
+ 
+ const struct attribute_group pci_dev_vpd_attr_group = {
+-	.bin_attrs = vpd_attrs,
++	.bin_attrs_new = vpd_attrs,
+ 	.is_bin_visible = vpd_attr_is_visible,
+ };
+ 
 
-Oh, sorry, I was assuming "stable+noautosel@kernel.org" was a hint for
-stable maintainers to pick this up, not a hint to ignore it.
-Eventually this meaning will sink in.
+-- 
+2.47.1
 
-Bjorn
 
