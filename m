@@ -1,375 +1,159 @@
-Return-Path: <linux-pci+bounces-17528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 440F49E0318
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 14:17:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7CAF9E056C
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 15:47:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 757F5288C4F
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 13:17:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11284B30509
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 13:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8B5720408F;
-	Mon,  2 Dec 2024 13:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF631FF7C9;
+	Mon,  2 Dec 2024 13:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PzySwLJq"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zSnEGhJM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SVggcK2d";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zSnEGhJM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SVggcK2d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F9320101A;
-	Mon,  2 Dec 2024 13:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8065AAD5E;
+	Mon,  2 Dec 2024 13:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733145358; cv=none; b=csoekq64Aud+MOTAsc3zK8kzdIPAWtqecLqd7PDayuqoPriBv1TR0RpWAOjba1O+CKmEbXwRw/2IHaRWIlZNbm2E6d51Nq3E+4nsZ1AWvCO+fD4ldikeDmSAiQzXNbwfwNw3e1SSBN2buB2OXzt7paRlgE5nyDXQOD/vBV3gSSY=
+	t=1733147346; cv=none; b=fHTI97Vi58/z+zI0yDtINEJbIA9xS2ZYEhyDl0tElHA08w9rzv9QGvu99v2cVMES3gm4geFst+/QxgHTRKpEo81x2II5PEavsh5qV3mrXhJStedhhdlWe3GWTXsAyk6MctFq0GaIymy4arWeskWCAE750lVT0G6T3/sGkQ7TdAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733145358; c=relaxed/simple;
-	bh=pXG2lNKrNxbQNSXeEqbEkvWSgUB67r8uakq/Fw79NeU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gJdMfwU9eViqsEqj2/iZusralqJlqurt6HVy2J48CaeyNiugF/ZL2J+C55VuFnSEXUWDZpvLhcfJVIsn3k/hMgZ0r07hK/wySs75hXtR5WzUZHHSFIyDY9P6LvalQLes2W248F2jqhLspPvweH5SGAZnKMjnZubNkL3aYF4Vilk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PzySwLJq; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id E32BCC0012;
-	Mon,  2 Dec 2024 13:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1733145349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=arc-20240116; t=1733147346; c=relaxed/simple;
+	bh=Ah5hWMdfPFzst6CBjRABiissd/71Qcp2TxJFwtVPowE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EtPdsBjTAF5vz9m86450CrUcK57BYQDdgTWuZDcc8VsWQOggH7GlaqrJepeJnr1l/Rv+rRv+3TUrB7TYkjWPxGed/7HXZBxGO2PLNLiC0L3XBSgY64AJhbRMHLRPiaXfpN2SiyNTuBwVRPKUNertjhXPPV2aiu9Q0MaG9IerApc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zSnEGhJM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SVggcK2d; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zSnEGhJM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SVggcK2d; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 57201211CF;
+	Mon,  2 Dec 2024 13:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733147342; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gJaxBHF3x4TI5XAw2BFga0+cPmQYa0O4/5xdJ6Zf6c8=;
-	b=PzySwLJqrPG3ReKWauwBKVGmVNmgrwx99UBlXv2W5kw5cr1Yxfez9Whjh5DkQXXSv7QGZJ
-	J2EurAtbvELBId28WM1QSIdueTLi8wQ0lVDrVhVPumbyEIETlByoCw6RYBrOhWBcuF/X/o
-	BY4GK29o6AAXswlNDRmEHMNpWHNMB7RFzInR6KCKeHeurvqsBbJAgQmM98Y+q6jngDhABJ
-	WQDsBh2wZjH0621/YrUtVtRr+BipVhuz90YmruePw3CYVSzFGEjVaJn3iUuI4fJgOpe+NB
-	7QWNjeiQqrEtW181ZFbI/mPK3rBtM2YMo0Bg8rtuAFF3FXP2NlkWpCy7y7OseQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lizhi Hou <lizhi.hou@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v4 6/6] PCI: of: Create device-tree PCI host bridge node
-Date: Mon,  2 Dec 2024 14:15:18 +0100
-Message-ID: <20241202131522.142268-7-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241202131522.142268-1-herve.codina@bootlin.com>
-References: <20241202131522.142268-1-herve.codina@bootlin.com>
+	bh=9qx7nVrFeR9OVdYomOaMq/GvODW8JLvzaL2rbW3wAPU=;
+	b=zSnEGhJMpzAV7OPerK/ECYunLFUvgXM1b9Cj1v+CMbAyPWhC6r9BRXGm9I36SC8/QOGB9N
+	X4DjAEO5M9Vzy4XTjE3SWfhNNbXnYt8JHI0M8G1gnlD9f2GW1I1qjh+LYSqcdujkfmDaO9
+	NboozgDQOZdNyLFrVqIs+qwi7ABoUvY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733147342;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9qx7nVrFeR9OVdYomOaMq/GvODW8JLvzaL2rbW3wAPU=;
+	b=SVggcK2dh8P33y3NX+FkAluNvDieRYd5y8E3ZgL18r4zVEz4jPqzVqmweaLt0CDetRTb6Z
+	rmcbXOcAxo9d0KCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733147342; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9qx7nVrFeR9OVdYomOaMq/GvODW8JLvzaL2rbW3wAPU=;
+	b=zSnEGhJMpzAV7OPerK/ECYunLFUvgXM1b9Cj1v+CMbAyPWhC6r9BRXGm9I36SC8/QOGB9N
+	X4DjAEO5M9Vzy4XTjE3SWfhNNbXnYt8JHI0M8G1gnlD9f2GW1I1qjh+LYSqcdujkfmDaO9
+	NboozgDQOZdNyLFrVqIs+qwi7ABoUvY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733147342;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9qx7nVrFeR9OVdYomOaMq/GvODW8JLvzaL2rbW3wAPU=;
+	b=SVggcK2dh8P33y3NX+FkAluNvDieRYd5y8E3ZgL18r4zVEz4jPqzVqmweaLt0CDetRTb6Z
+	rmcbXOcAxo9d0KCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 45906139C2;
+	Mon,  2 Dec 2024 13:49:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ekEDEM66TWf9EQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Mon, 02 Dec 2024 13:49:02 +0000
+Date: Mon, 2 Dec 2024 14:48:53 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+	mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, 
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v5 4/8] blk-mq: introduce blk_mq_map_hw_queues
+Message-ID: <95035ac7-8707-4a69-8425-86a47841c15d@flourine.local>
+References: <20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org>
+ <20241115-refactor-blk-affinity-helpers-v5-4-c472afd84d9f@kernel.org>
+ <8b303ed8-f819-4fa2-b447-8d8f4a42b380@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b303ed8-f819-4fa2-b447-8d8f4a42b380@oracle.com>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-PCI devices device-tree nodes can be already created. This was
-introduced by commit 407d1a51921e ("PCI: Create device tree node for
-bridge").
+On Thu, Nov 21, 2024 at 09:08:02AM +0000, John Garry wrote:
+> > +/**
+> > + * blk_mq_map_hw_queues - Create CPU to hardware queue mapping
+> > + * @qmap:	CPU to hardware queue map.
+> > + * @dev:	The device to map queues.
+> > + * @offset:	Queue offset to use for the device.
+> 
+> supernit: maybe no '.'
 
-In order to have device-tree nodes related to PCI devices attached on
-their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
-root bus device-tree node is needed. This root bus node will be used as
-the parent node of the first level devices scanned on the bus. On
-device-tree based systems, this PCI root bus device tree node is set to
-the node of the related PCI host bridge. The PCI host bridge node is
-available in the device-tree used to describe the hardware passed at
-boot.
+np. I've followed the style of the function right above. Dropped them.
 
-On non device-tree based system (such as ACPI), a device-tree node for
-the PCI host bridge or for the root bus do not exist. Indeed, the PCI
-host bridge is not described in a device-tree used at boot simply
-because no device-tree are passed at boot.
+> is there still a blank line at the bottom of the file?
 
-The device-tree PCI host bridge node creation needs to be done at
-runtime. This is done in the same way as for the creation of the PCI
-device nodes. I.e. node and properties are created based on computed
-information done by the PCI core. Also, as is done on device-tree based
-systems, this PCI host bridge node is used for the PCI root bus.
+It ends with (vim):
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/pci/of.c          |  94 ++++++++++++++++++++++++++++++++++-
- drivers/pci/of_property.c | 102 ++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h         |   6 +++
- drivers/pci/probe.c       |   2 +
- drivers/pci/remove.c      |   2 +
- 5 files changed, 205 insertions(+), 1 deletion(-)
+	}
+	EXPORT_SYMBOL_GPL(blk_mq_map_hw_queues);
+	~
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 3cca33105b85..a63799848aac 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -726,7 +726,99 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- out_free_name:
- 	kfree(name);
- }
--#endif
-+
-+void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
-+{
-+	struct device_node *np;
-+
-+	np = pci_bus_to_OF_node(bridge->bus);
-+	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-+		return;
-+
-+	device_remove_of_node(&bridge->bus->dev);
-+	device_remove_of_node(&bridge->dev);
-+	of_changeset_revert(np->data);
-+	of_changeset_destroy(np->data);
-+	of_node_put(np);
-+}
-+
-+void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
-+{
-+	struct device_node *np = NULL;
-+	struct of_changeset *cset;
-+	const char *name;
-+	int ret;
-+
-+	/*
-+	 * If there is already a device-tree node linked to the PCI bus handled
-+	 * by this bridge (i.e. the PCI root bus), nothing to do.
-+	 */
-+	if (pci_bus_to_OF_node(bridge->bus))
-+		return;
-+
-+	/* The root bus has no node. Check that the host bridge has no node too */
-+	if (bridge->dev.of_node) {
-+		pr_err("PCI host bridge of_node already set");
-+		return;
-+	}
-+
-+	/* Check if there is a DT root node to attach the created node */
-+	if (!of_root) {
-+		pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
-+		return;
-+	}
-+
-+	name = kasprintf(GFP_KERNEL, "pci@%x,%x", pci_domain_nr(bridge->bus),
-+			 bridge->bus->number);
-+	if (!name)
-+		return;
-+
-+	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
-+	if (!cset)
-+		goto out_free_name;
-+	of_changeset_init(cset);
-+
-+	np = of_changeset_create_node(cset, of_root, name);
-+	if (!np)
-+		goto out_destroy_cset;
-+
-+	ret = of_pci_add_host_bridge_properties(bridge, cset, np);
-+	if (ret)
-+		goto out_free_node;
-+
-+	/*
-+	 * This of_node will be added to an existing device. The of_node parent
-+	 * is the root OF node and so this node will be handled by the platform
-+	 * bus. Avoid any new device creation.
-+	 */
-+	of_node_set_flag(np, OF_POPULATED);
-+	np->fwnode.dev = &bridge->dev;
-+	fwnode_dev_initialized(&np->fwnode, true);
-+
-+	ret = of_changeset_apply(cset);
-+	if (ret)
-+		goto out_free_node;
-+
-+	np->data = cset;
-+
-+	/* Add the of_node to host bridge and the root bus */
-+	device_add_of_node(&bridge->dev, np);
-+	device_add_of_node(&bridge->bus->dev, np);
-+
-+	kfree(name);
-+
-+	return;
-+
-+out_free_node:
-+	of_node_put(np);
-+out_destroy_cset:
-+	of_changeset_destroy(cset);
-+	kfree(cset);
-+out_free_name:
-+	kfree(name);
-+}
-+
-+#endif /* CONFIG_PCI_DYNAMIC_OF_NODES */
- 
- /**
-  * of_pci_supply_present() - Check if the power supply is present for the PCI
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index 400c4c2e434d..b03baff651ee 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -394,3 +394,105 @@ int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
- 
- 	return 0;
- }
-+
-+static bool of_pci_is_range_resource(const struct resource *res, u32 *flags)
-+{
-+	if (!(resource_type(res) & IORESOURCE_MEM) &&
-+	    !(resource_type(res) & IORESOURCE_MEM_64))
-+		return false;
-+
-+	if (of_pci_get_addr_flags(res, flags))
-+		return false;
-+
-+	return true;
-+}
-+
-+static int of_pci_host_bridge_prop_ranges(struct pci_host_bridge *bridge,
-+					  struct of_changeset *ocs,
-+					  struct device_node *np)
-+{
-+	struct resource_entry *window;
-+	unsigned int ranges_sz = 0;
-+	unsigned int n_range = 0;
-+	struct resource *res;
-+	int n_addr_cells;
-+	u32 *ranges;
-+	u64 val64;
-+	u32 flags;
-+	int ret;
-+
-+	n_addr_cells = of_n_addr_cells(np);
-+	if (n_addr_cells <= 0 || n_addr_cells > 2)
-+		return -EINVAL;
-+
-+	resource_list_for_each_entry(window, &bridge->windows) {
-+		res = window->res;
-+		if (!of_pci_is_range_resource(res, &flags))
-+			continue;
-+		n_range++;
-+	}
-+
-+	if (!n_range)
-+		return 0;
-+
-+	ranges = kcalloc(n_range,
-+			 (OF_PCI_ADDRESS_CELLS + OF_PCI_SIZE_CELLS +
-+			  n_addr_cells) * sizeof(*ranges),
-+			 GFP_KERNEL);
-+	if (!ranges)
-+		return -ENOMEM;
-+
-+	resource_list_for_each_entry(window, &bridge->windows) {
-+		res = window->res;
-+		if (!of_pci_is_range_resource(res, &flags))
-+			continue;
-+
-+		/* PCI bus address */
-+		val64 = res->start;
-+		of_pci_set_address(NULL, &ranges[ranges_sz], val64 - window->offset,
-+				   0, flags, false);
-+		ranges_sz += OF_PCI_ADDRESS_CELLS;
-+
-+		/* Host bus address */
-+		if (n_addr_cells == 2)
-+			ranges[ranges_sz++] = upper_32_bits(val64);
-+		ranges[ranges_sz++] = lower_32_bits(val64);
-+
-+		/* Size */
-+		val64 = resource_size(res);
-+		ranges[ranges_sz] = upper_32_bits(val64);
-+		ranges[ranges_sz + 1] = lower_32_bits(val64);
-+		ranges_sz += OF_PCI_SIZE_CELLS;
-+	}
-+
-+	ret = of_changeset_add_prop_u32_array(ocs, np, "ranges", ranges, ranges_sz);
-+	kfree(ranges);
-+	return ret;
-+}
-+
-+int of_pci_add_host_bridge_properties(struct pci_host_bridge *bridge,
-+				      struct of_changeset *ocs,
-+				      struct device_node *np)
-+{
-+	int ret;
-+
-+	ret = of_changeset_add_prop_string(ocs, np, "device_type", "pci");
-+	if (ret)
-+		return ret;
-+
-+	ret = of_changeset_add_prop_u32(ocs, np, "#address-cells",
-+					OF_PCI_ADDRESS_CELLS);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_changeset_add_prop_u32(ocs, np, "#size-cells",
-+					OF_PCI_SIZE_CELLS);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_pci_host_bridge_prop_ranges(bridge, ocs, np);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2e40fc63ba31..0cdb2b3daea8 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -871,9 +871,15 @@ void of_pci_make_dev_node(struct pci_dev *pdev);
- void of_pci_remove_node(struct pci_dev *pdev);
- int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
- 			  struct device_node *np);
-+void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge);
-+void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge);
-+int of_pci_add_host_bridge_properties(struct pci_host_bridge *bridge, struct of_changeset *ocs,
-+				      struct device_node *np);
- #else
- static inline void of_pci_make_dev_node(struct pci_dev *pdev) { }
- static inline void of_pci_remove_node(struct pci_dev *pdev) { }
-+static inline void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge) { }
-+static inline void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge) { }
- #endif
- 
- #ifdef CONFIG_PCIEAER
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2e81ab0f5a25..629287f6b3d9 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1051,6 +1051,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 		dev_info(&bus->dev, "root bus resource %pR%s\n", res, addr);
- 	}
- 
-+	of_pci_make_host_bridge_node(bridge);
-+
- 	down_write(&pci_bus_sem);
- 	list_add_tail(&bus->node, &pci_root_buses);
- 	up_write(&pci_bus_sem);
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index efc37fcb73e2..9f7df2b20183 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -163,6 +163,8 @@ void pci_stop_root_bus(struct pci_bus *bus)
- 					 &bus->devices, bus_list)
- 		pci_stop_bus_device(child);
- 
-+	of_pci_remove_host_bridge_node(host_bridge);
-+
- 	/* stop the host bridge */
- 	device_release_driver(&host_bridge->dev);
- }
--- 
-2.47.0
+I hope that is what it supposed to be.
 
+Daniel
 
