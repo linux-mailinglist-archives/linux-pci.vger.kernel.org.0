@@ -1,95 +1,96 @@
-Return-Path: <linux-pci+bounces-17509-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17510-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D329DFD25
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 10:29:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A41A09DFDD8
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 10:55:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B793EB20CFA
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 09:29:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6150E28061C
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 09:55:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B1D1FA272;
-	Mon,  2 Dec 2024 09:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAA1E1FBE95;
+	Mon,  2 Dec 2024 09:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZo0VPoz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1oa8YSU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7B11F9EB4
-	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 09:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6481FBC9B
+	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 09:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733131752; cv=none; b=Pg8msoUJgRai5pOlVpXvfac1HVCxydRlCMDzco6hSwaDdckAQgGd1Z/lGWjnneAVJWe3Etj5BQEfcQxRwTBYLQdUmvKvyXP+pHgSYXqNKVMYUjTSzcJ+YO9QOA3zv56Y52pb4XwiPXxU5+Dl+1wGR0CuzCcWL6gopMe7w73zq3Y=
+	t=1733133324; cv=none; b=pliXXBZzB/uDgd10j82/KHWg4MGA3T2GazCIm7ffjOrfmvHAKDRHzXYuxu8pAX53H8T/Faw3zU4uFRFJeQTl6SxemeoHrVAhAo0hExmzIEQiG1dw8wY19IdustvGZnTZLQ/Q+BSmfGjGq8Eplc5/Nq1lbwUyKhpRElNEmv0eXHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733131752; c=relaxed/simple;
-	bh=fC2AEId7tNasHk337cq2lQod3+detAM62YDKRytBbU4=;
+	s=arc-20240116; t=1733133324; c=relaxed/simple;
+	bh=giKLGGK03twsti8r6koMTfcd/cXGRA56MS0yGykpzlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OuLwNKwJBPafQ6n2QKDDfeESt5SGoOvHl0nZRZ3kAAaoyO/r1LR16cdGUurNGjp73n+d5ClfeTJNT+HCPqUalWoO7ahrryRbH2yfk6pc/hpv64rnMI5RUvxC7zfVUtyQVUKQpi+e1ODg/gWcQABPxCQC3CU8h4kX8VResFk2Cxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yZo0VPoz; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2155157c31fso16811025ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 01:29:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733131750; x=1733736550; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EGMPvoh3nnYvZxMNds9qARKtX9Uv0fcU6Rjh9g+g7NA=;
-        b=yZo0VPozkOZXMBbmK5f2crD4shJ5pzSSNjE/33/CkoXBuhGW29iuDrA7phah2jOE+2
-         qxr7mfeXiyjjB0lhnp/FohNETyhtpxeP/YcZxnoQjIkQ3sVUW2v30Jent7/xrT7eXkDQ
-         oEpokEODTW3wvUMm7lF7QgVxrM1/cC+kX42v7E92ICfrP/5DYUBjlqQwZL6DU662yBud
-         LWD6V/99fG+h6avkZjAG526Jb1ygnZUgsUB2Ht0+SqX+ibWYYCuPif8+l7liucVbfwff
-         HbfTghwqDyiQKtPcIGz5M6cowRaPf/yW1UlCRGxNDhqIdUsQWSWQRlgNou4NFXhF+CM7
-         2C2g==
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8JXjJuqdpsZVNcl2XyYDE35TJC+atfsVxCGfmXtBKa6bCO1Hh2kpLH5LVUoA21fVfO4paGZvRmgB0Y+DGiR4iV9TXVchcuyMlnTXc9woZCKKQkqSRqBTAaP6+uo4pz2AtiknDaIQNeOkd6mItzn/JL0lAjIKmvOnX5JVJLa2fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1oa8YSU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733133321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=09MvrDFOXfmr7yZyk+mt+cZonVT5Z8HMfNE6DtwKO3c=;
+	b=N1oa8YSUu+L64Qv5Asym44Y/0LcmySll4INfx6ooxSVGd0JKKUSr0pMnBpnjjrbyMMQ6GR
+	YW3oLIrIFeda5LsPcTyJiYYwp2Pq+GxERDlFtVI4S9ZllDlQhbF0jExzJwe4SwUZbdsUZG
+	iRRqlAxBkqbVeBbC5e5qUyVjWmplnsU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-134-WLZ7aDpzN7SzFs0WEL9A6Q-1; Mon, 02 Dec 2024 04:55:20 -0500
+X-MC-Unique: WLZ7aDpzN7SzFs0WEL9A6Q-1
+X-Mimecast-MFC-AGG-ID: WLZ7aDpzN7SzFs0WEL9A6Q
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-434a04437cdso29875055e9.2
+        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 01:55:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733131750; x=1733736550;
+        d=1e100.net; s=20230601; t=1733133319; x=1733738119;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGMPvoh3nnYvZxMNds9qARKtX9Uv0fcU6Rjh9g+g7NA=;
-        b=Xn9gzuJaLpmqbAowyU1EotrWHdKPrId9IrT0+dFBVKZpM82Ux12lETBTl8BzsxC0Yi
-         p2kQetTLx22SR8f9/Toz+wij/DJx5VkPUtgoPQvBSAzw5aZUeeHs2Bsd3urhuDpmmhL4
-         B1f0W1ps85+6mlgWJ1pv32UuJx0Xa5CWQbVayAlwvALyDKxfXfA8u6TfaukzjA9h57TG
-         gxKm0vdk0aMMWJ8uZAJGmG0nPwu0wcljlPc59dqKUcVoMNDJMtYxpI/A7xudO+NE4DqG
-         TIxD+EUvw+dXWt192VIaT5VYO8w7M3DH7+WxoVVFHVAEYP9R0dzXW/BiDrTo97svblh9
-         zKmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUREKnJnNrkJCWqd5jwbKt9uEidr8vY6YD+x+GCtjeIeDydNiYLvSyteOfDs/HE2rVOLHx42McEVsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwljQDm5La51SJZWZU7nxzGa6DXD2cUaPi5NR6Qfgs14I4W78Vm
-	2q0poU0Pflggg4by3Jz+c0O4YmbXYEBX7jegK9zjONRytr4IAJPjYydVdyHohw==
-X-Gm-Gg: ASbGncuwssi424yMVMyDoiD1LTP7F08bN8BxdFpnweq6dC6ABWJMGnA5HKynk6ExYX0
-	GA6qiq3bepOa0OcV0TiYEP34rSWlvx2B2B0Gg5rV4HJ48sqesIevjlkKhyPevqsQiarUwCCu3x3
-	IW5HstH4udlGlr7US54Dt6un2DNSDYZS39GKmYckhOyxBAlUqg6uNksCM5LDsZpE4QJLaRoRxY1
-	/rQ9JRVxzQWaOTTISbQI/FjMDgqwjj5NuZ7JMjlqRsgXUgylfR8CgHJa1f8jQ==
-X-Google-Smtp-Source: AGHT+IGBDoG25e3pEf75i9cCZn/hE8xGiTP5kP5qKiZ7M9GVusUnW+yFGAk3ficksX3QF5GI5UN3Qg==
-X-Received: by 2002:a17:902:ec8e:b0:215:6c5f:d142 with SMTP id d9443c01a7336-2156c5fd28bmr100497085ad.20.1733131750007;
-        Mon, 02 Dec 2024 01:29:10 -0800 (PST)
-Received: from thinkpad ([120.60.140.110])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215219c31a0sm72507725ad.249.2024.12.02.01.29.05
+        bh=09MvrDFOXfmr7yZyk+mt+cZonVT5Z8HMfNE6DtwKO3c=;
+        b=BfKvAd+KFsqojN04Pb1XY8ZtTfjdJdfpqW6nzZM97tRpVz1zapSbvxQCbdPobHYiQF
+         ehcAjRd6pleT8MKDPBFN94AuYd1W6SBv8zUHMA2+ddbIyfDKB4T9loo55t6cOUeVsPCK
+         dqKnoVkvzowEsO1zAj9/PRA+1Dk1mIokn4R0DQ1XwLj2F+5MvGeEL41kiTDqlcB5YqH/
+         ioYLOIaFKcMUnHlhJVMlkOpbdcrwBHo/c1SCNQlEVoAhYZPCP2WJYPk6JU1115lNZ12s
+         873nxEbQftJT44VQovuk6aVs1XtnhwV+iBOxCgar1qKLRpVza2na+zaJDSepRIQ+YPf5
+         Vorg==
+X-Forwarded-Encrypted: i=1; AJvYcCUO9RSSb97VKQpCOOUWpZk+zCx+X73J5madNp8XZxbDaSelDrLPaSLinRRei6Lx2nkX8DgpXtPsltY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS1KdF6HLui1fpBiHlFX8+3y7+7rRpb8thgbE0ebHaHasP9pUj
+	LZjNA765fbzLKi8KEMZTyzGOhIc2MW0Aorbp879bps8QAgjn9UEyGtBSZpTsqql1wMZll2UfwRe
+	2UMu1M9m1ache7YOvdahjtmN0Csww+00Wy3dWFw7vsAPJJE+N7BtL5jIpEA==
+X-Gm-Gg: ASbGncviwRBYmcuOtdpwWs1KNgBNv5c34qZlzP+O7ei3fJF+H19/v2f+Plv1ohVjqOZ
+	8nVk6OcAPsan/qPMwXJQ9dwDBbK6S+unJjrizxIn6GlzUiZDCB+Wisu5qYyEz7Xpo5aq0FxRmpH
+	1ymaTt30WPPz6ea0W8TTCMsLyZNvT4Pkba+qvkae3gEp3PqIqg9elwCsYs0x3/cEWVP5aR+emgp
+	cmg5ia45dM3QGdp/zLADd5wRTtFnHJucNSXL9ZuuGYnE5EYwGRkXZZ1c1IvzwP6ySy1BGwZMkOe
+	Ci0=
+X-Received: by 2002:a05:600c:1c09:b0:431:44fe:fd9f with SMTP id 5b1f17b1804b1-434a9de8cc2mr172537515e9.23.1733133319113;
+        Mon, 02 Dec 2024 01:55:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFdrZW7CnHqIPba+h3rdUQEPKdX49BX6A51BtPfyAqpRIpHzFbEJP1x+SVenKFW+la85OBsJA==
+X-Received: by 2002:a05:600c:1c09:b0:431:44fe:fd9f with SMTP id 5b1f17b1804b1-434a9de8cc2mr172537265e9.23.1733133318732;
+        Mon, 02 Dec 2024 01:55:18 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.75.19])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434b0dbf95fsm144865155e9.15.2024.12.02.01.55.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2024 01:29:09 -0800 (PST)
-Date: Mon, 2 Dec 2024 14:59:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	"open list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-pci@vger.kernel.org>,
-	"moderated list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: check bridge->bus in pci_host_common_remove
-Message-ID: <20241202092902.rp6xb3f64llpabbi@thinkpad>
-References: <20241028084644.3778081-1-peng.fan@oss.nxp.com>
- <20241115062005.6ifvr6ens2qnrrrf@thinkpad>
- <PAXPR04MB8459D1507CA69498D8C38E0488242@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20241115144720.ovsyq2ani47norby@thinkpad>
- <20241127195650.GA4132105-robh@kernel.org>
+        Mon, 02 Dec 2024 01:55:17 -0800 (PST)
+Date: Mon, 2 Dec 2024 10:55:16 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+	Frauke =?iso-8859-1?Q?J=E4ger?= <frauke@linutronix.de>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel VII edition (OSPM-summit 2025)
+Message-ID: <Z02EBA_0SwWPhTAi@jlelli-thinkpadt14gen4.remote.csb>
+References: <ZytlAkTiuZApK23Y@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,130 +100,151 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241127195650.GA4132105-robh@kernel.org>
+In-Reply-To: <ZytlAkTiuZApK23Y@jlelli-thinkpadt14gen4.remote.csb>
 
-On Wed, Nov 27, 2024 at 01:56:50PM -0600, Rob Herring wrote:
-> On Fri, Nov 15, 2024 at 08:17:20PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Nov 15, 2024 at 10:14:10AM +0000, Peng Fan wrote:
-> > > Hi Manivannan,
-> > > 
-> > > > Subject: Re: [PATCH] PCI: check bridge->bus in
-> > > > pci_host_common_remove
-> > > > 
-> > > > On Mon, Oct 28, 2024 at 04:46:43PM +0800, Peng Fan (OSS) wrote:
-> > > > > From: Peng Fan <peng.fan@nxp.com>
-> > > > >
-> > > > > When PCI node was created using an overlay and the overlay is
-> > > > > reverted/destroyed, the "linux,pci-domain" property no longer exists,
-> > > > > so of_get_pci_domain_nr will return failure. Then
-> > > > > of_pci_bus_release_domain_nr will actually use the dynamic IDA,
-> > > > even
-> > > > > if the IDA was allocated in static IDA. So the flow is as below:
-> > > > > A: of_changeset_revert
-> > > > >     pci_host_common_remove
-> > > > >      pci_bus_release_domain_nr
-> > > > >        of_pci_bus_release_domain_nr
-> > > > >          of_get_pci_domain_nr      # fails because overlay is gone
-> > > > >          ida_free(&pci_domain_nr_dynamic_ida)
-> > > > >
-> > > > > With driver calls pci_host_common_remove explicity, the flow
-> > > > becomes:
-> > > > > B pci_host_common_remove
-> > > > >    pci_bus_release_domain_nr
-> > > > >     of_pci_bus_release_domain_nr
-> > > > >      of_get_pci_domain_nr      # succeeds in this order
-> > > > >       ida_free(&pci_domain_nr_static_ida)
-> > > > > A of_changeset_revert
-> > > > >    pci_host_common_remove
-> > > > >
-> > > > > With updated flow, the pci_host_common_remove will be called
-> > > > twice, so
-> > > > > need to check 'bridge->bus' to avoid accessing invalid pointer.
-> > > > >
-> > > > > Fixes: c14f7ccc9f5d ("PCI: Assign PCI domain IDs by ida_alloc()")
-> > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > 
-> > > > I went through the previous discussion [1] and I couldn't see an
-> > > > agreement on the point raised by Bjorn on 'removing the host bridge
-> > > > before the overlay'.
-> > > 
-> > > This patch is an agreement to Bjorn's idea. 
-> > > 
-> > > I have added pci_host_common_remove to remove host bridge
-> > > before removing overlay as I wrote in commit log.
-> > > 
-> > > But of_changeset_revert will still runs into pci_host_
-> > > common_remove to remove the host bridge again. Per
-> > > my view, the design of of_changeset_revert to remove
-> > > the device tree node will trigger device remove, so even
-> > > pci_host_common_remove was explicitly used before
-> > > of_changeset_revert. The following call to of_changeset_revert
-> > > will still call pci_host_common_remove.
-> > > 
-> > > So I did this patch to add a check of 'bus' to avoid remove again.
-> > > 
-> > 
-> > Ok. I think there was a misunderstanding. Bjorn's example driver,
-> > 'i2c-demux-pinctrl' applies the changeset, then adds the i2c adapter for its
-> > own. And in remove(), it does the reverse.
-> > 
-> > But in your case, the issue is with the host bridge driver that gets probed
-> > because of the changeset. While with 'i2c-demux-pinctrl' driver, it only
-> > applies the changeset. So we cannot compare both drivers. I believe in your
-> > case, 'i2c-demux-pinctrl' becomes 'jailhouse', isn't it?
-> > 
-> > So in your case, changeset is applied by jailhouse and that causes the
-> > platform device to be created for the host bridge and then the host bridge
-> > driver gets probed. So during destroy(), you call of_changeset_revert() that
-> > removes the platform device and during that process it removes the host bridge
-> > driver. The issue happens because during host bridge remove, it calls
-> > pci_remove_root_bus() and that tries to remove the domain_nr using
-> > pci_bus_release_domain_nr().
-> >
-> > But pci_bus_release_domain_nr() uses DT node to check whether to free the
-> > domain_nr from static IDA or dynamic IDA. And because there is no DT node exist
-> > at this time (it was already removed by of_changeset_revert()), it forces
-> > pci_bus_release_domain_nr() to use dynamic IDA even though the IDA was initially
-> > allocated from static IDA.
+Hello Everybody,
+
+Quick reminder that deadline for topics submission is approaching
+(December 9, 2024 - next Monday).
+
+Please use the form to submit your topic(s) or reply to me privately
+with topic's details.
+
+https://forms.gle/Vbvpxsh8pqBffx8b6
+
+Don't wait until last minute or Santa will add you to the naughty list!
+
+Best,
+Juri
+
+On 06/11/24 13:45, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) VII edition
 > 
-> Putting linux,pci-domain in an overlay is the same problem as aliases in 
-> overlays[1]. It's not going to work well.
+> March 18-20, 2025
+> Alte Fabrik
+> Uhldingen-Mühlhofen, Germany
 > 
-> IMO, you can have overlays, or you can have static domains. You can't 
-> have both.
+> ---
 > 
-
-Okay. 
-
-> > I think a neat way to solve this issue would be by removing the OF node only
-> > after removing all platform devices/drivers associated with that node. But I
-> > honestly do not know whether that is possible or not. Otherwise, any other
-> > driver that relies on the OF node in its remove() callback, could suffer from
-> > the same issue. And whatever fix we may come up with in PCI core, it will be a
-> > band-aid only.
-> > 
-> > I'd like to check with Rob first about his opinion.
+> .:: FOCUS
 > 
-> If the struct device has an of_node set, there should be a reference 
-> count on that node. But I think that only prevents the node from being 
-> freed. It does not prevent the overlay from being detached. This is one 
-> of many of the issues with overlays Frank painstakingly documented[2].
+> OSPM is moving to Germany!
 > 
-
-Ah, I do remember this page as Frank ended up creating it based on my
-continuous nudge to add CONFIG_FS interface for applying overlays.
-
-So why are we applying overlays in kernel now?
-
-> Perhaps it is just a matter of iterating thru all the nodes in an 
-> overlay, getting their driver/device, and forcing them to unbind. 
-> Though that has to be done per bus type.
+> The VII edition of the Power Management and Scheduling in the Linux
+> Kernel (OSPM) summit aims at fostering discussions on power management
+> and (real-time) scheduling techniques. Summit will be held in Uhldingen
+> (Germany) on March 18-20, 2025.
 > 
+> We welcome anybody interested in having discussions on the broad scope
+> of scheduler techniques for reducing energy consumption while meeting
+> performance and latency requirements, real-time systems, real-time and
+> non-real-time scheduling, tooling, debugging and tracing.
+> 
+> Feel free to take a look at what happened previous years:
+> 
+>  I   edition - https://lwn.net/Articles/721573/
+>  II  edition - https://lwn.net/Articles/754923/
+>  III edition - https://lwn.net/Articles/793281/
+>  IV  edition - https://lwn.net/Articles/820337/ (online)
+>  V   edition - https://lwn.net/Articles/934142/
+>                https://lwn.net/Articles/934459/
+>                https://lwn.net/Articles/935180/
+>  VI  edition - https://lwn.net/Articles/981371/
+> 
+> .:: FORMAT
+> 
+> The summit is organized to cover three days of discussions and talks.
+> 
+> The list of topics of interest includes (but it is not limited to):
+> 
+>  * Power management techniques
+>  * Scheduling techniques (real-time and non real-time)
+>  * Energy consumption and CPU capacity aware scheduling
+>  * Real-time virtualization
+>  * Mobile/Server power management real-world use cases (successes and
+>    failures)
+>  * Power management and scheduling tooling (configuration, integration,
+>    testing, etc.)
+>  * Tracing
+>  * Recap/lightning talks
+> 
+> Presentations (50 min) can cover recently developed technologies,
+> ongoing work and new ideas. Please understand that this workshop is not
+> intended for presenting sales and marketing pitches.
+> 
+> .:: SUBMIT A TOPIC/PRESENTATION
+> 
+> To submit a topic/presentation use the form available at
+> https://forms.gle/Vbvpxsh8pqBffx8b6.
+> 
+> Or, if you prefer, simply reply (only to me, please :) to this email
+> specifying:
+> 
+> - name/surname
+> - affiliation
+> - short bio
+> - email address
+> - title
+> - abstract
+> 
+> Deadline for submitting topics/presentations is December 9, 2024.
+> Notifications for accepted topics/presentations will be sent out
+> December 16, 2024.
+> 
+> .:: ATTENDING
+> 
+> Attending the OSPM-summit is free of charge, but registration to the
+> event is mandatory. The event can allow a maximum of 50 people (so, be
+> sure to register early!).
+> 
+> Registrations open on December 16, 2024.
+> To register fill in the registration form available at
+> https://forms.gle/Yvk7aS79pvNR6hbv8.
+> 
+> While it is not strictly required to submit a topic/presentation,
+> registrations with a topic/presentation proposal will take precedence.
+> 
+> .:: VENUE
+> 
+> The conference will take place at Alte Fabrik [1], Daisendorfer Str. 4,
+> 88689 Uhldingen-Mühlhofen, Germany
+> 
+> The conference venue is located in a 2 minute walking distance [2] to
+> the Hotel Sternen [3] that has been pre-reserved for the participants.
+> Since it is a very rural area, we recommend booking this hotel as it is
+> close to the conference room. The price ranges per night incl. breakfast
+> between 85€ (Standard Single Room) up to 149€ (Junior Suite). There is
+> an availability of 37 rooms in the hotel. Another 13 rooms are
+> pre-reserved in the Hotel Kreuz which is also a 5min walking distance to
+> the conference location [4]. Cost is 75€ inkl. breakfast. Please choose
+> your hotel (and room) and arrange booking yourself. We recommend arrival
+> on March 17 and departure on March 21 due to the length of the trip.
+> 
+> Please use the code ‘LINUTRONIX’ when booking your hotel room. 
+> Deadline for hotel booking in Hotel Sternen is February 28, 2025.
+> Deadline for hotel booking in Hotel Kreuz is January 17, 2025.  
+> After these dates, cancellations are not free of charge anymore.
+> 
+> You can reach Uhldingen-Mühlhofen best from Zürich Airport [5] or
+> Friedrichshafen Airport [6]. From both airports there are train and/or
+> bus connections to Uhldingen-Mühlhofen which you can check here [7]. The
+> rides are quite long, so another possibility is to organize yourself in
+> groups and share a taxi/shuttle [8].
+> 
+> [1] https://www.fabrik-muehlhofen.de/
+> [2] https://maps.app.goo.gl/S6cnTgx1KJAGRkMr7
+> [3] https://www.steAlte Fabrik Mühlhofenrnen-muehlhofen.de/
+> [4] https://www.bodensee-hotel-kreuz.de/
+> [5] https://www.flughafen-zuerich.ch/de/passagiere/praktisches/parking-und-transport/zug-tram-und-bus
+> [6] https://www.bodensee-airport.eu/passagiere-besucher/anreise-parken-uebernachten/
+> [7] https://www.bahn.de/
+> [8] https://airporttaxi24.ch/?gad_source=1&gclid=EAIaIQobChMIo_y9l56iiQMVfp6DBx16NxPtEAAYAiAAEgJOO_D_BwE
+> 
+> .:: ORGANIZERS
+> 
+> Juri Lelli (Red Hat)
+> Frauke Jäger (Linutronix)
+> Tommaso Cucinotta (SSSA)
+> Lorenzo Pieralisi (Linaro)
 
-Sounds like the correct approach.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
