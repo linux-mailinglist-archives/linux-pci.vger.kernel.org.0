@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-17521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17520-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BDAF9E0080
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 12:29:18 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFB609E0079
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 12:28:49 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3A68164429
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 11:28:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0C95282FBC
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 11:28:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE802010F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA94204089;
 	Mon,  2 Dec 2024 11:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NCFyGBHm"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TRUClMXb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6892040AA
-	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 11:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248061FDE2C
+	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 11:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733138361; cv=none; b=EmuLiWafLX4AlfVAqZk82oNpJBkuBUl2fx7jKA/CrmK/h5yxBfq9KkWXrrvi9E8LLA8eHpNny4mQgldXL1qJyJGJdTgPZjoSrK6Q/iZ2kVfWd+L0c89+6FldbE/IBxnu2FjpmKhc2mfo6EgHDe3Z1TsSUrHvgAWf+sAvS27z9ZU=
+	t=1733138361; cv=none; b=Ik4NYihoIa20W+3F8xXyXGRAEzgyR4qb1AXFuA4JZJFyDzFiTZHygVOlVKBESRxzHBDmi91YTun335+VmIFI5z1sQHn6fpkuACSxsHxm6IlK1kukf4yD2KBGzDdr+iP7h2g8V87HwI7bVBpsyezXcTnMA1hPMDSdvIq/lhKz79w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733138361; c=relaxed/simple;
-	bh=5wKv3990qTqArMWxDC8JoNsA96O0HLgsLUAOsCHU91I=;
+	bh=QMBFXNqBpFgYP2yitTOgzdsfZItshvzAST6FqjQRjNM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YvziJQgBbSNjcwTjDOl9L6gPo3fVupse8hJArBddtNJGJJ28phBJiMkbF6vqQx0dOHqh+YVu7p4CCRYlcmasAtnEE38JgUYNbDbOOnusVAXQtPijUxs+VmBUTsdk+oHkQPQSZ45piAbpxustKbtgtouErFlsvIrWd0ERETEtlDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NCFyGBHm; arc=none smtp.client-ip=209.85.208.50
+	 MIME-Version; b=Dq1Mgqg/g5T520U0vrUXygfHHsYEURkNcvDpaMNqgHhs0Ndpj/tl+YNTueSYMazSr/m0hZVU513lMBB+1k6vFv3fMiSt145swaayg70XDd1GBveVBOMZ5iSmfc+02W/vKyY3E+gFLdEYm9aEgQX8Kdw/jwpos4cBW5QYddCuIKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TRUClMXb; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5cec9609303so4896155a12.1
-        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 03:19:15 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d0d3dd3097so2583223a12.0
+        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 03:19:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1733138354; x=1733743154; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1733138355; x=1733743155; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P/DXYP0gmkoHCujxUnsFn55701rZVWVknkTyMB7ADmU=;
-        b=NCFyGBHmPbQC4JUKeBrMhZOaLAN/tRkmQEf4rq9AA0EF05KaaLWXSJA5PNxHJGfzMZ
-         oM7omQU6QTQ4yBVY+t3BXoO6Xeb2/HyTV6tIFBwuPX7LyZdjYBfTBMMgTcYffpBmLW1Y
-         bdsKZm+f5kmiqZx9zR2ws2rnoDDRQlsut4UD54zNmnYrN4ZnYIxwUyuvEg4/ph4L1kyp
-         LFFGo6LdYu2ihJFSYeGLmprgVyIlBOcQPVbaPsRdS9dMAmltZ32VGjLPVg9+e4pnUFFK
-         XEv0jGt4Ou99JJWeJfp1a4F47uP6FuHwXzqD+gkEDtEciLESka60XQ46nhpuADsFqjDC
-         df8w==
+        bh=+dNlxUlq/zQec54ENuov38IuayLoY+NtEDaFnmM1inQ=;
+        b=TRUClMXbT/BkEMucbnwqj8OcamE/lxRppa4P432szv42fzZY4uemRAU6iOZ7lsvAc/
+         fwPFwx1PMfCtYKXQ8kfySDfXiki98a6L7hP2mDvg6NYBTSK92eHCHTkM5/dxnsxhnDVh
+         9czhw0Zfjc9gR7ITOO3D8PJRVXyqkCwRu6VBq3gKr4fkkTBa4pc7n1W7bWHGio2Gco/l
+         4cnH37V3kw8znEEAlmF3wv2i8gTG06ijbVp8lk3WHkawjM7ibZTM3dLei6KNr/FlPGx5
+         jlA7CO0nA7UDUIr87WQu1nuM5wSUEZQ828yYv958AZPjqFj8pdzljNItiO9x4OfVCUgK
+         fHAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733138354; x=1733743154;
+        d=1e100.net; s=20230601; t=1733138355; x=1733743155;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P/DXYP0gmkoHCujxUnsFn55701rZVWVknkTyMB7ADmU=;
-        b=YfKWCJqzxUIEH+u+1mHYmCH73qxYkjhfHhJdMlg18De1BZlNPnAkYG6gEpk+lhCvgL
-         ZMQ74fV0VjfjQmzIulciWwkDJamzATU58Wb8Yx+49/iosSta8BPuE2Il9oGCZme+zceK
-         +TJ/UUbFSR/kAwVUzdyVQFfieccpmdRmzh99pROE63bvPTXmNQUB4XrFXtOA9wo35QfN
-         PPvH6Sm67UydX6Wh0r4GQeRS+SF6c34oRcKWSss7FQtYP44cKVCPQWdBKKHiKk6iNnAS
-         63D3yrsvr2rMZBR0qIEIvmqQm+3dSj49gIVS2VxhHSkFMJ4hM3RnJ8frPXQu74bA5AEZ
-         J8pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLkzgsFh4w7iH8MniHpFXRxYeRTw+b0GLRnwydSTvhqm1C7DxU4bXkN0AwQPGPJ32Uk9X7pk7/I0E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbC6s4Z1x/QwHLC84IoWwxXbtExwHZoRwZ6cC1yYcUi0zIBSPx
-	U5B1CcnRdFisoZRZ0hbSQi2WnSvvk2DSAqjRtRUYLMsmhUuNkHOhufrFBC4l2Ik=
-X-Gm-Gg: ASbGncv0GHi9AeCH/pR4vkdrWpUFW5w69At/NuVR2+mKxHZUF6nFK5rj9NUfoqhlbkZ
-	Fa03gBDPGh5Usz8kojQIfPKPcPhFE/Cb8ykDzr6h/tlfjUFAhFNFdsl69dBMiJZa1wCThBcqJl7
-	/VBr1/QM/wpiwKsZjYCi65qxGtLvWGVqevoxCijAp2R40xUUnlb5rqE2Q3uD8Rfl2mkmyRwKeCq
-	FMuFNZrTcfNR0vNI5urh24aPndMsWXdSIulq4scQvMMpLr6I4XGFOYlX1sn2MZP0DsOaVaSTfq0
-	RQERvWlCn7W6Y38pezIi
-X-Google-Smtp-Source: AGHT+IHeFnhQVvvNV6Unz5SbIu5RmIoxGk3I5zBFBtPc8jG8aJ1mwarpKQV7x9LB7y94ybUWdyYebQ==
-X-Received: by 2002:a05:6402:5206:b0:5d0:f088:c675 with SMTP id 4fb4d7f45d1cf-5d0f088cc59mr2379116a12.21.1733138353742;
-        Mon, 02 Dec 2024 03:19:13 -0800 (PST)
+        bh=+dNlxUlq/zQec54ENuov38IuayLoY+NtEDaFnmM1inQ=;
+        b=YFYMZrU9G6zKNpHY24sAMSqjvVasPj7KwsxQtAScgQ49F6XSRZdmo0s71NErtwhUb/
+         ASJN7nxKEnQjw5FhHxN86/yE10T3nAd2hcVmk65mw5jLCqZPtBCRAhYkUZK8LSqV2CwU
+         Jw7ukJNQjnbFyKp+KZ7gUA8fkFMybvWe+jFxtt7uuXcym8dMhQf//FZLCQ1jFUWeyMvl
+         zay3w3ZHatgaG6zA2eHC4poHa9WvxMvjVsqpT7evurnAAWJehlefqw9HDoPdlFtWxpCU
+         PLUfL5PoVjv48jrO7+3DT36yyElNUQ4yKNFmE5Jj6TUnBQqLkTJl2+JXsaNWdEvcF2tY
+         FfyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQMyc8cxudVVTKXyVnyEPIt7BbauGv4FFX2Fi1ByWHidTdP1FyaaOHR90cjRpVlEmaCloMt0kEdbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoyhUW22dhmd3a2zYnWKbZSGyGSQzu/d4rSVzdM1azuUv1icN+
+	vhMNcTomHUyGhMEzGWiOxnz3bspYLSC5SNU4/kizS91fWpVZBhHz0MoDa59S8zE=
+X-Gm-Gg: ASbGnctIyDhiJc2V9Xke4epRjFPw/zHJaFbxDThcf+kaiJ1qwDyvS5qp1r1kVeVbIfB
+	JmaEa57PkclKbubkiIVO4rbmyNA/e3ZDKTbwBRl2GzFSDzYa4KDZXDdvkWPc2CxjzjLUpGNDf56
+	vGn8qWkl6dlInRmQxQJmCRkPtzhUepsUNB2TYsbj/zWza6kL/UFW6Cpv6oxlNnVbdx68oRK4eUS
+	F0jLdPafilt/xVAJUPMFVNMTn5SUxrBU8tFpncCGwVElLV59XjQNzb4VxrMQeNOcf7eQq/Lf6S1
+	GXn1a53a33m6KLP4mwC0
+X-Google-Smtp-Source: AGHT+IEh8VAXDJC3bTBBrwDpqq8+bh66QBF8HuQqB3DA5Y6Ne4IKysOOgMjNIKrVqzCRG1epx5t5JQ==
+X-Received: by 2002:a05:6402:3484:b0:5d0:904f:710b with SMTP id 4fb4d7f45d1cf-5d0904f726amr20592659a12.34.1733138354832;
+        Mon, 02 Dec 2024 03:19:14 -0800 (PST)
 Received: from localhost (host-87-20-211-251.retail.telecomitalia.it. [87.20.211.251])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d0e1b6903esm1763679a12.19.2024.12.02.03.19.13
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d0d2f0652bsm2371980a12.25.2024.12.02.03.19.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2024 03:19:13 -0800 (PST)
+        Mon, 02 Dec 2024 03:19:14 -0800 (PST)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -107,9 +107,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v5 09/10] arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
-Date: Mon,  2 Dec 2024 12:19:33 +0100
-Message-ID: <8b4dda91fae156a7f28f2807cd6d64ac2ec07dd7.1733136811.git.andrea.porta@suse.com>
+Subject: [PATCH v5 10/10] arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+Date: Mon,  2 Dec 2024 12:19:34 +0100
+Message-ID: <2dc27b08d82e5257a831026c963ac148d11cb6e8.1733136811.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1733136811.git.andrea.porta@suse.com>
 References: <cover.1733136811.git.andrea.porta@suse.com>
@@ -121,32 +121,44 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-Add clk_rp1_xosc node to provide that.
+Select the RP1 drivers needed to operate the PCI endpoint containing
+several peripherals such as Ethernet and USB Controller. This chip is
+present on RaspberryPi 5.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 ---
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index 2bdbb6780242..ae3c0c153cea 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -16,6 +16,13 @@ chosen: chosen {
- 		stdout-path = "serial10:115200n8";
- 	};
- 
-+	clk_rp1_xosc: clock-50000000 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-output-names = "rp1-xosc";
-+		clock-frequency = <50000000>;
-+	};
-+
- 	/* Will be filled by the bootloader */
- 	memory@0 {
- 		device_type = "memory";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c62831e61586..91b39026dc56 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -609,6 +609,7 @@ CONFIG_PINCTRL_QCM2290=y
+ CONFIG_PINCTRL_QCS404=y
+ CONFIG_PINCTRL_QDF2XXX=y
+ CONFIG_PINCTRL_QDU1000=y
++CONFIG_PINCTRL_RP1=m
+ CONFIG_PINCTRL_SA8775P=y
+ CONFIG_PINCTRL_SC7180=y
+ CONFIG_PINCTRL_SC7280=y
+@@ -690,6 +691,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
+ CONFIG_SENSORS_SL28CPLD=m
+ CONFIG_SENSORS_INA2XX=m
+ CONFIG_SENSORS_INA3221=m
++CONFIG_MISC_RP1=m
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_DEVFREQ_THERMAL=y
+@@ -1272,6 +1274,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
+ CONFIG_COMMON_CLK_FSL_SAI=y
+ CONFIG_COMMON_CLK_S2MPS11=y
+ CONFIG_COMMON_CLK_PWM=y
++CONFIG_COMMON_CLK_RP1=m
+ CONFIG_COMMON_CLK_RS9_PCIE=y
+ CONFIG_COMMON_CLK_VC3=y
+ CONFIG_COMMON_CLK_VC5=y
 -- 
 2.35.3
 
