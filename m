@@ -1,151 +1,99 @@
-Return-Path: <linux-pci+bounces-17541-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDA469E0A61
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 18:48:00 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1119C9E0A43
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 18:40:14 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3566163D60
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 17:40:10 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9061DAC8D;
+	Mon,  2 Dec 2024 17:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwzL9nrR"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67486B426BE
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 15:01:52 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B702204F63;
-	Mon,  2 Dec 2024 14:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGB5UOal"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C498C205ADA
-	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 14:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD031D61A2;
+	Mon,  2 Dec 2024 17:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733151580; cv=none; b=Wocg3oHD3I8qcCcVFdGHOARTQZWR7sq+8zIc++xy/GVGg5+ZluJwDgZFU20o86bvoGE3eq195LlS1IiMALtYPVqiBdggnaKTP5E93vUTR9oUfO4Q1yASxuNKmeLeWFiDN55K/nniRC6WwDEfelrSkrMP2bsf4ryXnPdeRKDCTeo=
+	t=1733161209; cv=none; b=Ut5ScEp+iwRFIP1+tFposbgFWoPen+cryQl84XwkBTWl/BicqqDf02MW5jGE562LSshjDi8/7qR0rkbfPmgYXQ+gD7gZ38yk3sEUIB4am+eKNTzlRqq+bz4EOs5F23SG1aA0SdprhoCgIqF5BsBs1YrGsFGBgjqdK5qqQDVoB9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733151580; c=relaxed/simple;
-	bh=eoMDpvdSrW/IuE6tWQhPLD0TMa2/13xTFFot0aFscv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cpuSuABwy+pTtS3O7MhsaEXBtLVfNDT2wd/Veg4JpSWz9p8SLsjDjO5wA85JF3lLNr0gAc6wzwOd2/KRSZhevSPIvfnvoN9sDVyMJt5WNuCbmXWDM0m1MKfoc9H47Rmj12E7hnULK9HfE6EutMJkJTMSbYJ4cw60gwW2gOvczhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xGB5UOal; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-724f0f6300aso4856271b3a.2
-        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 06:59:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733151578; x=1733756378; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WgF/4kcAR5ywQOr3IwzI+nF+D01WGBejA8XPwY6tGHM=;
-        b=xGB5UOal9nC2ZhiOGMrftpxnrPBm+sPjxzq6bYAN2PYQQd7TMDFLEkflE76b3yHb+8
-         O1u6GdECptjr91TyqpLUe2Umqm0W/7NK65PApnDGVuv4fA0zfuNCsMMi6dBKUSZhvK62
-         UuC3L1rC/UJsAMEOE+CUamJJTzTTVuuCaS7ASnLq2PxjImEoXj/lm8SZQSVEL35KLfZw
-         Cow6093zM5ccfbH0xVU1q8Ls3+W6F2BweL1K858FtEmwbvazuEA9Yz//g+rIrt69Yt8+
-         Q3Vp/eXlvygMIWvbIjdf8IpW7yLsaYwPido432SaQ/eNUpSelWSZbW/239/ovG/V3IBW
-         FIig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733151578; x=1733756378;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WgF/4kcAR5ywQOr3IwzI+nF+D01WGBejA8XPwY6tGHM=;
-        b=hOjl5dDDmIFsX75MfUgmmHuFHyUx4pPBTX7ZpE0dszVR7n32DMd+MwoH47OfTeJurc
-         SBA1Lgk9HS4iuykg1FGysKF4Z9aWYH0wC28rIqaQHpWyYN58oOViU+crgj7+Mc8O1+PP
-         dPCk2CbSNdAUC50d/lHf7vhbV8k0wbgjtWIiJE0Uoray+DHvXoZq+x9G7IP9i7PKz0DJ
-         plspbV+U/ZqzK1ytSoEygPAD/IXwMRIAORsa8juMmvYY1hAt03GCdCV5srH+Ab0m8HS+
-         JVGlc2ozUDOBawrZ43PfYB1DkOsQWfJE0M3WjVkeauGw6rNJTgWc9JVuaI2qNELhJu3T
-         KTlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkZ+IhV2ZuKVOQzNeLe9YmkYLJtnO2qrazx07Hk1L50TnG8M9RG3pfGa+FnrAUO+wh4G65TVzYyKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTu7zMcyIlqC1RXF3PH/+mY4UQFwwanFZryb8wjcw1i/LRbl+d
-	NuZ2VelPt8QZmAHO8BXc2GAQLO+YA9GfHvz2oI1enpU+BmYbqMQNVtKkddeIgA==
-X-Gm-Gg: ASbGncumoEP0+qHY0Gjs4PN4FRl5xF0yrIkKVYG2OaWovQKzal1ZHidL5Mnevjgswfn
-	D43/QDMb7oAMcGK0le3Nho0QZN+W89lhcvWWfWFTy40xJsuPG/VdlrWvqeXYqIE/HPss/8FT/Jt
-	16QLgWY/V9iHeBd34DGyeWJ04CaApeRQD7EUw2xJnmdNGE/B4I7fNTGMSUyoLSFMe5J8K3OMOdn
-	o3Zq8fJ9D0HSSJhXjbqlPuxTWOF0svKUtsxIXrNQ7SOlzkOZACfmvOrAdhBJw==
-X-Google-Smtp-Source: AGHT+IHgG+f2vTl6EqIIXMvz6jhpHEi3UtNHtTewd/BkPPiHdBuHK6on+aYbHzhIO2Aft6WgAvaZ/w==
-X-Received: by 2002:a05:6a00:181b:b0:71e:4655:59ce with SMTP id d2e1a72fcca58-7252fe113f6mr29871251b3a.0.1733151578094;
-        Mon, 02 Dec 2024 06:59:38 -0800 (PST)
-Received: from thinkpad ([120.60.140.110])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254f689085sm6557728b3a.131.2024.12.02.06.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2024 06:59:37 -0800 (PST)
-Date: Mon, 2 Dec 2024 20:29:32 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org
-Subject: Re: DWC PCIe endpoint iATU vs BAR MASK ordering
-Message-ID: <20241202145932.5gj72erze57jh66r@thinkpad>
-References: <ZzxeBrjYRvYgMFdv@ryzen>
+	s=arc-20240116; t=1733161209; c=relaxed/simple;
+	bh=eaL8cC21xnf23Ecwe2rInbBhfl0hfiNSoyNwp9NMFTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TMceABs4umpaqp3yM2a55HCLLh/qwzLlgvqqbg00mI9hkNuTccomuW8wyxA457rtUNE324znY+SOsrGnfZ7BIWBOk63cYxamAfvQj9Py7EikQ9AmcwM3iK/qCalqxFgypxosxQRPki0tagCcN2i2EwViwx0lbNo5R1OcdXbELXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwzL9nrR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02BA7C4CED1;
+	Mon,  2 Dec 2024 17:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733161209;
+	bh=eaL8cC21xnf23Ecwe2rInbBhfl0hfiNSoyNwp9NMFTI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=XwzL9nrR46ZUQQBF/Cfqgfs1w85invh8HKkiybCnyLrEAtVqNB1p68veHs8gpbJ2A
+	 /hq1NkFqHuPqePepEotMIWmvb0CUvsez4rFylJtAuXgRW+lUMwYMxJp/ggkvrc04IO
+	 O7ZHYiWVvUfb2uxuewRaeY3txjgR9NxWbVj3I/aLJPus3ZRwAeV7y58XSBgx4e2G0W
+	 NSIMcaUOqF8bISHy7KoAjYmboKzhD7SjH6a1e4r/5B+Yncjp0auvf7p29ztozgTzmU
+	 ibMvf6dcSOaeByzIu8DgAVoeigO3Oo8ZO0Vfs7yza43w4TtijMK+7ZNc0kid2/gy1F
+	 74sTjn3Ni7ZcA==
+Date: Mon, 2 Dec 2024 11:40:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
+	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
+	aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
+	linux-kselftest@vger.kernel.org, stable+noautosel@kernel.org
+Subject: Re: [PATCH v2 1/4] PCI: qcom-ep: Mark BAR0/BAR2 as 64bit BARs and
+ BAR1/BAR3 as RESERVED
+Message-ID: <20241202174007.GA2902663@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZzxeBrjYRvYgMFdv@ryzen>
+In-Reply-To: <20241202125845.rp4vc7ape52v4bwd@thinkpad>
 
-On Tue, Nov 19, 2024 at 10:44:38AM +0100, Niklas Cassel wrote:
-> Hello DWC PCIe endpoint developers,
-> 
-> 
-> As I wrote in patch [1] (please review):
-> The DWC Databook description for the LWR_TARGET_RW and LWR_TARGET_HW fields
-> in the IATU_LWR_TARGET_ADDR_OFF_INBOUND_i registers state that:
-> "Field size depends on log2(BAR_MASK+1) in BAR match mode."
-> 
-> I.e. only the upper bits are writable, and the number of writable bits is
-> dependent on the configured BAR_MASK.
-> 
-> While patch [1] is a nice fail-safe that we definitely want to have...
-> I can see that the DWC PCIe EP driver is currently broken (and has been
-> since the beginning).
-> 
-> We are programming the iATU _before_ configuring the BAR:
-> https://github.com/torvalds/linux/blob/v6.12/drivers/pci/controller/dwc/pcie-designware-ep.c#L232-L247
-> 
-> The problem is of course that the iATU registers depend on the BAR mask
-> (the number of read-only bits depends on the currently set BAR mask),
-> so the iATU registers should be done _after_ configuring the BAR.
-> 
-> Doing it in this was makes a lot of sense.
-> First you configure the BAR, then you configure the address translation
-> for that BAR. (Since the iATU in BAR match mode obviously depends on how
-> the BAR is configured.)
-> 
-> 
-> Now, I would like to send a patch to change this order, so that we actually
-> write things in the only order that makes sense, my problem is this line:
-> https://github.com/torvalds/linux/blob/v6.12/drivers/pci/controller/dwc/pcie-designware-ep.c#L236-L237
-> 
-> This code makes no sense to me whatsoever.
-> 
-> If I look at the commit that introduced this early return:
-> 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-> 
-> It is not signed off by any of the regular PCI maintainers, neither does it
-> have any Acked-by by any of the regular PCI maintainers, so I kind of wonder
-> why this patch is there is the first place...
-> (Taking something via a different tree is fine, but that would still require
-> an Acked-by by one of the maintainers for the tree which owns that file.)
-> 
+On Mon, Dec 02, 2024 at 06:28:45PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Nov 29, 2024 at 01:55:37PM -0600, Bjorn Helgaas wrote:
+> > On Fri, Nov 29, 2024 at 02:54:12PM +0530, Manivannan Sadhasivam wrote:
+> > > On all Qcom endpoint SoCs, BAR0/BAR2 are 64bit BARs by default
+> > > and software cannot change the type. So mark the those BARs as
+> > > 64bit BARs and also mark the successive BAR1/BAR3 as RESERVED
+> > > BARs so that the EPF drivers cannot use them.
+> ...
 
-It was one such occurence where the PCI EP maintainer didn't respond promptly
-(not me) and the NTB maintainer merged the patch. I did complain about it:
-https://lore.kernel.org/linux-pci/20220818060230.GA12008@thinkpad
+> > > Cc: stable+noautosel@kernel.org # depends on patch introducing only_64bit flag
+> > 
+> > If stable maintainers need to act on this, do they need to search for
+> > the patch introducing only_64bit flag?  That seems onerous; is there a
+> > SHA1 that would make it easier?
+> 
+> But that's not the point of having noautosel tag, AFAIK.
+> 
+> Documentation/process/stable-kernel-rules.rst clearly says that this
+> tag is to be used when we do not want the stable team to backport
+> the commit due to a missing dependency.
+> ...
 
-- Mani
+> Here I did not intend to backport this change with commit adding
+> only_64bit flag because, I'm not sure if that dependency alone would
+> be sufficient. If someone really cares about backporting this
+> change, then they should figure out the dependencies, test the
+> functionality and then ask the stable team.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Oh, sorry, I was assuming "stable+noautosel@kernel.org" was a hint for
+stable maintainers to pick this up, not a hint to ignore it.
+Eventually this meaning will sink in.
+
+Bjorn
 
