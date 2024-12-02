@@ -1,228 +1,184 @@
-Return-Path: <linux-pci+bounces-17531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7FE59E0419
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 14:55:47 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A3309E04CE
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 15:26:21 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7747116768B
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 13:55:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E243B25FA8
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 14:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A90202F88;
-	Mon,  2 Dec 2024 13:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6BBF200120;
+	Mon,  2 Dec 2024 14:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAhUjGrF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAp0ZNOx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E09A201265;
-	Mon,  2 Dec 2024 13:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1381D90DB;
+	Mon,  2 Dec 2024 14:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733147740; cv=none; b=U0TUU5Kagpmv6gOrEhMM6zeoiOkm5vLTM4JhmiTKAcEnFYV+7NHhn8A4HUeyhc4Avcfu/KWneRuIskqoU0QWTS8QRC1oZc1Rtqu6YT3QxZEIu8e6qB6W5YOfLgqbyLyJL8E/laMNwqiiJLXv/1fbtUD+M0eJMcIn3kqcxdBV4TU=
+	t=1733148028; cv=none; b=TS3O/kMGBIQaqztXpH+Wh9H8oBuHUf0bbg6rffRxm83K+l6pEbTByiWxbrSyBW93w3XtKTSFY1tZgHnia32kBZImXJ8ycXv8snseM5qd07DFB7qRD49MnVuhClPm7xgPuu0UB/nZscnM5LL86tNnldrWa2XQCbox9qZo8stuT2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733147740; c=relaxed/simple;
-	bh=dq4Jh03jp7zUkTIngyjCfTLx54OmCwD9dBaqhm8rzgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jDbQ3Purzgl+xejzKakadhCNfSARj/hPQ1TkMQt6r8zyenbUtfM8n/cV1h4VaSlAwvYKtQJ3qQ+msLSXZhs9kzjE80OKoLGi0x6iTkoUrYnZ0KEv4J/4i+GbyNg3AF2wE43DkyLShXCfpXfsgjsLopr6VTzFZ0aYxjZgpV4mEmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAhUjGrF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE35C4CED2;
-	Mon,  2 Dec 2024 13:55:39 +0000 (UTC)
+	s=arc-20240116; t=1733148028; c=relaxed/simple;
+	bh=CI1Glq9VI/L3LuNkj/dEEMHH9MDZKbIsGpsW/ROzcn4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=owZGwDS8IFrLTW8+mu1QOsL0GVdRcApz8DbaQXEi5XG0LHyu17buHQeoyYt6nsEiOAwAPNbfgZDQPjt7hctyDmr7U7MJ1Jl33NM0GE6iXv+ZLCoCb5yG9RPhkyOtnSMbvM3bTHWCihwpwpweDssCt0rbgxjPyEEgAGX0XxUtIgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAp0ZNOx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6850BC4CED1;
+	Mon,  2 Dec 2024 14:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733147739;
-	bh=dq4Jh03jp7zUkTIngyjCfTLx54OmCwD9dBaqhm8rzgc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dAhUjGrFy+t0yWWW6wifd5lVcxk0seADD3UyqN+n6WrxU4siwWAXkxY0RSQkK4IBg
-	 ffHcOtmEeAI6kcooy1Akm6nf8cYga9IZVNclTQjCz6I1VtnHTLPZUHz1XIqj9xcirb
-	 8a0XvfL8BdASvcF85mpbA+PWKxtByeR3uRetd9zOJpLhSVNFrACsDtCu6RBaDcn71c
-	 1ejZtWmth3fYcfOEfRognRByzojQLwBijpmecZlRNXu77gxqRkifux8dZS1jTGV1DX
-	 P0u5iZ384qeHuLTkDWrRPSluGAUS1WI67s/gj3yOCoU46LfUi1fUciG2NQocFSpWCL
-	 0eY4HkMHwaTGQ==
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e3984b1db09so2883051276.3;
-        Mon, 02 Dec 2024 05:55:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVUL6NjA7JuiEi6iF0eNNbk8vmmME8II7IktjKWb3DjUjeEnbJNiTieJo4ri3L6o4JeYE6qpRueCGbpPac=@vger.kernel.org, AJvYcCWuZA2EoYlZCSlWWffE1akP/BYs6SiVkGypSmbHbgGvd7JbEuq19TgwJXF5G+f1tjoFaKXaRNcZqJ3G@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYHH/jzgQ8nPr7cd7oDoaVlBClMjE1vHrZp4f7F5aRfakjFomf
-	wDhNL84aF2gwxI6L/uGmIwRKr7SyW83WW+iadmPzsZOxVtEC1KZzRofY8rK6s08RXa6BiVY4wZT
-	s0jvM7P4f2UWG55jVcyTKEQ7X0w==
-X-Google-Smtp-Source: AGHT+IEloSJqy4rZ6DCnksDhtDtEDdsyojNs8gKu6ZzXmsQp5EfloUDQsNAE4mivTYgMThyDNwRd9UClK2iTfoC/vNE=
-X-Received: by 2002:a05:6902:160b:b0:e39:8b94:16e6 with SMTP id
- 3f1490d57ef6-e398b941c20mr12631670276.39.1733147738911; Mon, 02 Dec 2024
- 05:55:38 -0800 (PST)
+	s=k20201202; t=1733148026;
+	bh=CI1Glq9VI/L3LuNkj/dEEMHH9MDZKbIsGpsW/ROzcn4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=gAp0ZNOxz5p8NWTE57a98FY5SHQyiYCmcVXKMMExsmA4we/6A/l30r06G2gdXAwgQ
+	 2IGl1+8dHV8tqkvJOvExBSS4+Wq0xEbbJscpwwEllMlbUXWw+pvmK7j4hiqW1DhJ5P
+	 IjlgKQvW7OJAa3FOKh9Hua0/Uof6H8sR1+1ZuXVSVPR+uO2FY1qphQkr8KUlEdlauk
+	 mNEE7QkRC55WLejYZOri9uUi0L+CqI+7kiKDYAmZeojDqc7V0IRXW86RwyHMqTfpGU
+	 8RJNLTmRuqAOqBwXSi0WXe04QR7u17FmdmuPIheAUt2Rfrpy6O2aQgJfW+8uhzao4y
+	 24lARYzq0EELw==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH v6 0/8] blk: refactor queue affinity helpers
+Date: Mon, 02 Dec 2024 15:00:08 +0100
+Message-Id: <20241202-refactor-blk-affinity-helpers-v6-0-27211e9c2cd5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241028084644.3778081-1-peng.fan@oss.nxp.com>
- <20241115062005.6ifvr6ens2qnrrrf@thinkpad> <PAXPR04MB8459D1507CA69498D8C38E0488242@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20241115144720.ovsyq2ani47norby@thinkpad> <20241127195650.GA4132105-robh@kernel.org>
- <20241202092902.rp6xb3f64llpabbi@thinkpad>
-In-Reply-To: <20241202092902.rp6xb3f64llpabbi@thinkpad>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 2 Dec 2024 07:55:27 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+R39jtCeDecpEHbKq+4N-uirMQmsuNG1NaVe1Vnnnv3Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+R39jtCeDecpEHbKq+4N-uirMQmsuNG1NaVe1Vnnnv3Q@mail.gmail.com>
-Subject: Re: [PATCH] PCI: check bridge->bus in pci_host_common_remove
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
-	Will Deacon <will@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	"open list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-pci@vger.kernel.org>, 
-	"moderated list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGi9TWcC/4XQzY7CIBQF4FcxrAfDb2ld+R4TF1Aulti0DlSiM
+ X33uWpmphMXZXduyHe43EmGFCGT3eZOEpSY4zhgqD42pO3scAQaPWYimFCs4YImCLadxkRdf6I
+ 2hDjE6UY76M+QMjWsblyjnXKcETTOeD1en/7n4ZUTfF2wZvobdjEjeHu+ofDH9KdOrtQVThmtg
+ ek6GGMDF/t8ybD1QB5uEb8Wx7NmCbSCrJj31gvJ7f4EaYB+O6bji5NLbu0nikROG+lCa1nrfP3
+ GqSW3uqlCznvprOUgKhPeOL3k9BqnkWuVETb4WvnmPzfP8zf1SNe4GQIAAA==
+X-Change-ID: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
+To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+ mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
+ storagedev@microchip.com, linux-nvme@lists.infradead.org, 
+ Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-On Mon, Dec 2, 2024 at 3:29=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Wed, Nov 27, 2024 at 01:56:50PM -0600, Rob Herring wrote:
-> > On Fri, Nov 15, 2024 at 08:17:20PM +0530, Manivannan Sadhasivam wrote:
-> > > On Fri, Nov 15, 2024 at 10:14:10AM +0000, Peng Fan wrote:
-> > > > Hi Manivannan,
-> > > >
-> > > > > Subject: Re: [PATCH] PCI: check bridge->bus in
-> > > > > pci_host_common_remove
-> > > > >
-> > > > > On Mon, Oct 28, 2024 at 04:46:43PM +0800, Peng Fan (OSS) wrote:
-> > > > > > From: Peng Fan <peng.fan@nxp.com>
-> > > > > >
-> > > > > > When PCI node was created using an overlay and the overlay is
-> > > > > > reverted/destroyed, the "linux,pci-domain" property no longer e=
-xists,
-> > > > > > so of_get_pci_domain_nr will return failure. Then
-> > > > > > of_pci_bus_release_domain_nr will actually use the dynamic IDA,
-> > > > > even
-> > > > > > if the IDA was allocated in static IDA. So the flow is as below=
-:
-> > > > > > A: of_changeset_revert
-> > > > > >     pci_host_common_remove
-> > > > > >      pci_bus_release_domain_nr
-> > > > > >        of_pci_bus_release_domain_nr
-> > > > > >          of_get_pci_domain_nr      # fails because overlay is g=
-one
-> > > > > >          ida_free(&pci_domain_nr_dynamic_ida)
-> > > > > >
-> > > > > > With driver calls pci_host_common_remove explicity, the flow
-> > > > > becomes:
-> > > > > > B pci_host_common_remove
-> > > > > >    pci_bus_release_domain_nr
-> > > > > >     of_pci_bus_release_domain_nr
-> > > > > >      of_get_pci_domain_nr      # succeeds in this order
-> > > > > >       ida_free(&pci_domain_nr_static_ida)
-> > > > > > A of_changeset_revert
-> > > > > >    pci_host_common_remove
-> > > > > >
-> > > > > > With updated flow, the pci_host_common_remove will be called
-> > > > > twice, so
-> > > > > > need to check 'bridge->bus' to avoid accessing invalid pointer.
-> > > > > >
-> > > > > > Fixes: c14f7ccc9f5d ("PCI: Assign PCI domain IDs by ida_alloc()=
-")
-> > > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > >
-> > > > > I went through the previous discussion [1] and I couldn't see an
-> > > > > agreement on the point raised by Bjorn on 'removing the host brid=
-ge
-> > > > > before the overlay'.
-> > > >
-> > > > This patch is an agreement to Bjorn's idea.
-> > > >
-> > > > I have added pci_host_common_remove to remove host bridge
-> > > > before removing overlay as I wrote in commit log.
-> > > >
-> > > > But of_changeset_revert will still runs into pci_host_
-> > > > common_remove to remove the host bridge again. Per
-> > > > my view, the design of of_changeset_revert to remove
-> > > > the device tree node will trigger device remove, so even
-> > > > pci_host_common_remove was explicitly used before
-> > > > of_changeset_revert. The following call to of_changeset_revert
-> > > > will still call pci_host_common_remove.
-> > > >
-> > > > So I did this patch to add a check of 'bus' to avoid remove again.
-> > > >
-> > >
-> > > Ok. I think there was a misunderstanding. Bjorn's example driver,
-> > > 'i2c-demux-pinctrl' applies the changeset, then adds the i2c adapter =
-for its
-> > > own. And in remove(), it does the reverse.
-> > >
-> > > But in your case, the issue is with the host bridge driver that gets =
-probed
-> > > because of the changeset. While with 'i2c-demux-pinctrl' driver, it o=
-nly
-> > > applies the changeset. So we cannot compare both drivers. I believe i=
-n your
-> > > case, 'i2c-demux-pinctrl' becomes 'jailhouse', isn't it?
-> > >
-> > > So in your case, changeset is applied by jailhouse and that causes th=
-e
-> > > platform device to be created for the host bridge and then the host b=
-ridge
-> > > driver gets probed. So during destroy(), you call of_changeset_revert=
-() that
-> > > removes the platform device and during that process it removes the ho=
-st bridge
-> > > driver. The issue happens because during host bridge remove, it calls
-> > > pci_remove_root_bus() and that tries to remove the domain_nr using
-> > > pci_bus_release_domain_nr().
-> > >
-> > > But pci_bus_release_domain_nr() uses DT node to check whether to free=
- the
-> > > domain_nr from static IDA or dynamic IDA. And because there is no DT =
-node exist
-> > > at this time (it was already removed by of_changeset_revert()), it fo=
-rces
-> > > pci_bus_release_domain_nr() to use dynamic IDA even though the IDA wa=
-s initially
-> > > allocated from static IDA.
-> >
-> > Putting linux,pci-domain in an overlay is the same problem as aliases i=
-n
-> > overlays[1]. It's not going to work well.
-> >
-> > IMO, you can have overlays, or you can have static domains. You can't
-> > have both.
-> >
->
-> Okay.
->
-> > > I think a neat way to solve this issue would be by removing the OF no=
-de only
-> > > after removing all platform devices/drivers associated with that node=
-. But I
-> > > honestly do not know whether that is possible or not. Otherwise, any =
-other
-> > > driver that relies on the OF node in its remove() callback, could suf=
-fer from
-> > > the same issue. And whatever fix we may come up with in PCI core, it =
-will be a
-> > > band-aid only.
-> > >
-> > > I'd like to check with Rob first about his opinion.
-> >
-> > If the struct device has an of_node set, there should be a reference
-> > count on that node. But I think that only prevents the node from being
-> > freed. It does not prevent the overlay from being detached. This is one
-> > of many of the issues with overlays Frank painstakingly documented[2].
-> >
->
-> Ah, I do remember this page as Frank ended up creating it based on my
-> continuous nudge to add CONFIG_FS interface for applying overlays.
->
-> So why are we applying overlays in kernel now?
+I've rebased and retested the series on top of for-6.14/block and updated
+the docummentation as requested by John.
 
-That's been the case for some time. Mostly it's been for fixups of old
-to new bindings, but those all got dropped at some point. The in
-kernel users are very specific use cases where we know something about
-what's in the overlay. In contrast, configfs interface allows for any
-change to any node or property with no control over it by the kernel.
-Never say never, but I just don't see that ever happening upstream.
+Original cover letter:
 
-Rob
+These patches were part of 'honor isolcpus configuration' [1] series. To
+simplify the review process I decided to send this as separate series
+because I think it's a nice cleanup independent of the isolcpus feature.
+
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Changes in v6:
+- collected tags
+- Updated documented
+- rebased to for-6.14/block
+- Link to v5: https://lore.kernel.org/r/20241115-refactor-blk-affinity-helpers-v5-0-c472afd84d9f@kernel.org
+
+Changes in v5:
+- dropped the irq_get_affinity callback from struct device_driver
+  again.
+- s/blk_mq_hctx_map_queues/blk_mq_map_hw_queues/
+- collected tags
+- Link to v4: https://lore.kernel.org/r/20241113-refactor-blk-affinity-helpers-v4-0-dd3baa1e267f@kernel.org
+
+Changes in v4:
+- added irq_get_affinity callback to struct device_driver
+- hisi_sas use dev pointer directly from hisi_hba.
+- blk_mq_hctx_map_queues: ty irq_get_affinity callback
+  from device_driver first then from bus_type
+- collected tags
+- fixed typos
+- Link to v3: https://lore.kernel.org/r/20241112-refactor-blk-affinity-helpers-v3-0-573bfca0cbd8@kernel.org
+
+Changes in v3:
+- dropped the additinal argument in blk_mq_hctx_map_queues.
+  leave open coded version in hisi_sas_v2.
+- splitted "blk-mp: introduce blk_mq_hctx_map_queues" patch into
+  three patches.
+- dropped local variable in pci_device_irq_get_affinity
+- Link to v2: https://lore.kernel.org/r/20241111-refactor-blk-affinity-helpers-v2-0-f360ddad231a@kernel.org
+
+Changes in v2:
+- added new callback to struct bus_type and call directly the affinity
+  helpers from there.
+- Link to v1: https://lore.kernel.org/r/20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de
+
+Changes in v1:
+- renamed blk_mq_dev_map_queues to blk_mq_hctx_map_queues
+- squased 'virito: add APIs for retrieving vq affinity' into
+  'blk-mq: introduce blk_mq_hctx_map_queues'
+- moved hisi_sas changed into a new patch
+- hisi_sas use define instead of hard coded value
+- moved helpers into their matching subsystem, removed
+  blk-mq-pci and blk-mq-virtio files
+- fix spelling/typos
+- fixed long lines in docu (yep new lines in brief descriptions are
+  supported, tested ti)
+- based on the first part of
+  [1] https://lore.kernel.org/all/20240806-isolcpus-io-queues-v3-0-da0eecfeaf8b@suse.de
+
+---
+Daniel Wagner (8):
+      driver core: bus: add irq_get_affinity callback to bus_type
+      PCI: hookup irq_get_affinity callback
+      virtio: hookup irq_get_affinity callback
+      blk-mq: introduce blk_mq_map_hw_queues
+      scsi: replace blk_mq_pci_map_queues with blk_mq_map_hw_queues
+      nvme: replace blk_mq_pci_map_queues with blk_mq_map_hw_queues
+      virtio: blk/scsi: replace blk_mq_virtio_map_queues with blk_mq_map_hw_queues
+      blk-mq: remove unused queue mapping helpers
+
+ block/Makefile                            |  2 --
+ block/blk-mq-cpumap.c                     | 37 +++++++++++++++++++++++++
+ block/blk-mq-pci.c                        | 46 -------------------------------
+ block/blk-mq-virtio.c                     | 46 -------------------------------
+ drivers/block/virtio_blk.c                |  4 +--
+ drivers/nvme/host/fc.c                    |  1 -
+ drivers/nvme/host/pci.c                   |  3 +-
+ drivers/pci/pci-driver.c                  | 14 ++++++++++
+ drivers/scsi/fnic/fnic_main.c             |  3 +-
+ drivers/scsi/hisi_sas/hisi_sas.h          |  1 -
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  4 +--
+ drivers/scsi/megaraid/megaraid_sas_base.c |  3 +-
+ drivers/scsi/mpi3mr/mpi3mr.h              |  1 -
+ drivers/scsi/mpi3mr/mpi3mr_os.c           |  2 +-
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  3 +-
+ drivers/scsi/pm8001/pm8001_init.c         |  2 +-
+ drivers/scsi/pm8001/pm8001_sas.h          |  1 -
+ drivers/scsi/qla2xxx/qla_nvme.c           |  3 +-
+ drivers/scsi/qla2xxx/qla_os.c             |  4 +--
+ drivers/scsi/smartpqi/smartpqi_init.c     |  7 ++---
+ drivers/scsi/virtio_scsi.c                |  3 +-
+ drivers/virtio/virtio.c                   | 19 +++++++++++++
+ include/linux/blk-mq-pci.h                | 11 --------
+ include/linux/blk-mq-virtio.h             | 11 --------
+ include/linux/blk-mq.h                    |  2 ++
+ include/linux/device/bus.h                |  3 ++
+ 26 files changed, 92 insertions(+), 144 deletions(-)
+---
+base-commit: 22db180127a901ce41aa14d74da2e2eb452540b1
+change-id: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
+
+Best regards,
+-- 
+Daniel Wagner <wagi@kernel.org>
+
 
