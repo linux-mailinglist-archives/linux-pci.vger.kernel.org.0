@@ -1,149 +1,99 @@
-Return-Path: <linux-pci+bounces-17555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17557-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3AB99E0C38
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 20:36:47 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80C3F164EA9
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2024 19:36:44 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECD01DE4CC;
-	Mon,  2 Dec 2024 19:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="cSvd9z+b"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 586BB9E1280
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 05:43:20 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B31DE3BF
-	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 19:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733168203; cv=none; b=Fzo6dc8nsFcCiEEmJ9+t/YiWygZcfHOgsLxpm2bDcmA4XKD3Rt8SYYjw6tCs9XvjVQjGhI4f/kmGt+jAiXLaMv5s4gMnHIHQRfVVz2P3l4eqfW7FVPMs52aZVy9gaTo9bRIjyCpNDDFO2+skAdEiPA+nIZ97Crn0est2yrI5jlE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733168203; c=relaxed/simple;
-	bh=PMsUv+q/+JfREQxpfuAbt3/PvDuUR3+8vgcngJw4L0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tMyIIqH19eYCdwh8D8ov+B2XONdLJMSyqNk0y2yNeztwX2QRgo4+cFhM3Axmu0D2Xlm/NfncDZMHnKBP0Ho/3YMf/80J9uzcZkr2Zr0f1p1oMymi6R/614GGSRYJfOXapNPgIFDmJSyNMQxT0Qmwr1E+O45hyCKA3ZDigLNg/nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=cSvd9z+b; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com [209.85.208.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF7D9B2079B
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 04:43:17 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CADA957CBE;
+	Tue,  3 Dec 2024 04:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tF+Hp87U"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C86013F28C
-	for <linux-pci@vger.kernel.org>; Mon,  2 Dec 2024 19:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1733168198;
-	bh=W6aZlMtP8KSsoitzGDR7wpyoQGNVRJRxSI2L2J9zakA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=cSvd9z+bD+4PUlhD36l6d3fWAPthzbffNvTerhXVq3zHKB7ZBIGxLEE5BFQv29F03
-	 sdRKoRlB/6rdhdwOeUak/bCNYGhZcVr2YVA6PToadRPKZFI72hWh/rGwkV+Nnh7Pd3
-	 MtJxG4uYkBCKeSW4vNFhsVNknUHksh8N1zcX3LoB8RV3QV9L7dfZVHtiml9KCaACvx
-	 PrMhiwHl0O/F3NNSBSiHxTptb8xIoP67IhrwVGjwuGljR8A+Nb1ZIZ5MA4gdGOeXzF
-	 b881IE7tkdZJszDpwKIGIq3mJ7x7+cgvcNtZ5sKwG8lx37pSe8CXuzhBhwD407qcn8
-	 gAKif4d15spJg==
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ffe1ddca04so37181521fa.1
-        for <linux-pci@vger.kernel.org>; Mon, 02 Dec 2024 11:36:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733168196; x=1733772996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W6aZlMtP8KSsoitzGDR7wpyoQGNVRJRxSI2L2J9zakA=;
-        b=NLB7hURQBpe5TC/sNrM6pC4GN7T8YLqkyF77cV3DhBxTeSYtAXZRiznzB3DINE5+2s
-         uRe3ofddF9cbrwsQg4/isL/p2MqynuCAwqtkugmFhgLyASCPb7c4enTaES94Jh7SFHn3
-         0e1CFMDMwGsA2ka7EXvy/fi0svBHmDYmAv8fQVPAiriu+Aoik+a3QroBHg1b1ALXS4KK
-         RW1vm1t1FEXAinsvXEhLQL0Bqr2bqQWqqDYJ53XBPlsYzW/sGlsSyoTZzFqzNj4yJKUp
-         gxX0VhuOK06K/TTS/pWfiH2Qshxj6xtLNOFDayKvc8fF2o0j/Repb6b93kjmdnN02q1/
-         Qn+w==
-X-Gm-Message-State: AOJu0YzVI7x9avD0MSCY0MKYajg52eKJkr/neQrESoYzsAQuAUk7I9/G
-	Z3S6UDHoN5WNYlHZ8PHqx1M8ulWPWlvU3hlGAZn9iqAdatDzTM2aGNUOPm42z3+dY5HyqxOkRgI
-	TFT+Y+fUVKNrP+zY8m1xOYAaaqzN2zhKqiouNa53Ys5pYwwNt1Cgp2v3tQE/r8/DR6JMImrWUJA
-	AUjBHD2RYVRHPU9wXOayF7nDSN9XJO3wd6EliIvZUE5qT9uoda4Lu1gcGjvfY=
-X-Gm-Gg: ASbGncsQM8FwANQqTeYJmm4+tGx3TWrc/tRO2FT4gncGeT+dpLN3HOrIeotGfQB4KXJ
-	Y84FAY/XPURGZL74T7PUAHYNoenaOEw==
-X-Received: by 2002:a05:6512:1249:b0:53d:b4ab:13ba with SMTP id 2adb3069b0e04-53df00d953cmr13276677e87.27.1733168196283;
-        Mon, 02 Dec 2024 11:36:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGNSC28E6FM3qQ6WZTcAg556PxdrO7zI2Cs8OXWZhXXHB0JJrG1uq2dPIWuLVrFidClqbG+uIzIJVnnP73V5RM=
-X-Received: by 2002:a05:6512:1249:b0:53d:b4ab:13ba with SMTP id
- 2adb3069b0e04-53df00d953cmr13276668e87.27.1733168195915; Mon, 02 Dec 2024
- 11:36:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A612F3398B
+	for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2024 04:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733200994; cv=none; b=pQ5045esPlxalWjXu5/HIPG4rl3obJDJaYsUPkXpts9rhE/YEZrIOWvT2RBOWHt6N3NbnKTOsBczmRbNISMKUCpFB4GNib6MxCxNMCtcjzphEJKa7H7b+Z3HxQ+kXcs29E8ho3/hfgY3NQzMzkIHTpvEg2DxgkQhbg260iRThRU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733200994; c=relaxed/simple;
+	bh=cKOxT6qnr18ddJasqXiVSZmz2RrQrNoSER9FEShbRIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GMqhmU6G0A4nuTDyx+2062xMuMB12rXs80OScHu2pI7JkX9p89WHT3AFsa5TK5MwlP4FHPhM9D9XOLrthzLjGldlESae2RtMw9jmB3gI+aBb1HeUH8UgVnlCwsaNWXzCgxZ4+6mrDW2uTjN7rctDz7Kq7kTIB4AKns/zlMlyKWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tF+Hp87U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0FCC4CECF;
+	Tue,  3 Dec 2024 04:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733200994;
+	bh=cKOxT6qnr18ddJasqXiVSZmz2RrQrNoSER9FEShbRIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tF+Hp87UAv9+prGo5ovGE2s1+J/yQv+/xOluSGCLm5Fo7lQiq+m4tafpOhz8RQEOg
+	 NWZ5xiwdZF1CSc/SC2dWHoMFYWhFP+lgcTZSTVopMmPaQEjI6i7maKkszZCSAyUw91
+	 JEeGOQFuD3n+QWrtuU8bsO3y6zVhsqB90Grutwpg34JUJByCqNEpyt6yxBW/8vti+9
+	 gAlTBUaEf67mXMuyLgy7rYmQbxv7jyzLg2HKbfOissA39ue62AwXLx6j34JkN2DZwe
+	 17mbBPbrIqHOcRJkGa7CuhB4FxVxQcHqPZKtnZxfvWj1EgqO0XTZcsij69fD7dRsT8
+	 JxEYl9lbjPxZw==
+Date: Tue, 3 Dec 2024 05:43:10 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 1/2] PCI: endpoint: pci-epf-test: Add support for
+ capabilities
+Message-ID: <Z06MXj2K4dcWMZff@x1-carbon>
+References: <20241121152318.2888179-4-cassel@kernel.org>
+ <20241121152318.2888179-5-cassel@kernel.org>
+ <20241130081245.2gjrw26d5cbbsde5@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEyZgQZub4mDRrV5w@mail.gmail.com>
- <20241126103427.42d21193.alex.williamson@redhat.com> <CAHTA-ubXiDePmfgTdPbg144tHmRZR8=2cNshcL5tMkoMXdyn_Q@mail.gmail.com>
- <20241126154145.638dba46.alex.williamson@redhat.com> <CAHTA-uZp-bk5HeE7uhsR1frtj9dU+HrXxFZTAVeAwFhPen87wA@mail.gmail.com>
- <20241126170214.5717003f.alex.williamson@redhat.com> <CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
- <20241127102243.57cddb78.alex.williamson@redhat.com>
-In-Reply-To: <20241127102243.57cddb78.alex.williamson@redhat.com>
-From: Mitchell Augustin <mitchell.augustin@canonical.com>
-Date: Mon, 2 Dec 2024 13:36:25 -0600
-Message-ID: <CAHTA-uaGZkQ6rEMcRq6JiZn8v9nZPn80NyucuSTEXuPfy+0ccw@mail.gmail.com>
-Subject: Re: drivers/pci: (and/or KVM): Slow PCI initialization during VM boot
- with passthrough of large BAR Nvidia GPUs on DGX H100
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241130081245.2gjrw26d5cbbsde5@thinkpad>
 
-Thanks!
+Hello Mani,
 
-This approach makes sense to me - the only concern I have is that I
-see this restriction in a comment in __pci_read_base():
+On Sat, Nov 30, 2024 at 01:42:45PM +0530, Manivannan Sadhasivam wrote:
+> >  
+> >  struct pci_epf_test {
+> > @@ -74,6 +76,7 @@ struct pci_epf_test_reg {
+> >  	u32	irq_type;
+> >  	u32	irq_number;
+> >  	u32	flags;
+> > +	u32	caps;
+> 
+> Can we rename the 'magic' register? It is not used since the beginning and I
+> don't know if we will ever have a usecase for it.
 
-`/* No printks while decoding is disabled! */`
+It is actually used!
 
-At the end of __pci_read_base(), we do have several pci_info() and
-pci_err() calls - so I think we would need to also print that info one
-level up after the new decode enable if we do decide to move decode
-disable/enable one level up. Let me know if you agree, or if there is
-a more straightforward alternative that I am missing.
+When doing PCITEST_BAR (pci_endpoint_test_bar()),
+and barno == test->test_reg_bar, we are only filling the first 4 bytes,
+rather than filling the whole BAR:
+https://github.com/torvalds/linux/blob/v6.13-rc1/drivers/misc/pci_endpoint_test.c#L293-L294
 
-- Mitchell Augustin
+These first 4 bytes are stored in the magic register.
 
+I do agree that the magic register name is slightly misleading, but that
+seems completely unrelated to this patch.
 
-On Wed, Nov 27, 2024 at 11:22=E2=80=AFAM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> On Tue, 26 Nov 2024 19:12:35 -0600
-> Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
->
-> > Thanks for the breakdown!
-> >
-> > > That alone calls __pci_read_base() three separate times, each time
-> > > disabling and re-enabling decode on the bridge. [...] So we're
-> > > really being bitten that we toggle decode-enable/memory enable
-> > > around reading each BAR size
-> >
-> > That makes sense to me. Is this something that could theoretically be
-> > done in a less redundant way, or is there some functional limitation
-> > that would prevent that or make it inadvisable? (I'm still new to pci
-> > subsystem debugging, so apologies if that's a bit vague.)
->
-> The only requirement is that decode should be disabled while sizing
-> BARs, the fact that we repeat it around each BAR is, I think, just the
-> way the code is structured.  It doesn't take into account that toggling
-> the command register bit is not a trivial operation in a virtualized
-> environment.  IMO we should push the command register manipulation up a
-> layer so that we only toggle it once per device rather than once per
-> BAR.  Thanks,
->
-> Alex
->
+If you can come up with a better name, send a patch and you shall have
+my Reviewed-by tag :)
 
 
---=20
-Mitchell Augustin
-Software Engineer - Ubuntu Partner Engineering
+Kind regards,
+Niklas
 
