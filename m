@@ -1,217 +1,200 @@
-Return-Path: <linux-pci+bounces-17603-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17604-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6DD49E2E38
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 22:40:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D2D89E2EA1
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 23:06:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A92A5163EDA
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 21:40:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64CD616213F
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 22:06:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA1F205AA9;
-	Tue,  3 Dec 2024 21:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7684D1F7554;
+	Tue,  3 Dec 2024 22:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PyBqPO/+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bqc7qY9M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2080.outbound.protection.outlook.com [40.107.105.80])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED60E40BF5;
-	Tue,  3 Dec 2024 21:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733262031; cv=fail; b=LrZv8os63VASZH3uPC+4eW7+smTtCz9UC7jIb++X7N/F1EGYfl8wEMQz6O+F+0doxw6fydurjfcBLrYy2zLY72l2oot1pHFGG8qTFYSkRVqB+IsFne6PHixLFumksASoxkfwGtvyHDQkxx5zAjbiq2o63FRaV7/qW1kE8E5EZE8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733262031; c=relaxed/simple;
-	bh=dRVC6XSvLKkgjiPbWJtGZcpY73+AlYfDSVyUrjxqwBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AAUsfJUywj6+eFvyYSXwJM7JFjnF9K8XSmFnLvh5ibvhY1YgnpL8JOC+/rLlk5W20Hsi5InmTclE7nE8pGwAyEkvuSghVf6WWziTKP0ULpPhmjUy7oipkAhnvZrLcHk7HWmweex/URNUlQQzsEW/MpBNUKaN3DRavEyqe29Krlo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PyBqPO/+; arc=fail smtp.client-ip=40.107.105.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ggVpIjhk1CkK65NWcfgW+F+KjIMTDzAGSe4jSuVVCIk5h6ucRhkfazJ80hBQJt/dEePlSPt9zJJPRYINxyyXER+joj7KKVhI3taulJLpLRmbrWBYE2ndVBfrhrYWPcuvSNMYYtr4MfxxUWA+t59cy3SNeSWbPq9bPm49EFZIE1B4i9+r/ChAV8vAN+aR70wukMq85Jsuuqy3XMm5XTNJvf0ikRnjS/M8GN9QpWtEeqZyJgXuzOUXNuZBa0FCjCh7vOsb96OkdzL9qJxK8z8OXb9+hszKd/pVZMRFD2ySLbcMTeQtPdRQsGe/nE4DUkoclgAY5rQASU+EMafQi7tPHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8GoMrnfez8gkqSQdYCjv9jiFqJ6aB1zoOleoYA9M1Bw=;
- b=Zsicf0DoWY4gdCVEvQE9xyyHlBsu+BvmroCxfBZ/3Z3Ye3HOln4Rb140nTPM89Yb9SzriNVBA09alNt5WNke/35dK6cdAukk5p5plyU4qsPf+H4NZYJ3YdnIcIH4VnUGhKY9p3bbWpHiKRvlzfQpV7rSweHuCa9vTR8BR4LtVRl2gGBWMXgdgDJFy33eria7IZt0L9012pYmqphLV7HE1n/dqlsHeRxgJbVYAjw85NSYs+CogDHYjKQn3vDH8reGuZSP4iODPJxt0WpJ7ZfHP2zslb+Ra11u9Wziq3iaA2BQOnu9Rag1eS85kZlteluMwMwtT8neAWZiqlsmntmmeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8GoMrnfez8gkqSQdYCjv9jiFqJ6aB1zoOleoYA9M1Bw=;
- b=PyBqPO/+L8xyp5VBG9LZkmp1EMVpT0F0I4qRKLgPUIrmoR0/5i+CQRfty4dZVM6DAK6GQcIvdRlDKe9mPjJOKkRzzFkzwIKaCxG8vFVU2aYQxNl4x9g171hYxCltnepT4F8qBNaqwxipF7h9EPX12TQQW9tG828rctZkaSFefeMNq2GLPJYGk2YdtAsy+oGYDMIQRczqWblg4CC4KvI8g9O+T2CgYhZA+d1Oug/p4MXYZRVsBkRRLxo5ePdvScgo6DJNeSt3Fm6kbInNlaM6QMZ2WZF17w4FluQVfGG57SvvqSUivnec2x81DM7A+pjXUmzfIPGc26Regh6tjnFYHQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU2PR04MB9129.eurprd04.prod.outlook.com (2603:10a6:10:2f4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Tue, 3 Dec
- 2024 21:40:25 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8207.017; Tue, 3 Dec 2024
- 21:40:25 +0000
-Date: Tue, 3 Dec 2024 16:40:16 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Anup Patel <apatel@ventanamicro.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
-	maz@kernel.org, jdmason@kudzu.us, stable@kernel.org
-Subject: Re: [PATCH v9 1/6] platform-msi: Add msi_remove_device_irq_domain()
- in platform_device_msi_free_irqs_all()
-Message-ID: <Z096wCMFmR7AyfWn@lizhi-Precision-Tower-5810>
-References: <20241203-ep-msi-v9-0-a60dbc3f15dd@nxp.com>
- <20241203-ep-msi-v9-1-a60dbc3f15dd@nxp.com>
- <87y10wsc6z.ffs@tglx>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y10wsc6z.ffs@tglx>
-X-ClientProxiedBy: BYAPR01CA0043.prod.exchangelabs.com (2603:10b6:a03:94::20)
- To PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D20A1E00BE
+	for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2024 22:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733263589; cv=none; b=rTzBVI7y7zOu/IN0NsoZJJnBaHe4coIkX8jsQYA3NaD6Y4q17oMsNMy4jtMJMq6x2+mq221zUUM7xbO78p0vonKNG68HcPLXZ0xKmbTpASD6PS+fxFk4Ip7BVPBeROo89RuZyTxed4uhw3G+A209R/ecxRvmu4MwFypzHdwD2fs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733263589; c=relaxed/simple;
+	bh=AD9m5l1akbuPM1ybWrq29tq8zaQy3+HM6xJLensm4Qg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=odcmvoqzBZHHNSvRdg8p1/ikLBt1WJQa24vzFpXKKKNbeH187qr6oNwv//ZZYyuP9NID58Ufk7ZGTUubznJO+ULyyr4TxT6F4Tm77474l/K4LzqH3JuKL7ylpn+d8ACfLRi69DiWeLO5hhJl5+pjjsdJIKevq5nKLY6NGs4clPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bqc7qY9M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733263586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WIePSw9erBGB0EkQKOgbCaIeXQNXPbcij9sycEa1gJw=;
+	b=bqc7qY9M13k/fi+/eIXlGtXlprb+CXf1VHQJYi8cz74ZjHWY3tsF3MKiX09BHDZ1pjCAvQ
+	NhQCqfPtarVJD0TtRoFfqOn84USLCHGUSE+4Dz9cyd6YTcsqIOX5CtKy0NRVVsAYPFXcgy
+	vMFQo0sIUaP/GEjloQa+aQ6PjLjeFW8=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-211-zp9UeeQoPvmzWB4QRKnUbw-1; Tue, 03 Dec 2024 17:06:25 -0500
+X-MC-Unique: zp9UeeQoPvmzWB4QRKnUbw-1
+X-Mimecast-MFC-AGG-ID: zp9UeeQoPvmzWB4QRKnUbw
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-71d4b284637so959722a34.0
+        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2024 14:06:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733263584; x=1733868384;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WIePSw9erBGB0EkQKOgbCaIeXQNXPbcij9sycEa1gJw=;
+        b=gjfL2pc0Oohr5nEnfxDQo5Rl+t37Sh8pr5i7jDH5m5CtUJ8T9AdR0Qa4NpzoIgzInH
+         At3EWcFJXpDrSL3sXHQta9w+wFltzq0/PyqUVJFRX0GlXaPO2wbqL2FLf3uHPzIGmoEV
+         BuNo7zk/w+Wkauqw3mUJP8uZ7nrPq3bjR1uOCzVfh/+hAyt5b+6Cg2nAfElrsvBtoaiD
+         TWw72c5lpyacQTTThwWayKamGB57Y5ffNbKv8xor3+HrW8KO9TEox6mME5v9v4PJu9PK
+         ruQzvgPLGFzEbRiqZMktDHknHGhse0IwteZCPw5GOrhcZVxHmpeQ6v0JCQ5Vi9+2P127
+         tCMA==
+X-Gm-Message-State: AOJu0YyRVY519O6+AhrqHLryfEMSGe3pY4Si5Ou2CP/VtPAVzN0KUI8u
+	+Mx2dboeRhOEYQz4lW7di07u2YNStc7DyPWK4z9ineW2y+0lIy5ut49XkK2jpeNAZAyMTIO39r9
+	vb7+luTz3mGKUBD/uFa/KchSgMvw7OEpfBbA7vE0YtOK868zFdRyZoY4fsw==
+X-Gm-Gg: ASbGncui+phBotcyulmPWrOFm5ZRotXE31QLpJKJV96H6vdeL7WLaO2xhRNddPOUYzL
+	liZaWsaWwTeTxtAdf7KM5PM8JK3V/rRikDUR8VlLT4bjUIjtihS8zWjmNyAYCezkNy4FNroJ6hd
+	CIr5iJApOzFYfoZJvzLWdaEsotS9YroT8zyrlbp/J8BvdTjh8ZeyJaanZz0IiMjSWV3edmTcj8I
+	qLr6TtjLdTtVeOLNycI74v2mrE35Z4s/WPOuRm6lQzGWXYd/SGaQw==
+X-Received: by 2002:a05:6870:82a0:b0:29e:723c:8e9d with SMTP id 586e51a60fabf-29e8864ab96mr932474fac.4.1733263584306;
+        Tue, 03 Dec 2024 14:06:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH7jGvGfB3Me4o3Jd6sSOMboIoUa4ByGG2+wC0X4ZrR+2bwV76NNF/fqntlqJRNv1VOTSapnA==
+X-Received: by 2002:a05:6870:82a0:b0:29e:723c:8e9d with SMTP id 586e51a60fabf-29e8864ab96mr932465fac.4.1733263583944;
+        Tue, 03 Dec 2024 14:06:23 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-29de9945bc7sm4029719fac.43.2024.12.03.14.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2024 14:06:23 -0800 (PST)
+Date: Tue, 3 Dec 2024 15:06:20 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Mitchell Augustin <mitchell.augustin@canonical.com>
+Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: drivers/pci: (and/or KVM): Slow PCI initialization during VM
+ boot with passthrough of large BAR Nvidia GPUs on DGX H100
+Message-ID: <20241203150620.15431c5c.alex.williamson@redhat.com>
+In-Reply-To: <CAHTA-uZWGmoLr0R4L608xzvBAxnr7zQPMDbX0U4MTfN3BAsfTQ@mail.gmail.com>
+References: <CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEyZgQZub4mDRrV5w@mail.gmail.com>
+	<20241126103427.42d21193.alex.williamson@redhat.com>
+	<CAHTA-ubXiDePmfgTdPbg144tHmRZR8=2cNshcL5tMkoMXdyn_Q@mail.gmail.com>
+	<20241126154145.638dba46.alex.williamson@redhat.com>
+	<CAHTA-uZp-bk5HeE7uhsR1frtj9dU+HrXxFZTAVeAwFhPen87wA@mail.gmail.com>
+	<20241126170214.5717003f.alex.williamson@redhat.com>
+	<CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
+	<20241127102243.57cddb78.alex.williamson@redhat.com>
+	<CAHTA-uaGZkQ6rEMcRq6JiZn8v9nZPn80NyucuSTEXuPfy+0ccw@mail.gmail.com>
+	<20241203122023.21171712.alex.williamson@redhat.com>
+	<CAHTA-uZWGmoLr0R4L608xzvBAxnr7zQPMDbX0U4MTfN3BAsfTQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB9129:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6fd3284-0377-4edd-2ea8-08dd13e31912
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YUvF0ms5KwV6qIPXTQIqFfroL4p5WiM8F80buXtjPFlfStwGBOCLYVRkox15?=
- =?us-ascii?Q?Z/Z/tnEJBPaUgkyBuIlSKQTbxEJnQ+9Gku06nYRDtx8Sqpj9XUThALU+SHu8?=
- =?us-ascii?Q?jec7iig/KkOCWK2vG9Rh5JOpcm5ZFEdC0umTj/Xqt7FMHWR/tAGq339WRaYR?=
- =?us-ascii?Q?htq6XSH8W4yvoIjszoxZaFmv1UUQHl2Vv/8mHhnwySlzK4wohxG2TTg19Bec?=
- =?us-ascii?Q?fr3t+8ddBPmNv2w8fCdLvv+bFLWNpAbXjFgHbg1X6wmjl7MnnMwCknFPhDAv?=
- =?us-ascii?Q?IHWMtzX1gHKW0gwv0c0yNWr8EiTQZ4q204tKuL0IdBMir3dQdzwGteUYVegB?=
- =?us-ascii?Q?4re8EzYPDjVzqXS8XWX6Vd/Jbg3AyD6L1rEiINh2NhxW8ghrnul1xDzPvP7U?=
- =?us-ascii?Q?tNO6m3aAJKKNDouqO7Rr/gABqkEGeC4ytNGFe7Ha/70iRit5gK/PmqaaEKko?=
- =?us-ascii?Q?B7wg9I0z48EA/+ejdVhLMqIASaNbEIx0DwQPV7iabDewWZLLHzsSY02MxK5a?=
- =?us-ascii?Q?E4E8yqDUoablORqD1WZ3t08tau8vqyBdW27eVcQldF+GLwrp8GmFSSlSzMAW?=
- =?us-ascii?Q?1JFaXsx5dplUhRlf22SMr1QJZA6/uFuYNRSTWibB7Sz9vqD60sgjephZtGRZ?=
- =?us-ascii?Q?f3g23rvz6ACgKJm4SFjXQj7aGVNEJWCaP/wlbZ0TPIenkI3Z9S1lgXh7eE17?=
- =?us-ascii?Q?IZaQMkAbCAwGNBpLh2dOZnMj6UjLlU+pb0sTdS8q60goZWnWsaz3DFvbBhr4?=
- =?us-ascii?Q?3seOIi0gYVfZPhppR5ryh/heWeedXCdVxeEdECpNpe/sjwUoIaTkHL+gp9ea?=
- =?us-ascii?Q?Lx8kst1fvrsfOMJr75hoHfEp347QUnBcY/KG9cHKCFw/qoMNToYXWejzt2nf?=
- =?us-ascii?Q?VI8McFltHUJewig7tRX3I5rOKtVpwbYTmKEv/jzGZZBYTafp+4Dz8jqimVTw?=
- =?us-ascii?Q?T1avqZasUY887LS81DMs/HuS/NN6OpHMCmaY9Nuqz1PrKSgn9lrGYADSyqHo?=
- =?us-ascii?Q?Yn9R+M7eYcCLXpBsaNT5tfIpjnYcHbIih8030HdQ40+K2hfCXrwr+f1zz7zt?=
- =?us-ascii?Q?k3yZq8ZztdhJ7XGl6R+x/mZCr5TxHFlHGY0MSwY5OW/+JUaurrBasWuhOeTo?=
- =?us-ascii?Q?iVFsUw0+mqtlD1l0cs5fymVSR83cHUkfJ0gSAbzKgsqVO83EITlwTa/R/931?=
- =?us-ascii?Q?c8I1A331HHXq4/dnwTtBRYSdZQTmtTRkewrdqkShnwdFzw9cuLYNlSzUNTX3?=
- =?us-ascii?Q?GhD8SNR8xjdlRu6Rqb4XmsHZvio88Y9tQXbKFOAMRqo8SgxTpmLDyf5daeUS?=
- =?us-ascii?Q?Ez6YwIMbGNEcvbVkiGtEhRvk1uS2Hte0di01tbCOkthAcmdFFqQ+KcR1HEMc?=
- =?us-ascii?Q?cw8G3NtrvPBF8Y9Pl9o7nO8xpr6n12z2dPtB9PuiHbaA3i4q1Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YH0v7jiMO7xSr9SpryKg2dwKezFtZGRqYa3yuygM+OXJQcxIlLkrg3cy63LZ?=
- =?us-ascii?Q?KD5IOaR+EyvCE3TD5dX6Bi2/Lu30Oq8fthDKoN2RIhLD7LO30fgPnJsxejT5?=
- =?us-ascii?Q?UWqVu7fyxiiLNj9SS97JvOVIdfFG/u9ETgYYLTCqjkJ3kAIOUWCMk4/GKV7R?=
- =?us-ascii?Q?Jl6wLBY2VsqCZr/gSEeinGR2IH7Frg3+kxVVGzq2N5do2rSGUUJjySkKcRpu?=
- =?us-ascii?Q?1dKIuZ8D0AyH+yF02Gwz1oRskejKREtjr1QBVj1iRI3T0rRpiMn9OqjuiKIt?=
- =?us-ascii?Q?i/mgu0zDLTvHv2NRXzh7OMLMU2/GgNOevCf0npIFjPuilFGnZm3IwIFv8MSf?=
- =?us-ascii?Q?Mv9j4csAEk6ZyH1pa3BgWe7aXEkoNdblp/f4SKcEMF6EtAXZ3BNkbtu2NPdA?=
- =?us-ascii?Q?IBTQ0TCzrkPyOr5BkN1omZH/TRajmCeCx4xuwLN9VLWAxPiJpJEli2XGZIUz?=
- =?us-ascii?Q?CtykFlzQjarqYoCuE2LuZ+Spm7YJn7zDh2vsyyuRjV+ZQsSLQt4bWpsEFfJx?=
- =?us-ascii?Q?r9Hi8nPdX5hIJRoMiLzpgY8E8H/A52adKGHbOaSWqEg6iyOX1VZK/qWuiumi?=
- =?us-ascii?Q?yc222njxSoWSZi47yVFINm481Ktc1bLeZb5z+QUb9O2RRS17YnJHhthYh0ag?=
- =?us-ascii?Q?6eKMU9sLhF8CAfFBUVZ+m8TmLuRHlhBcNebaGdkmDNDLtkvPhdezJU3r+GGB?=
- =?us-ascii?Q?Hqk/mDlcYsggZ4cy2pG9SNRs3cBuS7i5jdsHm704q6SfnEGcALpcMhVn+vCX?=
- =?us-ascii?Q?GZsS2wSBXWkUagvxfiB9CMHLmYLoI1lQfxUT/dQKu+dVxOWUQos8K66wJ9z2?=
- =?us-ascii?Q?24+JBAM0xjcbJS7YEU24qCcQ8IsVXmFinOKe2cEo8lxKV6OtudIOmqCmSqOV?=
- =?us-ascii?Q?V5VpT2cY9rk4kVL3ijQbWYCPWWiiDoQYVgeNs0r4h6BNIBS+w23Y1cCDleUR?=
- =?us-ascii?Q?Z/kyPOzCZ/7pf7axizH+OW4AVhAX1n//VasYNK4FeUmZGL37Eoafm0yUHxYj?=
- =?us-ascii?Q?EbkENsO4CL3ltGubY9OK/bfPW4Mrlb34Z66RLw4O//ketz3Ymr4qYnhuAbLf?=
- =?us-ascii?Q?Qt0Rpb4yEP1wVvPt5tgapzHfp6X0DEAwUyIgqoN0V4CdGjDDAdR/6s5gFL2x?=
- =?us-ascii?Q?BTLD6jq2Rk8o95+oyg5H4moeVqA3uJFcE93cAlEIps5fS/4RwKo4p9sta5yu?=
- =?us-ascii?Q?ba8vcYhIFmixEwo5ejtSLmDYW99hnMbM2oRnrJL4MG1UI27ECgSCRyZ3ZQ41?=
- =?us-ascii?Q?+5xEUjnK2H8CSMbe39rcQxWxMEe4b8AcBZQEm8/fz2CIbdPdioxD5awWpaPU?=
- =?us-ascii?Q?yYgIlUdubpmcSbO9HALDKyJsQlZ0SKGZnQLBYeRpKKzbABrEUui3nFkCmfSc?=
- =?us-ascii?Q?vUBch0a6Ht1V3AekBs7ZYiMB1SeyJxY5yFyAf9piKiMGUW5bPe0N/yABoVxF?=
- =?us-ascii?Q?bwbWXBtDpuuiRtHvBncgO36zn9EBfhlLDIoVSe983sDK1K16tJYfy/qOyQ37?=
- =?us-ascii?Q?A7lwybwp2fMCAWfdl07VgjjJ7Efe906K6iN4P63fYrazgWsX6+lkf74REx87?=
- =?us-ascii?Q?3nVkd+8MA0lKIUE8wSo=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6fd3284-0377-4edd-2ea8-08dd13e31912
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2024 21:40:25.7338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MRtK9tjlqdVxwQXvLlKN+0NjSkWkMxyZ4ZZD4ncliwRb6EgEemGyyvjTD3S6eFhvf8h5hM9Z0XE0p8xvKL3sqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9129
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 03, 2024 at 10:12:36PM +0100, Thomas Gleixner wrote:
-> On Tue, Dec 03 2024 at 15:36, Frank Li wrote:
-> > The follow steps trigger kernel dump warning and
-> > platform_device_msi_init_and_alloc_irqs() return false.
-> >
-> > 1: platform_device_msi_init_and_alloc_irqs();
-> > 2: platform_device_msi_free_irqs_all();
-> > 3: platform_device_msi_init_and_alloc_irqs();
-> >
-> > Do below two things in platform_device_msi_init_and_alloc_irqs().
-> > - msi_create_device_irq_domain()
-> > - msi_domain_alloc_irqs_range()
-> >
-> > But only call msi_domain_free_irqs_all() in
-> > platform_device_msi_free_irqs_all(), which missed call
-> > msi_remove_device_irq_domain().
->
-> It's not a missed call. It's intentional as all existing users remove
-> the device afterwards.
->
-> > This cause above kernel dump when call
-> > platform_device_msi_init_and_alloc_irqs() again.
->
-> Sure, but that's not a fix and not required for stable because no
-> existing driver is affected by this unless I'm missing something.
->
-> What's the actual use case for this? You describe in great length what
-> fails, which is nice, but I'm missing the larger picture here.
+On Tue, 3 Dec 2024 14:33:10 -0600
+Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
 
-PCI host send a door bell to PCI endpoint, which use platform msi to
-trigger a IRQ.
+> Thanks.
+> 
+> I'm thinking about the cleanest way to accomplish this:
+> 
+> 1. I'm wondering if replacing the pci_info() calls with equivalent
+> printk_deferred() calls might be sufficient here. This works in my
+> initial test, but I'm not sure if this is definitive proof that we
+> wouldn't have any issues in all deployments, or if my configuration is
+> just not impacted by this kind of deadlock.
 
-PCI Host side				PCI endpoint side
+Just switching to printk_deferred() alone seems like wishful thinking,
+but if you were also to wrap the code in console_{un}lock(), that might
+be a possible low-impact solution.
 
-Send "enable"  command      ->         call platform_device_msi_init_and_alloc_irqs()
-Get doorbell address        <-         send back MSI address by shared memory
-Write data to doorbell      -> 	       MSI irq handler triggered.
-Send "Disable"  command     ->	       call platform_device_msi_free_irqs_all()
+> 2. I did also draft a patch that would just eliminate the redundancy
+> and disable the impacted logs by default, and allow them to be
+> re-enabled with a new kernel command line option
+> "pci=bar_logging_enabled" (at the cost of the performance gains due to
+> reduced redundancy). This works well in all of my tests.
 
+I suspect Bjorn would prefer not to add yet another pci command line
+option and as we've seen here, the logs are useful by default.
+ 
+> Do you think either of those approaches would work / be appropriate?
+> Ultimately I am trying to avoid messy changes that would require
+> actually propagating all of the info needed for these logs back up to
+> pci_read_bases(), if at all possible, since there seems like no
+> obvious way to do that without changing the signature of
+> __pci_read_base() or tracking additional state.
 
-At endpoint side, need dymatic response "enable/disable" commands. Of
-course, I can call msi_remove_device_irq_domain() in my disable function.
-But I think it should be symetic in alloc/free pair functions.
+The calling convention of __pci_read_base() is already changing if
+we're having the caller disable decoding and it doesn't have a lot of
+callers, so I don't think I'd worry about changing the signature.
 
-Previous version, alloc/free in bind/unbind function. I missed to do
-unbind/bind test. the principle should be the same.
+I think maybe another alternative that doesn't hold off the console
+would be to split the BAR sizing and resource processing into separate
+steps.  For example pci_read_bases() might pass arrays like:
 
-Frank
+        u32 bars[PCI_STD_NUM_BARS] = { 0 };
+        u32 romsz = 0;
 
->
-> Thanks,
->
->         tglx
+To a function like:
+
+void __pci_read_bars(struct pci_dev *dev, u32 *bars, u32 *romsz,
+                     int num_bars, int rom)
+{
+        u16 orig_cmd;
+        u32 tmp;
+        int i;
+
+        if (!dev->mmio_always_on) {
+                pci_read_config_word(dev, PCI_COMMAND, &orig_cmd);
+                if (orig_cmd & PCI_COMMAND_DECODE_ENABLE) {
+                        pci_write_config_word(dev, PCI_COMMAND,
+                                orig_cmd & ~PCI_COMMAND_DECODE_ENABLE);
+                }
+        }
+
+        for (i = 0; i < num_bars; i++) {
+                unsigned int pos = PCI_BASE_ADDRESS_0 + (i << 2);
+
+                pci_read_config_dword(dev, pos, &tmp);
+                pci_write_config_dword(dev, pos, ~0);
+                pci_read_config_dword(dev, pos, &bars[i]);
+                pci_write_config_dword(dev, pos, tmp);
+        }
+                
+        if (rom) {
+                pci_read_config_dword(dev, rom, &tmp);
+                pci_write_config_dword(dev, rom, PCI_ROM_ADDRESS_MASK);
+                pci_read_config_dword(dev, rom, romsz);
+                pci_write_config_dword(dev, rom, tmp);
+        }
+
+        if (!dev->mmio_always_on && (orig_cmd & PCI_COMMAND_DECODE_ENABLE))
+                pci_write_config_word(dev, PCI_COMMAND, orig_cmd);
+}
+
+pci_read_bases() would then iterate in a similar way that it does now,
+passing pointers to the stashed data to __pci_read_base(), which would
+then only do the resource processing and could freely print.
+
+To me that seems better than blocking the console... Maybe there are
+other ideas on the list.  Thanks,
+
+Alex
+
 
