@@ -1,61 +1,66 @@
-Return-Path: <linux-pci+bounces-17606-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17607-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC8149E2F03
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 23:25:21 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FEAC9E2F27
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 23:39:27 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 723FC283605
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 22:25:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64ED0161CC8
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 22:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58201204F77;
-	Tue,  3 Dec 2024 22:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923A81F8923;
+	Tue,  3 Dec 2024 22:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhLj8p8e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+Oamw/N"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E571DF268;
-	Tue,  3 Dec 2024 22:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE891D8E1E;
+	Tue,  3 Dec 2024 22:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733264717; cv=none; b=tzJeEgcP3lHJN/Xl9//CHpCxg9ndNukWTTAwkoJVdk62xtvXCyiODw4zhfmT0W7ncRb7IoF61lxFMgFfg3QAgfRkCHDx6PEcH9g+80Dg3uWrsQCBWj3hft/9r53IIPIFFN799bpOMkRkHfF4i+RBSJ17+lWdWY7FupLCh/rK7dU=
+	t=1733265562; cv=none; b=UVgw32R+EEjWvXkV2G39Zr6C/BI9SxoHqcMWRM0DfruZOY1VCRUjuiZIaU96B3/9N0P6L2AWasukShaQ41FlnALiulxReC/mmX566UGyKqwySByWznYAVP0+NYz7k9m3xU43phkyuJadM2gaIPOEOUlCtA5vBWbf5kgw/f346wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733264717; c=relaxed/simple;
-	bh=Z15C0mt3XM7YpivR1T5/W0M5swvKfGcdZ7nyxNwhLoQ=;
+	s=arc-20240116; t=1733265562; c=relaxed/simple;
+	bh=wKj6FXFllNBDaF5OSfRBHXGeyHVdbB1UAA4vOa8B/yU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZJ7TnyYwh3UlC9ONx6cJnCtV85XQSOGX6ZtzUwtgF64Ta2a5LA4ww2yjHJEadBznIYPEP61WacyMPI5bDTMclzkFSvYc8wMYHC/giJnaLeP5ILO0N7Qq0syxNv1npTsGiNLrm11qjIyad0JJu5DdX5zu3Vk/R3ieul2L+4k5PV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhLj8p8e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81806C4CEDC;
-	Tue,  3 Dec 2024 22:25:16 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Th2phDNrHphlY04iy+DCEcH5//oYFLh4FfLl4cmofjh8aFrLDU2WsaeweInAhuRs8m05lseHKu9q+XojNkHk0w9FehDk9VPJM0QTgoGQLp0pNe5AFexrqFPZzNhe6tEGcFumRHDTirv+EtJyy0eA73daZtZE7ERzayDSgemDqG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+Oamw/N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B9C8C4CEDC;
+	Tue,  3 Dec 2024 22:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733264716;
-	bh=Z15C0mt3XM7YpivR1T5/W0M5swvKfGcdZ7nyxNwhLoQ=;
+	s=k20201202; t=1733265561;
+	bh=wKj6FXFllNBDaF5OSfRBHXGeyHVdbB1UAA4vOa8B/yU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qhLj8p8eyWJXXP2R4fcik2XxZ1g4PpArVVeC4x2S0kXCH2O24HAt7vH4EuYcRZa9U
-	 agS0BM2aYhGkfRoh8AXjL7O1WEuoUtSxGq8aIPSUqUqT7p5kfpOKmj6WTOkNfWb6ae
-	 gesaNcOwa2CvKG0o081fcGYQyV1Aiw4aQQ57Md9Ffuda70Vw/Z/TP0AI/31q1JMnlr
-	 R4TnoXjduLP3en1w119e6ZYjMoLmpmNHSCdjvW4PMO4Sika9XCgkDNvThTj90uvqnI
-	 HFrNGoNAfsgTkVZtdnf4kK7COX0g/5hcp3ydpoWWf+O0KZ2vGTem5n36fzY7c/FExp
-	 rrf6y623PwJTQ==
-Date: Tue, 3 Dec 2024 16:25:15 -0600
+	b=M+Oamw/NYy+DFLqyJxR/dJ/vewk97b3hm56heP86XNoADsAj9LwNVSg5mfa7aVwFV
+	 P8nNRDpOF1beu9AGtqQgfQVog68tmtYdkBjEk8oWFaGrT6dH7CZdPjdOHEyntkZXay
+	 yuPq7xu3pR7qVcGxdVwF0eTyMc98bDqCuTXvaQogxXiOG8Gj0Bi1Qc92jHMXVJiFZa
+	 mtL39MAgLaEu+tkKWt5WuUmu38wDfq8JCyQMtQaRTxgQwXFvGAMbbVkDiSJ33oUfrG
+	 lIHCujR5DIVQNUeoNUqY0Hnlmbu+vOibhxsHndJy1VYRLeHBeiHkIQuUdJ2PoKUm9y
+	 xVuhTRGHwfF/Q==
+Date: Tue, 3 Dec 2024 16:39:20 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>,
-	Rob Herring <robh+dt@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	p.zabel@pengutronix.de, cassel@kernel.org,
-	quic_schintav@quicinc.com, fabrice.gasnier@foss.st.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: PCI: Add STM32MP25 PCIe root complex
- bindings
-Message-ID: <20241203222515.GA2967814@bhelgaas>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	robin.murphy@arm.com, will@kernel.org
+Subject: Re: [PATCH v5 1/2] PCI: Add enable_device() and disable_device()
+ callbacks for bridges
+Message-ID: <20241203223920.GA2969750@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,47 +69,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241126155119.1574564-2-christian.bruel@foss.st.com>
+In-Reply-To: <Z09tOGxAK6nBB8wV@lizhi-Precision-Tower-5810>
 
-On Tue, Nov 26, 2024 at 04:51:15PM +0100, Christian Bruel wrote:
-> Document the bindings for STM32MP25 PCIe Controller configured in
-> root complex mode.
+On Tue, Dec 03, 2024 at 03:42:32PM -0500, Frank Li wrote:
+> On Mon, Nov 04, 2024 at 02:22:59PM -0500, Frank Li wrote:
+> > Some PCIe host bridges require special handling when enabling or disabling
+> > PCIe Endpoints. For example, the i.MX95 platform has a lookup table to map
+> > Requester IDs to StreamIDs, which are used by the SMMU and MSI controller
+> > to identify the source of DMA accesses.
+> >
+> > Without this mapping, DMA accesses may target unintended memory, which
+> > would corrupt memory or read the wrong data.
+> >
+> > Add a host bridge .enable_device() hook the imx6 driver can use to
+> > configure the Requester ID to StreamID mapping. The hardware table isn't
+> > big enough to map all possible Requester IDs, so this hook may fail if no
+> > table space is available. In that case, return failure from
+> > pci_enable_device().
+> >
+> > It might make more sense to make pci_set_master() decline to enable bus
+> > mastering and return failure, but it currently doesn't have a way to return
+> > failure.
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
 > 
-> Supports 4 legacy interrupts and MSI interrupts from the ARM
-> GICv2m controller.
-
-s/legacy/INTx/
-
-> STM32 PCIe may be in a power domain which is the case for the STM32MP25
-> based boards.
+> Bjorn Helgaas:
 > 
-> Supports wake# from wake-gpios
+> 	Can I keep your acked tag? Compared V4, just use static helper
+> functions.
 
-s/wake#/WAKE#/
-
-> +  wake-gpios:
-> +    description: GPIO controlled connection to WAKE# input signal
-
-I'm not a hardware guy, but this sounds like a GPIO that *reads*
-WAKE#, not controls it.
-
-> +    pcie@48400000 {
-> +        compatible = "st,stm32mp25-pcie-rc";
-> +        device_type = "pci";
-> +        num-lanes = <1>;
-
-num-lanes applies to a Root Port, not to a Root Complex.  I know most
-bindings conflate Root Ports with the Root Complex, maybe because many
-of these controllers only support a single Root Port?
-
-But are we ever going to separate these out?  I assume someday
-controllers will support multiple Root Ports and/or additional devices
-on the root bus, like RCiEPs, RCECs, etc., and we'll need per-RP phys,
-max-link-speed, num-lanes, reset-gpios, etc.
-
-Seems like it would be to our benefit to split out the Root Ports when
-we can, even if the current hardware only supports one, so we can
-start untangling the code and data structures.
+Can you rebase this to pci/main (v6.13-rc1)?  This would go via the
+PCI tree, so it will need to be rebased anyway, and then I can ack
+that.
 
 Bjorn
 
