@@ -1,161 +1,195 @@
-Return-Path: <linux-pci+bounces-17589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B63AC9E2C2C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 20:39:35 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D6DB9E2D2E
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 21:33:31 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E42E2B2C6F6
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 19:20:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BBA116134F
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 20:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C79F1FECB7;
-	Tue,  3 Dec 2024 19:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0216E1F75B3;
+	Tue,  3 Dec 2024 20:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZDYRKRJT"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ppUdLvKE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CB01FC7F0
-	for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2024 19:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F911AF0AA
+	for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2024 20:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733253630; cv=none; b=s3SFli1mkYRejaJ0GzLKMalFsTV/AHrW3GCaYrIKmAsDfxVRi/chm5Lh9GD/RporLlwhhOCVt4LGkMRv6Pak6+phofBgBewpgjhFsMKPaOH+fiGPmcdyiL/ARhTCpUq/+sxWx53dRkNx/dktTk0b0XVdYaaCICvivZhkIE3sZZA=
+	t=1733258006; cv=none; b=FL3vxN0ui5Wja6vJ+86co66MK9fYqkpVqIiWWV7hNU92ZY8KDF9AYzdQPyWaevrJBdr3SiP+SuDz1m1TMGPTQhGhMb2rMInoYYC8pRH6VMaVZ04RbRfbu+hiZpBbbJmE03m0sZRQ1AhMWybov0RA8uFHKFpdU4azNzfm50dhXHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733253630; c=relaxed/simple;
-	bh=xmLrAoZYfH1C9qAMCpwXhGPaCxW23fC01rFSUrJArXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lKI2plA2zQQaQkMpDJc0Ywo3DgMFpeCV2SsVkKr/MD6wtKQQyFtBdwXJpTBAk4iKX4tqD4sqVgKMjkZWXblZ7UBILXAw7CgBA0RDwb2oVcDAsmpgBH6A/ywzuXnmwajhlZDmB5QLkbTR4TMJ/4rFwuPZDjj31dBTWDxY4/Ry2iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZDYRKRJT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733253627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MTrbWwo6c0uY9C6iZcF4Of2Z27zcDH0xT1dmnkzM2/Q=;
-	b=ZDYRKRJTnoLEqUvqBPtF6HOe9flEOohMqaAkXxswrk9QaURx5gBbs5MO9C+DN2fvF6oprm
-	y8U5B7dJGAAZA3tgJdj321fR9J7hI/PaMLn80Mknbo8yiFi8HlCBquK3/YpovaLtU3x03J
-	jO4LQoNLsS+7f91NGEgdmI9HbJYUL7U=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-467-jQL40edKNFiMu4oNrZKG2A-1; Tue, 03 Dec 2024 14:20:26 -0500
-X-MC-Unique: jQL40edKNFiMu4oNrZKG2A-1
-X-Mimecast-MFC-AGG-ID: jQL40edKNFiMu4oNrZKG2A
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-841acf1782fso71344939f.2
-        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2024 11:20:26 -0800 (PST)
+	s=arc-20240116; t=1733258006; c=relaxed/simple;
+	bh=e4jpFCaXU2nz/gwRkL8QZ7m8jv9KOqtZsjcyN4++KHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fBPtO24ECC3OB+4Mu6y135cDAcNpPVFj7izlC2e4nCnR7HXr0+7rOjEHcPL9udw5Co/LNiMQiid2LYtZcs+p+aTbCBP/fzyy8gkl3rplhVnZ+NuVdIor1HQ2frQEyi6NRtjyHVXjyjBIPGMMGFdAclMNdSzSzBeEsZQYBjb9wdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ppUdLvKE; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 3074A3F851
+	for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2024 20:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1733258002;
+	bh=4uNsVaUUplUBTIHeAwkHPLSzbCBzZJflgTjvuz4/qJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=ppUdLvKEMoIIeLnutg1tXVF+IJPSe2y0Oj4sJ1MfJLzmN7/K9PmUJ/4GpdoyszHrM
+	 V/kCXq1OE6YednxXwiK4vCAHv7mtnpyajNRvLWpMaGbmTH9xVi2F4cXZAJ6kICg4vF
+	 sCsJLGOTyUNNGfEVvpGxJLE+zTabjJnJyfLf44ZLcnUnRIH0LSU04iwcpwhU3xhMfL
+	 d8U211epsuuzX3CUgz5mCbSeupzRUjwMML9I8hCLzkCJi6ot0ghdoF/j6B9ApNfUpR
+	 tlSjkwictX4SBdGIkqLUiLiGQlY0PjUfYYnP55KTe1tjbEaDNaxZ8oVyvsVN6UnnSv
+	 6nWKL6aTNimiQ==
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa5449e1d9cso382695866b.2
+        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2024 12:33:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733253626; x=1733858426;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1733258002; x=1733862802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MTrbWwo6c0uY9C6iZcF4Of2Z27zcDH0xT1dmnkzM2/Q=;
-        b=sll/LqJ1WOfK7BY9CdLfZuqxcNR0Pb2O0FyYF7BlvjytWLb0oFb7gjlp5aY2/jCa8i
-         ynwGr5rKFfmh2BB7JIMFRdi1BtBFGKFLMbrOP+DsDdFcjm2zT0i8C1gK+k1eKA64o+2x
-         t7g1Pi/rMpw1l9FN1eMacTagInzRSnVGXziCOK4SQF4wKCvreThqMaGnfjF6jsfDFAlt
-         0Bn4lce9lFz5jdTUNifBSPjxsqABA9ePOl3hRJBwzis0TXkLlCTl2poMm7s0FZk2VFIf
-         hZWEuk/R+ovX2NJx+J1xcjagKDhAfr9Tq2B/b589eSQ64vq6jjnhwOKzv5IVEzxDKq06
-         YK7w==
-X-Gm-Message-State: AOJu0YzxoVSrSQ/FbkJu72uDv7K0yCj6dQ169RGW5sK1kFqGMztB7vRs
-	c4Ricz5UTA41lvDlxLTBKEXbZX+77NlluMkW72ScX6s2P6W2PP/wZc3gkfW8624d29NPZtooe2+
-	UwqZY+IPOe/neddn/NLS7GtO9pDPdG6b+J5WSY2fHBuIZbQw/T/edbNGMow==
-X-Gm-Gg: ASbGnctuHqPx+IVLSEhg6R/tc29kOwyoaq4HBLPF5bH5VylV55klg13SCMMmmEPZbrs
-	hIMh0YRA3yGhX7AVrB95mZ20O6UDn0qp7T71Hs9epaZMas5DIII3FjaTwegt+Z9D7wNwAIol7Ya
-	h38V6hzF4pPF+TIrsqp3lCV9NIOQVXncpboZrBTNKqR+NKCJiFfbimi0RkCQdbP1LxSFUNUY3dq
-	FSn3zYJMRShpALBMCYxYXJFrAEuKbuS6ZzYACvxzgIHZ1u9viZuzA==
-X-Received: by 2002:a05:6602:1588:b0:83a:abd1:6af2 with SMTP id ca18e2360f4ac-8445b7d3fe9mr107439139f.3.1733253625910;
-        Tue, 03 Dec 2024 11:20:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdS55JUe4FzmsGSIchjfa8Tf5gGWZeiOfX6lsv54NBFvIWQxWGmKOKqYeAHPiZ9GJxJvIQug==
-X-Received: by 2002:a05:6602:1588:b0:83a:abd1:6af2 with SMTP id ca18e2360f4ac-8445b7d3fe9mr107438439f.3.1733253625625;
-        Tue, 03 Dec 2024 11:20:25 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e230e5f21esm2722452173.80.2024.12.03.11.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 11:20:25 -0800 (PST)
-Date: Tue, 3 Dec 2024 12:20:23 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Mitchell Augustin <mitchell.augustin@canonical.com>
-Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, Bjorn Helgaas
- <bhelgaas@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: drivers/pci: (and/or KVM): Slow PCI initialization during VM
- boot with passthrough of large BAR Nvidia GPUs on DGX H100
-Message-ID: <20241203122023.21171712.alex.williamson@redhat.com>
-In-Reply-To: <CAHTA-uaGZkQ6rEMcRq6JiZn8v9nZPn80NyucuSTEXuPfy+0ccw@mail.gmail.com>
-References: <CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEyZgQZub4mDRrV5w@mail.gmail.com>
-	<20241126103427.42d21193.alex.williamson@redhat.com>
-	<CAHTA-ubXiDePmfgTdPbg144tHmRZR8=2cNshcL5tMkoMXdyn_Q@mail.gmail.com>
-	<20241126154145.638dba46.alex.williamson@redhat.com>
-	<CAHTA-uZp-bk5HeE7uhsR1frtj9dU+HrXxFZTAVeAwFhPen87wA@mail.gmail.com>
-	<20241126170214.5717003f.alex.williamson@redhat.com>
-	<CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
-	<20241127102243.57cddb78.alex.williamson@redhat.com>
-	<CAHTA-uaGZkQ6rEMcRq6JiZn8v9nZPn80NyucuSTEXuPfy+0ccw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+        bh=4uNsVaUUplUBTIHeAwkHPLSzbCBzZJflgTjvuz4/qJ4=;
+        b=n+QG2fYWe/B/NEUbpQFPW01L6LrcGWKWGdN6gev5+ss60gHlwFLXyqWBbfoiy0HtG2
+         vMUoWZFuRzXO8xryNqO35JOpBMlfKwX9HHkhg1dw1FHSQDZxIomqgRxDmcjL5tVDNTKT
+         6de/9HoGCOKdFypwyG1GZYxz6SxF3VXmA6UTrklwTChVA/s5bxjjYV/B+qm4QOqIG+r0
+         Oy73MkYJc7u93tXYLGHia2o8KEyUvJxVZ621fDLWmyGG7yptXMkkaw52eFM6CSNEGhY4
+         2t9RJnLDsqtV8PITCW6ZKKq+LuSZ+KkmLXg7iplV52wgec9c0JMRx3bUjUM99vypYKJw
+         WgvA==
+X-Gm-Message-State: AOJu0YzdFJV1UYn4zrqf9MpWcnBw5lY2g1rIR6EkkG0VWkwGRysrKgMD
+	d3wkLJqPjfpzMNzvhwvAip3mIaeDsX/azGdkdVpMmsM9zLk0Qvkc12ydsUoOUQrqHEIFNQUqoqw
+	qegYczT71bFdHCJqk9Xh4KIwCEEA59WgXursFJ70hlNB9QljtcmOcbspE3XxcuuXh7E7V2eepX+
+	34I/5z7w48kNpkz8Lax4NnN0P7dJpjmJcn/Y6Ea2FgFLWwJuGN
+X-Gm-Gg: ASbGnct97Bad2dD5GYOraHEKb6vsRDG3TdHgDnjXkXzQcwF+2BtDrP2whAbllUQZWXQ
+	rxlIKtyi8ACDb3jMvvadS79hvVx3nXw==
+X-Received: by 2002:a05:6402:270c:b0:5d0:c9ab:e03b with SMTP id 4fb4d7f45d1cf-5d10cb9a4c0mr2988850a12.33.1733258001678;
+        Tue, 03 Dec 2024 12:33:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFahZb8758MP2RttPa8AXIQXQS50GmG8gIk8MGGsBpTnaaVZkT60EhxOhmn7qNtBwnx1ucQOKQixiEO5+h2CzM=
+X-Received: by 2002:a05:6402:270c:b0:5d0:c9ab:e03b with SMTP id
+ 4fb4d7f45d1cf-5d10cb9a4c0mr2988839a12.33.1733258001334; Tue, 03 Dec 2024
+ 12:33:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEyZgQZub4mDRrV5w@mail.gmail.com>
+ <20241126103427.42d21193.alex.williamson@redhat.com> <CAHTA-ubXiDePmfgTdPbg144tHmRZR8=2cNshcL5tMkoMXdyn_Q@mail.gmail.com>
+ <20241126154145.638dba46.alex.williamson@redhat.com> <CAHTA-uZp-bk5HeE7uhsR1frtj9dU+HrXxFZTAVeAwFhPen87wA@mail.gmail.com>
+ <20241126170214.5717003f.alex.williamson@redhat.com> <CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
+ <20241127102243.57cddb78.alex.williamson@redhat.com> <CAHTA-uaGZkQ6rEMcRq6JiZn8v9nZPn80NyucuSTEXuPfy+0ccw@mail.gmail.com>
+ <20241203122023.21171712.alex.williamson@redhat.com>
+In-Reply-To: <20241203122023.21171712.alex.williamson@redhat.com>
+From: Mitchell Augustin <mitchell.augustin@canonical.com>
+Date: Tue, 3 Dec 2024 14:33:10 -0600
+Message-ID: <CAHTA-uZWGmoLr0R4L608xzvBAxnr7zQPMDbX0U4MTfN3BAsfTQ@mail.gmail.com>
+Subject: Re: drivers/pci: (and/or KVM): Slow PCI initialization during VM boot
+ with passthrough of large BAR Nvidia GPUs on DGX H100
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2 Dec 2024 13:36:25 -0600
-Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
+Thanks.
 
-> Thanks!
->=20
-> This approach makes sense to me - the only concern I have is that I
-> see this restriction in a comment in __pci_read_base():
->=20
-> `/* No printks while decoding is disabled! */`
->=20
-> At the end of __pci_read_base(), we do have several pci_info() and
-> pci_err() calls - so I think we would need to also print that info one
-> level up after the new decode enable if we do decide to move decode
-> disable/enable one level up. Let me know if you agree, or if there is
-> a more straightforward alternative that I am missing.
+I'm thinking about the cleanest way to accomplish this:
 
-Nope, I agree.  The console might be the device we've disabled for
-sizing or might be downstream of that device.  The logging would need
-to be deferred until the device is enabled.  Thanks,
+1. I'm wondering if replacing the pci_info() calls with equivalent
+printk_deferred() calls might be sufficient here. This works in my
+initial test, but I'm not sure if this is definitive proof that we
+wouldn't have any issues in all deployments, or if my configuration is
+just not impacted by this kind of deadlock.
 
-Alex
+2. I did also draft a patch that would just eliminate the redundancy
+and disable the impacted logs by default, and allow them to be
+re-enabled with a new kernel command line option
+"pci=3Dbar_logging_enabled" (at the cost of the performance gains due to
+reduced redundancy). This works well in all of my tests.
 
-> On Wed, Nov 27, 2024 at 11:22=E2=80=AFAM Alex Williamson
-> <alex.williamson@redhat.com> wrote:
+Do you think either of those approaches would work / be appropriate?
+Ultimately I am trying to avoid messy changes that would require
+actually propagating all of the info needed for these logs back up to
+pci_read_bases(), if at all possible, since there seems like no
+obvious way to do that without changing the signature of
+__pci_read_base() or tracking additional state.
+
+-Mitchell Augustin
+
+
+On Tue, Dec 3, 2024 at 1:20=E2=80=AFPM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> On Mon, 2 Dec 2024 13:36:25 -0600
+> Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
+>
+> > Thanks!
 > >
-> > On Tue, 26 Nov 2024 19:12:35 -0600
-> > Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
-> > =20
-> > > Thanks for the breakdown!
-> > > =20
-> > > > That alone calls __pci_read_base() three separate times, each time
-> > > > disabling and re-enabling decode on the bridge. [...] So we're
-> > > > really being bitten that we toggle decode-enable/memory enable
-> > > > around reading each BAR size =20
+> > This approach makes sense to me - the only concern I have is that I
+> > see this restriction in a comment in __pci_read_base():
+> >
+> > `/* No printks while decoding is disabled! */`
+> >
+> > At the end of __pci_read_base(), we do have several pci_info() and
+> > pci_err() calls - so I think we would need to also print that info one
+> > level up after the new decode enable if we do decide to move decode
+> > disable/enable one level up. Let me know if you agree, or if there is
+> > a more straightforward alternative that I am missing.
+>
+> Nope, I agree.  The console might be the device we've disabled for
+> sizing or might be downstream of that device.  The logging would need
+> to be deferred until the device is enabled.  Thanks,
+>
+> Alex
+>
+> > On Wed, Nov 27, 2024 at 11:22=E2=80=AFAM Alex Williamson
+> > <alex.williamson@redhat.com> wrote:
 > > >
-> > > That makes sense to me. Is this something that could theoretically be
-> > > done in a less redundant way, or is there some functional limitation
-> > > that would prevent that or make it inadvisable? (I'm still new to pci
-> > > subsystem debugging, so apologies if that's a bit vague.) =20
+> > > On Tue, 26 Nov 2024 19:12:35 -0600
+> > > Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
+> > >
+> > > > Thanks for the breakdown!
+> > > >
+> > > > > That alone calls __pci_read_base() three separate times, each tim=
+e
+> > > > > disabling and re-enabling decode on the bridge. [...] So we're
+> > > > > really being bitten that we toggle decode-enable/memory enable
+> > > > > around reading each BAR size
+> > > >
+> > > > That makes sense to me. Is this something that could theoretically =
+be
+> > > > done in a less redundant way, or is there some functional limitatio=
+n
+> > > > that would prevent that or make it inadvisable? (I'm still new to p=
+ci
+> > > > subsystem debugging, so apologies if that's a bit vague.)
+> > >
+> > > The only requirement is that decode should be disabled while sizing
+> > > BARs, the fact that we repeat it around each BAR is, I think, just th=
+e
+> > > way the code is structured.  It doesn't take into account that toggli=
+ng
+> > > the command register bit is not a trivial operation in a virtualized
+> > > environment.  IMO we should push the command register manipulation up=
+ a
+> > > layer so that we only toggle it once per device rather than once per
+> > > BAR.  Thanks,
+> > >
+> > > Alex
+> > >
 > >
-> > The only requirement is that decode should be disabled while sizing
-> > BARs, the fact that we repeat it around each BAR is, I think, just the
-> > way the code is structured.  It doesn't take into account that toggling
-> > the command register bit is not a trivial operation in a virtualized
-> > environment.  IMO we should push the command register manipulation up a
-> > layer so that we only toggle it once per device rather than once per
-> > BAR.  Thanks,
 > >
-> > Alex
-> > =20
->=20
->=20
+>
 
+
+--=20
+Mitchell Augustin
+Software Engineer - Ubuntu Partner Engineering
 
