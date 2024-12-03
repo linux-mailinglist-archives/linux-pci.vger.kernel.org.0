@@ -1,291 +1,193 @@
-Return-Path: <linux-pci+bounces-17580-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17581-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF2839E22AF
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 16:27:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A85699E264B
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 17:11:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EA38169880
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 15:22:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E405163983
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 16:06:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E20AC2D7BF;
-	Tue,  3 Dec 2024 15:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2731F7561;
+	Tue,  3 Dec 2024 16:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UOuFnNua"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="lHnQZbqT";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="lHnQZbqT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284591F7572
-	for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2024 15:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9348D23CE;
+	Tue,  3 Dec 2024 16:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733239359; cv=none; b=Ae/aDBRZOR8l46hVT0JJJv7LaiSQZez3iaCk1z0wZtkUf2YFJhDneB3sme1VEfBaMViP23Ka/9tu2cPT3sxP32T5S8G8JlwAXleEl0ZzQz8KSugpVJn+BXlnmlMh73kp+c3sV7n8MrPHFiIIZ5zBp6qXxKIgYCbKee+FYvcF6iI=
+	t=1733241986; cv=none; b=t2ArUL1Vqd5F0TF/J6aaAK7jtX5pdSH9BsIPJboeTMKoT9om6ymygIpmVUT55zgj6mJ2VI+/X2c9dY99kpQLaVvZxLt+inkp0M1kJhEHRcLMnpLWF+4ClZXB4GEFG38PpzN8yVj3U5ZuH5beNtW4Mq7mZyuiVftLw2OVPs4Dhjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733239359; c=relaxed/simple;
-	bh=3HKMqPH2mz9m9zUiyexitBS0CiX5BNdBQAn5qpYcUUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jAP4EJ+7PhJWxUNpgQ6wLZNVdDBjzqAhNSfE/EO1hFfmciLg6KAmVIubgI++1fetGMpIkAL+DhvJh4rHU1hkr4kk/tTqlNJeIRLOE/X6lalsJCh/oAxstAKTaaoHe0pd3w3JcBOHKdPL53jYm9qihhWbrqYNhgTYvkdD5rOIYKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UOuFnNua; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-724d8422f37so4617680b3a.2
-        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2024 07:22:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733239357; x=1733844157; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3axE8hWFEOAcBbBVlVC5J9i71o0iCzSmsJDKDt+tz5A=;
-        b=UOuFnNuapXdK7ztlXYhcWUhmsYGLUMqVpnC7kJTa0b4wcHThxZIhxtiQibmm+TZpuT
-         C/PhA9lT/47M6jt/qpV+b3g3YESYMvg/60SoZ6SPI1qaslUOzPaR6FUuJBD7PCkjqQff
-         hkuFoGFFBN2vEfEgNtTqCLsXZY9vofTsy/u7tyTnKglCBjdTbJd042v7/SUtQUg8IBLV
-         3mf2NCzGNRxy/PP7kVEATu6DdetFzR86lcYmizZPsWoy6QmIgEaEA/nTbMbMbWR9GAWD
-         qP57LdFFcRROzSHoaif1AI6idCG5h2c8+lVNRZvKGegY8ImzBBBjUSLlOdX2jZkMvJ2W
-         0RZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733239357; x=1733844157;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3axE8hWFEOAcBbBVlVC5J9i71o0iCzSmsJDKDt+tz5A=;
-        b=eZSAqgUiH15o3MRhC71bhiQYlIdvBZN5FwQDQgYj10roGUzEaRrYg07nqTInAleW5b
-         t7Sr7zDIoH6Ue1jlwhLS7pQsDZrcSE20wptAauv+2eJXrtaIG6ODbyt/rsu2DdBPY/NS
-         F6pIoGdJF49qbJPTQl7S5wmaFmdRcocd0+88L8TsbZx++uWLzQTB3DbyAiDnKgKXipGi
-         1hzgh3jJBth+kxTsL3cZCvvSFO+WyX/ir3McAPPsYWHkUtZV8P9JtNLLQ5TzUCxZ90U3
-         BaGPqmm87h/mR8/a+S2AFKR5rrBb2wrBSyPp5U6tP45L394t3LC4BJpxL5QeBUpcdwC6
-         ENfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNUiBbqW2MB0L++VUZgHcQxi5bz5xfYK+1Qols6/2D3/BSoMszazYVTkw4B8lLARp0FtwHUjLh6Xs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqgojB7+cqoYxtQByHo5Moxde/AA3pvVP0Wsc/oAmDQ4q7yBSK
-	wHn8GFLVqoNIdnF2/gA3dHxcHPVr9y+kenbSI4E0zPYU9s29KPCZBttu3jn6/A==
-X-Gm-Gg: ASbGncuYG+odS53N+fhP/QRBRKWwHF6JpjSh5kRAlqmSE5zEbvJBIpmQAyVi6Nr6njR
-	PRKzYSd83L8itQeLZvbtVhjn/9P809TC6AdJtEamySN6Knbg6QSpR1k54qoVOjCMG1jvfnBHK5D
-	K82xNKVlVPruOyuKNK/nEz2R2E+v9DhhNP6sRam5+kM/qfTPFcPJhfyWiYPM0OKG4pvAUqa/z+d
-	ffYmL9ebRvK1oq4UDLLV5p8mi5gJA9lv9TVfIs5DoxLZu7wE3mhhSw5zsHB
-X-Google-Smtp-Source: AGHT+IEZzaiAa/sDP0NIqy+9CcPtC9S0iqjWkUM0fW3/+Qg2jpqxzNaED37DXLoNtAbdVeskjdanNg==
-X-Received: by 2002:a05:6a00:1826:b0:71e:74bf:6b1a with SMTP id d2e1a72fcca58-7257fcae158mr3814643b3a.16.1733239357479;
-        Tue, 03 Dec 2024 07:22:37 -0800 (PST)
-Received: from thinkpad ([120.60.48.217])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254176f8f9sm10906738b3a.66.2024.12.03.07.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 07:22:37 -0800 (PST)
-Date: Tue, 3 Dec 2024 20:52:30 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	p.zabel@pengutronix.de, cassel@kernel.org,
-	quic_schintav@quicinc.com, fabrice.gasnier@foss.st.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
- STM32MP25
-Message-ID: <20241203152230.5mdrt27u5u5ecwcz@thinkpad>
-References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
- <20241126155119.1574564-5-christian.bruel@foss.st.com>
+	s=arc-20240116; t=1733241986; c=relaxed/simple;
+	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=aSska/9XUZi/HDIAlWMYGLLfha+/jMpzUV+2UxHmbM0vwdGlbiMPugXQjLbqx5wst36vVzpCE6t0q1gUrQb0XTzG1dzTROIOLb77IOYc3iLkZBumAeJjFauN0dU1EXkFt2CqErS6QmRhiegBIGxzM+p59FGIQQg7ngjwRzfwKxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=lHnQZbqT; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=lHnQZbqT; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1733241982;
+	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:From;
+	b=lHnQZbqTPw8lccD9LZoQTnjENuqFmq3M4qdXn9YwdcXuh8kaYOH60UbGnuArtEJoE
+	 Px4kL7hmZa2/uxmjqmqHUiq2gnIFhqP/9JNM4Zxjm340Kjh3IenF17vJPycyc5doEz
+	 9qzMTvJH2/Dq+wqAj7McqxgXVZICR0uf3Mza6cXQ=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id A277A128793E;
+	Tue, 03 Dec 2024 11:06:22 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id Kttl9qoRVbVg; Tue,  3 Dec 2024 11:06:22 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1733241982;
+	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:From;
+	b=lHnQZbqTPw8lccD9LZoQTnjENuqFmq3M4qdXn9YwdcXuh8kaYOH60UbGnuArtEJoE
+	 Px4kL7hmZa2/uxmjqmqHUiq2gnIFhqP/9JNM4Zxjm340Kjh3IenF17vJPycyc5doEz
+	 9qzMTvJH2/Dq+wqAj7McqxgXVZICR0uf3Mza6cXQ=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1133D128718C;
+	Tue, 03 Dec 2024 11:06:17 -0500 (EST)
+Message-ID: <7ed3b713f8901398f52d7485d59613c19ea0e752.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2 09/10] sysfs: bin_attribute: add const read/write
+ callback variants
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: linux@weissschuh.net
+Cc: James.Bottomley@HansenPartnership.com, Xinhui.Pan@amd.com, 
+ airlied@gmail.com, ajd@linux.ibm.com, alexander.deucher@amd.com, 
+ alison.schofield@intel.com, amd-gfx@lists.freedesktop.org, arnd@arndb.de, 
+ bhelgaas@google.com, carlos.bilbao.osdev@gmail.com,
+ christian.koenig@amd.com,  dan.j.williams@intel.com, dave.jiang@intel.com,
+ dave@stgolabs.net,  david.e.box@linux.intel.com, decui@microsoft.com, 
+ dennis.dalessandro@cornelisnetworks.com, dri-devel@lists.freedesktop.org, 
+ fbarrat@linux.ibm.com, gregkh@linuxfoundation.org, haiyangz@microsoft.com, 
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ira.weiny@intel.com, 
+ jgg@ziepe.ca, jonathan.cameron@huawei.com, kys@microsoft.com,
+ leon@kernel.org,  linux-alpha@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ logang@deltatee.com,  martin.petersen@oracle.com, mattst88@gmail.com,
+ miquel.raynal@bootlin.com,  mwalle@kernel.org,
+ naveenkrishna.chatradhi@amd.com,  platform-driver-x86@vger.kernel.org,
+ pratyush@kernel.org, rafael@kernel.org,  richard.henderson@linaro.org,
+ richard@nod.at, simona@ffwll.ch,  srinivas.kandagatla@linaro.org,
+ tudor.ambarus@linaro.org, vigneshr@ti.com,  vishal.l.verma@intel.com,
+ wei.liu@kernel.org
+Date: Tue, 03 Dec 2024 11:06:16 -0500
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-9-71110628844c@weissschuh.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241126155119.1574564-5-christian.bruel@foss.st.com>
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index
+> d17c473c1ef292875475bf3bdf62d07241c13882..d713a6445a6267145a7014f308d
+> f3bb25b8c3287 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -305,8 +305,12 @@ struct bin_attribute {
+>  	struct address_space *(*f_mapping)(void);
+>  	ssize_t (*read)(struct file *, struct kobject *, struct
+> bin_attribute *,
+>  			char *, loff_t, size_t);
+> +	ssize_t (*read_new)(struct file *, struct kobject *, const
+> struct bin_attribute *,
+> +			    char *, loff_t, size_t);
+>  	ssize_t (*write)(struct file *, struct kobject *, struct
+> bin_attribute *,
+>  			 char *, loff_t, size_t);
+> +	ssize_t (*write_new)(struct file *, struct kobject *,
+> +			     const struct bin_attribute *, char *,
+> loff_t, size_t);
+>  	loff_t (*llseek)(struct file *, struct kobject *, const
+> struct bin_attribute *,
+>  			 loff_t, int);
+>  	int (*mmap)(struct file *, struct kobject *, const struct
+> bin_attribute *attr,
+> @@ -325,11 +329,28 @@ struct bin_attribute {
+>   */
+>  #define sysfs_bin_attr_init(bin_attr) sysfs_attr_init(&(bin_attr)-
+> >attr)
+>  
+> +typedef ssize_t __sysfs_bin_rw_handler_new(struct file *, struct
+> kobject *,
+> +					   const struct
+> bin_attribute *, char *, loff_t, size_t);
+> +
+>  /* macros to create static binary attributes easier */
+>  #define __BIN_ATTR(_name, _mode, _read, _write, _size)
+> {		\
+>  	.attr = { .name = __stringify(_name), .mode = _mode
+> },		\
+> -	.read	=
+> _read,						\
+> -	.write	=
+> _write,						\
+> +	.read =
+> _Generic(_read,						\
+> +		__sysfs_bin_rw_handler_new * :
+> NULL,			\
+> +		default :
+> _read						\
+> +	),							
+> 	\
+> +	.read_new =
+> _Generic(_read,					\
+> +		__sysfs_bin_rw_handler_new * :
+> _read,			\
+> +		default :
+> NULL						\
+> +	),							
+> 	\
+> +	.write =
+> _Generic(_write,					\
+> +		__sysfs_bin_rw_handler_new * :
+> NULL,			\
+> +		default :
+> _write					\
+> +	),							
+> 	\
+> +	.write_new =
+> _Generic(_write,					\
+> +		__sysfs_bin_rw_handler_new * :
+> _write,			\
+> +		default :
+> NULL						\
+> +	),							
+> 	\
+>  	.size	=
+> _size,						\
+>  }
 
-[...]
+It's probably a bit late now, but you've done this the wrong way
+around.  What you should have done is added the const to .read/.write
+then added a .read_old/.write_old with the original function prototype
+and used _Generic() to switch between them.  Then when there are no
+more non const left, you can simply remove .read_old and .write_old
+without getting Linus annoyed by having to do something like this:
 
-> +static int stm32_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +	int ret;
-> +
-> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
-> +		dev_dbg(pci->dev, "Link is already enabled\n");
-> +		return 0;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_link(pci);
-> +	if (ret) {
-> +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
-> +		return ret;
-> +	}
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e70140ba0d2b1a30467d4af6bcfe761327b9ec95
 
-How the REFCLK is supplied to the endpoint? From host or generated locally?
+Regards,
 
-> +
-> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
-> +
-> +	enable_irq(stm32_pcie->perst_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static void stm32_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +
-> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
-> +		dev_dbg(pci->dev, "Link is already disabled\n");
-> +		return;
-> +	}
-> +
-> +	disable_irq(stm32_pcie->perst_irq);
-> +
-> +	stm32_pcie_disable_link(pci);
-> +
-> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
-> +}
-> +
-> +static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> +				unsigned int type, u16 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +
-> +	switch (type) {
-> +	case PCI_IRQ_INTX:
-> +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> +	case PCI_IRQ_MSI:
-> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> +	default:
-> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct pci_epc_features stm32_pcie_epc_features = {
-> +	.msi_capable = true,
-> +	.align = 1 << 16,
+James
 
-Use SZ_64K
-
-> +};
-> +
-
-[...]
-
-> +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
-> +			     struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = stm32_pcie->pci;
-> +	struct dw_pcie_ep *ep = &pci->ep;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +				 STM32MP25_PCIECR_TYPE_MASK,
-> +				 STM32MP25_PCIECR_EP);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pm_runtime_resume_and_get(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
-> +		return ret;
-> +	}
-
-You might want to do runtime resume before accessing regmap.
-
-> +
-> +	reset_control_assert(stm32_pcie->rst);
-> +	reset_control_deassert(stm32_pcie->rst);
-> +
-> +	ep->ops = &stm32_pcie_ep_ops;
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "failed to initialize ep: %d\n", ret);
-> +		goto err_init;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_resources(stm32_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable resources: %d\n", ret);
-> +		goto err_clk;
-> +	}
-> +
-> +	ret = dw_pcie_ep_init_registers(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
-> +		goto err_init_regs;
-> +	}
-> +
-> +	pci_epc_init_notify(ep->epc);
-> +
-> +	return 0;
-> +
-> +err_init_regs:
-> +	stm32_pcie_disable_resources(stm32_pcie);
-> +
-> +err_clk:
-> +	dw_pcie_ep_deinit(ep);
-> +
-> +err_init:
-> +	pm_runtime_put_sync(dev);
-> +	return ret;
-> +}
-> +
-> +static int stm32_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_pcie *stm32_pcie;
-> +	struct dw_pcie *dw;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
-> +	if (!stm32_pcie)
-> +		return -ENOMEM;
-> +
-> +	dw = devm_kzalloc(dev, sizeof(*dw), GFP_KERNEL);
-> +	if (!dw)
-> +		return -ENOMEM;
-
-Why can't you allocate it statically inside 'struct stm32_pcie'?
-
-> +
-> +	stm32_pcie->pci = dw;
-> +
-> +	dw->dev = dev;
-> +	dw->ops = &dw_pcie_ops;
-> +
-> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
-> +	if (IS_ERR(stm32_pcie->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
-> +				     "No syscfg specified\n");
-> +
-> +	stm32_pcie->phy = devm_phy_get(dev, "pcie-phy");
-> +	if (IS_ERR(stm32_pcie->phy))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
-> +				     "failed to get pcie-phy\n");
-> +
-> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(stm32_pcie->clk))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
-> +				     "Failed to get PCIe clock source\n");
-> +
-> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(stm32_pcie->rst))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
-> +				     "Failed to get PCIe reset\n");
-> +
-> +	stm32_pcie->perst_gpio = devm_gpiod_get(dev, "reset", GPIOD_IN);
-> +	if (IS_ERR(stm32_pcie->perst_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
-> +				     "Failed to get reset GPIO\n");
-> +
-> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
-
-Hmm, so PHY mode is common for both endpoint and host?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
