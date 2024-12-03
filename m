@@ -1,112 +1,103 @@
-Return-Path: <linux-pci+bounces-17600-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17601-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 471CD9E2EAA
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 23:08:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F12AE9E2EBA
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 23:11:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BAF79B28C7A
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 21:12:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F20F1B2E1C2
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2024 21:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98A81EF0AE;
-	Tue,  3 Dec 2024 21:12:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93EBB209F44;
+	Tue,  3 Dec 2024 21:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fs8EroUr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jts7PM3z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gitIX0AS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB71207A07;
-	Tue,  3 Dec 2024 21:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B91209678;
+	Tue,  3 Dec 2024 21:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733260360; cv=none; b=aNF8A3ZXjQdOb9RqnALwOFT5OtEXaPBdLUEsNa0GYqXwFUArReq6edWitGTI0MCmo/iz33n5xdX4sIV5aae7tRGFMGn+SEHnr7zlPYrpsLmZ5yzeRPXXu0+RZINUQ5RWA7HKl1H3oO28JmAfqD/9CffgogA/JSrikQ5VN/Usg3Y=
+	t=1733261535; cv=none; b=hegd0JWXfDBjvnUTOBQzEABSgGMmT9DHa79EPJ/8VdCvQRKfE5ocsMa4b77FvK+u4QfbT+PKzm1I7mC3vOOGS0zVafbma0boGLuhsRKaO6aJIK7m1IMJD0pGeB7OS1QXlJyLnk6w4LSNTKC32bAU7cJBVVAM/u/8xDkcpR5LKm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733260360; c=relaxed/simple;
-	bh=Xp7nItebZYWzIRkQ3dtApJ0l5bX7krb4ovTaP7j/+xY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FhtXCmQ2/d3owO9+BpRCLa8PW+ga7TeqmHtbahc0ubpS6hBgj/3wO/teQ3yUkPN9NKegLC8TH2abC67gq1NABZ5R6NBcJFNmJ0j/B11cQ6GcG7zUs2Ylz4tGIOyzxvuB0qxZ4msljIcOBGemoIdlQ/QWJpCJYAR4f6iFlm4jxAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Fs8EroUr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jts7PM3z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1733260357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mnFWEKbSESp9bfgP3xRoSac+D0/KI17M/a5z2PbtZZA=;
-	b=Fs8EroUrJCDqGGVrLBaUJeUXTHen+IpZiPJi1+z2vwK/4ZH8CBmYZf6lVp+N96KKbo/AGq
-	uH67HiWj58jATLxNoLLnQFFpgr8VqzZkfBGzwK8vwsLWKcgtmwISYRXfTF8DoSbfA9JCmX
-	ow3StPdOImtJ4Vp6vO6RvZ9MaGA+vQfao1CqC/l/jjZLrFjA0EKqJYQKL1Ti1R49kDeWgl
-	e96h5+fPKs9pwFoq5jU6oxq6FZFtQs9w37f7DrMqj4HmG+MVdBLsiAYQVPvUDxCFqjM2aR
-	3qWjoYg1ZWnXn6eocu3htVxvM05QwQwzxPe4FZjCq4TEfYXwUGXQNNVS2b2LAA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1733260357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mnFWEKbSESp9bfgP3xRoSac+D0/KI17M/a5z2PbtZZA=;
-	b=Jts7PM3zpGCNoUhOHZ0AJX0xH/5gVICXAZM/BxKVgFwHi1MY/cc7J4UBAP/wj2tFP92dPN
-	BX+a1criwUkN4NBw==
-To: Frank Li <Frank.Li@nxp.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Anup Patel <apatel@ventanamicro.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
- dlemoal@kernel.org, maz@kernel.org, jdmason@kudzu.us, Frank Li
- <Frank.Li@nxp.com>, stable@kernel.org
-Subject: Re: [PATCH v9 1/6] platform-msi: Add msi_remove_device_irq_domain()
- in platform_device_msi_free_irqs_all()
-In-Reply-To: <20241203-ep-msi-v9-1-a60dbc3f15dd@nxp.com>
-References: <20241203-ep-msi-v9-0-a60dbc3f15dd@nxp.com>
- <20241203-ep-msi-v9-1-a60dbc3f15dd@nxp.com>
-Date: Tue, 03 Dec 2024 22:12:36 +0100
-Message-ID: <87y10wsc6z.ffs@tglx>
+	s=arc-20240116; t=1733261535; c=relaxed/simple;
+	bh=DhgiLvL+m2Tn8uWHAPtO3YZr1lqo8Pn2CqNnVLXGezo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=E1XPocgiWrS50TvdQu9HMUGK8EjLob8sH5QI3gNab2RnkE6Iuk/gctj4s9bYM4oziQqoXYx7xFKK/29MyJllINFLOq1/HiiqeythSN3PmZ02i5LoSsAo9+8ZADlZobCKOA6lLczMyBECRpqE4OCRpPvydgrnQbQkOs0uulW8ya8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gitIX0AS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1FC5C4CED8;
+	Tue,  3 Dec 2024 21:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733261535;
+	bh=DhgiLvL+m2Tn8uWHAPtO3YZr1lqo8Pn2CqNnVLXGezo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=gitIX0ASrfazwTlGTVTkgLagyLqVELlLQtQiyC3aU8MXV9pjLuCSwvIbzDGT9/hi/
+	 4EDY4cMwfPDvSARii4qbITxZ8oZEhpZhrmwSdCigp7Wgd1T78uFhGdPbvWeR3A44rk
+	 TvCmfTR6GsxL5Ax2ZdjVF5NIk4cSmPHQCHjgxKYnOpAuY467WcRPsBnFoLqW2rmRx9
+	 0xTJL27kdVK+i0J5501uyKMo/Jf08P7gteoRJO0HKuSlrPSNU1yU2sFDrIEju9Ob23
+	 Q+WG0KwrlS7lkHiUjdhFk2FXOLYDm233WMp+XC6Xhz2H2vaOm6nf18Q9kApz1BrXD8
+	 NBu7eKTkLENuA==
+Date: Tue, 3 Dec 2024 15:32:13 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 0/4] PCI: Constify 'struct bin_attribute'
+Message-ID: <20241203213213.GA2965613@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241202-sysfs-const-bin_attr-pci-v1-0-c32360f495a7@weissschuh.net>
 
-On Tue, Dec 03 2024 at 15:36, Frank Li wrote:
-> The follow steps trigger kernel dump warning and
-> platform_device_msi_init_and_alloc_irqs() return false.
->
-> 1: platform_device_msi_init_and_alloc_irqs();
-> 2: platform_device_msi_free_irqs_all();
-> 3: platform_device_msi_init_and_alloc_irqs();
->
-> Do below two things in platform_device_msi_init_and_alloc_irqs().
-> - msi_create_device_irq_domain()
-> - msi_domain_alloc_irqs_range()
->
-> But only call msi_domain_free_irqs_all() in
-> platform_device_msi_free_irqs_all(), which missed call
-> msi_remove_device_irq_domain().
+On Mon, Dec 02, 2024 at 08:02:56PM +0100, Thomas Weißschuh wrote:
+> The sysfs core now allows instances of 'struct bin_attribute' to be
+> moved into read-only memory. Make use of that to protect them against
+> accidental or malicious modifications.
+> 
+> The usage of read_new/write_new/bin_attrs_new is a transition mechanism
+> and will be reverted after the transition is complete.
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-It's not a missed call. It's intentional as all existing users remove
-the device afterwards.
+Applied to pci/constify for v6.14, thanks.
 
-> This cause above kernel dump when call
-> platform_device_msi_init_and_alloc_irqs() again.
+Logan, I converted your response at
+https://lore.kernel.org/all/003d2d13-13be-4f05-80f8-61e14ddb9c83@deltatee.com/
+to include "Reviewed-by".
 
-Sure, but that's not a fix and not required for stable because no
-existing driver is affected by this unless I'm missing something.
+Let me know if that's not what you intended.
 
-What's the actual use case for this? You describe in great length what
-fails, which is nice, but I'm missing the larger picture here.
-
-Thanks,
-
-        tglx
+> ---
+> Thomas Weißschuh (4):
+>       PCI/sysfs: Constify 'struct bin_attribute'
+>       PCI/VPD: Constify 'struct bin_attribute'
+>       PCI/P2PDMA: Constify 'struct bin_attribute'
+>       PCI/ACPI: Constify 'struct bin_attribute'
+> 
+>  drivers/pci/hotplug/acpiphp_ibm.c |  6 +++---
+>  drivers/pci/p2pdma.c              |  6 +++---
+>  drivers/pci/pci-sysfs.c           | 42 +++++++++++++++++++--------------------
+>  drivers/pci/vpd.c                 | 14 ++++++-------
+>  4 files changed, 34 insertions(+), 34 deletions(-)
+> ---
+> base-commit: e70140ba0d2b1a30467d4af6bcfe761327b9ec95
+> change-id: 20241201-sysfs-const-bin_attr-pci-be2425e1a856
+> 
+> Best regards,
+> -- 
+> Thomas Weißschuh <linux@weissschuh.net>
+> 
 
