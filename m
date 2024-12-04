@@ -1,53 +1,59 @@
-Return-Path: <linux-pci+bounces-17705-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17706-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B224B9E4772
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 23:07:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7328E9E4782
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 23:08:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2117418803D3
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 22:07:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40A8E163FAD
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 22:08:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A853F194C86;
-	Wed,  4 Dec 2024 22:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 384F9192D61;
+	Wed,  4 Dec 2024 22:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Op6mzCz1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9Ndj2DQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4FE194096;
-	Wed,  4 Dec 2024 22:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD0A2391A0;
+	Wed,  4 Dec 2024 22:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733350037; cv=none; b=eV7ITJJ4Yf0xKTS/ZNIY9YfYuY7zJGO2eQ3LJaT5+wqmX7jskVQmEFuecfMgkUvg/lzy/34tj8WlIPItnrqX+oEQsitYlKiajTKjlly82hIHAgFBXbRNRVhHmeWHaRh8ip3HeIJnb7UEH6nUUGJY9/iMVRJy9GMe9D4hUsos1GI=
+	t=1733350130; cv=none; b=lML776LQzf3eV10jDE1Ko75WWN534xzzLu4aBxRy52uyWwPM/glk2MySGr6P8JZOCub3l1XavvLsylecXJQxqPqnaBYh7ElhxJoiBTtwN3rkvO1aJNx+XahVQJXkk7sgIvDWqim5C7FqeiscMsqZXTWvYvewIjziHJ892YMDdIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733350037; c=relaxed/simple;
-	bh=0NK5fQhfJILN0TmhkBr2bI0x1f488pGh3da65yqbmFQ=;
+	s=arc-20240116; t=1733350130; c=relaxed/simple;
+	bh=9WUkVEFFi58F5ojed1vxoss3U/Fr3/XFqUfdXLpl4nY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=imwOeAOaScwGwL3PkTYcxMVQzxrjS9tiPwXbr5baXV878VoOiWRigFHoeBBFB1Z9Hp3WyN80km3MLfC9tuKTJ1PVqMTpkIhOMnBdXJWNf0e7AJY4C72cHWf+T3pVQ0dvGBWCbZTUC0t6oywbhESeUDO6Z9uDZgLGhgX06cCCPuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Op6mzCz1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD8FC4CECD;
-	Wed,  4 Dec 2024 22:07:16 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=g/y3h8Y8Zvkp/AG8I1a97Ig7UdaQcYQaMrBq8tB5jRW3HzTbWJAnOMNF6MUa7a8jZ/J4UHMqgCg6aysEJzXdxkAmCRG0FJixl2XBASSH536JpjFw2nz6pzGv4mkoysJMrurcvLPV/S0MzeF2VYYAw9qqmVSj6GVwGqSFWaOKkQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9Ndj2DQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE26BC4CED1;
+	Wed,  4 Dec 2024 22:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733350037;
-	bh=0NK5fQhfJILN0TmhkBr2bI0x1f488pGh3da65yqbmFQ=;
+	s=k20201202; t=1733350129;
+	bh=9WUkVEFFi58F5ojed1vxoss3U/Fr3/XFqUfdXLpl4nY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Op6mzCz1FvyZlml6vvKnA9GU9VbNHkr2o+biDrWlxtvNU9wyXGmOZMjK0XHUo6v4Q
-	 B2MIC5XXbopePloosKHH+2BK7FqKn1xe3D40PKwZDv/TMTMZP2o+FzHX/q6T9fYP5N
-	 ib8lPshlmJBxKXdTTWx/ST/q/AdvKKZ18TGCBRYcpslx30fPfgd3JlNeugD2RkDwgz
-	 2lb9rx2Ju+3aM+2J5uaWecNHJlJflUBimk7jLaGy7kG2Hu/iFORWFcBg3AePU9WH+3
-	 /ZWTt83ftjE6P4FOb/sGFa+oM6m2z4+poIVSRS0D3fAKiUIfVIALwflTcpV8M5dfiT
-	 Icf2+jhJxRHBg==
-Date: Wed, 4 Dec 2024 16:07:15 -0600
+	b=J9Ndj2DQ0yXMfvB4oW8wKZ2I6S95iWRsxj7aeUISgdIvI3kr1PM68BVbX/ogdg8yF
+	 XXV0jMJwCWnVJi08ql9b/dNg831wIRpM+0gCdGKi5QkxmrxuwfBgzMKdrbZsnHp35g
+	 6p5YmWWCmuWbqsEQ2EI8aPV6TsjnwBdRCaHC+73LZpZx1HRUC2E+y6p5VDhvEAyHek
+	 QpVBHnFwopMysRVv9IZ/y3DWky4tTb4I8f8gRIlDas+Z7okrKENoQpEzwCtixSpBjX
+	 MFBLIAnrRKoTEQfSRHo6/sXJ5slvdBOf1EDSFZSd4wOcp1YYZCJL2E637MUxtZNCrg
+	 sj8bKmOs++FpA==
+Date: Wed, 4 Dec 2024 16:08:47 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Improve parameter docu for request APIs
-Message-ID: <20241204220715.GA3023116@bhelgaas>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Cameron Williams <cang1@live.co.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Fenghua Yu <fenghua.yu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-pci@vger.kernel.org,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v1 2/2] serial: 8250_pci: Share WCH IDs with
+ parport_serial driver
+Message-ID: <20241204220847.GA3023286@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,293 +62,105 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241203100023.31152-2-pstanner@redhat.com>
+In-Reply-To: <20241204031114.1029882-3-andriy.shevchenko@linux.intel.com>
 
-On Tue, Dec 03, 2024 at 11:00:24AM +0100, Philipp Stanner wrote:
-> PCI region request functions have a @name parameter (sometimes called
-> "res_name"). It is used in a log message to inform drivers about request
-> collisions, i.e., when another driver has requested that region already.
+On Wed, Dec 04, 2024 at 05:09:22AM +0200, Andy Shevchenko wrote:
+> parport_serial driver uses subset of WCH IDs that are present in 8250_pci.
+> Share them via pci_ids.h and switch parport_serial to use defined constants.
 > 
-> This message is only useful when it contains the actual owner of the
-> region, i.e., which driver requested it. So far, a great many drivers
-> misuse the @name parameter and just pass pci_name(), which doesn't
-> result in useful debug information.
-> 
-> Rename "res_name" to "name".
-> 
-> Detail @name's purpose in the docstrings.
-> 
-> Improve formatting a bit.
-> 
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-
-Applied to pci/resource for v6.14, thanks!
-
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/pci/devres.c | 12 ++++----
->  drivers/pci/pci.c    | 69 +++++++++++++++++++++-----------------------
->  2 files changed, 39 insertions(+), 42 deletions(-)
+>  drivers/parport/parport_serial.c   | 12 ++++++++----
+>  drivers/tty/serial/8250/8250_pci.c | 10 ++--------
+>  include/linux/pci_ids.h            | 11 +++++++++++
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci-ids.h
+
+>  3 files changed, 21 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index 3b59a86a764b..ffaffa880b88 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -101,7 +101,7 @@ static inline void pcim_addr_devres_clear(struct pcim_addr_devres *res)
->   * @bar: BAR the range is within
->   * @offset: offset from the BAR's start address
->   * @maxlen: length in bytes, beginning at @offset
-> - * @name: name associated with the request
-> + * @name: name of the resource requestor
->   * @req_flags: flags for the request, e.g., for kernel-exclusive requests
->   *
->   * Returns: 0 on success, a negative error code on failure.
-> @@ -723,7 +723,7 @@ EXPORT_SYMBOL(pcim_iounmap);
->   * pcim_iomap_region - Request and iomap a PCI BAR
->   * @pdev: PCI device to map IO resources for
->   * @bar: Index of a BAR to map
-> - * @name: Name associated with the request
-> + * @name: Name of the resource requestor
->   *
->   * Returns: __iomem pointer on success, an IOMEM_ERR_PTR on failure.
->   *
-> @@ -790,7 +790,7 @@ EXPORT_SYMBOL(pcim_iounmap_region);
->   * pcim_iomap_regions - Request and iomap PCI BARs (DEPRECATED)
->   * @pdev: PCI device to map IO resources for
->   * @mask: Mask of BARs to request and iomap
-> - * @name: Name associated with the requests
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
-> @@ -857,7 +857,7 @@ static int _pcim_request_region(struct pci_dev *pdev, int bar, const char *name,
->   * pcim_request_region - Request a PCI BAR
->   * @pdev: PCI device to requestion region for
->   * @bar: Index of BAR to request
-> - * @name: Name associated with the request
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, a negative error code on failure.
->   *
-> @@ -876,7 +876,7 @@ EXPORT_SYMBOL(pcim_request_region);
->   * pcim_request_region_exclusive - Request a PCI BAR exclusively
->   * @pdev: PCI device to requestion region for
->   * @bar: Index of BAR to request
-> - * @name: Name associated with the request
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, a negative error code on failure.
->   *
-> @@ -932,7 +932,7 @@ static void pcim_release_all_regions(struct pci_dev *pdev)
->  /**
->   * pcim_request_all_regions - Request all regions
->   * @pdev: PCI device to map IO resources for
-> - * @name: name associated with the request
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 0b29ec6e8e5e..cb96d12571a8 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3941,15 +3941,14 @@ EXPORT_SYMBOL(pci_release_region);
->   * __pci_request_region - Reserved PCI I/O and memory resource
->   * @pdev: PCI device whose resources are to be reserved
->   * @bar: BAR to be reserved
-> - * @res_name: Name to be associated with resource.
-> + * @name: Name of the resource requestor
->   * @exclusive: whether the region access is exclusive or not
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
-> - * Mark the PCI region associated with PCI device @pdev BAR @bar as
-> - * being reserved by owner @res_name.  Do not access any
-> - * address inside the PCI regions unless this call returns
-> - * successfully.
-> + * Mark the PCI region associated with PCI device @pdev BAR @bar as being
-> + * reserved by owner @name. Do not access any address inside the PCI regions
-> + * unless this call returns successfully.
->   *
->   * If @exclusive is set, then the region is marked so that userspace
->   * is explicitly not allowed to map the resource via /dev/mem or
-> @@ -3959,13 +3958,13 @@ EXPORT_SYMBOL(pci_release_region);
->   * message is also printed on failure.
->   */
->  static int __pci_request_region(struct pci_dev *pdev, int bar,
-> -				const char *res_name, int exclusive)
-> +				const char *name, int exclusive)
->  {
->  	if (pci_is_managed(pdev)) {
->  		if (exclusive == IORESOURCE_EXCLUSIVE)
-> -			return pcim_request_region_exclusive(pdev, bar, res_name);
-> +			return pcim_request_region_exclusive(pdev, bar, name);
+> diff --git a/drivers/parport/parport_serial.c b/drivers/parport/parport_serial.c
+> index 3644997a8342..24d4f3a3ec3d 100644
+> --- a/drivers/parport/parport_serial.c
+> +++ b/drivers/parport/parport_serial.c
+> @@ -266,10 +266,14 @@ static struct pci_device_id parport_serial_pci_tbl[] = {
+>  	{ 0x1409, 0x7168, 0x1409, 0xd079, 0, 0, timedia_9079c },
 >  
-> -		return pcim_request_region(pdev, bar, res_name);
-> +		return pcim_request_region(pdev, bar, name);
->  	}
+>  	/* WCH CARDS */
+> -	{ 0x4348, 0x5053, PCI_ANY_ID, PCI_ANY_ID, 0, 0, wch_ch353_1s1p},
+> -	{ 0x4348, 0x7053, 0x4348, 0x3253, 0, 0, wch_ch353_2s1p},
+> -	{ 0x1c00, 0x3050, 0x1c00, 0x3050, 0, 0, wch_ch382_0s1p},
+> -	{ 0x1c00, 0x3250, 0x1c00, 0x3250, 0, 0, wch_ch382_2s1p},
+> +	{ PCI_VENDOR_ID_WCHCN, PCI_DEVICE_ID_WCHCN_CH353_1S1P,
+> +	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, wch_ch353_1s1p },
+> +	{ PCI_VENDOR_ID_WCHCN, PCI_DEVICE_ID_WCHCN_CH353_2S1P,
+> +	  0x4348, 0x3253, 0, 0, wch_ch353_2s1p },
+> +	{ PCI_VENDOR_ID_WCHIC, PCI_DEVICE_ID_WCHIC_CH382_0S1P,
+> +	  0x1c00, 0x3050, 0, 0, wch_ch382_0s1p },
+> +	{ PCI_VENDOR_ID_WCHIC, PCI_DEVICE_ID_WCHIC_CH382_2S1P,
+> +	  0x1c00, 0x3250, 0, 0, wch_ch382_2s1p },
 >  
->  	if (pci_resource_len(pdev, bar) == 0)
-> @@ -3973,11 +3972,11 @@ static int __pci_request_region(struct pci_dev *pdev, int bar,
+>  	/* BrainBoxes PX272/PX306 MIO card */
+>  	{ PCI_VENDOR_ID_INTASHIELD, 0x4100,
+> diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+> index dfac79744d37..df4d0d832e54 100644
+> --- a/drivers/tty/serial/8250/8250_pci.c
+> +++ b/drivers/tty/serial/8250/8250_pci.c
+> @@ -64,23 +64,17 @@
+>  #define PCIE_DEVICE_ID_NEO_2_OX_IBM	0x00F6
+>  #define PCI_DEVICE_ID_PLX_CRONYX_OMEGA	0xc001
+>  #define PCI_DEVICE_ID_INTEL_PATSBURG_KT 0x1d3d
+> -#define PCI_VENDOR_ID_WCHCN		0x4348
+> +
+>  #define PCI_DEVICE_ID_WCHCN_CH352_2S	0x3253
+> -#define PCI_DEVICE_ID_WCHCN_CH353_4S	0x3453
+> -#define PCI_DEVICE_ID_WCHCN_CH353_2S1PF	0x5046
+> -#define PCI_DEVICE_ID_WCHCN_CH353_1S1P	0x5053
+> -#define PCI_DEVICE_ID_WCHCN_CH353_2S1P	0x7053
+>  #define PCI_DEVICE_ID_WCHCN_CH355_4S	0x7173
+> +
+>  #define PCI_VENDOR_ID_AGESTAR		0x5372
+>  #define PCI_DEVICE_ID_AGESTAR_9375	0x6872
+>  #define PCI_DEVICE_ID_BROADCOM_TRUMANAGE 0x160a
+>  #define PCI_DEVICE_ID_AMCC_ADDIDATA_APCI7800 0x818e
 >  
->  	if (pci_resource_flags(pdev, bar) & IORESOURCE_IO) {
->  		if (!request_region(pci_resource_start(pdev, bar),
-> -			    pci_resource_len(pdev, bar), res_name))
-> +			    pci_resource_len(pdev, bar), name))
->  			goto err_out;
->  	} else if (pci_resource_flags(pdev, bar) & IORESOURCE_MEM) {
->  		if (!__request_mem_region(pci_resource_start(pdev, bar),
-> -					pci_resource_len(pdev, bar), res_name,
-> +					pci_resource_len(pdev, bar), name,
->  					exclusive))
->  			goto err_out;
->  	}
-> @@ -3994,14 +3993,13 @@ static int __pci_request_region(struct pci_dev *pdev, int bar,
->   * pci_request_region - Reserve PCI I/O and memory resource
->   * @pdev: PCI device whose resources are to be reserved
->   * @bar: BAR to be reserved
-> - * @res_name: Name to be associated with resource
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
-> - * Mark the PCI region associated with PCI device @pdev BAR @bar as
-> - * being reserved by owner @res_name.  Do not access any
-> - * address inside the PCI regions unless this call returns
-> - * successfully.
-> + * Mark the PCI region associated with PCI device @pdev BAR @bar as being
-> + * reserved by owner @name. Do not access any address inside the PCI regions
-> + * unless this call returns successfully.
->   *
->   * Returns 0 on success, or %EBUSY on error.  A warning
->   * message is also printed on failure.
-> @@ -4011,9 +4009,9 @@ static int __pci_request_region(struct pci_dev *pdev, int bar,
->   * when pcim_enable_device() has been called in advance. This hybrid feature is
->   * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
->   */
-> -int pci_request_region(struct pci_dev *pdev, int bar, const char *res_name)
-> +int pci_request_region(struct pci_dev *pdev, int bar, const char *name)
->  {
-> -	return __pci_request_region(pdev, bar, res_name, 0);
-> +	return __pci_request_region(pdev, bar, name, 0);
->  }
->  EXPORT_SYMBOL(pci_request_region);
+> -#define PCI_VENDOR_ID_WCHIC		0x1c00
+> -#define PCI_DEVICE_ID_WCHIC_CH382_2S1P	0x3250
+>  #define PCI_DEVICE_ID_WCHIC_CH384_4S	0x3470
+>  #define PCI_DEVICE_ID_WCHIC_CH384_8S	0x3853
+> -#define PCI_DEVICE_ID_WCHIC_CH382_2S	0x3253
 >  
-> @@ -4036,13 +4034,13 @@ void pci_release_selected_regions(struct pci_dev *pdev, int bars)
->  EXPORT_SYMBOL(pci_release_selected_regions);
+>  #define PCI_DEVICE_ID_MOXA_CP102E	0x1024
+>  #define PCI_DEVICE_ID_MOXA_CP102EL	0x1025
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index d2402bf4aea2..de5deb1a0118 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2593,6 +2593,11 @@
 >  
->  static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
-> -					  const char *res_name, int excl)
-> +					  const char *name, int excl)
->  {
->  	int i;
+>  #define PCI_VENDOR_ID_REDHAT		0x1b36
 >  
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++)
->  		if (bars & (1 << i))
-> -			if (__pci_request_region(pdev, i, res_name, excl))
-> +			if (__pci_request_region(pdev, i, name, excl))
->  				goto err_out;
->  	return 0;
+> +#define PCI_VENDOR_ID_WCHIC		0x1c00
+> +#define PCI_DEVICE_ID_WCHIC_CH382_0S1P	0x3050
+> +#define PCI_DEVICE_ID_WCHIC_CH382_2S1P	0x3250
+> +#define PCI_DEVICE_ID_WCHIC_CH382_2S	0x3253
+> +
+>  #define PCI_VENDOR_ID_SILICOM_DENMARK	0x1c2c
 >  
-> @@ -4059,7 +4057,7 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
->   * pci_request_selected_regions - Reserve selected PCI I/O and memory resources
->   * @pdev: PCI device whose resources are to be reserved
->   * @bars: Bitmask of BARs to be requested
-> - * @res_name: Name to be associated with resource
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
-> @@ -4069,9 +4067,9 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
->   * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
->   */
->  int pci_request_selected_regions(struct pci_dev *pdev, int bars,
-> -				 const char *res_name)
-> +				 const char *name)
->  {
-> -	return __pci_request_selected_regions(pdev, bars, res_name, 0);
-> +	return __pci_request_selected_regions(pdev, bars, name, 0);
->  }
->  EXPORT_SYMBOL(pci_request_selected_regions);
+>  #define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
+> @@ -2647,6 +2652,12 @@
+>  #define PCI_VENDOR_ID_AKS		0x416c
+>  #define PCI_DEVICE_ID_AKS_ALADDINCARD	0x0100
 >  
-> @@ -4079,7 +4077,7 @@ EXPORT_SYMBOL(pci_request_selected_regions);
->   * pci_request_selected_regions_exclusive - Request regions exclusively
->   * @pdev: PCI device to request regions from
->   * @bars: bit mask of BARs to request
-> - * @res_name: name to be associated with the requests
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
-> @@ -4089,9 +4087,9 @@ EXPORT_SYMBOL(pci_request_selected_regions);
->   * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
->   */
->  int pci_request_selected_regions_exclusive(struct pci_dev *pdev, int bars,
-> -					   const char *res_name)
-> +					   const char *name)
->  {
-> -	return __pci_request_selected_regions(pdev, bars, res_name,
-> +	return __pci_request_selected_regions(pdev, bars, name,
->  			IORESOURCE_EXCLUSIVE);
->  }
->  EXPORT_SYMBOL(pci_request_selected_regions_exclusive);
-> @@ -4114,12 +4112,11 @@ EXPORT_SYMBOL(pci_release_regions);
->  /**
->   * pci_request_regions - Reserve PCI I/O and memory resources
->   * @pdev: PCI device whose resources are to be reserved
-> - * @res_name: Name to be associated with resource.
-> + * @name: Name of the resource requestor
->   *
-> - * Mark all PCI regions associated with PCI device @pdev as
-> - * being reserved by owner @res_name.  Do not access any
-> - * address inside the PCI regions unless this call returns
-> - * successfully.
-> + * Mark all PCI regions associated with PCI device @pdev as being reserved by
-> + * owner @name. Do not access any address inside the PCI regions unless this
-> + * call returns successfully.
->   *
->   * Returns 0 on success, or %EBUSY on error.  A warning
->   * message is also printed on failure.
-> @@ -4129,22 +4126,22 @@ EXPORT_SYMBOL(pci_release_regions);
->   * when pcim_enable_device() has been called in advance. This hybrid feature is
->   * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
->   */
-> -int pci_request_regions(struct pci_dev *pdev, const char *res_name)
-> +int pci_request_regions(struct pci_dev *pdev, const char *name)
->  {
->  	return pci_request_selected_regions(pdev,
-> -			((1 << PCI_STD_NUM_BARS) - 1), res_name);
-> +			((1 << PCI_STD_NUM_BARS) - 1), name);
->  }
->  EXPORT_SYMBOL(pci_request_regions);
->  
->  /**
->   * pci_request_regions_exclusive - Reserve PCI I/O and memory resources
->   * @pdev: PCI device whose resources are to be reserved
-> - * @res_name: Name to be associated with resource.
-> + * @name: Name of the resource requestor
->   *
->   * Returns: 0 on success, negative error code on failure.
->   *
->   * Mark all PCI regions associated with PCI device @pdev as being reserved
-> - * by owner @res_name.  Do not access any address inside the PCI regions
-> + * by owner @name. Do not access any address inside the PCI regions
->   * unless this call returns successfully.
->   *
->   * pci_request_regions_exclusive() will mark the region so that /dev/mem
-> @@ -4158,10 +4155,10 @@ EXPORT_SYMBOL(pci_request_regions);
->   * when pcim_enable_device() has been called in advance. This hybrid feature is
->   * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
->   */
-> -int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
-> +int pci_request_regions_exclusive(struct pci_dev *pdev, const char *name)
->  {
->  	return pci_request_selected_regions_exclusive(pdev,
-> -				((1 << PCI_STD_NUM_BARS) - 1), res_name);
-> +				((1 << PCI_STD_NUM_BARS) - 1), name);
->  }
->  EXPORT_SYMBOL(pci_request_regions_exclusive);
+> +#define PCI_VENDOR_ID_WCHCN		0x4348
+> +#define PCI_DEVICE_ID_WCHCN_CH353_4S	0x3453
+> +#define PCI_DEVICE_ID_WCHCN_CH353_2S1PF	0x5046
+> +#define PCI_DEVICE_ID_WCHCN_CH353_1S1P	0x5053
+> +#define PCI_DEVICE_ID_WCHCN_CH353_2S1P	0x7053
+> +
+>  #define PCI_VENDOR_ID_ACCESSIO		0x494f
+>  #define PCI_DEVICE_ID_ACCESSIO_WDG_CSM	0x22c0
 >  
 > -- 
-> 2.47.0
+> 2.43.0.rc1.1336.g36b5255a03ac
 > 
 
