@@ -1,240 +1,244 @@
-Return-Path: <linux-pci+bounces-17619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17620-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 864539E3157
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 03:19:08 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2E19163168
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 02:19:03 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676ED13AD39;
-	Wed,  4 Dec 2024 02:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aLHq6++H"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0925B9E3163
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 03:25:23 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BF68172A;
-	Wed,  4 Dec 2024 02:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733278723; cv=none; b=i3XxJjFdBL0QrNX4lMpUD/jdHG+crRK9drE9Clr3u14ui2ltIvnYAAPH0SVKKE3d0WLL1asXeLVmgR0YKkOvADdAiZ0s9UE9wyUfv/DuBgifoia5mF2sVG3aJeMCcUB5shLGwbj3XnhMkMACcbIyiaoaMLiGTZxLF9q6A+kaI8U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733278723; c=relaxed/simple;
-	bh=+kEMO7rGw+KeheCipiC3trpAyN0T9xh2czyl3i+Q6KU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NjivLJG8OlFDxPq8DfU6IZUo4Op5YsjE61+6hkK7c3O8K8/J8lAGRhw24l+1VTW33gaSDj0x2KfHM/84R2aXovTEWoQVn7Du8OmTQpyftb9pPNFEw+z2lABbgpwLZ4++tziKcml68IzHw18rLlO4GV5NlCfMBvBB62j5HviDilA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aLHq6++H; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B3E6nEA032117;
-	Wed, 4 Dec 2024 02:18:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2AB+M/PmUMKeW8e1s13hUrW6/+2lZdTuq/nO5hGHVCo=; b=aLHq6++H/eL2l1Nj
-	EBYNwW36AwGo6g3R7caPLDNgWFXIDgd7fIMFxPpi2eaRH8zThfk+VaY1CJlTLJCB
-	EGUUp1LYIEqmJ+zJO1JMtODaMAu+ep66Pcktk8PhFQAllFgMou6oxgP+N9uV7/wQ
-	fHD5AftoKr5HjibYQjplG+cBQHhf9yt2mCzxb/f/3CYHepUceBXIBpRh5HSiyLU3
-	NEO3zddvlTdmNusiWjkY08WGA8jrXRIRjXkmVp/Zw2+baxmRUFpR658y04iBlwWg
-	NlDr2oHYDFrs/7wHttBejpe1+e+2FGVnN36T0OrY7Qp2OyXo97MwS0WaK4BArsBC
-	iyCucQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43a3faspay-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Dec 2024 02:18:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B42ISvJ003944
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Dec 2024 02:18:28 GMT
-Received: from [10.216.45.237] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Dec 2024
- 18:18:19 -0800
-Message-ID: <0a6110c3-0e20-6afb-b266-952ef9c1ff1e@quicinc.com>
-Date: Wed, 4 Dec 2024 07:48:15 +0530
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4174DB23A90
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 02:25:20 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D354E17548;
+	Wed,  4 Dec 2024 02:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oJSPZM2f"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B13848C;
+	Wed,  4 Dec 2024 02:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733279115; cv=fail; b=AaO9W0qaPnGp4WGYobR8XkECHoOxe9PrVXRWknDZUD1qmDA08Zuqj9bYepQFbzvdl47481Vaz48fmWIgaepbTW43cNsHphxCLa+mXn2gvLcllswHZ4dLuXF3Jo5BR2RQKRoyg2IO9unxqdJNnVcadjkvy4Xf3MxP0ICuuRJrGhE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733279115; c=relaxed/simple;
+	bh=J9bkq/nGib0i8i1OVdo/qciMU+XmVdJdXUDlxBumTF4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=tJ5m7GONZFfW7n408zVbQR+9eIp6SCfXukpUHVSkcw6eQUPSJ2Ip5o6pbU2MYE09EzYjnlKGJa3W3p2b8VYAEpH/iLFsg+guEE0Xp4s9NzOhNrqNml9AFG5OdU01RfZqvfHTEEu5emlwvVf7FqZlWWjPt2vRqFOOmNE8i3pMcM0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oJSPZM2f; arc=fail smtp.client-ip=40.107.94.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EqvuCefgcyxWHyiUfpjGypxgUWMlDxoEhMe1KQw4/0CMpLwiTRvMoCg2lFjwaV5tdcb8eNyDxN5YenVoCAzX1LnUEOFLO8z+CC6DnxxOPfhoP1RrnZpk/Fepcx42Qh+ej5U+REB1Y1BNrC9ZDSaAGLkFJ6CzB5pHb9G9PaFOO8XpR1w+w9EvClAXw+/x7GWmXQTnF6Hlv94JJMcFhkxQNp9HUtoycLjoVq+gL6/8AsiUJLeVqSh+Y+u63apZGdCShmzOnss/ZlMolFUYgg8ipjMLOc+JnG/KozfYmLLPwl59rLzG9iKqzYYHTdnB6MAOSIt2cc3F1cLiNBTqOAZlJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Sw+qIvZypGRapyMajRxDKrksCmztBDt5ptWqdGB5es=;
+ b=QdWe2mIpV6+Hz8DJJleDczyPBnrAJKU2j4hKjXVYupRpXKxjZpUFEeCqgeabLsHW4uu0taZopKLXW1VPcK31zHrLNqPDKDdDxegrXKEypOx6RJW3x4uMamrH88P38Ospjhqe7goCJ7la55cEF2pAEqqv5dJpoXDjZT/JtvzJ2qcSOVk4ii9xh1N8shgh7DGGtMuX6MOu1Al09Rb8hHIyOBm19eTd+PhVpVRJvK8f6V6saPMTdk1PQW4pnimK1REXtZKtPg34AJP5kFe7ij7o/HAYEpQbgrwbM12bIwCiOLM3P0s2RYaog7E/CaeSEkMIt4wXNiORGP7voHJ4RsQNLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Sw+qIvZypGRapyMajRxDKrksCmztBDt5ptWqdGB5es=;
+ b=oJSPZM2fH8ZRXG7WLTxIc3FZzBBwKHhx5waSmMbrdyqq21slcnSdIls8kRFg85uVo90Gmv5EOkPRtBWGHW41ge27bWPJshQ0o23/lZ7xmFoxF68CUHuu0yYePxqT2sG2pggGE+d4zdg0IfFBGo5HwAY1KdHti7rl05XxOdo2rpDDMf/+2BUqJf4BrAYPmrUCN6atrnj6aCC7utQcm4l1rsnS+5ox6wTW4+ckxMs+AnCUL6KLwQ0pnENSbIbgAeM2mrb43NT4AfV6E12ipkSQiZzZ8VlwnwuQvM/iRL99maBqahKh2dJFJ2PWTQiZqVZKWuw0+w2Vac5T0NQkEZY6OQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
+ by PH7PR12MB7454.namprd12.prod.outlook.com (2603:10b6:510:20d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Wed, 4 Dec
+ 2024 02:25:08 +0000
+Received: from PH7PR12MB7914.namprd12.prod.outlook.com
+ ([fe80::8998:fe5c:833c:f378]) by PH7PR12MB7914.namprd12.prod.outlook.com
+ ([fe80::8998:fe5c:833c:f378%6]) with mapi id 15.20.8207.017; Wed, 4 Dec 2024
+ 02:25:08 +0000
+From: Kai-Heng Feng <kaihengf@nvidia.com>
+To: bhelgaas@google.com,
+	mika.westerberg@linux.intel.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Carol Soto <csoto@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Chris Chiu <chris.chiu@canonical.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>
+Subject: [PATCH v2] PCI: Use downstream bridges for distributing resources
+Date: Wed,  4 Dec 2024 10:24:57 +0800
+Message-Id: <20241204022457.51322-1-kaihengf@nvidia.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TP0P295CA0045.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:4::16) To PH7PR12MB7914.namprd12.prod.outlook.com
+ (2603:10b6:510:27d::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 3/3] PCI: qcom: Enable ECAM feature based on config size
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <cros-qcom-dts-watchers@chromium.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <quic_vbadigan@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_vpernami@quicinc.com>,
-        <quic_mrana@quicinc.com>, <mmareddy@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20241117-ecam-v1-0-6059faf38d07@quicinc.com>
- <20241117-ecam-v1-3-6059faf38d07@quicinc.com>
- <20241202165349.iwaqfugyewyq6or2@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20241202165349.iwaqfugyewyq6or2@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qY7M8vChkdIhR9aJVau0QweJSASVktbH
-X-Proofpoint-GUID: qY7M8vChkdIhR9aJVau0QweJSASVktbH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412040018
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|PH7PR12MB7454:EE_
+X-MS-Office365-Filtering-Correlation-Id: d5415e4d-e537-42c4-e8a2-08dd140adf24
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rmRZv5K6NZMIEo9ySVGfddCAB9NaebE/9BSEU/1sOdXJRG3gijr4CT6h1Ov8?=
+ =?us-ascii?Q?z0CWunLFweEFQGzYvl6D2wKdhWJvc7ADTpKFz5vl2E9lOQ1j827qhH3vGNh0?=
+ =?us-ascii?Q?A5kfOWst28uRgJu9vYc1uR5nOeHGyyV0M5EmWua8PqE86VQl49gx6pInXVq5?=
+ =?us-ascii?Q?NEatsGuulgayxrdMuqfopOBrZ1BHG8w6+g94RH8h06NwTQdz6HK8Ju377v7e?=
+ =?us-ascii?Q?nL3WMkmq++xU8Va+Ybcom15VEH5IjjH7a8lNVXKDPKOiPLqz2Nnv7M8Ez1+p?=
+ =?us-ascii?Q?aKOXQEUfdHe3Oj/Fm1Fc/z1pHPkvAjMjwZliFoE2+hcGSKVB+ASrLRWNOdkz?=
+ =?us-ascii?Q?6TkpSx48VlTgaE1lsWlygxgr6Wv1HShl6tQXBizJkqGHc+SLXa7GzcS42ZMI?=
+ =?us-ascii?Q?hg+KCap3m078oGOjz1gCiaWknEAesNQRViAmway6eNaYGZ670iKPP7LxWcls?=
+ =?us-ascii?Q?ighaIqdjsZdnUDQiMZOE19DvCBFzuCnQQv/SoB7ncEL3VZJ0l+wugEi/3JBY?=
+ =?us-ascii?Q?BiHtPZQdwgCZ91R5hdYIrKdBZ15RM9nzWnSx1eFDbDkB3v57BX5Fn95ObjCy?=
+ =?us-ascii?Q?/GaY6eYrALnaDqITsWQdSu8/rrh8VaUNd31yTfLvlPeKJ+zIAgzcLfSR1Rzc?=
+ =?us-ascii?Q?IU/wqreheTRKN4/7RoFduVWMrz0jA2dV0L86NN6qTHHxqgFPR/vINxq9fw0J?=
+ =?us-ascii?Q?OSElUYv2jyK+fsqUVQ1jLHqXIrmhIHjV6sxtUW8SIN7P2eQTZcFjRAOVO3In?=
+ =?us-ascii?Q?nyxF43UBWdh5NROVBRFKgcrK9qRHv/syV24CVM46XsHSNi6aQmbcLb8eByea?=
+ =?us-ascii?Q?XZt/1xlEL+w5AS5Ii3YK4onSmxuIK4tw0+RkmFtzfS1IP/rzWihA2UuN63fH?=
+ =?us-ascii?Q?tMaHv+U6Q/tRW4Ps2tsvwMWvKf10Mclb+Y/mOXoy25spAy/fctr3NkW6cCNL?=
+ =?us-ascii?Q?15SiiIZTt01Iu/jU6TDh8Aqb4EirNXsMoYaJYOLyxLoDsc4FGjx35W/GS3VK?=
+ =?us-ascii?Q?KV2Mm/mjCMTsGX4QLsw4JU6Hppij3LjbnE8JSRtfFX9VQKCg0K0BxRxEbAvx?=
+ =?us-ascii?Q?ndF7QcjHys8idPReI2zOFsFs+3UxMRfknw7M4UeYn9GJ8FJzIyZxXKfHLvka?=
+ =?us-ascii?Q?DuLRQCOkk8Q8/OPo4cMjpD6M4RSEeVX1qPkgf0eSvuxgKo03nymvt7gVmAm9?=
+ =?us-ascii?Q?MfcI7+3eJhj6/IWbTLMAtmFxT1kZhtNgtDguSM3OY1CPX5hDseuFUfvOK1lR?=
+ =?us-ascii?Q?D+4RisLebqSDAXXaQ+YtXv9kTbLAHgoy3mL/US8IIiqJbAegCRY/zHsZ8fTW?=
+ =?us-ascii?Q?z5zUd0KUQnnJiBKqyHFMY4BbofGqzRHY106B1qOYeMmFFJknyY6cw9qDvVPb?=
+ =?us-ascii?Q?pMoqJII=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?6OrqhNxvBiPNVdzBaHJrumCpeOrTbcP+zurvOI8wrnibDP3IkXHeYTLdD93X?=
+ =?us-ascii?Q?ZOygWG80Ip3jxb+XBF3wrz7Q0uS/mOS4GMxkY3AGjv6pKM5y8WG9hG1G94QF?=
+ =?us-ascii?Q?PzyWzMotjX4qaVEAma5kVuMZYbps2FMdhXy2g8ZlD/Aeu6Q0OQtVOSnyXyQ0?=
+ =?us-ascii?Q?NyTAfi2T4P97+rrZbRt0UiCKdTcQecWua4h44yCWCkTqtw1AAoL/SzcsyuSm?=
+ =?us-ascii?Q?SuYwGIjSjTidFDOhBD9lnpUmerCzO0uirRFvw37h4tHsyhIkh58AJCADJW6P?=
+ =?us-ascii?Q?SajlGhECK+2aOV/95Waxi4kmTzWEWU8Z+wnpQiOxHnBuhwQvZ7wdoiD1UY8Y?=
+ =?us-ascii?Q?SQgu5VZ11cbn9Ck1jlKJpeydfvv6QEbRppRj0Zlp9+fBr8xvC4GiGI/eaD7f?=
+ =?us-ascii?Q?/p0ER15q4FZl3ybeHtUPtxD7XTZW8Ls2wJvAk+pUnBx0WkMuhrsZISTpnnhJ?=
+ =?us-ascii?Q?D4OcvS2DWN/zUw/XfwSymA+rCU+XA/UJYxVr5asqsUP0RukiXmwGD/BHMHOa?=
+ =?us-ascii?Q?us47Nr+NklxCIXpoGv4hD8xuSodNLnljVjN2YKaM8tkXWy4cbS+fOXmPR8Bi?=
+ =?us-ascii?Q?d7F2pj3yX+90bwXizAK9rZliz+OPqfpN/irpcswF1vDNsYbodIcjk1IJw1wu?=
+ =?us-ascii?Q?Yrfj9jToM32tzn7kV58/5dXyr7utWrkdwHS2OFI5YFQo6Ats4zlrV4KpKKvm?=
+ =?us-ascii?Q?Ajc4swYmKGWsXK7W6LCS559v5Dm4FXaWaNDpd64og3/83FbD0ZNbZzA/t/Pe?=
+ =?us-ascii?Q?CZI9dmwBf0AOqFgq2MWdp7EkcUh5LI7q4vMalQ+qZaVyAQHH1Q51bnlB5zGe?=
+ =?us-ascii?Q?lsynPpP2rWGxXcFtxZiq6rfFhBldHUvp8dhXK2MSWM36a0C7pqXJ/VH7w9Y3?=
+ =?us-ascii?Q?oXVzMoZMvcYMLAPe9k/CmU1LkuidRADUPQD8mevDUKDFsv8bzILki6A6pt2e?=
+ =?us-ascii?Q?gvpP+lcbVUh79c0DWbJU0j3sm9BTqW5Ow7mJUP531NdEogdJvnI+N52+EtAY?=
+ =?us-ascii?Q?WpMFl+Z0+p+SU9itrDWhKA7TrnowIktqlS+0AycA/ViS1E0U3S+VTRQajmRp?=
+ =?us-ascii?Q?ACK4yRbeVuxTztifLTiZtN1JnIjiOFPoqjvzy0tjBL8cKnftTVQ+VakSZZN8?=
+ =?us-ascii?Q?mVe4/3ndnmhQ/gcVYZ7jtc76UNrJT2r0LYhyJFvhQqO6cQIqzpExOxzv2qGF?=
+ =?us-ascii?Q?QXPJ5XmkrSE+vz0dQ9dSp8FjXeIp5+R8oULe0zwnERZ4ZnzD4oY5NkG7BlOU?=
+ =?us-ascii?Q?9uNIiPg3VQ5WsM+PrnNbUKXTcoDYKcXmH93txFT7DsAT1VdWEmMDbcvIuQMB?=
+ =?us-ascii?Q?mzZJ+2uBeHTZhX8rD6sVxOYySpiETqBo30W+BevL79WLuGkZV16a5AWL11Kn?=
+ =?us-ascii?Q?19iaQB4K0LrzP/YFhffLElNIJowdH56WtMGtF8+aras7lHfT6M6sAMko6w8V?=
+ =?us-ascii?Q?VZFJ463rQkjh7NemgeD5gybfpMANLmwC+vaHtTTUgyzTQgTK/IqwB2RYOseA?=
+ =?us-ascii?Q?OBq+NZlM/OpCpyOp33rLi6ZsLx5fDlTum4AcGzVxfB2UJZX4EnenrPtYJKCG?=
+ =?us-ascii?Q?XOaSaLivd4p+T1vOse7upCtFtJOk+U7BVfARg6vv?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5415e4d-e537-42c4-e8a2-08dd140adf24
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 02:25:08.5056
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qaZ+Mpcdd7S2SgSNqfz8NltZHtk5Y9YFfk7+B7ryO8JLf35OAAoO4v7uPPlLPIKIH3ibbRFiNOLSCf0FBWG63g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7454
 
+Commit 7180c1d08639 ("PCI: Distribute available resources for root
+buses, too") breaks BAR assignment on some devcies:
+[   10.021193] pci 0006:03:00.0: BAR 0 [mem 0x6300c0000000-0x6300c1ffffff 64bit pref]: assigned
+[   10.029880] pci 0006:03:00.1: BAR 0 [mem 0x6300c2000000-0x6300c3ffffff 64bit pref]: assigned
+[   10.038561] pci 0006:03:00.2: BAR 0 [mem size 0x00800000 64bit pref]: can't assign; no space
+[   10.047191] pci 0006:03:00.2: BAR 0 [mem size 0x00800000 64bit pref]: failed to assign
+[   10.055285] pci 0006:03:00.0: VF BAR 0 [mem size 0x02000000 64bit pref]: can't assign; no space
+[   10.064180] pci 0006:03:00.0: VF BAR 0 [mem size 0x02000000 64bit pref]: failed to assign
+[   10.072543] pci 0006:03:00.1: VF BAR 0 [mem size 0x02000000 64bit pref]: can't assign; no space
+[   10.081437] pci 0006:03:00.1: VF BAR 0 [mem size 0x02000000 64bit pref]: failed to assign
 
+The apertures of domain 0006 before the commit:
+6300c0000000-63ffffffffff : PCI Bus 0006:00
+  6300c0000000-6300c9ffffff : PCI Bus 0006:01
+    6300c0000000-6300c9ffffff : PCI Bus 0006:02
+      6300c0000000-6300c8ffffff : PCI Bus 0006:03
+        6300c0000000-6300c1ffffff : 0006:03:00.0
+          6300c0000000-6300c1ffffff : mlx5_core
+        6300c2000000-6300c3ffffff : 0006:03:00.1
+          6300c2000000-6300c3ffffff : mlx5_core
+        6300c4000000-6300c47fffff : 0006:03:00.2
+        6300c4800000-6300c67fffff : 0006:03:00.0
+        6300c6800000-6300c87fffff : 0006:03:00.1
+      6300c9000000-6300c9bfffff : PCI Bus 0006:04
+        6300c9000000-6300c9bfffff : PCI Bus 0006:05
+          6300c9000000-6300c91fffff : PCI Bus 0006:06
+          6300c9200000-6300c93fffff : PCI Bus 0006:07
+          6300c9400000-6300c95fffff : PCI Bus 0006:08
+          6300c9600000-6300c97fffff : PCI Bus 0006:09
 
-On 12/2/2024 10:23 PM, Manivannan Sadhasivam wrote:
-> On Sun, Nov 17, 2024 at 03:30:20AM +0530, Krishna chaitanya chundru wrote:
->> Enable the ECAM feature if the config space size is equal to size required
->> to represent number of buses in the bus range property.
->>
-> 
-> Please move this change to DWC core.
-> 
->> The ELBI registers falls after the DBI space, so use the cfg win returned
->> from the ecam init to map these regions instead of doing the ioremap again.
->> ELBI starts at offset 0xf20 from dbi.
->>
->> On bus 0, we have only the root complex. Any access other than that should
->> not go out of the link and should return all F's. Since the IATU is
->> configured for bus 1 onwards, block the transactions for bus 0:0:1 to
->> 0:31:7 (i.e., from dbi_base + 4KB to dbi_base + 1MB) from going outside the
->> link through ecam blocker through parf registers.
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 104 +++++++++++++++++++++++++++++++--
->>   1 file changed, 100 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index ef44a82be058..266de2aa3a71 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -61,6 +61,17 @@
->>   #define PARF_DBI_BASE_ADDR_V2_HI		0x354
->>   #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
->>   #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
->> +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
->> +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
->> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
->> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
->> +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
->> +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
->> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
->> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
->> +#define PARF_ECAM_BASE				0x380
->> +#define PARF_ECAM_BASE_HI			0x384
->> +
->>   #define PARF_NO_SNOOP_OVERIDE			0x3d4
->>   #define PARF_ATU_BASE_ADDR			0x634
->>   #define PARF_ATU_BASE_ADDR_HI			0x638
->> @@ -68,6 +79,8 @@
->>   #define PARF_BDF_TO_SID_TABLE_N			0x2000
->>   #define PARF_BDF_TO_SID_CFG			0x2c00
->>   
->> +#define ELBI_OFFSET				0xf20
->> +
->>   /* ELBI registers */
->>   #define ELBI_SYS_CTRL				0x04
->>   
->> @@ -84,6 +97,7 @@
->>   
->>   /* PARF_SYS_CTRL register fields */
->>   #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
->> +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
->>   #define MST_WAKEUP_EN				BIT(13)
->>   #define SLV_WAKEUP_EN				BIT(12)
->>   #define MSTR_ACLK_CGC_DIS			BIT(10)
->> @@ -293,15 +307,68 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
->>   	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
->>   }
->>   
->> +static int qcom_pci_config_ecam_blocker(struct dw_pcie_rp *pp)
-> 
-> 'config_ecam_blocker' is one of the use of this function, not the only one. So
-> use something like, 'qcom_pci_config_ecam()'.
-> 
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->> +	u64 addr, addr_end;
->> +	u32 val;
->> +
->> +	/* Set the ECAM base */
->> +	writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
->> +	writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
->> +
->> +	/*
->> +	 * On bus 0, we have only the root complex. Any access other than that
->> +	 * should not go out of the link and should return all F's. Since the
->> +	 * IATU is configured for bus 1 onwards, block the transactions for
->> +	 * bus 0:0:1 to 0:31:7 (i.e from dbi_base + 4kb to dbi_base + 1MB) from
-> 
-> s/"for bus 0:0:1 to 0:31:7"/"starting from 0:0.1 to 0:31:7"
-> 
->> +	 * going outside the link.
->> +	 */
->> +	addr = pci->dbi_phys_addr + SZ_4K;
->> +	writel(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
->> +	writel(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
->> +
->> +	writel(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
->> +	writel(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
->> +
->> +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
->> +
->> +	writel(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
->> +	writel(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
->> +
->> +	writel(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
->> +	writel(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
->> +
->> +	val = readl(pcie->parf + PARF_SYS_CTRL);
->> +	val |= PCIE_ECAM_BLOCKER_EN;
->> +	writel(val, pcie->parf + PARF_SYS_CTRL);
->> +	return 0;
->> +}
->> +
->> +static int qcom_pcie_ecam_init(struct dw_pcie *pci, struct pci_config_window *cfg)
->> +{
->> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->> +
->> +	pcie->elbi = pci->dbi_base + ELBI_OFFSET;
-> 
-> Can't you derive this offset from DT?
-> 
-> - Mani
-instread of macro & dt In the next patch we will read a parf register
-which will give the offset value from dbi, PARF_SLV_DBI_ELBI (0x1C001B4)
+After the commit:
+6300c0000000-63ffffffffff : PCI Bus 0006:00
+  6300c0000000-6300c9ffffff : PCI Bus 0006:01
+    6300c0000000-6300c9ffffff : PCI Bus 0006:02
+      6300c0000000-6300c43fffff : PCI Bus 0006:03
+        6300c0000000-6300c1ffffff : 0006:03:00.0
+          6300c0000000-6300c1ffffff : mlx5_core
+        6300c2000000-6300c3ffffff : 0006:03:00.1
+          6300c2000000-6300c3ffffff : mlx5_core
+      6300c4400000-6300c4dfffff : PCI Bus 0006:04
+        6300c4400000-6300c4dfffff : PCI Bus 0006:05
+          6300c4400000-6300c45fffff : PCI Bus 0006:06
+          6300c4600000-6300c47fffff : PCI Bus 0006:07
+          6300c4800000-6300c49fffff : PCI Bus 0006:08
+          6300c4a00000-6300c4bfffff : PCI Bus 0006:09
 
-- Krishna Chaitanya.
-> 
+We can see that the window of 0006:03 gets shrunken too much and 0006:04
+eats away the window for 0006:03:00.2.
+
+The offending commit distributes the upstream bridge's resources
+multiple times to every downstream bridges, hence makes the aperture
+smaller than desired because calculation of io_per_b, mmio_per_b and
+mmio_pref_per_b becomes incorrect.
+
+Instead, distributing downstream bridges' own resources to resolve the
+issue.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=219540
+Cc: Carol Soto <csoto@nvidia.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Chris Chiu <chris.chiu@canonical.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
+Fixes: 7180c1d08639 ("PCI: Distribute available resources for root buses, too")
+Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+---
+ drivers/pci/setup-bus.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 23082bc0ca37..a6e653a4f5b1 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2105,8 +2105,7 @@ pci_root_bus_distribute_available_resources(struct pci_bus *bus,
+ 		 * in case of root bus.
+ 		 */
+ 		if (bridge && pci_bridge_resources_not_assigned(dev))
+-			pci_bridge_distribute_available_resources(bridge,
+-								  add_list);
++			pci_bridge_distribute_available_resources(dev, add_list);
+ 		else
+ 			pci_root_bus_distribute_available_resources(b, add_list);
+ 	}
+-- 
+2.47.0
+
 
