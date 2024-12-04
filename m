@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-17703-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17704-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB9C89E46F8
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 22:39:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 963829E472D
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 22:48:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41D3618801CD
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 21:39:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 706AC16A000
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 21:48:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A82B192D8B;
-	Wed,  4 Dec 2024 21:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CE9618FDDB;
+	Wed,  4 Dec 2024 21:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DaLa6SN8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCq04lhb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B73A192D83;
-	Wed,  4 Dec 2024 21:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C82618C900;
+	Wed,  4 Dec 2024 21:48:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733348307; cv=none; b=Ll9rLe1RVTpr8zV3UnaaVaBjGwU2xoWsv2SVy1Vd0yI3JLvKPe6dsYNujdKnM9z7xqr3dBTgW9v7wGYmcGegEZmgdDeYBKseU4aNUodvxaMo3sYe4gZPT3ygr3y4YSMjVdPp3A1+8yeTebikIwc+tam4FK8i+rC/doP3Zo6IqtY=
+	t=1733348934; cv=none; b=RbPuijSOadbjL0fSvUPIGt7Q0of6zvTF+DDum19e6BmVHhqz8Th1vzib2K60HcwsTJyEqPAiLM6ZGX0bwmjrvgyltUuvHmwRTNZV37k0Had/b5LV518LeWDvPPhwx9SSwSwQ6tjHwskGS3uMM9QjgWEz2/URv3QAm+LOcqHYUBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733348307; c=relaxed/simple;
-	bh=l7yTTVmUjjV/VqhMA+V6zq/8SizxCbJ3CpajJl/oHWU=;
+	s=arc-20240116; t=1733348934; c=relaxed/simple;
+	bh=bYet3lSnC6WeIGaeITC0Oaz3L3iKdeow2WxHvY63XEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=telj18vnG3E9wedUB3ev4URfqMArmropHB47mquHmjacfOS9ZFOzkx0jWM7FwqvIyOKjCVjvEJG/C3vNxR1wSmrVCq2AgIQSB+xDRY34PTaT0q35rJsVe8okFqB5b2srSsddOwA2J8OZOw6y90Lrsz03yHYQCwzhz8jjbkz6hMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DaLa6SN8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB3FAC4CED1;
-	Wed,  4 Dec 2024 21:38:26 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=A1gc5Jnfe20LMQ8WasM1ogRL913fZ4TZpXokNUXM3uFFeBB3tkgLbxSnTq0wmQU7WHBwhJL70CO3EzjiWa6I+9i/8nra+0bvU/pyS31d9uuWhyH7GBXpAmuI25yihDHJ2PFtWSNkoyIYnWVQpQhQUcfbVQ5v7MBqgXWzpH4KYDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCq04lhb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC94C4CECD;
+	Wed,  4 Dec 2024 21:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733348307;
-	bh=l7yTTVmUjjV/VqhMA+V6zq/8SizxCbJ3CpajJl/oHWU=;
+	s=k20201202; t=1733348933;
+	bh=bYet3lSnC6WeIGaeITC0Oaz3L3iKdeow2WxHvY63XEE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DaLa6SN8BM+PWpWbnGgM/0/tA6qmf5zQSGmYTk7AUVcBGNBDoBy+gM5Js4eAUiQHL
-	 P9Uumhwjzqj/Le/bOyXm1WPqjrGe0vDFv3i2W4Rov71hgR8R+qkoR63ur3eX4Z8GCr
-	 BHp9uTH30RGNibOtI24PG4Kulnajp0w5Q8OZzSxhaUyuF3GsWG7DXKm70V13xLQ9S7
-	 FzF6D9besA9lacQI/SZXJ1LUqa++mmoph5kRWV3MUw8SVYz+R31qH+ySWuhZvGewuZ
-	 JD9XB5K0NUWrcKkgbzvlarO7SnfhzGIYyOCKEH0Fw9SY6nXmIhW89Td9tkUeCAzh5J
-	 iURygTF4RlJnw==
-Date: Wed, 4 Dec 2024 15:38:25 -0600
+	b=eCq04lhbsw7EWb1lKqd2nOEKJlg3s1EphiHrA9QhejSdCBB2PAaWfmwo0kRkJaWpJ
+	 Wmjg4lYdYcp/BtEicaWL6K2zQUNNLsCb2Agjt2YEkRrE6mm156S9nAml+vep7QchCD
+	 ImFYiagi7yckXvor1TnOdK3B3ILwXrV5x/QQnYbLQgssGeUQMALIt9u439r3o+i/gx
+	 k7aVYgqQrzAMKaRlHbG4kVvIky9Geu5famIrWJNW/Zb3yr35Pnc8lAq2VsFRCcjCIA
+	 l0SepF+2YXvZcobavLYpI1ArFsziNrFx41yCgUzukW1XrbV5cdBB1odL8SPx1Ydyzf
+	 hUutvSTb4sUgQ==
+Date: Wed, 4 Dec 2024 15:48:52 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-pci@vger.kernel.org,
@@ -54,9 +55,8 @@ Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 1/6] driver core: Introduce
- device_{add,remove}_of_node()
-Message-ID: <20241204213825.GA3016970@bhelgaas>
+Subject: Re: [PATCH v4 6/6] PCI: of: Create device-tree PCI host bridge node
+Message-ID: <20241204214852.GA3017210@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,111 +65,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241202131522.142268-2-herve.codina@bootlin.com>
+In-Reply-To: <20241202131522.142268-7-herve.codina@bootlin.com>
 
-[cc->to Greg, Rafael]
+On Mon, Dec 02, 2024 at 02:15:18PM +0100, Herve Codina wrote:
+> PCI devices device-tree nodes can be already created. This was
+> introduced by commit 407d1a51921e ("PCI: Create device tree node for
+> bridge").
+> 
+> In order to have device-tree nodes related to PCI devices attached on
+> their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
+> root bus device-tree node is needed. This root bus node will be used as
+> the parent node of the first level devices scanned on the bus. On
+> device-tree based systems, this PCI root bus device tree node is set to
+> the node of the related PCI host bridge. The PCI host bridge node is
+> available in the device-tree used to describe the hardware passed at
+> boot.
+> 
+> On non device-tree based system (such as ACPI), a device-tree node for
+> the PCI host bridge or for the root bus do not exist. Indeed, the PCI
+> host bridge is not described in a device-tree used at boot simply
+> because no device-tree are passed at boot.
 
-On Mon, Dec 02, 2024 at 02:15:13PM +0100, Herve Codina wrote:
-> An of_node can be set to a device using device_set_node().
-> This function cannot prevent any of_node and/or fwnode overwrites.
-> 
-> When adding an of_node on an already present device, the following
-> operations need to be done:
-> - Attach the of_node if no of_node were already attached
-> - Attach the of_node as a fwnode if no fwnode were already attached
-> 
-> This is the purpose of device_add_of_node().
-> device_remove_of_node() reverts the operations done by
-> device_add_of_node().
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/base/core.c    | 52 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/device.h |  2 ++
+s/do not exist/does not exist/
 
-I suppose this series would go via the PCI tree since the bulk of the
-changes are there.  If so, I would look for an ack from the driver
-core folks (Greg, Rafael).
-
->  2 files changed, 54 insertions(+)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 8b056306f04e..3953c5ab7316 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -5216,6 +5216,58 @@ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
->  }
->  EXPORT_SYMBOL_GPL(set_secondary_fwnode);
->  
-> +/**
-> + * device_remove_of_node - Remove an of_node from a device
-> + * @dev: device whose device-tree node is being removed
-> + */
-> +void device_remove_of_node(struct device *dev)
+> +void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
 > +{
-> +	dev = get_device(dev);
-> +	if (!dev)
+> +	struct device_node *np = NULL;
+> +	struct of_changeset *cset;
+> +	const char *name;
+> +	int ret;
+> +
+> +	/*
+> +	 * If there is already a device-tree node linked to the PCI bus handled
+> +	 * by this bridge (i.e. the PCI root bus), nothing to do.
+> +	 */
+> +	if (pci_bus_to_OF_node(bridge->bus))
 > +		return;
 > +
-> +	if (!dev->of_node)
-> +		goto end;
-> +
-> +	if (dev->fwnode == of_fwnode_handle(dev->of_node))
-> +		dev->fwnode = NULL;
-> +
-> +	of_node_put(dev->of_node);
-> +	dev->of_node = NULL;
-> +
-> +end:
-> +	put_device(dev);
-> +}
-> +EXPORT_SYMBOL_GPL(device_remove_of_node);
-> +
-> +/**
-> + * device_add_of_node - Add an of_node to an existing device
-> + * @dev: device whose device-tree node is being added
-> + * @of_node: of_node to add
-> + */
-> +void device_add_of_node(struct device *dev, struct device_node *of_node)
-> +{
-> +	if (!of_node)
-> +		return;
-> +
-> +	dev = get_device(dev);
-> +	if (!dev)
-> +		return;
-> +
-> +	if (WARN(dev->of_node, "%s: Cannot replace node %pOF with %pOF\n",
-> +		 dev_name(dev), dev->of_node, of_node))
-> +		goto end;
-> +
-> +	dev->of_node = of_node_get(of_node);
-> +
-> +	if (!dev->fwnode)
-> +		dev->fwnode = of_fwnode_handle(of_node);
-> +
-> +end:
-> +	put_device(dev);
-> +}
-> +EXPORT_SYMBOL_GPL(device_add_of_node);
-> +
->  /**
->   * device_set_of_node_from_dev - reuse device-tree node of another device
->   * @dev: device whose device-tree node is being set
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 667cb6db9019..ef4c0f3c41cd 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1149,6 +1149,8 @@ int device_online(struct device *dev);
->  void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
->  void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
->  void device_set_node(struct device *dev, struct fwnode_handle *fwnode);
-> +void device_add_of_node(struct device *dev, struct device_node *of_node);
-> +void device_remove_of_node(struct device *dev);
->  void device_set_of_node_from_dev(struct device *dev, const struct device *dev2);
->  
->  static inline struct device_node *dev_of_node(struct device *dev)
-> -- 
-> 2.47.0
-> 
+> +	/* The root bus has no node. Check that the host bridge has no node too */
+> +	if (bridge->dev.of_node) {
+> +		pr_err("PCI host bridge of_node already set");
+
+Can we use dev_err() here?
+
+Bjorn
 
