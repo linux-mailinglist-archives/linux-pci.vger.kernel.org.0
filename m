@@ -1,59 +1,64 @@
-Return-Path: <linux-pci+bounces-17677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17688-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24CF49E4528
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 20:56:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 161589E44ED
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 20:42:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4BBCBC21D9
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:44:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F3FC0B4845C
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA47206F1E;
-	Wed,  4 Dec 2024 17:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C422111B8;
+	Wed,  4 Dec 2024 17:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIqkoCJw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uuoGbMaW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31384206F19;
-	Wed,  4 Dec 2024 17:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB8B207E0E;
+	Wed,  4 Dec 2024 17:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733332343; cv=none; b=RTItYqr1w57Au5eq5GnLGJxTcfYaFSvS06tdtyvaoLRKEHtESxRAOgMWejzHxMMbQ/UdyqX7hIDjgw+0XmEeb1uBwgnwzm+JKbT3mUuvLOT4fvDuXtuNR0tMzrlSliHq/4OveMNnEN2uy5BRavTiDWdv5CEczxYMCrSDvAdgU0c=
+	t=1733332408; cv=none; b=g+/AjxDVEFY8hxWBMLIRZ8Ss44Rv0O50VNHq3+hCEkAPHFL6HJoJTSS91hORObKoSsKcQNnOi8JzHQSVRuTI87W1ZO0JJgb9lkuAQcmiD90tUh+FOO5xRY2mNlbr3/nYRdB07THGOTiDU98MlxkRDoPrWsYjFUf/KOCZC19nUhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733332343; c=relaxed/simple;
-	bh=ckDMjVDSyBTqcPOpG8jfSlViv6qZAcYWL7qVzsWgtYM=;
+	s=arc-20240116; t=1733332408; c=relaxed/simple;
+	bh=/m2+NH+o1MbD+W0ApYc0BfuNQlXVMgMpyblIKJ3s9qs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TcTB5ohnsWG5QbDcy8dFQuY+ADEhCNAgQTDrahzeAe+yJZAQlgqZOfwzC9EUiJOoEd4bnnMJmjCTeIvNgHC3idw3mgMcychTYyMOv+bvQTQBwiOEHVeKYw2OKMhUfkyQNP+MIs5xV9sKpCLbafMDgq84CJUyqhyFxwV6diWlO0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIqkoCJw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52A0C4CEDF;
-	Wed,  4 Dec 2024 17:12:21 +0000 (UTC)
+	 MIME-Version; b=Cj6VKI2NOsWkSgWchXtV64NpAT5+kudM1yMOpifKrynjSOVjVviT121pvra3Vq9ltGXJXFSeRcAt3LGvts/FmN5iOTtlqXdToYRhWBsglcsOiadrw4gGL0EeqWySVJJSXGI2wgsZ7NHoJTt/7nTB/I3I3X8pphxa9wcDRiGo28k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uuoGbMaW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B565C4CECD;
+	Wed,  4 Dec 2024 17:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733332342;
-	bh=ckDMjVDSyBTqcPOpG8jfSlViv6qZAcYWL7qVzsWgtYM=;
+	s=k20201202; t=1733332408;
+	bh=/m2+NH+o1MbD+W0ApYc0BfuNQlXVMgMpyblIKJ3s9qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LIqkoCJwZMjNqLbr4oHIdKyvdz4eC4aI9fbG3R3/CTvFzQNFTbJVhYABCNArcYYqw
-	 8zSd679WV86w4Pxyli0nrLSrheMWxyFLh9IAlh8Ksbk22NBC3T5lTCsFKndtXGO5+R
-	 r6W2E5P8NEBS78UIigTDFvG9dTGwxk++p498xAHy2L85UujJoopAYtUfSWICBSJqjB
-	 ijpvcv+cIEUfKfj05cT009gh3y+dBcaJGO8nqGLx54acvF1mKqcyfXqSFSdxXvG6rl
-	 8Id9k3rY2LIZaR1M8eAQzLq3elc5tyCI6zn9vEmb8KDEqdKoGCwzy8f8I/KGNbqmKB
-	 4KgoDXp+LR2XA==
+	b=uuoGbMaWLrDA6uLztI9oHC0Pt1OT51yc95JvlSZRAsQXMbDZzhvb2QOaBGKtsXtu+
+	 +dSIHOe4oKYb2ZWiMjZAODquKftAPYCFVWXpFuOJkHhVevC79OBYWI/mHWneu6LcuC
+	 u0rrSlu+NkCeUQW3BNiOAgPFl6H2g6rXpa1xmO7MLIQZU0g+vSkUoin3MjlY1C8MeX
+	 +rvLo+p7P0jFe1R3O8RRyDTzaxzveqcN2klTKV69To+eOV4GD56Di8Gjqnq72HQnnr
+	 sWXoD4B00/2lhVPlXkkCOUyzy9GFz5TzFVg9yXe4JzXgWyBUSyZM+eu9uP248tMRn5
+	 cQZPLiOav05Kw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mengyuan Lou <mengyuanlou@net-swift.com>,
+Cc: Keith Busch <kbusch@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Amey Narkhede <ameynarkhede03@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
+	mariusz.tkaczyk@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	stuart.w.hayes@gmail.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.11 10/13] PCI: Add ACS quirk for Wangxun FF5xxx NICs
-Date: Wed,  4 Dec 2024 11:00:35 -0500
-Message-ID: <20241204160044.2216380-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 4/6] PCI: Add 'reset_subordinate' to reset hierarchy below bridge
+Date: Wed,  4 Dec 2024 11:01:54 -0500
+Message-ID: <20241204160200.2217169-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241204160044.2216380-1-sashal@kernel.org>
-References: <20241204160044.2216380-1-sashal@kernel.org>
+In-Reply-To: <20241204160200.2217169-1-sashal@kernel.org>
+References: <20241204160200.2217169-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,64 +67,131 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.11.10
+X-stable-base: Linux 5.15.173
 Content-Transfer-Encoding: 8bit
 
-From: Mengyuan Lou <mengyuanlou@net-swift.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit aa46a3736afcb7b0793766d22479b8b99fc1b322 ]
+[ Upstream commit 2fa046449a82a7d0f6d9721dd83e348816038444 ]
 
-Wangxun FF5xxx NICs are similar to SFxxx, RP1000 and RP2000 NICs.  They may
-be multi-function devices, but they do not advertise an ACS capability.
+The "bus" and "cxl_bus" reset methods reset a device by asserting Secondary
+Bus Reset on the bridge leading to the device.  These only work if the
+device is the only device below the bridge.
 
-But the hardware does isolate FF5xxx functions as though it had an ACS
-capability and PCI_ACS_RR and PCI_ACS_CR were set in the ACS Control
-register, i.e., all peer-to-peer traffic is directed upstream instead of
-being routed internally.
+Add a sysfs 'reset_subordinate' attribute on bridges that can assert
+Secondary Bus Reset regardless of how many devices are below the bridge.
 
-Add ACS quirk for FF5xxx NICs in pci_quirk_wangxun_nic_acs() so the
-functions can be in independent IOMMU groups.
+This resets all the devices below a bridge in a single command, including
+the locking and config space save/restore that reset methods normally do.
 
-Link: https://lore.kernel.org/r/E16053DB2B80E9A5+20241115024604.30493-1-mengyuanlou@net-swift.com
-Signed-off-by: Mengyuan Lou <mengyuanlou@net-swift.com>
+This may be the only way to reset devices that don't support other reset
+methods (ACPI, FLR, PM reset, etc).
+
+Link: https://lore.kernel.org/r/20241025222755.3756162-1-kbusch@meta.com
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+[bhelgaas: commit log, add capable(CAP_SYS_ADMIN) check]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Amey Narkhede <ameynarkhede03@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci | 11 +++++++++++
+ drivers/pci/pci-sysfs.c                 | 26 +++++++++++++++++++++++++
+ drivers/pci/pci.c                       |  2 +-
+ drivers/pci/pci.h                       |  1 +
+ 4 files changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index dccb60c1d9cc3..8103bc24a54ea 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4996,18 +4996,21 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- }
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index d4ae03296861e..41a60df789e34 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -148,6 +148,17 @@ Description:
+ 		will be present in sysfs.  Writing 1 to this file
+ 		will perform reset.
  
- /*
-- * Wangxun 10G/1G NICs have no ACS capability, and on multi-function
-- * devices, peer-to-peer transactions are not be used between the functions.
-- * So add an ACS quirk for below devices to isolate functions.
-+ * Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
-+ * multi-function devices, the hardware isolates the functions by
-+ * directing all peer-to-peer traffic upstream as though PCI_ACS_RR and
-+ * PCI_ACS_CR were set.
-  * SFxxx 1G NICs(em).
-  * RP1000/RP2000 10G NICs(sp).
-+ * FF5xxx 40G/25G/10G NICs(aml).
++What:		/sys/bus/pci/devices/.../reset_subordinate
++Date:		October 2024
++Contact:	linux-pci@vger.kernel.org
++Description:
++		This is visible only for bridge devices. If you want to reset
++		all devices attached through the subordinate bus of a specific
++		bridge device, writing 1 to this will try to do it.  This will
++		affect all devices attached to the system through this bridge
++		similiar to writing 1 to their individual "reset" file, so use
++		with caution.
++
+ What:		/sys/bus/pci/devices/.../vpd
+ Date:		February 2008
+ Contact:	Ben Hutchings <bwh@kernel.org>
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 9cf79afc0ec7d..075c32b91fc4e 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -496,6 +496,31 @@ static ssize_t bus_rescan_store(struct device *dev,
+ static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
+ 							    bus_rescan_store);
+ 
++static ssize_t reset_subordinate_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct pci_bus *bus = pdev->subordinate;
++	unsigned long val;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	if (kstrtoul(buf, 0, &val) < 0)
++		return -EINVAL;
++
++	if (val) {
++		int ret = __pci_reset_bus(bus);
++
++		if (ret)
++			return ret;
++	}
++
++	return count;
++}
++static DEVICE_ATTR_WO(reset_subordinate);
++
+ #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+ static ssize_t d3cold_allowed_store(struct device *dev,
+ 				    struct device_attribute *attr,
+@@ -620,6 +645,7 @@ static struct attribute *pci_dev_attrs[] = {
+ static struct attribute *pci_bridge_attrs[] = {
+ 	&dev_attr_subordinate_bus_number.attr,
+ 	&dev_attr_secondary_bus_number.attr,
++	&dev_attr_reset_subordinate.attr,
+ 	NULL,
+ };
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ee1d74f89a05f..8bbe8c00859a8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5834,7 +5834,7 @@ EXPORT_SYMBOL_GPL(pci_probe_reset_bus);
+  *
+  * Same as above except return -EAGAIN if the bus cannot be locked
   */
- static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 acs_flags)
+-static int __pci_reset_bus(struct pci_bus *bus)
++int __pci_reset_bus(struct pci_bus *bus)
  {
- 	switch (dev->device) {
--	case 0x0100 ... 0x010F:
--	case 0x1001:
--	case 0x2001:
-+	case 0x0100 ... 0x010F: /* EM */
-+	case 0x1001: case 0x2001: /* SP */
-+	case 0x5010: case 0x5025: case 0x5040: /* AML */
-+	case 0x5110: case 0x5125: case 0x5140: /* AML */
- 		return pci_acs_ctrl_enabled(acs_flags,
- 			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- 	}
+ 	int rc;
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index ec968b14aa2a2..4a8f499d278be 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -37,6 +37,7 @@ bool pci_reset_supported(struct pci_dev *dev);
+ void pci_init_reset_methods(struct pci_dev *dev);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
++int __pci_reset_bus(struct pci_bus *bus);
+ 
+ struct pci_cap_saved_data {
+ 	u16		cap_nr;
 -- 
 2.43.0
 
