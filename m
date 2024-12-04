@@ -1,65 +1,60 @@
-Return-Path: <linux-pci+bounces-17681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 673819E4239
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 18:47:26 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FED19E423C
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 18:47:41 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 574661654B6
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:47:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFC42287C4C
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B55207DED;
-	Wed,  4 Dec 2024 17:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3B1231B00;
+	Wed,  4 Dec 2024 17:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1Qa1rCm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZtIMYF3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C111207DEB;
-	Wed,  4 Dec 2024 17:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A7A231AF4;
+	Wed,  4 Dec 2024 17:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733332367; cv=none; b=t4B9F5D5W8UJgwkSEkygt6dWgOGgn5ValnFiECmuqq/XrWJ3amdRzz7HxTQs0fDJiR1KpyHeJlaDg96MjL6PoQyaAfoWPLUKIc+pR+i0PHKDecyDCZk6z3ORmUN1DcUcJrMRSUViddSSRZ93DX/UrYz1dCKjxxCEVeafF7HjGMc=
+	t=1733332370; cv=none; b=qvc/zmQSyFxhcNuDOrXlhkZA+337WN9FxydD2jem6t/SM8OnqAeucEIxV3CNBE+dNSahRjHVch/44ZZvZwxmU4BXyGj4PvTgBzymflTrs9/GLcOu8LxAOBPQq3iIlfbfPzQ2U1c+Wvc8luBEnrM6/DNMiRaA6L2dpdIY1YsbWfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733332367; c=relaxed/simple;
-	bh=JcQBRPnFqVpdCGukwP5CGlHoIqQWzo9rlbQJWSp6bGc=;
+	s=arc-20240116; t=1733332370; c=relaxed/simple;
+	bh=+DSOcSN36hHwURdw2ODcs92UNCbE7AuLFPiehLo63PI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m48RxVuqSmL2+Fbm28cvEM5NF+XNbllwgByrAhejIKeMvA6//XBiVONNZDAKQhoFlQ1hzEI7ipAyyEUbfkC8B7V75pBkf0R8NP68N2aLSFlnXEh8V9mBZlfGIiBc0x1QTos5uCP76EnM96xGVTlBuFlnUFLQM4FECa+xpHnK9Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1Qa1rCm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F94C4CECD;
-	Wed,  4 Dec 2024 17:12:45 +0000 (UTC)
+	 MIME-Version; b=ioXlQczWUhWZjiTh1lkjtblZI+o7gZSvmENpEXH5an8s12vZvGOh1JnUWz/LKOJfcco4trTZpUWbx2Zclo2hH4HZgjZwSZw9u1KrKcq2oBTjRShuPhhWO3gzJ79kOhJMJ9RrYHzSqaBaq1dnVJYAdOuarYuYDRJ9YfZcUOF7zqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZtIMYF3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCAEC4CECD;
+	Wed,  4 Dec 2024 17:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733332367;
-	bh=JcQBRPnFqVpdCGukwP5CGlHoIqQWzo9rlbQJWSp6bGc=;
+	s=k20201202; t=1733332370;
+	bh=+DSOcSN36hHwURdw2ODcs92UNCbE7AuLFPiehLo63PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k1Qa1rCmcW+M9kNVD9YycgEkUPNItLernZYyu3D6PQjxrpS0fja/bXGFEPGenQqtS
-	 6V8jZAG0oBEoTPbjVG7E7pjmgenFkkiOIbprC3Nlwp4uRo7rS1obgglxPz+xtYSrZp
-	 51evHLVuxNGGHe6hx6DWvqFgE5ybgpSuqfrEEAs+HaOUWhJoB4aUDy5Rl70YcQT/MQ
-	 bONd41TRaO8yrnRLd+m8psFMcnA71dDJHeJkKmeVCOdkFN/JHvFQTfoYvvZoRszr7f
-	 JS0tjJqz1TxUsVnuIPEUh2p2HObiSujrbEx6n9a8IxNcLYY+NnKsqXSzv/RA4IA7GY
-	 gR9Pr44w+ROjg==
+	b=XZtIMYF3LqUsOc/JBGaIv5JezIWICTEeq2rn4d+H5TjOf9JXugxCT+u1H56Finmry
+	 HVOcFE7/gz1ZQ4eUhdea8uA/8AelVTtLqhSG+oefhK4TNlm/4/pMal8i2lDeE9typy
+	 aK+8YJuqQieUwoCxrojqkRrlgYti2gkfSA+wZki49efIymE5DpgTb/pCxWr9sy8rbt
+	 R4efO2NOPxzzGnHqrF9uvoGcS9jYg4EjXO/9EpBvoKd1Cvj1NHeVi+miWSmBtf8+rj
+	 vfTKgzP2fmdQRLs2RMXo+U+WQc+MN+McuIDAIh4rr5Z7mvzJjdfe0pWbyP8TuxkWAh
+	 /woX+bqgKLNgQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc: Keith Busch <kbusch@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Amey Narkhede <ameynarkhede03@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-acpi@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mariusz.tkaczyk@linux.intel.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 07/12] PCI: Detect and trust built-in Thunderbolt chips
-Date: Wed,  4 Dec 2024 11:01:04 -0500
-Message-ID: <20241204160115.2216718-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 08/12] PCI: Add 'reset_subordinate' to reset hierarchy below bridge
+Date: Wed,  4 Dec 2024 11:01:05 -0500
+Message-ID: <20241204160115.2216718-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241204160115.2216718-1-sashal@kernel.org>
 References: <20241204160115.2216718-1-sashal@kernel.org>
@@ -74,274 +69,128 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.63
 Content-Transfer-Encoding: 8bit
 
-From: Esther Shimanovich <eshimanovich@chromium.org>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 3b96b895127b7c0aed63d82c974b46340e8466c1 ]
+[ Upstream commit 2fa046449a82a7d0f6d9721dd83e348816038444 ]
 
-Some computers with CPUs that lack Thunderbolt features use discrete
-Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
-chips are located within the chassis; between the Root Port labeled
-ExternalFacingPort and the USB-C port.
+The "bus" and "cxl_bus" reset methods reset a device by asserting Secondary
+Bus Reset on the bridge leading to the device.  These only work if the
+device is the only device below the bridge.
 
-These Thunderbolt PCIe devices should be labeled as fixed and trusted, as
-they are built into the computer. Otherwise, security policies that rely on
-those flags may have unintended results, such as preventing USB-C ports
-from enumerating.
+Add a sysfs 'reset_subordinate' attribute on bridges that can assert
+Secondary Bus Reset regardless of how many devices are below the bridge.
 
-Detect the above scenario through the process of elimination.
+This resets all the devices below a bridge in a single command, including
+the locking and config space save/restore that reset methods normally do.
 
-  1) Integrated Thunderbolt host controllers already have Thunderbolt
-     implemented, so anything outside their external facing Root Port is
-     removable and untrusted.
+This may be the only way to reset devices that don't support other reset
+methods (ACPI, FLR, PM reset, etc).
 
-     Detect them using the following properties:
-
-       - Most integrated host controllers have the "usb4-host-interface"
-         ACPI property, as described here:
-
-         https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
-
-       - Integrated Thunderbolt PCIe Root Ports before Alder Lake do not
-         have the "usb4-host-interface" ACPI property. Identify those by
-         their PCI IDs instead.
-
-  2) If a Root Port does not have integrated Thunderbolt capabilities, but
-     has the "ExternalFacingPort" ACPI property, that means the
-     manufacturer has opted to use a discrete Thunderbolt host controller
-     that is built into the computer.
-
-     This host controller can be identified by virtue of being located
-     directly below an external-facing Root Port that lacks integrated
-     Thunderbolt. Label it as trusted and fixed.
-
-     Everything downstream from it is untrusted and removable.
-
-The "ExternalFacingPort" ACPI property is described here:
-https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
-
-Link: https://lore.kernel.org/r/20240910-trust-tbt-fix-v5-1-7a7a42a5f496@chromium.org
-Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Esther Shimanovich <eshimanovich@chromium.org>
+Link: https://lore.kernel.org/r/20241025222755.3756162-1-kbusch@meta.com
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+[bhelgaas: commit log, add capable(CAP_SYS_ADMIN) check]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Amey Narkhede <ameynarkhede03@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/acpi.c | 119 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/probe.c |  30 ++++++++---
- include/linux/pci.h |   6 +++
- 3 files changed, 148 insertions(+), 7 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci | 11 +++++++++++
+ drivers/pci/pci-sysfs.c                 | 26 +++++++++++++++++++++++++
+ drivers/pci/pci.c                       |  2 +-
+ drivers/pci/pci.h                       |  1 +
+ 4 files changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index ea2eb2ec90e2b..1e3bdefe9cb42 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -250,6 +250,125 @@ void __init pci_acpi_crs_quirks(void)
- 		pr_info("Please notify linux-pci@vger.kernel.org so future kernels can do this automatically\n");
- }
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index ecf47559f495b..7f3e6bc3ff0ff 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -163,6 +163,17 @@ Description:
+ 		will be present in sysfs.  Writing 1 to this file
+ 		will perform reset.
  
-+/*
-+ * Check if pdev is part of a PCIe switch that is directly below the
-+ * specified bridge.
-+ */
-+static bool pcie_switch_directly_under(struct pci_dev *bridge,
-+				       struct pci_dev *pdev)
++What:		/sys/bus/pci/devices/.../reset_subordinate
++Date:		October 2024
++Contact:	linux-pci@vger.kernel.org
++Description:
++		This is visible only for bridge devices. If you want to reset
++		all devices attached through the subordinate bus of a specific
++		bridge device, writing 1 to this will try to do it.  This will
++		affect all devices attached to the system through this bridge
++		similiar to writing 1 to their individual "reset" file, so use
++		with caution.
++
+ What:		/sys/bus/pci/devices/.../vpd
+ Date:		February 2008
+ Contact:	Ben Hutchings <bwh@kernel.org>
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 3317b93547167..92e8ac85f58e8 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -517,6 +517,31 @@ static ssize_t bus_rescan_store(struct device *dev,
+ static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
+ 							    bus_rescan_store);
+ 
++static ssize_t reset_subordinate_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
 +{
-+	struct pci_dev *parent = pci_upstream_bridge(pdev);
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct pci_bus *bus = pdev->subordinate;
++	unsigned long val;
 +
-+	/* If the device doesn't have a parent, it's not under anything */
-+	if (!parent)
-+		return false;
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
 +
-+	/*
-+	 * If the device has a PCIe type, check if it is below the
-+	 * corresponding PCIe switch components (if applicable). Then check
-+	 * if its upstream port is directly beneath the specified bridge.
-+	 */
-+	switch (pci_pcie_type(pdev)) {
-+	case PCI_EXP_TYPE_UPSTREAM:
-+		return parent == bridge;
++	if (kstrtoul(buf, 0, &val) < 0)
++		return -EINVAL;
 +
-+	case PCI_EXP_TYPE_DOWNSTREAM:
-+		if (pci_pcie_type(parent) != PCI_EXP_TYPE_UPSTREAM)
-+			return false;
-+		parent = pci_upstream_bridge(parent);
-+		return parent == bridge;
++	if (val) {
++		int ret = __pci_reset_bus(bus);
 +
-+	case PCI_EXP_TYPE_ENDPOINT:
-+		if (pci_pcie_type(parent) != PCI_EXP_TYPE_DOWNSTREAM)
-+			return false;
-+		parent = pci_upstream_bridge(parent);
-+		if (!parent || pci_pcie_type(parent) != PCI_EXP_TYPE_UPSTREAM)
-+			return false;
-+		parent = pci_upstream_bridge(parent);
-+		return parent == bridge;
++		if (ret)
++			return ret;
 +	}
 +
-+	return false;
++	return count;
 +}
++static DEVICE_ATTR_WO(reset_subordinate);
 +
-+static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
-+{
-+	struct fwnode_handle *fwnode;
-+
-+	/*
-+	 * For USB4, the tunneled PCIe Root or Downstream Ports are marked
-+	 * with the "usb4-host-interface" ACPI property, so we look for
-+	 * that first. This should cover most cases.
-+	 */
-+	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
-+				       "usb4-host-interface", 0);
-+	if (!IS_ERR(fwnode)) {
-+		fwnode_handle_put(fwnode);
-+		return true;
-+	}
-+
-+	/*
-+	 * Any integrated Thunderbolt 3/4 PCIe Root Ports from Intel
-+	 * before Alder Lake do not have the "usb4-host-interface"
-+	 * property so we use their PCI IDs instead. All these are
-+	 * tunneled. This list is not expected to grow.
-+	 */
-+	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
-+		switch (pdev->device) {
-+		/* Ice Lake Thunderbolt 3 PCIe Root Ports */
-+		case 0x8a1d:
-+		case 0x8a1f:
-+		case 0x8a21:
-+		case 0x8a23:
-+		/* Tiger Lake-LP Thunderbolt 4 PCIe Root Ports */
-+		case 0x9a23:
-+		case 0x9a25:
-+		case 0x9a27:
-+		case 0x9a29:
-+		/* Tiger Lake-H Thunderbolt 4 PCIe Root Ports */
-+		case 0x9a2b:
-+		case 0x9a2d:
-+		case 0x9a2f:
-+		case 0x9a31:
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+bool arch_pci_dev_is_removable(struct pci_dev *pdev)
-+{
-+	struct pci_dev *parent, *root;
-+
-+	/* pdev without a parent or Root Port is never tunneled */
-+	parent = pci_upstream_bridge(pdev);
-+	if (!parent)
-+		return false;
-+	root = pcie_find_root_port(pdev);
-+	if (!root)
-+		return false;
-+
-+	/* Internal PCIe devices are not tunneled */
-+	if (!root->external_facing)
-+		return false;
-+
-+	/* Anything directly behind a "usb4-host-interface" is tunneled */
-+	if (pcie_has_usb4_host_interface(parent))
-+		return true;
-+
-+	/*
-+	 * Check if this is a discrete Thunderbolt/USB4 controller that is
-+	 * directly behind the non-USB4 PCIe Root Port marked as
-+	 * "ExternalFacingPort". Those are not behind a PCIe tunnel.
-+	 */
-+	if (pcie_switch_directly_under(root, pdev))
-+		return false;
-+
-+	/* PCIe devices after the discrete chip are tunneled */
-+	return true;
-+}
-+
- #ifdef	CONFIG_PCI_MMCONFIG
- static int check_segment(u16 seg, struct device *dev, char *estr)
+ #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+ static ssize_t d3cold_allowed_store(struct device *dev,
+ 				    struct device_attribute *attr,
+@@ -621,6 +646,7 @@ static struct attribute *pci_dev_attrs[] = {
+ static struct attribute *pci_bridge_attrs[] = {
+ 	&dev_attr_subordinate_bus_number.attr,
+ 	&dev_attr_secondary_bus_number.attr,
++	&dev_attr_reset_subordinate.attr,
+ 	NULL,
+ };
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 93f2f4dcf6d69..fb702d17ed9a7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6068,7 +6068,7 @@ EXPORT_SYMBOL_GPL(pci_probe_reset_bus);
+  *
+  * Same as above except return -EAGAIN if the bus cannot be locked
+  */
+-static int __pci_reset_bus(struct pci_bus *bus)
++int __pci_reset_bus(struct pci_bus *bus)
  {
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 43159965e09e9..03b519a228403 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1602,23 +1602,33 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+ 	int rc;
  
- static void set_pcie_untrusted(struct pci_dev *dev)
- {
--	struct pci_dev *parent;
-+	struct pci_dev *parent = pci_upstream_bridge(dev);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index d5e9010a135a1..83cd646bde3f0 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -46,6 +46,7 @@ bool pci_reset_supported(struct pci_dev *dev);
+ void pci_init_reset_methods(struct pci_dev *dev);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
++int __pci_reset_bus(struct pci_bus *bus);
  
-+	if (!parent)
-+		return;
- 	/*
--	 * If the upstream bridge is untrusted we treat this device
-+	 * If the upstream bridge is untrusted we treat this device as
- 	 * untrusted as well.
- 	 */
--	parent = pci_upstream_bridge(dev);
--	if (parent && (parent->untrusted || parent->external_facing))
-+	if (parent->untrusted) {
-+		dev->untrusted = true;
-+		return;
-+	}
-+
-+	if (arch_pci_dev_is_removable(dev)) {
-+		pci_dbg(dev, "marking as untrusted\n");
- 		dev->untrusted = true;
-+	}
- }
- 
- static void pci_set_removable(struct pci_dev *dev)
- {
- 	struct pci_dev *parent = pci_upstream_bridge(dev);
- 
-+	if (!parent)
-+		return;
- 	/*
--	 * We (only) consider everything downstream from an external_facing
-+	 * We (only) consider everything tunneled below an external_facing
- 	 * device to be removable by the user. We're mainly concerned with
- 	 * consumer platforms with user accessible thunderbolt ports that are
- 	 * vulnerable to DMA attacks, and we expect those ports to be marked by
-@@ -1628,9 +1638,15 @@ static void pci_set_removable(struct pci_dev *dev)
- 	 * accessible to user / may not be removed by end user, and thus not
- 	 * exposed as "removable" to userspace.
- 	 */
--	if (parent &&
--	    (parent->external_facing || dev_is_removable(&parent->dev)))
-+	if (dev_is_removable(&parent->dev)) {
-+		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
-+		return;
-+	}
-+
-+	if (arch_pci_dev_is_removable(dev)) {
-+		pci_dbg(dev, "marking as removable\n");
- 		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
-+	}
- }
- 
- /**
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 2b7e45bae9408..2d1fb935a8c86 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2577,6 +2577,12 @@ pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
- static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
- #endif
- 
-+#if defined(CONFIG_X86) && defined(CONFIG_ACPI)
-+bool arch_pci_dev_is_removable(struct pci_dev *pdev);
-+#else
-+static inline bool arch_pci_dev_is_removable(struct pci_dev *pdev) { return false; }
-+#endif
-+
- #ifdef CONFIG_EEH
- static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
- {
+ struct pci_cap_saved_data {
+ 	u16		cap_nr;
 -- 
 2.43.0
 
