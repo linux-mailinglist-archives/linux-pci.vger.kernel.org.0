@@ -1,149 +1,128 @@
-Return-Path: <linux-pci+bounces-17695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 074079E427A
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 18:55:21 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA7319E4384
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 19:37:39 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D04221699F4
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:55:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71EDCB3A53B
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:59:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A5320DD63;
-	Wed,  4 Dec 2024 17:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09566217674;
+	Wed,  4 Dec 2024 17:30:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzUcVkzg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXwlaOyF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA032202C39;
-	Wed,  4 Dec 2024 17:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0481A8F61;
+	Wed,  4 Dec 2024 17:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733332639; cv=none; b=pKmSd9xd2TFAAezsfwk8nm9bJXIrR9BT7+dqux9/iesIG2FFTFT4cG9lIHXctnWbG/MQbjtJ9yKRsG2ocP2BIgV8NUC6ZNxAY+06rOcQDn27Lsores3B79kjwVdFui9CC4BtKWLd7kBAD+ROOo12jPC48mhU5J21w+H7R9xyPVY=
+	t=1733333453; cv=none; b=QwS8Uv3ToeY3uB7nYJ4V1Dmjx6np6WYCrdiF1khU1tT7ZVPM+7935T52TBrS754bWSQ0vcGHVteDz/8N5XorqeZWazAh4rEnaO0wGpnZz7wKaY8xGYhorbVToD5Nd9MjWfazd7zQLrNOoI5GcxoSKQwk9qfowYAPpm6pWohPj3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733332639; c=relaxed/simple;
-	bh=uSz+sEEw2oT3nyzLQJLoBEJ9EIAKnpYCcjWGceBwYHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Zsq3Q2jG4ZHs6K6ixZ3R63Vb8mAFAgYZvZcgBjbC0c39LVvV73cXzuHB1AXsBuZyULrqvoEr7KtvMcG5B4S9y9seOHnHqV2WBMzIJMw6V10zjGo0Fsbtb4XwaQzY38XbEOGtQeraUXJI36ETQwfoU4t8WDBX3XNg9UMOAKA6D7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzUcVkzg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3789CC4CECD;
-	Wed,  4 Dec 2024 17:17:18 +0000 (UTC)
+	s=arc-20240116; t=1733333453; c=relaxed/simple;
+	bh=jwt44kHNB6fF2lg1PZA37n3lhUUOfzmfyHuqFyxEzww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fHUyEPmp1YRvJWWTi4yb7y+9SMpCiH5bvA7x5o9uVE8RiQUQkaXno3Z8YalNZXb9Y0wnrUJhoToyIG9FMQ//pupUjGyTNfS/MkVLiBJnj6bsZN+I15inT6M4ZmMvHIcKUPV/Ck/3aku/0DXcDByO0X/3vi7cWrzKs1iwzdo3Buo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXwlaOyF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB94C4CED1;
+	Wed,  4 Dec 2024 17:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733332638;
-	bh=uSz+sEEw2oT3nyzLQJLoBEJ9EIAKnpYCcjWGceBwYHE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gzUcVkzgIDOX+3sNoYZ2m5S8gUJkCgDRaK/qOGs/K9mg+UBc581dBYqWvYcPuVsHX
-	 smVWpgPqSmAECm/MFpowLEdhRa/m6uL9dPnzuPJ4vvEnWSR04cfKNI73xz6STBe2w3
-	 fcKl7kCelX0eX3rKmxLFFWY56VxNj4u5z6dyw1iwV/rcJKV9HuWQlTTSdeAaxrQ13L
-	 qM/jayOL5o6IwK059iR0WvSdxKKRKwdPPdxAD/BbGiladrytgutwZkvbQhx6DSzQP3
-	 T8mklJkZQM1Td4gHGr2q+XCam7Zh6eE+yvZ81qVW1G4x3kp2uslbhucxUc3I21eYPu
-	 TEoF/iCYF5woQ==
-Date: Wed, 4 Dec 2024 11:17:16 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jon Mason <jdmason@kudzu.us>, Frank Li <Frank.Li@nxp.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org,
-	ntb@lists.linux.dev
-Subject: Re: [PATCH v5 2/6] PCI: dwc: ep: Add missing checks when dynamically
- changing a BAR
-Message-ID: <20241204171716.GA2691918@bhelgaas>
+	s=k20201202; t=1733333453;
+	bh=jwt44kHNB6fF2lg1PZA37n3lhUUOfzmfyHuqFyxEzww=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oXwlaOyFHg8r2lL1BHPIjfcGkrFbwecYJGEFvO0y2n2WGa9QjxVB2n6v5AWgYvRiA
+	 cApyakaYuHBRDA9fw5DzBGwENK90QWg4pG9R9597vAPkR0WIp5Yq5AjSfFMsRYUw3k
+	 mngs9w6InT3USE+pAvgEG9lEgtSpTXYWNeVzAsNgs+8Ovvo8qCxuzc8v92iB5WCdsD
+	 3wvmgIxNiwd1Rbrg50g3wvr0ilnm5iwtLaz9v+vUHSyw6s5gDBT3gay+VrunKjU5Cw
+	 GD+XzQXuzvWGSUzuCecr1T+OWDv4blQOAuXBOPT0V1/elHBz3f45zUg+rVh8Bbl0/P
+	 1wwnsg9t27qrw==
+Message-ID: <aaac430f-ba1a-47ee-a290-0bb1559dcf24@kernel.org>
+Date: Wed, 4 Dec 2024 11:30:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241127103016.3481128-10-cassel@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] Verify devices transition from D3cold to D0
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+ Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mathias Nyman <mathias.nyman@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20240823154023.360234-1-superm1@kernel.org>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20240823154023.360234-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-[+cc NTB list, since NTB seems to be the main user of .set_bar()]
-
-Can we say something specific in the subject line, like "prevent
-changing size/flags" or whatever?
-
-On Wed, Nov 27, 2024 at 11:30:18AM +0100, Niklas Cassel wrote:
-> In commit 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update
-> inbound map address") set_bar() was modified to support dynamically
-> changing the physical address of a BAR.
+On 8/23/2024 10:40, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> This means that set_bar() can be called twice, without ever calling
-> clear_bar(), as calling clear_bar() would clear the BAR's PCI address
-> assigned by the host).
-
-Unpaired parenthesis at end.
-
-Apparently calling .set_bar() twice without calling .clear_bar() is a
-problem?  What problem does it cause?  Sorry about my poor
-understanding of the endpoint and NTB code; I'm sure this would be
-obvious if I understood more.
-
-Maybe a hint about the reason why we need to call .set_bar() twice
-would help me understand.
-
-> This can only be done if the new BAR configuration doesn't fundamentally
-> differ from the existing BAR configuration. Add these missing checks.
-
-Can you elaborate a bit on what "fundamentally differ" means?  Based
-on the patch, I guess it has to do with changing the size or type?
-
-And the problem this would cause is ...?  I guess it's a problem for
-some other entity that knows about the BAR and is doing MMIO or DMA to
-it?
-
-> While at it, add comments which clarifies the support for dynamically
-> changing the physical address of a BAR. (Which was also missing.)
+> Gary has reported that when a dock is plugged into a system at the same
+> time the autosuspend delay has tripped that the USB4 stack malfunctions.
 > 
-> Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 22 ++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+> Messages show up like this:
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index bad588ef69a4..01c739aaf61a 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -222,8 +222,28 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  	if ((flags & PCI_BASE_ADDRESS_MEM_TYPE_64) && (bar & 1))
->  		return -EINVAL;
->  
-> -	if (ep->epf_bar[bar])
-> +	/*
-> +	 * Certain EPF drivers dynamically change the physical address of a BAR
-> +	 * (i.e. they call set_bar() twice, without ever calling clear_bar(), as
-> +	 * calling clear_bar() would clear the BAR's PCI address assigned by the
-> +	 * host).
-> +	 */
-> +	if (ep->epf_bar[bar]) {
-> +		/*
-> +		 * We can only dynamically change a BAR if the new configuration
-> +		 * doesn't fundamentally differ from the existing configuration.
-> +		 */
-> +		if (ep->epf_bar[bar]->barno != bar ||
-> +		    ep->epf_bar[bar]->size != size ||
-> +		    ep->epf_bar[bar]->flags != flags)
-> +			return -EINVAL;
-> +
-> +		/*
-> +		 * When dynamically changing a BAR, skip writing the BAR reg, as
-> +		 * that would clear the BAR's PCI address assigned by the host.
-> +		 */
->  		goto config_atu;
-> +	}
->  
->  	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
->  
-> -- 
-> 2.47.0
+> ```
+> thunderbolt 0000:e5:00.6: ring_interrupt_active: interrupt for TX ring 0 is already enabled
+> ```
 > 
+> Furthermore the USB4 router is non-functional at this point.
+> 
+> Those messages happen because the device is still in D3cold at the time
+> that the PCI core handed control back to the USB4 connection manager
+> (thunderbolt).
+> 
+> The issue is that it takes time for a device to enter D3cold and do a
+> conventional reset, and then more time for it to exit D3cold.
+> 
+> This appears not to be a new problem; previously there were very similar
+> reports from Ryzen XHCI controllers.  Quirks were added for those.
+> Furthermore; adding extra logging it's apparent that other PCI devices
+> in the system can take more than 10ms to recover from D3cold as well.
+> 
+> This series add a wait into pci_power_up() specifically for D3cold exit and
+> then drops the quirks that were previously used for the Ryzen XHCI controllers.
+> 
+> Mario Limonciello (5):
+>    PCI: Use an enum for reset type in pci_dev_wait()
+>    PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in pci_dev_wait()
+>    PCI: Verify functions currently in D3cold have entered D0
+>    PCI: Allow Ryzen XHCI controllers into D3cold and drop delays
+>    PCI: Drop Radeon quirk for Macbook Pro 8.2
+> 
+>   drivers/pci/pci-driver.c    |  2 +-
+>   drivers/pci/pci.c           | 70 +++++++++++++++++++++++++++----------
+>   drivers/pci/pci.h           | 13 ++++++-
+>   drivers/pci/pcie/dpc.c      |  2 +-
+>   drivers/pci/quirks.c        | 25 -------------
+>   drivers/usb/host/xhci-pci.c | 11 ------
+>   6 files changed, 66 insertions(+), 57 deletions(-)
+> 
+
+Bjorn,
+
+This series has stalled a while.
+
+Mika and I went back and forth and I think are generally in agreement so 
+I think it's waiting on your feedback.
+
+Can you take another look?
+
+The alternative is to add some more piles of quirks, but I'm hoping that 
+we can go this direction and drop a bunch of the old ones instead.
+
+LMK if you want me to rebase it on 6.13-rc1 and resend a v6.
 
