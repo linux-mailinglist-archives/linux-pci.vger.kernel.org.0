@@ -1,157 +1,124 @@
-Return-Path: <linux-pci+bounces-17630-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17631-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48ED09E36CA
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 10:39:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 338849E36F2
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 10:53:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E97328483F
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 09:39:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0360284252
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 09:53:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4E61A4F2F;
-	Wed,  4 Dec 2024 09:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 805F9199EB7;
+	Wed,  4 Dec 2024 09:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByQbtb9o"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hri5/53m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6312419992C
-	for <linux-pci@vger.kernel.org>; Wed,  4 Dec 2024 09:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF39ABE5E;
+	Wed,  4 Dec 2024 09:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733305184; cv=none; b=heb5zriWT+BKZN97mvd965QjtzaMy6V7A0toxkoT5oe3TVjYcZyFJINz3u1ZDqGvQzY9Ykv46hVGV5NN4ZwG4UUvLCe5CE1Imw1vNr9SU7ABBxlPmk1cFcZZl0320smqgnjHAr0OVgmkbVwbCcb3YbtyNEQK+IiPDR9pszDuniQ=
+	t=1733306001; cv=none; b=rUjlqGIp3KpYRthGV39rA3kKQR5Cr8wkH7UdriDn2x79llAkkRKknUha5OVroTWubUvWkZHC862VodFwDa2cKaT4paDYW6gW3fBf1DNOAv+ofP3+ST5KIFDdLxCobV7j/+53oHnkjViTiQ8azde3ZPL24tCJlugm22xiYvlZpQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733305184; c=relaxed/simple;
-	bh=DP/JFqa156kR78Xda16UXbLaKJmv9TXbqhDy3RLVVuc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=trHb5/M59QC2i2H9YCYQ0bMNxqYEHMNONFPMIPZ/2OrxDU53ByL71Yhyj1A+KxkF1FUnbvtyjHu/uV3UG16vDPk6uW5XVxdQURPt4MoF15DyhpSY2exUolChzyfjbj8deVaBzBbiwLvOCkVjhDBXMlrUd9/0LCBLVXMriSVOxDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ByQbtb9o; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733305181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DP/JFqa156kR78Xda16UXbLaKJmv9TXbqhDy3RLVVuc=;
-	b=ByQbtb9or+O2V6v2DqnrzZ9qpAEP/LPQ7FJlZR6e+v5f6nfxxHwpLPGMWKxvO7ecp/xELZ
-	8LHy+KlVSbO66RoPo7KftIiak7jVhA4l1rnzdd+2EwmWkEG/tYoI1FmRCOcFfsiEmWNDdf
-	pS/yWEnXYZZf4nVMP3iOoeZRViCke9E=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-386-B1haYfGsN0yshQ4_fMivDA-1; Wed, 04 Dec 2024 04:39:39 -0500
-X-MC-Unique: B1haYfGsN0yshQ4_fMivDA-1
-X-Mimecast-MFC-AGG-ID: B1haYfGsN0yshQ4_fMivDA
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-53de3a4752eso5504471e87.2
-        for <linux-pci@vger.kernel.org>; Wed, 04 Dec 2024 01:39:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733305177; x=1733909977;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DP/JFqa156kR78Xda16UXbLaKJmv9TXbqhDy3RLVVuc=;
-        b=IUoZBdzHTV0iPuItK2We36LX4pkto211U4EuJbF5Kp5lZFuHnq4bthht1Xr26T5CcW
-         mKBMo5c6/2HEcGl/cuMeXp4qAmyNTyWH70XeZUinsGCunD8ynIWdQPuum0vkITChpgJ6
-         x33CdFo5jz9znynPuwxQJ0vR9Py81vxesXVifOdZM7YnQjrm+JzOBmIe5kbR3sKHhcEK
-         fWf2qTUYtSCjj27X+kBNdF1BBdhQj7PXdCWrZ2FvsPza5Aeh7QHyYV7DyBrYXoNoRyEI
-         oU2l0fPjU9hzGw/cQVq5UPdrqJatZyjpFGMrzreWzkHW1jyUkWq3THwbqvTWMBRlTKpY
-         6NlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPMMgf9RlFeqeqJ8P9dbh01A6GfqnpfhmSgYmf9w2KVcIYXiLon+kwcG5+LlWC6i8hey/zDj3REpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBmRc6nTCkDlWgod0ZiTPnqqFgszJHfbEhDPsyNpXEWa3ZmkAU
-	jTXrPNYrC6ZaQYgLU+VuOE30/Kt3Y2ROvT4sOMj/ptnZ9G47bp0kLQ/UAsiSTYHhpFUT/Yp01SP
-	xf7HMktiuzSwlk5Ip8RRl6EkaXYvnraw3oSHKK87clQEJEPesqOjYOCsO2g==
-X-Gm-Gg: ASbGncv3+WuuqNt2DcqhqK9ruUi+B1nanYygP9H170vJ9SzCynEtLxeo0DYYmSboHuW
-	2YWJeDRXcjhJn9pr4Rav0jK9BMmeSiwsuu2ki1nMEAp3Uoyl5W35iqjtvMSZpoBzKFZ8lMzXopX
-	8T7rFDiIASeLBlUM/Mv4dbXgHm+pbNgFr6JSZ5MCY43ufM3SiJJBIGDuXvE3FRxIXaZORmKeTVY
-	Vd2q81p3GTTDQMXC4W4ywEvZhfRbtFvHAS1CxEm2m2ucrO4ircUoEyKjqkSclZ+WzLqs5GcM1Sl
-X-Received: by 2002:a05:6512:1089:b0:53d:d3ff:7309 with SMTP id 2adb3069b0e04-53e12a01ee6mr3617852e87.32.1733305176865;
-        Wed, 04 Dec 2024 01:39:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE20k0Tu7rKuaCQLclSqEIlzr7i/kc78TnwszhucH69vAKub5K7XtOsnAMHlz3iBsfatbgDOw==
-X-Received: by 2002:a05:6512:1089:b0:53d:d3ff:7309 with SMTP id 2adb3069b0e04-53e12a01ee6mr3617845e87.32.1733305176454;
-        Wed, 04 Dec 2024 01:39:36 -0800 (PST)
-Received: from [10.200.68.91] (nat-pool-muc-u.redhat.com. [149.14.88.27])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434d527eeedsm18093745e9.19.2024.12.04.01.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2024 01:39:35 -0800 (PST)
-Message-ID: <5852280fa2764f9ca17f95f66541a945ad5b37ae.camel@redhat.com>
-Subject: Re: [PATCH] PCI: Improve parameter docu for request APIs
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 04 Dec 2024 10:39:35 +0100
-In-Reply-To: <20241203213758.GA2966054@bhelgaas>
-References: <20241203213758.GA2966054@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1733306001; c=relaxed/simple;
+	bh=ikvRGFtWLr4avaowkPIcLkUV2+AZIXQa/xtSbMU/Rxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OEVL0WgwVTYlc3P918/Hw3kZdF2ylMacYEAgNY5hwifg59bHNYTQ15Vl5BGG3dc88L5nJKCipWcBcMkacXTlrjHKLPnw+aDAv9kZ6PeXKFeKTD6DreLKQQdBNMLKB2HelyWJX1nzFj5NrSmcmOxUX597fNHO9Cu5ZKrd4WxOz0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hri5/53m; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733306000; x=1764842000;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ikvRGFtWLr4avaowkPIcLkUV2+AZIXQa/xtSbMU/Rxc=;
+  b=Hri5/53mPnbB4ickc6AlcWmc5rduXH5Y3w2bpJ8RFUpeBhXYIU1iAkIR
+   65uyg6Fm48djlFC8P4BYtpwWetNasTOldxpKUcxEbLlghyw1rSwotj8zW
+   Y38Y2TWNrdDpCZyFrd62ga8kiAKj9UvOf/YNMEIfaxHFqliy7IpzA4y3B
+   NoBGiq8t4ijJ4y26YF2TWDeM+OnkWyYndN/5X5+O9XPNO+mt3CM/YOoqZ
+   ZeOY4dbB5lKaYLysdH6dzsgedgz1V8tIS74aMdOEiiDihHXoI3YPzKPsj
+   y3OI8oXy2BsxccCwIAa+zRgaJHTzmMM//Ck4kiKjPAmummegSYwLQ3RoW
+   A==;
+X-CSE-ConnectionGUID: G1Ph2sFISUuCd4B5/qra5A==
+X-CSE-MsgGUID: RXOSBTexRqybkKnooSOKvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="33693621"
+X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
+   d="scan'208";a="33693621"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 01:53:19 -0800
+X-CSE-ConnectionGUID: D2fcP3wARVat8joSsrPGgQ==
+X-CSE-MsgGUID: cSjB88oiSW6FNEc2LT/82Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
+   d="scan'208";a="93900666"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 01:53:17 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tIm4H-00000003i4V-45v4;
+	Wed, 04 Dec 2024 11:53:13 +0200
+Date: Wed, 4 Dec 2024 11:53:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Cameron Williams <cang1@live.co.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Fenghua Yu <fenghua.yu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-pci@vger.kernel.org,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v1 2/2] serial: 8250_pci: Share WCH IDs with
+ parport_serial driver
+Message-ID: <Z1AmiSyKZhzzy8JJ@smile.fi.intel.com>
+References: <20241204031114.1029882-1-andriy.shevchenko@linux.intel.com>
+ <20241204031114.1029882-3-andriy.shevchenko@linux.intel.com>
+ <5ca95d14-84a7-48af-a5e3-cefc558d2e7f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ca95d14-84a7-48af-a5e3-cefc558d2e7f@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, 2024-12-03 at 15:37 -0600, Bjorn Helgaas wrote:
-> On Tue, Dec 03, 2024 at 11:00:24AM +0100, Philipp Stanner wrote:
-> > PCI region request functions have a @name parameter (sometimes
-> > called
-> > "res_name"). It is used in a log message to inform drivers about
-> > request
-> > collisions, i.e., when another driver has requested that region
-> > already.
-> >=20
-> > This message is only useful when it contains the actual owner of
-> > the
-> > region, i.e., which driver requested it. So far, a great many
-> > drivers
-> > misuse the @name parameter and just pass pci_name(), which doesn't
-> > result in useful debug information.
-> >=20
-> > Rename "res_name" to "name".
-> >=20
-> > Detail @name's purpose in the docstrings.
-> >=20
-> > Improve formatting a bit.
-> >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > =C2=A0drivers/pci/devres.c | 12 ++++----
-> > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0 | 69 +++++++++++++++++++++---=
-----------------
-> > ----
-> > =C2=A02 files changed, 39 insertions(+), 42 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> > index 3b59a86a764b..ffaffa880b88 100644
-> > --- a/drivers/pci/devres.c
-> > +++ b/drivers/pci/devres.c
-> > @@ -101,7 +101,7 @@ static inline void
-> > pcim_addr_devres_clear(struct pcim_addr_devres *res)
-> > =C2=A0 * @bar: BAR the range is within
-> > =C2=A0 * @offset: offset from the BAR's start address
-> > =C2=A0 * @maxlen: length in bytes, beginning at @offset
-> > - * @name: name associated with the request
-> > + * @name: name of the resource requestor
->=20
-> What if we say plainly:
->=20
-> =C2=A0 @name: name of driver requesting the resource
->=20
-> I can tweak this locally if you agree.
->=20
+On Wed, Dec 04, 2024 at 08:14:42AM +0100, Jiri Slaby wrote:
+> On 04. 12. 24, 4:09, Andy Shevchenko wrote:
+> > parport_serial driver uses subset of WCH IDs that are present in 8250_pci.
+> > Share them via pci_ids.h and switch parport_serial to use defined constants.
 
-Yup, sound like a good idea to me.
+> >   	{ 0x1409, 0x7168, 0x1409, 0xd079, 0, 0, timedia_9079c },
+> >   	/* WCH CARDS */
+> > -	{ 0x4348, 0x5053, PCI_ANY_ID, PCI_ANY_ID, 0, 0, wch_ch353_1s1p},
+> > -	{ 0x4348, 0x7053, 0x4348, 0x3253, 0, 0, wch_ch353_2s1p},
+> > -	{ 0x1c00, 0x3050, 0x1c00, 0x3050, 0, 0, wch_ch382_0s1p},
+> > -	{ 0x1c00, 0x3250, 0x1c00, 0x3250, 0, 0, wch_ch382_2s1p},
+> > +	{ PCI_VENDOR_ID_WCHCN, PCI_DEVICE_ID_WCHCN_CH353_1S1P,
+> > +	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, wch_ch353_1s1p },
+> > +	{ PCI_VENDOR_ID_WCHCN, PCI_DEVICE_ID_WCHCN_CH353_2S1P,
+> > +	  0x4348, 0x3253, 0, 0, wch_ch353_2s1p },
+> > +	{ PCI_VENDOR_ID_WCHIC, PCI_DEVICE_ID_WCHIC_CH382_0S1P,
+> > +	  0x1c00, 0x3050, 0, 0, wch_ch382_0s1p },
+> > +	{ PCI_VENDOR_ID_WCHIC, PCI_DEVICE_ID_WCHIC_CH382_2S1P,
+> > +	  0x1c00, 0x3250, 0, 0, wch_ch382_2s1p },
+> 
+> I know this is the current pattern in the file. But what about using
+> PCI_DEVICE_DATA() for the first and PCI_DEVICE_SUB() + .driver_data for the
+> rest? Otherwise it occurs as a load of incomprehensible constants.
 
-(nit: though I would say "name of the driver". But I'm also not a
-native English speaker, so..)
+I can issue an additional patch, I was really thinking about this, but decided
+to go the above way as it seems logical and moving to mentioned macros sounds
+like unrelated to the point of the change.
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-P.
 
 
