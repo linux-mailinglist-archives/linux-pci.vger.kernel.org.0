@@ -1,387 +1,177 @@
-Return-Path: <linux-pci+bounces-17626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5CB19E3391
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 07:32:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 422889E33AD
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 07:48:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 319D4B249CB
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 06:32:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0351B2827B6
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 06:48:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03FC181CE1;
-	Wed,  4 Dec 2024 06:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F8718756A;
+	Wed,  4 Dec 2024 06:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kHyyELfh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPfe4aqU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86164189BAC;
-	Wed,  4 Dec 2024 06:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733293931; cv=fail; b=I0F7Iy+kCU6Y7FmCMIK8hJ2TiCqIygrRXeitkWa6Z+jEa4Mk/LWphHQiQckrF5aDy79APSc2yN1XQYYLLKUtyccHSb7f+NwXMx11+Vr54Am+8I1moDynWN+1k6f6eeHVjAuHCXY5sXYeJZQICznNk7csbEE3xioGW8HPM3gOXCc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733293931; c=relaxed/simple;
-	bh=h+cKenHcjvaAVlhWlKHu5qkzqa7YrOALddlCagNp/iM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kJm+r54YJwljUOmY8LaLKRS6bWYjFVvxVbTOTV0Grx7K8qpxz2Agdeq4P0AuiGyTrV2O0qlWqBUDv4Q8/ACTMT++KNhYS8kSXZUk6SIiMA8Tct9mniCmgvLa6by6t/swczmOYylLOcVz5Phh+5ApuliM/G777khOFtmxh1OzvGA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kHyyELfh; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a3ff3V13fQVNsqqDKFGZpjmi16uSKNlEm36zHUtd4CsBvq3xl2n5R06v9mUApYYQxL6AcsBvIHGZokczSqmIhc5WBrgjzGO1VXY2ke6otTJiGS60KQxQHAlBo7mO3daA9FSqims7Y9NljFa2OHiVbW2M/WbSadPkkM8viqF796Nw+Dqq3mYFHmn7sH7H9BRBf6+fYsH3bQfLv7/qjnDUC3lIe/Ip38uOwm6qMC0Xme9gekOFNshsRedr6JvVRXA0yGMUwTAaYe8s5nDEuAwea9l2S5ynLNg8QMWD/CQljsOOvNK5Z7B7p/S0mp776lDdnIS+2cF3k+6yu4J8PId75A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8klByCOFIPSmgvSvAUg1IziJfIkK302O/M6LwSkJzU4=;
- b=HMr3Q/USZiqYACBxpE3EeMNAPtlHPnUWZ9mLPrLxZ20V+gEkMvZu34msJLhT++LiHEe47mfvjlx53PggBuz7sVXa1a8V0MsGFYJdVy05hPnamJde7XlpLDvQxTe1ATZaz7i4mJp18WNZSOtIqNl/iLEzLOo47l4Xvdp3f7hVEeSOO1q5reBl9bTutoATK+qxVmW4ES8zLMMjz79XBKC7OMIFMKtZFrmfamriC+TH2oqwE0vSSN3v8X8C+M5+Jgcc/vtSU+9WVhORsYJDQcULK2HmDSvEQTepCSNC63Py50g9+OR4LidI2sercw9ThqrwWDoIp4YC7IYYEwPFlXJjAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8klByCOFIPSmgvSvAUg1IziJfIkK302O/M6LwSkJzU4=;
- b=kHyyELfhUZcwSMEnZiMnTR4gciqowOZGM6UAAP6CuNHSNWRQM7Ifzdy1AuErsmqTxiiu+gQNBJs4ct76fMYNo+ZRBXHEK4ZYuINuNm/swqbGNNZjdOkCU7T0nNqXf5mQvMkqOv0My/XVlFB9VUP9Y3fqENOp5UjJbHa8TYum/GE=
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
- by IA0PR12MB8228.namprd12.prod.outlook.com (2603:10b6:208:402::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Wed, 4 Dec
- 2024 06:32:06 +0000
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3%6]) with mapi id 15.20.8207.014; Wed, 4 Dec 2024
- 06:32:06 +0000
-From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-To: Rob Herring <robh@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com"
-	<jingoohan1@gmail.com>, "Simek, Michal" <michal.simek@amd.com>, "Gogada,
- Bharat Kumar" <bharat.kumar.gogada@amd.com>
-Subject: RE: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MDB
- PCIe Root Port Bridge
-Thread-Topic: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MDB
- PCIe Root Port Bridge
-Thread-Index: AQHbRX/9tKefBNodzkOGfTPvQMzdCrLUl76AgAD++PA=
-Date: Wed, 4 Dec 2024 06:32:05 +0000
-Message-ID:
- <SN7PR12MB7201C658D71FDB5D8FD891838B372@SN7PR12MB7201.namprd12.prod.outlook.com>
-References: <20241203123608.2944662-1-thippeswamy.havalige@amd.com>
- <20241203123608.2944662-2-thippeswamy.havalige@amd.com>
- <20241203144101.GA1756254-robh@kernel.org>
-In-Reply-To: <20241203144101.GA1756254-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|IA0PR12MB8228:EE_
-x-ms-office365-filtering-correlation-id: cf470f45-fcfe-4927-a3a0-08dd142d5f36
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?U6wa3n3kbd4Uc8ysWnhfL/ANiTWJSvUaZ/LBYkZqIMqHqep2xzXKqNjWdW01?=
- =?us-ascii?Q?bTEZ6lRmrkCysEERQ6bQ8FqIjml34NlAAsXpH3gU+hCepL5N3OltUT7yxff0?=
- =?us-ascii?Q?Fb39rk3qoWvXNXJZzdIGjFQ5ABjbASydTLAK7OxRpCUbXnUaCsOT9qvkXaYy?=
- =?us-ascii?Q?UDT/2Ifxp+09b+UA+0jfBmm+MSZQdPzxYpAzufBZmZbgIvXyfCmmDvdFUThb?=
- =?us-ascii?Q?oVnph6AQywHStWuc+L2bYYRmQzqxOMFMr87ucoftNs764MmP9CTRHshtyBxX?=
- =?us-ascii?Q?m3FV9zzOogzOjbV8G2FdxDTunEOgKCXflwWi2iaHfXxQMu3jodWRp6RHxTCo?=
- =?us-ascii?Q?sS1pgPeUO+9CpFCxN9NSVQn2+zSGjvYPxt+A7apxBe4SnnZrmZ6C6CDRQt5p?=
- =?us-ascii?Q?cCGDhR2DJZpYrvc/883HEIf8tPktSA73y3ht3/d5jPjtmvEWCAt885bURuZv?=
- =?us-ascii?Q?bDShCRO68S1FmbwH1o29E1UmScdMG5JV8xxas4V3GQ/BKyXWHOmbRoo10OjK?=
- =?us-ascii?Q?BHoYhjb4AyiTulyjLA7oVsqZCJpDI6er5zMYoX/HJzcOI7gNy31f0k6bDmBe?=
- =?us-ascii?Q?xwYbajqT3t2rLl0bQ5E+FoQiyDJPOxLWwyAgyVF3xfVZl+zrt8KtB0vd5kLM?=
- =?us-ascii?Q?4FFkvI5qX9Dq1kjJu3GOlH9fhJiwS/LNAGfFNzD6XHLV6d1ZjtmUgFFivaiW?=
- =?us-ascii?Q?qjH8gZOObrKZt87qw7nFGlPfPH6+1eJP9ZwQx1sNkYwyJPy4Rkfcz9zUL71x?=
- =?us-ascii?Q?0KRnmAws+vloUnQW3+nyTR6WMPBkwEzG34pc/LMNEPFmz+1/BqdWavzrXTaZ?=
- =?us-ascii?Q?zugFDXqNBVChth3L8thu8Twfe2nQZFr7WD0s9h7FaNNNf8e/eJl3LEWNOvc+?=
- =?us-ascii?Q?H1P2w7dJX/7Oop1/pe18vHItoOm/X8qDU8X3P8SVxW+GavWwWrn7Vci5D7Aa?=
- =?us-ascii?Q?o7meajQt9dfnf2FfvW+KawNTIa7G35Jk0f57nVwFKKAEOTMWgkl+M0EWcteH?=
- =?us-ascii?Q?ZV9v8J8X04ATaBNBQxTtMhfgWKKe0NerD+jNXYeUjE/gtnLhV/SW3YfNaOC5?=
- =?us-ascii?Q?dlj3vvRk2FaG6WWoQl/sw6S+cZFEd17F9T9eyVNMEgt9E8dM7grwj4mQEGwv?=
- =?us-ascii?Q?AhHUgHGrcPIV5LrIniobJJxA80npMiX3eFSFrCE4tYY8+LhDqaySdYAVWaDR?=
- =?us-ascii?Q?QQNdGiFt2y8V64iT5JyYmGLqBNN2C0dgQKkXicB+PCMbFAZPuwb4fovN4K2C?=
- =?us-ascii?Q?aFII1YFiQsDvN+V1Adprmkvj8B4kG3gM/ik6r0XnkC2tYPMDjHVeQq8FmxKm?=
- =?us-ascii?Q?ySRSbdwqR4x/MdS66kp/DtYqPOwOtFQlri1xdrTSvAEVbuQuClb8v7IJPivK?=
- =?us-ascii?Q?01ae00M=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?dJk0OOmbQSf2IzSP7dHyL1j/Ues487ABkCYXOT5j+6R222dIlErWc75ce1KW?=
- =?us-ascii?Q?XRKGOPWlHVK+S7l8B7D3K27gTxEHwPzt36mkOR+Svs+3GmXRcGFTEAvYyvy8?=
- =?us-ascii?Q?iDH6zP7pyPvsD3tmHINEFAcuoslmiZfp822/1GV1qAzSWpuJn51JC0+KrBbi?=
- =?us-ascii?Q?JPHa8FzhH9dwdSlE7X9H2ZI+lxBfsqRYsS+ufP7NrvFvV/Aqy7jmmqBZfX7m?=
- =?us-ascii?Q?wv/C+ofC/DGh+0ckzuEhjQ1LbRzcTxc6ytdRn0IWUjckSrS+T4l56TtkSoRs?=
- =?us-ascii?Q?rJD/X7SWs8mm5iTfXC7DbnGArIplck7xI0k5WlNnrpnnSj/P9x9Bq9A/jSKI?=
- =?us-ascii?Q?YOrHQ8hnJRMsgYR0VCdVjTYJXBmwDmeiwHwc+2qyA5qBi9loYSOYaNOQqRzY?=
- =?us-ascii?Q?HYSMwtebFa4CqacozeNIcOyv5EDacZrhIsLoLsV5m1YEklrj1TZq+lgY6tn5?=
- =?us-ascii?Q?7uHwmMH3bVZ6EgNeKBbn2dJEiEUHRW3dbxJHt1kD7P41sngaFgOmIfLPmlsc?=
- =?us-ascii?Q?r+o2CdMXZ4v2aZAQrUEzABQeX7x62q1U5qYF9GN4l4v6sSB5Is59I5xx16tj?=
- =?us-ascii?Q?tjdJRwEkNyfVKgfXfMYYdwUypPuasUYRZOjhbIfqEG+xAMWSgZkPSQoYE6Mw?=
- =?us-ascii?Q?ZnQTX2qQRdrSxr4ccm65Hgt1l8jZiSeJttmcHYrwxxybW0/3qtKk8Q9TmUBI?=
- =?us-ascii?Q?FmvSuDOHJfD8qyUlGtjac79Gz8peqJs8ZAvRhREEevPt9QTBW6EVuJ9UmS6v?=
- =?us-ascii?Q?QhJ+KmxrrW2m964DDRQ7j9lk1t9EmBvIYW2dQsq1emVR/GLovjJgl/NFaDWK?=
- =?us-ascii?Q?SR64FMzlJD//kjkKKbwv6GGZjenq4c+8114y8aODzlTo2bl22Xkd7KZ2pn6a?=
- =?us-ascii?Q?1HhwP/BRcU+WeWc0j8IifCTXYpqKu5Czdpb7kQy5FAASTvQxd20A7dEiMNLl?=
- =?us-ascii?Q?naDc4vz4lgvRmbIYJgwy7Lmv9XVMUHHIjoBzaJ9AipTWGux6ncFX5iHMpZKj?=
- =?us-ascii?Q?cSP/sSEkKsTgNOSs6kstvktSdsaza32O8K/uqPlFFmXWN2P4GmJ5AOGwCEdw?=
- =?us-ascii?Q?3PJ0juLEtcYQNV8x87H4FC4h7zPwwQoKt7ygKHwfh9rb707Gw6CbDme+s7zI?=
- =?us-ascii?Q?MftOkzqqBAVp2KAS9B+sbp+bh0TTgaUwWl5j/W4SoQWSIzTJicT35G2Qtcwe?=
- =?us-ascii?Q?VQbvyOv+ew9lFKWKNg1hHCdSmkOeGx+hpN10J5qqg4PD0jNvMkAMPB3nDHsH?=
- =?us-ascii?Q?jx6MTOMrPk/Fqes1bkcwPan93t4nsdc0g+V2DcLecuLPYyZv96Pz5zMszKIq?=
- =?us-ascii?Q?ae2BXe5ikEc2mfTKblphTjCfRdJ27safwTgeDoRiD1jmHRt//ld6ELBeBAVk?=
- =?us-ascii?Q?FA0fs/LE+WOaoB4mPvljGXFzsaSqbC4Va2kv377pORT3T6FKa+yd9ZxGcRe1?=
- =?us-ascii?Q?j9KAexbUw/L1xLpXpkH6ZkXCHJUVg4dYSiRNYT9Nw2jIHyPzeJcPvH4ekr6v?=
- =?us-ascii?Q?YYhfNv4wC4YURD2vuL1Jd50pdy3LmIBfTLNUJEfEPUKVecMYBBljK/TfhXW1?=
- =?us-ascii?Q?2J7XndoRRvTeeqCjKEA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9416116D4E6;
+	Wed,  4 Dec 2024 06:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733294879; cv=none; b=nobBWCyTaBy9M+zKy5xBXOzKtRpheWr//kLJjVD8wpUhDh+mTP+7uX7FSQ+J+fgMH2FLjdT3/BtM1/ivDiZsMWJvb6cVwAUFc1ptuTiOMsGIu1Nuq8UF2x67DWRh/dE+sHTaxXD5pamZzIMiVVJJL4WIHuWymQtzkMct75vCT1A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733294879; c=relaxed/simple;
+	bh=0PQY8uwnRraRUPJ3qDNVaBgBU0DkhItCQ2j9LdNQhdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C8wSRO9VodVJshKHkD9GfQzOv60mF/B0BdMW5g1fezF6sSxRKBD0ohyXVampMt6e3emSyptyBBKx+of+vQSzPSRVXhNewiNw2+eyV9KnPeUp9fHyf/AEFvAI4IrCOaC+/89zInoDWidZw6wr5+ZWwGwy+obA31gHsf8e2h+0xo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPfe4aqU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58929C4CED1;
+	Wed,  4 Dec 2024 06:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733294879;
+	bh=0PQY8uwnRraRUPJ3qDNVaBgBU0DkhItCQ2j9LdNQhdE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CPfe4aqULKyPjEJOXb4caZ84Slr+FIc15UYhXEi2vdT8lSVgojxS9gXI9N80VR3RO
+	 QVJQeljcqQg83/w8ffb84XXyS4ZgB9hmxoAygWtDnTI6wj00/08iKsn10kJCGRyf76
+	 nrQMNp7ys9FuNqyMg1a+xdKALVTgN05JIygX62R5XbpPzIu1EDZdtW0T8ANbIjo0yP
+	 n1w/IEmFf/qwwldvRn/ufnzbtCeGyAUwKB85KrKC/WiuqwbaZ71YS1S2Kb4dl7vt5u
+	 IyOqNf7SSaBQMrb4GCnu+9FoQQEI/I2U0Bm62JowRI+GjpxTAjvXnjIYNZYP9WplfF
+	 ZTTM19/gdAvSg==
+Date: Wed, 4 Dec 2024 08:47:54 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Stephen Hemminger <stephen@networkplumber.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/sysfs: Change read permissions for VPD attributes
+Message-ID: <20241204064754.GL1245331@unreal>
+References: <20241203174027.GK1245331@unreal>
+ <20241203203625.GA2962643@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf470f45-fcfe-4927-a3a0-08dd142d5f36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2024 06:32:05.9438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2sMJJJbdKzT+IX7kg86gDWjnH2cr6ehDaZF8yZNc6UBAtLWpCGASKVlXwm/UN42gITsVn8NK7uI0+SlBj2FNCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8228
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241203203625.GA2962643@bhelgaas>
 
-Hi Bjorn,
+On Tue, Dec 03, 2024 at 02:36:25PM -0600, Bjorn Helgaas wrote:
+> [+cc Linux hardening folks for any security/reliability concerns]
+> 
+> On Tue, Dec 03, 2024 at 07:40:27PM +0200, Leon Romanovsky wrote:
+> > On Tue, Dec 03, 2024 at 09:24:56AM -0800, Stephen Hemminger wrote:
+> > > On Tue,  3 Dec 2024 14:15:28 +0200
+> > > Leon Romanovsky <leon@kernel.org> wrote:
+> > > 
+> > > > The Vital Product Data (VPD) attribute is not readable by regular
+> > > > user without root permissions. Such restriction is not needed at
+> > > > all for Mellanox devices, as data presented in that VPD is not
+> > > > sensitive and access to the HW is safe and well tested.
+> > > > 
+> > > > This change changes the permissions of the VPD attribute to be accessible
+> > > > for read by all users for Mellanox devices, while write continue to be
+> > > > restricted to root only.
+> > > > 
+> > > > The main use case is to remove need to have root/setuid permissions
+> > > > while using monitoring library [1].
+> > > > 
+> > > > [leonro@vm ~]$ lspci |grep nox
+> > > > 00:09.0 Ethernet controller: Mellanox Technologies MT2910 Family [ConnectX-7]
+> > > > 
+> > > > Before:
+> > > > [leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+> > > > -rw------- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+> > > > After:
+> > > > [leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+> > > > -rw-r--r-- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+> > > > 
+> > > > [1] https://developer.nvidia.com/management-library-nvml
+> > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > > ---
+> > > > Changelog:
+> > > > v3:
+> > > >  * Used | to change file attributes
+> > > >  * Remove WARN_ON
+> > > > v2: https://lore.kernel.org/all/61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org
+> > > >  * Another implementation to make sure that user is presented with
+> > > >    correct permissions without need for driver intervention.
+> > > > v1: https://lore.kernel.org/all/cover.1731005223.git.leonro@nvidia.com
+> > > >  * Changed implementation from open-read-to-everyone to be opt-in
+> > > >  * Removed stable and Fixes tags, as it seems like feature now.
+> > > > v0:
+> > > > https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
+> > > > ---
+> > > >  drivers/pci/vpd.c | 7 +++++++
+> > > >  1 file changed, 7 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > > > index a469bcbc0da7..a7aa54203321 100644
+> > > > --- a/drivers/pci/vpd.c
+> > > > +++ b/drivers/pci/vpd.c
+> > > > @@ -332,6 +332,13 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> > > >  	if (!pdev->vpd.cap)
+> > > >  		return 0;
+> > > >  
+> > > > +	/*
+> > > > +	 * Mellanox devices have implementation that allows VPD read by
+> > > > +	 * unprivileged users, so just add needed bits to allow read.
+> > > > +	 */
+> > > > +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
+> > > > +		return a->attr.mode | 0044;
+> > > > +
+> > > >  	return a->attr.mode;
+> > > >  }
+> > > 
+> > > Could this be with other vendor specific quirks instead?
+> > 
+> > In previous versions, I asked Bjorn about using quirks and the answer
+> > was that quirks are mainly to fix HW defects fixes and this change doesn't
+> > belong to that category.
+> > 
+> > https://lore.kernel.org/linux-pci/20241111214804.GA1820183@bhelgaas/
+> 
+> That previous proposal was driver-based, so VPD would only be readable
+> by unprivileged users after mlx5 was loaded.  VPD would be readable at
+> any time with either a quirk or the current patch.  The quirk would
+> require a new bit in pci_dev but has the advantage of getting the
+> Mellanox grunge out of the generic code.
+> 
+> My biggest concerns are that this exposes VPD data of unknown
+> sensitivity and exercises the sometimes-problematic device VPD
+> protocol for very little user benefit.  IIUC, the monitoring library
+> only wants this to identify the specific device variant in the user
+> interface; it doesn't need it to actually *use* the device.
+> 
+> We think these concerns are minimal for these devices (and I guess for
+> *all* present and future Mellanox devices), but I don't think it's a
+> great precedent.
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Tuesday, December 3, 2024 8:11 PM
-> To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
-> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> manivannan.sadhasivam@linaro.org; krzk+dt@kernel.org; conor+dt@kernel.org=
-;
-> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
-> <michal.simek@amd.com>; Gogada, Bharat Kumar
-> <bharat.kumar.gogada@amd.com>
-> Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MD=
-B
-> PCIe Root Port Bridge
->=20
-> On Tue, Dec 03, 2024 at 06:06:07PM +0530, Thippeswamy Havalige wrote:
-> > Add AMD Versal2 MDB (Multimedia DMA Bridge) PCIe Root Port Bridge.
-> >
-> > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > ---
-> > Changes in v2:
-> > -------------
-> > - Modify patch subject.
-> > - Add pcie host bridge reference.
-> > - Modify filename as per compatible string.
-> > - Remove standard PCI properties.
-> > - Modify interrupt controller description.
-> > - Indentation
-> > ---
-> >  .../bindings/pci/amd,versal2-mdb-host.yaml    | 132 ++++++++++++++++++
-> >  1 file changed, 132 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> > b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> > new file mode 100644
-> > index 000000000000..75795bab8254
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> > @@ -0,0 +1,132 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/amd,mdb-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: AMD Versal2 MDB(Multimedia DMA Bridge) Host Controller
-> > +
-> > +maintainers:
-> > +  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: amd,versal2-mdb-host
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: MDB PCIe controller 0 SLCR
->=20
-> SLCR is not defined anywhere.
-Thanks for review, Here SLCR refers to mdb_pcie_slcr should I modify it to =
-lower case?=20
->=20
-> > +      - description: configuration region
-> > +      - description: data bus interface
-> > +      - description: address translation unit register
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: mdb_pcie_slcr
-> > +      - const: config
-> > +      - const: dbi
-> > +      - const: atu
->=20
-> DWC based it seems. You need to reference the DWC schema.
-- Thanks for the review, Here should I add both dwc and pci-host-bridge hos=
-t bridge schema.
-> > +
-> > +  ranges:
-> > +    maxItems: 2
-> > +
-> > +  msi-map:
-> > +    maxItems: 1
-> > +
-> > +  bus-range:
-> > +    maxItems: 1
->=20
-> Already defined in the common schema. Plus you obviously didn't test anyt=
-hing with
-> this because bus-range must be exactly 2 entries. 1 is not valid.
-- Thanks for the review, Will remove it in next patch.
->=20
-> > +
-> > +  "#address-cells":
-> > +    const: 3
-> > +
-> > +  "#size-cells":
-> > +    const: 2
->=20
-> Both of these are also already defined in the pci-host-bridge.yaml.
-Thanks for the review, Will update in next patch.
->=20
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  interrupt-map-mask:
-> > +    items:
-> > +      - const: 0
-> > +      - const: 0
-> > +      - const: 0
-> > +      - const: 7
-> > +
-> > +  interrupt-map:
-> > +    maxItems: 4
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 1
-> > +
-> > +  interrupt-controller:
-> > +    description: identifies the node as an interrupt controller
-> > +    type: object
-> > +    properties:
-> > +      interrupt-controller: true
-> > +
-> > +      "#address-cells":
-> > +        const: 0
-> > +
-> > +      "#interrupt-cells":
-> > +        const: 1
-> > +
-> > +    required:
-> > +      - interrupt-controller
-> > +      - "#address-cells"
-> > +      - "#interrupt-cells"
-> > +
-> > +    additionalProperties: false
->=20
-> Move this before 'properties'.
-- Thanks for the review, I will update in next patch.
->=20
-> > +
-> > +required:
-> > +  - reg
-> > +  - reg-names
-> > +  - interrupts
-> > +  - interrupt-map
-> > +  - interrupt-map-mask
-> > +  - msi-map
-> > +  - ranges
->=20
-> Already required by common schema.
-Thanks for the review, will update in next patch.
->=20
-> > +  - "#interrupt-cells"
-> > +  - interrupt-controller
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +
->=20
-> Drop blank line.
-Thanks for the review, will update in next patch.
->=20
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    soc {
-> > +        #address-cells =3D <2>;
-> > +        #size-cells =3D <2>;
-> > +        pci@ed931000 {
->=20
-> pcie@...
-Thanks for the review, will update in next patch.
->=20
-> > +            compatible =3D "amd,versal2-mdb-host";
-> > +            reg =3D <0x0 0xed931000 0x0 0x2000>,
-> > +                  <0x1000 0x100000 0x0 0xff00000>,
-> > +                  <0x1000 0x0 0x0 0x100000>,
-> > +                  <0x0 0xed860000 0x0 0x2000>;
-> > +            reg-names =3D "mdb_pcie_slcr", "config", "dbi", "atu";
-> > +            ranges =3D <0x2000000 0x00 0xa8000000 0x00 0xa8000000 0x00
-> 0x10000000>,
-> > +                     <0x43000000 0x1100 0x00 0x1100 0x00 0x00 0x100000=
-0>;
-> > +            interrupts =3D <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
-> > +            interrupt-parent =3D <&gic>;
-> > +            interrupt-map-mask =3D <0 0 0 7>;
-> > +            interrupt-map =3D <0 0 0 1 &pcie_intc_0 0>,
-> > +                            <0 0 0 2 &pcie_intc_0 1>,
-> > +                            <0 0 0 3 &pcie_intc_0 2>,
-> > +                            <0 0 0 4 &pcie_intc_0 3>;
-> > +            msi-map =3D <0x0 &gic_its 0x00 0x10000>;
-> > +            #address-cells =3D <3>;
-> > +            #size-cells =3D <2>;
-> > +            #interrupt-cells =3D <1>;
-> > +            device_type =3D "pci";
-> > +            pcie_intc_0: interrupt-controller {
-> > +                #address-cells =3D <0>;
-> > +                #interrupt-cells =3D <1>;
-> > +                interrupt-controller;
-> > +           };
-> > +        };
-> > +    };
-> > --
-> > 2.34.1
-> >
-Regards,
-Thippeswamy H
+Yes, and we can always move this "if ..." to quirks once second device
+will appear.
+
+Thanks
+
+> 
+> Bjorn
 
