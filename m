@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-17646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D37189E3A3A
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 13:46:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5CA69E3A58
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 13:50:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93C7F286AA0
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 12:46:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DD90B2E9EE
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 12:46:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C4571C1F12;
-	Wed,  4 Dec 2024 12:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7581CDA14;
+	Wed,  4 Dec 2024 12:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3iG8HnO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr62k5+w"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8721B9831;
-	Wed,  4 Dec 2024 12:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECFF1CD1EA;
+	Wed,  4 Dec 2024 12:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733316367; cv=none; b=QTOfbfEhOO1lGv+23hXd297L/ys6aNHyz1FMpAlOD6GzP4kbqx4NVZnlMz6ZcAzZ5viqs1L9RueGU9L0XzPmFuKKvb21H0sZXIr//gkh3T31Wz1ICkJBX57MlvbEcCyZ/WaFRuHleFautlZs8DypnC6lU+eOnYSl+ekjcwWTaPs=
+	t=1733316368; cv=none; b=GnIY/AmLsDjBfNVPSUk2S0yfpaxLumtNQYVJxwhjPgGnkReVX69juW3UDCfL+cDAiDYoLR/qPFjFn5K/7jpG/uty5QibTH0AaoEQ2xklBIl72kptSg2xG5jyoFjQgowVE2vtAcsx8ROQLYJBs3GYqPnx9LtWRZb8mppC6I6Y5UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733316367; c=relaxed/simple;
-	bh=1V1FmvDMYnTWLajD7/gkCCe4tIOFd8A5mV3a3mgRPVM=;
+	s=arc-20240116; t=1733316368; c=relaxed/simple;
+	bh=J2h79k3WbUC/sq2bIkNgbuUFrP/AJSlM4EuxmyTYCv0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CgXKMgXQ7ydpsZKuxy6U1oo1ZugrTjNmrXqFZLKpJO+6pY58IhA9qyf8dhaujjVz18a7746w0xZzhgXFieL/ugqXTp4BeaGIwKaOhhJV7K4Fnj+4/MX2REz1YvHAQVHDHKb8cJ90/XsZHxMSWfzBXXSmyWFe2I3U6ryNXhGC5A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3iG8HnO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA059C4CEE1;
-	Wed,  4 Dec 2024 12:46:06 +0000 (UTC)
+	 MIME-Version; b=POUlrNMHyEI5gY1T3FvoFH5Trc8PWWxeQps7OIhMceHQAuuBz+cq8CqwLwXCw/bffUNFK9tp8JweEsbLXetQdbeetwU/JpFRQuGIn2f+VkSnVwXvaeLZkX8vI3DRtjckTWDs2MbvAeFrsjz6Lq01Y4hDEO4x8mbUcgU70hgcHlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr62k5+w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B88DEC19422;
+	Wed,  4 Dec 2024 12:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733316366;
-	bh=1V1FmvDMYnTWLajD7/gkCCe4tIOFd8A5mV3a3mgRPVM=;
+	s=k20201202; t=1733316367;
+	bh=J2h79k3WbUC/sq2bIkNgbuUFrP/AJSlM4EuxmyTYCv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n3iG8HnOi+ARtsWCUBL1CRJL9kMugczwqyYnB+XTeNHXx9L8y2GQ22sIoWSLtcxy6
-	 QXIPGa+mIuBiymtO45sUfVk8J0kI5TmsKayPVHsiyrhY4M9tmzCYgno6vJsJJgfUpj
-	 u9revKLDf+dC0ACsldoFraFy3jZSqA5a20y1KsX7Wc/lJ3dsAEXpD+Lnu20YAVnyu5
-	 9T4NwHb+gQenhY9XN1DvHJVLfUGJUkQbOcfpnLMFaXGoV1URNyDbP6vd8eXn55VWx/
-	 2/O3YOtPxLrX0Hwp0EmB8RWPAHQR6/6mg7t+SOeBxMApoznkpC2v9t6QEDVTQ9Nhvn
-	 KhMWJcvs1B++w==
+	b=Vr62k5+wqB1Fqc1D6aPCpoufZJluao/kLQZNfg84/LfpHrKbYN828AKSTqqKeQaCv
+	 3qu8CJlgV0P0DphhuHV0RXZl4YlD5GanSbvvlMu2BizRaUa0Hiyflsbn0JCFsPYFlm
+	 P1gkyNmR285x7ujGi1/X7nvkGtakgj9ob+HawHpkN/gsJhbfR7sLIxfJqf6ilYEPbn
+	 0z1kYl4YMoWLS5wILpt7MSOKNaSISK55Ihf7zQNlQF4KCFvvTCP1K5JjOoLEXJFQAh
+	 YqxtoRQYloKWZvBp/HFxKoEC7jmafjvBxIyDNWdKmnde0t3aJ5QRBubvIAF4uuPuwA
+	 pJo0WFkL1wwLw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tIolY-000RHy-Uq;
+	id 1tIolZ-000RHy-MI;
 	Wed, 04 Dec 2024 12:46:05 +0000
 From: Marc Zyngier <maz@kernel.org>
 To: iommu@lists.linux.dev,
@@ -78,9 +78,9 @@ Cc: Joerg Roedel <joro@8bytes.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Toan Le <toan@os.amperecomputing.com>,
 	Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Subject: [PATCH 03/11] irqchip/gic: Convert to msi_create_parent_irq_domain() helper
-Date: Wed,  4 Dec 2024 12:45:41 +0000
-Message-Id: <20241204124549.607054-4-maz@kernel.org>
+Subject: [PATCH 05/11] irqchip/riscv-imsic: Convert to msi_create_parent_irq_domain() helper
+Date: Wed,  4 Dec 2024 12:45:43 +0000
+Message-Id: <20241204124549.607054-6-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241204124549.607054-1-maz@kernel.org>
 References: <20241204124549.607054-1-maz@kernel.org>
@@ -97,93 +97,39 @@ X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
 Now that we have a concise helper to create an MSI parent domain,
-switch the GIC family over to that.
+switch the RISC-V letter soup over to that.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v2m.c    |  9 ++++-----
- drivers/irqchip/irq-gic-v3-its.c | 14 +++++---------
- drivers/irqchip/irq-gic-v3-mbi.c |  9 ++++-----
- 3 files changed, 13 insertions(+), 19 deletions(-)
+ drivers/irqchip/irq-riscv-imsic-platform.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index db79ae622f3c4..4916743aed314 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -270,16 +270,15 @@ static __init int gicv2m_allocate_domains(struct irq_domain *parent)
- 	if (!v2m)
- 		return 0;
- 
--	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
--						   &gicv2m_domain_ops, v2m);
-+	inner_domain = msi_create_parent_irq_domain(v2m->fwnode,
-+						    &gicv2m_msi_parent_ops,
-+						    &gicv2m_domain_ops,
-+						    0, 0, v2m, parent);
- 	if (!inner_domain) {
- 		pr_err("Failed to create GICv2m domain\n");
- 		return -ENOMEM;
+diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
+index c708780e8760f..3fbc3a8eb3be8 100644
+--- a/drivers/irqchip/irq-riscv-imsic-platform.c
++++ b/drivers/irqchip/irq-riscv-imsic-platform.c
+@@ -325,16 +325,15 @@ int imsic_irqdomain_init(void)
  	}
  
--	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
--	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
--	inner_domain->msi_parent_ops = &gicv2m_msi_parent_ops;
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 334fd15be1de1..6f61ee7c5d394 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -5114,20 +5114,16 @@ static int its_init_domain(struct its_node *its)
- 	info->ops = &its_msi_domain_ops;
- 	info->data = its;
- 
--	inner_domain = irq_domain_create_hierarchy(its_parent,
--						   its->msi_domain_flags, 0,
--						   its->fwnode_handle, &its_domain_ops,
--						   info);
-+	inner_domain = msi_create_parent_irq_domain(its->fwnode_handle,
-+						    &gic_v3_its_msi_parent_ops,
-+						    &its_domain_ops,
-+						    its->msi_domain_flags, 0,
-+						    info, its_parent);
- 	if (!inner_domain) {
- 		kfree(info);
+ 	/* Create Base IRQ domain */
+-	imsic->base_domain = irq_domain_create_tree(imsic->fwnode,
+-						    &imsic_base_domain_ops, imsic);
++	imsic->base_domain = msi_create_parent_irq_domain(imsic->fwnode,
++							  &imsic_msi_parent_ops,
++							  &imsic_base_domain_ops,
++							  0, 0, imsic, NULL);
++	
+ 	if (!imsic->base_domain) {
+ 		pr_err("%pfwP: failed to create IMSIC base domain\n", imsic->fwnode);
  		return -ENOMEM;
  	}
- 
--	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+-	imsic->base_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
+-	imsic->base_domain->msi_parent_ops = &imsic_msi_parent_ops;
 -
--	inner_domain->msi_parent_ops = &gic_v3_its_msi_parent_ops;
--	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
--
- 	return 0;
- }
+-	irq_domain_update_bus_token(imsic->base_domain, DOMAIN_BUS_NEXUS);
  
-diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
-index 63c658375fd55..e5f532f95148d 100644
---- a/drivers/irqchip/irq-gic-v3-mbi.c
-+++ b/drivers/irqchip/irq-gic-v3-mbi.c
-@@ -211,14 +211,13 @@ static int mbi_allocate_domain(struct irq_domain *parent)
- {
- 	struct irq_domain *nexus_domain;
- 
--	nexus_domain = irq_domain_create_hierarchy(parent, 0, 0, parent->fwnode,
--						   &mbi_domain_ops, NULL);
-+	nexus_domain = msi_create_parent_irq_domain(parent->fwnode,
-+						    &gic_v3_mbi_msi_parent_ops,
-+						    &mbi_domain_ops,
-+						    0, 0, NULL, parent);
- 	if (!nexus_domain)
- 		return -ENOMEM;
- 
--	irq_domain_update_bus_token(nexus_domain, DOMAIN_BUS_NEXUS);
--	nexus_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
--	nexus_domain->msi_parent_ops = &gic_v3_mbi_msi_parent_ops;
- 	return 0;
- }
- 
+ 	global = &imsic->global;
+ 	pr_info("%pfwP:  hart-index-bits: %d,  guest-index-bits: %d\n",
 -- 
 2.39.2
 
