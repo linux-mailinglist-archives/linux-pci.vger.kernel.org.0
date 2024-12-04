@@ -1,140 +1,166 @@
-Return-Path: <linux-pci+bounces-17700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AE759E449B
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 20:30:39 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B0AD9E476B
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 23:05:16 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15DC8167360
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 19:30:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C39D5B3880A
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 21:19:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7031C3BF9;
-	Wed,  4 Dec 2024 19:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 784B918FC84;
+	Wed,  4 Dec 2024 21:19:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cnZ+uEiw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqejnV9n"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB3D2391B3;
-	Wed,  4 Dec 2024 19:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4337A18B499;
+	Wed,  4 Dec 2024 21:19:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733340636; cv=none; b=OtUXgu2TOi9/lA9cYhY75nkYXVsrkzAzRuG1ZIWFSApiiPCRYx0mR7kQ79Bl/xmIVpRZNxFqXTm1hPCDetschaqKlPx8kFbh9R6EZ2n3QEFNLy0NS3cSvJCnUT8mmLaT85+ljFaVPD2bYCJTeuhlPM1+6TiYkRvhFN0T/B5doOw=
+	t=1733347158; cv=none; b=FHvKTubsxZiVLRquZpKOSH7BvHRkCsS0awjji2MUY2JkRUkpMdf+3eHU/u92VZp4HP0Zr7YNpK+/rRl75mU7BarPcpj5SbTqxl+rJmwIfyw33eBXDBVI+ey/fjLeGEiUSHo/En1nwOikpXK+b7GsorsVDHjBv+Yvqq5pT9sTJwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733340636; c=relaxed/simple;
-	bh=ihTJ2yXjg6e57IAiUEukEcJ9ypSdLyvvGf7Ps6RHyt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VMpcMdxgwSeEuxhNmmMUtr1NJpX417MALBk+gKL+fSZAlg+sXVCjiiB2BuDPf0ZC3wvlaz+9ODIcoUQr10vO21em7qeqEGKOSEhA3AL09Mj65vpS5ApmEvgmzjs58HvcxIk4VIVOKMpCHKzeqKhi35fhVtOd2lQaG8E6pWVhVdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cnZ+uEiw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E9CC4CECD;
-	Wed,  4 Dec 2024 19:30:31 +0000 (UTC)
+	s=arc-20240116; t=1733347158; c=relaxed/simple;
+	bh=y8BsGXjqxVRpKujAE+Zpsf0iQlQlKLvP+XXznm8jwaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=S6aQerTVbwLObQFQ+V4xwwam0gI9N4Jqqyjz5ExZ5QqdjxFNlh9utv4wB48cB2X0HKggiI/PBsfV16X4hFaGc8ywyQEYJoXNKO1VY5TcK9BWEU/aQ4MkXjAq3Lp7QzlUixJ3x8mu1mpCsRMdraoPu1lOYPGSp7dz8MbMBgDFqjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqejnV9n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06E1C4CECD;
+	Wed,  4 Dec 2024 21:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733340636;
-	bh=ihTJ2yXjg6e57IAiUEukEcJ9ypSdLyvvGf7Ps6RHyt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cnZ+uEiw68/OknjbhzgE+/eIr8+afVQ3AJWoZGCkSot6CAZdVdgTue6fDmbb1x1rX
-	 wIODjfF3hRtRWvjM747e+BRK8d9ymv17QK9eKDI1+xB+a3jqJp1QdZZib7gJGQokPO
-	 66v2ClrheJoJfWREGiOLZTyksrhNxg6DPlmANx+m94PgybMW3IKwrZUbIFsZBDz3On
-	 1fRbCOXjFTgAGaWUtcHbjqYIcUjKj5yp9q38enqHLcqmi5X0ae2uOYaD9atrNJXu+G
-	 ddRtepnXXcZ1AmDVTwizihUYWiQumh+TSk6f2SUhJEJM56vuHfsC0wTor/4JZbuOve
-	 CZcPAzztRHpyQ==
-Date: Wed, 4 Dec 2024 20:30:28 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
-	robh@kernel.org, saravanak@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
- driver abstractions
-Message-ID: <Z1Ct1PhowNg4HiET@pollux>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-16-dakr@kernel.org>
- <7EA482EF-1D3E-4C3E-A805-4F404758610C@collabora.com>
+	s=k20201202; t=1733347158;
+	bh=y8BsGXjqxVRpKujAE+Zpsf0iQlQlKLvP+XXznm8jwaQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SqejnV9nO/eEBpnkIh0HQaoFDQrCg91rAVSBDR3gARg6fGA4MLW3Q8AkQk3pjIPZk
+	 RBe1u2hilOegnqrmZLZFSQB2RT18mUZ8mA1LyvX28ym4q5rhnd5ypx9mg6P72OwATg
+	 0XJsiSbQfAgavVZYffDc4lGrZQVw6AP2v5sTwEBO9v3593CwMFckdTuSSrAW62oZoo
+	 BcItGZ0QvZrBH14AtIUBKw7/P8K8tJNoVHIkMSukoTOac4HVYEfksf+AyzVi6v6cFS
+	 Xt4/6mgqPP4/C5zhXNUSbHVI4ls46+tqKCQhc1t5hoFQLyCCEeONRhQq7pSMySPT9V
+	 Y6IExXdGBQUpg==
+Date: Wed, 4 Dec 2024 15:19:16 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: andersson@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] PCI: pwrctl: Add power control driver for qps615
+Message-ID: <20241204211916.GA3009300@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7EA482EF-1D3E-4C3E-A805-4F404758610C@collabora.com>
+In-Reply-To: <20241112-qps615_pwr-v3-6-29a1e98aa2b0@quicinc.com>
 
-On Wed, Dec 04, 2024 at 04:25:32PM -0300, Daniel Almeida wrote:
-> Hi Danilo,
-> 
-> > On 22 Oct 2024, at 18:31, Danilo Krummrich <dakr@kernel.org> wrote:
-> > +
-> > +/// The platform device representation.
-> > +///
-> > +/// A platform device is based on an always reference counted `device:Device` instance. Cloning a
-> > +/// platform device, hence, also increments the base device' reference count.
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// `Device` holds a valid reference of `ARef<device::Device>` whose underlying `struct device` is a
-> > +/// member of a `struct platform_device`.
-> > +#[derive(Clone)]
-> > +pub struct Device(ARef<device::Device>);
-> > +
-> > +impl Device {
-> > +    /// Convert a raw kernel device into a `Device`
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// `dev` must be an `Aref<device::Device>` whose underlying `bindings::device` is a member of a
-> > +    /// `bindings::platform_device`.
-> > +    unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
-> > +        Self(dev)
-> > +    }
-> > +
-> > +    fn as_dev(&self) -> &device::Device {
-> 
-> This has to be pub, since a platform::Device is at least as useful as a device::Device.
-> 
-> IOW: if an API takes &device::Device, there is no reason why someone with a &platform::Device
-> shouldn’t be able to call it.
-> 
-> In particular, having this as private makes it impossible for a platform driver to use Abdiel’s DMA allocator at [0].
+On Tue, Nov 12, 2024 at 08:31:38PM +0530, Krishna chaitanya chundru wrote:
+> QPS615 is the PCIe switch which has one upstream and three downstream
+> ports. To one of the downstream ports ethernet MAC is connected as endpoint
+> device. Other two downstream ports are supposed to connect to external
+> device. One Host can connect to QPS615 by upstream port. QPS615 switch
+> needs to be configured after powering on and before PCIe link was up.
 
-No worries, I already made it public in my branch [1], I'll send out a v4 soon.
+s/is the/is a/
 
-[1] https://github.com/Rust-for-Linux/linux/blob/staging/dev/rust/kernel/platform.rs#L213
+> The PCIe controller driver already enables link training at the host side
+> even before qps615 driver probe happens, due to this when driver enables
+> power to the switch it participates in the link training and PCIe link
+> may come up before configuring the switch through i2c. To prevent the
+> host from participating in link training, disable link training on the
+> host side to ensure the link does not come up before the switch is
+> configured via I2C.
+> 
+> Based up on dt property and type of the port, qps615 is configured
+> through i2c.
 
-- Danilo
+> +config PCI_PWRCTL_QPS615
+> +	tristate "PCI Power Control driver for QPS615"
+> +	select PCI_PWRCTL
+> +	help
+> +	  Say Y here to enable the pwrctl driver for Qualcomm
+> +	  QPS615 PCIe switch which enables and configures it
+> +	  through i2c.
 
-> 
-> > +        &self.0
-> > +    }
-> > +
-> > +    fn as_raw(&self) -> *mut bindings::platform_device {
-> > +        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
-> > +        // embedded in `struct platform_device`.
-> > +        unsafe { container_of!(self.0.as_raw(), bindings::platform_device, dev) }.cast_mut()
-> > +    }
-> > +}
-> > +
-> > +impl AsRef<device::Device> for Device {
-> > +    fn as_ref(&self) -> &device::Device {
-> > +        &self.0
-> > +    }
-> > +}
-> > -- 
-> > 2.46.2
-> > 
-> 
-> — Daniel
-> 
-> [0]: https://lkml.org/lkml/2024/12/3/1281
-> 
+Does this work if build as a module?  I guess maybe the QPS615 doesn't
+even get powered on without this, so it would be configured and then
+powered on after module-load time?
+
+s/pwrctl/pwrctrl/ (also in filename, code, variables, etc below)
+
+Will need to be rebased to account for the pwrctl -> pwrctrl rename in
+v6.13-rc1.
+
+> +static int qps615_pwrctl_power_on(struct qps615_pwrctl_ctx *ctx)
+> +{
+> +	struct qps615_pwrctl_cfg *cfg;
+> +	int ret, i;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +	if (ret < 0)
+> +		return dev_err_probe(ctx->pwrctl.dev, ret, "cannot enable regulators\n");
+> +
+> +	gpiod_set_value(ctx->reset_gpio, 0);
+> +
+> +	 /* wait for the internal osc frequency to stablise */
+
+s/stablise/stabilise/
+
+> +	usleep_range(10000, 10500);
+> +
+> +	ret = qps615_pwrctl_assert_deassert_reset(ctx, false);
+> +	if (ret)
+> +		goto out;
+> +
+> +	if (ctx->cfg[QPS615_USP].axi_freq_125) {
+> +		ret = qps615_pwrctl_i2c_write(ctx->client, QPS615_BUS_CONTROL, BIT(16));
+> +		if (ret)
+> +			dev_err(ctx->pwrctl.dev, "Setting AXI clk freq failed %d\n", ret);
+> +	}
+> +
+> +	for (i = 0; i < QPS615_MAX; i++) {
+> +		cfg = &ctx->cfg[i];
+> +		if (cfg->disable_port) {
+> +			ret = qps615_pwrctl_disable_port(ctx, i);
+> +			if (ret) {
+> +				dev_err(ctx->pwrctl.dev, "Disabling port failed\n");
+> +				goto out;
+> +			}
+> +		}
+
+A helper function could remove a level of indentation for the body of
+this loop.
+
+> +static int qps615_pwrctl_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct pci_host_bridge *bridge;
+> +	enum qps615_pwrctl_ports port;
+> +	struct qps615_pwrctl_ctx *ctx;
+> +	int ret, addr;
+> +
+> +	bridge = pci_find_host_bridge(to_pci_dev(dev->parent)->bus);
+
+Move to where "bridge" is used.
+
+> +	platform_set_drvdata(pdev, ctx);
+
+Can this be moved to the point where we know we won't return an error?
+
+Bjorn
 
