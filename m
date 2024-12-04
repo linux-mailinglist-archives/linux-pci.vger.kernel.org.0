@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-17618-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17619-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86BF79E3146
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 03:15:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 864539E3157
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 03:19:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50EE416806D
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 02:15:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2E19163168
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 02:19:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614FB175AB;
-	Wed,  4 Dec 2024 02:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676ED13AD39;
+	Wed,  4 Dec 2024 02:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lyWyNyFq"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aLHq6++H"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908FB944E;
-	Wed,  4 Dec 2024 02:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BF68172A;
+	Wed,  4 Dec 2024 02:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733278554; cv=none; b=AZ93CRgswaWLEN5DsxLA7Qhjp3azuMe1du1JyXxjWvD4M3q2o6Rzemq3TsWqWunUKm31hrF0qSGH71G5U0FBBKLaQpEXIpMF6nwcJQWVApRw8BManqkE3nc/axnBr+it2kkJXRq+sSat6UlgCOGAmaUf798ADOvaZEX2ntjrd10=
+	t=1733278723; cv=none; b=i3XxJjFdBL0QrNX4lMpUD/jdHG+crRK9drE9Clr3u14ui2ltIvnYAAPH0SVKKE3d0WLL1asXeLVmgR0YKkOvADdAiZ0s9UE9wyUfv/DuBgifoia5mF2sVG3aJeMCcUB5shLGwbj3XnhMkMACcbIyiaoaMLiGTZxLF9q6A+kaI8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733278554; c=relaxed/simple;
-	bh=OlHHrgP4UplwfyoIXDphhR2ghnkX9MTPH5x6SWstMFs=;
+	s=arc-20240116; t=1733278723; c=relaxed/simple;
+	bh=+kEMO7rGw+KeheCipiC3trpAyN0T9xh2czyl3i+Q6KU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KL2cjF2Qhq7yx4OlDu7t6zN7et/oSbhax5EVQLY5DP7p0adTmpXDolu5O/h/JHvcmb/40PupL7Oj/c/6UVFNSB9qkoULohW3EkK5ygbTEn2Leskt5UjNpVJj3BfHJ7GcZPONC1zjkoFDvKZcDdyLWSk++cy1Zyb36nUx90Ic7EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lyWyNyFq; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=NjivLJG8OlFDxPq8DfU6IZUo4Op5YsjE61+6hkK7c3O8K8/J8lAGRhw24l+1VTW33gaSDj0x2KfHM/84R2aXovTEWoQVn7Du8OmTQpyftb9pPNFEw+z2lABbgpwLZ4++tziKcml68IzHw18rLlO4GV5NlCfMBvBB62j5HviDilA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aLHq6++H; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B3DMQMl001285;
-	Wed, 4 Dec 2024 02:15:43 GMT
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B3E6nEA032117;
+	Wed, 4 Dec 2024 02:18:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ts4Njp90c68ZwdyOqQwSIi/UZ2klvbHWWrBIP09mKUE=; b=lyWyNyFqjOm1pqWy
-	d9YY71DDPXxBIEr4e2jTEUNz2a3rAm9+2uFYt4B8AebRXoiBAM0NNffTqxZBPQZy
-	budvROV/b0bUnmuq5N2+rGaysQag9gtlzrjMNk0r51H9e9nOpIzFma39bOZ7DM7k
-	Shu9CMGuFKMwh2xyqEpibrpHbZ+TqZfRo4x17WMzrOvqN9EtsHifQ0PNv/vWp7gQ
-	vZNrmambHvnomLbMMOU3E6RXPmnR+MraoY4+RErqDLDvBE+V+B+0ieT1jSvChqO0
-	Is16BOQvkbVZlLGmJPHyt3fOq/iuHQy58onu1nnpzeUa1obkSn4V4wzlLogWBOwV
-	jBJZhA==
+	2AB+M/PmUMKeW8e1s13hUrW6/+2lZdTuq/nO5hGHVCo=; b=aLHq6++H/eL2l1Nj
+	EBYNwW36AwGo6g3R7caPLDNgWFXIDgd7fIMFxPpi2eaRH8zThfk+VaY1CJlTLJCB
+	EGUUp1LYIEqmJ+zJO1JMtODaMAu+ep66Pcktk8PhFQAllFgMou6oxgP+N9uV7/wQ
+	fHD5AftoKr5HjibYQjplG+cBQHhf9yt2mCzxb/f/3CYHepUceBXIBpRh5HSiyLU3
+	NEO3zddvlTdmNusiWjkY08WGA8jrXRIRjXkmVp/Zw2+baxmRUFpR658y04iBlwWg
+	NlDr2oHYDFrs/7wHttBejpe1+e+2FGVnN36T0OrY7Qp2OyXo97MwS0WaK4BArsBC
+	iyCucQ==
 Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 439trbk627-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43a3faspay-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Dec 2024 02:15:42 +0000 (GMT)
+	Wed, 04 Dec 2024 02:18:28 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B42FfJn000307
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B42ISvJ003944
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Dec 2024 02:15:42 GMT
+	Wed, 4 Dec 2024 02:18:28 GMT
 Received: from [10.216.45.237] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Dec 2024
- 18:15:33 -0800
-Message-ID: <b42e1ec7-11a0-ab6b-c552-86d204dcb041@quicinc.com>
-Date: Wed, 4 Dec 2024 07:45:29 +0530
+ 18:18:19 -0800
+Message-ID: <0a6110c3-0e20-6afb-b266-952ef9c1ff1e@quicinc.com>
+Date: Wed, 4 Dec 2024 07:48:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,9 +66,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 2/3] PCI: dwc: Add ECAM support with iATU configuration
+Subject: Re: [PATCH 3/3] PCI: qcom: Enable ECAM feature based on config size
 Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 CC: <cros-qcom-dts-watchers@chromium.org>,
         Bjorn Andersson
 	<andersson@kernel.org>,
@@ -77,8 +77,6 @@ CC: <cros-qcom-dts-watchers@chromium.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley
 	<conor+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
         Lorenzo Pieralisi
 	<lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
@@ -89,186 +87,154 @@ CC: <cros-qcom-dts-watchers@chromium.org>,
         <quic_mrana@quicinc.com>, <mmareddy@quicinc.com>,
         <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20241203185534.GA2910014@bhelgaas>
+References: <20241117-ecam-v1-0-6059faf38d07@quicinc.com>
+ <20241117-ecam-v1-3-6059faf38d07@quicinc.com>
+ <20241202165349.iwaqfugyewyq6or2@thinkpad>
 From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20241203185534.GA2910014@bhelgaas>
+In-Reply-To: <20241202165349.iwaqfugyewyq6or2@thinkpad>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CPnu4dIKNOho9qE0pdApt9yBJ8mIhRzr
-X-Proofpoint-ORIG-GUID: CPnu4dIKNOho9qE0pdApt9yBJ8mIhRzr
+X-Proofpoint-ORIG-GUID: qY7M8vChkdIhR9aJVau0QweJSASVktbH
+X-Proofpoint-GUID: qY7M8vChkdIhR9aJVau0QweJSASVktbH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412040018
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412040018
 
 
 
-On 12/4/2024 12:25 AM, Bjorn Helgaas wrote:
-> On Sun, Nov 17, 2024 at 03:30:19AM +0530, Krishna chaitanya chundru wrote:
->> The current implementation requires iATU for every configuration
->> space access which increases latency & cpu utilization.
+On 12/2/2024 10:23 PM, Manivannan Sadhasivam wrote:
+> On Sun, Nov 17, 2024 at 03:30:20AM +0530, Krishna chaitanya chundru wrote:
+>> Enable the ECAM feature if the config space size is equal to size required
+>> to represent number of buses in the bus range property.
 >>
->> Configuring iATU in config shift mode enables ECAM feature to access the
->> config space, which avoids iATU configuration for every config access.
->>
->> Add "ctrl2" into struct dw_pcie_ob_atu_cfg  to enable config shift mode.
->>
->> As DBI comes under config space, this avoids remapping of DBI space
->> separately. Instead, it uses the mapped config space address returned from
->> ECAM initialization. Change the order of dw_pcie_get_resources() execution
->> to acheive this.
 > 
-> s/acheive/achieve/
+> Please move this change to DWC core.
 > 
->> Introduce new ecam_init() function op for the clients to configure after
->> ecam window creation has been done.
+>> The ELBI registers falls after the DBI space, so use the cfg win returned
+>> from the ecam init to map these regions instead of doing the ioremap again.
+>> ELBI starts at offset 0xf20 from dbi.
+>>
+>> On bus 0, we have only the root complex. Any access other than that should
+>> not go out of the link and should return all F's. Since the IATU is
+>> configured for bus 1 onwards, block the transactions for bus 0:0:1 to
+>> 0:31:7 (i.e., from dbi_base + 4KB to dbi_base + 1MB) from going outside the
+>> link through ecam blocker through parf registers.
 >>
 >> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 >> ---
->>   drivers/pci/controller/dwc/pcie-designware-host.c | 114 ++++++++++++++++++----
->>   drivers/pci/controller/dwc/pcie-designware.c      |   2 +-
->>   drivers/pci/controller/dwc/pcie-designware.h      |   6 ++
->>   3 files changed, 102 insertions(+), 20 deletions(-)
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 104 +++++++++++++++++++++++++++++++--
+>>   1 file changed, 100 insertions(+), 4 deletions(-)
 >>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index 3e41865c7290..e98cc841a2a9 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -418,6 +418,62 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
->>   	}
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index ef44a82be058..266de2aa3a71 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -61,6 +61,17 @@
+>>   #define PARF_DBI_BASE_ADDR_V2_HI		0x354
+>>   #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
+>>   #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
+>> +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
+>> +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
+>> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
+>> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
+>> +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
+>> +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
+>> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
+>> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
+>> +#define PARF_ECAM_BASE				0x380
+>> +#define PARF_ECAM_BASE_HI			0x384
+>> +
+>>   #define PARF_NO_SNOOP_OVERIDE			0x3d4
+>>   #define PARF_ATU_BASE_ADDR			0x634
+>>   #define PARF_ATU_BASE_ADDR_HI			0x638
+>> @@ -68,6 +79,8 @@
+>>   #define PARF_BDF_TO_SID_TABLE_N			0x2000
+>>   #define PARF_BDF_TO_SID_CFG			0x2c00
+>>   
+>> +#define ELBI_OFFSET				0xf20
+>> +
+>>   /* ELBI registers */
+>>   #define ELBI_SYS_CTRL				0x04
+>>   
+>> @@ -84,6 +97,7 @@
+>>   
+>>   /* PARF_SYS_CTRL register fields */
+>>   #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
+>> +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
+>>   #define MST_WAKEUP_EN				BIT(13)
+>>   #define SLV_WAKEUP_EN				BIT(12)
+>>   #define MSTR_ACLK_CGC_DIS			BIT(10)
+>> @@ -293,15 +307,68 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+>>   	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
 >>   }
 >>   
->> +static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
+>> +static int qcom_pci_config_ecam_blocker(struct dw_pcie_rp *pp)
+> 
+> 'config_ecam_blocker' is one of the use of this function, not the only one. So
+> use something like, 'qcom_pci_config_ecam()'.
+> 
 >> +{
 >> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct dw_pcie_ob_atu_cfg atu = {0};
->> +	struct resource_entry *bus;
->> +	int ret, bus_range_max;
+>> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+>> +	u64 addr, addr_end;
+>> +	u32 val;
 >> +
->> +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
+>> +	/* Set the ECAM base */
+>> +	writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
+>> +	writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
 >> +
 >> +	/*
->> +	 * Bus 1 config space needs type 0 atu configuration
->> +	 * Remaining buses need type 1 atu configuration
+>> +	 * On bus 0, we have only the root complex. Any access other than that
+>> +	 * should not go out of the link and should return all F's. Since the
+>> +	 * IATU is configured for bus 1 onwards, block the transactions for
+>> +	 * bus 0:0:1 to 0:31:7 (i.e from dbi_base + 4kb to dbi_base + 1MB) from
 > 
-> s/atu/ATU/ (initialism, looks like "iATU" might be appropriate here?)
+> s/"for bus 0:0:1 to 0:31:7"/"starting from 0:0.1 to 0:31:7"
 > 
-> I'm confused about the bus numbering; you refer to "bus 1" and "bus
-> 2".  Is bus 1 the root bus, i.e., the primary bus of a Root Port?
-> 
-> The root bus number would typically be 0, not 1, and is sometimes
-> programmable.  I don't know how the DesignWare core works, but since
-> you have "bus" here, referring to "bus 1" and "bus 2" here seems
-> overly specific.
-> 
-root bus is bus 0 and we don't need any iATU configuration for it as
-its config space is accessible from the system memory, for usp port of
-the switch or the direct the endpoint i.e bus 1 we need to send
-Configuration Type 0 requests and for other buses we need to send
-Configuration Type 1 requests this is as per PCIe spec, I will try to
-include PCIe spec details in next patch.
+>> +	 * going outside the link.
 >> +	 */
->> +	atu.index = 0;
->> +	atu.type = PCIE_ATU_TYPE_CFG0;
->> +	atu.cpu_addr = pp->cfg0_base + SZ_1M;
->> +	atu.size = SZ_1M;
->> +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
->> +	ret = dw_pcie_prog_outbound_atu(pci, &atu);
->> +	if (ret)
->> +		return ret;
+>> +	addr = pci->dbi_phys_addr + SZ_4K;
+>> +	writel(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
+>> +	writel(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
 >> +
->> +	bus_range_max = bus->res->end - bus->res->start + 1;
+>> +	writel(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
+>> +	writel(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
 >> +
->> +	/* Configure for bus 2 - bus_range_max in type 1 */
->> +	atu.index = 1;
->> +	atu.type = PCIE_ATU_TYPE_CFG1;
->> +	atu.cpu_addr = pp->cfg0_base + SZ_2M;
->> +	atu.size = (SZ_1M * (bus_range_max - 2));
->> +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
->> +	return dw_pcie_prog_outbound_atu(pci, &atu);
->> +}
+>> +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
 >> +
->> +static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *res)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct device *dev = pci->dev;
->> +	struct resource_entry *bus;
+>> +	writel(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
+>> +	writel(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
 >> +
->> +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
->> +	if (!bus)
->> +		return -ENODEV;
+>> +	writel(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
+>> +	writel(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
 >> +
->> +	pp->cfg = pci_ecam_create(dev, res, bus->res, &pci_generic_ecam_ops);
->> +	if (IS_ERR(pp->cfg))
->> +		return PTR_ERR(pp->cfg);
->> +
->> +	pci->dbi_base = pp->cfg->win;
->> +	pci->dbi_phys_addr = res->start;
->> +
->> +	if (pp->ops->ecam_init)
->> +		pp->ops->ecam_init(pci, pp->cfg);
-> 
-> .ecam_init() is defined to return int, but you ignore the return value.
-> If it's practical, I think it would be nicer if you could manage to:
-> 
->    - Drop .enable_ecam.
-> 
->    - Have .ecam_init() return failure if there's not enough ECAM space
->      or whatever, i.e., move the qcom_pcie_check_ecam_support() code
->      there.
-> 
->    - Handle .ecam_init() failure here by doing whatever we did before.
-> 
-> If there's no useful return value from .ecam_init(), make it void.
-> 
-In controller driver we need to skip few thing if we want to enable
-this feature before calling dw_pcie_host_init, better to have this way
+>> +	val = readl(pcie->parf + PARF_SYS_CTRL);
+>> +	val |= PCIE_ECAM_BLOCKER_EN;
+>> +	writel(val, pcie->parf + PARF_SYS_CTRL);
 >> +	return 0;
 >> +}
-> 
->> @@ -454,6 +499,30 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   
->>   	pp->bridge = bridge;
->>   
->> +	pp->cfg0_size = resource_size(res);
->> +	pp->cfg0_base = res->start;
 >> +
->> +	if (!pp->enable_ecam) {
+>> +static int qcom_pcie_ecam_init(struct dw_pcie *pci, struct pci_config_window *cfg)
+>> +{
+>> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+>> +
+>> +	pcie->elbi = pci->dbi_base + ELBI_OFFSET;
 > 
-> If you can't get rid of .enable_ecam, reverse order so this uses
-> positive logic:
+> Can't you derive this offset from DT?
 > 
->    if (pp->enable_ecam) {
->      ...
->    } else {
->      ...
->    }
-> 
-ack.
+> - Mani
+instread of macro & dt In the next patch we will read a parf register
+which will give the offset value from dbi, PARF_SLV_DBI_ELBI (0x1C001B4)
 
 - Krishna Chaitanya.
->> +		pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
->> +		if (IS_ERR(pp->va_cfg0_base))
->> +			return PTR_ERR(pp->va_cfg0_base);
->> +
->> +		/* Set default bus ops */
->> +		bridge->ops = &dw_pcie_ops;
->> +		bridge->child_ops = &dw_child_pcie_ops;
->> +		bridge->sysdata = pp;
->> +	} else {
->> +		ret = dw_pcie_create_ecam_window(pp, res);
->> +		if (ret)
->> +			return ret;
->> +		bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
->> +		pp->bridge->sysdata = pp->cfg;
->> +	}
 > 
 
