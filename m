@@ -1,60 +1,53 @@
-Return-Path: <linux-pci+bounces-17712-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 779099E4877
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 00:11:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 270D19E48BF
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 00:24:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EA3D1880522
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 23:11:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02E191625BD
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 23:24:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92F8F1F543E;
-	Wed,  4 Dec 2024 23:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 694141AE876;
+	Wed,  4 Dec 2024 23:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YT0nZoWG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfY7YeTL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4E91917D7;
-	Wed,  4 Dec 2024 23:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436E819DFB4
+	for <linux-pci@vger.kernel.org>; Wed,  4 Dec 2024 23:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733353859; cv=none; b=b/vlm+4BMhPkQAvU71MLp9Pt7ZPK/dqKGW6JNzY8aO8r5XEoDr4TBEOVqjgmZGPSxHxronkCiExW0gifYDxqMZ0pscWXKAks6QkbSNF6JMNSCnwK3/DT9RGdKxC2L+FWnlTPD2EUIJS0Tm/ujjdYhwyt9VBKn88hTD1L3snGvgM=
+	t=1733354664; cv=none; b=VOn+FjOjBSQTZ3A0ReXI4U55/Vb1p4tUdfWBtMokMjZT0RAlb9Yfl+bZzFMAa+xZDgt9Tsh4pvrog/K8JBW+rHoSYMk44OR6ZyP+OPbhbAFFD7m2Is+/zEjYSQYNW79Pkjg1HvM06E/9VtL51C11V/RklmXcCtHeAphE1lXLMj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733353859; c=relaxed/simple;
-	bh=7XpoUhfG8MJEb4Fmy8iGPH/58klFSTC5STKYSZRdPQ4=;
+	s=arc-20240116; t=1733354664; c=relaxed/simple;
+	bh=+9AI+rMMgHRCt+EBap5GONiFWkgoLxWThPoitwPQODE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UtzD4Hu8sSL/8ZgxaCQk4phASol2w72vC09M2DFQ57yxnDfbaBHy/o4DyqisNPSGVMphEr/6OMKEESIWfXjVvrbHIlR0Iyj2GHZzTZ/ujC1oVBFiTKrmE13BGDWStG1rI50m5sdfcSF9gd7ovQ4yQZcOU94a6OyXZABA/QOh120=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YT0nZoWG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4CD4C4CECD;
-	Wed,  4 Dec 2024 23:10:58 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=JOmd00/rk/s0auGyda8JGO84Ebk9v1q68Lu8dT4/mNCTZaxUfrZy12/S0NtA+8DISUC2zi2B8bS2EaUd8++sh05NKO0QU/V4+0305bvvX81kdl92/DCnfOOFj+4RzjG1usKBoUK0F/0xrEdZCuidZK5ENroT/dzodJPRdDA0jPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfY7YeTL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0F1C4CECD;
+	Wed,  4 Dec 2024 23:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733353858;
-	bh=7XpoUhfG8MJEb4Fmy8iGPH/58klFSTC5STKYSZRdPQ4=;
+	s=k20201202; t=1733354664;
+	bh=+9AI+rMMgHRCt+EBap5GONiFWkgoLxWThPoitwPQODE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YT0nZoWGHpepu2vQiyPAF527lbR3ZNU77EGCUanhHJ0GR2NX7HGuJ2Zcb2mUNzvN9
-	 F0vxJRbNdB7uch7LnST0dlKcrNVXV2rRPnX5/pjMkYHsQwObfG416NeTW+IBsCQqPg
-	 FniktmAElhIppocLFaR7yyGbgV7qYGKzQdCvHK6ZyRCbMMwBmFKYWcKbGc5s+TCi4d
-	 zPcdCptwyvqZBi5y7YdqUYIiIT4OCGmLc5hQpZdZXHLrq2V32fvtkAp/jYIe4iiYp/
-	 BO9vfBmSMRdZiJh9024capOJ3W+pTRtag30efwd9yB8ccNh3mb592XD2iyNJKwHaUK
-	 teATnJWy4pbJQ==
-Date: Wed, 4 Dec 2024 17:10:57 -0600
+	b=JfY7YeTLkeZFoKUax964CjKq05GEbcYuB1qdg5b5JAaMwADaOffNEbiiB42YmE/B/
+	 u4zA8fH1elVXpQO/MmI19Jv2kFNFyfFJPNoxRB8dIrL1sRk5CJ7kbisUvnRh+LEZb4
+	 gSL0VFX4xKtgw6s5TpXyQhaoPSj2PpmNr2LeBdIzJ9qUfvVm9o5xZKp5CBaolx2v0I
+	 1dYHE3dp/AwibWkYr5hN4vH56cw3wcD3PaLsBGZu0DPeJ8FU1Y6+X/jqvRhInTsNbD
+	 mhD+RD+i4GTzdIlsZvtDpJfHACDLCgHUVvslVzqI2D27DxVu8amFOLHqeFAt9GFcue
+	 dnKnALeVbUVxw==
+Date: Wed, 4 Dec 2024 17:24:22 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
-	andersson@kernel.org, konradybcio@kernel.org,
-	p.zabel@pengutronix.de, quic_nsekar@quicinc.com,
-	dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	Praveenkumar I <quic_ipkumar@quicinc.com>
-Subject: Re: [PATCH v2 4/6] pci: qcom: Add support for IPQ5332
-Message-ID: <20241204231057.GA3026683@bhelgaas>
+To: alucerop@amd.com
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	alison.schofield@intel.com
+Subject: Re: [PATCH] resource: harden resource_contains
+Message-ID: <20241204232422.GA3027254@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,51 +56,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241204113329.3195627-5-quic_varada@quicinc.com>
+In-Reply-To: <20241129091512.15661-1-alucerop@amd.com>
 
-On Wed, Dec 04, 2024 at 05:03:27PM +0530, Varadarajan Narayanan wrote:
-> From: Praveenkumar I <quic_ipkumar@quicinc.com>
+On Fri, Nov 29, 2024 at 09:15:12AM +0000, alucerop@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> The Qualcomm IPQ5332 PCIe controller instances are based on
-> SNPS core 5.90a with Gen3 Single-lane and Dual-lane support.
-> The Qualcomm IP can be handled by the 2.9.0 ops, hence using
-> that for IPQ5332.
+> While resource_contains checks for IORESOURCE_UNSET flag for the
+> resources given, if r1 was initialized with 0 size, the function
+> returns a false positive. This is so because resource start and
+> end fields are unsigned with end initialised to size - 1 by current
+> resource macros.
+> 
+> Make the function to check for the resource size for both resources
+> since r2 with size 0 should not be considered as valid for the function
+> purpose.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
 
-If you have occasion to update this series, please update the subject
-to follow the drivers/pci convention (use "git log --oneline
-drivers/pci/controller/dwc/pcie-qcom.c" and match the capitalization
-style):
+Seems reasonable to me.  FWIW,
 
-  PCI: qcom: Add IPQ5332 support
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 > ---
-> v2: Removed dependency on [1]
+>  include/linux/ioport.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> 1. https://lore.kernel.org/all/20230519090219.15925-1-quic_devipriy@quicinc.com/
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index dc102d8bd58c..68e6f97535db 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1835,6 +1835,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
->  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
->  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
-> +	{ .compatible = "qcom,pcie-ipq5332", .data = &cfg_2_9_0 },
->  	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
->  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 6e9fb667a1c5..6cb8a8494508 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -264,6 +264,8 @@ static inline unsigned long resource_ext_type(const struct resource *res)
+>  /* True iff r1 completely contains r2 */
+>  static inline bool resource_contains(const struct resource *r1, const struct resource *r2)
+>  {
+> +	if (!resource_size(r1) || !resource_size(r2))
+> +		return false;
+>  	if (resource_type(r1) != resource_type(r2))
+>  		return false;
+>  	if (r1->flags & IORESOURCE_UNSET || r2->flags & IORESOURCE_UNSET)
 > -- 
-> 2.34.1
+> 2.17.1
 > 
-> 
-> -- 
-> linux-phy mailing list
-> linux-phy@lists.infradead.org
-> https://lists.infradead.org/mailman/listinfo/linux-phy
 
