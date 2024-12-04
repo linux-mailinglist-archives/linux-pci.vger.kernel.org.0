@@ -1,194 +1,207 @@
-Return-Path: <linux-pci+bounces-17694-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0A1D9E426D
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 18:53:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95B571697CA
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 17:53:43 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53AA23874A;
-	Wed,  4 Dec 2024 17:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="biuZ1QDD"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BAAC9E41A9
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 18:32:32 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC57A238740;
-	Wed,  4 Dec 2024 17:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733332439; cv=none; b=YTb6u0eR8DQ3OM+5oyHonh53dUmaYJgs92rhgVlu2g+nVBYZ0RcRp5dbm8g94tVUl9Gx0waYUFOU1BA0v8ijSoXyZi3S1u+XP3sfo2wVAcOpx5v20Lp5IojYsyv6gFY+buJMty1BzkhfpstgyvHkug2yOUt7VNXoLc/S2iWcOFE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733332439; c=relaxed/simple;
-	bh=nL2jMgDplLnwuxZm04PTOAyEHPsJP4TvdbcDsPszNz0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t3Tpv+XzxN/2TW4RGtkwQAxJs0ZGXlRfo9yUcWhmegC2Y5Qkj6/8RMabpIA2l1piazMVjWuaAnlyqDHPbq7N6UVQrUpAHQhpsxcysV61YsLlaZQLPN2arnewuBL3CW8l+lsgRTXwVDAeJMT8WiHlljcNS9Z2EH3lIdnR2qvS3bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=biuZ1QDD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C903C4CED6;
-	Wed,  4 Dec 2024 17:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733332439;
-	bh=nL2jMgDplLnwuxZm04PTOAyEHPsJP4TvdbcDsPszNz0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=biuZ1QDDk7fsopP28DAxA9qhHGr7nV/eggEk4rPBRSNZL/toh96MK7o7WClDp3QKY
-	 hcw1RhRcyvXnea6kz08MCexDh0fqnuDhSnMBXY3W6gk1A6Eh0gNR9Q68JE5JxNKnk8
-	 2h09lAVbCCNY0tTaYwdslUfa1C2M5hFLv9q5lB+uy3qV5Z6Izy59JbSQQHbQvzkrgW
-	 k5BmpB8eZcRwqiKjC2/1V5OEV/eVo7sDf2LNT4hdlx7fcoy81BILJIyegIeSiB/YXE
-	 S/OaTF4FTgwnuT6/g+JX5IV3S/qw4qqxePw1zQPo+WKX90isBOvMh3uBYr1+W8gipu
-	 294t22P1tfnfQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Amey Narkhede <ameynarkhede03@gmail.com>,
-	Sasha Levin <sashal@kernel.org>,
-	mariusz.tkaczyk@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19] PCI: Add 'reset_subordinate' to reset hierarchy below bridge
-Date: Wed,  4 Dec 2024 11:02:36 -0500
-Message-ID: <20241204160239.2217532-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7500B24ED8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2024 16:35:35 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5473182D9;
+	Wed,  4 Dec 2024 16:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CITSfbab"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2073.outbound.protection.outlook.com [40.107.22.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CB54A28;
+	Wed,  4 Dec 2024 16:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733330132; cv=fail; b=jWN38ya8mOnpUCPpOjz6nfqfQKHrN/i9bQEhBZM1E1GToX++6cowfDs2jdzNtDnWYgF/e7koWndEXQKAI51prSSfi2HUYF6ldWGJ77AsPdyd4Kh6N5ZT+VdiJU9i163QgXLKIsKMOmLLcIqAqq8H7Xf259lRZt45HbJ9/t2zCOU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733330132; c=relaxed/simple;
+	bh=A5WmZu++0CYRHoBKnYb4HMSlpFxdRFL70ldALhSo4fI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tg2EWZ6UcuC1JHXBUUPPcSh7dZqVEZQyfs8Jk6xvqljTDSHGIZVdOJdTrW+yIYeHrJllYS8GhJUTCr0pzKgcL6SgnZ0wW2uuRRQrU98KMy0K8UWsQa5GH/Q86K36a1hRT0ip1Ez8yHStTQlovxmJZYwUYHDkcNGFigUGWuNvPk0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CITSfbab; arc=fail smtp.client-ip=40.107.22.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iTEf4tSk6KdC+nV26yWRdWYy+arBm1dhETD6ZUpZKOUVn1cc0aSlcmEun6Nj1Xgqrg7S5112gSGUGJ0bmQm7y7o+qWd+D8VWegYWHr8zhcBA2KpJ9Kf9r1ACchkvDlE/5RsjNWwZAOa5BlBfRM9Enms8CgGgNRX7LArLpvhh8qRXgev2BzjnCgqc9IbusEZLkKBuRvopT7JVhF+LCJjZEIKhoCkm96oihI/FlBAsKJN627CHcwXaAwrkmzixLFujYu3rJuhRpfh5OrKAvLAUxfdidw5JOpWr2Arnga9ZNTN6qli/CnEVw8gjds3312BE0EfhmMBJ1iZnjvXcdlOu5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rsIBRYUuFM0899T9WNw8x3+NfNa18s1BEWfwk2AcC7E=;
+ b=MsCOrMd0QkfEXVgRFPJID0KEMNcjBy2Q7QOfmJGcGVea0C+BxxMUz2ZSe9cQEi3Dr+y3uY0ip+aC3fOkCKbBpvfqh0MDWxnx0002P94JnkyFYiOkVFnSxT6feoXFDAvw5LPyJDZXv9jYmnTjCBXJaxZ46rwstEKZ9m0Gv/e6DpdVrgoidL9Dtk/XFhM58Z0YBzgNkgpIxD0oyXXdn7Zg6cW9Y5hObG8I5aDui/+SRNS7QB6TYowfmHsVIpctcDcxOWbA9SZheJSj669RSemFqgQVgOY3KMa5hBeHShEhjGVUPouR9foPvVgWNoDxMKn6JR1N2bTbQjBnzro+dI+zGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rsIBRYUuFM0899T9WNw8x3+NfNa18s1BEWfwk2AcC7E=;
+ b=CITSfbabPsN8MoMS8JL1NJq1vONYee0sCNxiYG1PebxdNb3W1i6BeMQ7CshZuJNc/4H2KMo2UKLqsq+bnSOb4FPAlojgRr/XnuiQP80FG6D43aGmMdsimFfOeUmcxDzkEEG4fvP9ATanWW0hjTmJKx9qNYMjH0eSPbGSB8zHyegaOE66E1/8jZ3UfKlHoo64o5acmetfo0RRxKJvuqgjrsfP/w4OwGnYBlKXExL0abq8B4tqEvPccwZ62BfKbHweCwDZbnhmXqLn27mve+ZxCpc9YTz5e04zLTvgvmBpNlDGGkATuDJ9Odif1BE34Bcj/Qo4OKIRPApehgzy3W0WmA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI0PR04MB10807.eurprd04.prod.outlook.com (2603:10a6:800:25a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.10; Wed, 4 Dec
+ 2024 16:35:28 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8207.017; Wed, 4 Dec 2024
+ 16:35:28 +0000
+Date: Wed, 4 Dec 2024 11:35:20 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Subject: Re: [PATCH 1/2] PCI: host-generic: Allow {en,dis}able_device() to be
+ provided via pci_ecam_ops
+Message-ID: <Z1CEyAJn8OnxEHUO@lizhi-Precision-Tower-5810>
+References: <20241204150145.800408-1-maz@kernel.org>
+ <20241204150145.800408-2-maz@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241204150145.800408-2-maz@kernel.org>
+X-ClientProxiedBy: BYAPR02CA0065.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::42) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.324
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10807:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc05042d-89b0-41b8-8156-08dd1481a944
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|376014|7416014|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Cf9Bh60T2hKpfgaAagypNZiiu9wRSb2uszIxf89AIn1mzqCY3Vuio/yx8Slh?=
+ =?us-ascii?Q?wSPxpkGkpzBbbL78aNJURvw0Hqnli14aiCq5VP167/8UFNtkUxExDguQxIzU?=
+ =?us-ascii?Q?t0dqqKICmWlBn+x0o67g6dFFWV6Q43kkT94HuVgX1D5tBS4uD+2lD+HKozPC?=
+ =?us-ascii?Q?VU7I0ftQBTgnrP3i3TL6hHgjanvuEhu+VBck6YV4jAHsZLRvyINnkbF0moGR?=
+ =?us-ascii?Q?PrWUIoPRvitEmF68F0UUOIuZNYPE0F6oIooy2AhWRmkFdssj5fCy559NlOMH?=
+ =?us-ascii?Q?94vB93HcZk03b06nmJZklgiQR73OzGUa7oNiFTuwgetU24ZiPYnqjS0/jdpD?=
+ =?us-ascii?Q?m0zRNCC2XoIR510CLNsXEb67udCF3hCvHEasxPw2TCswgOyxRwUacCsK/BGt?=
+ =?us-ascii?Q?WgYoU7b5w9CIQU8wSdooB9uhpB7GDMXB6roM/Wo1EsmNc30j6GfBds3VAb4a?=
+ =?us-ascii?Q?Pk8o5MOjpMzWIir8e1tPA4LXKnZLjq/EANuAiZZ6J0WQUwlWirhsfflhSvxu?=
+ =?us-ascii?Q?iBbelRc8TUq/oBCzxUXDyGxZ9s2PXw4XaZDbvK0S7qHLnLodmEi9zOFJc3a3?=
+ =?us-ascii?Q?yBNcU2pNIulX2l/qC7FSdwTi0mp265r5zSYoVnovPW4cux5TAbqlRIwe+BcA?=
+ =?us-ascii?Q?IpgwYmFjqCCVGLT+n2nYhAL67O3d7V3D3t0GcEQ3OYEMvxPCKu6in68BSx4W?=
+ =?us-ascii?Q?GHNmYzEL0p1b70pd45iAM449RTGriOjLFD2yhurFrtCTd3GioZZvRH5jPu7A?=
+ =?us-ascii?Q?h2pIBbNz/wMsLFYiRDcAxMMOYjP+0rObDekui6u10m2Xi3bf9lv/7bugYqtA?=
+ =?us-ascii?Q?rm5XLIYaOvD5qIzELN0Jhjgi8pM2VyJU0fDur0bEejC16g8LNqEvoR/IyJe2?=
+ =?us-ascii?Q?biO55exvl7zwvtic15gv96Hwdw8G4ig6H6OFQSmfij/rsyOteEqNGvDBw5w5?=
+ =?us-ascii?Q?Qipp5nSVkzMK2THUMj/+i5lxyz3vmQ+GBAV0bwCwXcTC310Zx9/qXTc2qOZr?=
+ =?us-ascii?Q?/HNouR8Hk4vkvR5oDmRsA9y9s/LeMRfeJSefhcadHVt2RmO3qFgLZcVwCrAr?=
+ =?us-ascii?Q?kqGEf2ci0nn1l25rOBjwHtRNUcQjs0pnhjL2i4XwuuyCyc+PwswPv+V7+5wm?=
+ =?us-ascii?Q?md4NONp6bCG4Vv2WO0Ek0Ig84v8cJb4xXdSoadzFqueapY+x5R5OdNPGjL24?=
+ =?us-ascii?Q?7YTupB2gRg6gM2EDjqnsloxu3v3Qtevf7lXf3d5lJPYh6+5Y179IS2snd1ZQ?=
+ =?us-ascii?Q?sfO5CO5o6JKF1tEsfI6eO2WR5V6ysSxpH+xQdMG/by3lftqG4YytjaCRUX5W?=
+ =?us-ascii?Q?1xImtjaICuKQMcAqdO3Io/ZVpILRd1JLXD9Cy9T8jUsPzLhnR+bI0m3YOvzC?=
+ =?us-ascii?Q?o1dpUWF5wMvyr2ZhyHI8ew45GrBlnr3MEe4i9vHljbVcUUnT3g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(7416014)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tc2pAVrsuyrm09cgv5su3siSeXOtGTsp+FnP+2cmxdwznCL/MVrcESNPd3tK?=
+ =?us-ascii?Q?u8guosWCXfcBfpDNnPbsiyOozbqXFES0AlFaWlhTWGk5lzL9jfNCVoAgH59T?=
+ =?us-ascii?Q?Mgbx/YwBF7f5432QT/n5vIcBWPzPHxRL9JdbF1K72JFapfJNV1gifzilwNgT?=
+ =?us-ascii?Q?2NfiNyD5wVGiX9DvU+jqPuGcoj4Li7vXy+wf6IQhNolpgzTZ1SGtsNwIWOxj?=
+ =?us-ascii?Q?+USCyAq/p7SnOYqS7XK5D2f8yfezdruWd9UImdn5ZIcfWypoV5tWhGQgT+LP?=
+ =?us-ascii?Q?gI8vZ42F5nAcK9GexYZc0YD8/K+lls6LodZ7Q0Z7IE37th/UAFClS+VH7IN8?=
+ =?us-ascii?Q?FrR+tdBbK9gxVAwU3qZhdMbJUmEofvxbxVTef+ZMdZfZQmhPj1XJC5d4D7cA?=
+ =?us-ascii?Q?2go4CGif4HWjdB5dZ8/C1CvU85GdQ51O07Enl6kiqSZXa0CpYdyFsINAb+db?=
+ =?us-ascii?Q?JRyRTeow5PHZ4Vn3ihIeN5yt7OakXIHUEvvblwIaH8Ybidilv4kJHmWSeBbJ?=
+ =?us-ascii?Q?D4bxtuMGN1/7FLFn1jKs3sghOoVXN1PoP2LdL3aFJERyl98mf2lJnJoq2TF5?=
+ =?us-ascii?Q?fx1YOQIsIJxtHyPaoyPSHJKnbpM3taJYzNQ3S2jCIYM/40EighNhOqvLTb1P?=
+ =?us-ascii?Q?WQ2CruQ5NBOLF9Icu0BW0oUsEtmx+lPvDo49ozx2CcmiDhaZ9i2o5aZ2O+ZR?=
+ =?us-ascii?Q?/3HsXBYkOFw1Y/a2hmQbDVj1xzynLUHnCojPpbIJ2s0IQEAXf4Sbx1VynX08?=
+ =?us-ascii?Q?1VDq6w74IV1grCMXYec0bCVN0yiZKlM67UpLPOGLtzQKMiln7sEGmKLJzkt9?=
+ =?us-ascii?Q?/N75EzODgYZS45PSm/bwADZqT5HPoYiVW8Shn218MiGIMfE5NPWS3SOaHZ2/?=
+ =?us-ascii?Q?kmxKG6wqBy9pLFpgTRg6WHlcAZaql901hddbycf0cm3I3ofJ11vdxf5c5S26?=
+ =?us-ascii?Q?TUaI2wM5eX43OsB1OY6M8ARfs6MwbuDflRavgckFDDe3tUGIX0T8v8AIRZT6?=
+ =?us-ascii?Q?C1eqTGNJ5ZekfalBHtwgXo/uxjUvDRkxn20R5OHbRVYcIx9RLWwpsh1/uB9R?=
+ =?us-ascii?Q?Ef4cZrpTn0g+jtYsM/PANiJfMXDjvXN/5NIaJLmgn9puWeCYdf0eNkwE3MQO?=
+ =?us-ascii?Q?dmlgKWpu+HbdhnpZXVC6y/PUoXSxO0XZOhbgfD7nCKnohyp+734nGkSI0q7W?=
+ =?us-ascii?Q?GwnypcfuGHSg6S1sE6NqA8KIjmD0PJHDnI9Wus7dv7hxcwvYXY4gOZLXpYGi?=
+ =?us-ascii?Q?VsD31GrgdsdsLtmQ5Eg72U9Dosz5vk4/nhfDEwSJNNJ0RI+ydE0tfqLBNN6E?=
+ =?us-ascii?Q?tTPATN0kodVugQhKEBNe6NiAaVaxsMr8Wvr3zEhj1LUQEqZB0LXXkG1gCUbr?=
+ =?us-ascii?Q?0xSumoqKs5qEwt8DLqujL+cVBbJh0GbrO8JiHgfEqu7b17OXNbF+rWrBkG89?=
+ =?us-ascii?Q?eclWNJVOZBN9rwF9TfDG3WfVZkMFhjwOdck2oVBV/WvI0KPiVUJSt6bgv+ME?=
+ =?us-ascii?Q?cI029niPjVzxOfeurzKAFzdmgg6EA/aQiqEDHZ7Rl8HUYJQb2MntT2KJK7QO?=
+ =?us-ascii?Q?7PgpjUWA7Wejfky19pmmYQ+fjAfc4eaXmna4X/2m?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc05042d-89b0-41b8-8156-08dd1481a944
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 16:35:28.0800
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bhtnVA21dzEkvUTBwrNlnDr2mvsrLMwxdJB263kWPEctviZzExu7T4YGhV9LouPq7XTLwFqX/4aaRdzDyj+OAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10807
 
-From: Keith Busch <kbusch@kernel.org>
+On Wed, Dec 04, 2024 at 03:01:44PM +0000, Marc Zyngier wrote:
+> In order to let host controller drivers using the host-generic
+> infrastructure use the {en,dis}able_device() callbacks that can
+> be used to configure sideband RID mapping hardware, provide these
+> two callbacks as part of the pci_ecap_ops structure.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 2fa046449a82a7d0f6d9721dd83e348816038444 ]
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-The "bus" and "cxl_bus" reset methods reset a device by asserting Secondary
-Bus Reset on the bridge leading to the device.  These only work if the
-device is the only device below the bridge.
-
-Add a sysfs 'reset_subordinate' attribute on bridges that can assert
-Secondary Bus Reset regardless of how many devices are below the bridge.
-
-This resets all the devices below a bridge in a single command, including
-the locking and config space save/restore that reset methods normally do.
-
-This may be the only way to reset devices that don't support other reset
-methods (ACPI, FLR, PM reset, etc).
-
-Link: https://lore.kernel.org/r/20241025222755.3756162-1-kbusch@meta.com
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-[bhelgaas: commit log, add capable(CAP_SYS_ADMIN) check]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Amey Narkhede <ameynarkhede03@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/ABI/testing/sysfs-bus-pci | 11 +++++++++++
- drivers/pci/pci-sysfs.c                 | 26 +++++++++++++++++++++++++
- drivers/pci/pci.c                       |  2 +-
- drivers/pci/pci.h                       |  1 +
- 4 files changed, 39 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 44d4b2be92fd4..c68d1d9a4d479 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -125,6 +125,17 @@ Description:
- 		will be present in sysfs.  Writing 1 to this file
- 		will perform reset.
- 
-+What:		/sys/bus/pci/devices/.../reset_subordinate
-+Date:		October 2024
-+Contact:	linux-pci@vger.kernel.org
-+Description:
-+		This is visible only for bridge devices. If you want to reset
-+		all devices attached through the subordinate bus of a specific
-+		bridge device, writing 1 to this will try to do it.  This will
-+		affect all devices attached to the system through this bridge
-+		similiar to writing 1 to their individual "reset" file, so use
-+		with caution.
-+
- What:		/sys/bus/pci/devices/.../vpd
- Date:		February 2008
- Contact:	Ben Hutchings <bwh@kernel.org>
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index f68798763af8d..d5287dfac9171 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -507,6 +507,31 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
- }
- static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
- 
-+static ssize_t reset_subordinate_store(struct device *dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct pci_bus *bus = pdev->subordinate;
-+	unsigned long val;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	if (kstrtoul(buf, 0, &val) < 0)
-+		return -EINVAL;
-+
-+	if (val) {
-+		int ret = __pci_reset_bus(bus);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return count;
-+}
-+static DEVICE_ATTR_WO(reset_subordinate);
-+
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
- 				    struct device_attribute *attr,
-@@ -778,6 +803,7 @@ static struct attribute *pci_dev_attrs[] = {
- static struct attribute *pci_bridge_attrs[] = {
- 	&dev_attr_subordinate_bus_number.attr,
- 	&dev_attr_secondary_bus_number.attr,
-+	&dev_attr_reset_subordinate.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index aa2be8d815048..e22040c8a0aec 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5295,7 +5295,7 @@ EXPORT_SYMBOL_GPL(pci_probe_reset_bus);
-  *
-  * Same as above except return -EAGAIN if the bus cannot be locked
-  */
--static int __pci_reset_bus(struct pci_bus *bus)
-+int __pci_reset_bus(struct pci_bus *bus)
- {
- 	int rc;
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 39725b71300f8..1db9b8ff6043d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -36,6 +36,7 @@ int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
- int pci_probe_reset_function(struct pci_dev *dev);
- int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
- int pci_bus_error_reset(struct pci_dev *dev);
-+int __pci_reset_bus(struct pci_bus *bus);
- 
- /**
-  * struct pci_platform_pm_ops - Firmware PM callbacks
--- 
-2.43.0
-
+> ---
+>  drivers/pci/controller/pci-host-common.c | 2 ++
+>  include/linux/pci-ecam.h                 | 4 ++++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index cf5f59a745b37..f441bfd6f96a8 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -75,6 +75,8 @@ int pci_host_common_probe(struct platform_device *pdev)
+>
+>  	bridge->sysdata = cfg;
+>  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
+> +	bridge->enable_device = ops->enable_device;
+> +	bridge->disable_device = ops->disable_device;
+>  	bridge->msi_domain = true;
+>
+>  	return pci_host_probe(bridge);
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index 3a4860bd27586..3a10f8cfc3ad5 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -45,6 +45,10 @@ struct pci_ecam_ops {
+>  	unsigned int			bus_shift;
+>  	struct pci_ops			pci_ops;
+>  	int				(*init)(struct pci_config_window *);
+> +	int				(*enable_device)(struct pci_host_bridge *,
+> +							 struct pci_dev *);
+> +	void				(*disable_device)(struct pci_host_bridge *,
+> +							  struct pci_dev *);
+>  };
+>
+>  /*
+> --
+> 2.39.2
+>
 
