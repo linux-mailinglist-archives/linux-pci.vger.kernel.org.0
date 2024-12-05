@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-17770-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17771-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 063409E5831
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:16:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5AF39E5834
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:16:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04EE31884212
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:16:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1B7316372B
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0E0218AC0;
-	Thu,  5 Dec 2024 14:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D6E21A43B;
+	Thu,  5 Dec 2024 14:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGBaFtCo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhcZvTYq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A95A17579;
-	Thu,  5 Dec 2024 14:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274A217579;
+	Thu,  5 Dec 2024 14:15:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733408154; cv=none; b=SfCyAFi56zsYGJj8edbGzT1vAisVM1cpxc4mjQ8vWJXm/XC6ZslaUs6qZM4pZL1Uvh2Z8CuzcFI3oHvnpKIkEPFPjq8HGU1G5ZLSiPnqt2vws77uF2wbJ8znaoHmhJXyc333RsjsZXAeN/7fAe3l8/7iobDvVb6u0+ei9+hENH8=
+	t=1733408160; cv=none; b=ZLpx2KOTYxXEiEBVjBhXjMYtaQta+GtvYZspGBtm1R/6IVrYLHPx1jZX6mVO7sF6VxjJTWBaG2X60mNOPL8DrcZl5T4caxB9GpWl0GyNmQ0cWyeOwHaPGaNvRJ1yK0ar2+H1kXexdaQGCNugnNtoJq1oPHOr/EHcLMIeqtza5/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733408154; c=relaxed/simple;
-	bh=KzaLlrMOSYV96pirchpaX9zp5w3CHhhYNXDvSJp4QvQ=;
+	s=arc-20240116; t=1733408160; c=relaxed/simple;
+	bh=UY79Fyz+WjTgpTgNuQWqioy0XVY37/7qviisSR+YttE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BqCcmpqbrH5FGD3SM3pjR3YuQUrRq8TfaHefxMhl8ePuHoT4BQnEz3GjZ+8xvxYUEotNHXospZq4NJ5VpnvjLU5wb4PFMsgrE7288ZwzAxPrxJI4SULSTSQTH9hgSlHfmrXsIqO7dFrz9YsOV3JYW3U9z3eraKePOB0GQKqUBdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGBaFtCo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D03DC4CEDC;
-	Thu,  5 Dec 2024 14:15:47 +0000 (UTC)
+	 MIME-Version; b=TJG0wbC/s7mDFKA5ITseFHuqeAsESP/6zC/KH0nv/txl9OZwfymtHSZA5olOnNIo0ySbnBkYdYegsiqUpRl0T16mbOpZWCvqZT4jRGzjo0bZ3f4rY7TgOX3yWte1c1xQRl0Il5E7ISvxnD0h3+WJ7c/abitbfb9NQo4Vp9Mbovw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhcZvTYq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F1FC4CED1;
+	Thu,  5 Dec 2024 14:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733408153;
-	bh=KzaLlrMOSYV96pirchpaX9zp5w3CHhhYNXDvSJp4QvQ=;
+	s=k20201202; t=1733408159;
+	bh=UY79Fyz+WjTgpTgNuQWqioy0XVY37/7qviisSR+YttE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IGBaFtCowUHZdIlxpTOCKXngVKHdfZBRRuPJaJmFyLMSPv6ziFnPg7v1pKpci/73F
-	 +5tSuAup0lPU7CwUunY8LozDOOXIcvqRBsoUd09B1Sp5UDi5LPsxrpZZgjBYdDt8l9
-	 5f3T7tqJOuNeLk4AASZ9tdfSXpZgwVKioaS6LTNCeGUuNkIbTysfOh+WK+YXBDAo2/
-	 LYF1RCv67QACacIcR9moO0M5E4uObzBZHPtNXFUeCDzcqyfzH2IdO3FJtXbrPtEtpl
-	 7HRHaQFASh/AfvqV7AJgz8nXGWNGw3I/I3ZFRyuaBWvyPCaDLQBx2DKX5wSqYW1zUz
-	 lCWJUlIK4gnZw==
+	b=fhcZvTYqEca+xNdFEzSigpcAnNoP3ajZRvW77/Sr9wqeaoCSgLIxwSbfsTAEKWg/G
+	 An/XSWFBYIE6tvY2w7D2b10eJHuxV3eylOTcGbYe/MJuATc3y/Hb2Tv3NHEOja6hGF
+	 yar2KpMzLuLCYTksL/WqIbRH+mm0BGITmvP2Q32fqApNmwSxDEnolwCuw8GN6hJFF2
+	 kct1w11zfglJ4yPpDQ2cX9KqJKtniFCpUtvA0ezUyfEu4q+OM5yXcwvbuIt4IbtfWp
+	 YaTToiTIb6XqKUBB/g4//3hVZIYBf4TTzhFyMAkwuyhFcaAPM1JX8tQKG4R+6H8R22
+	 /YdXAfJNvNBVg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -71,10 +71,11 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 01/13] rust: pass module name to `Module::init`
-Date: Thu,  5 Dec 2024 15:14:32 +0100
-Message-ID: <20241205141533.111830-2-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Subject: [PATCH v4 02/13] rust: implement generic driver registration
+Date: Thu,  5 Dec 2024 15:14:33 +0100
+Message-ID: <20241205141533.111830-3-dakr@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241205141533.111830-1-dakr@kernel.org>
 References: <20241205141533.111830-1-dakr@kernel.org>
@@ -86,205 +87,183 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In a subsequent patch we introduce the `Registration` abstraction used
-to register driver structures. Some subsystems require the module name on
-driver registration (e.g. PCI in __pci_register_driver()), hence pass
-the module name to `Module::init`.
+Implement the generic `Registration` type and the `DriverOps` trait.
 
+The `Registration` structure is the common type that represents a driver
+registration and is typically bound to the lifetime of a module. However,
+it doesn't implement actual calls to the kernel's driver core to register
+drivers itself.
+
+Instead the `DriverOps` trait is provided to subsystems, which have to
+implement `DriverOps::register` and `DrvierOps::unregister`. Subsystems
+have to provide an implementation for both of those methods where the
+subsystem specific variants to register / unregister a driver have to
+implemented.
+
+For instance, the PCI subsystem would call __pci_register_driver() from
+`DriverOps::register` and pci_unregister_driver() from
+`DrvierOps::unregister`.
+
+Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/block/rnull.rs          |  2 +-
- rust/kernel/lib.rs              | 14 ++++++++++----
- rust/kernel/net/phy.rs          |  2 +-
- rust/kernel/sync/lock/global.rs |  6 ++++--
- rust/macros/lib.rs              |  6 ++++--
- rust/macros/module.rs           |  7 +++++--
- samples/rust/rust_minimal.rs    |  2 +-
- samples/rust/rust_print_main.rs |  2 +-
- 8 files changed, 27 insertions(+), 14 deletions(-)
+ MAINTAINERS           |   1 +
+ rust/kernel/driver.rs | 120 ++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs    |   1 +
+ 3 files changed, 122 insertions(+)
+ create mode 100644 rust/kernel/driver.rs
 
-diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
-index 5de7223beb4d..0e0e9ed7851e 100644
---- a/drivers/block/rnull.rs
-+++ b/drivers/block/rnull.rs
-@@ -36,7 +36,7 @@ struct NullBlkModule {
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1e930c7a58b1..085b20dc5c0b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7031,6 +7031,7 @@ F:	include/linux/kobj*
+ F:	include/linux/property.h
+ F:	lib/kobj*
+ F:	rust/kernel/device.rs
++F:	rust/kernel/driver.rs
  
- impl kernel::Module for NullBlkModule {
--    fn init(_module: &'static ThisModule) -> Result<Self> {
-+    fn init(_name: &'static CStr, _module: &'static ThisModule) -> Result<Self> {
-         pr_info!("Rust null_blk loaded\n");
-         let tagset = Arc::pin_init(TagSet::new(1, 256, 1), flags::GFP_KERNEL)?;
- 
+ DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
+ M:	Nishanth Menon <nm@ti.com>
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+new file mode 100644
+index 000000000000..3ec0ba0556a1
+--- /dev/null
++++ b/rust/kernel/driver.rs
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Generic support for drivers of different buses (e.g., PCI, Platform, Amba, etc.).
++//!
++//! Each bus / subsystem is expected to implement [`RegistrationOps`], which allows drivers to
++//! register using the [`Registration`] class.
++
++use crate::error::{Error, Result};
++use crate::{init::PinInit, str::CStr, try_pin_init, types::Opaque, ThisModule};
++use core::pin::Pin;
++use macros::{pin_data, pinned_drop};
++
++/// The [`RegistrationOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform,
++/// Amba, etc.) to provide the corresponding subsystem specific implementation to register /
++/// unregister a driver of the particular type (`RegType`).
++///
++/// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
++/// `bindings::__pci_register_driver` from `RegistrationOps::register` and
++/// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`.
++pub trait RegistrationOps {
++    /// The type that holds information about the registration. This is typically a struct defined
++    /// by the C portion of the kernel.
++    type RegType: Default;
++
++    /// Registers a driver.
++    ///
++    /// On success, `reg` must remain pinned and valid until the matching call to
++    /// [`RegistrationOps::unregister`].
++    fn register(
++        reg: &mut Self::RegType,
++        name: &'static CStr,
++        module: &'static ThisModule,
++    ) -> Result;
++
++    /// Unregisters a driver previously registered with [`RegistrationOps::register`].
++    fn unregister(reg: &mut Self::RegType);
++}
++
++/// A [`Registration`] is a generic type that represents the registration of some driver type (e.g.
++/// `bindings::pci_driver`). Therefore a [`Registration`] must be initialized with a type that
++/// implements the [`RegistrationOps`] trait, such that the generic `T::register` and
++/// `T::unregister` calls result in the subsystem specific registration calls.
++///
++///Once the `Registration` structure is dropped, the driver is unregistered.
++#[pin_data(PinnedDrop)]
++pub struct Registration<T: RegistrationOps> {
++    #[pin]
++    reg: Opaque<T::RegType>,
++}
++
++// SAFETY: `Registration` has no fields or methods accessible via `&Registration`, so it is safe to
++// share references to it with multiple threads as nothing can be done.
++unsafe impl<T: RegistrationOps> Sync for Registration<T> {}
++
++// SAFETY: Both registration and unregistration are implemented in C and safe to be performed from
++// any thread, so `Registration` is `Send`.
++unsafe impl<T: RegistrationOps> Send for Registration<T> {}
++
++impl<T: RegistrationOps> Registration<T> {
++    /// Creates a new instance of the registration object.
++    pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Self, Error> {
++        try_pin_init!(Self {
++            reg <- Opaque::try_ffi_init(|ptr: *mut T::RegType| {
++                // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write.
++                unsafe { ptr.write(T::RegType::default()) };
++
++                // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write, and it has
++                // just been initialised above, so it's also valid for read.
++                let drv = unsafe { &mut *ptr };
++
++                T::register(drv, name, module)
++            }),
++        })
++    }
++}
++
++#[pinned_drop]
++impl<T: RegistrationOps> PinnedDrop for Registration<T> {
++    fn drop(self: Pin<&mut Self>) {
++        // SAFETY: The existence of the `Registration` guarantees that `self.reg.get()` is properly
++        // aligned and points to a valid value.
++        let drv = unsafe { &mut *self.reg.get() };
++
++        T::unregister(drv);
++    }
++}
++
++/// A kernel module that only registers the given driver on init.
++///
++/// This is a helper struct to make it easier to define single-functionality modules, in this case,
++/// modules that offer a single driver.
++#[pin_data]
++pub struct Module<T: RegistrationOps> {
++    #[pin]
++    _driver: Registration<T>,
++}
++
++impl<T: RegistrationOps + Sync + Send> crate::InPlaceModule for Module<T> {
++    fn init(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Self, Error> {
++        try_pin_init!(Self {
++            _driver <- Registration::<T>::new(name, module),
++        })
++    }
++}
++
++/// Declares a kernel module that exposes a single driver.
++///
++/// It is meant to be used as a helper by other subsystems so they can more easily expose their own
++/// macros.
++#[macro_export]
++macro_rules! module_driver {
++    (<$gen_type:ident>, $driver_ops:ty, { type: $type:ty, $($f:tt)* }) => {
++        type Ops<$gen_type> = $driver_ops;
++        type ModuleType = $crate::driver::Module<Ops<$type>>;
++        $crate::prelude::module! {
++            type: ModuleType,
++            $($f)*
++        }
++    }
++}
 diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index e1065a7551a3..686db6aa3323 100644
+index 686db6aa3323..0a719396256f 100644
 --- a/rust/kernel/lib.rs
 +++ b/rust/kernel/lib.rs
-@@ -90,7 +90,7 @@ pub trait Module: Sized + Sync + Send {
-     /// should do.
-     ///
-     /// Equivalent to the `module_init` macro in the C API.
--    fn init(module: &'static ThisModule) -> error::Result<Self>;
-+    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
- }
- 
- /// A module that is pinned and initialised in-place.
-@@ -98,13 +98,19 @@ pub trait InPlaceModule: Sync + Send {
-     /// Creates an initialiser for the module.
-     ///
-     /// It is called when the module is loaded.
--    fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error>;
-+    fn init(
-+        name: &'static str::CStr,
-+        module: &'static ThisModule,
-+    ) -> impl init::PinInit<Self, error::Error>;
- }
- 
- impl<T: Module> InPlaceModule for T {
--    fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error> {
-+    fn init(
-+        name: &'static str::CStr,
-+        module: &'static ThisModule,
-+    ) -> impl init::PinInit<Self, error::Error> {
-         let initer = move |slot: *mut Self| {
--            let m = <Self as Module>::init(module)?;
-+            let m = <Self as Module>::init(name, module)?;
- 
-             // SAFETY: `slot` is valid for write per the contract with `pin_init_from_closure`.
-             unsafe { slot.write(m) };
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index b89c681d97c0..0f41df2e6b96 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -903,7 +903,7 @@ struct Module {
-                 [$($crate::net::phy::create_phy_driver::<$driver>()),+];
- 
-             impl $crate::Module for Module {
--                fn init(module: &'static ThisModule) -> Result<Self> {
-+                fn init(_name: &'static CStr, module: &'static ThisModule) -> Result<Self> {
-                     // SAFETY: The anonymous constant guarantees that nobody else can access
-                     // the `DRIVERS` static. The array is used only in the C side.
-                     let drivers = unsafe { &mut DRIVERS };
-diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
-index 480ee724e3cc..feff4638e20b 100644
---- a/rust/kernel/sync/lock/global.rs
-+++ b/rust/kernel/sync/lock/global.rs
-@@ -187,6 +187,7 @@ pub fn get_mut(&mut self) -> &mut T {
- /// ```
- /// # mod ex {
- /// # use kernel::prelude::*;
-+/// # use kernel::str;
- /// kernel::sync::global_lock! {
- ///     // SAFETY: Initialized in module initializer before first use.
- ///     unsafe(uninit) static MY_COUNTER: Mutex<u32> = 0;
-@@ -199,7 +200,7 @@ pub fn get_mut(&mut self) -> &mut T {
- /// }
- ///
- /// impl kernel::Module for MyModule {
--///     fn init(_module: &'static ThisModule) -> Result<Self> {
-+///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
- ///         // SAFETY: Called exactly once.
- ///         unsafe { MY_COUNTER.init() };
- ///
-@@ -216,6 +217,7 @@ pub fn get_mut(&mut self) -> &mut T {
- /// # mod ex {
- /// # use kernel::prelude::*;
- /// use kernel::sync::{GlobalGuard, GlobalLockedBy};
-+/// # use kernel::str;
- ///
- /// kernel::sync::global_lock! {
- ///     // SAFETY: Initialized in module initializer before first use.
-@@ -239,7 +241,7 @@ pub fn get_mut(&mut self) -> &mut T {
- /// }
- ///
- /// impl kernel::Module for MyModule {
--///     fn init(_module: &'static ThisModule) -> Result<Self> {
-+///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
- ///         // SAFETY: Called exactly once.
- ///         unsafe { MY_MUTEX.init() };
- ///
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index 4ab94e44adfe..d669f9cd1726 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -32,6 +32,7 @@
- ///
- /// ```
- /// use kernel::prelude::*;
-+/// use kernel::str;
- ///
- /// module!{
- ///     type: MyModule,
-@@ -45,7 +46,7 @@
- /// struct MyModule(i32);
- ///
- /// impl kernel::Module for MyModule {
--///     fn init(_module: &'static ThisModule) -> Result<Self> {
-+///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
- ///         let foo: i32 = 42;
- ///         pr_info!("I contain:  {}\n", foo);
- ///         Ok(Self(foo))
-@@ -65,6 +66,7 @@
- ///
- /// ```
- /// use kernel::prelude::*;
-+/// use kernel::str;
- ///
- /// module!{
- ///     type: MyDeviceDriverModule,
-@@ -78,7 +80,7 @@
- /// struct MyDeviceDriverModule;
- ///
- /// impl kernel::Module for MyDeviceDriverModule {
--///     fn init(_module: &'static ThisModule) -> Result<Self> {
-+///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
- ///         Ok(Self)
- ///     }
- /// }
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index 2587f41b0d39..1f14ef55341a 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -333,8 +333,11 @@ mod __module_init {{
-                     ///
-                     /// This function must only be called once.
-                     unsafe fn __init() -> kernel::ffi::c_int {{
--                        let initer =
--                            <{type_} as kernel::InPlaceModule>::init(&super::super::THIS_MODULE);
-+                        let initer = <{type_} as kernel::InPlaceModule>::init(
-+                            kernel::c_str!(\"{name}\"),
-+                            &super::super::THIS_MODULE
-+                        );
-+
-                         // SAFETY: No data race, since `__MOD` can only be accessed by this module
-                         // and there only `__init` and `__exit` access it. These functions are only
-                         // called once and `__exit` cannot be called before or during `__init`.
-diff --git a/samples/rust/rust_minimal.rs b/samples/rust/rust_minimal.rs
-index 4aaf117bf8e3..1577dc34e563 100644
---- a/samples/rust/rust_minimal.rs
-+++ b/samples/rust/rust_minimal.rs
-@@ -17,7 +17,7 @@ struct RustMinimal {
- }
- 
- impl kernel::Module for RustMinimal {
--    fn init(_module: &'static ThisModule) -> Result<Self> {
-+    fn init(_name: &'static CStr, _module: &'static ThisModule) -> Result<Self> {
-         pr_info!("Rust minimal sample (init)\n");
-         pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
- 
-diff --git a/samples/rust/rust_print_main.rs b/samples/rust/rust_print_main.rs
-index aed90a6feecf..0853d767439b 100644
---- a/samples/rust/rust_print_main.rs
-+++ b/samples/rust/rust_print_main.rs
-@@ -41,7 +41,7 @@ fn arc_print() -> Result {
- }
- 
- impl kernel::Module for RustPrint {
--    fn init(_module: &'static ThisModule) -> Result<Self> {
-+    fn init(_name: &'static CStr, _module: &'static ThisModule) -> Result<Self> {
-         pr_info!("Rust printing macros sample (init)\n");
- 
-         pr_emerg!("Emergency message (level 0) without args\n");
+@@ -35,6 +35,7 @@
+ mod build_assert;
+ pub mod cred;
+ pub mod device;
++pub mod driver;
+ pub mod error;
+ #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
+ pub mod firmware;
 -- 
 2.47.0
 
