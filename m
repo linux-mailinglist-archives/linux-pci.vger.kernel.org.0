@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-17808-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17809-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26D0B9E607C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 23:24:08 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75F799E607D
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 23:24:15 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68FCA28430E
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 22:24:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BE4A16A7AF
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 22:24:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C3881CCEEC;
-	Thu,  5 Dec 2024 22:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66BDE1C878E;
+	Thu,  5 Dec 2024 22:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a9X6R9qI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C+7kMcVS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298F91C878E
-	for <linux-pci@vger.kernel.org>; Thu,  5 Dec 2024 22:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B312E1BD51B
+	for <linux-pci@vger.kernel.org>; Thu,  5 Dec 2024 22:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733437446; cv=none; b=OVCsbc9sqDu90UzTzxW3iVmmdSAhqyCUYNdDANaGaYxIhtmFWRrkp4EWyCTY0qXQqYZjaRkMi3dFsbKBMFlt5c1DX/N+Myg5YSQwD09Et9YnaTpdrFY7uBNNEBtEYlmd8b1VdDAUFV+H0YSHKoUmXncXE7znb+WA4z3WOu94Pv0=
+	t=1733437451; cv=none; b=NeyjecKux006XKh9UbytcpofwHH9js4keEjw/s7EKuiB59sY9/BrvahjmaGjkG3Nr4iye8xFV7liaxEZ3ZUcqE4v7kLONUYQK095RSwcOx5GnGAWTQgv64GynGY+sKGnVCIYvM8ZGcmDbxkA2KOWu3INgsAeO0OvV32O/0Ye4RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733437446; c=relaxed/simple;
-	bh=Ctr3y6WelSUKaqCbghukVrA6vcI0M1eDXAmBvq79rXI=;
+	s=arc-20240116; t=1733437451; c=relaxed/simple;
+	bh=+k2d4np08krIYuCxOkZ6CLhFSEDzFgxDvVHfbkVQxM0=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=krNOMNdBjpfBwc6BpG2slIyuMv/PuARq8f/ubaaqERg/9oaVP7x+qEVe00WBYRrqJSFM6UkilA5KSwybQzAZ6+U2j3ZOdM0/j8LKyhZzk3Ib53Br0y5Kzwz0VVMlRJ+nEGZDgIJreJyH2QuqUkCFtw47DEsDBIwvr4QIE1O4nfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a9X6R9qI; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=gMniPYkW1qMWOkrmijsipBnvnzw00H1F8wOR9GNwnhaoLyrUODX6jGT1ylF0LrPnESCvR+hppPb7cZqohHjk3k1WV591WpPgtIQg02ItN/Wmzdnix960wVkFzuBUMs4Up/UWmbKXzZdGOwLqmxS9dyryJs6YSRoWCUOpokPpJKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C+7kMcVS; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733437444; x=1764973444;
+  t=1733437450; x=1764973450;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Ctr3y6WelSUKaqCbghukVrA6vcI0M1eDXAmBvq79rXI=;
-  b=a9X6R9qI45yjtfd+RmKWWwnHVBle66FkpEkcNUGhXAWIJ5jbjBh4g1Si
-   9jPBEcQwrIaz9AGOXbjAmtnthSp5iT20cFu9imUyb3e+gT6l7kGugPm7j
-   MFgBwxjPTPWfrm6i0RDWwsvKp2h7FmTF1v8K/722uaUO2VMDH3eMH7qfx
-   EZ7Hauet9lg93WTYuvfSZj/CoAep01X0CwRZpADl8pcskl/HBdvFAz5We
-   jZUg/hZ0jOI5+DzkHU8OrlNOErKWtAAbQtCem960luEnRDtvHsUBQnJG7
-   atKMdGpUATLlxC1Km1n5mAOLxFVnAUVl01moRxvoRobFFm1XzLqvmqYJ9
+  bh=+k2d4np08krIYuCxOkZ6CLhFSEDzFgxDvVHfbkVQxM0=;
+  b=C+7kMcVS66idWI+OLxambHIqE5KvpWjSZxPJpX7r5hUZZ1bXbTGgnfEt
+   0C9KCrumwbKkVAU3K92EGA+XzRWwgJPb7LyjzCA8SFnLT4rjhiydtn571
+   OAIHDHIf1RE7p1ckPqvXKGIUwSPRSdf3gLiqBDlne6yJjRgj6+u8vJdgk
+   AwxpS5RZ3BaPxbQiSybuuLn8I78xJkL6GJFNIOr843G7hNS+l20W/b6Xw
+   qgjvw25Jj0zV/t07UWri9aeZ6lizWeQE81L431dpFJ/GpZkp5gmGQPGeQ
+   6+xOoB/TzsItQrkaTjuERMxdVOhLFvkZ4a+aoh4bkfiB/Km1aGmExDKAK
    w==;
-X-CSE-ConnectionGUID: b7QmWeFASMiiohi+y/dAtg==
-X-CSE-MsgGUID: 1OKt9urlRKOrWrTJqfcSZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33910458"
+X-CSE-ConnectionGUID: AZIxBQ60T1yg5BOuXCnefg==
+X-CSE-MsgGUID: xJEW+3AiRdyMHUVy7NztcA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="44802861"
 X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
-   d="scan'208";a="33910458"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 14:24:04 -0800
-X-CSE-ConnectionGUID: Z3GBsMxVSlWKu9pCivJc0A==
-X-CSE-MsgGUID: fB3wgmR7RquEJzGiDHVTDA==
+   d="scan'208";a="44802861"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 14:24:09 -0800
+X-CSE-ConnectionGUID: gWJd4ZfXQZqK7NOQbyptaw==
+X-CSE-MsgGUID: Jivy9iZaSfKJttcDIFw1KA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
-   d="scan'208";a="99050170"
+   d="scan'208";a="99301844"
 Received: from kcaccard-desk.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.108.178])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 14:24:03 -0800
-Subject: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 14:24:10 -0800
+Subject: [PATCH 09/11] PCI/IDE: Report available IDE streams
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-coco@lists.linux.dev
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
  Samuel Ortiz <sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>,
  Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
  gregkh@linuxfoundation.org
-Date: Thu, 05 Dec 2024 14:24:02 -0800
-Message-ID: <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
+Date: Thu, 05 Dec 2024 14:24:08 -0800
+Message-ID: <173343744869.1074769.12345445223792172558.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
 References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -79,381 +79,180 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-There are two components to establishing an encrypted link, provisioning
-the stream in config-space, and programming the keys into the link layer
-via the IDE_KM (key management) protocol. These helpers enable the
-former, and are in support of TSM coordinated IDE_KM. When / if native
-IDE establishment arrives it will share this same config-space
-provisioning flow, but for now IDE_KM, in any form, is saved for a
-follow-on change.
-
-With the TSM implementations of SEV-TIO and TDX Connect in mind this
-abstracts small differences in those implementations. For example, TDX
-Connect handles Root Port registers updates while SEV-TIO expects System
-Software to update the Root Port registers. This is the rationale for
-the PCI_IDE_SETUP_ROOT_PORT flag.
-
-The other design detail for TSM-coordinated IDE establishment is that
-the TSM manages allocation of stream-ids, this is why the stream_id is
-passed in to pci_ide_stream_setup().
-
-The flow is:
-
-pci_ide_stream_probe()
-  Gather stream settings (devid and address filters)
-pci_ide_stream_setup()
-  Program the stream settings into the endpoint, and optionally Root Port)
-pci_ide_enable_stream()
-  Run the stream after IDE_KM
-
-In support of system administrators auditing where platform IDE stream
-resources are being spent, the allocated stream is reflected as a
-symlink from the host-bridge to the endpoint.
-
-Thanks to Wu Hao for a draft implementation of this infrastructure.
+The limited number of link-encryption (IDE) streams that a given set of
+host-bridges supports is a platform specific detail. Provide
+pci_set_nr_ide_streams() as a generic facility for either platform TSM
+drivers, or in the future PCI core native IDE, to report the number
+available streams. After invoking pci_set_nr_ide_streams() an
+"available_secure_streams" attribute appears in PCI Host Bridge sysfs to
+convey how many streams are available for IDE establishment.
 
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Lukas Wunner <lukas@wunner.de>
 Cc: Samuel Ortiz <sameo@rivosinc.com>
-Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
-Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- .../ABI/testing/sysfs-devices-pci-host-bridge      |   28 +++
- drivers/pci/ide.c                                  |  192 ++++++++++++++++++++
- drivers/pci/pci.h                                  |    4 
- drivers/pci/probe.c                                |    1 
- include/linux/pci-ide.h                            |   33 +++
- include/linux/pci.h                                |    4 
- 6 files changed, 262 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-pci-host-bridge
- create mode 100644 include/linux/pci-ide.h
+ .../ABI/testing/sysfs-devices-pci-host-bridge      |   11 +++++
+ drivers/pci/ide.c                                  |   46 ++++++++++++++++++++
+ drivers/pci/pci.h                                  |    3 +
+ drivers/pci/probe.c                                |   11 ++++-
+ include/linux/pci.h                                |    9 ++++
+ 5 files changed, 79 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-devices-pci-host-bridge b/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-new file mode 100644
-index 000000000000..15dafb46b176
---- /dev/null
+index 15dafb46b176..1a3249f20e48 100644
+--- a/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
 +++ b/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-@@ -0,0 +1,28 @@
-+What:		/sys/devices/pciDDDDD:BB
-+		/sys/devices/.../pciDDDDD:BB
-+Date:		December, 2024
-+Contact:	linux-pci@vger.kernel.org
-+Description:
-+		A PCI host bridge device parents a PCI bus device topology. PCI
-+		controllers may also parent host bridges. The DDDDD:BB format
-+		convey the PCI domain number and the bus number for root ports
-+		of the host bridge.
+@@ -26,3 +26,14 @@ Description:
+ 		streams can be returned to the available secure streams pool by
+ 		invoking the tsm/disconnect flow. The link points to the
+ 		endpoint PCI device at domain:DDDDD bus:BB device:DD function:F.
 +
-+What:		pciDDDDD:BB/firmware_node
++What:		pciDDDDD:BB/available_secure_streams
 +Date:		December, 2024
 +Contact:	linux-pci@vger.kernel.org
 +Description:
-+		(RO) Symlink to the platform firmware device object "companion"
-+		of the host bridge. For example, an ACPI device with an _HID of
-+		PNP0A08 (/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00).
-+
-+What:		pciDDDDD:BB/streamN:DDDDD:BB:DD:F
-+Date:		December, 2024
-+Contact:	linux-pci@vger.kernel.org
-+Description:
-+		(RO) When a host-bridge has established a secure connection,
-+		typically PCIe IDE, between a host-bridge an endpoint, this
-+		symlink appears. The primary function is to account how many
-+		streams can be returned to the available secure streams pool by
-+		invoking the tsm/disconnect flow. The link points to the
-+		endpoint PCI device at domain:DDDDD bus:BB device:DD function:F.
++		(RO) When a host-bridge has root ports that support PCIe IDE
++		(link encryption and integrity protection) there may be a
++		limited number of streams that can be used for establishing new
++		secure links. This attribute decrements upon secure link setup,
++		and increments upon secure link teardown. The in-use stream
++		count is determined by counting stream symlinks.
 diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-index a0c09d9e0b75..c37f35f0d2c0 100644
+index c37f35f0d2c0..0abc19b341ab 100644
 --- a/drivers/pci/ide.c
 +++ b/drivers/pci/ide.c
-@@ -5,6 +5,9 @@
- 
- #define dev_fmt(fmt) "PCI/IDE: " fmt
- #include <linux/pci.h>
-+#include <linux/sysfs.h>
-+#include <linux/pci-ide.h>
-+#include <linux/bitfield.h>
- #include "pci.h"
- 
- static int sel_ide_offset(u16 cap, int stream_id, int nr_ide_mem)
-@@ -71,3 +74,192 @@ void pci_ide_init(struct pci_dev *pdev)
- 	pdev->sel_ide_cap = sel_ide_cap;
+@@ -75,8 +75,54 @@ void pci_ide_init(struct pci_dev *pdev)
  	pdev->nr_ide_mem = nr_ide_mem;
  }
-+
-+void pci_init_host_bridge_ide(struct pci_host_bridge *hb)
+ 
++static ssize_t available_secure_streams_show(struct device *dev,
++					     struct device_attribute *attr,
++					     char *buf)
 +{
-+	hb->ide_stream_res =
-+		DEFINE_RES_MEM_NAMED(0, 0, "IDE Address Association");
-+}
++	struct pci_host_bridge *hb = to_pci_host_bridge(dev);
++	int avail;
 +
-+/*
-+ * Retrieve stream association parameters for devid (RID) and resources
-+ * (device address ranges)
-+ */
-+void pci_ide_stream_probe(struct pci_dev *pdev, struct pci_ide *ide)
-+{
-+	int num_vf = pci_num_vf(pdev);
-+
-+	*ide = (struct pci_ide) { .stream_id = -1 };
-+
-+	if (pdev->fm_enabled)
-+		ide->domain = pci_domain_nr(pdev->bus);
-+	ide->devid_start = pci_dev_id(pdev);
-+
-+	/* for SR-IOV case, cover all VFs */
-+	if (num_vf)
-+		ide->devid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf),
-+					   pci_iov_virtfn_devfn(pdev, num_vf));
-+	else
-+		ide->devid_end = ide->devid_start;
-+
-+	/* TODO: address association probing... */
-+}
-+EXPORT_SYMBOL_GPL(pci_ide_stream_probe);
-+
-+static void __pci_ide_stream_teardown(struct pci_dev *pdev, struct pci_ide *ide)
-+{
-+	int pos;
-+
-+	pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
-+			     pdev->nr_ide_mem);
-+
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, 0);
-+	for (int i = ide->nr_mem - 1; i >= 0; i--) {
-+		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i), 0);
-+		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i), 0);
-+		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i), 0);
-+	}
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, 0);
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, 0);
-+}
-+
-+static void __pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
-+{
-+	int pos;
-+	u32 val;
-+
-+	pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
-+			     pdev->nr_ide_mem);
-+
-+	val = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT_MASK, ide->devid_end);
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, val);
-+
-+	val = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
-+	      FIELD_PREP(PCI_IDE_SEL_RID_2_BASE_MASK, ide->devid_start) |
-+	      FIELD_PREP(PCI_IDE_SEL_RID_2_SEG_MASK, ide->domain);
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
-+
-+	for (int i = 0; i < ide->nr_mem; i++) {
-+		val = FIELD_PREP(PCI_IDE_SEL_ADDR_1_VALID, 1) |
-+		      FIELD_PREP(PCI_IDE_SEL_ADDR_1_BASE_LOW_MASK,
-+				 lower_32_bits(ide->mem[i].start) >>
-+					 PCI_IDE_SEL_ADDR_1_BASE_LOW_SHIFT) |
-+		      FIELD_PREP(PCI_IDE_SEL_ADDR_1_LIMIT_LOW_MASK,
-+				 lower_32_bits(ide->mem[i].end) >>
-+					 PCI_IDE_SEL_ADDR_1_LIMIT_LOW_SHIFT);
-+		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i), val);
-+
-+		val = upper_32_bits(ide->mem[i].end);
-+		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i), val);
-+
-+		val = upper_32_bits(ide->mem[i].start);
-+		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i), val);
-+	}
-+}
-+
-+/*
-+ * Establish IDE stream parameters in @pdev and, optionally, its root port
-+ */
-+int pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide,
-+			 enum pci_ide_flags flags)
-+{
-+	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
-+	struct pci_dev *rp = pcie_find_root_port(pdev);
-+	int mem = 0, rc;
-+
-+	if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
-+		pci_err(pdev, "Setup fail: Invalid stream id: %d\n", ide->stream_id);
++	if (hb->nr_ide_streams < 0)
 +		return -ENXIO;
-+	}
 +
-+	if (test_and_set_bit_lock(ide->stream_id, hb->ide_stream_ids)) {
-+		pci_err(pdev, "Setup fail: Busy stream id: %d\n",
-+			ide->stream_id);
-+		return -EBUSY;
-+	}
-+
-+	ide->name = kasprintf(GFP_KERNEL, "stream%d:%s", ide->stream_id,
-+			      dev_name(&pdev->dev));
-+	if (!ide->name) {
-+		rc = -ENOMEM;
-+		goto err_name;
-+	}
-+
-+	rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, ide->name);
-+	if (rc)
-+		goto err_link;
-+
-+	for (mem = 0; mem < ide->nr_mem; mem++)
-+		if (!__request_region(&hb->ide_stream_res, ide->mem[mem].start,
-+				      range_len(&ide->mem[mem]), ide->name,
-+				      0)) {
-+			pci_err(pdev,
-+				"Setup fail: stream%d: address association conflict [%#llx-%#llx]\n",
-+				ide->stream_id, ide->mem[mem].start,
-+				ide->mem[mem].end);
-+
-+			rc = -EBUSY;
-+			goto err;
-+		}
-+
-+	__pci_ide_stream_setup(pdev, ide);
-+	if (flags & PCI_IDE_SETUP_ROOT_PORT)
-+		__pci_ide_stream_setup(rp, ide);
-+
-+	return 0;
-+err:
-+	for (; mem >= 0; mem--)
-+		__release_region(&hb->ide_stream_res, ide->mem[mem].start,
-+				 range_len(&ide->mem[mem]));
-+	sysfs_remove_link(&hb->dev.kobj, ide->name);
-+err_link:
-+	kfree(ide->name);
-+err_name:
-+	clear_bit_unlock(ide->stream_id, hb->ide_stream_ids);
-+	return rc;
++	avail = hb->nr_ide_streams -
++		bitmap_weight(hb->ide_stream_ids, PCI_IDE_SEL_CTL_ID_MAX + 1);
++	return sysfs_emit(buf, "%d\n", avail);
 +}
-+EXPORT_SYMBOL_GPL(pci_ide_stream_setup);
++static DEVICE_ATTR_RO(available_secure_streams);
 +
-+void pci_ide_enable_stream(struct pci_dev *pdev, struct pci_ide *ide)
++static struct attribute *pci_ide_attrs[] = {
++	&dev_attr_available_secure_streams.attr,
++	NULL,
++};
++
++static umode_t pci_ide_attr_visible(struct kobject *kobj, struct attribute *a, int n)
 +{
-+	int pos;
-+	u32 val;
++	struct device *dev = kobj_to_dev(kobj);
++	struct pci_host_bridge *hb = to_pci_host_bridge(dev);
 +
-+	pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
-+			     pdev->nr_ide_mem);
++	if (a == &dev_attr_available_secure_streams.attr)
++		if (hb->nr_ide_streams < 0)
++			return 0;
 +
-+	val = FIELD_PREP(PCI_IDE_SEL_CTL_ID_MASK, ide->stream_id) |
-+	      FIELD_PREP(PCI_IDE_SEL_CTL_DEFAULT, 1);
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, val);
++	return a->mode;
 +}
-+EXPORT_SYMBOL_GPL(pci_ide_enable_stream);
 +
-+void pci_ide_disable_stream(struct pci_dev *pdev, struct pci_ide *ide)
++struct attribute_group pci_ide_attr_group = {
++	.attrs = pci_ide_attrs,
++	.is_visible = pci_ide_attr_visible,
++};
++
++void pci_set_nr_ide_streams(struct pci_host_bridge *hb, int nr)
 +{
-+	int pos;
-+
-+	pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
-+			     pdev->nr_ide_mem);
-+
-+	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, 0);
++	hb->nr_ide_streams = nr;
++	sysfs_update_group(&hb->dev.kobj, &pci_ide_attr_group);
 +}
-+EXPORT_SYMBOL_GPL(pci_ide_disable_stream);
++EXPORT_SYMBOL_NS_GPL(pci_set_nr_ide_streams, PCI_IDE);
 +
-+void pci_ide_stream_teardown(struct pci_dev *pdev, struct pci_ide *ide,
-+			     enum pci_ide_flags flags)
-+{
-+	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
-+	struct pci_dev *rp = pcie_find_root_port(pdev);
-+
-+	__pci_ide_stream_teardown(pdev, ide);
-+	if (flags & PCI_IDE_SETUP_ROOT_PORT)
-+		__pci_ide_stream_teardown(rp, ide);
-+
-+	for (int i = ide->nr_mem - 1; i >= 0; i--)
-+		__release_region(&hb->ide_stream_res, ide->mem[i].start,
-+				 range_len(&ide->mem[i]));
-+	sysfs_remove_link(&hb->dev.kobj, ide->name);
-+	kfree(ide->name);
-+	clear_bit_unlock(ide->stream_id, hb->ide_stream_ids);
-+}
-+EXPORT_SYMBOL_GPL(pci_ide_stream_teardown);
+ void pci_init_host_bridge_ide(struct pci_host_bridge *hb)
+ {
++	hb->nr_ide_streams = -1;
+ 	hb->ide_stream_res =
+ 		DEFINE_RES_MEM_NAMED(0, 0, "IDE Address Association");
+ }
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6565eb72ded2..b267fabfd542 100644
+index b267fabfd542..76f18b07e081 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -465,8 +465,12 @@ static inline void pci_npem_remove(struct pci_dev *dev) { }
- 
+@@ -466,11 +466,14 @@ static inline void pci_npem_remove(struct pci_dev *dev) { }
  #ifdef CONFIG_PCI_IDE
  void pci_ide_init(struct pci_dev *dev);
-+void pci_init_host_bridge_ide(struct pci_host_bridge *bridge);
+ void pci_init_host_bridge_ide(struct pci_host_bridge *bridge);
++extern struct attribute_group pci_ide_attr_group;
++#define PCI_IDE_ATTR_GROUP (&pci_ide_attr_group)
  #else
  static inline void pci_ide_init(struct pci_dev *dev) { }
-+static inline void pci_init_host_bridge_ide(struct pci_host_bridge *bridge)
-+{
-+}
+ static inline void pci_init_host_bridge_ide(struct pci_host_bridge *bridge)
+ {
+ }
++#define PCI_IDE_ATTR_GROUP NULL
  #endif
  
  #ifdef CONFIG_PCI_TSM
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 6c1fe6354d26..667faa18ced2 100644
+index 667faa18ced2..a85ad3b28028 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -608,6 +608,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- 	bridge->native_dpc = 1;
- 	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
- 	bridge->native_cxl_error = 1;
-+	pci_init_host_bridge_ide(bridge);
- 
- 	device_initialize(&bridge->dev);
+@@ -589,6 +589,16 @@ static void pci_release_host_bridge_dev(struct device *dev)
+ 	kfree(bridge);
  }
-diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
-new file mode 100644
-index 000000000000..24e08a413645
---- /dev/null
-+++ b/include/linux/pci-ide.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+
-+/* PCIe 6.2 section 6.33 Integrity & Data Encryption (IDE) */
-+
-+#ifndef __PCI_IDE_H__
-+#define __PCI_IDE_H__
-+
-+#include <linux/range.h>
-+
-+struct pci_ide {
-+	int domain;
-+	u16 devid_start;
-+	u16 devid_end;
-+	int stream_id;
-+	const char *name;
-+	int nr_mem;
-+	struct range mem[16];
+ 
++static const struct attribute_group *pci_host_bridge_groups[] = {
++	PCI_IDE_ATTR_GROUP,
++	NULL,
 +};
 +
-+void pci_ide_stream_probe(struct pci_dev *pdev, struct pci_ide *ide);
-+
-+enum pci_ide_flags {
-+	PCI_IDE_SETUP_ROOT_PORT = BIT(0),
++static const struct device_type pci_host_bridge_type = {
++	.groups = pci_host_bridge_groups,
++	.release = pci_release_host_bridge_dev,
 +};
 +
-+int pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide,
-+			 enum pci_ide_flags flags);
-+void pci_ide_stream_teardown(struct pci_dev *pdev, struct pci_ide *ide,
-+			     enum pci_ide_flags flags);
-+void pci_ide_enable_stream(struct pci_dev *pdev, struct pci_ide *ide);
-+void pci_ide_disable_stream(struct pci_dev *pdev, struct pci_ide *ide);
-+#endif /* __PCI_IDE_H__ */
+ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+ {
+ 	INIT_LIST_HEAD(&bridge->windows);
+@@ -622,7 +632,6 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+ 		return NULL;
+ 
+ 	pci_init_host_bridge(bridge);
+-	bridge->dev.release = pci_release_host_bridge_dev;
+ 
+ 	return bridge;
+ }
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 10d035395a43..5d9fc498bc70 100644
+index 5d9fc498bc70..eae3d11710db 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -601,6 +601,10 @@ struct pci_host_bridge {
- 	int		domain_nr;
- 	struct list_head windows;	/* resource_entry */
- 	struct list_head dma_ranges;	/* dma ranges resource list */
-+#ifdef CONFIG_PCI_IDE			/* track IDE stream id allocation */
-+	DECLARE_BITMAP(ide_stream_ids, PCI_IDE_SEL_CTL_ID_MAX + 1);
-+	struct resource ide_stream_res; /* track ide stream address association */
-+#endif
+@@ -604,6 +604,7 @@ struct pci_host_bridge {
+ #ifdef CONFIG_PCI_IDE			/* track IDE stream id allocation */
+ 	DECLARE_BITMAP(ide_stream_ids, PCI_IDE_SEL_CTL_ID_MAX + 1);
+ 	struct resource ide_stream_res; /* track ide stream address association */
++	int nr_ide_streams;
+ #endif
  	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
  	int (*map_irq)(const struct pci_dev *, u8, u8);
- 	void (*release_fn)(struct pci_host_bridge *);
+@@ -654,6 +655,14 @@ void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
+ 				 void (*release_fn)(struct pci_host_bridge *),
+ 				 void *release_data);
+ 
++#ifdef CONFIG_PCI_IDE
++void pci_set_nr_ide_streams(struct pci_host_bridge *hb, int nr);
++#else
++static inline void pci_set_nr_ide_streams(struct pci_host_bridge *hb, int nr)
++{
++}
++#endif
++
+ int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge);
+ 
+ #define PCI_REGION_FLAG_MASK	0x0fU	/* These bits of resource flags tell us the PCI region flags */
 
 
