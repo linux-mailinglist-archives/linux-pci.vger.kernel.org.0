@@ -1,264 +1,173 @@
-Return-Path: <linux-pci+bounces-17819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17812-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C669E6273
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 01:49:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60E8B9E6149
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 00:29:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC2CF1884E10
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 00:49:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A37C16A35F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 23:29:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF5FF12EBE7;
-	Fri,  6 Dec 2024 00:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02871CDA1A;
+	Thu,  5 Dec 2024 23:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deFtp5ye"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F992BCFF
-	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 00:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B639C1CDA15;
+	Thu,  5 Dec 2024 23:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733446136; cv=none; b=JFeBCBj2Bc3nEchCde1FI51us7lsmcagYeqX0a1x6OyEqjLi/nEv3O4TA1oswHVlIYGy6wvO3tI+UwQLEavwvHxbJJC5DtZzzzxC5WkjQmS5vdgzOwEP7kCCNjgUyk/WE0kKhkzkfoWVLtmVA21BrvXRRGVpb4niQoWojinlo+M=
+	t=1733441343; cv=none; b=EuqJFU+d4AOA51KdVcBLMW4a5WmUD0q7dc80/7DAKMyEyoVIfO7KwtjoNF/Zdw1XPS/QgQytlSbDdk2mHZr5UYzkD3CDlr7siAWhRNrKy6NmoLQEmpb48qzEPkbMv8NSRBlZdojcvZXDYObJDcXt66wp5X2aAcAbCV+x3XGYUjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733446136; c=relaxed/simple;
-	bh=RDfVKyiGPkxjQWiZXYTMz5EOd1dIdsbHDvSH0iNDcAE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F6FGJsmt1WBUZ3RM9xqOPNoVmAmGN7A0n83LRSkb0Qyn/7kxDwcoJYMLZThE7oWPNac0e1P0kcXN9uUN+6QmJyQZd01iRRW1J5ZWZ/EBDDWLmeP23NE7Tp6bZP9EAgC2g1RPZ9BkdT6FbHTzrNX65kr8tKAmwHIiiskiQChUZMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1733446126-086e2312d5235b0001-0c9NHn
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id IQ6SxxUcIQQpJ0vr (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Fri, 06 Dec 2024 08:48:46 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from ZXSHMBX1.zhaoxin.com (10.28.252.163) by ZXSHMBX1.zhaoxin.com
- (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 6 Dec
- 2024 08:48:45 +0800
-Received: from ZXSHMBX1.zhaoxin.com ([fe80::3066:e339:e3d6:5264]) by
- ZXSHMBX1.zhaoxin.com ([fe80::3066:e339:e3d6:5264%7]) with mapi id
- 15.01.2507.039; Fri, 6 Dec 2024 08:48:45 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Dec
- 2024 19:40:53 +0800
-From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
-	<robert.moore@intel.com>, <avadhut.naik@amd.com>, <yazen.ghannam@amd.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>
-CC: <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
-	<LeoLiu-oc@zhaoxin.com>
-Subject: [PATCH v4 3/3] PCI/ACPI: Add pci_acpi_program_hest_aer_params()
-Date: Thu, 5 Dec 2024 19:40:48 +0800
-X-ASG-Orig-Subj: [PATCH v4 3/3] PCI/ACPI: Add pci_acpi_program_hest_aer_params()
-Message-ID: <20241205114048.60291-4-LeoLiu-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241205114048.60291-1-LeoLiu-oc@zhaoxin.com>
-References: <20241205114048.60291-1-LeoLiu-oc@zhaoxin.com>
+	s=arc-20240116; t=1733441343; c=relaxed/simple;
+	bh=+bqKJcKuzym60bZGjQJ4GJHjOSqCprR+fLaTkzPT5Ew=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FqUHBHza5gOinLnTEM/I4ppUfSUIK6KT6dqiQgAE5zJxsMastOYYVMnlNtZ2pGcmKSkWZxqy34BsQ8mDRc+7kuEpVJrP47Qf8rc//caspnM3DW/FrDzafHG81MVSbjRftABvhzpmXe9Rw4O0ffouVlYLbdw26bzTkxfV5zU6DdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=deFtp5ye; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113D2C4CED1;
+	Thu,  5 Dec 2024 23:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733441343;
+	bh=+bqKJcKuzym60bZGjQJ4GJHjOSqCprR+fLaTkzPT5Ew=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=deFtp5yecINLqt7hqACqQZa9xtYMkfvZ3pYK9207V2ZF5/fe01hdz8xJoILkxKsmg
+	 ot4TK+2A2p464xs/eMmyVle+Yq3PlX9Cup71VwZdzSFJ16+SDADdexq2dCK1tJckbc
+	 tI+alEjKL9qFJmwOBaa1TtSeF8CTgxLAe1gZvo9vJ5ULyDqI9TAjlicQJlU1tWfJ+m
+	 1Uoj5QSBDEzWRnwZmnoM0oGbRN/owKjCrlVJjahrRUDtprmIlTY1bzjGykqyTaKbIl
+	 hKjtEBnOve0/h+w05KpIWRq/cEr0p0jdTLpG2bVuU3hUv52rYnrByxGAosDpoFPWfT
+	 LYDR4dPqTqMxg==
+Date: Thu, 5 Dec 2024 17:29:00 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by
+ the user
+Message-ID: <20241205232900.GA3072557@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Moderation-Data: 12/6/2024 8:48:45 AM
-X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
-X-Barracuda-Start-Time: 1733446126
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 5221
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.134151
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241123090113.semecglxaqjvlmzp@thinkpad>
 
-From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+On Sat, Nov 23, 2024 at 02:31:13PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Nov 22, 2024 at 04:20:50PM -0600, Bjorn Helgaas wrote:
+> > On Mon, Nov 18, 2024 at 01:53:44PM +0530, Manivannan Sadhasivam wrote:
+> > > PCI core allows users to configure the D3Cold state for each PCI
+> > > device through the sysfs attribute
+> > > '/sys/bus/pci/devices/.../d3cold_allowed'. This attribute sets
+> > > the 'pci_dev:d3cold_allowed' flag and could be used by users to
+> > > allow/disallow the PCI devices to enter D3Cold during system
+> > > suspend.
+> > >
+> > > So make use of this flag in the NVMe driver to shutdown the NVMe
+> > > device during system suspend if the user has allowed D3Cold for
+> > > the device.  Existing checks in the NVMe driver decide whether
+> > > to shut down the device (based on platform/device limitations),
+> > > so use this flag as the last resort to keep the existing
+> > > behavior.
+> > > 
+> > > The default behavior of the 'pci_dev:d3cold_allowed' flag is to
+> > > allow D3Cold and the users can disallow it through sysfs if they
+> > > want.
+> > 
+> > What problem does this solve?  I guess there must be a case where
+> > suspend leaves NVMe in a higher power state than you want?
+> 
+> Yeah, this is the case for all systems that doesn't fit into the
+> existing checks in the NVMe suspend path:
+> 
+> 1. ACPI based platforms
+> 2. Controller doesn't support NPSS (hardware issue/limitation)
+> 3. ASPM not enabled
+> 4. Devices/systems setting NVME_QUIRK_SIMPLE_SUSPEND flag
+> 
+> In my case, all the Qualcomm SoCs using Devicetree doesn't fall into
+> the above checks. Hence, they were not fully powered down during
+> system suspend and always in low power state. This means, I cannot
+> achieve 'CX power collapse', a Qualcomm specific SoC powered down
+> state that consumes just enough power to wake up the SoC. Since the
+> controller driver keeps the PCI resource vote because of NVMe, the
+> firmware in the Qualcomm SoCs cannot put the SoC into above
+> mentioned low power state.
 
-Call the func pci_acpi_program_hest_aer_params() for every PCIe device,
-the purpose of this function is to extract register value from HEST PCIe
-AER structures and program them into AER Capabilities. This function
-applies to all hardware platforms that has a PCI Express AER structure
-in HEST.
+IIUC nvme_suspend() has two paths:
 
-Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
----
- drivers/pci/pci-acpi.c | 103 +++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h      |   9 ++++
- drivers/pci/probe.c    |   1 +
- 3 files changed, 113 insertions(+)
+  - Do nvme_disable_prepare_reset() without calling pci_save_state(),
+    so the PCI core chooses and sets the low-power state.
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index af370628e583..6e29af8e6cc4 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -19,6 +19,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/pm_qos.h>
- #include <linux/rwsem.h>
-+#include <acpi/apei.h>
- #include "pci.h"
-=20
- /*
-@@ -806,6 +807,108 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
- 	return -ENODEV;
- }
-=20
-+#ifdef CONFIG_ACPI_APEI
-+/*
-+ * program_hest_aer_common() - configure AER common registers for Root Por=
-ts,
-+ * Endpoints and PCIe to PCI/PCI-X bridges
-+ */
-+static void program_hest_aer_common(struct acpi_hest_aer_common aer_common=
-,
-+				    struct pci_dev *dev, int pos)
-+{
-+	u32 uncor_mask;
-+	u32 uncor_severity;
-+	u32 cor_mask;
-+	u32 adv_cap;
-+
-+	uncor_mask =3D aer_common.uncorrectable_mask;
-+	uncor_severity =3D aer_common.uncorrectable_severity;
-+	cor_mask =3D aer_common.correctable_mask;
-+	adv_cap =3D aer_common.advanced_capabilities;
-+
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, uncor_mask);
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, uncor_severity);
-+	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, cor_mask);
-+	pci_write_config_dword(dev, pos + PCI_ERR_CAP, adv_cap);
-+}
-+
-+static void program_hest_aer_root(struct acpi_hest_aer_root *aer_root,
-+				  struct pci_dev *dev, int pos)
-+{
-+	u32 root_err_cmd;
-+
-+	root_err_cmd =3D aer_root->root_error_command;
-+
-+	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, root_err_cmd);
-+}
-+
-+static void program_hest_aer_bridge(struct acpi_hest_aer_bridge *hest_aer_=
-bridge,
-+				    struct pci_dev *dev, int pos)
-+{
-+	u32 uncor_mask2;
-+	u32 uncor_severity2;
-+	u32 adv_cap2;
-+
-+	uncor_mask2 =3D hest_aer_bridge->uncorrectable_mask2;
-+	uncor_severity2 =3D hest_aer_bridge->uncorrectable_severity2;
-+	adv_cap2 =3D hest_aer_bridge->advanced_capabilities2;
-+
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK2, uncor_mask2);
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER2, uncor_severity2);
-+	pci_write_config_dword(dev, pos + PCI_ERR_CAP2, adv_cap2);
-+}
-+
-+static void program_hest_aer_params(struct hest_parse_aer_info info)
-+{
-+	struct pci_dev *dev;
-+	int port_type;
-+	int pos;
-+	struct acpi_hest_aer_root *hest_aer_root;
-+	struct acpi_hest_aer *hest_aer_endpoint;
-+	struct acpi_hest_aer_bridge *hest_aer_bridge;
-+
-+	dev =3D info.pci_dev;
-+	port_type =3D pci_pcie_type(dev);
-+	pos =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
-+	if (!pos)
-+		return;
-+
-+	switch (port_type) {
-+	case PCI_EXP_TYPE_ROOT_PORT:
-+		hest_aer_root =3D info.hest_aer_root_port;
-+		program_hest_aer_common(hest_aer_root->aer, dev, pos);
-+		program_hest_aer_root(hest_aer_root, dev, pos);
-+	break;
-+	case PCI_EXP_TYPE_ENDPOINT:
-+		hest_aer_endpoint =3D info.hest_aer_endpoint;
-+		program_hest_aer_common(hest_aer_endpoint->aer, dev, pos);
-+	break;
-+	case PCI_EXP_TYPE_PCI_BRIDGE:
-+		hest_aer_bridge =3D info.hest_aer_bridge;
-+		program_hest_aer_common(hest_aer_bridge->aer, dev, pos);
-+		program_hest_aer_bridge(hest_aer_bridge, dev, pos);
-+	break;
-+	default:
-+		return;
-+	break;
-+	}
-+}
-+
-+int pci_acpi_program_hest_aer_params(struct pci_dev *dev)
-+{
-+	struct hest_parse_aer_info info =3D {
-+		.pci_dev =3D dev
-+	};
-+
-+	if (!pci_is_pcie(dev))
-+		return -ENODEV;
-+
-+	if (apei_hest_parse(hest_parse_pcie_aer, &info) =3D=3D 1)
-+		program_hest_aer_params(info);
-+
-+	return 0;
-+}
-+#endif
-+
- /**
-  * pciehp_is_native - Check whether a hotplug port is handled by the OS
-  * @bridge: Hotplug port to check
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2e40fc63ba31..78bdc121c905 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -897,6 +897,15 @@ static inline void pci_save_aer_state(struct pci_dev *=
-dev) { }
- static inline void pci_restore_aer_state(struct pci_dev *dev) { }
- #endif
-=20
-+#ifdef CONFIG_ACPI_APEI
-+int pci_acpi_program_hest_aer_params(struct pci_dev *dev);
-+#else
-+static inline int pci_acpi_program_hest_aer_params(struct pci_dev *dev)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_ACPI
- bool pci_acpi_preserve_config(struct pci_host_bridge *bridge);
- int pci_acpi_program_hp_params(struct pci_dev *dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2e81ab0f5a25..33b8b46ca554 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2304,6 +2304,7 @@ static void pci_configure_device(struct pci_dev *dev)
- 	pci_configure_serr(dev);
-=20
- 	pci_acpi_program_hp_params(dev);
-+	pci_acpi_program_hest_aer_params(dev);
- }
-=20
- static void pci_release_capabilities(struct pci_dev *dev)
---=20
-2.34.1
+  - Put the device in an NVMe-specific low-power state and call
+    pci_save_state(), which prevents the PCI core from putting the
+    device in a low-power state.
 
+    (The PCI core part is in pci_pm_suspend_noirq(),
+    pci_pm_poweroff_noirq(), pci_pm_runtime_suspend())
+
+And I guess you want the first path for basically all systems?  The
+only systems that would use the NVMe-specific path are those where:
+
+  - !pm_suspend_via_firmware() (not an ACPI system), AND
+
+  - ctrl->npss (device supports NVMe power states), AND
+
+  - pcie_aspm_enabled(), AND
+
+  - !NVME_QUIRK_SIMPLE_SUSPEND (it's not something with a weird
+    quirk), AND
+
+  - !pdev->d3cold_allowed (user has cleared it via sysfs)
+
+This frankly seems almost unintelligible to me, so I'm glad I'm not
+responsible for nvme :)
+
+> > I'm not sure the use of pdev->d3cold_allowed here really expresses
+> > your underlying intent.  It suggests that you're really hoping for
+> > D3cold, but that's only a possibility if firmware supports it, and
+> > we have no visibility into that here.
+> 
+> I'm not relying on firmware to do anything here. If firmware has to
+> decide the suspend state, it should already satisfy the
+> pm_suspend_via_firmware() check in nvme_suspend(). ...
+
+I'm confused about this because we want to use PCI core power
+management, which chooses the new state with pci_target_state(),
+which looks like it will choose D3hot unless we're on an ACPI system
+and acpi_pci_choose_state() returns D3cold.
+
+But your system is not an ACPI system, so we should get D3hot, but yet
+you decide based on D3*cold* being allowed?
+
+> Here, the controller driver takes care of putting the device into
+> D3Cold.  Currently, the controller drivers cannot do it (on DT
+> platforms) because of NVMe driver's behavior.
+
+I'm missing the connection to the controller driver (I assume you mean
+qcom-pcie?).  Maybe it's that having the NVMe device in a PCI
+low-power state allows qcom_pcie_suspend_noirq() to reduce the ICC
+bandwidth vote and do other power-saving things?  And it can't do
+those things if we're using the NVMe low-power state because that
+state is not visible to qcom-pcie?
+
+> We did attempt to solve this problem in multiple ways, but the
+> lesson learned was, kernel cannot decide the power mode without help
+> from userspace. That's the reason I wanted to make use of this
+> 'd3cold_allowed' sysfs attribute to allow userspace to override the
+> D3Cold if it wants based on platform requirement.
+
+It seems sub-optimal that this only works how you want if the user
+intervenes.
+
+Bjorn
 
