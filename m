@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-17781-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17782-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F8099E5859
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:19:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2C289E585E
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:19:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDA8916AADB
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:19:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDC011884898
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:19:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEDF21CA17;
-	Thu,  5 Dec 2024 14:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C68621D589;
+	Thu,  5 Dec 2024 14:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/xbT5r7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nT5X3/xV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB6A21C16B;
-	Thu,  5 Dec 2024 14:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C24218EB3;
+	Thu,  5 Dec 2024 14:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733408222; cv=none; b=hrBL2U2VIoVI/NvCwvPlxVo587miJd+DFmRUFGzdI+5OVeWqR9IG5ol/kjtnf3gT5S6mKtQ3voP4mJfaqcdfelmMC86KXfXcl844aJX4NCyyp6PuCZdqTRHtgE1zHEn/r87sYEB2kxNJXb7fBxSH0XYD5lZOU/meHRWvjvkoO6s=
+	t=1733408229; cv=none; b=KIXGTSBJKUfL7CrYPGchgxcE6fZdZL0eqmVm3Qt4zy0zXQYjihart/q5s5o8vIVx/s33u006anEtv5aNRXxP5vsn6PcBd68sDLCfOq6MxYdmiuqUi8iSoXJZqtLZ+JzPtwDsxscJmuBtXmh95ZWTj5avRHMf1DsHpx9eKaOUmsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733408222; c=relaxed/simple;
-	bh=IKX0O1SrOLKu4uiz9usnuC5uo2WtQ/eZrUtXJqx7Uuw=;
+	s=arc-20240116; t=1733408229; c=relaxed/simple;
+	bh=fsQdz0uOY3RAQ4rMNOpTqBJdkc/b5ZHxcuQQNj6yVKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aoaqKIWHJI9AaW2PLdo6dQDrFSv4SeQHp36N88WKDzzVY5TBXfmTDmOeAa2EFK5Y5uyTH1LJjBIIPlZvvTAHVwf101u5olPsKN9RT3+6Warjlg3bwYEiJS3vjZWacCCRuCFfKprXSvQ42d42pgqaVrlszQ/xNhzUGl/QwHZ6z8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/xbT5r7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F908C4CED1;
-	Thu,  5 Dec 2024 14:16:56 +0000 (UTC)
+	 MIME-Version; b=m2nL+hPhS285aRURRejP+XCejoxS1DT6ke818fCI03AjOzau0PBD9sA7GAa4vaWa8tSV1sk2oTEW/tVfWE9Bvf4II8vCR5XlB4/r1JNkAwWWVymHK29BpUM6eH9klERA1z4hpSPsEqSr0qYkJ5OHzJZBiUxyrMH5Eds9hOlKhmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nT5X3/xV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2260C4CEDD;
+	Thu,  5 Dec 2024 14:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733408222;
-	bh=IKX0O1SrOLKu4uiz9usnuC5uo2WtQ/eZrUtXJqx7Uuw=;
+	s=k20201202; t=1733408228;
+	bh=fsQdz0uOY3RAQ4rMNOpTqBJdkc/b5ZHxcuQQNj6yVKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f/xbT5r7dNQ3h6Ewx/n+VlsWzprXiUE2LYdpTH8F1Mcu9dEk6QbUE2TMYYCzg8cF6
-	 VOZXJSdqxbrG4OeAbGSb7jHENHw97LHG5v+ywWiyVKhH8UPSagXFxqGCQsfrA+X4b2
-	 fJyKli1PgRbI+GsYgoofWS6rJjbRk1b2TyUohulY/KjrBR4gN3XAEqskCuz62EEEos
-	 K7hYGRVYUvkeer0rs8o4yYQrU95ClOZWSo4Jc3LaYnubQPxSeyF9DylIiHvJewCPRt
-	 sVOOERL8cjZh2/bhV48dHB44y2Z9hUrRJ+OF/quv4rzH9kqgE8VrLoI2UqMqyQc6Td
-	 0/Au/fEZ2COBQ==
+	b=nT5X3/xVaG1myUIf1wLCdym2Y9V3Sf3p5wOv2x9IYsy9XnjjhQrpAVnz/eZPRLY82
+	 BbYpb2ulLUxw4GhSOBuiMffANdbtK6aQyQX1AD3vOYOBv0KVekV0kL0OXXX6s3f7LE
+	 OHLidjzdQScMnvBifMFdth5Abv4Cq0z6KN3kGDQ8eW5MRxOVUZTfB8ut9/OxE1aVQL
+	 c9OrM68JTAN3Csz2VZSPUWZhLvZIsPUmO6rUGyIAELoVytYTZY/A8IiAxJD4csMDut
+	 3WeVutfpdZwQQk8JSbzbaIEatUx1kliJfPxrENxvrlkFI+bymtaDcGjcE7N5FWyKVW
+	 OETqWu4kpSEDg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -72,9 +72,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 12/13] rust: platform: add basic platform device / driver abstractions
-Date: Thu,  5 Dec 2024 15:14:43 +0100
-Message-ID: <20241205141533.111830-13-dakr@kernel.org>
+Subject: [PATCH v4 13/13] samples: rust: add Rust platform sample driver
+Date: Thu,  5 Dec 2024 15:14:44 +0100
+Message-ID: <20241205141533.111830-14-dakr@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241205141533.111830-1-dakr@kernel.org>
 References: <20241205141533.111830-1-dakr@kernel.org>
@@ -86,328 +86,137 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement the basic platform bus abstractions required to write a basic
-platform driver. This includes the following data structures:
+Add a sample Rust platform driver illustrating the usage of the platform
+bus abstractions.
 
-The `platform::Driver` trait represents the interface to the driver and
-provides `pci::Driver::probe` for the driver to implement.
-
-The `platform::Device` abstraction represents a `struct platform_device`.
-
-In order to provide the platform bus specific parts to a generic
-`driver::Registration` the `driver::RegistrationOps` trait is implemented
-by `platform::Adapter`.
+This driver probes through either a match of device / driver name or a
+match within the OF ID table.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- MAINTAINERS                     |   1 +
- rust/bindings/bindings_helper.h |   2 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/platform.c         |  13 ++
- rust/kernel/lib.rs              |   1 +
- rust/kernel/platform.rs         | 222 ++++++++++++++++++++++++++++++++
- 6 files changed, 240 insertions(+)
- create mode 100644 rust/helpers/platform.c
- create mode 100644 rust/kernel/platform.rs
+ MAINTAINERS                                  |  1 +
+ drivers/of/unittest-data/tests-platform.dtsi |  5 ++
+ samples/rust/Kconfig                         | 10 ++++
+ samples/rust/Makefile                        |  1 +
+ samples/rust/rust_driver_platform.rs         | 49 ++++++++++++++++++++
+ 5 files changed, 66 insertions(+)
+ create mode 100644 samples/rust/rust_driver_platform.rs
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d6bb4b15d2c..365fc48b7041 100644
+index 365fc48b7041..ae576c842c51 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -7034,6 +7034,7 @@ F:	rust/kernel/device.rs
- F:	rust/kernel/device_id.rs
+@@ -7035,6 +7035,7 @@ F:	rust/kernel/device_id.rs
  F:	rust/kernel/devres.rs
  F:	rust/kernel/driver.rs
-+F:	rust/kernel/platform.rs
+ F:	rust/kernel/platform.rs
++F:	samples/rust/rust_driver_platform.rs
  
  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
  M:	Nishanth Menon <nm@ti.com>
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 6d7a68e2ecb7..e9fdceb568b8 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -20,9 +20,11 @@
- #include <linux/jump_label.h>
- #include <linux/mdio.h>
- #include <linux/miscdevice.h>
-+#include <linux/of_device.h>
- #include <linux/pci.h>
- #include <linux/phy.h>
- #include <linux/pid_namespace.h>
-+#include <linux/platform_device.h>
- #include <linux/poll.h>
- #include <linux/refcount.h>
- #include <linux/sched.h>
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 3fda33cd42d4..0640b7e115be 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -20,6 +20,7 @@
- #include "kunit.c"
- #include "mutex.c"
- #include "page.c"
-+#include "platform.c"
- #include "pci.c"
- #include "pid_namespace.c"
- #include "rbtree.c"
-diff --git a/rust/helpers/platform.c b/rust/helpers/platform.c
+diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
+index fa39611071b3..2caaf1c10ee6 100644
+--- a/drivers/of/unittest-data/tests-platform.dtsi
++++ b/drivers/of/unittest-data/tests-platform.dtsi
+@@ -33,6 +33,11 @@ dev@100 {
+ 					reg = <0x100>;
+ 				};
+ 			};
++
++			test-device@2 {
++				compatible = "test,rust-device";
++				reg = <0x2>;
++			};
+ 		};
+ 	};
+ };
+diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+index 6d468193cdd8..70126b750426 100644
+--- a/samples/rust/Kconfig
++++ b/samples/rust/Kconfig
+@@ -41,6 +41,16 @@ config SAMPLE_RUST_DRIVER_PCI
+ 
+ 	  If unsure, say N.
+ 
++config SAMPLE_RUST_DRIVER_PLATFORM
++	tristate "Platform Driver"
++	help
++	  This option builds the Rust Platform driver sample.
++
++	  To compile this as a module, choose M here:
++	  the module will be called rust_driver_platform.
++
++	  If unsure, say N.
++
+ config SAMPLE_RUST_HOSTPROGS
+ 	bool "Host programs"
+ 	help
+diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+index 2f5b6bdb2fa5..761d13fff018 100644
+--- a/samples/rust/Makefile
++++ b/samples/rust/Makefile
+@@ -4,6 +4,7 @@ ccflags-y += -I$(src)				# needed for trace events
+ obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
+ obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
++obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
+ 
+ rust_print-y := rust_print_main.o rust_print_events.o
+ 
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
 new file mode 100644
-index 000000000000..ab9b9f317301
+index 000000000000..2f0dbbe69e10
 --- /dev/null
-+++ b/rust/helpers/platform.c
-@@ -0,0 +1,13 @@
++++ b/samples/rust/rust_driver_platform.rs
+@@ -0,0 +1,49 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+#include <linux/platform_device.h>
++//! Rust Platform driver sample.
 +
-+void *rust_helper_platform_get_drvdata(const struct platform_device *pdev)
-+{
-+	return platform_get_drvdata(pdev);
++use kernel::{c_str, of, platform, prelude::*};
++
++struct SampleDriver {
++    pdev: platform::Device,
 +}
 +
-+void rust_helper_platform_set_drvdata(struct platform_device *pdev, void *data)
-+{
-+	platform_set_drvdata(pdev, data);
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 7a0e4c82ad0c..cc8f48aa162b 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -59,6 +59,7 @@
- pub mod of;
- pub mod page;
- pub mod pid_namespace;
-+pub mod platform;
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-new file mode 100644
-index 000000000000..868cfddb75a2
---- /dev/null
-+++ b/rust/kernel/platform.rs
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: GPL-2.0
++struct Info(u32);
 +
-+//! Abstractions for the platform bus.
-+//!
-+//! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
++kernel::of_device_table!(
++    OF_TABLE,
++    MODULE_OF_TABLE,
++    <SampleDriver as platform::Driver>::IdInfo,
++    [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
++);
 +
-+use crate::{
-+    bindings, container_of, device, driver,
-+    error::{to_result, Result},
-+    of,
-+    prelude::*,
-+    str::CStr,
-+    types::{ARef, ForeignOwnable},
-+    ThisModule,
-+};
++impl platform::Driver for SampleDriver {
++    type IdInfo = Info;
++    const OF_ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
 +
-+/// An adapter for the registration of platform drivers.
-+pub struct Adapter<T: Driver>(T);
++    fn probe(pdev: &mut platform::Device, info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
++        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
 +
-+impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-+    type RegType = bindings::platform_driver;
-+
-+    fn register(
-+        pdrv: &mut Self::RegType,
-+        name: &'static CStr,
-+        module: &'static ThisModule,
-+    ) -> Result {
-+        pdrv.driver.name = name.as_char_ptr();
-+        pdrv.probe = Some(Self::probe_callback);
-+
-+        // Both members of this union are identical in data layout and semantics.
-+        pdrv.__bindgen_anon_1.remove = Some(Self::remove_callback);
-+        pdrv.driver.of_match_table = T::OF_ID_TABLE.as_ptr();
-+
-+        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-+        to_result(unsafe { bindings::__platform_driver_register(pdrv, module.0) })
-+    }
-+
-+    fn unregister(pdrv: &mut Self::RegType) {
-+        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-+        unsafe { bindings::platform_driver_unregister(pdrv) };
-+    }
-+}
-+
-+impl<T: Driver + 'static> Adapter<T> {
-+    #[cfg(CONFIG_OF)]
-+    fn of_id_info(pdev: &Device) -> Option<&'static T::IdInfo> {
-+        let table = T::OF_ID_TABLE;
-+
-+        // SAFETY:
-+        // - `table` has static lifetime, hence it's valid for read,
-+        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-+        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), pdev.as_ref().as_raw()) };
-+
-+        if raw_id.is_null() {
-+            None
-+        } else {
-+            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+            // does not add additional invariants, so it's safe to transmute.
-+            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
-+
-+            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-+        }
-+    }
-+
-+    #[cfg(not(CONFIG_OF))]
-+    fn of_id_info(_pdev: &Device) -> Option<&'static T::IdInfo> {
-+        None
-+    }
-+
-+    // Try to retrieve an `IdInfo` from any of the ID tables; if we can't find one for a particular
-+    // table, it means we don't have a match in there. If we don't match any of the ID tables, it
-+    // means we were matched by name.
-+    fn id_info(pdev: &Device) -> Option<&'static T::IdInfo> {
-+        let id = Self::of_id_info(pdev);
-+        if id.is_some() {
-+            return id;
++        if let Some(info) = info {
++            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
 +        }
 +
-+        None
-+    }
++        let drvdata = KBox::new(Self { pdev: pdev.clone() }, GFP_KERNEL)?;
 +
-+    extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> core::ffi::c_int {
-+        // SAFETY: The platform bus only ever calls the probe callback with a valid `pdev`.
-+        let dev = unsafe { device::Device::get_device(&mut (*pdev).dev) };
-+        // SAFETY: `dev` is guaranteed to be embedded in a valid `struct platform_device` by the
-+        // call above.
-+        let mut pdev = unsafe { Device::from_dev(dev) };
-+
-+        let info = Self::id_info(&pdev);
-+        match T::probe(&mut pdev, info) {
-+            Ok(data) => {
-+                // Let the `struct platform_device` own a reference of the driver's private data.
-+                // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
-+                // `struct platform_device`.
-+                unsafe { bindings::platform_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
-+            }
-+            Err(err) => return Error::to_errno(err),
-+        }
-+
-+        0
-+    }
-+
-+    extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
-+        // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
-+        let ptr = unsafe { bindings::platform_get_drvdata(pdev) };
-+
-+        // SAFETY: `remove_callback` is only ever called after a successful call to
-+        // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
-+        // `KBox<T>` pointer created through `KBox::into_foreign`.
-+        let _ = unsafe { KBox::<T>::from_foreign(ptr) };
++        Ok(drvdata.into())
 +    }
 +}
 +
-+/// Declares a kernel module that exposes a single platform driver.
-+///
-+/// # Examples
-+///
-+/// ```ignore
-+/// kernel::module_platform_driver! {
-+///     type: MyDriver,
-+///     name: "Module name",
-+///     author: "Author name",
-+///     description: "Description",
-+///     license: "GPL v2",
-+/// }
-+/// ```
-+#[macro_export]
-+macro_rules! module_platform_driver {
-+    ($($f:tt)*) => {
-+        $crate::module_driver!(<T>, $crate::platform::Adapter<T>, { $($f)* });
-+    };
-+}
-+
-+/// IdTable type for platform drivers.
-+pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<of::DeviceId, T>;
-+
-+/// The platform driver trait.
-+///
-+/// Drivers must implement this trait in order to get a platform driver registered.
-+///
-+/// # Example
-+///
-+///```
-+/// # use kernel::{bindings, c_str, of, platform};
-+///
-+/// struct MyDriver;
-+///
-+/// kernel::of_device_table!(
-+///     OF_TABLE,
-+///     MODULE_OF_TABLE,
-+///     <MyDriver as platform::Driver>::IdInfo,
-+///     [
-+///         (of::DeviceId::new(c_str!("test,device")), ())
-+///     ]
-+/// );
-+///
-+/// impl platform::Driver for MyDriver {
-+///     type IdInfo = ();
-+///     const OF_ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
-+///
-+///     fn probe(
-+///         _pdev: &mut platform::Device,
-+///         _id_info: Option<&Self::IdInfo>,
-+///     ) -> Result<Pin<KBox<Self>>> {
-+///         Err(ENODEV)
-+///     }
-+/// }
-+///```
-+pub trait Driver {
-+    /// The type holding information about each device id supported by the driver.
-+    ///
-+    /// TODO: Use associated_type_defaults once stabilized:
-+    ///
-+    /// type IdInfo: 'static = ();
-+    type IdInfo: 'static;
-+
-+    /// The table of OF device ids supported by the driver.
-+    const OF_ID_TABLE: IdTable<Self::IdInfo>;
-+
-+    /// Platform driver probe.
-+    ///
-+    /// Called when a new platform device is added or discovered.
-+    /// Implementers should attempt to initialize the device here.
-+    fn probe(dev: &mut Device, id_info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>>;
-+}
-+
-+/// The platform device representation.
-+///
-+/// A platform device is based on an always reference counted `device:Device` instance. Cloning a
-+/// platform device, hence, also increments the base device' reference count.
-+///
-+/// # Invariants
-+///
-+/// `Device` holds a valid reference of `ARef<device::Device>` whose underlying `struct device` is a
-+/// member of a `struct platform_device`.
-+#[derive(Clone)]
-+pub struct Device(ARef<device::Device>);
-+
-+impl Device {
-+    /// Convert a raw kernel device into a `Device`
-+    ///
-+    /// # Safety
-+    ///
-+    /// `dev` must be an `Aref<device::Device>` whose underlying `bindings::device` is a member of a
-+    /// `bindings::platform_device`.
-+    unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
-+        Self(dev)
-+    }
-+
-+    fn as_raw(&self) -> *mut bindings::platform_device {
-+        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
-+        // embedded in `struct platform_device`.
-+        unsafe { container_of!(self.0.as_raw(), bindings::platform_device, dev) }.cast_mut()
++impl Drop for SampleDriver {
++    fn drop(&mut self) {
++        dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver sample.\n");
 +    }
 +}
 +
-+impl AsRef<device::Device> for Device {
-+    fn as_ref(&self) -> &device::Device {
-+        &self.0
-+    }
++kernel::module_platform_driver! {
++    type: SampleDriver,
++    name: "rust_driver_platform",
++    author: "Danilo Krummrich",
++    description: "Rust Platform driver",
++    license: "GPL v2",
 +}
 -- 
 2.47.0
