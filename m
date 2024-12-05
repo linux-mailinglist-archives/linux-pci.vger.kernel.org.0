@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-17769-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17770-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 768EC9E582E
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:15:52 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 063409E5831
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:16:09 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3147B281EC1
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:15:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04EE31884212
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:16:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C79F6218851;
-	Thu,  5 Dec 2024 14:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0E0218AC0;
+	Thu,  5 Dec 2024 14:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cChdmXGd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGBaFtCo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D6217579;
-	Thu,  5 Dec 2024 14:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A95A17579;
+	Thu,  5 Dec 2024 14:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733408147; cv=none; b=KtFK2WeDh1p8jS82G4sc+xBRFBqYx12Kjlt+GcWd8K7PzxriOM8pRkKoVDeyMxvfYKbByqSWToeJqCUdgXFyHZNvoCQwrddtnH6bWwdjLwOnc3JqjeAfgGoCyf0O9LfgoV8cJT6fZfr1BIU0RoVXGtgQwUy2qxVkWiz3sld3yi0=
+	t=1733408154; cv=none; b=SfCyAFi56zsYGJj8edbGzT1vAisVM1cpxc4mjQ8vWJXm/XC6ZslaUs6qZM4pZL1Uvh2Z8CuzcFI3oHvnpKIkEPFPjq8HGU1G5ZLSiPnqt2vws77uF2wbJ8znaoHmhJXyc333RsjsZXAeN/7fAe3l8/7iobDvVb6u0+ei9+hENH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733408147; c=relaxed/simple;
-	bh=Dy0AOKEaGvg0o4zSFV8ZoWLPf9s5L2YbkQ6bOHtUYfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MA9EbUCFewDVzK8u9CGKrsaQru/qvhtbB9yUa4e0wk7WNF0Y1bYaBSu+jHpuVoCnV1tHMQts3Oswv//d/C6u7ltIaiD3ujn8Ih+z1KuPl2nrfYzSCm9BRQYLOku298Yr2jveamjqNhB1wvT8H4Xo8V7mwoRG0RcwFvLrd4p3wYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cChdmXGd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4294BC4CED1;
-	Thu,  5 Dec 2024 14:15:41 +0000 (UTC)
+	s=arc-20240116; t=1733408154; c=relaxed/simple;
+	bh=KzaLlrMOSYV96pirchpaX9zp5w3CHhhYNXDvSJp4QvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BqCcmpqbrH5FGD3SM3pjR3YuQUrRq8TfaHefxMhl8ePuHoT4BQnEz3GjZ+8xvxYUEotNHXospZq4NJ5VpnvjLU5wb4PFMsgrE7288ZwzAxPrxJI4SULSTSQTH9hgSlHfmrXsIqO7dFrz9YsOV3JYW3U9z3eraKePOB0GQKqUBdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGBaFtCo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D03DC4CEDC;
+	Thu,  5 Dec 2024 14:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733408147;
-	bh=Dy0AOKEaGvg0o4zSFV8ZoWLPf9s5L2YbkQ6bOHtUYfs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cChdmXGd/E4euD4cGLuKgifiYGyiJ98HpjRMbH/6EYL2sgYUhB93C/2UDMWpQdDbO
-	 0Xy2SM+AtKHCCYwVIkpZOv7ojF1Y5ltMz4Yn7zmgrbVA15w5OY2JpwVst2TnuUEDB2
-	 xPXv+IhELnlHmSSAjxfl+H3o/4UieCb4K4266EkSRng++LSbnGzWoGuTbvvb/LTmVs
-	 fTurUYoRfdXPw1j8oTGdZAvWvndslqOZXdETctNk7ILA7fUKkbIVB/eg2UgKGgIrzp
-	 EgB4NvJlGBM4NPxNXWmiXAQrGSjB7C0nwEy1f42qM5mS/Ci8A8GHaLK+sdcnuNsSxn
-	 lFm1LZORdn/Og==
+	s=k20201202; t=1733408153;
+	bh=KzaLlrMOSYV96pirchpaX9zp5w3CHhhYNXDvSJp4QvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IGBaFtCowUHZdIlxpTOCKXngVKHdfZBRRuPJaJmFyLMSPv6ziFnPg7v1pKpci/73F
+	 +5tSuAup0lPU7CwUunY8LozDOOXIcvqRBsoUd09B1Sp5UDi5LPsxrpZZgjBYdDt8l9
+	 5f3T7tqJOuNeLk4AASZ9tdfSXpZgwVKioaS6LTNCeGUuNkIbTysfOh+WK+YXBDAo2/
+	 LYF1RCv67QACacIcR9moO0M5E4uObzBZHPtNXFUeCDzcqyfzH2IdO3FJtXbrPtEtpl
+	 7HRHaQFASh/AfvqV7AJgz8nXGWNGw3I/I3ZFRyuaBWvyPCaDLQBx2DKX5wSqYW1zUz
+	 lCWJUlIK4gnZw==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -71,10 +72,12 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 00/13] Device / Driver PCI / Platform Rust abstractions
-Date: Thu,  5 Dec 2024 15:14:31 +0100
-Message-ID: <20241205141533.111830-1-dakr@kernel.org>
+Subject: [PATCH v4 01/13] rust: pass module name to `Module::init`
+Date: Thu,  5 Dec 2024 15:14:32 +0100
+Message-ID: <20241205141533.111830-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241205141533.111830-1-dakr@kernel.org>
+References: <20241205141533.111830-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,202 +86,205 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series implements the necessary Rust abstractions to implement
-device drivers in Rust.
+In a subsequent patch we introduce the `Registration` abstraction used
+to register driver structures. Some subsystems require the module name on
+driver registration (e.g. PCI in __pci_register_driver()), hence pass
+the module name to `Module::init`.
 
-This includes some basic generalizations for driver registration, handling of ID
-tables, MMIO operations and device resource handling.
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ drivers/block/rnull.rs          |  2 +-
+ rust/kernel/lib.rs              | 14 ++++++++++----
+ rust/kernel/net/phy.rs          |  2 +-
+ rust/kernel/sync/lock/global.rs |  6 ++++--
+ rust/macros/lib.rs              |  6 ++++--
+ rust/macros/module.rs           |  7 +++++--
+ samples/rust/rust_minimal.rs    |  2 +-
+ samples/rust/rust_print_main.rs |  2 +-
+ 8 files changed, 27 insertions(+), 14 deletions(-)
 
-Those generalizations are used to implement device driver support for two
-busses, the PCI and platform bus (with OF IDs) in order to provide some evidence
-that the generalizations work as intended.
-
-The patch series also includes two patches adding two driver samples, one PCI
-driver and one platform driver.
-
-The PCI bits are motivated by the Nova driver project [1], but are used by at
-least one more OOT driver (rnvme [2]).
-
-The platform bits, besides adding some more evidence to the base abstractions,
-are required by a few more OOT drivers aiming at going upstream, i.e. rvkms [3],
-cpufreq-dt [4], asahi [5] and the i2c work from Fabien [6].
-
-The patches of this series can also be [7], [8] and [9].
-
-Changes in v4:
-==============
-- Revocable
-  - convert `Revocable::data` to `Opaque`
-  - introduce `revoke_nosync`, which does not wait for an RCU grace period
-  - fix minor typo
-
-- Device ID
-  - fix ID table export name to always be unique
-  - remove `#![allow(stable_features)]`
-  - move `#![allow(const_refs_to_cell)]` to the "stable in 1.83" list
-
-- I/O
-  - split `Io<SIZE>` in `IoRaw<SIZE>` and `Io<SIZE>`
-  - add rust helper for ioremap() and iounmap() (needed by doctests)
-
-- Devres
-  - optimze `drop` by using `revoke_nosync` (we're guaranteed there are no more
-    concurrent users, hence no need to wait for a full grace period)
-
-- OF
-  - rename "Open Firmware" -> "Device Tree / Open Firmware" (Rob)
-  - remove unused C header reference
-  - add TODO comment to loop in `DeviceId::new`
-  - remove `DeviceId::compatible`; was only used in sample code
-  - add missing `#[repr(transparent)]`
-  - use #[cfg(CONFIG_OF)] for the relevant functions
-
-- PCI
-  - let Rust helper for pci_resource_len() return resource_size_t
-
-- PCI Sample
-  - remove unnecessary `from_le`
-
-- Platform
-  - fix example compatible string
-  - add example for `platform::Driver`
-  - rename `ID_TABLE` to `OF_ID_TABLE`
-  - don't allow public use of `of_match_table`; convert to `of_id_info` to
-    retrieve the `of::DeviceId` to gather the corresponding `IdInfo`
-  - remove wrong example reference in the documentation of `platform::Driver`
-  - remove `as_dev`, as we already implement `AsRef` for `platform::Device`
-
-- Platform Sample
-  - fix compatible string; add corresponding entry to drivers/of/unittest-data/tests-platform.dtsi
-  - remove usage of `of_match_table`
-
-- MISC
-  - fix a few spelling mistakes
-  - rebase onto rust-next (v6.13-rc1)
-
-Changes in v3:
-==============
-- add commits for `Opaque::try_ffi_init` and `InPlaceModule`
-- rename `DriverOps` to `RegistrationOps`
-- rework device ID abstractions to get rid of almost all macro magic (thanks to
-  Gary Guo for working this out!)
-  - this is possible due to recently stabilized language features
-- add modpost alias generation for device ID tables
-  - unfortunately, this is the part that still requires some macro magic in the
-    device ID abstractions
-- PCI
-  - represent the driver private data with the driver specific `Driver` instance
-    and bind it's lifetime to the time of the driver being bound to a device
-    - this allows us to handle class / subsystem registrations in a cleaner way
-  - get rid of `Driver::remove`
-    - Rust drivers should bind cleanup code to the `Drop` implementation of the
-      corresponding structure instead and put it into their driver structure for
-      automatic cleanup
-  - add a sample PCI driver
-- add abstractions for `struct of_device_id`
-- add abstractions for the platform bus, including a sample driver
-- update the MAINTAINERS file accordingly
-  - currently this turns out a bit messy, but it should become better once the
-    build system supports a treewide distribution of the kernel crate
-  - I didn't add myself as maintainer, but (if requested) I'm willing to do so
-    and help with maintenance
-
-Changes in v2:
-==============
-- statically initialize driver structures (Greg)
-- move base device ID abstractions to a separate source file (Greg)
-- remove `DeviceRemoval` trait in favor of using a `Devres` callback to
-  unregister drivers
-- remove `device::Data`, we don't need this abstraction anymore now that we
-  `Devres` to revoke resources and registrations
-- pass the module name to `Module::init` and `InPlaceModule::init` in a separate
-  patch
-- rework of `Io` including compile time boundary checks (Miguel, Wedson)
-- adjust PCI abstractions accordingly and implement a `module_pci_driver!` macro
-- rework `pci::Bar` to support a const SIZE
-- increase the total amount of Documentation, rephrase some safety comments and
-  commit messages for less ambiguity
-- fix compilation issues with some documentation examples
-
-[1] https://gitlab.freedesktop.org/drm/nova/-/tree/nova-next
-[2] https://github.com/metaspace/linux/tree/rnvme
-[3] https://lore.kernel.org/all/20240930233257.1189730-1-lyude@redhat.com/
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git/log/?h=rust/cpufreq-dt
-[5] https://github.com/AsahiLinux/linux
-[6] https://github.com/Fabo/linux/tree/fparent/rust-i2c
-[7] https://github.com/Rust-for-Linux/linux/tree/staging/rust-device
-[8] https://github.com/Rust-for-Linux/linux/tree/staging/rust-pci
-[9] https://github.com/Rust-for-Linux/linux/tree/staging/dev
-
-
-Danilo Krummrich (11):
-  rust: pass module name to `Module::init`
-  rust: implement generic driver registration
-  rust: implement `IdArray`, `IdTable` and `RawDeviceId`
-  rust: add `io::{Io, IoRaw}` base types
-  rust: add devres abstraction
-  rust: pci: add basic PCI device / driver abstractions
-  rust: pci: implement I/O mappable `pci::Bar`
-  samples: rust: add Rust PCI sample driver
-  rust: of: add `of::DeviceId` abstraction
-  rust: platform: add basic platform device / driver abstractions
-  samples: rust: add Rust platform sample driver
-
-Wedson Almeida Filho (2):
-  rust: add rcu abstraction
-  rust: add `Revocable` type
-
- MAINTAINERS                                  |   8 +
- drivers/block/rnull.rs                       |   2 +-
- drivers/of/unittest-data/tests-platform.dtsi |   5 +
- rust/bindings/bindings_helper.h              |   3 +
- rust/helpers/device.c                        |  10 +
- rust/helpers/helpers.c                       |   5 +
- rust/helpers/io.c                            | 101 +++++
- rust/helpers/pci.c                           |  18 +
- rust/helpers/platform.c                      |  13 +
- rust/helpers/rcu.c                           |  13 +
- rust/kernel/device_id.rs                     | 166 +++++++
- rust/kernel/devres.rs                        | 179 ++++++++
- rust/kernel/driver.rs                        | 120 ++++++
- rust/kernel/io.rs                            | 260 +++++++++++
- rust/kernel/lib.rs                           |  28 +-
- rust/kernel/net/phy.rs                       |   2 +-
- rust/kernel/of.rs                            |  57 +++
- rust/kernel/pci.rs                           | 429 +++++++++++++++++++
- rust/kernel/platform.rs                      | 222 ++++++++++
- rust/kernel/revocable.rs                     | 235 ++++++++++
- rust/kernel/sync.rs                          |   1 +
- rust/kernel/sync/lock/global.rs              |   6 +-
- rust/kernel/sync/rcu.rs                      |  47 ++
- rust/macros/lib.rs                           |   6 +-
- rust/macros/module.rs                        |   7 +-
- samples/rust/Kconfig                         |  21 +
- samples/rust/Makefile                        |   2 +
- samples/rust/rust_driver_pci.rs              | 109 +++++
- samples/rust/rust_driver_platform.rs         |  49 +++
- samples/rust/rust_minimal.rs                 |   2 +-
- samples/rust/rust_print_main.rs              |   2 +-
- 31 files changed, 2114 insertions(+), 14 deletions(-)
- create mode 100644 rust/helpers/device.c
- create mode 100644 rust/helpers/io.c
- create mode 100644 rust/helpers/pci.c
- create mode 100644 rust/helpers/platform.c
- create mode 100644 rust/helpers/rcu.c
- create mode 100644 rust/kernel/device_id.rs
- create mode 100644 rust/kernel/devres.rs
- create mode 100644 rust/kernel/driver.rs
- create mode 100644 rust/kernel/io.rs
- create mode 100644 rust/kernel/of.rs
- create mode 100644 rust/kernel/pci.rs
- create mode 100644 rust/kernel/platform.rs
- create mode 100644 rust/kernel/revocable.rs
- create mode 100644 rust/kernel/sync/rcu.rs
- create mode 100644 samples/rust/rust_driver_pci.rs
- create mode 100644 samples/rust/rust_driver_platform.rs
-
-
-base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
+index 5de7223beb4d..0e0e9ed7851e 100644
+--- a/drivers/block/rnull.rs
++++ b/drivers/block/rnull.rs
+@@ -36,7 +36,7 @@ struct NullBlkModule {
+ }
+ 
+ impl kernel::Module for NullBlkModule {
+-    fn init(_module: &'static ThisModule) -> Result<Self> {
++    fn init(_name: &'static CStr, _module: &'static ThisModule) -> Result<Self> {
+         pr_info!("Rust null_blk loaded\n");
+         let tagset = Arc::pin_init(TagSet::new(1, 256, 1), flags::GFP_KERNEL)?;
+ 
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index e1065a7551a3..686db6aa3323 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -90,7 +90,7 @@ pub trait Module: Sized + Sync + Send {
+     /// should do.
+     ///
+     /// Equivalent to the `module_init` macro in the C API.
+-    fn init(module: &'static ThisModule) -> error::Result<Self>;
++    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
+ }
+ 
+ /// A module that is pinned and initialised in-place.
+@@ -98,13 +98,19 @@ pub trait InPlaceModule: Sync + Send {
+     /// Creates an initialiser for the module.
+     ///
+     /// It is called when the module is loaded.
+-    fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error>;
++    fn init(
++        name: &'static str::CStr,
++        module: &'static ThisModule,
++    ) -> impl init::PinInit<Self, error::Error>;
+ }
+ 
+ impl<T: Module> InPlaceModule for T {
+-    fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error> {
++    fn init(
++        name: &'static str::CStr,
++        module: &'static ThisModule,
++    ) -> impl init::PinInit<Self, error::Error> {
+         let initer = move |slot: *mut Self| {
+-            let m = <Self as Module>::init(module)?;
++            let m = <Self as Module>::init(name, module)?;
+ 
+             // SAFETY: `slot` is valid for write per the contract with `pin_init_from_closure`.
+             unsafe { slot.write(m) };
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index b89c681d97c0..0f41df2e6b96 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -903,7 +903,7 @@ struct Module {
+                 [$($crate::net::phy::create_phy_driver::<$driver>()),+];
+ 
+             impl $crate::Module for Module {
+-                fn init(module: &'static ThisModule) -> Result<Self> {
++                fn init(_name: &'static CStr, module: &'static ThisModule) -> Result<Self> {
+                     // SAFETY: The anonymous constant guarantees that nobody else can access
+                     // the `DRIVERS` static. The array is used only in the C side.
+                     let drivers = unsafe { &mut DRIVERS };
+diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
+index 480ee724e3cc..feff4638e20b 100644
+--- a/rust/kernel/sync/lock/global.rs
++++ b/rust/kernel/sync/lock/global.rs
+@@ -187,6 +187,7 @@ pub fn get_mut(&mut self) -> &mut T {
+ /// ```
+ /// # mod ex {
+ /// # use kernel::prelude::*;
++/// # use kernel::str;
+ /// kernel::sync::global_lock! {
+ ///     // SAFETY: Initialized in module initializer before first use.
+ ///     unsafe(uninit) static MY_COUNTER: Mutex<u32> = 0;
+@@ -199,7 +200,7 @@ pub fn get_mut(&mut self) -> &mut T {
+ /// }
+ ///
+ /// impl kernel::Module for MyModule {
+-///     fn init(_module: &'static ThisModule) -> Result<Self> {
++///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
+ ///         // SAFETY: Called exactly once.
+ ///         unsafe { MY_COUNTER.init() };
+ ///
+@@ -216,6 +217,7 @@ pub fn get_mut(&mut self) -> &mut T {
+ /// # mod ex {
+ /// # use kernel::prelude::*;
+ /// use kernel::sync::{GlobalGuard, GlobalLockedBy};
++/// # use kernel::str;
+ ///
+ /// kernel::sync::global_lock! {
+ ///     // SAFETY: Initialized in module initializer before first use.
+@@ -239,7 +241,7 @@ pub fn get_mut(&mut self) -> &mut T {
+ /// }
+ ///
+ /// impl kernel::Module for MyModule {
+-///     fn init(_module: &'static ThisModule) -> Result<Self> {
++///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
+ ///         // SAFETY: Called exactly once.
+ ///         unsafe { MY_MUTEX.init() };
+ ///
+diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+index 4ab94e44adfe..d669f9cd1726 100644
+--- a/rust/macros/lib.rs
++++ b/rust/macros/lib.rs
+@@ -32,6 +32,7 @@
+ ///
+ /// ```
+ /// use kernel::prelude::*;
++/// use kernel::str;
+ ///
+ /// module!{
+ ///     type: MyModule,
+@@ -45,7 +46,7 @@
+ /// struct MyModule(i32);
+ ///
+ /// impl kernel::Module for MyModule {
+-///     fn init(_module: &'static ThisModule) -> Result<Self> {
++///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
+ ///         let foo: i32 = 42;
+ ///         pr_info!("I contain:  {}\n", foo);
+ ///         Ok(Self(foo))
+@@ -65,6 +66,7 @@
+ ///
+ /// ```
+ /// use kernel::prelude::*;
++/// use kernel::str;
+ ///
+ /// module!{
+ ///     type: MyDeviceDriverModule,
+@@ -78,7 +80,7 @@
+ /// struct MyDeviceDriverModule;
+ ///
+ /// impl kernel::Module for MyDeviceDriverModule {
+-///     fn init(_module: &'static ThisModule) -> Result<Self> {
++///     fn init(_name: &'static str::CStr, _module: &'static ThisModule) -> Result<Self> {
+ ///         Ok(Self)
+ ///     }
+ /// }
+diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+index 2587f41b0d39..1f14ef55341a 100644
+--- a/rust/macros/module.rs
++++ b/rust/macros/module.rs
+@@ -333,8 +333,11 @@ mod __module_init {{
+                     ///
+                     /// This function must only be called once.
+                     unsafe fn __init() -> kernel::ffi::c_int {{
+-                        let initer =
+-                            <{type_} as kernel::InPlaceModule>::init(&super::super::THIS_MODULE);
++                        let initer = <{type_} as kernel::InPlaceModule>::init(
++                            kernel::c_str!(\"{name}\"),
++                            &super::super::THIS_MODULE
++                        );
++
+                         // SAFETY: No data race, since `__MOD` can only be accessed by this module
+                         // and there only `__init` and `__exit` access it. These functions are only
+                         // called once and `__exit` cannot be called before or during `__init`.
+diff --git a/samples/rust/rust_minimal.rs b/samples/rust/rust_minimal.rs
+index 4aaf117bf8e3..1577dc34e563 100644
+--- a/samples/rust/rust_minimal.rs
++++ b/samples/rust/rust_minimal.rs
+@@ -17,7 +17,7 @@ struct RustMinimal {
+ }
+ 
+ impl kernel::Module for RustMinimal {
+-    fn init(_module: &'static ThisModule) -> Result<Self> {
++    fn init(_name: &'static CStr, _module: &'static ThisModule) -> Result<Self> {
+         pr_info!("Rust minimal sample (init)\n");
+         pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
+ 
+diff --git a/samples/rust/rust_print_main.rs b/samples/rust/rust_print_main.rs
+index aed90a6feecf..0853d767439b 100644
+--- a/samples/rust/rust_print_main.rs
++++ b/samples/rust/rust_print_main.rs
+@@ -41,7 +41,7 @@ fn arc_print() -> Result {
+ }
+ 
+ impl kernel::Module for RustPrint {
+-    fn init(_module: &'static ThisModule) -> Result<Self> {
++    fn init(_name: &'static CStr, _module: &'static ThisModule) -> Result<Self> {
+         pr_info!("Rust printing macros sample (init)\n");
+ 
+         pr_emerg!("Emergency message (level 0) without args\n");
 -- 
 2.47.0
 
