@@ -1,224 +1,196 @@
-Return-Path: <linux-pci+bounces-17782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2C289E585E
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:19:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F3219E58FB
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 15:56:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDC011884898
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:19:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D569166C80
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 14:56:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C68621D589;
-	Thu,  5 Dec 2024 14:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CDB221C18A;
+	Thu,  5 Dec 2024 14:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nT5X3/xV"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TAftLHFn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2074.outbound.protection.outlook.com [40.107.104.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C24218EB3;
-	Thu,  5 Dec 2024 14:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733408229; cv=none; b=KIXGTSBJKUfL7CrYPGchgxcE6fZdZL0eqmVm3Qt4zy0zXQYjihart/q5s5o8vIVx/s33u006anEtv5aNRXxP5vsn6PcBd68sDLCfOq6MxYdmiuqUi8iSoXJZqtLZ+JzPtwDsxscJmuBtXmh95ZWTj5avRHMf1DsHpx9eKaOUmsY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733408229; c=relaxed/simple;
-	bh=fsQdz0uOY3RAQ4rMNOpTqBJdkc/b5ZHxcuQQNj6yVKY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m2nL+hPhS285aRURRejP+XCejoxS1DT6ke818fCI03AjOzau0PBD9sA7GAa4vaWa8tSV1sk2oTEW/tVfWE9Bvf4II8vCR5XlB4/r1JNkAwWWVymHK29BpUM6eH9klERA1z4hpSPsEqSr0qYkJ5OHzJZBiUxyrMH5Eds9hOlKhmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nT5X3/xV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2260C4CEDD;
-	Thu,  5 Dec 2024 14:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733408228;
-	bh=fsQdz0uOY3RAQ4rMNOpTqBJdkc/b5ZHxcuQQNj6yVKY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nT5X3/xVaG1myUIf1wLCdym2Y9V3Sf3p5wOv2x9IYsy9XnjjhQrpAVnz/eZPRLY82
-	 BbYpb2ulLUxw4GhSOBuiMffANdbtK6aQyQX1AD3vOYOBv0KVekV0kL0OXXX6s3f7LE
-	 OHLidjzdQScMnvBifMFdth5Abv4Cq0z6KN3kGDQ8eW5MRxOVUZTfB8ut9/OxE1aVQL
-	 c9OrM68JTAN3Csz2VZSPUWZhLvZIsPUmO6rUGyIAELoVytYTZY/A8IiAxJD4csMDut
-	 3WeVutfpdZwQQk8JSbzbaIEatUx1kliJfPxrENxvrlkFI+bymtaDcGjcE7N5FWyKVW
-	 OETqWu4kpSEDg==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	bhelgaas@google.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	tmgross@umich.edu,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	airlied@gmail.com,
-	fujita.tomonori@gmail.com,
-	lina@asahilina.net,
-	pstanner@redhat.com,
-	ajanulgu@redhat.com,
-	lyude@redhat.com,
-	robh@kernel.org,
-	daniel.almeida@collabora.com,
-	saravanak@google.com,
-	dirk.behme@de.bosch.com,
-	j@jannau.net,
-	fabien.parent@linaro.org,
-	chrisi.schrefl@gmail.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 13/13] samples: rust: add Rust platform sample driver
-Date: Thu,  5 Dec 2024 15:14:44 +0100
-Message-ID: <20241205141533.111830-14-dakr@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241205141533.111830-1-dakr@kernel.org>
-References: <20241205141533.111830-1-dakr@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2BA21C17B;
+	Thu,  5 Dec 2024 14:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733410585; cv=fail; b=WTDV6M83RxAKd9EyL1PitL9LhzGmALe41tNs0ALc/IHK5feHhuI2b3Z5n1Qz8qKWReUcUv954DfGYsxkxcy7396DGH7pT3SLBQFsWVAOXJmve1gGl5i766ONTNoguoQ7SJeGEftqQvWJLjQ4S2eBFFqwJ4ELAR/O0a6a5G+F/C8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733410585; c=relaxed/simple;
+	bh=KGyvCT7j8/TZb42Zq/ZsBm8nsqFFeY+3kKTJ+ysaLVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qnKMp9vC10c5r2SveHjSOdAUPr+LVeqcLrfi4s6f0XnWW0+/EnEv/Cz8mY1/B1pvH2rD+nY5BJqmI97ig46jUgaOaZimegIGe+LaB34NQzZeQAVh4jgGXiqw5RqjVUYPp1Yq+aIkiSn3VXCJC0/OH+7DSm66g6ewGNZBf78itfA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TAftLHFn; arc=fail smtp.client-ip=40.107.104.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a44vjT9uADLc06tiTo7lc0VBQ/Nkvmo2fERK7vRjqr2sH04b0HoQ1cJmJI8xrvwd2SJHxmCg58F7l/AXcd+/4kq37thhpx0SThnAQaJOL9pZCNdBKVpAscnesx3jrQ1M2CuWYrxtG/B3cAw875IaUaJhOwUWFpD/748dXXqL9A4fetugZJSkiMNjmwBwP+yKkXuHFO7i7m+TTuXJi5H/9MGPmp4fo2CMq9/+dn0sXZqW9QRLqRdMbtmlTGjPcRiBPCbus2gM3dfPt8p3VpiP4hj9Q1i222OujHSoL8L4OUMdYZu3Pd8H/i3mWI2ZdIfJUFIBwUK3MOuqUd6UVR+aSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u8ObJYMcR3OKldnMUh90N4/yPoctlilZXTYH80GUDjw=;
+ b=XDMsutPHsvpas2OlsMjNEHBFSqkOllUyvF131q8MgIkPQqzshJyKvueRv798eWc6e15+8SARGrnFiNvHYVFVT1OpZivGjopyrn/39KoMDlZXgVrHQ+g4ntxOyvARuqEY68I6WIDf7GYUuX0ZPsCobqkD3yZ28djL/MkcsJdsvIaIc/w2fkgi6gUYCKrO2pz3wCT7gn4Gztxcrd2rj/OBEKABB3y869I3IVdF2/OQZB4rwqblHdfC9wGOUNWL491Z2TPe8jb3c5Fw1Yc9TUqYLUS6DZyNvlABpnvYS9DKtITEzASGVgxAFpJ9rTd9EP3Lo8mYWDDuW+aRneUMiFaNQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u8ObJYMcR3OKldnMUh90N4/yPoctlilZXTYH80GUDjw=;
+ b=TAftLHFna8zUrE23MetN+wkq2hC070ZNDnINhMm+Lxqw/oB0TFWVxhZhvHakGmU2Iqm01lhVjmMqcoU1yl3JwfJ4I0II3U5JwCMIOiSd+cLzs3Qmo5Ilrpa6fUbPDHyk1HDdg9EXPdABdRNVXfZTQr2GJUrepS7o07EAIQR0KZ2hILxaQb9Q1fYZmPPJMDASYUdkNiyT37CtOB0YlBbRAlh3lcFqqpbB+AoEOxf2V+dAQxDAWslOgE26ZIDPmL6D+mA4s6EtP309NFdKFk5GHqqgl4E2RYxqFNhyYUq/KfTkBKXujDdOoIRlkDR+q46Fns2KdlyyUWK7cpF0zGP+Xw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7812.eurprd04.prod.outlook.com (2603:10a6:20b:245::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.12; Thu, 5 Dec
+ 2024 14:56:20 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8230.010; Thu, 5 Dec 2024
+ 14:56:20 +0000
+Date: Thu, 5 Dec 2024 09:56:11 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
+	dlemoal@kernel.org, jdmason@kudzu.us,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v10 3/7] PCI: endpoint: pci-ep-msi: Add MSI address/data
+ pair mutable check
+Message-ID: <Z1G/CwFvO/aBLBe8@lizhi-Precision-Tower-5810>
+References: <20241204-ep-msi-v10-0-87c378dbcd6d@nxp.com>
+ <20241204-ep-msi-v10-3-87c378dbcd6d@nxp.com>
+ <87ttbiqnq8.ffs@tglx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ttbiqnq8.ffs@tglx>
+X-ClientProxiedBy: BYAPR11CA0106.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::47) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7812:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18e13a82-8faa-4e0b-8ad4-08dd153cfabb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?VSHD3y2UoS0pvR7RTvYGKfNhAblnuPxZ9q86GjVHgo9/ZJ48I3MdY4liVb+u?=
+ =?us-ascii?Q?P3NEazdL8W30Kev2suL/gYnceYnaq28FlT7GIAQosXFic6s3K9p5Ocvyd5KR?=
+ =?us-ascii?Q?R0b2fYlmscfJfxw2vkne3tRADxUQRJyAbr8/dnqfvuFzNOs+N4mYuoERidBQ?=
+ =?us-ascii?Q?HOdRuHrA7zfoX7Wrm+xPcE3/kz8zW62/L4BUAkUJExwtkTWRmkxIy4+IsBK/?=
+ =?us-ascii?Q?hebt3L27gk/JEAydquRqkd/oZ8WeiI7I4IXhBMX7DtoP6a/7aAkT63iEAQAy?=
+ =?us-ascii?Q?gSW7N7yLbfs9vlvDP/ZsbaMkJ79zVd2QIxJHOFxU/RPHXenk4cpVFbwU2zi1?=
+ =?us-ascii?Q?Cm9eAxH5r6vMPnW2b5NWPaYG+q6lnZurD0BDd4btyZGr3K8n3t1FUx10wgRl?=
+ =?us-ascii?Q?jAQQdOwvjpfUkj6nt6PM0c85VXnIImMpf5tT1IkwKonF6QlgFJO4SzImouFP?=
+ =?us-ascii?Q?w/DU/DeCjOQ2UwZ2rebkJjXeYoz1YN54YMd6NClf7Gna5Q5OaE6mFbuZW0pM?=
+ =?us-ascii?Q?ygTkWCtSlV1ZCAnL86il167OV9sag6eX0ihl8dOMdF13MCf+/5YCi7uXe9J5?=
+ =?us-ascii?Q?ag31P7Pe9JBrorA0tXeTnwL4FyXY3mxcJ5sVCvzsdUZgFRMRTmJEUae5X6D+?=
+ =?us-ascii?Q?VuJeREUfZbH2R138Nkj4rF3YJU7ElqMaNNS2+G1EpIOGvhfZg5uP5BT299hk?=
+ =?us-ascii?Q?QVWVrgeEUf1G0DYSQf9VvIIjivHHuchzpyt1+YPcoGzrzo3D6/n6LWYpwb8O?=
+ =?us-ascii?Q?s0LA2W5bESmJtkUm6NPr2ijNRd0qsSG4RgNpYN9ah90sj1slXgjzHDic1+hH?=
+ =?us-ascii?Q?hwrS2fIOrxi++E6u86ZvMQZ3FwdBQ9ETpQq8AuPJckwYdbVwMBqqVpjSf0Bc?=
+ =?us-ascii?Q?4jO3t73l+aOQGEDfmm+Hu7nzQnKNCbFkkX8G6suMhnTbGtBPg/3Rzuor8Ute?=
+ =?us-ascii?Q?qA6GrNvG2uMAW0Vb6tfbFjLZSQERs3brQAGw5VVViXKCfMzM+uVq5Tm6uXVp?=
+ =?us-ascii?Q?UkJllSuQvfxRcT9GSHUv7PJfRtPQARKaGSzrd1tfjMgQOIGndWoQuVet0XZG?=
+ =?us-ascii?Q?MQzfgzxUTLo2vRJUM2QMvroXLf0YI3NHUFg27DrTrKLCrcjcBbhJLKW0m88V?=
+ =?us-ascii?Q?MJ1/ks88awDCkQz5jH+x1pkWdsO7lJEglaHPIg7ppknnBt37MGTevW/sTM0k?=
+ =?us-ascii?Q?N7XtOeNsrbAEZcKXvRvrg4yy8HOG1zBcJO42L23e9qBRcmHICwJA+RsTWpPL?=
+ =?us-ascii?Q?UBRp1cFMQaw8nZHF2hCdGimVaop/orbVwIq6OySXzXVpECUmr/l08oljf3Ir?=
+ =?us-ascii?Q?nspUp2FR8WbqORZhn5wSfWk1372cdrFPVh3o4pDh0/vXRr0LX1knONyzc2LT?=
+ =?us-ascii?Q?oXlQsdomBfm4AYOWaaaTjP2W2SASY/o2q+sKjJysdKtMcqyl+A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZsTA5hxNR9JXs1EptUeJcU48AFgDgMQVkehiDUJuevEEk1A4IXlvrZf6vb6W?=
+ =?us-ascii?Q?zX1ozri+XzZOOVxOQwg4H63ihSbQOMsxQOabktyTuCbvj8DHN/burKXFup5o?=
+ =?us-ascii?Q?2PaU0EIHV7L2TiT6PnekokU/Bl/dReMOvpImNnGmu68oSDvHJDHqkV4i15Ud?=
+ =?us-ascii?Q?eFGTGzwCwGXTvLbuY7R7TAPwHCKYE/f0cs3TrdQM6KpG/4Rg9FvBS+JmajXc?=
+ =?us-ascii?Q?WaoG3UusmKXgSYemz+fgLTSm8ZYzgZGQNS0ZkD7IgF5Oz2JEovcqjO4Y0s/f?=
+ =?us-ascii?Q?8tBaNNe+Yf9//3VnUTbOp+T1Ug/zhTnBAzCfv5vWCTD8Seax9WwxTfQJfyfr?=
+ =?us-ascii?Q?JNqZ28Y6HUdNwdMnVh7jwzmSGtuHhP655FO7rzP2JSq9mqObigY9F9cRuXYD?=
+ =?us-ascii?Q?h2NWX2liOIykeQ1tyH8o3PxjwNAEFZZxoypi2aqFWeDkKQP/VrEL4y5RG79Y?=
+ =?us-ascii?Q?BneQmLJWaGF5ODvRHx7LeJZ5ue+akiK+giapBHHbKDr35iq56UrxD/SWmkNn?=
+ =?us-ascii?Q?Wwfo2jcPHrChekUdCjHCV5K5QxMXHu92g6o1YVCSH2h/fwfVybrVpEcz4nQY?=
+ =?us-ascii?Q?1kIt89Sec36JSF7o9GVbRcAjPs5x9lc4Y4nEt5rqifxXw+cb9xdM910/tFMz?=
+ =?us-ascii?Q?dDV0YMbQGCNnNJA6lUWuitXGeRsiSu3gbfqqIori4jOCF7yYTSYCClNvtAEC?=
+ =?us-ascii?Q?/DzYJJv22dxod0PLNOnQ0MEdHnvOZlBtEOTykaxX4bpSx3GMLr3FIEwSL1Yk?=
+ =?us-ascii?Q?Z1j43lulYC+qqZ5oAf3gKAn4BbXHh7d2UaCmmtUxCUeyY24saQj01YCCXGyv?=
+ =?us-ascii?Q?GMns2Hx8ewUzaZ2vFH4LvWhmUzR/UYeugr3scuT3lZtqGsw3jYoWg3RalAa5?=
+ =?us-ascii?Q?VKA4W5tljnAiZv1hXnTDW+lzbOIpcSxSTzeFtyk1/T0IfzuRWn9pc3R2k4f8?=
+ =?us-ascii?Q?F9rEHx4/nt0HmDmsiUYtxh0CO3ya/FWRFAgGrhrqe9nkTX4ITPSbmabk5RXd?=
+ =?us-ascii?Q?9eBhzl22p9S74FHohJLertNm3v3Jfx7G5XHMKKgQSIzxvNloK+8Txt1t9YZT?=
+ =?us-ascii?Q?gJ4pDDj9N2yOn41HXsDV3+bKvdJWjqa5+MOLctP6LLwul0woVcBoRB4RVxsI?=
+ =?us-ascii?Q?46ndrjgULmWISFQ3R1hFj2h5sZDy7oTpmBVGQBS73tmk+cFWuSo7BIrUgdM+?=
+ =?us-ascii?Q?bW/j5zxS6ib3u+SZtkHIp2XUpf3i17U+V7NunmXuj1gZjRmzLlkEbgIYhdwH?=
+ =?us-ascii?Q?ind8wUfO3RTBY1U7oWRcfwUqpbAjJgd5z6h569tt9ym+4h2hV+7+KOXJZQvq?=
+ =?us-ascii?Q?XFWvCgzblk92C+37gYYWlMzobfWFiumPn5u062jP7qgLKFgvx3g+yYz2DbZV?=
+ =?us-ascii?Q?iteiVIEM9fJ8zPf6bnm2LafGoE8AKp+eix9/Tr9QE/ixTwL13M2v3+Jh5s87?=
+ =?us-ascii?Q?04Adwqra+mTNtLkL4lklCFZcCyXxpB6wLebBHP1epJLEwGudAcjlRxx5ygnB?=
+ =?us-ascii?Q?PpeuLkv+9Ybj7a3rGP3gu5J8AMRjQLgSyXl8NkRJh/ZhmmCtsQJRg+4hOeHV?=
+ =?us-ascii?Q?w+IXvelxU0L1RWy7Vko=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18e13a82-8faa-4e0b-8ad4-08dd153cfabb
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2024 14:56:20.6485
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uAcKVqeOB4acyQ7tJSGx/oQW45UJJgP1MxRbUVFZewsGV3DuXgcAMDYNnOfxIeir0IuwVKQcioMmYkXbkNyYaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7812
 
-Add a sample Rust platform driver illustrating the usage of the platform
-bus abstractions.
+On Thu, Dec 05, 2024 at 02:10:55PM +0100, Thomas Gleixner wrote:
+> On Wed, Dec 04 2024 at 18:25, Frank Li wrote:
+> > Some MSI controller change address/data pair when irq_set_affinity().
+> > Current PCI endpoint can't support this type MSI controller. So add flag
+> > MSI_FLAG_MUTABLE in include/linux/msi.h and check it when allocate
+> > doorbell.
+>
+> Q: Who is going to annotate the affected domains with that flag?
+>
+> A: Nobody.
+>
+> Q: What's the value of the flag?
+>
+> A: Zero, as as it prevents exactly nothing.
+>
+> You want a MSI_FLAG_MSG_IMMUTABLE and set that on the domains which
+> provide it. That way you ensure that someone looked at the domain to
+> validate it.
 
-This driver probes through either a match of device / driver name or a
-match within the OF ID table.
+Okay, at beginning I think most MSI controller is immutable. So I use
+MSI_FLAG_MSG_MUTABLE.
 
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- MAINTAINERS                                  |  1 +
- drivers/of/unittest-data/tests-platform.dtsi |  5 ++
- samples/rust/Kconfig                         | 10 ++++
- samples/rust/Makefile                        |  1 +
- samples/rust/rust_driver_platform.rs         | 49 ++++++++++++++++++++
- 5 files changed, 66 insertions(+)
- create mode 100644 samples/rust/rust_driver_platform.rs
+It is fine change to MSI_FLAG_MSG_IMMUTABLE.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 365fc48b7041..ae576c842c51 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7035,6 +7035,7 @@ F:	rust/kernel/device_id.rs
- F:	rust/kernel/devres.rs
- F:	rust/kernel/driver.rs
- F:	rust/kernel/platform.rs
-+F:	samples/rust/rust_driver_platform.rs
- 
- DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
- M:	Nishanth Menon <nm@ti.com>
-diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
-index fa39611071b3..2caaf1c10ee6 100644
---- a/drivers/of/unittest-data/tests-platform.dtsi
-+++ b/drivers/of/unittest-data/tests-platform.dtsi
-@@ -33,6 +33,11 @@ dev@100 {
- 					reg = <0x100>;
- 				};
- 			};
-+
-+			test-device@2 {
-+				compatible = "test,rust-device";
-+				reg = <0x2>;
-+			};
- 		};
- 	};
- };
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 6d468193cdd8..70126b750426 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -41,6 +41,16 @@ config SAMPLE_RUST_DRIVER_PCI
- 
- 	  If unsure, say N.
- 
-+config SAMPLE_RUST_DRIVER_PLATFORM
-+	tristate "Platform Driver"
-+	help
-+	  This option builds the Rust Platform driver sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_driver_platform.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_HOSTPROGS
- 	bool "Host programs"
- 	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 2f5b6bdb2fa5..761d13fff018 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -4,6 +4,7 @@ ccflags-y += -I$(src)				# needed for trace events
- obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
-+obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
- 
- rust_print-y := rust_print_main.o rust_print_events.o
- 
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-new file mode 100644
-index 000000000000..2f0dbbe69e10
---- /dev/null
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust Platform driver sample.
-+
-+use kernel::{c_str, of, platform, prelude::*};
-+
-+struct SampleDriver {
-+    pdev: platform::Device,
-+}
-+
-+struct Info(u32);
-+
-+kernel::of_device_table!(
-+    OF_TABLE,
-+    MODULE_OF_TABLE,
-+    <SampleDriver as platform::Driver>::IdInfo,
-+    [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
-+);
-+
-+impl platform::Driver for SampleDriver {
-+    type IdInfo = Info;
-+    const OF_ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
-+
-+    fn probe(pdev: &mut platform::Device, info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
-+        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
-+
-+        if let Some(info) = info {
-+            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
-+        }
-+
-+        let drvdata = KBox::new(Self { pdev: pdev.clone() }, GFP_KERNEL)?;
-+
-+        Ok(drvdata.into())
-+    }
-+}
-+
-+impl Drop for SampleDriver {
-+    fn drop(&mut self) {
-+        dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver sample.\n");
-+    }
-+}
-+
-+kernel::module_platform_driver! {
-+    type: SampleDriver,
-+    name: "rust_driver_platform",
-+    author: "Danilo Krummrich",
-+    description: "Rust Platform driver",
-+    license: "GPL v2",
-+}
--- 
-2.47.0
+Frank
 
+>
+> Thanks,
+>
+>         tglx
 
