@@ -1,102 +1,159 @@
-Return-Path: <linux-pci+bounces-17797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3620C9E5DF6
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 19:05:38 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53CA59E5E12
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 19:12:22 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E554C28660B
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 18:05:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FCA716B7EB
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2024 18:12:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4529D227B89;
-	Thu,  5 Dec 2024 18:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F627227B90;
+	Thu,  5 Dec 2024 18:12:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nzpIl9YB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+4Rsy8fT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4LAdYka"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76A9226ED3;
-	Thu,  5 Dec 2024 18:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F26322579F;
+	Thu,  5 Dec 2024 18:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733421917; cv=none; b=jggguzC/RWtGoFObZQ8CWjTtV7wlIe2Gl33WWAnzaKTKOeAMu10XQaIJn/aoULhNeL4HnIYsyeNgeD4eI1rTHHYWv2VO9J2wWDOioLGmY8LZT4qIf8gy7t2h4R57J/ZRSI8L1n35qA6XK0Obffgk06qfbm2OvLfjR3kEKL399Pc=
+	t=1733422338; cv=none; b=HpaaETScXH68L7+/YduDzIiNC4QXVEN7vr30FKGzdrLsSJbb/cRWrAY6qZw8NMH0Jl4JNXRqCydc9rz4gyGkFwTzj+RC+Vl0mYaQkmpLNCAb4EYAeGcOYxGzQNMMzED46j4wBZqLQrwZOquf5BW+37rZLRUMqgREwvjC3E8WUq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733421917; c=relaxed/simple;
-	bh=f3oC/5XyI3YEdeEGvrWYb1QL6QS05ON7ASm8AOP/poY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Kt7GwmBd+994HqmMMPWr9wmmIEzWi51Jd8EoGwE/IgDtxl8dYqapls1jg2iRW9mssuBJNibpwPkgnbJwWScOWM8AIrZC/PRD9tc+BwPtmDVYXc3NJVY9Y55MgEXy6t1KGPj4r6JdGoBuHmUM/If9Ajf4hQPsq+OcdGYNEykNiAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nzpIl9YB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+4Rsy8fT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1733421913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BglboHQ7tVu4BxDK/EuzRuAGpk+spIRm/9NWQyWzxwk=;
-	b=nzpIl9YBICnzKJI2Pjvf7pkScFiSL9S5X4wczpmO39asv6i5Z5SF3UYOzOO2mqZVUE41dd
-	2zHRSj2qsel3OpEJ2kfDqI56RWlxU2MY40FwlxpwWSyXJ3ajQEFqK76st0cebIzRndq9pA
-	2K7XMPdBI6WOD0qjt5Y5K/ajyDIWjWtfx2/48zBYcsP8jwZBtIzK1dN2E82xpHAFca52/K
-	W7+oLVtuMAXCAUa7hz/zKRr885/ye+gH8lK5Zi/qu6MMMqRgoSP6YT7UQO6KJ2wrrqqE5T
-	CUxPyDxk6gq/DiLPQEUej3k429WBRKnuYABK/KMSPr9Nag6vvKCtUvuF6SSXpA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1733421913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BglboHQ7tVu4BxDK/EuzRuAGpk+spIRm/9NWQyWzxwk=;
-	b=+4Rsy8fTbbnjB6wPATM5TxkjCHnu+iZXm4JyQV8eFr1jCKHhPGsKvDTyDr8BPvspeOadXi
-	R164aOSReCT8w6Dg==
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Kishon Vijay Abraham I
- <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Anup Patel <apatel@ventanamicro.com>, Marc Zyngier
- <maz@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
- dlemoal@kernel.org, jdmason@kudzu.us, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v10 3/7] PCI: endpoint: pci-ep-msi: Add MSI address/data
- pair mutable check
-In-Reply-To: <Z1G/CwFvO/aBLBe8@lizhi-Precision-Tower-5810>
-References: <20241204-ep-msi-v10-0-87c378dbcd6d@nxp.com>
- <20241204-ep-msi-v10-3-87c378dbcd6d@nxp.com> <87ttbiqnq8.ffs@tglx>
- <Z1G/CwFvO/aBLBe8@lizhi-Precision-Tower-5810>
-Date: Thu, 05 Dec 2024 19:05:13 +0100
-Message-ID: <87ldwuqa3q.ffs@tglx>
+	s=arc-20240116; t=1733422338; c=relaxed/simple;
+	bh=QSZyaJi7d+QA+wOooiJNqMdZ/M4qnUu86w6eRcFcCnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nPIFd/b2qBjgvK/AgEteFEazNw8bEGU/GPagMUZdUjyfnQhFV/PKFz6OzIB43iSIGD+8zCyAemYSHKSemYES5UDyVQvInNOHG7FJjihfwd4nQjkWHwGO7RLwWu8TZP+ALF4CssD680HdnsGkObsFyW6HF78Wg+fh9Kr/r1vMHlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4LAdYka; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C3C2C4CED1;
+	Thu,  5 Dec 2024 18:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733422337;
+	bh=QSZyaJi7d+QA+wOooiJNqMdZ/M4qnUu86w6eRcFcCnM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=o4LAdYkapUYSlaTfcyJXGeTIcz4sh59MYtxw9ug53TfwO2SaxuM7FRgAG43MlDSlH
+	 Ud53mXK7Zc+p84UkN0DRlu412C9D+in5OGJ+OHO/JZnVE+rK5aGIUZvgVxw36bErZ5
+	 Wc2Cnr0Y3uts4Wt4Kgj7SczqhmlrGp/optJALE5nSVdgJhdzRzlKuRnz94hHht2xA6
+	 ojyg/3uEW0mb+tmPOqxVKFpCFeqpN/pvXLwVw00+Rcvw6czE6M4xxxuSf8+t7Om3aB
+	 HsRVk5XlWecCBYyv3PYmYdHEopxpWNeMKIGvEGQNAe7LZq089Hp9WpN6X9FOmFzYG6
+	 AYhB0A3KpU7/Q==
+Date: Thu, 5 Dec 2024 12:12:16 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+	Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Mathias Nyman <mathias.nyman@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v5 0/5] Verify devices transition from D3cold to D0
+Message-ID: <20241205181216.GA3058743@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1dafdb9-1480-480a-97f1-b43367d883fb@kernel.org>
 
-On Thu, Dec 05 2024 at 09:56, Frank Li wrote:
-> On Thu, Dec 05, 2024 at 02:10:55PM +0100, Thomas Gleixner wrote:
->> You want a MSI_FLAG_MSG_IMMUTABLE and set that on the domains which
->> provide it. That way you ensure that someone looked at the domain to
->> validate it.
->
-> Okay, at beginning I think most MSI controller is immutable. So I use
-> MSI_FLAG_MSG_MUTABLE.
+On Wed, Dec 04, 2024 at 09:44:05PM -0600, Mario Limonciello wrote:
+> On 12/4/2024 17:45, Bjorn Helgaas wrote:
+> > On Wed, Dec 04, 2024 at 11:30:51AM -0600, Mario Limonciello wrote:
+> > > On 8/23/2024 10:40, Mario Limonciello wrote:
+> > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > 
+> > > > Gary has reported that when a dock is plugged into a system at the same
+> > > > time the autosuspend delay has tripped that the USB4 stack malfunctions.
+> > > > 
+> > > > Messages show up like this:
+> > > > 
+> > > > ```
+> > > > thunderbolt 0000:e5:00.6: ring_interrupt_active: interrupt for TX ring 0 is already enabled
+> > > > ```
+> > > > 
+> > > > Furthermore the USB4 router is non-functional at this point.
+> > > > 
+> > > > Those messages happen because the device is still in D3cold at the time
+> > > > that the PCI core handed control back to the USB4 connection manager
+> > > > (thunderbolt).
+> > > > 
+> > > > The issue is that it takes time for a device to enter D3cold and do a
+> > > > conventional reset, and then more time for it to exit D3cold.
+> > > > 
+> > > > This appears not to be a new problem; previously there were very similar
+> > > > reports from Ryzen XHCI controllers.  Quirks were added for those.
+> > > > Furthermore; adding extra logging it's apparent that other PCI devices
+> > > > in the system can take more than 10ms to recover from D3cold as well.
+> > > > 
+> > > > This series add a wait into pci_power_up() specifically for D3cold exit and
+> > > > then drops the quirks that were previously used for the Ryzen XHCI controllers.
+> > > > 
+> > > > Mario Limonciello (5):
+> > > >     PCI: Use an enum for reset type in pci_dev_wait()
+> > > >     PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in pci_dev_wait()
+> > > >     PCI: Verify functions currently in D3cold have entered D0
+> > > >     PCI: Allow Ryzen XHCI controllers into D3cold and drop delays
+> > > >     PCI: Drop Radeon quirk for Macbook Pro 8.2
+> > > > 
+> > > >    drivers/pci/pci-driver.c    |  2 +-
+> > > >    drivers/pci/pci.c           | 70 +++++++++++++++++++++++++++----------
+> > > >    drivers/pci/pci.h           | 13 ++++++-
+> > > >    drivers/pci/pcie/dpc.c      |  2 +-
+> > > >    drivers/pci/quirks.c        | 25 -------------
+> > > >    drivers/usb/host/xhci-pci.c | 11 ------
+> > > >    6 files changed, 66 insertions(+), 57 deletions(-)
+> > > 
+> > > Bjorn,
+> > > 
+> > > This series has stalled a while.
+> > > 
+> > > Mika and I went back and forth and I think are generally in agreement so I
+> > > think it's waiting on your feedback.
+> > > 
+> > > Can you take another look?
+> > > 
+> > > The alternative is to add some more piles of quirks, but I'm hoping that we
+> > > can go this direction and drop a bunch of the old ones instead.
+> > > 
+> > > LMK if you want me to rebase it on 6.13-rc1 and resend a v6.
+> > 
+> > I'm still stuck on patch 2/5 because I'm not aware of any spec
+> > language about polling PCI_PM_CTRL to wait for a power state
+> > transition, so it seems really ad hoc.
+> 
+> I'm not really sure how to overcome this.  If I rebase everything I'll give
+> specs another read through in case I missed anything, but I suspect you know
+> these specs better than anyoe on this list.
+> 
+> Is it worth raising this to PCI-SIG to discuss?
+> Did you perhaps already do that?
 
-If you want to do that then _you_ have to go through every single
-interrupt controllers, validate and opt-out in case it does change the
-message. Otherwise that flag is completely pointless.
+I haven't, but it seems like that might be appropriate.  Can we
+formulate a question in terms of PCIe concepts?
 
-Instead of adding the IMMUTABLE flag for one controller you know and
-then let others who want to utilize this amend their controllers.
+I guess some of the pieces are:
 
-Opt-in is less work and more safe than opt-out. See?
+  - ACPI puts device in D3cold
+  - ACPI restores device to D0
+  - Device is not yet in D0 when ACPI method has completed
+  - OS read from device causes UR or RRS, so OS reads ~0
 
-Thanks,
+It's much more complicated if ACPI is involved because then we have
+question of whether the ACPI method should have waited.
 
-        tglx
+Patch 3/5 mentions "Full context restore or boot latency" language in
+PCI PM r1.2, but I couldn't find section.  I don't know how a generic
+spec could constrain D0->D3cold or D3cold->D0 transition time because
+that depends on platform-specific power management hardware.
+
+Bjorn
 
