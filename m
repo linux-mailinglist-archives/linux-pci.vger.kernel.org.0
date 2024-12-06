@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-17830-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17832-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B227B9E6901
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 09:34:41 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36B099E6903
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 09:34:57 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CABD51884168
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 08:34:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E642D281031
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 08:34:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B061DF985;
-	Fri,  6 Dec 2024 08:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67D61DDA3A;
+	Fri,  6 Dec 2024 08:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AxLDfEAI"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MS9kBJbb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9081DFE31
-	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 08:34:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5C11E1C2B
+	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 08:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733474065; cv=none; b=kcrqLtz1eeeh0yP4juIBhyJxVaUzZJ8Kp0tiU76mWH29zrIBFMlCWlrCvUH7MNZ0U59HdarQQkRnVpYiwJH08uL4yPZaOt2nvjnpeVp/sd1STCreQgX++nSO4Ush2kTgAYRTaSzT/bJAcrUp1jlGAmv2dbb8ZtTLez0ze2ufZwY=
+	t=1733474070; cv=none; b=a7s+GdfGCTSEB6g7/KQk3cmeZKq3QdnL906uno02KsWou2FnwuoE3FOE+gDsE2Qu0SedSScrpeH6iJRispCSmSrg25v3iAR7w2u9F7K8gGGYmEbUlD2J8iYXLquwI+mJH5E+lx4wNJj97CrWm0Zv5bxI1vBTh6ARtvOhsZg67ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733474065; c=relaxed/simple;
-	bh=Y7hyQYliKi59P3EK++qFtNAavnhWZIoTQz1hiPMCIGk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=bfo+uCevKPpOO5Uz+sc5ufF/D2Kagbx9dcBCTHTSDJMcIkR1EARhr382KLs5U3DL0X6dwnZgXcfuomLI7qZOnLZBBmH696zeHBroyQeGabnBeYdwguJprfjaBTdZuEXJlNPKcH3ADGspM+OKhw50b9wTlsZqzBxXF4kUjoIRp0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AxLDfEAI; arc=none smtp.client-ip=203.254.224.33
+	s=arc-20240116; t=1733474070; c=relaxed/simple;
+	bh=EhEGYhxLSlKYz9DoJ7L+0wZRwDTYKR4K1VwaUOKojWM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
+	 References; b=KY7TV/JV9qarEnUgR+4iAXmEqZMDiLc9yFnN13Nbmg4WO1LYqhCpAfhUqBPzOhly8cR0I8n73+NeW+iel2xVNdyX+3oixbKCC8ezYM2RQ5SEM2d2dOktB9qyK5oWB7qoYx5tMHeAUqQpJL9b+pSY7i+tZvb1NR1rj4jOZbNksoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MS9kBJbb; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20241206083415epoutp0355f26e57d33b649f40bfba4aabdcbe23~OiXf92sXY2333723337epoutp035
-	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 08:34:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20241206083415epoutp0355f26e57d33b649f40bfba4aabdcbe23~OiXf92sXY2333723337epoutp035
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20241206083418epoutp036648d68e03015e9b6584c8337d2c4f21~OiXjStk3A2315423154epoutp03_
+	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 08:34:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20241206083418epoutp036648d68e03015e9b6584c8337d2c4f21~OiXjStk3A2315423154epoutp03_
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1733474055;
-	bh=/2WNDe6QLmRMDxTMHLaeSgssrnQ4gM5C33L7+CC7KuA=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=AxLDfEAI6nV03qK8hG4hFw3qEZwCH2yBGwD/BBUcbdKSFB4k7OiEH3iB0JnKKRATI
-	 5Y+SpmxoaoHQm3rbYn67LEopz4I+PzI+ckT2K94k0/I3G4GwcuqzpD6p68/Y6mkdLN
-	 O5JooPCbNvlsl6xQqdhs7sb9hkk/xNqMhlUgUL8Q=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20241206083413epcas5p2a2f484ded668808c7e339fe8d8277161~OiXe8VFSM0537205372epcas5p2c;
-	Fri,  6 Dec 2024 08:34:13 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Y4PgS1qt2z4x9Q9; Fri,  6 Dec
-	2024 08:34:12 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	s=mail20170921; t=1733474058;
+	bh=8zKrIcn8Ku+bx3UX7Tz/EWhEyXC2fgMinelJIKpRG+A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MS9kBJbb30je8zmlMenh8NCmBwo9aBA6Wtuzd5yD3IXUjmiSe3XyEJjrWLyHsaxqw
+	 9PSTnL/gFjkcD3hja7ddjupd7M2Ah0WAukeNwGyEkJRZD8ooueJ8beWG6zI6F3+RGp
+	 snvz448ucqiY8Oh1i5R9e/ZENEV8YHW6Cte/CtsM=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20241206083417epcas5p39c67cf3f045df165f9a8451468eb57a8~OiXip7BHT2819428194epcas5p3G;
+	Fri,  6 Dec 2024 08:34:17 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Y4PgX1Sjzz4x9Q3; Fri,  6 Dec
+	2024 08:34:16 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
 	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	63.D7.19956.407B2576; Fri,  6 Dec 2024 17:34:12 +0900 (KST)
+	E5.D7.19956.807B2576; Fri,  6 Dec 2024 17:34:16 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20241206074226epcas5p116df75209c19f95223761ba56d179a39~OhqRC_Ttr1687316873epcas5p1u;
-	Fri,  6 Dec 2024 07:42:26 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20241206074234epcas5p3bc1151ad713c702c34581b484e21292d~OhqYKverE2415924159epcas5p3V;
+	Fri,  6 Dec 2024 07:42:34 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
 	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20241206074226epsmtrp110fbcd5032905bec982001472bf4eda7~OhqRCAi3-1431314313epsmtrp1C;
-	Fri,  6 Dec 2024 07:42:26 +0000 (GMT)
-X-AuditID: b6c32a4b-fd1f170000004df4-ac-6752b70452fd
+	20241206074234epsmtrp13fdff976ad6ec0a303a823bae8334a40~OhqYJ18dA1431314313epsmtrp1Q;
+	Fri,  6 Dec 2024 07:42:34 +0000 (GMT)
+X-AuditID: b6c32a4b-fd1f170000004df4-b2-6752b708311a
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9B.FC.18729.2EAA2576; Fri,  6 Dec 2024 16:42:26 +0900 (KST)
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7B.0E.18949.AEAA2576; Fri,  6 Dec 2024 16:42:34 +0900 (KST)
 Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
 	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20241206074223epsmtip1be6e21cb5e0321145d5c67ed97d1909a~OhqOFYz8O1582115821epsmtip1C;
-	Fri,  6 Dec 2024 07:42:23 +0000 (GMT)
+	20241206074231epsmtip1b892024f40d449e2eed582a8b6e08aa3~OhqVaDbkx1378213782epsmtip1C;
+	Fri,  6 Dec 2024 07:42:31 +0000 (GMT)
 From: Shradha Todi <shradha.t@samsung.com>
 To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
@@ -76,119 +76,109 @@ Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
 	pankaj.dubey@samsung.com, quic_nitegupt@quicinc.com,
 	quic_krichai@quicinc.com, gost.dev@samsung.com, Shradha Todi
 	<shradha.t@samsung.com>
-Subject: [PATCH v4 0/2] Add support for RAS DES feature in PCIe DW
-Date: Fri,  6 Dec 2024 13:14:54 +0530
-Message-Id: <20241206074456.17401-1-shradha.t@samsung.com>
+Subject: [PATCH v4 1/2] PCI: dwc: Add support for vendor specific capability
+ search
+Date: Fri,  6 Dec 2024 13:14:55 +0530
+Message-Id: <20241206074456.17401-2-shradha.t@samsung.com>
 X-Mailer: git-send-email 2.17.1
-Precedence: bulk
-X-Mailing-List: linux-pci@vger.kernel.org
-List-Id: <linux-pci.vger.kernel.org>
-List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPJsWRmVeSWpSXmKPExsWy7bCmui7L9qB0g/k3uS2mH1a0WNKUYdG0
+In-Reply-To: <20241206074456.17401-1-shradha.t@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmli7H9qB0gzXn2S2mH1a0WNKUYdG0
 	+i6rxc0DO5ksVnyZyW6xauE1NouGnt+sFpd3zWGzODvvOJtFy58WFou7LZ2sFou2fmG3ePCg
 	0qJzzhFmi/97drBb9B6udRDw2DnrLrvHgk2lHi1H3rJ6bFrVyeZx59oeNo8nV6YzeUzcU+fR
 	t2UVo8fnTXIBnFHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+
 	AbpumTlAHygplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCkwK9IoTc4tL89L18lJL
-	rAwNDIxMgQoTsjOeztjGXjBRouL093VsDYw3hLsYOTkkBEwkdm97ygRiCwnsZpTYf6W6i5EL
-	yP7EKLHnbDc7hPONUeL8jotsMB3nP06CSuxllPjQvpIVwvnCKLH53lN2kCo2AS2Jxq9dzCC2
-	iIC1xOH2LWwgRcwCT5kkWo//BBslLOAkMWvXYkYQm0VAVeLNnEawQ3gFrCRe/H3FDrFOXmL1
-	hgPMEHFBiZMzn7CA2MxA8eats5lBhkoI7OGQeNR3jBGiwUXiwNxrULcKS7w6vgVqkJTEy/42
-	KDtdYuXmGcwQdo7Et81LmCBse4kDV+YALeAAWqApsX6XPkRYVmLqqXVMEHv5JHp/P4Eq55XY
-	MQ/GVpb48ncPC4QtKTHv2GVWCNtDovHCGmgAx0ocaH7DNoFRfhaSd2YheWcWwuYFjMyrGCVT
-	C4pz01OLTQuM81LL4TGbnJ+7iRGckrW8dzA+evBB7xAjEwfjIUYJDmYlEd7KsMB0Id6UxMqq
-	1KL8+KLSnNTiQ4ymwDCeyCwlmpwPzAp5JfGGJpYGJmZmZiaWxmaGSuK8r1vnpggJpCeWpGan
-	phakFsH0MXFwSjUwHcy+vOpXh8SbxFM5nzpXBOjI7NzgzsvdcHCeda98TiDb54vdyie9r5y8
-	pFxzsqheuscyjM9b009gifiu+gzvDa8SGKeV/eHZXte95LbY2qN3ea//e3u209Ttd3Y3W/eW
-	pk1i07QblcLrtba+n3VA/DXruV/fwy1P7fxbl3kuI/Tcmv2NrVYTO67Xvom5EcHcqy6Y8UDt
-	2AsLr4qcqfY/j7xU+RVmd0I3dnLshY5+VaOrH6s2dXw4e0QsZYKdYrbF9zdfVx4/lDp76gzL
-	CRrqkV0TMx9pVhYu7mKydF6iEHbTYEbj5j8r1bPt8jnUci/PKOQ1O37++uuH9U8VrS+7e6YH
-	lZxvKDucLJI1f16IEktxRqKhFnNRcSIAsBbb8FIEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkkeLIzCtJLcpLzFFi42LZdlhJTvfRqqB0g/a70hbTDytaLGnKsGha
-	fZfV4uaBnUwWK77MZLdYtfAam0VDz29Wi8u75rBZnJ13nM2i5U8Li8Xdlk5Wi0Vbv7BbPHhQ
-	adE55wizxf89O9gteg/XOgh47Jx1l91jwaZSj5Yjb1k9Nq3qZPO4c20Pm8eTK9OZPCbuqfPo
-	27KK0ePzJrkAzigum5TUnMyy1CJ9uwSujKcztrEXTJSoOP19HVsD4w3hLkZODgkBE4nzHyex
-	dzFycQgJ7GaU2HvmCytEQlLi88V1TBC2sMTKf8+hij4xSrSu3M0GkmAT0JJo/NrFDGKLCNhK
-	3H80mRWkiFngK5PEx083wBLCAk4Ss3YtZgSxWQRUJd7MaQSbyitgJfHi7yt2iA3yEqs3HGCG
-	iAtKnJz5hKWLkQNokLrE+nlCIGFmoJLmrbOZJzDyz0JSNQuhahaSqgWMzKsYJVMLinPTc4sN
-	CwzzUsv1ihNzi0vz0vWS83M3MYJjSUtzB+P2VR/0DjEycTAeYpTgYFYS4a0MC0wX4k1JrKxK
-	LcqPLyrNSS0+xCjNwaIkziv+ojdFSCA9sSQ1OzW1ILUIJsvEwSnVwOTjlvxnffu5bbIbN73Q
-	1T2m+L5jddnF+gQtId+9NXonF/1m26H8dW9KUNg8LpfEB0d3RdfPqpB11HoqqVxkYDlJ8KfG
-	tE8W7zc9/ngzruG1wdbF+6SrzrhKHM2U+9IjoVpj63jjdNxKk3CvePnnCscY03cfnuYm0jhH
-	6q3oE5cGwYedv+Mn7VbyKTeL7Z/U6X7h98/33gvv7620W6NZNNnlsaRSyur8T5+tTLIeH56+
-	7fCa6b8X6eb2BiX88/3AvVZnjtL952sL6vkOCfvapHFekPt1avsWa+vkKafWb5Kcr7jdsi2/
-	LttcUP/EDs/bgt4PvLe9kApSOt+6yTVW7OLvyZFJs9taOfcnek39eVCJpTgj0VCLuag4EQBn
-	M+79FAMAAA==
-X-CMS-MailID: 20241206074226epcas5p116df75209c19f95223761ba56d179a39
+	rAwNDIxMgQoTsjP2bljJWvCKr+L4wn3sDYwveLoYOTkkBEwkJq+exNTFyMUhJLCbUeLUs4ds
+	EM4nRomFF2dAOd8YJc59W8cI07LlRzs7RGIvo8Sxkwehqr4wSvy8s5ENpIpNQEui8WsXM4gt
+	ImAtcbh9C1gRs8BTJonW4z/BioQFQiWub9jPBGKzCKhK9L2ezgJi8wpYSZxraIRaJy+xesMB
+	oEEcHJxAg6b+CgCZIyGwkEPizZQ2dogaF4lL0w5D2cISr45vgbKlJF72w9SkS6zcPIMZws6R
+	+LZ5CROEbS9x4MocFpD5zAKaEut36UOEZSWmnloHVsIswCfR+/sJVDmvxI55MLayxJe/e1gg
+	bEmJeccus0LYHhJtZ3rBXhQS6GOUeLHYeQKj3CyEDQsYGVcxSqYWFOempxabFhjnpZbDYy05
+	P3cTIziVannvYHz04IPeIUYmDsZDjBIczEoivJVhgelCvCmJlVWpRfnxRaU5qcWHGE2BwTeR
+	WUo0OR+YzPNK4g1NLA1MzMzMTCyNzQyVxHlft85NERJITyxJzU5NLUgtgulj4uCUamA6lHCM
+	6/v19B2ZDp6njV+ENuqllqQ7Ld5cfXTx3z6RFQuurVlbuULI+KBLaLw2j4HSj7UmvN/e781W
+	2v2Q/dEnb5ejQSW3DzT2F5ixvo8+Ov1ggkxmaswdGz9FCfPuPVtdrB7dmpGfFnLzBveTgMhv
+	O1R2VSWXFnx6lCS5jSUzTW9TgcDfoDD7Wubnz1jq9Oum7zRmnjnde1VkCkd3+iaHS86GfJyX
+	4+5OqTdy0BfxaeDa/fLyqouneh5cCPE4FlrrzRzGqutYMfMVY/KsRqFra20FHZtnrJqmIbtv
+	nr2nBO/XIJvKTIYzq+JF1itxrL394CSjyfQuPo8IC/eM1QLW4QcZX98Nt1/z2P6NvxJLcUai
+	oRZzUXEiAKcbqJMuBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsWy7bCSnO6rVUHpBscXcFtMP6xosaQpw6Jp
+	9V1Wi5sHdjJZrPgyk91i1cJrbBYNPb9ZLS7vmsNmcXbecTaLlj8tLBZ3WzpZLRZt/cJu8eBB
+	pUXnnCPMFv/37GC36D1c6yDgsXPWXXaPBZtKPVqOvGX12LSqk83jzrU9bB5Prkxn8pi4p86j
+	b8sqRo/Pm+QCOKO4bFJSczLLUov07RK4MvZuWMla8Iqv4vjCfewNjC94uhg5OSQETCS2/Ghn
+	72Lk4hAS2M0o8ebnfFaIhKTE54vrmCBsYYmV/56zg9hCAp8YJR4fFAex2QS0JBq/djGD2CIC
+	thL3H01mBRnELPCVSeLjpxtgCWGBYInFdxrBBrEIqEr0vZ7OAmLzClhJnGtoZIRYIC+xesMB
+	oHoODk4Ba4mpvwIgdllJrG/5zzaBkW8BI8MqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95Pzc
+	TYzgUNfS2sG4Z9UHvUOMTByMhxglOJiVRHgrwwLThXhTEiurUovy44tKc1KLDzFKc7AoifN+
+	e92bIiSQnliSmp2aWpBaBJNl4uCUamDatpZPpFVRYGehzlKfTI8FK7f/mzl3+tHGoPsr6+4n
+	//nkfnP+sQDB3S4WK8+Ifi2IaVLYsMGtRPV/eH6pyKLsV2dPzti9cNbVt3dWP3i5WFWUK8jB
+	1Nplw/UnXU/Tz18Snu9gkDBXeeH1vDUusj8OMgfOPqNxWSu1sku6M7zW49dER9eWZTxrfR2L
+	xIPaDs66Fy1zvYZtzl7FvQJb/JJtOOcs/GyxdLnE5481cz/+sdPifBttqtYwb5v85c2dVYGr
+	D0ZnTbWr9188Vadq6TLr+Me+rL3zDlbyyzifu9UVX3Ly14ftret5w/S4Zp1Wvqe+YO2CBYKd
+	ns/NWH6Er/hdom9yvc1g7SrtFcv1LfuvKLEUZyQaajEXFScCALe/QZzkAgAA
+X-CMS-MailID: 20241206074234epcas5p3bc1151ad713c702c34581b484e21292d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20241206074226epcas5p116df75209c19f95223761ba56d179a39
-References: <CGME20241206074226epcas5p116df75209c19f95223761ba56d179a39@epcas5p1.samsung.com>
+X-CMS-RootMailID: 20241206074234epcas5p3bc1151ad713c702c34581b484e21292d
+References: <20241206074456.17401-1-shradha.t@samsung.com>
+	<CGME20241206074234epcas5p3bc1151ad713c702c34581b484e21292d@epcas5p3.samsung.com>
+Precedence: bulk
+X-Mailing-List: linux-pci@vger.kernel.org
+List-Id: <linux-pci.vger.kernel.org>
+List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-DesignWare controller provides a vendor specific extended capability
-called RASDES as an IP feature. This extended capability  provides
-hardware information like:
- - Debug registers to know the state of the link or controller. 
- - Error injection mechanisms to inject various PCIe errors including
-   sequence number, CRC
- - Statistical counters to know how many times a particular event
-   occurred
+Add vendor specific extended configuration space capability search API
+using struct dw_pcie pointer for DW controllers.
 
-However, in Linux we do not have any generic or custom support to be
-able to use this feature in an efficient manner. This is the reason we
-are proposing this framework. Debug and bring up time of high-speed IPs
-are highly dependent on costlier hardware analyzers and this solution
-will in some ways help to reduce the HW analyzer usage.
+Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 16 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h |  1 +
+ 2 files changed, 17 insertions(+)
 
-The debugfs entries can be used to get information about underlying
-hardware and can be shared with user space. Separate debugfs entries has
-been created to cater to all the DES hooks provided by the controller.
-The debugfs entries interacts with the RASDES registers in the required
-sequence and provides the meaningful data to the user. This eases the
-effort to understand and use the register information for debugging.
-
-v4:
-    - Addressed comments from Manivannan, Bjorn and Jonathan
-    - Addressed style related change requests from v3
-    - Added Documentation under Documentation/ABI/testing and kdoc stype
-      comments wherever required for better understanding
-    - Enhanced error injection to include all possible error groups
-    - Removed debugfs init call from common designware file and left it
-      up to individual platform drivers to init/deinit as required.
-
-v3: https://lore.kernel.org/all/20240625093813.112555-1-shradha.t@samsung.com/
-    - v2 had suggestions about moving this framework to perf/EDAC instead of a
-      controller specific debugfs but after discussions we decided to go ahead
-      with the same. Rebased and posted v3 with minor style changes.
-
-v2: https://lore.kernel.org/lkml/20231130115044.53512-1-shradha.t@samsung.com/
-    - Addressed comments from Krzysztof Wilczyński, Bjorn Helgaas and
-      posted v2 with a changed implementation for a better code design
-
-v1: https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
-
-Shradha Todi (2):
-  PCI: dwc: Add support for vendor specific capability search
-  PCI: dwc: Add debugfs based RASDES support in DWC
-
- Documentation/ABI/testing/debugfs-dwc-pcie    | 143 +++++
- drivers/pci/controller/dwc/Kconfig            |  11 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- .../controller/dwc/pcie-designware-debugfs.c  | 544 ++++++++++++++++++
- .../controller/dwc/pcie-designware-debugfs.h  |   0
- drivers/pci/controller/dwc/pcie-designware.c  |  16 +
- drivers/pci/controller/dwc/pcie-designware.h  |  18 +
- 7 files changed, 733 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-dwc-pcie
- create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.c
- create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.h
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 6d6cbc8b5b2c..41230c5e4a53 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -277,6 +277,22 @@ static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+ 	return 0;
+ }
+ 
++u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap)
++{
++	u16 vsec = 0;
++	u32 header;
++
++	while (vsec = dw_pcie_find_next_ext_capability(pci, vsec,
++					PCI_EXT_CAP_ID_VNDR)) {
++		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
++		if (PCI_VNDR_HEADER_ID(header) == vsec_cap)
++			return vsec;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dw_pcie_find_vsec_capability);
++
+ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+ {
+ 	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 347ab74ac35a..98a057820bc7 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -476,6 +476,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
+ 
+ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
++u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap);
+ 
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+ int dw_pcie_write(void __iomem *addr, int size, u32 val);
 -- 
 2.17.1
 
