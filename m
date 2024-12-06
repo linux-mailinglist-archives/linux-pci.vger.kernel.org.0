@@ -1,127 +1,167 @@
-Return-Path: <linux-pci+bounces-17827-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17828-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F28AD9E6722
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 07:05:24 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C28D18856FF
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 06:05:24 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6C51D88C4;
-	Fri,  6 Dec 2024 06:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IrwUSdsi"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B54749E6754
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 07:39:13 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA62B13AD0;
-	Fri,  6 Dec 2024 06:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A8B4284735
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 06:39:11 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E791D89EC;
+	Fri,  6 Dec 2024 06:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+N+5AYx"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F215196C6C;
+	Fri,  6 Dec 2024 06:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733465120; cv=none; b=DLUzZ8SeeiwkhJy+SfMn3dH7og9219T66fLcZSjd7CIjAGZ85E836aSxKNI8pVeCl2IH84OtowtfSLJ10BQSJfjyfmikEZ0bGlkEc+g9302M5CAruXByfKDhtHzYnhm6Ms4lM3NJuoQtbYNNfAVTMxd3M3+GLqfY8RpMavFSoYQ=
+	t=1733467148; cv=none; b=maLls9oNZi6ELQsNo0+m9objLE7QTWRKzKqTEMVNQfB6sgKpKhz0eEmfrzDGu5eX3L9l3PpWfTbZk/QLmorwflBoIgtGfbSxDH4iL+MsiTnDX91nR5vm5HEH+MkN74CDDMHzcKlk1AbS02Pykjk1mqGB+AFd44j/qE1oN1YFHyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733465120; c=relaxed/simple;
-	bh=6Ri12HKLVSBvwN+t+sSnHgbkV9vrXYvjDK7jLXFLZJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p42g1+sSoVyLJIU0qiRq+ciq2hhaGadsZGHayvwQzReEhwFegZ+y2urMNHXCoUi/ZTROO/PJAANQ8VAOZgvk3htG80OUwjjriDXxjT9IPRRMI7gUaMH0nKO4hI0jzx/QJoC0NYgJH5DDgXaA1TTha3FJJMeynXhCgsldUQSTXRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IrwUSdsi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F13C4CED2;
-	Fri,  6 Dec 2024 06:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1733465118;
-	bh=6Ri12HKLVSBvwN+t+sSnHgbkV9vrXYvjDK7jLXFLZJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IrwUSdsiQXWcDSwOJ+EXtaq5uUbLt+N41KLKja7LcPfhf/jODLj2bVpLa0yvXlfgp
-	 hFfN0f5NfqdwC+7/pAWA8orzAaOwJNK8BE2LCs9Ksea7jK1pGR4Q8LPK2rAfBehO85
-	 2R07CzqDvmmYIrYXVDVJfbzOUyixKHRKxZleq9oc=
-Date: Fri, 6 Dec 2024 07:05:14 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, Isaku Yamahata <isaku.yamahata@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, Wu Hao <hao.wu@intel.com>,
-	Samuel Ortiz <sameo@rivosinc.com>, Lukas Wunner <lukas@wunner.de>,
-	Sami Mujawar <sami.mujawar@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Xiaoyao Li <xiaoyao.li@intel.com>, Yilun Xu <yilun.xu@intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>, John Allen <john.allen@amd.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 00/11] PCI/TSM: Core infrastructure for PCI device
- security (TDISP)
-Message-ID: <2024120625-baggage-balancing-48c5@gregkh>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+	s=arc-20240116; t=1733467148; c=relaxed/simple;
+	bh=gf/iKJKG7MSXBLNBSZesL4mVM9fFiTpPLt8UjWlYIhM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DH6y1FuLyN2YdDhAlg+KbfQDAfgA59GzS1Ar/Mf+kSuOPfNeg7oWw9zlQYsdSuvl/zEaqG4St2+7FV+HxQCZpsewSNmjVIiv9iw/jWnfIS9IMQAQzTZhov4Vc9oekbX+iC1/p/mUKTrc/nWBW1q5XJ2gZD4yrVnEEJox4NeScYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M+N+5AYx; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aa63dbda904so61421266b.3;
+        Thu, 05 Dec 2024 22:39:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733467145; x=1734071945; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RouDWMtrNmhK5uGTuKr0acx+tj8K0d2J2Vphj7alK/o=;
+        b=M+N+5AYxxpAITRrpoyfCrMf9wCdCID8UjNgxTQzGPxhe0MP8IDMkLivapeGgFS2W6A
+         cwlZ0z8bcTNFuCx30MX5dh8rsa5/w5ds7FpA/hKNMH0Dv0+pcvlzgSiQWI0YkHqCXVwa
+         E80F7ELl+lfEszYv60j/vLK3DQ/noJy3S4QChhzAOkAktqOlW2xH4ektalo+B+x1T7+/
+         g/NXmzvK3wpxhczQNmYkhTrey1VYaFW3nGNvMPTzieiJAdyta7iz5zikDsesd5FTFw8u
+         HaS8blVOn+4jdYybOcH9whkHHDnwsprlsGDrDEhFWUQPWjp5Au1U5uq+7bYggMOFX2AN
+         8r2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733467145; x=1734071945;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RouDWMtrNmhK5uGTuKr0acx+tj8K0d2J2Vphj7alK/o=;
+        b=cWyGc318Cb3TkPfouBbfKz51M1wivsTLBXJWBraNJy2K3nrWyUFIuBTHsXW2fiGpvE
+         pNYrpk9t6WImhcZozXPGRmhxQw9p2n0v11sFHhsJt6mD1UrZ1VQ8He8BG1IWa3MTybK9
+         eoWAzg9v63z7lcSFPDNzlzy5qb74J+6P3quAw2gINbndGHSxfvygJtrk4ODEomIge2/q
+         u30EJLT7tbmwJ2rGK6/pUeRz7/FYu/3YJlOqFCZRxX47U7nZ2pP/KX8lqpQcqXqo64X6
+         KAT0ADU9eQIwcmE0Z7anjmqGkaxpfCCpAtVb/jf7ZUsBGwuDeQQoXk14uX/8Hq0fg2MX
+         mY7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVyqo/tewXih9quaWkuWYwUPpFR4ZD1+MtV9WlwnSxoklqbifeq307zYWe8FKKK0OT0XgzNVrjYg0WV@vger.kernel.org, AJvYcCWCSyV49awgIjlU/kNAAqw4YvCXQSHN0iO1XKPaSPbQv5QbUvfK3q4MLzq8aqn9tLwWvzNU3pSMoCl6@vger.kernel.org, AJvYcCWeuT0pZ+9dwCvIjxcgfvVbwu1GzVasinpOI2sPDoTgLYtYj3OPUJ8oiTWUEbLYnLQqlgE0MO78bbBTZDoH@vger.kernel.org, AJvYcCX/S3pavHUxWVCswg0/oiNHKOAyv91vKmxZtok9WtSDEI0Ae/X3iD/TPsWgVBncqTz2DubvaGPoPNEpteVF2JU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzioJ12WBanbaakS9R/kABBkUQQoXmPGPBn0dHfZKTasXfZ0te/
+	ykvKfsdb2OCSkqkqbjlawARuyRdSd9gNM1AE8e3qUnAlKjjYmhat9NoWOUgN
+X-Gm-Gg: ASbGncvgZhUwNQoRgdX0uGKNNE4o5rlXW6Bl+oqmNABM16Em/d4bbCmP1lv75wAFWhJ
+	dfgm0c68hHlYFxnX0pJaokbUJf2hAX2ic+aiuZUU+ug7cFBr4rsSTr03UCNIkAJOOcCEEbLAT0f
+	bQYskpHUZXqO22kY403p9Wy8ht8v3Yjh4FpYAf+H4umHdspIvaBJjMHf9y9z20r+xQuJzTRfChH
+	YyezTDrD2KcPPHY7/Nc33bY8idlUBxjb53NGsNDpx+TPxxlgb5MtTfA9decEuCBngAmk6u5WWyq
+	e6qzqtCJlCq1rPMLBCCoDURWcGc7cc+96A0ETDpvvyP3O9FXOplj1z7xpJkDFPm92CN6pyQq0pC
+	AQYP5Pw==
+X-Google-Smtp-Source: AGHT+IGO33J7vW1h11O8By/EYSH2CHjkY31KMy759bZRbZKW/KpYXSdhit8XvWbJ7veAfaEdCrHIcQ==
+X-Received: by 2002:a17:907:2da9:b0:aa6:1f84:9791 with SMTP id a640c23a62f3a-aa63a2875aemr164679966b.51.1733467144727;
+        Thu, 05 Dec 2024 22:39:04 -0800 (PST)
+Received: from ?IPV6:2003:df:bf0d:b400:44f9:3850:f4a9:a264? (p200300dfbf0db40044f93850f4a9a264.dip0.t-ipconnect.de. [2003:df:bf0d:b400:44f9:3850:f4a9:a264])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa6260288e1sm192892266b.102.2024.12.05.22.39.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2024 22:39:04 -0800 (PST)
+Message-ID: <626b3707-c2cb-4239-b6f8-8b33e45e7874@gmail.com>
+Date: Fri, 6 Dec 2024 07:39:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/13] samples: rust: add Rust platform sample driver
+To: Rob Herring <robh@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
+ rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
+ a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+ fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+ ajanulgu@redhat.com, lyude@redhat.com, daniel.almeida@collabora.com,
+ saravanak@google.com, dirk.behme@de.bosch.com, j@jannau.net,
+ fabien.parent@linaro.org, chrisi.schrefl@gmail.com,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+References: <20241205141533.111830-1-dakr@kernel.org>
+ <20241205141533.111830-14-dakr@kernel.org>
+ <e2c202c1-6bbe-4b6c-ae97-185fe2aed0e5@gmail.com>
+ <CAL_JsqJn=bAF4OYVJNDmiyCNQTAte4wmLhpo0Ca5Pv_oGTg73g@mail.gmail.com>
+Content-Language: de-AT-frami, en-US
+From: Dirk Behme <dirk.behme@gmail.com>
+In-Reply-To: <CAL_JsqJn=bAF4OYVJNDmiyCNQTAte4wmLhpo0Ca5Pv_oGTg73g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 05, 2024 at 02:23:15PM -0800, Dan Williams wrote:
-> Changes since the RFC [1]:
-> - Wording changes and cleanups in "PCI/TSM: Authenticate devices via
->   platform TSM" (Bjorn)
-> - Document /sys/class/tsm/tsm0 (Bjorn)
-> - Replace the single ->exec(@op_code) operation with named operations
->   (Alexey, Yilun)
-> - Locking fixup in drivers/pci/tsm.c (Yilun)
-> - Drop pci_tsm_devs xarray (Alexey, Yilun)
-> - Finish the host bridge stream id allocator implementation (Alexey)
-> - Clarify pci_tsm_init() relative to IDE && !TEE devices (Alexey)
-> - Add the IDE core helpers
-> - Add devsec_tsm and devsec_bus sample driver and emulation
+Hi Rob,
+
+On 05.12.24 19:03, Rob Herring wrote:
+> On Thu, Dec 5, 2024 at 11:09 AM Dirk Behme <dirk.behme@gmail.com> wrote:
+>>
+>> Hi Danilo,
+>>
+>> On 05.12.24 15:14, Danilo Krummrich wrote:
+>>> Add a sample Rust platform driver illustrating the usage of the platform
+>>> bus abstractions.
+>>>
+>>> This driver probes through either a match of device / driver name or a
+>>> match within the OF ID table.
+>>>
+>>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>>
+>> Not a review comment, but a question/proposal:
+>>
+>> What do you think to convert the platform sample into an example/test?
+>> And drop it in samples/rust then? Like [1] below?
+>>
+>> We would have (a) a complete example in the documentation and (b) some
+>> (KUnit) test coverage and (c) have one patch less in the series and
+>> (d) one file less to maintain long term.
 > 
-> [1]: http://lore.kernel.org/171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com
+> I think that's going to become unwieldy when/if we add properties,
+> iomem, and every other thing a driver can call in probe.
+
+
+Yes, I agree. In your property RFC you added some (nice!) property
+access examples to the sample we are talking about here. That would
+become difficult with the documentation/Kunit example proposed here.
+So I think there are pros & cons for both options ;)
+
+
+> OTOH, the need for the sample will quickly diminish once there are
+> real drivers using this stuff.
 > 
-> ---
+>> I think to remember that it was mentioned somewhere that a
+>> documentation example / KUnit test is preferred over samples/rust (?).
 > 
-> Trusted execution environment (TEE) Device Interface Security Protocol
-> (TDISP) is a chapter name in the PCI specification. It describes an
-> alphabet soup of mechanisms, SPDM, CMA, IDE, TSM/DSM, that system
-> software uses to establish trust in a device and assign it to a
-> confidential virtual machine (CVM). It is protocol for dynamically
-> extending the trusted computing boundary (TCB) of a CVM with a PCI
-> device interface that can issue DMA to CVM private memory.
-> 
-> The acronym soup problem is enhanced by every major platform vendor
-> having distinct TEE Security Manager (TSM) API implementations /
-> capabilities, and to a lesser extent, every potential endpoint Device
-> Security Manager (DSM) having its own idiosyncratic behaviors around
-> TDISP state transitions.
+> Really? I've only figured out how you build and run the samples. I
+> started looking into how to do the documentation kunit stuff and still
+> haven't figured it out. 
 
-Wow, you aren't kidding about the acronym soup problem, this is a mess.
-And does any of this relate to the existing drivers/tee/ subsystem in
-any way?
+If you like try CONFIG_KUNIT=y and CONFIG_RUST_KERNEL_DOCTESTS=y.
 
-Anyhow, this patch series looks sane, nice work.
+I guess it will run automatically at boot, then. For me that was the
+easiest way. But yes, everything else will need some additional steps.
 
-> Note that devsec_tsm is for near term staging of vendor TSM
-> implementations. The expectation is that every piece of new core
-> infrastructure that devsec_tsm consumes must also have a vendor TSM
-> driver consumer within 1 to 2 kernel development cycles.
+Dirk
 
-How are you going to enforce this?  By removing infrastructure?
-Normally we can't add infrastructure unless there's a real user, and
-when you add a real user then you see all the things that need to be
-chagned.
+> I'm sure it is "easy", but it's not as easy as
+> the samples and yet another thing to go learn with the rust stuff. For
+> example, just ensuring it builds is more than just "compile the
+> kernel". We already have so many steps for submitting things upstream
+> and rust is just adding more on top.
 
-So are you ok with the apis and interfaces moving around over time here?
-I think I only see sysfs files being exported so hopefully this
-shouldn't be that big of a deal for userspace to deal with, but I don't
-know what userspace is supposed to do with any of this, is there
-external tools to talk to / set up, these devices?
 
-thanks,
-
-greg k-h
 
