@@ -1,100 +1,127 @@
-Return-Path: <linux-pci+bounces-17826-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17827-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0D6B9E66AC
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 06:14:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F28AD9E6722
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 07:05:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74F8918804CA
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 05:14:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C28D18856FF
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 06:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3511C194A5A;
-	Fri,  6 Dec 2024 05:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6C51D88C4;
+	Fri,  6 Dec 2024 06:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Hvh0dBNK"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IrwUSdsi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C41EA190470;
-	Fri,  6 Dec 2024 05:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA62B13AD0;
+	Fri,  6 Dec 2024 06:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733462085; cv=none; b=bq7qOBF83aoKwgMz3HalqyRnwNFSQkg3Nn2d0HY0tqON0jYDSFb/v5kbvmxeK0XFlFIpSjbm8Zn+W4H9W0FbAShFMxipjtv8k+W2cTzLm0OM1eITUIMooHDlxq+YPGSgrSjgiyR5tLghE+1TuCiC+Yq1FKr7Znqun4rtzOoynCU=
+	t=1733465120; cv=none; b=DLUzZ8SeeiwkhJy+SfMn3dH7og9219T66fLcZSjd7CIjAGZ85E836aSxKNI8pVeCl2IH84OtowtfSLJ10BQSJfjyfmikEZ0bGlkEc+g9302M5CAruXByfKDhtHzYnhm6Ms4lM3NJuoQtbYNNfAVTMxd3M3+GLqfY8RpMavFSoYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733462085; c=relaxed/simple;
-	bh=BqZvvQBe2NAiV555bybaFgTHIY65v4XFOh8d4y5vS50=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VvqM3+PqXVaKtklI1QgTNK46468dNgQktJNty7JLZ8yB4mVe6idlnwJpLS4UhlC7RT4leXOlKDYiDI99VjBPSGA5pUoyxKnzMXQxMSIh/BOVtbXu/bQQT7dCCpU3bBS2dQPgcARNtsNgSUw/3/3vH+kkxOE8krgR35GOc2itpTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Hvh0dBNK; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.0.192] (unknown [20.236.11.29])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DCC3E20ACD8D;
-	Thu,  5 Dec 2024 21:14:41 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DCC3E20ACD8D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1733462083;
-	bh=fmWPQyjFRGq2DUlJdZzT4Pg3mAFKTaqENTg3HM7bGXs=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=Hvh0dBNKckDBScVZZN9FBPxjIwxRPRWAjIktBLN2y3fC5OvW2S67m+oj9qsZDT5hY
-	 5k/by83lopTusK+LIkgRxkvpxQHZO4xGi0XNZqz+P31Fxv45dLNto6oVXCgd8Spwwi
-	 Q6b3836tPEjA0ievdJvUdmCOWAGIQMGjSvBrFuZA=
-Message-ID: <92399e62-e07b-48eb-9a96-9747ad5b6eb7@linux.microsoft.com>
-Date: Thu, 5 Dec 2024 21:14:40 -0800
+	s=arc-20240116; t=1733465120; c=relaxed/simple;
+	bh=6Ri12HKLVSBvwN+t+sSnHgbkV9vrXYvjDK7jLXFLZJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p42g1+sSoVyLJIU0qiRq+ciq2hhaGadsZGHayvwQzReEhwFegZ+y2urMNHXCoUi/ZTROO/PJAANQ8VAOZgvk3htG80OUwjjriDXxjT9IPRRMI7gUaMH0nKO4hI0jzx/QJoC0NYgJH5DDgXaA1TTha3FJJMeynXhCgsldUQSTXRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IrwUSdsi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F13C4CED2;
+	Fri,  6 Dec 2024 06:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1733465118;
+	bh=6Ri12HKLVSBvwN+t+sSnHgbkV9vrXYvjDK7jLXFLZJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IrwUSdsiQXWcDSwOJ+EXtaq5uUbLt+N41KLKja7LcPfhf/jODLj2bVpLa0yvXlfgp
+	 hFfN0f5NfqdwC+7/pAWA8orzAaOwJNK8BE2LCs9Ksea7jK1pGR4Q8LPK2rAfBehO85
+	 2R07CzqDvmmYIrYXVDVJfbzOUyixKHRKxZleq9oc=
+Date: Fri, 6 Dec 2024 07:05:14 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-coco@lists.linux.dev, Isaku Yamahata <isaku.yamahata@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, Wu Hao <hao.wu@intel.com>,
+	Samuel Ortiz <sameo@rivosinc.com>, Lukas Wunner <lukas@wunner.de>,
+	Sami Mujawar <sami.mujawar@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>, Yilun Xu <yilun.xu@intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>, John Allen <john.allen@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 00/11] PCI/TSM: Core infrastructure for PCI device
+ security (TDISP)
+Message-ID: <2024120625-baggage-balancing-48c5@gregkh>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, iommu@lists.linux.dev,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
- eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, mhklinux@outlook.com, decui@microsoft.com,
- catalin.marinas@arm.com, will@kernel.org, luto@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
- daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, arnd@arndb.de, sgarzare@redhat.com,
- jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mukeshrathor@microsoft.com,
- vkuznets@redhat.com, ssengar@linux.microsoft.com, apais@linux.microsoft.com,
- horms@kernel.org
-Subject: Re: [PATCH v3 5/5] hyperv: Remove the now unused hyperv-tlfs.h files
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-References: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1732577084-2122-6-git-send-email-nunodasneves@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <1732577084-2122-6-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
 
-On 11/25/2024 3:24 PM, Nuno Das Neves wrote:
-> Remove all hyperv-tlfs.h files. These are no longer included
-> anywhere. hyperv/hvhdk.h serves the same role, but with an easier
-> path for adding new definitions.
+On Thu, Dec 05, 2024 at 02:23:15PM -0800, Dan Williams wrote:
+> Changes since the RFC [1]:
+> - Wording changes and cleanups in "PCI/TSM: Authenticate devices via
+>   platform TSM" (Bjorn)
+> - Document /sys/class/tsm/tsm0 (Bjorn)
+> - Replace the single ->exec(@op_code) operation with named operations
+>   (Alexey, Yilun)
+> - Locking fixup in drivers/pci/tsm.c (Yilun)
+> - Drop pci_tsm_devs xarray (Alexey, Yilun)
+> - Finish the host bridge stream id allocator implementation (Alexey)
+> - Clarify pci_tsm_init() relative to IDE && !TEE devices (Alexey)
+> - Add the IDE core helpers
+> - Add devsec_tsm and devsec_bus sample driver and emulation
 > 
-> Remove the relevant lines in MAINTAINERS.
+> [1]: http://lore.kernel.org/171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com
 > 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  MAINTAINERS                          |   3 -
->  arch/arm64/include/asm/hyperv-tlfs.h |  71 ---
->  arch/x86/include/asm/hyperv-tlfs.h   | 811 ------------------------
->  include/asm-generic/hyperv-tlfs.h    | 883 ---------------------------
->  4 files changed, 1768 deletions(-)
->  delete mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
->  delete mode 100644 arch/x86/include/asm/hyperv-tlfs.h
->  delete mode 100644 include/asm-generic/hyperv-tlfs.h
 > 
+> Trusted execution environment (TEE) Device Interface Security Protocol
+> (TDISP) is a chapter name in the PCI specification. It describes an
+> alphabet soup of mechanisms, SPDM, CMA, IDE, TSM/DSM, that system
+> software uses to establish trust in a device and assign it to a
+> confidential virtual machine (CVM). It is protocol for dynamically
+> extending the trusted computing boundary (TCB) of a CVM with a PCI
+> device interface that can issue DMA to CVM private memory.
+> 
+> The acronym soup problem is enhanced by every major platform vendor
+> having distinct TEE Security Manager (TSM) API implementations /
+> capabilities, and to a lesser extent, every potential endpoint Device
+> Security Manager (DSM) having its own idiosyncratic behaviors around
+> TDISP state transitions.
 
-Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+Wow, you aren't kidding about the acronym soup problem, this is a mess.
+And does any of this relate to the existing drivers/tee/ subsystem in
+any way?
+
+Anyhow, this patch series looks sane, nice work.
+
+> Note that devsec_tsm is for near term staging of vendor TSM
+> implementations. The expectation is that every piece of new core
+> infrastructure that devsec_tsm consumes must also have a vendor TSM
+> driver consumer within 1 to 2 kernel development cycles.
+
+How are you going to enforce this?  By removing infrastructure?
+Normally we can't add infrastructure unless there's a real user, and
+when you add a real user then you see all the things that need to be
+chagned.
+
+So are you ok with the apis and interfaces moving around over time here?
+I think I only see sysfs files being exported so hopefully this
+shouldn't be that big of a deal for userspace to deal with, but I don't
+know what userspace is supposed to do with any of this, is there
+external tools to talk to / set up, these devices?
+
+thanks,
+
+greg k-h
 
