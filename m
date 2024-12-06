@@ -1,181 +1,172 @@
-Return-Path: <linux-pci+bounces-17839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29D5B9E6EB1
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 13:58:23 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 768109E6FB9
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 14:59:31 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEE2E28156C
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 12:58:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 903FE1888602
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 13:57:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E91CA2066FF;
-	Fri,  6 Dec 2024 12:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93E9420A5E5;
+	Fri,  6 Dec 2024 13:57:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k6KMm8hc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AvYoSDKS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F3B1D63DF;
-	Fri,  6 Dec 2024 12:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB83207E17
+	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 13:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733489892; cv=none; b=sjNdWG69OMeHB4OtElmFMgGFjqt8JIFh0m7MHW7ij1pLhYGc18BkcO8X9fVYv4ga4pHfYX24QqtFS3wlrJ3cCbnOckJU+3HEFwmtdyGvxuJtQZYNhPaapQY7uXUx7eOEkFFkB4q+/2l8dLT0woa0DW3Nb8gfodxUWwVsjBtl6PY=
+	t=1733493454; cv=none; b=ddIrSVTblxyUPfyJMvqmiZucRD1+5TPnHPzn91q/5z2SWrSbS8OzrflIv6QW3FPGrEAF4aS/DBdJD/GYi94hqwPEBj8xBlR7tShdeoXCo/nU/CBwg60+Sneod5VK0MXL+IQZbH0n7NOJq1FmW7XGTRIKsJgRR3vbidFkiSG2giE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733489892; c=relaxed/simple;
-	bh=gHmtYM0xFbENgH0JOzuO/NpklUBLQ269LXb2gsKedOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRztx5wpgwiXBzl3SsRtBd1Y8UFGLY2q4q/QqmgTBqPzyPaYaBSl3TqJXJaqr4BtvPW59BsYF3q6jBvrlXK6tsr9w8bNNWP7wqY9OvH/bsMMxR3AOdqm5evlyBZQ+X9fS+cdFL7UeENqsF2KO7dSmPodxFdCJf238S5qWQnQI3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k6KMm8hc; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733489892; x=1765025892;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gHmtYM0xFbENgH0JOzuO/NpklUBLQ269LXb2gsKedOA=;
-  b=k6KMm8hc3+XBPBpG7/FYYK5rW8n8tktnrpqDRuD5GdjHxOdoDJVnxUJY
-   5bQoCfYJ2EM/sn/wpSSjx42m79KYINklis4YA2cO1eOyvvl3AjGu9+SEs
-   io1SZ+S8+eTtm8RXL9dh6rO9yhN8rBY70mTe3nrGAGjzFEIweujOCN7S4
-   kAgdXvjlqCMrfuoPCcAD8w0uo9nsFzB58n3JQi7raZxdof+Sf9hBKVyqn
-   E0KPAKx2YCTDzeNumLIsaE0excHloIVivxqyH2uBy/xK6PupT3h4B3Qoc
-   sZrCh0DpaExL8ZWC1YPskMYLn39t8w2lY2KHACLqnntn6MRlk/A3oSO2c
-   w==;
-X-CSE-ConnectionGUID: vpxMdINFT8mWe8QvQ2P1fQ==
-X-CSE-MsgGUID: i1iKqZBYTha/dnI8ASarog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11278"; a="37626192"
-X-IronPort-AV: E=Sophos;i="6.12,213,1728975600"; 
-   d="scan'208";a="37626192"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2024 04:58:11 -0800
-X-CSE-ConnectionGUID: K1z3DFaDRuml0ncnFtb84g==
-X-CSE-MsgGUID: U+l5/zCpRpaI5s5WGZsy8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,213,1728975600"; 
-   d="scan'208";a="98855019"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Dec 2024 04:58:06 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tJXuG-00013r-0N;
-	Fri, 06 Dec 2024 12:58:04 +0000
-Date: Fri, 6 Dec 2024 20:57:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	fan.ni@samsung.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, quic_nitegupt@quicinc.com,
-	quic_krichai@quicinc.com, gost.dev@samsung.com,
-	Shradha Todi <shradha.t@samsung.com>
-Subject: Re: [PATCH v4 1/2] PCI: dwc: Add support for vendor specific
- capability search
-Message-ID: <202412062046.0XR2e2V6-lkp@intel.com>
-References: <20241206074456.17401-2-shradha.t@samsung.com>
+	s=arc-20240116; t=1733493454; c=relaxed/simple;
+	bh=fiLpHl8kskZJf92XZBCQSNQh0EM/rPino4TCddjjNa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EDhu+KtK6Swg/vwKx4r6tCVFtyXjci/E8wYlHIBpghb60O/3OFR6A3ZhJL3OBBRagrrLSlU39j7oONplJZ/CGcgCPFqzmfwiiZqfrtC9yx7DHDT1m2E9/7U4rpFg9/qq14vYGKWVTMZKArvNU3pJ3+mgKXDUMazKJxbat3pUT+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AvYoSDKS; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-434a099ba95so21310325e9.0
+        for <linux-pci@vger.kernel.org>; Fri, 06 Dec 2024 05:57:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733493451; x=1734098251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NDyT0nGxXbja5Q8/labpY0AGckKUvtd7GbprKAY57M8=;
+        b=AvYoSDKSCLxYr2qJ9WJYdJyxNdwdVzH2QpufLN34unghI9e48l4BdxZcLRoBFcWYcB
+         cbLgeg4nMqqCFrq4Uin8fFmFtKSiiQWLAndZGnMw8jf8jcvA4c9uB8zezR61m85Xwjt9
+         eAhkuUdh8u98jKE1CteId+lUsz8MCwORlo93OGUdd/Vi6Wq+U1bTDuWn2PE943AOmAzk
+         BfMAXxWdiNiCYYBQo/DN94/UNZ0PdU9MeTd9KU7lx0llZkLJGpy7NaEs51bCdAVTkLf0
+         jgBzRuZh8pEnBcWXeiayq+g08pYDKfRnUd/zAxkuyvZUfXd08R4R0WifhsEPLApu0HkR
+         76Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733493451; x=1734098251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NDyT0nGxXbja5Q8/labpY0AGckKUvtd7GbprKAY57M8=;
+        b=WGPhHXIj/5fdUaAxdFhJTrQqVcQKRbnEcVfeE/R3MCFbjwFnYvpSKMY7k1lAyN/fxE
+         qlb6cGXbQFpNumBltSffLeKGYZqQzRXbTmtSDOryxm8a0ToCobzSzW0bAbR8UE7iGoSO
+         huI+evVA6AwH8p7K3RhF2jlGdsHtd1yaZKf+3JtNKqU9J4/5o0RueZvr1t5/6UcGFJRY
+         Z5u9lZZQ5btAeV4tK2tBiMeCD3iKEkeXmh+43Z1ZGJ1NXLGYXpxUSkbVZ9W4RlbVNI2B
+         Rc2YlwQooX5ei6/M6LFVBA2TIbwSBmjyPvDfF2Jso+NGeU6CMCXCdJBFMmtyNHXB8oMV
+         6MOw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0QeVmTW9UBWxMOkUdfmv+RU/Gd75DLrMUI3j80gAwXFbHsDieni1wHlcWIORfX1DQ8p+N8kka6ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxPWSL1gXad1ytpWdgoczTch3n/IABQx70AvghJHbWRfM1uPLW
+	xI7rT6EvZrFdy3aFSm1aq/YDzXC4BYnmPprL31hEDOARdQFK+PEOTl1whbhkcYD1ApCDPfFz3Fy
+	KINyZjDmH4I/O5GwcU1xJHUuygYFVzUV79AbP
+X-Gm-Gg: ASbGnct8ogIY7sg75JAHPFrVYOLzVcxFHiVY5FT0OgSWXoyawBBB3/rozHA9GtmVVwF
+	B4ZCs6cKfh1GsNDqwOmSoL1qSYAAN/+Yi
+X-Google-Smtp-Source: AGHT+IFVl6C+eSFuu9yGxEcfzxTahR7P+lh22t4H7dnq5rZTDhoIXpqQ/0j5yDdZDKZ/gkNWcTIdlAv15QqNAyld/Ak=
+X-Received: by 2002:a05:6000:2cd:b0:386:2ebe:7ac9 with SMTP id
+ ffacd0b85a97d-3862ebe7ddemr1414917f8f.33.1733493450776; Fri, 06 Dec 2024
+ 05:57:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241206074456.17401-2-shradha.t@samsung.com>
+References: <20241205141533.111830-1-dakr@kernel.org> <20241205141533.111830-3-dakr@kernel.org>
+In-Reply-To: <20241205141533.111830-3-dakr@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 6 Dec 2024 14:57:19 +0100
+Message-ID: <CAH5fLghRVFAb06YYfUbuyuR1pOK0cHzGk6A25c5hX3CyvMm+sw@mail.gmail.com>
+Subject: Re: [PATCH v4 02/13] rust: implement generic driver registration
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com, 
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, 
+	j@jannau.net, fabien.parent@linaro.org, chrisi.schrefl@gmail.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Shradha,
+On Thu, Dec 5, 2024 at 3:16=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> Implement the generic `Registration` type and the `DriverOps` trait.
+>
+> The `Registration` structure is the common type that represents a driver
+> registration and is typically bound to the lifetime of a module. However,
+> it doesn't implement actual calls to the kernel's driver core to register
+> drivers itself.
+>
+> Instead the `DriverOps` trait is provided to subsystems, which have to
+> implement `DriverOps::register` and `DrvierOps::unregister`. Subsystems
 
-kernel test robot noticed the following build warnings:
+typo
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus mani-mhi/mhi-next linus/master v6.13-rc1 next-20241205]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> have to provide an implementation for both of those methods where the
+> subsystem specific variants to register / unregister a driver have to
+> implemented.
+>
+> For instance, the PCI subsystem would call __pci_register_driver() from
+> `DriverOps::register` and pci_unregister_driver() from
+> `DrvierOps::unregister`.
+>
+> Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shradha-Todi/PCI-dwc-Add-support-for-vendor-specific-capability-search/20241206-163620
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20241206074456.17401-2-shradha.t%40samsung.com
-patch subject: [PATCH v4 1/2] PCI: dwc: Add support for vendor specific capability search
-config: arm64-randconfig-003-20241206 (https://download.01.org/0day-ci/archive/20241206/202412062046.0XR2e2V6-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241206/202412062046.0XR2e2V6-lkp@intel.com/reproduce)
+[...]
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412062046.0XR2e2V6-lkp@intel.com/
+> +/// The [`RegistrationOps`] trait serves as generic interface for subsys=
+tems (e.g., PCI, Platform,
+> +/// Amba, etc.) to provide the corresponding subsystem specific implemen=
+tation to register /
+> +/// unregister a driver of the particular type (`RegType`).
+> +///
+> +/// For instance, the PCI subsystem would set `RegType` to `bindings::pc=
+i_driver` and call
+> +/// `bindings::__pci_register_driver` from `RegistrationOps::register` a=
+nd
+> +/// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`=
+.
+> +pub trait RegistrationOps {
+> +    /// The type that holds information about the registration. This is =
+typically a struct defined
+> +    /// by the C portion of the kernel.
+> +    type RegType: Default;
 
-All warnings (new ones prefixed by >>):
+This Default implementation doesn't seem useful. You initialize it and
+then `register` calls a C function to initialize it. Having `register`
+return an `impl PinInit` seems like it would work better here.
 
-   In file included from drivers/pci/controller/dwc/pcie-designware.c:15:
-   In file included from include/linux/dma/edma.h:13:
-   In file included from include/linux/dmaengine.h:12:
-   In file included from include/linux/scatterlist.h:8:
-   In file included from include/linux/mm.h:2223:
-   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     505 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     512 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     525 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/pci/controller/dwc/pcie-designware.c:285:14: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
-     285 |         while (vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-         |                ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     286 |                                         PCI_EXT_CAP_ID_VNDR)) {
-         |                                         ~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-designware.c:285:14: note: place parentheses around the assignment to silence this warning
-     285 |         while (vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-         |                     ^
-         |                (
-     286 |                                         PCI_EXT_CAP_ID_VNDR)) {
-         |                                                             
-         |                                                             )
-   drivers/pci/controller/dwc/pcie-designware.c:285:14: note: use '==' to turn this assignment into an equality comparison
-     285 |         while (vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-         |                     ^
-         |                     ==
-   5 warnings generated.
+> +    /// Registers a driver.
+> +    ///
+> +    /// On success, `reg` must remain pinned and valid until the matchin=
+g call to
+> +    /// [`RegistrationOps::unregister`].
+> +    fn register(
+> +        reg: &mut Self::RegType,
 
+If the intent is that RegType is going to be the raw bindings:: type,
+then this isn't going to work because you're creating &mut references
+to the raw type without a Opaque wrapper in between.
 
-vim +285 drivers/pci/controller/dwc/pcie-designware.c
+> +        name: &'static CStr,
+> +        module: &'static ThisModule,
+> +    ) -> Result;
+> +
+> +    /// Unregisters a driver previously registered with [`RegistrationOp=
+s::register`].
+> +    fn unregister(reg: &mut Self::RegType);
 
-   279	
-   280	u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap)
-   281	{
-   282		u16 vsec = 0;
-   283		u32 header;
-   284	
- > 285		while (vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-   286						PCI_EXT_CAP_ID_VNDR)) {
-   287			header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
-   288			if (PCI_VNDR_HEADER_ID(header) == vsec_cap)
-   289				return vsec;
-   290		}
-   291	
-   292		return 0;
-   293	}
-   294	EXPORT_SYMBOL_GPL(dw_pcie_find_vsec_capability);
-   295	
+I believe this handles pinning incorrectly. You can't hand out &mut
+references to pinned values.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alice
 
