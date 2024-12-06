@@ -1,158 +1,126 @@
-Return-Path: <linux-pci+bounces-17815-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17816-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AC1D9E61C7
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 01:09:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB4E49E6206
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 01:14:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2EA21884A46
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 00:09:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7D45168AB1
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 00:14:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21177483;
-	Fri,  6 Dec 2024 00:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41E111C83;
+	Fri,  6 Dec 2024 00:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="bItsGeZk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h7kEMBmh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC971C27
-	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 00:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C8F1946B
+	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 00:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733443765; cv=none; b=t57ii8+vXb4xUy/ubYejlVBRNMD38iGR7/tRn1ANPW+ME7MkkCizxydpxWUl4/CwF0J4TLSl7saQKRgiIU2Hq6rEqr8BnijsWXMVw0UC8y8rQ1Rg2HUewTIGNjHrchwKYuoAhtjOwWOEGDKdV4jj9yacyl31uerjU16kZLHJGg0=
+	t=1733443999; cv=none; b=ZPG00DnPn2DoJr3kO7dDy/y6Pipr2ammVMDb46WnEBaPTU76lCHeSDxH/BD5X/lTX9Agv/02BKat0tcTEVYKmiKgFfVemRTZsKIwpQSwZbJLcAOaQaUVqBiGhNPb+qY38C8C8v3wvhC/XaDcmwn6wQ918s3PYYB0RKe1oRWTT/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733443765; c=relaxed/simple;
-	bh=dBA47SUie5SwFd03yBmEyKgEIejEfXGA+UqqvehwusI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MdWV8dW1ycCIgq/pQQwHWoaCPEBxF8lENZAw3SXs0UObmlVt5wHYyImu/Xsy3bxFMuMa75KjfxSroMUZ+YkQH2IkkUpvaI+OkYnIfSsQdD8imSYOQQEV9Pw4WSciGasQ7UBn/rawBG2CQX9dtDS6OvTU1rBCJG2hwd2u6xp4rao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=bItsGeZk; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 055953F29E
-	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 00:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1733443760;
-	bh=sMurqy6Z4XssLascAqYWalpe3jcOC1OWrus+pdaK60E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=bItsGeZkQk2QihqDXKQmGXwFzGQIM6iTmVa/ZWLaMimwsamNsR5rFuSPdt0Jq19V+
-	 mQiK0dCOxO7y5A7Ld0UftNWgJ/a021OsNs6oLOnmti/pU1fcdjvHQBPvqFOiRUjxZ5
-	 3tiq6jvmo0DX6DteowQ7aCE0QDQBinpDwHM1QSedCIEWM44YDeiLpIWCH4Qq57w0YS
-	 WJHvkHXcs/CZ8xhCWtGm0yiECwxuHB91MhwDGYqCzy6G/5i4ixVpQOpBCF7+/2GHjn
-	 D7ZfJw3UY3BEiY+v9OX5AMWa5yVqATSkJvT0F7UzE/Hm6zz9eKfGH+fk0d1r+TsEpT
-	 CY3CLD5kx6rOA==
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5d10f6dfcfaso1168188a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 05 Dec 2024 16:09:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733443759; x=1734048559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sMurqy6Z4XssLascAqYWalpe3jcOC1OWrus+pdaK60E=;
-        b=oELS0y77rkhsJ9S49onGILUQbdb7eHuw2fuWh2AAuWisjlEozSpHX0cYQn85bV/kiH
-         Ghf3uhNM4bTpwij14kBqUKEWk2PimftDCYH+Z+pUKYaZd7yLl6bDpTE7OhNPSZFQyVaA
-         erIyKYbG1S4k/DiGVptubpNa1qCKf1dpbb9/Aqe+HTWb1Y1NTX+WdROaTCcRve7ogNEa
-         04M80x8xodpVNPmMWcv50qA0WFlCfQsM91sNgLZsNz79+aqWwyRXAucuG2y6OhT6gRg+
-         3wJxm6Tlxagy5BYQZQkIBfnbk2JtOp5EVtD8Bg+sEU2/i/8mF93Klwgqy9kDJZx+GZtS
-         TLbw==
-X-Gm-Message-State: AOJu0YyjFGum7WyiN9DR1tCrknx8kPsiAqG9zjK7OEnsm6YZGcZmlI+U
-	1h9em+nOOqJE1N0r/Nh2t0Tb2UKvea0atBaxH5kKAo0qFA7dCKYIDePgTB458Iu6wzC2M/Ld15k
-	WBxe1Y5W5OIzEdl2iX96dufVD/uh6KCLF4iRHkvyWjmsiWca0OY1e45PXW+IL8CnQa9OYcXoWq9
-	sHt0QwUu14REOZT7vt+w9JGuA1GAOtJcXPApCcfgyY0QOlVk0h
-X-Gm-Gg: ASbGncvtjg7FuJ27wU4ROPhVEnfmXbDBJ1fVFiV7Sqp874qA5NQPTdS/tv9HDwp/u73
-	9VE+uGUR5d4msjsv7vlnjts8OGSyGMg==
-X-Received: by 2002:a05:6402:380f:b0:5d0:849c:71c3 with SMTP id 4fb4d7f45d1cf-5d3be466d4fmr1063014a12.0.1733443759490;
-        Thu, 05 Dec 2024 16:09:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEXpaP6nHDJsgYgKmHtFKSLgJ8MxPTVUzP/aApdPIDtegMmgfU+nkDdyPlw7Ek4gZHguQ66qgFYOTW+lnJYTqI=
-X-Received: by 2002:a05:6402:380f:b0:5d0:849c:71c3 with SMTP id
- 4fb4d7f45d1cf-5d3be466d4fmr1062984a12.0.1733443759183; Thu, 05 Dec 2024
- 16:09:19 -0800 (PST)
+	s=arc-20240116; t=1733443999; c=relaxed/simple;
+	bh=G3k5kdpZDzPR2z4Kv8oYbTAM4x/lxykBvWDQ8XU9s/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fE2fsU1CGUrmW0gkSVjju8Ja5DAfY9zKagjyZ31vmIMreRcUj2glSITfOCJoay5tURi4/ECIYDC6y48kjZHRAPHAwaAwfFK7fHEuQSVFzRuPOmhFw/VZaxzBRqrsKHLrBVknaSBCeJNYwBLDnKS8D3n9OwggJwzwKdq/gfruNhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h7kEMBmh; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733443998; x=1764979998;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=G3k5kdpZDzPR2z4Kv8oYbTAM4x/lxykBvWDQ8XU9s/Q=;
+  b=h7kEMBmhmSzvYzDbIxqH6kmPwCh/opjTYIE85qX0O4fjVgzYEKxVxUVn
+   3wxXTd0WbML/26ZJrBnQwe3WNy5MgjCU9lcMOhD2ThV6w+7ZkTT4UX8qW
+   j6RrIWZv4ah3PvbRUGhV9vYx5s65OkAVlRP9enmOZgYzOSk1M3WtQLLp7
+   a3OOa4dZq/MtKXeugMhCFE4NtfoCGJLJ3ilRnKJKa5zse8FbB5gAOVx2/
+   KhrByeEW+kWAOqctft4+OxmWSkARBPA8l6kbtjJHOjGFK8+jWVjKHQVtp
+   LV/m0aBFEloot2+3IIYLLQrgeozf127Q+f6nOae2MeoUNiqNgit+mY+/c
+   w==;
+X-CSE-ConnectionGUID: ZaDLWfMBT92XmXfDI/PFZw==
+X-CSE-MsgGUID: uUTSVEV7RAGRVGy1khIieg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="37567905"
+X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
+   d="scan'208";a="37567905"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 16:13:17 -0800
+X-CSE-ConnectionGUID: xsOsT0DTRYmP2Xhx+3wfHA==
+X-CSE-MsgGUID: KZRQUGdxR9qVfBXCLAARKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
+   d="scan'208";a="117498516"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 05 Dec 2024 16:13:15 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tJLy4-0000Vz-2k;
+	Fri, 06 Dec 2024 00:13:12 +0000
+Date: Fri, 6 Dec 2024 08:12:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: Re: [PATCH 09/11] PCI/IDE: Report available IDE streams
+Message-ID: <202412060733.L2zUE7gx-lkp@intel.com>
+References: <173343744869.1074769.12345445223792172558.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEyZgQZub4mDRrV5w@mail.gmail.com>
- <20241126103427.42d21193.alex.williamson@redhat.com> <CAHTA-ubXiDePmfgTdPbg144tHmRZR8=2cNshcL5tMkoMXdyn_Q@mail.gmail.com>
- <20241126154145.638dba46.alex.williamson@redhat.com> <CAHTA-uZp-bk5HeE7uhsR1frtj9dU+HrXxFZTAVeAwFhPen87wA@mail.gmail.com>
- <20241126170214.5717003f.alex.williamson@redhat.com> <CAHTA-uY3pyDLH9-hy1RjOqrRR+OU=Ko6hJ4xWmMTyoLwHhgTOQ@mail.gmail.com>
- <20241127102243.57cddb78.alex.williamson@redhat.com> <CAHTA-uaGZkQ6rEMcRq6JiZn8v9nZPn80NyucuSTEXuPfy+0ccw@mail.gmail.com>
- <20241203122023.21171712.alex.williamson@redhat.com> <CAHTA-uZWGmoLr0R4L608xzvBAxnr7zQPMDbX0U4MTfN3BAsfTQ@mail.gmail.com>
- <20241203150620.15431c5c.alex.williamson@redhat.com> <CAHTA-uZD5_TAZQkxdJRt48T=aPNAKg+x1tgpadv8aDbX5f14vA@mail.gmail.com>
- <20241203163045.3e068562.alex.williamson@redhat.com>
-In-Reply-To: <20241203163045.3e068562.alex.williamson@redhat.com>
-From: Mitchell Augustin <mitchell.augustin@canonical.com>
-Date: Thu, 5 Dec 2024 18:09:08 -0600
-Message-ID: <CAHTA-ua5g2ygX_1T=YV7Nf1pRzO8TuqS==CCEpK51Gez9Q5woA@mail.gmail.com>
-Subject: Re: drivers/pci: (and/or KVM): Slow PCI initialization during VM boot
- with passthrough of large BAR Nvidia GPUs on DGX H100
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173343744869.1074769.12345445223792172558.stgit@dwillia2-xfh.jf.intel.com>
 
-I submitted a patch that addresses this issue that I want to link to
-in this thread:
-https://lore.kernel.org/all/20241206000351.884656-1-mitchell.augustin@canon=
-ical.com/
-- everything looks good with it on my end.
+Hi Dan,
 
--Mitchell Augustin
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on 40384c840ea1944d7c5a392e8975ed088ecf0b37]
 
-On Tue, Dec 3, 2024 at 5:30=E2=80=AFPM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> On Tue, 3 Dec 2024 17:09:07 -0600
-> Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
->
-> > Thanks for the suggestions!
-> >
-> > > The calling convention of __pci_read_base() is already changing if we=
-'re having the caller disable decoding
-> >
-> > The way I implemented that in my initial patch draft[0] still allows
-> > for __pci_read_base() to be called independently, as it was
-> > originally, since (as far as I understand) the encode disable/enable
-> > is just a mask - so I didn't need to remove the disable/enable inside
-> > __pci_read_base(), and instead just added an extra one in
-> > pci_read_bases(), turning the __pci_read_base() disable/enable into a
-> > no-op when called from pci_read_bases(). In any case...
-> >
-> > > I think maybe another alternative that doesn't hold off the console w=
-ould be to split the BAR sizing and resource processing into separate steps=
-.
-> >
-> > This seems like a potentially better option, so I'll dig into that appr=
-oach.
-> >
-> >
-> > Providing some additional info you requested last week, just for more c=
-ontext:
-> >
-> > > Do you have similar logs from that [hotplug] operation
-> >
-> > Attached [1] is the guest boot output (boot was quick, since no GPUs
-> > were attached at boot time)
->
-> I think what's happening here is that decode is already disabled on the
-> hot-added device (vs enabled by the VM firmware on cold-plug), so in
-> practice it's similar to your nested disable solution.  Thanks,
->
-> Alex
->
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/configfs-tsm-Namespace-TSM-report-symbols/20241206-064224
+base:   40384c840ea1944d7c5a392e8975ed088ecf0b37
+patch link:    https://lore.kernel.org/r/173343744869.1074769.12345445223792172558.stgit%40dwillia2-xfh.jf.intel.com
+patch subject: [PATCH 09/11] PCI/IDE: Report available IDE streams
+config: mips-mtx1_defconfig (https://download.01.org/0day-ci/archive/20241206/202412060733.L2zUE7gx-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241206/202412060733.L2zUE7gx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412060733.L2zUE7gx-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/probe.c:597:33: warning: unused variable 'pci_host_bridge_type' [-Wunused-const-variable]
+   static const struct device_type pci_host_bridge_type = {
+                                   ^
+   1 warning generated.
 
 
---=20
-Mitchell Augustin
-Software Engineer - Ubuntu Partner Engineering
+vim +/pci_host_bridge_type +597 drivers/pci/probe.c
+
+   596	
+ > 597	static const struct device_type pci_host_bridge_type = {
+   598		.groups = pci_host_bridge_groups,
+   599		.release = pci_release_host_bridge_dev,
+   600	};
+   601	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
