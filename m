@@ -1,117 +1,132 @@
-Return-Path: <linux-pci+bounces-17823-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17824-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1BDC9E6562
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 05:23:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DFF89E66A0
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 06:13:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 978021637E8
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 04:23:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 321351694E0
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 05:13:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E6014AD0D;
-	Fri,  6 Dec 2024 04:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D94194C90;
+	Fri,  6 Dec 2024 05:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KVbQD37q"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="evohsIOa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3143118E057
-	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 04:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA16A193078;
+	Fri,  6 Dec 2024 05:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733459028; cv=none; b=Ib5Vd+yi0ufxc7/sgI6nd6CHZAaf7E49dMgylx8S/GYSP+gd7hv2qDBMrrUqPap4/1OOdwq2QtrZ8phyvp21q0zL9wYjtwdgga48joOZyeElF+/SHHfGNgCa5djWpfL6h6V0VktJv3syYyxgcr9oGS/PpT/sGLtgkfhoE0dS1Mk=
+	t=1733461983; cv=none; b=KmKhLnb6kIrzkkc56kRNBpw8htva6LIHAjGM+eshQRCqj9/JpiJhDGgGWrgIqj7Dp2wkRt/oM+D/vmj/dRrPBfepeAK9nPWWYHEBOo7razN6FFTcf+xZfL8LothlIx7zviaO22DFfSfwxY85DAw6C2+NArybxcH6M6cpQYAMQis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733459028; c=relaxed/simple;
-	bh=1LAUqr6JVKFrcaMn88Pba9Cgc2UpWDmAHRTj5oibo8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXSWD46O1y7voVRF39drjcqdOJkESiyweMKDP2pM4On9tbojqIq81mKMLKQZyaCygOHr3Fi2ZOOmsjzX3s5G8SQDPfVtUvVC4MncxXR4G64bu7PJUuPARQTB5ywK3v0JlefkUw2HZhcRp4Xw1bdQMc8WDKqd4VHN9KSqht7wjVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KVbQD37q; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733459026; x=1764995026;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1LAUqr6JVKFrcaMn88Pba9Cgc2UpWDmAHRTj5oibo8E=;
-  b=KVbQD37qtL+nTEReuq9Q1H1M0tWHU5LV5RrPc5eKVNpnjJRE4iW9KRvn
-   24poK7wNgK8UooyH7oNemL5wteGUsOIRFkQIl8rLjj9tgqNMzUQcKHk0O
-   d8YBEkEPnXVhESoPN+H66a7XjehfnmphX5jAMxVRYw45am38CC0ana9bl
-   BaL9BJunmxCgIr7SrCJsnzXrZyuUhdlqk61g9t8DMexhbkAgIwT8WOq2f
-   ExySiBFuxSqWvKlaPpVB1yjpwT1SWybINoYnf8PHjZUd14pQjTCS7FD3K
-   IZrDcOHjK3NWY9/CqoNx9jdY5pv3Ddowtoas6ylAfvEM5TeHsVWg0ZNL6
-   w==;
-X-CSE-ConnectionGUID: vLRXWH/lRRK78/zlEWzyJw==
-X-CSE-MsgGUID: N4fcEQ5yR/a2i17b/XRrIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33716004"
-X-IronPort-AV: E=Sophos;i="6.12,212,1728975600"; 
-   d="scan'208";a="33716004"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 20:23:45 -0800
-X-CSE-ConnectionGUID: IzwPzyCZSGun3oSW+zInEg==
-X-CSE-MsgGUID: uPFNLp11S/aUlnUjPXgbvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,212,1728975600"; 
-   d="scan'208";a="94657550"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Dec 2024 20:23:42 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tJPsR-0000hD-2K;
-	Fri, 06 Dec 2024 04:23:39 +0000
-Date: Fri, 6 Dec 2024 12:23:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 06/11] samples/devsec: PCI device-security bus / endpoint
- sample
-Message-ID: <202412061214.KMe4sOrh-lkp@intel.com>
-References: <173343743095.1074769.17985181033044298157.stgit@dwillia2-xfh.jf.intel.com>
+	s=arc-20240116; t=1733461983; c=relaxed/simple;
+	bh=VSTof/Uj6masKJoLaAu/3mhUUtoihlT9CA4iZ2vzN2Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ekb+TogfBsXnFsmzrWa3bS7q9DlPIs+G1pakW5bTYkrDI/RCGUqCQ+tuMogtQBAN+i+4ir5gjiYmH4zhLpIV6l6vreNVax860UKmuNzK/zySuZmTq0oYD++OKXn+MWtE2m4Bbvvb0RUvsS8uKadiz2L1os4Od9D2MtNX75edVMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=evohsIOa; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.0.192] (unknown [20.236.11.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DB58D20ACD8D;
+	Thu,  5 Dec 2024 21:12:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DB58D20ACD8D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1733461980;
+	bh=UeJKj87W9UR5iJRJm8EOVLO3pStgIR+TvO1cTQt7BXk=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=evohsIOaYFfQe1eCWrL35euPbFbUcU8YiFIo4DvXuomC5z7qvwnPVNWkVkvtyTO46
+	 Yn0Oy0b5pR4/G+4koxJ9PiOD5s1K5XjZ34R/WB69cjeMhwcBdjYJtzQxfZiLMnvung
+	 JyqqH7VS1El1YbPoIX5fiIB9chqShvN25PcFIgO8=
+Message-ID: <3c5ec65e-93a9-48a2-a18f-f5b89e83e999@linux.microsoft.com>
+Date: Thu, 5 Dec 2024 21:12:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173343743095.1074769.17985181033044298157.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: Mozilla Thunderbird
+Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, iommu@lists.linux.dev,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
+ eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, mhklinux@outlook.com, decui@microsoft.com,
+ catalin.marinas@arm.com, will@kernel.org, luto@kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
+ daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, arnd@arndb.de, sgarzare@redhat.com,
+ jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mukeshrathor@microsoft.com,
+ vkuznets@redhat.com, ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ horms@kernel.org
+Subject: Re: [PATCH v3 3/5] hyperv: Add new Hyper-V headers in include/hyperv
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+References: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1732577084-2122-4-git-send-email-nunodasneves@linux.microsoft.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <1732577084-2122-4-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Dan,
+On 11/25/2024 3:24 PM, Nuno Das Neves wrote:
+> These headers contain definitions for regular Hyper-V guests (as in
+> hyperv-tlfs.h), as well as interfaces for more privileged guests like
+> the root partition (aka Dom0).
+> 
+> These files are derived from headers exported from Hyper-V, rather than
+> being derived from the TLFS document. (Although, to preserve
+> compatibility with existing Linux code, some definitions are copied
+> directly from hyperv-tlfs.h too).
+> 
+> The new files follow a naming convention according to their original
+> use:
+> - hdk "host development kit"
+> - gdk "guest development kit"
+> With postfix "_mini" implying userspace-only headers, and "_ext" for
+> extended hypercalls.
+> 
+> The use of multiple files and their original names is primarily to
+> keep the provenance of exactly where they came from in Hyper-V
+> code, which is helpful for manual maintenance and extension
+> of these definitions. Microsoft maintainers importing new definitions
+> should take care to put them in the right file. However, Linux kernel
+> code that uses any of the definitions need not be aware of the multiple
+> files or assign any meaning to the new names. Linux kernel code should
+> always just include hvhdk.h
+> 
+> Note the new headers contain both arm64 and x86_64 definitions. Some are
+> guarded by #ifdefs, and some are instead prefixed with the architecture,
+> e.g. hv_x64_*. These conventions are kept from Hyper-V code as another
+> tactic to simplify the process of importing and maintaining the
+> definitions, rather than splitting them up into their own files in
+> arch/x86/ and arch/arm64/.
+> 
+> These headers are a step toward importing headers directly from Hyper-V
+> in the future, similar to Xen public files in include/xen/interface/.
+> 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  MAINTAINERS                 |    5 +
+>  include/hyperv/hvgdk.h      |  308 +++++++++
+>  include/hyperv/hvgdk_ext.h  |   46 ++
+>  include/hyperv/hvgdk_mini.h | 1306 +++++++++++++++++++++++++++++++++++
+>  include/hyperv/hvhdk.h      |  733 ++++++++++++++++++++
+>  include/hyperv/hvhdk_mini.h |  311 +++++++++
+>  6 files changed, 2709 insertions(+)
+>  create mode 100644 include/hyperv/hvgdk.h
+>  create mode 100644 include/hyperv/hvgdk_ext.h
+>  create mode 100644 include/hyperv/hvgdk_mini.h
+>  create mode 100644 include/hyperv/hvhdk.h
+>  create mode 100644 include/hyperv/hvhdk_mini.h
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 40384c840ea1944d7c5a392e8975ed088ecf0b37]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/configfs-tsm-Namespace-TSM-report-symbols/20241206-064224
-base:   40384c840ea1944d7c5a392e8975ed088ecf0b37
-patch link:    https://lore.kernel.org/r/173343743095.1074769.17985181033044298157.stgit%40dwillia2-xfh.jf.intel.com
-patch subject: [PATCH 06/11] samples/devsec: PCI device-security bus / endpoint sample
-config: i386-kismet-CONFIG_TSM-CONFIG_SAMPLE_DEVSEC-0-0 (https://download.01.org/0day-ci/archive/20241206/202412061214.KMe4sOrh-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20241206/202412061214.KMe4sOrh-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412061214.KMe4sOrh-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for TSM when selected by SAMPLE_DEVSEC
-   WARNING: unmet direct dependencies detected for TSM
-     Depends on [n]: VIRT_DRIVERS [=n]
-     Selected by [y]:
-     - SAMPLE_DEVSEC [=y] && SAMPLES [=y] && PCI [=y] && X86 [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
