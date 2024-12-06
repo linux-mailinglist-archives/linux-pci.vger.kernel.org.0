@@ -1,167 +1,132 @@
-Return-Path: <linux-pci+bounces-17868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17869-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3311F9E77E0
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 19:13:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7E1C9E78FE
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 20:31:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7B98284CC4
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 18:13:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BDC42837EF
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 19:31:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3ABC1FFC69;
-	Fri,  6 Dec 2024 18:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA821CF5DF;
+	Fri,  6 Dec 2024 19:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4PjlxcM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cP7HNvjR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2CF2206A5;
-	Fri,  6 Dec 2024 18:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDD9153812;
+	Fri,  6 Dec 2024 19:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733508833; cv=none; b=U2n+ujvvh1vwPqPQ+1tnpOekgYPKB/sPs1U8zhNOeY/CNI+ICXRiRkw2PRnFy1iXNQ+memriJF+gxdDlPtFd7djkW2BxkZu5BkXg+lnGLBkgLfh3EidunjjYYJDksjRk0KEYuC7EFBIoQY0fdwpGvvVqj3ULc2PUW5KSXX1G81g=
+	t=1733513477; cv=none; b=Yb+xde2USR19B3TG6j0VJEOWoFnluwDWsefqXSRtNG787ZKNxl1IJZ8TiezKhF5909PTRglRpHxMuYGPUQktVBv1OtgItBhEhqKkng6AijojAndt17Z8A8BtGJyjHJcgvWI6RTi19XsFpcOgH3u/oGohqZ7LXUPow6UnHlQhBPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733508833; c=relaxed/simple;
-	bh=4ErpPL5RKiuQcrZig3s30EOBUc46OyFFUZ5BpiI6s8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msG4UhoqzhaFHT6nJ5+kqfBYHeUTbTRyvS9OxWSsklk0YWtg7LMRwZvYLhg6gCAuDp2bhAT/c0rK81RoZdqNWj1rJVFjE+AWk3z3Jwsd4NhPzj112YLJDTI6cqoASOl6QFhbACwAY01Cpq+gptuFLkppdzmodJwtLq1lc9EFkqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4PjlxcM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C22AC4CED1;
-	Fri,  6 Dec 2024 18:13:47 +0000 (UTC)
+	s=arc-20240116; t=1733513477; c=relaxed/simple;
+	bh=+OWDOFChEvpUYMYVfu8uMEknqRcVsM4mtaouTlOUxCw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jSivV3N8WudpIKzCObApq18ufEwCFOQuZOCy5pgQDpr1SR810Ntvw968dd7H7Ce4hZOZ1Ra0CJtmuhOSrlPwiYAExPqa3sRy4xL9mh56UPZqt0AiTXXh56L+FoCASETkjqwaMIUZU8RBKUhbgY8KX2sR5lK7cwlSKZKDLrWG+KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cP7HNvjR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AAFC4CED1;
+	Fri,  6 Dec 2024 19:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733508833;
-	bh=4ErpPL5RKiuQcrZig3s30EOBUc46OyFFUZ5BpiI6s8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A4PjlxcM/00JWSrZoVgU3sB06/hOdBzdPnD7f9XxmB7V5nTh+GKuLcLeohWkkS8zb
-	 Ex7oNt/TVBFXPiol8NQvZTVCIK3za2UIDXdDm2rnptZPAozPPbXDouB9au8bzMB5yb
-	 1gwhfo6rweiVkR4rqk6qRcab8wa77+CBPyLnMc3F889xvkvsfJrSZ/0h0Ca56ol0wG
-	 TgxLvQHNJgh7WTzW8a28TMD0bHpqVvs2ILHV7BKg3msMDBqLXAIl1SuFTixoMrqG++
-	 GKi/T4oaOUqr+fWf3fVFZ5QbhwhrYNwP/xuzMvKs018iNNiR2FoV2s+D3b3/Ds/xp6
-	 lu9HpaDJel0hg==
-Date: Fri, 6 Dec 2024 19:13:44 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
-	daniel.almeida@collabora.com, saravanak@google.com,
-	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
-	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Wedson Almeida Filho <wedsonaf@gmail.com>
-Subject: Re: [PATCH v4 02/13] rust: implement generic driver registration
-Message-ID: <Z1M-2J1wtLwEhz8D@pollux>
-References: <20241205141533.111830-1-dakr@kernel.org>
- <20241205141533.111830-3-dakr@kernel.org>
- <CAH5fLghRVFAb06YYfUbuyuR1pOK0cHzGk6A25c5hX3CyvMm+sw@mail.gmail.com>
+	s=k20201202; t=1733513476;
+	bh=+OWDOFChEvpUYMYVfu8uMEknqRcVsM4mtaouTlOUxCw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=cP7HNvjR/UDe9RQgZd32FUBE/j34ckESAtRoVZk4JeAhvT8L8Wo1I1nWwwv+fRhQi
+	 KIKl9+Q9/S8z0D65s41IZpY0sGNL/G2YYB57pWitdLk0gCHFV34k8DlP5r0YVZplT+
+	 2WFsJaxT89zJ1/SqdhZhpee9Wrmwo9b0eqnM+sVRB/38Iph8/iAlSl1rjTrGcrjnnI
+	 JtIWz4/r9w3vifeOlLxiAMyQEJvV3Jf28F+vnXWjzN8aiG2vqypVhH9Ioh4v+APvFy
+	 4iJw0wLbuAlHSttkfAh1slGQCSSzn3Tm2DpjSSbbISZz9nQKLdtRw10R7LPkMliATQ
+	 ptxs8zOgMlyHg==
+Message-ID: <91b501c0ce92de681cc699eb6064840caad28803.camel@kernel.org>
+Subject: Re: [PATCH v9 6/9] PCI/bwctrl: Re-add BW notification portdrv as
+ PCIe BW controller
+From: Niklas Schnelle <niks@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo
+ Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	 <kw@linux.com>, "Maciej W . Rozycki"
+ <macro@orcam.me.uk>, Jonathan Cameron	 <Jonathan.Cameron@Huawei.com>, Lukas
+ Wunner <lukas@wunner.de>, Alexandru Gagniuc <mr.nuke.me@gmail.com>, Krishna
+ chaitanya chundru <quic_krichai@quicinc.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, 	linux-pm@vger.kernel.org, Smita Koralahalli	
+ <Smita.KoralahalliChannabasappa@amd.com>, linux-kernel@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria
+ <amitk@kernel.org>,  Zhang Rui <rui.zhang@intel.com>, Christophe JAILLET
+ <christophe.jaillet@wanadoo.fr>, niks@kernel.org
+Date: Fri, 06 Dec 2024 20:31:10 +0100
+In-Reply-To: <db8e457fcd155436449b035e8791a8241b0df400.camel@kernel.org>
+References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com>
+		 <20241018144755.7875-7-ilpo.jarvinen@linux.intel.com>
+	 <db8e457fcd155436449b035e8791a8241b0df400.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLghRVFAb06YYfUbuyuR1pOK0cHzGk6A25c5hX3CyvMm+sw@mail.gmail.com>
 
-On Fri, Dec 06, 2024 at 02:57:19PM +0100, Alice Ryhl wrote:
-> On Thu, Dec 5, 2024 at 3:16 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > Implement the generic `Registration` type and the `DriverOps` trait.
-> >
-> > The `Registration` structure is the common type that represents a driver
-> > registration and is typically bound to the lifetime of a module. However,
-> > it doesn't implement actual calls to the kernel's driver core to register
-> > drivers itself.
-> >
-> > Instead the `DriverOps` trait is provided to subsystems, which have to
-> > implement `DriverOps::register` and `DrvierOps::unregister`. Subsystems
-> 
-> typo
-> 
-> > have to provide an implementation for both of those methods where the
-> > subsystem specific variants to register / unregister a driver have to
-> > implemented.
-> >
-> > For instance, the PCI subsystem would call __pci_register_driver() from
-> > `DriverOps::register` and pci_unregister_driver() from
-> > `DrvierOps::unregister`.
-> >
-> > Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> 
-> [...]
-> 
-> > +/// The [`RegistrationOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform,
-> > +/// Amba, etc.) to provide the corresponding subsystem specific implementation to register /
-> > +/// unregister a driver of the particular type (`RegType`).
-> > +///
-> > +/// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
-> > +/// `bindings::__pci_register_driver` from `RegistrationOps::register` and
-> > +/// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`.
-> > +pub trait RegistrationOps {
-> > +    /// The type that holds information about the registration. This is typically a struct defined
-> > +    /// by the C portion of the kernel.
-> > +    type RegType: Default;
-> 
-> This Default implementation doesn't seem useful. You initialize it and
+On Fri, 2024-12-06 at 19:12 +0100, Niklas Schnelle wrote:
+> On Fri, 2024-10-18 at 17:47 +0300, Ilpo J=C3=A4rvinen wrote:
+> > This mostly reverts the commit b4c7d2076b4e ("PCI/LINK: Remove
+> > bandwidth notification"). An upcoming commit extends this driver
+> > building PCIe bandwidth controller on top of it.
+> >=20
+> > The PCIe bandwidth notification were first added in the commit
+> > e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
+> > notification") but later had to be removed. The significant changes
+> > compared with the old bandwidth notification driver include:
+> >=20
+---8<---
+> > ---
+>=20
+> Hi Ilpo,
+>=20
+> I bisected a v6.13-rc1 boot hang on my personal workstation to this
+> patch. Sadly I don't have much details like a panic or so because the
+> boot hangs before any kernel messages, or at least they're not visible
+> long enough to see. I haven't yet looked into the code as I wanted to
+> raise awareness first. Since the commit doesn't revert cleanly on
+> v6.13-rc1 I also haven't tried that yet.
+>=20
+> Here are some details on my system:
+> - AMD Ryzen 9 3900X=20
+> - ASRock X570 Creator Motherboard
+> - Radeon RX 5600 XT
+> - Intel JHL7540 Thunderbolt 3 USB Controller (only USB 2 plugged)
+> - Intel 82599 10 Gigabit NIC with SR-IOV enabled with 2 VFs
+> - Intel n I211 Gigabit NIC
+> - Intel Wi-Fi 6 AX200
+> - Aquantia AQtion AQC107 NIC
+>=20
+> If you have patches or things to try just ask.
+>=20
+> Thanks,
+> Niklas
+>=20
 
-I think it is -- `RegType` is always the raw bindings:: type and in
-`Registration::new` in `Opaque::try_ffi_init` we call
-`ptr.write(T::RegType::default())` for - since `RegType` is a raw bindings::
-type - zero initialization.
+Ok I can now at least confirm that bluntly disabling the new bwctrl
+driver with the below diff on top of v6.13-rc1 circumvents the boot
+hang I'm seeing. So it's definitely this.
 
-> then `register` calls a C function to initialize it. Having `register`
-> return an `impl PinInit` seems like it would work better here.
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 5e10306b6308..6fa54480444a 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -828,7 +828,7 @@ static void __init pcie_init_services(void)
+        pcie_aer_init();
+        pcie_pme_init();
+        pcie_dpc_init();
+-       pcie_bwctrl_init();
++       /* pcie_bwctrl_init(); */
+        pcie_hp_init();
+ }
 
-This would work as well, but it would effectively move the common code from
-`Registration::new` to the bus specific type.
-
-I think it's quite nice that the bus specific code does not need to care about
-messing with `try_pin_init`, `Opaque::try_ffi_init`, zero initialization, etc.,
-but just needs to assign the relevant fields and call register.
-
-> 
-> > +    /// Registers a driver.
-> > +    ///
-> > +    /// On success, `reg` must remain pinned and valid until the matching call to
-> > +    /// [`RegistrationOps::unregister`].
-> > +    fn register(
-> > +        reg: &mut Self::RegType,
-> 
-> If the intent is that RegType is going to be the raw bindings:: type,
-> then this isn't going to work because you're creating &mut references
-> to the raw type without a Opaque wrapper in between.
-
-True, that seems unsound. Since this is called from when the corresponding
-`Opaque` wrapper is created, I think we need to fall back to a raw pointer then
-and make `register` and `unregister` unsafe.
-
-I don't think that too big of a deal though, since those two should never be
-called from anywhere else than `Registration:new` or `Registration::drop`.
-
-> 
-> > +        name: &'static CStr,
-> > +        module: &'static ThisModule,
-> > +    ) -> Result;
-> > +
-> > +    /// Unregisters a driver previously registered with [`RegistrationOps::register`].
-> > +    fn unregister(reg: &mut Self::RegType);
-> 
-> I believe this handles pinning incorrectly. You can't hand out &mut
-> references to pinned values.
-
-Same as above.
-
-> 
-> Alice
 
