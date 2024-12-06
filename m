@@ -1,338 +1,262 @@
-Return-Path: <linux-pci+bounces-17835-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17836-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7D449E6A17
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 10:29:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81CB79E6C7B
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 11:45:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58BB218859DC
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 09:29:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C6B71651E1
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 10:44:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6925E1E1322;
-	Fri,  6 Dec 2024 09:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 352411F943B;
+	Fri,  6 Dec 2024 10:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixuE945n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+749bMy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5DF1DFE16;
-	Fri,  6 Dec 2024 09:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9BC1BA86C
+	for <linux-pci@vger.kernel.org>; Fri,  6 Dec 2024 10:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733477375; cv=none; b=KpqhMxLY8PZD6KbV8ToI0kemaIJ+Y/Wh1CbUXqhFcRkGnVhBxfbwwD8mF45bCzZCqWSpLj49qXIn6QS9GPaGROaBEg+cLXvRid/MTK4sFNzNuGIk4KMkD4/6Abae0IpLBy50WOzlBZ6weShplfE0V2wOINpSTeo2kMZOqI252EE=
+	t=1733481897; cv=none; b=tG+KFibAWNPwcU/mn8GdqkcPyUw6EO7DIdnv+NG/dx5CRGbANOdprq9ngFeFr4DdEKyoJWXjEuYYA8uOGRfz4hULX+2rsv5DZCPGZUlUC90CbY+rI4JitdiPMIlfM69G4xb59nSw0226BssYa5IGFKKU786whq+QHHhyMNuDh1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733477375; c=relaxed/simple;
-	bh=z3UgihyWzrbkvKFliqv8LzUML9WKdI0gtnwfc2ODd0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7XtZ2aSVR4KhZMbRCjY8Ey2jgULn6k1zH5EyqTGJcl4BhWRObRP0l/caQeSbOKbEU3FY2Ux/EroiJX5/M29rdLqVreYWvUWCBmca8x26bVkb44tUVmG2mCpyqRMBstzoNzG/lb0vD3s18tZwKV6QEiWz3cvHP8mYs+81tgJHbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ixuE945n; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-434a45f05feso20377215e9.3;
-        Fri, 06 Dec 2024 01:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733477372; x=1734082172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=stbx1NEM35bVdNwXBH7Qjy70Xo3jWZihLJ77LxtbkVE=;
-        b=ixuE945nQKK7jste/NZKiGAnv5EKR7xh9cLSs319X5wZznk5/QOop+ABZOwfjWKhTC
-         vHLlfjNuG729FmG6JDG45k6Z1YIRrwV0XPpCd6B9aNqbsGVDmPEjGEkjPNfHVuH+KsFb
-         mH1t/4cPZFMwy2wULfpAFSF7Cb9nvh7XTMMmqbymna/BwshDkmC2xf5aa4dGLrB+c2te
-         OPTCASVZM7bSYpbtEP5VkySOZ3DUL3gc68/tEXv1XXa8b4yWNhyWBYCyd0hfsp3/9/KQ
-         ogg1VV+DIewtd95TSiOmE7i1dNfqcHbZRRWMMDI7Xq1AOtAKnGVNZc1bXhwDH6sGiUXl
-         biFw==
+	s=arc-20240116; t=1733481897; c=relaxed/simple;
+	bh=VdLM04lU/6Qnim7wYBbpRrvOccR8ws50/OQSJUBrxo4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UbgSdCyOU4JvpNqOqZ5h7JyG98/atteB2x+OcmVAhgnRdFf0+tCLj5/4Cqvmq7YMhj0lm15dDRm4Rjx2qIVyzVV4xFTtAlixKRSYMhWpjE3wyHlfJDVidGBaFpeot2duQMZV4lgD4x56GNitQSvDVPxVZ1vczSVUsW2ADJbWvWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U+749bMy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733481893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VdLM04lU/6Qnim7wYBbpRrvOccR8ws50/OQSJUBrxo4=;
+	b=U+749bMyhxkKiZCLOy9cUFMWWoxAwqep9MeUWwsWseCwz2kCleWlDiPxfNkL8rVFxEZT5X
+	s99YSJEqxF0xJiMJZDe0O3RdqZeaOCGjf8/9iNhgbv2+pDIMmbvwDVaeoWZCl1RxC3o5Ak
+	l7Mfj4DlIPXpLfiwgfX4JGf2tcXYK+E=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-299-RgmLLnIrO26asHr8J1nRtA-1; Fri, 06 Dec 2024 05:44:51 -0500
+X-MC-Unique: RgmLLnIrO26asHr8J1nRtA-1
+X-Mimecast-MFC-AGG-ID: RgmLLnIrO26asHr8J1nRtA
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4349eeeb841so12513995e9.3
+        for <linux-pci@vger.kernel.org>; Fri, 06 Dec 2024 02:44:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733477372; x=1734082172;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=stbx1NEM35bVdNwXBH7Qjy70Xo3jWZihLJ77LxtbkVE=;
-        b=Jq4aA/rkZFgS/W2P1/ky/wPw9iORkw9CGX9UGjzNRfz5pMKYvK6SGqF0TYKJb9HbZ9
-         /PCKbXQDFBIMiXkRHphH5dPwP6OdtD0twLWA9WFEhBJQ/MLt9vwks29egtcC289pDw1Q
-         RMipei6YKQT0/pWNQvl11kv8CU3qqIzU9JrWEchRuTIC/0z0ftvFdMqTd775tZ8h6vez
-         eoHCNUvuP1moOOZanfexD5hW+rGWrWQw5yPByT70WFk0JdDbRQRP18P1ZkV1wUUUNz6G
-         xP5ucf2hfYxW0Z3UX9lVPNpUfQ8//Fe7BVbcG3JtbQG2csYkYcK89qeDHun4CBhWVG96
-         qsHw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4hMwMl65uNDI46OtG6VFpspG7exiaJ08SND+Rq8qcpfCXeq8As0epbDUYs7uH6WnD8dtCwpZmI7HUGLJu+uo=@vger.kernel.org, AJvYcCVqg5MgEwusNPZVwUGLjvtHCWG3u4+UiA0kRjmrrthTjt0OUbr+nkMcncJFRynMoofJM8naX7t2kv9J@vger.kernel.org, AJvYcCWRAd5ecHr4nEwSXowEl/1IDugn+2LPFn7Jaz/hcq95+cXTJdf3nF2OVQRytxsfMt6/1Pjdh0TVnQnx0PJt@vger.kernel.org, AJvYcCWqSwOqYpBQdkMFpDDRkXzs0vX6n0JTbSnnvtSuPrcAQzieWQj9EVmvw9JN06L4//JUiBPLvZeLaMyy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy64JGeqW0rx9gEot/muOMLvf6e6PduBf7TAdN7Eny2bXZKNW+T
-	Xnu6gsB9HFcosHrUCNQr5rwGyW+gtdJ2lgMtnECkH3vZyzCtwGe9
-X-Gm-Gg: ASbGnctY+u2rT+FWoBbupdzQjldD1KAje5r+Q07UXMNT/gLp7yusYLDU2vuQ4IKWI1r
-	EE3ipikvtExDMPwTBks1nQm0IiOa8Bkl8/Xgo/Ae33rEaXHT9o8grMbn6u5GRxnbkIIy3lIpEtL
-	gh3hJW9JzeD4SdCXWu0UHgIyz6uesAoBfj7aub34Jz+AsBnkwMRMhcD2CqHj2VzAWHOkaw1Ug0n
-	jLZsRCKpRFvdFHT0/yDD3AV4AeV61odQbLLR77aOfbgekPyOK8JmUHX0z7fk11hRTm0Fydau8t2
-	9ZTcHTgm81xAj5Dc5QC/XfPa0qdTPL5yA2PINmI/UuQJarQBjB9xM5O56pCGSE/UIrqQtGLSY7o
-	hJwJu5w==
-X-Google-Smtp-Source: AGHT+IGFIYyUD9HEqIG73xUb72UXx8tEHaiNhA0ipV2EB4tCdQu8+kXVLo5dUDpxcqbC3LEkvZb7ew==
-X-Received: by 2002:a05:600c:458a:b0:431:54f3:11ab with SMTP id 5b1f17b1804b1-434ddee1384mr17702945e9.33.1733477371270;
-        Fri, 06 Dec 2024 01:29:31 -0800 (PST)
-Received: from ?IPV6:2003:df:bf0d:b400:44f9:3850:f4a9:a264? (p200300dfbf0db40044f93850f4a9a264.dip0.t-ipconnect.de. [2003:df:bf0d:b400:44f9:3850:f4a9:a264])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da0d691csm51269205e9.11.2024.12.06.01.29.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2024 01:29:30 -0800 (PST)
-Message-ID: <417cebcb-6311-43c3-a74f-edef10be0fb7@gmail.com>
-Date: Fri, 6 Dec 2024 10:29:29 +0100
+        d=1e100.net; s=20230601; t=1733481891; x=1734086691;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VdLM04lU/6Qnim7wYBbpRrvOccR8ws50/OQSJUBrxo4=;
+        b=e9F3MH9eVkTm5q9CojX9bHNl4pNaJNQK8/y8l1++GHDK2i+iUMja3keNul7K2tYOZu
+         fO4/TSU0K1UQTImDgGNLef3cCfyEd2AsPrOhvv50vIdEA2s0R+ivMMSVaQZJp2w6pWHD
+         2slgDtYVRWRaCyYt3gNR7zZisdB1vRQ5NB+15G8+TDkrgdGZcD5NOiOiFZSzQ/wEt0kK
+         NVGtE+JMXnFI0Uf/ushEhKuTuOPcm8HcHOn5doHB//9W7oY6FL4SFUOgXhdkPgdUkf5y
+         EPPmO11k5ZnCciox50VRBy7x9b9LM7tokv4hNljuZD7upNESIIWhITXvmmux1P1UR6fu
+         uLPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUucqLlDvOhEgmF1npIlkNlqZXscP67AtiNRX7Cx0FSMM0QHU+5CM0vOQ+wI9OcI+z0t8HiXf3LFuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR3oZjLhUonG9R7t+naxBOe0iKq7nAgTFToLRC5ZbDZ5FVtSgw
+	jDRQH40TFgQE8FYxcq9Y0UfSpV6/ZqOWP0XokXckltdHQKtGbzEck1ivIuLBqcdIfIAL3fevF9v
+	LINyusxnPpITzE7Fhl9Y3voILq1/7cGwhdbLEzx8g3xhVcPTTN90PCHVlLw==
+X-Gm-Gg: ASbGncu059aHl9owwDnuRxhkhEvUa0joBz9aZw/HoqUN3WoVIu4fcvuT66heQc3AbHw
+	FouEIrzh7kM0V9Tv7kQv/qtS0TDOLHlG5DwzXQbfr5B/D/SYZZRVXnkSNkvseSh0UYn2lu778/R
+	S9xJKrGBd/vAXGkkMMQLE4//7mK9Ntb6AfIhZXHwptQQl74NUqnfIN6ug+ighr6F5BLb4rh9vfS
+	ZYUT3M+VMsdorWL60r+c3/LYr/uobpFr30oeAHKSPQcQprY97FD4ChI5g5bedjG1pmcp0OzU6Kj
+X-Received: by 2002:a05:600c:4ecd:b0:434:a802:e99a with SMTP id 5b1f17b1804b1-434ddeadafcmr22762745e9.4.1733481890648;
+        Fri, 06 Dec 2024 02:44:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGV+6LDWILNYB2NrECNa3c6De9CRxe18oSJqKngmdn5TnKCeoxC0QHGQt2H/kLkfVwA+SqUtA==
+X-Received: by 2002:a05:600c:4ecd:b0:434:a802:e99a with SMTP id 5b1f17b1804b1-434ddeadafcmr22762315e9.4.1733481890204;
+        Fri, 06 Dec 2024 02:44:50 -0800 (PST)
+Received: from [10.200.68.91] (nat-pool-muc-u.redhat.com. [149.14.88.27])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da0d6a07sm52272785e9.13.2024.12.06.02.44.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2024 02:44:49 -0800 (PST)
+Message-ID: <900dcafa7ee5113145f1ee7dda02de32432388e7.camel@redhat.com>
+Subject: Re: [PATCH v4 09/13] rust: pci: implement I/O mappable `pci::Bar`
+From: Philipp Stanner <pstanner@redhat.com>
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, 
+ rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+ alex.gaynor@gmail.com,  boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com,  benno.lossin@proton.me, tmgross@umich.edu,
+ a.hindborg@samsung.com,  aliceryhl@google.com, airlied@gmail.com,
+ fujita.tomonori@gmail.com,  lina@asahilina.net, ajanulgu@redhat.com,
+ lyude@redhat.com, robh@kernel.org,  daniel.almeida@collabora.com,
+ saravanak@google.com, dirk.behme@de.bosch.com,  j@jannau.net,
+ fabien.parent@linaro.org, chrisi.schrefl@gmail.com
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Date: Fri, 06 Dec 2024 11:44:48 +0100
+In-Reply-To: <20241205141533.111830-10-dakr@kernel.org>
+References: <20241205141533.111830-1-dakr@kernel.org>
+	 <20241205141533.111830-10-dakr@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 13/13] samples: rust: add Rust platform sample driver
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
- airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
- pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
- daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com,
- j@jannau.net, fabien.parent@linaro.org, chrisi.schrefl@gmail.com,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20241205141533.111830-1-dakr@kernel.org>
- <20241205141533.111830-14-dakr@kernel.org>
- <e2c202c1-6bbe-4b6c-ae97-185fe2aed0e5@gmail.com> <Z1K22NjYjwhFnsit@pollux>
-Content-Language: de-AT-frami
-From: Dirk Behme <dirk.behme@gmail.com>
-In-Reply-To: <Z1K22NjYjwhFnsit@pollux>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 06.12.24 09:33, Danilo Krummrich wrote:
-> On Thu, Dec 05, 2024 at 06:09:10PM +0100, Dirk Behme wrote:
->> Hi Danilo,
->>
->> On 05.12.24 15:14, Danilo Krummrich wrote:
->>> Add a sample Rust platform driver illustrating the usage of the platform
->>> bus abstractions.
->>>
->>> This driver probes through either a match of device / driver name or a
->>> match within the OF ID table.
->>>
->>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->>
->> Not a review comment, but a question/proposal:
->>
->> What do you think to convert the platform sample into an example/test?
->> And drop it in samples/rust then? Like [1] below?
-> 
-> Generally, I think doctests are indeed preferrable. In this particular case
-> though, I think it's better to have a sample module, since this way it can serve
-> as go-to example of how to write a platform driver in Rust.
-> 
-> Especially for (kernel) folks who do not have a Rust (for Linux) background it's
-> way more accessible.
-
-
-Yes, ack. Rob said the same :)
-
-Thanks
-
-Dirk
-
-
->> We would have (a) a complete example in the documentation and (b) some
->> (KUnit) test coverage and (c) have one patch less in the series and
->> (d) one file less to maintain long term.
->>
->> I think to remember that it was mentioned somewhere that a
->> documentation example / KUnit test is preferred over samples/rust (?).
->>
->> Just an idea :)
->>
->> Best regards
->>
->> Dirk
->>
->> [1]
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index ae576c842c51..365fc48b7041 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -7035,7 +7035,6 @@ F:	rust/kernel/device_id.rs
->>  F:	rust/kernel/devres.rs
->>  F:	rust/kernel/driver.rs
->>  F:	rust/kernel/platform.rs
->> -F:	samples/rust/rust_driver_platform.rs
->>
->>  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
->>  M:	Nishanth Menon <nm@ti.com>
->> diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
->> index 868cfddb75a2..77aeb6fc2120 100644
->> --- a/rust/kernel/platform.rs
->> +++ b/rust/kernel/platform.rs
->> @@ -142,30 +142,55 @@ macro_rules! module_platform_driver {
->>  /// # Example
->>  ///
->>  ///```
->> -/// # use kernel::{bindings, c_str, of, platform};
->> +/// # mod mydriver {
->> +/// #
->> +/// # // Get this into the scope of the module to make the
->> assert_eq!() buildable
->> +/// # static __DOCTEST_ANCHOR: i32 = core::line!() as i32 - 4;
->> +/// #
->> +/// # use kernel::{c_str, of, platform, prelude::*};
->> +/// #
->> +/// struct MyDriver {
->> +///     pdev: platform::Device,
->> +/// }
->>  ///
->> -/// struct MyDriver;
->> +/// struct Info(u32);
->>  ///
->>  /// kernel::of_device_table!(
->>  ///     OF_TABLE,
->>  ///     MODULE_OF_TABLE,
->>  ///     <MyDriver as platform::Driver>::IdInfo,
->> -///     [
->> -///         (of::DeviceId::new(c_str!("test,device")), ())
->> -///     ]
->> +///     [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
->>  /// );
->>  ///
->>  /// impl platform::Driver for MyDriver {
->> -///     type IdInfo = ();
->> +///     type IdInfo = Info;
->>  ///     const OF_ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
->>  ///
->> -///     fn probe(
->> -///         _pdev: &mut platform::Device,
->> -///         _id_info: Option<&Self::IdInfo>,
->> -///     ) -> Result<Pin<KBox<Self>>> {
->> -///         Err(ENODEV)
->> +///     fn probe(pdev: &mut platform::Device, info:
->> Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
->> +///         dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver
->> sample.\n");
->> +///
->> +///         assert_eq!(info.unwrap().0, 42);
->> +///
->> +///         let drvdata = KBox::new(Self { pdev: pdev.clone() },
->> GFP_KERNEL)?;
->> +///
->> +///         Ok(drvdata.into())
->> +///     }
->> +/// }
->> +///
->> +/// impl Drop for MyDriver {
->> +///     fn drop(&mut self) {
->> +///         dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver
->> sample.\n");
->>  ///     }
->>  /// }
->> +///
->> +/// kernel::module_platform_driver! {
->> +///     type: MyDriver,
->> +///     name: "rust_driver_platform",
->> +///     author: "Danilo Krummrich",
->> +///     description: "Rust Platform driver",
->> +///     license: "GPL v2",
->> +/// }
->> +/// # }
->>  ///```
->>  pub trait Driver {
->>      /// The type holding information about each device id supported
->> by the driver.
->> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
->> index 70126b750426..6d468193cdd8 100644
->> --- a/samples/rust/Kconfig
->> +++ b/samples/rust/Kconfig
->> @@ -41,16 +41,6 @@ config SAMPLE_RUST_DRIVER_PCI
->>
->>  	  If unsure, say N.
->>
->> -config SAMPLE_RUST_DRIVER_PLATFORM
->> -	tristate "Platform Driver"
->> -	help
->> -	  This option builds the Rust Platform driver sample.
->> -
->> -	  To compile this as a module, choose M here:
->> -	  the module will be called rust_driver_platform.
->> -
->> -	  If unsure, say N.
->> -
->>  config SAMPLE_RUST_HOSTPROGS
->>  	bool "Host programs"
->>  	help
->> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
->> index 761d13fff018..2f5b6bdb2fa5 100644
->> --- a/samples/rust/Makefile
->> +++ b/samples/rust/Makefile
->> @@ -4,7 +4,6 @@ ccflags-y += -I$(src)				# needed for trace events
->>  obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
->>  obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
->>  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
->> -obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
->>
->>  rust_print-y := rust_print_main.o rust_print_events.o
->>
->> diff --git a/samples/rust/rust_driver_platform.rs
->> b/samples/rust/rust_driver_platform.rs
->> deleted file mode 100644
->> index 2f0dbbe69e10..000000000000
->> --- a/samples/rust/rust_driver_platform.rs
->> +++ /dev/null
->> @@ -1,49 +0,0 @@
->> -// SPDX-License-Identifier: GPL-2.0
->> -
->> -//! Rust Platform driver sample.
->> -
->> -use kernel::{c_str, of, platform, prelude::*};
->> -
->> -struct SampleDriver {
->> -    pdev: platform::Device,
->> -}
->> -
->> -struct Info(u32);
->> -
->> -kernel::of_device_table!(
->> -    OF_TABLE,
->> -    MODULE_OF_TABLE,
->> -    <SampleDriver as platform::Driver>::IdInfo,
->> -    [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
->> -);
->> -
->> -impl platform::Driver for SampleDriver {
->> -    type IdInfo = Info;
->> -    const OF_ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
->> -
->> -    fn probe(pdev: &mut platform::Device, info:
->> Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
->> -        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
->> -
->> -        if let Some(info) = info {
->> -            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n",
->> info.0);
->> -        }
->> -
->> -        let drvdata = KBox::new(Self { pdev: pdev.clone() },
->> GFP_KERNEL)?;
->> -
->> -        Ok(drvdata.into())
->> -    }
->> -}
->> -
->> -impl Drop for SampleDriver {
->> -    fn drop(&mut self) {
->> -        dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver
->> sample.\n");
->> -    }
->> -}
->> -
->> -kernel::module_platform_driver! {
->> -    type: SampleDriver,
->> -    name: "rust_driver_platform",
->> -    author: "Danilo Krummrich",
->> -    description: "Rust Platform driver",
->> -    license: "GPL v2",
->> -}
->>
+YnR3IHRoZSBQQ0kgc3Vic3lzdGVtIGNvbnNpc3RlbnRseSBhbHdheXMgd3JpdGVzIHRoZSBhY3Jv
+bnltIGFsbC0KdXBwZXJjYXNlIChQQ0kpIGluIGNvbW1pdCBtZXNzYWdlcyBhbmQgY29tbWVudHMu
+CgpJZiB5b3UgZ28gZm9yIGEgdjUsIG1pZ2h0IG1ha2Ugc2Vuc2UgdG8gYWRqdXN0IHRoYXQuCgpT
+YW1lIGFwcGxpZXMgZm9yIHBhdGNoIDguCgoKUC4KCgpPbiBUaHUsIDIwMjQtMTItMDUgYXQgMTU6
+MTQgKzAxMDAsIERhbmlsbyBLcnVtbXJpY2ggd3JvdGU6Cj4gSW1wbGVtZW50IGBwY2k6OkJhcmAs
+IGBwY2k6OkRldmljZTo6aW9tYXBfcmVnaW9uYCBhbmQKPiBgcGNpOjpEZXZpY2U6OmlvbWFwX3Jl
+Z2lvbl9zaXplZGAgdG8gYWxsb3cgZm9yIEkvTyBtYXBwaW5ncyBvZiBQQ0kKPiBCQVJzLgo+IAo+
+IFRvIGVuc3VyZSB0aGF0IGEgYHBjaTo6QmFyYCwgYW5kIGhlbmNlIHRoZSBJL08gbWVtb3J5IG1h
+cHBpbmcsIGNhbid0Cj4gb3V0LWxpdmUgdGhlIFBDSSBkZXZpY2UsIHRoZSBgcGNpOjpCYXJgIHR5
+cGUgaXMgYWx3YXlzIGVtYmVkZGVkIGludG8KPiBhCj4gYERldnJlc2AgY29udGFpbmVyLCBzdWNo
+IHRoYXQgdGhlIGBwY2k6OkJhcmAgaXMgcmV2b2tlZCBvbmNlIHRoZQo+IGRldmljZQo+IGlzIHVu
+Ym91bmQgYW5kIGhlbmNlIHRoZSBJL08gbWFwcGVkIG1lbW9yeSBpcyB1bm1hcHBlZC4KPiAKPiBB
+IGBwY2k6OkJhcmAgY2FuIGJlIHJlcXVlc3RlZCB3aXRoCj4gKGBwY2k6OkRldmljZTo6aW9tYXBf
+cmVnaW9uX3NpemVkYCkgb3IKPiB3aXRob3V0IChgcGNpOjpEZXZpY2U6OmlvbWFwX3JlZ2lvbmAp
+IGEgY29uc3QgZ2VuZXJpYyByZXByZXNlbnRpbmcKPiB0aGUKPiBtaW5pbWFsIHJlcXVlc3RlZCBz
+aXplIG9mIHRoZSBJL08gbWFwcGVkIG1lbW9yeSByZWdpb24uIEluIGNhc2Ugb2YKPiB0aGUKPiBs
+YXR0ZXIgb25seSBydW50aW1lIGNoZWNrZWQgSS9PIHJlYWRzIC8gd3JpdGVzIGFyZSBwb3NzaWJs
+ZS4KPiAKPiBDby1kZXZlbG9wZWQtYnk6IFBoaWxpcHAgU3Rhbm5lciA8cHN0YW5uZXJAcmVkaGF0
+LmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFN0YW5uZXIgPHBzdGFubmVyQHJlZGhhdC5j
+b20+Cj4gU2lnbmVkLW9mZi1ieTogRGFuaWxvIEtydW1tcmljaCA8ZGFrckBrZXJuZWwub3JnPgo+
+IC0tLQo+IMKgcnVzdC9rZXJuZWwvcGNpLnJzIHwgMTQ1Cj4gKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrCj4gwqAxIGZpbGUgY2hhbmdlZCwgMTQ1IGluc2VydGlv
+bnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvcnVzdC9rZXJuZWwvcGNpLnJzIGIvcnVzdC9rZXJuZWwv
+cGNpLnJzCj4gaW5kZXggNzQ4OTEyYzFjOTk0Li4wYTMyYTU5MzVjOWMgMTAwNjQ0Cj4gLS0tIGEv
+cnVzdC9rZXJuZWwvcGNpLnJzCj4gKysrIGIvcnVzdC9rZXJuZWwvcGNpLnJzCj4gQEAgLTUsMTAg
+KzUsMTQgQEAKPiDCoC8vISBDIGhlYWRlcjogW2BpbmNsdWRlL2xpbnV4L3BjaS5oYF0oc3JjdHJl
+ZS9pbmNsdWRlL2xpbnV4L3BjaS5oKQo+IMKgCj4gwqB1c2UgY3JhdGU6OnsKPiArwqDCoMKgIGFs
+bG9jOjpmbGFnczo6KiwKPiDCoMKgwqDCoCBiaW5kaW5ncywgY29udGFpbmVyX29mLCBkZXZpY2Us
+Cj4gwqDCoMKgwqAgZGV2aWNlX2lkOjpSYXdEZXZpY2VJZCwKPiArwqDCoMKgIGRldnJlczo6RGV2
+cmVzLAo+IMKgwqDCoMKgIGRyaXZlciwKPiDCoMKgwqDCoCBlcnJvcjo6e3RvX3Jlc3VsdCwgUmVz
+dWx0fSwKPiArwqDCoMKgIGlvOjpJbywKPiArwqDCoMKgIGlvOjpJb1JhdywKPiDCoMKgwqDCoCBz
+dHI6OkNTdHIsCj4gwqDCoMKgwqAgdHlwZXM6OntBUmVmLCBGb3JlaWduT3duYWJsZX0sCj4gwqDC
+oMKgwqAgVGhpc01vZHVsZSwKPiBAQCAtMjM5LDkgKzI0MywxMTUgQEAgcHViIHRyYWl0IERyaXZl
+ciB7Cj4gwqAvLy8KPiDCoC8vLyBBIFBDSSBkZXZpY2UgaXMgYmFzZWQgb24gYW4gYWx3YXlzIHJl
+ZmVyZW5jZSBjb3VudGVkCj4gYGRldmljZTpEZXZpY2VgIGluc3RhbmNlLiBDbG9uaW5nIGEgUENJ
+Cj4gwqAvLy8gZGV2aWNlLCBoZW5jZSwgYWxzbyBpbmNyZW1lbnRzIHRoZSBiYXNlIGRldmljZScg
+cmVmZXJlbmNlIGNvdW50Lgo+ICsvLy8KPiArLy8vICMgSW52YXJpYW50cwo+ICsvLy8KPiArLy8v
+IGBEZXZpY2VgIGhvbGQgYSB2YWxpZCByZWZlcmVuY2Ugb2YgYEFSZWY8ZGV2aWNlOjpEZXZpY2U+
+YCB3aG9zZQo+IHVuZGVybHlpbmcgYHN0cnVjdCBkZXZpY2VgIGlzIGEKPiArLy8vIG1lbWJlciBv
+ZiBhIGBzdHJ1Y3QgcGNpX2RldmAuCj4gwqAjW2Rlcml2ZShDbG9uZSldCj4gwqBwdWIgc3RydWN0
+IERldmljZShBUmVmPGRldmljZTo6RGV2aWNlPik7Cj4gwqAKPiArLy8vIEEgUENJIEJBUiB0byBw
+ZXJmb3JtIEkvTy1PcGVyYXRpb25zIG9uLgo+ICsvLy8KPiArLy8vICMgSW52YXJpYW50cwo+ICsv
+Ly8KPiArLy8vIGBCYXJgIGFsd2F5cyBob2xkcyBhbiBgSW9SYXdgIGluc3RzdGFuY2UgdGhhdCBo
+b2xkcyBhIHZhbGlkCj4gcG9pbnRlciB0byB0aGUgc3RhcnQgb2YgdGhlIEkvTwo+ICsvLy8gbWVt
+b3J5IG1hcHBlZCBQQ0kgYmFyIGFuZCBpdHMgc2l6ZS4KPiArcHViIHN0cnVjdCBCYXI8Y29uc3Qg
+U0laRTogdXNpemUgPSAwPiB7Cj4gK8KgwqDCoCBwZGV2OiBEZXZpY2UsCj4gK8KgwqDCoCBpbzog
+SW9SYXc8U0laRT4sCj4gK8KgwqDCoCBudW06IGkzMiwKPiArfQo+ICsKPiAraW1wbDxjb25zdCBT
+SVpFOiB1c2l6ZT4gQmFyPFNJWkU+IHsKPiArwqDCoMKgIGZuIG5ldyhwZGV2OiBEZXZpY2UsIG51
+bTogdTMyLCBuYW1lOiAmQ1N0cikgLT4gUmVzdWx0PFNlbGY+IHsKPiArwqDCoMKgwqDCoMKgwqAg
+bGV0IGxlbiA9IHBkZXYucmVzb3VyY2VfbGVuKG51bSk/Owo+ICvCoMKgwqDCoMKgwqDCoCBpZiBs
+ZW4gPT0gMCB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIEVycihFTk9NRU0pOwo+
+ICvCoMKgwqDCoMKgwqDCoCB9Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoCAvLyBDb252ZXJ0IHRvIGBp
+MzJgLCBzaW5jZSB0aGF0J3Mgd2hhdCBhbGwgdGhlIEMgYmluZGluZ3MKPiB1c2UuCj4gK8KgwqDC
+oMKgwqDCoMKgIGxldCBudW0gPSBpMzI6OnRyeV9mcm9tKG51bSk/Owo+ICsKPiArwqDCoMKgwqDC
+oMKgwqAgLy8gU0FGRVRZOgo+ICvCoMKgwqDCoMKgwqDCoCAvLyBgcGRldmAgaXMgdmFsaWQgYnkg
+dGhlIGludmFyaWFudHMgb2YgYERldmljZWAuCj4gK8KgwqDCoMKgwqDCoMKgIC8vIGBudW1gIGlz
+IGNoZWNrZWQgZm9yIHZhbGlkaXR5IGJ5IGEgcHJldmlvdXMgY2FsbCB0bwo+IGBEZXZpY2U6OnJl
+c291cmNlX2xlbmAuCj4gK8KgwqDCoMKgwqDCoMKgIC8vIGBuYW1lYCBpcyBhbHdheXMgdmFsaWQu
+Cj4gK8KgwqDCoMKgwqDCoMKgIGxldCByZXQgPSB1bnNhZmUgewo+IGJpbmRpbmdzOjpwY2lfcmVx
+dWVzdF9yZWdpb24ocGRldi5hc19yYXcoKSwgbnVtLCBuYW1lLmFzX2NoYXJfcHRyKCkpCj4gfTsK
+PiArwqDCoMKgwqDCoMKgwqAgaWYgcmV0ICE9IDAgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHJldHVybiBFcnIoRUJVU1kpOwo+ICvCoMKgwqDCoMKgwqDCoCB9Cj4gKwo+ICvCoMKgwqDCoMKg
+wqDCoCAvLyBTQUZFVFk6Cj4gK8KgwqDCoMKgwqDCoMKgIC8vIGBwZGV2YCBpcyB2YWxpZCBieSB0
+aGUgaW52YXJpYW50cyBvZiBgRGV2aWNlYC4KPiArwqDCoMKgwqDCoMKgwqAgLy8gYG51bWAgaXMg
+Y2hlY2tlZCBmb3IgdmFsaWRpdHkgYnkgYSBwcmV2aW91cyBjYWxsIHRvCj4gYERldmljZTo6cmVz
+b3VyY2VfbGVuYC4KPiArwqDCoMKgwqDCoMKgwqAgLy8gYG5hbWVgIGlzIGFsd2F5cyB2YWxpZC4K
+PiArwqDCoMKgwqDCoMKgwqAgbGV0IGlvcHRyOiB1c2l6ZSA9IHVuc2FmZSB7Cj4gYmluZGluZ3M6
+OnBjaV9pb21hcChwZGV2LmFzX3JhdygpLCBudW0sIDApIH0gYXMgdXNpemU7Cj4gK8KgwqDCoMKg
+wqDCoMKgIGlmIGlvcHRyID09IDAgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8vIFNBRkVU
+WToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvLyBgcGRldmAgdmFsaWQgYnkgdGhlIGludmFy
+aWFudHMgb2YgYERldmljZWAuCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLy8gYG51bWAgaXMg
+Y2hlY2tlZCBmb3IgdmFsaWRpdHkgYnkgYSBwcmV2aW91cyBjYWxsIHRvCj4gYERldmljZTo6cmVz
+b3VyY2VfbGVuYC4KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNhZmUgeyBiaW5kaW5nczo6
+cGNpX3JlbGVhc2VfcmVnaW9uKHBkZXYuYXNfcmF3KCksCj4gbnVtKSB9Owo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHJldHVybiBFcnIoRU5PTUVNKTsKPiArwqDCoMKgwqDCoMKgwqAgfQo+ICsK
+PiArwqDCoMKgwqDCoMKgwqAgbGV0IGlvID0gbWF0Y2ggSW9SYXc6Om5ldyhpb3B0ciwgbGVuIGFz
+IHVzaXplKSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgT2soaW8pID0+IGlvLAo+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIEVycihlcnIpID0+IHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIC8vIFNBRkVUWToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8v
+IGBwZGV2YCBpcyB2YWxpZCBieSB0aGUgaW52YXJpYW50cyBvZiBgRGV2aWNlYC4KPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8vIGBpb3B0cmAgaXMgZ3VhcmFudGVlZCB0byBiZSB0
+aGUgc3RhcnQgb2YgYSB2YWxpZAo+IEkvTyBtYXBwZWQgbWVtb3J5IHJlZ2lvbi4KPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8vIGBudW1gIGlzIGNoZWNrZWQgZm9yIHZhbGlkaXR5
+IGJ5IGEgcHJldmlvdXMgY2FsbAo+IHRvIGBEZXZpY2U6OnJlc291cmNlX2xlbmAuCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNhZmUgeyBTZWxmOjpkb19yZWxlYXNlKCZwZGV2
+LCBpb3B0ciwgbnVtKSB9Owo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJu
+IEVycihlcnIpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH0KPiArwqDCoMKgwqDCoMKgwqAg
+fTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgIE9rKEJhciB7IHBkZXYsIGlvLCBudW0gfSkKPiArwqDC
+oMKgIH0KPiArCj4gK8KgwqDCoCAvLy8gIyBTYWZldHkKPiArwqDCoMKgIC8vLwo+ICvCoMKgwqAg
+Ly8vIGBpb3B0cmAgbXVzdCBiZSBhIHZhbGlkIHBvaW50ZXIgdG8gdGhlIG1lbW9yeSBtYXBwZWQg
+UENJIGJhcgo+IG51bWJlciBgbnVtYC4KPiArwqDCoMKgIHVuc2FmZSBmbiBkb19yZWxlYXNlKHBk
+ZXY6ICZEZXZpY2UsIGlvcHRyOiB1c2l6ZSwgbnVtOiBpMzIpIHsKPiArwqDCoMKgwqDCoMKgwqAg
+Ly8gU0FGRVRZOgo+ICvCoMKgwqDCoMKgwqDCoCAvLyBgcGRldmAgaXMgdmFsaWQgYnkgdGhlIGlu
+dmFyaWFudHMgb2YgYERldmljZWAuCj4gK8KgwqDCoMKgwqDCoMKgIC8vIGBpb3B0cmAgaXMgdmFs
+aWQgYnkgdGhlIHNhZmV0eSByZXF1aXJlbWVudHMuCj4gK8KgwqDCoMKgwqDCoMKgIC8vIGBudW1g
+IGlzIHZhbGlkIGJ5IHRoZSBzYWZldHkgcmVxdWlyZW1lbnRzLgo+ICvCoMKgwqDCoMKgwqDCoCB1
+bnNhZmUgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJpbmRpbmdzOjpwY2lfaW91bm1hcChw
+ZGV2LmFzX3JhdygpLCBpb3B0ciBhcyBfKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBiaW5k
+aW5nczo6cGNpX3JlbGVhc2VfcmVnaW9uKHBkZXYuYXNfcmF3KCksIG51bSk7Cj4gK8KgwqDCoMKg
+wqDCoMKgIH0KPiArwqDCoMKgIH0KPiArCj4gK8KgwqDCoCBmbiByZWxlYXNlKCZzZWxmKSB7Cj4g
+K8KgwqDCoMKgwqDCoMKgIC8vIFNBRkVUWTogVGhlIHNhZmV0eSByZXF1aXJlbWVudHMgYXJlIGd1
+YXJhbnRlZWQgYnkgdGhlCj4gdHlwZSBpbnZhcmlhbnQgb2YgYHNlbGYucGRldmAuCj4gK8KgwqDC
+oMKgwqDCoMKgIHVuc2FmZSB7IFNlbGY6OmRvX3JlbGVhc2UoJnNlbGYucGRldiwgc2VsZi5pby5h
+ZGRyKCksCj4gc2VsZi5udW0pIH07Cj4gK8KgwqDCoCB9Cj4gK30KPiArCj4gK2ltcGwgQmFyIHsK
+PiArwqDCoMKgIGZuIGluZGV4X2lzX3ZhbGlkKGluZGV4OiB1MzIpIC0+IGJvb2wgewo+ICvCoMKg
+wqDCoMKgwqDCoCAvLyBBIGBzdHJ1Y3QgcGNpX2RldmAgb3ducyBhbiBhcnJheSBvZiByZXNvdXJj
+ZXMgd2l0aCBhdAo+IG1vc3QgYFBDSV9OVU1fUkVTT1VSQ0VTYCBlbnRyaWVzLgo+ICvCoMKgwqDC
+oMKgwqDCoCBpbmRleCA8IGJpbmRpbmdzOjpQQ0lfTlVNX1JFU09VUkNFUwo+ICvCoMKgwqAgfQo+
+ICt9Cj4gKwo+ICtpbXBsPGNvbnN0IFNJWkU6IHVzaXplPiBEcm9wIGZvciBCYXI8U0laRT4gewo+
+ICvCoMKgwqAgZm4gZHJvcCgmbXV0IHNlbGYpIHsKPiArwqDCoMKgwqDCoMKgwqAgc2VsZi5yZWxl
+YXNlKCk7Cj4gK8KgwqDCoCB9Cj4gK30KPiArCj4gK2ltcGw8Y29uc3QgU0laRTogdXNpemU+IERl
+cmVmIGZvciBCYXI8U0laRT4gewo+ICvCoMKgwqAgdHlwZSBUYXJnZXQgPSBJbzxTSVpFPjsKPiAr
+Cj4gK8KgwqDCoCBmbiBkZXJlZigmc2VsZikgLT4gJlNlbGY6OlRhcmdldCB7Cj4gK8KgwqDCoMKg
+wqDCoMKgIC8vIFNBRkVUWTogQnkgdGhlIHR5cGUgaW52YXJpYW50IG9mIGBTZWxmYCwgdGhlIE1N
+SU8gcmFuZ2UKPiBpbiBgc2VsZi5pb2AgaXMgcHJvcGVybHkgbWFwcGVkLgo+ICvCoMKgwqDCoMKg
+wqDCoCB1bnNhZmUgeyBJbzo6ZnJvbV9yYXcoJnNlbGYuaW8pIH0KPiArwqDCoMKgIH0KPiArfQo+
+ICsKPiDCoGltcGwgRGV2aWNlIHsKPiDCoMKgwqDCoCAvLy8gQ3JlYXRlIGEgUENJIERldmljZSBp
+bnN0YW5jZSBmcm9tIGFuIGV4aXN0aW5nCj4gYGRldmljZTo6RGV2aWNlYC4KPiDCoMKgwqDCoCAv
+Ly8KPiBAQCAtMjc1LDYgKzM4NSw0MSBAQCBwdWIgZm4gc2V0X21hc3Rlcigmc2VsZikgewo+IMKg
+wqDCoMKgwqDCoMKgwqAgLy8gU0FGRVRZOiBgc2VsZi5hc19yYXdgIGlzIGd1YXJhbnRlZWQgdG8g
+YmUgYSBwb2ludGVyIHRvIGEKPiB2YWxpZCBgc3RydWN0IHBjaV9kZXZgLgo+IMKgwqDCoMKgwqDC
+oMKgwqAgdW5zYWZlIHsgYmluZGluZ3M6OnBjaV9zZXRfbWFzdGVyKHNlbGYuYXNfcmF3KCkpIH07
+Cj4gwqDCoMKgwqAgfQo+ICsKPiArwqDCoMKgIC8vLyBSZXR1cm5zIHRoZSBzaXplIG9mIHRoZSBn
+aXZlbiBQQ0kgYmFyIHJlc291cmNlLgo+ICvCoMKgwqAgcHViIGZuIHJlc291cmNlX2xlbigmc2Vs
+ZiwgYmFyOiB1MzIpIC0+Cj4gUmVzdWx0PGJpbmRpbmdzOjpyZXNvdXJjZV9zaXplX3Q+IHsKPiAr
+wqDCoMKgwqDCoMKgwqAgaWYgIUJhcjo6aW5kZXhfaXNfdmFsaWQoYmFyKSB7Cj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgcmV0dXJuIEVycihFSU5WQUwpOwo+ICvCoMKgwqDCoMKgwqDCoCB9Cj4g
+Kwo+ICvCoMKgwqDCoMKgwqDCoCAvLyBTQUZFVFk6Cj4gK8KgwqDCoMKgwqDCoMKgIC8vIC0gYGJh
+cmAgaXMgYSB2YWxpZCBiYXIgbnVtYmVyLCBhcyBndWFyYW50ZWVkIGJ5IHRoZSBhYm92ZQo+IGNh
+bGwgdG8gYEJhcjo6aW5kZXhfaXNfdmFsaWRgLAo+ICvCoMKgwqDCoMKgwqDCoCAvLyAtIGJ5IGl0
+cyB0eXBlIGludmFyaWFudCBgc2VsZi5hc19yYXdgIGlzIGFsd2F5cyBhIHZhbGlkCj4gcG9pbnRl
+ciB0byBhIGBzdHJ1Y3QgcGNpX2RldmAuCj4gK8KgwqDCoMKgwqDCoMKgIE9rKHVuc2FmZSB7IGJp
+bmRpbmdzOjpwY2lfcmVzb3VyY2VfbGVuKHNlbGYuYXNfcmF3KCksCj4gYmFyLnRyeV9pbnRvKCk/
+KSB9KQo+ICvCoMKgwqAgfQo+ICsKPiArwqDCoMKgIC8vLyBNYXBwcyBhbiBlbnRpcmUgUENJLUJB
+UiBhZnRlciBwZXJmb3JtaW5nIGEgcmVnaW9uLXJlcXVlc3Qgb24KPiBpdC4gSS9PIG9wZXJhdGlv
+biBib3VuZCBjaGVja3MKPiArwqDCoMKgIC8vLyBjYW4gYmUgcGVyZm9ybWVkIG9uIGNvbXBpbGUg
+dGltZSBmb3Igb2Zmc2V0cyAocGx1cyB0aGUKPiByZXF1ZXN0ZWQgdHlwZSBzaXplKSA8IFNJWkUu
+Cj4gK8KgwqDCoCBwdWIgZm4gaW9tYXBfcmVnaW9uX3NpemVkPGNvbnN0IFNJWkU6IHVzaXplPigK
+PiArwqDCoMKgwqDCoMKgwqAgJnNlbGYsCj4gK8KgwqDCoMKgwqDCoMKgIGJhcjogdTMyLAo+ICvC
+oMKgwqDCoMKgwqDCoCBuYW1lOiAmQ1N0ciwKPiArwqDCoMKgICkgLT4gUmVzdWx0PERldnJlczxC
+YXI8U0laRT4+PiB7Cj4gK8KgwqDCoMKgwqDCoMKgIGxldCBiYXIgPSBCYXI6OjxTSVpFPjo6bmV3
+KHNlbGYuY2xvbmUoKSwgYmFyLCBuYW1lKT87Cj4gK8KgwqDCoMKgwqDCoMKgIGxldCBkZXZyZXMg
+PSBEZXZyZXM6Om5ldyhzZWxmLmFzX3JlZigpLCBiYXIsIEdGUF9LRVJORUwpPzsKPiArCj4gK8Kg
+wqDCoMKgwqDCoMKgIE9rKGRldnJlcykKPiArwqDCoMKgIH0KPiArCj4gK8KgwqDCoCAvLy8gTWFw
+cHMgYW4gZW50aXJlIFBDSS1CQVIgYWZ0ZXIgcGVyZm9ybWluZyBhIHJlZ2lvbi1yZXF1ZXN0IG9u
+Cj4gaXQuCj4gK8KgwqDCoCBwdWIgZm4gaW9tYXBfcmVnaW9uKCZzZWxmLCBiYXI6IHUzMiwgbmFt
+ZTogJkNTdHIpIC0+Cj4gUmVzdWx0PERldnJlczxCYXI+PiB7Cj4gK8KgwqDCoMKgwqDCoMKgIHNl
+bGYuaW9tYXBfcmVnaW9uX3NpemVkOjo8MD4oYmFyLCBuYW1lKQo+ICvCoMKgwqAgfQo+ICsKPiAr
+wqDCoMKgIC8vLyBSZXR1cm5zIGEgbmV3IGBBUmVmYCBvZiB0aGUgYmFzZSBgZGV2aWNlOjpEZXZp
+Y2VgLgo+ICvCoMKgwqAgcHViIGZuIGFzX2Rldigmc2VsZikgLT4gQVJlZjxkZXZpY2U6OkRldmlj
+ZT4gewo+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLjAuY2xvbmUoKQo+ICvCoMKgwqAgfQo+IMKgfQo+
+IMKgCj4gwqBpbXBsIEFzUmVmPGRldmljZTo6RGV2aWNlPiBmb3IgRGV2aWNlIHsKCg==
 
 
