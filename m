@@ -1,127 +1,149 @@
-Return-Path: <linux-pci+bounces-17873-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C96E9E7DAB
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 02:14:20 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 423E69E8105
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 17:31:32 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE30716D049
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 01:14:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF17728173A
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 16:31:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5AAF9DA;
-	Sat,  7 Dec 2024 01:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dz8iq5f9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC1313D244;
+	Sat,  7 Dec 2024 16:31:28 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF6FC2C9
-	for <linux-pci@vger.kernel.org>; Sat,  7 Dec 2024 01:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B755628F5;
+	Sat,  7 Dec 2024 16:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733534054; cv=none; b=b/itxBCU0ijnwJ86v8xXshifMTS8pw4MimppkW7CyB86TYXTOPRtNj4S454EmXg5rU8u0lteYE7g2RgcslHqsgDuBQWdao8Cj/v1iHhYLRH/Kl7a2uF6b6uo/+t/0Hh6Yo/Y8QwbxE/Vp5HlEkeVqy7RkVWWUTne8IYGC+x1V4Y=
+	t=1733589088; cv=none; b=gOeBtYxbS5iXqgDrJe5gL4aon1cUSrZSe9LesUdOy1aDYUiwweBWR2rSQ902xLbe7lPCbqKd3Si0bovau20lsJIyfHcVEWhHcubhcdFUdcAPvwG/yF1a7GZYi+xPqdXktoDU+XVI8W7Pg+vS8gTx7SRoIfVZUvFHheOe2n9H7xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733534054; c=relaxed/simple;
-	bh=1UDNfOgAXHiNS1laqsuNcIe0CfMA9SfD/bj3xh3ULE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UWYrTdd5eDdvjJ1Rd2REeFJpiVuK8d1obX7X1y/kGgQpNRLZkkf/vsbXSyawp2CAqSp4mgW7EWj5AG3KKnUoVPa3AGOE53QVRV6b+WVA2hG2UHW2SQcns57nWIdc7S6FG9Kxu5QLDU0uQbqr7WNH36UwWEzT4itMjpDGaK+QgZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dz8iq5f9; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3862b364538so760237f8f.1
-        for <linux-pci@vger.kernel.org>; Fri, 06 Dec 2024 17:14:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733534051; x=1734138851; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kc4i0kJQLOWcBEfKkh0Mird9pq2rATpCYMpyHBDNC9Q=;
-        b=Dz8iq5f9DSBrGG+VSu3ISHBYgs7VrSh10cEknSughBmoHAmqiComy73O9E+KtcNV66
-         eSLlY/QcZYW8PqmEpNVZNhhl6tHLg6g0MVtK47aFlsWGzoPoXH3x91GpySNxbaIh/tQK
-         IkY4ODuUmmOMkT5Hl6O31YsxsV6YJDuFk8Pvlg/QDL4NUqXLwQYunbkksLiuja6CVjVm
-         pq3b0dGgIGf5C8OKuXEZfkbxUkcLBjW09dbTd3PVEWlIsCLqRTxz8R3XPGK4M4HwAyIN
-         jO/DFNH20FpkAGwHRv8NCS8NqaoTRrjJIPIgxUyIkBv3gtD9X1GuPKVbIaoePw+RWO3w
-         yyPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733534051; x=1734138851;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kc4i0kJQLOWcBEfKkh0Mird9pq2rATpCYMpyHBDNC9Q=;
-        b=MtvkwS/xl0jdVzBa/6N/cHf05C8DJFsIQzVsJLel01TwV81incoxLYHTvO2jE5KPvL
-         dnoQbogllgLQhwTzbNyQadC4jq+IEG6/z7VFxtNMEjxTIZzYiDnVs6UsVQT3LXNtODzY
-         RPuKC2dMb6JRUHdLSb05hXPHMN5YU91Z1CjexbnasdOOcVdtL3dZL6UdbYcDuTz3gvIz
-         8r3shWaIwKxE9HlYNe++1yS7K1NDH/EY41fCITFixgdsFg2uowEvpS/08gk4hxb1NDYY
-         eQ4qDkPThPhobvL4Srq15sF/U+8VJ5sZVWoa6ZJgIuB4T502/Bb+GoQM9fdu1F0Atbul
-         QWRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaKuBxSmSdusVSXRCLgLddWSs1AhXoZoKmFtQSbrfdp7kp1897Y614gUzk/VpoDW2tiFV9aVdTsEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0b9fWFCpVEU0LTPa6IcMcA3XNBp8j/iIUAtLy0+oo/99BcT2/
-	4d9EG/2H1ymFjYOVy1r+sLPOPKWFFvyvtH9pOgWwtywe1JPsK/+rQc5lPqzK7wjqAoYSkvnMwi2
-	LHlg9esbbquwJdAs8Bo8CIDaOG4DIcBwAMkoDFQ==
-X-Gm-Gg: ASbGncth0GAmiG3ozMaeq+bWSfcPdWO40PSj1A2JRqMVq+S+NSeXSYPUZk2ucH7mH2b
-	mEVNZ5ey1q7ncRcYHLvDm+m9TYmfK5uMobflOUhxrBQLgUiEngpOQOoq+DxHYwtU=
-X-Google-Smtp-Source: AGHT+IEXUUe0fWZt4pPEQxVTHw6twtVV/mHWiQX4ajOGKuM43alY918V0NbCArXqqS7AFHkv/75t0ILgA7HTIDbSd1o=
-X-Received: by 2002:a05:6000:42c7:b0:386:2e8c:e26d with SMTP id
- ffacd0b85a97d-3862e8ce40emr1978498f8f.0.1733534051301; Fri, 06 Dec 2024
- 17:14:11 -0800 (PST)
+	s=arc-20240116; t=1733589088; c=relaxed/simple;
+	bh=yYFqEq2kwcktfnz+Klwd/FpVUkkIZx4E/bMB+tmEX8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PtLYh3sXaipn3RTSi68DEKdreKufCk1yckYVPvnGax/jCUF+xSy2JUxxk9s9LHBXx2gJQQt2yUEqaXmic32AtNNdhBbxlS8MQ4pAXUPnXSZ2rtHI4SDizC8mMBf//bVW/KEr4EVGDx8834yEQio6LWnxN1UCDHQAWkL7KLac+GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 9D018100DA1C3;
+	Sat,  7 Dec 2024 17:31:16 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 5FEFE15BCCC; Sat,  7 Dec 2024 17:31:16 +0100 (CET)
+Date: Sat, 7 Dec 2024 17:31:16 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Niklas Schnelle <niks@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	linux-kernel@vger.kernel.org,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v9 6/9] PCI/bwctrl: Re-add BW notification portdrv as
+ PCIe BW controller
+Message-ID: <Z1R4VNwCOlh9Sg9n@wunner.de>
+References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com>
+ <20241018144755.7875-7-ilpo.jarvinen@linux.intel.com>
+ <db8e457fcd155436449b035e8791a8241b0df400.camel@kernel.org>
+ <91b501c0ce92de681cc699eb6064840caad28803.camel@kernel.org>
+ <7a4a9d51a9105bd5ca2c850c26fed6435b5e90e9.camel@kernel.org>
+ <5f27c14467aa728358ebfe1686517aabe7c1e878.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205141533.111830-1-dakr@kernel.org> <20241205141533.111830-4-dakr@kernel.org>
-In-Reply-To: <20241205141533.111830-4-dakr@kernel.org>
-From: Fabien Parent <fabien.parent@linaro.org>
-Date: Fri, 6 Dec 2024 17:14:00 -0800
-Message-ID: <CAPFo5VJ9=VAghiUGbzPjDDdG8tg6xNQaRtBduHk8R70jktPQNg@mail.gmail.com>
-Subject: Re: [PATCH v4 03/13] rust: implement `IdArray`, `IdTable` and `RawDeviceId`
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
-	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, 
-	j@jannau.net, chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, Wedson Almeida Filho <wedsonaf@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f27c14467aa728358ebfe1686517aabe7c1e878.camel@kernel.org>
 
-Hi Danilo,
+[cc += Mika, start of thread:
+https://lore.kernel.org/all/db8e457fcd155436449b035e8791a8241b0df400.camel@kernel.org/
+]
 
-> +/// Create device table alias for modpost.
-> +#[macro_export]
-> +macro_rules! module_device_table {
-> +    ($table_type: literal, $module_table_name:ident, $table_name:ident) => {
-> +        #[rustfmt::skip]
-> +        #[export_name =
-> +            concat!("__mod_", $table_type,
-> +                    "__", module_path!(),
-> +                    "_", line!(),
-> +                    "_", stringify!($table_name),
-> +                    "_device_table")
+On Sat, Dec 07, 2024 at 12:06:49AM +0100, Niklas Schnelle wrote:
+> > > On Fri, 2024-12-06 at 19:12 +0100, Niklas Schnelle wrote:
+> > > > I bisected a v6.13-rc1 boot hang on my personal workstation to this
+> > > > patch. Sadly I don't have much details like a panic or so because the
+> > > > boot hangs before any kernel messages, or at least they're not visible
+> > > > long enough to see. I haven't yet looked into the code as I wanted to
+> > > > raise awareness first. Since the commit doesn't revert cleanly on
+> > > > v6.13-rc1 I also haven't tried that yet.
+> > > > 
+> > > > Here are some details on my system:
+> > > > - AMD Ryzen 9 3900X 
+> > > > - ASRock X570 Creator Motherboard
+> > > > - Radeon RX 5600 XT
+> > > > - Intel JHL7540 Thunderbolt 3 USB Controller (only USB 2 plugged)
+> > > > - Intel 82599 10 Gigabit NIC with SR-IOV enabled with 2 VFs
+> > > > - Intel n I211 Gigabit NIC
+> > > > - Intel Wi-Fi 6 AX200
+> > > > - Aquantia AQtion AQC107 NIC
+> 
+> Ok did some fiddeling and it's the thunderbolt ports. The below diff
+> works around the issue. That said I guess for a proper fix this would
+> should get filtered by the port service matching? Also as can be seen
+> in lspci the port still claims to support bandwidth management so maybe
+> other thunderbolt ports actually do.
+[...]
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -294,6 +294,9 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+>         struct pci_dev *port = srv->port;
+>         int ret;
+> 
+> +       if (srv->port->is_thunderbolt)
+> +               return -EOPNOTSUPP;
+> +
 
-This doesn't work on top of v6.13-rc1. The alias symbol name has been
-renamed by commit 054a9cd395a7 (modpost: rename alias
-symbol for MODULE_DEVICE_TABLE())
+Thanks for reporting and analyzing this.
 
-I applied the following change to make it work again:
--            concat!("__mod_", $table_type,
-+            concat!("__mod_device_table__", $table_type,
-                     "__", module_path!(),
-                     "_", line!(),
--                    "_", stringify!($table_name),
--                    "_device_table")
-+                    "_", stringify!($table_name))
+The PCIe bandwidth controller is only instantiated on Downstream Ports.
+Per the spec, Thunderbolt PCIe Downstream Ports are just tunnel endpoints
+with a fake Max Link Speed of 2.5 GT/s (USB4 v2 sec 11.2.1):
 
+   "Max Link Speed field in the Link Capabilities Register set to 0001b
+    (data rate of 2.5 GT/s only).
+    Note: These settings do not represent actual throughput.
+    Throughput is implementation specific and based on the USB4 Fabric
+    performance."
 
-> +        ]
-> +        static $module_table_name: [core::mem::MaybeUninit<u8>; $table_name.raw_ids().size()] =
-> +            unsafe { core::mem::transmute_copy($table_name.raw_ids()) };
-> +    };
-> +}
+So your patch does make sense in so far as the link speed of Thunderbolt
+PCIe Downstream Ports is fixed to 2.5 GT/s and cannot be throttled because
+that's already the lowest possible PCIe speed.  The actual speed is
+determined by the Thunderbolt links.
+
+The check for the is_thunderbolt bit should be moved to the if-clause in
+get_port_device_capability() which sets the PCIE_PORT_SERVICE_BWCTRL bit
+in the services mask.
+
+Alternatively, it may be worth considering not to instantiate the
+bandwidth controller if the only link speed supported is 2.5 GT/s.
+
+We should try to find out what actually causes the boot hang
+(some interrupt storm maybe?), but that can hopefully be done
+internally at Intel if the boot hang is reproducible.
+
+Thanks,
+
+Lukas
 
