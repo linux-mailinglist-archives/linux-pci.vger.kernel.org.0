@@ -1,175 +1,127 @@
-Return-Path: <linux-pci+bounces-17872-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17873-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D40919E7C35
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 00:06:58 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C96E9E7DAB
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 02:14:20 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92179280D3A
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2024 23:06:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE30716D049
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Dec 2024 01:14:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96381F9EC6;
-	Fri,  6 Dec 2024 23:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5AAF9DA;
+	Sat,  7 Dec 2024 01:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwevWi3z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dz8iq5f9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2161EF090;
-	Fri,  6 Dec 2024 23:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF6FC2C9
+	for <linux-pci@vger.kernel.org>; Sat,  7 Dec 2024 01:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733526415; cv=none; b=TjAfkBjcoaI/70HbS9CGAMh08qT3rJrfJ39aPGgj4YgDWNyTLrPqaPvybSDUSTvEa0lmjRYFNES2wVGGRkkBNap0wIr6rA6UFulO6c7a1/I6Yd7bNd09TF8HD6W9SQ3JjcwO69zTUs+Ml3YRasLYQmqDO6coRokbp8JGVV5rm7w=
+	t=1733534054; cv=none; b=b/itxBCU0ijnwJ86v8xXshifMTS8pw4MimppkW7CyB86TYXTOPRtNj4S454EmXg5rU8u0lteYE7g2RgcslHqsgDuBQWdao8Cj/v1iHhYLRH/Kl7a2uF6b6uo/+t/0Hh6Yo/Y8QwbxE/Vp5HlEkeVqy7RkVWWUTne8IYGC+x1V4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733526415; c=relaxed/simple;
-	bh=ZtoiAjQ2U+lEx4d4Q+20KSR/KUtr9wtqJss8xBJgrck=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JuARf8kXdWkJZWcZgHg6UC+oMRIT/Fxu6hZD92yYBXdlwTlNm2ksoKvgrD2EkmlkEpGnghW4VNvF15M87bgJ3xjWfhEUo3695sQiYpeGeb5G6eDIFj6dI0fQqOeQL59lLQ0ij1AJGetDaym+6EVpsjKyA3r2G5Hacq/dl1Vfw/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwevWi3z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A704C4CED1;
-	Fri,  6 Dec 2024 23:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733526415;
-	bh=ZtoiAjQ2U+lEx4d4Q+20KSR/KUtr9wtqJss8xBJgrck=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GwevWi3zEYTROksNfCuVInm2/ZJETA3X2Omp/Nz3xcxMo2mI3KyQLeGRMdIZ3i2hi
-	 Ghk+KC7pFawEoLcBHwDUsaUo15ija/rUOtN4E1Sw/jYgqxaZ2BCQunRqu8BZvvsTod
-	 XWRSfjTgOXtxW88x+SPkzCrkBTiqGCPjSUQTBn6ApxX5Wv3zwvh15yMawHxLJQiSTl
-	 AAhLLApcTm4v1CRpe0yZ/0aEb1UOGVgE1rmsHCzbS7O+oZ+QN91j3jAgXG9hwYYX72
-	 gmrnBOUbdkKc/JjyODzR9kC9ZdlwLglkj2GgDVusG5k2GXusx0nZGLgboAvDL5d3zC
-	 AD+VUkhOMamww==
-Message-ID: <5f27c14467aa728358ebfe1686517aabe7c1e878.camel@kernel.org>
-Subject: Re: [PATCH v9 6/9] PCI/bwctrl: Re-add BW notification portdrv as
- PCIe BW controller
-From: Niklas Schnelle <niks@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo
- Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	 <kw@linux.com>, "Maciej W . Rozycki"
- <macro@orcam.me.uk>, Jonathan Cameron	 <Jonathan.Cameron@Huawei.com>, Lukas
- Wunner <lukas@wunner.de>, Alexandru Gagniuc <mr.nuke.me@gmail.com>, Krishna
- chaitanya chundru <quic_krichai@quicinc.com>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki"
- <rafael@kernel.org>, 	linux-pm@vger.kernel.org, Smita Koralahalli	
- <Smita.KoralahalliChannabasappa@amd.com>, linux-kernel@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria
- <amitk@kernel.org>,  Zhang Rui <rui.zhang@intel.com>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, niks@kernel.org
-Date: Sat, 07 Dec 2024 00:06:49 +0100
-In-Reply-To: <7a4a9d51a9105bd5ca2c850c26fed6435b5e90e9.camel@kernel.org>
-References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com>
-						 <20241018144755.7875-7-ilpo.jarvinen@linux.intel.com>
-					 <db8e457fcd155436449b035e8791a8241b0df400.camel@kernel.org>
-				 <91b501c0ce92de681cc699eb6064840caad28803.camel@kernel.org>
-		 <7a4a9d51a9105bd5ca2c850c26fed6435b5e90e9.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	s=arc-20240116; t=1733534054; c=relaxed/simple;
+	bh=1UDNfOgAXHiNS1laqsuNcIe0CfMA9SfD/bj3xh3ULE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UWYrTdd5eDdvjJ1Rd2REeFJpiVuK8d1obX7X1y/kGgQpNRLZkkf/vsbXSyawp2CAqSp4mgW7EWj5AG3KKnUoVPa3AGOE53QVRV6b+WVA2hG2UHW2SQcns57nWIdc7S6FG9Kxu5QLDU0uQbqr7WNH36UwWEzT4itMjpDGaK+QgZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dz8iq5f9; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3862b364538so760237f8f.1
+        for <linux-pci@vger.kernel.org>; Fri, 06 Dec 2024 17:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733534051; x=1734138851; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kc4i0kJQLOWcBEfKkh0Mird9pq2rATpCYMpyHBDNC9Q=;
+        b=Dz8iq5f9DSBrGG+VSu3ISHBYgs7VrSh10cEknSughBmoHAmqiComy73O9E+KtcNV66
+         eSLlY/QcZYW8PqmEpNVZNhhl6tHLg6g0MVtK47aFlsWGzoPoXH3x91GpySNxbaIh/tQK
+         IkY4ODuUmmOMkT5Hl6O31YsxsV6YJDuFk8Pvlg/QDL4NUqXLwQYunbkksLiuja6CVjVm
+         pq3b0dGgIGf5C8OKuXEZfkbxUkcLBjW09dbTd3PVEWlIsCLqRTxz8R3XPGK4M4HwAyIN
+         jO/DFNH20FpkAGwHRv8NCS8NqaoTRrjJIPIgxUyIkBv3gtD9X1GuPKVbIaoePw+RWO3w
+         yyPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733534051; x=1734138851;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kc4i0kJQLOWcBEfKkh0Mird9pq2rATpCYMpyHBDNC9Q=;
+        b=MtvkwS/xl0jdVzBa/6N/cHf05C8DJFsIQzVsJLel01TwV81incoxLYHTvO2jE5KPvL
+         dnoQbogllgLQhwTzbNyQadC4jq+IEG6/z7VFxtNMEjxTIZzYiDnVs6UsVQT3LXNtODzY
+         RPuKC2dMb6JRUHdLSb05hXPHMN5YU91Z1CjexbnasdOOcVdtL3dZL6UdbYcDuTz3gvIz
+         8r3shWaIwKxE9HlYNe++1yS7K1NDH/EY41fCITFixgdsFg2uowEvpS/08gk4hxb1NDYY
+         eQ4qDkPThPhobvL4Srq15sF/U+8VJ5sZVWoa6ZJgIuB4T502/Bb+GoQM9fdu1F0Atbul
+         QWRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaKuBxSmSdusVSXRCLgLddWSs1AhXoZoKmFtQSbrfdp7kp1897Y614gUzk/VpoDW2tiFV9aVdTsEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0b9fWFCpVEU0LTPa6IcMcA3XNBp8j/iIUAtLy0+oo/99BcT2/
+	4d9EG/2H1ymFjYOVy1r+sLPOPKWFFvyvtH9pOgWwtywe1JPsK/+rQc5lPqzK7wjqAoYSkvnMwi2
+	LHlg9esbbquwJdAs8Bo8CIDaOG4DIcBwAMkoDFQ==
+X-Gm-Gg: ASbGncth0GAmiG3ozMaeq+bWSfcPdWO40PSj1A2JRqMVq+S+NSeXSYPUZk2ucH7mH2b
+	mEVNZ5ey1q7ncRcYHLvDm+m9TYmfK5uMobflOUhxrBQLgUiEngpOQOoq+DxHYwtU=
+X-Google-Smtp-Source: AGHT+IEXUUe0fWZt4pPEQxVTHw6twtVV/mHWiQX4ajOGKuM43alY918V0NbCArXqqS7AFHkv/75t0ILgA7HTIDbSd1o=
+X-Received: by 2002:a05:6000:42c7:b0:386:2e8c:e26d with SMTP id
+ ffacd0b85a97d-3862e8ce40emr1978498f8f.0.1733534051301; Fri, 06 Dec 2024
+ 17:14:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20241205141533.111830-1-dakr@kernel.org> <20241205141533.111830-4-dakr@kernel.org>
+In-Reply-To: <20241205141533.111830-4-dakr@kernel.org>
+From: Fabien Parent <fabien.parent@linaro.org>
+Date: Fri, 6 Dec 2024 17:14:00 -0800
+Message-ID: <CAPFo5VJ9=VAghiUGbzPjDDdG8tg6xNQaRtBduHk8R70jktPQNg@mail.gmail.com>
+Subject: Re: [PATCH v4 03/13] rust: implement `IdArray`, `IdTable` and `RawDeviceId`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, 
+	j@jannau.net, chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, Wedson Almeida Filho <wedsonaf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2024-12-06 at 21:07 +0100, Niklas Schnelle wrote:
-> On Fri, 2024-12-06 at 20:31 +0100, Niklas Schnelle wrote:
-> > On Fri, 2024-12-06 at 19:12 +0100, Niklas Schnelle wrote:
-> > > On Fri, 2024-10-18 at 17:47 +0300, Ilpo J=C3=A4rvinen wrote:
-> > > > This mostly reverts the commit b4c7d2076b4e ("PCI/LINK: Remove
-> > > > bandwidth notification"). An upcoming commit extends this driver
-> > > > building PCIe bandwidth controller on top of it.
-> > > >=20
-> > > > The PCIe bandwidth notification were first added in the commit
-> > > > e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-> > > > notification") but later had to be removed. The significant changes
-> > > > compared with the old bandwidth notification driver include:
-> > > >=20
-> > ---8<---
-> > > > ---
-> > >=20
-> > > Hi Ilpo,
-> > >=20
-> > > I bisected a v6.13-rc1 boot hang on my personal workstation to this
-> > > patch. Sadly I don't have much details like a panic or so because the
-> > > boot hangs before any kernel messages, or at least they're not visibl=
-e
-> > > long enough to see. I haven't yet looked into the code as I wanted to
-> > > raise awareness first. Since the commit doesn't revert cleanly on
-> > > v6.13-rc1 I also haven't tried that yet.
-> > >=20
-> > > Here are some details on my system:
-> > > - AMD Ryzen 9 3900X=20
-> > > - ASRock X570 Creator Motherboard
-> > > - Radeon RX 5600 XT
-> > > - Intel JHL7540 Thunderbolt 3 USB Controller (only USB 2 plugged)
-> > > - Intel 82599 10 Gigabit NIC with SR-IOV enabled with 2 VFs
-> > > - Intel n I211 Gigabit NIC
-> > > - Intel Wi-Fi 6 AX200
-> > > - Aquantia AQtion AQC107 NIC
-> > >=20
-> > > If you have patches or things to try just ask.
-> > >=20
-> > > Thanks,
-> > > Niklas
-> > >=20
-> >=20
-> > Ok I can now at least confirm that bluntly disabling the new bwctrl
-> > driver with the below diff on top of v6.13-rc1 circumvents the boot
-> > hang I'm seeing. So it's definitely this.
-> >=20
-> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> > index 5e10306b6308..6fa54480444a 100644
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -828,7 +828,7 @@ static void __init pcie_init_services(void)
-> >         pcie_aer_init();
-> >         pcie_pme_init();
-> >         pcie_dpc_init();
-> > -       pcie_bwctrl_init();
-> > +       /* pcie_bwctrl_init(); */
-> >         pcie_hp_init();
-> >  }
-> >=20
->=20
-> Also here is the full lspci -vvv output running the above on v6.13-rc1:
-> https://paste.js.org/9UwQIMp7eSgp
->=20
-> Also note that I have CONFIG_PCIE_THERMAL unset so it's also not the
-> cooling device portion that's causing the issue. Next I guess I should
-> narrow it down to the specific port where enabling the bandwidth
-> monitoring is causing trouble, not yet sure how best to do this with
-> this many devices.
->=20
-> Thanks,
-> Niklas
+Hi Danilo,
 
-Ok did some fiddeling and it's the thunderbolt ports. The below diff
-works around the issue. That said I guess for a proper fix this would
-should get filtered by the port service matching? Also as can be seen
-in lspci the port still claims to support bandwidth management so maybe
-other thunderbolt ports actually do.
+> +/// Create device table alias for modpost.
+> +#[macro_export]
+> +macro_rules! module_device_table {
+> +    ($table_type: literal, $module_table_name:ident, $table_name:ident) => {
+> +        #[rustfmt::skip]
+> +        #[export_name =
+> +            concat!("__mod_", $table_type,
+> +                    "__", module_path!(),
+> +                    "_", line!(),
+> +                    "_", stringify!($table_name),
+> +                    "_device_table")
 
-Thanks,
-Niklas
+This doesn't work on top of v6.13-rc1. The alias symbol name has been
+renamed by commit 054a9cd395a7 (modpost: rename alias
+symbol for MODULE_DEVICE_TABLE())
 
-diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index b59cacc740fa..76a14f959c7f 100644
---- a/drivers/pci/pcie/bwctrl.c
-+++ b/drivers/pci/pcie/bwctrl.c
-@@ -294,6 +294,9 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
-        struct pci_dev *port =3D srv->port;
-        int ret;
+I applied the following change to make it work again:
+-            concat!("__mod_", $table_type,
++            concat!("__mod_device_table__", $table_type,
+                     "__", module_path!(),
+                     "_", line!(),
+-                    "_", stringify!($table_name),
+-                    "_device_table")
++                    "_", stringify!($table_name))
 
-+       if (srv->port->is_thunderbolt)
-+               return -EOPNOTSUPP;
-+
-        struct pcie_bwctrl_data *data =3D devm_kzalloc(&srv->device,
-                                                     sizeof(*data), GFP_KER=
-NEL);
-        if (!data)
 
+> +        ]
+> +        static $module_table_name: [core::mem::MaybeUninit<u8>; $table_name.raw_ids().size()] =
+> +            unsafe { core::mem::transmute_copy($table_name.raw_ids()) };
+> +    };
+> +}
 
