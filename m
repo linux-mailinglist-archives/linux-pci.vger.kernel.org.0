@@ -1,166 +1,171 @@
-Return-Path: <linux-pci+bounces-17896-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17897-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29F829E89E2
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 04:42:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26E589E8A50
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 05:30:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A0BC1616EF
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 03:42:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17EC8163800
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 04:30:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50AC815573D;
-	Mon,  9 Dec 2024 03:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2777156228;
+	Mon,  9 Dec 2024 04:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hJfOyi9s"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bDPi664h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E7415665D
-	for <linux-pci@vger.kernel.org>; Mon,  9 Dec 2024 03:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0072B73446;
+	Mon,  9 Dec 2024 04:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733715667; cv=none; b=rIgcuDZNoCL0JKtXohGiKV1oa/QwoK26nSf6+SLfR3F/7xzI27Ws8jJvAEXInHBy9VRKaJTyw40ZlrIPnIc22brcqYi0sg8f9b0qUMrSLabLDKKz5BjQ+9+GBa6umN0fEsfPSx9Vjp1k797g+X50UPwFfWE8i01JSOcfEVGI5XA=
+	t=1733718630; cv=none; b=iJ3xr8R8+HHyxfCnPvmHaQHBqCD9hlNdL99gY+2g4hXa0RoK/Bel/PannLySCKQocfJgopQlB7/ckV1WB8kWLLqVx+QXRCLNAxKk2YTYSCWNxPBVKoTTIt/6kXsK/23VUi20IR8v2IcJ1uf2N6NkkxP/a9yCU4Kh+3Kc/ND463Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733715667; c=relaxed/simple;
-	bh=uTNZqUf0pQn0sEQrdm6iDAs3Wxr8P+TD55zoNhMtirs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rn8XU/QJFApoVB4BiyNK0POGgfVobuZhfLjSk7aPK1B4I0RY+BEhdvHrburDkd8UScw5hKJsJu1f1KVmIbqxojq3F6IxpfPDy/j+xlJsh70MKMG33ROHZUlKL3HnzQTGM+yAoCKyhDgHaWvzPOz3HSVNXNxgt901p6KTFF2rQsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hJfOyi9s; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733715665; x=1765251665;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uTNZqUf0pQn0sEQrdm6iDAs3Wxr8P+TD55zoNhMtirs=;
-  b=hJfOyi9sKwftQeeFFOPJunelHcU9tFayxzJn+Wyvo0cYLP54GYzwCOTT
-   n+k0kxiMb8qNqefhX+swC7e2kPXxW9QMyefldLPUSI6/9MCEAor4yfEcD
-   WLhw0k/sqNTa4VHiBufyCLFHZjF1s5KDO8c54fEfZ57g3dl/Uvzo5js+y
-   MOChlNOxGaVTa4pMLf0DE7rwtHciEVtpKS2yFtujqMezj6AZBl/hXIi6Y
-   K/Ldqqpj8NNWpHEumr5wcjbVdrW/nyubuY6Te+zV+tQHurT1ZTppJa9bL
-   cUEnxbW8jk7B/TuVBlJqg+0w29iamyEZSPsWT41M+ag9LUKyol9CHNZYA
-   g==;
-X-CSE-ConnectionGUID: JKrOw+NhQJyGAviuGYJIBA==
-X-CSE-MsgGUID: bfYJqTTGQfqgUGll/1o14w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11280"; a="59400868"
-X-IronPort-AV: E=Sophos;i="6.12,218,1728975600"; 
-   d="scan'208";a="59400868"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2024 19:41:04 -0800
-X-CSE-ConnectionGUID: r2ecLHP2Tx+V7jisDXIsfQ==
-X-CSE-MsgGUID: 6gJ3FpjhQjW8LbqAi4o5JA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,218,1728975600"; 
-   d="scan'208";a="99895657"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 08 Dec 2024 19:41:01 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tKUdn-0003k9-0E;
-	Mon, 09 Dec 2024 03:40:59 +0000
-Date: Mon, 9 Dec 2024 11:40:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 06/11] samples/devsec: PCI device-security bus / endpoint
- sample
-Message-ID: <202412070726.Au4TQYYS-lkp@intel.com>
-References: <173343743095.1074769.17985181033044298157.stgit@dwillia2-xfh.jf.intel.com>
+	s=arc-20240116; t=1733718630; c=relaxed/simple;
+	bh=qoBVCsPj9LSkNYkv+fShXevsElwvzFhBnbVMk+TP180=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sh5cekPPJ5+LH/fCqmDDS15g4AIprcIB1dx92MyJJaHiTWwfD9K1Dyr3wPL52TYPHlbpn4D3yNHFd3mQF1+E0EVpdry5ZGk8x33G/T5baPvnSpJSdC+/gtC9NBPQaH1/Iuu6nwHe3he1dj8J73wnlJ0ghujqxE85f48W5+aLXt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bDPi664h; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B8MTMZX018941;
+	Mon, 9 Dec 2024 04:30:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fzXSH1rhYvfdhTHAq6+nsYTA7iJW008iqtbY+N7KRvk=; b=bDPi664hLXIyVd3P
+	hc2uDNSA60VSJtvbiWhPzlpm4CNWHW/4Zlv5hvmanbE9ZOOULjuFchnmx+CV42ew
+	FbVRZZb/4Ppju+J6AIfEYaXOZPDDFCGiu47UhthZiVuB1lMKTKaEIq0btEPieC4r
+	ExSeo2YhyyX7tUiZu5LonG538FkqJe8PCzHzDPDFga4fdnvJxpU00ouztpO4HJBV
+	dnwCoYDVMu4AHYgG9HkCQpsQT08Sq0qkTF/MORJvV6G5sIYTB68djjZ4cswwthDm
+	B9LbZcGguao89xNJqzMw/7AtgctchDWafuiPFJgGgpDmLNfYD0suuurZXd3WjKeL
+	SYoAJA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43cc2ebh87-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Dec 2024 04:30:18 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B94UHt0005868
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 9 Dec 2024 04:30:17 GMT
+Received: from [10.216.4.234] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Dec 2024
+ 20:30:10 -0800
+Message-ID: <17c9839d-c61e-3c2f-4d77-5e8813f3a9c8@quicinc.com>
+Date: Mon, 9 Dec 2024 10:00:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173343743095.1074769.17985181033044298157.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 2/3] PCI: dwc: Add ECAM support with iATU configuration
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <cros-qcom-dts-watchers@chromium.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        "Manivannan
+ Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <quic_vbadigan@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_vpernami@quicinc.com>,
+        <quic_mrana@quicinc.com>, <mmareddy@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+References: <20241204221714.GA3023492@bhelgaas>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20241204221714.GA3023492@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 8DbU83nimCF42SVCvQNf9-IrGLpTh27j
+X-Proofpoint-GUID: 8DbU83nimCF42SVCvQNf9-IrGLpTh27j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412090034
 
-Hi Dan,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on 40384c840ea1944d7c5a392e8975ed088ecf0b37]
+On 12/5/2024 3:47 AM, Bjorn Helgaas wrote:
+> On Wed, Dec 04, 2024 at 07:45:29AM +0530, Krishna Chaitanya Chundru wrote:
+>> On 12/4/2024 12:25 AM, Bjorn Helgaas wrote:
+>>> On Sun, Nov 17, 2024 at 03:30:19AM +0530, Krishna chaitanya chundru wrote:
+>>>> The current implementation requires iATU for every configuration
+>>>> space access which increases latency & cpu utilization.
+>>>>
+>>>> Configuring iATU in config shift mode enables ECAM feature to access the
+>>>> config space, which avoids iATU configuration for every config access.
+> 
+>>>> +static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
+>>>> +{
+>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>> +	struct dw_pcie_ob_atu_cfg atu = {0};
+>>>> +	struct resource_entry *bus;
+>>>> +	int ret, bus_range_max;
+>>>> +
+>>>> +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
+>>>> +
+>>>> +	/*
+>>>> +	 * Bus 1 config space needs type 0 atu configuration
+>>>> +	 * Remaining buses need type 1 atu configuration
+>>>
+>>> I'm confused about the bus numbering; you refer to "bus 1" and "bus
+>>> 2".  Is bus 1 the root bus, i.e., the primary bus of a Root Port?
+>>>
+>>> The root bus number would typically be 0, not 1, and is sometimes
+>>> programmable.  I don't know how the DesignWare core works, but since
+>>> you have "bus" here, referring to "bus 1" and "bus 2" here seems
+>>> overly specific.
+>>>
+>> root bus is bus 0 and we don't need any iATU configuration for it as
+>> its config space is accessible from the system memory, for usp port of
+>> the switch or the direct the endpoint i.e bus 1 we need to send
+>> Configuration Type 0 requests and for other buses we need to send
+>> Configuration Type 1 requests this is as per PCIe spec, I will try to
+>> include PCIe spec details in next patch.
+> 
+> I understand the Type 0/Type 1 differences.  The question is whether
+> the root bus number is hard-wired to 0.
+> 
+It is not hard-wired to 0, we can configure it though bus-range property
+> I don't think specifying "bus 1" really adds anything.  The point is
+> that we need Type 0 accesses for anything directly below a Root Port
+> (regardless of what the RP's secondary bus number is), and Type 1 for
+> things deeper.
+> 
+I will update the comment without mentioning the buses as suggested.
+> When DWC supports multiple Root Ports in a Root Complex, they will not
+> all have a secondary bus number of 1.
+mostly they should be in bus number 0 with different device numbers, but
+it mostly depends upon the design, currently we don't have any multiple
+root ports.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/configfs-tsm-Namespace-TSM-report-symbols/20241206-064224
-base:   40384c840ea1944d7c5a392e8975ed088ecf0b37
-patch link:    https://lore.kernel.org/r/173343743095.1074769.17985181033044298157.stgit%40dwillia2-xfh.jf.intel.com
-patch subject: [PATCH 06/11] samples/devsec: PCI device-security bus / endpoint sample
-config: i386-randconfig-r123-20241206 (https://download.01.org/0day-ci/archive/20241207/202412070726.Au4TQYYS-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241207/202412070726.Au4TQYYS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412070726.Au4TQYYS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   samples/devsec/bus.c: In function 'doe_process':
->> samples/devsec/bus.c:172:18: warning: variable 'index' set but not used [-Wunused-but-set-variable]
-     172 |         u8 type, index;
-         |                  ^~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for TSM
-   Depends on [n]: VIRT_DRIVERS [=n]
-   Selected by [y]:
-   - SAMPLE_DEVSEC [=y] && SAMPLES [=y] && PCI [=y] && X86 [=y]
-
-sparse warnings: (new ones prefixed by >>)
->> samples/devsec/bus.c:539:37: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [usertype] subsystem_vendor_id @@     got restricted __le16 [usertype] @@
-   samples/devsec/bus.c:539:37: sparse:     expected unsigned short [usertype] subsystem_vendor_id
-   samples/devsec/bus.c:539:37: sparse:     got restricted __le16 [usertype]
->> samples/devsec/bus.c:546:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le32 [usertype] devcap @@     got restricted __le16 [usertype] @@
-   samples/devsec/bus.c:546:34: sparse:     expected restricted __le32 [usertype] devcap
-   samples/devsec/bus.c:546:34: sparse:     got restricted __le16 [usertype]
->> samples/devsec/bus.c:609:59: sparse: sparse: cast truncates bits from constant value (1000000000 becomes 0)
-
-vim +/index +172 samples/devsec/bus.c
-
-   168	
-   169	/* just indicate support for CMA */
-   170	static void doe_process(struct devsec_dev_doe *doe)
-   171	{
- > 172		u8 type, index;
-   173		u16 vid;
-   174	
-   175		vid = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, doe->req[0]);
-   176		type = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, doe->req[0]);
-   177	
-   178		if (vid != PCI_VENDOR_ID_PCI_SIG) {
-   179			doe->read_ttl = -1;
-   180			return;
-   181		}
-   182	
-   183		if (type != PCI_DOE_PROTOCOL_DISCOVERY) {
-   184			doe->read_ttl = -1;
-   185			return;
-   186		}
-   187	
-   188		index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX, doe->req[2]);
-   189	
-   190		doe->rsp[0] = doe->req[0];
-   191		doe->rsp[1] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, 3);
-   192		doe->read_ttl = 3;
-   193		doe->rsp[2] = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID,
-   194					 PCI_VENDOR_ID_PCI_SIG) |
-   195			      FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
-   196					 PCI_DOE_FEATURE_CMA) |
-   197			      FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX, 0);
-   198	}
-   199	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Krishna Chaitanya.
+> 
+> Bjorn
 
