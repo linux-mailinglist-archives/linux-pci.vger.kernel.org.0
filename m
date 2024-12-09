@@ -1,126 +1,87 @@
-Return-Path: <linux-pci+bounces-17964-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17965-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AADAD9E9FD9
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 20:52:04 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D608318868CD
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 19:52:02 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B77171991A5;
-	Mon,  9 Dec 2024 19:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QGqLICAW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PYFXlDr7"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70E1E9EA12D
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 22:22:45 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346B11990C1;
-	Mon,  9 Dec 2024 19:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26D3A2814FF
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 21:22:44 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 403DB198E76;
+	Mon,  9 Dec 2024 21:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyL2iuMA"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B56249652;
+	Mon,  9 Dec 2024 21:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733773918; cv=none; b=h8xHEqMKzSN6JVtHtAp0E51DgjRmuSEjooUdMpQn4JkpT2wS6cyhAgN+5Wk8oq8PLBbnGAbkDw7K1Te1TaZ5Qbn+q8jQ8y4Z9gqy+SuzoBqElBnwHt8y9+5ZUlmn9eKSJkj+7qs0iRmgNFnuvJOtU4yq67vsmFEBmHVJCDz8Qpo=
+	t=1733779361; cv=none; b=f5xWlfWtbF70cBS4tUPba0+/zLdXW3t3jsA8laLOVImLCAD1QmKQxZSiusKSrgIaqA6kywaoJiKUy57fdJ2cjS42Oti+EsCDn2kkb+M3ncCVSjYrEqatQrGWiJADvS0oeplIiouHXNm2iTuB9L5ri4gcYjpZO3veBae2lRjfMV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733773918; c=relaxed/simple;
-	bh=OSFj0uGte+4Djui3/eCX/wUJv+i1wrlJzzJviMsoiB8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tQ1mMCcTZopAGxkRe2egg/c2cSCh/FbHkdQ/D4jbu6MBntmWGKZdNeZylgxK48dSnDb8xdQq7nt0gDen6Upx51WrRTW4AdzBT6nE4kHEINbXeELm7+POhrmYBG3FX3epOk2M2yxuVX3VNl/Uk+wDqdy2zKpoZ/6Lw086gJpEPd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QGqLICAW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PYFXlDr7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1733773913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXb9Qlvpqf8UvXDokFX4BzJKnQj1O029xwrLhZM3PY4=;
-	b=QGqLICAWiFEGv1iAiUxnwN5MX5gFQ4eujqYD2p6hki0dgNaV9CGWmIqKBw4yv8DhklBNzx
-	pNL1aNghvs8S797J9vMctMalLNpkRF0kBs4liT52l5Nj3AvafHhH4DVVK2kNG7ijzKARnP
-	rJfgtGymN24m6vLSasEfaVZm5Phcc2olqkQJ0ci9yvHwoejqvbD1A4jIcONEjMMxihYUvZ
-	frdgQgqWWXbhTsyoc9qP4vp4QUhHC7e/Uy14h42KWgJD9uJUC7w+tKjFDgUzmYuAptX2U4
-	b8FywB/zf+4KyehgNqiK68jjK8IWyf3Wlg61WQHyaEqvEPkHruF2tKy5ewkWhA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1733773913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXb9Qlvpqf8UvXDokFX4BzJKnQj1O029xwrLhZM3PY4=;
-	b=PYFXlDr7DTnByaFHHuqwY4MCTGNP7Zqnly7+IhtKetDJzgwQHFlQ/FlwpauJFWmubiKxHO
-	cIZRO7e5htu0CICQ==
-To: Frank Li <Frank.Li@nxp.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
- dlemoal@kernel.org, jdmason@kudzu.us,
- linux-arm-kernel@lists.infradead.org, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v11 3/7] PCI: endpoint: pci-ep-msi: Add MSI address/data
- pair mutable check
-In-Reply-To: <20241209-ep-msi-v11-3-7434fa8397bd@nxp.com>
-References: <20241209-ep-msi-v11-0-7434fa8397bd@nxp.com>
- <20241209-ep-msi-v11-3-7434fa8397bd@nxp.com>
-Date: Mon, 09 Dec 2024 20:51:52 +0100
-Message-ID: <87h67cprc7.ffs@tglx>
+	s=arc-20240116; t=1733779361; c=relaxed/simple;
+	bh=90Wzf2BnALaciJfqUCZ7IRuSh5rcnWkqt3oeGVrhBSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lmV6K+bwJyMCvT9amse25ameJlZXng/bwLwT/so3sqF53hKJ1IPvGOH3f//ndg9pxH1pH5HJsWNda7dQXovc0oeUAicBNPVZ0+ugRdjR3XYFejm7ek6N4lBCamrXa+TewYQ1yK9nRJ/ECiE7WOVZJJR6rZfyFW4mmHsYgYd9/+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyL2iuMA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A728CC4CED1;
+	Mon,  9 Dec 2024 21:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733779360;
+	bh=90Wzf2BnALaciJfqUCZ7IRuSh5rcnWkqt3oeGVrhBSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tyL2iuMAtJTI9uVas9+prE56V1/izvjQ1oshD7XQGsVR8UXURxuN1jRSdsES8hAXL
+	 Zj1RqcA+rs3xREWK4Q5YnmF38wakQvxwj8RJQN4PP4SmBviUqPZp+osi6zfkVIx0vE
+	 FTGU37C3MvECg3b2W3i7wb5x3fK97UyrHmQ1Ez1XLdqg6OfRhDDTojvcJsaR8onCq4
+	 d9Ift5CgBnjZZrWrwILMcC/biLZpcFkQtmS6MtIrAOoHFehUY9/KFvACiDbXScJAC8
+	 3/snmbjWPstWoQnpuduC8R2NNvd4lEMtTNOIyDc2xUMU2t1tJdIEpEzvJGZtLGi74Q
+	 ZMmdRykaqyDQw==
+Date: Mon, 9 Dec 2024 15:22:38 -0600
+From: Rob Herring <robh@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
+	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 11/13] rust: of: add `of::DeviceId` abstraction
+Message-ID: <20241209212238.GE938291-robh@kernel.org>
+References: <20241205141533.111830-1-dakr@kernel.org>
+ <20241205141533.111830-12-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241205141533.111830-12-dakr@kernel.org>
 
-Frank!
-
-On Mon, Dec 09 2024 at 12:48, Frank Li wrote:
-
-> Some MSI controller change address/data pair when irq_set_affinity().
-> Current PCI endpoint can't support this type MSI controller. So add flag
-> MSI_FLAG_MSG_IMMUTABLE in include/linux/msi.h, set this flags in ARM GIC
-> ITS MSI controller and check it when allocate doorbell.
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Thu, Dec 05, 2024 at 03:14:42PM +0100, Danilo Krummrich wrote:
+> `of::DeviceId` is an abstraction around `struct of_device_id`.
+> 
+> This is used by subsequent patches, in particular the platform bus
+> abstractions, to create OF device ID tables.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
-> Change from v9 to v11
-> - new patch
-> ---
->  drivers/irqchip/irq-gic-v3-its-msi-parent.c | 1 +
->  drivers/pci/endpoint/pci-ep-msi.c           | 8 ++++++++
->  include/linux/msi.h                         | 2 ++
+>  MAINTAINERS        |  1 +
+>  rust/kernel/lib.rs |  1 +
+>  rust/kernel/of.rs  | 57 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 59 insertions(+)
+>  create mode 100644 rust/kernel/of.rs
 
-This is not how it works and I explained that you to more than once in
-the past.
-
-The change to the interrupt code is standalone and has nothing to do
-with PCI endpoint. The latter is just a user of this.
-
-So this want's to be split into several patches:
-
-   1) add the new flag and a helper function which checks for the flag.
-
-   2) add the flag to GICv3 ITS with a proper explanation
-
-   3) Check for it in the PCI endpoint code
-
->  
-> +	if (!dom->msi_parent_ops)
-> +		return -EINVAL;
-
-irq_domain_is_msi_parent()
-
-> +	if (!(dom->msi_parent_ops->supported_flags & MSI_FLAG_MSG_IMMUTABLE)) {
-
-Want's a helper.
-
-Thanks,
-
-        tglx
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
