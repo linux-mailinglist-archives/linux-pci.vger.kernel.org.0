@@ -1,48 +1,50 @@
-Return-Path: <linux-pci+bounces-17924-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17925-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B92BC9E95C1
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 14:08:33 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A972A9E95D7
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 14:10:17 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 576D62818EA
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 13:08:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33CD71885C74
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 13:08:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC3B81E9B2B;
-	Mon,  9 Dec 2024 13:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A8B218592;
+	Mon,  9 Dec 2024 13:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ecfHvZPC"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="d5dPS1xu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2FD1E9B16;
-	Mon,  9 Dec 2024 13:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7A51E9B18;
+	Mon,  9 Dec 2024 13:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733749437; cv=none; b=pIaXWP+fzcQvD0XfGRrehKHH2THaXd/ZvlbElvJpuzoTTQxrIlIb9XKMfLmAaH6cMNSj383Ma3JHL8SHpWg7xJ4NfrCe3JkXJ9hKp5HaFvUQzdabnkDLycCCShrdCqVgy67za7YvpXVcEDr4lBodr4UMjepFe/02Iynu2MlfSrk=
+	t=1733749438; cv=none; b=srOgsj5BLx/DTjzTqmLIcxqsrKDKDvgFdSswcPqfTzfTsGfnOgZT3Iq5xaq2OQ2lL6czJLfmKk2oQrb9z5TkuyVT+jgY4Pt8ohUByin1JxjtQcv23Wt8v48FqAJlAzGlooo03WPlOYsplsfhBcGUHVF9nOnCi4Sj2uVEUEZDbvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733749437; c=relaxed/simple;
-	bh=V5LsEE3DjBJaRa+zPz1kzWgU76+QLSy9csEUaoOEMK0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oy3N16PWVZNAGN7JQqyDP251VaJasqzvuPjJD4QdMxRc1KxVsBsETsAlR757c1GK7xsqdtZr2hYW9ouuMPArQm4zDLTCO7zBB4QPrsaEVd66Vz8LlLYTbloSIAT0SE1TIup2abn/xFUt9hnTFNnCcTo1LXxP9FfVm8Mr81Gw/8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ecfHvZPC; arc=none smtp.client-ip=217.70.183.200
+	s=arc-20240116; t=1733749438; c=relaxed/simple;
+	bh=uJvQVLZq5s0fZebrawLyIJa4g2jQGSVVFkXz4HSHpAM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AwLwkSOxtQTO8FNqsGtVjKBfQyOUpEbWv5k1qJvmDIxAhCoRSCqQqRfNCP8DFtvHudWzgXCP9st9cZsttLsafgjeCkKiQ1zqPjrjz2XQMeQMu02BREOYYy6dsZAvC+zht6UZtIDG2LFnCuMFoFGQzcvJicYErizl+KtuqyWqmfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=d5dPS1xu; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id EEF7D20003;
-	Mon,  9 Dec 2024 13:03:50 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 5BAB52000A;
+	Mon,  9 Dec 2024 13:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1733749431;
+	t=1733749434;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5HxjIuOt9MdlQxEP++73OJNYwJt0+JdUJjsJeeHx/ZU=;
-	b=ecfHvZPCa/QPRlZmyESpvbG2wYfWKEPFCpPGk/K06wzvJPPWYLMMWupx/MDuSlMPTXV/ky
-	u+wX8KlNiQ8jFHd/io0WVIMgayrkAAicK7ckweIUeuriPwt0fkzE49WjdKsTqLzyuBCtPT
-	PH8EUKXZ21uLgadXbyBjdLIzF1i4IxtyKBhoTHgI6T8lZGA3B8xc0WkMWBwYi4dq3Q76wy
-	gfs59+psQIOfBlcOttxCFfgxH+WRzA/7eIi4uTz0uEufAexclb0RbSmcLzoiZc/UUcQiVQ
-	N/1tCH1NXK2sqff3RlhSKIz8NaZgFl+92UfCq+4Zuo35XUpAB+rg104w3U6BEw==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DyKMpKoFaAsVDcZ194MhQ+bqbIP44CcfObgVtvg2tq0=;
+	b=d5dPS1xuF2LyqwthQYP+xtKNI6r6qrHzLo6hLwaSxUS4MR0ZH3vlIuMFrCOtyF/hRhuD0A
+	JPPlBiG0PcueeFxDVkc3R+QzmRq0YT9YqlKgcuR9PIpjiTbEZbMlgtq19Kl3PVuKfptoyS
+	L1kvMbwOWcanpQMGyLTsEMzuFRAMg+frU4RUau6aTu4CdcRPkN1RgtMyvZr5WEeBGv1LMl
+	/QATzoABevQzu2go2P7Hxe52/5FuVODEPsHD3dvX21QFhuE4jvy64ojPRus5iki7q3/+XM
+	E4vIfU7jM4RApITHVrEdzsePDIlZCBkLzgGYEEGJiSEMwO/NOQ6AMkS+8U/48Q==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
@@ -58,157 +60,117 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v5 0/5] Add support for the PCI host bridge device-tree node creation.
-Date: Mon,  9 Dec 2024 14:03:32 +0100
-Message-ID: <20241209130339.81354-1-herve.codina@bootlin.com>
+Subject: [PATCH v5 1/5] driver core: Introduce device_{add,remove}_of_node()
+Date: Mon,  9 Dec 2024 14:03:33 +0100
+Message-ID: <20241209130339.81354-2-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241209130339.81354-1-herve.codina@bootlin.com>
+References: <20241209130339.81354-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Hi,
+An of_node can be set to a device using device_set_node().
+This function cannot prevent any of_node and/or fwnode overwrites.
 
-This series adds support for creating a device-tree node for the PCI
-host bridge on non device-tree based system.
+When adding an of_node on an already present device, the following
+operations need to be done:
+- Attach the of_node if no of_node were already attached
+- Attach the of_node as a fwnode if no fwnode were already attached
 
-Creating device-tree nodes for PCI devices and PCI-PCI bridges already
-exists upstream. It was added in commit 407d1a51921e ("PCI: Create
-device tree node for bridge"). Created device-tree nodes need a parent
-node to be attached to. For the first level devices, on device-tree
-based system, this parent node (i.e. the PCI host bridge) is described
-in the base device-tree. The PCI bus related to this bridge (PCI root
-bus) inherit of the PCI host bridge device-tree node.
+This is the purpose of device_add_of_node().
+device_remove_of_node() reverts the operations done by
+device_add_of_node().
 
-The LAN966x PCI device driver, available since commit 185686beb464
-("misc: Add support for LAN966x PCI device"), relies on this feature.
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+---
+ drivers/base/core.c    | 54 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |  2 ++
+ 2 files changed, 56 insertions(+)
 
-On system where the base hardware is not described by a device-tree, the
-PCI host bridge to which first level created PCI devices need to be
-attach to does not exist. This is the case for instance on ACPI
-described systems such as x86.
-
-This series goal is to handle this case.
-
-In order to have the PCI host bridge device-tree node available even
-on x86, this top level node is created (if not already present) based on
-information computed by the PCI core. It follows the same mechanism as
-the one used for PCI devices device-tree node creation.
-
-As for device-tree based system, the PCI root bus handled by the PCI
-host bridge inherit of this created node.
-
-In order to have this feature available, a number of changes are needed:
-  - Patch 1 and 2: Introduce and use device_{add,remove}_of_node().
-    This function will also be used in the root PCI bus node creation.
-
-  - Patch 3 and 4: Improve existing functions to reuse them in the root
-    PCI bus node creation.
-
-  - Patch 5: The PCI host bridge device-tree node creation itself.
-
-With those modifications, the LAN966x PCI device is working on x86 systems
-and all device-tree kunit tests (including the of_unittest_pci_node test)
-pass successfully with the following command:
-  qemu-system-x86_64 -machine q35 -nographic \
-    -kernel arch/x86_64/boot/bzImage --append console=ttyS0 \
-    -device pcie-root-port,port=0x10,chassis=9,id=pci.9,bus=pcie.0,multifunction=on,addr=0x3 \
-    -device pcie-root-port,port=0x11,chassis=10,id=pci.10,bus=pcie.0,addr=0x3.0x1 \
-    -device x3130-upstream,id=pci.11,bus=pci.9,addr=0x0 \
-    -device xio3130-downstream,port=0x0,chassis=11,id=pci.12,bus=pci.11,multifunction=on,addr=0x0 \
-    -device i82801b11-bridge,id=pci.13,bus=pcie.0,addr=0x4 \
-    -device pci-bridge,chassis_nr=14,id=pci.14,bus=pci.13,addr=0x0 \
-    -device pci-testdev,bus=pci.12,addr=0x0
-
-Compare to previous iteration, this v5 series mainly:
-  - Use dev_warn() instead for WARN() in device_add_of_node()
-  - Use dev_err() in of_pci_make_host_bridge_node()
-  - Remove a patch already applied
-
-Best regards,
-Hervé Codina
-
-Changes v4 -> v5
-  v4: https://lore.kernel.org/lkml/20241202131522.142268-1-herve.codina@bootlin.com/
-
-  - Patch 1
-    Use dev_warn() instead of WARN()
-
-  - Patches 2 to 4
-    No changes
-
-  - Patch 5 (v4 patch 6)
-    Use dev_err()
-    Fix a typo in commit log
-
-  Patch removed in v5
-    - Patch 5 in v4
-      Already applied
-
-Changes v3 -> v4
-  v3: https://lore.kernel.org/lkml/20241114165446.611458-1-herve.codina@bootlin.com/
-
-  Rebase on top of v6.13-rc1
-
-  - Patches 1 to 6
-    No changes
-
-Changes v2 -> v3
-  v2: https://lore.kernel.org/lkml/20241108143600.756224-1-herve.codina@bootlin.com/
-
-  - Patch 5
-    Fix commit log.
-    Use 2 for #size-cells.
-
-  - Patches 1 to 4 and 6
-    No changes
-
-Changes v1 -> v2
-  v1: https://lore.kernel.org/lkml/20241104172001.165640-1-herve.codina@bootlin.com/
-
-  - Patch 1
-    Remove Cc: stable
-
-  - Patch 2
-    Remove Fixup tag and Cc: stable
-
-  - Patches 3 and 4
-    No changes
-
-  - Patch 5
-    Add #address-cells/#size-cells in the empty root DT node instead of
-    updating default values for x86.
-    Update commit log and commit title.
-
-  - Patch 6
-    Create device-tree node for the PCI host bridge and reuse it for
-    the PCI root bus. Rename functions accordingly.
-    Use "pci" instead of "pci-root" for the PCI host bridge node name.
-    Use "res->start - windows->offset" for the PCI bus addresses.
-    Update commit log and commit title.
-
-Herve Codina (5):
-  driver core: Introduce device_{add,remove}_of_node()
-  PCI: of: Use device_{add,remove}_of_node() to attach of_node to
-    existing device
-  PCI: of_property: Add support for NULL pdev in of_pci_set_address()
-  PCI: of_property: Constify parameter in of_pci_get_addr_flags()
-  PCI: of: Create device-tree PCI host bridge node
-
- drivers/base/core.c       |  54 ++++++++++++++++++
- drivers/pci/of.c          |  98 +++++++++++++++++++++++++++++++-
- drivers/pci/of_property.c | 114 ++++++++++++++++++++++++++++++++++++--
- drivers/pci/pci.h         |   6 ++
- drivers/pci/probe.c       |   2 +
- drivers/pci/remove.c      |   2 +
- include/linux/device.h    |   2 +
- 7 files changed, 271 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 8b056306f04e..81e5465aa746 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -5216,6 +5216,60 @@ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(set_secondary_fwnode);
+ 
++/**
++ * device_remove_of_node - Remove an of_node from a device
++ * @dev: device whose device-tree node is being removed
++ */
++void device_remove_of_node(struct device *dev)
++{
++	dev = get_device(dev);
++	if (!dev)
++		return;
++
++	if (!dev->of_node)
++		goto end;
++
++	if (dev->fwnode == of_fwnode_handle(dev->of_node))
++		dev->fwnode = NULL;
++
++	of_node_put(dev->of_node);
++	dev->of_node = NULL;
++
++end:
++	put_device(dev);
++}
++EXPORT_SYMBOL_GPL(device_remove_of_node);
++
++/**
++ * device_add_of_node - Add an of_node to an existing device
++ * @dev: device whose device-tree node is being added
++ * @of_node: of_node to add
++ */
++void device_add_of_node(struct device *dev, struct device_node *of_node)
++{
++	if (!of_node)
++		return;
++
++	dev = get_device(dev);
++	if (!dev)
++		return;
++
++	if (dev->of_node) {
++		dev_warn(dev, "Cannot replace node %pOF with %pOF\n",
++			 dev->of_node, of_node);
++		goto end;
++	}
++
++	dev->of_node = of_node_get(of_node);
++
++	if (!dev->fwnode)
++		dev->fwnode = of_fwnode_handle(of_node);
++
++end:
++	put_device(dev);
++}
++EXPORT_SYMBOL_GPL(device_add_of_node);
++
+ /**
+  * device_set_of_node_from_dev - reuse device-tree node of another device
+  * @dev: device whose device-tree node is being set
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 667cb6db9019..ef4c0f3c41cd 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1149,6 +1149,8 @@ int device_online(struct device *dev);
+ void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+ void device_set_node(struct device *dev, struct fwnode_handle *fwnode);
++void device_add_of_node(struct device *dev, struct device_node *of_node);
++void device_remove_of_node(struct device *dev);
+ void device_set_of_node_from_dev(struct device *dev, const struct device *dev2);
+ 
+ static inline struct device_node *dev_of_node(struct device *dev)
 -- 
 2.47.0
 
