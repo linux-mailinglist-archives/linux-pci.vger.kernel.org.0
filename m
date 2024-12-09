@@ -1,87 +1,94 @@
-Return-Path: <linux-pci+bounces-17951-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17952-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 938ED9E9AC0
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 16:42:23 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95B419E9D64
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 18:47:35 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E3BA281D5E
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 15:42:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D103618887F4
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 17:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 477241B423B;
-	Mon,  9 Dec 2024 15:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37036143C72;
+	Mon,  9 Dec 2024 17:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kDU4vQJe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g9l5Mbx0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A172A1B4236;
-	Mon,  9 Dec 2024 15:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FFE1552E7
+	for <linux-pci@vger.kernel.org>; Mon,  9 Dec 2024 17:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733758939; cv=none; b=MxYKQ66yED0F5PYmfzWu87xjaYU1DNSjTlpmO7CVE+ulCTUJm++9xkFDA+83oDO8ev7v4kNt6MEbWROf45hwD02yVpII1mXXRrq4U8y4/C7w/dRS2zvapCAc+ltqiUbLwiMVsCwbiIDJeUVAFQ3Uzs2oKyirNDaGs1NywIYKO5k=
+	t=1733766393; cv=none; b=UNsqthN0+LahntLd9LUOrmRwqWbegqSQPyrrPZQd/SJSrA/H9El+AiJJ/y3VB/43l0TLgHZ6hYX4DUsEX/5kyHdoqeuHzworSkeYueUbWX+uvIxlL5vWoG/34y0TP+JDOOXfyvRNFTnNPdyepx20oJ4+9R81+AXZOxyaRRwT2SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733758939; c=relaxed/simple;
-	bh=P18b2PlB0MwGNJ/eQCw45a7as/FOYe1k97RGjVLARlg=;
+	s=arc-20240116; t=1733766393; c=relaxed/simple;
+	bh=9b5qnojK+R2I8vIwqvTF89/RKbNf/+O+3Y2iKZaHEk8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=as1zyWglSznPb4o50QKAHUrhCHwxN6hqOGtc/Lisjh8IIb2zfZLqFx7y5LxtgscgFsq4t1Re8DxCuJv4u3NyCjE/slwchoObocYiOaL5BwMeRRAYWAAiGZrrp9rYDmSJCBsos532cmjkul9SCYBEL++qGmO1osXQHTcsYGPraVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kDU4vQJe; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733758938; x=1765294938;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P18b2PlB0MwGNJ/eQCw45a7as/FOYe1k97RGjVLARlg=;
-  b=kDU4vQJe5tdMQxjtWyK0WwIjSec5WgLrq1g7przjm9GTc8NuLYxlrt/u
-   MoboT1M087pzk6arXUhDQiH7hcOUT5Ef7tsT8z2CBueG69W3zsgpR5yGI
-   nlZsF+F5O1lnQEc5inTbvN+hPPnqYEmxA3QqW32mmPRraydb7TlyXb5uM
-   SiQZ3E87UWdkMscnA2IQvkz/9CuCzGMRb0pOeXgp5X0VMYb4edamNrIKl
-   q1WBFtdFM3cOiR2HztUEpYZhsdO+OlxO5vjT00EFk+QuQ/YWHYlgscHQJ
-   Rn1S8jnsBrsfQ0AqUMGcoEoc3xjFWbJmnRwkDZwRElBtYn7gmQ5Ua2HV5
-   w==;
-X-CSE-ConnectionGUID: AO6ovWqXTqWMOYQbOHyaIQ==
-X-CSE-MsgGUID: 6lcw4Ev5Rqyd2VPF/oz4MQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11281"; a="45466889"
-X-IronPort-AV: E=Sophos;i="6.12,219,1728975600"; 
-   d="scan'208";a="45466889"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2024 07:42:17 -0800
-X-CSE-ConnectionGUID: vBpVhrnzR9mGjzDWG200ag==
-X-CSE-MsgGUID: ifEavL7+SWa8OkyWYs+vYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,219,1728975600"; 
-   d="scan'208";a="94954637"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 09 Dec 2024 07:42:12 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 18D6644B; Mon, 09 Dec 2024 17:42:10 +0200 (EET)
-Date: Mon, 9 Dec 2024 17:42:10 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Niklas Schnelle <niks@kernel.org>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=ecCBa4Mk3GyByzgpqEMQU7tGJm0GHl6NNdrQCLDPzqtp7vm49t1Dk63LoE+XNjY1HlDGp6iLIHI5INA6R1eGpwwqWFAdSZxkov/AK0ZdyZEYvoGJWUZa4t0D2iCjrWzpQzDLSR02AoP4PVVOhBW6UIAd6xiiEmX0Hxdr54FeTSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g9l5Mbx0; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2164b662090so12229145ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 09 Dec 2024 09:46:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733766391; x=1734371191; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fAOCpxEOgR83Rnlqz7iMqvx61rBitZ69VRqbYwHS+Rc=;
+        b=g9l5Mbx0IAtgftTI+Q+SoNj2czxw3Oz5V2zs/eZ/E6aN4uAgY1Xx+BoTehkOmeupxl
+         4dgTyoEZ3/2z5hBsl8P72QeRRelS2bfdAyrvHFzsTBlxOcJL7FhYsDNxfcy5ntGoOJx0
+         8CfC3bzyqCRU2kXfQ87wO4xVeyuXAJYQDveK/Wb15lJGZGbEXMkHYFaKHRt1ZQ7t3ejj
+         kXOqWKDAgKJljxDo08UknpmXyJb5uGt+N6YvgnNyaGJBWH6EzRKRkAOIt31KBTRuoYSy
+         q3tCsFYYdx8UyOUymB5GZchuv5h+er7jSw5NZfAa5VbREzk/0LYpS6QJG1rGDqDps31r
+         fT1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733766391; x=1734371191;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fAOCpxEOgR83Rnlqz7iMqvx61rBitZ69VRqbYwHS+Rc=;
+        b=YawVxPTzaiDU5I8yLXDxceAAy5b6VWQolCoJO/FiZoSiCt8kiTeRZHDvgI9Pn/ep8A
+         jZ1z7z1ZR5eVasajbH7hlMrKXpF8RKUG7T9S0uX61O95JqGvC+7rxuahqu8B/3B6+4ri
+         bnYiZ04C9LMYc9jJlzpuDg7tcg2bgID7n62ZieR/QMYuiA3sVx/2D049WyGiCgpnFOax
+         UnS6cr1UHZFUYYsElvpc3Lvre1pGtMMQWFyqn/87xnYyQvyJ3ajKSx7GREM54Mf8LO88
+         f9V/mkk8bVoCB6jinXgA4yu9WFxtMfC8RT+SjvmFJ61uzDOH+UFjw6JBy3uLdOdg7xYH
+         SqLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcRczOnpO+sM4QfM410p6EXChOhGTviLYarGCR14gachvHAM5HagQa14YgQyZBCueoQBtyxJ2CX18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt+x0GJCmarih6RqrDSj1tCLDk4Q/TAyQj6efjkoeHB+FPY/jO
+	xdkpZ0IQrcaAr1LmNlHno+7wdq563AxFFpcSU33iVwoTe71B32H4xpw3KYRyig==
+X-Gm-Gg: ASbGncsAbb2ptnR6noBfHLbX+bGAcXUPjTd7lrH0fl7kQAV6dWnvIJz9DQvWXJjlALg
+	ZCrDfOdAb1ITSHiODDaW0c7BCD05DCbqBliqhXRncTAt++eIymKJpSc4nvtpVI2rGT3gNBvRUWN
+	1c99MYfkwRYx7rRIB/ZuavZiNtMMIK5U4Oyb0f/i5WmY63WXkU3uK0s5dEPMqkn7owCFqJtqc/8
+	2g9OduNY8laQ61H2W/aB58tPBENSTYXFK7wICkWhEIC95+EFcWHNJP9CLmH
+X-Google-Smtp-Source: AGHT+IGYcoe+FhprYtOY5QbmM3hEAVJjajJ6eU5NQLH8UxHl9RKTkJmmcrvmifL2+jvrIcGP8dCaDg==
+X-Received: by 2002:a17:903:230e:b0:215:b8b6:d2ea with SMTP id d9443c01a7336-21614d442e3mr220133805ad.15.1733766390920;
+        Mon, 09 Dec 2024 09:46:30 -0800 (PST)
+Received: from thinkpad ([120.60.142.39])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-216360d145esm34989315ad.44.2024.12.09.09.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 09:46:30 -0800 (PST)
+Date: Mon, 9 Dec 2024 23:16:20 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
 	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-kernel@vger.kernel.org,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] PCI/portdrv: Disable bwctrl service if port is fixed at
- 2.5 GT/s
-Message-ID: <20241209154210.GL4955@black.fi.intel.com>
-References: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: Re: [PATCH 6.13] PCI/pwrctrl: Skip NULL of_node when unregistering
+Message-ID: <20241209174620.6a53t5k2qgmgleix@thinkpad>
+References: <20241126210443.4052876-1-briannorris@chromium.org>
+ <20241129192811.GA2768738@bhelgaas>
+ <20241201082108.qy2reqd56mvrd6ku@thinkpad>
+ <Z0xAdQ2ozspEnV5g@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,31 +97,49 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z0xAdQ2ozspEnV5g@wunner.de>
 
-On Sat, Dec 07, 2024 at 07:44:09PM +0100, Niklas Schnelle wrote:
-> Trying to enable bwctrl on a Thunderbolt port causes a boot hang on some
-> systems though the exact reason is not yet understood. As per the spec
-> Thunderbolt PCIe Downstream Ports have a fake Max Link Speed of 2.5 GT/s
-> (USB4 v2 sec 11.2.1):
+On Sun, Dec 01, 2024 at 11:54:45AM +0100, Lukas Wunner wrote:
+> On Sun, Dec 01, 2024 at 01:51:08PM +0530, Manivannan Sadhasivam wrote:
+> > The idea of pci_pwrctrl_unregister() is to remove the pwrctl device when the
+> > associated PCI device gets removed. When this happens, the pwrctl driver will
+> > turn off the power to the corresponding PCI device
 > 
->    "Max Link Speed field in the Link Capabilities Register set to 0001b
->     (data rate of 2.5 GT/s only).
->     Note: These settings do not represent actual throughput.
->     Throughput is implementation specific and based on the USB4 Fabric
->     performance."
+> After pci_pwrctrl_unregister() is called from pci_stop_dev(),
+> the device may be accessed by one of the calls in pci_destroy_dev().
 > 
-> More generally if 2.5 GT/s is the only supported link speed there is no
-> point in throtteling as this is already the lowest possible PCIe speed
-> so don't advertise the capability stopping bwctrl from being probed on
-> these ports.
+> E.g. pci_doe_destroy() may set the DOE Abort bit in the DOE Control
+> Register if a DOE exchange is ongoing.  One cannot assume that no
+> such exchange is ongoing merely because the device was unbound from
+> its driver.  The PCI core may have legitimate reasons to perform a DOE
+> exchange or generally access config space even after the device has been
+> unbound.  And IIUC, those accesses will fail if pwrctrl has powered the
+> device down.
 > 
-> Link: https://lore.kernel.org/linux-pci/Z1R4VNwCOlh9Sg9n@wunner.de/
-> Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
-> Tested-by: Niklas Schnelle <niks@kernel.org>
-> Signed-off-by: Niklas Schnelle <niks@kernel.org>
+> Another example is pcie_aspm_exit_link_state(), which will adjust ASPM
+> settings on device removal.
+> 
+> So it seems to me that the call to pci_pwrctrl_unregister() needs to be
+> moved to pci_doe_destroy().  However I'm worried that will break the
+> symmetry with pci_pwrctrl_create_devices(), which is only called in the
+> !pci_dev_is_added() case.
+> 
 
-Makes sense to me,
+So I took a stab at both of your suggestions:
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+1. Moving the pwrctrl devices creation to pci_scan_device()
+2. Moving the pwrctrl devices unregister to pci_destroy_dev()
+
+Both seems to be working fine and it also allows creating pwrctrl devices for
+the PCI bridges without any change (for which I was planning to add one more
+patch earlier). But the devlink creation still needs to happen in
+pci_bus_add_device(), which I think is fine.
+
+Will post the patches tomorrow, thanks!
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
