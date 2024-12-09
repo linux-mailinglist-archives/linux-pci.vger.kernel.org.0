@@ -1,172 +1,215 @@
-Return-Path: <linux-pci+bounces-17923-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17924-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63DF29E95B9
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 14:07:49 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B50B716595D
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 13:06:40 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D363595E;
-	Mon,  9 Dec 2024 12:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Emm/6mDl"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B92BC9E95C1
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 14:08:33 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8420235959;
-	Mon,  9 Dec 2024 12:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 576D62818EA
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2024 13:08:32 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC3B81E9B2B;
+	Mon,  9 Dec 2024 13:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ecfHvZPC"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2FD1E9B16;
+	Mon,  9 Dec 2024 13:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733749160; cv=none; b=EXwwnuWhd2wr5pAkGcbHb4I4Dn+WcNHoImAA3vfBcP1nOCM1w8XbbgKfTCe+KgNq+e8AemvlcwfKfKXzLQ7b7kUZ61SxqeBeZ80DJkTA6X6aVKPxZSUZDj7GVTWlJIFYC0f9D3zEhnzsm89nZOz9rG15Aak2rgKKhc0Lr6MzOyQ=
+	t=1733749437; cv=none; b=pIaXWP+fzcQvD0XfGRrehKHH2THaXd/ZvlbElvJpuzoTTQxrIlIb9XKMfLmAaH6cMNSj383Ma3JHL8SHpWg7xJ4NfrCe3JkXJ9hKp5HaFvUQzdabnkDLycCCShrdCqVgy67za7YvpXVcEDr4lBodr4UMjepFe/02Iynu2MlfSrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733749160; c=relaxed/simple;
-	bh=Cm2fR0YHLhUCian+6aRdruvKehg4LBkMWZFDaZSAWtU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sLF8I1TdprnmH2wqEB5n9PYaIzLBqyuB0wfztoKjyOCRAH+oqRmk1urXOwguXVEaruqP6EmMALLH91v4yyUJy5XXoaeExiFwA/NPdQSFtt0futbDSEr18ZAjLeTHaoQuXTRVHei9j34e07VUXUy01ydBwsodpjad2z+bjOsmObw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Emm/6mDl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733749159; x=1765285159;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Cm2fR0YHLhUCian+6aRdruvKehg4LBkMWZFDaZSAWtU=;
-  b=Emm/6mDlyTdUZtWNgMCv9tIVJH/mEzNzhN4l/8MxO4j5Hdln/ZE21Yw6
-   EySnHNVIHMTpKXHcLIMalI9BIpn2z/JExG/GAm4xWvNCrlmgcN+SkGAa8
-   ajmLEAxiOfo3bhF1Akcn8NdxVMvxK4eaEHZxUeAO8yr/iMKh+ECb4UtOq
-   D4zBjeec9i/U4iz0zJfYG2rwiiqJBL0qX+gtv56acdTr4zFVHF45eHR4+
-   JWa9NsqZjQNEuWKllCoQhlQUTWar0bDBjy7rqG0lpUb44I99p7f0ANOUQ
-   DvWIGxS9pVzh9M78jzM1V4uJECaN+DUo/IJC9IZaWWObatDRRFNCMg+r+
-   w==;
-X-CSE-ConnectionGUID: eut4JBffSEyx0L59gwibDA==
-X-CSE-MsgGUID: SP7Ka5FrRiOlYK8FsgfKUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11281"; a="33957162"
-X-IronPort-AV: E=Sophos;i="6.12,219,1728975600"; 
-   d="scan'208";a="33957162"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2024 04:59:16 -0800
-X-CSE-ConnectionGUID: woeuFxg2TZK100U663v8zw==
-X-CSE-MsgGUID: 1nbLFhzhSB6nytS710buTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,219,1728975600"; 
-   d="scan'208";a="94744228"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.121])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2024 04:59:10 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Dec 2024 14:59:07 +0200 (EET)
-To: Niklas Schnelle <niks@kernel.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
-    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Alexandru Gagniuc <mr.nuke.me@gmail.com>, 
-    Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
-    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
-    Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Daniel Lezcano <daniel.lezcano@linaro.org>, 
-    Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-    Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] PCI/portdrv: Disable bwctrl service if port is fixed at
- 2.5 GT/s
-In-Reply-To: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
-Message-ID: <21fa32ff-73d0-5446-2d9b-ef1f8fccad8a@linux.intel.com>
-References: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
+	s=arc-20240116; t=1733749437; c=relaxed/simple;
+	bh=V5LsEE3DjBJaRa+zPz1kzWgU76+QLSy9csEUaoOEMK0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oy3N16PWVZNAGN7JQqyDP251VaJasqzvuPjJD4QdMxRc1KxVsBsETsAlR757c1GK7xsqdtZr2hYW9ouuMPArQm4zDLTCO7zBB4QPrsaEVd66Vz8LlLYTbloSIAT0SE1TIup2abn/xFUt9hnTFNnCcTo1LXxP9FfVm8Mr81Gw/8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ecfHvZPC; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPA id EEF7D20003;
+	Mon,  9 Dec 2024 13:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1733749431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5HxjIuOt9MdlQxEP++73OJNYwJt0+JdUJjsJeeHx/ZU=;
+	b=ecfHvZPCa/QPRlZmyESpvbG2wYfWKEPFCpPGk/K06wzvJPPWYLMMWupx/MDuSlMPTXV/ky
+	u+wX8KlNiQ8jFHd/io0WVIMgayrkAAicK7ckweIUeuriPwt0fkzE49WjdKsTqLzyuBCtPT
+	PH8EUKXZ21uLgadXbyBjdLIzF1i4IxtyKBhoTHgI6T8lZGA3B8xc0WkMWBwYi4dq3Q76wy
+	gfs59+psQIOfBlcOttxCFfgxH+WRzA/7eIi4uTz0uEufAexclb0RbSmcLzoiZc/UUcQiVQ
+	N/1tCH1NXK2sqff3RlhSKIz8NaZgFl+92UfCq+4Zuo35XUpAB+rg104w3U6BEw==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v5 0/5] Add support for the PCI host bridge device-tree node creation.
+Date: Mon,  9 Dec 2024 14:03:32 +0100
+Message-ID: <20241209130339.81354-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-429414955-1733749055=:938"
-Content-ID: <0dccd60f-1241-d533-3b08-32aed886f505@linux.intel.com>
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-429414955-1733749055=:938
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <22e425b1-b0d2-3b26-9867-728153f62360@linux.intel.com>
-
-On Sat, 7 Dec 2024, Niklas Schnelle wrote:
-
-> Trying to enable bwctrl on a Thunderbolt port causes a boot hang on some
-> systems though the exact reason is not yet understood. As per the spec
-> Thunderbolt PCIe Downstream Ports have a fake Max Link Speed of 2.5 GT/s
-> (USB4 v2 sec 11.2.1):
->=20
->    "Max Link Speed field in the Link Capabilities Register set to 0001b
->     (data rate of 2.5 GT/s only).
->     Note: These settings do not represent actual throughput.
->     Throughput is implementation specific and based on the USB4 Fabric
->     performance."
->
-> More generally if 2.5 GT/s is the only supported link speed there is no
-> point in throtteling as this is already the lowest possible PCIe speed
-> so don't advertise the capability stopping bwctrl from being probed on
-> these ports.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
 Hi,
 
-Thanks for finding the reason this far.
+This series adds support for creating a device-tree node for the PCI
+host bridge on non device-tree based system.
 
-Mika mentioned earlier to me this Link Speed stuff is all made up on=20
-Thunderbolt but I didn't make any changes back then because I thought=20
-bwctrl is not going to change the speed anyway in that case.
+Creating device-tree nodes for PCI devices and PCI-PCI bridges already
+exists upstream. It was added in commit 407d1a51921e ("PCI: Create
+device tree node for bridge"). Created device-tree nodes need a parent
+node to be attached to. For the first level devices, on device-tree
+based system, this parent node (i.e. the PCI host bridge) is described
+in the base device-tree. The PCI bus related to this bridge (PCI root
+bus) inherit of the PCI host bridge device-tree node.
 
-Seem reasonable way to workaround the Thunderbold problem and agreed,=20
-there's not much point in adding bwctrl for 2.5GT/s only ports.
+The LAN966x PCI device driver, available since commit 185686beb464
+("misc: Add support for LAN966x PCI device"), relies on this feature.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+On system where the base hardware is not described by a device-tree, the
+PCI host bridge to which first level created PCI devices need to be
+attach to does not exist. This is the case for instance on ACPI
+described systems such as x86.
 
---=20
- i.
+This series goal is to handle this case.
 
+In order to have the PCI host bridge device-tree node available even
+on x86, this top level node is created (if not already present) based on
+information computed by the PCI core. It follows the same mechanism as
+the one used for PCI devices device-tree node creation.
 
-> Link: https://lore.kernel.org/linux-pci/Z1R4VNwCOlh9Sg9n@wunner.de/
-> Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe =
-BW controller")
-> Tested-by: Niklas Schnelle <niks@kernel.org>
-> Signed-off-by: Niklas Schnelle <niks@kernel.org>
-> ---
-> Note: This issue causes a boot hang on my personal workstation see the
-> Link for details.
-> ---
->  drivers/pci/pcie/portdrv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 5e10306b63081b1ddd13e0a545418e2a8610c14c..e5f80e4a11aad4ce60b2ce998=
-b40ec9fda8c653d 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -270,7 +270,8 @@ static int get_port_device_capability(struct pci_dev =
-*dev)
->  =09=09u32 linkcap;
-> =20
->  =09=09pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
-> -=09=09if (linkcap & PCI_EXP_LNKCAP_LBNC)
-> +=09=09if (linkcap & PCI_EXP_LNKCAP_LBNC &&
-> +=09=09    (linkcap & PCI_EXP_LNKCAP_SLS) !=3D PCI_EXP_LNKCAP_SLS_2_5GB)
->  =09=09=09services |=3D PCIE_PORT_SERVICE_BWCTRL;
->  =09}
-> =20
->=20
-> ---
-> base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
-> change-id: 20241207-fix_bwctrl_thunderbolt-bd1f96b3d98f
->=20
-> Best regards,
->=20
---8323328-429414955-1733749055=:938--
+As for device-tree based system, the PCI root bus handled by the PCI
+host bridge inherit of this created node.
+
+In order to have this feature available, a number of changes are needed:
+  - Patch 1 and 2: Introduce and use device_{add,remove}_of_node().
+    This function will also be used in the root PCI bus node creation.
+
+  - Patch 3 and 4: Improve existing functions to reuse them in the root
+    PCI bus node creation.
+
+  - Patch 5: The PCI host bridge device-tree node creation itself.
+
+With those modifications, the LAN966x PCI device is working on x86 systems
+and all device-tree kunit tests (including the of_unittest_pci_node test)
+pass successfully with the following command:
+  qemu-system-x86_64 -machine q35 -nographic \
+    -kernel arch/x86_64/boot/bzImage --append console=ttyS0 \
+    -device pcie-root-port,port=0x10,chassis=9,id=pci.9,bus=pcie.0,multifunction=on,addr=0x3 \
+    -device pcie-root-port,port=0x11,chassis=10,id=pci.10,bus=pcie.0,addr=0x3.0x1 \
+    -device x3130-upstream,id=pci.11,bus=pci.9,addr=0x0 \
+    -device xio3130-downstream,port=0x0,chassis=11,id=pci.12,bus=pci.11,multifunction=on,addr=0x0 \
+    -device i82801b11-bridge,id=pci.13,bus=pcie.0,addr=0x4 \
+    -device pci-bridge,chassis_nr=14,id=pci.14,bus=pci.13,addr=0x0 \
+    -device pci-testdev,bus=pci.12,addr=0x0
+
+Compare to previous iteration, this v5 series mainly:
+  - Use dev_warn() instead for WARN() in device_add_of_node()
+  - Use dev_err() in of_pci_make_host_bridge_node()
+  - Remove a patch already applied
+
+Best regards,
+Hervé Codina
+
+Changes v4 -> v5
+  v4: https://lore.kernel.org/lkml/20241202131522.142268-1-herve.codina@bootlin.com/
+
+  - Patch 1
+    Use dev_warn() instead of WARN()
+
+  - Patches 2 to 4
+    No changes
+
+  - Patch 5 (v4 patch 6)
+    Use dev_err()
+    Fix a typo in commit log
+
+  Patch removed in v5
+    - Patch 5 in v4
+      Already applied
+
+Changes v3 -> v4
+  v3: https://lore.kernel.org/lkml/20241114165446.611458-1-herve.codina@bootlin.com/
+
+  Rebase on top of v6.13-rc1
+
+  - Patches 1 to 6
+    No changes
+
+Changes v2 -> v3
+  v2: https://lore.kernel.org/lkml/20241108143600.756224-1-herve.codina@bootlin.com/
+
+  - Patch 5
+    Fix commit log.
+    Use 2 for #size-cells.
+
+  - Patches 1 to 4 and 6
+    No changes
+
+Changes v1 -> v2
+  v1: https://lore.kernel.org/lkml/20241104172001.165640-1-herve.codina@bootlin.com/
+
+  - Patch 1
+    Remove Cc: stable
+
+  - Patch 2
+    Remove Fixup tag and Cc: stable
+
+  - Patches 3 and 4
+    No changes
+
+  - Patch 5
+    Add #address-cells/#size-cells in the empty root DT node instead of
+    updating default values for x86.
+    Update commit log and commit title.
+
+  - Patch 6
+    Create device-tree node for the PCI host bridge and reuse it for
+    the PCI root bus. Rename functions accordingly.
+    Use "pci" instead of "pci-root" for the PCI host bridge node name.
+    Use "res->start - windows->offset" for the PCI bus addresses.
+    Update commit log and commit title.
+
+Herve Codina (5):
+  driver core: Introduce device_{add,remove}_of_node()
+  PCI: of: Use device_{add,remove}_of_node() to attach of_node to
+    existing device
+  PCI: of_property: Add support for NULL pdev in of_pci_set_address()
+  PCI: of_property: Constify parameter in of_pci_get_addr_flags()
+  PCI: of: Create device-tree PCI host bridge node
+
+ drivers/base/core.c       |  54 ++++++++++++++++++
+ drivers/pci/of.c          |  98 +++++++++++++++++++++++++++++++-
+ drivers/pci/of_property.c | 114 ++++++++++++++++++++++++++++++++++++--
+ drivers/pci/pci.h         |   6 ++
+ drivers/pci/probe.c       |   2 +
+ drivers/pci/remove.c      |   2 +
+ include/linux/device.h    |   2 +
+ 7 files changed, 271 insertions(+), 7 deletions(-)
+
+-- 
+2.47.0
+
 
