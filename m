@@ -1,109 +1,133 @@
-Return-Path: <linux-pci+bounces-18042-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18043-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B51929EB931
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 19:19:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ADF09EB942
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 19:24:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7B9A1889C9A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 18:19:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F30BA1889CF0
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 18:24:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B1A81A01B0;
-	Tue, 10 Dec 2024 18:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DCC02046AC;
+	Tue, 10 Dec 2024 18:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fN47Kc/h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogrout7M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EC723ED59;
-	Tue, 10 Dec 2024 18:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169A21B1422;
+	Tue, 10 Dec 2024 18:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733854783; cv=none; b=L6rdmt9y9lw6syIqpPS/KXmn3TKoyPpCHUUdm0hsW+HnyfALwR8b/N5sepI5StNDpJOE4Py4R+kBWKIOXffei46Snf7IJgUdvEQm59ZKkWaLTd8ASD5B3DkKloJCZN/5lg4yNouPslSShBRVW9r+erI0FKCnrFfysU0v2N8abq4=
+	t=1733855046; cv=none; b=JSUJBSZEzb3GpyeaYabsB9YAeQCX6sYVZHYRxw5EpQX2hl+LcddmMMKzo4JQgAQ/MIq/xDeyrg5TREmr23RX2s6VC0cp/SGVgDOg0+YQbmF4Qr6pG24cl96+4UsX6GWQOn9Ucepm0c8J6MHLYTkkcFFi1CaFdYiNz2mcO0qkNlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733854783; c=relaxed/simple;
-	bh=bOl88BIrBVQcyS4UvrQpTwuyM5PF7qtNXyWSrImey1s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=F4DMPa4IO5GDMfJiXmfZ+iWhLajclA8G0rf4V4ehkSvCkstZgellNe/tIieEb2ON1yhYHD82hcmQpnMIowChze+4OB1TQEV1L7srTwbwehn9+ZFHsIK/mVX4YzvXmuK4PIODqokjU6XbRqZB5yY2fn/D2taCHAMsi+GOZ6isbvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fN47Kc/h; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733854782; x=1765390782;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=bOl88BIrBVQcyS4UvrQpTwuyM5PF7qtNXyWSrImey1s=;
-  b=fN47Kc/hybgERyI6vFVhrDCKPyi8u87yHVYF8slGlLNgoy1tb+NGdNeF
-   E8B8YbvoDxOeoAM5tlsx1otADXKHuOlt+me11dB3DiZvEKTJcJG7tBdvk
-   D2tYzz9LP72xLGkfVA0WWTvzGDaWcSEVK+5s0/Y5apd5a1kn9L654eQyY
-   dXHpRz/xz7EOmCwPPP695KYJ0BlRrLyM0W0PQX2SNZqn89QbNjfTMa3Sb
-   vL/e1GBcepBmh4qn/ODXyFwyLLnWJahmWgnosdunvfIAr8W+8FNXmsK2A
-   BZsBzkjcIwOZ6rEdJ8qfXzbXF+yFM89wgW7BuGL+DjAGPjXsx6qoTbtPe
-   g==;
-X-CSE-ConnectionGUID: rS77Tem4Skudzdg9/9bzjA==
-X-CSE-MsgGUID: 9qtFp5zJTlaNOZSwF/y+tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="51626751"
-X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
-   d="scan'208";a="51626751"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 10:19:42 -0800
-X-CSE-ConnectionGUID: V8DJcyq5QXmnIWhcgVU0TA==
-X-CSE-MsgGUID: M4jpkmM9QUmVBhSJX0WQWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
-   d="scan'208";a="99986249"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 10:19:39 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Dec 2024 20:19:36 +0200 (EET)
-To: Bjorn Helgaas <bhelgaas@google.com>
-cc: linux-pci@vger.kernel.org, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Lukas Wunner <lukas@wunner.de>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v6 0/8] PCI: Consolidate TLP Log reading and printing
-In-Reply-To: <cb44bafe-a7ec-889b-5c1c-ee8ca6c540a0@linux.intel.com>
-Message-ID: <38a03e53-789e-363a-c336-dc939161d7d7@linux.intel.com>
-References: <20240913143632.5277-1-ilpo.jarvinen@linux.intel.com> <cb44bafe-a7ec-889b-5c1c-ee8ca6c540a0@linux.intel.com>
+	s=arc-20240116; t=1733855046; c=relaxed/simple;
+	bh=/fyiDo7t3bwOFUjqyiEviTcAYM+EqiEbi3UktkKEp3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iD6vaZAtsAQY0BFhG+PPo5dkKajp/GCLBbslFZtOQxafDqEfbNkE+A/r6jVhR2Ha2puX6+QJ+jdFHwbjStXmyj4Dg8tOV6Wy7ByIfZEwWjOG6torB5eCiCeCYMQCpUzh6kanlgnBrVxBvErq8VGQk37543273E3X5Qs1CL9BEg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogrout7M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0DBC4CEE1;
+	Tue, 10 Dec 2024 18:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733855045;
+	bh=/fyiDo7t3bwOFUjqyiEviTcAYM+EqiEbi3UktkKEp3Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ogrout7MHwnM7F18t0n7uw+pQZL2ymnVhMl1eO/JP1Ds8FX9WrK28LT2aK/7jZzIX
+	 WY71XnrGhnCRPIIJdIMwKZDEfUo8OUe8hcHnFLt1xk/JRfPrrBbbCSqLkLy5dHbmRg
+	 UMy9AqKJGuJdn5brzdCDNAYVDjp7qPJTUfg6NZpiOt3nGTh24ZFmuWAsObWZVvIMUz
+	 oKSxVkwEIWywvMTarqKz8lSF+Hd+J4vx4Mz5TIvf1yC9j0Ii5CWa+gr4zRrOtr1zWF
+	 q+UFauPqIGe6i71/Kjukb2QIZukQ0PBUS9SF6fD+Hcx3vI2b8BKdC1C3kZYUsG9FRv
+	 rYsk3k54BxOrQ==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-29e998c70f9so3317108fac.2;
+        Tue, 10 Dec 2024 10:24:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVOfP4uCdeiuh1ks74MVuQdEv3Um4TnLxd6l4zRfq5JGlcoMjdMv1KDs6RYScMv3FRNXE1rA2WhKrwy1E2f@vger.kernel.org, AJvYcCW9Qucfma5Txv2OkFd+Vs7PTFUOtCJUA9hK4jrQFZwjwAoj19KgO3szVQU09De4ZKT5dURCKEY40RBT@vger.kernel.org, AJvYcCWBF4HDnqAcjF/68XYMehZVQauG3QvDxmeim6DxXpGWYb12/FVwKbFUbmXfusTnOB8+deGTPqojvEel@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy65oTSAA14rIBIuOAJwQ7A68JnDuPp5Rsv/ZfvFauQdmA1XKS1
+	+s1IfwPr2D6rEsfq1rW65ycIuFNHXmz4BKDMePLWNiwP0LUSVbe5oBOGKNVxNu2c5sDTTRQU5I8
+	5qjKo7m1RcoC6TBvAEPCZT7yuVFs=
+X-Google-Smtp-Source: AGHT+IFu8OYVyYTKwdDPzTvaFe9ROtPzqdq6WzuKHAXFFij4IpP0p5z0FzryDr3QH/SZNq5GL/qyp6Z2WfvfgDxBYFA=
+X-Received: by 2002:a05:6870:c08e:b0:29e:4d0e:a2b6 with SMTP id
+ 586e51a60fabf-2a012da5ad7mr73511fac.10.1733855044892; Tue, 10 Dec 2024
+ 10:24:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1421109454-1733854776=:905"
+References: <20241202-sysfs-const-bin_attr-pci-v1-0-c32360f495a7@weissschuh.net>
+ <20241202-sysfs-const-bin_attr-pci-v1-4-c32360f495a7@weissschuh.net>
+In-Reply-To: <20241202-sysfs-const-bin_attr-pci-v1-4-c32360f495a7@weissschuh.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 10 Dec 2024 19:23:53 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hQT7R2bMBy2JgXO0DJnoMNJ5JotZWyvvBV0w98fBae4A@mail.gmail.com>
+Message-ID: <CAJZ5v0hQT7R2bMBy2JgXO0DJnoMNJ5JotZWyvvBV0w98fBae4A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] PCI/ACPI: Constify 'struct bin_attribute'
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Dec 2, 2024 at 8:03=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@weisssc=
+huh.net> wrote:
+>
+> The sysfs core now allows instances of 'struct bin_attribute' to be
+> moved into read-only memory. Make use of that to protect them against
+> accidental or malicious modifications.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 
---8323328-1421109454-1733854776=:905
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On Wed, 23 Oct 2024, Ilpo J=E4rvinen wrote:
-
-> On Fri, 13 Sep 2024, Ilpo J=E4rvinen wrote:
->=20
-> > This series has the remaining patches of the AER & DPC TLP Log handling
-> > consolidation and now includes a few minor improvements to the earlier
-> > accepted TLP Logging code.
-> >=20
-> > v6:
-> > - Preserve "AER:"/"DPC:" prefix on the printed TLP line
-> > - New patch to add "AER:" also  on other lines of the AER error dump
->=20
-> Hi Bjorn,
->=20
-> A small reminder this series exists.
-
-Another reminder about this series. :-)
-
---=20
- i.
-
---8323328-1421109454-1733854776=:905--
+> ---
+>  drivers/pci/hotplug/acpiphp_ibm.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/acpiphp_ibm.c b/drivers/pci/hotplug/acpi=
+php_ibm.c
+> index 8f3a0a33f362bc60ba012419b865b8821c075531..b3aa34e3a4a29417bd6942737=
+79dc356be284f1d 100644
+> --- a/drivers/pci/hotplug/acpiphp_ibm.c
+> +++ b/drivers/pci/hotplug/acpiphp_ibm.c
+> @@ -84,7 +84,7 @@ static int ibm_get_attention_status(struct hotplug_slot=
+ *slot, u8 *status);
+>  static void ibm_handle_events(acpi_handle handle, u32 event, void *conte=
+xt);
+>  static int ibm_get_table_from_acpi(char **bufp);
+>  static ssize_t ibm_read_apci_table(struct file *filp, struct kobject *ko=
+bj,
+> -                                  struct bin_attribute *bin_attr,
+> +                                  const struct bin_attribute *bin_attr,
+>                                    char *buffer, loff_t pos, size_t size)=
+;
+>  static acpi_status __init ibm_find_acpi_device(acpi_handle handle,
+>                 u32 lvl, void *context, void **rv);
+> @@ -98,7 +98,7 @@ static struct bin_attribute ibm_apci_table_attr __ro_af=
+ter_init =3D {
+>                     .name =3D "apci_table",
+>                     .mode =3D S_IRUGO,
+>             },
+> -           .read =3D ibm_read_apci_table,
+> +           .read_new =3D ibm_read_apci_table,
+>             .write =3D NULL,
+>  };
+>  static struct acpiphp_attention_info ibm_attention_info =3D
+> @@ -353,7 +353,7 @@ static int ibm_get_table_from_acpi(char **bufp)
+>   * our solution is to only allow reading the table in all at once.
+>   */
+>  static ssize_t ibm_read_apci_table(struct file *filp, struct kobject *ko=
+bj,
+> -                                  struct bin_attribute *bin_attr,
+> +                                  const struct bin_attribute *bin_attr,
+>                                    char *buffer, loff_t pos, size_t size)
+>  {
+>         int bytes_read =3D -EINVAL;
+>
+> --
+> 2.47.1
+>
 
