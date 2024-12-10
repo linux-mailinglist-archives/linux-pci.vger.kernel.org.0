@@ -1,57 +1,59 @@
-Return-Path: <linux-pci+bounces-18046-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18047-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B389A9EB9A9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 19:53:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 228A19EBA0A
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 20:22:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7330163718
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 18:52:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B50C7167784
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 19:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9069A1A01B0;
-	Tue, 10 Dec 2024 18:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5671D214227;
+	Tue, 10 Dec 2024 19:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+Hw3XPM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYOTZdqG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680E923ED41;
-	Tue, 10 Dec 2024 18:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE4D214231;
+	Tue, 10 Dec 2024 19:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733856777; cv=none; b=IMT1xa6yoeGZxVr6I+FOuj35j/9jvL4qGvc/dbjnEmRTrYGGGpRTFZtL52T2368ORW26rM5HkI4VYUhzsM22tG7CwbR3mMPU0HbYtokrD52a/1FwbrkRyOqEMsIXfTkSkzLn4y+WlHJf6MhCU7UGs3iwAlCOd7VqkZfzNbwjhis=
+	t=1733858502; cv=none; b=HBzuwo2IchfxhRh/DspxcXCvmXnkODTmag4DUJnMuqCj/WNiO4VuI1DPsZlnYY55u81ULm0ZijunDqSxergXd9wVVPwZPoUDfRURbOrvP0sLXwFEjg1m0BSQ8XQ/kjlN/auI9U7Of/+TplhP0rQrL6Cz8LilgW/i1Ar9kshMR70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733856777; c=relaxed/simple;
-	bh=7EMn15M2kNbrawFFSVapj3ytlO0cjTCCmEuvYATmaww=;
+	s=arc-20240116; t=1733858502; c=relaxed/simple;
+	bh=230wSQ1wYeQaQouNCrsTwnLI6v3KuSOxEyYSkJf45H8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ajmfCZDziDPGuLXvzTY45Th647fQp+iKnJkedAWq8NuQDWu4mg7a59QQ3wp1gT6k+PZgv7mvRuLWFmsrt4PN0xig4myGz1haqnu8KrfwTaHq8vmCo+9QpcX4FA221M2kZvtSHWowlVC/4iq+UlGvXT8yPRoUfP0o3zjO1aUbpM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+Hw3XPM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26171C4CEDD;
-	Tue, 10 Dec 2024 18:52:57 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=PPE7Fvo40lj89bt+oorzw3rvx4vcE8uNzFsvZJz1O+qyrG2xyppaXYy5oeKW9oGQPnz8r3zeLMZ3vSElRAlfQN0mAz3t1SPkXU+hN1hNnwzoS/bflo9K3mKupg4ZSZ+xPgbG2Ldg6ohWXmHZqQO5jojvK7v3oQhaRk7a6QEVFao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYOTZdqG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8707DC4CED6;
+	Tue, 10 Dec 2024 19:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733856777;
-	bh=7EMn15M2kNbrawFFSVapj3ytlO0cjTCCmEuvYATmaww=;
+	s=k20201202; t=1733858501;
+	bh=230wSQ1wYeQaQouNCrsTwnLI6v3KuSOxEyYSkJf45H8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=H+Hw3XPM/ZmVPl3SO2wRwwqt8pcgMEPNAPcbIT8eJIaO8nWNOts03ya5ANFb/G9c8
-	 y3Hz+IU5tqaahFGrdDdTkGreRZgBpQHTesc8IbyVlGtOIap0OFO+OBe+kB8KJgzHzb
-	 CGJVFBUjNGidjocxlQ+pOb/oUHk9HxQGPGV/O5ZW6kgNAmWnh09mvYfJ2VuhTWI4C1
-	 vBtU37vMiCmdVQGiZXPKaP7uAdzhkq9P0LZL53/AEX+3Qjn7PMd1Bl7BWoL0du//OQ
-	 6N6tmxOUacKMHwYW9Mx76HN4n1G2T+VvgoL6KRThANtpzjW+Nf/DxPxh+f3stN/ofJ
-	 5w6jg2zBMaHfA==
-Date: Tue, 10 Dec 2024 12:52:55 -0600
+	b=JYOTZdqGXDurHfjZ7OK1P+GAUVX34qsCrNS8oivNtlGejwYDeUFmMEc9xo+YQ/Dhc
+	 UGKqBr5ljQq6FmLcAm7rCZOlDcB8BGiY7/pwDt1e5Og2jXsXuTxm9vSgfdCpZygmMH
+	 GwDNAoOwOfIke227UPl0OE15smllVujQUUim5PO55h5mr3cc5Lo0VW6RTCLwe09M7+
+	 M4+7C5LV5pWvzf4wrKmJeVdp98afINhGjG/LH/dCB9b6+RPUbTbQ0XO5nXleH8sajv
+	 IVSjUpzwZewG5S5ZmEiv8YRfuvLbYK54ezUlOhvT0/H0xpvgvhowHB1MEux1bg8Gba
+	 c1hSuC4UTp+xQ==
+Date: Tue, 10 Dec 2024 13:21:40 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Dan Williams <dan.j.williams@intel.com>
 Cc: linux-coco@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Samuel Ortiz <sameo@rivosinc.com>,
 	Alexey Kardashevskiy <aik@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
 	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <20241210185255.GA3251438@bhelgaas>
+Subject: Re: [PATCH 07/11] PCI: Add PCIe Device 3 Extended Capability
+ enumeration
+Message-ID: <20241210192140.GA3079633@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,47 +62,31 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <173343743678.1074769.15403889527436764173.stgit@dwillia2-xfh.jf.intel.com>
 
-On Thu, Dec 05, 2024 at 02:23:45PM -0800, Dan Williams wrote:
-> The PCIe 6.1 specification, section 11, introduces the Trusted Execution
-> Environment (TEE) Device Interface Security Protocol (TDISP).  This
-> interface definition builds upon Component Measurement and
-> Authentication (CMA), and link Integrity and Data Encryption (IDE). It
-> adds support for assigning devices (PCI physical or virtual function) to
-> a confidential VM such that the assigned device is enabled to access
-> guest private memory protected by technologies like Intel TDX, AMD
-> SEV-SNP, RISCV COVE, or ARM CCA.
+On Thu, Dec 05, 2024 at 02:23:56PM -0800, Dan Williams wrote:
+> PCIe 6.2 Section 7.7.9 Device 3 Extended Capability Structure,
+> enumerates new link capabilities and status added for Gen 6 devices. One
+> of the link details enumerated in that register block is the "Segment
+> Captured" status in the Device Status 3 register. That status is
+> relevant for enabling IDE (Integrity & Data Encryption) whereby
+> Selective IDE streams can be limited to a given requester id range
+> within a given segment.
 
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -583,3 +583,45 @@ Description:
->  		enclosure-specific indications "specific0" to "specific7",
->  		hence the corresponding led class devices are unavailable if
->  		the DSM interface is used.
-> +
-> +What:		/sys/bus/pci/devices/.../tsm/
-> +Date:		July 2024
-> +Contact:	linux-coco@lists.linux.dev
-> +Description:
-> +		This directory only appears if a physical device function supports
-> +		authentication (PCIe CMA-SPDM), interface security (PCIe TDISP), and is
-> +		accepted for secure operation by the platform TSM driver. This attribute
-> +		directory appears dynamically after the platform TSM driver loads. So,
-> +		only after the /sys/class/tsm/tsm0 device arrives can tools assume that
-> +		devices without a tsm/ attribute directory will never have one, before
-> +		that, the security capabilities of the device relative to the platform
-> +		TSM are unknown. See Documentation/ABI/testing/sysfs-class-tsm.
+s/requester id/Requester ID/ to match spec usage
 
-Wrap to fit in 80 columns like the rest of the file.
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -749,6 +749,7 @@
+>  #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
+>  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+>  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
+> +#define PCI_EXT_CAP_ID_DEV3	0x2F	/* Device 3 Capability/Control/Status */
 
-> +
-> +What:		/sys/bus/pci/devices/.../tsm/connect
-> +Date:		July 2024
-> +Contact:	linux-coco@lists.linux.dev
-> +Description:
-> +		(RW) Writing "1" to this file triggers the platform TSM (TEE Security
-> +		Manager) to establish a connection with the device.  This typically
-> +		includes an SPDM (DMTF Security Protocols and Data Models) session over
-> +		PCIe DOE (Data Object Exchange) and may also include PCIe IDE (Integrity
-> +		and Data Encryption) establishment.
+It doesn't look like lspci knows about this; is there something in
+progress to add that?
+
+https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/lib/header.h?id=v3.13.0#n257
+
+>  #define PCI_EXT_CAP_ID_IDE	0x30    /* Integrity and Data Encryption */
+>  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
 
