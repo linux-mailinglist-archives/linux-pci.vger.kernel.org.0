@@ -1,57 +1,60 @@
-Return-Path: <linux-pci+bounces-17979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0BE99EA631
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 04:09:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E26389EA67F
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 04:19:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DFE1166E8C
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 03:09:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CEC9A1886B1E
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 03:19:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C43E1A23AC;
-	Tue, 10 Dec 2024 03:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90B9269D2B;
+	Tue, 10 Dec 2024 03:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3CE7NTz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQGsFigI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2E92AEFE;
-	Tue, 10 Dec 2024 03:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660BE13AC1;
+	Tue, 10 Dec 2024 03:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733800146; cv=none; b=H92elp1B+Im2JENN8xvGWIObwsK9QgT4iuKI2OtiPbMa1xQIrliGhtZWQy/VtRYisGVe+nZLdv1SXd53Tz6ip7W+dIbG5fm9O1KXTIucXSlcZjTQiSmjbVE6D1np7vl+HXBgYPp5EK6iwoIofd2FvYBA7HfxgTObCF2IqezTs3M=
+	t=1733800787; cv=none; b=sM56BwoWSDTQWkJzguotr6DwINrnc86924LxDNSElfhUGeSex5dD+tyjmauSfv1LNCHaQuW1/7ViywTkODkmMg5WTWnFDulp2M97TZl5Xi3r8G280RLoRdZQtbNZb4OSBv+ZdlZgNUC4G2gveFNFy4oPvN5Pr8vAAnARMZELpgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733800146; c=relaxed/simple;
-	bh=fRBFQhB6QMKXvrtlcZeTgwu2qXuKjOlUlZoDsmJzRGs=;
+	s=arc-20240116; t=1733800787; c=relaxed/simple;
+	bh=lEwucMc9HgKjkcmlGPT3eXRxcPVzt4cX7HPBzWU8CL4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RArrFY/WfQWtGIHn2xUCHph7oKvliGrv6k4Y4G9xycCDkszoiNYWaf403VI+84P8RRYq9IhzvLcEpD5f+2/fh405BaJgxvDfpucrik0UsP74gbpleogbx+9AaKL97tYooQTdCL1PxixNirPkO1i2SH2q3tuW6UJz0EDZyRfALx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3CE7NTz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC61FC4CEDE;
-	Tue, 10 Dec 2024 03:09:03 +0000 (UTC)
+	 MIME-Version:Content-Type; b=MGSYLFaP6J/6+jF3GEDDuaC0/8BnELcsjcj30ziGfzVcQXGr0GxezKOP/rVXMbxCZ580LxFI178kExGXzLb1WzRdwGmSfMMuSJY4T8OtFlm1nIJz0SJbC28NZ5Ppjhx6tMMGnvd5YYrOost7K6XL6ieP7tXRvuG/zT3OCekztXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQGsFigI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E81AC4CED6;
+	Tue, 10 Dec 2024 03:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733800145;
-	bh=fRBFQhB6QMKXvrtlcZeTgwu2qXuKjOlUlZoDsmJzRGs=;
+	s=k20201202; t=1733800786;
+	bh=lEwucMc9HgKjkcmlGPT3eXRxcPVzt4cX7HPBzWU8CL4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=u3CE7NTzC7PAIt9sg8bMNz65KwxdJTXDcO/QfymQ2sw2WIh7E7EysPfdwcvbvWNMH
-	 XR+dHtGANAFD6tJ5bKZmZ4hevRVvypWgXB9Zm9tL57rEB6njd5biV1kGgTM7sstjY9
-	 /4GwKQY4pwR4PdSXYTY52D2r2ectoP5TRhuaEZLIfFGtx8TQj2xEsjB2aPE/+VB50i
-	 8kCLLs1RogH1mg3/bNvE/zPEhZMWb2DmDKxFC9+7KWKtb/Rpq2rloXYH5Ce3qSZTSp
-	 XXjubVgrcO/aERGUYFzlNd0/Q0UbZ703ICoYpdzs46OycFxnF0y/WDIGofeqJxZ/aR
-	 gpT+e7CsSvF6A==
+	b=jQGsFigI5h1cXweAjY4YUQUa6Jiv3gjqXAHvc6cOvBuwxJKll03p5PpsvCGumLTL8
+	 Di5VUurEmBkRm9eBq0oM1+FXAYw6AgghpAW79gL16d7nv2dk1HKLOqDE/Mrqcy80Yn
+	 /zDQLmtSYqcWbZaUpbT/Sm5afxy7YQv+uMkd74LlRfCXB6ux04N7KcRbzVQvzr37nS
+	 Ui9C8KUKpjJeaVo9fUIgNVbZphyBFDun85xuvuC4CjpsYmFi1ubQspHCt2kBT5TPGR
+	 htF5EKsobbGjtv57A2lnA7v3bqYLAH/jerFhoRf0+ZkL/xGo8uNCci6bpHApJOITmO
+	 rhMeCBVEJs3Ng==
 X-Mailer: emacs 31.0.50 (via feedmail 11-beta-1 I)
 From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
 To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
-Cc: Alexey Kardashevskiy <aik@amd.com>, linux-pci@vger.kernel.org,
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 04/11] PCI/IDE: Selective Stream IDE enumeration
-In-Reply-To: <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
+In-Reply-To: <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
 References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
-Date: Tue, 10 Dec 2024 08:38:57 +0530
-Message-ID: <yq5a34iw1bg6.fsf@kernel.org>
+ <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
+Date: Tue, 10 Dec 2024 08:49:40 +0530
+Message-ID: <yq5ay10oz0kz.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,18 +66,43 @@ Content-Type: text/plain
 
 Hi Dan,
 
-> +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Selective IDE Streams */
+Dan Williams <dan.j.williams@intel.com> writes:
+> +int pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide,
+> +			 enum pci_ide_flags flags)
+> +{
+> +	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
+> +	struct pci_dev *rp = pcie_find_root_port(pdev);
+> +	int mem = 0, rc;
+> +
+> +	if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
+> +		pci_err(pdev, "Setup fail: Invalid stream id: %d\n", ide->stream_id);
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (test_and_set_bit_lock(ide->stream_id, hb->ide_stream_ids)) {
+> +		pci_err(pdev, "Setup fail: Busy stream id: %d\n",
+> +			ide->stream_id);
+> +		return -EBUSY;
+> +	}
+> +
 
-Should this be
+Considering we are using the hostbridge ide_stream_ids bitmap, why is
+the stream_id allocation not generic? ie, any reason why a stream id alloc
+like below will not work?
 
-#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	((((x) >> 16) & 0xff) + 1) /* Selective IDE Streams */
+static int pcie_ide_sel_streamid_alloc(struct pci_dev *pdev)
+{
+	int stream_id;
+	struct pci_host_bridge *hb;
 
-We do loop as below in ide.c
+	hb = pci_find_host_bridge(pdev->bus);
 
-	for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val); i++) {
-		if (i == 0) {
-			pci_read_config_dword(pdev, sel_ide_cap, &val);
-			nr_ide_mem = PCI_IDE_SEL_CAP_ASSOC_NUM(val);
+	stream_id = find_first_zero_bit(hb->ide_stream_ids, hb->nr_ide_streams);
+	if (stream_id >= hb->nr_ide_streams)
+		return -EBUSY;
+
+	return stream_id;
+}
 
 -aneesh
 
