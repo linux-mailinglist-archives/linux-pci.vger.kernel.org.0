@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-18030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2669C9EB27C
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 15:01:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B94C9EB28F
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 15:03:13 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2D1A28420F
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 14:01:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F09D1695BA
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 14:02:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757E21AAE1A;
-	Tue, 10 Dec 2024 14:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D1F71B2190;
+	Tue, 10 Dec 2024 14:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="zY5+BEnc"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="UztrZSeK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from pv50p00im-tydg10011801.me.com (pv50p00im-tydg10011801.me.com [17.58.6.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C961AAA39
-	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 14:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E011AAA02
+	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 14:01:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733839286; cv=none; b=Nl2ToF+07OgFQKpIWWbMyQlCtL92ywgSiOMXonbaw1pjizpuIxbVNyO6/ym//qBomgTZyE3tYCFDYYP9WkHqSOJ5H3Dei2+Vv9XCRJ7hhAXru4XY3sIp1OYh2JH9+t76eaed2PzAslS6FhlaaKogDb6iez/TQXQJSEu0Tl6GJ8E=
+	t=1733839294; cv=none; b=WXoIKMifS10V+z42CxckY6bAMrmyMonbuJMLJ0CSaNRbJ3VaeTQevMjjR6lSuUVZ10T9o6dNwTac0Ns+rjbHQ86MGGqEji+63QmuJO/jZzY4isOTw1J4VBsoTiH18FveKYmCXiBjknDmb9vUC0PiceIu03QceCj4MMyyiZxR2oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733839286; c=relaxed/simple;
-	bh=aWKzwVPvKOYneYMrossW9cUyH+eV/Nmu2u8dB+8D8C0=;
+	s=arc-20240116; t=1733839294; c=relaxed/simple;
+	bh=eYMW9hHwPHqiPLBKFjol8BZpfo0bKQbBb10Nr3+vlqQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=peIcEI0G3QVwqFUEL9K3tte3Sa4Nq9lywUjkcVWh4gtu/oaouvZWro3A7ye2TlCfxXsNFlZBw+1FoP7aTRmrMCH+iSTdKr+c3gfykO3Y2wYgqPXvZY1Tl/yEl/sdLWmo7aXMpsI0Pio9BAe/J+9cCk1dP0H0Cush8wY6iUdkyR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=zY5+BEnc; arc=none smtp.client-ip=17.58.6.52
+	 In-Reply-To:To:Cc; b=iix0A+/v5OLjzfQeYw5jhprjBQJJKxssHSpQPdVp/hbGT1Q+3qNnHtY+bCSnGByKpINxmHIkGxR/5+qZgcY168gWM21jJD3xv2FWVClJ6ZhiqmvNlaGRipSK5YZJNG4+WY/sCD6zzEMMgvYPYOk7d/DsKgmQS1+ASfbYx4hl0Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=UztrZSeK; arc=none smtp.client-ip=17.58.6.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733839284;
-	bh=2XgjciLmb9VvLIB6D35kVbv07FFJrHP7xi93H6P3zng=;
+	s=1a1hai; t=1733839291;
+	bh=lyLsWjXmuagjO0JYLheAQbjG7pu5wh1gMuC5bWUKHX8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:
 	 x-icloud-hme;
-	b=zY5+BEncTiXe8mUyhf6kgUMP8Ffyrtsc8p3az5ceBDeMYlsBSr22uBBcMUYFD7Lao
-	 FqgxsaLbWcjH5PorAxQ1ym6IbTut35KNN5gWzvsY67JFKQWvN2B2ILR63sfCP/nt5h
-	 D+YudlZxZQLrUwdQQ4UE0VKGaQSoyqq33fdkAzCTh8bzVxpyVAotMTp280hXKC377L
-	 S4XndZkfZnAZQiNwrvzc9GkawPvjkb6pnT6OHUA9ql+TpOvIcQ7uA6siO4ZvKX303n
-	 5Ibm1j2j9X/O1bnnfSr9G4FRQYwcP9wrsNtp1RRaYBk/vhoyvCHn0JQ88v4cNg9HjU
-	 SDX2KXrpIMBsQ==
+	b=UztrZSeKMUSDRWGWM1ZaOXqwBHFS3eTzE33De+daZjVDyBRrEG7QQeqcKs2tYf4lX
+	 wTEzhd9HbI9Wj8azKuEDx3NusLBFBNhiTzCyaqxV0lIymvS16y8nQpAbm7x6fk8Tup
+	 f8jXD7BpeeqRt2TAyyPIMlvkm3xo3apKxYP8tisA2sO2tuy3ADBBnr+9p719BLeyPF
+	 yNdhdjzTMvINHOYJ3xxvyrlOQ3ECMODtppWOtvWcfKaWxxECR0NtC4mXHcuVWNXgeb
+	 eTWqMu5M5PkZllJxbB2E+wtjrOMI7zq1oJmpEdVM0afEkaE0j89/oSt/nEVHH6+bJI
+	 Nb/Sv5iA83Dxw==
 Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 7886A800417;
-	Tue, 10 Dec 2024 14:01:18 +0000 (UTC)
+	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 45A92800391;
+	Tue, 10 Dec 2024 14:01:24 +0000 (UTC)
 From: Zijun Hu <zijun_hu@icloud.com>
-Date: Tue, 10 Dec 2024 22:00:19 +0800
-Subject: [PATCH v3 2/3] PCI: endpoint: Simplify API pci_epc_get()
- implementation
+Date: Tue, 10 Dec 2024 22:00:20 +0800
+Subject: [PATCH v3 3/3] PCI: endpoint: Fix API pci_epf_add_vepf() returning
+ -EBUSY error
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241210-pci-epc-core_fix-v3-2-4d86dd573e4b@quicinc.com>
+Message-Id: <20241210-pci-epc-core_fix-v3-3-4d86dd573e4b@quicinc.com>
 References: <20241210-pci-epc-core_fix-v3-0-4d86dd573e4b@quicinc.com>
 In-Reply-To: <20241210-pci-epc-core_fix-v3-0-4d86dd573e4b@quicinc.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
@@ -67,65 +67,49 @@ To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  Wei Yongjun <weiyongjun1@huawei.com>
 Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
+ stable@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: w2B-dCiFi428P6b6Rq8BXWtkFRTfIE8j
-X-Proofpoint-ORIG-GUID: w2B-dCiFi428P6b6Rq8BXWtkFRTfIE8j
+X-Proofpoint-GUID: tWbp0T0O1YH03JZBuAhap_YTQqzC8Tu0
+X-Proofpoint-ORIG-GUID: tWbp0T0O1YH03JZBuAhap_YTQqzC8Tu0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2024-12-10_07,2024-12-10_01,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1015
  malwarescore=0 adultscore=0 phishscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ mlxlogscore=812 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2308100000 definitions=main-2412100105
 X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
 From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Simplify pci_epc_get() implementation by API class_find_device_by_name().
+pci_epf_add_vepf() will suffer -EBUSY error by steps below:
 
+pci_epf_add_vepf(@epf_pf, @epf_vf)       // add
+pci_epf_remove_vepf(@epf_pf, @epf_vf)   // remove
+pci_epf_add_vepf(@epf_pf, @epf_vf)     // add again, -EBUSY error.
+
+Fix by clearing @epf_vf->epf_pf in pci_epf_remove_vepf().
+
+Fixes: 1cf362e907f3 ("PCI: endpoint: Add support to add virtual function in endpoint core")
+Cc: stable@vger.kernel.org
 Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ drivers/pci/endpoint/pci-epf-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 71b6d100056e54438d0554f7ee82aaa64e0debb5..eb02d477bc7ca43a91b8a4a13c6ce96dab0b02fd 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -60,26 +60,17 @@ struct pci_epc *pci_epc_get(const char *epc_name)
- 	int ret = -EINVAL;
- 	struct pci_epc *epc;
- 	struct device *dev;
--	struct class_dev_iter iter;
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 8fa2797d4169a9f21136bbf73daa818da6c4ac49..50bc2892a36c54aa82c819ac5a9c99e9155d92c1 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -202,6 +202,7 @@ void pci_epf_remove_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf)
  
--	class_dev_iter_init(&iter, &pci_epc_class, NULL, NULL);
--	while ((dev = class_dev_iter_next(&iter))) {
--		if (strcmp(epc_name, dev_name(dev)))
--			continue;
-+	dev = class_find_device_by_name(&pci_epc_class, epc_name);
-+	if (!dev)
-+		goto err;
- 
--		epc = to_pci_epc(dev);
--		if (!try_module_get(epc->ops->owner)) {
--			ret = -EINVAL;
--			goto err;
--		}
--
--		class_dev_iter_exit(&iter);
--		get_device(&epc->dev);
-+	epc = to_pci_epc(dev);
-+	if (try_module_get(epc->ops->owner))
- 		return epc;
--	}
- 
- err:
--	class_dev_iter_exit(&iter);
-+	put_device(dev);
- 	return ERR_PTR(ret);
+ 	mutex_lock(&epf_pf->lock);
+ 	clear_bit(epf_vf->vfunc_no, &epf_pf->vfunction_num_map);
++	epf_vf->epf_pf = NULL;
+ 	list_del(&epf_vf->list);
+ 	mutex_unlock(&epf_pf->lock);
  }
- EXPORT_SYMBOL_GPL(pci_epc_get);
 
 -- 
 2.34.1
