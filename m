@@ -1,209 +1,176 @@
-Return-Path: <linux-pci+bounces-18025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8705B9EB060
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 13:04:45 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B4C6168FF3
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 12:04:40 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5F81A2653;
-	Tue, 10 Dec 2024 12:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XoEkw6lP"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7BCD9EB10A
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 13:40:51 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C5D23DEBA;
-	Tue, 10 Dec 2024 12:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFFB6286978
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 12:40:48 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A431C1A9B31;
+	Tue, 10 Dec 2024 12:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="R7ZkHnPB"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FDB1A0BE3
+	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 12:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733832267; cv=none; b=k2Fp4FLgHJsDqVgbsQeuC+P+3GeCzWZPCB4e8fJ9GovtXZwHk4Zw8J+Q7vE16uyXfAAHrdqOQUABTZOaVAjCOftqNWZJ2hUgl6tYk8EXEJelFFlVq47eQBORblnaWwfCHDvRy8q/Ej+4fV3Dlvpai3uxv2dVbF5F7+Gxz8liNUA=
+	t=1733834431; cv=none; b=O4BjTtOY0Oy+pSrriQZhNJZ4/pvcAr6N6uCZ7c+h//bPkopTr8vACjpURqk0QmWWyg9cNbCT7oH6zX1U7/Uy9uRDcmEde7jdlQOPxtVU7kXZ4IOE12fZBVGG6iigqgdyGnsug4K4w3ZWvaKMTyN8uhQHl4iHkjkM46Usksmy+h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733832267; c=relaxed/simple;
-	bh=zHIvZOeg5xy93LPPKuXKxIiMOA8gdaqFCgrklSYixNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RrWVj5FAi6R92yTKI5QztfciGyoxyeswAEqSIcxWieTAdoydwLz52YHHMtgTj7McnzkaQtKXreEW8KrkXFOwjToRt0ElWBxF0HQOXiY8zoUUPGWctRdr2pU37ha4OyNfdDc8qQVDp/rrnpzTlXkxSI1J1Lsxa3d9PU2Yk70HeGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XoEkw6lP; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1733832260; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=AzdJuUPXgsd+8k2HSMzcMHGonlQsEgs1Lrm1CL/U2eQ=;
-	b=XoEkw6lPCWuSOPsRq+O6FKO9m2gnHxIMrDSNAQZLK3uxFMZLtaTz69wPXglArLJRpYRq254ERRmcwbSjA3Rzy6t2KFnSHxdVjnWtPKEAs6wRlr/Ew6+bN0F2L7zZLpF/IA42wm2ZOQXvXDrLRVxWjeIRgG2zTcCirFUczDdVvm0=
-Received: from 30.166.1.177(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WLEroS4_1733832258 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 10 Dec 2024 20:04:19 +0800
-Message-ID: <5a1ef0d2-be24-4865-8e23-159d001ac6d6@linux.alibaba.com>
-Date: Tue, 10 Dec 2024 20:04:17 +0800
+	s=arc-20240116; t=1733834431; c=relaxed/simple;
+	bh=qoCJN0XDlVXX2rDBm9MupgcHVuexB/4QMq/Ob6ML5Mo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pRdBgNm/Zj2fN91W3npd0t/Ds/ksHKRT6cwbYasWBY9fsXyCkQS/lvy15IypQ2zvVTUumcCQM4ZKAANOSbvMJCMysGwuSnakawyc2bwT55fC4n6FJDOkYC5xI/Vh0t1H+aB+NSiIMtVeklrzd6rDXjgBBEMfBijk3zTKSJfd4Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=R7ZkHnPB; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54026562221so566286e87.1
+        for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 04:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733834427; x=1734439227; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uec8wtN5bXe/z6NMkpZDWqH1CVWwSVG3n4rX7hz3fG4=;
+        b=R7ZkHnPB2KaMhz+CIlrSzDtLCdfvUz9lnID31x/AxCKNd22Bzhb5ZF4ue3m21E3Vhq
+         wuYthkWDFMZggycfb3Y/ZarU9Y3esqtAwV2mAJ4oJr9pIm3bQGcK0IvY7PJZKgNXOfbG
+         Xfwpuvq27yR8Ryl3bkI+5EWEA+oVHckneTn1vTlvEEfMoqhYFA4mvEd59ejOmkIUwFJE
+         duzNdVic0KMFWfBK4w2U2ulw/CglfUBUlto5uBB+RGx7JimdeL2bFbHmJtLOSIm4pcf6
+         hyNstnVpnXAUjTwg050g6x+M5DKqCCk3oscXJPLn7L4DMVy+FVVG9zkY3Mejl1xO5+Zq
+         QIzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733834427; x=1734439227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uec8wtN5bXe/z6NMkpZDWqH1CVWwSVG3n4rX7hz3fG4=;
+        b=NYtf+NwoZFha+1dW7ehGIEuvbXUQYMm+Co51tt7aW/vI1O3PIe6CUPU4D8TZBSoOA5
+         1PKkllicAH2hoS8RYJm8Xy7soVEx3FnNqBKh8m2itZR00+jIPtWB1iHER/4dGMKVMUb5
+         t/gUmZJlb3qq9HweIzAgRCO1X9rZrkjr2BxkWdE89JyK8r7q12mx6jS0H4msf+IcnWbc
+         EWyVx395qlpwNqKMvmS7z76UCypiQKA3rLo7uibEU2eT8I2Js0y5lpalIBIrPg1iakdP
+         AwqKgTasxyhQPRB5UNz0DAfFzSU/4dfrqrtMFCdIIaOPCJpJSJE4p1Aoyg1Czsdi1aCc
+         exGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLwiH7sxBe3uzMF9x6jhrimhWqavrtQ4+S73oeqzgV9E6TPJfofq0GFAOhjolMPBu0K5Glgw+zZjE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypET03UWrBfKir+apl+3mW83DpODUFWTT8mg2Gu9TyvnjFR/1+
+	cozhdEH2hbFtJX3NE1VKEX+UrW5Ic+mtAtLCj1IxqhQ9399S0XW2yDKZVdrV/4rrmjVKQBT/u5m
+	yjWtXKeHsaXtzqgjc8jMsXwO/S64Pr1EFuMJb+Q==
+X-Gm-Gg: ASbGncurlAiQBIrPvUCPjbcgMOOiE/nIIOdS1Gil5DVoCmwFygfbwlGueDqHeprdqBO
+	n589CoThvUczBf6QI7Gl3ypIP9aA7xz9xH/hJD+dvw7Z1wvWa0GAendmJya81WG4m35s=
+X-Google-Smtp-Source: AGHT+IFVqvL+/GHDQ61RDn9o0FC8nZtPyXuew4DHpnWom1eAfh3AOK8aU1e1lybYBJfU4Hxy8Svd7zdyP/lhOowaxnw=
+X-Received: by 2002:a05:6512:33ca:b0:53f:8c46:42bb with SMTP id
+ 2adb3069b0e04-540241078d3mr1419815e87.40.1733834426836; Tue, 10 Dec 2024
+ 04:40:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/dwc_pcie: Qualify RAS DES VSEC Capability by Vendor,
- Revision
-To: Bjorn Helgaas <helgaas@kernel.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Krishna chaitanya chundru <quic_krichai@quicinc.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20241209222938.3219364-1-helgaas@kernel.org>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20241209222938.3219364-1-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20241210-pci-pwrctrl-slot-v1-0-eae45e488040@linaro.org>
+In-Reply-To: <20241210-pci-pwrctrl-slot-v1-0-eae45e488040@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 10 Dec 2024 13:40:16 +0100
+Message-ID: <CAMRc=Me39w3oPWQkiGBqY3xSv6AphX6f2oBSEA6WHtmaSbKb3g@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PCI/pwrctrl: Rework pwrctrl driver integration and
+ add driver for PCI slot
+To: manivannan.sadhasivam@linaro.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Qiang Yu <quic_qianyu@quicinc.com>, Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Bjorn,
-
-在 2024/12/10 06:29, Bjorn Helgaas 写道:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> PCI Vendor-Specific (VSEC) Capabilities are defined by each vendor.
-> Devices from different vendors may advertise a VSEC Capability with the DWC
-> RAS DES functionality, but the vendors may assign different VSEC IDs.
-> 
-> Search for the DWC RAS DES Capability using the VSEC ID and VSEC Rev
-> chosen by the vendor.
-> 
-> This does not fix a current problem because Alibaba, Ampere, and Qualcomm
-> all assigned the same VSEC ID and VSEC Rev for the DWC RAS DES Capability.
-> 
-> The potential issue is that we may add support for a device from another
-> vendor, where the vendor has already assigned DWC_PCIE_VSEC_RAS_DES_ID
-> (0x02) for an unrelated VSEC.  In that event, dwc_pcie_des_cap() would find
-> the unrelated VSEC and mistakenly assume it was a DWC RAS DES Capability.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Dec 10, 2024 at 10:55=E2=80=AFAM Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.linaro.org@kernel.org> wrote:
+>
+> Hi,
+>
+> This series reworks the PCI pwrctrl integration (again) by moving the cre=
+ation
+> and removal of pwrctrl devices to pci_scan_device() and pci_destroy_dev()=
+ APIs.
+> This is based on the suggestion provided by Lukas Wunner [1][2]. With thi=
+s
+> change, it is now possible to create pwrctrl devices for PCI bridges as w=
+ell.
+> This is required to control the power state of the PCI slots in a system.=
+ Since
+> the PCI slots are not explicitly defined in devicetree, the agreement is =
+to
+> define the supplies for PCI slots in PCI bridge nodes itself [3].
+>
+> Based on this, a pwrctrl driver to control the supplies of PCI slots are =
+also
+> added in patch 4. With this driver, it is now possible to control the vol=
+tage
+> regulators powering the PCI slots defined in PCI bridge nodes as below:
+>
+> ```
+> pcie@0 {
+>         compatible "pciclass,0604"
+>         ...
+>
+>         vpcie12v-supply =3D <&vpcie12v_reg>;
+>         vpcie3v3-supply =3D <&vpcie3v3_reg>;
+>         vpcie3v3aux-supply =3D <&vpcie3v3aux_reg>;
+> };
+> ```
+>
+> To make use of this driver, the PCI bridge DT node should also have the
+> compatible "pciclass,0604". But adding this compatible triggers the follo=
+wing
+> checkpatch warning:
+>
+> WARNING: DT compatible string vendor "pciclass" appears un-documented --
+> check ./Documentation/devicetree/bindings/vendor-prefixes.yaml
+>
+> For fixing it, I added patch 3. But due to some reason, checkpatch is not
+> picking the 'pciclass' vendor prefix alone, and requires adding the full
+> compatible 'pciclass,0604' in the vendor-prefixes list. Since my perl ski=
+lls are
+> not great, I'm leaving it in the hands of Rob to fix the checkpatch scrip=
+t.
+>
+> [1] https://lore.kernel.org/linux-pci/Z0yLDBMAsh0yKWf2@wunner.de
+> [2] https://lore.kernel.org/linux-pci/Z0xAdQ2ozspEnV5g@wunner.de
+> [3] https://github.com/devicetree-org/dt-schema/issues/145
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-> Sample devices that advertise VSEC Capabilities with VSEC ID=0x02 that are
-> unrelated to the DWC RAS DES functionality:
-> 
->    https://community.nxp.com/t5/S32G/S32G3-PCIe-compliance-mode-set-speed-to-5-8Gbit-s/m-p/1875346#M7024
->      00:00.0 PCI bridge: Freescale Semiconductor Inc Device 4300 (prog-if 00 [Normal decode])
->        Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
->        Capabilities: [158 v1] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
-> 
->    https://github.com/google-coral/edgetpu/issues/743
->      0000:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1) (prog-if 00 [Normal decode])
->        Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
->        Capabilities: [1d0 v1] Vendor Specific Information: ID=0002 Rev=4 Len=100
-> 
->    https://www.linuxquestions.org/questions/linux-kernel-70/differences-in-'lspci-v'-output-4175495550/
->      00:01.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 1 (rev 13) (prog-if 00 [Normal decode])
->        Capabilities: [90] Express Root Port (Slot+), MSI 00
->        Capabilities: [160] Vendor Specific Information: ID=0002 Rev=0 Len=00c <?>
-> 
->    https://www.reddit.com/r/linuxhardware/comments/187u87b/the_correct_way_to_identify_the_kernel_driver/
->      04:00.0 Network controller: Realtek Semiconductor Co., Ltd. Device c852 (rev 01)
->        Capabilities: [70] Express Endpoint, MSI 00
->        Capabilities: [170] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
+> Manivannan Sadhasivam (4):
+>       PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()
+>       PCI/pwrctrl: Move pci_pwrctrl_unregister() to pci_destroy_dev()
+>       dt-bindings: vendor-prefixes: Document the 'pciclass' prefix
+>       PCI/pwrctrl: Add pwrctrl driver for PCI Slots
+>
+>  .../devicetree/bindings/vendor-prefixes.yaml       |  2 +-
+>  drivers/pci/bus.c                                  | 43 ----------
+>  drivers/pci/probe.c                                | 34 ++++++++
+>  drivers/pci/pwrctrl/Kconfig                        | 11 +++
+>  drivers/pci/pwrctrl/Makefile                       |  3 +
+>  drivers/pci/pwrctrl/core.c                         |  2 +-
+>  drivers/pci/pwrctrl/slot.c                         | 93 ++++++++++++++++=
+++++++
+>  drivers/pci/remove.c                               |  2 +-
+>  8 files changed, 144 insertions(+), 46 deletions(-)
 > ---
->   drivers/perf/dwc_pcie_pmu.c | 68 ++++++++++++++++++++-----------------
->   1 file changed, 37 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> index 9cbea9675e21..d022f498fa1a 100644
-> --- a/drivers/perf/dwc_pcie_pmu.c
-> +++ b/drivers/perf/dwc_pcie_pmu.c
-> @@ -20,7 +20,6 @@
->   #include <linux/sysfs.h>
->   #include <linux/types.h>
->   
-> -#define DWC_PCIE_VSEC_RAS_DES_ID		0x02
->   #define DWC_PCIE_EVENT_CNT_CTL			0x8
->   
->   /*
-> @@ -100,14 +99,23 @@ struct dwc_pcie_dev_info {
->   	struct list_head dev_node;
->   };
->   
-> -struct dwc_pcie_vendor_id {
-> -	int vendor_id;
-> +struct dwc_pcie_pmu_vsec_id {
-> +	u16 vendor_id;
-> +	u16 vsec_id;
-> +	u8 vsec_rev;
->   };
->   
-> -static const struct dwc_pcie_vendor_id dwc_pcie_vendor_ids[] = {
-> -	{.vendor_id = PCI_VENDOR_ID_ALIBABA },
-> -	{.vendor_id = PCI_VENDOR_ID_AMPERE },
-> -	{.vendor_id = PCI_VENDOR_ID_QCOM },
-> +/*
-> + * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> + * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> + */
-> +static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
-> +	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
-> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
-> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_QCOM,
-> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
->   	{} /* terminator */
->   };
->   
-> @@ -519,31 +527,28 @@ static void dwc_pcie_unregister_pmu(void *data)
->   	perf_pmu_unregister(&pcie_pmu->pmu);
->   }
->   
-> -static bool dwc_pcie_match_des_cap(struct pci_dev *pdev)
-> +static u16 dwc_pcie_des_cap(struct pci_dev *pdev)
->   {
-> -	const struct dwc_pcie_vendor_id *vid;
-> -	u16 vsec = 0;
-> +	const struct dwc_pcie_pmu_vsec_id *vid;
-> +	u16 vsec;
->   	u32 val;
->   
->   	if (!pci_is_pcie(pdev) || !(pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT))
-> -		return false;
-> +		return 0;
->   
-> -	for (vid = dwc_pcie_vendor_ids; vid->vendor_id; vid++) {
-> +	for (vid = dwc_pcie_pmu_vsec_ids; vid->vendor_id; vid++) {
+> base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+> change-id: 20241210-pci-pwrctrl-slot-02c0ec63172f
+>
+> Best regards,
+> --
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+>
 
-How about checking the pdev->vendor with vid->vendor_id before search the vesc cap?
-
-+		if (pdev->vendor != vid->vendor_id)
-+			continue;
-
->   		vsec = pci_find_vsec_capability(pdev, vid->vendor_id,
-> -						DWC_PCIE_VSEC_RAS_DES_ID);
-> -		if (vsec)
-> -			break;
-> +						vid->vsec_id);
-> +		if (vsec) {
-> +			pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER,
-> +					      &val);
-> +			if (PCI_VNDR_HEADER_REV(val) == vid->vsec_rev) {
-> +				pci_dbg(pdev, "Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
-> +				return vsec;
-> +			}
-> +		}
->   	}
-> -	if (!vsec)
-> -		return false;
-> -
-> -	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> -	if (PCI_VNDR_HEADER_REV(val) != 0x04)
-> -		return false;
-> -
-> -	pci_dbg(pdev,
-> -		"Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
-> -	return true;
-> +	return 0;
->   }
-
-Best Regards,
-Shuai
+Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
