@@ -1,279 +1,201 @@
-Return-Path: <linux-pci+bounces-17991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17992-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBB639EAA01
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 08:47:12 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBAC4188156F
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 07:47:12 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22ABA22B5B9;
-	Tue, 10 Dec 2024 07:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UvDwKrsE"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49FD49EAA62
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 09:16:50 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45EC172BD5;
-	Tue, 10 Dec 2024 07:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733816828; cv=none; b=HJVvtSQHaxgWicjY03aDKJ6QFAAbnHl5okS+pDoa03UtXYKN+aN7OWn6knsIO6qgw1K6zklZ2TPJ37rYZdERp4tGJ2hDteWjKrEn1l+6p51r5b97CZxveTQmpiKbpG4pfJoumwVui5p9VZxudKoR9x7Go6NWATUDL0MNXSgXwOU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733816828; c=relaxed/simple;
-	bh=F9fylD2jsc17wp8pFzXmIUwAs+7aQ7ODDoAVqLh4MZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KfATqOvQ152TArEvSMlCD3EBWYXFBCrMGt0vDGhTEsah0kuBhn+HnRhVtQ/4xSX5yF+2V2ggihVfnJmEg/FGCqoi8JVq64wNarAM+BQZ8wtvgvJJjEUpt5rpeAQbhXipMYGY8X9W+D3ICCVkosHyrUWxw+W5gRflWfY9Xbm3tE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UvDwKrsE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94CDC4CED6;
-	Tue, 10 Dec 2024 07:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1733816826;
-	bh=F9fylD2jsc17wp8pFzXmIUwAs+7aQ7ODDoAVqLh4MZk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UvDwKrsEcogxDYdCEiglfx4I8jpqVva5uswZixExaMCN6z8b9XAoXq7X+Rlk2YfK/
-	 ESEMU0Bjq59A590tmXF2qEdEsHKeDO8unbNCHPNMfZSiz/DgXACn+PJNrnA6MBjGuv
-	 mlyQawat4Vkovncjl8PvGrXjE/jSe3nRSXBPiSQ0=
-Date: Tue, 10 Dec 2024 08:46:29 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, rafael@kernel.org,
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com,
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
-	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com,
-	lyude@redhat.com, daniel.almeida@collabora.com,
-	saravanak@google.com, dirk.behme@de.bosch.com, j@jannau.net,
-	fabien.parent@linaro.org, chrisi.schrefl@gmail.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 12/13] rust: platform: add basic platform device /
- driver abstractions
-Message-ID: <2024121014-rage-sneak-1b25@gregkh>
-References: <20241205141533.111830-1-dakr@kernel.org>
- <20241205141533.111830-13-dakr@kernel.org>
- <20241209223706.GF938291-robh@kernel.org>
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0004F284FE5
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 08:16:48 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61DB822CBF8;
+	Tue, 10 Dec 2024 08:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bTbRmg04"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2059.outbound.protection.outlook.com [40.107.21.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248403594F;
+	Tue, 10 Dec 2024 08:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733818606; cv=fail; b=cx3BHpNWqvccTcZEEanIklPIiWOXMWDYq5l2jV12JSalPVdikDsyJKKj4qKQy7MqzNqO+TPABDy8IOYbSdQML8Ja2Zsbrh1nXSl3BkjRin3ZphaMne0GVvKOr9fZ+3jHpPveRkgkXAJyJv2FRIgEe3mZVjzYqRfKXbCvcvnbKsc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733818606; c=relaxed/simple;
+	bh=xoXZQJm0a7qKjTtRLH0EID2PEooSQegcBY3y6RF7P5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=i7WIxcWv8vI0tHU/RUInsUx/wF6yxihOytPphmKG6jHNrJPScFjgiUw5PNxUWeocGQnwwXuw/bedSzJqQj4SNYzps5V+KtWcXL9Yct48t3LfG96QFCIknmEOH3pYoucr3Ns4lCkyqBSh+0eqiWa3FhOkpu/thTpi2V/OymKAeXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bTbRmg04; arc=fail smtp.client-ip=40.107.21.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vrOKnoD6VlXNhi+DnEpA7PBoA2ZaCtRLdjh6tZVujP7hE5aRfq43WYIx9tzRqdIxEdif4l7wjRdPlUlrDIsQQaxmM7OQg14BTVG5eGg65HHYUFbTQku8tbxl+VQB3gqtlOj2TVLPl2z33FeQELDlThSBuRB0ID5r5tcZRfE5pQBw+43AhQutpvvLsM+Ls0dondVc8zvYHIYw/GaA8K930l31w6pKog98DeOdS8rXmtbQw9qmdjQJb7WlHsorf6oKkLzPi6LcvWbu0W3uEkgBz9izhMUc8B9VFGA5B573ZhTjZM6OozaFtV/T1Wk33P1WmRBdMd+/7kmuU2O93iZ97A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gBn+fsQBsW1chsXVuNjtxRRJdFBCrFeqhs1wikOpzR0=;
+ b=F8AYY4TzulrUGo+TSUKckWgkQ+9lREDTOoXY2IoeJAhjp/T4z8k+TWkOAtsncIU+SzmO4RbY4SrC2JeINct7bgvEtrtvskkZaNfXokofdoHyP/9+I/mIZ8z+B77CO57PkcryharpmmtNnk+PXflKpYLyUnyNNdq6nloKoxidbdqfKJzIqmrqYNft05yJHFauhTDyJkISAafWhHWxbqGWH0LIKcbMtr8zlGtaztN5ei1zIN31nryOZMrUou3n9cXrwbbsCcuOGKArJ6tTh903bmpMiaEfxtJqBlxTlA3fW1zvqTRN5WIhyCmEOaWIGmh2aO3gw+OyYrIYxVflfQvMvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gBn+fsQBsW1chsXVuNjtxRRJdFBCrFeqhs1wikOpzR0=;
+ b=bTbRmg04ZhGEjLq8Gsdep1zRD1O+3EGAHJcih25Uha5TOykTDCfb95G3na4tXKN4HcTaHxYNaeSmrU4yK+xhbycPANPcUZJu5db/7wwBLHPqFafUcakFA+VABku1KuZ0atmrYvvu1oSYq0h3FSrWPM6W3q/J7Jz8pTY1FbA28jI2wGBl3HKI3ExS7m5hlY7kOG/jB7hj/t68wg4FbOONRhHG0tQMeAlDPP/52G5Qycsa7dXTl5ZhXWXpybx2Svv7OszHiR91o0Sn5e+TAoTpzxrIXjhE7UEWONLtZpi/mVwZkwyyiqS6nWNRMhyZyaytjpAq+Hw81MCfWpjzfaIBrw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by GV1PR04MB10156.eurprd04.prod.outlook.com (2603:10a6:150:1ad::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.19; Tue, 10 Dec
+ 2024 08:16:40 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93%5]) with mapi id 15.20.8230.016; Tue, 10 Dec 2024
+ 08:16:40 +0000
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: dlemoal@kernel.org,
+	jingoohan1@gmail.com,
+	bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	frank.li@nxp.com,
+	quic_krichai@quicinc.com
+Cc: imx@lists.linux.dev,
+	kernel@pengutronix.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] Bug fixes when dwc generic suspend/resume callbacks are used
+Date: Tue, 10 Dec 2024 16:15:55 +0800
+Message-Id: <20241210081557.163555-1-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0050.apcprd02.prod.outlook.com
+ (2603:1096:4:196::11) To AS8PR04MB8676.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241209223706.GF938291-robh@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|GV1PR04MB10156:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e04b933-b44a-4ee8-51e0-08dd18f2f913
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/Ih9+/Wk9oYdaK01anTNmPeiG1LW5JPm1msHYdTACpKUrr9NAlNaItY2eavL?=
+ =?us-ascii?Q?JacuzIeGZGuM9M/CtZkES2rJlAKSmzSBDFPbnQdKOahA88F+MIzntclE9Zhn?=
+ =?us-ascii?Q?2QS86BMrhb+6qpLAsH/xaKlk5xrPt1VaUSLDVR6t0C/QiWpMRz2WCbvRRGUu?=
+ =?us-ascii?Q?4WkcIvVXLJGZGKKxFG7g9O0HuoC7dqAoZTsZksChJRvHQcvcvNcDryc3O9AI?=
+ =?us-ascii?Q?XLvKmpM1E9j1SiUqHMsur2KpW6PTQvTyz0CC9dZTbmnUi72uaOpaM8nIRkpf?=
+ =?us-ascii?Q?he8aSBAx0atZ6glHTh5HfMolC2pDQQ4V+w5NmTMAOyxs8zQFGxRTlcPZFmb9?=
+ =?us-ascii?Q?rBFIZqdUAUpSn2JoTrOYNhceLr8dfMpQOaYo3veLuLoJj1r6/slLIaKLg61a?=
+ =?us-ascii?Q?2s7WMw9q8Ry69v46t4Ow4nwjFDJww64tuJjlayySb28bI5EVfIF9X3qsoJoD?=
+ =?us-ascii?Q?5fjgu7h4AzlmwdoaXGYJI/S3zdOpo9CXMDM2JFNDluphFr+xk6yZ3dKfF3mz?=
+ =?us-ascii?Q?BwbUsoiWGwK72ZMYb8qIXvXKLl4LmeojGZD1izZWUhAIf3RL08xo88NmkARg?=
+ =?us-ascii?Q?jXx9UBp2LlbhqU2zQ76zZlfBOLrmc8yA0vStWIagamozmNqhNnZZODbPiYSI?=
+ =?us-ascii?Q?NhQnq4YL+XxI5j8RejY1k7Qjwhx7k084N/qRB9FZEfTYxP0p3nh3/cunW+7I?=
+ =?us-ascii?Q?i4JnthSOLRIKH141fORkvLvyjxS/mUvL9Iwx6SZjO8EN7PvrltCsNVhWKrKn?=
+ =?us-ascii?Q?em4LbwYg4aG0vkpUPiJj2ViYmfvoJBhcboYDer89Xspc7vqfo2gPxJOpHsTo?=
+ =?us-ascii?Q?+dqwrPm5DjF6pB+ZT4kX6aS/lDSa8qy+bHGqjO2WkEOI4MbREyY6MFUFz9pF?=
+ =?us-ascii?Q?6dRUXcqJB2jSfgBy992/xM/cSlSfMwKAemM3mlPej7ROXUjvLQAH00q2EZqf?=
+ =?us-ascii?Q?Mx2qgyyGQ82ahEPv1FpaZuNKcQdIHevGenhVdFVKEl5CoRRL5CNoHiWrtp+v?=
+ =?us-ascii?Q?BdDaW22rx2J9JZVL+rklvr6bQXdca5RckcaQwtUN5Giqal5hA0OtySQbieNq?=
+ =?us-ascii?Q?pZOwYaWAL7Z+MeKreRDlHvYy7sB3Dxwoo6cw3O8/m5KJyuKBbz/jOKqsFY3P?=
+ =?us-ascii?Q?Lu3mF5dDtCb395gy+CrqG7g1LfajO5UDzc8EFNO3Ny/Y5xjaWzL8O2XAUHcp?=
+ =?us-ascii?Q?cTE0DPhL8KEUQDfq2YU49VQJHX04iQ7xVtGVpkICmpJ4GIRr1pXUHrTJN0uB?=
+ =?us-ascii?Q?woKOJm0oBLHsU87tBtQSDE9q3D16IE/134HkmhGc0i3avXX2I7M1Od1NSwFN?=
+ =?us-ascii?Q?oRNP78xpzlGh5oV1vmK/fhu+EJhWDm+yIiyXjoUpWQGCl3FsbPq0qi9bIG6M?=
+ =?us-ascii?Q?LqA2SLCi4R1HQpUVVoXy15qtK5izUGESXkJWpHHR4OgsxYtRIA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NAIuVjkO47S9A/5tC6fN8uXabzAV9F/Rzp9p2hOwAH1t8AudJWBoR3ObItP8?=
+ =?us-ascii?Q?hEYLl3bfEDJ8uX7oBfjIdebdr/PgS+IhIA6BoMVCe5v78zuEhkAvqYmpzVEE?=
+ =?us-ascii?Q?M+ao091tnhNd15ao+JB1DznNHazAR5ycQTr32ASVynqhLe7ptHkHD2TkVvxr?=
+ =?us-ascii?Q?n7ee+F73IWlN2GyBB5YQ0YHS+EVOo7B3hySp9+Gyh4KA9hPMs5hOJmshCMf+?=
+ =?us-ascii?Q?VIBN6lc0AP5ysKNiH59S+qDt2xWboj5Dya0uNa3U6bde4rFXAK+fdeOXacNT?=
+ =?us-ascii?Q?Jj9gvsGoInaVrpRwigD6ToRDLvrZJee3d1YbkzzkEEMsJUb3T2WW1MwpVNfE?=
+ =?us-ascii?Q?5qxS2zEHqOqLv807Lttnt1mxfwHul4VsI0GIaplJo7X8J8qf3yi08HH/TXDn?=
+ =?us-ascii?Q?rZd56yfo7Q4EF5Mj6Qfx2EDYv3l59P8uh5oTXnfXgXwQ7nfsffsp2xR2u/cF?=
+ =?us-ascii?Q?GMpbzwkS4UW0zyQd+/Dnxci2q+G9yw877riuwlJv+/AKfsnaT5Vf4yxHYPhC?=
+ =?us-ascii?Q?z5TKt6CpOqyaRk7TouaeCmAISBrBUGpcSbXHeZJhUZ1pt8T/Or9by2azNPMV?=
+ =?us-ascii?Q?D7Wdo3ahT21cqy1CupUBwHAEr6qo1L8tf2Per9p5le1kdbcwQIz5gCQToOq7?=
+ =?us-ascii?Q?3jOGk79uK+F8WhfVuWZiGpdoIlxTaWb50g1ybV7Y+z0ADlgvuRmgtDNCLGoE?=
+ =?us-ascii?Q?i1NY08uIylFGC12MG3CZONRtEx6Pn9FNyIMmd6alXJcXyobv0xFyzsaKy9sr?=
+ =?us-ascii?Q?mmvHoR0zJr3uzvIdLSRzoRFbh83q+6LBfrFPexBcH/BM7eyeSHzpJuxlT9G5?=
+ =?us-ascii?Q?mhysGIJSM4f4a2aA1QFmX+NKBAeK2txtsWwzgfFCkU/ORPR7MBl3bZDTpxV+?=
+ =?us-ascii?Q?CqpPTeyely3UVjmSO42MVqUuXJYBFqWRCWeoEvOyxQQXuJ9kvJVL7tBPo8BY?=
+ =?us-ascii?Q?S5qz8jqyX1GwxYUybbVno9hZj1M04jUK0F6t0v/bDMI8eu7m7eW5Z+RtiJet?=
+ =?us-ascii?Q?LBQSIFb0vxwYBkc74+oSNxctlUNz5zSnoMhkZ5zbcr11yEt/k4Uah/H6CKdT?=
+ =?us-ascii?Q?VfAvZ+sOoTfpSR8iSmKNiekjF6c+QxuLOdGwfrvFFMdGDdq2nudM6KC/3jsh?=
+ =?us-ascii?Q?zMDwvYAQY7JMHtWcfSpta3XvVfF48ld4LBcYys5PNmc6kMw+4RHO0Tg7bICF?=
+ =?us-ascii?Q?7Pmr/2P5DodN5DAm1BnNKW2GueyuOnb+PkUkCwiRZ8Z+tmDhrqLo9V/IpLWX?=
+ =?us-ascii?Q?QXRuCkZZxh/dQxWUChezMfmTVDg5ru5pdeBymqRPMKrI47zy9Cc1MAva+PLa?=
+ =?us-ascii?Q?29tiKMz+mb7axfdTU5gDQHJZYoR6R2jHMvFLsZdwXSQp4TvIF13OMJl5FIVl?=
+ =?us-ascii?Q?+vGHXDHjB9OfLTeITYJqLQC9pRv5EoGWAd3F58lkf4d8myrBG/VqlebYh4ol?=
+ =?us-ascii?Q?UVD83aI2O5z21aY3z9TSgnLJ+1M9PZe9pXSzfePSBgR88Tr2FsTXs8jsM+i9?=
+ =?us-ascii?Q?sSqGLkdAo2gcW7cki0AUpbP52vdsbfw9tRXhk9o3t/oInfsT4Qj6w5UA+pvE?=
+ =?us-ascii?Q?ifEXL/Gj/IzOf5ukdq8o5uiPT6WinfRQrzj/pajY?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e04b933-b44a-4ee8-51e0-08dd18f2f913
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2024 08:16:40.1302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rcEAUFrr5aoU6DSBjRAoREgV+t87dji+TDLlX8xzhwdvDuzGjOevZF6JfQVQGzh/6jr3Mwd3Kn9knVMOV1820g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10156
 
-On Mon, Dec 09, 2024 at 04:37:06PM -0600, Rob Herring wrote:
-> On Thu, Dec 05, 2024 at 03:14:43PM +0100, Danilo Krummrich wrote:
-> > Implement the basic platform bus abstractions required to write a basic
-> > platform driver. This includes the following data structures:
-> > 
-> > The `platform::Driver` trait represents the interface to the driver and
-> > provides `pci::Driver::probe` for the driver to implement.
-> > 
-> > The `platform::Device` abstraction represents a `struct platform_device`.
-> > 
-> > In order to provide the platform bus specific parts to a generic
-> > `driver::Registration` the `driver::RegistrationOps` trait is implemented
-> > by `platform::Adapter`.
-> > 
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  MAINTAINERS                     |   1 +
-> >  rust/bindings/bindings_helper.h |   2 +
-> >  rust/helpers/helpers.c          |   1 +
-> >  rust/helpers/platform.c         |  13 ++
-> >  rust/kernel/lib.rs              |   1 +
-> >  rust/kernel/platform.rs         | 222 ++++++++++++++++++++++++++++++++
-> >  6 files changed, 240 insertions(+)
-> >  create mode 100644 rust/helpers/platform.c
-> >  create mode 100644 rust/kernel/platform.rs
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 7d6bb4b15d2c..365fc48b7041 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7034,6 +7034,7 @@ F:	rust/kernel/device.rs
-> >  F:	rust/kernel/device_id.rs
-> >  F:	rust/kernel/devres.rs
-> >  F:	rust/kernel/driver.rs
-> > +F:	rust/kernel/platform.rs
-> >  
-> >  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
-> >  M:	Nishanth Menon <nm@ti.com>
-> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> > index 6d7a68e2ecb7..e9fdceb568b8 100644
-> > --- a/rust/bindings/bindings_helper.h
-> > +++ b/rust/bindings/bindings_helper.h
-> > @@ -20,9 +20,11 @@
-> >  #include <linux/jump_label.h>
-> >  #include <linux/mdio.h>
-> >  #include <linux/miscdevice.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/phy.h>
-> >  #include <linux/pid_namespace.h>
-> > +#include <linux/platform_device.h>
-> >  #include <linux/poll.h>
-> >  #include <linux/refcount.h>
-> >  #include <linux/sched.h>
-> > diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> > index 3fda33cd42d4..0640b7e115be 100644
-> > --- a/rust/helpers/helpers.c
-> > +++ b/rust/helpers/helpers.c
-> > @@ -20,6 +20,7 @@
-> >  #include "kunit.c"
-> >  #include "mutex.c"
-> >  #include "page.c"
-> > +#include "platform.c"
-> >  #include "pci.c"
-> >  #include "pid_namespace.c"
-> >  #include "rbtree.c"
-> > diff --git a/rust/helpers/platform.c b/rust/helpers/platform.c
-> > new file mode 100644
-> > index 000000000000..ab9b9f317301
-> > --- /dev/null
-> > +++ b/rust/helpers/platform.c
-> > @@ -0,0 +1,13 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/platform_device.h>
-> > +
-> > +void *rust_helper_platform_get_drvdata(const struct platform_device *pdev)
-> > +{
-> > +	return platform_get_drvdata(pdev);
-> > +}
-> > +
-> > +void rust_helper_platform_set_drvdata(struct platform_device *pdev, void *data)
-> > +{
-> > +	platform_set_drvdata(pdev, data);
-> > +}
-> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index 7a0e4c82ad0c..cc8f48aa162b 100644
-> > --- a/rust/kernel/lib.rs
-> > +++ b/rust/kernel/lib.rs
-> > @@ -59,6 +59,7 @@
-> >  pub mod of;
-> >  pub mod page;
-> >  pub mod pid_namespace;
-> > +pub mod platform;
-> >  pub mod prelude;
-> >  pub mod print;
-> >  pub mod rbtree;
-> > diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-> > new file mode 100644
-> > index 000000000000..868cfddb75a2
-> > --- /dev/null
-> > +++ b/rust/kernel/platform.rs
-> > @@ -0,0 +1,222 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +//! Abstractions for the platform bus.
-> > +//!
-> > +//! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
-> > +
-> > +use crate::{
-> > +    bindings, container_of, device, driver,
-> > +    error::{to_result, Result},
-> > +    of,
-> > +    prelude::*,
-> > +    str::CStr,
-> > +    types::{ARef, ForeignOwnable},
-> > +    ThisModule,
-> > +};
-> > +
-> > +/// An adapter for the registration of platform drivers.
-> > +pub struct Adapter<T: Driver>(T);
-> > +
-> > +impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-> > +    type RegType = bindings::platform_driver;
-> > +
-> > +    fn register(
-> > +        pdrv: &mut Self::RegType,
-> > +        name: &'static CStr,
-> > +        module: &'static ThisModule,
-> > +    ) -> Result {
-> > +        pdrv.driver.name = name.as_char_ptr();
-> > +        pdrv.probe = Some(Self::probe_callback);
-> > +
-> > +        // Both members of this union are identical in data layout and semantics.
-> > +        pdrv.__bindgen_anon_1.remove = Some(Self::remove_callback);
-> > +        pdrv.driver.of_match_table = T::OF_ID_TABLE.as_ptr();
-> > +
-> > +        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-> > +        to_result(unsafe { bindings::__platform_driver_register(pdrv, module.0) })
-> > +    }
-> > +
-> > +    fn unregister(pdrv: &mut Self::RegType) {
-> > +        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-> > +        unsafe { bindings::platform_driver_unregister(pdrv) };
-> > +    }
-> > +}
-> > +
-> > +impl<T: Driver + 'static> Adapter<T> {
-> > +    #[cfg(CONFIG_OF)]
-> > +    fn of_id_info(pdev: &Device) -> Option<&'static T::IdInfo> {
-> > +        let table = T::OF_ID_TABLE;
-> > +
-> > +        // SAFETY:
-> > +        // - `table` has static lifetime, hence it's valid for read,
-> > +        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-> > +        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), pdev.as_ref().as_raw()) };
-> > +
-> > +        if raw_id.is_null() {
-> > +            None
-> > +        } else {
-> > +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-> > +            // does not add additional invariants, so it's safe to transmute.
-> > +            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
-> > +
-> > +            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-> > +        }
-> > +    }
-> > +
-> > +    #[cfg(not(CONFIG_OF))]
-> > +    fn of_id_info(_pdev: &Device) -> Option<&'static T::IdInfo> {
-> > +        None
-> > +    }
-> > +
-> > +    // Try to retrieve an `IdInfo` from any of the ID tables; if we can't find one for a particular
-> > +    // table, it means we don't have a match in there. If we don't match any of the ID tables, it
-> > +    // means we were matched by name.
-> > +    fn id_info(pdev: &Device) -> Option<&'static T::IdInfo> {
-> > +        let id = Self::of_id_info(pdev);
-> > +        if id.is_some() {
-> > +            return id;
-> > +        }
-> > +
-> > +        None
-> > +    }
-> 
-> These methods are going to have to be duplicated by every bus type which 
-> can do DT matching (and later ACPI). Can't this be moved to be part of 
-> the common Driver trait.
-> 
-> 
-> I'll say it again for Greg to comment (doubtful he will look at v3 
-> again). Really, I think we should also align the probe method interface 
-> across bus types. That means getting rid of the 'id' in the PCI probe 
-> (or add it for everyone). Most drivers never need it. The typical case 
-> is needing nothing or the matched data. In a quick scan[1], there's 
-> only a handful of cases. So I think probe should match the common 
-> scenario and make retrieving the id match explicit if needed.
+Some bug fixes when DWC generic suspend/resume callbacks are used.
+Drop the first patch of v3 patch-set, since the use case of this patch had been
+covered by #3 commit "PCI: dwc: Clean up some unnecessary codes in dw_pcie_suspend_noirq()".
+To be simple, re-format the codes, drop the first patch of v3 patch-set, and
+only keep last two patches of v3 in v4 or later
 
-If there's a way for the probe callback to get access to the id that
-caused it to match, then it's fine with me to remove it.  But is that
-possible?  Many many drivers encode "stuff" in the id that the driver
-needs to know (quirks, functions, etc.)
+Here is the discussion [1] and final solution [2] of the codes clean up commit.
+[1] https://patchwork.kernel.org/project/linux-pci/patch/1721628913-1449-1-git-send-email-hongxing.zhu@nxp.com/
+[2] https://patchwork.kernel.org/project/linux-pci/patch/20241126073909.4058733-1-hongxing.zhu@nxp.com/
 
-If that's not possible, then it needs to stay.
+v4 changes:
+Drop the first patch("PCI: dwc: Fix resume failure if no EP is connected on some platforms")
+in v3, since it's use-case had been covered by #3 patch of v3.
+Add one Fixes tag into "PCI: dwc: Clean up some unnecessary codes in dw_pcie_suspend_noirq()".
+Refer to Damien's comments, let ret test go inside the "else" and remove the
+initialization of ret to 0 declaration. Thanks.
 
-thanks,
+v3 changes:
+Regarding the discussion listed above[2].
+Resend the patch-set after adding one more codes clean up patch together.
 
-greg k-h
+v2 changes:
+Thanks for Manivannan's review.
+- Refine the subject of second patch and add
+  "Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>"
+- In first patch, update the commit message and move one comment into
+  proper place.
+  BTW, Manivannan found another potential issue that suspend is entry but
+  the link is in L1SS stat in v1 review. This is a new story. And it's better
+  to be verified and fixed by another commit later.
+v2: https://patchwork.kernel.org/project/linux-pci/cover/1728539269-1861-1-git-send-email-hongxing.zhu@nxp.com/
+
+[PATCH v4 1/2] PCI: dwc: Always stop link in the
+[PATCH v4 2/2] PCI: dwc: Clean up some unnecessary codes in
+
+drivers/pci/controller/dwc/pcie-designware-host.c | 28 ++++++++++++++++++----------
+drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+2 files changed, 19 insertions(+), 10 deletions(-)
+
 
