@@ -1,463 +1,416 @@
-Return-Path: <linux-pci+bounces-17987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 072B89EA8A9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 07:18:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FD559EA8D0
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 07:38:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B51DB28516A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 06:18:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04473282B03
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 06:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590E4228397;
-	Tue, 10 Dec 2024 06:18:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BCC522B8D1;
+	Tue, 10 Dec 2024 06:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hp74BJyj"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3G5NnlQk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2049.outbound.protection.outlook.com [40.107.223.49])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2081.outbound.protection.outlook.com [40.107.237.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A40D227560
-	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 06:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435F114A0AA;
+	Tue, 10 Dec 2024 06:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733811514; cv=fail; b=ColILq1XHlsxK+ORTIp7S07AuN7i0UQ4CjjDDE60uniSJwlT7HfsN1UbALcOS1OHN4jC3NRyRRVZk/6YiWmWncuyWH9MYld41u/8R25WnYgfZSQVkTZPvg6bdJI6fHD7hmDsULgHfzqCAPb040xhYR73KJkCIrXL8H18rJ0jduk=
+	t=1733812678; cv=fail; b=nWjdnepj4268WwXH3efY4kVVP927fdyP5x7T3hijlgZBbO0CDXa/VSCIdX/vdVIOsSZlc2hBnYUmXCmaQbE0B0zwlmRYcgfJPq2E4cOcnXOvl6e5/W4Whz32DLikSOGFR19DTIuwQGmiZWH38wCDjlBqFCjExdXw41/w/yIxvZs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733811514; c=relaxed/simple;
-	bh=kE8groECKBQ9CEQYSyQ8zvovehZPPM8UF8EUsG9nzS0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mXIx8Gwk2NHYHhQcBy22t0+xFnaWvtVpZdlD45OFshoxSaPv0d5EWfBqzzmb3750wzyeKbYF83CkcSFN9EQtl68ijPdFnbUhIPYj0V/2xHMXKHbkgKlZPIlloU36cnIsCcbnUKW2rY5Ck+GI8XpsbxnRXi1uAxCKA6md7gyz1MU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hp74BJyj; arc=fail smtp.client-ip=40.107.223.49
+	s=arc-20240116; t=1733812678; c=relaxed/simple;
+	bh=mPpENjrvlweAt/aifB4R+Qc9hLVgiMZBmqKxmXW6HH8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ctm/t3Z7A8BWByYAGENXJYYzF0mXSyPo/c/s7PaOorlRWkPKtaHCkwAcadN9N60ps3RROzW5xRPSQOix0Tm6gbs9PKVlvl3QhLkCVw2aci6m33vmqjVQpPm4t40GGrG/x37EPpumNcf55GuHp9Cl0oO0F7IbptZ/fo4Lz2bkF50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3G5NnlQk; arc=fail smtp.client-ip=40.107.237.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m0rOp9xUacZhWRgf29cbY7VUcXQhwIpyXnwMEhaeZw5GThPJwgV6aUj5RFiNymgSF8uQjiONdQlUJY/YFOW8nZQQMuRzsn8dLVuibXCxFrjv6hbyP1j3g4C5Qn27Vdi0a+2vVyHeoluEB15gE5A7Wv3Xu4vvzCXyrsdUWat4rmy6l07U7fr5+x26tA4b+jSj++C/PId0kBU14x61c8ZiMa281rGz+PECyoExJa2qGd1x7wCUsGAGKKa6GFzkbGW+qmbItNKbbhugGA4PEFdAzbw8wHp5nnvNZ05bMFYFX7qtWvK0LF3in5MKP8GTTMlFqZ3Ck2vwP3OCayYDNgBj4A==
+ b=lIbhjQGKKNV6h/m8MmMUpvuY/1EAWwpezmtuiMbuEZ5P19eDjqBatJiBNbzQdoquYAgLtFHGoRQ6QYQ011OjXAr83slXhxyEEftVcSR9lBdRPe30dmAhxE+tnCqelrs903GeZ/GB1NY0NXlZzBtsmAU16g6V4Ko/JpFpGr550YYqLMV9W2qxYrg+6zs8uKF2VdUnigrcF2YYVVKKLZp5GQ6C172rQnZM0xuCvqoNHqgbhcCOoRq1XFWaUivA7Xg/mKFuxSOD1Yct1BfgwrYgFR8nB1IZtWpZU88PUz2cmVT/PndXmJfNSY4Pugql64v5EIWz+1S9VLl8EJk5Gr0sEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A6bHGRLAVqkD8pRgrhDfGKQIIpXj3uaUYobKaPWCQIQ=;
- b=jH4CGmYILfJTwlJBBZ2lLF0MKPcAmLzXYP+xH0wCzV6nVXqAI7IW2UhqY053GMPfXIl5JfSO4fFWz5FEaLEFACPF1+StY19GOmNI7gNQSk0Ue12zaGJplf8zEBmi2PiBwiuOyXOxFNCNcyDroizblsx24khp5xkPxb9Un90EDcrJDT70LtxAovIql6jU/GeL22TgbKZk8MM/QlDf9x7rEE9CpWq6R2/eEi0mC6m3vQjae+STALsXf45xkSKoBeo+L9Do2DIFpHPntacrftHGU3P/pzP8alQrmcl657xc88LxHlWHUCPwgygUp2EIcNaeRKMtnOZh1C0pkBfD0LQ2rQ==
+ bh=J+ZeVIcAbmThO/E4IByAPqxvkwi5C2mNesWKHR/yeEg=;
+ b=FKzuCelxLGXIKGSfIXJ1lphnhNhuM1TDTD7UTpOzfDiKH1hS2SP/fLqeysB1LdIeLA1i30uidrYNpup327WS4RIE3exDAOGF1a9Ns1sDNn+1P2iZpIiQJuomHLxmHLUJBBuIhIiKJZsf4W7kW7915c1yBs0nQWRKRS8BvxcB+QEq/ndwlY5HamehMDxB7q5dovTUXjzuturoRO25Wl97VEXxX82IIZZ10b0gh2xQE5LIeNxqPraqgxBon6x4DT9t85DhAjnZP0Pq8Az27jMdi4A3KXdUzBWgg0rn/lfOtw8uOK4InClvKqH5s5F9QfBgMeQUmYW/5Kg0LZ/Qio7G0Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A6bHGRLAVqkD8pRgrhDfGKQIIpXj3uaUYobKaPWCQIQ=;
- b=hp74BJyjjyeOSNHJfkIVEHSPoYFogvEAuXqkYUIM6un0h/M9cQOgFRCg+cx8AfXIl+4jiENZtKzaDYIeXH9BHYNJuizVV8B/CNbuK0DKP7FLI4FChoQWK3pYk5hciJFC8XD9LSTrP4xM8BALA04hhLw/zPXkwI8cEtOJhO2hk9M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by IA1PR12MB7711.namprd12.prod.outlook.com (2603:10b6:208:421::12) with
+ bh=J+ZeVIcAbmThO/E4IByAPqxvkwi5C2mNesWKHR/yeEg=;
+ b=3G5NnlQkomBDQZh3UybWkv2N7ujBgn97QarICKb9kZgSnoFxWeF9tqhzTePm1mip3CMMZWJWWW1Jesx0acX0DAn1RbvzsAZYAUEUTpeCdCYAaaPHAzRaS3hKgMT8LiXJVbLtI9duKBwPRg9OB/UUcoV0V4muklzuAsQ7xpuGtTY=
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
+ by DM6PR12MB4420.namprd12.prod.outlook.com (2603:10b6:5:2a7::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.14; Tue, 10 Dec
- 2024 06:18:27 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%7]) with mapi id 15.20.8230.010; Tue, 10 Dec 2024
- 06:18:27 +0000
-Message-ID: <4a50bcf4-89d0-466b-a27d-6036882e5fc3@amd.com>
-Date: Tue, 10 Dec 2024 17:18:22 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 04/11] PCI/IDE: Selective Stream IDE enumeration
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Tue, 10 Dec
+ 2024 06:37:52 +0000
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3%6]) with mapi id 15.20.8207.014; Tue, 10 Dec 2024
+ 06:37:52 +0000
+From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+To: Rob Herring <robh@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com"
+	<jingoohan1@gmail.com>, "Simek, Michal" <michal.simek@amd.com>, "Gogada,
+ Bharat Kumar" <bharat.kumar.gogada@amd.com>
+Subject: RE: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MDB
+ PCIe Root Port Bridge
+Thread-Topic: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MDB
+ PCIe Root Port Bridge
+Thread-Index: AQHbRX/9tKefBNodzkOGfTPvQMzdCrLUl76AgAD++PCACXYaAA==
+Date: Tue, 10 Dec 2024 06:37:52 +0000
+Message-ID:
+ <SN7PR12MB72014E558437E5B6E630E72E8B3D2@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20241203123608.2944662-1-thippeswamy.havalige@amd.com>
+ <20241203123608.2944662-2-thippeswamy.havalige@amd.com>
+ <20241203144101.GA1756254-robh@kernel.org>
+ <SN7PR12MB7201C658D71FDB5D8FD891838B372@SN7PR12MB7201.namprd12.prod.outlook.com>
+In-Reply-To:
+ <SN7PR12MB7201C658D71FDB5D8FD891838B372@SN7PR12MB7201.namprd12.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
-Cc: linux-pci@vger.kernel.org, gregkh@linuxfoundation.org
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY4P282CA0008.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:a0::18) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|DM6PR12MB4420:EE_
+x-ms-office365-filtering-correlation-id: e1728bf6-f7de-4b8c-4e14-08dd18e52c18
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?grO79wZKPTwGwcbe5WW2jNiQwEXm7E4ydB61ybQNqIFs+nW5C42vr8XrOTns?=
+ =?us-ascii?Q?B1jYmGWaIr5d9m2e3UMtq9drvh2Pho3SgngF20dKYyyNfhalIldufQX1vIFT?=
+ =?us-ascii?Q?tE1nwyOEj7KUlbOeicg049xTBnET/NiUDYsY/2BLxE+vvGG5KnE7VwqQVxdD?=
+ =?us-ascii?Q?zwSP6LuICE0oNipqxta/h0jpH8I1SFB6t81BNUtDamPRFF9Auf7viH94LdXl?=
+ =?us-ascii?Q?9oo8t8SFshyH9UmCmgWA89zbeny8Zd3sMvhX+/kiJ89Tgyn7VLBVg4HPT6MM?=
+ =?us-ascii?Q?4dMBVEAgfpxvxVYkmnENslc3CnUTzf4tcvoe5Had04GKfYcSvuFtkgf+7ATD?=
+ =?us-ascii?Q?4cyOa3tq6pbKBDpLjCF71/Gs1kqIVK+RiJ6EsPznxOxJ7Ymw+50jPifqFDhJ?=
+ =?us-ascii?Q?ykI0tgw46bZ//9vehABUdL+cU5a369CoTBTYrMYhfTIjFoVg58F9xvx3zIZ/?=
+ =?us-ascii?Q?MhlkWs989LpSMhifUMwB2sJfe9+e/ZqNms2l9Ae6vYtDFqhy0DAHUJJmu6tQ?=
+ =?us-ascii?Q?74/rLmT8ZDsQzbgm02HIcfeVZjG2lKlClDAZcLBhQcTWg4bDnMZ5hmiJMaGi?=
+ =?us-ascii?Q?frGJV2vkWRCXXVANp+Xf+yJMayyPzCU5l6ReDrsTPyDHoT2PcTsOQgsTq58N?=
+ =?us-ascii?Q?Z4VtDjP/CMHBpyDsoywWFEfpzI8ZsxsFrKTORHMV1iYbR28OVB3NqVMGkTt7?=
+ =?us-ascii?Q?ufNpLU2RD/0ltnMDrhQYm0w70EpVOKiEJgDWInAnInnRRJh+iSzPAy8Uopd4?=
+ =?us-ascii?Q?cf9hwD5guOGKDIdOPGy2qlRCVBMI/sOL3/v7tjd6eFSzgnRupAaDreDYE4yF?=
+ =?us-ascii?Q?3H8B0QYRa+sWblxSw/p1Y8C0hRsryiYoIZ9Gpz7TpZEZ5UZZbQGgZXav2JMw?=
+ =?us-ascii?Q?jwL8PZMaotDeAvjnQeeS430C9Mqs+LS9bzashxB6YwzF392s/UzMnTENMutN?=
+ =?us-ascii?Q?P0gHPW5X5EqoYl9NrWGie6PpSy8q00ijdAB0YwY/0PV/8lwo/52Ein6oDlhU?=
+ =?us-ascii?Q?udqkPluahpiLHSGl3thQMgm7ng2wYNgvCBwBCQfsbZHFJYfIZBOqRtYGMxEM?=
+ =?us-ascii?Q?sIp0EosvkwRCqXkh0xsg/0IM17sE0rfHhkhEDD2IvhVyteHvl2IaCU/b5TRA?=
+ =?us-ascii?Q?AcAf5kqNV59awYDg7f+FeYNLVpaIBaoywD8Jg1M93+IVF9tVCUFlXTBSsrwY?=
+ =?us-ascii?Q?JwPz+ELruGBZrDKBFGixkJQdSTKdxPrqYXVidz1cnDt/qKIvQGmy/pdR8Xpk?=
+ =?us-ascii?Q?uW8h0MwAxaJCMuewhLjwQzUmCuIwCh+LIZJ7iwY5oIYU3XItjq9L9eMxObwj?=
+ =?us-ascii?Q?v9CoCNG2vyYQccBeABl+dxqBBiLgUQWOLSKtzQFtep50QJvEQ91kPZe2jcpb?=
+ =?us-ascii?Q?OPULyTs=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?uVsY/mUdnuH0LpvAqywWoxQqBHdEJovow35ZdT6QTbYsQiQDxvGwNbmQMFp5?=
+ =?us-ascii?Q?xG6GmDu7RSuIqEEpjWrt/my6hZVo0k+9MLO09XK2ZS8w2UnCdT6258A1bgrB?=
+ =?us-ascii?Q?tlqci+G+/mnjeJmO7En4uHruYCD08GJp9Nv9V3qG9qJVhnFLvVg6O5wAn0ms?=
+ =?us-ascii?Q?LTebCbokFlOcL3MtwwbWKRJw0S8z6PMbM7eezQz52B9bLuB05oGZHs7vPatQ?=
+ =?us-ascii?Q?XM60kWd4XC4qnNGFNfjzMqzknC4+VeYdfzXpkQJl7XcviP/GA6CY5cydz9k+?=
+ =?us-ascii?Q?Bvq5fvJ/LOpfu112fAGC9oLOySbB2sxjL/zuxu1a8XICsdclcpUNKXhIdnXn?=
+ =?us-ascii?Q?n70IoR9dUX1+oQKouqXkuzy70uU1D1HiEH0PKzdnNTggPF6QNRjlJLp65aaD?=
+ =?us-ascii?Q?c5z2NMEpZLCNE9G4uTnILrh+l7PyBsOadTn686WuB4vH6Yah304d9maZr90a?=
+ =?us-ascii?Q?VD0MlsN9F4iEgukMaFsSUA06yRMV4DCgD1Rw0UWyxsgjQ+Wvkh12jJQgWO8f?=
+ =?us-ascii?Q?giLU12B/OPXeL8PrVRfjxVw4y5H97w+3Y8CekSa5Qhdif2CHimEXYkr3zk8H?=
+ =?us-ascii?Q?T5xfbn0zv5eeuNecBbzB2KaE5NhK9tTDHgHf+yzxFuC3TN6XGT/3f1HJ7WgA?=
+ =?us-ascii?Q?e7X+SgvbRExy1IDq92POdvYC4IHzxxcQ72MzhM9PYj7iHy8nBZxK46u/FOpU?=
+ =?us-ascii?Q?hTWAyYG/e1LK7ghuZpTelu9ua7aw8OvZKIfhCto8uMQzowNND7purO5f30Zs?=
+ =?us-ascii?Q?oUHhi1SVoammR4iweS453TMIbsdfqOP7PrQ+6vbgktVUqTKdDarHvAnDi6c0?=
+ =?us-ascii?Q?kCLo4uYflJ0yen/fwpXtsq75P/aWb1/0zpZw7HFXZ2DlLax4JlfPipiqXAW+?=
+ =?us-ascii?Q?Sdb3mriCsTOEh7tX7dHuoxDIb0m2aKAIXwAovxrLGISezThA6AHcVsBgDhIn?=
+ =?us-ascii?Q?et2qx6fal5zHCEJfHm44FTY2gTnOiGwRsh+yW50Yi/NoT0c+ROMdfPzw4BSG?=
+ =?us-ascii?Q?pvzDRCxbr0bAViBpjrgeC1Y26WZhaRxQAz5MXNFWTdgdalA/lUREYUbbebUU?=
+ =?us-ascii?Q?zmMS93miGX6DNYEt4FlWj3SxPzX3D73vik/CU0f0NiHXziP939fa4qAPQxn9?=
+ =?us-ascii?Q?Y1yel9BPVIDjmY6hLYGbARCBhUsoic655ok3WdJHGoYYpSGEP/CNz5x51C02?=
+ =?us-ascii?Q?VKl+Um/UdGSXKBqisTTkQJKGu3Hh8Ntex43GkjPzeKBVTGJ+wFmgN/Z2Otol?=
+ =?us-ascii?Q?DPefVzpTefnIwtkxs3yJ5PLC5gItkgx0/U0Ruzb1Ec+LxqbTm4UXOzug6LrC?=
+ =?us-ascii?Q?zRzTDdAQZAUGIbOzLymfjYWTVIMJtCPB1c/n2AgCCM9Ip/3vz9zzPecaY18M?=
+ =?us-ascii?Q?bN3eqMWz2yXcO0Dn/p8GGjdGZdXx9yVXsXvadOdsCSjOrjuJKi50eCToPX5V?=
+ =?us-ascii?Q?O+Eyk+VKFeAkeTLaOn+QjnbFEsC2gt/mhG7B6IGDMCWV4BfLBpLonhxXjoL1?=
+ =?us-ascii?Q?EQCIqBU0B+UatF7gAX9ya07MWMGaqrf07ClLZs+xOmI+ljg6pchMIvE622Zp?=
+ =?us-ascii?Q?KKDtXFDfws3uVlqkMPA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|IA1PR12MB7711:EE_
-X-MS-Office365-Filtering-Correlation-Id: 07a4c7fa-5e81-4ddb-c5e4-08dd18e275da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGNzTUd6RDVYT1BSOUZXOHpFU09BQ1IvSG1RYVB3ZFlQUHBTN0ppNWkxZ242?=
- =?utf-8?B?Q25zaXh4ZVp4TUJjenNybnhweGdCUVl1WXRxRllKdmlaaFpzU1QrWENXKzUw?=
- =?utf-8?B?VlM4OU92NFdEbFF3eU9CdE5QVkQwWGZBTzNxeXZGNXN2YUlkZER2TEVnSWNz?=
- =?utf-8?B?TVlDdG0yS0ZIWVViYmtOelBpWmorOWgvdXp4U2hidGhsQmRvREx0NitNdjdm?=
- =?utf-8?B?dVdteURGWEJ2eEUzeWgvcHdxZlFNT2x5SENGN1lzRU5LbWJ5QWxyWlFTWDRv?=
- =?utf-8?B?K1Q4K3dKRVkrUUNSRXB6SHU3TlhTZ0Jvcm5jUExIayt3NHU0Q1hXSmZUMEt0?=
- =?utf-8?B?RDNwb2FsVE9LQmV0c01YNm1oM0hGaCttRzdvUDNXR1RLTWFkWG1wQzBYa2FO?=
- =?utf-8?B?eDBqeWtiRzdoUSs4RlZjSTZsa2lXTUJWVmFCb1pGVEliTXA2aGVsaURmRktW?=
- =?utf-8?B?cm1rbmZyOTRqeVN1WlYrR0RWaXp4TkplMXVJRGhpRURZN1VUTEtCM25GcHlE?=
- =?utf-8?B?aTQ5OGZZZ1Y0R3h2T3NaYTAwb0c4cWNGRmtXT2lRSmdNL041L25aUCtOR2hH?=
- =?utf-8?B?emxaVkxzTUZWTzVLL3lJK0hYd3dZc0tkWlNTZVdlemlVd1FXUDZjQmU1Vk10?=
- =?utf-8?B?Vzd4ODRROXBmYnNaWGZqK0Njb1hhQ2pEOGJDRHJ2OWk4REdMNHRoSDFUaWJv?=
- =?utf-8?B?RXV6ZXhmZW84NGV5c2wrVHI2Nk9vNmNoUDk4dE9iT2RraWtkdjhRVmFUNTQ3?=
- =?utf-8?B?MmhDdWRhQm1ORHFNVjZ6SzhLalV6ZFpuZVZZUUg3OXEzY2thTWtkdnNaUlRB?=
- =?utf-8?B?NEo1Vzliem4vZ1VOMGc2M2FWQjZzMnd4Z2gzU0RSTVNlRnd3YnhGN1g2NXFN?=
- =?utf-8?B?R3YzbWdtWjh0VTI3OEpjdjFjR0xkdlUzeGZRRzlDQTgzdVk4V0FZL3JneGhu?=
- =?utf-8?B?NlE4SHkzWmFlZ2NRaW9URDljOERiSTV4ejJ3Q2IrSk9DRVFYUnhtQTJmK214?=
- =?utf-8?B?NUVnaDNpRmJraFViVTkvTW9pOW1CMHN6UGRsNDBSRXhFdzhtSXJkYlVZTXh3?=
- =?utf-8?B?VXd6Tk1GRDBrdDNUamsrNElaa2NER1gzRVBISlJZMjNRZnB1L0lFYUthaGR4?=
- =?utf-8?B?dldScTdUOVUyMnh5c3pQS2lyaHpwV3NhZDYrbU9XUUtIMzR4dUFIQXlnNjYy?=
- =?utf-8?B?NDBzRWF4R3FDYXg4cGgyb2xoSm9pNFc4blhBbnRMdXBqSHI4YjdMR09uU0lL?=
- =?utf-8?B?d2s1d0pKcmxQUXNsa1p2Y0UzakNiY1pGeDdYZlQ0ZFFVY1ZoSXZ4YmpmZ1c4?=
- =?utf-8?B?THdOK1AyRkVxT1dmZWpTRkFFd1lKenhrVHJPblJnNm9mb0hsclpMQTFZR2dT?=
- =?utf-8?B?dHRTT2haekZRNGhzWWZjRit4NkJLRDJONkxCUmJnRjY3VmFjMHdqRjVvcUdj?=
- =?utf-8?B?aG5odjN3UEpsSFZKa21lbEUrZXFIb3d0UUhWNnBaaGNvYys0bVpydVo0UzVy?=
- =?utf-8?B?aDlHYUlidjdCSm15TExxWk90b0t5WUZpQVRDSTB4Rlh1eTdRVlB3NGtuSjll?=
- =?utf-8?B?WHJ1dmM3SmdhZW8xRnNyT1NWb1ZCVXZIS3doSGo5dWxrQ1E4TjJHLzJrbGZ5?=
- =?utf-8?B?L1NRcm5QeVNtQnJ0SGZ1WnZ2MVJ5U3c1MHJ5bHAyTnpJMExWMjR4cHdheitI?=
- =?utf-8?B?MkJHckEwZmRxdVlSbExlSVJvRmttK1BjaW1EWXZacWh3ZTE3bTdXbEFzVW9i?=
- =?utf-8?B?SHFIYmYrclRzNW53U2JLNit6Y05WR2o3L2lDait6anQ5cW1RdzhLbXYwdVZw?=
- =?utf-8?B?OGFQMmZkbitWM2xMUExRdz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Sk9xR2wzVXVDYU0vUWdmM2t2ZzlOWXZFUDVKSlA4TDFTS1BPckZUWmFmd0JQ?=
- =?utf-8?B?UkVFNUdQYW44VzlJK3JGMXlRbWV2SUN5S3ptZ21aeTBwbm9kSERrWVRPVklz?=
- =?utf-8?B?MTVsY1VQZkFYdnU4UmNodTZwTGt6ak5jR2dWNVRhbXh4S2NWRC95VmZzL2hp?=
- =?utf-8?B?czAwNVlRN0F3dGFKN3g2dGt5cE1hclpUR1hhQUFROE5rVzEzM0E2emNobVB4?=
- =?utf-8?B?cVZ2b2hhSzVQakhXakRqWTMxc0hST1o4L0pjclRLODM0M0IreTNKeVZmQUhN?=
- =?utf-8?B?VWExMTBJak1yKzdmcFphM1B3cVdCeWVsTWE0bkRlL3RHQ3lFZm9qYTkyWmhH?=
- =?utf-8?B?Wk0yZVhCRFNJR29FYWJGN05aaXpUZ2Jxa2tscUswMDloVFR5cHFNZ3hkcDk1?=
- =?utf-8?B?d09oWEZ4Q21ndmRoZnZvTjJWcW0wU2M2YTdLcnRYTUhBQjVrejJXU0JTSzk0?=
- =?utf-8?B?NlhKMHlHVmNQNVF3NFhvZzRESnNPclkwTWs1VWNWQnhvdG5TVXJQOHhEcVht?=
- =?utf-8?B?Q2thdzdQK0YvTnp2aUJuYTRZdVJ2czNPTkIyWUtXc09MRTFybFZybGdSeFRX?=
- =?utf-8?B?MWROelh0T3o5MDl5OTZlNStKOHhCWFBEVXZjd0JqMGZ4MUxjenBxMXpTaG9X?=
- =?utf-8?B?K1dTVG51cU9Pb1lvemlXcjROekF5aWVDUlNYcWZlWDBnZHRlcTA1MTJBOEpV?=
- =?utf-8?B?Y3NBTzExTzdKY3Q2dW5vdW4ycEt0U3dZalpFY3k1V1JaeW5RM3I1elpDZm1S?=
- =?utf-8?B?UkNLU1ZheTV3NUxRK0M1ckNCcW1ZMlNGZXNSMFFlYThieXNVSnIxR0xGN1oz?=
- =?utf-8?B?VXVkUmIzWVBOVDFHRzZkeGp2R2JYZXRSVjNFUkViRWxtQlFwbXp1YU94K25R?=
- =?utf-8?B?YnBIdCtxYnk0MUhLeEo5OGxMTjRMQ3Fpck03dUhhajMvcnNpeVc2OVBSSjJu?=
- =?utf-8?B?cnFoMWFmdjBpYzlFSFludDZKdlI2Q3RxeU1tOVQ5V2xVVEpSTnRJYWpnQXR6?=
- =?utf-8?B?ZFNYc2NUeUd0ZTB4NEllK3lITnVuYnJnWEM4blU5alJ3OU1mOXVLdHlyem0v?=
- =?utf-8?B?SFJqbGpFdzFsRit3OU5lZzdNd0lkcXNBS0szQVVENlU2TEl4WkhqOVhLdlVS?=
- =?utf-8?B?ZFBDS0JiV0paSEN3ZkluZVl3bUtXNzY5OFlJaWpCZWxCekdWV3NqaU9FOThk?=
- =?utf-8?B?RWZrVnJrMCtUbkxTQm55ditIeUs1MFl1dEQwUFhHL3Y4VDNoczdaeHFCUGdr?=
- =?utf-8?B?RzJwVE95S2hmT3NIMHNxUTZOZDM4WjAxSXhXK0FFMFVyeE9hTFBlM0lSMm1h?=
- =?utf-8?B?QWwvTDI5akg5WkNFNXRZN3VPVUtmcmZnRFI2cnVpd01ld3ZaY1VxUm9reVlD?=
- =?utf-8?B?cWFONUl4ZW5MT3hPSi9KLzFQdmVSL1IrZyt4TVFMYXh5Qk9pWFFGemZ6ck1H?=
- =?utf-8?B?WWpGcGtmckpJamxGU0VHWFFSU1dWZWs2THRRTVducmhXRWNLekpDaVlGSUUw?=
- =?utf-8?B?enNVNFc4TlMrajUzTFR6eXh5K3Y1Wjh4QVBtY29MN2hKZWN6MmIrMHhRdUll?=
- =?utf-8?B?ZTFZMlFnOUNBYVNJTDIzTUx2SFlFanA1ZE9QUXJFM3V1emtuQ0RmNHlWNitU?=
- =?utf-8?B?dmpON2VZRDVEeTZZWnR6V3o5b0xiM3hYNFhMaUE5cnBpTENPWWlNQVpZY0xu?=
- =?utf-8?B?U2FEVEVkNVN3aEsvK0RwdUtyWXg5T3ZnY0dKaTBaM3d6Sm5tOWhZMnlMN212?=
- =?utf-8?B?M1dMZVI3cnRLcUF6R3lvSGUxRm1KZisyVHlVcm10VkpVa0l5L2ZDSG51K2kr?=
- =?utf-8?B?bzZWK1k0QmFCS0lmRzd3M1NxVUU3UTEwdWp6cWlwR0NQOUgzU1YyOFlVMndr?=
- =?utf-8?B?ZllCdXhpUll1RXo3YTR0L2lpK2k4OUI0ZmZhUEJ1Y21WOFhCSk5aajNvcC9D?=
- =?utf-8?B?NTBkZXdrSmJBZlVhQkZCVU81WU1waC9VKzB2USt2cXpkY2U3R2xxaXFoMFMv?=
- =?utf-8?B?TWxzbkxVODR2VWJXcHRhN0VSNHZoYmwwUExEWUlRa2JTNmFETCsza0Q1YUdZ?=
- =?utf-8?B?K01rMXdOaEVxUXEwM1FWNHFzVnhVc054T1VlMnBVeDRESVpKT3dISHprbWRk?=
- =?utf-8?Q?K8gQyysSjU0+8BnLZnwkFbdHW?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07a4c7fa-5e81-4ddb-c5e4-08dd18e275da
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2024 06:18:27.7068
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1728bf6-f7de-4b8c-4e14-08dd18e52c18
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2024 06:37:52.2624
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qpMajl1Wn3w4mJOMEk8okkOZDpUsCSCW1N7bj15caOLahvqYZibD7dLOOfgRhodz7DEl1BMExLlFAdArKpzPbw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7711
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xDQrsW2ZNzYRYMTsI3RWsU17Kpq8+n6EycMFaNxNJ9O5uJGJs1HShUf8DP29apjQRKqeldByLau/Md1GFzfyTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4420
 
-On 6/12/24 09:23, Dan Williams wrote:
-> Link encryption is a new PCIe capability defined by "PCIe 6.2 section
-> 6.33 Integrity & Data Encryption (IDE)". While it is a standalone port
-> and endpoint capability, it is also a building block for device security
-> defined by "PCIe 6.2 section 11 TEE Device Interface Security Protocol
-> (TDISP)". That protocol coordinates device security setup between the
-> platform TSM (TEE Security Manager) and device DSM (Device Security
-> Manager). While the platform TSM can allocate resources like stream-ids
-> and manage keys, it still requires system software to manage the IDE
-> capability register block.
-> 
-> Add register definitions and basic enumeration for a "selective-stream"
-> IDE capability, a follow on change will select the new CONFIG_PCI_IDE
-> symbol. Note that while the IDE specifications defines both a
-> point-to-point "Link" stream and a root-port-to-endpoint "Selective"
-> stream, only "Selective" is considered for now for platform TSM
-> coordination.
-> 
-> Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->   drivers/pci/Kconfig           |    3 +
->   drivers/pci/Makefile          |    1
->   drivers/pci/ide.c             |   73 ++++++++++++++++++++++++++++++++++++
->   drivers/pci/pci.h             |    6 +++
->   drivers/pci/probe.c           |    1
->   include/linux/pci.h           |    5 ++
->   include/uapi/linux/pci_regs.h |   84 +++++++++++++++++++++++++++++++++++++++++
->   7 files changed, 172 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/pci/ide.c
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 2fbd379923fd..4e5236c456f5 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -121,6 +121,9 @@ config XEN_PCIDEV_FRONTEND
->   config PCI_ATS
->   	bool
->   
-> +config PCI_IDE
-> +	bool
-> +
->   config PCI_DOE
->   	bool
->   
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 67647f1880fb..6612256fd37d 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -34,6 +34,7 @@ obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
->   obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
->   obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
->   obj-$(CONFIG_PCI_DOE)		+= doe.o
-> +obj-$(CONFIG_PCI_IDE)		+= ide.o
->   obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
->   obj-$(CONFIG_PCI_NPEM)		+= npem.o
->   obj-$(CONFIG_PCIE_TPH)		+= tph.o
-> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> new file mode 100644
-> index 000000000000..a0c09d9e0b75
-> --- /dev/null
-> +++ b/drivers/pci/ide.c
-> @@ -0,0 +1,73 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-> +
-> +/* PCIe 6.2 section 6.33 Integrity & Data Encryption (IDE) */
-> +
-> +#define dev_fmt(fmt) "PCI/IDE: " fmt
-> +#include <linux/pci.h>
-> +#include "pci.h"
-> +
-> +static int sel_ide_offset(u16 cap, int stream_id, int nr_ide_mem)
-> +{
-> +	return cap + stream_id * PCI_IDE_SELECTIVE_BLOCK_SIZE(nr_ide_mem);
-> +}
-> +
-> +void pci_ide_init(struct pci_dev *pdev)
-> +{
-> +	u16 ide_cap, sel_ide_cap;
-> +	int nr_ide_mem = 0;
-> +	u32 val = 0;
-> +
-> +	if (!pci_is_pcie(pdev))
-> +		return;
-> +
-> +	ide_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
-> +	if (!ide_cap)
-> +		return;
-> +
-> +	/*
-> +	 * Check for selective stream capability from endpoint to root-port, and
-> +	 * require consistent number of address association blocks
-> +	 */
-> +	pci_read_config_dword(pdev, ide_cap + PCI_IDE_CAP, &val);
-> +	if ((val & PCI_IDE_CAP_SELECTIVE) == 0)
-> +		return;
-> +
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) {
-> +		struct pci_dev *rp = pcie_find_root_port(pdev);
-> +
-> +		if (!rp->ide_cap)
-> +			return;
-> +	}
-> +
-> +	if (val & PCI_IDE_CAP_LINK)
-> +		sel_ide_cap = ide_cap + PCI_IDE_LINK_STREAM +
-> +			      (PCI_IDE_CAP_LINK_TC_NUM(val) + 1) *
-> +				      PCI_IDE_LINK_BLOCK_SIZE;
-> +	else
-> +		sel_ide_cap = ide_cap + PCI_IDE_LINK_STREAM;
-> +
-> +	for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val); i++) {
-> +		if (i == 0) {
-> +			pci_read_config_dword(pdev, sel_ide_cap, &val);
-> +			nr_ide_mem = PCI_IDE_SEL_CAP_ASSOC_NUM(val);
-> +		} else {
-> +			int offset = sel_ide_offset(sel_ide_cap, i, nr_ide_mem);
-> +
-> +			pci_read_config_dword(pdev, offset, &val);
-> +
-> +			/*
-> +			 * lets not entertain devices that do not have a
-> +			 * constant number of address association blocks
+Hi Robh,
 
-But why? It is quite easy to support those. Yeah, won't be able to cache 
-nr_ide_mem and will have to read more configspace but a specific 
-selected stream offset can live in pci_ide from 8/11. Thanks,
+Thank you for your comments. I mistakenly mentioned Bjorn in my earlier mes=
+sage.
+My apologies for the oversight.
 
-> +			 */
-> +			if (PCI_IDE_SEL_CAP_ASSOC_NUM(val) != nr_ide_mem) {
-> +				pci_info(pdev, "Unsupported Selective Stream %d capability\n", i);
-> +				return;
-> +			}
-> +		}
-> +	}
-> +
-> +	pdev->ide_cap = ide_cap;
-> +	pdev->sel_ide_cap = sel_ide_cap;
-> +	pdev->nr_ide_mem = nr_ide_mem;
-> +}
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2e40fc63ba31..0305f497b28a 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -452,6 +452,12 @@ static inline void pci_npem_create(struct pci_dev *dev) { }
->   static inline void pci_npem_remove(struct pci_dev *dev) { }
->   #endif
->   
-> +#ifdef CONFIG_PCI_IDE
-> +void pci_ide_init(struct pci_dev *dev);
-> +#else
-> +static inline void pci_ide_init(struct pci_dev *dev) { }
-> +#endif
-> +
->   /**
->    * pci_dev_set_io_state - Set the new error state if possible.
->    *
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2e81ab0f5a25..e22f515a8da9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2517,6 +2517,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->   	pci_rcec_init(dev);		/* Root Complex Event Collector */
->   	pci_doe_init(dev);		/* Data Object Exchange */
->   	pci_tph_init(dev);		/* TLP Processing Hints */
-> +	pci_ide_init(dev);		/* Link Integrity and Data Encryption */
->   
->   	pcie_report_downtraining(dev);
->   	pci_init_reset_methods(dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index db9b47ce3eef..50811b7655dd 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -530,6 +530,11 @@ struct pci_dev {
->   #endif
->   #ifdef CONFIG_PCI_NPEM
->   	struct npem	*npem;		/* Native PCIe Enclosure Management */
-> +#endif
-> +#ifdef CONFIG_PCI_IDE
-> +	u16		ide_cap;	/* Link Integrity & Data Encryption */
-> +	u16		sel_ide_cap;	/* - Selective Stream register block */
-> +	int		nr_ide_mem;	/* - Address range limits for streams */
->   #endif
->   	u16		acs_cap;	/* ACS Capability offset */
->   	u8		supported_speeds; /* Supported Link Speeds Vector */
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1601c7ed5fab..9635b27d2485 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -748,7 +748,8 @@
->   #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
->   #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
->   #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
-> +#define PCI_EXT_CAP_ID_IDE	0x30    /* Integrity and Data Encryption */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
->   
->   #define PCI_EXT_CAP_DSN_SIZEOF	12
->   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1213,4 +1214,85 @@
->   #define PCI_DVSEC_CXL_PORT_CTL				0x0c
->   #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
->   
-> +/* Integrity and Data Encryption Extended Capability */
-> +#define PCI_IDE_CAP			0x4
-> +#define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
-> +#define  PCI_IDE_CAP_SELECTIVE		0x2  /* Selective IDE Streams Supported */
-> +#define  PCI_IDE_CAP_FLOWTHROUGH	0x4  /* Flow-Through IDE Stream Supported */
-> +#define  PCI_IDE_CAP_PARTIAL_HEADER_ENC 0x8  /* Partial Header Encryption Supported */
-> +#define  PCI_IDE_CAP_AGGREGATION	0x10 /* Aggregation Supported */
-> +#define  PCI_IDE_CAP_PCRC		0x20 /* PCRC Supported */
-> +#define  PCI_IDE_CAP_IDE_KM		0x40 /* IDE_KM Protocol Supported */
-> +#define  PCI_IDE_CAP_ALG(x)		(((x) >> 8) & 0x1f) /* Supported Algorithms */
-> +#define  PCI_IDE_CAP_ALG_AES_GCM_256	0    /* AES-GCM 256 key size, 96b MAC */
-> +#define  PCI_IDE_CAP_LINK_TC_NUM(x)	(((x) >> 13) & 0x7) /* Link IDE TCs */
-> +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Selective IDE Streams */
-> +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_MASK	0xff0000
-> +#define  PCI_IDE_CAP_TEE_LIMITED	0x1000000 /* TEE-Limited Stream Supported */
-> +#define PCI_IDE_CTL			0x8
-> +#define  PCI_IDE_CTL_FLOWTHROUGH_IDE	0x4	/* Flow-Through IDE Stream Enabled */
-> +#define PCI_IDE_LINK_STREAM		0xc
-> +#define PCI_IDE_LINK_BLOCK_SIZE		8
-> +/* Link IDE Stream block, up to PCI_IDE_CAP_LINK_TC_NUM */
-> +/* Link IDE Stream Control Register */
-> +#define  PCI_IDE_LINK_CTL_EN		 0x1	/* Link IDE Stream Enable */
-> +#define  PCI_IDE_LINK_CTL_TX_AGGR_NPR(x) (((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
-> +#define  PCI_IDE_LINK_CTL_TX_AGGR_PR(x)	 (((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
-> +#define  PCI_IDE_LINK_CTL_TX_AGGR_CPL(x) (((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
-> +#define  PCI_IDE_LINK_CTL_PCRC_EN	 0x100	/* PCRC Enable */
-> +#define  PCI_IDE_LINK_CTL_PART_ENC(x)	 (((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
-> +#define  PCI_IDE_LINK_CTL_ALG(x)	 (((x) >> 14) & 0x1f) /* Selected Algorithm */
-> +#define  PCI_IDE_LINK_CTL_TC(x)		 (((x) >> 19) & 0x7)  /* Traffic Class */
-> +#define  PCI_IDE_LINK_CTL_ID(x)		 (((x) >> 24) & 0xff) /* Stream ID */
-> +#define  PCI_IDE_LINK_CTL_ID_MASK	 0xff000000
-> +
-> +
-> +/* Link IDE Stream Status Register */
-> +#define  PCI_IDE_LINK_STS_STATUS(x)	((x) & 0xf) /* Link IDE Stream State */
-> +#define  PCI_IDE_LINK_STS_RECVD_INTEGRITY_CHECK	0x80000000 /* Received Integrity Check Fail Msg */
-> +/* Selective IDE Stream block, up to PCI_IDE_CAP_SELECTIVE_STREAMS_NUM */
-> +#define PCI_IDE_SELECTIVE_BLOCK_SIZE(x)  (20 + 12 * (x))
-> +/* Selective IDE Stream Capability Register */
-> +#define  PCI_IDE_SEL_CAP		 0
-> +#define  PCI_IDE_SEL_CAP_ASSOC_NUM(x)	 ((x) & 0xf) /* Address Association Register Blocks Number */
-> +#define  PCI_IDE_SEL_CAP_ASSOC_MASK	 0xf
-> +/* Selective IDE Stream Control Register */
-> +#define  PCI_IDE_SEL_CTL		 4
-> +#define   PCI_IDE_SEL_CTL_EN		 0x1	/* Selective IDE Stream Enable */
-> +#define   PCI_IDE_SEL_CTL_TX_AGGR_NPR(x) (((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
-> +#define   PCI_IDE_SEL_CTL_TX_AGGR_PR(x)	 (((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
-> +#define   PCI_IDE_SEL_CTL_TX_AGGR_CPL(x) (((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
-> +#define   PCI_IDE_SEL_CTL_PCRC_EN	 0x100	/* PCRC Enable */
-> +#define   PCI_IDE_SEL_CTL_CFG_EN	 0x200	/* Selective IDE for Configuration Requests */
-> +#define   PCI_IDE_SEL_CTL_PART_ENC(x)	 (((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
-> +#define   PCI_IDE_SEL_CTL_ALG(x)	 (((x) >> 14) & 0x1f) /* Selected Algorithm */
-> +#define   PCI_IDE_SEL_CTL_TC(x)		 (((x) >> 19) & 0x7)  /* Traffic Class */
-> +#define   PCI_IDE_SEL_CTL_DEFAULT	 0x400000 /* Default Stream */
-> +#define   PCI_IDE_SEL_CTL_TEE_LIMITED	 (1 << 23) /* TEE-Limited Stream */
-> +#define   PCI_IDE_SEL_CTL_ID_MASK	 0xff000000
-> +#define   PCI_IDE_SEL_CTL_ID_MAX	 255
-> +/* Selective IDE Stream Status Register */
-> +#define  PCI_IDE_SEL_STS		 8
-> +#define   PCI_IDE_SEL_STS_STATUS(x)	((x) & 0xf) /* Selective IDE Stream State */
-> +#define   PCI_IDE_SEL_STS_RECVD_INTEGRITY_CHECK	0x80000000 /* Received Integrity Check Fail Msg */
-> +/* IDE RID Association Register 1 */
-> +#define  PCI_IDE_SEL_RID_1		 12
-> +#define   PCI_IDE_SEL_RID_1_LIMIT_MASK	 0xffff00
-> +/* IDE RID Association Register 2 */
-> +#define  PCI_IDE_SEL_RID_2		 16
-> +#define   PCI_IDE_SEL_RID_2_VALID	 0x1
-> +#define   PCI_IDE_SEL_RID_2_BASE_MASK	 0x00ffff00
-> +#define   PCI_IDE_SEL_RID_2_SEG_MASK	 0xff000000
-> +/* Selective IDE Address Association Register Block, up to PCI_IDE_SEL_CAP_ASSOC_NUM */
-> +#define  PCI_IDE_SEL_ADDR_1(x)		     (20 + (x) * 12)
-> +#define   PCI_IDE_SEL_ADDR_1_VALID	     0x1
-> +#define   PCI_IDE_SEL_ADDR_1_BASE_LOW_MASK   0x000fff0
-> +#define   PCI_IDE_SEL_ADDR_1_BASE_LOW_SHIFT  20
-> +#define   PCI_IDE_SEL_ADDR_1_LIMIT_LOW_MASK  0xfff0000
-> +#define   PCI_IDE_SEL_ADDR_1_LIMIT_LOW_SHIFT 20
-> +/* IDE Address Association Register 2 is "Memory Limit Upper" */
-> +/* IDE Address Association Register 3 is "Memory Base Upper" */
-> +#define  PCI_IDE_SEL_ADDR_2(x)		(24 + (x) * 12)
-> +#define  PCI_IDE_SEL_ADDR_3(x)		(28 + (x) * 12)
-> +
->   #endif /* LINUX_PCI_REGS_H */
-> 
+Regards,
+Thippeswamy H
 
--- 
-Alexey
-
+> -----Original Message-----
+> From: Havalige, Thippeswamy
+> Sent: Wednesday, December 4, 2024 12:02 PM
+> To: Rob Herring <robh@kernel.org>
+> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> manivannan.sadhasivam@linaro.org; krzk+dt@kernel.org; conor+dt@kernel.org=
+;
+> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
+> <michal.simek@amd.com>; Gogada, Bharat Kumar
+> <bharat.kumar.gogada@amd.com>
+> Subject: RE: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MD=
+B
+> PCIe Root Port Bridge
+>=20
+> Hi Bjorn,
+>=20
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Tuesday, December 3, 2024 8:11 PM
+> > To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
+> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> > manivannan.sadhasivam@linaro.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux- kernel@vger.kernel.org;
+> > jingoohan1@gmail.com; Simek, Michal <michal.simek@amd.com>; Gogada,
+> > Bharat Kumar <bharat.kumar.gogada@amd.com>
+> > Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add AMD Versal2
+> > MDB PCIe Root Port Bridge
+> >
+> > On Tue, Dec 03, 2024 at 06:06:07PM +0530, Thippeswamy Havalige wrote:
+> > > Add AMD Versal2 MDB (Multimedia DMA Bridge) PCIe Root Port Bridge.
+> > >
+> > > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> > > ---
+> > > Changes in v2:
+> > > -------------
+> > > - Modify patch subject.
+> > > - Add pcie host bridge reference.
+> > > - Modify filename as per compatible string.
+> > > - Remove standard PCI properties.
+> > > - Modify interrupt controller description.
+> > > - Indentation
+> > > ---
+> > >  .../bindings/pci/amd,versal2-mdb-host.yaml    | 132 ++++++++++++++++=
+++
+> > >  1 file changed, 132 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+> > > b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+> > > new file mode 100644
+> > > index 000000000000..75795bab8254
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yam
+> > > +++ l
+> > > @@ -0,0 +1,132 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/amd,mdb-pcie.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: AMD Versal2 MDB(Multimedia DMA Bridge) Host Controller
+> > > +
+> > > +maintainers:
+> > > +  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: amd,versal2-mdb-host
+> > > +
+> > > +  reg:
+> > > +    items:
+> > > +      - description: MDB PCIe controller 0 SLCR
+> >
+> > SLCR is not defined anywhere.
+> Thanks for review, Here SLCR refers to mdb_pcie_slcr should I modify it t=
+o lower
+> case?
+> >
+> > > +      - description: configuration region
+> > > +      - description: data bus interface
+> > > +      - description: address translation unit register
+> > > +
+> > > +  reg-names:
+> > > +    items:
+> > > +      - const: mdb_pcie_slcr
+> > > +      - const: config
+> > > +      - const: dbi
+> > > +      - const: atu
+> >
+> > DWC based it seems. You need to reference the DWC schema.
+> - Thanks for the review, Here should I add both dwc and pci-host-bridge h=
+ost bridge
+> schema.
+> > > +
+> > > +  ranges:
+> > > +    maxItems: 2
+> > > +
+> > > +  msi-map:
+> > > +    maxItems: 1
+> > > +
+> > > +  bus-range:
+> > > +    maxItems: 1
+> >
+> > Already defined in the common schema. Plus you obviously didn't test
+> > anything with this because bus-range must be exactly 2 entries. 1 is no=
+t valid.
+> - Thanks for the review, Will remove it in next patch.
+> >
+> > > +
+> > > +  "#address-cells":
+> > > +    const: 3
+> > > +
+> > > +  "#size-cells":
+> > > +    const: 2
+> >
+> > Both of these are also already defined in the pci-host-bridge.yaml.
+> Thanks for the review, Will update in next patch.
+> >
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupt-map-mask:
+> > > +    items:
+> > > +      - const: 0
+> > > +      - const: 0
+> > > +      - const: 0
+> > > +      - const: 7
+> > > +
+> > > +  interrupt-map:
+> > > +    maxItems: 4
+> > > +
+> > > +  "#interrupt-cells":
+> > > +    const: 1
+> > > +
+> > > +  interrupt-controller:
+> > > +    description: identifies the node as an interrupt controller
+> > > +    type: object
+> > > +    properties:
+> > > +      interrupt-controller: true
+> > > +
+> > > +      "#address-cells":
+> > > +        const: 0
+> > > +
+> > > +      "#interrupt-cells":
+> > > +        const: 1
+> > > +
+> > > +    required:
+> > > +      - interrupt-controller
+> > > +      - "#address-cells"
+> > > +      - "#interrupt-cells"
+> > > +
+> > > +    additionalProperties: false
+> >
+> > Move this before 'properties'.
+> - Thanks for the review, I will update in next patch.
+> >
+> > > +
+> > > +required:
+> > > +  - reg
+> > > +  - reg-names
+> > > +  - interrupts
+> > > +  - interrupt-map
+> > > +  - interrupt-map-mask
+> > > +  - msi-map
+> > > +  - ranges
+> >
+> > Already required by common schema.
+> Thanks for the review, will update in next patch.
+> >
+> > > +  - "#interrupt-cells"
+> > > +  - interrupt-controller
+> > > +
+> > > +unevaluatedProperties: false
+> > > +
+> > > +examples:
+> > > +
+> >
+> > Drop blank line.
+> Thanks for the review, will update in next patch.
+> >
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +
+> > > +    soc {
+> > > +        #address-cells =3D <2>;
+> > > +        #size-cells =3D <2>;
+> > > +        pci@ed931000 {
+> >
+> > pcie@...
+> Thanks for the review, will update in next patch.
+> >
+> > > +            compatible =3D "amd,versal2-mdb-host";
+> > > +            reg =3D <0x0 0xed931000 0x0 0x2000>,
+> > > +                  <0x1000 0x100000 0x0 0xff00000>,
+> > > +                  <0x1000 0x0 0x0 0x100000>,
+> > > +                  <0x0 0xed860000 0x0 0x2000>;
+> > > +            reg-names =3D "mdb_pcie_slcr", "config", "dbi", "atu";
+> > > +            ranges =3D <0x2000000 0x00 0xa8000000 0x00 0xa8000000
+> > > + 0x00
+> > 0x10000000>,
+> > > +                     <0x43000000 0x1100 0x00 0x1100 0x00 0x00 0x1000=
+000>;
+> > > +            interrupts =3D <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
+> > > +            interrupt-parent =3D <&gic>;
+> > > +            interrupt-map-mask =3D <0 0 0 7>;
+> > > +            interrupt-map =3D <0 0 0 1 &pcie_intc_0 0>,
+> > > +                            <0 0 0 2 &pcie_intc_0 1>,
+> > > +                            <0 0 0 3 &pcie_intc_0 2>,
+> > > +                            <0 0 0 4 &pcie_intc_0 3>;
+> > > +            msi-map =3D <0x0 &gic_its 0x00 0x10000>;
+> > > +            #address-cells =3D <3>;
+> > > +            #size-cells =3D <2>;
+> > > +            #interrupt-cells =3D <1>;
+> > > +            device_type =3D "pci";
+> > > +            pcie_intc_0: interrupt-controller {
+> > > +                #address-cells =3D <0>;
+> > > +                #interrupt-cells =3D <1>;
+> > > +                interrupt-controller;
+> > > +           };
+> > > +        };
+> > > +    };
+> > > --
+> > > 2.34.1
+> > >
+> Regards,
+> Thippeswamy H
 
