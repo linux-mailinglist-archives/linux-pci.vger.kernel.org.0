@@ -1,92 +1,165 @@
-Return-Path: <linux-pci+bounces-18047-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18051-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 228A19EBA0A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 20:22:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B3A29EBAA7
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 21:10:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B50C7167784
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 19:21:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9727A18871CE
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 20:10:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5671D214227;
-	Tue, 10 Dec 2024 19:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B496227573;
+	Tue, 10 Dec 2024 20:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYOTZdqG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="OKBbQ14K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx08lb.world4you.com (mx08lb.world4you.com [81.19.149.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE4D214231;
-	Tue, 10 Dec 2024 19:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AF9226869;
+	Tue, 10 Dec 2024 20:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733858502; cv=none; b=HBzuwo2IchfxhRh/DspxcXCvmXnkODTmag4DUJnMuqCj/WNiO4VuI1DPsZlnYY55u81ULm0ZijunDqSxergXd9wVVPwZPoUDfRURbOrvP0sLXwFEjg1m0BSQ8XQ/kjlN/auI9U7Of/+TplhP0rQrL6Cz8LilgW/i1Ar9kshMR70=
+	t=1733861419; cv=none; b=Gim4sgn+FqQ9pFJW+G2gkRt/8k+rDXAap8an4Je/UTPfIGEDlcaafvuz1Opbt8N37sKfOtcadChL8WNpZOUDsq/mL8TLx5wGAL8oC1pShKdbN3B3My+KFb38lTfazlorlqmG8KBzxw1d+ACrGMqApbUi6RagTuzMw9XyfRRQMDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733858502; c=relaxed/simple;
-	bh=230wSQ1wYeQaQouNCrsTwnLI6v3KuSOxEyYSkJf45H8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PPE7Fvo40lj89bt+oorzw3rvx4vcE8uNzFsvZJz1O+qyrG2xyppaXYy5oeKW9oGQPnz8r3zeLMZ3vSElRAlfQN0mAz3t1SPkXU+hN1hNnwzoS/bflo9K3mKupg4ZSZ+xPgbG2Ldg6ohWXmHZqQO5jojvK7v3oQhaRk7a6QEVFao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYOTZdqG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8707DC4CED6;
-	Tue, 10 Dec 2024 19:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733858501;
-	bh=230wSQ1wYeQaQouNCrsTwnLI6v3KuSOxEyYSkJf45H8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=JYOTZdqGXDurHfjZ7OK1P+GAUVX34qsCrNS8oivNtlGejwYDeUFmMEc9xo+YQ/Dhc
-	 UGKqBr5ljQq6FmLcAm7rCZOlDcB8BGiY7/pwDt1e5Og2jXsXuTxm9vSgfdCpZygmMH
-	 GwDNAoOwOfIke227UPl0OE15smllVujQUUim5PO55h5mr3cc5Lo0VW6RTCLwe09M7+
-	 M4+7C5LV5pWvzf4wrKmJeVdp98afINhGjG/LH/dCB9b6+RPUbTbQ0XO5nXleH8sajv
-	 IVSjUpzwZewG5S5ZmEiv8YRfuvLbYK54ezUlOhvT0/H0xpvgvhowHB1MEux1bg8Gba
-	 c1hSuC4UTp+xQ==
-Date: Tue, 10 Dec 2024 13:21:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 07/11] PCI: Add PCIe Device 3 Extended Capability
- enumeration
-Message-ID: <20241210192140.GA3079633@bhelgaas>
+	s=arc-20240116; t=1733861419; c=relaxed/simple;
+	bh=FYEQbT9tBWdrOaUmg/9LCm6UrMmwas/GkuSUSpaCRGs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=loxurJYRxtZ5HNKvHSnFbffnQYqoZoIuuTNhYhWGnLRGfFH33TamP1bRPDVpW0QBZRsFFtZD8pvyZnwIiUTNnZHfOgJa/1XFDA4u3bjtOBYc4m1DYvgGKOslUjFf8Obd4uxQb1Gidf7XOUGvMvoRU3kRxjOVMqpsbgQCXfoKwHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=OKBbQ14K; arc=none smtp.client-ip=81.19.149.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AhEWUKL5EhB8ncFdMFzQW4/lbKCtlIrg6mHUxIedBSE=; b=OKBbQ14KBlVrretGyyGUSDnClZ
+	9c2oso6nkDj80BeuVHcyvOzAYIat6gZoqf+CYD6T973bqp/G81KnARBGKRIj27Mf8w+H8Jx4sBzrR
+	3cM5y0P1b2GmVaC397CQbjq4mviSSnfEL83KrihNXJ4GizDLrJRN+1OmRanbx5ubNoaU=;
+Received: from [88.117.62.55] (helo=[10.0.0.160])
+	by mx08lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1tL5qY-000000002GY-3Sx5;
+	Tue, 10 Dec 2024 20:24:39 +0100
+Message-ID: <94752230-a901-4a15-abd1-f470a62e1047@engleder-embedded.com>
+Date: Tue, 10 Dec 2024 20:24:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173343743678.1074769.15403889527436764173.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH iwl-next v2] e1000e: Fix real-time
+ violations on link up
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
+ edumazet@google.com, pabeni@redhat.com, Gerhard Engleder <eg@keba.com>,
+ Vitaly Lifshits <vitaly.lifshits@intel.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20241208184950.8281-1-gerhard@engleder-embedded.com>
+ <7c4f3165-df86-47e1-9fc4-7087accf4a68@molgen.mpg.de>
+Content-Language: en-US
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <7c4f3165-df86-47e1-9fc4-7087accf4a68@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AV-Do-Run: Yes
 
-On Thu, Dec 05, 2024 at 02:23:56PM -0800, Dan Williams wrote:
-> PCIe 6.2 Section 7.7.9 Device 3 Extended Capability Structure,
-> enumerates new link capabilities and status added for Gen 6 devices. One
-> of the link details enumerated in that register block is the "Segment
-> Captured" status in the Device Status 3 register. That status is
-> relevant for enabling IDE (Integrity & Data Encryption) whereby
-> Selective IDE streams can be limited to a given requester id range
-> within a given segment.
+On 09.12.24 12:34, Paul Menzel wrote:
+> [Cc: +PCI folks]
+> 
+> Dear Gerhard,
+> 
+> 
+> Thank you for your patch.
+> 
+> 
+> Am 08.12.24 um 19:49 schrieb Gerhard Engleder:
+>> From: Gerhard Engleder <eg@keba.com>
+>>
+>> From: Gerhard Engleder <eg@keba.com>
+> 
+> The from line is present twice. No idea, if git is going to remove both.
 
-s/requester id/Requester ID/ to match spec usage
+It seems git send-email is adding this line again automatically.
+Will be fixed next time.
 
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -749,6 +749,7 @@
->  #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
->  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
->  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
-> +#define PCI_EXT_CAP_ID_DEV3	0x2F	/* Device 3 Capability/Control/Status */
+>> Link down and up triggers update of MTA table. This update executes many
+>> PCIe writes and a final flush. Thus, PCIe will be blocked until all 
+>> writes
+>> are flushed. As a result, DMA transfers of other targets suffer from 
+>> delay
+>> in the range of 50us. This results in timing violations on real-time
+>> systems during link down and up of e1000e.
+>>
+>> A flush after a low enough number of PCIe writes eliminates the delay
+>> but also increases the time needed for MTA table update. The following
+>> measurements were done on i3-2310E with e1000e for 128 MTA table entries:
+>>
+>> Single flush after all writes: 106us
+>> Flush after every write:       429us
+>> Flush after every 2nd write:   266us
+>> Flush after every 4th write:   180us
+>> Flush after every 8th write:   141us
+>> Flush after every 16th write:  121us
+>>
+>> A flush after every 8th write delays the link up by 35us and the
+>> negative impact to DMA transfers of other targets is still tolerable.
+>>
+>> Execute a flush after every 8th write. This prevents overloading the
+>> interconnect with posted writes.
+>>
+>> Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+>> CC: Vitaly Lifshits <vitaly.lifshits@intel.com>
+>> Link: 
+>> https://lore.kernel.org/netdev/f8fe665a-5e6c-4f95-b47a-2f3281aa0e6c@lunn.ch/T/
+>> Signed-off-by: Gerhard Engleder <eg@keba.com>
+>> ---
+>> v2:
+>> - remove PREEMPT_RT dependency (Andrew Lunn, Przemek Kitszel)
+>> ---
+>>   drivers/net/ethernet/intel/e1000e/mac.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/intel/e1000e/mac.c 
+>> b/drivers/net/ethernet/intel/e1000e/mac.c
+>> index d7df2a0ed629..7d1482a9effd 100644
+>> --- a/drivers/net/ethernet/intel/e1000e/mac.c
+>> +++ b/drivers/net/ethernet/intel/e1000e/mac.c
+>> @@ -331,8 +331,13 @@ void e1000e_update_mc_addr_list_generic(struct 
+>> e1000_hw *hw,
+>>       }
+>>       /* replace the entire MTA table */
+>> -    for (i = hw->mac.mta_reg_count - 1; i >= 0; i--)
+>> +    for (i = hw->mac.mta_reg_count - 1; i >= 0; i--) {
+>>           E1000_WRITE_REG_ARRAY(hw, E1000_MTA, i, hw->mac.mta_shadow[i]);
+>> +
+>> +        /* do not queue up too many writes */
+> 
+> Maybe make the comment more elaborate?
 
-It doesn't look like lspci knows about this; is there something in
-progress to add that?
+I will try to extend based on comments from the other thread.
 
-https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/lib/header.h?id=v3.13.0#n257
+>> +        if ((i % 8) == 0 && i != 0)
+>> +            e1e_flush();
+>> +    }
+>>       e1e_flush();
+>>   }
+> 
+> 
+> Kind regards,
+> 
+> Paul
 
->  #define PCI_EXT_CAP_ID_IDE	0x30    /* Integrity and Data Encryption */
->  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
+Thank you for the review!
+
+Gerhard
 
