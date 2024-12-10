@@ -1,274 +1,191 @@
-Return-Path: <linux-pci+bounces-17996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-17998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B67F39EAB0E
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 09:52:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A53EC9EAC6C
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 10:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0E6C166A7C
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 08:52:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C34F6188BCBD
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 09:37:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14AC722E3F8;
-	Tue, 10 Dec 2024 08:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97B53215796;
+	Tue, 10 Dec 2024 09:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6NiurQQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liBxbYcu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D882F12DD88;
-	Tue, 10 Dec 2024 08:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A3A215779
+	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 09:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733820771; cv=none; b=VWmycLt50XO9RcLQN7ZrmlGPnfOL8xcJR7qUr4+szXZl8bWsFrrQBxYP9qubvdFCN27jf6YqDBbInLq41d2qqxqgvzLd+ZHc7OButvQzFg0QpvcTwfHrnQwzZEDxxh9BJq8BS3nfsXDTY7lnNQec4PjPRrq1VCGqv2Br3XR4Cuo=
+	t=1733823276; cv=none; b=bz3w6DMKkLXyRn2fuwc5Js330pS7uN3D54y+ROqOuiV0g6aRuXN2rVVxG4FaSiPCU82Opu8ARGxROkdytmNOwQ/Y2m2X11iXM3nkJLzSsuwAvIpFGvgbLY7Ug+dMxLo1M0wIzRIoPhoUbG2dN/kNBEGwIaRRVUCegSxYXRPQAoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733820771; c=relaxed/simple;
-	bh=KP7mBNP2pd/DwOBjVN/npe0wHUj0p6vln405+1vkD6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fOmTDuwHyU7sTTl/ekIxOWfxTHgI6YczXjIxScKSdT9eTNi62n2w4QJxeS/2dclHJwputDGeXCDCsrvi09VypEnkGjhx1heqT7ueS/KKiKyo4xlIiPZrqD5bywNjgLMPKcnTKg+DNOlFpkJLlt+9e/k3dC4RMFDI7uMcDf6bVoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6NiurQQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6BCC4CED6;
-	Tue, 10 Dec 2024 08:52:49 +0000 (UTC)
+	s=arc-20240116; t=1733823276; c=relaxed/simple;
+	bh=j1D2I5jgTkzuY1AQu0N7/bHkOdN/fWR3IJJkDC0pa4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F936h0QSmmq8LGHKVyX+Iq991apc3Wr+6UX2mmXAKkFFIEaMFG011ydiTKGMANBLQzi1L9hpIMekUT3Vro9qQAhjhZorHV1ZRsr1lKMJPogUZrcV1j7krCXvHIVkmxN9jYRNVPSIBbMzldyIMvv7051hHFjb+Nd9Pbu6I1RQi4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liBxbYcu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C979C4CED6;
+	Tue, 10 Dec 2024 09:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733820770;
-	bh=KP7mBNP2pd/DwOBjVN/npe0wHUj0p6vln405+1vkD6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f6NiurQQ4XDxs1gH4XW/dww86rdwL0dyRBY+6cVYQy0dFPRAglysBqyDso5C3KC3R
-	 IpdFgRWwWUxxTvvsTOKRlr7kyICGceIqQCtfH+qojPFNpN5S1iWR2Bt6MFP7GuIaYO
-	 MwmLF+jKgTihBsI8QxB/WHBsU2Xca8fxgafYjp0pVEPo8WEycukLJ8cd+5T4qh/kMY
-	 cfC1j6+8/DATplAI0a8wUogZDvpBBE0cHnSY98sqoSqXnhA8Uxp4zIdf77rqV3kNyF
-	 JBGwDKJrC/izfdjhXh1krX1D9xhtdrPJif2nOQWpJbx4Nt9w/PJYWEJ+U4xtN+fuW5
-	 mUTCeKhY6fXLQ==
-Date: Tue, 10 Dec 2024 09:52:47 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Frank <Li@nxp.com>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: PCI: mobiveil: convert
- mobiveil-pcie.txt to yaml format
-Message-ID: <t3mrs7bap5fbiyxpth5r364al4ca2s72ddsoqgutbrlhrgwqae@qmcjeis2akwp>
-References: <20241206222529.3706373-1-Frank.Li@nxp.com>
+	s=k20201202; t=1733823276;
+	bh=j1D2I5jgTkzuY1AQu0N7/bHkOdN/fWR3IJJkDC0pa4g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=liBxbYcuJ8cnLhWIDAP3fkItT5G9fjLqN+r/BgTl7ixSAVJaxk9DjpyJJ/o1R7DYi
+	 y6LKisS83nZ0oJ3VHU0ez42OR7PIqTdxRDwzXI+zgm6yWLqBFLY6tPyqduU2HP5PpF
+	 4zDodJOBlNjvFJdvar+ytp3qkTYRNp/w590+D9eiCCI+jjVoR8p3WWDNcAw5s/4L5S
+	 sUDUA5bGI6OZ8TVGP48OpbMXxU+jWoirxSZvcfUvumK+0uyCNuQA7XtzWePexUF/uE
+	 6zatcZ1hGcKd5OR+4K5vQv2/vFWlZO8Yz8H3KSgaMRdx9jXpeZPvExRVHTjLszlj/7
+	 vEuh5/wWSC3JA==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-nvme@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v3 00/17] NVMe PCI endpoint target driver
+Date: Tue, 10 Dec 2024 18:33:51 +0900
+Message-ID: <20241210093408.105867-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241206222529.3706373-1-Frank.Li@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 06, 2024 at 05:25:27PM -0500, Frank Li wrote:
-> Convert device tree binding doc mobiveil-pcie.txt to yaml format. Merge
-> layerscape-pcie-gen4.txt into this file.
-> 
-> Additional change:
-> - interrupt-names: "aer", "pme", "intr", which align order in examples.
-> - reg-names: csr_axi_slave, config_axi_slave, which align existed dts file.
+(Note: follow up to v2 of "NVMe PCI endpoint function driver" patch
+series).
 
-mobiveil-pcie.txt binding suggested reversed orders of above, so please
-mention that you unify the order to match layerscape-pcie-gen4 and
-existing Layerscape DTS users.
+This patch series implements an NVMe target driver for the PCI transport
+using the PCI endpoint framework.
 
+The first 4 patches of this series move and cleanup some nvme code that
+will be reused in following patches.
 
-...
+Patch 5 introduces the PCI transport type to allow setting up ports for
+the new PCI target controller driver. Patch 6 to 9 are improvements of
+the target core code to allow creating the PCI controller and processing
+its nvme commands without the need to rely on fabrics commands like the
+connect command to create the admin and I/O queues.
 
+Patch 10 relaxes the SGL check in nvmet_req_init() to allow for PCI
+admin commands (which must use PRPs).
 
-> +++ b/Documentation/devicetree/bindings/pci/mbvl,gpex40-pcie.yaml
-> @@ -0,0 +1,167 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/mbvl,gpex40-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mobiveil AXI PCIe Root Port Bridge
-> +
-> +maintainers:
-> +  - Frank Li <Frank Li@nxp.com>
-> +
-> +description:
-> +  Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
-> +  has up to 8 outbound and inbound windows for the address translation.
-> +
-> +  NXP Layerscape PCIe Gen4 controller (Deprecated) base on Mobiveil's GPEX 4.0.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mbvl,gpex40-pcie
-> +      - fsl,lx2160a-pcie
+Patches 11 to 15 improve the set/get feature support of the target code
+to get closer to achieving NVMe specification compliance. These patches
+though do not implement support for some mandatory features.
 
-Please reverse them to keep alphabetical order.
+Patch 16 is the main patch which introduces the NVMe PCI endpoint target
+driver. This patch commit message provides and overview of the driver
+design and operation.
 
-> +
-> +  reg:
-> +    items:
-> +      - description: PCIe controller registers
-> +      - description: Bridge config registers
-> +      - description: GPIO registers to control slot power
-> +      - description: MSI registers
-> +    minItems: 2
-> +
-> +  reg-names:
-> +    items:
-> +      - const: csr_axi_slave
-> +      - const: config_axi_slave
-> +      - const: gpio_slave
-> +      - const: apb_csr
-> +    minItems: 2
-> +
-> +  apio-wins:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      numbers of requested apio outbound windows
-> +        1. Config window
-> +        2. Memory window
-> +    default: 2
-> +    maximum: 256
-> +
-> +  ppio-wins:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: number of requested ppio inbound windows
-> +    default: 1
-> +    maximum: 256
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  dma-coherent: true
-> +
-> +  msi-parent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,lx2160a-pcie
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 2
-> +
-> +        reg-names:
-> +          maxItems: 2
-> +
+Finally, patch 17 documents the NVMe PCI endpoint target driver and
+provides a user guide explaning how to setup an NVMe PCI endpoint
+device.
 
-interrupts:
-  minItems: 3
+The patches are base on Linus 6.13-rc2 tree.
 
-> +        interrupt-names:
-> +          items:
-> +            - const: aer
-> +            - const: pme
-> +            - const: intr
-> +    else:
-> +      properties:
-> +        dma-coherent: false
-> +        msi-parent: false
+This driver has been extensively tested using a Radxa Rock5B board
+(RK3588 Arm SoC). Some tests have also been done using a Pine Rockpro64
+board. However, this board does not support DMA channels for the PCI
+endpoint controller, leading to very poor performance.
 
-reg? interrupts? interrupt-names?
+Using the Radxa Rock5b board and setting up a 4 queue-pairs controller
+with a null-blk block device loop target, performance was measured using
+fio as follows:
 
+ +----------------------------------+------------------------+
+ | Workload                         | IOPS (BW)              |
+ +----------------------------------+------------------------+
+ | Rand read, 4KB, QD=1, 1 job      | 14.3k IOPS             |
+ | Rand read, 4KB, QD=32, 1 job     | 80.8k IOPS             |
+ | Rand read, 4KB, QD=32, 4 jobs    | 131k IOPS              |
+ | Rand read, 128KB, QD=32, 1 job   | 16.7k IOPS (2.18 GB/s) |
+ | Rand read, 128KB, QD=32, 4 jobs  | 17.4k IOPS (2.27 GB/s) |
+ | Rand read, 512KB, QD=32, 1 job   | 5380 IOPS (2.82 GB/s)  |
+ | Rand read, 512KB, QD=32, 4 jobs  | 5206 IOPS (2.27 GB/s)  |
+ | Rand write, 128KB, QD=32, 1 job  | 9617 IOPS (1.26 GB/s)  |
+ | Rand write, 128KB, QD=32, 4 jobs | 8405 IOPS (1.10 GB/s)  |
+ +----------------------------------+------------------------+
 
+These results use the default MDTS of the NVMe enpoint driver of 512 KB.
 
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    pcie@b0000000 {
-> +        compatible = "mbvl,gpex40-pcie";
-> +        reg = <0xb0000000 0x00010000>,
-> +              <0xa0000000 0x00001000>,
-> +              <0xff000000 0x00200000>,
-> +              <0xb0010000 0x00001000>;
-> +        reg-names = "csr_axi_slave",
-> +                    "config_axi_slave",
-> +                    "gpio_slave",
-> +                    "apb_csr";
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        device_type = "pci";
-> +        apio-wins = <2>;
-> +        ppio-wins = <1>;
-> +        bus-range = <0x00000000 0x000000ff>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        interrupt-parent = <&gic>;
-> +        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-map-mask = <0 0 0 7>;
-> +        interrupt-map = <0 0 0 0 &pci_express 0>,
-> +                        <0 0 0 1 &pci_express 1>,
-> +                        <0 0 0 2 &pci_express 2>,
-> +                        <0 0 0 3 &pci_express 3>;
-> +        ranges = <0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
+This driver is not intended for production use but rather to be a
+playground for learning NVMe and exploring/testing new NVMe features
+while providing reasonably good performance.
 
-Please keep ranges after reg-names
+Changes from v2:
+ - Changed all preparatory patches before patch 16 to move more NVMe
+   generic code out of the PCI endpoint target driver and into the
+   target core.
+ - Changed patch 16 to use directly a target controller instead of a
+   host controller. Many aspects of the command management and DMA
+   transfer management have also been simplified, leading to higher
+   performance.
+ - Change the documentation patch to match the above changes
 
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        pcie@3400000 {
-> +            compatible = "fsl,lx2160a-pcie";
-> +            reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-> +                   0x80 0x00000000 0x0 0x00001000>; /* configuration space */
-> +            reg-names = "csr_axi_slave", "config_axi_slave";
-> +            interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +                         <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +                        <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +            interrupt-names = "aer", "pme", "intr";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            device_type = "pci";
-> +            apio-wins = <8>;
-> +            ppio-wins = <8>;
-> +            dma-coherent;
-> +            bus-range = <0x0 0xff>;
-> +            msi-parent = <&its>;
-> +            ranges = <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>;
+Changes from v1:
+ - Added review tag to patch 1
+ - Modified patch 4 to:
+   - Add Rick's copyright notice
+   - Improve admin command handling (set_features command) to handle the
+     number of queues feature (among others) to enable Windows host
+   - Improved SQ and CQ work items handling
 
-Ditto here
+Damien Le Moal (17):
+  nvmet: Add vendor_id and subsys_vendor_id subsystem attributes
+  nvmet: Export nvmet_update_cc() and nvmet_cc_xxx() helpers
+  nvmet: Introduce nvmet_get_cmd_effects_admin()
+  nvmet: Add drvdata field to struct nvmet_ctrl
+  nvme: Add PCI transport type
+  nvmet: Improve nvmet_alloc_ctrl() interface and implementation
+  nvmet: Introduce nvmet_req_transfer_len()
+  nvmet: Introduce nvmet_sq_create() and nvmet_cq_create()
+  nvmet: Add support for I/O queue management admin commands
+  nvmet: Do not require SGL for PCI target controller commands
+  nvmet: Introduce get/set_feature controller operations
+  nvmet: Implement host identifier set feature support
+  nvmet: Implement interrupt coalescing feature support
+  nvmet: Implement interrupt config feature support
+  nvmet: Implement arbitration feature support
+  nvmet: New NVMe PCI endpoint target driver
+  Documentation: Document the NVMe PCI endpoint target driver
 
-> +            #interrupt-cells = <1>;
-> +            interrupt-map-mask = <0 0 0 7>;
-> +            interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
+ Documentation/PCI/endpoint/index.rst          |    1 +
+ .../PCI/endpoint/pci-nvme-function.rst        |   14 +
+ Documentation/nvme/index.rst                  |   12 +
+ .../nvme/nvme-pci-endpoint-target.rst         |  365 +++
+ Documentation/subsystem-apis.rst              |    1 +
+ drivers/nvme/target/Kconfig                   |   10 +
+ drivers/nvme/target/Makefile                  |    2 +
+ drivers/nvme/target/admin-cmd.c               |  388 ++-
+ drivers/nvme/target/configfs.c                |   49 +
+ drivers/nvme/target/core.c                    |  266 +-
+ drivers/nvme/target/discovery.c               |   17 +
+ drivers/nvme/target/fabrics-cmd-auth.c        |   14 +-
+ drivers/nvme/target/fabrics-cmd.c             |  101 +-
+ drivers/nvme/target/nvmet.h                   |  110 +-
+ drivers/nvme/target/pci-ep.c                  | 2627 +++++++++++++++++
+ include/linux/nvme.h                          |    2 +
+ 16 files changed, 3858 insertions(+), 121 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-nvme-function.rst
+ create mode 100644 Documentation/nvme/index.rst
+ create mode 100644 Documentation/nvme/nvme-pci-endpoint-target.rst
+ create mode 100644 drivers/nvme/target/pci-ep.c
 
-Best regards,
-Krzysztof
+-- 
+2.47.1
 
 
