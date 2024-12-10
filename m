@@ -1,188 +1,151 @@
-Return-Path: <linux-pci+bounces-18052-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18053-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F4B39EBAF5
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 21:45:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1BED9EBBB1
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 22:17:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 732A11673E4
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 20:45:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D00EF162EDD
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 21:17:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC63922ACDC;
-	Tue, 10 Dec 2024 20:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 088BA22CBF9;
+	Tue, 10 Dec 2024 21:17:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuPefJyw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4HkPpMK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A5D22A1C3;
-	Tue, 10 Dec 2024 20:45:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D057E23ED4A;
+	Tue, 10 Dec 2024 21:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733863528; cv=none; b=XEMT6wx38qDmkSAqUr6pt6y7wtuQabmHxMBtUbcLZheSe3/ZYOJAm9CC3xNw0MPQ4tPH8yRwFUkCsnmsmUJBiRyHA0Pm9k6QZaUTwrSiQUV7TngZl9GsKumWTSDbeKcofFvTupgZgpIEaE1Q60xqviCpJV0gs9fAnmyEztSwOrg=
+	t=1733865463; cv=none; b=CHtfTFR5zZ6JOePTH+k/C9s/Di9W3l8J6G6kMnT2eUL76/YHOE/mDIXI1gR4rbFFYxxM6iKq5GDVLL+zih/5dYk+c/Me8FINaxfxjylAyCFm+Q/x4BnMLs3HYjRSZBpSygfqpgVBOY53pFKbGaRNelbkWQi55CzivSeulKptHAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733863528; c=relaxed/simple;
-	bh=ju4X+yZhI1BnsMkCLu3fV4gRYkOlFHLyiHLIqGY2oAI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XQa/wcEk6QKQvhRuASxSr/nVmg0/70awf+tc0fcocZjB7qBiOz3kluNNVAG361bgABl9TwTWk3QtflfcXmWqYYgbZ4bYlnlqoFuPVcJ/dPJgLPRETdpSqITy7VGwloW/q/h3XIeuye+zRN/wnVg5YPPlasokXU2ny2L0yJTWDpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuPefJyw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C215C4CED6;
-	Tue, 10 Dec 2024 20:45:20 +0000 (UTC)
+	s=arc-20240116; t=1733865463; c=relaxed/simple;
+	bh=UyzaenxJMZxUyiuu2tQwx1Mm4Pxn8j1HQU8DNGDLMP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=M65XLYC6OzD6bK/3bXqbYZcRHh2pSmvFyYnnYQUbMXTASxElmCOVUWigBHPVylniWrM1jY5vc0wBXvSCj0ibN/TIEG+c3rmpJQ7BYTr2X87rFsBzDUZLy9Mu/FaLsKJ4+Tn8Zv4NEzg/eR61QeF1a5f5u1II96NbAkfPGrnpvIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4HkPpMK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D86C4CED6;
+	Tue, 10 Dec 2024 21:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733863526;
-	bh=ju4X+yZhI1BnsMkCLu3fV4gRYkOlFHLyiHLIqGY2oAI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=fuPefJywZSC3M5DKCRmu3ip8euNlDXxGdFXxooGSAULaGIOQ5Nr3J7A8yuFDyXspy
-	 oQHvIsVL3v9/2MJzNtHGIBnOWUMkQV9CLVYggHAk4mUIFLn8ppTNLaDNDJ5mzYNClN
-	 VSAnWePQkypQYcUCAZYFVZbYW58OhC0MG5N26Q+r34e0hFf3ycJbcxEAjSzibf320q
-	 lE8PTVeXmLFx2jA3BhWto17ogq/CBBuZPWRn1hOW/idRHZkiH8d3NfUHD4mV420G9X
-	 OPPTNfH92OPYM86pO92Jhv5vAAilHptux61V7er22TPoa0+IyydzfwsiBKB9tsj9Ta
-	 dmZsLMaPudTMQ==
-Message-ID: <70829798889c6d779ca0f6cd3260a765780d1369.camel@kernel.org>
-Subject: Re: [PATCH] PCI/portdrv: Disable bwctrl service if port is fixed at
- 2.5 GT/s
-From: Niklas Schnelle <niks@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Bjorn
- Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Rob Herring
- <robh@kernel.org>, Krzysztof Wilczy??ski	 <kw@linux.com>, "Maciej W .
- Rozycki" <macro@orcam.me.uk>, Jonathan Cameron	
- <Jonathan.Cameron@huawei.com>, Alexandru Gagniuc <mr.nuke.me@gmail.com>, 
- Krishna chaitanya chundru	 <quic_krichai@quicinc.com>, Srinivas Pandruvada	
- <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki"
- <rafael@kernel.org>, 	linux-pm@vger.kernel.org, Smita Koralahalli	
- <Smita.KoralahalliChannabasappa@amd.com>, linux-kernel@vger.kernel.org, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria
- <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,  Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, Mika Westerberg
- <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Tue, 10 Dec 2024 21:45:18 +0100
-In-Reply-To: <Z1gSZCdv3fwnRRNk@wunner.de>
-References: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
-		 <Z1gSZCdv3fwnRRNk@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	s=k20201202; t=1733865463;
+	bh=UyzaenxJMZxUyiuu2tQwx1Mm4Pxn8j1HQU8DNGDLMP4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=F4HkPpMKBxLyj/NgKupTc4pUVt+fm2OjGPZQkO1uN/W36xBGl9RMESHr7Cfe54S4F
+	 bwPy1fqXGEUp92cPx51vD57EWdhOKol0CRRpWZCe7iOjVdrOLvhNTNmhYYnZbGdJO6
+	 1TCVfyk6YVG5MbGnGMA4Wg30U8bap5dihPbRcfGOmuN0sqjDvKSIxhNMXezt/pk3VA
+	 gLPSdxgm5GpsmPqhlS7WSDVyJf5QEwwxmhgmR0qTtCfCQzyUU0zhcUsfTJj0vCuOUw
+	 k7YMFiGG4NTP+vprh6J+wqHJtfrHSxuxTr8CV3KsZQKZj3Wl9jFyOi+Fz43klZizQZ
+	 5tvS850P34Knw==
+Date: Tue, 10 Dec 2024 15:17:40 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Zhou Shengqing <zhoushengqing@ttyinfo.com>, Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCHv2] PCI/ACPI: _DSM PRESERVE_BOOT_CONFIG function rev id
+ doesn't match with spec.
+Message-ID: <20241210211740.GA3257918@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0g66WmqeouN6AWADE+J3e-f30wMGyLX-Upk+w7Y+i2OxA@mail.gmail.com>
 
-On Tue, 2024-12-10 at 11:05 +0100, Lukas Wunner wrote:
-> On Sat, Dec 07, 2024 at 07:44:09PM +0100, Niklas Schnelle wrote:
-> > Trying to enable bwctrl on a Thunderbolt port causes a boot hang on som=
-e
-> > systems though the exact reason is not yet understood.
->=20
-> Probably worth highlighting the discrete Thunderbolt chip which exhibits
-> this issue, i.e. Intel JHL7540 (Titan Ridge).
+On Tue, Dec 10, 2024 at 08:56:14PM +0100, Rafael J. Wysocki wrote:
+> On Tue, Dec 10, 2024 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Nov 14, 2024 at 03:04:24AM +0000, Zhou Shengqing wrote:
+> > > Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
+> > > for PCI. Preserve PCI Boot Configuration Initial Revision ID is 2. But
+> > > the code is 1.
+> >
+> > This _DSM function 5 was added in PCI Firmware r3.1, released Dec 13,
+> > 2010.  It's listed in sec 4.6 with Revision 2 (as *all* the defined
+> > functions are, even functions 1-4, which were included in r3.0 with
+> > Revision 1).
+> >
+> > But the actual definition that was added in r3.1 is in sec 4.6.5,
+> > which specifies Revision ID 1.
+> >
+> > PCI Firmware r3.2, released Jan 26, 2015, was the newest available at
+> > the time Ben implemented a78cf9657ba5 ("PCI/ACPI: Evaluate PCI Boot
+> > Configuration _DSM"), and sec 4.6.5 still specified Revision ID 1.
+> >
+> > So I think Ben's addition used the correct Revision ID (1).
+> >
+> > PCI Firmware r3.3, released Jan 20, 2021, changed sec 4.6.5 to say
+> > "lowest valid Revision ID value: 2"
+> >
+> > I think it's a mistake to make the kernel change below because
+> > platforms in the field implemented function 5 with revision 1 (per the
+> > r3.1 and r3.2 specs), and we have no idea whether they implement
+> > function 5 revision 2.
+> >
+> > It's quite likely that newer platforms following r3.3 will implement
+> > function 5 revision 2, but NOT revision 1, and the existing code won't
+> > work for them.
+> >
+> > I think the fix is to try revision 1 and, if that isn't implemented,
+> > we should try revision 2.  The semantics stayed the same, so they
+> > should both work the same.
+> 
+> Or call Function 0 with the new revision and check the result?
 
-Agree will ad for v2.
+IIUC we should always be using acpi_check_dsm() to call function 0 and
+check for the desired function and revision, so we should do that for
+both revision 1 and revision 2.  It looks like we're missing that
+check here, which is a separate problem.
 
->=20
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -270,7 +270,8 @@ static int get_port_device_capability(struct pci_de=
-v *dev)
-> >  		u32 linkcap;
-> > =20
-> >  		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
-> > -		if (linkcap & PCI_EXP_LNKCAP_LBNC)
-> > +		if (linkcap & PCI_EXP_LNKCAP_LBNC &&
-> > +		    (linkcap & PCI_EXP_LNKCAP_SLS) !=3D PCI_EXP_LNKCAP_SLS_2_5GB)
-> >  			services |=3D PCIE_PORT_SERVICE_BWCTRL;
-> >  	}
->=20
-> This is fine in principle because PCIe r6.2 sec 8.2.1 states:
->=20
->    "A device must support 2.5 GT/s and is not permitted to skip support
->     for any data rates between 2.5 GT/s and the highest supported rate."
->=20
-> However the Implementation Note at the end of PCIe r6.2 sec 7.5.3.18
-> cautions:
->=20
->    "It is strongly encouraged that software primarily utilize the
->     Supported Link Speeds Vector instead of the Max Link Speed field,
+Of the current pci_acpi_dsm_guid uses, these functions lack that check:
 
->     so that software can determine the exact set of supported speeds
->     on current and future hardware. This can avoid software being
->     confused if a future specification defines Links that do not
->     require support for all slower speeds."
->=20
-> First of all, the Supported Link Speeds field in the Link Capabilities
-> register (which you're querying here) was renamed to Max Link Speed in
-> PCIe r3.1=C2=A0and a new Link Capabilities 2 register was added which con=
-tains
-> a new Supported Link Speeds field.  Software is supposed to query the
-> latter if the device implements the Link Capabilities 2 register
-> (see the other Implementation Note at the end of PCIe r6.2 sec 7.5.3.18).
+  pci_acpi_preserve_config
+    acpi_evaluate_dsm_typed(DSM_PCI_PRESERVE_BOOT_CONFIG)
 
-Would it maybe make sense to update the comment for PCI_EXP_LNKCAP_SLS
-in pci_regs.h to point out that in PCIe r3.1 and newer this is called
-the Max Link Speed field? This would certainly helped me here.
+  acpi_pci_add_bus
+    acpi_evaluate_dsm_typed(DSM_PCI_POWER_ON_RESET_DELAY)
 
->=20
-> Second, the above-quoted Implementation Note says that software should
-> not rely on future spec versions to mandate that *all* link speeds
-> (2.5 GT/s and all intermediate speeds up to the maximum supported speed)
-> are supported.
->=20
-> Since v6.13-rc1, we cache the supported speeds in the "supported_speeds"
-> field in struct pci_dev, taking care of the PCIe 3.0 versus later version=
-s
-> issue.
->=20
-> So to make this future-proof what you could do is check whether only a
-> *single* speed is supported (which could be something else than 2.5 GT/s
-> if future spec versions allow that), i.e.:
->=20
-> -		if (linkcap & PCI_EXP_LNKCAP_LBNC)
-> +		if (linkcap & PCI_EXP_LNKCAP_LBNC &&
-> +		    hweight8(dev->supported_speeds) > 1)
+  pci_acpi_optimize_delay
+    acpi_evaluate_dsm_typed(DSM_PCI_DEVICE_READINESS_DURATIONS)
 
-This also makes sense to me in that the argument holds that if there is
-only one supported speed bwctrl can't control it. That said it is
-definitely more general than this patch.
+The only other PCI _DSM functions we use do include the check:
 
-Sadly, I tried it and in my case it doesn't work. Taking a closer look
-at lspci -vvv of the Thunderbolt port as well as a debug print reveals
-why:
+  EDR_PORT_DPC_ENABLE_DSM  acpi_enable_dpc()
+  EDR_PORT_LOCATE_DSM      acpi_dpc_port_get()
+  TPH_ST_DSM_FUNC_INDEX    tph_invoke_dsm()
+  DSM_PCI_DEVICE_NAME      dsm_get_label() (check in device_has_acpi_name())
 
-07:00.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan R=
-idge 4C 2018] (rev 06) (prog-if 00 [Normal decode])
-       ...
-                LnkCap: Port #0, Speed 2.5GT/s, Width x4, ASPM L1, Exit Lat=
-ency L1 <1us
-                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-                LnkCtl: ASPM Disabled; LnkDisable- CommClk+
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 2.5GT/s, Width x4
-                        TrErr- Train- SlotClk+ DLActive- BWMgmt+ ABWMgmt-
-	...
-                LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retim=
-er- 2Retimers- DRS-
-                LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- Speed=
-Dis-, Selectable De-emphasis: -6dB
-                         Transmit Margin: Normal Operating Range, EnterModi=
-fiedCompliance- ComplianceSOS-
-                         Compliance Preset/De-emphasis: -6dB de-emphasis, 0=
-dB preshoot
-	...
-
-So it seems that on this Thunderbolt chip the LnkCap field
-says 2.5 GT/s only as per the USB 4 spec you quoted but LnkCap2
-is 0x0E i.e. 2.5-8 GT/s.
-
-I wonder if this is related to why the hang occurs. Could it be that
-bwctrl tries to enable speeds above 2.5 GT/s and that causes links to
-fail?
-
-Thanks,
-Niklas
-
+> > > Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to pci_register_host_bridge()")
+> > > Origin fixes: a78cf9657ba5 ("PCI/ACPI: Evaluate PCI Boot Configuration _DSM")
+> > >
+> > > Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+> > > ---
+> > >  drivers/pci/pci-acpi.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > > index af370628e583..7a4cad0c1f00 100644
+> > > --- a/drivers/pci/pci-acpi.c
+> > > +++ b/drivers/pci/pci-acpi.c
+> > > @@ -132,7 +132,7 @@ bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
+> > >                */
+> > >               obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> > >                                             &pci_acpi_dsm_guid,
+> > > -                                           1, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> > > +                                           2, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> > >                                             NULL, ACPI_TYPE_INTEGER);
+> > >               if (obj && obj->integer.value == 0)
+> > >                       return true;
+> > > --
+> > > 2.39.2
+> > >
 
