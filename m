@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-18012-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18013-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 844349EAC78
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 10:38:09 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E57A9EAC76
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 10:38:04 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 193DA16B10B
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 09:37:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 723F328C0BA
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 09:38:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2040223E74;
-	Tue, 10 Dec 2024 09:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67AA4223E62;
+	Tue, 10 Dec 2024 09:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tpjo+xwA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+cNlJMD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D882223E67
-	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 09:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B5E223E80
+	for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 09:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733823308; cv=none; b=EoF0F4sveL0Xyh9Txw4uDmm//FISWCmUwWc8YStE788xHTQsrLPG6vsl5+vkOPaIsLxMQASxvhNsdLMleS2r+1X2Y3T6oPmbeqRInkHjFLPUm728lMPsB6ohllSC3vaCPRzjfyt3/H3rk1caKlBIQ82se5EPHPZFTq9J/k3JbL8=
+	t=1733823311; cv=none; b=G3PXCrpPnYi2QeeiQmgnj3aWwl/4MOdYE9gmaJjtWRHkdcDES7c89S1uZVCXRmFLcNOwPUcnmAdFVg4B2jOcLdcRveqx99mfbOriP9JIDggY+19NS89+FhAd6laBjfkwW8cryGtR5xoPsdr6vwm6VviLGrh0EfgU2AaAxXABn8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733823308; c=relaxed/simple;
-	bh=+X/wsRvpYMVsVg/DvYoWjCPmiVKTIhH2lSR7TbP6uFo=;
+	s=arc-20240116; t=1733823311; c=relaxed/simple;
+	bh=mxDgS9ScnbH4xzV88XBhOMkm6J/lau/VAHGoavlzYnw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rq6LhvsgREnrrXCLcvgTOemfQiprFV+l7w5wbP70dBlx+AYF8WInw6GGj3S07NW6leTad4dKsK5CbeE+92lOpcWvx1+zbWdu/+A0ptsUAMuj5tJ3H9yHSuewKuxeiyrLXaHMzouLYcyRn6KE5w6i0x4RwkDxjo1jwVn8s1SzjHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tpjo+xwA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81088C4CEE0;
-	Tue, 10 Dec 2024 09:35:06 +0000 (UTC)
+	 MIME-Version; b=Z6VzVfezjcZhYJvrB1+5r51+NpkOYwc5bSUMA20iUz08AuBXRYrJrwm0KUUu1YMZuuLSKPKe3IrCeHXzxycnRl6cRTfGuOZbvf4shHtL4Lhz3UXV/ydE21kb1xdUIFxb4LZXeR716f8fv/apKtWt2plnfdMqjjFJmkTMlQXOdTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+cNlJMD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77EDC4CED6;
+	Tue, 10 Dec 2024 09:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733823308;
-	bh=+X/wsRvpYMVsVg/DvYoWjCPmiVKTIhH2lSR7TbP6uFo=;
+	s=k20201202; t=1733823310;
+	bh=mxDgS9ScnbH4xzV88XBhOMkm6J/lau/VAHGoavlzYnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tpjo+xwAMfNlwoaAsDDi/PPROGYonpcPAyssqvdFbZlY14I+Uxkq3zpqj52EXT6j3
-	 /pPY8LcHSIfQRtBt4gxFTudf+3r6amWUf3x2uHFzz8yW4zAETXjZ0oPcMtX9ALxXn/
-	 uiqzt1UYkkCaK/wviApuTEISRjPp/u3UGvZt34mj8I9fRXzW3Ppe/NQRLth1zIEG+S
-	 sLXAhTKRY4Ph7g6hjEgAsQpgut1jEKWUZVglHe4NYNp2EYa1HHJIqj9P698NR7n/S0
-	 V++YNTg+I8Fn8hPsrXXiW8fh4MjTNBxElZP1IvEQFg5J2IArecHU7hFPtlQyNQSs85
-	 PryVhGbhJqoUg==
+	b=R+cNlJMDdZEK1i/CVzUgqthRqA8krItCwfOTRIYS5hjQ6UvL4EGMMdJ27/3v5VL3o
+	 z7w9OU5MXLCh8RKgEe8PpI+sc1BuRU6ov74prc4ExNotb41caBCVrrbuE6fkChX3Cq
+	 gsT50aJKEFK0mZvQ7bglXic873i8A2BEiwMfHfM+moBKAoMTs1NKwhPS2pHcwwPI7G
+	 Uj2qwQNPEFW7BytwrwcK2hqSPhxzkP5N5iyfCv2LEC5GMV2Z3KJysTxcJHNavjyMEm
+	 fpopio0eHL4KI6NPkq0taRmE8Be9QgLPpgjw7E+DMJJJ3pIzXxCP/NfjfcnjvJGiTI
+	 TBI63SLrZ7/Bg==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-nvme@lists.infradead.org,
 	Christoph Hellwig <hch@lst.de>,
@@ -54,9 +54,9 @@ To: linux-nvme@lists.infradead.org,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v3 14/17] nvmet: Implement interrupt config feature support
-Date: Tue, 10 Dec 2024 18:34:05 +0900
-Message-ID: <20241210093408.105867-15-dlemoal@kernel.org>
+Subject: [PATCH v3 15/17] nvmet: Implement arbitration feature support
+Date: Tue, 10 Dec 2024 18:34:06 +0900
+Message-ID: <20241210093408.105867-16-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241210093408.105867-1-dlemoal@kernel.org>
 References: <20241210093408.105867-1-dlemoal@kernel.org>
@@ -68,94 +68,90 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The NVMe base specifications v2.1 mandate supporting the interrupt
-config feature (NVME_FEAT_IRQ_CONFIG) for PCI controllers. Introduce the
-data structure struct nvmet_feat_irq_config to define the coalescing
-disabled (cd) and interrupt vector (iv) fields of this feature and
-implement the functions nvmet_get_feat_irq_config() and
-nvmet_set_feat_irq_config() functions to get and set these fields. These
-functions respectively use the controller get_feature() and
-set_feature() operations to fill and handle the fields of struct
-nvmet_feat_irq_config.
+NVMe base specification v2.1 mandates support for the arbitration
+feature (NVME_FEAT_ARBITRATION). Introduce the data structure
+struct nvmet_feat_arbitration to define the high, medium and low
+priority weight fields and the arbitration burst field of this feature
+and implement the functions nvmet_get_feat_arbitration() and
+nvmet_set_feat_arbitration() functions to get and set these fields.
 
-Support for this feature is prohibited for fabrics controllers. If a get
-feature command or a set feature command for this feature is received
-for a fabrics controller, the command is failed with an invalid field
-error.
+Since there is no generic way to implement support for the arbitration
+feature, these functions respectively use the controller get_feature()
+and set_feature() operations to process the feature with the help of
+the controller driver. If the controller driver does not implement these
+operations and a get feature command or a set feature command for this
+feature is received, the command is failed with an invalid field error.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/nvme/target/admin-cmd.c | 54 +++++++++++++++++++++++++++++++--
- drivers/nvme/target/nvmet.h     |  5 +++
- 2 files changed, 57 insertions(+), 2 deletions(-)
+ drivers/nvme/target/admin-cmd.c | 51 +++++++++++++++++++++++++++++++--
+ drivers/nvme/target/nvmet.h     |  7 +++++
+ 2 files changed, 56 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index eff9fd2e81ed..8b8ec33330b2 100644
+index 8b8ec33330b2..3ddd8e44e148 100644
 --- a/drivers/nvme/target/admin-cmd.c
 +++ b/drivers/nvme/target/admin-cmd.c
-@@ -1303,6 +1303,27 @@ static u16 nvmet_set_feat_irq_coalesce(struct nvmet_req *req)
- 	return ctrl->ops->set_feature(ctrl, NVME_FEAT_IRQ_COALESCE, &irqc);
+@@ -1324,6 +1324,25 @@ static u16 nvmet_set_feat_irq_config(struct nvmet_req *req)
+ 	return ctrl->ops->set_feature(ctrl, NVME_FEAT_IRQ_CONFIG, &irqcfg);
  }
  
-+static u16 nvmet_set_feat_irq_config(struct nvmet_req *req)
++static u16 nvmet_set_feat_arbitration(struct nvmet_req *req)
 +{
 +	struct nvmet_ctrl *ctrl = req->sq->ctrl;
 +	u32 cdw11 = le32_to_cpu(req->cmd->common.cdw11);
-+	struct nvmet_feat_irq_config irqcfg = {
-+		.iv = cdw11 & 0xffff,
-+		.cd = (cdw11 >> 16) & 0x1,
++	struct nvmet_feat_arbitration arb = {
++		.hpw = (cdw11 >> 24) & 0xff,
++		.mpw = (cdw11 >> 16) & 0xff,
++		.lpw = (cdw11 >> 8) & 0xff,
++		.ab = cdw11 & 0x3,
 +	};
 +
-+	/*
-+	 * This feature is not supported for fabrics controllers and mandatory
-+	 * for PCI controllers.
-+	 */
-+	if (!nvmet_is_pci_ctrl(ctrl)) {
++	if (!ctrl->ops->set_feature) {
 +		req->error_loc = offsetof(struct nvme_common_command, cdw10);
 +		return NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
 +	}
 +
-+	return ctrl->ops->set_feature(ctrl, NVME_FEAT_IRQ_CONFIG, &irqcfg);
++	return ctrl->ops->set_feature(ctrl, NVME_FEAT_ARBITRATION, &arb);
 +}
 +
  void nvmet_execute_set_features(struct nvmet_req *req)
  {
  	struct nvmet_subsys *subsys = nvmet_req_subsys(req);
-@@ -1329,6 +1350,9 @@ void nvmet_execute_set_features(struct nvmet_req *req)
- 	case NVME_FEAT_IRQ_COALESCE:
- 		status = nvmet_set_feat_irq_coalesce(req);
- 		break;
-+	case NVME_FEAT_IRQ_CONFIG:
-+		status = nvmet_set_feat_irq_config(req);
+@@ -1337,6 +1356,9 @@ void nvmet_execute_set_features(struct nvmet_req *req)
+ 		return;
+ 
+ 	switch (cdw10 & 0xff) {
++	case NVME_FEAT_ARBITRATION:
++		status = nvmet_set_feat_arbitration(req);
 +		break;
- 	case NVME_FEAT_KATO:
- 		status = nvmet_set_feat_kato(req);
- 		break;
-@@ -1397,6 +1421,31 @@ static u16 nvmet_get_feat_irq_coalesce(struct nvmet_req *req)
+ 	case NVME_FEAT_NUM_QUEUES:
+ 		ncqr = (cdw11 >> 16) & 0xffff;
+ 		nsqr = cdw11 & 0xffff;
+@@ -1446,6 +1468,30 @@ static u16 nvmet_get_feat_irq_config(struct nvmet_req *req)
  	return NVME_SC_SUCCESS;
  }
  
-+static u16 nvmet_get_feat_irq_config(struct nvmet_req *req)
++static u16 nvmet_get_feat_arbitration(struct nvmet_req *req)
 +{
 +	struct nvmet_ctrl *ctrl = req->sq->ctrl;
-+	u32 iv = le32_to_cpu(req->cmd->common.cdw11) & 0xffff;
-+	struct nvmet_feat_irq_config irqcfg = { .iv = iv };
++	struct nvmet_feat_arbitration arb = { };
 +	u16 status;
 +
-+	/*
-+	 * This feature is not supported for fabrics controllers and mandatory
-+	 * for PCI controllers.
-+	 */
-+	if (!nvmet_is_pci_ctrl(ctrl)) {
++	if (!ctrl->ops->get_feature) {
 +		req->error_loc = offsetof(struct nvme_common_command, cdw10);
 +		return NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
 +	}
 +
-+	status = ctrl->ops->get_feature(ctrl, NVME_FEAT_IRQ_CONFIG, &irqcfg);
++	status = ctrl->ops->get_feature(ctrl, NVME_FEAT_ARBITRATION, &arb);
 +	if (status != NVME_SC_SUCCESS)
 +		return status;
 +
-+	nvmet_set_result(req, ((u32)irqcfg.cd << 16) | iv);
++	nvmet_set_result(req,
++			 ((u32)arb.hpw << 24) |
++			 ((u32)arb.mpw << 16) |
++			 ((u32)arb.lpw << 8) |
++			 (arb.ab & 0x3));
 +
 +	return NVME_SC_SUCCESS;
 +}
@@ -163,35 +159,38 @@ index eff9fd2e81ed..8b8ec33330b2 100644
  void nvmet_get_feat_kato(struct nvmet_req *req)
  {
  	nvmet_set_result(req, req->sq->ctrl->kato * 1000);
-@@ -1431,14 +1480,15 @@ void nvmet_execute_get_features(struct nvmet_req *req)
- 		break;
- 	case NVME_FEAT_ERR_RECOVERY:
- 		break;
--	case NVME_FEAT_IRQ_CONFIG:
+@@ -1472,8 +1518,6 @@ void nvmet_execute_get_features(struct nvmet_req *req)
+ 	 * need to come up with some fake values for these.
+ 	 */
+ #if 0
+-	case NVME_FEAT_ARBITRATION:
 -		break;
+ 	case NVME_FEAT_POWER_MGMT:
+ 		break;
+ 	case NVME_FEAT_TEMP_THRESH:
+@@ -1483,6 +1527,9 @@ void nvmet_execute_get_features(struct nvmet_req *req)
  	case NVME_FEAT_WRITE_ATOMIC:
  		break;
  #endif
++	case NVME_FEAT_ARBITRATION:
++		status = nvmet_get_feat_arbitration(req);
++		break;
  	case NVME_FEAT_IRQ_COALESCE:
  		status = nvmet_get_feat_irq_coalesce(req);
  		break;
-+	case NVME_FEAT_IRQ_CONFIG:
-+		status = nvmet_get_feat_irq_config(req);
-+		break;
- 	case NVME_FEAT_ASYNC_EVENT:
- 		nvmet_get_feat_async_event(req);
- 		break;
 diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 555c09b11dbe..999a4ebf597e 100644
+index 999a4ebf597e..f4df458df9db 100644
 --- a/drivers/nvme/target/nvmet.h
 +++ b/drivers/nvme/target/nvmet.h
-@@ -916,4 +916,9 @@ struct nvmet_feat_irq_coalesce {
- 	u8		time;
+@@ -921,4 +921,11 @@ struct nvmet_feat_irq_config {
+ 	bool		cd;
  };
  
-+struct nvmet_feat_irq_config {
-+	u16		iv;
-+	bool		cd;
++struct nvmet_feat_arbitration {
++	u8		hpw;
++	u8		mpw;
++	u8		lpw;
++	u8		ab;
 +};
 +
  #endif /* _NVMET_H */
