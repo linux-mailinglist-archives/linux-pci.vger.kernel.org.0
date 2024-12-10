@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-18072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84B4B9EBE44
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 23:53:28 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED0489EBE47
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 23:53:37 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6444B16A288
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 22:53:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF46E286038
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2024 22:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8678225A4A;
-	Tue, 10 Dec 2024 22:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D05B225A53;
+	Tue, 10 Dec 2024 22:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1IMDY+2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8pa0ypY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86991EE7BD;
-	Tue, 10 Dec 2024 22:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29571EE7BD;
+	Tue, 10 Dec 2024 22:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733871075; cv=none; b=o0oSg0r2a/qjmeysFrOG6ehyLvi6W5pdYQsSlZ4UMzv+jfeEgUWwQyFCzuN9L89TMKQFuqVtVFcVLGXiXxW9Ba9c93eqpWDMAXBW1J5HBnLWX4wOnBsW9JUojUUKKLGbF73wTQ3ws1ba0T2mxVPiIEGE9TIfyAYhsy5g14taSz0=
+	t=1733871082; cv=none; b=XRApYnUwEKHiLKhbMUi2eJJ+QVp4ixrCpKrarFlt9I+Q14Obk1ztrxj2EjnKTp3DJhIovhPBSoIO3fiM6ewcZg0IhJviOmShQKm/7TXeraGRVYLvy1f7RWK6/B+pkvrrKX5WgtXL3xSGuVNgpwV3Lu045Rb7q1juLA6vdkqyftw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733871075; c=relaxed/simple;
-	bh=jrVPWbBukBXtbshCtZsBtD+5zJ+mmtK9G1LjoUASO/I=;
+	s=arc-20240116; t=1733871082; c=relaxed/simple;
+	bh=G82NOJZHyH6ULzotBAiLVDncCdayd7kGRmb8TyDikAg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P0Q0+qbkOWERlevRZ0VmkX6olLDlsEN2LP7uQyGjTGzzs/RhDYzdVkPW0/XooLaHmaOVU9eQTGj7/dHmtB7nFFU2PxQf7x2pKGuThkIwTfEGRwA34ZwadYWtoAvKTaaSvzmd48mBea+ggMKKu/Vs+2eVJXdF01i2DC6hlyWfr4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1IMDY+2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A37FC4CED6;
-	Tue, 10 Dec 2024 22:51:09 +0000 (UTC)
+	 MIME-Version; b=MOlNiS4jw9Zsnd3J0QR/M+1BdjPXflgdrkHu1U1LPQpy8MPZNtLwNa86drPbV4n7/hdU3KrT2k+gWmV43QtNMlg9RCT5yY41b0vj1KeBjNqZ8yc0vlReEVJlaLMTbEeflM1G6BuQeO2/5cKuKHg6DJxpIck7So9aO+Xx0Hd4L6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8pa0ypY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C949CC4CEE0;
+	Tue, 10 Dec 2024 22:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733871075;
-	bh=jrVPWbBukBXtbshCtZsBtD+5zJ+mmtK9G1LjoUASO/I=;
+	s=k20201202; t=1733871081;
+	bh=G82NOJZHyH6ULzotBAiLVDncCdayd7kGRmb8TyDikAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M1IMDY+29O+cEbyQA6cJv9YotAGqZcQovG30eQd1dcxb2fNXgY11Iqhp9omSbsy8t
-	 /mEjxhiw6+QviOIIhnc64Z6Rt/m/7aCptyaMeml2w8a+ne3sYU1Z2MXWQ2ptrjPgf4
-	 SQK0pJs6CyhwSdZDccUQbIXGzWg7twofqP9XBiiK+70VXXHEIEm3t6dxytkPY6Kc9m
-	 FUDoVhB4yLzuHOU+rkRiygcmlHdmEWDS0KPagVlwvchfE8gej1WBx9uWzNVeu6sysR
-	 5LSgmslEpF1buvxC1oyFbYjcQij7oLFJpJaLQryhL0RPiLbUBEUwqFBzUiOJb1qF1t
-	 py8WkKHBwTpVg==
+	b=V8pa0ypYAZiYq0hdyoSrIBQvMVo0ftI6v/8AWlaJjM4UxHUxMJBfc97Zdr1kYnnQx
+	 nHmyLRT5lYxPAdoc8JUZDWEfOmDetvYYGrhiA0NB5r8Ihtb8vnkfkpItd/AP3uzagA
+	 0vZVh2A1BhL/iXm+rSD4JO3El9ftZrYx461xuXXeaEIrvuzv2Tj791uU1/qJQ6a/sI
+	 vWvFIVcNcxFhUyjllskwcrrKG1kjtu2I/fO03zQHY1HsQR7/7jZKwuyXr9l9Fy9tgB
+	 ZuBGkFgSiMtVSkHqR69a3LCNehhClCbWp7/BQoUo2CHS/OZyV6lvc80md6pU0Iihjk
+	 iwRs7Lt1NhnnQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -72,9 +72,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v5 12/16] rust: of: add `of::DeviceId` abstraction
-Date: Tue, 10 Dec 2024 23:46:39 +0100
-Message-ID: <20241210224947.23804-13-dakr@kernel.org>
+Subject: [PATCH v5 13/16] rust: driver: implement `Adapter`
+Date: Tue, 10 Dec 2024 23:46:40 +0100
+Message-ID: <20241210224947.23804-14-dakr@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241210224947.23804-1-dakr@kernel.org>
 References: <20241210224947.23804-1-dakr@kernel.org>
@@ -86,109 +86,93 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-`of::DeviceId` is an abstraction around `struct of_device_id`.
+In order to not duplicate code in bus specific implementations (e.g.
+platform), implement a generic `driver::Adapter` to represent the
+connection of matched drivers and devices.
 
-This is used by subsequent patches, in particular the platform bus
-abstractions, to create OF device ID tables.
+Bus specific `Adapter` implementations can simply implement this trait
+to inherit generic functionality, such as matching OF or ACPI device IDs
+and ID table entries.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Suggested-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- MAINTAINERS        |  1 +
- rust/kernel/lib.rs |  1 +
- rust/kernel/of.rs  | 60 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 62 insertions(+)
- create mode 100644 rust/kernel/of.rs
+ rust/kernel/driver.rs | 59 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 50995e0e4252..7371ab484139 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17502,6 +17502,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- F:	Documentation/ABI/testing/sysfs-firmware-ofw
- F:	drivers/of/
- F:	include/linux/of*.h
-+F:	rust/kernel/of.rs
- F:	scripts/dtc/
- F:	tools/testing/selftests/dt/
- K:	of_overlay_notifier_
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 07770add5ee2..7a0e4c82ad0c 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -56,6 +56,7 @@
- pub mod miscdevice;
- #[cfg(CONFIG_NET)]
- pub mod net;
-+pub mod of;
- pub mod page;
- pub mod pid_namespace;
- pub mod prelude;
-diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-new file mode 100644
-index 000000000000..04f2d8ef29cb
---- /dev/null
-+++ b/rust/kernel/of.rs
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index ab0bb46fe2cc..d169899a5da1 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -6,7 +6,9 @@
+ //! register using the [`Registration`] class.
+ 
+ use crate::error::{Error, Result};
+-use crate::{init::PinInit, str::CStr, try_pin_init, types::Opaque, ThisModule};
++use crate::{
++    device, device_id, init::PinInit, of, str::CStr, try_pin_init, types::Opaque, ThisModule,
++};
+ use core::pin::Pin;
+ use macros::{pin_data, pinned_drop};
+ 
+@@ -114,3 +116,58 @@ macro_rules! module_driver {
+         }
+     }
+ }
 +
-+//! Device Tree / Open Firmware abstractions.
++/// The bus independent adapter to match a drivers and a devices.
++///
++/// This trait should be implemented by the bus specific adapter, which represents the connection
++/// of a device and a driver.
++///
++/// It provides bus independent functions for device / driver interactions.
++pub trait Adapter {
++    /// The type holding driver private data about each device id supported by the driver.
++    type IdInfo: 'static;
 +
-+use crate::{bindings, device_id::RawDeviceId, prelude::*};
++    /// The [`of::IdTable`] of the corresponding driver.
++    fn of_id_table() -> of::IdTable<Self::IdInfo>;
 +
-+/// IdTable type for OF drivers.
-+pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
++    /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
++    ///
++    /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
++    #[cfg(CONFIG_OF)]
++    fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        let table = Self::of_id_table();
 +
-+/// An open firmware device id.
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub struct DeviceId(bindings::of_device_id);
++        // SAFETY:
++        // - `table` has static lifetime, hence it's valid for read,
++        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
++        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
 +
-+// SAFETY:
-+// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and does not add
-+//   additional invariants, so it's safe to transmute to `RawType`.
-+// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::of_device_id;
++        if raw_id.is_null() {
++            None
++        } else {
++            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
++            // does not add additional invariants, so it's safe to transmute.
++            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
 +
-+    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::of_device_id, data);
-+
-+    fn index(&self) -> usize {
-+        self.0.data as _
++            Some(table.info(<of::DeviceId as device_id::RawDeviceId>::index(id)))
++        }
 +    }
-+}
 +
-+impl DeviceId {
-+    /// Create a new device id from an OF 'compatible' string.
-+    pub const fn new(compatible: &'static CStr) -> Self {
-+        let src = compatible.as_bytes_with_nul();
-+        // Replace with `bindings::of_device_id::default()` once stabilized for `const`.
-+        // SAFETY: FFI type is valid to be zero-initialized.
-+        let mut of: bindings::of_device_id = unsafe { core::mem::zeroed() };
++    #[cfg(not(CONFIG_OF))]
++    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        None
++    }
 +
-+        // TODO: Use `clone_from_slice` once the corresponding types do match.
-+        let mut i = 0;
-+        while i < src.len() {
-+            of.compatible[i] = src[i] as _;
-+            i += 1;
++    /// Returns the driver's private data from the matching entry of any of the ID tables, if any.
++    ///
++    /// If this returns `None`, it means that there is no match in any of the ID tables directly
++    /// associated with a [`device::Device`].
++    fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        let id = Self::of_id_info(dev);
++        if id.is_some() {
++            return id;
 +        }
 +
-+        Self(of)
++        None
 +    }
-+}
-+
-+/// Create an OF `IdTable` with an "alias" for modpost.
-+#[macro_export]
-+macro_rules! of_device_table {
-+    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
-+        const $table_name: $crate::device_id::IdArray<
-+            $crate::of::DeviceId,
-+            $id_info_type,
-+            { $table_data.len() },
-+        > = $crate::device_id::IdArray::new($table_data);
-+
-+        $crate::module_device_table!("of", $module_table_name, $table_name);
-+    };
 +}
 -- 
 2.47.0
