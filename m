@@ -1,169 +1,97 @@
-Return-Path: <linux-pci+bounces-18132-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85B269ECD98
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 14:46:15 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3878D16669E
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 13:45:58 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F1D1A83F4;
-	Wed, 11 Dec 2024 13:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R328R+Vn"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C2B79ECDA4
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 14:48:58 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA35422913A;
-	Wed, 11 Dec 2024 13:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 745882816AF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 13:48:53 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FBC9381AA;
+	Wed, 11 Dec 2024 13:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QAblZNSD"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728451A840C
+	for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 13:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733924717; cv=none; b=Pps8BBQKSOoZhGeDi/B1LbqtHrzBCwmitnakCaLmvOl+tdgoONr2eCGGYzwXqRPzh7mB/sw1jR5Fd4TwdjrrabSVSElGe02Ehs/3XRrE5bYEt+Xx5ejqjoK4VJlO1Gm0jpDFyhVT+2Uf59Lxrz3Dkl5KT6orXuSJhZiQ79yDyUg=
+	t=1733924931; cv=none; b=QChqh8BklXFOjhT9jPzP6ntl8H4zS2/YMc9RaQ5VJO28t1SSFEgCR/vvtpwnyM3OwydgZfTT7X78K6QfoHp6yxRsNChq8ClIlHiLYDfGMYO2qm1p04CKO6VV2PsdNnO48/peFPB058rr4QngZzTBW3+Cq4P9j9RmjgrdgXC3/vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733924717; c=relaxed/simple;
-	bh=1Vh/lJfGergY2Cfgz9dLUhsUnujS1YPQPim9cgg0SbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cI5/dNKnbXWw6cJZ0du1/L4laInjRnGRM9CEnJkvgeWFMPN1XMDIsl99H8f4b3kktN/jINTwBDBPQm8jBGoZ/OLKvw/nUSgrCwqEV6tmnDhLMl0Hg9mYunBGPPKIRDwPwbQoxKWIFrFmJvVY+OrJBqqbBWvF2zb16Xm9xfmSWzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R328R+Vn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7387C4CED2;
-	Wed, 11 Dec 2024 13:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1733924716;
-	bh=1Vh/lJfGergY2Cfgz9dLUhsUnujS1YPQPim9cgg0SbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R328R+VnTFMGl2Bx2kJgIzuAEMWHWICYjeNWB3ONLfLywltos6VGbVPSkbtHEINis
-	 uvi6iR+nE0BP8TadOkB27BB35U6quNc3rZ63G+XOdU6aJ7YxMIzCCu/s0pq2uAcRYR
-	 S8Mgx16Z5y7iogzag2JObGCjmYgl/QewVu9Oq8zU=
-Date: Wed, 11 Dec 2024 14:45:14 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
-	daniel.almeida@collabora.com, saravanak@google.com,
-	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
-	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 01/16] rust: pass module name to `Module::init`
-Message-ID: <2024121121-gimmick-etching-40fb@gregkh>
-References: <20241210224947.23804-1-dakr@kernel.org>
- <20241210224947.23804-2-dakr@kernel.org>
- <2024121112-gala-skincare-c85e@gregkh>
- <2024121111-acquire-jarring-71af@gregkh>
- <2024121128-mutt-twice-acda@gregkh>
- <2024121131-carnival-cash-8c5f@gregkh>
- <Z1mEAPlSXA9c282i@cassiopeiae>
- <Z1mG14DMoIzh6xtj@cassiopeiae>
- <2024121109-ample-retrain-bde0@gregkh>
- <Z1mUG8ruFkPhVZwj@cassiopeiae>
+	s=arc-20240116; t=1733924931; c=relaxed/simple;
+	bh=OFqjVmcR4svZ8DMCIKAwuWUtXkZFPBKvhtivo2Ibo2Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HKWAEBBvB2OQGQdM5ubJ5Jyg3wv4taOpbLmzNMD5IvUI118uN9Kny5M/lp2U8OO/ZKF+9Tbci4/Usii2dhcCh2pA1Ztqb3E+0xSNH820/bb6pUoQSUQtB180z7jXpcYQfEBHgijdtQbOyK7E5kuNbg1qXZK8dYqxvCDXuYs9nHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QAblZNSD; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733924929; x=1765460929;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OFqjVmcR4svZ8DMCIKAwuWUtXkZFPBKvhtivo2Ibo2Y=;
+  b=QAblZNSDyP7RBtuz4D6IyRHE4zYevO8djZ7DNJWvx0KBdJFaajN5Ystl
+   TP3cj3lulQanQKT3N07xiFZ6JPg+PrGFJ0zKcvgj7GEPdtTQ5+1EuhWGq
+   D7AvumKXTouUvcxOLfuzBLR36RiOjarYD+iaEXm7VjWOCtlkckYcd3bno
+   H8w1ow55f9bT6+yANrIwTgNGiCBIDWhHBVjq1qKIjkXxxWpN35dFutNOu
+   1FcOupKK4uGELXSzjaivtE2l6Vwt/wcv4/U1ZLGSUYX8Gg2/EMJLVMgcU
+   QbZqn/4ZMWEKgpIwnyykrCesManEm95SZFAVjoKozfRVZPVBauUfMSBgm
+   w==;
+X-CSE-ConnectionGUID: a8GoQSNmQ46+IK4y89OTjg==
+X-CSE-MsgGUID: 7H2iAbygSheNj3Osg215Gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="37139053"
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="37139053"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 05:48:49 -0800
+X-CSE-ConnectionGUID: sw/5+1jRTuqLcMVeX2+f3A==
+X-CSE-MsgGUID: d/qnfwtqSuO1sF8rq8wqcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="95514084"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.214])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 05:48:46 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Martin Mares <mj@ucw.cz>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-pci@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 0/2] lspci: Add Flit mode information and Dev3 from gen6
+Date: Wed, 11 Dec 2024 15:48:38 +0200
+Message-Id: <20241211134840.3375-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z1mUG8ruFkPhVZwj@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 11, 2024 at 02:31:07PM +0100, Danilo Krummrich wrote:
-> On Wed, Dec 11, 2024 at 02:14:37PM +0100, Greg KH wrote:
-> > On Wed, Dec 11, 2024 at 01:34:31PM +0100, Danilo Krummrich wrote:
-> > > On Wed, Dec 11, 2024 at 01:22:33PM +0100, Danilo Krummrich wrote:
-> > > > On Wed, Dec 11, 2024 at 12:05:10PM +0100, Greg KH wrote:
-> > > > > On Wed, Dec 11, 2024 at 11:59:54AM +0100, Greg KH wrote:
-> > > > > > On Wed, Dec 11, 2024 at 11:48:23AM +0100, Greg KH wrote:
-> > > > > > > On Wed, Dec 11, 2024 at 11:45:20AM +0100, Greg KH wrote:
-> > > > > > > > On Tue, Dec 10, 2024 at 11:46:28PM +0100, Danilo Krummrich wrote:
-> > > > > > > > > In a subsequent patch we introduce the `Registration` abstraction used
-> > > > > > > > > to register driver structures. Some subsystems require the module name on
-> > > > > > > > > driver registration (e.g. PCI in __pci_register_driver()), hence pass
-> > > > > > > > > the module name to `Module::init`.
-> > > > > > > > 
-> > > > > > > > Nit, we don't need the NAME of the PCI driver (well, we do like it, but
-> > > > > > > > that's not the real thing), we want the pointer to the module structure
-> > > > > > > > in the register_driver call.
-> > > > > > > > 
-> > > > > > > > Does this provide for that?  I'm thinking it does, but it's not the
-> > > > > > > > "name" that is the issue here.
-> > > > > > > 
-> > > > > > > Wait, no, you really do want the name, don't you.  You refer to
-> > > > > > > "module.0" to get the module structure pointer (if I'm reading the code
-> > > > > > > right), but as you have that pointer already, why can't you just use
-> > > > > > > module->name there as well as you have a pointer to a valid module
-> > > > > > > structure that has the name already embedded in it.
-> > > > > > 
-> > > > > > In digging further, it's used by the pci code to call into lower layers,
-> > > > > > but why it's using a different string other than the module name string
-> > > > > > is beyond me.  Looks like this goes way back before git was around, and
-> > > > > > odds are it's my fault for something I wrote a long time ago.
-> > > > > > 
-> > > > > > I'll see if I can just change the driver core to not need a name at all,
-> > > > > > and pull it from the module which would make all of this go away in the
-> > > > > > end.  Odds are something will break but who knows...
-> > > > > 
-> > > > > Nope, things break, the "name" is there to handle built-in modules (as
-> > > > > the module pointer will be NULL.)
-> > > > > 
-> > > > > So what you really want is not the module->name (as I don't think that
-> > > > > will be set), but you want KBUILD_MODNAME which the build system sets.
-> > > > 
-> > > > That's correct, and the reason why I pass through this name argument.
-> > > > 
-> > > > Sorry I wasn't able to reply earlier to save you some time.
-> > > > 
-> > > > > You shouldn't need to pass the name through all of the subsystems here,
-> > > > > just rely on the build system instead.
-> > > > > 
-> > > > > Or does the Rust side not have KBUILD_MODNAME?
-> > > > 
-> > > > AFAIK, it doesn't (or didn't have at the time I wrote the patch).
-> > > > 
-> > > > @Miguel: Can we access KBUILD_MODNAME conveniently?
-> > > 
-> > > Actually, I now remember there was another reason why I pass it through in
-> > > `Module::init`.
-> > > 
-> > > Even if we had env!(KBUILD_MODNAME) already, I'd want to use it from the bus
-> > > abstraction code, e.g. rust/kernel/pci.rs. But since this is generic code, it
-> > > won't get the KBUILD_MODNAME from the module that is using the bus abstraction.
-> > 
-> > Rust can't do that in a macro somehow that all pci rust drivers can pull
-> > from?
-> 
-> The problem is that register / unregister is encapsulated within methods of the
-> abstraction types. So the C macro trick (while generally possible) isn't
-> applicable.
+Add Flit mode related flags and Device 3 Extended Capability into
+lspci. The latter patch does not print all the Dev 3 fields but already
+feels useful for checking many things (UIO and the exit latency fields
+are not printed).
 
-Really?  You can't have something in a required "register()" type function?
-Something for when the driver "instance" is created as part of
-pci::Driver?  You do that today in your sample driver for the id table:
-	const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+Ilpo Järvinen (2):
+  lspci: Add Flit Mode information
+  lspci: Add Dev3 Extended Capability
 
-Something else called DRIVER_NAME that you could then set:
-	const DRIVER_NAME: env!(KBUILD_MODNAME);
+ lib/header.h | 23 +++++++++++++++++++++++
+ ls-caps.c    | 18 +++++++++++-------
+ ls-ecaps.c   | 41 ++++++++++++++++++++++++++++++++++++++++-
+ lspci.h      |  2 +-
+ 4 files changed, 75 insertions(+), 9 deletions(-)
 
-Also, I think you will want this for when a single module registers
-multiple drivers which I think can happen at times, so you could
-manually override the DRIVER_NAME field.
+-- 
+2.39.5
 
-And if DRIVER_NAME doesn't get set, well, you just don't get the module
-symlink in sysfs, just like what happens today if you don't provide that
-field (but for PCI drivers, the .h file does it automatically for you.)
-
-Anyway, this is a driver issue, NOT a module issue, so having to "plumb"
-the module name all the way down through this really isn't the best
-abstraction to do here from what I can tell.
-
-thanks,
-
-greg k-h
 
