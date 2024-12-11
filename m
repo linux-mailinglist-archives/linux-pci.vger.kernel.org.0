@@ -1,334 +1,249 @@
-Return-Path: <linux-pci+bounces-18172-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18173-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3FE29ED678
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 20:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE0EE9ED6A6
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 20:40:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1788F188BC7E
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 19:21:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AED1E1884117
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 19:39:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1F7259497;
-	Wed, 11 Dec 2024 19:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4869F1C461F;
+	Wed, 11 Dec 2024 19:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AYdKBsio"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LGslob5m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2082.outbound.protection.outlook.com [40.107.102.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C26E2594A2;
-	Wed, 11 Dec 2024 19:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733944872; cv=fail; b=BQ/CqqYC+Fn8aShmqN+tTdFOZXjiRowvFjUUQxOXg81fcxxEBoLm/qq2J10TEAkh5oAASQHl43qPG60laIDJkkpraJuf36GULAWCqiT+P1AonqWG5aEkCX+7IZQay4VGnPKkqnV+DJ2zcmfjEAqfbnV5bNHRWkq8XYVXlrV8kcM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733944872; c=relaxed/simple;
-	bh=N7fxG1hdlUEJYK8R7cGur6fqwTE4KWo/PR3rsSuMUb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mYeRJLYRGxV9YzqUeDwGj/jYuGdONBnhcUcDn/akPNmkHi0XZYWY4JioRSAIlJ1IMbkpIy9m6jq01GPv1vHHOm/zi2Ewdxmek8QI0FtwAvaEw4+ZaRr2oEBaWQrkDmHRJP+GeVZemITxbngJqvVOgf95Jz/G3YROg8vhHu2e+xQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AYdKBsio; arc=fail smtp.client-ip=40.107.102.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JMPaBHM5s1HP4aIWxORyfGOCs0qs0FnfLvmDqdEghfya9MZHyrNL+V5J15BoVDnbZBtIIG4KKzBJCR2Vmb++d1glNRy1ST6eBPgG0xiFEFRQQCgvJr3563LjPPJ3BCfK8/v+mo6JIsWgOSmLXfphlUlLQ/bCTa8akQKcuj27FDjd5eHCiYnKYVB3hNPArv6nIxv4ckDVHbzC3KguBje1YSz0+suMbHM+jfANe4xherL9chxRJXk2yXC97xUUhP7xKyapCE7QhUOeHfYGzhsouNcoBV3ErIcCCrwq8T2y+jL6Bjw22jp76tTA9SaRRAVFABEchEi5tY5vWzu3vS/BjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VZ8pq7qzfZVM4/KRkNAPIbtUpmui1Qw/UuBQ0o+0ySU=;
- b=iPKhqlVvj/FvEpda48V7RLJqBP06s+pWqqafJ9rhX6fyyy+v3pk2k3Pbn5BPn1/21HSmfKxJ9zRuwpuOWDMBejwVYjOGs8KPKxRTWZul8BtxlrSvliJHeSIecJ+T6ubtaI6SvakXMZ9WgXDKo5NXmkYgjNdjlyghuV1dtyg9/P9lTzIQVtRsPeCX6kuZT0L5TZmQmiYs1MRiNkU24OUFj+2Q4S1JAx4gVBxvl8aDOIX3PGS18U+qKCN2K8vq3n6Elx8nwZrbzQR6ArOywb6LYVBlYIcQQ7Q8DdDmk1ELHZ0y8TOcMP0m1c58TxR7HRUMVWq6I5VqDmjgLbCUnX9+dA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VZ8pq7qzfZVM4/KRkNAPIbtUpmui1Qw/UuBQ0o+0ySU=;
- b=AYdKBsiom2pBeU30aEQehfpRa5X/P2+m2JIhzxI+LZ5YrFe8rjuDxBLCXLqnvRy+8/7kzE96vfaSbKKR/tUCDUFIBDrLqQu2C1k9BW/LOUiPwStSQRK6LxINjZosi7ReQYe/LnaaHUzDEs9b1nBFiRYokolMx8XSq44gdaNxi14=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- MN0PR12MB5932.namprd12.prod.outlook.com (2603:10b6:208:37f::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8251.14; Wed, 11 Dec 2024 19:21:00 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.8230.016; Wed, 11 Dec 2024
- 19:20:59 +0000
-Date: Wed, 11 Dec 2024 14:20:48 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-	tony.luck@intel.com, bp@alien8.de, bhelgaas@google.com,
-	robert.moore@intel.com, avadhut.naik@amd.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
-	CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com
-Subject: Re: [PATCH v4 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
-Message-ID: <20241211192048.GA1960478@yaz-khff2.amd.com>
-References: <20241205114048.60291-1-LeoLiu-oc@zhaoxin.com>
- <20241205114048.60291-2-LeoLiu-oc@zhaoxin.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241205114048.60291-2-LeoLiu-oc@zhaoxin.com>
-X-ClientProxiedBy: BLAPR03CA0038.namprd03.prod.outlook.com
- (2603:10b6:208:32d::13) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB27204F73
+	for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 19:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733945988; cv=none; b=mhR+fMhKq9OmfdN2R1PUknnGX/qXA5DPyD7aCsN22ydfCl2BligNVnCGtvuD/NjfkrQA9nUMVFVN4QUr3Mk0XkpqmSKyqUNTCeqBPm3UMk2s/IeMaKK9Pvr86Iiw4MtnGy60bt0DM/O7tCLCZkkHbl85u5MScejeL7USBLP0Egs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733945988; c=relaxed/simple;
+	bh=eSv6jyYS7bs1pXUu2BATQ7WIGDGOMoLBSgAqFdPRo0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aMjnqSj5iylKpoc7vCrxuNu6iXlwvoh6yU1fdNuPCSojYzXVfCNHU6CBEGmQ6sELCi16G1NiNOoklZgVw2+Z/ATxwwM9zHlb991fdVSBFFk8hVtmILUv3GILsWa1BdLY7KgTTI0Zw0TmPJohxNEgxqOTvgu7ilNagt0AXp4/thg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LGslob5m; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46677ef6920so9504271cf.0
+        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 11:39:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1733945985; x=1734550785; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=iIB7OgclvuXmXcCb+7ry5WHS9m+ub2PzlVh4AHBJ290=;
+        b=LGslob5m/WWjUWYTqogvacsddGGozjxLntHEgp9t7dI5Q8NKTAfRWlutU9qXbRgCkh
+         +HC4gBYoSloGpLNSvqdkxLMSB1/KSNKsc820bqklkjjduC+69zOEQcyGb1C2RXKposd5
+         Jy/Kgyzb3kXQSISLnfaFL17x7zdxAVPz7e+Oo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733945985; x=1734550785;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iIB7OgclvuXmXcCb+7ry5WHS9m+ub2PzlVh4AHBJ290=;
+        b=N85LmWrhCbnigGg3Tv4/dLJbO6ffykl3droPNK8Ec90qYZDw0EwrMEUk5QU1WarEVb
+         Eit2EAwDEpJO7qFb+vjfLd1g78uI6LvrBg2wy226dKQgz0cxgkw2iHpN5g2pm0Rp6Qke
+         bR+g4PSZ75sX932CoyM6WowSSl7GxKLL1XI633yzDhnq4j1qHY7Pwm9MfAc9g/CjZ7AH
+         OYHLVD1/rN/LKPcng16sywDYWpYXKDGGVrKx4lLjoeTUN1UddJsH+PStMeT+EMFPkr0z
+         nF7+t9OaTgjxTzxWIzXeuXvb78WXNtfYKY/i8D71O98/l468r4JBLcmL7jrDM8CzmznI
+         sKlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXc504yozbItlM6eC68e0wX/zDb5pUJs5sMHifzYv53VlQVULyUN1RF9m3NYEz5vefAxc83gmS6MdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcAp9WX+rYXP2lEnRcjnQMW1QrLRuFY6voKXt0n4Uz3nIv0zkL
+	1TosoRaLlXZ/uWnsw9jFb56qME0EbhjGedpUBhIL2DwaCEuUTmWTKLOG5deSlA==
+X-Gm-Gg: ASbGncsqXkBc1uBxnfgbQUUcjGRlUAAW7E4EfpLhJLyvpocM42iN+pg8LQOc9sXgTxg
+	IshudxKBo2w5tf+FanXYGdQ9QDv5rTCGd+OD/p2uXyXduzTJwcyjxlo27CJTa4gdcw39Dn4Cke0
+	lMKrWw2xNWjLmBsvSX5uzpKNlgxotLibNp8WoSKM413klgkxpaS6GHny2CD9JqoBV56Ix069iq1
+	x1qGdj1zb15yoySSm/Bzep7zNdznXb9SgbYZwLE1A9lmgjCKVmOeDqfYUbm8u2pKYLFmyd9ubW8
+	7+MwolE+bJvG9Zc=
+X-Google-Smtp-Source: AGHT+IE7tWa/E0nByPLL7S0B6qviBPi3v4T4dJLWOaG0p2vZl2++JiBW87VesGV7kVDu4s3AD+/ezQ==
+X-Received: by 2002:a05:622a:1102:b0:467:6703:d469 with SMTP id d75a77b69052e-46796810483mr6964701cf.2.1733945985176;
+        Wed, 11 Dec 2024 11:39:45 -0800 (PST)
+Received: from [10.28.17.173] ([192.19.144.250])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4672978dd2asm75448881cf.60.2024.12.11.11.39.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2024 11:39:44 -0800 (PST)
+Message-ID: <474e5e38-37a4-439b-b25a-fe60df03f25b@broadcom.com>
+Date: Wed, 11 Dec 2024 14:39:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|MN0PR12MB5932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7fa213ba-7aec-4fbf-51e8-08dd1a18f18e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bcY580uVSaZdc+7Xz+sKK6/9svKS4zHuUUrBGv8wwLk7WxHc347Nu5FTYoK6?=
- =?us-ascii?Q?PZ/nsUtPjPOC7iIWZ3InY7bWhC6eTP48PcnmYubr08PgKiZlW7dakrjYrHFA?=
- =?us-ascii?Q?Z8ZpoNkngVzim3fPxlvsNm6YmimCrL4UJlRUfwIIWWbt8rKOjhdZhMAFk7ul?=
- =?us-ascii?Q?ppFPpwvp9PvjdFExpa44KybBdwyvsr/OF63yHk5gQpFzhaiQpr+gq4OQEdpJ?=
- =?us-ascii?Q?UV10M9xhVkFPMnefozrgOfeU19CLE5BXCaKwje3ZDPFm3YqHUVQ/nbOyZRmV?=
- =?us-ascii?Q?nrhvq2FT0PDuWzmjWbOc7mRmuOB4hFFR8LhOHiCtzFhgseT3HWO26U11H5gz?=
- =?us-ascii?Q?FAHvlQEuL1UA9vWBtn641val3HZhKnbOoFgMnbgZiRRO6U4F55HJ0RNtcDSv?=
- =?us-ascii?Q?J8k5X26NPal3LXVLZFNvmCBIN6vZuTNjrEDHaX9bDxOMvW2a0Ody3iOymtod?=
- =?us-ascii?Q?13zgYxU4DhKWGm2j/NSnDJAYGNCat8xL82lVLLo9wAXneBJXpCSVYgOWHMgA?=
- =?us-ascii?Q?c20mU6xgFO6YrnmLDUUVI0Nd/4xC+rm1d1+1Fw6c00XExBmyFT+Z4conTfu8?=
- =?us-ascii?Q?cOY57WisYZMf9kvOUinpHN5MfrXmHxFtJIVlM/bekmPbESAdhtrKKmzkDOTw?=
- =?us-ascii?Q?uRO6h4++BgFkCgyeCszYLnGxjLt7Kd64PLEmFQTtygFcIVwLxd9XeIMCo5FO?=
- =?us-ascii?Q?+yrT/Unx+sv8uPA5KI9Dh46HsecdigZ/5Dli8JvN8CkU9UucOpGLr8awQtjm?=
- =?us-ascii?Q?9wP6Tcd/AevQlRC1AJvdaiLZpODDHJcLqZwQjGSpiES5r3eZX/nRWKKQLdCc?=
- =?us-ascii?Q?SIH8QB1kUv1YrKedMxAVHc4jHLxEjDJsKaCoVmgs3/O+OPUnwTO1Sa80fJpT?=
- =?us-ascii?Q?GhueAJcE0VlPtUwhmNnb6OIzZ09E2pHZNgicvMdsO5rqbzLjHmp8DihQyvyu?=
- =?us-ascii?Q?2Wav4Cp5TlPGuIyEr7gkRQYY8Aizr5R21dCqUz3LslASrAV7O3TC2wOefwlx?=
- =?us-ascii?Q?+ojgKaILBwEIAXytVYyiI+UPdg0w2LoYSkiLmWw9ZJ5AudQTKz9nUOapdTag?=
- =?us-ascii?Q?0GGTWQ3NmzBcAkwkA8H3/QP0m7eR97Mgp/CcZpdBm7dbq4nm+kkhD3DTV3LV?=
- =?us-ascii?Q?SmcMODBPQsi2TwYPcYRy8OIersNpNbJHL8lPSt5lWfs2/VfggAUb+uaYa1wA?=
- =?us-ascii?Q?FValuX0vu86wlce6M6uhXv5PM25qtk21fV0yK/1HPchkE1XPECL3vlJLyT/d?=
- =?us-ascii?Q?ahI3TFAL6uY6Vbvtf5UbyguYKKaBh/d9DipyNrmytO6XxMsil49XRI67eRgS?=
- =?us-ascii?Q?kPWHKxydPXwqmPrvQUs9OaiesAl7HYbkp/Y/wfIFsgmZ2w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SO/SUUq1NVwodYhVUfhdJqgWQXbKEquJDK64I3efiAAdjLcwUINtpjyDPf7U?=
- =?us-ascii?Q?EPQuUB0uPNMaKI75r7/zdyaasyZeakOyXyakT0Sn1J0XdYgc2NRp/GAa7KHz?=
- =?us-ascii?Q?MDgCgK/SBMxUGLYFCQC1HpCVXPea6IS/0ssGo7Z70C3zDRlzhdERQvpSkrAr?=
- =?us-ascii?Q?qqk38+/eP1r6XhefgfPnfzphDAkQ5V593DK+k6wCe8m9ZC0+OJPtZTTK0sme?=
- =?us-ascii?Q?rVABNGD+BqceLZCNs3R68Vch4F9Sn9nj8gB31MGnhE1SW1abR29L8xaJuqEk?=
- =?us-ascii?Q?AP5DSD/+MzgXQAKsCksLehwZeLwBvu+k2Vu1W880jixUhvKHDIrYPfNqIhqt?=
- =?us-ascii?Q?MaUqun+mc6OABF1hRB9hcDW1yaxvP+OVft/LZwr7KIGVP72t8DISQKQfIVu1?=
- =?us-ascii?Q?1anMHT09xuIVBWAwtEjQDurwZ+hODatCh/ld6MAckY0nI7NP0Q3rxjK1fmvU?=
- =?us-ascii?Q?vAbfMh9Z/+iNCAquVx0RHVH2Iv8uWKBjl67NhsaAlhhc8sN75Z9BtH3N8DF9?=
- =?us-ascii?Q?xjLM/kg6Nl/+bHMuZLBFkZ7XNEklDQIk4yWefikmfGu9iJ0oBBJO2uu/c6qn?=
- =?us-ascii?Q?t0TGwSy5vbtvhI7fnRajbXQ2BLyN7r0xArUSbkfv15NxnqI1C9bok8vMYuuY?=
- =?us-ascii?Q?2TMQKi4Qylpk6d1TAx2oRIUxMN5rWfWqVYyYf8qiQ54W2OLEe8UlVSjKWdI3?=
- =?us-ascii?Q?UpffO+9R6vSUdxkw4HxuPYhNRLp68whUIqC0gxlUnn3KGLTvgVCtGuOwd9AS?=
- =?us-ascii?Q?qfIlEA6eIVLkWT+rcd+jYKY8EhSlXKadoPDUI0ZArYkB+4YmV3IKTouM8xXn?=
- =?us-ascii?Q?kJgm/Vl2qDEO0hEqHhTRuxtEo2XOxd2UylZFRBcU0RU59pGE+xsWQhea3mhC?=
- =?us-ascii?Q?4/QSe1/ANLJwlHjN8yZQQipNkrNeGnBHF1Ry92kkiFVl1cpNoll4z7EL8eNz?=
- =?us-ascii?Q?pvWa3ZrsDE0KchEF2fJ2zcD2F4ymRkSfzoHO5A8z9V/X2QxzT4g+hqPAixLx?=
- =?us-ascii?Q?c32f1QPBrWxo/kqtVpFvvvp+aMdLK9asFZjy1mUiSql4XEKPhGmMQsDJ1+9w?=
- =?us-ascii?Q?UXi0X4fdzSvEx6akwk8vKZ5cPLd/kdScfnAvd6fTcxq6G6/pPpuDNVwqSQGz?=
- =?us-ascii?Q?J9QBnftmpJVmYhqzb+GolT4oJb2XedOz+SBVu5igdrKJkWMIXpURE4N7PRAK?=
- =?us-ascii?Q?upvRrFE3M1wOKtN4XGz8K/JFtc+L+6snvqs6LI1l766iDKL7oHDRF8uTylk2?=
- =?us-ascii?Q?AWhilH14fRWByqlfQQUN28nOkp6ypHXC8YIH/zHp1uIdjHLF0kHMsUhHuiVn?=
- =?us-ascii?Q?ScwDW3pdB+QX7JusxlSrtWEqBXN25HjExCJruxrbnfbpv5eN6MDyvnkNYW9Q?=
- =?us-ascii?Q?Tli/YFtkwFS3woEeCaxurDyRM+07UB/xBAEahSYny+6xPqj9RwE5QLdA0+fF?=
- =?us-ascii?Q?ySjoGYjzlk1SWDG+JuxrYJIxelegVrcqHjAwzr0+ORHBp8ApqmeRJYoBBprk?=
- =?us-ascii?Q?JqrIUs66vJJSiMfxH5OeaDsw92PN13HgKn2zA6vmIienxXy7HXdwUsbL24Bq?=
- =?us-ascii?Q?doUzSTNJyaaFdIGuZHUqHE9jO3i2lXAqNJ3aOenN?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fa213ba-7aec-4fbf-51e8-08dd1a18f18e
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 19:20:59.3201
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: or7dkXxJLkjyzMeRul+84uJ+aL8CBOuZT6pcQxqowTjS6sLWa3dni96X9MX9pUkh8isvlbL82NChkJMUKnrVUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5932
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v4 08/10] PCI: brcmstb: Adjust PHY PLL setup to use a
+ 54MHz input refclk
+To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Andrea della Porta <andrea.porta@suse.com>,
+ Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
+References: <20241025124515.14066-1-svarbanov@suse.de>
+ <20241025124515.14066-9-svarbanov@suse.de>
+ <4bbdf9ed-f429-411b-8f5f-e51857f0f9d0@broadcom.com>
+ <f9f49030-0518-4e30-91a7-3c088c31180b@suse.de>
+Content-Language: en-US
+From: James Quinlan <james.quinlan@broadcom.com>
+Autocrypt: addr=james.quinlan@broadcom.com; keydata=
+ xsBNBFa+BXgBCADrHC4AsC/G3fOZKB754tCYPhOHR3G/vtDmc1O2ugnIIR3uRjzNNRFLUaC+
+ BrnULBNhYfCKjH8f1TM1wCtNf6ag0bkd1Vj+IbI+f4ri9hMk/y2vDlHeC7dbOtTEa6on6Bxn
+ r88ZH68lt66LSWEciIn+HMFRFKieXwYGqWyc4reakWanRvlAgB8R5K02uk9O9fZKL7uFyolD
+ 7WR4/qeHTMUjyLJQBZJyaMj++VjHfyXj3DNQjFyW1cjIxiLZOk9JkMyeWOZ+axP/Aoe6UvWl
+ Pg7UpxkAwCNHigmqMrZDft6e5ORXdRT163en07xDbzeMr/+DQyvTgpYst2CANb1y4lCFABEB
+ AAHNKEppbSBRdWlubGFuIDxqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbT7CwO8EEAEIAJkF
+ AmNo/6MgFAAAAAAAFgABa2V5LXVzYWdlLW1hc2tAcGdwLmNvbYwwFIAAAAAAIAAHcHJlZmVy
+ cmVkLWVtYWlsLWVuY29kaW5nQHBncC5jb21wZ3BtaW1lCAsJCAcDAgEKAhkBBReAAAAAGRhs
+ ZGFwOi8va2V5cy5icm9hZGNvbS5uZXQFGwMAAAADFgIBBR4BAAAABBUICQoACgkQ3G9aYyHP
+ Y/47xgf/TV+WKO0Hv3z+FgSEtOihmwyPPMispJbgJ50QH8O2dymaURX+v0jiCjPyQ273E4yn
+ w5Z9x8fUMJtmzIrBgsxdvnhcnBbXUXZ7SZLL81CkiOl/dzEoKJOp60A7H+lR1Ce0ysT+tzng
+ qkezi06YBhzD094bRUZ7pYZIgdk6lG+sMsbTNztg1OJKs54WJHtcFFV5WAUUNUb6WoaKOowk
+ dVtWK/Dyw0ivka9TE//PdB1lLDGsC7fzbCevvptGGlNM/cSAbC258qnPu7XAii56yXH/+WrQ
+ gL6WzcRtPnAlaAOz0jSqqOfNStoVCchTRFSe0an8bBm5Q/OVyiTZtII0GXq11c7ATQRWvgV4
+ AQgA7rnljIJvW5f5Zl6JN/zJn5qBAa9PPf27InGeQTRiL7SsNvi+yx1YZJL8leHw67IUyd4g
+ 7XXIQ7Qog83TM05dzIjqV5JJ2vOnCGZDCu39UVcF45oCmyB0F5tRlWdQ3/JtSdVY55zhOdNe
+ 6yr0qHVrgDI64J5M3n2xbQcyWS5/vhFCRgBNTDsohqn/4LzHOxRX8v9LUgSIEISKxphvKGP5
+ 9aSst67cMTRuode3j1p+VTG4vPyN5xws2Wyv8pJMDmn4xy1M4Up48jCJRNCxswxnG9Yr2Wwz
+ p77WvLx0yfMYo/ednfpBAAaNPqzQyTnUKUw0mUGHph9+tYjzKMx/UnJpzQARAQABwsGBBBgB
+ AgErBQJWvgV5BRsMAAAAwF0gBBkBCAAGBQJWvgV4AAoJEOa8+mKcd3+LLC4IAKIxCqH1yUnf
+ +ta4Wy+aZchAwVTWBPPSL1xJoVgFnIW1rt0TkITbqSPgGAayEjUvUv5eSjWrWwq4rbqDfSBN
+ 2VfAomYgiCI99N/d6M97eBe3e4sAugZ1XDk1TatetRusWUFxLrmzPhkq2SMMoPZXqUFTBXf0
+ uHtLHZ2L0yE40zLILOrApkuaS15RVvxKmruqzsJk60K/LJaPdy1e4fPGyO2bHekT9m1UQw9g
+ sN9w4mhm6hTeLkKDeNp/Gok5FajlEr5NR8w+yGHPtPdM6kzKgVvv1wjrbPbTbdbF1qmTmWJX
+ tl3C+9ah7aDYRbvFIcRFxm86G5E26ws4bYrNj7c9B34ACgkQ3G9aYyHPY/7g8QgAn9yOx90V
+ zuD0cEyfU69NPGoGs8QNw/V+W0S/nvxaDKZEA/jCqDk3vbb9CRMmuyd1s8eSttHD4RrnUros
+ OT7+L6/4EnYGuE0Dr6N9aOIIajbtKN7nqWI3vNg5+O4qO5eb/n+pa2Zg4260l34p6d1T1EWy
+ PqNP1eFNUMF2Tozk4haiOvnOOSw/U6QY8zIklF1N/NomnlmD5z063WrOnmonCJ+j9YDaucWm
+ XFBxUJewmGLGnXHlR+lvHUjHLIRxNzHgpJDocGrwwZ+FDaUJQTTayQ9ZgzRLd+/9+XRtFGF7
+ HANaeMFDm07Hev5eqDLLgTADdb85prURmV59Rrgg8FgBWw==
+In-Reply-To: <f9f49030-0518-4e30-91a7-3c088c31180b@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 05, 2024 at 07:40:46PM +0800, LeoLiu-oc wrote:
-> From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-> 
-> The purpose of the function apei_hest_parse_aer() is used to parse and
-> extract register value from HEST PCIe AER structures. This applies to
-> all hardware platforms that has a PCI Express AER structure in HEST.
-> 
-> Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-> ---
->  drivers/acpi/apei/hest.c | 77 ++++++++++++++++++++++++++++++++++++++--
->  include/acpi/apei.h      | 17 +++++++++
->  2 files changed, 92 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
-> index 20d757687e3d..13075f5aea25 100644
-> --- a/drivers/acpi/apei/hest.c
-> +++ b/drivers/acpi/apei/hest.c
-> @@ -22,6 +22,7 @@
->  #include <linux/kdebug.h>
->  #include <linux/highmem.h>
->  #include <linux/io.h>
-> +#include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <acpi/apei.h>
->  #include <acpi/ghes.h>
-> @@ -132,9 +133,81 @@ static bool is_ghes_assist_struct(struct acpi_hest_header *hest_hdr)
->  	return false;
->  }
->  
-> -typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
-> +#ifdef CONFIG_ACPI_APEI
+On 12/10/24 08:42, Stanimir Varbanov wrote:
+> Hi Jim
+>
+> On 12/10/24 12:52 AM, James Quinlan wrote:
+>> On 10/25/24 08:45, Stanimir Varbanov wrote:
+>>> The default input reference clock for the PHY PLL is 100Mhz, except for
+>>> some devices where it is 54Mhz like bcm2712C1 and bcm2712D0.
+>>>
+>>> To implement this adjustments introduce a new .post_setup op in
+>>> pcie_cfg_data and call it at the end of brcm_pcie_setup function.
+>>>
+>>> The bcm2712 .post_setup callback implements the required MDIO writes that
+>>> switch the PLL refclk and also change PHY PM clock period.
+>>>
+>>> Without this RPi5 PCIex1 is unable to enumerate endpoint devices on
+>>> the expansion connector.
+>>>
+>>> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+>>> ---
+>>> v3 -> v4:
+>>>    - Improved patch description (Florian)
+>>>
+>>>    drivers/pci/controller/pcie-brcmstb.c | 42 +++++++++++++++++++++++++++
+>>>    1 file changed, 42 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/
+>>> controller/pcie-brcmstb.c
+>>> index d970a76aa9ef..2571dcc14560 100644
+>>> --- a/drivers/pci/controller/pcie-brcmstb.c
+>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
+>>> @@ -55,6 +55,10 @@
+>>>    #define PCIE_RC_DL_MDIO_WR_DATA                0x1104
+>>>    #define PCIE_RC_DL_MDIO_RD_DATA                0x1108
+>>>    +#define PCIE_RC_PL_PHY_CTL_15                0x184c
+>>> +#define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK        0x400000
+>>> +#define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK    0xff
+>>> +
+>>>    #define PCIE_MISC_MISC_CTRL                0x4008
+>>>    #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK    0x80
+>>>    #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK    0x400
+>>> @@ -251,6 +255,7 @@ struct pcie_cfg_data {
+>>>        u8 num_inbound_wins;
+>>>        int (*perst_set)(struct brcm_pcie *pcie, u32 val);
+>>>        int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+>>> +    int (*post_setup)(struct brcm_pcie *pcie);
+>>>    };
+>>>      struct subdev_regulators {
+>>> @@ -826,6 +831,36 @@ static int brcm_pcie_perst_set_generic(struct
+>>> brcm_pcie *pcie, u32 val)
+>>>        return 0;
+>>>    }
+>>>    +static int brcm_pcie_post_setup_bcm2712(struct brcm_pcie *pcie)
+>>> +{
+>>> +    const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030,
+>>> 0x5030, 0x0007 };
+>>> +    const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
+>>> +    int ret, i;
+>>> +    u32 tmp;
+>>> +
+>>> +    /* Allow a 54MHz (xosc) refclk source */
+>>> +    ret = brcm_pcie_mdio_write(pcie->base, MDIO_PORT0,
+>>> SET_ADDR_OFFSET, 0x1600);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(regs); i++) {
+>>> +        ret = brcm_pcie_mdio_write(pcie->base, MDIO_PORT0, regs[i],
+>>> data[i]);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +    }
+>>> +
+>>> +    usleep_range(100, 200);
+>>> +
+>>> +    /* Fix for L1SS errata */
+>>> +    tmp = readl(pcie->base + PCIE_RC_PL_PHY_CTL_15);
+>>> +    tmp &= ~PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK;
+>>> +    /* PM clock period is 18.52ns (round down) */
+>>> +    tmp |= 0x12;
+>>> +    writel(tmp, pcie->base + PCIE_RC_PL_PHY_CTL_15);
+>> Hi Stan,
+>>
+>> Can you please say more about where this errata came from?  I asked the
+>> 7712 PCIe HW folks and they said that there best guess was that it was a
+>> old workaround for a particular Broadcom Wifi endpoint.  Do you know its
+>> origin?
+> Unfortunately, I don't know the details. See the comments on previous
+> series version [1]. My observation shows that MDIO writes are
+> implemented in RPi platform firmware only for pcie2 (where RP1 south
+> bridge is connected) but not for pcie1 expansion connector.
 
-Why is this needed? The entire hest.c file is only built if
-CONFIG_ACPI_APEI is enabled.
+Well, I think my concern is more about the comment "Fix for L1SS errata" 
+rather than the code.  If this is a bonafide errata it should have an 
+identifier and some documentation somewhere. Declaring it to be an 
+unknown errata provides little info.
 
-> +static bool hest_match_pci_devfn(struct acpi_hest_aer_common *p,
-> +				 struct pci_dev *dev)
-> +{
-> +	return ACPI_HEST_SEGMENT(p->bus) == pci_domain_nr(dev->bus) &&
-> +	       ACPI_HEST_BUS(p->bus) == dev->bus->number &&
-> +	       p->device == PCI_SLOT(dev->devfn) &&
-> +	       p->function == PCI_FUNC(dev->devfn);
+Code-wise, you could use u32p_replace_bits(..., PM_CLK_PERIOD_MASK) to 
+do the field value insertion.
 
-It may be nice to align all these lines on the "==".
+All the above being said, I have no objection since this code is 
+specific to the RPi platform.
 
-> +}
-> +
-> +static bool hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr,
-> +				    struct pci_dev *dev)
-> +{
-> +	u16 hest_type = hest_hdr->type;
-> +	u8 pcie_type = pci_pcie_type(dev);
-> +	struct acpi_hest_aer_common *common;
-> +
-> +	common = (struct acpi_hest_aer_common *)(hest_hdr + 1);
-> +
-> +	switch (hest_type) {
-> +	case ACPI_HEST_TYPE_AER_ROOT_PORT:
-> +		if (pcie_type != PCI_EXP_TYPE_ROOT_PORT)
-> +			return false;
-> +	break;
+Jim Quinlan  Broadcom STB/CM
 
-The breaks should be indented to the "if". Same for the rest of the
-file.
+>
+> ~Stan
+>
+> [1] https://www.spinics.net/lists/linux-pci/msg160842.html
+>
 
-> +	case ACPI_HEST_TYPE_AER_ENDPOINT:
-> +		if (pcie_type != PCI_EXP_TYPE_ENDPOINT)
-> +			return false;
-> +	break;
-> +	case ACPI_HEST_TYPE_AER_BRIDGE:
-> +		if (pcie_type != PCI_EXP_TYPE_PCI_BRIDGE &&
-> +		    pcie_type != PCI_EXP_TYPE_PCIE_BRIDGE)
-> +			return false;
-> +	break;
-> +	default:
-> +		return false;
-> +	break;
-> +	}
-> +
-> +	if (common->flags & ACPI_HEST_GLOBAL)
-> +		return true;
-> +
-> +	if (hest_match_pci_devfn(common, dev))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data)
-> +{
-> +	struct hest_parse_aer_info *info = data;
-> +
-> +	if (!hest_source_is_pcie_aer(hest_hdr, info->pci_dev))
-> +		return 0;
-> +
-> +	switch (hest_hdr->type) {
-> +	case ACPI_HEST_TYPE_AER_ROOT_PORT:
-> +		info->hest_aer_root_port = (struct acpi_hest_aer_root *)hest_hdr;
-> +		return 1;
-> +	break;
-> +	case ACPI_HEST_TYPE_AER_ENDPOINT:
-> +		info->hest_aer_endpoint = (struct acpi_hest_aer *)hest_hdr;
-> +		return 1;
-> +	break;
-> +	case ACPI_HEST_TYPE_AER_BRIDGE:
-> +		info->hest_aer_bridge = (struct acpi_hest_aer_bridge *)hest_hdr;
-> +		return 1;
-> +	break;
-> +	default:
-> +		return 0;
-> +	break;
-> +	}
-> +}
-> +#endif
->  
-> -static int apei_hest_parse(apei_hest_func_t func, void *data)
-> +int apei_hest_parse(apei_hest_func_t func, void *data)
->  {
->  	struct acpi_hest_header *hest_hdr;
->  	int i, rc, len;
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index dc60f7db5524..82d3cdf53e22 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -23,6 +23,15 @@ enum hest_status {
->  	HEST_NOT_FOUND,
->  };
->  
-> +#ifdef CONFIG_ACPI_APEI
-> +struct hest_parse_aer_info {
-> +	struct pci_dev *pci_dev;
-> +	struct acpi_hest_aer *hest_aer_endpoint;
-> +	struct acpi_hest_aer_root *hest_aer_root_port;
-> +	struct acpi_hest_aer_bridge *hest_aer_bridge;
-
-These three pointers are mutually exclusive. Can you save just one
-pointer and then cast it when checking the "port_type" in patch 3?
-
-> +};
-> +#endif
-
-I think the #ifdef is not needed, because this is not declaring an
-instance of the struct.
-
-> +
->  extern int hest_disable;
->  extern int erst_disable;
->  #ifdef CONFIG_ACPI_APEI_GHES
-> @@ -33,10 +42,18 @@ void __init acpi_ghes_init(void);
->  static inline void acpi_ghes_init(void) { }
->  #endif
->  
-> +typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
-> +int apei_hest_parse(apei_hest_func_t func, void *data);
-> +
-
-Minor nit: this could be done as a separate patch.
-
-Patch 1: Move apei_hest_parse() to apei.h
-Patch 2: Add new hest_parse_pcie_aer()
-
->  #ifdef CONFIG_ACPI_APEI
->  void __init acpi_hest_init(void);
-> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data);
->  #else
->  static inline void acpi_hest_init(void) { }
-> +static inline int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  int erst_write(const struct cper_record_header *record);
-> -- 
-
-Thanks,
-Yazen
 
