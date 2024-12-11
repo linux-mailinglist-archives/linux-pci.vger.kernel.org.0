@@ -1,204 +1,169 @@
-Return-Path: <linux-pci+bounces-18093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 898DE9EC597
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 08:30:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 30B579EC5EC
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 08:48:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B94662852FB
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 07:30:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB0E428126C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 07:48:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DF41D86FF;
-	Wed, 11 Dec 2024 07:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064E12770B;
+	Wed, 11 Dec 2024 07:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ypco1HAR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqXLx55g"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDC71C5F21
-	for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 07:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A8F1C549C
+	for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 07:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733902184; cv=none; b=PmPRgCzavdjjn9Ckx1oV9n0QlzAeAONilrqGDDkW4/Aw1pEHNSiOwBzM2bIagZ+yttAniqujbKPAWamEMY/iYkwtZJe5pMpRMpz6gJ5LMKu3wEtoZSDZJGrkB1/1MKeSFu/7YlCmIEAqVS32dDPJ69CHyYU41pApGRWK/vhOAXk=
+	t=1733903287; cv=none; b=H900aOlDgDy/nSzlnXAC+bc8zS08cw8poHUhkjH7k/xKmfGPu3MeO1L4PA+EK6o4sggyXlTv5oCpHuvQAumtwYdaySRL2WjmDSUvNmy/GwEufJRSHzsymgNs9uIUhVvsvbSfST226/+rqMfyWi/rZwIVXdvNXo6nfRSf0GpTWwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733902184; c=relaxed/simple;
-	bh=Ui2/Jdpz1fxUj57/NUfwZXPgzbfy6zMSI8MNHCZHnUk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=XHn1G2w5/6pv71fgnSfFzfspihZtkcfkl0KP9jCkz08WoSs7F0/s9AiOiMx2MjKZMdUP21ufEGWQRzMjzMKwLVaZSWBe8sFiA2osQReyCBnwPFbGsgMR/dB2R3zZIgkhaqS24b77soD51by/CsXcDeebuGyD8MlAXEle/RlvEhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Ypco1HAR; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-725dc290c00so318562b3a.0
-        for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 23:29:42 -0800 (PST)
+	s=arc-20240116; t=1733903287; c=relaxed/simple;
+	bh=FL0ECQxCvQ32p81Mcm1ddqDNtG56JuJQDXNqTmoIIxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QjGMm5oL9cwRpqDoLpcG+BjoWH4XJpC1K7a1LBw6yVuk9PwCkaCJ6D7i5iQL2B+EWiGCgG9OHHy94COJbq5zomkFp4fziBp/BLAXITHRiV+T8S/6m2013Kcl//a5GWWW/K1Uwl0lf3+OI711IpdNehQ5RGpmCnBfidDhvKyGLS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cqXLx55g; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-216281bc30fso44226895ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 10 Dec 2024 23:48:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1733902181; x=1734506981; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+        d=linaro.org; s=google; t=1733903286; x=1734508086; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8/oq+gebTAnADYfYNzQqdkR7lTEj/+kWYp6cfNh4N6g=;
-        b=Ypco1HARloPtoVKz8IsXikNcTOPmWrnM3hcDmFAOFxiyLXECllxHEE3qgHlTrpRD2m
-         9+PH+cr9YeMhfs/uwo+KdJy6DWrr/q1Jl9BRNvUE/i4C7NckfbKY2W8Jj2Z1Pbl9s1oL
-         7yb6dCGYX+RR0cozLbXqwqawIqrMi+hzYbTFs=
+        bh=We1H/O/5JSivIAPtQ7Na6FEoBB6GPBDqGbOj3m5VHPI=;
+        b=cqXLx55g1B8IVj5yBnGQDPfJMBJCe5vhyGbf3jJnKO1dZZRIQjcS+HhrE5aHspIw3u
+         l59ZweYgg/b8GHEUr/luWaWymkqC+/abKjrd5A088oNDC3ctsFAtNkfhgBtuy+7MInv5
+         fhj/MgyM6Cxr8S/Z6Z5s1VwVm0/1StqlOOWE/euRRD58/yulMHOsroHvuN0GP8ys5HkM
+         5h5HZuVjAMfTRaYxAzb5HEM/kx1Nk3KWmwVDKfhGhb/GPGEk5XhtFyLcPx6mHa5ksu/C
+         UlxSG3hSTWgAgYO7v4gybK0hbrnMVGHFNg8Pim91SkDTpV08/OkRBamh7kf19eF5YSuI
+         FFHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733902181; x=1734506981;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
+        d=1e100.net; s=20230601; t=1733903286; x=1734508086;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8/oq+gebTAnADYfYNzQqdkR7lTEj/+kWYp6cfNh4N6g=;
-        b=t8xWaarcC97gbqBKHrUlXURJ6aKff2eklD88dXKLIhs7czrUS8q3T7Pmkf8swkUlQB
-         +U9sDjTNsO5ovUAPBX+1vquhlGVuLyzaRAOJb/TwVTzcoj2cdmAPFq8XxLbrI5v58fq0
-         ukH0Iv51w9brkPDKdoiWwyJQVYfFBrHNFwucD+nYa/5wvBjhn26dR7gzpSoqhucrMLKZ
-         lu0DVJLm8dEYoJbDU8mc+z/W6OahG3g5S2JloUIdFtq3JivpjA+vJgzn+iG63LgMyfpW
-         XvYJhSyUxwJ1M7nEgJYQxJXoZtRtTgvEQ09QYYzSskkKbzowHPTB1rnOL4h1Z7mF21cX
-         3hBw==
-X-Gm-Message-State: AOJu0Yw5V06jNIK+9EtZL5Wd0rXy7NnlxJXiWTdFFuVDQB+WnVbWWD//
-	uCaPFY2DRigHoOHUSAAK+SnvTFghBSD87/dK+igDkR987fai8J/lWEN11wGG7D98Svo48b0dkfR
-	oi321bc/iZGEeruuwOEUmsn+I3Rzbad6GxU6bAoet/lWOdVay4Y7Kwzkfq6Cd2i4dMpYUdyxmNI
-	O18iuniWi5ud/wDaR7wCGRnyiBAuej/zsMGNkCX1GzAh4Q82z2lEDSOrKJvZzM37UAdQ==
-X-Gm-Gg: ASbGncuc4XKDI0lbNh/vEOxYJKMoLzQirxjEI4Y6TV2BOse5uF0/qNJ+iDNB6zXTXPW
-	8L49wfRE6yE9usQl6OLhJwiqrzwRoTjeiwABNcnFwrjrOFZDZdMOR/Cfcj6+Shy2T7zoGnsRZ9d
-	xQRLK38UXh9ZLOELEl9BpKmvQGDtoUiW7vIezC66h8T8QTt4O/Sbax3b2hjZXb3YsPFa5JXhnJW
-	ihk61aKpQ4/LuYvb183d6MuE4mDlfJZBPZEXsSPAVquk9GlZDJu4VNLb3GHuheRIQhT/aKXuuvH
-	BYGLo98hjPQXkw7JMVrbXzGuQ28u8TqZGCgYZTG5/IEE83g19NrN+klCJsKo+g==
-X-Google-Smtp-Source: AGHT+IFOzanYKtnaLHjb7nE4GzsLl0AT8VJBXbmwVneBepN2mAgXSwZ2Jw0VJvwyFz/yHtFGHb4bvA==
-X-Received: by 2002:a05:6a21:3396:b0:1e1:a789:1b4d with SMTP id adf61e73a8af0-1e1c2720ba0mr2236406637.15.1733902181215;
-        Tue, 10 Dec 2024 23:29:41 -0800 (PST)
-Received: from dhcp-135-24-192-142.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725cc7fcfb2sm7540539b3a.141.2024.12.10.23.29.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2024 23:29:40 -0800 (PST)
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org,
-	logang@deltatee.com,
-	Jonathan.Cameron@huawei.com
-Cc: linux-kernel@vger.kernel.org,
-	sumanesh.samanta@broadcom.com,
-	sathya.prakash@broadcom.com,
-	sjeaugey@nvidia.com,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Subject: [PATCH v3 2/2] PCI/P2PDMA: Modify p2p_dma_distance to detect P2P links
-Date: Tue, 10 Dec 2024 23:17:48 -0800
-Message-Id: <1733901468-14860-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-X-Mailer: git-send-email 2.4.3
-In-Reply-To: <1733901468-14860-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-References: <1733901468-14860-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+        bh=We1H/O/5JSivIAPtQ7Na6FEoBB6GPBDqGbOj3m5VHPI=;
+        b=v/6uA8qkWABLADXJDEp7OkCFB9NCP9G6xwzLEnEc/hDGjB4cF6ZzAoBIfWs60wP91m
+         pRHizJaihnNa0vJ+w+fSreVy54NVul+9lVI+b1bijP5RS8ck53whe2ZxGSFpYCTnPk7Q
+         lSB1H0+T2dQwzUO+Y9IQ6pJR3rzqJk1oFaykkyQcUzwnNgGRHRc/iPltepOyAIomIiQe
+         g67b0ZLYQBErofaUAfdfdR2Gx7YpR8SP0Nc5dfsIf67jpApUTi9UGHhEfB9affPOJYi0
+         sLhVVK/ubUEu5uI6ElbOoqhGe9bU1wji1g2aS4lpw3kJwALXK8h29bHzwKZY0cSGHVns
+         +kkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnQqMWHJuHHi+d2SVo3CGCNv7SLgrV+7dqT/5RisH4hH1MCbIPh639R9bnv9CNaFbEx9Bo/m+slAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS1bJGIlOLOqyAToYVspF+TnXODlbU+T6X6c3/qKYg8MTgiOLv
+	/UTLmGdZN03mrBT31iPX7X6+BHAkK/unqUT4erk3TWqRclC1CDS2yYjYjkxSGA==
+X-Gm-Gg: ASbGncu6ukpXV1Knq+yvJdo/Lws31O/dmkXAeLjBfY6cji6OwUzDIKQ8Uyi84ev6C1R
+	SJCe3wNLOa7JsxTy6yX0/WDNgFx6b2+y/6wdctcFHDiBu4K7S7l++kKDE84+Uzx2grQZL37gfeQ
+	v3zRBdgwNf5TvWjAR8xkxx/CGndRSnnzIQPOKuuxfIt5OhtQmPPoW/cHwAZhwzsP4T8DHQd5mtm
+	YcmzYemQVIYUJVxgi133SikOsbDdU6QVlkvTAuWtZQlZ5eIcbLziN9+iMxNGO8=
+X-Google-Smtp-Source: AGHT+IEhrzTztU1j5OzMUP/bR3EXig9yjni9/ZYqzhtDD5dvE1u59b6+6zz4qP3utDEKyerb33yjlg==
+X-Received: by 2002:a17:903:2284:b0:215:4a4e:9260 with SMTP id d9443c01a7336-21778536d17mr31649505ad.14.1733903285776;
+        Tue, 10 Dec 2024 23:48:05 -0800 (PST)
+Received: from thinkpad ([120.60.55.53])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21641f46e17sm53537855ad.221.2024.12.10.23.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2024 23:48:05 -0800 (PST)
+Date: Wed, 11 Dec 2024 13:17:57 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
+	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
+	aman1.gupta@samsung.com, p.rajanbabu@samsung.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] misc: pci_endpoint_test: Fix the return value of
+ IOCTL
+Message-ID: <20241211074757.byc5jqpgfe3otjh7@thinkpad>
+References: <20241129092415.29437-1-manivannan.sadhasivam@linaro.org>
+ <20241129092415.29437-3-manivannan.sadhasivam@linaro.org>
+ <ccd1587a-0368-4bde-9c72-4f10393c58b0@kernel.org>
+ <20241129163024.dvz2ojldopeoyr6c@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241129163024.dvz2ojldopeoyr6c@thinkpad>
 
-Update the p2p_dma_distance() to determine inter-switch P2P links existing
-between two switches and use this to calculate the DMA distance between
-two devices. This requires enabling the PCIE_P2P_LINK config option in
-the kernel.
+On Fri, Nov 29, 2024 at 10:00:30PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Nov 29, 2024 at 07:51:30PM +0900, Damien Le Moal wrote:
+> > On 11/29/24 18:24, Manivannan Sadhasivam wrote:
+> > > IOCTLs are supposed to return 0 for success and negative error codes for
+> > > failure. Currently, this driver is returning 0 for failure and 1 for
+> > > success, that's not correct. Hence, fix it!
+> > > 
+> > > Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Closes: https://lore.kernel.org/all/YvzNg5ROnxEApDgS@kroah.com
+> > > Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Looks OK to me.
+> > 
+> > Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> > 
+> > One nit below.
+> > 
+> > [...]
+> > 
+> > >  static void pci_endpoint_test_remove(struct pci_dev *pdev)
+> > > diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+> > > index 470258009ddc..545e04ad63a2 100644
+> > > --- a/tools/pci/pcitest.c
+> > > +++ b/tools/pci/pcitest.c
+> > > @@ -16,7 +16,6 @@
+> > >  
+> > >  #include <linux/pcitest.h>
+> > >  
+> > > -static char *result[] = { "NOT OKAY", "OKAY" };
+> > >  static char *irq[] = { "LEGACY", "MSI", "MSI-X" };
+> > >  
+> > >  struct pci_test {
+> > > @@ -52,63 +51,65 @@ static int run_test(struct pci_test *test)
+> > >  		ret = ioctl(fd, PCITEST_BAR, test->barnum);
+> > >  		fprintf(stdout, "BAR%d:\t\t", test->barnum);
+> > >  		if (ret < 0)
+> > > -			fprintf(stdout, "TEST FAILED\n");
+> > > +			fprintf(stdout, "NOT OKAY\n");
+> > >  		else
+> > > -			fprintf(stdout, "%s\n", result[ret]);
+> > > +			fprintf(stdout, "OKAY\n");
+> > 
+> > Maybe replace all this "if (ret < 0) ... else ..." and all the ones below with
+> > something a call to:
+> > 
+> > static void test_result(int ret)
+> > {
+> > 	fprintf(stdout, "%sOKAY\n", ret < 0 ? "NOT " : "");
+> > }
+> > 
+> > or simply with the call:
+> > 
+> > 	fprintf(stdout, "%sOKAY\n", ret < 0 ? "NOT " : "");
+> > 
+> > to avoid all these repetition.
+> > 
+> 
+> Sounds good to me. Will incorporate in next version, thanks!
+> 
 
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
----
-Changes in v3:
-Fixed review comments from Jonathan
+Maybe not. This test is converted to Kselftest in successive patches, so no need
+to simplify it.
 
- drivers/pci/p2pdma.c        | 18 +++++++++++++++++-
- drivers/pci/pcie/p2p_link.c | 18 ++++++++++++++++++
- drivers/pci/pcie/p2p_link.h |  5 +++++
- 3 files changed, 40 insertions(+), 1 deletion(-)
+- Mani
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 7abd4f546d3c..9482bf0b1a02 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -20,6 +20,7 @@
- #include <linux/random.h>
- #include <linux/seq_buf.h>
- #include <linux/xarray.h>
-+#include "pcie/p2p_link.h"
- 
- struct pci_p2pdma {
- 	struct gen_pool *pool;
-@@ -576,7 +577,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 		int *dist, bool verbose)
- {
- 	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
--	struct pci_dev *a = provider, *b = client, *bb;
-+	struct pci_dev *a = provider, *b = client, *bb, *b_p2p_link = NULL;
- 	bool acs_redirects = false;
- 	struct pci_p2pdma *p2pdma;
- 	struct seq_buf acs_list;
-@@ -606,6 +607,18 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 			if (a == bb)
- 				goto check_b_path_acs;
- 
-+#ifdef CONFIG_PCIE_P2P_LINK
-+			/*
-+			 * If both upstream bridges have Inter switch P2P link
-+			 * available, P2P DMA distance can account for optimized
-+			 * path.
-+			 */
-+			if (pcie_port_is_p2p_link_available(a, bb)) {
-+				b_p2p_link = bb;
-+				goto check_b_path_acs;
-+			}
-+#endif
-+
- 			bb = pci_upstream_bridge(bb);
- 			dist_b++;
- 		}
-@@ -629,6 +642,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 			acs_cnt++;
- 		}
- 
-+		if (bb == b_p2p_link)
-+			break;
-+
- 		bb = pci_upstream_bridge(bb);
- 	}
- 
-diff --git a/drivers/pci/pcie/p2p_link.c b/drivers/pci/pcie/p2p_link.c
-index dec5c4cbcf13..87651dfa1981 100644
---- a/drivers/pci/pcie/p2p_link.c
-+++ b/drivers/pci/pcie/p2p_link.c
-@@ -141,3 +141,21 @@ void p2p_link_sysfs_update_group(struct pci_dev *pdev)
- 
- 	sysfs_update_group(&pdev->dev.kobj, &pcie_port_p2p_link_attr_group);
- }
-+
-+/*
-+ * pcie_port_is_p2p_link_available: Determine if a P2P link is available
-+ * between the two upstream bridges. The serial number of the two devices
-+ * will be compared and if they are same then it is considered that the P2P
-+ * link is available.
-+ *
-+ * Return value: true if inter switch P2P is available, return false otherwise.
-+ */
-+bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b)
-+{
-+	if (!pcie_port_is_p2p_supported(a) || !pcie_port_is_p2p_supported(b))
-+		return false;
-+
-+	/* the above check validates DSN is valid for both devices */
-+	return pci_get_dsn(a) == pci_get_dsn(b);
-+}
-+EXPORT_SYMBOL_GPL(pcie_port_is_p2p_link_available);
-diff --git a/drivers/pci/pcie/p2p_link.h b/drivers/pci/pcie/p2p_link.h
-index 6c4f57841c79..6677ed66f397 100644
---- a/drivers/pci/pcie/p2p_link.h
-+++ b/drivers/pci/pcie/p2p_link.h
-@@ -21,7 +21,12 @@
- #ifdef CONFIG_PCIE_P2P_LINK
- void p2p_link_sysfs_update_group(struct pci_dev *pdev);
- 
-+bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b);
- #else
- static inline void p2p_link_sysfs_update_group(struct pci_dev *pdev) { }
-+static inline bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b)
-+{
-+	return false;
-+}
- #endif
- #endif /* _P2P_LINK_H_ */
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
