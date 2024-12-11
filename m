@@ -1,50 +1,53 @@
-Return-Path: <linux-pci+bounces-18139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7DD39ECEB1
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 15:33:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5565A9ECEB5
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 15:33:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 017B116B0B8
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 14:32:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 874BB188AA43
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 14:33:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC8B91DC197;
-	Wed, 11 Dec 2024 14:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D63F0165F1A;
+	Wed, 11 Dec 2024 14:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cn+DWU9z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHO5Bmzk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3E91DBB36;
-	Wed, 11 Dec 2024 14:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A891A1494DD;
+	Wed, 11 Dec 2024 14:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733927456; cv=none; b=S7Z1XgGXZah9ATJWcMm1IybxlcAJWEGglWMBk22MANaQoMy3YVV8BeXn2E85FuwZr0/ayV/GK+CP4IVzqtsnkv+2ilK4jHQxU+cYTkKy4bEHMrUeLfBgiZoSwWoBMhugBsP8PWQViB9GVXIgHuV7FL9h6nHEneArIxZJOT7MBQU=
+	t=1733927550; cv=none; b=LgWau1G5CONIZANSXObsztHkZwZkyZ9mtB9CbvlpHMJr0KlEeMHXpVkjrqSpN3cmKsJ0Dgzd+ngsD4jrJ0m/tDkVDYUKHpe2+wP5jtNQmh5CguPrE7Jt0/EQHpkfjQIz0y2H+wgD9a26EH1simy6t2IS30SiIN3Vro4LivhKDh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733927456; c=relaxed/simple;
-	bh=sf7J34p1Pkgecwlqi0r21A5mwW0XxASsI9vA7F+tTXM=;
+	s=arc-20240116; t=1733927550; c=relaxed/simple;
+	bh=hVduLjdvtwk/jSlcpLB3nZnk3Bh/+0CbGBpin9xdFQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+Rqn0FdMWnV2oDa/6pma33/28N6BbqUalGl3C0ChmmM85TqM6/mO2Cbj4rlA5X4f4gzOeF2CfRWoX2jZwxmjKKq97EEMtpBR8UIyeAE23quStVM5VPXOaXQfiU7DV2LJZmDG4eO11pXwxnbukW+Shhl0+bsOvbnwFzzoCzRSpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cn+DWU9z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C011C4CED7;
-	Wed, 11 Dec 2024 14:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1733927455;
-	bh=sf7J34p1Pkgecwlqi0r21A5mwW0XxASsI9vA7F+tTXM=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=PPLUYZi7A8p/MpWvnwdwqZHTP08BlpUndyINyTXh+8Ghn1a1hPhmAY1sj+ujaxawHVE94uu1ecwuyRTUAJjgii6rmBSKg+gK5qNJFR2S/zbv8cyugv/0/ZL5NqMz14RNbhxUQpTbc+RmfPkSv8k4DoZVgzHPReJQzSW9KjGe6Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHO5Bmzk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A849C4CED2;
+	Wed, 11 Dec 2024 14:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733927550;
+	bh=hVduLjdvtwk/jSlcpLB3nZnk3Bh/+0CbGBpin9xdFQ4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cn+DWU9zl9GpkkoxEqCTeyb7BGrEYTypixBsHMeE/OtdnJzNWe77iqFyRuaJcyFoa
-	 Ua7/8PXPk1vhC/o/JUg/+udsySvAXM8M8mh55hRQXIEearsPOFXkoZp2l7Tx3MfDJx
-	 narR0WuypGXUu4dRaf3nvKKcbsNJnZtu0clytarY=
-Date: Wed, 11 Dec 2024 15:30:52 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	b=CHO5BmzkP6HQKhPhS4My0GgYJkV9rej7LQWH+Ts+HnknVLWqaojyEiXm81Mpe4C0J
+	 01DOcLP+JlBKOd3YSa1cEWWlAy+qnitiLV8EOeR3LMUk9UciuIsOmvguooZzvpB/eB
+	 Q18uJ/+xpFb/HKZgu2hv7xt4YE1gJbyMUlKLSXdtETJDEGKQ9KbrbZcIwV0ukxb+01
+	 ZH07spbj0hsWj4ZB/9D6gnnun77lwSH0rPSILuOEGWldn0N/OQ2+fl2GhGEU+eDeFp
+	 Nj98NxGZKwimxDv3XTVkpl3gE6mGQ5nr/tjK/fIfSt0YNCrQxzbHWvkpjoeFJrFjBj
+	 23zGvBQwDEXJg==
+Date: Wed, 11 Dec 2024 15:32:21 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com,
 	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
 	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
 	daniel.almeida@collabora.com, saravanak@google.com,
@@ -52,73 +55,98 @@ Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
 	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 01/16] rust: pass module name to `Module::init`
-Message-ID: <2024121102-promotion-other-e7dc@gregkh>
-References: <2024121112-gala-skincare-c85e@gregkh>
- <2024121111-acquire-jarring-71af@gregkh>
- <2024121128-mutt-twice-acda@gregkh>
- <2024121131-carnival-cash-8c5f@gregkh>
- <Z1mEAPlSXA9c282i@cassiopeiae>
- <Z1mG14DMoIzh6xtj@cassiopeiae>
- <2024121109-ample-retrain-bde0@gregkh>
- <Z1mUG8ruFkPhVZwj@cassiopeiae>
- <2024121121-gimmick-etching-40fb@gregkh>
- <Z1mgATmU2WgYwCGZ@cassiopeiae>
+Subject: Re: [PATCH v4 08/13] rust: pci: add basic PCI device / driver
+ abstractions
+Message-ID: <Z1midaMMA1xBgBrg@cassiopeiae>
+References: <20241205141533.111830-1-dakr@kernel.org>
+ <20241205141533.111830-9-dakr@kernel.org>
+ <CAH5fLgh6qgQ=SBn17biSRbqO8pNtSEq=5fDY3iuGzbuf2Aqjeg@mail.gmail.com>
+ <Z1bKA5efDYxd8sTC@pollux.localdomain>
+ <CAH5fLgixvBWSf-3WDRj=Mxtn4ArQLqdKqMF0aSxyC6xVNPfTFQ@mail.gmail.com>
+ <Z1jC7NnmwidLPT9Z@pollux>
+ <CAH5fLgg=fvQOVL-FH72BFtv-5r_e35=esNir9itG_29am_5Sng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z1mgATmU2WgYwCGZ@cassiopeiae>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgg=fvQOVL-FH72BFtv-5r_e35=esNir9itG_29am_5Sng@mail.gmail.com>
 
-On Wed, Dec 11, 2024 at 03:21:53PM +0100, Danilo Krummrich wrote:
-> > Really?  You can't have something in a required "register()" type function?
-> > Something for when the driver "instance" is created as part of
-> > pci::Driver?  You do that today in your sample driver for the id table:
-> > 	const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
-> > 
-> > Something else called DRIVER_NAME that you could then set:
-> > 	const DRIVER_NAME: env!(KBUILD_MODNAME);
+On Wed, Dec 11, 2024 at 02:06:50PM +0100, Alice Ryhl wrote:
+> On Tue, Dec 10, 2024 at 11:38 PM Danilo Krummrich <dakr@kernel.org> wrote:
+> >
+> > On Tue, Dec 10, 2024 at 11:55:33AM +0100, Alice Ryhl wrote:
+> > > On Mon, Dec 9, 2024 at 11:44 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > >
+> > > > On Fri, Dec 06, 2024 at 03:01:18PM +0100, Alice Ryhl wrote:
+> > > > > On Thu, Dec 5, 2024 at 3:16 PM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > > > >
+> > > > > > Implement the basic PCI abstractions required to write a basic PCI
+> > > > > > driver. This includes the following data structures:
+> > > > > >
+> > > > > > The `pci::Driver` trait represents the interface to the driver and
+> > > > > > provides `pci::Driver::probe` for the driver to implement.
+> > > > > >
+> > > > > > The `pci::Device` abstraction represents a `struct pci_dev` and provides
+> > > > > > abstractions for common functions, such as `pci::Device::set_master`.
+> > > > > >
+> > > > > > In order to provide the PCI specific parts to a generic
+> > > > > > `driver::Registration` the `driver::RegistrationOps` trait is implemented
+> > > > > > by `pci::Adapter`.
+> > > > > >
+> > > > > > `pci::DeviceId` implements PCI device IDs based on the generic
+> > > > > > `device_id::RawDevceId` abstraction.
+> > > > > >
+> > > > > > Co-developed-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > > > > > Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > > > > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > > > >
+> > > > > > +/// The PCI device representation.
+> > > > > > +///
+> > > > > > +/// A PCI device is based on an always reference counted `device:Device` instance. Cloning a PCI
+> > > > > > +/// device, hence, also increments the base device' reference count.
+> > > > > > +#[derive(Clone)]
+> > > > > > +pub struct Device(ARef<device::Device>);
+> > > > >
+> > > > > It seems more natural for this to be a wrapper around
+> > > > > `Opaque<bindings::pci_dev>`. Then you can have both &Device and
+> > > > > ARef<Device> depending on whether you want to hold a refcount or not.
+> > > >
+> > > > Yeah, but then every bus device has to re-implement the refcount dance we
+> > > > already have in `device::Device` for the underlying base `struct device`.
+> > > >
+> > > > I forgot to mention this in my previous reply to Boqun, but we even documented
+> > > > it this way in `device::Device` [1].
+> > > >
+> > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/device.rs#n28
+> > >
+> > > We could perhaps write a derive macro for AlwaysRefCounted that
+> > > delegates to the inner type? That way, we can have the best of both
+> > > worlds.
+> >
+> > Sounds interesting, how exactly would this work?
+> >
+> > (I'll already send out a v5, but let's keep discussing this.)
 > 
-> Sure, that's possible. But that means that the driver has to set it explicitly
-> -- even when e.g. module_pci_driver! is used.
+> Well, the derive macro could assume that the refcount is manipulated
+> in the same way as the inner type does it. I admit that the idea is
+> not fully formed, but if we can avoid wrapping ARef, that would be
+> ideal.
+
+If we can get this to work, I agree it's a good solution.
+
+What do you think about making this a follow up of this series?
+
+> It sounds like the only reason you don't do that is that it's
+> more unsafe, which the macro could reduce.
+
+Exactly, yes.
+
 > 
-> In C you don't have that, because there it's implicit within the
-> pci_register_driver() macro. (Regardless of whether it's a single module for a
-> single driver or multiple drivers per module.)
 > 
-> Anyways, like I mentioned, given that we have `env!(KBUILD_MODNAME)` (which we
-> still need to add), there are other options to make it work similarly, e.g. add
-> a parameter to `pci::Adapter` and bake this into `module_pci_driver!`.
-
-Ok, I'm all for that, just don't modify the module rust functions for it :)
-
-> For this particular option, it would mean that for modules registering multiple
-> drivers a corresponding name would need to be passed explicitly.
-
-True.
-
-> > Also, I think you will want this for when a single module registers
-> > multiple drivers which I think can happen at times, so you could
-> > manually override the DRIVER_NAME field.
-> 
-> My proposal above would provide this option, but do we care? In C no one ever
-> changes the name. There is zero users of __pci_register_driver(), everyone uses
-> pci_register_driver() where the name is just KBUILD_MODNAME. Same for
-> __platform_driver_register().
-
-You are right.  But I see other drivers messing with that field, oh no,
-wait, that's just the EDAC layer doing really odd things (a known issue
-as that layer does very many odd things.)
-
-So nevermind, multiple drivers per module isn't going to be an issue, if
-you all can move it to a macro (best yet, like what Alice pointed out),
-that would be fine with me.
-
-thanks,
-
-greg k-h
+> Alice
 
