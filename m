@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-18151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29F2F9ECFB0
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 16:27:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E47D9ECFB6
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 16:29:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFE9D166B62
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 15:27:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2EC1C1888BF1
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 15:29:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C4531ABEA1;
-	Wed, 11 Dec 2024 15:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33631AC88A;
+	Wed, 11 Dec 2024 15:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6gYo1gK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHgXlIQS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3997117736;
-	Wed, 11 Dec 2024 15:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42261AA1C4;
+	Wed, 11 Dec 2024 15:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733930828; cv=none; b=iQaL59P4PZKT1AOw+gLdVfx/OKIyi9cI67Ui/J+XUWzjn5HwUdOaqE1v+D3tkt/kNvGOatKDfx+Xa06sqG7zrB+bwjRDY9FNR8IuT9CNX5vfjTNGpd61ekTKgV99C7Gt6U6h8cXLMa8Q/eWFNSdWfkJ83z75qaBAYr4J/cs2LpY=
+	t=1733930944; cv=none; b=nwppIAcZs8siE4NGyApd3SDw3lQa32sTXBJiu0jUDZeJ1abAOT0uOsamPjsrvbYt5k3kFFNhyx7+97aqVKdAzFlM0riWLFxMU5VwtJaiojB0kOHZv6yLDLoi4OmSzYg2+h0f0EIs2zDq8jnqdvHwXGXcevy99VopAaBlkrkqxh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733930828; c=relaxed/simple;
-	bh=BKIP6Fts7P9VMVBcKntIxvtkkTHt1ZG9kg8V7SXwY/o=;
+	s=arc-20240116; t=1733930944; c=relaxed/simple;
+	bh=TAkXGoru7IboFNheO16srMs+Hv5/y72CCn02eUzuyLM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yf0b45wD7aRWrysJ4jMgUCticRpPxqJfCaTZ7arN3cGFIxJYwCU4MhfcgL1OJI09HPj24wmzguOaWNKiJo6k355TSW+Orar5Mnfx/1I3sRZAvGLsBvzEpj+go1G9zRTylv9OuMc6MNMPpeEU5N679VST1NG/kKCBkbPLXHlMnW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6gYo1gK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967EAC4CED2;
-	Wed, 11 Dec 2024 15:27:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=c5mVkS/tdNlBlJel+bnsUYfYpE3Vm25DT0seMj7A+ZuINeJQ/n43MdtsZU7CyQglQ1X0/7A2VGY/4fC6ecgoZeNNLGf4TcYFUEsMK/wYs0BkP82kNAIt80b+Ly7aNOouuzxjGX9gY0eINHawDyzGl6b9EImfEU1wnCESHMJWzxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHgXlIQS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D080C4CED2;
+	Wed, 11 Dec 2024 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733930826;
-	bh=BKIP6Fts7P9VMVBcKntIxvtkkTHt1ZG9kg8V7SXwY/o=;
+	s=k20201202; t=1733930944;
+	bh=TAkXGoru7IboFNheO16srMs+Hv5/y72CCn02eUzuyLM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C6gYo1gKS1TNb34aBzsmRZ3OY5SEP9rvNWACpNpHnclMjKTxwiyPLxhoftQhiGAme
-	 tLFm0boXwqIO2PVppDOclyPQ5aiEuigwFJTyZQj3A4oiE+SiXmDTtek8iYBzrzBx8q
-	 vwH49vHmbS95ScOZV9vx/LvkPnYkt08tQg5+UA7Pfl01ufiifSKUoUiV9WZoV5NVYV
-	 Rn9EuR4TeX/M8Pyoe3pEmpItrEDp0BryTSl9oYTK9NHCgcVdaYkGqNRPwb7tXg9wAQ
-	 4/0Z9AeITSZ07I3lYUsSiJu4jgLAs6+RqOJ1jlDUR/qS39YLWNwUEAMF75vNfRf2BZ
-	 g4kkIVa/kR3VA==
-Date: Wed, 11 Dec 2024 09:27:04 -0600
+	b=YHgXlIQS5eH2JmCMGpmZPM3HedoUkg84SHg9kmruUuiNuDtG8QDl7H9t36d5WxEr5
+	 aXrrnqQPNu6bNZvZ9mVaybvDJFw3N6gl8it+sISL8MZFDk5IQIadFCvyYky3GRWpK/
+	 QHgF9I/k74OIcP2X/f1ghbYfyNdIOjgF65uSPv5RwonYOB4RHY26yWOG17CJy1l7Uk
+	 RNZGin55Y5nDXqx2JBI/1yuTAXYr77znMJsV3ecZFqUU1jW2b2nDQ7StuVWthpA/Xs
+	 1UZ2YWHIr+edDF9GGvVGCVwK6Jfo/guMgaO9dYAxSf5qRbN81YGMPtqyT2cPw8nQoV
+	 zeik5zrE7WbKA==
+Date: Wed, 11 Dec 2024 09:29:02 -0600
 From: Rob Herring <robh@kernel.org>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -55,11 +55,10 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
 	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 14/16] rust: platform: add basic platform device /
- driver abstractions
-Message-ID: <20241211152704.GA2906470-robh@kernel.org>
+Subject: Re: [PATCH v5 15/16] samples: rust: add Rust platform sample driver
+Message-ID: <20241211152902.GB2906470-robh@kernel.org>
 References: <20241210224947.23804-1-dakr@kernel.org>
- <20241210224947.23804-15-dakr@kernel.org>
+ <20241210224947.23804-16-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,32 +67,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241210224947.23804-15-dakr@kernel.org>
+In-Reply-To: <20241210224947.23804-16-dakr@kernel.org>
 
-On Tue, Dec 10, 2024 at 11:46:41PM +0100, Danilo Krummrich wrote:
-> Implement the basic platform bus abstractions required to write a basic
-> platform driver. This includes the following data structures:
+On Tue, Dec 10, 2024 at 11:46:42PM +0100, Danilo Krummrich wrote:
+> Add a sample Rust platform driver illustrating the usage of the platform
+> bus abstractions.
 > 
-> The `platform::Driver` trait represents the interface to the driver and
-> provides `platform::Driver::probe` for the driver to implement.
-> 
-> The `platform::Device` abstraction represents a `struct platform_device`.
-> 
-> In order to provide the platform bus specific parts to a generic
-> `driver::Registration` the `driver::RegistrationOps` trait is implemented
-> by `platform::Adapter`.
+> This driver probes through either a match of device / driver name or a
+> match within the OF ID table.
 > 
 > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
->  MAINTAINERS                     |   1 +
->  rust/bindings/bindings_helper.h |   2 +
->  rust/helpers/helpers.c          |   1 +
->  rust/helpers/platform.c         |  13 +++
->  rust/kernel/lib.rs              |   1 +
->  rust/kernel/platform.rs         | 193 ++++++++++++++++++++++++++++++++
->  6 files changed, 211 insertions(+)
->  create mode 100644 rust/helpers/platform.c
->  create mode 100644 rust/kernel/platform.rs
+>  MAINTAINERS                                  |  1 +
+>  drivers/of/unittest-data/tests-platform.dtsi |  5 ++
+>  samples/rust/Kconfig                         | 10 ++++
+>  samples/rust/Makefile                        |  1 +
+>  samples/rust/rust_driver_platform.rs         | 49 ++++++++++++++++++++
+>  5 files changed, 66 insertions(+)
+>  create mode 100644 samples/rust/rust_driver_platform.rs
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
