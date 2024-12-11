@@ -1,147 +1,187 @@
-Return-Path: <linux-pci+bounces-18143-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18144-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E2C59ECEE2
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 15:43:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC6A59ECEE4
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 15:44:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CE601885DEF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 14:43:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF72B162B0E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 14:44:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD363195811;
-	Wed, 11 Dec 2024 14:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C79194A67;
+	Wed, 11 Dec 2024 14:44:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpjv7a8u"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZaWMgy2X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B3316F0CF;
-	Wed, 11 Dec 2024 14:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4452F18732B
+	for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 14:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733928212; cv=none; b=EaOErRNMMMYB/DjTw91eAj5GM3uSB5Mg6d2Ixvm/hqY75WR3VRt1HNGU7vXNEoamWUh++2MrjCa+cN9Ltmrab0UxxTczPvzG2K4Bj1Ia0Va2Kz+4HPNd9iBCQitS5KkHNd4vHvKmq/7CBrvkuTfTsLxVBRHw1s+nKJorm+esC+Y=
+	t=1733928264; cv=none; b=H2rvHoR+qLWlrTdwaLFHJ/cvyPT5AVC3YypV8ImMQ3E8DSjRS8auPmD6MqjxjeLh36p9bLBT5Wu/BzuPNkGQXmm2G+NE9LtkeoCnQmopM4ErTvGTMx7Kpqlt8RApyXOOJ2Y0l7/KqFLt1jeXY8eo7aDh+wVjSW4j+eSynY1CQlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733928212; c=relaxed/simple;
-	bh=WdusEtqXKPC2wUkbqXcTD3TRpiQ9dBT+3oTxsPyVwvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Hg1aiBzn9BUYbpLIOmidx8TE/ZSOcNgLuH+n/7znQA3yNhrnuNF6SsqLmTeVZGeBFg3l6vhHID8Tc+uobey2G15EU/3FxVG/1cRJqbPDzIB74ymyJnex+RGatYjGvtcqoaUEwumBfYsc4si5qn7l+qdnDIZIUdxx9eUHekt2bjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpjv7a8u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E49C4CEDD;
-	Wed, 11 Dec 2024 14:43:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733928212;
-	bh=WdusEtqXKPC2wUkbqXcTD3TRpiQ9dBT+3oTxsPyVwvs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dpjv7a8uGeLiT2jrmKW+d7QCKB1bfw4GfXJByBI7BFW41UV1NXM9W451Ydtu2I905
-	 XnpN8mtlObefYXuEEICnUvbWWaf96xtvyM183YJW+UcOOdxhFYpDnj0CrSdMv/y8jZ
-	 Md38AXagqAhO/b08S94FAibWpECp3IbKYq1LsldPBZu67gkHDL9eeGFd5kIWt7DAMF
-	 ZfRAchXRDhfL6rIO5RAPhjuz8MWBAadHf/Hfs5/Tu/VSejTVifQfJfjZ01+nfx+B3x
-	 LYxLJxzUq1qwQUuD3qeBUDVEFDkLq4i6E7r14kvNQwr1ZSy2RgmA0sFZqSJO1tc9zj
-	 b8gxdgS1XelcQ==
-Date: Wed, 11 Dec 2024 08:43:30 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	fan.ni@samsung.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, quic_nitegupt@quicinc.com,
-	quic_krichai@quicinc.com, gost.dev@samsung.com
-Subject: Re: [PATCH v4 1/2] PCI: dwc: Add support for vendor specific
- capability search
-Message-ID: <20241211144330.GA3290532@bhelgaas>
+	s=arc-20240116; t=1733928264; c=relaxed/simple;
+	bh=o4dtZ3I4++4HRe+Qi1IdeT9fyDM3ommz8s/pS/6mX/Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=envUl2yDsVn9kd5tIOkbsW1HrRcAgx5Di23efSUhmXI45GJfl2QPmeXA5sLqgRXMfg67Q9CQnPh5+iIExKHrY3XfJEqrbgIdgfMt6U4Ngx4AV5tYYFxhoisX/WtnKsjXFx80QxF4eVo84sW56fPFFe1XDC+Yuqz+MNuSv3SRZio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZaWMgy2X; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-385e27c75f4so4979775f8f.2
+        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 06:44:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733928260; x=1734533060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o4dtZ3I4++4HRe+Qi1IdeT9fyDM3ommz8s/pS/6mX/Y=;
+        b=ZaWMgy2XH+G1TGRWFeyR3zWGS1ZNDdi3mIlbAYrceNRwjf1bRKuXEq0yZK3174pXp+
+         f4NQfn5z17eWnIyRl8FiD3cz3zF6aM8IRALrPcnS0vdlEJ5FtQpIS1s3UQkV4tYZOMH1
+         jjvllQDpa2KwnV7TQzBs3WPmh2VtCO31cL+lWZ8sWrEFbtoJ4h1H3idN9TRmh2XKJg/y
+         pMhaLDJss63kBHf5iwiPaItptJQyaI1llInhvNAQYZodpKAs447YOrfb7zFGQiu7TZzq
+         xRdZpDbHRt/EZ8C8nF0un9zMlMHdzzF1DP3wNfbuo21Vl9LvedVRX6QBikZ6cTCn3rwp
+         GZdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733928260; x=1734533060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o4dtZ3I4++4HRe+Qi1IdeT9fyDM3ommz8s/pS/6mX/Y=;
+        b=cURp9fnwaVneTrwkWmHxsfMIzIZS2LfQyYt+wFqxGNy8UpIB9R20u6IaXIR4lk2stY
+         SK868N2hfYB3nm3HKM3SSkYannvV8nrXPVPpecuCh/7elUE24NB8VJcY+hLTDH7eA2DD
+         0mUdvbMXhK5l/jeDmUAMLhXE7eB8Pqh6xe0hPym0umCvnz6XCt3ayCKSH40XwfpByuLL
+         Y2sLF0xqUVn6fY/xBVTrH2UUiHP0e4qybY0H08jNLouao8oDdiB99Mud7JzgjUkrMtnu
+         ACcAa9nD2kdtHsFGolvP7BoYDlTSPMugWBfsy/adkp7MIBuI48+WVJ1lXSoAWS+Ds0lA
+         LdKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVznNaBch3QHSfJtC30Dai7+ttwDc+gaHboKx3yJf6n07KPkRppOBtGfySDGb450OSBsTVGYz1R+Mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNnbnbxGyvpX2dLSBYQ/oiCkpieTOarWOw2Sg3urGPBxET+EIx
+	4Th3EzAXhVo6DGHWbffqdT/f0NnM/1xXUe+uuw38OQzD2lqjHotM/yIxt5+CHCNBMD7dm50GnRT
+	/zZqk+Shq9AoMlyDuROyt9RfKayMF72JNNyQs
+X-Gm-Gg: ASbGncvULDQixLjGgcx4gtNcI9CIOT7wgrvCJQ/I5Su4c0LgfeBmVK0SUxpilqn/Z91
+	040Jm11ciloK9TbVIK/euIWw/2YUlqx/a2gWEbXcXS96XFZs8B3jet/lchGapt5glbA==
+X-Google-Smtp-Source: AGHT+IF1Q4xI/J9HWTvNdMoBulSeGhZD2fHXeX+ZiLhQ0oCPOrSMYhTnFaag5cAKAMEuEzK0Jrm/373HpSaoFjzPukE=
+X-Received: by 2002:a05:6000:178b:b0:385:faaa:9d1d with SMTP id
+ ffacd0b85a97d-3864cea04aamr2980508f8f.35.1733928260519; Wed, 11 Dec 2024
+ 06:44:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d6301db4bc2$3be58dc0$b3b0a940$@samsung.com>
+References: <20241205141533.111830-1-dakr@kernel.org> <20241205141533.111830-9-dakr@kernel.org>
+ <CAH5fLgh6qgQ=SBn17biSRbqO8pNtSEq=5fDY3iuGzbuf2Aqjeg@mail.gmail.com>
+ <Z1bKA5efDYxd8sTC@pollux.localdomain> <CAH5fLgixvBWSf-3WDRj=Mxtn4ArQLqdKqMF0aSxyC6xVNPfTFQ@mail.gmail.com>
+ <Z1jC7NnmwidLPT9Z@pollux> <CAH5fLgg=fvQOVL-FH72BFtv-5r_e35=esNir9itG_29am_5Sng@mail.gmail.com>
+ <Z1midaMMA1xBgBrg@cassiopeiae>
+In-Reply-To: <Z1midaMMA1xBgBrg@cassiopeiae>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 11 Dec 2024 15:44:08 +0100
+Message-ID: <CAH5fLghuk9tQxHSNOPUW14+tO=WWFCCSfQbcTHhEdGOCQC2+LQ@mail.gmail.com>
+Subject: Re: [PATCH v4 08/13] rust: pci: add basic PCI device / driver abstractions
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com, 
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, 
+	j@jannau.net, fabien.parent@linaro.org, chrisi.schrefl@gmail.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 11, 2024 at 05:15:50PM +0530, Shradha Todi wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 06 December 2024 21:43
-> > To: Shradha Todi <shradha.t@samsung.com>
-> > Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org;
-> > kw@linux.com; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; Jonathan.Cameron@huawei.com;
-> > fan.ni@samsung.com; a.manzanares@samsung.com; pankaj.dubey@samsung.com; quic_nitegupt@quicinc.com;
-> > quic_krichai@quicinc.com; gost.dev@samsung.com
-> > Subject: Re: [PATCH v4 1/2] PCI: dwc: Add support for vendor specific capability search
-> > 
-> > On Fri, Dec 06, 2024 at 01:14:55PM +0530, Shradha Todi wrote:
-> > > Add vendor specific extended configuration space capability search API
-> > > using struct dw_pcie pointer for DW controllers.
-> > >
-> > > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware.c | 16 ++++++++++++++++
-> > > drivers/pci/controller/dwc/pcie-designware.h |  1 +
-> > >  2 files changed, 17 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > > b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 6d6cbc8b5b2c..41230c5e4a53 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -277,6 +277,22 @@ static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
-> > >  	return 0;
-> > >  }
-> > >
-> > > +u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap)
-> > 
-> > To make sure that we find a VSEC ID that corresponds to the
-> > expected vendor, I think this interface needs to be the same
-> > as pci_find_vsec_capability().  In particular, it needs to take a
-> > "u16 vendor"
+On Wed, Dec 11, 2024 at 3:32=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
-> As per my understanding, Synopsys is the vendor here when we talk
-> about vsec capabilities.  VSEC cap IDs are fixed for each vendor
-> (eg: For Synopsys Designware controllers, 0x2 is always RAS CAP, 0x4
-> is always PTM responder and so on).
+> On Wed, Dec 11, 2024 at 02:06:50PM +0100, Alice Ryhl wrote:
+> > On Tue, Dec 10, 2024 at 11:38=E2=80=AFPM Danilo Krummrich <dakr@kernel.=
+org> wrote:
+> > >
+> > > On Tue, Dec 10, 2024 at 11:55:33AM +0100, Alice Ryhl wrote:
+> > > > On Mon, Dec 9, 2024 at 11:44=E2=80=AFAM Danilo Krummrich <dakr@kern=
+el.org> wrote:
+> > > > >
+> > > > > On Fri, Dec 06, 2024 at 03:01:18PM +0100, Alice Ryhl wrote:
+> > > > > > On Thu, Dec 5, 2024 at 3:16=E2=80=AFPM Danilo Krummrich <dakr@k=
+ernel.org> wrote:
+> > > > > > >
+> > > > > > > Implement the basic PCI abstractions required to write a basi=
+c PCI
+> > > > > > > driver. This includes the following data structures:
+> > > > > > >
+> > > > > > > The `pci::Driver` trait represents the interface to the drive=
+r and
+> > > > > > > provides `pci::Driver::probe` for the driver to implement.
+> > > > > > >
+> > > > > > > The `pci::Device` abstraction represents a `struct pci_dev` a=
+nd provides
+> > > > > > > abstractions for common functions, such as `pci::Device::set_=
+master`.
+> > > > > > >
+> > > > > > > In order to provide the PCI specific parts to a generic
+> > > > > > > `driver::Registration` the `driver::RegistrationOps` trait is=
+ implemented
+> > > > > > > by `pci::Adapter`.
+> > > > > > >
+> > > > > > > `pci::DeviceId` implements PCI device IDs based on the generi=
+c
+> > > > > > > `device_id::RawDevceId` abstraction.
+> > > > > > >
+> > > > > > > Co-developed-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > > > > > > Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > > > > > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > > > > >
+> > > > > > > +/// The PCI device representation.
+> > > > > > > +///
+> > > > > > > +/// A PCI device is based on an always reference counted `de=
+vice:Device` instance. Cloning a PCI
+> > > > > > > +/// device, hence, also increments the base device' referenc=
+e count.
+> > > > > > > +#[derive(Clone)]
+> > > > > > > +pub struct Device(ARef<device::Device>);
+> > > > > >
+> > > > > > It seems more natural for this to be a wrapper around
+> > > > > > `Opaque<bindings::pci_dev>`. Then you can have both &Device and
+> > > > > > ARef<Device> depending on whether you want to hold a refcount o=
+r not.
+> > > > >
+> > > > > Yeah, but then every bus device has to re-implement the refcount =
+dance we
+> > > > > already have in `device::Device` for the underlying base `struct =
+device`.
+> > > > >
+> > > > > I forgot to mention this in my previous reply to Boqun, but we ev=
+en documented
+> > > > > it this way in `device::Device` [1].
+> > > > >
+> > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git/tree/rust/kernel/device.rs#n28
+> > > >
+> > > > We could perhaps write a derive macro for AlwaysRefCounted that
+> > > > delegates to the inner type? That way, we can have the best of both
+> > > > worlds.
+> > >
+> > > Sounds interesting, how exactly would this work?
+> > >
+> > > (I'll already send out a v5, but let's keep discussing this.)
+> >
+> > Well, the derive macro could assume that the refcount is manipulated
+> > in the same way as the inner type does it. I admit that the idea is
+> > not fully formed, but if we can avoid wrapping ARef, that would be
+> > ideal.
+>
+> If we can get this to work, I agree it's a good solution.
+>
+> What do you think about making this a follow up of this series?
 
-For VSEC, the vendor that matters is the one identified at 0x0 in
-config space.  That's why pci_find_vsec_capability() checks the
-supplied "vendor" against "dev->vendor".
+I'm fine with it being a follow-up.
 
-> So no matter if the DWC IP is being integrated by Samsung, NVDIA or
-> Qcom, the vendor specific CAP IDs will remain constant. Now since
-> this function is being written as part of designware file, the
-> control will reach here only when the PCIe IP is DWC. So, we don't
-> really require a vendor ID to be checked here. EG: If 0x2 VSEC ID is
-> present in any DWC controller, it means RAS is supported. Please
-> correct me if I'm wrong.
-
-In this case, the Vendor ID is typically Samsung, NVIDIA, Qcom, etc.,
-even though it may contain Synopsys DWC IP.  Each vendor assigns VSEC
-IDs independently, so VSEC ID 0x2 may mean something different to
-Samsung than it does to NVIDIA or Qcom.
-
-PCIe r6.0, sec 7.9.5 has the details, but the important part is this:
-
-  With a PCI Express Function, the structure and definition of the
-  vendor-specific Registers area is determined by the vendor indicated
-  by the Vendor ID field located at byte offset 00h in PCI-compatible
-  Configuration Space.
-
-There IS a separate DVSEC ("Designated Vendor-Specific") Capability;
-see sec 7.9.6.  That one does include a DVSEC Vendor ID in the
-Capability itself, and this would make more sense for this situation.
-
-If Synopsys assigned DVSEC ID 0x2 from the Synopsys namespace for RAS,
-then devices from Samsung, NVIDIA, Qcom, etc., could advertise a DVSEC
-Capability that contained a DVSEC Vendor ID of PCI_VENDOR_ID_SYNOPSYS
-with DVSEC ID 0x2, and all those devices could easily locate it.
-
-Unfortunately Samsung et al used VSEC instead of DVSEC, so we're stuck
-with having to specify the device vendor and the VSEC ID assigned by
-that vendor, and those VSEC IDs might be different per vendor.
-
-Bjorn
+Alice
 
