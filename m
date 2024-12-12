@@ -1,62 +1,50 @@
-Return-Path: <linux-pci+bounces-18214-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18215-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13F7D9EDEAE
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 06:04:43 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC0CF9EDF23
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 06:59:32 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A168283A7E
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 05:04:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67E041666BC
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 05:59:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5DF1632D3;
-	Thu, 12 Dec 2024 05:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lKu5AYnG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C47717BB24;
+	Thu, 12 Dec 2024 05:59:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DDF1632CA;
-	Thu, 12 Dec 2024 05:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D6416FF4E;
+	Thu, 12 Dec 2024 05:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733979878; cv=none; b=ja7PNesJRCeoGK9nkD0U+9CnxEyCutmgaET2/9q6sBsZVMgecAWjdOJQI4nRpVI1w6DjnNCGFJMfSI9FwC+of7r82ZyDsVhmTjEky6dNVXGN7gunHfQGDgvQeoM35c2bh137RghdLJigWadIrXrWszxuCE3Zvg6YjchKFB9WxpI=
+	t=1733983166; cv=none; b=uW9SVvbl4AuOmv4E4ngyqdSVSQdm0Fqy8tdZb+RkomrzzRDkDlWhYiyWTCggLwCBA/hHz695teBeNAb63vDHxHBZDIyJeNCNQzolJFF+7FmS7NE2iF7oNe9JGmFhejc3tgtHUZDu9txzpW99SZofR5CEge2RSFr+qU0BYXPzEKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733979878; c=relaxed/simple;
-	bh=VEKVRBoe22J+1hv8PucOdmZQtu/cWRv25jx9p6mkVjA=;
+	s=arc-20240116; t=1733983166; c=relaxed/simple;
+	bh=ZqQXAc3nXCYF3BKN0xXrCtUY7QFOP0sYKuINeUb3MGM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d+UBN/yZnqc1l2q/1QJY/qPBguO/3AQha6J2HHY1XOEQsTXkD9TehZcZFjYTJllU5cb1jduiFNpDmF86kaLG4gIEIzGHS1dHPgUnsddPzFP8pHNNPdXiyYgtxaUsr5lmBJcwpiwF1YZZitP85+vomHfnaDACqEmCPDPbFQTTGhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lKu5AYnG; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Mkkj/z+6cVMqEWDiwe1t0JQPVqzn1IGN5HRxuZF7jNk=; b=lKu5AYnGUJqai2k9tax9eGs6FR
-	y2yi6Tdnzdg/iMW/G593cApOV0DEgN3FoqFleQ6Fwsi0XCMXlVtjzWl42J5987nzsL8GH3PWH7m4M
-	Iuq6FzI2GkpvFFR8lgNjoPQBjVJHwRRti2xp5iYvBFFCADzmGUk3e64HdBlU0SOf8S9u2YZW/oflb
-	nnzpDMJazID2RX7qhR3Fd3AgbuvzbGkl17YmxHXof9o32c8mJUrgPRtwZ6V8jTOdvHvr4bKyRJu9G
-	yRw9dsodpa1NdfKdyEnoGKF9UN4dkTBPG8WizyofmTPpzvGXMOhXL7NSJxJFkkavoSyFQ6E28NDC1
-	YzSrt0Kg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLbNJ-0000000Gw1r-2vR6;
-	Thu, 12 Dec 2024 05:04:33 +0000
-Date: Wed, 11 Dec 2024 21:04:33 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org, logang@deltatee.com,
-	Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-	sumanesh.samanta@broadcom.com, sathya.prakash@broadcom.com,
-	sjeaugey@nvidia.com
-Subject: Re: [PATCH v3 2/2] PCI/P2PDMA: Modify p2p_dma_distance to detect P2P
- links
-Message-ID: <Z1pu4YCfk6OAPsIP@infradead.org>
-References: <1733901468-14860-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
- <1733901468-14860-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rsptmZSIhQY/4vLrE3PKzhLW4BzLldQyNoowjcJECvYr3/GSdrQqCuDp/55Dp+NMKYqTUo9xNFoedSOX7ADAh57CsJag+lKhi3jphDnBNxnxIDdzmthf3Prxf9boZRQdddSz8uJcoe4OeW8qI/8Y86ukwtU+XKKaTc+wErz/Aag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 7EED568D07; Thu, 12 Dec 2024 06:59:20 +0100 (CET)
+Date: Thu, 12 Dec 2024 06:59:20 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
+	sagi@grimberg.me, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by
+ the user
+Message-ID: <20241212055920.GB4825@lst.de>
+References: <20241205232900.GA3072557@bhelgaas> <20241206014934.GA3081609@bhelgaas> <20241209133606.GA18172@lst.de> <20241209143821.m4dahsaqeydluyf3@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,19 +53,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1733901468-14860-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20241209143821.m4dahsaqeydluyf3@thinkpad>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Dec 10, 2024 at 11:17:48PM -0800, Shivasharan S wrote:
-> Update the p2p_dma_distance() to determine inter-switch P2P links existing
-> between two switches and use this to calculate the DMA distance between
-> two devices. This requires enabling the PCIE_P2P_LINK config option in
-> the kernel.
+On Mon, Dec 09, 2024 at 08:08:21PM +0530, Manivannan Sadhasivam wrote:
+> > 
+> > The istory here is the the NVMe internal power states are significantly
+> > better for the SSDs.  It avoid shutting down the SSD frequently, which
+> > creates a lot of extra erase cycles and reduces life time.  It also
+> > prevents the SSD from performing maintainance operations while the host
+> > system is idle, which is the perfect time for them.  But the idea of
+> > putting all periphals into D3 is gaining a lot of ground because it
+> > makes the platform vendors life a lot simpler at the cost of others.
+> 
+> No, I disagree with the last comment. When the system goes to low power mode
+> (like S2R/hibernate), it *does* makes a lot of sense to put the devices into
+> D3Cold to save power.
 
-What the heck are "P2P links supposed to be.  And why shoud Linux
-support something non-standard like this?
+Yes.  That's what the pm_suspend_via_firmware call in nvme_suspend is
+supposed to catch.  If that is not the right way to check for a
+non-runtime suspend we'll need to improve the interface.  Which really
+are a mess, and the last thing I want is more "intelligence" in the
+drivers.  We need go information from the PM core what is going on so
+that things work out of the box.  Overloading obscure sysfs files with
+new logic queried from a driver is a complete no-go.
 
-NAK for these hacks to the core code unless you can get a vendor
-indpendent spec for it.
+> The current reality is that most of the devicetree platforms *do* want to power
+> down the NVMe during suspend. Only when NVMe is used in an OS like Android, we
+> might not want to do so (that's something for future, but still a possibility). 
+
+So fix the bloody interface instead of piling up hacks in drivers.
 
 
