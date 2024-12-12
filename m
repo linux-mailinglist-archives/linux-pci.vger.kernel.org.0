@@ -1,101 +1,149 @@
-Return-Path: <linux-pci+bounces-18221-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18222-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7D19EE0D4
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 09:04:21 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEB7E167E68
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 08:04:17 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40AA3165F01;
-	Thu, 12 Dec 2024 08:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tf/iEPgj"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 446979EE121
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 09:21:02 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE34558BA
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 08:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0D3B282F00
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 08:20:57 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5953520B7E6;
+	Thu, 12 Dec 2024 08:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="chU9ngdz"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8284020C018;
+	Thu, 12 Dec 2024 08:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733990658; cv=none; b=u8Q1HiyPuTSjR/12J9CYeen+VO2e85aELLvBC3UKSnRj/egP6qg2RLek7uFfmpBhOZtex1tAhJuKFfyg1aKB2BJaj+4YQhtnLEcvBW3/x0oth4HuJ8MvbnHQYRncEg/6U7m1bdMCSPOGQwEdCc6DmfreUUMXuBKwRRWA5QnMiVo=
+	t=1733991654; cv=none; b=o0Qa0segcW5Y11pPaB7eFo1fPnKYcDSh8nzToAiIcbJkddpfEMi10JQwniq3lWRCdJxJ36Sej+lfqutoSKR5qqlLryemSW1HU1qsugdu+L2LUWvlFk7r6k4FDfT1F8tPy2Myg7HhwFmXUChteYNnZho81HbfS3UYGhV9S8F8ykI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733990658; c=relaxed/simple;
-	bh=47kCC3IaGSxh1D7BcSgs1D4JpI1pTNpXykzx+d7p8Fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/cXJuDwz/fMIRo5hHTl8fl0XErtsgORo3qihqjlsgVQprpRe008uEMpKeGNzEVGcZuWFbEDbUiymvuuEwgE44idGDuXryjHNIUXw811dYsPGLuNDFeZZL2QvOLKa1qDaGt2+XdR+aTGFzn0nK7PzN3nlyAZkr7zix4f72wLjN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tf/iEPgj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B3EC4CECE;
-	Thu, 12 Dec 2024 08:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733990657;
-	bh=47kCC3IaGSxh1D7BcSgs1D4JpI1pTNpXykzx+d7p8Fg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tf/iEPgjcINryK5v/Jg7/FAJAr+P+m7ZQkzsS62+09HHfEz1q9iM8eS+R/qPvYQpx
-	 XkMPSmjPFM1r4i6MQY7+kMA1xw0FspHRE67Dk3l8r8a7ZMaQln6dyEUUCEK+RtN0Ke
-	 DiB3zMGSQ28XsfPh3qY0pOYtz7nG+eE46lCxWAfhf1Au58sBcT8zAbxTSztWYtSqBe
-	 TY34yeFkt+/Tq8H/1L0ZU2/KwlFyncyh1jTYxg8k8KRW06aa6v+zDmpaZsPazupvyh
-	 BtPsIZglCNret4sx6y9AmoQr6YjNrGk6VGhc2CNpTkt9WmJzhnkf+dc3avqv4FOOwu
-	 SVUf1PtfU/jPA==
-Date: Thu, 12 Dec 2024 09:04:12 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Enumerate endpoints based on
- dll_link_up irq in the combined sys irq
-Message-ID: <Z1qY_K57lamVxqRm@ryzen>
-References: <20241127145041.3531400-2-cassel@kernel.org>
- <20241211053104.7sgo5bmmjnolwvhh@thinkpad>
+	s=arc-20240116; t=1733991654; c=relaxed/simple;
+	bh=5hbva0ra1WgEeS0msvoBjcB4tt/jwYhd3Q1X0RsoUmU=;
+	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=U3/IDsJhW1ouMBL+KMiMof2mabGCM6OtF2FoOSR8XMhAND03495OQrrMjNj9d9guEMdGV5y7AgHK6Vb9KA3wVZTtEdpXAXwcu7B2tnux32sDaJbOJCTGC/fznkvidAYXnBg9lx9j2vKbWzSQVcarc8zOvSW7cNSuMRzuqB9eBZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=chU9ngdz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BC7dTOn027247;
+	Thu, 12 Dec 2024 08:19:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=RY2XHyRT98M51wFIDOeTWd
+	YXbB3NyzBkPbM/GJSC4qg=; b=chU9ngdznHSysrQnX0NI72Fjpk8++3izbGFgA6
+	BdPN9TVMtSFgXqwKNVQFowVUvIIonU1kqXgonABabe3AQccpQbmf3p+HHC3MA3Xm
+	G2ZAk6OpSJIsxQaiprIn0h2CiFpTkqK4UU3PLnAzxUVTa5mXYIZipnwRUAGLNBdA
+	7mAruym5eeHbi+tcVvqxHpzdVq+8JMyByj+z+uaZlhRvffAjyqWdgkAgqXuarMtE
+	If6R/KOAV9O+6gJKRH8/bjZAZIrn9mOgVkw8tWS+UOAFgHuIwPRsLmNmvosw51H5
+	nleHF7mCxzU6rn15zBeEq09b5kBHwskSTwIipVRV4WYMC3bw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43etn8wfxp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Dec 2024 08:19:19 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BC8JItT007947
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Dec 2024 08:19:18 GMT
+Received: from [10.239.28.138] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Dec
+ 2024 00:19:15 -0800
+Message-ID: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
+Date: Thu, 12 Dec 2024 16:19:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241211053104.7sgo5bmmjnolwvhh@thinkpad>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Content-Language: en-US
+To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <quic_cang@quicinc.com>, <mrana@quicinc.com>,
+        yuqiang
+	<quic_qianyu@quicinc.com>, <quic_wenbyao@quicinc.com>
+From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
+Subject: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: yk5AQikQeuvfqi_BdniJ95yqvb4M4z1G
+X-Proofpoint-GUID: yk5AQikQeuvfqi_BdniJ95yqvb4M4z1G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 spamscore=0 impostorscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=870 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412120056
 
-On Wed, Dec 11, 2024 at 11:01:04AM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Nov 27, 2024 at 03:50:42PM +0100, Niklas Cassel wrote:
-> > Most boards using the pcie-dw-rockchip PCIe controller lack standard
-> > hotplug support.
-> > 
-> > Thus, when an endpoint is attached to the SoC, users have to rescan the bus
-> > manually to enumerate the device. This can be avoided by using the
-> > 'dll_link_up' interrupt in the combined system interrupt 'sys'.
-> > 
-> > Once the 'dll_link_up' irq is received, the bus underneath the host bridge
-> > is scanned to enumerate PCIe endpoint devices.
-> > 
-> > This commit implements the same functionality that was implemented in the
-> > DWC based pcie-qcom driver in commit 4581403f6792 ("PCI: qcom: Enumerate
-> > endpoints based on Link up event in 'global_irq' interrupt").
-> > 
-> > The Root Complex specific device tree binding for pcie-dw-rockchip already
-> > has the 'sys' interrupt marked as required, so there is no need to update
-> > the device tree binding. This also means that we can request the 'sys' IRQ
-> > unconditionally.
-> > 
-> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
+indicates the number of lanes to check for exit from Electrical Idle in
+Polling.Active and L2.Idle. It is used to limit the effective link width to
+ignore broken or unused lanes that detect a receiver to prevent one or more
+bad Receivers or Transmitters from holding up a valid Link from being
+configured.
 
-Thanks for the review!
+In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
+to 1 will not affect the link width that is actually intended to be used.
+But setting it to a value other than 1 will lead to link training fail if
+one or more lanes are broken.
 
-Could this patch please be picked up?
+Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
+port actually supports to make linking up more robust. Link can still be
+established with one lane at least if other lanes are broken.
+
+Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+---
+  drivers/pci/controller/dwc/pcie-designware.c | 5 +----
+  1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
+b/drivers/pci/controller/dwc/pcie-designware.c
+index 6d6cbc8b5b2c..d40afe74ddd1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -752,22 +752,19 @@ static void dw_pcie_link_set_max_link_width(struct 
+dw_pcie *pci, u32 num_lanes)
+      /* Set link width speed control register */
+      lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+      lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
++    lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
+      switch (num_lanes) {
+      case 1:
+          plc |= PORT_LINK_MODE_1_LANES;
+-        lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
+          break;
+      case 2:
+          plc |= PORT_LINK_MODE_2_LANES;
+-        lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
+          break;
+      case 4:
+          plc |= PORT_LINK_MODE_4_LANES;
+-        lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
+          break;
+      case 8:
+          plc |= PORT_LINK_MODE_8_LANES;
+-        lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
+          break;
+      default:
+          dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
+-- 
+2.34.1
 
 
-Kind regards,
-Niklas
 
