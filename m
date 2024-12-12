@@ -1,114 +1,103 @@
-Return-Path: <linux-pci+bounces-18319-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18316-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 533429EF3CE
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 18:03:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1130F9EF2F5
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 17:54:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0964317D05D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 16:47:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9704A189AB02
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 16:46:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FF50242A9F;
-	Thu, 12 Dec 2024 16:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA016240395;
+	Thu, 12 Dec 2024 16:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmTwzaQj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtbmSYAv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400D3223C5C;
-	Thu, 12 Dec 2024 16:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809EA240390;
+	Thu, 12 Dec 2024 16:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734021408; cv=none; b=Roa5KGSrb+cJ6h4sLWVceF66TE4io9csMKokqqb2P/cBYJwAHG/RhFx1QKQHw/ewhf+WMrpAkbPjgqClJm4Eh7Sb69Pz+lOmEo0fh3rqaOx1KJyQWpT73BY8/75e8Pl0loP1A3Vd9oVgAgWOuNbfdPzNtkUBxebRBTOil0NcvHs=
+	t=1734021391; cv=none; b=FWqF6Ni/wgU0zh5Bn8CjvPZ+lIn37PsoBy4qik1cnUaq/2kYGDT8J04Wwu04iJwBIwDAkUDfGTYisltZbhs0F7X5lZWCcGgrsz0SArD3d9MojOpMgsBwRtcqR5l8hpEd1ij+ZOSy1/ML+2gBKoRcc3PdOhhcbQ10NfY2syffA0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734021408; c=relaxed/simple;
-	bh=ltomMjy5y7L8lzyf7pvlUKvJ0SvIiUEzsOHnZ3Azi/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bo9sXXRVmC+3kTJYZFnxPSzEWXVgxSjfwb+gqmwdUZX6+JzOM1QG3LDHJ5N6T9xdueGV2v1krniNOllh41frbcRoEVNPIeGZ3e57vtH85PPAYO5EyC5KS1TPVrC8rHrxh99p167l7916PDHCRRpIZapMrOSsyqrPg+hVNsKLBdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bmTwzaQj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6770EC4CED0;
-	Thu, 12 Dec 2024 16:36:41 +0000 (UTC)
+	s=arc-20240116; t=1734021391; c=relaxed/simple;
+	bh=E3xkzPKQE86qPNc4Bb6mCGp+0y2yz5hGOppGcN76hyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=pTh7Sps9r4jm9eKWHhK5FIVw7pb+oE/uouU7oWiSLfkeoxlINmcP3VyEW3VyaSCNaZq7G+uIUCIcm9jzalM3jlHIUtAb4Lm6n4qTopq68kRb9hfclB0gdQ/XRxEXJoT8sn/cNZRQK9XGD4BKy/O756HeNEJhWruty1waRSc8G/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtbmSYAv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA83C4CECE;
+	Thu, 12 Dec 2024 16:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734021408;
-	bh=ltomMjy5y7L8lzyf7pvlUKvJ0SvIiUEzsOHnZ3Azi/s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bmTwzaQjefuQscdXiMjlQAAK4GNk4+na2qkCgKdBAEBungkA2a9+GDB8WTTRpPfKg
-	 QOFXVeWus6Y9o5et4Ptkv/fgI/mk3N5RKJEJs06CdeTaFVAvK3pB57e6UxO9LqtIqD
-	 pd6bPMXG+jcBXySaZ9Ozt+VulUhNUagV2xNp3bsNS1P8JNXPsmPtout0MPk95Ey1xG
-	 FZDKibBVcYzj/IHJR4KjmZOkNlBtIrfdDHhYAhWyEMgyYFNgi/5UWlWMfN/wg69i8U
-	 /ZjK19gBLUrPGimx9jj3WcWqgEgM7gITglCCON5YaWVhupLiXgkQg01Ll+uv/r9uyh
-	 vMgUdMOcSNCUQ==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	bhelgaas@google.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	tmgross@umich.edu,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	airlied@gmail.com,
-	fujita.tomonori@gmail.com,
-	lina@asahilina.net,
-	pstanner@redhat.com,
-	ajanulgu@redhat.com,
-	lyude@redhat.com,
-	robh@kernel.org,
-	daniel.almeida@collabora.com,
-	saravanak@google.com,
-	dirk.behme@de.bosch.com,
-	j@jannau.net,
-	fabien.parent@linaro.org,
-	chrisi.schrefl@gmail.com,
-	paulmck@kernel.org
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rcu@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v6 16/16] MAINTAINERS: add Danilo to DRIVER CORE
-Date: Thu, 12 Dec 2024 17:33:47 +0100
-Message-ID: <20241212163357.35934-17-dakr@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241212163357.35934-1-dakr@kernel.org>
-References: <20241212163357.35934-1-dakr@kernel.org>
+	s=k20201202; t=1734021391;
+	bh=E3xkzPKQE86qPNc4Bb6mCGp+0y2yz5hGOppGcN76hyo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UtbmSYAvD1MjeeOilJvFuD7uHQ6s/uTeCtFGJbvIopLXIngNQPv/STwMZd1l/2g4t
+	 aBdHO+mGcTNejsBxQAqkNOaj96Yq+X3TpIVOV1ZVacjW5URKi8oBK+LTYuHNZ/+hs0
+	 +bymAZ7gYAq2V1NNl5YHJXGWYjVjxp182WJzfiVLJ/m+B6G6BgpikhGq6GWvjcrJIm
+	 wJ13UV0bHMnTORRNV04UJq13rZowMnHHHZAB8eEZaHN9NTuBQ/z9e+UFV8JCDioToS
+	 z/P/Z6vky1UpuJ5yLBY2pAlrQ7W0u11J/3HN8k5Xlt+0DVdfm7uba62ldfMxM7x0n/
+	 98Fn7qpRUi1Sw==
+Date: Thu, 12 Dec 2024 10:36:29 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: guilherme giacomo simoes <trintaeoitogc@gmail.com>
+Cc: scott@spiteful.org, bhelgaas@google.com, namcao@linutronix.de,
+	ngn@ngn.tf, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] PCI: remove already resolved TODO
+Message-ID: <20241212163629.GA3346193@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241212110233.787581-1-trintaeoitogc@gmail.com>
 
-Let's keep an eye on the Rust abstractions; add myself as reviewer to
-DRIVER CORE.
+On Thu, Dec 12, 2024 at 08:02:33AM -0300, guilherme giacomo simoes wrote:
+> The get_power and set_power fields is used, and only hardware_test is
+> really not used. So, after commit
+> 5b036cada481a7a3bf30d333298f6d83dfb19bed ("PCI: cpcihp: Remove unused
+> struct cpci_hp_controller_ops.hardware_test") this TODO is completed.
 
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+The entire 40-char SHA-1 is overkill; use 12:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=v6.12#n204
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 95bd7dc88ad8..6b9e10551392 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7021,6 +7021,7 @@ F:	include/linux/component.h
- DRIVER CORE, KOBJECTS, DEBUGFS AND SYSFS
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- R:	"Rafael J. Wysocki" <rafael@kernel.org>
-+R:	Danilo Krummrich <dakr@kernel.org>
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
- F:	Documentation/core-api/kobject.rst
--- 
-2.47.1
+I see a test and call for .get_power() and .set_power(), but no actual
+implementations, so I think they can be removed as well, can't they?
+If so, I'll wait for that removal before applying this patch.
 
+> Signed-off-by: guilherme giacomo simoes <trintaeoitogc@gmail.com>
+
+In
+https://lore.kernel.org/r/20241014131917.324667-1-trintaeoitogc@gmail.com,
+you capitalized your names.  What's your preference?  I'd like to use
+your name correctly and consistently.
+
+> ---
+>  drivers/pci/hotplug/TODO | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
+> index 92e6e20e8595..7397374af171 100644
+> --- a/drivers/pci/hotplug/TODO
+> +++ b/drivers/pci/hotplug/TODO
+> @@ -2,10 +2,6 @@ Contributions are solicited in particular to remedy the following issues:
+>  
+>  cpcihp:
+>  
+> -* There are no implementations of the ->hardware_test, ->get_power and
+> -  ->set_power callbacks in struct cpci_hp_controller_ops.  Why were they
+> -  introduced?  Can they be removed from the struct?
+> -
+>  * Returned code from pci_hp_add_bridge() is not checked.
+>  
+>  cpqphp:
+> -- 
+> 2.34.1
+> 
 
