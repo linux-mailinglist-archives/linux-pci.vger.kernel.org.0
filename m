@@ -1,140 +1,115 @@
-Return-Path: <linux-pci+bounces-18340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECDE59EFC82
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 20:29:42 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C00319EFCA6
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 20:40:14 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 478BE1890AFB
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 19:29:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8161E28C147
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 19:40:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 512BC199235;
-	Thu, 12 Dec 2024 19:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A667418FDB9;
+	Thu, 12 Dec 2024 19:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8Cw2aVs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVseI6q6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C33168497;
-	Thu, 12 Dec 2024 19:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBCB188713
+	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 19:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734031777; cv=none; b=RHacACiAxDDOeOrHpCkFzFB+lyxA6+ti1Ftqu5cCsKt0XFUTrO9PwChkHyVdILQADqGb+IULsJY+5gEhTJfjmjfj1ywSUlMFRky51tbcNn+CpQVyv1mPi0wpoqUrukRJ1JYXlhFpB352lpfsrjLeYSyM99oqgya4QA+rHliZlJ0=
+	t=1734032411; cv=none; b=usLRjKy+YQWk1KRFzS/L47/z27/ZeLn0qqLSk7tMKB2WimR+VLu8mDt0cXRhjRZY906DTw1Ipi5hdzWUBxFFyvlevtDeuKzSqROe1ahjxDBmO0cV+zUT7P+GEo4wkJqeTgvMmFbjgnO2UmF4O27CfhzI1Dh1RWjGmFwMAtQQqio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734031777; c=relaxed/simple;
-	bh=WYoQMRv5P87I4hjtnXW8jZn4JiuWP9wJLhfOJzWWED8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Lb3jUZVJyNcHkpqYeVOQPNfL+449gsR1gZ7RltnfYyebupl25hBlolCKGEKysLQtvbyewlV5M9IYqTFXWqO4dEp270mIlxYBIWhH/SZnfwpun5YuFDwQWtqdz9hOjSUCEu5vWYftBWodLxXBmYpK+HlLE5zM1GD1CmSqZG18vJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8Cw2aVs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF19C4CECE;
-	Thu, 12 Dec 2024 19:29:36 +0000 (UTC)
+	s=arc-20240116; t=1734032411; c=relaxed/simple;
+	bh=MHiF9z41i8Gdza9scgzFm/kGb7WP/O5Vog4Z0wtj8cQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YVFUlMD8cMb49R3IJGy8dgV4fJypsRIK7WxhDXatLalNUD99xkcTWF81R53bbnsF/bG29v5tr3r0xoQmqX9DbNa79xSIYGpI3W48L8FG//kA+OOdX/zOyZY2xlymjKk/UXbVwkSaE4PYYOihNJpO9AM8Xut4GrOUQ1jYR/e17TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVseI6q6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D0BC4CECE;
+	Thu, 12 Dec 2024 19:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734031776;
-	bh=WYoQMRv5P87I4hjtnXW8jZn4JiuWP9wJLhfOJzWWED8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=d8Cw2aVsk35SPPPau+WmwKHftXtxOtBGxzABqjUp3VewkjoIOKo8B2KXqKje+JVSP
-	 djTBvJiul67mWCuDNPW4/7UmW1JpZA0Oe5fd7eFxyNc9E3jTYVs++scwAbEKvN2iio
-	 ASWerK5IzlxQVYyY4PM1IgFrHu0PGaU7uXur0la91TTLygMlSjhi0SElqDcrayVRMc
-	 0tYs1Hf43YjllDIP7BU4vZCfLJYJF9u51IjbOaLqSBjARf2gjtT5Lvj9TK90DQ5pmV
-	 rzwfJOkKAeZX8PAqSxmH3Y12S6t6PJiSyxTumghytGk8wMXEJrBvzc6gMccg5kHs/2
-	 saRXMHh0KSqZQ==
-Date: Thu, 12 Dec 2024 13:29:35 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>,
-	Igor Mitsyanko <imitsyanko@quantenna.com>
-Cc: amien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sergey Matyukevich <geomatsi@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alex Dubov <oakad@yahoo.com>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-	Kalle Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Chen Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mostafa Saleh <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Yi Liu <yi.l.liu@intel.com>, Kunwu Chan <chentao@kylinos.cn>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 09/11] wifi: qtnfmac: use always-managed version of
- pcim_intx()
-Message-ID: <20241212192935.GA3360239@bhelgaas>
+	s=k20201202; t=1734032411;
+	bh=MHiF9z41i8Gdza9scgzFm/kGb7WP/O5Vog4Z0wtj8cQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=eVseI6q6ivxyaGlVKb7uJoCDjJ4Iq9MJ0RjD6JAvR15IIvmRjbhwWyZthh8fN43vH
+	 5cZ4zEOKLf8QwrKDMdEFPuqp0/ylw+10rQWWuTdA6qSDB1WpSv2t6yiieJN2jPlfj/
+	 8c10HnvSQLjV92Z9wLnDUkzPmq0MgTUb25+B7KB2yAsE7AMXmINv19PVyaqm57js0C
+	 hSnF6MBXAh3Uw/+TGAdHyYbGxthgF6MCOHFRysLIwCyTEw/h+jTesuwJigoxXvg4sK
+	 bHxn8DIAJ0zRvAyVHv0ZqMhn57KOugINYRncjEQdIMHGVfsFnMpb6SzT2IvjJCgluc
+	 Ob8J9Jn8w88Cg==
+Message-ID: <0b01d64fa7f6f62d49f39447c5175b44a1011fd5.camel@kernel.org>
+Subject: Re: [PATCH for-linus] PCI: Honor Max Link Speed when determining
+ supported speeds
+From: Niklas Schnelle <niks@kernel.org>
+To: Niklas Schnelle <schnelle@linux.ibm.com>, Bjorn Helgaas
+ <helgaas@kernel.org>,  Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, Ilpo Jarvinen
+ <ilpo.jarvinen@linux.intel.com>,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>
+Date: Thu, 12 Dec 2024 20:40:07 +0100
+In-Reply-To: <efafe0d864af49d2f496fc6543f619958630869f.camel@linux.ibm.com>
+References: <20241212161103.GA3345227@bhelgaas>
+	 <efafe0d864af49d2f496fc6543f619958630869f.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241209130632.132074-11-pstanner@redhat.com>
 
-[cc->to: Igor]
+On Thu, 2024-12-12 at 17:58 +0100, Niklas Schnelle wrote:
+> On Thu, 2024-12-12 at 10:11 -0600, Bjorn Helgaas wrote:
+> > On Thu, Dec 12, 2024 at 09:56:16AM +0100, Lukas Wunner wrote:
+> > > The Supported Link Speeds Vector in the Link Capabilities 2 Register
+> > > indicates the *supported* link speeds.  The Max Link Speed field in
+> > > the Link Capabilities Register indicates the *maximum* of those speed=
+s.
+> > >=20
+> > > Niklas reports that the Intel JHL7540 "Titan Ridge 2018" Thunderbolt
+> > > controller supports 2.5-8 GT/s speeds, but indicates 2.5 GT/s as maxi=
+mum.
+> > > Ilpo recalls seeing this inconsistency on more devices.
+> > >=20
+> > > pcie_get_supported_speeds() neglects to honor the Max Link Speed fiel=
+d
+> > > and will thus incorrectly deem higher speeds as supported.  Fix it.
+> > >=20
+> > > Fixes: d2bd39c0456b ("PCI: Store all PCIe Supported Link Speeds")
+> > > Reported-by: Niklas Schnelle <niks@kernel.org>
+> > > Closes: https://lore.kernel.org/r/70829798889c6d779ca0f6cd3260a765780=
+d1369.camel@kernel.org/
+> > > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > > Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> >=20
+> > Looks like you want this in v6.13?  Can we make commit log more
+> > explicit as to why we need it there?  Is this change enough to resolve
+> > the boot hang Niklas reported?
+>=20
+> As for if it fixes my hang I will test this later today when I come
+> home. But even if it is not enough on its own, I believe that this will
+> be needed as a prerequisite for the fix of my hang issue in that
+> without this patch the dev->supported_speeds incorrectly shows multiple
+> speeds as supported making it impossible to suppress probing of bwctrl
+> for devices that only support a fixed speed.
 
-On Mon, Dec 09, 2024 at 02:06:31PM +0100, Philipp Stanner wrote:
-> pci_intx() is a hybrid function which can sometimes be managed through
-> devres. To remove this hybrid nature from pci_intx(), it is necessary to
-> port users to either an always-managed or a never-managed version.
-> 
-> qtnfmac enables its PCI-Device with pcim_enable_device(). Thus, it needs
-> the always-managed version.
-> 
-> Replace pci_intx() with pcim_intx().
-> 
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> Acked-by: Kalle Valo <kvalo@kernel.org>
+Ok, gave this a test and as somewhat suspected this patch alone doesn't
+fix my boot hang nor do I get more output (also tried Lukas suggestion
+with early_printk).
 
-Hoping for an ack from Igor, too.
+Then I put my patch using the hweight8(dev->supported_speeds) > 1
+condition suggested by Lukas on top and with both things work again. I
+would now propose that once we've cleared up Ilpo's comment I sent a
+series with both patches for you to easily pick together. If you prefer
+I can of course also sent my patch stand alone.
 
-> ---
->  drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
-> index f66eb43094d4..3adcfac2886f 100644
-> --- a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
-> +++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
-> @@ -204,7 +204,7 @@ static void qtnf_pcie_init_irq(struct qtnf_pcie_bus_priv *priv, bool use_msi)
->  
->  	if (!priv->msi_enabled) {
->  		pr_warn("legacy PCIE interrupts enabled\n");
-> -		pci_intx(pdev, 1);
-> +		pcim_intx(pdev, 1);
->  	}
->  }
->  
-> -- 
-> 2.47.1
-> 
+Thanks,
+Niklas
 
