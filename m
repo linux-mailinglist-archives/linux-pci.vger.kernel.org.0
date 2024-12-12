@@ -1,110 +1,91 @@
-Return-Path: <linux-pci+bounces-18218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7FD99EDF83
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 07:35:58 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 198C29EE055
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 08:39:31 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3506A2827C6
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 06:35:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EED216739D
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 07:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3B6204C17;
-	Thu, 12 Dec 2024 06:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEA0154BEE;
+	Thu, 12 Dec 2024 07:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SA8JzUHy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PndvLKtD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63E718787A
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 06:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073F325949C
+	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 07:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733985353; cv=none; b=EPuPK4oufjbV/ospONYsUNcarE4a0ckyj6O0uc5XZI4r3FrhRSBlZ0UHIZi9u/3PEG+BUh6kgiYoTsrt8tEomfvOWPtDRjSphW3PCxN/WwZDzT1cJsj3qzKn1+o3yIu7GmbAVnjG22Vy8K9e/8Z3W47Po4Zinc60AhHCIsfYDIQ=
+	t=1733989164; cv=none; b=UJG2knwNI6d3qq4pDI4nmSfkEN4+G4o+MH76Vu6AnKrhiXRYah9aZUqWxkEAjwUEt1GfqpXqKzkSdI38J4goMwIxBdEUq25PUD0nw+MuBGedGqs/9w1v74Uulev0O96wlTONPD+UD0tK07x8uw50v1MB0I8r5NHeqyVbpvKUmtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733985353; c=relaxed/simple;
-	bh=bRs+jqMK9Qc+7HtGjN3ouZR3W+H5AJZtzIY/wrhkWDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nkXm2/gK5Z8m1hBBVVSRBd0mbg9UVzlmogGPypeYDEmYFUk/xz/FuBmnNtW9MQIOMHnI618HqSljJ7Tetn4+VLYWbNUkqDA2LeF4JjmaTS1PNek7KXwMSa6kSABlZZAddHWWTFMfN8KyR351dQCZTWFcMmVWuqD89vjVVVpmurE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SA8JzUHy; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733985352; x=1765521352;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bRs+jqMK9Qc+7HtGjN3ouZR3W+H5AJZtzIY/wrhkWDU=;
-  b=SA8JzUHy8c+wDpzJPTJ84ZKAvnIydtD7vZpYGSS+DC9VNUrnQWjcyOxx
-   Z6UNmKH1SnpgL+WOczjJXSwntSk4oz6WPca90RzVHCZ4JdQUOnyv5cMc+
-   1l3ohChd3DydjbXFgsjMxQD6Kel4DqzG44TCtlOZXE0r30/BNnZh2EpTL
-   MR70C9IwnKEA6juDLaB2zV2DhiKl3dQT1sOFlbANVUNT0elStDzWIerMT
-   yEDf81Ku/McOlehtdBaO/eLl9chZzkxfyIMvCx18pI09ay6xA4FVBVz/r
-   O/wJ0mtpost2mkR2DzY8/itKHcTq92kWGCXt6bJ+6wE4gyJV1rgKL3wrs
-   g==;
-X-CSE-ConnectionGUID: RFwsQANJQi2iMDOx5f6w9g==
-X-CSE-MsgGUID: 6WKtniHXRWK41hKqC7JvGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11283"; a="34308285"
-X-IronPort-AV: E=Sophos;i="6.12,227,1728975600"; 
-   d="scan'208";a="34308285"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 22:35:51 -0800
-X-CSE-ConnectionGUID: hyv3oL3RR5qysgnlqgtbpg==
-X-CSE-MsgGUID: 7uCKwp+4RmaiQeLWH3qK/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="101086308"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa005.jf.intel.com with ESMTP; 11 Dec 2024 22:35:49 -0800
-Date: Thu, 12 Dec 2024 14:32:32 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	Alexey Kardashevskiy <aik@amd.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 04/11] PCI/IDE: Selective Stream IDE enumeration
-Message-ID: <Z1qDgGLhw2xSk9T9@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
- <yq5a34iw1bg6.fsf@kernel.org>
+	s=arc-20240116; t=1733989164; c=relaxed/simple;
+	bh=5hYl/Xu1OA36+p/FnNeDP1k7XfWgUi+CZGQAOH0bNMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IcFwjR7bBmJQVrhDjO37ln3d0CPz27jU7Cf3vJ9gkmswzMuUDHxZCjXELwVMDtk2HCZ16iouKn5I35Os8XdGjD2nssitlm+d4LPuOa3eUU5T31VfTY18bvyvG0uX9Sf0l+7mz3ofdr5UuuD6jDJDXR3F6R1wc+1Ci+wR3s77+hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PndvLKtD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0052BC4CECE;
+	Thu, 12 Dec 2024 07:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733989163;
+	bh=5hYl/Xu1OA36+p/FnNeDP1k7XfWgUi+CZGQAOH0bNMM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PndvLKtDKKLajr1UThXYQPW8d2e8aNp+Km1v5+lsPHcSv/WBr+IGXl0RUXrvS5+wY
+	 k54aajjCdmnJ+TGgebancIjC4Eb/Yo3u13lVd1EYoY+GtTcs7JhpYGBesfiNoJ6eMP
+	 M0T85pCsUPeQqDdP7eCsSJvNGQd/is/dz30jF3s6UXoZKjhiC8MXOhd/5fRApy2P7b
+	 A9v68g8Wu0zbpom2KUgwll5fKh75oXVQrGfCcxdrSlVcZlqas2VnUrbO16YkPN3J8s
+	 wnbUUU+jImu4pvxsohyZ0sPC29gXvrqs5PJQKM+58Wpv5rXLtiOlqRMQhZtNAumOep
+	 cKOT1QI+ZYHHQ==
+Message-ID: <3ca32224-2978-4590-9fb7-152ede734fc1@kernel.org>
+Date: Thu, 12 Dec 2024 16:39:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5a34iw1bg6.fsf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/17] NVMe PCI endpoint target driver
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-nvme@lists.infradead.org, Keith Busch <kbusch@kernel.org>,
+ Sagi Grimberg <sagi@grimberg.me>, linux-pci@vger.kernel.org,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20241210093408.105867-1-dlemoal@kernel.org>
+ <20241212060648.GB5266@lst.de>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20241212060648.GB5266@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 10, 2024 at 08:38:57AM +0530, Aneesh Kumar K.V wrote:
+On 12/12/24 15:06, Christoph Hellwig wrote:
+> FYI, this looks good to me:
 > 
-> Hi Dan,
-> 
-> > +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Selective IDE Streams */
-> 
-> Should this be
-> 
-> #define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	((((x) >> 16) & 0xff) + 1) /* Selective IDE Streams */
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Is it better keep the literal SPEC definition here in pci_reg.h? And ...
+Thanks. The kernel test robot signaled a build failure that I need to fix (not a
+big deal) and I have some typo in the documentation too that need fixing.
+I will post v4 with these fixes.
 
 > 
-> We do loop as below in ide.c
+> But I've closely worked with Damaien on this, so a look from someone
+> who is not too close to the work would be useful as well.
 > 
-> 	for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val); i++) {
 
-for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val) + 1; i++) {
 
-Thanks,
-Yilun
-
-> 		if (i == 0) {
-> 			pci_read_config_dword(pdev, sel_ide_cap, &val);
-> 			nr_ide_mem = PCI_IDE_SEL_CAP_ASSOC_NUM(val);
-> 
-> -aneesh
-> 
+-- 
+Damien Le Moal
+Western Digital Research
 
