@@ -1,283 +1,244 @@
-Return-Path: <linux-pci+bounces-18287-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18288-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 132339EE80A
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 14:48:48 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4DA49EE888
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 15:13:00 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FF9A1619A5
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 14:12:49 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAFD21506B;
+	Thu, 12 Dec 2024 14:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G4EoXK4z"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B844F282710
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 13:48:43 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C06152135AC;
-	Thu, 12 Dec 2024 13:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CTPt1+1O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MqdWU/zS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CTPt1+1O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MqdWU/zS"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD0738396;
-	Thu, 12 Dec 2024 13:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D782147FE;
+	Thu, 12 Dec 2024 14:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734011320; cv=none; b=Bo2Af8xSXMjnVu9UsBa/YhZsNk9zj+9r9+Qfv6UA8ZNBOvmFT+DfJ7axofasFcwDYUkjJ5pFXRR8YnGWzzF5BOajd3h3k1anpZXCpKV8QrDkOesAdM5BsF47RtTBGYrUOSqNDtQtS+H8FHzt1n+xP5S6wkRqHV26qwrfnbT7ihQ=
+	t=1734012769; cv=none; b=mQzFCplhzjirDS4OWA7b7AVrNOb8fhiNt7f0vWZ5Z7JJR+O+lIwK8tJ61/7QrXccKuAGndBSaElFBVz6Ip2W00PCJ++nrIIYPvcYid7Fyp/uWaDV/eioscI6sHgsGedDY/gK/675sCpEr7tp6oOuT0Ew4R9P28fDbCZoJdkd/eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734011320; c=relaxed/simple;
-	bh=P94YWYtZkz3Sh9SxayjdD759WkC5LM/GlTYF2rW09FU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A1yyliVZn+P6ZL6PWHbDq3il4LoDk3vMxVR0UM//LheLd0OeeTLBhN6xuMFTRwvX6rIjPoP92+SHSwoH8lACCFt8/pItiMrLkCDmtJTy5RJCuF+/qX0efL9Ah8OtpNNXnxdSWOHBFVmszy0J/31fniARWFKCNK+C/5xhC65OJsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CTPt1+1O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MqdWU/zS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CTPt1+1O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MqdWU/zS; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B429C1F37C;
-	Thu, 12 Dec 2024 13:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1734011316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TRyhwbCFs9YdnDuH25cHl/brWhLVDYOwoyJ6Xun4/54=;
-	b=CTPt1+1OwXTDKbXc/EkMUIj6Yz06KWM8JO0UQZaROMLvn9VlEhw6oGCh60OuODlHeKhLk5
-	RSBZ56QwJHDk5UXexWrXr0jR80IyZSG7aYi+zO8GvX4C5eOjlMS2281luOivNQLDeD9A9Q
-	Bgkq82ID3IO5rL9okQSmxQKMxKRl4U0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1734011316;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TRyhwbCFs9YdnDuH25cHl/brWhLVDYOwoyJ6Xun4/54=;
-	b=MqdWU/zS4j6umFc78Qbzm+NvarMMEdpJCNKjFw3gf9KcIZJ57etWMrqkdiDfxDOCmEIiEQ
-	D/NB7OWrK73GtrDA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CTPt1+1O;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="MqdWU/zS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1734011316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TRyhwbCFs9YdnDuH25cHl/brWhLVDYOwoyJ6Xun4/54=;
-	b=CTPt1+1OwXTDKbXc/EkMUIj6Yz06KWM8JO0UQZaROMLvn9VlEhw6oGCh60OuODlHeKhLk5
-	RSBZ56QwJHDk5UXexWrXr0jR80IyZSG7aYi+zO8GvX4C5eOjlMS2281luOivNQLDeD9A9Q
-	Bgkq82ID3IO5rL9okQSmxQKMxKRl4U0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1734011316;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TRyhwbCFs9YdnDuH25cHl/brWhLVDYOwoyJ6Xun4/54=;
-	b=MqdWU/zS4j6umFc78Qbzm+NvarMMEdpJCNKjFw3gf9KcIZJ57etWMrqkdiDfxDOCmEIiEQ
-	D/NB7OWrK73GtrDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B8ACE13939;
-	Thu, 12 Dec 2024 13:48:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iiqTKrPpWme1YgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Thu, 12 Dec 2024 13:48:35 +0000
-Message-ID: <462fcc0a-3b4a-4b59-b414-a2d305dcd29a@suse.de>
-Date: Thu, 12 Dec 2024 15:48:35 +0200
+	s=arc-20240116; t=1734012769; c=relaxed/simple;
+	bh=oZvwUxmIt9Jb89+cOwAu5t9V0/+kjzARYOr+wFyil0E=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ITjUngZoF8Vw551Pwk81g/mqWCcgZFNQfiN9MR+enuPn71k3+SeOTmvPa7HiPJEoyiyDrgpJif7N+CMZNnr5woJKdxa0+SgKU1w43Z6E5JBpaxp5pZGhy0kCNAfK7Zoy/5NfWtw/fu5a7rqAVnrvnC2FTWzzhqcPcQNtdqztt7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G4EoXK4z; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BC60jos000945;
+	Thu, 12 Dec 2024 14:12:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=+pWSyD
+	a1SC+4rapagG9/qybDkMk3cUimnwFclPP/tiE=; b=G4EoXK4zm9hm6Ax9uq9VkR
+	znNgZEuh8HpdZJWqtBZdQUhkfY1MiYj/OZyvfZnHReXmC40a+1igS+t6x+o+2dYp
+	jYJOIzgcriW3Ho0mtVKHIhN2c98xtc3893vImv5Tbdwo41aCuwt16naTNJMzLdUP
+	bl1ihv5+saya2CSH8hIG0/Dy79XfU2mqkyWUFfokQqKq7VA7kdkxqiAgzLIU1l5W
+	nLKoTHW9/D++ODr5q+jI57sqWY2M/036U7ZsFGNYx2K/Yq1lIpPqj8bm2gbWsvrz
+	Xgd1fpG+MkNHN/RAo9+yYuTqBPhPHcWfl8RWBiDxEL8GBf0uak+6r1eTnFAWK4Dg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43ft6d2fsk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Dec 2024 14:12:24 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BCECNQc002412;
+	Thu, 12 Dec 2024 14:12:23 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43ft6d2fsf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Dec 2024 14:12:23 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BCBmULt017364;
+	Thu, 12 Dec 2024 14:12:22 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 43d3d20fqa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Dec 2024 14:12:22 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BCECLNm51511924
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Dec 2024 14:12:22 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D5B2558053;
+	Thu, 12 Dec 2024 14:12:21 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C07B58043;
+	Thu, 12 Dec 2024 14:12:18 +0000 (GMT)
+Received: from [9.152.212.155] (unknown [9.152.212.155])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 12 Dec 2024 14:12:18 +0000 (GMT)
+Message-ID: <f13b7b0c668c7e3df2842ee1e66ca4645421b055.camel@linux.ibm.com>
+Subject: Re: [PATCH] PCI/portdrv: Disable bwctrl service if port is fixed at
+ 2.5 GT/s
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Niklas Schnelle	 <niks@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, Krzysztof
+ Wilczy??ski	 <kw@linux.com>,
+        "Maciej W . Rozycki" <macro@orcam.me.uk>,
+        Jonathan Cameron	 <Jonathan.Cameron@huawei.com>,
+        Alexandru Gagniuc
+ <mr.nuke.me@gmail.com>,
+        Krishna chaitanya chundru	
+ <quic_krichai@quicinc.com>,
+        Srinivas Pandruvada	
+ <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J . Wysocki"
+ <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        Smita Koralahalli	
+ <Smita.KoralahalliChannabasappa@amd.com>,
+        LKML
+ <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano
+ <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, Zhang Rui
+ <rui.zhang@intel.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Mika Westerberg	
+ <mika.westerberg@linux.intel.com>
+Date: Thu, 12 Dec 2024 15:12:17 +0100
+In-Reply-To: <Z1rX1BgdsPHIHOv4@wunner.de>
+References: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
+	 <Z1gSZCdv3fwnRRNk@wunner.de>
+	 <70829798889c6d779ca0f6cd3260a765780d1369.camel@kernel.org>
+	 <Z1lF468L8c84QJkD@wunner.de>
+	 <dc6e677f-4c19-dd25-8878-8eae9154cff4@linux.intel.com>
+	 <Z1qoDmF6urJDN5jh@wunner.de>
+	 <97bbbdecb8c65cfa2625b47aa2585a7417ddcb81.camel@linux.ibm.com>
+	 <Z1rX1BgdsPHIHOv4@wunner.de>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/10] PCI: brcmstb: Adjust PHY PLL setup to use a
- 54MHz input refclk
-To: Jonathan Bell <jonathan@raspberrypi.com>,
- James Quinlan <james.quinlan@broadcom.com>
-Cc: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
- <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>
-References: <20241025124515.14066-1-svarbanov@suse.de>
- <20241025124515.14066-9-svarbanov@suse.de>
- <4bbdf9ed-f429-411b-8f5f-e51857f0f9d0@broadcom.com>
- <f9f49030-0518-4e30-91a7-3c088c31180b@suse.de>
- <474e5e38-37a4-439b-b25a-fe60df03f25b@broadcom.com>
- <CADQZjwci2SVN=AG178kj3yN=17nVixOHEZOjZCs9LSUihbby4Q@mail.gmail.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <CADQZjwci2SVN=AG178kj3yN=17nVixOHEZOjZCs9LSUihbby4Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B429C1F37C
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,vger.kernel.org,lists.infradead.org,broadcom.com,linutronix.de,kernel.org,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FwrEK2dmnrQAaJ_bi0sXIZPtagrsOtA-
+X-Proofpoint-ORIG-GUID: O3Py7kVZg1nVcHAyfIRyRWSrCY4v9tED
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 phishscore=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=916 mlxscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412120097
 
-Hi
+On Thu, 2024-12-12 at 13:32 +0100, Lukas Wunner wrote:
+> On Thu, Dec 12, 2024 at 10:17:21AM +0100, Niklas Schnelle wrote:
+> > On Thu, 2024-12-12 at 10:08 +0100, Lukas Wunner wrote:
+> > > After re-reading the spec I'm convinced now
+> > > that we're doing this wrong and that we should honor the Max Link Spe=
+ed
+> > > instead of blindly deeming all set bits in the Link Capabilities 2
+> > > Register as supported speeds:
+> > >=20
+> > > https://lore.kernel.org/r/e3386d62a766be6d0ef7138a001dabfe563cdff8.17=
+33991971.git.lukas@wunner.de/
+> > >=20
+> > > @Niklas, could you test if this is sufficient to avoid the issue?
+> > > Or do we still need to stop instantiating the bandwidth controller
+> > > if more than one speed is supported?
+> >=20
+> > Yes, I will test this but will only get to do so tonight (UTC +2).
+>=20
+> Hey, no worries.  We're not on the run!
+>=20
+> > If it's not sufficient I think we could use the modified
+> > pcie_get_supported_speeds() to check if only one link speed is
+> > supported, right?
+>=20
+> pcie_get_supported_speeds() is used to fill in the supported_speeds
+> field in struct pci_dev.
+>=20
+> And that field is used in a number of places (exposure of the max link
+> speed in sysfs, delay handling in pci_bridge_wait_for_secondary_bus(),
+> link tuning in radeon/amdgpu drivers, etc).
+>=20
+> So we can't use pcie_get_supported_speeds() to (exclusively) influence
+> the behavior of the bandwidth controller.  Instead, the solution is your
+> patch for get_port_device_capability(), but future-proofed such that
+> bwctrl is only instantiated if more than one link speed is supported.
+>=20
+> Thanks!
+>=20
+> Lukas
 
-On 12/11/24 10:54 PM, Jonathan Bell wrote:
-> On Wed, 11 Dec 2024 at 19:39, James Quinlan <james.quinlan@broadcom.com> wrote:
->>
->> On 12/10/24 08:42, Stanimir Varbanov wrote:
->>> Hi Jim
->>>
->>> On 12/10/24 12:52 AM, James Quinlan wrote:
->>>> On 10/25/24 08:45, Stanimir Varbanov wrote:
->>>>> The default input reference clock for the PHY PLL is 100Mhz, except for
->>>>> some devices where it is 54Mhz like bcm2712C1 and bcm2712D0.
->>>>>
->>>>> To implement this adjustments introduce a new .post_setup op in
->>>>> pcie_cfg_data and call it at the end of brcm_pcie_setup function.
->>>>>
->>>>> The bcm2712 .post_setup callback implements the required MDIO writes that
->>>>> switch the PLL refclk and also change PHY PM clock period.
->>>>>
->>>>> Without this RPi5 PCIex1 is unable to enumerate endpoint devices on
->>>>> the expansion connector.
->>>>>
->>>>> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
->>>>> ---
->>>>> v3 -> v4:
->>>>>    - Improved patch description (Florian)
->>>>>
->>>>>    drivers/pci/controller/pcie-brcmstb.c | 42 +++++++++++++++++++++++++++
->>>>>    1 file changed, 42 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/
->>>>> controller/pcie-brcmstb.c
->>>>> index d970a76aa9ef..2571dcc14560 100644
->>>>> --- a/drivers/pci/controller/pcie-brcmstb.c
->>>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->>>>> @@ -55,6 +55,10 @@
->>>>>    #define PCIE_RC_DL_MDIO_WR_DATA                0x1104
->>>>>    #define PCIE_RC_DL_MDIO_RD_DATA                0x1108
->>>>>    +#define PCIE_RC_PL_PHY_CTL_15                0x184c
->>>>> +#define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK        0x400000
->>>>> +#define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK    0xff
->>>>> +
->>>>>    #define PCIE_MISC_MISC_CTRL                0x4008
->>>>>    #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK    0x80
->>>>>    #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK    0x400
->>>>> @@ -251,6 +255,7 @@ struct pcie_cfg_data {
->>>>>        u8 num_inbound_wins;
->>>>>        int (*perst_set)(struct brcm_pcie *pcie, u32 val);
->>>>>        int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->>>>> +    int (*post_setup)(struct brcm_pcie *pcie);
->>>>>    };
->>>>>      struct subdev_regulators {
->>>>> @@ -826,6 +831,36 @@ static int brcm_pcie_perst_set_generic(struct
->>>>> brcm_pcie *pcie, u32 val)
->>>>>        return 0;
->>>>>    }
->>>>>    +static int brcm_pcie_post_setup_bcm2712(struct brcm_pcie *pcie)
->>>>> +{
->>>>> +    const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030,
->>>>> 0x5030, 0x0007 };
->>>>> +    const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
->>>>> +    int ret, i;
->>>>> +    u32 tmp;
->>>>> +
->>>>> +    /* Allow a 54MHz (xosc) refclk source */
->>>>> +    ret = brcm_pcie_mdio_write(pcie->base, MDIO_PORT0,
->>>>> SET_ADDR_OFFSET, 0x1600);
->>>>> +    if (ret < 0)
->>>>> +        return ret;
->>>>> +
->>>>> +    for (i = 0; i < ARRAY_SIZE(regs); i++) {
->>>>> +        ret = brcm_pcie_mdio_write(pcie->base, MDIO_PORT0, regs[i],
->>>>> data[i]);
->>>>> +        if (ret < 0)
->>>>> +            return ret;
->>>>> +    }
->>>>> +
->>>>> +    usleep_range(100, 200);
->>>>> +
->>>>> +    /* Fix for L1SS errata */
->>>>> +    tmp = readl(pcie->base + PCIE_RC_PL_PHY_CTL_15);
->>>>> +    tmp &= ~PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK;
->>>>> +    /* PM clock period is 18.52ns (round down) */
->>>>> +    tmp |= 0x12;
->>>>> +    writel(tmp, pcie->base + PCIE_RC_PL_PHY_CTL_15);
->>>> Hi Stan,
->>>>
->>>> Can you please say more about where this errata came from?  I asked the
->>>> 7712 PCIe HW folks and they said that there best guess was that it was a
->>>> old workaround for a particular Broadcom Wifi endpoint.  Do you know its
->>>> origin?
->>> Unfortunately, I don't know the details. See the comments on previous
->>> series version [1]. My observation shows that MDIO writes are
->>> implemented in RPi platform firmware only for pcie2 (where RP1 south
->>> bridge is connected) but not for pcie1 expansion connector.
->>
->> Well, I think my concern is more about the comment "Fix for L1SS errata"
->> rather than the code.  If this is a bonafide errata it should have an
->> identifier and some documentation somewhere. Declaring it to be an
->> unknown errata provides little info.
-> 
-> I'm the originator of this thunk - erratum is perhaps the wrong description.
-> If the reference clock provided to the RC is 54MHz and not 100MHz, as
-> is the case on BCM2712, then many of the L1 sub-state timers run
-> slower which means state transitions are unnecessarily lengthened.
-> 
-> This change, and the MDIO manipulation above, should be applied
-> regardless of the RC instance and/or connected EP.
-> 
+Yeah right, I was imprecise, should have said that we can use the use
+the updated pcie_get_supported_speeds() via the now correct dev-
+>supported_speeds. But first let's see if it alone already fixes
+things.
 
-Thank you Jonathan.
-
-I guess you are fine to take this description in the next version of the
-series?
-
-~Stan
-
+Thanks,
+Niklas
 
 
