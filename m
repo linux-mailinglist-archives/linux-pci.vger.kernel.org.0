@@ -1,128 +1,162 @@
-Return-Path: <linux-pci+bounces-18328-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6D5D9EFB73
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 19:48:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4AD19EFB75
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 19:49:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 924B5188D07C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 18:48:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC4DD16D60D
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 18:48:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A94918B484;
-	Thu, 12 Dec 2024 18:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C8FF18C002;
+	Thu, 12 Dec 2024 18:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrywXcPk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/mQNjZO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6426F189B9C
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 18:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54935188938;
+	Thu, 12 Dec 2024 18:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734029310; cv=none; b=IzwKgSY/mqgxuzwfnUgGaRiJxa8vJ4hp4mRKNj+uvYHPNaSKtLsKHeDn4Dcf6hzOy4/+fbCCjwxrAwnPSRS71QERtuo96xPUb6cUbyjE0hXORQStRm6ytp5V4oHrje4+LX93Vuag+FNSTcAXKtVBLEW+RWend/ekq/2VVSdYB7k=
+	t=1734029329; cv=none; b=TP5BIGCaa33lr5rVTQuSUbxwZ9PReU3ovotFY5bZDluRY27i+2/m1wTADjcm4wPrEV0q+KlvQdA+hHvEDlmnwgxi8CrEgv54UbQ4ta7uVcx6fkU603/uuz0IOdLG17eCMOFCDUP0Fa68NZUvhqSmJmr/vgwvGHQSogQnQqEDqtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734029310; c=relaxed/simple;
-	bh=tOGMju40dv2/vvov0Gt5CZ9asbT5RPj1IsGYlrPDuWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Fgf/zpFwrEOTTj+nrPWWdVy7sWGXFGRjQVFATDUyITGkXeM4iNtLVjILFDaJ6b/MZgJS50o+ySCha/EGF/jgFsREq+qJikuyd7p+1f78DgiGbkKjJ8ASXXAxLQ6kFdla3tLkkyyfp/x4YnRsx/ncQ9sDm/HgDslZe7J0gStyJ9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrywXcPk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38F1C4CECE;
-	Thu, 12 Dec 2024 18:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734029309;
-	bh=tOGMju40dv2/vvov0Gt5CZ9asbT5RPj1IsGYlrPDuWc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GrywXcPkz1K16BghTpnDVl+HI5dqFkRdXuaU8bIFT+gOlNQfBTW7zuqyok64nlsVl
-	 2W+8XKf1x1ZbEcbVbUAvb3UHz8GWzhJpc1U/w9euaRUoHA4tAyp2i+JJ0bZ8Ba/heD
-	 mYkeb718epWf3scMI7hjGPZ8QOXDuB/TYH81k/fpnAzTBp7gFM6DZcbCOwYiW6PoNE
-	 oLhjXDYAkd3ANF1/QT8bgwFucdEh8LTy0NSVKzaV46Hd9m0bzxC5E+0ExsAKl4rMiO
-	 d528wzG1dBGuVJphKf7n9NdiDRa3q1FbE1e6j8Uo4Rbxkxzorgmz2TPRT9TZWzKbVp
-	 /XmA+XqaTrhxA==
-Date: Thu, 12 Dec 2024 12:48:28 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v4 18/18] Documentation: Document the NVMe PCI endpoint
- target driver
-Message-ID: <20241212184828.GA3354708@bhelgaas>
+	s=arc-20240116; t=1734029329; c=relaxed/simple;
+	bh=2wHg5ech62f6kNP58dWuNm42eu3h+FcT06MHSXTV5lM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XyLkWp0FpxfdM67wCeha459cl0dRC8f8uec8DcdlMkud8c5y63tBr+1KBrWwhO9Ez1j3r4SGBypxwb8GZSZuzImD4FEFWaXrJrPp4NmVz4j0/5QY4KtVfvWHbSsACLowphzJtl1LTFw2WUjVqGyhR44yDfOnrs8siiYxe19LD5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/mQNjZO; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734029328; x=1765565328;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2wHg5ech62f6kNP58dWuNm42eu3h+FcT06MHSXTV5lM=;
+  b=a/mQNjZOYJ9jdT92L9536/mxPidqXHeWVKyjHHrlouvBCwCaS9UCzerz
+   YPobKd/savImAwKyJrdBgYRNaFIPrPmGJ4TIpGpNyf0kc0Bp2emDrHyf2
+   TURALc8HOJDrcaA9UofcXuC3Zwqh+t6klA9wjRBCqZavONDSLxQEHyFQA
+   rHhSgPSxmVFmywpOxPifcnNN0rYRFjg7CtRm4ufu6mA4U08pszJXXECv6
+   ifCmvXzDpZenUk5c8eUw7jkEQCa7k7ca8P4qfYg80xMNzyD5INVGtcx7B
+   pW+5wWBp4k48meIcAP+rpadbkeB35g6qK/SlkaKYRV0FI/FCKa7KlXFmA
+   g==;
+X-CSE-ConnectionGUID: FIyNuhhuS6CteEJqvJQPTQ==
+X-CSE-MsgGUID: R/RckaJsR6aGtJxy2XpvHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="45474145"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="45474145"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 10:48:47 -0800
+X-CSE-ConnectionGUID: pVSicdywTUa2jTMaz/PNGQ==
+X-CSE-MsgGUID: cfYrER84RBK5Aqf03CS7jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="127318593"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.137])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 10:48:42 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 12 Dec 2024 20:48:38 +0200 (EET)
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Lukas Wunner <lukas@wunner.de>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v6 6/8] PCI: Add TLP Prefix reading into
+ pcie_read_tlp_log()
+In-Reply-To: <e4f907ad-ab87-ac42-7428-93e16f070f74@linux.intel.com>
+Message-ID: <827acda7-26d8-f4f5-2251-befb932ebb8b@linux.intel.com>
+References: <20240913143632.5277-1-ilpo.jarvinen@linux.intel.com> <20240913143632.5277-7-ilpo.jarvinen@linux.intel.com> <20241211164904.00007a02@huawei.com> <e4f907ad-ab87-ac42-7428-93e16f070f74@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241212113440.352958-19-dlemoal@kernel.org>
+Content-Type: multipart/mixed; boundary="8323328-1583029406-1734029318=:936"
 
-On Thu, Dec 12, 2024 at 08:34:40PM +0900, Damien Le Moal wrote:
-> Add a documentation file
-> (Documentation/nvme/nvme-pci-endpoint-target.rst) for the new NVMe PCI
-> endpoint target driver. This provides an overview of the driver
-> requirements, capabilities and limitations. A user guide describing how
-> to setup a NVMe PCI endpoint device using this driver is also provided.
-> 
-> This document is made accessible also from the PCI endpoint
-> documentation using a link. Furthermore, since the existing nvme
-> documentation was not accessible from the top documentation index, an
-> index file is added to Documentation/nvme and this index listed as
-> "NVMe Subsystem" in the "Storage interfaces" section of the subsystem
-> API index.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+--8323328-1583029406-1734029318=:936
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-  Applying: Documentation: Document the NVMe PCI endpoint target driver
-  .git/rebase-apply/patch:43: new blank line at EOF.
-  +
-  warning: 1 line adds whitespace errors.
+On Thu, 12 Dec 2024, Ilpo J=E4rvinen wrote:
 
-> +The NVMe PCI endpoint target driver allows exposing a NVMe target controller
-> +over a PCIe link, thus implementing an NVMe PCIe device similar to a regular
-> +M.2 SSD. The target controller is created in the same manner as when using NVMe
-> +over fabrics: the controller represents the interface to an NVMe subsystem
-> +using a port. The port transfer type must be configured to be "pci". The
-> +subsystem can be configured to have namespaces backed by regular files or block
-> +devices, or can use NVMe passthrough to expose an existing physical NVMe device
-> +or a NVMe fabrics host controller (e.g. a NVMe TCP host controller).
-> +
-> +The NVMe PCI endpoint target driver relies as much as possible on the NVMe
-> +target core code to parse and execute NVMe commands submitted by the PCI RC
-> +host. However, using the PCI endpoint framework API and DMA API, the driver is
-> +also responsible for managing all data transfers over the PCI link. This
-> +implies that the NVMe PCI endpoint target driver implements several NVMe data
-> +structure management and some command parsing.
+> On Wed, 11 Dec 2024, Jonathan Cameron wrote:
+>=20
+> > On Fri, 13 Sep 2024 17:36:30 +0300
+> > Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> >=20
+> > > pcie_read_tlp_log() handles only 4 Header Log DWORDs but TLP Prefix L=
+og
+> > > (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
+> > >=20
+> > > Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
+> > > TLP Prefix Log. The relevant registers are formatted identically in A=
+ER
+> > > and DPC Capability, but has these variations:
+> > >=20
+> > > a) The offsets of TLP Prefix Log registers vary.
+> > > b) DPC RP PIO TLP Prefix Log register can be < 4 DWORDs.
+> > >=20
+> > > Therefore callers must pass the offset of the TLP Prefix Log register
+> > > and the entire length to pcie_read_tlp_log() to be able to read the
+> > > correct number of TLP Prefix DWORDs from the correct offset.
+> > >=20
+> > > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> >=20
+> > Trivial comments below
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >=20
+> > Would have been nice if they'd just made the formats have the
+> > same sized holes etc!
+>=20
+> That's not even the worst problem.
+>=20
+> They managed to copy-paste most of the stuff into DPC (copy-paste is=20
+> really obvious because the text still refers to AER in a DPC section :-))=
+=20
+> but forgot to add a few capability fields into the DPC capability, most=
+=20
+> importantly, the bit that indicates whether TLP was logged in Flit mode
+> or not And now we get to keep the pieces how to interpret the Log=20
+> Registers (relates to the follow up series). :-(
+>=20
+> > > diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> > > index 65ac7b5d8a87..def9dd7b73e8 100644
+> > > --- a/drivers/pci/pcie/tlp.c
+> > > +++ b/drivers/pci/pcie/tlp.c
+> > > @@ -11,26 +11,65 @@
+> >=20
+> > >  /**
+> > >   * pcie_read_tlp_log - read TLP Header Log
+> > Maybe update this to read TLP Header and Prefix Logs
+> > >   * @dev: PCIe device
+> > >   * @where: PCI Config offset of TLP Header Log
+> > > + * @where2: PCI Config offset of TLP Prefix Log
+> >=20
+> > Is it worth giving it a more specific name than where2?
+> > Possibly renaming where as well!
+>=20
+> Sure, why not.
 
-Sort of a mix of "PCIe link" vs "PCI link", maybe make them
-consistent.
+Hi again,
 
-Does "PCI RC" mean "Root Complex"?  If so, maybe "PCIe Root Complex"
-the first time, and "PCIe RC" subsequently?  I don't know enough about
-this to know whether "Root Complex" is necessary in this context, or
-whether "host" might be enough.
+After doing this rename, I rebased the Flit mode series on top of it and
+realized there's one small problem with naming where2. It will be=20
+overloaded between TLP Prefix Log (Non-Flit mode) and extended TLP Header=
+=20
+Log (DW5+) (Flit mode) so I'm not sure if there's really going to be a=20
+good name for it.
 
-> +4) The boot partition support (BPS), Persistent Memory Region Supported (PMRS)
-> +   and Controller Memory Buffer Supported (CMBS) capabilities are never reported.
+--=20
+ i.
 
-Gratuitous >80 column line.
-
-> +If the PCI endpoint controller used does not support MSIX, MSI can be
-> +configured instead::
-
-s/MSIX/MSI-X/ as is used elsewhere
-
-> +The NVMe PCI endpoint target driver uses the PCI endpoint configfs device attributes as follows.
-
-Gratuitous >80 column line.
+--8323328-1583029406-1734029318=:936--
 
