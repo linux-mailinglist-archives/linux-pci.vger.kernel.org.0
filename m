@@ -1,112 +1,110 @@
-Return-Path: <linux-pci+bounces-18278-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20FF39EE61F
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 13:03:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3E399EE68E
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 13:22:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B15B1615E7
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 12:02:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04901164E96
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 12:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C01212F9E;
-	Thu, 12 Dec 2024 11:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1668212D89;
+	Thu, 12 Dec 2024 12:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="WNRfxvdk"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="X08qOiSZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF66212F93
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 11:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6838D158DB1;
+	Thu, 12 Dec 2024 12:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734004629; cv=none; b=HI5ONAFBzKLrtH8GdeF7tOPcNslSYNevzbo0NpgOGn6b8b8vJQiyJNj1ZysdFjMGzaO8G6kpGoALlU2o4q6i3Sop1QRKZpzMNmILkFTPu2i+zzKl8egbo4kKz0JMNSnaA1mRZJdPJh0NUALNRij7RDnq0yiHZP4hWMTPGkcoHYU=
+	t=1734006115; cv=none; b=c7cC9oVcNUgAZWPBYmLC1VyvQ5NBU2dfH8t8GNXAqMp1cCbaM9RRCVBBb1YJEZ9uITOoKce9w6xqD3Dp5jVTIaSwl8CyskTdyunQ2IoiiqgRcUYW8/z+dzjqRciVQIp2lhH54qS311PAEyn1xrFGkgw4+VmmXv+uy5rMrQTjphM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734004629; c=relaxed/simple;
-	bh=4SOitpeJSxsCi3uUZNQXvqSx7dPK8Xu9nPdWBZ3pXZ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SxkBbZ7RYAR3oxYWg6P86W2Gl7N6UG5P34iYoG/TqzAcojcvfzazW2oYU++nGUDBXqm+UuziZDTxeIHmy1UOa5GjyKX2SK9jR7T+Jhk8fV06Pw96iF9IT97A50g/JyrFviPOgXzrebLXw2aEp6Y+SE5XQoSRy2WNiUHVhyPMMJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=WNRfxvdk; arc=none smtp.client-ip=17.58.6.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1734004627;
-	bh=1eMLf26XKrrfXj3aFM14LgTUGaE6UhvpHVb/22mBwUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
-	 x-icloud-hme;
-	b=WNRfxvdkGS3XfHsQHHV3QBZCEvGQbIOa2a+WsJ82Fgs1q1vdMYE1sED/Zr1kJady4
-	 JNR2c0a9ZnlTwNIJWlbof5RrnsVqI3wjxb8yVSotRAplZYJu44r/IYdSCA6A19y3Qj
-	 I0F+IRZxU/rFNOxI/hNrOhkvfXNFwUSO4W2PCdwH81yUcCkkRUPyjVtrx4l3OAmCer
-	 +5VNN4Kefo8mYNpNa78jgfdB1LH4RiPuaqv0wWSeUW7MKHGFlWCaascN3rJyDWpE33
-	 XiNFdYko2/5bakjuafEqHcJklwp6fAF1gavRpWZ1+5rA46E24aFA0PDT28VbuzIPi1
-	 OXS/2x8JA5DHQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id 0B15D34BA577;
-	Thu, 12 Dec 2024 11:57:01 +0000 (UTC)
-Message-ID: <d5ea10a7-7bb9-4fbe-a7b7-1871e5f697ff@icloud.com>
-Date: Thu, 12 Dec 2024 19:56:58 +0800
+	s=arc-20240116; t=1734006115; c=relaxed/simple;
+	bh=kWUPjvQaoxNBzOTT4VbNlf0Zq+E3gREB48uYjM0Jcyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ldIfz69cO77JHRedD/JRv8KjRnVJKgWRrmYlKeNXun4uM30utbaGLac24grabrt9yQ6WNVB/ayhw20xyEUfabKnWZvw2TJ/gbZnXRtEJHlm+wz8uVbYJ9DsQFrVpr6dT2Hmmx/vdZS7586R/JPWP6IBoiMd4HKu6ZuaHYVoIexw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=X08qOiSZ; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
+ id 9bd38cac647772b5; Thu, 12 Dec 2024 13:21:51 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id BBC377F5D85;
+	Thu, 12 Dec 2024 13:21:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1734006111;
+	bh=kWUPjvQaoxNBzOTT4VbNlf0Zq+E3gREB48uYjM0Jcyc=;
+	h=From:Subject:Date;
+	b=X08qOiSZDhFsu40YznaIwmRogZC0ucTkN/P6t6t7Oni4/pxdDDc6cvKFulHy/qPED
+	 6FNFLl2A9hywmOBg5RyN4qSSA1maGKhSCdB/LoiYVaEhNW2tXx2EfupwCFJypliYe6
+	 3ypuD9fMQ5dr97faASrG95dzZEj1e6foEMTRoGRGlB7AXIJUcJrg2g4SunoR2ggsda
+	 PEjHm+c7/mkD3JwjjAqCV3+liaoQ7R60dgG0iDwK0T0APd3+UtdS8dmEr6Cvg5rNF1
+	 DbTwbUnSw7iiF5Ju8ayK6U2peHwGvRebBjwUq6HG4QDSZqyluTFTtKCVkJdgW4dL5Z
+	 UROxHiBKNw6cw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Christoph Hellwig <hch@lst.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
+ sagi@grimberg.me, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org,
+ Ulf Hansson <ulf.hansson@linaro.org>, Len Brown <len.brown@intel.com>,
+ linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>
+Subject:
+ Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by the user
+Date: Thu, 12 Dec 2024 13:21:50 +0100
+Message-ID: <13662231.uLZWGnKmhe@rjwysocki.net>
+In-Reply-To: <20241212055920.GB4825@lst.de>
+References:
+ <20241205232900.GA3072557@bhelgaas>
+ <20241209143821.m4dahsaqeydluyf3@thinkpad> <20241212055920.GB4825@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] PCI: endpoint: fix bug for 2 APIs and simplify 1
- API
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <jpinto@synopsys.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Wei Yongjun <weiyongjun1@huawei.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>,
- stable@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-References: <20241210-pci-epc-core_fix-v3-0-4d86dd573e4b@quicinc.com>
- <1fac71d8-dcfe-4924-ab01-dc85a822b740@stanley.mountain>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <1fac71d8-dcfe-4924-ab01-dc85a822b740@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: KGwKBQwZIGmJw-R1yRjzVFkBZhgqDO3-
-X-Proofpoint-GUID: KGwKBQwZIGmJw-R1yRjzVFkBZhgqDO3-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-12_06,2024-12-12_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- adultscore=0 mlxscore=0 mlxlogscore=682 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412120085
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefuddrkeehgdefkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehmrghnihhvrghnnhgrnhdrshgrughhrghsihhvrghmsehlihhnrghrohdrohhrghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehksghushgthheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprgigsghovgeskhgvrhhnvghlrdgukhdprhgtphhtthhopehsrghgihesghhrihhmsggvrhhgrdhmvgdprhgtphh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=15 Fuz1=15 Fuz2=15
 
-On 2024/12/12 17:35, Dan Carpenter wrote:
-> On Tue, Dec 10, 2024 at 10:00:17PM +0800, Zijun Hu wrote:
->> This patch series is to fix bug for APIs
->> - devm_pci_epc_destroy().
->> - pci_epf_remove_vepf().
->>
->> and simplify APIs below:
->> - pci_epc_get().
->>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
+On Thursday, December 12, 2024 6:59:20 AM CET Christoph Hellwig wrote:
+> On Mon, Dec 09, 2024 at 08:08:21PM +0530, Manivannan Sadhasivam wrote:
+> > > 
+> > > The istory here is the the NVMe internal power states are significantly
+> > > better for the SSDs.  It avoid shutting down the SSD frequently, which
+> > > creates a lot of extra erase cycles and reduces life time.  It also
+> > > prevents the SSD from performing maintainance operations while the host
+> > > system is idle, which is the perfect time for them.  But the idea of
+> > > putting all periphals into D3 is gaining a lot of ground because it
+> > > makes the platform vendors life a lot simpler at the cost of others.
+> > 
+> > No, I disagree with the last comment. When the system goes to low power mode
+> > (like S2R/hibernate), it *does* makes a lot of sense to put the devices into
+> > D3Cold to save power.
 > 
-> This is very good.  This is Config FS.  Is there a kself test for configfs
-> or did you create your own test?
-> 
+> Yes.  That's what the pm_suspend_via_firmware call in nvme_suspend is
+> supposed to catch.
 
-no.
+pm_suspend_via_firmware() is to distinguish different flavors of system
+suspend.
 
-In order to investigate devres_release() usage for patch 1/3, i read
-2 PCI source files and then find a few obvious bugs. (^^)
+For runtime-suspend, there are different callbacks, but it doesn't look
+like they are used by NVMe.  At least nvme_dev_pm_ops doesn't set them.
 
-> regards,
-> dan carpenter
-> 
-> 
+
 
 
