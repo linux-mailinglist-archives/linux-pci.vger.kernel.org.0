@@ -1,97 +1,114 @@
-Return-Path: <linux-pci+bounces-18208-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 535859EDC31
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 00:47:28 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6017F1889EA3
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2024 23:47:27 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 463A01F8687;
-	Wed, 11 Dec 2024 23:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YD7WIMd6"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A716E9EDD02
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 02:20:28 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DBA1F8681;
-	Wed, 11 Dec 2024 23:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18137283138
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 01:20:27 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA49F38396;
+	Thu, 12 Dec 2024 01:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="A5Xsd5Qr"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-m21466.qiye.163.com (mail-m21466.qiye.163.com [117.135.214.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5578225A8
+	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 01:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733960671; cv=none; b=RewO05FJNS0UdeJ3n84/yp22gLnWtVSNLtfbHHwLS7foDbok7wUBSbnZvU8mTo6IoLMpr8uQlz9UCCwcaGC9tvONflNxDXFPp8QHwPblgv51dyVU6/vMJZ+mn6AvxzIGfVKlt4rLoadyzgtjp3z7K/x9L32LY7UvTp/PFriVVyw=
+	t=1733966424; cv=none; b=eW0k16suXbSik37Zl+RtpHThRTKeajA/jfVTDWkBtkyQOk9urH/m3inZVyyIwvuxDfTCImxLAWb0+RRX8hY+Lfq+99QCRumDeXb5rYObWh84LSG9Rb3th5EcZmilhPYXWydJPoMoavMTT5y1o8zPPrAZ5GYiw0YNEPz/QuNlE9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733960671; c=relaxed/simple;
-	bh=XF9P61tbrgXPRYSJgZFa8PSz3VL+CEz7IiHjAArXliE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Br2yTgBeZSXfiCndOo78YiaLihQMsB7jpUwVboClSzLDvzOePbmdTYfkxnz4YzI3QAzzVApoUwDMSb4e7sVSE8TbKpsMswUQ5RUJfVhA1sSfl65d52VhVVz1jAiGuiglLqnvzsgGl2i23gSj6uo1MkdrtY6kQ+FZs/HiAbfnYZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YD7WIMd6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFF2C4CED2;
-	Wed, 11 Dec 2024 23:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733960670;
-	bh=XF9P61tbrgXPRYSJgZFa8PSz3VL+CEz7IiHjAArXliE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YD7WIMd6OQrM6fvp17ZgAeAaHl0uDSrkJ3ab0jLmlAcWm82fmsLpeKe05y7AYg+MT
-	 MPiO/RZfAIUl09DmcJ918y2324irb9BtFvNSJvVQoCI6E3do4s35W7tAU8N7D7N9dA
-	 gWDyW2lsqOnOJbwIAPpvLa48tISKv1UHIJ0zulkI92uFrjVGjSsd7+wCuD0IcG+4Hl
-	 ly4Q1mOTe952zHhXYkNpM3O2+4kP/yejJn3N008XOYqgzXC909RUNrLz/uNKi6HIR3
-	 RSVLipLAoRKsrQ7KrmUY6HiNNwxroIDvFVJFNZaCJXy0j7QRa0VqiKl1WvkZB3obvC
-	 gLO3Wpwu4G1YA==
-From: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] perf/dwc_pcie: Qualify RAS DES VSEC Capability by Vendor, Revision
-Date: Wed, 11 Dec 2024 23:44:16 +0000
-Message-Id: <173395359744.1069392.3564048634010264629.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20241209222938.3219364-1-helgaas@kernel.org>
-References: <20241209222938.3219364-1-helgaas@kernel.org>
+	s=arc-20240116; t=1733966424; c=relaxed/simple;
+	bh=fOjOD/IKXJvnMHZB1d4G4Wo2OpN5AZxkgTXxyOKQPTw=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rpksBdeaRZSvXwctXqy7iU+ft2ZS3dKS/Fg0Bpf2Zaurh3JDoTywiYe+NxPfRvg5TU+oPNgPV2i4anIfS9BBj/ybpCobHcrSXS3JB19+hUikb6pXLFjqHWNFrHGW01pleuuAnl+2jgT43egIuDoB71+Wu2r8eVjh2EO2NE8NE7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=A5Xsd5Qr; arc=none smtp.client-ip=117.135.214.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.45] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 57657c51;
+	Thu, 12 Dec 2024 08:44:54 +0800 (GMT+08:00)
+Message-ID: <6c050402-18af-41b2-890f-87ef1f62073f@rock-chips.com>
+Date: Thu, 12 Dec 2024 08:44:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
+ Shuai Xue <xueshuai@linux.alibaba.com>,
+ Jing Zhang <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: Add Rockchip vendor ID
+To: Bjorn Helgaas <helgaas@kernel.org>
+References: <20241211201822.GA3305340@bhelgaas>
+Content-Language: en-GB
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20241211201822.GA3305340@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkxCTFZDSx9LHRpOTx1DSkJWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSE
+	JVSktLVUpCS0tZBg++
+X-HM-Tid: 0a93b85368ad09cckunm57657c51
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PSI6FDo6CTIREDceGhkWAwpD
+	OBAwCQpVSlVKTEhIQk1PSUJOSE5PVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpJSkg3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=A5Xsd5QrU7P+L9SverP1V0dMJBDvYsTr9D4EZe5taDYDSolxEh2/ebaTrXESJa/3LqUIjSUH+Usluux+tu6F8dw9FfGYYd86Wl7GYEBplkNFT4Yx+L5auraa8sciw0vad3pMOYqFySkKxjvrXTD20c0J8TxlkKH9puqcbtOHBQQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=3EoOeRnKT7mCblfjFt2q0SS8WR2hT+vivdMy0Xr6/LE=;
+	h=date:mime-version:subject:message-id:from;
 
-On Mon, 09 Dec 2024 16:29:38 -0600, Bjorn Helgaas wrote:
-> PCI Vendor-Specific (VSEC) Capabilities are defined by each vendor.
-> Devices from different vendors may advertise a VSEC Capability with the DWC
-> RAS DES functionality, but the vendors may assign different VSEC IDs.
+在 2024/12/12 4:18, Bjorn Helgaas 写道:
+> On Wed, Dec 11, 2024 at 02:58:12PM +0800, Shawn Lin wrote:
 > 
-> Search for the DWC RAS DES Capability using the VSEC ID and VSEC Rev
-> chosen by the vendor.
+> Needs a commit log.  It's OK to repeat the subject line.
 > 
-> [...]
+> Also, per the note at the top of pci_ids.h, needs a list of multiple
+> places this will be used.  This series only adds one place, which
+> isn't enough to justify adding this to pci_ids.h.
+> 
+> But this *could* also be used in drivers/misc/pci_endpoint_test.c and
+> drivers/pci/controller/pcie-rockchip-host.c, so if you want to update
+> them as well, this would be fine.
+> 
 
-Thanks, Bjorn, for sorting this out and also to Shuai and Ilkka for
-giving it a whirl on their platforms.
+Sure, will replace them on the next version. Thanks.
 
-Applied to will (for-next/perf), thanks!
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+>>
+>> Changes in v2: None
+>>
+>>   include/linux/pci_ids.h | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>> index d2402bf..6f68267 100644
+>> --- a/include/linux/pci_ids.h
+>> +++ b/include/linux/pci_ids.h
+>> @@ -2604,6 +2604,8 @@
+>>   
+>>   #define PCI_VENDOR_ID_ZHAOXIN		0x1d17
+>>   
+>> +#define PCI_VENDOR_ID_ROCKCHIP		0x1d87
+>> +
+>>   #define PCI_VENDOR_ID_HYGON		0x1d94
+>>   
+>>   #define PCI_VENDOR_ID_META		0x1d9b
+>> -- 
+>> 2.7.4
+>>
+> 
 
-[1/1] perf/dwc_pcie: Qualify RAS DES VSEC Capability by Vendor, Revision
-      https://git.kernel.org/will/c/b34d605d120f
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
 
