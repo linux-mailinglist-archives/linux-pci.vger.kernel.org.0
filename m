@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-18212-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18213-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E39D29EDD86
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 03:19:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DA119EDDB0
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 03:32:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9039416650D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 02:19:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 440CE167D5B
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 02:32:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE9797DA8C;
-	Thu, 12 Dec 2024 02:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF7513633F;
+	Thu, 12 Dec 2024 02:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FZXt78SX"
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="CZ9Gxy0Q"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E93813AA20;
-	Thu, 12 Dec 2024 02:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7740F18643;
+	Thu, 12 Dec 2024 02:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733969988; cv=pass; b=kyxMoidPucNypHhQwcQ+eArrIOjHHTg8VhTwuwtvr++7NUqCIZFCcWzFLHMpTMsOAv9cJZgnVienwGHjOWa7ZCSLw3vpYuNHAeppMstDLZgC32LRrTcLfd5XYZIwyt2DxY6QVuOHZWIuCL2/Kb/AcEx742IRfMbOpsb4mmteikA=
+	t=1733970744; cv=pass; b=I4go03uZw0SaixQnHjN4jMFC2zNPFz41DjPwWCkhvYFfSzUyc48c/gxG3CQhBe11Q9xVSG9EMMh+hMPvmKJ6gLCx/QlfGgr2ZXZKzwii0++fWhqLAHD42NNlf1rryPHD4VhuYICr9YejqAT052QcWNiEoFIEpbFGXp/hcwtAsoM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733969988; c=relaxed/simple;
-	bh=QPVmKbqFD+ZBCnWGXF58PWMNDZfaSkGKql4/+TfsO9I=;
+	s=arc-20240116; t=1733970744; c=relaxed/simple;
+	bh=eaQkOF9Jf0wWrpGxlEZdBUsEoqXgdpd1jEUbHm2nYzs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UGq7I3dCH+87Q5aFscxv4OiYXsUrAE/KKzzDp9oGEc46cJWyog1Ym3TtOz4jEyhTi6uq+VsfPXxB6ILLEQz+p35odpWRtEcuIZ56h34fgjziQr9AQhdPtTrsnlxeWqwAOYWY0zYlmaSPhVrWNKSfvJlzBQ0QfgbeCgscjR8VKgA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FZXt78SX; arc=pass smtp.client-ip=136.143.188.92
+	 In-Reply-To:Content-Type; b=HrXD5Knf+LLMVDEWxu5AAGLyDp1OIOBdkkGtyGgZSo/bnUqm7XGukLTQqy3kbGj6CI7uuoqCtEfpPvgzOk8nlqGw4le1rXKiNTKcI1esBaJAZl6uiaLsjOFhKhDT2fYu1MUB9sjXX90Fg9z5XPFtwlZBJzu2AoRXBEswpfEpHvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=CZ9Gxy0Q; arc=pass smtp.client-ip=136.143.188.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1733969966; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1733970715; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=NW/+2sE2YZ91T13gpe01l8+xL4DPeSi5fibMF6MiEzP2cPlGa+KrEm++tlkwWyU7RkXdPvW8RLSB53N4aubxgb2m7s1nAV2GZl95DoG7PdNgoQAP5GHkQHs3qDzgg1x0DtYSHQr09ZmANQQhbvzsqgkjdBTLhaDIdZ3E9p1iWqE=
+	b=RVCicII0a0uX3SfzyFmIPlesRDI6vtdCVQcOMQr2pCeRQJ5kBsXP5KYFXFj5BCnA6wVWTwBJPmtZP5SdNmCiLVLjWwOLHf7bKpq7KfcR4PT9TYc8IR8Ia+GaOdmHDl+NAgFTFF4bzJ2tk8kciy1A2jMp1eO5SCiOOo7Cvhlp+d4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1733969966; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=1CmRQYWQH5cZEG1iv6rm4RsKOtMnh3YorKEU0Fe4YIA=; 
-	b=Fi2rgE9AP5z8NjbIzuebj52Jgp2/WZJNd3c9nQe6Bk1ou/Ylc/nZ59ijTCtIag4bRkB04rUh3GzpZj3y+o+DJ8ik0U+4KJqwZM2FpBu4vvZhCTRGZ8XpYPewxYv4ZDw4/WgyUeZBssR4gpkmz+PxELPv7/0gAsY4UE5yb+RUyCM=
+	t=1733970715; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=zalQu0pwbiDcw7F1cqJxg4GJJw/8VFQDLsWjoxoHGZE=; 
+	b=UqeM4SsBtUIQWkK/t0dZqvRLvYLIhS1HPLCYJajzSB76zdV0yEyiXgIu3WMyC6KlgNbkVASaeUvqtIr6r7hGjjKkZtMhnqy6+k6bQdnYlrgIRqB+JgM1fqd5+RSz2JHcnaxk8YkzoHna29vXx90koWIplo3dpfNiimcY6cV+xWM=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733969966;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733970715;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
-	bh=1CmRQYWQH5cZEG1iv6rm4RsKOtMnh3YorKEU0Fe4YIA=;
-	b=FZXt78SXHiqvScMdw4+3/BfwiWZYp9t9f1frUuAwf0C+Gz4IFwzxN3SYbTDYlLMh
-	WeEiZB4tnw8NAI73r6zBYQQU/V1pNJmX0yyIWkLpsTp+gx4oERa+I43IgyJUUivnU+C
-	raWoLINXmhBddR3300KX8J+KzcsIKQ1zBtnG/36c=
-Received: by mx.zohomail.com with SMTPS id 1733969965267836.7884091257791;
-	Wed, 11 Dec 2024 18:19:25 -0800 (PST)
-Message-ID: <74701c17-ac1d-4ae3-a4a7-18668322c4b2@zohomail.com>
-Date: Thu, 12 Dec 2024 10:19:19 +0800
+	bh=zalQu0pwbiDcw7F1cqJxg4GJJw/8VFQDLsWjoxoHGZE=;
+	b=CZ9Gxy0QI9RCQkNiMOMvPyRuNI0ADoMv7xwKjfemw/ESUbqyJW4t4CrjX6hm+aXJ
+	Cq40VaaGo1vwuyAxMG30aVlMWzEh9Ivfy05Gj3esUtYcXG1wvoGMqWgrfoyay4jFOnx
+	gv59QQwFE+KUbS+k+N/KnJVJjnKu7gCRFfHHQwnk=
+Received: by mx.zohomail.com with SMTPS id 1733970712877505.3115459643508;
+	Wed, 11 Dec 2024 18:31:52 -0800 (PST)
+Message-ID: <04d33184-be7b-432b-a83f-fce649de3491@zohomail.com>
+Date: Thu, 12 Dec 2024 10:31:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,8 +60,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 12/15] cxl/pci: Add error handler for CXL PCIe Port RAS
- errors
+Subject: Re: [PATCH v4 14/15] cxl/pci: Add support to assign and clear
+ pci_driver::cxl_err_handlers
 To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  nifan.cxl@gmail.com, ming4.li@intel.com, dave@stgolabs.net,
@@ -73,91 +73,122 @@ To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
  Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
  PradeepVineshReddy.Kodamati@amd.com
 References: <20241211234002.3728674-1-terry.bowman@amd.com>
- <20241211234002.3728674-13-terry.bowman@amd.com>
+ <20241211234002.3728674-15-terry.bowman@amd.com>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20241211234002.3728674-13-terry.bowman@amd.com>
+In-Reply-To: <20241211234002.3728674-15-terry.bowman@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227d4c3de192d64bc18a62e61390000c179fc2b3607bcc824a48790af7393ceaf158a2e3b62a05ad9:zu080112271c69f0236998054652cf95fa0000fe40288b96694c3d5ad004144140e23a8eda6a5d821ff91dd8:rf0801122ba3daca91443f6b54b3219ebf00004b7f8666d048d343fcc70c24f2cbd806c2ee498775bbe4251697e35f46:ZohoMail
+Feedback-ID: rr08011227a8d71315135e6df905226dad0000b46c5a0ec3049f1397ddb2bbb36d57fe028d6ab660cef789bd:zu08011227c80956e6aebd3b7708812ab00000a28035694b60fea3c85626c1d66a0bc76b905c4c075ff8af94:rf0801122b5e795df8b5a8350207d939970000ab71120650df791615a4674ba8b98e5c19e9daa9075a2f7c5c5182f9cb:ZohoMail
 X-ZohoMailClient: External
 
-On 12/12/2024 7:39 AM, Terry Bowman wrote:
-> Introduce correctable and uncorrectable CXL PCIe port protocol error
-> handlers.
+On 12/12/2024 7:40 AM, Terry Bowman wrote:
+> pci_driver::cxl_err_handlers are not currently assigned handler callbacks.
+> The handlers can't be set in the pci_driver static definition because the
+> CXL PCIe Port devices are bound to the portdrv driver which is not CXL
+> driver aware.
 >
-> The handlers will be called with a 'struct pci_dev' parameter
-> indicating the CXL Port device requiring handling. The CXL PCIe Port
-> device's underlying 'struct device' will match the Port device in the
-> CXL topology.
+> Add cxl_assign_port_error_handlers() in the cxl_core module. This
+> function will assign the default handlers for a CXL PCIe Port device.
 >
-> Use the PCIe Port's device object to find the matching Upstream Switch
-> Port, Downstream Switch Port, or Root Port in the CXL topology. The
-> matching device will contain a reference to the RAS register block used to
-> handle and log the error.
+> When the CXL Port (cxl_port or cxl_dport) is destroyed the device's
+> pci_driver::cxl_err_handlers must be set to NULL indicating they should no
+> longer be used.
 >
-> Invoke the existing __cxl_handle_ras() or __cxl_handle_cor_ras() passing
-> a reference to the RAS registers as a parameter. These functions will use
-> the register reference to clear the device's RAS status.
->
-> Future patches will assign the error handlers and add trace logging.
+> Create cxl_clear_port_error_handlers() and register it to be called
+> when the CXL Port device (cxl_port or cxl_dport) is destroyed.
 >
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > ---
->  drivers/cxl/core/pci.c | 61 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
+>  drivers/cxl/core/pci.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 >
 > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 89f8d65d71ce..52afaedf5171 100644
+> index 3294ad5ff28f..9734a4c55b29 100644
 > --- a/drivers/cxl/core/pci.c
 > +++ b/drivers/cxl/core/pci.c
-> @@ -772,6 +772,67 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+> @@ -841,8 +841,38 @@ static bool cxl_port_error_detected(struct pci_dev *pdev)
+>  	return __cxl_handle_ras(&pdev->dev, ras_base);
 >  }
 >  
-> +static int match_uport(struct device *dev, const void *data)
+> +static const struct cxl_error_handlers cxl_port_error_handlers = {
+> +	.error_detected	= cxl_port_error_detected,
+> +	.cor_error_detected = cxl_port_cor_error_detected,
+> +};
+> +
+> +static void cxl_assign_port_error_handlers(struct pci_dev *pdev)
 > +{
-> +	struct device *uport_dev = (struct device *)data;
-> +	struct cxl_port *port;
+> +	struct pci_driver *pdrv;
 > +
-> +	if (!is_cxl_port(dev))
-> +		return 0;
+> +	if (!pdev || !pdev->driver)
+> +		return;
 > +
-> +	port = to_cxl_port(dev);
-> +
-> +	return port->uport_dev == uport_dev;
+> +	pdrv = pdev->driver;
+> +	pdrv->cxl_err_handler = &cxl_port_error_handlers;
 > +}
 > +
-> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev)
+> +static void cxl_clear_port_error_handlers(void *data)
 > +{
-> +	void __iomem *ras_base;
-> +	struct cxl_port *port;
+> +	struct pci_dev *pdev = data;
+> +	struct pci_driver *pdrv;
 > +
-> +	if (!pdev)
-> +		return NULL;
+> +	if (!pdev || !pdev->driver)
+> +		return;
 > +
-> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
-> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
-> +		struct cxl_dport *dport;
+> +	pdrv = pdev->driver;
+> +	pdrv->cxl_err_handler = NULL;
+> +}
 > +
-> +		port = find_cxl_port(&pdev->dev, &dport);
-> +		ras_base = dport ? dport->regs.ras : NULL;
-> +		if (port)
-> +			put_device(&port->dev);
-> +		return ras_base;
-> +	} else if (pci_pcie_type(pdev) == PCI_EXP_TYPE_UPSTREAM) {
-> +		struct device *port_dev;
+>  void cxl_uport_init_ras_reporting(struct cxl_port *port)
+>  {
+> +	struct pci_dev *pdev = to_pci_dev(port->uport_dev);
 > +
-> +		port_dev = bus_find_device(&cxl_bus_type, NULL, &pdev->dev,
-> +					   match_uport);
-> +		if (!port_dev)
-> +			return NULL;
+>  	/* uport may have more than 1 downstream EP. Check if already mapped. */
+>  	if (port->uport_regs.ras)
+>  		return;
+> @@ -853,6 +883,9 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
+>  		dev_err(&port->dev, "Failed to map RAS capability.\n");
+>  		return;
+>  	}
 > +
-> +		port = to_cxl_port(port_dev);
-> +		ras_base = port ? port->uport_regs.ras : NULL;
+> +	cxl_assign_port_error_handlers(pdev);
+> +	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
 
-I think that is no need to check 'port', just directly use 'ras_base = port->uport_regs.ras;', because match_uport() already checks it, returned port_dev must be a port.
+I think the first parameter of devm_add_action_or_reset() should be 'port->dev' rather than 'port->uport_dev'.
+
+'port->uport_dev' is 'pci_dev->dev' which will be destroyed on pci side, 'port->dev' will be destroyed on cxl side.
+
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
+>  
+> @@ -864,6 +897,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+>  {
+>  	struct device *dport_dev = dport->dport_dev;
+>  	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport_dev);
+> +	struct pci_dev *pdev = to_pci_dev(dport_dev);
+>  
+>  	dport->reg_map.host = dport_dev;
+>  	if (dport->rch && host_bridge->native_aer) {
+> @@ -880,6 +914,12 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+>  		dev_err(dport_dev, "Failed to map RAS capability.\n");
+>  		return;
+>  	}
+> +
+> +	if (dport->rch)
+> +		return;
+> +
+> +	cxl_assign_port_error_handlers(pdev);
+> +	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
+
+Same as above, should use 'port->dev'.
+
+please correct me if I am wrong.
 
 
 Ming
+
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
+>  
+
 
 
