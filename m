@@ -1,149 +1,87 @@
-Return-Path: <linux-pci+bounces-18222-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18223-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 446979EE121
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 09:21:02 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99ADB9EE12C
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 09:23:03 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0D3B282F00
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 08:20:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F7D018837BD
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 08:23:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5953520B7E6;
-	Thu, 12 Dec 2024 08:20:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A436D20C462;
+	Thu, 12 Dec 2024 08:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="chU9ngdz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VleVo90u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8284020C018;
-	Thu, 12 Dec 2024 08:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724F820C030;
+	Thu, 12 Dec 2024 08:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733991654; cv=none; b=o0Qa0segcW5Y11pPaB7eFo1fPnKYcDSh8nzToAiIcbJkddpfEMi10JQwniq3lWRCdJxJ36Sej+lfqutoSKR5qqlLryemSW1HU1qsugdu+L2LUWvlFk7r6k4FDfT1F8tPy2Myg7HhwFmXUChteYNnZho81HbfS3UYGhV9S8F8ykI=
+	t=1733991767; cv=none; b=g2BirX+OMojlwUhbA18Y3QjCMrjEr9dJRnPQ/WgEIjP1hFg/MOGs/Cu7p29kmw3Y0F6PuYHsQYa4/SB7xOLpHup/4Y9aDQ+DPx17KYdz0IKf4bOeU3BupFM8CxJ6r4LXbm2yHOCc8D07XYCF3G4RqILR5N105WygaIy8fPtZ+x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733991654; c=relaxed/simple;
-	bh=5hbva0ra1WgEeS0msvoBjcB4tt/jwYhd3Q1X0RsoUmU=;
-	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=U3/IDsJhW1ouMBL+KMiMof2mabGCM6OtF2FoOSR8XMhAND03495OQrrMjNj9d9guEMdGV5y7AgHK6Vb9KA3wVZTtEdpXAXwcu7B2tnux32sDaJbOJCTGC/fznkvidAYXnBg9lx9j2vKbWzSQVcarc8zOvSW7cNSuMRzuqB9eBZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=chU9ngdz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BC7dTOn027247;
-	Thu, 12 Dec 2024 08:19:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=RY2XHyRT98M51wFIDOeTWd
-	YXbB3NyzBkPbM/GJSC4qg=; b=chU9ngdznHSysrQnX0NI72Fjpk8++3izbGFgA6
-	BdPN9TVMtSFgXqwKNVQFowVUvIIonU1kqXgonABabe3AQccpQbmf3p+HHC3MA3Xm
-	G2ZAk6OpSJIsxQaiprIn0h2CiFpTkqK4UU3PLnAzxUVTa5mXYIZipnwRUAGLNBdA
-	7mAruym5eeHbi+tcVvqxHpzdVq+8JMyByj+z+uaZlhRvffAjyqWdgkAgqXuarMtE
-	If6R/KOAV9O+6gJKRH8/bjZAZIrn9mOgVkw8tWS+UOAFgHuIwPRsLmNmvosw51H5
-	nleHF7mCxzU6rn15zBeEq09b5kBHwskSTwIipVRV4WYMC3bw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43etn8wfxp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Dec 2024 08:19:19 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BC8JItT007947
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Dec 2024 08:19:18 GMT
-Received: from [10.239.28.138] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Dec
- 2024 00:19:15 -0800
-Message-ID: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
-Date: Thu, 12 Dec 2024 16:19:12 +0800
+	s=arc-20240116; t=1733991767; c=relaxed/simple;
+	bh=3w6JwqEh1b6LGc9CdhEWu+2Vi3hcS2jK0TgPSdAt/0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ViBqv60Pq0nEJNMPW6K3DT48kOrsad7fpL8LxRAWxuSCL0m/KZ6Q0Hzim346rcVK3VInC2Zi/v7faaoN4hIljLK9C6f7HCBbINpKkBIztI4TNtArsDximfktTn6g5ERCQPgYG8f+7FH/HBHt5HhAMxHSHWodQBlqbQNGp6fzl30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VleVo90u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A339C4CECE;
+	Thu, 12 Dec 2024 08:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733991767;
+	bh=3w6JwqEh1b6LGc9CdhEWu+2Vi3hcS2jK0TgPSdAt/0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VleVo90uZS4UD97FBA4QOHW9ymIgoFO0+bupgBIfksChmKYI2uAb6hEnMNDzgLY1z
+	 0zzoDIVAAyeP0t8YEtbobF3MDiHY/b/xwyRRVhL/ErfnnXRTfWM9jwSqrao1dlpoJG
+	 hu9FcDWfUdNNHmuUnfO7zAOH4Gop7GfvJYyhtmfAMgcHY6dJvaJrhCJviraLUwjcH/
+	 kBNagXr0NVbtBSkYn1fPK2nfcRxLdsryrLquvmt+nkrvyCEUvrkzgRkyuDiTMUA+7J
+	 +02/zl+VZ/aIyaBTmQIOBYGdOCG4qAx3Rax01PM2DwMVFUw/ZMRQdmgywrzYO400gb
+	 HWbckcvUh9SkA==
+Date: Thu, 12 Dec 2024 09:22:43 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Frank <Li@nxp.com>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH v3 1/1] dt-bindings: PCI: mobiveil: convert
+ mobiveil-pcie.txt to yaml format
+Message-ID: <elx5pr5pvq24useuomzoxtsetmcw6admoo3iyte44kxpt47snf@w6w7kwpwonqm>
+References: <20241211171318.4129818-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Content-Language: en-US
-To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_cang@quicinc.com>, <mrana@quicinc.com>,
-        yuqiang
-	<quic_qianyu@quicinc.com>, <quic_wenbyao@quicinc.com>
-From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-Subject: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: yk5AQikQeuvfqi_BdniJ95yqvb4M4z1G
-X-Proofpoint-GUID: yk5AQikQeuvfqi_BdniJ95yqvb4M4z1G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 spamscore=0 impostorscore=0 adultscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=870 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412120056
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241211171318.4129818-1-Frank.Li@nxp.com>
 
-PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
-indicates the number of lanes to check for exit from Electrical Idle in
-Polling.Active and L2.Idle. It is used to limit the effective link width to
-ignore broken or unused lanes that detect a receiver to prevent one or more
-bad Receivers or Transmitters from holding up a valid Link from being
-configured.
+On Wed, Dec 11, 2024 at 12:13:16PM -0500, Frank Li wrote:
+> Convert device tree binding doc mobiveil-pcie.txt to yaml format. Merge
+> layerscape-pcie-gen4.txt into this file.
+> 
+> Additional change:
+> - interrupt-names: "aer", "pme", "intr", which align order in examples.
+> - reg-names: reorder as csr_axi_slave, config_axi_slave to match
+> layerscape-pcie-gen4 and existed Layerscape DTS users.
+> 
+> Fix below CHECK_DTBS warning:
+> arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dtb: /soc/pcie@3400000: failed to match any schema with compatible: ['fsl,lx2160a-pcie']
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
-to 1 will not affect the link width that is actually intended to be used.
-But setting it to a value other than 1 will lead to link training fail if
-one or more lanes are broken.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
-port actually supports to make linking up more robust. Link can still be
-established with one lane at least if other lanes are broken.
-
-Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
----
-  drivers/pci/controller/dwc/pcie-designware.c | 5 +----
-  1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
-b/drivers/pci/controller/dwc/pcie-designware.c
-index 6d6cbc8b5b2c..d40afe74ddd1 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -752,22 +752,19 @@ static void dw_pcie_link_set_max_link_width(struct 
-dw_pcie *pci, u32 num_lanes)
-      /* Set link width speed control register */
-      lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-      lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
-+    lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
-      switch (num_lanes) {
-      case 1:
-          plc |= PORT_LINK_MODE_1_LANES;
--        lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
-          break;
-      case 2:
-          plc |= PORT_LINK_MODE_2_LANES;
--        lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
-          break;
-      case 4:
-          plc |= PORT_LINK_MODE_4_LANES;
--        lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
-          break;
-      case 8:
-          plc |= PORT_LINK_MODE_8_LANES;
--        lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
-          break;
-      default:
-          dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
--- 
-2.34.1
-
+Best regards,
+Krzysztof
 
 
