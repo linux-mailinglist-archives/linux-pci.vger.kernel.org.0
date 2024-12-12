@@ -1,61 +1,54 @@
-Return-Path: <linux-pci+bounces-18332-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18333-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF1989EFBEC
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 19:58:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C0759EFBFA
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 20:00:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3CC7188F46B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 18:58:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EF391888F22
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 19:00:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219771C9B97;
-	Thu, 12 Dec 2024 18:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0454F188736;
+	Thu, 12 Dec 2024 19:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdLt3LRd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE1MtNIq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11291D9592
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 18:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD961186607;
+	Thu, 12 Dec 2024 19:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734029729; cv=none; b=OrK7Xi1fXUr4lrSgiMkLqobbcECJTWDBS0+DkutGPUbFv0hvyc5sjY8zxO8vS2HpGEO6tTin7VVm8q3haOoj8JhDnH73iNKNheSPDhADiL0oQa1k7lps3Xixz3zBGEKB0SiuThnY13LgtAlK1A+V17iWLTJzAsvT1FwihpqPNSE=
+	t=1734030033; cv=none; b=u7iHx9S22LLBVXmttdla//vnCIE/L3ZMpWBOGkvYdhiq8T+iQbiiIl/RNpn9z/+AXCWLxT/uu6ZyM08frZQ94Cv7+zE95/+YEhpWCi0OEExgBsqTN98V/J6YlLGfCfAgXMTOy2oNgaediZNc+M0cE0329GLm81yBj5glfEiUE2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734029729; c=relaxed/simple;
-	bh=iC63c2TfMwutN6CHlOx6ciqpXlH4loUdJcyZovJHIwQ=;
+	s=arc-20240116; t=1734030033; c=relaxed/simple;
+	bh=nI3HeDyiaBOWdnA+gdK1JW4Xj2fk3KgJbK4ZlB//e7A=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IfVxn2KxHnFlrp4HQR3f+tq6/jQef7TA5o5v2DAHoarkgbM5eRQ9XMkIZzOMmZLJrM8iyTEqye/lol8w5DzvnIxAlseHJso2hWw/puyaEwb7AL/elT/YnKfd6/tYDDma+0zGVP1dQ+SBiokDZUshP/p8cyrVn9etsLHVm75JHbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdLt3LRd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43D4FC4CECE;
-	Thu, 12 Dec 2024 18:55:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=JUfsTk0kIOCyVYO7MCEDHgE7S6qDeKrl6yd72i/YPhoeKXKVMlujn3jWBHnc3qhmaHx/VsO1jGbYkKTKcugo+Ba0A58y9LEnZsKR/HrfPyIq46VW06ue88dUre+jPt5po02+50Y9sRk3QJYxZ4hVWmUX8oe1a2Bjm1fHns6k4Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE1MtNIq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3898CC4CED0;
+	Thu, 12 Dec 2024 19:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734029728;
-	bh=iC63c2TfMwutN6CHlOx6ciqpXlH4loUdJcyZovJHIwQ=;
+	s=k20201202; t=1734030033;
+	bh=nI3HeDyiaBOWdnA+gdK1JW4Xj2fk3KgJbK4ZlB//e7A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CdLt3LRdRxlehMKz4zIBkBo/OKzlURCHDEkmxHQDI5TfmgA6/hr1ZKA88Xblwa21h
-	 Q8c58GT5edDsbsKbt6R0IFL8giY0ocGxd9pWVDqmmgGdMLm1++IhD3Cd+uKBLeFQc8
-	 T1WJq9ViN9YeD9hYvPRIOnKCI/GGIgAfDiKnQSvnQvLuXhZCSUfUNdHqtmlzZLL8NW
-	 qKu5iSVXt443Y+tO3x9+dw0q8gLgyjRZ75/SBJs5dgj/54YmLhsTxQOtQwTBjmtGp+
-	 SDqYMmDn3Qe8d8WJPTvjzRJHzMLF80wtEw4CqQ9LEtd+08JwJQpeYNciACRbCbgQ+p
-	 3soTaSulMEgEQ==
-Date: Thu, 12 Dec 2024 12:55:27 -0600
+	b=eE1MtNIqt2FyWrnRA1VUOPfVzI11qZXATbOno4b0zzdn3PqjV8lGZj/isgBerEZpl
+	 4hrZST77HqvuRczo6Ur5dk5ayDOmkna/fYiHfIVCmn1C1kcXOh8hSVY4IUv6d7wORR
+	 TvfGdiNaW2YvSuu7LUGpbMuQ8+stmlnBAUW3uPkC96kUnnBzQrf8j88wlX2Y3AXiSX
+	 yBVbvmFIXivzQ2Ghj+St6RojXVbwcGBL3g2pjgM3kV331zLiAwnNBMUlUEp+y7P2/k
+	 LDRJLNawZnexaiFK4dsDUwIOWqET85+3yvw9wH0IWL2WtLcTlxt+bGJvVPM6obTUAX
+	 YVHjvpmOmf18A==
+Date: Thu, 12 Dec 2024 13:00:32 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v4 17/18] nvmet: New NVMe PCI endpoint target driver
-Message-ID: <20241212185527.GA3356063@bhelgaas>
+To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc: rick.wertenbroek@heig-vd.ch, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Replace magic number "6" by
+ PCI_STD_NUM_BARS
+Message-ID: <20241212190032.GA3356901@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,23 +57,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241212113440.352958-18-dlemoal@kernel.org>
+In-Reply-To: <20241212162547.225880-1-rick.wertenbroek@gmail.com>
 
-On Thu, Dec 12, 2024 at 08:34:39PM +0900, Damien Le Moal wrote:
+On Thu, Dec 12, 2024 at 05:25:47PM +0100, Rick Wertenbroek wrote:
+> Replace the constant "6" by PCI_STD_NUM_BARS, as defined in
+> include/uapi/linux/pci_regs.h:
+> 
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 
->    This ensure correct operation if, for instance, the host reboots
->    causing the PCI link to be temporarily down.
+Applied to pci/endpoint for v6.14, thanks!
 
-s/ensure/ensures/
-
-> The configuration of a NVMe PCI endpoint controller is done using
-> configfgs. First the NVMe PCI target controller configuration must be
-> done to set up a subsystem and a port with the "pci" addr_trtype
-> attribute. The subsystem can be setup using a file or block device
-> backed namespace or using a passthrough NVMe device. After this, the
-> PCI endpoint can be configured and bound to the PCI endpoint controller
-> to start the NVMe endpoint controller.
-
-s/addr_trtype/addr_type/ ?
-s/configfgs/configfs/
+> ---
+>  include/linux/pci-epf.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> index 18a3aeb62ae4..ee6156bcbbd0 100644
+> --- a/include/linux/pci-epf.h
+> +++ b/include/linux/pci-epf.h
+> @@ -157,7 +157,7 @@ struct pci_epf {
+>  	struct device		dev;
+>  	const char		*name;
+>  	struct pci_epf_header	*header;
+> -	struct pci_epf_bar	bar[6];
+> +	struct pci_epf_bar	bar[PCI_STD_NUM_BARS];
+>  	u8			msi_interrupts;
+>  	u16			msix_interrupts;
+>  	u8			func_no;
+> @@ -174,7 +174,7 @@ struct pci_epf {
+>  	/* Below members are to attach secondary EPC to an endpoint function */
+>  	struct pci_epc		*sec_epc;
+>  	struct list_head	sec_epc_list;
+> -	struct pci_epf_bar	sec_epc_bar[6];
+> +	struct pci_epf_bar	sec_epc_bar[PCI_STD_NUM_BARS];
+>  	u8			sec_epc_func_no;
+>  	struct config_group	*group;
+>  	unsigned int		is_bound;
+> -- 
+> 2.25.1
+> 
 
