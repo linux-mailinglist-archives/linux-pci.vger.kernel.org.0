@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-18280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09CA19EE6A0
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 13:26:09 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADFAD9EE6AC
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 13:27:03 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B507E283969
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 12:26:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5282161023
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 12:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EBD621323A;
-	Thu, 12 Dec 2024 12:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B08E213231;
+	Thu, 12 Dec 2024 12:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsivXwu1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MASb9seW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA779213233;
-	Thu, 12 Dec 2024 12:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569C12066FA;
+	Thu, 12 Dec 2024 12:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734006358; cv=none; b=TzAq7cuUWHzptRqgsIRN8XhsZWHRaXAlsn8Ra8Yock88unIVkW2sMM+csbwyoPoLZQolWppUd0NaJV5lQ6YW9bBpMbDQDi2g3cH4Si1+LINpFQj7c93HyEdQQRpT2gDpcYY9dzu1J1iYqda+z+zPjAc8WW4FOMgUQtb6+Xp0sa4=
+	t=1734006417; cv=none; b=JEmrtw+fXp2p45+v2MJp+XBmyINXcgcuiU4u4fCAYqgm1b+/YOe1w2vsfXZ4NDsVlj5qR1UuHAPo5a/AEJJduMjD3iTIOOlWRQr2EBF4XBtQ/0q8JV4Od1rzMlLbXMUukNo5gliQ4wu+Q2Su5PRguIX1qfDthwYcnDETjSvkkSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734006358; c=relaxed/simple;
-	bh=454YXdXYIhrZrIidxbsK18dYxlgZMNqtfmRPI0uCBPU=;
+	s=arc-20240116; t=1734006417; c=relaxed/simple;
+	bh=BlFdkLDtYUoDDDhgR15YdKD0RfmzdPYpVSLZ+FD5O0g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZEvUm+rTFGoFhZu22cA90BTzIVyzwFdRcQjpOMLfVb7+Yy0w6il14x9lpdlLiHnsLv1CqEjeVuF/iyxkcrqdXjjnQ0WJZEGNFMnihJhRfOLgmHY64Xe9JbpMEBt5wdi33Eq70OPpOr/0KR7LMDnh/uvxBwzjVXsCxaPHxPLs87w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsivXwu1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BDCC4CECE;
-	Thu, 12 Dec 2024 12:25:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pYcZPj5Fg3Tp8sVfsYWU02yBBK/wo67zTIQfx80fu70bEfvYLNthsLLJhG0nta+NLzxXlg3qsPYrjBYUWw1zPZVP5HZk9XOVZgVQ3IHxYWR2cL8VXN5MUdugF3x9Ix3SnK6ozJIhONoXO81xmQvamO852PCJrnFmLfzqHuFq1DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MASb9seW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3F6C4CECE;
+	Thu, 12 Dec 2024 12:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734006358;
-	bh=454YXdXYIhrZrIidxbsK18dYxlgZMNqtfmRPI0uCBPU=;
+	s=k20201202; t=1734006417;
+	bh=BlFdkLDtYUoDDDhgR15YdKD0RfmzdPYpVSLZ+FD5O0g=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WsivXwu1uLDqdln7Quzwb+hgeRMirTMyj8ttFrY5p9clyp/NjDP22wlhfvjKxftJi
-	 WwCRSZsVls/xLzcCvnUPCnlrOLI9ipQwQX2a/Nk5Ym3K0A3f9ic9C8Gm9kQ39y+eW2
-	 Dzn2EDEZ8VfntTwwrTGRsgaIItFKociecyy4MvP3eYmRpW6Bv2iJ79hr6ltiOYHehJ
-	 CK9+pG1OOBD00v38awsNGm0wpbfjkYEO7AskNLP7Ospvhvyal9709cyzrU9ds2BEJs
-	 jlzsSK+D3ieLcA0AHihJiTLAQiVyELb/kGiYk33NLFjEyOmnoqiQ1bh7De6EG1BP6n
-	 sUaL2U3hzOwNw==
-Message-ID: <beb7d859-8d68-49d9-8a35-b2ba50f00c33@kernel.org>
-Date: Thu, 12 Dec 2024 13:25:51 +0100
+	b=MASb9seWXAoAxpnkJvlmfuKS99pfCmezxA6op3gwQ9w6hubWweTdPM+OTLZDuCVBA
+	 cAsMwC3U2HrsaXQnPfPikG3tYuEPwVarg0z9xLw3nt6AapulUgr1sPmDhxEKEj58DP
+	 Ltjn6L/hvcdqrumtdpmR5AQCVRGJdCD+wCwpe06uWnrmIxGe/eD9NxTQRRta50lcax
+	 Wb9a53MmN4gXuUSfTaJCEhGfqbcFjetyzmPe1Ry1WT4liqTEDHN4RwWKQ6iKVPEIfl
+	 ZplpSDSeESX8p/ngblgwLVCTmuN2An3Qe42E9OmPeVJLUoCAnxgWQG9z0qI0zK4GQh
+	 DDI0tZpqJj+Qg==
+Message-ID: <a1473261-a182-4768-8e02-99fec9dc56be@kernel.org>
+Date: Thu, 12 Dec 2024 13:26:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
+Subject: Re: [PATCH v2 0/4] PCI: dwc: Add support for configuring lane
+ equalization presets
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
@@ -66,7 +66,7 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  Konrad Dybcio <konradybcio@kernel.org>,
  Krishna chaitanya chundru <quic_krichai@quicinc.com>
 References: <20241212-preset_v2-v2-0-210430fbcd8a@oss.qualcomm.com>
- <20241212-preset_v2-v2-1-210430fbcd8a@oss.qualcomm.com>
+ <39012a4a-7d02-b954-bc06-53708b772a7c@oss.qualcomm.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,42 +112,15 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241212-preset_v2-v2-1-210430fbcd8a@oss.qualcomm.com>
+In-Reply-To: <39012a4a-7d02-b954-bc06-53708b772a7c@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/12/2024 11:32, Krishna Chaitanya Chundru wrote:
-> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
-> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
-> rates used in lane equalization procedure.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index a36076e3c56b..6a2074297030 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -2993,6 +2993,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->  			phys = <&pcie6a_phy>;
->  			phy-names = "pciephy";
->  
-> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
-> +
-> +			eq-presets-16gts = /bits/ 8 <0x55 0x55>;
-NAK for two reasons (stated many times during review):
-1. There is no way driver code can depend on DTS, unless you fix
-something serious but nothing is explained about that serious fix in
-commit msg.
+On 12/12/2024 11:40, Krishna Chaitanya Chundru wrote:
+> Please ignore this series it has wrong patches I will send new series to 
+> fix this.
 
-2. There are no such properties. It does not look like you tested the
-DTS against bindings. Please run `make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
+You got feedback already.
 
 Best regards,
 Krzysztof
