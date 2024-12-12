@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-18270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 516A69EE52D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 12:35:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F307E9EE530
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 12:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECDF41885635
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 11:35:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3A26166E0A
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 11:35:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7757D21170B;
-	Thu, 12 Dec 2024 11:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97E0C21129D;
+	Thu, 12 Dec 2024 11:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZZ8+N0V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfVVAi26"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51109211A1B
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 11:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735C820B807
+	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 11:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734003326; cv=none; b=HhZvXCPj1Ftw+xAzSYzCWdb3yoFR242fiNI8QxQAbi6R+suWkLgSeWfPLrmsciKGKZeLG7X1EghB6d+PzZNO/iO7YsXA00dQRyRoEpSXziXN2u14IPm0M6vluiLLxoa1226riUIjqmkUQ586fYUytWIX/UDJmiSJ8XIzH4Qbado=
+	t=1734003328; cv=none; b=GmP8W+dOYh63ne5nHIuWQNt21vT/AOvc1CjKQSyBfGj2gQhg5/huEZvvZ+Gv1dP1U0kE5HmS5corFOABirmRoOLEPa+CJVdO1GaldShzVpnhXX9BmF8vxhbspIgGxW2pYFxPxiXH/qJL3jchkX3x4dNIBbEQSqn5U9OhkNzLvDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734003326; c=relaxed/simple;
-	bh=ObnK18IrbXCCXHeUn9M9sRVoVKrc3aKyRqhRFeq9/WU=;
+	s=arc-20240116; t=1734003328; c=relaxed/simple;
+	bh=Tq5lne9E79bYedkcTiQtblQgzJZr02APslo5sZaYcwM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n5glSd/jtUU2MQaDoL9SPIM+gd8jJ5T4KkdiJL9MMWcQlhnaNCKZ18lWWhxuxQ0vn19rY/RHPNJsvsDcZF5tuBYcXUvHf9kIGKSkG2LZt8hjrVsDxgIRLao2JjCx6mT3eGZRS8zY5odutbWPotbw60/+xidWdaKZh5YgmPKRfuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZZ8+N0V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBDBC4CED7;
-	Thu, 12 Dec 2024 11:35:24 +0000 (UTC)
+	 MIME-Version; b=CoQAW7QaKULtqJ91n3oTjewyS2i3n7w1mwSuLMMGj3G/5Z2knubGlINGXdmfsmNX0F6R7tW64ct/vcmcjCzC7nNzocmTISDunbGF2pUFz0UAz9aKHPcBMJG3KW/KcdK/Eiw7eXU2mP3reDTXvGqOCnfkIWo6uvMeJGDxeSlYn+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfVVAi26; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B43CC4CED4;
+	Thu, 12 Dec 2024 11:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734003326;
-	bh=ObnK18IrbXCCXHeUn9M9sRVoVKrc3aKyRqhRFeq9/WU=;
+	s=k20201202; t=1734003327;
+	bh=Tq5lne9E79bYedkcTiQtblQgzJZr02APslo5sZaYcwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HZZ8+N0VRB9XUKCA3SW510mfToBLwnDEDjO91AFI60jX95K8K2ousfcy3Ot21FD/V
-	 mFOOPtKM+9gNz5c9svn7IG6DVnD12gx6xToV6QvxRf44j7cOw6UT3WryFv5g/vYu0B
-	 tfCX7OQXhz6D8pQJrYH4uZr+mVifROrvs7pqj6xt6hTugN9/rjXS1+udAtHnoeZG9p
-	 6Qs9i4ddKuDgNpH2KmZluos+mMuu0GBGiFhLxbRNb3u1BzENbljQIQzTiHgzEqL6hg
-	 YhN6Ntq3j8OrSam7oJJyIUmuG4W/+tyL+jnNSJKVZcHNkkjQGbCrbwelgN778UQ+gn
-	 FLCaoX4xBG+/w==
+	b=EfVVAi26H+UG5aLrQsmNkHLK2/lyRCN6GZrJFYmZB7dxrri+Gm/4Dw0AcesMQAm+k
+	 Sb2bxVD0Piw878BBGhWQXw32lb7NsDmQMDCeNksZwUNrX91peiz4ra+raha4bInbjd
+	 Apb8KHR4wmqMW8P2XJjtKAoFMx+LNgN5QwjVk+JAmWsBNMavsjqjvC8ShuLff5tJVM
+	 qClF65v2+xugZlOSnhuUwHK7rszf5UE0xuPS2wCeuZbaij+0ST8+eofg9QYXGC6gEN
+	 U4qAlJtMCFaHLP77YyB3ahRQT+d2b3ZL8vkGhLq2nJ5idvtNltRbKo6fZqIm0hVaAV
+	 W8JamVuUJXtew==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-nvme@lists.infradead.org,
 	Christoph Hellwig <hch@lst.de>,
@@ -54,9 +54,9 @@ To: linux-nvme@lists.infradead.org,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v4 11/18] nvmet: Do not require SGL for PCI target controller commands
-Date: Thu, 12 Dec 2024 20:34:33 +0900
-Message-ID: <20241212113440.352958-12-dlemoal@kernel.org>
+Subject: [PATCH v4 12/18] nvmet: Introduce get/set_feature controller operations
+Date: Thu, 12 Dec 2024 20:34:34 +0900
+Message-ID: <20241212113440.352958-13-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241212113440.352958-1-dlemoal@kernel.org>
 References: <20241212113440.352958-1-dlemoal@kernel.org>
@@ -68,99 +68,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support for SGL is optional for the PCI transport. Modify
-nvmet_req_init() to not require the NVME_CMD_SGL_METABUF command flag to
-be set if the target controller transport type is NVMF_TRTYPE_PCI.
-In addition to this, the NVMe base specification v2.1 mandate that all
-admin commands use PRP, that is, have CDW0.PSDT cleared to 0. Modify
-nvmet_parse_admin_cmd() to check this.
+The implementation of some features cannot always be done generically by
+the target core code. Arbitraion and IRQ coalescing features are
+examples of such features: their implementation must be provided (at
+least partially) by the target controller driver.
 
-Finally, modify nvmet_check_transfer_len() and
-nvmet_check_data_len_lte() to return the appropriate error status
-depending on the command using SGL or PRP. Since for fabrics
-nvmet_req_init() checks that a command uses SGL, always, this change
-affects only PCI target controllers.
+Introduce the set_feature() and get_feature() controller fabrics
+operations (in struct nvmet_fabrics_ops) to allow supporting such
+features.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Tested-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 ---
- drivers/nvme/target/admin-cmd.c |  5 +++++
- drivers/nvme/target/core.c      | 27 +++++++++++++++++++++------
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ drivers/nvme/target/nvmet.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index c91864c185fc..0c5127a1d191 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -1478,6 +1478,11 @@ u16 nvmet_parse_admin_cmd(struct nvmet_req *req)
- 	if (unlikely(ret))
- 		return ret;
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 86bb2852a63b..8325de3382ee 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -416,6 +416,10 @@ struct nvmet_fabrics_ops {
+ 	u16 (*create_cq)(struct nvmet_ctrl *ctrl, u16 cqid, u16 flags,
+ 			 u16 qsize, u64 prp1, u16 irq_vector);
+ 	u16 (*delete_cq)(struct nvmet_ctrl *ctrl, u16 cqid);
++	u16 (*set_feature)(const struct nvmet_ctrl *ctrl, u8 feat,
++			   void *feat_data);
++	u16 (*get_feature)(const struct nvmet_ctrl *ctrl, u8 feat,
++			   void *feat_data);
+ };
  
-+	/* For PCI controllers, admin commands shall not use SGL. */
-+	if (nvmet_is_pci_ctrl(req->sq->ctrl) && !req->sq->qid &&
-+	    cmd->common.flags & NVME_CMD_SGL_ALL)
-+		return NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
-+
- 	if (nvmet_is_passthru_req(req))
- 		return nvmet_parse_passthru_admin_cmd(req);
- 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 3a92e3a81b46..43c9888eea90 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -1122,12 +1122,15 @@ bool nvmet_req_init(struct nvmet_req *req, struct nvmet_cq *cq,
- 	/*
- 	 * For fabrics, PSDT field shall describe metadata pointer (MPTR) that
- 	 * contains an address of a single contiguous physical buffer that is
--	 * byte aligned.
-+	 * byte aligned. For PCI controllers, this is optional so not enforced.
- 	 */
- 	if (unlikely((flags & NVME_CMD_SGL_ALL) != NVME_CMD_SGL_METABUF)) {
--		req->error_loc = offsetof(struct nvme_common_command, flags);
--		status = NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
--		goto fail;
-+		if (!req->sq->ctrl || !nvmet_is_pci_ctrl(req->sq->ctrl)) {
-+			req->error_loc =
-+				offsetof(struct nvme_common_command, flags);
-+			status = NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
-+			goto fail;
-+		}
- 	}
- 
- 	if (unlikely(!req->sq->ctrl))
-@@ -1182,8 +1185,14 @@ EXPORT_SYMBOL_GPL(nvmet_req_transfer_len);
- bool nvmet_check_transfer_len(struct nvmet_req *req, size_t len)
- {
- 	if (unlikely(len != req->transfer_len)) {
-+		u16 status;
-+
- 		req->error_loc = offsetof(struct nvme_common_command, dptr);
--		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_STATUS_DNR);
-+		if (req->cmd->common.flags & NVME_CMD_SGL_ALL)
-+			status = NVME_SC_SGL_INVALID_DATA;
-+		else
-+			status = NVME_SC_INVALID_FIELD;
-+		nvmet_req_complete(req, status | NVME_STATUS_DNR);
- 		return false;
- 	}
- 
-@@ -1194,8 +1203,14 @@ EXPORT_SYMBOL_GPL(nvmet_check_transfer_len);
- bool nvmet_check_data_len_lte(struct nvmet_req *req, size_t data_len)
- {
- 	if (unlikely(data_len > req->transfer_len)) {
-+		u16 status;
-+
- 		req->error_loc = offsetof(struct nvme_common_command, dptr);
--		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_STATUS_DNR);
-+		if (req->cmd->common.flags & NVME_CMD_SGL_ALL)
-+			status = NVME_SC_SGL_INVALID_DATA;
-+		else
-+			status = NVME_SC_INVALID_FIELD;
-+		nvmet_req_complete(req, status | NVME_STATUS_DNR);
- 		return false;
- 	}
- 
+ #define NVMET_MAX_INLINE_BIOVEC	8
 -- 
 2.47.1
 
