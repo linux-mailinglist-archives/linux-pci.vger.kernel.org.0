@@ -1,412 +1,402 @@
-Return-Path: <linux-pci+bounces-18322-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18323-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8444B9EF80B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 18:39:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 812269EF844
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 18:40:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8181D1894A33
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 17:27:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B40FD170EA8
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 17:29:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 276C721B8E1;
-	Thu, 12 Dec 2024 17:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C65221DA4;
+	Thu, 12 Dec 2024 17:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RVV2Ij3q"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="N59CW8kO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2056.outbound.protection.outlook.com [40.107.237.56])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2075.outbound.protection.outlook.com [40.107.241.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072A217F34;
-	Thu, 12 Dec 2024 17:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C58221660B;
+	Thu, 12 Dec 2024 17:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734024457; cv=fail; b=WOv5JLHyOpcnoINwYsIJaHfytEgQeNii1IDGJbBaV2ONxlo4+pUDW34drgwSFLd+ylx8ci+dCJM8JP0FQ3Q6JrWeKvK49tuca1oUDBOmooITFMiqSg2+ExeNYkTjarcy+W561TGCky5zci2jeiqms5uo1fgADJy/NWHnwHcBg0w=
+	t=1734024574; cv=fail; b=mZuazZ1uy7aWU32o6ROi1dQPH3ojS/jiV/rbS4Kv4PBoISGN0I97Dq/+KlPfmTOj+IeFsXLh5lhg0wYcxoTvLXU7B74IUyfjZpTH09+uy4cZ54WzYsuYURTmnVBCa4ukzvDYe2e10P0+bTDHHw4y+GfRQmBOo6ICcXo5uHs+H0o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734024457; c=relaxed/simple;
-	bh=CX+r2Wbgd0/gHJbruoDkMMQxfRwn8wTm5m8MyxN2jrQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PNhRjSAMS4H5y+KLPo/AduS7vUiVQiYH1vuCCJ7vr6U0o5Tt7uqd8L68FSGDxuEApADsD7UzNLuVbt8SKMj+Wut3p13Iu5wR9jYT7JSmUGLG21frIVdjW07e7bzkVngUNaiViRkeQeUOfnZXF48Mhi3cv6+/A55BFl0ctCY5DUM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RVV2Ij3q; arc=fail smtp.client-ip=40.107.237.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1734024574; c=relaxed/simple;
+	bh=DtsqEdmIr4jhGvXxVWmCPKddieI3zy4ItlJNjg/wZtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o++FN4D+NwEW2pj9agjeVM1ppgFj34r2iXmomuxIma4Ie/ryQrvvCko7Kdt0dYUQ4fkaAbb7Yg+TjbDwIXmgmaC8xYuF9ojwBVduXSTReR7+I25Wqigo6WQcdiPX7OalAKL01wtTPRakbX2H/4WMsR+xqEZGMM+VqJdFiDoD2BQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=N59CW8kO; arc=fail smtp.client-ip=40.107.241.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qoNARE54Vx4WPUC5rS6hQ2koBS2lH6vv1nUnOnXBsa5KYdEk7Ev9P6/2Ifk6qanCxVXibBbaCtdQU6zByunr86t5sYoyQxtNarib/f3e3zBfwPqcQPvzrxjWf0PL3ePcg+aprWsqLJQN/BIM55Q/YiUDOmhgk3osqAmzm4ID2hMSKheYRz0nnBfXvt/7IEb01emTSsFdt4u8p2n59AtmK8DNcLOSB5R7YBrRSJrkRBj/NpoxLoP4pkjQuFUjZEkUsxgoI7tSYPkyKkVFnuZ8kSIG2cIR4e5L7jxSKxnXzM3Xacog8KHPldb5sKFehowMNRCXIIe6yBgDLDoB0pueEg==
+ b=mVCKigI0NPBjxvS3YJaDHL5iMq6cQy5zAdrfiCeSrqvYksX+tA/ip9KHazEUrG4R8DtQccj9lUkvDppuN5ZlOl11afE8tIfiMnUwebr+5bczDObqA1MsXbgvLDf+ExBXHlo11c2jHnK1GMC4hjkT/zhEa1BJD1PM9v65glS3I2GCc5dfSbt+/IHOrH8Q0tN5JR+2gGaZEYnxaAud/AbPJPC2yJCI9zNm/PeMWxJlEAFFbZbSYISa638IVjc0v9PYYotjsOmaqGdxfvTTfL4QTpbC3zFG2x3Mb0FA5N1K4ACn9L3afqNrSdbQH61kZnteeE6H5AWZjIBFp/iLIEcQ5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o2sq8fBDdc/UH1duv5ky0yBqh0KohAFyb7B1ZOFzr0k=;
- b=Eb0mXrrM3WBaq7Y3Y6H2/OcGhuQQrVSIosFahSI9e+pknvhLcL96/l08rOeIOkOhu3PdJE5PLNVpuugy0ejWGRlrQ69nfVyrXL/tUBXAkYZXxRRsWMFNRzx98AE6OF309IkvWqixyrDBCaCnEHZwrfD77W1YS1Xgke/QwQw7Ok3xwTLLFATZZSQeqKd85IQSQYAik/RpKVg/b8+52rtv3RKfLUZIw/1EmmpTilKUWzH/YOpJjTg/Ve05rw8SiVTKkoxl1zG8Q7inBrXWPm7DFC3MyaUXC1ejGVOeplnn6qQ6YICbqyKc4lTeTXV5otD6i6a1F8YDJSAGzq/OW4An8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=HdnwnRgncroPhBXROVl1H4zREjKx5YnNuBJ5F+I4D80=;
+ b=VTkojfxW+b+r/zRInVMwovDGY14z4U0apf91McDhTH2eUGIs3HLTyFrT0cn7ExdZr4l50hq8/tSMka7W/BbaW2SefJ5JCVtDGgi/zZZUsl6lnamQXn0r0J2sXVXJMPzLQ5MgADTF7PIS5zZsFJhBnDz8CLwuOyQOS8ktPMABYFOfEkOO7gKIN6quFSaggchyaqIoP1aqesxPkl5mJlksRBoTy0lR10mzfxM8EOR7RfR7xPE3gzHK74+yi9u/4Q+9Vx35y+1qB7wl50SwREgKX4QQAWurVvzCdowncMXW6lulqS1jGsCOex1GW8XHBDRQ5iP+5fmtwMTrcFIxhAszXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o2sq8fBDdc/UH1duv5ky0yBqh0KohAFyb7B1ZOFzr0k=;
- b=RVV2Ij3qXrblgzp7/gHIyXVR47CemgPespjWEA86ezQs6bKT3+tB+XXh48cezTpe6YBEe6XJo2Av3FCpJ5KHGNWYuqbkrfXt900zFszbNzoqyLYjymOd6lnA2/Z6GJswPPK7qt9yk/3dek79w0Da6NnCLKWR8vNccvsN8tvUozw=
-Received: from CH2PR14CA0040.namprd14.prod.outlook.com (2603:10b6:610:56::20)
- by CY8PR12MB8266.namprd12.prod.outlook.com (2603:10b6:930:79::5) with
+ bh=HdnwnRgncroPhBXROVl1H4zREjKx5YnNuBJ5F+I4D80=;
+ b=N59CW8kO4BIqlRflwAc5qTgV5DteleA5h0Qf/PqPgCgowkH5/KCk8Qoptdp0xcszzPInOXFDdnaD24wmZDo4pG8/Z7jBuOtYzmY22/pRdg+mxMidp2blER63+HuKyxkztozRs/Bq1SADzP1j7HJH7cvGQmg2k6ak97xVazR4BnCCFGgPQKa17vAmlStE900pWZkekzuE+SKv9atZXLkOhpYfi3d1u6AuB2dazIlhhu9k5R2kq3UE1Ae4UoeQK52gmBKKZFF55/4Sdtj9xxZwoPV1xNgnM+5R9apjhbJtPE54paqRm9hLrVROIcvvxqTNMjlm3MePqTaf4lIphDxcWw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB8386.eurprd04.prod.outlook.com (2603:10a6:20b:3f6::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.17; Thu, 12 Dec
- 2024 17:27:23 +0000
-Received: from DS3PEPF000099D6.namprd04.prod.outlook.com
- (2603:10b6:610:56:cafe::f2) by CH2PR14CA0040.outlook.office365.com
- (2603:10b6:610:56::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8251.16 via Frontend Transport; Thu,
- 12 Dec 2024 17:27:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D6.mail.protection.outlook.com (10.167.17.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8251.15 via Frontend Transport; Thu, 12 Dec 2024 17:27:23 +0000
-Received: from purico-9eb2host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Dec
- 2024 11:27:21 -0600
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <yazen.ghannam@amd.com>, <x86@kernel.org>, <tony.luck@intel.com>,
-	<mario.limonciello@amd.com>, <bhelgaas@google.com>, <jdelvare@suse.com>,
-	<linux@roeck-us.net>, <clemens@ladisch.de>, <Shyam-sundar.S-k@amd.com>,
-	<hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-	<naveenkrishna.chatradhi@amd.com>, <suma.hegde@amd.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2.1] x86/amd_node, platform/x86/amd/hsmp: Have HSMP use SMN through AMD_NODE
-Date: Thu, 12 Dec 2024 17:27:11 +0000
-Message-ID: <20241212172711.1944927-1-yazen.ghannam@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241206161210.163701-15-yazen.ghannam@amd.com>
-References:
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.15; Thu, 12 Dec
+ 2024 17:29:26 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8230.010; Thu, 12 Dec 2024
+ 17:29:26 +0000
+Date: Thu, 12 Dec 2024 12:29:16 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	robin.murphy@arm.com, will@kernel.org
+Subject: Re: [PATCH v8 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
+ i.MX95
+Message-ID: <Z1sdbH7N1Ly9eXc0@lizhi-Precision-Tower-5810>
+References: <20241210-imx95_lut-v8-0-2e730b2e5fde@nxp.com>
+ <20241210-imx95_lut-v8-2-2e730b2e5fde@nxp.com>
+ <Z1sTUaoA5yk9RcIc@lpieralisi>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z1sTUaoA5yk9RcIc@lpieralisi>
+X-ClientProxiedBy: SJ0PR03CA0150.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D6:EE_|CY8PR12MB8266:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e185135-927f-4768-4f2b-08dd1ad23d80
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8386:EE_
+X-MS-Office365-Filtering-Correlation-Id: 167f9839-f8b2-486b-47f2-08dd1ad286be
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013|921020;
+	BCL:0;ARA:13230040|7416014|52116014|1800799024|376014|366016|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wdMUj3BRxr4U/qrOR0xQvH9M7Q1JNvtNBwIEV7q4OKBybqBJcn5pK5Xgx1bM?=
- =?us-ascii?Q?MesGvffK8y7FQX/RxzKOvMrxpyIzCoYv0HuBV5FNsIGsHZc12JoKAlH1UPnM?=
- =?us-ascii?Q?cpmrDpxIBwqaYyF/lVlHqID3lxYqHXo8TQjm5W/zDqB1jXis9tNMXah4oaRX?=
- =?us-ascii?Q?lrDcPkVw6InoQy4NepY95xaifm6ux48pLgrQuw02f12qnFvVqAdF4lbUUg1H?=
- =?us-ascii?Q?Jv5eHaVjxdSbZKunmPa8/DJHP+MByAOl34CtEPhoO1sADNbEdtjkNKvIvIvm?=
- =?us-ascii?Q?nrCd19LO3FiCgTcgbIGKIbHg2f2tj1+XOibDuGQdpc1ooXt4YLZb1p3xvlOi?=
- =?us-ascii?Q?gZK+v8n8onRbb01ZDPIpje+20vcCRooQcPhWp4G/IWdVShkPwUH4PzC2Mz5n?=
- =?us-ascii?Q?bjhjYwo7ak1QBnzu0/zM78wTNUGSl9V/jENbE0yRXN7BblNkrINxgjfkEgWI?=
- =?us-ascii?Q?puywguQAYV3m+yVv63W2lC1gYEq2QGJiDfcv3cnyEPbVbcpIr+Z4ep8gg9AQ?=
- =?us-ascii?Q?6p5BtAm34F0P/aObckQFTZjTGA5+whlfUCoJq1VJh/IkEl/9U6ZiUeBVHtm0?=
- =?us-ascii?Q?j4vXuLuIoAGM2GoW6kkT93JEDqsCnVsoYTy4AvygMeE/33xt6cy1LeR9SU69?=
- =?us-ascii?Q?wOkf/qCcIij8flAcitcOqPQpI6SGB3LKo30FSPJtxcmjOovwNKsFcA2rHZhf?=
- =?us-ascii?Q?3zg9v+IvLgM+HoW89m79lg8qrdk6eEHpSJem1N7p+P+ZP6hwd2IYAd+/QWIK?=
- =?us-ascii?Q?3YDUZPD8nGZR6Vzf0nBIfdvYoboSm7CtRrSIWALLEUIDZaA3YfjrZ+ilxeCD?=
- =?us-ascii?Q?knWQ+Xllk31GKZXmAMseytGMuQO9pA7Qyqk5sYcQRH3rqYgz/pAWlT6QcpmF?=
- =?us-ascii?Q?LADD8uPkcb7G9m/bVoav/vU3rKo2d1GQJkGhydAwLURbGPgbzbjLqZH/ncYZ?=
- =?us-ascii?Q?azbreX8j+/MzXPKKspDNlHKXKDOTFaDapQCAAXTcmOMakmeyBlWWGFmlwm34?=
- =?us-ascii?Q?+g+qVZBoCfmzHixygyDIyHJAZIdWMM4DTsnuWYcDWExT58IEvCKZRjvuE+ym?=
- =?us-ascii?Q?WCqhWUoKYKOO2pzicLusb87hpmItvbmmFdvMAtyp/Fd4WAoX29G4PZdfqgao?=
- =?us-ascii?Q?U7lBdh+Y1PFkEvf76UKLCoiOFxDf8yjwgpSaPLTcXtFtlDcRiqDkny1FVC+s?=
- =?us-ascii?Q?b229SPsU1ZhAoTeqJJa0Oed+RFEzq1aw9m0f0T/MdkrCJOkX3VibksYwntzk?=
- =?us-ascii?Q?Wf+VyRgn9Y78Hl8s1tpzr66gT8S89yRFjPd08YwELtDGY+OAW4ItUxD/RtfY?=
- =?us-ascii?Q?IivbDZfjUtt6ycI4FUPm5UXRxoGJNkMdNutakC/VI6CKhgVm81BosARkeIxJ?=
- =?us-ascii?Q?ll2fcntZVfLmFRvQtFzui3d5Wrw0ey8PVdAgGmkADVic1AZccvlrCoI46w1b?=
- =?us-ascii?Q?EisjLWPS5S2kHeQrISklZ1y89o02uD5ZyoswTh7lxoUks1vk/LgssA=3D=3D?=
+	=?utf-8?B?K1AxOW94alNNNGIxcXk5TEh0YlNsQUtmRTV5OUt6V0VneEliUUswZjFGV04v?=
+ =?utf-8?B?SlNkMUxEV0w3RVFON0JaQlRpcFUzNklxWFRhc2dmSTJwelp4ZW43b1NQeUZX?=
+ =?utf-8?B?RHJrTHdIc1NHY2VzVHhVYnlhZGlCbDlzSjVsS2N3MjhFcmpid2RJWVQ0bnFS?=
+ =?utf-8?B?SE5lL3pqakJBYVFKRDBvemQ3N29kYVRMWU5aS2ZHMktnR0ZNZHBTRVQ5SFll?=
+ =?utf-8?B?SFBGR09OdzFGTGlLajFsMVJyeU8ybHkyQ1A2L0hGRDB0MHltdVNpQVljSjZS?=
+ =?utf-8?B?MUlmcGFLUkFqbVZkSTA1NklnN3VWTkVDdUVvYmNqNk9hUWcrZEZMT09Qalcz?=
+ =?utf-8?B?RTBaeUhtS3JXd1RiY0RKR1JRd2FjNGxMb05aTyswdHBMMXpmQXlUT3NySU0x?=
+ =?utf-8?B?bHhRaEZHVVRyajVNQjdqbUpFUVN5OFhsZ3E5M1RHbmZhV0lPRXpmQU5GYVRT?=
+ =?utf-8?B?cTZweDYxMkVrSFFMems4QjBnV0I4clNHTWxXOW1KRnVPTkU0cnYzU09QT3ZJ?=
+ =?utf-8?B?Z05sSXdGSXhQeW5HaFlmc1lTUGNpaTYzVXNMNE5rZVFhWHdsdE1mOGpSRE1z?=
+ =?utf-8?B?NERudjRVcy9rSDVlTW5SMG1oVlVKTUZQVG5zdWY5TXo5dGd4bi9NMmtSQkxV?=
+ =?utf-8?B?bEpKbmRxK0pXVjYwWGhLWkZyR0NESmVFV1VFM0RqbEN5b09oTkxWdDY5TzRB?=
+ =?utf-8?B?c1I1dFNSS2RzdFBVMyt5TVVjeWJEeE5UMURtUlVMcmhQRHdIdDB6ODFtOUNI?=
+ =?utf-8?B?Q1duZnFESmlkWmszL21mekRVa2llOXI4NXFZUTRmTlVjOXFEMUE5TmNITkJU?=
+ =?utf-8?B?M1FtSURHeWlFYnd2TjhsNWNhcjhtaGRJNXl3a3JOYml5Wi9kQjNiRkFidDNH?=
+ =?utf-8?B?SUZVNE5mT0M4SXJKL204Z3dVOXhiYmZvc3FjU0RmenV4Q2k4bWRBTjFBdFIz?=
+ =?utf-8?B?djVDWDZwRGI3eEFManlLb3FZSndRMWx3bVVXM00zTGZTVzF1TWVGcGNUTVN6?=
+ =?utf-8?B?MXZzY3k3ZEhuUVl1QS80WENYS3R6bzBqQWwrWkh2V2pWcEF6dEIyMGcrZml3?=
+ =?utf-8?B?bHhqbEI4Nm5KY1MzNG9RME52elJzcHVNMm9BUW1oRGtWaHR3eWJpbkxvbjlR?=
+ =?utf-8?B?MGpUSmY4YjRLRXIzSlNPajlySkFWb1FjTXNrMTdtZTJpUU9weTlScnluWHNz?=
+ =?utf-8?B?NlRHTEN5UHpEWW9SY1l0N2RjUUlqZlQrcDNYaTVrSmxpclk0aXlJYUMwQ0ZI?=
+ =?utf-8?B?dituaEVkUHBrK3Fnbk5aTHZUbkdIOE5EWUd4K0tDM3NMeGR0RUZQUktDTkpk?=
+ =?utf-8?B?MHF3R2ZmR1JvS3c3OU92NVVZWEJ1MXljZjBkZ2kvUkp1T21lL2p5ZHJBSmpE?=
+ =?utf-8?B?S043bHVUaDVvRlFhMURoWFU5Mmx1Z0x0ZU0zUVJBSEllR0hBc3JacllQRnB1?=
+ =?utf-8?B?SUZNMVRrRVdxUFdPTG5QU2xLZG1YODhxWXpuazFJSzdNTUVrSWF4NVlYZW9W?=
+ =?utf-8?B?eTFERElOVGNQcFZGQ0FGaGFWZThvSXk4c0E1cjJxVXJwQTRSK2FyR1ZTU3FF?=
+ =?utf-8?B?aWVBSjRiYU5zMStEaHhqNGNQUnJhOHI2bVpMVEpWQ1ZuRk94Wm0vaGdMRGpJ?=
+ =?utf-8?B?RTl0bW1wbWVHMjJZTWQzamxZSlNEeW44cVc3a2taS2w0QzBMQjFPbktSbWs5?=
+ =?utf-8?B?Vjg2ZnBuYS91eUtUeW1GbzhRLzA5MGw0REhROTl0VlBsZmhSTnRJSlBZV3R0?=
+ =?utf-8?B?N3ZQalc1dWdPM2dJbkRQUWdhT25haUgyRXBGNUppdTZsUDBhY2IxNXhBZFps?=
+ =?utf-8?B?QUtEZnMrOEF1RlZoNm1BeHBSTTI1VFhUaldZWTlMKytJZWVmY0M1Z0gzSC9z?=
+ =?utf-8?B?M0VKbFFTYU0xVWI5VS9lcHVBWWQrbVNnaU00TWx3T2pCUFE9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 17:27:23.2658
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(1800799024)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NGk1OEdGcFhQWk5YVU5VU2M4ZFBxZ2RSaUtocjRUMmVNZ2plVk5JQ1pIL0hL?=
+ =?utf-8?B?ZmorcW9KcjNENFAyTmFYOUpDaVlLSDRXQzF2cnVMbUc5Sk9CQmc5VW0veEZz?=
+ =?utf-8?B?djAxUUZ1aitMcGRkRFBUd0w2dGNWSXljVFBzU3VlMjk3TmtzSytWZStINnhR?=
+ =?utf-8?B?dHFTb0RKaThyV1pOcEJoaTU2ZW1FUnZ2VlhjYWZSWXdIWFh0WVZCSkdTdXlm?=
+ =?utf-8?B?cm5vS2JNdmYwWlRuTm9OTGVmMmRpQjM5TmdnTTRvZHpVQXFvb2Uzdll6aDdT?=
+ =?utf-8?B?ZDFvNm1jVWlXeTU4ZUk0T25XQXdOSVZ1dlZvZm5QWGJrNHYvdlNudzE5VzBo?=
+ =?utf-8?B?UFE2MEwzWmI4ckRGYmNHUEpGVkNNd3BzR1JQdG0yT3MwU1NxdXhOa3QxbVRX?=
+ =?utf-8?B?N1k0V2NDQ2xVdk5pOS9aYUphZUFHR29haFlQRnNRTUlGWDN3SzFDNm1HZXJV?=
+ =?utf-8?B?UnBQUElMWW83MHBKSzZmekV0Wmw3cndkR3ZmbVJDekgwNUNOUEZRVVJBekR2?=
+ =?utf-8?B?KzVoU2h4Skx3WndEd2FPekhncHhmMXpvd0h2QjlrZ1pyOE9wK09BVlpkRzFl?=
+ =?utf-8?B?UkJnOUNzOW44RFNud2dtdFNoekh4Zm5haTYxWmdGa29WRFBHaVA5OHdNQWpz?=
+ =?utf-8?B?M2l0Uk0xa20wWnlnZ3VXaEpwdEdldEhqUG9yc2RKeHI2V1FsTHI3clVRVjNQ?=
+ =?utf-8?B?MkVaWnNzZU1teStlcmFmcDVMV0tXbUUvTWRYTTdXM0hpVTI5MWZsRGJKcURO?=
+ =?utf-8?B?UFV2d25jaFR2THlMNVN5WUViN1B5cWdRdFBFaUtlc3QzQUJlWG9iYlAvY0Fj?=
+ =?utf-8?B?elVlRVY1ZnpGMjU4eG9rMkdCQ2xHK0U3bXRTdVdycTFjZDZzSVZ5VkhGY0JM?=
+ =?utf-8?B?dS95VGZROEx6c0RVcXJwMDV4NmdJbHg0YThxYytVMXNTR01ad0hSSTI1L3FC?=
+ =?utf-8?B?RDV4ZVA2eFpPOHlkZEdhYjdpMFhXcFpLZjZhYkh4M3pvWFl6WlAvQW4zRzds?=
+ =?utf-8?B?M2lyMWorN1JZeHVMWFhmYWh0QzZXQ2xaeWZ2anBEeStiOVJGT1dPdXNKQm1Z?=
+ =?utf-8?B?QlZmdjI0eWRTTXd2NjNZU0ExbW13UDRLc2hmSmF5QzFmY3VKWFl6S3Y2TTFh?=
+ =?utf-8?B?NnBLVUw3cU53d2pycEFPcXBXaE1scHhxejU0Nnlhcm5MM01XOEgydjZ5SjZE?=
+ =?utf-8?B?RWc1dXJnUHB1ZXFEOGVGaHd0Snd0SmxrU01kd1p0alpJc1RkblVxUnF6K3gr?=
+ =?utf-8?B?cVM5Z28yQmZSTzFzMG9wMllwZXZWRVhLUVh1UUpTdkQ2enlieXl4aWVDWDkx?=
+ =?utf-8?B?RXF0UXUrU3BJZnZJdFJJSWlqMkJGZGFOMU5LeDBtRjBpK1ZabUN1ejJ3UmE1?=
+ =?utf-8?B?aHZkbVhCSU9lc3NVbDZUbG5DME54N1FEMGlENEJSc0JHbXBEc1J1R0lSWC9D?=
+ =?utf-8?B?MlRkTW9pdHRKQlNBU2VvMmtGekEzUStGMHp4d1Z5VHh6NGltOC9aMDBIMDUv?=
+ =?utf-8?B?amh3YUZGNHVQdWFpTC9GcUJOa21Wa3RKdVF0cExDU1lKNW9zRnBTdTBCNG0v?=
+ =?utf-8?B?V2xoMThjWE5GMTdqYXhtY1M0NmFpbDNWN2dZNjRkR04rRlYzU1FsNktpRUEw?=
+ =?utf-8?B?ajV1dVpHbGJNY2hpVFA1MW4xZ1gybS94Qm9LRHczZk5aT1p1QkVsUlJqUW5J?=
+ =?utf-8?B?b3lLZUlWQ1RoZWwyczNmL1p4OVZlSkJMdWxnbXordVlxSEJHZm13dDhsVE9p?=
+ =?utf-8?B?UjJJVUdtWENOZTF1M2FEY09mUEJwSC92V3F0MnB4QVdPa1pUT3dqdDdzMTBT?=
+ =?utf-8?B?NWVnOEpZV0NmdXd3TUE4aEg0NXBQbm95WjBsYVN5bGFsMjRiUEora3NLMmdS?=
+ =?utf-8?B?dFg2WGNsWm9CVTEvQVoyTStEaWc4ZkR2UnV5YVZZc0llUGV5VE9MSUhNMHVq?=
+ =?utf-8?B?RmcxVElXYkMra2d5NTRHYSt0VVRVOXZPY2JUVGJDU0dCWC9xRGtrTEROZGI2?=
+ =?utf-8?B?d2duL2t3SWlxVlQ4TXlUQ3g2T3luQTdDNG4zVjk3bkRITlJMZm4zR0cxUEJp?=
+ =?utf-8?B?dXFHL29MZ1RTVDJPVW9EMVBnZy9rVjNQcDQ5Rktac0JwTXhQeE1STGhpRC80?=
+ =?utf-8?Q?mI9nnfSDmDX1mEe8WwnvO7Ldm?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 167f9839-f8b2-486b-47f2-08dd1ad286be
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 17:29:26.4141
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e185135-927f-4768-4f2b-08dd1ad23d80
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D6.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8266
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tvlPdjEJeTgyWGmdfWHmN7dm1jd0CeK4exOo3sCUdfjH9Dbotn36CY+AMGgZtr0QngBprwMR90H52Bt9G4U+9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8386
 
-The HSMP interface is just an SMN interface with different offsets.
+On Thu, Dec 12, 2024 at 05:46:09PM +0100, Lorenzo Pieralisi wrote:
+> On Tue, Dec 10, 2024 at 05:48:59PM -0500, Frank Li wrote:
+> > For the i.MX95, configuration of a LUT is necessary to convert Bus Device
+> > Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
+> > This involves checking msi-map and iommu-map device tree properties to
+> > ensure consistent mapping of PCI BDF to the same stream IDs. Subsequently,
+> > LUT-related registers are configured. In the absence of an msi-map, the
+> > built-in MSI controller is utilized as a fallback.
+>
+> This is wrong information. What you want to say is that if an msi-map
+> isn't detected this means that the platform relies on DWC built-in
+> controller for MSIs (that does not need streamIDs handling).
+>
+> That's quite different from what you are writing here.
 
-Define an HSMP wrapper in the SMN code and have the HSMP platform driver
-use that rather than a local solution.
+How about ?
 
-Also, remove the "root" member from AMD_NB, since there are no more
-users of it.
+"If an msi-map isn't detected, platform relies on DWC built-in controller
+for MSIs that does not need streamdIDs"
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
+>
+> >
+> > Register a PCI bus callback function to handle enable_device() and
+> > disable_device() operations, setting up the LUT whenever a new PCI device
+> > is enabled.
+> >
+> > Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Notes:
-    Link:
-    https://lore.kernel.org/20241206161210.163701-15-yazen.ghannam@amd.com
-    
-    v2->v2.1:
-    * Include static_assert() and comment for sysfs attributes.
-    
-    v1->v2:
-    * Rebase on recent HSMP rework.
+[...]
 
- arch/x86/include/asm/amd_nb.h         |  1 -
- arch/x86/include/asm/amd_node.h       |  3 +++
- arch/x86/kernel/amd_nb.c              |  1 -
- arch/x86/kernel/amd_node.c            |  9 +++++++
- drivers/platform/x86/amd/hsmp/Kconfig |  2 +-
- drivers/platform/x86/amd/hsmp/acpi.c  |  7 +++---
- drivers/platform/x86/amd/hsmp/hsmp.c  |  1 -
- drivers/platform/x86/amd/hsmp/hsmp.h  |  3 ---
- drivers/platform/x86/amd/hsmp/plat.c  | 35 +++++++++------------------
- 9 files changed, 28 insertions(+), 34 deletions(-)
+> > +	int err_i, err_m;
+> > +	u32 sid;
+> > +
+> > +	dev = imx_pcie->pci->dev;
+> > +
+> > +	target = NULL;
+> > +	err_i = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", &target, &sid_i);
+> > +	if (target) {
+> > +		of_node_put(target);
+> > +	} else {
+> > +		/*
+> > +		 * "target == NULL && err_i == 0" means use 1:1 map RID to
+>
+> Is it what it means ? Or does it mean that the iommu-map property was found
+> and RID is out of range ?
 
-diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
-index 4c4efb93045e..adfa0854cf2d 100644
---- a/arch/x86/include/asm/amd_nb.h
-+++ b/arch/x86/include/asm/amd_nb.h
-@@ -27,7 +27,6 @@ struct amd_l3_cache {
- };
- 
- struct amd_northbridge {
--	struct pci_dev *root;
- 	struct pci_dev *misc;
- 	struct pci_dev *link;
- 	struct amd_l3_cache l3_cache;
-diff --git a/arch/x86/include/asm/amd_node.h b/arch/x86/include/asm/amd_node.h
-index 113ad3e8ee40..5fe9c6537434 100644
---- a/arch/x86/include/asm/amd_node.h
-+++ b/arch/x86/include/asm/amd_node.h
-@@ -33,4 +33,7 @@ static inline u16 amd_num_nodes(void)
- int __must_check amd_smn_read(u16 node, u32 address, u32 *value);
- int __must_check amd_smn_write(u16 node, u32 address, u32 value);
- 
-+/* Should only be used by the HSMP driver. */
-+int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write);
-+
- #endif /*_ASM_X86_AMD_NODE_H_*/
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 2729e99806ec..3a20312062af 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -73,7 +73,6 @@ static int amd_cache_northbridges(void)
- 	amd_northbridges.nb = nb;
- 
- 	for (i = 0; i < amd_northbridges.num; i++) {
--		node_to_amd_nb(i)->root = amd_node_get_root(i);
- 		node_to_amd_nb(i)->misc = amd_node_get_func(i, 3);
- 		node_to_amd_nb(i)->link = amd_node_get_func(i, 4);
- 	}
-diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
-index d2ec7fd555c5..65045f223c10 100644
---- a/arch/x86/kernel/amd_node.c
-+++ b/arch/x86/kernel/amd_node.c
-@@ -97,6 +97,9 @@ static DEFINE_MUTEX(smn_mutex);
- #define SMN_INDEX_OFFSET	0x60
- #define SMN_DATA_OFFSET		0x64
- 
-+#define HSMP_INDEX_OFFSET	0xc4
-+#define HSMP_DATA_OFFSET	0xc8
-+
- /*
-  * SMN accesses may fail in ways that are difficult to detect here in the called
-  * functions amd_smn_read() and amd_smn_write(). Therefore, callers must do
-@@ -179,6 +182,12 @@ int __must_check amd_smn_write(u16 node, u32 address, u32 value)
- }
- EXPORT_SYMBOL_GPL(amd_smn_write);
- 
-+int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write)
-+{
-+	return __amd_smn_rw(HSMP_INDEX_OFFSET, HSMP_DATA_OFFSET, node, address, value, write);
-+}
-+EXPORT_SYMBOL_GPL(amd_smn_hsmp_rdwr);
-+
- static int amd_cache_roots(void)
- {
- 	u16 node, num_nodes = amd_num_nodes();
-diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
-index 7d10d4462a45..d6f7a62d55b5 100644
---- a/drivers/platform/x86/amd/hsmp/Kconfig
-+++ b/drivers/platform/x86/amd/hsmp/Kconfig
-@@ -7,7 +7,7 @@ config AMD_HSMP
- 	tristate
- 
- menu "AMD HSMP Driver"
--	depends on AMD_NB || COMPILE_TEST
-+	depends on AMD_NODE || COMPILE_TEST
- 
- config AMD_HSMP_ACPI
- 	tristate "AMD HSMP ACPI device driver"
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index e981d45e1c12..28565ca78afd 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -10,7 +10,6 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <asm/amd_hsmp.h>
--#include <asm/amd_nb.h>
- 
- #include <linux/acpi.h>
- #include <linux/device.h>
-@@ -24,6 +23,8 @@
- 
- #include <uapi/asm-generic/errno-base.h>
- 
-+#include <asm/amd_node.h>
-+
- #include "hsmp.h"
- 
- #define DRIVER_NAME		"amd_hsmp"
-@@ -321,8 +322,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	if (!hsmp_pdev->is_probed) {
--		hsmp_pdev->num_sockets = amd_nb_num();
--		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_SOCKETS)
-+		hsmp_pdev->num_sockets = amd_num_nodes();
-+		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
- 			return -ENODEV;
- 
- 		hsmp_pdev->sock = devm_kcalloc(&pdev->dev, hsmp_pdev->num_sockets,
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 227b4ad4a51a..e04c613ad5d6 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -8,7 +8,6 @@
-  */
- 
- #include <asm/amd_hsmp.h>
--#include <asm/amd_nb.h>
- 
- #include <linux/acpi.h>
- #include <linux/delay.h>
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index e852f0a947e4..af8b21f821d6 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -21,8 +21,6 @@
- 
- #define HSMP_ATTR_GRP_NAME_SIZE	10
- 
--#define MAX_AMD_SOCKETS 8
--
- #define HSMP_CDEV_NAME		"hsmp_cdev"
- #define HSMP_DEVNODE_NAME	"hsmp"
- 
-@@ -41,7 +39,6 @@ struct hsmp_socket {
- 	void __iomem *virt_base_addr;
- 	struct semaphore hsmp_sem;
- 	char name[HSMP_ATTR_GRP_NAME_SIZE];
--	struct pci_dev *root;
- 	struct device *dev;
- 	u16 sock_ind;
- 	int (*amd_hsmp_rdwr)(struct hsmp_socket *sock, u32 off, u32 *val, bool rw);
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index a61f815c9f80..32921092b0c8 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -10,7 +10,6 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <asm/amd_hsmp.h>
--#include <asm/amd_nb.h>
- 
- #include <linux/device.h>
- #include <linux/module.h>
-@@ -18,6 +17,8 @@
- #include <linux/platform_device.h>
- #include <linux/sysfs.h>
- 
-+#include <asm/amd_node.h>
-+
- #include "hsmp.h"
- 
- #define DRIVER_NAME		"amd_hsmp"
-@@ -34,28 +35,12 @@
- #define SMN_HSMP_MSG_RESP	0x0010980
- #define SMN_HSMP_MSG_DATA	0x00109E0
- 
--#define HSMP_INDEX_REG		0xc4
--#define HSMP_DATA_REG		0xc8
--
- static struct hsmp_plat_device *hsmp_pdev;
- 
- static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
- 			     u32 *value, bool write)
- {
--	int ret;
--
--	if (!sock->root)
--		return -ENODEV;
--
--	ret = pci_write_config_dword(sock->root, HSMP_INDEX_REG,
--				     sock->mbinfo.base_addr + offset);
--	if (ret)
--		return ret;
--
--	ret = (write ? pci_write_config_dword(sock->root, HSMP_DATA_REG, *value)
--		     : pci_read_config_dword(sock->root, HSMP_DATA_REG, value));
--
--	return ret;
-+	return amd_smn_hsmp_rdwr(sock->sock_ind, sock->mbinfo.base_addr + offset, value, write);
- }
- 
- static ssize_t hsmp_metric_tbl_plat_read(struct file *filp, struct kobject *kobj,
-@@ -95,7 +80,12 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-  * Static array of 8 + 1(for NULL) elements is created below
-  * to create sysfs groups for sockets.
-  * is_bin_visible function is used to show / hide the necessary groups.
-+ *
-+ * Validate the maximum number against MAX_AMD_NUM_NODES. If this changes,
-+ * then the attributes and groups below must be adjusted.
-  */
-+static_assert(MAX_AMD_NUM_NODES == 8);
-+
- #define HSMP_BIN_ATTR(index, _list)					\
- static struct bin_attribute attr##index = {				\
- 	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},	\
-@@ -159,10 +149,7 @@ static int init_platform_device(struct device *dev)
- 	int ret, i;
- 
- 	for (i = 0; i < hsmp_pdev->num_sockets; i++) {
--		if (!node_to_amd_nb(i))
--			return -ENODEV;
- 		sock = &hsmp_pdev->sock[i];
--		sock->root			= node_to_amd_nb(i)->root;
- 		sock->sock_ind			= i;
- 		sock->dev			= dev;
- 		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
-@@ -305,11 +292,11 @@ static int __init hsmp_plt_init(void)
- 		return -ENOMEM;
- 
- 	/*
--	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
-+	 * amd_num_nodes() returns number of SMN/DF interfaces present in the system
- 	 * if we have N SMN/DF interfaces that ideally means N sockets
- 	 */
--	hsmp_pdev->num_sockets = amd_nb_num();
--	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_SOCKETS)
-+	hsmp_pdev->num_sockets = amd_num_nodes();
-+	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
- 		return ret;
- 
- 	ret = platform_driver_register(&amd_hsmp_driver);
--- 
-2.43.0
+yes, if this happen, sid_i will be equal to RID.
 
+>
+> Could you point me at a sample dts for this host bridge please ?
+
+https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi
+
+/* 0x10~0x17 stream id for pci0 */
+   iommu-map = <0x000 &smmu 0x10 0x1>,
+               <0x100 &smmu 0x11 0x7>;
+
+/* msi part */
+   msi-map = <0x000 &its 0x10 0x1>,
+             <0x100 &its 0x11 0x7>;
+
+>
+> > +		 * stream ID. Hardware can't support this because stream ID
+> > +		 * only 5bits
+>
+> It is 5 or 6 bits ? From GENMASK(5, 0) above it should be 6.
+
+Sorry for typo. it is 6bits.
+
+>
+> > +		 */
+> > +		err_i = -EINVAL;
+> > +	}
+> > +
+> > +	target = NULL;
+> > +	err_m = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", &target, &sid_m);
+> > +
+> > +	/*
+> > +	 *   err_m      target
+> > +	 *	0	NULL		Use 1:1 map RID to stream ID,
+>
+> Again, is that what it really means ?
+>
+> > +	 *				Current hardware can't support it,
+> > +	 *				So return -EINVAL.
+> > +	 *      != 0    NULL		msi-map not exist, use built-in MSI.
+>
+> does not exist.
+>
+> > +	 *	0	!= NULL		Get correct streamID from RID.
+> > +	 *	!= 0	!= NULL		Unexisted case, never happen.
+>
+> "Invalid combination"
+>
+> > +	 */
+> > +	if (!err_m && !target)
+> > +		return -EINVAL;
+> > +	else if (target)
+> > +		of_node_put(target); /* Find stream ID map entry for RID in msi-map */
+> > +
+> > +	/*
+> > +	 * msi-map        iommu-map
+> > +	 *   N                N            DWC MSI Ctrl
+> > +	 *   Y                Y            ITS + SMMU, require the same sid
+> > +	 *   Y                N            ITS
+> > +	 *   N                Y            DWC MSI Ctrl + SMMU
+> > +	 */
+> > +	if (err_i && err_m)
+> > +		return 0;
+> > +
+> > +	if (!err_i && !err_m) {
+> > +		/*
+> > +		 * MSI glue layer auto add 2 bits controller ID ahead of stream
+>
+> What's "MSI glue layer" ?
+
+It is common term for IC desgin, which connect IP's signal to platform with
+some simple logic. Inside chip, when connect LUT output 6bit streamIDs
+to MSI controller, there are 2bits hardcode controller ID information
+append to 6 bits streamID.
+
+           Glue Layer
+          <==========>
+┌─────┐                  ┌──────────┐
+│ LUT │ 6bit stream ID   │          │
+│     ┼─────────────────►│  MSI     │
+└─────┘    2bit ctrl ID  │          │
+            ┌───────────►│          │
+            │            │          │
+ 00 PCIe0   │            │          │
+ 01 ENETC   │            │          │
+ 10 PCIe1   │            │          │
+            │            └──────────┘
+
+>
+> > +		 * ID, so mask this 2bits to get stream ID.
+> > +		 * But IOMMU glue layer doesn't do that.
+>
+> and "IOMMU glue layer" ?
+
+See above.
+
+Frank
+
+>
+> > +		 */
+> > +		if (sid_i != (sid_m & IMX95_SID_MASK)) {
+> > +			dev_err(dev, "iommu-map and msi-map entries mismatch!\n");
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	sid = sid_i;
+>
+> err_i could be != 0 here, I understand that the end result is
+> fine given how the code is written but it is misleading.
+>
+> 	if (!err_i)
+> 	else if (!err_m)
+
+Okay
+
+>
+> > +	if (!err_m)
+> > +		sid = sid_m & IMX95_SID_MASK;
+> > +
+> > +	return imx_pcie_add_lut(imx_pcie, rid, sid);
+> > +}
+> > +
+> > +static void imx_pcie_disable_device(struct pci_host_bridge *bridge, struct pci_dev *pdev)
+> > +{
+> > +	struct imx_pcie *imx_pcie;
+> > +
+> > +	imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(bridge->sysdata));
+> > +	imx_pcie_remove_lut(imx_pcie, pci_dev_id(pdev));
+> > +}
+> > +
+> >  static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+> >  {
+> >  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > @@ -946,6 +1122,11 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+> >  		}
+> >  	}
+> >
+> > +	if (pp->bridge && imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT)) {
+> > +		pp->bridge->enable_device = imx_pcie_enable_device;
+> > +		pp->bridge->disable_device = imx_pcie_disable_device;
+> > +	}
+> > +
+> >  	imx_pcie_assert_core_reset(imx_pcie);
+> >
+> >  	if (imx_pcie->drvdata->init_phy)
+> > @@ -1330,6 +1511,8 @@ static int imx_pcie_probe(struct platform_device *pdev)
+> >  	imx_pcie->pci = pci;
+> >  	imx_pcie->drvdata = of_device_get_match_data(dev);
+> >
+> > +	mutex_init(&imx_pcie->lock);
+> > +
+> >  	/* Find the PHY if one is defined, only imx7d uses it */
+> >  	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
+> >  	if (np) {
+> > @@ -1627,7 +1810,8 @@ static const struct imx_pcie_drvdata drvdata[] = {
+> >  	},
+> >  	[IMX95] = {
+> >  		.variant = IMX95,
+> > -		.flags = IMX_PCIE_FLAG_HAS_SERDES,
+> > +		.flags = IMX_PCIE_FLAG_HAS_SERDES |
+> > +			 IMX_PCIE_FLAG_HAS_LUT,
+> >  		.clk_names = imx8mq_clks,
+> >  		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
+> >  		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
+> >
+> > --
+> > 2.34.1
+> >
 
