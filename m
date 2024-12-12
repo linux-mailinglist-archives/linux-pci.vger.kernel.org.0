@@ -1,215 +1,217 @@
-Return-Path: <linux-pci+bounces-18210-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18211-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09BDF9EDD1F
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 02:35:13 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4DB4167F6D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 01:35:08 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189AE71747;
-	Thu, 12 Dec 2024 01:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="MEAyikBU"
-X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 936139EDD65
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 03:10:46 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F38F61FD7;
-	Thu, 12 Dec 2024 01:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733967286; cv=pass; b=O4QPqoomx3ALJbucKc+AU5798wjgbeKpRilUcUtaUMeu8K32rgNz2dOPgISUvIMlvudQueSHi7K1KQ+BGln6+ZAWKREd9fnwBtZlCLdxC2KjMlEBQ0L5GvfIzqrfFIhCNhPHbpyuN1kj28qVLr+bzcoJviUI8dIhJCaRAG9Z+aY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733967286; c=relaxed/simple;
-	bh=KLxWFaaDF+cDRTd2G/MCadupPbA8MQ8L6qx4g0pnmIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UwEBkj0wEGOEYV4LwAwEwbzYrNYNHHzYhCoP+b7h5uVWeg1ap8BetY5fY5pJIIIgRu6nnpgi5Y/cRuOkwxj0tnYynQZcMrLSA+OwRxwYmCrZ/XUvHEH85x6JvbAnU60DgHc4lAgJQ3k/Q789LiCufZl3mNqOv6dMBmgj/QTIbHU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=MEAyikBU; arc=pass smtp.client-ip=136.143.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1733967266; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UwECDe0BrqCMGT3Tsai/M2obybX9neUccM5d6IX/mqsBDdAzcF1SXkzuQ+9/KrMXP3ytszI4r1SFDSLpQ/JxYLogIZZ+vuPu27aIhCL2sQqHBxob4ePqOkkKvkf8beoX2r88LSaofKbxTYuF18WnKBLZmZ9uoS3ND+Iz1Cgz7Ec=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1733967266; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=/zAzYfeI6PSkHjCt6+l45ujLT/1wh28c6GqI9MqVE9k=; 
-	b=BlkFqwwT7jwd5+TujYRdRNdprdxUambKwdFfw0GEnr5FOieUiys04byfcjnOJvwa6M/RL9HJUQNhckDGbSw/n/+WjHz6W2lS6nZDUkB55whqqisBOST2VVwwnYRQHuPn3fa2KNgKMSwF2YCPSftxbdezokI72MKMWmkkGw/RhoA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733967266;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
-	bh=/zAzYfeI6PSkHjCt6+l45ujLT/1wh28c6GqI9MqVE9k=;
-	b=MEAyikBUN4KtkedwY0CPGt7vD/FSkp1WOv0MZpvGlKbudHnY2nWuJAOsiz4Tm9dK
-	2U50zlGUt/S3720RNT/bKEAW6zUFagdC8eGqmti3BSre2T/lJTAqWtoy2JsmkgupL4C
-	TTuV4SVTgJpR8xDMkO4kvJbqbeJknV6iRoxFoDTo=
-Received: by mx.zohomail.com with SMTPS id 1733967264986906.6878328457522;
-	Wed, 11 Dec 2024 17:34:24 -0800 (PST)
-Message-ID: <ef7d45cc-d5ed-4a76-a9af-52c2a423ead0@zohomail.com>
-Date: Thu, 12 Dec 2024 09:34:19 +0800
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BB4F283778
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 02:10:45 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14468139D1B;
+	Thu, 12 Dec 2024 02:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pl423G1j"
+X-Original-To: linux-pci@vger.kernel.org
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDAA84A35
+	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 02:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733969440; cv=none; b=bl39UmsDvYXygFumANNT72FfHTdgwcav4VEDd6h8aGt1GH7s2w7LtbSCePJEpwAtXzzeDAUPO8H+ucpLXN3x/NQuSAYpk8cZY6QGFiEJdxwUqCCt/QxXUhPR7OdWaIYOFmcjUDWAiZHSs//RTHSVh1/X+ttcBAE10SGY1cE8ZWU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733969440; c=relaxed/simple;
+	bh=spUtHcPPJbNwPrwL4FiNj6XeBc/EajXKKYFSxtjemLY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ebMaajEKd4AJ2uubq6iTKk5Bz3YbnP26HIthdBWRFwObKlWHvc9TWqn7rKN3KuJmss5spzfcG60815pE4AaDs0vG+2GqvovohUH/cKiYCXAXbmdI2UkXA7aYfQglj+Taqpmj5PA3+O2j4EPN8inxMhEeAmV9L8SdJysDaaSUHV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pl423G1j; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-435004228c0so918255e9.0
+        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2024 18:10:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733969436; x=1734574236; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=scGk+jhmTsDeKJRBFJ2O5IixPKb7txuFEU5Rw3KyI2Q=;
+        b=pl423G1j6zsEehsgsROOP8yfF5JyrgAXOfz78YghVzaFY7HRLe0GgkHoZL95elUznG
+         pD7RhWwC2cGkS7dXW4Xe2L+GhhRjmEMD0wAnUkakLZ10kB2TCPsZj+K0C5CnElWUFif2
+         jo+WCfW6rO8+K6djxw3qOv5zaP+clKHFZ2fbHfwEJmLjlL3a2gyoqbU7mlE6cI8HFVAk
+         76Foy7HQqq4B+jabAD1a0grra6tvWzjbBCP/N0EMrmRn5hAto6Liax/5D7/AS0swMgHk
+         2FMWMhCdmP2AWZLPnWt7aU+qhRtPtMOzb9nwii91lpCT41i3IVvrWdGB5x3RGkwk5P3w
+         cPsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733969436; x=1734574236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=scGk+jhmTsDeKJRBFJ2O5IixPKb7txuFEU5Rw3KyI2Q=;
+        b=QolyqLPdJpvmLhzHE+8OkXy9THi981W3EWXzDHE74kTYc8PEsPqXJRJB8NRhh08mKt
+         FZUSdn+sz+w7W0iqsbbykH1kodUDsdgO6AzyBAMs8lT/9eQxJznmt/UvoNWfBBYtG0vX
+         hy3b3FjoyRzAEQeNJtSqYbvxor09ieY7is3UqsDwaU4hnN/3j5BNx+QOSkFi0d9iTO2z
+         /V7CMhWNl0a4dCG72ZF9YDTAG/OHxJOATqKtWNefD+D9Ywij8jQAOwHoq8clmLbrbLLL
+         Ln2CTZNEqhs3Sl1vHWNNOqM5wbiJys/b6nubDHMHWK0LbLCOaHNg6p3IgW69X3r2IFL8
+         68Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcCD/WOcmkjr1u5XSt4HCxybTkO8gEsUkJNdtHr0CA+K5kS2bPyqSWzSeiyLeto2TZequyPS4tCC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVAOHp/AWKBDT4hLJmN+k2DMHF76ZhUeBxv3dJh7rEB7LHR8m7
+	Rk/aOLNS3ms4iWbNdxlKdlRJH7qnE99MEN43BOwZ2nLrhBdEBjOEsDuwoEnBxqZmNOlET2EQyO3
+	qYC+RJFxXSZj2zEGWKMPLIFtbVrxMKYx1B97ohA==
+X-Gm-Gg: ASbGncsh1rOYMJeEYmZM7UKxhqnhuCV/tCsZ87HVMzkAKYSrMyzQzddI7uH+0uOnq2d
+	0gWflXaSS2+N6wHnKoJcTWWPBmzEnzIYVqSOnVIxjKAQCLUjrJn0uy7A6A6/Dp5WWow+V0Q==
+X-Google-Smtp-Source: AGHT+IHBx39xZcFgFzsVQ+rnkny559PaBrW3cVqVsjq3DJPY+URL01bH3evGC+t2KLYI/LSoNGMILFwWBC7IgTsoQOA=
+X-Received: by 2002:a05:600c:4f11:b0:428:d31:ef25 with SMTP id
+ 5b1f17b1804b1-4361c3ab1bdmr44897445e9.12.1733969435848; Wed, 11 Dec 2024
+ 18:10:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/15] PCI/AER: Modify AER driver logging to report CXL
- or PCIe bus error type
-To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- nifan.cxl@gmail.com, ming4.li@intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- PradeepVineshReddy.Kodamati@amd.com
-References: <20241211234002.3728674-1-terry.bowman@amd.com>
- <20241211234002.3728674-5-terry.bowman@amd.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20241211234002.3728674-5-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227c741f4742d9ef0e0fb386338000004c7fb93fd456f8aefcef903ee1aff76f5bed377f8d51fab79:zu080112277a838a0372edc9d97d63627a000051e7e3d61a484978f27332cd6960e73c6fc115bf4911b8a48e:rf0801122b8692146451b7c785712ddf500000a048d575bfeca5188fcb442fe9f6b3587662d52a3a49287768cf49f9c2:ZohoMail
-X-ZohoMailClient: External
+References: <20241210224947.23804-1-dakr@kernel.org> <20241210224947.23804-14-dakr@kernel.org>
+In-Reply-To: <20241210224947.23804-14-dakr@kernel.org>
+From: Fabien Parent <fabien.parent@linaro.org>
+Date: Wed, 11 Dec 2024 18:10:24 -0800
+Message-ID: <CAPFo5V+WMxS5joVOJrxr_vaEpo+vdTcfffbpWDe2dtw7kP6rnw@mail.gmail.com>
+Subject: Re: [PATCH v5 13/16] rust: driver: implement `Adapter`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, 
+	j@jannau.net, chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/12/2024 7:39 AM, Terry Bowman wrote:
-> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors.
+Hi Danilo,
+
+On Tue, Dec 10, 2024 at 2:51=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
-> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL
-> device errors.
+> In order to not duplicate code in bus specific implementations (e.g.
+> platform), implement a generic `driver::Adapter` to represent the
+> connection of matched drivers and devices.
 >
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Bus specific `Adapter` implementations can simply implement this trait
+> to inherit generic functionality, such as matching OF or ACPI device IDs
+> and ID table entries.
+>
+> Suggested-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
->  drivers/pci/pcie/aer.c  | 14 ++++++++------
->  include/ras/ras_event.h |  9 ++++++---
->  2 files changed, 14 insertions(+), 9 deletions(-)
+>  rust/kernel/driver.rs | 59 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 58 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index fe6edf26279e..53e9a11f6c0f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -699,13 +699,14 @@ static void __aer_print_error(struct pci_dev *dev,
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->  	int layer, agent;
->  	int id = pci_dev_id(dev);
->  	const char *level;
->  
->  	if (!info->status) {
-> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> -			aer_error_severity_string[info->severity]);
-> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> +			bus_type, aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
->  
-> @@ -714,8 +715,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
->  
-> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		   aer_error_severity_string[info->severity],
-> +	pci_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-> +		   bus_type, aer_error_severity_string[info->severity],
->  		   aer_error_layer[layer], aer_agent_string[agent]);
->  
->  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> @@ -730,7 +731,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	if (info->id && info->error_dev_num > 1 && info->id == id)
->  		pci_err(dev, "  Error of this Agent is reported first\n");
->  
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
->  			info->severity, info->tlp_header_valid, &info->tlp);
+> diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+> index ab0bb46fe2cc..d169899a5da1 100644
+> --- a/rust/kernel/driver.rs
+> +++ b/rust/kernel/driver.rs
+> @@ -6,7 +6,9 @@
+>  //! register using the [`Registration`] class.
+>
+>  use crate::error::{Error, Result};
+> -use crate::{init::PinInit, str::CStr, try_pin_init, types::Opaque, ThisM=
+odule};
+> +use crate::{
+> +    device, device_id, init::PinInit, of, str::CStr, try_pin_init, types=
+::Opaque, ThisModule,
+> +};
+>  use core::pin::Pin;
+>  use macros::{pin_data, pinned_drop};
+>
+> @@ -114,3 +116,58 @@ macro_rules! module_driver {
+>          }
+>      }
 >  }
->  
-> @@ -764,6 +765,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		   struct aer_capability_regs *aer)
->  {
-> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->  	int layer, agent, tlp_header_valid = 0;
->  	u32 status, mask;
->  	struct aer_err_info info;
-> @@ -798,7 +800,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  	if (tlp_header_valid)
->  		__print_tlp_header(dev, &aer->header_log);
->  
-> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
->  			aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
-> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-> index e5f7ee0864e7..1bf8e7050ba8 100644
-> --- a/include/ras/ras_event.h
-> +++ b/include/ras/ras_event.h
-> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
->  
->  TRACE_EVENT(aer_event,
->  	TP_PROTO(const char *dev_name,
-> +		 const char *bus_type,
->  		 const u32 status,
->  		 const u8 severity,
->  		 const u8 tlp_header_valid,
->  		 struct pcie_tlp_log *tlp),
->  
-> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
->  
->  	TP_STRUCT__entry(
->  		__string(	dev_name,	dev_name	)
-> +		__string(	bus_type,	bus_type	)
->  		__field(	u32,		status		)
->  		__field(	u8,		severity	)
->  		__field(	u8, 		tlp_header_valid)
-> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
->  
->  	TP_fast_assign(
->  		__assign_str(dev_name);
-> +		__assign_str(bus_type);
->  		__entry->status		= status;
->  		__entry->severity	= severity;
->  		__entry->tlp_header_valid = tlp_header_valid;
-> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
->  		}
->  	),
->  
-> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
-> -		__get_str(dev_name),
-> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-> +		__get_str(dev_name), __get_str(bus_type),
->  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
->  			__entry->severity == AER_FATAL ?
->  			"Fatal" : "Uncorrected, non-fatal",
+> +
+> +/// The bus independent adapter to match a drivers and a devices.
+> +///
+> +/// This trait should be implemented by the bus specific adapter, which =
+represents the connection
+> +/// of a device and a driver.
+> +///
+> +/// It provides bus independent functions for device / driver interactio=
+ns.
+> +pub trait Adapter {
+> +    /// The type holding driver private data about each device id suppor=
+ted by the driver.
+> +    type IdInfo: 'static;
+> +
+> +    /// The [`of::IdTable`] of the corresponding driver.
+> +    fn of_id_table() -> of::IdTable<Self::IdInfo>;
 
-Hi Terry,
+I think we may want this to return an Option<of::IdTable<Self::IdInfo>>
+instead. I don't think we want to force every bus abstraction to have
+to implement every possible IdTable that this adapter will support.
 
+For instance if your driver only supports ACPI, it will still be required
+to provide an empty OF table because the bus abstraction needs it
+for implementing this trait.
 
-Patch #3 is using flexbus dvsec to identify CXL RP/USP/DSP. But per CXL r3.1 section 9.12.3 "Enumerating CXL RPs and DSPs", there may be a flexbus dvsec if CXL RP/DSP is in disconnect state or connecting to a PCIe device.
-
-If a PCIe device connects to a CXL RP/DSP, and the CXL RP/DSP reports an error, the error log will be also "CXL Bus Type", is it expected? My understanding is that the CXL RP/DSP is working on PCIe mode.
-
-If not, I think that setting "pci_dev->is_cxl" during cxl port enumeration and CXL device probing is another option.
-
-
-Thanks
-
-Ming
-
+> +
+> +    /// Returns the driver's private data from the matching entry in the=
+ [`of::IdTable`], if any.
+> +    ///
+> +    /// If this returns `None`, it means there is no match with an entry=
+ in the [`of::IdTable`].
+> +    #[cfg(CONFIG_OF)]
+> +    fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo>=
+ {
+> +        let table =3D Self::of_id_table();
+> +
+> +        // SAFETY:
+> +        // - `table` has static lifetime, hence it's valid for read,
+> +        // - `dev` is guaranteed to be valid while it's alive, and so is=
+ `pdev.as_ref().as_raw()`.
+> +        let raw_id =3D unsafe { bindings::of_match_device(table.as_ptr()=
+, dev.as_raw()) };
+> +
+> +        if raw_id.is_null() {
+> +            None
+> +        } else {
+> +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of =
+`struct of_device_id` and
+> +            // does not add additional invariants, so it's safe to trans=
+mute.
+> +            let id =3D unsafe { &*raw_id.cast::<of::DeviceId>() };
+> +
+> +            Some(table.info(<of::DeviceId as device_id::RawDeviceId>::in=
+dex(id)))
+> +        }
+> +    }
+> +
+> +    #[cfg(not(CONFIG_OF))]
+> +    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo=
+> {
+> +        None
+> +    }
+> +
+> +    /// Returns the driver's private data from the matching entry of any=
+ of the ID tables, if any.
+> +    ///
+> +    /// If this returns `None`, it means that there is no match in any o=
+f the ID tables directly
+> +    /// associated with a [`device::Device`].
+> +    fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> +        let id =3D Self::of_id_info(dev);
+> +        if id.is_some() {
+> +            return id;
+> +        }
+> +
+> +        None
+> +    }
+> +}
+> --
+> 2.47.0
+>
 
