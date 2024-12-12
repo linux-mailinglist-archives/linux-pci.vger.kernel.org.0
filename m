@@ -1,194 +1,137 @@
-Return-Path: <linux-pci+bounces-18245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AF1B9EE37B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 10:53:45 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1CDB9EE3F1
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 11:17:12 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E23D280C63
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 09:53:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B77F160451
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2024 10:17:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC8720E6FE;
-	Thu, 12 Dec 2024 09:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 354221EC4D0;
+	Thu, 12 Dec 2024 10:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HLHDjaXv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSsWCZT2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EA220E6EF
-	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 09:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6428820E6E8
+	for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 10:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733997220; cv=none; b=UdaToK8AZMFytvAqRAdHXNiR09t45hw7VSk1BDCbp6YfF8wJUUmvYD0M5GHtmOpyHauKSV0jYIHjlGVqSD12uLpzHNuxaJqCOn5UxceDFsrdcUoJ9Ot4rVJFdEOxLTVml2w+gTuj6W6/pU4/aVM1SB0jU859/Xa8au1b01ipVPY=
+	t=1733998626; cv=none; b=XBdtUs8YDcCiO91kmkN+eneyo4qk1wf/1HCi/Rr7kodmpTt0Je3g1WR48aB/yrP2hoeMffV2tLd0cl7Rsiqwk4H9Jl78v7OBalBn2TDppFyOv5WN+vSRnvgH+mY/WecMh3wNGPW5LtRXZuVU1amgg7AzI5fseyFtj75RcvMoqdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733997220; c=relaxed/simple;
-	bh=TaI1Dcx+eELk9hTyKx75u7qeSvVJzGBRlCGF9iGcreo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J70LhdHxQFyO+Rm9gospKb6GqDZaNsm8H/lo/kcZlN5ZzSZmgGMQ84oSgut5XnD1x+EQ6xtbFYFL/F9tWt+9I9D9PZalivf8QpH7dY7jc0AuvvmfzJiP8fFiiwrreQ7JFTONfVtvOSHdECZfFldFaB/M+84i4UPT9tpEZLOysPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HLHDjaXv; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733997219; x=1765533219;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TaI1Dcx+eELk9hTyKx75u7qeSvVJzGBRlCGF9iGcreo=;
-  b=HLHDjaXvA/2N1JvilRCZbVrEe2VxPRqq29niNBi4GdvNBzm1M/TkwJBQ
-   IhSb7PJdtyCzUM28ZnneQONjP37J7wBPHNIOnpGlf/UQG4IJzW9NXBu4A
-   shpDNRFcLHKMSptUZ8mxYFC3EdOphL3H2/1tzYjkuiXuetM7FYHqQ0T1Y
-   6Ym+6dmprUsCVO6x1UO2Nb86pQUMZLX+IeZ43WpwkZEP3sEwGer6kuc3O
-   lvGQmM8aA8YYhP6NqN0EYE3BjO6eWRQZkhMReaumwWEghm92HAZU6WCCR
-   bFNDR19gYZR58jeQX/EI6t0a8CsUwSMeABSIb9NgmMBeivcqIbfeCEYLS
-   w==;
-X-CSE-ConnectionGUID: ZCbhhti2TOWJ0BcmBsPigA==
-X-CSE-MsgGUID: kOSc1jWMQMiqIgzgkKNYiA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11283"; a="21997554"
-X-IronPort-AV: E=Sophos;i="6.12,228,1728975600"; 
-   d="scan'208";a="21997554"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 01:53:38 -0800
-X-CSE-ConnectionGUID: kfDg5nk1RiGc12L9CzFKjA==
-X-CSE-MsgGUID: MDwheczeTY2+u+x6yvDAnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,228,1728975600"; 
-   d="scan'208";a="96074112"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa009.jf.intel.com with ESMTP; 12 Dec 2024 01:53:36 -0800
-Date: Thu, 12 Dec 2024 17:50:18 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <Z1qx2nAHbZN72Ljf@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
+	s=arc-20240116; t=1733998626; c=relaxed/simple;
+	bh=j6sNSSpKZ3LKKYS3NHkAfIesC05rsXqB571iPrdFdr8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IsjrQztojze8XECVHapCSLnTSkv72ok3V06Uzlsk7HOus3rNLw+yRGrpn9jtvmALD/20YBy+L3MYvWa67mpk8awdfqXKBaw/TRoBWiX1+ZEHbCiZCxpJkTwYhxqlvCjit/ybPWDtP9U4w1M4ppyda10XRwJUJNxlgbiQua/SdU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSsWCZT2; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e39779a268bso334150276.1
+        for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 02:17:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733998623; x=1734603423; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=j6sNSSpKZ3LKKYS3NHkAfIesC05rsXqB571iPrdFdr8=;
+        b=jSsWCZT2ubEWqVsyhXW2500C/TKUFPzdQXqK+4nf76ekBGei4Xfco0UxRgG5YpLybM
+         dYFij3QUFg5bNCwDIOo8vO5FXKFsGxLiYVMRimTrh5EPK6TN+2H4irs2ZuQcVfDXbiU5
+         E7O/eQa1QHllVI9cL7v2lx/5lJhjhFkZTkNudK9IJQQqjJzDw3y7f1k+MaZxXHIX/qjx
+         tNIELWsf6r2KPUcp2zxuubWxXBmz3caIKp38fQXH+xaOgkzpUANZB+qdLHwbLsbVFTWr
+         se9bYe8haKv5ZCXQ+autgWh1vmOKhCtaGVwrcu/FibwR7m00P0VcMSPtjE0SB/BBOAYU
+         FLFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733998623; x=1734603423;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j6sNSSpKZ3LKKYS3NHkAfIesC05rsXqB571iPrdFdr8=;
+        b=librAGMpnfCK6cxriJRSykdRD0Gu9Mt5uYLcCNlKa7+MjrgcfWKu/hTDCn3PWZsyXO
+         dQf1ZHFUN/yBvaRYnuH19fAqjXnbteoEhGIlhirOuAdkCutHgtN/FLyzhqjf8Lj35+qX
+         6FM2lcqsycJ2djs2m1xwstf41u0BvNLSlMqZv2drZCHFRxRPseXyFtC9iIkKJkCVWKdF
+         eVRHAKdcLiXk/eg4YvcBE5jdPnim+CuUy4hzEXNPoW4QxEiIUUili/Lll/Yqiny/3Z2l
+         cmHBH0Vfq26B2gp9GRXgASJgVE6TlaqcMXwfiNawznA6jlrJmu0blRLX51pN0zn/hFhM
+         4X+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXRS2ltHdWWi0+q7va3G6Yp0YPUuoOruTf475bBg/qoZRibKE2+8I1a1D61v7nk+7/iVjHBnISO0qQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFQHdDahwA5Ki89qkfd5pG7sSUwN+JvdbPDCsMuyWepLej3ljw
+	6aEBe6PtZUbN0hs41W6golKwWsid6IIEfNHFZ3ZBuzkjVtGky2ndDNlxqtvKfBtcBUcVKBn0Ce3
+	j2cBgQee5xUr70TWFlKecCaFokzQ=
+X-Gm-Gg: ASbGnctbejyaBowUU9hBrWMV7Qs3sTChxOMMVtcmW8tYS7LKNNnBDnNqdnqKRbvOkKv
+	DY9BCiyq5sisL2hZlla0nw+ebE2UQxs17EDX92OA=
+X-Google-Smtp-Source: AGHT+IFQ0mnoL4s3ntbi4EPBBc/tu7a6QOuEiTV3ORYuJ4Ti5V51Ij6T2l2YWjVzp70tafOWDPy1U2td8emRHbbjmWs=
+X-Received: by 2002:a25:8284:0:b0:e38:81cc:f95 with SMTP id
+ 3f1490d57ef6-e3dc9270f8amr1913454276.10.1733998623325; Thu, 12 Dec 2024
+ 02:17:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
+References: <20241210093408.105867-1-dlemoal@kernel.org>
+In-Reply-To: <20241210093408.105867-1-dlemoal@kernel.org>
+From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Date: Thu, 12 Dec 2024 11:16:26 +0100
+Message-ID: <CAAEEuhotOFTYc27n8wsnPtJ1fW2GHk5zRp3EeytjH=EZ2gxd5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 00/17] NVMe PCI endpoint target driver
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>, 
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, linux-pci@vger.kernel.org, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-> +static int pci_tsm_disconnect(struct pci_dev *pdev)
-> +{
-> +	struct pci_tsm *pci_tsm = pdev->tsm;
-> +
-> +	lockdep_assert_held(&pci_tsm_rwsem);
-> +	if_not_guard(mutex_intr, &pci_tsm->lock)
-> +		return -EINTR;
-> +
-> +	if (pci_tsm->state < PCI_TSM_CONNECT)
-> +		return 0;
-> +	if (pci_tsm->state < PCI_TSM_INIT)
-> +		return -ENXIO;
+Hello,
+I have tested the NVMe endpoint function extensively on two extra
+platforms to run on, the FriendlyElec CM3588+NAS Kit [1] and NanoPC T6
+[2] (with PCIe x1, x2, and x4 links).
 
-Check PCI_TSM_INIT first, or this condition will never hit.
+Besides testing with Linux based hosts (Ubuntu 20.04, 23.10, 24.04), I
+also tested that the NVMe device is recognized by a Windows 10
+Enterprise host and can be formatted and used as a regular disk. I
+also tested on MacOS Monterey on a Macbook Pro 2016 (Intel based) host
+through a M.2 to USB-C adapter [3], the drive is recognized and
+usable.
 
-  if (pci_tsm->state < PCI_TSM_INIT)
-	return -ENXIO;
-  if (pci_tsm->state < PCI_TSM_CONNECT)
-	return 0;
+The USB-C adapter is based on the ASM2464PD chipset [4] which does
+USB4/Thunderbolt to PCIe/NVMe, I tested with PCI over Thunderbolt with
+the MacOS host, so the host sees the NVMe endpoint function directly
+as a PCI device and the NVMe drive is seen as such. This works well.
 
-I suggest the same sequence for pci_tsm_connect().
+The only test case that did not work is when I tested the ASM2464PD
+chipset NVMe to regular USB functionality, where the chipset is the
+host, and presents itself to the PC as a "usb-storage" class device,
+but this didn't work because the ASM2464PD never enabled the NVMe
+controller (CC.EN bit in BAR0), the PCI Link between the ASM2464PD and
+endpoint function gets up however, and to the host PC the USB device
+is recognized ("usb-storage" class, like a USB stick, e.g., /dev/sda),
+but it cannot be read (shows as 0B block device). As I cannot debug
+the chipset itself I don't know why the NVMe endpoint doesn't get
+enabled. This might very well be a quirk in the ASM2464PD chipset and
+is a very specific use case so I don't think it indicates any major
+issues with the endpoint function, but I report it here for the sake
+of completion.
 
-> +
-> +	tsm_ops->disconnect(pdev);
-> +	pci_tsm->state = PCI_TSM_INIT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_tsm_connect(struct pci_dev *pdev)
-> +{
-> +	struct pci_tsm *pci_tsm = pdev->tsm;
-> +	int rc;
-> +
-> +	lockdep_assert_held(&pci_tsm_rwsem);
-> +	if_not_guard(mutex_intr, &pci_tsm->lock)
-> +		return -EINTR;
-> +
-> +	if (pci_tsm->state >= PCI_TSM_CONNECT)
-> +		return 0;
-> +	if (pci_tsm->state < PCI_TSM_INIT)
-> +		return -ENXIO;
-> +
-> +	rc = tsm_ops->connect(pdev);
-> +	if (rc)
-> +		return rc;
-> +	pci_tsm->state = PCI_TSM_CONNECT;
-> +	return 0;
-> +}
-> +
+I have tested with different storage backend devices for actual
+storage (USB, eMMC, and NVMe (PCIe x1, x2) on the NAS kit).
 
-[...]
+In summary, over PCI the endpoint function works well with all three
+Linux/MacOS/Windows hosts.
 
-> +
-> +static void __pci_tsm_init(struct pci_dev *pdev)
-> +{
-> +	bool tee_cap;
-> +
-> +	if (!is_physical_endpoint(pdev))
-> +		return;
+Tested-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+(I don't know if this applies as I co-developed the endpoint function
+with Damien)
 
-This Filters out virtual functions, just because not ready for support,
-is it?
+Best regards,
+Rick
 
-> +
-> +	tee_cap = pdev->devcap & PCI_EXP_DEVCAP_TEE;
-> +
-> +	if (!(pdev->ide_cap || tee_cap))
-> +		return;
-> +
-> +	lockdep_assert_held_write(&pci_tsm_rwsem);
-> +	if (!tsm_ops)
-> +		return;
-> +
-> +	struct pci_tsm *pci_tsm __free(kfree) = kzalloc(sizeof(*pci_tsm), GFP_KERNEL);
-> +	if (!pci_tsm)
-> +		return;
-> +
-> +	/*
-> +	 * If a physical device has any security capabilities it may be
-> +	 * a candidate to connect with the platform TSM
-> +	 */
-> +	struct pci_dsm *dsm __free(dsm_remove) = tsm_ops->probe(pdev);
-
-IIUC, pdev->tsm should be for every pci function (physical or virtual),
-pdev->tsm->dsm should be only for physical functions, is it?
-
-> +
-> +	pci_dbg(pdev, "Device security capabilities detected (%s%s ), TSM %s\n",
-> +		pdev->ide_cap ? " ide" : "", tee_cap ? " tee" : "",
-> +		dsm ? "attach" : "skip");
-> +
-> +	if (!dsm)
-> +		return;
-> +
-> +	mutex_init(&pci_tsm->lock);
-> +	pci_tsm->doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
-> +					       PCI_DOE_PROTO_CMA);
-> +	if (!pci_tsm->doe_mb) {
-> +		pci_warn(pdev, "TSM init failure, no CMA mailbox\n");
-> +		return;
-> +	}
-> +
-> +	pci_tsm->state = PCI_TSM_INIT;
-> +	pci_tsm->dsm = no_free_ptr(dsm);
-> +	pdev->tsm = no_free_ptr(pci_tsm);
-> +	sysfs_update_group(&pdev->dev.kobj, &pci_tsm_auth_attr_group);
-> +	sysfs_update_group(&pdev->dev.kobj, &pci_tsm_attr_group);
-> +	if (pci_tsm_owner_attr_group)
-> +		sysfs_merge_group(&pdev->dev.kobj, pci_tsm_owner_attr_group);
-> +}
+[1] https://wiki.friendlyelec.com/wiki/index.php/CM3588
+[2] https://wiki.friendlyelec.com/wiki/index.php/NanoPC-T6
+[3] https://www.aliexpress.com/item/1005006316029054.html
+[4] https://www.asmedia.com.tw/product/802zX91Yw3tsFgm4/C64ZX59yu4sY1GW5/ASM2464PD
 
