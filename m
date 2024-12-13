@@ -1,143 +1,269 @@
-Return-Path: <linux-pci+bounces-18355-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18349-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08E059F0505
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 07:47:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98F949F03DA
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 05:38:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23A26161230
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 06:47:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C98E51883518
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 04:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C1818CC08;
-	Fri, 13 Dec 2024 06:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14652F43;
+	Fri, 13 Dec 2024 04:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ClVzhtY3"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="ZBxSKSuE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1973189.qiye.163.com (mail-m1973189.qiye.163.com [220.197.31.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B1D18C03B
-	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 06:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1F6157465
+	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 04:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734072456; cv=none; b=OKYXfK0CZsrwdDSG6FCIk5JkcM4ZM6nGppXJN/oldWjD+cucA+kOpVgG8Cu6zme/FEiiOR36c8Ms76LOpqBZi/lyYUV5zLpx2j1HozKFpbmTiiIzstLoV6cClOSxazn4G8cllM268Tl7I0OM+TxJQyyn12nFqxdgkbHfZ08Xm8E=
+	t=1734064683; cv=none; b=KISR+6LGYjrDdL8NYQ8dyiG0ky20x8vf5EKhwCaYfuQstuDDBp/eP9+upmgc0feZO/YsC2Ndh2Kc+C1nBF2LhuPIbhle35vynoIrCIsyWggF6OLztu+Kft+xIbupztugGwvW4AmPz+a/u74U3YXMOB8zzh9d6mfOMEpLB+LEqbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734072456; c=relaxed/simple;
-	bh=PfFBxxqBsrfSTPD05tZ98ztyI/YLGrFgtqa+ZxVUFjM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TKXHxn7Likzjk14kfZnynZpsOBFE/JlNJDtsuT2/losS93CTOvS9u9NUnPo+uVbhxwas3rnWxfwC3w8z2D2xbXToks3zy4WK8Y8L8wdRs/BqcyKxJI2XmdMu2kPaEccj79Z5yDS2/k0TFh8NMO47a1VlTrJ/XbBjfO9UmTna75w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ClVzhtY3; arc=none smtp.client-ip=220.197.31.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 59d5a5dd;
-	Fri, 13 Dec 2024 12:25:03 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pci@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v3 2/2] perf/dwc_pcie: Add support for Rockchip SoCs
-Date: Fri, 13 Dec 2024 12:24:03 +0800
-Message-Id: <1734063843-188144-2-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1734063843-188144-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1734063843-188144-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0MaT1ZOT09LGEIYGR1DQkhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a93be4352e409cckunm59d5a5dd
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MT46NDo*IzIWSSgeOksIQxIL
-	GkIwCT1VSlVKTEhPS01IQktPSE9PVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlOSk43Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=ClVzhtY3Z3mh8wYBSeZJbJo20gPm9FFsLjh62S17Yn/Ymh9g9Yn4iuE6Gysag15Z65H0qdi5JUARUZPlhDUFK18MS4BiLliH8LE9q06wWa2z6wJ0ypmBYbuLmoz28EgI62cu1URsxrMFW4MOBB1tNFyvc/aAB/6kuWzmu3cCkTQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=Cshq1RwCXcGI6mKIyJp7j0jn9Uct0z6UaFLXnK3Sd5Y=;
-	h=date:mime-version:subject:message-id:from;
+	s=arc-20240116; t=1734064683; c=relaxed/simple;
+	bh=GVgXu4A3zASfuRz7mMyfcROq9TZkNBgnJ+YD5t4en8A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fToL6KeVgrvuKjq/dNO22D31lXJh6AOgjE8BczoWJ1vFY6FIKCnnjTxb+LuOzJ5KFigQNoeThnghbYGNBxyG48Wqn2I1mRgdCd2A5ZbwqFjXcv2CQ8f4Q+XGWGSbe/DDzTkAhLL/FHfuYgLVcK769mNZqmAqJb3nLXEmppMHKHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=ZBxSKSuE; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e0875f1e9edso933852276.1
+        for <linux-pci@vger.kernel.org>; Thu, 12 Dec 2024 20:38:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1734064680; x=1734669480; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CA0VTqFeX4vfwfePnuPtsMQ981tGJ5bnrr7HfndGMDA=;
+        b=ZBxSKSuE3RHyAOX9WaUrgcJYn5f0iE/1jU9tHa385Vw33USPmfFHpZ0Dl4C4B5cju/
+         EriNXPP6yRKQss8dgqDWKc7G/C2YDNGQeaoHBfc4OssZXupqSz0+p8+zId/U1FgQ0PUO
+         71nVfrXKEYaJUwxuXKb4qBaXGuDN5htTBix/yNPnSvKyeR87xQ1DDO11Pq/s2AGU3PWM
+         koOuuD0bdQUzRmsZb67GM7k4iFvgIUWyjLjY44iSVnbGkg1MGjMLGOSddZbFNVHT+9TZ
+         qG6W0HMWjZ8+1J4SCNSaopoPcIClhaYMLcDOyPheXSCvxzSzwCBalauv9WJUCrD71FUx
+         +uHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734064680; x=1734669480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CA0VTqFeX4vfwfePnuPtsMQ981tGJ5bnrr7HfndGMDA=;
+        b=ionFSuUNBFPhz9Zg73WtcEr8azfuDu340810D47r3fLXBPk5XxTrHYpoSelSbU1W0I
+         hFYwr2Re+frWfKleFcv3Cisy6G8wwxxhHHw46+6SHbCfoNbcJuZTBtM4DTuZHQ5Isc9W
+         zGqnF9vmhoL+wyRRj0hNCT8Fi8Ck/pDs3BllJv1hUcAYTFFtfcCFOE0MEYnnV10xc8zT
+         aPr0V4EL26JxTxLoqBdaGSPMrANPl5AckxLLNuje2H+csBpFUL5Aclr1IaauO1Y2UqBs
+         4t7uCRcFH1IyEAPV+JithOIQ8T/6caSRSdy6NMtRlekHZQXaj7pw1ZznXQQ3EWCac7xr
+         hGNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKoJWX0cbIY88+hYYnco0XpUOAoz5UZaLX8UOOk1FopTkVx3WeMvFOV37pgXH4910G9bCOH2oUC+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIyxc6YKsxB5T5TGdLmYL57ZRzgqRUewVg3CcHcPmsjNF9inTg
+	2WWKwGRMd56pye+MzFxs2CIT5KH7CVXD/5A61pkCwt0tRIXi96PLuZRWqjMBmlt/oYGClobSqzd
+	RdYbIbFAFUo8zNYEWv7j/rX1NCEh+Ez34XTLT2A==
+X-Gm-Gg: ASbGnctGlvCVAUQHfJPG3R9XoP6p6sryn4IaDnFcjUTcKwLdGcxQnmrnwk2FImlwgLq
+	VnI2JC167EILytEUKYFqEx6E6qkvqCZVBOV5qYA==
+X-Google-Smtp-Source: AGHT+IHbH63ESaEqwIP/PH2guFIwaDf91nGUtlEaO6s/N+vuTmmeMnoA6MXg8WxKC8sCCjMLJi7yBD5jbJKYj+SbYVc=
+X-Received: by 2002:a05:6902:2213:b0:e38:8e02:1f13 with SMTP id
+ 3f1490d57ef6-e4348f184e8mr1243306276.10.1734064680440; Thu, 12 Dec 2024
+ 20:38:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20241115072200.37509-3-jhp@endlessos.org> <20241212230340.GA3267194@bhelgaas>
+In-Reply-To: <20241212230340.GA3267194@bhelgaas>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 13 Dec 2024 12:37:24 +0800
+Message-ID: <CAPpJ_eeHbQBtNK=0rJG-jzU-jZ=Tc1RknwrQgsFgEjr1qTqyqg@mail.gmail.com>
+Subject: Re: [PATCH v13] PCI/ASPM: Make pci_save_aspm_l1ss_state save both
+ child and parent's L1SS configuration
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	Nirmal Patel <nirmal.patel@linux.intel.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux@endlessos.org, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"David E. Box" <david.e.box@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for Rockchip SoCs by adding vendor ID to the vendor list.
-And fix the lane-event based enable/disable/read process which is slightly
-different on Rockchip SoCs, by checking vendor ID.
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2024=E5=B9=B412=E6=9C=8813=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=887:03=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Fri, Nov 15, 2024 at 03:22:02PM +0800, Jian-Hong Pan wrote:
+> > PCI devices' parameters on the VMD bus have been programmed properly
+> > originally. But, cleared after pci_reset_bus() and have not been restor=
+ed
+> > correctly. This leads the link's L1.2 between PCIe Root Port and child
+> > device gets wrong configs.
+> >
+> > Here is a failed example on ASUS B1400CEAE with enabled VMD. Both PCIe
+> > bridge and NVMe device should have the same LTR1.2_Threshold value.
+> > However, they are configured as different values in this case:
+> >
+> > 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Proces=
+sor PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
+> >   ...
+> >   Capabilities: [200 v1] L1 PM Substates
+> >     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Sub=
+states+
+> >       PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50us
+> >     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> >       T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+> >     L1SubCtl2: T_PwrOn=3D0us
+> >
+> > 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Bl=
+ue SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+> >   ...
+> >   Capabilities: [900 v1] L1 PM Substates
+> >     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Sub=
+states+
+> >       PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10us
+> >     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> >       T_CommonMode=3D0us LTR1.2_Threshold=3D101376ns
+> >     L1SubCtl2: T_PwrOn=3D50us
+> >
+> >
+> > Here is VMD mapped PCI device tree:
+> >
+> > -+-[0000:00]-+-00.0  Intel Corporation Device 9a04
+> >  | ...
+> >  \-[10000:e0]-+-06.0-[e1]----00.0  Sandisk Corp WD Blue SN550 NVMe SSD
+> >               \-17.0  Intel Corporation Tiger Lake-LP SATA Controller
+> >
+> > When pci_reset_bus() resets the bus [e1] of the NVMe, it only saves and
+> > restores NVMe's state before and after reset. Then, when it restores th=
+e
+> > NVMe's state, ASPM code restores L1SS for both the parent bridge and th=
+e
+> > NVMe in pci_restore_aspm_l1ss_state(). The NVMe's L1SS is restored
+> > correctly. But, the parent bridge's L1SS is restored with a wrong value=
+ 0x0
+> > because the parent bridge's L1SS wasn't saved by pci_save_aspm_l1ss_sta=
+te()
+> > before reset.
+>
+> I think the important thing here is that currently
+> pci_save_aspm_l1ss_state() saves only the child L1SS state, but
+> pci_restore_aspm_l1ss_state() restores both parent and child, and the
+> parent state is garbage.
+>
+> Obviously nothing specific to VMD or NVMe or SATA.
+>
+> > To avoid pci_restore_aspm_l1ss_state() restore wrong value to the paren=
+t's
+> > L1SS config like this example, make pci_save_aspm_l1ss_state() save the
+> > parent's L1SS config, if the PCI device has a parent.
+>
+> I tried to simplify the commit log and the patch so it's a little more
+> parallel with pci_restore_aspm_l1ss_state().  Please comment and test.
+>
+> Bjorn
+>
+> commit c93935e3ac92 ("PCI/ASPM: Save parent L1SS config in pci_save_aspm_=
+l1ss_state()")
+> Author: Jian-Hong Pan <jhp@endlessos.org>
+> Date:   Fri Nov 15 15:22:02 2024 +0800
+>
+>     PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
+>
+>     After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+>     suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS state =
+for
+>     "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for bo=
+th
+>     "dev" and its parent.
+>
+>     The problem is that unless pci_save_state() has been used in some oth=
+er
+>     path and has already saved the parent L1SS state, we will restore jun=
+k to
+>     the parent, which means the L1 Substates likely won't work correctly.
+>
+>     Save the L1SS config for both the device and its parent in
+>     pci_save_aspm_l1ss_state().  When restoring, we need both because L1S=
+S must
+>     be enabled at the parent (the Downstream Port) before being enabled a=
+t the
+>     child (the Upstream Port).
+>
+>     Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endlessos.=
+org
+>     Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for s=
+uspend/resume")
+>     Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+>     Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>     Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+>     [bhelgaas: parallel save/restore structure, simplify commit log]
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Thanks for the simplification!
+Tested on my Asus B1400CEAE. Both the "dev" (NVMe) and the parent (PCI
+bridge) keep the correct L1SS config.
 
----
+Tested-by: Jian-Hong Pan <jhp@endlessos.org>
 
-Changes in v3: None
-Changes in v2:
-- rebase on Bejorn's new patch about Qualifing VSEC Capability by Vendor, Revision
-
- drivers/perf/dwc_pcie_pmu.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index d022f49..ba6d5116 100644
---- a/drivers/perf/dwc_pcie_pmu.c
-+++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -116,6 +116,8 @@ static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
- 	  .vsec_id = 0x02, .vsec_rev = 0x4 },
- 	{ .vendor_id = PCI_VENDOR_ID_QCOM,
- 	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-+	{ .vendor_id = PCI_VENDOR_ID_ROCKCHIP,
-+	  .vsec_id = 0x02, .vsec_rev = 0x4 },
- 	{} /* terminator */
- };
- 
-@@ -264,12 +266,27 @@ static const struct attribute_group *dwc_pcie_attr_groups[] = {
- 	NULL
- };
- 
-+static void dwc_pcie_pmu_lane_event_enable_for_rk(struct pci_dev *pdev,
-+						  u16 ras_des_offset,
-+						  bool enable)
-+{
-+	if (enable)
-+		pci_write_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
-+				DWC_PCIE_CNT_ENABLE | DWC_PCIE_PER_EVENT_ON);
-+	else
-+		pci_clear_and_set_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
-+				DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_ON);
-+}
-+
- static void dwc_pcie_pmu_lane_event_enable(struct dwc_pcie_pmu *pcie_pmu,
- 					   bool enable)
- {
- 	struct pci_dev *pdev = pcie_pmu->pdev;
- 	u16 ras_des_offset = pcie_pmu->ras_des_offset;
- 
-+	if (pdev->vendor == PCI_VENDOR_ID_ROCKCHIP)
-+		return dwc_pcie_pmu_lane_event_enable_for_rk(pdev, ras_des_offset, enable);
-+
- 	if (enable)
- 		pci_clear_and_set_config_dword(pdev,
- 					ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
-@@ -295,9 +312,14 @@ static u64 dwc_pcie_pmu_read_lane_event_counter(struct perf_event *event)
- {
- 	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
- 	struct pci_dev *pdev = pcie_pmu->pdev;
-+	int event_id = DWC_PCIE_EVENT_ID(event);
- 	u16 ras_des_offset = pcie_pmu->ras_des_offset;
- 	u32 val;
- 
-+	if (pdev->vendor == PCI_VENDOR_ID_ROCKCHIP)
-+		pci_write_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
-+				       event_id << 16);
-+
- 	pci_read_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_DATA, &val);
- 
- 	return val;
--- 
-2.7.4
-
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 28567d457613..e0bc90597dca 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -81,24 +81,47 @@ void pci_configure_aspm_l1ss(struct pci_dev *pdev)
+>
+>  void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+>  {
+> +       struct pci_dev *parent =3D pdev->bus->self;
+>         struct pci_cap_saved_state *save_state;
+> -       u16 l1ss =3D pdev->l1ss;
+>         u32 *cap;
+>
+> +       /*
+> +        * If this is a Downstream Port, we never restore the L1SS state
+> +        * directly; we only restore it when we restore the state of the
+> +        * Upstream Port below it.
+> +        */
+> +       if (pcie_downstream_port(pdev) || !parent)
+> +               return;
+> +
+> +       if (!pdev->l1ss || !parent->l1ss)
+> +               return;
+> +
+>         /*
+>          * Save L1 substate configuration. The ASPM L0s/L1 configuration
+>          * in PCI_EXP_LNKCTL_ASPMC is saved by pci_save_pcie_state().
+>          */
+> -       if (!l1ss)
+> -               return;
+> -
+>         save_state =3D pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
+>         if (!save_state)
+>                 return;
+>
+>         cap =3D &save_state->cap.data[0];
+> -       pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
+> -       pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
+> +       pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL2, cap++);
+> +       pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL1, cap++);
+> +
+> +       if (parent->state_saved)
+> +               return;
+> +
+> +       /*
+> +        * Save parent's L1 substate configuration so we have it for
+> +        * pci_restore_aspm_l1ss_state(pdev) to restore.
+> +        */
+> +       save_state =3D pci_find_saved_ext_cap(parent, PCI_EXT_CAP_ID_L1SS=
+);
+> +       if (!save_state)
+> +               return;
+> +
+> +       cap =3D &save_state->cap.data[0];
+> +       pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, cap++=
+);
+> +       pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, cap++=
+);
+>  }
+>
+>  void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
 
