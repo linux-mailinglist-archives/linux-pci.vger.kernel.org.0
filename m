@@ -1,417 +1,289 @@
-Return-Path: <linux-pci+bounces-18392-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18393-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56D0A9F10C7
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 16:22:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 585B29F1110
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 16:35:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED53F162851
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:22:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E42F1634C3
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:35:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF5A51E2312;
-	Fri, 13 Dec 2024 15:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD2291E0E10;
+	Fri, 13 Dec 2024 15:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NH8w91lO"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2OQSgMfS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2050.outbound.protection.outlook.com [40.107.100.50])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD391DFDB8;
-	Fri, 13 Dec 2024 15:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DFC1DF988;
+	Fri, 13 Dec 2024 15:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734103345; cv=fail; b=aVxxgYP99dxgdILGuzRedCuM/mBxRnNC3OzJH2QN1fHrNWC3+eXkWL1mE0p6H8WeHdrOhG+EmJBGproERBsUFnBVedgem5TBTIwbQrv88E4YnU/SygckVHDDdV+uzVzRECLH0FRru1U8dC9qb8uoZKmrNvXx9MuvIzesfY+sccs=
+	t=1734104109; cv=fail; b=KrX07e1o4w+rFVwhLDxpmF321MiZMiqlIY0mgZlP1usOy3JSYzpCNrQn8qpW4Rf8S3/ugg1hvnv3xak5v0Zoqfpdpm6D36kJ0wiPCsX7DFlSvL06Iam+YwD7Lh55KQ0vdVhZvjjv9rQs+0Zcb+/8iG87wg98M1cIkiTvryjM/Sg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734103345; c=relaxed/simple;
-	bh=iptci/CjSghrufUB/NjIyi5ygasz+6Gh5eCDSW+W8pg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aIy/5NfBw6fzj3E09JwXImeugpodx8j7M+6cWkdbktH1YQeJ/ucwkO3frUdALZuIU5LU0aQ+jnLGggjvAxGDgykAwEmd8LTCPcXlQnYDPYhruSYydZDJKjDHN6RwpEL7GQdK/4A3CmRzyzL7OHB37qQILMjV7/1oPd6K45vkjYg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NH8w91lO; arc=fail smtp.client-ip=40.107.100.50
+	s=arc-20240116; t=1734104109; c=relaxed/simple;
+	bh=f5wTeQvBEXmfp4dRkg0AKKFFr8ptfHNdpZoBhjHZUAk=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dEZ8KRxrsKdUorJFIhy0JXy3Ulp3Qaelf42vEFk/6HGCSiPyrBdeeVrkx6Ah0Oe/XmVixvuhdeFB327eY1GPjKvA7yvy+5vooDdTJasxexT1j6Ee+NrtUTHMWiCgzrpXFee2RxGUpiUnwAt2CN+lhYhLvxjCjUOU7FGBMgPzUJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2OQSgMfS; arc=fail smtp.client-ip=40.107.243.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Iee8UG6Mredo82NSBCCd0ifh2qOtmZdvL5KWzP7IbjFQfvQF844cqHRzXQ8k6YbPIt/TMRtmglSWHWi4WujqewOUrPBpvfJtV5SBW/udUdysCQZ3t6/umqo4Kecr4G4lTwHxi1QEwkTJrPLkowTfeFVrbUVqmSCz3IMyHAsvahOuFmS6zErOMp9swpQ0J0EsGUttBDZDElNOxEtRrMgsPVvz3Mwy3JGsLBS6Oh2mUBwWJ6eZz6fg6WrPvgENbR/dwQV0IWJuv6b3R8gK6EjbOgCr509ydtNlXm3pVAbdwFEPpL4ol69zxz3LZP+U2CYBINw0i2aca+F+wsbuGEyEbg==
+ b=kjQ8Dpnc8S6EU4Up0hzgvnZznMPzESw5JokFWa93DY/6p8ogEtB7JvlRHh5N8sGIpZDPpNBU3mogazvl3cp+HMd4ItnJF401kuo6RZaZtxf1U0hxIc/uGJoTbxQ3tE5xKOkqtAuRDOiqcI291r6qkh+3h93bdSYluw3yvNtQw6G6qlrb0a82TyQ4SfzLmB/xK7WmzpyI2pu5GcGP6E8oB7zvJB6FSBNwaGMn8G5K0EtlJYZLlOH7CXYr5BkMoXHOjXpDIPThhESVpviQvHzZ5RznwmkAtodT2Ck/GIhCV+BBj3WEyXxbOWb3g9pCrxBKvRXvn1j/iWSGOI/5Lse5gA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pSZN1AAuiS+MLqT4fdgugjtKwM8e7vSCxQ+r4Jqok60=;
- b=M50N/omYzRcUseVTS186F/A6hhbU7q96HlwzMRv77Ha9DOYmeD24CsOFrrQckEo8VlduiM79cf3GD5enNcfVm2Pf+OeuaQDm+LDP8bdluncTNeuSZwxGNhYzpa/Qu0JtQVxMK5X1H0J5tuAWVbYFzMApIh/eYqtaVYx3oqprjR3mCr+cWCu7igU42vPVRK0/gnyJRkzkTxDJIx2F7CB51E9dGmIk3wpDPLwVxYB42UZB4A7GOar8iH5Ex0pDYeUAH6fnO10NQ+FjIeNzzK2v8sKZt3pWs7OisPTAgRF6yLB44HmEEgjtLOpyw2CTb/DABpH37K6wUKgGDu4GOMnM7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ bh=fsmsHCCJsCfUvKGzuT8Q0f+Ir2MaXDLbkiNvO/0/02Y=;
+ b=YT8LMMo/kCyzErk77yw5krvw1Z1atMN0eSufKX3tqi6evrfcbOMadzl+bpxDsW3Er4YB5HxW5GB+tUxHZjJG6asoRd9IjcqYNlzgK3co/SB7dhALi77bdnGJwFYEZNyBFDZKsufIzzvcPOaem/gWsTjRxSy9hvQXX0z7lr8M83hHi7addcprTnhN6jPbJZdA92eNnQh8JKr2IfJw4gH0cqllWMaYNINGZSGgRh5hN2K2t3W5E/9SG50Gxbt1jjX4xsXtB4zDNWII65E+Z1zS9qFjcbK9plrgUCklnLM+XsPX5nntQAgdKfmFiQN61rc0ogDOED0URTixDJ1bI0kNhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pSZN1AAuiS+MLqT4fdgugjtKwM8e7vSCxQ+r4Jqok60=;
- b=NH8w91lOUJq0WadXwvOeKALQ2fQHhL5bAkX981CI43J/5MeqbGUVdehUIACtpjpt3uxbHTC3ChmfoDpPqa7/YLWVWYsVl8omvMMX8b+VM+bQaAG5IVnZX9Vo/tEKVpsqx1SDGffIXXb2Gh/8WjfMlawzV2J4dSG3nlRp6c4RHio=
-Received: from DS7PR07CA0016.namprd07.prod.outlook.com (2603:10b6:5:3af::18)
- by CH3PR12MB8546.namprd12.prod.outlook.com (2603:10b6:610:15f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.18; Fri, 13 Dec
- 2024 15:22:19 +0000
-Received: from DS1PEPF0001709B.namprd05.prod.outlook.com
- (2603:10b6:5:3af:cafe::7a) by DS7PR07CA0016.outlook.office365.com
- (2603:10b6:5:3af::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8251.15 via Frontend Transport; Fri,
- 13 Dec 2024 15:22:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0001709B.mail.protection.outlook.com (10.167.18.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8251.15 via Frontend Transport; Fri, 13 Dec 2024 15:22:18 +0000
-Received: from purico-9eb2host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Dec
- 2024 09:22:16 -0600
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <yazen.ghannam@amd.com>, <x86@kernel.org>, <tony.luck@intel.com>,
-	<mario.limonciello@amd.com>, <bhelgaas@google.com>, <jdelvare@suse.com>,
-	<linux@roeck-us.net>, <clemens@ladisch.de>, <Shyam-sundar.S-k@amd.com>,
-	<hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-	<naveenkrishna.chatradhi@amd.com>, <suma.hegde@amd.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2.2] x86/amd_node, platform/x86/amd/hsmp: Have HSMP use SMN through AMD_NODE
-Date: Fri, 13 Dec 2024 15:22:06 +0000
-Message-ID: <20241213152206.385573-1-yazen.ghannam@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241212172711.1944927-1-yazen.ghannam@amd.com>
-References:
+ bh=fsmsHCCJsCfUvKGzuT8Q0f+Ir2MaXDLbkiNvO/0/02Y=;
+ b=2OQSgMfSimgrQ+X3j2KuuRu1hp1RGbGZYrc4r7vp47wrZUDXLjUkv1sa1SrJLPzvkArSH9beBC4Mkzk6RjKe9HLSakjkK10eKXzB5I87XUW1ir35l6bhnBtKZPARLa06RQk6B5U+eM78QANT0/VsJyKVvejAFsXeDHHW1e5/Xu8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ MW6PR12MB8706.namprd12.prod.outlook.com (2603:10b6:303:249::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8251.19; Fri, 13 Dec 2024 15:35:05 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8251.015; Fri, 13 Dec 2024
+ 15:35:04 +0000
+Message-ID: <6525e2ba-b9d3-4f3b-8c7f-8e0b69cf096e@amd.com>
+Date: Fri, 13 Dec 2024 09:34:59 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 15/15] PCI/AER: Enable internal errors for CXL Upstream
+ and Downstream Switch Ports
+To: Alejandro Lucero Palau <alucerop@amd.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ PradeepVineshReddy.Kodamati@amd.com, Li Ming <ming.li@zohomail.com>
+References: <20241211234002.3728674-1-terry.bowman@amd.com>
+ <20241211234002.3728674-16-terry.bowman@amd.com>
+ <8a87754c-bb27-37d9-2423-cce6170de496@amd.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <8a87754c-bb27-37d9-2423-cce6170de496@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0044.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::19) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001709B:EE_|CH3PR12MB8546:EE_
-X-MS-Office365-Filtering-Correlation-Id: 522e17c1-b406-419e-1374-08dd1b89eea3
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|MW6PR12MB8706:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51d9aedf-f042-456b-6b8f-08dd1b8bb753
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014|921020;
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?reOALwbqhQ3aXG78/RCcO3xkJpjNVoCgMu9S/sXYNdOhCQv16pxjNKVeoSP0?=
- =?us-ascii?Q?OeJCNlCw2XkYeAOiS+k3TmuaXLcSsIc1e39poral+iJb5a3s+TyuyY5tWZu4?=
- =?us-ascii?Q?s6W5/JV3TNTEsDcv3mkkStfCzZNWPVHNTqhUFWchy18IZzM3rJaRjh66X+mf?=
- =?us-ascii?Q?bn+TjWHTY5nxJAk3N1l61+/T3FpdtxLJpoNV+gWKCg2t/sgrLNDDNNdOZf0a?=
- =?us-ascii?Q?jDDxByG+kly9VIgqWi5On/onzyU6wk8NU8dY4vla50MIGbakyWPY7b4ZUiOk?=
- =?us-ascii?Q?uQKZweGUYmMMGyD6ykhE6CBN4VD5bISnNvxXi3pxbWcDUrV7ZO6XP6i0hkxV?=
- =?us-ascii?Q?Ohi5d96F15/Ktcsjs++7MJll+2ROleiwLR/UilORXVlMy4trh5HIa3LzgOQy?=
- =?us-ascii?Q?R7an4DOsZ5T7usJjcAroxDfafogDoXdxkTgvnIZaaTrJSfP87NpTABdLtAC2?=
- =?us-ascii?Q?K3sPLmQaJmIHFFTjMWwaXYBEIHrksG7yw+GdJr31L+q7Tmtkd7gqT64FvAr9?=
- =?us-ascii?Q?8wa0rWiu7Nlw4Ltmw0gsQAUpyW4WVuJJCLMOwEeuSyczjVhWvAskogSdz+D3?=
- =?us-ascii?Q?AQbWWegW8O2FoK/dgeLrVZfk7P7CjqP0SudJz5K8XVBNnzpwOSQ+POT55MGx?=
- =?us-ascii?Q?7ONQx4WmaQDguy3hpQ4Z913W4tUGIr8k0zqUBeaLg2pKx2iIcOIXwh1CHpny?=
- =?us-ascii?Q?cQQE1e4MBn0nXHN0J2FusbArZ5gNqkq6SbYvZLUN6+n3htruPEZCsXtSjSet?=
- =?us-ascii?Q?KmQpN/GPj7hfXmVoSSTTqMBOad4I/v5mzUIXVQeoR2TWV5l64/NMBbi7vMw8?=
- =?us-ascii?Q?hwUdmDl5QO1+M9appn036d4PSE92+zMGoJQ3/rL/hn8PiLAoVNsBtnbfU2fA?=
- =?us-ascii?Q?fc9HJrj9YPppKZAaDD/HUJpEfexmWYXZGwef9snUtOzW66A/jEO6KMkZmMcx?=
- =?us-ascii?Q?OtG88t4XKOlMVxl4jmkae+uUWpUTnoUlMJZ1REMiVq2ddlTgH4Pytucnha0e?=
- =?us-ascii?Q?wt/B9mlrD57fKGM8hoi5kAAjJZZiXgCf/CEVxz+4XD8Cd3wlvnilbgowmHhi?=
- =?us-ascii?Q?Ai+CNDhjkvrS8w5TWU2+s8bdxzs7PVMcXrEBcM64GDlK0mCilP7H2cfoxkf2?=
- =?us-ascii?Q?JMMEDXjcZMrAcyTeZKRBPNT15X1hlbOcgbiiPvaxEC2Ssa/4BwPmMjoguX6v?=
- =?us-ascii?Q?IHlP0f4+uI4zvuhyJVJcSlk55dGyIbrWDOtbAAfGqtA/DUjhRp4fpL1eTCD7?=
- =?us-ascii?Q?AgUAIftDIUsGbDlhex86+e9adQs6jevPDFHrwxRMLfvgB95jmVY7LE8pol9f?=
- =?us-ascii?Q?RrIWxb70hDf4SdtcDbIi/9xcc2eeGHXBUmpDC8UR+1IdUsA1guFnyCy+cUV9?=
- =?us-ascii?Q?YocPheTgONDcNtuyjdL+Csm5gD2WwVukmYpAf2G9jZ4q0kg7WnW4qdGyXhNk?=
- =?us-ascii?Q?jTurHUU4BfDoC82CKqdNmU8IUcreMS/id6+iIbq+EezC2c9Cp9P5OR37e3ye?=
- =?us-ascii?Q?PYVDRoBJrGdODqzbuMiQOqfa1jJvkjcVmsDE?=
+	=?utf-8?B?alEvaWNUbnQvWnRhb1ZEMnFSYzg5K0k5b3EzbUt1SW5GSHVUblczOFl6YWZz?=
+ =?utf-8?B?KzIwbFNJa3pTU0ZNdms3YjEwS2twNzZLc0ExbDBwNGVuME1ZSEVELzlscHZU?=
+ =?utf-8?B?YmRkZElQVHBTQytBUHFIREFxTmZNYzV5b1NnWFUyUXkvMEVCWjMySWQ3TGlF?=
+ =?utf-8?B?amdRWmNpVHh2YmhVVjJCWHIzWktGMlpkRG1pUjFXRkhRb3dYcU1WeTZsQk8x?=
+ =?utf-8?B?WHRLbll1b3J3OE5Nb3pVNlFpRy9qSldPSkVKRnhGNmZYSVFJdUlHWGNpT1Ny?=
+ =?utf-8?B?MU0vNkN5ajRIL3hUOUNUQVNJZUdnYVNoR0dZTW5nOVMxM0dKd2RUVmgxMm1U?=
+ =?utf-8?B?dEprbDFlNCtnS0FabnZaTWlvNEkwOEdmTDBUZjNFd0NDR1JnRUZxNThtWDZ5?=
+ =?utf-8?B?N3h5WTBWVUF4YmYzR2F5YTU2TExXcHRFQmxIZXR4cXhxK3d0UFI3d2NtQ3g4?=
+ =?utf-8?B?OG5KS0pwNGNFdzNaeW5ER1B1UWU3ZnpkYXU5d3JtamF4SFp5SXoyd3h3aDBI?=
+ =?utf-8?B?RWVVK3FlelZ1VDhrNW9FNUVYdlVYYXJqaTVqRU5QNEhjeXZLR1Z2cXdPWFJl?=
+ =?utf-8?B?Uk9TL0hXT2VwUjVWelJ5MHBJTnhSczRpdlZ2VlFtdHZXODdGSTZjZmM1ZjJZ?=
+ =?utf-8?B?V0I2NWNqYklwNnczK1daR2hLdEdBRy9reUxoZE8vOW1XTFdOam1kZzgrUWdY?=
+ =?utf-8?B?WXAva2VjanV1WVZBYmw5NU51VFVaeXU3MkNLakJKT0JSOUJOUzRNSE82MWlp?=
+ =?utf-8?B?YXJ3d0VXOWlSRzZKeS9XUXA2NTlnNHRaWHl0eVgxcU1aZTVBQUx3bUM1akVM?=
+ =?utf-8?B?WmliaS82cGEvVjYyTjByejBzbWtBenEvVkVMTjRCSnhhMDR3akcrTVc2TnNG?=
+ =?utf-8?B?RW9NTkg2Qmt5YmFYQkhVWTBuT0FTb281elBEVmR5TDdTOHFSWUUzWGJ6a3JE?=
+ =?utf-8?B?VFJJTnhJQ1JtT2xZLzBuMVBoODBUWjVlNmlsWDJoaVVKWUR2MUF5R01rVm1N?=
+ =?utf-8?B?eEk0Z01zTGE5OE9naWc1aDVFSWtwZFR2VGw3QkhSK25DMDl1bkMzcmU1Z0Fj?=
+ =?utf-8?B?dk91VUVtaU5TbFhsTTRmQjVlaVkzblhMUTdBaWdBQ1UyUE9EWmVHSnVJanFB?=
+ =?utf-8?B?eXpPcHNScHJkNCsyS1IrdXFGL1ZoMnJEWjRUWmFjUTlkL0QzdUZ6bXJ5VENG?=
+ =?utf-8?B?QW5ESEJnWWxwTUhJc0VnWGl3Q0J6MFViczBBTUtIdlpNWWUzK0NmOU1ET3Fo?=
+ =?utf-8?B?UkhQMituOEYzUThnL043czlIWVlvNVBON2cyMUVUUUFFaHcrMWFSNXJCSXNJ?=
+ =?utf-8?B?aDJGMlpWQm5leUdaZ084cTR1K2l6VW5ZaVNXbVR5L2RJZEhydGx2bEkxTEkw?=
+ =?utf-8?B?cVRKalJjeGpGYXZMM1F2MEYyQVNEOTh4aUdvQUl3TEE0VnBwRnI5YkYrc0xZ?=
+ =?utf-8?B?MWtJSGtpaGlKNUQxeUZsQ0RFVmlMRUY0R0VTYTcyeURtbUM2VWlDajhVQ2NI?=
+ =?utf-8?B?U1ZlaWtrdnBySWVFNDE1TWhyc255ekxwT3BNbEQyTHZUM1dXMUZkQ3BzZktw?=
+ =?utf-8?B?YzNQRW0vaUMyY3BWZk8xenVsVXRpbkhidldqSHhRbTdiM2t0VForRkdmQ1JR?=
+ =?utf-8?B?eFR3STk0RjdHSGFNeVEvS0VBai9JdmZuTnBhalBLVmhNb2dVdDE4bW5Xd1oz?=
+ =?utf-8?B?dkRVTmhKTWV2YytOMGJwajI0M3FEWS9MbEZtNUlYbU1teHQ1L1VTZUFVTnlh?=
+ =?utf-8?B?K05KNjlSdlUvdjBUbXdVbDM0ZytvMEtJZUFHa2R0YUVJVjhtN0I4RE5LL1hk?=
+ =?utf-8?B?TTJrTmRpMGxZMStMckVocXRRbm93RFRNWUdXZ2x2azA3Y3BMVlcvaGR2VEFY?=
+ =?utf-8?Q?wwZvTfMkyGkzr?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OGloQTZxeUpIWXhQUVBHWmRzdWxBdkVIbWpBZzFwT3YvRHp2RnVyVTZUV1No?=
+ =?utf-8?B?ZUU0d1BEaXVTUWV5QzRnTnd4ajkyVXc1blAzY0ZMT1dJTG1QajlvN3BvdU5G?=
+ =?utf-8?B?elZUQS9pampZT2prOS9WbHNsb2g3Yk1RWWNMek9GZ0VyTWlnQkY1dlVNNHpr?=
+ =?utf-8?B?RXNFN3lrSW50aXRUV1FKcm5adHk4N0xvYnZ1UnIzQnRmZjV2aFQ4VkV0V3Ew?=
+ =?utf-8?B?eVl6Yjdsa1hibUt4NG9xakVlbnpxczBoVUpVdzNSdGFlRWluY2lNK0s1blBy?=
+ =?utf-8?B?TFNQalhYYmhjTmxIWTRFejExandBMW95K3hhbmxuTDI0S3Irdzl6ZzV4ZVd2?=
+ =?utf-8?B?ZGFnSDQ0WHZSaXo2UWtpRlRSSmVGb0ZCV0Yvd3VtVjdsMGtkNFVReEdKNkJm?=
+ =?utf-8?B?OUowUU5IZEFWOUZBVkxzaEdOU1VSRkl3TWRsSnJndTdwdE5DUm1tOWhCUHlS?=
+ =?utf-8?B?UVJSTVlxT1pjREZIb05nWVpGNG50aDM2QUh0VmlxYVUrVUJEZU81eGZ0bHRq?=
+ =?utf-8?B?S1FvU2J6cll1ZWhNMkZXaUJDK0Nqa3M5YjNEcmJjUHdLMGZOaGtRTUZ1cjk1?=
+ =?utf-8?B?bFY3aFVJWExPbGhWM1Vyc2V1N0QzRVczYjRuQ2h3cE1xeVgwbFdYb0dOalND?=
+ =?utf-8?B?NHRqdTI3eVVKUE9wdkRJQ0g5ek5oRHcrU1JMeFY0cHY4MUtOMjRSR0RDTkRY?=
+ =?utf-8?B?Z3VoSWhpTndrNEIrVCtaRmh6MHQ3UStRNE1EMlBoUHhVbVVXZmJKMFowb2Rj?=
+ =?utf-8?B?cm1LN0YxaThTZFdDM1RzNjFMZGJNcXVNSXFsY2trT2dzWlJzQkhqYlhqY1lq?=
+ =?utf-8?B?N01XZnhpTTQyYUVDVFFCME5BRyt1QXFDb1lMS2Y1SjI2clVOUzU0ZFNrYWcr?=
+ =?utf-8?B?d0pwVkNsNVB1RUlMaVdsdjQyY25vRWNRTGRxY1pXNFRqcUlWNXNvc3pCTlBr?=
+ =?utf-8?B?OW1QOVNqUXdEY29pTlZFbGhGWEFhTVBjeldQWVBiSlN2ekFZTktNU01ET2tZ?=
+ =?utf-8?B?MnArTHVRNmxxdlkvM3RDWEJ2OFEvNzZsNkZQQ25icTBQNjI1TmhFUWtHdnlz?=
+ =?utf-8?B?Q1RjT3hvanZoK3ZHbjV5QTBReVJibGJ2YzlJMGxSQk1Jb0cyMzhCQnNHZU9D?=
+ =?utf-8?B?MHNVd0FRMWwrZVdiTlF1ZnVOemR4VW4xK1N3bVZYcnl6WDF0QU5Bc2pVYy9Z?=
+ =?utf-8?B?dXBHM042eU5DbHRXN1d6bDJPUGR6ckc2R2RYUVJURVR2YnhvMVR0alZSNlRr?=
+ =?utf-8?B?T2FKbGlOS011VklLaGxncTZqa2NocGk0UWVqRCtXdW11QjVYL2V1bUx2UFdN?=
+ =?utf-8?B?RW83QWJwZk5YZmJSNVRlWWN3UjVrNmZIOUFrSlJDSWZQY0l5dW93bm9lakh0?=
+ =?utf-8?B?dExvdHNlOXlBdUJBbjNpRDREanN1OUEvaEFTcTBTRkJSTlcwSkhGOTdtV2Jz?=
+ =?utf-8?B?czJEeXdsWkFiT1pDSzlUcFZkTERuN2hnTU1tR3lVMVpiNERXY3ZENGJPVGNE?=
+ =?utf-8?B?eHdvbjZ1RWt2SlFyL0hHWklrdm8rdnlkUGppNi9uaHlRYmN1VFZHNTFGaWZu?=
+ =?utf-8?B?Vmc2SzFGbGdmS0x6b1FPeE90R3VzeGp3RitWb29vM3NLNWd1RXVkWkRldW81?=
+ =?utf-8?B?TFZjNjR6bHRtWjRNalh0S1QvZFIxVW1QTm9TYlVaeVZpTldHTWQ1bWI1V2Zk?=
+ =?utf-8?B?ZEk4eUtyRDVMMjlwWnJZOEF3UHZNM2lQVXlDSmR4STQ2MVpSOGN0VDNQQmVF?=
+ =?utf-8?B?aTdlZWtpYUZaaGVVTTdzL0lkemdSQzZqb1pIbUlLUVBENlZVUG00SGswOXZV?=
+ =?utf-8?B?VjVqSTBEUUxYR1FFalFkM001UkVTSXNTYmdkTS81R3FaM2JCeXpTdGZ1dDkw?=
+ =?utf-8?B?b1d1YmpUVUE1eGF5NFFxejRRdldUZHNYYzVjTlc4TGFLNnJtb0JWRzJsbjg3?=
+ =?utf-8?B?cEU2K212enZvSW9NOVd3NWVKK1JNY1BUNnprUkZ3aHFYMTlxeGQzMGtzb2xJ?=
+ =?utf-8?B?REpRMGhFSUZPdHU0Q21wZDQ2TThMKy9KMmdiZDdIWEtuY3hUS0J6TnZvRXJ0?=
+ =?utf-8?B?bit1N2x3V05mUHZlR29ubERFdWdDdVViSWFDNGJLM0ZkSEM5OFFVZmRHb255?=
+ =?utf-8?Q?VVvps84TLRtxVDReqTJPKxQG0?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2024 15:22:18.3518
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51d9aedf-f042-456b-6b8f-08dd1b8bb753
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2024 15:35:04.8386
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 522e17c1-b406-419e-1374-08dd1b89eea3
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001709B.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8546
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NXMv0Du91o4jKPWwrNEsJQbb0+S3/Fwdt+fXIbahCjGyMqnpYgj/mTYCBHclW8tK+z7CQe5yAskPjZVLj+o/Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8706
 
-The HSMP interface is just an SMN interface with different offsets.
 
-Define an HSMP wrapper in the SMN code and have the HSMP platform driver
-use that rather than a local solution.
 
-Also, remove the "root" member from AMD_NB, since there are no more
-users of it.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
+On 12/12/2024 3:44 AM, Alejandro Lucero Palau wrote:
+> On 12/11/24 23:40, Terry Bowman wrote:
+>> The AER service driver enables PCIe Uncorrectable Internal Errors (UIE) and
+>> Correctable Internal errors (CIE) for CXL Root Ports and CXL RCEC's. The
+>> UIE and CIE are used in reporting CXL Protocol Errors. The same UIE/CIE
+>> enablement is needed for CXL PCIe Upstream and Downstream Ports inorder to
+>> notify the associated Root Port and OS.[1]
+>>
+>> Export the AER service driver's pci_aer_unmask_internal_errors() function
+>> to CXL namespace.
+>>
+>> Remove the function's dependency on the CONFIG_PCIEAER_CXL kernel config
+>> because it is now an exported function.
+>>
+>> Call pci_aer_unmask_internal_errors() during RAS initialization in:
+>> cxl_uport_init_ras_reporting() and cxl_dport_init_ras_reporting().
+>>
+>> [1] PCIe Base Spec r6.2-1.0, 6.2.3.2.2 Masking Individual Errors
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> ---
+>>   drivers/cxl/core/pci.c | 2 ++
+>>   drivers/pci/pcie/aer.c | 5 +++--
+>>   include/linux/aer.h    | 1 +
+>>   3 files changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index 9734a4c55b29..740ac5d8809f 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -886,6 +886,7 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
+>>   
+>>   	cxl_assign_port_error_handlers(pdev);
+>>   	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
+>> +	pci_aer_unmask_internal_errors(pdev);
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
+>>   
+>> @@ -920,6 +921,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+>>   
+>>   	cxl_assign_port_error_handlers(pdev);
+>>   	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
+>> +	pci_aer_unmask_internal_errors(pdev);
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
+>>   
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index 861521872318..0fa1b1ed48c9 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -949,7 +949,6 @@ static bool is_internal_error(struct aer_err_info *info)
+>>   	return info->status & PCI_ERR_UNC_INTN;
+>>   }
+>>   
+>> -#ifdef CONFIG_PCIEAER_CXL
+>
+> This ifdef move puzzles me. I would expect to use it when the next 
+> function is invoked instead of moving it here.
+>
+> It seems weird to have such a config but code using those related 
+> functions not aware of it.
+>
 
-Notes:
-    Link:
-    https://lore.kernel.org/20241212172711.1944927-1-yazen.ghannam@amd.com
-    
-    v2.1-v2.2:
-    * Include <linux/build_bug.h> for static_assert()
-    
-    v2->v2.1:
-    * Include static_assert() and comment for sysfs attributes.
-    
-    v1->v2:
-    * Rebase on recent HSMP rework.
+I was asked to remove the dependency on the KConfig (ifdef) because the function is also being
+'exported' and used across multiple subsystems. Because its exported, the function behavior
+needs to be consistent and independent of a KConfig.
 
- arch/x86/include/asm/amd_nb.h         |  1 -
- arch/x86/include/asm/amd_node.h       |  3 +++
- arch/x86/kernel/amd_nb.c              |  1 -
- arch/x86/kernel/amd_node.c            |  9 +++++++
- drivers/platform/x86/amd/hsmp/Kconfig |  2 +-
- drivers/platform/x86/amd/hsmp/acpi.c  |  7 +++---
- drivers/platform/x86/amd/hsmp/hsmp.c  |  1 -
- drivers/platform/x86/amd/hsmp/hsmp.h  |  3 ---
- drivers/platform/x86/amd/hsmp/plat.c  | 36 +++++++++------------------
- 9 files changed, 29 insertions(+), 34 deletions(-)
+I'll update the commit message with this reasoning.
 
-diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
-index 4c4efb93045e..adfa0854cf2d 100644
---- a/arch/x86/include/asm/amd_nb.h
-+++ b/arch/x86/include/asm/amd_nb.h
-@@ -27,7 +27,6 @@ struct amd_l3_cache {
- };
- 
- struct amd_northbridge {
--	struct pci_dev *root;
- 	struct pci_dev *misc;
- 	struct pci_dev *link;
- 	struct amd_l3_cache l3_cache;
-diff --git a/arch/x86/include/asm/amd_node.h b/arch/x86/include/asm/amd_node.h
-index 113ad3e8ee40..5fe9c6537434 100644
---- a/arch/x86/include/asm/amd_node.h
-+++ b/arch/x86/include/asm/amd_node.h
-@@ -33,4 +33,7 @@ static inline u16 amd_num_nodes(void)
- int __must_check amd_smn_read(u16 node, u32 address, u32 *value);
- int __must_check amd_smn_write(u16 node, u32 address, u32 value);
- 
-+/* Should only be used by the HSMP driver. */
-+int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write);
-+
- #endif /*_ASM_X86_AMD_NODE_H_*/
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 2729e99806ec..3a20312062af 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -73,7 +73,6 @@ static int amd_cache_northbridges(void)
- 	amd_northbridges.nb = nb;
- 
- 	for (i = 0; i < amd_northbridges.num; i++) {
--		node_to_amd_nb(i)->root = amd_node_get_root(i);
- 		node_to_amd_nb(i)->misc = amd_node_get_func(i, 3);
- 		node_to_amd_nb(i)->link = amd_node_get_func(i, 4);
- 	}
-diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
-index d2ec7fd555c5..65045f223c10 100644
---- a/arch/x86/kernel/amd_node.c
-+++ b/arch/x86/kernel/amd_node.c
-@@ -97,6 +97,9 @@ static DEFINE_MUTEX(smn_mutex);
- #define SMN_INDEX_OFFSET	0x60
- #define SMN_DATA_OFFSET		0x64
- 
-+#define HSMP_INDEX_OFFSET	0xc4
-+#define HSMP_DATA_OFFSET	0xc8
-+
- /*
-  * SMN accesses may fail in ways that are difficult to detect here in the called
-  * functions amd_smn_read() and amd_smn_write(). Therefore, callers must do
-@@ -179,6 +182,12 @@ int __must_check amd_smn_write(u16 node, u32 address, u32 value)
- }
- EXPORT_SYMBOL_GPL(amd_smn_write);
- 
-+int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write)
-+{
-+	return __amd_smn_rw(HSMP_INDEX_OFFSET, HSMP_DATA_OFFSET, node, address, value, write);
-+}
-+EXPORT_SYMBOL_GPL(amd_smn_hsmp_rdwr);
-+
- static int amd_cache_roots(void)
- {
- 	u16 node, num_nodes = amd_num_nodes();
-diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
-index 7d10d4462a45..d6f7a62d55b5 100644
---- a/drivers/platform/x86/amd/hsmp/Kconfig
-+++ b/drivers/platform/x86/amd/hsmp/Kconfig
-@@ -7,7 +7,7 @@ config AMD_HSMP
- 	tristate
- 
- menu "AMD HSMP Driver"
--	depends on AMD_NB || COMPILE_TEST
-+	depends on AMD_NODE || COMPILE_TEST
- 
- config AMD_HSMP_ACPI
- 	tristate "AMD HSMP ACPI device driver"
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index e981d45e1c12..28565ca78afd 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -10,7 +10,6 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <asm/amd_hsmp.h>
--#include <asm/amd_nb.h>
- 
- #include <linux/acpi.h>
- #include <linux/device.h>
-@@ -24,6 +23,8 @@
- 
- #include <uapi/asm-generic/errno-base.h>
- 
-+#include <asm/amd_node.h>
-+
- #include "hsmp.h"
- 
- #define DRIVER_NAME		"amd_hsmp"
-@@ -321,8 +322,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	if (!hsmp_pdev->is_probed) {
--		hsmp_pdev->num_sockets = amd_nb_num();
--		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_SOCKETS)
-+		hsmp_pdev->num_sockets = amd_num_nodes();
-+		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
- 			return -ENODEV;
- 
- 		hsmp_pdev->sock = devm_kcalloc(&pdev->dev, hsmp_pdev->num_sockets,
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 227b4ad4a51a..e04c613ad5d6 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -8,7 +8,6 @@
-  */
- 
- #include <asm/amd_hsmp.h>
--#include <asm/amd_nb.h>
- 
- #include <linux/acpi.h>
- #include <linux/delay.h>
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index e852f0a947e4..af8b21f821d6 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -21,8 +21,6 @@
- 
- #define HSMP_ATTR_GRP_NAME_SIZE	10
- 
--#define MAX_AMD_SOCKETS 8
--
- #define HSMP_CDEV_NAME		"hsmp_cdev"
- #define HSMP_DEVNODE_NAME	"hsmp"
- 
-@@ -41,7 +39,6 @@ struct hsmp_socket {
- 	void __iomem *virt_base_addr;
- 	struct semaphore hsmp_sem;
- 	char name[HSMP_ATTR_GRP_NAME_SIZE];
--	struct pci_dev *root;
- 	struct device *dev;
- 	u16 sock_ind;
- 	int (*amd_hsmp_rdwr)(struct hsmp_socket *sock, u32 off, u32 *val, bool rw);
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index a61f815c9f80..9452685a2446 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -10,14 +10,16 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <asm/amd_hsmp.h>
--#include <asm/amd_nb.h>
- 
-+#include <linux/build_bug.h>
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/sysfs.h>
- 
-+#include <asm/amd_node.h>
-+
- #include "hsmp.h"
- 
- #define DRIVER_NAME		"amd_hsmp"
-@@ -34,28 +36,12 @@
- #define SMN_HSMP_MSG_RESP	0x0010980
- #define SMN_HSMP_MSG_DATA	0x00109E0
- 
--#define HSMP_INDEX_REG		0xc4
--#define HSMP_DATA_REG		0xc8
--
- static struct hsmp_plat_device *hsmp_pdev;
- 
- static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
- 			     u32 *value, bool write)
- {
--	int ret;
--
--	if (!sock->root)
--		return -ENODEV;
--
--	ret = pci_write_config_dword(sock->root, HSMP_INDEX_REG,
--				     sock->mbinfo.base_addr + offset);
--	if (ret)
--		return ret;
--
--	ret = (write ? pci_write_config_dword(sock->root, HSMP_DATA_REG, *value)
--		     : pci_read_config_dword(sock->root, HSMP_DATA_REG, value));
--
--	return ret;
-+	return amd_smn_hsmp_rdwr(sock->sock_ind, sock->mbinfo.base_addr + offset, value, write);
- }
- 
- static ssize_t hsmp_metric_tbl_plat_read(struct file *filp, struct kobject *kobj,
-@@ -95,7 +81,12 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-  * Static array of 8 + 1(for NULL) elements is created below
-  * to create sysfs groups for sockets.
-  * is_bin_visible function is used to show / hide the necessary groups.
-+ *
-+ * Validate the maximum number against MAX_AMD_NUM_NODES. If this changes,
-+ * then the attributes and groups below must be adjusted.
-  */
-+static_assert(MAX_AMD_NUM_NODES == 8);
-+
- #define HSMP_BIN_ATTR(index, _list)					\
- static struct bin_attribute attr##index = {				\
- 	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},	\
-@@ -159,10 +150,7 @@ static int init_platform_device(struct device *dev)
- 	int ret, i;
- 
- 	for (i = 0; i < hsmp_pdev->num_sockets; i++) {
--		if (!node_to_amd_nb(i))
--			return -ENODEV;
- 		sock = &hsmp_pdev->sock[i];
--		sock->root			= node_to_amd_nb(i)->root;
- 		sock->sock_ind			= i;
- 		sock->dev			= dev;
- 		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
-@@ -305,11 +293,11 @@ static int __init hsmp_plt_init(void)
- 		return -ENOMEM;
- 
- 	/*
--	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
-+	 * amd_num_nodes() returns number of SMN/DF interfaces present in the system
- 	 * if we have N SMN/DF interfaces that ideally means N sockets
- 	 */
--	hsmp_pdev->num_sockets = amd_nb_num();
--	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_SOCKETS)
-+	hsmp_pdev->num_sockets = amd_num_nodes();
-+	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
- 		return ret;
- 
- 	ret = platform_driver_register(&amd_hsmp_driver);
--- 
-2.43.0
+- Terry
+
+>>   /**
+>>    * pci_aer_unmask_internal_errors - unmask internal errors
+>>    * @dev: pointer to the pcie_dev data structure
+>> @@ -960,7 +959,7 @@ static bool is_internal_error(struct aer_err_info *info)
+>>    * Note: AER must be enabled and supported by the device which must be
+>>    * checked in advance, e.g. with pcie_aer_is_native().
+>>    */
+>> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>> +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>>   {
+>>   	int aer = dev->aer_cap;
+>>   	u32 mask;
+>> @@ -973,7 +972,9 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>>   	mask &= ~PCI_ERR_COR_INTERNAL;
+>>   	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
+>>   }
+>> +EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, CXL);
+>>   
+>> +#ifdef CONFIG_PCIEAER_CXL
+>>   static bool is_cxl_mem_dev(struct pci_dev *dev)
+>>   {
+>>   	/*
+>> diff --git a/include/linux/aer.h b/include/linux/aer.h
+>> index 4b97f38f3fcf..093293f9f12b 100644
+>> --- a/include/linux/aer.h
+>> +++ b/include/linux/aer.h
+>> @@ -55,5 +55,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>   int cper_severity_to_aer(int cper_severity);
+>>   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>>   		       int severity, struct aer_capability_regs *aer_regs);
+>> +void pci_aer_unmask_internal_errors(struct pci_dev *dev);
+>>   #endif //_AER_H_
+>>   
 
 
