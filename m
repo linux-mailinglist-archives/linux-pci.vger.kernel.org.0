@@ -1,63 +1,61 @@
-Return-Path: <linux-pci+bounces-18379-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95A929F0F2C
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:33:40 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75F499F0F30
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:33:44 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF0516445B
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:33:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31F9A2825BB
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:33:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDEE31E1C0F;
-	Fri, 13 Dec 2024 14:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 411BC1E1C01;
+	Fri, 13 Dec 2024 14:33:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EytmmJsX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwxAlPXn"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8821F1E1023;
-	Fri, 13 Dec 2024 14:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AD01E22E2
+	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 14:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734100413; cv=none; b=YfJYFgYfq9YDxxZJoaQ3CLIg7PCYCbrnSQZiBzPopLT66CxN40+4BfnlJuwzkUaKmRIpv+ZchE5esOrvZ1aoGuz7E4BN0cziZX9+8DMMOsGkqWysEiwf4aHSKxuZvQBg/44zYgg/DFNnpLfFVWEpVmwz0dHiqXYHREYwFhM4ZC4=
+	t=1734100417; cv=none; b=NUVthzgDl/KruBz9skD6WTZ9xVOYgOjCUEJdVHJfymT5KKm1eTzm6Fb7dE5jw9aiOVREMVyKt7tluIrEyIf/ndIeGrzEHCjjcPYz/jn2LKQrWl3CICasR67QMG3odQLDQq66hh6deC9Tx29KtoGaRvXN22r0AaCdakScNfj9NlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734100413; c=relaxed/simple;
-	bh=hUIuEzkuObWfcaT7ire0dHFb9zefHWiHTHS+omNaE1g=;
+	s=arc-20240116; t=1734100417; c=relaxed/simple;
+	bh=0VouYiquPy2It5bjWm9fqPZiiVDMP+venn6AQh1bAEU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jvVOFCYjSw/DRm8AXE7eOPfMN+iwtB2TjKUe6EI6MYnY54e76rud557B+/xYg8sK4JH6CyE3jJcoZWagxtvA9I4Goqbw87f0YjFysCUtIFaVEgN1Wu1yBKVdG0lt21qgo2ZOuk2WHkeHLn+iTJdPKmTKjZxjdtz0dkE7QPrYiTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EytmmJsX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37DB0C4CED0;
-	Fri, 13 Dec 2024 14:33:30 +0000 (UTC)
+	 MIME-Version; b=ezEqr6IbBcpW+94OyjVgScfXkosiUA6bJTmlICugjZurk1gIXNY1XFGYFHLqNN4owSL47n644rmnIQtGjC556JfgZX91FKwJsUaaa29eo/lwDk65nlWPk97GsUq00YsYCwy35gcpQY9pV3wIb7R3Lqg4lgk0bBLo+sTHNoSxs/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwxAlPXn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E5DC4CED0;
+	Fri, 13 Dec 2024 14:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734100413;
-	bh=hUIuEzkuObWfcaT7ire0dHFb9zefHWiHTHS+omNaE1g=;
+	s=k20201202; t=1734100416;
+	bh=0VouYiquPy2It5bjWm9fqPZiiVDMP+venn6AQh1bAEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EytmmJsXkE4HcNPe3IraDR0GQetCebSuTsl8lfOgp9K7kY9Vkvy8poSYLDwJBMho6
-	 uYOUZBUhkhqbDysSqvbAbUcOjwfIbJ53WXCjKfSJpTitgjkPNW6lu8wFwuGsKunkJf
-	 EQ3+AyNdmFlDPagYawrTH9wEtJvwu3ZF57HmrWbVW2CD9UO3f/KMD51QoVa4g+mFNN
-	 fzoBouiNVImy5tzkRcQJpZ5eMz7NMeKfa1aWCUC6hbcmunYLvEPMQrzAYaoYdEs8aN
-	 ZKqE5FwrSpWVSfZz7AsArR89fUDcY8SsNP3uO+GUMnOx7zZDoCA8vSElnMobBzlAk5
-	 HpMNocudVmd8w==
+	b=TwxAlPXnFwOkBGntUnPSMjPs2Qxqf31jIXW2W6fEPcHGl8lkGp8/cbDQIr1Oi46ED
+	 RUI64QwVtjSFjzEwgoRdL0UL3xGpQb+dvALDYtDmz+hRrinRGD6rptWs/8ZACxgBAg
+	 616QaMs4UkIQk/OlSperZ2WerIlVUAOxsDa2QgfmaDyXXZ7shvCMprD8EqRNHZbkma
+	 Ccfc71ca6C0dn9n8VPRSiv8+eX1bCpMJ9PshXV6sp9Tfvsf69EZBPbmVzJQKPQDHcH
+	 EDe3lU4wiApbY8/n5rRMxxj9Yi7e6ciqjr8Lq9f0LqOBC/eGJiJbArAO9meLdZqM1v
+	 qsD9GBN4eibmQ==
 From: Niklas Cassel <cassel@kernel.org>
 To: Jingoo Han <jingoohan1@gmail.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	Jon Mason <jdmason@kudzu.us>
+	Bjorn Helgaas <bhelgaas@google.com>
 Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
 	Jesper Nilsson <jesper.nilsson@axis.com>,
 	Niklas Cassel <cassel@kernel.org>,
-	stable@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v6 2/6] PCI: dwc: ep: Prevent changing BAR size/flags in pci_epc_set_bar()
-Date: Fri, 13 Dec 2024 15:33:03 +0100
-Message-ID: <20241213143301.4158431-10-cassel@kernel.org>
+Subject: [PATCH v6 3/6] PCI: dwc: ep: Add 'address' alignment to 'size' check in dw_pcie_prog_ep_inbound_atu()
+Date: Fri, 13 Dec 2024 15:33:04 +0100
+Message-ID: <20241213143301.4158431-11-cassel@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241213143301.4158431-8-cassel@kernel.org>
 References: <20241213143301.4158431-8-cassel@kernel.org>
@@ -67,72 +65,105 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2690; i=cassel@kernel.org; h=from:subject; bh=hUIuEzkuObWfcaT7ire0dHFb9zefHWiHTHS+omNaE1g=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJjXBdp3btlsFNz323lvfOmG1lzc9fe+LL+7NwpLyvuN EzestPkTkcpC4MYF4OsmCKL7w+X/cXd7lOOK96xgZnDygQyhIGLUwAmYt7E8D/sWktlgbOY1MeD TzT06y7fUyn+2bOQZ41Tt4ZG9LzF7Q0M/3RD1ibNVs7iubpwlmyf+f74CNGlVyRlZ4hvWWWk9yr AhhsA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4323; i=cassel@kernel.org; h=from:subject; bh=0VouYiquPy2It5bjWm9fqPZiiVDMP+venn6AQh1bAEU=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJjXBc/EzyeoZgxm+PIpNxfp4/IMD/h6I25MM+Uu0S69 +6bnV+7O0pZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjCRjY0M/0MTBB8tbdgg/v3u hkCmp/M3V5bO/eYQdIH7TeyRurer46cz/BVufLhLtPuRUjjztXUalU8837488bXtn2dC8tvgr+L TZRgA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-In commit 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update
-inbound map address") set_bar() was modified to support dynamically
-changing the backing physical address of a BAR that was already configured.
+dw_pcie_prog_ep_inbound_atu() is used to program an inbound iATU in
+"BAR Match Mode".
 
-This means that set_bar() can be called twice, without ever calling
-clear_bar() (as calling clear_bar() would clear the BAR's PCI address
-assigned by the host).
+A memory address returned by e.g. kmalloc() is guaranteed to have natural
+alignment (aligned to the size of the allocation). It is however not
+guaranteed that pci_epc_set_bar() (and thus dw_pcie_prog_ep_inbound_atu())
+is supplied an address that has natural alignment. (An EPF driver can send
+in an arbitrary physical address to pci_epc_set_bar().)
 
-This can only be done if the new BAR size/flags does not differ from the
-existing BAR configuration. Add these missing checks.
+The DWC Databook description for the LWR_TARGET_RW and LWR_TARGET_HW fields
+in the IATU_LWR_TARGET_ADDR_OFF_INBOUND_i registers state that:
+"Field size depends on log2(BAR_MASK+1) in BAR match mode."
 
-If we allow set_bar() to set e.g. a new BAR size that differs from the
-existing BAR size, the new address translation range will be smaller than
-the BAR size already determined by the host, which would mean that a read
-past the new BAR size would pass the iATU untranslated, which could allow
-the host to read memory not belonging to the new struct pci_epf_bar.
+I.e. only the upper bits are writable, and the number of writable bits is
+dependent on the configured BAR_MASK.
 
-While at it, add comments which clarifies the support for dynamically
-changing the physical address of a BAR. (Which was also missing.)
+Add a check to ensure that the physical address programmed in the iATU is
+aligned to the size of the BAR (BAR_MASK+1), as without this, we can get
+hard to debug errors, as we could write to bits that are read-only (without
+getting a write error), which could cause the iATU to end up redirecting to
+a physical address that is different from the address that we intended.
 
-Cc: stable@vger.kernel.org
-Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- .../pci/controller/dwc/pcie-designware-ep.c   | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 8 +++++---
+ drivers/pci/controller/dwc/pcie-designware.c    | 5 +++--
+ drivers/pci/controller/dwc/pcie-designware.h    | 2 +-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index bad588ef69a4..44a617d54b15 100644
+index 44a617d54b15..8e07d432e74f 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -222,8 +222,28 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	if ((flags & PCI_BASE_ADDRESS_MEM_TYPE_64) && (bar & 1))
+@@ -128,7 +128,8 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ }
+ 
+ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+-				  dma_addr_t cpu_addr, enum pci_barno bar)
++				  dma_addr_t cpu_addr, enum pci_barno bar,
++				  size_t size)
+ {
+ 	int ret;
+ 	u32 free_win;
+@@ -145,7 +146,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 	}
+ 
+ 	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
+-					  cpu_addr, bar);
++					  cpu_addr, bar, size);
+ 	if (ret < 0) {
+ 		dev_err(pci->dev, "Failed to program IB window\n");
+ 		return ret;
+@@ -265,7 +266,8 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	else
+ 		type = PCIE_ATU_TYPE_IO;
+ 
+-	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
++	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar,
++				     size);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 6d6cbc8b5b2c..3c683b6119c3 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -597,11 +597,12 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+ }
+ 
+ int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-				int type, u64 cpu_addr, u8 bar)
++				int type, u64 cpu_addr, u8 bar, size_t size)
+ {
+ 	u32 retries, val;
+ 
+-	if (!IS_ALIGNED(cpu_addr, pci->region_align))
++	if (!IS_ALIGNED(cpu_addr, pci->region_align) ||
++	    !IS_ALIGNED(cpu_addr, size))
  		return -EINVAL;
  
--	if (ep->epf_bar[bar])
-+	/*
-+	 * Certain EPF drivers dynamically change the physical address of a BAR
-+	 * (i.e. they call set_bar() twice, without ever calling clear_bar(), as
-+	 * calling clear_bar() would clear the BAR's PCI address assigned by the
-+	 * host).
-+	 */
-+	if (ep->epf_bar[bar]) {
-+		/*
-+		 * We can only dynamically change a BAR if the new BAR size and
-+		 * BAR flags do not differ from the existing configuration.
-+		 */
-+		if (ep->epf_bar[bar]->barno != bar ||
-+		    ep->epf_bar[bar]->size != size ||
-+		    ep->epf_bar[bar]->flags != flags)
-+			return -EINVAL;
-+
-+		/*
-+		 * When dynamically changing a BAR, skip writing the BAR reg, as
-+		 * that would clear the BAR's PCI address assigned by the host.
-+		 */
- 		goto config_atu;
-+	}
- 
- 	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
- 
+ 	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 347ab74ac35a..fc0872711672 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -491,7 +491,7 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+ 			     u64 cpu_addr, u64 pci_addr, u64 size);
+ int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-				int type, u64 cpu_addr, u8 bar);
++				int type, u64 cpu_addr, u8 bar, size_t size);
+ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+ void dw_pcie_setup(struct dw_pcie *pci);
+ void dw_pcie_iatu_detect(struct dw_pcie *pci);
 -- 
 2.47.1
 
