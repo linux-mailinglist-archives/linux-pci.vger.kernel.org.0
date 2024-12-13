@@ -1,144 +1,108 @@
-Return-Path: <linux-pci+bounces-18408-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C4F19F1538
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 19:47:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9819A9F153A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 19:49:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BF57188B6FB
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 18:47:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B5EB1634F9
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 18:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2521019CD08;
-	Fri, 13 Dec 2024 18:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49F4918871E;
+	Fri, 13 Dec 2024 18:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPO4ih82"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCbPbzcC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001D118CBE1
-	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 18:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2342A1547CA
+	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 18:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734115670; cv=none; b=njbcXdKQhgk7/kLiIbHMtee/ggpqlYu0LEDK4g88lMDODLwUqF+A2CuLY17Nod6Y3aHx0XCvx8Xmnnbby83ilCLLhSGz/cjkE2ayLBJgVUEmR4tq3cUSvtJ0juYr1ky6hDPy2G0I97S67BPd9/Z4JCNucI8TLFMGDPFAi+L1/J4=
+	t=1734115796; cv=none; b=cZkl1boTDJdjFJNgEeOb95URQdbQCj1Phdqhuo2MEnl3vfSg4xV/1pOkDKrJ07YsTseBK6nTuuVt7jFSaqW5I+2+hg71Kkzhmw5DVIQmSvvB++pbn7S9AAu88mJqHnnNOjpH6nExG2bZQcrRiOdwPjTCNMZzLE0LM/Avs3gWBsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734115670; c=relaxed/simple;
-	bh=7jOG+o7F5M/VMegqZfzT9Z8E032Zvghu26tlXZAuE/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DY/ZwLsx73M9t6D4NkUN2uGa/qV1gnkRsLUsYMOsqFlwnImGP8w/oSOdODUtchWgphOL16o/gjgUDKG9iylSb4BplZSqL5qV1xaCRsiwgcghOCsd7+etNHt4+ijmouxme0KvMGUMGPY3scUwWmPt7n4iKrsBv2LPUGrQTB3xC0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPO4ih82; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7FEC4CED0;
-	Fri, 13 Dec 2024 18:47:49 +0000 (UTC)
+	s=arc-20240116; t=1734115796; c=relaxed/simple;
+	bh=NHMaCImy5uCpgK+P8XFSDKqBeD5tlffhitsqC2f3SAM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=vA7Y+MuI4iudkDaBr+Pk+PCBNEvWfWErYLs9w10Y57jMAzEjlR4Y/3G4aw6hTHn/mIE5zVzUlaDBv+vI8v7cCVqc4aYrgACqPLKNflotsPlmCxbLA5AABsfOPsrfU4bjgfltVuHRRnMlyze0iqyoq1dWySC3ibtv+SSNIexah5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCbPbzcC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DC6C4CED0;
+	Fri, 13 Dec 2024 18:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734115669;
-	bh=7jOG+o7F5M/VMegqZfzT9Z8E032Zvghu26tlXZAuE/c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CPO4ih82cSgdYBNR7WBnc7NlxoIoq1eOEjReuR9YPb98FNr4eeVCoAB8qInt+1vYG
-	 VtwsiOCBqOfPN6AZ5jsDPwfsnP3eEINt7uk4cw25CNUe2awL3wFD00rbYeB6BVABiA
-	 K3j9dhHe65+oJ/nz+vIdTMPJwdwKPE6ggLQrqv2/wGhYbaWANkd/2K6dww0kR3rkP7
-	 ejuQfFgs3UynXIvZqYMD6aZGFfQkPcX0/GvKg0Fsxr4oXEL4E8brn4JY6wrB44umF9
-	 /1ft8Y/QFPjQYis2UHp8rKooyrqjTJS82WgKqkDQP1Khf/e3q9StaZqmV9F8rpYKfw
-	 i9dSMLRD5DuUw==
-Date: Fri, 13 Dec 2024 12:47:48 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH v3 1/2] PCI: Add Rockchip vendor ID
-Message-ID: <20241213184748.GA3424367@bhelgaas>
+	s=k20201202; t=1734115795;
+	bh=NHMaCImy5uCpgK+P8XFSDKqBeD5tlffhitsqC2f3SAM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=sCbPbzcCqTak7QUaCb8ugV7P6py/pgFbsb5q1ARbEjtt/nVy35mB7qmUxyjdur+vl
+	 hAtGFa2f/CKPPiM9J7/ANs47tLfSg6umfveCubRAa3+ivqEIaTgfW8BQ7lua9UHKkA
+	 j1PSekcZ4MXdUixtvktkXc8Kpnw5ZjXYpvDWnt2iVNz8Nl6xmymDRdfjwmCkhe8Kgj
+	 yuKwSTKJH1UcTfpViTeb57f+Zc052cSKxh1vIYN3CfFb/dtoTlTIJNoM9P74CUyN3x
+	 GsUKdOvjhaN9hpVtk1UJZAOL2FZZHsiVybTOaprviiLc436IrsHyTxPcn2KvxpazsQ
+	 O8Wn7EVAHOA7w==
+Message-ID: <e34ace63dfb3331cb36778d13696457a92e39892.camel@kernel.org>
+Subject: Re: [PATCH for-linus] PCI: Honor Max Link Speed when determining
+ supported speeds
+From: Niklas Schnelle <niks@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, Jonathan
+ Cameron <Jonathan.Cameron@huawei.com>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>,  "Maciej W. Rozycki"	 <macro@orcam.me.uk>
+Date: Fri, 13 Dec 2024 19:49:52 +0100
+In-Reply-To: <71784f5660f0f5d9927f01b7313a1395155f9214.camel@kernel.org>
+References: 
+	<e3386d62a766be6d0ef7138a001dabfe563cdff8.1733991971.git.lukas@wunner.de>
+		 <30db80fd-15bd-c4a7-9f73-a86a062bce52@linux.intel.com>
+		 <Z1tgJoTRnldq8NYE@wunner.de>
+		 <f8bf764f-4233-0486-54b6-2380b446cd5a@linux.intel.com>
+	 <71784f5660f0f5d9927f01b7313a1395155f9214.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1734063843-188144-1-git-send-email-shawn.lin@rock-chips.com>
 
-On Fri, Dec 13, 2024 at 12:24:02PM +0800, Shawn Lin wrote:
-> This patch moves PCI_VENDOR_ID_ROCKCHIP from pci_endpoint_test.c to
-> pci_ids.h. And reuse it in pcie-rockchip-host.c.
-> 
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Krzysztof Wilczynski <kw@linux.com>
-> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+On Fri, 2024-12-13 at 18:41 +0100, Niklas Schnelle wrote:
+> On Fri, 2024-12-13 at 12:12 +0200, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 12 Dec 2024, Lukas Wunner wrote:
+> >=20
+> > > On Thu, Dec 12, 2024 at 04:33:23PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > > > On Thu, 12 Dec 2024, Lukas Wunner wrote:
+> > > > > --- a/drivers/pci/pci.c
+> > > > > +++ b/drivers/pci/pci.c
+> > > > > @@ -6240,12 +6240,14 @@ u8 pcie_get_supported_speeds(struct pci_d=
+ev *dev)
+> > > > >  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
+> > > > >  	speeds =3D lnkcap2 & PCI_EXP_LNKCAP2_SLS;
+> > > > > =20
+> > > > > +	/* Ignore speeds higher than Max Link Speed */
+> > > > > +	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+> > > > > +	speeds &=3D GENMASK(lnkcap & PCI_EXP_LNKCAP_SLS, 0);
+> > > >=20
+> >=20
+>=20
+> ---8<---
+>=20
+> > As in more broader terms there are other kinds of broken devices this=
+=20
+> > code doesn't handle. If PCI_EXP_LNKCAP2_SLS is empty of bits but the=
+=20
+> > device has >5GT/s in PCI_EXP_LNKCAP_SLS, this function will return 0.
+>=20
+> On second look I don't think it will. If lnkcap2 & PCI_EXP_LNKCAP2_SLS
+> is 0 it will proceed to the synthesize part and rely on
+> PCI_EXP_LNKCAP_SLS alone. The potentially broken part I see is when
+> lnkcap2 has bits set but lnkcap doesn't which is also when the
+> GENMASK(=E2=80=A6, 1) would become weird. Not sure what the right handlin=
+g for
+> that is though.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
-> 
-> Changes in v3:
-> - add commit log and reuse this ID for more places
-> 
-> Changes in v2: None
-> 
->  drivers/misc/pci_endpoint_test.c            | 1 -
->  drivers/pci/controller/pcie-rockchip-host.c | 2 +-
->  drivers/pci/controller/pcie-rockchip.h      | 1 -
->  include/linux/pci_ids.h                     | 2 ++
->  4 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 3aaaf47..b5c8422 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -85,7 +85,6 @@
->  #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
->  #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
->  
-> -#define PCI_VENDOR_ID_ROCKCHIP			0x1d87
->  #define PCI_DEVICE_ID_ROCKCHIP_RK3588		0x3588
->  
->  static DEFINE_IDA(pci_endpoint_test_ida);
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 5adac6a..6a46be1 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -367,7 +367,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  		}
->  	}
->  
-> -	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
-> +	rockchip_pcie_write(rockchip, PCI_VENDOR_ID_ROCKCHIP,
->  			    PCIE_CORE_CONFIG_VENDOR);
->  	rockchip_pcie_write(rockchip,
->  			    PCI_CLASS_BRIDGE_PCI_NORMAL << 8,
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index a51b087..f9eaac9 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -198,7 +198,6 @@
->  #define AXI_WRAPPER_NOR_MSG			0xc
->  
->  #define PCIE_RC_SEND_PME_OFF			0x11960
-> -#define ROCKCHIP_VENDOR_ID			0x1d87
->  #define PCIE_LINK_IS_L2(x) \
->  	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
->  #define PCIE_LINK_TRAINING_DONE(x) \
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index d2402bf..6f68267 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2604,6 +2604,8 @@
->  
->  #define PCI_VENDOR_ID_ZHAOXIN		0x1d17
->  
-> +#define PCI_VENDOR_ID_ROCKCHIP		0x1d87
-> +
->  #define PCI_VENDOR_ID_HYGON		0x1d94
->  
->  #define PCI_VENDOR_ID_META		0x1d9b
-> -- 
-> 2.7.4
-> 
+Never mind, I missed the >5 GT/s bit. Though I think that returning 0
+speeds is probably the safest bet for a broken device, no?
 
