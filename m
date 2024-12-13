@@ -1,113 +1,90 @@
-Return-Path: <linux-pci+bounces-18365-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18366-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3234D9F0853
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 10:46:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0B39F090B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 11:05:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31917188C02F
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 09:46:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A34A01880140
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 10:05:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CB151B3950;
-	Fri, 13 Dec 2024 09:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C681ADFE0;
+	Fri, 13 Dec 2024 10:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hughsie.com header.i=@hughsie.com header.b="C1PSvcAg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4251B3937;
-	Fri, 13 Dec 2024 09:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from mail-40136.proton.ch (mail-40136.proton.ch [185.70.40.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1521B6D18
+	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 10:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734083194; cv=none; b=bkRyea4evrqUZ6zlN3hT2vOXtlCPcw2HyO01IRkD9NmpNjYra6NTVWdUzhUWvKa4iYvzjqBQyoTUf9XHlLxDYjT1/JaNY+xd4TnJ0g9wsjiydCplX7oGY6JcpP7kwPUxRJmEaUh6f9+CbsZEMWseKiA2wWDo4KtKpzybf4cppZo=
+	t=1734084334; cv=none; b=pqnaghA3msi7pLL95yH2Tr3ilufjEezNT6E+nTkLsr9wLY2ULQFh8st7jCB/z95JujvKV5vnFO1xzC3InGcwRjEd2YJpKh7w4am0UPhdUEqypoy4l3COPGlMUq5JK6fir4QAoq+jfYd+UZ0G++HZazguhJhXzDUnnraRRKvSYNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734083194; c=relaxed/simple;
-	bh=hLBnV4IZYkZgCuhCpJqYMpTk2eeDR/CYwEsx3jyoaGs=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=K8pwWB/5V4JW2gGodzraUuIvJ1xERIV3OpymBvGnKn2nzNmHtZMVLT2xOlh2v5wtqAZkvdoT2c0aflmj+Mp8gvXOkuOx/jx/TU+ksibGDNU7/3Hhk842YVHo/Cqd2lrEqCJKwlBhkPrfkxBA0XqzWYY2HOgJ9LfWlrezhOZTOnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from ubuntu18.eswin.cn (unknown [10.12.192.151])
-	by app1 (Coremail) with SMTP id TAJkCgDXG6VrAlxnCBICAA--.9990S4;
-	Fri, 13 Dec 2024 17:46:20 +0800 (CST)
-From: zhangdongdong@eswincomputing.com
-To: alex.williamson@redhat.com
-Cc: bhelgaas@google.com,
-	zhangdongdong@eswincomputing.com,
-	yishaih@nvidia.com,
-	avihaih@nvidia.com,
-	yi.l.liu@intel.com,
-	ankita@nvidia.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Remove redundant macro
-Date: Fri, 13 Dec 2024 17:46:17 +0800
-Message-Id: <20241213094617.1149-1-zhangdongdong@eswincomputing.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:TAJkCgDXG6VrAlxnCBICAA--.9990S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrykCw4rWFy7JryUCr4Uurg_yoW8WryfpF
-	s5Ca4xGrWrXFWFka1vya45AFn8XasxZrWI93y7uw13Ka43t3yIvrWYyr42yry2grWIyF45
-	XrsYkr98WFyjqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
-	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
-	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUO73vUUUUU
-X-CM-SenderInfo: x2kd0wpgrqwvxrqjqvxvzl0uprps33xlqjhudrp/1tbiAgEKCmdbECsaiwAEsR
+	s=arc-20240116; t=1734084334; c=relaxed/simple;
+	bh=tH827m4h4XLHI6oAAXVZE+nLImUPaQ79hjHCS2ChNZg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ke39rNbV70DINIRQcUF4ZEfXp+3VEdZr5Kk6bZBPABnPeECjNJEhdAysKKU1l8lXgv9jI1935RB7iICXbkHa9y8a3uL3gHO75Vwit5a65LcPsrULgppN/ZS5khQIINyif5FMG6cdoCFQmuQE0AWhypJwy/uGXuou0T9O71oI2QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hughsie.com; spf=pass smtp.mailfrom=hughsie.com; dkim=pass (2048-bit key) header.d=hughsie.com header.i=@hughsie.com header.b=C1PSvcAg; arc=none smtp.client-ip=185.70.40.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hughsie.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hughsie.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hughsie.com;
+	s=protonmail2; t=1734084324; x=1734343524;
+	bh=tH827m4h4XLHI6oAAXVZE+nLImUPaQ79hjHCS2ChNZg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=C1PSvcAgJ+w3YeZgnXpRL+A4V4qpOa2UBMFNfzgNUSx/Kj+Qwz/yyCo3tebwd/S0t
+	 C9G8FQc1Po3HfUlQ6JluyGfSBKYXihKNA8loSBYvny8e9Fi21MPvlF6dIGZQnfDGGv
+	 4qbgCyXUybIKHg7gMzeaprKvKF4KfWPmqeKnDvKym6wRuEZCjtcfQQHxxSZ/0VbY1N
+	 wNpsaxx/o8Ps1OHtaEgtcXFu8rAfo3j5IioBdp1XdufXFIV/Dq/7yswj4hi6vnnE4j
+	 jhpccPYZzOWlaTEp7nyruz+JSj/Lai15h+v5srYVpAPZ3PnRZUUNpbZ8uT88XSk+1W
+	 Dc+RN8Ur9+Fjw==
+Date: Fri, 13 Dec 2024 10:05:19 +0000
+To: Mario Limonciello <mario.limonciello@amd.com>
+From: Richard Hughes <richard@hughsie.com>
+Cc: Werner Sembach <wse@tuxedocomputers.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Richard Hughes <hughsient@gmail.com>, ggo@tuxedocomputers.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Avoid putting some root ports into D3 on some Ryzen chips
+Message-ID: <vVLu9MdNWVCG96sN3xqjkmMVQpr_1iu61hX0w0q5dSQtFBi9ERc3b6hSoCjobPSTNgkIp3PBheheyUlayhMeQjShsx62zNqxWnPsrHt-xaM=@hughsie.com>
+In-Reply-To: <20cfa4ed-d25d-4881-81b9-9f1698efe9ff@amd.com>
+References: <20241209193614.535940-1-wse@tuxedocomputers.com> <215cd12e-6327-4aa6-ac93-eac2388e7dab@amd.com> <23c6140b-946e-4c63-bba4-a7be77211948@tuxedocomputers.com> <823c393d-49f6-402b-ae8b-38ff44aeabc4@amd.com> <2b38ea7b-d50e-4070-80b6-65a66d460152@tuxedocomputers.com> <e0ee3415-4670-4c0c-897a-d5f70e0f65eb@amd.com> <6a809349-016a-42bf-b139-544aeec543aa@tuxedocomputers.com> <20cfa4ed-d25d-4881-81b9-9f1698efe9ff@amd.com>
+Feedback-ID: 110239754:user:proton
+X-Pm-Message-ID: 8c998f637c16f699820e7fb8c69c173bc45aab2a
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Dongdong Zhang <zhangdongdong@eswincomputing.com>
+On Thursday, 12 December 2024 at 19:01, Mario Limonciello <mario.limonciell=
+o@amd.com> wrote:
+> > > > > Sadly fwupd/LVFS does not support executing arbitrary efi binarie=
+s/
+> > > > > nsh scripts which still is the main form ODMs provide bios update=
+s.
 
-Removed the duplicate macro definition PCI_VSEC_HDR from
-pci_regs.h to avoid redundancy. Updated the VFIO PCI code
-to use the existing `PCI_VNDR_HEADER` macro for consistency,
-ensuring minimal changes to the codebase.
+Of course fwupd can't do this; it would be a huge security hole as the nsh =
+script isn't signed.
 
-Signed-off-by: Dongdong Zhang <zhangdongdong@eswincomputing.com>
----
- drivers/vfio/pci/vfio_pci_config.c | 3 ++-
- include/uapi/linux/pci_regs.h      | 1 -
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> It sounds like some bugs in the implementation of the capsule handler
+> for this system.
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index ea2745c1ac5e..c30748912ff1 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1389,7 +1389,8 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
- 
- 	switch (ecap) {
- 	case PCI_EXT_CAP_ID_VNDR:
--		ret = pci_read_config_dword(pdev, epos + PCI_VSEC_HDR, &dword);
-+		ret = pci_read_config_dword(pdev, epos + PCI_VNDR_HEADER,
-+					    &dword);
- 		if (ret)
- 			return pcibios_err_to_errno(ret);
- 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 1601c7ed5fab..7b6cad788de3 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1001,7 +1001,6 @@
- #define PCI_ACS_CTRL		0x06	/* ACS Control Register */
- #define PCI_ACS_EGRESS_CTL_V	0x08	/* ACS Egress Control Vector */
- 
--#define PCI_VSEC_HDR		4	/* extended cap - vendor-specific */
- #define  PCI_VSEC_HDR_LEN_SHIFT	20	/* shift for length field */
- 
- /* SATA capability */
--- 
-2.17.1
+I've seen this with AmiFlash + BIOS.ROM, but never from a capsule. I'm pret=
+ty sure Aptio builder is more than capable of constructing a capsule file w=
+ith the correct DMI data.
 
+> It's not an Insyde problem. I use Insyde capsules regularly myself from
+> fwupd. I also know several other OEMs that ship capsules to LVFS that
+> use Insyde.
+
+100% agreed; Insyde firmware makes up more than 20% of the updates on the L=
+VFS now.
+
+Richard.
 
