@@ -1,102 +1,133 @@
-Return-Path: <linux-pci+bounces-18403-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18404-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02C2B9F1415
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 18:41:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DBCD9F1466
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 18:53:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8B26282483
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 17:41:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEC0B280A9B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 17:53:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95EBA1E5702;
-	Fri, 13 Dec 2024 17:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6509A1E22E6;
+	Fri, 13 Dec 2024 17:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6nJdMZg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dsGwzCps"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7036117B505
-	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 17:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEF3187FFA;
+	Fri, 13 Dec 2024 17:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734111689; cv=none; b=kSERAh/XeD7qc/4neGxDp6m/EHnxtWsOMMrP7zAgAYMar4IKg37yX64M0fa/LmVHhCNx8NY/8q/lf1KHgKQwjJGOY0KAY9g5em665YRKV1+6lIN/zi8L7wz6n4QcyOb8OYFoBEor4p6BWLHU9ArzQGIQPZcL5QNjoOBAlyQasLg=
+	t=1734112431; cv=none; b=Y5Uplpsd5HFc7QAKP0H6ZLhlhukl7L8K5m8IvH/fpmotA4wyoLjoxx2BmyMGfRe2hh4lrNu3xiAvtpu2PpO8bw6XVNZegVHmqFdN0ndh5kJsKtWEvbFi1pCwBz99pbeg88yI4Vav2eafIADm10pXdgNaC8ThQ1V9cjCd61BEDZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734111689; c=relaxed/simple;
-	bh=gviHR/V7n23AGgmG4qi0mDfAV/LbyKvjKLrG+BLRTQ4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aUYIRIbn255aBzUeLCYWZXdJFxXzbTbFdjjl6Vyz7GBIeynAVPCgxQmAG2mvZZfzcmmf+VmMfLEw3HXz3TDLU/5NQZynEIoA4caJv8Q0B9MijfehgCOIfiTAaCMjIBYG8Gn0Fbxjo1bGdqR+o3ziY4q3zQZ2ujFJnQy/66QYKis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6nJdMZg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2329EC4CEE3;
-	Fri, 13 Dec 2024 17:41:24 +0000 (UTC)
+	s=arc-20240116; t=1734112431; c=relaxed/simple;
+	bh=giLsrBe+eXIr2Z5RCc4V156ArPFV4LhVw7wYhIzIoXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TjxITHd02ehDSerFxudBlFZyRpdunAWlFjdwEpTml/F3ia7cY54S+XaZBEMNQArNH9g/91aQh+x/zgF2CC+HvFbYHuCSM546jDCbcmwUWegQ2wiKaR03J3dZoh8r0fBaOxGQxgCUfq0gjYoOoF9ETeTC8uZnzLx3jXWTxUvScTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dsGwzCps; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6830CC4CED0;
+	Fri, 13 Dec 2024 17:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734111686;
-	bh=gviHR/V7n23AGgmG4qi0mDfAV/LbyKvjKLrG+BLRTQ4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=U6nJdMZgpt+Fztbai5f0H1UhYzWJhK1uBauDAXbbxtdQkQSe56JjoQtIla0xCgmSG
-	 e58+nXNwFKcRXREFUMns/hZqvlhYoYSe7Nw8rJ4Wwj6trSpeMEQ71o8LCS51qN3DW+
-	 jAvqTaOztWGNXqv3fcqhR0bRwnjn6mK/strKpUh1gplkaJxI2NIOxb6vGz79eSBiU2
-	 Q++kdSCMmszpWANfAr95EJAxZCuljoQKyUkcfarQeVY9LaPB8ChoWB2zhE5eQfqTc+
-	 xkttfks5JUy+CdnoEOoYxGSovynLQ0T26PE3u0FkdKERzsSlsJooU2MYd3oeIG+LFp
-	 6i2nOA7WmWRQg==
-Message-ID: <71784f5660f0f5d9927f01b7313a1395155f9214.camel@kernel.org>
-Subject: Re: [PATCH for-linus] PCI: Honor Max Link Speed when determining
- supported speeds
-From: Niklas Schnelle <niks@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>, Mika Westerberg
- <mika.westerberg@linux.intel.com>,  "Maciej W. Rozycki"	 <macro@orcam.me.uk>
-Date: Fri, 13 Dec 2024 18:41:23 +0100
-In-Reply-To: <f8bf764f-4233-0486-54b6-2380b446cd5a@linux.intel.com>
-References: 
-	<e3386d62a766be6d0ef7138a001dabfe563cdff8.1733991971.git.lukas@wunner.de>
-	 <30db80fd-15bd-c4a7-9f73-a86a062bce52@linux.intel.com>
-	 <Z1tgJoTRnldq8NYE@wunner.de>
-	 <f8bf764f-4233-0486-54b6-2380b446cd5a@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	s=k20201202; t=1734112430;
+	bh=giLsrBe+eXIr2Z5RCc4V156ArPFV4LhVw7wYhIzIoXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dsGwzCpsHyKSEp5dYNZqIU7VIPCf1+1BvfLnsNExHvF+KgHEKWxdDya2OH4Yb1KdO
+	 xjyNZsn9LGsL+5ubm9YwLy6PfO1o9HHK4GH9HnfKOzJfFxn/wgTn1u4o1aUgnAXEWn
+	 GkW8WT5ub+1C8izqxGJm68p92qbUmH0Zz6j12LSWYDuKvCO0PKAmAIFG8J70k4DM58
+	 BkmbpSUnFf6MODuN2bFpAw11s14p/2yDMhpzWn6yJuuKNDwnCnEugjbstu3jKrQ4hZ
+	 YZx0beo5hpke+CycdWaTs127pteqlLsHIM7BixvuD11GKP+6nU5Tvb5YUerVZXNZPP
+	 DkNTiHRBWPZvw==
+Date: Fri, 13 Dec 2024 11:53:49 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Philipp Stanner <pstanner@redhat.com>,
+	Igor Mitsyanko <imitsyanko@quantenna.com>,
+	amien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Basavaraj Natikar <basavaraj.natikar@amd.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sergey Matyukevich <geomatsi@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alex Dubov <oakad@yahoo.com>,
+	Sudarsana Kalluru <skalluru@marvell.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+	Sanjay R Mehta <sanju.mehta@amd.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Chen Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mostafa Saleh <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Yi Liu <yi.l.liu@intel.com>, Kunwu Chan <chentao@kylinos.cn>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>,
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	Igor Mitsyanko <i.mitsyanko@gmail.com>
+Subject: Re: [PATCH v3 09/11] wifi: qtnfmac: use always-managed version of
+ pcim_intx()
+Message-ID: <20241213175349.GA3421319@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87cyhvoox9.fsf@kernel.org>
 
-On Fri, 2024-12-13 at 12:12 +0200, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 12 Dec 2024, Lukas Wunner wrote:
->=20
-> > On Thu, Dec 12, 2024 at 04:33:23PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > > On Thu, 12 Dec 2024, Lukas Wunner wrote:
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -6240,12 +6240,14 @@ u8 pcie_get_supported_speeds(struct pci_dev=
- *dev)
-> > > >  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
-> > > >  	speeds =3D lnkcap2 & PCI_EXP_LNKCAP2_SLS;
-> > > > =20
-> > > > +	/* Ignore speeds higher than Max Link Speed */
-> > > > +	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-> > > > +	speeds &=3D GENMASK(lnkcap & PCI_EXP_LNKCAP_SLS, 0);
-> > >=20
->=20
+[+cc personal address for Igor]
 
----8<---
+On Fri, Dec 13, 2024 at 12:30:42PM +0200, Kalle Valo wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+> 
+> > [cc->to: Igor]
+> >
+> > On Mon, Dec 09, 2024 at 02:06:31PM +0100, Philipp Stanner wrote:
+> >> pci_intx() is a hybrid function which can sometimes be managed through
+> >> devres. To remove this hybrid nature from pci_intx(), it is necessary to
+> >> port users to either an always-managed or a never-managed version.
+> >> 
+> >> qtnfmac enables its PCI-Device with pcim_enable_device(). Thus, it needs
+> >> the always-managed version.
+> >> 
+> >> Replace pci_intx() with pcim_intx().
+> >> 
+> >> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> >> Acked-by: Kalle Valo <kvalo@kernel.org>
+> >
+> > Hoping for an ack from Igor, too.
+> 
+> Igor hasn't been around for a while so I'm not expecting see an ack from
+> him, I think the whole qtnfmac driver should be removed in the future.
+> Feel free to take the patch as is.
 
-> As in more broader terms there are other kinds of broken devices this=20
-> code doesn't handle. If PCI_EXP_LNKCAP2_SLS is empty of bits but the=20
-> device has >5GT/s in PCI_EXP_LNKCAP_SLS, this function will return 0.
-
-On second look I don't think it will. If lnkcap2 & PCI_EXP_LNKCAP2_SLS
-is 0 it will proceed to the synthesize part and rely on
-PCI_EXP_LNKCAP_SLS alone. The potentially broken part I see is when
-lnkcap2 has bits set but lnkcap doesn't which is also when the
-GENMASK(=E2=80=A6, 1) would become weird. Not sure what the right handling =
-for
-that is though.
-
+Thanks, Kalle, will do.
 
