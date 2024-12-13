@@ -1,139 +1,118 @@
-Return-Path: <linux-pci+bounces-18357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 302069F0529
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 08:06:24 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B34329F058B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 08:32:30 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95E201886B48
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 07:06:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 752E0283403
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 07:32:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189A0187325;
-	Fri, 13 Dec 2024 07:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED8A197A9F;
+	Fri, 13 Dec 2024 07:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWHuvmh1"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YXws51p4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4275C1372;
-	Fri, 13 Dec 2024 07:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AE93207;
+	Fri, 13 Dec 2024 07:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734073580; cv=none; b=BthLqh2yXwYO/yehbwAAen7XrVjEMzTntbzMM/uazQk2WYnuR+ubsSp5DeHDSdiKFjleXgVJITI2kD+d86CFBCeTBUfy4UxO8pOXVOv7rl1sbZl/LsVBlc9xYGiV8R1e8zYPrT/CVC7sH2vITGAA2mOBgZ61lVjB4we4d3f6iww=
+	t=1734075145; cv=none; b=HUihgheNum5cHsn6k2mbti28rtc/z3Ug4R0dl2Q8+8slhUKeS755Fp+s7+bYS8t457ukzuF875VgpFZlpMLq1+pWMiG+u3PNHwyzV7tM3Za3Qr++Hse0+ThJsml6UfMCK9LeVgU9ll1L/T0h6bcOZ5IOlugMwDc7RKMoposy5eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734073580; c=relaxed/simple;
-	bh=9XnvVYl+YZ24uJZB1nNo0oLCc3tEoJXLzFdrQlqruV8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W1gIoYbqhR7Ii+Fb0jt/pGLZOvnXJwSFgjd5rGDT2xESSeM3mNc1ygaVEcBkY2X7U/ovUyvfTmS/uLNzWhPo7BwdHp0zyw6NWqSqEXMjuAhmAVFNY2Sh55U05k4VdTIZNAnNBnEGlJhHVXND120NHH2CVo/br+sRN13yXmzWkRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWHuvmh1; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aa68d0b9e7bso263244766b.3;
-        Thu, 12 Dec 2024 23:06:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734073575; x=1734678375; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zxrQwrMDRX39hUvqMvsuz8UTw88tsq0nhYKLS4FpEXc=;
-        b=GWHuvmh1RUdZHF1XGUijnMqCz0CupU/mH/bHmbUSdXx3plUIShWnIvtKIhWg06l/3p
-         4jjOE8QkB12IDLY5IFrMiWnN36r1r2VCHm0dMJJooKKk8rFW+VSmln8RB4nipD07US+k
-         KxZjBjbSgH9RBlvrn6ZNiP2yDBrqOaSzKpy47mYpKqs7o2+g3mNBrw6kVU36WrZe61ww
-         rCuiZ2qGJGP4tHRMJn3HYPys4lXbPlfX8SzW8pREYSxvE4Gp7270dfgOQ9H3xHz5/fpS
-         BPIUGa9vbAjnvnEuBUuJndRqUOraPN9JJeAAeCIDf6QfVJFFvErYmCqARyY0g8VUyy3C
-         QOAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734073575; x=1734678375;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zxrQwrMDRX39hUvqMvsuz8UTw88tsq0nhYKLS4FpEXc=;
-        b=Vhp3PLeRzJYTB0YVutNkRAjYV/FDaMBN4P3gTmyPBDj5BGxxADO10PBSQT/BH+X5XE
-         123mJpl6T5sNV4RJmFXH17zaeiUqYUnvQvmJHB+XEoSypha9FbQfmXkwqSvG1xMwqZv3
-         yVeY47UsFA4wLnstMS7s3+PIGvmVV4QfacA14tZJDuI9oYl6JWSt3IhJdz4JHtn/3wJs
-         Tb+avWJ9sjPP3D7jpUIQE4gDx7GG98cz+N9ji7orU1QuLU+F8ZIj3MqR76FgAzPWUKsJ
-         5Hyq8/PnBuc0zRBeevXChLEau6sc0BZYk5Ucwe4otjPwVfrWxtRdVBCsoXpTLcQdsz19
-         wg6w==
-X-Forwarded-Encrypted: i=1; AJvYcCU0NSTGBUksVKxgtaBZLvl+S9PiOD1x9HFvu/nlw5y/OsO6frEV4EDrXOs2uueDXDOpLUf+@vger.kernel.org, AJvYcCVQAiUBT6xkDcPdDhXEph+6bbZ6+uwsSn2fp2MJKSKgPkrLwG0wvzbjTBeV5duFIM7680P8Eid+ffNs@vger.kernel.org, AJvYcCVo60E2Lj8oD73OwEZkIhYSOWbbC0B/Hx7mF/t9j0an8eJgwML2k6s2baI8PdYG9DPB4bEEuq2QnqNNGlMQ@vger.kernel.org, AJvYcCXtctm6F//BoL9A04NE5tK+poqKLpwzZIDfinqerYprNH3Yu7zRwW0mEqtdjpuvTKrWzvsuCUQEpfD0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQjrNwzos72EJfJDSe4ZWEx0te7g1fYQBX81f0WFLp53SCA0WI
-	LtQBaGyz115I7Pmo/tieU+B6J8N33rcqPcZAFpL5UKWXk6N7yzuH
-X-Gm-Gg: ASbGnctXwUdW2VnoaBtTfUCyeZMcNgnV5myvBQu2jKbyuKHRW4KmDyMEKVX3/aZ20LC
-	uZ78bG/v8SIMwBS2H45C36S0cw8H80fCzIGIn4NrPDyNSl3vbKusdPxY29Of973qZWUJhdICeJC
-	9fhXBHtkUdH2gxoT5X7asI699niF0dFLlYhvHtBcVkXKCDkhIwyVuZrPQA42JkpWyFRM0vGFV81
-	7CTJMj1cEkmhtj/+B9QUzrBNbq4J0mcXaNvUXXj/cLpdoy/SHahEdnbTsPGyNQWroVj4umueAXr
-	iBc0IKsdu5k228FC2ena68r0p9wKK2OExQsV0AY0m06vYF8EMotpOTzajqdFZr+FMnMs6Em/Csi
-	BawChY2cuTIAE
-X-Google-Smtp-Source: AGHT+IHFJ+kRGpSorLtHc8TbJrTe4EAI6jr1TsoG5rRi6v2qDv0r5gf2yVynewdjhGrIVYCgXoTJJg==
-X-Received: by 2002:a17:906:6a04:b0:aa6:800a:1295 with SMTP id a640c23a62f3a-aab778d9d9cmr155786966b.5.1734073575257;
-        Thu, 12 Dec 2024 23:06:15 -0800 (PST)
-Received: from ?IPV6:2003:df:bf0d:b400:9583:b351:67da:b15e? (p200300dfbf0db4009583b35167dab15e.dip0.t-ipconnect.de. [2003:df:bf0d:b400:9583:b351:67da:b15e])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa685b6cf77sm687526266b.83.2024.12.12.23.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2024 23:06:14 -0800 (PST)
-Message-ID: <00dd07c9-21a6-4515-9b62-351c6aff2d1b@gmail.com>
-Date: Fri, 13 Dec 2024 08:06:13 +0100
+	s=arc-20240116; t=1734075145; c=relaxed/simple;
+	bh=KF2u61fFy2MhhhXHsq56NzRxS4bNBSmPrcwIzbiCk28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTt9bQ078C30Ko6QS3MosAWp1BX+ai+GNzNu16u5XMyrwBWgbR5YoXF6Wp2dOvWorYpefw3drqtiEsK/J18QX+fwziYfe7zQxXP04BFSCHS76P6hwiYGGvLRWBpr5hjjYFT0P6V5Ta1QLsaNsES3CUpP/r6z28ZqBgo1FGGx7+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YXws51p4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C47C4CED0;
+	Fri, 13 Dec 2024 07:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1734075144;
+	bh=KF2u61fFy2MhhhXHsq56NzRxS4bNBSmPrcwIzbiCk28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YXws51p4OlwPq738uGlipsQN5HV9ZVc0qBQtIDFJ/RVNPLGvtjmm8j7Lruy9AroPG
+	 fwsqluHpE8hKxixfh9G9UkxLnr46YSpthgtDfA9vQaZk5drkqBVz90PEiil9zPChQB
+	 04xHlVOMH3ZIXzCGOFptOxKKf9WCynUw3GeIuYZg=
+Date: Fri, 13 Dec 2024 08:31:45 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Philipp Stanner <pstanner@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Alex Dubov <oakad@yahoo.com>, amien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Basavaraj Natikar <basavaraj.natikar@amd.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Sudarsana Kalluru <skalluru@marvell.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+	Igor Mitsyanko <imitsyanko@quantenna.com>,
+	Sergey Matyukevich <geomatsi@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Chen Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mostafa Saleh <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Yi Liu <yi.l.liu@intel.com>, Kunwu Chan <chentao@kylinos.cn>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>,
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 05/11] misc: Use never-managed version of pci_intx()
+Message-ID: <2024121335-blooper-cognitive-04ec@gregkh>
+References: <20241209130632.132074-7-pstanner@redhat.com>
+ <20241212192637.GA3359920@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/16] Device / Driver PCI / Platform Rust abstractions
-To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
- rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
- a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
- fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
- ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
- daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com,
- j@jannau.net, fabien.parent@linaro.org, chrisi.schrefl@gmail.com,
- paulmck@kernel.org
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org
-References: <20241212163357.35934-1-dakr@kernel.org>
-Content-Language: de-AT-frami, en-US
-From: Dirk Behme <dirk.behme@gmail.com>
-In-Reply-To: <20241212163357.35934-1-dakr@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241212192637.GA3359920@bhelgaas>
 
-On 12.12.24 17:33, Danilo Krummrich wrote:
-> This patch series implements the necessary Rust abstractions to implement
-> device drivers in Rust.
+On Thu, Dec 12, 2024 at 01:26:37PM -0600, Bjorn Helgaas wrote:
+> [cc->to: Arnd, Greg, Alex]
 > 
-> This includes some basic generalizations for driver registration, handling of ID
-> tables, MMIO operations and device resource handling.
+> On Mon, Dec 09, 2024 at 02:06:27PM +0100, Philipp Stanner wrote:
+> > pci_intx() is a hybrid function which can sometimes be managed through
+> > devres. To remove this hybrid nature from pci_intx(), it is necessary to
+> > port users to either an always-managed or a never-managed version.
+> > 
+> > cardreader/rtsx_pcr.c and tifm_7xx1.c enable their PCI-Device with
+> > pci_enable_device(). Thus, they need the never-managed version.
+> > 
+> > Replace pci_intx() with pci_intx_unmanaged().
+> > 
+> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 > 
-> Those generalizations are used to implement device driver support for two
-> busses, the PCI and platform bus (with OF IDs) in order to provide some evidence
-> that the generalizations work as intended.
-> 
-> The patch series also includes two patches adding two driver samples, one PCI
-> driver and one platform driver.
-> 
-> The PCI bits are motivated by the Nova driver project [1], but are used by at
-> least one more OOT driver (rnvme [2]).
-> 
-> The platform bits, besides adding some more evidence to the base abstractions,
-> are required by a few more OOT drivers aiming at going upstream, i.e. rvkms [3],
-> cpufreq-dt [4], asahi [5] and the i2c work from Fabien [6].
-> 
-> The patches of this series can also be [7], [8] and [9].
+> Looking for ack from Arnd, Greg, Alex.
 
-With v6.13-rc2 and Fabien's regmap/regulator/I2C on top I gave it a
-try on x86 with qemu. Additionally cross compiled for arm64 and will
-try it on real hardware once I have it available. But previous
-versions of this series have been fine on that, already. No issues
-observed for running the samples and for the examples/KUnit. So:
-
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
-
-Many thanks!
-
-Dirk
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
