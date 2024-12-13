@@ -1,92 +1,75 @@
-Return-Path: <linux-pci+bounces-18358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B34329F058B
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 08:32:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A3969F067D
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 09:37:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 752E0283403
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 07:32:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6802282E43
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 08:37:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED8A197A9F;
-	Fri, 13 Dec 2024 07:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YXws51p4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91C741AA1DF;
+	Fri, 13 Dec 2024 08:37:12 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AE93207;
-	Fri, 13 Dec 2024 07:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A291A8F76;
+	Fri, 13 Dec 2024 08:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734075145; cv=none; b=HUihgheNum5cHsn6k2mbti28rtc/z3Ug4R0dl2Q8+8slhUKeS755Fp+s7+bYS8t457ukzuF875VgpFZlpMLq1+pWMiG+u3PNHwyzV7tM3Za3Qr++Hse0+ThJsml6UfMCK9LeVgU9ll1L/T0h6bcOZ5IOlugMwDc7RKMoposy5eg=
+	t=1734079032; cv=none; b=lWU8mWmXeOK9NtTF9PrcMNixALxQxdCW0cacW8W98dGKRd2UILNafRQHAeVpR4HFXa3fWdl7e/4s0ziG9fGzadc2iHl7VLGYhSxWJ9vQcJhQh/yVpxoIL7nhuEso/BbAmKW6PW8gHpXhAitTloSWx7naME/NssvmKWs49ObD/Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734075145; c=relaxed/simple;
-	bh=KF2u61fFy2MhhhXHsq56NzRxS4bNBSmPrcwIzbiCk28=;
+	s=arc-20240116; t=1734079032; c=relaxed/simple;
+	bh=qzqJnt4UH+d1eHyynyyv8N54391sMrNELpuncmbi1Z4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTt9bQ078C30Ko6QS3MosAWp1BX+ai+GNzNu16u5XMyrwBWgbR5YoXF6Wp2dOvWorYpefw3drqtiEsK/J18QX+fwziYfe7zQxXP04BFSCHS76P6hwiYGGvLRWBpr5hjjYFT0P6V5Ta1QLsaNsES3CUpP/r6z28ZqBgo1FGGx7+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YXws51p4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C47C4CED0;
-	Fri, 13 Dec 2024 07:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1734075144;
-	bh=KF2u61fFy2MhhhXHsq56NzRxS4bNBSmPrcwIzbiCk28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YXws51p4OlwPq738uGlipsQN5HV9ZVc0qBQtIDFJ/RVNPLGvtjmm8j7Lruy9AroPG
-	 fwsqluHpE8hKxixfh9G9UkxLnr46YSpthgtDfA9vQaZk5drkqBVz90PEiil9zPChQB
-	 04xHlVOMH3ZIXzCGOFptOxKKf9WCynUw3GeIuYZg=
-Date: Fri, 13 Dec 2024 08:31:45 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Philipp Stanner <pstanner@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Alex Dubov <oakad@yahoo.com>, amien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-	Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Chen Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mostafa Saleh <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Yi Liu <yi.l.liu@intel.com>, Kunwu Chan <chentao@kylinos.cn>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 05/11] misc: Use never-managed version of pci_intx()
-Message-ID: <2024121335-blooper-cognitive-04ec@gregkh>
-References: <20241209130632.132074-7-pstanner@redhat.com>
- <20241212192637.GA3359920@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=i7Kmz4rWoqX6XyRzqhHbhiNOo+WtpdZu9366tQ9MwJ4ZvdJIo/JasZ5D7mdvFdNudFvAb/82c9yE1lnQCsWX2i6Wfr4vhB/jtKw2VMP+Z1Ubx9JdfDVs+K3fP1ytaMdIewpgdsLSLZ72bovR3FLOz+Xa8l4Q9NDbSJi+fnEK2S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 823DB2800C988;
+	Fri, 13 Dec 2024 09:37:00 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 638B03A4BC0; Fri, 13 Dec 2024 09:37:00 +0100 (CET)
+Date: Fri, 13 Dec 2024 09:37:00 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Niklas Schnelle <niks@kernel.org>
+Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] PCI/portdrv: Disable bwctrl service if port is fixed at
+ 2.5 GT/s
+Message-ID: <Z1vyLNW20RuVaZe5@wunner.de>
+References: <20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org>
+ <Z1gSZCdv3fwnRRNk@wunner.de>
+ <70829798889c6d779ca0f6cd3260a765780d1369.camel@kernel.org>
+ <Z1lF468L8c84QJkD@wunner.de>
+ <dc6e677f-4c19-dd25-8878-8eae9154cff4@linux.intel.com>
+ <Z1qoDmF6urJDN5jh@wunner.de>
+ <97bbbdecb8c65cfa2625b47aa2585a7417ddcb81.camel@linux.ibm.com>
+ <Z1rX1BgdsPHIHOv4@wunner.de>
+ <1dcc3ca74c3fbb3b4a1adcafb648dfd2501310f1.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,24 +78,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241212192637.GA3359920@bhelgaas>
+In-Reply-To: <1dcc3ca74c3fbb3b4a1adcafb648dfd2501310f1.camel@kernel.org>
 
-On Thu, Dec 12, 2024 at 01:26:37PM -0600, Bjorn Helgaas wrote:
-> [cc->to: Arnd, Greg, Alex]
+On Thu, Dec 12, 2024 at 09:40:04PM +0100, Niklas Schnelle wrote:
+> On Thu, 2024-12-12 at 13:32 +0100, Lukas Wunner wrote:
+> > pcie_get_supported_speeds() is used to fill in the supported_speeds
+> > field in struct pci_dev.
+> > 
+> > And that field is used in a number of places (exposure of the max link
+> > speed in sysfs, delay handling in pci_bridge_wait_for_secondary_bus(),
+> > link tuning in radeon/amdgpu drivers, etc).
 > 
-> On Mon, Dec 09, 2024 at 02:06:27PM +0100, Philipp Stanner wrote:
-> > pci_intx() is a hybrid function which can sometimes be managed through
-> > devres. To remove this hybrid nature from pci_intx(), it is necessary to
-> > port users to either an always-managed or a never-managed version.
-> > 
-> > cardreader/rtsx_pcr.c and tifm_7xx1.c enable their PCI-Device with
-> > pci_enable_device(). Thus, they need the never-managed version.
-> > 
-> > Replace pci_intx() with pci_intx_unmanaged().
-> > 
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> 
-> Looking for ack from Arnd, Greg, Alex.
+> Side question. If this is used in radeon/amdgpu could detecting the
+> thunderbolt port's max link speed as 2.5 GT/s cause issues for external
+> GPUs?
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I don't think so:
+
+An attached Thunderbolt gadget (e.g. eGPU) is visible to the OS as a
+PCIe switch.  A portion of the Switch Downstream Ports is used to
+attach Endpoints (e.g. GPU) and the remainder is used for tunneling,
+i.e. to extend the hierarchy further if multiple Thunderbolt devices
+are daisy-chained.
+
+My expectation is that the Max Link Speed is 8 GT/s on those Downstream
+Ports leading to Endpoints and 2.5 GT/s on those Downstream Ports used
+for tunneling (to conform with the USB4/Thunderbolt spec).  In other words,
+the Supported Link Speeds is the same on all of them, but Max Link Speed
+is reduced to 2.5 GT/s on so-called PCIe Adapters (in USB4/Thunderbolt
+terminology).
+
+The PCIe Adapters encapsulate PCIe TLPs into Thunderbolt packets and
+send them over the Thunderbolt fabric, and similarly decapsulate TLPs
+received from the fabric.
+
+There are some illustrations available here which explain the distinction
+between the two types of Downstream Ports:
+
+https://developer.apple.com/library/archive/documentation/HardwareDrivers/Conceptual/ThunderboltDevGuide/Basics/Basics.html
+
+I'm hoping Mika or Ilpo can verify the above information.  I have
+lspci dumps here of MeteorLake-P and BarlowRidge host controllers,
+but without any attached USB4/Thunderbolt gadgets.
+
+Thanks,
+
+Lukas
 
