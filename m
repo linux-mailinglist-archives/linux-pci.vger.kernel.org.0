@@ -1,115 +1,153 @@
-Return-Path: <linux-pci+bounces-18377-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18378-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C547F9F0F29
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:33:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9AFC9F0F2A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:33:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 860E9282378
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:33:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7959F282438
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:33:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60AD51E1A33;
-	Fri, 13 Dec 2024 14:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F62C1E1C1F;
+	Fri, 13 Dec 2024 14:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZX9s+R5w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJE3ZyhX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0BE1E0E10
-	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 14:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC0E1E1C0F;
+	Fri, 13 Dec 2024 14:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734100406; cv=none; b=QwIf1Uoadkio7+ys8vkfyc/+X0qMAeMZgCCmCC5+JU3uO/DSteSRIs9G/W/bg6SBRiVjMaeJLd9ZE3deMjfuH7+UVR+h0b5tr9M3VVzXWtu+eYLJT0tBspM4CkbPCzIY5W3/AyQ6V3BEc+7dRNOCLp2cYjxBx5mcUUYfoPw+Frk=
+	t=1734100410; cv=none; b=BlNTFH0osdgr4D7OygfVxC2U2JywZERXc7GP7FYPNEWw77RKIGc9UWF1gubmNKlCL3cry+bNtSDDSlG9rlqMFh2y3sl1NZVeBOgfm5n7fQclBteH+VD2eXjywXmVlZrr93JWqupybjp1SXATrJ0mxw5cTacYlU2+qWvIg6NS6Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734100406; c=relaxed/simple;
-	bh=6z8g3qZLtqSGsO5JVJC/+rVTF4aAuaeARL1F0sVpqyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tk4NFLisNb4J1nTIAMZ90/DvWr9VRleM8ksy+ofzFFy31erW8+S1tVXMGikHeAsiNzGPJq69sRnJilunrJ0ssPTjn4VTfHZ3EtDp7WtE/x/H2wOewv1mg5Fwu1x/uGawwv6kdJ9JgYdR2NdO/M2m70vTWZXq2dYZIRw7pVEe5O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZX9s+R5w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB6BC4CED0;
-	Fri, 13 Dec 2024 14:33:22 +0000 (UTC)
+	s=arc-20240116; t=1734100410; c=relaxed/simple;
+	bh=hf3uPTsI8CFcJFUPNdC68/VsTO/Oc1Od5Tl6oCQzNgs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UwJ5oDkfZQ01PFHgcO+McCfrNK3YcZU+RgszfCqIoaWcPedLuPkSbNHaofRNOgxUmVyTlvqOKOJp48XfjwGsXjLeo6oZFuSQ75gXmVdQzpTvSVsZ9szF7MNOBJ8e8RSFBVleNp3ts+z+yD/PchbusflyhAPJBlxskab/WScX19A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJE3ZyhX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF6EC4CED0;
+	Fri, 13 Dec 2024 14:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734100405;
-	bh=6z8g3qZLtqSGsO5JVJC/+rVTF4aAuaeARL1F0sVpqyU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZX9s+R5w7J0OrocTsa2ncjBN02bqz/JfUwrf8HeP/prdQJKgbTPH9f/+EPuf8wEpB
-	 eFzhqYZ3WBb012YrZRC+W06+0DwmGaF0F+h9atylOOdbO2AL9l/OiqMVHR/wfRhk3i
-	 sVJXhidv3nVLwyEU9acyWNN14Z9C6ebemOYugQr817K18Mnpf390GV2fnymopYfWY7
-	 qQKcjP8RlJ5wgGwvQt8k4HpRZpRjLbzwik3+vOOLJ65PEd9c3L6ESzMZe93+JEey9x
-	 0RoCoOoStGbglqoMopUzyh/CKEAynVd0lL/MPSaJsBTFvMf+EuPH565GVMZqOUhD8a
-	 m5ENyUryJebSw==
+	s=k20201202; t=1734100409;
+	bh=hf3uPTsI8CFcJFUPNdC68/VsTO/Oc1Od5Tl6oCQzNgs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LJE3ZyhXqbMTrh21qkf7fSIuuCt5O7ZVy8jshQSMR/9B6neJf9pkYw82a+P00jcOH
+	 Xus4Nliq82zT2tKTSj+5kDK0HsZqfvfgWfLQOBWFDWufrYTH1nJYJjjDw65IOhg9kB
+	 upcloYBvfpYixjZZMPGH9/43q2D3dd6YkIb67HYM4lVZA5u972qRD4p6KBbGDMWIc7
+	 BbW0J+5P5LnTRZx/mFssov+bMAu1fpYFkr8o3vVDR3PfxmlDokNZw/sZQKET8vkG/U
+	 t+qWYEob1DQ73uw5xNJ0WaJJSG2L6mz4od3JV6oBvjhdThsgtdTQztN3WYZKA/MtwW
+	 uAaIWP2QDp8/Q==
 From: Niklas Cassel <cassel@kernel.org>
-To: Jesper Nilsson <jesper.nilsson@axis.com>,
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>,
-	Frank Li <Frank.Li@nxp.com>
+	Kishon Vijay Abraham I <kishon@kernel.org>
 Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
 	Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@axis.com,
+	stable@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v6 0/6] PCI endpoint additional pci_epc_set_bar() checks
-Date: Fri, 13 Dec 2024 15:33:01 +0100
-Message-ID: <20241213143301.4158431-8-cassel@kernel.org>
+Subject: [PATCH v6 1/6] PCI: dwc: ep: Write BAR_MASK before iATU registers in pci_epc_set_bar()
+Date: Fri, 13 Dec 2024 15:33:02 +0100
+Message-ID: <20241213143301.4158431-9-cassel@kernel.org>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241213143301.4158431-8-cassel@kernel.org>
+References: <20241213143301.4158431-8-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1542; i=cassel@kernel.org; h=from:subject; bh=6z8g3qZLtqSGsO5JVJC/+rVTF4aAuaeARL1F0sVpqyU=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJjXOdeYDkcd6gkVs3La9a7OfpLLHz+XZscPV02cJVZo 6hHFuu9jhIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAEykx5fhn9UpF2PzpcK/NzO7 yU+OkbK7ZjPtZNsN2xtv4ti3C6w408zwo+n6BJY/x/9M+OzsHKH44uFzoxrNqeuN9D4qvNr/m/E zMwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2752; i=cassel@kernel.org; h=from:subject; bh=hf3uPTsI8CFcJFUPNdC68/VsTO/Oc1Od5Tl6oCQzNgs=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJjXBct6Wbb8SJTfM7maG5177wXy+Ijz1/lea/tmb8s1 urys8rqjlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExEeiYjw0veA68dfAJV7388 eTt6f4iRvel6rz/XLoqf6WKduCPI3ZzhD5dw2jHmaz9nP/LgdLtu9/LFTwatySv6/otNdV13NXB jBhsA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Hello all,
+The "DesignWare Cores PCI Express Controller Register Descriptions,
+Version 4.60a", section "1.21.70 IATU_LWR_TARGET_ADDR_OFF_INBOUND_i",
+fields LWR_TARGET_RW and LWR_TARGET_HW both state that:
+"Field size depends on log2(BAR_MASK+1) in BAR match mode."
 
-This series adds some extra checks to ensure that it is not possible to
-program the iATU with an address which we did not intend to use.
+I.e. only the upper bits are writable, and the number of writable bits is
+dependent on the configured BAR_MASK.
 
-If these checks were in place when testing some of the earlier revisions
-of Frank's doorbell patches (which did not handle fixed BARs properly),
-we would gotten an error, rather than silently using an address which we
-did not intend to use.
+If we do not write the BAR_MASK before writing the iATU registers, we are
+relying the reset value of the BAR_MASK being larger than the requested
+BAR size (which is supplied in the struct pci_epf_bar which is passed to
+pci_epc_set_bar()). The reset value of the BAR_MASK is SoC dependent.
 
-Having these checks in place will hopefully avoid similar debugging in the
-future.
+Thus, if the struct pci_epf_bar requests a BAR size that is larger than the
+reset value of the BAR_MASK, the iATU will try to write to read-only bits,
+which will cause the iATU to end up redirecting to a physical address that
+is different from the address that was intended.
 
+Thus, we should always write the iATU registers after writing the BAR_MASK.
 
-Kind regards,
-Niklas
+Cc: stable@vger.kernel.org
+Fixes: f8aed6ec624f ("PCI: dwc: designware: Add EP mode support")
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ .../pci/controller/dwc/pcie-designware-ep.c   | 28 ++++++++++---------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-
-Changes since v5:
--Picked up tags.
--Add Cc: stable for patch 2/6.
--Improved commit messages in patch 1/6 and patch 2/6.
--Improved code comment in patch 2/6 to be more specific.
-
-Niklas Cassel (6):
-  PCI: dwc: ep: Write BAR_MASK before iATU registers in
-    pci_epc_set_bar()
-  PCI: dwc: ep: Prevent changing BAR size/flags in pci_epc_set_bar()
-  PCI: dwc: ep: Add 'address' alignment to 'size' check in
-    dw_pcie_prog_ep_inbound_atu()
-  PCI: artpec6: Implement dw_pcie_ep operation get_features
-  PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()
-  PCI: endpoint: Verify that requested BAR size is a power of two
-
- drivers/pci/controller/dwc/pcie-artpec6.c     | 13 +++++
- .../pci/controller/dwc/pcie-designware-ep.c   | 52 ++++++++++++++-----
- drivers/pci/controller/dwc/pcie-designware.c  |  5 +-
- drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
- drivers/pci/endpoint/pci-epc-core.c           | 14 ++++-
- 5 files changed, 67 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index f3ac7d46a855..bad588ef69a4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -222,19 +222,10 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	if ((flags & PCI_BASE_ADDRESS_MEM_TYPE_64) && (bar & 1))
+ 		return -EINVAL;
+ 
+-	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+-
+-	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+-		type = PCIE_ATU_TYPE_MEM;
+-	else
+-		type = PCIE_ATU_TYPE_IO;
+-
+-	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
+-	if (ret)
+-		return ret;
+-
+ 	if (ep->epf_bar[bar])
+-		return 0;
++		goto config_atu;
++
++	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 
+@@ -246,9 +237,20 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0);
+ 	}
+ 
+-	ep->epf_bar[bar] = epf_bar;
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+ 
++config_atu:
++	if (!(flags & PCI_BASE_ADDRESS_SPACE))
++		type = PCIE_ATU_TYPE_MEM;
++	else
++		type = PCIE_ATU_TYPE_IO;
++
++	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
++	if (ret)
++		return ret;
++
++	ep->epf_bar[bar] = epf_bar;
++
+ 	return 0;
+ }
+ 
 -- 
 2.47.1
 
