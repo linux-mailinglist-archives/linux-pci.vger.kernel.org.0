@@ -1,55 +1,59 @@
-Return-Path: <linux-pci+bounces-18407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18408-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 492459F1533
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 19:47:08 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C4F19F1538
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 19:47:53 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A6B92846D1
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 18:47:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BF57188B6FB
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 18:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 834BC18CBE1;
-	Fri, 13 Dec 2024 18:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2521019CD08;
+	Fri, 13 Dec 2024 18:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVdhsT39"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPO4ih82"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5E51547CA;
-	Fri, 13 Dec 2024 18:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001D118CBE1
+	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 18:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734115623; cv=none; b=dNKVHBqqeENdOoREsak+sFXlE3XuHQL8KfHUo2R0aDgWAMReGQdkeAY+PA/AiLSnFbWCngaGfdJrqFYVNmI+vXMJjj6GJfaxkO5vRWy08kV8pIr+S5Y9OTVLKkiYp+ZnQP89Csr7wVVeHNFA7iJ0vjTx/XY5dlep6UjLKvuEhHE=
+	t=1734115670; cv=none; b=njbcXdKQhgk7/kLiIbHMtee/ggpqlYu0LEDK4g88lMDODLwUqF+A2CuLY17Nod6Y3aHx0XCvx8Xmnnbby83ilCLLhSGz/cjkE2ayLBJgVUEmR4tq3cUSvtJ0juYr1ky6hDPy2G0I97S67BPd9/Z4JCNucI8TLFMGDPFAi+L1/J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734115623; c=relaxed/simple;
-	bh=OuLMV0zQ/jHtlcGfTN3vBPecDjzPfA1i/m3/mOtyIuo=;
+	s=arc-20240116; t=1734115670; c=relaxed/simple;
+	bh=7jOG+o7F5M/VMegqZfzT9Z8E032Zvghu26tlXZAuE/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Huf9PpQRQ06C3+8erw5xp4abNvocfz9OxXRt0KEDF0939AKGTLgW4esPQtOY2+5n15lXffMoic7t0GLsY3EAatIzveuQ3IOhGNxLphBoiikIs/vv2JJPfhzyNs4tY9LHJJjFEmgY3NsEEc0WuGVehn/2sBmP0MBygtoAcyRu5lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVdhsT39; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9D1FC4CED0;
-	Fri, 13 Dec 2024 18:47:02 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=DY/ZwLsx73M9t6D4NkUN2uGa/qV1gnkRsLUsYMOsqFlwnImGP8w/oSOdODUtchWgphOL16o/gjgUDKG9iylSb4BplZSqL5qV1xaCRsiwgcghOCsd7+etNHt4+ijmouxme0KvMGUMGPY3scUwWmPt7n4iKrsBv2LPUGrQTB3xC0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPO4ih82; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7FEC4CED0;
+	Fri, 13 Dec 2024 18:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734115622;
-	bh=OuLMV0zQ/jHtlcGfTN3vBPecDjzPfA1i/m3/mOtyIuo=;
+	s=k20201202; t=1734115669;
+	bh=7jOG+o7F5M/VMegqZfzT9Z8E032Zvghu26tlXZAuE/c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZVdhsT39/TZC+Zh4x0dWRAtjVN6TbVoxYEejZerqchVETr+7d7qoVXYLXmbOjEtP3
-	 dPnCRKFfOLbF9TpbJfWsJGWoqRWrba5+1vfD5+fa8JukRYd31n80BMgqAqFdXCGIi3
-	 M06Wd9s08IBdyDOtZF1awvl9H+kUubHpUIpDKl8t2QPu7GmwyCMRwASu4b6WJ74CXz
-	 f/rZfHlHajIcS7433HAHhxQNp70nEo4zSTkXoieDHD0iaht99mvBnDiHz8i1oIu/+c
-	 JqqBG3Li6td9Olizp+JUEB6AzLdAN2ytemdzukv9kjDNSFopHm7ASHKkR5S9ow/Rns
-	 S5DLHQ6fvhHiQ==
-Date: Fri, 13 Dec 2024 12:47:00 -0600
+	b=CPO4ih82cSgdYBNR7WBnc7NlxoIoq1eOEjReuR9YPb98FNr4eeVCoAB8qInt+1vYG
+	 VtwsiOCBqOfPN6AZ5jsDPwfsnP3eEINt7uk4cw25CNUe2awL3wFD00rbYeB6BVABiA
+	 K3j9dhHe65+oJ/nz+vIdTMPJwdwKPE6ggLQrqv2/wGhYbaWANkd/2K6dww0kR3rkP7
+	 ejuQfFgs3UynXIvZqYMD6aZGFfQkPcX0/GvKg0Fsxr4oXEL4E8brn4JY6wrB44umF9
+	 /1ft8Y/QFPjQYis2UHp8rKooyrqjTJS82WgKqkDQP1Khf/e3q9StaZqmV9F8rpYKfw
+	 i9dSMLRD5DuUw==
+Date: Fri, 13 Dec 2024 12:47:48 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Gowthami Thiagarajan <gthiagarajan@marvell.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2] PCI : Fix pcie_flag_reg in set_pcie_port_type
-Message-ID: <20241213184700.GA3423791@bhelgaas>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH v3 1/2] PCI: Add Rockchip vendor ID
+Message-ID: <20241213184748.GA3424367@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,67 +62,83 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241213070241.3334854-1-gthiagarajan@marvell.com>
+In-Reply-To: <1734063843-188144-1-git-send-email-shawn.lin@rock-chips.com>
 
-[+cc Mika, Andy]
-
-On Fri, Dec 13, 2024 at 12:32:41PM +0530, Gowthami Thiagarajan wrote:
-> When an invalid PCIe topology is detected, the set_pcie_port_type function 
-> does not set the port type correctly. This issue can occur in 
-> configurations such as:
+On Fri, Dec 13, 2024 at 12:24:02PM +0800, Shawn Lin wrote:
+> This patch moves PCI_VENDOR_ID_ROCKCHIP from pci_endpoint_test.c to
+> pci_ids.h. And reuse it in pcie-rockchip-host.c.
 > 
-> 	Root Port ---> Downstream Port ---> Root Port
-> 
-> In such cases, the topology is identified as invalid and due to the
-> incorrect port type setting, the extended configuration space of the
-> child device becomes inaccessible.
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Krzysztof Wilczynski <kw@linux.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-From reading the code, it looks like the underlying problem is
-components that advertise the wrong PCIe Device/Port Type.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-set_pcie_port_type() already detects that incorrect Port Type and
-tries to correct it, but it puts the corrected type in bits [3:0]
-instead of [7:4] where it belongs.
-
-This looks like a bug from ca78410403dd ("PCI: Get rid of
-dev->has_secondary_link flag").  If so, we should add a Fixes: tag for
-that and possibly a stable tag.
-
-This looks like a clear bug.  What system tripped over this?  It's
-useful to have bread crumbs like that in case we see other issues
-caused by hardware/firmware defects like this.
-
-> Signed-off-by: Gowthami Thiagarajan <gthiagarajan@marvell.com>
 > ---
-> v1->v2:
-> 	Updated commit description
 > 
->  drivers/pci/probe.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Changes in v3:
+> - add commit log and reuse this ID for more places
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4f68414c3086..263ec21451d9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1596,7 +1596,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
->  		if (pcie_downstream_port(parent)) {
->  			pci_info(pdev, "claims to be downstream port but is acting as upstream port, correcting type\n");
->  			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
-> -			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM;
-> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM << 4;
->  		}
->  	} else if (type == PCI_EXP_TYPE_UPSTREAM) {
->  		/*
-> @@ -1607,7 +1607,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
->  		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
->  			pci_info(pdev, "claims to be upstream port but is acting as downstream port, correcting type\n");
->  			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
-> -			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM;
-> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM << 4;
+> Changes in v2: None
+> 
+>  drivers/misc/pci_endpoint_test.c            | 1 -
+>  drivers/pci/controller/pcie-rockchip-host.c | 2 +-
+>  drivers/pci/controller/pcie-rockchip.h      | 1 -
+>  include/linux/pci_ids.h                     | 2 ++
+>  4 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 3aaaf47..b5c8422 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -85,7 +85,6 @@
+>  #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
+>  #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
+>  
+> -#define PCI_VENDOR_ID_ROCKCHIP			0x1d87
+>  #define PCI_DEVICE_ID_ROCKCHIP_RK3588		0x3588
+>  
+>  static DEFINE_IDA(pci_endpoint_test_ida);
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 5adac6a..6a46be1 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -367,7 +367,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
 >  		}
 >  	}
->  }
+>  
+> -	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
+> +	rockchip_pcie_write(rockchip, PCI_VENDOR_ID_ROCKCHIP,
+>  			    PCIE_CORE_CONFIG_VENDOR);
+>  	rockchip_pcie_write(rockchip,
+>  			    PCI_CLASS_BRIDGE_PCI_NORMAL << 8,
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index a51b087..f9eaac9 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -198,7 +198,6 @@
+>  #define AXI_WRAPPER_NOR_MSG			0xc
+>  
+>  #define PCIE_RC_SEND_PME_OFF			0x11960
+> -#define ROCKCHIP_VENDOR_ID			0x1d87
+>  #define PCIE_LINK_IS_L2(x) \
+>  	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
+>  #define PCIE_LINK_TRAINING_DONE(x) \
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index d2402bf..6f68267 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2604,6 +2604,8 @@
+>  
+>  #define PCI_VENDOR_ID_ZHAOXIN		0x1d17
+>  
+> +#define PCI_VENDOR_ID_ROCKCHIP		0x1d87
+> +
+>  #define PCI_VENDOR_ID_HYGON		0x1d94
+>  
+>  #define PCI_VENDOR_ID_META		0x1d9b
 > -- 
-> 2.25.1
+> 2.7.4
 > 
 
