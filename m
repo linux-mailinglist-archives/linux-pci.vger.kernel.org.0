@@ -1,61 +1,59 @@
-Return-Path: <linux-pci+bounces-18381-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18382-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A2CF9F0F32
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:33:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B4059F0F33
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 15:33:48 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B586A2825A9
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7137A1647D8
 	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:33:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8DE1E200F;
-	Fri, 13 Dec 2024 14:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC9D1E1A28;
+	Fri, 13 Dec 2024 14:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwu/WgSg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JtX4T4U9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C291E2318
-	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 14:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83BE1E0E10
+	for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2024 14:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734100419; cv=none; b=V4bCZYPXqmELW1naHsP6UbvAfO2P9RfOjJKnyJzCjLVZgPVdYQD6quZ1PXmMe91oCY1B5/2vveXB7dZzeglLZNV4+hrvhWoSrJM0DnSiUe702OtjXTIwlMz4lHkxjPFdaN0D2VT2AmVZn5b7uvGpePr4xyukgSgoLu73wbPJsws=
+	t=1734100422; cv=none; b=CMdX4Bw8xZ9jL33T3MCHzmySPwcO84WDTlpMKTTTTyQo+jA3vZJNAxT9cjmQ0QImzJA9TeKgyMXs+A7RHv0tqUd7Hx7+xtW3+nG064PBVA0ifSqiNKvhWgkJAUT/lgjSzX1uZgx04ohvbDQEJ+BpTkH+ueybFb0huqhfhN5lj3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734100419; c=relaxed/simple;
-	bh=YkSK1OJRY9aMlx2OTK8VC5n9q/GmDamEjTb97bvOfC4=;
+	s=arc-20240116; t=1734100422; c=relaxed/simple;
+	bh=zv0UrLQJcLbh4LKqOpzblK7DRJPEARLfSBhrVvqoUII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BrYJAh8IUfuscea+6kSmJ6i2eQmCZPlHMB6row7qi1maf+2q0RQmQkPq3V883d3QZptBdkEScF5GF9KRdaNXBLnWA8MIBELBTurgQ/aMRyYVNdG7wj4+45II9NLbPU5cVtRU1nzWiF5YpHnDeuLCmAEcNPj69u06kE2BGJESO14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwu/WgSg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2F0C4CED2;
-	Fri, 13 Dec 2024 14:33:36 +0000 (UTC)
+	 MIME-Version; b=bFH/uCbMgFMOvnS9fn0/Ew21dITPXdkm3ZNCKyq00+8FBOYbGFI4gntx4Ye7MTPLdhZpk/5NJpAN8kazzu0CkD5UQiUkQvFvWho64IO6oyfPckK968yL66+sabXl9JeymPtGUFCznug3WToXaG9ul9jT+rZJ8q4xA8Om9r8x6v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JtX4T4U9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0FE2C4CED2;
+	Fri, 13 Dec 2024 14:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734100419;
-	bh=YkSK1OJRY9aMlx2OTK8VC5n9q/GmDamEjTb97bvOfC4=;
+	s=k20201202; t=1734100422;
+	bh=zv0UrLQJcLbh4LKqOpzblK7DRJPEARLfSBhrVvqoUII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fwu/WgSgpHuGU9ZnThHrI6iQf0q9x47yEKhPJJrYeyUaivRCrGqUksF6fliHmqip1
-	 qtbxkzS69SRw606h2QlenkevALPp83hgkdp1D0prO5V7FQohexx8T2nUZF41Lqj6E5
-	 xMog9UgFAgfOV27Ucn8+ZZwFunm1G8EZByhIosi4B7gVqv84f26IEN3LZ3qzB7tIVp
-	 WLC5Rjic0AIko0SQB0gXxx/KlfLaAMowy6bGNNNrKnoKSDMAhxpxsl52T5Vc9ibAQg
-	 dr4qwRCyXOIjCqKc5TnZKVAl+1JB/TtbHYE9xRtMXxL03Ay9HNAfFWNE6WA3F5hUWR
-	 datEUEKuPt/ug==
+	b=JtX4T4U9i7KTutiv5gqdVh38VOkCLV60y8NGgJFcIflkazTWxoSS7QaoHUQuHSIHT
+	 ZYTwKTLjBFz32VERKSSXhLkML9DP2XBez8fxRUVgkm/oIrSGTVBEtI2zAYtH7CztCL
+	 fnPJF2KiDqL8H7OIq6wfWsXwtOAkaCwXluAs/Yq1BQkfLIr4hJcS5/OkfuJTE/qEZd
+	 25z3CJptZhgCcffdhEPmgyxvzUuPriDt9qhwX1AX9JwGXhlx7fPVryrngAHy0GWK+0
+	 6foypsNoDMWQ9sAvzhPA6BVKaRBBGi8nwIOvoaN5OX12IBhgq0+fMzLtSl18TZpy98
+	 ET0xOlg7RrtFQ==
 From: Niklas Cassel <cassel@kernel.org>
-To: Jesper Nilsson <jesper.nilsson@axis.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>
 Cc: Damien Le Moal <dlemoal@kernel.org>,
 	Frank Li <Frank.Li@nxp.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
 	Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@axis.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v6 4/6] PCI: artpec6: Implement dw_pcie_ep operation get_features
-Date: Fri, 13 Dec 2024 15:33:05 +0100
-Message-ID: <20241213143301.4158431-12-cassel@kernel.org>
+Subject: [PATCH v6 5/6] PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()
+Date: Fri, 13 Dec 2024 15:33:06 +0100
+Message-ID: <20241213143301.4158431-13-cassel@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241213143301.4158431-8-cassel@kernel.org>
 References: <20241213143301.4158431-8-cassel@kernel.org>
@@ -65,57 +63,56 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1719; i=cassel@kernel.org; h=from:subject; bh=YkSK1OJRY9aMlx2OTK8VC5n9q/GmDamEjTb97bvOfC4=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJjXBfvDTzttXQlH+fnv3PYunc0u6y7e83LyFfXzbb7t bOQO39ORykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACYir8zIcJtzh9FrH/tJlmwG C06URJ+TOH/2956Oa3uMdvy3KTC/kMbIsPeVuCKX6Bafa5+U1ktOKqmolps+1dzZeb9s3e+Tmdw sTAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1895; i=cassel@kernel.org; h=from:subject; bh=zv0UrLQJcLbh4LKqOpzblK7DRJPEARLfSBhrVvqoUII=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJjXJfsjVqe/21hTkbBZQE7s/sb1125a1BzyL9J4fMu6 1MzjGx8O0pZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjARtk2MDB8/lDDKR/+z05a6 r521+UzpefV9qYZ7TTId1intS7JZasnI8KpNgqFfPZ03165RZx/Tq2sBecm5ciVRz/V/H7him8b PBAA=
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-All non-DWC EPC drivers implement (struct pci_epc *)->ops->get_features().
-All DWC EPC drivers implement (struct dw_pcie_ep *)->ops->get_features(),
-except for pcie-artpec6.c.
+A BAR of type BAR_FIXED has a fixed BAR size (the size cannot be changed).
 
-epc_features has been required in pci-epf-test.c since commit 6613bc2301ba
-("PCI: endpoint: Fix NULL pointer dereference for ->get_features()").
+When using pci_epf_alloc_space() to allocate backing memory for a BAR,
+pci_epf_alloc_space() will always set the size to the fixed BAR size if
+the BAR type is BAR_FIXED (and will give an error if you the requested size
+is larger than the fixed BAR size).
 
-A follow-up commit will make further use of epc_features in EPC core code.
+However, some drivers might not call pci_epf_alloc_space() before calling
+pci_epc_set_bar(), so add a check in pci_epc_set_bar() to ensure that an
+EPF driver cannot set a size different from the fixed BAR size, if the BAR
+type is BAR_FIXED.
 
-Implement epc_features in the only EPC driver where it is currently not
-implemented.
+The pci_epc_function_is_valid() check is removed because this check is now
+done by pci_epc_get_features().
 
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-artpec6.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/pci/endpoint/pci-epc-core.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index f8e7283dacd4..234c8cbcae3a 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -369,9 +369,22 @@ static int artpec6_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	return 0;
- }
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index bed7c7d1fe3c..c69c133701c9 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -609,10 +609,17 @@ EXPORT_SYMBOL_GPL(pci_epc_clear_bar);
+ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		    struct pci_epf_bar *epf_bar)
+ {
+-	int ret;
++	const struct pci_epc_features *epc_features;
++	enum pci_barno bar = epf_bar->barno;
+ 	int flags = epf_bar->flags;
++	int ret;
  
-+static const struct pci_epc_features artpec6_pcie_epc_features = {
-+	.linkup_notifier = false,
-+	.msi_capable = true,
-+	.msix_capable = false,
-+};
+-	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
++	epc_features = pci_epc_get_features(epc, func_no, vfunc_no);
++	if (!epc_features)
++		return -EINVAL;
 +
-+static const struct pci_epc_features *
-+artpec6_pcie_get_features(struct dw_pcie_ep *ep)
-+{
-+	return &artpec6_pcie_epc_features;
-+}
-+
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
- 	.init = artpec6_pcie_ep_init,
- 	.raise_irq = artpec6_pcie_raise_irq,
-+	.get_features = artpec6_pcie_get_features,
- };
++	if (epc_features->bar[bar].type == BAR_FIXED &&
++	    (epc_features->bar[bar].fixed_size != epf_bar->size))
+ 		return -EINVAL;
  
- static int artpec6_pcie_probe(struct platform_device *pdev)
+ 	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
 -- 
 2.47.1
 
