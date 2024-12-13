@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-18370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56EC59F0D54
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:34:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E731A9F0D6D
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 14:38:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11D12284350
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 13:34:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8FCA28310B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2024 13:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B911DF273;
-	Fri, 13 Dec 2024 13:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADCBA1E049C;
+	Fri, 13 Dec 2024 13:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dww15wq3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsT8N/k/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2651F38DE1;
-	Fri, 13 Dec 2024 13:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A391E048F;
+	Fri, 13 Dec 2024 13:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734096882; cv=none; b=bCjtRFu6aEj4OqnSh8Cr1mqR1ZecKrASEGnbDnrxa9rSj5wFV8eQbFFFIKiqpNFZfTLMBZ584rVeKU7YKh0+N5tq/pUoaKUKzpxBm1WdgsxagbZ7xlx6McuDu5+QJQUJh+huNZk7YXnfF3iTx/jwKCPVqEaOxsrSVnTTLnBDXF4=
+	t=1734097083; cv=none; b=IrxpS5yiisdMV2UfXl3vOrMgE3U+ZbcRwYZXk8hZa9wLPBzNexnzZtBT69QEpvTV3Lo8msQYiw5REVgiHJAyOo0bViAIA8pCShQCfK4+pFw081uDlGK+wPrtpjiZLt7TjCRZY3i/ISg3ajsiY1aePUn55LOyjMcj45fx8YJzoBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734096882; c=relaxed/simple;
-	bh=T4o9xKY2MfS7nK0plKbaiDSl8ZQeDCS+/DIfcQpnqzE=;
+	s=arc-20240116; t=1734097083; c=relaxed/simple;
+	bh=9U5JZFUnNCZkRXoe6sZZUHnrfn3CHmkPIWmKGAHDiX8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjHB18FzslroMiKTDgxDbZ/YIxEEf3F4f+bEnSTdRQAR5BHZI14QK25OTwyhcHBLDlqntAAMbt8s0HP1i2VeHPFZKXlB+Ufst7/pETIxxbXzDpOyGDtkR/9EnwiokAZQsUqnQqrdJ8XCjdkSpaEiVoyW+UYIAPDhx4tFGZ07hwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dww15wq3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6814C4CED0;
-	Fri, 13 Dec 2024 13:34:38 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EfsC5bBxJT9M+nuxpA6wj9Ng287UqJOIfKp1Fz8lp9rEgdFYzv8GwOuS+MJepD/jKRP1HlXfoIP03rVmwWrclvm8Pbkzo+CK8nNtWtP/q/jKilIadY++UYC+jmudkiekIReMxTsd/oiFZ4xJL23kY6HP390gjnDLvD8DMRTTrQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsT8N/k/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBAEC4CED0;
+	Fri, 13 Dec 2024 13:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734096881;
-	bh=T4o9xKY2MfS7nK0plKbaiDSl8ZQeDCS+/DIfcQpnqzE=;
+	s=k20201202; t=1734097083;
+	bh=9U5JZFUnNCZkRXoe6sZZUHnrfn3CHmkPIWmKGAHDiX8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dww15wq3lRzLWmN92dqzg2sBPSqaB4jVFa9QRAU2F3x/F5YgszAnLKUzTW+dYE13b
-	 CS1xi7gQ1+DPHOIXMcmLPSAczENqrYIi1CvBnS5V3EnDLIy66mklPqukbgsnGd7w7x
-	 w/ZKTosm+Qqd/LBokFtO/IqHMYtIO+SabyRYlZ3cnNXkGot3p83SHk+Vy9MPxTuHBC
-	 biWAYEm1NPoRXbRD3GJsD0NcEuSSbTy0lYJxzBF7yyK2zhlyKb4lM6tmLIxLrt6UCs
-	 0j7YmAoHHcYYxtND5d4O/H6JjFB6CEfP4LEXXkiYik36qNgcINsacBr3GWtvQudAIG
-	 6WE4pc1bI6Ncg==
-Date: Fri, 13 Dec 2024 14:34:35 +0100
+	b=UsT8N/k/I/acFdIUUPc0ZF1/5z0TECbZ+/jTqbOvVfmWpBHyjB7dKQZJpCXd8fSWY
+	 I/qc4ATlEflLEjWttGx7Rb3AIFNOoyr4Y+aZxvG8o39P21hceyTWVJQuHUum0LU1aB
+	 Y2EORxgxt91q5p3M8tW3g/q1xuGHtxf8WJvDh2yRRp1aPQxte2EsiMhUMBpm1+JGcQ
+	 FIVlbErMxGr+wi2rR/Bc0/c246H0IY1SCLytxi2vrQ/lheP0sJ4EDAcdxo3g/9PGAa
+	 +dy1MKIFE/0tgHuRmV9VTgTo32/kRH2HVjijKUvjoH0wOtLWD1ryJvng/fW/stjXgA
+	 NP9Qo+5PtpS3Q==
+Date: Fri, 13 Dec 2024 14:37:57 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
@@ -49,15 +49,15 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>, stable@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] PCI: dwc: ep: iATU registers must be written
- after the BAR_MASK
-Message-ID: <Z1w364da43KCOIGY@ryzen>
-References: <20241127103016.3481128-9-cassel@kernel.org>
- <20241204173352.GA3006363@bhelgaas>
+	Jon Mason <jdmason@kudzu.us>, Frank Li <Frank.Li@nxp.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org,
+	ntb@lists.linux.dev
+Subject: Re: [PATCH v5 2/6] PCI: dwc: ep: Add missing checks when dynamically
+ changing a BAR
+Message-ID: <Z1w4tToNC0JEcZqP@ryzen>
+References: <20241127103016.3481128-10-cassel@kernel.org>
+ <20241204171716.GA2691918@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,121 +66,85 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241204173352.GA3006363@bhelgaas>
+In-Reply-To: <20241204171716.GA2691918@bhelgaas>
 
-Hello Bjorn,
-
-On Wed, Dec 04, 2024 at 11:33:52AM -0600, Bjorn Helgaas wrote:
-> In subject, maybe "Write BAR_MASK before iATU registers"
+On Wed, Dec 04, 2024 at 11:17:16AM -0600, Bjorn Helgaas wrote:
+> [+cc NTB list, since NTB seems to be the main user of .set_bar()]
+> 
+> Can we say something specific in the subject line, like "prevent
+> changing size/flags" or whatever?
 
 Ok. Will fix in v6.
 
 
 > 
-> I guess writing BAR_MASK is really configuring the *size* of the BAR?
-
-I am quite sure that you know how host software determines the size of
-a BAR :)
-
-But yes, writing the BAR_MASK will directly decide a BARs size:
-https://wiki.osdev.org/PCI#Address_and_size_of_the_BAR
-
-So BAR_MASK is "BAR size - 1".
-
-
-> Maybe the size is the important semantic connection with iATU config?
-
-The connection is:
-"Field size depends on log2(BAR_MASK+1) in BAR match mode."
-
-So I think it makes sense for the subject to include BAR_MASK
-rather than BAR size.
-
-
+> On Wed, Nov 27, 2024 at 11:30:18AM +0100, Niklas Cassel wrote:
+> > In commit 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update
+> > inbound map address") set_bar() was modified to support dynamically
+> > changing the physical address of a BAR.
+> > 
+> > This means that set_bar() can be called twice, without ever calling
+> > clear_bar(), as calling clear_bar() would clear the BAR's PCI address
+> > assigned by the host).
 > 
-> On Wed, Nov 27, 2024 at 11:30:17AM +0100, Niklas Cassel wrote:
-> > The DWC Databook description for the LWR_TARGET_RW and LWR_TARGET_HW fields
-> > in the IATU_LWR_TARGET_ADDR_OFF_INBOUND_i registers state that:
-> > "Field size depends on log2(BAR_MASK+1) in BAR match mode."
-> 
-> Can we include a databook revision and section here to help future
-> maintainers?
+> Unpaired parenthesis at end.
 
 Ok. Will fix in v6.
 
 
 > 
-> > I.e. only the upper bits are writable, and the number of writable bits is
-> > dependent on the configured BAR_MASK.
-> > 
-> > If we do not write the BAR_MASK before writing the iATU registers, we are
-> > relying the reset value of the BAR_MASK being larger than the requested
-> > size of the first set_bar() call. The reset value of the BAR_MASK is SoC
-> > dependent.
-> > 
-> > Thus, if the first set_bar() call requests a size that is larger than the
-> > reset value of the BAR_MASK, the iATU will try to write to read-only bits,
-> > which will cause the iATU to end up redirecting to a physical address that
-> > is different from the address that was intended.
-> > 
-> > Thus, we should always write the iATU registers after writing the BAR_MASK.
-> 
-> Apparently we write BAR_MASK and the iATU registers in the wrong
-> order?  I assume dw_pcie_ep_inbound_atu() writes the iATU registers.
+> Apparently calling .set_bar() twice without calling .clear_bar() is a
+> problem?  What problem does it cause?  Sorry about my poor
+> understanding of the endpoint and NTB code; I'm sure this would be
+> obvious if I understood more.
 
-Yes.
+Calling .set_bar() without calling .clear_bar() is not a problem.
+In fact, that is how the NTB EPF dynamically switches the inbound address
+translation for a BAR on the fly, after the host has assigned a PCI address
+for the BAR.
+
+It is just that for most EPF drivers, you would normally call .clear_bar()
+before calling .set_bar() again.
 
 
 > 
-> I can't quite connect the commit log with the code change.  I assume
-> the dw_pcie_ep_writel_dbi2() and dw_pcie_ep_writel_dbi() writes update
-> BAR_MASK?
+> Maybe a hint about the reason why we need to call .set_bar() twice
+> would help me understand.
 
-dw_pcie_ep_writel_dbi2() writes the BAR_MASK.
-dw_pcie_ep_writel_dbi() writes the BAR type.
+The NTB EPF does this to change the inbound address translation from one
+address to another on the fly. For details about why the NTB EPF driver does
+this, you would need to ask Frank who implemented this.
 
 
 > 
-> And I guess the problem is that the previous code does:
+> > This can only be done if the new BAR configuration doesn't fundamentally
+> > differ from the existing BAR configuration. Add these missing checks.
 > 
->   dw_pcie_ep_inbound_atu        # iATU
->   dw_pcie_ep_writel_dbi2        # BAR_MASK (?)
->   dw_pcie_ep_writel_dbi
-> 
-> and the new code basically does this:
-> 
->   if (ep->epf_bar[bar]) {
->     dw_pcie_ep_writel_dbi2      # BAR_MASK (?)
->     dw_pcie_ep_writel_dbi
->   }
->   dw_pcie_ep_inbound_atu        # iATU
->   ep->epf_bar[bar] = epf_bar
-> 
-> so the first time we call dw_pcie_ep_set_bar(), we write BAR_MASK
-> before iATU, and if we call dw_pcie_ep_set_bar() again, we skip the 
-> BAR_MASK update?
+> Can you elaborate a bit on what "fundamentally differ" means?  Based
+> on the patch, I guess it has to do with changing the size or type?
 
-The problem is as described in the commit message:
-"If we do not write the BAR_MASK before writing the iATU registers, we are
-relying the reset value of the BAR_MASK being larger than the requested
-size of the first set_bar() call. The reset value of the BAR_MASK is SoC
-dependent."
+Correct, BAR size and BAR type has to be the same.
+I don't know why the NTB EPF does this, but it is obvious that very bad
+things could happen if you would dynamically change from one BAR size to
+another. (This is not a resizable BAR...)
 
 
-Before:
-dw_pcie_ep_inbound_atu() # iATU - the writable bits in this write depends on
-                         # BAR_MASK, which has not been written yet, thus the
-			 # write will be at the mercy of the reset value of
-			 # BAR_MASK, which is SoC dependent.
-dw_pcie_ep_writel_dbi2() # BAR_MASK
-dw_pcie_ep_writel_dbi()  # BAR type
+> 
+> And the problem this would cause is ...?  I guess it's a problem for
+> some other entity that knows about the BAR and is doing MMIO or DMA to
+> it?
 
-After:
-dw_pcie_ep_writel_dbi2() # BAR_MASK
-dw_pcie_ep_writel_dbi()  # BAR type
-dw_pcie_ep_inbound_atu() # iATU - this write is now done after BAR_MASK has
-			 # been written, so we know that all the bits in this
-			 # write is writable.
+If we allowed the BAR sizes of the old area and the new area to differ,
+that could mean that we could leak kernel memory, since if e.g. the new area
+is smaller than the old area, a read past the new area size would potentially
+read memory that wasn't allocated by the EPF.
+
+To me, is seems like quite a big oversight that these safe guards wasn't
+added as part of commit 4284c88fff0e ("PCI: designware-ep: Allow
+pci_epc_set_bar() update inbound map address"), but then as you might have
+seen, that patch was also merged via the NTB tree without any Ack from the
+PCI endpoint maintainers. This patch has a Fixes-tag against that commit,
+so stable should pick this up. I will also add an explict Cc: stable in v6.
 
 
 Kind regards,
