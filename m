@@ -1,236 +1,101 @@
-Return-Path: <linux-pci+bounces-18450-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18451-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BC9F9F22F0
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 10:19:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A12C39F2324
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 11:22:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 880F6188672A
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 09:19:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD261163172
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 10:22:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18F31494D9;
-	Sun, 15 Dec 2024 09:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcNtW89t"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C267A320E;
+	Sun, 15 Dec 2024 10:22:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24D51465B4;
-	Sun, 15 Dec 2024 09:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F3756B81
+	for <linux-pci@vger.kernel.org>; Sun, 15 Dec 2024 10:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734254311; cv=none; b=JXzHrbMHCT83LhtFAgsITBllrtBlAywACJ6Mj/ygSUR9fomhXYDFPsrn7sG9D1zMgWmOcq29PQat22ZVB7X165Jn/M8X4vG2JqlKSqvW8T0MbH5a2WG0Q2239H6Oskho+dOULR+Y8IXPEHW1rtHuiBrhJ8f4Wt9p1o4u394LImk=
+	t=1734258128; cv=none; b=G0rOG2nJaqzxSzw/HhLmQv/oJXvMqxVmjDXnMHH0rnrCZHQZZ/FLzhHjp6v/77GenIHiJOWzfQRTvcEz/DBLh81T/ry8u7i5k8Iie5viUtl3bnTiSMONvaFmaqbE09VJAQYiMAaBFtqBB3wIJs7veBb+y1/eAh2PUAARzDEE2iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734254311; c=relaxed/simple;
-	bh=gOFMlC93rzTys2ywdCU7XfZ3NWMuDFC1Y2dBKFeIrRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gD3RVnAoyPgFVBHM8r818B9zG8Si2EEfPQQHJZmRs1AgaBmasPaAnGZfAZuNSnLHYe0mCBgPUH7stJQ+XCv9xFuu93fKkC5fqYvLFeU2AtnOdaN2rJbNdzTg832q2Qn1HQPqNfqnd3OuQgjCpjADDPoOpMtQmWIa9bDY+JTbCc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcNtW89t; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734254309; x=1765790309;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gOFMlC93rzTys2ywdCU7XfZ3NWMuDFC1Y2dBKFeIrRU=;
-  b=fcNtW89tbfxPrNgd34xroGr4xRINLsITpCxoyH5vCxdlWRJCEEN2ym/C
-   XO5n5mRAamp3ny1HXMzKWQ16xcPMDwpbsKNpdpSSn8SOpba6SWs4ZYZZ/
-   0pDfuQ4ppmi03rF6JW53SkVSPvYdxSNhYchCBy5ojCeBABivayiabKhsY
-   oM4G9FDLROBDvNNwrgyHom9wPI0AkuFstYf7Yfcqhk67a4a9iWgj5ljbG
-   A+jkvoamtus1j6grVP54I2OAgkuBuLWszKtdbJhUUqwEB+LIKY+A23foF
-   dqSWqpbFQKObZSrDVGDaV7rK9Hv3VMBjhTWkVjJ+bK6JmVOLginX/NjGP
-   A==;
-X-CSE-ConnectionGUID: FV0CAWdXTMWUIdju1PmIhw==
-X-CSE-MsgGUID: fkQBkOvfSqKiLuxusve+MQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="45139906"
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="45139906"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2024 01:18:28 -0800
-X-CSE-ConnectionGUID: U3KsVvy2SGKSfoAXon5cPw==
-X-CSE-MsgGUID: 4p8/FwS1R7KjSwCz7AR3OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,236,1728975600"; 
-   d="scan'208";a="127745779"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 15 Dec 2024 01:18:21 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tMklX-000DXG-0A;
-	Sun, 15 Dec 2024 09:18:19 +0000
-Date: Sun, 15 Dec 2024 17:17:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chen Wang <unicornxw@gmail.com>, kw@linux.com,
-	u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, arnd@arndb.de,
-	bhelgaas@google.com, unicorn_wang@outlook.com, conor+dt@kernel.org,
-	guoren@kernel.org, inochiama@outlook.com, krzk+dt@kernel.org,
-	lee@kernel.org, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
-	fengchun.li@sophgo.com, helgaas@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-Message-ID: <202412151758.8ckkzHnf-lkp@intel.com>
-References: <1d82eff3670f60df24228e5c83cf663c6dd61eaf.1733726572.git.unicorn_wang@outlook.com>
+	s=arc-20240116; t=1734258128; c=relaxed/simple;
+	bh=/g/ezvj3xEQqQynf091lUsRFtMTDv8v8tYdW5wKohmU=;
+	h=Message-ID:From:Date:Subject:MIME-Version:Content-Type:To:Cc; b=bvHfVk4SZlga001asBPB2/CnGDPReJFTpG5RUmogu6sBHWbpJq8H0l8dFXnuaA+d1R2LUMSW34w2dyIZ+NC9ezy+7hzHdXtn8UtRiSHzJlVVa5LHF4XvUlsQkJ1kgUEIMmHSIHPxlHvfE25DGeESPtIgS9wngClua6vMuBGFGRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 631C33000D7A4;
+	Sun, 15 Dec 2024 11:21:55 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 385AACEFE2; Sun, 15 Dec 2024 11:21:55 +0100 (CET)
+Message-ID: <cover.1734257330.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Sun, 15 Dec 2024 11:20:50 +0100
+Subject: [PATCH for-linus v2 0/3] Fix bwctrl boot hang
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d82eff3670f60df24228e5c83cf663c6dd61eaf.1733726572.git.unicorn_wang@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Niklas Schnelle <niks@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>, Mario Limonciello <mario.limonciello@amd.com>
 
-Hi Chen,
+Here's my renewed proposal to fix the boot hang reported by Niklas
+when enabling the bandwidth controller on Intel JHL7540 "Titan Ridge 2018"
+Thunderbolt controllers.
 
-kernel test robot noticed the following build warnings:
+@Niklas, could you re-test this?
 
-[auto build test WARNING on fac04efc5c793dccbd07e2d59af9f90b7fc0dca4]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Chen-Wang/dt-bindings-pci-Add-Sophgo-SG2042-PCIe-host/20241209-152613
-base:   fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
-patch link:    https://lore.kernel.org/r/1d82eff3670f60df24228e5c83cf663c6dd61eaf.1733726572.git.unicorn_wang%40outlook.com
-patch subject: [PATCH v2 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-config: sh-randconfig-r071-20241215 (https://download.01.org/0day-ci/archive/20241215/202412151758.8ckkzHnf-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241215/202412151758.8ckkzHnf-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412151758.8ckkzHnf-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/cadence/pcie-sg2042.c:23:
->> drivers/pci/controller/cadence/../../../irqchip/irq-msi-lib.h:25:39: warning: 'struct msi_domain_info' declared inside parameter list will not be visible outside of this definition or declaration
-      25 |                                struct msi_domain_info *info);
-         |                                       ^~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:306:15: error: variable 'sg2042_pcie_msi_parent_ops' has initializer but incomplete type
-     306 | static struct msi_parent_ops sg2042_pcie_msi_parent_ops = {
-         |               ^~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:307:10: error: 'struct msi_parent_ops' has no member named 'required_flags'
-     307 |         .required_flags         = SG2042_PCIE_MSI_FLAGS_REQUIRED,
-         |          ^~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:301:41: error: 'MSI_FLAG_USE_DEF_DOM_OPS' undeclared here (not in a function)
-     301 | #define SG2042_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |      \
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:307:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_REQUIRED'
-     307 |         .required_flags         = SG2042_PCIE_MSI_FLAGS_REQUIRED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:302:41: error: 'MSI_FLAG_USE_DEF_CHIP_OPS' undeclared here (not in a function)
-     302 |                                         MSI_FLAG_USE_DEF_CHIP_OPS)
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:307:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_REQUIRED'
-     307 |         .required_flags         = SG2042_PCIE_MSI_FLAGS_REQUIRED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/pci/controller/cadence/pcie-sg2042.c:301:40: warning: excess elements in struct initializer
-     301 | #define SG2042_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |      \
-         |                                        ^
-   drivers/pci/controller/cadence/pcie-sg2042.c:307:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_REQUIRED'
-     307 |         .required_flags         = SG2042_PCIE_MSI_FLAGS_REQUIRED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:301:40: note: (near initialization for 'sg2042_pcie_msi_parent_ops')
-     301 | #define SG2042_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |      \
-         |                                        ^
-   drivers/pci/controller/cadence/pcie-sg2042.c:307:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_REQUIRED'
-     307 |         .required_flags         = SG2042_PCIE_MSI_FLAGS_REQUIRED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:308:10: error: 'struct msi_parent_ops' has no member named 'supported_flags'
-     308 |         .supported_flags        = SG2042_PCIE_MSI_FLAGS_SUPPORTED,
-         |          ^~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:304:41: error: 'MSI_GENERIC_FLAGS_MASK' undeclared here (not in a function)
-     304 | #define SG2042_PCIE_MSI_FLAGS_SUPPORTED MSI_GENERIC_FLAGS_MASK
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:308:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_SUPPORTED'
-     308 |         .supported_flags        = SG2042_PCIE_MSI_FLAGS_SUPPORTED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:304:41: warning: excess elements in struct initializer
-     304 | #define SG2042_PCIE_MSI_FLAGS_SUPPORTED MSI_GENERIC_FLAGS_MASK
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:308:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_SUPPORTED'
-     308 |         .supported_flags        = SG2042_PCIE_MSI_FLAGS_SUPPORTED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:304:41: note: (near initialization for 'sg2042_pcie_msi_parent_ops')
-     304 | #define SG2042_PCIE_MSI_FLAGS_SUPPORTED MSI_GENERIC_FLAGS_MASK
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:308:35: note: in expansion of macro 'SG2042_PCIE_MSI_FLAGS_SUPPORTED'
-     308 |         .supported_flags        = SG2042_PCIE_MSI_FLAGS_SUPPORTED,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:309:10: error: 'struct msi_parent_ops' has no member named 'bus_select_mask'
-     309 |         .bus_select_mask        = MATCH_PCI_MSI,
-         |          ^~~~~~~~~~~~~~~
->> drivers/pci/controller/cadence/../../../irqchip/irq-msi-lib.h:15:33: warning: excess elements in struct initializer
-      15 | #define MATCH_PCI_MSI           (0)
-         |                                 ^
-   drivers/pci/controller/cadence/pcie-sg2042.c:309:35: note: in expansion of macro 'MATCH_PCI_MSI'
-     309 |         .bus_select_mask        = MATCH_PCI_MSI,
-         |                                   ^~~~~~~~~~~~~
-   drivers/pci/controller/cadence/../../../irqchip/irq-msi-lib.h:15:33: note: (near initialization for 'sg2042_pcie_msi_parent_ops')
-      15 | #define MATCH_PCI_MSI           (0)
-         |                                 ^
-   drivers/pci/controller/cadence/pcie-sg2042.c:309:35: note: in expansion of macro 'MATCH_PCI_MSI'
-     309 |         .bus_select_mask        = MATCH_PCI_MSI,
-         |                                   ^~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:310:10: error: 'struct msi_parent_ops' has no member named 'bus_select_token'
-     310 |         .bus_select_token       = DOMAIN_BUS_NEXUS,
-         |          ^~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:310:35: warning: excess elements in struct initializer
-     310 |         .bus_select_token       = DOMAIN_BUS_NEXUS,
-         |                                   ^~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:310:35: note: (near initialization for 'sg2042_pcie_msi_parent_ops')
-   drivers/pci/controller/cadence/pcie-sg2042.c:311:10: error: 'struct msi_parent_ops' has no member named 'prefix'
-     311 |         .prefix                 = "SG2042-",
-         |          ^~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:311:35: warning: excess elements in struct initializer
-     311 |         .prefix                 = "SG2042-",
-         |                                   ^~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:311:35: note: (near initialization for 'sg2042_pcie_msi_parent_ops')
-   drivers/pci/controller/cadence/pcie-sg2042.c:312:10: error: 'struct msi_parent_ops' has no member named 'init_dev_msi_info'
-     312 |         .init_dev_msi_info      = msi_lib_init_dev_msi_info,
-         |          ^~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:312:35: warning: excess elements in struct initializer
-     312 |         .init_dev_msi_info      = msi_lib_init_dev_msi_info,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-sg2042.c:312:35: note: (near initialization for 'sg2042_pcie_msi_parent_ops')
-   drivers/pci/controller/cadence/pcie-sg2042.c: In function 'sg2042_pcie_setup_msi':
-   drivers/pci/controller/cadence/pcie-sg2042.c:344:22: error: 'struct irq_domain' has no member named 'msi_parent_ops'
-     344 |         parent_domain->msi_parent_ops = &sg2042_pcie_msi_parent_ops;
-         |                      ^~
-   drivers/pci/controller/cadence/pcie-sg2042.c: At top level:
-   drivers/pci/controller/cadence/pcie-sg2042.c:306:30: error: storage size of 'sg2042_pcie_msi_parent_ops' isn't known
-     306 | static struct msi_parent_ops sg2042_pcie_msi_parent_ops = {
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+I believe I've addressed all the feedback on v1, please let me know
+if I've missed anything.
 
 
-vim +25 drivers/pci/controller/cadence/../../../irqchip/irq-msi-lib.h
+Changes v1 -> v2:
 
-72e257c6f058032 Thomas Gleixner 2024-06-23  11  
-8c41ccec839c622 Thomas Gleixner 2024-06-23  12  #ifdef CONFIG_PCI_MSI
-8c41ccec839c622 Thomas Gleixner 2024-06-23  13  #define MATCH_PCI_MSI		BIT(DOMAIN_BUS_PCI_MSI)
-8c41ccec839c622 Thomas Gleixner 2024-06-23  14  #else
-8c41ccec839c622 Thomas Gleixner 2024-06-23 @15  #define MATCH_PCI_MSI		(0)
-8c41ccec839c622 Thomas Gleixner 2024-06-23  16  #endif
-8c41ccec839c622 Thomas Gleixner 2024-06-23  17  
-496436f4a514a3f Thomas Gleixner 2024-06-23  18  #define MATCH_PLATFORM_MSI	BIT(DOMAIN_BUS_PLATFORM_MSI)
-496436f4a514a3f Thomas Gleixner 2024-06-23  19  
-72e257c6f058032 Thomas Gleixner 2024-06-23  20  int msi_lib_irq_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
-72e257c6f058032 Thomas Gleixner 2024-06-23  21  			      enum irq_domain_bus_token bus_token);
-72e257c6f058032 Thomas Gleixner 2024-06-23  22  
-72e257c6f058032 Thomas Gleixner 2024-06-23  23  bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-72e257c6f058032 Thomas Gleixner 2024-06-23  24  			       struct irq_domain *real_parent,
-72e257c6f058032 Thomas Gleixner 2024-06-23 @25  			       struct msi_domain_info *info);
-72e257c6f058032 Thomas Gleixner 2024-06-23  26  
+* [PATCH 2/3] PCI: Honor Max Link Speed when determining supported speeds
+  * Use PCI_EXP_LNKCAP2_SLS_2_5GB as lowest bit in GENMASK() macro
+    (Ilpo, Niklas).
+  * Mention user-visible issues addressed by the patch in commit message
+    (Bjorn).
+
+* [PATCH 1/3] PCI: Assume 2.5 GT/s if Max Link Speed is undefined
+  * New patch to prevent invocation of malformed GENMASK(0, lowest) macro.
+
+* [PATCH 3/3] PCI/bwctrl: Enable only if more than one speed is supported
+  * New patch to prevent the boot hang.  This is a future-proof alternative
+    to Niklas' patch.
+
+
+Link to v1, prior discussion and Niklas' patch:
+
+https://lore.kernel.org/r/e3386d62a766be6d0ef7138a001dabfe563cdff8.1733991971.git.lukas@wunner.de/
+https://lore.kernel.org/r/db8e457fcd155436449b035e8791a8241b0df400.camel@kernel.org/
+https://lore.kernel.org/r/20241207-fix_bwctrl_thunderbolt-v1-1-b711f572a705@kernel.org/
+https://lore.kernel.org/r/20241213-fix_bwctrl_thunderbolt-v2-1-b52fef641dfc@kernel.org/
+
+
+Lukas Wunner (3):
+  PCI: Assume 2.5 GT/s if Max Link Speed is undefined
+  PCI: Honor Max Link Speed when determining supported speeds
+  PCI/bwctrl: Enable only if more than one speed is supported
+
+ drivers/pci/pci.c          | 13 +++++++++++--
+ drivers/pci/pcie/portdrv.c |  4 +++-
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
