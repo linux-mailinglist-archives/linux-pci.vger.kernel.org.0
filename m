@@ -1,32 +1,32 @@
-Return-Path: <linux-pci+bounces-18460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9D879F24F2
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 18:19:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C2FD9F24F5
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 18:20:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BD421640E0
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 17:19:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 330CB188586F
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2024 17:20:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 454F4196DB1;
-	Sun, 15 Dec 2024 17:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A261199252;
+	Sun, 15 Dec 2024 17:20:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B3A4C80;
-	Sun, 15 Dec 2024 17:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5354C80;
+	Sun, 15 Dec 2024 17:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734283169; cv=none; b=hpmeirkv7OyAK7TsRyqVUMWECL2qNTs/pvlCnOptc9MqZtHpsAAzxDPZ131M8qFUleRc41kSK4SPJS59V10TfmsVmvB5uk0ZUEqphAly1fw1MFqd97M9IT5rs34dA6DLW87136VyI14Cdt8sTJTvPsvdjQAr4daf5u7KyTSx8Tg=
+	t=1734283233; cv=none; b=ck4GWTQcpD5UBetrtIqi4zDCl56IQlRj8nicKKjCtVAARY9wc9yP5jz/pHX8wO5iahjmU+FF7IH4LsnKBoRZ12JNaQRyLlof2yIXnKL67m9ByLKy1wQ54iWDRG4g4O0t1MYy3it2vCdrtKrT9+3HozxmoVK95zj0Tkeagfe7YM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734283169; c=relaxed/simple;
-	bh=6jW12wldE/aX15oid43joNXKS5Bk5xOHfcVkXCmHMB0=;
+	s=arc-20240116; t=1734283233; c=relaxed/simple;
+	bh=9jT7GMINdAwYPgKGwV+UTR6KGKBjxDK1/+5ETBaRoJo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V3P/SeOhS/Eq3yIOCCxOq4M7ZloN96bWl6FdqjJ5YJwcNJVlJn0XwZGZiG+6VjQndV1bLOfTw1W20Gzml3WSqv8BEwdZmW7t8q4qCHtu4vZT/86T8zs1zSxGBVFmS4+2KQg/4HTQ4ulcQN7jpkF9LrpzcKOKlcMtiLojeMLDXbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzLrDXfQOqbruxKMnQaa7kT21p5KGObG4OpPAUlHIF3GDxVUaB5/b2PXHHMdp21GSSy266tNb8ihNmLMKixITMmpcQGD9TcW3JD3mtxdGNeE28L2pg9roPu/I9+obAlfFiD8CEDfNiSWOALy4K08D+ORse/9ElAzyFyeAoIQAMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
@@ -34,11 +34,11 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id F28F5100F00C1;
-	Sun, 15 Dec 2024 18:19:22 +0100 (CET)
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 314C03000D5CA;
+	Sun, 15 Dec 2024 18:20:27 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BFFA948D1B7; Sun, 15 Dec 2024 18:19:22 +0100 (CET)
-Date: Sun, 15 Dec 2024 18:19:22 +0100
+	id 2956F4A8140; Sun, 15 Dec 2024 18:20:27 +0100 (CET)
+Date: Sun, 15 Dec 2024 18:20:27 +0100
 From: Lukas Wunner <lukas@wunner.de>
 To: manivannan.sadhasivam@linaro.org
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
@@ -49,11 +49,11 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>,
 	Qiang Yu <quic_qianyu@quicinc.com>
-Subject: Re: [PATCH 1/4] PCI/pwrctrl: Move creation of pwrctrl devices to
- pci_scan_device()
-Message-ID: <Z18Pmq7_rK3pvuT4@wunner.de>
+Subject: Re: [PATCH 2/4] PCI/pwrctrl: Move pci_pwrctrl_unregister() to
+ pci_destroy_dev()
+Message-ID: <Z18P2-FchianimEL@wunner.de>
 References: <20241210-pci-pwrctrl-slot-v1-0-eae45e488040@linaro.org>
- <20241210-pci-pwrctrl-slot-v1-1-eae45e488040@linaro.org>
+ <20241210-pci-pwrctrl-slot-v1-2-eae45e488040@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,46 +62,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241210-pci-pwrctrl-slot-v1-1-eae45e488040@linaro.org>
+In-Reply-To: <20241210-pci-pwrctrl-slot-v1-2-eae45e488040@linaro.org>
 
-On Tue, Dec 10, 2024 at 03:25:24PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2446,6 +2448,36 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
->  }
->  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
->  
-> +/*
-> + * Create pwrctrl devices (if required) for the PCI devices to handle the power
-> + * state.
-> + */
-> +static void pci_pwrctrl_create_devices(struct pci_bus *bus, int devfn)
+On Tue, Dec 10, 2024 at 03:25:25PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> PCI core will try to access the devices even after pci_stop_dev() for
+> things like Data Object Exchange (DOE), ASPM etc... So move
+> pci_pwrctrl_unregister() to the near end of pci_destroy_dev() to make sure
+> that the devices are powered down only after the PCI core is done with
+> them.
+> 
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Nit:  AFAICS this only creates a *single* platform device, so the
-"devices" (plural) in the function name and in the code comment
-doesn't seem to be accurate anymore.
-
-
-> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-> index 2fb174db91e5..9cc7e2b7f2b5 100644
-> --- a/drivers/pci/pwrctrl/core.c
-> +++ b/drivers/pci/pwrctrl/core.c
-> @@ -44,7 +44,7 @@ static void rescan_work_func(struct work_struct *work)
->  						   struct pci_pwrctrl, work);
->  
->  	pci_lock_rescan_remove();
-> -	pci_rescan_bus(to_pci_dev(pwrctrl->dev->parent)->bus);
-> +	pci_rescan_bus(to_pci_host_bridge(pwrctrl->dev->parent)->bus);
->  	pci_unlock_rescan_remove();
->  }
-
-Remind me, what's the purpose of this?  I'm guessing that it
-recursively creates the platform devices below the newly
-powered up device, is that correct?  If so, is it still
-necessary?  Doesn't the new approach automatically create
-those devices upon their enumeration?
-
-Overall it looks like a significant improvement, thanks for doing this!
-
-Lukas
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
