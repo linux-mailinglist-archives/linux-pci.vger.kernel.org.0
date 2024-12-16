@@ -1,75 +1,78 @@
-Return-Path: <linux-pci+bounces-18514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18515-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 709D49F3565
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:10:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90DFC9F356A
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:10:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 217F6188A179
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:10:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4B48188A77D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24498148FF0;
-	Mon, 16 Dec 2024 16:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31303148FF0;
+	Mon, 16 Dec 2024 16:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kvGODZ4F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFMkEtzC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DD214A095;
-	Mon, 16 Dec 2024 16:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D66114A095;
+	Mon, 16 Dec 2024 16:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734365424; cv=none; b=PAPXb8I47FRKwPUcG8HlsbE2HYN+QBSccwK9pnN5tfh5JVh85pA4RGfh7TFQwBmr8uKjjM9MFgjLR6zY+Ca+PWhthy6Qyw8ioNa762YzEVJuYCf5V8gr4zGYRzAL4AOaCll7Cf+nQtYPu9ibmbtGeLXghScbduTH35/WQkTa50I=
+	t=1734365431; cv=none; b=lNXrO4tyHBrx6/pr/Ip4sPCMo1Ze6p1Du5hS0TMFSkT02XKCRtmz3StDf12nODnTjk+BDhexayDam9KFxUOjWnL+3ltTqiMaIzM5aFpC0hlTYPuWsgkMDDaePRr9Y4dOCliKfABOtmh+dM7bWbmpJs33NsWr251TjjkhCSgOaxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734365424; c=relaxed/simple;
-	bh=+uv/7k4icZNWNusvJVdXIbirJCnG0+qQNlYVBeg5/Tc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fU8npe/RlStiOG+bLH7XezCAkuj6EuNMyqjEWVITOtbdk7MfPuigR0hRC0eVngF7wPqDFqQhPtc7fKx/rTue2+yFLGwxhrbSxC4gi9Ui2Wwh6wMOv3dpuEwh4pTwNh3lZb61/e3UjrGyCd/KPSsacbndzYT16rgabcFmUIfirZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kvGODZ4F; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1734365431; c=relaxed/simple;
+	bh=M8Snydld+G3bzzI1y2e+peBZwEHDa69ZjkPqObx7NeE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WwCoyJ8+PcTj9PPc9kLgAdLaMi5CtO2lMJv8009D/02Zv+ghbj9F7QkZo5/qh1tVlDtFGfhG3KyDZji604YhY1MQcVAhlMCUB/uHdbwXZfaqCkGt/+cmjev07yK5uafC5vx8YisJtgA/Dkvev9PaqUTR5sYK48wJFNj3racHjNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFMkEtzC; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734365423; x=1765901423;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+uv/7k4icZNWNusvJVdXIbirJCnG0+qQNlYVBeg5/Tc=;
-  b=kvGODZ4FHeJJbpUjz4/500U4i0L/4BXFcKAeDWBJxSsz0XFBlLqru4Vf
-   4fkL4HUvkFlVuTTpK7xWSAE1nler+Iy/k+ifaF2YNaZGPr4IzZWw14xR+
-   OmheKrS++Ad2DxArtiIKjWAgW+VhiS7/2F5+IDuQbm5dhUT9sbeCgixDD
-   QsN+GfheWpIw5D+eVp/DmFhErgiHwYgGDXOEmJIPPJnswjt12db4n71qp
-   cD1VgDsxDuE3+NkcBsLvDfaqwhCO3WsbYFke8Q+ubiVv1YP0c+iI41RvB
-   8vpELaBQED129zUhseeq/O4oGfFS6giJAAd6tio/QkMIM0eeYjLqWyQWe
-   g==;
-X-CSE-ConnectionGUID: nEp9WoOPQ+a7xHFs21ajHg==
-X-CSE-MsgGUID: ZEkYG7fFQAWnAN/bTcYQxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34904188"
+  t=1734365430; x=1765901430;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=M8Snydld+G3bzzI1y2e+peBZwEHDa69ZjkPqObx7NeE=;
+  b=aFMkEtzCJY8r4FkcR+xp63jNJgwajNnlnn1FTQssEIAl+WqYZwZ1/GS6
+   kL0tSmp0m8IMNcEffykYP96FRCsIwGsBIrhejKtbwFlaFHaqF5hApLley
+   6kpR0hbop6gxUtj3J19FCmfd/y79M3ZV3xWwxzuvbQF75rmaw8UPCfQCn
+   Thj+jQOOR3GWocMG2IWJ/cczBzBxFx5448pQ+s1dYjz97jI5xDW3rxDP9
+   bl+QZjHf5/aze5KoOsx0HOoz+IWG8k88egjXP+ijGJK1p8v5UgXxD9XWi
+   UfEI2No0AwQ5RZFQsDqHIRUIwPq1w5v/NQxuzCCYy2G34DJBnqHJZIiK0
+   Q==;
+X-CSE-ConnectionGUID: /cQ0N9JWSe65dUUeeNA42g==
+X-CSE-MsgGUID: Apup2XRbTpGy2eot151/gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34904197"
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="34904188"
+   d="scan'208";a="34904197"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 08:10:22 -0800
-X-CSE-ConnectionGUID: 09aDVqpbQNClxQSSDRrojA==
-X-CSE-MsgGUID: i9QSmHfrT6GyVHwruP3UiA==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 08:10:29 -0800
+X-CSE-ConnectionGUID: Q2+nlaXYSGGEBgO8/PGPZQ==
+X-CSE-MsgGUID: d3bwhLe9RBuIaEBQXi8GsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="97120698"
+   d="scan'208";a="97120727"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 08:10:19 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 08:10:26 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org,
 	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
 	"Oliver O'Halloran" <oohall@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 0/4] PCI: pci_printk() removal (+ related cleanups)
-Date: Mon, 16 Dec 2024 18:10:08 +0200
-Message-Id: <20241216161012.1774-1-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/4] PCI: shpchp: Remove logging from module init/exit functions
+Date: Mon, 16 Dec 2024 18:10:09 +0200
+Message-Id: <20241216161012.1774-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20241216161012.1774-1-ilpo.jarvinen@linux.intel.com>
+References: <20241216161012.1774-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,26 +82,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-include/linux/pci.h provides pci_printk() which is a low-level
-interface with level that is only useful for AER due to error severity
-variations.
+The logging in shpchp module init/exit functions is not very useful.
+Remove it.
 
-This series cleans up shpchp logging wrappers to avoid using low-level
-pci_printk() unnecessarily and replaces pci_printk() with aer_printk().
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/hotplug/shpchp_core.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-Ilpo Järvinen (4):
-  PCI: shpchp: Remove logging from module init/exit functions
-  PCI: shpchp: Change dbg() -> ctrl_dbg()
-  PCI: shpchp: Cleanup logging and debug wrappers
-  PCI: Descope pci_printk() to aer_printk()
-
- drivers/pci/hotplug/shpchp.h      | 18 +-----------------
- drivers/pci/hotplug/shpchp_core.c | 13 +------------
- drivers/pci/hotplug/shpchp_hpc.c  |  2 +-
- drivers/pci/pcie/aer.c            | 10 +++++++---
- include/linux/pci.h               |  3 ---
- 5 files changed, 10 insertions(+), 36 deletions(-)
-
+diff --git a/drivers/pci/hotplug/shpchp_core.c b/drivers/pci/hotplug/shpchp_core.c
+index a92e28b72908..a10ce7be7f51 100644
+--- a/drivers/pci/hotplug/shpchp_core.c
++++ b/drivers/pci/hotplug/shpchp_core.c
+@@ -324,20 +324,12 @@ static struct pci_driver shpc_driver = {
+ 
+ static int __init shpcd_init(void)
+ {
+-	int retval;
+-
+-	retval = pci_register_driver(&shpc_driver);
+-	dbg("%s: pci_register_driver = %d\n", __func__, retval);
+-	info(DRIVER_DESC " version: " DRIVER_VERSION "\n");
+-
+-	return retval;
++	return pci_register_driver(&shpc_driver);
+ }
+ 
+ static void __exit shpcd_cleanup(void)
+ {
+-	dbg("unload_shpchpd()\n");
+ 	pci_unregister_driver(&shpc_driver);
+-	info(DRIVER_DESC " version: " DRIVER_VERSION " unloaded\n");
+ }
+ 
+ module_init(shpcd_init);
 -- 
 2.39.5
 
