@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-18553-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18554-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A426B9F3860
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 19:07:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29F199F3861
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 19:08:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E83D16CE33
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 18:07:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EBD9160F51
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 18:07:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F582207DE6;
-	Mon, 16 Dec 2024 17:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138A720765E;
+	Mon, 16 Dec 2024 17:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZIO0COi/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FlaxQlfM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AAF208984;
-	Mon, 16 Dec 2024 17:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C028207663;
+	Mon, 16 Dec 2024 17:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734371952; cv=none; b=WZIiV064DXEgEeHg1YCCadcnP/BL0R/xbiJNCdBwahMHrdwfjTJuETa1peJi364PID07srFrlvzzcLTFSXv7t56F0HMRaaLRN70vjd65ifiW0254T41WE+cFteWNgaTaQTC1PYXFJT2MEvG8uSZ4t5YsLnwB+TscTFSDuP3S7rc=
+	t=1734371961; cv=none; b=jaGPi+I4Tk/CbkItSe3iDoT0tBRfHJr0FIp9WRn+JdJ7k3gtDb+e+07BYZ4+SqTOJqaE1V5dff3N9jyKFiRk+JrKxy46Abwlg1zgdNn+5qv1PCGY54+vLyh8Ld4IB4bNo9D7VpqUGb/dd1ogczCNmpbnnKmUwr/Kfhgf8i3n3Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734371952; c=relaxed/simple;
-	bh=eQtWuXJHJ9eWQ0mMHPPcvoBKYqVq+l+21AkCILaf4gg=;
+	s=arc-20240116; t=1734371961; c=relaxed/simple;
+	bh=qP/7E/wEcnYheuAKNjOAYjf30iQeRzyamhuIbSdUl74=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N72+wm0bcL/Sn+C6DaeHnbkJDyQBFFALDYDomk1QUh5yyI7JcO94AEYIhN1c9sBW8c10i+tH3fr8fdTK6W+x87W7lidKjF5YfPFX86RHgEEhJNEPrQHI8DlSbb6wogn0Uiw8XA8HrmxsSQuP7c/kUt99h5hZsWs3SoxrzWY82J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZIO0COi/; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=rSN/BrHY9Bmgy/bdKuVuOEJw6ki2aD8C4HwN7dJ8qhPPfQU4FY3JcHRC2EmTLjXHqWAbBNYgCzHZa3stE4pIJRqY5OvIlrZJApmwSDgts1/xvZQC1T8UYRlTWBfolrlBtFIxntO3d2bNGrkDJPnegwoG66dz04mLSqoeTpYR+co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FlaxQlfM; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734371952; x=1765907952;
+  t=1734371960; x=1765907960;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eQtWuXJHJ9eWQ0mMHPPcvoBKYqVq+l+21AkCILaf4gg=;
-  b=ZIO0COi/eGaU1jBE1ComSJgVbVJJZ6l3uvq2F/E68CcqaposGfzhfuDz
-   paANuk7EFR5empEuPgjwNONsCvIGjXJQu3W5elxCsfIvplXIQZpnqmrhf
-   7KJ/z1kc+9vZ5ci1IzzdbY8KXU8CU8bFhxG/nbuFQCXRt9qiovSBLvKRm
-   ygpXPwozAxTSPkwDjIjlULw2BmHp8Mt4v3CoKGo3pDg8Wx12yMqIZozbu
-   cnyGjGQ2PS2EuCOJH82o6NBihcmQLPD7Mkbvc3WY+QR4ngrUYliXDret0
-   xGuwtqO9vHakNHJPvKUYC02z0z6yA4A2bvi0jQIQeY8paxrHwAn0ZykcL
-   g==;
-X-CSE-ConnectionGUID: oa1GA7zCTsShKkUM54xqGQ==
-X-CSE-MsgGUID: I+aHWgxKTZ+arsdZlCpmJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="52183777"
+  bh=qP/7E/wEcnYheuAKNjOAYjf30iQeRzyamhuIbSdUl74=;
+  b=FlaxQlfMnwlSqzcD5ukJhfRd0sn0rGDmtmpJm9ZScgUkarTJxsjVF2LG
+   geDxsINsY1mDK7yjv5C9u6u0y2RM+CiRpGOfKZzlupf+Q3fFRnFunHVOx
+   XDOPCh3ePsFTUA8UrA2JLIfug6YxCM5v5cWDUhYXwhMWr2r+8cxtyNmfL
+   mCDmt98A8h1rf1GW3yq89NeCNieHZFVSKH+ptoQwA+R8643SRX9tBzUrg
+   2wiuklKIh6Y8aOl692je3+mSVOEQ7SWzcFRnWBvFULMHaVenZnjtJWZhB
+   YafV/PDPAm0rwtsLpXmjYuS+XE2KFTB8GBn2ulYtCMVIhFuwfkZtlGUT3
+   A==;
+X-CSE-ConnectionGUID: DAtmqEvhTVSMEE8Cq3taew==
+X-CSE-MsgGUID: j41KBG05S+ahVHbqjLiznw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="52183812"
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="52183777"
+   d="scan'208";a="52183812"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:59:11 -0800
-X-CSE-ConnectionGUID: pDCigzt4SMO0KYjQODDeIg==
-X-CSE-MsgGUID: 7sisdlSYRAa1YEbFeO1IQQ==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:59:19 -0800
+X-CSE-ConnectionGUID: ZdTr0kdcTWqXziLrmczXZA==
+X-CSE-MsgGUID: 0kwz1wAeRxqR0WE9HgLU6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="128075865"
+   d="scan'208";a="128075881"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:59:09 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:59:17 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
@@ -66,9 +66,9 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-kernel@vger.kernel.org
 Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 18/25] PCI: Add restore_dev_resource()
-Date: Mon, 16 Dec 2024 19:56:25 +0200
-Message-Id: <20241216175632.4175-19-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 19/25] PCI: Extend enable to check for any optional resource
+Date: Mon, 16 Dec 2024 19:56:26 +0200
+Message-Id: <20241216175632.4175-20-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
 References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
@@ -81,88 +81,83 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Resource fitting needs to restore the saved dev resources in a few
-places. Add a restore_dev_resource() helper for that.
+pci_enable_resources() checks if device's io and mem resources are all
+assigned and disallows enable if any resource failed to assign (*) but
+makes an exception for the case of disabled extension ROM. There are
+other optional resources, however.
+
+Add pci_resource_is_optional() and use it instead of
+pci_resource_is_disabled_rom() to cover also IOV resources that are
+also optional as per pbus_size_mem().
+
+As there will be more users of pci_resource_is_optional() inside
+setup-bus.c in changes coming up after this one, the function is
+placed there.
+
+(*) In practice, resource fitting code calls reset_resource() for any
+resource it fails to assign which clears resource's ->flags causing
+pci_enable_resources() to never detect failed resource assignments.
+This seems undesirable internal logic inconsistency, effectively
+reset_resource() prevents pci_enable_resources() from functioning as
+intended. This is one step of many that will be needed towards removing
+reset_resource().
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 35 +++++++++++++++--------------------
- 1 file changed, 15 insertions(+), 20 deletions(-)
+ drivers/pci/pci.h       |  1 +
+ drivers/pci/setup-bus.c | 12 ++++++++++++
+ drivers/pci/setup-res.c |  3 +--
+ 3 files changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 0b722d158b6a..efdb9af8e256 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -329,6 +329,7 @@ void pci_walk_bus_locked(struct pci_bus *top,
+ 			 void *userdata);
+ 
+ const char *pci_resource_name(struct pci_dev *dev, unsigned int i);
++bool pci_resource_is_optional(const struct pci_dev *dev, int resno);
+ 
+ /**
+  * pci_resource_num - Reverse lookup resource number from device resources
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 7e5985543734..d30e8a5a0311 100644
+index d30e8a5a0311..a4e40916e2fc 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -127,6 +127,15 @@ static resource_size_t get_res_add_align(struct list_head *head,
- 	return dev_res ? dev_res->min_align : 0;
+@@ -206,6 +206,18 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 	}
  }
  
-+static void restore_dev_resource(struct pci_dev_resource *dev_res)
++bool pci_resource_is_optional(const struct pci_dev *dev, int resno)
 +{
-+	struct resource *res = dev_res->res;
++	const struct resource *res = pci_resource_n(dev, resno);
 +
-+	res->start = dev_res->start;
-+	res->end = dev_res->end;
-+	res->flags = dev_res->flags;
++	if (pci_resource_is_iov(resno))
++		return true;
++	if (resno == PCI_ROM_RESOURCE && !(res->flags & IORESOURCE_ROM_ENABLE))
++		return true;
++
++	return false;
 +}
 +
- static bool pdev_resources_assignable(struct pci_dev *dev)
+ static inline void reset_resource(struct resource *res)
  {
- 	u16 class = dev->class >> 8, command;
-@@ -473,13 +482,8 @@ static void __assign_resources_sorted(struct list_head *head,
- 			release_resource(res);
- 	}
- 	/* Restore start/end/flags from saved list */
--	list_for_each_entry(save_res, &save_head, list) {
--		res = save_res->res;
--
--		res->start = save_res->start;
--		res->end = save_res->end;
--		res->flags = save_res->flags;
--	}
-+	list_for_each_entry(save_res, &save_head, list)
-+		restore_dev_resource(save_res);
- 	free_list(&save_head);
+ 	res->start = 0;
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index a862b5d769dc..041c881c3c9c 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -494,8 +494,7 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
  
- requested_and_reassign:
-@@ -2159,9 +2163,7 @@ static void pci_prepare_next_assign_round(struct list_head *fail_head,
- 		struct pci_dev *dev = fail_res->dev;
- 		int idx = pci_resource_num(dev, res);
- 
--		res->start = fail_res->start;
--		res->end = fail_res->end;
--		res->flags = fail_res->flags;
-+		restore_dev_resource(fail_res);
- 
- 		if (!pci_is_bridge(dev))
+ 		if (!(r->flags & (IORESOURCE_IO | IORESOURCE_MEM)))
  			continue;
-@@ -2378,13 +2380,8 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+-		if ((i == PCI_ROM_RESOURCE) &&
+-				(!(r->flags & IORESOURCE_ROM_ENABLE)))
++		if (pci_resource_is_optional(dev, i))
+ 			continue;
  
- cleanup:
- 	/* Restore size and flags */
--	list_for_each_entry(dev_res, &failed, list) {
--		struct resource *res = dev_res->res;
--
--		res->start = dev_res->start;
--		res->end = dev_res->end;
--		res->flags = dev_res->flags;
--	}
-+	list_for_each_entry(dev_res, &failed, list)
-+		restore_dev_resource(dev_res);
- 	free_list(&failed);
- 
- 	/* Revert to the old configuration */
-@@ -2394,9 +2391,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
- 		bridge = dev_res->dev;
- 		i = pci_resource_num(bridge, res);
- 
--		res->start = dev_res->start;
--		res->end = dev_res->end;
--		res->flags = dev_res->flags;
-+		restore_dev_resource(dev_res);
- 
- 		pci_claim_resource(bridge, i);
- 		pci_setup_bridge(bridge->subordinate);
+ 		if (r->flags & IORESOURCE_UNSET) {
 -- 
 2.39.5
 
