@@ -1,115 +1,102 @@
-Return-Path: <linux-pci+bounces-18502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18503-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D1779F3158
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 14:15:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98E029F319E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 14:35:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9BED1887FA4
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 13:15:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D76E4188A1A1
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 13:34:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC5C51E526;
-	Mon, 16 Dec 2024 13:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CBB0205AA7;
+	Mon, 16 Dec 2024 13:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="gXkj01dN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dI6RXtT+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF581DFCB
-	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 13:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766C8204597
+	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 13:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734354940; cv=none; b=MFCgsdPDEFB+Sf9HZnA3GKnwgYpjWudJW7QJzXafGHVFge+Hd9U4lLZcJWJO6+cvudvyRpYb7EPPWTk8MMc6OoFmbOrdmd1A14TpGvjmlx1BxhJBAMcgKEU1yJ/p32E0C25nQt3uNfV+LAlAwd8pHZMjPR0PNZQhpDr0A1wnNys=
+	t=1734356047; cv=none; b=ASYwvHBE3X5SfUtry8+H9lrYi+tsX6EgLqDxol08GHY4393XAPuNX4XUz3SqromZ3JzTf25hdZWWjQCWsdG8nLXKhavl2r38cTR+j+dMSwWg/QMOE/lhtBOcXhDlnh5GuFzTthvpJIcNl4P3uvDgan7tQPoKrWVvqA+3bdfKWNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734354940; c=relaxed/simple;
-	bh=gbuH35S5nW17BuGhUu4QZP19q/B3XFW2NhnxtO6rfms=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AZcV3PxvWOEsyRLZeQIM84vyIWdA89RSgO2WOehMAEv69cF+UOqjsk0Tbo6zrCoqmouBNJIzoJ+pgNNgfd8aUFtnph2mN0mPiaoUFhHlowtuKymVwm/wwa9tHEloLQLfCWr4RZLQDH8Tkz2S8D1ceM9d5X9/eG1TOb74lSgfJbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=gXkj01dN; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4afe7429d37so1118898137.2
-        for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 05:15:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qtec.com; s=google; t=1734354937; x=1734959737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbuH35S5nW17BuGhUu4QZP19q/B3XFW2NhnxtO6rfms=;
-        b=gXkj01dNLu0ItVGkRESYksh79NDZtJOwjviwFnlGGYhvqULc/eq80UKO+eJPotxf3J
-         1nRbb+w2ktG18yFh6TL08Gninsm5exIkrJc+G3s2WDjdp/LT2F0Qp9hYd3OgRvU9oENh
-         UHRhJniptgL3TvpI6VBSXPiUfH46VkfgiFS0jZj/M1fRIAFv+JYmqafCUcpYabe7BLjc
-         xr3J3LkK5on301WbB1zacOuwXz+KJN7JfzTBYtC4zXhZrKUTqN3shq8zcNeyVTPYc88j
-         n3AFlAssvdjUdPktZcz2U4kUR1P5oc9cusCFihH2PggCIP4iEBbJhvsmgqNgQQBHn4SF
-         TE/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734354937; x=1734959737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gbuH35S5nW17BuGhUu4QZP19q/B3XFW2NhnxtO6rfms=;
-        b=dgUAv6iKYXiogKIz1zOd9mAaY9K1HaCWcjtHcBjF5QSvQK9YEuKAfmmSf1X+W7cz3t
-         SyfHDnZc178M8GjZlhu6UENwmTsnXiTiIXdxHGfRp/7x1Bfp7or1MNAgNvVRzE6rUyxl
-         t7M8URDxxlfrYS2pOZkbJlkK4LjXQFjFd8q17oNr7oQDMwDMk7RoEJrQxdI4pbnLUYru
-         /wcfChI2da/0c++61WOrJmPeqkpG/5WX0XNzGApibtpnYMKztoKArywPWFiLlcqO1QFk
-         vZvDbQqCmJuGkOEXU5Lo3R8oemDywCi2ZU/RJ083HYK5WFlCHCvQJjYty1M8F8Fc9Lxo
-         0bog==
-X-Gm-Message-State: AOJu0YzYj5+R/TvYvHwyHmlxdn3zfyYeaBjxkibLvXKoFiKUNi97dTKP
-	H3Pc2UJ1pb7Yrw2WM//NYWMHkY1SpvlzAyuks3zWXROyOVToHIzUlThwo9NKS0M/kkGAKQH0Ipy
-	VvduqnxJf3M1uVeNre3m/cVN8uzqVM6dr0SWTRGE8Lfmwy9aezwM=
-X-Gm-Gg: ASbGncsSSXGPjbF/wjFjxS4vVriAk/nSB+pXpWpA4RHGgUgPUCmdrFeBzVI+2BVkR/1
-	nsyu0gTFXEuZJnXJ/Lo/eTdDugTIAb2+Ql1eI
-X-Google-Smtp-Source: AGHT+IECqcNIM9HG7DmQeCQpQHlXqrnoyQq6GT6H4Sbdz5JiP5NTyQoK0DFRlqfZM3HFpa4cYBgR8nz5UX/0F6tTu98=
-X-Received: by 2002:a05:6122:16a0:b0:518:778b:70a1 with SMTP id
- 71dfb90a1353d-518ca45afc8mr8931883e0c.7.1734354936817; Mon, 16 Dec 2024
- 05:15:36 -0800 (PST)
+	s=arc-20240116; t=1734356047; c=relaxed/simple;
+	bh=aVPfQEFKL+WfSXiGb62W4d7FMVnQGVx6W7koXWJ+C7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pB0dEFSVIWXAuaXLN99cQg/g00cmJb3ia2DbaUAg9lilg6ysmmvkEqDx8NyBblacL49Os8uuo9LrvVnN9MRrA5tQa8tHQhj5v8h+1Fnfuli036dsWvt+j4ebRP0FkhtQNzMBNoFE/wAgUgNFZTvUt++Nm7+OCTJhYepWmoEnNKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dI6RXtT+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F178C4CED0;
+	Mon, 16 Dec 2024 13:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734356046;
+	bh=aVPfQEFKL+WfSXiGb62W4d7FMVnQGVx6W7koXWJ+C7g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dI6RXtT+Ma3oCbMsc7XVg5hWeF3LqNkc+vXVh44BCC5dMTrgRFC4SHJnQEom40UYe
+	 9v3Q/u1IbkNRHtbvvZadLMYOJcHgd5EpjFrLz+CMzGUiijY63VNYYB/N/wdGjtinIo
+	 40eUutOxCwyxi4JV9r40VudAdhd/jPJkNIH0Keq8AHNj5pUuHMU0rYfC4IyJgmxyuC
+	 9O3KCuRuWyhwU4VEYtO25uGdxojk0D91DMbLRy/ggqclp3mDDcCvAN16/vgcgfj4S3
+	 Sh3rsvPZcq2NEph86iwpM1al+c7F2/xDkBkJkVd5lFb2LKrAN2uxJkC0vltzV3gSGA
+	 Zl5VypKsOhF3g==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v2] PCI: rockchip: Add missing fields descriptions for struct rockchip_pcie_ep
+Date: Mon, 16 Dec 2024 22:34:04 +0900
+Message-ID: <20241216133404.540736-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rostyslav Khudolii <ros@qtec.com>
-Date: Mon, 16 Dec 2024 14:15:26 +0100
-Message-ID: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
-Subject: PCI IO ECS access is no longer possible for AMD family 17h
-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, bp@alien8.de, 
-	"tglx@linutronix.de" <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+When compiling the rockchip endpoint driver with -W=1, gcc output the
+following warnings:
 
-I am currently working on a custom AMD Ryzen=E2=84=A2 Embedded R2000 (AMD
-Family 17h) device and have discovered that PCI IO Extended
-Configuration Space (ECS) access is no longer possible.
+drivers/pci/controller/pcie-rockchip-ep.c:59: warning: Function parameter or struct member 'perst_irq' not described in 'rockchip_pcie_ep'
+drivers/pci/controller/pcie-rockchip-ep.c:59: warning: Function parameter or struct member 'perst_asserted' not described in 'rockchip_pcie_ep'
+drivers/pci/controller/pcie-rockchip-ep.c:59: warning: Function parameter or struct member 'link_up' not described in 'rockchip_pcie_ep'
+drivers/pci/controller/pcie-rockchip-ep.c:59: warning: Function parameter or struct member 'link_training' not described in 'rockchip_pcie_ep'
 
-Consider the following functions: amd_bus_cpu_online() and
-pci_enable_pci_io_ecs(). These functions are part of the
-amd_postcore_init() initcall and are responsible for enabling PCI IO
-ECS. Both functions modify the CoreMasterAccessCtrl (EnableCf8ExtCfg)
-value via the PCI device function or the MSR register directly (see
-the "BIOS and Kernel Developer=E2=80=99s Guide (BKDG) for AMD Family 15h",
-Section 2.7). However, neither the MSR register nor the PCI function
-at the specified address (D18F3x8C) exists for AMD Family 17h. The
-CoreMasterAccessCtrl register still exists but is now located at a
-different address (see the "Processor Programming Reference (PPR) for
-AMD Family 17h", Section 2.1.8).
+Avoid these warnings by adding the missing field descriptions in
+struct rockchip_pcie_ep kdoc comment.
 
-I would be happy to submit a patch to fix this issue. However, since
-the most recent change affecting this functionality appears to be 14
-years old, I would like to confirm whether this is still relevant or
-if the kernel should always be built with CONFIG_PCI_MMCONFIG when ECS
-access is required.
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+Fixes: a7137cbf6bd5 ("PCI: rockchip-ep: Handle PERST# signal in EP mode")
+Fixes: bd6e61df4b2e ("PCI: rockchip-ep: Improve link training")
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+---
+Changes from v1:
+ - Addressed Manivannan's comments
 
-Linux Kernel info:
+ drivers/pci/controller/pcie-rockchip-ep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-root@qt5222:~# uname -a
-Linux qt5222 6.6.49-2447-qtec-standard--gef032148967a #1 SMP Fri Nov
-22 09:25:55 UTC 2024 x86_64 GNU/Linux
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+index 1064b7b06cef..4f978a17fdbb 100644
+--- a/drivers/pci/controller/pcie-rockchip-ep.c
++++ b/drivers/pci/controller/pcie-rockchip-ep.c
+@@ -40,6 +40,10 @@
+  * @irq_pci_fn: the latest PCI function that has updated the mapping of
+  *		the MSI/INTX IRQ dedicated outbound region.
+  * @irq_pending: bitmask of asserted INTX IRQs.
++ * @perst_irq: IRQ used for the PERST# signal.
++ * @perst_asserted: True if the PERST# signal was asserted.
++ * @link_up: True if the PCI link is up.
++ * @link_training: Work item to execute PCI link training.
+  */
+ struct rockchip_pcie_ep {
+ 	struct rockchip_pcie	rockchip;
+-- 
+2.47.1
 
-Best regards,
-Ros
 
