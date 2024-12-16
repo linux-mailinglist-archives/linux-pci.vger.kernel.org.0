@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-18547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6874B9F3848
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 19:04:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 174399F384D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 19:04:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C64D118920FF
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 18:02:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 889AD167CFE
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 18:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7296520CCF8;
-	Mon, 16 Dec 2024 17:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F52820E321;
+	Mon, 16 Dec 2024 17:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="afm3HAk/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Le+c/Gek"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DF620CCDC;
-	Mon, 16 Dec 2024 17:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D8C20E038;
+	Mon, 16 Dec 2024 17:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734371906; cv=none; b=inPAAUXGSaSWfwedoMj5oYCQTSHuWZlVv1dytcRpZ1cevO5VW9Q9ne72yLCXyTWSrwzMh3pWeasAyCZjJYN3ajCapUj1h8fPdn6uW+u3QxCLokpi8C7P8UbhofIpm92z051GL8MEiCNcVdfwlrsg43LWRuvAJsFBd99cFKy98Vk=
+	t=1734371918; cv=none; b=nd/Qa3jjBMbSizANTOf2UXLACuo/ObSqBNPFyhXXNA21KbWA0cDiC68AMkk4+bCq6/JUNHydChxXw9p25zV+55XagW4dkiFpR7x1DFPdZeB0WCv22SEYfpGySm7D0l5nMfb/7wgy4w2boGhXJFvy/Tsv7FWNfqU+SLClr4N5Utk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734371906; c=relaxed/simple;
-	bh=EaKOY1NURyHD7MBz4t/eBMjwdJZLiP/F4PItP37cGuM=;
+	s=arc-20240116; t=1734371918; c=relaxed/simple;
+	bh=vm6XgHjYOHoP+wOWdHcRPtAguPDJoFo34GGUVlmf8vo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bOAa7fEOCrRP/+cGf8cL7tVMYypl4NYNGgjLI3su0sd3s3tcN2s5aYkQkWWHmdqpbcltzwwiyjxbcBsdI6BA0YJ9Jqsjjbi+yk9JJTcX089y0tA2ZkRGGF4QlXO/Nzg3DQm3G2RoO69zZ13EZtkN7gfq6+Euxhkz4ct3PWSKrcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=afm3HAk/; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=lewU0urBxVvuBItgbg2hGK2fxxMr/AO0nFXg0AIuaFYU0uacV7uXwQCZ31x0AYbgeOCV7WVPeP4MYHqJFyX76uFH0U46ox7BEZKH4+oOcawspAW/+pHw2qbxzqe+FtxR3OSIMo9ETC3DPs+rtlc03bkfYsD5mFY2eNFXMsZgCMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Le+c/Gek; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734371905; x=1765907905;
+  t=1734371917; x=1765907917;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EaKOY1NURyHD7MBz4t/eBMjwdJZLiP/F4PItP37cGuM=;
-  b=afm3HAk/OuQXmGu5j/qRi5AzmtN5j0pFw3ST+pKUoL2S8+JWa1gUHhfe
-   LheyuUnaox7NYx0dTaJ0FCvBc9Yl27JsHtswrbfrLubYRXglqyImj2NXw
-   HmuK7UQkDA27i3Pk5anZoH9qFP81yyOY/OqwB0w1DbTF/FzngwzRDHuqI
-   AS8NlNcgEvrTBZfiL/Aqk+GhIs3a/gg9wAlDXA2VD0U0JNkyx0l2DY/N3
-   ktN/MFZFFcFEVtbgTHcPqjH/E9Mdih5HblfCMcPRfx9n+wvu4Uv+XsPYf
-   urHhoaX6zFlHk3QKZykAay1lJ30JPnlCGp23LijhcudFZDfq+0J8faZqW
+  bh=vm6XgHjYOHoP+wOWdHcRPtAguPDJoFo34GGUVlmf8vo=;
+  b=Le+c/Gek/+M388X/p7PI5GsYUu0YOPMosoT7+f4Lrl/fqNzM54yydh1J
+   ItjKDbA9QyDLaVS/Aj5CHVeyG1qwbzLfTlfudrfcVxQrO+UGzgz0+UkZ6
+   Q15gOJbmC6FWlYrQjKd6kWcUj7poLToqTAmBSaUxc5ysTNuAFczDyEdpl
+   9z19urzZgYjuj4pCbwYBuYJTLrZFsJWrvvOWCZqmESMGd8S4D74IeYuBI
+   NdkkeL1+5IhO4Zp1AWJFLtpS//DCcEzD9ShFK5XrT2l6daVnYv4L+GWAI
+   ph/VB637ssuXjQiiRk01ALnrsmdqrY6BVs+19pIefroWkHu08xS5ROrcM
    Q==;
-X-CSE-ConnectionGUID: DgO5wL/KT9KkvUKqY1XKUg==
-X-CSE-MsgGUID: j69v2sidTyOziobVU31ZVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="57250930"
+X-CSE-ConnectionGUID: J/qYGVe8QWGVsOcoAdAg7w==
+X-CSE-MsgGUID: Mw+oUBeTQpqnb2OPzMl7Jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="57250957"
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="57250930"
+   d="scan'208";a="57250957"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:58:24 -0800
-X-CSE-ConnectionGUID: 1GCzlevXTjumfLGnWuUGMA==
-X-CSE-MsgGUID: INcC9lW2QxeaUZO6BnveKQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:58:32 -0800
+X-CSE-ConnectionGUID: 8kKD6bYpRAOJQYki8BnUGg==
+X-CSE-MsgGUID: c1zu1P8bQN+FbuQI+eoxcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="101419048"
+   d="scan'208";a="101419065"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:58:21 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:58:29 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
@@ -66,9 +66,9 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-kernel@vger.kernel.org
 Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 12/25] PCI: Converge return paths in __assign_resources_sorted()
-Date: Mon, 16 Dec 2024 19:56:19 +0200
-Message-Id: <20241216175632.4175-13-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 13/25] PCI: Refactor pdev_sort_resources() & __dev_sort_resources()
+Date: Mon, 16 Dec 2024 19:56:20 +0200
+Message-Id: <20241216175632.4175-14-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
 References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
@@ -81,37 +81,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-All return paths want to free head list in __assign_resources_sorted()
-so add a label and use goto.
+Reduce level of call nesting by calling pdev_sort_resources() directly
+and by moving the tests done inside __dev_sort_resources() into
+pdev_resources_assignable() helper.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/setup-bus.c | 44 +++++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 6b4318da1147..ad7bc6166b23 100644
+index ad7bc6166b23..ba935a050be3 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -444,8 +444,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 		list_for_each_entry(dev_res, head, list)
- 			remove_from_list(realloc_head, dev_res->res);
- 		free_list(&save_head);
--		free_list(head);
--		return;
-+		goto out;
- 	}
- 
- 	/* Check failed type */
-@@ -488,6 +487,8 @@ static void __assign_resources_sorted(struct list_head *head,
- 	/* Try to satisfy any additional optional resource requests */
- 	if (realloc_head)
- 		reassign_resources_sorted(realloc_head, head);
-+
-+out:
- 	free_list(head);
+@@ -127,12 +127,33 @@ static resource_size_t get_res_add_align(struct list_head *head,
+ 	return dev_res ? dev_res->min_align : 0;
  }
  
++static bool pdev_resources_assignable(struct pci_dev *dev)
++{
++	u16 class = dev->class >> 8, command;
++
++	/* Don't touch classless devices or host bridges or IOAPICs */
++	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
++		return false;
++
++	/* Don't touch IOAPIC devices already enabled by firmware */
++	if (class == PCI_CLASS_SYSTEM_PIC) {
++		pci_read_config_word(dev, PCI_COMMAND, &command);
++		if (command & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY))
++			return false;
++	}
++
++	return true;
++}
++
+ /* Sort resources by alignment */
+ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ {
+ 	struct resource *r;
+ 	int i;
+ 
++	if (!pdev_resources_assignable(dev))
++		return;
++
+ 	pci_dev_for_each_resource(dev, r, i) {
+ 		const char *r_name = pci_resource_name(dev, i);
+ 		struct pci_dev_resource *dev_res, *tmp;
+@@ -176,25 +197,6 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 	}
+ }
+ 
+-static void __dev_sort_resources(struct pci_dev *dev, struct list_head *head)
+-{
+-	u16 class = dev->class >> 8;
+-
+-	/* Don't touch classless devices or host bridges or IOAPICs */
+-	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
+-		return;
+-
+-	/* Don't touch IOAPIC devices already enabled by firmware */
+-	if (class == PCI_CLASS_SYSTEM_PIC) {
+-		u16 command;
+-		pci_read_config_word(dev, PCI_COMMAND, &command);
+-		if (command & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY))
+-			return;
+-	}
+-
+-	pdev_sort_resources(dev, head);
+-}
+-
+ static inline void reset_resource(struct resource *res)
+ {
+ 	res->start = 0;
+@@ -498,7 +500,7 @@ static void pdev_assign_resources_sorted(struct pci_dev *dev,
+ {
+ 	LIST_HEAD(head);
+ 
+-	__dev_sort_resources(dev, &head);
++	pdev_sort_resources(dev, &head);
+ 	__assign_resources_sorted(&head, add_head, fail_head);
+ 
+ }
+@@ -511,7 +513,7 @@ static void pbus_assign_resources_sorted(const struct pci_bus *bus,
+ 	LIST_HEAD(head);
+ 
+ 	list_for_each_entry(dev, &bus->devices, bus_list)
+-		__dev_sort_resources(dev, &head);
++		pdev_sort_resources(dev, &head);
+ 
+ 	__assign_resources_sorted(&head, realloc_head, fail_head);
+ }
 -- 
 2.39.5
 
