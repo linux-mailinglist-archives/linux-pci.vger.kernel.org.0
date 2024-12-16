@@ -1,118 +1,134 @@
-Return-Path: <linux-pci+bounces-18528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6E299F368B
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:50:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B961E9F36AB
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:54:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38EF016B965
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:49:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC3D6161B40
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:54:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A06206F0A;
-	Mon, 16 Dec 2024 16:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19982063C9;
+	Mon, 16 Dec 2024 16:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJQp7TAD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wk6qB7Kf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB693205510;
-	Mon, 16 Dec 2024 16:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75E2063E0
+	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 16:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734367425; cv=none; b=Ua75lw2o6M8LYP8oymGksGn5R63gWh0XeJqH4cvCRosai0+bAMr9tMcoREuDk0w99rmHiynNwIynhAwlyb5Q/l/uoyf6AQjk59N4papiHNhmgYD7OtSVUDLRmrPLzZW9xqBpSVUeYGec2SqPtZFwdvYlXgdFcQUKfmaSm0z+85E=
+	t=1734367719; cv=none; b=iINunPPfBdNFRtSIhtPiLAst9FRdA+3mYkgY9bSFrM5c6M40K4n48c78CzPT1VubReYT2PzA3T8h0P8xIcqAdLV7mhB+IkOMeZotCCP+d7bqY03Ka9sF6rR9lGeyLpgyJfi3LTNGDrzno3Xrs2+/JKsMpD+W7E9ZeaeoTPVM3W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734367425; c=relaxed/simple;
-	bh=04uq97evC0SsjGrcIpfj85T+QYon9j42SA1xzgoB2h8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R5q2jGPOfe6nN7hsRFNkA/HDpRy04eXtEBvmtXXTczaGGlQmct0RknF8DubaHLBLxsyb7fgPZn9+yeEIWQrY/gbkjbZeeRMnQE15yMlxtwj1VEoQvR8ajipYFVQ93AMlcnnUmDSbDefF9db6KFMkkDKkiGVhJm8HrDm+rtkMYTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJQp7TAD; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ef6ee55225so658327a91.0;
-        Mon, 16 Dec 2024 08:43:43 -0800 (PST)
+	s=arc-20240116; t=1734367719; c=relaxed/simple;
+	bh=JVy1OakhjRBLAdA6bfdtQVTG5Be/+QvYNXigpOHTD3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TiPaiR67pgDRElfjjySIszCbi9CGJJPJhQPJoiWsDtjNXqXZdQZvCFaCLhlbrt4TNaI3oapYZ+LA96wlwi/7pKo/yhgie/XP6oZ14MoamH6pJeVNMnxABPSaCrN/fXh7SUvV9nI1st0aW0xWXH50aAfBBbAmcm39VhmxwJYj2gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wk6qB7Kf; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21628b3fe7dso33682215ad.3
+        for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 08:48:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734367423; x=1734972223; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=04uq97evC0SsjGrcIpfj85T+QYon9j42SA1xzgoB2h8=;
-        b=KJQp7TADjBHf+JciSDM2ecOyo8hT5A4HZfpEFrMb/2b8HV6/QryvTK0XRhOon0jWS5
-         2r5qW/VA8K7ag4Pm5Lx/Fh5Y+ufdAEyebv66WvLXyNqDGBWqq4MYfK3WCEU+w2FgDp63
-         3D6rfbiU/hbTeec7y5HCuf8tSgr83kJRJQf5T3GLkwyHPlCDcdKmDOUgBqY3tFTQx3NZ
-         HNchx2cyvRqVlICmxRpp17vRiBlpuj/0cI4nNpKOO49dsW54d/S56YaMJTW4q5rJEbSC
-         xxYs8/xg/df62WwDWLMVgJTWvxGcX1gGknLu/GjUn2eXXTPqz5hFUCPS4EwBQ2W1hLR4
-         0nFw==
+        d=linaro.org; s=google; t=1734367717; x=1734972517; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uf/C35BwQBTRlT0IeaFUKw9xJGt6H8iM2xKqt61L0Gc=;
+        b=wk6qB7KfcPA62V34D7l/DQce+iYDhcODPnDK0/4cySZmO4TrlaCXZh6wy3Fii1Pum0
+         CciDHmoWb0mbaCX6Y2wM+bkPDxagvGX0rIDC3peMWGU0N4kUA5Rl2MWhWC2HZxMgwUJZ
+         4LoRX+uG7fJogSX//RB6GljG/9/9sy8A0q+ERPfTfg7VjuXuj3yblWqOlhvmONaq0EF5
+         TXumy8N5yJ7Uj6BzkL6hfUITNAUqGKT9QrKjUsPOAmiMP0EjC+jx8EI9L0mLged1hHAl
+         ej7bsb9yjodB85tF2iNX3dD829cLRwcSEerKqK6x8FvG+O/VYB7L4R3AkrHni7PGf9Lk
+         tZTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734367423; x=1734972223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=04uq97evC0SsjGrcIpfj85T+QYon9j42SA1xzgoB2h8=;
-        b=kkd0arzGb8GtcKjca+mnmKrdoQrd6Ms4/9i8quS2nmlHD6ze+fb5TVIEWjRto1h6JG
-         /qzWyJxQqXfCqz6HAXPNYN6laWWjWj50ffT841Slc9Cz1Sn2wb6ngbQQ1NC1vWEh5ON+
-         Ku1t/4/JCneo0d7KHQptnKwtrYX2mTqaEWqufa3NZooabfS0MlQHzG26clmNeo6AbpEt
-         zGk/ZkDuhJBlfogwEbm95H38m+XvpRlHNPQFfPkdtXvfbyiV2AREK6+4Mxv0zC3hHZQn
-         1KiXB/Pjx8lCzZ0f/dUiMK9Q3DO6TdYEcMBA9OIfewckAmBmv6AgJzibH2P+dgsnUsm8
-         ylqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIh1yga0UXP9PYOa5mfcewZSeAfAtp/7kvd6D1fKNkDlUYAfYMjp+zmOqGYYN9SMjaYTKiBVPUbdre@vger.kernel.org, AJvYcCUdDznQvOOp+TqzUCUzNptbf9j7Stj4oAQWJavjnB441KMQ6dlitSqjwiiDeL64/oXcxqXg@vger.kernel.org, AJvYcCWkoKZJXWAPPfAKKdb4LFRLFAFMqpBFKoGQXhLOMB3+j5rnCgSLXYkC1408kCRrJ4u2q2dB3B7sFgTQ9umc3/w=@vger.kernel.org, AJvYcCXQLaL+dlq2RYw0hoFwZNQRzcd9KfGkQjYIIfGzDBRNRGupAeg6Sw2hmGVo4tygY2XkTy6RoF8rY4L9@vger.kernel.org, AJvYcCXoUarC7aDQkJm5VrN5zBA9kXihMkiaRN/Zh74+yV2HnHjmaFobdm4IvduVWyrSN5rwxsfsfAft/w04bSRJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+o8QXN0pcBsi69ncpd6xqL+Eaoqdlo4qNryIymJeaeia9VdiS
-	nmHSHjQmtnIFH2HMpnNNS5thPnUh8Abdl+mdToCJdP+vVTrlwTrNpzdJ90nXuhGZ51UH5xP39Su
-	gQqnmztfv6qGyGeYQyBgUg+eG//k=
-X-Gm-Gg: ASbGncseY2KX1N2LipHCg3sPKyHeoM2E+qHvFxRo9Ihtl8W/AfxYPfeCdELgDmRz0cs
-	df+w9jFAMXROoS77bExSoybGg1eyNSJrtIralyw==
-X-Google-Smtp-Source: AGHT+IFKc7fJkdNBzcdwh9kY45ShdWwWMEp2syQkysrKW6iv3Fq+LMpjh+KUuaXeGBaITab5cB8AhTBOz/VBn8AK0aM=
-X-Received: by 2002:a17:90b:4d06:b0:2ee:b665:12b3 with SMTP id
- 98e67ed59e1d1-2f2900aa595mr7449238a91.5.1734367423043; Mon, 16 Dec 2024
- 08:43:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1734367717; x=1734972517;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uf/C35BwQBTRlT0IeaFUKw9xJGt6H8iM2xKqt61L0Gc=;
+        b=Nm43cvkU+FV20n3Rl5HBj1ygnRftx/czPpYmf6gaJ+GNqkOabSAE3tWkqYrPC9S4zb
+         TE5oWrN1z4QiQsL8D1HGuQExlhLjt1pJFSsNIDaISXhFoowulh6Plm52fYgoYgwLYdy5
+         K4dOkd/+Gi8VWskRxK4JpL4eeVFtpLte0Jnh5j3kjMji9l0YKtP6Kh2X6tUw85KNraqI
+         gYB/Cfupz/b9OmI8UuIUipcRnXrTBFGeeTv1mNGv0BNTmMPs/sIZLS7e7+GYT5IBrBE5
+         N+/8POAFNcY6iE+6KREjhXsFdNLDSSKExioXs2z9UN1sPjQ+lWA7t+/B4EwN2dFeTXCI
+         VtmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiJ0DvfeWO4iPFICpYps7dAmtFKx1NYbLcis1wxlVCu+dUIBLdnUfoRk6NeUZKOXbO/joC3SLsMJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0q1ZZHYCpKtVl2Mmr9lY1Qet8FxcJvuBNkSN9Wc0AaRxG+9FV
+	iPz632PuQXfRZa+jnKw+CZQkeFpKdjt0JCUN6UHWMR17x7l+OJv4sDVRnyZntg==
+X-Gm-Gg: ASbGnctA4YzWK8JQfNMGl0yaiKfvOL26j4eqO/GwE+VvdTdNV5H3FPhA3LM2nyqpM+l
+	WKl/+W1oGq/azJh+eC85XB8FKjmQ0Zgniyv2cePWyyG07VaKiTlGEB8Bh+1DPN4NSYljCrhIRxF
+	SRzLwFlxB3QKezgh5na0cWFxsQ70/DcvjmLcfTOUSxmIBZKP+aIClaGvpJdyiKvBiAmaOxFhMz+
+	IySgp/oEfEVS3DldPGNHT5HTevnLj63lepmUiDo1BrCeFXI42puMq16PxVYTytOnD5s
+X-Google-Smtp-Source: AGHT+IEbjZhCC60l4mXiJWyw0YJq9ctEYxooGkv/o7bOg9yFa29PqtrzXCLZoknekW9tg22tCtP5pg==
+X-Received: by 2002:a17:902:ccd2:b0:216:26f1:530b with SMTP id d9443c01a7336-21892a70579mr183783695ad.51.1734367717333;
+        Mon, 16 Dec 2024 08:48:37 -0800 (PST)
+Received: from thinkpad ([120.56.200.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1e510a9sm44948185ad.167.2024.12.16.08.48.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2024 08:48:36 -0800 (PST)
+Date: Mon, 16 Dec 2024 22:18:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Ulf Hansson <ulf.hansson@linaro.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org,
+	axboe@kernel.dk, sagi@grimberg.me, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org,
+	Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by
+ the user
+Message-ID: <20241216164830.36lpu6gfnapsdar4@thinkpad>
+References: <20241205232900.GA3072557@bhelgaas>
+ <20241209143821.m4dahsaqeydluyf3@thinkpad>
+ <20241212055920.GB4825@lst.de>
+ <13662231.uLZWGnKmhe@rjwysocki.net>
+ <CAPDyKFrxEjHFB6B2r7JbryYY6=E4CxX_xTmLDqO6+26E+ULz6A@mail.gmail.com>
+ <20241212151354.GA7708@lst.de>
+ <CAJZ5v0gUpDw_NjTDtHGCUnKK0C+x0nrW6mP0tHQoXsgwR2RH8g@mail.gmail.com>
+ <20241214063023.4tdvjbqd2lrylb7o@thinkpad>
+ <20241216162303.GA26434@lst.de>
+ <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212163357.35934-1-dakr@kernel.org> <20241212163357.35934-16-dakr@kernel.org>
- <2024121550-palpitate-exhume-348c@gregkh> <Z2BV72LDOFvS2p8h@pollux.localdomain>
-In-Reply-To: <Z2BV72LDOFvS2p8h@pollux.localdomain>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 16 Dec 2024 17:43:31 +0100
-Message-ID: <CANiq72=cOgKRbA9_G7XSTNkNx0JxEa8Qqwe+VNCw8t7y1w7n3Q@mail.gmail.com>
-Subject: Re: [PATCH v6 15/16] samples: rust: add Rust platform sample driver
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org, bhelgaas@google.com, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
-	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, 
-	j@jannau.net, fabien.parent@linaro.org, chrisi.schrefl@gmail.com, 
-	paulmck@kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com>
 
-On Mon, Dec 16, 2024 at 5:31=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> Thanks! If nothing else comes up, I'll send you a v7 end of this week add=
-ressing
-> the two minor things I just replied to (remove wrong return statement in
-> iounmap() helper, `pci::DeviceId` naming and `Deref` impl).
+On Mon, Dec 16, 2024 at 05:42:30PM +0100, Rafael J. Wysocki wrote:
+> On Mon, Dec 16, 2024 at 5:23 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Sat, Dec 14, 2024 at 12:00:23PM +0530, Manivannan Sadhasivam wrote:
+> > > We need a PM core API that tells the device drivers when it is safe to powerdown
+> > > the devices. The usecase here is with PCIe based NVMe devices but the problem is
+> > > applicable to other devices as well.
+> >
+> > Maybe I'm misunderstanding things, but I think the important part is
+> > to indicate when a suspend actually MUST put the device into D3.  Because
+> > doing that should always be safe, but not always optimal.
+> 
+> I'm not aware of any cases when a device must be put into D3cold
+> (which I think is what you mean) during system-wide suspend.
+> 
+> Suspend-to-idle on x86 doesn't require this, at least not for
+> correctness.  I don't think any platforms using DT require it either.
+> 
 
-If you are going to send v7, then could you please take the chance to
-update `core::ffi::c_*` to `kernel::ffi::c_*`? (since we are migrating
-to our custom mapping -- `rust-next` completes the migration and
-enables the new mapping)
+On suspend-to-idle, yes D3Cold doesn't make sense, but on suspend-to-ram it is
+pretty much required. That applies to DT as well.
 
-I think you have only 3 cases here, and the change should not break
-anything in your case, i.e. it is just a replacement.
+- Mani
 
-Thanks!
-
-Cheers,
-Miguel
+-- 
+மணிவண்ணன் சதாசிவம்
 
