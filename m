@@ -1,127 +1,128 @@
-Return-Path: <linux-pci+bounces-18512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D494D9F3511
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:55:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A508F9F3529
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:01:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03ED41889283
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 15:55:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A66C16310C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:01:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D722484A5E;
-	Mon, 16 Dec 2024 15:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C81C11D696;
+	Mon, 16 Dec 2024 16:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KI3ENP0+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUZH13Nm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAAC148FF0
-	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 15:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5083217591;
+	Mon, 16 Dec 2024 16:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734364523; cv=none; b=nRnOLr9JulTa08hPKWgvjXPPbmUjq7H9fFFy1SJ7hRNjr/kitGl29czrCDikHT40Yi7P2vZCw7W/it9QITNGuEPprEgz9HRGpPO5odzFcHXj/r0t+AlcQ7gSnRcWysM4isiCj/ZOaVI3HRU7nrVv2IubzSbR4dpW4fraTZP2C8c=
+	t=1734364894; cv=none; b=gOPcGZt4lQ8eBe5zw7mwSLzgUWqtBKN+eosLtNCQRmR8AFfftAk4UVcn4t2XSZ51he+8H2Qi3LdWtsMZhf4E+9f6v8r8mw5YgUysz+BrwRf0hTM1OCANxLzIpYSkNCQTKGSiU86GFCBSuMbrOZy1n8goze40gDldZz3TQTVjsRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734364523; c=relaxed/simple;
-	bh=DhMQ81JiQIUHP4I1dckoQnLgcr2me1VWvzaca1SA/es=;
+	s=arc-20240116; t=1734364894; c=relaxed/simple;
+	bh=lEX9N+/EdEZGwnBqSmWoKk8wnmnP4cylfr/1FvUxUxw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Lb0QS0hGXuT8l2xK4V305KyrOeW5VdkROU8A2cEPqDpFwg2zlsACJrkD8fxYOKu2Sa9IzdDciwdRGjz58L0ZGXHTNabo89iLKyX0EJe3jf1XxLdUKfHW6eGDn5WcLmePlsa76SaI6qSxQ7Kuc0l3OD9cBPTtw1XAkptfbbmb+wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KI3ENP0+; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=d4sI5QRV6OI1ZGPwaiotTGfXQ2zVDe2ZoCZmmRAC6FpehMjnoYxSuDnApTkttn/ytpkg5L58tfx46JywJC/t+4k2caCo2PS4E3ttGiV0wYQbEb16fWBDDVB/CqiWvNEaCV5uqQVzbJ7tUexC8GukvFQZKjqP+IBG1VYo+q8xMJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUZH13Nm; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734364522; x=1765900522;
+  t=1734364893; x=1765900893;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=DhMQ81JiQIUHP4I1dckoQnLgcr2me1VWvzaca1SA/es=;
-  b=KI3ENP0+I5uQIh7EjnRWDtKVEeNBiO79ESoKVPBICTzrtmqIYA3QOi5m
-   Q/KcQbm7TV6WArrMPEPCmhZYIk6MvyTFH6/u0MHqmD6dBIUTVFBnaycjg
-   zwiy+40lUEfMEQVSlScEmjxCsuQUjJCjRdZebOgq4yZ5rxH96BPto38wj
-   wfdpdLsGl1P5neKEHTEaMPrCEUxXSFdpBoEVTJ8cH1AQcB86odqEJbhSg
-   S/RmzVnP2Bii4tNe3/mAWAVJqAxKHf+IwtXRY+FZMqVeSjZR+M4N+AVgJ
-   4+YayvritZLoQ23tmfnGA9eYWVuiPzmjy0ZqAFu/NOksOC04aqV8yTZjH
+   references:mime-version;
+  bh=lEX9N+/EdEZGwnBqSmWoKk8wnmnP4cylfr/1FvUxUxw=;
+  b=UUZH13NmTZiS3N57XcPWog0KAUN201uBcLx0jNhstuBKj54gze/WE/k6
+   SIwuKZ0KSMCLCR0Unca6HYuFJXda/ZmS5lG3tISRwdscgwexQSL95DBd3
+   uBtqnJd/KbehPNFghKay1HUTdV1vrPRSvvtUmvuk2pLacwCsYOm7W05KT
+   HWUweuXKs9WgpcSqV8nQgnD8d0tI6Irg2V2m+okP0iAZPwUdA1FUbK9JD
+   bfpOxzqwyYpo6mgpYyaaUZTOkg/uhvh6WPuAc2xNyCHBnIKoZSPCFynSN
+   6e/yinpPXq4X8rpvNXV/DsOv2sZY8OLBbjGVPITVynwAVnbCyuj6ZMoIx
    g==;
-X-CSE-ConnectionGUID: qjGYPjWkQOyUvG6bGk+HAA==
-X-CSE-MsgGUID: /YdwEDwMR+26OoprI8Jz2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="52168752"
+X-CSE-ConnectionGUID: QKVLmNuBQH2SKtor/QDlaw==
+X-CSE-MsgGUID: 88j7ErqDQWCCRfBZUsdfJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="38530718"
 X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
-   d="scan'208";a="52168752"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 07:55:21 -0800
-X-CSE-ConnectionGUID: p6ZTJrjFRvy96s3/ZPAVGA==
-X-CSE-MsgGUID: aV3eWowAQQaR436cinJRMg==
+   d="scan'208";a="38530718"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 08:01:32 -0800
+X-CSE-ConnectionGUID: uLkk7swzS6GLSPySWw/2SQ==
+X-CSE-MsgGUID: D/ks+nPYQiGn83aWcOEg/Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120495195"
+X-IronPort-AV: E=Sophos;i="6.12,239,1728975600"; 
+   d="scan'208";a="97468225"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 07:55:20 -0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 08:01:30 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 16 Dec 2024 17:55:16 +0200 (EET)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-    Niklas Schnelle <niks@kernel.org>
-Subject: Re: [PATCH] PCI: Update code comment on PCI_EXP_LNKCAP_SLS for PCIe
- r3.0
-In-Reply-To: <ceb8f672fa834c96b7287b7f74fb60b166be109e.1734338101.git.lukas@wunner.de>
-Message-ID: <49c29ad2-bc6f-0213-2fa0-562d00c0a546@linux.intel.com>
-References: <ceb8f672fa834c96b7287b7f74fb60b166be109e.1734338101.git.lukas@wunner.de>
+Date: Mon, 16 Dec 2024 18:01:27 +0200 (EET)
+To: Gowthami Thiagarajan <gthiagarajan@marvell.com>
+cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI : Fix pcie_flag_reg in set_pcie_port_type
+In-Reply-To: <20241213070241.3334854-1-gthiagarajan@marvell.com>
+Message-ID: <5047c4a8-dfce-a081-e4fa-c6da731eb01d@linux.intel.com>
+References: <20241213070241.3334854-1-gthiagarajan@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-147570352-1734364490=:941"
-Content-ID: <e3fb4c8f-c3a0-090c-62a3-df1e13e13142@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 13 Dec 2024, Gowthami Thiagarajan wrote:
 
---8323328-147570352-1734364490=:941
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <81887081-4815-c8f7-3878-c1ed254b0b09@linux.intel.com>
-
-On Mon, 16 Dec 2024, Lukas Wunner wrote:
-
-> Niklas notes that the code comment on the PCI_EXP_LNKCAP_SLS macro is
-> outdated as it reflects the meaning of the field prior to PCIe r3.0.
-> Update it to avoid confusion.
->=20
-> Reported-by: Niklas Schnelle <niks@kernel.org>
-> Closes: https://lore.kernel.org/r/70829798889c6d779ca0f6cd3260a765780d136=
-9.camel@kernel.org/
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> When an invalid PCIe topology is detected, the set_pcie_port_type function 
+> does not set the port type correctly. This issue can occur in 
+> configurations such as:
+> 
+> 	Root Port ---> Downstream Port ---> Root Port
+> 
+> In such cases, the topology is identified as invalid and due to the incorrect 
+> port type setting, the extended configuration space of the child device becomes 
+> inaccessible.
+> 
+> Signed-off-by: Gowthami Thiagarajan <gthiagarajan@marvell.com>
 > ---
->  include/uapi/linux/pci_regs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.=
-h
-> index 1601c7e..521a04e 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -533,7 +533,7 @@
->  #define  PCI_EXP_DEVSTA_TRPND=090x0020=09/* Transactions Pending */
->  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V1=0912=09/* v1 endpoints without=
- link end here */
->  #define PCI_EXP_LNKCAP=09=090x0c=09/* Link Capabilities */
-> -#define  PCI_EXP_LNKCAP_SLS=090x0000000f /* Supported Link Speeds */
-> +#define  PCI_EXP_LNKCAP_SLS=090x0000000f /* Max Link Speed (prior to PCI=
-e r3.0: Supported Link Speeds */
->  #define  PCI_EXP_LNKCAP_SLS_2_5GB 0x00000001 /* LNKCAP2 SLS Vector bit 0=
- */
->  #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1=
- */
->  #define  PCI_EXP_LNKCAP_SLS_8_0GB 0x00000003 /* LNKCAP2 SLS Vector bit 2=
- */
+> v1->v2:
+> 	Updated commit description
+> 
+>  drivers/pci/probe.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4f68414c3086..263ec21451d9 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1596,7 +1596,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
+>  		if (pcie_downstream_port(parent)) {
+>  			pci_info(pdev, "claims to be downstream port but is acting as upstream port, correcting type\n");
+>  			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
+> -			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM;
+> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM << 4;
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Use FIELD_PREP() please.
 
---=20
+-- 
  i.
---8323328-147570352-1734364490=:941--
+
+>  		}
+>  	} else if (type == PCI_EXP_TYPE_UPSTREAM) {
+>  		/*
+> @@ -1607,7 +1607,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
+>  		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
+>  			pci_info(pdev, "claims to be upstream port but is acting as downstream port, correcting type\n");
+>  			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
+> -			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM;
+> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM << 4;
+>  		}
+>  	}
+>  }
+> 
+
 
