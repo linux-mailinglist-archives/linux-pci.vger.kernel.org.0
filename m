@@ -1,75 +1,94 @@
-Return-Path: <linux-pci+bounces-18488-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18489-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 934F29F2B94
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 09:11:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 80F139F2BBB
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 09:26:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8232D16710C
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 08:11:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8AA3166431
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 08:26:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2598D200121;
-	Mon, 16 Dec 2024 08:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9940B1FF7BE;
+	Mon, 16 Dec 2024 08:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KIO4muEL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wJwivIBa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771E91FF7DE;
-	Mon, 16 Dec 2024 08:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54571FF7B0
+	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 08:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734336653; cv=none; b=DCNQwjWaVpD4Eha3BYiNtddAoRfXgXuHPb13f+wWT+WB0PYRxD+EnNPAQwqDknc4i4IIgAcjRnAeehc+1+OjA5ZXmtrxo350YrKpj76TKXmcyfuzYWUCnLUFGPMFYEMr/8h200U0TxKE8KMllPQocL7FppzUtvPYFsCm+86a1ZI=
+	t=1734337583; cv=none; b=pPOZsHzZQ8rYn0nQjn35EA5LkL9N/h2uI/QiFV1CYOlfXGK0JSazp4tfqS7TnECdY2m45d82iP8v/YDnH66hUTPmZpV+aD/KSwvTNXpCJ84GVxI4DXQMffQ7mCF3L+8ESiDWQXbxBmgZN7Cd5AM8Dha7WheNQnRfylo/sQFGCfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734336653; c=relaxed/simple;
-	bh=CHK4Jzr8rXjs+xGyAY8Y9E2r8SBWtp0syHd8/1DxAjQ=;
+	s=arc-20240116; t=1734337583; c=relaxed/simple;
+	bh=jtn6Pm5T3kv4l9SAFuqVXKL9jZb3vLGRYnCPnSPFP8w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVX14gaLrQ2tZ4MBk/PsylQQ1f/zsUys2nShr7eclB+GYLYSObvo5/I4jnn0U0DvK6PcrI+TU3yD2YMxuQFxb0HyAR9GmreXwzpzZve0LUC+i6QIvAuSyBQ4yk3UZsHgfkB6omOhZuJGBiGiIXgSutLI/E9oXAd+Kdf8WY5MZtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KIO4muEL; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734336651; x=1765872651;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CHK4Jzr8rXjs+xGyAY8Y9E2r8SBWtp0syHd8/1DxAjQ=;
-  b=KIO4muELKUPYs2sNx6Okn+iNhQwwct7jqh03cJ8yTGzDZFvLeLiI0PAp
-   boZM85ZIBZzSAPXaVAjSrSlWaQPeEUClGrSFgy9t6gG4SQdFNUr/32UCk
-   eFqDcjJVmlAyF5Db4v9UIR1cyVHksqVntkev3qif+tWupMlXKeOcSOHOL
-   H2ZIkZu8wfaqbdV1Q9YYyOtGQIyCaEaudSQBM14fkffKXYaR1/kbwCVj7
-   rm2OEwKzGuK/tfs108J1R4LYRZh+pWh5DeTnFcJPEjwpdj65o0b8yI83e
-   rT4hX9WIPqAvM5ILQMnchuCsSi2zIs+sZ0t9P4X+GXInF+Oh7Wldeonca
-   Q==;
-X-CSE-ConnectionGUID: Jh1769amTiqHqJ5kiL2lfw==
-X-CSE-MsgGUID: eZnknvmzRNyQrgaB/K02SA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11287"; a="34745864"
-X-IronPort-AV: E=Sophos;i="6.12,238,1728975600"; 
-   d="scan'208";a="34745864"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 00:10:51 -0800
-X-CSE-ConnectionGUID: N6y2UMgMSkSQQH2f+ksrZw==
-X-CSE-MsgGUID: 89JTuorXSwmv1qZw3EJY+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="102106790"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 16 Dec 2024 00:10:49 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 3ED311E0; Mon, 16 Dec 2024 10:10:48 +0200 (EET)
-Date: Mon, 16 Dec 2024 10:10:48 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Gowthami Thiagarajan <gthiagarajan@marvell.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2] PCI : Fix pcie_flag_reg in set_pcie_port_type
-Message-ID: <20241216081048.GE3713119@black.fi.intel.com>
-References: <20241213070241.3334854-1-gthiagarajan@marvell.com>
- <20241213184700.GA3423791@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EICNvS4rYDX0ezC1m3KS/I3d7tBG86u29ycjJqxorPu2x7xhNgBelzklu/a1LbgCZToY+5pGwD7+Heu1ESPukHSSxOBvzn83451URPVWQ0GQbjoZpoqRdDjieWb67F6nnRrUTjsikB3gpbeD+kySCLCdPzI9iOepYbbxXYv8cUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wJwivIBa; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21670dce0a7so41489175ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 00:26:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734337581; x=1734942381; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UMxPAd8z2FmVKP4SzaClGo5hrcMgeeddGCLGfliuqKc=;
+        b=wJwivIBaGuIsSmXVd4DY2UZjTuQTTdLuqXAXkwu4+95/cdAFZkqBoH8WZ7vLead/Sx
+         3iIYkLCFBJVY/MuOC718z3a1OoR3AagtddROR7xU/unCM5OPW+9biM44beFra7TQh5HF
+         Hg5Fm6fNa8EL5ULF7wNHCRQLav8/AO+oXrvW5KwhDDWEJNH/8HwEjvpn9e0hdqo2+mqQ
+         mC6FHUR3dMoL8GPWCwZvDUXNpswrv/qBfXvnrQT3kJ0p6enm3W/MpDZ683qvnSlYOJ4K
+         Y7ZMgY0FvVVMKpa9gQKYHh9N9zb8zT2i6m8eIqeX1qjugh81YZ+iUBePNIoEnbEXv+BG
+         Jprg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734337581; x=1734942381;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UMxPAd8z2FmVKP4SzaClGo5hrcMgeeddGCLGfliuqKc=;
+        b=or8ZSdAA1VHy+3p/1OeT7qkM9k7hf8wJAy0CWoU69hmZreJsVBsn9bW1G8SoisbVRm
+         5THX1ZHNevah98B40JMUFgHoPBx4gOo8O/Hm5aDguwVaFbf1GPxVbsMe5D4lcznkOBGY
+         00EiYIadHAkd3x8fUnvFfxN93fKQIuAm1z0F6BJt/a9UKLFO9CLoyZukrHjSrVhdILBv
+         BkzKBiM71qIT+sVRcSs/oFTFiLMbV7DZ9Wo2QIKZWKGY/Qyp3rtH3a8fZNBROjCoCn65
+         VGNwuziSflyH/bk0O6noE/z3vGlHhgA/wXCFcYf3Jnkz5HRXttsP7aXMHpPZCznNPFf8
+         x2VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJxwYcxKiRyX7FXQakeqttYyvIqUXzxeExZo6jxsqFNdXlkOPIi6WKH1Jz36PasCMH7xZvMbQBdsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD16tapoyjl4db3MVwZFJGnoSdrBw8UZHNLcCKMZQKZaLkiA4s
+	no/KGoUzYRh39iH0JiFkGfroszPcXvogK1ZgFdy2LyryXt8M0DVFQHN6loiZJ5eaka3q0TcMGnE
+	=
+X-Gm-Gg: ASbGncsFDjMN7PNx4b/oyXBtZ88n/RaOvj7swe6TM1aIeWdlDMUhyN9f1Oceq9lGi24
+	ZiUiFymlgCn6mHY6mB04tKDfrhU0ffhhz7/nD63yU/Qbev0acMrr2ikEVt1dOukDmA4MCIPIdTa
+	N8kbXldqxZGfP2zsZLTWhSdRICVS4MpBih6nvMlbQW0XID6M/zaLhx5iUfX5Af0qw+yb5DP2swn
+	C1n23fypv4Muofq28q0pJe6LKjS0Zo5T5TfxzMzFOcYe/En7gLSNlrQ/+chpuTaCZ4=
+X-Google-Smtp-Source: AGHT+IENA5UYsb1sfFGlrjJqHLC9gUwTByUIMXg+G63HTX6mypdVpLxeXK41K0rJQNY6hQLTWIpi6w==
+X-Received: by 2002:a17:902:ce01:b0:215:50fb:ae4a with SMTP id d9443c01a7336-218928bc06bmr188269365ad.0.1734337581219;
+        Mon, 16 Dec 2024 00:26:21 -0800 (PST)
+Received: from thinkpad ([120.60.56.176])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1e5cae5sm37350505ad.191.2024.12.16.00.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2024 00:26:20 -0800 (PST)
+Date: Mon, 16 Dec 2024 13:56:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Subject: Re: [PATCH 0/4] PCI/pwrctrl: Rework pwrctrl driver integration and
+ add driver for PCI slot
+Message-ID: <20241216082606.zuczo34ugysc2vdc@thinkpad>
+References: <20241210-pci-pwrctrl-slot-v1-0-eae45e488040@linaro.org>
+ <c5c9b7fc-a484-438a-aa97-35785f25d576@quicinc.com>
+ <Z18SkkuPbVgTYD8k@wunner.de>
+ <20241216052107.tyhwzh4g3tmnp5ll@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,70 +97,70 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241213184700.GA3423791@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241216052107.tyhwzh4g3tmnp5ll@thinkpad>
 
-On Fri, Dec 13, 2024 at 12:47:00PM -0600, Bjorn Helgaas wrote:
-> [+cc Mika, Andy]
-> 
-> On Fri, Dec 13, 2024 at 12:32:41PM +0530, Gowthami Thiagarajan wrote:
-> > When an invalid PCIe topology is detected, the set_pcie_port_type function 
-> > does not set the port type correctly. This issue can occur in 
-> > configurations such as:
+On Mon, Dec 16, 2024 at 10:51:18AM +0530, Manivannan Sadhasivam wrote:
+> On Sun, Dec 15, 2024 at 06:32:02PM +0100, Lukas Wunner wrote:
+> > On Wed, Dec 11, 2024 at 05:55:48PM +0800, Qiang Yu wrote:
+> > > PCIe3 is able to link up after applying your patch. Slot power is turned on
+> > > correctly.
+> > > But see "NULL pointer dereference" when I try to remove device.
 > > 
-> > 	Root Port ---> Downstream Port ---> Root Port
+> > There's a WARN splat occurring before the NULL pointer deref.
+> > Was this happening before or is it new?  Probably makes sense
+> > to debug that first before looking into the NULL pointer deref,
+> > which could be a result of it.
 > > 
-> > In such cases, the topology is identified as invalid and due to the
-> > incorrect port type setting, the extended configuration space of the
-> > child device becomes inaccessible.
 > 
-> >From reading the code, it looks like the underlying problem is
-> components that advertise the wrong PCIe Device/Port Type.
+> Precisely.
 > 
-> set_pcie_port_type() already detects that incorrect Port Type and
-> tries to correct it, but it puts the corrected type in bits [3:0]
-> instead of [7:4] where it belongs.
+> > 
+> > > [   38.757726] WARNING: CPU: 1 PID: 816 at drivers/regulator/core.c:5857
+> > > regulator_unregister+0x13c/0x160
+> > > [   38.767288] Modules linked in: phy_qcom_qmp_combo aux_bridge
+> > > drm_kms_helper drm nvme backlight pinctrl_sm8550_lpass_lpi pci_pwrctl_slot
+> > > pci_pwrctrl_core nvme_core phy_qcom_edp phy_qcom_eusb2_repeater
+> > > dispcc_x1e80100 pinctrl_lpass_lpi phy_qcom_snps_eusb2 lpasscc_sc8280xp typec
+> > > gpucc_x1e80100 phy_qcom_qmp_pcie
+> > > [   38.795279] CPU: 1 UID: 0 PID: 816 Comm: bash Not tainted
+> > > 6.12.0-next-20241128-00005-g6178bf6ce3c2-dirty #50
+> > > [   38.805359] Hardware name: Qualcomm IDP, BIOS
+> > > 6.0.240607.BOOT.MXF.2.4-00348.1-HAMOA-1.67705.7 06/ 7/2024
+> > > [   38.815088] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS
+> > > BTYPE=--)
+> > > [   38.822239] pc : regulator_unregister+0x13c/0x160
+> > > [   38.827081] lr : regulator_unregister+0xc0/0x160
+> > 
+> > The WARN splat seems to be caused by:
+> > 
+> > 	WARN_ON(rdev->open_count);
+> > 
+> > So the regulator is unregistered although it's still in use.
+> > Is there maybe a multifunction PCIe device in your system
+> > so that multiple devices are using the same regulator?
+> > 
 > 
-> This looks like a bug from ca78410403dd ("PCI: Get rid of
-> dev->has_secondary_link flag").  If so, we should add a Fixes: tag for
-> that and possibly a stable tag.
+> Maybe the regulator is shared with other peripherals (not just PCIe) in the
+> system.
+> 
+> @Qiang: I referred your patch [1] that added the slot regulators, but they were
+> not used by any peripherals other than PCIe. Could you please post the list of
+> consumers of the 3 slot regulators?
+>
 
-Yeah agree, this is definitely a bug in that commit.
+Just looked briefly into regulator_unregister() and I can see that it will get
+called only when the regulator driver is unbound from the regulator device. Your
+previous DT reference suggests that you were probably using fixed regulator for
+all 3 slot regulators. In that case, this splat can occur when the regulator
+driver is unbound (module unload?) with still one of the consumers holding
+reference.
 
-> This looks like a clear bug.  What system tripped over this?  It's
-> useful to have bread crumbs like that in case we see other issues
-> caused by hardware/firmware defects like this.
-> 
-> > Signed-off-by: Gowthami Thiagarajan <gthiagarajan@marvell.com>
-> > ---
-> > v1->v2:
-> > 	Updated commit description
-> > 
-> >  drivers/pci/probe.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 4f68414c3086..263ec21451d9 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1596,7 +1596,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
-> >  		if (pcie_downstream_port(parent)) {
-> >  			pci_info(pdev, "claims to be downstream port but is acting as upstream port, correcting type\n");
-> >  			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
-> > -			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM;
-> > +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM << 4;
-> >  		}
-> >  	} else if (type == PCI_EXP_TYPE_UPSTREAM) {
-> >  		/*
-> > @@ -1607,7 +1607,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
-> >  		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
-> >  			pci_info(pdev, "claims to be upstream port but is acting as downstream port, correcting type\n");
-> >  			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
-> > -			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM;
-> > +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM << 4;
-> >  		}
-> >  	}
-> >  }
-> > -- 
-> > 2.25.1
-> > 
+So somehow regulator_put() is never called for that consumer but the regulator
+is removed. This looks like a bug somewhere.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
