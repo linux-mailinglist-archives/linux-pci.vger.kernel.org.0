@@ -1,123 +1,128 @@
-Return-Path: <linux-pci+bounces-18469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18470-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A898E9F27CC
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 02:36:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EBD29F283E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 02:54:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8A4E7A1849
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 01:36:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 418991886FB9
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 01:54:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44390101E6;
-	Mon, 16 Dec 2024 01:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08CD154648;
+	Mon, 16 Dec 2024 01:51:42 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmtu5ljy1ljeznc42.icoremail.net (zg8tmtu5ljy1ljeznc42.icoremail.net [159.65.134.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D2A8BE8;
-	Mon, 16 Dec 2024 01:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.65.134.6
+Received: from out198-30.us.a.mail.aliyun.com (out198-30.us.a.mail.aliyun.com [47.90.198.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C035588E;
+	Mon, 16 Dec 2024 01:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734312966; cv=none; b=TvNKZgzUdvf1UY0PuYCzHv8JG7iOmrzM5zErltT60cIvPHHHAlHSGYPSSFFJQixJ0nXLXUFhfMo9ZOF9ys/2bQYrRepmKt3Kmhko7yNgmZrlf7am/E+FJVIyp7yrbnjJfTa804akzHaJ1nD9dA0q0fJyCFQktp2oFpf76LVNgFo=
+	t=1734313901; cv=none; b=JLWId3iLulrWzDTmFd8unFVyOPd19C7HleTOi/MwHATPKE5/cda/lr8aGI5rhdYoXZYUjsUDWnmvlhqqjnyNo9KavdgUdCsSblYNjGhVOTA/vEA5toroRVrnHktsLgZFzFYiGOlxFxYMmReIla3Ck/IcYOmI9fI1iWxXSbToqvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734312966; c=relaxed/simple;
-	bh=eWgUJAmz47HFCOh4aIEmrxNlaOSMz0Zxku7oakMFQ3E=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=iates0D4nEFstfFD97K8qow7YvAnQEr+rEKXkoPw+lQbM+z1/UFfN8Aqi8zNCT+2hFI1eMIEBoamxomyi+vdc6m66he6HrNRYc8U3WoDK7r+uQgKzARGTQF8FB5GCxX7PHMGyU+A9EMKJBMhfo0EwIYg6qgbcaJaR90OGRgDRTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=159.65.134.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from ubuntu18.eswin.cn (unknown [10.12.192.151])
-	by app1 (Coremail) with SMTP id TAJkCgDXG6Xsg19nlw8DAA--.14605S4;
-	Mon, 16 Dec 2024 09:35:41 +0800 (CST)
-From: zhangdongdong@eswincomputing.com
-To: alex.williamson@redhat.com
-Cc: bhelgaas@google.com,
-	zhangdongdong@eswincomputing.com,
-	yishaih@nvidia.com,
-	avihaih@nvidia.com,
-	yi.l.liu@intel.com,
-	ankita@nvidia.com,
-	kvm@vger.kernel.org,
+	s=arc-20240116; t=1734313901; c=relaxed/simple;
+	bh=ij3WN1Dy5OkHseo9uYpfE1pXLbGVgY+w7q+SLog/ldM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=t0S8UMYwNt8BaLGXG8RIvqQ8q2K8IrgIb7oFMU0gsLuQWczEzQs72O45y01qPgRFxNs1jVMLgKPXArl6CLUEpe3s9Ej03rUal4pQ3+QVwi2AvRVANcMpT7Zc5Whw5LRfl4ZPBkr+psUFkl3zPO3757M088qHgulD+uevbccLt9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
+Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.aeuigva_1734313875 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Mon, 16 Dec 2024 09:51:16 +0800
+From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+To: bhelgaas@google.com
+Cc: zhoushengqing@ttyinfo.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v2] PCI: Remove redundant macro
-Date: Mon, 16 Dec 2024 09:35:36 +0800
-Message-Id: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:TAJkCgDXG6Xsg19nlw8DAA--.14605S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1DKFyUJF17uFWUtrWkJFb_yoW8ury8pr
-	s8Ca4xGr45XF4Y9a1qya45A3W5Xa9xAryI93y7u343KFy3tw10vrWFyr42kryagrWxAF45
-	JrsY9r90gF9F93JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
-	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
-	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbknY7UUUUU==
-X-CM-SenderInfo: x2kd0wpgrqwvxrqjqvxvzl0uprps33xlqjhudrp/1tbiAgENCmdfBKsMWAABsG
+Subject: Re: [PATCHv3] PCI/ACPI: _DSM PRESERVE_BOOT_CONFIG function rev id doesn't match with spec
+Date: Mon, 16 Dec 2024 01:51:15 +0000
+Message-Id: <20241216015115.24075-1-zhoushengqing@ttyinfo.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20241214104117.17973-1-zhoushengqing@ttyinfo.com>
+References: <20241214104117.17973-1-zhoushengqing@ttyinfo.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Dongdong Zhang <zhangdongdong@eswincomputing.com>
+Hi Bjorn,
+  Please ignore this post.
 
-Removed the duplicate macro `PCI_VSEC_HDR` and its related macro
-`PCI_VSEC_HDR_LEN_SHIFT` from `pci_regs.h` to avoid redundancy and
-inconsistencies. Updated VFIO PCI code to use `PCI_VNDR_HEADER` and
-`PCI_VNDR_HEADER_LEN()` for consistent naming and functionality.
-
-These changes aim to streamline header handling while minimizing
-impact, given the niche usage of these macros in userspace.
-
-Signed-off-by: Dongdong Zhang <zhangdongdong@eswincomputing.com>
----
- drivers/vfio/pci/vfio_pci_config.c | 5 +++--
- include/uapi/linux/pci_regs.h      | 3 ---
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index ea2745c1ac5e..5572fd99b921 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1389,11 +1389,12 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
- 
- 	switch (ecap) {
- 	case PCI_EXT_CAP_ID_VNDR:
--		ret = pci_read_config_dword(pdev, epos + PCI_VSEC_HDR, &dword);
-+		ret = pci_read_config_dword(pdev, epos + PCI_VNDR_HEADER,
-+					    &dword);
- 		if (ret)
- 			return pcibios_err_to_errno(ret);
- 
--		return dword >> PCI_VSEC_HDR_LEN_SHIFT;
-+		return PCI_VNDR_HEADER_LEN(dword);
- 	case PCI_EXT_CAP_ID_VC:
- 	case PCI_EXT_CAP_ID_VC9:
- 	case PCI_EXT_CAP_ID_MFVC:
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 1601c7ed5fab..bcd44c7ca048 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1001,9 +1001,6 @@
- #define PCI_ACS_CTRL		0x06	/* ACS Control Register */
- #define PCI_ACS_EGRESS_CTL_V	0x08	/* ACS Egress Control Vector */
- 
--#define PCI_VSEC_HDR		4	/* extended cap - vendor-specific */
--#define  PCI_VSEC_HDR_LEN_SHIFT	20	/* shift for length field */
--
- /* SATA capability */
- #define PCI_SATA_REGS		4	/* SATA REGs specifier */
- #define  PCI_SATA_REGS_MASK	0xF	/* location - BAR#/inline */
--- 
-2.17.1
-
+On Sat, 14 Dec 2024 10:41:17 +0000, Zhou shengqing wrote:
+> Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
+> for PCI. Preserve PCI Boot Configuration Initial Revision ID changed to 2.
+> But the code remains unchanged, still 1.
+> 
+> v3:try revision id 1 first, then try revision id 2.
+> v2:add Fixes tag.
+> 
+> Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to pci_register_host_bridge()")
+> 
+> Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+> ---
+>  drivers/pci/pci-acpi.c | 40 +++++++++++++++++++++++++++++++---------
+>  1 file changed, 31 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index af370628e583..ae3b315d708c 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -126,16 +126,38 @@ bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
+>  		union acpi_object *obj;
+>  
+>  		/*
+> -		 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> -		 * exists and returns 0, we must preserve any PCI resource
+> -		 * assignments made by firmware for this host bridge.
+> +		 * Per PCI Firmware r3.2, released Jan 26, 2015,
+> +		 * DSM_PCI_PRESERVE_BOOT_CONFIG Revision ID is 1.
+> +		 * But PCI Firmware r3.3, released Jan 20, 2021,
+> +		 * changed sec 4.6.5 to say
+> +		 * "lowest valid Revision ID value: 2". So try revision 1
+> +		 * first for old platform, then try revision 2.
+>  		 */
+> -		obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> -					      &pci_acpi_dsm_guid,
+> -					      1, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> -					      NULL, ACPI_TYPE_INTEGER);
+> -		if (obj && obj->integer.value == 0)
+> -			return true;
+> +		if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 1,
+> +			    1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG)) {
+> +			/*
+> +			 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> +			 * exists and returns 0, we must preserve any PCI resource
+> +			 * assignments made by firmware for this host bridge.
+> +			 */
+> +			obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> +							  &pci_acpi_dsm_guid,
+> +						  1, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> +						  NULL, ACPI_TYPE_INTEGER);
+> +			if (obj && obj->integer.value == 0)
+> +				return true;
+> +		}
+> +
+> +		if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 2,
+> +			    1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG)) {
+> +			obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> +							  &pci_acpi_dsm_guid,
+> +						  2, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> +						  NULL, ACPI_TYPE_INTEGER);
+> +			if (obj && obj->integer.value == 0)
+> +				return true;
+> +		}
+> +
+>  		ACPI_FREE(obj);
+>  	}
+>  
+> -- 
+> 2.39.2
 
