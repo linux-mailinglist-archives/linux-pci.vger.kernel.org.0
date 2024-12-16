@@ -1,121 +1,189 @@
-Return-Path: <linux-pci+bounces-18504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18505-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 482EB9F320E
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 14:57:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E183F9F3236
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 15:05:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 879931665EF
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 13:57:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E8BC167347
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 14:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF735205AB0;
-	Mon, 16 Dec 2024 13:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6976204C09;
+	Mon, 16 Dec 2024 14:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CvNmGMQ6"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="lKQXyxcP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF97B29CA;
-	Mon, 16 Dec 2024 13:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6691F9DA;
+	Mon, 16 Dec 2024 14:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734357452; cv=none; b=QU+PGKfC7ntNoP0R1MaNyM2FxnoMTR1M5H+pKmOI2Zn2Hsq11s5izX+ewi7IRctT+WThSzCM+iT8iraDtlml6KoLZAJtgY948Ud+MDZ4lL6NJEpDyxi8Z7OcPIYAZeyTvSD/ReMuTAU6/J33zkD1rIXjhwmPQzZjIfiBq1Z3L5I=
+	t=1734357944; cv=none; b=bkU3hr4Hla/Axol/ENVT3CH1N8Sr9QpilSlXyDh3tKA9FLoUfSFQDgjnfMcIzJsAV055cuo1ZkkfyD+/tLovY0rOh1U7cHD47m0zFQAfC2/mhUO8w1CySXeL26YlT3+zp7AcRp28r7PcGawh2QngQ7S+cl8hdIpdX5vChcE1iAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734357452; c=relaxed/simple;
-	bh=asW/rEU97Lhupbtp+ldMp9ntQdvITH9HiMPFa8DHXXU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mjypnTvzrP0IL366geKqEU+B8JzOIRSXN/Kzkt/vxtnYl2FY39e61Yo279x9y24jbgn+0cv5FcqhWx/avif59qPR43qk3fLeaVNC+ouDPYlfScAD7GnmV6HEZjr43mt2rvGcdd7JOqAVOadSiTRC2fPkaAH1Cv29+prhv7l0lsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CvNmGMQ6; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734357451; x=1765893451;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=asW/rEU97Lhupbtp+ldMp9ntQdvITH9HiMPFa8DHXXU=;
-  b=CvNmGMQ6AYqJjGOyKKU6MoQACL9olKgfBKDe/64qjkJCd3T8i039axKt
-   ufHiaOc4KD2xpMQJYkluiLzmXNVT/qOfhRtTUtYKbtaU0IURqvgn2U115
-   9puY2fSfOR68tsv82fGgrqOsw4fujVDV1qErjd+9xlUa986u9802u6PfX
-   JSD+gLuajdfzvvEgQ1R27cKDn6iCUERMhmNpbYVTnxbGYr0O1gTmTx+56
-   JKDAftrsPCGdnAWDzqZHQ4y0neC9sbpfctM23ttVQJ8a44Res9EUo2ZES
-   cOcBrnhVckRJw44MHyGWuwg1sv8UpvrYiN8YZIoQwnO/Sq+evUSndGiJk
-   Q==;
-X-CSE-ConnectionGUID: eWgx9HNnRAyfqGGWPMA4mw==
-X-CSE-MsgGUID: Qh8+q7+2QX2eMtlP3MXnoA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="22327530"
-X-IronPort-AV: E=Sophos;i="6.12,238,1728975600"; 
-   d="scan'208";a="22327530"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 05:57:30 -0800
-X-CSE-ConnectionGUID: XOBIYAXUQuSw0lBEwcrp+A==
-X-CSE-MsgGUID: 76n3K51WRmioP0fo0HJzmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,238,1728975600"; 
-   d="scan'208";a="96971982"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 05:57:25 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 16 Dec 2024 15:57:23 +0200 (EET)
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-cc: x86@kernel.org, tony.luck@intel.com, mario.limonciello@amd.com, 
-    bhelgaas@google.com, jdelvare@suse.com, linux@roeck-us.net, 
-    clemens@ladisch.de, Shyam-sundar.S-k@amd.com, 
-    Hans de Goede <hdegoede@redhat.com>, naveenkrishna.chatradhi@amd.com, 
-    suma.hegde@amd.com, LKML <linux-kernel@vger.kernel.org>, 
-    linux-edac@vger.kernel.org, linux-pci@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2.1] x86/amd_node, platform/x86/amd/hsmp: Have HSMP use
- SMN through AMD_NODE
-In-Reply-To: <20241212214637.GA80677@yaz-khff2.amd.com>
-Message-ID: <ff59d4e9-15da-37b3-1a8c-1ae688fa4094@linux.intel.com>
-References: <20241212172711.1944927-1-yazen.ghannam@amd.com> <65375593-f2e0-e03b-7e7f-ad8be58772d4@linux.intel.com> <20241212214637.GA80677@yaz-khff2.amd.com>
+	s=arc-20240116; t=1734357944; c=relaxed/simple;
+	bh=pPerfZEbJtBY3ypppTbyVtIx9qnt6U/cYwaJ7K/ilTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IcyQVMmsF4Tv6XLsn7K95sZoWgN6gvkNgbN5oybGiQj6JAUaGVcuGx0ASMb4J8XYJZTuOG1bJphtyyGimP/Su8PQjsNUaiPGA9jX1pRLsYn7hRrkqUMEVZzcNgbFqddvXXP8DK+VYeInqHp+lxDkaSXm8dC/yJqvtyRWC7/RvhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=lKQXyxcP; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BGBSXHC019814;
+	Mon, 16 Dec 2024 15:03:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	zg4ilhS7TTTXcjH+uIPD/koI66ea2Qpvy0x9hiKQl8Y=; b=lKQXyxcP27EDP2SN
+	0Op6pw5jUuTudTT1tjc1Ox1RMd+Bs1nVCHNRFoAibKwrCoxzwXiAvMDKo8RG5zTW
+	gSVmLkgZDsS8TwhTT3AXTQD9LVhpZTcwFSmeWlhCqTkTpvF5/omg4n7PSl0WLVPe
+	uUVKQBCyxdf46N8npdM9WTXr/rJbFp8SDLwl71zoU/NeJJW1ZG0BU0MK6Ul+NNuq
+	KgbNQoimNYQZuRLQbp8Zwv1gzQ8/BSRqrwKBh6x83P0scZoumiYKAus+IJsq8SGq
+	KO//wHf0gnLp2zoJdrnuuh4jwZYN5EkuMZjBdnNI42j5M+BgaPbGtwtNlsOomhc1
+	F9Ydbg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43jeeyj1h0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 15:03:33 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F2E9840044;
+	Mon, 16 Dec 2024 15:02:07 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 66AB926E55B;
+	Mon, 16 Dec 2024 15:01:00 +0100 (CET)
+Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Mon, 16 Dec
+ 2024 15:00:59 +0100
+Message-ID: <ef02ddbf-0838-4616-a3c5-ef7ab55de3c9@foss.st.com>
+Date: Mon, 16 Dec 2024 15:00:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1223704678-1734357443=:941"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
+ STM32MP25
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
+        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20241205172738.GA3054352@bhelgaas>
+Content-Language: en-US
+From: Christian Bruel <christian.bruel@foss.st.com>
+In-Reply-To: <20241205172738.GA3054352@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1223704678-1734357443=:941
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Thu, 12 Dec 2024, Yazen Ghannam wrote:
+On 12/5/24 18:27, Bjorn Helgaas wrote:
+> On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
+>> Add driver to configure the STM32MP25 SoC PCIe Gen2 controller based on the
+>> DesignWare PCIe core in endpoint mode.
+> 
+>> +config PCIE_STM32_EP
+>> +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
+>> +	depends on ARCH_STM32 || COMPILE_TEST
+>> +	depends on PCI_ENDPOINT
+>> +	select PCIE_DW_EP
+>> +	help
+>> +	  Enables endpoint support for DesignWare core based PCIe controller in found
+>> +	  in STM32MP25 SoC.
+> 
+> s/in found in/in/ (or "found in" if you prefer)
+> 
+> Wrap so help text fits in 80 columns when for "make menuconfig".
+> 
+>> +static void stm32_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+>> +	enum pci_barno bar;
+>> +
+>> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
+>> +		dw_pcie_ep_reset_bar(pci, bar);
+>> +
+>> +	/* Defer Completion Requests until link started */
+> 
+> I asked about this before [1] but didn't finish the conversation.  My
+> main point is that I think "Completion Request" is a misnomer.
+> There's a "Configuration Request" and a "Completion," but no such
+> thing as a "Completion Request."
+> 
+> Based on your previous response, I think this should say something
+> like "respond to config requests with Request Retry Status (RRS) until
+> we're prepared to handle them."
 
-> On Thu, Dec 12, 2024 at 08:50:26PM +0200, Ilpo J=E4rvinen wrote:
-> > On Thu, 12 Dec 2024, Yazen Ghannam wrote:
-> > > @@ -95,7 +80,12 @@ static umode_t hsmp_is_sock_attr_visible(struct ko=
-bject *kobj,
-> > >   * Static array of 8 + 1(for NULL) elements is created below
-> > >   * to create sysfs groups for sockets.
-> > >   * is_bin_visible function is used to show / hide the necessary grou=
-ps.
-> > > + *
-> > > + * Validate the maximum number against MAX_AMD_NUM_NODES. If this ch=
-anges,
-> > > + * then the attributes and groups below must be adjusted.
-> > >   */
-> > > +static_assert(MAX_AMD_NUM_NODES =3D=3D 8);
-> >=20
-> > Please also add the #include for it.
-> >
->=20
-> Just to confirm, you mean for static_assert()?
->=20
->   #include <linux/build_bug.h>
+OK thanks for the phrasing. This is inline with the DWC doc:
+"... controller completes incoming configuration requests with a
+configuration request retry status."
+The only thing is that the PCIe specs talks about CRS, not RRS.
 
-I saw you already made that change but yes, it is what I meant.
+so slightly change to
+"respond to config requests with Configuration Request Retry Status 
+(CRS) until we're prepared to handle them."
 
---=20
- i.
 
---8323328-1223704678-1734357443=:941--
+> 
+>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +			   STM32MP25_PCIECR_REQ_RETRY_EN,
+>> +			   STM32MP25_PCIECR_REQ_RETRY_EN);
+>> +}
+>> +
+>> +static int stm32_pcie_enable_link(struct dw_pcie *pci)
+>> +{
+>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+>> +	int ret;
+>> +
+>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +			   STM32MP25_PCIECR_LTSSM_EN,
+>> +			   STM32MP25_PCIECR_LTSSM_EN);
+>> +
+>> +	ret = dw_pcie_wait_for_link(pci);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +			   STM32MP25_PCIECR_REQ_RETRY_EN,
+>> +			   0);
+> 
+> And I assume this means the endpoint will accept config requests and
+> handle them normally instead of responding with RRS.
+> 
+> Strictly speaking this is a different condition than "the link is up"
+> because the link must be up in order to even receive a config request.
+> The purpose of RRS is for devices that need more initialization time
+> after the link is up before they can respond to config requests.
+> 
+> The fact that the hardware provides this bit makes me think the
+> designer anticipated that the link might come up before the rest of
+> the device is fully initialized.
+
+Agree, this there are 2 conditions in this function: link is up + 
+accepting config requests. I'll split or rename
+
+Thanks
+Christian
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/r/20241112203846.GA1856246@bhelgaas
+> 
 
