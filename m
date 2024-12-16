@@ -1,128 +1,159 @@
-Return-Path: <linux-pci+bounces-18470-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18471-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EBD29F283E
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 02:54:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94D7D9F285B
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 03:04:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 418991886FB9
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 01:54:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE22B7A12DD
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 02:04:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08CD154648;
-	Mon, 16 Dec 2024 01:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27CC58BE8;
+	Mon, 16 Dec 2024 02:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wrNdKFGw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out198-30.us.a.mail.aliyun.com (out198-30.us.a.mail.aliyun.com [47.90.198.30])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C035588E;
-	Mon, 16 Dec 2024 01:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E745917C64
+	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 02:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734313901; cv=none; b=JLWId3iLulrWzDTmFd8unFVyOPd19C7HleTOi/MwHATPKE5/cda/lr8aGI5rhdYoXZYUjsUDWnmvlhqqjnyNo9KavdgUdCsSblYNjGhVOTA/vEA5toroRVrnHktsLgZFzFYiGOlxFxYMmReIla3Ck/IcYOmI9fI1iWxXSbToqvM=
+	t=1734314672; cv=none; b=drWY0/pQy2QcDpOo9iwYGrSuUvNvI3RquD6tyZPpTYl9Nk7v5S7JUOOPHlRx+E4AwVfAagl0HF4Nqv8wTLK0gTqTpHsaEyI+/TyAWW+5U6Gw5vJXwjz6o0t1ejT8AVgXgGeSXqBpXPNmbEkWTx1bQtvvljMUyEyKE7gdNmBebk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734313901; c=relaxed/simple;
-	bh=ij3WN1Dy5OkHseo9uYpfE1pXLbGVgY+w7q+SLog/ldM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t0S8UMYwNt8BaLGXG8RIvqQ8q2K8IrgIb7oFMU0gsLuQWczEzQs72O45y01qPgRFxNs1jVMLgKPXArl6CLUEpe3s9Ej03rUal4pQ3+QVwi2AvRVANcMpT7Zc5Whw5LRfl4ZPBkr+psUFkl3zPO3757M088qHgulD+uevbccLt9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.aeuigva_1734313875 cluster:ay29)
+	s=arc-20240116; t=1734314672; c=relaxed/simple;
+	bh=c8NhwMiQ10hVa8L2LJ1fhHQQi6EFQ8op/Qos4bspSSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V8nRuRB6vK1dfZ5N+HcqGm7mUrngdIlXSoCeJZAZBWNoXnoGsoFkEz/aX+xlN+2/06W8xpZgmbAgZVeq1cwe0hIAxL3tdMFv2+8Mvt7n5DgjQhOHilqnH766IBLiVBviXZy0OIZwZPexUkk/5/nXg3pyqEOo9ZpzdOCplyBYPyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wrNdKFGw; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1734314662; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=24DfLfcLombAJYbHSYVsdhGBS3LkiqYZobdq0gmMRQM=;
+	b=wrNdKFGwxJ0JSVNPsJ3UhjB8D+GJt1m+cdoUMyOPdLKdSE5C0A9/mV2tUpzX5vEJJ670MIWmY7dfUCldzvoybAnMDrfCiDWmrMBAoO1QTB2jfg5qsyaNOTFg72IvwIm6GbooWI0JfrkBvnigIS18Gt2oZPrk6n8v+am5cMp+OFg=
+Received: from 30.246.161.240(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WLVFj53_1734314660 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 16 Dec 2024 09:51:16 +0800
-From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-To: bhelgaas@google.com
-Cc: zhoushengqing@ttyinfo.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCHv3] PCI/ACPI: _DSM PRESERVE_BOOT_CONFIG function rev id doesn't match with spec
-Date: Mon, 16 Dec 2024 01:51:15 +0000
-Message-Id: <20241216015115.24075-1-zhoushengqing@ttyinfo.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241214104117.17973-1-zhoushengqing@ttyinfo.com>
-References: <20241214104117.17973-1-zhoushengqing@ttyinfo.com>
+          Mon, 16 Dec 2024 10:04:21 +0800
+Message-ID: <4d1f22d2-2436-4cb8-8bb1-1e1d8edf92a6@linux.alibaba.com>
+Date: Mon, 16 Dec 2024 10:04:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] perf/dwc_pcie: Add support for Rockchip SoCs
+To: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pci@vger.kernel.org
+References: <1734063843-188144-1-git-send-email-shawn.lin@rock-chips.com>
+ <1734063843-188144-2-git-send-email-shawn.lin@rock-chips.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <1734063843-188144-2-git-send-email-shawn.lin@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Bjorn,
-  Please ignore this post.
 
-On Sat, 14 Dec 2024 10:41:17 +0000, Zhou shengqing wrote:
-> Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
-> for PCI. Preserve PCI Boot Configuration Initial Revision ID changed to 2.
-> But the code remains unchanged, still 1.
+
+在 2024/12/13 12:24, Shawn Lin 写道:
+> Add support for Rockchip SoCs by adding vendor ID to the vendor list.
+> And fix the lane-event based enable/disable/read process which is slightly
+> different on Rockchip SoCs, by checking vendor ID.
 > 
-> v3:try revision id 1 first, then try revision id 2.
-> v2:add Fixes tag.
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 > 
-> Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to pci_register_host_bridge()")
-> 
-> Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
 > ---
->  drivers/pci/pci-acpi.c | 40 +++++++++++++++++++++++++++++++---------
->  1 file changed, 31 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index af370628e583..ae3b315d708c 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -126,16 +126,38 @@ bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
->  		union acpi_object *obj;
->  
->  		/*
-> -		 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-> -		 * exists and returns 0, we must preserve any PCI resource
-> -		 * assignments made by firmware for this host bridge.
-> +		 * Per PCI Firmware r3.2, released Jan 26, 2015,
-> +		 * DSM_PCI_PRESERVE_BOOT_CONFIG Revision ID is 1.
-> +		 * But PCI Firmware r3.3, released Jan 20, 2021,
-> +		 * changed sec 4.6.5 to say
-> +		 * "lowest valid Revision ID value: 2". So try revision 1
-> +		 * first for old platform, then try revision 2.
->  		 */
-> -		obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
-> -					      &pci_acpi_dsm_guid,
-> -					      1, DSM_PCI_PRESERVE_BOOT_CONFIG,
-> -					      NULL, ACPI_TYPE_INTEGER);
-> -		if (obj && obj->integer.value == 0)
-> -			return true;
-> +		if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 1,
-> +			    1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG)) {
-> +			/*
-> +			 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-> +			 * exists and returns 0, we must preserve any PCI resource
-> +			 * assignments made by firmware for this host bridge.
-> +			 */
-> +			obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
-> +							  &pci_acpi_dsm_guid,
-> +						  1, DSM_PCI_PRESERVE_BOOT_CONFIG,
-> +						  NULL, ACPI_TYPE_INTEGER);
-> +			if (obj && obj->integer.value == 0)
-> +				return true;
-> +		}
+> Changes in v3: None
+> Changes in v2:
+> - rebase on Bejorn's new patch about Qualifing VSEC Capability by Vendor, Revision
+> 
+>   drivers/perf/dwc_pcie_pmu.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> index d022f49..ba6d5116 100644
+> --- a/drivers/perf/dwc_pcie_pmu.c
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -116,6 +116,8 @@ static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
+>   	  .vsec_id = 0x02, .vsec_rev = 0x4 },
+>   	{ .vendor_id = PCI_VENDOR_ID_QCOM,
+>   	  .vsec_id = 0x02, .vsec_rev = 0x4 },
+> +	{ .vendor_id = PCI_VENDOR_ID_ROCKCHIP,
+> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
+>   	{} /* terminator */
+>   };
+>   
+> @@ -264,12 +266,27 @@ static const struct attribute_group *dwc_pcie_attr_groups[] = {
+>   	NULL
+>   };
+>   
+> +static void dwc_pcie_pmu_lane_event_enable_for_rk(struct pci_dev *pdev,
+> +						  u16 ras_des_offset,
+> +						  bool enable)
+> +{
+> +	if (enable)
+> +		pci_write_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
+> +				DWC_PCIE_CNT_ENABLE | DWC_PCIE_PER_EVENT_ON);
+
+DWC_PCIE_CNT_ENABLE is a bit mask,
+
+     #define DWC_PCIE_CNT_ENABLE			GENMASK(4, 2)
+     #define DWC_PCIE_PER_EVENT_ON			0x3
+
+so, DWC_PCIE_CNT_ENABLE | DWC_PCIE_PER_EVENT_ON == DWC_PCIE_CNT_ENABLE.
+
+what value do you really intend to set here?
+
+
+> +	else
+> +		pci_clear_and_set_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
+> +				DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_ON);
+
+It is really weird that DWC_PCIE_PER_EVENT_ON mean disable.
+Does 0x3 in the register data book for ROCKCHIP means "per event off"?
+
+The register data book from my hand:
+
+     - 0x1 (PER_EVENT_OFF): per event off
+     - 0x3 (PER_EVENT_ON): per event on
+
+> +}
 > +
-> +		if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 2,
-> +			    1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG)) {
-> +			obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
-> +							  &pci_acpi_dsm_guid,
-> +						  2, DSM_PCI_PRESERVE_BOOT_CONFIG,
-> +						  NULL, ACPI_TYPE_INTEGER);
-> +			if (obj && obj->integer.value == 0)
-> +				return true;
-> +		}
+>   static void dwc_pcie_pmu_lane_event_enable(struct dwc_pcie_pmu *pcie_pmu,
+>   					   bool enable)
+>   {
+>   	struct pci_dev *pdev = pcie_pmu->pdev;
+>   	u16 ras_des_offset = pcie_pmu->ras_des_offset;
+>   
+> +	if (pdev->vendor == PCI_VENDOR_ID_ROCKCHIP)
+> +		return dwc_pcie_pmu_lane_event_enable_for_rk(pdev, ras_des_offset, enable);
 > +
->  		ACPI_FREE(obj);
->  	}
->  
-> -- 
-> 2.39.2
+>   	if (enable)
+>   		pci_clear_and_set_config_dword(pdev,
+>   					ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
+> @@ -295,9 +312,14 @@ static u64 dwc_pcie_pmu_read_lane_event_counter(struct perf_event *event)
+>   {
+>   	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
+>   	struct pci_dev *pdev = pcie_pmu->pdev;
+> +	int event_id = DWC_PCIE_EVENT_ID(event);
+>   	u16 ras_des_offset = pcie_pmu->ras_des_offset;
+>   	u32 val;
+>   
+> +	if (pdev->vendor == PCI_VENDOR_ID_ROCKCHIP)
+> +		pci_write_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_CTL,
+> +				       event_id << 16);
+
+I think dwc_pcie_pmu_event_add() has done the same work to set the event id.
+
+Best Regards,
+Shuai
+
 
