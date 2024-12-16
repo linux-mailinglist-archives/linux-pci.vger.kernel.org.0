@@ -1,156 +1,515 @@
-Return-Path: <linux-pci+bounces-18520-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18521-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34C129F35AB
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:19:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9BB09F35D4
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:23:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 427077A3C18
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:18:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E405B1886BC8
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:21:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 493212063DD;
-	Mon, 16 Dec 2024 16:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709F920550B;
+	Mon, 16 Dec 2024 16:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EMRoHY4a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWtTlDGP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE912063D7
-	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 16:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A687E59A;
+	Mon, 16 Dec 2024 16:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734365830; cv=none; b=ORkouAMU/vY9DzQfh0s3FK8vPVSYymMUUzLGiuVDcdo1BzBRmH2TJPQe7leTqaoMAMIOMUTOk+w9Pr8I0nK2+nIbU0z0Wq5wBw8vfK6snsF6HjCHxYEDmIrPlZ6HRI333NEBZX1Aw4lSwoLpQ7/QxHe3O/WeaEN2idYiqWoPdZ4=
+	t=1734366035; cv=none; b=Yz52nogGnoRV0O9qsV9Eghy3LjFrVkprF1kedvfqRcDiQI3zDcJYMRe5akBhaptXoeQAJj2/Yq208mfTYm6gh36BltX+B16acFgbT+c+Q4ZNOKhm8xWN+cpnWRwQoLe/696MyUOfdUYDRMKVC/DVq4oNgiWVlLW2nY/axpYRP5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734365830; c=relaxed/simple;
-	bh=t8wf47QY9cmdBo63Gv0CCceIk9iBBth3UuB3w+B9zfU=;
+	s=arc-20240116; t=1734366035; c=relaxed/simple;
+	bh=65JkafVBDhoy5MQvDSjRmvH/HDfmnYr+EktmCnuGBUA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=McvHSpg1oUkUgygT1+JdlaJmNblXKUFSjCQt3tP6s21iBMh0eZvUtcThnizuUSG9Z/tJHD34JJ20mTx/JImgBfPDeXGE8owIn1OLmHGvqNCEk9ivNFPnR1yvyIrsTcxacJ7/TqrULvXEJmCCYTZW9dbbzBeb8FEnbvYNSl0szcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EMRoHY4a; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7242f559a9fso5492587b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 08:17:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734365828; x=1734970628; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=82gDKALWw0Ekg/l8MKhauenkjup0NAxqqSYjA8q5Flo=;
-        b=EMRoHY4aeTjOHOR29cyv4zuei/iVpMLuYrSfQzyZclfe0NEXW6Jl504WqSbsqUx8Xy
-         b5hpCSFig3u2axLHJnu20jv19Ba5IsKrNiFelE2gfHsvqnWFMCIfKTjHoeUL1sDoXVBf
-         afShywFdFiEev+CQuTxTSPxzR4yQ7FYAj8XhplNN8NxqrN/qmwwHWsRAcADSZBGfOqIS
-         aInMNWjkvwZy3nUUQE3lUsHkbKGjS/h8qFYE9uZuevWcof8ebNbhNCid6gc/sfq11E3I
-         jnXBpewD3YJE9QsDWJ4VTiqibXrUPWCzAU6IgOpqEZjL0YX96WQgVW9u1nGUWJk3ewqz
-         VUpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734365828; x=1734970628;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=82gDKALWw0Ekg/l8MKhauenkjup0NAxqqSYjA8q5Flo=;
-        b=Fh4XFFQiv0OQpDxLqoUNswYLyj4xxhmbYZ+mR3zeqGrXW7hL0g1P8Zo/Y5pGV58Tt0
-         NWSSLXT+1WletWXADks/dW2+AyoELXEgrX4l3Xwp3Ap2dp8H06VoRI+zJVgv38Azrv7o
-         nfeB9Ond6pv9vS8CxqRsUS4eTGCCmd/9IKaXuRyjckgoREwy62rYWASprEmkxceuaZXa
-         qxihQJrBXaFTI7FoyzuC0PuVqqa1VEb4724gYn7piRAzV1cRhqNsV8cOIyxIOaeupXsX
-         gt0Ut1LQS0yR3i1L7un6H6AIFqTcwlg/KGUge52okVNt3L9LE14BhDaBEQpB+m6Vv74P
-         41LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOKkcvhdnlQcDG2aE2BqX00x/4uzcWELXAv8G4tQVnSmjFddcgY+cz4Lf5d+gfACvpD8lv7YE71WI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9I8pOvrS9ZLIjD4p8WbKUHrMUIc99vLGpCM4FIFAbMhhkCHU9
-	8fWa7+EAxr1nur3BJhzdECYgRPgS3F1l/YLtYxZjypXsyfSwNbfvCV02SQ7D+g==
-X-Gm-Gg: ASbGncvGGEXNbYhvjZAEfzJVv9iI1LsVdZJ3fubVAftFkNPZS9tyonyqZ2peRQyDzdQ
-	2APXjStwtkXH1+AbIrlUnUv8ZcxXTDcOxELoO0eH3W/XRQPqj/WQgFaVKez3GJXSEvO0p0eXcB6
-	Fi+8cyled83PHUktWo+c4/SPQ/d5P5XZXe31RbcoseHfHXcuhGTSSu3z2hv8ELSOZrK9Uo+p4Wv
-	ObKMXTyVBqhpdcLpTulR7hxUA5XLRm6nobNXw2A35A+/jQxokGZ/uHhnp1oJ7kmJf9a
-X-Google-Smtp-Source: AGHT+IGvG6qXEoCqCkROvX+b6dhtMyqPUbkI3UVWtmJgHt1xZMsm2fyfByqDiqxFQpxzhlW12Qg/Wg==
-X-Received: by 2002:a05:6a00:3688:b0:729:35b:542e with SMTP id d2e1a72fcca58-7290c25a4bcmr16844563b3a.16.1734365827870;
-        Mon, 16 Dec 2024 08:17:07 -0800 (PST)
-Received: from thinkpad ([120.56.200.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918bb3a6dsm4925657b3a.136.2024.12.16.08.17.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2024 08:17:07 -0800 (PST)
-Date: Mon, 16 Dec 2024 21:47:00 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	p.zabel@pengutronix.de, cassel@kernel.org,
-	quic_schintav@quicinc.com, fabrice.gasnier@foss.st.com,
+	 Content-Type:Content-Disposition:In-Reply-To; b=WTaQeQQRTX9Xxxd72LX0nDY1uOFbkAXAihaQwERmvh3gBP6d2vaVQpJ7gjAV4ne1BAwuyio9/93uk24AdxEqslOmnpkssGsB4dDGcVhXwbTgMrQCYp+2Eovc2vJcmi4Sch5Jw/q1jP0TXaOTWzJfKu4xAuugh9SD1uwrJguNcT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWtTlDGP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD91DC4CED4;
+	Mon, 16 Dec 2024 16:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734366034;
+	bh=65JkafVBDhoy5MQvDSjRmvH/HDfmnYr+EktmCnuGBUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UWtTlDGPvAza/3zv41Vy+EsExJAd656stAUVuKuzUJEbhuPBuStQCxfjsP4YI7Npq
+	 8XdZ6aRJlBFViBZxjtNdN7FHC1Fxh67bnViYWGseGB5a1c42VHcDyenRc9BGQ9tUcA
+	 btoJeJsvkbyrW4wcahmaDhU35z2QyhM8+yQjHm83prToEwXra7imcQHbf7ADG4oqOB
+	 nKj8gxgiUFJF/l9fdbfqRjffw4t6ihgHi9KwiZaoh7/mN3pc5YLSnxVgVB1nhrn5zG
+	 7amoe1ZIzmrjmxJKzVzoM9WZqffvv0traaX0Zn61VcGmlI68uA/lhVOkFM+ZGr30zu
+	 Jr49ecBuB+8mQ==
+Date: Mon, 16 Dec 2024 17:20:25 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	robh@kernel.org, daniel.almeida@collabora.com, saravanak@google.com,
+	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
+	chrisi.schrefl@gmail.com, paulmck@kernel.org
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
- STM32MP25
-Message-ID: <20241216161700.dtldi7fari6kafrr@thinkpad>
-References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
- <20241126155119.1574564-5-christian.bruel@foss.st.com>
- <20241203152230.5mdrt27u5u5ecwcz@thinkpad>
- <4e257489-4d90-4e47-a4d9-a2444627c356@foss.st.com>
+	rcu@vger.kernel.org
+Subject: Re: [PATCH v6 07/16] rust: add `io::{Io, IoRaw}` base types
+Message-ID: <Z2BTSbOjWa8R29i5@cassiopeiae>
+References: <20241212163357.35934-1-dakr@kernel.org>
+ <20241212163357.35934-8-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e257489-4d90-4e47-a4d9-a2444627c356@foss.st.com>
+In-Reply-To: <20241212163357.35934-8-dakr@kernel.org>
 
-On Mon, Dec 16, 2024 at 11:02:07AM +0100, Christian Bruel wrote:
-> Hi Manivanna,
+On Thu, Dec 12, 2024 at 05:33:38PM +0100, Danilo Krummrich wrote:
+> I/O memory is typically either mapped through direct calls to ioremap()
+> or subsystem / bus specific ones such as pci_iomap().
 > 
-> On 12/3/24 16:22, Manivannan Sadhasivam wrote:
-> > On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
-> > 
-> > [...]
-> > 
-> > > +static int stm32_pcie_start_link(struct dw_pcie *pci)
-> > > +{
-> > > +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> > > +	int ret;
-> > > +
-> > > +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
-> > > +		dev_dbg(pci->dev, "Link is already enabled\n");
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	ret = stm32_pcie_enable_link(pci);
-> > > +	if (ret) {
-> > > +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > 
-> > How the REFCLK is supplied to the endpoint? From host or generated locally?
+> Even though subsystem / bus specific functions to map I/O memory are
+> based on ioremap() / iounmap() it is not desirable to re-implement them
+> in Rust.
 > 
-> From Host only, we don't support the separated clock model.
+> Instead, implement a base type for I/O mapped memory, which generically
+> provides the corresponding accessors, such as `Io::readb` or
+> `Io:try_readb`.
 > 
-
-OK. So even without refclk you are still able to access the controller
-registers? So the controller CSRs should be accessible by separate local clock I
-believe.
-
-Anyhow, please add this limitation (refclk dependency from host) in commit
-message.
-
-[...]
-
-> > > +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
-> > 
-> > Hmm, so PHY mode is common for both endpoint and host?
+> `Io` supports an optional const generic, such that a driver can indicate
+> the minimal expected and required size of the mapping at compile time.
+> Correspondingly, calls to the 'non-try' accessors, support compile time
+> checks of the I/O memory offset to read / write, while the 'try'
+> accessors, provide boundary checks on runtime.
 > 
-> Yes it is. We need to init the phy here because it is a clock source for the
-> PCIe core clk
+> `IoRaw` is meant to be embedded into a structure (e.g. pci::Bar or
+> io::IoMem) which creates the actual I/O memory mapping and initializes
+> `IoRaw` accordingly.
 > 
+> To ensure that I/O mapped memory can't out-live the device it may be
+> bound to, subsystems must embed the corresponding I/O memory type (e.g.
+> pci::Bar) into a `Devres` container, such that it gets revoked once the
+> device is unbound.
+> 
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Reviewed-by: Daniel Almeida  <daniel.almeida@collabora.com>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/helpers/helpers.c |   1 +
+>  rust/helpers/io.c      | 101 ++++++++++++++++
+>  rust/kernel/io.rs      | 260 +++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs     |   1 +
+>  4 files changed, 363 insertions(+)
+>  create mode 100644 rust/helpers/io.c
+>  create mode 100644 rust/kernel/io.rs
+> 
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 060750af6524..63f9b1da179f 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -14,6 +14,7 @@
+>  #include "cred.c"
+>  #include "err.c"
+>  #include "fs.c"
+> +#include "io.c"
+>  #include "jump_label.c"
+>  #include "kunit.c"
+>  #include "mutex.c"
+> diff --git a/rust/helpers/io.c b/rust/helpers/io.c
+> new file mode 100644
+> index 000000000000..1dde6374c0e2
+> --- /dev/null
+> +++ b/rust/helpers/io.c
+> @@ -0,0 +1,101 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/io.h>
+> +
+> +void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
+> +{
+> +	return ioremap(offset, size);
+> +}
+> +
+> +void rust_helper_iounmap(volatile void __iomem *addr)
+> +{
+> +	return iounmap(addr);
 
-Clock source? Is it coming directly to PCIe or through RCC? There is no direct
-clock representation from PHY to PCIe in DT binding.
+Copy-paste mistake, obviously this return statement shouldn't be here.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> +}
+> +
+> +u8 rust_helper_readb(const volatile void __iomem *addr)
+> +{
+> +	return readb(addr);
+> +}
+> +
+> +u16 rust_helper_readw(const volatile void __iomem *addr)
+> +{
+> +	return readw(addr);
+> +}
+> +
+> +u32 rust_helper_readl(const volatile void __iomem *addr)
+> +{
+> +	return readl(addr);
+> +}
+> +
+> +#ifdef CONFIG_64BIT
+> +u64 rust_helper_readq(const volatile void __iomem *addr)
+> +{
+> +	return readq(addr);
+> +}
+> +#endif
+> +
+> +void rust_helper_writeb(u8 value, volatile void __iomem *addr)
+> +{
+> +	writeb(value, addr);
+> +}
+> +
+> +void rust_helper_writew(u16 value, volatile void __iomem *addr)
+> +{
+> +	writew(value, addr);
+> +}
+> +
+> +void rust_helper_writel(u32 value, volatile void __iomem *addr)
+> +{
+> +	writel(value, addr);
+> +}
+> +
+> +#ifdef CONFIG_64BIT
+> +void rust_helper_writeq(u64 value, volatile void __iomem *addr)
+> +{
+> +	writeq(value, addr);
+> +}
+> +#endif
+> +
+> +u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readb_relaxed(addr);
+> +}
+> +
+> +u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readw_relaxed(addr);
+> +}
+> +
+> +u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readl_relaxed(addr);
+> +}
+> +
+> +#ifdef CONFIG_64BIT
+> +u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readq_relaxed(addr);
+> +}
+> +#endif
+> +
+> +void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
+> +{
+> +	writeb_relaxed(value, addr);
+> +}
+> +
+> +void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
+> +{
+> +	writew_relaxed(value, addr);
+> +}
+> +
+> +void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
+> +{
+> +	writel_relaxed(value, addr);
+> +}
+> +
+> +#ifdef CONFIG_64BIT
+> +void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
+> +{
+> +	writeq_relaxed(value, addr);
+> +}
+> +#endif
+> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+> new file mode 100644
+> index 000000000000..7ec3341bb411
+> --- /dev/null
+> +++ b/rust/kernel/io.rs
+> @@ -0,0 +1,260 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Memory-mapped IO.
+> +//!
+> +//! C header: [`include/asm-generic/io.h`](srctree/include/asm-generic/io.h)
+> +
+> +use crate::error::{code::EINVAL, Result};
+> +use crate::{bindings, build_assert};
+> +
+> +/// Raw representation of an MMIO region.
+> +///
+> +/// By itself, the existence of an instance of this structure does not provide any guarantees that
+> +/// the represented MMIO region does exist or is properly mapped.
+> +///
+> +/// Instead, the bus specific MMIO implementation must convert this raw representation into an `Io`
+> +/// instance providing the actual memory accessors. Only by the conversion into an `Io` structure
+> +/// any guarantees are given.
+> +pub struct IoRaw<const SIZE: usize = 0> {
+> +    addr: usize,
+> +    maxsize: usize,
+> +}
+> +
+> +impl<const SIZE: usize> IoRaw<SIZE> {
+> +    /// Returns a new `IoRaw` instance on success, an error otherwise.
+> +    pub fn new(addr: usize, maxsize: usize) -> Result<Self> {
+> +        if maxsize < SIZE {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        Ok(Self { addr, maxsize })
+> +    }
+> +
+> +    /// Returns the base address of the MMIO region.
+> +    #[inline]
+> +    pub fn addr(&self) -> usize {
+> +        self.addr
+> +    }
+> +
+> +    /// Returns the maximum size of the MMIO region.
+> +    #[inline]
+> +    pub fn maxsize(&self) -> usize {
+> +        self.maxsize
+> +    }
+> +}
+> +
+> +/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
+> +///
+> +/// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
+> +/// mapping, performing an additional region request etc.
+> +///
+> +/// # Invariant
+> +///
+> +/// `addr` is the start and `maxsize` the length of valid I/O mapped memory region of size
+> +/// `maxsize`.
+> +///
+> +/// # Examples
+> +///
+> +/// ```no_run
+> +/// # use kernel::{bindings, io::{Io, IoRaw}};
+> +/// # use core::ops::Deref;
+> +///
+> +/// // See also [`pci::Bar`] for a real example.
+> +/// struct IoMem<const SIZE: usize>(IoRaw<SIZE>);
+> +///
+> +/// impl<const SIZE: usize> IoMem<SIZE> {
+> +///     /// # Safety
+> +///     ///
+> +///     /// [`paddr`, `paddr` + `SIZE`) must be a valid MMIO region that is mappable into the CPUs
+> +///     /// virtual address space.
+> +///     unsafe fn new(paddr: usize) -> Result<Self>{
+> +///         // SAFETY: By the safety requirements of this function [`paddr`, `paddr` + `SIZE`) is
+> +///         // valid for `ioremap`.
+> +///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE.try_into().unwrap()) };
+> +///         if addr.is_null() {
+> +///             return Err(ENOMEM);
+> +///         }
+> +///
+> +///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
+> +///     }
+> +/// }
+> +///
+> +/// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+> +///     fn drop(&mut self) {
+> +///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped by `Self::new`.
+> +///         unsafe { bindings::iounmap(self.0.addr() as _); };
+> +///     }
+> +/// }
+> +///
+> +/// impl<const SIZE: usize> Deref for IoMem<SIZE> {
+> +///    type Target = Io<SIZE>;
+> +///
+> +///    fn deref(&self) -> &Self::Target {
+> +///         // SAFETY: The memory range stored in `self` has been properly mapped in `Self::new`.
+> +///         unsafe { Io::from_raw(&self.0) }
+> +///    }
+> +/// }
+> +///
+> +///# fn no_run() -> Result<(), Error> {
+> +/// // SAFETY: Invalid usage for example purposes.
+> +/// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
+> +/// iomem.writel(0x42, 0x0);
+> +/// assert!(iomem.try_writel(0x42, 0x0).is_ok());
+> +/// assert!(iomem.try_writel(0x42, 0x4).is_err());
+> +/// # Ok(())
+> +/// # }
+> +/// ```
+> +#[repr(transparent)]
+> +pub struct Io<const SIZE: usize = 0>(IoRaw<SIZE>);
+> +
+> +macro_rules! define_read {
+> +    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
+> +        /// Read IO data from a given offset known at compile time.
+> +        ///
+> +        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+> +        /// time, the build will fail.
+> +        $(#[$attr])*
+> +        #[inline]
+> +        pub fn $name(&self, offset: usize) -> $type_name {
+> +            let addr = self.io_addr_assert::<$type_name>(offset);
+> +
+> +            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+> +            unsafe { bindings::$name(addr as _) }
+> +        }
+> +
+> +        /// Read IO data from a given offset.
+> +        ///
+> +        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
+> +        /// out of bounds.
+> +        $(#[$attr])*
+> +        pub fn $try_name(&self, offset: usize) -> Result<$type_name> {
+> +            let addr = self.io_addr::<$type_name>(offset)?;
+> +
+> +            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+> +            Ok(unsafe { bindings::$name(addr as _) })
+> +        }
+> +    };
+> +}
+> +
+> +macro_rules! define_write {
+> +    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
+> +        /// Write IO data from a given offset known at compile time.
+> +        ///
+> +        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+> +        /// time, the build will fail.
+> +        $(#[$attr])*
+> +        #[inline]
+> +        pub fn $name(&self, value: $type_name, offset: usize) {
+> +            let addr = self.io_addr_assert::<$type_name>(offset);
+> +
+> +            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+> +            unsafe { bindings::$name(value, addr as _, ) }
+> +        }
+> +
+> +        /// Write IO data from a given offset.
+> +        ///
+> +        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
+> +        /// out of bounds.
+> +        $(#[$attr])*
+> +        pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
+> +            let addr = self.io_addr::<$type_name>(offset)?;
+> +
+> +            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+> +            unsafe { bindings::$name(value, addr as _) }
+> +            Ok(())
+> +        }
+> +    };
+> +}
+> +
+> +impl<const SIZE: usize> Io<SIZE> {
+> +    /// Converts an `IoRaw` into an `Io` instance, providing the accessors to the MMIO mapping.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of size
+> +    /// `maxsize`.
+> +    pub unsafe fn from_raw(raw: &IoRaw<SIZE>) -> &Self {
+> +        // SAFETY: `Io` is a transparent wrapper around `IoRaw`.
+> +        unsafe { &*core::ptr::from_ref(raw).cast() }
+> +    }
+> +
+> +    /// Returns the base address of this mapping.
+> +    #[inline]
+> +    pub fn addr(&self) -> usize {
+> +        self.0.addr()
+> +    }
+> +
+> +    /// Returns the maximum size of this mapping.
+> +    #[inline]
+> +    pub fn maxsize(&self) -> usize {
+> +        self.0.maxsize()
+> +    }
+> +
+> +    #[inline]
+> +    const fn offset_valid<U>(offset: usize, size: usize) -> bool {
+> +        let type_size = core::mem::size_of::<U>();
+> +        if let Some(end) = offset.checked_add(type_size) {
+> +            end <= size && offset % type_size == 0
+> +        } else {
+> +            false
+> +        }
+> +    }
+> +
+> +    #[inline]
+> +    fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+> +        if !Self::offset_valid::<U>(offset, self.maxsize()) {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        // Probably no need to check, since the safety requirements of `Self::new` guarantee that
+> +        // this can't overflow.
+> +        self.addr().checked_add(offset).ok_or(EINVAL)
+> +    }
+> +
+> +    #[inline]
+> +    fn io_addr_assert<U>(&self, offset: usize) -> usize {
+> +        build_assert!(Self::offset_valid::<U>(offset, SIZE));
+> +
+> +        self.addr() + offset
+> +    }
+> +
+> +    define_read!(readb, try_readb, u8);
+> +    define_read!(readw, try_readw, u16);
+> +    define_read!(readl, try_readl, u32);
+> +    define_read!(
+> +        #[cfg(CONFIG_64BIT)]
+> +        readq,
+> +        try_readq,
+> +        u64
+> +    );
+> +
+> +    define_read!(readb_relaxed, try_readb_relaxed, u8);
+> +    define_read!(readw_relaxed, try_readw_relaxed, u16);
+> +    define_read!(readl_relaxed, try_readl_relaxed, u32);
+> +    define_read!(
+> +        #[cfg(CONFIG_64BIT)]
+> +        readq_relaxed,
+> +        try_readq_relaxed,
+> +        u64
+> +    );
+> +
+> +    define_write!(writeb, try_writeb, u8);
+> +    define_write!(writew, try_writew, u16);
+> +    define_write!(writel, try_writel, u32);
+> +    define_write!(
+> +        #[cfg(CONFIG_64BIT)]
+> +        writeq,
+> +        try_writeq,
+> +        u64
+> +    );
+> +
+> +    define_write!(writeb_relaxed, try_writeb_relaxed, u8);
+> +    define_write!(writew_relaxed, try_writew_relaxed, u16);
+> +    define_write!(writel_relaxed, try_writel_relaxed, u32);
+> +    define_write!(
+> +        #[cfg(CONFIG_64BIT)]
+> +        writeq_relaxed,
+> +        try_writeq_relaxed,
+> +        u64
+> +    );
+> +}
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 5702ce32ec8e..6c836ab73771 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -79,6 +79,7 @@
+>  
+>  #[doc(hidden)]
+>  pub use bindings;
+> +pub mod io;
+>  pub use macros;
+>  pub use uapi;
+>  
+> -- 
+> 2.47.1
+> 
 
