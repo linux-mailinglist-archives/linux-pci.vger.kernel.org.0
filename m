@@ -1,225 +1,107 @@
-Return-Path: <linux-pci+bounces-18526-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18527-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66C119F3630
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:36:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A30249F3687
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 17:49:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 500CA164C4A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:36:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD3D616CF14
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2024 16:49:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0FFF204F92;
-	Mon, 16 Dec 2024 16:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10C3820DD59;
+	Mon, 16 Dec 2024 16:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEW+Y9+s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltJu+eJe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBD984A3E
-	for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2024 16:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60CE2066E0;
+	Mon, 16 Dec 2024 16:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734366948; cv=none; b=KSE1D4BxanQTW5bhobG5oX63OI/m5MeebP8Q38puDEaLonGtXOlo52oLdJ0SbbjWyB+/ALgszT0IaFp612xPbay0egfQtKDPyncjgOmRl5nu+Hu5mA9dCjUSw9jzfKCUFVL9euainm+00nzoj/0Y4zK6+ArGdFcCYmplfuLEKCs=
+	t=1734367363; cv=none; b=jIQVFrVWbYT/kiv2LoVGGTwqIrJXCqQqQRKtQU8FkYjpNqatyzyy2XBE+bDTDNiuZLMKHWA4L3av8GdEVTgXs0KQOLNfhOdR10FyKLRTs1U5p/6Rqt1gicu2+W82p/gKSxZPTNydZQwDAolKug7PfsX+13F/Dm9GHvvNNb99AO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734366948; c=relaxed/simple;
-	bh=3iPcEokKl82QATys2srvtgnVQ5QzbIcdVKpEDugtwig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbwKEXpGQePxai1eVe805dgeWtoPKoWCyos0Z+ndRVnb5ZrXIdBq2LMrx0ABr3BkTGO7WULgj7Itz2b4FBhDXy7WgiJWfrD8VENQZyjlzMr+4NmpW+8CI1VbaZR+DmK9TbbuHxDRdUimFAkSspm3mXvGIXcaWgC76miKIHXbWhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEW+Y9+s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B1ACC4CED0;
-	Mon, 16 Dec 2024 16:35:47 +0000 (UTC)
+	s=arc-20240116; t=1734367363; c=relaxed/simple;
+	bh=/YZL8BCWUrGgnBHMRhMJrndei+MItSBCpjXPuhiodx0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oxjsW87p4DIz08tuCRb82+5GSSvzOoAIX6UYuO2KwWKUdEynLqL0Ai0a+lMDlE9+qLEvP5fHhCxCHBubw/YlG9g2hfncFedlCplCpCyXW35B/7uYPKYPmKRsGl+T39ihBVS3Dkyz6vr8vNKpmM5xABUHKKYOhF02BFFLkFBuaEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltJu+eJe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B31C4AF0C;
+	Mon, 16 Dec 2024 16:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734366948;
-	bh=3iPcEokKl82QATys2srvtgnVQ5QzbIcdVKpEDugtwig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bEW+Y9+sQ5098kCykYnXiLOe2KDPYltyUC0lwNaCTjZN5DVDEkdz0kwpD9Jz7lOXK
-	 7ChbYBvtZ5ihCZnl5W1bGI5EAdi87AbxVLQ576FWnHdGKGCIVmA63uLmdJm3laYXpM
-	 oNkiXxSv8BTKtUKkUKcKPJfx/LoQ4fjjL0n8AQiB/XK3Odj4o/isMZJhQP7eq5fl9i
-	 T9nm7jQDuEDaygqccErIx0sg6sDOQJ8b+zDPuxHmdXwSuCcSw/UboMVgyCrAfikUZB
-	 UPJrccNonuV7AH+V6BCGZsmFDghCt5NpIa39eC6pNF0gEpwncs2RceIqISRpz9ssmB
-	 xgGSmSjObj05w==
-Date: Mon, 16 Dec 2024 22:05:44 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH v4 17/18] nvmet: New NVMe PCI endpoint target driver
-Message-ID: <Z2BW4CjdE1p50AhC@vaman>
-References: <20241212113440.352958-1-dlemoal@kernel.org>
- <20241212113440.352958-18-dlemoal@kernel.org>
- <Z1xoAj9c9oWhqZoV@ryzen>
+	s=k20201202; t=1734367362;
+	bh=/YZL8BCWUrGgnBHMRhMJrndei+MItSBCpjXPuhiodx0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ltJu+eJeR3GVPWDizkM77lXgowRdcSjeVfd5GPbD227yBIXxqu2EAYCE39iRRdUt4
+	 SpSB9VFKQcfVlXU/V/oMfWNazpYQ7e81rSLUbIHctVeIagYKBNKrky7f9MAa8LC0Oj
+	 tTOQmJ7ZryVejBv6bhG8HJPeR2a9aNgpznsVCAE9z8VxSvQUsiPhdJWc/dIzYx/hxr
+	 0CEHhhkbIyhImMh6SMZC3KuRVYxq82JmoJKdhvOujrJ9I1QM3nFxkrgaN+6A/9W3bS
+	 Jjzi5snzhCdVCbQZpKNfo9bDa7gV72cCFX5paBnp5fFA3gCKc1tHsTVr1Lu+DFm3VZ
+	 N+3FE7AcN9hHw==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3eb98ad8caaso2275153b6e.0;
+        Mon, 16 Dec 2024 08:42:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVc6IBKJkLjAfbHSxl/cynCpvO593RWmzrJJis0X1U6TvPotQSGE4d1O7+GDkmyOS88t4+zfHC2hhk=@vger.kernel.org, AJvYcCWA5hTdXYGGepBDv/lZ4YW/dsSqTC+Jw/yvxZlNvX04RtDevEcaeeXaH7KiSxz7naDFLUyucYIhY/Ah7uQ=@vger.kernel.org, AJvYcCXxz29GgqeMYvhnqRhPta+yi9NWjKvSrwQI75nS21IStPDLVOBd6IEZBReq3j9edQL3YkpDoz749hTR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy33+KSJ2iOE5tBpCwBFhTWt0t7j+1bN2miThFjoaBhkdEUO5W+
+	pVi4BwKqIqnYXtzp125dfuNJQrYL9OMowxjLmqVizjqZeA4qejR6Uadzi/FMIFEkQ4glLd/KNSt
+	j0WtxSMIKs0uf/DMydmIsf2a0NQw=
+X-Google-Smtp-Source: AGHT+IHnMZjbo2UVibBmoMUnEzobdQTlLjR1cy109pM5/JrqwIVhmYAJg7QJ9Vp9yf3MkZqDb3PPIJV5mlF0UqPv0JE=
+X-Received: by 2002:a05:6808:1887:b0:3eb:556e:dde6 with SMTP id
+ 5614622812f47-3eba6867bb5mr6716314b6e.12.1734367361510; Mon, 16 Dec 2024
+ 08:42:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z1xoAj9c9oWhqZoV@ryzen>
+References: <20241205232900.GA3072557@bhelgaas> <20241209143821.m4dahsaqeydluyf3@thinkpad>
+ <20241212055920.GB4825@lst.de> <13662231.uLZWGnKmhe@rjwysocki.net>
+ <CAPDyKFrxEjHFB6B2r7JbryYY6=E4CxX_xTmLDqO6+26E+ULz6A@mail.gmail.com>
+ <20241212151354.GA7708@lst.de> <CAJZ5v0gUpDw_NjTDtHGCUnKK0C+x0nrW6mP0tHQoXsgwR2RH8g@mail.gmail.com>
+ <20241214063023.4tdvjbqd2lrylb7o@thinkpad> <20241216162303.GA26434@lst.de>
+In-Reply-To: <20241216162303.GA26434@lst.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 16 Dec 2024 17:42:30 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com>
+Message-ID: <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by the user
+To: Christoph Hellwig <hch@lst.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, 
+	axboe@kernel.dk, sagi@grimberg.me, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, andersson@kernel.org, 
+	konradybcio@kernel.org, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Niklas,
+On Mon, Dec 16, 2024 at 5:23=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
+e:
+>
+> On Sat, Dec 14, 2024 at 12:00:23PM +0530, Manivannan Sadhasivam wrote:
+> > We need a PM core API that tells the device drivers when it is safe to =
+powerdown
+> > the devices. The usecase here is with PCIe based NVMe devices but the p=
+roblem is
+> > applicable to other devices as well.
+>
+> Maybe I'm misunderstanding things, but I think the important part is
+> to indicate when a suspend actually MUST put the device into D3.  Because
+> doing that should always be safe, but not always optimal.
 
-On 13-12-24, 17:59, Niklas Cassel wrote:
-> Hello Vinod,
-> 
-> I am a bit confused about the usage of the dmaengine API, and I hope that you
-> could help make me slightly less confused :)
+I'm not aware of any cases when a device must be put into D3cold
+(which I think is what you mean) during system-wide suspend.
 
-Sure thing!
+Suspend-to-idle on x86 doesn't require this, at least not for
+correctness.  I don't think any platforms using DT require it either.
 
-> If you look at the nvmet_pciep_epf_dma_transfer() function below, it takes a
-> mutex around the dmaengine_slave_config(), dmaengine_prep_slave_single(),
-> dmaengine_submit(), dma_sync_wait(), and dmaengine_terminate_sync() calls.
-> 
-> I really wish that we would remove this mutex, to get better performance.
-> 
-> 
-> If I look at e.g. the drivers/dma/dw-edma/dw-edma-core.c driver, I can see
-> that dmaengine_prep_slave_single() (which will call
-> device_prep_slave_sg(.., .., 1, .., .., ..)) allocates a new
-> dma_async_tx_descriptor for each function call.
-> 
-> I can see that device_prep_slave_sg() (dw_edma_device_prep_slave_sg()) will
-> call dw_edma_device_transfer() which will call vchan_tx_prep(), which adds
-> the descriptor to the tail of a list.
-> 
-> I can also see that dw_edma_done_interrupt() will automatically start the
-> transfer of the next descriptor (using vchan_next_desc()).
-> 
-> So this looks like it is supposed to be asynchronous... however, if we simply
-> remove the mutex, we get IOMMU errors, most likely because the DMA writes to
-> an incorrect address.
-> 
-> It looks like this is because dmaengine_prep_slave_single() really requires
-> dmaengine_slave_config() for each transfer. (Since we are supplying a src_addr
-> in the sconf that we are supplying to dmaengine_slave_config().)
-> 
-> (i.e. we can't call dmaengine_slave_config() while a DMA transfer is active.)
-> 
-> So while this API is supposed to be async, to me it looks like it can only
-> be used in a synchronous manner... But that seems like a really weird design.
-> 
-> Am I missing something obvious here?
+In theory, ACPI S3 or hibernation may request that, but I've never
+seen it happen in practice.
 
-Yes, I feel nvme being treated as slave transfer, which it might not be.
-This API was designed for peripherals like i2c/spi etc where we have a
-hardware address to read/write to. So the dma_slave_config would pass on
-the transfer details for the peripheral like address, width of fifo,
-depth etc and these are setup config, so call once for a channel and then
-prepare the descriptor, submit... and repeat of prepare and submit ...
-
-I suspect since you are passing an address which keep changing in the
-dma_slave_config, you need to guard that and prep_slave_single() call,
-as while preparing the descriptor driver would lookup what was setup for
-the configuration.
-
-I suggest then use the prep_memcpy() API instead and pass on source and
-destination, no need to lock the calls...
-
-> If the dmaengine_prep_slave_single() instead took a sconfig as a parameter,
-> then it seems like it would be possible to use this API asynchronously.
-> 
-> There does seem to be other drivers holding a mutex around
-> dmaengine_slave_config() + dmaengine_prep_slave_single()... but it feels like
-> this should be avoidable (at least for dw-edma), if
-> dmaengine_prep_slave_single() simply took an sconf.
-> 
-> What am I missing? :)
-> 
-> 
-> Kind regards,
-> Niklas
-> 
-> 
-> On Thu, Dec 12, 2024 at 08:34:39PM +0900, Damien Le Moal wrote:
-> > +static int nvmet_pciep_epf_dma_transfer(struct nvmet_pciep_epf *nvme_epf,
-> > +		struct nvmet_pciep_segment *seg, enum dma_data_direction dir)
-> > +{
-> > +	struct pci_epf *epf = nvme_epf->epf;
-> > +	struct dma_async_tx_descriptor *desc;
-> > +	struct dma_slave_config sconf = {};
-> > +	struct device *dev = &epf->dev;
-> > +	struct device *dma_dev;
-> > +	struct dma_chan *chan;
-> > +	dma_cookie_t cookie;
-> > +	dma_addr_t dma_addr;
-> > +	struct mutex *lock;
-> > +	int ret;
-> > +
-> > +	switch (dir) {
-> > +	case DMA_FROM_DEVICE:
-> > +		lock = &nvme_epf->dma_rx_lock;
-> > +		chan = nvme_epf->dma_rx_chan;
-> > +		sconf.direction = DMA_DEV_TO_MEM;
-> > +		sconf.src_addr = seg->pci_addr;
-> > +		break;
-> > +	case DMA_TO_DEVICE:
-> > +		lock = &nvme_epf->dma_tx_lock;
-> > +		chan = nvme_epf->dma_tx_chan;
-> > +		sconf.direction = DMA_MEM_TO_DEV;
-> > +		sconf.dst_addr = seg->pci_addr;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	mutex_lock(lock);
-> > +
-> > +	dma_dev = dmaengine_get_dma_device(chan);
-> > +	dma_addr = dma_map_single(dma_dev, seg->buf, seg->length, dir);
-> > +	ret = dma_mapping_error(dma_dev, dma_addr);
-> > +	if (ret)
-> > +		goto unlock;
-> > +
-> > +	ret = dmaengine_slave_config(chan, &sconf);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to configure DMA channel\n");
-> > +		goto unmap;
-> > +	}
-> > +
-> > +	desc = dmaengine_prep_slave_single(chan, dma_addr, seg->length,
-> > +					   sconf.direction, DMA_CTRL_ACK);
-> > +	if (!desc) {
-> > +		dev_err(dev, "Failed to prepare DMA\n");
-> > +		ret = -EIO;
-> > +		goto unmap;
-> > +	}
-> > +
-> > +	cookie = dmaengine_submit(desc);
-> > +	ret = dma_submit_error(cookie);
-> > +	if (ret) {
-> > +		dev_err(dev, "DMA submit failed %d\n", ret);
-> > +		goto unmap;
-> > +	}
-> > +
-> > +	if (dma_sync_wait(chan, cookie) != DMA_COMPLETE) {
-> > +		dev_err(dev, "DMA transfer failed\n");
-> > +		ret = -EIO;
-> > +	}
-> > +
-> > +	dmaengine_terminate_sync(chan);
-> > +
-> > +unmap:
-> > +	dma_unmap_single(dma_dev, dma_addr, seg->length, dir);
-> > +
-> > +unlock:
-> > +	mutex_unlock(lock);
-> > +
-> > +	return ret;
-> > +}
-
--- 
-~Vinod
+Suspend-to-idle on x86 may want devices to end up in specific power
+states in order to be able to switch the entire platform into a deep
+energy-saving mode, but that's never been D3cold so far.
 
