@@ -1,611 +1,219 @@
-Return-Path: <linux-pci+bounces-18621-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18623-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BC769F4BCD
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 14:18:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E11379F4C04
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 14:24:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C0A07A20CC
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 13:09:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3229F161235
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 13:18:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E98D1F9F48;
-	Tue, 17 Dec 2024 13:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B064F1F8ADF;
+	Tue, 17 Dec 2024 13:10:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="binQUbdu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVdple0W"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC52C1F9F40;
-	Tue, 17 Dec 2024 13:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF481F4263;
+	Tue, 17 Dec 2024 13:10:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734440527; cv=none; b=jI7Z7eDx5N57BN4uUkOqbZvyL0qu3IUVEHZ56TBRfXRy6Upjp/CsO8+Rqpq7XGgYAV4IzfRfCe828b91thWoBDe6FPMSXr9v9v51JXxSzkCHAYG/k+Qj0/3Gno/gGAFoGpf/nmFPN41p8qZMOsfcJyzz7zAAPPNsUvD6PBLD1NY=
+	t=1734441004; cv=none; b=EpoFFbGYhsBondl89LMdu/v2HGZ9hvn26wnvMtrs8NikW73vMdtSueaZ0W06n5aF9Z5lpszHexKD34LV57PdJa197FmtZgGJGEM7vuQEmtYZ3zj8CDw5s7A5tEcGOTXF904GhZExbbcDDHOd5CSecmZwEKRvnhDqGaBADQtDxT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734440527; c=relaxed/simple;
-	bh=1i4Q22Noom6dP1zwC56KXmf6NLafiu+OCFYVjUdRIJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ac9uzUYV8R7uPw4C5o/y2hjWtTN11xKHjTwDqaddJBRyT4YlDQuguQBfR3QYqHy5LBZ/jJvuUy2n0pLRgLmJQZuJr5Y67K3T8aap/6gog6jPKMI62XiIDeNGIjRW7hSOQgrZzVGRW5PM8nfFDQjD2mIwbrIWHrslNmqvrAAtb1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=binQUbdu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3453C4CED3;
-	Tue, 17 Dec 2024 13:02:06 +0000 (UTC)
+	s=arc-20240116; t=1734441004; c=relaxed/simple;
+	bh=kDlu4XK3lP82N0qIPv6jQEmDp0tDUCg6mKlUOzQMyOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=le2ycBk03Zc0fLi/v0JY1DfEQkgJkziuROP6xkTNJ7g+JSs9aCvoIrBd9zqpeWQBzvhanVI5TFoldQGoozrSgqC1xGsKXWw2RR5wU09maXffvyavZDq/6n1AM/rETvfcU5g1orGCQKf2oCCtkB/60StaGFfdFWrkJzoYtyEaYAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVdple0W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B07FDC4CED3;
+	Tue, 17 Dec 2024 13:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734440527;
-	bh=1i4Q22Noom6dP1zwC56KXmf6NLafiu+OCFYVjUdRIJw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=binQUbduqwRJVcrlXtMaGWSODJWKBl2iM2TiId79MZzVA6KgpRJnw9pZ3edaOITRX
-	 yrsdmHUJuzqbBpDYUicae+zPOn5svRwoT2c8y22iyrgrqPlAYy+4pwWFwu5us2v7A6
-	 uYPxFGHSpjKsQvJrm6PpKjuhYkVvkyU0jpus4YVJ8GesDQVAvaYHtV3zUTTGq9dEuz
-	 hisncVsCbc/n7XcPdih/RLT87+YkTiRB+NmULsgj4VQQn45ZyW9fhG5Dt1/Aeo6lq1
-	 lSY2hQz+PTWur8XC0r/9DtvWQcl8EB4gMnG0dj26zr8lXHy10ogltPoc2OxDO1b7rL
-	 z00qkvPLY0kPQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v5 17/17] vfio/mlx5: Enable the DMA link API
-Date: Tue, 17 Dec 2024 15:00:35 +0200
-Message-ID: <b83c323ddd3dff4578fe251d4b517e2e72591ac4.1734436840.git.leon@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1734436840.git.leon@kernel.org>
-References: <cover.1734436840.git.leon@kernel.org>
+	s=k20201202; t=1734441004;
+	bh=kDlu4XK3lP82N0qIPv6jQEmDp0tDUCg6mKlUOzQMyOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eVdple0Wsw4aagxBZWjMhm/AcC6DgKyOa4cYXNQKMwHKbSwXMNwDedw00a0o7MNj6
+	 8gW94BorPBTcxgEcMgM+f1jVmqLaOleRmm9hL0awcuQxy8/opixQVdIvDcXYxkYNmt
+	 LTC4yEdiPWplj+yFAf4vlQ4rVJkh/hmI9SgGfGsQ/T+tDy94RGbGSC0aTjpxbvV4zl
+	 xDv7OUZ68T81BdLRU0HkK7Qq96VFqroe/3vuGHOa87zNQYdOBYMcIc61fTNMOIPg9A
+	 x8xW7vdH1MInsxeV79Cy7Ddbigy023dPKZWW2EgxA7xjq5ks27uuCSt1keUYfG2Z3a
+	 MdtN2XR7d+CXw==
+Date: Tue, 17 Dec 2024 07:10:02 -0600
+From: Rob Herring <robh@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Chen Wang <unicorn_wang@outlook.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicornxw@gmail.com>,
+	kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+	arnd@arndb.de, bhelgaas@google.com, guoren@kernel.org,
+	inochiama@outlook.com, lee@kernel.org, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, pbrobinson@gmail.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com
+Subject: Re: [PATCH v2 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
+Message-ID: <20241217131002.GA1160167-robh@kernel.org>
+References: <BM1PR01MB4515ECD36D8FC6ECB7D161C5FE3E2@BM1PR01MB4515.INDPRD01.PROD.OUTLOOK.COM>
+ <20241211192014.GA3302752@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241211192014.GA3302752@bhelgaas>
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Wed, Dec 11, 2024 at 01:20:14PM -0600, Bjorn Helgaas wrote:
+> [cc->to: Rob, Krzysztof, Conor because I'm not a DT expert and I'd
+> like their thoughts on this idea of describing Root Ports as separate
+> children]
+> 
+> On Wed, Dec 11, 2024 at 05:00:44PM +0800, Chen Wang wrote:
+> > On 2024/12/11 1:33, Bjorn Helgaas wrote:
+> > > On Mon, Dec 09, 2024 at 03:19:38PM +0800, Chen Wang wrote:
+> 
+> > > > +      The Cadence IP has two modes of operation, selected by a strap pin.
+> > > > +
+> > > > +      In the single-link mode, the Cadence PCIe core instance associated
+> > > > +      with Link0 is connected to all the lanes and the Cadence PCIe core
+> > > > +      instance associated with Link1 is inactive.
+> > > > +
+> > > > +      In the dual-link mode, the Cadence PCIe core instance associated
+> > > > +      with Link0 is connected to the lower half of the lanes and the
+> > > > +      Cadence PCIe core instance associated with Link1 is connected to
+> > > > +      the upper half of the lanes.
+> 
+> > > > +      SG2042 contains 2 Cadence IPs and configures the Cores as below:
+> > > > +
+> > > > +                     +-- Core(Link0) <---> pcie_rc0   +-----------------+
+> > > > +                     |                                |                 |
+> > > > +      Cadence IP 1 --+                                | cdns_pcie0_ctrl |
+> > > > +                     |                                |                 |
+> > > > +                     +-- Core(Link1) <---> disabled   +-----------------+
+> > > > +
+> > > > +                     +-- Core(Link0) <---> pcie_rc1   +-----------------+
+> > > > +                     |                                |                 |
+> > > > +      Cadence IP 2 --+                                | cdns_pcie1_ctrl |
+> > > > +                     |                                |                 |
+> > > > +                     +-- Core(Link1) <---> pcie_rc2   +-----------------+
+> > > > +
+> > > > +      pcie_rcX is pcie node ("sophgo,sg2042-pcie-host") defined in DTS.
+> > > > +      cdns_pcie0_ctrl is syscon node ("sophgo,sg2042-pcie-ctrl") defined in DTS
+> > > > +
+> > > > +      cdns_pcieX_ctrl contains some registers shared by pcie_rcX, even two
+> > > > +      RC(Link)s may share different bits of the same register. For example,
+> > > > +      cdns_pcie1_ctrl contains registers shared by link0 & link1 for Cadence IP 2.
+> 
+> > > > +      "sophgo,pcie-port" is defined to flag which core(link) the rc maps to, with
+> > > > +      this we can know what registers(bits) we should use.
+> 
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - reg-names
+> > > > +  - vendor-id
+> > > > +  - device-id
+> > > > +  - sophgo,syscon-pcie-ctrl
+> > > > +  - sophgo,pcie-port
+> > >
+> > > It looks like vendor-id and device-id apply to PCI devices, i.e.,
+> > > things that will show up in lspci, I assume Root Ports in this case.
+> > > Can we make this explicit in the DT, e.g., something like this?
+> > > 
+> > >    pcie@62000000 {
+> > >      compatible = "sophgo,sg2042-pcie-host";
+> > >      port0: pci@0,0 {
+> > >        vendor-id = <0x1f1c>;
+> > >        device-id = <0x2042>;
+> > >      };
+> > 
+> > Sorry, I don't understand your meaning very well.  Referring to the topology
+> > diagram I drew above, is it okay to write DTS as follows?
+> > 
+> > pcie@7060000000 {
+> >     compatible = "sophgo,sg2042-pcie-host";
+> >     ...... // other properties
+> >     pci@0,0 {
+> >       vendor-id = <0x1f1c>;
+> >       device-id = <0x2042>;
+> >     };
+> > }
+> > 
+> > pcie@7062000000 {
+> >     compatible = "sophgo,sg2042-pcie-host";
+> >     ...... // other properties
+> >     pci@0,0 {
+> >       vendor-id = <0x1f1c>;
+> >       device-id = <0x2042>;
+> >     };
+> > }
+> > 
+> > pcie@7062800000 {
+> >     compatible = "sophgo,sg2042-pcie-host";
+> >     ...... // other properties
+> >     pci@1,0 {
+> >       vendor-id = <0x1f1c>;
+> >       device-id = <0x2042>;
+> >     };
+> > 
+> > }
+> 
+> Generally makes sense to me.  I'm suggesting that we should start
+> describing Root Ports as children of the host bridge node instead of 
+> mixing their properties into the host bridge itself.
+> 
+> Some properties apply to the host bridge, e.g., "bus-range" describes
+> the bus number aperture, and "ranges" describes the address
+> translation between the upstream CPU address space and the PCI address
+> space.
+> 
+> Others apply specifically to a Root Port, e.g., "num-lanes",
+> "max-link-speed", "phys", "vendor-id", "device-id".  I think it will
+> help if we can describe these in separate children, especially when
+> there are multiple Root Ports.
 
-Remove intermediate scatter-gather table completely and
-enable new DMA link API.
+Agreed.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/vfio/pci/mlx5/cmd.c  | 299 ++++++++++++++++-------------------
- drivers/vfio/pci/mlx5/cmd.h  |  21 ++-
- drivers/vfio/pci/mlx5/main.c |  31 ----
- 3 files changed, 148 insertions(+), 203 deletions(-)
 
-diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
-index 48c272ecb04f..fba20abf240a 100644
---- a/drivers/vfio/pci/mlx5/cmd.c
-+++ b/drivers/vfio/pci/mlx5/cmd.c
-@@ -345,26 +345,82 @@ static u32 *alloc_mkey_in(u32 npages, u32 pdn)
- 	return in;
- }
- 
--static int create_mkey(struct mlx5_core_dev *mdev, u32 npages,
--		       struct mlx5_vhca_data_buffer *buf, u32 *mkey_in,
-+static int create_mkey(struct mlx5_core_dev *mdev, u32 npages, u32 *mkey_in,
- 		       u32 *mkey)
- {
-+	int inlen = MLX5_ST_SZ_BYTES(create_mkey_in) +
-+		sizeof(__be64) * round_up(npages, 2);
-+
-+	return mlx5_core_create_mkey(mdev, mkey, mkey_in, inlen);
-+}
-+
-+static void unregister_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
-+				 u32 *mkey_in, struct dma_iova_state *state,
-+				 enum dma_data_direction dir)
-+{
-+	dma_addr_t addr;
- 	__be64 *mtt;
--	int inlen;
-+	int i;
- 
--	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
--	if (buf) {
--		struct sg_dma_page_iter dma_iter;
-+	WARN_ON_ONCE(dir == DMA_NONE);
- 
--		for_each_sgtable_dma_page(&buf->table.sgt, &dma_iter, 0)
--			*mtt++ = cpu_to_be64(
--				sg_page_iter_dma_address(&dma_iter));
-+	if (dma_use_iova(state)) {
-+		dma_iova_destroy(mdev->device, state, npages * PAGE_SIZE, dir,
-+				 0);
-+	} else {
-+		mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in,
-+					     klm_pas_mtt);
-+		for (i = npages - 1; i >= 0; i--) {
-+			addr = be64_to_cpu(mtt[i]);
-+			dma_unmap_page(mdev->device, addr, PAGE_SIZE, dir);
-+		}
- 	}
-+}
- 
--	inlen = MLX5_ST_SZ_BYTES(create_mkey_in) +
--		sizeof(__be64) * round_up(npages, 2);
-+static int register_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
-+			      struct page **page_list, u32 *mkey_in,
-+			      struct dma_iova_state *state,
-+			      enum dma_data_direction dir)
-+{
-+	dma_addr_t addr;
-+	size_t mapped = 0;
-+	__be64 *mtt;
-+	int i, err;
- 
--	return mlx5_core_create_mkey(mdev, mkey, mkey_in, inlen);
-+	WARN_ON_ONCE(dir == DMA_NONE);
-+
-+	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
-+
-+	if (dma_iova_try_alloc(mdev->device, state, 0, npages * PAGE_SIZE)) {
-+		addr = state->addr;
-+		for (i = 0; i < npages; i++) {
-+			err = dma_iova_link(mdev->device, state,
-+					    page_to_phys(page_list[i]), mapped,
-+					    PAGE_SIZE, dir, 0);
-+			if (err)
-+				goto error;
-+			*mtt++ = cpu_to_be64(addr);
-+			addr += PAGE_SIZE;
-+			mapped += PAGE_SIZE;
-+		}
-+		err = dma_iova_sync(mdev->device, state, 0, mapped);
-+		if (err)
-+			goto error;
-+	} else {
-+		for (i = 0; i < npages; i++) {
-+			addr = dma_map_page(mdev->device, page_list[i], 0,
-+					    PAGE_SIZE, dir);
-+			err = dma_mapping_error(mdev->device, addr);
-+			if (err)
-+				goto error;
-+			*mtt++ = cpu_to_be64(addr);
-+		}
-+	}
-+	return 0;
-+
-+error:
-+	unregister_dma_pages(mdev, i, mkey_in, state, dir);
-+	return err;
- }
- 
- static int mlx5vf_dma_data_buffer(struct mlx5_vhca_data_buffer *buf)
-@@ -380,98 +436,91 @@ static int mlx5vf_dma_data_buffer(struct mlx5_vhca_data_buffer *buf)
- 	if (buf->mkey_in || !buf->npages)
- 		return -EINVAL;
- 
--	ret = dma_map_sgtable(mdev->device, &buf->table.sgt, buf->dma_dir, 0);
--	if (ret)
--		return ret;
--
- 	buf->mkey_in = alloc_mkey_in(buf->npages, buf->migf->pdn);
--	if (!buf->mkey_in) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!buf->mkey_in)
-+		return -ENOMEM;
- 
--	ret = create_mkey(mdev, buf->npages, buf, buf->mkey_in, &buf->mkey);
-+	ret = register_dma_pages(mdev, buf->npages, buf->page_list,
-+				 buf->mkey_in, &buf->state, buf->dma_dir);
-+	if (ret)
-+		goto err_register_dma;
-+
-+	ret = create_mkey(mdev, buf->npages, buf->mkey_in, &buf->mkey);
- 	if (ret)
- 		goto err_create_mkey;
- 
- 	return 0;
- 
- err_create_mkey:
-+	unregister_dma_pages(mdev, buf->npages, buf->mkey_in, &buf->state,
-+			     buf->dma_dir);
-+err_register_dma:
- 	kvfree(buf->mkey_in);
- 	buf->mkey_in = NULL;
--err:
--	dma_unmap_sgtable(mdev->device, &buf->table.sgt, buf->dma_dir, 0);
- 	return ret;
- }
- 
-+static void free_page_list(u32 npages, struct page **page_list)
-+{
-+	int i;
-+
-+	/* Undo alloc_pages_bulk_array() */
-+	for (i = npages - 1; i >= 0; i--)
-+		__free_page(page_list[i]);
-+
-+	kvfree(page_list);
-+}
-+
- void mlx5vf_free_data_buffer(struct mlx5_vhca_data_buffer *buf)
- {
--	struct mlx5_vf_migration_file *migf = buf->migf;
--	struct sg_page_iter sg_iter;
-+	struct mlx5vf_pci_core_device *mvdev = buf->migf->mvdev;
-+	struct mlx5_core_dev *mdev = mvdev->mdev;
- 
--	lockdep_assert_held(&migf->mvdev->state_mutex);
--	WARN_ON(migf->mvdev->mdev_detach);
-+	lockdep_assert_held(&mvdev->state_mutex);
-+	WARN_ON(mvdev->mdev_detach);
- 
- 	if (buf->mkey_in) {
--		mlx5_core_destroy_mkey(migf->mvdev->mdev, buf->mkey);
-+		mlx5_core_destroy_mkey(mdev, buf->mkey);
-+		unregister_dma_pages(mdev, buf->npages, buf->mkey_in,
-+				     &buf->state, buf->dma_dir);
- 		kvfree(buf->mkey_in);
--		dma_unmap_sgtable(migf->mvdev->mdev->device, &buf->table.sgt,
--				  buf->dma_dir, 0);
- 	}
- 
--	/* Undo alloc_pages_bulk_array() */
--	for_each_sgtable_page(&buf->table.sgt, &sg_iter, 0)
--		__free_page(sg_page_iter_page(&sg_iter));
--	sg_free_append_table(&buf->table);
-+	free_page_list(buf->npages, buf->page_list);
- 	kfree(buf);
- }
- 
--static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
--				      unsigned int npages)
-+static int mlx5vf_add_pages(struct page ***page_list, unsigned int npages)
- {
--	unsigned int to_alloc = npages;
--	struct page **page_list;
--	unsigned long filled;
--	unsigned int to_fill;
--	int ret;
-+	unsigned int filled, done = 0;
- 	int i;
- 
--	to_fill = min_t(unsigned int, npages, PAGE_SIZE / sizeof(*page_list));
--	page_list = kvzalloc(to_fill * sizeof(*page_list), GFP_KERNEL_ACCOUNT);
--	if (!page_list)
-+	*page_list =
-+		kvcalloc(npages, sizeof(struct page *), GFP_KERNEL_ACCOUNT);
-+	if (!*page_list)
- 		return -ENOMEM;
- 
--	do {
--		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT, to_fill,
--						page_list);
--		if (!filled) {
--			ret = -ENOMEM;
-+	for (;;) {
-+		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT,
-+						npages - done,
-+						*page_list + done);
-+		if (!filled)
- 			goto err;
--		}
--		to_alloc -= filled;
--		ret = sg_alloc_append_table_from_pages(
--			&buf->table, page_list, filled, 0,
--			filled << PAGE_SHIFT, UINT_MAX, SG_MAX_SINGLE_ALLOC,
--			GFP_KERNEL_ACCOUNT);
- 
--		if (ret)
--			goto err_append;
--		buf->npages += filled;
--		/* clean input for another bulk allocation */
--		memset(page_list, 0, filled * sizeof(*page_list));
--		to_fill = min_t(unsigned int, to_alloc,
--				PAGE_SIZE / sizeof(*page_list));
--	} while (to_alloc > 0);
-+		done += filled;
-+		if (done == npages)
-+			break;
-+	}
- 
--	kvfree(page_list);
- 	return 0;
- 
--err_append:
--	for (i = filled - 1; i >= 0; i--)
--		__free_page(page_list[i]);
- err:
--	kvfree(page_list);
--	return ret;
-+	for (i = 0; i < done; i++)
-+		__free_page(*page_list[i]);
-+
-+	kvfree(*page_list);
-+	*page_list = NULL;
-+	return -ENOMEM;
- }
- 
- struct mlx5_vhca_data_buffer *
-@@ -488,10 +537,12 @@ mlx5vf_alloc_data_buffer(struct mlx5_vf_migration_file *migf, u32 npages,
- 	buf->dma_dir = dma_dir;
- 	buf->migf = migf;
- 	if (npages) {
--		ret = mlx5vf_add_migration_pages(buf, npages);
-+		ret = mlx5vf_add_pages(&buf->page_list, npages);
- 		if (ret)
- 			goto end;
- 
-+		buf->npages = npages;
-+
- 		if (dma_dir != DMA_NONE) {
- 			ret = mlx5vf_dma_data_buffer(buf);
- 			if (ret)
-@@ -1350,101 +1401,16 @@ static void mlx5vf_destroy_qp(struct mlx5_core_dev *mdev,
- 	kfree(qp);
- }
- 
--static void free_recv_pages(struct mlx5_vhca_recv_buf *recv_buf)
--{
--	int i;
--
--	/* Undo alloc_pages_bulk_array() */
--	for (i = 0; i < recv_buf->npages; i++)
--		__free_page(recv_buf->page_list[i]);
--
--	kvfree(recv_buf->page_list);
--}
--
--static int alloc_recv_pages(struct mlx5_vhca_recv_buf *recv_buf,
--			    unsigned int npages)
--{
--	unsigned int filled = 0, done = 0;
--	int i;
--
--	recv_buf->page_list = kvcalloc(npages, sizeof(*recv_buf->page_list),
--				       GFP_KERNEL_ACCOUNT);
--	if (!recv_buf->page_list)
--		return -ENOMEM;
--
--	for (;;) {
--		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT,
--						npages - done,
--						recv_buf->page_list + done);
--		if (!filled)
--			goto err;
--
--		done += filled;
--		if (done == npages)
--			break;
--	}
--
--	recv_buf->npages = npages;
--	return 0;
--
--err:
--	for (i = 0; i < npages; i++) {
--		if (recv_buf->page_list[i])
--			__free_page(recv_buf->page_list[i]);
--	}
--
--	kvfree(recv_buf->page_list);
--	return -ENOMEM;
--}
--static void unregister_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
--				 u32 *mkey_in)
--{
--	dma_addr_t addr;
--	__be64 *mtt;
--	int i;
--
--	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
--	for (i = npages - 1; i >= 0; i--) {
--		addr = be64_to_cpu(mtt[i]);
--		dma_unmap_single(mdev->device, addr, PAGE_SIZE,
--				DMA_FROM_DEVICE);
--	}
--}
--
--static int register_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
--			      struct page **page_list, u32 *mkey_in)
--{
--	dma_addr_t addr;
--	__be64 *mtt;
--	int i;
--
--	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
--
--	for (i = 0; i < npages; i++) {
--		addr = dma_map_page(mdev->device, page_list[i], 0, PAGE_SIZE,
--				    DMA_FROM_DEVICE);
--		if (dma_mapping_error(mdev->device, addr))
--			goto error;
--
--		*mtt++ = cpu_to_be64(addr);
--	}
--
--	return 0;
--
--error:
--	unregister_dma_pages(mdev, i, mkey_in);
--	return -ENOMEM;
--}
--
- static void mlx5vf_free_qp_recv_resources(struct mlx5_core_dev *mdev,
- 					  struct mlx5_vhca_qp *qp)
- {
- 	struct mlx5_vhca_recv_buf *recv_buf = &qp->recv_buf;
- 
- 	mlx5_core_destroy_mkey(mdev, recv_buf->mkey);
--	unregister_dma_pages(mdev, recv_buf->npages, recv_buf->mkey_in);
-+	unregister_dma_pages(mdev, recv_buf->npages, recv_buf->mkey_in,
-+			     &recv_buf->state, DMA_FROM_DEVICE);
- 	kvfree(recv_buf->mkey_in);
--	free_recv_pages(&qp->recv_buf);
-+	free_page_list(recv_buf->npages, recv_buf->page_list);
- }
- 
- static int mlx5vf_alloc_qp_recv_resources(struct mlx5_core_dev *mdev,
-@@ -1455,10 +1421,12 @@ static int mlx5vf_alloc_qp_recv_resources(struct mlx5_core_dev *mdev,
- 	struct mlx5_vhca_recv_buf *recv_buf = &qp->recv_buf;
- 	int err;
- 
--	err = alloc_recv_pages(recv_buf, npages);
--	if (err < 0)
-+	err = mlx5vf_add_pages(&recv_buf->page_list, npages);
-+	if (err)
- 		return err;
- 
-+	recv_buf->npages = npages;
-+
- 	recv_buf->mkey_in = alloc_mkey_in(npages, pdn);
- 	if (!recv_buf->mkey_in) {
- 		err = -ENOMEM;
-@@ -1466,24 +1434,25 @@ static int mlx5vf_alloc_qp_recv_resources(struct mlx5_core_dev *mdev,
- 	}
- 
- 	err = register_dma_pages(mdev, npages, recv_buf->page_list,
--				 recv_buf->mkey_in);
-+				 recv_buf->mkey_in, &recv_buf->state,
-+				 DMA_FROM_DEVICE);
- 	if (err)
- 		goto err_register_dma;
- 
--	err = create_mkey(mdev, npages, NULL, recv_buf->mkey_in,
--			  &recv_buf->mkey);
-+	err = create_mkey(mdev, npages, recv_buf->mkey_in, &recv_buf->mkey);
- 	if (err)
- 		goto err_create_mkey;
- 
- 	return 0;
- 
- err_create_mkey:
--	unregister_dma_pages(mdev, npages, recv_buf->mkey_in);
-+	unregister_dma_pages(mdev, npages, recv_buf->mkey_in, &recv_buf->state,
-+			     DMA_FROM_DEVICE);
- err_register_dma:
- 	kvfree(recv_buf->mkey_in);
- 	recv_buf->mkey_in = NULL;
- end:
--	free_recv_pages(recv_buf);
-+	free_page_list(npages, recv_buf->page_list);
- 	return err;
- }
- 
-diff --git a/drivers/vfio/pci/mlx5/cmd.h b/drivers/vfio/pci/mlx5/cmd.h
-index 25dd6ff54591..d7821b5ca772 100644
---- a/drivers/vfio/pci/mlx5/cmd.h
-+++ b/drivers/vfio/pci/mlx5/cmd.h
-@@ -53,7 +53,8 @@ struct mlx5_vf_migration_header {
- };
- 
- struct mlx5_vhca_data_buffer {
--	struct sg_append_table table;
-+	struct page **page_list;
-+	struct dma_iova_state state;
- 	loff_t start_pos;
- 	u64 length;
- 	u32 npages;
-@@ -63,10 +64,6 @@ struct mlx5_vhca_data_buffer {
- 	u8 stop_copy_chunk_num;
- 	struct list_head buf_elm;
- 	struct mlx5_vf_migration_file *migf;
--	/* Optimize mlx5vf_get_migration_page() for sequential access */
--	struct scatterlist *last_offset_sg;
--	unsigned int sg_last_entry;
--	unsigned long last_offset;
- };
- 
- struct mlx5vf_async_data {
-@@ -133,6 +130,7 @@ struct mlx5_vhca_cq {
- struct mlx5_vhca_recv_buf {
- 	u32 npages;
- 	struct page **page_list;
-+	struct dma_iova_state state;
- 	u32 next_rq_offset;
- 	u32 *mkey_in;
- 	u32 mkey;
-@@ -224,8 +222,17 @@ struct mlx5_vhca_data_buffer *
- mlx5vf_get_data_buffer(struct mlx5_vf_migration_file *migf, u32 npages,
- 		       enum dma_data_direction dma_dir);
- void mlx5vf_put_data_buffer(struct mlx5_vhca_data_buffer *buf);
--struct page *mlx5vf_get_migration_page(struct mlx5_vhca_data_buffer *buf,
--				       unsigned long offset);
-+static inline struct page *
-+mlx5vf_get_migration_page(struct mlx5_vhca_data_buffer *buf,
-+			  unsigned long offset)
-+{
-+	int page_entry = offset / PAGE_SIZE;
-+
-+	if (page_entry >= buf->npages)
-+		return NULL;
-+
-+	return buf->page_list[page_entry];
-+}
- void mlx5vf_state_mutex_unlock(struct mlx5vf_pci_core_device *mvdev);
- void mlx5vf_disable_fds(struct mlx5vf_pci_core_device *mvdev,
- 			enum mlx5_vf_migf_state *last_save_state);
-diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
-index 83247f016441..c528932e5739 100644
---- a/drivers/vfio/pci/mlx5/main.c
-+++ b/drivers/vfio/pci/mlx5/main.c
-@@ -34,37 +34,6 @@ static struct mlx5vf_pci_core_device *mlx5vf_drvdata(struct pci_dev *pdev)
- 			    core_device);
- }
- 
--struct page *
--mlx5vf_get_migration_page(struct mlx5_vhca_data_buffer *buf,
--			  unsigned long offset)
--{
--	unsigned long cur_offset = 0;
--	struct scatterlist *sg;
--	unsigned int i;
--
--	/* All accesses are sequential */
--	if (offset < buf->last_offset || !buf->last_offset_sg) {
--		buf->last_offset = 0;
--		buf->last_offset_sg = buf->table.sgt.sgl;
--		buf->sg_last_entry = 0;
--	}
--
--	cur_offset = buf->last_offset;
--
--	for_each_sg(buf->last_offset_sg, sg,
--			buf->table.sgt.orig_nents - buf->sg_last_entry, i) {
--		if (offset < sg->length + cur_offset) {
--			buf->last_offset_sg = sg;
--			buf->sg_last_entry += i;
--			buf->last_offset = cur_offset;
--			return nth_page(sg_page(sg),
--					(offset - cur_offset) / PAGE_SIZE);
--		}
--		cur_offset += sg->length;
--	}
--	return NULL;
--}
--
- static void mlx5vf_disable_fd(struct mlx5_vf_migration_file *migf)
- {
- 	mutex_lock(&migf->lock);
--- 
-2.47.0
+> Documentation/devicetree/bindings/pci/pci.txt says a Root Port
+> should include a reg property that contains the bus/device/function
+> number of the RP, e.g.,
+> Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt has
+> this:
+> 
+>   pcie-controller@3000 {
+>      compatible = "nvidia,tegra30-pcie";
+>      pci@1,0 {
+>        reg = <0x000800 0 0 0 0>;
+>      };
+> 
+> where the "0x000800 0 0 0 0" means the "pci@1,0" Root Port is at
+> 00:01.0 (bus 00, device 01, function 0).  I don't know what the "@1,0"
+> part means.
+> 
+> > And with this change, I can drop the “pcie-port”property and use the port
+> > name to figure out the port number, right?
+> 
+> Seems likely to me.
+
+I don't think device 1 would be the correct address. The RP is almost 
+always device 0.
+
+I think instead the 'syscon-pcie-ctrl' should perhaps be modeled as a 
+phy with the phy binding. Then the host bridge node can have 1 or 2 phy 
+entries depending on if the host uses 1 or 2 links. And the 2nd host 
+should have 'status = "disabled";' when it is not used.
+
+Or perhaps just 'num-lanes' would be enough.
+
+Rob
 
 
