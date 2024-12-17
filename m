@@ -1,251 +1,238 @@
-Return-Path: <linux-pci+bounces-18644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18645-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 827609F4EEF
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 16:11:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 277B69F4FA2
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 16:37:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B55D7A5FD0
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 15:10:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1F551883DC9
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 15:37:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5DB1F707B;
-	Tue, 17 Dec 2024 15:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE3C1F7545;
+	Tue, 17 Dec 2024 15:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNIyrSc2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fTHeZfZ0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC5A1F4E3D;
-	Tue, 17 Dec 2024 15:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88C61F755A;
+	Tue, 17 Dec 2024 15:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734448242; cv=none; b=Mxg2SaZrhlnCv+ZEd/uy/WaTVlcphjYfXQ2pP1gk12HCFeUK089YMF8iW1LEpOCrkxqmnxMBQIEvWdxbUv8zrYKZz3EIfS0xRi1vJ9W0aoA6NCeW6VIh6VDS3GswhhrixCh+hh61EeRvCHKEJoz4OyH9RMMFDuiOzOk93r0ip9Q=
+	t=1734449821; cv=none; b=QPFNQ+CLjCwu6hSNX4fbKxlrEDPithuFH0Qz2vjXLYnoGfZFUYA4n46s/1XEyxKhPy1VeJDRdj1eSiIyOg8LBCCk3yj/ocxlqFgQ+YdUp8a+dI5yREiKxfjA3UC/baAgZaHBKTecEDEoM8xUeCAZ40Bq65OGEJ/aZxrw3tfxv40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734448242; c=relaxed/simple;
-	bh=LMggsVzwN2kSgQEeNn/tSwOxtfN7qlhVoAGwYEYNS38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tG5jKnskXWaQ7NLfb4tGl6Py6qmpKEpdd6tHq2FjT9A58ipvCgh6VlC7but/SQXX5PmmL2DMXdTnMtOPJkfZIvJqAy34wDaZHmbCAE4U/is/P7Lrs7KXf3iiCgRIQYavE1rzR2UMCbJXUx2nK3SGuuBroJR1l8DNSL3PuR7vsM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNIyrSc2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067EFC4CED3;
-	Tue, 17 Dec 2024 15:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734448242;
-	bh=LMggsVzwN2kSgQEeNn/tSwOxtfN7qlhVoAGwYEYNS38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qNIyrSc2aX9d1rpbFx95IRXM2YtR+wHhrtZmr22cOrRrLxHib1f9ZkuCtfVhh/SX5
-	 PUmzDdiSn/5KjRRcv6rbnzefMGe0Nx+Poxg1S3I8EsQ+tV8/IsaXQXQ6IpXeck4aek
-	 ba0YLq0tgi59lJri764pVgBH2Zjnu+UPPW3F2yNSMEhs1DkL8gGi4GuoHlZSBGiFbp
-	 fYt4f75nRAaLJ4clI7KDh8KVqtGelmXEOM4BrKR9cYfa8bLluvmMTFIyXu+lPhRYyp
-	 aa3XcsOvp2PzU0VNH8Br4xDJExbIyoOMYhczhZzHKm6NoqJDTkRT+NUCB71DfQkNpb
-	 +W0m90T4RcnKg==
-Date: Tue, 17 Dec 2024 09:10:40 -0600
-From: Rob Herring <robh@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jingoohan1@gmail.com, michal.simek@amd.com,
-	bharat.kumar.gogada@amd.com
-Subject: Re: [RESEND PATCH v5 2/3] dt-bindings: PCI: amd-mdb: Add AMD Versal2
- MDB PCIe Root Port Bridge
-Message-ID: <20241217151040.GA1667241-robh@kernel.org>
-References: <20241213064035.1427811-1-thippeswamy.havalige@amd.com>
- <20241213064035.1427811-3-thippeswamy.havalige@amd.com>
+	s=arc-20240116; t=1734449821; c=relaxed/simple;
+	bh=7khA5JcW71av4ThxWlBfqu2rJHa/l8SiGW54wOk9rwk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Enu8sBEWrAMurzvI8S/ozXLexrJ0ljwWpqqSQAo0BjLm/a0HKLDXksUCIDLHwqXERF522YTosfFT78dKm76A74UOCrPd9Vl8KNZr0bAi6Toj5yZPiF+flgacvAaEwNVISTZbJC6u0ggML3QpaVV4KJRMQNf5HAAwDqWwFAPbBuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fTHeZfZ0; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734449819; x=1765985819;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=7khA5JcW71av4ThxWlBfqu2rJHa/l8SiGW54wOk9rwk=;
+  b=fTHeZfZ0N9FTINozhz8VYuNpeLduDCJx9SslvjxNS2rHYeWYGLYRuSO/
+   q3p6lvIjmv3bchNp9xlkZtRrSbseiuY4PESGmSbOyr0/V4jBhePTkKjPn
+   cJgN8FebbBiimyN3AXApXGEJV8WpVimeUTl83hubQlP1sbJMtf6JLvSGH
+   9C6IGAMzDa/2utKKPBtx/c1Kukljmr4KvuX+V7WTp5GbstpkEnifgTCCh
+   jURNws+43qs5nwEh6Crz++xHEenqUtXyD9K0b4gbhSSmzXnTh9YoH8nUa
+   9d9sXEpIFli1UukrrCBdDCtMZ/7rJwAnDLy4ZLMNVPnx3HQwtQ2lRwG/+
+   A==;
+X-CSE-ConnectionGUID: mjLerT0eSdKMquSFyDJrrQ==
+X-CSE-MsgGUID: oLQfZGteR2GgeH5htaMFqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34610194"
+X-IronPort-AV: E=Sophos;i="6.12,242,1728975600"; 
+   d="scan'208";a="34610194"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 07:36:59 -0800
+X-CSE-ConnectionGUID: d6hHN4FZStOIlMxhNlCMqQ==
+X-CSE-MsgGUID: wtU0e46sQ9m3H9Ev2SV1bA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,242,1728975600"; 
+   d="scan'208";a="97457037"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 07:36:56 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 17 Dec 2024 17:36:51 +0200 (EET)
+To: Bjorn Helgaas <bhelgaas@google.com>
+cc: linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v7 6/8] PCI: Add TLP Prefix reading into
+ pcie_read_tlp_log()
+In-Reply-To: <20241217135358.9345-7-ilpo.jarvinen@linux.intel.com>
+Message-ID: <9fa49c5d-4939-db48-c815-ccb496c82d0b@linux.intel.com>
+References: <20241217135358.9345-1-ilpo.jarvinen@linux.intel.com> <20241217135358.9345-7-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241213064035.1427811-3-thippeswamy.havalige@amd.com>
+Content-Type: multipart/mixed; boundary="8323328-798945083-1734449811=:924"
 
-On Fri, Dec 13, 2024 at 12:10:34PM +0530, Thippeswamy Havalige wrote:
-> Add AMD Versal2 MDB (Multimedia DMA Bridge) PCIe Root Port Bridge.
-> 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-798945083-1734449811=:924
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 17 Dec 2024, Ilpo J=C3=A4rvinen wrote:
+
+> pcie_read_tlp_log() handles only 4 Header Log DWORDs but TLP Prefix Log
+> (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
+>=20
+> Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
+> TLP Prefix Log. The relevant registers are formatted identically in AER
+> and DPC Capability, but has these variations:
+>=20
+> a) The offsets of TLP Prefix Log registers vary.
+> b) DPC RP PIO TLP Prefix Log register can be < 4 DWORDs.
+> c) AER TLP Prefix Log Present (PCIe r6.1 sec 7.8.4.7) can indicate
+>    Prefix Log is not present.
+>=20
+> Therefore callers must pass the offset of the TLP Prefix Log register
+> and the entire length to pcie_read_tlp_log() to be able to read the
+> correct number of TLP Prefix DWORDs from the correct offset.
+>=20
+> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> Changes in v2:
-> -------------
-> - Modify patch subject.
-> - Add pcie host bridge reference.
-> - Modify filename as per compatible string.
-> - Remove standard PCI properties.
-> - Modify interrupt controller description.
-> - Indentation
-> 
-> Changes in v3:
-> -------------
-> - Modified SLCR to lower case.
-> - Add dwc schemas.
-> - Remove common properties.
-> - Move additionalProperties below properties.
-> - Remove ranges property from required properties.
-> - Drop blank line.
-> - Modify pci@ to pcie@
-> 
-> Changes in v4:
-> -------------
-> - None.
-> 
-> Changes in v5:
-> -------------
-> - None.
-> ---
->  .../bindings/pci/amd,versal2-mdb-host.yaml    | 121 ++++++++++++++++++
-> ---
->  .../bindings/pci/amd,versal2-mdb-host.yaml    | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> new file mode 100644
-> index 000000000000..c319adeeee66
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> @@ -0,0 +1,121 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/amd,versal2-mdb-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AMD Versal2 MDB(Multimedia DMA Bridge) Host Controller
-> +
-> +maintainers:
-> +  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: amd,versal2-mdb-host
-> +
-> +  reg:
-> +    items:
-> +      - description: MDB PCIe controller 0 SLCR
-> +      - description: configuration region
-> +      - description: data bus interface
-> +      - description: address translation unit register
-> +
-> +  reg-names:
-> +    items:
-> +      - const: mdb_pcie_slcr
-> +      - const: config
-> +      - const: dbi
-> +      - const: atu
-> +
-> +  ranges:
-> +    maxItems: 2
-> +
-> +  msi-map:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - const: 0
-> +      - const: 0
-> +      - const: 0
-> +      - const: 7
-> +
-> +  interrupt-map:
-> +    maxItems: 4
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-controller:
-> +    description: identifies the node as an interrupt controller
-> +    type: object
-> +    additionalProperties: false
-> +    properties:
-> +      interrupt-controller: true
-> +
-> +      "#address-cells":
-> +        const: 0
-> +
-> +      "#interrupt-cells":
-> +        const: 1
-> +
-> +    required:
-> +      - interrupt-controller
-> +      - "#address-cells"
-> +      - "#interrupt-cells"
-> +
-> +required:
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +  - msi-map
-> +  - "#interrupt-cells"
-> +  - interrupt-controller
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        pcie@ed931000 {
-> +            compatible = "amd,versal2-mdb-host";
-> +            reg = <0x0 0xed931000 0x0 0x2000>,
-> +                  <0x1000 0x100000 0x0 0xff00000>,
-> +                  <0x1000 0x0 0x0 0x100000>,
+>  drivers/pci/pci.h             |  5 +++-
+>  drivers/pci/pcie/aer.c        |  5 +++-
+>  drivers/pci/pcie/dpc.c        | 13 +++++----
+>  drivers/pci/pcie/tlp.c        | 50 +++++++++++++++++++++++++++++++----
+>  include/linux/aer.h           |  1 +
+>  include/uapi/linux/pci_regs.h | 10 ++++---
+>  6 files changed, 66 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 55fcf3bac4f7..7797b2544d00 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -550,7 +550,9 @@ struct aer_err_info {
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *=
+info);
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> =20
+> -int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_lo=
+g *log);
+> +int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+> +=09=09      unsigned int tlp_len, struct pcie_tlp_log *log);
+> +unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
+>  #endif=09/* CONFIG_PCIEAER */
+> =20
+>  #ifdef CONFIG_PCIEPORTBUS
+> @@ -569,6 +571,7 @@ void pci_dpc_init(struct pci_dev *pdev);
+>  void dpc_process_error(struct pci_dev *pdev);
+>  pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
+>  bool pci_dpc_recovered(struct pci_dev *pdev);
+> +unsigned int dpc_tlp_log_len(struct pci_dev *dev);
+>  #else
+>  static inline void pci_save_dpc_state(struct pci_dev *dev) { }
+>  static inline void pci_restore_dpc_state(struct pci_dev *dev) { }
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 80c5ba8d8296..656dbf1ac45b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1248,7 +1248,10 @@ int aer_get_device_error_info(struct pci_dev *dev,=
+ struct aer_err_info *info)
+> =20
+>  =09=09if (info->status & AER_LOG_TLP_MASKS) {
+>  =09=09=09info->tlp_header_valid =3D 1;
+> -=09=09=09pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG, &info->tlp);
+> +=09=09=09pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG,
+> +=09=09=09=09=09  aer + PCI_ERR_PREFIX_LOG,
+> +=09=09=09=09=09  aer_tlp_log_len(dev, aercc),
+> +=09=09=09=09=09  &info->tlp);
+>  =09=09}
+>  =09}
+> =20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 2b6ef7efa3c1..7933b3cedb59 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -190,7 +190,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+>  static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+>  {
+>  =09u16 cap =3D pdev->dpc_cap, dpc_status, first_error;
+> -=09u32 status, mask, sev, syserr, exc, log, prefix;
+> +=09u32 status, mask, sev, syserr, exc, log;
+>  =09struct pcie_tlp_log tlp_log;
+>  =09int i;
+> =20
+> @@ -217,20 +217,19 @@ static void dpc_process_rp_pio_error(struct pci_dev=
+ *pdev)
+> =20
+>  =09if (pdev->dpc_rp_log_size < 4)
+>  =09=09goto clear_status;
+> -=09pcie_read_tlp_log(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG, &tlp_log=
+);
+> +=09pcie_read_tlp_log(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG,
+> +=09=09=09  cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG,
+> +=09=09=09  dpc_tlp_log_len(pdev), &tlp_log);
+>  =09pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
+>  =09=09tlp_log.dw[0], tlp_log.dw[1], tlp_log.dw[2], tlp_log.dw[3]);
+> +=09for (i =3D 0; i < pdev->dpc_rp_log_size - 5; i++)
+> +=09=09pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, tlp_log.pref=
+ix[i]);
+> =20
+>  =09if (pdev->dpc_rp_log_size < 5)
+>  =09=09goto clear_status;
+>  =09pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &lo=
+g);
+>  =09pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
+> =20
+> -=09for (i =3D 0; i < pdev->dpc_rp_log_size - 5; i++) {
+> -=09=09pci_read_config_dword(pdev,
+> -=09=09=09cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
+> -=09=09pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
+> -=09}
+>   clear_status:
+>  =09pci_write_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, status)=
+;
+>  }
+> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> index 65ac7b5d8a87..0c4bf6a50d7e 100644
+> --- a/drivers/pci/pcie/tlp.c
+> +++ b/drivers/pci/pcie/tlp.c
+> @@ -11,26 +11,66 @@
+> =20
+>  #include "../pci.h"
+> =20
+> +/**
+> + * aer_tlp_log_len - Calculates AER Capability TLP Header/Prefix Log len=
+gth
+> + * @dev: PCIe device
+> + *
+> + * Return: TLP Header/Prefix Log length
+> + */
+> +unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc)
 
-DBI space is 1MB? Last I checked, there's less than 4KB worth of 
-registers.
+Hmpf, it seems I forgot to move the @aercc kerneldoc from Flit mode series=
+=20
+patch were it was originally added to here when I needed aercc to the
+PCI_ERR_CAP_PREFIX_LOG_PRESENT check.
 
-The address looks odd. The config space is purely iATU configuration. 
-Really, we should have described the entire address space (like the 
-endpoint) available to the ATU. So the 1MB offset in the base 
-address seems like just that. Most h/w design to cut down signal 
-routing would put the base address for the ATU input at something 
-aligned greater than the size of the address space. 
+I'll send an update in a day or two.
 
-> +                  <0x0 0xed860000 0x0 0x2000>;
+> +{
+> +=09return 4 + (aercc & PCI_ERR_CAP_PREFIX_LOG_PRESENT) ?
+> +=09=09   dev->eetlp_prefix_max : 0;
+> +}
 
-And then the DBI and ATU registers are nowhere near each other? 
-Possible, but seems odd.
-
-> +            reg-names = "mdb_pcie_slcr", "config", "dbi", "atu";
-> +            ranges = <0x2000000 0x00 0xa8000000 0x00 0xa8000000 0x00 0x10000000>,
-> +                     <0x43000000 0x1100 0x00 0x1100 0x00 0x00 0x1000000>;
-> +            interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-parent = <&gic>;
-> +            interrupt-map-mask = <0 0 0 7>;
-> +            interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
-> +                            <0 0 0 2 &pcie_intc_0 1>,
-> +                            <0 0 0 3 &pcie_intc_0 2>,
-> +                            <0 0 0 4 &pcie_intc_0 3>;
-> +            msi-map = <0x0 &gic_its 0x00 0x10000>;
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            #interrupt-cells = <1>;
-> +            device_type = "pci";
-> +            pcie_intc_0: interrupt-controller {
-> +                #address-cells = <0>;
-> +                #interrupt-cells = <1>;
-> +                interrupt-controller;
-> +           };
-> +        };
-> +    };
-> -- 
-> 2.34.1
-> 
+--
+ i.
+--8323328-798945083-1734449811=:924--
 
