@@ -1,233 +1,425 @@
-Return-Path: <linux-pci+bounces-18638-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18639-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A49F59F4D64
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 15:15:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3A889F4DEE
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 15:37:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 981A51881283
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 14:14:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AA2E18884C5
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 14:35:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEFA21F7090;
-	Tue, 17 Dec 2024 14:12:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DA801F428B;
+	Tue, 17 Dec 2024 14:35:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Gbn0TlCl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8iSMH60"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2041.outbound.protection.outlook.com [40.107.96.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24F11F7540;
-	Tue, 17 Dec 2024 14:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734444750; cv=fail; b=BEsT1e9r7MohsWpNhd4CZSchyH7tEVB4ljdYG7TmMi0/YP9dYR5BKWt0aWvZqLQp/YvRdWgfYI3EQXCnvsRqugOXp+RSOxoOI7A+MBTB5cKSZPq5MvRQ60Td1GPhQIXM2/rljpnw6SsAdhQHczKmar/wmNtOr8CxE/z4XH1iIs0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734444750; c=relaxed/simple;
-	bh=ja2zL3Y8cEljPM91/8QgKb5q/QNAjoToMvamc/MMlxg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=l/V+TwjCDfGXEK7ZihZmTNZd4BQcJ6DEZwhFH1tFjlWMSIPqv+V8BZ2KiiAG0sl2bmRUemlHN4mwKPeCkshi+umvvNlcNwofeOsehwkS6QPQXKdmowjQo132FzFn2XKCADMsMEbg7mtp7fRKmZwUn2KvzFe6QNKs6OFFlxFnqP8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Gbn0TlCl; arc=fail smtp.client-ip=40.107.96.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k47Cl3Gzq9MgtL+lv+9GNJJVV1YICA4PYPK+uDUPrfSVzOpVWtD79ZqgV8A+6yFG4J2vkXX6V9cNpQZY5T8LbOoGtnq7xREbalwHcrLi5TxBON0k3KwZjGKOpiHT21Ct8GrhJG90rn5CgG+DUPYLMasJEwdRTXFRwfgW+cq6qnJzggp4yYTpi60m3rErzBdsuA4gfMzGmVWJUoXS7QGOmWuuW9LcnaGOXXBshGKo5J9HOwfVcKtKatbnbUaaNwV2N68o7wNbzOzF2mFc6uiGdI6xF5SEafyogmSZEpUS9K3V3LdQLUFXEFjLgUw8nuL+Vd5KdY7p9fMMS71UKt0gbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I0uk2U/8pBxjqqhxJFJnvwZCbTt+Fztca45yAbu+2Ao=;
- b=hX27po3QHkbH9xg9l+BiopmGdG9gl6/UQ77EnJgJGgPbqqSM8Gz1O/v6bI4ZR+GfhOYzQhAynR6BZEYNBJoC+Jxh6fe8Wp/KZXoeuHOj01351BhQyhC4s4MJr2oPh6Nsq6xrwEz/OhAIfohiccLekgbKE8Q0nWeIHz2OzE7LDuzEzfz1XdczL42W46h7w2yWKZFgAI0pYIyM0O/s4gQH+LfukUgnJuyRCF/0KXsNY96fcDf1ec1338DKd4lQMo4z8DVMz2/7M/hsUAqrpmIy4hV/5njm9cRSVosVVC8XanCtueV6Dhd9OH5GA2A+goDN3qrjDiLlpAG5qv5Yh42Kjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0uk2U/8pBxjqqhxJFJnvwZCbTt+Fztca45yAbu+2Ao=;
- b=Gbn0TlCl+k3cwHtqovrU6I2YJ0D8q6Hlf2rpZWIUL9f1ibXZCX3TAXIJxfu625LuytTD7V7pOI0aQvqeWH3bhQPvbJmc9RFnsY2v0BJx3CDxgcuvEdru6gxX++iyeraU39Prwn+uVEbML3YpJUVdjv/kAIyOonxVSGwFW5nKjfs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
- CY5PR12MB6456.namprd12.prod.outlook.com (2603:10b6:930:34::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8251.21; Tue, 17 Dec 2024 14:12:24 +0000
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::c48a:6eaf:96b0:8405]) by DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::c48a:6eaf:96b0:8405%5]) with mapi id 15.20.8272.005; Tue, 17 Dec 2024
- 14:12:24 +0000
-Message-ID: <87e0a55c-447b-4fc3-a391-e2c2ea9b8e81@amd.com>
-Date: Tue, 17 Dec 2024 08:12:21 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Avoid putting some root ports into D3 on some
- Ryzen chips
-To: Werner Sembach <wse@tuxedocomputers.com>,
- Richard Hughes <richard@hughsie.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Richard Hughes <hughsient@gmail.com>, ggo@tuxedocomputers.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241209193614.535940-1-wse@tuxedocomputers.com>
- <215cd12e-6327-4aa6-ac93-eac2388e7dab@amd.com>
- <23c6140b-946e-4c63-bba4-a7be77211948@tuxedocomputers.com>
- <823c393d-49f6-402b-ae8b-38ff44aeabc4@amd.com>
- <2b38ea7b-d50e-4070-80b6-65a66d460152@tuxedocomputers.com>
- <e0ee3415-4670-4c0c-897a-d5f70e0f65eb@amd.com>
- <6a809349-016a-42bf-b139-544aeec543aa@tuxedocomputers.com>
- <20cfa4ed-d25d-4881-81b9-9f1698efe9ff@amd.com>
- <vVLu9MdNWVCG96sN3xqjkmMVQpr_1iu61hX0w0q5dSQtFBi9ERc3b6hSoCjobPSTNgkIp3PBheheyUlayhMeQjShsx62zNqxWnPsrHt-xaM=@hughsie.com>
- <2b762f16-fe50-4dec-8f3f-dfe21977d807@tuxedocomputers.com>
- <C9ewaxwQKbro-b58prMr4pYnBsbGXBokgIk3OMYfT2OTCUPqSKeabS2ED02pN44ukBu88wjq1JCzyc4Rb9KHK5qce8L1WufgA27O3NKmTvA=@hughsie.com>
- <6c5eb555-4642-42ef-8e4d-9c0c61292ba8@tuxedocomputers.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <6c5eb555-4642-42ef-8e4d-9c0c61292ba8@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0077.namprd04.prod.outlook.com
- (2603:10b6:806:121::22) To DS7PR12MB6095.namprd12.prod.outlook.com
- (2603:10b6:8:9c::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E581F239E
+	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 14:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734446135; cv=none; b=iwEANPoVL1Rz3szkJQU7cYqpwdgQuANXJ3VZE2JIbrs1AVUvzwcTNvWbeaeCAfZV/giayOzNLBxVjDkTzOUp+6LtPIIezN4SN5Q2Z0u4IsJKmwl9asL9vNFl2JIdjLjYdENeCa7FYW1cPNPpuVNnBJpon93oy6ybmwjNGcrfG8Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734446135; c=relaxed/simple;
+	bh=DIznGnkD+cJkT6D4uFZk4PFQcwNNI1dPTclUv+wTHsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qj1Ae4a70R6QfDs8wFMKWPwWwmicuJKBJp1IHTyJ2IOyCjoQR3MSBsSmz6GwLhyE3/ecOfS8xzR9X4p0rKvAC0ygRoOA+GVjLjn/7At2Ia28Mme8AbcSqAAitjQtaNR8qnJvA5H0RKTOrj1qyTNXGcqUZuxgvj/4iKHcSH/eOPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8iSMH60; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C007C4CED3;
+	Tue, 17 Dec 2024 14:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734446135;
+	bh=DIznGnkD+cJkT6D4uFZk4PFQcwNNI1dPTclUv+wTHsk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y8iSMH60BxhEKFfWuK2qQ1/VdCBNC8/Uk5bOHNPcp3nlRfNMHJTclOpFLNznUsS90
+	 Z+48iO3vMWVPpe5rbwydryUDjgbXdFQ5UjnRLnZWPD/+DWLi4VUgaieiRLbwFa36+f
+	 eJG6RcOGDTnAYHJFDVvnBlpstPqCY1hdzDd+Rgzk8YP4Lbbrm9FtAxt/TsacSUDvPL
+	 2od15LNXLs6Q9OgF1PVl3msw6M69jMY/WRp7Pp52vSQe6Cna4o/doPMn65n24fehhy
+	 35YQHE58NqzhhjFjCMCGSRp1CUSS4VuHnZUsxWin5qrUjnYmDHZEz+AdB/3sSWkujr
+	 DA7CVnfm3A+0A==
+Message-ID: <4015e54a-54a5-4ac7-ae1c-3d2fb935b20f@kernel.org>
+Date: Tue, 17 Dec 2024 06:35:33 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|CY5PR12MB6456:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9a69380-a667-43b8-acac-08dd1ea4d459
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y0ZEam95dFEwT3FBQ3RzMnVNaWlCZXpURkpabE5zQ3FzTW5jMGR4aERJcVhw?=
- =?utf-8?B?dGd4ejM5Y0xsM1lYdk1RU0g1Z0dsUERPa3VOUnVOa0dHWkNsd3YvR3AybHFO?=
- =?utf-8?B?OWxhSTFjam5QM0Z4em5Xcy9IcWZSNXZRNndzR3IyajN2Y3BOR0xNVmZFbzJG?=
- =?utf-8?B?RmNMaTNlcWp5YTIxaFhJVVVUbG15SWtNTGpiTmtqMWZLRnFqa0FRZmhuYnBJ?=
- =?utf-8?B?dGFjVVJXLzRGRDdBZ05DSnN3UzlkOWQ4NjJsdHYrWWg1Y0MzUmdyaDExSjNO?=
- =?utf-8?B?K2NjaEhuTGl1dENYRE9nMjBMejNOSU5EVmpvQUZxTW1DMk1TRTQxZDdwd0ND?=
- =?utf-8?B?T01tVXZIMVVxRjNONmdYb3lSZG9mMDRFSmU5QkVxdkhDU0orTS9qMi9UK255?=
- =?utf-8?B?OUMxWWptZGRBREhFSEcwdTFtd00wWnA2WmtheUhudXQrOHdCREJMWFhPR1p2?=
- =?utf-8?B?VE1wMjRnRHI1dk1VblhwQmVGWngyY3dFZkNoK2Q0K1RLZFBTbGpEa0RmYUhw?=
- =?utf-8?B?UVNiSU9nTDJWdEl5Vm15cENxWkxSU3BXK1VodkpUMStjVW5tS0wvUGVQL1N5?=
- =?utf-8?B?S2R4bW9YRFdOV2xMYzhNMDVyc2xpQWlzd25laFEyd0FDOUdpemNtekIwOERa?=
- =?utf-8?B?WXlWaG5BWFR5MzNaVkcxeEV3YXNRb29KWHdKYnlXNjBydU1zQThyUVh2VGdI?=
- =?utf-8?B?NTREbDVxY0dVdTN2eDQ3eWRURTdNUURXcG5lSUtNdHRvNUFUTFYrZ3lSbWdJ?=
- =?utf-8?B?ZEpsaWJWWFMyYlNhcXYrQWpxemFTL1ZudDZNWFFneThrVEF3bnI4OEtiU1E2?=
- =?utf-8?B?TmFjT2JWTTd0NmVxbnFKTzM5cTRwdGZXNkRpN1QwK0lUTEwydHNMNjNLcytH?=
- =?utf-8?B?RzNQNllkY01QVS9QTVVtOXp2dXV4MFN0M09DUGVxWXErQnZGVFo4aHh4VHlW?=
- =?utf-8?B?WnV5dXNUNmdRQ21YVitra1RIOTdONW9vakVFVmpCblNNenZ1NEZkdHFZbUVS?=
- =?utf-8?B?Rk9PbFhzb2NvVVdNOTNGdEJ5anVyeVEyazdKNWxINEZJOThjT29sVXBMa1Zh?=
- =?utf-8?B?VHQ4US9KNzE1dS91MUlxa21LTDhYWFRVc2YwWHNXSWZlMGxSMGd3U2NGbTh0?=
- =?utf-8?B?WWtZaFFJUlZ1RVdwRWo2c21KMjZBN3lWZGdRWXJWVGJOSkZtTFJWTzZ3WStG?=
- =?utf-8?B?eC9TcVVRMFZBandUSEl1R3lkL3dzWXdGdHFYSXMwM1VmWFgzZ2p5SEFUTUVw?=
- =?utf-8?B?UVdjRkxsTnVtRlE1WDNqQnN4L29GS0tUUG1wZURicmx2bllLa2VRK2NNWTYz?=
- =?utf-8?B?UVYvRUFVRUcwZThvak1DTFlrZllTSTdUTkhzcHg1eExrN2EzNWdNakJHM3hZ?=
- =?utf-8?B?TjBYVDVpQVlWbS8yNVo2aHRtZk5iSVhRMGVRb3BhZ3c4WUlSNWtOSDhpeU1N?=
- =?utf-8?B?VCtDOE8wb2RUSkJVSVozWVFoR0JvK24xMlZ6NTZhRys1Wm5PTS9vczVmMk52?=
- =?utf-8?B?Mjd4UEhBNHBiR0lLV1czL3lRM3VtMkw5bytYNGFQaEIzRnRTS1V3K2xMTUFJ?=
- =?utf-8?B?WkljOXZIRTA2RkdlS1Mwd29nTVdaa096ZGdKOE5ydnZic1JXZHlaWDZScGhV?=
- =?utf-8?B?YXhxUnQ0a3l1VThQbTFrTHM0REhPUjZHcDltTFFETDdEYTM3ZTJQT29WY21V?=
- =?utf-8?B?R0hmQVN6YUtQNE8yVmZEem5qSFY0VHY3cFdyUThqNmhIOFc1ME9zOGtDeUZB?=
- =?utf-8?B?WVY2VHZrYkV5ejVuZk1od2NManZNN3UvVjNUVk5JQlBIWmo4c29MZmRQd1JS?=
- =?utf-8?B?S3FqQVRPeEgxcWJVNm8yNzZiMGtUeGtTTktsRmtyN2twSDNXQmFXeTlEdUFr?=
- =?utf-8?Q?Ig1AbTC9g67MH?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TEw1RFZpbElaNEFEOWptMGtxbTNLYWtoNjJjcy93TFZLOXNRdDY2NU42TW1o?=
- =?utf-8?B?TGhmNmFSRnpWWmNJazZqOS9qV25OZXBaM1BaY25tVUtjVngvOXhwNVBucnpQ?=
- =?utf-8?B?U0oyUERwOURIYXo5a0w3am5rK0s5OXpkSDRMTTZvZktubFVqblAra0NaSkk1?=
- =?utf-8?B?R0hsMjVXKzdsdkdOS3dDVStLT3VOQzl2U3BVYmFzSnRBWVFnQTBCeXVsSVZN?=
- =?utf-8?B?UFdjTGovZ1VnaktzbVFUYUtycnNVd09DMHJ2ZCtMNmk0cU1CL0YrNEFJU3VL?=
- =?utf-8?B?YnlrM3BoN3NLRFVrajdSRDZVbndrV05QMkptMWNBcWtzNzltNmgvRTlnRUJ4?=
- =?utf-8?B?RUIzWHJEamdCZHF5eHVCcExwOHBZTG1OQ3RNSDNaMU9iakRMZEZ6bGROTU9k?=
- =?utf-8?B?WXliaWxMWkI4cm1nSjdaTEdxN1pWeHgwb3VZRkNyNEpoa0xDZUpXTkhrQjk4?=
- =?utf-8?B?QjliNUY2YUdqZnVBbHhoUkJoWkRraVZxbWZUdDljdXFHZ3EzbDF2S2cvdnYz?=
- =?utf-8?B?MjFmQVZQcVp6YWNRWTFwVW9PbXlJWjlMUkRyN3lvMWpyWVBMdWVBQVkxQlR0?=
- =?utf-8?B?QlkvZ3VoaGtmbThKNjEzSXFsOWoyUmxZbDJGNS9nNDdKdmJPd2lWTzJKYk1Q?=
- =?utf-8?B?ZHNpQzhqQktVcTg1UExMT2tNaG8xQUFMNDQwbUtvVVVuZFpNMWdrVlNEUUdS?=
- =?utf-8?B?N2xmRGJhTHI3WEpRZmM4dGdOUTRxK2ltbkxKK3pxNmMva0xNOGtZWGpqOWVh?=
- =?utf-8?B?SERhYkJ1Vzk1TStYNHFjQmMxTXZmTjRqY3B4S1FrY01lNmhOUXZUMm9QL08y?=
- =?utf-8?B?U1E5NnBId2dhQU9tWUhVUWlYZGVhaGVLK2xuOUV2bit6MXZGZ3ZRSldGVGVu?=
- =?utf-8?B?Qlo0WnpYS2ZINWNLNWhnMHlDUHFVZDlpOGREYUZ4VUNLK1dLWFhuVEpvNTFV?=
- =?utf-8?B?Tms2ZUxvblNqTUdnMzJVZ0xQTGkrREdISXBtQ2NzZjJMaGU0VnQ0QjExUGlp?=
- =?utf-8?B?Z25nRE40MldObU9WTDUwR3hkNi82OC9Hb01aS25YdFNwUFN5blpPL0JXWjRt?=
- =?utf-8?B?TklXV2xKV0R1akcyYklPekdwUDVxQ0QwOTZ0RHZJREt3dHhkVUMzK1ZWSlVD?=
- =?utf-8?B?Q0pqNTVTdW8yMEpRdlcxQmJQU0RzajV4dEZLSUdOdGVyMTNrZ1hFd0Y5Z0xV?=
- =?utf-8?B?TC9Wd2ZUa0tkY0pPR2tzNkdQeDF3bzJzREpUQXJVZU0xOXZFdzFqU3NEaHB6?=
- =?utf-8?B?RWdaTGo0QnU3U3dGNVNCZElDQmZKMTZHRFlaZFc4MUh2RCtEK3lBYVhMTWxD?=
- =?utf-8?B?dy8zNXRsR0pnTDkybGFWdWpJUGVjc01wVjM2QkxjTjhOV3dYdzhoWFk4SURX?=
- =?utf-8?B?cngycnB1YkliUHRBMlpYSHhKR0hTZzEwcllIUWFHOGJuT1E1ZC9ENFpMdUI1?=
- =?utf-8?B?dncxaW9OZGJicUY0c25MZzA1UXJPRlJGMTB2SVBscHFWTWlhMTVhZzFwM25w?=
- =?utf-8?B?d0ZDZTkzZzhUalF4b09oUTdtRFU1ZFgvNXF0T1M5VlJqOGhEY0VHMUgvdk9w?=
- =?utf-8?B?Zmp5NUJsTjFGSmY5NExlRTZaSE41TTE0Q0FNQks0YUVvSW1KZzAySTkzNmov?=
- =?utf-8?B?RjFvTy9kc2dCSzBIZnlqczhnYXl0T05KZjlnM3o4aHQwZGEvQS9jME1PWlgv?=
- =?utf-8?B?UW9IMzIySGN2S21aYnlvZ0pXOXRkZXJSMXB5aXJTbVBsQmhMWCsranR0Zzc2?=
- =?utf-8?B?NDluclJBRkZRaFNIdGppQktiZS9nRlNPUHFRd2hGZmQzSzJOamtaME9rb1VT?=
- =?utf-8?B?dTlWYXN5SmY1Vk9HUVo0Q0M5TVlsVDdKUW5rc3d4Mk5EUVoyRDk1aU5Udm5Y?=
- =?utf-8?B?TUlXUWMzUXBuYjA0RGlBSm9sZzFlbis0WFZCL3hpUTJLdU9xWmtjNElyUWFu?=
- =?utf-8?B?TFlpd0xlVnFoWkF4a3RZbUF1S2NBcnhXa1ZsbDZkbkRBOXNidHBLVkNPY2ps?=
- =?utf-8?B?T1RYVFA3MkJ6MlFETnBaL2ZMZjdDVmR6aXdFYjNmM0pLZVlYY0NDYUJiSzV2?=
- =?utf-8?B?UnJXSUhVemtrV0VBa2VESUJaanBnSGx1TXhCRk1UbjBYV2d2N3NzUUNnOHRo?=
- =?utf-8?Q?SnssxVWV34j0ygQ7QeMKgEzFT?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9a69380-a667-43b8-acac-08dd1ea4d459
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2024 14:12:24.3835
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1PCymD3Xn1iicymSvM8iunJNSSh3Z5dORqbjKC8xeR9CKLw/t945iPT6OFnbRT9S0HjHARkzqiSLDG5C1kh9Ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6456
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 17/18] nvmet: New NVMe PCI endpoint target driver
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+ Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20241212113440.352958-1-dlemoal@kernel.org>
+ <20241212113440.352958-18-dlemoal@kernel.org>
+ <20241217085355.y6bqqisqbr5kbxkl@thinkpad>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20241217085355.y6bqqisqbr5kbxkl@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 12/17/2024 05:58, Werner Sembach wrote:
+On 2024/12/17 0:53, Manivannan Sadhasivam wrote:
+> [...]
 > 
-> Am 17.12.24 um 11:10 schrieb Richard Hughes:
->> On Monday, 16 December 2024 at 23:37, Werner Sembach 
->> <wse@tuxedocomputers.com> wrote:
->>> - AfuEfix64.efi <bios>.bin /p /r /capsule -> overwrites nothing
->>> I tried to explain fwupd and the requirements to our contact at the 
->>> ODM, but
->>> just got the unhelpful reply to use the command above.
->> Can you name the ODM? I think essentially all the ODMs are uploading 
->> [valid] capsules to the LVFS now. If it helps, it's the same capsule 
->> needed for the LVFS as for the Microsoft WU (Windows Update) process 
->> and all ODMs should be intimately familiar with those requirements.
+>> +/*
+>> + * PCI EPF driver private data.
+>> + */
+>> +struct nvmet_pciep_epf {
 > 
-> In this case it was a Tonfang/Uniwill barebone and I talked to a 
-> Tongfang representative.
+> nvmet_pci_epf?
 > 
-> Want to point out again that I could determine that /k did do nothing in 
-> the /capsule mode while /p and /r did effect the flash (iirc /p was 
-> required for /capsule or the flash didn't start). I could not determine 
-> if /b /n and /l did something (and probably can't without proper 
-> documentation, which I don't have access to). I guess /x is irrelevant 
-> as long as the flash works.
+>> +	struct pci_epf			*epf;
+>> +
+>> +	const struct pci_epc_features	*epc_features;
+>> +
+>> +	void				*reg_bar;
+>> +	size_t				msix_table_offset;
+>> +
+>> +	unsigned int			irq_type;
+>> +	unsigned int			nr_vectors;
+>> +
+>> +	struct nvmet_pciep_ctrl		ctrl;
+>> +
+>> +	struct dma_chan			*dma_tx_chan;
+>> +	struct mutex			dma_tx_lock;
+>> +	struct dma_chan			*dma_rx_chan;
+>> +	struct mutex			dma_rx_lock;
+>> +
+>> +	struct mutex			mmio_lock;
+>> +
+>> +	/* PCI endpoint function configfs attributes */
+>> +	struct config_group		group;
+>> +	bool				dma_enable;
+>> +	__le16				portid;
+>> +	char				subsysnqn[NVMF_NQN_SIZE];
+>> +	unsigned int			mdts_kb;
+>> +};
+>> +
+>> +static inline u32 nvmet_pciep_bar_read32(struct nvmet_pciep_ctrl *ctrl, u32 off)
+>> +{
+>> +	__le32 *bar_reg = ctrl->bar + off;
+>> +
+>> +	return le32_to_cpu(READ_ONCE(*bar_reg));
 > 
-> Do you have a Microsoft help page for OEMs about BIOS and EC upgrades 
-> via Windows Update? Having some Windows requirements to point to often 
-> helps when talking with ODMs in my experience.
+> Looks like you can use readl/writel variants here. Any reason to not use them?
 
-https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/windows-uefi-firmware-update-platform
+A bar memory comes from dma_alloc_coherent(), which is a "void *" pointer and
+*not* iomem. So using readl/writel for accessing that memory seems awefully
+wrong to me.
+
+>> +static bool nvmet_pciep_epf_init_dma(struct nvmet_pciep_epf *nvme_epf)
+>> +{
+>> +	struct pci_epf *epf = nvme_epf->epf;
+>> +	struct device *dev = &epf->dev;
+>> +	struct nvmet_pciep_epf_dma_filter filter;
+>> +	struct dma_chan *chan;
+>> +	dma_cap_mask_t mask;
+>> +
+>> +	mutex_init(&nvme_epf->dma_rx_lock);
+>> +	mutex_init(&nvme_epf->dma_tx_lock);
+>> +
+>> +	dma_cap_zero(mask);
+>> +	dma_cap_set(DMA_SLAVE, mask);
+>> +
+>> +	filter.dev = epf->epc->dev.parent;
+>> +	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
+>> +
+>> +	chan = dma_request_channel(mask, nvmet_pciep_epf_dma_filter, &filter);
+>> +	if (!chan)
+>> +		return false;
+> 
+> You should also destroy mutexes in error path.
+
+Good catch. Will add that.
+
+[...]
+
+>> +static int nvmet_pciep_epf_dma_transfer(struct nvmet_pciep_epf *nvme_epf,
+>> +		struct nvmet_pciep_segment *seg, enum dma_data_direction dir)
+>> +{
+>> +	struct pci_epf *epf = nvme_epf->epf;
+>> +	struct dma_async_tx_descriptor *desc;
+>> +	struct dma_slave_config sconf = {};
+>> +	struct device *dev = &epf->dev;
+>> +	struct device *dma_dev;
+>> +	struct dma_chan *chan;
+>> +	dma_cookie_t cookie;
+>> +	dma_addr_t dma_addr;
+>> +	struct mutex *lock;
+>> +	int ret;
+>> +
+>> +	switch (dir) {
+>> +	case DMA_FROM_DEVICE:
+>> +		lock = &nvme_epf->dma_rx_lock;
+>> +		chan = nvme_epf->dma_rx_chan;
+>> +		sconf.direction = DMA_DEV_TO_MEM;
+>> +		sconf.src_addr = seg->pci_addr;
+>> +		break;
+>> +	case DMA_TO_DEVICE:
+>> +		lock = &nvme_epf->dma_tx_lock;
+>> +		chan = nvme_epf->dma_tx_chan;
+>> +		sconf.direction = DMA_MEM_TO_DEV;
+>> +		sconf.dst_addr = seg->pci_addr;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	mutex_lock(lock);
+>> +
+>> +	dma_dev = dmaengine_get_dma_device(chan);
+>> +	dma_addr = dma_map_single(dma_dev, seg->buf, seg->length, dir);
+>> +	ret = dma_mapping_error(dma_dev, dma_addr);
+>> +	if (ret)
+>> +		goto unlock;
+>> +
+>> +	ret = dmaengine_slave_config(chan, &sconf);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to configure DMA channel\n");
+>> +		goto unmap;
+>> +	}
+>> +
+>> +	desc = dmaengine_prep_slave_single(chan, dma_addr, seg->length,
+>> +					   sconf.direction, DMA_CTRL_ACK);
+>> +	if (!desc) {
+>> +		dev_err(dev, "Failed to prepare DMA\n");
+>> +		ret = -EIO;
+>> +		goto unmap;
+>> +	}
+>> +
+>> +	cookie = dmaengine_submit(desc);
+>> +	ret = dma_submit_error(cookie);
+>> +	if (ret) {
+>> +		dev_err(dev, "DMA submit failed %d\n", ret);
+>> +		goto unmap;
+>> +	}
+>> +
+>> +	if (dma_sync_wait(chan, cookie) != DMA_COMPLETE) {
+> 
+> Why do you need to do sync tranfer all the time? This defeats the purpose of
+> using DMA.
+
+You may be getting confused about the meaning of sync here. This simply means
+"spin wait for the completion of the transfer". I initially was using the
+completion callback like in pci-epf-tets and othe EPF drivers doing DMA, but
+that causes a context switch for every transfer, even small ones, which really
+hurts performance. Switching to using dma_sync_wait() avoids this context switch
+while achieving what we need, which is to wait for the end of the transfer. I
+nearly doubled the max IOPS for small IOs with this.
+
+Note that we cannot easily do asynchronous DMA transfers with the current DMA
+slave API, unless we create some special work item responsible for DMA transfers.
+
+I did not try to micro optimize this driver too much for this first drop. Any
+improvement around how data transfers are done can come later. The preformance I
+am getting with this code is decent enough as it is.
+
+[...]
+
+>> +static inline int nvmet_pciep_epf_transfer(struct nvmet_pciep_epf *nvme_epf,
+> 
+> No need to add 'inline' keyword in .c files.
+
+Yes there is. Because that funtion is tiny and I really want it to be forced to
+be inlined.
+
+[...]
+
+>> +invalid_offset:
+>> +	dev_err(ctrl->dev, "PRPs list invalid offset\n");
+>> +	kfree(prps);
+>> +	iod->status = NVME_SC_PRP_INVALID_OFFSET | NVME_STATUS_DNR;
+>> +	return -EINVAL;
+>> +
+>> +invalid_field:
+>> +	dev_err(ctrl->dev, "PRPs list invalid field\n");
+>> +	kfree(prps);
+>> +	iod->status = NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
+>> +	return -EINVAL;
+>> +
+>> +internal:
+>> +	dev_err(ctrl->dev, "PRPs list internal error\n");
+>> +	kfree(prps);
+>> +	iod->status = NVME_SC_INTERNAL | NVME_STATUS_DNR;
+>> +	return -EINVAL;
+> 
+> Can't you organize the labels in such a way that there is only one return path?
+> Current code makes it difficult to read and also would confuse the static
+> checkers.
+
+I do not see how this is difficult to read... But sure, I can try to simplify this.
+
+
+> [...]
+> 
+>> +static void nvmet_pciep_init_bar(struct nvmet_pciep_ctrl *ctrl)
+>> +{
+>> +	struct nvmet_ctrl *tctrl = ctrl->tctrl;
+>> +
+>> +	ctrl->bar = ctrl->nvme_epf->reg_bar;
+>> +
+>> +	/* Copy the target controller capabilities as a base */
+>> +	ctrl->cap = tctrl->cap;
+>> +
+>> +	/* Contiguous Queues Required (CQR) */
+>> +	ctrl->cap |= 0x1ULL << 16;
+>> +
+>> +	/* Set Doorbell stride to 4B (DSTRB) */
+>> +	ctrl->cap &= ~GENMASK(35, 32);
+>> +
+>> +	/* Clear NVM Subsystem Reset Supported (NSSRS) */
+>> +	ctrl->cap &= ~(0x1ULL << 36);
+>> +
+>> +	/* Clear Boot Partition Support (BPS) */
+>> +	ctrl->cap &= ~(0x1ULL << 45);
+>> +
+>> +	/* Clear Persistent Memory Region Supported (PMRS) */
+>> +	ctrl->cap &= ~(0x1ULL << 56);
+>> +
+>> +	/* Clear Controller Memory Buffer Supported (CMBS) */
+>> +	ctrl->cap &= ~(0x1ULL << 57);
+> 
+> Can you use macros for these?
+
+I could. But that would mean defining *all* bits of the cap register, which is a
+lot... The NVMe code does not have all these defined now. That is a cleanup that
+can come later I think.
+
+[...]
+
+>> +	if (epc_features->msix_capable) {
+>> +		size_t pba_size;
+>> +
+>> +		msix_table_size = PCI_MSIX_ENTRY_SIZE * epf->msix_interrupts;
+>> +		nvme_epf->msix_table_offset = reg_size;
+>> +		pba_size = ALIGN(DIV_ROUND_UP(epf->msix_interrupts, 8), 8);
+>> +
+>> +		reg_size += msix_table_size + pba_size;
+>> +	}
+>> +
+>> +	reg_bar_size = ALIGN(reg_size, max(epc_features->align, 4096));
+> 
+> From where does this 4k alignment comes from? NVMe spec? If so, is it OK to use
+> fixed_size BAR?
+
+NVMe BAR cannot be fixed size as its size depends on the number of queue pairs
+the controller can support. Will check if the 4K alignment is mandated by the
+specs. But it sure does not hurt...
+
+[...]
+
+>> +	/* Create the target controller. */
+>> +	ret = nvmet_pciep_create_ctrl(nvme_epf, max_nr_queues);
+>> +	if (ret) {
+>> +		dev_err(&epf->dev,
+>> +			"Create NVMe PCI target controller failed\n");
+> 
+> Failed to create NVMe PCI target controller
+
+How is that better ?
 
 > 
->>> Do you know how these AfuEfix64.efi flags are passed over to the 
->>> capsule flash
->>> process? Then it might be possible to implement them in fwupd too.
->> The capsule, as expected by LVFS and WU, is actually a single *signed* 
->> binary that contains the flasher binary and the payload all wrapped up 
->> into one. The only time I've seen AfuEfix64.efi in use is for the 
->> system preload, as done in the factory.
-> Yeah but since at least the /r flag influences the flash process there 
-> must be some way the efi shell can pass on options to the flasher 
-> included in the capsule ... EFI variables? Some bits appended to the 
-> capsule?
->>
->> Richard.
->>
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (epf->vfunc_no <= 1) {
+> 
+> Are you really supporting virtual functions? If supported, 'vfunc_no < 1' is not
+> possible.
 
+NVMe does support virtual functions and nothing in the configuration path
+prevents the user from setting one such function. So yes, this is supposed to
+work if the endpoint controller supports it. Though I must say that I have not
+tried/tested yet.
+
+> 
+>> +		/* Set device ID, class, etc */
+>> +		epf->header->vendorid = ctrl->tctrl->subsys->vendor_id;
+>> +		epf->header->subsys_vendor_id =
+>> +			ctrl->tctrl->subsys->subsys_vendor_id;
+> 
+> Why these are coming from somewhere else and not configured within the EPF
+> driver?
+
+They are set through the nvme target configfs. So there is no need to have these
+again setup through the epf configfs. We just grab the values set for the NVME
+target subsystem config.
+
+>> +static int nvmet_pciep_epf_link_up(struct pci_epf *epf)
+>> +{
+>> +	struct nvmet_pciep_epf *nvme_epf = epf_get_drvdata(epf);
+>> +	struct nvmet_pciep_ctrl *ctrl = &nvme_epf->ctrl;
+>> +
+>> +	dev_info(nvme_epf->ctrl.dev, "PCI link up\n");
+> 
+> These prints are supposed to come from the controller drivers. So no need to
+> have them here also.
+
+Nope, the controller driver does not print anything. At least the DWC driver
+does not print anything.
+
+>> +static ssize_t nvmet_pciep_epf_dma_enable_store(struct config_item *item,
+>> +					     const char *page, size_t len)
+>> +{
+>> +	struct config_group *group = to_config_group(item);
+>> +	struct nvmet_pciep_epf *nvme_epf = to_nvme_epf(group);
+>> +	int ret;
+>> +
+>> +	if (nvme_epf->ctrl.tctrl)
+>> +		return -EBUSY;
+>> +
+>> +	ret = kstrtobool(page, &nvme_epf->dma_enable);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return len;
+>> +}
+>> +
+>> +CONFIGFS_ATTR(nvmet_pciep_epf_, dma_enable);
+> 
+> What is the use of making this option user configurable? It is purely a hardware
+> capability and I don't think users would want to have their NVMe device working
+> without DMA voluntarily.
+
+If you feel strongly about it, I can drop this. But it is useful for debugging
+purpose to check that the DMA API is being used and working correctly.
+
+>> +static int __init nvmet_pciep_init_module(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = pci_epf_register_driver(&nvmet_pciep_epf_driver);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = nvmet_register_transport(&nvmet_pciep_fabrics_ops);
+> 
+> What is the need to register the transport so early? You should consider moving
+> the registration to bind() so that the transport can be removed once the driver
+> is unbind with the controller.
+
+This registration is needed to enable the configfs configuration of the nvme
+target subsystem and port. Withoutn this, setting a port transporet type to
+"pci" would fail to find the pci transport implemented here and the
+configuration would fail. This configuration of the nvme target susbsystem and
+port must come before configuring the EPF and binding it.
+
+
+
+
+-- 
+Damien Le Moal
+Western Digital Research
 
