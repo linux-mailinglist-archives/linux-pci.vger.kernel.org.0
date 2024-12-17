@@ -1,102 +1,175 @@
-Return-Path: <linux-pci+bounces-18603-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37C969F4ABE
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 13:13:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA1379F4B6E
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 14:01:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DE1C16F124
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 12:13:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1926188CDC5
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 13:01:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C49641DAC88;
-	Tue, 17 Dec 2024 12:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EE251F3D57;
+	Tue, 17 Dec 2024 13:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gd20w65/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2+t6vZC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E166E4D8CE
-	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 12:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8CCA29;
+	Tue, 17 Dec 2024 13:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734437588; cv=none; b=N1WivW5lr7e71GMRTnH201fSfKTaqNkmR6LaxR/pOjJbC36R9BY9FDaYzfHjOUo/qhlOKAtlUtAompen1Xm8vv1mOAfJSyim5OzEJRws/VTUKbInJwBxJL7yiA0IspbAuQ0jMtGVNYv0mEFake3Vy9BaYTZ/Fgxr9Qje71FN6Nw=
+	t=1734440460; cv=none; b=T0i8pGvy9aSH6Z5h8rZBAud8bM8HIkUq/NNl79H5Uqzt/Tex+uu8Jrc2aX+g2SGHLlxaxItwCQqvIxXCInK9Be/UlR/Uyo678D0ojhITz+Ylftfxb3e+QRpc5XNDWALjfEHwkycg2AudyNiRxkTNXmtxkVfpt3MMuNKof3M8vWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734437588; c=relaxed/simple;
-	bh=9qnMXPea0TMkfAUZ7DwfhizkPmA5yDstwmaR49DRQOE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=T7Cbt2OWKq0m6celLcPfuWhwl4POyNsfTlxMelfh3UXiPRc75tiVNSs5HIfJ8ODkN/tLL2vw11rHRm4LYc1ZazlWWH9a1BEtEV1qqYj/ede6SrDwCR0p03GCGInA/JcA5W1iV6YezKcI89ONrE8StDCz5MjnooDDAB+rIKoh3P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gd20w65/; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=+jKgIThs09MvIq8+Vw
-	z+A+qwUGnSTOUWB4siy6x5W8Q=; b=gd20w65/p5KLVhs7SOYxVm+mD4Xw9wDzae
-	fKWrNj8b9S7zl6Ikr+tT/IudXPGY22yakq7aNUQC84fSVzWmRmICfRtt5g1RRzNn
-	UwLGp6qDS1HH3/EzfFZvO9LodM3YcEUDnKHmy1+C455O3wx9LUwm3c44dREL7Sh/
-	CB7NI1dRM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3N+SnamFnuE+xBA--.30878S2;
-	Tue, 17 Dec 2024 20:12:25 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: manivannan.sadhasivam@linaro.org
-Cc: kw@linux.com,
-	kishon@kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
+	s=arc-20240116; t=1734440460; c=relaxed/simple;
+	bh=WUcPWFcOfeUf/sio4O36o8I8jrOpMF9pl2t7YRV1K7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kcTmF/0zmtc5jZ7AU0mCs3x//4cIg/ucroYFKLpQ4S3z9U5MNDxZxlU4PR2jRWurhgviUWga87KOOnECbNO2g/lbzcLa+hZbZ58ZBILPvjLenLc9plBsb8igbNcTbDoZV5m2LisOAnW4jJWUua/jTL4E+fqLCh0PZdnwr56o55U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2+t6vZC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E42C4CED3;
+	Tue, 17 Dec 2024 13:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734440459;
+	bh=WUcPWFcOfeUf/sio4O36o8I8jrOpMF9pl2t7YRV1K7c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=W2+t6vZC3dFZWGD+hxEMeEPE1EEKt40fCuWrdg3SEm/26SFd4QEg0tiIvT2/Wek19
+	 ipbNsM3RLXl0RvFJrTnmhBFYT5MAx6OqnZ/oOKDrKGf32XUg477wAJn6V2jcBjZO/8
+	 Ii8+JaZkyyMGebvolPyBm40JjRdZQhIhr9H3yf5kaiaiXVcPFmwe/C4LJJ4P6impvd
+	 8/hR+n5YTMhKvuP9ew3PL2463hfk0ZudfO9HpYVaOpExaxG4v5E7GWf3f90dIP2oBV
+	 GHJCkATLPfGc2ofcLdQ0kQuhsYKz0DBm7jEilkgCea7JLERhDeOtEVUaSSk2h/iHeZ
+	 SwmUwQ1h0ckQQ==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
 	linux-pci@vger.kernel.org,
-	inux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] misc: pci_endpoint_test: fixed pci_resource_len return value out of bounds.
-Date: Tue, 17 Dec 2024 07:12:20 -0500
-Message-Id: <20241217121220.19676-1-18255117159@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3N+SnamFnuE+xBA--.30878S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr4kCw4xZFWDJF1DtFyftFb_yoW8Gr1kpr
-	ZIkw109F4UtrWDGws2g3WkCF9YyFsrXry7XFW5Aw1avFnxAFyFyF1UGrWjgryxCF4IvF1j
-	yrs8tayv9a1UAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUwIgUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDwm3o2dfexme7QAEs-
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v5 00/17] Provide a new two step DMA mapping API
+Date: Tue, 17 Dec 2024 15:00:18 +0200
+Message-ID: <cover.1734436840.git.leon@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The return type of the API is inconsistent. Inconsistencies may
-result in out-of-bounds. If the bar size of the EP device exceeds
-4G, this bar_Size will be equal to 0.
+Changelog:
+v5:
+ * Trimmed long lines in all patches.
+ * Squashed "dma-mapping: Add check if IOVA can be used" into
+   "dma: Provide an interface to allow allocate IOVA" patch.
+ * Added tags from Christoph and Will.
+ * Fixed spelling/grammar errors.
+ * Change title from "dma: Provide an  ..." to be "dma-mapping: Provide an ...".
+ * Slightly changed hmm patch to set sticky flags in one place.
+v4: https://lore.kernel.org/all/cover.1733398913.git.leon@kernel.org
+ * Added extra patch to add kernel-doc for iommu_unmap and
+ * iommu_unmap_fast
+ * Rebased to v6.13-rc1
+ * Added Will's tags
+v3: https://lore.kernel.org/all/cover.1731244445.git.leon@kernel.org
+ * Added DMA_ATTR_SKIP_CPU_SYNC to p2p pages in HMM.
+ * Fixed error unwind if dma_iova_sync fails in HMM.
+ * Clear all PFN flags which were set in map to make code.
+   more clean, the callers anyway cleaned them.
+ * Generalize sticky PFN flags logic in HMM.
+ * Removed not-needed #ifdef-#endif section.
+v2: https://lore.kernel.org/all/cover.1730892663.git.leon@kernel.org
+ * Fixed docs file as Randy suggested
+ * Fixed releases of memory in HMM path. It was allocated with kv..
+   variants but released with kfree instead of kvfree.
+ * Slightly changed commit message in VFIO patch.
+v1: https://lore.kernel.org/all/cover.1730298502.git.leon@kernel.org
+ * Squashed two VFIO patches into one
+ * Added Acked-by/Reviewed-by tags
+ * Fix docs spelling errors
+ * Simplified dma_iova_sync() API
+ * Added extra check in dma_iova_destroy() if mapped size to make code
+ * more clear
+ * Fixed checkpatch warnings in p2p patch
+ * Changed implementation of VFIO mlx5 mlx5vf_add_migration_pages() to
+   be more general
+ * Reduced the number of changes in VFIO patch
+v0: https://lore.kernel.org/all/cover.1730037276.git.leon@kernel.org
 
-For example, there is an EP device, the bar0 size is 16MB, bar1
-size is 32MB, bar2 size is 8GB. When testing bar2, barno equals
-BAR2. Then run pcitest -b 2, console will output "TEST FAILED".
+----------------------------------------------------------------------------
 
-Variable declaration of bar_size is int, the range less than or
-equal 2G. The return value of pci_resource_len is resource_size_t.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/misc/pci_endpoint_test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Christoph Hellwig (6):
+  PCI/P2PDMA: Refactor the p2pdma mapping helpers
+  dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+  iommu: generalize the batched sync after map interface
+  iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+  dma-mapping: add a dma_need_unmap helper
+  docs: core-api: document the IOVA-based API
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 3aaaf47fa4ee..414c4e55fb0a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
- static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 				  enum pci_barno barno)
- {
--	int j, bar_size, buf_size, iters, remain;
- 	void *write_buf __free(kfree) = NULL;
- 	void *read_buf __free(kfree) = NULL;
- 	struct pci_dev *pdev = test->pdev;
-+	int j, buf_size, iters, remain;
-+	resource_size_t bar_size;
- 
- 	if (!test->bar[barno])
- 		return false;
+Leon Romanovsky (11):
+  iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+  dma-mapping: Provide an interface to allow allocate IOVA
+  dma-mapping: Implement link/unlink ranges API
+  mm/hmm: let users to tag specific PFN with DMA mapped bit
+  mm/hmm: provide generic DMA managing logic
+  RDMA/umem: Store ODP access mask information in PFN
+  RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+    linkage
+  RDMA/umem: Separate implicit ODP initialization from explicit ODP
+  vfio/mlx5: Explicitly use number of pages instead of allocated length
+  vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+  vfio/mlx5: Enable the DMA link API
+
+ Documentation/core-api/dma-api.rst   |  70 +++++
+ drivers/infiniband/core/umem_odp.c   | 250 +++++----------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+ drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+ drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+ drivers/iommu/dma-iommu.c            | 454 +++++++++++++++++++++++----
+ drivers/iommu/iommu.c                |  84 ++---
+ drivers/pci/p2pdma.c                 |  38 +--
+ drivers/vfio/pci/mlx5/cmd.c          | 376 +++++++++++-----------
+ drivers/vfio/pci/mlx5/cmd.h          |  35 ++-
+ drivers/vfio/pci/mlx5/main.c         |  87 +++--
+ include/linux/dma-map-ops.h          |  54 ----
+ include/linux/dma-mapping.h          |  86 +++++
+ include/linux/hmm-dma.h              |  33 ++
+ include/linux/hmm.h                  |  21 ++
+ include/linux/iommu.h                |   4 +
+ include/linux/pci-p2pdma.h           |  84 +++++
+ include/rdma/ib_umem_odp.h           |  25 +-
+ kernel/dma/direct.c                  |  44 +--
+ kernel/dma/mapping.c                 |  18 ++
+ mm/hmm.c                             | 264 ++++++++++++++--
+ 21 files changed, 1423 insertions(+), 693 deletions(-)
+ create mode 100644 include/linux/hmm-dma.h
+
 -- 
-2.17.1
+2.47.0
 
 
