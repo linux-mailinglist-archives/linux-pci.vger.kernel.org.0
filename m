@@ -1,183 +1,237 @@
-Return-Path: <linux-pci+bounces-18650-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18651-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC37D9F5096
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 17:13:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B10E79F50AB
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 17:16:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AD2916479D
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 16:11:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E8EE1701F8
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 16:14:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A7841FC0F1;
-	Tue, 17 Dec 2024 15:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6856D1F7580;
+	Tue, 17 Dec 2024 16:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHzmDWaM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLfhKfOZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FE11FBEA4
-	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 15:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408E71F7545
+	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 16:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734451196; cv=none; b=Y/DWWyG2w4NxvRrxdJDAf6YBDITaLLV6Iu/FZI5scH6958/JoGgYqGHI1lAVgOHIYrlLVTAiAcAZo1H2lBaSeKUPJIKKiBywjsVFJdi2zvCjAMI3GR3eVDI8iXIsc3/eHUeNxDyKihy3f61q4FunWHzJ5HHVOShYBp69WL80Dis=
+	t=1734451503; cv=none; b=LB/gRgy8zYhojeeUWzFbNtkQq2XtVGCVdGwmH0r/sUyYd9we0JT9CPTN51f0qVCAJXLqfS+9WIhsCcBYcH9Q50k+K/ekMQt37GYn0cycjvInjSyND1Wo7XDZNug5yYYaz9c0zdjpNzyMsVCHB5PXO7xViF4nX9zfGvv6pxS1+LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734451196; c=relaxed/simple;
-	bh=nUX3IOEY4L2Iqp2QUUWu5H20jVTxoMFhA3GkwcXLnhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oAGPItvpAH2/OMJ22nxNbsFA0+r3xWt/Q69208XjNOTzv1CVDQ/PYsJiXjYo4FIEBcIcJMSnmu+4eSaKfzwTTFQ/tiOjlX3AqZ2qfOhUZ2HdZvxga5l3cGnFQSXcEzl8QAZvLL0gKXNuRAVOslj3CfzTY13YfFeQyIybds+m+Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHzmDWaM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82389C4CED3;
-	Tue, 17 Dec 2024 15:59:53 +0000 (UTC)
+	s=arc-20240116; t=1734451503; c=relaxed/simple;
+	bh=TU/raJvixvN4nOQHwwErByg4LJJt9dVgcIq0Gcog9v8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hCAWRFK+Emr43Txp4J9svOSoRvz/FX7iHC82XalLWuCfGqP9t9aKxU7hnMDoaWwBfOE0ilJOSHqqyqPXTJBH+aj5LvHAIhtellVa3ml4znKk5yvR50Zmbyov6UVSXaShnveX2N3qhYSQk19NisnK2mpWJb1hFIdMM5/7UthboGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLfhKfOZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34013C4CED3;
+	Tue, 17 Dec 2024 16:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734451196;
-	bh=nUX3IOEY4L2Iqp2QUUWu5H20jVTxoMFhA3GkwcXLnhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WHzmDWaM2j/ZV9zsCUxKZLD6mjf0yTBhZWcYb80Lue8StkqOjHZYpyABFXE0Vxvck
-	 AgCYHlzQB6XheRvb4ihjf7JYc4o3atvFmfGut2n/9SgAO5Mmheo+8RoUkMqYJuNs/F
-	 WwN2GC1QPW0KkXP1jA+UvnQeK638/vHZlzWJvlSRVvhaW4ZrrgIhzIjSw2ITVKCF4P
-	 Uvc1OaKJp71bl6z/t/S7FljJTTOxF/eiDxki+wIWZ4t5yBNBoFrK02GUQE8/4EXugD
-	 Yr+Odgoj8bklqWJu6BS9L47P0ZyfACSe781efgERbFDA+GTV74Q/IK/N2xQKKHSjEZ
-	 VebpBwAUngNPg==
-Date: Tue, 17 Dec 2024 16:59:50 +0100
+	s=k20201202; t=1734451503;
+	bh=TU/raJvixvN4nOQHwwErByg4LJJt9dVgcIq0Gcog9v8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nLfhKfOZLiJXR4Jrh80kZasntvw2CzdkGVGxdhGFHnJkLBcvbOxj383Keav2FE0MV
+	 ZxE3Ds9FO6pRBnOJdR+ZbRWwaTUIaYV7gDLLWvxnZ7UMi5hCUPFmO7V21c+i5RC/ci
+	 riv9C/DUvf13gZzFbUzwIXRwENxJgbVA/BybQd9PrAewiT7wnKen7ZevgqfW1PJDAt
+	 0ntTmCpvbrZZ4bTB57p/Zww8ojyWEskhGPgtVpmFMyg/lYsmTRBmFO8o4BFpx1v+Fm
+	 DcAC3yYlE7RqQoGAcH3FtfjYImCWPecrgL1O8tBYsyo6hociitXmUPRueliV0CreSu
+	 j/vZX3sR2vyvg==
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	linux-nvme@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
 	linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v4 17/18] nvmet: New NVMe PCI endpoint target driver
-Message-ID: <Z2Gf9lv6hLROjM8e@ryzen>
-References: <20241212113440.352958-1-dlemoal@kernel.org>
- <20241212113440.352958-18-dlemoal@kernel.org>
- <Z1xoAj9c9oWhqZoV@ryzen>
- <Z2BW4CjdE1p50AhC@vaman>
- <4d20c4f6-3c89-4287-aa0c-326ff9997904@kernel.org>
- <Z2ELpuC+ltp5wDay@vaman>
- <20241217062144.g7jjnkziuen3qsm6@thinkpad>
- <20241217090129.6dodrgi4tn7l3cod@thinkpad>
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH 1/3] dmaengine: dw-edma: Add support for DMA_MEMCPY
+Date: Tue, 17 Dec 2024 17:04:49 +0100
+Message-ID: <20241217160448.199310-4-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <Z2Gf9lv6hLROjM8e@ryzen>
+References: <Z2Gf9lv6hLROjM8e@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241217090129.6dodrgi4tn7l3cod@thinkpad>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5606; i=cassel@kernel.org; h=from:subject; bh=TU/raJvixvN4nOQHwwErByg4LJJt9dVgcIq0Gcog9v8=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNITFypUPVfzczncLnnAYd6tnQZqE6f/jTy2b6VDVpftj izPHa39HaUsDGJcDLJiiiy+P1z2F3e7TzmueMcGZg4rE8gQBi5OAZhI9T+G/xlTam7+fVm+8vZT U54lSvpzAnPqp39KV1jJ1/LqmrfqZEdGhneTlBdXJTm8fCDRnZLB9PeoosTxoye4w9eu+3i9ga+ PhwUA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 17, 2024 at 02:31:29PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Dec 17, 2024 at 11:51:44AM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Dec 17, 2024 at 10:57:02AM +0530, Vinod Koul wrote:
-> > > On 16-12-24, 11:12, Damien Le Moal wrote:
-> > > > On 2024/12/16 8:35, Vinod Koul wrote:
-> > > > > Hi Niklas,
-> > > > > 
-> > > > > On 13-12-24, 17:59, Niklas Cassel wrote:
-> > > > >> Hello Vinod,
-> > > > >>
-> > > > >> I am a bit confused about the usage of the dmaengine API, and I hope that you
-> > > > >> could help make me slightly less confused :)
-> > > > > 
-> > > > > Sure thing!
-> > > > > 
-> > > > >> If you look at the nvmet_pciep_epf_dma_transfer() function below, it takes a
-> > > > >> mutex around the dmaengine_slave_config(), dmaengine_prep_slave_single(),
-> > > > >> dmaengine_submit(), dma_sync_wait(), and dmaengine_terminate_sync() calls.
-> > > > >>
-> > > > >> I really wish that we would remove this mutex, to get better performance.
-> > > > >>
-> > > > >>
-> > > > >> If I look at e.g. the drivers/dma/dw-edma/dw-edma-core.c driver, I can see
-> > > > >> that dmaengine_prep_slave_single() (which will call
-> > > > >> device_prep_slave_sg(.., .., 1, .., .., ..)) allocates a new
-> > > > >> dma_async_tx_descriptor for each function call.
-> > > > >>
-> > > > >> I can see that device_prep_slave_sg() (dw_edma_device_prep_slave_sg()) will
-> > > > >> call dw_edma_device_transfer() which will call vchan_tx_prep(), which adds
-> > > > >> the descriptor to the tail of a list.
-> > > > >>
-> > > > >> I can also see that dw_edma_done_interrupt() will automatically start the
-> > > > >> transfer of the next descriptor (using vchan_next_desc()).
-> > > > >>
-> > > > >> So this looks like it is supposed to be asynchronous... however, if we simply
-> > > > >> remove the mutex, we get IOMMU errors, most likely because the DMA writes to
-> > > > >> an incorrect address.
-> > > > >>
-> > > > >> It looks like this is because dmaengine_prep_slave_single() really requires
-> > > > >> dmaengine_slave_config() for each transfer. (Since we are supplying a src_addr
-> > > > >> in the sconf that we are supplying to dmaengine_slave_config().)
-> > > > >>
-> > > > >> (i.e. we can't call dmaengine_slave_config() while a DMA transfer is active.)
-> > > > >>
-> > > > >> So while this API is supposed to be async, to me it looks like it can only
-> > > > >> be used in a synchronous manner... But that seems like a really weird design.
-> > > > >>
-> > > > >> Am I missing something obvious here?
-> > > > > 
-> > > > > Yes, I feel nvme being treated as slave transfer, which it might not be.
-> > > > > This API was designed for peripherals like i2c/spi etc where we have a
-> > > > > hardware address to read/write to. So the dma_slave_config would pass on
-> > > > > the transfer details for the peripheral like address, width of fifo,
-> > > > > depth etc and these are setup config, so call once for a channel and then
-> > > > > prepare the descriptor, submit... and repeat of prepare and submit ...
-> > > > > 
-> > > > > I suspect since you are passing an address which keep changing in the
-> > > > > dma_slave_config, you need to guard that and prep_slave_single() call,
-> > > > > as while preparing the descriptor driver would lookup what was setup for
-> > > > > the configuration.
-> > > > > 
-> > > > > I suggest then use the prep_memcpy() API instead and pass on source and
-> > > > > destination, no need to lock the calls...
-> > > > 
-> > > > Vinod,
-> > > > 
-> > > > Thank you for the information. However, I think we can use this only if the DMA
-> > > > controller driver implements the device_prep_dma_memcpy operation, no ?
-> > > > In our case, the DWC EDMA driver does not seem to implement this.
-> > > 
-> > > It should be added in that case.
-> > > 
-> > > Before that, the bigger question is, should nvme be slave transfer or
-> > > memcpy.. Was driver support the reason why the slave transfer was used here...?
-> > > 
-> > > As i said, slave is for peripherals which have a static fifo to
-> > > send/receive data from, nvme sounds like a memory transfer to me, is
-> > > that a right assumption?
-> > > 
-> > 
-> > My understanding is that DMA_MEMCPY is for local DDR transfer i.e., src and dst
-> > are local addresses. And DMA_SLAVE is for transfer between remote and local
-> > addresses. I haven't looked into the NVMe EPF driver yet, but it should do
-> > the transfer between remote and local addresses. This is similar to MHI EPF
-> > driver as well.
-> > 
-> 
-> I had an offline discussion with Vinod and he clarified that the DMA_SLAVE
-> implementation is supposed to be used by clients with fixed FIFO. That's why
-> 'struct dma_slave_config' has options to configure maxburst, addr_width,
-> port_window_size etc... So these are not applicable for our usecase where we
-> would be just carrying out transfer between remote and local DDR.
-> 
-> So we should be implementing prep_memcpy() in dw-edma driver and use DMA_MEMCPY
-> in client drivers.
-> 
-> @Niklas: Since you asked this question, are you volunteering to implement
-> prep_memcpy() in dw-edma driver? ;)
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/dma/dw-edma/dw-edma-core.c | 52 ++++++++++++++++++++++++++++--
+ drivers/dma/dw-edma/dw-edma-core.h | 10 +++++-
+ 2 files changed, 59 insertions(+), 3 deletions(-)
 
-I did implement something that seems to be working.
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index 68236247059d..29cbd947df57 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -422,6 +422,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 			return NULL;
+ 		if (!xfer->xfer.il->src_inc || !xfer->xfer.il->dst_inc)
+ 			return NULL;
++	} else if (xfer->type == EDMA_XFER_MEMCPY) {
++		if (!xfer->xfer.memcpy.len)
++			return NULL;
+ 	} else {
+ 		return NULL;
+ 	}
+@@ -437,6 +440,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 	if (xfer->type == EDMA_XFER_INTERLEAVED) {
+ 		src_addr = xfer->xfer.il->src_start;
+ 		dst_addr = xfer->xfer.il->dst_start;
++	} else if (xfer->type == EDMA_XFER_MEMCPY) {
++		src_addr = xfer->xfer.memcpy.src;
++		dst_addr = xfer->xfer.memcpy.dst;
+ 	} else {
+ 		src_addr = chan->config.src_addr;
+ 		dst_addr = chan->config.dst_addr;
+@@ -455,6 +461,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 	} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
+ 		cnt = xfer->xfer.il->numf * xfer->xfer.il->frame_size;
+ 		fsz = xfer->xfer.il->frame_size;
++	} else if (xfer->type == EDMA_XFER_MEMCPY) {
++		cnt = 1;
+ 	}
+ 
+ 	for (i = 0; i < cnt; i++) {
+@@ -477,6 +485,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 			burst->sz = sg_dma_len(sg);
+ 		else if (xfer->type == EDMA_XFER_INTERLEAVED)
+ 			burst->sz = xfer->xfer.il->sgl[i % fsz].size;
++		else if (xfer->type == EDMA_XFER_MEMCPY)
++			burst->sz = xfer->xfer.memcpy.len;
+ 
+ 		chunk->ll_region.sz += burst->sz;
+ 		desc->alloc_sz += burst->sz;
+@@ -495,7 +505,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 				 * and destination addresses are increased
+ 				 * by the same portion (data length)
+ 				 */
+-			} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
++			} else if (xfer->type == EDMA_XFER_INTERLEAVED ||
++				   xfer->type == EDMA_XFER_MEMCPY) {
+ 				burst->dar = dst_addr;
+ 			}
+ 		} else {
+@@ -512,7 +523,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 				 * and destination addresses are increased
+ 				 * by the same portion (data length)
+ 				 */
+-			}  else if (xfer->type == EDMA_XFER_INTERLEAVED) {
++			}  else if (xfer->type == EDMA_XFER_INTERLEAVED ||
++				    xfer->type == EDMA_XFER_MEMCPY) {
+ 				burst->sar = src_addr;
+ 			}
+ 		}
+@@ -595,6 +607,40 @@ dw_edma_device_prep_interleaved_dma(struct dma_chan *dchan,
+ 	return dw_edma_device_transfer(&xfer);
+ }
+ 
++static struct dma_async_tx_descriptor *
++dw_edma_device_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst,
++			       dma_addr_t src, size_t len, unsigned long flags)
++{
++	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
++	enum dma_transfer_direction direction;
++	struct dw_edma_transfer xfer;
++
++	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
++		if (chan->dir == EDMA_DIR_READ)
++			direction = DMA_DEV_TO_MEM;
++		else
++			direction = DMA_MEM_TO_DEV;
++	} else {
++		if (chan->dir == EDMA_DIR_WRITE)
++			direction = DMA_DEV_TO_MEM;
++		else
++			direction = DMA_MEM_TO_DEV;
++	}
++
++	xfer.dchan = dchan;
++	xfer.direction = direction;
++	xfer.xfer.memcpy.dst = dst;
++	xfer.xfer.memcpy.src = src;
++	xfer.xfer.memcpy.len = len;
++	xfer.flags = flags;
++	xfer.type = EDMA_XFER_MEMCPY;
++
++	/* DMA_MEMCPY does not need an initial dmaengine_slave_config() call */
++	chan->configured = true;
++
++	return dw_edma_device_transfer(&xfer);
++}
++
+ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
+ {
+ 	struct dw_edma_desc *desc;
+@@ -787,6 +833,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+ 	dma_cap_set(DMA_CYCLIC, dma->cap_mask);
+ 	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
+ 	dma_cap_set(DMA_INTERLEAVE, dma->cap_mask);
++	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
+ 	dma->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+ 	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+@@ -806,6 +853,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+ 	dma->device_prep_slave_sg = dw_edma_device_prep_slave_sg;
+ 	dma->device_prep_dma_cyclic = dw_edma_device_prep_dma_cyclic;
+ 	dma->device_prep_interleaved_dma = dw_edma_device_prep_interleaved_dma;
++	dma->device_prep_dma_memcpy = dw_edma_device_prep_dma_memcpy;
+ 
+ 	dma_set_max_seg_size(dma->dev, U32_MAX);
+ 
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index 71894b9e0b15..2b35dccbe8de 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -36,7 +36,8 @@ enum dw_edma_status {
+ enum dw_edma_xfer_type {
+ 	EDMA_XFER_SCATTER_GATHER = 0,
+ 	EDMA_XFER_CYCLIC,
+-	EDMA_XFER_INTERLEAVED
++	EDMA_XFER_INTERLEAVED,
++	EDMA_XFER_MEMCPY
+ };
+ 
+ struct dw_edma_chan;
+@@ -139,12 +140,19 @@ struct dw_edma_cyclic {
+ 	size_t				cnt;
+ };
+ 
++struct dw_edma_memcpy {
++	dma_addr_t			dst;
++	dma_addr_t			src;
++	size_t				len;
++};
++
+ struct dw_edma_transfer {
+ 	struct dma_chan			*dchan;
+ 	union dw_edma_xfer {
+ 		struct dw_edma_sg		sg;
+ 		struct dw_edma_cyclic		cyclic;
+ 		struct dma_interleaved_template *il;
++		struct dw_edma_memcpy		memcpy;
+ 	} xfer;
+ 	enum dma_transfer_direction	direction;
+ 	unsigned long			flags;
+-- 
+2.47.1
 
-It would be nice if you could help testing it using your MHI EPF driver.
-(You need to convert it to use _prep_memcpy() in order to be able to test.)
-
-
-Kind regards,
-Niklas
 
