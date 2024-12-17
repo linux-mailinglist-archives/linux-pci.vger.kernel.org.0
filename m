@@ -1,67 +1,98 @@
-Return-Path: <linux-pci+bounces-18572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18573-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB8AC9F4037
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 02:50:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6C2B9F415B
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 04:56:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B37E16A12B
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 01:50:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 817B41889596
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 03:56:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A695182488;
-	Tue, 17 Dec 2024 01:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879DC136353;
+	Tue, 17 Dec 2024 03:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kCpRFeaR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C706EB7C
-	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 01:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C54434A23;
+	Tue, 17 Dec 2024 03:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734400212; cv=none; b=MiOimnvBKBgRY7Q0nnilbF2+FNmVeM8o3tkejbGekzbSIgJLJcrn8xFDSXy8HkFYSYi1IAwgdsnQEMx2i4U3eJRKz/44WoOC5F9K+GDHOJRoSeaudHHzPCCqYzlN5EU7iXhcvqPVbbqLsQv7aJyHPFqZQb6wh/rzc1N45gHb1To=
+	t=1734407811; cv=none; b=lXD964oHURWhuGnz9jD75nQR7FUloP89EAuY1RZtz2N+8RZiYwb6vvtVRMXLZj5cIdJspBZocPQRXEtwOc0zccklMGBY6ZJdqlbGqpfNjHtq5UNnHbmJWW18F7YLeU7wn47zudup85CPRIiOuZ/yLeMxSIJXgWV5RJ8lr1YF4yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734400212; c=relaxed/simple;
-	bh=ljKmAB0VT2J1XoUx9siQ779m5CZ8tdsK068WTcuBiOY=;
-	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Wybtl+9oRdaGHNJDzSnB/UiQj5ms84fplJkNhlWu9JPDnzlY1OxXDFXzz57ralhnuTOWCpJj0JdqITpiVpo7AGrnTL33NWnEuPpQh0uovXb93bObIN6cRrGt4YJp/x7lMWzu7Y0ea5br6fmClGR17Kf5JTqXIIInXsDyAmwVOeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4YC09k2wWhz1JFcQ;
-	Tue, 17 Dec 2024 09:49:46 +0800 (CST)
-Received: from kwepemh100007.china.huawei.com (unknown [7.202.181.92])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8930C1A0171;
-	Tue, 17 Dec 2024 09:50:07 +0800 (CST)
-Received: from [10.67.111.53] (10.67.111.53) by kwepemh100007.china.huawei.com
- (7.202.181.92) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Dec
- 2024 09:50:06 +0800
-Message-ID: <30cde67b-7add-49c1-b45f-bc8a9204862b@huawei.com>
-Date: Tue, 17 Dec 2024 09:50:06 +0800
+	s=arc-20240116; t=1734407811; c=relaxed/simple;
+	bh=arZH8wml6AT9zJI+tM6LObAj292jKK9legVNPvfwbaY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MMEXHq1ZikT8JZ7hbk2W0ugK7PgFEdi0LJ+LH57GPY+nNRQI6/FzBovP42FRgs7K56hVx0V2wlHWGh/VVOFIG3Z+8Vw92g0sZVAF++iOy5HMp9Lx45P0NfrGcMW7P3XjLF70HDK/ctDqmH5fo/zLIc1KBsdtMlq49kvyGOvM/Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kCpRFeaR; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=tTzf7
+	6yZq9yXiN59rqqtrq/Asv5rbCSWbmTGGzC2TiI=; b=kCpRFeaRtMfwYlihLQaSM
+	mFwAuNmhmOrhgmzFwgW+eRkaSolr59cemsipfvp0y8SQWgjBRTFP+D5XkY9KiAUE
+	6vCTT9HHM+Bmb9RW8SfLYAP1XIKYnCM7IurpOLpLhdvI01mWwVMy/bPhGIYUkcwM
+	YbWIdYOijoMRwSpWuNjkzo=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wC3z3rn9WBnjJxUBA--.60828S4;
+	Tue, 17 Dec 2024 11:54:21 +0800 (CST)
+From: Ma Ke <make_ruc2021@163.com>
+To: bhelgaas@google.com,
+	rafael.j.wysocki@intel.com,
+	yinghai@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make_ruc2021@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] PCI: fix reference leak in pci_alloc_child_bus()
+Date: Tue, 17 Dec 2024 11:54:13 +0800
+Message-Id: <20241217035413.2892000-1-make_ruc2021@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: <zhangkunbo@huawei.com>
-CC: <bhelgaas@google.com>, <bp@alien8.de>, <chris.zjh@huawei.com>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <liaochang1@huawei.com>,
-	<linux-pci@vger.kernel.org>, <mingo@redhat.com>, <tglx@linutronix.de>,
-	<x86@kernel.org>
-References: <20241126015457.3463645-1-zhangkunbo@huawei.com>
-Subject: Re: [PATCH v2] x86: fix missing declaration of x86_apple_machine
-From: zhangkunbo <zhangkunbo@huawei.com>
-In-Reply-To: <20241126015457.3463645-1-zhangkunbo@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemh100007.china.huawei.com (7.202.181.92)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3z3rn9WBnjJxUBA--.60828S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWruFWxGr1fCr1UKw1rZw15CFg_yoWfWrcE93
+	W09F97Wr4UK3WxKw1ayw13Z392k3WDZrZ3urW8tF1fZa43Zr4q9F17Zry8Cw4qganrCr98
+	Aa4jvr1vkr1UWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRWGQhUUUUUU==
+X-CM-SenderInfo: 5pdnvshuxfjiisr6il2tof0z/1tbizRa4C2dg7-GeEgAAs9
 
-ping gently.
+When device_register(&child->dev) failed, calling put_device() to
+explicitly release child->dev. Otherwise, it could cause double free
+problem.
+
+Found by code review.
+
+Cc: stable@vger.kernel.org
+Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
+Signed-off-by: Ma Ke <make_ruc2021@163.com>
+---
+ drivers/pci/probe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2e81ab0f5a25..d3146c588d7f 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ add_dev:
+ 	pci_set_bus_msi_domain(child);
+ 	ret = device_register(&child->dev);
+-	WARN_ON(ret < 0);
++	if (ret) {
++		WARN_ON(ret < 0);
++		put_device(&child->dev);
++	}
+ 
+ 	pcibios_add_bus(child);
+ 
+-- 
+2.25.1
 
 
