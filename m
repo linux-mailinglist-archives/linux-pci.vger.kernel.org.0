@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-18600-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18601-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1863E9F49FE
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 12:34:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4695D9F4A02
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 12:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50D9D168D92
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 11:34:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9407B1883A08
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 11:35:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32C31F2C5A;
-	Tue, 17 Dec 2024 11:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A7A1EBFE3;
+	Tue, 17 Dec 2024 11:35:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4tZtKqz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3/rmqQM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDDD1F2385
-	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 11:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16851DDA35
+	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 11:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734435228; cv=none; b=newRxSUyytShuMzyG89sjwD/3aBtMwm0happDoM/RhDgmsnIflWUw1egJUkvZpfmuDV3Jv7WNZYJyCBDOXOLpxVCdfbi5bRwWSLci5WmaJ8Ol5kpt5oQ5V8Ysa5IDbU2el4raoGk7Mcp8cFBMOpo+NlYH0FKyyZjhSiAc6tdqTM=
+	t=1734435323; cv=none; b=ix0hbkuGRLQ4yUgaWglwVYyzdsSm2K+9x/nJ+QxBhEe3A9Q7VzjTv9tJ+GUmT2/G00lL8vq6u8pmWQwsKy8bfmSEta0YI3WRxyQvfaLC92a463qn5D8vlmB8uNmzB9bBoo5fGRO6kEoxsULK7NMQHggMrcEOPpPgLHkrjvbhsBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734435228; c=relaxed/simple;
-	bh=dovFDGfh0oTg3T/Ws6pelYKX4I/ATheP2kHV4hFq6Mg=;
+	s=arc-20240116; t=1734435323; c=relaxed/simple;
+	bh=KFHWe4yw4h/Z1XC4XDHfokrrpBQKfZVcMgaNhS+ege4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qDnKU6wRnpNMvnJy7KpijHf6xBngPQktHqEfkDiJu77TUwhtq4Lg0JZ3qy1Chvtxh4e5dcnDyWt0lGa3zHjd5em1F/dK570DxHRaCbEUJnlaj9f9yauBIXw2IwvPHl9kcBUMZkI8DtH8Csskiy06ny+MmGDZkzVeANU8QXKpvYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4tZtKqz; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=H/BKmjhmMaEETQx7bNx+MjKN+JlsP72fLEuggdfucOZ4E1fGPH4lOF7lJAogMAF70rWLy9p+zwAMI8MG8n+gTxm0TrbJ6JsxD+hpifSt4SXL2tz0ItsAIIFnoQ5RUlxstEGBR6DI5FHLor5OXsIdYggKhpVbpKdg567uWSGVXLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3/rmqQM; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734435225; x=1765971225;
+  t=1734435322; x=1765971322;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=dovFDGfh0oTg3T/Ws6pelYKX4I/ATheP2kHV4hFq6Mg=;
-  b=R4tZtKqzSd/Z2CzvHPe8ujlsIBpL/1JVPE+/jINj2+uOy5waULXb/hJs
-   TmHqXDLsBxghfAN9h7t9askGgHyUeHaMrvOpR2xJOjWdK3jlX7vfBQh21
-   wbpKS5ZNJIawP3UFehpnhuUMLSSHIf772dy4hQc1OzUJuearLo7AeW0U/
-   KjSrI0ytc05EK3EnMZ1tTYfSesd9Zd1491VB8r5Daxg4DNIjejfFJCXj2
-   OOWD2BXm/fTqs7JkEQ0rcj+AMCUCCQghOgJQ2CljxEAvekNRsLT1ZUGyZ
-   8zTgOe04zNGMGCR42oWd5SSFzQKTAFnT7LEeKqiJvOV6OWZZ3TZ01V7bJ
-   w==;
-X-CSE-ConnectionGUID: Us/sJYEUQKuwnvipDdHTYw==
-X-CSE-MsgGUID: Wh0J4bANSNuYLGQp4XjxEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34177061"
+  bh=KFHWe4yw4h/Z1XC4XDHfokrrpBQKfZVcMgaNhS+ege4=;
+  b=M3/rmqQM3X4MNP1iIy/8Oye2MYFKjUT0+4b+oUZJ6t/V0HP6jQle8317
+   0moq+78CcE/3dSVn8RIS+LMh9qQRPfuRzmvNmTG0Cvb4wo5js2PRiXPH0
+   8OUoGg0zJT0jEU5mXdXkCgKR8cYlzZ+AtSemcIa0xD6QdcjGT0WMF1mxA
+   E+OiStQPqolgQr85dN8aN75Yg7d88H/OxjoN7t2ed++enPLlfuLPQM7OA
+   QwjG092le6e9ZjiDA6+66GEIV+6+4Ae2bbGyrqA+wlwnS4jPMWGglr5tT
+   2tAe8Y3ncCJts7DW2dwWxTmpjgt8tXtg2B3PJx6/+v0yoM3MgDZPNrwMG
+   Q==;
+X-CSE-ConnectionGUID: kscvOvxkRTG8Qm4+wodEww==
+X-CSE-MsgGUID: eaVaUAa6Q+6/KJ9Rl5Tp2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="57335808"
 X-IronPort-AV: E=Sophos;i="6.12,241,1728975600"; 
-   d="scan'208";a="34177061"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 03:33:43 -0800
-X-CSE-ConnectionGUID: 1BbLwNjXQKe33T0q/wBtuQ==
-X-CSE-MsgGUID: nuCvQoyAT/qyDljTjer3wg==
+   d="scan'208";a="57335808"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 03:35:21 -0800
+X-CSE-ConnectionGUID: T9XBm6uHTZyrIN8TDWEX4g==
+X-CSE-MsgGUID: OjntznneQ+K5miOxU51UQg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,241,1728975600"; 
-   d="scan'208";a="97403588"
+   d="scan'208";a="98081350"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 03:33:41 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 03:35:18 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 17 Dec 2024 13:33:36 +0200 (EET)
+Date: Tue, 17 Dec 2024 13:35:15 +0200 (EET)
 To: Lukas Wunner <lukas@wunner.de>
 cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
     Niklas Schnelle <niks@kernel.org>, 
@@ -67,112 +67,100 @@ cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
     Mika Westerberg <mika.westerberg@linux.intel.com>, 
     "Maciej W. Rozycki" <macro@orcam.me.uk>, 
     Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH for-linus v3 1/2] PCI: Honor Max Link Speed when determining
- supported speeds
-In-Reply-To: <fe03941e3e1cc42fb9bf4395e302bff53ee2198b.1734428762.git.lukas@wunner.de>
-Message-ID: <7bbd48eb-efaf-260f-ad8d-9fe7f2209812@linux.intel.com>
-References: <cover.1734428762.git.lukas@wunner.de> <fe03941e3e1cc42fb9bf4395e302bff53ee2198b.1734428762.git.lukas@wunner.de>
+Subject: Re: [PATCH for-linus v3 2/2] PCI/bwctrl: Enable only if more than
+ one speed is supported
+In-Reply-To: <3564908a9c99fc0d2a292473af7a94ebfc8f5820.1734428762.git.lukas@wunner.de>
+Message-ID: <4c66d934-58fa-cc6a-77bd-04be5f81f76e@linux.intel.com>
+References: <cover.1734428762.git.lukas@wunner.de> <3564908a9c99fc0d2a292473af7a94ebfc8f5820.1734428762.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-152149658-1734435216=:924"
+Content-Type: multipart/mixed; boundary="8323328-339689917-1734435315=:924"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-152149658-1734435216=:924
+--8323328-339689917-1734435315=:924
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Tue, 17 Dec 2024, Lukas Wunner wrote:
 
-> The Supported Link Speeds Vector in the Link Capabilities 2 Register
-> indicates the *supported* link speeds.  The Max Link Speed field in the
-> Link Capabilities Register indicates the *maximum* of those speeds.
+> If a PCIe port only supports a single speed, enabling bandwidth control
+> is pointless:  There's no need to monitor autonomous speed changes, nor
+> can the speed be changed.
 >=20
-> pcie_get_supported_speeds() neglects to honor the Max Link Speed field an=
-d
-> will thus incorrectly deem higher speeds as supported.  Fix it.
+> Not enabling it saves a small amount of memory and compute resources,
+> but also fixes a boot hang reported by Niklas:  It occurs when enabling
+> bandwidth control on Downstream Ports of Intel JHL7540 "Titan Ridge 2018"
+> Thunderbolt controllers.  The ports only support 2.5 GT/s in accordance
+> with USB4 v2 sec 11.2.1, so the present commit works around the issue.
 >=20
-> One user-visible issue addressed here is an incorrect value in the sysfs
-> attribute "max_link_speed".
+> PCIe r6.2 sec 8.2.1 prescribes that:
 >=20
-> But the main motivation is a boot hang reported by Niklas:  Intel JHL7540
-> "Titan Ridge 2018" Thunderbolt controllers supports 2.5-8 GT/s speeds,
-> but indicate 2.5 GT/s as maximum.  Ilpo recalls seeing this on more
-> devices.  It can be explained by the controller's Downstream Ports
-> supporting 8 GT/s if an Endpoint is attached, but limiting to 2.5 GT/s
-> if the port interfaces to a PCIe Adapter, in accordance with USB4 v2
-> sec 11.2.1:
+>    "A device must support 2.5 GT/s and is not permitted to skip support
+>     for any data rates between 2.5 GT/s and the highest supported rate."
 >=20
->    "This section defines the functionality of an Internal PCIe Port that
->     interfaces to a PCIe Adapter. [...]
->     The Logical sub-block shall update the PCIe configuration registers
->     with the following characteristics: [...]
->     Max Link Speed field in the Link Capabilities Register set to 0001b
->     (data rate of 2.5 GT/s only).
->     Note: These settings do not represent actual throughput. Throughput
->     is implementation specific and based on the USB4 Fabric performance."
+> Consequently, bandwidth control is currently only disabled if a port
+> doesn't support higher speeds than 2.5 GT/s.  However the Implementation
+> Note in PCIe r6.2 sec 7.5.3.18 cautions:
 >=20
-> The present commit is not sufficient on its own to fix Niklas' boot hang,
-> but it is a prerequisite:  A subsequent commit will fix the boot hang by
-> enabling bandwidth control only if more than one speed is supported.
+>    "It is strongly encouraged that software primarily utilize the
+>     Supported Link Speeds Vector instead of the Max Link Speed field,
+>     so that software can determine the exact set of supported speeds on
+>     current and future hardware.  This can avoid software being confused
+>     if a future specification defines Links that do not require support
+>     for all slower speeds."
 >=20
-> The GENMASK() macro used herein specifies 0 as lowest bit, even though
-> the Supported Link Speeds Vector ends at bit 1.  This is done on purpose
-> to avoid a GENMASK(0, 1) macro if Max Link Speed is zero.  That macro
-> would be invalid as the lowest bit is greater than the highest bit.
-> Ilpo has witnessed a zero Max Link Speed on Root Complex Integrated
-> Endpoints in particular, so it does occur in practice.
-
-Thanks for adding this extra information.
-
-I'd also add reference to r6.2 section 7.5.3 which states those registers=
-=20
-are required for RPs, Switch Ports, Bridges, and Endpoints _that are not=20
-RCiEPs_. My reading is that implies they're not required from RCiEPs.
+> In other words, future revisions of the PCIe Base Spec may allow gaps
+> in the Supported Link Speeds Vector.  To be future-proof, don't just
+> check whether speeds above 2.5 GT/s are supported, but rather check
+> whether *more than one* speed is supported.
+>=20
+> Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe =
+BW controller")
+> Reported-by: Niklas Schnelle <niks@kernel.org>
+> Tested-by: Niklas Schnelle <niks@kernel.org>
+> Closes: https://lore.kernel.org/r/db8e457fcd155436449b035e8791a8241b0df40=
+0.camel@kernel.org/
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Jonathan Cameron <Jonthan.Cameron@huawei.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
 Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --
  i.
 
-> Fixes: d2bd39c0456b ("PCI: Store all PCIe Supported Link Speeds")
-> Reported-by: Niklas Schnelle <niks@kernel.org>
-> Tested-by: Niklas Schnelle <niks@kernel.org>
-> Closes: https://lore.kernel.org/r/70829798889c6d779ca0f6cd3260a765780d136=
-9.camel@kernel.org/
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 > ---
->  drivers/pci/pci.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  drivers/pci/pcie/portdrv.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 35dc9f2..b730560 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6240,12 +6240,14 @@ u8 pcie_get_supported_speeds(struct pci_dev *dev)
->  =09pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
->  =09speeds =3D lnkcap2 & PCI_EXP_LNKCAP2_SLS;
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index 5e10306..02e7309 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -265,12 +265,14 @@ static int get_port_device_capability(struct pci_de=
+v *dev)
+>  =09    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+>  =09=09services |=3D PCIE_PORT_SERVICE_DPC;
 > =20
-> +=09/* Ignore speeds higher than Max Link Speed */
-> +=09pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-> +=09speeds &=3D GENMASK(lnkcap & PCI_EXP_LNKCAP_SLS, 0);
-> +
->  =09/* PCIe r3.0-compliant */
->  =09if (speeds)
->  =09=09return speeds;
+> +=09/* Enable bandwidth control if more than one speed is supported. */
+>  =09if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_DOWNSTREAM ||
+>  =09    pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_ROOT_PORT) {
+>  =09=09u32 linkcap;
 > =20
-> -=09pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-> -
->  =09/* Synthesize from the Max Link Speed field */
->  =09if ((lnkcap & PCI_EXP_LNKCAP_SLS) =3D=3D PCI_EXP_LNKCAP_SLS_5_0GB)
->  =09=09speeds =3D PCI_EXP_LNKCAP2_SLS_5_0GB | PCI_EXP_LNKCAP2_SLS_2_5GB;
+>  =09=09pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
+> -=09=09if (linkcap & PCI_EXP_LNKCAP_LBNC)
+> +=09=09if (linkcap & PCI_EXP_LNKCAP_LBNC &&
+> +=09=09    hweight8(dev->supported_speeds) > 1)
+>  =09=09=09services |=3D PCIE_PORT_SERVICE_BWCTRL;
+>  =09}
+> =20
 >=20
---8323328-152149658-1734435216=:924--
+--8323328-339689917-1734435315=:924--
 
