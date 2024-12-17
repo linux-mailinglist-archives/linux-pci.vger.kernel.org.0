@@ -1,96 +1,94 @@
-Return-Path: <linux-pci+bounces-18659-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18660-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3B129F52A0
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 18:21:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 571A29F5296
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 18:21:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C83D1884F2A
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 17:18:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 711837A2494
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 17:21:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 514B41F8697;
-	Tue, 17 Dec 2024 17:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80AF71DE2AC;
+	Tue, 17 Dec 2024 17:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j+cw8ieG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aAg37WfX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC841F8909
-	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 17:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81371F7568
+	for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 17:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734455849; cv=none; b=ay+92axxteoS511JwyK+H1moIZdNeihhtJIg77IVMs4RIrMJNc9oKxNw1YgZJtABXgR8PkpIHGCtKO65wNEHLJifc+b88TT1jys/kzDqjSocSvGyWQ417rRFbRow7YPzYNoora0JYtlU8RDzCQ0Nyqsby+Kmeph4sc11q3HOVd0=
+	t=1734456045; cv=none; b=L00HP/NXFRC6fOUS3DQ5s68Hs/R5dCksMZi9+C2mpKn/c5E9/1RMG7GYejDRLlj5Gzq4e1fh+srVfibj3G0lKYcYQ173cF0vgrQMdPcoAPZyP66BUn+zljAbHgtgAMB7O3COolHXDVR2y+jKfNuYRKSW4iB+bCPngo+7UOzHHtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734455849; c=relaxed/simple;
-	bh=4Wju0L+ekzq44nRzcQmCPIRzf2mtM6FZNCx4PGYgx1g=;
+	s=arc-20240116; t=1734456045; c=relaxed/simple;
+	bh=lU3v/h95t9yKq+oPE/QPiEX37Ydf45Rwlzuvm1RuHwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PDLAbcgnp0Gv/re+OOB8RDMEoKKPW3WUvSWVNJ/aaoG2uTRkcGjO0qsEW7ScQLudUIk3Y3QqAPxLSC3J3tGvCfTHSIELGjLXVyJeACzY55p2HFpd5iLkJfAVSVqB/IVj6SzMD/4pSPwacCdPFA5eVGIJDmhasI2eqnfFkpUfqVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j+cw8ieG; arc=none smtp.client-ip=209.85.214.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyUBRAL+Zj+tHKCgbhcex/Z2o1DIEU0yOGC/z1tqAxV6Ye7vX50D+0vx93T2j6JvlkA0rVR34pZtT3BLfoiq9blb9GNU2PAx3cym5RUV4ISdJ3YO5XwJfCaTllo/m7ZsEvNVhdOEgeF8u8OO/LnThZIAjNK/Bk7Y7vg4KJlMtAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aAg37WfX; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21683192bf9so53122995ad.3
-        for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 09:17:26 -0800 (PST)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ee50ffcf14so5171091a91.0
+        for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2024 09:20:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734455846; x=1735060646; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1734456043; x=1735060843; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=EWKZ7yU7lz3ojV6mlmNYCITfdB0jo1tGhiz+XfLBXW4=;
-        b=j+cw8ieGLqgJigm/AE6vSXZagCTWfnOvUEYLsuaSeJZo15IJjpS074jkVJSlBVMAJL
-         Kuvm5rw59P1kQzp2eXu3ElneVuNxzXaNGnz5rDbuQhcYHSGR5aCVJ1jUTtHDhg6GhqC5
-         rKeltQJ12dG4PZaXHs9rP8rJvRQhXqUx+znIuyBGx4sxR1wkR+aZlSncnTptsGh5et6l
-         GCn4wY6fFEAfrJ899x8pCz/xyiLLpUZ68c+es37LYgWAliENRc8io6MUDuspPmkM/Yrd
-         7GlJFu+uSgwSK3H6+MMcoB8rkZ3El3ECmSAM/5dfPdXvdi8kDgOGlEWltVpHwPL3reZM
-         G/ZQ==
+        bh=97u39/mB75Gyvq3MUoP9A6BWuOZp1jV8oYjBZnf5YHs=;
+        b=aAg37WfXAKzH8J0gBo8+CmgbMQfNxTmLmgza8p7mM/WtKG4Udas38fPEtaCtY+COQ8
+         WREMrEuUdRJIWM3Ymd0PILouuqEj3uWXJ2ZM+GVrRzxOp3nmuymm1rGPfnU7ZCmztpsK
+         meVDvwXNmC6zdP1JJmkWIBpZvYmnFZ4FllTZid26VQpo5MC9INOj2k2jy56KfJXGIVNW
+         vpvVOGsmL235elLgXzSlNW1tfiW0d+BDwkPqXiSBGjcC33iMaJ+FuaUJ73055VvY0dcL
+         jowC5Fux9CdlXCmwEoyte6FMWxN7hArG0OBMzqpv1YmTObDdrzJjn1d73Cp+tc4RvTwY
+         y0Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734455846; x=1735060646;
+        d=1e100.net; s=20230601; t=1734456043; x=1735060843;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EWKZ7yU7lz3ojV6mlmNYCITfdB0jo1tGhiz+XfLBXW4=;
-        b=JHdoLhZ2TDO7tiwXVNTFQpjI4RsjRXfaZFqWKI/kYr6rRF5XLhGdBfEx1LgydzwOv1
-         XFSZZxeCLg7g4w/1flNeJ7HqM0Us/d/c0v3q1QJ6sIE8LBU/fKBLWy3XeVJ0mAmw/AkB
-         Ny/O8+IvUEVKRYMBlFufMgp9hK2+PI9L6p23+s54LT5NIZ9eORhqKs4TVXIVtV2aQqxV
-         L2E04aXDXj4LKe11j1oBkBs7aGiPaT0RFFNtFOZaFPCgqrX2HrYyAukLjY96xMIQSFaT
-         g+4ldCHDYSwhfo0h8f91lv8lyGO1syawAflWvplIKdufmG/I6LIofojsxL4KOPG7FU2l
-         +wVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMn109yX/EV39pu3a9hc1ALSpq67vC/Nl3So18QtXtUB/UJQhfP5LmH7NKAfybZSbjI5/R9H+FMYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhjfLecrAoZ853UonjeqXY2n/jOAxwJSgp3lzNS3zxC4w/Vi5C
-	5KZezlhbLyL5LTpvOah1EijZo2nYGDTy5TZcl0TRf2H11GB8kL1G8cll8YP8zw==
-X-Gm-Gg: ASbGncslw1kH15PJlsvLLFe/f3IcCyWzpAh6Xz8LaWkkkLkwXRlxEcuuZc7qFiQXAMD
-	NU3UnLYtyDrw57Q4qJLCrFqE85GJ7kQIyRanAhG9KWh/2Uxxdgxql/p4/+LmzlnjqnWSvvkRO6P
-	EschVYbhi0rZGSDeKj7VFCqpMtaGz4OR6TPOhCQBDbEq7q3s3zcpIyu+SKAD1EwgPMWDgJ6rxtF
-	yYnrtKsxrAdpSxlhD9B8zWdxfGRTzc7AtB9VDVoiZqXTuJzUcTnXcLBp3P6AwBBZlU6
-X-Google-Smtp-Source: AGHT+IHw0j4waZkD5AOaUOZbUb/afL8zOjtN94gaSgY9b1aG30bn7rZvne7ekkCLaJV9utR7RGn4Ig==
-X-Received: by 2002:a17:902:e88e:b0:216:386e:dd8 with SMTP id d9443c01a7336-218d4f76563mr4328115ad.17.1734455845878;
-        Tue, 17 Dec 2024 09:17:25 -0800 (PST)
+        bh=97u39/mB75Gyvq3MUoP9A6BWuOZp1jV8oYjBZnf5YHs=;
+        b=Scrn12QVJQJh+Ai+8mUc8R5C0sFPFSCjDTIG3bo0Hqoku1iPJDriqtpoxgbxsc208I
+         T4IsGv2zuSRCa4rTRkaiy5C/r0pnpt377XnV9OaJnY30bpthoVIU0uyBNtnblSNo9dk/
+         w4sPhWfIxls+hxafD1P+x0lqlewzAjAzfeXIO70cQxf/1dcb3Hj6Wmkks9l2YixK+fBM
+         XyYrIAIgQwDjNhUIDljQMCbLUXKgG0bho9VpKWDC8IsZq3vt0qIro6ZlO3avuhFiaMjs
+         jA4+ncHpTWwzdN9ITPyBvP7TAmkZKmPlajNtYFKN/rNb2WGnNhTyKbMZod6EcXxCdllY
+         pRFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6es58hVDc03q9Gx1tisHYxXuvBw/MRIB2b9EzZhPbT7fsMLxcdjZtsDYbgcCk0qlKpWRU0807GIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlU/prHZeQZlyi3sp8t8yr+ibyAcrbjCHDFq1+F7gzhm9j1Whu
+	Ny4h7qwxIDJMDrOOYZh9Ak7gZCkUElHw/cIv7jjmVw/yBS/sQcg03rkrnA6cTw==
+X-Gm-Gg: ASbGncsltSJhyCr1/cnWvqSBp5/tv8IcjiZ2bJtP1TYWsKBensJmGWAK2wbJy20BAgR
+	RitaMSgmFYzNsLNYB8hVpzKrEjY6fdKmd7xgtXp+7/Is9gfDnOKFFz5iwHr2liElGafgXddlGxj
+	cJ1JF5xPfyP4UaHNY05docSUwAL1Tru+m++YAtqKGzevl458rv72fXGnw1+5/jXcl1ISb7M00F9
+	2bY3jbzGhnPqCTCD8xEHaqPNiiMD3f3JfOS/CQMbPJZNktDcMcSrJqDyzjS+PlpifHD
+X-Google-Smtp-Source: AGHT+IGjUccenohiYb+SDkdAmpf0k5ZpdC9204RkXFZyFmXwB9GNV/fs0d/6P1jKINhalSCuMQyisw==
+X-Received: by 2002:a17:90b:2750:b0:2ee:7504:bb3d with SMTP id 98e67ed59e1d1-2f2d867445amr6395058a91.0.1734456043265;
+        Tue, 17 Dec 2024 09:20:43 -0800 (PST)
 Received: from thinkpad ([117.193.214.60])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1e5011bsm61959185ad.152.2024.12.17.09.17.20
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f2a2434a7bsm6848964a91.36.2024.12.17.09.20.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 09:17:25 -0800 (PST)
-Date: Tue, 17 Dec 2024 22:47:15 +0530
+        Tue, 17 Dec 2024 09:20:42 -0800 (PST)
+Date: Tue, 17 Dec 2024 22:50:33 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v4 17/18] nvmet: New NVMe PCI endpoint target driver
-Message-ID: <20241217171715.wqawrrk3c7bdmxtn@thinkpad>
-References: <20241212113440.352958-1-dlemoal@kernel.org>
- <20241212113440.352958-18-dlemoal@kernel.org>
- <20241217085355.y6bqqisqbr5kbxkl@thinkpad>
- <4015e54a-54a5-4ac7-ae1c-3d2fb935b20f@kernel.org>
- <20241217164149.vuqwtthlykn7bobj@thinkpad>
- <cab48574-503b-48dd-9fe4-71e5c4c86d4e@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Christian Bruel <christian.bruel@foss.st.com>,
+	Rob Herring <robh+dt@kernel.org>, lpieralisi@kernel.org,
+	kw@linux.com, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, p.zabel@pengutronix.de,
+	cassel@kernel.org, quic_schintav@quicinc.com,
+	fabrice.gasnier@foss.st.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: PCI: Add STM32MP25 PCIe root complex
+ bindings
+Message-ID: <20241217172033.zxl4bufakzx7eww5@thinkpad>
+References: <20241126155119.1574564-2-christian.bruel@foss.st.com>
+ <20241203222515.GA2967814@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,82 +98,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cab48574-503b-48dd-9fe4-71e5c4c86d4e@kernel.org>
+In-Reply-To: <20241203222515.GA2967814@bhelgaas>
 
-On Tue, Dec 17, 2024 at 09:03:08AM -0800, Damien Le Moal wrote:
-> On 2024/12/17 8:41, Manivannan Sadhasivam wrote:
-> >>>> +	/* Create the target controller. */
-> >>>> +	ret = nvmet_pciep_create_ctrl(nvme_epf, max_nr_queues);
-> >>>> +	if (ret) {
-> >>>> +		dev_err(&epf->dev,
-> >>>> +			"Create NVMe PCI target controller failed\n");
-> >>>
-> >>> Failed to create NVMe PCI target controller
-> >>
-> >> How is that better ?
-> >>
+On Tue, Dec 03, 2024 at 04:25:15PM -0600, Bjorn Helgaas wrote:
+> On Tue, Nov 26, 2024 at 04:51:15PM +0100, Christian Bruel wrote:
+> > Document the bindings for STM32MP25 PCIe Controller configured in
+> > root complex mode.
 > > 
-> > It is common for the error messages to start with 'Failed to...'. Also 'Create
-> > NVMe PCI target controller failed' doesn't sound correct to me. But I am not a
-> > native english speaker, so my views could be wrong.
+> > Supports 4 legacy interrupts and MSI interrupts from the ARM
+> > GICv2m controller.
 > 
-> I do not think this is true for all subsystems. But sure, I can change the message.
+> s/legacy/INTx/
 > 
-> >>> Why these are coming from somewhere else and not configured within the EPF
-> >>> driver?
-> >>
-> >> They are set through the nvme target configfs. So there is no need to have these
-> >> again setup through the epf configfs. We just grab the values set for the NVME
-> >> target subsystem config.
-> >>
+> > STM32 PCIe may be in a power domain which is the case for the STM32MP25
+> > based boards.
 > > 
-> > But in documentation you were configuring the vendor_id twice:
-> > 
-> > 	# echo "0x1b96" > nvmepf.0.nqn/attr_vendor_id
-> > 	...
-> >         # echo 0x1b96 > nvmepf.0/vendorid
-> > 
-> > And that's what confused me. You need to get rid of the second command and add a
-> > note that the vendor_id used in target configfs will be reused.
+> > Supports wake# from wake-gpios
 > 
-> vendor_id != subsys_vendor_id :) These are 2 different fields. subsys_vendor_id
-> is reported by the identify controller command and is also present in the PCI
-> config space. vendor_id is not reported by the identify controller command and
-> present only in the PCI config space.
+> s/wake#/WAKE#/
 > 
-
-I know the difference between vendor_id and subsys_vendor_id :) But as I quoted,
-you are using the same vendor id value in 2 places. One in nvmet configfs and
-another in epf configfs. But internally, you just reuse the nvmet configfs value
-in epf. And this is not evident in the documentation.
-
-> For the config example, I simply used the same values for both fields, but they
-> can be different. NVMe PCIe specs are a bit of a mess around these IDs...
+> > +  wake-gpios:
+> > +    description: GPIO controlled connection to WAKE# input signal
 > 
-> >>>> +static int nvmet_pciep_epf_link_up(struct pci_epf *epf)
-> >>>> +{
-> >>>> +	struct nvmet_pciep_epf *nvme_epf = epf_get_drvdata(epf);
-> >>>> +	struct nvmet_pciep_ctrl *ctrl = &nvme_epf->ctrl;
-> >>>> +
-> >>>> +	dev_info(nvme_epf->ctrl.dev, "PCI link up\n");
-> >>>
-> >>> These prints are supposed to come from the controller drivers. So no need to
-> >>> have them here also.
-> >>
-> >> Nope, the controller driver does not print anything. At least the DWC driver
-> >> does not print anything.
-> >>
-> > 
-> > Which DWC driver? pcie-dw-rockchip? But other drivers like pcie-qcom-ep have
-> > these prints already. And this EPF driver is not tied to a single controller
-> > driver. As said earlier, these prints are supposed to be added to the controller
-> > drivers.
+> I'm not a hardware guy, but this sounds like a GPIO that *reads*
+> WAKE#, not controls it.
 > 
-> The DWC driver for the rk2588 (drivers/pci/controllers/dwc/*) is missing this
-> message.
+> > +    pcie@48400000 {
+> > +        compatible = "st,stm32mp25-pcie-rc";
+> > +        device_type = "pci";
+> > +        num-lanes = <1>;
+> 
+> num-lanes applies to a Root Port, not to a Root Complex.  I know most
+> bindings conflate Root Ports with the Root Complex, maybe because many
+> of these controllers only support a single Root Port?
+> 
+> But are we ever going to separate these out?  I assume someday
+> controllers will support multiple Root Ports and/or additional devices
+> on the root bus, like RCiEPs, RCECs, etc., and we'll need per-RP phys,
+> max-link-speed, num-lanes, reset-gpios, etc.
+> 
+> Seems like it would be to our benefit to split out the Root Ports when
+> we can, even if the current hardware only supports one, so we can
+> start untangling the code and data structures.
 > 
 
-Yeah, maybe you should add it later.
++1 for moving the properties to RP node where they should belong to. The
+controller driver might have to do some extra work to parse the RP node and get
+these properties, but it is worth the effort.
 
 - Mani
 
