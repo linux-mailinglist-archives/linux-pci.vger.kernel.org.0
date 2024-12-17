@@ -1,61 +1,106 @@
-Return-Path: <linux-pci+bounces-18580-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18581-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05D899F45E5
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 09:19:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74A549F45E8
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 09:21:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E650161A70
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 08:19:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19924188F46B
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2024 08:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B73731D358F;
-	Tue, 17 Dec 2024 08:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E161D3194;
+	Tue, 17 Dec 2024 08:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYxCNpij"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qVwW87h9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3iwiwvyj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qVwW87h9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3iwiwvyj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3F6155393;
-	Tue, 17 Dec 2024 08:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5B8155393;
+	Tue, 17 Dec 2024 08:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734423572; cv=none; b=JiRTRW3aw2CAilC/CHT0XgSWapJ+ef+TMBG79ywz4jk5v1yeQHttWHMITqQ70UXOVQBOmRmtc54du1Kj6Qh8w7sqgA4l/ZKA+Gc0cweUkvtI8VWRE9fqnZ4SmjbmPZV2K7OPx69VYUUTitp5fZgB5lUxSfydwWMONy6oYqm05bA=
+	t=1734423708; cv=none; b=dUZbGu/jBwQqCqJFNUpS7ww6TJaHjv7YAjfDOP3235EHnlR2NOMivvYxlIcZln5KW11b0LyA7ik7yCYMuxDastr+APFOf8uhqW769KBf4M+CVGEOhzdkOKnBTgJ8SgIrh5JYTouBvyO9b8lZRdsjhV5IJXnBQeqZpPUIED7dr7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734423572; c=relaxed/simple;
-	bh=aYa3RIWaGsSZmGLSGpEKECcp/S+cC/X2OhaJlWubKdY=;
+	s=arc-20240116; t=1734423708; c=relaxed/simple;
+	bh=F5S4FhtmltsBwBx86PvuD+lMhYGZK3Hqs0mfpw44AcI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqTcPG/vJJfV3FCgSln4ErS7L8XvyOmNlbxC5ytvyoNg/EPokC0iF1Vsgepag7V+2KLl5cZvwZ6JroOqeqkvDBR+AiEAvApDSM0RgpliAdh1/msKWyLd5lub2qDa47/TuZz1zMxjp8Xx6k9TroYcmo+FDGajrfOHCXk2sssyTfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYxCNpij; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D22BC4CED6;
-	Tue, 17 Dec 2024 08:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734423572;
-	bh=aYa3RIWaGsSZmGLSGpEKECcp/S+cC/X2OhaJlWubKdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QYxCNpijNpOsz0L1m7C0o4M5LtA5HE4cTxtR8XlPORgm0xHFkDPzlYatP44Tz0q2o
-	 TcbKj5g5mY/xUebBAvYr9lz51tOH+wH7rkIGPx4OtcIB/jcPzjiWT9uKUwGFTgvxLQ
-	 +ISngo+lg/zUCFiJ54DPA0WfUlXdQp0HyZ7vg2BEeEZLzGAZIWjHCWKBNnrSCHQ4Bx
-	 Pzgq319u//KoxYd+NIMOOnoYi/G7CWty2nldiyOoNJ2bS5643oi6i+sb5DWOIsqVEw
-	 1+WgU6UR3qyTKhBRB+geKvpXp0XfKo4oZ1A/XH1sm2NJPM4mEb1ALzeYsJc9VlU+7T
-	 G9Mt95lLNkdEQ==
-Date: Tue, 17 Dec 2024 09:19:28 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?B?V2lsY3p577+977+977+9c2tp?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] misc: pci_endpoint_test: Set reserved BARs for each
- SoCs
-Message-ID: <Z2E0EDC3tV76303d@ryzen>
-References: <20241216073941.2572407-1-hayashi.kunihiko@socionext.com>
- <20241216073941.2572407-2-hayashi.kunihiko@socionext.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=d6JHPuOMMPzOah1f7Hv9Rq7w8MsLGBGLLONCcT1OWpYTWYnvUufnjcmWrI/a7Hebuv2jxqch8eQvg2EQkoT/+SJNQxsGWcPlJEHODICms033cREFzCTYlI/tC+b4ZrScMA1c/hFOmZNCp4jwZ9aNCAR7KR6cGDK1CwKVFTPUPME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qVwW87h9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3iwiwvyj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qVwW87h9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3iwiwvyj; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3BE1821120;
+	Tue, 17 Dec 2024 08:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1734423705; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K0ccd5T/w72yfTNgA1rqqzypkLFYQGNqOiIvNG54Ot8=;
+	b=qVwW87h9IIRltr8VdEQKJhEHFuizPMnxm0At6YVF3qu+QiNzXpcpWmb0c3EcfdTqfazSpW
+	rFjbHnPZBb4MqKFKk758sazgfQJW8bw7GPrJyefEfU9FE6uZ8mWdlPQf4HhNdTPtmIdJIo
+	uIfhHPGBVf6Z3CqFuQIL2ayxRKzFaB8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1734423705;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K0ccd5T/w72yfTNgA1rqqzypkLFYQGNqOiIvNG54Ot8=;
+	b=3iwiwvyjFkJl+c1TbcwB8Pfq8gRzCBQ6bjAAAmtXFrCrO4FldFK7xQD1+gf7kU35PPhUF4
+	vs35Wg5oVgtVd3DA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1734423705; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K0ccd5T/w72yfTNgA1rqqzypkLFYQGNqOiIvNG54Ot8=;
+	b=qVwW87h9IIRltr8VdEQKJhEHFuizPMnxm0At6YVF3qu+QiNzXpcpWmb0c3EcfdTqfazSpW
+	rFjbHnPZBb4MqKFKk758sazgfQJW8bw7GPrJyefEfU9FE6uZ8mWdlPQf4HhNdTPtmIdJIo
+	uIfhHPGBVf6Z3CqFuQIL2ayxRKzFaB8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1734423705;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K0ccd5T/w72yfTNgA1rqqzypkLFYQGNqOiIvNG54Ot8=;
+	b=3iwiwvyjFkJl+c1TbcwB8Pfq8gRzCBQ6bjAAAmtXFrCrO4FldFK7xQD1+gf7kU35PPhUF4
+	vs35Wg5oVgtVd3DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 19E3213A3C;
+	Tue, 17 Dec 2024 08:21:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mA8iBJk0YWe4GQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 17 Dec 2024 08:21:45 +0000
+Date: Tue, 17 Dec 2024 09:21:44 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, John Garry <john.g.garry@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+	mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com, 
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v6 0/8] blk: refactor queue affinity helpers
+Message-ID: <632d25c7-ac46-4a1a-b2bc-14258a88216c@flourine.local>
+References: <20241202-refactor-blk-affinity-helpers-v6-0-27211e9c2cd5@kernel.org>
+ <c5f7f562-c8b0-422b-bb51-744ecba7ecee@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,70 +109,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241216073941.2572407-2-hayashi.kunihiko@socionext.com>
+In-Reply-To: <c5f7f562-c8b0-422b-bb51-744ecba7ecee@flourine.local>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Hello Hayashisan,
+Hi Jens,
 
-On Mon, Dec 16, 2024 at 04:39:41PM +0900, Kunihiko Hayashi wrote:
-> There are bar numbers that cannot be used on the endpoint.
-> So instead of SoC-specific conditions, add "reserved_bar" bar number
-> bitmap to the SoC data.
+On Mon, Dec 09, 2024 at 10:42:26AM +0100, Daniel Wagner wrote:
+> On Mon, Dec 02, 2024 at 03:00:08PM +0100, Daniel Wagner wrote:
+> > I've rebased and retested the series on top of for-6.14/block and updated
+> > the docummentation as requested by John.
+> > 
+> > Original cover letter:
+> > 
+> > These patches were part of 'honor isolcpus configuration' [1] series. To
+> > simplify the review process I decided to send this as separate series
+> > because I think it's a nice cleanup independent of the isolcpus feature.
+> > 
+> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> 
+> I've based this work on top of your tree as I think it should go your
+> tree. If this should go via different tree, let me know which one.
+> 
+> And in case the series didn't hit your inbox, I really don't know what I
+> am doing wrong. I've switched over to use b4 and korg for sending the
+> patches and on my side all looks good and the mails also appear on lore
+> completely normal.
 
-I think that it was mistake to put is_am654_pci_dev() checks in
-pci_endpoint_test.c in the first place. However, let's not make the
-situation worse by introducing a reserved_bar bitmap on the host side as
-well.
+Any chance to get this merged?
 
-IMO, we should not have any logic for this the host side at all.
-
-
-Just like for am654, rk3588 has a BAR (BAR4) that should not be written by
-pci_endpoint_test.c (as it exposes the ATU registers in BAR4, so if the
-host writes this BAR, all address translation will be broken).
-
-An EPC driver can mark a BAR as reserved and that is exactly was rk3588
-does for BAR4:
-https://github.com/torvalds/linux/blob/v6.13-rc3/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L300
-
-Marking a BAR as reserved means that an EPF driver should not touch that
-BAR at all.
-
-However, this by itself is not enough if the BAR is enabled by default,
-in that case we also need to disable the BAR for the host side to not
-be able to write to it:
-https://github.com/torvalds/linux/blob/v6.13-rc3/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L248-L249
-
-
-If we look at am654, we can see that it does set BAR0 and BAR1 as reserved:
-https://github.com/torvalds/linux/blob/v6.13-rc3/drivers/pci/controller/dwc/pci-keystone.c#L967-L968
-
-The problem is that am654 does not also disable these BARs by default.
-
-
-If you look at most DWC based EPC drivers:
-drivers/pci/controller/dwc/pci-dra7xx.c:                dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pci-imx6.c:          dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pci-layerscape-ep.c:         dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pcie-artpec6.c:              dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pcie-designware-plat.c:              dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pcie-dw-rockchip.c:          dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pcie-qcom-ep.c:              dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pcie-rcar-gen4.c:            dw_pcie_ep_reset_bar(pci, bar);
-drivers/pci/controller/dwc/pcie-uniphier-ep.c:          dw_pcie_ep_reset_bar(pci, bar);
-
-They call dw_pcie_ep_reset_bar() in EP init for all BARs.
-(An EPF driver will be able to re-enable all BARs that are not marked as
-reserved.)
-
-am654 seems to be the exception here.
-
-
-If you simply add code that disables all BARs by default in am654, you
-should be able to remove these ugly is_am654_pci_dev() checks in the host
-driver, and the host driver should not be able to write to these reserved
-BARs, as they will never get enabled by pci-epf-test.c.
-
-
-Kind regards,
-Niklas
+Thanks,
+Daniel
 
