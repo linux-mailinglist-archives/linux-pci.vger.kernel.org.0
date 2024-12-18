@@ -1,224 +1,272 @@
-Return-Path: <linux-pci+bounces-18682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 698C09F61D6
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 10:34:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A5AD9F621B
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 10:46:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60D0B16F861
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 09:33:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30C12161961
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 09:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E23019E994;
-	Wed, 18 Dec 2024 09:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65239198832;
+	Wed, 18 Dec 2024 09:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F1wtdQ3i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WKZpv/dj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2059.outbound.protection.outlook.com [40.107.92.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2071319E98D;
-	Wed, 18 Dec 2024 09:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734514221; cv=fail; b=cy/BX6wGZB/locH++V4FUKIfMym5kkEQAV8czcUAFVdywBF1CHfk9jVy6QgLDyYyjioFXOsXvPy+/301PG0pdcEt9IIUD5uOvif3FGHIaa0zvCLkmQXzi8LjNU3utsmYmtyNjwhSpv4nMSJmiZQdCx0P/8y1zdnLpeIH46FHf84=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734514221; c=relaxed/simple;
-	bh=ja2mPRQW5Mr3gtK6F57Fw4aIyr/IG7firQ/d1bQBF0s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nUGgZNxUhsd0KiadnD2TUY1g+9hdznQJbfVSbhZIHcLvSiJR8IDzVLWeyZ9WnTzmoghqGEtuoZtV9iK/XN3hu9/hmhCj9t8L1OgAN7yMvZlufA7lvXTsv6u3CPvBpg7v226fVRVDTteU/GGkZHyPHUZXHIh+1keQlI9VxJvtB+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F1wtdQ3i; arc=fail smtp.client-ip=40.107.92.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qIjsWAWF1bQZg4AUcX5Jek/NpnuiK9mNJ0rwfC47lH5FJnpv7IcxyZRGYcl1Na9yiWOwWwCBtHJcMEOfQjuherpVgVbiLZja99KSw7dH+HBgrPeQTgFZFI78Tv9wa2uSBNGbBEKf2/TMnZ9gtSve5UWTWBBTB/eXyvJ06Ttw5bCOO5xYybwMjyKIfxtw6pX5k+RjhjPhs8iQtbadEeJYwGqNo8pU5fB6jwCIoMZLH6o7JQ67X9KDxTlH26JASL5xJOB0Oy4cYQrfXxNTakeG7Ph2+CLTQnM2b+x+r+nm1VEES0z0d9LKOr0gSWTyhHlS4AuU0cNBxh07SOOWkjtDEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Rbi/fBq8Cy4cJaqgcQZ7VFbq7fGo1tqsEWgtssQm9U=;
- b=g3G2EmKyCqe0XYTYn7+JakGt2wvg6MP/C8ZmpKeQywrzRiOxDeL3PbiaTikvYUur2hoSVWilUP5q7jZmuq1cY3F1rQDdVfEAK7lELHTPkhhi66iDASlvTwE55KdXpiq0hyBrumIVP6pmf49i86ZGT+0omTF2Dvc2vV1jBANEfPOGUWkjhBWuxGGFF1xC7Hsp1a8zu4EN/OnHXkG1K+CFWoCSjuNkbF2cQ00bUaxArxZPUsU0/H/Li+QdrXWZFKScBBIRa+Gwpeo40Di9qiGNhdPcVTFjT7asTJ1XnyW/io40OHbeA8OXk2UAf8/pzO2IFQWhNAMu/suMXZudfugJ7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Rbi/fBq8Cy4cJaqgcQZ7VFbq7fGo1tqsEWgtssQm9U=;
- b=F1wtdQ3iaKq9gPrSyByZanMELJ3Gih3haJdA7VnOwcKQy9zly+73iJIxC678SINPswsF8Mn59PZ/GxfUM/nloROh1ISO13MwOqL8ZxovNkCYhGK51k3xH+7E36i/r9/1PFlY8+Mxfqdi474BiumQi4xrxMDFORrNDxH4kZAYKbM=
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
- by DM4PR12MB5819.namprd12.prod.outlook.com (2603:10b6:8:63::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Wed, 18 Dec
- 2024 09:30:17 +0000
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3%6]) with mapi id 15.20.8251.015; Wed, 18 Dec 2024
- 09:30:17 +0000
-From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-To: Rob Herring <robh@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com"
-	<jingoohan1@gmail.com>, "Simek, Michal" <michal.simek@amd.com>, "Gogada,
- Bharat Kumar" <bharat.kumar.gogada@amd.com>
-Subject: RE: [RESEND PATCH v5 1/3] dt-bindings: PCI: dwc: Add AMD Versal2 mdb
- slcr support
-Thread-Topic: [RESEND PATCH v5 1/3] dt-bindings: PCI: dwc: Add AMD Versal2 mdb
- slcr support
-Thread-Index: AQHbTSoFYVLX1yudd0SjNvzX50qzvbLqjqEAgAE1jsA=
-Date: Wed, 18 Dec 2024 09:30:17 +0000
-Message-ID:
- <SN7PR12MB72019397436F94C7E2D915118B052@SN7PR12MB7201.namprd12.prod.outlook.com>
-References: <20241213064035.1427811-1-thippeswamy.havalige@amd.com>
- <20241213064035.1427811-2-thippeswamy.havalige@amd.com>
- <20241217150058.GA1660852-robh@kernel.org>
-In-Reply-To: <20241217150058.GA1660852-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|DM4PR12MB5819:EE_
-x-ms-office365-filtering-correlation-id: 19f7cff2-1274-4826-bd22-08dd1f4695ce
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?f+8K+VMUXx4wRe1WwvlUW364wCyLcLENXQABH27zQmbKzpZ+Hob4r8pD3cDc?=
- =?us-ascii?Q?GPhLXLA+0gVIVUdabFxL8EIGaQ2x4ygm6Sr/MLFUQBppGfeyMcjirecb3ANW?=
- =?us-ascii?Q?+siIZcvx48loFQLApc1KFgQ5sBbk5qaWAadjBVzRBx09CZW5I6yJw6daatJM?=
- =?us-ascii?Q?6Jl7K+8bVnU1tqbjQSc6B01WrZMevodTjWEfR44BS3+aUiZ1DnJqtCmO2DOR?=
- =?us-ascii?Q?T/SiRmNYR5qQvVWnB8nH2mLaPObtUJHAhhg/q/Ziwu3d9Gj9Li0Ol+vzcmZT?=
- =?us-ascii?Q?YHd68kGiNehBh7VGnA6AV7z6dQpR6Dk0ygvD2M2ZxUSi37rqyjE1zPX1E1Ni?=
- =?us-ascii?Q?ii1h/lRBNtn6++08da+UfjWIeE3nygRFnt7o00cTk6ynq4JN/bkZ4fMYzvjT?=
- =?us-ascii?Q?vioTpRqKXvBehwKpkxUw6JjG7hcIXPBVAWODFwI8BG+IlMztcNmecy9DIjux?=
- =?us-ascii?Q?WaFCS87VBN/0bQnA4Y2yf8+9SUVD51ry817icHT4zDt7BstMVluOcIGma5AH?=
- =?us-ascii?Q?KsBma428K2e0nkdvQVPD7o5znfLKSswoQLU1Jd3NG7AE1oiTDKqJaF765Hz3?=
- =?us-ascii?Q?pV1fqxLLHMf0Z500EU5+vqDvVy9yoDGXeWh8xVeE8pKM/oHd9E+UhemzQfID?=
- =?us-ascii?Q?hUC8Lh8fARchfxr9PgRrhYpJDtpkoU9FqDlMsZJXzhPfO/0Nv6s6ZlMHj3ZF?=
- =?us-ascii?Q?N4ZCMz6aOzuo4QMpWuxLxu9cSIS4C0sql+0/RUBf+hyheCcJAtVgdow1K9gQ?=
- =?us-ascii?Q?8TN0fv597gq5S3Vh4/2b0MWCGxv7jQDC/6egkYqXuK3xBYOh6OmvsrRoDkYC?=
- =?us-ascii?Q?8PQW4zQVGUNmkmq6MW+u0CcARFpg9aayTHDARaZ0CJuGKTmrrngMCmkuc0mb?=
- =?us-ascii?Q?ojQ7Ux8v9kvWYu30yvdsZHqqaZuF69qzsemtXEl4bU+9rJOkzjHaYOJmhiSm?=
- =?us-ascii?Q?P/yqxDlYJUj3Ivdz6HmZnnZqRguJ/1Cz30KGzSJsHEbicoIxFu8HMbVOUHP3?=
- =?us-ascii?Q?4c1JUQjWf8ZrN7g+NCbi4ev4uJeKIT3EFq1RaaWZUn8an6cvbDTTPYDWa/Qa?=
- =?us-ascii?Q?sAgkU4gXvJKU5PgEJLo+gRBEF4QgQdeKYWK+iV8AnnEx8hpZiARph33BOYSO?=
- =?us-ascii?Q?24Wr+hJ4lTA8Pk4/02tdzG3SGtwulM+scwTPCv3n9JdqeNL6MhpF8SLhDwRW?=
- =?us-ascii?Q?ShARm6Kuu6U1yPn2B8T2fpv5DulzUXFNSbzSLewHb9sbrn1waY5VwyV43sFU?=
- =?us-ascii?Q?H7kJBGiuPPY7uHtaI8d6GuPWaUR55I8RngVDodI+DWx4rSNkvmKVO1D/sHVA?=
- =?us-ascii?Q?CsWvVQz1EZHBK88aj66GeA1MdBlSENeyTx1NnJc9F9hmAh2dQV9Vmacu9854?=
- =?us-ascii?Q?atYmXVxNO/pK85VaFxJrRXplcD6JMSi3HZlJhsy3VeC5VB7CjFYcriDhPKR5?=
- =?us-ascii?Q?ZrJ+u+vVEewUu7YDQu9bkQN/rMIlRzcr?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ROJ2QYdYeEsQz88ceGV994DaONy/fxWg0a6rEz3FC3zhuzkak3AN+iTL9LkA?=
- =?us-ascii?Q?W2vNSS0YkUk7V1DlIAGKWIEwtzsIDMQh6QrSQRNaN4ZRB0bjDet+/18uSa3c?=
- =?us-ascii?Q?969cjpc25q0j8vqRQhSBkHBS4fKrml9dc3fNwBXyANIsjDl5djvE2Ypl8UoL?=
- =?us-ascii?Q?ipHYPlwv8my4779N46EpK/bGBmE/TPqAS5uKBe/zH/Jmx4t25LKuoRc79n7b?=
- =?us-ascii?Q?/hkrPXsr2fkgMyJMov0VXKsHskk6rv67Ne0tjPd5L0KfeX2BO4wEJ+yKHBzU?=
- =?us-ascii?Q?8r5/1aFe5/QVdTJQd0jXJrhPxe+2WfPNmi5gu7IkSE1xLe01/LP/Kb3tY5pS?=
- =?us-ascii?Q?Nw9/9ve+l5yTSqbn5O6jeoQwzaSpqyLicoI9Q6+KgVOwOp6pNucmBRIHFUfh?=
- =?us-ascii?Q?FdV5FolkaWVXuI64vcxaXDN1oPMa5FWlR7kaEsotIUt4c881Ex7U2kWfLWIz?=
- =?us-ascii?Q?DrltqBRDIShURTyJYK0IiAhXAyRVb4dg0Tspb7X10d1YycsOpsCdXF6GOLWB?=
- =?us-ascii?Q?KZHrWoDKExsJ5w1sFJBpMZ2LJmnO5QBjh/PQF7K7aYvwlqrVbXQcMvBvXIxb?=
- =?us-ascii?Q?fKUP04P0JB/GiQ2kvWz3vt7WJPTk7sqtSo//3m03S7QfVbC0kx90DoE8UoIk?=
- =?us-ascii?Q?eZ593fARzqfbRJyJfzxeGJOxxg5z9fxvLm1763nAgwyQbKKIQXaBj6lieFOW?=
- =?us-ascii?Q?b0AozCJ/B7Z4lquMDeTPFUm3HSLW7Y8EdGGS0m4+jljvtSRAY5ZfhBvZqEE0?=
- =?us-ascii?Q?KNU0OWRWwHf+dl2vEtr//VB0YarmGtRjR40lyIIBF/acaoHS6mo2kGA4OCTO?=
- =?us-ascii?Q?3KmVPw9ZZKIbCuhHrj3dVH/t0+Yvz6YHuumTW54/joFbJWGNHutZfdDxx0cp?=
- =?us-ascii?Q?pR/V7cW13adPQkJdQZh9Wt2ZK3YdW6IDgAaX4OWgmOk/9VNLCGxQOfhBXAod?=
- =?us-ascii?Q?KWR1OdZ3+iYce5AsoFX5JvppjFwUgCKJshdUNyEvBjD3xViWx1n+K2K0RtBH?=
- =?us-ascii?Q?MfxDqNjmXO5rhbvpsQQX15D/XXsTS3Mixwhy9HYDKLdec5ZUx1k5/+5hQ/rY?=
- =?us-ascii?Q?p9bfvOyYH8JH5Hc8Xiru3fiYQgnTBOSoBRB1Kqtj9PKyzDZbdIGLu+gmBGJo?=
- =?us-ascii?Q?V4vvbqDdF05hamnKi5LUu6qpqkEcGfav8Cy3kC0UlK5GNT3zTtVmtYz2zgmR?=
- =?us-ascii?Q?FbiEXyT1hlum7Tvo26v9C548cPyyx8vP6i9F7cKyEOxQhXe+999KGISPJmtQ?=
- =?us-ascii?Q?tcVCNCGa2c+McDWbLkJ//Ws4zoHIOoONb9Z/ejLuETJkF64JaJTpIOS6wObu?=
- =?us-ascii?Q?MLmPUYJyPL0TbyC23PYaWOmM36aXKNLAd2UyXIfSWp7yGy/wb5lJxnr9I0Ka?=
- =?us-ascii?Q?wwIJV9kt+BA3sJIbMH8vQ+Xk8/bz56R0g0nHjHMUUTCfcfrzEDI3K5Kxb5Bp?=
- =?us-ascii?Q?pmbuCWFeA/v7B1Iu37YI3YbAzZcrVoDi6Gma8VuQ7j5WYdcjHSLpwcCQslZn?=
- =?us-ascii?Q?IcHU+yg7sxKH0/N2PPH2xuKbgNCbwvNS/fOHk9ovywG7F+t+7z/i67zNWqpD?=
- =?us-ascii?Q?m1v6hLJZX3HOq/KcQWA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79E7165EF8
+	for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2024 09:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734515178; cv=none; b=Zrx0i6UjXCfF959gwlFX5h5JU1ZI1MeNIG8T2zsEE/+WgdncVUdz+dPYhbKeobOTgxKEqb3OXxc42/vnxnya0z/RyxvN9+Moze5TSVU9MSVvaQKrFPB4FfPdxpbKvubnOd3ewlaOJMDjo8QmMAJBQ723XiVOIjpwLAGNk+kOYMw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734515178; c=relaxed/simple;
+	bh=eIF1iCXbYoUBtz1oWY9/PbVWZ4xErWglHEwvqZrxO3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ru3AM+M7OqOdVtCZ0r6qgXMYW3z51pMMzVTgmKMMvvxFkMZqXp1a9wmZARCye0R6c+qaPaBcPBT7IUJSjliqx42K4zvyBcUKMQDNWuq2LVry/4n/UkDCrRWnCIC/gsy89CI/x+8gd+kjFmpp5cD5aaAUb/qzjW9ZVNjHS0M7pkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WKZpv/dj; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-215770613dbso42513655ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2024 01:46:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734515175; x=1735119975; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pXXsnJWHazfaSUP/GHMRDCdHmTBTRf0ix5hsVwacD90=;
+        b=WKZpv/djOiut1GD6fpTmIsUzvEzcmdK7hnfTvJmLDbz0AtoToX1BQOQRA94om169EX
+         SLGck0KO3fTDr1jUkm8SHZGj0PITZ3r0ACYD3AdVlxYlG8Pu5SZFt+ZdISQBINyk7bf1
+         Z9RGqqtpjB9JtJNWr1GnziOQ9ghYtk3YXL1e5V4CxxYdX+4/rLjWLpGrJFg11tsubmzi
+         kJtP6fu7foOcMb+Kr3Hm8qDOuVWjrRkLkTQgLMAQpypNz10VWrt8iO1N6Vlwh0rxywcb
+         elPq1FXryMlIL/h4mnsSHcZytqRxFDbl4bnEsUpJDKvAoh0sh5cyT/9oFmxAe3IK6V9B
+         ZTXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734515175; x=1735119975;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pXXsnJWHazfaSUP/GHMRDCdHmTBTRf0ix5hsVwacD90=;
+        b=svHvIVQNHzpLQhCTq+tvOn7tS+Tx9u9JrAHBLfi3MJ0y3RHIAOdv7ywEASSxNvZRhR
+         KlmTlKiRzfaOs+c0AelprXbEQavL+11X2Qq79O4WGzTT66R2VbrRmVeR0HeZ+ZjO6p/p
+         1SwnqcvwEFv14BDvSWTKtNBjDkK4xnmmrmZPkS+aqqsKcCeDOLFdeVHXsQy4XhUuWK7g
+         iZeXewmohYcuZ6CKfZP0WJIi3TFXoxoWnf/19H0sZjiQKuOlCe+4NXBkTe+MdM5fx86F
+         dAELD09RJ0MglGMxx6ZzgaQisu8bEpP1PP7oIkAqFzkKzezBRxi1crwhfY9ZPwElgdzO
+         4T6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbm9ws5nuJipWGFs2SVBcwmPz3SklkygjDuKJmkEVe934KQsU62LHM0rpQKtDboHFtOzmkNvNk+CY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9/suiLw87as3ebL7iqnKb7hS08YdvjQgzz13iXkND4fk+izHS
+	DJpXk1eFPgnaBYCZ9gAjCSKzFpSYm3InGL9mIEkOpRML7PZk4bj0YrxQbG09SA==
+X-Gm-Gg: ASbGncsxPTNWXDOluKaiuzO0nFOOY2DxA2OJC888Hsz6Mxl+nwddN4gw2x6wX7ZgL4O
+	RBYBXZiF+r11tN2HisCxitf+s8WzYrZkndoLxoZcQPMlCPjZANhzp7diUgUh4WhfGnBw7jfmATR
+	MBnRKcU+be347uNh3hEFOHOMMqIk1qTdQHP/3Dl9fjP0wxB62oPNw2ELvpnqM8NJo1C7DjGyu1c
+	xhoh5Yd/XZbkl6JL9rWvpzXckQmqSq/4ZwEhWEAaOMDBWUC97xgKc3mmkV9bZbnMa40
+X-Google-Smtp-Source: AGHT+IFqUIwo1Ikpx9Q1p35hwXgeavzvbPAmGa2NY+JFf2suz00vESnUChpaxHz8BxW9HDpRMZJpNA==
+X-Received: by 2002:a17:902:c407:b0:216:2dc5:233c with SMTP id d9443c01a7336-218d724962dmr29793665ad.41.1734515175035;
+        Wed, 18 Dec 2024 01:46:15 -0800 (PST)
+Received: from thinkpad ([117.193.214.60])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1db5e05sm72437155ad.44.2024.12.18.01.46.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2024 01:46:14 -0800 (PST)
+Date: Wed, 18 Dec 2024 15:16:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	p.zabel@pengutronix.de, cassel@kernel.org,
+	quic_schintav@quicinc.com, fabrice.gasnier@foss.st.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] PCI: stm32: Add PCIe host support for STM32MP25
+Message-ID: <20241218094606.sljdx2w27thc5ahj@thinkpad>
+References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
+ <20241126155119.1574564-3-christian.bruel@foss.st.com>
+ <20241203145244.trgrobtfmumtiwuc@thinkpad>
+ <ced7a55a-d968-497f-abc2-663855882a3f@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19f7cff2-1274-4826-bd22-08dd1f4695ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2024 09:30:17.7757
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +LqfgctH/Oh3jtg1u+GAvmItGcbnDzA8qEnKziXaHYnjM1qDzzakyqNfCX2yYBOyQS11913YWIwtR4N8U6bjEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5819
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ced7a55a-d968-497f-abc2-663855882a3f@foss.st.com>
 
-Hi Rob,
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Tuesday, December 17, 2024 8:31 PM
-> To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
-> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> manivannan.sadhasivam@linaro.org; krzk+dt@kernel.org; conor+dt@kernel.org=
-;
-> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
-> <michal.simek@amd.com>; Gogada, Bharat Kumar
-> <bharat.kumar.gogada@amd.com>
-> Subject: Re: [RESEND PATCH v5 1/3] dt-bindings: PCI: dwc: Add AMD Versal2=
- mdb
-> slcr support
->=20
-> On Fri, Dec 13, 2024 at 12:10:33PM +0530, Thippeswamy Havalige wrote:
-> > Add support for mdb slcr aperture that is only supported for AMD
-> > Versal2 devices.
-> >
-> > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > ---
-> > Changes in v3:
-> > -------------
-> > - Introduced below changes in dwc yaml schema.
-> > Changes in v5:
-> > -------------
-> > - Modify mdb_pcie_slcr as constant.
-> > ---
-> >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > index 548f59d76ef2..696568e81cfc 100644
-> > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > @@ -113,6 +113,8 @@ properties:
-> >                enum: [ smu, mpu ]
-> >              - description: Tegra234 aperture
-> >                enum: [ ecam ]
-> > +            - description: AMD MDB PCIe slcr region
-> > +              const: mdb_pcie_slcr
->=20
-> Including the block name is redundant. Just 'slcr' is sufficient.
-Thank you for your comments, I'll update this in next patch.
->=20
-> >      allOf:
-> >        - contains:
-> >            const: dbi
-> > --
-> > 2.34.1
-> >
+On Mon, Dec 16, 2024 at 10:00:27AM +0100, Christian Bruel wrote:
+
+[...]
+
+> > 
+> > > +		msleep(PCIE_T_RRS_READY_MS);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static void stm32_pcie_stop_link(struct dw_pcie *pci)
+> > > +{
+> > > +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+> > > +
+> > > +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+> > > +			   STM32MP25_PCIECR_LTSSM_EN, 0);
+> > > +
+> > > +	/* Assert PERST# */
+> > > +	if (stm32_pcie->perst_gpio)
+> > > +		gpiod_set_value(stm32_pcie->perst_gpio, 1);
+> > 
+> > I don't like tying PERST# handling with start/stop link. PERST# should be
+> > handled based on the power/clock state.
+> 
+> I don't understand your point: We turn off the PHY in suspend_noirq(), so
+> that seems a logical place to de-assert in resume_noirq after the refclk is
+> ready. PERST# should be kept active until the PHY stablilizes the clock in
+> resume. From the PCIe electromechanical specs, PERST# goes active while the
+> refclk is not stable/
+> 
+
+While your understanding about PERST# is correct, your implementation is not.
+You are toggling PERST# from start/stop link callbacks which are supposed to
+control the LTSSM state only. I don't have issues with toggling PERST# in
+stm32_pcie_{suspend/resume}_noirq().
+
+> 
+> > 
+> > > +}
+> > > +
+> > > +static int stm32_pcie_suspend(struct device *dev)
+> > > +{
+> > > +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> > > +
+> > > +	if (device_may_wakeup(dev) || device_wakeup_path(dev))
+> > > +		enable_irq_wake(stm32_pcie->wake_irq);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int stm32_pcie_resume(struct device *dev)
+> > > +{
+> > > +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> > > +
+> > > +	if (device_may_wakeup(dev) || device_wakeup_path(dev))
+> > > +		disable_irq_wake(stm32_pcie->wake_irq);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int stm32_pcie_suspend_noirq(struct device *dev)
+> > > +{
+> > > +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> > > +
+> > > +	stm32_pcie->link_is_up = dw_pcie_link_up(stm32_pcie->pci);
+> > > +
+> > > +	stm32_pcie_stop_link(stm32_pcie->pci);
+> > 
+> > I don't understand how endpoint can wakeup the host if PERST# gets asserted.
+> 
+> The stm32 PCIe doesn't support L2, we don't expect an in-band beacon for the
+> wakeup. We support wakeup only from sideband WAKE#, that will restart the
+> link from IRQ
+> 
+
+I don't understand how WAKE# is supported without L2. Only in L2 state, endpoint
+will make use of Vaux and it will wakeup the host using either beacon or WAKE#.
+If you don't support L2, then the endpoint will reach L3 (link off) state.
+
+> > 
+> > > +	clk_disable_unprepare(stm32_pcie->clk);
+> > > +
+> > > +	if (!device_may_wakeup(dev) && !device_wakeup_path(dev))
+> > > +		phy_exit(stm32_pcie->phy);
+> > > +
+> > > +	return pinctrl_pm_select_sleep_state(dev);
+> > > +}
+> > > +
+> > > +static int stm32_pcie_resume_noirq(struct device *dev)
+> > > +{
+> > > +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> > > +	struct dw_pcie *pci = stm32_pcie->pci;
+> > > +	struct dw_pcie_rp *pp = &pci->pp;
+> > > +	int ret;
+> > > +
+> > > +	/* init_state must be called first to force clk_req# gpio when no
+> > 
+> > CLKREQ#
+> > 
+> > Why RC should control CLKREQ#?
+> 
+> REFCLK is gated with CLKREQ#, So we cannot access the core
+> without CLKREQ# if no device is present. So force it with a init pinmux
+> the time to init the PHY and the core DBI registers
+> 
+
+Ok. You should add a comment to clarify it in the code as this is not a standard
+behavior.
+
+> > 
+> > Also please use preferred style for multi-line comments:
+> > 
+> > 	/*
+> > 	 * ...
+> > 	 */
+> > 
+> > > +	 * device is plugged.
+> > > +	 */
+> > > +	if (!IS_ERR(dev->pins->init_state))
+> > > +		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
+> > > +	else
+> > > +		ret = pinctrl_pm_select_default_state(dev);
+> > > +
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	if (!device_may_wakeup(dev) && !device_wakeup_path(dev)) {
+> > > +		ret = phy_init(stm32_pcie->phy);
+> > > +		if (ret) {
+> > > +			pinctrl_pm_select_default_state(dev);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	ret = clk_prepare_enable(stm32_pcie->clk);
+> > > +	if (ret)
+> > > +		goto clk_err;
+> > 
+> > Please name the goto labels of their purpose. Like err_phy_exit.
+> 
+> OK
+> 
+> > 
+> > > +
+> > > +	ret = dw_pcie_setup_rc(pp);
+> > > +	if (ret)
+> > > +		goto pcie_err;
+> > 
+> > This should be, 'err_disable_clk'.
+> > 
+> > > +
+> > > +	if (stm32_pcie->link_is_up) {
+> > 
+> > Why do you need this check? You cannot start the link in the absence of an
+> > endpoint?
+> > 
+> 
+> It is an optimization to avoid unnecessary "dw_pcie_wait_for_link" if no
+> device is present during suspend
+> 
+
+In that case you'll not trigger LTSSM if there was no endpoint connected before
+suspend. What if users connect an endpoint after resume?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
