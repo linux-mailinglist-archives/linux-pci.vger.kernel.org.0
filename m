@@ -1,222 +1,255 @@
-Return-Path: <linux-pci+bounces-18696-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18697-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86E2E9F672B
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 14:23:12 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B94E79F67FC
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 15:07:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC3C21648A1
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 13:20:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6EED16C10A
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 14:06:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B208B1F0E32;
-	Wed, 18 Dec 2024 13:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75193F50F;
+	Wed, 18 Dec 2024 14:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KonLLg+n"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XRfNlhx/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2074.outbound.protection.outlook.com [40.107.220.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE2B1EF093
-	for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2024 13:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734527854; cv=none; b=mqF9tAqzHe/3bxT70HzR5ESw3ORAyz/SfskRhABOs1zuw0HWV4rSwnQZM/W2S09LuskH/X/7qicjK2WOJAEe5Slg3V6N/XTm7BkTBs3A+2YlC8yfqvFFwS6GZIHXWbJlRd5SYvfSfrxK8hrpgijv9pbD/qgqu4bSI3UiDIDBXms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734527854; c=relaxed/simple;
-	bh=KmHYa21lj826stnbrgZHHiVgcWy3kG6DgaDRpDonehM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xn7YvhQgatTEPPkYLrPWcjKZvS89MvFMNHp/0nH4PWZADpq61jIyMVk2ZMJwTIAKP/9I+8+iBy9I3tXl0Xyip8SDZUQAAOmCL3whkHwlrMDJAicHCNOWyvS9jS36rPN6iPtuAwGqfG931Ozp5jbhyhgyRFY4kDb4w72nNblzCIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KonLLg+n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734527851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dkUmObNyd3luMSujCoF8tqBFETH6TbAw8siM2qHvUZI=;
-	b=KonLLg+nSyx36QgEI/CkYRlB7Kz6VhvkGR4idg9ilT93t037r0P8ZxzNcSHoZnOITcvR/C
-	9kcyFMO5yf8D+b0UXA/Oveo30Y+695XUyD5yaxSDckiy0rns8Cuyc/FBJk3rK+MzsE6ykT
-	53fq2sTtDOS3lkSId2ADxf8/jsvTdwk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-_zNPhDJjMLyU4yij0oEiwg-1; Wed,
- 18 Dec 2024 08:17:25 -0500
-X-MC-Unique: _zNPhDJjMLyU4yij0oEiwg-1
-X-Mimecast-MFC-AGG-ID: _zNPhDJjMLyU4yij0oEiwg
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8273E1955EF9;
-	Wed, 18 Dec 2024 13:17:19 +0000 (UTC)
-Received: from localhost (unknown [10.22.80.196])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7202519560AD;
-	Wed, 18 Dec 2024 13:17:18 +0000 (UTC)
-Date: Wed, 18 Dec 2024 10:17:17 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Ryo Takakura <ryotkkr98@gmail.com>
-Cc: bhelgaas@google.com, jonathan.derrick@linux.dev, kw@linux.com,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	nirmal.patel@linux.intel.com, robh@kernel.org,
-	bigeasy@linutronix.de, rostedt@goodmis.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v2] PCI: vmd: Fix spinlock usage on config access for RT
- kernel
-Message-ID: <Z2LLXUwxEtjNNc8K@uudg.org>
-References: <20241218115951.83062-1-ryotkkr98@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7E715A856;
+	Wed, 18 Dec 2024 14:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734530810; cv=fail; b=G1aJzfK9csIKaC1qCvMYxG+MTNQA9jnnIk+rMXJRTdHkbRBknb1r2nS41LH9U0Z/FnqhywG8xKnIaUwn6ki5puAV6Q69kXQkm1OMwnSVZ2mQKYyIqG44CKGoPt9kiHFO7mnI85mojVekxpGjTZz8lSmuMbJEwzgf6BylCBeKYaY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734530810; c=relaxed/simple;
+	bh=1maKstUwSuznOSyV20nIm/3MlOYs3hZUbjs28XPqeJo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=D+Gkv6VWnami/R7bc1xeq+z16GURRE6DcSEQBCsoDXMvne0d7oAkSsQBEhNdyv20oWnh2czbBkpvM5wHWXsBYfG5NWmEeDjbROmo4DnffL7uLh/syLxSTfKNOTTDQwIBC5NMtzwt+SMGR34wvBPx0XAUSLn2zp9Mg5JYQEBVEWo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XRfNlhx/; arc=fail smtp.client-ip=40.107.220.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WB3VcVqcJfKsB/pLhi4lRVjfwPAgXZ3WEO/qgegOQc1avSySLZS9SOPp8jwu41praLcJjdA0zIyCNXv+QNcMa96sxznFEjuCVh4vsAufB/85q5SDydUduOwgGc3tA6RTgEyCwyMJ5UJsMsR27qzcenFOm/6C8yIIhYT3Yw2asbBLdPH6lo85JsCHKdb02OrXX8hxHaayyGRyXDEalwqFvJWXBpKfwUiNNa79q8ArLcfpOuU+bybx1Yfl5K5hapA7alch8aQTYyQ7AluDvHFmiAdkN1FpLC6xJFMmPrWlgP6J0LrqoMffmVFWNGihczFo2Q307TcGyXmiz4wv9LkX6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CCoe2j9sewp5cOE+YC66REwWy8JYbdin5bbmANlUW3E=;
+ b=WusgnbuLjpzjWzC8KhvAH36aFyLfXWYEqepM4HeEi6KgQA6wgCbnP0CdXlFJ0cFQvRWHr617mxuXWI4HnBAkyPBjp2dqbyJeVDWXf52v49kOS+dy4//Ldf8lMXfSh9hjy6kpjPBKsTpbpwqejRbf4pJ/YwIaO41LJNJwH2Kij+sxzqZUEZHqJUoqoPZg664rd1I9kWKjXUybm/En1Puo3aehK7CawkUkBxawC6Ggk8ehv+2iqw/yEKmRQ4hU3Tn50BI1+jW/dMJs0kK/qOi0vz3hPPsH8LfMyTKEzECL5pOlXQir6hArcN5d3TZQF0VYl0pNnzEf1SWCKoQqQvVxkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CCoe2j9sewp5cOE+YC66REwWy8JYbdin5bbmANlUW3E=;
+ b=XRfNlhx/bMGJJ8xyuaOt3zWlN4ZiAnEYMdv2YsmasqoncvqUcEWdOu9Yhs+6/3L7eMX4MuK8VjOu6GxFOdRSV/roj7ZSqJxDrFSokiFQuY9EtTa9kCbaRS+hBPa0p3vR+5nv0KFmYUBgYJ3jcksquolA/hoorVa29sVtn1DcYH4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM4PR12MB7741.namprd12.prod.outlook.com (2603:10b6:8:103::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.21; Wed, 18 Dec
+ 2024 14:06:46 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8272.013; Wed, 18 Dec 2024
+ 14:06:46 +0000
+Message-ID: <85537504-f107-44aa-9b6d-f61eb067b330@amd.com>
+Date: Wed, 18 Dec 2024 08:06:43 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI: Avoid putting some root ports into D3 on some
+ Ryzen chips
+To: Werner Sembach <wse@tuxedocomputers.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241218103433.384027-1-wse@tuxedocomputers.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20241218103433.384027-1-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9P223CA0015.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:806:26::20) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241218115951.83062-1-ryotkkr98@gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB7741:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66562931-782e-4b9c-3618-08dd1f6d350b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MG84WjFLcGFxNEtmbE81bHljTGVBNTc1TmVYaktMNm10amo1MkFOSVJPa0ZV?=
+ =?utf-8?B?WFlISVFtWDNwbE9TcWozQmtRTUZJbzdUSXNuSHB4cnFnNzdxY1dOU2V4QlVu?=
+ =?utf-8?B?eGlDK1RWZXBHMFQydUVVREJKbzFpaEw0RW1GY0tpaEpmdW1ERUVUeVEya05E?=
+ =?utf-8?B?b0Fkc2o0TXV5QVdUK3dZaFJnK1pUVC9aS3BVWFhwYStySnUrUzJJZ29CZjJE?=
+ =?utf-8?B?cndYVTVraDdrU203L1AweCtETSs0cmI2WDFUa1ozd24xaXhLRVpKd2wvdyt6?=
+ =?utf-8?B?RTV3TFM2Ty9nQ1laY1NDbGRDK2F4cmdwV3daZSsxZTRLdTZmUlFZSUFKSXFK?=
+ =?utf-8?B?VHRDRlM0SmlpVE4yNVdoODBnYWVCUVM2WnBrVkZ6elhKMWhYTXVVUnhMaGx3?=
+ =?utf-8?B?dUV6RkRKd2NUNEVTVkJxUmVVdVlPQjk5N0tRSjJ2YWdLenFCbmxLUEdUVnFj?=
+ =?utf-8?B?YUpsTzVIUGU1Qlg3aEpYVUwrZnNMaUlhclNHRXRzckxqYWVuOFlQUFN3eG1L?=
+ =?utf-8?B?N2lXcXRQbFZFSk11dXkxV3hiOFE2M2hlL0RSSWRjeUljSXdWMTh5NkJXZ2o5?=
+ =?utf-8?B?LzFORHBmWXNhbzMvZXdBalRYYnNaY2FLaFMzZk9XY2hBMEUxM3BsaTBFeFE0?=
+ =?utf-8?B?UFdWRHNGWGh4V21lTVVSME9iN2RGNFZrWDZVL0xhRms4MFY5TktSMExFVS9Z?=
+ =?utf-8?B?d0hZUWs3Y01TVk15TytlNm56N3hVUCt4ZU9DcFNJNUY5Znk0b2Y5MUNvVnR6?=
+ =?utf-8?B?WWFPV1JGSUNEYjluUzZRN1U5SEdOKzl3WWZKa2l5RWJTRkJ5TVFJZkViUkJj?=
+ =?utf-8?B?T2ZBY2hZZFJhOG9hUmJzWmZieHV4RFU1NVdya2JDVkhXenRrSzVoTmc0ZzRC?=
+ =?utf-8?B?NFl2MDhlNDQ3SVFLYVYxMzVpMmZwZlkrNjhXQUJIaGRXT3dJaEpzL3pUZ28v?=
+ =?utf-8?B?QWsvVGpnOUtZUysrbS8vN3dDdDN2Qit0SS9VRlhjMVl0aEtrYW5wYVk2cEIv?=
+ =?utf-8?B?bGJicnRzcm9ORVFub3p0b3llNkNqa2pRaGpKbGtHK2ZYbHJsd0FDdnQxelJG?=
+ =?utf-8?B?U2I4b2swUk0rTUpxOHFEeTBIZzdoUGIvazBsM3hJSjR1bFZBY0ZzRGFVQkZh?=
+ =?utf-8?B?WHo1MWd0UmJTU0ppUGJHd21FQ25saEduTGlmWEx3VHJRZVJmcVZoNmlWZGtJ?=
+ =?utf-8?B?VTBXN2Z3cjQzQTc4RVZmUHczS1ZTaXpmaVFSOXJuWXNmcUNnNlYycGR4TTFm?=
+ =?utf-8?B?M05zSVhXZHBtWmpzeEl2WUhmUE5Kc0JKNlVKWEdSa3c2N2hEbGExMDJKY0gw?=
+ =?utf-8?B?Qk5vakhGK0VrQjhYWFBJa0plWUhZa0Z2RHRJOTk3YUg1WkZTdllQUENBZDRv?=
+ =?utf-8?B?T3daZmFBSlV3RlZtS2ZMK3lvbVliU2pVSDdiL2tmaE9zMXF6YmdEeGsybENW?=
+ =?utf-8?B?NEtaSjdSM2tNd1BiQnZROEV0YVF5S2crbjhOaE1xaktIV2JVeDFJMDdYNXBM?=
+ =?utf-8?B?cHZ6RzRwWlVDSVhZU01KS3AzNVRlUXBwUEpkMU5ZcW9LNThWdXFIN3RxL2Ur?=
+ =?utf-8?B?alphcWlmTG1MSzdBbE5uelpMVlh2dVFEZGh3YkNhS3htK1BYVzRXR21WZlBV?=
+ =?utf-8?B?SWVoSEVXa3JsODZrQUZxVkNuM0hVN2dzbjZ4ajVoV20yUkcyelhINisvMkR6?=
+ =?utf-8?B?QWoyQXROOVNXMG90dktUNUJyT1BDRW5wak1JYjhxRktHK0xoMVI0ZnJLZUsx?=
+ =?utf-8?B?YWphUEx5aEFJQWVKT3R2SU83SittcHlLNzZNZzdWdTF6OXpJTEN4UWFJWUJU?=
+ =?utf-8?B?WFRjMTM1d0lJRGxjL3hJZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MWU1NVFQV3NJZ0FTektqQlVLVUd3K2FpaXB4a1VjOXV5cVorZFBZcGVrMjNV?=
+ =?utf-8?B?QnE1NlRzQnFGbmI0WmxEbkxuY0Y4by93TkFYeVFZaEF4YWU1MzF4TDZDaVU5?=
+ =?utf-8?B?R0ExSTRSM0sveDFwblZ2eVowdnpBUm45Wjg2NzYyeVdaUGdQcWFsNEJGRGZq?=
+ =?utf-8?B?Q3ZRV0Z1UDgrUUo3QTFFUGpGdGwvdU5rV3l1UjBNQS85bXhyMUFKLy8xU1BZ?=
+ =?utf-8?B?dktJLzdudFJtd2NBZVF3cklTUHJZbmxPQVRHQ3h1K01ZSS9JL2VMeGVDdCsv?=
+ =?utf-8?B?NzAyVDFNYUlpOHc4UWVCSGZuVkV4QTc0bjNnU01oY1FtOWJNYnVjeFRGTEVn?=
+ =?utf-8?B?MVdaeGJwWjVJbEowT2x5Y2tiYytvRTRDTU5JckhTd3ZUMFlSWXNsS0RBYVly?=
+ =?utf-8?B?c0s4dVZUVm1yWHNHKyswVVdxamFOcXE4Z2IyR3puVkdQL2k1NE1HM1AvSjFv?=
+ =?utf-8?B?RWZYa3hINW1RUG1Vem1TbzU5cDEyVnVYUnJlSkNCNXRMOGd2SUVHMy85ZkVR?=
+ =?utf-8?B?c1d4cDFPY0p2SGtLVmVmdVZMVHJVbnlPL2VtU0VBbVh1Y3ZYdWkxbUhxRll1?=
+ =?utf-8?B?cnAyQk15bjZtKzQ5M2NOVGpTNjlsWW1jbDBNMytNUU5NN080MXJsVnNNUmFY?=
+ =?utf-8?B?YTJ0bFBSTUpWSmYrVVN3eTkrVEhSMmlQc2R1bUw4aUhnYWw5OWFoSWZUSUwz?=
+ =?utf-8?B?aFhXSXNRWkFQWENPYUNZOExmcTE4ejk4MEtaSFI1bGNiTTRLeFhhbEU5OTZi?=
+ =?utf-8?B?TjE3OVgrTnZRL0hadlVZMXZDSStOSGw1MDJSLzBoMm5qZmtyemNEbTZtRU5Z?=
+ =?utf-8?B?WUFQa0Ryd3VjWWVaUzRYajZUYUFhVk1VTGpzQ3lUY05lYjdBY1hZK3lyMnQ3?=
+ =?utf-8?B?QTVVOVBsSHhRNWlUUWhsKzluVW8vbzh6eVluL1lWYjBNdGtmM2FZeTYwcUQy?=
+ =?utf-8?B?OU4xcU1CaE1jQVZleWRrWlQ0cDJOZkZ5RnNjaXJnTnhUdWZlUFJvTzFETVpu?=
+ =?utf-8?B?bnZ6cko4ZG1reFZPeGpKc2M4ekR1bkszZGRGbTJyaC9tRlZJUWpscGFKSmph?=
+ =?utf-8?B?TmNYeGJiRk92ZWF5Y3g1YmRYRGNybWl3QTdQNDY0ekpEVWN1Yy9vWjJQTWt2?=
+ =?utf-8?B?dytySXBBR2lSL1owTzQ2RmpxNjA2Sjltc0NUMVdKRGlEbkY4aG5iRU1hd1hl?=
+ =?utf-8?B?RzdqZ2Z6Z2tHNmRTWDFpU294Tm4rR21EczNJRS8wcm9SNW1kWDRqYkkvYUh0?=
+ =?utf-8?B?Qkw3N292L1Q0M0E1NHVmRGsvYVF5bGxTL0VCdTI0MVNrUzNzcmlIM1JKdmV5?=
+ =?utf-8?B?c1pjcXNBeUZPdFV0WGxNYVpVNzJkeXMxWXJXUkE2SlhJUFpxNkRUZlRubndm?=
+ =?utf-8?B?ZDBhczh3MW92cGpsZ1d1dXdtNFNvdlM0WXEzbmxDanNneHlNcTJOWWJ6a1N3?=
+ =?utf-8?B?a3RrYkxlWE5FNVcvaldNbkQ1YVcvbHlPMHNyN3lSYlg0ZC8yK01yb05mOUtl?=
+ =?utf-8?B?dk1WeERtUUU3UVQ5a2JDTGJQaW1VM3BMS0FTMkZybEpGL3lqSHpabURKNm1F?=
+ =?utf-8?B?d0tWdHRyRGdlbE1oQ3hHazRzYzlaTWZpaEJtRG0rU0drNTFzd3FscHN0NnJO?=
+ =?utf-8?B?eURwdmhKSlpMeE44aVh3aUJZOStMZ3FwNDlRY04vR1lZM3pjeWlUUVFIanh4?=
+ =?utf-8?B?R0YvYjVJZHVzOThNWGg2NWhKVXdYRGcxUzBvY1pMd3V4VTNiWWFFdStSdU5S?=
+ =?utf-8?B?R2Y0TDV2YmhXbk9lMjNBbmJRWGFsYmoxUXhoWWtQMFdmNmZkdXNIbnE1NFhz?=
+ =?utf-8?B?VnZrTHU0YW81d294MmVWR1FqVXl0cXFpcjMzRW81QzlXQlZXMlRmekxUNGN4?=
+ =?utf-8?B?ZWxqSndvTEFTVUVMV1RDRUZJS25mbE5RYU1MYjlvMGEzcEJhYTEwMVlqTHRa?=
+ =?utf-8?B?c3VDRmVMM1A5NW5kNlRRUnUreHZSTFMza2hmNG1DRy9QSk9ucHhmbHRJRXRD?=
+ =?utf-8?B?enpEbjQ5VGpURGlBQkh5MW9idkxFNnNQWE5FM2VKOTZXUWRQWXFuSHZNSFZM?=
+ =?utf-8?B?WmdPYWdwOG8xcTVwLzgwK09idk4wOXBPMk43SE83c1diY2M4blBCNWtESk9F?=
+ =?utf-8?Q?HtNtvUfaW5oaqLWrndMlA+xcE?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66562931-782e-4b9c-3618-08dd1f6d350b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 14:06:45.9794
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: clVznaRq/Ulk99YhLomvcFb+75nZKqiLKwc+7Ozv6PGKX6G5nIGMS3CER4e0SUnT0VnINEZx1kxyym3cg7iRbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7741
 
-On Wed, Dec 18, 2024 at 08:59:51PM +0900, Ryo Takakura wrote:
-> PCI config access is locked with pci_lock which serializes
-> pci_user/bus_write_config*() and pci_user/bus_read_config*().
-> The subsequently invoked vmd_pci_write() and vmd_pci_read() are also
-> serialized as they are only invoked by them respectively.
+On 12/18/2024 04:34, Werner Sembach wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Remove cfg_lock which is taken by vmd_pci_write() and vmd_pci_read()
-> for their serialization as its already serialized by pci_lock.
+> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend") sets the
+> policy that all PCIe ports are allowed to use D3.  When the system is
+> suspended if the port is not power manageable by the platform and won't be
+> used for wakeup via a PME this sets up the policy for these ports to go
+> into D3hot.
 > 
-> This fixes the spinlock_t(cfg_lock) usage within
-> raw_spinlock_t(pci_lock) on RT kernels where spinlock_t becomes
-> sleepable.
+> This policy generally makes sense from an OSPM perspective but it leads to
+> problems with wakeup from suspend on the TUXEDO Sirius 16 Gen 1 with a
+> specific old BIOS. This manifests as a system hang.
 > 
-> Reported as following:
-> [   18.756807] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-> [   18.756810] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 1617, name: nodedev-init
-> [   18.756810] preempt_count: 1, expected: 0
-> [   18.756811] RCU nest depth: 0, expected: 0
-> [   18.756811] INFO: lockdep is turned off.
-> [   18.756812] irq event stamp: 0
-> [   18.756812] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-> [   18.756815] hardirqs last disabled at (0): [<ffffffff864f1fe2>] copy_process+0xa62/0x2d90
-> [   18.756819] softirqs last  enabled at (0): [<ffffffff864f1fe2>] copy_process+0xa62/0x2d90
-> [   18.756820] softirqs last disabled at (0): [<0000000000000000>] 0x0
-> [   18.756822] CPU: 3 UID: 0 PID: 1617 Comm: nodedev-init Tainted: G        W          6.12.1 #11
-> [   18.756823] Tainted: [W]=WARN
-> [   18.756824] Hardware name: Dell Inc. Vostro 3710/0K1D6X, BIOS 1.14.0 06/09/2023
-> [   18.756825] Call Trace:
-> [   18.756826]  <TASK>
-> [   18.756827]  dump_stack_lvl+0x9b/0xf0
-> [   18.756830]  dump_stack+0x10/0x20
-> [   18.756831]  __might_resched+0x158/0x230
-> [   18.756833]  rt_spin_lock+0x4e/0x130
-> [   18.756837]  ? vmd_pci_read+0x8d/0x100 [vmd]
-> [   18.756839]  vmd_pci_read+0x8d/0x100 [vmd]
-> [   18.756840]  pci_user_read_config_byte+0x6f/0xe0
-> [   18.756843]  pci_read_config+0xfe/0x290
-> [   18.756845]  sysfs_kf_bin_read+0x68/0x90
-> [   18.756847]  kernfs_fop_read_iter+0xd7/0x200
-> [   18.756850]  vfs_read+0x26d/0x360
-> [   18.756853]  ksys_read+0x70/0xf0
-> [   18.756855]  __x64_sys_read+0x1a/0x20
-> [   18.756857]  x64_sys_call+0x1715/0x20d0
-> [   18.756859]  do_syscall_64+0x8f/0x170
-> [   18.756861]  ? syscall_exit_to_user_mode+0xcd/0x2c0
-> [   18.756863]  ? do_syscall_64+0x9b/0x170
-> [   18.756865]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> On the affected Device + BIOS combination, add a quirk for the PCI device
+> ID used by the problematic root port on to ensure that these root ports are
+> not put into D3hot at suspend.
 > 
-> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+> This patch is based on
+> https://lore.kernel.org/linux-pci/20230708214457.1229-2-mario.limonciello@amd.com/
+> but with the added condition both in the documentation and in the code to
+> apply only to the TUXEDO Sirius 16 Gen 1 with a specific old BIOS.
+> 
+> Co-developed-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+> Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+> Co-developed-by: Werner Sembach <wse@tuxedocomputers.com>
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> Cc: stable@vger.kernel.org # 6.1+
+> Reported-by: Iain Lane <iain@orangesquash.org.uk>
+> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+
+These two tag (Reported-by and Closes) should be stripped because this 
+is now for very different hardware.
+
+> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
-
-Reviewed-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-
-Best regards,
-Luis
- 
-> Thanks Luis for feedback!
+>   drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
+>   1 file changed, 26 insertions(+)
 > 
-> Changes since v1:
-> https://lore.kernel.org/lkml/20241215141321.383144-1-ryotkkr98@gmail.com/T/
-> 
-> - Remove cfg_lock instead of converting it to raw spinlock as suggested
->   by Sebastian[0].
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 76f4df75b08a1..68075a6a5283c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3908,6 +3908,32 @@ static void quirk_apple_poweroff_thunderbolt(struct pci_dev *dev)
+>   DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
+>   			       PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
+>   			       quirk_apple_poweroff_thunderbolt);
+> +
+> +/*
+> + * Putting PCIe root ports on Ryzen SoCs with USB4 controllers into D3hot
+> + * may cause problems when the system attempts wake up from s2idle.
+> + *
+> + * On the TUXEDO Sirius 16 Gen 1 with a specific old BIOS this manifests as
+> + * a system hang.
+> + */
+> +static const struct dmi_system_id quirk_ryzen_rp_d3_dmi_table[] = {
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "APX958"),
+> +			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "V1.00A00_20240108"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+> +static void quirk_ryzen_rp_d3(struct pci_dev *pdev)
+> +{
+> +	if (dmi_check_system(quirk_ryzen_rp_d3_dmi_table) &&
+> +	    !acpi_pci_power_manageable(pdev))
+> +		pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x14eb, quirk_ryzen_rp_d3);
+
+So it needs to be applied to /all/ the root ports PID 0x14eb, not just 
+one of them?
+
+>   #endif
 >   
-> [0] https://lore.kernel.org/linux-rt-users/20230620154434.MosrzRUh@linutronix.de/
-> 
-> ---
->  drivers/pci/controller/vmd.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 9d9596947..2be898424 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -125,7 +125,6 @@ struct vmd_irq_list {
->  struct vmd_dev {
->  	struct pci_dev		*dev;
->  
-> -	spinlock_t		cfg_lock;
->  	void __iomem		*cfgbar;
->  
->  	int msix_count;
-> @@ -385,13 +384,11 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
->  {
->  	struct vmd_dev *vmd = vmd_from_bus(bus);
->  	void __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
-> -	unsigned long flags;
->  	int ret = 0;
->  
->  	if (!addr)
->  		return -EFAULT;
->  
-> -	spin_lock_irqsave(&vmd->cfg_lock, flags);
->  	switch (len) {
->  	case 1:
->  		*value = readb(addr);
-> @@ -406,7 +403,6 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
->  		ret = -EINVAL;
->  		break;
->  	}
-> -	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
->  	return ret;
->  }
->  
-> @@ -420,13 +416,11 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
->  {
->  	struct vmd_dev *vmd = vmd_from_bus(bus);
->  	void __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
-> -	unsigned long flags;
->  	int ret = 0;
->  
->  	if (!addr)
->  		return -EFAULT;
->  
-> -	spin_lock_irqsave(&vmd->cfg_lock, flags);
->  	switch (len) {
->  	case 1:
->  		writeb(value, addr);
-> @@ -444,7 +438,6 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
->  		ret = -EINVAL;
->  		break;
->  	}
-> -	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
->  	return ret;
->  }
->  
-> @@ -1009,7 +1002,6 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
->  		vmd->first_vec = 1;
->  
-> -	spin_lock_init(&vmd->cfg_lock);
->  	pci_set_drvdata(dev, vmd);
->  	err = vmd_enable_domain(vmd, features);
->  	if (err)
-> -- 
-> 2.34.1
-> 
----end quoted text---
+>   /*
 
 
