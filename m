@@ -1,252 +1,288 @@
-Return-Path: <linux-pci+bounces-18688-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18689-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 158819F6469
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 12:12:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BB229F64DB
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 12:27:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FAE716CD9A
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 11:12:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE59A188764B
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 11:27:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8166819939D;
-	Wed, 18 Dec 2024 11:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E769B19EEC2;
+	Wed, 18 Dec 2024 11:27:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A34oUUer"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ckUmMP0W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4826317C219;
-	Wed, 18 Dec 2024 11:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734520345; cv=fail; b=ElpW21XZjAR+XaPNM2+Z3VZKWGDouf/F5qwC1V2HuSLhzjprZwrNkRpzXE0aSzj7q8vdL56cFkJnCSltBWgcCoHtgCPA1Hg/q/BODBXp2Y/OFauSUIyh0mFkhsbnycSAowIfByydRfDr3bBIiBaupfRdBYQAu0S5IZvpreUYKxw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734520345; c=relaxed/simple;
-	bh=DPOdIoZ7PPix9WpiHU6eBR2ONIKsGN5qKARhBbzlqlM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=O6zSMuCCCiVDr4ZzD5xl6uoAuYVClqar4urFH7B1Mx8Y/Lt7Tbc6IydWus0/GD6FPOo6BpQ4ffUh9fV9GWnTk+3wkGYC/BnKUlUOp+On7BKv/VwyTZzKYzYvc9kZgYd4bkNNHNMS2NplvwRZSpZvNDIeu++bIXFnDVKcT/MWY2U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A34oUUer; arc=fail smtp.client-ip=40.107.237.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CQW5qazMovNJZPXq2RHqWASF7/GRH0XZTVpIo2IQOhd9xJVjB9uC8ewbI2KjiB6Mvxf4Y5GZVYmw2MMaZ+UQlaQ1DGrcUXyp/NJvaGTh/Iaum5AiQrpMSUGEaJ1RDcCmPRVZwHPL8rhD7h/h/HiccFiGNO9zbcGTFUQSMh9oNw8Wtq7ka4JdtSve5iVNfOa0oRqDXPaTtDgQnEqcY+EqG1jngZQNN73Y7i56OfgdSeyoFAq/ZGKDJP6RVJDSegEqLpi0qNhZdtpXUZXh+m56fVT1W9NJvk+LIZrucYuDUDypF/DCbU8rR5FOrDYZIbbw7hmDtnzeJe9pq57d+INugQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U2zpEEd4497H8rdqp1CmHcTfFGlz1inQyxr3oGKAVTE=;
- b=b9zyG3ltac7kjEwfZ/I75u/pQH9csOzPEx22AWsn2u96DYa7IRszVvWqtm9xyw/DgTOQVD2Bg37E8mJPURcJV9I2+yRMD0lEv+WE36p9FxkSf7154eJOF2B5S0WMFS3UKlekEZMq5DZrhi4JS2tu3oDYHkSzlhRXGC8y3bqcMJdao2jvccn2l14fRJzEFsyzBgt4OZBNnc+n2rd9rNvN5ht4e69mRvXme0xXx/SfCsfCiXNcyRA1rmRhqKjbt4KtlJEp/tMBR+HKUHIr2KZoPbi497sCyeFUfWt6A6dso89V9LXzuNX/9a5E2limnL7kVkqgWAUjEw0O0cE86wmzIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U2zpEEd4497H8rdqp1CmHcTfFGlz1inQyxr3oGKAVTE=;
- b=A34oUUeryc+9IVEf1iR1y0hXmmtWTipIA3F/zbo28EC/d536ev+f8TU8KB/0ODf/tsqSPNFKsLd2h2W6rE313GOTKz4/IIMGudshVcv6MuVAzJcGGlqpu4hcuws7DlCRelSatKSNymLsc1YHmQAsBSOfkTrV8UVfmsvFJWlQhSJDqxUqIGlp4uJ38Nh1JRTDbPeEfb+AHcj4cptlpL+fk6/fyl7bl+71KPtnpzZynfTu6bMxMbs9210kPqhL213i3ajxiX+MyGJmUlwfocz8fiQat8bJcjA+SUCQAaEoj26XQ3HZe1U1c5il1R/EH1NjZYJm0l/orWrOjjFEUOPOJA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
- by SA0PR12MB7464.namprd12.prod.outlook.com (2603:10b6:806:24b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Wed, 18 Dec
- 2024 11:12:20 +0000
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::8998:fe5c:833c:f378]) by PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::8998:fe5c:833c:f378%6]) with mapi id 15.20.8251.015; Wed, 18 Dec 2024
- 11:12:19 +0000
-Message-ID: <99a4ee84-e41d-472d-8935-8f2a2de837ec@nvidia.com>
-Date: Wed, 18 Dec 2024 19:12:09 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Use downstream bridges for distributing resources
-To: bhelgaas@google.com
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Carol Soto <csoto@nvidia.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Chris Chiu <chris.chiu@canonical.com>,
- Chia-Lin Kao <acelan.kao@canonical.com>
-References: <20241204022457.51322-1-kaihengf@nvidia.com>
- <20241204054809.GD4955@black.fi.intel.com>
-Content-Language: en-US
-From: Kai-Heng Feng <kaihengf@nvidia.com>
-In-Reply-To: <20241204054809.GD4955@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR03CA0126.apcprd03.prod.outlook.com
- (2603:1096:4:91::30) To PH7PR12MB7914.namprd12.prod.outlook.com
- (2603:10b6:510:27d::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23BB19CC0E;
+	Wed, 18 Dec 2024 11:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734521243; cv=none; b=e8NFpbHUTzjmLWiELrq8Fxbgjdd6iNEdRb+fcKnwPhnjeToqrkWkpTtYl9ab6qQYAvEUBdw1hraA0t5e5MSPUw+hUs7MxGOJbY6HVJW/OunnFr+YDk5JOCTLZGr2Bv3lpGuZREYBl7Z8LNY4g6j96mW5k2hJhNw60bS1LaLphm8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734521243; c=relaxed/simple;
+	bh=1UaJGtFi19l8VofmnvCt7LMQITGr93is0ZCgGXCq+Ck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pTPYE+y/vfV+ae0GaUw1f84k2VRTweGlxVMe2nSJbVQMTxIKSzQKo6hxzddun8IMKOeFDfcn2fDbzyS3TlfL7RHbypc/Xx91m4VzN6tphRfmKbSAN1seY0GWOjk4ZftlMoj0+YUTGWfKTHXcVAlJHl26q+uFnlQSyR4rFFHLe1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ckUmMP0W; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BI6oHKX032719;
+	Wed, 18 Dec 2024 12:26:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	WK1PKmsLdMHmuIS4oNCU1BzF7ljmQDQFxfjOUdX1gH4=; b=ckUmMP0WTEqzQtDp
+	w8KlcXYffhEfhJxZVedYAeqoFU9W4nL4m7zqd07ylW9k2dkllV3ijQqXafgKYn+d
+	xSRtLs11MJEI7qM4f3AkWc2wxTuePPfTGLJMXkHaIdP65zPzjbbQmQtY6Ms8w/LR
+	YIu9V8Gi/AjzcP/Fq0fPAz2XDy7dVFg5IjCIGa6MxQ3F+vAHWCz3sU6iXH3rPIfC
+	fY29qHXoygRkggYOgp60pV2lyo3/4oV2IYHiWlTEYmU+axWa+8LKOSR5MJtSznKw
+	dt45aoxICs9uAsc6YcHkt07stpJsAJkkV7OPvfHfgq4b5uU9FqDh4rxwoaRmPrYh
+	SvMrBg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43ksfrh79w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Dec 2024 12:26:54 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B5B6840048;
+	Wed, 18 Dec 2024 12:25:29 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 42FCB26C440;
+	Wed, 18 Dec 2024 12:24:23 +0100 (CET)
+Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 18 Dec
+ 2024 12:24:22 +0100
+Message-ID: <d15cec4e-e06a-47f7-aa8a-744c0829d244@foss.st.com>
+Date: Wed, 18 Dec 2024 12:24:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|SA0PR12MB7464:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a8fda44-2151-4d0e-3e3f-08dd1f54d68f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YjFzMUhLY2hDNlFpN0QxZkVFbmFneGp1dmtzR1VjUzVKY1FDdktZRzdlYTda?=
- =?utf-8?B?bTZlbGVpTDlXZ2hpZEcvWmRXbE5ldXJIRlRWemJHSk91cVJTYVVHV1ZpUHlQ?=
- =?utf-8?B?OXJDMldvVExkMXAyVWxyaHkzWWxkQ3BvSVZCdVkxK2ROOEVWOEdKN2s5TFRJ?=
- =?utf-8?B?K0tCY0pncHpwUEhCZEFkdm1FT1hKZmwyWDVEd0Vvb3l5c1RxSEF5eGpKTlB1?=
- =?utf-8?B?bWJ5di9URFk0aHNjSUR5d2wxL0h5Yk1FR1FPakhYT3FXa09nUlRLOTl3WWEz?=
- =?utf-8?B?UzRxall4TkVoNkxVSVBZY0l6MWR2ZlZ5MTVhWkFYWjMxRm80MkV2Zll4RXpU?=
- =?utf-8?B?MVVpaEhHMlZkZEd4dzF6OTJ3WGNvZ2F4MlVBMTZpRHNmaVhXMEptc3FjVnZu?=
- =?utf-8?B?LzUwYkFhUGtRTWpybzZ1b1cyNjhxMUhxYnI0RmRmbzU4RGR1bk9UZUZPcUI1?=
- =?utf-8?B?R2ZYZ0NMN3JOd1I1MHdodHYySWlVMGZiaVVhWlZwYUZBTXVFZktYeWFoSFlD?=
- =?utf-8?B?N1NIa3hVT3NWbm5NM0FZR3M4V1VFZkNOcHNEM29pdkQ3elBZN0RzWlZyRG9Q?=
- =?utf-8?B?bVpjS3BET3J1dVgycHdiUHIxd1NIenViOEtXbExNY2s0QkkwdGhMM1VleGI3?=
- =?utf-8?B?NExKRk9ZVnhsWUQxZW5hN2owTmh6SHhZR1hRTkloeW5rM3VucmE1S0swUGRJ?=
- =?utf-8?B?a3FxVThDc2VNck91UTJyK04wR3ovS1I0K3dkclFLVXhoUTJTYkx3am45ejEz?=
- =?utf-8?B?WGljSXAvRmIwbWNUb25Uc09VMXdxeUoyVjV6cXArZDRTb21XQkZQa0F1Q1dS?=
- =?utf-8?B?K1ZuSHozVmRpdUpzdjdzTHpXSG9oV1FOOTV6NUg4VnM5cmNIYkVGNGVkeUE2?=
- =?utf-8?B?M1NzMUdkZ2svOG5pTnhjcHkya1ltTndPOUNyUEQrQkFJOUlFTTJrcTMyU2tr?=
- =?utf-8?B?OVdkenc3M2llQytLZFFnNHZiZ2RGSkozSHlBczdkdmgvSTgwT05zUkh2dXJa?=
- =?utf-8?B?Zk5QRFdic3pTckorZWxxbmVQQ1NPVWF2bEo1dFNtYms0UUI0amtTU0ZTOWZj?=
- =?utf-8?B?dE5MVFlHdjVIQWFZWitYVjZnbGJselRYYVhabW5YbVF4ekJzaUNIZnpWMWN5?=
- =?utf-8?B?THp1aGdyazBlSTZYR1lHVGRrNDBpZFQzMzFrcWM2SkFzQnFhYlg1MWNuOTE0?=
- =?utf-8?B?SmxYMUZ1TDErS203eDFqQ2Vpd0x5L2I0a3p3ZFd3RzlUbnFFRHIyNFlGK2pr?=
- =?utf-8?B?MkN4WlQrTDFYaXl4bFFPUnRMRmxubzJSZEtuZ1pVdCt3Q2ltcU9qY1FlQWdH?=
- =?utf-8?B?SXpxZjM5V0dIUE1sYzdua1hTT2taMTR5bUNNM09HNFg5ZUVGRzg0RG5zbE5u?=
- =?utf-8?B?UittYjFNUW5wMitMeE1GZ05GeEgxZzRZY0trM0RDT1p6N09pMlRUSWZXbk5w?=
- =?utf-8?B?cjNTM2Mydi9hZXhKbkZGWGhIYUlTYzRGbVMrbGhTdkw4SnRsYjRPTG1wWnVk?=
- =?utf-8?B?T2wrWHI4dzdOT2FEL1lTT3hrK3c2RnEwaWw3TXhHbFlPZWpYUG85bVhUaFh0?=
- =?utf-8?B?TWRxc2xRUE1OZXpTbUtzV290WnlGVDk4aDdLRHg0aHU2a3NXNnFYVml6RVg2?=
- =?utf-8?B?U0tUajBUVUViR2xkSUtaSmt6bCtJSnJ0cjRacmJzckR0NmVTUGc5dHF0a0Ja?=
- =?utf-8?B?UVhYdUlkc2Q0NFRYOENDRVhuR3JtWGVJTExIcFhZblBsd05PdXJXaHhmZ0dj?=
- =?utf-8?B?OS9zdEtkbmlyTTQraFJ3QXZFekFOcThaanpVV3dGS3QvbEMzb0c2UzdBTjVj?=
- =?utf-8?B?cjVkMjlXTlB0K21XQk1ETHlLQzFTT242a05EZm9tVXQwR08xbmhneitNSmMv?=
- =?utf-8?Q?kBw2s81GCUk0Q?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a01SMFN2bEN0TklVSm5Qd3JCNW9jb0VGWTZtdzFHUytIR3NpVTJXV3c0b0h1?=
- =?utf-8?B?YWlacVFuQlBiaVpTNVdpeitzWVd1K090MFhpcExkRGVFMUVNOS9xcm1qeUZs?=
- =?utf-8?B?SmsreHlmR3p0LzNFazc3aWZhNXVkUTJlVHhsY2Z6VEV4dkE3UVJyUmJzWk5D?=
- =?utf-8?B?anZsY0s2eGMwa2lKRVowd3JXV1hQQUp3SDQyc09IUzR5MXoydmtLUjJyZU9k?=
- =?utf-8?B?bEN2WHQ5WEZiSzR2Qmt3TTVmNnB2TjBJb3lvbDFpSTNWUXYxUjEwejV5cTlO?=
- =?utf-8?B?b1BiUjNHTHBQQTJJbDQ5bXc2ZmtpcWhKZFFzWmc4VjVpZGZnT1RIVzJVWjdv?=
- =?utf-8?B?N2t3RUR3eFFoWFpXckIyTEFPdVNyV0xCYW1kQU9rZHAreFpPeEVzVlNGbVNW?=
- =?utf-8?B?cnJzNGVuWFRLby8vR3E2SlMvQmIyUzZwS0dNWlVVTEk4aERSdThHMVdlRlZu?=
- =?utf-8?B?MHlsWllyUWlENHFmaHpNL3ByUzFVWCtPWmdkb0luSzlDa0cxeG5tWk9Db0Vq?=
- =?utf-8?B?bGlXa1J6bmU5ckFRTlBEL0dHeGxidVRYTWFhSDZhWXZXeFJ6VktWd1c3R2E1?=
- =?utf-8?B?TENtcVZPb1NDQmpaZnAxSHg3eGNzb1dJVUtvNHpJV2RqOStoc2l5R3RnUkY4?=
- =?utf-8?B?V2p1dlViVnFQMWZHSjhLVlFMNUFVc2lrY0t1NkJTaUxYODFQcitOK2xhS0Yz?=
- =?utf-8?B?RlVrNEZYQlhxWld1cnFpNEZPRm91d2ZtM2dPRCtBZ0phaDhjZFF2STRvUmp5?=
- =?utf-8?B?aHBmUHdmSTZPZ3ozbWlpRE91VGV3YkV0Y0xwT2t5T0NpMzNjR0UwUEphZERl?=
- =?utf-8?B?aHFtbGgzUTBJYUZublduSlRsdWtKQk15QkRmWTl4YUZDSS9FNFBYWW8rMTdU?=
- =?utf-8?B?R3Y5TkVSTmhYcFdvc3VXRGNaMEtIZ0VLTGc1RThOcGw3UEJwVXBSVnpHdmZW?=
- =?utf-8?B?NGpGa3J4YWgvY2VocWdrcitINWJaRHdZVDgvL0VZS2FsMlBsS2czWGRtdU41?=
- =?utf-8?B?cjV1eVlFdWtrUXFjNGFvMTB0UStoUTBUcFEwSmZneksrTXRBZzdHaTlhMGRL?=
- =?utf-8?B?SDhDMFM2NU1pVUdaQ0J3aHpyWS9hZ3JUWGFpOStOQmZyUnExa2RWSWdpaGJT?=
- =?utf-8?B?QktKaU5HUWJxbXdoN1pDQWF2MTJZS3ZlOXdIUWZOSEg0aVd4Z0I1MThub0xS?=
- =?utf-8?B?VGd1VFYvREFQSVFodDRNZGlMaHJ1b3JZb2pEdFowb0diMVFsL0hRbFV5a3Rm?=
- =?utf-8?B?TlUwSm1yWCtpOGJDSmtESlNVRFJiRzVZRjBWdXBsUkk2TzNGUDFENnJwWkRv?=
- =?utf-8?B?cmxGU003aUcxQVZBUnNJY0I4V09HRFQ1dkhEdFpnUUQzQ1hKQlNIUXUxL1M0?=
- =?utf-8?B?U2o0MDZoRDY5WWRmOUZNWk9YUGV2elFPOHFCREIvbnh3RS9KblpvSEQ1cXFX?=
- =?utf-8?B?cENtdnpJMXREb29HMEpxclRNMEpmMnJjaXl2NnNoa2hLQ3ZnMlVEN08yNitV?=
- =?utf-8?B?aXE5cFEyVVBmTlZPVFF0dFFQblVpT2N6ZE5WUHlQZXllbUdZRmUzK1kvazVj?=
- =?utf-8?B?SEYxVUdUdGZWVFFyMWxxSE9TZDE4eDlscU1CSlN5cnlIemhaamZSbXJBT1kx?=
- =?utf-8?B?dFdyNHZidzFsWlBtRG1kUVpVZ1ZVa2owaGFiVFRBV0FmOTlJY2htRWFTNXll?=
- =?utf-8?B?MWhKTE15M1V3NXc1bitrTXlPQmkvQjdKSk9kZnJhZ3NLTzVlWjZhazd1b3Zq?=
- =?utf-8?B?cHZQaWFlT25WckdTSVh1SFIrU0pOajRZWURYV01IVWV0a2NwR2pZdEFUaTNV?=
- =?utf-8?B?NEFla05uT1I5M2pEcU1CRVdxQWd6dWNLZ0NZSXhGVUVuMTI5ek45ZzZrR0Yx?=
- =?utf-8?B?NTlYaEpKb29vNk5GdlJSR2tlck52UXJ4UzA3UjYxeEZlNllVeXVCMC8wN3ZK?=
- =?utf-8?B?OHZDMXpQRjJZZDY3N3ZTQUtpdDB1VnJWMXJLUHZ3VHljcTlJRmQ5bVA1UXNY?=
- =?utf-8?B?OEdhYkdER1dQMlV4MncxTnV5RnpwQ2hZZElSMitLSDFwbE04Y0oraXhreEEw?=
- =?utf-8?B?WUJJQVMvQmVFaGoyUkVYb29YSFBKQUR0V3JJUlRsVzdxOVpOR0p5MHR2b0cr?=
- =?utf-8?Q?uG9zhw5GQU8Cstm4hS3SI+h5Y?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a8fda44-2151-4d0e-3e3f-08dd1f54d68f
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 11:12:19.7368
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WCkjkFe7Iwdc7ioUIDNHd6n4aYUWwGK1+bSSY6USNs6mhr4Eft+6BT1GDLodkyT9mJuVWmovSNGQPqabVd1jWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7464
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] PCI: stm32: Add PCIe host support for STM32MP25
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
+        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
+ <20241126155119.1574564-3-christian.bruel@foss.st.com>
+ <20241203145244.trgrobtfmumtiwuc@thinkpad>
+ <ced7a55a-d968-497f-abc2-663855882a3f@foss.st.com>
+ <20241218094606.sljdx2w27thc5ahj@thinkpad>
+Content-Language: en-US
+From: Christian Bruel <christian.bruel@foss.st.com>
+In-Reply-To: <20241218094606.sljdx2w27thc5ahj@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-Hi Bjorn,
 
-On 2024/12/4 1:48 PM, Mika Westerberg wrote:
-> External email: Use caution opening links or attachments
+
+On 12/18/24 10:46, Manivannan Sadhasivam wrote:
+> On Mon, Dec 16, 2024 at 10:00:27AM +0100, Christian Bruel wrote:
 > 
+> [...]
 > 
-> On Wed, Dec 04, 2024 at 10:24:57AM +0800, Kai-Heng Feng wrote:
->> Commit 7180c1d08639 ("PCI: Distribute available resources for root
->> buses, too") breaks BAR assignment on some devcies:
->> [   10.021193] pci 0006:03:00.0: BAR 0 [mem 0x6300c0000000-0x6300c1ffffff 64bit pref]: assigned
->> [   10.029880] pci 0006:03:00.1: BAR 0 [mem 0x6300c2000000-0x6300c3ffffff 64bit pref]: assigned
->> [   10.038561] pci 0006:03:00.2: BAR 0 [mem size 0x00800000 64bit pref]: can't assign; no space
->> [   10.047191] pci 0006:03:00.2: BAR 0 [mem size 0x00800000 64bit pref]: failed to assign
->> [   10.055285] pci 0006:03:00.0: VF BAR 0 [mem size 0x02000000 64bit pref]: can't assign; no space
->> [   10.064180] pci 0006:03:00.0: VF BAR 0 [mem size 0x02000000 64bit pref]: failed to assign
->> [   10.072543] pci 0006:03:00.1: VF BAR 0 [mem size 0x02000000 64bit pref]: can't assign; no space
->> [   10.081437] pci 0006:03:00.1: VF BAR 0 [mem size 0x02000000 64bit pref]: failed to assign
+>>>
+>>>> +		msleep(PCIE_T_RRS_READY_MS);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void stm32_pcie_stop_link(struct dw_pcie *pci)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+>>>> +
+>>>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>>>> +			   STM32MP25_PCIECR_LTSSM_EN, 0);
+>>>> +
+>>>> +	/* Assert PERST# */
+>>>> +	if (stm32_pcie->perst_gpio)
+>>>> +		gpiod_set_value(stm32_pcie->perst_gpio, 1);
+>>>
+>>> I don't like tying PERST# handling with start/stop link. PERST# should be
+>>> handled based on the power/clock state.
 >>
->> The apertures of domain 0006 before the commit:
->> 6300c0000000-63ffffffffff : PCI Bus 0006:00
->>    6300c0000000-6300c9ffffff : PCI Bus 0006:01
->>      6300c0000000-6300c9ffffff : PCI Bus 0006:02
->>        6300c0000000-6300c8ffffff : PCI Bus 0006:03
->>          6300c0000000-6300c1ffffff : 0006:03:00.0
->>            6300c0000000-6300c1ffffff : mlx5_core
->>          6300c2000000-6300c3ffffff : 0006:03:00.1
->>            6300c2000000-6300c3ffffff : mlx5_core
->>          6300c4000000-6300c47fffff : 0006:03:00.2
->>          6300c4800000-6300c67fffff : 0006:03:00.0
->>          6300c6800000-6300c87fffff : 0006:03:00.1
->>        6300c9000000-6300c9bfffff : PCI Bus 0006:04
->>          6300c9000000-6300c9bfffff : PCI Bus 0006:05
->>            6300c9000000-6300c91fffff : PCI Bus 0006:06
->>            6300c9200000-6300c93fffff : PCI Bus 0006:07
->>            6300c9400000-6300c95fffff : PCI Bus 0006:08
->>            6300c9600000-6300c97fffff : PCI Bus 0006:09
+>> I don't understand your point: We turn off the PHY in suspend_noirq(), so
+>> that seems a logical place to de-assert in resume_noirq after the refclk is
+>> ready. PERST# should be kept active until the PHY stablilizes the clock in
+>> resume. From the PCIe electromechanical specs, PERST# goes active while the
+>> refclk is not stable/
 >>
->> After the commit:
->> 6300c0000000-63ffffffffff : PCI Bus 0006:00
->>    6300c0000000-6300c9ffffff : PCI Bus 0006:01
->>      6300c0000000-6300c9ffffff : PCI Bus 0006:02
->>        6300c0000000-6300c43fffff : PCI Bus 0006:03
->>          6300c0000000-6300c1ffffff : 0006:03:00.0
->>            6300c0000000-6300c1ffffff : mlx5_core
->>          6300c2000000-6300c3ffffff : 0006:03:00.1
->>            6300c2000000-6300c3ffffff : mlx5_core
->>        6300c4400000-6300c4dfffff : PCI Bus 0006:04
->>          6300c4400000-6300c4dfffff : PCI Bus 0006:05
->>            6300c4400000-6300c45fffff : PCI Bus 0006:06
->>            6300c4600000-6300c47fffff : PCI Bus 0006:07
->>            6300c4800000-6300c49fffff : PCI Bus 0006:08
->>            6300c4a00000-6300c4bfffff : PCI Bus 0006:09
->>
->> We can see that the window of 0006:03 gets shrunken too much and 0006:04
->> eats away the window for 0006:03:00.2.
->>
->> The offending commit distributes the upstream bridge's resources
->> multiple times to every downstream bridges, hence makes the aperture
->> smaller than desired because calculation of io_per_b, mmio_per_b and
->> mmio_pref_per_b becomes incorrect.
->>
->> Instead, distributing downstream bridges' own resources to resolve the
->> issue.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219540
->> Cc: Carol Soto <csoto@nvidia.com>
->> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Cc: Chris Chiu <chris.chiu@canonical.com>
->> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> While your understanding about PERST# is correct, your implementation is not.
+> You are toggling PERST# from start/stop link callbacks which are supposed to
+> control the LTSSM state only. I don't have issues with toggling PERST# in
+> stm32_pcie_{suspend/resume}_noirq().
 
-Is it possible to pickup this up in 6.13 window?
+Ah OK. this function is split now into 2 functional blocks in the 
+upcoming version
 
-Kai-Heng
+> 
+>>
+>>>
+>>>> +}
+>>>> +
+>>>> +static int stm32_pcie_suspend(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+>>>> +
+>>>> +	if (device_may_wakeup(dev) || device_wakeup_path(dev))
+>>>> +		enable_irq_wake(stm32_pcie->wake_irq);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int stm32_pcie_resume(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+>>>> +
+>>>> +	if (device_may_wakeup(dev) || device_wakeup_path(dev))
+>>>> +		disable_irq_wake(stm32_pcie->wake_irq);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int stm32_pcie_suspend_noirq(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+>>>> +
+>>>> +	stm32_pcie->link_is_up = dw_pcie_link_up(stm32_pcie->pci);
+>>>> +
+>>>> +	stm32_pcie_stop_link(stm32_pcie->pci);
+>>>
+>>> I don't understand how endpoint can wakeup the host if PERST# gets asserted.
+>>
+>> The stm32 PCIe doesn't support L2, we don't expect an in-band beacon for the
+>> wakeup. We support wakeup only from sideband WAKE#, that will restart the
+>> link from IRQ
+>>
+> 
+> I don't understand how WAKE# is supported without L2. Only in L2 state, endpoint
+> will make use of Vaux and it will wakeup the host using either beacon or WAKE#.
+> If you don't support L2, then the endpoint will reach L3 (link off) state.
+
+I think this is what happens, my understanding is that the device is 
+still powered to get the wakeup event (eg WoL magic packet), triggers 
+the PCIe wake_IRQ from the WAKE#.
+
+> 
+>>>
+>>>> +	clk_disable_unprepare(stm32_pcie->clk);
+>>>> +
+>>>> +	if (!device_may_wakeup(dev) && !device_wakeup_path(dev))
+>>>> +		phy_exit(stm32_pcie->phy);
+>>>> +
+>>>> +	return pinctrl_pm_select_sleep_state(dev);
+>>>> +}
+>>>> +
+>>>> +static int stm32_pcie_resume_noirq(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+>>>> +	struct dw_pcie *pci = stm32_pcie->pci;
+>>>> +	struct dw_pcie_rp *pp = &pci->pp;
+>>>> +	int ret;
+>>>> +
+>>>> +	/* init_state must be called first to force clk_req# gpio when no
+>>>
+>>> CLKREQ#
+>>>
+>>> Why RC should control CLKREQ#?
+>>
+>> REFCLK is gated with CLKREQ#, So we cannot access the core
+>> without CLKREQ# if no device is present. So force it with a init pinmux
+>> the time to init the PHY and the core DBI registers
+>>
+> 
+> Ok. You should add a comment to clarify it in the code as this is not a standard
+> behavior.
+> 
+
+OK
+
+>>>
+>>> Also please use preferred style for multi-line comments:
+>>>
+>>> 	/*
+>>> 	 * ...
+>>> 	 */
+>>>
+>>>> +	 * device is plugged.
+>>>> +	 */
+>>>> +	if (!IS_ERR(dev->pins->init_state))
+>>>> +		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
+>>>> +	else
+>>>> +		ret = pinctrl_pm_select_default_state(dev);
+>>>> +
+>>>> +	if (ret) {
+>>>> +		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	if (!device_may_wakeup(dev) && !device_wakeup_path(dev)) {
+>>>> +		ret = phy_init(stm32_pcie->phy);
+>>>> +		if (ret) {
+>>>> +			pinctrl_pm_select_default_state(dev);
+>>>> +			return ret;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	ret = clk_prepare_enable(stm32_pcie->clk);
+>>>> +	if (ret)
+>>>> +		goto clk_err;
+>>>
+>>> Please name the goto labels of their purpose. Like err_phy_exit.
+>>
+>> OK
+>>
+>>>
+>>>> +
+>>>> +	ret = dw_pcie_setup_rc(pp);
+>>>> +	if (ret)
+>>>> +		goto pcie_err;
+>>>
+>>> This should be, 'err_disable_clk'.
+>>>
+>>>> +
+>>>> +	if (stm32_pcie->link_is_up) {
+>>>
+>>> Why do you need this check? You cannot start the link in the absence of an
+>>> endpoint?
+>>>
+>>
+>> It is an optimization to avoid unnecessary "dw_pcie_wait_for_link" if no
+>> device is present during suspend
+>>
+> 
+> In that case you'll not trigger LTSSM if there was no endpoint connected before
+> suspend. What if users connect an endpoint after resume?
+
+Yes, exactly. We don't support hotplug, and plugging a device while the 
+system is in stand-by is something that we don't expect. The imx6 
+platform does this also.
+
+thanks,
+
+Christian
+
+> 
+> - Mani
+> 
 
