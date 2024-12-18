@@ -1,162 +1,106 @@
-Return-Path: <linux-pci+bounces-18717-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18718-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05C669F6AA5
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 17:00:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 008379F6AB1
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 17:03:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09E497A5CCA
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 16:00:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DAB7171979
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2024 16:03:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552441F2C52;
-	Wed, 18 Dec 2024 16:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BB6198822;
+	Wed, 18 Dec 2024 16:03:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="lcxP2NnY"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HQcDSI+M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eFw1OrdA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162911B0422;
-	Wed, 18 Dec 2024 15:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFB3145B1D;
+	Wed, 18 Dec 2024 16:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734537604; cv=none; b=ChLpAxOmy2K++FLA1JeDGYvcTl4evz2uAj5QyT6wBwRgvCVByzwsbizfm5kT0BS0I6ZgvILKJeGPsX4r6ZgVIDBAWlchjF6yjEqiQjhuw7p9VqBuVCNJ3NHATPcVo8Zl8tTHAbGyBZHAcnwZh6cU9DFr/4juxPeEZnrRtiFvPoQ=
+	t=1734537801; cv=none; b=fr2u86h7HRs13H8I35OX2LQ/fCG09Z1C4elNjdYEA0x3GdsJA3VL1RwSH2ZB9xtrYP+VutE2JNJlJV6FCXLyKAecCad2AIJGZCwQMNMGbw4/tKHJOLTFib09eVDj2m7XbfjBCrInX7XWT0L6SUdp7IY2nPOUShOqmVCnVr3jtCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734537604; c=relaxed/simple;
-	bh=zSDEzurTrixLK4QAI8e0UJ0PnQqoTsxwVqrGhZLTadg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZLk2N4qfkS9YMWdZGqiZHL219oZcUlT/UahV+kPxN+wiqrY1Vy+EBQQ5GEV4wGS4PweL2pnKogY7HOD+EwGteTcHCMQjzhnbdf62DlXS8SaPv/tqQjS0OFtF5QN4PoOOG6yqPQZwQn6FmTnQKMw7ZnWqjqMxXMIsquDi0VsN62M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=lcxP2NnY; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Received: from [192.168.42.116] (p5de4533f.dip0.t-ipconnect.de [93.228.83.63])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 748962FC0055;
-	Wed, 18 Dec 2024 16:59:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1734537597;
+	s=arc-20240116; t=1734537801; c=relaxed/simple;
+	bh=Si/VAs3+6Saj2eWKNnvuJJ/Mt+JRj8McFgux9WjQOUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uN4F3YU7LpKmZafPHF2vo6Y7pXXk8Bt8UwAtDeeQosL3faU2OYtysn7nUpfnyqyR2iQp8c2jijT2wuQuK4nWJL3YF00qmiw1naFFfDy+TQ9D5Zo8qslIjPt9hXzj6m5okAQ67+tigpA4etljBKwEn5I9V8Oxwc4lqoomvDSCo68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HQcDSI+M; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eFw1OrdA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Wed, 18 Dec 2024 17:03:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1734537798;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZqB6ZFbdNdxtHGL3p7m46qrgjCNBrJgnwNgYe3IrfQQ=;
-	b=lcxP2NnYoDutq8PdLeCg2GbmNKHut7oS1HHSYcQabeVYOI4T08mzvvWUaR1HDQfQPmnbc3
-	KByrL8jqS8ZghXK+1DYYOVhQEp0V+U1BKfyrQy1ztGx9MjfTNl2jwjLROxoHmeceAVtGYg
-	g0CkdClRVDm/w7xSlBWqsP/YzZFW8Iw=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <9487791a-784e-451b-a88c-7c578a6ead2e@tuxedocomputers.com>
-Date: Wed, 18 Dec 2024 16:59:56 +0100
+	bh=gseOPJ3O68lx3hSAAMu7P/vaf8EmvlWF2AeUxqoAXao=;
+	b=HQcDSI+MJgNckYZejbkRNSHS67i5qXV0USZeQVgO8gqzbbKIB4u/C0HVhELb/S+blysoeb
+	f8QiemXRMe4Lw7Ae+ixP/a/dN8oIc1tTgFiI+T6RdweG8n37ZzA+kVG3XfkNPRfbqfGOBz
+	wVYDRmwYO1/bK4QYewL+XGPXTiLgknu/XWYcLf2c+vBDnJVf3ippDXlCHxR7qDUb2JM449
+	zo3hZ1IMNrKdv8Xolq1WlP2ow2pe2TnpjX2p5GMfpZFjG2UoZD+NsV4tlLMVHZ/I80DFT9
+	t3hPuiCZD8yHXQVUj7yx5+K7q/A0gMJyWrxttAHPXf2QfQGavcoH0bQm2lsR3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1734537798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gseOPJ3O68lx3hSAAMu7P/vaf8EmvlWF2AeUxqoAXao=;
+	b=eFw1OrdA5J7ny+gBbwdZqmZcB6e1IGN9PaPe/SUrGiJ9KsM5BYUeP8n4iuIIgiIQjBPMpt
+	k3w8ZMds/hmfL1DQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Ryo Takakura <ryotkkr98@gmail.com>, lgoncalv@redhat.com,
+	bhelgaas@google.com, jonathan.derrick@linux.dev, kw@linux.com,
+	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	nirmal.patel@linux.intel.com, robh@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v2] PCI: vmd: Fix spinlock usage on config access for RT
+ kernel
+Message-ID: <20241218160316.NHEIKDfT@linutronix.de>
+References: <20241218115951.83062-1-ryotkkr98@gmail.com>
+ <Z2LsFoXotl_SHmNk@kbusch-mbp.dhcp.thefacebook.com>
+ <20241218154838.xVrjbjeX@linutronix.de>
+ <Z2LxAU0U_G5wI_2M@kbusch-mbp.dhcp.thefacebook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Avoid putting some root ports into D3 on some
- Ryzen chips
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241218103433.384027-1-wse@tuxedocomputers.com>
- <85537504-f107-44aa-9b6d-f61eb067b330@amd.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <85537504-f107-44aa-9b6d-f61eb067b330@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z2LxAU0U_G5wI_2M@kbusch-mbp.dhcp.thefacebook.com>
 
+On 2024-12-18 08:57:53 [-0700], Keith Busch wrote:
+> On Wed, Dec 18, 2024 at 04:48:38PM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2024-12-18 08:36:54 [-0700], Keith Busch wrote:
+> > > On Wed, Dec 18, 2024 at 08:59:51PM +0900, Ryo Takakura wrote:
+> > > > PCI config access is locked with pci_lock which serializes
+> > > > pci_user/bus_write_config*() and pci_user/bus_read_config*().
+> > > > The subsequently invoked vmd_pci_write() and vmd_pci_read() are also
+> > > > serialized as they are only invoked by them respectively.
+> > > > 
+> > > > Remove cfg_lock which is taken by vmd_pci_write() and vmd_pci_read()
+> > > > for their serialization as its already serialized by pci_lock.
+> > > 
+> > > That's only true if CONFIG_PCI_LOCKLESS_CONFIG isn't set, so pci_lock
+> > > won't help with concurrent kernel config access in such a setup. I think
+> > > the previous change to raw lock proposal was the correct approach.
+> > 
+> > I overlooked that. Wouldn't it make sense to let the vmd driver select
+> > that option rather than adding/ having a lock for the same purpose?
+> 
+> The arch/x86/Kconfig always selects PCI_LOCKESS_CONFIG, so I don't think
+> the vmd driver can require it be turned off. Besides, no need to punish
+> all PCI access if only this device requires it be serialized.
 
-Am 18.12.24 um 15:06 schrieb Mario Limonciello:
-> On 12/18/2024 04:34, Werner Sembach wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend") sets the
->> policy that all PCIe ports are allowed to use D3.  When the system is
->> suspended if the port is not power manageable by the platform and won't be
->> used for wakeup via a PME this sets up the policy for these ports to go
->> into D3hot.
->>
->> This policy generally makes sense from an OSPM perspective but it leads to
->> problems with wakeup from suspend on the TUXEDO Sirius 16 Gen 1 with a
->> specific old BIOS. This manifests as a system hang.
->>
->> On the affected Device + BIOS combination, add a quirk for the PCI device
->> ID used by the problematic root port on to ensure that these root ports are
->> not put into D3hot at suspend.
->>
->> This patch is based on
->> https://lore.kernel.org/linux-pci/20230708214457.1229-2-mario.limonciello@amd.com/ 
->>
->> but with the added condition both in the documentation and in the code to
->> apply only to the TUXEDO Sirius 16 Gen 1 with a specific old BIOS.
->>
->> Co-developed-by: Georg Gottleuber <ggo@tuxedocomputers.com>
->> Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
->> Co-developed-by: Werner Sembach <wse@tuxedocomputers.com>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> Cc: stable@vger.kernel.org # 6.1+
->> Reported-by: Iain Lane <iain@orangesquash.org.uk>
->> Closes: 
->> https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
->
-> These two tag (Reported-by and Closes) should be stripped because this is now 
-> for very different hardware.
-Ack will remove in next version
->
->> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 76f4df75b08a1..68075a6a5283c 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -3908,6 +3908,32 @@ static void quirk_apple_poweroff_thunderbolt(struct 
->> pci_dev *dev)
->>   DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
->>                      PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
->>                      quirk_apple_poweroff_thunderbolt);
->> +
->> +/*
->> + * Putting PCIe root ports on Ryzen SoCs with USB4 controllers into D3hot
->> + * may cause problems when the system attempts wake up from s2idle.
->> + *
->> + * On the TUXEDO Sirius 16 Gen 1 with a specific old BIOS this manifests as
->> + * a system hang.
->> + */
->> +static const struct dmi_system_id quirk_ryzen_rp_d3_dmi_table[] = {
->> +    {
->> +        .matches = {
->> +            DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->> +            DMI_EXACT_MATCH(DMI_BOARD_NAME, "APX958"),
->> +            DMI_EXACT_MATCH(DMI_BIOS_VERSION, "V1.00A00_20240108"),
->> +        },
->> +    },
->> +    {}
->> +};
->> +
->> +static void quirk_ryzen_rp_d3(struct pci_dev *pdev)
->> +{
->> +    if (dmi_check_system(quirk_ryzen_rp_d3_dmi_table) &&
->> +        !acpi_pci_power_manageable(pdev))
->> +        pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
->> +}
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x14eb, quirk_ryzen_rp_d3);
->
-> So it needs to be applied to /all/ the root ports PID 0x14eb, not just one of 
-> them?
-Don't know, I will look into it (I think because of the 
-!acpi_pci_power_manageable(pdev) it is applied to two of the three on the device)
->
->>   #endif
->>     /*
->
+Okay. That makes sense.
+
+Sebastian
 
