@@ -1,120 +1,117 @@
-Return-Path: <linux-pci+bounces-18767-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18768-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02C969F79DD
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 11:53:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90E979F7A04
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 12:05:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58B0B168ACB
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 10:53:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B4F918930C8
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 11:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DE2A22257F;
-	Thu, 19 Dec 2024 10:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27B3F222591;
+	Thu, 19 Dec 2024 11:05:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+lmQdU2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlaHPBuC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69706222566;
-	Thu, 19 Dec 2024 10:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F18B222D45
+	for <linux-pci@vger.kernel.org>; Thu, 19 Dec 2024 11:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734605601; cv=none; b=OI2zqnIsgVpmDq7FK891+pKb/99XXE20w5AjESium8PkEgWhnCEZ8D26zqOU4h3yP9+5NA9tLVlp+OKwtPIbi1T6R7aT2XyB4HXJ0aN9ORSIBkDRqJnvaB4iRBMjQIKPShg5qLJT3KBPGRS6fo7Sm1T3xhjP80xIKr6hEkFChV0=
+	t=1734606309; cv=none; b=alW9elTqWFGtImNdvoIVX+XVanT36gsac81EqIcejbY02CElTQZPWNVFsfzm/BIICM91+Ay7GMvzkR6fsrosDIjGHW0sTxV04eXQ+nbeMvVAvRf/SFHXopQSwdapT76kLZj6SvepUEX0bc7KQVghrANbpQsEed/Xn58LzjPTW+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734605601; c=relaxed/simple;
-	bh=RpuYyr3iEI9pJoKS8TGxrFFOZ8RRcoKwdnKtdEJS7oo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nX/h9FDetJmZyTl4RdZd0DPNfIHlJUIW2/p2ntYMbjZ6Yiql7eEb8aBEdCdGP8wTeU32yWC+nJQtalPGDeUWyyCrs08g5n6KVrLWM4p9ipx96VZg2sux7+vhDaMDQ/POoLvdp+5juKt6Ebe+l/FqRlWwMPaKGF5daaDSqCEX2lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+lmQdU2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209F1C4CED0;
-	Thu, 19 Dec 2024 10:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734605601;
-	bh=RpuYyr3iEI9pJoKS8TGxrFFOZ8RRcoKwdnKtdEJS7oo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=f+lmQdU26+HCxPMf/l7I9BtP0ocP4GNnvWw5cF0TS9JeqY1fMK3mVW2D40SZTJMxl
-	 AVODtVJRkw0Slzi/7tmqMdmYortm+Us48c62APa8KinkZtv/tJ7Gi7FRCUvTovigPp
-	 2PA1pFaLCg4FenTAHiTVtaGRMwB9TOOhyzwfFoYE435hwimFA7oJjqAjHmrtc5SCPe
-	 29xPVCxBXVge9n3W3Jnq4BFDTUa1ms7rJGADEeO8NkLTFp/oisgkl0tMpCOIi+f3Mc
-	 cs6Vqmy8j+1fvBC74CTbmGJTd6Qo8JcCCTYpXeQ0H1KS5zOPi+czn9gWb09jkT2MYG
-	 17MF4MwySy55w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org,  rafael@kernel.org,  bhelgaas@google.com,
-  ojeda@kernel.org,  alex.gaynor@gmail.com,  boqun.feng@gmail.com,
-  gary@garyguo.net,  bjorn3_gh@protonmail.com,  benno.lossin@proton.me,
-  tmgross@umich.edu,  a.hindborg@samsung.com,  aliceryhl@google.com,
-  airlied@gmail.com,  fujita.tomonori@gmail.com,  lina@asahilina.net,
-  pstanner@redhat.com,  ajanulgu@redhat.com,  lyude@redhat.com,
-  robh@kernel.org,  daniel.almeida@collabora.com,  saravanak@google.com,
-  dirk.behme@de.bosch.com,  j@jannau.net,  fabien.parent@linaro.org,
-  chrisi.schrefl@gmail.com,  paulmck@kernel.org,
-  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-pci@vger.kernel.org,  devicetree@vger.kernel.org,
-  rcu@vger.kernel.org
-Subject: Re: [PATCH v6 13/16] rust: driver: implement `Adapter`
-In-Reply-To: <20241212163357.35934-14-dakr@kernel.org> (Danilo Krummrich's
-	message of "Thu, 12 Dec 2024 17:33:44 +0100")
-References: <20241212163357.35934-1-dakr@kernel.org>
-	<20241212163357.35934-14-dakr@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 19 Dec 2024 11:53:06 +0100
-Message-ID: <87r064kkq5.fsf@kernel.org>
+	s=arc-20240116; t=1734606309; c=relaxed/simple;
+	bh=ts8JdaFOEr/E318Hf3FXavzKbiiDxmWmi7PrWTuAPYw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JnZhh3Ptlw43z/ldrBf1vX4ZvEDv9+LNS0n7+0ybXYug7j8FWcjX4uehGPscLCU1CW7ncJMaEZ/lUhgx/0zG2Ym4iU6QmLKocbZc6BCr60w31Zevyx5RjWGSfNAo0VEN7bC73E4WWanJtsQLquHTkm0uIM4f4KIEVtXDkKxCZAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlaHPBuC; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734606307; x=1766142307;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ts8JdaFOEr/E318Hf3FXavzKbiiDxmWmi7PrWTuAPYw=;
+  b=dlaHPBuCZY5o+Qdy6Uok7Jf0MOQwYhoR1yuCiRk6dqzJX+tHxfwm8lxp
+   diW545gBzWEmHutp7Gh6K1SWK21K+0jU8NLH/9sFZMpuZmU0a12RlLCfJ
+   LMUelDPFW72smhMTKTjQOAQ9nzpir3rafwzjOobWggjd9glNzQcJmKoGf
+   aMQAOsoWr/e/t5IchGwaz9dfdj00tZdW9CKRrct7QNfwWpVJy3Kf32kpX
+   kcSPX57o2LUJchfk5VOB8pl1iwCGbLmg4SGeipeqO5kCNgjsthMTn3NGo
+   s6D2oW5yhPAwccvN210B8cZfBS7cttTTkLHyUtafraLzVHwVEFr6A9onH
+   A==;
+X-CSE-ConnectionGUID: +WH4AsOWTmW7IITQrgZk6g==
+X-CSE-MsgGUID: yFqpOGusTB6Iy8WRi9uszQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11290"; a="46498855"
+X-IronPort-AV: E=Sophos;i="6.12,247,1728975600"; 
+   d="scan'208";a="46498855"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 03:05:07 -0800
+X-CSE-ConnectionGUID: MK5DMnwCT1uZuxAaKgn0BQ==
+X-CSE-MsgGUID: VQb4EI4CRdWBGz3C+7ba5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,247,1728975600"; 
+   d="scan'208";a="97954139"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.7])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 03:05:03 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 19 Dec 2024 13:05:00 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Krzysztof Wilczy??ski <kw@linux.com>, Bjorn Helgaas <helgaas@kernel.org>, 
+    linux-pci@vger.kernel.org, Niklas Schnelle <niks@kernel.org>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH for-linus v3 1/2] PCI: Honor Max Link Speed when determining
+ supported speeds
+In-Reply-To: <Z2POKvvGX7HZmqtP@wunner.de>
+Message-ID: <f4b43cee-b029-1c78-2412-7a952e8e83a1@linux.intel.com>
+References: <cover.1734428762.git.lukas@wunner.de> <fe03941e3e1cc42fb9bf4395e302bff53ee2198b.1734428762.git.lukas@wunner.de> <7bbd48eb-efaf-260f-ad8d-9fe7f2209812@linux.intel.com> <20241218234357.GA1444967@rocinante> <Z2POKvvGX7HZmqtP@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 19 Dec 2024, Lukas Wunner wrote:
 
-Hi Danilo,
-
-Danilo Krummrich <dakr@kernel.org> writes:
-
-> In order to not duplicate code in bus specific implementations (e.g.
-> platform), implement a generic `driver::Adapter` to represent the
-> connection of matched drivers and devices.
->
-> Bus specific `Adapter` implementations can simply implement this trait
-> to inherit generic functionality, such as matching OF or ACPI device IDs
-> and ID table entries.
->
-> Suggested-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
-
-I get some warnings when applying this patch:
-
->   RUSTC L rust/kernel.o
-> warning: unused import: `device_id`
->   --> /home/aeh/src/linux-rust/rnvme-v6.13-rc3/rust/kernel/driver.rs:10:13
->    |
-> 10 |     device, device_id, init::PinInit, of, str::CStr, try_pin_init, types::Opaque, ThisModule,
->    |             ^^^^^^^^^
->    |
->    = note: `#[warn(unused_imports)]` on by default
+> On Thu, Dec 19, 2024 at 08:43:57AM +0900, Krzysztof Wilczy??ski wrote:
+> > > > The GENMASK() macro used herein specifies 0 as lowest bit, even though
+> > > > the Supported Link Speeds Vector ends at bit 1.  This is done on purpose
+> > > > to avoid a GENMASK(0, 1) macro if Max Link Speed is zero.  That macro
+> > > > would be invalid as the lowest bit is greater than the highest bit.
+> > > > Ilpo has witnessed a zero Max Link Speed on Root Complex Integrated
+> > > > Endpoints in particular, so it does occur in practice.
+> > > 
+> > > Thanks for adding this extra information.
+> > > 
+> > > I'd also add reference to r6.2 section 7.5.3 which states those registers 
+> > > are required for RPs, Switch Ports, Bridges, and Endpoints _that are not 
+> > > RCiEPs_. My reading is that implies they're not required from RCiEPs.
+> > 
+> > Let me know how you would like to update the commit message.  I will do it
+> > directly on the branch.
 > 
-> warning: missing documentation for an associated function
->    --> /home/aeh/src/linux-rust/rnvme-v6.13-rc3/rust/kernel/driver.rs:158:5
->     |
-> 158 |     fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
->     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->     |
->     = note: requested on the command line with `-W missing-docs`
+> FWIW, I edited the commit message like this on my local branch:
 > 
-> warning: 2 warnings emitted
+> -Endpoints in particular, so it does occur in practice.
+> +Endpoints in particular, so it does occur in practice.  (The Link
+> +Capabilities Register is optional on RCiEPs per PCIe r6.2 sec 7.5.3.)
+> 
+> In other words, I just added the sentence in parentheses.
+> But maybe Ilpo has another wording preference... :)
 
+Your wording is good summary for the real substance that is the spec 
+itself. :-)
 
-Looks like the latter one is from patch 13.
-
-
-Best regards,
-Andreas Hindborg
-
+-- 
+ i.
 
 
