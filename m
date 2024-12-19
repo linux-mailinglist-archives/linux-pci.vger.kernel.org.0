@@ -1,130 +1,125 @@
-Return-Path: <linux-pci+bounces-18746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B149F7180
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 01:55:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 872F29F71D9
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 02:40:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0740B16B09A
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 00:55:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79775188B490
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 01:40:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65815171D2;
-	Thu, 19 Dec 2024 00:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5F7433CE;
+	Thu, 19 Dec 2024 01:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxmqfVtq"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bAjdJGWY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D1F12E4A;
-	Thu, 19 Dec 2024 00:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAD3E22075;
+	Thu, 19 Dec 2024 01:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734569747; cv=none; b=Qruz3kpeVJ6faw2oksqtN+I1R5cekToJVyuj7cy4n1iiPbNWG7dC/IjFV34cLHyGATDQNJLA1Wyuq+6NB8SEKf5zjeGYnvGv+cTvECUkRRGpseSADW/mbUKdHinWm51jJ/yQ5TKXCcp/QyJ9uN3BaG6fMuNi6LdM8yF76uLFtWg=
+	t=1734572425; cv=none; b=XNslSm/OPi7UloaGqAIElm4XOZUBOckrnIQ2Fehegc+tNwNKQDqDll0TZnoiAHCgkUu8/JDCN+3gOI+3FxfhR8G63fOWWB8TbtvoVhjPbuiD2MKGYhwNbvWUTtcNxy98pr0ZuLKaXgmDNdSFFbYw5JQoUWt0TkvEUoieCL4hWfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734569747; c=relaxed/simple;
-	bh=hd0ZlzWgSawFh8+8A+rV7uc3ocDRTNeUduIba2FQg1c=;
+	s=arc-20240116; t=1734572425; c=relaxed/simple;
+	bh=D+hjjt3ihwde2L/XaDn561fQCTgdt3mPQJ6kAtBrx0U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y+MX5H7HG838BMJCg9dg5pZZx/SlpbvWPfW6Ng0w9sSBuP6eKY9Yj/LbMMb7UaLp1Ikp49iutSo1JUrQ8FriyVWMHgHhYbTzC6sXm4Th8QkABizncUqp3dFSydLGxq0GGCtXSlUTcISs40tHK1wMdyu/JrkKbqvM4+axxM27t20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxmqfVtq; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2165cb60719so2561945ad.0;
-        Wed, 18 Dec 2024 16:55:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734569745; x=1735174545; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Z2JJA+VVWbDFlxfMN+TCjx2RUrp/JrvgBtYLZGV9fQ=;
-        b=mxmqfVtqumfap0c/3IsLFU0GOSQPifgoNHboDlyovgoDcA+kKaaIr607kolumImFq3
-         ueZu2uOsWpSpT6oB2qWxoaAyYNfRQFg+auB3/U3c1y9WunG3QIvcdOeybP70IS9EVCuc
-         pRncUSRa1qcWOPBCp4c5Ui9+kuLn/oLdaMNhflifHS5xBkoB1Ss0htyR49VhIVgUlnFW
-         RgrPSgFTfIy6SCVvhwiCYRYZumTdB11MXJKthc6GC+3kr7cH8njlj38TcKnGAFbkpwG1
-         ojLkKQuiVfzOCOLJ366mgJnaMu2KkbHTEN2OGL3NCIOyxhDkBE25tsRSkq6XI5/RcXYH
-         1z2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734569745; x=1735174545;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Z2JJA+VVWbDFlxfMN+TCjx2RUrp/JrvgBtYLZGV9fQ=;
-        b=prd0CURz3PGJOi4/DGsZ+ncqX/gKjHUbcJiLh6bOhOdrLEYu8IC482VFMp8ozWsf9b
-         +SBEd7RjJJOXEYcSH9oa84CalEq2SVNSjGbv8GHNI4qGszHD7KuNcRECO4FmNINOgmHY
-         qTpNkG4uB0jc/GQebHUBRJHSQ0ibm1VtAIJ84j72DrvwbA3JpqZFVVGPPKBhAgEPb1Jv
-         JoKh6b405NtCQg+GiS/W2ZD6MEKI5tZmSRiCYuwzG3rEiWdJzlwDP7d1t07a0mj2qIo5
-         0qiged+/mAp8OepTRSDX5ZukxlIEp6Q2RhbB2ZlE2bP7TeEjcYYDJ6m3C6exlmts/vud
-         8vRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPrTUC8mIbZcfAjct0VoXQ94XV7vWP1Jm+kExC5uX6/WZRBeIPDYIhq+ei+W+TzdxqOruFBHOimlm6@vger.kernel.org, AJvYcCXVjiM1h9qENgHhjrmG5/W8Mwov++GUlnVIifrEIeusAt90AbW8Ryq57M4GYpKdfpkkTw6NF8ihMYTj3x0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzeKhQ005aDt5uQpSEbaGOxMNptjilh0glA7O3hb3NjeYYHcjb
-	UIfSskyB5gtlDfDKheNxfApR+LV91c9G9Iusr3yNRWiq03gFx5DC
-X-Gm-Gg: ASbGnctSa8nu3R7u4ZPLVGRktBPHZOh/Cijmx3CZXKK+vzdFRPQ1sklg1YVcz2M926W
-	fAcOPEQ6CTT9Usala/8IiCWM8FTrY2mzchcCZsYIYQTRfcOIh67CO/Whj29sZdS8Uybma5AT8dh
-	REOtTDG52wn48Tf9fnWxaHgZoJGfYdybGFJFBAcjOvDOHnjKXt+kqXbHkA8MVQwUdLwXN4KwDI+
-	VWg28Fi4dT1aJZbzc1gQqGP2J/sINxsM3MtZsyMbWxOSscB28daAX8C/XziPZwpiZPZIOodYV+y
-	p/8JzMLquAP1tLcyn7LuzSDPAQA=
-X-Google-Smtp-Source: AGHT+IFvQC912dfQQj+RYYrtFJJbdM4bKFikCtfL5Crx1hXDf1k/rw3oosC5thpRzFx/YnswfK/uTw==
-X-Received: by 2002:a17:902:ce8c:b0:216:7ee9:220b with SMTP id d9443c01a7336-219d96268a0mr23576035ad.22.1734569745167;
-        Wed, 18 Dec 2024 16:55:45 -0800 (PST)
-Received: from DESKTOP-NBGHJ1C.local.valinux.co.jp (vagw.valinux.co.jp. [210.128.90.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc96e867sm1482065ad.71.2024.12.18.16.55.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2024 16:55:44 -0800 (PST)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: kbusch@kernel.org
+	 MIME-Version:Content-Type; b=Kr5GZrflbBltu9koHYlWDC7jEs/UsYI9mBeDBVZGWhJzI/ERVunPSC7+0eMsnlIAFm5/fx0z2CzozKcqIFcOs1Xej78m87MR6pGaOyocMa0bytICBRHgnt0NZa71RSkPVQZQt7jr95e6wPomC1cfPsFdUIj5er1qqN6lUZNYJaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bAjdJGWY; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=PmrCcyA1Ch8l3GxS0c3p3ifF/9ECkLSeyXYIv7wdGcI=;
+	b=bAjdJGWYgJP4yZ6ZhMJisRa864Zl1s4Tign/mXDz/ztREnSDT+JwDd0Te7oNav
+	zUE4puxdVaBLfgflhuoiRnpRGKL01vVKPK7+n1AsB+UoQ7WuQTNWcx2CmNV5cvAF
+	M8ilLaihgyan+mLsyUjZbzQE2/dd109UQr/w9hbcpgITY=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAHAlNLeWNngMyQAA--.8650S4;
+	Thu, 19 Dec 2024 09:39:36 +0800 (CST)
+From: Ma Ke <make_ruc2021@163.com>
+To: ilpo.jarvinen@linux.intel.com
 Cc: bhelgaas@google.com,
-	bigeasy@linutronix.de,
-	jonathan.derrick@linux.dev,
-	kw@linux.com,
-	lgoncalv@redhat.com,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	nirmal.patel@linux.intel.com,
-	robh@kernel.org,
-	rostedt@goodmis.org
-Subject: Re: [PATCH v2] PCI: vmd: Fix spinlock usage on config access for RT kernel
-Date: Thu, 19 Dec 2024 09:55:38 +0900
-Message-Id: <20241219005538.9125-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z2LsFoXotl_SHmNk@kbusch-mbp.dhcp.thefacebook.com>
-References: <Z2LsFoXotl_SHmNk@kbusch-mbp.dhcp.thefacebook.com>
+	lukas@wunner.de,
+	make_ruc2021@163.com,
+	rafael.j.wysocki@intel.com,
+	stable@vger.kernel.org,
+	yinghai@kernel.org
+Subject: Re: [PATCH] PCI: fix reference leak in pci_alloc_child_bus()
+Date: Thu, 19 Dec 2024 09:39:23 +0800
+Message-Id: <20241219013923.2996224-1-make_ruc2021@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <479bf618-187e-14f0-5319-c41f8b80faeb@linux.intel.com>
+References: <479bf618-187e-14f0-5319-c41f8b80faeb@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHAlNLeWNngMyQAA--.8650S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cw4xKw4Uuw4rAw1rtFyDGFg_yoW8Aryxpa
+	93Ga1YkFW8Xr17uw4qvF1jv3s0kanrtry09r1rJ3W7CFy3CryxKFW3tFW5G3WDu397C3Wj
+	v3Z8Xw1j9an8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUI1vsUUUUU=
+X-CM-SenderInfo: 5pdnvshuxfjiisr6il2tof0z/xtbBFRm6C2djckyg+wAAsc
 
-Hi Keith,
+Ilpo Järvinen<ilpo.jarvinen@linux.intel.com> wrote:
+> Ma Ke <make_ruc2021@163.com> writes:
+> > When device_register(&child->dev) failed, calling put_device() to
+> > explicitly release child->dev. Otherwise, it could cause double free
+> > problem.
+> > 
+> > Found by code review.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
+> > Signed-off-by: Ma Ke <make_ruc2021@163.com>
+> > ---
+> >  drivers/pci/probe.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 2e81ab0f5a25..d3146c588d7f 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+> >  add_dev:
+> >  	pci_set_bus_msi_domain(child);
+> >  	ret = device_register(&child->dev);
+> > -	WARN_ON(ret < 0);
+> > +	if (ret) {
+> > +		WARN_ON(ret < 0);
+> 
+> The usual way is:
+> 
+> 	if (WARN_ON(ret < 0))
+> 
+> > +		put_device(&child->dev);
+> > +	}
+> >  
+> >  	pcibios_add_bus(child);
+> 
+> But more serious problem here is that should this code even proceed as if 
+> nothing happened when an error occurs? pci_register_host_bridge() does 
+> proper rollback when device_register() fails but this function doesn't.
+> 
+> Into the same vein, is using WARN_ON() even correct here? Why should this 
+> print a stacktrace if device_register() fails instead of simply printing 
+> and error?
+Thank you for your guidance and suggestions. I have the same confusion
+about the simple handling(WARN_ON()) of errors if device_add() fails. 
+I am looking forward to receiving guidance and insights from other 
+experts.
 
-On Wed, 18 Dec 2024 08:36:54 -0700, Keith Busch wrote:
->> @@ -385,13 +384,11 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
->>  {
->>  	struct vmd_dev *vmd = vmd_from_bus(bus);
->>  	void __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
->> -	unsigned long flags;
->>  	int ret = 0;
->>  
->>  	if (!addr)
->>  		return -EFAULT;
->>  
->> -	spin_lock_irqsave(&vmd->cfg_lock, flags);
->>  	switch (len) {
->>  	case 1:
->>  		*value = readb(addr);
->
->There's a comment above this function explaining the need for the lock,
->which doesn't make a lot of sense after this patch.
+--
+Regards,
 
-Thanks for pointing it out! It slipped my mind.
-I'll leave it as it is for the next patch :)
+Ma Ke
 
-Sincerely,
-Ryo Takakura
 
