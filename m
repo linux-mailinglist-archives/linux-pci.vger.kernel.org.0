@@ -1,141 +1,255 @@
-Return-Path: <linux-pci+bounces-18771-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18772-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FDFA9F7A4B
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 12:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 210A09F7AA9
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 12:48:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71E34169F41
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 11:24:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74A75160489
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 11:48:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF90A22371C;
-	Thu, 19 Dec 2024 11:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E528F221DA0;
+	Thu, 19 Dec 2024 11:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cpkxhch3"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WSRGQn23"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C38222D68;
-	Thu, 19 Dec 2024 11:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A71223330;
+	Thu, 19 Dec 2024 11:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734607442; cv=none; b=mq+XGjBdl7uf2oV/mVxXN1q0WC20x7559e0kIY8Md1NrhxW21DWkOvWpQKF0PvJl2W8hj5KroOlijXS0lUBQ4PCp6QBb6n4naeBtHvCDhaPgP9Oh/CgFndSr/fSh5am4/tDirOnWJvgGz1z7grtVf1udTnlvqL2515XpzZUnn48=
+	t=1734608890; cv=none; b=nZJdmPCvBi8CegvkqD7POuweJCp/9Hs1HTH2KClOmAyuLhSf+YH6pqqTi3t7DrHyQVIQbfgzF9xZtKPhcduq9T6tSx4rPa7/8OG9KH4rwXeJmdPJFgtV1VsLu39Cg/1b5NBGaAkMjjQU1H2ppU8mSFvieq6OZtpjDTxzollKO74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734607442; c=relaxed/simple;
-	bh=Z+B0TtMOCcpkWVdy/3AxHhcMeb4iaFN+XQCTuzmOQ5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AHxNMG8EqgiOiwqWcyNhHx16eugo3F6XCUder/kCB8eAtByBcu9JPxiIHlvyUnC2fMX6zEJJFCOC/qWNhUU4twHCpLcH2YN9V0gTjlY/IsUjThUffEX3m0KH+IOfuNt5OFLGaOhqENUeIKFleVzbqd12Yr6Cawu+Vcp9aAdWKdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Cpkxhch3 reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4C60A40E02C4;
-	Thu, 19 Dec 2024 11:23:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ag5DNof_6v-2; Thu, 19 Dec 2024 11:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1734607426; bh=Ky91ij7q8YzbxjbNPNlCNvqYo+3HDYeDJCMEoaVeO1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cpkxhch3GqGKQ+2KfkW0RPRWUFl0Rdl3na4M7Tdgfx1Y9J80b6Vo4WaJMwW0b/rwr
-	 L6He2ba8gs9r7uMnMXK7eagdoZ5h8WJH7D/sHnP9NOMHdBm1CNjt8Jlea6VqLOTZSr
-	 mV94pe2qfUnni3ZOhPFhQLmrD2VD7zrMtGO0L3iXq1ABC9xKKqRj6Sr6frUY40vNwY
-	 RsBOb/gZQzA3p/IZUOw5693Vj+Rgn0DfpRbt50EPGWFkC9JtGHjfHB4TQeU+3hdxDz
-	 vVzLw61uTuHl0Uqo+DeXzRN5Xv4jjYwyhZsOuZJsXxl4FWO1oNtzGVnnG6lePw3aRi
-	 UdpU9BvydXPklU7ebcGSR/Q7vdiD5kyX5TubkVgBSOPzL1O09l9zQw3YAUDnQGAvPB
-	 zkH6M0toUisCz5kg5FDw2wCKtSMKQ/8Hn2jAwRhx+2BylXxgEj+gvHSNVxiRNOSmc3
-	 H/c3rVPPRrMe4Qiq7VcktiKnh4vSOxfGrEFKlFyzgAeTcvkarcbPgCNU0TXvnolBQ4
-	 dBnEamcin6+Y/pGfDtslgxpl+2dLArcUqGrSA7zRYxmtktgwjqVNyzANxwy4Hi4BcT
-	 J0AUogNog14S9iylFgGV0Wh7E/CQTkLRf7rj7fRkqnbDGgR3O+L3Wk7gQdf69iE5Rw
-	 c3aVUkidDIl72ZUASZSosbJ8=
-Received: from nazgul.tnic (93-39-225-244.ip77.fastwebnet.it [93.39.225.244])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 71EDE40E02C1;
-	Thu, 19 Dec 2024 11:23:39 +0000 (UTC)
-Date: Thu, 19 Dec 2024 12:23:37 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Rostyslav Khudolii <ros@qtec.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	Yazen Ghannam <Yazen.Ghannam@amd.com>
-Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
-Message-ID: <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local>
-References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
+	s=arc-20240116; t=1734608890; c=relaxed/simple;
+	bh=A/T4GzO87/lggPl3UQJfJ1Ft3OHe+ruvIGRNPK/tVg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g86neO+YIJSY0/kFhiwwX/8jJsOtxk8TZAmKQ8BTokQwLXeifPNphyP4wl5WmonF73WtaxSGS/6fl8DoVJKDKGHXutQVqemWL7E4kBxBsV2KImLsZItrkLPAZuE9Nfhu8XkPd1O4khFjWUcPqjdNewMva/jQQkWHELDX83iquFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WSRGQn23; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=0VmFlIQJL1wyeyT0aVlTvdgEA73CHRcs94bD1LnGY0A=;
+	b=WSRGQn23CafXnOMBKkDNvBZ+Lds/pF1Puk8unHmSK1eV4Zvrc4ntSm7+e6+UKV
+	t6il5vnuTG0Ph4GvyLbEMOUMr9PpwcGqOrGnPVwYgyjkbN4OjuWdKxtmmgOc4iOw
+	7XzsJIvPayzjfRgGb36JpYzykit4emOHM3wtq5wB6G/XY=
+Received: from [192.168.60.52] (unknown [222.71.101.198])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgDnj_eVB2RnsIWRDA--.5821S2;
+	Thu, 19 Dec 2024 19:46:31 +0800 (CST)
+Message-ID: <3bbb298a-6f84-6be7-69c6-eaeaa088cc0e@163.com>
+Date: Thu, 19 Dec 2024 06:46:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] PCI: cadence: Fixed cdns_pcie_host_link_setup return
+ value.
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
+ kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20241219081452.32035-1-18255117159@163.com>
+ <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
+ <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
+ <v623jkaz4u4dpzlr5dtnjfolc5nk7az24aqhjth4lpjffen4ct@ypjekbr4o54q>
+ <f2c8be62-7ff6-f0d0-f34a-ddb6915df0a4@163.com>
+ <20241219094906.wzn7ripjxrvbmwbh@thinkpad>
+ <c16dc225-4116-c966-7278-cc645f16c8a4@163.com>
+ <20241219112051.pjr3a4evtftlpxau@thinkpad>
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20241219112051.pjr3a4evtftlpxau@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PCgvCgDnj_eVB2RnsIWRDA--.5821S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3AF47JFWrurWkXw4rJF4rAFb_yoW3ZrWDpF
+	Waqayqkr4kJw10yr1I93WDWF10krsYyayDXrykKryUuw1q9ryUtr47trWjka4DGw4kAr17
+	trZ0qFyIvryDAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jxJ5rUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwm6o2dkApgvQgACsp
 
-+ Yazen.
 
-On Mon, Dec 16, 2024 at 02:15:26PM +0100, Rostyslav Khudolii wrote:
-> Hi all,
->=20
-> I am currently working on a custom AMD Ryzen=E2=84=A2 Embedded R2000 (A=
-MD
-> Family 17h) device and have discovered that PCI IO Extended
-> Configuration Space (ECS) access is no longer possible.
 
-Perhaps that particular type of system of yours needs some special handli=
-ng.
+On 12/19/24 06:20, Manivannan Sadhasivam wrote:
+> On Thu, Dec 19, 2024 at 05:29:01AM -0500, Hans Zhang wrote:
+>>
+>>
+>> On 12/19/24 04:49, Manivannan Sadhasivam wrote:
+>>> On Thu, Dec 19, 2024 at 04:38:11AM -0500, Hans Zhang wrote:
+>>>>
+>>>> On 12/19/24 03:59, Siddharth Vadapalli wrote:
+>>>>> On Thu, Dec 19, 2024 at 03:49:33AM -0500, Hans Zhang wrote:
+>>>>>> On 12/19/24 03:33, Siddharth Vadapalli wrote:
+>>>>>>> On Thu, Dec 19, 2024 at 03:14:52AM -0500, Hans Zhang wrote:
+>>>>>>>> If the PCIe link never came up, the enumeration process
+>>>>>>>> should not be run.
+>>>>>>> The link could come up at a later point in time. Please refer to the
+>>>>>>> implementation of:
+>>>>>>> dw_pcie_host_init() in drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> wherein we have the following:
+>>>>>>> 	/* Ignore errors, the link may come up later */
+>>>>>>> 	dw_pcie_wait_for_link(pci);
+>>>>>>>
+>>>>>>> It seems to me that the logic behind ignoring the absence of the link
+>>>>>>> within cdns_pcie_host_link_setup() instead of erroring out, is similar to
+>>>>>>> that of dw_pcie_wait_for_link().
+>>>>>>>
+>>>>>>> Regards,
+>>>>>>> Siddharth.
+>>>>>>>
+>>>>>>>
+>>>>>>> If a PCIe port is not connected to a device. The PCIe link does not
+>>>>>>> go up. The current code returns success whether the device is connected
+>>>>>>> or not. Cadence IP's ECAM requires an LTSSM at L0 to access the RC's
+>>>>>>> config space registers. Otherwise the enumeration process will hang.
+>>>>> The ">" symbols seem to be manually added in your reply and are also
+>>>>> incorrect. If you have added them manually, please don't add them at the
+>>>>> start of the sentences corresponding to your reply.
+>>>>>
+>>>>> The issue you are facing seems to be specific to the Cadence IP or the way
+>>>>> in which the IP has been integrated into the device that you are using.
+>>>>> On TI SoCs which have the Cadence PCIe Controller, absence of PCIe devices
+>>>>> doesn't result in a hang. Enumeration should proceed irrespective of the
+>>>>> presence of PCIe devices and should indicate their absence when they aren't
+>>>>> connected.
+>>>>>
+>>>>> While I am not denying the issue being seen, the fix should probably be
+>>>>> done elsewhere.
+>>>>>
+>>>>> Regards,
+>>>>> Siddharth.
+>>>> We are the SOC design company and we have confirmed with the designer and
+>>>> Cadence. For the Cadence's IP we are using, ECAM must be L0 at LTSSM to be
+>>>> used. Cadence will fixed next RTL version.
+>>>>
+>>>
+>>> I don't understand what you mean by 'ECAM must be L0 at LTSSM'. If you do not
+>>> connect the device, LTSSM would still be in 'detect' state until the device is
+>>> connected. Is that different on your SoC?
+>>>
+>>>> If the cdns_pcie_host_link_setup return value is not modified. The following
+>>>> is the
+>>>> log of the enumeration process without connected devices. There will be hang
+>>>> for
+>>>> more than 300 seconds. So I don't think it makes sense to run the
+>>>> enumeration
+>>>> process without connecting devices. And it will affect the boot time.
+>>>>
+>>>
+>>> We don't know your driver, so cannot comment on the issue without understanding
+>>> the problem, sorry.
+>>>
+>>> - Mani
+>>>
+>>>> [ 2.681770] xxx pcie: xxx_pcie_probe starting!
+>>>> [ 2.689537] xxx pcie: host bridge /soc@0/pcie@xxx ranges:
+>>>> [ 2.698601] xxx pcie: IO 0x0060100000..0x00601fffff -> 0x0060100000
+>>>> [ 2.708625] xxx pcie: MEM 0x0060200000..0x007fffffff -> 0x0060200000
+>>>> [ 2.718649] xxx pcie: MEM 0x1800000000..0x1bffffffff -> 0x1800000000
+>>>> [ 2.744441] xxx pcie: ioremap rcsu, paddr:[mem 0x0a000000-0x0a00ffff],
+>>>> vaddr:ffff800089390000
+>>>> [ 2.756230] xxx pcie: ioremap msg, paddr:[mem 0x60000000-0x600fffff],
+>>>> vaddr:ffff800089800000
+>>>> [ 2.769692] xxx pcie: ECAM at [mem 0x2c000000-0x2fffffff] for [bus c0-ff]
+>>>> [ 2.780139] xxx.pcie_phy: pcie_phy_common_init end
+>>>> [ 2.788900] xxx pcie: waiting PHY is ready! retries = 2
+>>>> [ 3.905292] xxx pcie: Link fail, retries 10 times
+>>>> [ 3.915054] xxx pcie: ret=-110, rc->quirk_retrain_flag = 0
+>>>> [ 3.923848] xxx pcie: ret=-110, rc->quirk_retrain_flag = 0
+>>>> [ 3.932669] xxx pcie: PCI host bridge to bus 0000:c0
+>>>> [ 3.940847] pci_bus 0000:c0: root bus resource [bus c0-ff]
+>>>> [ 3.948322] pci_bus 0000:c0: root bus resource [io 0x0000-0xfffff] (bus
+>>>> address [0x60100000-0x601fffff])
+>>>> [ 3.959922] pci_bus 0000:c0: root bus resource [mem 0x60200000-0x7fffffff]
+>>>> [ 3.968799] pci_bus 0000:c0: root bus resource [mem
+>>>> 0x1800000000-0x1bffffffff pref]
+>>>> [ 339.667761] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+>>>> [ 339.677449] rcu: 5-...0: (20 ticks this GP) idle=4d94/1/0x4000000000000000
+>>>> softirq=20/20 fqs=2623
+>>>> [ 339.688184] (detected by 2, t=5253 jiffies, g=-1119, q=2 ncpus=12)
+>>>> [ 339.696193] Sending NMI from CPU 2 to CPUs 5:
+>>>> [ 349.703670] rcu: rcu_preempt kthread timer wakeup didn't happen for 2509
+>>>> jiffies! g-1119 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
+>>>> [ 349.718710] rcu: Possible timer handling issue on cpu=2 timer-softirq=1208
+>>>> [ 349.727418] rcu: rcu_preempt kthread starved for 2515 jiffies! g-1119 f0x0
+>>>> RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
+>>>> [ 349.739642] rcu: Unless rcu_preempt kthread gets sufficient CPU time, OOM
+>>>> is now expected behavior.
+>>>> [ 349.750546] rcu: RCU grace-period kthread stack dump:
+>>>> [ 349.757319] task:rcu_preempt state:I stack:0 pid:14 ppid:2
+>>>> flags:0x00000008
+>>>> [ 349.767439] Call trace:
+>>>> [ 349.771575] __switch_to+0xdc/0x150
+>>>> [ 349.776777] __schedule+0x2dc/0x7d0
+>>>> [ 349.781972] schedule+0x5c/0x100
+>>>> [ 349.786903] schedule_timeout+0x8c/0x100
+>>>> [ 349.792538] rcu_gp_fqs_loop+0x140/0x420
+>>>> [ 349.798176] rcu_gp_kthread+0x134/0x164
+>>>> [ 349.803725] kthread+0x108/0x10c
+>>>> [ 349.808657] ret_from_fork+0x10/0x20
+>>>> [ 349.813942] rcu: Stack dump where RCU GP kthread last ran:
+>>>> [ 349.821156] CPU: 2 PID: 0 Comm: swapper/2 Tainted: G S xxx-build-generic
+>>>> #8
+>>>> [ 349.831887] Hardware name: xxx Reference Board, BIOS xxx
+>>>> [ 349.843583] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS
+>>>> BTYPE=--)
+>>>> [ 349.852294] pc : arch_cpu_idle+0x18/0x2c
+>>>> [ 349.857928] lr : arch_cpu_idle+0x14/0x2c
+>>>>
+>>>> Regards Hans
+>>>>
+>>>
+>>
+>> I am very sorry that the previous email said that I included HTML format, so
+>> I resend it twice.
+>>
+>>
+>>> I don't understand what you mean by 'ECAM must be L0 at LTSSM'. If you do
+>> not
+>>> connect the device, LTSSM would still be in 'detect' state until the
+>> device is
+>>> connected. Is that different on your SoC?
+>>
+>> If a PCIe port is not connected to a device. Then run pci_host_probe and
+>> perform the enumeration process. During the enumeration process, VID and PID
+>> are read. If the LTSSM is not in L0, the CPU send AXI transmission will not
+>> be sent, that is, the AXI slave will hang. This is the problem with the
+>> Cadence IP we are using.
+>>
+> 
+> This sounds similar to the issues we have seen with other IP implementations:
+> 
+> 15b23906347c ("PCI: dwc: Add link up check in dw_child_pcie_ops.map_bus()")
+> 9e9ec8d8692a ("PCI: keystone: Add link up check to ks_pcie_other_map_bus()")
+> 
+> If the config space access happens for devices that do not exist on the bus,
+> then SError gets triggered and it causes the system hang.
+> 
+> In that case, you need to skip the enumeration in your own
+> 'struct pci_ops::map_bus' callback. Even though it is not the best solution, we
+> have to live with it.
+> 
+> - Mani
+> 
 
-Things to try:
+ > In that case, you need to skip the enumeration in your own
+ > 'struct pci_ops::map_bus' callback. Even though it is not the best 
+solution, we
+ > have to live with it.
 
-* use the latest upstream kernel
+I know how pcie-designware-host.c works, but accessing each config space 
+register requires checking if it is a link up, which seems inefficient.
+We have 5 PCIe controllers, and if a few of them are not connected to 
+the device. And it will affect the boot time.
 
-* add some debug printks to the paths you mention to see where they fail
+Regards
+Hans
 
-Looking at the relevant chapter in the PPR - 2.1.7 or 2.1.8 - that
-should still work.
-
-Leaving in the rest for reference.
-
-> Consider the following functions: amd_bus_cpu_online() and
-> pci_enable_pci_io_ecs(). These functions are part of the
-> amd_postcore_init() initcall and are responsible for enabling PCI IO
-> ECS. Both functions modify the CoreMasterAccessCtrl (EnableCf8ExtCfg)
-> value via the PCI device function or the MSR register directly (see
-> the "BIOS and Kernel Developer=E2=80=99s Guide (BKDG) for AMD Family 15=
-h",
-> Section 2.7). However, neither the MSR register nor the PCI function
-> at the specified address (D18F3x8C) exists for AMD Family 17h. The
-> CoreMasterAccessCtrl register still exists but is now located at a
-> different address (see the "Processor Programming Reference (PPR) for
-> AMD Family 17h", Section 2.1.8).
->=20
-> I would be happy to submit a patch to fix this issue. However, since
-> the most recent change affecting this functionality appears to be 14
-> years old, I would like to confirm whether this is still relevant or
-> if the kernel should always be built with CONFIG_PCI_MMCONFIG when ECS
-> access is required.
->=20
-> Linux Kernel info:
->=20
-> root@qt5222:~# uname -a
-> Linux qt5222 6.6.49-2447-qtec-standard--gef032148967a #1 SMP Fri Nov
-> 22 09:25:55 UTC 2024 x86_64 GNU/Linux
->=20
-> Best regards,
-> Ros
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
