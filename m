@@ -1,255 +1,231 @@
-Return-Path: <linux-pci+bounces-18772-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18773-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 210A09F7AA9
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 12:48:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EBC89F7B04
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 13:16:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74A75160489
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 11:48:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8BF1189051B
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 12:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E528F221DA0;
-	Thu, 19 Dec 2024 11:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE9B1FCD02;
+	Thu, 19 Dec 2024 12:16:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WSRGQn23"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwFd+lie"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A71223330;
-	Thu, 19 Dec 2024 11:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3009B1CA9C;
+	Thu, 19 Dec 2024 12:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734608890; cv=none; b=nZJdmPCvBi8CegvkqD7POuweJCp/9Hs1HTH2KClOmAyuLhSf+YH6pqqTi3t7DrHyQVIQbfgzF9xZtKPhcduq9T6tSx4rPa7/8OG9KH4rwXeJmdPJFgtV1VsLu39Cg/1b5NBGaAkMjjQU1H2ppU8mSFvieq6OZtpjDTxzollKO74=
+	t=1734610602; cv=none; b=k/5z0cmWcc0f4OJpWBgcVomVfbir+dVAqKPjVlC5NPwBkdWbR3iG/oZ86TNfY/nj59tmbUNUGBUoFf/muf5X65XQb2Jt50G9vbm3Xs6Wsai5RWPeC4cWGnKp8JmyEXqi0pkRUclW7M4KrKXByqIvlEU8J+F2ih5enIpgeXn80pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734608890; c=relaxed/simple;
-	bh=A/T4GzO87/lggPl3UQJfJ1Ft3OHe+ruvIGRNPK/tVg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g86neO+YIJSY0/kFhiwwX/8jJsOtxk8TZAmKQ8BTokQwLXeifPNphyP4wl5WmonF73WtaxSGS/6fl8DoVJKDKGHXutQVqemWL7E4kBxBsV2KImLsZItrkLPAZuE9Nfhu8XkPd1O4khFjWUcPqjdNewMva/jQQkWHELDX83iquFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WSRGQn23; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=0VmFlIQJL1wyeyT0aVlTvdgEA73CHRcs94bD1LnGY0A=;
-	b=WSRGQn23CafXnOMBKkDNvBZ+Lds/pF1Puk8unHmSK1eV4Zvrc4ntSm7+e6+UKV
-	t6il5vnuTG0Ph4GvyLbEMOUMr9PpwcGqOrGnPVwYgyjkbN4OjuWdKxtmmgOc4iOw
-	7XzsJIvPayzjfRgGb36JpYzykit4emOHM3wtq5wB6G/XY=
-Received: from [192.168.60.52] (unknown [222.71.101.198])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgDnj_eVB2RnsIWRDA--.5821S2;
-	Thu, 19 Dec 2024 19:46:31 +0800 (CST)
-Message-ID: <3bbb298a-6f84-6be7-69c6-eaeaa088cc0e@163.com>
-Date: Thu, 19 Dec 2024 06:46:28 -0500
+	s=arc-20240116; t=1734610602; c=relaxed/simple;
+	bh=/rc6f/XyoswSnzbbgPHjpTqckIr5GVVzgBeklS57Qo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTIQJs7VYU0KbI1z1ySQygQpS7WyNKWLWN4f5rUEKTIf1NT4ucz+N74iZlnlsBU9l1ov2bjpV6pbMIH0d5H+BFfcbnRnbPOKvX+3v3gRUe/CfYBrdy0XXHmpL+RdO6+Ak6gMgfWf9yFPg+sVrDywOkJ2c7l9RABMtRp4k3xy6Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwFd+lie; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D38C4CECE;
+	Thu, 19 Dec 2024 12:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734610601;
+	bh=/rc6f/XyoswSnzbbgPHjpTqckIr5GVVzgBeklS57Qo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UwFd+lieTdZ8hfsq7P/ml72xq1HSgxoiNzGMZt45JYbo5b9EOdEuEe98ULBJSIM8a
+	 nAOf9sgSicIl5xEYFmyb/1y3Q99ft46zA/POMlPAjAMHQs10l9CRA2yUfshvDrYdTu
+	 2IoeqegJeBpYWm5eKXTcQ764Duu+c9tJTIja6WVwBMccX0xrPHtR6apFLbHT4uS8Oh
+	 gvL4SqNtCH7u2XnuSsxGNHSl/WpzF8KVGyhJKKUy0TUeAv903UdwxjlMkDw2Tjt28i
+	 2s6BOv1KcChK75cxut/LJtkuL41IOCVEt15JpuIAWkml2bEMchDS1GL6exan77wyaU
+	 dKyoJFQJ4x0CA==
+Date: Thu, 19 Dec 2024 06:16:39 -0600
+From: Rob Herring <robh@kernel.org>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Chen Wang <unicornxw@gmail.com>,
+	kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+	arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org,
+	guoren@kernel.org, inochiama@outlook.com, krzk+dt@kernel.org,
+	lee@kernel.org, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, pbrobinson@gmail.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com
+Subject: Re: [PATCH v2 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
+Message-ID: <20241219121639.GA3977968-robh@kernel.org>
+References: <20241210173350.GA3222084@bhelgaas>
+ <BM1PR01MB2116EB0657EA6E231AB75BD5FE062@BM1PR01MB2116.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] PCI: cadence: Fixed cdns_pcie_host_link_setup return
- value.
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
- kw@linux.com, robh@kernel.org, bhelgaas@google.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20241219081452.32035-1-18255117159@163.com>
- <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
- <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
- <v623jkaz4u4dpzlr5dtnjfolc5nk7az24aqhjth4lpjffen4ct@ypjekbr4o54q>
- <f2c8be62-7ff6-f0d0-f34a-ddb6915df0a4@163.com>
- <20241219094906.wzn7ripjxrvbmwbh@thinkpad>
- <c16dc225-4116-c966-7278-cc645f16c8a4@163.com>
- <20241219112051.pjr3a4evtftlpxau@thinkpad>
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20241219112051.pjr3a4evtftlpxau@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PCgvCgDnj_eVB2RnsIWRDA--.5821S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3AF47JFWrurWkXw4rJF4rAFb_yoW3ZrWDpF
-	Waqayqkr4kJw10yr1I93WDWF10krsYyayDXrykKryUuw1q9ryUtr47trWjka4DGw4kAr17
-	trZ0qFyIvryDAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jxJ5rUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwm6o2dkApgvQgACsp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BM1PR01MB2116EB0657EA6E231AB75BD5FE062@BM1PR01MB2116.INDPRD01.PROD.OUTLOOK.COM>
 
-
-
-On 12/19/24 06:20, Manivannan Sadhasivam wrote:
-> On Thu, Dec 19, 2024 at 05:29:01AM -0500, Hans Zhang wrote:
->>
->>
->> On 12/19/24 04:49, Manivannan Sadhasivam wrote:
->>> On Thu, Dec 19, 2024 at 04:38:11AM -0500, Hans Zhang wrote:
->>>>
->>>> On 12/19/24 03:59, Siddharth Vadapalli wrote:
->>>>> On Thu, Dec 19, 2024 at 03:49:33AM -0500, Hans Zhang wrote:
->>>>>> On 12/19/24 03:33, Siddharth Vadapalli wrote:
->>>>>>> On Thu, Dec 19, 2024 at 03:14:52AM -0500, Hans Zhang wrote:
->>>>>>>> If the PCIe link never came up, the enumeration process
->>>>>>>> should not be run.
->>>>>>> The link could come up at a later point in time. Please refer to the
->>>>>>> implementation of:
->>>>>>> dw_pcie_host_init() in drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> wherein we have the following:
->>>>>>> 	/* Ignore errors, the link may come up later */
->>>>>>> 	dw_pcie_wait_for_link(pci);
->>>>>>>
->>>>>>> It seems to me that the logic behind ignoring the absence of the link
->>>>>>> within cdns_pcie_host_link_setup() instead of erroring out, is similar to
->>>>>>> that of dw_pcie_wait_for_link().
->>>>>>>
->>>>>>> Regards,
->>>>>>> Siddharth.
->>>>>>>
->>>>>>>
->>>>>>> If a PCIe port is not connected to a device. The PCIe link does not
->>>>>>> go up. The current code returns success whether the device is connected
->>>>>>> or not. Cadence IP's ECAM requires an LTSSM at L0 to access the RC's
->>>>>>> config space registers. Otherwise the enumeration process will hang.
->>>>> The ">" symbols seem to be manually added in your reply and are also
->>>>> incorrect. If you have added them manually, please don't add them at the
->>>>> start of the sentences corresponding to your reply.
->>>>>
->>>>> The issue you are facing seems to be specific to the Cadence IP or the way
->>>>> in which the IP has been integrated into the device that you are using.
->>>>> On TI SoCs which have the Cadence PCIe Controller, absence of PCIe devices
->>>>> doesn't result in a hang. Enumeration should proceed irrespective of the
->>>>> presence of PCIe devices and should indicate their absence when they aren't
->>>>> connected.
->>>>>
->>>>> While I am not denying the issue being seen, the fix should probably be
->>>>> done elsewhere.
->>>>>
->>>>> Regards,
->>>>> Siddharth.
->>>> We are the SOC design company and we have confirmed with the designer and
->>>> Cadence. For the Cadence's IP we are using, ECAM must be L0 at LTSSM to be
->>>> used. Cadence will fixed next RTL version.
->>>>
->>>
->>> I don't understand what you mean by 'ECAM must be L0 at LTSSM'. If you do not
->>> connect the device, LTSSM would still be in 'detect' state until the device is
->>> connected. Is that different on your SoC?
->>>
->>>> If the cdns_pcie_host_link_setup return value is not modified. The following
->>>> is the
->>>> log of the enumeration process without connected devices. There will be hang
->>>> for
->>>> more than 300 seconds. So I don't think it makes sense to run the
->>>> enumeration
->>>> process without connecting devices. And it will affect the boot time.
->>>>
->>>
->>> We don't know your driver, so cannot comment on the issue without understanding
->>> the problem, sorry.
->>>
->>> - Mani
->>>
->>>> [ 2.681770] xxx pcie: xxx_pcie_probe starting!
->>>> [ 2.689537] xxx pcie: host bridge /soc@0/pcie@xxx ranges:
->>>> [ 2.698601] xxx pcie: IO 0x0060100000..0x00601fffff -> 0x0060100000
->>>> [ 2.708625] xxx pcie: MEM 0x0060200000..0x007fffffff -> 0x0060200000
->>>> [ 2.718649] xxx pcie: MEM 0x1800000000..0x1bffffffff -> 0x1800000000
->>>> [ 2.744441] xxx pcie: ioremap rcsu, paddr:[mem 0x0a000000-0x0a00ffff],
->>>> vaddr:ffff800089390000
->>>> [ 2.756230] xxx pcie: ioremap msg, paddr:[mem 0x60000000-0x600fffff],
->>>> vaddr:ffff800089800000
->>>> [ 2.769692] xxx pcie: ECAM at [mem 0x2c000000-0x2fffffff] for [bus c0-ff]
->>>> [ 2.780139] xxx.pcie_phy: pcie_phy_common_init end
->>>> [ 2.788900] xxx pcie: waiting PHY is ready! retries = 2
->>>> [ 3.905292] xxx pcie: Link fail, retries 10 times
->>>> [ 3.915054] xxx pcie: ret=-110, rc->quirk_retrain_flag = 0
->>>> [ 3.923848] xxx pcie: ret=-110, rc->quirk_retrain_flag = 0
->>>> [ 3.932669] xxx pcie: PCI host bridge to bus 0000:c0
->>>> [ 3.940847] pci_bus 0000:c0: root bus resource [bus c0-ff]
->>>> [ 3.948322] pci_bus 0000:c0: root bus resource [io 0x0000-0xfffff] (bus
->>>> address [0x60100000-0x601fffff])
->>>> [ 3.959922] pci_bus 0000:c0: root bus resource [mem 0x60200000-0x7fffffff]
->>>> [ 3.968799] pci_bus 0000:c0: root bus resource [mem
->>>> 0x1800000000-0x1bffffffff pref]
->>>> [ 339.667761] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
->>>> [ 339.677449] rcu: 5-...0: (20 ticks this GP) idle=4d94/1/0x4000000000000000
->>>> softirq=20/20 fqs=2623
->>>> [ 339.688184] (detected by 2, t=5253 jiffies, g=-1119, q=2 ncpus=12)
->>>> [ 339.696193] Sending NMI from CPU 2 to CPUs 5:
->>>> [ 349.703670] rcu: rcu_preempt kthread timer wakeup didn't happen for 2509
->>>> jiffies! g-1119 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
->>>> [ 349.718710] rcu: Possible timer handling issue on cpu=2 timer-softirq=1208
->>>> [ 349.727418] rcu: rcu_preempt kthread starved for 2515 jiffies! g-1119 f0x0
->>>> RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
->>>> [ 349.739642] rcu: Unless rcu_preempt kthread gets sufficient CPU time, OOM
->>>> is now expected behavior.
->>>> [ 349.750546] rcu: RCU grace-period kthread stack dump:
->>>> [ 349.757319] task:rcu_preempt state:I stack:0 pid:14 ppid:2
->>>> flags:0x00000008
->>>> [ 349.767439] Call trace:
->>>> [ 349.771575] __switch_to+0xdc/0x150
->>>> [ 349.776777] __schedule+0x2dc/0x7d0
->>>> [ 349.781972] schedule+0x5c/0x100
->>>> [ 349.786903] schedule_timeout+0x8c/0x100
->>>> [ 349.792538] rcu_gp_fqs_loop+0x140/0x420
->>>> [ 349.798176] rcu_gp_kthread+0x134/0x164
->>>> [ 349.803725] kthread+0x108/0x10c
->>>> [ 349.808657] ret_from_fork+0x10/0x20
->>>> [ 349.813942] rcu: Stack dump where RCU GP kthread last ran:
->>>> [ 349.821156] CPU: 2 PID: 0 Comm: swapper/2 Tainted: G S xxx-build-generic
->>>> #8
->>>> [ 349.831887] Hardware name: xxx Reference Board, BIOS xxx
->>>> [ 349.843583] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS
->>>> BTYPE=--)
->>>> [ 349.852294] pc : arch_cpu_idle+0x18/0x2c
->>>> [ 349.857928] lr : arch_cpu_idle+0x14/0x2c
->>>>
->>>> Regards Hans
->>>>
->>>
->>
->> I am very sorry that the previous email said that I included HTML format, so
->> I resend it twice.
->>
->>
->>> I don't understand what you mean by 'ECAM must be L0 at LTSSM'. If you do
->> not
->>> connect the device, LTSSM would still be in 'detect' state until the
->> device is
->>> connected. Is that different on your SoC?
->>
->> If a PCIe port is not connected to a device. Then run pci_host_probe and
->> perform the enumeration process. During the enumeration process, VID and PID
->> are read. If the LTSSM is not in L0, the CPU send AXI transmission will not
->> be sent, that is, the AXI slave will hang. This is the problem with the
->> Cadence IP we are using.
->>
+On Thu, Dec 19, 2024 at 10:34:50AM +0800, Chen Wang wrote:
+> hello ~
 > 
-> This sounds similar to the issues we have seen with other IP implementations:
+> On 2024/12/11 1:33, Bjorn Helgaas wrote:
+> > On Mon, Dec 09, 2024 at 03:19:38PM +0800, Chen Wang wrote:
+> > > Add binding for Sophgo SG2042 PCIe host controller.
+> > > +  sophgo,pcie-port:
+> [......]
+> > > +      The Cadence IP has two modes of operation, selected by a strap pin.
+> > > +
+> > > +      In the single-link mode, the Cadence PCIe core instance associated
+> > > +      with Link0 is connected to all the lanes and the Cadence PCIe core
+> > > +      instance associated with Link1 is inactive.
+> > > +
+> > > +      In the dual-link mode, the Cadence PCIe core instance associated
+> > > +      with Link0 is connected to the lower half of the lanes and the
+> > > +      Cadence PCIe core instance associated with Link1 is connected to
+> > > +      the upper half of the lanes.
+> > I assume this means there are two separate Root Ports, one for Link0
+> > and a second for Link1?
+> > 
+> > > +      SG2042 contains 2 Cadence IPs and configures the Cores as below:
+> > > +
+> > > +                     +-- Core(Link0) <---> pcie_rc0   +-----------------+
+> > > +                     |                                |                 |
+> > > +      Cadence IP 1 --+                                | cdns_pcie0_ctrl |
+> > > +                     |                                |                 |
+> > > +                     +-- Core(Link1) <---> disabled   +-----------------+
+> > > +
+> > > +                     +-- Core(Link0) <---> pcie_rc1   +-----------------+
+> > > +                     |                                |                 |
+> > > +      Cadence IP 2 --+                                | cdns_pcie1_ctrl |
+> > > +                     |                                |                 |
+> > > +                     +-- Core(Link1) <---> pcie_rc2   +-----------------+
+> > > +
+> > > +      pcie_rcX is pcie node ("sophgo,sg2042-pcie-host") defined in DTS.
+> > > +      cdns_pcie0_ctrl is syscon node ("sophgo,sg2042-pcie-ctrl") defined in DTS
+> > > +
+> > > +      cdns_pcieX_ctrl contains some registers shared by pcie_rcX, even two
+> > > +      RC(Link)s may share different bits of the same register. For example,
+> > > +      cdns_pcie1_ctrl contains registers shared by link0 & link1 for Cadence IP 2.
+> > An RC doesn't have a Link.  A Root Port does.
+> > 
+> > > +      "sophgo,pcie-port" is defined to flag which core(link) the rc maps to, with
+> > > +      this we can know what registers(bits) we should use.
+> > > +
+> > > +  sophgo,syscon-pcie-ctrl:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description:
+> > > +      Phandle to the PCIe System Controller DT node. It's required to
+> > > +      access some MSI operation registers shared by PCIe RCs.
+> > I think this probably means "shared by PCIe Root Ports", not RCs.
+> > It's unlikely that this hardware has multiple Root Complexes.
 > 
-> 15b23906347c ("PCI: dwc: Add link up check in dw_child_pcie_ops.map_bus()")
-> 9e9ec8d8692a ("PCI: keystone: Add link up check to ks_pcie_other_map_bus()")
+> hi, Bjorn,
 > 
-> If the config space access happens for devices that do not exist on the bus,
-> then SError gets triggered and it causes the system hang.
+> I just double confirmed with sophgo engineers, they told me that the actual
+> PCIe design is that there is only one root port under a host bridge. I am
+> sorry that my original description and diagram may not make this clear, so
+> please allow me to introduce this historical background in detail again.
+> Please read it patiently :):
 > 
-> In that case, you need to skip the enumeration in your own
-> 'struct pci_ops::map_bus' callback. Even though it is not the best solution, we
-> have to live with it.
+> The IP provided by Cadence contains two independent cores (called "links"
+> according to the terminology of their manual, the first one is called link0
+> and the second one is called link1). Each core corresponds to a host bridge,
+> and each host bridge has only one root port, and their configuration
+> registers are completely independent. That is to say，one cadence IP
+> encapsulates two independent host bridges. SG2042 integrates two Cadence
+> IPs, so there can actually be up to four host bridges.
 > 
-> - Mani
 > 
+> Taking a Cadence IP as an example, the two host bridges can be connected to
+> different lanes through configuration, which has been described in the
+> original message. At present, the configuration of SG2042 is to let core0
+> (link0) in the first ip occupy all lanes in the ip, and let core0 (link0)
+> and core1 (link1) in the second ip each use half of the lanes in the ip. So
+> in the end we only use 3 cores, that's why 3 host bridge nodes are
+> configured in dts.
+> 
+> 
+> Because the configurations of these links are independent, the story ends
+> here, but unfortunately, sophgo engineers defined some new register files to
+> add support for their msi controller inside pcie. The problem is they did
+> not separate these register files according to link0 and link1. These new
+> register files are "cdns_pcie0_ctrl" / "cdns_pcie1_ctrl" in the original
+> picture and dts, where the register of "cdns_pcie0_ctrl" is shared by link0
+> and link1 of the first ip, and "cdns_pcie1_ctrl" is shared by link0 and
+> link1 of the second ip. According to my new description, "cdns_pcieX_ctrl"
+> is not shared by root ports, they are shared by host bridge/rc.
+> 
+> 
+> Because the register design of "cdns_pcieX_ctrl" is not strictly segmented
+> according to link0 and link1, in pcie host bridge driver coding we must know
+> whether the host bridge corresponds to link0 or link1 in the ip, so the
+> "sophgo,link-id" attribute is introduced.
+> 
+> 
+> Now I think it is not appropriate to change it to "sophgo,pcie-port". The
+> reason is that as mentioned above, there is only one root port under each
+> host bridge in the cadence ip. Link0 and link1 are actually used to
+> distinguish the two host bridges in one ip.
+> 
+> So I suggest to keep the original "sophgo,link-id" and with the prefix
+> because the introduction of this attribute is indeed caused by the private
+> design of sophgo.
+> 
+> Any other good idea please feel free let me know.
+> 
+> Thansk,
+> 
+> Chen
+> 
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - reg-names
+> > > +  - vendor-id
+> > > +  - device-id
+> > > +  - sophgo,syscon-pcie-ctrl
+> > > +  - sophgo,pcie-port
+> > It looks like vendor-id and device-id apply to PCI devices, i.e.,
+> > things that will show up in lspci, I assume Root Ports in this case.
+> > Can we make this explicit in the DT, e.g., something like this?
+> > 
+> >    pcie@62000000 {
+> >      compatible = "sophgo,sg2042-pcie-host";
+> >      port0: pci@0,0 {
+> >        vendor-id = <0x1f1c>;
+> >        device-id = <0x2042>;
+> >      };
+> As I mentioned above, there is actually only one root port under a host
+> bridge, so I think it is unnecessary to introduce the port subnode.
 
- > In that case, you need to skip the enumeration in your own
- > 'struct pci_ops::map_bus' callback. Even though it is not the best 
-solution, we
- > have to live with it.
+It doesn't matter how many RPs there are. What matters is what are the 
+properties associated with.
 
-I know how pcie-designware-host.c works, but accessing each config space 
-register requires checking if it is a link up, which seems inefficient.
-We have 5 PCIe controllers, and if a few of them are not connected to 
-the device. And it will affect the boot time.
+> In addition, I found that it is also allowed to directly add the vendor-id
+> and device-id properties directly under the host bridge, see https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-host-bridge.yaml
+> And refer to the dts for those products using cadence ip:
+> arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
 
-Regards
-Hans
+It's allowed because we are stuck things with the wrong way. That 
+doesn't mean we should continue to do so. 
 
+> In this way, when executing lspci, the vendor id and device id will appear
+> in the line corresponding to the pci brdge device.
+
+That's the RP though, isn't it?
+
+There is one difference in location though. If the properties are in the 
+RP, then they should be handled by the PCI core and override what's read 
+from the RP registers. If the properties are in the host bridge node, 
+then the host bridge driver sets the values in some host bridge specific 
+registers (or has a way to make read-only regs writeable) which get 
+reflected in the RP registers. So perhaps in the host bridge is the 
+correct place.
+
+Rob
 
