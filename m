@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-18795-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18796-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E24F89F8129
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 18:09:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 639599F8128
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 18:09:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06C32188BC08
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 17:07:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9717B16A49A
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 17:07:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41AF519C556;
-	Thu, 19 Dec 2024 17:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4A919D060;
+	Thu, 19 Dec 2024 17:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joF5QUT6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2KR5pa7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1001990B7;
-	Thu, 19 Dec 2024 17:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D2D199934;
+	Thu, 19 Dec 2024 17:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734627916; cv=none; b=cJAnVF0XlseokTtn5u8i4OpopnZ1ZWwjo1y99dW9szWpDvHM83/MTfU/6Elvkc7mGoqN0K8Sc6hrxV9Qs2Ywd2ci7AeG7VmWRmJoVBDMzG0hyLS9rFelhiE7AXNn4eQMQq6cSaL1yapHB56aEgI6KkALFE4rghQdlWgdRb/qDQg=
+	t=1734627923; cv=none; b=IW11I501qwdqEs7inFqGXfsZA5chXLlwgwB76Wv/alX6l9DPsaXzxKCLNxgcTeGjzqxUD5T7NM4vccoQ37tDzseQXXRF44+iHPwBvQKBKqY9nqPTNQidVBc+3bZiFfoqDwkF/+JfpseiJXg4lN+vcujiRyK6zAlRYUrGQ3dac+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734627916; c=relaxed/simple;
-	bh=DxQ/61odAOQNafq8w5T3Pre2yz8WeRNJezbTihiJrpQ=;
+	s=arc-20240116; t=1734627923; c=relaxed/simple;
+	bh=9wHkxdrrOxzy8BKNLk1HkhOmsoSlH62lrWUS/sSGh7Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WDCLVgysT9yJSAja3tkkMWdmrOhZAJAlAWAbqFItY5aHWp8+CRvK/rtcrCPBsTdN0lEswTQVQ9r+seVnUgUNCcmFRvr/cQSTa7fvutH+I/0GnrMG3EW79pBZD+VFdtbU91uy184kvVn2JqnM3EftlCOeGNhcQPidBYLxJQJML4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joF5QUT6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA4AC4CED6;
-	Thu, 19 Dec 2024 17:05:09 +0000 (UTC)
+	 MIME-Version; b=s8Y011Oo7RIq3KkazWKPf3BZPiN8ONJcVktt1Bs4RSxAwk5WgI1tuq7dXFtRGzl4TQ6FPA0Qlaeo1fUj9VeiUcDyxRQkFOaLU7Qj/9oDVPDOL7eY+OKht3fgHcZ9gwl/pUezFQfp+ynvrnjclIt4+xDD0/14IxqUrWiCtPJc+K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2KR5pa7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC78C4CED4;
+	Thu, 19 Dec 2024 17:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734627915;
-	bh=DxQ/61odAOQNafq8w5T3Pre2yz8WeRNJezbTihiJrpQ=;
+	s=k20201202; t=1734627922;
+	bh=9wHkxdrrOxzy8BKNLk1HkhOmsoSlH62lrWUS/sSGh7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=joF5QUT6jTJk8BNk7DRX5VSkYADFWnTw6wGGCqVR+Yh7Q70rNzF/P2WGeGmFmlN68
-	 61klHHcGDa45xs43aLMdqzBMy5JpE7yOB+24dD5zUgKUfhvS7B3/phlMCB7orMz6sl
-	 mZgiIrNtwpkG9ELOiMMytBfxvrI59KWqPTh5nqqbGRwu7GN6wE7yPTsWF3nJNR4Ma6
-	 JPUIyawo0vA/kNi6upQ0JGNdtVDNdj6HELFh+Rt+xRdnEdFZSn2Cf31ZMNrJF2s94t
-	 a9vhPsUxg17eMX11xy8O6OnzNxWna2oB6zc+YEKLnmIOUKoN+UEVUm/kGkE1lOjK3Q
-	 0EqwMHyvpMOcw==
+	b=O2KR5pa70JYAKIhVOoivqlmZ1hzVVCRndJtECCrQZZUGcwhadRqDLcjjnVM52rxge
+	 MtmnyE4tUpCk6Vsm2k5XIpZXK1j59TKNuCLGNs+pI1rtEnxqZaG1lB9n7MKR93ZWPp
+	 Acc5QuFWgCRTOaI6dY26DwiOGatmY33GqzTaGS7AYF1OgjbkNPclbVg3iDhyNe93Jx
+	 VIeHixMNmQNmGNpOJhdfu5R2YFfsyaLd1VaMPv0TQ1PJHvOojCJ56Zj+QsWcRIK5EB
+	 RvTp7mbY/fhDRJrROQsJCkaJCRM8OnwEYowvOeMDzlz8GPhDz4LQgEZAWD94t1ENJi
+	 MekB/LqnJgJQQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -73,11 +73,10 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	rcu@vger.kernel.org,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v7 06/16] rust: add `Revocable` type
-Date: Thu, 19 Dec 2024 18:04:08 +0100
-Message-ID: <20241219170425.12036-7-dakr@kernel.org>
+Subject: [PATCH v7 07/16] rust: add `io::{Io, IoRaw}` base types
+Date: Thu, 19 Dec 2024 18:04:09 +0100
+Message-ID: <20241219170425.12036-8-dakr@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241219170425.12036-1-dakr@kernel.org>
 References: <20241219170425.12036-1-dakr@kernel.org>
@@ -89,262 +88,442 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
+I/O memory is typically either mapped through direct calls to ioremap()
+or subsystem / bus specific ones such as pci_iomap().
 
-Revocable allows access to objects to be safely revoked at run time.
+Even though subsystem / bus specific functions to map I/O memory are
+based on ioremap() / iounmap() it is not desirable to re-implement them
+in Rust.
 
-This is useful, for example, for resources allocated during device probe;
-when the device is removed, the driver should stop accessing the device
-resources even if another state is kept in memory due to existing
-references (i.e., device context data is ref-counted and has a non-zero
-refcount after removal of the device).
+Instead, implement a base type for I/O mapped memory, which generically
+provides the corresponding accessors, such as `Io::readb` or
+`Io:try_readb`.
 
-Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Co-developed-by: Danilo Krummrich <dakr@kernel.org>
+`Io` supports an optional const generic, such that a driver can indicate
+the minimal expected and required size of the mapping at compile time.
+Correspondingly, calls to the 'non-try' accessors, support compile time
+checks of the I/O memory offset to read / write, while the 'try'
+accessors, provide boundary checks on runtime.
+
+`IoRaw` is meant to be embedded into a structure (e.g. pci::Bar or
+io::IoMem) which creates the actual I/O memory mapping and initializes
+`IoRaw` accordingly.
+
+To ensure that I/O mapped memory can't out-live the device it may be
+bound to, subsystems must embed the corresponding I/O memory type (e.g.
+pci::Bar) into a `Devres` container, such that it gets revoked once the
+device is unbound.
+
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+Reviewed-by: Daniel Almeida  <daniel.almeida@collabora.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/lib.rs       |   1 +
- rust/kernel/revocable.rs | 219 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 220 insertions(+)
- create mode 100644 rust/kernel/revocable.rs
+ rust/helpers/helpers.c |   1 +
+ rust/helpers/io.c      | 101 ++++++++++++++++
+ rust/kernel/io.rs      | 260 +++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs     |   1 +
+ 4 files changed, 363 insertions(+)
+ create mode 100644 rust/helpers/io.c
+ create mode 100644 rust/kernel/io.rs
 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 66149ac5c0c9..5702ce32ec8e 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -60,6 +60,7 @@
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-+pub mod revocable;
- pub mod security;
- pub mod seq_file;
- pub mod sizes;
-diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 060750af6524..63f9b1da179f 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -14,6 +14,7 @@
+ #include "cred.c"
+ #include "err.c"
+ #include "fs.c"
++#include "io.c"
+ #include "jump_label.c"
+ #include "kunit.c"
+ #include "mutex.c"
+diff --git a/rust/helpers/io.c b/rust/helpers/io.c
 new file mode 100644
-index 000000000000..1e5a9d25c21b
+index 000000000000..4c2401ccd720
 --- /dev/null
-+++ b/rust/kernel/revocable.rs
-@@ -0,0 +1,219 @@
++++ b/rust/helpers/io.c
+@@ -0,0 +1,101 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+//! Revocable objects.
++#include <linux/io.h>
++
++void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
++{
++	return ioremap(offset, size);
++}
++
++void rust_helper_iounmap(volatile void __iomem *addr)
++{
++	iounmap(addr);
++}
++
++u8 rust_helper_readb(const volatile void __iomem *addr)
++{
++	return readb(addr);
++}
++
++u16 rust_helper_readw(const volatile void __iomem *addr)
++{
++	return readw(addr);
++}
++
++u32 rust_helper_readl(const volatile void __iomem *addr)
++{
++	return readl(addr);
++}
++
++#ifdef CONFIG_64BIT
++u64 rust_helper_readq(const volatile void __iomem *addr)
++{
++	return readq(addr);
++}
++#endif
++
++void rust_helper_writeb(u8 value, volatile void __iomem *addr)
++{
++	writeb(value, addr);
++}
++
++void rust_helper_writew(u16 value, volatile void __iomem *addr)
++{
++	writew(value, addr);
++}
++
++void rust_helper_writel(u32 value, volatile void __iomem *addr)
++{
++	writel(value, addr);
++}
++
++#ifdef CONFIG_64BIT
++void rust_helper_writeq(u64 value, volatile void __iomem *addr)
++{
++	writeq(value, addr);
++}
++#endif
++
++u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
++{
++	return readb_relaxed(addr);
++}
++
++u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
++{
++	return readw_relaxed(addr);
++}
++
++u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
++{
++	return readl_relaxed(addr);
++}
++
++#ifdef CONFIG_64BIT
++u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
++{
++	return readq_relaxed(addr);
++}
++#endif
++
++void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
++{
++	writeb_relaxed(value, addr);
++}
++
++void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
++{
++	writew_relaxed(value, addr);
++}
++
++void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
++{
++	writel_relaxed(value, addr);
++}
++
++#ifdef CONFIG_64BIT
++void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
++{
++	writeq_relaxed(value, addr);
++}
++#endif
+diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+new file mode 100644
+index 000000000000..d4a73e52e3ee
+--- /dev/null
++++ b/rust/kernel/io.rs
+@@ -0,0 +1,260 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Memory-mapped IO.
 +//!
-+//! The [`Revocable`] type wraps other types and allows access to them to be revoked. The existence
-+//! of a [`RevocableGuard`] ensures that objects remain valid.
++//! C header: [`include/asm-generic/io.h`](srctree/include/asm-generic/io.h)
 +
-+use crate::{bindings, prelude::*, sync::rcu, types::Opaque};
-+use core::{
-+    marker::PhantomData,
-+    ops::Deref,
-+    ptr::drop_in_place,
-+    sync::atomic::{AtomicBool, Ordering},
-+};
++use crate::error::{code::EINVAL, Result};
++use crate::{bindings, build_assert};
 +
-+/// An object that can become inaccessible at runtime.
++/// Raw representation of an MMIO region.
 +///
-+/// Once access is revoked and all concurrent users complete (i.e., all existing instances of
-+/// [`RevocableGuard`] are dropped), the wrapped object is also dropped.
++/// By itself, the existence of an instance of this structure does not provide any guarantees that
++/// the represented MMIO region does exist or is properly mapped.
++///
++/// Instead, the bus specific MMIO implementation must convert this raw representation into an `Io`
++/// instance providing the actual memory accessors. Only by the conversion into an `Io` structure
++/// any guarantees are given.
++pub struct IoRaw<const SIZE: usize = 0> {
++    addr: usize,
++    maxsize: usize,
++}
++
++impl<const SIZE: usize> IoRaw<SIZE> {
++    /// Returns a new `IoRaw` instance on success, an error otherwise.
++    pub fn new(addr: usize, maxsize: usize) -> Result<Self> {
++        if maxsize < SIZE {
++            return Err(EINVAL);
++        }
++
++        Ok(Self { addr, maxsize })
++    }
++
++    /// Returns the base address of the MMIO region.
++    #[inline]
++    pub fn addr(&self) -> usize {
++        self.addr
++    }
++
++    /// Returns the maximum size of the MMIO region.
++    #[inline]
++    pub fn maxsize(&self) -> usize {
++        self.maxsize
++    }
++}
++
++/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
++///
++/// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
++/// mapping, performing an additional region request etc.
++///
++/// # Invariant
++///
++/// `addr` is the start and `maxsize` the length of valid I/O mapped memory region of size
++/// `maxsize`.
 +///
 +/// # Examples
 +///
-+/// ```
-+/// # use kernel::revocable::Revocable;
++/// ```no_run
++/// # use kernel::{bindings, io::{Io, IoRaw}};
++/// # use core::ops::Deref;
 +///
-+/// struct Example {
-+///     a: u32,
-+///     b: u32,
++/// // See also [`pci::Bar`] for a real example.
++/// struct IoMem<const SIZE: usize>(IoRaw<SIZE>);
++///
++/// impl<const SIZE: usize> IoMem<SIZE> {
++///     /// # Safety
++///     ///
++///     /// [`paddr`, `paddr` + `SIZE`) must be a valid MMIO region that is mappable into the CPUs
++///     /// virtual address space.
++///     unsafe fn new(paddr: usize) -> Result<Self>{
++///         // SAFETY: By the safety requirements of this function [`paddr`, `paddr` + `SIZE`) is
++///         // valid for `ioremap`.
++///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE as _) };
++///         if addr.is_null() {
++///             return Err(ENOMEM);
++///         }
++///
++///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
++///     }
 +/// }
 +///
-+/// fn add_two(v: &Revocable<Example>) -> Option<u32> {
-+///     let guard = v.try_access()?;
-+///     Some(guard.a + guard.b)
++/// impl<const SIZE: usize> Drop for IoMem<SIZE> {
++///     fn drop(&mut self) {
++///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped by `Self::new`.
++///         unsafe { bindings::iounmap(self.0.addr() as _); };
++///     }
 +/// }
 +///
-+/// let v = KBox::pin_init(Revocable::new(Example { a: 10, b: 20 }), GFP_KERNEL).unwrap();
-+/// assert_eq!(add_two(&v), Some(30));
-+/// v.revoke();
-+/// assert_eq!(add_two(&v), None);
-+/// ```
++/// impl<const SIZE: usize> Deref for IoMem<SIZE> {
++///    type Target = Io<SIZE>;
 +///
-+/// Sample example as above, but explicitly using the rcu read side lock.
-+///
-+/// ```
-+/// # use kernel::revocable::Revocable;
-+/// use kernel::sync::rcu;
-+///
-+/// struct Example {
-+///     a: u32,
-+///     b: u32,
++///    fn deref(&self) -> &Self::Target {
++///         // SAFETY: The memory range stored in `self` has been properly mapped in `Self::new`.
++///         unsafe { Io::from_raw(&self.0) }
++///    }
 +/// }
 +///
-+/// fn add_two(v: &Revocable<Example>) -> Option<u32> {
-+///     let guard = rcu::read_lock();
-+///     let e = v.try_access_with_guard(&guard)?;
-+///     Some(e.a + e.b)
-+/// }
-+///
-+/// let v = KBox::pin_init(Revocable::new(Example { a: 10, b: 20 }), GFP_KERNEL).unwrap();
-+/// assert_eq!(add_two(&v), Some(30));
-+/// v.revoke();
-+/// assert_eq!(add_two(&v), None);
++///# fn no_run() -> Result<(), Error> {
++/// // SAFETY: Invalid usage for example purposes.
++/// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
++/// iomem.writel(0x42, 0x0);
++/// assert!(iomem.try_writel(0x42, 0x0).is_ok());
++/// assert!(iomem.try_writel(0x42, 0x4).is_err());
++/// # Ok(())
++/// # }
 +/// ```
-+#[pin_data(PinnedDrop)]
-+pub struct Revocable<T> {
-+    is_available: AtomicBool,
-+    #[pin]
-+    data: Opaque<T>,
++#[repr(transparent)]
++pub struct Io<const SIZE: usize = 0>(IoRaw<SIZE>);
++
++macro_rules! define_read {
++    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
++        /// Read IO data from a given offset known at compile time.
++        ///
++        /// Bound checks are performed on compile time, hence if the offset is not known at compile
++        /// time, the build will fail.
++        $(#[$attr])*
++        #[inline]
++        pub fn $name(&self, offset: usize) -> $type_name {
++            let addr = self.io_addr_assert::<$type_name>(offset);
++
++            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
++            unsafe { bindings::$name(addr as _) }
++        }
++
++        /// Read IO data from a given offset.
++        ///
++        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
++        /// out of bounds.
++        $(#[$attr])*
++        pub fn $try_name(&self, offset: usize) -> Result<$type_name> {
++            let addr = self.io_addr::<$type_name>(offset)?;
++
++            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
++            Ok(unsafe { bindings::$name(addr as _) })
++        }
++    };
 +}
 +
-+// SAFETY: `Revocable` is `Send` if the wrapped object is also `Send`. This is because while the
-+// functionality exposed by `Revocable` can be accessed from any thread/CPU, it is possible that
-+// this isn't supported by the wrapped object.
-+unsafe impl<T: Send> Send for Revocable<T> {}
++macro_rules! define_write {
++    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
++        /// Write IO data from a given offset known at compile time.
++        ///
++        /// Bound checks are performed on compile time, hence if the offset is not known at compile
++        /// time, the build will fail.
++        $(#[$attr])*
++        #[inline]
++        pub fn $name(&self, value: $type_name, offset: usize) {
++            let addr = self.io_addr_assert::<$type_name>(offset);
 +
-+// SAFETY: `Revocable` is `Sync` if the wrapped object is both `Send` and `Sync`. We require `Send`
-+// from the wrapped object as well because  of `Revocable::revoke`, which can trigger the `Drop`
-+// implementation of the wrapped object from an arbitrary thread.
-+unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
-+
-+impl<T> Revocable<T> {
-+    /// Creates a new revocable instance of the given data.
-+    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
-+        pin_init!(Self {
-+            is_available: AtomicBool::new(true),
-+            data <- Opaque::pin_init(data),
-+        })
-+    }
-+
-+    /// Tries to access the revocable wrapped object.
-+    ///
-+    /// Returns `None` if the object has been revoked and is therefore no longer accessible.
-+    ///
-+    /// Returns a guard that gives access to the object otherwise; the object is guaranteed to
-+    /// remain accessible while the guard is alive. In such cases, callers are not allowed to sleep
-+    /// because another CPU may be waiting to complete the revocation of this object.
-+    pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
-+        let guard = rcu::read_lock();
-+        if self.is_available.load(Ordering::Relaxed) {
-+            // Since `self.is_available` is true, data is initialised and has to remain valid
-+            // because the RCU read side lock prevents it from being dropped.
-+            Some(RevocableGuard::new(self.data.get(), guard))
-+        } else {
-+            None
++            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
++            unsafe { bindings::$name(value, addr as _, ) }
 +        }
-+    }
 +
-+    /// Tries to access the revocable wrapped object.
-+    ///
-+    /// Returns `None` if the object has been revoked and is therefore no longer accessible.
-+    ///
-+    /// Returns a shared reference to the object otherwise; the object is guaranteed to
-+    /// remain accessible while the rcu read side guard is alive. In such cases, callers are not
-+    /// allowed to sleep because another CPU may be waiting to complete the revocation of this
-+    /// object.
-+    pub fn try_access_with_guard<'a>(&'a self, _guard: &'a rcu::Guard) -> Option<&'a T> {
-+        if self.is_available.load(Ordering::Relaxed) {
-+            // SAFETY: Since `self.is_available` is true, data is initialised and has to remain
-+            // valid because the RCU read side lock prevents it from being dropped.
-+            Some(unsafe { &*self.data.get() })
-+        } else {
-+            None
++        /// Write IO data from a given offset.
++        ///
++        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
++        /// out of bounds.
++        $(#[$attr])*
++        pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
++            let addr = self.io_addr::<$type_name>(offset)?;
++
++            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
++            unsafe { bindings::$name(value, addr as _) }
++            Ok(())
 +        }
-+    }
++    };
++}
 +
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that there are no more concurrent users of the revocable object.
-+    unsafe fn revoke_internal<const SYNC: bool>(&self) {
-+        if self.is_available.swap(false, Ordering::Relaxed) {
-+            if SYNC {
-+                // SAFETY: Just an FFI call, there are no further requirements.
-+                unsafe { bindings::synchronize_rcu() };
-+            }
-+
-+            // SAFETY: We know `self.data` is valid because only one CPU can succeed the
-+            // `compare_exchange` above that takes `is_available` from `true` to `false`.
-+            unsafe { drop_in_place(self.data.get()) };
-+        }
-+    }
-+
-+    /// Revokes access to and drops the wrapped object.
-+    ///
-+    /// Access to the object is revoked immediately to new callers of [`Revocable::try_access`],
-+    /// expecting that there are no concurrent users of the object.
++impl<const SIZE: usize> Io<SIZE> {
++    /// Converts an `IoRaw` into an `Io` instance, providing the accessors to the MMIO mapping.
 +    ///
 +    /// # Safety
 +    ///
-+    /// Callers must ensure that there are no more concurrent users of the revocable object.
-+    pub unsafe fn revoke_nosync(&self) {
-+        // SAFETY: By the safety requirement of this function, the caller ensures that nobody is
-+        // accessing the data anymore and hence we don't have to wait for the grace period to
-+        // finish.
-+        unsafe { self.revoke_internal::<false>() }
++    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of size
++    /// `maxsize`.
++    pub unsafe fn from_raw(raw: &IoRaw<SIZE>) -> &Self {
++        // SAFETY: `Io` is a transparent wrapper around `IoRaw`.
++        unsafe { &*core::ptr::from_ref(raw).cast() }
 +    }
 +
-+    /// Revokes access to and drops the wrapped object.
-+    ///
-+    /// Access to the object is revoked immediately to new callers of [`Revocable::try_access`].
-+    ///
-+    /// If there are concurrent users of the object (i.e., ones that called
-+    /// [`Revocable::try_access`] beforehand and still haven't dropped the returned guard), this
-+    /// function waits for the concurrent access to complete before dropping the wrapped object.
-+    pub fn revoke(&self) {
-+        // SAFETY: By passing `true` we ask `revoke_internal` to wait for the grace period to
-+        // finish.
-+        unsafe { self.revoke_internal::<true>() }
++    /// Returns the base address of this mapping.
++    #[inline]
++    pub fn addr(&self) -> usize {
++        self.0.addr()
 +    }
-+}
 +
-+#[pinned_drop]
-+impl<T> PinnedDrop for Revocable<T> {
-+    fn drop(self: Pin<&mut Self>) {
-+        // Drop only if the data hasn't been revoked yet (in which case it has already been
-+        // dropped).
-+        // SAFETY: We are not moving out of `p`, only dropping in place
-+        let p = unsafe { self.get_unchecked_mut() };
-+        if *p.is_available.get_mut() {
-+            // SAFETY: We know `self.data` is valid because no other CPU has changed
-+            // `is_available` to `false` yet, and no other CPU can do it anymore because this CPU
-+            // holds the only reference (mutable) to `self` now.
-+            unsafe { drop_in_place(p.data.get()) };
++    /// Returns the maximum size of this mapping.
++    #[inline]
++    pub fn maxsize(&self) -> usize {
++        self.0.maxsize()
++    }
++
++    #[inline]
++    const fn offset_valid<U>(offset: usize, size: usize) -> bool {
++        let type_size = core::mem::size_of::<U>();
++        if let Some(end) = offset.checked_add(type_size) {
++            end <= size && offset % type_size == 0
++        } else {
++            false
 +        }
 +    }
-+}
 +
-+/// A guard that allows access to a revocable object and keeps it alive.
-+///
-+/// CPUs may not sleep while holding on to [`RevocableGuard`] because it's in atomic context
-+/// holding the RCU read-side lock.
-+///
-+/// # Invariants
-+///
-+/// The RCU read-side lock is held while the guard is alive.
-+pub struct RevocableGuard<'a, T> {
-+    data_ref: *const T,
-+    _rcu_guard: rcu::Guard,
-+    _p: PhantomData<&'a ()>,
-+}
-+
-+impl<T> RevocableGuard<'_, T> {
-+    fn new(data_ref: *const T, rcu_guard: rcu::Guard) -> Self {
-+        Self {
-+            data_ref,
-+            _rcu_guard: rcu_guard,
-+            _p: PhantomData,
++    #[inline]
++    fn io_addr<U>(&self, offset: usize) -> Result<usize> {
++        if !Self::offset_valid::<U>(offset, self.maxsize()) {
++            return Err(EINVAL);
 +        }
-+    }
-+}
 +
-+impl<T> Deref for RevocableGuard<'_, T> {
-+    type Target = T;
-+
-+    fn deref(&self) -> &Self::Target {
-+        // SAFETY: By the type invariants, we hold the rcu read-side lock, so the object is
-+        // guaranteed to remain valid.
-+        unsafe { &*self.data_ref }
++        // Probably no need to check, since the safety requirements of `Self::new` guarantee that
++        // this can't overflow.
++        self.addr().checked_add(offset).ok_or(EINVAL)
 +    }
++
++    #[inline]
++    fn io_addr_assert<U>(&self, offset: usize) -> usize {
++        build_assert!(Self::offset_valid::<U>(offset, SIZE));
++
++        self.addr() + offset
++    }
++
++    define_read!(readb, try_readb, u8);
++    define_read!(readw, try_readw, u16);
++    define_read!(readl, try_readl, u32);
++    define_read!(
++        #[cfg(CONFIG_64BIT)]
++        readq,
++        try_readq,
++        u64
++    );
++
++    define_read!(readb_relaxed, try_readb_relaxed, u8);
++    define_read!(readw_relaxed, try_readw_relaxed, u16);
++    define_read!(readl_relaxed, try_readl_relaxed, u32);
++    define_read!(
++        #[cfg(CONFIG_64BIT)]
++        readq_relaxed,
++        try_readq_relaxed,
++        u64
++    );
++
++    define_write!(writeb, try_writeb, u8);
++    define_write!(writew, try_writew, u16);
++    define_write!(writel, try_writel, u32);
++    define_write!(
++        #[cfg(CONFIG_64BIT)]
++        writeq,
++        try_writeq,
++        u64
++    );
++
++    define_write!(writeb_relaxed, try_writeb_relaxed, u8);
++    define_write!(writew_relaxed, try_writew_relaxed, u16);
++    define_write!(writel_relaxed, try_writel_relaxed, u32);
++    define_write!(
++        #[cfg(CONFIG_64BIT)]
++        writeq_relaxed,
++        try_writeq_relaxed,
++        u64
++    );
 +}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 5702ce32ec8e..6c836ab73771 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -79,6 +79,7 @@
+ 
+ #[doc(hidden)]
+ pub use bindings;
++pub mod io;
+ pub use macros;
+ pub use uapi;
+ 
 -- 
 2.47.1
 
