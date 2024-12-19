@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-18790-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18791-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D50B9F8114
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 18:07:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD6C79F8113
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 18:07:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54F2F189250E
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 17:05:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 054BF167D84
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 17:05:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F89C19D8BD;
-	Thu, 19 Dec 2024 17:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5F0919E966;
+	Thu, 19 Dec 2024 17:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CP9kGCJx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/8/9kw8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7E815252D;
-	Thu, 19 Dec 2024 17:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7584119E7E2;
+	Thu, 19 Dec 2024 17:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734627882; cv=none; b=Iak8rc5icBv7I5g5HANi43tJueU/lUC9wvSiF50Fy5hDgP0P3mv8pnhAt2RvnBcE8CzU+XLSHl9qpBVCGCVt8zmB9u/IpW/BQu89yr9Xms80cFOsHGLjHbsKc32k/2xWxeyDJA7lCqxW2APyOO9qfE4gAeTsLbWDDUz71kBnx5M=
+	t=1734627888; cv=none; b=Wp2SwDk4f88Abb+V1JTlGkIlikWm34kdPvAiVHWKPepEJgTqJVzkdSbkKdS+Pxrv4zEVFCDAms+TfnuR0U9Ns5X97uahtJn9HrpaGO5SCsYu0W7dcppP7YmikyYi8xjRdgyaD8uipnX13zBPmTBzeGxUf87Kh+LwN4e25YQDS7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734627882; c=relaxed/simple;
-	bh=qnI9EdwsG9kMkRPvMWH3A7l2tEEs2+Fz3s89mI50uEU=;
+	s=arc-20240116; t=1734627888; c=relaxed/simple;
+	bh=UTiNgkSPA42wFmnim1I8+BekGbQRYCqLffGJQ/UINN0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fJqGHN/a4dyIJvpUSJv9H6vNCJCYvaujEEQdm1+Rhq6T9w6bR9bhVUvhUnq7FEdwJsDPD6H1iKr8kN4CDLbWKbOieNF+r6l3r9UudDJu8zTOqeKCIWoyY1G7YzQ4Xu5idOD+oNRJlFgCIq9ivfosK0x7Oaz0NQfRr7ne9Qa5VnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CP9kGCJx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367AFC4CED6;
-	Thu, 19 Dec 2024 17:04:35 +0000 (UTC)
+	 MIME-Version; b=Z/HQlIOCsRpYRe/dWcqU+Osrqjpix7zL8tsrpuBRhSkRNF/XDD3cwjBWR2phD9SdzzJrPmMlfleWi+Il/EeqjOFsZv8zoCxfnadTdX6tnliBErwc+tU9R3mAiw49NbUn1z1NQWbCCUAUOrBx3lk2qDo186JfC07/kE1wtTBwr2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/8/9kw8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E082FC4CECE;
+	Thu, 19 Dec 2024 17:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734627881;
-	bh=qnI9EdwsG9kMkRPvMWH3A7l2tEEs2+Fz3s89mI50uEU=;
+	s=k20201202; t=1734627888;
+	bh=UTiNgkSPA42wFmnim1I8+BekGbQRYCqLffGJQ/UINN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CP9kGCJxcy00iYj/AnT49cuVyY4W78Y33YKlg4/cenRHxHf01NA5sVAEg2sJHcs2Q
-	 0CZqDFCKojGJfAXRIILJ59htnH28hUgt0gxV8RJVXXkKWsmOq6LqwME11kXVnkYyyu
-	 BiY+Zjby2QE3KBzxnxBK7Ja6DAGJxyLMybCFtpQJttACVQGXVSaEEcxeGAlR0C79Xn
-	 X184kF5Ry4sxmG7RScPloAVymYvEOJLGnDIAVLSo0u/uHYTGtWmGseVxNwJSbSQr4Q
-	 itC0JrobApiYUmOFdxhlECM4e6W8QfMNk/fcT4ShRJWmJtPyrNxwl6dkcyqJt5eiu+
-	 G2MbeH8+0xNgg==
+	b=u/8/9kw8LxmDK5OzdN1w8KzMN2KBQpvdoy6lCC1kaC94CnSYuc4Ep2DfSEzEEESw3
+	 i0r3Mj5bZbWF/dqYXtm7IGF6m8QFUf8nH3NyUBk5HRf4WsZmw0pmbyKuLQx8ZqfLlS
+	 NxgGGoysGpmR6261mhwlxa6KSf19bkIJxp14ZzvOEBCc5iBcyaOROV4BCRtTcp8V41
+	 UzUEl2xJg6WPb4zSWu91YcjccdiYW4tlwQo5cn6YjTLZqp4btCG+ei207tPDjqUAdT
+	 ekci/59aYtZvncq4L0k9INyh5eSK7RFTFB6vcQWUfRdc5DV0Q75O1D1tXI85WXL6C+
+	 PEhqVrBTWCL8g==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -73,10 +73,11 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	rcu@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v7 01/16] rust: module: add trait `ModuleMetadata`
-Date: Thu, 19 Dec 2024 18:04:03 +0100
-Message-ID: <20241219170425.12036-2-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Subject: [PATCH v7 02/16] rust: implement generic driver registration
+Date: Thu, 19 Dec 2024 18:04:04 +0100
+Message-ID: <20241219170425.12036-3-dakr@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241219170425.12036-1-dakr@kernel.org>
 References: <20241219170425.12036-1-dakr@kernel.org>
@@ -88,50 +89,181 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to access static metadata of a Rust kernel module, add the
-`ModuleMetadata` trait.
+Implement the generic `Registration` type and the `RegistrationOps`
+trait.
 
-In particular, this trait provides the name of a Rust kernel module as
-specified by the `module!` macro.
+The `Registration` structure is the common type that represents a driver
+registration and is typically bound to the lifetime of a module. However,
+it doesn't implement actual calls to the kernel's driver core to register
+drivers itself.
 
+Instead the `RegistrationOps` trait is provided to subsystems, which have
+to implement `RegistrationOps::register` and
+`RegistrationOps::unregister`. Subsystems have to provide an
+implementation for both of those methods where the subsystem specific
+variants to register / unregister a driver have to implemented.
+
+For instance, the PCI subsystem would call __pci_register_driver() from
+`RegistrationOps::register` and pci_unregister_driver() from
+`DrvierOps::unregister`.
+
+Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/lib.rs    | 6 ++++++
- rust/macros/module.rs | 4 ++++
- 2 files changed, 10 insertions(+)
+ MAINTAINERS           |   1 +
+ rust/kernel/driver.rs | 117 ++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs    |   1 +
+ 3 files changed, 119 insertions(+)
+ create mode 100644 rust/kernel/driver.rs
 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index e1065a7551a3..61b82b78b915 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -116,6 +116,12 @@ fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error> {
-     }
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index baf0eeb9a355..2ad58ed40079 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7033,6 +7033,7 @@ F:	include/linux/kobj*
+ F:	include/linux/property.h
+ F:	lib/kobj*
+ F:	rust/kernel/device.rs
++F:	rust/kernel/driver.rs
  
-+/// Metadata attached to a [`Module`] or [`InPlaceModule`].
-+pub trait ModuleMetadata {
-+    /// The name of the module as specified in the `module!` macro.
-+    const NAME: &'static crate::str::CStr;
+ DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
+ M:	Nishanth Menon <nm@ti.com>
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+new file mode 100644
+index 000000000000..c1957ee7bb7e
+--- /dev/null
++++ b/rust/kernel/driver.rs
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Generic support for drivers of different buses (e.g., PCI, Platform, Amba, etc.).
++//!
++//! Each bus / subsystem is expected to implement [`RegistrationOps`], which allows drivers to
++//! register using the [`Registration`] class.
++
++use crate::error::{Error, Result};
++use crate::{init::PinInit, str::CStr, try_pin_init, types::Opaque, ThisModule};
++use core::pin::Pin;
++use macros::{pin_data, pinned_drop};
++
++/// The [`RegistrationOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform,
++/// Amba, etc.) to provide the corresponding subsystem specific implementation to register /
++/// unregister a driver of the particular type (`RegType`).
++///
++/// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
++/// `bindings::__pci_register_driver` from `RegistrationOps::register` and
++/// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`.
++pub trait RegistrationOps {
++    /// The type that holds information about the registration. This is typically a struct defined
++    /// by the C portion of the kernel.
++    type RegType: Default;
++
++    /// Registers a driver.
++    ///
++    /// On success, `reg` must remain pinned and valid until the matching call to
++    /// [`RegistrationOps::unregister`].
++    fn register(
++        reg: &Opaque<Self::RegType>,
++        name: &'static CStr,
++        module: &'static ThisModule,
++    ) -> Result;
++
++    /// Unregisters a driver previously registered with [`RegistrationOps::register`].
++    fn unregister(reg: &Opaque<Self::RegType>);
 +}
 +
- /// Equivalent to `THIS_MODULE` in the C API.
- ///
- /// C header: [`include/linux/init.h`](srctree/include/linux/init.h)
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index 2587f41b0d39..cdf94f4982df 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -228,6 +228,10 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
-                 kernel::ThisModule::from_ptr(core::ptr::null_mut())
-             }};
- 
-+            impl kernel::ModuleMetadata for {type_} {{
-+                const NAME: &'static kernel::str::CStr = kernel::c_str!(\"{name}\");
-+            }}
++/// A [`Registration`] is a generic type that represents the registration of some driver type (e.g.
++/// `bindings::pci_driver`). Therefore a [`Registration`] must be initialized with a type that
++/// implements the [`RegistrationOps`] trait, such that the generic `T::register` and
++/// `T::unregister` calls result in the subsystem specific registration calls.
++///
++///Once the `Registration` structure is dropped, the driver is unregistered.
++#[pin_data(PinnedDrop)]
++pub struct Registration<T: RegistrationOps> {
++    #[pin]
++    reg: Opaque<T::RegType>,
++}
 +
-             // Double nested modules, since then nobody can access the public items inside.
-             mod __module_init {{
-                 mod __module_init {{
++// SAFETY: `Registration` has no fields or methods accessible via `&Registration`, so it is safe to
++// share references to it with multiple threads as nothing can be done.
++unsafe impl<T: RegistrationOps> Sync for Registration<T> {}
++
++// SAFETY: Both registration and unregistration are implemented in C and safe to be performed from
++// any thread, so `Registration` is `Send`.
++unsafe impl<T: RegistrationOps> Send for Registration<T> {}
++
++impl<T: RegistrationOps> Registration<T> {
++    /// Creates a new instance of the registration object.
++    pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Self, Error> {
++        try_pin_init!(Self {
++            reg <- Opaque::try_ffi_init(|ptr: *mut T::RegType| {
++                // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write.
++                unsafe { ptr.write(T::RegType::default()) };
++
++                // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write, and it has
++                // just been initialised above, so it's also valid for read.
++                let drv = unsafe { &*(ptr as *const Opaque<T::RegType>) };
++
++                T::register(drv, name, module)
++            }),
++        })
++    }
++}
++
++#[pinned_drop]
++impl<T: RegistrationOps> PinnedDrop for Registration<T> {
++    fn drop(self: Pin<&mut Self>) {
++        T::unregister(&self.reg);
++    }
++}
++
++/// Declares a kernel module that exposes a single driver.
++///
++/// It is meant to be used as a helper by other subsystems so they can more easily expose their own
++/// macros.
++#[macro_export]
++macro_rules! module_driver {
++    (<$gen_type:ident>, $driver_ops:ty, { type: $type:ty, $($f:tt)* }) => {
++        type Ops<$gen_type> = $driver_ops;
++
++        #[$crate::prelude::pin_data]
++        struct DriverModule {
++            #[pin]
++            _driver: $crate::driver::Registration<Ops<$type>>,
++        }
++
++        impl $crate::InPlaceModule for DriverModule {
++            fn init(
++                module: &'static $crate::ThisModule
++            ) -> impl $crate::init::PinInit<Self, $crate::error::Error> {
++                $crate::try_pin_init!(Self {
++                    _driver <- $crate::driver::Registration::new(
++                        <Self as $crate::ModuleMetadata>::NAME,
++                        module,
++                    ),
++                })
++            }
++        }
++
++        $crate::prelude::module! {
++            type: DriverModule,
++            $($f)*
++        }
++    }
++}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 61b82b78b915..7818407f9aac 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -35,6 +35,7 @@
+ mod build_assert;
+ pub mod cred;
+ pub mod device;
++pub mod driver;
+ pub mod error;
+ #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
+ pub mod firmware;
 -- 
 2.47.1
 
