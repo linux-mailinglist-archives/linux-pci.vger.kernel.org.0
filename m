@@ -1,99 +1,125 @@
-Return-Path: <linux-pci+bounces-18760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAE309F77B6
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 09:50:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21FAD9F77DC
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 10:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A74E6189550D
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 08:50:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77CBF16AC0F
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 09:00:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD87F1FC7E1;
-	Thu, 19 Dec 2024 08:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15E421D003;
+	Thu, 19 Dec 2024 09:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="X/9yRedF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="olSO8Phh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB0F1FC7E0;
-	Thu, 19 Dec 2024 08:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16842165E4;
+	Thu, 19 Dec 2024 08:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734598252; cv=none; b=rmKLRf5/je26PA628PqVelA/uvH2rUOFHQjUva2JLzih3/sYNyGnNerJwT4NDzU1b+smJYEoFK8Fzb6eAQ41upqCSXU+mGG6ad+Zi+INDQXZR6GGrePrqkwYaM83nNH8jizmWC+OUwsjJnJNjMvQvDRhF2i4xTBE3abXRUcR4mc=
+	t=1734598801; cv=none; b=m1SdVGYhGmgYSlnd3Zbz4nX5MIE4wr3ixSh+dAL0gM81s9bNuIYdyh7bDWrLi1BRx6f808Yfs/f39zN7sxmtDBdGHD5EXnwaEKUOtsLaNWXP+0OTC7MoBg26vcU3CoWlGq4J0yZfkblX1lSPbNM0H4likPJ8oAj7nnyAQ4gKKUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734598252; c=relaxed/simple;
-	bh=m0U7ilFtAFGXH8rQgMsPT893bh3t6+SqQpxRiY8iRAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tc9+0gMIWNJF+6+15DlM2kozid5ZtJUG5HiyEoJbU1fSLfJDzTCFv8zM/9kqCxHZBiMdoN40/0artGuD51NzciQPMlUiLdcsg2LVPJjtiVns2LlLhJvmcHCahZpQwRVLIW1twIZng+klLjjcbOZg+ZAVwvMviy2LbAO5p9VFDcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=X/9yRedF; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=X+QWZeciCtlO3h9lSaSbVhOwFLjdsNDfNT574pJ5UYs=;
-	b=X/9yRedF6SBIVf0tiKEpWq+qwPgks+lDC5wtbDawGJ8MtEhH4s1vze+3tWnG9x
-	IMR2j2QWMGLvKhac+s6btwJaqYMSQBvYklmx2Jo8zB72MjF+Rl05+qfTyIZTSxtk
-	BlHS9hDeibVJzPXInhDIKyUDx52MQ1bMnGhK0zkbBKbA8=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3v9Ie3mNnAKXhAA--.39158S2;
-	Thu, 19 Dec 2024 16:49:35 +0800 (CST)
-Message-ID: <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
-Date: Thu, 19 Dec 2024 03:49:33 -0500
+	s=arc-20240116; t=1734598801; c=relaxed/simple;
+	bh=jTmSlx8GDZQDKvAZw1h8ubP9h/bedd9nyUEfEr3zI0c=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P1N598kOMbNMazSoDUJHJp5zuQlwRjxjrwSIWBcgQgoPNWM1fSwng4vtS1XV2SvfIBVk8OJkjZHxSASYEnjs92GswRm7XFUvAH6tairbjk+bGX5U6psvBZ/EY/ZYPzyh2cIRLVL8HgtkWYf60Qm2Yt1RbD34fo8D+4kdmtKIuL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=olSO8Phh; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4BJ8xcPC044798;
+	Thu, 19 Dec 2024 02:59:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1734598778;
+	bh=/LGNL7rxnITISaykKCoSQ4leRTbo2NuexQJLKGse51s=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=olSO8PhhatKnzVbrAyLjKdSB5ZUzbl3YCAFRO7YzYVZ+oN3/WAoZwHxjcJUA3Oapi
+	 PiiFm1EWsHykdzsKOzLXueRS58rrXcVYg5rB5IvXNeWL3Ri1rQYK2Xee14Z+2aUHzI
+	 ZEGLOLKYndwEysTc7viCJRhxQHRws+BZ4oeSXFLA=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4BJ8xcqh112600;
+	Thu, 19 Dec 2024 02:59:38 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 19
+ Dec 2024 02:59:38 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 19 Dec 2024 02:59:38 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4BJ8xbn5072279;
+	Thu, 19 Dec 2024 02:59:37 -0600
+Date: Thu, 19 Dec 2024 14:29:36 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Hans Zhang <18255117159@163.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <thomas.richard@bootlin.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rockswang7@gmail.com>
+Subject: Re: [PATCH] PCI: cadence: Fixed cdns_pcie_host_link_setup return
+ value.
+Message-ID: <v623jkaz4u4dpzlr5dtnjfolc5nk7az24aqhjth4lpjffen4ct@ypjekbr4o54q>
+References: <20241219081452.32035-1-18255117159@163.com>
+ <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
+ <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] PCI: cadence: Fixed cdns_pcie_host_link_setup return
- value.
-Content-Language: en-US
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20241219081452.32035-1-18255117159@163.com>
- <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3v9Ie3mNnAKXhAA--.39158S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JF1rtryfXryfAry7JryrJFb_yoWDGwbE9r
-	n8uanrZ3WqkrZ3Ca13ur1ftrW5Cay2kFy7Jan7KFy3Jr1Sg3WDCrn0gr92vF48W39Iqr90
-	9rnFva18Z34a9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnbyCJUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwO6o2dj2EKlWgAAsg
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On Thu, Dec 19, 2024 at 03:49:33AM -0500, Hans Zhang wrote:
+> 
+> On 12/19/24 03:33, Siddharth Vadapalli wrote:
+> > On Thu, Dec 19, 2024 at 03:14:52AM -0500, Hans Zhang wrote:
+> > > If the PCIe link never came up, the enumeration process
+> > > should not be run.
+> > The link could come up at a later point in time. Please refer to the
+> > implementation of:
+> > dw_pcie_host_init() in drivers/pci/controller/dwc/pcie-designware-host.c
+> > wherein we have the following:
+> > 	/* Ignore errors, the link may come up later */
+> > 	dw_pcie_wait_for_link(pci);
+> > 
+> > It seems to me that the logic behind ignoring the absence of the link
+> > within cdns_pcie_host_link_setup() instead of erroring out, is similar to
+> > that of dw_pcie_wait_for_link().
+> > 
+> > Regards,
+> > Siddharth.
+> > 
+> > 
+> > If a PCIe port is not connected to a device. The PCIe link does not
+> > go up. The current code returns success whether the device is connected
+> > or not. Cadence IP's ECAM requires an LTSSM at L0 to access the RC's
+> > config space registers. Otherwise the enumeration process will hang.
 
-On 12/19/24 03:33, Siddharth Vadapalli wrote:
-> On Thu, Dec 19, 2024 at 03:14:52AM -0500, Hans Zhang wrote:
->> If the PCIe link never came up, the enumeration process
->> should not be run.
-> The link could come up at a later point in time. Please refer to the
-> implementation of:
-> dw_pcie_host_init() in drivers/pci/controller/dwc/pcie-designware-host.c
-> wherein we have the following:
-> 	/* Ignore errors, the link may come up later */
-> 	dw_pcie_wait_for_link(pci);
->
-> It seems to me that the logic behind ignoring the absence of the link
-> within cdns_pcie_host_link_setup() instead of erroring out, is similar to
-> that of dw_pcie_wait_for_link().
->
-> Regards,
-> Siddharth.
->
->
-> If a PCIe port is not connected to a device. The PCIe link does not
-> go up. The current code returns success whether the device is connected
-> or not. Cadence IP's ECAM requires an LTSSM at L0 to access the RC's
-> config space registers. Otherwise the enumeration process will hang.
->
-> Regards,
-> Hans
+The ">" symbols seem to be manually added in your reply and are also
+incorrect. If you have added them manually, please don't add them at the
+start of the sentences corresponding to your reply.
 
+The issue you are facing seems to be specific to the Cadence IP or the way
+in which the IP has been integrated into the device that you are using.
+On TI SoCs which have the Cadence PCIe Controller, absence of PCIe devices
+doesn't result in a hang. Enumeration should proceed irrespective of the
+presence of PCIe devices and should indicate their absence when they aren't
+connected.
+
+While I am not denying the issue being seen, the fix should probably be
+done elsewhere.
+
+Regards,
+Siddharth.
 
