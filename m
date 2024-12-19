@@ -1,131 +1,117 @@
-Return-Path: <linux-pci+bounces-18816-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18817-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71BA19F860D
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 21:38:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF4829F8629
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 21:44:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB385189221C
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 20:38:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D212416CD01
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2024 20:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 813211B85D3;
-	Thu, 19 Dec 2024 20:38:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CFC41D88D1;
+	Thu, 19 Dec 2024 20:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="jTrcT0h6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmJnD9Qe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E8B1C1F15;
-	Thu, 19 Dec 2024 20:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E371D86C3;
+	Thu, 19 Dec 2024 20:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734640682; cv=none; b=WvswW2YQmzyDkpPfeY7ZeppELXnHVrS04LU0LMv3wG+1RAebWKaeYs91ZmtHFBrE5OYrhxaTtvDuLFWloTLcexoqd9lPu/kP65zUvqIBz5PZmUAsHXb/cQFRuXRkqvcixcg4TyYz9uSvdqVBFMbIsNxD1YNHjhihQQBXlVGzZEI=
+	t=1734641002; cv=none; b=R/F9iQaQShFsrTNUqJrVuK/G3HYpAGCuF1RpXagLATB58cr0CHN8upJQhEj7TTc1yPJdi1XN2klJKygNhaSsh+Z6qY8i3jCEl3dHqa6Hz3d4j42G17Y5zCLU2iqSjb4eASSDCjkmv/huUfpkgLBg6HS73nAvoLZQ9HndDll9PuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734640682; c=relaxed/simple;
-	bh=FEnaOwVQrkTc6L6pkdi0G9x7Taz7LOoQ4NsMeOGf0t4=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=kl01DoN+fX9gOiOZNcEu9YR+CXml3+ZdvN9tf1z7PRQ+1GL0jsh9jRU8eMLAHZh9t0L1rU+YrLM5ajtuPwaoNLeRfpLvGQMEaZGTTmjsJVFF+/frgJ98+0JhBMgMxvbBVhYx3S3QJanKJEt2HVd/rDgK3t9BTcaBMm4sRb9eYp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=jTrcT0h6; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [192.168.80.133] (unknown [207.7.121.250])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4YDj6Y6T4qz4T8S;
-	Thu, 19 Dec 2024 15:37:57 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1734640679; bh=FEnaOwVQrkTc6L6pkdi0G9x7Taz7LOoQ4NsMeOGf0t4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jTrcT0h6gmKlu23s8VsN1s/49NpPZYhlxBKobAYvLCEagdG/4IxuTAqIbFw8NBd4H
-	 Ffx/uwuNCt9P849SZgaQ9w5gpqAtNgmKYEFebK3fRt7+jiZYd3+1zRDHfWFD6To7SV
-	 yk0rx/XHpaYtYmZ5i1BxzzhbHzsXA6VNDyXBs948=
-Content-Type: multipart/mixed; boundary="------------XETfFMsvRHrtHU1hk5awnmMv"
-Message-ID: <7ad6b642-b31e-438c-97fb-840542740499@panix.com>
-Date: Thu, 19 Dec 2024 12:37:56 -0800
+	s=arc-20240116; t=1734641002; c=relaxed/simple;
+	bh=G6bMfexz+wArkOSIy0OifiSOvN5KLKUMvRsykmliEsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lbEcbqYh7d4WOxaRc+hsYzpfz+0jWLmSFyjNzAsBHLdSlDJih5Y5UKeo9PZDOLc24WH7ALrhK362iefk7I800q1rlf4KlEGYdYcBbxrvkqfd4Gboc0HOx0QsYq5kHoWLbLC1m2vyJHDADtDcyxWo4r9O3ZYI8X3ulAXr+eVDkCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmJnD9Qe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52CA6C4CEE2;
+	Thu, 19 Dec 2024 20:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734641001;
+	bh=G6bMfexz+wArkOSIy0OifiSOvN5KLKUMvRsykmliEsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dmJnD9Qex8zb76MkRSNV8w/pleJc7agAVHdZmk37esuv92MR/LJ+YtapO71KAsR0K
+	 wI3cyZvGyyTX+/6RA4VqzLlu+fUanKgjXDCTfoym6JUz68cONpDKiG/kSGOXPILz3l
+	 2Tf4LrHcWE5FwJkGTRDWsetCsD9NcdIc36xzqIiDYA7Amva1d4tyqeCndgAhBOl2gz
+	 TQZgJmAXO52yqjkMX32XiSaIEJStw5vpBgqRuyPniwP5pJsKFxF1lILwVSYhlbhhQj
+	 OBt8J9DpejQAFpBEkfRqxCr6Gsf+4lHvWpWO0Am/Ge3EQUcPF6lbjHf98AVS6Wowq7
+	 bkXmD0fjJMD/w==
+Date: Thu, 19 Dec 2024 21:43:15 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Marc Zyngier <maz@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, imx@lists.linux.dev, dlemoal@kernel.org,
+	jdmason@kudzu.us, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v13 4/9] irqchip/gic-v3-its: Add
+ DOMAIN_BUS_DEVICE_PCI_EP_MSI support
+Message-ID: <Z2SFYwC7KC-qiZD2@ryzen>
+References: <20241218-ep-msi-v13-0-646e2192dc24@nxp.com>
+ <20241218-ep-msi-v13-4-646e2192dc24@nxp.com>
+ <868qscq70x.wl-maz@kernel.org>
+ <Z2RRimPlT41Ru281@lizhi-Precision-Tower-5810>
+ <Z2R9qPmAyTcc5mtg@ryzen>
+ <Z2R/S4y3fF2Dw4Ye@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: My AlderLake Dell (XPS-9320) needs these patches to get full
- standby/low-power modes
-To: david.e.box@linux.intel.com, rafael@kernel.org,
- Bjorn Helgaas <helgaas@kernel.org>,
- Nirmal Patel <nirmal.patel@linux.ntel.com>, Kenneth Crudup <kenny@panix.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Vidya Sagar <vidyas@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Andrea Righi <andrea.righi@canonical.com>,
- You-Sheng Yang <vicamo.yang@canonical.com>, linux-pm@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20241213230214.GA3434438@bhelgaas>
- <ffeae6a38215df37d8c109c16fd8b6713687ba77.camel@linux.intel.com>
- <28fd68e1-f76f-40a9-89a8-a24d693209c1@panix.com>
- <2ed90445e8e39a76e58a37712ca75ba40d121c15.camel@linux.intel.com>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <2ed90445e8e39a76e58a37712ca75ba40d121c15.camel@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z2R/S4y3fF2Dw4Ye@lizhi-Precision-Tower-5810>
 
-This is a multi-part message in MIME format.
---------------XETfFMsvRHrtHU1hk5awnmMv
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On Thu, Dec 19, 2024 at 03:17:15PM -0500, Frank Li wrote:
+> 
+> Thank you very much. I update msi part, so endpoint controller node align
+> host controller node.
+> 
+> It should be
+> msi-map = <0x0000 &its1 0x0000 0x1000>;
+> 
+> So if your hardware support multi physical function, your can create more
+> than one pci_test func. Previous version only support one EP func.
+
+I see. That seems like an improvement.
+I will need to ask Rockchip maintainer to drop my msi-parent patch for PCIe
+EP node then. (Which is currently queued up in for-6.14)
+
+However, for the PCIe host node, rk3588 has:
+iommu-map = <0x0000 &mmu600_pcie 0x0000 0x1000>;
+
+For the PCIe endpoint node, rk3588 has:
+iommus = <&mmu600_pcie 0x0000>;
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v6.14-armsoc/dts64&id=da92d3dfc871e821a1bface3ba5afcf8cda19805
+
+Is it fine that for the PCIe EP node, we specify iommu mapping using:
+iommus = <&mmu600_pcie 0x0000>;
+but the ITS/MSI map will be:
+msi-map = <0x0000 &its1 0x0000 0x1000>;
+
+isn't this a bit inconsistent?
+
+The physical function is the "F" in the BDF.
+Does this mean that:
+iommus = <&mmu600_pcie 0x0000>;
+the IOMMU will not be able to distinguish different PCI physical functions
+from the same PCI device? So two different physical functions on the same
+PCI device share the same IOMMU mappings?
 
 
-Or, just use (some version of) the attached patch (against Linus' recent 
-master) that enables VMD ASPM this for us "automatically" if there's a 
-detected VMD ?
-
-I'd prefer a scalpel to a bludgeon (and have been trying to get some 
-version of these fixes into mainline for a while).
-
--Kenny
-
-On 12/19/24 11:52, David E. Box wrote:
-
-> If you want to override this behavior, you can try setting pcie_aspm=force on
-> the kernel command line.
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
---------------XETfFMsvRHrtHU1hk5awnmMv
-Content-Type: text/plain; charset=UTF-8; name="aspm-enable-take-2"
-Content-Disposition: attachment; filename="aspm-enable-take-2"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIGIvZHJpdmVycy9wY2kvcGNp
-ZS9hc3BtLmMKaW5kZXggMjg1NjdkNDU3NjEzLi5hNWRmNjIzMGNmM2MgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jCisrKyBiL2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5j
-CkBAIC03NjgsNiArNzY4LDMxIEBAIHN0YXRpYyB2b2lkIGFzcG1fbDFzc19pbml0KHN0cnVj
-dCBwY2llX2xpbmtfc3RhdGUgKmxpbmspCiAJCWFzcG1fY2FsY19sMTJfaW5mbyhsaW5rLCBw
-YXJlbnRfbDFzc19jYXAsIGNoaWxkX2wxc3NfY2FwKTsKIH0KIAorLyoKKyAqIEJJT1MgbWF5
-IG5vdCBiZSBhYmxlIHRvIGFjY2VzcyBjb25maWcgc3BhY2Ugb2YgZGV2aWNlcyB1bmRlciBW
-TUQgZG9tYWluLCBzbworICogaXQgcmVsaWVzIG9uIHNvZnR3YXJlIHRvIGVuYWJsZSBBU1BN
-IGZvciBsaW5rcyB1bmRlciBWTUQuCisgKi8KK3N0YXRpYyBib29sIHBjaV9maXh1cF92bWRf
-YnJpZGdlX2VuYWJsZV9hc3BtKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQoreworICAgICAgIHN0
-cnVjdCBwY2lfYnVzICpidXMgPSBwZGV2LT5idXM7CisgICAgICAgc3RydWN0IGRldmljZSAq
-ZGV2OworICAgICAgIHN0cnVjdCBwY2lfZHJpdmVyICpwZHJ2OworCisgICAgICAgaWYgKCFw
-Y2lfaXNfcm9vdF9idXMoYnVzKSkKKyAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsKKwor
-ICAgICAgIGRldiA9IGJ1cy0+YnJpZGdlLT5wYXJlbnQ7CisgICAgICAgaWYgKGRldiA9PSBO
-VUxMKQorICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOworCisgICAgICAgcGRydiA9IHBj
-aV9kZXZfZHJpdmVyKHRvX3BjaV9kZXYoZGV2KSk7CisgICAgICAgaWYgKHBkcnYgPT0gTlVM
-TCB8fCBzdHJjbXAoInZtZCIsIHBkcnYtPm5hbWUpKQorICAgICAgICAgICAgICAgcmV0dXJu
-IGZhbHNlOworCisgICAgICAgcGNpX2luZm8ocGRldiwgImVuYWJsZSBBU1BNIGZvciBwY2kg
-YnJpZGdlIGJlaGluZCB2bWQiKTsKKyAgICAgICByZXR1cm4gdHJ1ZTsKK30KKwogc3RhdGlj
-IHZvaWQgcGNpZV9hc3BtX2NhcF9pbml0KHN0cnVjdCBwY2llX2xpbmtfc3RhdGUgKmxpbmss
-IGludCBibGFja2xpc3QpCiB7CiAJc3RydWN0IHBjaV9kZXYgKmNoaWxkID0gbGluay0+ZG93
-bnN0cmVhbSwgKnBhcmVudCA9IGxpbmstPnBkZXY7CkBAIC04NDYsNyArODcxLDggQEAgc3Rh
-dGljIHZvaWQgcGNpZV9hc3BtX2NhcF9pbml0KHN0cnVjdCBwY2llX2xpbmtfc3RhdGUgKmxp
-bmssIGludCBibGFja2xpc3QpCiAJfQogCiAJLyogU2F2ZSBkZWZhdWx0IHN0YXRlICovCi0J
-bGluay0+YXNwbV9kZWZhdWx0ID0gbGluay0+YXNwbV9lbmFibGVkOworCWxpbmstPmFzcG1f
-ZGVmYXVsdCA9IHBjaV9maXh1cF92bWRfYnJpZGdlX2VuYWJsZV9hc3BtKHBhcmVudCkgPwor
-CQlQQ0lFX0xJTktfU1RBVEVfQVNQTV9BTEwgOiBsaW5rLT5hc3BtX2VuYWJsZWQ7CiAKIAkv
-KiBTZXR1cCBpbml0aWFsIGNhcGFibGUgc3RhdGUuIFdpbGwgYmUgdXBkYXRlZCBsYXRlciAq
-LwogCWxpbmstPmFzcG1fY2FwYWJsZSA9IGxpbmstPmFzcG1fc3VwcG9ydDsK
-
---------------XETfFMsvRHrtHU1hk5awnmMv--
+Kind regards,
+Niklas
 
