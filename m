@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-18857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63F7C9F8C64
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 07:10:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9338D9F8CE2
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 07:42:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4839D1896A47
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 06:10:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A47C1892C9D
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 06:42:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFBA1946C8;
-	Fri, 20 Dec 2024 06:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A92E186E54;
+	Fri, 20 Dec 2024 06:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Of4RG8Jx"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lh4Zkhf9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EFE17B401;
-	Fri, 20 Dec 2024 06:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE32325765;
+	Fri, 20 Dec 2024 06:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734675000; cv=none; b=mJEFMdRwFMFVzGhZXs+JqNbd8MBAN74WrLW+TB75lVgiZTadvMJlAJyzE0v7ab2NDlmRnwO6+7gCaIbeGzLklaQgro2vew98ZlpOKxvOigm/xax95dFQauMq3Ij2QZlTnOUMnP6v+/CJgQ1eDHf1+CLx3TYMn6t/klqOFVlMQxQ=
+	t=1734676952; cv=none; b=S5/BNuypUGv9J5ulL2Qm95fMfsoN7zlBphbdou8BrsURF5UZNg8CzO2UsBjyONf1TUC7VZ15GGqhuwHNlEgCdNnrsr9WXN2k//pvsxhc3d+aZZoqmeTmOBscNa1NEA3J7uQaqAt6sMR6FLKWBcgCwOtuFVAm416yRMJO17b7SIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734675000; c=relaxed/simple;
-	bh=4UvwxWO96i6Wb1aOhPmhcQZTOGZCX7MV9jRqHCmvkYA=;
+	s=arc-20240116; t=1734676952; c=relaxed/simple;
+	bh=9bvD+hGat8LLJu1xTP46ZD4AahO2wfoy/u/RHEqsTas=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=o4eh1TgxqoNgYct7FsohIe2KbX/BSZOMES4JvtPqbXoj7AaHWBOB9lMDL6rx0HqwbfcFWisVovhwDAbEqJwrLnlOCGkAwvXEu8PB4+XvMTGR8Xx6V+ZOi6QBkH/uCXJvQjW9vNRA76zKqPNC2FK2T+xl+QLwQrQIoYa1c+u5ei4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Of4RG8Jx; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=KtV4vnOuVRDvBFHU4gTrif4Fa3t+hIsBXw0/9HkxlFm+zcBOi9opKVzSapPe6p+hYXGboUHOIIdGQdUZDWnU3hYYJW/SdFzX8K64dEKF6ZtJaFQ9uwQjaZA3+LTwcK4voGN7Nid9PrShKcQLMl5OkNEWfKaGKccTzXGknReppko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lh4Zkhf9; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK45a5j028900;
-	Fri, 20 Dec 2024 06:09:44 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK5ehgG005017;
+	Fri, 20 Dec 2024 06:42:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8U7tneMvbmJGLnzZtcRMnfor+X1SskoicqA/MrREYr8=; b=Of4RG8Jx0tTTPPBU
-	z8KGWKOAlAtCZS2ZzZj28cF0FZtquY/cuaRDEJ+DusvEBYPfXEHCFUxTb86sCmbA
-	87LrYFh+HKBOHnyojVFAxqT1S/rusMwzt2XXhMaN7+Gf/Z4FlWrjIZN+nyw4t82m
-	BnJ5fZawW/gapa44ceJ08+5kBhtQ9XcHFwI2+amr1eDcNSr/U/+ldwLqZ0UzNwYX
-	l9Xxa25Hht0DDyXCgEEMhj1DRWjQkU7k0NDBKwV0PBv4qSMuL8Da8EAQIm0C7R95
-	bMez9ID5lvynWiv78B562M/RtFdL5Mtk044z/a3quZyPYLHuPP9eNA7cExM3TBbr
-	qqfurg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43mntf1w6n-1
+	zsp4oqLCT405v81EFBJxahh0RypZYUKhCS90+zQEKD4=; b=lh4Zkhf9z7qI0U3h
+	QyTVHYxH9dg1Ul7jKdBLmQ+G+HhAlJ4QQFs0QEgDfKCdSNjFHdyRGfj/yCsCp5MR
+	AEJq9GlOrxgPCxYFGJP5oEeliwZV9hgnkQoRIkSFAVf30fTeBV++LMT/drRG9HwO
+	BN5kTurJa9xGRqD/y9INJmtB9k8IUhdLG0n5cMKq2vYuQQVQ/d7hwVkj4ISuZ9+2
+	uwXZN0e+VwbchqHipiwCsNGdOgFU+zt8LEXuPLfpPosfdUQr5mc8Fej9i0f84Low
+	k9UVPGaJj7ikH197Mv9B5BrZKSAmDi3+B6hvpMFqNhxjbe+nr0HyouN3EBtypYmp
+	fLcbrQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n2n5r4ng-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 06:09:44 +0000 (GMT)
+	Fri, 20 Dec 2024 06:42:17 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BK69hH4017136
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BK6gHHj017583
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 06:09:43 GMT
+	Fri, 20 Dec 2024 06:42:17 GMT
 Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 19 Dec
- 2024 22:09:37 -0800
-Message-ID: <3ac003e7-7a3c-4769-8a3f-462bb7389b23@quicinc.com>
-Date: Fri, 20 Dec 2024 11:39:34 +0530
+ 2024 22:42:10 -0800
+Message-ID: <08fbde92-a827-4270-a143-cca56a274e6c@quicinc.com>
+Date: Fri, 20 Dec 2024 12:12:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,16 +88,16 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: N3rM-ti90XKfeauLnvSnhujJtDIwYB4n
-X-Proofpoint-ORIG-GUID: N3rM-ti90XKfeauLnvSnhujJtDIwYB4n
+X-Proofpoint-ORIG-GUID: 2_EghpnmcPuSFXnaH0aYSYWvDrYGWDM8
+X-Proofpoint-GUID: 2_EghpnmcPuSFXnaH0aYSYWvDrYGWDM8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412200050
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412200055
 
 
 
@@ -133,10 +133,6 @@ On 12/13/2024 8:36 PM, Konrad Dybcio wrote:
 > 
 > This must be a separate change, with a clear explanation
 > 
-
-Thank you for reviewing the patch.
-Okay, sure.
-
 >> +
 >> +		pcie0_phy: phy@84000 {
 >> +			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
@@ -243,6 +239,21 @@ Okay, sure.
 > This leftover zero needs to be removed too, currently the wrong
 > clocks are used as parents
 > 
+
+Hi Konrad,
+
+The '<0>' entry is for "USB PCIE wrapper pipe clock source".
+And, will update the pcie entries as follows
+	<&pcie0_phy GCC_PCIE0_PIPE_CLK>
+	<&pcie1_phy GCC_PCIE1_PIPE_CLK>
+	<&pcie2_phy GCC_PCIE2_PIPE_CLK>
+	<&pcie3_phy GCC_PCIE3_PIPE_CLK>
+
+Please correct me if i am wrong.
+
+Thanks & Regards,
+Manikanta.
+
 >> -				 <0>,
 >> -				 <0>,
 >> -				 <0>,
@@ -256,34 +267,4 @@ Okay, sure.
 >>  			};
 >>  		};
 >>  
->> +		pcie3: pcie@40000000 {
->> +			compatible = "qcom,pcie-ipq5424",
->> +				     "qcom,pcie-ipq9574";
->> +			reg = <0 0x40000000 0 0xf1d>,
->> +			      <0 0x40000f20 0 0xa8>,
->> +			      <0 0x40001000 0 0x1000>,
->> +			      <0 0x000f8000 0 0x3000>,
->> +			      <0 0x40100000 0 0x1000>;
->> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
-> 
-> Please make this a vertical list, in all nodes
-> 
-
-Okay, sure.
-
-> [...]
-> 
->> +			phys = <&pcie3_phy>;
->> +			phy-names = "pciephy";
->> +			interconnects = <&gcc MASTER_ANOC_PCIE3 &gcc SLAVE_ANOC_PCIE3>,
->> +					<&gcc MASTER_CNOC_PCIE3 &gcc SLAVE_CNOC_PCIE3>;
->> +			interconnect-names = "pcie-mem", "cpu-pcie";
->> +			status = "disabled";
-> 
-> And add a newline above status
-
-Okay, sure.
-
-Thanks & Regards,
-Manikanta.
 
