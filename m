@@ -1,167 +1,224 @@
-Return-Path: <linux-pci+bounces-18874-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18875-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25FEE9F8F46
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 10:48:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA22C9F8F49
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 10:50:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FE601646C4
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 09:48:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDFED18930FC
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 09:50:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D66F1AF0BB;
-	Fri, 20 Dec 2024 09:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58B81A2643;
+	Fri, 20 Dec 2024 09:50:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TnXttQgS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVN3Cl5b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE85F1AA1F4
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 09:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807FD199E84
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 09:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734688127; cv=none; b=cDiitRV54dh79RduLO7DpnIrUFlx7A1fwYbdqGbEKbePxGU2rCoJV/YMCGg/6cQWel6I65tGDTvj/5GH53m8MY7tp2fBFU1e2BqVSLXywzZ+XUdRbRkaCmzpoUdZHH/ruBKmrs9VrNSk7PYgQXft4ZgKt0Nes6WOIUDKOvIQ3yM=
+	t=1734688242; cv=none; b=YnGBt2+aMlbJcHH/qwkCmjA5HHyFL9/mS1AL3cgIDAuIGlKyaSnuLrX/qQSmF0ThADAhpoGMgnDgx5v2H1GO0HJvkns/AekLp5PBYWDoq+66iHzHJzDwOdmXFLmgGVu9W3kTqqdX1jnnAinUt6N/sX5RgjY3wbr4C3EeLP0wQe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734688127; c=relaxed/simple;
-	bh=/u9h2u8VCyh8Wn9919kX8kdRK2eFwLLsCmZITUi20AY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c/v8MRZuH/4zOvgCHAaG3c+PuUcSJTvwmnPdT5iWEGPgsgZ2ltbWJlIiZqUs3rqzeWC3NILpmdKTGObd1kAtPT06At5cbUFXwRSSHwVpZnb4NfxrNVQm6LIA1KTxQwpTMR3pNPDKxL7dwuu4j/QJL5pP+M9cT7DJwkMI6zRHgg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TnXttQgS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK4PZpc024611
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 09:48:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rVUKpvjNKYGH0d1LGTP6M2rnV3QaECUxpVoVBYXGfy8=; b=TnXttQgSCor7rJoe
-	ZTBEftsaaXQeMsPvYEG6HAS4ZywCAggRUc0fj9YqhkUyaAK5MEE17GJItr7P8s+m
-	oS95fkfGpPDhHflfjcPq+3lvpJVQL15DY3U/8YlscKeqKiGpdeDOOcL19dCOADRM
-	cx+y4aw6AqTuRW0jdE7Mb715dmGANGaBDFjB6mOq8gJnXDMHsNDjJCMJAGR6gcF2
-	bKtVe6IdhtdgVIlGrz2CdQoOT2Gtn//PsNZW2LHNQuCadDIpDXf8qcJtYezBSZhA
-	a6lGQMpiSAvwu2AoEVzyIIs7KtTdwa/Y5FdTkz+Gq8+APwEacS7Q6xmKafS/U3pN
-	fLjmMA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n1hx0td6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 09:48:45 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6d8e7016630so4028676d6.1
-        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 01:48:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734688124; x=1735292924;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rVUKpvjNKYGH0d1LGTP6M2rnV3QaECUxpVoVBYXGfy8=;
-        b=M9t6gA2AN8admVcG49kGFR06LYe7qHU5JjvKOl7xhDrFcFSNDYJrn/iM5emWq5OHTp
-         qRetuNFDb4lEd9NL8seWolSnfqrgdZVzbp1cS1WBJgAhSYSCJmCgJqWswbDCr95p+ZRe
-         labLMtxoRS7WcrtynPDzfLOogkWjLUShMdEJM3ZE7yXII7IWVXECHoo2uNcrcoVeTU6/
-         mWYdeTnMH/yHuoRqQl9lMQ3hwheqYzYY8z1P0CiRK6rQA98HjKjU2wTLXjPaojprNvz3
-         hJoJvltaBAyaxzxXau6Jq3l/c9k+rLW05d4aGxB1NdYadkvyHERNNXWlwu0Klx+CHr0z
-         /Sog==
-X-Forwarded-Encrypted: i=1; AJvYcCU7KNNX+7tyn3jzM3Tp8ExCnPAwf7IhT9RHUbHnmvnnleIgcHpnj5NNWlYgn+g6r5cz8yQp1AmpQVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWo8KpfQvYZFtLNaoTIjE7lXjejKZuNZJl5EEmW3OORn92hBaQ
-	lkDjq8fSzV4HyAgeRDTXaDXe5qHp+t2MO2msha1LiYY7UqNjgxglt02HN4a18E4kk8z7RVLTcvM
-	5/sniRTLI+n16E4Vwn+f/bzLOLaRI0msK5qGX8Y0M73R5cuKpJaW+dE8YH2A=
-X-Gm-Gg: ASbGncv9vJWF6eOQ1axbJTMSx5SRhYNhBOSYO3ZihyPNavkDTQOfxpAWY22wtDhr4Pj
-	VHwMhh2Gr0BEcJgZhZU2A3Krj1cXl1MrwbtPoyQvK0vT4nUCS/62YMdKvtyTbazdEratYaD1IBp
-	CD0GGmL6PEcGuJrLEYH5Zd8At1adwLNBboZQuFHijZBiwaffxD22s5ht7/gpcnZYYOTiUs7jQJo
-	r94YKVICt5ma/FCFAtp+uD5cnljwtcwyFCdw8PY8bRP1KHR3Gvm1UHh9aL++ZJEtBuybnhXBJ9D
-	bt+ezsgs+fRt4tRxfZqPUFYPHvEeX36XuQA=
-X-Received: by 2002:ac8:7c56:0:b0:467:6379:8d2f with SMTP id d75a77b69052e-46a4a9a3aa9mr14362451cf.15.1734688123784;
-        Fri, 20 Dec 2024 01:48:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHrggBl9ERFYcbqyZk1aIf/jeZFXwznISS8GkbxVKTIw+S69nHydV8TNBfU9FuwstBBRIOaUQ==
-X-Received: by 2002:ac8:7c56:0:b0:467:6379:8d2f with SMTP id d75a77b69052e-46a4a9a3aa9mr14362341cf.15.1734688123444;
-        Fri, 20 Dec 2024 01:48:43 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0f011efdsm156471866b.134.2024.12.20.01.48.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2024 01:48:42 -0800 (PST)
-Message-ID: <71d2135f-664a-465d-bc1f-051cc07c8537@oss.qualcomm.com>
-Date: Fri, 20 Dec 2024 10:48:40 +0100
+	s=arc-20240116; t=1734688242; c=relaxed/simple;
+	bh=+AcctufWP2IqX10xnwdS8OfGcZA1o4W9paD5B3nzZf0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h8BhKCgBq4CPMbSmLeQiEgUgcxcyJ5LPIbzNjS95/Emk17SOC2FTslCmzTYbhF8HkMv0YnEGD7WmvNgMntWMx4zk4jxceMM3YgFcK6sRS9VuxFHheSM9mizQPB2t8xHiMQDtGYh6gs/+ZdRTT9YfFvgzYJJhxRYynD3262Z/FcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVN3Cl5b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8FBC4CECD;
+	Fri, 20 Dec 2024 09:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734688242;
+	bh=+AcctufWP2IqX10xnwdS8OfGcZA1o4W9paD5B3nzZf0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HVN3Cl5bXcpbsLah4y1rz7vWlvwgz1FwhMQASaQg+gGRcheT34lP/AcfoR0CXdNsX
+	 5I95LJ1R4Pd7PNZL7xe+UCZXMKW1rHZvzv1MuH8vN1iXs0ErLKM7HsfMKeIts5etJp
+	 PPPXhKSkO1i/QNnEAZkyo4fjFuzw2sbcsVVvf5rFS+b+V15Th0jBy2fwtv8P9NsHvF
+	 RJ9DUaRj2XEK7CJVvdQO0mku4DcptRLc2H0gNGubQJobKxZOiOjfXTnkOI1W/VU/Px
+	 k2Srgz6nX3vjHaApwmtsw47t2Qsqnct28vZP+bEU4xj5c185hWPDSdddQJSpAzXOhP
+	 CAd2PZhEm/w4A==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-nvme@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v7 00/18] NVMe PCI endpoint target driver
+Date: Fri, 20 Dec 2024 18:50:50 +0900
+Message-ID: <20241220095108.601914-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: ipq5424: Add PCIe PHYs and
- controller nodes
-To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, bhelgaas@google.com,
-        lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
-        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com
-References: <20241213134950.234946-1-quic_mmanikan@quicinc.com>
- <20241213134950.234946-4-quic_mmanikan@quicinc.com>
- <69dffe54-939d-47c3-b951-4a4dea11eae0@oss.qualcomm.com>
- <08fbde92-a827-4270-a143-cca56a274e6c@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <08fbde92-a827-4270-a143-cca56a274e6c@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: SB7gT5AzumvXCYsDgMms7_AUDoBeUVBC
-X-Proofpoint-ORIG-GUID: SB7gT5AzumvXCYsDgMms7_AUDoBeUVBC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412200080
+Content-Transfer-Encoding: 8bit
 
-On 20.12.2024 7:42 AM, Manikanta Mylavarapu wrote:
-> 
-> 
-> On 12/13/2024 8:36 PM, Konrad Dybcio wrote:
->> On 13.12.2024 2:49 PM, Manikanta Mylavarapu wrote:
->>> Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
->>> found on IPQ5424 platform. The PCIe0 & PCIe1 are 1-lane Gen3
->>> host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
->>>
->>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->>> ---
+This patch series implements an NVMe target driver for the PCI transport
+using the PCI endpoint framework.
 
-[...]
+The first 5 patches of this series move and cleanup some nvme code that
+will be reused in following patches.
 
->>>  		tlmm: pinctrl@1000000 {
->>>  			compatible = "qcom,ipq5424-tlmm";
->>> @@ -168,11 +261,11 @@ gcc: clock-controller@1800000 {
->>>  			reg = <0 0x01800000 0 0x40000>;
->>>  			clocks = <&xo_board>,
->>>  				 <&sleep_clk>,
->>> +				 <&pcie0_phy>,
->>> +				 <&pcie1_phy>,
->>>  				 <0>,
->>
->> This leftover zero needs to be removed too, currently the wrong
->> clocks are used as parents
->>
-> 
-> Hi Konrad,
-> 
-> The '<0>' entry is for "USB PCIE wrapper pipe clock source".
-> And, will update the pcie entries as follows
-> 	<&pcie0_phy GCC_PCIE0_PIPE_CLK>
-> 	<&pcie1_phy GCC_PCIE1_PIPE_CLK>
-> 	<&pcie2_phy GCC_PCIE2_PIPE_CLK>
-> 	<&pcie3_phy GCC_PCIE3_PIPE_CLK>
-> 
-> Please correct me if i am wrong.
+Patch 6 introduces the PCI transport type to allow setting up ports for
+the new PCI target controller driver. Patch 7 to 10 are improvements of
+the target core code to allow creating the PCI controller and processing
+its nvme commands without the need to rely on fabrics commands like the
+connect command to create the admin and I/O queues.
 
-The order of these is fixed by the first enum in
-drivers/clk/qcom/gcc-ipq5424.c. The <0> entry must be at the end of
-the clocks list for it to do what you want it to.
+Patch 11 relaxes the SGL check in nvmet_req_init() to allow for PCI
+admin commands (which must use PRPs).
 
-Konrad
+Patches 12 to 16 improve the set/get feature support of the target code
+to get closer to achieving NVMe specification compliance. These patches
+though do not implement support for some mandatory features.
+
+Patch 17 is the main patch which introduces the NVMe PCI endpoint target
+driver. This patch commit message provides and overview of the driver
+design and operation.
+
+Finally, patch 18 documents the NVMe PCI endpoint target driver and
+provides a user guide explaning how to setup an NVMe PCI endpoint
+device.
+
+The patches are base on Linus 6.13-rc3 tree.
+
+This driver has been extensively tested using a Radxa Rock5B board
+(RK3588 Arm SoC). Some tests have also been done using a Pine Rockpro64
+board. However, this board does not support DMA channels for the PCI
+endpoint controller, leading to very poor performance.
+
+Using the Radxa Rock5b board and setting up a 4 queue-pairs controller
+with a null-blk block device loop target, performance was measured using
+fio as follows:
+
+ +----------------------------------+------------------------+
+ | Workload                         | IOPS (BW)              |
+ +----------------------------------+------------------------+
+ | Rand read, 4KB, QD=1, 1 job      | 14.3k IOPS             |
+ | Rand read, 4KB, QD=32, 1 job     | 80.8k IOPS             |
+ | Rand read, 4KB, QD=32, 4 jobs    | 131k IOPS              |
+ | Rand read, 128KB, QD=32, 1 job   | 16.7k IOPS (2.18 GB/s) |
+ | Rand read, 128KB, QD=32, 4 jobs  | 17.4k IOPS (2.27 GB/s) |
+ | Rand read, 512KB, QD=32, 1 job   | 5380 IOPS (2.82 GB/s)  |
+ | Rand read, 512KB, QD=32, 4 jobs  | 5206 IOPS (2.27 GB/s)  |
+ | Rand write, 128KB, QD=32, 1 job  | 9617 IOPS (1.26 GB/s)  |
+ | Rand write, 128KB, QD=32, 4 jobs | 8405 IOPS (1.10 GB/s)  |
+ +----------------------------------+------------------------+
+
+These results use the default MDTS of the NVMe enpoint driver of 512 KB.
+
+This driver is not intended for production use but rather to be a
+playground for learning NVMe and exploring/testing new NVMe features
+while providing reasonably good performance.
+
+Changes from v6:
+ - Fixed incorrect bar cleanup in patch 17 causing a NULL pointer
+   dereference when PERST# is asserted
+ - Added Mani's review tag to path 18
+
+Changes from v5:
+ - Rebased on 6.13-rc3
+ - Addressed most of Mani's comment on patch 17:
+   - Renaming of functions and data structures
+   - Error messages format
+   - Removed dma_enable configfs knob and simplified DMA initialization
+     and cleanup.
+   - Simplified some error path
+   - Fixed up handling of icontrollers with a fixed bar 0 size
+   Of note is that I did not define macros for the bits of the CAP
+   register as that would be too much for now since we want to do this
+   correctly in include/linux/nvme.h by defining all of them, and by
+   using these definitions in the nvme host and target code. This can be
+   done in a followup patch series once this is applied.
+ - Fixed the command examples in patch 18
+
+Changes from v4:
+ - Fixed typos in patch 13 and 17 commit message
+ - Addressed Bjorn's comments (typos and text clarity) in patch 18.
+ - Added Bjorn's Acked-by tag to patch 18
+
+Changes from v3:
+ - Added patch 1 which was missing from v3 and caused the 0day build
+   failure
+ - Corrected a few typos in the documentation (patch 18)
+ - Added Christoph's review tag and Rick's tested tag
+
+Changes from v2:
+ - Changed all preparatory patches before patch 16 to move more NVMe
+   generic code out of the PCI endpoint target driver and into the
+   target core.
+ - Changed patch 16 to use directly a target controller instead of a
+   host controller. Many aspects of the command management and DMA
+   transfer management have also been simplified, leading to higher
+   performance.
+ - Change the documentation patch to match the above changes
+
+Changes from v1:
+ - Added review tag to patch 1
+ - Modified patch 4 to:
+   - Add Rick's copyright notice
+   - Improve admin command handling (set_features command) to handle the
+     number of queues feature (among others) to enable Windows host
+   - Improved SQ and CQ work items handling
+
+Damien Le Moal (18):
+  nvme: Move opcode string helper functions declarations
+  nvmet: Add vendor_id and subsys_vendor_id subsystem attributes
+  nvmet: Export nvmet_update_cc() and nvmet_cc_xxx() helpers
+  nvmet: Introduce nvmet_get_cmd_effects_admin()
+  nvmet: Add drvdata field to struct nvmet_ctrl
+  nvme: Add PCI transport type
+  nvmet: Improve nvmet_alloc_ctrl() interface and implementation
+  nvmet: Introduce nvmet_req_transfer_len()
+  nvmet: Introduce nvmet_sq_create() and nvmet_cq_create()
+  nvmet: Add support for I/O queue management admin commands
+  nvmet: Do not require SGL for PCI target controller commands
+  nvmet: Introduce get/set_feature controller operations
+  nvmet: Implement host identifier set feature support
+  nvmet: Implement interrupt coalescing feature support
+  nvmet: Implement interrupt config feature support
+  nvmet: Implement arbitration feature support
+  nvmet: New NVMe PCI endpoint function target driver
+  Documentation: Document the NVMe PCI endpoint target driver
+
+ Documentation/PCI/endpoint/index.rst          |    1 +
+ .../PCI/endpoint/pci-nvme-function.rst        |   13 +
+ Documentation/nvme/index.rst                  |   12 +
+ .../nvme/nvme-pci-endpoint-target.rst         |  368 +++
+ Documentation/subsystem-apis.rst              |    1 +
+ drivers/nvme/host/nvme.h                      |   39 -
+ drivers/nvme/target/Kconfig                   |   10 +
+ drivers/nvme/target/Makefile                  |    2 +
+ drivers/nvme/target/admin-cmd.c               |  388 ++-
+ drivers/nvme/target/configfs.c                |   49 +
+ drivers/nvme/target/core.c                    |  266 +-
+ drivers/nvme/target/discovery.c               |   17 +
+ drivers/nvme/target/fabrics-cmd-auth.c        |   14 +-
+ drivers/nvme/target/fabrics-cmd.c             |  101 +-
+ drivers/nvme/target/nvmet.h                   |  110 +-
+ drivers/nvme/target/pci-epf.c                 | 2610 +++++++++++++++++
+ include/linux/nvme.h                          |   42 +
+ 17 files changed, 3883 insertions(+), 160 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-nvme-function.rst
+ create mode 100644 Documentation/nvme/index.rst
+ create mode 100644 Documentation/nvme/nvme-pci-endpoint-target.rst
+ create mode 100644 drivers/nvme/target/pci-epf.c
+
+
+base-commit: 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
+-- 
+2.47.1
+
 
