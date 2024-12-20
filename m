@@ -1,173 +1,526 @@
-Return-Path: <linux-pci+bounces-18910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0359C9F952B
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 16:16:40 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B70569F9637
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 17:19:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62D2A188F8BD
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 15:15:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 543827A2433
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 16:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB26219A64;
-	Fri, 20 Dec 2024 15:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CWkrGgGe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89BA9218E9F;
+	Fri, 20 Dec 2024 16:19:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40616218E82
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 15:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCB929405
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 16:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734707730; cv=none; b=OcvM5L2SSEmhMaErfbsAUIFvndvan9U5s63rPI4z/YnB7i3mkyMvj4MNMwjqWVFwCh0jGzp3lFRaXozXI/i9K1Mb72WbEPqkQ8bt1UHt4bBqueoTjjREeRjGTgYjIiQnC9aDY+7anby8EUw6euG/hd59SCU1zliA0g2wCtPZu9E=
+	t=1734711590; cv=none; b=OsVLEphPwVG626+n7cPB9SABSK6ONBjgYyYRrZs0p17X4fpE9MRjypk8f5M5VV0uRkTnBAdv5nwPDMJyfb4YDKDBdkMYTpV3vQ+12HNMCg9Hs7C0KO8Dt+6TDJibMwiGRfthJYEtUWmpM50gGJRyhOiJe1/xY9J+UMwN0GQTM/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734707730; c=relaxed/simple;
-	bh=kg49+uaoHpj7D++o6jRL1ADBtrJA1aWRF63Yb9kp8ZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eqzy5paTWRbJsEJmCxC5Y1ni9IVB8e3e6E5nMRi/O6CkY5wV4N9PzAb606RNZZ6g795WlInqhXvcITEdN0wElGe6j8/N+CiZUthWr0WsIvlqSqiiI71Bqkw88zky4+GK7+jaC5tnin5/OWxqPUMBBiza9WOXHsMoHJO4WSh5lyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CWkrGgGe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BKBbivp023321
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 15:15:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9pdRk1FNEwE15r/NRpb5txdFYJ22rYoCmR29SeDLD9E=; b=CWkrGgGegK3PkMiY
-	21XQ7nuYVRZdULWoQulYqqX8aAHE8jbyNEdEg73YmDZVSxvnURpB4D4bUA+m/kTB
-	LO1CY95KY8IVvkA7UHxeL2jUR6ya8zlQljpYX2cWDemMtBTBxIwyQT/J9CgWKBPW
-	9sUxYrb6RRpvNNOJWaxLc18BXplb1tD5Rb/YtnO2odLR1Hg4INSoaaBIxhhHsKuV
-	/o5/i66CKjOmTe92spTR3caiejJbu24r8RB+RllT4HwZgBQbPp2iYU0wkl5Csv5z
-	tCBy0CRXjZdO9bhgYqFHuT2Unuu0R/Lo0AnPZ0heF2W92bgaIriX8GZz9nI059b9
-	qGsaIA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n7vg0ghn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 15:15:25 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6d88fe63f21so4806086d6.3
-        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 07:15:25 -0800 (PST)
+	s=arc-20240116; t=1734711590; c=relaxed/simple;
+	bh=7J9SseknIGmbe1UHiGUdTV9SbtBgNqo5OgqusejBfGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFBjRZitpAm/yP0PN7rTaFho97P9SpahJ+SFjrWy2IthWidPDpVFhmn+DJf8+RPqtquUHiBiZFv79ndnAW1Dw7bq+yFUKCU11opUejw8NUE/xksKSVcb+8l3R8hjCz6m/yjGiaW9HK//CVYkg3eKoYLcEHvrxbQLU9kFaPGnWso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2161eb95317so21024525ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 08:19:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734707725; x=1735312525;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1734711588; x=1735316388;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9pdRk1FNEwE15r/NRpb5txdFYJ22rYoCmR29SeDLD9E=;
-        b=jCKL8mo1uqD+AEQ8BjJL3MI5RSnWZ0pML1631BB5zaLu9pMkcwSuG+QBOXQgEQ6MKL
-         RDnPdxAsivIdeOL5CCZ83cvirHXISZudSnCBUzJMD98cgo0QLppaF7w8gwRHxzIcdwnz
-         n8aEc1kHImBWf1IUAv8kiTuE3/5lAUYl9XgnjAjlOqZLhKLhpedPpC8b4IwHAUlvlf8j
-         9y+jEWhp1iYSnUwuXjnREkxtXwv8mAYLjujDaq7oOdyDyOeCTHIfubtDM8odi7/7dh/B
-         fdsYrLAjENf4KoXkhLT5DqnxXEQYeiZpg8NDCumR44koE7eUvPGx/jDLIPlbNATP20oW
-         FG3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXcf/We2mjRZsU696N0mso/1okosJbQuX1ImtQtdyEIndl2oAeatgSXPrmAb6NVDKjrTLqC1CHmB1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzoa6BLz4/x4r33D34KWZMSzfS/HZWSM5JCdptFSOYeHikp5A1P
-	hUeL9qu6pnnbdRQAijYJZXked1oAinDBoSZfo1GXLVLFVJWBfYROiKIiE+tygPEOKj9iVlqCvFf
-	ZUqau+8KEdEyxH5ONAhDbh1dJ3T5b9W1oK9lizjZGTucRdGBbfpfaN9HIiJ4=
-X-Gm-Gg: ASbGnctjzw0MyFZ1+xvsOAt+M4I7gLv0PjLkz6jiDknnimPzXfkE5Oy+5aqvNu+eqJk
-	oP6jk6binChX7aPLXiuZlbAbr2I/rUiylv7wG/DPfJs1R7lJAwUsiEVjnPFTcKWg4NWY7zoKrL9
-	o99MUlznAEQN84s3/3D3b0G8e+XQnvzJX3zDbjtLJt3LWCMiQlDmQaRe9umB6VIAKB47h8zcU9q
-	XgQPsNJB/BMX8BwbFCganAyY23sqNYfC+EGgjt6OXgG/vVovOGavdT0z7QQ7gSrZhKCPcXMbwoG
-	/I005RD+S1jn2RyjwErqetiMmqGYkLdcA1w=
-X-Received: by 2002:a05:620a:2454:b0:7b6:c8a4:ba09 with SMTP id af79cd13be357-7b9ba7be496mr170654785a.9.1734707725186;
-        Fri, 20 Dec 2024 07:15:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFD5koPpJL0wKEso3nr+u+1J+IrI3s+lO5cyWCeEsrPYRbTAkLqKhgQ19j1vhTaqjkKzFcUzQ==
-X-Received: by 2002:a05:620a:2454:b0:7b6:c8a4:ba09 with SMTP id af79cd13be357-7b9ba7be496mr170652685a.9.1734707724779;
-        Fri, 20 Dec 2024 07:15:24 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80675a741sm1818444a12.12.2024.12.20.07.15.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2024 07:15:24 -0800 (PST)
-Message-ID: <dd557897-f2e0-4347-ae67-27cd45920159@oss.qualcomm.com>
-Date: Fri, 20 Dec 2024 16:15:21 +0100
+        bh=ehY0BRtTi774oOyk6/6hLQ1XGvflXkt1M7GGFhFmz3g=;
+        b=Yb5R2evwIFb9rOqkPoHFDBSHJ7M/PBaQ9iXprJnBsEv9niFzMwijcREP0ZERwSlSaw
+         KizGigJ76yKUkFX94xBNvaJD+J07K6B8VfmW8+VEAxjEHU9UieGHGpgTRSwlUsBfnJtk
+         YifUnOr4urToJFyS/3db3Aa7NMbOgOszQ7Ht9faN5YWEQ+I8heHg4DAsQhOoluJj5OGV
+         +/6IqpMpDxtTXohV645MZk/4WSgcZp1Vvf1QJc+wCr+ay2bSAdSHDvNrD/J9mxGC1u5i
+         5B6DwhNb1kWb5D90YUWN+pL6ItbG1t4ruGNuOBpcKa5VOfYF8i6XUsUDY0KNLY4rUC/R
+         9KEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQS74qNfUtSFAuByZUrnOY98lY07RFgwgT8U82lTjE6mMeUGWJJZoyrkwCRl9P+vdgHQ5wV5ywNbc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxozLiTL1YchtIHGT94HDioPXunIqeFs/Ppdr1HIQCf/5+3JGkB
+	Z5NJgsB5AjRNT6alPg450rCRgAcHiMvECwJysWdoOgcgL0D/XzK9
+X-Gm-Gg: ASbGncsXmJCRYWg92Io0auY3VS0BnL7vh7BUOW/yuafD8jFtftcLeJLLJyTmjplRNtX
+	m1/+2yV/np7A4LluMVkqRwmVI/Dy8ZE6xQ2xnbOycNsMq9COB8lf+8tE/oTmqIifHvlZqnytird
+	3YYpE9h5F9HUkQ1tQhpWe6ay8VjfzIQXUkyhJ59ZGDWOERqaQ8kRnY3lUJNI3N7FfoCzDw9ASUb
+	ahPGHwFbeSpe2A2IrE459+aWyPsMYG1v3T14HhbhN4Irtv2ub67x1JFtcLSYw4ng1SRcfA6jlgz
+	bnWtvLdQqFxvb0k=
+X-Google-Smtp-Source: AGHT+IEU39pi1xaCFza1oWqMrRusspYhLQuHLpR3Dl5Zp1BO28lOcWxiz4a0FUcQJG3s1UYPwg/9bQ==
+X-Received: by 2002:a17:902:eccc:b0:216:53fa:634f with SMTP id d9443c01a7336-219e6f27f90mr46704135ad.48.1734711587602;
+        Fri, 20 Dec 2024 08:19:47 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9d4441sm30163595ad.129.2024.12.20.08.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2024 08:19:46 -0800 (PST)
+Date: Sat, 21 Dec 2024 01:19:45 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v7 17/18] nvmet: New NVMe PCI endpoint function target
+ driver
+Message-ID: <20241220161945.GA1007198@rocinante>
+References: <20241220095108.601914-1-dlemoal@kernel.org>
+ <20241220095108.601914-18-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by the
- user
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki"
- <rjw@rjwysocki.net>,
-        Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
-        sagi@grimberg.me, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org,
-        Len Brown
- <len.brown@intel.com>, linux-pm@vger.kernel.org
-References: <20241205232900.GA3072557@bhelgaas>
- <20241209143821.m4dahsaqeydluyf3@thinkpad> <20241212055920.GB4825@lst.de>
- <13662231.uLZWGnKmhe@rjwysocki.net>
- <CAPDyKFrxEjHFB6B2r7JbryYY6=E4CxX_xTmLDqO6+26E+ULz6A@mail.gmail.com>
- <20241212151354.GA7708@lst.de>
- <CAJZ5v0gUpDw_NjTDtHGCUnKK0C+x0nrW6mP0tHQoXsgwR2RH8g@mail.gmail.com>
- <20241214063023.4tdvjbqd2lrylb7o@thinkpad> <20241216162303.GA26434@lst.de>
- <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: gzMfGZ0LmNGjM22A0VhAclwOsLVEuFob
-X-Proofpoint-ORIG-GUID: gzMfGZ0LmNGjM22A0VhAclwOsLVEuFob
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412200124
+In-Reply-To: <20241220095108.601914-18-dlemoal@kernel.org>
 
-On 16.12.2024 5:42 PM, Rafael J. Wysocki wrote:
-> On Mon, Dec 16, 2024 at 5:23 PM Christoph Hellwig <hch@lst.de> wrote:
->>
->> On Sat, Dec 14, 2024 at 12:00:23PM +0530, Manivannan Sadhasivam wrote:
->>> We need a PM core API that tells the device drivers when it is safe to powerdown
->>> the devices. The usecase here is with PCIe based NVMe devices but the problem is
->>> applicable to other devices as well.
->>
->> Maybe I'm misunderstanding things, but I think the important part is
->> to indicate when a suspend actually MUST put the device into D3.  Because
->> doing that should always be safe, but not always optimal.
-> 
-> I'm not aware of any cases when a device must be put into D3cold
-> (which I think is what you mean) during system-wide suspend.
-> 
-> Suspend-to-idle on x86 doesn't require this, at least not for
-> correctness.  I don't think any platforms using DT require it either.
+Hello,
 
-That would be correct.
+> Implement a PCI target driver using the PCI endpoint framework. This
+> requires hardware with a PCI controller capable of executing in endpoint
+> mode.
 
-The Qualcomm platform (or class of platforms) we're looking at with this
-specific issue requires PCIe (implying NVMe) shutdown for S2RAM.
+This is an excellent work which was a pleasure to review, and I only have
+few minor review comments, neither of which are blockers.
 
-The S2RAM entry mechanism is unfortunately misrepresented as an S2Idle
-state by Linux as of today, and I'm trying really hard to convince some
-folks to let me describe it correctly, with little success so far..
+Otherwise, with pleasure:
 
-That is the real underlying issue and once/if it's solved, this patch
-will not be necessary.
+  Reviewed-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 
-> In theory, ACPI S3 or hibernation may request that, but I've never
-> seen it happen in practice.
-> 
-> Suspend-to-idle on x86 may want devices to end up in specific power
-> states in order to be able to switch the entire platform into a deep
-> energy-saving mode, but that's never been D3cold so far.
+> +config NVME_TARGET_PCI_EPF
+> +	tristate "NVMe PCI Endpoint Function target support"
+> +	depends on NVME_TARGET && PCI_ENDPOINT
+> +	help
+> +	  This enables the NVMe PCI endpoint function target driver support,
+> +	  which allows creating a NVMe PCI controller using an endpoint mode
+> +	  capable PCI controller.
+> +
 
-In our case the plug is only pulled in S2RAM, otherwise the best we can
-do is just turn off the devices individually to decrease the overall
-power draw
+Perhaps:
 
-(simplifying some small edge cases here, but that's mostly the story)
+  This enables the NVMe PCI Endpoint Function target support, which allows
+  for the creation of an NVMe PCI controller using an endpoint mode capable
+  PCI Express controller.
 
-Konrad
+The above is a slightly different wordings and also keeps capitalisation
+consistent with rest of the code base.
+
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * NVMe PCI Endpoint Function driver.
+
+To keep things consistent:
+
+  NVMe PCI Endpoint Function target driver.
+
+> +struct nvmet_pci_epf_iod {
+> +	struct list_head		link;
+> +
+> +	struct nvmet_req		req;
+> +	struct nvme_command		cmd;
+> +	struct nvme_completion		cqe;
+> +	unsigned int			status;
+> +
+> +	struct nvmet_pci_epf_ctrl	*ctrl;
+> +
+> +	struct nvmet_pci_epf_queue	*sq;
+> +	struct nvmet_pci_epf_queue	*cq;
+> +
+> +	/* Data transfer size and direction for the command. */
+> +	size_t				data_len;
+> +	enum dma_data_direction		dma_dir;
+> +
+> +	/*
+> +	 * RC PCI address data segments: if nr_data_segs is 1, we use only
+> +	 * @data_seg. Otherwise, the array of segments @data_segs is allocated
+> +	 * to manage multiple PCI address data segments. @data_sgl and @data_sgt
+> +	 * are used to setup the command request for execution by the target
+> +	 * core.
+> +	 */
+
+What about:
+
+  PCI Root Complex (RC) address data segments: ...
+
+> +static int nvmet_pci_epf_dma_transfer(struct nvmet_pci_epf *nvme_epf,
+> +		struct nvmet_pci_epf_segment *seg, enum dma_data_direction dir)
+> +{
+> +	struct pci_epf *epf = nvme_epf->epf;
+> +	struct dma_async_tx_descriptor *desc;
+> +	struct dma_slave_config sconf = {};
+> +	struct device *dev = &epf->dev;
+> +	struct device *dma_dev;
+> +	struct dma_chan *chan;
+> +	dma_cookie_t cookie;
+> +	dma_addr_t dma_addr;
+> +	struct mutex *lock;
+> +	int ret;
+> +
+> +	switch (dir) {
+> +	case DMA_FROM_DEVICE:
+> +		lock = &nvme_epf->dma_rx_lock;
+> +		chan = nvme_epf->dma_rx_chan;
+> +		sconf.direction = DMA_DEV_TO_MEM;
+> +		sconf.src_addr = seg->pci_addr;
+> +		break;
+> +	case DMA_TO_DEVICE:
+> +		lock = &nvme_epf->dma_tx_lock;
+> +		chan = nvme_epf->dma_tx_chan;
+> +		sconf.direction = DMA_MEM_TO_DEV;
+> +		sconf.dst_addr = seg->pci_addr;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	mutex_lock(lock);
+> +
+> +	dma_dev = dmaengine_get_dma_device(chan);
+> +	dma_addr = dma_map_single(dma_dev, seg->buf, seg->length, dir);
+> +	ret = dma_mapping_error(dma_dev, dma_addr);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	ret = dmaengine_slave_config(chan, &sconf);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to configure DMA channel\n");
+> +		goto unmap;
+> +	}
+> +
+> +	desc = dmaengine_prep_slave_single(chan, dma_addr, seg->length,
+> +					   sconf.direction, DMA_CTRL_ACK);
+> +	if (!desc) {
+> +		dev_err(dev, "Failed to prepare DMA\n");
+> +		ret = -EIO;
+> +		goto unmap;
+> +	}
+> +
+> +	cookie = dmaengine_submit(desc);
+> +	ret = dma_submit_error(cookie);
+> +	if (ret) {
+> +		dev_err(dev, "DMA submit failed %d\n", ret);
+> +		goto unmap;
+> +	}
+
+To keep the verb first and for consistency with other error messages:
+
+  dev_err(dev, "Failed to submit DMA %d\n", ret);
+
+Or:
+
+  dev_err(dev, "Failed to do DMA submit %d\n", ret);
+
+Some drivers seem to favour the latter.
+
+> +
+> +	if (dma_sync_wait(chan, cookie) != DMA_COMPLETE) {
+> +		dev_err(dev, "DMA transfer failed\n");
+> +		ret = -EIO;
+> +	}
+
+As there is a timeout involved, perhaps:
+
+  dev_err(dev, "Failed while waiting for DMA transfer\n");
+
+Or:
+
+  dev_err(dev, "Failed to wait for DMA completion\n");
+
+> +static void nvmet_pci_epf_raise_irq(struct nvmet_pci_epf_ctrl *ctrl,
+> +		struct nvmet_pci_epf_queue *cq, bool force)
+> +{
+> +	struct nvmet_pci_epf *nvme_epf = ctrl->nvme_epf;
+> +	struct pci_epf *epf = nvme_epf->epf;
+> +	int ret = 0;
+> +
+> +	if (!test_bit(NVMET_PCI_EPF_Q_LIVE, &cq->flags))
+> +		return;
+> +
+> +	mutex_lock(&ctrl->irq_lock);
+> +
+> +	if (!nvmet_pci_epf_should_raise_irq(ctrl, cq, force))
+> +		goto unlock;
+> +
+> +	switch (nvme_epf->irq_type) {
+> +	case PCI_IRQ_MSIX:
+> +	case PCI_IRQ_MSI:
+> +		ret = pci_epc_raise_irq(epf->epc, epf->func_no, epf->vfunc_no,
+> +					nvme_epf->irq_type, cq->vector + 1);
+> +		if (!ret)
+> +			break;
+> +		/*
+> +		 * If we got an error, it is likely because the host is using
+> +		 * legacy IRQs (e.g. BIOS, grub).
+> +		 */
+> +		fallthrough;
+> +	case PCI_IRQ_INTX:
+> +		ret = pci_epc_raise_irq(epf->epc, epf->func_no, epf->vfunc_no,
+> +					PCI_IRQ_INTX, 0);
+> +		break;
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (ret)
+> +		dev_err(ctrl->dev, "Raise IRQ failed %d\n", ret);
+
+Also, for consistency:
+
+  dev_err(ctrl->dev, "Failed to raise IRQ %d\n", ret);
+
+> +static int nvmet_pci_epf_iod_parse_prp_list(struct nvmet_pci_epf_ctrl *ctrl,
+> +					    struct nvmet_pci_epf_iod *iod)
+> +{
+> +	struct nvme_command *cmd = &iod->cmd;
+> +	struct nvmet_pci_epf_segment *seg;
+> +	size_t size = 0, ofst, prp_size, xfer_len;
+> +	size_t transfer_len = iod->data_len;
+> +	int nr_segs, nr_prps = 0;
+> +	u64 pci_addr, prp;
+> +	int i = 0, ret;
+> +	__le64 *prps;
+> +
+> +	prps = kzalloc(ctrl->mps, GFP_KERNEL);
+> +	if (!prps)
+> +		goto err_internal;
+> +
+> +	/*
+> +	 * Allocate PCI segments for the command: this considers the worst case
+> +	 * scenario where all prps are discontiguous, so get as many segments
+> +	 * as we can have prps. In practice, most of the time, we will have
+> +	 * far less PCI segments than prps.
+> +	 */
+> +	prp = le64_to_cpu(cmd->common.dptr.prp1);
+> +	if (!prp)
+> +		goto err_invalid_field;
+> +
+> +	ofst = nvmet_pci_epf_prp_ofst(ctrl, prp);
+> +	nr_segs = (transfer_len + ofst + ctrl->mps - 1) >> ctrl->mps_shift;
+> +
+> +	ret = nvmet_pci_epf_alloc_iod_data_segs(iod, nr_segs);
+> +	if (ret)
+> +		goto err_internal;
+> +
+> +	/* Set the first segment using prp1 */
+> +	seg = &iod->data_segs[0];
+> +	seg->pci_addr = prp;
+> +	seg->length = nvmet_pci_epf_prp_size(ctrl, prp);
+> +
+> +	size = seg->length;
+> +	pci_addr = prp + size;
+> +	nr_segs = 1;
+> +
+> +	/*
+> +	 * Now build the PCI address segments using the PRP lists, starting
+> +	 * from prp2.
+> +	 */
+> +	prp = le64_to_cpu(cmd->common.dptr.prp2);
+> +	if (!prp)
+> +		goto err_invalid_field;
+> +
+> +	while (size < transfer_len) {
+> +		xfer_len = transfer_len - size;
+> +
+> +		if (!nr_prps) {
+> +			/* Get the PRP list */
+> +			nr_prps = nvmet_pci_epf_get_prp_list(ctrl, prp,
+> +							     xfer_len, prps);
+> +			if (nr_prps < 0)
+> +				goto err_internal;
+> +
+> +			i = 0;
+> +			ofst = 0;
+> +		}
+> +
+> +		/* Current entry */
+> +		prp = le64_to_cpu(prps[i]);
+> +		if (!prp)
+> +			goto err_invalid_field;
+> +
+> +		/* Did we reach the last PRP entry of the list ? */
+
+Small nit pick: no space before a question or exclamation mark in English.
+
+> +		if (xfer_len > ctrl->mps && i == nr_prps - 1) {
+> +			/* We need more PRPs: PRP is a list pointer */
+> +			nr_prps = 0;
+> +			continue;
+> +		}
+> +
+> +		/* Only the first PRP is allowed to have an offset */
+> +		if (nvmet_pci_epf_prp_ofst(ctrl, prp))
+> +			goto err_invalid_offset;
+> +
+> +		if (prp != pci_addr) {
+> +			/* Discontiguous prp: new segment */
+> +			nr_segs++;
+> +			if (WARN_ON_ONCE(nr_segs > iod->nr_data_segs))
+> +				goto err_internal;
+> +
+> +			seg++;
+> +			seg->pci_addr = prp;
+> +			seg->length = 0;
+> +			pci_addr = prp;
+> +		}
+> +
+> +		prp_size = min_t(size_t, ctrl->mps, xfer_len);
+> +		seg->length += prp_size;
+> +		pci_addr += prp_size;
+> +		size += prp_size;
+> +
+> +		i++;
+> +	}
+> +
+> +	iod->nr_data_segs = nr_segs;
+> +	ret = 0;
+> +
+> +	if (size != transfer_len) {
+> +		dev_err(ctrl->dev, "PRPs transfer length mismatch %zu / %zu\n",
+> +			size, transfer_len);
+> +		goto err_internal;
+> +	}
+
+This makes me think of "got" vs "want", for example:
+
+  dev_err(ctrl->dev, "PRPs transfer length mismatch; got %zu B, want %zu B\n",
+          size, transfer_len);
+
+Or using format of messages used here already:
+
+  dev_err(ctrl->dev, "PRPs transfer length mismatch %zu (need %zu)\n",
+          size, transfer_len);
+
+> +static int nvmet_pci_epf_iod_parse_prp_simple(struct nvmet_pci_epf_ctrl *ctrl,
+> +					      struct nvmet_pci_epf_iod *iod)
+> +{
+> +	struct nvme_command *cmd = &iod->cmd;
+> +	size_t transfer_len = iod->data_len;
+> +	int ret, nr_segs = 1;
+> +	u64 prp1, prp2 = 0;
+> +	size_t prp1_size;
+> +
+> +	/* prp1 */
+> +	prp1 = le64_to_cpu(cmd->common.dptr.prp1);
+> +	prp1_size = nvmet_pci_epf_prp_size(ctrl, prp1);
+
+The comment above is very succinct, might not add anything useful here. :)
+
+> +static void nvmet_pci_epf_complete_iod(struct nvmet_pci_epf_iod *iod)
+> +{
+> +	struct nvmet_pci_epf_queue *cq = iod->cq;
+> +	unsigned long flags;
+> +
+> +	/* Do not print an error message for AENs */
+> +	iod->status = le16_to_cpu(iod->cqe.status) >> 1;
+> +	if (iod->status && iod->cmd.common.opcode != nvme_admin_async_event)
+> +		dev_err(iod->ctrl->dev,
+> +			"CQ[%d]: Command %s (0x%x) status 0x%0x\n",
+> +			iod->sq->qid, nvmet_pci_epf_iod_name(iod),
+> +			iod->cmd.common.opcode, iod->status);
+
+Was this dev_err() here intended to be like the other similarly looking
+dev_dbg() invocations?  I wonder whether it would make sense to keep this
+a debug message, if needed, and then turn this into an error message.
+
+> +static int nvmet_pci_epf_create_ctrl(struct nvmet_pci_epf *nvme_epf,
+> +				     unsigned int max_nr_queues)
+> +{
+> +	struct nvmet_pci_epf_ctrl *ctrl = &nvme_epf->ctrl;
+> +	struct nvmet_alloc_ctrl_args args = {};
+> +	char hostnqn[NVMF_NQN_SIZE];
+> +	uuid_t id;
+> +	int ret;
+> +
+> +	memset(ctrl, 0, sizeof(*ctrl));
+> +	ctrl->dev = &nvme_epf->epf->dev;
+> +	mutex_init(&ctrl->irq_lock);
+> +	ctrl->nvme_epf = nvme_epf;
+> +	ctrl->mdts = nvme_epf->mdts_kb * SZ_1K;
+> +	INIT_DELAYED_WORK(&ctrl->poll_cc, nvmet_pci_epf_poll_cc_work);
+> +	INIT_DELAYED_WORK(&ctrl->poll_sqs, nvmet_pci_epf_poll_sqs_work);
+> +
+> +	ret = mempool_init_kmalloc_pool(&ctrl->iod_pool,
+> +					max_nr_queues * NVMET_MAX_QUEUE_SIZE,
+> +					sizeof(struct nvmet_pci_epf_iod));
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "Failed to initialize iod mempool\n");
+> +		return ret;
+> +	}
+
+To keep the case consistent:
+
+  dev_err(ctrl->dev, "Failed to initialize IOD mempool\n");
+
+> +static int nvmet_pci_epf_bind(struct pci_epf *epf)
+> +{
+> +	struct nvmet_pci_epf *nvme_epf = epf_get_drvdata(epf);
+> +	const struct pci_epc_features *epc_features;
+> +	struct pci_epc *epc = epf->epc;
+> +	int ret;
+> +
+> +	if (!epc) {
+> +		dev_err(&epf->dev, "No endpoint controller\n");
+> +		return -EINVAL;
+> +	}
+
+What about:
+
+  No endpoint controller found
+
+Or:
+
+  No endpoint controller detected
+
+> +#define to_nvme_epf(epf_group)	\
+> +	container_of(epf_group, struct nvmet_pci_epf, group)
+
+This is added immediately before where its used, but I wonder whether we
+could move it to the top immediately after the struct nvmet_pci_epf
+declaration.
+
+> +MODULE_DESCRIPTION("NVMe PCI Endpoint Function target driver");
+> +MODULE_AUTHOR("Damien Le Moal <dlemoal@kernel.org>");
+> +MODULE_LICENSE("GPL");
+
+A few other things:
+
+  - Settle on the "IO" vs "I/O", and "BAR0" vs "BAR 0" (even thought the
+    latter is better for readibility), within messages and code comments.
+
+  - The "INTX" as "INTx", etc.  Also, PCIe over PCI where PCI Express was
+    really meant, or where it makes sense.
+
+  - Choose one of the following styles:
+
+    1. dev_err(dev, "DMA submit failed %d\n", ret)
+    2. dev_err(dev, "DMA submit failed: %d\n", ret)
+    3. dev_err(dev, "DMA submit failed (err=%d)\n", ret);
+    4. dev_err(dev, "DMA submit failed (ret=%d)\n", ret);
+
+    Then use consistently throughout the code base.  Current a few
+    different styles are used.
+
+  - Add missing full-stop to sentences in code comments, especially any
+    longer ones.
+
+  - Would be nice to include references to the NVMe specification every
+    time the standard is cited or quoted.
+    
+Again, thank you for an amazing driver and an interesting new feature!
+        
+	Krzysztof
 
