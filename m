@@ -1,91 +1,96 @@
-Return-Path: <linux-pci+bounces-18908-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18909-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B88D9F9228
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 13:27:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 060D59F9243
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 13:32:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 664031664FD
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 12:27:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEF3E7A152B
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 12:32:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CAD204596;
-	Fri, 20 Dec 2024 12:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6BD215195;
+	Fri, 20 Dec 2024 12:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TpNOoME2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ncsKx/7y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDD513C914
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 12:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AED2153C6
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 12:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734697625; cv=none; b=JscZLc105Sp9F4WbJGcipY96VMFiUsMB2p82JjPDQAuxV9OuwFuyUJGgwDHqBgPAxhAdPra9JC3dxXutsTIajj/cPGVLX34vOZMFuzz0YRxKmufyVRXFZnCefgCfZe1n4ZRw/WxLJzx+Ofj+l6CyZf35nwKFzWWo6cmCs2iXlPM=
+	t=1734697952; cv=none; b=n5swAWgHhQaQCYX6Heskj5Dpt+ovKIGmO0ahIAbazRZLhNZnndnqxcye21XgoTJ82DRcggFlFN3tRTQpv17bP7I2lQysKBlWnPkWmeDXaQowCOtkmT5u2iT0GzQVZ1xVZmAho6OObqNL2Emhil7FwPtV2CnierlW+8/varpXybk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734697625; c=relaxed/simple;
-	bh=VEHgtPfPlauGelApB0lmhVxM9hgt/V7Dh8U7Qt+FYes=;
+	s=arc-20240116; t=1734697952; c=relaxed/simple;
+	bh=vk07zozYwtpe1+cPc2KclignhFvzpMNco127jRDNi0s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=usBM3x31mszAnbt/C/S9KM4Sqb4Wzgn/ETdyM8SqS+SgTLN/Zx/QthGAo0dXD0gJf9Egar27tH2O5BZj5BEXqMyw6woleQuyPGQG4E+bOGwa7tF9bKWIBUKd0fnT8QZp3SepQuCPXRJS1lyxzTvlLZBH0i7SDscuP4fbRwFihvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TpNOoME2; arc=none smtp.client-ip=209.85.215.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=bva03VZsjJQbxSjfJScLvAxIX/AXNPOSceF879BTNB08HTISzQtz9YvkODsQkHdXOXi4OugWgXKoOYhzPhekloU5oJL72Ij88jW18EjLuc9uz4CWD12OfaHQPW4+H17Nr79J4bSCMB/ExtUfGgSl52IlpU6JK0/0zZzC4NBq4is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ncsKx/7y; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fd49d85f82so1421266a12.3
-        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 04:27:04 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-728f1525565so2214648b3a.1
+        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 04:32:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734697624; x=1735302424; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1734697950; x=1735302750; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=d34YpD18XPJbPPq+gzX4Ba4pRSVyQOB2rh5MKz2PYrM=;
-        b=TpNOoME24uZH1QChVZn0Pkuanbr83Slltj8RIOhfIb9YY3LPuzPK2a5Js7vpvtHqlJ
-         sdWgZdRFBj0n4NGatdVCeWiQ/MWDxSgEIaRHgmQZ1OaxZRTBMaEnK2rD4PiX/VXzDHUl
-         ZPNtabbp71SuxFFHj31ikmCc+4x80wwkaYq0tfGWNDQIOrhdyciSuFDX3jSgj2W5fZqH
-         bfL5/+T/9LSsVHTv3DVQxhxL8PueL1XLwb+3Pb629LTYN8jk7plAbV2l2msMbVY5g2IN
-         DK3CtnR8EoR+XT4D6XxD3gl9ovlIi0PZs+9AkTh5XMdhHt+ngAyUUkHoD+ms/dbwB6aU
-         XkQg==
+        bh=AZQLvxQfbQ2yfFsFhMBSf4jBM/n8hKFCqlH/yM+9TIA=;
+        b=ncsKx/7ymKXevAcY0rGy/CfuvzxFy2X+gq9TgrpRd7SNNO2OGEyrNeiLcwOoo+je+n
+         bDEbP4fzEtW4aTItPh5QrPsi9J+OAZ+KCrBiPlj6sJtjEifhBHEalko0vEFPE2go0VVj
+         opxIDTSfO9Gk6rCE7oBnFIxddDin3x+V56mQhYQFI7758cYIvzp0inDYU1oFCrsGjWuM
+         7m2mQYzHqCwpQqaaWYwQwCwbn93ezjftqPUODpHmxVvbowzgPKaGWY38aUhIof4cqQ2A
+         iKXayZFvtThcb/QYVIoNekUYuePwXGZeV/zWzRAimJv1Cagzb4kWUQkZoSGvXymTE8ym
+         n+Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734697624; x=1735302424;
+        d=1e100.net; s=20230601; t=1734697950; x=1735302750;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d34YpD18XPJbPPq+gzX4Ba4pRSVyQOB2rh5MKz2PYrM=;
-        b=OIb8KPfBkrmRqpC81/Qt9kND+39Dh+ItuEcec1o6Y27zRyik+7MHrDoNROUOb4NbdB
-         U1fcBtQfcmGlLcYfmHIjCxacpjtjfeHkjKwg2V9lN/S3PEofujDFxLbuZnKaiyvq2ACN
-         j/XkTY82/q7Ct6wbye/INfCl0Bv/2o17HQQl293OKrwNRtZS5o/v0RvlpwGCKKq8sdFx
-         KhWZjOcxoWnUKbjg5wve4JSg6pNQ28gG+D3YXdR2TCUbJAEG36tUTUdofcJY6J7GeLgp
-         8d6EevAiRRVUvckRiT0RlM33vy2UPv4mxbJdu3xPA71vC5SAaOJbh0t3vfjcde5YmVqS
-         h75g==
-X-Forwarded-Encrypted: i=1; AJvYcCVVkBL5MYHUin6YymP5sE82+LKSe5kAgq+EVyHRXORh1FAY2og39Bdsy28uMOY69w21qO2P9BJA6lM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD61DgShjiufSpbsjmUZGiWxg6w1e2AXCq1hi68QRHm16YvoWa
-	Q8JEey4Co+8rtCkVrhQPdMjA4ZQn3d+xF7AAqcrwhZWslnhS+nTKgFoourqGvQ==
-X-Gm-Gg: ASbGncsBRZgYWU6F38F+Z/SyB8w4KzYm2NHx0nxO4M9vgW54RxrYQJ43AvMeaLTp4Om
-	0lLKatQvltq2yjcaCAGvPKPnxS58SUkGdE0BEyssA6XVI5vw5gq7ySVWeC/qK3YF9FdfRT5sfOD
-	975akDbUxhdy0KqNnMhv3mHkN7UlNdeOEnPsgL5ZZOp86EnY4EjHm7gxyLjg2lhM8000XgPBawI
-	6JA49DBdJYwRwdwVom0x76392BF/wn6aKmNqNQGab3BnV1n8mAMBQecHGT7kzkyi8EBKQ==
-X-Google-Smtp-Source: AGHT+IFrG9eb4Q5oiwTAQ33mdTfGdeqS6zs2mHn0GS/AJHJxe5SNvbyKKhrl2al1o1wJ0gQ5KPwUgQ==
-X-Received: by 2002:a05:6a20:158c:b0:1e0:d6ef:521a with SMTP id adf61e73a8af0-1e5e043f6c0mr4790958637.1.1734697623521;
-        Fri, 20 Dec 2024 04:27:03 -0800 (PST)
+        bh=AZQLvxQfbQ2yfFsFhMBSf4jBM/n8hKFCqlH/yM+9TIA=;
+        b=eV1tdFdmhhz20IGeIXqYAjLu37bLoq5jTUAiripD+EQT59KeP2TG9AyIDfGAzDMM7V
+         nje2LlAB71/BzV5ve72bmBRs9+FN8RY2P76q6hMJOekWi9ecXddWkvqE32ghHEiHnMVr
+         b1/h25Yn2x6wX+lZRva2m2MGwPnvbaHP+Ht4GogZlXFl5gdQekpiT+sgdhsWTTCtPxpE
+         m3k2bXaJZ5mtHPolGq5CwadtOCA1+QmMQn7hX7jIO/VW8X6nsANgEhrfoI3CyRKRDEoU
+         OlUi7d88ugxViXGt//nul46W25FELbqyhVFhYaNoVBGT90wGKOemWyYlUvFeSSb7RY5y
+         X5LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWqqaXNl5aC5auP5AsgALHazrLePqbbxwXZxLYSmeB/N21Iw4okUtJHdICsetG3uUQ+Fa20ywGXvc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDIQXXTLqdsau/nZQsESF/IB1icEE0jjzABBBElneesIFHS2ev
+	XuuHa1KYeRkI4ixIbbP2lamWS6z3K1OYg/k0NULaylcx4RmO1p6KgawmGkc1fg==
+X-Gm-Gg: ASbGnctK6scR7iEWXCz4X8zqjqOI/N9o0AAY4sfOKCS/eHWE+OV6Nqw7XqyYygYq9Sy
+	sv8LaUvie4Q7FB4tGmRzlUbX1bSUXg7hcb6jHH9/oOn+tGZioUPWXhyy36RDO3wdDDSarg8MY7I
+	L1X3Vn80inCMmY9xhU54Zsm087bi212nmQNi7xjo9dgAeb6nDd1/FQNnGhcixULgUL7KIdZ0dXj
+	uFNP7wRTE0PLCkx8k2uYxV0XrTAD5Ucx1pyezMePogrKqAfyjCi3UdE4NYGCcvsIdhoVw==
+X-Google-Smtp-Source: AGHT+IEW0uspGj9Ws2R06d8k4ZCODLKGf1OyTjKYW1LTMgGOGZCWO4oWUqfBgHV7yU8/7KeFiFsbKw==
+X-Received: by 2002:a05:6a20:244a:b0:1db:ff76:99d7 with SMTP id adf61e73a8af0-1e5e07ef1afmr6053387637.35.1734697950010;
+        Fri, 20 Dec 2024 04:32:30 -0800 (PST)
 Received: from thinkpad ([117.213.102.140])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8164c7sm2981317b3a.4.2024.12.20.04.27.00
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad81641esm2970472b3a.3.2024.12.20.04.32.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 04:27:03 -0800 (PST)
-Date: Fri, 20 Dec 2024 17:56:56 +0530
+        Fri, 20 Dec 2024 04:32:29 -0800 (PST)
+Date: Fri, 20 Dec 2024 18:02:16 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v7 00/18] NVMe PCI endpoint target driver
-Message-ID: <20241220122656.mb7bs47pfw2xbadr@thinkpad>
-References: <20241220095108.601914-1-dlemoal@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rockswang7@gmail.com
+Subject: Re: [PATCH] PCI: cadence: Fixed cdns_pcie_host_link_setup return
+ value.
+Message-ID: <20241220123216.za6kzma4q2kyfhln@thinkpad>
+References: <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
+ <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
+ <v623jkaz4u4dpzlr5dtnjfolc5nk7az24aqhjth4lpjffen4ct@ypjekbr4o54q>
+ <f2c8be62-7ff6-f0d0-f34a-ddb6915df0a4@163.com>
+ <20241219094906.wzn7ripjxrvbmwbh@thinkpad>
+ <c16dc225-4116-c966-7278-cc645f16c8a4@163.com>
+ <20241219112051.pjr3a4evtftlpxau@thinkpad>
+ <3bbb298a-6f84-6be7-69c6-eaeaa088cc0e@163.com>
+ <20241219133545.jiyqdzbkpwfu2rcv@thinkpad>
+ <44c74561-a4db-4550-a07e-67f51556dd03@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,69 +100,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241220095108.601914-1-dlemoal@kernel.org>
+In-Reply-To: <44c74561-a4db-4550-a07e-67f51556dd03@163.com>
 
-On Fri, Dec 20, 2024 at 06:50:50PM +0900, Damien Le Moal wrote:
-> This patch series implements an NVMe target driver for the PCI transport
-> using the PCI endpoint framework.
+On Fri, Dec 20, 2024 at 03:27:22PM +0800, Hans Zhang wrote:
 > 
-> The first 5 patches of this series move and cleanup some nvme code that
-> will be reused in following patches.
 > 
-> Patch 6 introduces the PCI transport type to allow setting up ports for
-> the new PCI target controller driver. Patch 7 to 10 are improvements of
-> the target core code to allow creating the PCI controller and processing
-> its nvme commands without the need to rely on fabrics commands like the
-> connect command to create the admin and I/O queues.
+> On 12/19/24 08:35, Manivannan Sadhasivam wrote:
 > 
-> Patch 11 relaxes the SGL check in nvmet_req_init() to allow for PCI
-> admin commands (which must use PRPs).
+> > > We have 5 PCIe controllers, and if a few of them are not connected to the
+> > > device. And it will affect the boot time.
+> > > 
+> > 
+> > Why are you enabling all controllers? Can't you just enable the ones you know
+> > the endpoints are going to be connected? I'm just trying to see if we can avoid
+> > having a quirk.
 > 
-> Patches 12 to 16 improve the set/get feature support of the target code
-> to get closer to achieving NVMe specification compliance. These patches
-> though do not implement support for some mandatory features.
-> 
-> Patch 17 is the main patch which introduces the NVMe PCI endpoint target
-> driver. This patch commit message provides and overview of the driver
-> design and operation.
-> 
-> Finally, patch 18 documents the NVMe PCI endpoint target driver and
-> provides a user guide explaning how to setup an NVMe PCI endpoint
-> device.
-> 
-> The patches are base on Linus 6.13-rc3 tree.
-> 
-> This driver has been extensively tested using a Radxa Rock5B board
-> (RK3588 Arm SoC). Some tests have also been done using a Pine Rockpro64
-> board. However, this board does not support DMA channels for the PCI
-> endpoint controller, leading to very poor performance.
-> 
-> Using the Radxa Rock5b board and setting up a 4 queue-pairs controller
-> with a null-blk block device loop target, performance was measured using
-> fio as follows:
-> 
->  +----------------------------------+------------------------+
->  | Workload                         | IOPS (BW)              |
->  +----------------------------------+------------------------+
->  | Rand read, 4KB, QD=1, 1 job      | 14.3k IOPS             |
->  | Rand read, 4KB, QD=32, 1 job     | 80.8k IOPS             |
->  | Rand read, 4KB, QD=32, 4 jobs    | 131k IOPS              |
->  | Rand read, 128KB, QD=32, 1 job   | 16.7k IOPS (2.18 GB/s) |
->  | Rand read, 128KB, QD=32, 4 jobs  | 17.4k IOPS (2.27 GB/s) |
->  | Rand read, 512KB, QD=32, 1 job   | 5380 IOPS (2.82 GB/s)  |
->  | Rand read, 512KB, QD=32, 4 jobs  | 5206 IOPS (2.27 GB/s)  |
->  | Rand write, 128KB, QD=32, 1 job  | 9617 IOPS (1.26 GB/s)  |
->  | Rand write, 128KB, QD=32, 4 jobs | 8405 IOPS (1.10 GB/s)  |
->  +----------------------------------+------------------------+
-> 
-> These results use the default MDTS of the NVMe enpoint driver of 512 KB.
-> 
-> This driver is not intended for production use but rather to be a
-> playground for learning NVMe and exploring/testing new NVMe features
-> while providing reasonably good performance.
+> Our SOC has a PC product situation, and there may be PCIe slots on the PCB,
+> but the device may not be plugged in. So we need to enable all ports.
 > 
 
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Since you are trying to fail probe for the unused slots, your hardware is not
+supporting hotplug as well I hope.
+
+> > If you do not know, then you need to introduce a quirk for your platform.
+> > But that requires your controller driver to be upstreamed. We cannot provide
+> > hooks for downstream drivers in upstream.
+> 
+> Our controller driver currently has no plans for upstream and needs to wait
+> for notification from the boss.
+> 
+
+Then the quirk patch has to wait until your driver is submitted upstream.
 
 - Mani
 
