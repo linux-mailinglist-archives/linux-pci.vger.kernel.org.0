@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-18841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E8BF9F8AC9
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 04:55:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B294A9F8AC5
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 04:55:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F9D5188D4A6
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 03:55:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9AC337A2E7E
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 03:55:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43DB38635B;
-	Fri, 20 Dec 2024 03:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB778634F;
+	Fri, 20 Dec 2024 03:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6Kb5F2t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVp47Y94"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC0F8635A
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 03:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F702594B5
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 03:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734666884; cv=none; b=r1kh/sm2B4PTUzSCcPwdIqapyHf96Vw0evotBLRsazz9MU6NpgKK8af51stM6r1Mo2BaT3Qw8iHeQLjFxikk37fDPYndqvPo+JLbOy0zIUJwbjL3+w3gwCaPSrHb+wBohsMHRU9I5LU8zEE+5q8cCmgOJ3MQuYVr4XDqf/wUt5M=
+	t=1734666886; cv=none; b=MZl5p9xpquys4Z31UlZrtXO/07pF27B2jkapdAYnQjDffT5q5HV5C2CU15Y0+3NfxOTY8XFjSyrllZAquzUhk1poNQHon1NbU4CEnFgRwRpVq93lUNNxy9onsitvNfy3jLAwyjEn2rO/HrpJlVfM1S+jzFleBY/7sDmSHLX93qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734666884; c=relaxed/simple;
-	bh=Tq5lne9E79bYedkcTiQtblQgzJZr02APslo5sZaYcwM=;
+	s=arc-20240116; t=1734666886; c=relaxed/simple;
+	bh=ubd1JlQoe83cyVIqW71e80goPXSHt5tGASSZnTCs3v0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GisLJv/JmfxK4QWb8d6nO4KeK7qqZ6fm9MiOIs+WKaeJwXQOTClHohXHoJXPgEok0uDciAO+c8dGI0VWGjvDsieZRhoyC3jUazSe/m3/+mn+p1AeSysH46n0l8svjxMHT6zJm+eAswYizAYXBWFSCE7bLJlNrZrmFaZSk5EVi7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6Kb5F2t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BFCC4CED7;
-	Fri, 20 Dec 2024 03:54:41 +0000 (UTC)
+	 MIME-Version; b=mrq9+bD7nGtcj1XrKT39lo97XIW0i4cjJduVS4B8m+MOz+rh1LHA0VzIQlPHIUEn/DpHRJ9rfXy4Q7ja9L0dsszcMG1J5tyMTerNfvsQLPRQaR0DyIB/jjow/s1XC58R+irECeEbuvpz/xoLSnAGGnQ2uH8UT161YFFdXTOd0lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVp47Y94; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F1D8C4CEDD;
+	Fri, 20 Dec 2024 03:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734666883;
-	bh=Tq5lne9E79bYedkcTiQtblQgzJZr02APslo5sZaYcwM=;
+	s=k20201202; t=1734666885;
+	bh=ubd1JlQoe83cyVIqW71e80goPXSHt5tGASSZnTCs3v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o6Kb5F2tQNVNinwbOY9YB177gkPDJ2H8hfo4azdx8MRNgL2s/0BNRUNMjoWzJXtiM
-	 rRjNgJF14U+dg+PWQ+dG0rDLXGLGX67egqEngOKPnDPdyFbEDOMpa51gS/bItb74r+
-	 Xhsg+YD1rLXzE+HDZPalMkjVP3rE34Kasf5RhIAsQQjLExSKQ3Yk5MKNsz2/aLmaeX
-	 FZlNDOv8VhEVU8CUC29qhPFpCSOcjvJ6utYpoE24J4bNbUrkh2sxrh+Ma5kc0iIjcY
-	 wTfzUqn+WyX/eQ6VZxEWDMSF8eI3QorcBuwJXcZI+C3YQOCHChYMdbNbEyL5vM70+m
-	 p4wOMFC98DwJg==
+	b=YVp47Y94sZKsTLxXF5F8kSSHn9OvruOidRE4Q1L3FfCWIHREfqfiSLUadYRcUoG1O
+	 F2B+lLuXB4UMULJO4DAx3Dxtj6CnVnftqPjSRXMgIFo0rRmeJKI63fWTVdI2hEeNBb
+	 FAU/to9LOiDRaG7s+8RcesRGlzQznstzdU4BIj7Y7pG4RNsfts0qJaIWn7oHw8TKSF
+	 QLWqDN8UHBPwLQPh9PhOGUrde1kVbGlfNEQGUgC74GefEuJG6nkI3QGYeEI2bcZNAN
+	 H0Ovb4Jvz1UYvU0PkBd6iSqGBc8DsMrKv77ntU30xiRfbQzdXUIyz70Q+F9XXJZkmy
+	 grsvQk8hZE3fQ==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-nvme@lists.infradead.org,
 	Christoph Hellwig <hch@lst.de>,
@@ -54,9 +54,9 @@ To: linux-nvme@lists.infradead.org,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v6 12/18] nvmet: Introduce get/set_feature controller operations
-Date: Fri, 20 Dec 2024 12:54:35 +0900
-Message-ID: <20241220035441.600193-13-dlemoal@kernel.org>
+Subject: [PATCH v6 13/18] nvmet: Implement host identifier set feature support
+Date: Fri, 20 Dec 2024 12:54:36 +0900
+Message-ID: <20241220035441.600193-14-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241220035441.600193-1-dlemoal@kernel.org>
 References: <20241220035441.600193-1-dlemoal@kernel.org>
@@ -68,37 +68,110 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The implementation of some features cannot always be done generically by
-the target core code. Arbitraion and IRQ coalescing features are
-examples of such features: their implementation must be provided (at
-least partially) by the target controller driver.
+The NVMe specifications mandate support for the host identifier
+set_features for controllers that also supports reservations. Satisfy
+this requirement by implementing handling of the NVME_FEAT_HOST_ID
+feature for the nvme_set_features command. This implementation is for
+now effective only for PCI target controllers. For other controller
+types, the set features command is failed with a NVME_SC_CMD_SEQ_ERROR
+status as before.
 
-Introduce the set_feature() and get_feature() controller fabrics
-operations (in struct nvmet_fabrics_ops) to allow supporting such
-features.
+As noted in the code, 128 bits host identifiers are supported since the
+NVMe base specifications version 2.1 indicate in section 5.1.25.1.28.1
+that "The controller may support a 64-bit Host Identifier...".
+
+The RHII (Reservations and Host Identifier Interaction) bit of the
+controller attribute (ctratt) field of the identify controller data is
+also set to indicate that a host ID of "0" is supported but that the
+host ID must be a non-zero value to use reservations.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Tested-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 ---
- drivers/nvme/target/nvmet.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvme/target/admin-cmd.c | 35 +++++++++++++++++++++++++++++----
+ include/linux/nvme.h            |  1 +
+ 2 files changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 86bb2852a63b..8325de3382ee 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -416,6 +416,10 @@ struct nvmet_fabrics_ops {
- 	u16 (*create_cq)(struct nvmet_ctrl *ctrl, u16 cqid, u16 flags,
- 			 u16 qsize, u64 prp1, u16 irq_vector);
- 	u16 (*delete_cq)(struct nvmet_ctrl *ctrl, u16 cqid);
-+	u16 (*set_feature)(const struct nvmet_ctrl *ctrl, u8 feat,
-+			   void *feat_data);
-+	u16 (*get_feature)(const struct nvmet_ctrl *ctrl, u8 feat,
-+			   void *feat_data);
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index 0c5127a1d191..efef3acba9fb 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -659,7 +659,7 @@ static void nvmet_execute_identify_ctrl(struct nvmet_req *req)
+ 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
+ 	struct nvmet_subsys *subsys = ctrl->subsys;
+ 	struct nvme_id_ctrl *id;
+-	u32 cmd_capsule_size;
++	u32 cmd_capsule_size, ctratt;
+ 	u16 status = 0;
+ 
+ 	if (!subsys->subsys_discovered) {
+@@ -707,8 +707,10 @@ static void nvmet_execute_identify_ctrl(struct nvmet_req *req)
+ 
+ 	/* XXX: figure out what to do about RTD3R/RTD3 */
+ 	id->oaes = cpu_to_le32(NVMET_AEN_CFG_OPTIONAL);
+-	id->ctratt = cpu_to_le32(NVME_CTRL_ATTR_HID_128_BIT |
+-		NVME_CTRL_ATTR_TBKAS);
++	ctratt = NVME_CTRL_ATTR_HID_128_BIT | NVME_CTRL_ATTR_TBKAS;
++	if (nvmet_is_pci_ctrl(ctrl))
++		ctratt |= NVME_CTRL_ATTR_RHII;
++	id->ctratt = cpu_to_le32(ctratt);
+ 
+ 	id->oacs = 0;
+ 
+@@ -1255,6 +1257,31 @@ u16 nvmet_set_feat_async_event(struct nvmet_req *req, u32 mask)
+ 	return 0;
+ }
+ 
++static u16 nvmet_set_feat_host_id(struct nvmet_req *req)
++{
++	struct nvmet_ctrl *ctrl = req->sq->ctrl;
++
++	if (!nvmet_is_pci_ctrl(ctrl))
++		return NVME_SC_CMD_SEQ_ERROR | NVME_STATUS_DNR;
++
++	/*
++	 * The NVMe base specifications v2.1 recommends supporting 128-bits host
++	 * IDs (section 5.1.25.1.28.1). However, that same section also says
++	 * that "The controller may support a 64-bit Host Identifier and/or an
++	 * extended 128-bit Host Identifier". So simplify this support and do
++	 * not support 64-bits host IDs to avoid needing to check that all
++	 * controllers associated with the same subsystem all use the same host
++	 * ID size.
++	 */
++	if (!(req->cmd->common.cdw11 & cpu_to_le32(1 << 0))) {
++		req->error_loc = offsetof(struct nvme_common_command, cdw11);
++		return NVME_SC_INVALID_FIELD | NVME_STATUS_DNR;
++	}
++
++	return nvmet_copy_from_sgl(req, 0, &req->sq->ctrl->hostid,
++				   sizeof(req->sq->ctrl->hostid));
++}
++
+ void nvmet_execute_set_features(struct nvmet_req *req)
+ {
+ 	struct nvmet_subsys *subsys = nvmet_req_subsys(req);
+@@ -1285,7 +1312,7 @@ void nvmet_execute_set_features(struct nvmet_req *req)
+ 		status = nvmet_set_feat_async_event(req, NVMET_AEN_CFG_ALL);
+ 		break;
+ 	case NVME_FEAT_HOST_ID:
+-		status = NVME_SC_CMD_SEQ_ERROR | NVME_STATUS_DNR;
++		status = nvmet_set_feat_host_id(req);
+ 		break;
+ 	case NVME_FEAT_WRITE_PROTECT:
+ 		status = nvmet_set_feat_write_protect(req);
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 42fc00dc494e..fe3b60818fdc 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -276,6 +276,7 @@ enum nvme_ctrl_attr {
+ 	NVME_CTRL_ATTR_HID_128_BIT	= (1 << 0),
+ 	NVME_CTRL_ATTR_TBKAS		= (1 << 6),
+ 	NVME_CTRL_ATTR_ELBAS		= (1 << 15),
++	NVME_CTRL_ATTR_RHII		= (1 << 18),
  };
  
- #define NVMET_MAX_INLINE_BIOVEC	8
+ struct nvme_id_ctrl {
 -- 
 2.47.1
 
