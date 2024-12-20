@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-18907-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18908-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA4B69F9220
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 13:23:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B88D9F9228
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 13:27:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B65601670C0
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 12:22:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 664031664FD
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 12:27:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 989392046B5;
-	Fri, 20 Dec 2024 12:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CAD204596;
+	Fri, 20 Dec 2024 12:27:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5M/fEY2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TpNOoME2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55D51BCA19
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 12:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDD513C914
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 12:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734697354; cv=none; b=Mq+D+W1MZTrcn0MEQDyRmheqTq34jtLjKFqEoxHZuXcJ1TMoBjg811rcg0DROwvnhyu+j4gTQNp4QpFKODOJyh49xYXD0ufLLwS/RCNvTxMsXygdAQrjieeEdHk4T4XFMKLA5oK68ikD/JE+8tEhBcFS2BsPjYXOy4zqZj7mrBk=
+	t=1734697625; cv=none; b=JscZLc105Sp9F4WbJGcipY96VMFiUsMB2p82JjPDQAuxV9OuwFuyUJGgwDHqBgPAxhAdPra9JC3dxXutsTIajj/cPGVLX34vOZMFuzz0YRxKmufyVRXFZnCefgCfZe1n4ZRw/WxLJzx+Ofj+l6CyZf35nwKFzWWo6cmCs2iXlPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734697354; c=relaxed/simple;
-	bh=W5+q0XJLUlFS3QQe/fBa2GtWW85O0vw7b64MtS1z25w=;
+	s=arc-20240116; t=1734697625; c=relaxed/simple;
+	bh=VEHgtPfPlauGelApB0lmhVxM9hgt/V7Dh8U7Qt+FYes=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUoTmalBH1s1eUiYflrM/Kk3w2Z+jVinPsDhQc281rssRfltl/YEPbT+5r+XJOF+RLiKMvZYYpibpaRN77U26CJ2CvQ2YdOsokNSCxlCtxpuu8jbypR6QnmWnYpycFhwdmOmxfs4SJhnPpcssCYSbpwuc8vCFVc+EXplpMY+BVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e5M/fEY2; arc=none smtp.client-ip=209.85.210.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=usBM3x31mszAnbt/C/S9KM4Sqb4Wzgn/ETdyM8SqS+SgTLN/Zx/QthGAo0dXD0gJf9Egar27tH2O5BZj5BEXqMyw6woleQuyPGQG4E+bOGwa7tF9bKWIBUKd0fnT8QZp3SepQuCPXRJS1lyxzTvlLZBH0i7SDscuP4fbRwFihvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TpNOoME2; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7292a83264eso1624236b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 04:22:32 -0800 (PST)
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fd49d85f82so1421266a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 04:27:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734697352; x=1735302152; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1734697624; x=1735302424; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=oWMz4Or7oMQmuw8gXtGP6co0bEIH20jpOM6bqYupeRQ=;
-        b=e5M/fEY2nmV3K8m28g9kD/barz6O28sNU/JUmpJ0KdHia7pxZ/FDmg4nES5JLF1tDu
-         c5GtuGcIMbzRHvzv4K3aTykj5lt+YtjZAdfZVLTTltyZFzyL2P6ns8Jxgq5Cv1OM2ylw
-         3EX8QXTolOjGzZsB3v8uAfIROIMLLLgEzYP7lTDS7KvVhe3wPp/ldbfPMkTxvlcbO2nh
-         WtZB9zJuVw8ObrcWhRLLfkk8Ecz3v1aBGj74ZULNCA2VNU3QOrshoRKdhbVXIL8GJzzu
-         5e0luidiXbtQCiJv4eK6DUaJdMQppRJELX0jElrZnqhsvVz4pliY9S0gICQEk35WBIZK
-         iu6w==
+        bh=d34YpD18XPJbPPq+gzX4Ba4pRSVyQOB2rh5MKz2PYrM=;
+        b=TpNOoME24uZH1QChVZn0Pkuanbr83Slltj8RIOhfIb9YY3LPuzPK2a5Js7vpvtHqlJ
+         sdWgZdRFBj0n4NGatdVCeWiQ/MWDxSgEIaRHgmQZ1OaxZRTBMaEnK2rD4PiX/VXzDHUl
+         ZPNtabbp71SuxFFHj31ikmCc+4x80wwkaYq0tfGWNDQIOrhdyciSuFDX3jSgj2W5fZqH
+         bfL5/+T/9LSsVHTv3DVQxhxL8PueL1XLwb+3Pb629LTYN8jk7plAbV2l2msMbVY5g2IN
+         DK3CtnR8EoR+XT4D6XxD3gl9ovlIi0PZs+9AkTh5XMdhHt+ngAyUUkHoD+ms/dbwB6aU
+         XkQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734697352; x=1735302152;
+        d=1e100.net; s=20230601; t=1734697624; x=1735302424;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oWMz4Or7oMQmuw8gXtGP6co0bEIH20jpOM6bqYupeRQ=;
-        b=WzFDQVcsW5bzWIiaqQQx79aIClccTjzSNa+kLoakBwjIiB0rzsmD80Pbt8qEnD0Cmo
-         iiSWXRNcnG5JPPCb0sgnHXthZWGi7t5s5YbQs/a+Zeyi8hwQdbG5r9+N1+dL0mnDYd0K
-         jSXYJ4uiNISEC+M3i9gtx7Dy2uLZ4pl+kPT86FVqD+1U9ONKRWlWIpexc6dANg7GtZik
-         9w6xhAdWxubQ27MN0KpBZfyKqNvYMYDOfyqZiaGQ14+y2yXLvLQISfvID/4H2BTHAS2a
-         RwSlQ/30O45utTTX+Ewys9R5suX5hxNAuor++gqr9ggFV00w7mj7xiv3q7y8MiJ7Y171
-         F3iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnsLSxT6Fo8poRlkODk7re1Qyc0hvo1TWG2kJxI99yxt3oYPphKSCs7pSNbdcBHLZP+AUT7ixJuk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwgxl/zVHguS8UfVpZSCXlRIDwTsyPxcQbh3sbOWrTmec3Q6zM
-	REXKLesIcEQaBE4ghVKEalhhHFbBLduLwNLjL9ovtn4cI3da8HSkZaVl1nWdNA==
-X-Gm-Gg: ASbGnct7BGZ3PCWMQkeqDpvYllRZa5rimOANJYaPC2Up2r0RYu5b0cUhqyhCG7E6qMG
-	BRcNzvc+Nk/kGh33s0QMY6eOYdGZt83ARbTdb+oTA9nIgd9cbeC6kNx3udgmsLhWDQHrfnfJ1Bj
-	Mtn9fA8M3P4+lsWl6ibJL/OJH+ehkoingzvtPHGVK6mArSkMBdwg/NZkPCnxbOQuaXGEDG+jWaf
-	uogZAdgEIceML3srNnmYER07nd3xnaAwtJfSB/WWyUWhame+UNMd1wKnoOobumKrT/CPw==
-X-Google-Smtp-Source: AGHT+IFBE2ysCt3TYqJyyCcgYPYBsX3e7fiMItcbT+QolwPmsg4IHUeRQxoA27xY/70Fm+2n4WAWrg==
-X-Received: by 2002:a05:6a20:728f:b0:1e1:aef4:9cdd with SMTP id adf61e73a8af0-1e5e0450013mr5074508637.1.1734697352265;
-        Fri, 20 Dec 2024 04:22:32 -0800 (PST)
+        bh=d34YpD18XPJbPPq+gzX4Ba4pRSVyQOB2rh5MKz2PYrM=;
+        b=OIb8KPfBkrmRqpC81/Qt9kND+39Dh+ItuEcec1o6Y27zRyik+7MHrDoNROUOb4NbdB
+         U1fcBtQfcmGlLcYfmHIjCxacpjtjfeHkjKwg2V9lN/S3PEofujDFxLbuZnKaiyvq2ACN
+         j/XkTY82/q7Ct6wbye/INfCl0Bv/2o17HQQl293OKrwNRtZS5o/v0RvlpwGCKKq8sdFx
+         KhWZjOcxoWnUKbjg5wve4JSg6pNQ28gG+D3YXdR2TCUbJAEG36tUTUdofcJY6J7GeLgp
+         8d6EevAiRRVUvckRiT0RlM33vy2UPv4mxbJdu3xPA71vC5SAaOJbh0t3vfjcde5YmVqS
+         h75g==
+X-Forwarded-Encrypted: i=1; AJvYcCVVkBL5MYHUin6YymP5sE82+LKSe5kAgq+EVyHRXORh1FAY2og39Bdsy28uMOY69w21qO2P9BJA6lM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD61DgShjiufSpbsjmUZGiWxg6w1e2AXCq1hi68QRHm16YvoWa
+	Q8JEey4Co+8rtCkVrhQPdMjA4ZQn3d+xF7AAqcrwhZWslnhS+nTKgFoourqGvQ==
+X-Gm-Gg: ASbGncsBRZgYWU6F38F+Z/SyB8w4KzYm2NHx0nxO4M9vgW54RxrYQJ43AvMeaLTp4Om
+	0lLKatQvltq2yjcaCAGvPKPnxS58SUkGdE0BEyssA6XVI5vw5gq7ySVWeC/qK3YF9FdfRT5sfOD
+	975akDbUxhdy0KqNnMhv3mHkN7UlNdeOEnPsgL5ZZOp86EnY4EjHm7gxyLjg2lhM8000XgPBawI
+	6JA49DBdJYwRwdwVom0x76392BF/wn6aKmNqNQGab3BnV1n8mAMBQecHGT7kzkyi8EBKQ==
+X-Google-Smtp-Source: AGHT+IFrG9eb4Q5oiwTAQ33mdTfGdeqS6zs2mHn0GS/AJHJxe5SNvbyKKhrl2al1o1wJ0gQ5KPwUgQ==
+X-Received: by 2002:a05:6a20:158c:b0:1e0:d6ef:521a with SMTP id adf61e73a8af0-1e5e043f6c0mr4790958637.1.1734697623521;
+        Fri, 20 Dec 2024 04:27:03 -0800 (PST)
 Received: from thinkpad ([117.213.102.140])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8dba99sm2948660b3a.92.2024.12.20.04.22.28
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8164c7sm2981317b3a.4.2024.12.20.04.27.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 04:22:31 -0800 (PST)
-Date: Fri, 20 Dec 2024 17:52:25 +0530
+        Fri, 20 Dec 2024 04:27:03 -0800 (PST)
+Date: Fri, 20 Dec 2024 17:56:56 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Damien Le Moal <dlemoal@kernel.org>
 Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
@@ -84,7 +84,7 @@ Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
 Subject: Re: [PATCH v7 00/18] NVMe PCI endpoint target driver
-Message-ID: <20241220122225.lw6mpv7gx77igzgl@thinkpad>
+Message-ID: <20241220122656.mb7bs47pfw2xbadr@thinkpad>
 References: <20241220095108.601914-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -157,10 +157,7 @@ On Fri, Dec 20, 2024 at 06:50:50PM +0900, Damien Le Moal wrote:
 > while providing reasonably good performance.
 > 
 
-Series looks good from PCI endpoint perspective and I've given my R-b tags. I
-hope this gets merged through the nvme tree.
-
-Thanks a lot for the work, Damien and Rick!
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
