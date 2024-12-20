@@ -1,65 +1,82 @@
-Return-Path: <linux-pci+bounces-18847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC31C9F8ACA
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 04:55:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 915B39F8C09
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 06:54:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2967F16B58B
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 03:55:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 366D27A1184
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 05:54:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0253D13D8A4;
-	Fri, 20 Dec 2024 03:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0196D155327;
+	Fri, 20 Dec 2024 05:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bu5n6s+0"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pFoGs40L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15DB13D53B
-	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 03:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDA625949A;
+	Fri, 20 Dec 2024 05:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734666897; cv=none; b=IQqZ6DxTy1/nbqRUuWsPX1UwuJYkZfKyduxKH6JLH/xKqxuoz58yE7HDyw+gAUknKIfxTwzpazlBWVn73nIJUOJVPyQG+qmZFVB9bXT79UKNVB+pumS4pDcQPwXSk7toP5kIec5FLpOMN6s3fNmzqHzGB9kLmSq+tB5L/FR2Ikc=
+	t=1734674056; cv=none; b=ay4YFa9TYCX6NJ23hQDw+FKE4ym9H21vUew6EEUuxeIeo3NZOlv4vvhzD7QOUm8yf6dpe5mUW7k+Wrj1aljWl/pALpMJCGxXeelC7GWaVpA3Tjz3JbvcxK7CXnOi3DAW2PLjFnotjcqLz9AuNgBSgiu2FLsY+/N7C553eEFOAFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734666897; c=relaxed/simple;
-	bh=/Junxencw5D3Ugp0gRAJ8rzOOlhiqMgM0awSB1rrvTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OyfcDwxXlqlx2sW3yFZs+thE7k/Oc9/ZeeZkS29/ouNJsCGcPkEhe4ysaUcH3p+nL96pjwLIiMJYlyCB24voQV7q7ju6JjGHXFPC3U/IgwgL2MFELUui084oLq6tjub7AUpAshjxlXS2BwkT6UNrJw8wXp5tQ6A9K1ap8QLA56k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bu5n6s+0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B75DAC4CEDD;
-	Fri, 20 Dec 2024 03:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734666897;
-	bh=/Junxencw5D3Ugp0gRAJ8rzOOlhiqMgM0awSB1rrvTg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bu5n6s+05VjcLoUFFh0J8biOZM7v1PraZRa2iUMYTh6ItkLV/7/hwvuyywLsjHT6R
-	 EuF0WzcL30N6eSRA9Bftnu4byxasBRiOM7Bczms2eI2BG6mvaKiIlGOe3tSy4mUrJK
-	 ZUPEFjLQVtsxAD3cD095mlTnhkYishy+6sAa5aM0oIeTDobz4XYIvBpx98wJZgVbi1
-	 yhzG7TJH1Eu+xCg/UtBgL4fBpYkGRHVp3lU57FuF7PoHo+kuy9+/UvLA1gpMCTupIX
-	 SU/6PnMayoxiKUPsO+SZeLj89famS3nMHB4rYUP4140C6xHdAAc8rPAmgvepTK2EAh
-	 0d4WzsaGORWMg==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: linux-nvme@lists.infradead.org,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v6 18/18] Documentation: Document the NVMe PCI endpoint target driver
-Date: Fri, 20 Dec 2024 12:54:41 +0900
-Message-ID: <20241220035441.600193-19-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241220035441.600193-1-dlemoal@kernel.org>
-References: <20241220035441.600193-1-dlemoal@kernel.org>
+	s=arc-20240116; t=1734674056; c=relaxed/simple;
+	bh=btz2jR5uMijKnMQ6AiDlQWsci6ohAmy6UEWUn5cwt2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nxQbgVI+apA/Snr8VdV5kGioaFJGCYdV6uzoC3XL22jTFr1lpl6ComyJFMfEfToLiXlRw+Q5mSfZ06WrBWwxDtn2LExo3xQw4UkriHkm1R0RMwhGYpD9OTAiOz6UETlfsb74Z7EdPUR41CQ19QDGCO/8NetuMoBhdZWd6sr4qhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pFoGs40L; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK4PZON024611;
+	Fri, 20 Dec 2024 05:54:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=x1HPUkh0Nxv+8Nqj9cHIhTM180n9lKWJNV0
+	B0w0N3xo=; b=pFoGs40LUlmlPj8b0dh/8nHq1XIkZXwN5lL8XLsGohD+ed3mf3Z
+	wI1yiOFriDjsWcWVmCcSyOUrCtQwNDUvDsVbVfreFWCO9TerlcUHP6EAxPkVERQL
+	mKDH1g7U+d3RrHjQodMFGEKb+LoJzdowvLHTAdeYwqhZGM6FTpJnRLV35/YRWgGu
+	+/q7J/rd1nZlDZ8817GsQRO3weL2vhnVI+hjxniP9nMJ3AzCIPDldGep6ycTvZlp
+	ndVDT99m9ytu3NBhTEkYYWDLpBAZhNxDEjUA7ZckE9HEB7aKCpymovGeQbQKCDwZ
+	6Xign+Syu+ikc04XIhZW+KRshgWgWfd+HBA==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n1hx05fh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Dec 2024 05:54:05 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK5s3PH023962;
+	Fri, 20 Dec 2024 05:54:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 43h33kv4q7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Dec 2024 05:54:03 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4BK5s3w9023955;
+	Fri, 20 Dec 2024 05:54:03 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 4BK5s27a023942
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Dec 2024 05:54:03 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id 0DB621C38; Fri, 20 Dec 2024 13:54:01 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, dmitry.baryshkov@linaro.org,
+        neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+        bhelgaas@google.com, andersson@kernel.org, konradybcio@kernel.org
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, quic_qianyu@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v3 0/8] pci: qcom: Add QCS8300 PCIe support
+Date: Fri, 20 Dec 2024 13:52:31 +0800
+Message-Id: <20241220055239.2744024-1-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,470 +84,71 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: AsbRgjc-J_-ttTvhMMYgSXB1rsMACo-i
+X-Proofpoint-ORIG-GUID: AsbRgjc-J_-ttTvhMMYgSXB1rsMACo-i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ phishscore=0 adultscore=0 bulkscore=0 mlxlogscore=841 impostorscore=0
+ malwarescore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412200048
 
-Add a documentation file
-(Documentation/nvme/nvme-pci-endpoint-target.rst) for the new NVMe PCI
-endpoint target driver. This provides an overview of the driver
-requirements, capabilities and limitations. A user guide describing how
-to setup a NVMe PCI endpoint device using this driver is also provided.
+This series adds document, phy, configs support for PCIe in QCS8300.
+The series depend on the following devicetree.
 
-This document is made accessible also from the PCI endpoint
-documentation using a link. Furthermore, since the existing nvme
-documentation was not accessible from the top documentation index, an
-index file is added to Documentation/nvme and this index listed as
-"NVMe Subsystem" in the "Storage interfaces" section of the subsystem
-API index.
+Have follwing changes:
+	- Document the QMP PCIe PHY on the QCS8300 platform.
+	- Add dedicated schema for the PCIe controllers found on QCS8300.
+	- Add compatible for qcs8300 platform.
+	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
 ---
- Documentation/PCI/endpoint/index.rst          |   1 +
- .../PCI/endpoint/pci-nvme-function.rst        |  13 +
- Documentation/nvme/index.rst                  |  12 +
- .../nvme/nvme-pci-endpoint-target.rst         | 368 ++++++++++++++++++
- Documentation/subsystem-apis.rst              |   1 +
- 5 files changed, 395 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-nvme-function.rst
- create mode 100644 Documentation/nvme/index.rst
- create mode 100644 Documentation/nvme/nvme-pci-endpoint-target.rst
+Changes in v3:
+- Add received tag(Rob & Dmitry)
+- Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+- remove pcieprot0 node(Konrad & Mani)
+- Fix format comments(Konrad)
+- Update base-commit to tag: next-20241213(Bjorn)
+- Corrected of_device_id.data from 1.9.0 to 1.34.0.
+- Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 4d2333e7ae06..dd1f62e731c9 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -15,6 +15,7 @@ PCI Endpoint Framework
-    pci-ntb-howto
-    pci-vntb-function
-    pci-vntb-howto
-+   pci-nvme-function
- 
-    function/binding/pci-test
-    function/binding/pci-ntb
-diff --git a/Documentation/PCI/endpoint/pci-nvme-function.rst b/Documentation/PCI/endpoint/pci-nvme-function.rst
-new file mode 100644
-index 000000000000..df57b8e7d066
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-nvme-function.rst
-@@ -0,0 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+PCI NVMe Function
-+=================
-+
-+:Author: Damien Le Moal <dlemoal@kernel.org>
-+
-+The PCI NVMe endpoint function implements a PCI NVMe controller using the NVMe
-+subsystem target core code. The driver for this function resides with the NVMe
-+subsystem as drivers/nvme/target/nvmet-pciep.c.
-+
-+See Documentation/nvme/nvme-pci-endpoint-target.rst for more details.
-diff --git a/Documentation/nvme/index.rst b/Documentation/nvme/index.rst
-new file mode 100644
-index 000000000000..13383c760cc7
---- /dev/null
-+++ b/Documentation/nvme/index.rst
-@@ -0,0 +1,12 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============
-+NVMe Subsystem
-+==============
-+
-+.. toctree::
-+   :maxdepth: 2
-+   :numbered:
-+
-+   feature-and-quirk-policy
-+   nvme-pci-endpoint-target
-diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
-new file mode 100644
-index 000000000000..66e7b7d869b4
---- /dev/null
-+++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
-@@ -0,0 +1,368 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================================
-+NVMe PCI Endpoint Function Target
-+=================================
-+
-+:Author: Damien Le Moal <dlemoal@kernel.org>
-+
-+The NVMe PCI endpoint function target driver implements a NVMe PCIe controller
-+using a NVMe fabrics target controller configured with the PCI transport type.
-+
-+Overview
-+========
-+
-+The NVMe PCI endpoint function target driver allows exposing a NVMe target
-+controller over a PCIe link, thus implementing an NVMe PCIe device similar to a
-+regular M.2 SSD. The target controller is created in the same manner as when
-+using NVMe over fabrics: the controller represents the interface to an NVMe
-+subsystem using a port. The port transfer type must be configured to be
-+"pci". The subsystem can be configured to have namespaces backed by regular
-+files or block devices, or can use NVMe passthrough to expose to the PCI host an
-+existing physical NVMe device or a NVMe fabrics host controller (e.g. a NVMe TCP
-+host controller).
-+
-+The NVMe PCI endpoint function target driver relies as much as possible on the
-+NVMe target core code to parse and execute NVMe commands submitted by the PCIe
-+host. However, using the PCI endpoint framework API and DMA API, the driver is
-+also responsible for managing all data transfers over the PCIe link. This
-+implies that the NVMe PCI endpoint function target driver implements several
-+NVMe data structure management and some NVMe command parsing.
-+
-+1) The driver manages retrieval of NVMe commands in submission queues using DMA
-+   if supported, or MMIO otherwise. Each command retrieved is then executed
-+   using a work item to maximize performance with the parallel execution of
-+   multiple commands on different CPUs. The driver uses a work item to
-+   constantly poll the doorbell of all submission queues to detect command
-+   submissions from the PCIe host.
-+
-+2) The driver transfers completion queues entries of completed commands to the
-+   PCIe host using MMIO copy of the entries in the host completion queue.
-+   After posting completion entries in a completion queue, the driver uses the
-+   PCI endpoint framework API to raise an interrupt to the host to signal the
-+   commands completion.
-+
-+3) For any command that has a data buffer, the NVMe PCI endpoint target driver
-+   parses the command PRPs or SGLs lists to create a list of PCI address
-+   segments representing the mapping of the command data buffer on the host.
-+   The command data buffer is transferred over the PCIe link using this list of
-+   PCI address segments using DMA, if supported. If DMA is not supported, MMIO
-+   is used, which results in poor performance. For write commands, the command
-+   data buffer is transferred from the host into a local memory buffer before
-+   executing the command using the target core code. For read commands, a local
-+   memory buffer is allocated to execute the command and the content of that
-+   buffer is transferred to the host once the command completes.
-+
-+Controller Capabilities
-+-----------------------
-+
-+The NVMe capabilities exposed to the PCIe host through the BAR 0 registers
-+are almost identical to the capabilities of the NVMe target controller
-+implemented by the target core code. There are some exceptions.
-+
-+1) The NVMe PCI endpoint target driver always sets the controller capability
-+   CQR bit to request "Contiguous Queues Required". This is to facilitate the
-+   mapping of a queue PCI address range to the local CPU address space.
-+
-+2) The doorbell stride (DSTRB) is always set to be 4B
-+
-+3) Since the PCI endpoint framework does not provide a way to handle PCI level
-+   resets, the controller capability NSSR bit (NVM Subsystem Reset Supported)
-+   is always cleared.
-+
-+4) The boot partition support (BPS), Persistent Memory Region Supported (PMRS)
-+   and Controller Memory Buffer Supported (CMBS) capabilities are never
-+   reported.
-+
-+Supported Features
-+------------------
-+
-+The NVMe PCI endpoint target driver implements support for both PRPs and SGLs.
-+The driver also implements IRQ vector coalescing and submission queue
-+arbitration burst.
-+
-+The maximum number of queues and the maximum data transfer size (MDTS) are
-+configurable through configfs before starting the controller. To avoid issues
-+with excessive local memory usage for executing commands, MDTS defaults to 512
-+KB and is limited to a maximum of 2 MB (arbitrary limit).
-+
-+Mimimum number of PCI Address Mapping Windows Required
-+------------------------------------------------------
-+
-+Most PCI endpoint controllers provide a limited number of mapping windows for
-+mapping a PCI address range to local CPU memory addresses. The NVMe PCI
-+endpoint target controllers uses mapping windows for the following.
-+
-+1) One memory window for raising MSI or MSI-X interrupts
-+2) One memory window for MMIO transfers
-+3) One memory window for each completion queue
-+
-+Given the highly asynchronous nature of the NVMe PCI endpoint target driver
-+operation, the memory windows as described above will generally not be used
-+simultaneously, but that may happen. So a safe maximum number of completion
-+queues that can be supported is equal to the total number of memory mapping
-+windows of the PCI endpoint controller minus two. E.g. for an endpoint PCI
-+controller with 32 outbound memory windows available, up to 30 completion
-+queues can be safely operated without any risk of getting PCI address mapping
-+errors due to the lack of memory windows.
-+
-+Maximum Number of Queue Pairs
-+-----------------------------
-+
-+Upon binding of the NVMe PCI endpoint target driver to the PCI endpoint
-+controller, BAR 0 is allocated with enough space to accommodate the admin queue
-+and multiple I/O queues. The maximum of number of I/O queues pairs that can be
-+supported is limited by several factors.
-+
-+1) The NVMe target core code limits the maximum number of I/O queues to the
-+   number of online CPUs.
-+2) The total number of queue pairs, including the admin queue, cannot exceed
-+   the number of MSI-X or MSI vectors available.
-+3) The total number of completion queues must not exceed the total number of
-+   PCI mapping windows minus 2 (see above).
-+
-+The NVMe endpoint function driver allows configuring the maximum number of
-+queue pairs through configfs.
-+
-+Limitations and NVMe Specification Non-Compliance
-+-------------------------------------------------
-+
-+Similar to the NVMe target core code, the NVMe PCI endpoint target driver does
-+not support multiple submission queues using the same completion queue. All
-+submission queues must specify a unique completion queue.
-+
-+
-+User Guide
-+==========
-+
-+This section describes the hardware requirements and how to setup an NVMe PCI
-+endpoint target device.
-+
-+Kernel Requirements
-+-------------------
-+
-+The kernel must be compiled with the configuration options CONFIG_PCI_ENDPOINT,
-+CONFIG_PCI_ENDPOINT_CONFIGFS, and CONFIG_NVME_TARGET_PCI_EPF enabled.
-+CONFIG_PCI, CONFIG_BLK_DEV_NVME and CONFIG_NVME_TARGET must also be enabled
-+(obviously).
-+
-+In addition to this, at least one PCI endpoint controller driver should be
-+available for the endpoint hardware used.
-+
-+To facilitate testing, enabling the null-blk driver (CONFIG_BLK_DEV_NULL_BLK)
-+is also recommended. With this, a simple setup using a null_blk block device
-+as a subsystem namespace can be used.
-+
-+Hardware Requirements
-+---------------------
-+
-+To use the NVMe PCI endpoint target driver, at least one endpoint controller
-+device is required.
-+
-+To find the list of endpoint controller devices in the system::
-+
-+       # ls /sys/class/pci_epc/
-+        a40000000.pcie-ep
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+       # ls /sys/kernel/config/pci_ep/controllers
-+        a40000000.pcie-ep
-+
-+The endpoint board must of course also be connected to a host with a PCI cable
-+with RX-TX signal swapped. If the host PCI slot used does not have
-+plug-and-play capabilities, the host should be powered off when the NVMe PCI
-+endpoint device is configured.
-+
-+NVMe Endpoint Device
-+--------------------
-+
-+Creating an NVMe endpoint device is a two step process. First, an NVMe target
-+subsystem and port must be defined. Second, the NVMe PCI endpoint device must
-+be setup and bound to the subsystem and port created.
-+
-+Creating a NVMe Subsystem and Port
-+----------------------------------
-+
-+Details about how to configure a NVMe target subsystem and port are outside the
-+scope of this document. The following only provides a simple example of a port
-+and subsystem with a single namespace backed by a null_blk device.
-+
-+First, make sure that configfs is enabled::
-+
-+       # mount -t configfs none /sys/kernel/config
-+
-+Next, create a null_blk device (default settings give a 250 GB device without
-+memory backing). The block device created will be /dev/nullb0 by default::
-+
-+        # modprobe null_blk
-+        # ls /dev/nullb0
-+        /dev/nullb0
-+
-+The NVMe PCI endpoint function target driver must be loaded::
-+
-+        # modprobe nvmet_pci_epf
-+        # lsmod | grep nvmet
-+        nvmet_pci_epf          32768  0
-+        nvmet                 118784  1 nvmet_pci_epf
-+        nvme_core             131072  2 nvmet_pci_epf,nvmet
-+
-+Now, create a subsystem and a port that we will use to create a PCI target
-+controller when setting up the NVMe PCI endpoint target device. In this
-+example, the port is created with a maximum of 4 I/O queue pairs::
-+
-+        # cd /sys/kernel/config/nvmet/subsystems
-+        # mkdir nvmepf.0.nqn
-+        # echo -n "Linux-pci-epf" > nvmepf.0.nqn/attr_model
-+        # echo "0x1b96" > nvmepf.0.nqn/attr_vendor_id
-+        # echo "0x1b96" > nvmepf.0.nqn/attr_subsys_vendor_id
-+        # echo 1 > nvmepf.0.nqn/attr_allow_any_host
-+        # echo 4 > nvmepf.0.nqn/attr_qid_max
-+
-+Next, create and enable the subsystem namespace using the null_blk block
-+device::
-+
-+        # mkdir nvmepf.0.nqn/namespaces/1
-+        # echo -n "/dev/nullb0" > nvmepf.0.nqn/namespaces/1/device_path
-+        # echo 1 > "nvmepf.0.nqn/namespaces/1/enable"
-+
-+Finally, create the target port and link it to the subsystem::
-+
-+        # cd /sys/kernel/config/nvmet/ports
-+        # mkdir 1
-+        # echo -n "pci" > 1/addr_trtype
-+        # ln -s /sys/kernel/config/nvmet/subsystems/nvmepf.0.nqn \
-+                /sys/kernel/config/nvmet/ports/1/subsystems/nvmepf.0.nqn
-+
-+Creating a NVMe PCI Endpoint Device
-+-----------------------------------
-+
-+With the NVMe target subsystem and port ready for use, the NVMe PCI endpoint
-+device can now be created and enabled. The NVMe PCI endpoint target driver
-+should already be loaded (that is done automatically when the port is created)::
-+
-+        # ls /sys/kernel/config/pci_ep/functions
-+        nvmet_pci_epf
-+
-+Next, create function 0::
-+
-+        # cd /sys/kernel/config/pci_ep/functions/nvmet_pci_epf
-+        # mkdir nvmepf.0
-+        # ls nvmepf.0/
-+        baseclass_code    msix_interrupts   secondary
-+        cache_line_size   nvme              subclass_code
-+        deviceid          primary           subsys_id
-+        interrupt_pin     progif_code       subsys_vendor_id
-+        msi_interrupts    revid             vendorid
-+
-+Configure the function using any device ID (the vendor ID for the device will
-+be automatically set to the same value as the NVMe target subsystem vendor
-+ID)::
-+
-+        # cd /sys/kernel/config/pci_ep/functions/nvmet_pci_epf
-+        # echo 0xBEEF > nvmepf.0/deviceid
-+        # echo 32 > nvmepf.0/msix_interrupts
-+
-+If the PCI endpoint controller used does not support MSI-X, MSI can be
-+configured instead::
-+
-+        # echo 32 > nvmepf.0/msi_interrupts
-+
-+Next, let's bind our endpoint device with the target subsystem and port that we
-+created::
-+
-+        # echo 1 > nvmepf.0/nvme/portid
-+        # echo "nvmepf.0.nqn" > nvmepf.0/nvme/subsysnqn
-+
-+The endpoint function can then be bound to the endpoint controller and the
-+controller started::
-+
-+        # cd /sys/kernel/config/pci_ep
-+        # ln -s functions/nvmet_pci_epf/nvmepf.0 controllers/a40000000.pcie-ep/
-+        # echo 1 > controllers/a40000000.pcie-ep/start
-+
-+On the endpoint machine, kernel messages will show information as the NVMe
-+target device and endpoint device are created and connected.
-+
-+.. code-block:: text
-+
-+        null_blk: disk nullb0 created
-+        null_blk: module loaded
-+        nvmet: adding nsid 1 to subsystem nvmepf.0.nqn
-+        nvmet_pci_epf nvmet_pci_epf.0: PCI endpoint controller supports MSI-X, 32 vectors
-+        nvmet: Created nvm controller 1 for subsystem nvmepf.0.nqn for NQN nqn.2014-08.org.nvmexpress:uuid:2ab90791-2246-4fbb-961d-4c3d5a5a0176.
-+        nvmet_pci_epf nvmet_pci_epf.0: New PCI ctrl "nvmepf.0.nqn", 4 I/O queues, mdts 524288 B
-+
-+PCI Root-Complex Host
-+---------------------
-+
-+Booting the PCI host will result in the initialization of the PCIe link (this
-+may be signaled by the PCI endpoint driver with a kernel message). A kernel
-+message on the endpoint will also signal when the host NVMe driver enables the
-+device controller::
-+
-+        nvmet_pci_epf nvmet_pci_epf.0: Enabling controller
-+
-+On the host side, the NVMe PCI endpoint function target device will is
-+discoverable as a PCI device, with the vendor ID and device ID as configured::
-+
-+        # lspci -n
-+        0000:01:00.0 0108: 1b96:beef
-+
-+An this device will be recognized as an NVMe device with a single namespace::
-+
-+        # lsblk
-+        NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
-+        nvme0n1     259:0    0   250G  0 disk
-+
-+The NVMe endpoint block device can then be used as any other regular NVMe
-+namespace block device. The *nvme* command line utility can be used to get more
-+detailed information about the endpoint device::
-+
-+        # nvme id-ctrl /dev/nvme0
-+        NVME Identify Controller:
-+        vid       : 0x1b96
-+        ssvid     : 0x1b96
-+        sn        : 94993c85650ef7bcd625
-+        mn        : Linux-pci-epf
-+        fr        : 6.13.0-r
-+        rab       : 6
-+        ieee      : 000000
-+        cmic      : 0xb
-+        mdts      : 7
-+        cntlid    : 0x1
-+        ver       : 0x20100
-+        ...
-+
-+
-+Endpoint Bindings
-+=================
-+
-+The NVMe PCI endpoint target driver uses the PCI endpoint configfs device
-+attributes as follows.
-+
-+================   ===========================================================
-+vendorid           Ignored (the vendor id of the NVMe target subsystem is used)
-+deviceid           Anything is OK (e.g. PCI_ANY_ID)
-+revid              Do not care
-+progif_code        Must be 0x02 (NVM Express)
-+baseclass_code     Must be 0x01 (PCI_BASE_CLASS_STORAGE)
-+subclass_code      Must be 0x08 (Non-Volatile Memory controller)
-+cache_line_size    Do not care
-+subsys_vendor_id   Ignored (the subsystem vendor id of the NVMe target subsystem
-+		   is used)
-+subsys_id          Anything is OK (e.g. PCI_ANY_ID)
-+msi_interrupts     At least equal to the number of queue pairs desired
-+msix_interrupts    At least equal to the number of queue pairs desired
-+interrupt_pin      Interrupt PIN to use if MSI and MSI-X are not supported
-+================   ===========================================================
-+
-+The NVMe PCI endpoint target function also has some specific configurable
-+fields defined in the *nvme* subdirectory of the function directory. These
-+fields are as follows.
-+
-+================   ===========================================================
-+mdts_kb            Maximum data transfer size in KiB (default: 512)
-+portid             The ID of the target port to use
-+subsysnqn          The NQN of the target subsystem to use
-+================   ===========================================================
-diff --git a/Documentation/subsystem-apis.rst b/Documentation/subsystem-apis.rst
-index 74af50d2ef7f..b52ad5b969d4 100644
---- a/Documentation/subsystem-apis.rst
-+++ b/Documentation/subsystem-apis.rst
-@@ -60,6 +60,7 @@ Storage interfaces
-    cdrom/index
-    scsi/index
-    target/index
-+   nvme/index
- 
- Other subsystems
- ----------------
+Changes in v2:
+- Fix some format comments and match the style in x1e80100(Konrad)
+- Add global interrupt for PCIe0 and PCIe1(Konrad)
+- split the soc dtsi and the platform dts into two changes(Konrad)
+- Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+
+Ziyue Zhang (8):
+  dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS8300 QMP
+    PCIe PHY Gen4 x2
+  phy: qcom-qmp-pcie: add dual lane PHY support for QCS8300
+  dt-bindings: PCI: qcom,pcie-sa8775p: document qcs8300
+  PCI: qcom: Add QCS8300 PCIe support
+  arm64: dts: qcom: qcs8300: enable pcie0 for qcs8300 soc
+  arm64: dts: qcom: qcs8300: enable pcie0 for qcs8300 platform
+  arm64: dts: qcom: qcs8300: enable pcie1 for qcs8300 soc
+  arm64: dts: qcom: qcs8300: enable pcie1 for qcs8300 platform
+
+ .../bindings/pci/qcom,pcie-sa8775p.yaml       |   7 +-
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   2 +
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  82 ++++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 349 +++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      |  89 +++++
+ 6 files changed, 527 insertions(+), 3 deletions(-)
+
+
+base-commit: 4176cf5c5651c33769de83bb61b0287f4ec7719f
 -- 
-2.47.1
+2.34.1
 
 
