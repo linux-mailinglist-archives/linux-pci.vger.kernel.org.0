@@ -1,270 +1,106 @@
-Return-Path: <linux-pci+bounces-18858-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18859-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9338D9F8CE2
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 07:42:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD46D9F8D39
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 08:25:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A47C1892C9D
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 06:42:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4322D1896567
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 07:25:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A92E186E54;
-	Fri, 20 Dec 2024 06:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84C318A6D3;
+	Fri, 20 Dec 2024 07:24:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lh4Zkhf9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWraBeln"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE32325765;
-	Fri, 20 Dec 2024 06:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A122217FAC2
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 07:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734676952; cv=none; b=S5/BNuypUGv9J5ulL2Qm95fMfsoN7zlBphbdou8BrsURF5UZNg8CzO2UsBjyONf1TUC7VZ15GGqhuwHNlEgCdNnrsr9WXN2k//pvsxhc3d+aZZoqmeTmOBscNa1NEA3J7uQaqAt6sMR6FLKWBcgCwOtuFVAm416yRMJO17b7SIY=
+	t=1734679448; cv=none; b=D+TH3QgYNU2G7rPVd4Jo56gQaJnzO1N73lYxjzJMb1hYT0CSslhki4jknurU2OrBLc86TvXEZSikMWl46hd2ED+01Fb0lNjoz2ZY8Ci6TmOZ22XS9TujooHf08a8r3EzPgXdEhqTHmWBlT5zQXuPGllDP8pcgf3tznVO9aXooK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734676952; c=relaxed/simple;
-	bh=9bvD+hGat8LLJu1xTP46ZD4AahO2wfoy/u/RHEqsTas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KtV4vnOuVRDvBFHU4gTrif4Fa3t+hIsBXw0/9HkxlFm+zcBOi9opKVzSapPe6p+hYXGboUHOIIdGQdUZDWnU3hYYJW/SdFzX8K64dEKF6ZtJaFQ9uwQjaZA3+LTwcK4voGN7Nid9PrShKcQLMl5OkNEWfKaGKccTzXGknReppko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lh4Zkhf9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK5ehgG005017;
-	Fri, 20 Dec 2024 06:42:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zsp4oqLCT405v81EFBJxahh0RypZYUKhCS90+zQEKD4=; b=lh4Zkhf9z7qI0U3h
-	QyTVHYxH9dg1Ul7jKdBLmQ+G+HhAlJ4QQFs0QEgDfKCdSNjFHdyRGfj/yCsCp5MR
-	AEJq9GlOrxgPCxYFGJP5oEeliwZV9hgnkQoRIkSFAVf30fTeBV++LMT/drRG9HwO
-	BN5kTurJa9xGRqD/y9INJmtB9k8IUhdLG0n5cMKq2vYuQQVQ/d7hwVkj4ISuZ9+2
-	uwXZN0e+VwbchqHipiwCsNGdOgFU+zt8LEXuPLfpPosfdUQr5mc8Fej9i0f84Low
-	k9UVPGaJj7ikH197Mv9B5BrZKSAmDi3+B6hvpMFqNhxjbe+nr0HyouN3EBtypYmp
-	fLcbrQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n2n5r4ng-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 06:42:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BK6gHHj017583
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 06:42:17 GMT
-Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 19 Dec
- 2024 22:42:10 -0800
-Message-ID: <08fbde92-a827-4270-a143-cca56a274e6c@quicinc.com>
-Date: Fri, 20 Dec 2024 12:12:06 +0530
+	s=arc-20240116; t=1734679448; c=relaxed/simple;
+	bh=fRLLBH23QC/DarwvX5ERdkM9z/RIFAr9cuImi11cLQE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=usrFfWVHMPz5y+aAvK5yabWuiNDy4Sv96KCjIuAb/W9caQfT2trIxUjl7xT5PfvYe4RoZPdd20eXHL/3dqDRPZUhrRnqe4hvCL30uQP75GjaceLews5wJuc3BuQWvCKFpLNCL/Dugt2LY57tkh6/6aVrKFL+mLugqqml7N3Y3nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWraBeln; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB9FC4CECD;
+	Fri, 20 Dec 2024 07:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734679448;
+	bh=fRLLBH23QC/DarwvX5ERdkM9z/RIFAr9cuImi11cLQE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iWraBelnEEVFXrUfISsZ+rq1f8248TvyXrb1DvgEjy+pLflyAB7So9SoURnFBmm0g
+	 XCrZaAffVkS/nryXtFfX544AtZdDWl3oKWA/7PvSC1F9OgsqQqUtUtnEpAw4wVCzTC
+	 /9jvy+LdlwPJEn5JXiS3Wahmgoqg/wFOWUtZ2KHjpkQRD+Uqjj1GuI2iC7Wcmtziv+
+	 YpKPIhLcvaae79OTkYLniDeE8WTY+flwPX5o5aQ45oZ9Sua7UlrOU1Ewru27hn+dGE
+	 IG/Yb6bR89kKijBp03gu75xZ2AQ/fklkspzvTod9W6QE2/UX+8zMyFB94A+lEV95+8
+	 0vLLQ4kaE7z8Q==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: dwc: Reject a negative nr_irqs value in dw_pcie_edma_irq_verify()
+Date: Fri, 20 Dec 2024 08:23:29 +0100
+Message-ID: <20241220072328.351329-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: ipq5424: Add PCIe PHYs and
- controller nodes
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <bhelgaas@google.com>,
-        <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-References: <20241213134950.234946-1-quic_mmanikan@quicinc.com>
- <20241213134950.234946-4-quic_mmanikan@quicinc.com>
- <69dffe54-939d-47c3-b951-4a4dea11eae0@oss.qualcomm.com>
-Content-Language: en-US
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-In-Reply-To: <69dffe54-939d-47c3-b951-4a4dea11eae0@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2_EghpnmcPuSFXnaH0aYSYWvDrYGWDM8
-X-Proofpoint-GUID: 2_EghpnmcPuSFXnaH0aYSYWvDrYGWDM8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412200055
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1699; i=cassel@kernel.org; h=from:subject; bh=fRLLBH23QC/DarwvX5ERdkM9z/RIFAr9cuImi11cLQE=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJTpQtUFnd9UnEOmZUvPnFhc265ReUZ5x0n1zw9vuFum OHV538ZOkpZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjCRpRUM/+tNHGw4zbi2t6+b +6VdcuvOletnTMhgjtPYc/7YVd2ty3wYGda4uE3nbGHdXnvsT2/qvDUxF/ojKoJnGPV9+B6o3BC hxQoA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
+Platforms that do not have (one or more) dedicated IRQs for the eDMA
+need to set nr_irqs to a non-zero value in their DWC glue driver.
 
+Platforms that do have (one or more) dedicated IRQs do not need to
+initialize nr_irqs. DWC common code will automatically set nr_irqs.
 
-On 12/13/2024 8:36 PM, Konrad Dybcio wrote:
-> On 13.12.2024 2:49 PM, Manikanta Mylavarapu wrote:
->> Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
->> found on IPQ5424 platform. The PCIe0 & PCIe1 are 1-lane Gen3
->> host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
->>
->> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/ipq5424.dtsi | 482 +++++++++++++++++++++++++-
->>  1 file changed, 477 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
->> index 5e219f900412..ade512bcb180 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
->> @@ -9,6 +9,7 @@
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>  #include <dt-bindings/clock/qcom,ipq5424-gcc.h>
->>  #include <dt-bindings/reset/qcom,ipq5424-gcc.h>
->> +#include <dt-bindings/interconnect/qcom,ipq5424.h>
->>  #include <dt-bindings/gpio/gpio.h>
->>  
->>  / {
->> @@ -143,7 +144,99 @@ soc@0 {
->>  		compatible = "simple-bus";
->>  		#address-cells = <2>;
->>  		#size-cells = <2>;
->> -		ranges = <0 0 0 0 0x10 0>;
->> +		ranges = <0 0 0 0 0x0 0xffffffff>;
-> 
-> This must be a separate change, with a clear explanation
-> 
->> +
->> +		pcie0_phy: phy@84000 {
->> +			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
->> +				     "qcom,ipq9574-qmp-gen3x1-pcie-phy";
->> +			reg = <0 0x00084000 0 0x2000>;
->> +			clocks = <&gcc GCC_PCIE0_AUX_CLK>,
->> +				 <&gcc GCC_PCIE0_AHB_CLK>,
->> +				 <&gcc GCC_PCIE0_PIPE_CLK>;
->> +			clock-names = "aux", "cfg_ahb", "pipe";
->> +
->> +			assigned-clocks = <&gcc GCC_PCIE0_AUX_CLK>;
->> +			assigned-clock-rates = <20000000>;
->> +
->> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
->> +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
->> +			reset-names = "phy", "common";
->> +
->> +			#clock-cells = <0>;
->> +			clock-output-names = "gcc_pcie0_pipe_clk_src";
->> +
->> +			#phy-cells = <0>;
->> +			status = "disabled";
->> +		};
->> +
->> +		pcie1_phy: phy@8c000 {
->> +			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
->> +				     "qcom,ipq9574-qmp-gen3x1-pcie-phy";
->> +			reg = <0 0x0008c000 0 0x2000>;
->> +			clocks = <&gcc GCC_PCIE1_AUX_CLK>,
->> +				 <&gcc GCC_PCIE1_AHB_CLK>,
->> +				 <&gcc GCC_PCIE1_PIPE_CLK>;
->> +			clock-names = "aux", "cfg_ahb", "pipe";
->> +
->> +			assigned-clocks = <&gcc GCC_PCIE1_AUX_CLK>;
->> +			assigned-clock-rates = <20000000>;
->> +
->> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
->> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
->> +			reset-names = "phy", "common";
->> +
->> +			#clock-cells = <0>;
->> +			clock-output-names = "gcc_pcie1_pipe_clk_src";
->> +
->> +			#phy-cells = <0>;
->> +			status = "disabled";
->> +		};
->> +
->> +		pcie2_phy: phy@f4000 {
->> +			compatible = "qcom,ipq5424-qmp-gen3x2-pcie-phy",
->> +				     "qcom,ipq9574-qmp-gen3x2-pcie-phy";
->> +			reg = <0 0x000f4000 0 0x2000>;
->> +			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
->> +				 <&gcc GCC_PCIE2_AHB_CLK>,
->> +				 <&gcc GCC_PCIE2_PIPE_CLK>;
->> +			clock-names = "aux", "cfg_ahb", "pipe";
->> +
->> +			assigned-clocks = <&gcc GCC_PCIE2_AUX_CLK>;
->> +			assigned-clock-rates = <20000000>;
->> +
->> +			resets = <&gcc GCC_PCIE2_PHY_BCR>,
->> +				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
->> +			reset-names = "phy", "common";
->> +
->> +			#clock-cells = <0>;
->> +			clock-output-names = "gcc_pcie2_pipe_clk_src";
->> +
->> +			#phy-cells = <0>;
->> +			status = "disabled";
->> +		};
->> +
->> +		pcie3_phy: phy@fc000 {
->> +			compatible = "qcom,ipq5424-qmp-gen3x2-pcie-phy",
->> +				     "qcom,ipq9574-qmp-gen3x2-pcie-phy";
->> +			reg = <0 0x000fc000 0 0x2000>;
->> +			clocks = <&gcc GCC_PCIE3_AUX_CLK>,
->> +				 <&gcc GCC_PCIE3_AHB_CLK>,
->> +				 <&gcc GCC_PCIE3_PIPE_CLK>;
->> +			clock-names = "aux", "cfg_ahb", "pipe";
->> +
->> +			assigned-clocks = <&gcc GCC_PCIE3_AUX_CLK>;
->> +			assigned-clock-rates = <20000000>;
->> +
->> +			resets = <&gcc GCC_PCIE3_PHY_BCR>,
->> +				 <&gcc GCC_PCIE3PHY_PHY_BCR>;
->> +			reset-names = "phy", "common";
->> +
->> +			#clock-cells = <0>;
->> +			clock-output-names = "gcc_pcie3_pipe_clk_src";
->> +
->> +			#phy-cells = <0>;
->> +			status = "disabled";
->> +		};
->>  
->>  		tlmm: pinctrl@1000000 {
->>  			compatible = "qcom,ipq5424-tlmm";
->> @@ -168,11 +261,11 @@ gcc: clock-controller@1800000 {
->>  			reg = <0 0x01800000 0 0x40000>;
->>  			clocks = <&xo_board>,
->>  				 <&sleep_clk>,
->> +				 <&pcie0_phy>,
->> +				 <&pcie1_phy>,
->>  				 <0>,
-> 
-> This leftover zero needs to be removed too, currently the wrong
-> clocks are used as parents
-> 
+Since a glue driver can initialize nr_irqs, dw_pcie_edma_irq_verify()
+should verify that nr_irqs, if non-zero, is a valid value. Thus, add a
+check in dw_pcie_edma_irq_verify() to reject a negative nr_irqs value.
 
-Hi Konrad,
+This fixes the following build warning when compiling with W=1:
 
-The '<0>' entry is for "USB PCIE wrapper pipe clock source".
-And, will update the pcie entries as follows
-	<&pcie0_phy GCC_PCIE0_PIPE_CLK>
-	<&pcie1_phy GCC_PCIE1_PIPE_CLK>
-	<&pcie2_phy GCC_PCIE2_PIPE_CLK>
-	<&pcie3_phy GCC_PCIE3_PIPE_CLK>
+drivers/pci/controller/dwc/pcie-designware.c: In function ‘dw_pcie_edma_detect’:
+drivers/pci/controller/dwc/pcie-designware.c:989:50: warning: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Wformat-truncation=]
+  989 |                 snprintf(name, sizeof(name), "dma%d", pci->edma.nr_irqs);
+      |                                                  ^~
 
-Please correct me if i am wrong.
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks & Regards,
-Manikanta.
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 3c683b6119c3..d7f695d5dbc4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -978,6 +978,8 @@ static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+ 		return 0;
+ 	else if (pci->edma.nr_irqs > 1)
+ 		return pci->edma.nr_irqs != ch_cnt ? -EINVAL : 0;
++	else if (pci->edma.nr_irqs < 0)
++		return -EINVAL;
+ 
+ 	ret = platform_get_irq_byname_optional(pdev, "dma");
+ 	if (ret > 0) {
+-- 
+2.47.1
 
->> -				 <0>,
->> -				 <0>,
->> -				 <0>,
->> -				 <0>;
->> +				 <&pcie2_phy>,
->> +				 <&pcie3_phy>;
->>  			#clock-cells = <1>;
->>  			#reset-cells = <1>;
->>  			#interconnect-cells = <1>;
->> @@ -292,6 +385,385 @@ frame@f42d000 {
->>  			};
->>  		};
->>  
 
