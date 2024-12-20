@@ -1,134 +1,169 @@
-Return-Path: <linux-pci+bounces-18906-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18907-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF9689F920A
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 13:22:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA4B69F9220
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 13:23:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3AFD167714
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 12:22:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B65601670C0
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2024 12:22:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11AFA204690;
-	Fri, 20 Dec 2024 12:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 989392046B5;
+	Fri, 20 Dec 2024 12:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Yq+tb1ps"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5M/fEY2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFA31A7AE3;
-	Fri, 20 Dec 2024 12:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55D51BCA19
+	for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 12:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734697316; cv=none; b=TDIiwUUrEtm6twyomjSCct5MRfRt/tgfmLYP7tyGJs4zp4xeEktFTHJOdvfE01lI03uCkzQFBbROcerheaD7e1Pu7nDazQAmuoNnEMzaWZzeP63emPIcJxjJSyZmaBXCOh+SizanyH5ZATwo+XqSJFMZREv9avFiCAWnI/EZYp8=
+	t=1734697354; cv=none; b=Mq+D+W1MZTrcn0MEQDyRmheqTq34jtLjKFqEoxHZuXcJ1TMoBjg811rcg0DROwvnhyu+j4gTQNp4QpFKODOJyh49xYXD0ufLLwS/RCNvTxMsXygdAQrjieeEdHk4T4XFMKLA5oK68ikD/JE+8tEhBcFS2BsPjYXOy4zqZj7mrBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734697316; c=relaxed/simple;
-	bh=JduFaswRmxN5tGLStvzwUiaywMEIItZVTSmKsVx9nOI=;
+	s=arc-20240116; t=1734697354; c=relaxed/simple;
+	bh=W5+q0XJLUlFS3QQe/fBa2GtWW85O0vw7b64MtS1z25w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rm4jRIh61FDTqFa4Wqoho1YpUA8bygGHav7a9cstSMKlhSuVDC+bbPGXdAGx77au9BuXy6CUCYnYD8s6iLuqXiGA0AboG0Jzab3zzVyaGpoHQxF9Cz88n2PtJg4pJpREJiF49Btjh0DQYiAwCcpna2SOfS5Lr4jX7ZEmu8z7lBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Yq+tb1ps; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B3BC4CECD;
-	Fri, 20 Dec 2024 12:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1734697316;
-	bh=JduFaswRmxN5tGLStvzwUiaywMEIItZVTSmKsVx9nOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yq+tb1psbAD0EEaGVo62BeRkwh9Xj1zwGjU1RnX9bPc3zuKVZ+vFaKjzZirLF0O5Q
-	 cWqZTrj/8oUOashMDH0in9idt9Jf9pCN3xfKSbuna7zWsHJDYmyLi1Jgqy+04F5+b+
-	 WkFCtRLWZn13uCsuIFDP/5NAmVeHVQ3OLBfdEu0A=
-Date: Fri, 20 Dec 2024 13:21:51 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
-	Simon Xue <xxm@rock-chips.com>, Lee Jones <lee@kernel.org>,
-	dri-devel@lists.freedesktop.org, Zhang Rui <rui.zhang@intel.com>,
-	Elaine Zhang <zhangqing@rock-chips.com>, linux-clk@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Andy Yan <andyshrk@163.com>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-pm@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jose Abreu <joabreu@synopsys.com>, Jamie Iles <jamie@jamieiles.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Frank Wang <frank.wang@rock-chips.com>, linux-mmc@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
-	Simona Vetter <simona@ffwll.ch>,
-	Finley Xiao <finley.xiao@rock-chips.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=dUoTmalBH1s1eUiYflrM/Kk3w2Z+jVinPsDhQc281rssRfltl/YEPbT+5r+XJOF+RLiKMvZYYpibpaRN77U26CJ2CvQ2YdOsokNSCxlCtxpuu8jbypR6QnmWnYpycFhwdmOmxfs4SJhnPpcssCYSbpwuc8vCFVc+EXplpMY+BVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e5M/fEY2; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7292a83264eso1624236b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 20 Dec 2024 04:22:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734697352; x=1735302152; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oWMz4Or7oMQmuw8gXtGP6co0bEIH20jpOM6bqYupeRQ=;
+        b=e5M/fEY2nmV3K8m28g9kD/barz6O28sNU/JUmpJ0KdHia7pxZ/FDmg4nES5JLF1tDu
+         c5GtuGcIMbzRHvzv4K3aTykj5lt+YtjZAdfZVLTTltyZFzyL2P6ns8Jxgq5Cv1OM2ylw
+         3EX8QXTolOjGzZsB3v8uAfIROIMLLLgEzYP7lTDS7KvVhe3wPp/ldbfPMkTxvlcbO2nh
+         WtZB9zJuVw8ObrcWhRLLfkk8Ecz3v1aBGj74ZULNCA2VNU3QOrshoRKdhbVXIL8GJzzu
+         5e0luidiXbtQCiJv4eK6DUaJdMQppRJELX0jElrZnqhsvVz4pliY9S0gICQEk35WBIZK
+         iu6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734697352; x=1735302152;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oWMz4Or7oMQmuw8gXtGP6co0bEIH20jpOM6bqYupeRQ=;
+        b=WzFDQVcsW5bzWIiaqQQx79aIClccTjzSNa+kLoakBwjIiB0rzsmD80Pbt8qEnD0Cmo
+         iiSWXRNcnG5JPPCb0sgnHXthZWGi7t5s5YbQs/a+Zeyi8hwQdbG5r9+N1+dL0mnDYd0K
+         jSXYJ4uiNISEC+M3i9gtx7Dy2uLZ4pl+kPT86FVqD+1U9ONKRWlWIpexc6dANg7GtZik
+         9w6xhAdWxubQ27MN0KpBZfyKqNvYMYDOfyqZiaGQ14+y2yXLvLQISfvID/4H2BTHAS2a
+         RwSlQ/30O45utTTX+Ewys9R5suX5hxNAuor++gqr9ggFV00w7mj7xiv3q7y8MiJ7Y171
+         F3iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnsLSxT6Fo8poRlkODk7re1Qyc0hvo1TWG2kJxI99yxt3oYPphKSCs7pSNbdcBHLZP+AUT7ixJuk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxwgxl/zVHguS8UfVpZSCXlRIDwTsyPxcQbh3sbOWrTmec3Q6zM
+	REXKLesIcEQaBE4ghVKEalhhHFbBLduLwNLjL9ovtn4cI3da8HSkZaVl1nWdNA==
+X-Gm-Gg: ASbGnct7BGZ3PCWMQkeqDpvYllRZa5rimOANJYaPC2Up2r0RYu5b0cUhqyhCG7E6qMG
+	BRcNzvc+Nk/kGh33s0QMY6eOYdGZt83ARbTdb+oTA9nIgd9cbeC6kNx3udgmsLhWDQHrfnfJ1Bj
+	Mtn9fA8M3P4+lsWl6ibJL/OJH+ehkoingzvtPHGVK6mArSkMBdwg/NZkPCnxbOQuaXGEDG+jWaf
+	uogZAdgEIceML3srNnmYER07nd3xnaAwtJfSB/WWyUWhame+UNMd1wKnoOobumKrT/CPw==
+X-Google-Smtp-Source: AGHT+IFBE2ysCt3TYqJyyCcgYPYBsX3e7fiMItcbT+QolwPmsg4IHUeRQxoA27xY/70Fm+2n4WAWrg==
+X-Received: by 2002:a05:6a20:728f:b0:1e1:aef4:9cdd with SMTP id adf61e73a8af0-1e5e0450013mr5074508637.1.1734697352265;
+        Fri, 20 Dec 2024 04:22:32 -0800 (PST)
+Received: from thinkpad ([117.213.102.140])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8dba99sm2948660b3a.92.2024.12.20.04.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2024 04:22:31 -0800 (PST)
+Date: Fri, 20 Dec 2024 17:52:25 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-pci@vger.kernel.org,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-watchdog@vger.kernel.org, David Wu <david.wu@rock-chips.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org,
-	linux-pci@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	linux-phy@lists.infradead.org, Jonas Karlman <jonas@kwiboo.se>,
-	Maxime Ripard <mripard@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-pwm@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Mark Brown <broonie@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>, Johan Jonker <jbx6244@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-serial@vger.kernel.org,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	devicetree@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Tim Lunn <tim@feathertop.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Subject: Re: [PATCH 00/38] rockchip: Add rk3562 support
-Message-ID: <2024122018-groove-glitzy-f3bc@gregkh>
-References: <20241220103825.3509421-1-kever.yang@rock-chips.com>
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v7 00/18] NVMe PCI endpoint target driver
+Message-ID: <20241220122225.lw6mpv7gx77igzgl@thinkpad>
+References: <20241220095108.601914-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241220103825.3509421-1-kever.yang@rock-chips.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241220095108.601914-1-dlemoal@kernel.org>
 
-On Fri, Dec 20, 2024 at 06:37:46PM +0800, Kever Yang wrote:
+On Fri, Dec 20, 2024 at 06:50:50PM +0900, Damien Le Moal wrote:
+> This patch series implements an NVMe target driver for the PCI transport
+> using the PCI endpoint framework.
 > 
-> This patch set adds rk3562 SoC and its evb support.
+> The first 5 patches of this series move and cleanup some nvme code that
+> will be reused in following patches.
 > 
-> The patch number is a little bit too big, some of them may need to split
-> out for different maintainers, please let me know which patch need to
-> split out.
+> Patch 6 introduces the PCI transport type to allow setting up ports for
+> the new PCI target controller driver. Patch 7 to 10 are improvements of
+> the target core code to allow creating the PCI controller and processing
+> its nvme commands without the need to rely on fabrics commands like the
+> connect command to create the admin and I/O queues.
+> 
+> Patch 11 relaxes the SGL check in nvmet_req_init() to allow for PCI
+> admin commands (which must use PRPs).
+> 
+> Patches 12 to 16 improve the set/get feature support of the target code
+> to get closer to achieving NVMe specification compliance. These patches
+> though do not implement support for some mandatory features.
+> 
+> Patch 17 is the main patch which introduces the NVMe PCI endpoint target
+> driver. This patch commit message provides and overview of the driver
+> design and operation.
+> 
+> Finally, patch 18 documents the NVMe PCI endpoint target driver and
+> provides a user guide explaning how to setup an NVMe PCI endpoint
+> device.
+> 
+> The patches are base on Linus 6.13-rc3 tree.
+> 
+> This driver has been extensively tested using a Radxa Rock5B board
+> (RK3588 Arm SoC). Some tests have also been done using a Pine Rockpro64
+> board. However, this board does not support DMA channels for the PCI
+> endpoint controller, leading to very poor performance.
+> 
+> Using the Radxa Rock5b board and setting up a 4 queue-pairs controller
+> with a null-blk block device loop target, performance was measured using
+> fio as follows:
+> 
+>  +----------------------------------+------------------------+
+>  | Workload                         | IOPS (BW)              |
+>  +----------------------------------+------------------------+
+>  | Rand read, 4KB, QD=1, 1 job      | 14.3k IOPS             |
+>  | Rand read, 4KB, QD=32, 1 job     | 80.8k IOPS             |
+>  | Rand read, 4KB, QD=32, 4 jobs    | 131k IOPS              |
+>  | Rand read, 128KB, QD=32, 1 job   | 16.7k IOPS (2.18 GB/s) |
+>  | Rand read, 128KB, QD=32, 4 jobs  | 17.4k IOPS (2.27 GB/s) |
+>  | Rand read, 512KB, QD=32, 1 job   | 5380 IOPS (2.82 GB/s)  |
+>  | Rand read, 512KB, QD=32, 4 jobs  | 5206 IOPS (2.27 GB/s)  |
+>  | Rand write, 128KB, QD=32, 1 job  | 9617 IOPS (1.26 GB/s)  |
+>  | Rand write, 128KB, QD=32, 4 jobs | 8405 IOPS (1.10 GB/s)  |
+>  +----------------------------------+------------------------+
+> 
+> These results use the default MDTS of the NVMe enpoint driver of 512 KB.
+> 
+> This driver is not intended for production use but rather to be a
+> playground for learning NVMe and exploring/testing new NVMe features
+> while providing reasonably good performance.
+> 
 
-I recommend you doing the split-apart as you know the dependencies here
-the best, right?  Otherwise we all will just probably ignore them
-assuming someone else is going to review/accept them...
+Series looks good from PCI endpoint perspective and I've given my R-b tags. I
+hope this gets merged through the nvme tree.
 
-thanks,
+Thanks a lot for the work, Damien and Rick!
 
-greg k-h
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
