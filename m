@@ -1,115 +1,91 @@
-Return-Path: <linux-pci+bounces-18931-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18932-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA6989FA0ED
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 15:11:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 203569FA131
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 15:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E89A169C96
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 14:11:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A93767A04A8
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 14:50:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4801C1F37B3;
-	Sat, 21 Dec 2024 14:11:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 855E41F2C36;
+	Sat, 21 Dec 2024 14:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lyrgBtf7"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Df2B7RiH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3231A3BD7;
-	Sat, 21 Dec 2024 14:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03C481F2C59;
+	Sat, 21 Dec 2024 14:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734790310; cv=none; b=simYIGKDGeZAsut/OcLIABPUpJWVeE2KAzPVvtWUnzcXhcCMp5nUcBq2IG1D7brdzq3khePdPbJuXAAQR3ZTsRWD6ynKEeEAbmFSxg+GR/g2aBn9g5+KRb8P2uyij0weOp8gELfrReYwwFpue5cxxEo1YWJOZOPeXu5ZbpA2Ykk=
+	t=1734792556; cv=none; b=HF7oVJyFdy3B5J3gNOHg/NHuJ+VWfjZ6EJLW62SHt2oEUMBu4CQ8Vhb7oHqI+ij2qfcIaCGri/2Aerj7uMftUoxgxgygG5ddxvWFl+RW4k3B5p+9IKw43eTdp3BqkNFiVL/fYso9QnTvagyjw6LX9RUuSCJzBGn3CJLrUFkUXmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734790310; c=relaxed/simple;
-	bh=4OAX6nZP1YQ45HXw3GzIduMUTIazI8OHiD5eDcNZOE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hR60dv22+B3AyRTdHc2JRQ36015/GJuuFDPcYrKcIQ/mOELHWHGh+8b2lSkfT+nVZQvdR60j4IZB0MweVzNK+IpPSZViq+t13t1L7jPCcDZvuCznzK1oTaiIEaa2tIxMo8sTbBFj7eco8bKo5Io9jf5SvVEUWxoIBbQNMhOXpBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lyrgBtf7; arc=none smtp.client-ip=117.135.210.5
+	s=arc-20240116; t=1734792556; c=relaxed/simple;
+	bh=tAQkr1bL8Vf/NvA9zabtC82RDVInjdMk/JhPMaaCjS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FBOrazmt7wPxV/XOo9ZVUbpzt5O1nQTLtewZcPVQg+tF0DgSqb4X3hnbQbJFmv9grZb2dZyp7XSjKladkk2wM/VFxz27r5FPit3y+q+xoPsQzsiZA4pejBkmtn0RUOCTEEpvfgSUmGXmREHSf6KDbt9xCCHFsedtAsF/SrjVa9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Df2B7RiH; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ErDre
-	KwpHAXR5aeq+4ClwKZe6oaWNwwvRPfAt9lEDi4=; b=lyrgBtf7BdUAUjSEM570M
-	iuGaOJ7wknReYoFASUTvztBwdcMtOEQjXQYr4/YRChy2gW9SIXlT4dWCyDkqEuow
-	QNf8VJHCbu8X0/ZfCGhJCcAsncuYZQ2NxwpFU59npxRAdLiwmG50T+WFpkcRMSpM
-	HbN+bj/XiPP4vdxZwP7u8o=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDXrx5RzGZnp_LeAg--.13848S2;
-	Sat, 21 Dec 2024 22:10:26 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: manivannan.sadhasivam@linaro.org
-Cc: kw@linux.com,
-	kishon@kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	Hans Zhang <18255117159@163.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [v3] misc: pci_endpoint_test: Fix return resource_size_t from pci_resource_len
-Date: Sat, 21 Dec 2024 22:10:09 +0800
-Message-Id: <20241221141009.27317-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=JLjXSeT4ASAxskBE5NoXYk7PA3S09CaNlCxHsyGGnZQ=;
+	b=Df2B7RiH2CmWqlhACWTFQkclyykl9j4rKzD3JMlanHx7irzpZQdl3Q+wNgpFNg
+	PY42qaYsQ7P6v//LRYELXlmfHdZsAsUS2W1lLtnMy4GxemqthF3rmPfs//5OHVnn
+	phjS1dCfxh9HqYa3/KCEllube9lqas1ZcEPSTZR2rSxM8=
+Received: from [192.168.71.44] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wB3n2Ig1WZnXt7XAg--.13948S2;
+	Sat, 21 Dec 2024 22:48:00 +0800 (CST)
+Message-ID: <3056bc64-7fc3-421c-a469-d233f5de6b40@163.com>
+Date: Sat, 21 Dec 2024 22:47:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXrx5RzGZnp_LeAg--.13848S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw18Gw1ruw4DJrWxAF43Jrb_yoW8Wr15pF
-	ZIkw10vF4Utry8Ga1xK3WDCFZYka9rXry7Wa98Aw1SvFnxZFn5t3WUK3yYkrnrCFsF9a12
-	y3ZIya1vgw12kFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziMq2_UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxy8o2dmyog1MQAAsL
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: cadence: Fixed cdns_pcie_host_link_setup return
+ value.
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
+ kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <hldbrb5rgzwibq3xiak2qpy5jawsgmhwjxrhersjwfighljyim@noxzbf4cre3m>
+ <999ad91d-9b61-b939-a043-4ab3f07c72a1@163.com>
+ <v623jkaz4u4dpzlr5dtnjfolc5nk7az24aqhjth4lpjffen4ct@ypjekbr4o54q>
+ <f2c8be62-7ff6-f0d0-f34a-ddb6915df0a4@163.com>
+ <20241219094906.wzn7ripjxrvbmwbh@thinkpad>
+ <c16dc225-4116-c966-7278-cc645f16c8a4@163.com>
+ <20241219112051.pjr3a4evtftlpxau@thinkpad>
+ <3bbb298a-6f84-6be7-69c6-eaeaa088cc0e@163.com>
+ <20241219133545.jiyqdzbkpwfu2rcv@thinkpad>
+ <44c74561-a4db-4550-a07e-67f51556dd03@163.com>
+ <20241220123216.za6kzma4q2kyfhln@thinkpad>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20241220123216.za6kzma4q2kyfhln@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wB3n2Ig1WZnXt7XAg--.13948S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxQ6pUUUUU
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwe8o2dm06AovAAAsx
 
-With 8GB BAR2, running pcitest -b 2 fails with "TEST FAILED".
 
-The return value of the `pci_resource_len` interface is not an integer.
-Using `pcitest` with an 8GB BAR2, the bar_size of integer type will
-overflow.
-Change the data type of bar_size from integer to resource_size_t, to fix
-the above issue.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+On 2024/12/20 20:32, Manivannan Sadhasivam wrote:
 
----
-Changes since v2:
-https://lore.kernel.org/linux-pci/20241220075253.16791-1-18255117159@163.com/
+> 
+> Then the quirk patch has to wait until your driver is submitted upstream.
+> 
 
-- Fix "changes" part goes below the --- line
-- The patch commit message were modified.
+Thank you Mani.
 
-Changes since v1:
-https://lore.kernel.org/linux-pci/20241217121220.19676-1-18255117159@163.com/
-
-- The patch subject and commit message were modified.
----
- drivers/misc/pci_endpoint_test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 3aaaf47fa4ee..414c4e55fb0a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
- static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 				  enum pci_barno barno)
- {
--	int j, bar_size, buf_size, iters, remain;
- 	void *write_buf __free(kfree) = NULL;
- 	void *read_buf __free(kfree) = NULL;
- 	struct pci_dev *pdev = test->pdev;
-+	int j, buf_size, iters, remain;
-+	resource_size_t bar_size;
- 
- 	if (!test->bar[barno])
- 		return false;
--- 
-2.25.1
+Regards
+Hans
 
 
