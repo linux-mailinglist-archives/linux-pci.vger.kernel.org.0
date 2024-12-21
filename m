@@ -1,79 +1,105 @@
-Return-Path: <linux-pci+bounces-18934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90ACA9FA210
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 19:57:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 844D69FA21C
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 20:19:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08B9B161D64
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 18:57:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDB5F163E27
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2024 19:19:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0081D190497;
-	Sat, 21 Dec 2024 18:56:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 848AC15C140;
+	Sat, 21 Dec 2024 19:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uu22x0fc"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="g+qXg2pq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8C317838C;
-	Sat, 21 Dec 2024 18:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0831063B9;
+	Sat, 21 Dec 2024 19:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734807400; cv=none; b=U7wL47X7bGsDsrkpmSw2QPvdqeAjKWFYjqd05SoYGVjyVS5m+xhkd032PdG2iM/nlJFlMvPifoQW0JSu5mA+4H88cka2aiQNhtw726CiKpQm4EE3tbnrWZpUsZqoPqw6rxe4rH26WK0EK5CjZEut8xKPkjQLBbDcr6nbjlUYAyI=
+	t=1734808746; cv=none; b=p+VCnpIg0AVsPfEgsU0R1oK6gA5iuSchcH0pmyXQVHDtxU5UgRkNN98Q2TpieWEuoClT9+NE6QvBV43uCkRTG9OcG0gje76VGxDsq+LLAiNLQfaHq2nufDoWREh/Wdu6qRMQElfs0/CvJzcKmL4hBJCjOsmvrSNYSWYIzNEpA0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734807400; c=relaxed/simple;
-	bh=9nxMp1J22zloSjt+gxz0skZepMZrf56UT9qGZGSO2Mg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QmNwKbclsW2gq1SnGIHyo/1ZwKchVGTyw4nP58KgrzXLbsRwgoqfIz8+fzHvHEh1VfhwwhfPhLH8+42+IW/OmXgnNW+0M8wfU/JHd4SaR9It9wJYblBUSn1/uzFTaTzwKuJUYA+5RSaiZMIKpwsbcca7z/eCVdkp2vmNjgKwZrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uu22x0fc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FA7C4CECE;
-	Sat, 21 Dec 2024 18:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734807400;
-	bh=9nxMp1J22zloSjt+gxz0skZepMZrf56UT9qGZGSO2Mg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Uu22x0fcIzLTICYY9U/JRz5LY4BO1rAKG1FXzl6LDyK61KV3t7nDG8979cQ9cP+JV
-	 +1XdSi5I943fevGqBf5vcFQor1oLO/cVWY2wEJ50pdiSVoF7yqRSNSTr/pkbg+DpQR
-	 XbXxGTGlItpDaYBkc3DLxostL7MozUVmiUfUcN4jPi3hSxUuBEUMApa+Y5rI4r+ie0
-	 7Y2dapOU4hq8aG8srCaqs/lBSqoGG4wTRgNV1MB52cJg9TqoN1/Rba+/6Bnbsfoz3c
-	 t6AP585vvu+25oTwHCG4ib9laSEtU9cs/I9rVe+wLrOxaEkXgG3FqAPa9XFXx77OcE
-	 E2BlNnTWOgi3Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD673806656;
-	Sat, 21 Dec 2024 18:56:59 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.13
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20241221131251.GA1086543@rocinante>
-References: <20241221131251.GA1086543@rocinante>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20241221131251.GA1086543@rocinante>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.13-fixes-2
-X-PR-Tracked-Commit-Id: 774c71c52aa487001c7da9f93b10cedc9985c371
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a99b4a369a5495dbb625e1dfb5cd7a5ff6ba4bd5
-Message-Id: <173480741818.3207643.11704178580635152654.pr-tracker-bot@kernel.org>
-Date: Sat, 21 Dec 2024 18:56:58 +0000
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Bjorn Helgaas <helgaas@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, Niklas Schnelle <niks@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1734808746; c=relaxed/simple;
+	bh=f0HpRvQ0hioTHIw4WD65hnzsgzz9OYIVi/fd6K4Vcqs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=nWHoZAlEttCvsN8bNTny1mVLDuazYnPuulXpbXRhrhVzq7JMuaD/6Aac41QQbVB6H4HbCvLHEewx1WgqIotAZhHXf8nQflw+5tdm9hdjOuusVesVp0tCqTafJRrFussni+OUNUYA1039t3QfY2M6nCLycCWR+ZLY5armA9rfBTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=g+qXg2pq; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1734808710; x=1735413510; i=markus.elfring@web.de;
+	bh=f0HpRvQ0hioTHIw4WD65hnzsgzz9OYIVi/fd6K4Vcqs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g+qXg2pqsqrZFMUJdTKl6y4Q6sZnrz3AgM5vBbJ6o58vp2tM/1buu1ux7hsPQ0Hq
+	 krmh0xrxLj4cCRir1ltBCHggnXDGXQrLBztlgrIsiGMfAXkjSRDDSNomE8wCzr+Cd
+	 z38pyzC3RYi9MRqmA6uH3lGtvuWjf/BDJq1dfVs6oL3Glf/eDt3zNOw5546M0SuHS
+	 a80erqhxqBYihqSJap7qfHndCATa+LIJrksxDEWzUEFdyfsFGrIV9O9i/ojL1HO/L
+	 MEcsHsopUMMkFjgcP2a68P1FWsmtocDRE768uLGKUjB3aun8sJ4jPTnZpa+tTsiNO
+	 AgKoeo3FaHJZINb1BQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.93.29]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MZjET-1t1F1l0s2Z-00TwaB; Sat, 21
+ Dec 2024 20:18:30 +0100
+Message-ID: <61237444-4c0e-40c6-b478-dc997e49cfa9@web.de>
+Date: Sat, 21 Dec 2024 20:18:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Mohamed Khalfella <khalfella@gmail.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Niklas Cassel <cassel@kernel.org>, Wang Jiang <jiangwang@kylinos.cn>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+References: <20241221030011.1360947-1-khalfella@gmail.com>
+Subject: Re: [PATCH] PCI: endpoint: Set RX DMA channel to NULL aftre freeing
+ it
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20241221030011.1360947-1-khalfella@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gh2i4qqIYS7pQ6O/4i/OrhruRpx3sWNiuxkTN6OcwXmA6aHbDlw
+ lnqseai/2Wg2FBeaNRrTUC5V7jPLVyWZcV+F8d1oebFU6hPiJnHTvhq5etJjAZ7PcRIcy/Y
+ vPL1N3VWAZ6vd88uRhNJiEizEuWcbFnQ62WIwfUOStHhk5ledzSwINp4ViDFB7amE4R1PRz
+ XVJDzHSo8dKrau+87ojpg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XhhpjUITr5c=;acn6/cFvYIJ4ps0Fc5wOeBJBqS4
+ 7GdqvCfXw+rK6JYRBQef65b2xw8ZErd8Nvt38GiEsSDNe1PrybWJ0f36bgGoTuoTR0+Mz5Iyr
+ PFPo5+brSwZUiln2qealxD/wlpL8CCmZCQ4ez3+r3kHoOBTut7sBmdKmtM+eYDmR/VE7U0fFH
+ DEGkb0SWId8hX3joP3kbYKPKi8j2j1RzhXBcLHuQKmST6/jUTPkH2+mnhyRPbZXYfWEFRHXPe
+ 95Xt73QsYUl7MnAyFy0l8HJSNgqYt6R/H3XjYUdwM5aqyPJYRa2iovJPoZHcRufpBQ6ps3iUF
+ T2lWZibfRzeWT379RIxBed1F/m8ABMrJpP5mEHYtR0UAEcgbsGhoPssHOu0vempOCHFSPFAMh
+ 6Hp7lLS14HA4JrVBOVwx0pSIo7b4t2ZCUAEWueHcgf0znMBPEXKsZWW/M1rgVBs62gNSLXLGG
+ 5NNpYvhczQRYX7E8OqdbeALrUJJIgtvf38EfJ5K/M5JkdNofjULEJzUY5HXmNdFeXZCqYcu1u
+ RmZmhRek7Fs2pAtQ6WWsuvZM6ac7f3lhiAx62nl+ekZ6Sle3MzPpXU/YGCdjAyB9EKArSPvD6
+ EtnI+lpa4YvsQyl/rO/64GZTTQLpsv9LaIXNmZ/1LpyrYpyJdxCUjtYJ2Wa6GMmfXStpitIci
+ GLXywZ5gZsvQkCbtoD9pMHKWAPQrVKIQ06e/07+4XHq89+N3cbbCGbVyBzFVrATLbaW7/h2KO
+ lz2+ixf0rp1Qj2A+2s9hxJVxmpT90Z2dVsa8nuZLtAWYkoO+x60SzZesqMommDlmegN9mvLL8
+ OLM4D8BowfDL76PO0twmSguxxw60dWrruw/EsnnjgkPFkmQnXDae60oHfPWa2sSGpm2i1JzVq
+ LDpa0vYuE/OTT+6rwwHvz8wImK6+lmEQt9gP+4tOpHSs7ttFgmFaLE8wTJwpJ6cey/TlSuuFP
+ 1Mue3j/BSIbn9aRB4X/LCI1CYgx3SyuTVXZ8nipgPPB6rr3n6bIA6zfBQ3ejlJFjjckh0mSRb
+ QWvdjdzBsnCr7uVdT3lTE/D3rYVEcEJrgo010FIkCwXTAmGa1wZe6oyCNU9fFrrOqRwUCMvtA
+ KYingSRl4=
 
-The pull request you sent on Sat, 21 Dec 2024 22:12:51 +0900:
+> Fixed a small bug in pci-epf-test driver. =E2=80=A6
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.13-fixes-2
+Please avoid a typo in the summary phrase for the final commit.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a99b4a369a5495dbb625e1dfb5cd7a5ff6ba4bd5
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards,
+Markus
 
