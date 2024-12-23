@@ -1,167 +1,212 @@
-Return-Path: <linux-pci+bounces-18947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18948-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B85659FA876
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Dec 2024 23:36:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE83C9FA9C7
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 04:39:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05EC018864A7
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Dec 2024 22:36:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2DFC18860C4
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 03:39:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3809192B69;
-	Sun, 22 Dec 2024 22:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBD9F28F1;
+	Mon, 23 Dec 2024 03:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLOakvNX"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="dik6DGWJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E6E192B62;
-	Sun, 22 Dec 2024 22:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89B4179BC
+	for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 03:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734906968; cv=none; b=trVUNzOJM58aV7fhtNY2Yi5oDcIhCFk0g5ijz/Hm0nJ9vsdIzYH3msb4kOcoKbwwJF6yoHNGN7JaZ4T0uuXWVetrc7sfNjpvYegRA9yo1qy/NQwvOA5UhKwQ2mKgpg2ybIIcPpKj2Vt5oBO7OfiiQsMcuftmRIS/m2B7llOxOTM=
+	t=1734925179; cv=none; b=g1/A2u2edibAY+9vX5OvCD2XzZiby2iXgncxfoEC/y0HCBQCSI6ILnQm2uWazGlKDazHOC+TXi4fpd080zfRmsnEIIH85thVmP4CCHXBk9XPoepouJP2p49iZj0ZyalTyRyCJwo1f74lCQG5A473p2yKqFl1GVRLKamgF1zPaLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734906968; c=relaxed/simple;
-	bh=/43HSdEtYyVjDZJjnecKHUCc3uqTj+JIRgsPRb+NMrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pBkIIqyy99mssrkcJr7D4b88K2ZTwzaMucYKPw8Jr7S2LuuvJ8oty2hOlk5d96HJSYOEN04H2GBX2QRMTMnIHaVonweYaj6q4MDqbHJ77N3fhVvOlmGRHsK1DI0UQB4BkMfFWwYg1cmm298axJKTbe5LoaCvzHsn5xsqycxcdmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLOakvNX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA08C4CECD;
-	Sun, 22 Dec 2024 22:36:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734906967;
-	bh=/43HSdEtYyVjDZJjnecKHUCc3uqTj+JIRgsPRb+NMrQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=PLOakvNX3nznLdM0zf+oPLS6/dOKix5wtjclqBXG/Qckr1H+w6xdsT/6d9qj/ldfn
-	 T3yaEIvxehrVnx3mmaGehfkVd2uu8krKqTuFeXZfRXOBd7+Li3Qe8SguMQj3uKplEs
-	 F1HkZ2rnDpj3VTvDwxgGDe7BuiOD/fvmT5GSVYdPoFKamg/o61PJqQPRoplUydRZ19
-	 tJvJDWfYAydIUOeSC6f8CtwhetQNqT36B6B/bnV+Q93Wz3yO+3YLRpFrEpddtdGefH
-	 8+secFKHbkoobdiwm9KyMbjEbFIxYKmn6c76YeFf91bmuvTEWNVwSOFBroYe3ei8Lu
-	 cE4uEv3Bh44eA==
-Date: Sun, 22 Dec 2024 16:36:04 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>,
-	Peter Xu <peterx@redhat.com>,
-	Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
- graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <20241222223604.GA3735586@bhelgaas>
+	s=arc-20240116; t=1734925179; c=relaxed/simple;
+	bh=jBaSmkEDSMRh/bJu1zZxgjWmBllrGMjn+9rsFaeRqE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xsb9IMJ+Y9dkVqX0xWxAfjgarBzzjdfkcR29iDaMiDz1YJaO4A1Gm5KwRqZ//E+OVgx7SLE4DGEs4S+xw7KN4jWLqa1MLu8g5yCuVp/r6OlYVNRO8SFpV4EOc2a0nxUMhTKEPYy6ygwshrMqvY4ppoyBW6c7JGtPtJAH1q5+5fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=dik6DGWJ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21628b3fe7dso31443685ad.3
+        for <linux-pci@vger.kernel.org>; Sun, 22 Dec 2024 19:39:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1734925177; x=1735529977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xh1F/n81FGcKrm8w489tsF1X17mb5O1clFq3h62SE+8=;
+        b=dik6DGWJD0USMQ45pYMfpWjROtTqJ6W7KA8pbw9sm1QGf3rRRfNeAiWZoiuJqf1D/o
+         rEfiyGSQNO+sUZq5ZhXPtUIr4b5HwBu1o7SDBSWpkiKbpSLOQQaUxJcjBFc5w+H9XRIg
+         Zy0ZhuCYWJ4cJGPGYbEvaHrSGsct7tb42b8h4NmdaHwHvN6cgMrKvYAjrsVapNC4p4kJ
+         Evh98UEmnhYLzv9O9ZCEBJHOUzLXllr1ljtO7ZgxVmNYeK/w1bMP71tv6p3djXrQXny4
+         s0Yy0Uoyt5gkmI8I/TvEteI44xJp/aMX/MX06tdcpz6z5vrfqbjO2+225Tcae5RjSuQ8
+         52QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734925177; x=1735529977;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xh1F/n81FGcKrm8w489tsF1X17mb5O1clFq3h62SE+8=;
+        b=xSsLBt37lVasx4bkStBRWV7CjjKSQ3jgGpLXKiqCW9B8bgq4DUbBt64AqkAPelY7AE
+         pYTEc2QDd1MQiKnLHgoZHBknJhYRAl2+Dv22hVzs1hkMnfnC71nGJJaJle6XBU1AsExD
+         yBB1XAgnKCBKE3vS/FI83K0J1cEdroZ68ISJVjDuPe4Ho18eq0E6dwslAuPvNpKu7Sy7
+         ON1gnV8vIseDOhiQtnYrFcykWLh6lPpoadGr1TdOoB1Odb9PHFrkSf/SRZVN07SZPbJ6
+         4yyivz8KyU2sgZkF18wAomCENgnudbSua2cOwl3oDgVboJ1/W14EW5jGYIltnBOyITXN
+         A/1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXxocSkGxJblmbJHBUgdAvc2DzDs9WAzqX3zIaCQuaFhbaMJW9PY92iCUDyJTX3uU9CLVarpXLOKmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz01xTapJOqTxY5oFWhf2N5A0dmkWjZCR70inlBtgXs9AMOKe3s
+	dcyEO/+rJq3CeLLD7vu7PDvYHFGfF5xDTqdPsGUsIX1bfWuYCeyASeFNi6Tx2Q==
+X-Gm-Gg: ASbGncsa8hhNhEMD8eA1nNPGElhdx8B+KYXMAzYyojr3eGmdNq/gQloijeHbZdDu4ZE
+	JO0mR4C69heHT2WWRrehaMFEFZs/dHi/hIeRkXoeY6F1JrjFqIRMYc6cPbkr0D1JesVEVQ1kNPM
+	sKI8D2kPYGHhdivP2jwksRW4CvaAOE4w4GZsRyYUSxHjF0gY4VmUfprztY2+PvTESAmh9IZ5WEs
+	WDMilwwJhBVeCqcoX99YL3xvPdWYUSU0iYW6PIVAp8+Md6ve2O8CIr2qJLqs8OEa/FZhl3ewuRo
+	cv87RQMa
+X-Google-Smtp-Source: AGHT+IGweHI7vysTBGD+M9mrgr7p/F7E9+Rnih9FJFsKFOJg+4mpc2T7wvLwrtasWeK21gUO2E6R2g==
+X-Received: by 2002:a17:902:db0f:b0:215:9379:4650 with SMTP id d9443c01a7336-219e6f10958mr171532675ad.42.1734925176826;
+        Sun, 22 Dec 2024 19:39:36 -0800 (PST)
+Received: from dns-eos-trunk-123.sjc.aristanetworks.com ([74.123.28.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dca02e91sm63616025ad.274.2024.12.22.19.39.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2024 19:39:36 -0800 (PST)
+From: Daniel Stodden <dns@arista.com>
+To: dinghui@sangfor.com.cn
+Cc: Daniel Stodden <dns@arista.com>,
+	bhelgaas@google.com,
+	david.e.box@linux.intel.com,
+	kai.heng.feng@canonical.com,
+	linux-pci@vger.kernel.org,
+	michael.a.bottini@linux.intel.com,
+	qinzongquan@sangfor.com.cn,
+	rajatja@google.com,
+	refactormyself@gmail.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	vidyas@nvidia.com
+Subject: [PATCH 0/1] Re: PCI/ASPM: Fix UAF by disabling ASPM for link when child function is removed
+Date: Sun, 22 Dec 2024 19:39:07 -0800
+Message-ID: <cover.1734924854.git.dns@arista.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20230507034057.20970-1-dinghui@sangfor.com.cn>
+References: <20230507034057.20970-1-dinghui@sangfor.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Forwarding since not everybody follows bugzilla.  Apparently bisected
-to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
+About change 456d8aa37d0f "PCI/ASPM: Disable ASPM on MFD function
+removal to avoid use-after-free")
 
-Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
-verify that reverting it is enough to avoid these artifacts?
+Let's say root port 00:03.0 was connected to a PCIe switch.
+      
+[00]-+..
+     |
+     +--03.0-[01-03]--+-00.0-[02-03]--+-02.0-[02]--x
+     |                |               \-0d.0-[03]----00.0  Endpoint
+     .                +-00.1  Upstream Port Sibling
 
-#regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
+And that switch had not only an upstream port at 01:00.0, but also a
+sibling function at 01:00.1.
 
------ Forwarded message from bugzilla-daemon@kernel.org -----
+Let's break the link under 00:03.0, which makes pciehp remove the [01]
+bus. Surprise effect: traversal during bus [01] device removal happens
+in reverse order (for SR-IOV-ish reasons, see pciehp_pci.c
+commentary). Fair enough, ASPM should probably not rely on any
+specific order anyway.
 
-Date: Sat, 21 Dec 2024 10:10:02 +0000
-From: bugzilla-daemon@kernel.org
-To: bjorn@helgaf9e54c3a2f5bas.com
-Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade
-Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
+Recursing through pci_remove_bus_device() underneath, the order in
+which we pci_destroy_dev() will be:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=219619
+   [ 01:00.1 [ 02:02.0 [ 03:00.0 ] 02:0d.0 ] 01:00.0 ]
 
-            Bug ID: 219619
-           Summary: vfio-pci: screen graphics artifacts after 6.12 kernel
-                    upgrade
-           Product: Drivers
-           Version: 2.5
-          Hardware: AMD
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: athul.krishna.kr@protonmail.com
-        Regression: No
+Trivially, the above is also the order in which
+pcie_aspm_exit_link_state() will be called.
 
-Created attachment 307382
-  --> https://bugzilla.kernel.org/attachment.cgi?id=307382&action=edit
-dmesg
+Then note how, since above change removed the list_empty() exit
+condition, we are now going to remove the pcie_link_state for bus [01]
+(parent=<00:03.0>) during the first invocation, i.e. right at
+pcie_aspm_exit_link_state(<01:00.1>).
 
-Device: Asus Zephyrus GA402RJ
-CPU: Ryzen 7 6800HS
-GPU: RX 6700S
-Kernel: 6.13.0-rc3-g8faabc041a00
+Iow: with bus [03] removal only to come, we removed the
+pcie_link_state upstream first, and only then will remove the
+downstream pcie_link_state at parent=<02:0d.0>.
 
-Problem:
-Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
-screen artifacts, ultimately qemu will pause with unrecoverable error.
+Eventually reaching that second link, it carries a ref "parent_link =
+link->parent" which now points to free'd memory again. One can observe
+a rather high probability of finishing with a random GPF or nullptr
+dereference condition.
 
-Commit:
-f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
-commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
-Author: Alex Williamson <alex.williamson@redhat.com>
-Date:   Mon Aug 26 16:43:53 2024 -0400
+Above switches, with MFD upstream portions, exist. Case at hand is a
+PEX8717 with 4 DMA engines:
 
-    vfio/pci: implement huge_fault support
+  +-08.0-[51-5b]--+-00.0-[52-5b]--+-02.0-[53]--
+                  |               \-0d.0-[54-5b]----00.0  Broadcom Inc. …
+                  +-00.1  PLX Technology, Inc. PEX PCI Express Switch DMA interface
+                  +-00.2  PLX Technology, Inc. PEX PCI Express Switch DMA interface
+                  +-00.3  PLX Technology, Inc. PEX PCI Express Switch DMA interface
+                  \-00.4  PLX Technology, Inc. PEX PCI Express Switch DMA interface
 
-    With the addition of pfnmap support in vmf_insert_pfn_{pmd,pud}() we can
-    take advantage of PMD and PUD faults to PCI BAR mmaps and create more
-    efficient mappings.  PCI BARs are always a power of two and will typically
-    get at least PMD alignment without userspace even trying.  Userspace
-    alignment for PUD mappings is also not too difficult.
+Backtrace:
 
-    Consolidate faults through a single handler with a new wrapper for
-    standard single page faults.  The pre-faulting behavior of commit
-    d71a989cf5d9 ("vfio/pci: Insert full vma on mmap'd MMIO fault") is removed
-    in this refactoring since huge_fault will cover the bulk of the faults and
-    results in more efficient page table usage.  We also want to avoid that
-    pre-faulted single page mappings preempt huge page mappings.
+[  790.817077] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  790.900514] #PF: supervisor read access in kernel mode
+[  790.962081] #PF: error_code(0x0000) - not-present page
+[  791.023641] PGD 8000000104648067 P4D 8000000104648067 PUD 1404bc067 PMD 0
+[  791.106041] Oops: 0000 [#1] PREEMPT SMP PTI
+[  791.156151] CPU: 8 PID: 145 Comm: irq/43-pciehp Tainted: G           OE      6.1.0-22-2-amd64 #5  Debian 6.1.94-1
+[  791.279173] Hardware name: Intel Camelback Mountain CRB/Camelback Mountain CRB, BIOS Aboot-norcal7-7.1.6-generic-22971530 06/30/2021
+[  791.421982] RIP: 0010:pcie_config_aspm_link+0x48/0x330
+[  791.483548] Code: 48 8b 04 25 28 00 00 00 48 89 44 24 30 31 c0 8b 47 30 4c 8b 47 08 83 e3 7f c1 e8 0e f7 d3 89 c2 83 e0 7f 21 c3 83 e2 7f 21 f3 <41> 8b b6 a0 00 00 00 89 d8 83 e0 87 f6 c3 04 0f 44 d8 0f b7 47 30
+[  791.708646] RSP: 0018:ffffa8cf8062bcb8 EFLAGS: 00010246
+[  791.771254] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[  791.856772] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff94bac3d56a80
+[  791.942291] RBP: ffff94bac3d56a80 R08: 0000000000000000 R09: ffffa8cf8062bc6c
+[  792.027808] R10: 0000000000000000 R11: 0000000000000004 R12: ffff94b9c0f61fc0
+[  792.113326] R13: ffff94bbc0ae9828 R14: 0000000000000000 R15: ffff94b9c0ea6f20
+[  792.198845] FS:  0000000000000000(0000) GS:ffff94c8ffc00000(0000) …
+[  792.295827] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  792.364680] CR2: 00000000000000a0 CR3: 00000001062fe003 CR4: 00000000003706e0
+[  792.450198] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  792.535717] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  792.621235] Call Trace:
+[  792.650506]  <TASK>
+[  792.675616]  ? __die_body.cold+0x1a/0x1f
+[  792.722600]  ? page_fault_oops+0xd2/0x2b0
+[  792.770625]  ? sysvec_apic_timer_interrupt+0xa/0x90
+[  792.829068]  ? exc_page_fault+0x70/0x170
+[  792.876051]  ? asm_exc_page_fault+0x22/0x30
+[  792.926161]  ? pcie_config_aspm_link+0x48/0x330
+[  792.980437]  pcie_aspm_exit_link_state+0xb9/0x120
+[  793.036796]  pci_remove_bus_device+0xc8/0x110
+[  793.088988]  pci_remove_bus_device+0x2e/0x110
+[  793.141180]  pci_remove_bus_device+0x3e/0x110
+[  793.193373]  pciehp_unconfigure_device+0x94/0x160
+[  793.249733]  pciehp_disable_slot+0x69/0x100
+[  793.299840]  pciehp_handle_presence_or_link_change+0x241/0x350
+[  793.369742]  pciehp_ist+0x164/0x170
+[  793.411524]  ? disable_irq_nosync+0x10/0x10
+[  793.461632]  irq_thread_fn+0x1f/0x60
+[  793.504449]  irq_thread+0xfa/0x1c0
+[  793.545185]  ? irq_thread_fn+0x60/0x60
+[  793.590085]  ? irq_thread_check_affinity+0xf0/0xf0
+[  793.647485]  kthread+0xda/0x100
+[  793.685096]  ? kthread_complete_and_exit+0x20/0x20
+[  793.742495]  ret_from_fork+0x22/0x30
+[  793.785314]  </TASK>
 
-    Link: https://lkml.kernel.org/r/20240826204353.2228736-20-peterx@redhat.com
-    Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-    Signed-off-by: Peter Xu <peterx@redhat.com>
-    Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-    Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-    Cc: Borislav Petkov <bp@alien8.de>
-    Cc: Catalin Marinas <catalin.marinas@arm.com>
-    Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-    Cc: Dave Hansen <dave.hansen@linux.intel.com>
-    Cc: David Hildenbrand <david@redhat.com>
-    Cc: Gavin Shan <gshan@redhat.com>
-    Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-    Cc: Heiko Carstens <hca@linux.ibm.com>
-    Cc: Ingo Molnar <mingo@redhat.com>
-    Cc: Jason Gunthorpe <jgg@nvidia.com>
-    Cc: Matthew Wilcox <willy@infradead.org>
-    Cc: Niklas Schnelle <schnelle@linux.ibm.com>
-    Cc: Paolo Bonzini <pbonzini@redhat.com>
-    Cc: Ryan Roberts <ryan.roberts@arm.com>
-    Cc: Sean Christopherson <seanjc@google.com>
-    Cc: Sven Schnelle <svens@linux.ibm.com>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    Cc: Vasily Gorbik <gor@linux.ibm.com>
-    Cc: Will Deacon <will@kernel.org>
-    Cc: Zi Yan <ziy@nvidia.com>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Daniel Stodden (1):
+  PCI/ASPM: fix link state exit during switch upstream function removal.
 
- drivers/vfio/pci/vfio_pci_core.c | 60 ++++++++++++++++++++++++++++------------
- 1 file changed, 43 insertions(+), 17 deletions(-)
+ drivers/pci/pcie/aspm.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 -- 
-You may reply to this email to add a comment.
+2.47.0
 
-You are receiving this mail because:
-You are watching the assignee of the bug.
-
------ End forwarded message -----
 
