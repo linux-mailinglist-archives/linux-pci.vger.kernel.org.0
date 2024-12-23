@@ -1,188 +1,212 @@
-Return-Path: <linux-pci+bounces-18957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCC9A9FAB34
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 08:37:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63D7E9FAB4A
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 08:50:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1D2D18854EE
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 07:37:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D0F397A1DFA
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 07:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BED41632F3;
-	Mon, 23 Dec 2024 07:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9953118BC19;
+	Mon, 23 Dec 2024 07:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="FsKqc4ev"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dCBOF2Y9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9AF185B4C;
-	Mon, 23 Dec 2024 07:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1621189520;
+	Mon, 23 Dec 2024 07:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734939473; cv=none; b=hUcO+5aPPOMz2+fDXi4o2kgiYovJ/OXalIl0re4q/0jo5zEk0MfF/dGNo4tjAb4S1ZBkL9z6vzRY1GIOZ+8pau03zLspeCu/Hdoo2IJ0JUQIYqFCKRx6nuGmtw1DwfOwSwLigiizcRBZA8lespWdQ+/6GZAMQzvC3q7oJYsY/24=
+	t=1734940226; cv=none; b=TsWdYcY2/C6QsV5r4CpCkWw3simd9QPCkniJCVfpgXZYz+o0QuwCCfe/WUaUJggy2qo7Vxml/xbUvg18gPJ9VUMrbuOCNx69PYjzS/zzotK0cGudv6zAq1qIifkQeUgLqMvx+db5QScgI7h4QzGjAWDRmQjJ4uuyJo/92d4dYAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734939473; c=relaxed/simple;
-	bh=P/4242QLq3nVMegiA2aERKECD/KhF7C8dCgei73v83g=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T2rX691v4iABj+reD+Fx5Dp1RxTWYjLQZ+hVvbHKG4wMkqo2JyxgGC83/vbhqox/ZTiXH9DkB+phzj/ZEsddjfblIqF58vDyyDnWH3o75iEIojvRG+3lopa2tnPx4PD6tWpP7vx2qQX6vBLOqsq3MD3B6VSmEIBxGQf0ke+qviM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=FsKqc4ev; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1734939469; x=1735198669;
-	bh=MdDjYfT+KDtz3lpfNwxg/Y9kIsJlKMLPKSqWl9jRiEY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=FsKqc4evvDR157Lswcqd1GU5mNtXiqDCfpVTSelzK4QhkwZCMRdE+KmwU8P0jTz/n
-	 VtFYGkYeTKgx+qQ4DXG1MWtCkBHBYSrphKNIIZuEvsyURdIXuLXG0pRLyuYxGKQD7l
-	 dMQuTrHpH5ksdOm95NHru0E1gsLjyFc423T0+1S+byrWwVm5oMch8+vDyJkLI5S7iH
-	 9gZqYTslfDViBlHf9HYk4wUwRj+7+A06clhkq8JldMNwZJEU8wJjVYewMI2no/ZokZ
-	 V4baTO5UxvfM/6D//xM+JezzFWYw/3IRFSnznxNEbLpI2SMuwJdIw75h9j0+f7KCdY
-	 oq5mGTZEZfbjQ==
-Date: Mon, 23 Dec 2024 07:37:46 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-From: Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "peterx@redhat.com" <peterx@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
-In-Reply-To: <20241222223604.GA3735586@bhelgaas>
-References: <20241222223604.GA3735586@bhelgaas>
-Feedback-ID: 97021173:user:proton
-X-Pm-Message-ID: 95968d894a95988886d3bb7e373efb2a8c6469ac
+	s=arc-20240116; t=1734940226; c=relaxed/simple;
+	bh=KluvoRVs50gNq7a5yFRrEJBBDOWuB3gtzpqMMaQxMhA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4fGhUvUpfUcxUt4DRxaq55Vgm9j/GWmzsyiMjMMK4n0RWSKw3zVKFQvqUTF9IAVF6par0uDWJHOB52pc6NI8HqYldbgvTupUP+1ng+fMUxy+7LxEVGidYQDFPR6FDfVUZkj+1KY/V5VzPKmNnjbPZATRbbr0GHMs57nap1qGc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dCBOF2Y9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BN6mbwA004776;
+	Mon, 23 Dec 2024 07:50:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=o0ylRwCleiLePsy/R7nCCMSI
+	zCh9GGBByF9fUZV3WJo=; b=dCBOF2Y9bcfzYzkpPCbsZTO47lTzNynhM+D9tR5A
+	JCH/AJ4yl215RyWRNHdXxFz9EL5kw92yCTmgZNwuiNeRY5wVywF/GkwTFNUkU2NN
+	jdhqEzp19eWYbxw7PGm6NJD2VNJJ6bnzFwB+sGpQSi/SzlZ/XyGv02qKzER7WV/+
+	jv4jAVZxV4U+15PEuqPq/487WS7BDLQK1xtlMjVurjObYl49hXRuCv0iTDhD5cGP
+	6A8qSUsxa7WWiF2PBaA/4tqpeKXoDU1WIJsdD9kjs0bdcBJoB6x96BOQtUH8Pvyt
+	AAuDYkZgQVcjB2FS9X6PFJAXiVA8HkQZQW6gAM7Zv4yvcw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43q2ww88bn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Dec 2024 07:50:07 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BN7o6Nm027292
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Dec 2024 07:50:06 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 22 Dec 2024 23:50:00 -0800
+Date: Mon, 23 Dec 2024 13:19:57 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>, <quic_srichara@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe
+ uniphy
+Message-ID: <Z2kWJb/77vunIPDg@hu-varada-blr.qualcomm.com>
+References: <20241217100359.4017214-1-quic_varada@quicinc.com>
+ <20241217100359.4017214-2-quic_varada@quicinc.com>
+ <nhzbr4knneo5k3zxvjy2ozx6ciqg2hivwyr2qxdld2x63vlzeb@mjrlqeqiykzp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <nhzbr4knneo5k3zxvjy2ozx6ciqg2hivwyr2qxdld2x63vlzeb@mjrlqeqiykzp>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: G7LY8sYViYMibK_Ix7Wj0HgbzslH0iz9
+X-Proofpoint-GUID: G7LY8sYViYMibK_Ix7Wj0HgbzslH0iz9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412230068
 
-Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.
+On Wed, Dec 18, 2024 at 11:28:18AM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Dec 17, 2024 at 03:33:55PM +0530, Varadarajan Narayanan wrote:
+> > From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> >
+> > Document the Qualcomm UNIPHY PCIe 28LP present in IPQ5332.
+> >
+> > Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > ---
+> > v3: Fix compatible string to be similar to other phys and rename file accordingly
+> >     Fix clocks minItems -> maxItems
+>
+> I think there was just one clock, so you increased it to two.
 
--------- Original Message --------
-On 23/12/24 04:06, Bjorn Helgaas <helgaas@kernel.org> wrote:
+IPQ5018 patch series had one clock. IPQ5332 introduced additional
+clocks and it became four. Of the four clocks, two were NoC
+related clocks. Since the NoC clocks are handled in icc-clk based
+interconnect driver, have dropped those two and have incldued the
+two here.
 
->  Forwarding since not everybody follows bugzilla.  Apparently bisected
->  to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
-> =20
->  Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
->  verify that reverting it is enough to avoid these artifacts?
-> =20
->  #regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault suppo=
-rt")
-> =20
->  ----- Forwarded message from bugzilla-daemon@kernel.org -----
-> =20
->  Date: Sat, 21 Dec 2024 10:10:02 +0000
->  From: bugzilla-daemon@kernel.org
->  To: bjorn@helgaf9e54c3a2f5bas.com
->  Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.1=
-2 kernel upgrade
->  Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
-> =20
->  https://bugzilla.kernel.org/show_bug.cgi?id=3D219619
-> =20
->              Bug ID: 219619
->             Summary: vfio-pci: screen graphics artifacts after 6.12 kerne=
-l
->                      upgrade
->             Product: Drivers
->             Version: 2.5
->            Hardware: AMD
->                  OS: Linux
->              Status: NEW
->            Severity: normal
->            Priority: P3
->           Component: PCI
->            Assignee: drivers_pci@kernel-bugs.osdl.org
->            Reporter: athul.krishna.kr@protonmail.com
->          Regression: No
-> =20
->  Created attachment 307382
->    --> https://bugzilla.kernel.org/attachment.cgi?id=3D307382&action=3Ded=
-it
->  dmesg
-> =20
->  Device: Asus Zephyrus GA402RJ
->  CPU: Ryzen 7 6800HS
->  GPU: RX 6700S
->  Kernel: 6.13.0-rc3-g8faabc041a00
-> =20
->  Problem:
->  Launching games or gpu bench-marking tools in qemu windows 11 vm will ca=
-use
->  screen artifacts, ultimately qemu will pause with unrecoverable error.
-> =20
->  Commit:
->  f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
->  commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
->  Author: Alex Williamson <alex.williamson@redhat.com>
->  Date:   Mon Aug 26 16:43:53 2024 -0400
-> =20
->      vfio/pci: implement huge_fault support
-> =20
->      With the addition of pfnmap support in vmf_insert_pfn_{pmd,pud}() we=
- can
->      take advantage of PMD and PUD faults to PCI BAR mmaps and create mor=
-e
->      efficient mappings.  PCI BARs are always a power of two and will typ=
-ically
->      get at least PMD alignment without userspace even trying.  Userspace
->      alignment for PUD mappings is also not too difficult.
-> =20
->      Consolidate faults through a single handler with a new wrapper for
->      standard single page faults.  The pre-faulting behavior of commit
->      d71a989cf5d9 ("vfio/pci: Insert full vma on mmap'd MMIO fault") is r=
-emoved
->      in this refactoring since huge_fault will cover the bulk of the faul=
-ts and
->      results in more efficient page table usage.  We also want to avoid t=
-hat
->      pre-faulted single page mappings preempt huge page mappings.
-> =20
->      Link: https://lkml.kernel.org/r/20240826204353.2228736-20-peterx@red=
-hat.com
->      Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
->      Signed-off-by: Peter Xu <peterx@redhat.com>
->      Cc: Alexander Gordeev <agordeev@linux.ibm.com>
->      Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->      Cc: Borislav Petkov <bp@alien8.de>
->      Cc: Catalin Marinas <catalin.marinas@arm.com>
->      Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
->      Cc: Dave Hansen <dave.hansen@linux.intel.com>
->      Cc: David Hildenbrand <david@redhat.com>
->      Cc: Gavin Shan <gshan@redhat.com>
->      Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
->      Cc: Heiko Carstens <hca@linux.ibm.com>
->      Cc: Ingo Molnar <mingo@redhat.com>
->      Cc: Jason Gunthorpe <jgg@nvidia.com>
->      Cc: Matthew Wilcox <willy@infradead.org>
->      Cc: Niklas Schnelle <schnelle@linux.ibm.com>
->      Cc: Paolo Bonzini <pbonzini@redhat.com>
->      Cc: Ryan Roberts <ryan.roberts@arm.com>
->      Cc: Sean Christopherson <seanjc@google.com>
->      Cc: Sven Schnelle <svens@linux.ibm.com>
->      Cc: Thomas Gleixner <tglx@linutronix.de>
->      Cc: Vasily Gorbik <gor@linux.ibm.com>
->      Cc: Will Deacon <will@kernel.org>
->      Cc: Zi Yan <ziy@nvidia.com>
->      Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> =20
->   drivers/vfio/pci/vfio_pci_core.c | 60 ++++++++++++++++++++++++++++-----=
--------
->   1 file changed, 43 insertions(+), 17 deletions(-)
-> =20
->  --
->  You may reply to this email to add a comment.
-> =20
->  You are receiving this mail because:
->  You are watching the assignee of the bug.
-> =20
->  ----- End forwarded message -----
->  
+> >     Change one of the maintainer from Sricharan to Varadarajan
+> >
+> > v2: Rename the file to match the compatible
+> >     Drop 'driver' from title
+> >     Dropped 'clock-names'
+> >     Fixed 'reset-names'
+> > --
+> >  .../phy/qcom,ipq5332-uniphy-pcie-phy.yaml     | 82 +++++++++++++++++++
+> >  1 file changed, 82 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+> > new file mode 100644
+> > index 000000000000..0634d4fb85d1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+> > @@ -0,0 +1,82 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/qcom,ipq5332-uniphy-pcie-phy.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm UNIPHY PCIe 28LP PHY
+> > +
+> > +maintainers:
+> > +  - Nitheesh Sekar <quic_nsekar@quicinc.com>
+> > +  - Varadarajan Narayanan <quic_varada@quicinc.com>
+> > +
+> > +description:
+> > +  PCIe and USB combo PHY found in Qualcomm IPQ5332 SoC
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,ipq5332-uniphy-gen3x1-pcie-phy
+> > +      - qcom,ipq5332-uniphy-gen3x2-pcie-phy
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 2
+>
+> I should have been more specific last time, but I assumed you will take
+> other bindings as example.  well, so now proper review: you need to list
+> tiems.
+
+Sure.
+
+> > +
+> > +  resets:
+> > +    minItems: 2
+> > +    maxItems: 3
+>
+> No answer to my previous question. Question stands.
+
+I assume this question:- "So where are three items?" [1]
+Will remove this and list the items.
+
+> > +
+> > +  reset-names:
+> > +    minItems: 2
+> > +    items:
+> > +      - const: phy
+> > +      - const: phy_ahb
+> > +      - const: phy_cfg
+> > +
+> > +  "#phy-cells":
+> > +    const: 0
+> > +
+> > +  "#clock-cells":
+> > +    const: 0
+> > +
+> > +  clock-output-names:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - resets
+> > +  - reset-names
+> > +  - clocks
+>
+> Keep the same order as in properties block.
+
+Ok.
+
+Thanks
+Varada
+
+1. https://lore.kernel.org/linux-arm-msm/c685ca4e-3992-4deb-adfb-da3bbcb59685@linaro.org/
 
