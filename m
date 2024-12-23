@@ -1,131 +1,120 @@
-Return-Path: <linux-pci+bounces-18972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3E969FB045
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 15:42:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F0A39FB07D
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 16:03:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C29C1189121F
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 14:38:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C90EF162DB3
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 15:03:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C5CF1B415B;
-	Mon, 23 Dec 2024 14:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F4A1AC8AE;
+	Mon, 23 Dec 2024 15:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DCBhTADY"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HNc46ApH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFC6224D7;
-	Mon, 23 Dec 2024 14:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401AE14287;
+	Mon, 23 Dec 2024 15:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734964545; cv=none; b=mYtezZ7ZC7yWLqyV8TX13jT+VSkOsEITECpGuY9XLtBgOxE3FJRtcy3ZduZ4r8iyxGC7z98XZ3U3wbPkWEJCtOCd785ZzoMTJQU8Yyq1lokOmwurIQN9mGzLih2jjhE+ZIJSXVuCCg24d6LQlSA96ovWRWohjmnif+uDOnSx2q4=
+	t=1734966226; cv=none; b=J0ydatj84oUPGzFquYa2fgQ5AL0ZKXbPEloHjpQ5bSkX68nnU/t7RppXEcaAQHbc0A5ZU6wD+NMivOYa5DOPCC5KWXC0bnAuZjjtnqZ/uVz+nEsZP2h0L57BUxWcK0IW/kR5b25sQemftU/fATQWtW+INxK989AhwZR/lJolkFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734964545; c=relaxed/simple;
-	bh=vJZ3Uk6iPVe0ZZIcXecDwxXO5IBElB7XlJUMQqMt6zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BtwNMf72c+t/grpdf7lOz/BxYz1UDiRwYa1vg721FEueXM3drPLe8VlsxgdW6mh41Tu/ZI9k9QwLbMr9DvqCgm74nAhN4TNn0sHcmFicFMq6JlF8m1nTlNnqVLMP5RqdBIdBSZ6CJUQoVRgyBwdy8nSLKNGbr3VwiaLAnb8m6jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DCBhTADY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BNBVf5m006918;
-	Mon, 23 Dec 2024 14:35:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6tkD8uSfn8nZqsLFTy9uQSJ8FJ9RYK5Kc4Pqit5t+fk=; b=DCBhTADYbEju+VXa
-	Ln5U2FPXfulW48L2W85ituuQLEwjeQCAhRGnjsW6UDPczdeUVFv5CY6lahXYn8x1
-	scsfaUvG6XCyuEgHsF/aWgDjGwSRcd6op5lZ4O0w6Y5Ci1ORMQFZ2JkRDyWDh7sy
-	C0Nuv4a9+s4URljhnzApb31Rpj5x80f9Qw5FTYqSFdQd2oyDrVQj0W5dpnwf2Amm
-	p8NKdK0Wrb1adrUSg65nnQrfoEpf8YmGd45BxQ46RAVXst7tpyp0cya2gAowLeNV
-	lf8aklQS4XN7v3MOfmQuN2uP9g+EiGZO9mfSqSN3379G0moLTuWjiNjlU5zX7eq4
-	1ZxMcQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43q72n8dru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Dec 2024 14:35:36 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BNEZZqu028171
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Dec 2024 14:35:35 GMT
-Received: from [10.216.2.152] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 23 Dec
- 2024 06:35:29 -0800
-Message-ID: <47c9a897-cbe3-1423-b851-cf1efb11a5dc@quicinc.com>
-Date: Mon, 23 Dec 2024 20:05:25 +0530
+	s=arc-20240116; t=1734966226; c=relaxed/simple;
+	bh=9Uk4DZGoZgt9jIhyWCEgTSIsBhoNfzlfz6+xrGe7MSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BLNBUXJJmSFxvvDf4o4oKSSHmvyIiIcM1uk6ty0VZRvEu4IZflVUPQh9pgxh+E85beE24ohWUkVWbRvLXbF0n2Tu/aYSgdkunYOVKWmYx/UDfsuVpA/8v91YUOI7RaQRwVs5WoOaNQbbcPw2evzlp26reYXl41gQdmeWdjP7z6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HNc46ApH; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1734966220;
+	bh=9Uk4DZGoZgt9jIhyWCEgTSIsBhoNfzlfz6+xrGe7MSY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HNc46ApHwR3QSB4UFbizcKOsz1Xw4oJsAmICm5n4kGOlLL/OXztNUVL4ndZWkm5Yy
+	 nHRHuY2GvgHbWDgUjKzuf23CYfFnuwbuW7MMpETvm/82pENy6Tk58GtTv1i9Sm/GW8
+	 4q1Ki/caz610ZdaNv8y51Bz5fK7gNpKQ72WlxUTuXbqgOtGn7hqi987C8P3ueeNLJN
+	 tnVyJtKek3bV0rmzESnWcmSQFPa39SBsJY/g3DksSbTwFbqbn58mANvSdkBE5PvuyG
+	 a9UqBawMpZbT+wBI5LeycYh7tc4lH1AZ7AU5YUS+ahnSdDJbZSJcGPP1AImkORCdmv
+	 xjexlN++t6Ndg==
+Received: from [192.168.1.90] (unknown [84.232.140.38])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 78ABD17E0E2C;
+	Mon, 23 Dec 2024 16:03:39 +0100 (CET)
+Message-ID: <cbd16df2-4f94-4f66-a00d-e9e972390905@collabora.com>
+Date: Mon, 23 Dec 2024 17:03:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] PCI: exynos: Switch to
+ devm_clk_bulk_get_all_enabled()
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, kernel@collabora.com,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+References: <20241217-clk_bulk_ena_fix-v5-0-aafbbb245155@collabora.com>
+ <20241217-clk_bulk_ena_fix-v5-2-aafbbb245155@collabora.com>
+ <19eca5c3-cedb-4c5f-9b70-9c25c8387414@collabora.com>
+ <20241223141806.GA1864738@rocinante>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krishna Chaitanya Chundru
-	<krishna.chundru@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <quic_mrana@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-References: <20241223-preset_v2-v3-0-a339f475caf5@oss.qualcomm.com>
- <20241223-preset_v2-v3-1-a339f475caf5@oss.qualcomm.com>
- <93ff7098-a77a-48a1-a14e-de23940bc763@oss.qualcomm.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <93ff7098-a77a-48a1-a14e-de23940bc763@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1GyqAP6odFFc1DjkeshuLYyeYJ2emYEj
-X-Proofpoint-GUID: 1GyqAP6odFFc1DjkeshuLYyeYJ2emYEj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=478 spamscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412230131
+In-Reply-To: <20241223141806.GA1864738@rocinante>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 12/23/2024 5:06 PM, Konrad Dybcio wrote:
-> On 23.12.2024 7:51 AM, Krishna Chaitanya Chundru wrote:
->> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
->> rates used in lane equalization procedure.
+On 12/23/24 4:18 PM, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+>>> The helper devm_clk_bulk_get_all_enable() missed to return the number of
+>>> clocks stored in the clk_bulk_data table referenced by the clks
+>>> argument and, therefore, will be dropped.
+>>>
+>>> Use the newly introduced devm_clk_bulk_get_all_enabled() variant
+>>> instead, which is consistent with devm_clk_bulk_get_all() in terms of
+>>> the returned value:
+>>>
+>>>  > 0 if one or more clocks have been stored
+>>>  = 0 if there are no clocks
+>>>  < 0 if an error occurred
+>>>
+>>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 >>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
+>> In case you missed the previous requests, we need your ack on this patch
+>> so that Stephen can apply the entire series to the clk tree and drop the
+>> obsolete helper.
 > 
-> Does this also apply to PCIe3?
+> Please, take the following:
 > 
-> Konrad
->It will be applicable to PCIe3 also, I will update this in next patch
+>   Acked-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+> 
+> Should be sufficient.
+> 
+> Also, sorry for keeping you both waiting.
 
-- Krishna Chaitanya.
+Thanks Krzysztof, no worries!
 
+Regards,
+Cristian
 
