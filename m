@@ -1,225 +1,245 @@
-Return-Path: <linux-pci+bounces-18980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ECE59FB3E4
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 19:15:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 517699FB404
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 19:31:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3FC8188428F
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 18:15:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81C9818851FC
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 18:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DBAF1B393A;
-	Mon, 23 Dec 2024 18:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5519F1B85DF;
+	Mon, 23 Dec 2024 18:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTlLp5aH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WboZ+BmR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A187838F82
-	for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 18:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C881B3939
+	for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 18:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734977733; cv=none; b=R18K+ojlTr/pF/j/6UsXLw1zLN5Qo2n4TyZpS6X1yLnckfCOyZ7LIcEgpOG5As4eylr/IZ6N6M2aVqdyZwwqtRLoik1ed5lwLQSKsrlOyf1woX9rssLGND8OElFU0L048Q+8ocos5h+AiA5dSjQYiwF7z31BA+pjeDp24+Y5WtM=
+	t=1734978661; cv=none; b=DL5oO9fA24PX5n0KwQkIKW3ETmMlGYODPIsfTEnWJtD0IoxQ3N/qmwAHPl7MVAYZSv2s18d5bfwU8hdaGecQ0lthPMYRLvUNytCJbQ2cT6I/F1YXTV2dR/0IBMWFnGm/3Jg6zFNdEOSck8JV8JMWXMW1Fdjeal7xCxQXiI8+i7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734977733; c=relaxed/simple;
-	bh=8pDFmu8/1sF75hrfCbh9g3oxXjJ5jWjyvYPRTNtqsUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hkgltFkJYSXcMYSKJ2T4jZlNGYFFxnbUrK3RDdNoFoGuCVEogVGIsSMR/IZn7Z6V73sPJojbUI/9nxD5Z0CXiL5oPDj43jQz3bAfoldUJguANDikN13/4WPeZUYt2ScQbOdQ5FRFw10zZsTfy7zN8ZHBHxL0TC3JBcvl3g1RCDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PTlLp5aH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734977730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i779kwZKwslACzFfkM+4lV0vJyXdo9Mbz+mQvKzFbgg=;
-	b=PTlLp5aHnAsmdorl96AwAGAWQgbWGJpYB5yuFVEZg/wL0WT/0JutW25xhakLax8MvgyKUh
-	/fpbTB+c6Fu76DV8uVCeeoKkVJqRc5fhBc9eBkrp+3Qw52JFXLuaoAsghR0F4Ooz3MQTaw
-	1BsUugxQniZOIFzXV+p8itg49cV9IaE=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-450-s737_W10MwKOALCpRpkjEg-1; Mon, 23 Dec 2024 13:15:29 -0500
-X-MC-Unique: s737_W10MwKOALCpRpkjEg-1
-X-Mimecast-MFC-AGG-ID: s737_W10MwKOALCpRpkjEg
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-71e222441b7so26637a34.2
-        for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 10:15:29 -0800 (PST)
+	s=arc-20240116; t=1734978661; c=relaxed/simple;
+	bh=pbOx+LkwL74tgz3xkBgnjoUyd+PUXUbhc2tvIadZcpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLqLupgkqTiz4R7RwalPfNhq/H28qgnBW0j4jEFfIgFFUfv8CrkBNc/fKR7dVRq9CgYowFH/TozPVTT/hyfl56ItVBpVa6EEOfpjqPcEPFuAVOjGeM7PWbS0/tjGCr01R2DC7ZvOA+m0Zf5F7uRiadl4tBVTApsI3CdcBBw+xM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WboZ+BmR; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5401c68b89eso5240981e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 10:30:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734978657; x=1735583457; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ib6wBjX5a1DsQ7xeFSqZ26+LR0UmLO29CWJ794aiBqc=;
+        b=WboZ+BmRp/mMDD0KQ/NxVWjm8RY6Jln7n3pQNTLK5E03fbIjTeKFZyduiwBnSazhsw
+         nL1QpZcHe76Dzh//vA7sRVE2fiEC4VzsXXg0NWcdmx/XhKnq5M+FUS+uA+Fe9dFfGsXB
+         oRd83PDKC7xOOZIsl27soO4XvzwfcUQvhlRujchKCUsnq06yoTNStJM6hQiXnfVg7r3t
+         CuS+L2v+swBCk+Kjz32mCA2J2SmNw2+Upf7mI8MHkOg/kDJfZtZsed8TZ98BQO924oZy
+         Xzl8/8L7WQfn8+LGsu4DU+zyXxSo4S5f+EplfxYOVTazwKG30frc2UnOT6rg0WARaPlJ
+         I3tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734977728; x=1735582528;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i779kwZKwslACzFfkM+4lV0vJyXdo9Mbz+mQvKzFbgg=;
-        b=p4vLp5+Upf42p9cLfsRAOI4RBYXcP0KNUKaEf77wZ4li7OelW051OzwgaRTNOAIkgE
-         CplyMwxNEPI5qtRoVNKue72E9GQx99qnFjDQrbdCdSGVAG6nuLo2mfmW49KSn25P2CLs
-         xTPMmt/4mmzcBWAC4zmq3JpbU9HjqsUUlrMiCPpFXWD1nNZCqgPwg08h5UptWiIM8AMd
-         pEaaw8LpoIS+M9zk2UJmAbEn3LfyDBJ+vy0ZPxWcDfScpjHbflsXJERAgqCsEBxggCS3
-         URa0k7RPRiauzuT5i34X811MRYsq6BhBrGLfgd2FFD6RnAGuPH8vSZ7R4mU38s/KIW+s
-         W0hg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ6BOBUDaa1c4O9X23OtabTmgxZN7oTwpiNHXWiDafXSP4C+PgKBL+XYrjPsg8lvP928G7Ro/KLxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLGyowCuH5KZtaPex+beG4FKiBzVZdB+R8yQduC9NLYY3IXl6P
-	LG3BEmx6R2ehGInzntK+XG30+kWJ1IPom0KK1fSvhpkgcRh+rxilZ9U3GErPWWIwy2dHS72oOiQ
-	LXLdWdoA5m/k+zSGbxGYxH0i6TCLevFz+ULI+8npPUY2TEFYtkwnnkCjfiA==
-X-Gm-Gg: ASbGncv49kx+SeZmZur8XS3hyyqqx1uw2iVZQ8ADw8UCm7AHhRl13hQFirxor8yWvmP
-	U5MTGBpX2cYDUVGaowO2qen4PxRCxHZMV9BoU+gmCG+0uNjQBivbyynxqLv/Vyb3w1ZOjKD9IxE
-	8Amt6I5TDH36EJdrGIzTdWJdn7Sp2YgCiM0lnaJLsQdSc/yCfU+TSbdIh/L4F6C8QthZNkTEyJR
-	ugtWcrdnFVogcfoJ5BrtQt6jh+WMp0+9bZU6zGrzVmmva39JMHqZw/zAtgm
-X-Received: by 2002:a05:6830:34a9:b0:71e:48b1:ad29 with SMTP id 46e09a7af769-720ff691e28mr2341872a34.2.1734977728569;
-        Mon, 23 Dec 2024 10:15:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHL84ulGDZQJL2507Y3H15s+slqjLTXHJpf42Oh15OEYbs2ukq1so9LGjZjnTqyXM9iw8VcMg==
-X-Received: by 2002:a05:6830:34a9:b0:71e:48b1:ad29 with SMTP id 46e09a7af769-720ff691e28mr2341863a34.2.1734977728249;
-        Mon, 23 Dec 2024 10:15:28 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71fc97642e8sm2400002a34.5.2024.12.23.10.15.27
+        d=1e100.net; s=20230601; t=1734978657; x=1735583457;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ib6wBjX5a1DsQ7xeFSqZ26+LR0UmLO29CWJ794aiBqc=;
+        b=I4OAb3rxsL6Rdzy0Mfae4mWABm06pZ1kGI3rpxWb/LEDqv+R7XGuJK43YKItZ6gde1
+         orn9Zps9QtxpV2nA/iq/Uu/S3A8d/i8T8UnDbHA13B2jqjO39F/xU5SP6Gkqk7f50Qs+
+         SiNwlrO1b+SnHX12pYewLY6sf5VN23DD65W/ZlcomjdcPhQoxLi0UJsiAKrdHNSXNc5/
+         bKTc8d7DsHw7gGfYB26XklT2KbN0ykTm4ZRJXH/lgW8XSNgA29XE5GBEfXhSOHCXCpvA
+         mx7vEd4kXusEzTFaCQqGKqRvUB+L+xKqfWsKG/9faycJGl0A7lkON1qMQQEuFS9aNifH
+         TQvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXijHj+ymb2g1l7NfeVvW2wJI2mPbjF6CttsNXZVF3nt/NI5ToKKtt4sGkVNmEiddmbE1OerueV5CQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8V/dcufDo2kP9bwigaorqUIdVAWR6iwN6YGICze2IkyanAgdX
+	lRJbSmWM/TlvR19SSVnzfMicusz9oLzCtm8d9HgcakKxaZuZYRIl6QMyHEler5Q=
+X-Gm-Gg: ASbGncthWf8w60MizGkmamg+ZYHjeMwgdGYFdsTuF+/4oI8vp/9Fk7JDPV1QbTX0KAl
+	cVXTVxImuBlY3iLR1ouNp02k0SVdrg306Euo30RKc1I4ReVaS9WDPyfqp/wREw0ZzHCGRDnpyBF
+	OSEGq94t36Mt5G46g/xQbtvQGjGhHlodmyFisioHCEOpKLOkRI8MY545PfwQfWwqFPfIKoaDOyw
+	wxZThC20Bk0exe0POt8npqAF2UUdDTKHiyUfIejtgksFmoicjL7qivAGPjag7OpM/fYu3AdjsBD
+	HG0b8Qu+Z+yqhte3edCBiouH8Mu7ipFmdzCo
+X-Google-Smtp-Source: AGHT+IH98AgsW3aEpXG1+1pa2cP2E4c381Hid3mVv/P1h9wa3FRZwHzgJACk9iyoPOwC3UpzdSI9mg==
+X-Received: by 2002:a05:6512:b19:b0:541:1c5f:bf86 with SMTP id 2adb3069b0e04-5422946ee2fmr4284193e87.18.1734978657141;
+        Mon, 23 Dec 2024 10:30:57 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-542235f5d88sm1373627e87.15.2024.12.23.10.30.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2024 10:15:27 -0800 (PST)
-Date: Mon, 23 Dec 2024 11:15:25 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Peter Xu <peterx@redhat.com>, Athul Krishna
- <athul.krishna.kr@protonmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
- graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <20241223111525.0249057e.alex.williamson@redhat.com>
-In-Reply-To: <Z2mW2k8GfP7S0c5M@x1n>
-References: <20241222223604.GA3735586@bhelgaas>
-	<Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
-	<Z2mW2k8GfP7S0c5M@x1n>
-Organization: Red Hat
+        Mon, 23 Dec 2024 10:30:55 -0800 (PST)
+Date: Mon, 23 Dec 2024 20:30:53 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com, 
+	quic_mrana@quicinc.com, quic_vbadigan@quicinc.com, 
+	Bjorn Andersson <andersson@kernel.org>
+Subject: Re: [PATCH v3 2/4] PCI: of: Add API to retrieve equalization presets
+ from device tree
+Message-ID: <ntag3wc3yqax2afsbzesev32hpj3ssiknhjq6dtncuuj4ljrxh@23ed4qdwfrxi>
+References: <20241223-preset_v2-v3-0-a339f475caf5@oss.qualcomm.com>
+ <20241223-preset_v2-v3-2-a339f475caf5@oss.qualcomm.com>
+ <piccoomv7rx4dvvfdoesmxbzrdqz4ld6ii6neudsdf4hjj2yzm@2bcuacwa4feb>
+ <d317c51a-3913-6c49-f8db-e75589f9289a@quicinc.com>
+ <wjk32haduzgiea676mamqdr6mhbmm3rrb6eyhzghqpczjuiazx@ipik3jhjzmhz>
+ <7bc9f3f2-851c-3703-39b4-fea93d10bd7f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7bc9f3f2-851c-3703-39b4-fea93d10bd7f@quicinc.com>
 
-On Mon, 23 Dec 2024 11:59:06 -0500
-Peter Xu <peterx@redhat.com> wrote:
-
-> On Mon, Dec 23, 2024 at 07:37:46AM +0000, Athul Krishna wrote:
-> > Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.  
+On Mon, Dec 23, 2024 at 10:13:29PM +0530, Krishna Chaitanya Chundru wrote:
 > 
-> I suppose Alex should have some more thoughts, probably after the holidays.
-> Before that, one quick question to ask..
-
-Yeah, apologies in advance for latency over the next couple weeks.
-
-> > -------- Original Message --------
-> > On 23/12/24 04:06, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > >  Forwarding since not everybody follows bugzilla.  Apparently bisected
-> > >  to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
-> > >  
-> > >  Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
-> > >  verify that reverting it is enough to avoid these artifacts?
-> > >  
-> > >  #regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
-> > >  
-> > >  ----- Forwarded message from bugzilla-daemon@kernel.org -----
-> > >  
-> > >  Date: Sat, 21 Dec 2024 10:10:02 +0000
-> > >  From: bugzilla-daemon@kernel.org
-> > >  To: bjorn@helgaf9e54c3a2f5bas.com
-> > >  Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade
-> > >  Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
-> > >  
-> > >  https://bugzilla.kernel.org/show_bug.cgi?id=219619
-> > >  
-> > >              Bug ID: 219619
-> > >             Summary: vfio-pci: screen graphics artifacts after 6.12 kernel
-> > >                      upgrade
-> > >             Product: Drivers
-> > >             Version: 2.5
-> > >            Hardware: AMD
-> > >                  OS: Linux
-> > >              Status: NEW
-> > >            Severity: normal
-> > >            Priority: P3
-> > >           Component: PCI
-> > >            Assignee: drivers_pci@kernel-bugs.osdl.org
-> > >            Reporter: athul.krishna.kr@protonmail.com
-> > >          Regression: No
-> > >  
-> > >  Created attachment 307382  
-> > >    --> https://bugzilla.kernel.org/attachment.cgi?id=307382&action=edit  
-> > >  dmesg  
 > 
-> vfio-pci 0000:03:00.0: vfio_bar_restore: reset recovery - restoring BARs
-
-Is the reset recovery message seen even with the suspect commit
-reverted?  Timestamps here would be useful for correlation.
-
-> pcieport 0000:00:01.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:03:00.1
-> vfio-pci 0000:03:00.0: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
-> vfio-pci 0000:03:00.0:   device [1002:73ef] error status/mask=00100000/00000000
-> vfio-pci 0000:03:00.0:    [20] UnsupReq               (First)
-> vfio-pci 0000:03:00.0: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
-> vfio-pci 0000:03:00.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
-> vfio-pci 0000:03:00.1:   device [1002:ab28] error status/mask=00100000/00000000
-> vfio-pci 0000:03:00.1:    [20] UnsupReq               (First)
-> vfio-pci 0000:03:00.1: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
-> vfio-pci 0000:03:00.1: AER:   Error of this Agent is reported first
-> pcieport 0000:02:00.0: AER: broadcast error_detected message
-> pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
-> pcieport 0000:02:00.0: AER: broadcast resume message
-> pcieport 0000:02:00.0: AER: device recovery successful
-> pcieport 0000:02:00.0: AER: broadcast error_detected message
-> pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
-> pcieport 0000:02:00.0: AER: broadcast resume message
-> pcieport 0000:02:00.0: AER: device recovery successful
+> On 12/23/2024 8:56 PM, Dmitry Baryshkov wrote:
+> > On Mon, Dec 23, 2024 at 08:02:23PM +0530, Krishna Chaitanya Chundru wrote:
+> > > 
+> > > 
+> > > On 12/23/2024 5:17 PM, Dmitry Baryshkov wrote:
+> > > > On Mon, Dec 23, 2024 at 12:21:15PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > PCIe equalization presets are predefined settings used to optimize
+> > > > > signal integrity by compensating for signal loss and distortion in
+> > > > > high-speed data transmission.
+> > > > > 
+> > > > > As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+> > > > > of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+> > > > > configure lane equalization presets for each lane to enhance the PCIe
+> > > > > link reliability. Each preset value represents a different combination
+> > > > > of pre-shoot and de-emphasis values. For each data rate, different
+> > > > > registers are defined: for 8.0 GT/s, registers are defined in section
+> > > > > 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+> > > > > an extra receiver preset hint, requiring 16 bits per lane, while the
+> > > > > remaining data rates use 8 bits per lane.
+> > > > > 
+> > > > > Based on the number of lanes and the supported data rate, this function
+> > > > > reads the device tree property and stores in the presets structure.
+> > > > > 
+> > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > > > ---
+> > > > >    drivers/pci/of.c  | 45 +++++++++++++++++++++++++++++++++++++++++++++
+> > > > >    drivers/pci/pci.h | 17 +++++++++++++++--
+> > > > >    2 files changed, 60 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > > > index dacea3fc5128..99e0e7ae12e9 100644
+> > > > > --- a/drivers/pci/of.c
+> > > > > +++ b/drivers/pci/of.c
+> > > > > @@ -826,3 +826,48 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > > > >    	return slot_power_limit_mw;
+> > > > >    }
+> > > > >    EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> > > > > +
+> > > > 
+> > > > kerneldoc? Define who should free the memory and how.
+> > > > 
+> > > I will update this in next series.
+> > > as we are allocating using devm_kzalloc it should be freed on driver
+> > > detach, as no special freeing is required.
+> > > > > +int of_pci_get_equalization_presets(struct device *dev,
+> > > > > +				    struct pci_eq_presets *presets,
+> > > > > +				    int num_lanes)
+> > > > > +{
+> > > > > +	char name[20];
+> > > > > +	void **preset;
+> > > > > +	void *temp;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	if (of_property_present(dev->of_node, "eq-presets-8gts")) {
+> > > > > +		presets->eq_presets_8gts = devm_kzalloc(dev, sizeof(u16) * num_lanes, GFP_KERNEL);
+> > > > > +		if (!presets->eq_presets_8gts)
+> > > > > +			return -ENOMEM;
+> > > > > +
+> > > > > +		ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
+> > > > > +						 presets->eq_presets_8gts, num_lanes);
+> > > > > +		if (ret) {
+> > > > > +			dev_err(dev, "Error reading eq-presets-8gts %d\n", ret);
+> > > > > +			return ret;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > > +	for (int i = 1; i < sizeof(struct pci_eq_presets) / sizeof(void *); i++) {
+> > > > > +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << i);
+> > > > > +		if (of_property_present(dev->of_node, name)) {
+> > > > > +			temp = devm_kzalloc(dev, sizeof(u8) * num_lanes, GFP_KERNEL);
+> > > > > +			if (!temp)
+> > > > > +				return -ENOMEM;
+> > > > > +
+> > > > > +			ret = of_property_read_u8_array(dev->of_node, name,
+> > > > > +							temp, num_lanes);
+> > > > > +			if (ret) {
+> > > > > +				dev_err(dev, "Error %s %d\n", name, ret);
+> > > > > +				return ret;
+> > > > > +			}
+> > > > > +
+> > > > > +			preset = (void **)((u8 *)presets + i * sizeof(void *));
+> > > > 
+> > > > Ugh.
+> > > > 
+> > > I was trying iterate over each element on the structure as presets holds the
+> > > starting address of the structure and to that we are adding size of the void
+> > > * point to go to each element. I did this way to reduce the
+> > > redundant code to read all the gts which has same way of storing the data
+> > > from the device tree. I will add comments here in the next series.
+> > 
+> > Please rewrite this in a cleaner way. The code shouldn't raise
+> > questions.
+> > 
+> > > > > +			*preset = temp;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
+> > > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > > > index 14d00ce45bfa..82362d58bedc 100644
+> > > > > --- a/drivers/pci/pci.h
+> > > > > +++ b/drivers/pci/pci.h
+> > > > > @@ -731,7 +731,12 @@ static inline u64 pci_rebar_size_to_bytes(int size)
+> > > > >    }
+> > > > >    struct device_node;
+> > > > > -
+> > > > > +struct pci_eq_presets {
+> > > > > +	void *eq_presets_8gts;
+> > > > > +	void *eq_presets_16gts;
+> > > > > +	void *eq_presets_32gts;
+> > > > > +	void *eq_presets_64gts;
+> > > > 
+> > > > Why are all of those void*? 8gts is u16*, all other are u8*.
+> > > > 
+> > > To have common parsing logic I moved them to void*, as these are pointers
+> > > actual memory is allocated by of_pci_get_equalization_presets()
+> > > based upon the gts these should not give any issues.
+> > 
+> > Please, don't. They have types. void pointers are for the opaque data.
+> > 
+> ok.
 > 
-> > >  
-> > >  Device: Asus Zephyrus GA402RJ
-> > >  CPU: Ryzen 7 6800HS
-> > >  GPU: RX 6700S
-> > >  Kernel: 6.13.0-rc3-g8faabc041a00
-> > >  
-> > >  Problem:
-> > >  Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
-> > >  screen artifacts, ultimately qemu will pause with unrecoverable error.  
+> I think then better to use v1 patch
+> https://lore.kernel.org/all/20241116-presets-v1-2-878a837a4fee@quicinc.com/
 > 
-> Is there more information on what setup can reproduce it?
-> 
-> For example, does it only happen with Windows guests?  Does the GPU
-> vendor/model matter?
+> konrad, any objection on using v1 as that will be cleaner way even if we
+> have some repetitive code.
 
-And the CPU vendor, this was predominately tested by me on Intel +
-NVIDIA.  I'm also not seeing any similar reports on r/VFIO, which is a
-bit strange as there are a lot of bleeding edge users there.  The bz is
-reported against 6.13.0-rc3-g8faabc041a00 and a revert against
-v6.13-rc1 was reported as stable.  Has this actually been confirmed on
-v6.12, or might something in v6.13-rc have introduced a new issue?
+Konrad had a nice suggestion about using the array of values. Please use
+such an array for 16gts and above. This removes most of repetitive code.
 
-> > >  Commit:
-> > >  f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
-> > >  commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
-> > >  Author: Alex Williamson <alex.williamson@redhat.com>
-> > >  Date:   Mon Aug 26 16:43:53 2024 -0400
-> > >  
-> > >      vfio/pci: implement huge_fault support  
-> 
-> Personally I have no clue yet on how this could affect it.  I was initially
-> worrying on any implicit cache mode changes on the mappings, but I don't
-> think any of such was involved in this specific change.
-> 
-> This commit majorly does two things: (1) allow 2M/1G mappings for BARs
-> instead of small 4Ks always, and (2) always lazy faults rather than
-> "install everything in the 1st fault".  Maybe one of the two could have
-> some impact in some way.
 
-Athul, can you test reverting both f9e54c3a2f5b and d71a989cf5d9?  That
-would provide the faulting behavior without yet making use of huge
-pfnmaps.  Thanks,
-
-Alex
-
+-- 
+With best wishes
+Dmitry
 
