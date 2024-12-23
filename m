@@ -1,93 +1,93 @@
-Return-Path: <linux-pci+bounces-18982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EA379FB44D
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 19:57:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4DF89FB466
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 19:58:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CE58164E1D
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 18:57:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BD417A20F6
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 18:58:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD9851C3F13;
-	Mon, 23 Dec 2024 18:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CC21BBBDC;
+	Mon, 23 Dec 2024 18:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AXYHTNJT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYeZA1sT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D14880038
-	for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 18:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2246018A6B7
+	for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 18:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734980265; cv=none; b=s9Vjik8vEqoxijIGJAyZ2OdFaNvilTZM2sqny2T1frYTNhiXGbpFa22FdgpM6xBSoJwr69sSfl/+ycNiRsh0UTmEm8vvZDBbZd4lFPgr3wN8X+AiCFvgs3SVyi9NjKjOvvOYgICqqxVD39dkbO3NHLe4ZUz/q5glVBLdKWD4VRU=
+	t=1734980316; cv=none; b=aVv0v1Pgb2ioOVS2AVWsqMD/hrDklQVhx88l6ZlXUPxRiuwaB7AOHBkqjrinbl3YKi4KnczPpTfjzNrAz4J+24Yrfmxmp5sAellYvUk+t8iQs3vzKKGVp2v09xX6HOUNwVzSIGVVirfc8TP8+E4RPVjONC4ef6z7HssrW5vBCKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734980265; c=relaxed/simple;
-	bh=CLc2Osw8/B8T2wxBkWhCVN7fKlUPXJ4gaPQtwt+H8WQ=;
+	s=arc-20240116; t=1734980316; c=relaxed/simple;
+	bh=9e8k8JsOuq3Lyw7YbfY8XkwYsS2e1ChPhuTYq0muhS0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKZL3w8131MzoMyZkZ1agYr+H78EyvYt3s2zbJoiqortNYaV+dDkJ/w9JWt1QSO5fcbOuRHbGaesLOeZ3ywg0si92XqAJLwPqfk5VN9Ky9DRxuWqRYK7klGMN5mjzcvRmUipeWrFWUvJdtjB+lwI0cmSdlV0CHKmLwgUjsTcVMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AXYHTNJT; arc=none smtp.client-ip=209.85.208.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPtalGvmMOdw1vueN4dFQUS6SArIAzI9t+43hlgWm/Os9gRewQFhnKLyJ1e0A4lfdW9VMl7oTO0nqQdTFbh6filer9TcvA6XJACbRdEVgZX4vXLS6k3UqIQqGtYUFWb0h+MGvcGKqEZBX5pEPtNRQqEe3Nq7WTCtnpQlpvVLLDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nYeZA1sT; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-303489e8775so47501211fa.3
-        for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 10:57:42 -0800 (PST)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3003c82c95cso36760881fa.3
+        for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 10:58:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734980261; x=1735585061; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1734980313; x=1735585113; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAPKmHnbb/9He+b5YIbB2MVR9UCM2JWA5pAkVC2uS40=;
-        b=AXYHTNJTwygR8EcQhwKgdeQooptM4QHFveWChhGyxy2Ng+WMOFV0sO0aVm3UjE58nz
-         AoD3WhoB8ZUId086xjiG9rNB+WLF9Y5sC9XE3gApZpLScEKCDPRt/Hap772ejLa60fdy
-         /01+O2o2toFli8BI3jZgcVN/TLEfIBndOztlsPdky4FMnZvRATLTJV3f9ETnLswc5Tug
-         HK+Xa3SVQBnIEXreLjBWgquatCEZSzGqoUEVQW2J47kiIN7W+ND+YsVAOmpIYtoTJ3YQ
-         zoE3XxGW1QE/b6/XQ7rA9yq0jHaXHHxc9yb5OQsxsJrztU1AfkiE6JeQ/hiOkxwtveyr
-         Fqzg==
+        bh=NafCQxwJmOkvoMXvzQ41cvEv1gNV8av0R9IvJSptuN8=;
+        b=nYeZA1sTM2Zhbh6hdVeq0AeDlgg+MNWGPJ8LJxlplPb5M1Pw+u8iPRa6zJWtIYYrA0
+         eNgbvsQrndT6hZgoBLFIztLwQsq5MqtyERRoXK2bLZJhh9tPB1CCdYQIY4v/fEsLSg2o
+         d4L/KqLhXxLb1eTb7eRV164ZLiC+OFW1on9lXIqwgCnaIwPLi/ccJEgEt5tcLG6oxYGH
+         Hdnxh7GLqBudUnmrEej5b68VB3/yR6gy2qZgCN4BY4a81dtg697E5B+nmhpZ9a7NTKRY
+         +d1kaYFFJ7IxtpMzw8WlldnEAy9173ww1a4I5brH1heEgQEcQfjs39wsb0k0DKgNCYU/
+         z8LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734980261; x=1735585061;
+        d=1e100.net; s=20230601; t=1734980313; x=1735585113;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QAPKmHnbb/9He+b5YIbB2MVR9UCM2JWA5pAkVC2uS40=;
-        b=Pzum3TwQ+F14g9E2l6tLNcldcQmf51cEGpLMt3YvF/m3WjgvRS7DCF8/Jb54I/eRra
-         Lw1ZCgep+EeX9Vkw14dJflQ/gj5e/1ZhLr7bduQibtoJ/w0pNBIMDdenW7PJ4jwZBGQw
-         mbH5k4Bpt4BbNm3TDkanYsBxOzhamBdGzCiNjMUl+hVIALFYR3yvAxqx1QkX8AWgAGug
-         UhN+NTlS4nCQfoW+H+MJE8m4ZLnKg1S+tDMT3Fi8+3MUWZDTk6og7+J1Wi3Wcv3b2g/B
-         xNVOcokbnFCaEzeG7OA8I4p3zAojDSF0cPL6LbnjAHuqdkmWamDDt470RHYuTr4f/4N9
-         LtqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Y1Y28ncWXzCYvGPe+z+VVVgluD99VX+zKiSHbZXOshg8JpYq68xOCtLxTMHy9QQux98+pD121N0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKwC2oSLyZPWQ2DowDPeIGezjT7nA6uc7u+GLmBvdvF/2kD4br
-	aj71n8YVIf5go+LjsZrLQSZPFQA/r7n4/hjSX0jpjA9rF8QKeJYNBtG0jvjuHgw=
-X-Gm-Gg: ASbGnctQyyFSTrWaIKk/DFIArJpMiNyJELosLfG6LyO3Fb0tDwlIs/IemCE9ElxwQ36
-	2+v7p6SLlcDnMd4I0AYaintLecRSzwDqBIUgRAP1Kskr/IZRrCc4wMIXv8Z3jBRtQBRCyfu20VT
-	MorHxqpZBl7qZCPR2+WUh/6JzVPDT2f6Nhd+Hab/RewLyB4rs2k1L8o9aWSu02l/tkZ5/E2chrj
-	jxe3HNEQf+mrpr9asw84KC8BG/PKqBx/9E5mNHE35Xe6idxgsAez1g1NnyQ3BV8mNikEYTgyXnw
-	QVm89bsLszcCXYdifLD0UjfnY3YTBeFpYpto
-X-Google-Smtp-Source: AGHT+IGcBmaR2sIpRq7pnwtei2AaSKRaxTb1Kw1gnsE1hW58HhRCyKwYRA7MOMb1mdW5rL+WApdXvQ==
-X-Received: by 2002:a05:651c:f04:b0:302:3356:7751 with SMTP id 38308e7fff4ca-3046865f080mr44681591fa.40.1734980260576;
-        Mon, 23 Dec 2024 10:57:40 -0800 (PST)
+        bh=NafCQxwJmOkvoMXvzQ41cvEv1gNV8av0R9IvJSptuN8=;
+        b=gVLkrCBZ2gptgSg4GWVSHLdmnH0rcj0/rH9gz9p0R6u3QtlIRSGFLIkqxxKxT76WAJ
+         FcZUdn9i7hCYbEX5mQp95/1eOr7hno2byfhc+mb1Fzj0qaWD0dO6P9Xc0Vgpk86x1DT+
+         pqnj/n4OAkp3/q2zy+1ZzXfpMyq40m3YlgVJrxVrZjCsSrGCIEcFhM31d3KGffbGFnhA
+         ym+mFFGB2kagElGhpY6wfYYrmcs3EFu5nQoQaXE7hpNtlHdWjIcH82cd4yBlY/VUMyte
+         DgJnFxWkn65jBeQv95SoQ5TFPesu3AxLTioyfMfOtYheOiEMKUjiBOi20w3Ev1N0KEB7
+         AI4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUcJeP6n9vPWYUud29Z0wV5sU78shn467MKaXNXu+JuPuy08Tnxm3XxilQuar4h6XAm5/9ksatn9V0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi9oXyTr8WyVMkf2ZUltxsZQ4e7gGA5L85UcTF88CkC/sQOX/s
+	erbkxW+Un2UZPz0roAUop50Og0ucS7aPqZ3TS4RW8kSyQuHgd4ThUHyyoLTQmW8=
+X-Gm-Gg: ASbGnctlQC9iw45nki1xjGojk+10CgWA4cSyccjllzPhy/yHBBU/ZvmiyMNnvFbkpK+
+	M+9dCwWNYiNAlVdZ95R5CoaU5GdWen+Ykehc7qPz22Bgnt3kyLapvtSpbFIsGHmOcfIFjRFktgC
+	P7J6CTnVsteSa/PllxMHZv6GcVvP0veJLMm8qcwQ7zyVYUaBEztx8EZfOLNLGxb24Zn+MmtEa/D
+	oQCo3N42/HwM9nqAmWa/fsUqoRQ3noXvgtMgkj6WsCWu+OAisFkiseSIjqHmQlZub+Jrnykqqe4
+	L9g8py4J0PIymlJLargJJ4erKqpjYeFj5Zvl
+X-Google-Smtp-Source: AGHT+IHPb6SW08p1Sk/egzXNbASrffIvwilfZZMkOde25LLZktxTeqMtZZEbnt5aKm7eZrMKs3usjg==
+X-Received: by 2002:a2e:be94:0:b0:300:32a3:a322 with SMTP id 38308e7fff4ca-3046860cef5mr46520301fa.32.1734980313338;
+        Mon, 23 Dec 2024 10:58:33 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3045ad9bbdesm13956911fa.44.2024.12.23.10.57.38
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30484c377b1sm3344011fa.35.2024.12.23.10.58.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2024 10:57:40 -0800 (PST)
-Date: Mon, 23 Dec 2024 20:57:37 +0200
+        Mon, 23 Dec 2024 10:58:32 -0800 (PST)
+Date: Mon, 23 Dec 2024 20:58:29 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, andersson@kernel.org, 
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>, andersson@kernel.org, 
 	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
-Message-ID: <kssmfrzgo7ljxveys4rh5wqyaottufhjsdjnro7k7h7e6fdgcl@i7tdpohtny2x>
-References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
- <20241115161848.GA2961450-robh@kernel.org>
- <74eaef67-18f2-c2a1-1b9c-ac97cefecc54@quicinc.com>
+Message-ID: <m6h27swiax7wgtyldwl5sd3ddzh2tgiux3f4bgf6nuqlxsn6e3@o7rhwdjvaydw>
+References: <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
+ <20241204212559.GA3007963@bhelgaas>
+ <20241211060000.3vn3iumouggjcbva@thinkpad>
+ <bf57eca8-69b5-9c21-0350-bf1c07de786f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,327 +96,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <74eaef67-18f2-c2a1-1b9c-ac97cefecc54@quicinc.com>
+In-Reply-To: <bf57eca8-69b5-9c21-0350-bf1c07de786f@quicinc.com>
 
-On Sun, Nov 24, 2024 at 07:02:48AM +0530, Krishna Chaitanya Chundru wrote:
+On Mon, Dec 23, 2024 at 10:18:24PM +0530, Krishna Chaitanya Chundru wrote:
 > 
 > 
-> On 11/15/2024 9:48 PM, Rob Herring wrote:
-> > On Tue, Nov 12, 2024 at 08:31:33PM +0530, Krishna chaitanya chundru wrote:
-> > > Add binding describing the Qualcomm PCIe switch, QPS615,
-> > > which provides Ethernet MAC integrated to the 3rd downstream port
-> > > and two downstream PCIe ports.
+> On 12/11/2024 11:30 AM, Manivannan Sadhasivam wrote:
+> > On Wed, Dec 04, 2024 at 03:25:59PM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Nov 12, 2024 at 08:31:33PM +0530, Krishna chaitanya chundru wrote:
+> > > > Add binding describing the Qualcomm PCIe switch, QPS615,
+> > > > which provides Ethernet MAC integrated to the 3rd downstream port
+> > > > and two downstream PCIe ports.
 > > > 
-> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > ---
-> > >   .../devicetree/bindings/pci/qcom,qps615.yaml       | 205 +++++++++++++++++++++
-> > >   1 file changed, 205 insertions(+)
+> > > > +$defs:
+> > > > +  qps615-node:
+> > > > +    type: object
+> > > > +
+> > > > +    properties:
+> > > > +      qcom,l0s-entry-delay-ns:
+> > > > +        description: Aspm l0s entry delay.
+> > > > +
+> > > > +      qcom,l1-entry-delay-ns:
+> > > > +        description: Aspm l1 entry delay.
 > > > 
-> > > diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> > > new file mode 100644
-> > > index 000000000000..e6a63a0bb0f3
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> > > @@ -0,0 +1,205 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm QPS615 PCIe switch
-> > > +
-> > > +maintainers:
-> > > +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > +
-> > > +description: |
-> > > +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
-> > > +  ports. The 3rd downstream port has integrated endpoint device of
-> > > +  Ethernet MAC. Other two downstream ports are supposed to connect
-> > > +  to external device.
-> > > +
-> > > +  The QPS615 PCIe switch can be configured through I2C interface before
-> > > +  PCIe link is established to change FTS, ASPM related entry delays,
-> > > +  tx amplitude etc for better power efficiency and functionality.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - pci1179,0623
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  i2c-parent:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > > +    description: |
-> > 
-> > Don't need '|' if no formatting to preserve.
-> > 
-> ack
-> > > +      A phandle to the parent I2C node and the slave address of the device
-> > > +      used to do configure qps615 to change FTS, tx amplitude etc.
-> > > +    items:
-> > > +      - description: Phandle to the I2C controller node
-> > > +      - description: I2C slave address
-> > > +
-> > > +  vdd18-supply: true
-> > > +
-> > > +  vdd09-supply: true
-> > > +
-> > > +  vddc-supply: true
-> > > +
-> > > +  vddio1-supply: true
-> > > +
-> > > +  vddio2-supply: true
-> > > +
-> > > +  vddio18-supply: true
-> > > +
-> > > +  reset-gpios:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      GPIO controlling the RESX# pin.
-> > 
-> > Is the PERST# or something else?
-> > 
-> it is not PERST GPIO, it is similar to PERST in terms
-> of functionality which brings switch out from reset.
-
-Do you have an actual PERST# on upstream facing port? Is it a separate
-wire? Judging by the RB3 Gen2 this line is being used as PERST#
-
-> > > +
-> > > +  qps615,axi-clk-freq-hz:
-> > 
-> > qps615 is not a vendor prefix.
-> > 
-> > > +    description:
-> > > +      AXI clock rate which is internal bus of the switch
-> > > +      The switch only runs in two frequencies i.e 250MHz and 125MHz.
-> > > +    enum: [125000000, 250000000]
-> > > +
-> > > +allOf:
-> > > +  - $ref: "#/$defs/qps615-node"
-> > > +
-> > > +patternProperties:
-> > > +  "@1?[0-9a-f](,[0-7])?$":
-> > 
-> > You have 3 ports. So isn't this fixed and limited to 0-2?
-> > 
-> sure I will change it to below as suggested
-> "@1?[0-3](,[0-1])?$"
-
-Why do you still need '1?' ?
-
-> > > +    description: child nodes describing the internal downstream ports
-> > > +      the qps615 switch.
-> > 
-> > Please be consistent with starting after the ':' or on the next line.
-> > 
-> > And start with capital C.
-> > 
-> > 
-> ack
-> 
-> > > +    type: object
-> > > +    $ref: "#/$defs/qps615-node"
-> > > +    unevaluatedProperties: false
-> > > +
-> > > +$defs:
-> > > +  qps615-node:
-> > > +    type: object
-> > > +
-> > > +    properties:
-> > > +      qcom,l0s-entry-delay-ns:
-> > > +        description: Aspm l0s entry delay.
-> > > +
-> > > +      qcom,l1-entry-delay-ns:
-> > > +        description: Aspm l1 entry delay.
-> > 
-> > These should probably be common being standard PCIe things. Though, why
-> > are they needed? I'm sure the timing is defined by the PCIe spec, so
-> > they are not compliant?
-> > 
-> Usually the firmware in the endpoints/switches should do this these
-> configurations. But the qps615 PCIe switch doesn't have any firmware
-> running to configure these. So the hardware exposes i2c interface to
-> configure these before link training.
-
-If they are following the standard, why do you need to have them in the
-DT? Can you hardcode thos evalues in the driver?
-
-> > > +
-> > > +      qcom,tx-amplitude-millivolt:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: Change Tx Margin setting for low power consumption.
-> > > +
-> > > +      qcom,no-dfe-support:
-> > > +        type: boolean
-> > > +        description: Disable DFE (Decision Feedback Equalizer), which mitigates
-> > > +          intersymbol interference and some reflections caused by impedance mismatches.
-> > > +
-> > > +      qcom,nfts:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description:
-> > > +          Number of Fast Training Sequence (FTS) used during L0s to L0 exit
-> > > +          for bit and Symbol lock.
-> > 
-> > Also something common.
-> > 
-> > The problem I have with all these properties is you are using them on
-> > both the upstream and downstream sides of the PCIe links. They belong in
-> > either the device's node (downstream) or the bus's node (upstream).
-> > 
-> This switch allows us to configure both upstream, downstream ports and
-> also embedded Ethernet port which is internal to the switch. These
-> properties are applicable for all of those.
-> > > +
-> > > +    allOf:
-> > > +      - $ref: /schemas/pci/pci-bus.yaml#
-> > 
-> > pci-pci-bridge.yaml is more specific and closer to what this device is.
-> > 
-> I tried this now, I was getting warning saying the compatible
-> /local/mnt/workspace/skales/kobj/Documentation/devicetree/bindings/pci/qcom,qps615.example.dtb:
-> pcie@0,0: compatible: ['pci1179,0623'] does not contain items matching the
-> given schema
->         from schema $id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
-> /local/mnt/workspace/skales/kobj/Documentation/devicetree/bindings/pci/qcom,qps615.example.dtb:
-> pcie@0,0: Unevaluated properties are not allowed ('#address-cells',
-> '#size-cells', 'bus-range', 'device_type', 'ranges' were unexpected)
-> 
-> I think pci-pci-bridge is expecting the compatible string in this format
-> only "pciclass,0604".
-
-I think the pci-pci-bridge schema requires to have "pciclass,0604" among
-other compatibles. So you should be able to do something like:
-
-compatible = "pci1179,0623", "pciclass,0604";
-
-At least if follows PCI Bus Binding to Open Firmware document.
-
-> 
-> > > +
-> > > +unevaluatedProperties: false
-> > > +
-> > > +required:
-> > > +  - vdd18-supply
-> > > +  - vdd09-supply
-> > > +  - vddc-supply
-> > > +  - vddio1-supply
-> > > +  - vddio2-supply
-> > > +  - vddio18-supply
-> > > +  - i2c-parent
-> > > +  - reset-gpios
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +
-> > > +    pcie {
-> > > +        #address-cells = <3>;
-> > > +        #size-cells = <2>;
-> > > +
-> > > +        pcie@0 {
-> > > +            device_type = "pci";
-> > > +            reg = <0x0 0x0 0x0 0x0 0x0>;
-> > > +
-> > > +            #address-cells = <3>;
-> > > +            #size-cells = <2>;
-> > > +            ranges;
-> > > +            bus-range = <0x01 0xff>;
-> > > +
-> > > +            pcie@0,0 {
-> > > +                compatible = "pci1179,0623";
-> > > +                reg = <0x10000 0x0 0x0 0x0 0x0>;
-> > > +                device_type = "pci";
-> > > +                #address-cells = <3>;
-> > > +                #size-cells = <2>;
-> > > +                ranges;
-> > > +                bus-range = <0x02 0xff>;
-> > > +
-> > > +                i2c-parent = <&qup_i2c 0x77>;
-> > > +
-> > > +                vdd18-supply = <&vdd>;
-> > > +                vdd09-supply = <&vdd>;
-> > > +                vddc-supply = <&vdd>;
-> > > +                vddio1-supply = <&vdd>;
-> > > +                vddio2-supply = <&vdd>;
-> > > +                vddio18-supply = <&vdd>;
-> > > +
-> > > +                reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-> > > +
-> > > +                pcie@1,0 {
-> > > +                    reg = <0x20800 0x0 0x0 0x0 0x0>;
-> > > +                    #address-cells = <3>;
-> > > +                    #size-cells = <2>;
-> > > +                    device_type = "pci";
-> > > +                    ranges;
-> > > +                    bus-range = <0x03 0xff>;
-> > > +
-> > > +                    qcom,no-dfe-support;
-> > > +                };
-> > > +
-> > > +                pcie@2,0 {
-> > > +                    reg = <0x21000 0x0 0x0 0x0 0x0>;
-> > > +                    #address-cells = <3>;
-> > > +                    #size-cells = <2>;
-> > > +                    device_type = "pci";
-> > > +                    ranges;
-> > > +                    bus-range = <0x04 0xff>;
-> > > +
-> > > +                    qcom,nfts = <10>;
-> > > +                };
-> > > +
-> > > +                pcie@3,0 {
-> > > +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
-> > > +                    #address-cells = <3>;
-> > > +                    #size-cells = <2>;
-> > > +                    device_type = "pci";
-> > > +                    ranges;
-> > > +                    bus-range = <0x05 0xff>;
-> > > +
-> > > +                    qcom,tx-amplitude-millivolt = <10>;
-> > > +                    pcie@0,0 {
-> > > +                        reg = <0x50000 0x0 0x0 0x0 0x0>;
-> > > +                        #address-cells = <3>;
-> > > +                        #size-cells = <2>;
-> > > +                        device_type = "pci";
-> > 
-> > There's a 2nd PCI-PCI bridge?
-> This the embedded ethernet port which is as part of DSP3.
-
-So is there an adidtional bus for that ethernet device?
-
-> 
-> - Krishna Chaitanya.
-> > 
-> > > +                        ranges;
-> > > +
-> > > +                        qcom,l1-entry-delay-ns = <10>;
-> > > +                    };
-> > > +
-> > > +                    pcie@0,1 {
-> > > +                        reg = <0x50100 0x0 0x0 0x0 0x0>;
-> > > +                        #address-cells = <3>;
-> > > +                        #size-cells = <2>;
-> > > +                        device_type = "pci";
-> > > +                        ranges;
-> > > +
-> > > +                        qcom,l0s-entry-delay-ns = <10>;
-> > > +                    };
-
-What is this?
-
-> > > +                };
-> > > +            };
-> > > +        };
-> > > +    };
+> > > To match spec usage:
+> > > s/Aspm/ASPM/
+> > > s/l0s/L0s/
+> > > s/l1/L1/
 > > > 
-> > > -- 
-> > > 2.34.1
+> > > Other than the fact that qps615 needs the driver to configure these,
+> > > there's nothing qcom-specific here, so I suggest the names should omit
+> > > "qcom" and include "aspm".
 > > > 
+> > 
+> > In that case, these properties should be documented in dt-schema:
+> > https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml
+> > 
+> > - Mani
+> I am fine to move to pci-bus-common.yaml but currently these are being used
+> by qps615 only I hope that is fine.
+
+With bindings there is no such thing as "currently". Once defined they
+become an ABI and must not be changed.
 
 -- 
 With best wishes
