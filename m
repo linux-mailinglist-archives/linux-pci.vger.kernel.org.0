@@ -1,101 +1,119 @@
-Return-Path: <linux-pci+bounces-18966-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18967-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 727559FAE1A
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 13:05:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 833E69FAE49
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 13:30:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB9087A19A3
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 12:05:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBA8818833D8
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 12:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E381A8F6E;
-	Mon, 23 Dec 2024 12:05:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C297B199FA4;
+	Mon, 23 Dec 2024 12:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuHqgJj+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nx6bZ0N7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE35A166307;
-	Mon, 23 Dec 2024 12:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9657418FDDC;
+	Mon, 23 Dec 2024 12:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734955549; cv=none; b=f6pWmRIcNV3FJfmZi3cmc+96BU3D3A/0G4c0soTaV4n/LLSLj8f9GpS2iY67CNUtazzi5SdDedCHnHe6jddBtQipe6pSOhRSVR9Uzp1qo6xiKt58yEGHpinK8eE1WUN2KKJ4hqrZhm0eHyV5iM5AvSDrcRUtFptXkgNG+zqKM9M=
+	t=1734957019; cv=none; b=WU7zTc769N3Yus6H0K6hsAcJQck0V2rLHXaNT0Oe5r/jBj1jQi1WKSUDynDTW+O533wp9kTeM/Y/CWT7lghgT+43qyFaZ69owhJaGAz3T0ekIHiNa1GFLRL0qbRjEn5MFHaDL5rXNupNrh7em2+ReJRlXf7p4CjJChn0W7hviq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734955549; c=relaxed/simple;
-	bh=e30vzzM7b/2rv4f0iYgnhl37bCQLhfHEPZ3Scyl8qPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tE8n/I8UvVDpVOC+MqWXr+Bbe7Wj5VMTfBItQr8hWmY9i1XmQ7iZnDRiESWAS8KCEZy9dMuASBs4kkJcM9KTATN0d+xaWrl1TZILTtKCXXl18je2efEsRU18AD8abx0rkrWNGgIXWoqUA+0haksYehu80NH6J8TJtukZJed/f0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuHqgJj+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A8EC4CED3;
-	Mon, 23 Dec 2024 12:05:47 +0000 (UTC)
+	s=arc-20240116; t=1734957019; c=relaxed/simple;
+	bh=6nXbrL1gwIytwF5O4XWcHKIPCE3bZ8kGnps/owl0hCU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=rijpoe96lKpTngtBSjQA/2QqH/XlQuP9ab6g7+Ja2UL6xSJaxXTvIR/kl/oTnlq2uiXCu1hO4T1MCk08pG7c1vBrnLUyZ9JEhDcGyOGfN/7PiJ9KncEiF8sPMvMYkZZoS/wjGNCvxRXlXWBSeeJVKUTgGr78hlZhOpzHkYdG1Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nx6bZ0N7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA429C4CED3;
+	Mon, 23 Dec 2024 12:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734955549;
-	bh=e30vzzM7b/2rv4f0iYgnhl37bCQLhfHEPZ3Scyl8qPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cuHqgJj+B6woJTFfkd/utLcetirMePw8wzjA0DOhnnvGUvuychiXXw/SXFFnAkZba
-	 2rdfsil4V0PJqqXFYRs+LZXC4+YlFDs4CSAVxtkGXQUHI7ZKM3InGaU+mrolaBLHan
-	 t2epj3bP9BVhM71bDI5Yt6a7zjE9t+ME+HiF36knlPtMN8efsAmhY5h2vCTW4RqW2N
-	 7FFE8t5TehtbWv5O/IgFkeFpRBrm9QCj9PAKO2wuwu7JETc35p6dyTKbtWLNhBuZ4P
-	 thN9J8a+eqWFuz7HaGG7gLUQ6U+FLCP8nLQv8NBJ/guOl06n2J7v0aM5BmVMBX0fIT
-	 e096H93blej8Q==
-Date: Mon, 23 Dec 2024 13:05:45 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] misc: pci_endpoint_test: Set reserved BARs for each
- SoCs
-Message-ID: <Z2lSGcQCob6_upuT@ryzen>
-References: <20241216073941.2572407-1-hayashi.kunihiko@socionext.com>
- <20241216073941.2572407-2-hayashi.kunihiko@socionext.com>
- <Z2E0EDC3tV76303d@ryzen>
- <56f1a6cf-40ad-4452-bce1-274eb3d124a9@socionext.com>
- <Z2QasXs0c9jQY8RL@x1-carbon>
- <5f978a20-3f28-4282-8688-b05f3a1f21b8@socionext.com>
+	s=k20201202; t=1734957019;
+	bh=6nXbrL1gwIytwF5O4XWcHKIPCE3bZ8kGnps/owl0hCU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Nx6bZ0N7x9kx21ITNGRYUptWqADRtrtEc4CBIHp1Xvaxrr6eECiGHwPb3xejQFZaH
+	 XxpAF9MuZFAqDe+xlJtkB9vH9AtesxBtCEckTZON9jjmenbNOlB3RbN2bh+pgJ2orJ
+	 7hNt3RFqWznstdgwtEzvm0Tx335YFql2Vwn6ws8DfeqjpOZZ17SvCkLusIL8yZ3F0w
+	 UDIBaDhZTiosKMOt+l49dUUliqaYavE80CtjMdwp0cSWH4fmv1nHpWj984tkUXDr6f
+	 xU60eoVFgX3QPWuZ5L0zbkyNHYlX9Z4FiuUGntG7hPcvcsC4IFicjveCTieJx3nKwA
+	 KKtMsrlNto5eQ==
+Date: Mon, 23 Dec 2024 06:30:17 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f978a20-3f28-4282-8688-b05f3a1f21b8@socionext.com>
-
-On Mon, Dec 23, 2024 at 08:51:42PM +0900, Kunihiko Hayashi wrote:
-> On 2024/12/19 22:08, Niklas Cassel wrote:
-> > On Thu, Dec 19, 2024 at 08:17:50PM +0900, Kunihiko Hayashi wrote:
-> > > On 2024/12/17 17:19, Niklas Cassel wrote:
-
-[...]
-
-> On the other hand, some other SoCs might have BAR masks fixed by the DWC
-> IP configuration. These BARs will be exposed to the host even if the BAR
-> mask is set to 0. However, such case hasn't been upstreamed, so there is
-> no need to worry about them now.
-
-The three schemes are:
-BARn_SIZING_SCHEME_N =“Fixed Mask” (0)
-BARn_SIZING_SCHEME_N =“Programmable Mask” (1)
-BARn_SIZING_SCHEME_N =“Resizable BAR” (2)
-
-Considering that the text:
-"To disable a BAR (in any of the three schemes), your application can
-write ‘0’ to the LSB of the BAR mask register."
-
-says "in any of the three schemes", I would expect writing 0 to BAR_MASK
-should disable a BAR, even for a Fixed Mask/Fixed BAR.
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, heiko@sntech.de, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, Simon Xue <xxm@rock-chips.com>, 
+ linux-rockchip@lists.infradead.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>
+To: Kever Yang <kever.yang@rock-chips.com>
+In-Reply-To: <20241223110637.3697974-3-kever.yang@rock-chips.com>
+References: <20241223110637.3697974-1-kever.yang@rock-chips.com>
+ <20241223110637.3697974-3-kever.yang@rock-chips.com>
+Message-Id: <173495701750.480868.16123444058526675248.robh@kernel.org>
+Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: dw: rockchip: Add rk3576
+ support
 
 
-Kind regards,
-Niklas
+On Mon, 23 Dec 2024 19:06:32 +0800, Kever Yang wrote:
+> rk3576 is using dwc controller, with msi interrupt directly to gic instead
+> of to gic its, so
+> - no its suport is required and the 'msi-map' is not need anymore,
+> - a new 'msi' interrupt is needed.
+> 
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+> 
+> Changes in v3:
+> - Fix dtb check broken on rk3588
+> - Update commit message
+> 
+> Changes in v2:
+> - remove required 'msi-map'
+> - add interrupt name 'msi'
+> 
+>  .../devicetree/bindings/pci/rockchip-dw-pcie-common.yaml      | 4 +++-
+>  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml   | 4 +---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml:85:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241223110637.3697974-3-kever.yang@rock-chips.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
