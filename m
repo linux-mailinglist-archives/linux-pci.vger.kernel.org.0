@@ -1,267 +1,148 @@
-Return-Path: <linux-pci+bounces-18974-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18975-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61CE09FB0AF
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 16:26:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47FAC9FB308
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 17:40:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD6EF1626B5
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 15:26:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C309C164B58
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2024 16:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ABF1450FE;
-	Mon, 23 Dec 2024 15:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7B31B4139;
+	Mon, 23 Dec 2024 16:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FvFkr8HR"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NuT6L0tk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFCF80BEC
-	for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 15:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1F91AF0B4;
+	Mon, 23 Dec 2024 16:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734967569; cv=none; b=l3VwlARaJnbQJXJO+Qp6utbULDyjQ5hcFJ5Q/IdRhYAHZmm825oGJtIHGN6yBc0y2Y8b2VYeMCMlntmt0EKmALTvBHnQ3qz3aajN6/EoNoyIQt7fc9ZXV6QNwuYURw6uhuDfvz3IvbdcplvZSEmQc+E7+AbpKa5oxWHMqUYBL9o=
+	t=1734971757; cv=none; b=qjhQUkkfzRl39xuaucvxNolZpUz85kS+EsWcyy1VMuyANItJFvZPGS+5VFxnHqb1SF6XmO/fcwxBIrbaGKbdzLRyzc+llKrG/Rh8alIQT5ddFsEHAi/7lQAMOwZw53e2KSGAyx0FNV7QXCb/Ki2+sQg5kCKTT1SWKtWb81qr0iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734967569; c=relaxed/simple;
-	bh=8KxeIyHLII2N4zOym0EJjR22b9J8GOGmryISAcvRUL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufwFDRvtQfT4ZKBtkOv4WS4ay7NZwP8ayzUQ6PDm+IVrRtkqKU2PYvDXSkoCdBdo/dnkzH1H/5ewKsyGtka35DLdbjo/u04lMh36Nw8AMf1wrBZWsbWrV2sZuTNZHqOIaXGLPYj1mmbPGK2Xu0tuHaXHLEjkjEQRJ3BgWMd03gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FvFkr8HR; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3043e84c687so36336381fa.1
-        for <linux-pci@vger.kernel.org>; Mon, 23 Dec 2024 07:26:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734967565; x=1735572365; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yRNn5SEviZmZ++7jvBvB2eWIk3Q1+FuekrxDUUhMtLM=;
-        b=FvFkr8HRTN4SY86SNnywaOuKdFQJ/0y7z+q5gHNktJaFuJ4MqOGb+ZWuYvaMgydHf2
-         PyOk2p4k+6kX0xMxZt3T/iAmxB5WhklODXP356AW/1yfDQuCW49K9MfTlxM1FJfAXLkN
-         FMd3I/JtBxKsqDp53Ys2eJKtyxgVZOvhgsrNTkNgH/HBXLXSCyA7ey/JV/f67HcD8Z7a
-         VUzCa3h8lEi3Fbwji+n9ZoSS3m1j7rsPSodvILloFdpnJQd2Yoa5g7vgJwjjvOwQ4N7B
-         ftMZgN9jNi4lzUWwXsJ3jv8a2igbZKP3HnxXT5VuvlotkNkPnF8DFKuJtkxq9QFZsQWF
-         o5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734967565; x=1735572365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yRNn5SEviZmZ++7jvBvB2eWIk3Q1+FuekrxDUUhMtLM=;
-        b=jojDzh4tP4dVOlJ2fO4xUcb5iGs6oM6tVpppu6HdXRoDdl6ytwa4QPtfhOKOlRp5wk
-         527zhLRGNniq/st1UoKAXQHCUgTeCKyVRURN+VLYw+qFqupF1qUUmbo1Iy5FZ352gIX8
-         iKGOgHpSOA3KrzrpJhVc5eSxsQDovAFpMfxDy1DPccRYfBWJ8cx3/FqmsJR23A39NVxC
-         a3tlLfI7mupAM7jGm6gla2I2HVLRYRkTZKErYAfL8iyZNY1Iuw0iC78vfhEMuCaOg8rl
-         ahs364OVAcSkINDcHYAR0lY3xKh8pL2ekL3OQahAl7ZNCS1b8uy8ir3ysr6qtlZv6jkL
-         vufA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDmaz0PIahh728kRX9J6rrp8cAAWKfJGhXZBugAO4fc3du6+GMEE5gAt3hWH3MDLxwvfiWNdyeSKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe20sC0+0caaF+HSPr7wRKQ9mDlfExFKWudw0qB99CjINdy1Xk
-	og5LtPLodPU2cUDlornxSVPsubZq/CxWcjQzTMFgbb0fmNsavuTNkzrk3a0VHrQ=
-X-Gm-Gg: ASbGncsGNadQMR9XYzwmQJOy0WZCZyHqQBvX8TNsKfyhYreBCuXdvDT6ExDorBvez7w
-	7cNrGdgnvn9JF7o6r4zwGGBcKslFOdpu8cSRr10kPkzZ0yuyDOYlog200WAXFeTpotlMiwQa+OY
-	D6wI7mnhOW5Az59mzee7Tw5CnthP3bsWPbX2qQgRaA7vUEFIx13OWIYCAHJWdjqn5gFBWdwRDIb
-	70NSDt/bpVrv44jMNMQeFkm3FRXosvUrfTrIDWWABMLscvCLfcUKZJCrXFYj4ykYiUuCwodUA62
-	omrtA+Fn+89m3jxVcAVy5eeGINACyrsuoWsa
-X-Google-Smtp-Source: AGHT+IG+kCxBxVnOETwXcR6CNiK04pSn0N/4ewqqpIaaBk/+kzh3htMWI6X8QTGNkH+somP+K3HIdA==
-X-Received: by 2002:a05:651c:2129:b0:2fb:4b0d:9092 with SMTP id 38308e7fff4ca-30468519761mr39670991fa.1.1734967565411;
-        Mon, 23 Dec 2024 07:26:05 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3045ad6cae6sm13678521fa.23.2024.12.23.07.26.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2024 07:26:04 -0800 (PST)
-Date: Mon, 23 Dec 2024 17:26:02 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com, 
-	quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v3 2/4] PCI: of: Add API to retrieve equalization presets
- from device tree
-Message-ID: <wjk32haduzgiea676mamqdr6mhbmm3rrb6eyhzghqpczjuiazx@ipik3jhjzmhz>
-References: <20241223-preset_v2-v3-0-a339f475caf5@oss.qualcomm.com>
- <20241223-preset_v2-v3-2-a339f475caf5@oss.qualcomm.com>
- <piccoomv7rx4dvvfdoesmxbzrdqz4ld6ii6neudsdf4hjj2yzm@2bcuacwa4feb>
- <d317c51a-3913-6c49-f8db-e75589f9289a@quicinc.com>
+	s=arc-20240116; t=1734971757; c=relaxed/simple;
+	bh=2LpGnCh13IE5nAVYp9h6TBX2ay5C5BHnYyLrnbg7fe4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ASBFETKyRchDrGqvKzF+oMxmBIKp90AYqp3owoWDpb0e2JY+RihdSFRa4Tw+rdckhj0j48gMA18fVJpdmeJdLrYS4EhFfjbkejmr9JJDuRypaJaB82j9sCwywZqM1LkPWVUkf9zL8hq41MLnW1W/N2bXW1JwBmmXuvMXkKXO444=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NuT6L0tk; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C00F3C0002;
+	Mon, 23 Dec 2024 16:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1734971746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xy3/Aj5G5XKlSOGuvuIp4d0+mFT8WB0dvmaCLkjMxr4=;
+	b=NuT6L0tkVKLCJ8BKcPhxuTOoiTzvuwVakfuU3d7T8Z/oDRQ3IUOeB9NWuiutvisPHuhz5U
+	jbOoDLGuBn3S8cn5dqIdsOxmOp6PB3oFHnc18NVgUqcG1UUfup0ns4ElSrB9xrTSZJJAWz
+	VFv5O+NOk7d0dMBkTIdl9tZkqJKckcUwEFKv9yvUzjuhE7IvN+Ze8pBWTKs2tsU37Ltm6u
+	8QY666Wj4lRhVaND0oGDS6gdsu0EEC4VP8Fka/jPFGcstGIeAizpVi8cUVwLXM/HYtbkot
+	BxZ67xvtd0KDslthfFHjtOqHk1YLKR2L/N/Neh9nwAzsrpRCHoa2XYg+CqDecw==
+Message-ID: <9b7161a7-2682-4824-8af0-39477b0938d8@bootlin.com>
+Date: Mon, 23 Dec 2024 17:35:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d317c51a-3913-6c49-f8db-e75589f9289a@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/10] Add PCIe support for bcm2712
+To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Andrea della Porta <andrea.porta@suse.com>,
+ Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
+References: <20241025124515.14066-1-svarbanov@suse.de>
+Content-Language: en-US
+From: Olivier Benjamin <olivier.benjamin@bootlin.com>
+In-Reply-To: <20241025124515.14066-1-svarbanov@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: olivier.benjamin@bootlin.com
 
-On Mon, Dec 23, 2024 at 08:02:23PM +0530, Krishna Chaitanya Chundru wrote:
+On 10/25/24 14:45, Stanimir Varbanov wrote:
+> Here is v4 of the series which aims to add support for PCIe on bcm2712 SoC
+> used by RPi5. Previous v3 can be found at [1].
 > 
+Hello Stanimir,
+
+Thank you for you work on this!
+
+> v3 -> v4 changes include:
+>   - Addressed comments on the interrupt-controller driver (Thomas)
+>   - Moved "Reuse config structure" patch earlier in the series (Bjorn)
+>   - Merged "Avoid turn off of bridge reset" into "Add bcm2712 support" (Bjorn)
+>   - Fixed DTB warnings on broadcom/bcm2712-rpi-5-b.dtb
 > 
-> On 12/23/2024 5:17 PM, Dmitry Baryshkov wrote:
-> > On Mon, Dec 23, 2024 at 12:21:15PM +0530, Krishna Chaitanya Chundru wrote:
-> > > PCIe equalization presets are predefined settings used to optimize
-> > > signal integrity by compensating for signal loss and distortion in
-> > > high-speed data transmission.
-> > > 
-> > > As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
-> > > of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
-> > > configure lane equalization presets for each lane to enhance the PCIe
-> > > link reliability. Each preset value represents a different combination
-> > > of pre-shoot and de-emphasis values. For each data rate, different
-> > > registers are defined: for 8.0 GT/s, registers are defined in section
-> > > 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
-> > > an extra receiver preset hint, requiring 16 bits per lane, while the
-> > > remaining data rates use 8 bits per lane.
-> > > 
-> > > Based on the number of lanes and the supported data rate, this function
-> > > reads the device tree property and stores in the presets structure.
-> > > 
-> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > ---
-> > >   drivers/pci/of.c  | 45 +++++++++++++++++++++++++++++++++++++++++++++
-> > >   drivers/pci/pci.h | 17 +++++++++++++++--
-> > >   2 files changed, 60 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > index dacea3fc5128..99e0e7ae12e9 100644
-> > > --- a/drivers/pci/of.c
-> > > +++ b/drivers/pci/of.c
-> > > @@ -826,3 +826,48 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
-> > >   	return slot_power_limit_mw;
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> > > +
-> > 
-> > kerneldoc? Define who should free the memory and how.
-> > 
-> I will update this in next series.
-> as we are allocating using devm_kzalloc it should be freed on driver
-> detach, as no special freeing is required.
-> > > +int of_pci_get_equalization_presets(struct device *dev,
-> > > +				    struct pci_eq_presets *presets,
-> > > +				    int num_lanes)
-> > > +{
-> > > +	char name[20];
-> > > +	void **preset;
-> > > +	void *temp;
-> > > +	int ret;
-> > > +
-> > > +	if (of_property_present(dev->of_node, "eq-presets-8gts")) {
-> > > +		presets->eq_presets_8gts = devm_kzalloc(dev, sizeof(u16) * num_lanes, GFP_KERNEL);
-> > > +		if (!presets->eq_presets_8gts)
-> > > +			return -ENOMEM;
-> > > +
-> > > +		ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
-> > > +						 presets->eq_presets_8gts, num_lanes);
-> > > +		if (ret) {
-> > > +			dev_err(dev, "Error reading eq-presets-8gts %d\n", ret);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	for (int i = 1; i < sizeof(struct pci_eq_presets) / sizeof(void *); i++) {
-> > > +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << i);
-> > > +		if (of_property_present(dev->of_node, name)) {
-> > > +			temp = devm_kzalloc(dev, sizeof(u8) * num_lanes, GFP_KERNEL);
-> > > +			if (!temp)
-> > > +				return -ENOMEM;
-> > > +
-> > > +			ret = of_property_read_u8_array(dev->of_node, name,
-> > > +							temp, num_lanes);
-> > > +			if (ret) {
-> > > +				dev_err(dev, "Error %s %d\n", name, ret);
-> > > +				return ret;
-> > > +			}
-> > > +
-> > > +			preset = (void **)((u8 *)presets + i * sizeof(void *));
-> > 
-> > Ugh.
-> > 
-> I was trying iterate over each element on the structure as presets holds the
-> starting address of the structure and to that we are adding size of the void
-> * point to go to each element. I did this way to reduce the
-> redundant code to read all the gts which has same way of storing the data
-> from the device tree. I will add comments here in the next series.
-
-Please rewrite this in a cleaner way. The code shouldn't raise
-questions.
-
-> > > +			*preset = temp;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 14d00ce45bfa..82362d58bedc 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -731,7 +731,12 @@ static inline u64 pci_rebar_size_to_bytes(int size)
-> > >   }
-> > >   struct device_node;
-> > > -
-> > > +struct pci_eq_presets {
-> > > +	void *eq_presets_8gts;
-> > > +	void *eq_presets_16gts;
-> > > +	void *eq_presets_32gts;
-> > > +	void *eq_presets_64gts;
-> > 
-> > Why are all of those void*? 8gts is u16*, all other are u8*.
-> > 
-> To have common parsing logic I moved them to void*, as these are pointers
-> actual memory is allocated by of_pci_get_equalization_presets()
-> based upon the gts these should not give any issues.
-
-Please, don't. They have types. void pointers are for the opaque data.
-
-> > > +};
-> > 
-> > Empty lines before and after the struct definition.
-> > 
-> ack.
+> For more detailed info check patches.
 > 
-> - Krishna Chaitanya.
-> > >   #ifdef CONFIG_OF
-> > >   int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
-> > >   int of_get_pci_domain_nr(struct device_node *node);
-> > > @@ -746,7 +751,9 @@ void pci_set_bus_of_node(struct pci_bus *bus);
-> > >   void pci_release_bus_of_node(struct pci_bus *bus);
-> > >   int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
-> > > -
-> > > +int of_pci_get_equalization_presets(struct device *dev,
-> > > +				    struct pci_eq_presets *presets,
-> > > +				    int num_lanes);
-> > 
-> > Keep the empty line.
-> > 
-> > >   #else
-> > >   static inline int
-> > >   of_pci_parse_bus_range(struct device_node *node, struct resource *res)
-> > > @@ -793,6 +800,12 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
-> > >   	return 0;
-> > >   }
-> > > +static inline int of_pci_get_equalization_presets(struct device *dev,
-> > > +						  struct pci_eq_presets *presets,
-> > > +						  int num_lanes)
-> > > +{
-> > > +	return 0;
-> > > +}
-> > >   #endif /* CONFIG_OF */
-> > >   struct of_changeset;
-> > > 
-> > > -- 
-> > > 2.34.1
-> > > 
-> > 
+I would simply like to report that I have (rather succintly) tested this 
+series.
+I have built a 6.13.0-rc4-v8 vanilla kernel and deployed it to a 
+Raspberry Pi 5 equipped with a "Raspberry Pi SSD" NVMe Drive on an M.2 
+Hat+ connected to the main board using PCIe.
+This of course did not work, and I could not see my drive.
+I then applied this series on top, rebuilt and deployed the kernel, and 
+I could see the /dev/nvme0 device and mount the ext4 fs on the 1st 
+partition.
+
+> Comments are welcome!
+> ~Stan
+	
+If you find it helpful, feel free to collect my Tested-By tag.
+
+I'll be happy to do the same for future versions of the series and can 
+do some additional testing if you want an extra pair of eyes.
+
+Olivier
+> 
+> [1] https://patchwork.kernel.org/project/linux-pci/list/?series=898891
+> 
+> Stanimir Varbanov (10):
+>    dt-bindings: interrupt-controller: Add bcm2712 MSI-X DT bindings
+>    dt-bindings: PCI: brcmstb: Update bindings for PCIe on bcm2712
+>    irqchip: Add Broadcom bcm2712 MSI-X interrupt controller
+>    PCI: brcmstb: Reuse config structure
+>    PCI: brcmstb: Expand inbound window size up to 64GB
+>    PCI: brcmstb: Enable external MSI-X if available
+>    PCI: brcmstb: Add bcm2712 support
+>    PCI: brcmstb: Adjust PHY PLL setup to use a 54MHz input refclk
+>    arm64: dts: broadcom: bcm2712: Add PCIe DT nodes
+>    arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
+> 
+>   .../brcm,bcm2712-msix.yaml                    |  60 ++++
+>   .../bindings/pci/brcm,stb-pcie.yaml           |  21 ++
+>   .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |   8 +
+>   arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 162 +++++++++
+>   drivers/irqchip/Kconfig                       |  16 +
+>   drivers/irqchip/Makefile                      |   1 +
+>   drivers/irqchip/irq-bcm2712-mip.c             | 310 ++++++++++++++++++
+>   drivers/pci/controller/pcie-brcmstb.c         | 204 +++++++++---
+>   8 files changed, 735 insertions(+), 47 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+>   create mode 100644 drivers/irqchip/irq-bcm2712-mip.c
+> 
 
 -- 
-With best wishes
-Dmitry
+Olivier Benjamin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
