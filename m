@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-19024-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19025-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E6589FC232
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 21:21:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD349FC264
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 21:51:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC21D16356E
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 20:21:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9473116119F
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 20:51:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 366161922C6;
-	Tue, 24 Dec 2024 20:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0ACE1865FA;
+	Tue, 24 Dec 2024 20:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="IUiC5ESt"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="h8vONGXR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020118.outbound.protection.outlook.com [52.101.196.118])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020099.outbound.protection.outlook.com [52.101.195.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE4D142E76;
-	Tue, 24 Dec 2024 20:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B275E8BFF;
+	Tue, 24 Dec 2024 20:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.99
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735071691; cv=fail; b=YOn86+OSeBH+2YtAjEIY+9YNo4WgfGnr0AFDHUG3nwyKHAW3e6ef+RjxouJV3UyxNLoDZzia0Q9VmvCt200WEVxGRpJcn5Zn3FpsIVi31IKFDe/A7ao3ih7dsU3pXrgqTA3dlNkf01z6oIHVTanLzK9K6ZmZ/CxiYNr6AQes0hU=
+	t=1735073492; cv=fail; b=n9s7JewsdJzUr8b2HLxhNqajLwhTnDtH5IWbJJz28H91Pz3PTF9P2orhuuvPde7PoynA91Y0WkglBjH5Evdm1NVxxvorqLEPVZRDXK775+2Cly16Xk3tRIFR4YUrhrT1UJluUPMCptskI5b2Xy28hd7bIisEpt9FMbZ1zsG8RpA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735071691; c=relaxed/simple;
-	bh=uFyWc4QlgcyuGSCbEn+yRy3+8v/xLESQ7c2IeQOI56Y=;
+	s=arc-20240116; t=1735073492; c=relaxed/simple;
+	bh=rZxg1xD0jhgxlwj9K1E895oY4ZtjTCarlB0mlE579PY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iTbpapU3ba3AgAai2n3HJdIpqANzNRqUMgkk92NqEqAUdsp6SFLPvTBsTd7d5YFjOVbJLhrKsQD5i+N3s753lNtpJvQ7OcL2+TLaxoH9GUY+48zOmkpQ3N7+Re1QDzbsj5xVFPbD34xKKbbQyA/Lu2aSWwKH/t8E/7H99bb+CZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=IUiC5ESt; arc=fail smtp.client-ip=52.101.196.118
+	 Content-Type:MIME-Version; b=cwvEK1oqBPO8HrzzSWyceGLjklclS98MdBkd8vzptOxlhVIPqbX1i8Tr64ox6Yxb1repTO6tRWGxemoLBfRbfli4YJzGLAZB6ySnDIYLz1kcZS6NquJbRVrmgb4jEWT44psIBwGGZ8yxpPIT9fQp/eqhNdZNO9zA6SvsmqXymvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=h8vONGXR; arc=fail smtp.client-ip=52.101.195.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vAmXtTXojwLyyLMsdeqrz+TrFxcK5NpSH2JDcUCFL4ZwDOvxiQ1p64o7YkbjXb2wWnZFBWQ1DyaiaFzClsK5z2fywYUenEjhJH/eCpV+E5X06RaUAf84gYelFm/LHJO2vMtRno7zVyqiRCeFMNhe5dZCqXRuFraOaTs6UeTsQf2/69x8GysAVag97Cce/sto2vjTct0OMWoB6bF7t4YWlk/rOLofvtKuZ0rWET+h2MsKfR67v7dALCixHolpMu8DQsIx4SDrb7RYoiunqcORj+IQiF6Ta/ZhPW3vQM92cvqjhW0kpT5siC6HS50/NAmcu0Liz/TdJ573BNoC3NP9gw==
+ b=e9XO7gY+xz0IVveZlIM0HO7EB5KL3ianhrd1oR8HxYdU0PnvQ7NfMIZf+W0WPL8rsfPLCQOfH0yNmrnQaVu2f4CbjJ43domEXi75l9htZ+x+u7tiPJjTA4Dfs4rA9FSc4jE0Z8m5m0FZFqHo31xIYFDYFBsX1HzyZl6Mn3e6UETE3J16l56Fi6Fh5/jCyT8IKeV8gY9NNUdJogEw3F/jrPG7tXS3i4cTSLFqbSCvjqgdSgFmOEuStDcp90nalFU2iO07A+rQGjNUX6cGgpysz+iJXQFXTgsbsIt9ItPzwILAs2DIBdaZyW+k2P+iIlmKjrIc19AfHGbiI/eDIY96tA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zDRd850OC8czIEmHprOIgVDMmbJNKxa0GuVVXx6v5rU=;
- b=So3vqBTGSxCGvKbMfjyk50LAsNsPtGuUHG2ldWTdq9j3ENMUayyHD2qLsgBy3mxjo9ssmOshsYuS/hr4xYmHyDqOdeJcATHUQNRp9+y8O7XpMYgDDjPao0TbKVCjxN41loXfLGk8IB8Cn9dUXmtbfziYtQRAEtnfU4hijJCGKUJgdEIQsaEGe+AmZF/JeUMPJNxJx6p+eCy7Uwq09NOku5DB0Eb8Zo5/RWG0m6ehl3IHq/sgckXmXOzDi0s7hmcusSx3IgodPR5uRqZRM76pd4C9PNFXW4JTRCyPHLXZxRNds4BDwTzDmGsw7RmT/RNw4h4NKiSVwBazHc7oQBBwPw==
+ bh=NeZQshWyCh1ztRWoIxg4DKLipur37/Ku4XQWFppXNYI=;
+ b=Dk0BbIAN7inSYGiAcqXaVUTAMoSM5s7jlMTa6PrSh/d9K/dxCjZceRpJPCzFlfL7tCGiHF6CUVJ1j0AtXW3mVPCHREIoyTkWybmZ1GWNN+fdi/i8BLM3ZXnbjqWV10h2lSOyzDCNEed/UbAamKTMCkXhvzrvKEQZp/oA4V70884GT1Qun+4b+bDesB/eymvKhHdoeCaPk2OlWR0iSp9S+QjkDckBKiX57boPijKmzb+lM2jWkL+if86Hr/X2PQsmta9GuMpsjVUPaX44q3AWl8ep9YdOsFAfjiN55MakhRaRmegtD15i06wrOwgaIJEGAnhUpgz1vqu5ea+ansSyCg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
  dkim=pass header.d=garyguo.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zDRd850OC8czIEmHprOIgVDMmbJNKxa0GuVVXx6v5rU=;
- b=IUiC5ESt+sfuNhzo3PPD89qXPN9s/sAkw7tF/MFn9S6WpxfzEaQvCW/T+NeBFJQV3sX8K2HHGw0LV6JmCViuiRnlLebu4MiX+orpS9jmprznKouppd52pqvDQTQg98ssRUY3MNxbvV1mFWumKxHEr6ddd9ODrnb7SrrmPfDxXk0=
+ bh=NeZQshWyCh1ztRWoIxg4DKLipur37/Ku4XQWFppXNYI=;
+ b=h8vONGXRMuPDZDOtFpzuPWYH6gPSv4COI2GCfmnn/L+ZlVRdVF1J1A05MMkLuY5fp09P7EhE5gyl1AYNvH896+eLyuqRnM0wfBzAfc/drF4lhUFku1QXP0pLhrJXLPLe+dw5kjMiwEZ320GyFxjfCCyNEGtCjtGxjWxmUJBjaZE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=garyguo.net;
 Received: from CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:15f::14)
- by LO0P265MB6357.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:2cf::5) with
+ by LO0P265MB6421.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:2ca::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.19; Tue, 24 Dec
- 2024 20:21:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.22; Tue, 24 Dec
+ 2024 20:51:27 +0000
 Received: from CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
  ([fe80::4038:9891:8ad7:aa8a]) by CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
  ([fe80::4038:9891:8ad7:aa8a%7]) with mapi id 15.20.8272.013; Tue, 24 Dec 2024
- 20:21:25 +0000
-Date: Tue, 24 Dec 2024 20:21:20 +0000
+ 20:51:27 +0000
+Date: Tue, 24 Dec 2024 20:51:24 +0000
 From: Gary Guo <gary@garyguo.net>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -71,16 +71,16 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
  chrisi.schrefl@gmail.com, paulmck@kernel.org,
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH v7 05/16] rust: types: add `Opaque::pin_init`
-Message-ID: <20241224202120.581b7088.gary@garyguo.net>
-In-Reply-To: <20241219170425.12036-6-dakr@kernel.org>
+Subject: Re: [PATCH v7 01/16] rust: module: add trait `ModuleMetadata`
+Message-ID: <20241224205124.0f716b22.gary@garyguo.net>
+In-Reply-To: <20241219170425.12036-2-dakr@kernel.org>
 References: <20241219170425.12036-1-dakr@kernel.org>
-	<20241219170425.12036-6-dakr@kernel.org>
+	<20241219170425.12036-2-dakr@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0213.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:6a::19) To CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
+X-ClientProxiedBy: LO4P265CA0266.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:37c::8) To CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
  (2603:10a6:400:15f::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -89,118 +89,130 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP265MB5186:EE_|LO0P265MB6357:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80768fd0-e870-4429-740f-08dd24588a90
+X-MS-TrafficTypeDiagnostic: CWLP265MB5186:EE_|LO0P265MB6421:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53cac18a-1eb3-40bf-bb56-08dd245cbc74
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|1800799024|376014|7416014|366016|7053199007;
+	BCL:0;ARA:13230040|366016|7416014|376014|10070799003|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?x2aRV/+U+r5ZFnRKiN4/W1za7Seur7lQEE5ufl6iI99/t5Tl0duboGBQRvdp?=
- =?us-ascii?Q?s7jDkUsaXE8oLgYqcmyqqffDs5wg9T4GAwJkUqxqX6716adhTbcYFsX1DFPI?=
- =?us-ascii?Q?VSKv1IYxM+pXemybpWN21RQptcUWuIjXnZZi/ycQuYfz0kXQMjQ736nAPsWg?=
- =?us-ascii?Q?r5OZD4OgB2MQxcABiNjoWvZBUZnOVCZlIFsUvy9ayi5oSynYMlkjEWUMvm9K?=
- =?us-ascii?Q?ocN0f8pSr9pYC5RjwH96cAGWRFXafM5STnDYys8K2iflCp9Q1SE+kW5LdY7p?=
- =?us-ascii?Q?9gyeGh49+ym0wayIG1WpjVDjNpMDLpUIkAL59+O+tCY9C52kYoYqCg3W7xBU?=
- =?us-ascii?Q?sVFTciW5gxyNZ1AkMK0xnYcaIQ0d4Ch2E2M89gXaomtU4ATcGVOT0uTmDLEO?=
- =?us-ascii?Q?B0uO83hxc5GzoSpEejam8IpZSSMNheTGxqTjuqyDGvjncWakmQv5uvMT8ZRD?=
- =?us-ascii?Q?rlozFm1Ht3Y0rEt+wWtUGswXdF3AkhyzfuNjUwK8eepW6GFsjucwKn7NcBw5?=
- =?us-ascii?Q?gP16CQsVaFuu58CGdRMMyyQDu5edHUvQzh4fyXBJzCu7Rs1yanThSW0AQtjz?=
- =?us-ascii?Q?MT1zXE7zc6CxmDYPuiPUQhimkxfcY41hIcysEvEq1PM3DvjQ0dnSDe9MQzh1?=
- =?us-ascii?Q?JrNZus1e8MBnqqHM/1Is6j9CGEZCGh7wT1FxVqmt080LPLGC1ypq6C9Y1P1B?=
- =?us-ascii?Q?+w7xMvXIa2cEE6z1NG0u528j8aT5RBcecrHjQtcpHW1l4EE/ATsi1kM7zwab?=
- =?us-ascii?Q?D6E2J/GJpNtju7YCksVTKDG32C1gycKQwEKp7IpJnxxhYpVI09MPcPJpqhFN?=
- =?us-ascii?Q?EmkGl3CPh5Xi6VgKq1nBx/YUS5F3JqMD8q7rsrE1XfOl1XxrRhaLlWW30QIR?=
- =?us-ascii?Q?JjNltjq3bdPsKbUkjzF6E5A/Pha1S97amWgXeoIbaXEt8x023vZoIsXJPHlk?=
- =?us-ascii?Q?fv/yJqQ2StYmLsWK8en7ix0GtR0OHlgE3wsYJ0AeQWTWpWRmwlchH14jWwYC?=
- =?us-ascii?Q?e6McS5IYZqo6kC8oGLwWPY5SHQtEBP4nRy+XiHxZHfXZocSizsF3krf17k/Z?=
- =?us-ascii?Q?MmR+bV8kHvRS3Qb/Hb4kLLtsJBdVe2dcZETdnbvTcHhXwz0LBuR8uauyoEx0?=
- =?us-ascii?Q?GSCua1tTYLHNnrVY7bABTkwN785RlmMfEVHcT4yiAmCvOMWBkBRFkvSxlLS/?=
- =?us-ascii?Q?b7fYGaWxPjK3o5allfAQSqvRFoa/Bns/dVesCSGKwszPtggKZzIuk+qO6bzv?=
- =?us-ascii?Q?Q7gKteNGWFV58/6A1odYHlIkkgPwtSgLcZwpq9SBd6sH4GERSN7NuS6JopyY?=
- =?us-ascii?Q?wpogjOEw/ecU78KgjkBceXQ63V/mgrEC/M+RZ363E9WeCeqHJtl7Hwlsx06k?=
- =?us-ascii?Q?jxGKqcfZ1SgFC+JfYwsqKjyE72oe?=
+	=?us-ascii?Q?OZyPIkuXd3j5En5d1HStPkDD6N0LcOHKSpCax/xSuSW1xdmr74H3uC0BzhVX?=
+ =?us-ascii?Q?s+b4+ZUVL8uIarh6fbm3d6T5dzYIJ81KN3umh8SYu78DPGvB4u6MPyZs7f3q?=
+ =?us-ascii?Q?BDb1q+YsSRkoLwnmyrDV1ST+OZBXJXRxpOh3jdmlwarX0bPgas26HIP/PNiV?=
+ =?us-ascii?Q?VZa/uzkRloG/GnjSBiM7q0OHSGD76Y46gvxQ8FfSWvPgyWAOfscb//oMXtYB?=
+ =?us-ascii?Q?U3ka5MsuFOpEzY9YKpuIb74qXyMF8Eed1STc5DUA+L5r3BZpbSJju67CqkeN?=
+ =?us-ascii?Q?oxs236GDBheaNQVKDJ+0+E1K+9BFzlVs1iKtYk942pMrhJossBZdu0cJ0IqB?=
+ =?us-ascii?Q?lSok1cKUzyeWtPjW3O1SqEk3uBXy/lAN4IDe0VfOpVUOEPStZHnpbYzy2MFO?=
+ =?us-ascii?Q?2pSHoQTZz2NXFIq2sK77usKBYyWvm4Cf6ruR6MEABotJZr4dMNzuyalpFPOs?=
+ =?us-ascii?Q?w1b638M5Ek55XJmtkGMwF/jlY7WIjJkSWqCre0GWCMFXpa57yv6SoDh5AT1l?=
+ =?us-ascii?Q?1z/XqwLHAL3KKIGfj1AcLROIfZVgD88ISR+CWsq5dLwlSuC4BWkNtM8/oJop?=
+ =?us-ascii?Q?bNujiz2sfH11+wOEFq3nJvoMKR3OkJF2v/evsPRAAQVNTM4C1aYS2zpe15D5?=
+ =?us-ascii?Q?8+AKvpzrU/qNB8D25+fyQlvElvF49Ls0+OdbC6IxOW6MVXfVPzmtMODxTRWz?=
+ =?us-ascii?Q?M1e2fMjK5ZfZJr8sSQvQzLS+/3JAPqmFHXR15uNK4e9RlxUAuCqIhIKgun7p?=
+ =?us-ascii?Q?PELXDiB/fvzi/dU1YkMn7ZpR9Ry5wcEDqJkkL18wprNYMZswmGzstV41sxep?=
+ =?us-ascii?Q?mDXf202KbNiw8ZmiSsG+VHl5MINokVSCol1dXub8LtNSJ8qoALflwWleYLcy?=
+ =?us-ascii?Q?n8/GF7z+ulIMSHl6AREX+QQlwlRD9swrb/XjSXozI/wN/S8k508WbIm1Ba1c?=
+ =?us-ascii?Q?TAQGSWf1DBtUKjdNy8L3ubSO0yd8gZlWQBc8PJvqSdBuFUMjfHbLjBrSwTd6?=
+ =?us-ascii?Q?fPUdqH2FiYLkGW/togq4Ldo2FPuVwRt/irNIhNfGuFc2h2CooE84rQoCF4+b?=
+ =?us-ascii?Q?m0eYVP4n6BcqrylRQ/qTDXJ7nLgODqpZKc956wl0IUUK9wFTNN6/p5IoElq4?=
+ =?us-ascii?Q?SKMZ87nx7JPo/PR8BjO8i2ZIclSBwXeTDD5N6Ozagk5ps72aPDcr0U66CDBd?=
+ =?us-ascii?Q?RmDLNIour06pH2bJIkPyHpksINPxL0DlIxSmiAshEdOehvLxq/IaoUAxQGXN?=
+ =?us-ascii?Q?LY+wuWrh9f3ObbaRx8jcY1kO5am0xMugqTiYlaVuiayusGHkZFVG4oq7W0uD?=
+ =?us-ascii?Q?gYXFz6ZpD0laYkZp4443e2wGkPjJHsps7iYx9UdpnyhflNJhjMeMKEkiNjRE?=
+ =?us-ascii?Q?hMe7hhPJXF98PKaO3JQKQJnfaery?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(10070799003)(1800799024)(7053199007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qSgZ36Wjuy3vsgXxOwan8D7itLWivrCyWffMBthov9egghwQ74xMFVVyUESU?=
- =?us-ascii?Q?S4gegD0uTYsJEBrK/qILhyVJFodyR5ffe2+HZ52nLcpi4ivPbWYDUlhfsMwW?=
- =?us-ascii?Q?2lEgYalD+bsSyBaXKw+hc7Gq34sspMOG81jDg+CAjGNVaJ53J6NlKy9Rx5qN?=
- =?us-ascii?Q?15gjEpsZFsifv+XnAYT24+9vC5xICyV7bodXHQscpci30GIXrrqYcGbIpmYO?=
- =?us-ascii?Q?3FBO2ncIg2DA8xCDnOAXbsk70TNZBAo2opo2CZ7C+5AVo8ap148swjxs9tkm?=
- =?us-ascii?Q?V4EcqLq/WLmcEkMHZGk2dL9qfeisJLE1IakL+h4EqvxmpptD9stPMz3cb7D6?=
- =?us-ascii?Q?bTmVSDIabHLer8HboJoeQwMqHDlaAXz0QKUF16NTx8LmbLv79DgQUNXV/Zl8?=
- =?us-ascii?Q?xxtTP5+QFvC9C9AmVHSiIec3HKPKj7dpGrvQpCMcTRoQM6ouljQp/KUlOBpz?=
- =?us-ascii?Q?pCz/yiBOGufYdyt9RLklcQWy9bvrhHqdL/K8Utfevp/VTgSfRSzR8XVGUQpK?=
- =?us-ascii?Q?Pezs4gKM2WjMjGp6P5UxSGGyOOH3vSahtCAbVzsLhNgFRdTKTXxYGwPhCNZf?=
- =?us-ascii?Q?ab6UtUiUZ4j84rr8yuUDvHXonNBQGcan3xAb2uVR17doJ/jwF1+UD2Zw2mzq?=
- =?us-ascii?Q?Yi4Bjfi/iXSvU7jdH2eIBosRSY4tz2yn5i/QtxsfcJ9rTFgFEhxcZswcn/yq?=
- =?us-ascii?Q?LxPZX/CvXCZHmB/rHRI9IwoSYy0GOiLOs3I/Q1eqTICPdaQ0TFdqMNt5qgtE?=
- =?us-ascii?Q?Pm57AK2hII06tB9ue3ECNCYAIDR9RTFvZUc5QZzd7/7jqlqoHHyuiqHsVTBH?=
- =?us-ascii?Q?ykG5vHbyP3gHzWbQgp8orOndY94JpJOkdYnmrJUjEyLWM5x5AZ1o21pTpEA9?=
- =?us-ascii?Q?ecX+CACssEYPIXWZFbfA9IR0FwR34p51qNixkWAincLk22mcooH838nUpKjg?=
- =?us-ascii?Q?11II7cw1eMnR26VlX+ImhNYIKbZTgUahnWdjRrs4F6G9iLp/qbWpeZjYmwq2?=
- =?us-ascii?Q?os8/K+iQV5J4M5EidpKnciR/2Ntd4vI3I0ff9ubboNEWxnM/U1xT5URD5BtG?=
- =?us-ascii?Q?JskjlP7/23Y+1hd8uUwL5R4VDz+btx7krabyH2LSGWAndO3pB62tQJnrl58d?=
- =?us-ascii?Q?E/LgIbPg3dktKtgei+QLHcnC4uGSsQPu5f12A1Y/TQAq/be2tp+s0gC90jLC?=
- =?us-ascii?Q?5KJG4pG6+rtPIkv830wf6Z8CsahPHw+86bfdiV6SsWgFhLtsDruucTZ6mxmH?=
- =?us-ascii?Q?IeJzpqBqFzrISWiohMW6ygBh2RXdm4qd9bWXyrJBQRaWAktAPSGFhniERz6J?=
- =?us-ascii?Q?+BdvmmyXhteNr6Fj2orV1+Pzfan0Jydew75AGzyrSCRNf5H7pN2qoW6rVdmD?=
- =?us-ascii?Q?eOiXE10p1QRpcdNskuaLpJq/+dM8gRvdIjVCMROSUvkDZIbLBkTyNR+wOWVE?=
- =?us-ascii?Q?woJ7WvicCsCyZcDUbcXQSBjgTQukfelNt34WHsVCZKmstHGxNsfA85c/KJMP?=
- =?us-ascii?Q?+kjtMYkx9xf02w4G9aOvqtb1eDuKsfrdz/TfDxqJ+7PUG0Nh0Couru18ANT3?=
- =?us-ascii?Q?hmFd4Y4gMpjiiKd+vB87VBTFa6f8RjypAdyR6Cz8dL473K4FF+9qgQxlS/xZ?=
- =?us-ascii?Q?8g=3D=3D?=
+	=?us-ascii?Q?BF3XLiuQn+DjzytlIQrYPsMjXXuxWaUX3JFsEdeNK/wr7E+FqCOdvszp5Y6i?=
+ =?us-ascii?Q?S5Asz9DE/+9VBKmNlk4ciDNqDR3def1OdgzwAtvQVdVK6pN+AZPveA0vs4N/?=
+ =?us-ascii?Q?kiWDQUKunzIX9WSBZgrWDRj1b9qeyF0/nSP4yUWsk6Q6hBqQzco8F7svUulA?=
+ =?us-ascii?Q?Qpvbix+1AijlwkmiPokkd61I7V1SAU2xvSy2C6Y5BVk5pu1+jfkT50LCYrXQ?=
+ =?us-ascii?Q?zXoDTk3M9mBLA2cPWXmbS2cRl9HYgylD2+cLxR/sRPkAsrM2864zXvmkEH2D?=
+ =?us-ascii?Q?Yal4uSxni/PjP1u9PcI60MXikmRu0y0QHoCvxnsxrbXGF9U2/ai9S0mRPYlx?=
+ =?us-ascii?Q?7p0hecANfRu1WK7mt/sd67ZwXN85/21gwYwDYPVGz8mi6mfYTM8qu7jeeFIi?=
+ =?us-ascii?Q?3OdnohtgC4zCvzoPZ33TjlOMJXfvMgV4RbxKX8mfH63vbaCXraDMGVrrTY/w?=
+ =?us-ascii?Q?CXMVraGKHcdb0gXUY2s/j1AxGjhGUPW+kw+2htUh2KSAcrEB48PnNZb4NqmC?=
+ =?us-ascii?Q?yFkk0ofZPzFlUUYem0o9wHTB4B7ez5qe6RQbG/PjJMQccaZZ/Db06z3GrXGK?=
+ =?us-ascii?Q?p/NwzdFO0ROxv4hMlvgOEddWDt8mHocZ0Uzd8om+CoMU6rtV6nk1IW+uxHq7?=
+ =?us-ascii?Q?S+Tq8b0sV7FTqgEBRlvAkAeIGVWBwmL7F6bBiF0cF0eHcxdq2oRSUqxkd1qN?=
+ =?us-ascii?Q?TsEEVIZxpVeNxJmjNyGlnMSaUPKnS55C9Ae/d4X4jjrFymdWPJUBtVm0GRoB?=
+ =?us-ascii?Q?AGVik6dzPCU8rVNg4VXKkRV0BYr5RWyV+YqDMr4iEfXjMUNY0Q3xi9rZvcNI?=
+ =?us-ascii?Q?dJi4I2xXgisXBL03BOqf5ejyLDfQuXEz+giTZJOWg+2h1J7dvgthazFL5EpN?=
+ =?us-ascii?Q?Y38gCmrbG186UqQMrKDgXv0rciizNJattMEZTwql0XczZkme62TPSxDZZR1f?=
+ =?us-ascii?Q?nGmwd5Kqz9VavtUm03qX/+UGfsvLkCmAelwldkZrhQJHJWq4mVEBSxZwY3Pe?=
+ =?us-ascii?Q?81vyxKqy70Mtr5+evagxq1+76Av9cOTc1DKIoOzJsBoZvGsbQPf+uUwGtpD0?=
+ =?us-ascii?Q?teILe6OfLjT8GEibETK6LJSGVL4SS+0LDLFWyXCq36+KBfo0IcmPHsNpapes?=
+ =?us-ascii?Q?FxgNkXd28Xg5KKSaGR+k4K+AYL4Rg4LiwuMhEn0PjNOhRX6nzRKYE7vLvuW5?=
+ =?us-ascii?Q?n027W5y5xf7vdtR85NKnF40cQR21dBoX/DU4MgoV4szLcmF16dKJxs4gMi6T?=
+ =?us-ascii?Q?BO5P491nRXWdmu4wTSrTbQCFgMVxyVxA/6nt1xzKaeUXkZi76jjf2g4zgnEn?=
+ =?us-ascii?Q?H8x6EW7rBMTtbxjRAXHnmOHglx55gVGYDDU4SR/0MeLYn25xWCzKpicMQ3zu?=
+ =?us-ascii?Q?T77PqSVuXnSvZdb0hnjN3TiXy3hyWkovGTplka0eRyO3Gqu3UA54vkSBADuQ?=
+ =?us-ascii?Q?1+zbS9duTc47pZEuEW8j51KwbNpa32Tk/Cj4P986HgdvkaACTL8IUeO3EEBj?=
+ =?us-ascii?Q?uxksGKYBotVoNHR5DVyJNdLL+0qnuftwI+il6SCD/OxkWfa0F2mmf+ifLVmv?=
+ =?us-ascii?Q?QlHe+5bBqsEsv+rNnG6MTsX8T/aAAQi8eg8OZ/INO99wytsvS69t7oTunt7p?=
+ =?us-ascii?Q?xQ=3D=3D?=
 X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80768fd0-e870-4429-740f-08dd24588a90
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53cac18a-1eb3-40bf-bb56-08dd245cbc74
 X-MS-Exchange-CrossTenant-AuthSource: CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2024 20:21:25.8297
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2024 20:51:27.5820
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IUDvs39c6HxKABFPEU9775OLS6IdghQ/04Z3D3bd5DeYYqgI0L8of/i0MJVOQNjMDYRUUY8EpRDAFCIHwiMX0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB6357
+X-MS-Exchange-CrossTenant-UserPrincipalName: xxo2u33TFy+h9Mzn3F+bbmHizOKYW4ZlK2mXl/Ib4nvpzv02yYCO1oHHRx8GiLLOhueXfDwhI0PgAcyMex8l1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB6421
 
-On Thu, 19 Dec 2024 18:04:07 +0100
+On Thu, 19 Dec 2024 18:04:03 +0100
 Danilo Krummrich <dakr@kernel.org> wrote:
 
-> Analogous to `Opaque::new` add `Opaque::pin_init`, which instead of a
-> value `T` takes a `PinInit<T>` and returns a `PinInit<Opaque<T>>`.
+> In order to access static metadata of a Rust kernel module, add the
+> `ModuleMetadata` trait.
 > 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> In particular, this trait provides the name of a Rust kernel module as
+> specified by the `module!` macro.
+> 
 > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
 Reviewed-by: Gary Guo <gary@garyguo.net>
 
 > ---
->  rust/kernel/types.rs | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  rust/kernel/lib.rs    | 6 ++++++
+>  rust/macros/module.rs | 4 ++++
+>  2 files changed, 10 insertions(+)
 > 
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index ec6457bb3084..3aea6af9a0bc 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -281,6 +281,17 @@ pub const fn uninit() -> Self {
->          }
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index e1065a7551a3..61b82b78b915 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -116,6 +116,12 @@ fn init(module: &'static ThisModule) -> impl init::PinInit<Self, error::Error> {
 >      }
+>  }
 >  
-> +    /// Create an opaque pin-initializer from the given pin-initializer.
-> +    pub fn pin_init(slot: impl PinInit<T>) -> impl PinInit<Self> {
-> +        Self::ffi_init(|ptr: *mut T| {
-> +            // SAFETY:
-> +            //   - `ptr` is a valid pointer to uninitialized memory,
-> +            //   - `slot` is not accessed on error; the call is infallible,
-> +            //   - `slot` is pinned in memory.
-> +            let _ = unsafe { init::PinInit::<T>::__pinned_init(slot, ptr) };
-> +        })
-> +    }
+> +/// Metadata attached to a [`Module`] or [`InPlaceModule`].
+> +pub trait ModuleMetadata {
+> +    /// The name of the module as specified in the `module!` macro.
+> +    const NAME: &'static crate::str::CStr;
+> +}
 > +
->      /// Creates a pin-initializer from the given initializer closure.
->      ///
->      /// The returned initializer calls the given closure with the pointer to the inner `T` of this
+>  /// Equivalent to `THIS_MODULE` in the C API.
+>  ///
+>  /// C header: [`include/linux/init.h`](srctree/include/linux/init.h)
+> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+> index 2587f41b0d39..cdf94f4982df 100644
+> --- a/rust/macros/module.rs
+> +++ b/rust/macros/module.rs
+> @@ -228,6 +228,10 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
+>                  kernel::ThisModule::from_ptr(core::ptr::null_mut())
+>              }};
+>  
+> +            impl kernel::ModuleMetadata for {type_} {{
+> +                const NAME: &'static kernel::str::CStr = kernel::c_str!(\"{name}\");
+> +            }}
+> +
+>              // Double nested modules, since then nobody can access the public items inside.
+>              mod __module_init {{
+>                  mod __module_init {{
 
 
