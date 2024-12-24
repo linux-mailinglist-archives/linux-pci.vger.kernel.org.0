@@ -1,302 +1,338 @@
-Return-Path: <linux-pci+bounces-19027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75D469FC297
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 22:53:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 986E79FC2E2
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Dec 2024 00:34:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2CBE1883EF8
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 21:53:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0707D16362A
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 23:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AAC714901B;
-	Tue, 24 Dec 2024 21:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE6F212D60;
+	Tue, 24 Dec 2024 23:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="dl5/t7GH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z+uhUv8W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021097.outbound.protection.outlook.com [52.101.100.97])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E07A18AE2;
-	Tue, 24 Dec 2024 21:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735077220; cv=fail; b=nSsZfP4HqdMqFo0OJ6P+xZWCTMARbieuapLKX0h0gOAO2Swq0kgY669M2ioe5Q/BiYmDGtEP/+UeEffN63fWNDv1qbr283Xq1vM4h2v7sT7A7vOijJut6o9xo6gC9DNPbzvPnFBsuDJK5C7JJpLtpfN0qKru/khnmT+UKRKafwA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735077220; c=relaxed/simple;
-	bh=Uvo5D9vCD/VIaBqRWjG89sIXVktAyNPStPOkyfYZjKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AZ8ULp1cDyg8JPu29WINsWUWoEpcec2cF1Rvf53IKVvrLX4fietbnlVGC39J41GbxqoAwmcgs9MFN3rTFMOvZX+ZnSnZJl8AJZo8X7PO6+/Hj7WdPcWRKmuBMaXcXhau+YBzMknptHbrmVYkKZDXQ3+yPEWOt537Lb7j7Ii3BB8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=dl5/t7GH; arc=fail smtp.client-ip=52.101.100.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k4tesBHfzlg9QmNjzqSUWWaNEx/dHx+sBQQ+7e7aRWWsaJH8kgxDdfhP5eBjdtsDs30KjEjHaP3ef5USojNlAlb6G88gwaL+0E9fPO7mdC3IhfdwhAQOYzzNtQFsTh9dKV4c8S5K4GkKJnbJ1QzBLpu6TNFx73yUMkVIq67Rx5OqTT/WBlpJK36W/ptLHO+5XLUe/f6RJ2SdT19zU4ENbyn7IXpto5/Yzc50Ew/hY1aMHbpAfBtZ0ORID4Sk/yKHvbCvrpkT1ZB/y6DQOvM8RD4CcXmYanT3CxJKhWY3T46xqoAkZ19bi5o5V8QAb0cCGW7NOlxVp/i41iwPdCYCGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qMJ5DVIPmR0GGyKuj9yCCK91LLnvLn8at/DfeavIHlA=;
- b=Werp8uz1MkTm7i4TsqzbfYABLxC77P1PHlWHZ7wCVvlUKOJcfRTnBvMU+mig5OayJQ/zThtnQAHIDOiKasI7CcP0ii2cJ1yN10U6cqOB6tgoC5DF4YcMy1FJqv3Z6PL5YSRajuOWaxyL4HjsOgQikSuL1KJf7xNXyIKcFadrJPgjIwadZtp7l2DEBdRvz6huP5JwgmCRmxHPzTGUCcziLd0pktKwbKcJmG5lDB2SyglqKC3X47rEcX+LUGDLmbx3ABmcHpiHNq93iQ/PbN+AWPoVrsGyDi/i3kWF+ZNXajBos1YAh1GBIVyKhZ/mYo+n5dba4N49n/vcz+6Cf/RuOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qMJ5DVIPmR0GGyKuj9yCCK91LLnvLn8at/DfeavIHlA=;
- b=dl5/t7GHTOrQpQsOc90oxMofPV8F9OXqPenVrLIccJxdCPFe7yeJRMDzW1xdE1CR/bdBPq2Y9n4eT97/ExHZzmNGPB9KiPoJvd7/HETGLg0MayEyotf0eoNkaSvWq+iireIRJjQ5OjM5kr5dd14KvF+285hUzCuwRxXvZWTismI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
- by LO6P265MB7215.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:347::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.21; Tue, 24 Dec
- 2024 21:53:34 +0000
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7%3]) with mapi id 15.20.8293.000; Tue, 24 Dec 2024
- 21:53:29 +0000
-Date: Tue, 24 Dec 2024 21:53:23 +0000
-From: Gary Guo <gary@garyguo.net>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
- a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
- fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
- ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
- daniel.almeida@collabora.com, saravanak@google.com,
- dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
- chrisi.schrefl@gmail.com, paulmck@kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH v7 08/16] rust: add devres abstraction
-Message-ID: <20241224215323.560f17a9.gary@garyguo.net>
-In-Reply-To: <20241219170425.12036-9-dakr@kernel.org>
-References: <20241219170425.12036-1-dakr@kernel.org>
-	<20241219170425.12036-9-dakr@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0287.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b7::29) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:253::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FF814D29D
+	for <linux-pci@vger.kernel.org>; Tue, 24 Dec 2024 23:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735083271; cv=none; b=cBFqIlOk8k9nCbew+NWNRKqOhJhS0+r709mZpT3owGona/kCpfwCRTE/qXJvbVBH4xYRx70vCwzuEIrYMjtDLykS/LvEYF4uMq8JE/MmuHGrumeJ/Sk3ThfZS/tk4eP5FbKNNwNnsZQAIk8KJotanKmiJJowm8Ma3HD/vzJC5x0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735083271; c=relaxed/simple;
+	bh=YcX2ncLPxYqtSquQR7sTFscPhSUP9EFkasX0QohzZyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q3WN2hXrtv5HP1/1oOT4V/Bgx52O2ay+kXpV/AeF5YSaPxxt/vP1NkY9Cb4Pzb3HE1XcTB3bsqzM0jJxfQKtkCSs6UiLHaAu8WeKNTmQsRABTRk6ST0pstBCZiZevGrdI3bhGDdLgyocIuttbO90MHjqERobNEiStXvgwa+h4XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z+uhUv8W; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1735083269; x=1766619269;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YcX2ncLPxYqtSquQR7sTFscPhSUP9EFkasX0QohzZyw=;
+  b=Z+uhUv8WfdBFd6gBlV3Azd1vEuV1AZ5FuM0GOaFWMXRIF5c7QWIdefYw
+   y+LGf5wMjkHwLeW8ylMhJHdHgk1PSV2+DDT7HxD4f+60S+xCkaqMR7R26
+   QBSIgwMAXF2MAZZPHt60DM/DXbbBlOpnVxScyqYfpEgBCZCcgTds1n8Ok
+   OGIAmmj+DRhuWErTYMj5EVQ9m/KVGAexkXFZ5gUGH3okk4ftQSXBy9o26
+   s9WcLjTucVxeSuAwfRGGPYYNlksn7ZKlsvO96UTpOxn+jyK1E3UBjrz83
+   EZOyTTCd1O9Lp81LqEDe72NfanPJbuG/i7TVfD5Mqpl8aUgyepnz6U/nI
+   w==;
+X-CSE-ConnectionGUID: sLcis2Q6R+uPDcfxbv3WAQ==
+X-CSE-MsgGUID: YMNnVIZPTX29xVWnGpzogg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11296"; a="35666612"
+X-IronPort-AV: E=Sophos;i="6.12,261,1728975600"; 
+   d="scan'208";a="35666612"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2024 15:34:29 -0800
+X-CSE-ConnectionGUID: qGB9eT7LRHaBVTor91LYvQ==
+X-CSE-MsgGUID: 7+Y8jl4KTa+zdQR9fHs2tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="100057210"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 24 Dec 2024 15:34:26 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tQEPu-0001X1-2j;
+	Tue, 24 Dec 2024 23:34:22 +0000
+Date: Wed, 25 Dec 2024 07:34:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Damien Le Moal <dlemoal@kernel.org>, linux-nvme@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v7 17/18] nvmet: New NVMe PCI endpoint function target
+ driver
+Message-ID: <202412250700.WqUH4KaL-lkp@intel.com>
+References: <20241220095108.601914-18-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LO6P265MB7215:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f6ba5e7-caae-4a4a-8dd5-08dd246566d2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|10070799003|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?c3TKK9hF1OjZAtE08/TuN6/3ylMqxlw0yZhBLM/Q7x10Aquag2IBaMznVH4k?=
- =?us-ascii?Q?h3dwZgn9rxfKLrXo27sQio5cXBH4bt5i8Q4o0MKGYc2cqPfEfkzvYUyy4MrU?=
- =?us-ascii?Q?ZV6gNSFSlojMMhS54WxcrnrTrMdI0HuNXm1oRNuJHD9WDiXypoTiPAuQNIZd?=
- =?us-ascii?Q?0xYCmaAK36zPUVC7n6zsBXw07i6Z+7wwRa4RhHv2omLa3KDbQohtQX8M7/16?=
- =?us-ascii?Q?fouW6hzyIccoIu4ExE2A5XMtrSRG8O7LiG0lTkhWxt6Tyna2S20NJpOop8fy?=
- =?us-ascii?Q?6qHWXiqdLLO/lJm6+dAWCD1nzjqlDq6YRIGZVFFTroZCF5v6tgDSJtRZoRns?=
- =?us-ascii?Q?LNPCob52kK3ln8CWhyKgVTZbrmlH+kFR8rvetBD9YFnL+VNNsVVS2GUD0rEV?=
- =?us-ascii?Q?8MwngEgi+hoUPqcAMCxxNEf6t7D4SZpoWoYej3ov8katBlC4H+5rYrSz0XJS?=
- =?us-ascii?Q?f+TgsH+86k+Jmdg/KKLJQbprhUbsvbaIDgALO0h58gY+TUeCVNY55QjMqe3J?=
- =?us-ascii?Q?hXhX67LumPwmj2R3+gwJEZsKlVZtKDkIGmO9Ak/LUkVXneJz60QHSo8NUxII?=
- =?us-ascii?Q?4VeWzwyuUqEzjW5vyh/N17O/8y2YSQab6QXzYWSfYXLY05/GpZqUrWHy8kCQ?=
- =?us-ascii?Q?aFdGkj2I1gKbqQVcgouo7ZZ9sBJDjAhSk1Qh0W3W7kbLSG3gCY1Zha3pRq/s?=
- =?us-ascii?Q?QdTORDJOQE9G2lN2fjrBnswu3B42Ifj74jg7WMY1mlQ6/szfhpaYIJMGxsSW?=
- =?us-ascii?Q?eELViNAeEibbxHV+NirQWsmFjpugjrNAd9x8m45WSoB3+Qze1wQGF1HSKD+x?=
- =?us-ascii?Q?4+8BCcGh5f4vRXbsKct+NgyL/ZDioPSy7ealW/ZoIZss1p7JB4RYOQxsLr53?=
- =?us-ascii?Q?pW+bsk2unx04mybTounSuHdDIqwR+kt1ocGmdyeZLDDMoiwsjWs9ZqTzPscc?=
- =?us-ascii?Q?UzFm3+Pqwc6oY9D+bk0zcqNtnHvPrYhsnD+Ldz5fOL2LfYiMypIqMT7/5A8e?=
- =?us-ascii?Q?Fu8+sfJxBSJEDhJ1ABLEioBj2wk6hRG6bX6imd4GygdyJaYgztkAwbi9Ow5r?=
- =?us-ascii?Q?EP8bnZTRaniyKV5aCKruYq0LI1v7/mVbjoUt7arNNRmRRkgaJAqeSQWjsc7A?=
- =?us-ascii?Q?keAI+BT0WHMFuYTsAdtd9K20o4zuj8bozL2ql0KrtWZHdbohNX/HRt+s/RxV?=
- =?us-ascii?Q?DiR4a3SCmFz7FgTHC9XdD8ns/CyROzN6ddpJhheGcJP+jAPrrcNmqOnhk6Cv?=
- =?us-ascii?Q?dBriZiOjGNYlnvRSUUAdP6DtsOdc88YDl9GpJghHbdvo/wCTqCIMUX86YU+h?=
- =?us-ascii?Q?J4eCooB3djW1sfz+J0KSTBZt7Ukk7Yub2V6YLh2jbWcTy5gki7LH1GJKgKtN?=
- =?us-ascii?Q?ToZ/892Cv3UwM9kHn26g0CmY3tsy?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(10070799003)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Sq7ImJ48s3i0mFk/nKDf6QSQLmLsZoOBlEa6+4v8FK6/HUvimTL4rZuYMlcV?=
- =?us-ascii?Q?cMeuY1opBQND/6AKMmhIYfe+rQlMhWqwD1PaY6quu++NjHnEf4CPtIFKnruN?=
- =?us-ascii?Q?zAs61jO2CJCJLUTSGJd3Amioae9O35a63V8vyju/zTh+PI4NkjGVqUGMW+2d?=
- =?us-ascii?Q?NFsNEHtlsmFu1WdVvXEdOufmWZWS5DaDzfxc1FlT/scR9JCflL4sPYb0k8BF?=
- =?us-ascii?Q?NLUUf6ZUrWyPZC3ZT4s378gEKJz5qWMe+qwEdlG6ydiPprC2KbdHXpWtSc4W?=
- =?us-ascii?Q?i+9YpXh1MNindlqWbeK1jX0qYK1VgZ0zFDfuli6msHcWdkRYaicVxclz+CnE?=
- =?us-ascii?Q?2OlE75tSj/fLfe6idD3cUOA4Vtlog+UA80EqADgfaroC/ACdy+wjHNGcb3aV?=
- =?us-ascii?Q?FB7m4rxfa1TexznF+jAyi6yzaHj1zxZczJAsRO9PQVeJ0Gt7cTPWDUEJCMNr?=
- =?us-ascii?Q?rf0JovVD21DAZzuM6YUY9tQXlRESXn3GCZLxWFOdcF6CGUtzchNhUq5dp8Rm?=
- =?us-ascii?Q?ZgN43e+tzS5TMceiO8Nd9ta2F9RIhIkCqZBRDjidvPrbWy29sDkgL7tNpooO?=
- =?us-ascii?Q?NntEEl18iqLc8VUq1p5QGdFTarRjOReTMJs20Ni5sbU3uEM2NETTgz19QFgo?=
- =?us-ascii?Q?K1x45F6LbUzYxA40QDjGefKyKOhfG0iHGndain5zPJqfGZlJrVttNQmgwodN?=
- =?us-ascii?Q?014YWbsboCz7Id/PCW114ISu2xeQV4fpkt6QsWISA+9RnwvaJJ+n9VSznway?=
- =?us-ascii?Q?J5tYxZT2LbxlIYASxuHHVxFFxZpOm+hHlegoDJ+50bDGzxq6SU+oFeQu0hR+?=
- =?us-ascii?Q?Qfc94p8tiTFyPkFZcf2b6ZrbSPSZiUcfvKZMdbPrFt+8g/FNA3NEbBkVs+MQ?=
- =?us-ascii?Q?iwKSWJkvfl1Wj2R6LZ6ZbrUWgUMbfq0QZi2Ni0/1ty+4BU8mAYXCtHy5coWp?=
- =?us-ascii?Q?brEkBtrwj8usOAp1LB8rLuOYNRURMbvpP8dJ5nNU+atXRWtg8LKXkn5zB5hE?=
- =?us-ascii?Q?tnegFBbk0N6rMqJ5H9Uch9HkRf/96kfRU+D6LsUO5sXCvF1Z+J6Ji99o78Lp?=
- =?us-ascii?Q?iMwW1rqOCqFMilOoLGWfytr0Ff5IDTdhjTBvoeMsh6Rl65ETzua9MtwpKz2Y?=
- =?us-ascii?Q?0sxNqF/HsfFxgu/CCCmc+fJi6wjZLLRBwZhdTQI0F/zduNHCPkpLS/DNPIfV?=
- =?us-ascii?Q?wn8LWZ46WnICjH5ZcgjRsdWq7v/HtJP+J5Io3zZRb5KzrAa9fcjoXxIXFl4O?=
- =?us-ascii?Q?P775tTScqfyaQFK+0SzqGW74wxpEcQifTI+Y6YuecW/NsLC5qD2DJ2iWOR0j?=
- =?us-ascii?Q?Fcg8M9XqyFiykG8xoBPL8ZVYdh75Ax8d+334WicBqT4lNKgNBzWqMTrxZmul?=
- =?us-ascii?Q?aERbgt/g7r+rLkoeyu4UFjJJv7y8l/Hk5lyaWTCPzNN5L6hSEpAOTBh8OCWB?=
- =?us-ascii?Q?K0xZqIMBUTnXCPd/E+PU49XRzrSeiDhQTrV4vPEuati7bgptyS7OdSobZzot?=
- =?us-ascii?Q?M672Pd7Rxh2OG4YARZibFU1BcF2SnPoGGAq+OsXnb4JAnutYh1T3tWHREPIa?=
- =?us-ascii?Q?Nwm34EQeDlIk1hFez0A26vTzc/JCPwuhXEKibEfHWginvR+l99kIhFQx17tV?=
- =?us-ascii?Q?9w=3D=3D?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f6ba5e7-caae-4a4a-8dd5-08dd246566d2
-X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2024 21:53:29.3624
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xXpl+b5Oiffj90o+ru8dmETY8dK0ygoGGkgmtj6gre7ItFYT6j6z9dynEtVj0ggfZgTxJ3lnMcDNdjZLmg6vtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P265MB7215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241220095108.601914-18-dlemoal@kernel.org>
 
-On Thu, 19 Dec 2024 18:04:10 +0100
-Danilo Krummrich <dakr@kernel.org> wrote:
+Hi Damien,
 
-> Add a Rust abstraction for the kernel's devres (device resource
-> management) implementation.
-> 
-> The Devres type acts as a container to manage the lifetime and
-> accessibility of device bound resources. Therefore it registers a
-> devres callback and revokes access to the resource on invocation.
-> 
-> Users of the Devres abstraction can simply free the corresponding
-> resources in their Drop implementation, which is invoked when either the
-> Devres instance goes out of scope or the devres callback leads to the
-> resource being revoked, which implies a call to drop_in_place().
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  MAINTAINERS            |   1 +
->  rust/helpers/device.c  |  10 +++
->  rust/helpers/helpers.c |   1 +
->  rust/kernel/devres.rs  | 178 +++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs     |   1 +
->  5 files changed, 191 insertions(+)
->  create mode 100644 rust/helpers/device.c
->  create mode 100644 rust/kernel/devres.rs
-> 
-> <snip>
->
-> +pub struct Devres<T>(Arc<DevresInner<T>>);
-> +
-> +impl<T> DevresInner<T> {
-> +    fn new(dev: &Device, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
-> +        let inner = Arc::pin_init(
-> +            pin_init!( DevresInner {
-> +                data <- Revocable::new(data),
-> +            }),
-> +            flags,
-> +        )?;
-> +
-> +        // Convert `Arc<DevresInner>` into a raw pointer and make devres own this reference until
-> +        // `Self::devres_callback` is called.
-> +        let data = inner.clone().into_raw();
-> +
-> +        // SAFETY: `devm_add_action` guarantees to call `Self::devres_callback` once `dev` is
-> +        // detached.
-> +        let ret = unsafe {
-> +            bindings::devm_add_action(dev.as_raw(), Some(Self::devres_callback), data as _)
-> +        };
-> +
-> +        if ret != 0 {
-> +            // SAFETY: We just created another reference to `inner` in order to pass it to
-> +            // `bindings::devm_add_action`. If `bindings::devm_add_action` fails, we have to drop
-> +            // this reference accordingly.
-> +            let _ = unsafe { Arc::from_raw(data) };
-> +            return Err(Error::from_errno(ret));
-> +        }
-> +
-> +        Ok(inner)
-> +    }
-> +
-> +    #[allow(clippy::missing_safety_doc)]
-> +    unsafe extern "C" fn devres_callback(ptr: *mut kernel::ffi::c_void) {
-> +        let ptr = ptr as *mut DevresInner<T>;
-> +        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
-> +        // reference.
-> +        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
-> +        //         `DevresInner::new`.
-> +        let inner = unsafe { Arc::from_raw(ptr) };
-> +
-> +        inner.data.revoke();
-> +    }
-> +}
-> +
-> +impl<T> Devres<T> {
-> +    /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
-> +    /// returned `Devres` instance' `data` will be revoked once the device is detached.
-> +    pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
-> +        let inner = DevresInner::new(dev, data, flags)?;
-> +
-> +        Ok(Devres(inner))
-> +    }
-> +
-> +    /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
-> +    /// is owned by devres and will be revoked / dropped, once the device is detached.
-> +    pub fn new_foreign_owned(dev: &Device, data: T, flags: Flags) -> Result {
-> +        let _ = DevresInner::new(dev, data, flags)?;
-> +
-> +        Ok(())
-> +    }
-> +}
-> +
-> +impl<T> Deref for Devres<T> {
-> +    type Target = Revocable<T>;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        &self.0.data
-> +    }
-> +}
-> +
-> +impl<T> Drop for Devres<T> {
-> +    fn drop(&mut self) {
-> +        // Revoke the data, such that it gets dropped already and the actual resource is freed.
-> +        //
-> +        // `DevresInner` has to stay alive until the devres callback has been called. This is
-> +        // necessary since we don't know when `Devres` is dropped and calling
-> +        // `devm_remove_action()` instead could race with `devres_release_all()`.
+kernel test robot noticed the following build warnings:
 
-IIUC, the outcome of that race is the `WARN` if
-devres_release_all takes the spinlock first and has already remvoed the
-action?
+[auto build test WARNING on 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8]
 
-Could you do a custom devres_release here that mimick
-`devm_remove_action` but omit the `WARN`? This way it allows the memory
-behind DevresInner to be freed early without keeping it allocated until
-the end of device lifetime.
+url:    https://github.com/intel-lab-lkp/linux/commits/Damien-Le-Moal/nvme-Move-opcode-string-helper-functions-declarations/20241220-175304
+base:   78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
+patch link:    https://lore.kernel.org/r/20241220095108.601914-18-dlemoal%40kernel.org
+patch subject: [PATCH v7 17/18] nvmet: New NVMe PCI endpoint function target driver
+config: i386-randconfig-011-20241225 (https://download.01.org/0day-ci/archive/20241225/202412250700.WqUH4KaL-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241225/202412250700.WqUH4KaL-lkp@intel.com/reproduce)
 
-> +        //
-> +        // SAFETY: When `drop` runs, it's guaranteed that nobody is accessing the revocable data
-> +        // anymore, hence it is safe not to wait for the grace period to finish.
-> +        unsafe { self.revoke_nosync() };
-> +    }
-> +}
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 6c836ab73771..2b61bf99d1ee 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -41,6 +41,7 @@
->  pub mod cred;
->  pub mod device;
->  pub mod device_id;
-> +pub mod devres;
->  pub mod driver;
->  pub mod error;
->  #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412250700.WqUH4KaL-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/nvme/target/pci-epf.c:12:
+   In file included from include/linux/dmaengine.h:12:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2223:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/nvme/target/pci-epf.c:1854:19: warning: shift count is negative [-Wshift-count-negative]
+    1854 |         pci_addr = acq & GENMASK(63, 12);
+         |                          ^~~~~~~~~~~~~~~
+   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |                                      ^~~~~~~~~~~~~~~
+   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
+       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
+         |                   ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/nvme/target/pci-epf.c:1864:19: warning: shift count is negative [-Wshift-count-negative]
+    1864 |         pci_addr = asq & GENMASK(63, 12);
+         |                          ^~~~~~~~~~~~~~~
+   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |                                      ^~~~~~~~~~~~~~~
+   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
+       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
+         |                   ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/nvme/target/pci-epf.c:1961:16: warning: shift count >= width of type [-Wshift-count-overflow]
+    1961 |         ctrl->cap &= ~GENMASK(35, 32);
+         |                       ^~~~~~~~~~~~~~~
+   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |                                      ^~~~~~~~~~~~~~~
+   include/uapi/linux/bits.h:8:31: note: expanded from macro '__GENMASK'
+       8 |         (((~_UL(0)) - (_UL(1) << (l)) + 1) & \
+         |                               ^  ~~~
+   drivers/nvme/target/pci-epf.c:1961:16: warning: shift count is negative [-Wshift-count-negative]
+    1961 |         ctrl->cap &= ~GENMASK(35, 32);
+         |                       ^~~~~~~~~~~~~~~
+   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |                                      ^~~~~~~~~~~~~~~
+   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
+       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
+         |                   ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/nvme/target/pci-epf.c:753:19: warning: unused function 'nvmet_pci_epf_prp_addr' [-Wunused-function]
+     753 | static inline u64 nvmet_pci_epf_prp_addr(struct nvmet_pci_epf_ctrl *ctrl,
+         |                   ^~~~~~~~~~~~~~~~~~~~~~
+   6 warnings generated.
+
+
+vim +1854 drivers/nvme/target/pci-epf.c
+
+  1817	
+  1818	static int nvmet_pci_epf_enable_ctrl(struct nvmet_pci_epf_ctrl *ctrl)
+  1819	{
+  1820		u64 pci_addr, asq, acq;
+  1821		u32 aqa;
+  1822		u16 status, qsize;
+  1823	
+  1824		if (ctrl->enabled)
+  1825			return 0;
+  1826	
+  1827		dev_info(ctrl->dev, "Enabling controller\n");
+  1828	
+  1829		ctrl->mps_shift = nvmet_cc_mps(ctrl->cc) + 12;
+  1830		ctrl->mps = 1UL << ctrl->mps_shift;
+  1831		ctrl->mps_mask = ctrl->mps - 1;
+  1832	
+  1833		ctrl->io_sqes = 1UL << nvmet_cc_iosqes(ctrl->cc);
+  1834		ctrl->io_cqes = 1UL << nvmet_cc_iocqes(ctrl->cc);
+  1835	
+  1836		if (ctrl->io_sqes < sizeof(struct nvme_command)) {
+  1837			dev_err(ctrl->dev, "Unsupported IO SQES %zu (need %zu)\n",
+  1838				ctrl->io_sqes, sizeof(struct nvme_command));
+  1839			return -EINVAL;
+  1840		}
+  1841	
+  1842		if (ctrl->io_cqes < sizeof(struct nvme_completion)) {
+  1843			dev_err(ctrl->dev, "Unsupported IO CQES %zu (need %zu)\n",
+  1844				ctrl->io_sqes, sizeof(struct nvme_completion));
+  1845			return -EINVAL;
+  1846		}
+  1847	
+  1848		/* Create the admin queue. */
+  1849		aqa = nvmet_pci_epf_bar_read32(ctrl, NVME_REG_AQA);
+  1850		asq = nvmet_pci_epf_bar_read64(ctrl, NVME_REG_ASQ);
+  1851		acq = nvmet_pci_epf_bar_read64(ctrl, NVME_REG_ACQ);
+  1852	
+  1853		qsize = (aqa & 0x0fff0000) >> 16;
+> 1854		pci_addr = acq & GENMASK(63, 12);
+  1855		status = nvmet_pci_epf_create_cq(ctrl->tctrl, 0,
+  1856					NVME_CQ_IRQ_ENABLED | NVME_QUEUE_PHYS_CONTIG,
+  1857					qsize, pci_addr, 0);
+  1858		if (status != NVME_SC_SUCCESS) {
+  1859			dev_err(ctrl->dev, "Failed to create admin completion queue\n");
+  1860			return -EINVAL;
+  1861		}
+  1862	
+  1863		qsize = aqa & 0x00000fff;
+  1864		pci_addr = asq & GENMASK(63, 12);
+  1865		status = nvmet_pci_epf_create_sq(ctrl->tctrl, 0, NVME_QUEUE_PHYS_CONTIG,
+  1866						 qsize, pci_addr);
+  1867		if (status != NVME_SC_SUCCESS) {
+  1868			dev_err(ctrl->dev, "Failed to create admin submission queue\n");
+  1869			nvmet_pci_epf_delete_cq(ctrl->tctrl, 0);
+  1870			return -EINVAL;
+  1871		}
+  1872	
+  1873		ctrl->sq_ab = NVMET_PCI_EPF_SQ_AB;
+  1874		ctrl->irq_vector_threshold = NVMET_PCI_EPF_IV_THRESHOLD;
+  1875		ctrl->enabled = true;
+  1876	
+  1877		/* Start polling the controller SQs */
+  1878		schedule_delayed_work(&ctrl->poll_sqs, 0);
+  1879	
+  1880		return 0;
+  1881	}
+  1882	
+  1883	static void nvmet_pci_epf_disable_ctrl(struct nvmet_pci_epf_ctrl *ctrl)
+  1884	{
+  1885		int qid;
+  1886	
+  1887		if (!ctrl->enabled)
+  1888			return;
+  1889	
+  1890		dev_info(ctrl->dev, "Disabling controller\n");
+  1891	
+  1892		ctrl->enabled = false;
+  1893		cancel_delayed_work_sync(&ctrl->poll_sqs);
+  1894	
+  1895		/* Delete all IO queues */
+  1896		for (qid = 1; qid < ctrl->nr_queues; qid++)
+  1897			nvmet_pci_epf_delete_sq(ctrl->tctrl, qid);
+  1898	
+  1899		for (qid = 1; qid < ctrl->nr_queues; qid++)
+  1900			nvmet_pci_epf_delete_cq(ctrl->tctrl, qid);
+  1901	
+  1902		/* Delete the admin queue last */
+  1903		nvmet_pci_epf_delete_sq(ctrl->tctrl, 0);
+  1904		nvmet_pci_epf_delete_cq(ctrl->tctrl, 0);
+  1905	}
+  1906	
+  1907	static void nvmet_pci_epf_poll_cc_work(struct work_struct *work)
+  1908	{
+  1909		struct nvmet_pci_epf_ctrl *ctrl =
+  1910			container_of(work, struct nvmet_pci_epf_ctrl, poll_cc.work);
+  1911		u32 old_cc, new_cc;
+  1912		int ret;
+  1913	
+  1914		if (!ctrl->tctrl)
+  1915			return;
+  1916	
+  1917		old_cc = ctrl->cc;
+  1918		new_cc = nvmet_pci_epf_bar_read32(ctrl, NVME_REG_CC);
+  1919		ctrl->cc = new_cc;
+  1920	
+  1921		if (nvmet_cc_en(new_cc) && !nvmet_cc_en(old_cc)) {
+  1922			/* Enable the controller */
+  1923			ret = nvmet_pci_epf_enable_ctrl(ctrl);
+  1924			if (ret)
+  1925				return;
+  1926			ctrl->csts |= NVME_CSTS_RDY;
+  1927		}
+  1928	
+  1929		if (!nvmet_cc_en(new_cc) && nvmet_cc_en(old_cc)) {
+  1930			nvmet_pci_epf_disable_ctrl(ctrl);
+  1931			ctrl->csts &= ~NVME_CSTS_RDY;
+  1932		}
+  1933	
+  1934		if (nvmet_cc_shn(new_cc) && !nvmet_cc_shn(old_cc)) {
+  1935			nvmet_pci_epf_disable_ctrl(ctrl);
+  1936			ctrl->csts |= NVME_CSTS_SHST_CMPLT;
+  1937		}
+  1938	
+  1939		if (!nvmet_cc_shn(new_cc) && nvmet_cc_shn(old_cc))
+  1940			ctrl->csts &= ~NVME_CSTS_SHST_CMPLT;
+  1941	
+  1942		nvmet_update_cc(ctrl->tctrl, ctrl->cc);
+  1943		nvmet_pci_epf_bar_write32(ctrl, NVME_REG_CSTS, ctrl->csts);
+  1944	
+  1945		schedule_delayed_work(&ctrl->poll_cc, NVMET_PCI_EPF_CC_POLL_INTERVAL);
+  1946	}
+  1947	
+  1948	static void nvmet_pci_epf_init_bar(struct nvmet_pci_epf_ctrl *ctrl)
+  1949	{
+  1950		struct nvmet_ctrl *tctrl = ctrl->tctrl;
+  1951	
+  1952		ctrl->bar = ctrl->nvme_epf->reg_bar;
+  1953	
+  1954		/* Copy the target controller capabilities as a base */
+  1955		ctrl->cap = tctrl->cap;
+  1956	
+  1957		/* Contiguous Queues Required (CQR) */
+  1958		ctrl->cap |= 0x1ULL << 16;
+  1959	
+  1960		/* Set Doorbell stride to 4B (DSTRB) */
+> 1961		ctrl->cap &= ~GENMASK(35, 32);
+  1962	
+  1963		/* Clear NVM Subsystem Reset Supported (NSSRS) */
+  1964		ctrl->cap &= ~(0x1ULL << 36);
+  1965	
+  1966		/* Clear Boot Partition Support (BPS) */
+  1967		ctrl->cap &= ~(0x1ULL << 45);
+  1968	
+  1969		/* Clear Persistent Memory Region Supported (PMRS) */
+  1970		ctrl->cap &= ~(0x1ULL << 56);
+  1971	
+  1972		/* Clear Controller Memory Buffer Supported (CMBS) */
+  1973		ctrl->cap &= ~(0x1ULL << 57);
+  1974	
+  1975		/* Controller configuration */
+  1976		ctrl->cc = tctrl->cc & (~NVME_CC_ENABLE);
+  1977	
+  1978		/* Controller status */
+  1979		ctrl->csts = ctrl->tctrl->csts;
+  1980	
+  1981		nvmet_pci_epf_bar_write64(ctrl, NVME_REG_CAP, ctrl->cap);
+  1982		nvmet_pci_epf_bar_write32(ctrl, NVME_REG_VS, tctrl->subsys->ver);
+  1983		nvmet_pci_epf_bar_write32(ctrl, NVME_REG_CSTS, ctrl->csts);
+  1984		nvmet_pci_epf_bar_write32(ctrl, NVME_REG_CC, ctrl->cc);
+  1985	}
+  1986	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
