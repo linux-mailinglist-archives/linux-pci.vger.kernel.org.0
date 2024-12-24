@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-19026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4747C9FC266
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 21:55:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75D469FC297
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 22:53:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A0ED1882391
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 20:55:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2CBE1883EF8
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 21:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 853A0142E67;
-	Tue, 24 Dec 2024 20:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AAC714901B;
+	Tue, 24 Dec 2024 21:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="m5uqbPx+"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="dl5/t7GH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021082.outbound.protection.outlook.com [52.101.100.82])
+Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021097.outbound.protection.outlook.com [52.101.100.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AEC8BFF;
-	Tue, 24 Dec 2024 20:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E07A18AE2;
+	Tue, 24 Dec 2024 21:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.97
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735073697; cv=fail; b=gSS/t5N8CiEJcq4g4JfKvmhCzc3BisDyh8feKTNbJRGS3q249Zhr465g8JVn3EvMwem3N65uPrMgNnZspC2YifnrnqbDY2eF+7Uvh7BR+r+grbtCQMTkpSyJlt/R9WTTJrxpTmGrp6FJpoeUvUOmNRxw5JlL4PliqknjNAvXSbo=
+	t=1735077220; cv=fail; b=nSsZfP4HqdMqFo0OJ6P+xZWCTMARbieuapLKX0h0gOAO2Swq0kgY669M2ioe5Q/BiYmDGtEP/+UeEffN63fWNDv1qbr283Xq1vM4h2v7sT7A7vOijJut6o9xo6gC9DNPbzvPnFBsuDJK5C7JJpLtpfN0qKru/khnmT+UKRKafwA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735073697; c=relaxed/simple;
-	bh=Y1gqGf23Nxf1R07clvDd4R3G2SWJo/p4wDCz0A8Syqw=;
+	s=arc-20240116; t=1735077220; c=relaxed/simple;
+	bh=Uvo5D9vCD/VIaBqRWjG89sIXVktAyNPStPOkyfYZjKQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MtI8on9oxeCKYP4UQP4K1lVAyxdw+uFjuaVNliw4SFp7sZsObP2ObJ9PIlYjPZjTZ6kyMObPNL6wAvJB3nviKm2ogVOOJEKbXU4zr4xzeG4jKeavsfGxH8CB6/IOBAOSECdqPx+XTWch4/R2Ic/OEevOSBkfZr9wqKmgNjSwc/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=m5uqbPx+; arc=fail smtp.client-ip=52.101.100.82
+	 Content-Type:MIME-Version; b=AZ8ULp1cDyg8JPu29WINsWUWoEpcec2cF1Rvf53IKVvrLX4fietbnlVGC39J41GbxqoAwmcgs9MFN3rTFMOvZX+ZnSnZJl8AJZo8X7PO6+/Hj7WdPcWRKmuBMaXcXhau+YBzMknptHbrmVYkKZDXQ3+yPEWOt537Lb7j7Ii3BB8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=dl5/t7GH; arc=fail smtp.client-ip=52.101.100.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V87JMBtY3/+MFp6JoweAZPk0JtdVyx/cd0+F4SvqIsXM/lHc4A56e2CyihDb5zkJJRm4R805ECHZsJgiowoFspMxSeTwaj/hY4/dhkyzM4A0k5J/3VwLJ2tA6fOuPJ0xFyxLRHnsHWee+xJ7RmNkddtSUDJnjnYYj3IXb7fP7SbyPk9viBVASwBtAeoS8QnmoLbZv5WwfTOrO4WAD1n5X+Loz/WitXkWMkJte0babmpZBfizU5QgvhzzR98gxJNbcS1u7IyuTCLfsjvBKcyQRHt/FQiScrZ8Pft6yxScP/omvz68aIDuzo+exk82qesR03yCuysyhw2Dar0H7uPu7Q==
+ b=k4tesBHfzlg9QmNjzqSUWWaNEx/dHx+sBQQ+7e7aRWWsaJH8kgxDdfhP5eBjdtsDs30KjEjHaP3ef5USojNlAlb6G88gwaL+0E9fPO7mdC3IhfdwhAQOYzzNtQFsTh9dKV4c8S5K4GkKJnbJ1QzBLpu6TNFx73yUMkVIq67Rx5OqTT/WBlpJK36W/ptLHO+5XLUe/f6RJ2SdT19zU4ENbyn7IXpto5/Yzc50Ew/hY1aMHbpAfBtZ0ORID4Sk/yKHvbCvrpkT1ZB/y6DQOvM8RD4CcXmYanT3CxJKhWY3T46xqoAkZ19bi5o5V8QAb0cCGW7NOlxVp/i41iwPdCYCGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4J6QHsJvn8vPnVDgCSoeaV8ZD51OxELqHBd+YCJaB/I=;
- b=V1WTRb44nMcP0Qb2XSbFrm82bpYWP7egN2X5ilGO93gaoM+jY2dx3aecygdUSNCYl6Rq3lMzhOkMD8Uc0YKoExenHsotkaZgn0ajYhArOEWXGeFkItPP8wIbc0JfcmqnY7ZYQVXlI8i8/OMbW/wjfxt/2iYpdP7E13gCJ9S4YK8a2hoML4sjbzyOZ8vkq5+zM9iBDzX4RteVy+Jw+gQo+v7DCh8iTY1azvIH13N7d8+vMEJNpAIQcR6w1RRSTHh4VcEU/59lj6oMImGs0D8bHnISHTWxNgwXk6sIHd6e9BghaJ6ZGwbDA5ZUKveKSA0NRvkpfF45R2J5V4lGgUf92A==
+ bh=qMJ5DVIPmR0GGyKuj9yCCK91LLnvLn8at/DfeavIHlA=;
+ b=Werp8uz1MkTm7i4TsqzbfYABLxC77P1PHlWHZ7wCVvlUKOJcfRTnBvMU+mig5OayJQ/zThtnQAHIDOiKasI7CcP0ii2cJ1yN10U6cqOB6tgoC5DF4YcMy1FJqv3Z6PL5YSRajuOWaxyL4HjsOgQikSuL1KJf7xNXyIKcFadrJPgjIwadZtp7l2DEBdRvz6huP5JwgmCRmxHPzTGUCcziLd0pktKwbKcJmG5lDB2SyglqKC3X47rEcX+LUGDLmbx3ABmcHpiHNq93iQ/PbN+AWPoVrsGyDi/i3kWF+ZNXajBos1YAh1GBIVyKhZ/mYo+n5dba4N49n/vcz+6Cf/RuOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
  dkim=pass header.d=garyguo.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4J6QHsJvn8vPnVDgCSoeaV8ZD51OxELqHBd+YCJaB/I=;
- b=m5uqbPx+SsGHaR0op0thVfQvdCnAbg63NLXxrpidAMvnXyc5QW6hOOEd4GGpHBL0f3eeWwCy02GXvu2OcuOwXNeV7R13X0SzS/QBHFRRpTZ3sIF/Fx9kf7qK4wc1eEtXRSGa7447p8faTF288nsYM8YJBhBi9iJ8llZ1ljm0Rx4=
+ bh=qMJ5DVIPmR0GGyKuj9yCCK91LLnvLn8at/DfeavIHlA=;
+ b=dl5/t7GHTOrQpQsOc90oxMofPV8F9OXqPenVrLIccJxdCPFe7yeJRMDzW1xdE1CR/bdBPq2Y9n4eT97/ExHZzmNGPB9KiPoJvd7/HETGLg0MayEyotf0eoNkaSvWq+iireIRJjQ5OjM5kr5dd14KvF+285hUzCuwRxXvZWTismI=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:15f::14)
- by LO0P265MB6421.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:2ca::8) with
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
+ by LO6P265MB7215.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:347::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.22; Tue, 24 Dec
- 2024 20:54:53 +0000
-Received: from CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
- ([fe80::4038:9891:8ad7:aa8a]) by CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
- ([fe80::4038:9891:8ad7:aa8a%7]) with mapi id 15.20.8272.013; Tue, 24 Dec 2024
- 20:54:53 +0000
-Date: Tue, 24 Dec 2024 20:54:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.21; Tue, 24 Dec
+ 2024 21:53:34 +0000
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7%3]) with mapi id 15.20.8293.000; Tue, 24 Dec 2024
+ 21:53:29 +0000
+Date: Tue, 24 Dec 2024 21:53:23 +0000
 From: Gary Guo <gary@garyguo.net>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -70,19 +70,18 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
  dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
  chrisi.schrefl@gmail.com, paulmck@kernel.org,
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org,
- Wedson Almeida Filho <wedsonaf@gmail.com>
-Subject: Re: [PATCH v7 04/16] rust: add rcu abstraction
-Message-ID: <20241224205450.20171869.gary@garyguo.net>
-In-Reply-To: <20241219170425.12036-5-dakr@kernel.org>
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [PATCH v7 08/16] rust: add devres abstraction
+Message-ID: <20241224215323.560f17a9.gary@garyguo.net>
+In-Reply-To: <20241219170425.12036-9-dakr@kernel.org>
 References: <20241219170425.12036-1-dakr@kernel.org>
-	<20241219170425.12036-5-dakr@kernel.org>
+	<20241219170425.12036-9-dakr@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO3P265CA0024.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:387::19) To CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:400:15f::14)
+X-ClientProxiedBy: DUZPR01CA0287.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b7::29) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:253::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,227 +89,214 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP265MB5186:EE_|LO0P265MB6421:EE_
-X-MS-Office365-Filtering-Correlation-Id: 585cf0fd-f6b0-401e-735a-08dd245d36fe
+X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LO6P265MB7215:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1f6ba5e7-caae-4a4a-8dd5-08dd246566d2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|10070799003|1800799024|7053199007;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|10070799003|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?C21q2y+NCuHQoGWk5Ig5sft2xzl3YCGKuWTgEwj+tSVv5qFaAEoIuWTIIDF8?=
- =?us-ascii?Q?5MhiWqwOePeqMc4ofquPUiusqegSkqA+HzO6XG41qcJWc8RHKQFzbXx9D5sy?=
- =?us-ascii?Q?/Yw8EotgaXtMIEenaS/7unkSwQddRR6hxvaxwSTfaV1ece/ETLBpC7y7MtJ2?=
- =?us-ascii?Q?fwI6VPEjoisXyg6vE+xI1VixP6+YItvlTnWvXCd8jr73e/LwhtZFQllzV7Z9?=
- =?us-ascii?Q?uW7PwVK1Mjc77+s0ol9+ovC/QPDX/6cCgU3xzrcQTFszo0D5/WWeg4h/FtoS?=
- =?us-ascii?Q?td45nlFao6ehgvaaQ6fag9tRFA3+l6wU4ZlIjPxXJ1y2AlhHZdHK8PT0LBrJ?=
- =?us-ascii?Q?ptg5hbhljY3zdJeKQ9XIOVviOLSOhW/9EkzDtCq4EiI7LECnpSRXDdg7JB6e?=
- =?us-ascii?Q?Oqaq+QFpJG08EPOs8TOA9BmWtcthafVOn6So/CdvJnGrswhwfRDfDsiNxAP4?=
- =?us-ascii?Q?+oq8PZw4htu89zVjdy7fyyz89oAFGSR+EEdKW3JUfqU582iFac7CjUHfVScW?=
- =?us-ascii?Q?tCdIoMsKsXvnws3oWMxagurRCYolvQqoPI4nd5hoHOGo9wBoCF0oL7T1PWyG?=
- =?us-ascii?Q?LNNO6QTNcZEjlJGmb/qCLGOvPq+eRz1m++hxQ8VIlBc76qSBRv4zyuvwp8O3?=
- =?us-ascii?Q?Elsez9Vb+ceme6PNE/LfM1WZUt6c96UyCby93WqLRPQ3n5OnB+FKhmN6D7tc?=
- =?us-ascii?Q?DIM6Xam0GywDjGlLDRVqwaofm0AeeSr2lB1VfzxZwnm66X0K7t6R7Abq4jQU?=
- =?us-ascii?Q?5QoTt/8kmD5cV1RRckhQBsVzpeuYFmI5vw0mAUMwRKDfjQ/u+y+zS3YN1lOh?=
- =?us-ascii?Q?KZGwtII5jwziui0cCnxnK+tWjc0Yz2HVyVXx84Biky6ixFM8cmI8hSNbT5mg?=
- =?us-ascii?Q?Q/V8weih2pNnMVNkHyaRQH/6dO1Uo7uALA/j3oolFa0/wC1ggBqTiuB58fE+?=
- =?us-ascii?Q?H8c+wqO+k/6IxWjSC5KFPbV8Ay8wEOwSJC+E2v8VCIkNOVZEZ0mO0fwXaHQ8?=
- =?us-ascii?Q?y+0kp5VvRhpLQ4W1HcUFOELIbOzNViSQnFcLeomNmvPRAYYa6nQ6Bkmaefrb?=
- =?us-ascii?Q?okXL6eebdIsdy8TNBa4Qj7q4nVHKZcPRjnX0S311la3axH327kT9mQ99bIPT?=
- =?us-ascii?Q?/xfrj5DCO9k8CdWAOkp/6TY9O/3vufmobiTi1zsj/YIHEqCr0IYIhNpeL44C?=
- =?us-ascii?Q?6la+rEdUfzdcDiR7/4GU2u+MsQBT0jpD89BSiISM/ZO4XpYAGGGBuGU5B/k2?=
- =?us-ascii?Q?jniNQ2ue+BGaXWqGgvjjy8cenHLHvSKmdLt/Z4gC52UFoUSM4LUfqzoiudS3?=
- =?us-ascii?Q?yledz8Ceu3YAa64eGZAnC+ldXCskZKFWcwSiOYUxF2d3gT9/EBlcILez+4Lh?=
- =?us-ascii?Q?GTaI8AjnLlPzdwI9NhTIvNhLdk+2?=
+	=?us-ascii?Q?c3TKK9hF1OjZAtE08/TuN6/3ylMqxlw0yZhBLM/Q7x10Aquag2IBaMznVH4k?=
+ =?us-ascii?Q?h3dwZgn9rxfKLrXo27sQio5cXBH4bt5i8Q4o0MKGYc2cqPfEfkzvYUyy4MrU?=
+ =?us-ascii?Q?ZV6gNSFSlojMMhS54WxcrnrTrMdI0HuNXm1oRNuJHD9WDiXypoTiPAuQNIZd?=
+ =?us-ascii?Q?0xYCmaAK36zPUVC7n6zsBXw07i6Z+7wwRa4RhHv2omLa3KDbQohtQX8M7/16?=
+ =?us-ascii?Q?fouW6hzyIccoIu4ExE2A5XMtrSRG8O7LiG0lTkhWxt6Tyna2S20NJpOop8fy?=
+ =?us-ascii?Q?6qHWXiqdLLO/lJm6+dAWCD1nzjqlDq6YRIGZVFFTroZCF5v6tgDSJtRZoRns?=
+ =?us-ascii?Q?LNPCob52kK3ln8CWhyKgVTZbrmlH+kFR8rvetBD9YFnL+VNNsVVS2GUD0rEV?=
+ =?us-ascii?Q?8MwngEgi+hoUPqcAMCxxNEf6t7D4SZpoWoYej3ov8katBlC4H+5rYrSz0XJS?=
+ =?us-ascii?Q?f+TgsH+86k+Jmdg/KKLJQbprhUbsvbaIDgALO0h58gY+TUeCVNY55QjMqe3J?=
+ =?us-ascii?Q?hXhX67LumPwmj2R3+gwJEZsKlVZtKDkIGmO9Ak/LUkVXneJz60QHSo8NUxII?=
+ =?us-ascii?Q?4VeWzwyuUqEzjW5vyh/N17O/8y2YSQab6QXzYWSfYXLY05/GpZqUrWHy8kCQ?=
+ =?us-ascii?Q?aFdGkj2I1gKbqQVcgouo7ZZ9sBJDjAhSk1Qh0W3W7kbLSG3gCY1Zha3pRq/s?=
+ =?us-ascii?Q?QdTORDJOQE9G2lN2fjrBnswu3B42Ifj74jg7WMY1mlQ6/szfhpaYIJMGxsSW?=
+ =?us-ascii?Q?eELViNAeEibbxHV+NirQWsmFjpugjrNAd9x8m45WSoB3+Qze1wQGF1HSKD+x?=
+ =?us-ascii?Q?4+8BCcGh5f4vRXbsKct+NgyL/ZDioPSy7ealW/ZoIZss1p7JB4RYOQxsLr53?=
+ =?us-ascii?Q?pW+bsk2unx04mybTounSuHdDIqwR+kt1ocGmdyeZLDDMoiwsjWs9ZqTzPscc?=
+ =?us-ascii?Q?UzFm3+Pqwc6oY9D+bk0zcqNtnHvPrYhsnD+Ldz5fOL2LfYiMypIqMT7/5A8e?=
+ =?us-ascii?Q?Fu8+sfJxBSJEDhJ1ABLEioBj2wk6hRG6bX6imd4GygdyJaYgztkAwbi9Ow5r?=
+ =?us-ascii?Q?EP8bnZTRaniyKV5aCKruYq0LI1v7/mVbjoUt7arNNRmRRkgaJAqeSQWjsc7A?=
+ =?us-ascii?Q?keAI+BT0WHMFuYTsAdtd9K20o4zuj8bozL2ql0KrtWZHdbohNX/HRt+s/RxV?=
+ =?us-ascii?Q?DiR4a3SCmFz7FgTHC9XdD8ns/CyROzN6ddpJhheGcJP+jAPrrcNmqOnhk6Cv?=
+ =?us-ascii?Q?dBriZiOjGNYlnvRSUUAdP6DtsOdc88YDl9GpJghHbdvo/wCTqCIMUX86YU+h?=
+ =?us-ascii?Q?J4eCooB3djW1sfz+J0KSTBZt7Ukk7Yub2V6YLh2jbWcTy5gki7LH1GJKgKtN?=
+ =?us-ascii?Q?ToZ/892Cv3UwM9kHn26g0CmY3tsy?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(10070799003)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(10070799003)(7053199007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZJ9Y9lvxhmFNcFst8ehQfGTwrdNfTryBxJskutlqVovsPlS9Kva/as7ugUn0?=
- =?us-ascii?Q?WgjRgIkrd+IGeqK6k6ITVQzYIn9QYZdP7Nbkr/cgtpJP4wx/w78pWqh/+rNs?=
- =?us-ascii?Q?073NYQonC7wnBh2hPeAVyk+sctUE6vtreuvnzSIWBlyAplJ+xt0eG6LzFL7r?=
- =?us-ascii?Q?Ws0qXjzmwE5qvKZhvMNwwIxXVFXikH9NU5/X9tzIIBX9m52RRYnRb2Ui0sNL?=
- =?us-ascii?Q?8+/ui+4q5lZ8jkOxUp+tyPMT7GOLOYTUpTuiYV5mN3xzIVTamZP+pwYnRkiP?=
- =?us-ascii?Q?trjG3WBQtsL0qlYQdf+engQeSHiZ2fM/DnxLTsdbfqqxXzz83gBIAFgMnydA?=
- =?us-ascii?Q?rW6gMhxoMaS5cvMO8zPpBtpRkECXT0td+EES3a+STmgUvyTnFA5EkJOk9KXX?=
- =?us-ascii?Q?Jv5sxWcqw9ulDYlg8xYm3yhAws2ryukqEh1oUX3mex1/dCBDZ4DO6NcjTQlE?=
- =?us-ascii?Q?qnUyRP9SipigvRrVAWyXoznh56pyzGNic/EZKzhrkSga96jwDayM1WsDhMXb?=
- =?us-ascii?Q?36O34J1orj6xUCh3VV90Uu4+2hvDJKHhraNT2dh1MrG4GHeLFEQNOwBPibZ1?=
- =?us-ascii?Q?UoUJB9+1o0fg2B0SV9MfDIxg02i5F5yat1HGNqe6dLCDlcbvpQKE5Isxi2VF?=
- =?us-ascii?Q?9WikwdQdBfqkoVVAm9PpR/4HUohLfgq4wqdj5ZTU8XuofexvL+rzzuk3wnYe?=
- =?us-ascii?Q?G84QjEmxGw+HNw5OKJA2O4p4o5ohVbC5xgtZUabOwQN6ify1VtQ3nciBLdy4?=
- =?us-ascii?Q?Xa7aO3IyZepmIyHsmun8KpQ3XJl8u4cXyZM58mtqjuS5ZcyaPCDSRwkHL2Lu?=
- =?us-ascii?Q?8c39xRdggtXa08Bicx58ImmIAmuSoMJN8qcLZsDpS1uMeMt9hZ2sqde95LKO?=
- =?us-ascii?Q?M3ZiawsKeHzik30Gqhi3KV2XVbsYycvbBgmYRRUGcCIVKbViJY4eaj4xt3hR?=
- =?us-ascii?Q?ycHsVJvs6liikHtcJ1tUArDjkYzIDoWkjRa2c4V3o7lal1OdAsjiKR2sjFxd?=
- =?us-ascii?Q?8omJLTHqZz2QAlBKsfGPwhka39kyL8q4YGJ3bemjV2fzfozxyl1HXc72hNor?=
- =?us-ascii?Q?3M4bfOs95SySy38AJXioIJdg1ieJtiIF8CT6P6x7vn7LD5HhTn3hnUrVA5rY?=
- =?us-ascii?Q?UAs7KVjZdSoAso+qjI8xpjsbLOZz7VUxYKzgIiAeE/I0Kjt52cQSPNjnQ7NM?=
- =?us-ascii?Q?zifaMAJPtIFoPY8U0Iio67U5espS+EQ0W5cy0GOI99Th0YIm93m+Q6PK5VhH?=
- =?us-ascii?Q?m0Ml9Ey5cI2QLxrsww7ppPOTn7IfP86lhEK/cuDaFZ/qqZqXauPdQNRI24KR?=
- =?us-ascii?Q?ZY0PZ1ifqgzfKBf5zZPw2YeonV3cAKCZ6FbLdUCIEGxT5MHTflWc8EDCoBQN?=
- =?us-ascii?Q?VQ4mIt/Je1/hnaaemCiH5eAsIZ3WJL+/7WUqSD6nhcixP+/KKJhmcHuf4moI?=
- =?us-ascii?Q?ZwgmVFq6SnSbL0baI/fP0Z0l9yYM73qm4g4IAu+d+ghXYlh6jFgKKRCHcpc2?=
- =?us-ascii?Q?KcsUoZmG2dCpz2IsmuUhwFg52cQjhD4Lh0k90nz5rYKzSMmo23tBoK6feOQg?=
- =?us-ascii?Q?KkZMZ94PYFuaAerYa8yGnRdNoxobPEGS9bGd5wJhhma9QZ6M43LWjWRK4Gi2?=
- =?us-ascii?Q?4Q=3D=3D?=
+	=?us-ascii?Q?Sq7ImJ48s3i0mFk/nKDf6QSQLmLsZoOBlEa6+4v8FK6/HUvimTL4rZuYMlcV?=
+ =?us-ascii?Q?cMeuY1opBQND/6AKMmhIYfe+rQlMhWqwD1PaY6quu++NjHnEf4CPtIFKnruN?=
+ =?us-ascii?Q?zAs61jO2CJCJLUTSGJd3Amioae9O35a63V8vyju/zTh+PI4NkjGVqUGMW+2d?=
+ =?us-ascii?Q?NFsNEHtlsmFu1WdVvXEdOufmWZWS5DaDzfxc1FlT/scR9JCflL4sPYb0k8BF?=
+ =?us-ascii?Q?NLUUf6ZUrWyPZC3ZT4s378gEKJz5qWMe+qwEdlG6ydiPprC2KbdHXpWtSc4W?=
+ =?us-ascii?Q?i+9YpXh1MNindlqWbeK1jX0qYK1VgZ0zFDfuli6msHcWdkRYaicVxclz+CnE?=
+ =?us-ascii?Q?2OlE75tSj/fLfe6idD3cUOA4Vtlog+UA80EqADgfaroC/ACdy+wjHNGcb3aV?=
+ =?us-ascii?Q?FB7m4rxfa1TexznF+jAyi6yzaHj1zxZczJAsRO9PQVeJ0Gt7cTPWDUEJCMNr?=
+ =?us-ascii?Q?rf0JovVD21DAZzuM6YUY9tQXlRESXn3GCZLxWFOdcF6CGUtzchNhUq5dp8Rm?=
+ =?us-ascii?Q?ZgN43e+tzS5TMceiO8Nd9ta2F9RIhIkCqZBRDjidvPrbWy29sDkgL7tNpooO?=
+ =?us-ascii?Q?NntEEl18iqLc8VUq1p5QGdFTarRjOReTMJs20Ni5sbU3uEM2NETTgz19QFgo?=
+ =?us-ascii?Q?K1x45F6LbUzYxA40QDjGefKyKOhfG0iHGndain5zPJqfGZlJrVttNQmgwodN?=
+ =?us-ascii?Q?014YWbsboCz7Id/PCW114ISu2xeQV4fpkt6QsWISA+9RnwvaJJ+n9VSznway?=
+ =?us-ascii?Q?J5tYxZT2LbxlIYASxuHHVxFFxZpOm+hHlegoDJ+50bDGzxq6SU+oFeQu0hR+?=
+ =?us-ascii?Q?Qfc94p8tiTFyPkFZcf2b6ZrbSPSZiUcfvKZMdbPrFt+8g/FNA3NEbBkVs+MQ?=
+ =?us-ascii?Q?iwKSWJkvfl1Wj2R6LZ6ZbrUWgUMbfq0QZi2Ni0/1ty+4BU8mAYXCtHy5coWp?=
+ =?us-ascii?Q?brEkBtrwj8usOAp1LB8rLuOYNRURMbvpP8dJ5nNU+atXRWtg8LKXkn5zB5hE?=
+ =?us-ascii?Q?tnegFBbk0N6rMqJ5H9Uch9HkRf/96kfRU+D6LsUO5sXCvF1Z+J6Ji99o78Lp?=
+ =?us-ascii?Q?iMwW1rqOCqFMilOoLGWfytr0Ff5IDTdhjTBvoeMsh6Rl65ETzua9MtwpKz2Y?=
+ =?us-ascii?Q?0sxNqF/HsfFxgu/CCCmc+fJi6wjZLLRBwZhdTQI0F/zduNHCPkpLS/DNPIfV?=
+ =?us-ascii?Q?wn8LWZ46WnICjH5ZcgjRsdWq7v/HtJP+J5Io3zZRb5KzrAa9fcjoXxIXFl4O?=
+ =?us-ascii?Q?P775tTScqfyaQFK+0SzqGW74wxpEcQifTI+Y6YuecW/NsLC5qD2DJ2iWOR0j?=
+ =?us-ascii?Q?Fcg8M9XqyFiykG8xoBPL8ZVYdh75Ax8d+334WicBqT4lNKgNBzWqMTrxZmul?=
+ =?us-ascii?Q?aERbgt/g7r+rLkoeyu4UFjJJv7y8l/Hk5lyaWTCPzNN5L6hSEpAOTBh8OCWB?=
+ =?us-ascii?Q?K0xZqIMBUTnXCPd/E+PU49XRzrSeiDhQTrV4vPEuati7bgptyS7OdSobZzot?=
+ =?us-ascii?Q?M672Pd7Rxh2OG4YARZibFU1BcF2SnPoGGAq+OsXnb4JAnutYh1T3tWHREPIa?=
+ =?us-ascii?Q?Nwm34EQeDlIk1hFez0A26vTzc/JCPwuhXEKibEfHWginvR+l99kIhFQx17tV?=
+ =?us-ascii?Q?9w=3D=3D?=
 X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 585cf0fd-f6b0-401e-735a-08dd245d36fe
-X-MS-Exchange-CrossTenant-AuthSource: CWLP265MB5186.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f6ba5e7-caae-4a4a-8dd5-08dd246566d2
+X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2024 20:54:53.1245
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2024 21:53:29.3624
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P5n6gzdbjHC+YvepZGUSDZZJBlZb6xRollI1LoD2Ac+mC8ft0PX/lOvMdoagM67vSiTo+OsxTMjeVpK9Jdg3wg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB6421
+X-MS-Exchange-CrossTenant-UserPrincipalName: xXpl+b5Oiffj90o+ru8dmETY8dK0ygoGGkgmtj6gre7ItFYT6j6z9dynEtVj0ggfZgTxJ3lnMcDNdjZLmg6vtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P265MB7215
 
-On Thu, 19 Dec 2024 18:04:06 +0100
+On Thu, 19 Dec 2024 18:04:10 +0100
 Danilo Krummrich <dakr@kernel.org> wrote:
 
-> From: Wedson Almeida Filho <wedsonaf@gmail.com>
+> Add a Rust abstraction for the kernel's devres (device resource
+> management) implementation.
 > 
-> Add a simple abstraction to guard critical code sections with an rcu
-> read lock.
+> The Devres type acts as a container to manage the lifetime and
+> accessibility of device bound resources. Therefore it registers a
+> devres callback and revokes access to the resource on invocation.
 > 
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> Co-developed-by: Danilo Krummrich <dakr@kernel.org>
+> Users of the Devres abstraction can simply free the corresponding
+> resources in their Drop implementation, which is invoked when either the
+> Devres instance goes out of scope or the devres callback leads to the
+> resource being revoked, which implies a call to drop_in_place().
+> 
 > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
->  MAINTAINERS             |  1 +
->  rust/helpers/helpers.c  |  1 +
->  rust/helpers/rcu.c      | 13 ++++++++++++
->  rust/kernel/sync.rs     |  1 +
->  rust/kernel/sync/rcu.rs | 47 +++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 63 insertions(+)
->  create mode 100644 rust/helpers/rcu.c
->  create mode 100644 rust/kernel/sync/rcu.rs
-
-[resend to the list]
-
+>  MAINTAINERS            |   1 +
+>  rust/helpers/device.c  |  10 +++
+>  rust/helpers/helpers.c |   1 +
+>  rust/kernel/devres.rs  | 178 +++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs     |   1 +
+>  5 files changed, 191 insertions(+)
+>  create mode 100644 rust/helpers/device.c
+>  create mode 100644 rust/kernel/devres.rs
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3cfb68650347..0cc69e282889 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19690,6 +19690,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
->  F:	Documentation/RCU/
->  F:	include/linux/rcu*
->  F:	kernel/rcu/
-> +F:	rust/kernel/sync/rcu.rs
->  X:	Documentation/RCU/torture.rst
->  X:	include/linux/srcu*.h
->  X:	kernel/rcu/srcu*.c
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index dcf827a61b52..060750af6524 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -20,6 +20,7 @@
->  #include "page.c"
->  #include "pid_namespace.c"
->  #include "rbtree.c"
-> +#include "rcu.c"
->  #include "refcount.c"
->  #include "security.c"
->  #include "signal.c"
-> diff --git a/rust/helpers/rcu.c b/rust/helpers/rcu.c
-> new file mode 100644
-> index 000000000000..f1cec6583513
-> --- /dev/null
-> +++ b/rust/helpers/rcu.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> <snip>
+>
+> +pub struct Devres<T>(Arc<DevresInner<T>>);
 > +
-> +#include <linux/rcupdate.h>
+> +impl<T> DevresInner<T> {
+> +    fn new(dev: &Device, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+> +        let inner = Arc::pin_init(
+> +            pin_init!( DevresInner {
+> +                data <- Revocable::new(data),
+> +            }),
+> +            flags,
+> +        )?;
 > +
-> +void rust_helper_rcu_read_lock(void)
-> +{
-> +	rcu_read_lock();
-> +}
+> +        // Convert `Arc<DevresInner>` into a raw pointer and make devres own this reference until
+> +        // `Self::devres_callback` is called.
+> +        let data = inner.clone().into_raw();
 > +
-> +void rust_helper_rcu_read_unlock(void)
-> +{
-> +	rcu_read_unlock();
-> +}
-> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-> index 1eab7ebf25fd..0654008198b2 100644
-> --- a/rust/kernel/sync.rs
-> +++ b/rust/kernel/sync.rs
-> @@ -12,6 +12,7 @@
->  pub mod lock;
->  mod locked_by;
->  pub mod poll;
-> +pub mod rcu;
->  
->  pub use arc::{Arc, ArcBorrow, UniqueArc};
->  pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
-> diff --git a/rust/kernel/sync/rcu.rs b/rust/kernel/sync/rcu.rs
-> new file mode 100644
-> index 000000000000..b51d9150ffe2
-> --- /dev/null
-> +++ b/rust/kernel/sync/rcu.rs
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +        // SAFETY: `devm_add_action` guarantees to call `Self::devres_callback` once `dev` is
+> +        // detached.
+> +        let ret = unsafe {
+> +            bindings::devm_add_action(dev.as_raw(), Some(Self::devres_callback), data as _)
+> +        };
 > +
-> +//! RCU support.
-> +//!
-> +//! C header: [`include/linux/rcupdate.h`](srctree/include/linux/rcupdate.h)
+> +        if ret != 0 {
+> +            // SAFETY: We just created another reference to `inner` in order to pass it to
+> +            // `bindings::devm_add_action`. If `bindings::devm_add_action` fails, we have to drop
+> +            // this reference accordingly.
+> +            let _ = unsafe { Arc::from_raw(data) };
+> +            return Err(Error::from_errno(ret));
+> +        }
 > +
-> +use crate::{bindings, types::NotThreadSafe};
-> +
-> +/// Evidence that the RCU read side lock is held on the current thread/CPU.
-> +///
-> +/// The type is explicitly not `Send` because this property is per-thread/CPU.
-> +///
-> +/// # Invariants
-> +///
-> +/// The RCU read side lock is actually held while instances of this guard exist.
-> +pub struct Guard(NotThreadSafe);
-> +
-> +impl Guard {
-> +    /// Acquires the RCU read side lock and returns a guard.
-> +    pub fn new() -> Self {
-> +        // SAFETY: An FFI call with no additional requirements.
-> +        unsafe { bindings::rcu_read_lock() };
-> +        // INVARIANT: The RCU read side lock was just acquired above.
-> +        Self(NotThreadSafe)
+> +        Ok(inner)
 > +    }
 > +
-> +    /// Explicitly releases the RCU read side lock.
-> +    pub fn unlock(self) {}  
-
-I don't think there's need for this, `drop(rcu_guard)` is equally
-clear.
-
-There was a debate in Rust community about explicit lock methods, but
-the conclusion was to not have it,
-see https://github.com/rust-lang/rust/issues/81872.
-
+> +    #[allow(clippy::missing_safety_doc)]
+> +    unsafe extern "C" fn devres_callback(ptr: *mut kernel::ffi::c_void) {
+> +        let ptr = ptr as *mut DevresInner<T>;
+> +        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
+> +        // reference.
+> +        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
+> +        //         `DevresInner::new`.
+> +        let inner = unsafe { Arc::from_raw(ptr) };
+> +
+> +        inner.data.revoke();
+> +    }
 > +}
 > +
-> +impl Default for Guard {
-> +    fn default() -> Self {
-> +        Self::new()
-> +    }
-> +}  
-
-I don't think anyone would like to implicit acquire an RCU guard! I
-believe you included this because clippy is yelling, but in this case
-you shouldn't listen to clippy. Either suppress the warning or rename
-`new` to `lock`.
-
+> +impl<T> Devres<T> {
+> +    /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
+> +    /// returned `Devres` instance' `data` will be revoked once the device is detached.
+> +    pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
+> +        let inner = DevresInner::new(dev, data, flags)?;
 > +
-> +impl Drop for Guard {
+> +        Ok(Devres(inner))
+> +    }
+> +
+> +    /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
+> +    /// is owned by devres and will be revoked / dropped, once the device is detached.
+> +    pub fn new_foreign_owned(dev: &Device, data: T, flags: Flags) -> Result {
+> +        let _ = DevresInner::new(dev, data, flags)?;
+> +
+> +        Ok(())
+> +    }
+> +}
+> +
+> +impl<T> Deref for Devres<T> {
+> +    type Target = Revocable<T>;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        &self.0.data
+> +    }
+> +}
+> +
+> +impl<T> Drop for Devres<T> {
 > +    fn drop(&mut self) {
-> +        // SAFETY: By the type invariants, the RCU read side is locked, so it is ok to unlock it.
-> +        unsafe { bindings::rcu_read_unlock() };
+> +        // Revoke the data, such that it gets dropped already and the actual resource is freed.
+> +        //
+> +        // `DevresInner` has to stay alive until the devres callback has been called. This is
+> +        // necessary since we don't know when `Devres` is dropped and calling
+> +        // `devm_remove_action()` instead could race with `devres_release_all()`.
+
+IIUC, the outcome of that race is the `WARN` if
+devres_release_all takes the spinlock first and has already remvoed the
+action?
+
+Could you do a custom devres_release here that mimick
+`devm_remove_action` but omit the `WARN`? This way it allows the memory
+behind DevresInner to be freed early without keeping it allocated until
+the end of device lifetime.
+
+> +        //
+> +        // SAFETY: When `drop` runs, it's guaranteed that nobody is accessing the revocable data
+> +        // anymore, hence it is safe not to wait for the grace period to finish.
+> +        unsafe { self.revoke_nosync() };
 > +    }
 > +}
-> +
-> +/// Acquires the RCU read side lock.
-> +pub fn read_lock() -> Guard {
-> +    Guard::new()
-> +}  
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 6c836ab73771..2b61bf99d1ee 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -41,6 +41,7 @@
+>  pub mod cred;
+>  pub mod device;
+>  pub mod device_id;
+> +pub mod devres;
+>  pub mod driver;
+>  pub mod error;
+>  #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
 
 
