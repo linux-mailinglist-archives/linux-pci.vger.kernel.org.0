@@ -1,310 +1,521 @@
-Return-Path: <linux-pci+bounces-18995-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18996-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA3E69FBB0E
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 10:18:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 856FE9FBB84
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 10:51:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D63D1670AA
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 09:17:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A59C1886A48
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 09:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53FD418FC74;
-	Tue, 24 Dec 2024 09:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 058CA1C5493;
+	Tue, 24 Dec 2024 09:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FAFi5ZM+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sEkD8u1s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A19217B502;
-	Tue, 24 Dec 2024 09:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8411C3C13
+	for <linux-pci@vger.kernel.org>; Tue, 24 Dec 2024 09:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735031838; cv=none; b=hiKadPoHSpStHUq1alBSglOyC82FBWHhWDxfBylvoN8Qhz2zN3BrlNtzDFeM/3D5Xlb1er9jaI8okLB6ME2Ln8dXWh04aKwut96NTHyFYPdJP43xIgbGu/eJxNu1yZWYuCDt9e+WcKAQWWpF+zBAPbx5fBK8aRIDfLgklYKsRwg=
+	t=1735033638; cv=none; b=JpZxZ+d8AqKJl5rNYBviaiQMDLTA9g4t0fZ2BD76BSrqRJJIpmpuoJwLDzU9elcwMySXJv9OxXmNsJqr9Yo/JpwGvVBcIMCQghAiK0eZ3jB6r0ziOlSbDTmbBFd0KIj2tzJT0xOyDcsH0d4eRe3e9Wd3wy4BXePUPIn+EkXDP/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735031838; c=relaxed/simple;
-	bh=aR84a1s28BWuJJeeBtIPGWpY5xfFU48IxSY0h9hK2ZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Eb//GbMwgOtRBUxjde6TrYdrqRGo9rJI6FoTmFwhWbLes0ia2HR4J2gGH4utblnrz/6jArAa5/w12Rf00i7leOqhSlEO99x7HVlZ2G8StcZf2e055bz3ax47v84o3iGH7ZqOYLm9vKI0eNKL2rvjplPqqvvMMYy+y6ttqzDSvw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FAFi5ZM+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BO5lZSg006792;
-	Tue, 24 Dec 2024 09:17:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rjWAJ6FFzY8sfYf+NxS1tMVHBivxN2oLABX0OWwcp2Y=; b=FAFi5ZM+V0TFObkR
-	DGt9I7Z/OStBqD7l+S9LytROAOkR8bM9Ilo3GfR8pY637f/uU76Su8yGh9WZg9Yx
-	S9sH4DHcr6/GRgFTuQ/WSNuBsqdtUPr+JJaWQ/f5jVlgWnoUYc4k6KUgZit3FsjS
-	xquMvJ6gHuGKtyP2+7S788Bcg4VQrhbcR20thL9eZfjfoDBZlkMjlSkjauXku85I
-	eH+NY/8vXt3X2FCEEoC8sm19Cqdly0AhTLp9Syz/kxnrj5Cf/ujkavTbDeCP0o+N
-	xMLIUOwTeg9d+kZ0s2WzPjMqT5zO7fvy2FviQloZ402IDYsci/48Yf28dutDwT+I
-	oDZy2w==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43qq4b0v7n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Dec 2024 09:17:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BO9H9OP014280
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Dec 2024 09:17:09 GMT
-Received: from [10.216.2.152] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Dec
- 2024 01:17:03 -0800
-Message-ID: <49ccd5f2-8524-eba4-25ef-4cdc39edc93b@quicinc.com>
-Date: Tue, 24 Dec 2024 14:47:00 +0530
+	s=arc-20240116; t=1735033638; c=relaxed/simple;
+	bh=nJL3cJklp23M/iHXZ6qUlbikuJoZmCHT94AfHfXf+TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QRWbO11j8dn1/ELpc+8VXd2ehKgvpMuYyfq0rv78WxIIIEBGGvTdd5nwcurhQlcW3XKnhDpKe4daxlzL9GFi+SdK3qStj2lZA15ZaDH0g4aMLI6AODQY2hHIBLhqrGb6eBgopMPvOWqOmhxQj2yYYvZIh4bjFrKHPBgWyeOc6LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sEkD8u1s; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54025432becso5207989e87.1
+        for <linux-pci@vger.kernel.org>; Tue, 24 Dec 2024 01:47:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1735033634; x=1735638434; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ICRWszIDYo7jhB4ldqyzBXZGTmMRp8M18Zu6d1SbJBc=;
+        b=sEkD8u1sXWhH4Qy2i1wnPa2jcIkRieBB7Slqt+d1jZuDlOCfuXxt6p0v1uX2sq8QA8
+         wDjMrIvWcaXjM6QxIUnC7seFEeGpTlsuXlwyHGsx7eYdWeru8msORYBSQoobZxN1bnHd
+         aYfwIP+OZOB+TuYOY1ebVPMDdKfevIBfPkJn0rg7cPAZ+yOzcdSgmvOiQkKwnbTxkjwm
+         7Bj/JXI6gV9s6x85P8pLerw0h/9PY4fTPX0+quk/eZ+se+uJk1lscai5U0mK6+VZhMP1
+         upHA7KARbHnt2UadS9apLNIU/np4huXozgXVj4tdhg+6nPIvZSYGsmgiouj44nOa/vaN
+         A/ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735033634; x=1735638434;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ICRWszIDYo7jhB4ldqyzBXZGTmMRp8M18Zu6d1SbJBc=;
+        b=TH8n1EHEI3wZecBrpSpP3IqemVXqtheqljBC/5rO409K8h9tEVYYe8D1s7ukMj9rSm
+         5wqfd6FB9QXCJpGboFCL9k876/yEl/Tsy/uY3pJxuLyQlSKpcJhvY7Befjc2wYVS6QxX
+         zBUMduEQUubHAaCjAZX6LUpRH2lb06AOvLSrRn7sW5hNfg+5jQEk9MV54rwKimmE9iIs
+         0hGNY2mFqO3sapYh6co9Q1xGkhF8Gba9mE/CFm3F6Ny3VFC+kZwB4Vh74gsmUU1n/nlu
+         +UAHnMZwYSpB/xIpDtDKuTdyjzePXQPVDv0pkFuvVa6wK1dAMFkGLSMP9tGU6rTT6SMn
+         KQtA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4Yh8crUVRCnbPdtICcFZthW863nZS/jVK58VkEz5EIwBCkj8HJTZJz94fsGoXC/KX24cDkfIvK2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXGVTe+eRTXzDe0vID4pvARIhLcFSnLTWiIkDMZly3+L5dGd4r
+	Jmi7hiT59rzBpDIXAL9IvMYJOwseqIcJCl1AA+v1kg2QRQl/RbnnmSbdok1uH/o=
+X-Gm-Gg: ASbGnctpp9slMAYOuPJaTq1cDhnFqDLCAxjFTg6OFYiJqsbXhlH0jsnt5/q9hPxWEAx
+	+n8byENNlrqXeSXaLuEmXWcgNadhOP3sR3sos8alDGJh/bHroB9y82/2+eGw1U9COyaZin9Z7KG
+	QQ3pFWP9urVPIw1t7wUp2TwEzSQVlmJ/TDUZBjq+ZI4G0NDibjCMAaCXkFkzQsfv0mlBlDzBOdG
+	3lUTTDjL5X0+WoUAiRM1pdPQ7Fso/b/cc0OKlgUu/GCkUpcskxCUxRThuBmRX9lp5bHxERwXtPX
+	cdAwEv+OzDhGEYnglZJ7pS5Bbk4/UfzkXnvW
+X-Google-Smtp-Source: AGHT+IGsFcFgssSv3Q/bbtU+QPMUs+pd8hc7ThLbPWbmORFNznEyed0S9iXPab6Bquw3SZf1Tbv+1w==
+X-Received: by 2002:a05:6512:334e:b0:542:218a:343 with SMTP id 2adb3069b0e04-542295989femr4074133e87.52.1735033634465;
+        Tue, 24 Dec 2024 01:47:14 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54223830207sm1581792e87.251.2024.12.24.01.47.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2024 01:47:13 -0800 (PST)
+Date: Tue, 24 Dec 2024 11:47:11 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Rob Herring <robh@kernel.org>, andersson@kernel.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
+Message-ID: <hadsywppxfppeqqbqejuztrc3igg3mwmgdhpffxxyj4vnrowjh@uxtjywpipdig>
+References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
+ <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
+ <20241115161848.GA2961450-robh@kernel.org>
+ <74eaef67-18f2-c2a1-1b9c-ac97cefecc54@quicinc.com>
+ <kssmfrzgo7ljxveys4rh5wqyaottufhjsdjnro7k7h7e6fdgcl@i7tdpohtny2x>
+ <9bcbbd2b-7fe9-d0ad-656a-f759b14a32dc@quicinc.com>
+ <srts5hm5kvbu2k6fxtejuei7eo2fjvvhpxho2giskto3w3nvoh@iymonedukgrs>
+ <a2d98705-adb5-e33a-5047-4635bda11355@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 2/4] PCI: of: Add API to retrieve equalization presets
- from device tree
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Konrad Dybcio <konradybcio@kernel.org>,
-        Krishna Chaitanya Chundru
-	<krishna.chundru@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_mrana@quicinc.com>,
-        <quic_vbadigan@quicinc.com>, Bjorn Andersson
-	<andersson@kernel.org>
-References: <20241223-preset_v2-v3-0-a339f475caf5@oss.qualcomm.com>
- <20241223-preset_v2-v3-2-a339f475caf5@oss.qualcomm.com>
- <piccoomv7rx4dvvfdoesmxbzrdqz4ld6ii6neudsdf4hjj2yzm@2bcuacwa4feb>
- <d317c51a-3913-6c49-f8db-e75589f9289a@quicinc.com>
- <wjk32haduzgiea676mamqdr6mhbmm3rrb6eyhzghqpczjuiazx@ipik3jhjzmhz>
- <7bc9f3f2-851c-3703-39b4-fea93d10bd7f@quicinc.com>
- <ntag3wc3yqax2afsbzesev32hpj3ssiknhjq6dtncuuj4ljrxh@23ed4qdwfrxi>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <ntag3wc3yqax2afsbzesev32hpj3ssiknhjq6dtncuuj4ljrxh@23ed4qdwfrxi>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: DAHgdLhOTEMqnrg8ac9W1yw7AexkoagL
-X-Proofpoint-GUID: DAHgdLhOTEMqnrg8ac9W1yw7AexkoagL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412240078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2d98705-adb5-e33a-5047-4635bda11355@quicinc.com>
 
-
-
-On 12/24/2024 12:00 AM, Dmitry Baryshkov wrote:
-> On Mon, Dec 23, 2024 at 10:13:29PM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 12/23/2024 8:56 PM, Dmitry Baryshkov wrote:
->>> On Mon, Dec 23, 2024 at 08:02:23PM +0530, Krishna Chaitanya Chundru wrote:
->>>>
->>>>
->>>> On 12/23/2024 5:17 PM, Dmitry Baryshkov wrote:
->>>>> On Mon, Dec 23, 2024 at 12:21:15PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>> PCIe equalization presets are predefined settings used to optimize
->>>>>> signal integrity by compensating for signal loss and distortion in
->>>>>> high-speed data transmission.
->>>>>>
->>>>>> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
->>>>>> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
->>>>>> configure lane equalization presets for each lane to enhance the PCIe
->>>>>> link reliability. Each preset value represents a different combination
->>>>>> of pre-shoot and de-emphasis values. For each data rate, different
->>>>>> registers are defined: for 8.0 GT/s, registers are defined in section
->>>>>> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
->>>>>> an extra receiver preset hint, requiring 16 bits per lane, while the
->>>>>> remaining data rates use 8 bits per lane.
->>>>>>
->>>>>> Based on the number of lanes and the supported data rate, this function
->>>>>> reads the device tree property and stores in the presets structure.
->>>>>>
->>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->>>>>> ---
->>>>>>     drivers/pci/of.c  | 45 +++++++++++++++++++++++++++++++++++++++++++++
->>>>>>     drivers/pci/pci.h | 17 +++++++++++++++--
->>>>>>     2 files changed, 60 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->>>>>> index dacea3fc5128..99e0e7ae12e9 100644
->>>>>> --- a/drivers/pci/of.c
->>>>>> +++ b/drivers/pci/of.c
->>>>>> @@ -826,3 +826,48 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->>>>>>     	return slot_power_limit_mw;
->>>>>>     }
->>>>>>     EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
->>>>>> +
->>>>>
->>>>> kerneldoc? Define who should free the memory and how.
->>>>>
->>>> I will update this in next series.
->>>> as we are allocating using devm_kzalloc it should be freed on driver
->>>> detach, as no special freeing is required.
->>>>>> +int of_pci_get_equalization_presets(struct device *dev,
->>>>>> +				    struct pci_eq_presets *presets,
->>>>>> +				    int num_lanes)
->>>>>> +{
->>>>>> +	char name[20];
->>>>>> +	void **preset;
->>>>>> +	void *temp;
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	if (of_property_present(dev->of_node, "eq-presets-8gts")) {
->>>>>> +		presets->eq_presets_8gts = devm_kzalloc(dev, sizeof(u16) * num_lanes, GFP_KERNEL);
->>>>>> +		if (!presets->eq_presets_8gts)
->>>>>> +			return -ENOMEM;
->>>>>> +
->>>>>> +		ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
->>>>>> +						 presets->eq_presets_8gts, num_lanes);
->>>>>> +		if (ret) {
->>>>>> +			dev_err(dev, "Error reading eq-presets-8gts %d\n", ret);
->>>>>> +			return ret;
->>>>>> +		}
->>>>>> +	}
->>>>>> +
->>>>>> +	for (int i = 1; i < sizeof(struct pci_eq_presets) / sizeof(void *); i++) {
->>>>>> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << i);
->>>>>> +		if (of_property_present(dev->of_node, name)) {
->>>>>> +			temp = devm_kzalloc(dev, sizeof(u8) * num_lanes, GFP_KERNEL);
->>>>>> +			if (!temp)
->>>>>> +				return -ENOMEM;
->>>>>> +
->>>>>> +			ret = of_property_read_u8_array(dev->of_node, name,
->>>>>> +							temp, num_lanes);
->>>>>> +			if (ret) {
->>>>>> +				dev_err(dev, "Error %s %d\n", name, ret);
->>>>>> +				return ret;
->>>>>> +			}
->>>>>> +
->>>>>> +			preset = (void **)((u8 *)presets + i * sizeof(void *));
->>>>>
->>>>> Ugh.
->>>>>
->>>> I was trying iterate over each element on the structure as presets holds the
->>>> starting address of the structure and to that we are adding size of the void
->>>> * point to go to each element. I did this way to reduce the
->>>> redundant code to read all the gts which has same way of storing the data
->>>> from the device tree. I will add comments here in the next series.
->>>
->>> Please rewrite this in a cleaner way. The code shouldn't raise
->>> questions.
->>>
->>>>>> +			*preset = temp;
->>>>>> +		}
->>>>>> +	}
->>>>>> +
->>>>>> +	return 0;
->>>>>> +}
->>>>>> +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
->>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->>>>>> index 14d00ce45bfa..82362d58bedc 100644
->>>>>> --- a/drivers/pci/pci.h
->>>>>> +++ b/drivers/pci/pci.h
->>>>>> @@ -731,7 +731,12 @@ static inline u64 pci_rebar_size_to_bytes(int size)
->>>>>>     }
->>>>>>     struct device_node;
->>>>>> -
->>>>>> +struct pci_eq_presets {
->>>>>> +	void *eq_presets_8gts;
->>>>>> +	void *eq_presets_16gts;
->>>>>> +	void *eq_presets_32gts;
->>>>>> +	void *eq_presets_64gts;
->>>>>
->>>>> Why are all of those void*? 8gts is u16*, all other are u8*.
->>>>>
->>>> To have common parsing logic I moved them to void*, as these are pointers
->>>> actual memory is allocated by of_pci_get_equalization_presets()
->>>> based upon the gts these should not give any issues.
->>>
->>> Please, don't. They have types. void pointers are for the opaque data.
->>>
->> ok.
->>
->> I think then better to use v1 patch
->> https://lore.kernel.org/all/20241116-presets-v1-2-878a837a4fee@quicinc.com/
->>
->> konrad, any objection on using v1 as that will be cleaner way even if we
->> have some repetitive code.
+On Tue, Dec 24, 2024 at 02:39:17PM +0530, Krishna Chaitanya Chundru wrote:
 > 
-> Konrad had a nice suggestion about using the array of values. Please use
-> such an array for 16gts and above. This removes most of repetitive code.
 > 
-I don't feel having array in the preset structure looks good, I have
-come up with this logic if you feel it is not so good I will go to the
-suggested way by having array for 16gts and above.
+> On 12/24/2024 12:24 PM, Dmitry Baryshkov wrote:
+> > On Tue, Dec 24, 2024 at 11:34:10AM +0530, Krishna Chaitanya Chundru wrote:
+> > > 
+> > > 
+> > > On 12/24/2024 12:27 AM, Dmitry Baryshkov wrote:
+> > > > On Sun, Nov 24, 2024 at 07:02:48AM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > 
+> > > > > 
+> > > > > On 11/15/2024 9:48 PM, Rob Herring wrote:
+> > > > > > On Tue, Nov 12, 2024 at 08:31:33PM +0530, Krishna chaitanya chundru wrote:
+> > > > > > > Add binding describing the Qualcomm PCIe switch, QPS615,
+> > > > > > > which provides Ethernet MAC integrated to the 3rd downstream port
+> > > > > > > and two downstream PCIe ports.
+> > > > > > > 
+> > > > > > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > > > > > ---
+> > > > > > >     .../devicetree/bindings/pci/qcom,qps615.yaml       | 205 +++++++++++++++++++++
+> > > > > > >     1 file changed, 205 insertions(+)
+> > > > > > > 
+> > > > > > > diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..e6a63a0bb0f3
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> > > > > > > @@ -0,0 +1,205 @@
+> > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > +%YAML 1.2
+> > > > > > > +---
+> > > > > > > +$id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Qualcomm QPS615 PCIe switch
+> > > > > > > +
+> > > > > > > +maintainers:
+> > > > > > > +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > > > > > +
+> > > > > > > +description: |
+> > > > > > > +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
+> > > > > > > +  ports. The 3rd downstream port has integrated endpoint device of
+> > > > > > > +  Ethernet MAC. Other two downstream ports are supposed to connect
+> > > > > > > +  to external device.
+> > > > > > > +
+> > > > > > > +  The QPS615 PCIe switch can be configured through I2C interface before
+> > > > > > > +  PCIe link is established to change FTS, ASPM related entry delays,
+> > > > > > > +  tx amplitude etc for better power efficiency and functionality.
+> > > > > > > +
+> > > > > > > +properties:
+> > > > > > > +  compatible:
+> > > > > > > +    enum:
+> > > > > > > +      - pci1179,0623
+> > > > > > > +
+> > > > > > > +  reg:
+> > > > > > > +    maxItems: 1
+> > > > > > > +
+> > > > > > > +  i2c-parent:
+> > > > > > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > > > > > > +    description: |
+> > > > > > 
+> > > > > > Don't need '|' if no formatting to preserve.
+> > > > > > 
+> > > > > ack
+> > > > > > > +      A phandle to the parent I2C node and the slave address of the device
+> > > > > > > +      used to do configure qps615 to change FTS, tx amplitude etc.
+> > > > > > > +    items:
+> > > > > > > +      - description: Phandle to the I2C controller node
+> > > > > > > +      - description: I2C slave address
+> > > > > > > +
+> > > > > > > +  vdd18-supply: true
+> > > > > > > +
+> > > > > > > +  vdd09-supply: true
+> > > > > > > +
+> > > > > > > +  vddc-supply: true
+> > > > > > > +
+> > > > > > > +  vddio1-supply: true
+> > > > > > > +
+> > > > > > > +  vddio2-supply: true
+> > > > > > > +
+> > > > > > > +  vddio18-supply: true
+> > > > > > > +
+> > > > > > > +  reset-gpios:
+> > > > > > > +    maxItems: 1
+> > > > > > > +    description:
+> > > > > > > +      GPIO controlling the RESX# pin.
+> > > > > > 
+> > > > > > Is the PERST# or something else?
+> > > > > > 
+> > > > > it is not PERST GPIO, it is similar to PERST in terms
+> > > > > of functionality which brings switch out from reset.
+> > > > 
+> > > > Do you have an actual PERST# on upstream facing port? Is it a separate
+> > > > wire? Judging by the RB3 Gen2 this line is being used as PERST#
+> > > > 
+> > > we had PERST# as a separate line. It has two inputs one is PERST# &
+> > > other one is RESX# gpio functionality wise both are similar.
+> > 
+> > I don't think I follow. Are you describing the QPS615 side or the SoC side?
+> > 
+> These are QPS615 side. it has both PERST# as per PCIe spec and RESX# which
+> belongs to only qps615 to bring out of reset. There are two different GPIO
+> lines.
 
-        if (of_property_present(dev->of_node, "eq-presets-8gts")) {
-                 presets->eq_presets_8gts = devm_kzalloc(dev, 
-sizeof(u16) * num_lanes, GFP_KERNEL);
-                 if (!presets->eq_presets_8gts)
-                         return -ENOMEM;
+Hmm, okay. I indeed see two pins, PCIE_RESET_N and RESX. PCIE_RESET_N is
+described as "Reset for PCIe block", while RESX is "System reset input".
+RESX should be lifted before PCIE_RESET_N during QPS615 power on.
+If I understand correctly, the reset-gpios is a RESX pin, which is
+controlled manually by the QPS driver. Is PERST# controlled by the DWC3
+driver or by the DWC3 controller itself?
 
-                 ret = of_property_read_u16_array(dev->of_node, 
-"eq-presets-8gts",
- 
-presets->eq_presets_8gts, num_lanes);
-                 if (ret) {
-                         dev_err(dev, "Error reading eq-presets-8gts 
-%d\n", ret);
-                         return ret;
-                 }
-         }
+> > > > > > > +
+> > > > > > > +  qps615,axi-clk-freq-hz:
+> > > > > > 
+> > > > > > qps615 is not a vendor prefix.
+> > > > > > 
+> > > > > > > +    description:
+> > > > > > > +      AXI clock rate which is internal bus of the switch
+> > > > > > > +      The switch only runs in two frequencies i.e 250MHz and 125MHz.
+> > > > > > > +    enum: [125000000, 250000000]
+> > > > > > > +
+> > > > > > > +allOf:
+> > > > > > > +  - $ref: "#/$defs/qps615-node"
+> > > > > > > +
+> > > > > > > +patternProperties:
+> > > > > > > +  "@1?[0-9a-f](,[0-7])?$":
+> > > > > > 
+> > > > > > You have 3 ports. So isn't this fixed and limited to 0-2?
+> > > > > > 
+> > > > > sure I will change it to below as suggested
+> > > > > "@1?[0-3](,[0-1])?$"
+> > > > 
+> > > > Why do you still need '1?' ?
+> > > > 
+> > > we want to represent integrated ethernet MAC also here and to represent it
+> > > we need '1' as it is multi function device. I will update the
+> > > description to reflect the same.
+> > 
+> > Note, I has asked about the '1?' part, not about the [0-1].
+> > 
+> > However as you've mentioned it, you are describing the first level
+> > subnodes. Per your example, these subnodes are "pcie@1,0", "pcie@2,0"
+> > and "pcie@3,0". Thus this patternProperties should have the regexp of
+> > "^pcie@[1-3],0$". The multifunction devices for the ethernet node are
+> > hidden under the pcie@3,0 and as such they are not being matched against
+> > this regexp.
+> > 
+> ack. I will use as the suggested one.
+> > > > > > > +    description: child nodes describing the internal downstream ports
+> > > > > > > +      the qps615 switch.
+> > > > > > 
+> > > > > > Please be consistent with starting after the ':' or on the next line.
+> > > > > > 
+> > > > > > And start with capital C.
+> > > > > > 
+> > > > > > 
+> > > > > ack
+> > > > > 
+> > > > > > > +    type: object
+> > > > > > > +    $ref: "#/$defs/qps615-node"
+> > > > > > > +    unevaluatedProperties: false
+> > > > > > > +
+> > > > > > > +$defs:
+> > > > > > > +  qps615-node:
+> > > > > > > +    type: object
+> > > > > > > +
+> > > > > > > +    properties:
+> > > > > > > +      qcom,l0s-entry-delay-ns:
+> > > > > > > +        description: Aspm l0s entry delay.
+> > > > > > > +
+> > > > > > > +      qcom,l1-entry-delay-ns:
+> > > > > > > +        description: Aspm l1 entry delay.
+> > > > > > 
+> > > > > > These should probably be common being standard PCIe things. Though, why
+> > > > > > are they needed? I'm sure the timing is defined by the PCIe spec, so
+> > > > > > they are not compliant?
+> > > > > > 
+> > > > > Usually the firmware in the endpoints/switches should do this these
+> > > > > configurations. But the qps615 PCIe switch doesn't have any firmware
+> > > > > running to configure these. So the hardware exposes i2c interface to
+> > > > > configure these before link training.
+> > > > 
+> > > > If they are following the standard, why do you need to have them in the
+> > > > DT? Can you hardcode thos evalues in the driver?
+> > > > 
+> > > These values can be changed from platform to platform based upon the
+> > > different power goals and latency requirements so we can't have hard coded
+> > > values.
+> > > 
+> > > And even DWC controllers also provide provision to change these values
+> > > currently we are not using them. As bjorn suggested if we move these to
+> > > common pcie bindings these can be used in future by controller drivers also.
+> > 
+> > Ack
+> > 
+> > > > > > > +
+> > > > > > > +      qcom,tx-amplitude-millivolt:
+> > > > > > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > > > +        description: Change Tx Margin setting for low power consumption.
+> > > > > > > +
+> > > > > > > +      qcom,no-dfe-support:
+> > > > > > > +        type: boolean
+> > > > > > > +        description: Disable DFE (Decision Feedback Equalizer), which mitigates
+> > > > > > > +          intersymbol interference and some reflections caused by impedance mismatches.
+> > > > > > > +
+> > > > > > > +      qcom,nfts:
+> > > > > > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > > > +        description:
+> > > > > > > +          Number of Fast Training Sequence (FTS) used during L0s to L0 exit
+> > > > > > > +          for bit and Symbol lock.
+> > > > > > 
+> > > > > > Also something common.
+> > > > > > 
+> > > > > > The problem I have with all these properties is you are using them on
+> > > > > > both the upstream and downstream sides of the PCIe links. They belong in
+> > > > > > either the device's node (downstream) or the bus's node (upstream).
+> > > > > > 
+> > > > > This switch allows us to configure both upstream, downstream ports and
+> > > > > also embedded Ethernet port which is internal to the switch. These
+> > > > > properties are applicable for all of those.
+> > > > > > > +
+> > > > > > > +    allOf:
+> > > > > > > +      - $ref: /schemas/pci/pci-bus.yaml#
+> > > > > > 
+> > > > > > pci-pci-bridge.yaml is more specific and closer to what this device is.
+> > > > > > 
+> > > > > I tried this now, I was getting warning saying the compatible
+> > > > > /local/mnt/workspace/skales/kobj/Documentation/devicetree/bindings/pci/qcom,qps615.example.dtb:
+> > > > > pcie@0,0: compatible: ['pci1179,0623'] does not contain items matching the
+> > > > > given schema
+> > > > >           from schema $id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
+> > > > > /local/mnt/workspace/skales/kobj/Documentation/devicetree/bindings/pci/qcom,qps615.example.dtb:
+> > > > > pcie@0,0: Unevaluated properties are not allowed ('#address-cells',
+> > > > > '#size-cells', 'bus-range', 'device_type', 'ranges' were unexpected)
+> > > > > 
+> > > > > I think pci-pci-bridge is expecting the compatible string in this format
+> > > > > only "pciclass,0604".
+> > > > 
+> > > > I think the pci-pci-bridge schema requires to have "pciclass,0604" among
+> > > > other compatibles. So you should be able to do something like:
+> > > > 
+> > > > compatible = "pci1179,0623", "pciclass,0604";
+> > > > 
+> > > > At least if follows PCI Bus Binding to Open Firmware document.
+> > > > 
+> > > let us try this and come back.
+> > > > > 
+> > > > > > > +
+> > > > > > > +unevaluatedProperties: false
+> > > > > > > +
+> > > > > > > +required:
+> > > > > > > +  - vdd18-supply
+> > > > > > > +  - vdd09-supply
+> > > > > > > +  - vddc-supply
+> > > > > > > +  - vddio1-supply
+> > > > > > > +  - vddio2-supply
+> > > > > > > +  - vddio18-supply
+> > > > > > > +  - i2c-parent
+> > > > > > > +  - reset-gpios
+> > > > > > > +
+> > > > > > > +examples:
+> > > > > > > +  - |
+> > > > > > > +
+> > > > > > > +    #include <dt-bindings/gpio/gpio.h>
+> > > > > > > +
+> > > > > > > +    pcie {
+> > > > > > > +        #address-cells = <3>;
+> > > > > > > +        #size-cells = <2>;
+> > > > > > > +
+> > > > > > > +        pcie@0 {
+> > > > > > > +            device_type = "pci";
+> > > > > > > +            reg = <0x0 0x0 0x0 0x0 0x0>;
+> > > > > > > +
+> > > > > > > +            #address-cells = <3>;
+> > > > > > > +            #size-cells = <2>;
+> > > > > > > +            ranges;
+> > > > > > > +            bus-range = <0x01 0xff>;
+> > > > > > > +
+> > > > > > > +            pcie@0,0 {
+> > > > > > > +                compatible = "pci1179,0623";
+> > > > > > > +                reg = <0x10000 0x0 0x0 0x0 0x0>;
+> > > > > > > +                device_type = "pci";
+> > > > > > > +                #address-cells = <3>;
+> > > > > > > +                #size-cells = <2>;
+> > > > > > > +                ranges;
+> > > > > > > +                bus-range = <0x02 0xff>;
+> > > > > > > +
+> > > > > > > +                i2c-parent = <&qup_i2c 0x77>;
+> > > > > > > +
+> > > > > > > +                vdd18-supply = <&vdd>;
+> > > > > > > +                vdd09-supply = <&vdd>;
+> > > > > > > +                vddc-supply = <&vdd>;
+> > > > > > > +                vddio1-supply = <&vdd>;
+> > > > > > > +                vddio2-supply = <&vdd>;
+> > > > > > > +                vddio18-supply = <&vdd>;
+> > > > > > > +
+> > > > > > > +                reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
+> > > > > > > +
+> > > > > > > +                pcie@1,0 {
+> > > > > > > +                    reg = <0x20800 0x0 0x0 0x0 0x0>;
+> > > > > > > +                    #address-cells = <3>;
+> > > > > > > +                    #size-cells = <2>;
+> > > > > > > +                    device_type = "pci";
+> > > > > > > +                    ranges;
+> > > > > > > +                    bus-range = <0x03 0xff>;
+> > > > > > > +
+> > > > > > > +                    qcom,no-dfe-support;
+> > > > > > > +                };
+> > > > > > > +
+> > > > > > > +                pcie@2,0 {
+> > > > > > > +                    reg = <0x21000 0x0 0x0 0x0 0x0>;
+> > > > > > > +                    #address-cells = <3>;
+> > > > > > > +                    #size-cells = <2>;
+> > > > > > > +                    device_type = "pci";
+> > > > > > > +                    ranges;
+> > > > > > > +                    bus-range = <0x04 0xff>;
+> > > > > > > +
+> > > > > > > +                    qcom,nfts = <10>;
+> > > > > > > +                };
+> > > > > > > +
+> > > > > > > +                pcie@3,0 {
+> > > > > > > +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
+> > > > > > > +                    #address-cells = <3>;
+> > > > > > > +                    #size-cells = <2>;
+> > > > > > > +                    device_type = "pci";
+> > > > > > > +                    ranges;
+> > > > > > > +                    bus-range = <0x05 0xff>;
+> > > > > > > +
+> > > > > > > +                    qcom,tx-amplitude-millivolt = <10>;
+> > > > > > > +                    pcie@0,0 {
+> > > > > > > +                        reg = <0x50000 0x0 0x0 0x0 0x0>;
+> > > > > > > +                        #address-cells = <3>;
+> > > > > > > +                        #size-cells = <2>;
+> > > > > > > +                        device_type = "pci";
+> > > > > > 
+> > > > > > There's a 2nd PCI-PCI bridge?
+> > > > > This the embedded ethernet port which is as part of DSP3.
+> > > > 
+> > > > So is there an adidtional bus for that ethernet device?
+> > > > 
+> > > yes for ethernet it has aditional bus assigned.
+> > > 
+> > > > > 
+> > > > > - Krishna Chaitanya.
+> > > > > > 
+> > > > > > > +                        ranges;
+> > > > > > > +
+> > > > > > > +                        qcom,l1-entry-delay-ns = <10>;
+> > > > > > > +                    };
+> > > > > > > +
+> > > > > > > +                    pcie@0,1 {
+> > > > > > > +                        reg = <0x50100 0x0 0x0 0x0 0x0>;
+> > > > > > > +                        #address-cells = <3>;
+> > > > > > > +                        #size-cells = <2>;
+> > > > > > > +                        device_type = "pci";
+> > > > > > > +                        ranges;
+> > > > > > > +
+> > > > > > > +                        qcom,l0s-entry-delay-ns = <10>;
+> > > > > > > +                    };
+> > > > 
+> > > > What is this?
+> > > > 
+> > > Ethernet endpoint is a multi function device which has 2 functions
+> > > This node represents 2nd node. I will update the description to
+> > > reflect the same.
+> > 
+> > If this is an ethernet device, why does it have a name of pcie@? Per
+> > bindings the pcie@ name should be used only for devices with the class
+> > 0604. Whas is the PCI device class for those devices? I think ethernet@
+> > (0200) should probably be the best fit, judgin by your description.
+> > 
+> These are PCIe Ethernet endpoints with base class 2 & subclass 2, I taught
 
-         for (int i = EQ_PRESET_TYPE_16GTS; i < EQ_PRESET_TYPE_64GTS; i++) {
-                 snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << i);
-                 if (of_property_present(dev->of_node, name)) {
-                         temp = devm_kzalloc(dev, sizeof(u8) * 
-num_lanes, GFP_KERNEL);
-                         if (!temp)
-                                 return -ENOMEM;
+Hmm, 0x0202 is reserved for FDDI devices. Has somebody been
+over-creative or is it me missing a part of the PCIe spec?
 
-                         ret = of_property_read_u8_array(dev->of_node, name,
-                                                         temp, num_lanes);
-                         if (ret) {
-                                 dev_err(dev, "Error %s %d\n", name, ret);
-                                 return ret;
-                         }
+> all the PCIe devices should start with pcie irrespective of the class, can
+> you point us the binding you are referring to. I was referring to this https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-device.yaml#L23
 
-                         switch (i) {
-                                 case EQ_PRESET_TYPE_16GTS:
-                                         presets->eq_presets_16gts = temp;
-                                         break;
-                                 case EQ_PRESET_TYPE_32GTS:
-                                         presets->eq_presets_32gts = temp;
-                                         break;
-                                 case EQ_PRESET_TYPE_64GTS:
-                                         presets->eq_presets_64gts = temp;
-                                         break;
-                         }
-                 }
-         }
-- Krishna Chaitanya.
+These bindings do not fix $nodename. A quick search through the existing
+DTs should have provided you with the list of the endpoint device node
+names as used by the kernel, which contains more than just pcie@N,M.
+
+As for the spec, see [1], Table 1 on page 15. It defines node names for
+various PCI classes.
+
+[1] https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
 
 > 
+> As this is a endpoint device, I will cross check once if we can represent
+> here or not and get back on this.
+
+Unless you have to configure those ports, you should be able to skip
+them. From your DT example it is not clear which part is actually
+configurable: pcie@3,0 or its subdevices: DT example contains extra
+properties in all those nodes.
+
+> 
+> - Krishna Chaitanya.
+> > > 
+> > > - Krishna Chaitanya.
+> > > 
+> > > > > > > +                };
+> > > > > > > +            };
+> > > > > > > +        };
+> > > > > > > +    };
+> > > > > > > 
+> > > > > > > -- 
+> > > > > > > 2.34.1
+> > > > > > > 
+> > > > 
+> > 
+
+-- 
+With best wishes
+Dmitry
 
