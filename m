@@ -1,101 +1,146 @@
-Return-Path: <linux-pci+bounces-18991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-18992-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 889499FBA20
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 08:17:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87D589FBA7F
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 09:30:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08E6D1640EC
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 07:17:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BB26163BED
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2024 08:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF2A51487E1;
-	Tue, 24 Dec 2024 07:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1090E18C924;
+	Tue, 24 Dec 2024 08:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qRKrMYqA"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NYfRbolB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C2742049;
-	Tue, 24 Dec 2024 07:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D059914A099;
+	Tue, 24 Dec 2024 08:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735024648; cv=none; b=VCk2qVv/nawpFbFN2zcuSkiZwaRG7BZ4TIsxRRq4ovNRMGjBhdBn95nxSM+e5TWXLO2PYy8UvqcClh+m8Z4coxUqlPA7J3jIgiaZmUPb5gd+EwrN/F4BduGC8VhVJxegS0IE9iWusoB8LzD9M/f+qx2/z1jt0Led5PyGn3hhNEU=
+	t=1735028997; cv=none; b=QElYAsSNzqdLhfVnQqv7FLsp7q95awINp5IssIkdTllcIMNB1GZNHgTg1qM2nQo+iAQicgwBWpXMRKqxjcPsIM6O+NIGz1lfH5GfqWysRXd02QNnCx+9q5gaKfxFrA7nAVFvs/fPLQV9Vu1X2TBzEV6Z6nytQxgzdc5Cp2NKYZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735024648; c=relaxed/simple;
-	bh=9+tXIZ3mXnKDoT+JrNUteSPE/HF4WoOH4WhtFzMnYj8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=paQJ4geCNucUjxfi0DhSs9MXuqQHlWPntxMMFtDdk083DwOkP4ibIHPuTW/GQguh4K30vSTyGHBxzZAXyEIqztNwR9hhdPcNORuX8qC3gvHv7nY5T6Fi9kycA+OWxf8Yi/g1mgd9AQ6aiWLhKBp9AKdmBgLgMLnrf4uCcU/IgX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qRKrMYqA; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=sHxrY
-	o+EMtDjV2zRM4wtSEtY1RzeCEoC9OhX7FDEO1s=; b=qRKrMYqAPP7aLDzR3CI+7
-	qVqSCJPsWqUxklcVAtue1dFGUPHi7DzBke39vqOYU4frUO3IcbNoefr1a6C8A7x7
-	YXX3Lm234owMdzUyTE6olGKv5xFAOoqnoZCmsdB2ElC1Vh4f5xzqqtM8/v9vqNt9
-	knId5pZKi4MpAoqWuG7jKA=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgDHD3vdX2pnMfWbDg--.10900S4;
-	Tue, 24 Dec 2024 15:16:55 +0800 (CST)
-From: Ma Ke <make_ruc2021@163.com>
-To: bhelgaas@google.com,
-	yinghai@kernel.org,
-	rafael.j.wysocki@intel.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make_ruc2021@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] PCI: fix reference leak in pci_alloc_child_bus()
-Date: Tue, 24 Dec 2024 15:16:43 +0800
-Message-Id: <20241224071643.3762325-1-make_ruc2021@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1735028997; c=relaxed/simple;
+	bh=/GM5ZUvhitEGZ3IJv96w96QpZukeSQNGr4bt6cew8xU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JxEPq8n+ytBSsvSgEqUt2vbgjld7inI3LEG2skJPVUi+W0RhBSgHVu1vZh1fLAm3EkDXWGsi3hz16S1JPcIOZDg9rFMovMYC4dBzyn+U+UVF0jXatOE4cjbWbgOk73wIlnDjtaHm5tQe26Yoi2KMBiUuB7VRSNhZ2dqzuX3JDqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NYfRbolB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A20C4CED0;
+	Tue, 24 Dec 2024 08:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1735028996;
+	bh=/GM5ZUvhitEGZ3IJv96w96QpZukeSQNGr4bt6cew8xU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NYfRbolBZwx1aMcMjqSgSFSwsNuJqdyr6HkSKeMnG0NWh5qidrMmdfSj7gQW7NCdV
+	 ntOXnjnl1lUaEdGxrOBMP/P/mVw4dd7Ok23KC5kNpYKSc96zSvUHE5nelQSp4Ez8d6
+	 Eh4PM4QsCAOtEAMcB8okikBKabg8GYxFRR43ZMN4=
+Date: Tue, 24 Dec 2024 09:29:47 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 1/5] driver core: Introduce
+ device_{add,remove}_of_node()
+Message-ID: <2024122459-only-catchy-9f13@gregkh>
+References: <20241209130339.81354-1-herve.codina@bootlin.com>
+ <20241209130339.81354-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgDHD3vdX2pnMfWbDg--.10900S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWruFWxGr1fCr1UKw1rZw15CFg_yoWfKrgE93
-	W09F97Wr4Dt3WxKw1ayr13Z392k3WDZrZ3WrW0qF1xZa43Xrs8ZF9rZry8Jw4j9anrCr98
-	Aa4jqrn29F1agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRXyCLJUUUUU==
-X-CM-SenderInfo: 5pdnvshuxfjiisr6il2tof0z/1tbizR+-C2dqV-6xYAAAsT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241209130339.81354-2-herve.codina@bootlin.com>
 
-When device_register(&child->dev) failed, calling put_device() to
-explicitly release child->dev. Otherwise, it could cause double free
-problem.
+On Mon, Dec 09, 2024 at 02:03:33PM +0100, Herve Codina wrote:
+> An of_node can be set to a device using device_set_node().
+> This function cannot prevent any of_node and/or fwnode overwrites.
+> 
+> When adding an of_node on an already present device, the following
+> operations need to be done:
+> - Attach the of_node if no of_node were already attached
+> - Attach the of_node as a fwnode if no fwnode were already attached
+> 
+> This is the purpose of device_add_of_node().
+> device_remove_of_node() reverts the operations done by
+> device_add_of_node().
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/base/core.c    | 54 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/device.h |  2 ++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 8b056306f04e..81e5465aa746 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -5216,6 +5216,60 @@ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
+>  }
+>  EXPORT_SYMBOL_GPL(set_secondary_fwnode);
+>  
+> +/**
+> + * device_remove_of_node - Remove an of_node from a device
+> + * @dev: device whose device-tree node is being removed
+> + */
+> +void device_remove_of_node(struct device *dev)
+> +{
+> +	dev = get_device(dev);
+> +	if (!dev)
+> +		return;
+> +
+> +	if (!dev->of_node)
+> +		goto end;
+> +
+> +	if (dev->fwnode == of_fwnode_handle(dev->of_node))
+> +		dev->fwnode = NULL;
+> +
+> +	of_node_put(dev->of_node);
+> +	dev->of_node = NULL;
+> +
+> +end:
+> +	put_device(dev);
+> +}
+> +EXPORT_SYMBOL_GPL(device_remove_of_node);
+> +
+> +/**
+> + * device_add_of_node - Add an of_node to an existing device
+> + * @dev: device whose device-tree node is being added
+> + * @of_node: of_node to add
+> + */
+> +void device_add_of_node(struct device *dev, struct device_node *of_node)
 
-Found by code review.
+Why is this void?
 
-Cc: stable@vger.kernel.org
-Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
-Signed-off-by: Ma Ke <make_ruc2021@163.com>
----
-Changes in v2:
-- modified the patch as suggestions.
----
- drivers/pci/probe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> +{
+> +	if (!of_node)
+> +		return;
+> +
+> +	dev = get_device(dev);
+> +	if (!dev)
+> +		return;
+> +
+> +	if (dev->of_node) {
+> +		dev_warn(dev, "Cannot replace node %pOF with %pOF\n",
+> +			 dev->of_node, of_node);
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2e81ab0f5a25..a61070ce5f88 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
- add_dev:
- 	pci_set_bus_msi_domain(child);
- 	ret = device_register(&child->dev);
--	WARN_ON(ret < 0);
-+	if (WARN_ON(ret < 0)) {
-+		put_device(&child->dev);
-+		return ERR_PTR(ret);
-+	}
- 
- 	pcibios_add_bus(child);
- 
--- 
-2.25.1
+Why not return an error too?  Otherwise you can never know if this
+worked or not.
 
+thanks,
+
+greg k-h
 
