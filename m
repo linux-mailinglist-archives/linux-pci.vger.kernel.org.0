@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-19069-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19070-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33DFD9FD0A8
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 07:53:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F2529FD0F4
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 08:19:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAD30163998
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 06:53:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBF43163A7A
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 07:19:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596313594A;
-	Fri, 27 Dec 2024 06:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5067C12CD8B;
+	Fri, 27 Dec 2024 07:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwV7I5TK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pc2OwAJH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24171F5F6;
-	Fri, 27 Dec 2024 06:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB773596E;
+	Fri, 27 Dec 2024 07:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735282385; cv=none; b=BHM8xDxcw4ERChUxqjmwCw9bMXmOPItfvjChhedZxHh7TM7bGJDSB/NQ7ap01UKVyVbEA535aD60cSihQjHbZRw4jW4rx1yPXUkf/tu8xk16Dnh+VmSPkMHmSZ/NykgcQXbdTUKiM5qyCnxIVQmixIDbONaMhSPTqnIS/6Vfom4=
+	t=1735283961; cv=none; b=BYhESBz40jByD8d3RNkEqk0XFLCFC1AFS9ZlOqT1WVvBeQLO0V73urjMnOR+vXvXpuMGYfPJGMSLiqcE/50cw+lBvocWEf/1yLOWgFmeld1yMTo2pXIqlXV4i7WMehFekynL80YewKUldhRwqVpwdlOgJbLaf9AwNSuo1eRw3aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735282385; c=relaxed/simple;
-	bh=qLkIYpACpFNgqaeoFB4OT01rjeZzIb8ZNDemwy0nQaU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kcogqtBhoU0imlcf/JtcLUh2mulAnZy4Dy7KcguDhdRVrMofwU/6194vIUO4CUrzHGGn37aPHDlB6rfadueANflidyojNOwnYHMnippnRb8mSZV+FdDMvlTNImde+36iqgIz15JAvEDI+tae7cv3k8ih48iEJ0vVeR8ATpIv7DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwV7I5TK; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1735283961; c=relaxed/simple;
+	bh=eCnHkf5RYGu61gOb+4MCbKrF5lSToHoK6hGKeh2JC7A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tFGXurCCaK8olhQoJruj29/DxoBJ8m1XW8EMlOE1YX3WrtGbr+CNVxScu7wENa6VA8csUarnkYhBUz8d3K9Mag3J2qQwwQWjXHq6pXpSDAKH0dUwSYpn6xyKjJIpmap8wDZZOhs2oRN7rgRv/AdfpGDGtc3VXqYpOIkvRupgupY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pc2OwAJH; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21683192bf9so87367215ad.3;
-        Thu, 26 Dec 2024 22:53:03 -0800 (PST)
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ee8aa26415so8518160a91.1;
+        Thu, 26 Dec 2024 23:19:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735282383; x=1735887183; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1735283959; x=1735888759; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3gYkbbfi3lIdz0EUXPWD1ceNd1AYXhoB3nzoejKLA8=;
-        b=UwV7I5TKBQLz7Z/g4zEXKDTsYefGjMQogZfWoi479Ij4+rtv+mECskz6HcKpRbbEW9
-         RhvS8ct0+LTjB2I4wF+Ftra9f5+zj2bu80ByHOY8iD2dk9sEtC3Qcdlco4gvah9TbEHQ
-         gZKRlIhZTtjQAckNoMV4iJ8b/1jWs0JGqisXbXSjpwzmZn5mJJhCuLaL+thS3dUsZEj/
-         v2h22SQU15KC5yIHVta3LKDkzSCQx7ZK82nouFdyJTn2XkLzjPvPZ01rfGMlW3MrL5Kn
-         Ca4dzTo8Nuwgx0bR1ink3wgn0WIjO8/h87bb7Y8Z6AAcIMFFnZGW6Qb1Qt+zV9ZkDuxx
-         Kdiw==
+        bh=UnuLkUZSsf9O56DvJZoknEy7hBumP3/+WgCLz39mvuk=;
+        b=Pc2OwAJHDCqymYTNwd9qepSbsnpvzWeLB9Gw5XOrz8wCKgqXPMSVBAF0c7YFq8wWio
+         KH5AmYmbcENBl2Zm00fVmLWsmhmFzLrtFUIMKDJa72W/YPTLuRCrmyjWFpNPYAgjEU2Q
+         rylDEcP5lW8K9DEPaWjqDlEkY5FI8SH6tccJ1FbIrBvCqnqD5xBEWWlzn1LKFKbMk/xH
+         TuJiiRIiQFkukKi/UmnpHrFalpAwBS+eOEDyedlF2Fitnmg9Fsx7C6H2l/WZ5wC2WGTJ
+         zbJLetCp3bDW1Sk/tZGR/2NaUkQTuzGHAHxXIFNuyoiHkKQQtre6dvkyd+xG++07PZEB
+         tMqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735282383; x=1735887183;
+        d=1e100.net; s=20230601; t=1735283959; x=1735888759;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=j3gYkbbfi3lIdz0EUXPWD1ceNd1AYXhoB3nzoejKLA8=;
-        b=o8JzCg3fU3TIqsJV77/p0MQVO8uClkXoB5AAMvVzFubSVsAkOqGKHgmnL1b8+8sHdg
-         3EO0E9ITVnOfw6TAfBsSqTV5wtOFgyY0VIxqmX1hNReJNa5YmgEDyX85A/tLR88LOT4g
-         rIy3a9LNTM5PPT6oMbH9SFENh8sfHMSEAu0vvnpnzDvsvHaobVOftIHmAPGXgdBAqtrx
-         XZipKZ6MV+DL+cJWfvjY/gp9MKU8Z9W3glrQTaTJXb8y/Wyl1rTjAlSH4lMcMSkK27rJ
-         JMx2yUlw6mXR7ADxQdjRgV/X3Se7uhgPPcOyoASUBVIlDzjB+fS4C8ly/w8h/A24LD5E
-         Efmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmS30zpQks/NLgJqlAUqmcx9t18cNTywbCN5rt7b0kpWDPQCHUeDVfw5mAz8fupHq3Owf3qxWm/SAUS88=@vger.kernel.org, AJvYcCXBHixMJYMbDKnZkMeS2cFgv75VPx5bof2gWRdlMa+e8aT3IarffmBv3/Q5e/B+Kpq/sb1UCwu+KhqU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNN3Hw8A4IWD+uonAJXDNNXsb1AfN+rR5I/nZri1tFIQ5EEeCU
-	31k6eEiJDSwem+VD7XSdJsfKeiw/eWMlE11oOe019oGCqaPr0ugU
-X-Gm-Gg: ASbGnct2jeVnmtZBJT56HjmYw0/i2Dt4nlxflQzmq5pm2oZzhNndndiPt6Ne4eZ8vj2
-	zMHTP5W8ptMJrjpDhxfqA+M7AImIe02eX4NoFsp1Wxk0eyfzWbdsvFSkNEDAEgRObIDJUhrIPp4
-	nhDrBOpJYFbKIzLjZ8JUw3JM3z6JOYiUuHWRqCn0nlLSASsf3zKC3npqbYRuN2nl1mwdDyONHPj
-	jj8VNdNIusyCWkolP3EQguGQ068BXtO1bm1vNbh3csiBwohnw7zgOUPl9hAoVdt6oD2ORtNpg==
-X-Google-Smtp-Source: AGHT+IFPGELX2PWQE4yHJKlKfSRfNyM1fiNC2n+BqoCOE0VCWCmRkUXWjJNZ0U1jChDx4VJSHa8HaA==
-X-Received: by 2002:a05:6a21:6d88:b0:1e0:cc8c:acc4 with SMTP id adf61e73a8af0-1e5e081ca16mr43836085637.37.1735282383124;
-        Thu, 26 Dec 2024 22:53:03 -0800 (PST)
-Received: from localhost.localdomain ([2401:4900:45c8:7d73:4193:45c:684e:d99c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad81572dsm13981232b3a.14.2024.12.26.22.52.59
+        bh=UnuLkUZSsf9O56DvJZoknEy7hBumP3/+WgCLz39mvuk=;
+        b=OLiwyKXmRLjsk92/nSsAJo5T0eLaL1FLk2LeNxWYQ81nhelChZIyCoMk20lbme40i3
+         R7qVLLT6iPoHiRIrTvfwhSwGWngxCVMZPZ8fSbwYdIIMKBRKSwGYWaBMdmXkWHv9DUvS
+         ygEhFa8Iofgali9Ree+A7AjP8BIGC/zR61uqRN4df03Wf7xhjPkZ/HF/bI+SE7vrghrn
+         zB5JrRhapVNrzSnqEPzWSQzusE5w8hw6gIrj7ausi8sbCzNa3Ba6dqahDwQ/hXI9DRc7
+         zd0bYuXBoWI0+DsG8o2FgCZKHdAaYEyTWFce0tQH6KGmBvoIGFb3V2LGWeOM9ODZF1GV
+         FeOA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7wZ5xa3jR7tr0CK7jIMgIZmg2r4N5AAeLu6VIOy/ETm8tmmmxjQ6NO1GsdgONJlRewkH04elEqArm@vger.kernel.org, AJvYcCX4of4BfwYMdTR2tajVxR1+l3tdLSDDaLo0IEwk/byyr92CZDoh92fNlrRcocYPo9oAJhlPL5j2JnfISBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUDjzyhUqSkoaJCtJHC2qHPLCLRuVqsPT05pwHZXjdAGet5sDw
+	GsLlCJryLzzYnLSVcI1E1eBpZisNbGGmBO1p1rcdeQH2Q2O+FTV3
+X-Gm-Gg: ASbGncuchz/vXTHholFybIVmJouwLiKpHJLq4y5kUrPR2EdwQViCRQGkQXMxmd/NEQn
+	+mqY8wIPDVJTN6w8nvSfJ6lSbDcdIcHZTna/8tWubFzxKPM/qwQWLcN5EA35uFwScv5mRnI+323
+	MUWPb1TivgoP3Ih0UNxh+vM3sOTNa335rZaqHIzHI5Z2inCF9qWdVdaU9pGYQj9qykrGrGDAHGi
+	C5W8OFi7z5tOGdHoha70Z/g+wYoneVDJmOSQaP68nGQLFo6egd2qKvEujquiXXedh74WGDiljE=
+X-Google-Smtp-Source: AGHT+IE4gAS771EocxnX0fNLgBOnvBM1JMpmjqOEkQXBE1ofvVqYAzSgusfEUdwpY5nhbywfqhyo0w==
+X-Received: by 2002:a17:90b:2e4a:b0:2ee:fa0c:cebc with SMTP id 98e67ed59e1d1-2f452e38d0emr40078681a91.20.1735283959098;
+        Thu, 26 Dec 2024 23:19:19 -0800 (PST)
+Received: from localhost.localdomain ([2401:4900:45c8:7d73:b364:3050:fc3a:14f7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f4477c84d0sm15195994a91.14.2024.12.26.23.19.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2024 22:53:02 -0800 (PST)
+        Thu, 26 Dec 2024 23:19:18 -0800 (PST)
 From: Atharva Tiwari <evepolonium@gmail.com>
 To: 
 Cc: evepolonium@gmail.com,
@@ -78,9 +78,9 @@ Cc: evepolonium@gmail.com,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/ERR: use panic instead pci_info for device recovery failure in PCIe
-Date: Fri, 27 Dec 2024 12:22:53 +0530
-Message-Id: <20241227065253.72323-1-evepolonium@gmail.com>
+Subject: [PATCH] PCI/AER:Add error message when unable to handle additional devices
+Date: Fri, 27 Dec 2024 12:49:10 +0530
+Message-Id: <20241227071910.1719-1-evepolonium@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -90,31 +90,27 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-update failed in drivers/pci/pcie/err.c to 
-trigger a kernel panic instead of pci_info
-
-Thanks
+Log an error message in `find_device_iter'
+when the system cannot handle more error devices.
 
 Signed-off-by: Atharva Tiwari <evepolonium@gmail.com>
 ---
- drivers/pci/pcie/err.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/aer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 31090770fffc..2630b88564d8 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -271,8 +271,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 34ce9f834d0c..04743617202e 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -886,7 +886,7 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+ 		/* List this device */
+ 		if (add_error_device(e_info, dev)) {
+ 			/* We cannot handle more... Stop iteration */
+-			/* TODO: Should print error message here? */
++			pr_err("PCI: Unable to handle additional error devices\n");
+ 			return 1;
+ 		}
  
- 	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
- 
--	/* TODO: Should kernel panic here? */
--	pci_info(bridge, "device recovery failed\n");
-+
-+	panic("Kernel Panic: %s: Device recovery failed\n", pci_name(bridge));
- 
- 	return status;
- }
 -- 
 2.39.5
 
