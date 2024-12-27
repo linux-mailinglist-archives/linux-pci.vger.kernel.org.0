@@ -1,146 +1,127 @@
-Return-Path: <linux-pci+bounces-19077-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19078-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0CB59FD367
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 12:07:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADAD99FD51D
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 15:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E6CC163964
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 11:07:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E2CC163172
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 14:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2AB31F1310;
-	Fri, 27 Dec 2024 11:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C10161F4E22;
+	Fri, 27 Dec 2024 14:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="OTvW66Sp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OHkUYaGp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFF4157485
-	for <linux-pci@vger.kernel.org>; Fri, 27 Dec 2024 11:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDFD3F9C5
+	for <linux-pci@vger.kernel.org>; Fri, 27 Dec 2024 14:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735297654; cv=none; b=Gh+9XvkiPLT/3EKmXOZe86/VMHhudxFp8vYUT6xsOSEcIr+q83VqT0HAn4BrgQ8tGLzhg2gq3zuauT+z5uNTpetCKJpE0P9roYyY5CN9FUB88C8m4j7A7WhHZaOuL8YJjX5CI79lZTp0ahST/1i4KsR2emZfr+EWMecS71dzUl8=
+	t=1735308002; cv=none; b=qCQXL86dYnjtNXAkr8WFXkZMF3S7Eam8DISFj9RpP67OAlHJ6KGXfox12BLQFOYtigs4BuAQGTXNg+WaNLFtDrWaCJfzDOW9hmpk6OhWTlBWvDhfCSLqrHkYuYx4RBKDvP2xLSqeBeNZshxyRjBahq8yRHtcO3FFmvq/WTtCYJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735297654; c=relaxed/simple;
-	bh=9xL37oGYYc2ulNYz2tTj5hnt/NWxhrHHVUNrdmRW0qk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U1LFtng3Lj3B4SiQJUwYCulpwwQ3rRm9wgSOHRAeVSX4/tn8tKU12EQHLnEytkxNY9UhtUseVk/ScoPX4ciS2Ky+nLZg3Tpfa4OeLA6/Y/t7c1mvolwGoitbbx8+SDaU4Njx7N8B8Cxx9C6SHa4aqLOOJpFGFBs5Gab5fEur69I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=OTvW66Sp; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4aff5b3845eso2449883137.2
-        for <linux-pci@vger.kernel.org>; Fri, 27 Dec 2024 03:07:31 -0800 (PST)
+	s=arc-20240116; t=1735308002; c=relaxed/simple;
+	bh=KnTwypsODTYKcfQ+5eeuenyq9SnltN7W23aSn8NFLng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p4WPuqZMjMUbzgloBZXalOjNXi5bueBbr+VaLIUVVWzyvuoErtFx7DwneAQo5H6oWIVG3QBih+GYGy5g7+TiQX8pHCcyJ4ATDfJnCfc8DyarP6DSA6nv+4g+Urtc+3YYFgzIzzsJjDmhKL1MnEKia/xDh1YMKRJocGkM/04Iw6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OHkUYaGp; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21631789fcdso69178375ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 27 Dec 2024 06:00:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qtec.com; s=google; t=1735297651; x=1735902451; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9xL37oGYYc2ulNYz2tTj5hnt/NWxhrHHVUNrdmRW0qk=;
-        b=OTvW66SpJGzglaswvV97yNA+Lt2ZqqBAVidECL68s0T7N8+crxFhcpAoFF6hCBKPA/
-         RuINrBbMaSzZQIdQkf0MSvaKpVtnv/U077kLtsKk/YKaTfPmCwuCXeC8mrGVhCKBEZuv
-         xWMNvDC/aDf9LQtFW6vohUuoyfbitwaE02Qs6BE4tPH3z4frRR5CcXxXvgR/3aEUCDJM
-         cv8VrC4ld5YvbaEsOCiltcwVJtnvjPMm8j6MPQbL/nnLeGFpp4nogDRqhA0ZGqUqqaBM
-         jec6XfDEQYjmCjH0zYTapGWi8yxgbIbULz9fGNW6qR+6I0NOpWxeLoFWecSSe2RF0VjK
-         8eUQ==
+        d=linaro.org; s=google; t=1735308000; x=1735912800; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=55X/40ED4suy4tEhRhJkavXvZ2omQygaYh5J1H8jr1M=;
+        b=OHkUYaGp/ZlaRscj0Fthq8NHaQAJFVGQtlHnbHj7+fMkBLIuHxLlJJiNk/Asj5gQrh
+         tJOWBpYkpP2S65MfcfsHJuwD6lUw2A1TugrVp6I/wEktT7JAmLdpZ2K5jLP7xfvqZkwJ
+         72cPzCUM6v3v7oybTua633AR25OjXCCIPTf+ii1XV3/uZE0ELbaf/gag/GhJDl9jovmD
+         CMJAijXWpntNJpckUZ1PFpIOBFumpY++wJ2JQdBCCxBhg1k/A6G47ovFJ2qSPPmIGQ07
+         K/bjl+xsoBXS+iCtlc5mZroyXqW59F6vRAfcZKgvN+iXutKuYBSVwqSnyrWeGogFex5s
+         X9BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735297651; x=1735902451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9xL37oGYYc2ulNYz2tTj5hnt/NWxhrHHVUNrdmRW0qk=;
-        b=qLe4PbXmlKtUVl+UIJcL5Phmq6+l5zi0QOYWmbjVYfNtcRhs9kGYxKyKihHk+0ny+4
-         5DA0+Q2Ibdrvp6NxCkSKKOF7Nd4+ZxuUPxO0DIG1LTLjiZ19emPteSK68NRU/90f8MIc
-         raXemO01GFl5N/QaubbFru9EJ70PFzW1hPmxytE7/7prrirb9L87zvQUcUVMUD8Gm8ny
-         EartnMrGUNXkX4obnrcRSb5voCbdwv7eYRnoLkrb5B/WJJLFhlIATIxftlTW2F3Wqw0n
-         fXScSu7nQos5NdSnrmXxXHPueW3ysWNPzEFZ2fKVNMFVrW80mtZY0+1EplpQEFJBPUIs
-         P8Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVukaOquBTdGtAepGFor9eLX4FeyKeSe1FMhr5XGTv/AHU+tIjnZM2SmH0d53Y66zTOVoELkcgdnP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT9OT/Tu2xIEyb+odVUVoQDoA3eRUSUDFxXElfgYP3eknNVRG0
-	ExXK2MAeyMHYFz0mid0O2MzMRLaav3yWIPRkFHJxrMoBLX3wjJfUxlZSXsytI4QKpnXXv8r8t7H
-	Z/imIYEvn90GUIx28DwHbcee1/BA6mJIpH1iXdQ==
-X-Gm-Gg: ASbGncvDDfBfQQILgJlx205lXT8WK3739THc2wagZQa1BPA3M7H3azaOyCtunAQhb6j
-	uxiokgOOYB+2NFvRCVEALWwK5OZBHEMukc1Me
-X-Google-Smtp-Source: AGHT+IEKKk39eBf60/LxFYyrHqRojOWZz2AhcO0loBpUk0HmSOhqnqJ1WXM6r6CWgFYWi9vFQwXrIyt43EDNi6aux58=
-X-Received: by 2002:a05:6102:3751:b0:4b2:73f7:5adf with SMTP id
- ada2fe7eead31-4b2cc351714mr21333421137.9.1735297651003; Fri, 27 Dec 2024
- 03:07:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1735308000; x=1735912800;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=55X/40ED4suy4tEhRhJkavXvZ2omQygaYh5J1H8jr1M=;
+        b=xBUBErXXToHY5R0EAawtq5hGdGFItGFypYrjui0iLGszD5T9E7sCbswoHPpiDgakLV
+         Y+PTCOnI1C5Hfs49/as/q9bI6deaANjX4YrW3KoItgzcSgNMJXsbEDoeLL1hng3f8olw
+         oRNP2zjECaINzIOcsDRpQhvnPbcI2o4hxQ341vc7MqiSjuy+QXyGRGoCdIPspp67+svD
+         GPS1hPTrkt8O0h9M6nW7HADk0xIfiNmyLgdg+6ERFNGOvp3khAQ+uwN/82fPx48CpJNH
+         osBpKSuPJO9IFs99MwoWdSoiRkyUNj7XNksbtnRPe5HaCrI0smlGQ8eEVU1cAK0VZkKk
+         SsLw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4z1gAehzwRl515Hayqso/omQlTpuI1zDdYpTKxlJ6h+IJdQ560//tt5PmxMclfZpu8vxcUZRidoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx27s1CPjH0r47aIsEqlQT0RxClIwCDWdhOIDDMeVVrYoVHJYXR
+	OP7f5hWPsl+lV8RoZBAuF1yfK0rcBptbq7i3C+EM1VT8Ll4xHza1E0ggn3ISyw==
+X-Gm-Gg: ASbGncuyKCubXb5rV3WJcHZ0q9kQYGtrrh3yUWase0pNg7DWDz4wYU0u2GDr0uXRaka
+	Rv3FP+ci8gb3UaA8mrbuTAEZrNF+Xw56KIM1fUSbk4c1jFAYJA1Q+ChtmxaWlJqcFS+qESKgqP4
+	tq7tG++dNNdKC5sMGmHdCrSwb+GD2aXikuRxgYVZbUm+E9L5J/MjflXCc/AsyitarRHIlcQfzUW
+	k4XIzqD4IQSf1lQK/gOtEe4liP+FxkS7GGkvgGb8vYVII2Td7FAG5xsFS4pmODjqKd1
+X-Google-Smtp-Source: AGHT+IFDncOOCRiWPfmSqbq1hsnxix5Z3tZSk/434Ys5dUSyhS2rwgpdlE2d0O9LL+3ul9ALitLfOA==
+X-Received: by 2002:a05:6a21:3989:b0:1d9:a94:feec with SMTP id adf61e73a8af0-1e5e1e0460bmr45155437637.2.1735308000456;
+        Fri, 27 Dec 2024 06:00:00 -0800 (PST)
+Received: from thinkpad ([120.60.143.108])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8157d7sm15094009b3a.21.2024.12.27.05.59.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2024 05:59:59 -0800 (PST)
+Date: Fri, 27 Dec 2024 19:29:48 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Mohamed Khalfella <khalfella@gmail.com>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Niklas Cassel <cassel@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Wang Jiang <jiangwang@kylinos.cn>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: endpoint: Set RX DMA channel to NULL after
+ freeing it
+Message-ID: <20241227135948.ztxxx2u37og3ixxn@thinkpad>
+References: <Z2Z7Ru9bEhCEFqmc@ryzen>
+ <20241221173453.1625232-1-khalfella@gmail.com>
+ <20241226163121.n2itccd4glm6vum4@thinkpad>
+ <Z22XqedgvDYsc-QR@ceto>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
- <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
-In-Reply-To: <20241219164408.GA1454146@yaz-khff2.amd.com>
-From: Rostyslav Khudolii <ros@qtec.com>
-Date: Fri, 27 Dec 2024 12:07:20 +0100
-Message-ID: <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
-Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z22XqedgvDYsc-QR@ceto>
 
-Hi Yazen, Borislav
+On Thu, Dec 26, 2024 at 09:51:37AM -0800, Mohamed Khalfella wrote:
+> On 2024-12-26 22:01:21 +0530, Manivannan Sadhasivam wrote:
+> > On Sat, Dec 21, 2024 at 09:34:42AM -0800, Mohamed Khalfella wrote:
+> > > Fix a small bug in pci-epf-test driver. When requesting TX DMA channel
+> > > fails, free already allocated RX channel and set it to NULL.
+> > > 
+> > 
+> > Patch description should accurately describe what the patch does. Here, the
+> > patch is fixing the NULL ptr assignment to dma_chan_rx pointer and that's it.
+> > 
+> > Reword it as such.
+> 
+> PCI: endpoint: pci-epf-test: Fix NULL ptr assignment to dma_chan_rx
+> 
+> When allocating dma_chan_tx fails set dma_chan_rx to NULL after it is
+> freed.
+> 
 
-Thank you for the elaborate reply.
+s/"When allocating dma_chan_tx fails"/"If dma_chan_tx allocation fails,"
 
-> Things to try:
->
-> * use the latest upstream kernel
->
-> * add some debug printks to the paths you mention to see where they fail
->
-> Looking at the relevant chapter in the PPR - 2.1.7 or 2.1.8 - that
-> should still work.
+- Mani
 
-As far as I can see the behavior should be the same with the latest upstrea=
-m
-kernel and the same configuration (see below).
-
-> I expect you would want CONFIG_ACPI_MCFG and the "MCFG" table should be
-> provided through ACPI.
->
-> Can you please confirm if this config option is enabled, and that the
-> system provides MCFG?
->
-
-Neither CONFIG_ACPI_MCFG nor CONFIG_PCI_MMCONFIG were originally enabled
-in my kernel, when I discovered this issue.
-
-> My understanding, based on the above info, is that ACPI should be used.
-> The direct register enablement is still possible for backwards
-> compatibility, if needed.
->
-> I think your observation proves a good point. The registers were moved
-> starting in Zen. But this is not an issue on modern OSes since ACPI is
-> used by default.
-
-This is my understanding too. However, what is the desired behavior on
-Zen if the CONFIG_ACPI_MCFG
-and CONFIG_PCI_MMCONFIG are both disabled? ECS should not be possible
-since the registers were
-moved, right?
-If that's the case then, at the very least, it would be great to have
-a warning message.
-
-> For your specific issue, I think we should determine if there is a
-> configuration or a firmware problem.
-
-To give a bit more context: I am porting the kernel which works on the
-AMD Ryzen=E2=84=A2 Embedded V1000-based
-device. On that system, it seems like the firmware doesn't disable IO
-access to ECS (which is wrong), hence we
-have never experienced this issue before. Now, the R2000-based
-device's firmware disables IO access to ECS
-(correctly) and that's when the issue starts to happen.
-
-Thanks,
-Ros
+-- 
+மணிவண்ணன் சதாசிவம்
 
