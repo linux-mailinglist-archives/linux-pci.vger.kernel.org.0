@@ -1,113 +1,121 @@
-Return-Path: <linux-pci+bounces-19068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F1019FD021
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 05:16:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33DFD9FD0A8
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 07:53:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F2331881EE9
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 04:16:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAD30163998
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2024 06:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5280214EC55;
-	Fri, 27 Dec 2024 04:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596313594A;
+	Fri, 27 Dec 2024 06:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXztEk9G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwV7I5TK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2709214D44D;
-	Fri, 27 Dec 2024 04:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24171F5F6;
+	Fri, 27 Dec 2024 06:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735272940; cv=none; b=W1Pm6tx9vWMEk8MeBbHz0kZt0OhpN3Kj+A7ZDOmvPgcCXp4uk8jZa7VNlbNWp3K1aG69e9Hjo4UI6dpE7gOFXkbmAmB197KQQPTsSWoEJVijk4SjznY9YlH+4gR2bmB5aWW1/ZchnrNTk9C0Adg02VtN8S14NTGKQVS1eNjMnhg=
+	t=1735282385; cv=none; b=BHM8xDxcw4ERChUxqjmwCw9bMXmOPItfvjChhedZxHh7TM7bGJDSB/NQ7ap01UKVyVbEA535aD60cSihQjHbZRw4jW4rx1yPXUkf/tu8xk16Dnh+VmSPkMHmSZ/NykgcQXbdTUKiM5qyCnxIVQmixIDbONaMhSPTqnIS/6Vfom4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735272940; c=relaxed/simple;
-	bh=PX2gCVpNov1cAi/I9agfGg8xaQUf7f2dYAyurGCugBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PC2XzJ+QrQY3tnFoxLu+Rjtz4e6pzKvCzygFFrs2X7qQ4TjnmLTvMJCWCh+vcrWGqXtbMJyTyNNlkQRXUTZY4URwztPrrogbiYFrZEshnyn9stYxekEiZZy3faoPq/HKhVhtPvg5eczCZOLoJjvVJyNTYe5I6Rbfexw0E13aeZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXztEk9G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60A2C4CED4;
-	Fri, 27 Dec 2024 04:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735272939;
-	bh=PX2gCVpNov1cAi/I9agfGg8xaQUf7f2dYAyurGCugBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OXztEk9G0hR3esm4cmZBlEwErDuW/rLM08DzHGcd+SyKqdh81DbyurORkHY7gyI65
-	 l0tA+XLQOGbvCG+gaOhScxSDDAsd1KqFQxxvYQ9epCNCbhz+8lr6adLwRuJfwFixkS
-	 dG4jZyFoiesD9GaXbit0DKhGdx+CcpMLnBu4b2+cyU7DaEtefAnQ5nSPRVDEmZUqRh
-	 rq+I9PewP4FDhJNFZV2EY/HKayaAujaCo1fSZxqILZsYAvIOzFKT0wv6+WQMRplIeD
-	 b3LbcsVJr5P+1+BmHjjz4Ftl4OYW4rVP2mZCGzeb8VpJwLm1Qe3ZFgc2ECOWDBpOwX
-	 WaHJxd+AqeVMw==
-From: Bjorn Andersson <andersson@kernel.org>
-To: manivannan.sadhasivam@linaro.org,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: helgaas@kernel.org,
+	s=arc-20240116; t=1735282385; c=relaxed/simple;
+	bh=qLkIYpACpFNgqaeoFB4OT01rjeZzIb8ZNDemwy0nQaU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kcogqtBhoU0imlcf/JtcLUh2mulAnZy4Dy7KcguDhdRVrMofwU/6194vIUO4CUrzHGGn37aPHDlB6rfadueANflidyojNOwnYHMnippnRb8mSZV+FdDMvlTNImde+36iqgIz15JAvEDI+tae7cv3k8ih48iEJ0vVeR8ATpIv7DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwV7I5TK; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21683192bf9so87367215ad.3;
+        Thu, 26 Dec 2024 22:53:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735282383; x=1735887183; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j3gYkbbfi3lIdz0EUXPWD1ceNd1AYXhoB3nzoejKLA8=;
+        b=UwV7I5TKBQLz7Z/g4zEXKDTsYefGjMQogZfWoi479Ij4+rtv+mECskz6HcKpRbbEW9
+         RhvS8ct0+LTjB2I4wF+Ftra9f5+zj2bu80ByHOY8iD2dk9sEtC3Qcdlco4gvah9TbEHQ
+         gZKRlIhZTtjQAckNoMV4iJ8b/1jWs0JGqisXbXSjpwzmZn5mJJhCuLaL+thS3dUsZEj/
+         v2h22SQU15KC5yIHVta3LKDkzSCQx7ZK82nouFdyJTn2XkLzjPvPZ01rfGMlW3MrL5Kn
+         Ca4dzTo8Nuwgx0bR1ink3wgn0WIjO8/h87bb7Y8Z6AAcIMFFnZGW6Qb1Qt+zV9ZkDuxx
+         Kdiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735282383; x=1735887183;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j3gYkbbfi3lIdz0EUXPWD1ceNd1AYXhoB3nzoejKLA8=;
+        b=o8JzCg3fU3TIqsJV77/p0MQVO8uClkXoB5AAMvVzFubSVsAkOqGKHgmnL1b8+8sHdg
+         3EO0E9ITVnOfw6TAfBsSqTV5wtOFgyY0VIxqmX1hNReJNa5YmgEDyX85A/tLR88LOT4g
+         rIy3a9LNTM5PPT6oMbH9SFENh8sfHMSEAu0vvnpnzDvsvHaobVOftIHmAPGXgdBAqtrx
+         XZipKZ6MV+DL+cJWfvjY/gp9MKU8Z9W3glrQTaTJXb8y/Wyl1rTjAlSH4lMcMSkK27rJ
+         JMx2yUlw6mXR7ADxQdjRgV/X3Se7uhgPPcOyoASUBVIlDzjB+fS4C8ly/w8h/A24LD5E
+         Efmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmS30zpQks/NLgJqlAUqmcx9t18cNTywbCN5rt7b0kpWDPQCHUeDVfw5mAz8fupHq3Owf3qxWm/SAUS88=@vger.kernel.org, AJvYcCXBHixMJYMbDKnZkMeS2cFgv75VPx5bof2gWRdlMa+e8aT3IarffmBv3/Q5e/B+Kpq/sb1UCwu+KhqU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNN3Hw8A4IWD+uonAJXDNNXsb1AfN+rR5I/nZri1tFIQ5EEeCU
+	31k6eEiJDSwem+VD7XSdJsfKeiw/eWMlE11oOe019oGCqaPr0ugU
+X-Gm-Gg: ASbGnct2jeVnmtZBJT56HjmYw0/i2Dt4nlxflQzmq5pm2oZzhNndndiPt6Ne4eZ8vj2
+	zMHTP5W8ptMJrjpDhxfqA+M7AImIe02eX4NoFsp1Wxk0eyfzWbdsvFSkNEDAEgRObIDJUhrIPp4
+	nhDrBOpJYFbKIzLjZ8JUw3JM3z6JOYiUuHWRqCn0nlLSASsf3zKC3npqbYRuN2nl1mwdDyONHPj
+	jj8VNdNIusyCWkolP3EQguGQ068BXtO1bm1vNbh3csiBwohnw7zgOUPl9hAoVdt6oD2ORtNpg==
+X-Google-Smtp-Source: AGHT+IFPGELX2PWQE4yHJKlKfSRfNyM1fiNC2n+BqoCOE0VCWCmRkUXWjJNZ0U1jChDx4VJSHa8HaA==
+X-Received: by 2002:a05:6a21:6d88:b0:1e0:cc8c:acc4 with SMTP id adf61e73a8af0-1e5e081ca16mr43836085637.37.1735282383124;
+        Thu, 26 Dec 2024 22:53:03 -0800 (PST)
+Received: from localhost.localdomain ([2401:4900:45c8:7d73:4193:45c:684e:d99c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad81572dsm13981232b3a.14.2024.12.26.22.52.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2024 22:53:02 -0800 (PST)
+From: Atharva Tiwari <evepolonium@gmail.com>
+To: 
+Cc: evepolonium@gmail.com,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	quic_vbadigan@quicinc.com,
-	quic_nitegupt@quicinc.com,
-	quic_skananth@quicinc.com,
-	quic_ramkri@quicinc.com,
-	krzysztof.kozlowski@linaro.org
-Subject: Re: (subset) [PATCH v10 0/4] PCI: qcom: ep: Add basic interconnect support
-Date: Thu, 26 Dec 2024 22:15:27 -0600
-Message-ID: <173527291948.1467503.9672408078047236148.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <1689751218-24492-1-git-send-email-quic_krichai@quicinc.com>
-References: <1689751218-24492-1-git-send-email-quic_krichai@quicinc.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/ERR: use panic instead pci_info for device recovery failure in PCIe
+Date: Fri, 27 Dec 2024 12:22:53 +0530
+Message-Id: <20241227065253.72323-1-evepolonium@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+update failed in drivers/pci/pcie/err.c to 
+trigger a kernel panic instead of pci_info
 
-On Wed, 19 Jul 2023 12:50:14 +0530, Krishna chaitanya chundru wrote:
-> Add basic support for managing "pcie-mem" interconnect path by setting
-> a low constraint before enabling clocks and updating it after the link
-> is up based on link speed and width the device got enumerated.
-> 
-> changes from v9:
-> 	- addressed the comments by mani.
-> changes from v8:
->         - Added cpu to pcie path in dtsi and in dtsi binding.
-> changes from v7:
->         - setting icc bw to '0' in disable resources as suggested by mani.
-> changes from v6:
->         - addressed the comments as suggested by mani.
-> changes from v5:
->         - addressed the comments by mani.
-> changes from v4:
->         - rebased with linux-next.
->         - Added comments as suggested by mani.
->         - removed the arm: dts: qcom: sdx55: Add interconnect path
->           as that patch is already applied.
-> changes from v3:
->         - ran make DT_CHECKER_FLAGS=-m dt_binding_check and fixed
->          errors.
->         - Added macros in the qcom ep driver patch as suggested by Dmitry
-> changes from v2:
->         - changed the logic for getting speed and width as suggested
->          by bjorn.
->         - fixed compilation errors.
-> 
-> [...]
+Thanks
 
-Applied, thanks!
+Signed-off-by: Atharva Tiwari <evepolonium@gmail.com>
+---
+ drivers/pci/pcie/err.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[2/4] arm: dts: qcom: sdx65: Add PCIe EP interconnect path
-      commit: 84d2ae7c09d93949fc9e9fe57bdb78a2f3fa24aa
-[3/4] arm: dts: qcom: sdx55: Add CPU PCIe EP interconnect path
-      commit: 7ec041bd2715df2da4ab19c403c27d58d173c7c0
-
-Best regards,
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 31090770fffc..2630b88564d8 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -271,8 +271,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 
+ 	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
+ 
+-	/* TODO: Should kernel panic here? */
+-	pci_info(bridge, "device recovery failed\n");
++
++	panic("Kernel Panic: %s: Device recovery failed\n", pci_name(bridge));
+ 
+ 	return status;
+ }
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.39.5
+
 
