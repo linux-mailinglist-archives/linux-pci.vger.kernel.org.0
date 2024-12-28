@@ -1,204 +1,210 @@
-Return-Path: <linux-pci+bounces-19081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 498B59FD8FB
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2024 06:05:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11FD89FDBE0
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2024 19:50:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 168D01624FC
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2024 05:05:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABD9E1882B30
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2024 18:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FCF22092;
-	Sat, 28 Dec 2024 05:04:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4589A190692;
+	Sat, 28 Dec 2024 18:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gq/xuTBu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m4920.qiye.163.com (mail-m4920.qiye.163.com [45.254.49.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEC2635
-	for <linux-pci@vger.kernel.org>; Sat, 28 Dec 2024 05:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B1478F34;
+	Sat, 28 Dec 2024 18:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735362298; cv=none; b=dzz97XsA3CaEbCwTz3MI+35xfdMLxOzxIXxTLA6A9j4buxobcZWMyVsgiT5+IRPDe4/OsX0PwkwuwmHaz1AEbashb84JIKYvEKbDhNn3JMYuYUlnV1VrPKagDahroMdJVbtxIJDtW25AF4sKw0IpOxehPhhZvMottyNOgjjDRw8=
+	t=1735411797; cv=none; b=Pe3PFPtIs6Pw29IemAo3ag7xcJWDbdjuCGFrRBitywSZS+M6GVWsyFWfs3ZhdJo0mXBZVbxwWmob/7Ks7kQa6BS3wBXBUnhvhrn0sLMr4pOjMnTRM8MGek9G/Ya9RV6iT4XA4XioJClmzHFR0HpATyk/m238axMLfS5KwElJqUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735362298; c=relaxed/simple;
-	bh=pAdxJDwrLq84+UGKXvTkciGZHYNpX6Li0lqP+01DRXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CAQuJN1VSIgK1R7jPtNRBbG64yPzHoVLWoiENV79osAkoiBCCbuLM5IdI/sAE39lT7UWxx5CrdBfcsQxRm5lzrmkcI3bG84hW8rXsnOvbjtVlkSsWsqY8eJIdjbrk9BdyJf2TcCwcT17btzvm1aREdrE6rd8m5XfYZgnkQkbZgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn; spf=pass smtp.mailfrom=sangfor.com.cn; arc=none smtp.client-ip=45.254.49.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sangfor.com.cn
-Received: from [IPV6:240e:3b7:3275:4ea0:39d2:a551:6fcc:9e65] (unknown [IPV6:240e:3b7:3275:4ea0:39d2:a551:6fcc:9e65])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 70e74bca;
-	Sat, 28 Dec 2024 12:59:35 +0800 (GMT+08:00)
-Message-ID: <ddd7bf5e-9580-4ea1-a2fe-bd4fb689f6fb@sangfor.com.cn>
-Date: Sat, 28 Dec 2024 13:00:13 +0800
+	s=arc-20240116; t=1735411797; c=relaxed/simple;
+	bh=1yAI3ZDHyUkDV9UQDHx22Hbwp4ZXby1Wc02tN6J1Y4M=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=MWDQj6D4k513gI7QV7oxevADx80E8TWYfHZVFW4vBOngZJsyIZQfDJpPTWnqpgMwKmzDMq+Wp09sa6t0t6FISWTvcG+v9nOdYBMLQs+WhbQprECnt10pPx1Sb+E7XhEqYHNVbMvMokQM0qdRr51uDJGshBIUdt9npar/h5IqwdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gq/xuTBu; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e53ef7462b6so4633297276.3;
+        Sat, 28 Dec 2024 10:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735411794; x=1736016594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmPTlVzrMWsZV/0UuabLUVbV1EH4j//h4cVfthapkOk=;
+        b=gq/xuTBurrj1cIJFk2EBHB5j3HScOX88aqR54EhRNsU9CKBkCC0euiBrTTjqE8HXCn
+         J76Y3mfQoOhI2X+gX1luJYrJPXNhwlhgOe0JMryVbFI8CgkNk5PUZvWDeFMfAe1srcC5
+         dzNfsJT9iQWQWp9GKCCfFWUm/5U0z/mZaQuG/hyUQ+4yP0AvlDr/B+cA/fAzKwTe0Hdp
+         a75t3NvSWd2sbmG8CHaZ5hFGHUb95Rjlaw82xPEPr91mslpFN8H3t3UI+NBVnAlGzP+B
+         s0apu7wPjdsjnMKb2HXX6nriitYB9RV1igLI6dy6AxeVJW+wOAI4+ncgMQAHPpXiWtO7
+         vLUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735411794; x=1736016594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmPTlVzrMWsZV/0UuabLUVbV1EH4j//h4cVfthapkOk=;
+        b=nu5Fm33A79J69WSTBdY7Ng0EkdSZbz2NlrHGrG9fi7W0JfJdaNh/pKvdopAxcSjwGh
+         vg8RXaBeM76SlbLRYKPYM19kPD0M0aOno7otU5Yntk2Lsrn+mB6FjkNxDCNCNHGqHe3H
+         kpWuSKY/b7VYEK8T25VP6UkhymedjTfMdh+atlaDBWrxsrC10NOt4zr8CizgK4LHEnmB
+         +uvvxT1ay9diQ4s6QiCAmUMPX+At++pmulJ4z6wuzoxmDrhiT7P1YqTbud3X6nz1S58J
+         i86/pH4abwF7VgQ2GKa5XW4RE+5IF7qsImpGk2C4P1+jGKiJqMIPc3/+ZrZj75iJA1Qt
+         fhjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC04k8Xxup8BZfJkaAefS6giGWoiAniwcYaRXbrqM6L3t3Z6eQuY4mzNSCh8BLQu1Ze2hl/ii12US1EA==@vger.kernel.org, AJvYcCVcU0+8XK1sZgYsFa+RZmoJOD0aPR6XcgQFGn6qs3/s4pa91zLirkRppBmYTysO7NHK7U6sgyv8@vger.kernel.org, AJvYcCX1CHzBZYYw1s/6MyGo4m3or5ansdrBh+2mWpZ3JdsvSUuZ4O7xZ+vW3fmqWQuTaEZT4woG0Mw2FyjoYmA=@vger.kernel.org, AJvYcCX8n/qCITBtrw86FAt2+i2s7Q3ufr+W6fMNsalPwg6ZFVn4SfARdiOxvuqwl4JNL+sUDjmeZljbfX13hgIr@vger.kernel.org, AJvYcCXJOmd9bM8lmoh1B1fSuvpeqkv6ATKdXI/gvxVhfxE1rxpjO3/QJvI1yxxUMAaFPidAtn/8/Lz8JBF7mQ==@vger.kernel.org, AJvYcCXh7O5RwqvPbkfIu1inKDniW3FYZRzusynZPyd3ZsGVydwlUlJTeSXLOf9ZHlfD2XGwWMyg54k6Xd0I@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsS1C57ipjEYmauOhS1FTiV5EO5tY3vDwhJqHLPX7uA3W/8Izu
+	yTBrx0sTL1jZOHmX/gLOgRaCOWFaXSn0CKWMV0B7QKSWv2zWalHgIWYgMLaYXD8=
+X-Gm-Gg: ASbGncu2bgunPziC7dwfv0XaZ/+F0zifhWZu1O9IFN4qeoXUSygTtsQeOkQSuoT9Tm/
+	rkriyLMAg7CVWbbX4rhkTRkRmb9Tuag0jt++Cmb5kCmvFCbQsRmfXj23Wm2MbythLGGc54iOj+x
+	b/Q0SpYW7Cq7YdTzsx3vIUzLMFcaoxJCM5jf3tUi5vYkWgA1Kjm0Ymm25Rk7mfNuXjeKTlrnR/7
+	8JUoV7YenQm44LGi5aC9WCLXy/DdU1DdllxCfrA6EkGHoCnUBu8Nm8xVN5M5hEFUsSgCcBLOBB8
+	76nH5fPb7lsj3jaz
+X-Google-Smtp-Source: AGHT+IEkJJFH0m3oTNAbR0yAINMZTww0cO+zE7+Lf9uNhKvuTxiLtpcDAvH2RV2/PHCyo+AVfgp8KA==
+X-Received: by 2002:a05:6902:18c1:b0:e39:8b94:16e6 with SMTP id 3f1490d57ef6-e538c3a2eb7mr19599866276.39.1735411794393;
+        Sat, 28 Dec 2024 10:49:54 -0800 (PST)
+Received: from localhost (c-24-129-28-254.hsd1.fl.comcast.net. [24.129.28.254])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e537cbedbe7sm5061343276.4.2024.12.28.10.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Dec 2024 10:49:53 -0800 (PST)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Rick Lindsley <ricklind@linux.ibm.com>,
+	Nick Child <nnac123@linux.ibm.com>,
+	Thomas Falcon <tlfalcon@linux.ibm.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Matt Wu <wuqiang.matt@bytedance.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kurz <groug@kaod.org>,
+	Peter Xu <peterx@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>
+Subject: [PATCH 00/14] cpumask: cleanup cpumask_next_wrap() implementation and usage
+Date: Sat, 28 Dec 2024 10:49:32 -0800
+Message-ID: <20241228184949.31582-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] Re: PCI/ASPM: Fix UAF by disabling ASPM for link when
- child function is removed
-To: Daniel Stodden <dns@arista.com>, bhelgaas@google.com
-Cc: david.e.box@linux.intel.com, kai.heng.feng@canonical.com,
- linux-pci@vger.kernel.org, michael.a.bottini@linux.intel.com,
- qinzongquan@sangfor.com.cn, rajatja@google.com, refactormyself@gmail.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com
-References: <20230507034057.20970-1-dinghui@sangfor.com.cn>
- <cover.1734924854.git.dns@arista.com>
-From: Ding Hui <dinghui@sangfor.com.cn>
-In-Reply-To: <cover.1734924854.git.dns@arista.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHUJMVhoZTh4dQ0wYT0lISlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlJT0seQUgZTEFISUxOQU8eGktBSEIfSUEaTk5KQU0dGBhBQh5NTllXWR
-	YaDxIVHRRZQVlPQkxVSElKTExVS1VJS0tNWQY+
-X-HM-Tid: 0a940ba256c309d9kunm70e74bca
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NiI6Egw4MDIWEz4pKEMjOBQv
-	LAIwCUlVSlVKTEhOSE1KQkxMS0lCVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-	QVlJT0seQUgZTEFISUxOQU8eGktBSEIfSUEaTk5KQU0dGBhBQh5NTllXWQgBWUFNTkNNNwY+
 
-Sorry for late reply.
+cpumask_next_wrap() is overly complicated, comparing to it's generic
+version find_next_bit_wrap(), not mentioning it duplicates the above.
+It roots to the times when the function was used in the implementation
+of for_each_cpu_wrap() iterator. The function has 2 additional parameters
+that were used to catch loop termination condition for the iterator.
+(Although, only one is needed.)
 
-Thanks for pointing out the release order issue that I indeed overlooked.
+Since 4fe49b3b97c262 ("lib/bitmap: introduce for_each_set_bit_wrap()
+macro"), for_each_cpu_wrap() is wired to corresponding generic
+wrapping bitmap iterator, and additional complexity of
+cpumask_next_wrap() is not needed anymore.
 
-I'm not an expert in PCI, so I'm not sure if there's a similar PCI topology like this:
+All existing users call cpumask_next_wrap() in a manner that makes
+it possible to turn it to a straight and simple alias to
+find_next_bit_wrap().
 
-[00]-+..
-      |
-      +--03.0-[01-03]--+-00.0  Endpoint
-                       +-00.1-[02-03]--+-02.0-[02]--x
-                                       \-0d.0-[03]----00.0  Endpoint
+This series replaces historical 4-parameter cpumask_next_wrap() with a
+thin 2-parameter wrapper around find_next_bit_wrap().
 
-If this is possible, I think that even after applying your patch, removing 01:00.0
-individually by
-   echo 1 > /sys/bus/pci/devices/0000:01:00.0/remove
-maybe still lead to a Use-After-Free when pcie_aspm_exit_link_state(<02:02.0>).
+Where it's possible to use for_each_cpu_wrap() iterator, the code is
+switched to use it because it's always preferable to use iterators over
+open loops.
 
-Additionally, Bjorn Helgaas also expects compliance with the PCIe specification r6.0,
-section 7.5.3.7, which recommends that software programs the same ASPM Control value
-across all functions of multi-function devices.
+This series touches various scattered subsystems and To-list for the
+whole series is quite a long. To minimize noise, I send cover-letter and
+key patches #5 and 6 to every person involved. All other patches are sent
+individually to those pointed by scripts/get_maintainers.pl.
 
-Therefore, should we recursively release the link_state of child devices before
-the current device in pcie_aspm_exit_link_state()?
+I'd like to move the series with my bitmap-for-next branch as a whole.
+
+Yury Norov (14):
+  objpool: rework objpool_pop()
+  virtio_net: simplify virtnet_set_affinity()
+  ibmvnic: simplify ibmvnic_set_queue_affinity()
+  powerpc/xmon: simplify xmon_batch_next_cpu()
+  cpumask: deprecate cpumask_next_wrap()
+  cpumask: re-introduce cpumask_next_wrap()
+  cpumask: use cpumask_next_wrap() where appropriate
+  padata: switch padata_find_next() to using cpumask_next_wrap()
+  s390: switch stop_machine_yield() to using cpumask_next_wrap()
+  nvme-tcp: switch nvme_tcp_set_queue_io_cpu() to using
+    cpumask_next_wrap()
+  scsi: lpfc: switch lpfc_irq_rebalance() to using cpumask_next_wrap()
+  scsi: lpfc: rework lpfc_next_{online,present}_cpu()
+  PCI: hv: switch hv_compose_multi_msi_req_get_cpu() to using
+    cpumask_next_wrap()
+  cpumask: drop cpumask_next_wrap_old()
+
+ arch/powerpc/xmon/xmon.c            |  6 +---
+ arch/s390/kernel/processor.c        |  2 +-
+ drivers/net/ethernet/ibm/ibmvnic.c  | 17 +++++-----
+ drivers/net/virtio_net.c            | 12 +++++---
+ drivers/nvme/host/tcp.c             |  2 +-
+ drivers/pci/controller/pci-hyperv.c |  3 +-
+ drivers/scsi/lpfc/lpfc.h            | 23 +++-----------
+ drivers/scsi/lpfc/lpfc_init.c       |  2 +-
+ include/linux/cpumask.h             | 48 ++++++++++++++++-------------
+ include/linux/objpool.h             |  7 ++---
+ kernel/padata.c                     |  2 +-
+ lib/cpumask.c                       | 37 ++--------------------
+ 12 files changed, 60 insertions(+), 101 deletions(-)
 
 -- 
-Thanks,
--dinghui
-
-On 2024/12/23 11:39, Daniel Stodden wrote:
-> About change 456d8aa37d0f "PCI/ASPM: Disable ASPM on MFD function
-> removal to avoid use-after-free")
-> 
-> Let's say root port 00:03.0 was connected to a PCIe switch.
->        
-> [00]-+..
->       |
->       +--03.0-[01-03]--+-00.0-[02-03]--+-02.0-[02]--x
->       |                |               \-0d.0-[03]----00.0  Endpoint
->       .                +-00.1  Upstream Port Sibling
-> 
-> And that switch had not only an upstream port at 01:00.0, but also a
-> sibling function at 01:00.1.
-> 
-> Let's break the link under 00:03.0, which makes pciehp remove the [01]
-> bus. Surprise effect: traversal during bus [01] device removal happens
-> in reverse order (for SR-IOV-ish reasons, see pciehp_pci.c
-> commentary). Fair enough, ASPM should probably not rely on any
-> specific order anyway.
-> 
-> Recursing through pci_remove_bus_device() underneath, the order in
-> which we pci_destroy_dev() will be:
-> 
->     [ 01:00.1 [ 02:02.0 [ 03:00.0 ] 02:0d.0 ] 01:00.0 ]
-> 
-> Trivially, the above is also the order in which
-> pcie_aspm_exit_link_state() will be called.
-> 
-> Then note how, since above change removed the list_empty() exit
-> condition, we are now going to remove the pcie_link_state for bus [01]
-> (parent=<00:03.0>) during the first invocation, i.e. right at
-> pcie_aspm_exit_link_state(<01:00.1>).
-> 
-> Iow: with bus [03] removal only to come, we removed the
-> pcie_link_state upstream first, and only then will remove the
-> downstream pcie_link_state at parent=<02:0d.0>.
-> 
-> Eventually reaching that second link, it carries a ref "parent_link =
-> link->parent" which now points to free'd memory again. One can observe
-> a rather high probability of finishing with a random GPF or nullptr
-> dereference condition.
-> > Above switches, with MFD upstream portions, exist. Case at hand is a
-> PEX8717 with 4 DMA engines:
-> 
->    +-08.0-[51-5b]--+-00.0-[52-5b]--+-02.0-[53]--
->                    |               \-0d.0-[54-5b]----00.0  Broadcom Inc. …
->                    +-00.1  PLX Technology, Inc. PEX PCI Express Switch DMA interface
->                    +-00.2  PLX Technology, Inc. PEX PCI Express Switch DMA interface
->                    +-00.3  PLX Technology, Inc. PEX PCI Express Switch DMA interface
->                    \-00.4  PLX Technology, Inc. PEX PCI Express Switch DMA interface
-> 
-> Backtrace:
-> 
-> [  790.817077] BUG: kernel NULL pointer dereference, address: 00000000000000a0
-> [  790.900514] #PF: supervisor read access in kernel mode
-> [  790.962081] #PF: error_code(0x0000) - not-present page
-> [  791.023641] PGD 8000000104648067 P4D 8000000104648067 PUD 1404bc067 PMD 0
-> [  791.106041] Oops: 0000 [#1] PREEMPT SMP PTI
-> [  791.156151] CPU: 8 PID: 145 Comm: irq/43-pciehp Tainted: G           OE      6.1.0-22-2-amd64 #5  Debian 6.1.94-1
-> [  791.279173] Hardware name: Intel Camelback Mountain CRB/Camelback Mountain CRB, BIOS Aboot-norcal7-7.1.6-generic-22971530 06/30/2021
-> [  791.421982] RIP: 0010:pcie_config_aspm_link+0x48/0x330
-> [  791.483548] Code: 48 8b 04 25 28 00 00 00 48 89 44 24 30 31 c0 8b 47 30 4c 8b 47 08 83 e3 7f c1 e8 0e f7 d3 89 c2 83 e0 7f 21 c3 83 e2 7f 21 f3 <41> 8b b6 a0 00 00 00 89 d8 83 e0 87 f6 c3 04 0f 44 d8 0f b7 47 30
-> [  791.708646] RSP: 0018:ffffa8cf8062bcb8 EFLAGS: 00010246
-> [  791.771254] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> [  791.856772] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff94bac3d56a80
-> [  791.942291] RBP: ffff94bac3d56a80 R08: 0000000000000000 R09: ffffa8cf8062bc6c
-> [  792.027808] R10: 0000000000000000 R11: 0000000000000004 R12: ffff94b9c0f61fc0
-> [  792.113326] R13: ffff94bbc0ae9828 R14: 0000000000000000 R15: ffff94b9c0ea6f20
-> [  792.198845] FS:  0000000000000000(0000) GS:ffff94c8ffc00000(0000) …
-> [  792.295827] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  792.364680] CR2: 00000000000000a0 CR3: 00000001062fe003 CR4: 00000000003706e0
-> [  792.450198] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  792.535717] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  792.621235] Call Trace:
-> [  792.650506]  <TASK>
-> [  792.675616]  ? __die_body.cold+0x1a/0x1f
-> [  792.722600]  ? page_fault_oops+0xd2/0x2b0
-> [  792.770625]  ? sysvec_apic_timer_interrupt+0xa/0x90
-> [  792.829068]  ? exc_page_fault+0x70/0x170
-> [  792.876051]  ? asm_exc_page_fault+0x22/0x30
-> [  792.926161]  ? pcie_config_aspm_link+0x48/0x330
-> [  792.980437]  pcie_aspm_exit_link_state+0xb9/0x120
-> [  793.036796]  pci_remove_bus_device+0xc8/0x110
-> [  793.088988]  pci_remove_bus_device+0x2e/0x110
-> [  793.141180]  pci_remove_bus_device+0x3e/0x110
-> [  793.193373]  pciehp_unconfigure_device+0x94/0x160
-> [  793.249733]  pciehp_disable_slot+0x69/0x100
-> [  793.299840]  pciehp_handle_presence_or_link_change+0x241/0x350
-> [  793.369742]  pciehp_ist+0x164/0x170
-> [  793.411524]  ? disable_irq_nosync+0x10/0x10
-> [  793.461632]  irq_thread_fn+0x1f/0x60
-> [  793.504449]  irq_thread+0xfa/0x1c0
-> [  793.545185]  ? irq_thread_fn+0x60/0x60
-> [  793.590085]  ? irq_thread_check_affinity+0xf0/0xf0
-> [  793.647485]  kthread+0xda/0x100
-> [  793.685096]  ? kthread_complete_and_exit+0x20/0x20
-> [  793.742495]  ret_from_fork+0x22/0x30
-> [  793.785314]  </TASK>
-> 
-> Daniel Stodden (1):
->    PCI/ASPM: fix link state exit during switch upstream function removal.
-> 
->   drivers/pci/pcie/aspm.c | 17 +++++++++--------
->   1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-
-
+2.43.0
 
 
