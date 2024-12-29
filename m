@@ -1,132 +1,122 @@
-Return-Path: <linux-pci+bounces-19085-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19086-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CAAE9FDC0D
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2024 19:53:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83CD29FDDAE
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Dec 2024 07:54:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43211161DA3
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2024 18:53:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90F6E7A12D3
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Dec 2024 06:54:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A871A0714;
-	Sat, 28 Dec 2024 18:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CC983BBC9;
+	Sun, 29 Dec 2024 06:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Av5U7meb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eMVBGo2R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBD81A00F8;
-	Sat, 28 Dec 2024 18:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C982AD0F
+	for <linux-pci@vger.kernel.org>; Sun, 29 Dec 2024 06:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735411823; cv=none; b=jz4EpvYyQgPkUh/l/YQxsLOTrg1weroKpXksfIVnwp163M9db3qBQmpl7aBV4BYXVH1f5PpX8TChluKo37KltBD31qDdtZ2W7AQm2CCOZQmeNcMgaaUal9dN9l33RDCjSjKoyazng+6PVtOW5wbj6hqeMk9ITqNxVeGh17MoKBY=
+	t=1735455247; cv=none; b=A8oPRxiXwTJlGDbdc/MS+4L5BAmbhm2R2B8Z4J3kD5J35/ojOV48ITlR9uvGzDb48bv9HymkuEOj4OZJFj1TSV/zZqGAvryWot48x7f4XpFRHkwpzuRfwuWGhE8u7or692MuS8LA8LhYnRSjeyGa39xVk2tPyCsbHByf9BDoOzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735411823; c=relaxed/simple;
-	bh=iW9ylujeTdndT37/iM7oaUQu1ZpcpSzb4qLxy9BPmQA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dtjGxmTROAs0eGTmdkmbhVVVeGPIh6DvoE6Oc6bVudHf6c8vsMF05qXxqEV2RzybHtyFTmemPMaL1wK1Q9Xwrl+ZL2Bs6EZFMHh3PClTh4RZ4V7HlGzbIGXnbD9sIwqRd4+882z+xTC1p0nJzah+FaqHdnRy3vB24WgopezoJyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Av5U7meb; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e398484b60bso8677342276.1;
-        Sat, 28 Dec 2024 10:50:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735411821; x=1736016621; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0OLhVdLNIy86InjJpjUKoLKMqO34Ru2M3pMOZX0/BuM=;
-        b=Av5U7meb/h9zYMV0VA43DnuVDG+OIdsKCMKbsToFnECDo6zaon2D3Kr1z4EsJ2qXA1
-         RE6kEJfuOWdhYJNg1wY4USxkjDaelkbOyMKPlby3U8xYR4Y6wvIxKLvmR94372bO60+j
-         NcDGzBic0ttjPtHqaukJkuXYDH6fUVmw9TtxdSXtleQyfWFc8ySUypTamfosfutvmai2
-         kMRTaHxztwtowqr3szoYo0ElJ4oIS80NsHeLYVwIEyyy/KcfQ4sMfdyeuMRp2l5Yg3/B
-         yFZCZSQ7TdWjK/ID/j3D2R1f8EPc14Omr0HgqprUvXCY5e0jl5RqE8uDgEk7PGrmCl9K
-         wrKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735411821; x=1736016621;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0OLhVdLNIy86InjJpjUKoLKMqO34Ru2M3pMOZX0/BuM=;
-        b=GWCc4Kf72JAW9IHEBg/+sY4V2sfWDQfbUpSNRdZmsJeozRYHRC6auIO0IVGGiCweg4
-         IkavztH0Ke4vIklx8XcLgXTkM1Vb/eNnMecvAWu0LWpDeQgKEV57pBtTrkcw8uY8awYL
-         nv5Gg5QVy87SFk5Q0kq2uzMcRsbBW9K4iSVkV7zT5EJ332htGq+6Y0qJ+Vc/WCDC121A
-         opjouFZW/C5aALIaIA6LE+wcmam5E5bmzj9HxN6ZMwnlIXbePIWjy2trymUxak6NE2Qd
-         iqYZTpIMkxGN3zNem+aHG1qWiBovssukGRQ0k9xu3x0DosULmK1mxOr+aCxd3yljaLew
-         lx5w==
-X-Forwarded-Encrypted: i=1; AJvYcCU+DmxbRm1/UwVfiIn4uYka/Q/7U6vvaTNLfxM/Zok3AYu+M8XOfiuKtqAtINnJ6/EwTECITKUFOVdMsSE=@vger.kernel.org, AJvYcCV1eYuMv4SQQsRPjBv1Ia44/guhXGaUEJv6DHjMI6pMPngCNkte+p9MqutLA5YyujWar1rqUm+taiWQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCXtH9JzoaJk1/EJR0GXUC1sqnpOWMskx/wqX7J0ZlvoSJW5NF
-	mjsw3MVDF4YC+U3MeJ0yAUdUps8Vsb45FkhU8yMLFtBoH4S72OQvVLseky5s
-X-Gm-Gg: ASbGncuTkHaqT7G5UWWSAOT4a9nrjedpcikCuUigEAhsxHNdDhVX0uNh/9Zj2yCpYYK
-	eLepMHGf5A4LjwpMWtfJ6UU5NXVAQimSns4bLhUIdCdh/XMWB31WTf/rlcZKRx84da0OfcR0apZ
-	V5qKi3qgp9WPKxlwnLVNtVkIbwH6QIQXnaAoyVvv7cd0F0wHSANhIpEO+38vcN7tJn2ZS/CQMXO
-	AsnwGOafuaGcjQ8rIformfuLopng6R5p1CVLEOUe+dV4wg+0+890IGMX+RFeKu+7VMwvDGMO5dt
-	/ub6W+W3mGvLgCXH
-X-Google-Smtp-Source: AGHT+IFcN0Go12HlexbfvKdqPGehFZUpfM2D5CjlN3akVq3/w+FTn+K4qrCtvr5d4IqwedfN8cLy+A==
-X-Received: by 2002:a05:690c:490c:b0:6e2:43ea:552 with SMTP id 00721157ae682-6f3f8110ed5mr204402267b3.16.1735411821056;
-        Sat, 28 Dec 2024 10:50:21 -0800 (PST)
-Received: from localhost (c-24-129-28-254.hsd1.fl.comcast.net. [24.129.28.254])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f3e743ba07sm47965447b3.28.2024.12.28.10.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2024 10:50:19 -0800 (PST)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	s=arc-20240116; t=1735455247; c=relaxed/simple;
+	bh=W4tnXakf0kq3vxryWjAQNS8a3zjroqDKu75yuKQsQlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CIBd9Ffk3SW9h9DCYgbNR3zfCGqk8uxW6+yuTzTLuX3uv9LddEV5+McuzR7I3XPOtxQr5Snp6kNltQDjJ/syZcpHzJ0OsPN51witnKBFc8D7lK6o0oDGD7NTDamAYFMNhWdgr7FR15Cco4l77EBELkP8Zk7gnWhXsrMVETSoFPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eMVBGo2R; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1735455246; x=1766991246;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W4tnXakf0kq3vxryWjAQNS8a3zjroqDKu75yuKQsQlU=;
+  b=eMVBGo2R8D2pOu2QBZMki9PbcCFtO/lVJoFTNJ/+XKvkySjFBs+eLGBP
+   7A/kI1bolDCjPnfBSW22KiTmSr0TkFjMa0XjYszsg4q87EklPY3AJuyOy
+   DRQ75t5BgywowVJuGEwnsQnk5fINoujowp4sXeHCAJFzfwfP8SkvaONh8
+   1nH+hLQ9k12h1OqmdYzCP1sWlyipQNOoNCUc0Zi7Ds+u9cSNTdYFryDTy
+   oKNMAIDO+m0mJaXwlkLcqMXrXqsY0U0PqSFbd7L4qIq7pASdKBbUDiuId
+   +tgSrfttA8Pme6F/Ujqp7Jq43j1KGD5pbEiBUnZPpM5geymxmphhkegWW
+   Q==;
+X-CSE-ConnectionGUID: KhPrsPZPRO+qPEcOpGZrnw==
+X-CSE-MsgGUID: rMuKDq/lS/Gemzk/DqX/Ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11299"; a="39466502"
+X-IronPort-AV: E=Sophos;i="6.12,273,1728975600"; 
+   d="scan'208";a="39466502"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2024 22:54:05 -0800
+X-CSE-ConnectionGUID: 5tXAXnFMTt+Crm/OSuw3TQ==
+X-CSE-MsgGUID: KKO77kzwQG28faSx55L2Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,273,1728975600"; 
+   d="scan'208";a="105358263"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 28 Dec 2024 22:54:01 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tRnBX-0004XY-2U;
+	Sun, 29 Dec 2024 06:53:59 +0000
+Date: Sun, 29 Dec 2024 14:53:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Damien Le Moal <dlemoal@kernel.org>, linux-nvme@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-pci@vger.kernel.org,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH 13/14] PCI: hv: switch hv_compose_multi_msi_req_get_cpu() to using cpumask_next_wrap()
-Date: Sat, 28 Dec 2024 10:49:45 -0800
-Message-ID: <20241228184949.31582-14-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241228184949.31582-1-yury.norov@gmail.com>
-References: <20241228184949.31582-1-yury.norov@gmail.com>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v8 17/18] nvmet: New NVMe PCI endpoint function target
+ driver
+Message-ID: <202412291432.nDgfmkwD-lkp@intel.com>
+References: <20241225082956.96650-18-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241225082956.96650-18-dlemoal@kernel.org>
 
-Calling cpumask_next_wrap_old() with starting CPU == nr_cpu_ids
-is effectively the same as request to find first CPU, starting
-from a given one and wrapping around if needed.
+Hi Damien,
 
-cpumask_next_wrap() is a proper replacement for that.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+[auto build test ERROR on 4bbf9020becbfd8fc2c3da790855b7042fad455b]
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 86d1c2be8eb5..f8ebf98248b3 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1757,8 +1757,7 @@ static int hv_compose_multi_msi_req_get_cpu(void)
- 
- 	spin_lock_irqsave(&multi_msi_cpu_lock, flags);
- 
--	cpu_next = cpumask_next_wrap_old(cpu_next, cpu_online_mask, nr_cpu_ids,
--				     false);
-+	cpu_next = cpumask_next_wrap(cpu_next, cpu_online_mask);
- 	cpu = cpu_next;
- 
- 	spin_unlock_irqrestore(&multi_msi_cpu_lock, flags);
+url:    https://github.com/intel-lab-lkp/linux/commits/Damien-Le-Moal/nvme-Move-opcode-string-helper-functions-declarations/20241225-163855
+base:   4bbf9020becbfd8fc2c3da790855b7042fad455b
+patch link:    https://lore.kernel.org/r/20241225082956.96650-18-dlemoal%40kernel.org
+patch subject: [PATCH v8 17/18] nvmet: New NVMe PCI endpoint function target driver
+config: alpha-randconfig-r072-20241228 (https://download.01.org/0day-ci/archive/20241229/202412291432.nDgfmkwD-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241229/202412291432.nDgfmkwD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412291432.nDgfmkwD-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   alpha-linux-ld: drivers/nvme/target/pci-epf.o: in function `nvmet_pci_epf_complete_iod':
+>> (.text+0x2a38): undefined reference to `nvme_get_opcode_str'
+>> alpha-linux-ld: (.text+0x2a3c): undefined reference to `nvme_get_opcode_str'
+>> alpha-linux-ld: (.text+0x2b24): undefined reference to `nvme_get_admin_opcode_str'
+   alpha-linux-ld: (.text+0x2b28): undefined reference to `nvme_get_admin_opcode_str'
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
