@@ -1,158 +1,123 @@
-Return-Path: <linux-pci+bounces-19096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4DEE9FE988
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 18:53:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C83FC9FE98B
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 18:58:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDF1818805C1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 17:53:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 189A23A2301
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 17:57:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A1B1ACDE7;
-	Mon, 30 Dec 2024 17:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41521ACEC6;
+	Mon, 30 Dec 2024 17:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ni/X16Oz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABrWQIbX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C1E19DFAB
-	for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 17:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CE19DFAB;
+	Mon, 30 Dec 2024 17:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735581186; cv=none; b=C+BUe5TOcmqGMXAcif1W0SDHrJ1g3WayxoEXwEDglf3Rd7opKXw64pUPHrpa9OJFklDgldRh8bIw/k5iutljKmipYBh0aOZgXtigyEKy+kAoW8PlaWNCRqfwFMGi2mdeldw9dZlpSzWbBPegZmjjHBCcBTI8ZM9AxO4005ucpYo=
+	t=1735581476; cv=none; b=e0LPrMh8uZzTdUpiMWrmAef1q3ySu/hdTuSn6pDRCa/Lexl37CKfCkbOzGXGfv0L4tZXObOU6oSPhVV7Iu7x/kCsYPEM81Ly/kXtlY2tX7YR2pC9R3XfJe+2IYKtaq7GlJZG7BmjIJjs22SobLFuFdYXfvML6MK5ghsTUYNJzAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735581186; c=relaxed/simple;
-	bh=OinC3bhugjWs81HQ/VUVqwQh9XcC/WrGz1Uup6D/m4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g3Fj9XpToi1zX0qBu99fNdcK5ZusK1JfVdwXPxN2eOVLnJvEP2ZrxCSQuRDHIB5DXIIPBPsSlYTlqeADbkeAWwlxuRhS2CVKsm8VvPcgvnjBNkxSzwSEFfyw6gqvUugVHqnY6N743hw1Gr9HRF8zc9t6KWrSGIADWfnrt2YoxAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ni/X16Oz; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21636268e43so25649565ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 09:53:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735581184; x=1736185984; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=o3xI5DjH4HAYdB6G5OXMtCQ/yI27laowdH1Ku4WAUuU=;
-        b=ni/X16OzrW3z/sHrJU46Lb3L2Sct2albf0LX20NodAVZY9VvHiUPNZnXRSf4G20xh8
-         ZRAe7A1bu7ZeaOgcCM+IkardlB7ZR7xyqi/CkHyGKSwQ7xNZi9MDLZqpt6ouxEZ4ipN8
-         1QQ/wb2m8+gEoIGME1T/n0BJPFufURAYUMvZhJszAQnNATGPpxXRwDkFPT/WQCoStXmM
-         F7/jj4W3fGwA+e50DsRczqfAPBtHYbFTJu7IzSLsuU9rr5xTcYt4b0i9sVH9S7mK46f/
-         KPCtuTwZ3xCT+br7fnnZBbYKsCZ38/gvW9Q5qmCbUdfEDKX/cxsfXAjk2XC9W9JwZyhT
-         yLbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735581184; x=1736185984;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3xI5DjH4HAYdB6G5OXMtCQ/yI27laowdH1Ku4WAUuU=;
-        b=O/3aNjDCHTymZmFYUr4M0gtgrbb5F8Z2v1pgfFqFGyAw68rGpXHWD0AMzLUdDlN/30
-         YBnjaadNIqTRk52MweazdJiJybH7bR2cGNKA5bWeVzkAddRp3oibFqkwT1wp213JUfhQ
-         C5FuK/7/sr43Ada0Wt6veACPyUIzqqCZPTDAVZsuCzD2FcbwtjRhxzinZhDrpSgfMycE
-         dCujRBAXQ649NxqaBaqSLxXbysJ5DCUWYFBJXDdVx9ScnIJyxDk/BufBR3Nld6BOg1+P
-         rKu5C357nIaFYdt65q/wTNNF+zcy2vb3fuWFdC9DPp45GOj4khD0T3QrXHua+0JKgUT1
-         Qvtg==
-X-Forwarded-Encrypted: i=1; AJvYcCViupkwk6A7Y7Y0OvuYwQVSURuTKqj9nlD9Wg0FFheCoVjWaCsy0apbCIaRF3RWGKa2AZA59sqzp8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygGsIQCSifNdY71p/FHhYzgLCCMjN2IwIZm7/TPe1RE1Qb9c2p
-	6NlsMuQwHLe0ozE7x3i8gLlsPSQgH4y67hBzLU4N8d6ZD/nNq7C/9ozok4YFxg==
-X-Gm-Gg: ASbGncsbVjyzA4AEjC/yzrKPZ3Kf2BdaTKHS7ktynYxL/3Q7UnocXYlqg2W/G/dhFoz
-	qzBSUH7+H3nbRzLeGyJwYQkcEdeGt1/FIdRDTqfCIwdMAq2F8YFkk27LEvaUeDYxTuoM55EmWwE
-	6tidcgysiUU0laxW4sWm4kvsb52GVya6jVokKZUQysFPXxocJyzUddLGjGO9UYe75yaF/LdHNeN
-	QYblXIpUJsbnkXDNdEroFf29UnUWQI/YYjQzTq0Eki3RLOsAdbIf+iKbtYAvt4G7Cgy
-X-Google-Smtp-Source: AGHT+IHeD2wPRjHlfgF7pPwJpRkMuKUiK6/XjQte9rKjKeYvH/JFjbDy3YIRqFOuyyy1Rnljy5snSA==
-X-Received: by 2002:a17:902:ce88:b0:215:620f:8de4 with SMTP id d9443c01a7336-219e6e8baffmr468933345ad.2.1735581184321;
-        Mon, 30 Dec 2024 09:53:04 -0800 (PST)
-Received: from thinkpad ([120.60.139.149])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc97181fsm180454425ad.108.2024.12.30.09.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 09:53:03 -0800 (PST)
-Date: Mon, 30 Dec 2024 23:22:49 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: kw@linux.com, kishon@kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [v3] misc: pci_endpoint_test: Fix return resource_size_t from
- pci_resource_len
-Message-ID: <20241230175249.lx32nb2adsm54qh3@thinkpad>
-References: <20241221141009.27317-1-18255117159@163.com>
+	s=arc-20240116; t=1735581476; c=relaxed/simple;
+	bh=dzPrHdZM0//31eEZr1bEj6ShwlM5NON8mv2BEY16joc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Shac5bEPipQNt8VtzNIlUObWEeET9+ijotTa+P/YZbjZ3oPsKu5oRu7+JMg193kyXGJC2Z2oYTzP2TbMRuLWal9nWCtasNPkdP9ZR3D1j9fzfRMsLSMxFo9P3Q2qo/htDAokOEAXsjKHGCegPVAuUXsXqaMP36Oc6Ob1P7G4/Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABrWQIbX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D7EC4CED2;
+	Mon, 30 Dec 2024 17:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735581476;
+	bh=dzPrHdZM0//31eEZr1bEj6ShwlM5NON8mv2BEY16joc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ABrWQIbXDRX/AAW+l2q3veDwIBQYYxj92TiTOPKiZoIzsYEhg0YUfXEjzs3/PLv9i
+	 ipVPop8B7ACEYwqM1eGKMMMC8tK5vzS78vuuwS1To5vBvb6rqE307YtsW889IjSJPN
+	 4EYuMfL+Um7ZTS2LyB96X9yocftLVufxNCVbEG1zrJNxETd8YbRRC8vCqRjUkAi3IV
+	 XbtUwh0dMMQPvcN3rbaNu1prZSyr4BcANtlShv4j85nYPP/NbDen3w7a4O8AWj2yCI
+	 LIbSYdCe+8hhMWkVwexRW+6w9qzlPDmbwd9CfRUdjl8pwFpWgTY0jC3Kt+OxVK8GPw
+	 1TDPp/ofG+KXA==
+Date: Mon, 30 Dec 2024 11:57:54 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] PCI: mediatek-gen3: Add missing
+ reset_control_deassert() for mac_rst in mtk_pcie_en7581_power_up()
+Message-ID: <20241230175754.GA3958277@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241221141009.27317-1-18255117159@163.com>
+In-Reply-To: <20241130-pcie-en7581-fixes-v5-1-dbffe41566b3@kernel.org>
 
-On Sat, Dec 21, 2024 at 10:10:09PM +0800, Hans Zhang wrote:
+On Sat, Nov 30, 2024 at 12:20:10AM +0100, Lorenzo Bianconi wrote:
+> Even if this is not a real issue since Airoha EN7581 SoC does not require
+> the mac reset line, add missing reset_control_deassert() for mac reset
+> line in mtk_pcie_en7581_power_up() callback.
 
-Subject should be improved:
+s/mac/MAC/ in English text since "mac" is an acronym, not a real word
 
-misc: pci_endpoint_test: Fix overflow of bar_size
+This doesn't really say why we need this patch.
 
-> With 8GB BAR2, running pcitest -b 2 fails with "TEST FAILED".
-> 
-> The return value of the `pci_resource_len` interface is not an integer.
-> Using `pcitest` with an 8GB BAR2, the bar_size of integer type will
-> overflow.
-> Change the data type of bar_size from integer to resource_size_t, to fix
-> the above issue.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
+This adds both assert and deassert, so it doesn't really look like
+adding a *missing* deassert.
 
-With that,
+On EN7581, is mac_reset optional or always absent?
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+If mac_reset is always absent for EN7581, why add this patch at all?
+If it's optional, say so.
 
-- Mani
-
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
-> Changes since v2:
-> https://lore.kernel.org/linux-pci/20241220075253.16791-1-18255117159@163.com/
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> - Fix "changes" part goes below the --- line
-> - The patch commit message were modified.
-> 
-> Changes since v1:
-> https://lore.kernel.org/linux-pci/20241217121220.19676-1-18255117159@163.com/
-> 
-> - The patch subject and commit message were modified.
-> ---
->  drivers/misc/pci_endpoint_test.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 3aaaf47fa4ee..414c4e55fb0a 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
->  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->  				  enum pci_barno barno)
->  {
-> -	int j, bar_size, buf_size, iters, remain;
->  	void *write_buf __free(kfree) = NULL;
->  	void *read_buf __free(kfree) = NULL;
->  	struct pci_dev *pdev = test->pdev;
-> +	int j, buf_size, iters, remain;
-> +	resource_size_t bar_size;
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index 64ef8ff71b0357b9bf9ad8484095b7aa60c22271..4d1c797a32c236faf79428eb8a83708e9c4f21d8 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -942,6 +942,9 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+>  	 */
+>  	mdelay(PCIE_EN7581_RESET_TIME_MS);
 >  
->  	if (!test->bar[barno])
->  		return false;
-> -- 
-> 2.25.1
+> +	/* MAC power on and enable transaction layer clocks */
+> +	reset_control_deassert(pcie->mac_reset);
+> +
+>  	pm_runtime_enable(dev);
+>  	pm_runtime_get_sync(dev);
+>  
+> @@ -976,6 +979,7 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+>  err_clk_prepare:
+>  	pm_runtime_put_sync(dev);
+>  	pm_runtime_disable(dev);
+> +	reset_control_assert(pcie->mac_reset);
+>  	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
+>  err_phy_deassert:
+>  	phy_power_off(pcie->phy);
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> -- 
+> 2.47.0
+> 
 
