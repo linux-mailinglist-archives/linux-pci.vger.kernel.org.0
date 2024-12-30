@@ -1,89 +1,87 @@
-Return-Path: <linux-pci+bounces-19095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19096-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C10B29FE95B
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 18:12:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4DEE9FE988
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 18:53:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C81E1882D11
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 17:12:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDF1818805C1
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2024 17:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FD631AAE0D;
-	Mon, 30 Dec 2024 17:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A1B1ACDE7;
+	Mon, 30 Dec 2024 17:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1X92P7Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ni/X16Oz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E92233C9
-	for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 17:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C1E19DFAB
+	for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 17:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735578719; cv=none; b=EWeRXu2+yuFkl0u4+/1/keU4fzvqgY06Tr2xsCCYnONUUqCePX2Fd/uYVtijX4HJExRlXgj7car0eQ3ortP5ZB/8jFheXX6eITBs3oXbjnfYGHxTKJaZlfd3zlHxeMkkAHFuaG075th1tf3M2nt+Jee6EyA0al12a4E56zD7UHQ=
+	t=1735581186; cv=none; b=C+BUe5TOcmqGMXAcif1W0SDHrJ1g3WayxoEXwEDglf3Rd7opKXw64pUPHrpa9OJFklDgldRh8bIw/k5iutljKmipYBh0aOZgXtigyEKy+kAoW8PlaWNCRqfwFMGi2mdeldw9dZlpSzWbBPegZmjjHBCcBTI8ZM9AxO4005ucpYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735578719; c=relaxed/simple;
-	bh=dCIZ/NMFEEBomGMOrm1A9FSBcKh2gYJk9o4/wUQGEbA=;
+	s=arc-20240116; t=1735581186; c=relaxed/simple;
+	bh=OinC3bhugjWs81HQ/VUVqwQh9XcC/WrGz1Uup6D/m4k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FfQ4rZd5GzGoQodGiHgvIzVrhjyTdGjevRonoczMun0uQyylH1RrLy6KBiYtUG/E8eDR3hJfH5Dhb2rCSNH8sTCp1boIXAZ6ajKE+ubqIADEjaRqnE6NHW1SkCX3pZMKlbO5JjlYZPZdr75Ub2Zf+QI/X2Twggn2vwjsjO4KldE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j1X92P7Z; arc=none smtp.client-ip=209.85.214.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3Fj9XpToi1zX0qBu99fNdcK5ZusK1JfVdwXPxN2eOVLnJvEP2ZrxCSQuRDHIB5DXIIPBPsSlYTlqeADbkeAWwlxuRhS2CVKsm8VvPcgvnjBNkxSzwSEFfyw6gqvUugVHqnY6N743hw1Gr9HRF8zc9t6KWrSGIADWfnrt2YoxAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ni/X16Oz; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21675fd60feso161694545ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 09:11:57 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21636268e43so25649565ad.2
+        for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 09:53:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735578717; x=1736183517; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1735581184; x=1736185984; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=lfwNqQqXUFYCXkUWp/TOAB4xKTViC/JZlOdRDh9c4zk=;
-        b=j1X92P7ZUC+jugAZdV+CQWMVH1L4gvAxFDpyu3tclAz25dRGw6GxPWb7Ejvg93DWS+
-         pVXBkAtjParIsBshY++IYIsh/Ge6FWEtwrErFHAdvcFn9dP/GijvtLll+fPE+OrAnkvm
-         u8YsNvtsVZz+X/hij7DkHdT2JBg6YIPCdeYzHtUf4bsdPCb9PaIG7KgUTf9iC7YkbNdD
-         5ZT6rijkxAj2WIcP3HJmUNyobgaRBqaP+GbK/ZdpkBZNV1xSSHGX5X3NGPfIqKeyrnva
-         1pRtnRZ/fhaO/0RA5QDJqHuZcK0BNWJcQ5hKCrrMShomfQhdi6u3Cz0vOTyVIGYL/oPr
-         aQtQ==
+        bh=o3xI5DjH4HAYdB6G5OXMtCQ/yI27laowdH1Ku4WAUuU=;
+        b=ni/X16OzrW3z/sHrJU46Lb3L2Sct2albf0LX20NodAVZY9VvHiUPNZnXRSf4G20xh8
+         ZRAe7A1bu7ZeaOgcCM+IkardlB7ZR7xyqi/CkHyGKSwQ7xNZi9MDLZqpt6ouxEZ4ipN8
+         1QQ/wb2m8+gEoIGME1T/n0BJPFufURAYUMvZhJszAQnNATGPpxXRwDkFPT/WQCoStXmM
+         F7/jj4W3fGwA+e50DsRczqfAPBtHYbFTJu7IzSLsuU9rr5xTcYt4b0i9sVH9S7mK46f/
+         KPCtuTwZ3xCT+br7fnnZBbYKsCZ38/gvW9Q5qmCbUdfEDKX/cxsfXAjk2XC9W9JwZyhT
+         yLbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735578717; x=1736183517;
+        d=1e100.net; s=20230601; t=1735581184; x=1736185984;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lfwNqQqXUFYCXkUWp/TOAB4xKTViC/JZlOdRDh9c4zk=;
-        b=IZFjqifJRM5BDdyptEM17slM4RlPbyZhyatEb2oUxlCLaQDfuJetSglJoGogZEI93H
-         1eStjfLh7cBKVWYHRktyHDVG76DPm8D4GI5IZXBVB76pOkeWZ7Ey4MJDBXC33IQT6MQT
-         WJT/XRXPigy+Pu7Bo0gB0QuoPElVFjaE6VixwdIJ2smbJDrhv9qZC4XC2etsEq3OuMve
-         dV/PcpNqaiMIUlv4wQGLIFNIt5glSwCB0y+y3dgzru8a3b66TWnKBMwYCCF3a293KaLw
-         TJCveZRRVzIcdb3mx4fIcyA2ART5RkoQxx1Pg+wT2PJQe2d+/AH1gTwzgx+Z26m6ZGO4
-         5r0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWSahU5ARSktTnipVN/SiGd0yVLyNpOf26xhJtMzDczrmt8LH0WiiDI1cVXJjd9Hxe6mpMtuTRfi94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqBsCtA6+5u0t8aoCFIYWn3A/8bqeP0sdAmkWtOBQZvL/lnZaP
-	wKfjbpBjXfDU1g4eYl0s5F6dyAGUzapGtKIhQ7+4zEhW2yocaAjeVA012xllMQ==
-X-Gm-Gg: ASbGncs+uKPP3gEEHJAnoGYaMksM+WvOwmUEyzXs4RFXcYlCM6nm7euE82dlSpUolE/
-	jRVLXdNk40RnXyebkS0AZpaXfFG/tchkvWOpZNmATZQpCi8NfOfo2GLI96WlnF0DxQudLzFJ7WR
-	KZVgPC7wigLAukFCsHqEVgCRmb0e0pNwPlOflI6ZPjZ7yS37ZGPA31we0mfWXJgsazhjp8mc2cP
-	HSMLkcIRPiHXMTdOFC6opj+QUp74bzzgGvuK3GLtmSu6u5wXihZHrJiXoQTJiSGApxH
-X-Google-Smtp-Source: AGHT+IFwgvk481sU68Q8zxzSLG4BiOIx4W8KpDbELH9PwlRKWt+xiKLtXJaVpqdvB396XpJQJIW0WQ==
-X-Received: by 2002:a05:6a00:35ce:b0:725:eb85:f7ef with SMTP id d2e1a72fcca58-72abddcaf2fmr51349434b3a.14.1735578716738;
-        Mon, 30 Dec 2024 09:11:56 -0800 (PST)
+        bh=o3xI5DjH4HAYdB6G5OXMtCQ/yI27laowdH1Ku4WAUuU=;
+        b=O/3aNjDCHTymZmFYUr4M0gtgrbb5F8Z2v1pgfFqFGyAw68rGpXHWD0AMzLUdDlN/30
+         YBnjaadNIqTRk52MweazdJiJybH7bR2cGNKA5bWeVzkAddRp3oibFqkwT1wp213JUfhQ
+         C5FuK/7/sr43Ada0Wt6veACPyUIzqqCZPTDAVZsuCzD2FcbwtjRhxzinZhDrpSgfMycE
+         dCujRBAXQ649NxqaBaqSLxXbysJ5DCUWYFBJXDdVx9ScnIJyxDk/BufBR3Nld6BOg1+P
+         rKu5C357nIaFYdt65q/wTNNF+zcy2vb3fuWFdC9DPp45GOj4khD0T3QrXHua+0JKgUT1
+         Qvtg==
+X-Forwarded-Encrypted: i=1; AJvYcCViupkwk6A7Y7Y0OvuYwQVSURuTKqj9nlD9Wg0FFheCoVjWaCsy0apbCIaRF3RWGKa2AZA59sqzp8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygGsIQCSifNdY71p/FHhYzgLCCMjN2IwIZm7/TPe1RE1Qb9c2p
+	6NlsMuQwHLe0ozE7x3i8gLlsPSQgH4y67hBzLU4N8d6ZD/nNq7C/9ozok4YFxg==
+X-Gm-Gg: ASbGncsbVjyzA4AEjC/yzrKPZ3Kf2BdaTKHS7ktynYxL/3Q7UnocXYlqg2W/G/dhFoz
+	qzBSUH7+H3nbRzLeGyJwYQkcEdeGt1/FIdRDTqfCIwdMAq2F8YFkk27LEvaUeDYxTuoM55EmWwE
+	6tidcgysiUU0laxW4sWm4kvsb52GVya6jVokKZUQysFPXxocJyzUddLGjGO9UYe75yaF/LdHNeN
+	QYblXIpUJsbnkXDNdEroFf29UnUWQI/YYjQzTq0Eki3RLOsAdbIf+iKbtYAvt4G7Cgy
+X-Google-Smtp-Source: AGHT+IHeD2wPRjHlfgF7pPwJpRkMuKUiK6/XjQte9rKjKeYvH/JFjbDy3YIRqFOuyyy1Rnljy5snSA==
+X-Received: by 2002:a17:902:ce88:b0:215:620f:8de4 with SMTP id d9443c01a7336-219e6e8baffmr468933345ad.2.1735581184321;
+        Mon, 30 Dec 2024 09:53:04 -0800 (PST)
 Received: from thinkpad ([120.60.139.149])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad81575fsm19379685b3a.36.2024.12.30.09.11.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc97181fsm180454425ad.108.2024.12.30.09.53.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 09:11:56 -0800 (PST)
-Date: Mon, 30 Dec 2024 22:41:45 +0530
+        Mon, 30 Dec 2024 09:53:03 -0800 (PST)
+Date: Mon, 30 Dec 2024 23:22:49 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Marc Zyngier <marc.zyngier@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Brian Norris <briannorris@google.com>
-Subject: Re: [PATCH] PCI: dwc: Use level-triggered handler for MSI IRQs
-Message-ID: <20241230171145.hsqynixmowjn77ki@thinkpad>
-References: <20241015141215.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+To: Hans Zhang <18255117159@163.com>
+Cc: kw@linux.com, kishon@kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rockswang7@gmail.com,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [v3] misc: pci_endpoint_test: Fix return resource_size_t from
+ pci_resource_len
+Message-ID: <20241230175249.lx32nb2adsm54qh3@thinkpad>
+References: <20241221141009.27317-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,63 +91,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241015141215.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+In-Reply-To: <20241221141009.27317-1-18255117159@163.com>
 
-On Tue, Oct 15, 2024 at 02:12:16PM -0700, Brian Norris wrote:
-> From: Brian Norris <briannorris@google.com>
-> 
-> Per Synopsis's documentation, the msi_ctrl_int signal is
-> level-triggered, not edge-triggered.
-> 
+On Sat, Dec 21, 2024 at 10:10:09PM +0800, Hans Zhang wrote:
 
-Could you please quote the spec reference?
+Subject should be improved:
+
+misc: pci_endpoint_test: Fix overflow of bar_size
+
+> With 8GB BAR2, running pcitest -b 2 fails with "TEST FAILED".
+> 
+> The return value of the `pci_resource_len` interface is not an integer.
+> Using `pcitest` with an 8GB BAR2, the bar_size of integer type will
+> overflow.
+> Change the data type of bar_size from integer to resource_size_t, to fix
+> the above issue.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+
+With that,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
-> ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
-> which actually dropped preexisting use of handle_level_trigger().
-> Looking at the patch history, this change was only made by request:
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
 > 
->   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
->   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
-> 
->   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
->    triggered, not level."
-> 
-> However, while the underlying MSI protocol is edge-triggered in a sense,
-> the DesignWare IP is actually level-triggered.
-> 
-> So, let's switch back to level-triggered.
-> 
-> In many cases, the distinction doesn't really matter here, because this
-> signal is hidden behind another (chained) top-level IRQ which can be
-> masked on its own. But it's still wise to manipulate this interrupt line
-> according to its actual specification -- specifically, to mask it while
-> we handle it.
-> 
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
 > ---
+> Changes since v2:
+> https://lore.kernel.org/linux-pci/20241220075253.16791-1-18255117159@163.com/
 > 
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> - Fix "changes" part goes below the --- line
+> - The patch commit message were modified.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 3e41865c7290..0fb79a26d05e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -198,7 +198,7 @@ static int dw_pcie_irq_domain_alloc(struct irq_domain *domain,
->  	for (i = 0; i < nr_irqs; i++)
->  		irq_domain_set_info(domain, virq + i, bit + i,
->  				    pp->msi_irq_chip,
-> -				    pp, handle_edge_irq,
-> +				    pp, handle_level_irq,
->  				    NULL, NULL);
+> Changes since v1:
+> https://lore.kernel.org/linux-pci/20241217121220.19676-1-18255117159@163.com/
+> 
+> - The patch subject and commit message were modified.
+> ---
+>  drivers/misc/pci_endpoint_test.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 3aaaf47fa4ee..414c4e55fb0a 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
+>  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+>  				  enum pci_barno barno)
+>  {
+> -	int j, bar_size, buf_size, iters, remain;
+>  	void *write_buf __free(kfree) = NULL;
+>  	void *read_buf __free(kfree) = NULL;
+>  	struct pci_dev *pdev = test->pdev;
+> +	int j, buf_size, iters, remain;
+> +	resource_size_t bar_size;
 >  
->  	return 0;
+>  	if (!test->bar[barno])
+>  		return false;
 > -- 
-> 2.47.0.rc1.288.g06298d1525-goog
+> 2.25.1
 > 
 
 -- 
