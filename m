@@ -1,63 +1,87 @@
-Return-Path: <linux-pci+bounces-19106-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19107-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 149409FECD8
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 05:38:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0649FECDA
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 05:48:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A44A416179D
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 04:38:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B7CC3A27FE
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 04:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F20247DA88;
-	Tue, 31 Dec 2024 04:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91562155C8C;
+	Tue, 31 Dec 2024 04:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gmjCiJxI"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YAUX3s7v"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CE4EDE;
-	Tue, 31 Dec 2024 04:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE8D14F136
+	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 04:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735619911; cv=none; b=JzCvvTv7MILrMyjl2ZpLsdYGVa+UhhX7K4c2n/Rc/YVG/5od7qBraYx389GqKMhrgfU0yB+E7g30gZOToSKs5DtF9uC0PiWgwBWUhK9j3uW88OT1/6a21GkEyeqfjOQQ/W2MMBqUOCeFS2550tRoCPzaQKSk48SsoUG0b3UKYmY=
+	t=1735620478; cv=none; b=jnKqKMY/7ALB/mLeLYi5S8KUK28yh+JK8f6gxL39DafzXOyxztfGM0/NFzHcH5XVKwpXwaGuXY9+lvTfLfLq1XJZdxYfgIC8WdQ7WKSrZCgI56MsxQlnXw8MM0r66wkBdynDvFGIZZ1qWrUx43cIg0XRiSQ2UiO5UzQHB80osqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735619911; c=relaxed/simple;
-	bh=wTPus96MJjY7aQ25cNpSgVkYz231qkKlSaSxd69oHy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hCNbPX1nxDSqhabNtjmrBnpx7LFJd4VbXg4JzKZcswrsPKp2CvGiXONQ9y7HqwpIwjtfVgNhGL5S9OznBAom0lejlyUk55mwoUct7ZQpuBbg0AYwKwqUDqbnMjfQzP551Oo7GTjxXv02sUiy98vbpXCy72485U2NH21GIb1d1mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gmjCiJxI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BV32fDH023989;
-	Tue, 31 Dec 2024 04:38:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	s=arc-20240116; t=1735620478; c=relaxed/simple;
+	bh=UpH7lfEEkfF8NKFKKgvKrQxfQlrAYZpimtTRVKfmnzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N84m3341JEjHuwb7BG/fLHrlvvMibgabOmTml3CFCEl8yyrP/c/iLFU0ovHB6KxpidMykUqx/vYM1ho/13VVSrIwuUf6ISuPwW65BxoT3/p2KRAjZOxIUjaUBmzNTuqgi61LzY4YIjbom6QsW/Y7LbOCJ8Ey8OD0PMIxGXf3dUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YAUX3s7v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BUJqdEG019792
+	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 04:47:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DEel0FYTjQp4yTtRHdqQn24b2WNPQjqYKQ1Z4azqcEs=; b=gmjCiJxIDhaIRIuA
-	CSwNYRZs1rfSVu6p6vgE2x/9Qd8ShrHG+aNrRoxg2g14cvqUBruWPqaQ3VRt+5ZO
-	82uXrx9fEGIg57pl98tgIyQrUTwpN25MmMYIy1IFrj2k+27oWcf/KcLQt2KzDF0E
-	EsqeKtdfgtjeBTOdJoCuHZXVK3hgd+eL0Fh7bLum3c4/uIU7n6hNLsOq/KVYWgIy
-	HrJy4XFaI45j7lYrU7Ee4Ehl6R2Zh0rj/9R9hWVq7zmTxUuKuzpfTtbScgcUxNKu
-	DYlMWtoBPmoWWABCTAw4z/mbenjpfQe0xY/ntfKMC5VnPPGPXKEvBvWu1WFKnBMk
-	i4DG/w==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43v8c3g5ag-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 31 Dec 2024 04:38:19 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BV4cICp008760
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 31 Dec 2024 04:38:18 GMT
-Received: from [10.216.61.131] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 30 Dec
- 2024 20:38:12 -0800
-Message-ID: <42297b99-5930-e270-45d6-181e1c36681f@quicinc.com>
-Date: Tue, 31 Dec 2024 10:08:09 +0530
+	ZKqfrwjFddNEtBKNkH5xy3hzGi3JwSNPhz3E+7WNCHY=; b=YAUX3s7vU2NqdxH9
+	cdB4d87vWLTk/pQgj40W9kFbOwSYnXOPrB/XGOdHdQSIUU7WnU6G+zLZa7ihI4hr
+	Z/mLTB5pH0h3Wgq3OGIGkBpcr5JYrclVzSYBMHe3bvwcpAdhVNsIRW6EtQMr7wk5
+	GmL8EEDlaGcIe9yEhtIZR97ZtZG63/rxPVXGqVlNuheaSR2JUqFjNejcdpQyUAXW
+	rgF61zO2YA3INdsJGy28czhmUzxjanTnVl9667E9JhDXTizFLScQU7Jf1EhsK3Qy
+	EbzYvILSsLUKwwc9Y9Ae9OkzpH+TU+QYUoY2ezU99IZWGufHtlXKAQvQpWiyCc44
+	QsJEKg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43v22g8r0n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 04:47:55 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2163c2f32fdso210208515ad.2
+        for <linux-pci@vger.kernel.org>; Mon, 30 Dec 2024 20:47:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735620474; x=1736225274;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZKqfrwjFddNEtBKNkH5xy3hzGi3JwSNPhz3E+7WNCHY=;
+        b=Xfcv/7BYHcx2Zju6UynL2d8RDbYVnOe2Gnir/vn6lYzaXmHpCkMDe1mCzetNjCV8RK
+         rfc82SKciTSzOYt1u5y1mtEAzrDbNXRLOm1XuLlrQRxCsPCE7rei97A+KuEc4Ke9XgMD
+         lNgvckjJ0akWsOyGCJKUujjAys8BewJOnznLuV7yfd1VD2lnubvRNBtCOZkARuUfemWY
+         iRULmnorncvmgFhNeRtR2y2vsNPh5VeCQxmH2ntg/uQ5E23JItsPIt5j+SrQUN5jBx30
+         gx/EoyPlrhDJUc1RE7II7yRovmY+1SP/SmtMsuSm5mH/CnmH6Swp8aaVodpc98OrvxUm
+         x/IA==
+X-Forwarded-Encrypted: i=1; AJvYcCX54gA32p7I3MWsQoEZUsVZfsK7Dy0HYCQ8pUvbfFg3608a0oLHqR2mXH+q6AflReNYPqP2HSLW7Mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNGoB80WyAtLZ3X+idiiRMSl7JaD4qM6AMdgQYsUsjLTsHKzav
+	1lyzTwiy2wQEBj9hVDbB7RKji38dMae89cDQLbPSIgVJClY8g1ogHNTH4yGieZ00h3Y9vftFGcQ
+	eKwQlWe84BP2dN3H66RC/DF+gJMpvFCBkPy3StxaOcXM6895nlBhvAFQAMojM/UKNsX8=
+X-Gm-Gg: ASbGncugQ3ucaarxNJ1Z8IRcjIZDMaS2zGWUck2xSeLpDePTJnJhrU5DjJ9BzJgX3as
+	PyelEQwqV4wbPjH8e7TIns2xAiI0YsH2k5YdDbCHWfCESuUJ+1GsAIs/YGETK3/7SzAKeHf3KVd
+	VIj2VJu73avDwhtjFddBt6LqSmfsMYBmu57K6LaO/Y/H+QnRNt9R/kO8X5gm6zW9o4iLJwwsF+s
+	ouYlv+6pVsrMd8TpkIORFYEQ5Z7ACBfsjbqtNXnUpJNuDyjCd+2y6v0dl2QW7zh925HYNLCy178
+	XR5WWHeQJF8=
+X-Received: by 2002:a17:902:c943:b0:216:2e5e:96ff with SMTP id d9443c01a7336-219e6cd7bc3mr637511875ad.0.1735620473909;
+        Mon, 30 Dec 2024 20:47:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEfnXVELaWhLUrVfPNUy3g+GH/Lxzp3x2ulb0cHgWBczGzXYRn3hC7nFJP3anYXCMh564ZqtA==
+X-Received: by 2002:a17:902:c943:b0:216:2e5e:96ff with SMTP id d9443c01a7336-219e6cd7bc3mr637511645ad.0.1735620473541;
+        Mon, 30 Dec 2024 20:47:53 -0800 (PST)
+Received: from [10.92.200.237] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9f6c17sm186615175ad.221.2024.12.30.20.47.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Dec 2024 20:47:53 -0800 (PST)
+Message-ID: <2684f4b3-b79d-14a2-c547-8b1f7000737c@oss.qualcomm.com>
+Date: Tue, 31 Dec 2024 10:17:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,301 +90,171 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v3 2/4] PCI: of: Add API to retrieve equalization presets
- from device tree
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-CC: Konrad Dybcio <konradybcio@kernel.org>,
-        Krishna Chaitanya Chundru
-	<krishna.chundru@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <quic_mrana@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>
-References: <20241223-preset_v2-v3-0-a339f475caf5@oss.qualcomm.com>
- <20241223-preset_v2-v3-2-a339f475caf5@oss.qualcomm.com>
- <piccoomv7rx4dvvfdoesmxbzrdqz4ld6ii6neudsdf4hjj2yzm@2bcuacwa4feb>
- <d317c51a-3913-6c49-f8db-e75589f9289a@quicinc.com>
- <wjk32haduzgiea676mamqdr6mhbmm3rrb6eyhzghqpczjuiazx@ipik3jhjzmhz>
- <7bc9f3f2-851c-3703-39b4-fea93d10bd7f@quicinc.com>
- <ntag3wc3yqax2afsbzesev32hpj3ssiknhjq6dtncuuj4ljrxh@23ed4qdwfrxi>
- <49ccd5f2-8524-eba4-25ef-4cdc39edc93b@quicinc.com>
- <7busek7zgost2s7mjklgvlccaef3lgz4k7btki72nkr5et7fdn@wkv2z6zbicdj>
- <fb17e142-e66f-85a7-353c-0e498892b884@quicinc.com>
- <CAA8EJpr=ktQ4c2dGxnCQNF4rLOCuCLRr6OYT4yVkyOnk2nF+Og@mail.gmail.com>
- <1a3c7424-9cef-4fed-aa53-ad922aa4d3cb@oss.qualcomm.com>
+Subject: Re: [PATCH v2 2/4] PCI: dwc: Add ECAM support with iATU configuration
 Content-Language: en-US
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <1a3c7424-9cef-4fed-aa53-ad922aa4d3cb@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        cros-qcom-dts-watchers@chromium.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
+        quic_mrana@quicinc.com, mmareddy@quicinc.com,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+References: <20241224-enable_ecam-v2-0-43daef68a901@oss.qualcomm.com>
+ <20241224-enable_ecam-v2-2-43daef68a901@oss.qualcomm.com>
+ <12fb6164-fa53-46e7-9a22-bb9b373f9860@oss.qualcomm.com>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <12fb6164-fa53-46e7-9a22-bb9b373f9860@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: aK58-LGgeJc6unb5bGZCF2efBnbGLRXg
-X-Proofpoint-ORIG-GUID: aK58-LGgeJc6unb5bGZCF2efBnbGLRXg
+X-Proofpoint-GUID: LdryMFWI6gxk06oznAPuu6YM-SKxb0Ip
+X-Proofpoint-ORIG-GUID: LdryMFWI6gxk06oznAPuu6YM-SKxb0Ip
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 impostorscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 spamscore=0 mlxscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412310036
+ definitions=main-2412310038
 
 
-
-On 12/30/2024 7:11 PM, Konrad Dybcio wrote:
-> On 24.12.2024 11:57 AM, Dmitry Baryshkov wrote:
->> On Tue, 24 Dec 2024 at 12:36, Krishna Chaitanya Chundru
->> <quic_krichai@quicinc.com> wrote:
->>>
->>>
->>>
->>> On 12/24/2024 3:25 PM, Dmitry Baryshkov wrote:
->>>> On Tue, Dec 24, 2024 at 02:47:00PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>
->>>>>
->>>>> On 12/24/2024 12:00 AM, Dmitry Baryshkov wrote:
->>>>>> On Mon, Dec 23, 2024 at 10:13:29PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 12/23/2024 8:56 PM, Dmitry Baryshkov wrote:
->>>>>>>> On Mon, Dec 23, 2024 at 08:02:23PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 12/23/2024 5:17 PM, Dmitry Baryshkov wrote:
->>>>>>>>>> On Mon, Dec 23, 2024 at 12:21:15PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>>>>>>> PCIe equalization presets are predefined settings used to optimize
->>>>>>>>>>> signal integrity by compensating for signal loss and distortion in
->>>>>>>>>>> high-speed data transmission.
->>>>>>>>>>>
->>>>>>>>>>> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
->>>>>>>>>>> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
->>>>>>>>>>> configure lane equalization presets for each lane to enhance the PCIe
->>>>>>>>>>> link reliability. Each preset value represents a different combination
->>>>>>>>>>> of pre-shoot and de-emphasis values. For each data rate, different
->>>>>>>>>>> registers are defined: for 8.0 GT/s, registers are defined in section
->>>>>>>>>>> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
->>>>>>>>>>> an extra receiver preset hint, requiring 16 bits per lane, while the
->>>>>>>>>>> remaining data rates use 8 bits per lane.
->>>>>>>>>>>
->>>>>>>>>>> Based on the number of lanes and the supported data rate, this function
->>>>>>>>>>> reads the device tree property and stores in the presets structure.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->>>>>>>>>>> ---
->>>>>>>>>>>       drivers/pci/of.c  | 45 +++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>       drivers/pci/pci.h | 17 +++++++++++++++--
->>>>>>>>>>>       2 files changed, 60 insertions(+), 2 deletions(-)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->>>>>>>>>>> index dacea3fc5128..99e0e7ae12e9 100644
->>>>>>>>>>> --- a/drivers/pci/of.c
->>>>>>>>>>> +++ b/drivers/pci/of.c
->>>>>>>>>>> @@ -826,3 +826,48 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->>>>>>>>>>>         return slot_power_limit_mw;
->>>>>>>>>>>       }
->>>>>>>>>>>       EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
->>>>>>>>>>> +
->>>>>>>>>>
->>>>>>>>>> kerneldoc? Define who should free the memory and how.
->>>>>>>>>>
->>>>>>>>> I will update this in next series.
->>>>>>>>> as we are allocating using devm_kzalloc it should be freed on driver
->>>>>>>>> detach, as no special freeing is required.
->>>>>>>>>>> +int of_pci_get_equalization_presets(struct device *dev,
->>>>>>>>>>> +                                  struct pci_eq_presets *presets,
->>>>>>>>>>> +                                  int num_lanes)
->>>>>>>>>>> +{
->>>>>>>>>>> +      char name[20];
->>>>>>>>>>> +      void **preset;
->>>>>>>>>>> +      void *temp;
->>>>>>>>>>> +      int ret;
->>>>>>>>>>> +
->>>>>>>>>>> +      if (of_property_present(dev->of_node, "eq-presets-8gts")) {
->>>>>>>>>>> +              presets->eq_presets_8gts = devm_kzalloc(dev, sizeof(u16) * num_lanes, GFP_KERNEL);
->>>>>>>>>>> +              if (!presets->eq_presets_8gts)
->>>>>>>>>>> +                      return -ENOMEM;
->>>>>>>>>>> +
->>>>>>>>>>> +              ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
->>>>>>>>>>> +                                               presets->eq_presets_8gts, num_lanes);
->>>>>>>>>>> +              if (ret) {
->>>>>>>>>>> +                      dev_err(dev, "Error reading eq-presets-8gts %d\n", ret);
->>>>>>>>>>> +                      return ret;
->>>>>>>>>>> +              }
->>>>>>>>>>> +      }
->>>>>>>>>>> +
->>>>>>>>>>> +      for (int i = 1; i < sizeof(struct pci_eq_presets) / sizeof(void *); i++) {
->>>>>>>>>>> +              snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << i);
->>>>>>>>>>> +              if (of_property_present(dev->of_node, name)) {
->>>>>>>>>>> +                      temp = devm_kzalloc(dev, sizeof(u8) * num_lanes, GFP_KERNEL);
->>>>>>>>>>> +                      if (!temp)
->>>>>>>>>>> +                              return -ENOMEM;
->>>>>>>>>>> +
->>>>>>>>>>> +                      ret = of_property_read_u8_array(dev->of_node, name,
->>>>>>>>>>> +                                                      temp, num_lanes);
->>>>>>>>>>> +                      if (ret) {
->>>>>>>>>>> +                              dev_err(dev, "Error %s %d\n", name, ret);
->>>>>>>>>>> +                              return ret;
->>>>>>>>>>> +                      }
->>>>>>>>>>> +
->>>>>>>>>>> +                      preset = (void **)((u8 *)presets + i * sizeof(void *));
->>>>>>>>>>
->>>>>>>>>> Ugh.
->>>>>>>>>>
->>>>>>>>> I was trying iterate over each element on the structure as presets holds the
->>>>>>>>> starting address of the structure and to that we are adding size of the void
->>>>>>>>> * point to go to each element. I did this way to reduce the
->>>>>>>>> redundant code to read all the gts which has same way of storing the data
->>>>>>>>> from the device tree. I will add comments here in the next series.
->>>>>>>>
->>>>>>>> Please rewrite this in a cleaner way. The code shouldn't raise
->>>>>>>> questions.
->>>>>>>>
->>>>>>>>>>> +                      *preset = temp;
->>>>>>>>>>> +              }
->>>>>>>>>>> +      }
->>>>>>>>>>> +
->>>>>>>>>>> +      return 0;
->>>>>>>>>>> +}
->>>>>>>>>>> +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
->>>>>>>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->>>>>>>>>>> index 14d00ce45bfa..82362d58bedc 100644
->>>>>>>>>>> --- a/drivers/pci/pci.h
->>>>>>>>>>> +++ b/drivers/pci/pci.h
->>>>>>>>>>> @@ -731,7 +731,12 @@ static inline u64 pci_rebar_size_to_bytes(int size)
->>>>>>>>>>>       }
->>>>>>>>>>>       struct device_node;
->>>>>>>>>>> -
->>>>>>>>>>> +struct pci_eq_presets {
->>>>>>>>>>> +      void *eq_presets_8gts;
->>>>>>>>>>> +      void *eq_presets_16gts;
->>>>>>>>>>> +      void *eq_presets_32gts;
->>>>>>>>>>> +      void *eq_presets_64gts;
->>>>>>>>>>
->>>>>>>>>> Why are all of those void*? 8gts is u16*, all other are u8*.
->>>>>>>>>>
->>>>>>>>> To have common parsing logic I moved them to void*, as these are pointers
->>>>>>>>> actual memory is allocated by of_pci_get_equalization_presets()
->>>>>>>>> based upon the gts these should not give any issues.
->>>>>>>>
->>>>>>>> Please, don't. They have types. void pointers are for the opaque data.
->>>>>>>>
->>>>>>> ok.
->>>>>>>
->>>>>>> I think then better to use v1 patch
->>>>>>> https://lore.kernel.org/all/20241116-presets-v1-2-878a837a4fee@quicinc.com/
->>>>>>>
->>>>>>> konrad, any objection on using v1 as that will be cleaner way even if we
->>>>>>> have some repetitive code.
->>>>>>
->>>>>> Konrad had a nice suggestion about using the array of values. Please use
->>>>>> such an array for 16gts and above. This removes most of repetitive code.
->>>>>>
->>>>> I don't feel having array in the preset structure looks good, I have
->>>>> come up with this logic if you feel it is not so good I will go to the
->>>>> suggested way by having array for 16gts and above.
->>>>>
->>>>>          if (of_property_present(dev->of_node, "eq-presets-8gts")) {
->>>>>                   presets->eq_presets_8gts = devm_kzalloc(dev, sizeof(u16) *
->>>>> num_lanes, GFP_KERNEL);
->>>>>                   if (!presets->eq_presets_8gts)
->>>>>                           return -ENOMEM;
->>>>>
->>>>>                   ret = of_property_read_u16_array(dev->of_node,
->>>>> "eq-presets-8gts",
->>>>>
->>>>> presets->eq_presets_8gts, num_lanes);
->>>>>                   if (ret) {
->>>>>                           dev_err(dev, "Error reading eq-presets-8gts %d\n",
->>>>> ret);
->>>>>                           return ret;
->>>>>                   }
->>>>>           }
->>>>>
->>>>>           for (int i = EQ_PRESET_TYPE_16GTS; i < EQ_PRESET_TYPE_64GTS; i++) {
->>>>>                   snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << i);
->>>>>                   if (of_property_present(dev->of_node, name)) {
->>>>>                           temp = devm_kzalloc(dev, sizeof(u8) * num_lanes,
->>>>> GFP_KERNEL);
->>>>>                           if (!temp)
->>>>>                                   return -ENOMEM;
->>>>>
->>>>>                           ret = of_property_read_u8_array(dev->of_node, name,
->>>>>                                                           temp, num_lanes);
->>>>>                           if (ret) {
->>>>>                                   dev_err(dev, "Error %s %d\n", name, ret);
->>>>>                                   return ret;
->>>>>                           }
->>>>>
->>>>>                           switch (i) {
->>>>>                                   case EQ_PRESET_TYPE_16GTS:
->>>>>                                           presets->eq_presets_16gts = temp;
->>>>>                                           break;
->>>>>                                   case EQ_PRESET_TYPE_32GTS:
->>>>>                                           presets->eq_presets_32gts = temp;
->>>>>                                           break;
->>>>>                                   case EQ_PRESET_TYPE_64GTS:
->>>>>                                           presets->eq_presets_64gts = temp;
->>>>>                                           break;
->>>>>                           }
->>>>
->>>> This looks like 'presets->eq_presets[i] = temp;', but I won't insist on
->>>> that.
->>>>
->>>> Also, a strange thought came to my mind: we know that there won't be
->>>> more than 16 lanes. Can we have the following structure instead:
->>>>
->>>> #define MAX_LANES 16
->>>> enum pcie_gts {
->>>>        PCIE_GTS_16GTS,
->>>>        PCIE_GTS_32GTS,
->>>>        PCIE_GTS_64GTS,
->>>>        PCIE_GTS_MAX,
->>>> };
->>>> struct pci_eq_presets {
->>>>        u16 eq_presets_8gts[MAX_LANES];
->>>>        u8 eq_presets_Ngts[PCIE_GTS_MAX][MAX_LANES];
->>>> };
->>>>
->>>> This should allow you to drop the of_property_present() and
->>>> devm_kzalloc(). Just read DT data into a corresponding array.
->>>>
->>> in the dwc driver patch I was using pointers and memory allocation
->>> to known if the property is present or not. If I use this way I might
->>> end up reading dt property again.
+On 12/30/2024 8:34 PM, Konrad Dybcio wrote:
+> On 24.12.2024 3:10 PM, Krishna Chaitanya Chundru wrote:
+>> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 >>
->> Add foo_valid flags to the struct.
-> 
-> Some(u8)/None would be fitting, but we're not there yet :(
-> 
-> Are all 0x00-0xff(ff) values valid for these presets?
-> 
-currently 0xff are reserved not sure in future PCIe spec data rates
-can use it or not.
+>> The current implementation requires iATU for every configuration
+>> space access which increases latency & cpu utilization.
+>>
+>> Designware databook 5.20a, section 3.10.10.3 says about CFG Shift Feature,
+>> which shifts/maps the BDF (bits [31:16] of the third header DWORD, which
+>> would be matched against the Base and Limit addresses) of the incoming
+>> CfgRd0/CfgWr0 down to bits[27:12]of the translated address.
+>>
+>> Configuring iATU in config shift feature enables ECAM feature to access the
+>> config space, which avoids iATU configuration for every config access.
+>>
+>> Add "ctrl2" into struct dw_pcie_ob_atu_cfg  to enable config shift feature.
+>>
+>> As DBI comes under config space, this avoids remapping of DBI space
+>> separately. Instead, it uses the mapped config space address returned from
+>> ECAM initialization. Change the order of dw_pcie_get_resources() execution
+>> to achieve this.
+>>
+>> Enable the ECAM feature if the config space size is equal to size required
+>> to represent number of buses in the bus range property, add a function
+>> which checks this. The DWC glue drivers uses this function and decide to
+>> enable ECAM mode or not.
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig                |   1 +
+>>   drivers/pci/controller/dwc/pcie-designware-host.c | 136 +++++++++++++++++++---
+>>   drivers/pci/controller/dwc/pcie-designware.c      |   2 +-
+>>   drivers/pci/controller/dwc/pcie-designware.h      |  11 ++
+>>   4 files changed, 130 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index b6d6778b0698..73c3aed6b60a 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -9,6 +9,7 @@ config PCIE_DW
+>>   config PCIE_DW_HOST
+>>   	bool
+>>   	select PCIE_DW
+>> +	select PCI_HOST_COMMON
+>>   
+>>   config PCIE_DW_EP
+>>   	bool
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index d2291c3ceb8b..4e07fefe12e1 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -418,6 +418,61 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
+>>   	}
+>>   }
+>>   
+>> +static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	struct dw_pcie_ob_atu_cfg atu = {0};
+>> +	struct resource_entry *bus;
+>> +	int ret, bus_range_max;
+> resource_size_t for bus_range_max since you feed it the ouput of
+> resource_size()
+>
+>> +
+>> +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
+>> +
+>> +	/*
+>> +	 * Root bus under the root port doesn't require any iATU configuration
+>> +	 * as DBI space will represent Root bus configuration space.
+>> +	 * Immediate bus under Root Bus, needs type 0 iATU configuration and
+>> +	 * remaining buses need type 1 iATU configuration.
+>> +	 */
+>> +	atu.index = 0;
+>> +	atu.type = PCIE_ATU_TYPE_CFG0;
+>> +	atu.cpu_addr = pp->cfg0_base + SZ_1M;
+>> +	atu.size = SZ_1M;
+>> +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
+>> +	ret = dw_pcie_prog_outbound_atu(pci, &atu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	bus_range_max = resource_size(bus->res);
+>> +
+>> +	/* Configure remaining buses in type 1 iATU configuration */
+>> +	atu.index = 1;
+>> +	atu.type = PCIE_ATU_TYPE_CFG1;
+>> +	atu.cpu_addr = pp->cfg0_base + SZ_2M;
+>> +	atu.size = (SZ_1M * (bus_range_max - 2));
+> This explodes badly with:
+>
+> bus-range = <0 0>;
+
+The bus range = <0 0> is not a valid configuration but with bus-range = 
+<0 1> it will
+
+be a issue I will update the logic next series, thanks for pointing it out.
 
 - Krishna Chaitanya.
->>>   I think better to switch to have a
->>> array for above 16gts.
->>
->> Whichever way works for you.
-> 
-> Sorta-answering the earlier email, I have no concerns either
-> 
+
+>
+>> +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
+>> +	return dw_pcie_prog_outbound_atu(pci, &atu);
+> A newline before the return statement would make it prettier
+>
+> [...]
+>
+>> +bool dw_pcie_ecam_supported(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	struct platform_device *pdev = to_platform_device(pci->dev);
+>> +	struct resource *config_res, *bus_range;
+>> +	u64 bus_config_space_count;
+>> +
+>> +	bus_range = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
+>> +	if (!bus_range)
+>> +		return false;
+>> +
+>> +	config_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+>> +	if (!config_res)
+>> +		return false;
+>> +
+>> +	bus_config_space_count = resource_size(config_res) >> PCIE_ECAM_BUS_SHIFT;
+>> +	if (resource_size(bus_range) > bus_config_space_count)
+>> +		return false;
+>> +
+>> +	return true;
+> return bus_config_space_count <= resource_size(bus_range);
+>
 > Konrad
 
