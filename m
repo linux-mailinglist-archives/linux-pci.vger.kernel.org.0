@@ -1,94 +1,124 @@
-Return-Path: <linux-pci+bounces-19117-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19118-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C10B9FEF14
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 12:26:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFB399FEF6D
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 14:02:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F069188317A
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 11:26:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC2AF3A2DDF
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 13:02:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAED2192590;
-	Tue, 31 Dec 2024 11:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9599019CC3C;
+	Tue, 31 Dec 2024 13:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oofNmexe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EjNFVd56"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E3618FDC8;
-	Tue, 31 Dec 2024 11:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092C438382
+	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 13:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735644408; cv=none; b=dG/GLrzBI23PkyKVZaiVpIPuxgvxCTTckM7IwVwsQfEplVAG7qIZkQl3ExcJpi3RydCG1U1PmAJvsMJ1TNh6N7lWqcJmyWeNbLZMZ/FVVcQ+DwfabASAcqFeyl9Pyw7Qi8ZVwH3T76Hm3FddXLcnd2J1W18TxSbogYGWTuzANDY=
+	t=1735650158; cv=none; b=XNgSPXGEFQ3JYOcmjv58QctQQHS+v5pXonT3230W3ZVPhdU4Pc0hqjdWvfD+bhX+vZidPGRu6no3kHlhK2C0Jm7tnC46a3JsAcXWGPxz7Y+K12cllOrTpPhn8rMmhYtZcIzXihnbil1ohsVjoS/8mLBliHKECA7jqRm79hyGUnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735644408; c=relaxed/simple;
-	bh=7I691cikO6+2ya29OQVC4BNPWfPNDEUQc7RUJdpNRnc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZzFA3nUKF4uRtrGPEvfJsfklYv00Wy6isZW2GUzUnvY1IT4oBGGVkLu9/8RmG2occEgntSvq+9MEe0LebUoLKe6L1VHj3Onnna+MQCzbPE8PcxQjSSJ1VphiHtYmOiHEpM7MfCraTXBF/kJBPBSyxaWMR6BitcQQRsk6/LEqHCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oofNmexe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B60D9C4CED2;
-	Tue, 31 Dec 2024 11:26:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735644408;
-	bh=7I691cikO6+2ya29OQVC4BNPWfPNDEUQc7RUJdpNRnc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oofNmexejOf6DtzMHzSm5/hhVPLO7oTwCu/lgM+pv7g4ZVjowqJTNbsOrLTxkNIHK
-	 yEDDjgEvZoTC0YIXCLRV8BdTK2NbXvES1qMZ8TBiP2LPYJYqBO2uJ89NTVFbzEl1uV
-	 eYe8zvkNWHwKOTj+IVHu68YjVv18a6o1vduIRADkkgDL5bC1ez/hDfBMmDPu3ffpSn
-	 UOW6/420rP7TrrAoS2QCx731qGe4ohJkn/uGfFH/UTt1UMoeFzeautXULGB0UneWWI
-	 Z3XqzxY2a87O0mdC4bCEdAQczTdSQafRh4KLfmGB7XSt+7vMcK24BExheL4o1CabOg
-	 g7nbKh8UChVnQ==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Anand Moon <linux.amoon@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
+	s=arc-20240116; t=1735650158; c=relaxed/simple;
+	bh=A2svREI4FIVJzkKEwefSXyU94tPzvmDtXnUwV8G8N/Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A1SgY5BG19JHNQ6NJvqhG2vbPwcV/7spub3rNRJx86HaBLfnmMeBbANUUdt1guWx0Sk6O5DDIDqVIEIfrgWwGVF7eFlX7S6nN1CYXA8jU9TSBAKe4SV0IhLhreATaOlqxNlKtEuJXB5sUd1OnG9ElxHCmLBhdmP99K5KBZmM0hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EjNFVd56; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2156e078563so115830555ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 05:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1735650155; x=1736254955; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pD++1f9rqBnGXBqsB0i/D/VQxXsfJ1lC64nLmc5hcVM=;
+        b=EjNFVd56Nz0mWf+vslEky5Oxlk1LYpK8TqT6Jz5+44DHaWdCNCH8UfhtsrRUsB49uw
+         2TCER7dtl9LbZ+WxRCt2Cg6du54DE1tQo/c4XGTe6EWEJbDIi4ir4qQLJJx6IfPknxT0
+         7uexokrY1RY1t2PhLsJjvLaK90amfBtvGQEoZHvKOgS+MfP5PDZIgglxJJZjtidwS322
+         YTBliw0WlSTMeejM/MZKEyEWDhQvzuZTs8o5cEopgOLNCA8pZ887feQr0oeHNiDSqFFv
+         JlCGH4L16XvezxFfoP4djSBlxsN/phKmE/dq6ZyFx9owc2XUfjkW9IbR/P3RclYluuLD
+         2crA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735650155; x=1736254955;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pD++1f9rqBnGXBqsB0i/D/VQxXsfJ1lC64nLmc5hcVM=;
+        b=Rdxn+w8kEqUS3EwstQOC9aNdSCihRN21T2wRnEPXMW5jkFmJhVUxYHlp9Z68e4XNxE
+         divMVFlYwWdjyvYGQ3c1mQTUWZ6SWOLucL604eKTwTbP+mQ3BC2lPoI7Xe/mFj5NKu/x
+         1aEmyKuMdg3v/bZRdl7LuoUDw8iEe+WbTTqxalvb+/sgN5yW61r7qhIPtayIwPMVEcMz
+         dqabubZxl0Ha/4iIEMH3eX+G4OjV0BsFrsYOz59pznlZRJByxljVhrtWuxe8K+L+n8g4
+         ueDn+U30sZJETaifv/CiXpwRNZnSqiGamEm5kLL52DwXcO03TbzGQ3jU1TfjG7NOMGC5
+         n01A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzmMQiC3DgT13Nyx7miMMQClJxoiovWEhcAu5vYqhnBBx5sfxeyIv44S8cnBzgAIykAph6nhZswiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx22IBAqNuina/UIRKCPATmjGMqF1FTeHqQKG5Jkj4bAhK/KkzP
+	f1gBg0W6vnHr/HD8RB/qx3bg/QKxfVN2xTvPJ1AlP6LPhl+e0A6JdtnseYn2XA==
+X-Gm-Gg: ASbGncv6c0g35HUtSo9Kuxfu3kMHP/mJjqkDxFKSaIu7XiY/SogPTqswtPYOIsw9lY/
+	hYS5+n2dEWVu4FH9hpxwMoPjD4LNAwRX3bPiOjSQsp0Z9S7c2IzRlynekr7uSEJOV2h6q5vUMF5
+	c7hhh3+2JylMCJYUn1v+wPGlHn1CUzoGUm5Qm2OVGGp8qzaXHN1iXA8ppmQocTBwcfpE8QTId22
+	qVsYmSIunFa0+8U9fqf1mDRc8A/LWZxb99L0CPLd3o7yj+tW38mPcY6MSkQoujh/5Xt/6UZiJMd
+	18xon0VkRXs=
+X-Google-Smtp-Source: AGHT+IHskOPLWYz3FbdcCRFskO3yH92w/nP2ktKNyWbNAAQ2+U5M+AnqRVc9v6tod88isaSxH0Z6dg==
+X-Received: by 2002:a17:902:d582:b0:216:282d:c68c with SMTP id d9443c01a7336-219e6e9dff9mr595650485ad.23.1735650154344;
+        Tue, 31 Dec 2024 05:02:34 -0800 (PST)
+Received: from localhost.localdomain ([117.193.213.202])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9d945csm194514275ad.117.2024.12.31.05.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2024 05:02:33 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 1/3] PCI: rockchip: Simplify clock handling by using clk_bulk*() function
-Date: Tue, 31 Dec 2024 12:26:39 +0100
-Message-ID: <173564436965.205920.13726972992693707050.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241202151150.7393-2-linux.amoon@gmail.com>
-References: <20241202151150.7393-1-linux.amoon@gmail.com> <20241202151150.7393-2-linux.amoon@gmail.com>
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] PCI: qcom-ep: BAR fixes
+Date: Tue, 31 Dec 2024 18:32:22 +0530
+Message-Id: <20241231130224.38206-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Dec 2024 20:41:42 +0530, Anand Moon wrote:
-> Currently, the driver acquires clks and prepare enable/disable unprepare
-> the clks individually thereby making the driver complex to read.
-> But this can be simplified by using the clk_bulk*() APIs.
-> Use devm_clk_bulk_get_all() API to acquire all the clks and use
-> clk_bulk_prepare_enable() to prepare enable clks
-> and clk_bulk_disable_unprepare() APIs disable unprepare them in bulk.
-> 
-> [...]
+Hi,
 
-Applied to controller/rockchip, thanks!
+This series has a couple of fixes for Qcom PCIe endpoint controller. The dts
+patch fixes the size of the 'addr_space' regions that allows the endpoint
+drivers to request and map BARs of size >= 1MB. The driver patch marks BAR0/BAR2
+as 64bit BARs.
 
-[1/3] PCI: rockchip: Simplify clock handling by using clk_bulk*() function
-      https://git.kernel.org/pci/pci/c/fa0ce454cd4e
-[2/3] PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function
-      https://git.kernel.org/pci/pci/c/853c711e2caf
-[3/3] PCI: rockchip: Refactor rockchip_pcie_disable_clocks() function signature
-      https://git.kernel.org/pci/pci/c/8261bf695c47
+Previously, this series was part of the Kselftest series [1]. But submitting
+separately as these are independent fixes anyway.
 
-Thanks,
-Lorenzo
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/20241211080105.11104-1-manivannan.sadhasivam@linaro.org/
+
+Manivannan Sadhasivam (2):
+  arm64: dts: qcom: sa8775p: Fix the size of 'addr_space' regions
+  PCI: qcom-ep: Mark BAR0/BAR2 as 64bit BARs and BAR1/BAR3 as RESERVED
+
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi     | 4 ++--
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+-- 
+2.25.1
+
 
