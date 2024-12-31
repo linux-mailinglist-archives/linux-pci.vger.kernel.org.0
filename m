@@ -1,144 +1,217 @@
-Return-Path: <linux-pci+bounces-19128-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19129-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C436D9FF06A
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 16:52:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D479FF078
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 17:07:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F18473A0685
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 15:52:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B7C0188240E
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 16:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89EC5137923;
-	Tue, 31 Dec 2024 15:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703F617ADE8;
+	Tue, 31 Dec 2024 16:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qU+8xEGF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AZnpajFo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40311C683
-	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 15:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8329276035
+	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 16:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735660327; cv=none; b=cj/OOVWdObk7QCsk6dYD5r8oCFkGLDcPrmfLXhr8Iq6/j7GAzsKToPJqusbYSwZ6vft+iQMQe9FTNfJqIbjU1o+PR/luEW1Ju47cvko0Z2YjSC7NFfwo812/uX3ESrr4K5EjMdegZC2nOJA8giyvVhn0wf856N1VIgNNPL/5EuY=
+	t=1735661261; cv=none; b=Pr7GJYgA4DWIKYydkyAGsiLQZpys8b0/3fR9zr/SOsN1j0wfEqml3p+mDlOjGayvZ0pR5CMlVRwprf9YE32nCt40bwdXAp3kcAj0EFb4BSRZuIcQCi8xUL3AJ5cRImiuznyIG6l1lfydeRZJMbeEw8ZkYunOvKXmH0O73jAYVvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735660327; c=relaxed/simple;
-	bh=o/gUTWYn4zL8vZs1eQPLpSfuSLy4PH3XIgBvJWqf00A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ou0o/Dyx3G8zloBFACGnG8LA/LHwnB2I5BTBlxUgGk0/7OMTviDgNhQVJFQAN0E8SHtggOzrvhk0HKrXVpLZjOGbM9sxHA0cQUDdHv47iwgI38NDky7TkiMMBZnS/J2YidmWVlKLZ95m9E2lj3ohg0OOKWgm/Te7eyTfiWlQIGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qU+8xEGF; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21675fd60feso177616445ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 07:52:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735660325; x=1736265125; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=R7jrbYeg74O76BQKe1PxZ80+Q7guLGYsTWpYCdBdtVE=;
-        b=qU+8xEGF8eJdn7qZNoCSszOHRds87gA9FmXL3PC8hABTQUgD+c/HJIAHOykN3oFVv1
-         yWiwDiJCC1w2ky0T8bPW+CmhbLZUYg0rnMSpxxI9XdG3Hj9E5IypKKcgQvq8PVH+R24s
-         yuLOE+YWg+SOSHqXacYfhLOz/2hEOqylZ58y5WBBJ6HfUm2qVzMcrFs9Zoy62aBaZFKo
-         jNIZzVWlmc8s6Ko3bqdOKWe4nIMrJW4oxSpiUopv2PWx3TeRcMpuMKODnnI0g1E7Lb2Q
-         N7ZMngv79jO9ynOHQ475uYszJgJyYL2rkcNht+nPFvAH+mIku9UN74L6RdketXTqS0Ej
-         K9Bw==
+	s=arc-20240116; t=1735661261; c=relaxed/simple;
+	bh=6Zmla0LVyTncR3/v9mqhQIHU8lTg7K5Gahp1bf0CymQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ahbMnSk9YhgGohQQRvdNVEACdkmPj/f+9CVxukBPAV92mnQOY2Og9pvKk5e9sc+VLSuUhrdnIvy0N8Xicy0pUUqpmredkdVzQ1ZQbola2UKIv8AuCaslH6x9MzIsI2xFhc3lcFhvFYdNy04pxeMGZvZSJ/LqDAGS8DMIvrUgEuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AZnpajFo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1735661258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BjCxAz/SLu3yTa+rxUG3pUgBMnmOle1zayM2SEx7fQ4=;
+	b=AZnpajFoJPCFBDgdV41ceswlsz/JDqZ2OxZJVUfod1N2t2sbqTuUv4eb20HlT3MAr0yNya
+	JgFfABmWhRERx8yVC9rKOUOLNV0AgWNmfTuXZruXiac4iDIzdQSdMNOn9IrU48D1HjEdIO
+	t1+C8WvRA0t+2AKUz6J3D0bh8GvOV8o=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-210-vA5_-qTnOKaUBjOCbj3GkQ-1; Tue, 31 Dec 2024 11:07:37 -0500
+X-MC-Unique: vA5_-qTnOKaUBjOCbj3GkQ-1
+X-Mimecast-MFC-AGG-ID: vA5_-qTnOKaUBjOCbj3GkQ
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a78fc19e2aso11726885ab.3
+        for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 08:07:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735660325; x=1736265125;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R7jrbYeg74O76BQKe1PxZ80+Q7guLGYsTWpYCdBdtVE=;
-        b=mYqWgE0U0G+de4Fw6GSn4mZN3BM2nz8zyE7q5BwYWpGr0XvLsF+0qBeJ9ECGJDn0Zt
-         ZSsAoD34yHb3om1AqWZCxXmFWZrlLMI2WFRIMJBaqPwaju2FkSJHC9DKDTswX9SysNti
-         qFF5GF5XwzD4pKDnnPmg2xQcR4byMKG0t6TC4yJNwQ4iiraY6Aahy6mGbPFY9FWzgYEw
-         yFONrClt0f5nF5hri6r1d7uKQqNgxOrzdSgywpcAjLxmzNcdR0F+g5oDprlpwILRuQbE
-         kuhZc/kIAoCCP38YQTwESF7RTv0iGq/Iv7Lu7xZzUzC4TAr9gs6gNvrC7GUthdamxbdH
-         3N1w==
-X-Forwarded-Encrypted: i=1; AJvYcCX4MPuh//z2EMv5XMIspK8QDHfxOEvMVykUFvhgQMgrMpR15SUT7n2BiJVPr89y40Q8Ib9xulJ/VgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR7S+kkonm0Gj9/AM1krcRNT8O6BD67pqUwkKIaO4OFs4jM7P3
-	R6tj+uVmdwYK9patus4dUrUBMKw1UbR+qFA04BaLrn5q+19Cq3zdzvGvEUQ9Ig==
-X-Gm-Gg: ASbGnctPPtTp19g/nsoul1NiMcxxXMJgutaRdr1k9+ekabTXAP0h9mhNVNh2fZw658c
-	lZ8r/ZnPxnEBWZH+pbawWeeGDy3ZZIr7rstE1ES3DQcqA/1odlqo1ifvc0yRcmkGZftjW1C9D9G
-	mS6NX9coFBjFZUWeVXfmOL/WfRCYpB/sHiUHNlnHTrJlgF2PK+yyiN/zKadGX++RXd7Adxm9luc
-	Cg/gmQmVRJENPe80h6gA7a96rXQvwePsUjbrzmxHCcShxUCAeCyraSX0211JMuwF3iAHw==
-X-Google-Smtp-Source: AGHT+IFJeQNTjSu3Tcy/d88RjR9p6E9hlISKh3WQsLCSC/mh+dyJ/5a2OucJMHL4MATDy3MwYLUUmg==
-X-Received: by 2002:a05:6a00:914b:b0:72a:bcc2:7748 with SMTP id d2e1a72fcca58-72abdbde4acmr46615146b3a.0.1735660325290;
-        Tue, 31 Dec 2024 07:52:05 -0800 (PST)
-Received: from thinkpad ([117.193.213.202])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8162efsm21694516b3a.25.2024.12.31.07.52.02
+        d=1e100.net; s=20230601; t=1735661256; x=1736266056;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BjCxAz/SLu3yTa+rxUG3pUgBMnmOle1zayM2SEx7fQ4=;
+        b=M6VYPs/eGKuurOkljNxMbF/EMgSCz+fKU0KB6pzt3u8JPjdN4VpI4a5K3yyrx9KHte
+         kdopTOYvARrQ6DqbwxRxbUcIM/ql6B2TYDgqJ9IDY+PyItTsS5YW2Nl+UOWUbppoNQl4
+         4YF81+/cFt8Kbsb3zkdMshmbU5Gy2Q/lGZtrD+FCG6XAQsYcBk5HpPP8w8t/R/0Hzx1V
+         LOlxr+CnyygG7EdTuUfEgKAJnFO/oz27SgGI/Qxr5o4rJOK+mQLm1hbfNCAx0NJHeZcu
+         fwqGtTUrNXqTmARacB5Pmsm0GPXHEN9+4AWVjRvgnhaMupAr6s2CVF4z86kbgQncq8xo
+         pD1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUZIweCYGHoPgOj+qAXRe1JSpg0wY9R8cK2pQFlQOmP2c+kdxRJ04icFZBgRlnqTNgccNpgU6VB9w4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpkc0uKupzXvpIaZc8cD7gTBf7IN9NyVTMtB5v/KcM6LQvhI8p
+	ZEfinV44IbAgipjTsh5/42zcYxw7+KDzVWT5oCeSc7iCqNsvG/A19ShjzcYyK951wDleSuSnNw9
+	B+yWunsdqHq40Ar+Epg4Tp2JBtb25ZnUMwdR4xXAiSLyFtB43cLjVmyeP1w==
+X-Gm-Gg: ASbGnctM+Q6aTcJ0mxFdoIZa/7gWCaPT3/7C8iBB2g4ODW7iTTw+yuMTYMlRdvL4tAk
+	xn1gXIkxEjTaNYLZUMmPVot6JMjigoS2DoZV4b6fmgyl2s7gPsSmXkHKcn+s2mhZcPCgh7Luipp
+	cTEsWau75hjygeZljvQtiVPip1krADkJucgvghAJdyIiVpLgFoWZenuH5L3yzKQnyHfanA3ZORP
+	xsVJNZf2HClbXudhyIfyuBzrsKUGTyGi0dR8c0mU7OjKSv8ohbD3RsEuLYO
+X-Received: by 2002:a05:6e02:1c81:b0:3a7:bd4c:b17e with SMTP id e9e14a558f8ab-3c2cbd89eedmr95086555ab.0.1735661256343;
+        Tue, 31 Dec 2024 08:07:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGMDJl87fngylKomV7UV+zvAJP64mA5EIAts1gnV02QFp9Ynw1i2pTj7v8/N5Bcv/u7RWxG+g==
+X-Received: by 2002:a05:6e02:1c81:b0:3a7:bd4c:b17e with SMTP id e9e14a558f8ab-3c2cbd89eedmr95086375ab.0.1735661255788;
+        Tue, 31 Dec 2024 08:07:35 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68c1dab95sm6152786173.123.2024.12.31.08.07.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2024 07:52:04 -0800 (PST)
-Date: Tue, 31 Dec 2024 21:21:58 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: Reject a negative nr_irqs value in
- dw_pcie_edma_irq_verify()
-Message-ID: <20241231155158.5edodo2r5zar3tfe@thinkpad>
-References: <20241220072328.351329-2-cassel@kernel.org>
+        Tue, 31 Dec 2024 08:07:35 -0800 (PST)
+Date: Tue, 31 Dec 2024 09:07:33 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Precific <precification@posteo.de>
+Cc: Peter Xu <peterx@redhat.com>, Athul Krishna
+ <athul.krishna.kr@protonmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Linux PCI
+ <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
+ graphics artifacts after 6.12 kernel upgrade]
+Message-ID: <20241231090733.5cc5504a.alex.williamson@redhat.com>
+In-Reply-To: <bba03a61-9504-40d0-9b2c-115b4f70e8ca@posteo.de>
+References: <20241222223604.GA3735586@bhelgaas>
+	<Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
+	<Z2mW2k8GfP7S0c5M@x1n>
+	<16ea1922-c9ce-4d73-b9b6-8365ca3fcf32@posteo.de>
+	<20241230182737.154cd33a.alex.williamson@redhat.com>
+	<bba03a61-9504-40d0-9b2c-115b4f70e8ca@posteo.de>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241220072328.351329-2-cassel@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 20, 2024 at 08:23:29AM +0100, Niklas Cassel wrote:
-> Platforms that do not have (one or more) dedicated IRQs for the eDMA
-> need to set nr_irqs to a non-zero value in their DWC glue driver.
-> 
-> Platforms that do have (one or more) dedicated IRQs do not need to
-> initialize nr_irqs. DWC common code will automatically set nr_irqs.
-> 
-> Since a glue driver can initialize nr_irqs, dw_pcie_edma_irq_verify()
-> should verify that nr_irqs, if non-zero, is a valid value. Thus, add a
-> check in dw_pcie_edma_irq_verify() to reject a negative nr_irqs value.
-> 
+On Tue, 31 Dec 2024 15:44:13 +0000
+Precific <precification@posteo.de> wrote:
 
-Why can't we make dw_edma_chip::nr_irqs unsigned?
+> On 31.12.24 02:27, Alex Williamson wrote:
+> > On Mon, 30 Dec 2024 21:03:30 +0000
+> > Precific <precification@posteo.de> wrote:
+> >   
+> >> In my case, commenting out (1) the huge_fault callback assignment from
+> >> f9e54c3a2f5b suffices for GPU initialization in the guest, even if (2)
+> >> the 'install everything' loop is still removed.
+> >>
+> >> I have uploaded host kernel logs with vfio-pci-core debugging enabled
+> >> (one log with stock sources, one large log with vfio-pci-core's
+> >> huge_fault handler patched out):
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=219619#c1
+> >> I'm not sure if the logs of handled faults say much about what
+> >> specifically goes wrong here, though.
+> >>
+> >> The dmesg portion attached to my mail is of a Linux guest failing to
+> >> initialize the GPU (BAR 0 size 16GB with 12GB of VRAM).  
+> > 
+> > Thanks for the logs with debugging enabled.  Would you be able to
+> > repeat the test with QEMU 9.2?  There's a patch in there that aligns
+> > the mmaps, which should avoid mixing 1G and 2MB pages for huge faults.
+> > With this you should only see order 18 mappings for BAR0.
+> > 
+> > Also, in a different direction, it would be interesting to run tests
+> > disabling 1G huge pages and 2MB huge pages independently.  The
+> > following would disable 1G pages:
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> > index 1ab58da9f38a..dd3b748f9d33 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -1684,7 +1684,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+> >   							     PFN_DEV), false);
+> >   		break;
+> >   #endif
+> > -#ifdef CONFIG_ARCH_SUPPORTS_PUD_PFNMAP
+> > +#if 0
+> >   	case PUD_ORDER:
+> >   		ret = vmf_insert_pfn_pud(vmf, __pfn_to_pfn_t(pfn + pgoff,
+> >   							     PFN_DEV), false);
+> > 
+> > This should disable 2M pages:
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> > index 1ab58da9f38a..d7dd359e19bb 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -1678,7 +1678,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+> >   	case 0:
+> >   		ret = vmf_insert_pfn(vma, vmf->address, pfn + pgoff);
+> >   		break;
+> > -#ifdef CONFIG_ARCH_SUPPORTS_PMD_PFNMAP
+> > +#if 0
+> >   	case PMD_ORDER:
+> >   		ret = vmf_insert_pfn_pmd(vmf, __pfn_to_pfn_t(pfn + pgoff,
+> >   							     PFN_DEV), false);
+> > 
+> > And applying both together should be functionally equivalent to
+> > pre-v6.12.  Thanks,
+> > 
+> > Alex
+> >   
+> 
+> Logs with QEMU 9.1.2 vs. 9.2.0, all huge_page sizes/1G only/2M only: 
+> https://bugzilla.kernel.org/show_bug.cgi?id=219619#c3
+> 
+> You're right, I was still using QEMU 9.1.2. With 9.2.0, the 
+> passed-through GPU works fine indeed with both Linux and Windows guests.
+> 
+> The huge_fault calls are aligned nicely with QEMU 9.2.0. Only the lower 
+> 16MB of BAR 0 see repeated calls at 2M/4K page sizes but no misalignment.
+> The QEMU 9.1.2 'stock' log shows a misalignment with 1G faults (order 
+> 18), e.g., huge_faulting 0x40000 pages at page offset 0 and later 
+> 0x4000. I'm not sure if that is a problem, or if the offsets are simply 
+> masked off to the correct alignment.
+> QEMU 9.1.2 also works with 1G pages disabled. Perhaps coincidentally, 
+> the offsets are aligned properly for order 9 (0x200 'page offset' 
+> increments) from what I've seen.
 
-- Mani
+Thank you so much for your testing, this is immensely helpful!  This
+all suggests to me we're dealing with an alignment issue for 1GB pages.
+We're getting 2MB alignment on the mmap by default, so that's working
+everywhere.  QEMU 9.2 provides us with proper 1GB alignment, but it
+seems we need to filter alignment more strictly when that's not present.
+Please give this a try with QEMU 9.1.x and an otherwise stock v6.12.x:
 
-> This fixes the following build warning when compiling with W=1:
-> 
-> drivers/pci/controller/dwc/pcie-designware.c: In function ‘dw_pcie_edma_detect’:
-> drivers/pci/controller/dwc/pcie-designware.c:989:50: warning: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Wformat-truncation=]
->   989 |                 snprintf(name, sizeof(name), "dma%d", pci->edma.nr_irqs);
->       |                                                  ^~
-> 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 3c683b6119c3..d7f695d5dbc4 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -978,6 +978,8 @@ static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
->  		return 0;
->  	else if (pci->edma.nr_irqs > 1)
->  		return pci->edma.nr_irqs != ch_cnt ? -EINVAL : 0;
-> +	else if (pci->edma.nr_irqs < 0)
-> +		return -EINVAL;
->  
->  	ret = platform_get_irq_byname_optional(pdev, "dma");
->  	if (ret > 0) {
-> -- 
-> 2.47.1
-> 
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 1ab58da9f38a..bdfdc8ee4c2b 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -1661,7 +1661,8 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+ 	unsigned long pfn, pgoff = vmf->pgoff - vma->vm_pgoff;
+ 	vm_fault_t ret = VM_FAULT_SIGBUS;
+ 
+-	if (order && (vmf->address & ((PAGE_SIZE << order) - 1) ||
++	if (order && (pgoff & ((1 << order) - 1) ||
++		      vmf->address & ((PAGE_SIZE << order) - 1) ||
+ 		      vmf->address + (PAGE_SIZE << order) > vma->vm_end)) {
+ 		ret = VM_FAULT_FALLBACK;
+ 		goto out;
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+Thanks,
+Alex
+
 
