@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-19114-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19115-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB619FEE79
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 10:44:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1311C9FEE81
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 10:44:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF6783A2AA2
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 09:44:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98DFF3A2D39
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 09:44:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A20BD195962;
-	Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A7F19ADB0;
+	Tue, 31 Dec 2024 09:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIhtr13R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tg3uclUb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599521925A6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84C5196D90;
 	Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735638254; cv=none; b=fQlD8M0dA9QJPBOv8m5TRTgZjOUPOrW5rZG2jPOjjhNUwgYePpoNOpMd7TOyT9KUXd5iv116tl9MtQ5mcaeB9znKAoKqrxRGTdMpBRFpN0a0D9QBg4ieUVXrltMDZM22JHZaiBYj9V6ZAikht6WrIOIYCWSFzXMuXW9XcyNWci4=
+	t=1735638254; cv=none; b=X1STClOovc0LEiXMuIf/gm5YjQJq9w9U9GrYRZbAd5gKdw5S3DzW/32WWu8BJnSjcUxjcIe8zlonA/hxDMszJ58+YYcZEr7XNF0SAamhu5JOf0JR/qNb7IG75/lbovmkl/7Q3DSGKF8nr4DJvpA5S6uK4oPO1q/yZEgsv01McPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1735638254; c=relaxed/simple;
-	bh=I85exvHlAdHCyIBwyyJVeayckDAvYb7ppB240+u+sv0=;
+	bh=EmN4Jn2rIvX97LgY0ou3YPQGNYpXchenEI59Nhj03LU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TvlN5cLpuwxOQJMPaNReKW6C+g1UlvMS1y4aSk1ssWq0CWwEaYBj8vPvUsD1bjf2iVVm4dKnr6DbWtQaVTeZ30KOPeVzcRfX9eVFqEJl6TOn7K2XnPPY5WWepV2xB+GpaF6bGFhd8sqrW/2/0rYnHCeHMqZlLL2dRpj9FmQ+0IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIhtr13R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0FB83C4CEE1;
+	 In-Reply-To:To:Cc; b=JVhk0eNyPF3sHDWkfeO7uLa47FESR8zigNEEdhGlKgDK2PLOgWZ6RTee+T5Vy2TKA8009R+/lEeIm8e8EkqL35kc8EOsth7fRJZGlCylTjrnwYKEKmXeyIx/m0NYO0+gbl8p6B2FbbeWndQf/WobEBQpITUBhOR7mgy5xZUPBYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tg3uclUb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2182BC4CEE6;
 	Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1735638254;
-	bh=I85exvHlAdHCyIBwyyJVeayckDAvYb7ppB240+u+sv0=;
+	bh=EmN4Jn2rIvX97LgY0ou3YPQGNYpXchenEI59Nhj03LU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=TIhtr13RstXyb56XfTTTu+LxMCmB14Y4yX9/IxxWddXSl3kPmQmhDau/E5rRO17ca
-	 XXar4lI7l3ey9YoOrb8ttJNbZ48cFASvD28pkJNjxMAguwhoRxPOvXYhBr29IPKf6M
-	 EBGWrM6fSD3s+C1DcFTZAne98DZbS6v4bC5BYLVrf1J3kCHlNKeG8EnmLz8Mi21jFr
-	 UQd0Lrvh5gDqjWjpaJbA3lXUUklJdzDvjkW4KIeZfXFHgOj35jzWhvPKcpdk069neV
-	 G8mq5sIFemW39aulyIM2egOKZK44X4bDjOogefSS8E60I7vRw99I4TCfKoWoMIz8p3
-	 o5r5MTpV/2Ipw==
+	b=tg3uclUbsdQ2rvF1gDq962DdXJWsUR5eWkQoKINsvc45XAtFyj6m33jNXCO5zOrU8
+	 f2KuRYEuZ2uQQG5Gf++0KKXHXkfT8lmE8XxTqMvKrjA8LbO74tY8/3UC9+xIzCFSYb
+	 gSZIaSnjGZ3XMxptZmKAKcFVQ8cd2PYUf7V+durV+q/eOb3c7V9sbJ0ZNfw72duMAI
+	 puuDKzRTEjrrLjbbdOLp95HOec8Qp8apRFkLeW1S+zyMFq9wvub4/66iPMP59e62hV
+	 mVb5h/NnjCSM3aRAhKbwjVXGjZvQ7Vl71+MvQIbQFw1QZfU4XuFuPX3nBfTVlwYSCg
+	 yVow+gSbrL98w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08986E77188;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1570DE77194;
 	Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Tue, 31 Dec 2024 15:13:45 +0530
-Subject: [PATCH v2 4/6] PCI/pwrctrl: Skip scanning for the device further
- if pwrctrl device is created
+Date: Tue, 31 Dec 2024 15:13:46 +0530
+Subject: [PATCH v2 5/6] dt-bindings: vendor-prefixes: Document the
+ 'pciclass' prefix
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241231-pci-pwrctrl-slot-v2-4-6a15088ba541@linaro.org>
+Message-Id: <20241231-pci-pwrctrl-slot-v2-5-6a15088ba541@linaro.org>
 References: <20241231-pci-pwrctrl-slot-v2-0-6a15088ba541@linaro.org>
 In-Reply-To: <20241231-pci-pwrctrl-slot-v2-0-6a15088ba541@linaro.org>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -66,18 +66,19 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Qiang Yu <quic_qianyu@quicinc.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2479;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1265;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=ZL4/V6JFUdmO0YAXp+rd+0EQhZLXt3iJU/vJV6wd1WE=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnc7zreRTAGViodhIerB4qBU+JGtkIrfAxenxfp
- 1BjYCey/LCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ3O86wAKCRBVnxHm/pHO
- 9Xo5B/4k+7/RJtlU1DjUuo7dbArcYUOgE4GUwF22dv/aaIMygYddilkPq2OMFf+y/EGPrpqoXun
- LGMhs0Sj5Cqw2CY8wbsNpwU9RXLwfL9L66StOq7Koq3sbq2++3DwTKuSMD6wkZES6MeFT3YMVf3
- OM72sPqwIPIiW7MLDhvyCYWaylUX2Dc1pjTLndJ3Jiuphzk7PaVuGofY5EmKQ7MdWGhwKzdyP+v
- BvdSLJH7W6A+5eZ1vrUC8py6a2qsH+m7LJVpPkk0Y6yZ14UT2O0Eue1wJjPkABHxEDq18Sv3BtQ
- WW3CO76Fqxh1qREaveLfBycZMwv41a6FWwoGEWojQFOwnrvy
+ bh=2V7zx2KeHk/VkOVQ7/eUdxe/lfsvltP4xYw5h/bK3Jg=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnc7zrdciV1jQWsadhJ4t7js4Cn7Ak714NgV2do
+ SpaQY946HaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ3O86wAKCRBVnxHm/pHO
+ 9Ww/B/wNerD31lCjE4OJmIqxQWZOqcYw66Ta2d/3+wwFEIL6JD4t1JgG2jL4MpUM78L0AcQO1VD
+ ga8zNq0guDXRBO9DiyWZnziUcnARZccKeQ0uJD/Jtd937noG2D9fAld8rE9pePmYTCJLG821BO0
+ 4N0V/jwr2uE6kxDFFU5flAp/65B8TMAstqX8ztjzDclxDWsrd9kTcnaPeJmvHuxYBFT6ChUtswZ
+ H+1RImAANVNEIJfCP1UICzTDIoZDRE4qOAb2aUVTYAoDFdSh2oEtNv/FrGgWmMtuz0UYhux0e3C
+ CneMG3xbsj2tInJeElO3YgsFrFHMxHdaMAkQTa/4EWQDc3bM
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -87,77 +88,30 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-The pwrctrl core will rescan the bus once the device is powered on. So
-there is no need to continue scanning for the device further.
+'pciclass' is an existing prefix used to identify the PCI bridge devices,
+but it is not a vendor prefix. So document it in the non-vendor prefix
+list.
 
+Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/probe.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 91bdb2727c8e..6121f81f7c98 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2448,11 +2448,7 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
- }
- EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index da01616802c7..0539aea6af5a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -18,7 +18,7 @@ patternProperties:
+   # DO NOT ADD NEW PROPERTIES TO THIS LIST
+   "^(at25|bm|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-fan|gpio-key|gpio|gpmc|hdmi|i2c-gpio),.*": true
+   "^(keypad|m25p|max8952|max8997|max8998|mpmc),.*": true
+-  "^(pinctrl-single|#pinctrl-single|PowerPC),.*": true
++  "^(pciclass|pinctrl-single|#pinctrl-single|PowerPC),.*": true
+   "^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*": true
+   "^(simple-audio-card|st-plgpio|st-spics|ts),.*": true
  
--/*
-- * Create pwrctrl device (if required) for the PCI device to handle the power
-- * state.
-- */
--static void pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-+static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
- {
- 	struct pci_host_bridge *host = pci_find_host_bridge(bus);
- 	struct platform_device *pdev;
-@@ -2460,7 +2456,7 @@ static void pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
- 
- 	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
- 	if (!np || of_find_device_by_node(np))
--		return;
-+		return NULL;
- 
- 	/*
- 	 * First check whether the pwrctrl device really needs to be created or
-@@ -2469,13 +2465,17 @@ static void pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
- 	 */
- 	if (!of_pci_supply_present(np)) {
- 		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
--		return;
-+		return NULL;
- 	}
- 
- 	/* Now create the pwrctrl device */
- 	pdev = of_platform_device_create(np, NULL, &host->dev);
--	if (!pdev)
--		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for OF node: %s\n", np->name);
-+	if (!pdev) {
-+		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
-+		return NULL;
-+	}
-+
-+	return pdev;
- }
- 
- /*
-@@ -2487,7 +2487,14 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
- 	struct pci_dev *dev;
- 	u32 l;
- 
--	pci_pwrctrl_create_device(bus, devfn);
-+	/*
-+	 * Create pwrctrl device (if required) for the PCI device to handle the
-+	 * power state. If the pwrctrl device is created, then skip scanning
-+	 * further as the pwrctrl core will rescan the bus after powering on
-+	 * the device.
-+	 */
-+	if (pci_pwrctrl_create_device(bus, devfn))
-+		return NULL;
- 
- 	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, 60*1000))
- 		return NULL;
 
 -- 
 2.25.1
