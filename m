@@ -1,61 +1,59 @@
-Return-Path: <linux-pci+bounces-19132-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C3D39FF10F
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 18:42:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA01D9FF12B
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 19:13:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8516162300
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 17:42:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72C783A3331
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 18:13:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C1BC1ACED9;
-	Tue, 31 Dec 2024 17:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F149154430;
+	Tue, 31 Dec 2024 18:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JX8xeGoD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbwIvcTB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075661ACEB8;
-	Tue, 31 Dec 2024 17:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF1D29415
+	for <linux-pci@vger.kernel.org>; Tue, 31 Dec 2024 18:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735666969; cv=none; b=r5CrCeKZogWtWnZ+oq1POFJibrl47Zl3wIbo2f8JMIvCWoZ9mivRNQtnh6mWWEBPz/ltQRtZpViiXSG7QkBuJRPslHIYGx9RaSB3NXb91cVILbgV2Bc85uHcNxvUl3WC+w4F51QNst0qM+4Ea7A6iAh/Tug+WmdFjHhgveXxH3M=
+	t=1735668818; cv=none; b=OirnROfg2oFVLlYH4g/rs9pJhNXE/WyY4HSNLE9elFm1xqa+1e/zGrF+HN5mlsWqRG0SdEOZAveyjp7Kno8ouPCJKSClMnqoVRyDefLwB7GbC8JN+Kn4nRXR69SB7QoJl+FN6KidZG/YofXRpMY7WdprjZMj52vlF7h8j9UjUrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735666969; c=relaxed/simple;
-	bh=IEPX7dqSkzpod9dMPu+rnhC0mWcA4/iiEodsksuiqCU=;
+	s=arc-20240116; t=1735668818; c=relaxed/simple;
+	bh=kfVA9Fw+YAUQ75SJrC7MRF1gZanYOSfE6nQjpjVx+dM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GVma38P+JRj7KlbZ+GY4ld2WGQ22iRY60SswbFbr1vflDlOncA2zMVqFe/f0q+4XKvCFStZVUqG/w8GIM9R6OFDwEhESi8dmC/lpZjNJYQQYv2/Or86zGY1wgFT2i9CwUTPbkTrZCsogCK5NtMYS2e+ZsWh+Hi7xRRlwiJcMPwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JX8xeGoD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83F67C4CED2;
-	Tue, 31 Dec 2024 17:42:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=aWAsAh4DC+puv6jPXvDVtVF1TwBUwfzyzdLaGHGKs2zJVbaiSfY0dK06gTKwKcaENblNcwZoMS3ca8ni7JlpZQClThvOiHFm2T1RzfSohOYHXcJSCEVSzCRK5nGdDiX+MDLr5zQe8eZAb603iZ9/9zFPYoJm9OTRPFBHhNWGk68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbwIvcTB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E62C4CED2;
+	Tue, 31 Dec 2024 18:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735666968;
-	bh=IEPX7dqSkzpod9dMPu+rnhC0mWcA4/iiEodsksuiqCU=;
+	s=k20201202; t=1735668817;
+	bh=kfVA9Fw+YAUQ75SJrC7MRF1gZanYOSfE6nQjpjVx+dM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JX8xeGoDSvZfv/b1mgJdWDHuC1jVL0S58TE3mefqRsYxxuRueeNgPwT5uxpeSLx3/
-	 axwotL6kGCwe5/iXjLNNp0qsBgG+N3mhpycxPjOaxd0oGcvS/CpV7FKmGzBwN4iBru
-	 z08/PT48cN99ZeIeExHjA8rukXqLoycdGLOe+GWmQUOnjQPWmkcbYodEXvD8mp4p1Q
-	 qd2qrJ0JnMXCjVN7xbAt7EYqCkcVDakW+IXvymDtoMiubnvBJH3pqtc5r8GybpMsCS
-	 E41jsw4sCP9RcuLF+SPB+YpZ/R64DMRHv4mq26c5IzBIrjIR0Toats4Tt0GX87tjhF
-	 Zk8TNekZEZPiw==
-Date: Tue, 31 Dec 2024 18:42:42 +0100
+	b=RbwIvcTB1J/tsFtrwC3bM/PZFqsQAALjBPcwFoAxiToR42R6xo3PO0CnKzTfcQwd1
+	 D68aQoz8pK3IlbRSCc1j/2jL04Rh3jeNRGRvy6vogmamljiTgv5GsV7wpqIV5BAL8W
+	 Z4eBRzLpxShI23AJ4dqQVs515NwPe+D/jAAzUvlAKhUpEF8ZxTouUnFUGLCf/k90LC
+	 Oby2P1qo/PlBUqWm6kgtM3E5/isvdcXyfxKMqYHAZdvcGWRcMXPEq37xPQkpHr/VfC
+	 o7pXqrw2XqApZLTQfSz3OFBQ30HEWsdYXm4NyUfNddMEKTA1FxDLvKnqMXNSFOeZ5+
+	 9P0QwXG+r21gA==
+Date: Tue, 31 Dec 2024 19:13:33 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Aman Gupta <aman1.gupta@samsung.com>,
-	Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-Subject: Re: [PATCH v4 3/3] selftests: pci_endpoint: Migrate to Kselftest
- framework
-Message-ID: <Z3QtEihbiKIGogWA@ryzen>
-References: <20241231131341.39292-1-manivannan.sadhasivam@linaro.org>
- <20241231131341.39292-4-manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Reject a negative nr_irqs value in
+ dw_pcie_edma_irq_verify()
+Message-ID: <Z3Q0TY873woxmsEC@ryzen>
+References: <20241220072328.351329-2-cassel@kernel.org>
+ <20241231155158.5edodo2r5zar3tfe@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,75 +62,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241231131341.39292-4-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20241231155158.5edodo2r5zar3tfe@thinkpad>
 
-On Tue, Dec 31, 2024 at 06:43:41PM +0530, Manivannan Sadhasivam wrote:
+On Tue, Dec 31, 2024 at 09:21:58PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Dec 20, 2024 at 08:23:29AM +0100, Niklas Cassel wrote:
+> > Platforms that do not have (one or more) dedicated IRQs for the eDMA
+> > need to set nr_irqs to a non-zero value in their DWC glue driver.
+> > 
+> > Platforms that do have (one or more) dedicated IRQs do not need to
+> > initialize nr_irqs. DWC common code will automatically set nr_irqs.
+> > 
+> > Since a glue driver can initialize nr_irqs, dw_pcie_edma_irq_verify()
+> > should verify that nr_irqs, if non-zero, is a valid value. Thus, add a
+> > check in dw_pcie_edma_irq_verify() to reject a negative nr_irqs value.
+> > 
+> 
+> Why can't we make dw_edma_chip::nr_irqs unsigned?
 
-(...)
+dw_edma is defined in drivers/dma/dw-edma/dw-edma-core.h
+in struct dw_edma.
 
-> +	#  RUN           pci_ep_data_transfer.dma.COPY_TEST ...
-> +	#            OK  pci_ep_data_transfer.dma.COPY_TEST
-> +	ok 11 pci_ep_data_transfer.dma.COPY_TEST
-> +	# PASSED: 11 / 11 tests passed.
-> +	# Totals: pass:11 fail:0 xfail:0 xpass:0 skip:0 error:0
-> +
-> +
-> +Testcase 11 (pci_ep_data_transfer.dma.COPY_TEST) will fail for most of the DMA
-> +capable endpoint controllers due to the absence of the MEMCPY over DMA. For such
-> +controllers, it is advisable to skip the forementioned testcase using below
-> +command::
+struct dw_pcie (defined in drivers/pci/controller/dwc/pcie-designware.h)
+simply has a struct dw_edma as a struct member.
 
-Hm.. this is strictly not correct. If will currently fail because pci-epf-test.c
-does:
-if ((reg->flags & FLAG_USE_DMA) && epf_test->dma_private)
-	return -EINVAL;
+If you bounce on nr_irqs in:
+drivers/dma/dw-edma/dw-edma-core.c
+and in
+drivers/dma/dw-edma/dw-edma-pcie.c
+you can see that this driver uses signed int for this everywhere.
 
-So even if a DMA driver has support for the DMA_MEMCPY cap, if the DMA driver
-also has the DMA_PRIVATE cap, this test will fail because of the code in
-pci-epf-test.c.
-
-Not sure how to formulate this properly... Perhaps:
-Testcase 11 (pci_ep_data_transfer.dma.COPY_TEST) will fail for DMA drivers that
-have the DMA_PRIVATE cap set. For DMA drivers which have the DMA_PRIVATE cap
-set, it is advisable to skip the forementioned testcase using below command::
-
-> +
-> +	# pci_endpoint_test -f pci_ep_basic -v memcpy -T COPY_TEST -v dma
-
-Is this really correct? I would guess that it should be
-pci_endpoint_test -f pci_ep_data_transfer -v memcpy -T COPY_TEST -v dma
+I didn't feel like refactoring a whole DMA driver.
 
 
-(...)
+dw_pcie_edma_irq_verify() is supposed to verify that nr_irqs is either
+initialized to a valid value by a DWC PCIe glue driver, or that common
+code initializes it.
 
-> +TEST_F(pci_ep_basic, BAR_TEST)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i <= 5; i++) {
-> +		pci_ep_ioctl(PCITEST_BAR, i);
-> +		EXPECT_FALSE(ret) TH_LOG("Test failed for BAR%d", i);
-> +	}
-> +}
-
-From looking at this function, will we still be able to test a single BAR?
-Previous pcitest.c allowed us to do pcitest -b <barno> to only test a
-specific BAR. I think that is a useful feature that we shouldn't remove.
-
-It would be nice if we could do something like:
-# pci_endpoint_test -f pci_ep_basic -T BAR_TEST -v <barno>
-
-
-(...)
-
-> +
-> +TEST_F(pci_ep_data_transfer, COPY_TEST)
-> +{
-> +	struct pci_endpoint_test_xfer_param param = {0};
-
-This (also other places in this file) can be written as:
-struct pci_endpoint_test_xfer_param param = {};
-
+If nr_irqs is initialized by a glue driver && "pci->edma.nr_irqs != ch_cnt",
+dw_pcie_edma_irq_verify() returns error and avoids calling dw_edma_probe(),
+thus it made sense for dw_pcie_edma_irq_verify() to also return error on
+negative nr_irqs.
 
 
 Kind regards,
