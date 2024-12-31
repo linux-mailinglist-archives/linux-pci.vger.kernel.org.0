@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-19113-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19110-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE85D9FEE7B
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 10:44:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B3909FEE73
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 10:44:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6EB947A153C
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 09:44:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A89C3A2B64
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0941953BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88330193084;
 	Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quNSMcgx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUbfyxUA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59905191489;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5980913B7AE;
 	Tue, 31 Dec 2024 09:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735638254; cv=none; b=Y1c6SnKwfgfTghLRHINKULwnMahvKFgI0ykaXh8PNL2yAJPqYZi+Gi0HuUHbMfJcMBplm8FMv8QosdcDfzyTp54D7Ye70+vFC7SlT6CpKamSljW3cN2ttmxLe5a98MUCNu08tsAIp/VfaJXw8Ji85baegeJO+KJM1Stsm0iNl5k=
+	t=1735638254; cv=none; b=LAGsFR1QaRKXRVp/1KFlxR3IcxcGFL40IXlecH85FGWTIi4xwHuJv1C2Tt3mn6D/QtSeLe9VbUSPe25a8nu5LMiqzKtJn2/u4zF7ezDJpiEQlQeltfft7sKMgHXm2BlSTtqpGspqf0f+e6PMuey8VvhO0g7F9OCdZFfFK5I4JGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1735638254; c=relaxed/simple;
-	bh=EtKM6ndxdOTEv3Lg6SK1avX9h/VksamOyCmNxI9AcNU=;
+	bh=WIQv3KD1TnKJ1FeAsp5Ms4Qm3siNonfJRB+TKoH/FEE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gBae8/C4WpjTwqQxU2ih6V4Dda4C53d0jD6k9yVhySEt2qpGrBUzMEImCQDJVygQ6x4f/XO+0Gm95jqI19q1OJzV42FXqXIhSi3TV4laWWkyHq8OadAYnn0lnflMxGTA070NrrEjwAGagG76resh7e7J1A+56L02NdM7FNMynBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quNSMcgx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E1D64C4CEDD;
+	 In-Reply-To:To:Cc; b=SVMcANEOGzC/WyDmESGKkzPDxxHw1iGlQjwNqWL0Ov5XpPBvxunKGxAHgfwqkeR3uywz/lSwSL7XYdtWweTr1ecHh5pDmitpNZp9xSgEQZvFZ6YomXDawIOcTyrVmZKm26451/upgP0ADd+bao3VZLjXyoYu1xA8MJB+tkTaHPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUbfyxUA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EE1E2C4CEDC;
 	Tue, 31 Dec 2024 09:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1735638254;
-	bh=EtKM6ndxdOTEv3Lg6SK1avX9h/VksamOyCmNxI9AcNU=;
+	bh=WIQv3KD1TnKJ1FeAsp5Ms4Qm3siNonfJRB+TKoH/FEE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=quNSMcgxiOtOJ188x/I+EJkt0rXpKxGIP+z/8Cxx5dX0iPn4zab6RsRU797akhLW6
-	 k3kWfoa3hPqSeiIp0bo/af1TeacxZJmeWjn9q6zj7Z4QAnXxbN8Q14xe75+JY0RnQC
-	 mR7ztg+moetsN9F4beFtR/HGpEUVSc2WRRTr2Mv3cj662y+GaIMoQqo3/J+d5/VXJE
-	 eN6+EEYgXzyF8WQeoCuTjl4wMXKDkG8WW05u9fTMs49E9JI/FnBRGbHLMo88mlPj1n
-	 lSJsYY8iipgEFtSTBr6Mi9OHHWGDziZ4PKOACKkiUkXs5eFiUelztUe6QOeElBIw5M
-	 MVMV5pEqZYXqg==
+	b=dUbfyxUA+NglW7iGzI8XkC+z8l6lULCZnKa8ertvZwmeN9oT80i9MfvxgXF4xgFK5
+	 pHO97di83BhHWpLSo67xIW7L7I/WAG3ITI2bHNa0NBQ5fGa4aobUocLNeSJR0Mtqiq
+	 m4kLfyzSQRoBkqtUMk35omqk/2iJ+RRU/fnOFSh/eBASnKIOmftdsqyfHnqDuITJ50
+	 7JPd4yoouD7VYOzMoMlsavdIcfmVjnhB4resKU/tpEZvlmtRvadgrkzsv9yaNOSC7r
+	 a5bdx8YjdS5V4OhFptO8kgvoX0K5qVb5D72Dy6i62ZKVBzHMecbN1Nrlo/yX2xk8wm
+	 YW6ZQ/1RLgvkA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC530E77194;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2D7E77197;
 	Tue, 31 Dec 2024 09:44:13 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Tue, 31 Dec 2024 15:13:42 +0530
-Subject: [PATCH v2 1/6] regulator: Guard of_regulator_bulk_get_all() with
- CONFIG_OF
+Date: Tue, 31 Dec 2024 15:13:43 +0530
+Subject: [PATCH v2 2/6] PCI/pwrctrl: Move creation of pwrctrl devices to
+ pci_scan_device()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241231-pci-pwrctrl-slot-v2-1-6a15088ba541@linaro.org>
+Message-Id: <20241231-pci-pwrctrl-slot-v2-2-6a15088ba541@linaro.org>
 References: <20241231-pci-pwrctrl-slot-v2-0-6a15088ba541@linaro.org>
 In-Reply-To: <20241231-pci-pwrctrl-slot-v2-0-6a15088ba541@linaro.org>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -67,19 +67,19 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Qiang Yu <quic_qianyu@quicinc.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- kernel test robot <lkp@intel.com>
+ Lukas Wunner <lukas@wunner.de>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2865;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5697;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=K+DYdieboNDk57dwVIEL7f2cQO+VTMxu2E7c8/n7Jlo=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnc7zqTMNVJc/B8DvCcn2G3OvvaTAA8fnoqVLv0
- 2ZwUIbqNt2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ3O86gAKCRBVnxHm/pHO
- 9ZQhB/41JoxXANcG/9Tbc6G33jRxLNfoE/73Y3y9qigHsQ5X7/5RafygZfY4p79ClS3RIE5w4eB
- UahE3ASO8oYFZkN+sLicBX7NuVSe3qamxrcH0hWra+xz/D2BxAvJjXRDT5Mj1+I5HnWfI2kBETJ
- qmL/B6y7QOpDEfXftuWufkOA7NGj1ue4nKO6hn7ghLwoIqF4Or5XukrsFDR3zm8NSW74VuJ+vkq
- xbPXdIEvGXSW4+8MrCnEP+5uT7m7vQ86kknvDGcN654sYs1glDWOFOBnUKEJmnf2q/DwSAZtxHC
- nc+OapDZchATmfw/WgsZoztkd7yCskuTgSLQg0WEbuIXGwFV
+ bh=xIyJbEnDR6J92iNeHDHLDUlZlBfz305fAs7wXMTBhwA=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnc7zqGVqYCh9zKJ8rTHRjIBT+/jHKlwSn7ef3r
+ Kv6bAH2d8CJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ3O86gAKCRBVnxHm/pHO
+ 9UT0CACfn6kB5rPiWJ/jqdgHu1VMtAl/CKZg5GnkOq89WvfjVpOKJXZmM7AbUsGAvG3BXH9tCQP
+ Em5ugKdexFWq/pogVtDpTeFaJkAx86m/cZm1srlA2StMancVgsi+xD5iomWwxhFbY5LsGs8YrBA
+ RhptUPi3ZA6QglfCRj/xiz3mFbyHvW9ePk+5oabdhWEyjVbkgGwPlfgx156sENXtzPT7gI+NqwW
+ nYE8fmCn8UO1iuaOXIlKbiItWZhI2poz/X+pfKH1po1/Boh/eHdWX5/dHzWu7g5W6QVjWUCh/Rr
+ QnlLGBJSXtoSeukh4iUPSQ17JuVDuSf68OS83ow8Z6AVjecF
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -89,70 +89,167 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Since the definition is in drivers/regulator/of_regulator.c and compiled
-only if CONFIG_OF is enabled, building the consumer driver without
-CONFIG_OF and with CONFIG_REGULATOR will result in below build error:
+Current way of creating pwrctrl devices requires iterating through the
+child devicetree nodes of the PCI bridge in pci_pwrctrl_create_devices().
+Even though it works, it creates confusion as there is no symmetry between
+this and pci_pwrctrl_unregister() function that removes the pwrctrl
+devices.
 
-ERROR: modpost: "of_regulator_bulk_get_all" [drivers/pci/pwrctrl/pci-pwrctl-slot.ko] undefined!
+So to make these two functions symmetric, move the creation of pwrctrl
+devices to pci_scan_device(). During the scan of each device in a slot,
+the devicetree node (if exists) for the PCI device will be checked. If it
+has the supplies populated, then the pwrctrl device will be created.
 
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202412181640.12Iufkvd-lkp@intel.com/
+Since the PCI device scan happens so early, there would be no 'struct
+pci_dev' available for the device. So the host bridge is used as the parent
+of all pwrctrl devices.
+
+One nice side effect of this move is that, it is now possible to have
+pwrctrl devices for PCI bridges as well (to control the supplies of PCI
+slots).
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- include/linux/regulator/consumer.h | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/pci/bus.c          | 43 -------------------------------------------
+ drivers/pci/probe.c        | 34 ++++++++++++++++++++++++++++++++++
+ drivers/pci/pwrctrl/core.c |  2 +-
+ 3 files changed, 35 insertions(+), 44 deletions(-)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index 8c3c372ad735..85be83c8fa17 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -175,6 +175,8 @@ struct regulator *__must_check of_regulator_get_optional(struct device *dev,
- struct regulator *__must_check devm_of_regulator_get_optional(struct device *dev,
- 							      struct device_node *node,
- 							      const char *id);
-+int __must_check of_regulator_bulk_get_all(struct device *dev, struct device_node *np,
-+					   struct regulator_bulk_data **consumers);
- #else
- static inline struct regulator *__must_check of_regulator_get_optional(struct device *dev,
- 								       struct device_node *node,
-@@ -189,6 +191,13 @@ static inline struct regulator *__must_check devm_of_regulator_get_optional(stru
- {
- 	return ERR_PTR(-ENODEV);
- }
-+
-+static inline int of_regulator_bulk_get_all(struct device *dev, struct device_node *np,
-+					    struct regulator_bulk_data **consumers)
-+{
-+	return 0;
-+}
-+
- #endif
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 98910bc0fcc4..b6851101ac36 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -331,47 +331,6 @@ void __weak pcibios_resource_survey_bus(struct pci_bus *bus) { }
  
- int regulator_register_supply_alias(struct device *dev, const char *id,
-@@ -223,8 +232,6 @@ int regulator_disable_deferred(struct regulator *regulator, int ms);
+ void __weak pcibios_bus_add_device(struct pci_dev *pdev) { }
  
- int __must_check regulator_bulk_get(struct device *dev, int num_consumers,
- 				    struct regulator_bulk_data *consumers);
--int __must_check of_regulator_bulk_get_all(struct device *dev, struct device_node *np,
--					   struct regulator_bulk_data **consumers);
- int __must_check devm_regulator_bulk_get(struct device *dev, int num_consumers,
- 					 struct regulator_bulk_data *consumers);
- void devm_regulator_bulk_put(struct regulator_bulk_data *consumers);
-@@ -483,12 +490,6 @@ static inline int devm_regulator_bulk_get(struct device *dev, int num_consumers,
- 	return 0;
- }
- 
--static inline int of_regulator_bulk_get_all(struct device *dev, struct device_node *np,
--					    struct regulator_bulk_data **consumers)
+-/*
+- * Create pwrctrl devices (if required) for the PCI devices to handle the power
+- * state.
+- */
+-static void pci_pwrctrl_create_devices(struct pci_dev *dev)
 -{
--	return 0;
+-	struct device_node *np = dev_of_node(&dev->dev);
+-	struct device *parent = &dev->dev;
+-	struct platform_device *pdev;
+-
+-	/*
+-	 * First ensure that we are starting from a PCI bridge and it has a
+-	 * corresponding devicetree node.
+-	 */
+-	if (np && pci_is_bridge(dev)) {
+-		/*
+-		 * Now look for the child PCI device nodes and create pwrctrl
+-		 * devices for them. The pwrctrl device drivers will manage the
+-		 * power state of the devices.
+-		 */
+-		for_each_available_child_of_node_scoped(np, child) {
+-			/*
+-			 * First check whether the pwrctrl device really
+-			 * needs to be created or not. This is decided
+-			 * based on at least one of the power supplies
+-			 * being defined in the devicetree node of the
+-			 * device.
+-			 */
+-			if (!of_pci_supply_present(child)) {
+-				pci_dbg(dev, "skipping OF node: %s\n", child->name);
+-				return;
+-			}
+-
+-			/* Now create the pwrctrl device */
+-			pdev = of_platform_device_create(child, NULL, parent);
+-			if (!pdev)
+-				pci_err(dev, "failed to create OF node: %s\n", child->name);
+-		}
+-	}
 -}
 -
- static inline int devm_regulator_bulk_get_const(
- 	struct device *dev, int num_consumers,
- 	const struct regulator_bulk_data *in_consumers,
+ /**
+  * pci_bus_add_device - start driver for a single device
+  * @dev: device to add
+@@ -396,8 +355,6 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 	pci_proc_attach_device(dev);
+ 	pci_bridge_d3_update(dev);
+ 
+-	pci_pwrctrl_create_devices(dev);
+-
+ 	/*
+ 	 * If the PCI device is associated with a pwrctrl device with a
+ 	 * power supply, create a device link between the PCI device and
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2e81ab0f5a25..91bdb2727c8e 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -9,6 +9,8 @@
+ #include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of_pci.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -2446,6 +2448,36 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+ }
+ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+ 
++/*
++ * Create pwrctrl device (if required) for the PCI device to handle the power
++ * state.
++ */
++static void pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
++{
++	struct pci_host_bridge *host = pci_find_host_bridge(bus);
++	struct platform_device *pdev;
++	struct device_node *np;
++
++	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
++	if (!np || of_find_device_by_node(np))
++		return;
++
++	/*
++	 * First check whether the pwrctrl device really needs to be created or
++	 * not. This is decided based on at least one of the power supplies
++	 * being defined in the devicetree node of the device.
++	 */
++	if (!of_pci_supply_present(np)) {
++		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
++		return;
++	}
++
++	/* Now create the pwrctrl device */
++	pdev = of_platform_device_create(np, NULL, &host->dev);
++	if (!pdev)
++		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for OF node: %s\n", np->name);
++}
++
+ /*
+  * Read the config data for a PCI device, sanity-check it,
+  * and fill in the dev structure.
+@@ -2455,6 +2487,8 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
+ 	struct pci_dev *dev;
+ 	u32 l;
+ 
++	pci_pwrctrl_create_device(bus, devfn);
++
+ 	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, 60*1000))
+ 		return NULL;
+ 
+diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+index 2fb174db91e5..9cc7e2b7f2b5 100644
+--- a/drivers/pci/pwrctrl/core.c
++++ b/drivers/pci/pwrctrl/core.c
+@@ -44,7 +44,7 @@ static void rescan_work_func(struct work_struct *work)
+ 						   struct pci_pwrctrl, work);
+ 
+ 	pci_lock_rescan_remove();
+-	pci_rescan_bus(to_pci_dev(pwrctrl->dev->parent)->bus);
++	pci_rescan_bus(to_pci_host_bridge(pwrctrl->dev->parent)->bus);
+ 	pci_unlock_rescan_remove();
+ }
+ 
 
 -- 
 2.25.1
