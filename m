@@ -1,122 +1,108 @@
-Return-Path: <linux-pci+bounces-19155-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19156-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A17EF9FF87A
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 11:57:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6301E9FF889
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 12:14:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2A72188216D
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 10:57:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF1DC3A2BC5
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 11:13:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B8A7374CB;
-	Thu,  2 Jan 2025 10:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B56619D07C;
+	Thu,  2 Jan 2025 11:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWN61Kxr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQFLItGZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A55125D6
-	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 10:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E897B219FF
+	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 11:13:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735815457; cv=none; b=akdUCi6NYxung41TidOoFLXf5OViPesqmGSC7aFGPVPHNQx3B+iygLoJqtq6+BGhobQJknx6LUXHH1aqyn3W9CKWnBPlmU+MjAxsyWxcFDROmY6C9NkKUQKnATW7MHQLna3rRnbvfmPrVMlAQSOGp+Wibm7GfoMInlLQSzZ1lKw=
+	t=1735816438; cv=none; b=tJ+g/9vIq3Epo53jEbgjdgARTIf/VGMCxzXDyTYUGuTSVj4WfyZkHh64YqCafxr11TEEPrIeVeW72n3gJVPq0ZSIiNdCoBl87D5Zrcc/FRXNsZnp3XuAZhLyzdHjgAycgafE6eyyqeWq4t6uN0L1aQQFSXMlnX7qkGozpngkOcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735815457; c=relaxed/simple;
-	bh=jYQGhT42EsutXFIPYlsP1xCkgXwU2aDPBqiXLufYMfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bKc/megBMsAm5RF3C0eC70MYMshxxQfn+OfxihXVMVH3BZ/DPo6qNQA7D/vTGMVWVmcJyjiUEM6DjLuEPXdz2g2qvVpTbfjcrKmq5Yimtza5qRtH3Tzo7LmyKIUhHQK8fYoa31lmj26MeGAtho0/ZZ1ZZCtimgDg9pSlEdq+cs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWN61Kxr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE29C4CED0;
-	Thu,  2 Jan 2025 10:57:34 +0000 (UTC)
+	s=arc-20240116; t=1735816438; c=relaxed/simple;
+	bh=SIPTwBfOR8bPRMZ5Gxi66zad8YdydJ5Bp00gV7bEcGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OBnqX6+IoV9XaoKOT/k7dcUu1vzTVYYFiP7cn3/en1TadNjkt6Q6yWPrUre0VVIuXo90+Dnir/Fd913uNFjxYfNwuqGhCgdlO/9/zn+WD8a/3G00OCmjFiV8miZZJ7X/K0fdeVv4cmdpUn+Irbg2YwUyBerCWX8q+e7ukHi92dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQFLItGZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F039C4CED0;
+	Thu,  2 Jan 2025 11:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735815456;
-	bh=jYQGhT42EsutXFIPYlsP1xCkgXwU2aDPBqiXLufYMfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PWN61Kxr6Y30pk0RzuLyFgWLbKXfa0p4pm6EGE3jxJGQQKWlxYKzeboIFsFgmeykU
-	 a8G+t3Qw5nt6Gdfwju50ns4DpL8z9slTYX7UxbIrr/9KgKytUQdLuH71t1CNvljVR0
-	 RsGwltYk8db2hsJIX1bN5E4vi/Tfg6b+FIFp3Ue/EsWPMA36a0q15Mkv9oMca8ATeN
-	 axf+W2DfkkUnJ/YocRbYsZnDABGG1ZU9gOUAkN0iVgLnMpBdb55b+SekOKaWI6e21l
-	 B0Es6Q3fIQaNSQlnGaFbzxP/omfceK7ubWI3eemVxfLpquoBPu1zQgbQFOlVmYbxkC
-	 pxjj/2DbuHl8Q==
-Date: Thu, 2 Jan 2025 11:57:32 +0100
+	s=k20201202; t=1735816437;
+	bh=SIPTwBfOR8bPRMZ5Gxi66zad8YdydJ5Bp00gV7bEcGM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JQFLItGZI+2l2TVJ3iTxk+NRmy9Anyug7zEy7TI3GXSZbYvOGd5ydl21Cey0WjGkU
+	 tU21GCOza+Ax2gTqDfEMQ2HQAZZDGSHbM+/YbJG76vrASajJ8x2pdHCKrjz16KUAxV
+	 hWhoEwe1RE3PVgQ/AbSpIhTY0opfiEhMn2CTN0knA5mp02gLLztEZYUBuE6WHCJxuS
+	 VUwkKB5Z8p1ovwQ/zX1H8AU3TuzFsl1MW6vYbndV2QfBM/2g6hyp+sxhUPVDKTU4l7
+	 SnP8FYZ4nbUuLmZaq377hkXK17D8yM7VNRWW2XbLgVr63gSvq6HHhEv2S+GuwZVKCE
+	 L9AWOhU/flE+w==
 From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: Reject a negative nr_irqs value in
- dw_pcie_edma_irq_verify()
-Message-ID: <Z3ZxHLfN7rcpH414@ryzen>
-References: <20241220072328.351329-2-cassel@kernel.org>
- <20241231155158.5edodo2r5zar3tfe@thinkpad>
- <Z3Q0TY873woxmsEC@ryzen>
- <20241231184913.s24umoi2yi4wowod@thinkpad>
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2] PCI: dwc: Fix W=1 build warning in dw_pcie_edma_irq_verify()
+Date: Thu,  2 Jan 2025 12:13:40 +0100
+Message-ID: <20250102111339.2233101-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241231184913.s24umoi2yi4wowod@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1821; i=cassel@kernel.org; h=from:subject; bh=SIPTwBfOR8bPRMZ5Gxi66zad8YdydJ5Bp00gV7bEcGM=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLLSh7/zxZLbd5r88o336OkvGj/q4hvwasfr8lbcOXQn EITC+6OjlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExk4jyG/76yscuDLQ4u+GXS wrxm1uR0O/kOxpTFivxF3elt/2Web2f47yNnNKWhh+Hdvs5dV1ybN+9t7WbMPrdFjfVm1pm27eY 32QA=
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 01, 2025 at 12:19:13AM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Dec 31, 2024 at 07:13:33PM +0100, Niklas Cassel wrote:
-> > On Tue, Dec 31, 2024 at 09:21:58PM +0530, Manivannan Sadhasivam wrote:
-> > > On Fri, Dec 20, 2024 at 08:23:29AM +0100, Niklas Cassel wrote:
-> > > > Platforms that do not have (one or more) dedicated IRQs for the eDMA
-> > > > need to set nr_irqs to a non-zero value in their DWC glue driver.
-> > > > 
-> > > > Platforms that do have (one or more) dedicated IRQs do not need to
-> > > > initialize nr_irqs. DWC common code will automatically set nr_irqs.
-> > > > 
-> > > > Since a glue driver can initialize nr_irqs, dw_pcie_edma_irq_verify()
-> > > > should verify that nr_irqs, if non-zero, is a valid value. Thus, add a
-> > > > check in dw_pcie_edma_irq_verify() to reject a negative nr_irqs value.
-> > > > 
-> > > 
-> > > Why can't we make dw_edma_chip::nr_irqs unsigned?
-> > 
-> > dw_edma is defined in drivers/dma/dw-edma/dw-edma-core.h
-> > in struct dw_edma.
-> > 
-> > struct dw_pcie (defined in drivers/pci/controller/dwc/pcie-designware.h)
-> > simply has a struct dw_edma as a struct member.
-> > 
-> > If you bounce on nr_irqs in:
-> > drivers/dma/dw-edma/dw-edma-core.c
-> > and in
-> > drivers/dma/dw-edma/dw-edma-pcie.c
-> > you can see that this driver uses signed int for this everywhere.
-> > 
-> > I didn't feel like refactoring a whole DMA driver.
-> > 
-> 
-> There is no need to refactor. Both 'dma' and 'dwc' drivers do not assume that
-> 'nr_irqs' is signed. So simply changing the type to 'unsigned int' is enough.
-> I don't see a valid reason to keep it signed and check for negative value.
+Change dw_pcie_edma_irq_verify() to print the dma channel as %u.
 
-If you bounce on nr_irqs in
-drivers/dma/dw-edma/dw-edma-core.c
-and in
-drivers/dma/dw-edma/dw-edma-pcie.c
+While a DWC glue driver could theoretically initialize nr_irqs to a
+negative value, doing so would obviously be incorrect, and the later
+dw_edma_probe(struct dw_edma_chip *chip) call would fail, since while
+the dw_edma_probe() call expects the caller to initialize chip->nr_irqs,
+dw_edma_probe() verifies nr_irqs and returns failure if nr_irqs is < 1.
 
-you will see that there are a lot of local variables
-that are nr_irqs which are signed, in addition to the
-struct member.
+This fixes the following build warning when compiling with W=1:
 
-I don't want to change the whole driver simply to fix
-a warning when building the DWC PCIe driver with W=1.
+drivers/pci/controller/dwc/pcie-designware.c: In function ‘dw_pcie_edma_detect’:
+drivers/pci/controller/dwc/pcie-designware.c:989:50: warning: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Wformat-truncation=]
+  989 |                 snprintf(name, sizeof(name), "dma%d", pci->edma.nr_irqs);
+      |                                                  ^~
 
-I have a different solution and will send a V2 soon.
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+Changes since V1:
+-Do not reject negative nr_irqs value in dw_pcie_edma_irq_verify(),
+ as this will already be done by dw_edma_probe().
 
+ drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kind regards,
-Niklas
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 3c683b6119c3..0a13fb4336f4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -986,7 +986,7 @@ static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+ 	}
+ 
+ 	for (; pci->edma.nr_irqs < ch_cnt; pci->edma.nr_irqs++) {
+-		snprintf(name, sizeof(name), "dma%d", pci->edma.nr_irqs);
++		snprintf(name, sizeof(name), "dma%u", pci->edma.nr_irqs);
+ 
+ 		ret = platform_get_irq_byname_optional(pdev, name);
+ 		if (ret <= 0)
+-- 
+2.47.1
+
 
