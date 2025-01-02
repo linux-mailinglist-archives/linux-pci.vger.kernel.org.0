@@ -1,57 +1,64 @@
-Return-Path: <linux-pci+bounces-19189-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19190-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15580A001BE
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 00:29:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DB0CA001C4
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 00:30:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1CB7164B85
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 23:29:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9945164C39
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 23:30:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F3C11BEF67;
-	Thu,  2 Jan 2025 23:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CB171BFE0D;
+	Thu,  2 Jan 2025 23:28:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMPfPdZt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zh5XVJyA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21CE1BEF65;
-	Thu,  2 Jan 2025 23:26:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384731BEF86
+	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 23:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735860376; cv=none; b=esj3gQikcXLq4aM2GU3Zy2GIp2ym0Xf2oFGXNu6JWbm4qHjBW2ndxc4ZJ3kfy/zf1MEyzShHWi59dxZ7Bo0AABen1ooBk9C9sTuYxrBK06WH4/iJroSmrht7D4yR2C4GhuusTJnRwZbAwdjbqGTzrM/fk6pU81whAJNmbJ/nXlI=
+	t=1735860501; cv=none; b=IqxIv2Uo/UHTtUBleWTRP0vZw+vyREFp2xWes7pqiksr6FSaRpsqruUc9GkqbCyDTjH+lKKCrCaiHBKWAqbC9M+Gf9biRXQbYNclnQHe3s4FwNzlUhNwY0ATRR3UcvlshEeq6Z7F+C03ZFxPr1U3zLRELU4MPSUiquaJxAFJ29w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735860376; c=relaxed/simple;
-	bh=wG+43w9FbSOlhitQ1PPqyfrpvp5N6QLgb3Fwq4DOy0k=;
+	s=arc-20240116; t=1735860501; c=relaxed/simple;
+	bh=o8Evq/Jq7VTHs84rjitCUFOTChZzkwzLSgAyMnDD4CA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nBT8oi160QecAvMER9EHXtEGAoCPrvyHjkZ9GqWuY/8y2P1ZZMEGrPeJHVD5Ktz24CjRqnE4ulsPV4aVD1cEC02iK+SYkBGkJ7vpz/W2KmF7SqzFqjHHh6YWeLffn6//LWOYAnLZzLcX2GX5TnzCXSEJt+FO0gt6DKROZztHKRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMPfPdZt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB92C4CED0;
-	Thu,  2 Jan 2025 23:26:15 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=uyDq9Oo8HdZ8PL59Q6wQzeXH2mnp4WWUpeg6hBT1rPZafhvBEwzOskkuk4siEq4QDZAT7pSODxc86tiZcq4MsakvARtphc14WfJV2XaYtHpUDSANRFHg5BLJ/tbEEVl4YBdMwQBlAWY65MjWfzCxJD3e7rWyKOjQseX9EO0F5DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zh5XVJyA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8304DC4CED7;
+	Thu,  2 Jan 2025 23:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735860375;
-	bh=wG+43w9FbSOlhitQ1PPqyfrpvp5N6QLgb3Fwq4DOy0k=;
+	s=k20201202; t=1735860500;
+	bh=o8Evq/Jq7VTHs84rjitCUFOTChZzkwzLSgAyMnDD4CA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UMPfPdZt/2rzoFQQJN06c1jrbXhmuShjc7wt7EGdEGYnbnLAjPhDSCMpiRkS4CcLZ
-	 dT/oZgHyYKtAjfJU93Kn5lcnPkSkIKJIcI3nT1zROnw66FExiMsEOgO7OKH4aabJvC
-	 i3cKM7OWe4zOd7oRQljW05QhERxi6HoUGgxdXhXcE/jAiLBZXWHnsZQNmPnphTlA0L
-	 AMA3K+E0CCU0xjjMqXnYH5ASoO9yDbKm/6aR8n/uhdmb/vJFXvTSJeTAHDhd3XHQk+
-	 A1DwJx2p2Bv9XJE9D+xkXIuxPkJAz98t3ErFlaat48j83MRqU0GqLLG/cvTE6IuFhg
-	 VXcuROVMkcgzw==
-Date: Thu, 2 Jan 2025 17:26:14 -0600
+	b=Zh5XVJyAyIKPbBdYNw8zG8iHqib2Doua4b1soxpN4u91DBRCvDqe0t+ef1BcRPmoa
+	 y6EXojfQCmXuS6sJ0Jp4/SWvy/+nnpNDQTxc9GoSMW30T9rqTu5/MKdHVnKOH7sXPY
+	 6yCXakKSOntzIKxnFtwGhH4raj67Ond3HtwPRpbeJsY3C4WoyRzLLbbi+TlaEGgkEL
+	 Q4WvYR//5ibRXe07gWFZ5y6kX53IGw0t9sx9NybbjYZFQhZ7zHMCHSpCNKX5nMIrpX
+	 2IBg+mCPOecgO1WYHOB+0VIJhn5HVgBdSjcKUXa2Nf1C+hXlS+xdMI2f+tC3XbogwU
+	 DAZ208w3zAc0g==
+Date: Thu, 2 Jan 2025 17:28:17 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Tushar Dave <tdave@nvidia.com>
-Cc: corbet@lwn.net, bhelgaas@google.com, paulmck@kernel.org,
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
-	xiongwei.song@windriver.com, vidyas@nvidia.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, vsethi@nvidia.com, jgg@nvidia.com,
-	sdonthineni@nvidia.com
-Subject: Re: [PATCH 1/1] PCI: Fix Extend ACS configurability
-Message-ID: <20250102232614.GA4147007@bhelgaas>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Christian Marangi <ansuelsmth@gmail.com>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
+	Hui Ma <hui.ma@airoha.com>
+Subject: Re: [PATCH v3] PCI: mediatek-gen3: Avoid PCIe resetting via
+ PCIE_RSTB for Airoha EN7581 SoC
+Message-ID: <20250102232817.GA4147111@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,22 +67,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241213202942.44585-1-tdave@nvidia.com>
+In-Reply-To: <Z3Z4jcwtgcXk9Zo6@lore-desk>
 
-On Fri, Dec 13, 2024 at 12:29:42PM -0800, Tushar Dave wrote:
-> Commit 47c8846a49ba ("PCI: Extend ACS configurability") introduced a
-> bug that fails to configure ACS ctrl for multiple PCI devices. It
-> affects both 'config_acs' and 'disable_acs_redir'.
+On Thu, Jan 02, 2025 at 12:29:17PM +0100, Lorenzo Bianconi wrote:
+> > On Wed, Nov 13, 2024 at 02:58:08PM +0100, Lorenzo Bianconi wrote:
+> > > Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
+> > > causing occasional PCIe link down issues. In order to overcome the
+> > > problem, PCIE_RSTB signals are not asserted/released during device probe or
+> > > suspend/resume phase and the PCIe block is reset using REG_PCI_CONTROL
+> > > (0x88) and REG_RESET_CONTROL (0x834) registers available in the clock
+> > > module running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
+> > > 
+> > > Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
+> > > specify per-SoC capabilities.
 > 
-> For example, using 'config_acs' to configure ACS ctrl for multiple BDFs
-> fails:
+> Hi Bjorn,
 > 
-> [    0.000000] Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p" earlycon
-> [   12.349875] PCI: Can't parse ACS command line parameter
-> [   19.629314] pci 0020:02:00.0: ACS mask  = 0x007f
-> [   19.629315] pci 0020:02:00.0: ACS flags = 0x007b
-> [   19.629316] pci 0020:02:00.0: Configured ACS to 0x007b
+> similar to the other series, this patch is already in Krzysztof's branch.
+> Do you prefer to resend it or just incremental changes?
 
-Drop timestamps (unless they contribute to understanding the
-problem) and indent the quoted material by a couple spaces.
+If it's not too much trouble, I think a new v4 would be simplest so
+the Link: in the lore archives is more correct.
 
