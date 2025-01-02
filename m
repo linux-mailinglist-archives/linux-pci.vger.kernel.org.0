@@ -1,188 +1,305 @@
-Return-Path: <linux-pci+bounces-19182-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19183-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07EB4A00032
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 21:46:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26DDBA00040
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 21:56:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5A8B3A14F5
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 20:46:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12BB13A32AF
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 20:56:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6304B1BBBD4;
-	Thu,  2 Jan 2025 20:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C8261A2543;
+	Thu,  2 Jan 2025 20:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXhGFHWz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXDP6Ggu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40DD1B983E;
-	Thu,  2 Jan 2025 20:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E571C36;
+	Thu,  2 Jan 2025 20:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735850781; cv=none; b=Lv8pmAWI76arAVfuLuqWfx6AJp9+QUgnbAJ/oE3x6Q5EwrxGEyJLIOVNBu7aiV8Awzkk3+ixDHlulH2urNx6OQ67la5gM9G0ke+Am1SDIcPVFbDvAe+HK42K7aymcGxTkLqTqXZMp0Ne9mzY/PFt+qFZ+iako2Z9JMhns0+K8pA=
+	t=1735851368; cv=none; b=ZNeoxj5/W7fD4gzIsJKoH1knnbHvC2qv7KbISO+zAdsT8VeeOXsleH0ZLJ0q7wej4oDCuLJrmcz7Wynq6jm2CGcBegtBJnbUXgVHLsHGV1f8fbVTjVG9lUm2YE0qgdc/K1oSw4IEhPveNyVBBtr5gNfByKUj6xpnwu9hv2BdCzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735850781; c=relaxed/simple;
-	bh=lXtHheUcWiplOvGAaTqAv+gEmAbp2r9+jFsyAWbuv5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KR0CXrmkms1x92qDz8xNx6tN2dFeWAlopHaGmB7oQAPRItMKVqkFYERPhiabveeEYsD1+sW5IJXFkU9UcZtNL0Ahu3Goyr3Htk2cLctrXEkwsy7ylo6KnXKBSIUl6BSss9b/FXRJ87MDbscvJJ553XPJZJzImhfVXc2cPnh0/A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXhGFHWz; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735850780; x=1767386780;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lXtHheUcWiplOvGAaTqAv+gEmAbp2r9+jFsyAWbuv5E=;
-  b=gXhGFHWzoHVpElP7dWFpYehwOwDRLDXBRqgRr/XE/T0Rr52DWBIdz/+K
-   73+jeShocoo2f2v2lkGhVf8BjVZC0p0ENoB6v8ljqt9ghPNKdU39bf4K7
-   gP+TIsCgDMieSm1t3M5UbEyQHPNJFhE1wGZx5s94VjzuZ3yiWU8Bs+72k
-   caHzYZi+0hTYtYLjtSMN/FJjAV4N3It0T8YZxgmRlkQ9ex7VsdUQzDoIY
-   hvBRlB01GPy60vacAzm0F5UrL9YelmN4em0nac1/iGEejz+9LtNDXSIEq
-   hO9hi34U2/MwTO4W1dyBPLG4/ssyqFzOPYCd1oig+ylI75U5pKayLkm0N
-   g==;
-X-CSE-ConnectionGUID: NDaV+iimTq2GSTV6cNTpEQ==
-X-CSE-MsgGUID: mZzGcTdKR2qDKJJ8qh1ulg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11303"; a="38926847"
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="38926847"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2025 12:46:19 -0800
-X-CSE-ConnectionGUID: JXo9s0gESbW+wTzPOGbn+Q==
-X-CSE-MsgGUID: vzOAfbDNR5eBh3vmRD4fPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="105654733"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 02 Jan 2025 12:46:16 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tTS58-0008rD-0U;
-	Thu, 02 Jan 2025 20:46:14 +0000
-Date: Fri, 3 Jan 2025 04:46:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, manivannan.sadhasivam@linaro.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	kishon@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com, Hans Zhang <18255117159@163.com>,
-	kernel test robot <lkp@intel.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [v6] misc: pci_endpoint_test: Fix overflow of bar_size
-Message-ID: <202501030414.p0DE9xNK-lkp@intel.com>
-References: <20250102120222.1403906-1-18255117159@163.com>
+	s=arc-20240116; t=1735851368; c=relaxed/simple;
+	bh=a0QfaE5pQxC6vlHdUKC7SuIHrZ6UIYAnTRzLKGxuMYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MGnXxWY+oDjnIa7BKwFHw+/yhgGy8/hvww+uzpthvxWmy7q6NdiP7JQLTdobhEpTMWd8LcrT03cMiDRCAO2LpS9tH7lUgwO0w4N90fAD/bSAYsmf9FkQfDuY0koGCy7Gi4LlLKl/exq2gkUUHrKMUETDBM1W7ygI89568aYdg34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXDP6Ggu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3C9C4CEDF;
+	Thu,  2 Jan 2025 20:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735851367;
+	bh=a0QfaE5pQxC6vlHdUKC7SuIHrZ6UIYAnTRzLKGxuMYU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AXDP6GguHr55H/5CooFsp4XmuUjdizppyvL4IgBHfpWdxbGKOmDp734Axv6A760Mu
+	 ePCqO6Q/d7uL9kO0Ii3IxeDIGBzPMTMvrIjQE2buE5L+qwTRSGsq6LbM/bnYl9xEvG
+	 NHnJy8s1bqkBDcfnjP/UL3yBbDJepJxWPsWFJEzmkZHsMzw8xol1kH76eZJgnmKgfS
+	 pS4WLRkHUtsOn1vcZkT7Peb4H6YYIsqE9RzSUxunoYHdlX0enqQ7pmyiiVXKsG2/nv
+	 rntOGR1IeFvy9AGrebRSO8Ifv/yeXllxnyOl/HNzazCVHqNQkqgRI3y2ITfEWWGImy
+	 +tcNZMtuNpdog==
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e4a6b978283so15753598276.0;
+        Thu, 02 Jan 2025 12:56:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUABgr8dw4W/1VpJAvWHLoCGOhqkpQlYOWeFLSLzOKC7uVowHgB1p32Uqdf843q0mkwk31NmGrRfVc4@vger.kernel.org, AJvYcCUhGJxmSfeu6CHrJy/PcGUGow9sS1ayWbVE6sL+xIeZ7vjPf72wwmfzRK6K1so6f/Li0F6KWy8H1B6q@vger.kernel.org, AJvYcCV9i9kEVMNdVpzFBulHDp1bsUbZ3NK4cao7AMmwNbqY5XBiW+GKbt2SIyNznqynfuQ5MPRJXlzaTlEorY+S@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEZzfEi9HmrTPrls1aBZKnF5FbYPDBO4YUWMovEdI2mYlWhbv3
+	znrvo6qTAJxABRWXfClD5n1P9z3ej6219bi32A5tORQNfmFvBhIVEFS0yoaYyEmrvST3omxC9Op
+	MY6IxMofx9vMZa4Hfi6HMXVmfnA==
+X-Google-Smtp-Source: AGHT+IHtj7cfz+hI1abCkQt2vX9gx6KrcNx8cTdb6ZxAx+0QmvAHWd0hN+xY+1v1vIK146ymrQJx+TnN5gMSTiz0v2Q=
+X-Received: by 2002:a05:690c:6908:b0:664:74cd:5548 with SMTP id
+ 00721157ae682-6f3e2a65668mr376448997b3.1.1735851366905; Thu, 02 Jan 2025
+ 12:56:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250102120222.1403906-1-18255117159@163.com>
+References: <20241213064035.1427811-1-thippeswamy.havalige@amd.com>
+ <20241213064035.1427811-3-thippeswamy.havalige@amd.com> <20241217151040.GA1667241-robh@kernel.org>
+ <SN7PR12MB72015F80356A44D225F6E3408B052@SN7PR12MB7201.namprd12.prod.outlook.com>
+In-Reply-To: <SN7PR12MB72015F80356A44D225F6E3408B052@SN7PR12MB7201.namprd12.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 2 Jan 2025 14:55:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKHMVSu9fdiARMSpyVaCjOCvnP=mo74L-3_F3nVNK_O8w@mail.gmail.com>
+Message-ID: <CAL_JsqKHMVSu9fdiARMSpyVaCjOCvnP=mo74L-3_F3nVNK_O8w@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 2/3] dt-bindings: PCI: amd-mdb: Add AMD Versal2
+ MDB PCIe Root Port Bridge
+To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kw@linux.com" <kw@linux.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Simek, Michal" <michal.simek@amd.com>, 
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+On Wed, Dec 18, 2024 at 3:28=E2=80=AFAM Havalige, Thippeswamy
+<thippeswamy.havalige@amd.com> wrote:
+>
+> Hi Rob,
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Tuesday, December 17, 2024 8:41 PM
+> > To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
+> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> > manivannan.sadhasivam@linaro.org; krzk+dt@kernel.org; conor+dt@kernel.o=
+rg;
+> > linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
+> > <michal.simek@amd.com>; Gogada, Bharat Kumar
+> > <bharat.kumar.gogada@amd.com>
+> > Subject: Re: [RESEND PATCH v5 2/3] dt-bindings: PCI: amd-mdb: Add AMD
+> > Versal2 MDB PCIe Root Port Bridge
+> >
+> > On Fri, Dec 13, 2024 at 12:10:34PM +0530, Thippeswamy Havalige wrote:
+> > > Add AMD Versal2 MDB (Multimedia DMA Bridge) PCIe Root Port Bridge.
+> > >
+> > > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> > > ---
+> > > Changes in v2:
+> > > -------------
+> > > - Modify patch subject.
+> > > - Add pcie host bridge reference.
+> > > - Modify filename as per compatible string.
+> > > - Remove standard PCI properties.
+> > > - Modify interrupt controller description.
+> > > - Indentation
+> > >
+> > > Changes in v3:
+> > > -------------
+> > > - Modified SLCR to lower case.
+> > > - Add dwc schemas.
+> > > - Remove common properties.
+> > > - Move additionalProperties below properties.
+> > > - Remove ranges property from required properties.
+> > > - Drop blank line.
+> > > - Modify pci@ to pcie@
+> > >
+> > > Changes in v4:
+> > > -------------
+> > > - None.
+> > >
+> > > Changes in v5:
+> > > -------------
+> > > - None.
+> > > ---
+> > >  .../bindings/pci/amd,versal2-mdb-host.yaml    | 121 ++++++++++++++++=
+++
+> > > ---
+> > >  .../bindings/pci/amd,versal2-mdb-host.yaml    | 121 ++++++++++++++++=
+++
+> > >  1 file changed, 121 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/amd,versal2=
+-mdb-
+> > host.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-ho=
+st.yaml
+> > b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+> > > new file mode 100644
+> > > index 000000000000..c319adeeee66
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+> > > @@ -0,0 +1,121 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/amd,versal2-mdb-host.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: AMD Versal2 MDB(Multimedia DMA Bridge) Host Controller
+> > > +
+> > > +maintainers:
+> > > +  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> > > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: amd,versal2-mdb-host
+> > > +
+> > > +  reg:
+> > > +    items:
+> > > +      - description: MDB PCIe controller 0 SLCR
+> > > +      - description: configuration region
+> > > +      - description: data bus interface
+> > > +      - description: address translation unit register
+> > > +
+> > > +  reg-names:
+> > > +    items:
+> > > +      - const: mdb_pcie_slcr
+> > > +      - const: config
+> > > +      - const: dbi
+> > > +      - const: atu
+> > > +
+> > > +  ranges:
+> > > +    maxItems: 2
+> > > +
+> > > +  msi-map:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupt-map-mask:
+> > > +    items:
+> > > +      - const: 0
+> > > +      - const: 0
+> > > +      - const: 0
+> > > +      - const: 7
+> > > +
+> > > +  interrupt-map:
+> > > +    maxItems: 4
+> > > +
+> > > +  "#interrupt-cells":
+> > > +    const: 1
+> > > +
+> > > +  interrupt-controller:
+> > > +    description: identifies the node as an interrupt controller
+> > > +    type: object
+> > > +    additionalProperties: false
+> > > +    properties:
+> > > +      interrupt-controller: true
+> > > +
+> > > +      "#address-cells":
+> > > +        const: 0
+> > > +
+> > > +      "#interrupt-cells":
+> > > +        const: 1
+> > > +
+> > > +    required:
+> > > +      - interrupt-controller
+> > > +      - "#address-cells"
+> > > +      - "#interrupt-cells"
+> > > +
+> > > +required:
+> > > +  - reg
+> > > +  - reg-names
+> > > +  - interrupts
+> > > +  - interrupt-map
+> > > +  - interrupt-map-mask
+> > > +  - msi-map
+> > > +  - "#interrupt-cells"
+> > > +  - interrupt-controller
+> > > +
+> > > +unevaluatedProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +
+> > > +    soc {
+> > > +        #address-cells =3D <2>;
+> > > +        #size-cells =3D <2>;
+> > > +        pcie@ed931000 {
+> > > +            compatible =3D "amd,versal2-mdb-host";
+> > > +            reg =3D <0x0 0xed931000 0x0 0x2000>,
+> > > +                  <0x1000 0x100000 0x0 0xff00000>,
+> > > +                  <0x1000 0x0 0x0 0x100000>,
+> >
+> > DBI space is 1MB? Last I checked, there's less than 4KB worth of
+> > registers.
+> Thank you for your feedback. I will reduce the size to 4KB, as the DBI sp=
+ace primarily
+> uses less than 4KB for its registers. Beyond this, the space includes por=
+t logic registers,
+> which can be safely ignored in this context.
+> > The address looks odd. The config space is purely iATU configuration.
+> > Really, we should have described the entire address space (like the
+> > endpoint) available to the ATU. So the 1MB offset in the base
+> > address seems like just that. Most h/w design to cut down signal
+> > routing would put the base address for the ATU input at something
+> > aligned greater than the size of the address space.
+> In AMD (Xilinx) PCIe IPs, the configuration space for the endpoint typica=
+lly starts after 1MB.
+> To align with this, I initially set the DBI size to 1MB. However, conside=
+ring the actual utilization of less
+> than 4KB for DBI registers, this allocation I'll update in the next patch=
+.
+> >
+> > > +                  <0x0 0xed860000 0x0 0x2000>;
+> >
+> > And then the DBI and ATU registers are nowhere near each other?
+> > Possible, but seems odd.
+>
+> Thank you for your feedback. The DBI address provided in the device tree =
+serves as
+> one way to access the local ECAM space, which corresponds to a relative a=
+ddress
+> of 0xED840000.
+>
+> The internal IP uses the 0xED840000 address to configure all PCIe attribu=
+tes.
+> When accessing the address 0x1000_0000_0000, PCIe internally translates a=
+nd
+> implicitly accesses the 0xED840000 address.
 
-kernel test robot noticed the following build errors:
+Using the 0xED840000 address would be more aligned with how everyone
+else accesses the DBI. If you support ECAM, then doesn't
+0x1000_0010_0000 also correspond to the same registers in the DBI
+space? Though I thought only the generic PCI config space registers
+would be exposed there.
 
-[auto build test ERROR on ccb98ccef0e543c2bd4ef1a72270461957f3d8d0]
+Speaking of ECAM, if that's supported, it would be better if the
+driver used that (there's not any support in the driver for that). The
+advantage would be you could skip reconfiguring the iATU on every
+access. Ideally, the result would be utilizing what's in
+drivers/pci/ecam.c. Not something that needs to be done in this
+series, but you need to make sure the DT correctly describes the ECAM
+region (seems like it should be large enough). The hisi driver does
+this though it suffers from not handling devfn>0 on the root bus
+correctly (also a quirk in the generic ECAM based driver for DWC based
+implementations) and also needs 32-bit accesses to the root bus.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/misc-pci_endpoint_test-Fix-overflow-of-bar_size/20250102-200548
-base:   ccb98ccef0e543c2bd4ef1a72270461957f3d8d0
-patch link:    https://lore.kernel.org/r/20250102120222.1403906-1-18255117159%40163.com
-patch subject: [v6] misc: pci_endpoint_test: Fix overflow of bar_size
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20250103/202501030414.p0DE9xNK-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 096551537b2a747a3387726ca618ceeb3950e9bc)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250103/202501030414.p0DE9xNK-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501030414.p0DE9xNK-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> drivers/misc/pci_endpoint_test.c:311:11: warning: comparison of distinct pointer types ('typeof ((bar_size)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
-     311 |         remain = do_div(bar_size, buf_size);
-         |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:183:28: note: expanded from macro 'do_div'
-     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
->> drivers/misc/pci_endpoint_test.c:311:11: error: incompatible pointer types passing 'resource_size_t *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-     311 |         remain = do_div(bar_size, buf_size);
-         |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:199:22: note: expanded from macro 'do_div'
-     199 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-   arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
-      24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-         |                                             ^
->> drivers/misc/pci_endpoint_test.c:311:11: warning: shift count >= width of type [-Wshift-count-overflow]
-     311 |         remain = do_div(bar_size, buf_size);
-         |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:195:25: note: expanded from macro 'do_div'
-     195 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^  ~~
-   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   2 warnings and 1 error generated.
-
-
-vim +311 drivers/misc/pci_endpoint_test.c
-
-   279	
-   280	static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
-   281					  enum pci_barno barno)
-   282	{
-   283		void *write_buf __free(kfree) = NULL;
-   284		void *read_buf __free(kfree) = NULL;
-   285		struct pci_dev *pdev = test->pdev;
-   286		int j, buf_size, iters, remain;
-   287		resource_size_t bar_size;
-   288	
-   289		if (!test->bar[barno])
-   290			return false;
-   291	
-   292		bar_size = pci_resource_len(pdev, barno);
-   293	
-   294		if (barno == test->test_reg_bar)
-   295			bar_size = 0x4;
-   296	
-   297		/*
-   298		 * Allocate a buffer of max size 1MB, and reuse that buffer while
-   299		 * iterating over the whole BAR size (which might be much larger).
-   300		 */
-   301		buf_size = min(SZ_1M, bar_size);
-   302	
-   303		write_buf = kmalloc(buf_size, GFP_KERNEL);
-   304		if (!write_buf)
-   305			return false;
-   306	
-   307		read_buf = kmalloc(buf_size, GFP_KERNEL);
-   308		if (!read_buf)
-   309			return false;
-   310	
- > 311		remain = do_div(bar_size, buf_size);
-   312		iters = bar_size;
-   313		for (j = 0; j < iters; j++)
-   314			if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
-   315							 write_buf, read_buf, buf_size))
-   316				return false;
-   317	
-   318		if (remain)
-   319			if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
-   320							 write_buf, read_buf, remain))
-   321				return false;
-   322	
-   323		return true;
-   324	}
-   325	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
 
