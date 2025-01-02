@@ -1,126 +1,161 @@
-Return-Path: <linux-pci+bounces-19172-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19173-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F4BA9FFC0B
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 17:42:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72B859FFC0E
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 17:43:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A858A1882C7E
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 16:42:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 379D116253B
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 16:43:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C7C481CD;
-	Thu,  2 Jan 2025 16:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30279481CD;
+	Thu,  2 Jan 2025 16:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKguF/bd"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T16iawhO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9UZWLLFC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T16iawhO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9UZWLLFC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32B21EB44;
-	Thu,  2 Jan 2025 16:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB31C8FE;
+	Thu,  2 Jan 2025 16:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735836149; cv=none; b=AnsTF5QOwOs3cdD/V02Df3VgNkAlyy/88FuFLKO8fKEPNPDmbeeJmNIYJs4CPGsrJVsA2CFTIjxeYYKi9yTf8Fm1tf0G8ExLeGcPtIlRDmEBS941UOm4jf7YG4Y1pHdIur9in4Sr48oTBAhMLsnqNs5cY9w4Jt+2bPMJ7rtptNw=
+	t=1735836202; cv=none; b=XKaCMINKn+6bzNp4Zo59dXC+N3EaZ1RHdiF1cCZNzzWc0i64DFPBNbgCz4baSBoW86GDHJbnqxrJKM0icL3hAuH6zprHW78r3b7c2r1tnm9pq2NU+tEbfh7+dJVvyerWZKtux2SLu+8+i9JnqNISu9xcBhZ2NE42By43bbMigIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735836149; c=relaxed/simple;
-	bh=tZuVzd99ApeDUiVzw3KuaRFyYnW0IaFKchnEVYIP3F4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dPq7b1x7nuLy3mG8Yf4HrwRrJp/KzDt/tidtBR4jQPgSYR5rBS46N4BQ5thMEPzkxKPuAeVqrCZmK6cNQZBRVwwBt+ib4oT1twg43Uh8qTOJaZbo8bwzH39FSCPM0C1AyQz3KdpvI9OrFw1VhS1fg39wEfljjfvjjwjIULYJd1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKguF/bd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFE5C4CED0;
-	Thu,  2 Jan 2025 16:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735836149;
-	bh=tZuVzd99ApeDUiVzw3KuaRFyYnW0IaFKchnEVYIP3F4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TKguF/bdVe/nYsa5OBSSdjQU+0IB0oiClOLxaKJk3C/QCjdxyQ8iD0MJrfbc/JRKX
-	 +nmLJFamWcySsUJZnJfilv/ppewKO0ERHvkFz4Qp5Lp4UsXZMPVtQQhQZthPCCJHpy
-	 Ix54ywD08xG5zdbYN0KfQzhbqxX0cKviCGXNG57DeCHip2+41JF2e1ZcmgGxw12onj
-	 9muhc3eHf8QLKrI+BZj9pGP+3MT0FZYSQNZlz8FYD6pNo3Yc+VwGl/EstAh8I+rxJb
-	 vkJ2MWGlKwmYQGMWeCQbXEwicIbmRX3yglpwE53wZhnEPkgg9Mqta8T1HSlqPPaFZD
-	 uuQOsPUwD1xHQ==
-Date: Thu, 2 Jan 2025 17:42:23 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	andersson@kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com
-Subject: Re: [PATCH v5 0/3] PCI: dwc: Skip waiting for link up if vendor
- drivers can detect Link up event
-Message-ID: <Z3bB79Wu2U6-65Z4@ryzen>
-References: <20241123-remove_wait2-v5-0-b5f9e6b794c2@quicinc.com>
+	s=arc-20240116; t=1735836202; c=relaxed/simple;
+	bh=9I9jzaF2uWbmc1r0yyQsNVOWAX0k07wB7MbOw49sqro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J7NujZWxraiCoRvEzk+6CC6zNJFYPmAQJki7IPIxko9y8L4IDlYNuYb+0pugUUntKBfU0jfftoEyt66YnKfOSmxmXvo63HuQDO6YhznYgjUqzcnWylstxlvksCbbXLkFvpy2JKhPsreBGiig8ahia2fHWU5M/jwe9vpSxxHilUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T16iawhO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9UZWLLFC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T16iawhO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9UZWLLFC; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BDF4621174;
+	Thu,  2 Jan 2025 16:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1735836197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=PS9lBiCat/TxqCgkUW1aegGPB7m78UBAnLCf/Y2Oc5A=;
+	b=T16iawhO92JtIygNWb1ty9hxuImpM6gePShuZM4naQqu+nTgj59BsbbCamx5B6xk4cTtp+
+	pPyP7+UIeOqu4pi+wzgmaTHdRpw8ZmsFIhCrZY4i26ogdVoEO5Bc9MbjxiwBalFOVahRK0
+	ZhPGWC0NKRxVp4HV+LGz2gaBFmwo3Tg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1735836197;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=PS9lBiCat/TxqCgkUW1aegGPB7m78UBAnLCf/Y2Oc5A=;
+	b=9UZWLLFCJCwmNXjVSGaeRmRoEn1xpkb+XSm3aLHcHPDCSTPTIIp1HTskE44WkG57Hsb2h4
+	FGr/0IgswUhWbwDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=T16iawhO;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=9UZWLLFC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1735836197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=PS9lBiCat/TxqCgkUW1aegGPB7m78UBAnLCf/Y2Oc5A=;
+	b=T16iawhO92JtIygNWb1ty9hxuImpM6gePShuZM4naQqu+nTgj59BsbbCamx5B6xk4cTtp+
+	pPyP7+UIeOqu4pi+wzgmaTHdRpw8ZmsFIhCrZY4i26ogdVoEO5Bc9MbjxiwBalFOVahRK0
+	ZhPGWC0NKRxVp4HV+LGz2gaBFmwo3Tg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1735836197;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=PS9lBiCat/TxqCgkUW1aegGPB7m78UBAnLCf/Y2Oc5A=;
+	b=9UZWLLFCJCwmNXjVSGaeRmRoEn1xpkb+XSm3aLHcHPDCSTPTIIp1HTskE44WkG57Hsb2h4
+	FGr/0IgswUhWbwDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 97A0B13418;
+	Thu,  2 Jan 2025 16:43:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pH+mIyXCdmdpNAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 02 Jan 2025 16:43:17 +0000
+From: Takashi Iwai <tiwai@suse.de>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/DPC: Yet another quirk for PIO log size on Intel Raptor Lake-P
+Date: Thu,  2 Jan 2025 17:43:13 +0100
+Message-ID: <20250102164315.7562-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241123-remove_wait2-v5-0-b5f9e6b794c2@quicinc.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: BDF4621174
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Sat, Nov 23, 2024 at 12:39:58AM +0530, Krishna chaitanya chundru wrote:
-> If the vendor drivers can detect the Link up event using mechanisms
-> such as Link up IRQ, then waiting for Link up during probe is not
-> needed. if the drivers can be notified when the link comes up,
-> vendor driver can enumerate downstream devices instead of waiting
-> here, which optimizes the boot time.
-> 
-> So skip waiting for link to be up if the driver supports 'use_linkup_irq'.
-> 
-> Currently, only Qcom RC driver supports the 'use_linkup_irq' as it can
-> detect the Link Up event using its own 'global IRQ' interrupt. So set
-> 'use_linkup_irq' flag for QCOM drivers.
-> 
-> And as part of the PCIe link up event, the ICC and OPP values are updated.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
-> Changes in v5:
-> - update the commit text as suggested by (mani).
-> Changes in v4:
-> - change the linkup_irq name to use_linkup_irq a suggested by (bjorn
->   andresson)
-> - update commit text as suggested by bjorn andresson.
-> - Link to v3: https://lore.kernel.org/r/linux-arm-msm/20241101-remove_wait-v3-0-7accf27f7202@quicinc.com/T/
-> Changes in v3:
-> - seperate dwc changes and qcom changes as suggested (mani)
-> - update commit & comments as suggested (mani & bjorn)
-> - Link to v2: https://lore.kernel.org/linux-pci/20240920-remove_wait-v2-0-7c0fcb3b581d@quicinc.com/T/
-> Changes in v2:
-> - Updated the bypass_link_up_wait name to linkup_irq  & added comment as
->   suggested (mani).
-> - seperated the icc and opp update patch (mani).
-> - Link to v1: https://lore.kernel.org/r/20240917-remove_wait-v1-1-456d2551bc50@quicinc.com
-> 
-> ---
-> Krishna chaitanya chundru (3):
->       PCI: dwc: Skip waiting for link up if vendor drivers can detect Link up event
->       PCI: qcom: Set use_linkup_irq if global IRQ handler is present
->       PCI: qcom: Update ICC and OPP values during link up event
-> 
->  drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++--
->  drivers/pci/controller/dwc/pcie-designware.h      |  1 +
->  drivers/pci/controller/dwc/pcie-qcom.c            |  7 ++++++-
->  3 files changed, 15 insertions(+), 3 deletions(-)
-> ---
-> base-commit: cfba9f07a1d6aeca38f47f1f472cfb0ba133d341
-> change-id: 20241122-remove_wait2-d581b40380ea
-> 
-> Best regards,
-> -- 
-> Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
+There is yet another PCI entry for Intel Raptor Lake-P that shows the
+  error "DPC: RP PIO log size 0 is invalid":
+  0000:00:07.0 PCI bridge [0604]: Intel Corporation Raptor Lake-P Thunderbolt 4 PCI Express Root Port #0 [8086:a76e]
+  0000:00:07.2 PCI bridge [0604]: Intel Corporation Raptor Lake-P Thunderbolt 4 PCI Express Root Port #2 [8086:a72f]
 
-For the series:
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Add the corresponding quirk entry for 8086:a72f.
+
+Note that the one for 8086:a76e has been already added by the commit
+627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root
+Ports").
+
+Link: https://bugzilla.suse.com/show_bug.cgi?id=1234623
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 76f4df75b08a..4ed3704ce92e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6253,6 +6253,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2b, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa72f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa73f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
+ #endif
+-- 
+2.43.0
+
 
