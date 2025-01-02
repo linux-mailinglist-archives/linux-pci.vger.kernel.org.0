@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-19150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BF8A9FF779
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 10:34:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E67E69FF782
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 10:36:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 120D2162014
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 09:34:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC0BD162113
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 09:36:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F206199920;
-	Thu,  2 Jan 2025 09:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F04194089;
+	Thu,  2 Jan 2025 09:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Crig4Kem"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Et+cmj6f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BC5190664;
-	Thu,  2 Jan 2025 09:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C68191F89;
+	Thu,  2 Jan 2025 09:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735810487; cv=none; b=fl4k8JtfFJPaFgFEhgvXNKgIXguC7DH2RMc++Ny2ZUcjJZSQDoT4AUpVEAVlygcEO/HWwjNwkYcnvu0oW5bInzcUXdNKEmFoXsCJC1jGfORIaEsoa+gUr3a9FQCe5RKE4jQ7FTIXMAyoWelUVurtaOY8qP+k2Fkk91DctsadzL8=
+	t=1735810596; cv=none; b=qgCwkfhWCQEsoKbx68dVHd3/Dk7s9X0IK8PPvPwJiUCaLRrlM7q73HlVzgJ1cQFkbL6Zr/4S44JDLoczqul0lEqqF+NxNyY0QFmvgnWaaFDXa/3tKOLpMBWxK0395BDy1iYI394DuEcD1sjpdRw/Cr0kAHJAC8OSYAjy//1O4vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735810487; c=relaxed/simple;
-	bh=OUDBQJThGstWw2l0mZV4B+XMNXyMUYV3+qOoyISK7Vk=;
+	s=arc-20240116; t=1735810596; c=relaxed/simple;
+	bh=m4HpPUCNfrmW1y5TFM5fRmU/JVwN1ECD7vuAH4bP3Hs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEX2Z861XNVnZUCERAIiiWxnIsdXb/YvWQghcRxKZO1DRja9PohKuhR1tL+HUk/QIKxMMAdLb5ef8A+OEYHImfq59PSl3C+0HjOueWhr/Q72NallN0xxKwvaQbGfsmlelvrbPCJKNsWrw38lyDt4bfuuW56O066xL0nywYkprc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Crig4Kem; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 397E0C4CED0;
-	Thu,  2 Jan 2025 09:34:40 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgpEKDPTac0iohMGbvs31VP/RzPkCrOoDP6HZJ9VCe9K4WdKIFVpg94qaB01jIQdlz1CUntKxCRNU8yhnzd8+MhyaNuYIurDCaCe0+XjVrNPBGODYO2YJVTfZHA2O0Ccrp9CxCrsdhnQYAR6SB9xe6e1g8OhaBKo1NAg1kwW5PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Et+cmj6f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C871C4CED0;
+	Thu,  2 Jan 2025 09:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735810486;
-	bh=OUDBQJThGstWw2l0mZV4B+XMNXyMUYV3+qOoyISK7Vk=;
+	s=k20201202; t=1735810596;
+	bh=m4HpPUCNfrmW1y5TFM5fRmU/JVwN1ECD7vuAH4bP3Hs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Crig4KemQXRV1w8TLVFsk2QTdTY7lAMSw5NQyFQMUb1IPCHUk5OGqeb9fGV7q3f6x
-	 zLtp6IeSL4GHC+M0BmJXM2ysEc1e6VAZ9FffcQDTEGFG7fF4GOug7abN/WQoE57RHz
-	 yTJA9hQ4CWQo0961A4ntC16Kx9aDy3JEqrDQSJiByr3l1zeN2RfdMJ3Heg4sZcU7p7
-	 JCFmHSI2p5sPaxfSQN88gTxeDLWpHjY4gTqd57+Bd39sTgRtnpKyk2FisLQRxgEV6K
-	 LKB04rrSZmXWmNgKEbI9EtvRPNiGZNR859TQh2tU90JFfwN7nkIB3jXbY/TdwdUmIy
-	 MPIjdcKmEoPVw==
-Date: Thu, 2 Jan 2025 10:34:37 +0100
+	b=Et+cmj6fgjZE3wJkcRpXGpKlmAbZMYErgLORbnn8UFbVMr3Ex9prJdT9YfoITx0if
+	 VbPGLSBVDiZId0LCbBw23hvq8vvtQilCfunH3W2ftNa0ph8BQ/Xcxwy3VnLIQrL2r7
+	 E6scUeUjudul+U59E1EPtgDtxipdRm4oS14wtVsqhb2A18JP+iU22IGaYGJYUYG6Lk
+	 tkRl6Er2Wwx0kKHKlhZVKhJPG7ejBO9csqeWv9VmkFKo7XuV/0kL4zyH4WtcbeYLla
+	 JDk1k8lFyNSJsXGDQryE3BeJvLV0JbjEHVSx0En8HvMcemI+xosgX3gaTFzikgtXWQ
+	 plJnGTIjEAR0A==
+Date: Thu, 2 Jan 2025 10:36:27 +0100
 From: Danilo Krummrich <dakr@kernel.org>
 To: Gary Guo <gary@garyguo.net>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -56,11 +56,12 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	rcu@vger.kernel.org, Wedson Almeida Filho <wedsonaf@gmail.com>
-Subject: Re: [PATCH v7 02/16] rust: implement generic driver registration
-Message-ID: <Z3ZdreeFVp_1KktC@cassiopeiae>
+Subject: Re: [PATCH v7 03/16] rust: implement `IdArray`, `IdTable` and
+ `RawDeviceId`
+Message-ID: <Z3ZeG5NJRJEVGCYi@cassiopeiae>
 References: <20241219170425.12036-1-dakr@kernel.org>
- <20241219170425.12036-3-dakr@kernel.org>
- <20241224195821.3b43302b.gary@garyguo.net>
+ <20241219170425.12036-4-dakr@kernel.org>
+ <20241224201002.6a69c77c.gary@garyguo.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,238 +70,124 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241224195821.3b43302b.gary@garyguo.net>
+In-Reply-To: <20241224201002.6a69c77c.gary@garyguo.net>
 
-Hi Gary,
-
-On Tue, Dec 24, 2024 at 07:58:21PM +0000, Gary Guo wrote:
-> On Thu, 19 Dec 2024 18:04:04 +0100
+On Tue, Dec 24, 2024 at 08:10:02PM +0000, Gary Guo wrote:
+> On Thu, 19 Dec 2024 18:04:05 +0100
 > Danilo Krummrich <dakr@kernel.org> wrote:
 > 
-> > Implement the generic `Registration` type and the `RegistrationOps`
-> > trait.
+> > Most subsystems use some kind of ID to match devices and drivers. Hence,
+> > we have to provide Rust drivers an abstraction to register an ID table
+> > for the driver to match.
 > > 
-> > The `Registration` structure is the common type that represents a driver
-> > registration and is typically bound to the lifetime of a module. However,
-> > it doesn't implement actual calls to the kernel's driver core to register
-> > drivers itself.
-> > 
-> > Instead the `RegistrationOps` trait is provided to subsystems, which have
-> > to implement `RegistrationOps::register` and
-> > `RegistrationOps::unregister`. Subsystems have to provide an
-> > implementation for both of those methods where the subsystem specific
-> > variants to register / unregister a driver have to implemented.
-> > 
-> > For instance, the PCI subsystem would call __pci_register_driver() from
-> > `RegistrationOps::register` and pci_unregister_driver() from
-> > `DrvierOps::unregister`.
+> > Generally, those IDs are subsystem specific and hence need to be
+> > implemented by the corresponding subsystem. However, the `IdArray`,
+> > `IdTable` and `RawDeviceId` types provide a generalized implementation
+> > that makes the life of subsystems easier to do so.
 > > 
 > > Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
 > > Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> > Co-developed-by: Gary Guo <gary@garyguo.net>
+> > Signed-off-by: Gary Guo <gary@garyguo.net>
+> > Co-developed-by: Fabien Parent <fabien.parent@linaro.org>
+> > Signed-off-by: Fabien Parent <fabien.parent@linaro.org>
 > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > 
-> Hi Danilo,
-> 
-> I think there're soundness issues with this API, please see comments
-> inlined below.
-
-Just in case you did not note, this series has been applied to the driver-core
-tree already.
-
-> 
-> Best,
-> Gary
+> Thank you for converting my prototype to a working patch. There's a nit below.
 > 
 > > ---
-> >  MAINTAINERS           |   1 +
-> >  rust/kernel/driver.rs | 117 ++++++++++++++++++++++++++++++++++++++++++
-> >  rust/kernel/lib.rs    |   1 +
-> >  3 files changed, 119 insertions(+)
-> >  create mode 100644 rust/kernel/driver.rs
+> >  MAINTAINERS              |   1 +
+> >  rust/kernel/device_id.rs | 165 +++++++++++++++++++++++++++++++++++++++
+> >  rust/kernel/lib.rs       |   6 ++
+> >  3 files changed, 172 insertions(+)
+> >  create mode 100644 rust/kernel/device_id.rs
 > > 
 > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index baf0eeb9a355..2ad58ed40079 100644
+> > index 2ad58ed40079..3cfb68650347 100644
 > > --- a/MAINTAINERS
 > > +++ b/MAINTAINERS
 > > @@ -7033,6 +7033,7 @@ F:	include/linux/kobj*
 > >  F:	include/linux/property.h
 > >  F:	lib/kobj*
 > >  F:	rust/kernel/device.rs
-> > +F:	rust/kernel/driver.rs
+> > +F:	rust/kernel/device_id.rs
+> >  F:	rust/kernel/driver.rs
 > >  
 > >  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
-> >  M:	Nishanth Menon <nm@ti.com>
-> > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+> > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
 > > new file mode 100644
-> > index 000000000000..c1957ee7bb7e
+> > index 000000000000..e5859217a579
 > > --- /dev/null
-> > +++ b/rust/kernel/driver.rs
-> > @@ -0,0 +1,117 @@
-> > +// SPDX-License-Identifier: GPL-2.0
+> > +++ b/rust/kernel/device_id.rs
+> > 
+> > <snip>
+> >
 > > +
-> > +//! Generic support for drivers of different buses (e.g., PCI, Platform, Amba, etc.).
-> > +//!
-> > +//! Each bus / subsystem is expected to implement [`RegistrationOps`], which allows drivers to
-> > +//! register using the [`Registration`] class.
-> > +
-> > +use crate::error::{Error, Result};
-> > +use crate::{init::PinInit, str::CStr, try_pin_init, types::Opaque, ThisModule};
-> > +use core::pin::Pin;
-> > +use macros::{pin_data, pinned_drop};
-> > +
-> > +/// The [`RegistrationOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform,
-> > +/// Amba, etc.) to provide the corresponding subsystem specific implementation to register /
-> > +/// unregister a driver of the particular type (`RegType`).
-> > +///
-> > +/// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
-> > +/// `bindings::__pci_register_driver` from `RegistrationOps::register` and
-> > +/// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`.
-> > +pub trait RegistrationOps {
-> > +    /// The type that holds information about the registration. This is typically a struct defined
-> > +    /// by the C portion of the kernel.
-> > +    type RegType: Default;
-> > +
-> > +    /// Registers a driver.
-> > +    ///
-> > +    /// On success, `reg` must remain pinned and valid until the matching call to
-> > +    /// [`RegistrationOps::unregister`].
-> 
-> This looks like an obligation for the caller, so this function should
-> be unsafe?
-> 
-> > +    fn register(
-> > +        reg: &Opaque<Self::RegType>,
-> > +        name: &'static CStr,
-> > +        module: &'static ThisModule,
-> > +    ) -> Result;
-> > +
-> > +    /// Unregisters a driver previously registered with [`RegistrationOps::register`].
-> 
-> Similarly this is an obligation for the caller.
-
-I think you're right. I didn't want this to be unsafe, and when I got rid of the
-raw pointer, and hence removed the unsafe, I did miss the fact you point out
-here. It's a bit unfortunate, especially, since `register` and `unregister` are
-only ever called from this file.
-
-I'll send a patch to fix it up, unless you want to send one yourself.
-
-> 
-> > +    fn unregister(reg: &Opaque<Self::RegType>);
-> > +}
-> > +
-> > +/// A [`Registration`] is a generic type that represents the registration of some driver type (e.g.
-> > +/// `bindings::pci_driver`). Therefore a [`Registration`] must be initialized with a type that
-> > +/// implements the [`RegistrationOps`] trait, such that the generic `T::register` and
-> > +/// `T::unregister` calls result in the subsystem specific registration calls.
-> > +///
-> > +///Once the `Registration` structure is dropped, the driver is unregistered.
-> > +#[pin_data(PinnedDrop)]
-> > +pub struct Registration<T: RegistrationOps> {
-> > +    #[pin]
-> > +    reg: Opaque<T::RegType>,
-> > +}
-> > +
-> > +// SAFETY: `Registration` has no fields or methods accessible via `&Registration`, so it is safe to
-> > +// share references to it with multiple threads as nothing can be done.
-> > +unsafe impl<T: RegistrationOps> Sync for Registration<T> {}
-> > +
-> > +// SAFETY: Both registration and unregistration are implemented in C and safe to be performed from
-> > +// any thread, so `Registration` is `Send`.
-> > +unsafe impl<T: RegistrationOps> Send for Registration<T> {}
-> > +
-> > +impl<T: RegistrationOps> Registration<T> {
-> > +    /// Creates a new instance of the registration object.
-> > +    pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Self, Error> {
-> > +        try_pin_init!(Self {
-> > +            reg <- Opaque::try_ffi_init(|ptr: *mut T::RegType| {
-> > +                // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write.
-> > +                unsafe { ptr.write(T::RegType::default()) };
-> 
-> Any reason that this is initialised with a default, and not be up to
-> `T::register` to initialise?
-
-`T::RegType` is always an FFI type, so this can be in the common code.
-
-> 
-> > +
-> > +                // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write, and it has
-> > +                // just been initialised above, so it's also valid for read.
-> 
-> Opaque can hold uninitialised value so as long as `ptr` is not dangling
-> this is fine. There's no need to actually initialise.
-
-I think the "initialized" part is from before it was an `Opaque`.
-
-> 
-> > +                let drv = unsafe { &*(ptr as *const Opaque<T::RegType>) };
-> > +
-> > +                T::register(drv, name, module)
-> > +            }),
-> > +        })
+> > +impl<T: RawDeviceId, const N: usize> RawIdArray<T, N> {
+> > +    #[doc(hidden)]
+> > +    pub const fn size(&self) -> usize {
+> > +        core::mem::size_of::<Self>()
 > > +    }
 > > +}
 > > +
-> > +#[pinned_drop]
-> > +impl<T: RegistrationOps> PinnedDrop for Registration<T> {
-> > +    fn drop(self: Pin<&mut Self>) {
-> > +        T::unregister(&self.reg);
-> > +    }
-> > +}
+> 
+> This is not necessary, see below.
+> 
+> > <snip>
+> >
 > > +
-> > +/// Declares a kernel module that exposes a single driver.
-> > +///
-> > +/// It is meant to be used as a helper by other subsystems so they can more easily expose their own
-> > +/// macros.
+> > +/// Create device table alias for modpost.
 > > +#[macro_export]
+> > +macro_rules! module_device_table {
+> > +    ($table_type: literal, $module_table_name:ident, $table_name:ident) => {
+> > +        #[rustfmt::skip]
+> > +        #[export_name =
+> > +            concat!("__mod_device_table__", $table_type,
+> > +                    "__", module_path!(),
+> > +                    "_", line!(),
+> > +                    "_", stringify!($table_name))
+> > +        ]
+> > +        static $module_table_name: [core::mem::MaybeUninit<u8>; $table_name.raw_ids().size()] =
+> > +            unsafe { core::mem::transmute_copy($table_name.raw_ids()) };
 > 
-> I think this is supposed to be used by other macros only? If so, please
-> add `#[doc(hidden)]`.
+> const_size_of_val will be stable in Rust 1.85, so we can start using the
+> feature and 
+> 
+> static $module_table_name: [core::mem::MaybeUninit<u8>; core::mem::size_of_val($table_name.raw_ids())] =
+>     unsafe { core::mem::transmute_copy($table_name.raw_ids()) };
+> 
+> should work.
 
-Why? It's a public kernel API to be used by bus abstractions. I don't think
-documentation should be for drivers only.
+Thanks for the note, this indeed saves a few lines.
+
+Since the series has been applied already, feel free to send a patch.
 
 > 
-> > +macro_rules! module_driver {
-> > +    (<$gen_type:ident>, $driver_ops:ty, { type: $type:ty, $($f:tt)* }) => {
-> > +        type Ops<$gen_type> = $driver_ops;
-> > +
-> > +        #[$crate::prelude::pin_data]
-> > +        struct DriverModule {
-> > +            #[pin]
-> > +            _driver: $crate::driver::Registration<Ops<$type>>,
-> > +        }
-> > +
-> > +        impl $crate::InPlaceModule for DriverModule {
-> > +            fn init(
-> > +                module: &'static $crate::ThisModule
-> > +            ) -> impl $crate::init::PinInit<Self, $crate::error::Error> {
-> > +                $crate::try_pin_init!(Self {
-> > +                    _driver <- $crate::driver::Registration::new(
-> > +                        <Self as $crate::ModuleMetadata>::NAME,
-> > +                        module,
-> > +                    ),
-> > +                })
-> > +            }
-> > +        }
-> > +
-> > +        $crate::prelude::module! {
-> > +            type: DriverModule,
-> > +            $($f)*
-> > +        }
-> > +    }
+> > +    };
 > > +}
 > > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index 61b82b78b915..7818407f9aac 100644
+> > index 7818407f9aac..66149ac5c0c9 100644
 > > --- a/rust/kernel/lib.rs
 > > +++ b/rust/kernel/lib.rs
-> > @@ -35,6 +35,7 @@
+> > @@ -18,6 +18,11 @@
+> >  #![feature(inline_const)]
+> >  #![feature(lint_reasons)]
+> >  #![feature(unsize)]
+> > +// Stable in Rust 1.83
+> > +#![feature(const_maybe_uninit_as_mut_ptr)]
+> > +#![feature(const_mut_refs)]
+> > +#![feature(const_ptr_write)]
+> > +#![feature(const_refs_to_cell)]
+> >  
+> >  // Ensure conditional compilation based on the kernel configuration works;
+> >  // otherwise we may silently break things like initcall handling.
+> > @@ -35,6 +40,7 @@
 > >  mod build_assert;
 > >  pub mod cred;
 > >  pub mod device;
-> > +pub mod driver;
+> > +pub mod device_id;
+> >  pub mod driver;
 > >  pub mod error;
 > >  #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
-> >  pub mod firmware;
 > 
 
