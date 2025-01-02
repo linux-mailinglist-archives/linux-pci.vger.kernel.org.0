@@ -1,91 +1,163 @@
-Return-Path: <linux-pci+bounces-19190-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19191-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DB0CA001C4
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 00:30:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F720A001DE
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 00:50:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9945164C39
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 23:30:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B4F1162890
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 23:50:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CB171BFE0D;
-	Thu,  2 Jan 2025 23:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D62661ABEC7;
+	Thu,  2 Jan 2025 23:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zh5XVJyA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KCcAe/Pf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384731BEF86
-	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 23:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B05149E00
+	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 23:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735860501; cv=none; b=IqxIv2Uo/UHTtUBleWTRP0vZw+vyREFp2xWes7pqiksr6FSaRpsqruUc9GkqbCyDTjH+lKKCrCaiHBKWAqbC9M+Gf9biRXQbYNclnQHe3s4FwNzlUhNwY0ATRR3UcvlshEeq6Z7F+C03ZFxPr1U3zLRELU4MPSUiquaJxAFJ29w=
+	t=1735861811; cv=none; b=hIrUVajCNiHttKc4oKI39i9v7p4ORLtM2BVN6IIz8nfwh0CdvybadnOYG8rM4GvTH1RTf1i9ZJPOVWHWewxpa0pfpgUQofB1GyV+BKSvacGIE3FxNYmiHRSupOFgk7IcMzpMWO3axT+gfoBfr2EIFz9vWUQ2eWvoULeYoHJqBwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735860501; c=relaxed/simple;
-	bh=o8Evq/Jq7VTHs84rjitCUFOTChZzkwzLSgAyMnDD4CA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uyDq9Oo8HdZ8PL59Q6wQzeXH2mnp4WWUpeg6hBT1rPZafhvBEwzOskkuk4siEq4QDZAT7pSODxc86tiZcq4MsakvARtphc14WfJV2XaYtHpUDSANRFHg5BLJ/tbEEVl4YBdMwQBlAWY65MjWfzCxJD3e7rWyKOjQseX9EO0F5DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zh5XVJyA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8304DC4CED7;
-	Thu,  2 Jan 2025 23:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735860500;
-	bh=o8Evq/Jq7VTHs84rjitCUFOTChZzkwzLSgAyMnDD4CA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Zh5XVJyAyIKPbBdYNw8zG8iHqib2Doua4b1soxpN4u91DBRCvDqe0t+ef1BcRPmoa
-	 y6EXojfQCmXuS6sJ0Jp4/SWvy/+nnpNDQTxc9GoSMW30T9rqTu5/MKdHVnKOH7sXPY
-	 6yCXakKSOntzIKxnFtwGhH4raj67Ond3HtwPRpbeJsY3C4WoyRzLLbbi+TlaEGgkEL
-	 Q4WvYR//5ibRXe07gWFZ5y6kX53IGw0t9sx9NybbjYZFQhZ7zHMCHSpCNKX5nMIrpX
-	 2IBg+mCPOecgO1WYHOB+0VIJhn5HVgBdSjcKUXa2Nf1C+hXlS+xdMI2f+tC3XbogwU
-	 DAZ208w3zAc0g==
-Date: Thu, 2 Jan 2025 17:28:17 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Christian Marangi <ansuelsmth@gmail.com>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
-	Hui Ma <hui.ma@airoha.com>
-Subject: Re: [PATCH v3] PCI: mediatek-gen3: Avoid PCIe resetting via
- PCIE_RSTB for Airoha EN7581 SoC
-Message-ID: <20250102232817.GA4147111@bhelgaas>
+	s=arc-20240116; t=1735861811; c=relaxed/simple;
+	bh=P3f0e0KsZC3uxVFqjTtm1/WBjQsByv+LK7vD91x80rY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X+7OvjT1pSpOZxsUbvINOS8qfUncZ2/4//P0vmucQjAjkvKPLVL43iueLBKhZyp4YGdcXafbdgRjhfns7fORGxp3Gn6psXQbCZrl4Cb6450/+wqEZ7ogCcFo+iq2fIXptTFWgoIqZdHGn5KaYboKyOBWVJ4H8PoSWkT7/n2lmDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KCcAe/Pf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1735861808;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+31JuwM03Y6EdVp3v3LgbQg7ZDKiY/lu+6/XlJPbttk=;
+	b=KCcAe/PfoPWaSIVFsAXUJsR3lRT8YRsA0y4vKju122nzh8MeNe0fKNUkEeO941c+Wf5zbP
+	4lvvh+Y0LKSKqe6LbgJ0xT1SRBAXk+4x963dTQRKMdOPUC5QYPkQbhQWJXcvoI+v5zBLaN
+	ukC8ftGO6WIdGuUg5mn3swXwUp88r6k=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-32-ak22uXrjOIaDoVGfXZXjNQ-1; Thu, 02 Jan 2025 18:50:07 -0500
+X-MC-Unique: ak22uXrjOIaDoVGfXZXjNQ-1
+X-Mimecast-MFC-AGG-ID: ak22uXrjOIaDoVGfXZXjNQ
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a78fc19e2aso13709505ab.3
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jan 2025 15:50:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735861807; x=1736466607;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+31JuwM03Y6EdVp3v3LgbQg7ZDKiY/lu+6/XlJPbttk=;
+        b=bWawQQmAYnrGwcdV+lNoA3jqho9WKWqn/vIgyuxSmFu6BBI0BmnugusAW8mJQjNrRD
+         MFfopopM7asvPoHPCwlSNtMlx93peHuTlenhhAtGSdoN+7UKDh4zF7URTdrxfu3xrVYs
+         4D6y3Qa4JxMCTNT63UNFKYogVDuRIS4hy8FUYk6ywx4xQYEyko8wYTEjMQIs+p5nstAy
+         KBqqZ4+87FAvI0gFtkzzSCc8w/jp7TEILCKnfFsTVHi36RkH9PPsxh0JAnnGGbMGekWp
+         LWiljcr2q/0Y/l4IICcLuO9mMZBs6TDtO+vhncXo+YEouHTxqgGvpPd10+ObuWn1/vlz
+         OPSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPVLahx7ABIKTg8ccG4efiUBRaz4+ayY2yHxiOZPwqD12rve4Uah6unl4X1Ed6cFi3UmxPHlL2SvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4xI097HpTmg6aTswjmC3pLwEXrh1RBVuAXOx63kTGuZ1Cv+Lx
+	14hfpQDinoUNHVb/UjbHJGGCGVbTRWINoAiighRHoPJP2qUPoesibr6D7Y0mypyOr+8MXtTuVUK
+	EMBGcv1vdZeGfRkL5ZESm1tVD+U9cnI0mp/8+5mr1zPQTFnvaULTwyuTRxg==
+X-Gm-Gg: ASbGncsFzqJkDB4mmuZbRRsJHofL2cEfPzm1YA1hD/M7STnbXZfg+Ua1fHILsiU4v1K
+	fXrmzRmV/9qLLU8OWFsIjqSkK2NBC/WlXm+pPuu42PD4pr8oqZWnB6YRvgsy1hVE2TRgGYVp3UY
+	Eh06y+8pIrCDU5iRgqppZO41GzRWkrQ/j9A44TyPCl9rcQbRDJ+HiQJMGKXRe8rKEKQHxUGqwOf
+	M9goKj/B0qHBKMvfX6WYg20xLB8YJe/v+LgN+7pl6UMfpL6a6CzyyXDQeVO
+X-Received: by 2002:a05:6e02:2198:b0:3a7:bc95:bae5 with SMTP id e9e14a558f8ab-3c2d5247952mr101091335ab.5.1735861806821;
+        Thu, 02 Jan 2025 15:50:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFPdiuvD3nbQOVUd7KLLxbQIFjMW4WTn8Dgh4Oc4yWHhIFUQMePiqwfOYLyExiaxztN6ea8Zg==
+X-Received: by 2002:a05:6e02:2198:b0:3a7:bc95:bae5 with SMTP id e9e14a558f8ab-3c2d5247952mr101091245ab.5.1735861806487;
+        Thu, 02 Jan 2025 15:50:06 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68bf4f405sm7075401173.6.2025.01.02.15.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2025 15:50:05 -0800 (PST)
+Date: Thu, 2 Jan 2025 16:50:04 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: zhangdongdong@eswincomputing.com
+Cc: bhelgaas@google.com, yishaih@nvidia.com, avihaih@nvidia.com,
+ yi.l.liu@intel.com, ankita@nvidia.com, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Remove redundant macro
+Message-ID: <20250102165004.2470fbb0.alex.williamson@redhat.com>
+In-Reply-To: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
+References: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z3Z4jcwtgcXk9Zo6@lore-desk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 02, 2025 at 12:29:17PM +0100, Lorenzo Bianconi wrote:
-> > On Wed, Nov 13, 2024 at 02:58:08PM +0100, Lorenzo Bianconi wrote:
-> > > Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> > > causing occasional PCIe link down issues. In order to overcome the
-> > > problem, PCIE_RSTB signals are not asserted/released during device probe or
-> > > suspend/resume phase and the PCIe block is reset using REG_PCI_CONTROL
-> > > (0x88) and REG_RESET_CONTROL (0x834) registers available in the clock
-> > > module running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
-> > > 
-> > > Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
-> > > specify per-SoC capabilities.
-> 
-> Hi Bjorn,
-> 
-> similar to the other series, this patch is already in Krzysztof's branch.
-> Do you prefer to resend it or just incremental changes?
+On Mon, 16 Dec 2024 09:35:36 +0800
+zhangdongdong@eswincomputing.com wrote:
 
-If it's not too much trouble, I think a new v4 would be simplest so
-the Link: in the lore archives is more correct.
+> From: Dongdong Zhang <zhangdongdong@eswincomputing.com>
+> 
+> Removed the duplicate macro `PCI_VSEC_HDR` and its related macro
+> `PCI_VSEC_HDR_LEN_SHIFT` from `pci_regs.h` to avoid redundancy and
+> inconsistencies. Updated VFIO PCI code to use `PCI_VNDR_HEADER` and
+> `PCI_VNDR_HEADER_LEN()` for consistent naming and functionality.
+> 
+> These changes aim to streamline header handling while minimizing
+> impact, given the niche usage of these macros in userspace.
+> 
+> Signed-off-by: Dongdong Zhang <zhangdongdong@eswincomputing.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_config.c | 5 +++--
+
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
+
+Let me know if this is expected to go through the vfio tree.  Given
+that vfio is just collateral to a PCI change and it's touching PCI
+uapi, I'm assuming it'll go through the PCI tree.  Thanks,
+
+Alex
+
+>  include/uapi/linux/pci_regs.h      | 3 ---
+>  2 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index ea2745c1ac5e..5572fd99b921 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -1389,11 +1389,12 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
+>  
+>  	switch (ecap) {
+>  	case PCI_EXT_CAP_ID_VNDR:
+> -		ret = pci_read_config_dword(pdev, epos + PCI_VSEC_HDR, &dword);
+> +		ret = pci_read_config_dword(pdev, epos + PCI_VNDR_HEADER,
+> +					    &dword);
+>  		if (ret)
+>  			return pcibios_err_to_errno(ret);
+>  
+> -		return dword >> PCI_VSEC_HDR_LEN_SHIFT;
+> +		return PCI_VNDR_HEADER_LEN(dword);
+>  	case PCI_EXT_CAP_ID_VC:
+>  	case PCI_EXT_CAP_ID_VC9:
+>  	case PCI_EXT_CAP_ID_MFVC:
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 1601c7ed5fab..bcd44c7ca048 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1001,9 +1001,6 @@
+>  #define PCI_ACS_CTRL		0x06	/* ACS Control Register */
+>  #define PCI_ACS_EGRESS_CTL_V	0x08	/* ACS Egress Control Vector */
+>  
+> -#define PCI_VSEC_HDR		4	/* extended cap - vendor-specific */
+> -#define  PCI_VSEC_HDR_LEN_SHIFT	20	/* shift for length field */
+> -
+>  /* SATA capability */
+>  #define PCI_SATA_REGS		4	/* SATA REGs specifier */
+>  #define  PCI_SATA_REGS_MASK	0xF	/* location - BAR#/inline */
+
 
