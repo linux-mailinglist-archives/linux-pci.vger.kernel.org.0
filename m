@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-19162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C42149FF8C8
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 12:31:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF9F89FF8CB
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 12:32:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39C963A2F78
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 11:31:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E782C1882DDE
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 11:32:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41BC81AC44D;
-	Thu,  2 Jan 2025 11:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981E11B043C;
+	Thu,  2 Jan 2025 11:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S3miscrQ"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X2biQtwX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFAA1AC435;
-	Thu,  2 Jan 2025 11:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8CF1AC435;
+	Thu,  2 Jan 2025 11:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735817483; cv=none; b=luMfOqkpvVQ8g0Ft9sUb9SSNiZ7T5KBNkl4v/E2crlyT0Fnm0pbP7EUfWhAgHsbgQMSZxWNVJQ/a9wBeZmmEUT4axhDGJ0/ZMv9meM2/Zmqtl1r57EkghYOZ/ZvwD6OGcYImpKdZMPtHlioZ1XwZ74POd7U6wSKv47sLwGNrpz8=
+	t=1735817488; cv=none; b=hI9lTvNnw5F9Ribkos6NapBS8rlWF4U9Vp0UjCU+vD9SWd0HZyY3myYz8DgeNDmYxbCl9LpiDDhaBvVYCQ5LjebbSHI9Xhxk3rHqIeCWfuT2JGwLv3DY/7Nv0kR5t4FSSLBG1pWbgYZwqKvUGmWRyJ6Q1dYXj7ENyFEPq4uzU1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735817483; c=relaxed/simple;
-	bh=kR5DZg11/lS8sJzEVh31zwKRWJNDoRwVH3FjDzxFd5A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AU4Why5csuhj+7GyM6ngiagAvYQcn967Jw2/MTKX2wQePbu/KY0jq8WogRQePF9C8iingILpFj7rx2ra5OQsTFQqktMU60FToVMM/N3DtQwJQRZh7ffEGqABaIOlb3MxwVh0WqaScqN4u/YWLF5CbKb75EPz+G3vgf0SuH/BQuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S3miscrQ; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1735817488; c=relaxed/simple;
+	bh=71FtpYofxPuRsZljt7RUB75kNyxMYW+CjPPzAy4ipkQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m/5Zj76Qyj06G3nhXwb/WO8YTfInsYdROnlPcqO5l7oh9ij22sZ4fn5fdRDj9qfqmC/kPTf50i+934MY9n9M7wc9le75npnYunJBKkB/2jYAZra6CIrpkE5DVFWLhKgBZEatF6A5wVHa8fXCyMaabqiDU5EWk4n30NgBj8flX8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X2biQtwX; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 502Abt4f015290;
-	Thu, 2 Jan 2025 11:31:12 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5020UUIX032704;
+	Thu, 2 Jan 2025 11:31:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vUeLGBAxvts4X203Q/MGdubbLNCCoO34ykMY+aa8tUg=; b=S3miscrQjh53QEBH
-	63BJ/CDdpOr4h/Vzlmx/7ClGimyObEcbasB3hTq8GDzBBXJdVWKvgQ+RU19U/Iox
-	l1h+uBi3kZLPqx8LgPHeVpUD0kCtYZA0QqSgHKSIXuKC8DyLbKJOKpTMbs0Mbsjg
-	sAuEjbvJ6KGxkarw4OOXxLUdnLV0deqzdP904iXQD6KhiLuiCCAKgvkKJGvtuuUZ
-	KT4SK7EX/SliJ0whBKTh4pqZWibeVXRS+s4hFRnmf/40KNWFn4pD9akqmScUCK+w
-	zmdFXasioBxLIefcNRhsTWNLXpN7D3LpGTNGRww4D+i1UgbtSO/+8zhjV35NIeGi
-	cijaIw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43ws7a82u2-1
+	wh7FHFrsbaMUmnELAnpAnab0WW9eAXgZTYTMfK9n5vM=; b=X2biQtwXa0qtM2vw
+	zzw/6GArMDANrGwOasiDXRKbX0JJtdLoKdm8UQ54PHAVTTRs5I7YwWkte0q07Btb
+	9dxdZ18CSYQF3DPT+Tyyr9+foCnhGRJ5wrDk0rjF9YrWd+07JtkMZnUz2EIJRGYw
+	Rz1R8x8wQuoDfrwgaAK8CvS7k+J6ZwhNZoasMyCShMYDOo+GgJSj9z7/bxRJdXZl
+	svbzkP0CahOUsawU4a4Xaz4bqMRwSukiyyh1scg9UxEU7mqAha4yYXCU573XdVPd
+	i6/e25CTxS08qxcfuzjoNPQlQpY3IW6Js4oXnzlB9GCjWCvmbyvD1Ohz7E37WvV4
+	Aum/rA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43wfy414kd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Jan 2025 11:31:12 +0000 (GMT)
+	Thu, 02 Jan 2025 11:31:17 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 502BV2Bn002783
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 502BV8SD008627
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 2 Jan 2025 11:31:02 GMT
+	Thu, 2 Jan 2025 11:31:08 GMT
 Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 2 Jan 2025 03:30:56 -0800
+ 15.2.1544.9; Thu, 2 Jan 2025 03:31:02 -0800
 From: Varadarajan Narayanan <quic_varada@quicinc.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
@@ -66,9 +66,12 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-phy@lists.infradead.org>
-Subject: [PATCH v5 3/5] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
-Date: Thu, 2 Jan 2025 17:00:17 +0530
-Message-ID: <20250102113019.1347068-4-quic_varada@quicinc.com>
+CC: Praveenkumar I <quic_ipkumar@quicinc.com>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+Subject: [PATCH v5 4/5] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Date: Thu, 2 Jan 2025 17:00:18 +0530
+Message-ID: <20250102113019.1347068-5-quic_varada@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250102113019.1347068-1-quic_varada@quicinc.com>
 References: <20250102113019.1347068-1-quic_varada@quicinc.com>
@@ -84,87 +87,293 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: eMWF3jbt_JODEXyErEDXygikOpshaQCH
-X-Proofpoint-GUID: eMWF3jbt_JODEXyErEDXygikOpshaQCH
+X-Proofpoint-GUID: 7QSysZ4lPsZVpREZV-I8YCzK2XSgg0Le
+X-Proofpoint-ORIG-GUID: 7QSysZ4lPsZVpREZV-I8YCzK2XSgg0Le
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 adultscore=0 spamscore=0 impostorscore=0
- phishscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 bulkscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
+ impostorscore=0 phishscore=0 adultscore=0 suspectscore=0
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2411120000 definitions=main-2501020100
 
-Document the PCIe controller on IPQ5332 platform.
+From: Praveenkumar I <quic_ipkumar@quicinc.com>
 
+Add phy and controller nodes for pcie0_x1 and pcie1_x2.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
 Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 ---
-v5: Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
+v5: Add 'num-lanes' to "pcie1_phy: phy@4b1000"
+    Make ipq5332 as main and ipq9574 as fallback compatible
+    Move controller nodes per address
+    Having Konrad's Reviewed-By
 
-v4: * v3 reused ipq9574 bindings for ipq5332. Instead add one for ipq5332
-    * DTS uses ipq9574 compatible as fallback. Hence move ipq9574 to be able
-      to use the 'reg' section for both ipq5332 and ipq9574. Else, dtbs_check
-      and dt_binding_check flag errors.
+v4: Remove 'reset-names' as driver uses bulk APIs
+    Remove 'clock-output-names' as driver uses bulk APIs
+    Add missing reset for pcie1_phy
+    Convert 'reg-names' to a vertical list
+    Move 'msi-map' before interrupts
+
+v3: Fix compatible string for phy nodes
+    Use ipq9574 as backup compatible instead of new compatible for ipq5332
+    Fix mixed case hex addresses
+    Add "mhi" space
+    Removed unnecessary comments and stray blank lines
+
+v2: Fix nodes' location per address
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi | 221 +++++++++++++++++++++++++-
+ 1 file changed, 219 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index bd87f6b49d68..9f37eca1ce0d 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -26,7 +26,6 @@ properties:
-           - qcom,pcie-ipq8064-v2
-           - qcom,pcie-ipq8074
-           - qcom,pcie-ipq8074-gen3
--          - qcom,pcie-ipq9574
-           - qcom,pcie-msm8996
-           - qcom,pcie-qcs404
-           - qcom,pcie-sdm845
-@@ -34,6 +33,10 @@ properties:
-       - items:
-           - const: qcom,pcie-msm8998
-           - const: qcom,pcie-msm8996
-+      - items:
-+          - enum:
-+              - qcom,pcie-ipq5332
-+          - const: qcom,pcie-ipq9574
+diff --git a/arch/arm64/boot/dts/qcom/ipq5332.dtsi b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+index d3c3e215a15c..89daf955e4bd 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5332.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+@@ -186,6 +186,43 @@ rng: rng@e3000 {
+ 			clock-names = "core";
+ 		};
  
-   reg:
-     minItems: 4
-@@ -165,7 +168,6 @@ allOf:
-             enum:
-               - qcom,pcie-ipq6018
-               - qcom,pcie-ipq8074-gen3
--              - qcom,pcie-ipq9574
-     then:
-       properties:
-         reg:
-@@ -206,6 +208,8 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,pcie-ipq5332
-+              - qcom,pcie-ipq9574
-               - qcom,pcie-sdx55
-     then:
-       properties:
-@@ -407,6 +411,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,pcie-ipq5332
-               - qcom,pcie-ipq9574
-     then:
-       properties:
-@@ -555,6 +560,7 @@ allOf:
-               enum:
-                 - qcom,pcie-apq8064
-                 - qcom,pcie-ipq4019
-+                - qcom,pcie-ipq5332
-                 - qcom,pcie-ipq8064
-                 - qcom,pcie-ipq8064v2
-                 - qcom,pcie-ipq8074
++		pcie0_phy: phy@4b0000 {
++			compatible = "qcom,ipq5332-uniphy-pcie-phy";
++			reg = <0x004b0000 0x800>;
++
++			clocks = <&gcc GCC_PCIE3X1_0_PIPE_CLK>,
++				 <&gcc GCC_PCIE3X1_PHY_AHB_CLK>;
++
++			resets = <&gcc GCC_PCIE3X1_0_PHY_BCR>,
++				 <&gcc GCC_PCIE3X1_PHY_AHB_CLK_ARES>,
++				 <&gcc GCC_PCIE3X1_0_PHY_PHY_BCR>;
++
++			#clock-cells = <0>;
++
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		pcie1_phy: phy@4b1000 {
++			compatible = "qcom,ipq5332-uniphy-pcie-phy";
++			reg = <0x004b1000 0x1000>;
++
++			clocks = <&gcc GCC_PCIE3X2_PIPE_CLK>,
++				 <&gcc GCC_PCIE3X2_PHY_AHB_CLK>;
++
++			resets = <&gcc GCC_PCIE3X2_PHY_BCR>,
++				 <&gcc GCC_PCIE3X2_PHY_AHB_CLK_ARES>,
++				 <&gcc GCC_PCIE3X2PHY_PHY_BCR>;
++
++			#clock-cells = <0>;
++
++			#phy-cells = <0>;
++
++			num-lanes = <2>;
++
++			status = "disabled";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq5332-tlmm";
+ 			reg = <0x01000000 0x300000>;
+@@ -212,8 +249,8 @@ gcc: clock-controller@1800000 {
+ 			#interconnect-cells = <1>;
+ 			clocks = <&xo_board>,
+ 				 <&sleep_clk>,
+-				 <0>,
+-				 <0>,
++				 <&pcie1_phy>,
++				 <&pcie0_phy>,
+ 				 <0>;
+ 		};
+ 
+@@ -479,6 +516,186 @@ frame@b128000 {
+ 				status = "disabled";
+ 			};
+ 		};
++
++		pcie1: pcie@18000000 {
++			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
++			reg = <0x00088000 0x3000>,
++			      <0x18000000 0xf1d>,
++			      <0x18000f20 0xa8>,
++			      <0x18001000 0x1000>,
++			      <0x18100000 0x1000>,
++			      <0x0008b000 0x1000>;
++			reg-names = "parf",
++				    "dbi",
++				    "elbi",
++				    "atu",
++				    "config",
++				    "mhi";
++			device_type = "pci";
++			linux,pci-domain = <1>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <2>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			ranges = <0x01000000 0 0x18200000 0x18200000 0 0x00100000>,
++				 <0x02000000 0 0x18300000 0x18300000 0 0x07d00000>;
++
++			msi-map = <0x0 &v2m0 0x0 0xffd>;
++
++			interrupts = <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi0",
++					  "msi1",
++					  "msi2",
++					  "msi3",
++					  "msi4",
++					  "msi5",
++					  "msi6",
++					  "msi7";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 0 412 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &intc 0 0 413 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &intc 0 0 414 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &intc 0 0 415 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_PCIE3X2_AXI_M_CLK>,
++				 <&gcc GCC_PCIE3X2_AXI_S_CLK>,
++				 <&gcc GCC_PCIE3X2_AXI_S_BRIDGE_CLK>,
++				 <&gcc GCC_PCIE3X2_RCHG_CLK>,
++				 <&gcc GCC_PCIE3X2_AHB_CLK>,
++				 <&gcc GCC_PCIE3X2_AUX_CLK>;
++			clock-names = "axi_m",
++				      "axi_s",
++				      "axi_bridge",
++				      "rchng",
++				      "ahb",
++				      "aux";
++
++			resets = <&gcc GCC_PCIE3X2_PIPE_ARES>,
++				 <&gcc GCC_PCIE3X2_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE3X2_AXI_S_STICKY_ARES>,
++				 <&gcc GCC_PCIE3X2_AXI_S_CLK_ARES>,
++				 <&gcc GCC_PCIE3X2_AXI_M_STICKY_ARES>,
++				 <&gcc GCC_PCIE3X2_AXI_M_CLK_ARES>,
++				 <&gcc GCC_PCIE3X2_AUX_CLK_ARES>,
++				 <&gcc GCC_PCIE3X2_AHB_CLK_ARES>;
++			reset-names = "pipe",
++				      "sticky",
++				      "axi_s_sticky",
++				      "axi_s",
++				      "axi_m_sticky",
++				      "axi_m",
++				      "aux",
++				      "ahb";
++
++			phys = <&pcie1_phy>;
++			phy-names = "pciephy";
++
++			interconnects = <&gcc MASTER_SNOC_PCIE3_2_M &gcc SLAVE_SNOC_PCIE3_2_M>,
++					<&gcc MASTER_ANOC_PCIE3_2_S &gcc SLAVE_ANOC_PCIE3_2_S>;
++			interconnect-names = "pcie-mem", "cpu-pcie";
++
++			status = "disabled";
++		};
++
++		pcie0: pcie@20000000 {
++			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
++			reg = <0x00080000 0x3000>,
++			      <0x20000000 0xf1d>,
++			      <0x20000f20 0xa8>,
++			      <0x20001000 0x1000>,
++			      <0x20100000 0x1000>,
++			      <0x00083000 0x1000>;
++			reg-names = "parf",
++				    "dbi",
++				    "elbi",
++				    "atu",
++				    "config",
++				    "mhi";
++			device_type = "pci";
++			linux,pci-domain = <0>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			ranges = <0x01000000 0 0x20200000 0x20200000 0 0x00100000>,
++				 <0x02000000 0 0x20300000 0x20300000 0 0x0fd00000>;
++
++			msi-map = <0x0 &v2m0 0x0 0xffd>;
++
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi0",
++					  "msi1",
++					  "msi2",
++					  "msi3",
++					  "msi4",
++					  "msi5",
++					  "msi6",
++					  "msi7";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 0 35 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &intc 0 0 36 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &intc 0 0 37 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &intc 0 0 38 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_PCIE3X1_0_AXI_M_CLK>,
++				 <&gcc GCC_PCIE3X1_0_AXI_S_CLK>,
++				 <&gcc GCC_PCIE3X1_0_AXI_S_BRIDGE_CLK>,
++				 <&gcc GCC_PCIE3X1_0_RCHG_CLK>,
++				 <&gcc GCC_PCIE3X1_0_AHB_CLK>,
++				 <&gcc GCC_PCIE3X1_0_AUX_CLK>;
++			clock-names = "axi_m",
++				      "axi_s",
++				      "axi_bridge",
++				      "rchng",
++				      "ahb",
++				      "aux";
++
++			resets = <&gcc GCC_PCIE3X1_0_PIPE_ARES>,
++				 <&gcc GCC_PCIE3X1_0_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE3X1_0_AXI_S_STICKY_ARES>,
++				 <&gcc GCC_PCIE3X1_0_AXI_S_CLK_ARES>,
++				 <&gcc GCC_PCIE3X1_0_AXI_M_STICKY_ARES>,
++				 <&gcc GCC_PCIE3X1_0_AXI_M_CLK_ARES>,
++				 <&gcc GCC_PCIE3X1_0_AUX_CLK_ARES>,
++				 <&gcc GCC_PCIE3X1_0_AHB_CLK_ARES>;
++			reset-names = "pipe",
++				      "sticky",
++				      "axi_s_sticky",
++				      "axi_s",
++				      "axi_m_sticky",
++				      "axi_m",
++				      "aux",
++				      "ahb";
++
++			phys = <&pcie0_phy>;
++			phy-names = "pciephy";
++
++			interconnects = <&gcc MASTER_SNOC_PCIE3_1_M &gcc SLAVE_SNOC_PCIE3_1_M>,
++					<&gcc MASTER_ANOC_PCIE3_1_S &gcc SLAVE_ANOC_PCIE3_1_S>;
++			interconnect-names = "pcie-mem", "cpu-pcie";
++
++			status = "disabled";
++		};
+ 	};
+ 
+ 	timer {
 -- 
 2.34.1
 
