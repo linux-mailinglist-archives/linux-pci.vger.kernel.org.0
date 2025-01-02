@@ -1,135 +1,178 @@
-Return-Path: <linux-pci+bounces-19168-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19169-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 501DF9FFA76
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 15:23:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6B389FFAFA
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 16:27:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 478913A067A
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 14:23:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D45051883CD8
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 15:27:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01A55198E60;
-	Thu,  2 Jan 2025 14:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E20711B3950;
+	Thu,  2 Jan 2025 15:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJTdpopN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFQ3BMRY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB63AAD51;
-	Thu,  2 Jan 2025 14:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4841B4124;
+	Thu,  2 Jan 2025 15:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735827800; cv=none; b=XLcW3LeHh2psG9NVeaiyhBOTWn6NDe1rPnSkSOF7MMWhwkhGC8C+yvKA/b4EK53jlLqAD9DBeexNiIcjZXVKKvw9kAfRmSbdaUHU3N6gjEYhj43x0nK9ebuu1BgRoUQhYEj3YJewtpEa/saeZqme3F44HDasxZ8/O/f03xZwstA=
+	t=1735831617; cv=none; b=W/9LS0vjyP/KUje+0wGrFk58RhHkC6d08x5fqhUb+fZx+RMgWbPfDpWZn/9I/zhTVIBrSWzsKXToxnvbhBH2dzW9wvO4z5TaPqHglYEtiKWMXLtzcbozkCY59b99qhcA1ehBXh2RNVisqChZQ9K+fX19iuQD+gw2dwS7R7ZrrYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735827800; c=relaxed/simple;
-	bh=WBASArHNWuzDRkBlzLrre+5pUpttJP04ha3ml0jtfCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2IYBj9EurKjW8fPPOenwbuaDqR1T4IDFMp87DGDYusi9upM/tj4ycNRtz+tEkv59vmJUS8z5bs3LBsTFp80BtzixZMwk9nx/a46wM0G1BAID8/2pLK5QPNXzZ00P2eM3Y+qXbtX+QjwdIHG03yI9JlqG0al2MpkvirbytFm6SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJTdpopN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0884CC4CED0;
-	Thu,  2 Jan 2025 14:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735827800;
-	bh=WBASArHNWuzDRkBlzLrre+5pUpttJP04ha3ml0jtfCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UJTdpopNJ8Vj/ZLQ+tn7e1QU4O0Wl0nN6iLW8fcuhsETsiToAynXzvl01EdD3PM4M
-	 zUvWDEgp0z8fKFKBYtIL2XqB3GxlLhI3kZpmWvpXV7ONrsEOE8nfdEa003xw97t5QX
-	 jJEW+U/CfV4q8re1wf+223LksgBfYgj6WUZ86ACCp08KpZEU8Vx1wIk0cKUzmBxpMR
-	 BSwFtQMo00zb1XPCKkUWaH4k9nKxS5PT+81SXVgPXahXc40jHlbZFgqo/rn4wlurGr
-	 SklXJ73W/VNXkOluc9BirsLEIDaqDRg9u5AJF46rZJxph5QOPDRvx8bDyBjX+3KO7D
-	 Gjg1R5XKD2deA==
-Date: Thu, 2 Jan 2025 15:23:14 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Aman Gupta <aman1.gupta@samsung.com>,
-	Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-Subject: Re: [PATCH v4 3/3] selftests: pci_endpoint: Migrate to Kselftest
- framework
-Message-ID: <Z3ahUuSjRv66L_g9@ryzen>
-References: <20241231131341.39292-1-manivannan.sadhasivam@linaro.org>
- <20241231131341.39292-4-manivannan.sadhasivam@linaro.org>
- <Z3QtEihbiKIGogWA@ryzen>
- <20241231191812.ymyss2dh7naz4oda@thinkpad>
- <2C16240A-28F8-4D9B-9FD7-33E4E6F0879E@kernel.org>
- <20250102070404.aempesitsqktfnle@thinkpad>
+	s=arc-20240116; t=1735831617; c=relaxed/simple;
+	bh=ch3lPgpH9FqpWF5yhIl3KdS/BSZwVZLBNQlPIEZ73z4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GnYBJZWRxBkpWC6uPQ/aiS/ciipgIBnRzzlbOT678Xr7xI3cwY35hwR2/wPc+CrUkoXMbrsHiLnWXLOJHLbDbux0wEXtf6sBMlbi4Hcb1HoZfewMwDaNbLCNvu4GOUFNVoTflaPlTodFS94UZqC514m9bjXPWjC8I0QjQeH41Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFQ3BMRY; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2162c0f6a39so163813625ad.0;
+        Thu, 02 Jan 2025 07:26:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735831615; x=1736436415; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=gFQ3BMRYdCG4ZhyVx0kSKgw3wrwwF8VEwXOF9YU6wOFCp0rdRiY68auIKeXxRq649v
+         24z9Ml1S7UFRs7se8KML3VEa0GOBvtWd71qeW9P7UoJoNFkwgV4GWBfurZe4Lqaee1ZB
+         nrrisO/G8QgQHRDh3RMGJgfMQlldfU6AUvIH4E18NEziUsFD/yIIXj6Y4R1OlQCHwQAq
+         4XaVXFDmCVi70jRfg4orW97RK5NKWoUaMZfZ6shUrlyngrx4JWuwvvg5WJBCWDdhX5b5
+         HyWBXUu+5oi75Cg7e67a7pwhRm+6lupcai4TF2x16fcYAOKd/4JnBbpYTdFRyzZ6Lwut
+         dErQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735831615; x=1736436415;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=vTlOwzOvEVHLem7HEmUMBPAJ1UcqBql4xV8e353GWWAInebmfkeHFj1lJVw+HLb0jH
+         HDxHzzYa7XoT863Ga9vZaH76bn8AtHsnhKZ2GX47wfcFyPb6y1dPYz/sOl2ZO9ghZobR
+         gdm7ivsveWJN5hp1DDn9jUVq3Y9ma1HyOscFlZhN2bSe3fK9qX9HpvDH4uDtrYNCHtnx
+         iX6IP40vkycK93gd26O4jmW7ABsOMptprrMfjN2nmB0pnCQSU6bS0HQPdpEKF+Hy9Ylq
+         Wbs8YoJP7/tjO3Hy6LK5qjrppF95p8Xwbh9PJoztaG/8NwTxrgG5CLV9NSbTyvO04HHM
+         CjXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzDsOFD9E8Xv7m39R3hRUVv6Z91sQVY/RvGcVL9dOjnNSYyF73T/S8A3R9qruRCH92phDCTAmB+VCB@vger.kernel.org, AJvYcCWUtuNZSdl8xrhWSsU7rdnc+Kr0B2NNDP77GZM6J23ljIm6q1KQ6DSbCUteaXSQtUD4/6h2psAWIUlSPxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAw7uMrifZWewtxcoFDzI0VEgemPrrzMt7yKvMJN6zcYwOoWA1
+	55V7VD6ewxVG1thsAB1q1QqhDoN00sBqmZiATmuRxa7s3q54Y1d+
+X-Gm-Gg: ASbGncsG0zBqkuO4EIwAHl7SwHxia7yG8sOfQdOkKgB8//aN5IsVvhVLZinfVSdXAbB
+	15GD3e+LCLJ1BycrXKIKvU0KUcPIItYN20TZW1SV8EnPqwRrG3+Cl4xeBDay/gEhzdezsx7UksN
+	zCHcH5GbOLNGU51txQ+7lNek8AqPGj0a/dAhzq2Zmn+CHP2hHzhpqcI9j/zK8CQZmdfeAf7vu4o
+	rdey5AaUgLepRXpagE5KKEBIxAsZ4EF6AvcDwBcNYV9ukJrniO4KVcD21mYGEEg7w==
+X-Google-Smtp-Source: AGHT+IEQUELGCjkbYFRRfwJqqdSmc30qlqIgUmKS185gO4X6UQKJbnkeIYHbKnbNCcsUSviUOm2qvg==
+X-Received: by 2002:a05:6a21:3382:b0:1e1:9e9f:ae4 with SMTP id adf61e73a8af0-1e5e1e87c5bmr56816161637.13.1735831615327;
+        Thu, 02 Jan 2025 07:26:55 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.134.229])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842e32f6aa2sm22377156a12.75.2025.01.02.07.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2025 07:26:55 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: scott@spiteful.org,
+	bhelgaas@google.com
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] PCI: cpci: remove unused fields
+Date: Thu,  2 Jan 2025 12:26:46 -0300
+Message-Id: <20250102152646.359624-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250102070404.aempesitsqktfnle@thinkpad>
+Content-Transfer-Encoding: 8bit
 
-Hello Mani, Vinod,
+The `get_power()` and `set_power()` function pointers in the
+`cpci_hp_controller ops` struct were declared but never implemented by
+any driver. To improve code readability and reduce resource usage,
+remove this pointers and replace with a `flags` field.
 
-On Thu, Jan 02, 2025 at 12:34:04PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Dec 31, 2024 at 08:33:57PM +0100, Niklas Cassel wrote:
-> > 
-> > I have some patches that adds DMA_MEMCPY to dw-edma, but I'm not sure if the DWC eDMA hardware supports having both src and dst as PCI addresses, or if only one of them can be a PCI address (with the other one being a local address).
-> > 
-> > If only one of them can be a PCI address, then I'm not sure if your suggested patch is correct.
-> > 
-> 
-> I don't see why that would be an issue. DMA_MEMCPY is independent of PCI/local
-> addresses. If a dmaengine driver support doing MEMCPY, then the dma cap should
-> be sufficient. As you said, if a controller supports both SLAVE and MEMCPY, the
-> test currently errors out, which is wrong.
+Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
+`cpci_get_power_s atus()` to track the slot's power state using the
+`SLOT_ENABLED` macro.
 
-While I am okay with your suggested change to pci-epf-test.c:
-> >-               if (epf_test->dma_private) {
-> >+               if (!dma_has_cap(DMA_MEMCPY, epf_test->dma_chan_tx->device->cap_mask)) {
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
+ drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
+ 2 files changed, 8 insertions(+), 16 deletions(-)
 
-Since this will ensure that a DMA driver implementing DMA_MEMCPY,
-which cannot be shared (has DMA_PRIVATE set), will not error out.
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index 03fa39ab0c88..c5cb12cad2b4 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
+ 	int (*enable_irq)(void);
+ 	int (*disable_irq)(void);
+ 	int (*check_irq)(void *dev_id);
+-	u8  (*get_power)(struct slot *slot);
+-	int (*set_power)(struct slot *slot, int value);
++	int flags;
+ };
+ 
+ struct cpci_hp_controller {
+diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+index d0559d2faf50..87a743c2a5f1 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_core.c
++++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+@@ -27,6 +27,8 @@
+ #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
+ #define DRIVER_DESC	"CompactPCI Hot Plug Core"
+ 
++#define SLOT_ENABLED 0x00000001
++
+ #define MY_NAME	"cpci_hotplug"
+ 
+ #define dbg(format, arg...)					\
+@@ -71,13 +73,12 @@ static int
+ enable_slot(struct hotplug_slot *hotplug_slot)
+ {
+ 	struct slot *slot = to_slot(hotplug_slot);
+-	int retval = 0;
+ 
+ 	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
+ 
+-	if (controller->ops->set_power)
+-		retval = controller->ops->set_power(slot, 1);
+-	return retval;
++	controller->ops->flags |= SLOT_ENABLED;
++
++	return 0;
+ }
+ 
+ static int
+@@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ 	}
+ 	cpci_led_on(slot);
+ 
+-	if (controller->ops->set_power) {
+-		retval = controller->ops->set_power(slot, 0);
+-		if (retval)
+-			goto disable_error;
+-	}
++	controller->ops->flags &= ~SLOT_ENABLED;
+ 
+ 	slot->adapter_status = 0;
+ 
+@@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ static u8
+ cpci_get_power_status(struct slot *slot)
+ {
+-	u8 power = 1;
+-
+-	if (controller->ops->get_power)
+-		power = controller->ops->get_power(slot);
+-	return power;
++	return controller->ops->flags & SLOT_ENABLED;
+ }
+ 
+ static int
+-- 
+2.34.1
 
-
-What I'm trying to explain is that in:
-https://lore.kernel.org/linux-pci/Z2BW4CjdE1p50AhC@vaman/
-https://lore.kernel.org/linux-pci/20241217090129.6dodrgi4tn7l3cod@thinkpad/
-
-Vinod (any you) suggested that we should add support for prep_memcpy()
-(which implies also setting cap DMA_MEMCPY) in the dw-edma DMA driver.
-
-However, from section "6.3 Using the DMA" in the DWC databook,
-the DWC eDMA hardware only supports:
-- Transfer (copy) of a block of data from local memory to remote memory.
-- Transfer (copy) of a block of data from remote memory to local memory.
-
-
-Currently, we have:
-https://github.com/torvalds/linux/blob/v6.13-rc5/include/linux/dmaengine.h#L843-L844
-https://github.com/torvalds/linux/blob/v6.13-rc5/drivers/dma/dw-edma/dw-edma-core.c#L215-L231
-
-Where we can expose per-channel capabilities, so we set MEM_TO_DEV/DEV_TO_MEM
-per channel, however, these are returned in a struct dma_slave_caps *caps,
-so this is AFAICT only for DMA_SLAVE, not for DMA_MEMCPY.
-
-Looking at:
-https://github.com/torvalds/linux/blob/v6.13-rc5/include/linux/dmaengine.h#L975-L979
-it seems that DMA_MEMCPY is always assumed to be MEM_TO_MEM.
-
-To me, it seems that we would either need a new dma_transaction_type (e.g. DMA_COPY)
-where we can set dir:
-MEM_TO_DEV, DEV_TO_MEM, or DEV_TO_DEV. (dw-edma would not support DEV_TO_DEV.)
-
-Or, if we should stick with DMA_MEMCPY, we would need another way of telling
-client drivers that only src or dst can be a remote address.
-
-Until this is solved, I think I will stop my work on adding DMA_MEMCPY to the
-dw-edma driver.
-
-
-Kind regards,
-Niklas
 
