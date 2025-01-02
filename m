@@ -1,98 +1,122 @@
-Return-Path: <linux-pci+bounces-19154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00FAE9FF84C
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 11:38:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A17EF9FF87A
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 11:57:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F10383A22BE
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 10:38:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2A72188216D
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 10:57:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953411953A1;
-	Thu,  2 Jan 2025 10:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B8A7374CB;
+	Thu,  2 Jan 2025 10:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWN61Kxr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F9F1917CD;
-	Thu,  2 Jan 2025 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A55125D6
+	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 10:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735814319; cv=none; b=RBcS3ELOPF4RA+SX2pNEwyzhX6LpzH5qZR017zX2UqjbyfwUnjPQwR10p/4kIZvnS5ZU96qKJTwuqhnTFODHiBwKF1i7T481HntNbbJ3G50nBGdqLlgC4vN22zff6x5VbrBfoquG+rEDkDbW6Yin2jSNoV4lsGC641AKd0MZqgM=
+	t=1735815457; cv=none; b=akdUCi6NYxung41TidOoFLXf5OViPesqmGSC7aFGPVPHNQx3B+iygLoJqtq6+BGhobQJknx6LUXHH1aqyn3W9CKWnBPlmU+MjAxsyWxcFDROmY6C9NkKUQKnATW7MHQLna3rRnbvfmPrVMlAQSOGp+Wibm7GfoMInlLQSzZ1lKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735814319; c=relaxed/simple;
-	bh=LpUnQDiio+JlMiPsNZKiGTW5Zem5ne95MKjZGD+pFi8=;
+	s=arc-20240116; t=1735815457; c=relaxed/simple;
+	bh=jYQGhT42EsutXFIPYlsP1xCkgXwU2aDPBqiXLufYMfw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fp3vZwMPVoQ4BkGvCtjj+2eGLxtASkQsFFYcJ/aedJ4NBZs0iNR1YmzzuHgOF9XLggrn/jaE2GF7wbx/THDTEWKwmH0OluQ9oSKsgYR0yFDhk1415RcYqbGuN3wzn8otTj4c+Frz/OUJRmPmLxWG+h95+SQE54DRnSmqfDrQvhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id DE5572800B4B7;
-	Thu,  2 Jan 2025 11:38:27 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C4A7B533CEB; Thu,  2 Jan 2025 11:38:27 +0100 (CET)
-Date: Thu, 2 Jan 2025 11:38:27 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-kernel@vger.kernel.org,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v9 7/9] PCI/bwctrl: Add API to set PCIe Link Speed
-Message-ID: <Z3Zso3vXrzR79s2o@wunner.de>
-References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com>
- <20241018144755.7875-8-ilpo.jarvinen@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bKc/megBMsAm5RF3C0eC70MYMshxxQfn+OfxihXVMVH3BZ/DPo6qNQA7D/vTGMVWVmcJyjiUEM6DjLuEPXdz2g2qvVpTbfjcrKmq5Yimtza5qRtH3Tzo7LmyKIUhHQK8fYoa31lmj26MeGAtho0/ZZ1ZZCtimgDg9pSlEdq+cs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWN61Kxr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE29C4CED0;
+	Thu,  2 Jan 2025 10:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735815456;
+	bh=jYQGhT42EsutXFIPYlsP1xCkgXwU2aDPBqiXLufYMfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PWN61Kxr6Y30pk0RzuLyFgWLbKXfa0p4pm6EGE3jxJGQQKWlxYKzeboIFsFgmeykU
+	 a8G+t3Qw5nt6Gdfwju50ns4DpL8z9slTYX7UxbIrr/9KgKytUQdLuH71t1CNvljVR0
+	 RsGwltYk8db2hsJIX1bN5E4vi/Tfg6b+FIFp3Ue/EsWPMA36a0q15Mkv9oMca8ATeN
+	 axf+W2DfkkUnJ/YocRbYsZnDABGG1ZU9gOUAkN0iVgLnMpBdb55b+SekOKaWI6e21l
+	 B0Es6Q3fIQaNSQlnGaFbzxP/omfceK7ubWI3eemVxfLpquoBPu1zQgbQFOlVmYbxkC
+	 pxjj/2DbuHl8Q==
+Date: Thu, 2 Jan 2025 11:57:32 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Reject a negative nr_irqs value in
+ dw_pcie_edma_irq_verify()
+Message-ID: <Z3ZxHLfN7rcpH414@ryzen>
+References: <20241220072328.351329-2-cassel@kernel.org>
+ <20241231155158.5edodo2r5zar3tfe@thinkpad>
+ <Z3Q0TY873woxmsEC@ryzen>
+ <20241231184913.s24umoi2yi4wowod@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241018144755.7875-8-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20241231184913.s24umoi2yi4wowod@thinkpad>
 
-On Fri, Oct 18, 2024 at 05:47:53PM +0300, Ilpo Järvinen wrote:
-> @@ -142,9 +304,11 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
->  	if (ret)
->  		return ret;
->  
-> -	scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> -		port->link_bwctrl = no_free_ptr(data);
-> -		pcie_bwnotif_enable(srv);
-> +	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
-> +		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> +			port->link_bwctrl = no_free_ptr(data);
-> +			pcie_bwnotif_enable(srv);
-> +		}
->  	}
+On Wed, Jan 01, 2025 at 12:19:13AM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Dec 31, 2024 at 07:13:33PM +0100, Niklas Cassel wrote:
+> > On Tue, Dec 31, 2024 at 09:21:58PM +0530, Manivannan Sadhasivam wrote:
+> > > On Fri, Dec 20, 2024 at 08:23:29AM +0100, Niklas Cassel wrote:
+> > > > Platforms that do not have (one or more) dedicated IRQs for the eDMA
+> > > > need to set nr_irqs to a non-zero value in their DWC glue driver.
+> > > > 
+> > > > Platforms that do have (one or more) dedicated IRQs do not need to
+> > > > initialize nr_irqs. DWC common code will automatically set nr_irqs.
+> > > > 
+> > > > Since a glue driver can initialize nr_irqs, dw_pcie_edma_irq_verify()
+> > > > should verify that nr_irqs, if non-zero, is a valid value. Thus, add a
+> > > > check in dw_pcie_edma_irq_verify() to reject a negative nr_irqs value.
+> > > > 
+> > > 
+> > > Why can't we make dw_edma_chip::nr_irqs unsigned?
+> > 
+> > dw_edma is defined in drivers/dma/dw-edma/dw-edma-core.h
+> > in struct dw_edma.
+> > 
+> > struct dw_pcie (defined in drivers/pci/controller/dwc/pcie-designware.h)
+> > simply has a struct dw_edma as a struct member.
+> > 
+> > If you bounce on nr_irqs in:
+> > drivers/dma/dw-edma/dw-edma-core.c
+> > and in
+> > drivers/dma/dw-edma/dw-edma-pcie.c
+> > you can see that this driver uses signed int for this everywhere.
+> > 
+> > I didn't feel like refactoring a whole DMA driver.
+> > 
+> 
+> There is no need to refactor. Both 'dma' and 'dwc' drivers do not assume that
+> 'nr_irqs' is signed. So simply changing the type to 'unsigned int' is enough.
+> I don't see a valid reason to keep it signed and check for negative value.
 
-The "data" pointer is allocated with devm_kzalloc().
-There's no __free(kfree) anywhere.
+If you bounce on nr_irqs in
+drivers/dma/dw-edma/dw-edma-core.c
+and in
+drivers/dma/dw-edma/dw-edma-pcie.c
 
-So what's the motivation for the no_free_ptr()?
-Is this a remnant of an earlier version of the patch set that can be deleted
-or is there actually a purpose to it?
+you will see that there are a lot of local variables
+that are nr_irqs which are signed, in addition to the
+struct member.
 
-Thanks,
+I don't want to change the whole driver simply to fix
+a warning when building the DWC PCIe driver with W=1.
 
-Lukas
+I have a different solution and will send a V2 soon.
+
+
+Kind regards,
+Niklas
 
