@@ -1,177 +1,115 @@
-Return-Path: <linux-pci+bounces-19179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 720BE9FFEE8
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 19:53:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1913D9FFF6C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 20:29:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B56D160C51
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 18:53:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56EAC1882963
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 19:29:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E57418FDAB;
-	Thu,  2 Jan 2025 18:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4DA1B6D0B;
+	Thu,  2 Jan 2025 19:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mfSqZdC1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A66GKt40"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE9214F9F7;
-	Thu,  2 Jan 2025 18:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1421B6CF3
+	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 19:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735843990; cv=none; b=Ou5d6XZw+nuZy+mp0rGCt107wLm9166lD1z0RWHq69fOlScblO/+vcfbhPpZiKSREMcCdUWiAlU81xYVk+7S1zK6bC9nM70TEw8UH9zPCb6BAH66KWtClYlu4ye8p8M547B5QPoNiBVubzwb18MtN4nyDNptu416+u8gHslf+LQ=
+	t=1735846153; cv=none; b=cclVdJnIagKfPLQBTFd+BucJ9eGY/xaWaJkD/v8ou7iSs0QNtux2AGDnFY2oO3fihDpIBMsg1qnLk6KYlxLj/s6TZt5PPmg4igCCYaWc/+Ewh1ENVEAhulJFXoXmnhMZtnxAopSvmP14029dDjaMdKroA5OIxppgdwJb1HEQxgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735843990; c=relaxed/simple;
-	bh=C5uhygVpFSAMH26WubSta1/6ShJinhqB6PUVGB6/E4g=;
+	s=arc-20240116; t=1735846153; c=relaxed/simple;
+	bh=GWdEuXg3WUDZDGjGFdNsNR/oBNnu0D17oPDtWlVfFM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XHZ2uCfxEBQs4XQQXFrdPxheq+B7HzBO2YO8ne6Eb/5oO0sW1Ut9ybo6BBCvGd4EoVHPvh/bTMggfcdJeSdFU4OmuOC1ksy+6MpaJ7MBfeoCPo4ePs405093usKlTZWgT3/9va126nEVDK3cZuxovc3Wgm0B9c1IWJErNqgxE/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mfSqZdC1; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735843989; x=1767379989;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C5uhygVpFSAMH26WubSta1/6ShJinhqB6PUVGB6/E4g=;
-  b=mfSqZdC17cYoF7w3BTSwgjMZKyKYaqO+2Fscs9RlNbIOJ15sJaLRORUN
-   Atyd7II+5lNbrjIpIn9gf/x5RBYqzeO3Y4rVCUECpxDeHRw2KjQcnWVqZ
-   vs7y+SvlTX9ZHtuiMwBH20vv/3wZ7pg5prK5roN0+eS4Bol5sEWzB4DzA
-   jlWii0212PtmQcHHfPV3M0gxu7zuUdL7Y1KTnUqnCTKlabhmIxZlII90B
-   nQABVTqk7GskdSZSr7GgbbCVc8F3iZRx+YKJRrQi+hmibZY0B0UwHptZs
-   fCX6oveaVg0cNiRdiEIWvZoW2hJTWlqphD8dRhFj2oY/Fa4ND4c/rHbT8
-   g==;
-X-CSE-ConnectionGUID: DS5SJQpnTD6q+VfjAtHA8Q==
-X-CSE-MsgGUID: S0YeC3ZDQmOiAkRzv4Sgeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11303"; a="36255619"
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="36255619"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2025 10:53:08 -0800
-X-CSE-ConnectionGUID: etN7jZrBRb+qciGVqMgaMQ==
-X-CSE-MsgGUID: bnl9W5O4RCGTxyWddatt0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="138913988"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 02 Jan 2025 10:53:06 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tTQJb-0008lZ-0Q;
-	Thu, 02 Jan 2025 18:53:03 +0000
-Date: Fri, 3 Jan 2025 02:52:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, manivannan.sadhasivam@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com, kishon@kernel.org,
-	arnd@arndb.de, gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com, Hans Zhang <18255117159@163.com>,
-	kernel test robot <lkp@intel.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [v6] misc: pci_endpoint_test: Fix overflow of bar_size
-Message-ID: <202501030210.iaAEQUA6-lkp@intel.com>
-References: <20250102120222.1403906-1-18255117159@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I/z9pdBl+/3lYrXxS2/3IFsgp+e0d8O/5fs+aafxfAygPQ+0egHsxKe9ku2Tx6ScfeDgJMB2mQDhF4v3CsmGKfL245l3tLdZOrYyWY9Zzgr1Rzw6ya7j5S3N8nE6vPqKQafk4n8KFwGYf5kt933fVbXAaReWLYDD/xLNpWIbhlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A66GKt40; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1735846149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PqrnXD3+1RR06iBvi9uXmFy/HWAjf6sbg1PXAd5cQdI=;
+	b=A66GKt40aK7VZE+Eu8aorHg+GphnqyJMLrePGlYTeSvaMine1VJvwUF+H/h95nr1r61gT1
+	4FB6sQBfo6wGuK3b/BffPohvECyGQIPLkCSTbd6uazP1m1km50xVPLz7dYnXiZY9CwACkc
+	8a0x68rxu0uQH/ds04Rh9WJemEfLfhc=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-261-ibhspsPeNZWMdppgc_egRA-1; Thu, 02 Jan 2025 14:29:04 -0500
+X-MC-Unique: ibhspsPeNZWMdppgc_egRA-1
+X-Mimecast-MFC-AGG-ID: ibhspsPeNZWMdppgc_egRA
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6dcd1e4a051so239937226d6.2
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jan 2025 11:29:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735846144; x=1736450944;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PqrnXD3+1RR06iBvi9uXmFy/HWAjf6sbg1PXAd5cQdI=;
+        b=J8VlAbs+CWhPE84P0snW7T9aldkpHSbfIVDyCcKLKTgUxnGM+X5vApS/7jxhgJiKsT
+         0Ohbu/UNaf5yTCZ++M6Y/I15Dot77NRh6APWORnEXQzz8CupE1TDhPJ+jrW/r3bw5iEI
+         nBPdjL8K79XrcCc4Py2U/ECV44aIO/cf55CGPnpV3kR6Q72g86EvXl6W/iPIuDgbzqx3
+         FnOrmr6Qlxvdyw6B6bdkuT+N7jc2zFONp9ODmXeAgm1L32r8fAgxuiaoKpIdCitBrKp1
+         6Hb3XZ9JmGrn6utlMNslTjygSrlOmx6Sm0ivzcXv4O5uKmoECV/jZxcxXadrFJubpODx
+         YR2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUryhXssIQxGEC+ZToiVzS19OV1ZwL8EpXRiedOygt23GfOYbPsHWNMi4Nw77LrpSTt29JcnCtsju0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrGdP1tbnLXg5xw8B6EdVhOI2jShPJihDdGhrCaXSPoGx71RIb
+	fsFgZuHSVJGEVOlZLoKtWjcE4uJeNzzjVRRSf4qQsm4h89cBeSZuo7kymCZs/7ZruQ638ltZ9Dx
+	ZpsMdEaIlWi1Nw4xvF38UpPwAIsgaYlCzQsQwY1bI1h8BoAZcvCm7WB9zgg==
+X-Gm-Gg: ASbGncssQ7iU17/jBv9qxHat57vU/mubdwTDjESDontCUCauttfxCNj4PtvQotCD1M/
+	wSq3r+4Mk/OcOy7CTkfm276Q9UaeIxQSkhv7Dec7Azx8GrrjhAXLKNJS9hKXosnTUfg0Bnl1en4
+	LiIQZPsncOZIiEH7HiL/7/YmwKTm+UR20JPu4FD8ojyGeRmMdafyaHqrrO4snFMeZI6rk4a6pss
+	E/PLfTywRqaxXOjnpQD6MEXCYGiRo7jB2Dqw7vYFbQWF7XHFLJMSpgkyzE4ll+Ih8WfvxWZExKX
+	HRUqLSRGblEAA4EkbQ==
+X-Received: by 2002:a05:6214:dca:b0:6d8:aa04:9a5d with SMTP id 6a1803df08f44-6dd2330bad3mr754637376d6.4.1735846144011;
+        Thu, 02 Jan 2025 11:29:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFpdC/2YXkIAOTi4K3SggAQlhXdABeSiWVvsv/qQ0FgTGnzpIL/OI93lXM53tLkNbD4XLXwkg==
+X-Received: by 2002:a05:6214:dca:b0:6d8:aa04:9a5d with SMTP id 6a1803df08f44-6dd2330bad3mr754637166d6.4.1735846143772;
+        Thu, 02 Jan 2025 11:29:03 -0800 (PST)
+Received: from x1n (pool-99-254-114-190.cpe.net.cable.rogers.com. [99.254.114.190])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd4194937bsm100205756d6.95.2025.01.02.11.29.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2025 11:29:03 -0800 (PST)
+Date: Thu, 2 Jan 2025 14:29:01 -0500
+From: Peter Xu <peterx@redhat.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, precification@posteo.de,
+	athul.krishna.kr@protonmail.com, regressions@lists.linux.dev
+Subject: Re: [PATCH] vfio/pci: Fallback huge faults for unaligned pfn
+Message-ID: <Z3bo_TNnwweOH5cp@x1n>
+References: <20250102183416.1841878-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250102120222.1403906-1-18255117159@163.com>
+In-Reply-To: <20250102183416.1841878-1-alex.williamson@redhat.com>
 
-Hi Hans,
+On Thu, Jan 02, 2025 at 11:32:54AM -0700, Alex Williamson wrote:
+> The PFN must also be aligned to the fault order to insert a huge
+> pfnmap.  Test the alignment and fallback when unaligned.
+> 
+> Fixes: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219619
+> Reported-by: Athul Krishna <athul.krishna.kr@protonmail.com>
+> Reported-by: Precific <precification@posteo.de>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on ccb98ccef0e543c2bd4ef1a72270461957f3d8d0]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/misc-pci_endpoint_test-Fix-overflow-of-bar_size/20250102-200548
-base:   ccb98ccef0e543c2bd4ef1a72270461957f3d8d0
-patch link:    https://lore.kernel.org/r/20250102120222.1403906-1-18255117159%40163.com
-patch subject: [v6] misc: pci_endpoint_test: Fix overflow of bar_size
-config: powerpc-randconfig-003-20250102 (https://download.01.org/0day-ci/archive/20250103/202501030210.iaAEQUA6-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250103/202501030210.iaAEQUA6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501030210.iaAEQUA6-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from ./arch/powerpc/include/generated/asm/div64.h:1,
-                    from include/linux/math.h:6,
-                    from include/linux/delay.h:12,
-                    from drivers/misc/pci_endpoint_test.c:11:
-   drivers/misc/pci_endpoint_test.c: In function 'pci_endpoint_test_bar':
-   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
-     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                                   ^~
-   drivers/misc/pci_endpoint_test.c:311:18: note: in expansion of macro 'do_div'
-     311 |         remain = do_div(bar_size, buf_size);
-         |                  ^~~~~~
-   In file included from include/linux/cleanup.h:5,
-                    from drivers/misc/pci_endpoint_test.c:10:
-   include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
-     195 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^~
-   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   drivers/misc/pci_endpoint_test.c:311:18: note: in expansion of macro 'do_div'
-     311 |         remain = do_div(bar_size, buf_size);
-         |                  ^~~~~~
->> include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
-     199 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-         |                                    |
-         |                                    resource_size_t * {aka unsigned int *}
-   drivers/misc/pci_endpoint_test.c:311:18: note: in expansion of macro 'do_div'
-     311 |         remain = do_div(bar_size, buf_size);
-         |                  ^~~~~~
-   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'resource_size_t *' {aka 'unsigned int *'}
-     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
-         |                            ~~~~~~~~~~^~~~~~~~
-
-
-vim +/__div64_32 +199 include/asm-generic/div64.h
-
-^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
-^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
-^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
-^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
-^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
-461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
-461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
-461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  195  	} else if (likely(((n) >> 32) == 0)) {		\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
-^1da177e4c3f41 Linus Torvalds     2005-04-16 @199  		__rem = __div64_32(&(n), __base);	\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
-^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
+Reviewed-by: Peter Xu <peterx@redhat.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Peter Xu
+
 
