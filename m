@@ -1,217 +1,255 @@
-Return-Path: <linux-pci+bounces-19244-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19245-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5C4AA00C61
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 17:47:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EF9CA00CEE
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 18:39:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C47516475E
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 16:47:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74A583A40D6
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 17:39:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 616921FC7EE;
-	Fri,  3 Jan 2025 16:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A861E1FBEAE;
+	Fri,  3 Jan 2025 17:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbHKslwZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPZHQcSu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1631FC10C;
-	Fri,  3 Jan 2025 16:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD231FAC53;
+	Fri,  3 Jan 2025 17:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735922834; cv=none; b=hmeCr+aW8MjYmG2vJvQCpFPTkWdZjY/TYX2jZAGDFWw9LAK6v/0JlkNZuf3TkDguIS/mkOm86MouFmGvs7bsl0xKMuNyv+Ii1Dy59O7x0ge/LsO2PU5erDsWjMYNNYlzE1xkiDbZOnfnBDXQ2tx8PNAYMxqzzVW1vLhHC9JCJ9w=
+	t=1735925973; cv=none; b=N5rKiMNIyFZOLRq9w8Dq/6RRFhyxeiwNRM/hcZur7Csg+yHocv4Jiotc50UKnNtQEMVECp5QqAOACvAAgqlYZYPKgC5bIrmlgHtCJ6p0TgfvgihdLBWP4h1dQNQ1wNBihHOU6n77TQiCyY1hX5Qp8RD7oGohM2XnvMez26pFWtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735922834; c=relaxed/simple;
-	bh=OUnzSPYLSoc//E88dncYu34255MsFamAkyC4TSeJnOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a8kt2LHdzhfSEdiXzkP0lg4JPkzE8wgNTn+2v5JFS7zG10i3k8DcXZq5df1KzTP4PAKDiMtp/DKq62sX2lLLz8Lp5vwszV21EuZfDv+MoV49cmd5lfLAnM2ndd4w/Jgx6kO6B3krz7rkZ7CWJugZsIHleMv+oxFJVcGQMLuFLiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbHKslwZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7D1C4CECE;
-	Fri,  3 Jan 2025 16:47:10 +0000 (UTC)
+	s=arc-20240116; t=1735925973; c=relaxed/simple;
+	bh=1wIXlOJ0PKHN5nwQGBTEiR9c24IV0eG7sZVh7WolJVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fmyj9O4cYQezPgRqvvXZwEiPOFQuHL8XmmPNtYk+VVwlg6a9d/Q2tuVT0XnWYsuj5RJVlMIyj+9Q75VkkvKLiijGHPXn1MGgo1WZ22zzVijgsRrvFj6mqo2t6jcocDqPmHOEPxH+atxa3+9/mr6OjmXwjYB241t8EGRKDoqWQ9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPZHQcSu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FE1FC4CECE;
+	Fri,  3 Jan 2025 17:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735922833;
-	bh=OUnzSPYLSoc//E88dncYu34255MsFamAkyC4TSeJnOM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lbHKslwZsO3Yhwrdd9QB6XqQPYXeT7I4jNNqoYmM1YKxVhxS9nx+Er3CKFcnuiTb+
-	 ah5gmWj9MvxhFeFsKFFoRpWHnCNiM0fZDnfwoyB2DUHaVlXlndk9J/AbFoH64ym3p9
-	 g9w6XJ1CU8eYjDBN5qNu4VLIViQbbl4DAJbk1IyUYmLB4O2wHRwVWz0IK1dYXsvAKN
-	 sM3pDihgDFNiiGoADiXeHDwwF3mOOh5pAJQ1k5bB0Gsw8Bg2Jp/BPZ4RHybbkhO5om
-	 qQ6iW5Cepc6yfsTQ5IDgRJmQIOAOcuOGw2FgWw91Gb+jqoWGnqreVQ1ZfZIbsfT4wU
-	 3IqWUegEatF1w==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	bhelgaas@google.com,
-	fujita.tomonori@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 3/3] rust: driver: address soundness issue in `RegistrationOps`
-Date: Fri,  3 Jan 2025 17:46:03 +0100
-Message-ID: <20250103164655.96590-4-dakr@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250103164655.96590-1-dakr@kernel.org>
-References: <20250103164655.96590-1-dakr@kernel.org>
+	s=k20201202; t=1735925972;
+	bh=1wIXlOJ0PKHN5nwQGBTEiR9c24IV0eG7sZVh7WolJVk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=BPZHQcSuqbbqIrFTIHtpgna4b6QvnL4z/0HIBd8gv8ph5yszadSe/qj+ladr3VFNt
+	 +RzGsJVqLfFNKC/ELtlYOlI8qNNTl5pc7jno9F67QXEo3jd8YAESptcsx+qrGQNjRd
+	 sCrK2ZHAgXwzCB6C7R1ZM4XnPt0W82nZpG2X5E3i+FBChhK07J8+/vIyoQdBYlfMNm
+	 5xdrsJqUTRq2VWs3MjjZ0eWLBJF7182AFCCV6RZHioNKUg6/kmS1Xz4ovHGjFFi6WM
+	 +luqDU7/cilINIqmflBdqTukOj+NNIO2pBMdlD3sZcKGEBhxnH+x9P/lTeHzzT/3DP
+	 hpdMB8ku98kkw==
+Date: Fri, 3 Jan 2025 11:39:30 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-crypto@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Rick Lindsley <ricklind@linux.ibm.com>,
+	Nick Child <nnac123@linux.ibm.com>,
+	Thomas Falcon <tlfalcon@linux.ibm.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Matt Wu <wuqiang.matt@bytedance.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kurz <groug@kaod.org>, Peter Xu <peterx@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>
+Subject: Re: [PATCH 05/14] cpumask: deprecate cpumask_next_wrap()
+Message-ID: <20250103173930.GA4181899@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241228184949.31582-6-yury.norov@gmail.com>
 
-The `RegistrationOps` trait holds some obligations to the caller and
-implementers. While being documented, the trait and the corresponding
-functions haven't been marked as unsafe.
+On Sat, Dec 28, 2024 at 10:49:37AM -0800, Yury Norov wrote:
+> The next patche aligns implementation of cpumask_next_wrap() with the
+> generic version in find.h which changes function signature.
 
-Hence, markt the trait and functions unsafe and add the corresponding
-safety comments.
+s/patche/patch/
 
-This patch does not include any fuctional changes.
+I guess this is an indirect reference to find_next_bit_wrap()?  If so,
+I think mentioning the function name would be more useful than
+referring to "the generic version in find.h".
 
-Reported-by: Gary Guo <gary@garyguo.net>
-Closes: https://lore.kernel.org/rust-for-linux/20241224195821.3b43302b.gary@garyguo.net/
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- rust/kernel/driver.rs   | 25 ++++++++++++++++++++-----
- rust/kernel/pci.rs      |  8 +++++---
- rust/kernel/platform.rs |  8 +++++---
- 3 files changed, 30 insertions(+), 11 deletions(-)
-
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index c630e65098ed..2a16d5e64e6c 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -17,23 +17,35 @@
- /// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
- /// `bindings::__pci_register_driver` from `RegistrationOps::register` and
- /// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`.
--pub trait RegistrationOps {
-+///
-+/// # Safety
-+///
-+/// A call to [`RegistrationOps::unregister`] for a given instance of `RegType` is only valid if a
-+/// preceding call to [`RegistrationOps::register`] has been successful.
-+pub unsafe trait RegistrationOps {
-     /// The type that holds information about the registration. This is typically a struct defined
-     /// by the C portion of the kernel.
-     type RegType: Default;
- 
-     /// Registers a driver.
-     ///
-+    /// # Safety
-+    ///
-     /// On success, `reg` must remain pinned and valid until the matching call to
-     /// [`RegistrationOps::unregister`].
--    fn register(
-+    unsafe fn register(
-         reg: &Opaque<Self::RegType>,
-         name: &'static CStr,
-         module: &'static ThisModule,
-     ) -> Result;
- 
-     /// Unregisters a driver previously registered with [`RegistrationOps::register`].
--    fn unregister(reg: &Opaque<Self::RegType>);
-+    ///
-+    /// # Safety
-+    ///
-+    /// Must only be called after a preceding successful call to [`RegistrationOps::register`] for
-+    /// the same `reg`.
-+    unsafe fn unregister(reg: &Opaque<Self::RegType>);
- }
- 
- /// A [`Registration`] is a generic type that represents the registration of some driver type (e.g.
-@@ -68,7 +80,8 @@ pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Sel
-                 // just been initialised above, so it's also valid for read.
-                 let drv = unsafe { &*(ptr as *const Opaque<T::RegType>) };
- 
--                T::register(drv, name, module)
-+                // SAFETY: `drv` is guaranteed to be pinned until `T::unregister`.
-+                unsafe { T::register(drv, name, module) }
-             }),
-         })
-     }
-@@ -77,7 +90,9 @@ pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Sel
- #[pinned_drop]
- impl<T: RegistrationOps> PinnedDrop for Registration<T> {
-     fn drop(self: Pin<&mut Self>) {
--        T::unregister(&self.reg);
-+        // SAFETY: The existence of `self` guarantees that `self.reg` has previously been
-+        // successfully registered with `T::register`
-+        unsafe { T::unregister(&self.reg) };
-     }
- }
- 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index d5e7f0b15303..4c98b5b9aa1e 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -23,10 +23,12 @@
- /// An adapter for the registration of PCI drivers.
- pub struct Adapter<T: Driver>(T);
- 
--impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-+// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-+// a preceding call to `register` has been successful.
-+unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-     type RegType = bindings::pci_driver;
- 
--    fn register(
-+    unsafe fn register(
-         pdrv: &Opaque<Self::RegType>,
-         name: &'static CStr,
-         module: &'static ThisModule,
-@@ -45,7 +47,7 @@ fn register(
-         })
-     }
- 
--    fn unregister(pdrv: &Opaque<Self::RegType>) {
-+    unsafe fn unregister(pdrv: &Opaque<Self::RegType>) {
-         // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-         unsafe { bindings::pci_unregister_driver(pdrv.get()) }
-     }
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 03287794f9d0..50e6b0421813 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -19,10 +19,12 @@
- /// An adapter for the registration of platform drivers.
- pub struct Adapter<T: Driver>(T);
- 
--impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-+// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-+// a preceding call to `register` has been successful.
-+unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-     type RegType = bindings::platform_driver;
- 
--    fn register(
-+    unsafe fn register(
-         pdrv: &Opaque<Self::RegType>,
-         name: &'static CStr,
-         module: &'static ThisModule,
-@@ -44,7 +46,7 @@ fn register(
-         to_result(unsafe { bindings::__platform_driver_register(pdrv.get(), module.0) })
-     }
- 
--    fn unregister(pdrv: &Opaque<Self::RegType>) {
-+    unsafe fn unregister(pdrv: &Opaque<Self::RegType>) {
-         // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-         unsafe { bindings::platform_driver_unregister(pdrv.get()) };
-     }
--- 
-2.47.1
-
+> To make the transition smooth, this patch deprecates current
+> implementation by adding an _old suffix. The following patches switch
+> current users to the new implementation one by one.
+> 
+> No functional changes were intended.
+> 
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> ---
+>  arch/s390/kernel/processor.c        | 2 +-
+>  drivers/nvme/host/tcp.c             | 2 +-
+>  drivers/pci/controller/pci-hyperv.c | 2 +-
+>  drivers/scsi/lpfc/lpfc_init.c       | 2 +-
+>  include/linux/cpumask.h             | 4 ++--
+>  kernel/padata.c                     | 2 +-
+>  lib/cpumask.c                       | 6 +++---
+>  7 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+> index 5ce9a795a0fe..42ca61909030 100644
+> --- a/arch/s390/kernel/processor.c
+> +++ b/arch/s390/kernel/processor.c
+> @@ -72,7 +72,7 @@ void notrace stop_machine_yield(const struct cpumask *cpumask)
+>  	this_cpu = smp_processor_id();
+>  	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
+>  		__this_cpu_write(cpu_relax_retry, 0);
+> -		cpu = cpumask_next_wrap(this_cpu, cpumask, this_cpu, false);
+> +		cpu = cpumask_next_wrap_old(this_cpu, cpumask, this_cpu, false);
+>  		if (cpu >= nr_cpu_ids)
+>  			return;
+>  		if (arch_vcpu_is_preempted(cpu))
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index 28c76a3e1bd2..054904376c3c 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -1578,7 +1578,7 @@ static void nvme_tcp_set_queue_io_cpu(struct nvme_tcp_queue *queue)
+>  	if (wq_unbound)
+>  		queue->io_cpu = WORK_CPU_UNBOUND;
+>  	else
+> -		queue->io_cpu = cpumask_next_wrap(n - 1, cpu_online_mask, -1, false);
+> +		queue->io_cpu = cpumask_next_wrap_old(n - 1, cpu_online_mask, -1, false);
+>  }
+>  
+>  static void nvme_tcp_tls_done(void *data, int status, key_serial_t pskid)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index cdd5be16021d..86d1c2be8eb5 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1757,7 +1757,7 @@ static int hv_compose_multi_msi_req_get_cpu(void)
+>  
+>  	spin_lock_irqsave(&multi_msi_cpu_lock, flags);
+>  
+> -	cpu_next = cpumask_next_wrap(cpu_next, cpu_online_mask, nr_cpu_ids,
+> +	cpu_next = cpumask_next_wrap_old(cpu_next, cpu_online_mask, nr_cpu_ids,
+>  				     false);
+>  	cpu = cpu_next;
+>  
+> diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+> index 7f57397d91a9..31622fb0614a 100644
+> --- a/drivers/scsi/lpfc/lpfc_init.c
+> +++ b/drivers/scsi/lpfc/lpfc_init.c
+> @@ -12876,7 +12876,7 @@ lpfc_irq_rebalance(struct lpfc_hba *phba, unsigned int cpu, bool offline)
+>  
+>  	if (offline) {
+>  		/* Find next online CPU on original mask */
+> -		cpu_next = cpumask_next_wrap(cpu, orig_mask, cpu, true);
+> +		cpu_next = cpumask_next_wrap_old(cpu, orig_mask, cpu, true);
+>  		cpu_select = lpfc_next_online_cpu(orig_mask, cpu_next);
+>  
+>  		/* Found a valid CPU */
+> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+> index 30042351f15f..b267a4f6a917 100644
+> --- a/include/linux/cpumask.h
+> +++ b/include/linux/cpumask.h
+> @@ -296,7 +296,7 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
+>  
+>  #if NR_CPUS == 1
+>  static __always_inline
+> -unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
+> +unsigned int cpumask_next_wrap_old(int n, const struct cpumask *mask, int start, bool wrap)
+>  {
+>  	cpumask_check(start);
+>  	if (n != -1)
+> @@ -312,7 +312,7 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, boo
+>  	return cpumask_first(mask);
+>  }
+>  #else
+> -unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
+> +unsigned int __pure cpumask_next_wrap_old(int n, const struct cpumask *mask, int start, bool wrap);
+>  #endif
+>  
+>  /**
+> diff --git a/kernel/padata.c b/kernel/padata.c
+> index d51bbc76b227..454ff2fca40b 100644
+> --- a/kernel/padata.c
+> +++ b/kernel/padata.c
+> @@ -274,7 +274,7 @@ static struct padata_priv *padata_find_next(struct parallel_data *pd,
+>  	if (remove_object) {
+>  		list_del_init(&padata->list);
+>  		++pd->processed;
+> -		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, -1, false);
+> +		pd->cpu = cpumask_next_wrap_old(cpu, pd->cpumask.pcpu, -1, false);
+>  	}
+>  
+>  	spin_unlock(&reorder->lock);
+> diff --git a/lib/cpumask.c b/lib/cpumask.c
+> index e77ee9d46f71..c9a9b451772a 100644
+> --- a/lib/cpumask.c
+> +++ b/lib/cpumask.c
+> @@ -8,7 +8,7 @@
+>  #include <linux/numa.h>
+>  
+>  /**
+> - * cpumask_next_wrap - helper to implement for_each_cpu_wrap
+> + * cpumask_next_wrap_old - helper to implement for_each_cpu_wrap
+>   * @n: the cpu prior to the place to search
+>   * @mask: the cpumask pointer
+>   * @start: the start point of the iteration
+> @@ -19,7 +19,7 @@
+>   * Note: the @wrap argument is required for the start condition when
+>   * we cannot assume @start is set in @mask.
+>   */
+> -unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
+> +unsigned int cpumask_next_wrap_old(int n, const struct cpumask *mask, int start, bool wrap)
+>  {
+>  	unsigned int next;
+>  
+> @@ -37,7 +37,7 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, boo
+>  
+>  	return next;
+>  }
+> -EXPORT_SYMBOL(cpumask_next_wrap);
+> +EXPORT_SYMBOL(cpumask_next_wrap_old);
+>  
+>  /* These are not inline because of header tangles. */
+>  #ifdef CONFIG_CPUMASK_OFFSTACK
+> -- 
+> 2.43.0
+> 
 
