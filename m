@@ -1,91 +1,97 @@
-Return-Path: <linux-pci+bounces-19206-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19207-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54A30A004F0
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 08:28:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C47ADA0052F
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 08:42:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87C031883F58
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 07:28:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 063B3188405C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 07:42:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C97ED1C760A;
-	Fri,  3 Jan 2025 07:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E7A1C3BF8;
+	Fri,  3 Jan 2025 07:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1OLao/u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DC11C5F33;
-	Fri,  3 Jan 2025 07:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13401C1F10;
+	Fri,  3 Jan 2025 07:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735889292; cv=none; b=ZA56UzDL8pIWYthd2Co1Wku2jqzIZjmUyQziF68dVkMoZTYX9jfwQVNgSRgWH34P3+lmpDuDjLcHYhvrDcgLeZ85QiZOiHO+p41A8tQifcE/Hyxfps8i2aJ8K2BXIr44K+lGmtbNLMi4ucQksS6OGB2vgiimc0yRB6slMwVkGcY=
+	t=1735890141; cv=none; b=U6/WVvBk54LoHwZvX+Z466WHbvFGybhYAIl5wy5mFSG1JCMZIuVnCITwTaXgdcoLQDYHPu9C0CpNOObC7k+nesOuL4E/aP1/hGmnKpBsC5+T+eWkiiOptSwr4BttQQBFdRZAYqfiTzXdGvU9ivKiF/lC3KqCWln+qE1iKX3+1GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735889292; c=relaxed/simple;
-	bh=hDWEfUzTIhiBFhANnJ+9N4J+UrEmd6wQ5HUaT9fsztk=;
+	s=arc-20240116; t=1735890141; c=relaxed/simple;
+	bh=Zo2LGaP6JfpLkthOZwDrMvwqIAlhxp2dBRQ4A8GvYO4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQVHVmv/gfULn3Ayn89FRPgFncd3wrNe389jJX0bGgp34GtGOvbKKoEhunf/sSjPkGiH2wZDbuXXOgT5h/Hvnt60g+FIPomkxzE8Ib5rI4ZY3hYWiEPx+QXbDoQrTeQfwRAKXWHuIwTiMH6ME/0mg8slvb43Zc3d3WE3U4KIF2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 981C868BEB; Fri,  3 Jan 2025 08:28:05 +0100 (CET)
-Date: Fri, 3 Jan 2025 08:28:05 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org,
-	axboe@kernel.dk, sagi@grimberg.me, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	andersson@kernel.org, konradybcio@kernel.org,
-	Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH] nvme-pci: Shutdown the device if D3Cold is allowed by
- the user
-Message-ID: <20250103072805.GB28920@lst.de>
-References: <20241209143821.m4dahsaqeydluyf3@thinkpad> <20241212055920.GB4825@lst.de> <13662231.uLZWGnKmhe@rjwysocki.net> <CAPDyKFrxEjHFB6B2r7JbryYY6=E4CxX_xTmLDqO6+26E+ULz6A@mail.gmail.com> <20241212151354.GA7708@lst.de> <CAJZ5v0gUpDw_NjTDtHGCUnKK0C+x0nrW6mP0tHQoXsgwR2RH8g@mail.gmail.com> <20241214063023.4tdvjbqd2lrylb7o@thinkpad> <20241216162303.GA26434@lst.de> <CAJZ5v0g8CdGgWA7e6TXpUjYNkU1zX46Rz3ELiun42MayoN0osA@mail.gmail.com> <dd557897-f2e0-4347-ae67-27cd45920159@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSdCaQynxAj6cakjFSPf0TAUgO8Fh4VlJIQKKgGWUiZZLikHVFlxXlMO6C9tlNVXk4U80WEkT/aB12cFIXzffZ72mcCUtFYeA5AyiGO9weZ+0NR8Zk9KYQcz+mISRgJ7wRaj3lP8vvYdIrFR7QuZQ+XZBLnuczZy2J4mPMkWXKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1OLao/u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00950C4CECE;
+	Fri,  3 Jan 2025 07:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735890140;
+	bh=Zo2LGaP6JfpLkthOZwDrMvwqIAlhxp2dBRQ4A8GvYO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o1OLao/ugA7pp5i1/BY+iqZ7FeX6FjrJv5aDpAkZcNwPbnK7AkKanAtZ2aNI05Ha6
+	 RFloi/jZrc6n8dugCCP5bgnGK0TElnhYW81DeUU7GAELRD0A9/iYMKpywGZRs7RXN8
+	 iiLMmjDupMJtMcxLgQbfV7KB/7otCzSElkkdXDIojDD0WnWSATllJaevF0aIG7JvRU
+	 wx5fA58BQvK491fQDhEP6GM9mOslKkIVFYaF7yWOc7pa2O5aI47FL8nppyCRFDoa8P
+	 5Uy9bHhKVP/w3B9xtLsrtHHVifSsUzi2EIP14wpraFJQvBdfarWHDPKE6IR9TqHbNP
+	 4sdbLT+fAUQng==
+Date: Fri, 3 Jan 2025 08:42:17 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
+	p.zabel@pengutronix.de, quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe
+ uniphy
+Message-ID: <ihjgmi6hd5dzv4kxskerc7px4u4tynwxa6edwa2mozzczdar3b@xdplqfwme3lm>
+References: <20250102113019.1347068-1-quic_varada@quicinc.com>
+ <20250102113019.1347068-2-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dd557897-f2e0-4347-ae67-27cd45920159@oss.qualcomm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250102113019.1347068-2-quic_varada@quicinc.com>
 
-On Fri, Dec 20, 2024 at 04:15:21PM +0100, Konrad Dybcio wrote:
-> The Qualcomm platform (or class of platforms) we're looking at with this
-> specific issue requires PCIe (implying NVMe) shutdown for S2RAM.
-> 
-> The S2RAM entry mechanism is unfortunately misrepresented as an S2Idle
-> state by Linux as of today, and I'm trying really hard to convince some
-> folks to let me describe it correctly, with little success so far..
+On Thu, Jan 02, 2025 at 05:00:15PM +0530, Varadarajan Narayanan wrote:
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  "#clock-cells":
+> +    const: 0
+> +
+> +  num-lanes: true
 
-Well, not advertizing the right mechanism isn't going to cause havoc
-to any scheme.
+$ref: /schemas/types.yaml#/definitions/uint32
+enum:
 
-> That is the real underlying issue and once/if it's solved, this patch
-> will not be necessary.
+or this should be moved to some shared schema.
 
-Well, maybe this thread gave good enough fodder to finally fix it?
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - "#phy-cells"
+> +  - "#clock-cells"
 
-> 
-> > In theory, ACPI S3 or hibernation may request that, but I've never
-> > seen it happen in practice.
-> > 
-> > Suspend-to-idle on x86 may want devices to end up in specific power
-> > states in order to be able to switch the entire platform into a deep
-> > energy-saving mode, but that's never been D3cold so far.
-> 
-> In our case the plug is only pulled in S2RAM, otherwise the best we can
-> do is just turn off the devices individually to decrease the overall
-> power draw
+num-lanes should be required. How does it work without it? There is no
+default.
 
-FYI, going to D3 for S2RAM seems perfectly reasonable from the NVMe POV.
+Best regards,
+Krzysztof
 
 
