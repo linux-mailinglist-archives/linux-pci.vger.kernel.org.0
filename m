@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-19260-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19261-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 841B7A00FDD
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 22:31:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02E8BA00FE1
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 22:32:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1616188298E
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:32:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5574164ABC
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3B5B1C3C02;
-	Fri,  3 Jan 2025 21:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DE671C4A34;
+	Fri,  3 Jan 2025 21:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKXdZqoO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhAspUKF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826291C3BF7;
-	Fri,  3 Jan 2025 21:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EC21BD9FF;
+	Fri,  3 Jan 2025 21:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735939900; cv=none; b=ew7thKR4OjgJKbvVsGe1okcnon6ovs0ahQuFzDH0Fkxmz+sMg1Ise4rsHpJVvyH4F9rnRfdySMqntYvbPgLNpwE4OLbg3tCdKpsq9168Sgj7w13Bh0PLeD7KFTLtMn1ERkpOPB/T8ARVBApjN3mKzhLglsIZVzqx0tb+t5rFnSE=
+	t=1735939902; cv=none; b=QoXUhaJ3oB7knaHH/3uMoTxljce7Zfjh/qGU71eIOBJDTBDFghnDMNXSQLSWNAcWEC0jEffnSnmQVVDjicsNyW8dOgK1LZpTKCn/mNYNIGQzN7mgU4cmaEupHWpo1mzJgrZafRt2nWdNVpcYM1rh8aqkYS7dVoDjU9xMyIQyCyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735939900; c=relaxed/simple;
-	bh=ztOb7Bjbdt8/rOh3nZBMwe5FXbP3NIWGLtLshH98ct8=;
+	s=arc-20240116; t=1735939902; c=relaxed/simple;
+	bh=EuCGkIFQhILIwI/BmPvzsrziE7WAnUsgkmw9+dkwRlY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BLlm2r+SM0JLcZrIC/tCCbaY5JqXSmzkCh+a/XAV6l89okLvH7aqaGGw+MC6tTmAkHc0MBsHL5CPYXH+WtOkCBW1JkCQHwQ/xsR2UBy6eWy0cg18/Oo6+iA6H2jQor+z3FmzufEFwTf84yEhl7HgBZcIjzIU70886FQG5JgH4nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKXdZqoO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC2DC4CED7;
-	Fri,  3 Jan 2025 21:31:39 +0000 (UTC)
+	 MIME-Version; b=a69qsVYB6sOWFayv3+O1hxtFZ9ywfeELl73klfjZsSN1RI5tv0LoOqShIGDcvEFuA/AAvCBgF0fR7QVjZbqCoX42xJp4lK+/I7R1nHpRVwLYJJ5Vl/XuREO2yTGapKct773L1aESS4rLTQ6ogQL52l+41lFzmfe+ImwwHE74pmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhAspUKF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89680C4CECE;
+	Fri,  3 Jan 2025 21:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735939900;
-	bh=ztOb7Bjbdt8/rOh3nZBMwe5FXbP3NIWGLtLshH98ct8=;
+	s=k20201202; t=1735939901;
+	bh=EuCGkIFQhILIwI/BmPvzsrziE7WAnUsgkmw9+dkwRlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MKXdZqoOf6LEH5y3eWn5fPO0k1j+4ekhPXyt/ieCCAaz8YT9GR4Kavz8CxrxW5R+K
-	 tpkQIxXqFBuydnalmcYKGfISPQKeUpyk/ttzWqgfxFx2nYgn9fqSZT5vZ0FPpOuako
-	 DJ4aFwJrhlPYuuJBO7flSU7arTKY8IB9XsreLo5tu+GC/UptTzPSUByTMo720kqTeA
-	 hFt7kN7T8UABoqEk5DsZ1mZR+VpHF9MrORM8EceNI9RDTqG+EHysIG4puDJDvQ4tw8
-	 sAAmqyGVP3DfhzUYheIhaM5iEj/jJdRVo2J7VjujYgfpAvkysOyheeBEg7odAuFHRL
-	 oMTcj+p3RLOhw==
+	b=lhAspUKFtF39lRlM18VayT1QP+099ZCaZZ4nEhX+lax4q812ogmxjpOcMki7XHF7Z
+	 1aA1DlJPoyRNkiaWY+ftbCTDFfKbWeZ9Kp36E4qLPdFAqxKNrCa5S8dX2h1gJx+zVB
+	 QFkPMgGtfQIGamvs5U1epM4jE04jSOJyLG6qVxbGXo/CgQx4YSaQGuUHwaMVX7HgM+
+	 uLlxCcCDP3MACJdapylvZdyeadGbYBm36pMWDXN54imLO55f4OICkaZjKy+iUp/pfv
+	 e0HCmHGqhXG7xSYSgGo02Ej7AJlhZhwvD40+lotXybtfkMEx0CmxKj7NT/sSO+8Eml
+	 dHnkHNK378XSQ==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Rob Herring <robh@kernel.org>
 Cc: "David S . Miller" <davem@davemloft.net>,
@@ -49,9 +49,9 @@ Cc: "David S . Miller" <davem@davemloft.net>,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/3] PCI: of: Simplify bus range parsing
-Date: Fri,  3 Jan 2025 15:31:28 -0600
-Message-Id: <20250103213129.5182-3-helgaas@kernel.org>
+Subject: [PATCH 3/3] sparc/PCI: Update reference to devm_of_pci_get_host_bridge_resources()
+Date: Fri,  3 Jan 2025 15:31:29 -0600
+Message-Id: <20250103213129.5182-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250103213129.5182-1-helgaas@kernel.org>
 References: <20250103213129.5182-1-helgaas@kernel.org>
@@ -65,63 +65,28 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-of_pci_parse_bus_range() looks for a DT "bus-range" property.  If none
-exists, devm_of_pci_get_host_bridge_resources() defaults to the [bus 00-ff]
-range supplied by its caller, pci_parse_request_of_pci_ranges().
-
-devm_of_pci_get_host_bridge_resources() is static and has no other callers,
-so there's no reason to complicate its interface by passing the default bus
-range.
-
-Drop the busno and bus_max parameters and use 0x0 and 0xff directly in
-devm_of_pci_get_host_bridge_resources().
+5bd51b35c7cb ("PCI: Rework of_pci_get_host_bridge_resources() to
+devm_of_pci_get_host_bridge_resources()") converted and renamed
+of_pci_get_host_bridge_resources().  Update the comment reference to match.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/of.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/sparc/kernel/pci_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 2f579b691f8e..02cba51e4ca4 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -302,8 +302,6 @@ EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
-  * devm_of_pci_get_host_bridge_resources() - Resource-managed parsing of PCI
-  *                                           host bridge resources from DT
-  * @dev: host bridge device
-- * @busno: bus number associated with the bridge root bus
-- * @bus_max: maximum number of buses for this bridge
-  * @resources: list where the range of resources will be added after DT parsing
-  * @ib_resources: list where the range of inbound resources (with addresses
-  *                from 'dma-ranges') will be added after DT parsing
-@@ -319,7 +317,6 @@ EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
-  * value if it failed.
-  */
- static int devm_of_pci_get_host_bridge_resources(struct device *dev,
--			unsigned char busno, unsigned char bus_max,
- 			struct list_head *resources,
- 			struct list_head *ib_resources,
- 			resource_size_t *io_base)
-@@ -343,8 +340,8 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+diff --git a/arch/sparc/kernel/pci_common.c b/arch/sparc/kernel/pci_common.c
+index 5eeec9ad6845..2576f4f31309 100644
+--- a/arch/sparc/kernel/pci_common.c
++++ b/arch/sparc/kernel/pci_common.c
+@@ -361,7 +361,7 @@ void pci_determine_mem_io_space(struct pci_pbm_info *pbm)
+ 	int i, saw_mem, saw_io;
+ 	int num_pbm_ranges;
  
- 	err = of_pci_parse_bus_range(dev_node, bus_range);
- 	if (err) {
--		bus_range->start = busno;
--		bus_range->end = bus_max;
-+		bus_range->start = 0;
-+		bus_range->end = 0xff;
- 		bus_range->flags = IORESOURCE_BUS;
- 		dev_info(dev, "  No bus range found for %pOF, using %pR\n",
- 			 dev_node, bus_range);
-@@ -597,7 +594,7 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
- 	INIT_LIST_HEAD(&bridge->windows);
- 	INIT_LIST_HEAD(&bridge->dma_ranges);
+-	/* Corresponding generic code in of_pci_get_host_bridge_resources() */
++	/* Corresponds to generic devm_of_pci_get_host_bridge_resources() */
  
--	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff, &bridge->windows,
-+	err = devm_of_pci_get_host_bridge_resources(dev, &bridge->windows,
- 						    &bridge->dma_ranges, &iobase);
- 	if (err)
- 		return err;
+ 	saw_mem = saw_io = 0;
+ 	pbm_ranges = of_get_property(pbm->op->dev.of_node, "ranges", &i);
 -- 
 2.34.1
 
