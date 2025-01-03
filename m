@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-19258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F33BA00FD8
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 22:31:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA3F3A00FDB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 22:31:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB5AF1882859
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:31:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29A2E3A240E
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85651C1F30;
-	Fri,  3 Jan 2025 21:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E699F1C243D;
+	Fri,  3 Jan 2025 21:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qn3C9Y4n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdM7sGO2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802641C1F13;
-	Fri,  3 Jan 2025 21:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15B31BD9FF;
+	Fri,  3 Jan 2025 21:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735939897; cv=none; b=cc79j3GXVe+L0PPfdw8UjQwV+wOZ+Dfww/lOPHsjPEkJMYqD3i4DRDduSDkTh2PWdVjIjzjrNeGWP3WFNhxiCBoKdopCzoDF6GtCsw8RWJdVcC0Lm4HGJ2jZj0Qnf7vCnV1oB4cfIpCLEUWt3dxb546cxJmQexN/FsONnT0gBiE=
+	t=1735939898; cv=none; b=FOFjAlh67+UdwSfugjsEbwKVB/vytiVvVYPg9fO9xU8+Dr2mHtkn2wGnDyP0JOhfzsmqACKo76anOdi91nx6WcccooEEfVK8fXL9RcgxHD1pDHks8MFZ3HhgIhPYgcZfHM8ir9Ci1Y2qhlzcV/2UJwa1MQYZy83bP14jivGfd70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735939897; c=relaxed/simple;
-	bh=nRKRLieoD4MJzJcW6U24tBShsNyJKPnuSiQ2LZElBUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qVaIv1O+rK9fdVhNqT7Qe6UyP4k6JYhk8ikMCkpcKfLIPHHgM0nPCbizdahu18AA/CXO9VbMn3yxkt6x3zo8dzVEGUKRVKRkyxQ6mhuqWfwE3x2g8qQ2G6DhZffSQ79Mey+EFMePLxzWeiCKEdESJ4JD+2y83YchUvNkkb3XrNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qn3C9Y4n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 769EFC4CECE;
-	Fri,  3 Jan 2025 21:31:36 +0000 (UTC)
+	s=arc-20240116; t=1735939898; c=relaxed/simple;
+	bh=T3K7Xt/laFZc/LMwoH4OYILNY7Em+VlSsCcVbeg4c9o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nbWUp+MR6fYc/uxZIwdy2IaCcG6Jfv0a8bp/wboWIeGi/DQc524BnV3yeSL61mgdxZPVk7IIID21N3iVYiTjdX/nN90TQ4LUzYmCLqLzet5zCb4UIR14fsu0cQ1VBQLKJah/S0Gx4jQxShdigvAPpvRX/MOnhWy85FGyVYUzefA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdM7sGO2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B0DC4CEE0;
+	Fri,  3 Jan 2025 21:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735939896;
-	bh=nRKRLieoD4MJzJcW6U24tBShsNyJKPnuSiQ2LZElBUc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Qn3C9Y4nUaekskAFuIWZXKs03f8Y6LMsi2cLlcWw4gErvh1XbC9UVK2IkSMzpF5sy
-	 KYncJ4QYHrVFGTu/WjvDlrS3AR+4CMDtv1+tizd0KV7hg4df0t+4NZjJSQbdinuNA1
-	 RfXP1Heplc4rd+ipHrZe1+RPvC13KTsaPKPd9rybPcX9Nt9S4gfNglF/xLh92CCTza
-	 Ws0+KTXMry1M3Zsa4C5+TRmstRHl767r16YXo9OZKxobmVAZM+ontmXAfKhzUzBj2j
-	 e2dJX3DgUBPVZlwjgCHRRVMYtalo4pS4P3eLp8W9tqjwg1msM+4iG/+fmJHlqvEZO+
-	 0UFhhdqDhFOoQ==
+	s=k20201202; t=1735939898;
+	bh=T3K7Xt/laFZc/LMwoH4OYILNY7Em+VlSsCcVbeg4c9o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pdM7sGO2qaXMPTZjUtOSF5JeRh5l/trqXU8vci4JYvyyWmEj5sM9/fWlsW2sldZvM
+	 0pWQZJRsWz5ufXJuiFjys0BKsBJpKFcK5JnHVWdmwZR0rESPAw0gSkN6j6eiR9b0jJ
+	 cKqBgHPERwm0c4dw35iCls+kUqU9TjXiuwuNxDanXZ67aJKx2WdZEtHAYAsrKw+s0X
+	 6VTCyn+j/it9Sz7RzRYCd85XlzQfhK2cyE0ArT3vi2PNUV8+qu+huHPm8/EGqeTAs8
+	 pLJLFNbmmAswSwx7Eh7/WTabVR3Fbfu/krWWxaNB28SNHp4sFpMklkVF8teETConbL
+	 G41rVORmPcVjg==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Rob Herring <robh@kernel.org>
 Cc: "David S . Miller" <davem@davemloft.net>,
@@ -48,10 +49,12 @@ Cc: "David S . Miller" <davem@davemloft.net>,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 0/3] PCI: Simplify bus range parsing
-Date: Fri,  3 Jan 2025 15:31:26 -0600
-Message-Id: <20250103213129.5182-1-helgaas@kernel.org>
+Subject: [PATCH 1/3] PCI: Unexport of_pci_parse_bus_range()
+Date: Fri,  3 Jan 2025 15:31:27 -0600
+Message-Id: <20250103213129.5182-2-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250103213129.5182-1-helgaas@kernel.org>
+References: <20250103213129.5182-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,24 +65,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Unexport of_pci_parse_bus_range() since it's only used in drivers/pci/of.c.
+of_pci_parse_bus_range() is only used in drivers/pci/of.c, so make it
+static and unexport it.
 
-Drop bus range parameters from devm_of_pci_get_host_bridge_resources()
-since they're always the same values.
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/of.c  | 4 ++--
+ drivers/pci/pci.h | 7 -------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
-Update a sparc comment that referred to of_pci_get_host_bridge_resources(),
-which no longer exists.
-
-Bjorn Helgaas (3):
-  PCI: Unexport of_pci_parse_bus_range()
-  PCI: of: Simplify bus range parsing
-  sparc/PCI: Update reference to devm_of_pci_get_host_bridge_resources()
-
- arch/sparc/kernel/pci_common.c |  2 +-
- drivers/pci/of.c               | 13 +++++--------
- drivers/pci/pci.h              |  7 -------
- 3 files changed, 6 insertions(+), 16 deletions(-)
-
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 52f770bcc481..2f579b691f8e 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -190,7 +190,8 @@ EXPORT_SYMBOL_GPL(of_pci_get_devfn);
+  *
+  * Returns 0 on success or a negative error-code on failure.
+  */
+-int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
++static int of_pci_parse_bus_range(struct device_node *node,
++				  struct resource *res)
+ {
+ 	u32 bus_range[2];
+ 	int error;
+@@ -207,7 +208,6 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+ 
+ /**
+  * of_get_pci_domain_nr - Find the host bridge domain number
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2e40fc63ba31..35faf4770a14 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -797,7 +797,6 @@ static inline u64 pci_rebar_size_to_bytes(int size)
+ struct device_node;
+ 
+ #ifdef CONFIG_OF
+-int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+ int of_get_pci_domain_nr(struct device_node *node);
+ int of_pci_get_max_link_speed(struct device_node *node);
+ u32 of_pci_get_slot_power_limit(struct device_node *node,
+@@ -813,12 +812,6 @@ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
+ bool of_pci_supply_present(struct device_node *np);
+ 
+ #else
+-static inline int
+-of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline int
+ of_get_pci_domain_nr(struct device_node *node)
+ {
 -- 
 2.34.1
 
