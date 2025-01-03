@@ -1,62 +1,58 @@
-Return-Path: <linux-pci+bounces-19247-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19248-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 647B7A00D21
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 18:47:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BF16A00D37
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 18:50:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F2CC1649B2
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 17:47:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DBD247A031A
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 17:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634451FCCED;
-	Fri,  3 Jan 2025 17:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABABA59B71;
+	Fri,  3 Jan 2025 17:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQvmj+w4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tT9+QmNa"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81331FCD14;
-	Fri,  3 Jan 2025 17:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C7F11CA0;
+	Fri,  3 Jan 2025 17:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735926346; cv=none; b=u17FuUcDY5mZJa1iPyXXvko/Sk/ZrA59VkZtvmamob0tVTXCkAfFa8cOPPn3QbNTOdp3nEV0ue/j0YMZ6mMJW9UqSsdn/onqt3nNPtAEKb9IKbhAykU82QsoZEFFqtnQYcA5W7PTAugO5vvsF/QSwiwPzGIGDohcdKcIRh6GxlY=
+	t=1735926597; cv=none; b=aO8Om6fNdORjgYHSUk7+VJZTKEvavPpOppd3YaZiJpkaTZwUsjScq2P8D/XeRv9lbvv+3YFEf5nr5MTSQ63DgDjPXSzkZGnFOFsxf2XBt815vL68Gz3puSVLHxcITDZfgsflk3AeEFKT/ZXtfhrP2TUogronZIoxv+vAl5aCxfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735926346; c=relaxed/simple;
-	bh=PjguB0P0QSqRCCIH+3Z+tkA9X1dYzd8blRQleEtdhmI=;
+	s=arc-20240116; t=1735926597; c=relaxed/simple;
+	bh=GMFRac5OMIqXJmIVXjqHqaCXz5gJCdrMqXQ6ezJ20CM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IW/8szTQn2SiAdPp2wM2r0oXS+PgJSRLdzjtPHpuRBYa8ALW20bpzW2/uqkMs3zaXi+pV3qrU/6F6HSstsYRfHXHK6NaeCGBRDX6DUZcuv6AhUxun9NY8FnNlu6y05HQSAe1/EqQ2tT/hq+8YJRY6+lDlqaatsIdr1vXmT0K9rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQvmj+w4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82C60C4CED7;
-	Fri,  3 Jan 2025 17:45:45 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=TkDOLBwBdqHtPPfXnQ3GsX2O2TSldQbUjWfP5pG/+MjuCoX6s8ByuqU3B81/YTaTLZs6/zRx57SNfQwOb8McEfNEFr6mvrdqKWhq+DZCYtwm6Dtq+XfGO3WJ1tYsakxUZ94xBtTcrHaA3j2ZKjnkdSoKyL88Co0UmW5zGBsE0R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tT9+QmNa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE9A8C4CECE;
+	Fri,  3 Jan 2025 17:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735926345;
-	bh=PjguB0P0QSqRCCIH+3Z+tkA9X1dYzd8blRQleEtdhmI=;
+	s=k20201202; t=1735926597;
+	bh=GMFRac5OMIqXJmIVXjqHqaCXz5gJCdrMqXQ6ezJ20CM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DQvmj+w4cL6xqInl8wzdW4reWfX5JMVLV8U5lPGqpAGrqUZz8H00lerv7SgUsw9BI
-	 1sxHGH1jwthr4h8mIG9jiBMwWv2mJAOVG1NOKN/PSy10LM834DKE2iieZBIIYnqB1e
-	 mHaBGTs2Jgktkby6AKxtv1cSu/7O3gar/epejeHoXAXtR4tzXF0sML+3M65rVotLzb
-	 gSQk935chddgWVu19PuQEn9LMXQpiZ1kuQy3Mi/Bo1wi1W+/qf6vCok0iq8kfP1kQF
-	 klvK546/joxTpBqlwXeuaR1WJU3q9fiTZEAaF8QUkDkmAmKfIIBg+mzOmahstAA50w
-	 1MvXWs0I/lxvw==
-Date: Fri, 3 Jan 2025 11:45:43 -0600
+	b=tT9+QmNayF8rZgpwUgIKfMfDsmIv4iXFVG5sXsHI8xi4teFJc8aaAnxh8hdf+1ev0
+	 SwPQaxZS1bBIzF0f+XKUos4rAV95AgVwDu8BgTWdJnxE2yD7IEr/lwoIMSngUP9qgd
+	 RcQPIVdM+d8S++clm6M4OPmWVUZMHsp7Hz2W2wlF1ksqehW+4pfTYKoXR2TYMKT03d
+	 MPv1U51duXN05JOXUwDt2g50dK8fW2mDSFJv+0GGj4HkdhMHx7UjyznGO2PHXmQ7gr
+	 16UUXNIirhybRlk0HO3kHl+vCD3hXhBbXZqx06HiFQmHXLPX2FVi4f7306gG7522yA
+	 gzjQT7CrYq9Og==
+Date: Fri, 3 Jan 2025 11:49:55 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+To: Brian Norris <briannorris@chromium.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH 13/14] PCI: hv: switch hv_compose_multi_msi_req_get_cpu()
- to using cpumask_next_wrap()
-Message-ID: <20250103174543.GA4181373@bhelgaas>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Marc Zyngier <marc.zyngier@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] PCI: dwc: Use level-triggered handler for MSI IRQs
+Message-ID: <20250103174955.GA4182381@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,43 +61,51 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241228184949.31582-14-yury.norov@gmail.com>
+In-Reply-To: <Z3dAvgO3XEUaJfq_@google.com>
 
-On Sat, Dec 28, 2024 at 10:49:45AM -0800, Yury Norov wrote:
-> Calling cpumask_next_wrap_old() with starting CPU == nr_cpu_ids
-> is effectively the same as request to find first CPU, starting
-> from a given one and wrapping around if needed.
+On Thu, Jan 02, 2025 at 05:43:26PM -0800, Brian Norris wrote:
+> On Mon, Dec 30, 2024 at 10:41:45PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Oct 15, 2024 at 02:12:16PM -0700, Brian Norris wrote:
+> > > From: Brian Norris <briannorris@google.com>
+> > > 
+> > > Per Synopsis's documentation, the msi_ctrl_int signal is
+> > > level-triggered, not edge-triggered.
+> > 
+> > Could you please quote the spec reference?
 > 
-> cpumask_next_wrap() is a proper replacement for that.
+> From the reference manual for msi_ctrl_int:
 > 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-
-s/switch/Switch/ in subject to match history.
-
-Since this depends on previous patches, I assume you'll merge them all
-together, so:
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  drivers/pci/controller/pci-hyperv.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>   "Asserted when an MSI interrupt is pending. De-asserted when there is
+>   no MSI interrupt pending.
+>   ...
+>   Active State: High (level)"
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 86d1c2be8eb5..f8ebf98248b3 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1757,8 +1757,7 @@ static int hv_compose_multi_msi_req_get_cpu(void)
->  
->  	spin_lock_irqsave(&multi_msi_cpu_lock, flags);
->  
-> -	cpu_next = cpumask_next_wrap_old(cpu_next, cpu_online_mask, nr_cpu_ids,
-> -				     false);
-> +	cpu_next = cpumask_next_wrap(cpu_next, cpu_online_mask);
->  	cpu = cpu_next;
->  
->  	spin_unlock_irqrestore(&multi_msi_cpu_lock, flags);
-> -- 
-> 2.43.0
+> The reference manual also points at the databook for more info. One
+> relevant excerpt from the databook:
 > 
+>   "When any status bit remains set, then msi_ctrl_int remains asserted.
+>   The interrupt status register provides a status bit for up to 32
+>   interrupt vectors per Endpoint. When the decoded interrupt vector is
+>   enabled but is masked, then the controller sets the corresponding bit
+>   in interrupt status register but the it does not assert the top-level
+>   controller output msi_ctrl_int.
+
+"the it" might be a transcription error?
+
+> That's essentially a prose description of level-triggering, plus
+> 32-vector multiplexing and masking.
+> 
+> Did you want a v2 with this included, or did you just want it noted
+> here?
+
+I think a v2 with citations (spec name, revision, section number)
+would be helpful.  Including these quotes as well would be fine with
+me.
+
+> (Side note: I think it doesn't really matter that much whether we use
+> the 'level' or 'edge' variant handlers here, at least if the parent
+> interrupt is configured correctly as level-triggered. We're not actually
+> in danger of a level-triggered interrupt flood or similar issue.)
+> 
+> Brian
 
