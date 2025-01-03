@@ -1,65 +1,94 @@
-Return-Path: <linux-pci+bounces-19250-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19251-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9539A00DAF
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 19:35:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 329C7A00E1E
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 19:56:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E959218849B4
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 18:35:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10AAD163E02
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 18:56:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14AF1FC0E0;
-	Fri,  3 Jan 2025 18:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C211FA24D;
+	Fri,  3 Jan 2025 18:56:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xx0pQfwX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIIJUM3T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769E11B87FE;
-	Fri,  3 Jan 2025 18:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80EF1B983E;
+	Fri,  3 Jan 2025 18:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735929331; cv=none; b=rAh27/etoJU+5vwHzgrmR/sSE7qtWkSFJO3Auke7X8bApFQGg57SXJk3sTKTmmixZNKYs5FRpI6VKlDrniF9F0uab+K0bzG4UaflBIZG5FY5Jx2EcP1IYucRVWnH5F/rGxkLJGxa+X98rzX2jbxsMJwSm0DWJvk/Ssi0LVwy5qc=
+	t=1735930588; cv=none; b=LLTcl/2DakfSJzla0AEFb7aBCyQLdvagC1YPzRCNGBMwTRBz5xUmUIYCHAZZsizXuBjCW8WkEPQwqzXPf8BzygaurBRTtqqJf/KzIrhxpO8DYEpfjomNT40tvRzmw+5LtGcEUwqBNsXON+P7hfIHtXTUZo8HTyE9MhGgG7Ki7aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735929331; c=relaxed/simple;
-	bh=ibvW79eXJj9bVQweOC7IEhp7Vlli+LtSmdXNdcq9QEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MvfCqk/qfWrqMAtTra/qzGGr/yH+Qdo1pGRSvdblzzSWh67PjXjtTsfOiXle2atLOYyvbcMlMhBGZZSYZul6Uc3CwaxPUSrcSXDkBKKanb2wtvn5RtqoJHo3bz/L1X3pTOudO8tAVk8trYWjJKuUsGd3glAT/oo87wHixS+3B08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xx0pQfwX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91611C4CECE;
-	Fri,  3 Jan 2025 18:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735929330;
-	bh=ibvW79eXJj9bVQweOC7IEhp7Vlli+LtSmdXNdcq9QEo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Xx0pQfwXe3nUi4AxSJKfgoGsj5s6dtkSTxO4cKrT/aqGtOb4X5McUGs04OaP1J7jU
-	 2Xzu+QBsX6tTThEl7PjqQJRaWR+7pK5SPuYLSD6KzojpMq6cEm2sAtoq3A3cMSDV5Z
-	 mIDzYbT5B66q2E8FftvyNQ+4Q7KxYjxE1nK56uoiR1WyvKcpG7Up2IPTHERS31ACx2
-	 23wT8S3lC8frjB3fEExs5/7S8OurliP6NnsoUsCyNp0KdWuMF0mu6knHOl7EUGNK6/
-	 R6i6wMJYJfRLgfuWXZlcDkp8Pmv0O3P5bCqdCEyWlkovWtWDfNfizggj+C0x/4I/x7
-	 o8iNiXs6XXmQQ==
-Date: Fri, 3 Jan 2025 12:35:27 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
+	s=arc-20240116; t=1735930588; c=relaxed/simple;
+	bh=dUuMEhX70aXIaq8sYTqN3FqOx7b5rPZ0uazHwU20TyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KEahbtBiu4YyUfof+8DYw1131/iYtsDck8EStVE+mrx/l1n0i1+Sp1qyZX+jNjZZgd6xhgDaKED0x7EFwTDmgarDBe25nvxqnZ00zeemN6y+4DyANE6LA+KdPNGFJDic8Tas3l7Up8Vck5YWyQTLBO5sRzoiG1b1UVTQS994aq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UIIJUM3T; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2165cb60719so178039725ad.0;
+        Fri, 03 Jan 2025 10:56:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735930586; x=1736535386; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oVVrhWd1O8EztCpSEBTvrv1iv+5vHaoeRXX63DoIlaA=;
+        b=UIIJUM3TA5J6045qy9VbCyrZsE/VTN+sBMIb/hXoFDOmfrRdWQhwIZk/f8uldzcYCm
+         h+YMLpDMB6gXqDijrDvP1FKzFu9n7V3y0mHrAcfS/c4tYbE6wJ/HCFbBfmkwFsD23fDc
+         1IjIQX6cd3nS5HZoGjbcNz/DuBUNId3xktNxdGSAPVkm9D/6ndnOaeK/Rttq1WMogaA9
+         oGxkivMiyBEexjL5NLHiwWrPJSdNJ2RFJ88IdSpQF76sCAMcrASgDE7vfxDPfJdjkQsd
+         O7EVZOhowBpWpvplwTGmAAb7YG/Ezy1Ce0V2/Pkaed7p7Uq1VkqE3Su6ZBAtoNS43WBs
+         Uh3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735930586; x=1736535386;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oVVrhWd1O8EztCpSEBTvrv1iv+5vHaoeRXX63DoIlaA=;
+        b=eUcHkQp4TdGRC3U/7fJ2+CNTCUa+FDZBNvlviUev/bcWZZmzg5Awq0te9jy1xMg9jb
+         J21pRkJQ8SUKEH5fnjTS3E1Riq5sKjrA/D+2UiqO8913b2yJ65IdpuynzYHXgQQxae+C
+         SO4ixC32iGdj9vasFvVXU7XI1NQvoxhk1U8hqNviBHT2UtyiKS4NRxE9SbxOVD6IhYpl
+         D/ZNnjwh8IBYhNTiTc4lVDo9Uy0eMpBOMSLAsgJIiDJeB6jzQPoz8qQ93Q+Wse36TP9W
+         ccaqL3fat15MEjUCJb+UkCNLRPuAjCulB0fJsaxZ+8gEmAI+00Z55Go2Xwn3CwtIyV/w
+         Ro+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUmoF0gS+NmiJiZei6grdQzCP416mRpVMs44O4t+MHW1x0ZBNo+otacCNgy+WYPcPhl7vMs7dQdalZNfKI=@vger.kernel.org, AJvYcCVLCy5Um6WLllHv2g/RLL7CzmaMvO+Sfj2CEwxwug7xuCLny+ZoJXOaK/wK6FMBMlXxiDWHR8a4EmE3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhMhgAiJCe874KDzSPsQIMlA6w4BqehFoacVpk9brvmz/k4dad
+	NsAY/2/g0BmkAUuTmBShPtF85fb0APdcXjTt0daOWK4xvmF4S6Ji
+X-Gm-Gg: ASbGncv+VO9Bi4HtVcKEheKtFuv+aFK2Jd51khzFVfpcOwUZopSlIPEXJYyM1ALMnJu
+	WUAZTQFLvZZ6E9lOh1HTX8MCzZIF8Ve18gEIctyWKah/oI1aoaOy0i5h4TuRuJrQ+7WMiDlnyBv
+	Vg6g6mGl9NmELft37GLMkH3e19NIKW0QjlG4Ju33iqHSG7WzrmRclhP3pSD+wfo+gtOztip58jh
+	RM4KlktCXG0FpVpBzrAGlCv8vg/4dxi9qtLNxQLuKn7+mpxHVkgVvH2sNctl9xeG+ZN0LZ2nwV1
+	31eh
+X-Google-Smtp-Source: AGHT+IE6pDVdyQASWwcQGAlNwbQb8p9FZpL49slDuAqYCJdSk3q8VSfhQvtFLuIGNX+Atj7Wyd5TUg==
+X-Received: by 2002:a17:902:d502:b0:216:4348:149d with SMTP id d9443c01a7336-219e6f25d60mr804941215ad.53.1735930585649;
+        Fri, 03 Jan 2025 10:56:25 -0800 (PST)
+Received: from localhost (maglev-oncall.nvidia.com. [216.228.125.128])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9f6251sm242682965ad.207.2025.01.03.10.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2025 10:56:25 -0800 (PST)
+Date: Fri, 3 Jan 2025 10:56:23 -0800
+From: Yury Norov <yury.norov@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 5/6] PCI: mediatek-gen3: Add reset delay in
- mtk_pcie_en7581_power_up()
-Message-ID: <20250103183527.GA3959656@bhelgaas>
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH 13/14] PCI: hv: switch hv_compose_multi_msi_req_get_cpu()
+ to using cpumask_next_wrap()
+Message-ID: <Z3gy14tcnwCEDckC@yury-ThinkPad>
+References: <20241228184949.31582-14-yury.norov@gmail.com>
+ <20250103174543.GA4181373@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,73 +97,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241130-pcie-en7581-fixes-v5-5-dbffe41566b3@kernel.org>
+In-Reply-To: <20250103174543.GA4181373@bhelgaas>
 
-
-If you repost this series, here are a few comments/typos.  Otherwise
-we can do the trivial updates on the branch.
-
-In subject: this patch doesn't *add* a delay; it *moves* it.
-
-On Sat, Nov 30, 2024 at 12:20:14AM +0100, Lorenzo Bianconi wrote:
-> Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> causing occasional PCIe link down issues. In order to overcome the
-> problem, PCIe block is reset using REG_PCI_CONTROL (0x88) and
-> REG_RESET_CONTROL (0x834) registers available in the clock module
-> running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
-
-Add parens after clk_bulk_prepare_enable.
-
-> In order to make the code more readable, move the wait for the time
-> needed to complete the PCIe reset from en7581_pci_enable() to
-> mtk_pcie_en7581_power_up().
-> Reduce reset timeout from 250ms to the standard PCIE_T_PVPERL_MS value
-> (100ms) since it has no impact on the driver behavior.
->
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  drivers/clk/clk-en7523.c                    | 1 -
->  drivers/pci/controller/pcie-mediatek-gen3.c | 7 +++++++
->  2 files changed, 7 insertions(+), 1 deletion(-)
+On Fri, Jan 03, 2025 at 11:45:43AM -0600, Bjorn Helgaas wrote:
+> On Sat, Dec 28, 2024 at 10:49:45AM -0800, Yury Norov wrote:
+> > Calling cpumask_next_wrap_old() with starting CPU == nr_cpu_ids
+> > is effectively the same as request to find first CPU, starting
+> > from a given one and wrapping around if needed.
+> > 
+> > cpumask_next_wrap() is a proper replacement for that.
+> > 
+> > Signed-off-by: Yury Norov <yury.norov@gmail.com>
 > 
-> diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
-> index 22fbea61c3dcc05e63f8fa37e203c62b2a6fe79e..bf9d9594bef8a54316e28e56a1642ecb0562377a 100644
-> --- a/drivers/clk/clk-en7523.c
-> +++ b/drivers/clk/clk-en7523.c
-> @@ -393,7 +393,6 @@ static int en7581_pci_enable(struct clk_hw *hw)
->  	       REG_PCI_CONTROL_PERSTOUT;
->  	val = readl(np_base + REG_PCI_CONTROL);
->  	writel(val | mask, np_base + REG_PCI_CONTROL);
-> -	msleep(250);
->  
->  	return 0;
->  }
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index 01e8fde96080fa55f6c23c7d1baab6e22c49fcff..da01e741ff290464d28e172879520dbe0670cc41 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -977,6 +977,13 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
->  		goto err_clk_prepare_enable;
->  	}
->  
-> +	/*
-> +	 * Airoha EN7581 performs PCIe reset via clk callabacks since it has a
-> +	 * hw issue with PCIE_PE_RSTB signal. Add wait for the time needed to
-> +	 * complete the PCIe reset.
-
-s/callabacks/callbacks/
-
-> +	 */
-> +	msleep(PCIE_T_PVPERL_MS);
-> +
->  	return 0;
->  
->  err_clk_prepare_enable:
+> s/switch/Switch/ in subject to match history.
 > 
-> -- 
-> 2.47.0
+> Since this depends on previous patches, I assume you'll merge them all
+> together, so:
 > 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Hi Bjorn,
+
+Thanks for review!
+
+Agree with everything you spotted out. I'll fix it in v2 if it will be
+needed, or inplace when applying.
+
+Thanks,
+Yury
 
