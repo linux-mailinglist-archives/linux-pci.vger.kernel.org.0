@@ -1,119 +1,104 @@
-Return-Path: <linux-pci+bounces-19256-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19257-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7086CA00ED7
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:34:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 140BBA00EDD
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:37:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 468F83A46DB
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 20:34:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E460016410C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 20:37:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CD31B6CF5;
-	Fri,  3 Jan 2025 20:34:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F761BEF68;
+	Fri,  3 Jan 2025 20:37:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8M488aL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nmnb0TiH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D778C26281;
-	Fri,  3 Jan 2025 20:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F0F1BDA95
+	for <linux-pci@vger.kernel.org>; Fri,  3 Jan 2025 20:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735936462; cv=none; b=d9E7fJJ6mc7oytEX3RMGy4ETZK6DvehjTVoKG+/a5bg1TTs7+3DgLX0BOxAXG+KfxZza3GFB6esflogzYqiR8jU/t2uBEGQP/jnvulbvZlskTteNUtZknUSzQ2rQqIVYOfDoTAW+XCprF2TWKIh/Izhp6c8VicHvvxyretIKRi4=
+	t=1735936653; cv=none; b=sGLQ0/Ohopz9TafuZloaKj8zWYJ58C1slL+vKLUbhQHWdTq6xE0t87vWNCs5ezpxio2zZ+29IPl1N7ESI11+JmhlRv5bD8EVm26rvBpNyf6GtwGdPd1gvbNtClrSmflFbhoZfV8pG2a4BS8+qB+bmI66vN9wWhlV2oKBzs+y/6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735936462; c=relaxed/simple;
-	bh=1ZGLulGDlTSpJxCguhGrREQr5gRXYqPGBZZ/QU6S1do=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BY8lvZnZ9n/H/qKBhdAgomtfB5bxCWVUVI2lPv8YCLfE1NYAxITn2c8GeRAaujhDhBdKtcI3Tx3wuvtfOUjB4OEeZ0dQRznKifbgAfDVX1BV3OFpzgFFGKzUnYUs3sFMr4TvGDDN5B0lOY9xGuqschtAdwrmeZb/atox222ihvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8M488aL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27F0FC4CECE;
-	Fri,  3 Jan 2025 20:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735936460;
-	bh=1ZGLulGDlTSpJxCguhGrREQr5gRXYqPGBZZ/QU6S1do=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=S8M488aLHj8YsuX4skSyMkDhobtt51M+IfjDXAFlPoz/mKb1Kr5T+l0pqUSn0YLNc
-	 fJSGx8HMuqTpXi11J5y32fYY8PURzV3VJKZXrDj6JTKWjSBSBrRnvwUnpxx33PKLZI
-	 d+QVKKyEVbaS60j1LZPpVMizKCEdONQK4e0XbBsyiUf6y6HtuZc3Yz0OTOHb4ZEwDR
-	 yQDKKktFGWJEjCuDABLY8ENZ//g4iS0A6tC4dxZskJuDy47U0KkUxUr9za3vwebKTM
-	 q4AUmRIoPOGsZsm7WTe2vcMokVZP9/P8Kx9laEQuw+QE2t0inEguU4Jf0egjXjS7f4
-	 SDl66nkiVVNmA==
-Date: Fri, 3 Jan 2025 14:34:18 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: zhangdongdong@eswincomputing.com
-Cc: alex.williamson@redhat.com, bhelgaas@google.com, yishaih@nvidia.com,
-	avihaih@nvidia.com, yi.l.liu@intel.com, ankita@nvidia.com,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Remove redundant macro
-Message-ID: <20250103203418.GA4193119@bhelgaas>
+	s=arc-20240116; t=1735936653; c=relaxed/simple;
+	bh=IcW+YRhLC17wMuxfvpweCXASJ4X50+pqxzp/4Y7uagU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A55pPrt6Zn61UwHab75WVvAG99KAS0CQycw5VCSh8eyNMRmslVAJLtsy5p26bt/2mNfWNAvEjc7Jurf9vRTC2VN+ebOQBx0WsPZIOt3cUtHP0H0+1PJJ7Z64Al5YXK5yLJ8EzYkDJ/azak6PsFCFNvZKiz4s/0nHowctoB91V4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nmnb0TiH; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53e389d8dc7so13550737e87.0
+        for <linux-pci@vger.kernel.org>; Fri, 03 Jan 2025 12:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1735936650; x=1736541450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IcW+YRhLC17wMuxfvpweCXASJ4X50+pqxzp/4Y7uagU=;
+        b=nmnb0TiHgVP8CtfbOGQTPt9zJ5aouQXNzOwOfDHSD1+DpHKd3ijyZIDPUOaZopTlbL
+         PQav5ieNG/XradOQ+y5ckfzn1FvbAMY8EejyaIujT7BBVaSys/wXvtN/XgfX3ZtEBkF+
+         1OWJXucjbwGczyRS8gY3k34uIUyoH/+FOh65r2U33oiIPAhyzNhiUBWnYxnhTVXCJznO
+         SEHcZc/U+s+e46VqYtKnK6naruai2QsGpvy4o+bb8+JIVnh9wIs9Y5ZJj4JrkYb4XoIY
+         Z528foQX8KyQOOZDd8sqEO1KUeurrfAPPFGZjapJuaHZtraybb0897pfBdH72C6JurPz
+         RWMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735936650; x=1736541450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IcW+YRhLC17wMuxfvpweCXASJ4X50+pqxzp/4Y7uagU=;
+        b=QPMpfUroPtezlEcr9vBRanDvOaKh6/Y8tF5p3DwFT/Bc6svUwmY71Uz6KGzSQsa5FD
+         HxF5wkpfFu9GqS++sI2UbVf0z83+8X5HElxMP1B0hoF7ISteICg1Ub3TVP0cV2d7vzsE
+         Vm9gVu7i9XgwZK9J9liu7mB+eG/T0A60x7+vYzEUcsuUJV7uBR0nQNqD6vz5PjmYrZxG
+         1IlDwemM5GKCuP6AxSzu/jAqB+CjiSsAlvEp4/uVpqzeMHMqY+4wpDKkhyO+jOIWsNu5
+         IYgYezTud126L/OS0goBm4LnHR9Q1cwWR5Uk2HIa44Iefjot6stTjVWPpMZVTtBzDCK7
+         P6Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNryM3WJgnt+xvv56qYh8PKBeTtgKCzXkTaiHs/lLqtWWHyIKey8U3rPfkyUQ7KMyPunBNcgqWFTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc1zAiztH5U0aBw8Y5vcbXAA5lfkTIMzimG/+ncj3qjDZrk6+Y
+	DgixtPoZmiqtAp6DKoLEzwwrFkf/FKRGqlHL/3g5sReAIvDOhy3ttGhVolmG+k+Dq5tvQGWQ8XH
+	ovqVHZHxHFGLMQ4NgOpzeqLUGaqW1htconywZdg==
+X-Gm-Gg: ASbGncsxDReZ/zBoljKQo0vzqHdpiNX5eTS7rcebhgZPW4VgYSi1GkhP3rzzZBKni5h
+	ufq5y3GIaGB7S9Mfe4ZHkQCNTSI60XM4PxIgpjZ3N32HLTQ1UwF6EXBfpPihS6iFaeCT1ag==
+X-Google-Smtp-Source: AGHT+IElo2uNzbI2yxezV962zG4A83qUdJfBpmfP5k3TqUGmdQidzq8s9ge/UzIYrQyyh7g9kHfGo+UfaLJzGbZ0vyw=
+X-Received: by 2002:a05:6512:3352:b0:542:2972:4e1d with SMTP id
+ 2adb3069b0e04-54229724e7fmr12699339e87.37.1735936649705; Fri, 03 Jan 2025
+ 12:37:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
+References: <20241231-pci-pwrctrl-slot-v2-0-6a15088ba541@linaro.org> <20241231-pci-pwrctrl-slot-v2-4-6a15088ba541@linaro.org>
+In-Reply-To: <20241231-pci-pwrctrl-slot-v2-4-6a15088ba541@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 3 Jan 2025 21:37:18 +0100
+Message-ID: <CAMRc=Mf_WXkmEkOU2V+8uwuWu9YTEiEzj3Ah3_PeJKRrCPSn5w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] PCI/pwrctrl: Skip scanning for the device further
+ if pwrctrl device is created
+To: manivannan.sadhasivam@linaro.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Qiang Yu <quic_qianyu@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 16, 2024 at 09:35:36AM +0800, zhangdongdong@eswincomputing.com wrote:
-> From: Dongdong Zhang <zhangdongdong@eswincomputing.com>
-> 
-> Removed the duplicate macro `PCI_VSEC_HDR` and its related macro
-> `PCI_VSEC_HDR_LEN_SHIFT` from `pci_regs.h` to avoid redundancy and
-> inconsistencies. Updated VFIO PCI code to use `PCI_VNDR_HEADER` and
-> `PCI_VNDR_HEADER_LEN()` for consistent naming and functionality.
-> 
-> These changes aim to streamline header handling while minimizing
-> impact, given the niche usage of these macros in userspace.
-> 
-> Signed-off-by: Dongdong Zhang <zhangdongdong@eswincomputing.com>
-
-Applied with Alex's ack to pci/misc for v6.14, thanks!
-
+On Tue, Dec 31, 2024 at 10:44=E2=80=AFAM Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.linaro.org@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> The pwrctrl core will rescan the bus once the device is powered on. So
+> there is no need to continue scanning for the device further.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/vfio/pci/vfio_pci_config.c | 5 +++--
->  include/uapi/linux/pci_regs.h      | 3 ---
->  2 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index ea2745c1ac5e..5572fd99b921 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -1389,11 +1389,12 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
->  
->  	switch (ecap) {
->  	case PCI_EXT_CAP_ID_VNDR:
-> -		ret = pci_read_config_dword(pdev, epos + PCI_VSEC_HDR, &dword);
-> +		ret = pci_read_config_dword(pdev, epos + PCI_VNDR_HEADER,
-> +					    &dword);
->  		if (ret)
->  			return pcibios_err_to_errno(ret);
->  
-> -		return dword >> PCI_VSEC_HDR_LEN_SHIFT;
-> +		return PCI_VNDR_HEADER_LEN(dword);
->  	case PCI_EXT_CAP_ID_VC:
->  	case PCI_EXT_CAP_ID_VC9:
->  	case PCI_EXT_CAP_ID_MFVC:
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1601c7ed5fab..bcd44c7ca048 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1001,9 +1001,6 @@
->  #define PCI_ACS_CTRL		0x06	/* ACS Control Register */
->  #define PCI_ACS_EGRESS_CTL_V	0x08	/* ACS Egress Control Vector */
->  
-> -#define PCI_VSEC_HDR		4	/* extended cap - vendor-specific */
-> -#define  PCI_VSEC_HDR_LEN_SHIFT	20	/* shift for length field */
-> -
->  /* SATA capability */
->  #define PCI_SATA_REGS		4	/* SATA REGs specifier */
->  #define  PCI_SATA_REGS_MASK	0xF	/* location - BAR#/inline */
-> -- 
-> 2.17.1
-> 
+
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
