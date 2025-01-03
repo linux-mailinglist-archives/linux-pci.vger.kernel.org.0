@@ -1,104 +1,131 @@
-Return-Path: <linux-pci+bounces-19202-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19203-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BC37A00459
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 07:27:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E727A0048C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 07:53:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D79E916311F
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 06:27:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEB1A3A36B8
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 06:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FA851B140D;
-	Fri,  3 Jan 2025 06:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A481AF0B9;
+	Fri,  3 Jan 2025 06:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DzR20blO"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JOPrO8De"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4C31B85FA;
-	Fri,  3 Jan 2025 06:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DA71957FF;
+	Fri,  3 Jan 2025 06:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735885602; cv=none; b=uK/0o89KF68cARfY/aK+LX3waaHZ9oHOVbLdxgh0HcLWpISJsqePXadU5RtmsNiZs53miRwfZ8STBm2NPhqjrBQ+IMGMz9Yg6aLIUi6ivjt8uJYNts51uLqRkj3AzjU6RxYHoyT+RcZfLAIPUF1CXq/SsWxk4U0MoKdkn4iYvF8=
+	t=1735887190; cv=none; b=Yy/ngbqK7+1RrAbah3jtzUfWD+PB2zlS8vizU2rak3dAtBsxOZKhG0RT5cTYpR/r05R9rBWxvWl6Z+Htp3P5cRw8Q8s2YskmTXL9W6JW98d5x03KldybKHcLtWOLehHWCAgeujusMH9a32EGAw5Z12VsT0wD9uQOiyjEoi0i4hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735885602; c=relaxed/simple;
-	bh=aF/+aLAuMH/kL/bHHyraAzqvwP02S0rlgq64vO4nxuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aX+HOzEEuGdfJXYP28Clufmh9je28R77MgS8wTDoVCOIiKk8qcKyGojjBPApKSnYMYA7egYNeQ08/P1Dm8lSdsFAnYfFLV1hb2Qb7s7wAcBdiuxQej+XtKFlh3Roi7ekfVkv/AMk+gt94KRpBM8vY5VD/SPbLcCJFcmPEp6BXpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DzR20blO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64841C4CECE;
-	Fri,  3 Jan 2025 06:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1735885601;
-	bh=aF/+aLAuMH/kL/bHHyraAzqvwP02S0rlgq64vO4nxuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DzR20blOC5nqMo+VGpx4e2e6Y9gh4AGyzEb3fCxuz1S5zikCiX+Q1UZqBSjIOCoef
-	 8gGmwwTDzjq4D4Cph+yT1p3f8CEvnc87aYXXZmVj5kyoS/EVwmn4RE3beTsGZzBRCH
-	 nwlMDHXDn4H9ARFRdeDkyVi3vgGMoASANHfaxzmQ=
-Date: Fri, 3 Jan 2025 07:26:38 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, peterx@redhat.com,
-	precification@posteo.de, athul.krishna.kr@protonmail.com,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] vfio/pci: Fallback huge faults for unaligned pfn
-Message-ID: <2025010322-overblown-symptom-d4cd@gregkh>
-References: <20250102183416.1841878-1-alex.williamson@redhat.com>
+	s=arc-20240116; t=1735887190; c=relaxed/simple;
+	bh=isYiBb7oiYBaJGWmsjMnSGVAfyOYn1rcJKu/1b0r6dY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NwLgPdHg2VMhGhptl6mXsKBlg37mKtJ2fRXlJrP1YHenVxWCsYPxBrzUD5UBVXrIK5JxV4AEdcfGYf/p3iUhMw2rt2i/LUqmgJssNcuCf6Jlf+thYP9NSJaDzLSzyzAOXb6hNoBE7/gT8rM3b+zcishTPZ4FLgg8rmaRLDUVZ+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JOPrO8De; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5030sbNQ008188;
+	Fri, 3 Jan 2025 06:53:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=hyaFWJ3uV6VryfgSKh0Yayoi
+	83S+mBT6y9wX8ulhkHM=; b=JOPrO8DelrWKfJDagsT83DQfs244ORMO4Dtwx2b1
+	yRjFbLOOUI+/o5hXlsPI/zxb6QVEUiV6aqUcP0x5aGUJDfwwt7aV0T21NAiFDHOZ
+	JD20nG3yrhfRt6bjncIQmZ3OwIA9LZL0m8nFwzxETGAttZPKbCEIgMt/ff9d43is
+	v+s97CU9+7oWOngFostJQ5ZR0iuyk4e5WL6hehO+fPQDteM7b7UED63cixPnxwNR
+	y95IG5hqLUJFvzY19u2cj1oL3KZArH00ep5M3Wh2EnqvK8sbIYqObEKGmLSBskH4
+	qTTPMK66r5RYFnxYg7v2uj0rCvZ8U3n87Njyjet8kWs3pg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43x5s0rn1n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jan 2025 06:53:01 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5036r0t2012610
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 3 Jan 2025 06:53:00 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 2 Jan 2025 22:52:55 -0800
+Date: Fri, 3 Jan 2025 12:22:51 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <quic_srichara@quicinc.com>
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
+ controllers
+Message-ID: <Z3eJQyJXSBG+oFF4@hu-varada-blr.qualcomm.com>
+References: <20241213134950.234946-1-quic_mmanikan@quicinc.com>
+ <20241213134950.234946-5-quic_mmanikan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250102183416.1841878-1-alex.williamson@redhat.com>
+In-Reply-To: <20241213134950.234946-5-quic_mmanikan@quicinc.com>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lT6gXrGBlZrGDdzVkjHQ1dyfzH1S9LgO
+X-Proofpoint-GUID: lT6gXrGBlZrGDdzVkjHQ1dyfzH1S9LgO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 malwarescore=0
+ clxscore=1015 suspectscore=0 phishscore=0 mlxlogscore=614
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501030058
 
-On Thu, Jan 02, 2025 at 11:32:54AM -0700, Alex Williamson wrote:
-> The PFN must also be aligned to the fault order to insert a huge
-> pfnmap.  Test the alignment and fallback when unaligned.
-> 
-> Fixes: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219619
-> Reported-by: Athul Krishna <athul.krishna.kr@protonmail.com>
-> Reported-by: Precific <precification@posteo.de>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
+On Fri, Dec 13, 2024 at 07:19:50PM +0530, Manikanta Mylavarapu wrote:
 
-Hi,
+[ .  .  . ]
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+> +&pcie2_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie2 {
+> +	pinctrl-0 = <&pcie2_default_state>;
+> +	pinctrl-names = "default";
+> +
+> +	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+pcie2 should come before pcie2_phy
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+> +
+> +&pcie3_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie3 {
+> +	pinctrl-0 = <&pcie3_default_state>;
+> +	pinctrl-names = "default";
+> +
+> +	perst-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+same here.
 
-thanks,
-
-greg k-h's patch email bot
+-Varada
 
