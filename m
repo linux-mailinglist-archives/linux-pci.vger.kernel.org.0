@@ -1,98 +1,98 @@
-Return-Path: <linux-pci+bounces-19240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF10DA00C25
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 17:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C5E58A00C5A
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 17:47:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C4301884622
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 16:38:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B6D5188028D
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 16:47:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE471BEF95;
-	Fri,  3 Jan 2025 16:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC82E1FA8F5;
+	Fri,  3 Jan 2025 16:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pI+M8LIu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AD259B71;
-	Fri,  3 Jan 2025 16:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6331FBE8C;
+	Fri,  3 Jan 2025 16:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735922308; cv=none; b=XpyW3vIXAK1U93XKvy0ESuY6UeQwdmWm09rF6cujG+FmcY5yFZ2gi2GD+JTCUsTHM7gxDjM2DtbFGk8aJd6lRMigogjSab4veYsTazSriFhHLi1LBtcvy/4reMVQjQjjpaWX34cOlU8HwS1W4hO/Yv37JP9DXdsf8QwBUd5N47c=
+	t=1735922822; cv=none; b=mt5T0Oe2G+rotqhusyR3QJw79X1LxeUsaNQx57xEsfF6NR7u2StiU/kVE28OrGNuDoBRBVCy5O5VpzY9zvm7pXNT/JjVBjOp0uyP9BZUbYSehW+bhItVtNiBA/ipN1xilGj1tqfkTvZrgwRpAODQXfcwkXE/dKfGU2hPyPstiZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735922308; c=relaxed/simple;
-	bh=b9Wz5T09QYZihqzho0/7WPT0FEO5PDrMnfQzQQb9SVs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gWpedpc3iF/YF2TEupT0z8VfwnevEu1xAII5przHJpM3DRtwsXnL6nqnFU7nAS1jazDNw+CeMOgbK1nCi4MJ3r98Fe0LIs5YUPDlqliSkt6Pt0XEMKAFLO0G9PRQaiZ7IRf2S0lLAFXanX2KHp8F8GAniXUQVBQAAUJHk+H9dss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YPq091Y2Rz6K61Y;
-	Sat,  4 Jan 2025 00:34:01 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3A59A1404C4;
-	Sat,  4 Jan 2025 00:38:23 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 3 Jan
- 2025 17:38:22 +0100
-Date: Fri, 3 Jan 2025 16:38:21 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Lukas Wunner
-	<lukas@wunner.de>, Yazen Ghannam <yazen.ghannam@amd.com>,
-	<linux-kernel@vger.kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v8 4/7] PCI: Use unsigned int i in pcie_read_tlp_log()
-Message-ID: <20250103163821.00005521@huawei.com>
-In-Reply-To: <20241218143747.3159-5-ilpo.jarvinen@linux.intel.com>
-References: <20241218143747.3159-1-ilpo.jarvinen@linux.intel.com>
-	<20241218143747.3159-5-ilpo.jarvinen@linux.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1735922822; c=relaxed/simple;
+	bh=JlclBmU+7aNNkKpFtS3j2IsHfxgZgnHrbWtmyIC+Cb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eu/65wa1+Tr7PIvS11NU2zomA1eLuSRGxML3zwyCoK4ehLqjgx1ZUu1dVqbwgsukBm1cuGpNx+tIgtA6BQ0bOj2xh81SRJxHdP/cfR6pxRtop311VM/rspnc/17u8uQ8haL9CY8mt7HUfMxyBmAg0AAoeFXNbmb8fr2HlHEiqfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pI+M8LIu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A74C4CECE;
+	Fri,  3 Jan 2025 16:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735922822;
+	bh=JlclBmU+7aNNkKpFtS3j2IsHfxgZgnHrbWtmyIC+Cb0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pI+M8LIud258aoMvZmLwXlMgfNMVstxfLSZyukVBqTDqChLMRULjC7yad0PdAtQoM
+	 omGEtyW48kTKDCN2ptPeYYyp9YGMOoujm0Misa9krMNMmw1OJwZ9UrZ08x9pjjFuC0
+	 rCst2ISyiq0UAht56wPg+khlkqPMLNmPZelzCF3m6PWg18EPFlgiTyN0mZDQrhKI9f
+	 z9MfzNKKzVIa4jJm0UeuVt0LkEKWfhB9JzivaCHB2dIMav+B55vOqY128nqv6DJ0ym
+	 pVN/p48eYZvtsAPREmVaERF2mMeHfTGaOoTXr/xzOmjTQWdW8xijT9BgPHxaDXh36R
+	 yzx1/46itRa1w==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	bhelgaas@google.com,
+	fujita.tomonori@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH 0/3] Fixes for Rust Device / Driver abstractions
+Date: Fri,  3 Jan 2025 17:46:00 +0100
+Message-ID: <20250103164655.96590-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Wed, 18 Dec 2024 16:37:44 +0200
-Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+This patch series contains a few fixes for the preceding series [1] introducing
+device / driver Rust abstractions.
 
-> Loop variable i counting from 0 upwards does not need to be signed so
-> make it unsigned int.
->=20
-> Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Except for the CONFIG_PCI_MSI dependency fix, there's no functional change.
 
-Whilst I find it hard to care, it is harmless so up to Bjorn if he
-wants the churn or not.
+[1] https://lore.kernel.org/rust-for-linux/20241219170425.12036-1-dakr@kernel.org/
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/pci/pcie/tlp.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-> index 2bf15749cd31..65ac7b5d8a87 100644
-> --- a/drivers/pci/pcie/tlp.c
-> +++ b/drivers/pci/pcie/tlp.c
-> @@ -24,7 +24,8 @@
->  int pcie_read_tlp_log(struct pci_dev *dev, int where,
->  		      struct pcie_tlp_log *log)
->  {
-> -	int i, ret;
-> +	unsigned int i;
-> +	int ret;
-> =20
->  	memset(log, 0, sizeof(*log));
-> =20
+Danilo Krummrich (3):
+  rust: pci: do not depend on CONFIG_PCI_MSI
+  rust: io: move module entry to its correct location
+  rust: driver: address soundness issue in `RegistrationOps`
+
+ rust/kernel/driver.rs   | 25 ++++++++++++++++++++-----
+ rust/kernel/lib.rs      |  6 +++---
+ rust/kernel/pci.rs      |  8 +++++---
+ rust/kernel/platform.rs |  8 +++++---
+ 4 files changed, 33 insertions(+), 14 deletions(-)
+
+
+base-commit: 06e843bbbf2107463249ea6f6b1a736f5647e24a
+prerequisite-patch-id: 5ce64efa11560206236db2b2f014ceaa3d2e9fa3
+prerequisite-patch-id: e86a1e93ce4e9e8440be0bb641ef99def521b75f
+-- 
+2.47.1
 
 
