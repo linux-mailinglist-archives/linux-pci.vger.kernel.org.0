@@ -1,64 +1,55 @@
-Return-Path: <linux-pci+bounces-19255-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19256-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98A68A00E63
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 20:19:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7086CA00ED7
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 21:34:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DBF3164846
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 19:19:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 468F83A46DB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 20:34:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3941D61AC;
-	Fri,  3 Jan 2025 19:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CD31B6CF5;
+	Fri,  3 Jan 2025 20:34:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+Deeg9V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8M488aL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD321A8F80;
-	Fri,  3 Jan 2025 19:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D778C26281;
+	Fri,  3 Jan 2025 20:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735931991; cv=none; b=acOQFoaGEMP3AnBYU3Vd/4GSn/3Hk/oNY66mYURNSW2ShDSsV/2NSbz3VBxL8PikFpBOT4n33qI4050gc3WM8NsEqNKf3xg0WpKCsPkzO2YofGag6tIelFHgM0dv3wadHInTtUegFt1khPwtyISE2ZWqQbucg/m95M49JXS1Tbc=
+	t=1735936462; cv=none; b=d9E7fJJ6mc7oytEX3RMGy4ETZK6DvehjTVoKG+/a5bg1TTs7+3DgLX0BOxAXG+KfxZza3GFB6esflogzYqiR8jU/t2uBEGQP/jnvulbvZlskTteNUtZknUSzQ2rQqIVYOfDoTAW+XCprF2TWKIh/Izhp6c8VicHvvxyretIKRi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735931991; c=relaxed/simple;
-	bh=UXGyxRlGmAmUaGZwDyufZzkZnBt8bnaVeYMR/tdNg+Q=;
+	s=arc-20240116; t=1735936462; c=relaxed/simple;
+	bh=1ZGLulGDlTSpJxCguhGrREQr5gRXYqPGBZZ/QU6S1do=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Gylnud1M8CQigqkpowdCuXuhmSIlnoTZrNftjcj2nRsMTJ6nam/noBwTBpqKYyp1zg1LLncENH7bfX4t4luXOfcUlPVWGOF02OID3mdPG+aROhveQOr8TcDlkn39uTLhpi+BfbvGTYJIXii0OO0iicfMFdObDc0qe8TMugJcC1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+Deeg9V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8723DC4CECE;
-	Fri,  3 Jan 2025 19:19:50 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=BY8lvZnZ9n/H/qKBhdAgomtfB5bxCWVUVI2lPv8YCLfE1NYAxITn2c8GeRAaujhDhBdKtcI3Tx3wuvtfOUjB4OEeZ0dQRznKifbgAfDVX1BV3OFpzgFFGKzUnYUs3sFMr4TvGDDN5B0lOY9xGuqschtAdwrmeZb/atox222ihvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8M488aL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27F0FC4CECE;
+	Fri,  3 Jan 2025 20:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735931990;
-	bh=UXGyxRlGmAmUaGZwDyufZzkZnBt8bnaVeYMR/tdNg+Q=;
+	s=k20201202; t=1735936460;
+	bh=1ZGLulGDlTSpJxCguhGrREQr5gRXYqPGBZZ/QU6S1do=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=c+Deeg9V8VcFyWomkmsle9ozLucizmwJO5Gutz9vBqoQwXoCxuL8loK/x7obZvHEk
-	 uHTo34zns+QN8AkiNsG7P+CS+Mvegxcq45X3iIPUO01K38zjW06iDv7iWC0lEdOOJs
-	 LMGswkom9/wF+1cjL0RVIGvrV7OsvC8V6MgTeoNEHdIXdCVLGr/kacYmm2m9hLNbjg
-	 YVw8AE6wINCaMy5MgoHSrDv8zWlck9GfZclIMh6cTY/N4OE+44l2RTDit1BiYL2Y9l
-	 3MXb7vQx+pyFTev750QKolFs5hoi5ClshqRaToxvYoMrCg/MaHFu4WNzJCQsII+h1g
-	 TuuddzAxEwQjA==
-Date: Fri, 3 Jan 2025 13:19:48 -0600
+	b=S8M488aLHj8YsuX4skSyMkDhobtt51M+IfjDXAFlPoz/mKb1Kr5T+l0pqUSn0YLNc
+	 fJSGx8HMuqTpXi11J5y32fYY8PURzV3VJKZXrDj6JTKWjSBSBrRnvwUnpxx33PKLZI
+	 d+QVKKyEVbaS60j1LZPpVMizKCEdONQK4e0XbBsyiUf6y6HtuZc3Yz0OTOHb4ZEwDR
+	 yQDKKktFGWJEjCuDABLY8ENZ//g4iS0A6tC4dxZskJuDy47U0KkUxUr9za3vwebKTM
+	 q4AUmRIoPOGsZsm7WTe2vcMokVZP9/P8Kx9laEQuw+QE2t0inEguU4Jf0egjXjS7f4
+	 SDl66nkiVVNmA==
+Date: Fri, 3 Jan 2025 14:34:18 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Xavier Chang <Xavier.Chang@mediatek.com>
-Subject: Re: [PATCH 4/5] PCI: mediatek-gen3: Don't reply AXI slave error
-Message-ID: <20250103191948.GA4190995@bhelgaas>
+To: zhangdongdong@eswincomputing.com
+Cc: alex.williamson@redhat.com, bhelgaas@google.com, yishaih@nvidia.com,
+	avihaih@nvidia.com, yi.l.liu@intel.com, ankita@nvidia.com,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Remove redundant macro
+Message-ID: <20250103203418.GA4193119@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,71 +58,62 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250103060035.30688-5-jianjun.wang@mediatek.com>
+In-Reply-To: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
 
-On Fri, Jan 03, 2025 at 02:00:14PM +0800, Jianjun Wang wrote:
-> There are some circumstances where the EP device will not respond to
-> non-posted access from the root port (e.g., MMIO read). In such cases,
-> the root port will reply with an AXI slave error, which will be treated
-> as a System Error (SError), causing a kernel panic and preventing us
-> from obtaining any useful information for further debugging.
+On Mon, Dec 16, 2024 at 09:35:36AM +0800, zhangdongdong@eswincomputing.com wrote:
+> From: Dongdong Zhang <zhangdongdong@eswincomputing.com>
 > 
-> We have added a new bit in the PCIE_AXI_IF_CTRL_REG register to prevent
-> PCIe AXI0 from replying with a slave error. Setting this bit on an older
-> platform that does not support this feature will have no effect.
+> Removed the duplicate macro `PCI_VSEC_HDR` and its related macro
+> `PCI_VSEC_HDR_LEN_SHIFT` from `pci_regs.h` to avoid redundancy and
+> inconsistencies. Updated VFIO PCI code to use `PCI_VNDR_HEADER` and
+> `PCI_VNDR_HEADER_LEN()` for consistent naming and functionality.
 > 
-> By preventing AXI0 from replying with a slave error, we can keep the
-> kernel alive and debug using the information from AER.
+> These changes aim to streamline header handling while minimizing
+> impact, given the niche usage of these macros in userspace.
 > 
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> Signed-off-by: Dongdong Zhang <zhangdongdong@eswincomputing.com>
+
+Applied with Alex's ack to pci/misc for v6.14, thanks!
+
 > ---
->  drivers/pci/controller/pcie-mediatek-gen3.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  drivers/vfio/pci/vfio_pci_config.c | 5 +++--
+>  include/uapi/linux/pci_regs.h      | 3 ---
+>  2 files changed, 3 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index 4bd3b39eebe2..48f83c2d91f7 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -87,6 +87,9 @@
->  #define PCIE_LOW_POWER_CTRL_REG		0x194
->  #define PCIE_FORCE_DIS_L0S		BIT(8)
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index ea2745c1ac5e..5572fd99b921 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -1389,11 +1389,12 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
 >  
-> +#define PCIE_AXI_IF_CTRL_REG		0x1a8
-> +#define PCIE_AXI0_SLV_RESP_MASK		BIT(12)
-> +
->  #define PCIE_PIPE4_PIE8_REG		0x338
->  #define PCIE_K_FINETUNE_MAX		GENMASK(5, 0)
->  #define PCIE_K_FINETUNE_ERR		GENMASK(7, 6)
-> @@ -469,6 +472,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
->  	val |= PCIE_FORCE_DIS_L0S;
->  	writel_relaxed(val, pcie->base + PCIE_LOW_POWER_CTRL_REG);
+>  	switch (ecap) {
+>  	case PCI_EXT_CAP_ID_VNDR:
+> -		ret = pci_read_config_dword(pdev, epos + PCI_VSEC_HDR, &dword);
+> +		ret = pci_read_config_dword(pdev, epos + PCI_VNDR_HEADER,
+> +					    &dword);
+>  		if (ret)
+>  			return pcibios_err_to_errno(ret);
 >  
-> +	/*
-> +	 * Prevent PCIe AXI0 from replying a slave error, as it will cause kernel panic
-> +	 * and prevent us from getting useful information.
-> +	 * Keep the kernel alive and debug using the information from AER.
-
-Wrap to fit in 80 columns like the rest of the file
-
-Add blank lines between paragraphs.
-
-AER is an asynchronous mechanism, so if you disable the SError,
-whoever issued the MMIO read to the PCIe device will receive some kind
-of data.
-
-I hope/assume that data is ~0 as on other platforms?  If so, please
-confirm this in the comment and commit log.  Otherwise, the caller
-will received corrupted data with no way to know that it's corrupted.
-
-> +	 */
-> +	val = readl_relaxed(pcie->base + PCIE_AXI_IF_CTRL_REG);
-> +	val |= PCIE_AXI0_SLV_RESP_MASK;
-> +	writel_relaxed(val, pcie->base + PCIE_AXI_IF_CTRL_REG);
-> +
->  	/* Disable DVFSRC voltage request */
->  	val = readl_relaxed(pcie->base + PCIE_MISC_CTRL_REG);
->  	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
+> -		return dword >> PCI_VSEC_HDR_LEN_SHIFT;
+> +		return PCI_VNDR_HEADER_LEN(dword);
+>  	case PCI_EXT_CAP_ID_VC:
+>  	case PCI_EXT_CAP_ID_VC9:
+>  	case PCI_EXT_CAP_ID_MFVC:
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 1601c7ed5fab..bcd44c7ca048 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1001,9 +1001,6 @@
+>  #define PCI_ACS_CTRL		0x06	/* ACS Control Register */
+>  #define PCI_ACS_EGRESS_CTL_V	0x08	/* ACS Egress Control Vector */
+>  
+> -#define PCI_VSEC_HDR		4	/* extended cap - vendor-specific */
+> -#define  PCI_VSEC_HDR_LEN_SHIFT	20	/* shift for length field */
+> -
+>  /* SATA capability */
+>  #define PCI_SATA_REGS		4	/* SATA REGs specifier */
+>  #define  PCI_SATA_REGS_MASK	0xF	/* location - BAR#/inline */
 > -- 
-> 2.46.0
+> 2.17.1
 > 
 
