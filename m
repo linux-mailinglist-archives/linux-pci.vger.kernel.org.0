@@ -1,163 +1,134 @@
-Return-Path: <linux-pci+bounces-19191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F720A001DE
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 00:50:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96B54A00277
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 02:43:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B4F1162890
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2025 23:50:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28FDD7A1B87
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 01:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D62661ABEC7;
-	Thu,  2 Jan 2025 23:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A42C1137775;
+	Fri,  3 Jan 2025 01:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KCcAe/Pf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R1fgvLUV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B05149E00
-	for <linux-pci@vger.kernel.org>; Thu,  2 Jan 2025 23:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215AF11CA0
+	for <linux-pci@vger.kernel.org>; Fri,  3 Jan 2025 01:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735861811; cv=none; b=hIrUVajCNiHttKc4oKI39i9v7p4ORLtM2BVN6IIz8nfwh0CdvybadnOYG8rM4GvTH1RTf1i9ZJPOVWHWewxpa0pfpgUQofB1GyV+BKSvacGIE3FxNYmiHRSupOFgk7IcMzpMWO3axT+gfoBfr2EIFz9vWUQ2eWvoULeYoHJqBwk=
+	t=1735868610; cv=none; b=ds6moU2omdwg1qbcT4EMpuRNnFEkms2ogRpIBemDdq4snZBB0js+DLWEtgGnnuzTKvOp97ouJhyadP9ZAWj71EKvJhLEyntf7zfAUEg9e0ogOeESPGZFaA9F/4aXBkN/WpQWKkqJLcehy43vJhPnCFglCgVpE29vQHWcOFVD4kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735861811; c=relaxed/simple;
-	bh=P3f0e0KsZC3uxVFqjTtm1/WBjQsByv+LK7vD91x80rY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X+7OvjT1pSpOZxsUbvINOS8qfUncZ2/4//P0vmucQjAjkvKPLVL43iueLBKhZyp4YGdcXafbdgRjhfns7fORGxp3Gn6psXQbCZrl4Cb6450/+wqEZ7ogCcFo+iq2fIXptTFWgoIqZdHGn5KaYboKyOBWVJ4H8PoSWkT7/n2lmDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KCcAe/Pf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735861808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+31JuwM03Y6EdVp3v3LgbQg7ZDKiY/lu+6/XlJPbttk=;
-	b=KCcAe/PfoPWaSIVFsAXUJsR3lRT8YRsA0y4vKju122nzh8MeNe0fKNUkEeO941c+Wf5zbP
-	4lvvh+Y0LKSKqe6LbgJ0xT1SRBAXk+4x963dTQRKMdOPUC5QYPkQbhQWJXcvoI+v5zBLaN
-	ukC8ftGO6WIdGuUg5mn3swXwUp88r6k=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-32-ak22uXrjOIaDoVGfXZXjNQ-1; Thu, 02 Jan 2025 18:50:07 -0500
-X-MC-Unique: ak22uXrjOIaDoVGfXZXjNQ-1
-X-Mimecast-MFC-AGG-ID: ak22uXrjOIaDoVGfXZXjNQ
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a78fc19e2aso13709505ab.3
-        for <linux-pci@vger.kernel.org>; Thu, 02 Jan 2025 15:50:07 -0800 (PST)
+	s=arc-20240116; t=1735868610; c=relaxed/simple;
+	bh=vNndI9LZcwHH6Y3vWf9YNryxmY9fG8HSj6cNRYb3x1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HJgyAqqHBq+gTF4vzR0jQBJ5PwKZAGFbdvbPPCQ5wSAHEC36ZMY37ZZT21quVxmJ2jCHHhNdKNFEHQxwsWRmvzqGuCdirfNoiXDD41zGcLplqwl8kmPzKZ8ApJW7JHr01VUhY3zruRyliFLnxkMJkUOZltp55XdZ0pYSayLk2XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R1fgvLUV; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21649a7bcdcso159087155ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jan 2025 17:43:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1735868608; x=1736473408; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Q7qrFoRRjNsCU67hKLaHi7leV6habWZWnDMjovAGb4=;
+        b=R1fgvLUVSGBxwMBwKyWOcWrL6yaFVW71z5bJQDix+oY4VhfepD5HBrFvOmzLAD3WR1
+         bZmCHjRriPsKq7W4nRT8ENzSM0FQ/wnJeb4PjzY75QrABVrEVKVzoxlPUOZ9DQRQyAF/
+         dSC89NCJjoLk3IoQzwSFKU0uB0o+hUQ42bJYo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735861807; x=1736466607;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+31JuwM03Y6EdVp3v3LgbQg7ZDKiY/lu+6/XlJPbttk=;
-        b=bWawQQmAYnrGwcdV+lNoA3jqho9WKWqn/vIgyuxSmFu6BBI0BmnugusAW8mJQjNrRD
-         MFfopopM7asvPoHPCwlSNtMlx93peHuTlenhhAtGSdoN+7UKDh4zF7URTdrxfu3xrVYs
-         4D6y3Qa4JxMCTNT63UNFKYogVDuRIS4hy8FUYk6ywx4xQYEyko8wYTEjMQIs+p5nstAy
-         KBqqZ4+87FAvI0gFtkzzSCc8w/jp7TEILCKnfFsTVHi36RkH9PPsxh0JAnnGGbMGekWp
-         LWiljcr2q/0Y/l4IICcLuO9mMZBs6TDtO+vhncXo+YEouHTxqgGvpPd10+ObuWn1/vlz
-         OPSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPVLahx7ABIKTg8ccG4efiUBRaz4+ayY2yHxiOZPwqD12rve4Uah6unl4X1Ed6cFi3UmxPHlL2SvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4xI097HpTmg6aTswjmC3pLwEXrh1RBVuAXOx63kTGuZ1Cv+Lx
-	14hfpQDinoUNHVb/UjbHJGGCGVbTRWINoAiighRHoPJP2qUPoesibr6D7Y0mypyOr+8MXtTuVUK
-	EMBGcv1vdZeGfRkL5ZESm1tVD+U9cnI0mp/8+5mr1zPQTFnvaULTwyuTRxg==
-X-Gm-Gg: ASbGncsFzqJkDB4mmuZbRRsJHofL2cEfPzm1YA1hD/M7STnbXZfg+Ua1fHILsiU4v1K
-	fXrmzRmV/9qLLU8OWFsIjqSkK2NBC/WlXm+pPuu42PD4pr8oqZWnB6YRvgsy1hVE2TRgGYVp3UY
-	Eh06y+8pIrCDU5iRgqppZO41GzRWkrQ/j9A44TyPCl9rcQbRDJ+HiQJMGKXRe8rKEKQHxUGqwOf
-	M9goKj/B0qHBKMvfX6WYg20xLB8YJe/v+LgN+7pl6UMfpL6a6CzyyXDQeVO
-X-Received: by 2002:a05:6e02:2198:b0:3a7:bc95:bae5 with SMTP id e9e14a558f8ab-3c2d5247952mr101091335ab.5.1735861806821;
-        Thu, 02 Jan 2025 15:50:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFPdiuvD3nbQOVUd7KLLxbQIFjMW4WTn8Dgh4Oc4yWHhIFUQMePiqwfOYLyExiaxztN6ea8Zg==
-X-Received: by 2002:a05:6e02:2198:b0:3a7:bc95:bae5 with SMTP id e9e14a558f8ab-3c2d5247952mr101091245ab.5.1735861806487;
-        Thu, 02 Jan 2025 15:50:06 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68bf4f405sm7075401173.6.2025.01.02.15.50.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2025 15:50:05 -0800 (PST)
-Date: Thu, 2 Jan 2025 16:50:04 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: zhangdongdong@eswincomputing.com
-Cc: bhelgaas@google.com, yishaih@nvidia.com, avihaih@nvidia.com,
- yi.l.liu@intel.com, ankita@nvidia.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Remove redundant macro
-Message-ID: <20250102165004.2470fbb0.alex.williamson@redhat.com>
-In-Reply-To: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
-References: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+        d=1e100.net; s=20230601; t=1735868608; x=1736473408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Q7qrFoRRjNsCU67hKLaHi7leV6habWZWnDMjovAGb4=;
+        b=ntDdxFdP0PXlZf+VDqF8DVqXwqk7KPLW4UkrlvwyFhbSMxESPVG2l35vkqpHLuuvEP
+         ADf578FX69JKRDVrMt1eREeYeIJKLnJ81DyXMrEV6lYAG21EWAxImP26YTjnyIeQBxA5
+         t97G66JFI2+PvzzUyavsLFl8OfrdkcSRH275ouHODMVi3K4rh/nFFv1kk0B11tdpjIes
+         IWGEMuLK42RvHuaBSWmxSj1KvaGjpsob7/JdgXpCQ+o4sffTLS7n5gdRe3VEhRvk6jTN
+         iDosjZa3CEq4iB+hCuXeawhBlalGVhfctRfFraHGR/ZKHJpnch6VnKGBYdiLKm4urdJd
+         ZXDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUppcWKX2VxBdd2YD8kf+BH8sRKF2iLMOYE72r15QdX4u8ypKZUt9V2KT+IuvopfBazgoMLxO6IekQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylLZmhwhMKrUI8VsDkvZDKf5aOPK9BMPD3el4V94mLFo0Ha954
+	XriOi7njnEKrovk9ydfmNOBC6FzOPkGwvXNlNh6k4qgOpqzMI3hQ9HdYYuX2ZDeRHOklOgZOOLE
+	=
+X-Gm-Gg: ASbGnctMHXZfCOjHhnOigKI/ClNLpgEEqSi30fykrn69ciRYTa9D9bAJo67S+h4LVT1
+	zZIym66IJe2rna/PhjzvsiuSVURvIDFA8HNW4EcVYWC6PDpBkaGE6yW+IMLtbtkiUJB3xTYffjO
+	ufoXF+7cgjMLQ6198nbSVHPe13drQoDLEs7C/5+93DryM0bVSxZj/pSJiPKtEirKpH7TMs+00Ij
+	7Z848yURPhVmlswGVH+hVDWlpf4bPEHBtG2P1RnDCTQTnyIwFMOEhH5EKkdkD18Mnx/spPywXDB
+	UmzZ+mbrQwQLj47vsnQ=
+X-Google-Smtp-Source: AGHT+IEyokAoD80/sjdIV3JIQ3DSu4zM7TJboSZL78A6caQdKqnHUNCJTZLOydzxTxG7Tl874q/2mQ==
+X-Received: by 2002:a17:903:230d:b0:20c:9821:69af with SMTP id d9443c01a7336-219e70c018cmr670912955ad.45.1735868608471;
+        Thu, 02 Jan 2025 17:43:28 -0800 (PST)
+Received: from localhost ([2a00:79e0:2e14:7:2f1b:db40:bb38:fa8e])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2f4477c84d0sm27287665a91.14.2025.01.02.17.43.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2025 17:43:27 -0800 (PST)
+Date: Thu, 2 Jan 2025 17:43:26 -0800
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Marc Zyngier <marc.zyngier@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] PCI: dwc: Use level-triggered handler for MSI IRQs
+Message-ID: <Z3dAvgO3XEUaJfq_@google.com>
+References: <20241015141215.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+ <20241230171145.hsqynixmowjn77ki@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241230171145.hsqynixmowjn77ki@thinkpad>
 
-On Mon, 16 Dec 2024 09:35:36 +0800
-zhangdongdong@eswincomputing.com wrote:
-
-> From: Dongdong Zhang <zhangdongdong@eswincomputing.com>
+On Mon, Dec 30, 2024 at 10:41:45PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Oct 15, 2024 at 02:12:16PM -0700, Brian Norris wrote:
+> > From: Brian Norris <briannorris@google.com>
+> > 
+> > Per Synopsis's documentation, the msi_ctrl_int signal is
+> > level-triggered, not edge-triggered.
+> > 
 > 
-> Removed the duplicate macro `PCI_VSEC_HDR` and its related macro
-> `PCI_VSEC_HDR_LEN_SHIFT` from `pci_regs.h` to avoid redundancy and
-> inconsistencies. Updated VFIO PCI code to use `PCI_VNDR_HEADER` and
-> `PCI_VNDR_HEADER_LEN()` for consistent naming and functionality.
-> 
-> These changes aim to streamline header handling while minimizing
-> impact, given the niche usage of these macros in userspace.
-> 
-> Signed-off-by: Dongdong Zhang <zhangdongdong@eswincomputing.com>
-> ---
->  drivers/vfio/pci/vfio_pci_config.c | 5 +++--
+> Could you please quote the spec reference?
 
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
+From the reference manual for msi_ctrl_int:
 
-Let me know if this is expected to go through the vfio tree.  Given
-that vfio is just collateral to a PCI change and it's touching PCI
-uapi, I'm assuming it'll go through the PCI tree.  Thanks,
+  "Asserted when an MSI interrupt is pending. De-asserted when there is
+  no MSI interrupt pending.
+  ...
+  Active State: High (level)"
 
-Alex
+The reference manual also points at the databook for more info. One
+relevant excerpt from the databook:
 
->  include/uapi/linux/pci_regs.h      | 3 ---
->  2 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index ea2745c1ac5e..5572fd99b921 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -1389,11 +1389,12 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
->  
->  	switch (ecap) {
->  	case PCI_EXT_CAP_ID_VNDR:
-> -		ret = pci_read_config_dword(pdev, epos + PCI_VSEC_HDR, &dword);
-> +		ret = pci_read_config_dword(pdev, epos + PCI_VNDR_HEADER,
-> +					    &dword);
->  		if (ret)
->  			return pcibios_err_to_errno(ret);
->  
-> -		return dword >> PCI_VSEC_HDR_LEN_SHIFT;
-> +		return PCI_VNDR_HEADER_LEN(dword);
->  	case PCI_EXT_CAP_ID_VC:
->  	case PCI_EXT_CAP_ID_VC9:
->  	case PCI_EXT_CAP_ID_MFVC:
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1601c7ed5fab..bcd44c7ca048 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1001,9 +1001,6 @@
->  #define PCI_ACS_CTRL		0x06	/* ACS Control Register */
->  #define PCI_ACS_EGRESS_CTL_V	0x08	/* ACS Egress Control Vector */
->  
-> -#define PCI_VSEC_HDR		4	/* extended cap - vendor-specific */
-> -#define  PCI_VSEC_HDR_LEN_SHIFT	20	/* shift for length field */
-> -
->  /* SATA capability */
->  #define PCI_SATA_REGS		4	/* SATA REGs specifier */
->  #define  PCI_SATA_REGS_MASK	0xF	/* location - BAR#/inline */
+  "When any status bit remains set, then msi_ctrl_int remains asserted.
+  The interrupt status register provides a status bit for up to 32
+  interrupt vectors per Endpoint. When the decoded interrupt vector is
+  enabled but is masked, then the controller sets the corresponding bit
+  in interrupt status register but the it does not assert the top-level
+  controller output msi_ctrl_int.
 
+That's essentially a prose description of level-triggering, plus
+32-vector multiplexing and masking.
+
+Did you want a v2 with this included, or did you just want it noted
+here?
+
+(Side note: I think it doesn't really matter that much whether we use
+the 'level' or 'edge' variant handlers here, at least if the parent
+interrupt is configured correctly as level-triggered. We're not actually
+in danger of a level-triggered interrupt flood or similar issue.)
+
+Brian
 
