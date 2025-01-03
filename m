@@ -1,195 +1,124 @@
-Return-Path: <linux-pci+bounces-19193-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19194-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CE58A0028C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 02:54:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADFBDA002FB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 04:04:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 629633A3908
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 01:54:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C97B7A1A0F
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 03:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D612F148FE6;
-	Fri,  3 Jan 2025 01:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECxfB5RL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FF31B2198;
+	Fri,  3 Jan 2025 03:04:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3313EA93D
-	for <linux-pci@vger.kernel.org>; Fri,  3 Jan 2025 01:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 198B31957FF;
+	Fri,  3 Jan 2025 03:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735869245; cv=none; b=ATmwCQiVMfSvYQUP6VfXMb0CPZMGc+cDorpykEkDRYjENKunCSOCSY4BLH4q0sqmUQ18y6e+Dmkeyw8Yf2L87MlKqVzatjp5cWfq3gcDsxnJPmA2Oonxqi5gRP01AoWfCGYYFULgh5SQv3XxC2ANXWXhprweR3iSKVY7qk9P8ec=
+	t=1735873462; cv=none; b=ff4UFzj9HaoO2a+DMoxKiMtgzpYh5xCsr1eShbxqL898Ll/OTh6D+C7eFqBi8LZ7lIGrUae6ucnCVmMURQ72YwN4YgvqRGwX0iVQiuVcFt6nmBrfFTnY6vOlAZfnw+xp6xY+R941fQF9rDMadY6NBUUMEK2h0neJr7/HMUexfiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735869245; c=relaxed/simple;
-	bh=KFPzrRxSun4CqyFFe7crv0yYjsdP/kWh2W+jLI7+5eU=;
-	h=From:Content-Type:Mime-Version:Subject:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=iZrhOx/M/BJFegUK/yfXKedgEhU/NwZhw+v40ZmAmT7FW1IvvsxzNFbiq0xX3h8vp56dbpXdKbwj/GOezmr6ojGkiSZTFYjLIjfcUho5yoecKWmtezVy01vUCIAXEM2w3JyxIYVmWqOIcAdh+jJeBRNNKFN7roOh3DYm+ZQoagU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ECxfB5RL; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-46677ef6910so127226661cf.2
-        for <linux-pci@vger.kernel.org>; Thu, 02 Jan 2025 17:54:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735869243; x=1736474043; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:subject:mime-version:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/M56tZOnpBYnCRpoAFoXevxc7oyfOzK3becRET5ZsSI=;
-        b=ECxfB5RLYb7W3lLoNHGSqhXsIDqIHL2SbbllamqQLUB87a7eqU9OHBMS4b8DEjcVtq
-         8oumT0h8If+Oqvj6RpCVYLCl4BfAaOclpYT5JjneP57/ahqb5BlMGbBC8JKkZ3rx5Rg8
-         qk4ljMTk4NwD5576vl4ZP4jdfgBs/P1kQDKCAfIYBviMw5076dXpCVtdXncwN0MIAZvY
-         cWie9phYM67QNL+yVbBDSPfPuSGH1a2msC9EadEcELu8DmxSy4sTFJ9bMphSR+cAqb+C
-         OH+IbeyZtA8y3P+j/3LsO7EPhGhUp1SR8d9S2iPttYPZpVCdQ8U332EMAC8KMs0Xkn0Z
-         Lh1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735869243; x=1736474043;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:subject:mime-version:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/M56tZOnpBYnCRpoAFoXevxc7oyfOzK3becRET5ZsSI=;
-        b=cLKjDdWouchGQYFIXRKO2gSNIk0QDEVNOqkALLfmpHsVCJdY8Yxi+V0Iv95hCNmRR7
-         me3WaAuZPKKcSM0Eh/H/BkMhTHfY1x8ebnNbcKtqNtIblJiqhT5kKnpT8/S3+5FlY55O
-         za2Ms/TfPIYO+9COcK9tzc3OU38kvL9WxZmbmrwvz1K+/0c2N6Pr67EmPEN4Md46gAOr
-         X4JlZIJuYAsrGHx6ADwMaNZp4M5cBFf4uwm4CPbpu1sXn+o2AzW708+aUPvoOJiwZ6SD
-         lGCPyg9jugOdPk9muI6zkPDN37Y1uZNDXTp6wis2du29KW0ZS+DTI0H/e89KGsi2LJ16
-         toww==
-X-Forwarded-Encrypted: i=1; AJvYcCV6reErzJjXxWwbdrQsQn/HZHyG9cAcUELDJFmoJgllK6X7TaSDxSFwDr6KHpwdJdR1DYx7ySuKDu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqcdRHxHI7jymy+axPDqx5bEh4c0M2IqGFbrAIdogsIOuqnmuK
-	yeXhkCHvYeFJV3cHUg5l4fTckIOUWzYtUb3GdZ8V/EkndOVnU9HU
-X-Gm-Gg: ASbGncveFyG1bIoiZXvkOUlzY4tx3/fBtT2KlK160JzG2wN1gji6HdD05/kKAKLbwrw
-	nkWWgNNvKrk8QTcRYjJK9PJjj4cdu7tDQvr9clDH3L7AXCa7GL05DqlqVSDBQIjOeCTtOiK4T6b
-	Vl+w25354dOiulIwkwLFwuMLP0OPwG3W30DdnoyGlVqUoR1sSIxYg3PF1dvfaZQ8nevdBl14z32
-	fGiSWH1662aZCXNl89Mm8JuJJ3h5GA9WI+9WWvjk9RZILxWlMaGzHDQeDCxiz9AtzgGfsCDPczM
-	7Jrfi1lUun6vkx7SrVAgdaKmmo/kPrcXpd8H9Q==
-X-Google-Smtp-Source: AGHT+IHBa258agoCI+TvQMHOxshC6JJj8bFzTqytAq3/8K9obXTuyYKJxqYFVfkUooIV7yZxE+W6Tg==
-X-Received: by 2002:ac8:7d46:0:b0:466:9bc4:578 with SMTP id d75a77b69052e-46a4a8e2899mr775177191cf.22.1735869242790;
-        Thu, 02 Jan 2025 17:54:02 -0800 (PST)
-Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd182082f0sm136958276d6.129.2025.01.02.17.54.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jan 2025 17:54:02 -0800 (PST)
-From: Daniel Stodden <daniel.stodden@gmail.com>
-X-Google-Original-From: Daniel Stodden <Daniel.Stodden@gmail.com>
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1735873462; c=relaxed/simple;
+	bh=b84H8V0RCiWWEiQdiQT7j2XLx+dL7zq6v7MEYmFfcWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=M8BpldsT68n1vFsIfj/MFJazrByXzRGVNmjgJtCMHjkoIVL8ddoUItC6Q0yUr5jtTFb0oH1dfWSkNLySW3DG5WYzkK1zwsxuG5sVJeK1hofhhni/BNNFHTrJQ5PIY/FaPvU1qDuRTcw0/2v6BDb8ouXKwYsmm8CasABoJeJ87A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangdongdong$eswincomputing.com ( [10.12.96.111] ) by
+ ajax-webmail-app2 (Coremail) ; Fri, 3 Jan 2025 11:03:56 +0800 (GMT+08:00)
+Date: Fri, 3 Jan 2025 11:03:56 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: DongdongZhang <zhangdongdong@eswincomputing.com>
+To: "Alex Williamson" <alex.williamson@redhat.com>
+Cc: bhelgaas@google.com, yishaih@nvidia.com, avihaih@nvidia.com,
+	yi.l.liu@intel.com, ankita@nvidia.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: Re: [PATCH v2] PCI: Remove redundant macro
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241010(a2f59183) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <20250102165004.2470fbb0.alex.williamson@redhat.com>
+References: <20241216013536.4487-1-zhangdongdong@eswincomputing.com>
+ <20250102165004.2470fbb0.alex.williamson@redhat.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH 1/1] PCI/ASPM: fix link state exit during switch upstream
- function removal.
-In-Reply-To: <e12898835f25234561c9d7de4435590d957b85d9.1734924854.git.dns@arista.com>
-Date: Thu, 2 Jan 2025 17:53:49 -0800
-Cc: dinghui@sangfor.com.cn,
- Bjorn Helgaas <bhelgaas@google.com>,
- david.e.box@linux.intel.com,
- kai.heng.feng@canonical.com,
- linux-pci@vger.kernel.org,
- michael.a.bottini@linux.intel.com,
- qinzongquan@sangfor.com.cn,
- rajatja@google.com,
- refactormyself@gmail.com,
- sathyanarayanan.kuppuswamy@linux.intel.com,
- vidyas@nvidia.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D15363DF-76B4-4CFC-954D-72A1AB621B08@gmail.com>
-References: <20230507034057.20970-1-dinghui@sangfor.com.cn>
- <cover.1734924854.git.dns@arista.com>
- <e12898835f25234561c9d7de4435590d957b85d9.1734924854.git.dns@arista.com>
-To: Daniel Stodden <dns@arista.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
+MIME-Version: 1.0
+Message-ID: <29fffca1.18a8.1942a1e9aa0.Coremail.zhangdongdong@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgD3Y2qcU3dna54KAA--.3373W
+X-CM-SenderInfo: x2kd0wpgrqwvxrqjqvxvzl0uprps33xlqjhudrp/1tbiAQELCmd2v
+	1EDaAADsW
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-
-
-> On Dec 22, 2024, at 7:39=E2=80=AFPM, Daniel Stodden <dns@arista.com> =
-wrote:
->=20
-> From: Daniel Stodden <daniel.stodden@gmail.com>
-
-If this gets accepted =E2=80=94 remove that line? Not important, but I =
-don=E2=80=99t know how it got there. Might be because I had to =
-export/import patches between private and corporate machines during test =
-a few times.
-
-Thanks,
-Daniel
-
-> Before change 456d8aa37d0f "Disable ASPM on MFD function removal to
-> avoid use-after-free", we would free the ASPM link only after the last
-> function on the bus pertaining to the given link was removed.
->=20
-> That was too late. If function 0 is removed before sibling function,
-> link->downstream would point to free'd memory after.
->=20
-> After above change, we freed the ASPM parent link state upon any
-> function removal on the bus pertaining to a given link.
->=20
-> That is too early. If the link is to a PCIe switch with MFD on the
-> upstream port, then removing functions other than 0 first would free a
-> link which still remains parent_link to the remaining downstream
-> ports.
->=20
-> The resulting GPFs are especially frequent during hot-unplug, because
-> pciehp removes devices on the link bus in reverse order.
->=20
-> On that switch, function 0 is the virtual P2P bridge to the internal
-> bus. Free exactly when function 0 is removed -- before the parent link
-> is obsolete, but after all subordinate links are gone.
->=20
-> Fixes: 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal =
-to avoid use-after-free")
-> Signed-off-by: Daniel Stodden <dns@arista.com>
-> ---
-> drivers/pci/pcie/aspm.c | 17 +++++++++--------
-> 1 file changed, 9 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index e0bc90597dca..8ae7c75b408c 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1273,16 +1273,16 @@ void pcie_aspm_exit_link_state(struct pci_dev =
-*pdev)
-> parent_link =3D link->parent;
->=20
-> /*
-> - * link->downstream is a pointer to the pci_dev of function 0.  If
-> - * we remove that function, the pci_dev is about to be deallocated,
-> - * so we can't use link->downstream again.  Free the link state to
-> - * avoid this.
-> + * Free the parent link state, no later than function 0 (i.e.
-> + * link->downstream) being removed.
-> *
-> - * If we're removing a non-0 function, it's possible we could
-> - * retain the link state, but PCIe r6.0, sec 7.5.3.7, recommends
-> - * programming the same ASPM Control value for all functions of
-> - * multi-function devices, so disable ASPM for all of them.
-> + * Do not free free the link state any earlier. If function 0
-> + * is a switch upstream port, this link state is parent_link
-> + * to all subordinate ones.
-> */
-> + if (pdev !=3D link->downstream)
-> + goto out;
-> +
-> pcie_config_aspm_link(link, 0);
-> list_del(&link->sibling);
-> free_link_state(link);
-> @@ -1293,6 +1293,7 @@ void pcie_aspm_exit_link_state(struct pci_dev =
-*pdev)
-> pcie_config_aspm_path(parent_link);
-> }
->=20
-> + out:
-> mutex_unlock(&aspm_lock);
-> up_read(&pci_bus_sem);
-> }
-> --=20
-> 2.47.0
->=20
-
+SGkgQWxleCzCoMKgCgpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcgYW5kIGZvciBwcm92aWRpbmcg
+eW91ciBBY2tlZC1ieSHCoMKgCkkgYWdyZWUgdGhhdCB0aGlzIHBhdGNoIHByaW1hcmlseSBpbnZv
+bHZlcyBQQ0kgY2hhbmdlcywgCmluY2x1ZGluZyBhIG1vZGlmaWNhdGlvbiB0byBQQ0kgVUFQSS4g
+VGhlcmVmb3JlLCBJIGJlbGlldmUKaXQgd291bGQgbWFrZSB0aGUgbW9zdCBzZW5zZSB0byBoYXZl
+IGl0IGdvIHRocm91Z2ggdGhlIFBDSSB0cmVlLsKgwqAKClBsZWFzZSBsZXQgbWUga25vdyBpZiB0
+aGVyZSBhcmUgYW55IGFkZGl0aW9uYWwgc3RlcHMgSQpzaG91bGQgdGFrZSB0byBlbnN1cmUgYSBz
+bW9vdGggc3VibWlzc2lvbi7CoMKgCgpUaGFua3MgYWdhaW4gZm9yIHlvdXIgdGltZSBhbmQgc3Vw
+cG9ydCHCoMKgCgpCZXN0IHJlZ2FyZHMswqDCoApEb25nZG9uZyBaaGFuZ8KgwqAKCgoKCj4gLS0t
+LS3ljp/lp4vpgq7ku7YtLS0tLQo+IOWPkeS7tuS6ujogIkFsZXggV2lsbGlhbXNvbiIgPGFsZXgu
+d2lsbGlhbXNvbkByZWRoYXQuY29tPgo+IOWPkemAgeaXtumXtDoyMDI1LTAxLTAzIDA3OjUwOjA0
+ICjmmJ/mnJ/kupQpCj4g5pS25Lu25Lq6OiB6aGFuZ2Rvbmdkb25nQGVzd2luY29tcHV0aW5nLmNv
+bQo+IOaKhOmAgTogYmhlbGdhYXNAZ29vZ2xlLmNvbSwgeWlzaGFpaEBudmlkaWEuY29tLCBhdmlo
+YWloQG52aWRpYS5jb20sIHlpLmwubGl1QGludGVsLmNvbSwgYW5raXRhQG52aWRpYS5jb20sIGt2
+bUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LXBj
+aUB2Z2VyLmtlcm5lbC5vcmcKPiDkuLvpopg6IFJlOiBbUEFUQ0ggdjJdIFBDSTogUmVtb3ZlIHJl
+ZHVuZGFudCBtYWNybwo+IAo+IE9uIE1vbiwgMTYgRGVjIDIwMjQgMDk6MzU6MzYgKzA4MDAKPiB6
+aGFuZ2Rvbmdkb25nQGVzd2luY29tcHV0aW5nLmNvbSB3cm90ZToKPiAKPiA+IEZyb206IERvbmdk
+b25nIFpoYW5nIDx6aGFuZ2Rvbmdkb25nQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+IAo+ID4gUmVt
+b3ZlZCB0aGUgZHVwbGljYXRlIG1hY3JvIGBQQ0lfVlNFQ19IRFJgIGFuZCBpdHMgcmVsYXRlZCBt
+YWNybwo+ID4gYFBDSV9WU0VDX0hEUl9MRU5fU0hJRlRgIGZyb20gYHBjaV9yZWdzLmhgIHRvIGF2
+b2lkIHJlZHVuZGFuY3kgYW5kCj4gPiBpbmNvbnNpc3RlbmNpZXMuIFVwZGF0ZWQgVkZJTyBQQ0kg
+Y29kZSB0byB1c2UgYFBDSV9WTkRSX0hFQURFUmAgYW5kCj4gPiBgUENJX1ZORFJfSEVBREVSX0xF
+TigpYCBmb3IgY29uc2lzdGVudCBuYW1pbmcgYW5kIGZ1bmN0aW9uYWxpdHkuCj4gPiAKPiA+IFRo
+ZXNlIGNoYW5nZXMgYWltIHRvIHN0cmVhbWxpbmUgaGVhZGVyIGhhbmRsaW5nIHdoaWxlIG1pbmlt
+aXppbmcKPiA+IGltcGFjdCwgZ2l2ZW4gdGhlIG5pY2hlIHVzYWdlIG9mIHRoZXNlIG1hY3JvcyBp
+biB1c2Vyc3BhY2UuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IERvbmdkb25nIFpoYW5nIDx6aGFu
+Z2Rvbmdkb25nQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvdmZpby9w
+Y2kvdmZpb19wY2lfY29uZmlnLmMgfCA1ICsrKy0tCj4gCj4gQWNrZWQtYnk6IEFsZXggV2lsbGlh
+bXNvbiA8YWxleC53aWxsaWFtc29uQHJlZGhhdC5jb20+Cj4gCj4gTGV0IG1lIGtub3cgaWYgdGhp
+cyBpcyBleHBlY3RlZCB0byBnbyB0aHJvdWdoIHRoZSB2ZmlvIHRyZWUuICBHaXZlbgo+IHRoYXQg
+dmZpbyBpcyBqdXN0IGNvbGxhdGVyYWwgdG8gYSBQQ0kgY2hhbmdlIGFuZCBpdCdzIHRvdWNoaW5n
+IFBDSQo+IHVhcGksIEknbSBhc3N1bWluZyBpdCdsbCBnbyB0aHJvdWdoIHRoZSBQQ0kgdHJlZS4g
+IFRoYW5rcywKPiAKPiBBbGV4Cj4gCj4gPiAgaW5jbHVkZS91YXBpL2xpbnV4L3BjaV9yZWdzLmgg
+ICAgICB8IDMgLS0tCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDUgZGVs
+ZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZmaW8vcGNpL3ZmaW9fcGNp
+X2NvbmZpZy5jIGIvZHJpdmVycy92ZmlvL3BjaS92ZmlvX3BjaV9jb25maWcuYwo+ID4gaW5kZXgg
+ZWEyNzQ1YzFhYzVlLi41NTcyZmQ5OWI5MjEgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3ZmaW8v
+cGNpL3ZmaW9fcGNpX2NvbmZpZy5jCj4gPiArKysgYi9kcml2ZXJzL3ZmaW8vcGNpL3ZmaW9fcGNp
+X2NvbmZpZy5jCj4gPiBAQCAtMTM4OSwxMSArMTM4OSwxMiBAQCBzdGF0aWMgaW50IHZmaW9fZXh0
+X2NhcF9sZW4oc3RydWN0IHZmaW9fcGNpX2NvcmVfZGV2aWNlICp2ZGV2LCB1MTYgZWNhcCwgdTE2
+IGVwbwo+ID4gIAo+ID4gIAlzd2l0Y2ggKGVjYXApIHsKPiA+ICAJY2FzZSBQQ0lfRVhUX0NBUF9J
+RF9WTkRSOgo+ID4gLQkJcmV0ID0gcGNpX3JlYWRfY29uZmlnX2R3b3JkKHBkZXYsIGVwb3MgKyBQ
+Q0lfVlNFQ19IRFIsICZkd29yZCk7Cj4gPiArCQlyZXQgPSBwY2lfcmVhZF9jb25maWdfZHdvcmQo
+cGRldiwgZXBvcyArIFBDSV9WTkRSX0hFQURFUiwKPiA+ICsJCQkJCSAgICAmZHdvcmQpOwo+ID4g
+IAkJaWYgKHJldCkKPiA+ICAJCQlyZXR1cm4gcGNpYmlvc19lcnJfdG9fZXJybm8ocmV0KTsKPiA+
+ICAKPiA+IC0JCXJldHVybiBkd29yZCA+PiBQQ0lfVlNFQ19IRFJfTEVOX1NISUZUOwo+ID4gKwkJ
+cmV0dXJuIFBDSV9WTkRSX0hFQURFUl9MRU4oZHdvcmQpOwo+ID4gIAljYXNlIFBDSV9FWFRfQ0FQ
+X0lEX1ZDOgo+ID4gIAljYXNlIFBDSV9FWFRfQ0FQX0lEX1ZDOToKPiA+ICAJY2FzZSBQQ0lfRVhU
+X0NBUF9JRF9NRlZDOgo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC9wY2lfcmVn
+cy5oIGIvaW5jbHVkZS91YXBpL2xpbnV4L3BjaV9yZWdzLmgKPiA+IGluZGV4IDE2MDFjN2VkNWZh
+Yi4uYmNkNDRjN2NhMDQ4IDEwMDY0NAo+ID4gLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L3BjaV9y
+ZWdzLmgKPiA+ICsrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9wY2lfcmVncy5oCj4gPiBAQCAtMTAw
+MSw5ICsxMDAxLDYgQEAKPiA+ICAjZGVmaW5lIFBDSV9BQ1NfQ1RSTAkJMHgwNgkvKiBBQ1MgQ29u
+dHJvbCBSZWdpc3RlciAqLwo+ID4gICNkZWZpbmUgUENJX0FDU19FR1JFU1NfQ1RMX1YJMHgwOAkv
+KiBBQ1MgRWdyZXNzIENvbnRyb2wgVmVjdG9yICovCj4gPiAgCj4gPiAtI2RlZmluZSBQQ0lfVlNF
+Q19IRFIJCTQJLyogZXh0ZW5kZWQgY2FwIC0gdmVuZG9yLXNwZWNpZmljICovCj4gPiAtI2RlZmlu
+ZSAgUENJX1ZTRUNfSERSX0xFTl9TSElGVAkyMAkvKiBzaGlmdCBmb3IgbGVuZ3RoIGZpZWxkICov
+Cj4gPiAtCj4gPiAgLyogU0FUQSBjYXBhYmlsaXR5ICovCj4gPiAgI2RlZmluZSBQQ0lfU0FUQV9S
+RUdTCQk0CS8qIFNBVEEgUkVHcyBzcGVjaWZpZXIgKi8KPiA+ICAjZGVmaW5lICBQQ0lfU0FUQV9S
+RUdTX01BU0sJMHhGCS8qIGxvY2F0aW9uIC0gQkFSIy9pbmxpbmUgKi8K
 
