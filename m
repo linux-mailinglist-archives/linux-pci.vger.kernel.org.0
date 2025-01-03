@@ -1,139 +1,104 @@
-Return-Path: <linux-pci+bounces-19214-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19215-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 580D2A006F7
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 10:29:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D97DA00755
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 10:58:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33CDF162A7A
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 09:29:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70DA93A3528
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2025 09:58:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3181CD1E1;
-	Fri,  3 Jan 2025 09:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2021D151F;
+	Fri,  3 Jan 2025 09:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="E+7p/7rM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJPrZvpT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747EB1B140D;
-	Fri,  3 Jan 2025 09:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC331C07FB
+	for <linux-pci@vger.kernel.org>; Fri,  3 Jan 2025 09:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735896555; cv=none; b=eFQJJiJtOL9/c1QTnuyrG5K2yZR8D8F2kWoBqCaBF9WTQIqTHdZtYbZ1VCqmQlcJqJJy480UxpSA6nxbWvEpfW357M0fhW31kTcaplOVr8v7mXtLVcUkghPvg60VO1ihEETn74EfoOzUnGhbYHESuaKk5s+FIVnOUymDxzfrQVg=
+	t=1735898301; cv=none; b=Wu2gpDOdcq+Ig7NVTtRJ0LIOWiM+Gs1GpaoxFJUMiitiq5WgjSNMxxoaqFRUQ/9ZQd0gyiYDFrL3+LGMFqujAmER/ijt4K4jAVdbf3J4z2zMVgsbJOTnsxFT7baqiYS/ilWsU4kOC5ivI6E1FdGDoLcwF9/S06EPBick4qBzLs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735896555; c=relaxed/simple;
-	bh=1EkZCsAiRqfDtZ/Tc5fh3hJ4LLDdivzPZL9UBgudwok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sK5DOhV+7yPmyEutAXdHmeOeoWs/zNKaBzesjtNsrqwejjF7CtBUdY2eRiCFaloPGMGXQ7jEqPMY8Kr2D1dl/sBiYlHHjHMAVZa64Q3NgNId35ccvx+buRCs1XTSnGrMk2naaItcXzn9OZT0j2X2YA4mXjyyligwOkKPiwSfaGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=E+7p/7rM; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1735896551;
-	bh=1EkZCsAiRqfDtZ/Tc5fh3hJ4LLDdivzPZL9UBgudwok=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E+7p/7rMe4PAa4LM0kSw8xzFdN+zGRyjxWOn0lMCpc6E2VjQmqMlsSsOc7ZPoq9p7
-	 QUcSdel8jDfuhfVtd44c9joi+Wq+hISPPU9BC3DaukPhTW74UzwDaLgfAUfBhgxkfn
-	 Vv+Vi3todqQ+24cPdz8kCtZyMH5zJHqkxycW3vD/lTRzAV+QL398IA3lGEUW/ABchI
-	 XWuakUiYXp8JUy58jU2HjH+gCDtRrTlfGAtdL7o88vJ0ed86/sbpeLsuNsbY4mguOr
-	 XbsLLfU04ChKG2u56OUE7A09nqHbPuqhs0zn0dZeM0xinU1kdbiamAT7d6HY9qcnQq
-	 FDX9X3i/53UEg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A6ED217E153E;
-	Fri,  3 Jan 2025 10:29:10 +0100 (CET)
-Message-ID: <9a874a5b-c698-4185-bb7f-f17245381af1@collabora.com>
-Date: Fri, 3 Jan 2025 10:29:10 +0100
+	s=arc-20240116; t=1735898301; c=relaxed/simple;
+	bh=K4fzD7ubtKTn0SOctnqu1z25EeAlhR621aiktUmrQIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H2yuAICJIutq9o+CigVG2q5JaMrW/jywB42zYSTgkwFZxopj4QsOcbNV6v7JLLYB8ag2GREWxtsmJIfrXc8xpxC4W5R11rWUgZh41FlFddY/Qw1/F9ISCLTZHsLB/2vKcST88DqtwSW/1PWeBoCIz71aG7LM2AJKBGfqVp1J8n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJPrZvpT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F10C4CECE;
+	Fri,  3 Jan 2025 09:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735898299;
+	bh=K4fzD7ubtKTn0SOctnqu1z25EeAlhR621aiktUmrQIc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OJPrZvpT6AQbvqgtB9D4+QOFBPxLzaXc67UE8SuqxFAaUxNQjfY2lE3aZAdoJT3ua
+	 FWEva1e/bC31mVTvFNwdkSJRyN0YA5GNgFhXLrZ0XiCf5RLb8PNHV9B8d5kTpL3uNY
+	 traU8B33VeEVU0iuOdS4NA/lzUdv49Lrfpg6x6mZbTNmfwFV6EmCRFW1VmoZkSLagb
+	 2gGOgwHNUzu9oHma897WyBcsDswCUsGwNO8HQ3ARrBTot3ZDj2OZLRRIhhMSxhc32Z
+	 Fhn5m5D8uC0hyfglJt0OUcCWF7M7NXrMtbYdY76wfWvd6874gysdaAvvNZHBrkSAb3
+	 dI2B4NVH3y3Tw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH] PCI: dw-rockchip: Replace magic values with defines
+Date: Fri,  3 Jan 2025 10:58:12 +0100
+Message-ID: <20250103095812.2408364-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] PCI: mediatek-gen3: Don't reply AXI slave error
-To: Jianjun Wang <jianjun.wang@mediatek.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Xavier Chang <Xavier.Chang@mediatek.com>
-References: <20250103060035.30688-1-jianjun.wang@mediatek.com>
- <20250103060035.30688-5-jianjun.wang@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250103060035.30688-5-jianjun.wang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1344; i=cassel@kernel.org; h=from:subject; bh=K4fzD7ubtKTn0SOctnqu1z25EeAlhR621aiktUmrQIc=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLLt2y58jajKmlB5OyESRcuba8XWTWVN8fJJs5CT+Swa MWEzBy1jlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAEykZQ3D//T4eQfuXnyqs9um 8oOhuvGuuMVH1/38+/BQxHvHlS7aO5QYGWb+upyyjEvhgEFAc+fr/R9bPAIqtJqUnKw8C1/m370 QyQsA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-Il 03/01/25 07:00, Jianjun Wang ha scritto:
-> There are some circumstances where the EP device will not respond to
-> non-posted access from the root port (e.g., MMIO read). In such cases,
-> the root port will reply with an AXI slave error, which will be treated
-> as a System Error (SError), causing a kernel panic and preventing us
-> from obtaining any useful information for further debugging.
-> 
-> We have added a new bit in the PCIE_AXI_IF_CTRL_REG register to prevent
-> PCIe AXI0 from replying with a slave error. Setting this bit on an older
-> platform that does not support this feature will have no effect.
-> 
-> By preventing AXI0 from replying with a slave error, we can keep the
-> kernel alive and debug using the information from AER.
-> 
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> ---
->   drivers/pci/controller/pcie-mediatek-gen3.c | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index 4bd3b39eebe2..48f83c2d91f7 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -87,6 +87,9 @@
->   #define PCIE_LOW_POWER_CTRL_REG		0x194
->   #define PCIE_FORCE_DIS_L0S		BIT(8)
->   
-> +#define PCIE_AXI_IF_CTRL_REG		0x1a8
-> +#define PCIE_AXI0_SLV_RESP_MASK		BIT(12)
-> +
->   #define PCIE_PIPE4_PIE8_REG		0x338
->   #define PCIE_K_FINETUNE_MAX		GENMASK(5, 0)
->   #define PCIE_K_FINETUNE_ERR		GENMASK(7, 6)
-> @@ -469,6 +472,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
->   	val |= PCIE_FORCE_DIS_L0S;
->   	writel_relaxed(val, pcie->base + PCIE_LOW_POWER_CTRL_REG);
->   
-> +	/*
-> +	 * Prevent PCIe AXI0 from replying a slave error, as it will cause kernel panic
-> +	 * and prevent us from getting useful information.
-> +	 * Keep the kernel alive and debug using the information from AER.
-> +	 */
+Replace magic values with existing defines.
 
-Isn't it safer if we set this bit at the beginning of mtk_pcie_startup_port()
-instead?
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Cheers,
-Angelo
-
-> +	val = readl_relaxed(pcie->base + PCIE_AXI_IF_CTRL_REG);
-> +	val |= PCIE_AXI0_SLV_RESP_MASK;
-> +	writel_relaxed(val, pcie->base + PCIE_AXI_IF_CTRL_REG);
-> +
->   	/* Disable DVFSRC voltage request */
->   	val = readl_relaxed(pcie->base + PCIE_MISC_CTRL_REG);
->   	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
-
-
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index ce4b511bff9b..b65c6ad803c6 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -488,7 +488,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+ 	}
+ 
+ 	/* unmask DLL up/down indicator */
+-	rockchip_pcie_writel_apb(rockchip, 0x20000, PCIE_CLIENT_INTR_MASK_MISC);
++	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED, 0);
++	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
+ 
+ 	return ret;
+ }
+@@ -545,7 +546,8 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
+ 	pci_epc_init_notify(rockchip->pci.ep.epc);
+ 
+ 	/* unmask DLL up/down indicator and hot reset/link-down reset */
+-	rockchip_pcie_writel_apb(rockchip, 0x60000, PCIE_CLIENT_INTR_MASK_MISC);
++	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
++	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
+ 
+ 	return ret;
+ }
+-- 
+2.47.1
 
 
