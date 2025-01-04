@@ -1,537 +1,292 @@
-Return-Path: <linux-pci+bounces-19294-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19295-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03BC8A0126E
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 06:01:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A39DA012E8
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 08:24:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF6F43A45EA
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 05:00:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3448B1884A7F
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 07:24:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6094F1494D4;
-	Sat,  4 Jan 2025 05:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 664B1146D76;
+	Sat,  4 Jan 2025 07:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uf5gGAQT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QroF9Y96"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965BC14A09E
-	for <linux-pci@vger.kernel.org>; Sat,  4 Jan 2025 05:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C11025757;
+	Sat,  4 Jan 2025 07:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735966858; cv=none; b=MWntQugXuQPW6iK1qvp2aqpmZ7q/vsOZT2Oh/gDxQnTY6YJYn98J3QKwSyEk+Dk1pDyt5NeN7uA6HQTzmb7/uy5XAVwX680zhr5XMHD5yJXmATIFWJYPk3Fgt1WkhxVDHbN9ZhU5HcSIiq8e0BFjcA0i7uYdNqXpAE+YSHuLExE=
+	t=1735975459; cv=none; b=EwttfOfonWqMXrXkjjnYBzgY3+H6RqtqDTSpmIN0USARGvPrEQpxo3cEpba3WGO9FKuj5xSTlL3DCne21h5epF8s1S7LtjaOgAxxv55iZVlnDD81CP9abFfYGnoqiB9zgR2bDb9K8yHWP+LrXrmnOnWlDe3dB7IROzYyvSC6WW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735966858; c=relaxed/simple;
-	bh=4zRhAoXxFdsLoxCzVeKMSGwFF3boobUSIh4vrzt6pcs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mUq1eoYbBdX8kTm45sl7CvwzNXv0+VMM3A8Yo1aroqvZngW50+g6Xfod4T76U+Ci2XhdjEaMMCiNCMNrQHi8p+iw0KxEjcaE59GxmiK9QDausiLiTjHBDSu7Qdi9FMZaQpn2YCRiFaOFj/9p5bSn0eZPYrfaGXxs9Een255h0yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uf5gGAQT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04822C4CEE5;
-	Sat,  4 Jan 2025 05:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735966858;
-	bh=4zRhAoXxFdsLoxCzVeKMSGwFF3boobUSIh4vrzt6pcs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Uf5gGAQT4Sk7/g+WB2c0kyWCKtxPdF7gju3/dh9K0pobnDlwAu+uyaaDb8Nt+IGDQ
-	 opoQ2AQ1tD+7v5RtPfpYYqnOYO8lZhCowN5rOeiPDzIw2kR3Vuu9wzacLRcy4rvQ8h
-	 wn1eM+TAofg2dXUMn7KnbD1LaR9faArZm7l05kTc8T8t+7cYDA5ZyEKAY+pGyAwo8s
-	 0xwIE97GR/ouVogvrdCRs9uYH/5cx2YoQOsLjK/GukAYkUlitfiLWPV7e/9RAfRv55
-	 iyE0KzEoF+MC5Y8VWy9eeZRZeN49wh7deZW0rnQkEULx+RIM/a+aLaEkfiX8gCBWHz
-	 pGOs2Ks4BHtqw==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: linux-nvme@lists.infradead.org,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v9 18/18] Documentation: Document the NVMe PCI endpoint target driver
-Date: Sat,  4 Jan 2025 13:59:51 +0900
-Message-ID: <20250104045951.157830-19-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250104045951.157830-1-dlemoal@kernel.org>
-References: <20250104045951.157830-1-dlemoal@kernel.org>
+	s=arc-20240116; t=1735975459; c=relaxed/simple;
+	bh=1UjT/iRKOzXq0r0UbmTO4uorivqpm4Sr7r+1Xk+4lEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V406HHaraQHsnPsLwvOQjULutSHRgdP2gaRHerCsrN4kIReIEIfmjGTia/Ahwxp5eY4tBPrLjHBxpZ5m1k3HGp1y+5V9/UrArPQLCVcKjKoVVvGC9YOZBMyyrZUILXVCQYa4zdSzCxgq8AafVtCLdkQknXNT5Iz8odX3kYmKAg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QroF9Y96; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1735975457; x=1767511457;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1UjT/iRKOzXq0r0UbmTO4uorivqpm4Sr7r+1Xk+4lEY=;
+  b=QroF9Y969Vtu/fDwVu/P8+p21C528+Du2W25dy7FsOVHePUorWt4Ikel
+   T93T8C30kRqV1cDQ3hir5QWBkoBLe01y8IajLhg3psleE/occDmMkGbwP
+   y5raPZ+jkCdoN/J5H8TAz/drvxJx4wyC+hHc/XdLj0+oPg3oIuORk3X8p
+   qgi171c0RCrCDqiNul8aJ18Zp7i3YVEGnxE0Kwbdc7WrNOAep3cCYABep
+   j/96PdyaB4222NJwNkLMFjRyRIeqzMbijielFYq3HfNBa5AiH04YZGQyu
+   fxxke8NOnKcLaWR3gIY8acmUh/dujSdg6nXyaSbCaLQhcs2FoqB0E5pD8
+   w==;
+X-CSE-ConnectionGUID: Fi/SC7K7Shuf7URewiFlhA==
+X-CSE-MsgGUID: X4BP4l2uRIKq2r0/pNbTsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="39030211"
+X-IronPort-AV: E=Sophos;i="6.12,288,1728975600"; 
+   d="scan'208";a="39030211"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 23:24:14 -0800
+X-CSE-ConnectionGUID: haX6Fa4WRHmxCE6l0dJ51w==
+X-CSE-MsgGUID: m85yKfO3TMK5fXLTfQK52w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="102466775"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 03 Jan 2025 23:24:12 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tTyW1-000Ajb-2o;
+	Sat, 04 Jan 2025 07:24:09 +0000
+Date: Sat, 4 Jan 2025 15:23:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 2/3] PCI: of: Simplify bus range parsing
+Message-ID: <202501041529.CV5Doc8D-lkp@intel.com>
+References: <20250103213129.5182-3-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250103213129.5182-3-helgaas@kernel.org>
 
-Add a documentation file
-(Documentation/nvme/nvme-pci-endpoint-target.rst) for the new NVMe PCI
-endpoint target driver. This provides an overview of the driver
-requirements, capabilities and limitations. A user guide describing how
-to setup a NVMe PCI endpoint device using this driver is also provided.
+Hi Bjorn,
 
-This document is made accessible also from the PCI endpoint
-documentation using a link. Furthermore, since the existing nvme
-documentation was not accessible from the top documentation index, an
-index file is added to Documentation/nvme and this index listed as
-"NVMe Subsystem" in the "Storage interfaces" section of the subsystem
-API index.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- Documentation/PCI/endpoint/index.rst          |   1 +
- .../PCI/endpoint/pci-nvme-function.rst        |  13 +
- Documentation/nvme/index.rst                  |  12 +
- .../nvme/nvme-pci-endpoint-target.rst         | 368 ++++++++++++++++++
- Documentation/subsystem-apis.rst              |   1 +
- 5 files changed, 395 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-nvme-function.rst
- create mode 100644 Documentation/nvme/index.rst
- create mode 100644 Documentation/nvme/nvme-pci-endpoint-target.rst
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus robh/for-next linus/master v6.13-rc5 next-20241220]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 4d2333e7ae06..dd1f62e731c9 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -15,6 +15,7 @@ PCI Endpoint Framework
-    pci-ntb-howto
-    pci-vntb-function
-    pci-vntb-howto
-+   pci-nvme-function
- 
-    function/binding/pci-test
-    function/binding/pci-ntb
-diff --git a/Documentation/PCI/endpoint/pci-nvme-function.rst b/Documentation/PCI/endpoint/pci-nvme-function.rst
-new file mode 100644
-index 000000000000..df57b8e7d066
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-nvme-function.rst
-@@ -0,0 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+PCI NVMe Function
-+=================
-+
-+:Author: Damien Le Moal <dlemoal@kernel.org>
-+
-+The PCI NVMe endpoint function implements a PCI NVMe controller using the NVMe
-+subsystem target core code. The driver for this function resides with the NVMe
-+subsystem as drivers/nvme/target/nvmet-pciep.c.
-+
-+See Documentation/nvme/nvme-pci-endpoint-target.rst for more details.
-diff --git a/Documentation/nvme/index.rst b/Documentation/nvme/index.rst
-new file mode 100644
-index 000000000000..13383c760cc7
---- /dev/null
-+++ b/Documentation/nvme/index.rst
-@@ -0,0 +1,12 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============
-+NVMe Subsystem
-+==============
-+
-+.. toctree::
-+   :maxdepth: 2
-+   :numbered:
-+
-+   feature-and-quirk-policy
-+   nvme-pci-endpoint-target
-diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
-new file mode 100644
-index 000000000000..66e7b7d869b4
---- /dev/null
-+++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
-@@ -0,0 +1,368 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================================
-+NVMe PCI Endpoint Function Target
-+=================================
-+
-+:Author: Damien Le Moal <dlemoal@kernel.org>
-+
-+The NVMe PCI endpoint function target driver implements a NVMe PCIe controller
-+using a NVMe fabrics target controller configured with the PCI transport type.
-+
-+Overview
-+========
-+
-+The NVMe PCI endpoint function target driver allows exposing a NVMe target
-+controller over a PCIe link, thus implementing an NVMe PCIe device similar to a
-+regular M.2 SSD. The target controller is created in the same manner as when
-+using NVMe over fabrics: the controller represents the interface to an NVMe
-+subsystem using a port. The port transfer type must be configured to be
-+"pci". The subsystem can be configured to have namespaces backed by regular
-+files or block devices, or can use NVMe passthrough to expose to the PCI host an
-+existing physical NVMe device or a NVMe fabrics host controller (e.g. a NVMe TCP
-+host controller).
-+
-+The NVMe PCI endpoint function target driver relies as much as possible on the
-+NVMe target core code to parse and execute NVMe commands submitted by the PCIe
-+host. However, using the PCI endpoint framework API and DMA API, the driver is
-+also responsible for managing all data transfers over the PCIe link. This
-+implies that the NVMe PCI endpoint function target driver implements several
-+NVMe data structure management and some NVMe command parsing.
-+
-+1) The driver manages retrieval of NVMe commands in submission queues using DMA
-+   if supported, or MMIO otherwise. Each command retrieved is then executed
-+   using a work item to maximize performance with the parallel execution of
-+   multiple commands on different CPUs. The driver uses a work item to
-+   constantly poll the doorbell of all submission queues to detect command
-+   submissions from the PCIe host.
-+
-+2) The driver transfers completion queues entries of completed commands to the
-+   PCIe host using MMIO copy of the entries in the host completion queue.
-+   After posting completion entries in a completion queue, the driver uses the
-+   PCI endpoint framework API to raise an interrupt to the host to signal the
-+   commands completion.
-+
-+3) For any command that has a data buffer, the NVMe PCI endpoint target driver
-+   parses the command PRPs or SGLs lists to create a list of PCI address
-+   segments representing the mapping of the command data buffer on the host.
-+   The command data buffer is transferred over the PCIe link using this list of
-+   PCI address segments using DMA, if supported. If DMA is not supported, MMIO
-+   is used, which results in poor performance. For write commands, the command
-+   data buffer is transferred from the host into a local memory buffer before
-+   executing the command using the target core code. For read commands, a local
-+   memory buffer is allocated to execute the command and the content of that
-+   buffer is transferred to the host once the command completes.
-+
-+Controller Capabilities
-+-----------------------
-+
-+The NVMe capabilities exposed to the PCIe host through the BAR 0 registers
-+are almost identical to the capabilities of the NVMe target controller
-+implemented by the target core code. There are some exceptions.
-+
-+1) The NVMe PCI endpoint target driver always sets the controller capability
-+   CQR bit to request "Contiguous Queues Required". This is to facilitate the
-+   mapping of a queue PCI address range to the local CPU address space.
-+
-+2) The doorbell stride (DSTRB) is always set to be 4B
-+
-+3) Since the PCI endpoint framework does not provide a way to handle PCI level
-+   resets, the controller capability NSSR bit (NVM Subsystem Reset Supported)
-+   is always cleared.
-+
-+4) The boot partition support (BPS), Persistent Memory Region Supported (PMRS)
-+   and Controller Memory Buffer Supported (CMBS) capabilities are never
-+   reported.
-+
-+Supported Features
-+------------------
-+
-+The NVMe PCI endpoint target driver implements support for both PRPs and SGLs.
-+The driver also implements IRQ vector coalescing and submission queue
-+arbitration burst.
-+
-+The maximum number of queues and the maximum data transfer size (MDTS) are
-+configurable through configfs before starting the controller. To avoid issues
-+with excessive local memory usage for executing commands, MDTS defaults to 512
-+KB and is limited to a maximum of 2 MB (arbitrary limit).
-+
-+Mimimum number of PCI Address Mapping Windows Required
-+------------------------------------------------------
-+
-+Most PCI endpoint controllers provide a limited number of mapping windows for
-+mapping a PCI address range to local CPU memory addresses. The NVMe PCI
-+endpoint target controllers uses mapping windows for the following.
-+
-+1) One memory window for raising MSI or MSI-X interrupts
-+2) One memory window for MMIO transfers
-+3) One memory window for each completion queue
-+
-+Given the highly asynchronous nature of the NVMe PCI endpoint target driver
-+operation, the memory windows as described above will generally not be used
-+simultaneously, but that may happen. So a safe maximum number of completion
-+queues that can be supported is equal to the total number of memory mapping
-+windows of the PCI endpoint controller minus two. E.g. for an endpoint PCI
-+controller with 32 outbound memory windows available, up to 30 completion
-+queues can be safely operated without any risk of getting PCI address mapping
-+errors due to the lack of memory windows.
-+
-+Maximum Number of Queue Pairs
-+-----------------------------
-+
-+Upon binding of the NVMe PCI endpoint target driver to the PCI endpoint
-+controller, BAR 0 is allocated with enough space to accommodate the admin queue
-+and multiple I/O queues. The maximum of number of I/O queues pairs that can be
-+supported is limited by several factors.
-+
-+1) The NVMe target core code limits the maximum number of I/O queues to the
-+   number of online CPUs.
-+2) The total number of queue pairs, including the admin queue, cannot exceed
-+   the number of MSI-X or MSI vectors available.
-+3) The total number of completion queues must not exceed the total number of
-+   PCI mapping windows minus 2 (see above).
-+
-+The NVMe endpoint function driver allows configuring the maximum number of
-+queue pairs through configfs.
-+
-+Limitations and NVMe Specification Non-Compliance
-+-------------------------------------------------
-+
-+Similar to the NVMe target core code, the NVMe PCI endpoint target driver does
-+not support multiple submission queues using the same completion queue. All
-+submission queues must specify a unique completion queue.
-+
-+
-+User Guide
-+==========
-+
-+This section describes the hardware requirements and how to setup an NVMe PCI
-+endpoint target device.
-+
-+Kernel Requirements
-+-------------------
-+
-+The kernel must be compiled with the configuration options CONFIG_PCI_ENDPOINT,
-+CONFIG_PCI_ENDPOINT_CONFIGFS, and CONFIG_NVME_TARGET_PCI_EPF enabled.
-+CONFIG_PCI, CONFIG_BLK_DEV_NVME and CONFIG_NVME_TARGET must also be enabled
-+(obviously).
-+
-+In addition to this, at least one PCI endpoint controller driver should be
-+available for the endpoint hardware used.
-+
-+To facilitate testing, enabling the null-blk driver (CONFIG_BLK_DEV_NULL_BLK)
-+is also recommended. With this, a simple setup using a null_blk block device
-+as a subsystem namespace can be used.
-+
-+Hardware Requirements
-+---------------------
-+
-+To use the NVMe PCI endpoint target driver, at least one endpoint controller
-+device is required.
-+
-+To find the list of endpoint controller devices in the system::
-+
-+       # ls /sys/class/pci_epc/
-+        a40000000.pcie-ep
-+
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
-+       # ls /sys/kernel/config/pci_ep/controllers
-+        a40000000.pcie-ep
-+
-+The endpoint board must of course also be connected to a host with a PCI cable
-+with RX-TX signal swapped. If the host PCI slot used does not have
-+plug-and-play capabilities, the host should be powered off when the NVMe PCI
-+endpoint device is configured.
-+
-+NVMe Endpoint Device
-+--------------------
-+
-+Creating an NVMe endpoint device is a two step process. First, an NVMe target
-+subsystem and port must be defined. Second, the NVMe PCI endpoint device must
-+be setup and bound to the subsystem and port created.
-+
-+Creating a NVMe Subsystem and Port
-+----------------------------------
-+
-+Details about how to configure a NVMe target subsystem and port are outside the
-+scope of this document. The following only provides a simple example of a port
-+and subsystem with a single namespace backed by a null_blk device.
-+
-+First, make sure that configfs is enabled::
-+
-+       # mount -t configfs none /sys/kernel/config
-+
-+Next, create a null_blk device (default settings give a 250 GB device without
-+memory backing). The block device created will be /dev/nullb0 by default::
-+
-+        # modprobe null_blk
-+        # ls /dev/nullb0
-+        /dev/nullb0
-+
-+The NVMe PCI endpoint function target driver must be loaded::
-+
-+        # modprobe nvmet_pci_epf
-+        # lsmod | grep nvmet
-+        nvmet_pci_epf          32768  0
-+        nvmet                 118784  1 nvmet_pci_epf
-+        nvme_core             131072  2 nvmet_pci_epf,nvmet
-+
-+Now, create a subsystem and a port that we will use to create a PCI target
-+controller when setting up the NVMe PCI endpoint target device. In this
-+example, the port is created with a maximum of 4 I/O queue pairs::
-+
-+        # cd /sys/kernel/config/nvmet/subsystems
-+        # mkdir nvmepf.0.nqn
-+        # echo -n "Linux-pci-epf" > nvmepf.0.nqn/attr_model
-+        # echo "0x1b96" > nvmepf.0.nqn/attr_vendor_id
-+        # echo "0x1b96" > nvmepf.0.nqn/attr_subsys_vendor_id
-+        # echo 1 > nvmepf.0.nqn/attr_allow_any_host
-+        # echo 4 > nvmepf.0.nqn/attr_qid_max
-+
-+Next, create and enable the subsystem namespace using the null_blk block
-+device::
-+
-+        # mkdir nvmepf.0.nqn/namespaces/1
-+        # echo -n "/dev/nullb0" > nvmepf.0.nqn/namespaces/1/device_path
-+        # echo 1 > "nvmepf.0.nqn/namespaces/1/enable"
-+
-+Finally, create the target port and link it to the subsystem::
-+
-+        # cd /sys/kernel/config/nvmet/ports
-+        # mkdir 1
-+        # echo -n "pci" > 1/addr_trtype
-+        # ln -s /sys/kernel/config/nvmet/subsystems/nvmepf.0.nqn \
-+                /sys/kernel/config/nvmet/ports/1/subsystems/nvmepf.0.nqn
-+
-+Creating a NVMe PCI Endpoint Device
-+-----------------------------------
-+
-+With the NVMe target subsystem and port ready for use, the NVMe PCI endpoint
-+device can now be created and enabled. The NVMe PCI endpoint target driver
-+should already be loaded (that is done automatically when the port is created)::
-+
-+        # ls /sys/kernel/config/pci_ep/functions
-+        nvmet_pci_epf
-+
-+Next, create function 0::
-+
-+        # cd /sys/kernel/config/pci_ep/functions/nvmet_pci_epf
-+        # mkdir nvmepf.0
-+        # ls nvmepf.0/
-+        baseclass_code    msix_interrupts   secondary
-+        cache_line_size   nvme              subclass_code
-+        deviceid          primary           subsys_id
-+        interrupt_pin     progif_code       subsys_vendor_id
-+        msi_interrupts    revid             vendorid
-+
-+Configure the function using any device ID (the vendor ID for the device will
-+be automatically set to the same value as the NVMe target subsystem vendor
-+ID)::
-+
-+        # cd /sys/kernel/config/pci_ep/functions/nvmet_pci_epf
-+        # echo 0xBEEF > nvmepf.0/deviceid
-+        # echo 32 > nvmepf.0/msix_interrupts
-+
-+If the PCI endpoint controller used does not support MSI-X, MSI can be
-+configured instead::
-+
-+        # echo 32 > nvmepf.0/msi_interrupts
-+
-+Next, let's bind our endpoint device with the target subsystem and port that we
-+created::
-+
-+        # echo 1 > nvmepf.0/nvme/portid
-+        # echo "nvmepf.0.nqn" > nvmepf.0/nvme/subsysnqn
-+
-+The endpoint function can then be bound to the endpoint controller and the
-+controller started::
-+
-+        # cd /sys/kernel/config/pci_ep
-+        # ln -s functions/nvmet_pci_epf/nvmepf.0 controllers/a40000000.pcie-ep/
-+        # echo 1 > controllers/a40000000.pcie-ep/start
-+
-+On the endpoint machine, kernel messages will show information as the NVMe
-+target device and endpoint device are created and connected.
-+
-+.. code-block:: text
-+
-+        null_blk: disk nullb0 created
-+        null_blk: module loaded
-+        nvmet: adding nsid 1 to subsystem nvmepf.0.nqn
-+        nvmet_pci_epf nvmet_pci_epf.0: PCI endpoint controller supports MSI-X, 32 vectors
-+        nvmet: Created nvm controller 1 for subsystem nvmepf.0.nqn for NQN nqn.2014-08.org.nvmexpress:uuid:2ab90791-2246-4fbb-961d-4c3d5a5a0176.
-+        nvmet_pci_epf nvmet_pci_epf.0: New PCI ctrl "nvmepf.0.nqn", 4 I/O queues, mdts 524288 B
-+
-+PCI Root-Complex Host
-+---------------------
-+
-+Booting the PCI host will result in the initialization of the PCIe link (this
-+may be signaled by the PCI endpoint driver with a kernel message). A kernel
-+message on the endpoint will also signal when the host NVMe driver enables the
-+device controller::
-+
-+        nvmet_pci_epf nvmet_pci_epf.0: Enabling controller
-+
-+On the host side, the NVMe PCI endpoint function target device will is
-+discoverable as a PCI device, with the vendor ID and device ID as configured::
-+
-+        # lspci -n
-+        0000:01:00.0 0108: 1b96:beef
-+
-+An this device will be recognized as an NVMe device with a single namespace::
-+
-+        # lsblk
-+        NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
-+        nvme0n1     259:0    0   250G  0 disk
-+
-+The NVMe endpoint block device can then be used as any other regular NVMe
-+namespace block device. The *nvme* command line utility can be used to get more
-+detailed information about the endpoint device::
-+
-+        # nvme id-ctrl /dev/nvme0
-+        NVME Identify Controller:
-+        vid       : 0x1b96
-+        ssvid     : 0x1b96
-+        sn        : 94993c85650ef7bcd625
-+        mn        : Linux-pci-epf
-+        fr        : 6.13.0-r
-+        rab       : 6
-+        ieee      : 000000
-+        cmic      : 0xb
-+        mdts      : 7
-+        cntlid    : 0x1
-+        ver       : 0x20100
-+        ...
-+
-+
-+Endpoint Bindings
-+=================
-+
-+The NVMe PCI endpoint target driver uses the PCI endpoint configfs device
-+attributes as follows.
-+
-+================   ===========================================================
-+vendorid           Ignored (the vendor id of the NVMe target subsystem is used)
-+deviceid           Anything is OK (e.g. PCI_ANY_ID)
-+revid              Do not care
-+progif_code        Must be 0x02 (NVM Express)
-+baseclass_code     Must be 0x01 (PCI_BASE_CLASS_STORAGE)
-+subclass_code      Must be 0x08 (Non-Volatile Memory controller)
-+cache_line_size    Do not care
-+subsys_vendor_id   Ignored (the subsystem vendor id of the NVMe target subsystem
-+		   is used)
-+subsys_id          Anything is OK (e.g. PCI_ANY_ID)
-+msi_interrupts     At least equal to the number of queue pairs desired
-+msix_interrupts    At least equal to the number of queue pairs desired
-+interrupt_pin      Interrupt PIN to use if MSI and MSI-X are not supported
-+================   ===========================================================
-+
-+The NVMe PCI endpoint target function also has some specific configurable
-+fields defined in the *nvme* subdirectory of the function directory. These
-+fields are as follows.
-+
-+================   ===========================================================
-+mdts_kb            Maximum data transfer size in KiB (default: 512)
-+portid             The ID of the target port to use
-+subsysnqn          The NQN of the target subsystem to use
-+================   ===========================================================
-diff --git a/Documentation/subsystem-apis.rst b/Documentation/subsystem-apis.rst
-index 74af50d2ef7f..b52ad5b969d4 100644
---- a/Documentation/subsystem-apis.rst
-+++ b/Documentation/subsystem-apis.rst
-@@ -60,6 +60,7 @@ Storage interfaces
-    cdrom/index
-    scsi/index
-    target/index
-+   nvme/index
- 
- Other subsystems
- ----------------
+url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Unexport-of_pci_parse_bus_range/20250104-053408
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250103213129.5182-3-helgaas%40kernel.org
+patch subject: [PATCH 2/3] PCI: of: Simplify bus range parsing
+config: i386-buildonly-randconfig-001-20250104 (https://download.01.org/0day-ci/archive/20250104/202501041529.CV5Doc8D-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250104/202501041529.CV5Doc8D-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501041529.CV5Doc8D-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pci/of.c:12:
+   In file included from include/linux/pci.h:1645:
+   In file included from include/linux/dmapool.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2223:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/pci/of.c:349:43: error: use of undeclared identifier 'bus_max'; did you mean 'pid_max'?
+     349 |                 if (bus_range->end > bus_range->start + bus_max)
+         |                                                         ^~~~~~~
+         |                                                         pid_max
+   include/linux/pid.h:109:12: note: 'pid_max' declared here
+     109 | extern int pid_max;
+         |            ^
+   drivers/pci/of.c:350:40: error: use of undeclared identifier 'bus_max'; did you mean 'pid_max'?
+     350 |                         bus_range->end = bus_range->start + bus_max;
+         |                                                             ^~~~~~~
+         |                                                             pid_max
+   include/linux/pid.h:109:12: note: 'pid_max' declared here
+     109 | extern int pid_max;
+         |            ^
+   1 warning and 2 errors generated.
+
+
+vim +349 drivers/pci/of.c
+
+4670d610d59233 Rob Herring         2018-01-17  300  
+4670d610d59233 Rob Herring         2018-01-17  301  /**
+5bd51b35c7cbbc Jan Kiszka          2018-05-15  302   * devm_of_pci_get_host_bridge_resources() - Resource-managed parsing of PCI
+5bd51b35c7cbbc Jan Kiszka          2018-05-15  303   *                                           host bridge resources from DT
+055f87a2a33640 Jan Kiszka          2018-05-15  304   * @dev: host bridge device
+4670d610d59233 Rob Herring         2018-01-17  305   * @resources: list where the range of resources will be added after DT parsing
+9b41d19aff4090 Krzysztof Kozlowski 2020-07-29  306   * @ib_resources: list where the range of inbound resources (with addresses
+9b41d19aff4090 Krzysztof Kozlowski 2020-07-29  307   *                from 'dma-ranges') will be added after DT parsing
+4670d610d59233 Rob Herring         2018-01-17  308   * @io_base: pointer to a variable that will contain on return the physical
+4670d610d59233 Rob Herring         2018-01-17  309   * address for the start of the I/O range. Can be NULL if the caller doesn't
+4670d610d59233 Rob Herring         2018-01-17  310   * expect I/O ranges to be present in the device tree.
+4670d610d59233 Rob Herring         2018-01-17  311   *
+4670d610d59233 Rob Herring         2018-01-17  312   * This function will parse the "ranges" property of a PCI host bridge device
+4670d610d59233 Rob Herring         2018-01-17  313   * node and setup the resource mapping based on its content. It is expected
+4670d610d59233 Rob Herring         2018-01-17  314   * that the property conforms with the Power ePAPR document.
+4670d610d59233 Rob Herring         2018-01-17  315   *
+4670d610d59233 Rob Herring         2018-01-17  316   * It returns zero if the range parsing has been successful or a standard error
+4670d610d59233 Rob Herring         2018-01-17  317   * value if it failed.
+4670d610d59233 Rob Herring         2018-01-17  318   */
+3b55809cf91f54 Rob Herring         2019-10-28  319  static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+331f63457165a3 Rob Herring         2019-10-30  320  			struct list_head *resources,
+331f63457165a3 Rob Herring         2019-10-30  321  			struct list_head *ib_resources,
+331f63457165a3 Rob Herring         2019-10-30  322  			resource_size_t *io_base)
+4670d610d59233 Rob Herring         2018-01-17  323  {
+055f87a2a33640 Jan Kiszka          2018-05-15  324  	struct device_node *dev_node = dev->of_node;
+93c9a7f8793175 Jan Kiszka          2018-06-19  325  	struct resource *res, tmp_res;
+4670d610d59233 Rob Herring         2018-01-17  326  	struct resource *bus_range;
+4670d610d59233 Rob Herring         2018-01-17  327  	struct of_pci_range range;
+4670d610d59233 Rob Herring         2018-01-17  328  	struct of_pci_range_parser parser;
+331f63457165a3 Rob Herring         2019-10-30  329  	const char *range_type;
+4670d610d59233 Rob Herring         2018-01-17  330  	int err;
+4670d610d59233 Rob Herring         2018-01-17  331  
+4670d610d59233 Rob Herring         2018-01-17  332  	if (io_base)
+4670d610d59233 Rob Herring         2018-01-17  333  		*io_base = (resource_size_t)OF_BAD_ADDR;
+4670d610d59233 Rob Herring         2018-01-17  334  
+5bd51b35c7cbbc Jan Kiszka          2018-05-15  335  	bus_range = devm_kzalloc(dev, sizeof(*bus_range), GFP_KERNEL);
+4670d610d59233 Rob Herring         2018-01-17  336  	if (!bus_range)
+4670d610d59233 Rob Herring         2018-01-17  337  		return -ENOMEM;
+4670d610d59233 Rob Herring         2018-01-17  338  
+d9c5d5ac287caa Jan Kiszka          2018-05-15  339  	dev_info(dev, "host bridge %pOF ranges:\n", dev_node);
+4670d610d59233 Rob Herring         2018-01-17  340  
+126b7de6bfd84b Jan Kiszka          2018-05-15  341  	err = of_pci_parse_bus_range(dev_node, bus_range);
+4670d610d59233 Rob Herring         2018-01-17  342  	if (err) {
+5ad20c289cd7a4 Bjorn Helgaas       2025-01-03  343  		bus_range->start = 0;
+5ad20c289cd7a4 Bjorn Helgaas       2025-01-03  344  		bus_range->end = 0xff;
+4670d610d59233 Rob Herring         2018-01-17  345  		bus_range->flags = IORESOURCE_BUS;
+d9c5d5ac287caa Jan Kiszka          2018-05-15  346  		dev_info(dev, "  No bus range found for %pOF, using %pR\n",
+126b7de6bfd84b Jan Kiszka          2018-05-15  347  			 dev_node, bus_range);
+4670d610d59233 Rob Herring         2018-01-17  348  	} else {
+4670d610d59233 Rob Herring         2018-01-17 @349  		if (bus_range->end > bus_range->start + bus_max)
+4670d610d59233 Rob Herring         2018-01-17  350  			bus_range->end = bus_range->start + bus_max;
+4670d610d59233 Rob Herring         2018-01-17  351  	}
+4670d610d59233 Rob Herring         2018-01-17  352  	pci_add_resource(resources, bus_range);
+4670d610d59233 Rob Herring         2018-01-17  353  
+4670d610d59233 Rob Herring         2018-01-17  354  	/* Check for ranges property */
+126b7de6bfd84b Jan Kiszka          2018-05-15  355  	err = of_pci_range_parser_init(&parser, dev_node);
+4670d610d59233 Rob Herring         2018-01-17  356  	if (err)
+d277f6e88c8872 Rob Herring         2021-08-03  357  		return 0;
+4670d610d59233 Rob Herring         2018-01-17  358  
+d9c5d5ac287caa Jan Kiszka          2018-05-15  359  	dev_dbg(dev, "Parsing ranges property...\n");
+4670d610d59233 Rob Herring         2018-01-17  360  	for_each_of_pci_range(&parser, &range) {
+4670d610d59233 Rob Herring         2018-01-17  361  		/* Read next ranges element */
+4670d610d59233 Rob Herring         2018-01-17  362  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+331f63457165a3 Rob Herring         2019-10-30  363  			range_type = "IO";
+4670d610d59233 Rob Herring         2018-01-17  364  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+331f63457165a3 Rob Herring         2019-10-30  365  			range_type = "MEM";
+4670d610d59233 Rob Herring         2018-01-17  366  		else
+331f63457165a3 Rob Herring         2019-10-30  367  			range_type = "err";
+331f63457165a3 Rob Herring         2019-10-30  368  		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+d9c5d5ac287caa Jan Kiszka          2018-05-15  369  			 range_type, range.cpu_addr,
+d9c5d5ac287caa Jan Kiszka          2018-05-15  370  			 range.cpu_addr + range.size - 1, range.pci_addr);
+4670d610d59233 Rob Herring         2018-01-17  371  
+4670d610d59233 Rob Herring         2018-01-17  372  		/*
+4670d610d59233 Rob Herring         2018-01-17  373  		 * If we failed translation or got a zero-sized region
+4670d610d59233 Rob Herring         2018-01-17  374  		 * then skip this range
+4670d610d59233 Rob Herring         2018-01-17  375  		 */
+4670d610d59233 Rob Herring         2018-01-17  376  		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+4670d610d59233 Rob Herring         2018-01-17  377  			continue;
+4670d610d59233 Rob Herring         2018-01-17  378  
+93c9a7f8793175 Jan Kiszka          2018-06-19  379  		err = of_pci_range_to_resource(&range, dev_node, &tmp_res);
+93c9a7f8793175 Jan Kiszka          2018-06-19  380  		if (err)
+93c9a7f8793175 Jan Kiszka          2018-06-19  381  			continue;
+93c9a7f8793175 Jan Kiszka          2018-06-19  382  
+93c9a7f8793175 Jan Kiszka          2018-06-19  383  		res = devm_kmemdup(dev, &tmp_res, sizeof(tmp_res), GFP_KERNEL);
+4670d610d59233 Rob Herring         2018-01-17  384  		if (!res) {
+4670d610d59233 Rob Herring         2018-01-17  385  			err = -ENOMEM;
+5bd51b35c7cbbc Jan Kiszka          2018-05-15  386  			goto failed;
+4670d610d59233 Rob Herring         2018-01-17  387  		}
+4670d610d59233 Rob Herring         2018-01-17  388  
+4670d610d59233 Rob Herring         2018-01-17  389  		if (resource_type(res) == IORESOURCE_IO) {
+4670d610d59233 Rob Herring         2018-01-17  390  			if (!io_base) {
+d9c5d5ac287caa Jan Kiszka          2018-05-15  391  				dev_err(dev, "I/O range found for %pOF. Please provide an io_base pointer to save CPU base address\n",
+126b7de6bfd84b Jan Kiszka          2018-05-15  392  					dev_node);
+4670d610d59233 Rob Herring         2018-01-17  393  				err = -EINVAL;
+5bd51b35c7cbbc Jan Kiszka          2018-05-15  394  				goto failed;
+4670d610d59233 Rob Herring         2018-01-17  395  			}
+4670d610d59233 Rob Herring         2018-01-17  396  			if (*io_base != (resource_size_t)OF_BAD_ADDR)
+d9c5d5ac287caa Jan Kiszka          2018-05-15  397  				dev_warn(dev, "More than one I/O resource converted for %pOF. CPU base address for old range lost!\n",
+126b7de6bfd84b Jan Kiszka          2018-05-15  398  					 dev_node);
+4670d610d59233 Rob Herring         2018-01-17  399  			*io_base = range.cpu_addr;
+3bd6b8271ee660 Punit Agrawal       2021-06-15  400  		} else if (resource_type(res) == IORESOURCE_MEM) {
+3bd6b8271ee660 Punit Agrawal       2021-06-15  401  			res->flags &= ~IORESOURCE_MEM_64;
+4670d610d59233 Rob Herring         2018-01-17  402  		}
+4670d610d59233 Rob Herring         2018-01-17  403  
+4670d610d59233 Rob Herring         2018-01-17  404  		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
+4670d610d59233 Rob Herring         2018-01-17  405  	}
+4670d610d59233 Rob Herring         2018-01-17  406  
+331f63457165a3 Rob Herring         2019-10-30  407  	/* Check for dma-ranges property */
+331f63457165a3 Rob Herring         2019-10-30  408  	if (!ib_resources)
+331f63457165a3 Rob Herring         2019-10-30  409  		return 0;
+331f63457165a3 Rob Herring         2019-10-30  410  	err = of_pci_dma_range_parser_init(&parser, dev_node);
+331f63457165a3 Rob Herring         2019-10-30  411  	if (err)
+331f63457165a3 Rob Herring         2019-10-30  412  		return 0;
+331f63457165a3 Rob Herring         2019-10-30  413  
+331f63457165a3 Rob Herring         2019-10-30  414  	dev_dbg(dev, "Parsing dma-ranges property...\n");
+331f63457165a3 Rob Herring         2019-10-30  415  	for_each_of_pci_range(&parser, &range) {
+331f63457165a3 Rob Herring         2019-10-30  416  		/*
+331f63457165a3 Rob Herring         2019-10-30  417  		 * If we failed translation or got a zero-sized region
+331f63457165a3 Rob Herring         2019-10-30  418  		 * then skip this range
+331f63457165a3 Rob Herring         2019-10-30  419  		 */
+331f63457165a3 Rob Herring         2019-10-30  420  		if (((range.flags & IORESOURCE_TYPE_BITS) != IORESOURCE_MEM) ||
+331f63457165a3 Rob Herring         2019-10-30  421  		    range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+331f63457165a3 Rob Herring         2019-10-30  422  			continue;
+331f63457165a3 Rob Herring         2019-10-30  423  
+331f63457165a3 Rob Herring         2019-10-30  424  		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+331f63457165a3 Rob Herring         2019-10-30  425  			 "IB MEM", range.cpu_addr,
+331f63457165a3 Rob Herring         2019-10-30  426  			 range.cpu_addr + range.size - 1, range.pci_addr);
+331f63457165a3 Rob Herring         2019-10-30  427  
+331f63457165a3 Rob Herring         2019-10-30  428  
+331f63457165a3 Rob Herring         2019-10-30  429  		err = of_pci_range_to_resource(&range, dev_node, &tmp_res);
+331f63457165a3 Rob Herring         2019-10-30  430  		if (err)
+331f63457165a3 Rob Herring         2019-10-30  431  			continue;
+331f63457165a3 Rob Herring         2019-10-30  432  
+331f63457165a3 Rob Herring         2019-10-30  433  		res = devm_kmemdup(dev, &tmp_res, sizeof(tmp_res), GFP_KERNEL);
+331f63457165a3 Rob Herring         2019-10-30  434  		if (!res) {
+331f63457165a3 Rob Herring         2019-10-30  435  			err = -ENOMEM;
+331f63457165a3 Rob Herring         2019-10-30  436  			goto failed;
+331f63457165a3 Rob Herring         2019-10-30  437  		}
+331f63457165a3 Rob Herring         2019-10-30  438  
+b8397a8f4ebc0b Robin Murphy        2022-05-09  439  		pci_add_resource_offset(ib_resources, res,
+331f63457165a3 Rob Herring         2019-10-30  440  					res->start - range.pci_addr);
+331f63457165a3 Rob Herring         2019-10-30  441  	}
+331f63457165a3 Rob Herring         2019-10-30  442  
+4670d610d59233 Rob Herring         2018-01-17  443  	return 0;
+4670d610d59233 Rob Herring         2018-01-17  444  
+5bd51b35c7cbbc Jan Kiszka          2018-05-15  445  failed:
+4670d610d59233 Rob Herring         2018-01-17  446  	pci_free_resource_list(resources);
+4670d610d59233 Rob Herring         2018-01-17  447  	return err;
+4670d610d59233 Rob Herring         2018-01-17  448  }
+4670d610d59233 Rob Herring         2018-01-17  449  
+
 -- 
-2.47.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
