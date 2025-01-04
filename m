@@ -1,103 +1,113 @@
-Return-Path: <linux-pci+bounces-19271-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19272-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E87CA01149
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 01:21:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC038A0121D
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 04:48:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0367E164CF6
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 00:21:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FC02163F88
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2025 03:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB273D66;
-	Sat,  4 Jan 2025 00:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16CD184E1C;
+	Sat,  4 Jan 2025 03:48:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOq9emER"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ny4iM3xx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574E28F77
-	for <linux-pci@vger.kernel.org>; Sat,  4 Jan 2025 00:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF902F5E;
+	Sat,  4 Jan 2025 03:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735950096; cv=none; b=YSe4QmausWBw3v9NH7jfuQkh4U8jF3gub42yPiUDe3fBudtpV/Dean8dzGKGqZFuGzGsF5aMnhEizsvhHjQzaTihafnRunbFWwub9o8Pu5fvd3iVBPt0r1fWqvzHHK51DSN+YAQgdsZWvdnl+Et6UaVbKnYe6uN0vaEjIW0uGPU=
+	t=1735962526; cv=none; b=gSABkmZmGvPXMbz7y3Oj2WYXirFhAifzklCx7xuLCRPmGR8XAmnrjV9L9ia/GRQDmPwGiZPra4/wnvjwRl4lfyV8VU/8hIYRVE4dzWa4NsGU/rQgydb2550MmQRsmQEyOoxf9iO7NThWd9oCK73cTq7DDEln+CpulsDjyPX9aqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735950096; c=relaxed/simple;
-	bh=kubRnj5mvwSHwk8mLuo4g1N2jXWg39zGJozb06L1IfY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k85xT9v6/1Gy34S5QxZFFJp5qN7o9BKWVUNl2SDLn5OzgnRWoAZDKlfs/xl0FjImo5RXS8FPYrro0JKaoFZ8RJ8123vpExlaCeIaaqjfR/AvzPTHwUBU83KezXkyrXwkLo7YKniW7sKq7+cXjS/WQ3+2sfizC7Z21JJzGJ87JAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOq9emER; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF852C4CEDD;
-	Sat,  4 Jan 2025 00:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735950095;
-	bh=kubRnj5mvwSHwk8mLuo4g1N2jXWg39zGJozb06L1IfY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nOq9emERJltx6iWXV8v1mIF6fIk5CG7+hHHPFfdWwX2IT7i33WNgY1ZgTeQxX3+lF
-	 RPtZ8F+GX8j2q+hia0PXOsxFOkZW35VFFxjCN0UJGMYdFB2WMm+nQjeXNnuhz5hVAP
-	 IRAD5cC+TMUOCcTEcbcJEr+3AxZqALKKir6mfZFeJ9WJ/i2F87s+OF2MEtZVnsU1j0
-	 4DDME2UcQLW+pDf2QAQcirDLDzIBtG4pfjbKr+TlHnlVeOvomL4hwZAZPczTv21T3C
-	 7UWd7tKsoEHJW2gw+X0C12G76oKVo2itV4EuJ0wZpC/Jbf7/06eF/kCMZVjqL3NYtd
-	 N3Ko/0VP+vS1A==
-From: Niklas Cassel <cassel@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3] PCI: dwc: Fix potential truncation in dw_pcie_edma_irq_verify()
-Date: Sat,  4 Jan 2025 01:21:20 +0100
-Message-ID: <20250104002119.2681246-2-cassel@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1735962526; c=relaxed/simple;
+	bh=yxbHv6iUD/29XP5ATke3cUX5MX2RLlXScgkZO1u6t8M=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=Jd0zLEp2X14XaI2p1/3VXxlle6PpI9G1QrrRaQ2KcZphvmcZ6qUjaqepGWYNNJCPUyld8zzL2i0Obf21HXRecvO/iJNV575CRnntD1Grxg4GHS6KlGzz7490pT2P0ZF8JFnL3rzlY8annwjA5NzTY1HAuPD/tb/sUlY2COUtnLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ny4iM3xx; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1735962511; bh=2AtSQaRyqne9GadOORx0ISm1RZ5idyeG/5MtQGu253o=;
+	h=From:To:Cc:Subject:Date;
+	b=ny4iM3xxRak6giHg8Ir+L9afMFSILij2bQLgoAaFzzRBtTKL/VaPdxIBgI4gQS8Kz
+	 yHjPcpxRNmPQrHXmFJv1DlIWx46JMgyr29PVsJD66nGDTJ2YExi22Y6+E5SU3lWPUT
+	 WK+Y4ELMx9uVnZzJTCkjCWkREPxBwr3YfwDeUvdU=
+Received: from Dev.. ([219.142.145.136])
+	by newxmesmtplogicsvrszc25-0.qq.com (NewEsmtp) with SMTP
+	id A0B0B4F2; Sat, 04 Jan 2025 11:40:11 +0800
+X-QQ-mid: xmsmtpt1735962011t26eww8fi
+Message-ID: <tencent_59625EFD404130F5900D6FB48840AD428F05@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeiehXmH5jtx9iHsk3b9fXCJOCnqV3YqWQrseClcXHj9ebboRN55o/
+	 5e9NSR/+j1S4ZGJ+tTWxlWAn/UbaXpxUAEfVQ/VyyLV40Z6Ed3nY332qs34+hLl5y3xGrjUmOeA4
+	 +a1ilFETBgM0YNE5m0GOoLk0+ENCRJCCKLC1eM49P9KJ5aT+Tm2JAOLq51CrPMbD9y88xmZgCu8R
+	 mY451QC8MTwEWheEg6RfhwgMlwlS/3NR/dG1gEoDGY30pirU+cHyU4Glx6/KC3AJIg5HZRoE0i66
+	 d0w547v9BiiVye/z6V3Lusg2gTyvwYfA+h+6Nm3yAVDCgcXQwaWlJ3q+LsKWoGrzM/8ORUzh81wM
+	 WiCKhnINUXQhLACK4zmnwqk9R7vdt7UJ7lt8aD8hsn4eVQC9r9yaYWFwsTUVMcoba4jhMeKYXxnZ
+	 HR/lS1Od616CG2S2HCBv/euXR4rW7z42rmBRpJLnH8aY3saaishUITmtT+JTXhpEkDf+4PzWnzwE
+	 uKr0ed6VpsJOjan/u3DeVCg2KhWXJhcSJnnu8RdmiatTGHrK/4yPqJIagNFU3ovnmc8XkRkoSPi8
+	 eVIJC6KLdys8vhgAuSPF3nS88C/KD2f/OWYC5mkLBDus+g4G1Lzp3to8RDk6tZiV5Z1jIuSnpemp
+	 4svmE9WY0UOFgoHiMLZnNxWAhnh2GR3IxUfFiv7cusEjOFSv2C8W28SpbcUL6rRt9vc3UAD9Teaq
+	 er4wTJQVP9kgEvJ/SxWDAgYZPNjogcr9kM2jYdJZEYOSYs2FTBtteyAeLmkIoP4ui8ozFAXcapz1
+	 SgxE9W104unGyotAhLH9zfU539RcyVADMmqkoM5cb0AsWneVYjPfDi6KXur38/uCCXX0Kn03Q/c5
+	 fYmQVKse7v2FqfyYtI8rqXh8JPBi+vW5dzAP0Aqer4Oljp94zjv8bwJj/5q/LM/BNC9DqXTUnGrB
+	 BltjWcofJRxRamb37FWlvrvgsCYj0Q
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: kingdix10@qq.com
+To: marek.vasut+renesas@gmail.com,
+	yoshihiro.shimoda.uh@renesas.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	King Dix <kingdix10@qq.com>
+Subject: [PATCH] PCI: rcar-ep: Fix the issue of the name parameter when calling devm_request_mem_region
+Date: Sat,  4 Jan 2025 11:39:41 +0800
+X-OQ-MSGID: <20250104033941.2782-1-kingdix10@qq.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1412; i=cassel@kernel.org; h=from:subject; bh=kubRnj5mvwSHwk8mLuo4g1N2jXWg39zGJozb06L1IfY=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIr6v4r/ZhuynGyUqyCY2euT3jR1a1O+47MtChKnP0r0 Fn/2EqnjlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAEzEUo7hn63Ncv/3zDP3KAkb CPemrmD5NOv0qucOjQcMzFuaN9joWDD8r3SfETvxwLJ9HuV7C+Zue9Tkycloanfyt9fBuSEdvwR W8wIA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Increase the size of the string buffer to avoid potential truncation in
-dw_pcie_edma_irq_verify().
+From: King Dix <kingdix10@qq.com>
 
-This fixes the following build warning when compiling with W=1:
+When using devm_request_mem_region to request a resource, if the passed
+variable is a stack string variable, it will lead to an oops issue when
+eecuting the command cat /proc/iomem.
 
-drivers/pci/controller/dwc/pcie-designware.c: In function ‘dw_pcie_edma_detect’:
-drivers/pci/controller/dwc/pcie-designware.c:989:50: warning: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Wformat-truncation=]
-  989 |                 snprintf(name, sizeof(name), "dma%d", pci->edma.nr_irqs);
-      |                                                  ^~
+Fix this by replacing outbound_name with the name of the previously
+requested resource.
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
+Signed-off-by: King Dix <kingdix10@qq.com>
 ---
-Changes since v2:
--Simply increase the size of the string buffer instead of chaning the
- print format specifier.
-
- drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+ drivers/pci/controller/pcie-rcar-ep.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 3c683b6119c3..145e7f579072 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -971,7 +971,7 @@ static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
- {
- 	struct platform_device *pdev = to_platform_device(pci->dev);
- 	u16 ch_cnt = pci->edma.ll_wr_cnt + pci->edma.ll_rd_cnt;
--	char name[6];
-+	char name[15];
- 	int ret;
- 
- 	if (pci->edma.nr_irqs == 1)
+diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
+index 047e2cef5afc..464f8f29390c 100644
+--- a/drivers/pci/controller/pcie-rcar-ep.c
++++ b/drivers/pci/controller/pcie-rcar-ep.c
+@@ -107,7 +107,7 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
+ 		}
+ 		if (!devm_request_mem_region(&pdev->dev, res->start,
+ 					     resource_size(res),
+-					     outbound_name)) {
++						 res->name)) {
+ 			dev_err(pcie->dev, "Cannot request memory region %s.\n",
+ 				outbound_name);
+ 			return -EIO;
 -- 
-2.47.1
+2.43.0
 
 
