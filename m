@@ -1,192 +1,251 @@
-Return-Path: <linux-pci+bounces-19314-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19315-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C6CBA01B01
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 18:39:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3665EA01B2E
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 18:46:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95C213A3517
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:39:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C954E3A35ED
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:46:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D908C155C9E;
-	Sun,  5 Jan 2025 17:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C371A8F61;
+	Sun,  5 Jan 2025 17:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dV1RrQyl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04D31487DD;
-	Sun,  5 Jan 2025 17:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898E11474A7;
+	Sun,  5 Jan 2025 17:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736098792; cv=none; b=ZuvzNgeQuOfiPooHHayqedxHHij052qmh6HDDttCNFgcgSTENEAsJDuTRCr42ilJsMiPaz7K4L7IRKVOBi2gwGDmM7fGrRn/DijLIEOThEe00Rb/DqFIaMmNZXiLB+LT0XfEhBe8C5BtJcptpfkq420SX3AA9rZgtLbuIsrDXcw=
+	t=1736099186; cv=none; b=Y57iiwVzG2P5PTXI7XZnOA7xRXsF6T8QUXkCcK52/I8v/KA6V74ORW3gHQj26lT+QLAPGPcOHrbhE3WZSzpKRCSIdbrnYcYD0PA/tQfD2g1iCxrONfgotK7wvDdhTY4ejB9yuCaZnBX0iy/GappT7Cb/xcQsK7yE80R3FXMkCJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736098792; c=relaxed/simple;
-	bh=X+1xcx4Om+gi05BkXXVgtrIr7bwQ44ulDNRrNrc2cxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L41fFciuw0yBZ0dS5t5BuB8WzCkRGdp6JqnsZTObQC7rs1Q5+jjJ+eygnqTD34GeBRoZaUY/711IuWIfsx75AC9A4C9+VHjp7qAG2Yl4JLLK8sHUCasR+J1J66VTQeisl8jBcDGTRdcE/SKk8G+RCklatBk5PHMpdr3hMNRM/Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
-Received: from MUA
-	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98)
-	(envelope-from <mhej@vps-ovh.mhejs.net>)
-	id 1tUUb4-00000005F7Y-34Am;
-	Sun, 05 Jan 2025 18:39:30 +0100
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To: M Chetan Kumar <m.chetan.kumar@intel.com>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: wwan: iosm: Fix hibernation by re-binding the driver around it
-Date: Sun,  5 Jan 2025 18:39:24 +0100
-Message-ID: <0bf3266a7c6e42e5e19ed2040e6a8feb88202703.1736098238.git.mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1736099186; c=relaxed/simple;
+	bh=16dja6sPjpAJw0P4STGKxY/COGb3YcH6ePLNGKK2vJw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ozt0QIp1wvcXD83qr+X4E5LUXbpWeAEOJFXpduS4pEYochCofBQGWULkeztqYZ92qYagwIvqzqsPuRzxZAw4y1aPIwKZ18HERDKi6e2vSzvSVPgm+Gk6PnIbQz8s2L8qaM29ufzytRvvx0/IIOkHTEVfiuCifg64K8zhLqd6B3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dV1RrQyl; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d122cf8dd1so23930959a12.2;
+        Sun, 05 Jan 2025 09:46:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736099183; x=1736703983; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIykvlmhFYKrh2hGvG0EqISiN/aGTtZGMfzgjXPy2TQ=;
+        b=dV1RrQyllyds65bTxCMVdoDrilmUXtZcpa/YNG4GHq2j/xA++r56+310Wt+L3XT0qe
+         oXccdrxmAYCVwpVZjqQOHkG6MFs0n0Cb8GdO73j0RPWxohwYXRFFUGg3QYOpRa04Q+9E
+         ND+J0cmuzFWMBk2rZfhbShBEzGqSL+RZ3Q1DlVsBqdeVwY7CUCYSrHwua/c79rWwnkpi
+         lyBTCieObgfTHpbkK0M5pRxX1fWbmbBOjkuvRlESYcn1i4lTJP+10FPpXxr4jCX+DwEI
+         P9lddp+MuJZW14U7c1Cyi1AVOVcPaKM7y6876/kSv66bfRytEPNtgBFDNJeLyHkQZl7s
+         jDEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736099183; x=1736703983;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lIykvlmhFYKrh2hGvG0EqISiN/aGTtZGMfzgjXPy2TQ=;
+        b=v3MHJ4WtU4CnesZSSkdA1VoauiuQKdXdm9I1YDGoOsMZgjJaYfgYayU5DM49T44nO2
+         FCeqeRVFjAW6RaI5Xl7LOKdpXbDp8lJoC2ipEZZePdKObUzbuYzVhthvGuQhYArJNOiE
+         QOuEYx6t99TlHQEmJTKmhLM0V+BXeUoybdzCYBDvgJsH2wuiksFzNAfw8LEP2TWRGHT0
+         TRy8nklNtzrkZFFSjRU+Y58HU040FV/AgafXzjulKjzQGLYoooTmoljJtqSc3fXwvRGt
+         AZOSieBs5fklWBsAO01CeXgnNERuCVfBK0dh+XVEUKXII0JM5w0ci0ih7cmSxlC1rmwl
+         XijQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPtMFE3BBqi3fNyEVVNxwHdkw0YFtWP4fPtn5/9jw8+l75m2KcT6P7eaYbyQPMLucwwq7tW5ZA8dgHwqg=@vger.kernel.org, AJvYcCW0T5mNKlpSOA8otA8WZGJ3BOIUaoL1LBCwvRsLoHZsTiiBhqJX0BqwTD+9G541E5VVDMLk+vPNLS7w@vger.kernel.org
+X-Gm-Message-State: AOJu0YweXz5MK8fr3UVcWG4x3QnC5XBkXNWWS7C7RKZdwPBsLj2GHl4w
+	T4AHZ5DxQP9HC7dbofZJXe+m4bPvFM/oCcH46NgCR49wqSWTCWIZZtCCPyxlpbCUuyErOdSKsrg
+	6vv8pprbEvSxViWWAR+Yp09/G1bU=
+X-Gm-Gg: ASbGnctY2F6gUDrkAnZhMH1/vfC3QXjCzTv3jVeGRyTZmsb460ukAmTBqtbLuC5ovvW
+	DQHgYep2Nnuc/ccs8fwt3PHnacV7Z35WMoVJ5iw==
+X-Google-Smtp-Source: AGHT+IHKoLQ3bbk5sX9596VJfsx7MTb1NN/9SirZSGNKB5kB6RJj6mYW7ASrHVq7n/gBHPzbAHYnTQkgOBJmhlHwrKc=
+X-Received: by 2002:a05:6402:230e:b0:5d9:a55:8104 with SMTP id
+ 4fb4d7f45d1cf-5d90a55812fmr8206307a12.21.1736099182361; Sun, 05 Jan 2025
+ 09:46:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: mhej@vps-ovh.mhejs.net
+References: <20240809073610.2517-1-linux.amoon@gmail.com> <Z3fKkTSFFcU9gQLg@ryzen>
+ <CANAwSgS5ZWGTP+A11r_qFSrjWZH_DqsM89MLiP+1VAxhz+e+2A@mail.gmail.com> <Z3fzad51PIxccDGX@ryzen>
+In-Reply-To: <Z3fzad51PIxccDGX@ryzen>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Sun, 5 Jan 2025 23:16:05 +0530
+Message-ID: <CANAwSgS3iXUOH2_4CYK0W+A09xitDdXhQFns=E7XjwqOTUXMRg@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: dw-rockchip: Enable async probe by default
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Currently, the driver is seriously broken with respect to the
-hibernation (S4): after image restore the device is back into
-IPC_MEM_EXEC_STAGE_BOOT (which AFAIK means bootloader stage) and needs
-full re-launch of the rest of its firmware, but the driver restore
-handler treats the device as merely sleeping and just sends it a
-wake-up command.
+Hi Niklas,
 
-This wake-up command times out but device nodes (/dev/wwan*) remain
-accessible.
-However attempting to use them causes the bootloader to crash and
-enter IPC_MEM_EXEC_STAGE_CD_READY stage (which apparently means "a crash
-dump is ready").
+On Fri, 3 Jan 2025 at 19:55, Niklas Cassel <cassel@kernel.org> wrote:
+>
+> Hello Anand,
+>
+> On Fri, Jan 03, 2025 at 07:24:07PM +0530, Anand Moon wrote:
+> >
+> > Thanks for testing this patch.
+> >
+> > This patch should have been tested on hardware that includes all the
+> > relevant controllers,
+> > such as PCI 2.0, PCI 3.0, and the SATA controller.
+> > I will test this patch again on all the Radxa devices I have.
+> >
+> > This patch's dependency lies in deferring the probe until the PHY
+> > controller initializes.
+> >
+> > CONFIG_PHY_ROCKCHIP_NANENG_COMBO_PHY=m
+>
+>
+> Note that the splat, as reported in this thread, and in:
+> https://lore.kernel.org/netdev/20250101235122.704012-1-francesco@valla.it/T/
+>
+> is related to the network PHY (CONFIG_REALTEK_PHY) on the RTL8125 NIC,
+> which is connected to one of the PCIe Gen2 controllers, not the PCIe PHY
+> on the PCIe controller (CONFIG_PHY_ROCKCHIP_NANENG_COMBO_PHY) itself.
+>
+> For the record, I run with all the relevant drivers as built-in:
+> CONFIG_PCIE_ROCKCHIP_DW_HOST=y
+> CONFIG_PHY_ROCKCHIP_NANENG_COMBO_PHY=y (for the PCIe Gen2 controllers)
+> CONFIG_PHY_ROCKCHIP_SNPS_PCIE3=y (for the PCIe Gen3 controllers)
+> CONFIG_R8169=y
+> CONFIG_REALTEK_PHY=y
+>
+>
+I am unable to reproduce this issue on my end. Could you share your
+config file with me?
+Additionally, if we build most of the ROCKCHIP components as modules..."
 
-It seems that the device cannot be re-initialized from this crashed
-stage without toggling some reset pin (on my test platform that's
-apparently what the device _RST ACPI method does).
+You will see this warning, which is the main reason for this patch
 
-While it would theoretically be possible to rewrite the driver to tear
-down the whole MUX / IPC layers on hibernation (so the bootloader does
-not crash from improper access) and then re-launch the device on
-restore this would require significant refactoring of the driver
-(believe me, I've tried), since there are quite a few assumptions
-hard-coded in the driver about the device never being partially
-de-initialized (like channels other than devlink cannot be closed,
-for example).
-Probably this would also need some programming guide for this hardware.
+[   34.642365] platform fc400000.usb: deferred probe pending: dwc3:
+failed to initialize core
+[   34.642529] platform a41000000.pcie: deferred probe pending:
+rockchip-dw-pcie: missing PHY
+[   34.642604] platform a40800000.pcie: deferred probe pending:
+rockchip-dw-pcie: missing PHY
+[   34.642674] platform fcd00000.usb: deferred probe pending: dwc3:
+failed to initialize core
 
-Considering that the driver seems orphaned [1] and other people are
-hitting this issue too [2] fix it by simply unbinding the PCI driver
-before hibernation and re-binding it after restore, much like
-USB_QUIRK_RESET_RESUME does for USB devices that exhibit a similar
-problem.
+> >
+> > To my surprise, we have not enabled mdio on Rock-5B boards.
+> > can you check if these changes work on your end?
+>
+> I think these changes are wrong, at least for rock5b.
+>
+> On rock5b the RTL8125 NIC is connected via PCI, and PCI devices should not
+> be specified in device tree, as PCI is a bus that can be enumerated.
+>
 
-Tested on XMM7360 in HP EliteBook 855 G7 both with s2idle (which uses
-the existing suspend / resume handlers) and S4 (which uses the new code).
+According to RK3588 (TRM) documentation specifies the requirement for
+a dedicated GMAC controller
+to effectively manage certain critical network features. In the
+absence of this specialized controller,
+the network interface card (NIC) may operate solely as a standard PCIe
+NIC, potentially leading to
+suboptimal performance and a lack of robust flow control mechanisms.
 
-[1]: https://lore.kernel.org/all/c248f0b4-2114-4c61-905f-466a786bdebb@leemhuis.info/
-[2]:
-https://github.com/xmm7360/xmm7360-pci/issues/211#issuecomment-1804139413
+Log analysis indicates that Ethernet probing occurs before the
+initialization of the PCIe PHY and PCIe hosts.
+To investigate this issue, please test with the following configuration changes:
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
+1 Set CONFIG_DWMAC_ROCKCHIP=m.
+2 Enable the probe mode PROBE_PREFER_ASYNCHRONOUS for the DWMAC_ROCKCHIP driver.
 
-Changes from v1:
-* Un-register the PM-notifier and PCI driver in iosm_ipc_driver_exit()
-in the reverse order of their registration in iosm_ipc_driver_init().
-
-* CC the PCI supporter and PCI mailing list in case there's some better
-way to fix/implement all of this.
-
- drivers/net/wwan/iosm/iosm_ipc_pcie.c | 57 ++++++++++++++++++++++++++-
- 1 file changed, 56 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_pcie.c b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
-index 04517bd3325a..3ca81864a2fd 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
-@@ -6,6 +6,7 @@
- #include <linux/acpi.h>
- #include <linux/bitfield.h>
- #include <linux/module.h>
-+#include <linux/suspend.h>
- #include <net/rtnetlink.h>
- 
- #include "iosm_ipc_imem.h"
-@@ -448,7 +449,61 @@ static struct pci_driver iosm_ipc_driver = {
- 	},
- 	.id_table = iosm_ipc_ids,
- };
--module_pci_driver(iosm_ipc_driver);
-+
-+static bool pci_registered;
-+
-+static int pm_notify(struct notifier_block *nb, unsigned long mode, void *_unused)
-+{
-+	if (mode == PM_HIBERNATION_PREPARE || mode == PM_RESTORE_PREPARE) {
-+		if (pci_registered) {
-+			pci_unregister_driver(&iosm_ipc_driver);
-+			pci_registered = false;
-+		}
-+	} else if (mode == PM_POST_HIBERNATION || mode == PM_POST_RESTORE) {
-+		if (!pci_registered) {
-+			int ret;
-+
-+			ret = pci_register_driver(&iosm_ipc_driver);
-+			if (ret) {
-+				pr_err(KBUILD_MODNAME ": unable to re-register PCI driver: %d\n",
-+				       ret);
-+			} else {
-+				pci_registered = true;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct notifier_block pm_notifier = {
-+	.notifier_call = pm_notify,
-+};
-+
-+static int __init iosm_ipc_driver_init(void)
-+{
-+	int ret;
-+
-+	ret = pci_register_driver(&iosm_ipc_driver);
-+	if (ret)
-+		return ret;
-+
-+	pci_registered = true;
-+
-+	register_pm_notifier(&pm_notifier);
-+
-+	return 0;
-+}
-+module_init(iosm_ipc_driver_init);
-+
-+static void __exit iosm_ipc_driver_exit(void)
-+{
-+	unregister_pm_notifier(&pm_notifier);
-+
-+	if (pci_registered)
-+		pci_unregister_driver(&iosm_ipc_driver);
-+}
-+module_exit(iosm_ipc_driver_exit);
- 
- int ipc_pcie_addr_map(struct iosm_pcie *ipc_pcie, unsigned char *data,
- 		      size_t size, dma_addr_t *mapping, int direction)
+Thanks
+-Anand
+>
+> >
+> > -----8<----------8<----------8<----------8<----------8<----------8<-----
+> > alarm@rock-5b:/media/nvme0/mainline/linux-rockchip-6.y-devel$ git diff
+> >    arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > index c44d001da169..5008a05efd2a 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > @@ -155,6 +155,19 @@ vcc_1v1_nldo_s3: regulator-vcc-1v1-nldo-s3 {
+> >         };
+> >  };
+> >
+> > +&mdio1 {
+> > +       rgmii_phy1: ethernet-phy@1 {
+> > +               /* RTL8211F */
+> > +               compatible = "ethernet-phy-id001c.c916";
+> > +               reg = <0x1>;
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&rtl8211f_rst>;
+> > +               reset-assert-us = <20000>;
+> > +               reset-deassert-us = <100000>;
+> > +               reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
+> > +       };
+> > +};
+> > +
+> >  &combphy0_ps {
+> >         status = "okay";
+> >  };
+> > @@ -224,6 +237,21 @@ &hdptxphy_hdmi0 {
+> >         status = "okay";
+> >  };
+> >
+> > +&gmac1 {
+> > +       clock_in_out = "output";
+> > +       phy-handle = <&rgmii_phy1>;
+> > +       phy-mode = "rgmii";
+> > +       pinctrl-0 = <&gmac1_miim
+> > +                    &gmac1_tx_bus2
+> > +                    &gmac1_rx_bus2
+> > +                    &gmac1_rgmii_clk
+> > +                    &gmac1_rgmii_bus>;
+> > +       pinctrl-names = "default";
+> > +       tx_delay = <0x3a>;
+> > +       rx_delay = <0x3e>;
+> > +       status = "okay";
+> > +};
+> > +
+> >  &i2c0 {
+> >         pinctrl-names = "default";
+> >         pinctrl-0 = <&i2c0m2_xfer>;
+> > @@ -419,6 +447,12 @@ pcie3_vcc3v3_en: pcie3-vcc3v3-en {
+> >                 };
+> >         };
+> >
+> > +       rtl8211f {
+> > +               rtl8211f_rst: rtl8211f-rst {
+> > +                       rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +               };
+> > +       };
+> > +
+> >         usb {
+> >                 vcc5v0_host_en: vcc5v0-host-en {
+> >                         rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+> > >
+> > > Kind regards,
+> > > Niklas
+> >
+> > Can you check this on your end
+> >
+> > alarm@rock-5b:~$ sudo cat /sys/kernel/debug/devices_deferred
+> > [sudo] password for alarm:
+> > fc400000.usb    dwc3: failed to initialize core
+> > alarm@rock-5b:~$ sudo cat /sys/kernel/debug/devices_deferred
+>
+> Sure:
+> # cat /sys/kernel/debug/devices_deferred
+> fc400000.usb    dwc3: failed to initialize core
+>
+>
+> Kind regards,
+> Niklas
 
