@@ -1,122 +1,118 @@
-Return-Path: <linux-pci+bounces-19307-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19308-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD62EA01844
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 07:03:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E21FA0187E
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 09:25:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E0F33A35F5
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 06:03:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF8F9162867
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 08:25:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728073595A;
-	Sun,  5 Jan 2025 06:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC771CA84;
+	Sun,  5 Jan 2025 08:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="dUggafPS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jfh4j2WQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164A61BDC3;
-	Sun,  5 Jan 2025 06:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF9510FD;
+	Sun,  5 Jan 2025 08:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736056984; cv=none; b=gcIyiL0J3Ut/tO9Pq1Q6OBtjrfsPxOECKn88QA+BbrefJjaIDfUpO5vohsapS+hmI/Qeoawz8Io8DfmX0UoLKWyrL3MOF4OmfaLrI3+6inzVgR1kpcVnzLgJAyfcIeDg471uWaE4NbSxlWDSoZIdsVQ8PRM1Wyqp7EGtXY8x4hw=
+	t=1736065525; cv=none; b=IFVYJtWILQDl3kSj4YnRWHlaH81Ik+PyzymWprJ2Bs+qSMWvOmksOJAfnrOLzLEkdS1ACJy/+xAfmX3NJ3EKWyp1oOgWb1X6EqbnEd1vHVeSdYPirXD9rjBwy4bGuU5p+Fx8QMnVkK432b7srB2XfJug7pUV1eUPkYCnbUBEu2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736056984; c=relaxed/simple;
-	bh=ljcqXNSzvAWcAno6sw8/xCxCE4+is3tD5z9YqtdeCIo=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=l9oP82/l9kfJiVUK8/3pAowHjY1I37GN1Qb8rpDpsflU18UzI6Csvn5Em2SFTIIOODwgB+7/BgN9BN39ViEj3D73+mCWMusAPSdTsS5hzH03ay5T0aWdTLhHoTH+TABZV2CqYSRYKyi20ccYIr0QBhfy/4oux3vmsO7MzyHP5Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=dUggafPS; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1736056676; bh=tuSQf2/SB/aButLjZ/0dfORHyj8pi8iEwOjjELQDRDE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dUggafPSYTF5tNsaOpjFOjnoQgsIvZE7kPSodApxyBHtqw4jZQHXGULPKJ030KQ+i
-	 MZrx6Y4FIxmQ3uQTA66weSGDlEwofokr6S8TcNNxXTX8hPPIM2lM0u7vdFXUZjnb+6
-	 0jY3Lg4EWamx8HieQJSe/TbWlmkkrWhohO5aPiSE=
-Received: from Ubuntu.. ([240e:305:25d4:e300:e2d9:1fb6:5f8b:3c3f])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id E7534067; Sun, 05 Jan 2025 13:57:53 +0800
-X-QQ-mid: xmsmtpt1736056673tx6e30xse
-Message-ID: <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
-X-QQ-XMAILINFO: MapnONytPuziafDcN9vkGEkdxlXC9IdW28vfD++22D6BxNqaf6FHiQTsWTU2/6
-	 GbZRJ6w8T2YZ3v80AcJlPMgaUXx+LdA3TiIhQMc8xUqz9uXAXoiub8g8T99Qzwhw6qM3WG5msTve
-	 fsfQfhnVR1HqCb5ySwKwUCFO4MQuAidPuA9cPbVoym/ci78/z4kaqAEYiuKAqrz2lxGR8HqyAbYA
-	 bCBI82KOajz2DMXJA+M1qxevOH2sJI/KUWOibb2n5cYQFmKXAb03rp8ioWIt7FrfYw4oUj94Aikp
-	 kOI2KOe8u7egHxrvid0w4I3HBYV8c0dcFyINkCV5rozSIxeXbIcEX5riRp+O4C8o9XoELGXHpQaz
-	 H11FYMVLPjehbrqUF9gIXbv1jHnPq/ZxaCbH7aUCTgLf7N3uycAIPUYTqF2YuFlUMFOIJkO2Seza
-	 lxa+sBrLFjqxViD406qLLS+Qvz2HaOGqm42SGyGHp84x8mqXXvSO3jeXv1+qBlqbYVfF5+UXycVK
-	 CU9zufMOVu0Qm5B6LpwmJ9Nc1zCZYK/pnGDLuY232NdwXfK4nWV3X5YZb9pMQkx9pGnbBM825y+k
-	 7XNIoY8kH2oTjUOibIppId3tpbcXRE3XWcEBzrrx72k16FCdvo/l7Pkc62Ms4TXOv0X5dwLdnZOm
-	 9IbmWyFAUO5ROZKhAa+L+LFBf7TiFG2KY+x2JGFSB968hslNPEbujcfdA68WxN4/FZjrIE5Aa+NA
-	 UYmND2XspBnVgxRIxjvhVms/4Wmj0GHkSPBPXg6LPJL1atBYaNLzD0cXM7bCBFC0iG8gMWzvaH/s
-	 YSxtUIUFKiQu6sqc5JW/fSIvLwWpPP3nhTi8YAmK7DNShk1WnNjWzPaGjtMGhCUYm9tGIj3mcukW
-	 Lkw6kvHXC6pVsD8FmFbQ9T+Ya/SiNBbaQ+L2zALXOJaVlXVc8X4JZxUCc6DC51TRC/0CFM+LEui/
-	 +piPPD7eqA3OxKUK+7CIIj7BjGj7V2jNL20YSJSb0fYNEriZuC/6XjyhSvC9ZHheCzRB63TAQwAc
-	 6fD1ODu5LWxaSq4Zsy839YgzkJRtioa0BMbrsx1+tMVelyipqmOEiTnYFIOCSpUSn7+twC9YShfq
-	 TqXRcG
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: kingdix10@qq.com
-To: s.shtylyov@omp.ru,
-	marek.vasut+renesas@gmail.com,
-	yoshihiro.shimoda.uh@renesas.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	King Dix <kingdix10@qq.com>
-Subject: [PATCH v2] PCI: rcar-ep: Fix the issue of the name parameter when calling devm_request_mem_region
-Date: Sun,  5 Jan 2025 13:57:51 +0800
-X-OQ-MSGID: <20250105055751.175881-1-kingdix10@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <5f8d43fe-25e3-450d-b5c2-2d69b9bc9923@omp.ru>
-References: <5f8d43fe-25e3-450d-b5c2-2d69b9bc9923@omp.ru>
+	s=arc-20240116; t=1736065525; c=relaxed/simple;
+	bh=vcWHcn6d78iRsBdRFvzNcgcC2FLW4T3I3h05kztpyak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmJQIIDoTBkPI9nJDcTaFhzS2NRMXzuNRd4Ss8YAFDIGdMP14YyvjChf5V5X+MJ25gRHbt6lpGgZWSlAwfRdxDo8jAFa0Iv6rBmqRxMrQFE4lDPRF7skoU8MrzmJZ2spSwUd3dUVV0f8v/nroQaOTThwlSytRJngvozoLxHyXg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jfh4j2WQ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736065524; x=1767601524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vcWHcn6d78iRsBdRFvzNcgcC2FLW4T3I3h05kztpyak=;
+  b=jfh4j2WQjc1eB3m8PkwCtbxmWeZu8A8kDun7L6XWL5ISWsR/M+lSKSX5
+   qSa9S34cXickFPSCP8RA9n7ynGGv0mPSiL49U6gFKtd/yo/eNCNoPQx3G
+   UuuurOIcQdaHNlaKqRYKfDP8DwArUuzGVl1iT4i5g/IINkBudl2aNWZJz
+   5FSuJ8KM3hehj/BO1WeMnqV2NMsXsAruiSDfT4IQkjHLWtRA7m1bvG2aB
+   VQQyoZwfH2au2laCflmo8C/2WeDp/wWACn7ltN1azfxkpjza2/z8X/19J
+   +F1brj5KzXCq/6Delff6M9rRc8uXq+B3svKdtnFv/vkB8UrqXmV43aTwA
+   w==;
+X-CSE-ConnectionGUID: QqCUdNxlQRCTra3Ras/HoQ==
+X-CSE-MsgGUID: dHbLbuQbSJedORaig7OwrA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11305"; a="36392812"
+X-IronPort-AV: E=Sophos;i="6.12,290,1728975600"; 
+   d="scan'208";a="36392812"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 00:25:23 -0800
+X-CSE-ConnectionGUID: V9kRf1YNTJuDaBpAwrPO1g==
+X-CSE-MsgGUID: 3oxBs6g9QNiOjnkhy0OhGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="102009693"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 05 Jan 2025 00:25:22 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 4B60926A; Sun, 05 Jan 2025 10:25:20 +0200 (EET)
+Date: Sun, 5 Jan 2025 10:25:20 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Keith Busch <keith.busch@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/DPC: Yet another quirk for PIO log size on Intel
+ Raptor Lake-P
+Message-ID: <20250105082520.GT3713119@black.fi.intel.com>
+References: <20250102164315.7562-1-tiwai@suse.de>
+ <20250103225315.GA12322@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250103225315.GA12322@bhelgaas>
 
-From: King Dix <kingdix10@qq.com>
+Hi,
 
-When using devm_request_mem_region to request a resource, if the passed
-variable is a stack string variable, it will lead to an oops issue when
-eecuting the command cat /proc/iomem.
+On Fri, Jan 03, 2025 at 04:53:15PM -0600, Bjorn Helgaas wrote:
+> On Thu, Jan 02, 2025 at 05:43:13PM +0100, Takashi Iwai wrote:
+> > There is yet another PCI entry for Intel Raptor Lake-P that shows the
+> >   error "DPC: RP PIO log size 0 is invalid":
+> >   0000:00:07.0 PCI bridge [0604]: Intel Corporation Raptor Lake-P Thunderbolt 4 PCI Express Root Port #0 [8086:a76e]
+> >   0000:00:07.2 PCI bridge [0604]: Intel Corporation Raptor Lake-P Thunderbolt 4 PCI Express Root Port #2 [8086:a72f]
+> > 
+> > Add the corresponding quirk entry for 8086:a72f.
+> > 
+> > Note that the one for 8086:a76e has been already added by the commit
+> > 627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root
+> > Ports").
+> 
+> Intel folks, what's the long-term resolution of this?  I'm kind of
+> tired of adding quirks like this.  So far we have these (not including
+> the current patch), dating back to Aug 2022:
+> 
+>   627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports")
+>   3b8803494a06 ("PCI/DPC: Quirk PIO log size for Intel Ice Lake Root Ports")
+>   5459c0b70467 ("PCI/DPC: Quirk PIO log size for certain Intel Root Ports")
+> 
+> I *thought* this problem was caused by BIOS defects that were supposed
+> to be fixed, but nothing seems to be happening.
 
-Fix this by replacing outbound_name with the name of the previously
-requested resource.
-
-Signed-off-by: King Dix <kingdix10@qq.com>
----
-Changes in v2:
-  - Fix the code indentation issue.
----
- drivers/pci/controller/pcie-rcar-ep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-index 047e2cef5afc..c5e0d025bc43 100644
---- a/drivers/pci/controller/pcie-rcar-ep.c
-+++ b/drivers/pci/controller/pcie-rcar-ep.c
-@@ -107,7 +107,7 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
- 		}
- 		if (!devm_request_mem_region(&pdev->dev, res->start,
- 					     resource_size(res),
--					     outbound_name)) {
-+					     res->name)) {
- 			dev_err(pcie->dev, "Cannot request memory region %s.\n",
- 				outbound_name);
- 			return -EIO;
--- 
-2.43.0
-
+As far as I know it should be fixed already. I just checked my MTLP and PTL
+systems (both with integrated TBT PCIe root ports) and I don't see the
+message anymore. I don't have RPL system though. This is on reference
+hardware and BIOS so it is possible that the fix has not been taken into
+the OEM BIOS.
 
