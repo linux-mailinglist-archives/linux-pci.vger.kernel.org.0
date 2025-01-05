@@ -1,130 +1,146 @@
-Return-Path: <linux-pci+bounces-19311-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19312-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 122F9A01AAE
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:43:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 527F4A01AB2
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:53:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 851C11882BCC
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 16:43:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB0AE18830DC
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 16:53:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B189155A59;
-	Sun,  5 Jan 2025 16:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50431143725;
+	Sun,  5 Jan 2025 16:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/6pZt1O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPWckYMl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E1E14F9FB;
-	Sun,  5 Jan 2025 16:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CB5146A7B
+	for <linux-pci@vger.kernel.org>; Sun,  5 Jan 2025 16:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736095399; cv=none; b=ntQYDVPk0GFdkE5GbgV6l0gIiBGCBFfaO9Badxc8X1zScmrSSd7QMxpGBKHRAjsczVx98j5zur+L06bEPc2VC04PCkKWES7naVsaiSsB4r+yRWjXRZLQoWPtMVvKRhlYPdrw72Rh2DemzIuUBH1DlcmtT81rVU9mwN0dwLY8HFQ=
+	t=1736096014; cv=none; b=E/YQKPVQ6pcx/twVi2qoZSeeI6uDbDCHx0AVyohb+nTqWnJ8o6y7BTilMccVIwhMf0Vr6ZNTgzUxmzlkt4h0HUwJuXY7C2cl+JI/4gsVCGwHAvWFECnuMO8gvWwTn4JRz7goFtyGOsi/Cj+vW0MUt7TFtuQqfS+8k/EVLs2rMYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736095399; c=relaxed/simple;
-	bh=vvJ+Yp3leDodK0CvCdi9+gRe6EvxCrT8p2X4U/O0HQc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ToH2BNhNffMIl5mn1P0elowJCeh0l8m9QdkHGfhnwakLbPJfP6/deqUmmwHng23PxvuXjGqANYzKYrRGxJZPf2jtV3tnkVvwcmRIk6bRgxbZw9gsjd1idwsnEMuDGfCqDYnmL5w3shQNkL2Nw/P1/QBJXBbJHcOffafe8AZlxzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/6pZt1O; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736095397; x=1767631397;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=vvJ+Yp3leDodK0CvCdi9+gRe6EvxCrT8p2X4U/O0HQc=;
-  b=F/6pZt1O1MbNe6skYxAtIKm7zn3iPBViANAzYv0kwNOMaYUp0bOqPlrE
-   oROP0s6ALD9LAo/VcXwJq0y0f8vqydDu7Jzrk44VRpov2gJrLAmIQc0B2
-   8aQR1lJlij8B6v48qpJ9JcDxvVBbViONaOcAfZupMJcRtLBdZRS3zqElQ
-   HAxwDaukHqvy4uweggE8LOjqrpMmhCxImZ3Dve7NQRqgm4vHIwT/L8nwL
-   tZegtwGUoFkiogRL06HLACzVkE9riaIj6wEIoRuWpdLGlAxKRqkjLwUYt
-   NC2sAPzlF2eMCa3qQZLVTpO8wTRrU9Oy+sUmlCQeQlAK6NhnVuWg4myqa
-   w==;
-X-CSE-ConnectionGUID: 5LwvYmLCTk6SCSS83far7g==
-X-CSE-MsgGUID: fgN4YZbqTaGBDLacMEEC7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11306"; a="61632337"
-X-IronPort-AV: E=Sophos;i="6.12,291,1728975600"; 
-   d="scan'208";a="61632337"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 08:43:16 -0800
-X-CSE-ConnectionGUID: 6sYrLDRiQaySabinfUYJsA==
-X-CSE-MsgGUID: Hgoa4TgmTTCtmTY1unR+UQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106870333"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.18])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 08:43:10 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sun, 5 Jan 2025 18:43:07 +0200 (EET)
-To: Lukas Wunner <lukas@wunner.de>
-cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-    Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
-    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Alexandru Gagniuc <mr.nuke.me@gmail.com>, 
-    Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
-    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
-    Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Daniel Lezcano <daniel.lezcano@linaro.org>, 
-    Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-    Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v9 7/9] PCI/bwctrl: Add API to set PCIe Link Speed
-In-Reply-To: <Z3Zso3vXrzR79s2o@wunner.de>
-Message-ID: <b0183c5d-3fbc-3823-e653-31e3999ca5ca@linux.intel.com>
-References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com> <20241018144755.7875-8-ilpo.jarvinen@linux.intel.com> <Z3Zso3vXrzR79s2o@wunner.de>
+	s=arc-20240116; t=1736096014; c=relaxed/simple;
+	bh=dm2CVgOeUMxnPwXmGBh9jXrkwI8tzVSGMW+uPQsvvqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Or5GAyEIXF5mSHCONIiRkv+w95sEDD5IWlUIeafM9vQ11RPq8DBJitS1bkX4pJlgnqmhbhapdnpkzR6Q1qmS+Xh6IUwsI3Es9MSuwRaxLs/pmB7/R0FzqbDuH8iw0RtaYg9d+g3DOv9jx3JNPcc51qIeFx7NeoEUnD5i3UmZDe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mPWckYMl; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2164b1f05caso189090625ad.3
+        for <linux-pci@vger.kernel.org>; Sun, 05 Jan 2025 08:53:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736096012; x=1736700812; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kVkkUKi3TEoqcrBW9O+G+7DHI8k94lZ9o3ZtGWTmR/4=;
+        b=mPWckYMltnQaOuwzmgoZgs8qf62FTGOFFR+u+PQDIxtCPx1wOi/O1xV8y4pjWFDHbM
+         yQ7lcdIxSjUySuxlrIn4i0z6t5iax9/Tup//uu4pv1PcvWoKQOIHY7ENveahYvdBkrvL
+         L8kW5Bb56zLDrMkojIAKe78oK8WE8iPu0w1uyw2nsN8A+3YTzmOKH/1LyaFOysltBwGX
+         VD4Bnblw2aKiGLJz7tMSrD4s2i8a9OBTgiRLqJjHTwYLZLlhvEK2yJzeoV6nNXU2o6mG
+         U1VqwiAuJSr+WMIbusVJGp2jzRSWvc3ITCHL0gvDGytc+mySaUecMKMW2H4dYOUJXDfM
+         +JBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736096012; x=1736700812;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kVkkUKi3TEoqcrBW9O+G+7DHI8k94lZ9o3ZtGWTmR/4=;
+        b=MBCfpp988Phk4unJa3dUdRyzAqBNVpw4F8w5pOObXH2AJDtF7DThjT+QxDHLqxrATv
+         MaZ/+1zRcUCJXwi9Tjo1Swc4IjtTOjjjVIFtokG3rC1mo/3qk73MpsGCNiDYltkUjRwI
+         CS/2XZSe8oAnSDVCd7mbEpUyv+2l2lApO0rWnjkv1TjYo2fTcgLXswC6CeSCtenkfNPF
+         pjekAglY32SNIZ8qQrKZpWG/NSLL1hoy2i7qlIF4nkI6FEr+n3q8OCjLZBynMiEippry
+         ZRQJ7KOWszcBHo7ErdvLjuCqNwmf5/N9rDMsgDNrvTMC72x8H4umAI9p6bkKdKWumjla
+         iAUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWA2omv3stjdDQndbdFo+NydcCJNICGm7oP1A/rm+KhDw+z18NiuEkYXooqzcsb8QpM4HQYOYaEPkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNQy5O2+t4dnLDEYpM21sVH/t089h/3KwWfC/nY19UbyH1ECuK
+	jyQzTWecXpvYQNJiot+CWN/cjmF2U17RcFrW9385DAvlzgHEem3x+9OAr+Gm+w==
+X-Gm-Gg: ASbGnct25M3M1xrDiEqu5X30/GKoasKV/QcRvKAjJS5V8WtpO9eonb9CNEFFhwm6h9F
+	WF+p4iu5HGE3IPjwJ1icg2xuegp8HH/gFsVfRxaS7u7fmio+ZZUlvDhZbtaMDcWozhZ7JOn9Xmk
+	U57a16uprEE4kGreFcr1IiGlBuh2H/HvCMMuKoVlj4yae4zN0Fk8FOptWZtF/DVgVs+7gIiFpi1
+	pSQe9c8/YW8KXvUCqWCDqENQ4/++GboVOQxVImqlRyfosQRz//50yt6SzneKFiXndf8Mg==
+X-Google-Smtp-Source: AGHT+IGXvIwm3XR62M68f0UJnGgdNvu8I3ovTYOD52PhzIp4domidCXZMxXz5eNuZ3JRWmxru94gqA==
+X-Received: by 2002:a17:902:f681:b0:216:7ee9:2227 with SMTP id d9443c01a7336-219e6f11630mr820530235ad.36.1736096012108;
+        Sun, 05 Jan 2025 08:53:32 -0800 (PST)
+Received: from thinkpad ([117.193.213.165])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc962dc0sm278473755ad.32.2025.01.05.08.53.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2025 08:53:31 -0800 (PST)
+Date: Sun, 5 Jan 2025 22:23:24 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: kingdix10@qq.com
+Cc: s.shtylyov@omp.ru, marek.vasut+renesas@gmail.com,
+	yoshihiro.shimoda.uh@renesas.com, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rcar-ep: Fix the issue of the name parameter
+ when calling devm_request_mem_region
+Message-ID: <20250105165324.swmtt4qedut5eald@thinkpad>
+References: <5f8d43fe-25e3-450d-b5c2-2d69b9bc9923@omp.ru>
+ <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1558070145-1736093219=:924"
-Content-ID: <a86c63c4-52de-ae50-e7d1-c803f42ed965@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, Jan 05, 2025 at 01:57:51PM +0800, kingdix10@qq.com wrote:
+> From: King Dix <kingdix10@qq.com>
+> 
+> When using devm_request_mem_region to request a resource, if the passed
+> variable is a stack string variable, it will lead to an oops issue when
+> eecuting the command cat /proc/iomem.
+> 
 
---8323328-1558070145-1736093219=:924
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d99ca1d3-d107-6a7b-c5d2-02cd1bdca6c3@linux.intel.com>
+Is this your observation or you saw the oops? If the latter, please include
+the relevant log snippet for reference.
 
-On Thu, 2 Jan 2025, Lukas Wunner wrote:
+> Fix this by replacing outbound_name with the name of the previously
+> requested resource.
+> 
+> Signed-off-by: King Dix <kingdix10@qq.com>
 
-> On Fri, Oct 18, 2024 at 05:47:53PM +0300, Ilpo J=E4rvinen wrote:
-> > @@ -142,9 +304,11 @@ static int pcie_bwnotif_probe(struct pcie_device *=
-srv)
-> >  =09if (ret)
-> >  =09=09return ret;
-> > =20
-> > -=09scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> > -=09=09port->link_bwctrl =3D no_free_ptr(data);
-> > -=09=09pcie_bwnotif_enable(srv);
-> > +=09scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
-> > +=09=09scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> > +=09=09=09port->link_bwctrl =3D no_free_ptr(data);
-> > +=09=09=09pcie_bwnotif_enable(srv);
-> > +=09=09}
-> >  =09}
->=20
-> The "data" pointer is allocated with devm_kzalloc().
-> There's no __free(kfree) anywhere.
->=20
-> So what's the motivation for the no_free_ptr()?
-> Is this a remnant of an earlier version of the patch set that can be dele=
-ted
-> or is there actually a purpose to it?
+Also, please do not send next version as a reply to the previous one.
 
-Remnant it was so it is okay to remove it in your fix.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
---=20
- i.
---8323328-1558070145-1736093219=:924--
+- Mani
+
+> ---
+> Changes in v2:
+>   - Fix the code indentation issue.
+> ---
+>  drivers/pci/controller/pcie-rcar-ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
+> index 047e2cef5afc..c5e0d025bc43 100644
+> --- a/drivers/pci/controller/pcie-rcar-ep.c
+> +++ b/drivers/pci/controller/pcie-rcar-ep.c
+> @@ -107,7 +107,7 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
+>  		}
+>  		if (!devm_request_mem_region(&pdev->dev, res->start,
+>  					     resource_size(res),
+> -					     outbound_name)) {
+> +					     res->name)) {
+>  			dev_err(pcie->dev, "Cannot request memory region %s.\n",
+>  				outbound_name);
+>  			return -EIO;
+> -- 
+> 2.43.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
