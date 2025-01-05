@@ -1,146 +1,221 @@
-Return-Path: <linux-pci+bounces-19312-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19313-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 527F4A01AB2
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:53:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DC5EA01AB5
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:54:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB0AE18830DC
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 16:53:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D4973A2DC2
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 16:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50431143725;
-	Sun,  5 Jan 2025 16:53:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8985F1465BE;
+	Sun,  5 Jan 2025 16:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPWckYMl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cI6rhGVt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CB5146A7B
-	for <linux-pci@vger.kernel.org>; Sun,  5 Jan 2025 16:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E880143725
+	for <linux-pci@vger.kernel.org>; Sun,  5 Jan 2025 16:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736096014; cv=none; b=E/YQKPVQ6pcx/twVi2qoZSeeI6uDbDCHx0AVyohb+nTqWnJ8o6y7BTilMccVIwhMf0Vr6ZNTgzUxmzlkt4h0HUwJuXY7C2cl+JI/4gsVCGwHAvWFECnuMO8gvWwTn4JRz7goFtyGOsi/Cj+vW0MUt7TFtuQqfS+8k/EVLs2rMYU=
+	t=1736096074; cv=none; b=ZmUXS425w1ZVg84B/1n1T6enB2qYnmG7AP5bfSMwKp/BSgBzsI9cObNwWH22yvrkKTht28/VvtcaFKYG/eriV/MaSEX8BEaZOBHoByFiYOmgbQKwNXUXlVgl5wsY1JHeH7uzmiBrk8/XmEmtZ/CLOb58cA+oZLBylg8LNMhtK7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736096014; c=relaxed/simple;
-	bh=dm2CVgOeUMxnPwXmGBh9jXrkwI8tzVSGMW+uPQsvvqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Or5GAyEIXF5mSHCONIiRkv+w95sEDD5IWlUIeafM9vQ11RPq8DBJitS1bkX4pJlgnqmhbhapdnpkzR6Q1qmS+Xh6IUwsI3Es9MSuwRaxLs/pmB7/R0FzqbDuH8iw0RtaYg9d+g3DOv9jx3JNPcc51qIeFx7NeoEUnD5i3UmZDe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mPWckYMl; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2164b1f05caso189090625ad.3
-        for <linux-pci@vger.kernel.org>; Sun, 05 Jan 2025 08:53:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736096012; x=1736700812; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kVkkUKi3TEoqcrBW9O+G+7DHI8k94lZ9o3ZtGWTmR/4=;
-        b=mPWckYMltnQaOuwzmgoZgs8qf62FTGOFFR+u+PQDIxtCPx1wOi/O1xV8y4pjWFDHbM
-         yQ7lcdIxSjUySuxlrIn4i0z6t5iax9/Tup//uu4pv1PcvWoKQOIHY7ENveahYvdBkrvL
-         L8kW5Bb56zLDrMkojIAKe78oK8WE8iPu0w1uyw2nsN8A+3YTzmOKH/1LyaFOysltBwGX
-         VD4Bnblw2aKiGLJz7tMSrD4s2i8a9OBTgiRLqJjHTwYLZLlhvEK2yJzeoV6nNXU2o6mG
-         U1VqwiAuJSr+WMIbusVJGp2jzRSWvc3ITCHL0gvDGytc+mySaUecMKMW2H4dYOUJXDfM
-         +JBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736096012; x=1736700812;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kVkkUKi3TEoqcrBW9O+G+7DHI8k94lZ9o3ZtGWTmR/4=;
-        b=MBCfpp988Phk4unJa3dUdRyzAqBNVpw4F8w5pOObXH2AJDtF7DThjT+QxDHLqxrATv
-         MaZ/+1zRcUCJXwi9Tjo1Swc4IjtTOjjjVIFtokG3rC1mo/3qk73MpsGCNiDYltkUjRwI
-         CS/2XZSe8oAnSDVCd7mbEpUyv+2l2lApO0rWnjkv1TjYo2fTcgLXswC6CeSCtenkfNPF
-         pjekAglY32SNIZ8qQrKZpWG/NSLL1hoy2i7qlIF4nkI6FEr+n3q8OCjLZBynMiEippry
-         ZRQJ7KOWszcBHo7ErdvLjuCqNwmf5/N9rDMsgDNrvTMC72x8H4umAI9p6bkKdKWumjla
-         iAUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWA2omv3stjdDQndbdFo+NydcCJNICGm7oP1A/rm+KhDw+z18NiuEkYXooqzcsb8QpM4HQYOYaEPkE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNQy5O2+t4dnLDEYpM21sVH/t089h/3KwWfC/nY19UbyH1ECuK
-	jyQzTWecXpvYQNJiot+CWN/cjmF2U17RcFrW9385DAvlzgHEem3x+9OAr+Gm+w==
-X-Gm-Gg: ASbGnct25M3M1xrDiEqu5X30/GKoasKV/QcRvKAjJS5V8WtpO9eonb9CNEFFhwm6h9F
-	WF+p4iu5HGE3IPjwJ1icg2xuegp8HH/gFsVfRxaS7u7fmio+ZZUlvDhZbtaMDcWozhZ7JOn9Xmk
-	U57a16uprEE4kGreFcr1IiGlBuh2H/HvCMMuKoVlj4yae4zN0Fk8FOptWZtF/DVgVs+7gIiFpi1
-	pSQe9c8/YW8KXvUCqWCDqENQ4/++GboVOQxVImqlRyfosQRz//50yt6SzneKFiXndf8Mg==
-X-Google-Smtp-Source: AGHT+IGXvIwm3XR62M68f0UJnGgdNvu8I3ovTYOD52PhzIp4domidCXZMxXz5eNuZ3JRWmxru94gqA==
-X-Received: by 2002:a17:902:f681:b0:216:7ee9:2227 with SMTP id d9443c01a7336-219e6f11630mr820530235ad.36.1736096012108;
-        Sun, 05 Jan 2025 08:53:32 -0800 (PST)
-Received: from thinkpad ([117.193.213.165])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc962dc0sm278473755ad.32.2025.01.05.08.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2025 08:53:31 -0800 (PST)
-Date: Sun, 5 Jan 2025 22:23:24 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: kingdix10@qq.com
-Cc: s.shtylyov@omp.ru, marek.vasut+renesas@gmail.com,
-	yoshihiro.shimoda.uh@renesas.com, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: rcar-ep: Fix the issue of the name parameter
- when calling devm_request_mem_region
-Message-ID: <20250105165324.swmtt4qedut5eald@thinkpad>
-References: <5f8d43fe-25e3-450d-b5c2-2d69b9bc9923@omp.ru>
- <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
+	s=arc-20240116; t=1736096074; c=relaxed/simple;
+	bh=eOtgxUY75cgZuz93li8ktIizbZiivy8G4rsgjO+RUOI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sqt2nxm2JXGWeEfjPEraSuVbL2QwtoVDPTfuclw1Y5o/tN10K9Y0qUHiPbQl+UFuFkeS+AgV22vzqIbvRmtr7QX0gP6xyKwXBXs8dSH6ArrR1wZvWyr9qAqkXrp6yXRPLmaOb+8LSQYvMiO26xjNcUVxY06vp4dKn/hdCVeCv2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cI6rhGVt; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736096072; x=1767632072;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=eOtgxUY75cgZuz93li8ktIizbZiivy8G4rsgjO+RUOI=;
+  b=cI6rhGVtgsbmNrHBq1h1T+ZqR0V+mhsT3CZU5Q+2yPkhwRFwFqjMw9IT
+   rq9Nh2NIsUztJvioDUMKGLMydlSoTToz1RurgjyfUmFFkpl3V+/da+1dv
+   V3qToOCzGGrueQ2oiX7/Ktp1pw3nSYn2wpDq3zHX8dokMGjZihc5tyMaL
+   rKgariKbMyggioycHTNz13qFs0x732pplIgE88F2wsu8bM6bt9ejzF2X9
+   /SfB1wC0d20XnKgNTcqzGbx9rEaS/z3MmiQDe9i6kObsEi1GtMIif4C1z
+   9N1FOd5zx/CPNUBU+cx1VIIrOGnZCGki6SCrdSpRqcgsb6KptQYGrtseq
+   Q==;
+X-CSE-ConnectionGUID: hCYPYEA6QKGOM8cn0Q7mfA==
+X-CSE-MsgGUID: DeE7JFPGRQiHR3IbEH/ZKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11306"; a="46925783"
+X-IronPort-AV: E=Sophos;i="6.12,291,1728975600"; 
+   d="scan'208";a="46925783"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 08:54:31 -0800
+X-CSE-ConnectionGUID: Tes5J0qcRIif2v8YoJaVfw==
+X-CSE-MsgGUID: 0b+OikDSQ2WYi3QX/6WZKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,291,1728975600"; 
+   d="scan'208";a="133074661"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.18])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 08:54:28 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sun, 5 Jan 2025 18:54:24 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <helgaas@kernel.org>, 
+    Krzysztof Wilczynski <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, 
+    Niklas Schnelle <niks@kernel.org>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Evert Vorster <evorster@gmail.com>
+Subject: Re: [PATCH for-linus] PCI/bwctrl: Fix NULL pointer deref on unbind
+ and bind
+In-Reply-To: <0ee5faf5395cad8d29fb66e1ec444c8d882a4201.1735852688.git.lukas@wunner.de>
+Message-ID: <e08d30b5-50e0-4381-d2e7-61c2da12966f@linux.intel.com>
+References: <0ee5faf5395cad8d29fb66e1ec444c8d882a4201.1735852688.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Sun, Jan 05, 2025 at 01:57:51PM +0800, kingdix10@qq.com wrote:
-> From: King Dix <kingdix10@qq.com>
+On Thu, 2 Jan 2025, Lukas Wunner wrote:
+
+> The interrupt handler for bandwidth notifications, pcie_bwnotif_irq(),
+> dereferences a "data" pointer.
 > 
-> When using devm_request_mem_region to request a resource, if the passed
-> variable is a stack string variable, it will lead to an oops issue when
-> eecuting the command cat /proc/iomem.
+> On unbind, that pointer is set to NULL by pcie_bwnotif_remove().  However
+> the interrupt handler may still be invoked afterwards and will dereference
+> that NULL pointer.
 > 
-
-Is this your observation or you saw the oops? If the latter, please include
-the relevant log snippet for reference.
-
-> Fix this by replacing outbound_name with the name of the previously
-> requested resource.
+> That's because the interrupt is requested using a devm_*() helper and the
+> driver core releases devm_*() resources *after* calling ->remove().
 > 
-> Signed-off-by: King Dix <kingdix10@qq.com>
-
-Also, please do not send next version as a reply to the previous one.
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
+> pcie_bwnotif_remove() does clear the Link Bandwidth Management Interrupt
+> Enable and Link Autonomous Bandwidth Interrupt Enable bits in the Link
+> Control Register, but that won't prevent execution of pcie_bwnotif_irq():
+> The interrupt for bandwidth notifications may be shared with AER, DPC,
+> PME, and hotplug.  So pcie_bwnotif_irq() may be executed as long as the
+> interrupt is requested.
+> 
+> There's a similar race on bind:  pcie_bwnotif_probe() requests the
+> interrupt when the "data" pointer still points to NULL.  A NULL pointer
+> deref may thus likewise occur if AER, DPC, PME or hotplug raise an
+> interrupt in-between the bandwidth controller's call to devm_request_irq()
+> and assignment of the "data" pointer.
+> 
+> Drop the devm_*() usage and reorder requesting of the interrupt to fix the
+> issue.
+> 
+> While at it, drop a stray but harmless no_free_ptr() invocation when
+> assigning the "data" pointer in pcie_bwnotif_probe().
+> 
+> Evert reports a hang on shutdown of an ASUS ROG Strix SCAR 17 G733PYV.
+> The issue is no longer reproducible with the present commit.
+> 
+> Evert found that attaching a USB-C monitor prevented the hang.  The
+> machine contains an ASMedia USB 3.2 controller below a hotplug-capable
+> Root Port.  So one possible explanation is that the controller gets
+> hot-removed on shutdown unless something is connected.  And the ensuing
+> hotplug interrupt occurs exactly when the bandwidth controller is
+> unregistering.  The precise cause could not be determined because the
+> screen had already turned black when the hang occurred.
+> 
+> Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
+> Reported-by: Evert Vorster <evorster@gmail.com>
+> Tested-by: Evert Vorster <evorster@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219629
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 > ---
-> Changes in v2:
->   - Fix the code indentation issue.
-> ---
->  drivers/pci/controller/pcie-rcar-ep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/pcie/bwctrl.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-> index 047e2cef5afc..c5e0d025bc43 100644
-> --- a/drivers/pci/controller/pcie-rcar-ep.c
-> +++ b/drivers/pci/controller/pcie-rcar-ep.c
-> @@ -107,7 +107,7 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
->  		}
->  		if (!devm_request_mem_region(&pdev->dev, res->start,
->  					     resource_size(res),
-> -					     outbound_name)) {
-> +					     res->name)) {
->  			dev_err(pcie->dev, "Cannot request memory region %s.\n",
->  				outbound_name);
->  			return -EIO;
-> -- 
-> 2.43.0
-> 
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index b59cacc..7cd8211 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -303,17 +303,18 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = devm_request_irq(&srv->device, srv->irq, pcie_bwnotif_irq,
+> -			       IRQF_SHARED, "PCIe bwctrl", srv);
+> +	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem)
+> +		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem)
+> +			port->link_bwctrl = data;
+> +
+> +	ret = request_irq(srv->irq, pcie_bwnotif_irq, IRQF_SHARED,
+> +			  "PCIe bwctrl", srv);
+>  	if (ret)
+> -		return ret;
+> +		goto err_reset_data;
+>  
+> -	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
+> -		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
+> -			port->link_bwctrl = no_free_ptr(data);
+> +	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem)
+> +		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem)
+>  			pcie_bwnotif_enable(srv);
+> -		}
+> -	}
+
+Hi Lukas,
+
+Indeed, it certainly didn't occur to me while arranging the code the way 
+it is that there are other sources for the same irq. However, there is a 
+reason those lines where within the same critical section (I also realized 
+it's not documented anywhere):
+
+As bwctrl has two operating modes, one with BW notifications and the other 
+without them, there are races when switching between those modes during 
+probe wrt. call to lbms counting accessor, and I reused those rw 
+semaphores to prevent those race (the race fixes were noted only in a 
+history bullet of the bwctrl series).
+
+Do you think it would be possible to put also request_irq() inside that
+critical section to synchronize lbms count calls with the mode switch? 
+(Also beware that with scoped_guards, a goto out of the critical section 
+cannot be used in error handling and the NULL needs to be assigned inside 
+it.)
+
+(I know Bjorn has taken this already in so if needed, we can consider 
+making that change later on top of this as those races are much less 
+severe issue than what this fix is correcting.)
+
+>  	pci_dbg(port, "enabled with IRQ %d\n", srv->irq);
+>  
+> @@ -323,6 +324,12 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+>  		port->link_bwctrl->cdev = NULL;
+>  
+>  	return 0;
+> +
+> +err_reset_data:
+> +	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem)
+> +		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem)
+> +			port->link_bwctrl = NULL;
+> +	return ret;
+>  }
+>  
+>  static void pcie_bwnotif_remove(struct pcie_device *srv)
+> @@ -333,6 +340,8 @@ static void pcie_bwnotif_remove(struct pcie_device *srv)
+>  
+>  	pcie_bwnotif_disable(srv->port);
+>  
+> +	free_irq(srv->irq, srv);
+> +
+>  	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem)
+>  		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem)
+>  			srv->port->link_bwctrl = NULL;
+
+It seems I didn't remember to fix the mode switch races here at all.
+So I think also here, pcie_bwnotif_disable(), free_irq() and NULL 
+assignment, should be within the same critical section. Although this 
+doesn't seem very big problemn compared with the probe side.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
 
