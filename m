@@ -1,157 +1,130 @@
-Return-Path: <linux-pci+bounces-19310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62249A01A9E
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:35:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 122F9A01AAE
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 17:43:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF20F1883FCA
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 16:35:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 851C11882BCC
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jan 2025 16:43:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F82D14D717;
-	Sun,  5 Jan 2025 16:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B189155A59;
+	Sun,  5 Jan 2025 16:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i0VuDodx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/6pZt1O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F36014B07E
-	for <linux-pci@vger.kernel.org>; Sun,  5 Jan 2025 16:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E1E14F9FB;
+	Sun,  5 Jan 2025 16:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736094921; cv=none; b=Owt5+DwFZ9pEORj2eYUZOebHT1oHelCDpjKVv7MS+PnEAmVU3FbMAwyGCv0JqqLX2dllhicUzhsn/OyNhKw2Je+wmxufO7BKxy9jnrVDLMe9bdZIzOBceAGVnFSl+FH8pEGR7nvCe0IaBdr70N6JKCrvk8CMgILxYfWYoK3ggD0=
+	t=1736095399; cv=none; b=ntQYDVPk0GFdkE5GbgV6l0gIiBGCBFfaO9Badxc8X1zScmrSSd7QMxpGBKHRAjsczVx98j5zur+L06bEPc2VC04PCkKWES7naVsaiSsB4r+yRWjXRZLQoWPtMVvKRhlYPdrw72Rh2DemzIuUBH1DlcmtT81rVU9mwN0dwLY8HFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736094921; c=relaxed/simple;
-	bh=W8n4UV6+W1kcJ9PGinQ/CjgG6MkwYDyuasni3ltxRO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FwME9/i7Y6tIBFVBhl261qr2to9zP9N53DEVH6Ydp/P2SRuWquUUscw7Gix03duaL+6LfDh0m3vXjUbB+nIas/WxVWWSPvFvRJWmOU6COJYed413nZ7zEDfDY6bahNR0ECl0liV24N0Ig1QugZx4lNZMrdS008BZeQS6AxTubj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i0VuDodx; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21680814d42so163881325ad.2
-        for <linux-pci@vger.kernel.org>; Sun, 05 Jan 2025 08:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736094918; x=1736699718; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PnREJXO8gdOnlDXn6hPd7bSDzdru7IQfI4OFlA05/Zk=;
-        b=i0VuDodxftT9iVhyH5DlZjIW4/9meupkBgQgSN8wpOa8upkfz2qe+wzAuFemBrDUdy
-         Hp0o33L5SwSnnLZKM9a0bzXm4u1/LGG6YS3DK07kKx6kzh35eynv68Nk5Wa2Bn2roDfv
-         YZeRZoU+I/CMZct6W9de5RAAwhCDwsfnzNrpyilBdSK3ODF+/2TlKSKC2K3hqtnE4zt3
-         OybOS9sMkLahJVc71smniNyZkBbfzjh4LJCLnSYgNVlb2yq49P4uZVj6HihRY4qqk6it
-         9kDOxf1NuyXYnnTd/z/LUNWqnPx/1nVuRr67kdq686L9OMgDK2trZl+N/hJ6bcAi14IA
-         J3mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736094918; x=1736699718;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PnREJXO8gdOnlDXn6hPd7bSDzdru7IQfI4OFlA05/Zk=;
-        b=ZA9kR/TTCM8FaxPuNpYg02KZleW+SNb/AO+wwX2l/bkaCB5BhlMeclh+S1kAOh3gX5
-         48UhOS65A34za6O0qyroG9/SLrXJtxBCHGdxbkZQfgaoWws0wpTu3aOzAghc8+3AT+l5
-         0fVgJcsJ/g1jFmA4penQV4zBvqBkJ5ag9H4q43BXCxOYSdxWqw+0Rtir4AbP4zcOeZUd
-         fbQNPuao4yxXNENXVPraJJhlq25Bd5+Kn2r3hQCnUUc4A93ZYZq5MG6nWGh7EZbW5RqL
-         stoxoRVcllDyOq7ZfnN6xTB9s9x6ADrGtC2C4Em1Xo8NryaALGP83LlCp/5J1+supmtZ
-         lQVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSdeHeygjRh6FZMLQQSurCUA7bcMb+HND29GillK/8iuNPZGlo6/KxrL6OfCmqyYtsk4Q3H2jy1mE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5hbuXWkww9amMeDdHPX4W6cs7AtGL2tleEM6psIE4MxkOt2yl
-	Os3AGuHuTrIqzNreRxMtAANYha6CjsssGlIVfGndsniDPQXz8yFZQoTmj9S8PQ==
-X-Gm-Gg: ASbGncv7LvuMtt0Cp+VPm0TMfcJk4DHOtNCpTkn0I3xfXwS0SdSzfyTS3OaxiMSSO+Q
-	6BOSzotCia0qFlhePbDpk6Q4nYuwJ385nd+PuvxnLr51Hy9McNjh2SCg4rSaP3xFGrs/u4XIN83
-	oscuEZLxC1+ZDmbYMRcQvPQHSM6yeNo/l6F5nSnXmZsBIQxC8fxgNkVMyPlx64vShkrLk/n9hCT
-	k2JOuTO/Bl8NQEQiHqeg3WuqGp1xUKMvt4DfOaZubw3r99g7yRBJ/9Fp8iWqCi93u/o/g==
-X-Google-Smtp-Source: AGHT+IEOtAp4w31CjTLB1aFWoVsatu6IG9r4c5kd2CVIdLrHft5tD4dMe9HJZQJaorB/J3Udvac1sQ==
-X-Received: by 2002:a17:903:2cc:b0:216:2e5e:971d with SMTP id d9443c01a7336-219e70dc3f7mr692735935ad.51.1736094918605;
-        Sun, 05 Jan 2025 08:35:18 -0800 (PST)
-Received: from thinkpad ([117.193.213.165])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9cde72sm277254345ad.130.2025.01.05.08.35.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2025 08:35:18 -0800 (PST)
-Date: Sun, 5 Jan 2025 22:05:11 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Enable async probe by default
-Message-ID: <20250105163511.rwer5pl6tevw4zp2@thinkpad>
-References: <20240809073610.2517-1-linux.amoon@gmail.com>
- <Z3fKkTSFFcU9gQLg@ryzen>
- <CANAwSgS5ZWGTP+A11r_qFSrjWZH_DqsM89MLiP+1VAxhz+e+2A@mail.gmail.com>
- <Z3fzad51PIxccDGX@ryzen>
- <CANAwSgQEunirUf3O3FJJAUsQu9mQYD_Y40uJ_zMYDZYVy5J=wQ@mail.gmail.com>
- <Z3f4JQZ6yYV1BJ-b@ryzen>
- <CANAwSgRTcHuDNLvPJAs7ZaV-NnepeOkHj_kVc5OAJtP03hd6pQ@mail.gmail.com>
- <Z3f95RXj7GhZZHEP@ryzen>
- <CANAwSgQEb7rWFaeEO3Mb8LAwK6A5mrCyQFEysmSpeVdhoRWrtw@mail.gmail.com>
+	s=arc-20240116; t=1736095399; c=relaxed/simple;
+	bh=vvJ+Yp3leDodK0CvCdi9+gRe6EvxCrT8p2X4U/O0HQc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ToH2BNhNffMIl5mn1P0elowJCeh0l8m9QdkHGfhnwakLbPJfP6/deqUmmwHng23PxvuXjGqANYzKYrRGxJZPf2jtV3tnkVvwcmRIk6bRgxbZw9gsjd1idwsnEMuDGfCqDYnmL5w3shQNkL2Nw/P1/QBJXBbJHcOffafe8AZlxzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/6pZt1O; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736095397; x=1767631397;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=vvJ+Yp3leDodK0CvCdi9+gRe6EvxCrT8p2X4U/O0HQc=;
+  b=F/6pZt1O1MbNe6skYxAtIKm7zn3iPBViANAzYv0kwNOMaYUp0bOqPlrE
+   oROP0s6ALD9LAo/VcXwJq0y0f8vqydDu7Jzrk44VRpov2gJrLAmIQc0B2
+   8aQR1lJlij8B6v48qpJ9JcDxvVBbViONaOcAfZupMJcRtLBdZRS3zqElQ
+   HAxwDaukHqvy4uweggE8LOjqrpMmhCxImZ3Dve7NQRqgm4vHIwT/L8nwL
+   tZegtwGUoFkiogRL06HLACzVkE9riaIj6wEIoRuWpdLGlAxKRqkjLwUYt
+   NC2sAPzlF2eMCa3qQZLVTpO8wTRrU9Oy+sUmlCQeQlAK6NhnVuWg4myqa
+   w==;
+X-CSE-ConnectionGUID: 5LwvYmLCTk6SCSS83far7g==
+X-CSE-MsgGUID: fgN4YZbqTaGBDLacMEEC7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11306"; a="61632337"
+X-IronPort-AV: E=Sophos;i="6.12,291,1728975600"; 
+   d="scan'208";a="61632337"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 08:43:16 -0800
+X-CSE-ConnectionGUID: 6sYrLDRiQaySabinfUYJsA==
+X-CSE-MsgGUID: Hgoa4TgmTTCtmTY1unR+UQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="106870333"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.18])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 08:43:10 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sun, 5 Jan 2025 18:43:07 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+    Rob Herring <robh@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
+    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Alexandru Gagniuc <mr.nuke.me@gmail.com>, 
+    Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
+    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
+    Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Daniel Lezcano <daniel.lezcano@linaro.org>, 
+    Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+    Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v9 7/9] PCI/bwctrl: Add API to set PCIe Link Speed
+In-Reply-To: <Z3Zso3vXrzR79s2o@wunner.de>
+Message-ID: <b0183c5d-3fbc-3823-e653-31e3999ca5ca@linux.intel.com>
+References: <20241018144755.7875-1-ilpo.jarvinen@linux.intel.com> <20241018144755.7875-8-ilpo.jarvinen@linux.intel.com> <Z3Zso3vXrzR79s2o@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgQEb7rWFaeEO3Mb8LAwK6A5mrCyQFEysmSpeVdhoRWrtw@mail.gmail.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1558070145-1736093219=:924"
+Content-ID: <a86c63c4-52de-ae50-e7d1-c803f42ed965@linux.intel.com>
 
-On Fri, Jan 03, 2025 at 08:59:51PM +0530, Anand Moon wrote:
-> Hi Niklas
-> 
-> On Fri, 3 Jan 2025 at 20:40, Niklas Cassel <cassel@kernel.org> wrote:
-> >
-> > On Fri, Jan 03, 2025 at 08:36:18PM +0530, Anand Moon wrote:
-> > > > >
-> > > > > We need to enable the GMAC PHY and reset it using the proper GPIO pin
-> > > > > (PCIE_PERST_L).
-> > > > > Please refer to the schematic for more details.
-> > > >
-> > > > The PERST# GPIO is already asserted + deasserted from the PCIe Root Complex
-> > > > (host) driver:
-> > > > https://github.com/torvalds/linux/blob/v6.13-rc5/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L191-L206
-> > > >
-> > > > which will cause the endpoint device (a RTL8125 NIC in this case)
-> > > > to be reset during bootup.
-> > > >
-> > > Thanks for letting me know. It seems like a workaround.
-> > > I'll try to disable this and test it again.
-> > >
-> > > My point is that we haven't enabled the GMAC PHY (device nodes)
-> > > and must properly reset the GMAC.
-> > >
-> > > We're relying on the code above hack to do that job.
-> >
-> > I do not think it is a hack.
-> >
-> > If you look in most PCIe controller drivers, they toggle PERST before
-> > enumerating the bus:
-> > $ git grep gpiod_set_value drivers/pci/controller/
-> >
-> 
-> Ok, understood. However, we have multiple reset lines per controller,
-> so the PCIe driver will reset these lines using gpiod_set_value.
-> 
-> PCIE30X4_PERSTn_M1_L
-> PCIE30x1_0_PERSTn_M1_L
-> PCIE_PERST_L
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-PERST# gpio is unique per controller instance and will be asserted/deasserted
-by the PCIe controller driver itself. Endpoint drivers should not touch these.
+--8323328-1558070145-1736093219=:924
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <d99ca1d3-d107-6a7b-c5d2-02cd1bdca6c3@linux.intel.com>
 
-And most of the PCIe endpoint devices do not need to be described in devicetree
-as PCIe is a discoverable bus. But we do define some of them if they require any
-special board configuration.
+On Thu, 2 Jan 2025, Lukas Wunner wrote:
 
-- Mani
+> On Fri, Oct 18, 2024 at 05:47:53PM +0300, Ilpo J=E4rvinen wrote:
+> > @@ -142,9 +304,11 @@ static int pcie_bwnotif_probe(struct pcie_device *=
+srv)
+> >  =09if (ret)
+> >  =09=09return ret;
+> > =20
+> > -=09scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
+> > -=09=09port->link_bwctrl =3D no_free_ptr(data);
+> > -=09=09pcie_bwnotif_enable(srv);
+> > +=09scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
+> > +=09=09scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
+> > +=09=09=09port->link_bwctrl =3D no_free_ptr(data);
+> > +=09=09=09pcie_bwnotif_enable(srv);
+> > +=09=09}
+> >  =09}
+>=20
+> The "data" pointer is allocated with devm_kzalloc().
+> There's no __free(kfree) anywhere.
+>=20
+> So what's the motivation for the no_free_ptr()?
+> Is this a remnant of an earlier version of the patch set that can be dele=
+ted
+> or is there actually a purpose to it?
 
--- 
-மணிவண்ணன் சதாசிவம்
+Remnant it was so it is okay to remove it in your fix.
+
+--=20
+ i.
+--8323328-1558070145-1736093219=:924--
 
