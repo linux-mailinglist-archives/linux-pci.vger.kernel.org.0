@@ -1,60 +1,58 @@
-Return-Path: <linux-pci+bounces-19359-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19360-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6ACF6A03332
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 00:11:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C30B4A03356
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 00:32:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D05E16251C
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 23:11:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B44A0163FA8
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 23:32:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13B4D1E048D;
-	Mon,  6 Jan 2025 23:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D70E1DEFFC;
+	Mon,  6 Jan 2025 23:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNg/lnLu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nv1DSwK6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC971C69D
-	for <linux-pci@vger.kernel.org>; Mon,  6 Jan 2025 23:11:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99B84A04;
+	Mon,  6 Jan 2025 23:32:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736205115; cv=none; b=tT8kAV5QZJqqj2/JgOJqHXABTTn6UeHjgMkNUfdPh2yHO0CMxRq3twiZf2Rmc/G8XZL/jMsptTDTOHWKCzgiKFLr283DVBYN72C8BwvHkJHzvCJsqxzj999V60x00p4yBB4S1FeHVKg1zWTByG7nHnhvrXh+Ra0GdvQMOhvKKMo=
+	t=1736206369; cv=none; b=k208Zp71vH8mx/+8eghkAJpacXRlC7GFuSqwLwmD0oilyPDJe0ckIGgYPxnmmcIrPQW3fOpywBI9WJOSiYp1BgJ5YXwl4AHkxE3ynHxdxvE9ZRdVCFluG7cDAv7Vby7bD5juBx1A5KrBNcG8mMxAdH6JVLP7KSzBcnamezrSbW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736205115; c=relaxed/simple;
-	bh=MN/Ih2P+s6qf6oUkFhnGkhQu+KHq9eZ465ZZ7btl6hU=;
+	s=arc-20240116; t=1736206369; c=relaxed/simple;
+	bh=eeMQqExnDirKLWFXQEWznjA1b/1/ng+r1w7U0NJCPrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bN8R26cUTyVImjMRoh0Ffw50bl01pF9D3l3HgXak15FjMI+Bp9UfzYG0ykb4c+Ih0ada1lUA9MrhJV5w3Q5dMXIeAMMoUjGu4IUYX0bysF1rYDMBPNf4SiwHM/G0Fj5GqcD6PLSZPdWQuMzO73rOQ57Jj1UWC29HF3NdQD8DjSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNg/lnLu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E651C4CED2;
-	Mon,  6 Jan 2025 23:11:54 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=dcQnJ1tlMB0Qs/0pryjE2YqOkHcCxZ9/Sk5v5b8Q6G4OL2OgRQ+fgNolhTrIh4fimZeTE//CR0GYjgGcYvfIYptqGDL1G+RaP5IunqtgCeHb9ROn9H8HPp7tRREKEaDJea0kYYp1F540A4GmGlPkp7CoJXfu/aose1zqYhRbCCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nv1DSwK6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35751C4CED2;
+	Mon,  6 Jan 2025 23:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736205114;
-	bh=MN/Ih2P+s6qf6oUkFhnGkhQu+KHq9eZ465ZZ7btl6hU=;
+	s=k20201202; t=1736206368;
+	bh=eeMQqExnDirKLWFXQEWznjA1b/1/ng+r1w7U0NJCPrY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SNg/lnLu+XwaDiPgeCwleH/v+su+9gXl+5Hczkj/kBu37fZ6LEo7yTsa5Lu4bR7rC
-	 LhFChr3Pd/QRC6R6OCfqOrR68X/i+J9A/K9JslrBvLnBuoevDJ38ZbpVy4ngMbxIhp
-	 EEDGzNrxIn6qjleUbYRhrK0Zj41Z01hzeQcOyKW1+WHQddK948TV692bQPfyDDxTwE
-	 dbS++iEZubFg2GHAX3bunSNgrEW47p80n/owThGowZdZ99Yf+oDFO5winkanYGsO6U
-	 CLKjtj6sAHoD7pX7LQOHspr0imCOJl1cL4s6H33fG1VTrwnyHlV3Zf1GSQ++yHlk51
-	 duaDch+jtj1og==
-Date: Mon, 6 Jan 2025 17:11:52 -0600
+	b=Nv1DSwK6k2zpzNAbPpGm5uDQMY7iKKu2mInE/Kg4oqhY9qsZI1NNo2dQLKkCFbLJb
+	 EbGnkKYVHcQOGDnUDtfgFg0vbkkZYdGa1krWt/ZkX90iQbGN3OLxnL/r6fxHgYAxUI
+	 dYY4S5FvyIOodelpiMXz4lkXNYfX+aeNmZZb5akDUJxJO5SE1KT193o0cELWOJoYn7
+	 16krPSvZKlLlNIKvF5oYCpOERfcYXXCzWQbkFTpJweonCeM7afKheZpq00w4umIL5K
+	 tudCkfVoy7A3/R5mDXs/5LH0K4QBghL3w14k4o3xH7Y6WpvwYmb++P7dhSx5pjq6Q0
+	 LotRGXfa4l12Q==
+Date: Mon, 6 Jan 2025 17:32:46 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Krzysztof Wilczynski <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, Niklas Schnelle <niks@kernel.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Evert Vorster <evorster@gmail.com>
-Subject: Re: [PATCH for-linus v2] PCI/bwctrl: Fix NULL pointer deref on
- unbind and bind
-Message-ID: <20250106231152.GA139531@bhelgaas>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: andersson@kernel.org, robh@kernel.org, dmitry.baryshkov@linaro.org,
+	manivannan.sadhasivam@linaro.org, krzk@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH V1] schemas: pci: bridge: Document PCI L0s & L1 entry
+ delay and nfts
+Message-ID: <20250106233246.GA116572@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,119 +61,111 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae2b02c9cfbefff475b6e132b0aa962aaccbd7b2.1736162539.git.lukas@wunner.de>
+In-Reply-To: <20250106093304.604829-1-krishna.chundru@oss.qualcomm.com>
 
-On Mon, Jan 06, 2025 at 12:26:35PM +0100, Lukas Wunner wrote:
-> The interrupt handler for bandwidth notifications, pcie_bwnotif_irq(),
-> dereferences a "data" pointer.
-> 
-> On unbind, that pointer is set to NULL by pcie_bwnotif_remove().  However
-> the interrupt handler may still be invoked afterwards and will dereference
-> that NULL pointer.
-> 
-> That's because the interrupt is requested using a devm_*() helper and the
-> driver core releases devm_*() resources *after* calling ->remove().
-> 
-> pcie_bwnotif_remove() does clear the Link Bandwidth Management Interrupt
-> Enable and Link Autonomous Bandwidth Interrupt Enable bits in the Link
-> Control Register, but that won't prevent execution of pcie_bwnotif_irq():
-> The interrupt for bandwidth notifications may be shared with AER, DPC,
-> PME, and hotplug.  So pcie_bwnotif_irq() may be executed as long as the
-> interrupt is requested.
-> 
-> There's a similar race on bind:  pcie_bwnotif_probe() requests the
-> interrupt when the "data" pointer still points to NULL.  A NULL pointer
-> deref may thus likewise occur if AER, DPC, PME or hotplug raise an
-> interrupt in-between the bandwidth controller's call to devm_request_irq()
-> and assignment of the "data" pointer.
-> 
-> Drop the devm_*() usage and reorder requesting of the interrupt to fix the
-> issue.
-> 
-> While at it, drop a stray but harmless no_free_ptr() invocation when
-> assigning the "data" pointer in pcie_bwnotif_probe().
-> 
-> Ilpo points out that the locking on unbind and bind needs to be symmetric,
-> so move the call to pcie_bwnotif_disable() inside the critical section
-> protected by pcie_bwctrl_setspeed_rwsem and pcie_bwctrl_lbms_rwsem.
-> 
-> Evert reports a hang on shutdown of an ASUS ROG Strix SCAR 17 G733PYV.
-> The issue is no longer reproducible with the present commit.
-> 
-> Evert found that attaching a USB-C monitor prevented the hang.  The
-> machine contains an ASMedia USB 3.2 controller below a hotplug-capable
-> Root Port.  So one possible explanation is that the controller gets
-> hot-removed on shutdown unless something is connected.  And the ensuing
-> hotplug interrupt occurs exactly when the bandwidth controller is
-> unregistering.  The precise cause could not be determined because the
-> screen had already turned black when the hang occurred.
-> 
-> Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
-> Reported-by: Evert Vorster <evorster@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219629
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Tested-by: Evert Vorster <evorster@gmail.com>
+On Mon, Jan 06, 2025 at 03:03:04PM +0530, Krishna Chaitanya Chundru wrote:
+> Some controllers and endpoints provide provision to program the entry
+> delays of L0s & L1 which will allow the link to enter L0s & L1 more
+> aggressively to save power.
 
-Replaced the patch on pci/for-linus with this one, headed for v6.13,
-thanks!
+Although these are sort of related because FTS is used during L0s->L1
+transitions, I think these are subtle enough that it's worth splitting
+this into two patches.
 
+> As per PCIe spec 6 sec 4.2.5.6, the number of Fast Training Sequence (FTS)
+> can be programmed by the controllers or endpoints that is used for bit and
+> Symbol lock when transitioning from L0s to L0 based upon the PCIe data rate
+> FTS value can vary. So define a array for each data rate for nfts.
+>
+> These values needs to be programmed before link training.
+
+IIUC, the point of this is to program the N_FTS value ("number of Fast
+Training Sequences required by the Receiver" as described in PCIe
+r6.0, sec 4.2.5.1, tables 4-25, 4-26, 4-27 for TS1, TS2, and Modified
+TS1/TS2 Ordered Sets).
+
+During Link training, all PCIe components transmit the N_FTS value
+they require.  Sec 4.2.5.6 only describes the Fast Training Sequence
+from a protocol perspective.  The fact that the N_FTS value of a
+device may be programmable is device-specific.
+
+Possible text:
+
+  Per PCIe r6.0, sec 4.2.5.1, during Link training, a PCIe component
+  captures the N_FTS value it receives.  Per 4.2.5.6, when
+  transitioning the Link from L0s to L0, it must transmit N_FTS Fast
+  Training Sequences to enable the receiver to obtain bit and Symbol
+  lock.
+
+  Components may have device-specific ways to configure N_FTS values
+  to advertise during Link training.  Define an n_fts array with an
+  entry for each supported data rate.
+
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
-> Changes v1 -> v2 (in response to Ilpo's review):
->  Move request_irq() inside critical section on bind.
->  Move free_irq() + pcie_bwnotif_disable() inside critical section on unbind.
->  Amend commit message with a paragraph explaining these changes.
+> - This change was suggested in this patch: https://lore.kernel.org/all/20241211060000.3vn3iumouggjcbva@thinkpad/
+> ---
+>  dtschema/schemas/pci/pci-bus-common.yaml | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
->  drivers/pci/pcie/bwctrl.c | 25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index b59cacc740fa..0a5e7efbce2c 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -303,14 +303,17 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
->  	if (ret)
->  		return ret;
+> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+> index 94b648f..f0655ba 100644
+> --- a/dtschema/schemas/pci/pci-bus-common.yaml
+> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
+> @@ -128,6 +128,16 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      enum: [ 1, 2, 4, 8, 16, 32 ]
 >  
-> -	ret = devm_request_irq(&srv->device, srv->irq, pcie_bwnotif_irq,
-> -			       IRQF_SHARED, "PCIe bwctrl", srv);
-> -	if (ret)
-> -		return ret;
-> -
->  	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
->  		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> -			port->link_bwctrl = no_free_ptr(data);
-> +			port->link_bwctrl = data;
+> +  nfts:
+> +    description:
+> +      Number of Fast Training Sequence (FTS) used during L0s to L0 exit for bit
+> +      and Symbol lock.
+
+I think it's worth using the "number of Fast Training Sequences
+required by the Receiver" language from the spec to hint that these
+values will be used to program a component with the number of FTSs
+that it requires as a Receiver, and the component will advertise this
+number as N_FTS during Link training.
+
+  n_fts:
+    description:
+      The number of Fast Training Sequences (N_FTS) required by the
+      Receiver (this component) when transitioning the Link from L0s
+      to L0; advertised during initial Link training
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 1
+> +    maxItems: 5
+> +    items:
+> +      maximum: 255
 > +
-> +			ret = request_irq(srv->irq, pcie_bwnotif_irq,
-> +					  IRQF_SHARED, "PCIe bwctrl", srv);
-> +			if (ret) {
-> +				port->link_bwctrl = NULL;
-> +				return ret;
-> +			}
+>    reset-gpios:
+>      description: GPIO controlled connection to PERST# signal
+>      maxItems: 1
+> @@ -150,6 +160,12 @@ properties:
+>      description: Disables ASPM L0s capability
+>      type: boolean
+>  
+> +  aspm-l0s-entry-delay-ns:
+> +    description: Aspm l0s entry delay.
 > +
->  			pcie_bwnotif_enable(srv);
->  		}
->  	}
-> @@ -331,11 +334,15 @@ static void pcie_bwnotif_remove(struct pcie_device *srv)
+> +  aspm-l1-entry-delay-ns:
+> +    description: Aspm l1 entry delay.
+
+s/Aspm/ASPM/
+s/l0s/L0s/
+s/l1/L1/
+
+(I mentioned these earlier in the conversation you pointed to above,
+but they got missed)
+
+Also, to match surrounding items:
+s/\.$//
+
+>    vpcie12v-supply:
+>      description: 12v regulator phandle for the slot
 >  
->  	pcie_cooling_device_unregister(data->cdev);
->  
-> -	pcie_bwnotif_disable(srv->port);
-> +	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
-> +		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> +			pcie_bwnotif_disable(srv->port);
-> +
-> +			free_irq(srv->irq, srv);
->  
-> -	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem)
-> -		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem)
->  			srv->port->link_bwctrl = NULL;
-> +		}
-> +	}
->  }
->  
->  static int pcie_bwnotif_suspend(struct pcie_device *srv)
 > -- 
-> 2.43.0
+> 2.34.1
 > 
 
