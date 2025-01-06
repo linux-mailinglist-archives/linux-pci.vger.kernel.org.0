@@ -1,148 +1,155 @@
-Return-Path: <linux-pci+bounces-19342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA459A02AFC
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 16:39:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 789E7A02D6D
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 17:10:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5AD91885BA7
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 15:39:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D869B188159F
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 16:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405958634A;
-	Mon,  6 Jan 2025 15:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7F150285;
+	Mon,  6 Jan 2025 16:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKusq9io"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T9hBXOsW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BED2DF71
-	for <linux-pci@vger.kernel.org>; Mon,  6 Jan 2025 15:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D7D7405A
+	for <linux-pci@vger.kernel.org>; Mon,  6 Jan 2025 16:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736177959; cv=none; b=fPqLUTP374SWOrBV2NLgBPqmG2v5VZNZjOs5husIM5Jl4akNojghxoneztfiEyc9GBXBo/fOkGVh4mWEBfxwG2JEQHeFqxFk2H0PF6ME1rvyOjusHYA359NKu/662kB/3B9esWJMWpXgFVhtSafBeR3vNtjl5D+gyhu89AlfAA4=
+	t=1736179809; cv=none; b=U12/spaw93m/QB5gmLhxP/LjeIRQp85imGVFoit9nRNuQdavrIiSVz6U/0b/jKxtrkCzIqqM6WaG2lA6DVlOVmsBTLoqNMkde73hTjGc/SNDYEKY0zk6BMwzGXp7EfbrjjxYrb/fozftBCrXf1UphLR3IO7PjEd1jYrByiLYZxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736177959; c=relaxed/simple;
-	bh=6FTeL7J9W/8v/MFftWkYANi3oEghJQhAORIbcFv+bpg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d2Nv2E7yWpldRjAHZ9iKVSz0AEN1C90fVYUIqM4MQyJJl/fDdHiGaOlGB1Pb8jo4ghTk3I00qUDIUnN7H+QZ+k1fsSzZxYol5NsyTj0zKkB8gcdnBoPH8F0bcgALVmVCxEdUG7fN/k8s7TIzQlLm6ZdcEo5LLM4ovMzUzI27rU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKusq9io; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d3e9f60bf4so26056424a12.3
-        for <linux-pci@vger.kernel.org>; Mon, 06 Jan 2025 07:39:17 -0800 (PST)
+	s=arc-20240116; t=1736179809; c=relaxed/simple;
+	bh=w5Yel1wJYsFWeW0wLAjqewZMxGW2Jmj/sYREWUnMsjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WaNw7ZhHsQPufFRzHElCE3QWv4NcgYpW7gFP64Ojjab3DNxIjKf0IIerkaYxBvqqTdbqVcxjQZhgwvxFGm5TnOfUd8ClYOjQCHNYduAHnWKgtu1VsKeUmb1Dm/1VhMcUn1UKcfKzBDuzmzi9LJVPay0288Hbiuth7FkBYwm1CQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T9hBXOsW; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-216728b1836so190509115ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 06 Jan 2025 08:10:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736177956; x=1736782756; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjInjQ8EYFWqvY7RVufEqpVSTgGfiOzA1xoY/iPL4eM=;
-        b=GKusq9ioBeBSsSHh3W65CEtb7vowlSru2FAaGRPAjrRxO/9+XTFv5Ufjh0j+wlyad4
-         Ui7irwkbnz28pk0q71zeN2CXZ/ojWGWOw+6STLf8lfvh81EjM/wc3n1IjppRnXS/4Vdz
-         s9PHzaPYktjDSkiGowdkNL2Va6L12vjh/ZLEEukDfBaIuuT+kTSxwanF1VUh312PM0fu
-         +sq+rnWOX5lqNrRw2pU++JvVk2C6b/9DhhPbVEm2y/6Oy0XA/ynS95CIgsIseO/16tNP
-         W3TJnEX826Hg+mMISElOfogIN59TyV8WDCkPTSwsLBbc19Z0M5r9MaNV8T0lHjMfPyCt
-         WmnA==
+        d=linaro.org; s=google; t=1736179807; x=1736784607; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cbh70FNu5lHAZ2y3qFziORwGTSyKcYnNaY2OZrOn1ZY=;
+        b=T9hBXOsWJ9sXTpYFVmm9dBd7gXG10UVWDw+nj00g21F7ZVHPOOVgl+BmHhtlrJf8X9
+         AGIXiDTrST8vy1bPI88RD+SV7FLPfjCntYsZm0t+z+hFO/liePUB1NoGvKvwdi7SWemv
+         exBv0D6TfPRF4dcxAhW3QhfqlAxv52Sf6KkWTGqXRulbEe8HL721E1H6o04mmxv/Chjo
+         oMe8D9pnQkNDHqFe09kw3f6lfvX+sbotKLRjqsvlbZAstJ83Omv/YO6VHa8K5K9x7n5w
+         1u/yRQp0Bl/IRmBL1sJuEXXrqjsW4w4P9tnnRYbmxd0X7r75E2XbbdPeWriHKZJ/KDgb
+         Reqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736177956; x=1736782756;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DjInjQ8EYFWqvY7RVufEqpVSTgGfiOzA1xoY/iPL4eM=;
-        b=Fx/W3BZfbc6/7UxJ9MnnA676VjzabBjMFLi22SvP2SvyAPcFxrSL4szJpvfH4jw/Hp
-         JbD9S+2d9OiSFo0rUG/pRoOZSXqIoyDo3FQUOyoSXuXKBUHCBC8mrNlKSqn+kmaP8yxC
-         IAFdLn7ot/ivswcQF+cAC8W1S5KV+9OUEsMo9UJF4aquc+cRFw733FVRdiuUruRSvJbM
-         O5RSMCC0yjnjFEDMqoBFbKcTyPjMyVtX0WlIM1idSB1W8MXlYWUpY6iKTn+XzayDo7dD
-         26sQmLXzOAkzgvMlzYKLUqpoRRfPUpd7u/0P6s7AhG2WN1H1EJCFWssko8p1vvnJMmkt
-         iuvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFpH+44f21VQwFVz0F32aA9P053feRFnw8u3vAwrVGR0Atitl2FKH2PxJah0DHreVT89jiq8DT+fw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+DW8suIISBLqWXhwfnZBE6dXHHo86d45i6DNUHQMXVSvuUpy8
-	iJPEAtRVCaPGBBKEid33TJzHfQDLxnpn5h74b7e/R91JeIQDpI3JEctGpx6HqHwuzpKhpqPtPt4
-	aSHoKVJP4ifjKQw6hcK7hWTU29Xm5BdpTT/s=
-X-Gm-Gg: ASbGncsabyi8hYYPa5ZhWHO9sSLr0Bt9EAGOHtJ+GJgRGyUaqSbBtK+hIUSG4MNWH1m
-	B/6ERkD73/+KNHA8bSkXaUi1Ux8dWoUIy5qkl6A==
-X-Google-Smtp-Source: AGHT+IEGN1GdG+i3TIHVGvpAsiqTdVpoXIFMSYU+j0qxRCJAVqb+OjpdIo8gZVE36TK6MxTksPlnEo2hd8k6w5btTAA=
-X-Received: by 2002:a50:cc04:0:b0:5d8:a46f:110b with SMTP id
- 4fb4d7f45d1cf-5d8a46f1123mr28655123a12.17.1736177955405; Mon, 06 Jan 2025
- 07:39:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736179807; x=1736784607;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cbh70FNu5lHAZ2y3qFziORwGTSyKcYnNaY2OZrOn1ZY=;
+        b=cNz5kKPo5ElOPZ6CHH7jgI8+zzUYfBgKrd8sdnmvfrQPqX6fvvGZM8dGTNfwVuJk5X
+         CjKhqvHQvAsVDlev3RbkXTOsftloLAffudHKgivCkBjyUWw5gKhTr0VszERcK3ARSvje
+         jxj54Vbm3IdrBRM2zoNS45xRqp6GUFfse6r55Xpp0SeAv4cjcIJSuLq0cQSU+Lx01wYv
+         G0fX+wI/Wd5OsZ2A5HXJ6//YLd6ikSvVTzYaJU87T5unMwVFqSqGVVOoojy4/uIL2sMo
+         vZvod1JRcnX/kMjuplKGu7xqF3Hq7pPtpOTFW6Nvj5eheA1AsXaSC6cDds3vYutmxuFR
+         WP+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWxxzyPk2QkTAOrJApgio9wJwkPa3SOtNCZVoDJIXySQFr7ZJM8beB4nGmPBc+xlyfzOnls1LD0m7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPoCS63eifFnV6etpxNePolukj19QNgh2996qN8pJ5qRUx5Yz8
+	RUbFgH9zRvuidB5NwqfsmwfCH4rBoT15oKE3lfyNLxLfOwdqWpGNWeWq/BDqyQ==
+X-Gm-Gg: ASbGncsMjDPJd2rJtI9NfLkmNj7AuAVZZeQOn9VYc8OP3GnakIiwHVqMlR5pwRM/V/X
+	zGaU9N+LfZijBQ5/QJZLBgPFoYk/XaTzNojNe1rkTGQ7sLp21wNfCyXYg8FU/WnNWaWs7LBrobI
+	+Rh9VJLP+Nhi4R7+PqdvWSkKuLlxmSRTrQVflvy/cgcGszOi297mt3jWbPcQGcuU3PaAbyxteis
+	jVKyf1g+zFYiohrzVS1YRfb2apZKzjSm+8uknp2NHewFkxaqSiMxnPRGsv6naudBcc=
+X-Google-Smtp-Source: AGHT+IGWek+UwLvA7jIxaMXySnHt1P9khnFX7cna7RBNBSt0+o7sQhOK9pqBW8ZD3DQlUzuguSWTWA==
+X-Received: by 2002:a05:6a21:2d04:b0:1e1:b224:74c0 with SMTP id adf61e73a8af0-1e5e0815ee4mr94198810637.38.1736179807211;
+        Mon, 06 Jan 2025 08:10:07 -0800 (PST)
+Received: from thinkpad ([120.60.61.126])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8dbafesm32377915b3a.128.2025.01.06.08.10.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2025 08:10:06 -0800 (PST)
+Date: Mon, 6 Jan 2025 21:39:50 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Xavier Chang <Xavier.Chang@mediatek.com>
+Subject: Re: [PATCH 3/5] PCI: mediatek-gen3: Disable ASPM L0s
+Message-ID: <20250106160950.uutcgs2vqnuve22k@thinkpad>
+References: <20250103060035.30688-1-jianjun.wang@mediatek.com>
+ <20250103060035.30688-4-jianjun.wang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <dc020ef3-e48a-42cb-aa4c-81d46ebac338@stanley.mountain>
-In-Reply-To: <dc020ef3-e48a-42cb-aa4c-81d46ebac338@stanley.mountain>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 6 Jan 2025 21:08:44 +0530
-Message-ID: <CANAwSgRzexcPSwJxORxG9FSuCXCeKHSCa90brmG0bX-jD9DoZQ@mail.gmail.com>
-Subject: Re: [pci:controller/rockchip 1/3] drivers/pci/controller/pcie-rockchip.c:134
- rockchip_pcie_parse_dt() warn: passing zero to 'dev_err_probe'
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev, lkp@intel.com, oe-kbuild-all@lists.linux.dev, 
-	linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250103060035.30688-4-jianjun.wang@mediatek.com>
 
-Hi Dan
+On Fri, Jan 03, 2025 at 02:00:13PM +0800, Jianjun Wang wrote:
+> Disable ASPM L0s support because it does not significantly save power
+> but impacts performance.
+> 
 
-On Mon, 6 Jan 2025 at 17:09, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-> head:   8261bf695c47b98a2d8f63e04e2fc2e4a8c6b12b
-> commit: fa0ce454cd4ee35703d4126c5b8e4a9a398cf198 [1/3] PCI: rockchip: Simplify clock handling by using clk_bulk*() function
-> config: arm64-randconfig-r073-20250102 (https://download.01.org/0day-ci/archive/20250104/202501040409.SUV09R80-lkp@intel.com/config)
-> compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> | Closes: https://lore.kernel.org/r/202501040409.SUV09R80-lkp@intel.com/
->
-> smatch warnings:
-> drivers/pci/controller/pcie-rockchip.c:134 rockchip_pcie_parse_dt() warn: passing zero to 'dev_err_probe'
->
-> vim +/dev_err_probe +134 drivers/pci/controller/pcie-rockchip.c
->
-> 964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  115     rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
-> 964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  116     if (IS_ERR(rockchip->aclk_rst)) {
-> 964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  117             if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
-> 964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  118                     dev_err(dev, "missing aclk reset property in node\n");
-> 964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  119             return PTR_ERR(rockchip->aclk_rst);
-> e77f847df54c6b drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-09-03  120     }
-> e77f847df54c6b drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-09-03  121
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  122     if (rockchip->is_rc)
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  123             rockchip->perst_gpio = devm_gpiod_get_optional(dev, "ep",
-> 840b7a5edf88fe drivers/pci/controller/pcie-rockchip.c Manivannan Sadhasivam 2024-04-16  124                                                            GPIOD_OUT_LOW);
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  125     else
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  126             rockchip->perst_gpio = devm_gpiod_get_optional(dev, "reset",
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  127                                                            GPIOD_IN);
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  128     if (IS_ERR(rockchip->perst_gpio))
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  129             return dev_err_probe(dev, PTR_ERR(rockchip->perst_gpio),
-> a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  130                                  "failed to get PERST# GPIO\n");
-> e77f847df54c6b drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-09-03  131
-> fa0ce454cd4ee3 drivers/pci/controller/pcie-rockchip.c Anand Moon            2024-12-02  132     rockchip->num_clks = devm_clk_bulk_get_all(dev, &rockchip->clks);
-> fa0ce454cd4ee3 drivers/pci/controller/pcie-rockchip.c Anand Moon            2024-12-02  133     if (rockchip->num_clks < 0)
-> fa0ce454cd4ee3 drivers/pci/controller/pcie-rockchip.c Anand Moon            2024-12-02 @134             return dev_err_probe(dev, err, "failed to get clocks\n");
->
->
-> "err" is zero.  It should be "rockchip->num_clks".
->
-> 4816c4c7b82b55 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-12-07  135
-> 964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  136     return 0;
-> 4816c4c7b82b55 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-12-07  137  }
->
-Thanks for the report I have submitted this fix for this.
+You should disable ASPM only if it is causing any functional issues to the SoC
+itself. For other reasons, users will use the existing sysfs/cmdline params to
+disable ASPM based on usecase if required.
 
-[0] https://lore.kernel.org/linux-pci/20250106153041.55267-1-linux.amoon@gmail.com/
+- Mani
 
-Thanks
--Anand
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index ed3c0614486c..4bd3b39eebe2 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -84,6 +84,9 @@
+>  #define PCIE_MSI_SET_ENABLE_REG		0x190
+>  #define PCIE_MSI_SET_ENABLE		GENMASK(PCIE_MSI_SET_NUM - 1, 0)
+>  
+> +#define PCIE_LOW_POWER_CTRL_REG		0x194
+> +#define PCIE_FORCE_DIS_L0S		BIT(8)
+> +
+>  #define PCIE_PIPE4_PIE8_REG		0x338
+>  #define PCIE_K_FINETUNE_MAX		GENMASK(5, 0)
+>  #define PCIE_K_FINETUNE_ERR		GENMASK(7, 6)
+> @@ -458,6 +461,14 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+>  	val &= ~PCIE_INTX_ENABLE;
+>  	writel_relaxed(val, pcie->base + PCIE_INT_ENABLE_REG);
+>  
+> +	/*
+> +	 * Disable L0s support because it does not significantly save power
+> +	 * but impacts performance.
+> +	 */
+> +	val = readl_relaxed(pcie->base + PCIE_LOW_POWER_CTRL_REG);
+> +	val |= PCIE_FORCE_DIS_L0S;
+> +	writel_relaxed(val, pcie->base + PCIE_LOW_POWER_CTRL_REG);
+> +
+>  	/* Disable DVFSRC voltage request */
+>  	val = readl_relaxed(pcie->base + PCIE_MISC_CTRL_REG);
+>  	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
+> -- 
+> 2.46.0
+> 
 
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
+-- 
+மணிவண்ணன் சதாசிவம்
 
