@@ -1,84 +1,56 @@
-Return-Path: <linux-pci+bounces-19331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 718AEA0246C
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 12:39:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 928E4A0248B
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 12:49:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EC8B160805
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 11:39:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 820E9164A16
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 11:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C551917E9;
-	Mon,  6 Jan 2025 11:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D52CD1DDA10;
+	Mon,  6 Jan 2025 11:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rlKU2Jv7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPDSdoBA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FF078F2A
-	for <linux-pci@vger.kernel.org>; Mon,  6 Jan 2025 11:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE141DD9AD;
+	Mon,  6 Jan 2025 11:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736163566; cv=none; b=KU+GYMaVcYXs7oHueNsow4UKf/xmqUDUCCjLt44LZAveXzfwy9cGrht1eYp1XFAmTR7cTFUQ67kTw9a/+sOiDBX3HzWVzQxFMDA2blxdqPR7OdlnU192S6djSyCsX/Svfcluit4DtDD3XRSWc5dacky+DhMN4XJ/zCaoDgu3iOA=
+	t=1736164146; cv=none; b=L6NW2z5OIzs7I+bDZqI8QJLIbRli7wFkvT6bhlkvw1vQWUXXpxKP9s3U/spcsBCyZzM/Kkum+PHDiHOEw92HK8aJvrvkdzIi4O02EtEoo3CWT7JjpmueuwIc6D5m/bZ26hxxGfJOcWVAByoPNXM+R021lSlV9Jj2xtWpIJaVaEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736163566; c=relaxed/simple;
-	bh=26pjsa9xFHb9OG9vxKGj54thfd/2fsofHqoCepdK3/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z8LNedvRz+RCcAV/fVJZjwvFgorML4FLU4dlfVch0m41/Q1CahLEcVb8CADrRa6xbwOgEkuQbeweN+ZZKUlvctPM6anapf/4v/3bNOOma4o7rRB3vuh6iMnrHVknQwCS0WYNDVm2rF0mzF4EITkL0p0ljWCq9eZ/LbMXSMLY0lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rlKU2Jv7; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385e06af753so7137689f8f.2
-        for <linux-pci@vger.kernel.org>; Mon, 06 Jan 2025 03:39:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736163563; x=1736768363; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SGGE5ZgPMc/qWU6n7x03EMW8N+ct1TmxeLEwS/agbwU=;
-        b=rlKU2Jv73gjuyCgcD9rHkr4CmROQFWef4dPFQjCTtUANsmFEaxjOCAvqrtEkdxARNW
-         de37zaomtI6xJ/no/hoIhMrpoASASboZJGdcn3Leh5OOR8ZQ71FQlkzkUiHHmlH9T8fC
-         9X8mH9wCn2cN1JOK80R1pbmdT09BHlpbmyKj/OUrPwGpgh8n9kelL52PWDnzlpiTUB5Q
-         fdQWVar31NKmXV6p9F7zSCynJXAqEbmIl38lIG1ADD4qTrNwhQ4jWHbwCRJ6KRjYcaXq
-         VvPKYgt48ETGStw5p0nX2V3JItcO2NCpWt2Onl5UeK1M9Ebp5bVdL9f4Hbs+ijnVDqXr
-         lEmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736163563; x=1736768363;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGGE5ZgPMc/qWU6n7x03EMW8N+ct1TmxeLEwS/agbwU=;
-        b=SMDnlTNyRunPjIy28ooF0iB+qSPb5Utxw2K0qhjhzI2GbB0ozhMWvmd5r9KHBcppHM
-         hQMtygM328qpsscuDHwqOQftqHKgvgfiotwJ5eGD1kGiYvNhw7ef19rjAGopLM+lR24M
-         I4tHMeyAFlwKmi/INopD+CxVz6a5QCdQDOfg/nV5V5lwBWVxIFx6NANhz6xJtJO22+xH
-         PVcQSdO3Y8Rv23/NpIXFqpziDz+Z1X75fmnqCYya0cg4rvnjBgbgETCwg6vAS72Uf1oc
-         7km9kZV++hc1v73uiaGq0r7VdktFa5T2A+DuW/1Unq2dgCjI0L61IJ7ZqceL79dyvhU6
-         Fg2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUaUKVix98O8eMr7T0ymEizVkhEjY3soZ5miuwD+cO+PB9SMpmOADoT9yxM3UsivAALhFRg6bJLIiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZVVkoPv9NZ69YDAoNzIK0LK6uoPbisZ66+YR0lqcqBjMXGrOO
-	HTlG9q9a5ghFqZb5AxMnnaq54TDrNnO8i7IKfnyIwyr/jt0EG4XzLgMwpisFsiA=
-X-Gm-Gg: ASbGncveULOBVC/JCC9iAqfCWgEdNsxjgRyP61ZQ5S21L+Mk/3guNOEB8Tt+5oM0Sl7
-	0WxdmO1O9gC0XAglHIYSPCcTFbNRXtkaYNdR2mv6zW8mARjGeGQOX+cqZGNEJ4KQJ5rbCEix4Zd
-	DjoSAwbrjTCz3oDGEU9FvthUOmovtwp6e7sMJx8pCIhxk1VSqB9CXnChrGqtjyIaGc5G7D/ByfB
-	5SEPTPiHf/dKkz163Vfg5+mf+aua27uU/pTRFiX5v1YRUCpBJLdm6ccYgbThQ==
-X-Google-Smtp-Source: AGHT+IErqpiG9dUFlGsnpWUvGF4tVLHkOIJGkA1M5xs+/xZCEUFs+lJ2J8dnZD6u5ktnBPrPKucZQw==
-X-Received: by 2002:a5d:64e9:0:b0:385:f56c:d90a with SMTP id ffacd0b85a97d-38a223fd452mr55871172f8f.55.1736163563247;
-        Mon, 06 Jan 2025 03:39:23 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8a636asm48935694f8f.88.2025.01.06.03.39.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 03:39:22 -0800 (PST)
-Date: Mon, 6 Jan 2025 14:39:19 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Anand Moon <linux.amoon@gmail.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [pci:controller/rockchip 1/3]
- drivers/pci/controller/pcie-rockchip.c:134 rockchip_pcie_parse_dt() warn:
- passing zero to 'dev_err_probe'
-Message-ID: <dc020ef3-e48a-42cb-aa4c-81d46ebac338@stanley.mountain>
+	s=arc-20240116; t=1736164146; c=relaxed/simple;
+	bh=th2FcPgSzUrZsqMrYGEIu+RCX35MJ63fAapbzUqbMGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYDvTbkpUWzHduueNE4hfa8T6WUadH3tp1X38HzoUgBFDtt9NbGROJBoCDkVJ/epgbzOcVTZr2Z58Bg485crCDkmetT/63gYjf6UdwsIMRto4mGpQJHYuaWu5JJUpGO0u3EmkPgLRMstQoW/j3sA8JS2mCuwnNs6tX0TyV8tWzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPDSdoBA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208C0C4CED2;
+	Mon,  6 Jan 2025 11:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736164146;
+	bh=th2FcPgSzUrZsqMrYGEIu+RCX35MJ63fAapbzUqbMGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mPDSdoBAbIFK1daJMQlQq+BerF6DQIjjzj3rTwLyv/5y9plFCdk741wPQ0a5m0PLn
+	 txgnjlhK5Ue+nbVKrMkw3WMf6qMvuCnExLFe1yKQ3ZpKd2bIlJB3mgrYM67+5+0aHW
+	 J7K6OPAODQ6yfCsQObzie3r0rbXEfBzomZhCX2OYGo33kQt3eqlxqR53U57Lnk9RMk
+	 2KXD26hh6O8BJnb0hspCz4JFu6+ItwVEPkLB3AWos7nvBk8q5W2mjPuiel7DGkFt9A
+	 U/gr63WaMvjzvJ1Dtk7iiCofIxzDr0l5z3l4JfbSR4xCE2l4rmTK0IhXZzB3Y9t8Ty
+	 miSXLThPKg+dQ==
+Date: Mon, 6 Jan 2025 12:49:01 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: manivannan.sadhasivam@linaro.org, kw@linux.com, kishon@kernel.org,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com
+Subject: Re: [v8] misc: pci_endpoint_test: Fix overflow of bar_size
+Message-ID: <Z3vDLcq9kWL4ueq7@ryzen>
+References: <20250104151652.1652181-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,54 +59,109 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250104151652.1652181-1-18255117159@163.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-head:   8261bf695c47b98a2d8f63e04e2fc2e4a8c6b12b
-commit: fa0ce454cd4ee35703d4126c5b8e4a9a398cf198 [1/3] PCI: rockchip: Simplify clock handling by using clk_bulk*() function
-config: arm64-randconfig-r073-20250102 (https://download.01.org/0day-ci/archive/20250104/202501040409.SUV09R80-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+On Sat, Jan 04, 2025 at 11:16:52PM +0800, Hans Zhang wrote:
+> With 8GB BAR2, running pcitest -b 2 fails with "TEST FAILED".
+> 
+> The return value of the `pci_resource_len` interface is not an integer.
+> Using `pcitest` with an 8GB BAR2, the bar_size of integer type will
+> overflow.
+> 
+> Change the data type of bar_size from integer to resource_size_t, to fix
+> the above issue.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202501040409.SUV09R80-lkp@intel.com/
-
-smatch warnings:
-drivers/pci/controller/pcie-rockchip.c:134 rockchip_pcie_parse_dt() warn: passing zero to 'dev_err_probe'
-
-vim +/dev_err_probe +134 drivers/pci/controller/pcie-rockchip.c
-
-964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  115  	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
-964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  116  	if (IS_ERR(rockchip->aclk_rst)) {
-964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  117  		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
-964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  118  			dev_err(dev, "missing aclk reset property in node\n");
-964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  119  		return PTR_ERR(rockchip->aclk_rst);
-e77f847df54c6b drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-09-03  120  	}
-e77f847df54c6b drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-09-03  121  
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  122  	if (rockchip->is_rc)
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  123  		rockchip->perst_gpio = devm_gpiod_get_optional(dev, "ep",
-840b7a5edf88fe drivers/pci/controller/pcie-rockchip.c Manivannan Sadhasivam 2024-04-16  124  							       GPIOD_OUT_LOW);
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  125  	else
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  126  		rockchip->perst_gpio = devm_gpiod_get_optional(dev, "reset",
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  127  							       GPIOD_IN);
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  128  	if (IS_ERR(rockchip->perst_gpio))
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  129  		return dev_err_probe(dev, PTR_ERR(rockchip->perst_gpio),
-a7137cbf6bd53a drivers/pci/controller/pcie-rockchip.c Damien Le Moal        2024-10-17  130  				     "failed to get PERST# GPIO\n");
-e77f847df54c6b drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-09-03  131  
-fa0ce454cd4ee3 drivers/pci/controller/pcie-rockchip.c Anand Moon            2024-12-02  132  	rockchip->num_clks = devm_clk_bulk_get_all(dev, &rockchip->clks);
-fa0ce454cd4ee3 drivers/pci/controller/pcie-rockchip.c Anand Moon            2024-12-02  133  	if (rockchip->num_clks < 0)
-fa0ce454cd4ee3 drivers/pci/controller/pcie-rockchip.c Anand Moon            2024-12-02 @134  		return dev_err_probe(dev, err, "failed to get clocks\n");
+When significantly changing the patch from one version to another,
+(as in this case), you are supposed to drop the Reviewed-by tags.
 
 
-"err" is zero.  It should be "rockchip->num_clks".
+Doing a:
+$ git grep -A 10 "IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT"
+does not show very many hits, which suggests that this is not the proper
+way to solve this.
 
-4816c4c7b82b55 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-12-07  135  
-964bac9455bee7 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2018-05-09  136  	return 0;
-4816c4c7b82b55 drivers/pci/host/pcie-rockchip.c       Shawn Lin             2016-12-07  137  }
+I don't know the proper solution to this. How is resource_size_t handled
+in other PCI driver when being built on with 32-bit PHYS_ADDR_T ?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Can't you just cast the resource_size_t to u64 before doing the division?
 
+
+> ---
+> Changes since v8:
+> 
+> - Add reviewer.
+> 
+> Changes since v4-v7:
+> https://lore.kernel.org/linux-pci/20250102120222.1403906-1-18255117159@163.com/
+> https://lore.kernel.org/linux-pci/20250101151509.570341-1-18255117159@163.com/
+> 
+> - Fix 32-bit OS warnings and errors.
+> - Fix undefined reference to `__udivmoddi4`
+> 
+> Changes since v3:
+> https://lore.kernel.org/linux-pci/20241221141009.27317-1-18255117159@163.com/
+> 
+> - The patch subject were modified.
+> 
+> Changes since v2:
+> https://lore.kernel.org/linux-pci/20241220075253.16791-1-18255117159@163.com/
+> 
+> - Fix "changes" part goes below the --- line
+> - The patch commit message were modified.
+> 
+> Changes since v1:
+> https://lore.kernel.org/linux-pci/20241217121220.19676-1-18255117159@163.com/
+> 
+> - The patch subject and commit message were modified.
+> ---
+>  drivers/misc/pci_endpoint_test.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 3aaaf47fa4ee..50d4616119af 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
+>  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+>  				  enum pci_barno barno)
+>  {
+> -	int j, bar_size, buf_size, iters, remain;
+>  	void *write_buf __free(kfree) = NULL;
+>  	void *read_buf __free(kfree) = NULL;
+>  	struct pci_dev *pdev = test->pdev;
+> +	int j, buf_size, iters, remain;
+> +	resource_size_t bar_size;
+>  
+>  	if (!test->bar[barno])
+>  		return false;
+> @@ -307,13 +308,18 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+>  	if (!read_buf)
+>  		return false;
+>  
+> -	iters = bar_size / buf_size;
+> +	if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT)) {
+> +		remain = do_div(bar_size, buf_size);
+> +		iters = bar_size;
+> +	} else {
+> +		iters = bar_size / buf_size;
+> +		remain = bar_size % buf_size;
+> +	}
+>  	for (j = 0; j < iters; j++)
+>  		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
+>  						 write_buf, read_buf, buf_size))
+>  			return false;
+>  
+> -	remain = bar_size % buf_size;
+>  	if (remain)
+>  		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
+>  						 write_buf, read_buf, remain))
+> 
+> base-commit: ccb98ccef0e543c2bd4ef1a72270461957f3d8d0
+> -- 
+> 2.25.1
+> 
 
