@@ -1,142 +1,100 @@
-Return-Path: <linux-pci+bounces-19335-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19336-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 208F3A02656
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 14:17:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F75BA026F1
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 14:44:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1F121885863
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 13:18:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B86C63A4FC6
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2025 13:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3FB1F5E6;
-	Mon,  6 Jan 2025 13:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB2BB1DAC8E;
+	Mon,  6 Jan 2025 13:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeuS1ZYz"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ISl0fbKu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8BE23A6;
-	Mon,  6 Jan 2025 13:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E66A1DE2BD;
+	Mon,  6 Jan 2025 13:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736169475; cv=none; b=Dkh7mqIYi65/3PwYAzX/osSDas17HWB8nUgtnraLbVl7JleO0Tt0FP8aaeoSPv1k6+T20eX0IooSJIykKkkrNVQDyWrhwM9T4/Sc20anWqyU4zKbBw/BfBx44GWAQE5o2ln2qLxBiCGOJKDUlZfDDfRc7jKbDpYYOONKRvwb2bc=
+	t=1736171077; cv=none; b=krZIvGFysdpN21Wg0jl5iYVA0BgqWo2Dt2suLUhgr/XxWHIpxppzjtsupngvYVcCp5Z50B8RuVT5PG4Bpv/FIuMTINuWdrTnHvG13MKWg6wP2f0HO7sMwlb/9tI3TVNWjHxkKF5EzFdlktefBCoMH5WNtZ9X8+o1kT8WkGfxwl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736169475; c=relaxed/simple;
-	bh=YIImtwtZH5SKw14XzKVyMgDBI//I/aBh3ePe8zFyIVw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fCl3MFdCJ1npiSv0Db0lAPtU/+rvBTFdq2rs4yZepDWiF7+uZr1zhD7YloPX7qZTX1M6Mh7FnXS57pooDeOqkBs71YOG7Un1PgCiktgfc8+f42WZkBIik2cI9lq42rREX71HD1qkJsqv9opSAGaB5BcsRYM9Nc66Mh/N8k5fDvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DeuS1ZYz; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5161d5b8650so4412110e0c.3;
-        Mon, 06 Jan 2025 05:17:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736169473; x=1736774273; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kSoVteyukTqX+i5Oj3dGp3+dNiqvEeX8i0bxDc2IFb8=;
-        b=DeuS1ZYz3jPS7z8GBiYt6JQ6+LNL8O7uF2gnegnmgFPeppqk2+Dzv4aDQerNCqA8L2
-         IndDYPlefZbZEA6B/41+Z8rymRAlMYQexFZJxdZBcE7spMSWxHbKLGA45+vjHMwr+uIy
-         /pXVbnwQimFOULDt6Hu5obHS8PCTGDGV681LMwmQujHEvjxsuMbSsex7GrhU0z7/vscw
-         BZ8rzGbGcnYqg2JQ6oU1sBQp4wzHauXj70XJ2i+sBUlyi3pni2T5FJg44BPWKTihroNM
-         ZPk2vBw63KQn/EaqR3bcxrPXlfofR1OJ5c0V/ZqQo+9ad6tmpvglnAlKzdmr5GHsQc7e
-         JfoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736169473; x=1736774273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kSoVteyukTqX+i5Oj3dGp3+dNiqvEeX8i0bxDc2IFb8=;
-        b=QzqfdlFQb67GBcxx1xmp852250QqHWUq9tpC3x5irQ0gDh09my4QE7w1I+IyOO1+aF
-         icb1OCOHecCPc8HuW2DAy6e2OB15SoCVRVecJfvPIK0H89ckvbCjKMyUbeLrNS2QmgZO
-         vhNoGNa3JSM3z4P1k8KEYR/6hVZUDeyFbd0wxu/dZfAQZHVODmJOGA9FGYnT3lrHe8kx
-         wDj8Otp86+8C6+RkcZ2xlj+OfsDv8+1TM0iRy/uNb6BGzVb8A8fdjWUj7gdUIcJftTVA
-         12c3KVxNk6NPr6JizLfOmurInrO0nK2sjOWjh+KhTXto5gO2dwH3GXiC4NDFlweHvJBe
-         IUpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOXr/qIhW2PDiV98Fp7VG+dHmnt08cyA01Jr+Dr8ncgVxXS8wd1YBPGdPsqdtOaG0ySNmPV0TX8V9AD4yJuvr3EoA=@vger.kernel.org, AJvYcCUR7A+C7zGQmktD0agBSfXbdeHcKYnNEe269q7/LjQuRapT2gQGiAVymU9yQF+rHvvX8lKHr+Nk5TrBK4c=@vger.kernel.org, AJvYcCXwBbyT4XnraKk/gXXh3l/85nCVVJZkvUfJD3A5aakBEm0rKcDrik4/Ta0A0MvXc47hlb3nWkuCVG4G@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxoc27Jq/l7fglEy5fpruFTNyh7PZK7+GkPLN5qEqFrB8llNqO2
-	ddOM/e9fi2AewHYNpotE4qf/fKUrVCJiq5RqN7JqVRDR6QNkYLPCtvW1xyNvozUAnXT3zK9nmNo
-	nYXIwXzQgCLaqyQH1IDlkCjaZCvI=
-X-Gm-Gg: ASbGncsNwKOEQO/WPmc/s2gx5lM9RKRTc6TQWDIaic9gCuQ8OjpdM1bH47YFs1/lAR/
-	X6rLfKlBY8jyf8H72PuN5x+P5Sl9h1owNgYCEyKw=
-X-Google-Smtp-Source: AGHT+IFx4uyN3y/BjQQatnfGrDSvSpAxvuCIlhGWGcM+B4yjcozgFUkBTXG6XBq3araC3fFpuIq/CO9AvQRkQS9pWhU=
-X-Received: by 2002:a05:6122:438c:b0:518:865e:d177 with SMTP id
- 71dfb90a1353d-51b75d3fc5bmr39679404e0c.9.1736169472668; Mon, 06 Jan 2025
- 05:17:52 -0800 (PST)
+	s=arc-20240116; t=1736171077; c=relaxed/simple;
+	bh=PaRy/Qp4G2GUwWfivD85MpnF/GRAoQIsxAYn3Wppbwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O1+UpKyeQHnls5SCiyk0K9Ez15wXQ8wHlGBBKxk6olG8WDltH9HaOTQXM6V8ndMajNcRzBmtI4HFnfgBPJW+Pd3amUQpYWvVGIdKwstmZU2PtRQS7punWj+Vn7aXNFlCPmQa+H8BUPy1CLhVFALzuHGbwBkKwn/yHzP34RC9/18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ISl0fbKu; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=jPkB+WGq3E7u+EGSM2PcJI+Gi33CoRnyjGq/ftg1apk=; b=ISl0fbKuUQ8lMiwligsmbR+plC
+	JjC342g3xpVPQWI2K9aXk9wSCnkVVCcHqv4jR+KivMdjhNVDnaSVQHAQO1dvn1ef+/Z90Y4pdjgMK
+	OhmdIb9F/npjbPB+1TPiV+G+w2jlQ79mJkVU4qPaenwOBrkvohtj5iLtUO/IEi8yiQGA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tUnP1-001tBo-T9; Mon, 06 Jan 2025 14:44:19 +0100
+Date: Mon, 6 Jan 2025 14:44:19 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Anand Moon <linux.amoon@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dw-rockchip: Enable async probe by default
+Message-ID: <b49e6147-32c6-4239-bdba-72f25ef04a9f@lunn.ch>
+References: <20240809073610.2517-1-linux.amoon@gmail.com>
+ <Z3fKkTSFFcU9gQLg@ryzen>
+ <CANAwSgS5ZWGTP+A11r_qFSrjWZH_DqsM89MLiP+1VAxhz+e+2A@mail.gmail.com>
+ <5a3e8fda-f9e4-4c2f-847b-93f521b8313b@lunn.ch>
+ <CANAwSgSUuEvJb2Vn58o0i7Soo3jGzM8EYHvDtUTPxRHekCpruA@mail.gmail.com>
+ <c94570db-c0af-4d92-935c-5cc242356818@lunn.ch>
+ <CANAwSgQ_gojVxvi_OyHTyTSdzRrno=Yymn0AdEXyTHTgDTyFcA@mail.gmail.com>
+ <Z3vGXrUIII4ixNnF@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5f8d43fe-25e3-450d-b5c2-2d69b9bc9923@omp.ru> <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
-In-Reply-To: <tencent_6F826F87DF787845466AE67AEFF37E073E08@qq.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 6 Jan 2025 13:17:26 +0000
-Message-ID: <CA+V-a8ve-kJoeRgS=kmzBbO_qX2nZ60WH0syMb7MEc9pHp9+9w@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: rcar-ep: Fix the issue of the name parameter when
- calling devm_request_mem_region
-To: kingdix10@qq.com
-Cc: s.shtylyov@omp.ru, marek.vasut+renesas@gmail.com, 
-	yoshihiro.shimoda.uh@renesas.com, lpieralisi@kernel.org, kw@linux.com, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z3vGXrUIII4ixNnF@ryzen>
 
-On Sun, Jan 5, 2025 at 6:03=E2=80=AFAM <kingdix10@qq.com> wrote:
->
-> From: King Dix <kingdix10@qq.com>
->
-> When using devm_request_mem_region to request a resource, if the passed
-> variable is a stack string variable, it will lead to an oops issue when
-> eecuting the command cat /proc/iomem.
->
-s/eecuting/executing
+> As both me an Manivannan said earlier in this thread,
+> PCIe endpoint devices should not be described in device tree
+> (the exception is an FPGA, and when you need to describe devices
+> within the FPGA).
+> 
+> So I think that adding a "ethernet-phy" device tree node in this case is
+> wrong (as the Ethernet PHY in this case is integrated in the PCIe connected
+> NIC, and not a discrete component on the SoC).
 
-> Fix this by replacing outbound_name with the name of the previously
-> requested resource.
->
-Fixes: 2a6d0d63d999 ("PCI: rcar: Add endpoint mode support")
-> Signed-off-by: King Dix <kingdix10@qq.com>
-> ---
-> Changes in v2:
->   - Fix the code indentation issue.
-> ---
->  drivers/pci/controller/pcie-rcar-ep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-With the above fixed,
+There are other cases when PCIe devices need a DT node. One is when
+you have an onboard ethernet switch connected to the Ethernet
+device. The switch has to be described in DT, and it needs a phandle
+to the ethernet interface. Hence you need a DT node the phandle points
+to.
 
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+You are also making the assumption that the PCIe ethernet interface
+has firmware driving all its subsystems. Which results in every PCIe
+ethernet device manufacture re-inventing what Linux can already do for
+SoC style Ethernet interfaces which do not have firmware, linux drives
+it all. I personally would prefer Linux to drive the hardware, via a
+DT node, since i then don't have to deal with firmware bugs i cannot
+fix, its just Linux all the way down.
 
-Cheers,
-Prabhakar
-
-> diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controll=
-er/pcie-rcar-ep.c
-> index 047e2cef5afc..c5e0d025bc43 100644
-> --- a/drivers/pci/controller/pcie-rcar-ep.c
-> +++ b/drivers/pci/controller/pcie-rcar-ep.c
-> @@ -107,7 +107,7 @@ static int rcar_pcie_parse_outbound_ranges(struct rca=
-r_pcie_endpoint *ep,
->                 }
->                 if (!devm_request_mem_region(&pdev->dev, res->start,
->                                              resource_size(res),
-> -                                            outbound_name)) {
-> +                                            res->name)) {
->                         dev_err(pcie->dev, "Cannot request memory region =
-%s.\n",
->                                 outbound_name);
->                         return -EIO;
-> --
-> 2.43.0
->
->
+	Andrew
 
