@@ -1,162 +1,99 @@
-Return-Path: <linux-pci+bounces-19395-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19396-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BFC2A03D36
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 12:05:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDE47A03D4B
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 12:08:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA1983A30B2
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 11:05:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E3333A344B
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 11:08:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B9319CC2E;
-	Tue,  7 Jan 2025 11:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ICpfpPfG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DE0A1E9B22;
+	Tue,  7 Jan 2025 11:08:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084E0219ED;
-	Tue,  7 Jan 2025 11:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5BB1E9B12;
+	Tue,  7 Jan 2025 11:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736247944; cv=none; b=EsnB64eElVzgyDmtmeFe19SHtXLPilazp5sWe7dDYOlq+1ru/RjjwGj3AjTCDVG5Zz0IKUU8ZHL+di9H90LXSb4xHrRWr6nUhf+gKp3BmJcafvsmIuhG3hW1DwIMxm1IkBy+EQ+O0FyzMDRjjYXd4hC1mRVA58LllyHvmCEQw9U=
+	t=1736248088; cv=none; b=kHfHc6V01dMMI0qwrF4CI3uYerGBDea/gIvjJinNLKjLeS/uleezgERk7trtIMw5D4JiWQtW/1du0cFLQwm8ohzqKHsL4G6VeVMvaqnjqkBos5FRRiycB3+H95lPHJrNrh61SW6uLpqnUSeZ9UTdYPhUWYCK4fFpzrzoXs2kX3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736247944; c=relaxed/simple;
-	bh=ThRmP5SNmsjh2B0dSxhnd+9YAXIeaNOahsI6G66Q/74=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U2Kg0kYDqqtXqIb54WaxFA2Qy+KsmfWSl6z9mw/h/2Quclm6gkvCPHvHSvYWHZCWt9sPkK+F1bkCRxwMPSq45GqaNbQC9GQSUBRJQ4ByEog7gncxuAF3TCPLRH4mosgSblyZT4wp/5sY2CYTO2vsYB5uYN8dLBV3PI+9lVhpObM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ICpfpPfG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 507A0T1J019736;
-	Tue, 7 Jan 2025 11:05:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=/yz6W5asShFN9pgFAwO5c5pG
-	EwHieZL0RQw4bc3kmgQ=; b=ICpfpPfGS51AnQ8VIHw3sGv8lco2EJi+Epk2dojM
-	Iwq1NYkeg7dfozpAMCc1f+k5kk99ukUAX9hXxDtGyvmi1s3ayqyDi+UNFeYeAUf5
-	/IEHB7y/6iUXgK0TrhXPlDKhnPzSSsbCWLGAEmXaNBgespMjcHVQjH33MnilylJf
-	PhBm+YmdtGwRqppiw53OBjR3cmz60bLPsrpJGw9JulI1qkwQ2sjBy1IpioZF2U09
-	K/xzF0cwqTw39aRj/4duKB7t1DwIaqKBAtz0X8v/Id8OEemKd4QnynpSd3/PxMWZ
-	dlUfa8C6RoXt4YMFRfB2z6JrNIPoP2EeX2DSlUhscgYLhQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44124xr5fk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 11:05:18 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 507B5HcW015952
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 7 Jan 2025 11:05:17 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 7 Jan 2025 03:05:11 -0800
-Date: Tue, 7 Jan 2025 16:35:08 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>
-Subject: Re: [PATCH v5 3/5] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe
- controller
-Message-ID: <Z30KZM1RGdFvB1dy@hu-varada-blr.qualcomm.com>
-References: <20250102113019.1347068-1-quic_varada@quicinc.com>
- <20250102113019.1347068-4-quic_varada@quicinc.com>
- <4hwclzotaowog6rzfejiixqvvg7iumg4udbvq3h72mmh42dbki@piphsf37vhpv>
+	s=arc-20240116; t=1736248088; c=relaxed/simple;
+	bh=bCMleowzAfZojYUk9L3a47ihZP3dZmD+zxowkjbYVbc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q0z9e8ESZqKh02II+rjMOIVg8yjfczCE0mznSZUNAQ7kYhRWvqRGO9vdKYD/Sldi8zu59mUbkscExN64CNQPc4PTvE9shDdBFRsqRHkia6lGa6bqKMBw6wHEqWwOQz2+WhsjLRnlohg/1XqPB3v9WVb53RE5y6wiDHi9dhIXEsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowAAnLQ0FC31nAbgEBg--.16431S2;
+	Tue, 07 Jan 2025 19:08:00 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH] PCI: fix reference leak in pci_alloc_child_bus()
+Date: Tue,  7 Jan 2025 19:07:47 +0800
+Message-Id: <20250107110747.860952-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4hwclzotaowog6rzfejiixqvvg7iumg4udbvq3h72mmh42dbki@piphsf37vhpv>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Rqs0Y1pnTmicV7r4h61kix2iYIbzCCBR
-X-Proofpoint-GUID: Rqs0Y1pnTmicV7r4h61kix2iYIbzCCBR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 suspectscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501070092
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAAnLQ0FC31nAbgEBg--.16431S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruFWxGr1fCr1UKw1rZw15CFg_yoW3CFbE93
+	W09F97Wr4DK3WIkw1ayw13Z392k3WDZrZ3WrW0q3WfZa47Xrn8uFy7Zry8Gw4jka1DCr98
+	Aa4jvr1xCF17KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb48FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb0PfJUUUU
+	U==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On Fri, Jan 03, 2025 at 08:45:14AM +0100, Krzysztof Kozlowski wrote:
-> On Thu, Jan 02, 2025 at 05:00:17PM +0530, Varadarajan Narayanan wrote:
-> > Document the PCIe controller on IPQ5332 platform.
-> >
-> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > ---
-> > v5: Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
->
-> What? How this is related to commit msg?
->
-> >
-> > v4: * v3 reused ipq9574 bindings for ipq5332. Instead add one for ipq5332
-> >     * DTS uses ipq9574 compatible as fallback. Hence move ipq9574 to be able
-> >       to use the 'reg' section for both ipq5332 and ipq9574. Else, dtbs_check
-> >       and dt_binding_check flag errors.
-> > ---
-> >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > index bd87f6b49d68..9f37eca1ce0d 100644
-> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > @@ -26,7 +26,6 @@ properties:
-> >            - qcom,pcie-ipq8064-v2
-> >            - qcom,pcie-ipq8074
-> >            - qcom,pcie-ipq8074-gen3
-> > -          - qcom,pcie-ipq9574
->
-> I don't understand this change at all and your commit msg explains
-> here nothing.
+When device_register(&child->dev) failed, calling put_device() to
+explicitly release child->dev. Otherwise, it could cause double free
+problem.
 
-All DT entries except "reg" is similar between ipq5332 and
-ipq9574. ipq9574 has 5 registers while ipq5332 has 6. MHI is the
-additional (i.e. sixth) entry for ipq5332.
+Found by code review.
 
-If ipq9574 is not removed from here, dt_binding_check gives the
-following errors
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/pci/probe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-1.	/local/mnt/workspace/varada/upstream/pci-v6/arch/arm64/boot/dts/qcom/ipq5332-rdp474.dtb: pcie@18000000: reg: [[557056, 12288], [402653184, 3869], [402657056, 168], [402657280, 4096], [403701760, 4096], [569344, 4096]] is too long
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2e81ab0f5a25..a61070ce5f88 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ add_dev:
+ 	pci_set_bus_msi_domain(child);
+ 	ret = device_register(&child->dev);
+-	WARN_ON(ret < 0);
++	if (WARN_ON(ret < 0)) {
++		put_device(&child->dev);
++		return ERR_PTR(ret);
++	}
+ 
+ 	pcibios_add_bus(child);
+ 
+-- 
+2.25.1
 
-	Failed validating 'maxItems' in schema['allOf'][2]['then']['properties']['reg']:
-	    {'maxItems': 5, 'minItems': 5}
-
-2.	/local/mnt/workspace/varada/upstream/pci-v6/arch/arm64/boot/dts/qcom/ipq5332-rdp474.dtb: pcie@18000000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'config', 'mhi'] is too long
-
-	Failed validating 'maxItems' in schema['allOf'][2]['then']['properties']['reg-names']:
-	    {'items': [{'const': 'dbi'},
-		       {'const': 'elbi'},
-		       {'const': 'atu'},
-		       {'const': 'parf'},
-		       {'const': 'config'}],
-	     'maxItems': 5,
-	     'minItems': 5,
-	     'type': 'array'}
-
-Hence had to remove it from here and add it to the sdx55 reg
-definition.
-
-Will capture this in the commit message.
-
-Thanks
-Varada
 
