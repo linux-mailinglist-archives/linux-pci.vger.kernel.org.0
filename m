@@ -1,164 +1,220 @@
-Return-Path: <linux-pci+bounces-19423-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19424-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F1DDA04292
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 15:31:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6E1CA04294
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 15:31:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64CCF3A21D0
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:28:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D11483A1A2C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:29:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84DDE1F2362;
-	Tue,  7 Jan 2025 14:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D7C1F0E51;
+	Tue,  7 Jan 2025 14:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W+PH0fHY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QcQlbRnE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB481F1934;
-	Tue,  7 Jan 2025 14:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652CF1E47DB
+	for <linux-pci@vger.kernel.org>; Tue,  7 Jan 2025 14:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736260121; cv=none; b=qKro/9Mg4yWuCOy/FKKndKliNhk62Lwdai+wESnQZ9oYhXvjuQfN5dWAeaKTrsDEH9Xd4jFyX0wsQ0hRKblFj8YK5THu6fvIAQN2AKjAnNv4Hs2ygii5mKitRxBN18dUx3yB4tcUVWGKyVQ6b59/ozQKuB3/MgJD/ppqwEpHsas=
+	t=1736260168; cv=none; b=Mqzrckjb1D+uC6hiEggurMSA5Lq/YsU3swFrpUOjN7PmB4IgBzgDhLmvBeT4teQE2Fcf/Ww1QifehjE1fBVSOlel/C3mroUVL2BS7/i+afdVH7V08KKaBugSBEdRDZo4o6DQZjqpmJ1kvT3UymfrGAwI93vGiqfMkszrWsW1iJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736260121; c=relaxed/simple;
-	bh=jt0g4HQC2ApGULGRSdheIj7kpFpp7zOFQDxoRPUkF9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=S4avYNDtzfBkHFgzzFCbfiOlSdH47raklE05l+lf1dns4UMJuuNpUYhUS7qBoKiO0ny3PNunCdr0Kum+ceDCns1ZmbwX5dXOu3B598Q7shsS4IFTi5iWIRdn6pUyJMvIWBPqFCUFMz0esn9SeyoZZqB46wfsM9RrDIiQMfjxy0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W+PH0fHY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5078Ah8B015107;
-	Tue, 7 Jan 2025 14:28:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mqrVUNW49lzpKto+HQEZxkSB8vhFVth/PJTNQPwkFXA=; b=W+PH0fHY9LS886oM
-	tiC3rRXgS7rxepEsnw2sE1wAAA2ndr8qPLAw3ziTcokbhFzAQ3X8ih5okOnW49NJ
-	SCaHiPkIWanDZ+lLk0RS1zv4XcAUEA98hPGXgvtuQ3Hlu9C/j333x3zSONOOxTDL
-	7hJi8x8TaH4yQt1d/izU1dqRzTqK7KpNuaEV4QMHMDJOCCBH4r/xsMQ7XG3Jp5Lv
-	QzT0/DHULm1dEwN3ebnWQ9OJeIpOzsAhd7Zi0v97khAC/Hx3Be7KGJwrI9qJv2mr
-	993PSMHF7I3yFQ6dYFzwNIfTYz7puGRxFLeCZQv9GNv72p0O7gtf5xYRylUYAaZz
-	4T7DTQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4410he8w2u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 14:28:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 507ESRok002693
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 7 Jan 2025 14:28:27 GMT
-Received: from [10.216.0.179] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 Jan 2025
- 06:28:21 -0800
-Message-ID: <d4019981-1df2-0946-d093-7dc97c2d0ffe@quicinc.com>
-Date: Tue, 7 Jan 2025 19:58:17 +0530
+	s=arc-20240116; t=1736260168; c=relaxed/simple;
+	bh=rP4UWAe4JOsyEV7aa5ctI9aZUeKZJpJAcsN65riTZDU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PY0JgusMRKoVYUG7KMUOd3zhoX7Vf1gcBJXTrESgmBBd0PESI7hzZJpStSz4TjujBYH7kLC+cL3BGMavOnAf1D/bE346mzZrq8OwKCnDrkLT3q5QKjkjxeBnvyquwbDtrcklZoGyv5IEbBoIlp0VCDa5b8SYHgVieVQjEO3WRPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QcQlbRnE; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736260167; x=1767796167;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rP4UWAe4JOsyEV7aa5ctI9aZUeKZJpJAcsN65riTZDU=;
+  b=QcQlbRnEzI0FDx8a0NCrSAP/MZH60EzWg7UYb7yV0uTOUxKRVwekgeoF
+   bA28xA5M1DEb32A6r0s5JPqaUNRTvAFCDIHEZ5+cAaMqGsSvK8iEd4hKV
+   wG3vpXQPff8v5Dkewq4jwv5HaRT30QKj578pPrMw47oPWHT6Vq/7Uedtg
+   /YWFsZS9P1jPNqTGBCjXp03QmkTkg8IfK9QqXYiwwQ3fK0LeLPWLagC6C
+   17xZnAPlVTnN94wDmq3vS3ZY/LSaFTnzwQmUAf2V0DxtubsSHYW+QL6Lk
+   CK51So/Ysys0jSN+q81RJ6CCAf2X8vGxtqE0ByA9bhfsOCMNadAcWZUrT
+   w==;
+X-CSE-ConnectionGUID: ONAGwRXvQcqswgm41QYXpg==
+X-CSE-MsgGUID: /Un+eh8eSzy7SZsB3WswJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="40115615"
+X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
+   d="scan'208";a="40115615"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 06:29:26 -0800
+X-CSE-ConnectionGUID: HB10+epBR1q1NJcGo9AYwg==
+X-CSE-MsgGUID: kRVTqs3NSJGjp/HrijWUpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
+   d="scan'208";a="107657574"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.206])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 06:29:21 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 7 Jan 2025 16:29:18 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <helgaas@kernel.org>, 
+    Krzysztof Wilczynski <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, 
+    Niklas Schnelle <niks@kernel.org>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Evert Vorster <evorster@gmail.com>
+Subject: Re: [PATCH for-linus] PCI/bwctrl: Fix NULL pointer deref on unbind
+ and bind
+In-Reply-To: <Z3ytsSBP3FzuFLRj@wunner.de>
+Message-ID: <ad5154b6-0e7c-ab80-fd96-c3f6418f20e5@linux.intel.com>
+References: <0ee5faf5395cad8d29fb66e1ec444c8d882a4201.1735852688.git.lukas@wunner.de> <e08d30b5-50e0-4381-d2e7-61c2da12966f@linux.intel.com> <Z3ytsSBP3FzuFLRj@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        <cros-qcom-dts-watchers@chromium.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        <quic_vbadigan@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
- <20241115161848.GA2961450-robh@kernel.org>
- <74eaef67-18f2-c2a1-1b9c-ac97cefecc54@quicinc.com>
- <kssmfrzgo7ljxveys4rh5wqyaottufhjsdjnro7k7h7e6fdgcl@i7tdpohtny2x>
- <20241230182201.4nem2dvg4lg5vdjv@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20241230182201.4nem2dvg4lg5vdjv@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: E7FtCkCRsb3BbOWdHcURCfaI4K4ENAeN
-X-Proofpoint-ORIG-GUID: E7FtCkCRsb3BbOWdHcURCfaI4K4ENAeN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=844 adultscore=0
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501070121
+Content-Type: multipart/mixed; boundary="8323328-778893945-1736260158=:1001"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-778893945-1736260158=:1001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 7 Jan 2025, Lukas Wunner wrote:
+
+> On Sun, Jan 05, 2025 at 06:54:24PM +0200, Ilpo J=E4rvinen wrote:
+> > Indeed, it certainly didn't occur to me while arranging the code the wa=
+y=20
+> > it is that there are other sources for the same irq. However, there is =
+a=20
+> > reason those lines where within the same critical section (I also reali=
+zed=20
+> > it's not documented anywhere):
+> >=20
+> > As bwctrl has two operating modes, one with BW notifications and the ot=
+her=20
+> > without them, there are races when switching between those modes during=
+=20
+> > probe wrt. call to lbms counting accessor, and I reused those rw=20
+> > semaphores to prevent those race (the race fixes were noted only in a=
+=20
+> > history bullet of the bwctrl series).
+>=20
+> Could you add code comment(s) to document this?
+
+Sure, I'll do that once I've been able to clear the holiday-induced logjam
+on pdx86 maintainership front. :-) (For now, I added a bullet to my todo=20
+list to not forget it).
+
+> I've respun the patch, but of course yesterday was a holiday in Finland.
+> So I'm hoping you get a chance to review the v2 patch today.
+
+Done.
+
+> It seems pcie_bwctrl_setspeed_rwsem is only needed because
+> pcie_retrain_link() calls pcie_reset_lbms_count(), which
+> would recursively acquire pcie_bwctrl_lbms_rwsem.
+>
+> There are only two callers of pcie_retrain_link(), so I'm
+> wondering if the invocation of pcie_reset_lbms_count()
+> can be moved to them, thus avoiding the recursive lock
+> acquisition and allowing to get rid of pcie_bwctrl_setspeed_rwsem.
+>
+> An alternative would be to have a __pcie_retrain_link() helper
+> which doesn't call pcie_reset_lbms_count().
+>
+> Right now there are no less than three locks used by bwctrl
+> (the two global rwsem plus the per-port mutex).  That doesn't
+> look elegant and makes it difficult to reason about the code,
+> so simplifying the locking would be desirable I think.
+
+I considered __pcie_retrain_link() variant but it felt like locking=20
+details that are internal to bwctrl would be leaking into elsewhere in the=
+=20
+code so I had some level of dislike towards this solution, but I'm not=20
+strictly against it.
+
+It would seem most straightforward approach that wouldn't force=20
+moving LBMS reset to callers which feels even less elegant/obvious.
+I just previously chose to keep that to complexity internal to bwctrl
+but if you think adding __pcie_retrain_link() would be more elegant,
+we can certainly move to that direction.
+
+> I'm also wondering if the IRQ handler really needs to run in
+> hardirq context.  Is there a reason it can't run in thread
+> context?  Note that CONFIG_PREEMPT_RT=3Dy (as well as the
+> "threadirqs" command line option) cause the handler to be run
+> in thread context, so it must work properly in that situation
+> as well.
+
+If thread context would work now, why was the fix in the commit=20
+3e82a7f9031f ("PCI/LINK: Supply IRQ handler so level-triggered IRQs are=20
+acked")) needed (the commit is from the bwnotif era)? What has changed=20
+since that fix?
+
+I'm open to our suggestion but that existence of that fix is keeping me=20
+back. I just don't understand why it would work now when it didn't back=20
+then.
+
+> Another oddity that caught my eye is the counting of the
+> interrupts.  It seems the only place where lbms_count is read
+> is the pcie_failed_link_retrain() quirk, and it only cares
+> about the count being non-zero.  So this could be a bit in
+> pci_dev->priv_flags that's accessed with set_bit() / test_bit()
+> similar to pci_dev_assign_added() / pci_dev_is_added().
+>=20
+> Are you planning on using the count for something else in the
+> future?  If not, using a flag would be simpler and more economical
+> memory-wise.
+
+Somebody requested having the count exposed. For troubleshooting HW=20
+problems (IIRC), it was privately asked from me when I posted one of=20
+the early versions of the bwctrl series (so quite long time ago). I've
+just not created that change yet to put it under sysfs.
+
+> I'm also worried about the lbms_count overflowing.
+
+Should I perhaps simply do pci_warn() if it happens?
+
+> Because there's hardware which signals an interrupt before actually
+> setting one of the two bits in the Link Status Register, I'm
+> wondering if it would make sense to poll the register a couple
+> of times in the irq handler.  Obviously this is only an option
+> if the handler is running in thread context.  What was the maximum
+> time you saw during testing that it took to set the LBMS bit belatedly?
+
+Is there some misunderstanding here between us because I don't think I've=
+=20
+noticed delayed LBMS assertion? What I saw was the new Link Speed not yet=
+=20
+updated when Link Training was already 0. In that case, the Link Status=20
+register was read inside the handler so I'd assume LBMS was set to=20
+actually trigger the interrupt, thus, not set belatedly.
+
+I only recall testing with reading the value again inside set speed=20
+functions and the Link Speed was always correct by then. I might have also=
+=20
+tried polling it inside the handler but I'm sorry don't recall anymore if=
+=20
+I did and what was the end result.
+
+> If you don't poll for the LBMS bit, then you definitely should clear
+> it on unbind in case it contains a stale 1.  Or probably clear it in
+> any case.
 
 
 
-On 12/30/2024 11:52 PM, Manivannan Sadhasivam wrote:
-> On Mon, Dec 23, 2024 at 08:57:37PM +0200, Dmitry Baryshkov wrote:
-> 
-> [...]
-> 
->>> This switch allows us to configure both upstream, downstream ports and
->>> also embedded Ethernet port which is internal to the switch. These
->>> properties are applicable for all of those.
->>>>> +
->>>>> +    allOf:
->>>>> +      - $ref: /schemas/pci/pci-bus.yaml#
->>>>
->>>> pci-pci-bridge.yaml is more specific and closer to what this device is.
->>>>
->>> I tried this now, I was getting warning saying the compatible
->>> /local/mnt/workspace/skales/kobj/Documentation/devicetree/bindings/pci/qcom,qps615.example.dtb:
->>> pcie@0,0: compatible: ['pci1179,0623'] does not contain items matching the
->>> given schema
->>>          from schema $id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
->>> /local/mnt/workspace/skales/kobj/Documentation/devicetree/bindings/pci/qcom,qps615.example.dtb:
->>> pcie@0,0: Unevaluated properties are not allowed ('#address-cells',
->>> '#size-cells', 'bus-range', 'device_type', 'ranges' were unexpected)
->>>
->>> I think pci-pci-bridge is expecting the compatible string in this format
->>> only "pciclass,0604".
->>
->> I think the pci-pci-bridge schema requires to have "pciclass,0604" among
->> other compatibles. So you should be able to do something like:
->>
->> compatible = "pci1179,0623", "pciclass,0604";
->>
-> 
-> Even though a PCIe switch is supposed to be a network of PCI bridges, using
-> PCI bridge fallback for this switch is not technically correct IMO. Mostly
-> because, this switch requires other configurations which are not applicable to
-> PCI bridges. So the drivers matching against the bridge compatible won't be able
-> to use this switch.
-> 
-> - Mani
-Rob,
+--=20
+ i.
 
-Using pci-pci-bridge expects to use compatible as pciclass,0604, we
-can't  use as this switch is doing other configurations which are
-applicable to PCI bridges. can we continue to use pci-bus.yaml.
-
-- Krishna Chaitanya.
-> 
+--8323328-778893945-1736260158=:1001--
 
