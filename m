@@ -1,69 +1,69 @@
-Return-Path: <linux-pci+bounces-19442-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19443-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 375F8A042FE
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 15:46:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA81EA04347
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 15:52:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E70A160908
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:46:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 209FA1883F33
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:52:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C421F1917;
-	Tue,  7 Jan 2025 14:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B3B31F237A;
+	Tue,  7 Jan 2025 14:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AV/NC3sq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHFxlRYo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD151E491C;
-	Tue,  7 Jan 2025 14:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD3B1F2360;
+	Tue,  7 Jan 2025 14:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736261184; cv=none; b=Sfub65FgNabY72qIi/HIBhGU9EtsWBa/Qn9guFNy8W+2+4fS+Ow3cRF6wnvFu6oi0krLBqcElz4FqMYlyzd51t29ulSzQs3KbxvTqEoQ66pxTLyY9ExJSYkoZeffNyXSjtLqSLGEYjz9hItxESjtN+DpIp+B0VxAL5PSbu07vYw=
+	t=1736261536; cv=none; b=UmLyaXYigBmGfY0fzapnEmZFxsG2pCE3XNAzFB0cAhEY5vj8yczc2+9c7TTqDP1M1ZijxdKC/FaCCyuNbWJYCF3VP0SO0PdWvhSlvV/i7ZIFJjiZVdCPorR4P3N9M97v2PwS5RP29o6ScPQVy/aoIMf8QkwPMI01Jny8i5NJQwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736261184; c=relaxed/simple;
-	bh=SCPRluSpt1qsGmWs0v+16rP68QASchnoXbBrVm2LWWs=;
+	s=arc-20240116; t=1736261536; c=relaxed/simple;
+	bh=n/g/LT0+EYxgBnaA8Q0Y3ihh51DKPMals4XQPA51fA8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VKmgxmp88hw4Eh+6z43Os33vMRYoZHE8/ZStLQoz2ba7M6PFSA0TgLQUHiLxCXLTi2DBxdkpqRDTKYypTYa+MN5NztHO5zoKesXoDX0XrEWt9+clt+j9oHg6GazQcCu8hgqVx5Gr6nhLYhGyVwsyKHL+VyFmBThP31kJwK1SXEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AV/NC3sq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 068F3C4CED6;
-	Tue,  7 Jan 2025 14:46:24 +0000 (UTC)
+	 To:Cc:Content-Type; b=GXbH8Zr0LyAC1gpcGHtNkKrrkY5Lui4W45EyFVn93rA8A/KToHmHocOmWW1VMTBP5HDvfaQXU50s3CrBExsF5ngy00Gi2p5TaIDtdtmSKWUXAVFdgOM6KTO3zWvyjSf41Sey3vkxoWor7LSsUAudIZDeF7x2M4obEJMNAx7mrkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHFxlRYo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5852BC4CEE1;
+	Tue,  7 Jan 2025 14:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736261184;
-	bh=SCPRluSpt1qsGmWs0v+16rP68QASchnoXbBrVm2LWWs=;
+	s=k20201202; t=1736261535;
+	bh=n/g/LT0+EYxgBnaA8Q0Y3ihh51DKPMals4XQPA51fA8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AV/NC3sq+Z9GYsJSR0NRFgYXG/T/ExU+tJoGJpC3D2JSIQtPZ45HCZZ0G/jM08+D4
-	 gkEreMEvVXEFCBjxS0KvJ39hE/weXWwnW1K0dsGA09TRe5qTAm37AN8WhWJhlRUDPr
-	 ZjlT7HjUswAjz9JJZVK2uS4b+d8mxdIzhuQ551xlD2SdPxVeZOFJOdrbJ2abYwEDPQ
-	 +4ne0EvViCBFU9E3V/svDm35NMnDc6hPvinLqybyS7FXo5vw/EPoXEimh2WH2CvNbY
-	 wr/UJrLJvxPrUX19bNM9MX4qUj6KdWPcDgNyjGQDdczGmv6dcF3eCIsGv7SOLV2LDR
-	 qfreVsNNLT0Iw==
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e46ebe19489so20285382276.2;
-        Tue, 07 Jan 2025 06:46:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVgKZGDymHO9ZgLXbj3KzZ81g/D6tf95/P7swIgk8fgsXwq0fEtJeULE62GV+TG8CEMO95qhofTieVEurU=@vger.kernel.org, AJvYcCWKl3D1Y2IpgRvoq/KoF0XSG8SB0uj8ajY7kZ/0oqB2PonjMZjUvyqfCTN5hVDhtzFDtCKsrcW0qXXR8w==@vger.kernel.org, AJvYcCWfKDhsR8v628dZHXVgBBipe3hHMjcxno6aLv+QZWraEKtPMWxmBgUn/yU5NMmACaR1Q2uYHLT5B5yf@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywso/qGlpri7KXz31uukhbXpZmAMthGuP7XBDp7NcPEeHYxCJhy
-	9NZQbvaIW9eoGiAk/1GQAd2kHIcZ1iO5DCcUOpwVnQv0nuRNRVUM+uclM+iirkXRgY5clneRl5S
-	j3/jJ+pmZgSwn+TjN8q4DW5Ch6w==
-X-Google-Smtp-Source: AGHT+IFyV9lVUw16Rv8iHzwmUnZSkHsA5PPxxrnmceolsNmDmlhg4nana1IEH6m/uPeTPy+gpBY7jSdc1ZLsVgZS2Rw=
-X-Received: by 2002:a05:690c:620c:b0:6ee:4209:731 with SMTP id
- 00721157ae682-6f3f8239192mr443182597b3.39.1736261183298; Tue, 07 Jan 2025
- 06:46:23 -0800 (PST)
+	b=PHFxlRYoB4d8fAyELs+7yr9LwVKmQejIgwyRAb60gbpTSRKvRA3oT1OKkUsdI7I+J
+	 gMxLkWE4lMOTxdUXDJO4KvVP2tIP+zgtnST6+W31Jb63OixButBlRJ04sCbUrCSCLD
+	 21wEJ6+33+URAKU5qj9tD0l8CR1iLydvtifU2WDgAA4cCe4E31FLk0uTSeOxcpsvIG
+	 Xbn04ZKnpqM77VU1vxgcUFeWLschN4KdgOjVwXNDnes+5ixwd0h0YTmvSTlCD5kTP7
+	 5XYP9NpRK4xb6JC22Yna7zH0LspehLa92WidXNeaXFnPc6ETfvfEaPbl6sYjJ/TlwF
+	 zJ133HRA6hS4Q==
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e46ac799015so19451868276.0;
+        Tue, 07 Jan 2025 06:52:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8nWO4+QHZ1zSByLLBb5FIM0TvMcFpiM3BsxYO5cKTZYizSXVSDotC91GNWmFjuzfo+PRGKpQskFmT@vger.kernel.org, AJvYcCWO37fMXA9ZqenXueCQs/DNZtVa/PWujA9RgzyTckyiNGK06OeZ08I6pU6ULLt6Ydz+Ek2TY9Edp8u2bQ==@vger.kernel.org, AJvYcCWXemdEtiondSl0gyHTDeGs85ag/3/GaKmbdRZ8r9LZC61krn7Dj/YsLhW1FA7wCDKGY+G55r47URV51Nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3PmIZlQnGrfnd93ps9UI/tR3DhHQCjFCUIZD9cJKF9Xdc8PFz
+	yY5WPryEEWRClMOYE5xUl0BkukOGkWXiXcR27CCWoOaPjP/Vm1f3MRZa4X0MpaFpJ/F/pXBCb/n
+	xmHXwGWv10rwMLOKORN2RJPQ8Iw==
+X-Google-Smtp-Source: AGHT+IH8qHsiUkkhE1jBqDw2Y7C4UCsv7+Yrl4O6TN7qMNtI98+pa9YVs/utSqgaeOWLz23NECazuzjMwNM2CevcfpQ=
+X-Received: by 2002:a05:690c:6188:b0:6ef:820c:a752 with SMTP id
+ 00721157ae682-6f3f814565fmr425497757b3.20.1736261534525; Tue, 07 Jan 2025
+ 06:52:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250103213129.5182-3-helgaas@kernel.org> <20250103213846.GA6313@bhelgaas>
-In-Reply-To: <20250103213846.GA6313@bhelgaas>
+References: <20250103213129.5182-1-helgaas@kernel.org> <20250103213129.5182-2-helgaas@kernel.org>
+In-Reply-To: <20250103213129.5182-2-helgaas@kernel.org>
 From: Rob Herring <robh@kernel.org>
-Date: Tue, 7 Jan 2025 08:46:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJjUyV8vr7HkcV4yneo6KNw2QRzxYmTXiNCk524KudCvw@mail.gmail.com>
-Message-ID: <CAL_JsqJjUyV8vr7HkcV4yneo6KNw2QRzxYmTXiNCk524KudCvw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PCI: of: Simplify bus range parsing
+Date: Tue, 7 Jan 2025 08:52:03 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+k0DpXkVFNP+3eUw=FHu2rqM4MaDu93tfNfU42OnJ0og@mail.gmail.com>
+Message-ID: <CAL_Jsq+k0DpXkVFNP+3eUw=FHu2rqM4MaDu93tfNfU42OnJ0og@mail.gmail.com>
+Subject: Re: [PATCH 1/3] PCI: Unexport of_pci_parse_bus_range()
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: "David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
@@ -71,31 +71,19 @@ Cc: "David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.c
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 3, 2025 at 3:38=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+On Fri, Jan 3, 2025 at 3:31=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
 rote:
 >
-> On Fri, Jan 03, 2025 at 03:31:28PM -0600, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > of_pci_parse_bus_range() looks for a DT "bus-range" property.  If none
-> > exists, devm_of_pci_get_host_bridge_resources() defaults to the [bus 00=
--ff]
-> > range supplied by its caller, pci_parse_request_of_pci_ranges().
-> >
-> > devm_of_pci_get_host_bridge_resources() is static and has no other call=
-ers,
-> > so there's no reason to complicate its interface by passing the default=
- bus
-> > range.
-> >
-> > Drop the busno and bus_max parameters and use 0x0 and 0xff directly in
-> > devm_of_pci_get_host_bridge_resources().
+> From: Bjorn Helgaas <bhelgaas@google.com>
 >
-> Since we default this if the DT lacks "bus-range", is there any point
-> in repeating "bus-range =3D <0x00 0xff>;" in all the host bridge
-> descriptions?
+> of_pci_parse_bus_range() is only used in drivers/pci/of.c, so make it
+> static and unexport it.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/of.c  | 4 ++--
+>  drivers/pci/pci.h | 7 -------
+>  2 files changed, 2 insertions(+), 9 deletions(-)
 
-No. And I tell people to drop it if that's what they have.
-
-Rob
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
