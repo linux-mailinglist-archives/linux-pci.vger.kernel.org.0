@@ -1,169 +1,184 @@
-Return-Path: <linux-pci+bounces-19384-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19385-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDA72A0374C
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 06:21:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BDB7A038EC
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 08:39:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C86D3A1154
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 05:21:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C5A61885D35
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 07:39:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA7F141987;
-	Tue,  7 Jan 2025 05:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1C41DEFD8;
+	Tue,  7 Jan 2025 07:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HSIbbIbL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWqIeLmq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D29E188A0D;
-	Tue,  7 Jan 2025 05:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4C3154BE2;
+	Tue,  7 Jan 2025 07:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736227282; cv=none; b=Ah20VSTHr8R9MFD6rN83nfhHxtkAhp1p2zGTTvI8vDr/KN5VheWPa4jhYh7LcTnqXKZIS9hObQKG3aX+7AdRP3CQ7R1adFQYqGG90L8ziNjVbLVVimhJjhdDB4FO8hQRH3EC80oduad06KOE0HOItLsYzqdG/iab7LNdTvWTzsU=
+	t=1736235578; cv=none; b=QnOqCZK9nDSx3wVGp6nMhgePmRIHpE9idBfIu9xtWAps2lXAuk1qKAgcgJ5DNstBhf/Xs53B3aPFRNLvlciox1nynRroHkexvfQV+j7FVVdZ4+6f5bsQmODqv4rUCdwha5jmpN26JfxPuw/DKR91jK1lOO0fD3f8p6ttfVNSQfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736227282; c=relaxed/simple;
-	bh=fXgUWoIbIysK6RhCvhvcoGaPIUwiOdOz1mN5YLq+0Ho=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=p25YcOiGjrO2kUE/IVs+dnFIdWi/OaVgJGNfGnTSkfJ6iJh/7Y10/Ee0FbLWqrsMeaYSf1f9TlnOVcRGTIV7ZYc40FO9F7jycitYAc/XyGvwUyAO98xLs3e5DJRI4GhN+hIvDA7mfwEaZMTzDzHKHxaflEVVb7gXLyOsP3eizmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=HSIbbIbL; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 35b4d502ccb711ef99858b75a2457dd9-20250107
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=KZz8IJT3Behlj/SYm2zXDzCba/a/DTK3QmgKi1MNypk=;
-	b=HSIbbIbLCKTZHvv2kVivfN9fGbBoJhNl3DtTJ6uuU6Ui+HX2PtMfrfOMHFYjos51HdF59R3h02h/qHJmb5MfZ81dmeGdsjR9ZhXmUTV/934v7+mE4ccLQzPEfKDrFiKnz8CDDngYlMrnW8N/GxpOVnO7uwiQfYJ1EnGFzGwFjn4=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:91fd3362-5971-44ae-a5bf-95170a65ae34,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-50
-X-CID-META: VersionHash:60aa074,CLOUDID:eca9c349-1563-4a46-85ba-7ddee3d98b2a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil
-	,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 35b4d502ccb711ef99858b75a2457dd9-20250107
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <jianjun.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2042080541; Tue, 07 Jan 2025 13:21:12 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 7 Jan 2025 13:21:11 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 7 Jan 2025 13:21:10 +0800
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
-	<jianjun.wang@mediatek.com>, <linux-pci@vger.kernel.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
-Date: Tue, 7 Jan 2025 13:20:58 +0800
-Message-ID: <20250107052108.8643-1-jianjun.wang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1736235578; c=relaxed/simple;
+	bh=pdOg6pQVabUnWRXDjf2S2sinPTFgzNzHGzdPbLsARCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+v7+nNAgNIGxiwv2vKJGYP6DYug6CoNZDvOPMelVwguNwKKoudi9dTof3A/JNvpVm0OX5UUhoB9gP9ji664+BParN3dRAS7UHtUGBVAbTWB1wxyMFH02/vVCi0Q2nlPVT5PlwDFBrukSZNMgmWhF/EQnDpQVcghMMKlGK+84pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWqIeLmq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B432EC4CED6;
+	Tue,  7 Jan 2025 07:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736235578;
+	bh=pdOg6pQVabUnWRXDjf2S2sinPTFgzNzHGzdPbLsARCw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tWqIeLmq/schcCGXmWU4ONMqdYjUejHaF8jEEoNsVIWw7YBVLp3+UO/A+1pDd+gmh
+	 fRiba10lS31nsNxlvoQ87Svxa2CzLLgysiU1geiTvo7XjrknUO5S06LLQ02jqx/wB1
+	 bZCpY78h2ksQLV4WivqoHWtKSWOdKBkKJkfEqbJfK5pjCE+Ohn0jBHvPtmXpD7djDn
+	 QyEg8IXqKv1ZPop7r7f1aYGV/hfZHMnU+46oLgc+fLluY+2daPyregTSVC3JCEtO9b
+	 9FBNyIZ3VSxDsyhG9Ij/PNNQku1qSskshx7X9UgPploM8wES/jOR49Zi4XsgA1/3DT
+	 N/b+cQh8spXOw==
+Message-ID: <336b4eff-9d77-47ac-be26-2f73e30a5766@kernel.org>
+Date: Tue, 7 Jan 2025 08:39:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+To: Kever Yang <kever.yang@rock-chips.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, heiko@sntech.de,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Simon Xue <xxm@rock-chips.com>,
+ linux-rockchip@lists.infradead.org,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>
+References: <20241223110637.3697974-1-kever.yang@rock-chips.com>
+ <20241223110637.3697974-3-kever.yang@rock-chips.com>
+ <173495701750.480868.16123444058526675248.robh@kernel.org>
+ <7d94ec48-5dfb-4daf-b32b-504271afb374@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <7d94ec48-5dfb-4daf-b32b-504271afb374@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Remove the usage of virt_to_phys, as it will cause sparse warnings when
-building on some platforms.
+On 07/01/2025 08:24, Kever Yang wrote:
+> Hi Rob,
+> 
+> On 2024/12/23 20:30, Rob Herring (Arm) wrote:
+>> On Mon, 23 Dec 2024 19:06:32 +0800, Kever Yang wrote:
+>>> rk3576 is using dwc controller, with msi interrupt directly to gic instead
+>>> of to gic its, so
+>>> - no its suport is required and the 'msi-map' is not need anymore,
+>>> - a new 'msi' interrupt is needed.
+>>>
+>>> Signed-off-by: Kever Yang<kever.yang@rock-chips.com>
+>>> ---
+>>>
+>>> Changes in v3:
+>>> - Fix dtb check broken on rk3588
+>>> - Update commit message
+>>>
+>>> Changes in v2:
+>>> - remove required 'msi-map'
+>>> - add interrupt name 'msi'
+>>>
+>>>   .../devicetree/bindings/pci/rockchip-dw-pcie-common.yaml      | 4 +++-
+>>>   Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml   | 4 +---
+>>>   2 files changed, 4 insertions(+), 4 deletions(-)
+>>>
+>> My bot found errors running 'make dt_binding_check' on your patch:
+>>
+>> yamllint warnings/errors:
+>> ./Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml:85:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+> 
+> Sorry, I'm not so good at the yaml grammar, I will fix it in next version.
+> 
+> But when I run the make dt_binding_check, I can't find this warning in 
+> my side, maybe the tool has version required?
 
-Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 3bcfc4e58ba2..dc1e5fd6c7aa 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -178,6 +178,7 @@ struct mtk_pcie_soc {
-  * @phy: pointer to PHY control block
-  * @slot: port slot
-  * @irq: GIC irq
-+ * @msg_addr: MSI message address
-  * @irq_domain: legacy INTx IRQ domain
-  * @inner_domain: inner IRQ domain
-  * @msi_domain: MSI IRQ domain
-@@ -198,6 +199,7 @@ struct mtk_pcie_port {
- 	struct phy *phy;
- 	u32 slot;
- 	int irq;
-+	phys_addr_t msg_addr;
- 	struct irq_domain *irq_domain;
- 	struct irq_domain *inner_domain;
- 	struct irq_domain *msi_domain;
-@@ -393,12 +395,10 @@ static struct pci_ops mtk_pcie_ops_v2 = {
- static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
--	phys_addr_t addr;
- 
- 	/* MT2712/MT7622 only support 32-bit MSI addresses */
--	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
- 	msg->address_hi = 0;
--	msg->address_lo = lower_32_bits(addr);
-+	msg->address_lo = lower_32_bits(port->msg_addr);
- 
- 	msg->data = data->hwirq;
- 
-@@ -510,10 +510,8 @@ static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
- static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
- {
- 	u32 val;
--	phys_addr_t msg_addr;
- 
--	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
--	val = lower_32_bits(msg_addr);
-+	val = lower_32_bits(port->msg_addr);
- 	writel(val, port->base + PCIE_IMSI_ADDR);
- 
- 	val = readl(port->base + PCIE_INT_MASK);
-@@ -913,6 +911,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
- 	struct mtk_pcie_port *port;
- 	struct device *dev = pcie->dev;
- 	struct platform_device *pdev = to_platform_device(dev);
-+	struct resource *regs;
- 	char name[10];
- 	int err;
- 
-@@ -921,12 +920,18 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
- 		return -ENOMEM;
- 
- 	snprintf(name, sizeof(name), "port%d", slot);
--	port->base = devm_platform_ioremap_resource_byname(pdev, name);
-+	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-+	if (!regs)
-+		return -EINVAL;
-+
-+	port->base = devm_ioremap_resource(dev, regs);
- 	if (IS_ERR(port->base)) {
- 		dev_err(dev, "failed to map port%d base\n", slot);
- 		return PTR_ERR(port->base);
- 	}
- 
-+	port->msg_addr = regs->start + PCIE_MSI_VECTOR;
-+
- 	snprintf(name, sizeof(name), "sys_ck%d", slot);
- 	port->sys_ck = devm_clk_get(dev, name);
- 	if (IS_ERR(port->sys_ck)) {
--- 
-2.46.0
+Read the full instruction (it is there on purpose, to avoid trivial
+questions):
 
+> 
+> 
+> Thanks,
+> - Kever
+>>
+>> dtschema/dtc warnings/errors:
+>>
+>> doc reference errors (make refcheckdocs):
+>>
+>> Seehttps://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241223110637.3697974-3-kever.yang@rock-chips.com
+>>
+>> The base for the series is generally the latest rc1. A different dependency
+>> should be noted in *this* patch.
+>>
+>> If you already ran 'make dt_binding_check' and didn't see the above
+>> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+>> date:
+>>
+>> pip3 install dtschema --upgrade
+
+
+Down to here. All above is fine on your side?
+
+
+
+Best regards,
+Krzysztof
 
