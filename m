@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-19375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA5C6A036AE
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 04:54:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 312CAA036B2
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 04:55:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B31BA1886450
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 03:54:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8D8918873EF
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 03:54:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887441E32D3;
-	Tue,  7 Jan 2025 03:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6FD51E2603;
+	Tue,  7 Jan 2025 03:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="wn1MCndP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ikkma1Bm"
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="vsSi0Ple";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tw6t5HN2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1158D1E282D;
-	Tue,  7 Jan 2025 03:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F2D1E377A;
+	Tue,  7 Jan 2025 03:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736221925; cv=none; b=eaeVAjxqlANIwa3zwYyUNOywBnDS3I3U8S1rwbljGZzR7iPa+Ood70UrTVFLxycb4a6iBjQ53V05+AAB+twAULuuRrSyFg3tfXV12fauVQ7YvAYu9r0hju+PXPm2dzrld/JfexpM5aAEmfDwZSnSXMjKacpllLH6Eez4HXl0DkY=
+	t=1736221935; cv=none; b=mZrETFZlHURQMkY61sGZ4dWPXSY97PREna4nhOQ45szMC9dl80Jj2XdK1U62NVJdt100uXcAB+k/+UnNnOCb8tMi/cU+nJKW7slSlZxaNG5hOq14K1NRR/qRkeingOzLGh79OXIOI6ABCn6iM9F+Q+U8z2g7SIRsLnzJV/rq4/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736221925; c=relaxed/simple;
-	bh=5BrfFFBCBHv6932FS3KDksKXm9dLpoXeq8iAZYe+SqE=;
+	s=arc-20240116; t=1736221935; c=relaxed/simple;
+	bh=EHSlaTonH2PZtsWfGpxaWYL0HLwW1YZBpvhRYnj6NjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X+B/o8fYYpCvRYDV6jUF8gjyA6uVtFDbinPb1IpP4FEkLyg3kzh9uvXPCTaCq8Ue5VoQMq0+roSVo0pbovpAdRKNLY3cTKxINUJU59I51Vpl7hRkSBDxHGD/zi4Y41+R3ft0M8/oSm/UzvLa66M8sGl0xaVQShOS52Nd5KfSqAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=wn1MCndP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ikkma1Bm; arc=none smtp.client-ip=202.12.124.147
+	 MIME-Version; b=iatb55l5rCbRT9WrBM8CVfibP0KNwO8HwTe/c0UL18O/o8pVnbxlvqafNZTBf/Z1nb+Q+KuwonHQ+5S2POulQ7soly19DdWdXbjKAvHTIBDhGXIL1YQevAeYfEakAOwERCtqFWyatB4dwhzQHFXMxXFDb+jSkPm6ja9/EMepyJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=vsSi0Ple; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Tw6t5HN2; arc=none smtp.client-ip=202.12.124.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id B55911140132;
-	Mon,  6 Jan 2025 22:52:00 -0500 (EST)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 2B70D1140139;
+	Mon,  6 Jan 2025 22:52:10 -0500 (EST)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 06 Jan 2025 22:52:01 -0500
+  by phl-compute-05.internal (MEProxy); Mon, 06 Jan 2025 22:52:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1736221920; x=
-	1736308320; bh=bEub0ikOKo+++DSvY9N0stswW670P+GbSK/Ut0G9gns=; b=w
-	n1MCndPAy8nPh90TaHLCghRfSkZQTy6RbcgyGB7xsFie0XEWniKknvUYUhWIF/LF
-	cVnzMRDtGl9rQmXVrpGjIDShVHs8u8Mj0tr/H/Xa5Mw5ANcCcvi3SAQH4VFNy8vp
-	SzNTm+I4nTDddp4R7/s9WwCZkkDaUmznkIpw/n9t3EaAj8QPFug3jn8NAW+KUtc3
-	/p0u97in9Ldlk5TT6rZsmUwnK+tVYIVdKc3LIsZgmchcgzx9Ut3Fdf1/ilOGL7Z+
-	JMpkMuUea8en4wW3v5XREupCd43DrZlf8rXvxhuqjcL8q/YIq9inDMxuOeqBQ8HT
-	eZCf+CQcpcQsLPyol9z5g==
+	:reply-to:subject:subject:to:to; s=fm2; t=1736221930; x=
+	1736308330; bh=OfYGHDYbEKvGmLe0AavBagBId+cthJ3oCYShygzZcXU=; b=v
+	sSi0PlejpPxLSUJBhVCKhG8hyguZ5MzyDiJQ9liiG/IRP2kRetiiRuF3Y0on4TWs
+	xh8H2DG7YBfpmLMSThDuurJA03d5Dj895egng59UQRyq4HSc0QZtfImRlXeFiwex
+	xdWbH3KNomQAoqYYUwrwHWqFkhZvp2dIC4UqyWvlTlHCZ8IcJOHeHVV77xZWTIKd
+	ge1+7T3JVAWNVmIs+gyqcsmRwpBLAFjmVxrGRH5yCfgpdeqryjPRDYvWnBMMAYEb
+	Lyx/brHJRzBLml9XXjhzzrOLaaF0Xmd4IVWYRr3yCU2gq3xU0QOj+TwRGE+7G4s5
+	hIIkOShrLzEVSeBK7mSbg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1736221920; x=1736308320; bh=b
-	Eub0ikOKo+++DSvY9N0stswW670P+GbSK/Ut0G9gns=; b=ikkma1Bm9JpJV2OmM
-	50eRmZKS51EOmLAuMtdCUjsalmm7uE1UWQykW9P74dQKIHvtp9As8M/AJTbo8/Mc
-	TjAR25J9mMVYKDBDiZy/XBfFgvDSNNtxhPU3/5le7q1mNHg/MBCjAkSa1QVPgAAj
-	IZ/k4YYAGgyx/u+tocQRs3K3Dib9CPNpLoEHlvACySS9428aEs407U9YrWNOt94Q
-	vkZ5WbhheeY8oW3DvHcYuUE7OtVapFKd6paGwFvfwMM2TmcgS+//L7gOs49jABS+
-	j4lfz/tswve3JxThcoRRkg3q3/pmnPCOAcP90XtzApSYsozWcnmng4sExT1nM4y/
-	7Z9UA==
-X-ME-Sender: <xms:36R8ZxUHgQhBkgtkBN6Q5p1dxKB5LMKf-7ULJpRkXCeYYmVuz8p75g>
-    <xme:36R8Zxn-npDI9nT56-Kbppg53hrw4bdFwY7IC1yoTG-LhZKtwMMbWqxqt49bW_7e4
-    f3ByAYBxLkKSs3rxBY>
-X-ME-Received: <xmr:36R8Z9b-aFAVqYUgDl7CvD9ZYp7cT36r2-Yg2SJiWpDMsy4vh74SJXHNheSKNo-aqNbb6PzQQrc>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1736221930; x=1736308330; bh=O
+	fYGHDYbEKvGmLe0AavBagBId+cthJ3oCYShygzZcXU=; b=Tw6t5HN2nk8vF0zXk
+	R131X4TwrIyqeng3t7+TEBFxxzj4+7X3wM0HtSmjSyKNMDSw3iHb5w+Z7AYGXRci
+	4k8OTeQDaP/O7g+geZ2odlAtxgoaL/GV4lMKmCCVOtUV3mvbSrE4FoVvL9h+B3gc
+	/0tz0M2sMYdmsR7u2Cm01vgvslxCPQRwhe0Y7uDtgvW/YY15oVNPD4zY9fRv+rlL
+	AdblQlB4TTdatdq2Vt/vCDqEf2MJGUBlC4YTOxzdtl5z+aJVCjskUiP7Uya8Ii62
+	pa9FNo+hplWKjGg2U0WZxhAN2EwakOCChgKhnse8otFyK5Crb+wsoRuP8N/LkeJB
+	Qup0g==
+X-ME-Sender: <xms:6aR8ZwQ_kDOPYSkqheJUwiAmXSR7BK4YUVn-1spuB70PLRs4SRYmFA>
+    <xme:6aR8Z9yIrmQzUuuVtfbIn0hSX0-sgs2PitiQxDSYwFVcuHkLYGMRqeHivbzfxvwU5
+    0R_EHVNmY0viJFlCCs>
+X-ME-Received: <xmr:6aR8Z91FdpdZxX8tR5s8WSMAtzO5UvSMWPNAsiPOKgtdEoV2NpunCFPW1JsH7vK-3cSr_EGiyMQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeguddgieeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
@@ -82,14 +82,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeguddgieeiucetufdoteggod
     ohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehojhgvuggrsehkvg
     hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgtgihlsehvghgvrhdrkhgvrhhn
     vghlrdhorhhg
-X-ME-Proxy: <xmx:36R8Z0Ux1FcdEz1ZsS3aSaoiGaRkj97JTZTHGMraoJaGtA0ioMue1A>
-    <xmx:36R8Z7m8fIfDHMaNBC3OCvWF5vtsXT2S-WvjpTCKuV1Kcoyhrbrn9g>
-    <xmx:36R8ZxctHauQDHe9V2C7mdrLQ8-tuGf6uQM8oa38mXCSJPvow-Thvw>
-    <xmx:36R8Z1FuwAf9OVz_r8VR1mKnfDAp8vDs9ZYb2hjphaoehsC-KB3hfA>
-    <xmx:4KR8Z5Hu4UeaGxgT0iewlbVDrXfs54_GxXiBFP4o26KO-6weDzBR0B6t>
+X-ME-Proxy: <xmx:6aR8Z0C5vxKWM3-wxkcsLd8gvh-sXa2kTvB1e1JxOQ1ARIna8vRFbg>
+    <xmx:6aR8Z5gkVb9OAjKhuBkFLeEx7pWZetaryLulhJwjJ8h6Slu1VVqAbg>
+    <xmx:6aR8ZwrBJwM1h0TZhgtx_b_JHgXXO0OKBqQaihkJS1wzxZJ59hxWAw>
+    <xmx:6aR8Z8i-MSMGIKYONvq0CRGFFmGkmJUO7vPkzn19rO17X6HP_m_T2g>
+    <xmx:6aR8Z9QWFa9uVXQkHA4t1Io0U1afE1wSN-EUQutQm5gkzl5yROF05lzb>
 Feedback-ID: ifd214418:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 6 Jan 2025 22:51:49 -0500 (EST)
+ 6 Jan 2025 22:52:01 -0500 (EST)
 From: Alistair Francis <alistair@alistair23.me>
 To: bhelgaas@google.com,
 	rust-for-linux@vger.kernel.org,
@@ -114,9 +114,9 @@ Cc: alistair23@gmail.com,
 	wilfred.mallawa@wdc.com,
 	Alistair Francis <alistair@alistair23.me>,
 	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH v5 04/11] rust: helpers: Remove kunit helper
-Date: Tue,  7 Jan 2025 13:50:51 +1000
-Message-ID: <20250107035058.818539-5-alistair@alistair23.me>
+Subject: [PATCH v5 05/11] rust: helpers: Remove some page helpers
+Date: Tue,  7 Jan 2025 13:50:52 +1000
+Message-ID: <20250107035058.818539-6-alistair@alistair23.me>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250107035058.818539-1-alistair@alistair23.me>
 References: <20250107035058.818539-1-alistair@alistair23.me>
@@ -128,53 +128,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that we support wrap-static-fns we no longer need the custom helper.
+Now that we support wrap-static-fns we no longer need the custom helpers.
 
 Signed-off-by: Alistair Francis <alistair@alistair23.me>
 Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
 ---
  rust/bindgen_static_functions | 2 ++
- rust/helpers/helpers.c        | 1 -
- rust/helpers/kunit.c          | 8 --------
- 3 files changed, 2 insertions(+), 9 deletions(-)
- delete mode 100644 rust/helpers/kunit.c
+ rust/helpers/page.c           | 5 -----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/rust/bindgen_static_functions b/rust/bindgen_static_functions
-index 0269efa83c61..b4032d277e72 100644
+index b4032d277e72..ded5b816f304 100644
 --- a/rust/bindgen_static_functions
 +++ b/rust/bindgen_static_functions
-@@ -9,3 +9,5 @@
- --allowlist-function ERR_PTR
- --allowlist-function IS_ERR
+@@ -11,3 +11,5 @@
  --allowlist-function PTR_ERR
+ 
+ --allowlist-function kunit_get_current_test
 +
-+--allowlist-function kunit_get_current_test
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 675f8eae0475..9e6c6c9c67d2 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -13,7 +13,6 @@
- #include "cred.c"
- #include "fs.c"
- #include "jump_label.c"
--#include "kunit.c"
- #include "mutex.c"
- #include "page.c"
- #include "pid_namespace.c"
-diff --git a/rust/helpers/kunit.c b/rust/helpers/kunit.c
-deleted file mode 100644
-index b85a4d394c11..000000000000
---- a/rust/helpers/kunit.c
-+++ /dev/null
-@@ -1,8 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include <kunit/test-bug.h>
--
--struct kunit *rust_helper_kunit_get_current_test(void)
++--allowlist-function kmap_local_page
+diff --git a/rust/helpers/page.c b/rust/helpers/page.c
+index b3f2b8fbf87f..52ebec9d7186 100644
+--- a/rust/helpers/page.c
++++ b/rust/helpers/page.c
+@@ -8,11 +8,6 @@ struct page *rust_helper_alloc_pages(gfp_t gfp_mask, unsigned int order)
+ 	return alloc_pages(gfp_mask, order);
+ }
+ 
+-void *rust_helper_kmap_local_page(struct page *page)
 -{
--	return kunit_get_current_test();
+-	return kmap_local_page(page);
 -}
+-
+ void rust_helper_kunmap_local(const void *addr)
+ {
+ 	kunmap_local(addr);
 -- 
 2.47.1
 
