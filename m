@@ -1,130 +1,63 @@
-Return-Path: <linux-pci+bounces-19414-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19415-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18AF1A040D7
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:29:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A5DAA040EF
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:36:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E6321886B49
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 13:29:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0FBE1887366
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 13:36:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303011F03F7;
-	Tue,  7 Jan 2025 13:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 428631DE2C3;
+	Tue,  7 Jan 2025 13:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OBlsnYR/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUuKgjgt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444D71F03D5;
-	Tue,  7 Jan 2025 13:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A1918CBFC;
+	Tue,  7 Jan 2025 13:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736256577; cv=none; b=mOKw6PVqA+iieNrsddlh39Tkp9FbCt9EFkGufStTqcs6jsm+tVav4+NLP5bmwzARxQ3vBQWq0FxK1bneBIK9KGpNUHlE0NYI/7ciVws5pUHUQwc5XXxA12IHA0dbr1E7DB2wn2ZH5AEd4onKJzJe9nUaub29r2U4Aq8/vWi6tqo=
+	t=1736257003; cv=none; b=K+SnYnMna0J1I9bv1B7ZI8QZ/OeMPMu65Rs5ogQSaRDFgzaAshdFLLaFXF6jf4QyioJ+g7goFlUON3pk53EgiwsSqXyq+BRM/Hl8lA25tRp1ZuESBP56ws63VAO4gIMR2BuAlGJ334GzDBlUfq61L0PM+xturXIP7nXXtxaYs8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736256577; c=relaxed/simple;
-	bh=L+MkuHhCLgD8kGQfSxdeNfO2pfO1WF0R1klzgWW+KGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0JQTSQDKstP20BejQWE2KGlVc+6EWg5Bz9nBw8wE1wbKHgF6uULWjTLAgB6lwJIzYvHMuL0JqbL9E8U8JlNvFbyBnTIFjJY3EAq29e9eQfMJdSNofDk01BWIDMJMJYF0xbNekIXR7xTorHpJRkazd/VfKKoKPswDBf3oetblIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OBlsnYR/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 507BWGNg009731;
-	Tue, 7 Jan 2025 13:28:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=mLgDzv/pVpbzGVF/OSbbOoTsrwb8sA
-	5JJIlfnBc5IRk=; b=OBlsnYR/bBezL2GRdAOvCDpfjTzgBC1YAjcDWKh3genAFF
-	7VmFYGzCQqntDisGxSNct7Weq0zBh7U5qGIkA5VFcOJnoftvLaehKEFWCQfbiAfR
-	Hl5eFKoY3fwyy2nUB/xz6agS+ZhpnxTY7T/PX+63Xv2yU1Kk0y9tcnz2IFIcrbYV
-	NzQeY+t+o8ZjwiyLasSJ3MUgeMRk8A4h2B7dp/wPkINyHfgIfyQ633G927/t2rHM
-	KAh2R9OaibMnsh2VLHw9gByqghhedxAONPnPg+tuNpdgnb/8oi6iqo8T34dO6hVT
-	kuVJh4zs/jK+zKcJflBj0i12SBFp1JxjCTVCM/Nw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 440s0aaygh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 13:28:40 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 507DSdcj025835;
-	Tue, 7 Jan 2025 13:28:39 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 440s0aaygc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 13:28:39 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5079nnbp027946;
-	Tue, 7 Jan 2025 13:28:38 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43yhhk2dgt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 13:28:38 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 507DSY0s27591038
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Jan 2025 13:28:34 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D9D820040;
-	Tue,  7 Jan 2025 13:28:34 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A3C020043;
-	Tue,  7 Jan 2025 13:28:33 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  7 Jan 2025 13:28:33 +0000 (GMT)
-Date: Tue, 7 Jan 2025 14:28:31 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-nvme@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Haren Myneni <haren@linux.ibm.com>,
-        Rick Lindsley <ricklind@linux.ibm.com>,
-        Nick Child <nnac123@linux.ibm.com>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Matt Wu <wuqiang.matt@bytedance.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Greg Kurz <groug@kaod.org>,
-        Peter Xu <peterx@redhat.com>, Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>
-Subject: Re: [PATCH 06/14] cpumask: re-introduce cpumask_next{,_and}_wrap()
-Message-ID: <Z30r/6S8VBU8/Ml5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20241228184949.31582-1-yury.norov@gmail.com>
- <20241228184949.31582-7-yury.norov@gmail.com>
+	s=arc-20240116; t=1736257003; c=relaxed/simple;
+	bh=l3IJuD/shp89OM31zlFcztlZ3fPZYz7SSWllnGf/pIA=;
+	h=Date:From:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I5CUmFrQARZSWAJH5MhbsWwC16bt0ir17pSIhzN5ZJUbLdyOrOruvNrPmUlj8u1cmJtaM90GThweyMlAUv3ftOrohvMo2x+9j9VGvWPZbDRy0J4RUT8NHaK/k1wDuJlTSn1tan36zuEGz6G9fkjcNaydDlHhYZHF4sKkam514Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUuKgjgt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F26C4CED6;
+	Tue,  7 Jan 2025 13:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736257002;
+	bh=l3IJuD/shp89OM31zlFcztlZ3fPZYz7SSWllnGf/pIA=;
+	h=Date:From:Cc:Subject:References:In-Reply-To:From;
+	b=mUuKgjgtOAWrZ/ZYEjvE1qu0rKx0gznDCpvgQfvuFx46IDG+9hDjwnVr1rwVHFJcl
+	 HC2R/1qx21JiT2dmC9MXaerPgW5jTDMpwFvLYJMtpE6d8DaRmcHZ15FVZKzche13p7
+	 NxjlePQiv0Pp6Ob1UoaNbzk6cEPq4GYC/cZfJxF2p+RfmoLhh5Hw+8DhQHTJ0BaKcK
+	 QhrJ03Xt5QxWmk1ZnIUU8aR2df24dgzXNtCbtG4eucSHo2fYbI8hMHv+JZFMubJiC4
+	 FzjvHKptEQciMFTxcN563XrJZDb5XtWNe7tZie1cj1a4wSIdkPJ3KFCx1UGlIhssSS
+	 qTEVpTCB+dcQA==
+Date: Tue, 7 Jan 2025 14:36:37 +0100
+From: Niklas Cassel <cassel@kernel.org>
+Cc: manivannan.sadhasivam@linaro.org, kw@linux.com, kishon@kernel.org,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com
+Subject: Re: [v8] misc: pci_endpoint_test: Fix overflow of bar_size
+Message-ID: <Z30t5diuUrCNY55Z@ryzen>
+References: <20250104151652.1652181-1-18255117159@163.com>
+ <Z3vDLcq9kWL4ueq7@ryzen>
+ <d79d5a72-d1b0-4442-a0a3-e53516726204@163.com>
+ <Z30CywAKGRYE_p28@ryzen>
+ <96b3a0f7-f144-4f2a-9f84-82c31d8ec23e@163.com>
+ <Z30RFBcOI61784bI@ryzen>
+ <270783b7-70c6-49d5-8464-fb542396e2dd@163.com>
+ <Z30UXDVZi3Re_J9p@ryzen>
+ <b2781922-d536-453f-b593-880674fc8b01@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -133,99 +66,97 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241228184949.31582-7-yury.norov@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CvBcdJZ3Px_Fxar3yVlr0JKsNe7bUdCi
-X-Proofpoint-ORIG-GUID: MYFcjTtUWdbqcyxPXpK7_i-p0KcJF5T7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501070109
+In-Reply-To: <b2781922-d536-453f-b593-880674fc8b01@163.com>
 
-On Sat, Dec 28, 2024 at 10:49:38AM -0800, Yury Norov wrote:
-
-Hi Yury,
-
-> cpumask_next_wrap_old() has two additional parameters, comparing to it's
-> analogue in linux/find.h find_next_bit_wrap(). The reason for that is
-> historical.
+On Tue, Jan 07, 2025 at 08:09:48PM +0800, Hans Zhang wrote:
+> Hi Niklas,
 > 
-> Before 4fe49b3b97c262 ("lib/bitmap: introduce for_each_set_bit_wrap()
-> macro"), cpumask_next_wrap() was used to implement for_each_cpu_wrap()
-> iterator. Now that the iterator is an alias to generic
-> for_each_set_bit_wrap(), the additional parameters aren't used and may
-> confuse readers.
+> The robot has been compiled with CONFIG_PHYS_ADDR_T_64BIT=y, so
+> resource_size_t=u64
 > 
-> All existing users call cpumask_next_wrap() in a way that makes it
-> possible to turn it to straight and simple alias to find_next_bit_wrap().
 > 
-> In a couple places kernel users opencode missing cpumask_next_and_wrap().
-> Add it as well.
+> include/linux/types.h
 > 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  include/linux/cpumask.h | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
+> #ifdef CONFIG_PHYS_ADDR_T_64BIT
+> typedef u64 phys_addr_t;
+> #else
+> typedef u32 phys_addr_t;
+> #endif
 > 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index b267a4f6a917..18c9908d50c4 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -284,6 +284,43 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
->  		small_cpumask_bits, n + 1);
->  }
->  
-> +/**
-> + * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
-> + *			   @n and wrapping around, if needed
-> + * @n: the cpu prior to the place to search (i.e. return will be > @n)
-> + * @src1p: the first cpumask pointer
-> + * @src2p: the second cpumask pointer
-> + *
-> + * Return: >= nr_cpu_ids if no further cpus set in both.
-> + */
-> +static __always_inline
-> +unsigned int cpumask_next_and_wrap(int n, const struct cpumask *src1p,
-> +			      const struct cpumask *src2p)
-> +{
-> +	/* -1 is a legal arg here. */
-> +	if (n != -1)
-> +		cpumask_check(n);
-> +	return find_next_and_bit_wrap(cpumask_bits(src1p), cpumask_bits(src2p),
-> +		small_cpumask_bits, n + 1);
-> +}
-> +
-> +/*
-> + * cpumask_next_wrap - get the next cpu in *src, starting from
-> + *			   @n and wrapping around, if needed
+> typedef phys_addr_t resource_size_t;
+> 
+> 
+> Is my understanding wrong? Could you correct me, please? Thank you very
+> much.
 
-Does it mean the search wraps a cpumask and starts from the beginning
-if the bit is not found and returns >= nr_cpu_ids if @n crosses itself?
+I see. That is correct.
 
-> + * @n: the cpu prior to the place to search
-> + * @src: cpumask pointer
-> + *
-> + * Return: >= nr_cpu_ids if no further cpus set in both.
 
-It looks like Return is a cpumask_next_and_wrap() comment leftover.
+> 
+> config: i386-randconfig-003-20250101 (https://download.01.org/0day-ci/archive/20250101/202501011917.ugP1ywJV-lkp@intel.com/config)
+> 
+> 
+> I compiled it as a KO module for an experiment.
+> __umoddi3 and __udivdi3 is similar to __udivmoddi4.
+> 
+> u64 bar_size;
+> 
+> iters = bar_size / buf_size;
+> remain = bar_size % buf_size;
 
-> + */
-> +static __always_inline
-> +unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
-> +{
-> +	/* -1 is a legal arg here. */
-> +	if (n != -1)
-> +		cpumask_check(n);
-> +	return find_next_bit_wrap(cpumask_bits(src), small_cpumask_bits, n + 1);
-> +}
-> +
->  /**
->   * for_each_cpu - iterate over every cpu in a mask
->   * @cpu: the (optionally unsigned) integer iterator
+I think that I am an idiot (I'm the one who wrote this code).
 
-Thanks!
+A BAR size is always a power of two.
+
+So I don't see how there can ever be a remainer...
+
+buf_size = min(SZ_1M, bar_size);
+
+If the BAR size is <= 1MB, there will be 1 iteration, no remainder.
+
+If the BAR size is > 1MB, there will be more than one iteration,
+but the size will always be evenly divisible by 1MB, so no remainder.
+
+This should probably be two patches:
+patch 1/2:
+@@ -316,12 +317,6 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+                                                 write_buf, read_buf, buf_size))
+                        return false;
+ 
+-       remain = bar_size % buf_size;
+-       if (remain)
+-               if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
+-                                                write_buf, read_buf, remain))
+-                       return false;
+-
+        return true;
+ }
+
+
+patch 2/2:
+@@ -283,10 +283,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
+ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+                                  enum pci_barno barno)
+ {
+-       int j, bar_size, buf_size, iters, remain;
++       int j, buf_size, iters;
+        void *write_buf __free(kfree) = NULL;
+        void *read_buf __free(kfree) = NULL;
+        struct pci_dev *pdev = test->pdev;
++       resource_size_t bar_size;
+ 
+        if (!test->bar[barno])
+                return false;
+
+
+
+The error:
+drivers/misc/pci_endpoint_test.c:315: undefined reference to `__udivmoddi4'
+sounds like the compiler is using a specialized instruction to do both div
+and mod in one. By removing the mod in patch 1/2, I expect that patch 2/2
+will no longer get this error.
+
+
+Kind regards,
+Niklas
 
