@@ -1,121 +1,115 @@
-Return-Path: <linux-pci+bounces-19477-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3B74A04CBD
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 23:56:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5962AA04D27
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 00:06:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E52F3A13D0
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 22:56:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3E2C1888681
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 23:06:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947961DE8AF;
-	Tue,  7 Jan 2025 22:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FCB81E47A6;
+	Tue,  7 Jan 2025 23:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uF3QcgTC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOXT9/e9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688BC190664;
-	Tue,  7 Jan 2025 22:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41E01DE4CA;
+	Tue,  7 Jan 2025 23:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736290615; cv=none; b=QmLD2RecO2+KXOrq8OHK107zruc1iYTsZFLS2rDcBnP0skpxU8hcDEi/0hbIkqUrZ1y5JPIlmMwI7ak/rWBduEFjIBf7dAMpbZ2WHNZQTg5Yg8wqoxqmNPD5RUdir+PQDvcDVNZX+jroXgLqBepHM7w2lEypRMMtm/FaCrmQUf4=
+	t=1736291187; cv=none; b=RzCASB4muGVw/4wm+i7TWDLnZtyOdBCaeSkjeDWQywM8OomXrpwqM+Ss3WSQ9vcdLlnqJ2YkriLLFJIvuUZDz/RxObTLuDKg1XWv4nywP9459pyRcUl7rUDyIvsAptuSyF16aiBki951cidaD90+ROgUr5zXo2hUuZu1TIBpL60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736290615; c=relaxed/simple;
-	bh=Uu7xq9XM13IosmKAtUDCEJiXSNkbDjbe5WLOqFhn/vw=;
+	s=arc-20240116; t=1736291187; c=relaxed/simple;
+	bh=VfAnBfuX08F+R34YGFjPDdCZbCRXPGtckNSQu09Cp8k=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DsMkgmRJb03BFEMery20Z9uAiSs0PNr4wh8ctMJvhF3dPA67vwW1PvsYX7q9w5cX1zQ2OM36KpHPwFgUl+ovAkvRfB2dm5HuVEkFOOyp5FcL1F3IBI0+pNxT2eNWMla1gVZ2Mj0iekp8KX9wxVZ/DyP684D+bOTTWpvVlArq7as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uF3QcgTC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C828EC4CED6;
-	Tue,  7 Jan 2025 22:56:54 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=X62tLZzg8AVmN7wxDX4LzblRvqmRBrDuGie5xfTQJlZKxSjbzfGgPnpXBkIYla7Pu8Rlba+DBZV+cebkM/+pW83ZGJRIsPtQmbVknHvTWoD5+8vFpgxIk/C719zx9V31asddeobR4TsvWO7umg84tIesRExyILwdKXmUilYkhfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOXT9/e9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46902C4CEDF;
+	Tue,  7 Jan 2025 23:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736290615;
-	bh=Uu7xq9XM13IosmKAtUDCEJiXSNkbDjbe5WLOqFhn/vw=;
+	s=k20201202; t=1736291185;
+	bh=VfAnBfuX08F+R34YGFjPDdCZbCRXPGtckNSQu09Cp8k=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=uF3QcgTCujONept9Uno7iOwTSNdvb905ueIhvbJ2edgfWaswKlRf/hIIPXDVQgNZc
-	 AeQnR2xcsxHQDZgFFIEcYUP+ZpjBmLD1Q8Dv+CMPuPBingzlJoHtZv7t0NLXwt0RkI
-	 z/ZQHhm/aD7MB2kqaQC1wX0l1gablp3pHVFuob7NS1oEYPYajnb7TfArEPSS43nIbU
-	 a/SckdWNp1WmKSyGzWNiCqQMjgZC0ncsAh+lzKRd6xque3FQIYraenNmQtFL/0BAk0
-	 5u/6r6rOOvvnieEFk1DbZDwgJ2ff2s661tmxeGP/ei3bcswuXeokSUpxg7yZ7p0Ahw
-	 T59FhG9sxECWw==
-Date: Tue, 7 Jan 2025 16:56:53 -0600
+	b=cOXT9/e9xxyBFaU6ZRyl43N5yOhkdSW3pm+L4KFDvPaD4x4bhaPDx6vsx/+XK15JB
+	 ufQhgPuoW8HeB5VsOY57a1OQnNFYyGITDl/MGXWbZcc8V+rKTVX7tK4/fNWSL5cRJT
+	 YtgV0laPpn4XfecnAbcURnxone1ng/4plt6Eiae1K14ASLBiDClGM0r/kZMxZNAJx8
+	 B8rJG874PHgtYWGEiEBgv8D2hwmFL2CI3yGqY+uirRMi1sBDWdPxXwGN9CofAI4udG
+	 MkB8aA5vkzdhC9sPCpCx7WjD3gUDWyW00nopCYQjAS9Xqe7QR07g3Aplq0O/3ma3Yw
+	 VlpA8jCaUFgFQ==
+Date: Tue, 7 Jan 2025 17:06:23 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: kingdix10@qq.com
-Cc: marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
-	lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, prabhakar.csengg@gmail.com,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v4] PCI: rcar-ep: Fix the issue of the name parameter
- when calling devm_request_mem_region
-Message-ID: <20250107225653.GA189000@bhelgaas>
+To: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>
+Cc: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	Xavier Chang =?utf-8?B?KOW8teeNu+aWhyk=?= <Xavier.Chang@mediatek.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <Ryder.Lee@mediatek.com>
+Subject: Re: [PATCH 3/5] PCI: mediatek-gen3: Disable ASPM L0s
+Message-ID: <20250107230623.GA189234@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <tencent_F1132FBA08580D482F6A1EF7605710E5F005@qq.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b7b0d1bca5088bda46a651481b9a42f3be1a75d.camel@mediatek.com>
 
-On Tue, Jan 07, 2025 at 09:51:23PM +0800, kingdix10@qq.com wrote:
-> From: King Dix <kingdix10@qq.com>
+On Tue, Jan 07, 2025 at 02:44:37AM +0000, Jianjun Wang (王建军) wrote:
+> On Fri, 2025-01-03 at 13:15 -0600, Bjorn Helgaas wrote:
+> > On Fri, Jan 03, 2025 at 02:00:13PM +0800, Jianjun Wang wrote:
+> > > Disable ASPM L0s support because it does not significantly save
+> > > power but impacts performance.
+> > 
+> > This seems like a user/administrator decision, not a driver
+> > decision.
+> > 
+> > L0s reduces power at the cost of performance for *all* PCIe
+> > devices, although the actual numbers may vary.
 > 
-> When using devm_request_mem_region to request a resource, if the passed
-> variable is a stack string variable, it will lead to an oops issue when
-> executing the command cat /proc/iomem.
-> 
-> Fix this by replacing outbound_name with the name of the previously
-> requested resource.
+> We have encountered some compatibility issues when connected with
+> some PCIe EPs, these issues are probabilistic and disabling the L0s
+> can fix them.
 
-Thanks a lot for doing this work!
+This sounds like either a software problem in ASPM or a hardware
+problem in one of the devices.  If it's a Linux ASPM issue, obviously
+we should find and fix that.  If it's an endpoint hardware issue, we
+should fix the driver or quirk it to avoid L0s on all platforms, not
+just this one.
 
-Add "()" after function names in subject and commit log.
+If it's a mediatek-gen3 hardware issue, we should disable L0s as you
+do here.  But if the reason is to work around a hardware erratum, we
+should describe it as such.
 
-Please include a couple lines of the oops message to help people
-connect the problem with the fix.
+Justifying it as "L0s really doesn't save much power, so disable it"
+is an invitation for somebody to come back and ask why L0s doesn't
+work when the lspci output claims it *should* work.
 
-I suppose you found this by tripping over it.  Can you look through
-the other callers of devm_request_mem_region() and similar interfaces,
-at least in drivers/pci, and make sure there are no other similar
-errors?
+> Users may not be aware of these issues, so I think disabling L0s
+> through the driver might be the better way, since it does not
+> significantly save power and we usually use L1ss for power-saving
+> when the link is idle.
 
-> Fixes: 2a6d0d63d999 ("PCI: rcar: Add endpoint mode support")
-> 
-> Signed-off-by: King Dix <kingdix10@qq.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> Changes in v4:
->   - Add more information to the comment.
-> Changes in v3:
->   - Fix the spelling issue in the comment.
-> Changes in v2:
->   - Fix the code indentation issue.
-> ---
->  drivers/pci/controller/pcie-rcar-ep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-> index 047e2cef5afc..c5e0d025bc43 100644
-> --- a/drivers/pci/controller/pcie-rcar-ep.c
-> +++ b/drivers/pci/controller/pcie-rcar-ep.c
-> @@ -107,7 +107,7 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
->  		}
->  		if (!devm_request_mem_region(&pdev->dev, res->start,
->  					     resource_size(res),
-> -					     outbound_name)) {
-> +					     res->name)) {
->  			dev_err(pcie->dev, "Cannot request memory region %s.\n",
->  				outbound_name);
->  			return -EIO;
-> -- 
-> 2.43.0
-> 
+Users should not need to be aware of probabilistic behavior problems
+related to ASPM.  It's *our* problem to make sure users never see
+issues like that :)
+
+Bjorn
 
