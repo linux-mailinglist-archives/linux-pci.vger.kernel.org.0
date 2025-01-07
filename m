@@ -1,132 +1,109 @@
-Return-Path: <linux-pci+bounces-19459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93E33A04910
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 19:15:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3029A0498C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 19:50:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F65C1886CD0
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 18:15:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2E7B166C8E
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 18:50:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7138F1E0DE2;
-	Tue,  7 Jan 2025 18:15:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19FAD1F470E;
+	Tue,  7 Jan 2025 18:48:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9epLKEB"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="NrcRcQ+0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420911DF25C
-	for <linux-pci@vger.kernel.org>; Tue,  7 Jan 2025 18:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816C51F4289;
+	Tue,  7 Jan 2025 18:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736273741; cv=none; b=RgFNyS32r2XK59S76yzzNE2sU4eRzWkKpqM0nsPO/qNvpxcunjQs9/UnQyONxhhhbiO2o1+aOWASb02BX4TNfRksp8U1HBdOrxgQaU+z1VwtsU0ztJCvRzJINMEMCrUYmDlyYhiM6tpwNVrDkIMZU1MvZzzNLRt8Ham/3PXm//g=
+	t=1736275726; cv=none; b=FePfDapSgw8mZAq82QRvsK1PCP+8mAWPJVFxFKCoyr0KyLiuq6ZtymSNXujDtzZtnIQE7OGozNqeN4DDMBjpRQR0kNz+GY8vMPgbfXP/8v+DmM/o+glwr/OmhwOkPOmUJj596d9aq6qiCru9B6ATrmWguIlRELdHULgr2OddV34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736273741; c=relaxed/simple;
-	bh=YjPRYyKxFWfwBGyFIc8FXbd9BDk5/XxDt0/Kay6MfyM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W5lJfamczqeTxO3UrvivzDXe8VadQv99TCR2viUBeIWhc3zw3dom5Za43qAy9lQqtBylWdrT07Pi7ezyJxlxH162BAGc1T9cC3XSEr3R3QsM+3CzWtLUVrlpad3Xp3HywtC/rMbfVwj4Yd60YBo5njUFPLRP2SMEpXOGyuX/Dsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9epLKEB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84EC5C4CED6;
-	Tue,  7 Jan 2025 18:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736273740;
-	bh=YjPRYyKxFWfwBGyFIc8FXbd9BDk5/XxDt0/Kay6MfyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m9epLKEB4Ua0wOU1NBLxEUWtamnLKpupf0LIemEnjpkyMiMSs4md8jN2hzrdUEsbN
-	 k7wT3PzAW00qFQEKXJBExWjwVdPc0ONgqoMhAmZPsduIr3eHh8Y7hULBQP0nb4b1z7
-	 DJ+2SR0O6yybFeWckPVGq4J+gxkwwtNJaM4xH2tIUdIkw+gfcA46hKYlfWUGpSPRVB
-	 ULNSB6pyx17N1rafrODipXv4cL8/Wu/jXDnxfiCt8+Un5HpOVBGbxX8kCfbXzAaGrb
-	 mOzusBs/OHIwt15jDMr563IMjPFYQrbYxlPr8SNZRzvZRO9XTP/SKg2KWBMDP0N7K3
-	 6mwVmt16xE4aA==
-From: Niklas Cassel <cassel@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH 6/6] PCI: dw-rockchip: Describe resizable BARs as resizable BARs
-Date: Tue,  7 Jan 2025 19:14:56 +0100
-Message-ID: <20250107181450.3182430-14-cassel@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250107181450.3182430-8-cassel@kernel.org>
-References: <20250107181450.3182430-8-cassel@kernel.org>
+	s=arc-20240116; t=1736275726; c=relaxed/simple;
+	bh=i5Hv7txc6Lr+5oObuH/kjN+ySZcL3F3pqA2rrIPS8TE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B6cgdY3eXXrRVH6FdWtb0zL1reVoe5XJ/NsCFnyrKHnqtJ6X38qNzHRA1F2sqiFNtbw+52nUpeckSN3KWDXaH73e1YRRkiCDggT/NRIgs72eraxraTxBrUy7xwyUXnbDFpIaq2SbpReSaxEnkg+xrGZmcexZc2H56WTGKlrjFus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=NrcRcQ+0; arc=none smtp.client-ip=80.12.242.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id VEcutZ3aCnl6tVEcytQeMv; Tue, 07 Jan 2025 19:48:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1736275713;
+	bh=TEWIhvc/bu8r64juy8U6sdj5RTo643e4B/u7nfVDmCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=NrcRcQ+0lqsje1mWOryeqaNNn72M2LmLtbv4oVes7YkmclBIPqZscrJc5RjYPSy/5
+	 oH3HvMTv+nQs5h8UjB0nJeXgliXcJQUV9VByTDz5JUS2bNT7Oq2PkzG63TgC9pHVpr
+	 P8ASttjhFYI1BYOxGgKbsupvfSXDOPgd7pp9BbUvVrRmdeHAkq947G4qM9KPy0OiGD
+	 weLgWvEDFxqlORKwboi50HiQbqjOak085q8WBgPcxiHzK/qSXnuUxc36lKRxRd20a8
+	 czVntIo0lMgpqL5QEWt3Qn3nVvn61nfsEDhJV3Mfo4VTlAaFH6PkiRTzdgwAO4XJTl
+	 3nvEOftDAkAGg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 07 Jan 2025 19:48:33 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <73c1bc90-569a-4514-93d4-e6d5e0597607@wanadoo.fr>
+Date: Tue, 7 Jan 2025 19:48:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2520; i=cassel@kernel.org; h=from:subject; bh=YjPRYyKxFWfwBGyFIc8FXbd9BDk5/XxDt0/Kay6MfyM=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJr8xWP/59YxzOtaeNWwVce1/qe8drIX/Pk+DdJlOfuT /ebDR2LO0pZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjCRz2YM/yOVrx/Z1DTJ9Nd8 9VmOh55c8LWziInhl2mZVl3z4aCQazgjw9aC19+viiXdnalpl/cvY9uM3NVWYd/OLAmaVynj6vd FgBMA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: fix reference leak in pci_alloc_child_bus()
+To: Ma Ke <make24@iscas.ac.cn>, bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250107110747.860952-1-make24@iscas.ac.cn>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250107110747.860952-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Looking at "11.4.4.29 USP_PCIE_RESBAR Registers Summary" in the rk3588 TRM,
-we can see that none of the BARs are Fixed BARs, but actually Resizable
-BARs.
+Le 07/01/2025 à 12:07, Ma Ke a écrit :
+> When device_register(&child->dev) failed, calling put_device() to
+> explicitly release child->dev. Otherwise, it could cause double free
+> problem.
+> 
+> Found by code review.
+> 
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>   drivers/pci/probe.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2e81ab0f5a25..a61070ce5f88 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+>   add_dev:
+>   	pci_set_bus_msi_domain(child);
+>   	ret = device_register(&child->dev);
+> -	WARN_ON(ret < 0);
+> +	if (WARN_ON(ret < 0)) {
+> +		put_device(&child->dev);
+> +		return ERR_PTR(ret);
 
-I couldn't find any reference in the rk3568 TRM, but looking at the
-downstream PCIe endpoint driver, rk3568 and rk3588 are treated as the same,
-so the BARs on rk3568 must also be Resizable BARs.
+Previously, the code was continuing the execution. I don't know it is 
+correct to return at this point.
 
-Now when we actually have support for Resizable BARs, let's configure
-these BARs as such.
+Anyway, returning ERR_PTR(ret) just looks wrong, because 
+pci_add_new_bus() expect NULL in case of error.
+Should ERR_PTR(ret) be returned, it is likely basd thing would happen there.
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 22 +++++++++----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+CJ
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index ce4b511bff9b..6a307a961756 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -273,12 +273,12 @@ static const struct pci_epc_features rockchip_pcie_epc_features_rk3568 = {
- 	.msi_capable = true,
- 	.msix_capable = true,
- 	.align = SZ_64K,
--	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_0] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_1] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_2] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_3] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_4] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
- };
- 
- /*
-@@ -293,12 +293,12 @@ static const struct pci_epc_features rockchip_pcie_epc_features_rk3588 = {
- 	.msi_capable = true,
- 	.msix_capable = true,
- 	.align = SZ_64K,
--	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_0] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_1] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_2] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_3] = { .type = BAR_RESIZABLE, },
- 	.bar[BAR_4] = { .type = BAR_RESERVED, },
--	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
- };
- 
- static const struct pci_epc_features *
--- 
-2.47.1
+> +	}
+>   
+>   	pcibios_add_bus(child);
+>   
 
 
