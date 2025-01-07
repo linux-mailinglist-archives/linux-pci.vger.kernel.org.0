@@ -1,109 +1,128 @@
-Return-Path: <linux-pci+bounces-19460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3029A0498C
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 19:50:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C581A04B2F
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 21:42:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2E7B166C8E
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 18:50:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C11C165C00
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 20:42:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19FAD1F470E;
-	Tue,  7 Jan 2025 18:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9A51F669F;
+	Tue,  7 Jan 2025 20:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="NrcRcQ+0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1X6Fjoq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816C51F4289;
-	Tue,  7 Jan 2025 18:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5141F37C0;
+	Tue,  7 Jan 2025 20:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736275726; cv=none; b=FePfDapSgw8mZAq82QRvsK1PCP+8mAWPJVFxFKCoyr0KyLiuq6ZtymSNXujDtzZtnIQE7OGozNqeN4DDMBjpRQR0kNz+GY8vMPgbfXP/8v+DmM/o+glwr/OmhwOkPOmUJj596d9aq6qiCru9B6ATrmWguIlRELdHULgr2OddV34=
+	t=1736282551; cv=none; b=GS2dkOXNTAF69qjdSGf0n82ca9D7Tdu6le95THnDLLn8boeE/IesSK33AmFe4ldDKAAW2LlxZEkTvxff5W5tY6doLuOMrf9olGTmYG/OZPj+7+RxwlbtQQPnupSlPiisDb+Gcpr5TQE3c8gMzBm9ZxaCAJufC4KkXXl8/7xNhcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736275726; c=relaxed/simple;
-	bh=i5Hv7txc6Lr+5oObuH/kjN+ySZcL3F3pqA2rrIPS8TE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B6cgdY3eXXrRVH6FdWtb0zL1reVoe5XJ/NsCFnyrKHnqtJ6X38qNzHRA1F2sqiFNtbw+52nUpeckSN3KWDXaH73e1YRRkiCDggT/NRIgs72eraxraTxBrUy7xwyUXnbDFpIaq2SbpReSaxEnkg+xrGZmcexZc2H56WTGKlrjFus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=NrcRcQ+0; arc=none smtp.client-ip=80.12.242.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id VEcutZ3aCnl6tVEcytQeMv; Tue, 07 Jan 2025 19:48:33 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1736275713;
-	bh=TEWIhvc/bu8r64juy8U6sdj5RTo643e4B/u7nfVDmCo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=NrcRcQ+0lqsje1mWOryeqaNNn72M2LmLtbv4oVes7YkmclBIPqZscrJc5RjYPSy/5
-	 oH3HvMTv+nQs5h8UjB0nJeXgliXcJQUV9VByTDz5JUS2bNT7Oq2PkzG63TgC9pHVpr
-	 P8ASttjhFYI1BYOxGgKbsupvfSXDOPgd7pp9BbUvVrRmdeHAkq947G4qM9KPy0OiGD
-	 weLgWvEDFxqlORKwboi50HiQbqjOak085q8WBgPcxiHzK/qSXnuUxc36lKRxRd20a8
-	 czVntIo0lMgpqL5QEWt3Qn3nVvn61nfsEDhJV3Mfo4VTlAaFH6PkiRTzdgwAO4XJTl
-	 3nvEOftDAkAGg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 07 Jan 2025 19:48:33 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <73c1bc90-569a-4514-93d4-e6d5e0597607@wanadoo.fr>
-Date: Tue, 7 Jan 2025 19:48:28 +0100
+	s=arc-20240116; t=1736282551; c=relaxed/simple;
+	bh=B1Ckc7g9BeYgu/ickCDB0Ca1bCjlvly28BndxYTw1HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SRdKL7ZWBfFrJl+e4QY0Q/lqTJTixoRZdQb0v1LGXyb/Ed+LB6jnpexZknEsEWWPoUic8A58qJFa3gODWymGuJXrIT/PF5WBPo9LMzL300ghVnUzNnyo5kILup1ZKLlP+6asOXLj6ROaJ9v6FvSIOwMpfbyHIH+2u7BV96sDzDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1X6Fjoq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23916C4CED6;
+	Tue,  7 Jan 2025 20:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736282550;
+	bh=B1Ckc7g9BeYgu/ickCDB0Ca1bCjlvly28BndxYTw1HE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=f1X6FjoqgTjt1mJZyJ+Jl8CPM0ijT8X6zotnBSQ3+iWJO2VYUwttFLuC2UIyPTAih
+	 68qbHXpmh8kkKeqvLxQJPqwV3rBtzD7UuJOnmHnIIQ/JXlNovNudCiI3AiwWIi3CzL
+	 h5gb+c3sKucJIKeYdp/b7r2HEDcKZvXJZ/hx4LPgJseLkKlC0yulDeh8ciIfAHdWBt
+	 TAIy9K+7EqNi8q1HhQez/AJNsoYFkuXw+aE+5aA+KU3i2wUt7VE6B5KsDngi6wTso2
+	 MGf1iN7lfvazmT2Gvyu69WhQfg2x/kPiysSlJwTkLrUUUKAIUy5f7QPsVwKTMjBR4d
+	 YLaVUeqFa1IdQ==
+Date: Tue, 7 Jan 2025 14:42:28 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	andersson@kernel.org, dmitry.baryshkov@linaro.org,
+	manivannan.sadhasivam@linaro.org, krzk@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH V1] schemas: pci: bridge: Document PCI L0s & L1 entry
+ delay and nfts
+Message-ID: <20250107204228.GA180123@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: fix reference leak in pci_alloc_child_bus()
-To: Ma Ke <make24@iscas.ac.cn>, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250107110747.860952-1-make24@iscas.ac.cn>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250107110747.860952-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d75827d-5285-35ff-bf9b-aec77cd8304e@quicinc.com>
 
-Le 07/01/2025 à 12:07, Ma Ke a écrit :
-> When device_register(&child->dev) failed, calling put_device() to
-> explicitly release child->dev. Otherwise, it could cause double free
-> problem.
-> 
-> Found by code review.
-> 
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->   drivers/pci/probe.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2e81ab0f5a25..a61070ce5f88 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
->   add_dev:
->   	pci_set_bus_msi_domain(child);
->   	ret = device_register(&child->dev);
-> -	WARN_ON(ret < 0);
-> +	if (WARN_ON(ret < 0)) {
-> +		put_device(&child->dev);
-> +		return ERR_PTR(ret);
+On Tue, Jan 07, 2025 at 07:49:00PM +0530, Krishna Chaitanya Chundru wrote:
+> On 1/6/2025 8:37 PM, Rob Herring wrote:
+> > On Mon, Jan 6, 2025 at 3:33 AM Krishna Chaitanya Chundru
+> > <krishna.chundru@oss.qualcomm.com> wrote:
+> > > 
+> > > Some controllers and endpoints provide provision to program the entry
+> > > delays of L0s & L1 which will allow the link to enter L0s & L1 more
+> > > aggressively to save power.
+> > > 
+> > > As per PCIe spec 6 sec 4.2.5.6, the number of Fast Training Sequence (FTS)
+> > > can be programmed by the controllers or endpoints that is used for bit and
+> > > Symbol lock when transitioning from L0s to L0 based upon the PCIe data rate
+> > > FTS value can vary. So define a array for each data rate for nfts.
+> > > 
+> > > These values needs to be programmed before link training.
 
-Previously, the code was continuing the execution. I don't know it is 
-correct to return at this point.
+> > Do these properties apply to any link like downstream ports on a
+> > PCIe switch?
+> > 
+> These applies to downstream ports also on a switch.
 
-Anyway, returning ERR_PTR(ret) just looks wrong, because 
-pci_add_new_bus() expect NULL in case of error.
-Should ERR_PTR(ret) be returned, it is likely basd thing would happen there.
+IIUC every PCIe component with a Link, i.e., Upstream Ports (on a
+Switch or Endpoint) and Downstream Ports (a Root Port or Switch), has
+an N_FTS value that it advertises during Link training.
 
-CJ
+I suppose N_FTS depends on the component electrical design and maybe
+the Link, and it only makes sense to have this n-fts property for
+specific devices that support this kind of configuration, right?  I
+don't think we would know what to do with n-fts for random plug-in
+Switches or Endpoints because there's no generic way to configure
+N_FTS, and we *couldn't* do it before the Link is trained anyway
+unless there's some sideband mechanism.
 
-> +	}
->   
->   	pcibios_add_bus(child);
->   
+> > > +    description:
+> > > +      Number of Fast Training Sequence (FTS) used during L0s to L0 exit for bit
+> > > +      and Symbol lock.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +    minItems: 1
+> > > +    maxItems: 5
+> > 
+> > Need to define what is each entry? Gen 1 to 5?
+> > 
+> yes there are from Gen1 to Gen 5, I will update this in next patch these
+> details.
 
+Components are permitted to advertise different N_FTS values at
+different *speeds*, not "GenX" (PCIe r6.0, sec 4.2.5.6)
+
+The spec discourages use of Gen1, etc because they are ambiguous (sec
+1.2):
+
+  Terms like "PCIe Gen3" are ambiguous and should be avoided. For
+  example, "gen3" could mean (1) compliant with Base 3.0, (2)
+  compliant with Base 3.1 (last revision of 3.x), (3) compliant with
+  Base 3.0 and supporting 8.0 GT/s, (4) compliant with Base 3.0 or
+  later and supporting 8.0 GT/s, ....
+
+We're stuck with the use of genX for max-link-speed, but we should use
+speeds when we can for clarity, e.g., in the description here.
 
