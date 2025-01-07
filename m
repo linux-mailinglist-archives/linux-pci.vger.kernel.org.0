@@ -1,120 +1,114 @@
-Return-Path: <linux-pci+bounces-19444-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19445-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08612A0437F
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 15:58:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01D6AA04517
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 16:47:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F0281885896
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 14:58:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 621A6161496
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2025 15:46:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CEF81E32DA;
-	Tue,  7 Jan 2025 14:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07D21F4289;
+	Tue,  7 Jan 2025 15:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFXkceVR"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YxrpOLzu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AAF13C914;
-	Tue,  7 Jan 2025 14:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170AC1F5425;
+	Tue,  7 Jan 2025 15:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736261902; cv=none; b=sGFlrOgl1BsVNqU7tO5CeIvA+d2mT+KUxZ8rjY3QaJC79LWyfdGI0go+OCuuBdgh94VCz22OOhXnycwi8r6CLLZrXJQWFmXwsDSht0yDo9XcCNSDmdHfZsdz4KMWbGu94syjpI56DjisNe0owZKv7p/yJtzLABxaHR3QTBfKkWk=
+	t=1736264697; cv=none; b=rFOVF/yiZs1qZ1ggyFpTTaMngsACcSKc1lgbYh2by5AH+YM2XO81iEr3xPmxK4V32hOLF4nSfxFiVJ17weIiK25IqwDKZyUWlfC6BuZwXucM9b+uL71k2AEDhXX4SBNCB0VYIWGES4zwi3z7LZca9KI0cGfbES9u9UDpZ9ODt9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736261902; c=relaxed/simple;
-	bh=8Rzl0aaYtU7XWij9DMTB6XAjbq9juChEdgio5qKrZ30=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=guNvaz/hBgIOkFSFA6+k+T5HjrMCwXKBePD0Kb+axMT95xAn7YexSj3gfHdEHlrzdY3BGIPUJP9OeuuhwCpANyxDOMqPFy/cxFhGun4jRRG0mEIXcvgVY3UDBfW7fkNtrFrY5q1SM7MqHKP3zvPH0EOd3TIKJ9IF/9P/xbpLtjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFXkceVR; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d7e527becaso26511697a12.3;
-        Tue, 07 Jan 2025 06:58:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736261896; x=1736866696; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Az2wVx1hCiPjzJ0BVL12MlXicctDopMjOkqCsQ4N3kk=;
-        b=UFXkceVRXH2hhsxBUDc1Vwdo8fA8Lxph+9/oKkWZT2jPCqy4V8J5RpNIDZ3EgZJq9j
-         68M0uYOa8F834HU55hT/ngIxi0XnCyvDc49ouvGC2J8EEGQBZvQTZ8gYwWfBYbF//J+B
-         5cpUCsZ/hXAQmVYCGhZ6IPmqcgpVGsuVXbWhvc0Ca1aBzkWJh/7652alcDNKJuphbHq3
-         7WRdO+JjgpluZ/6FniBD5+TQWHnv6SRmonpC7bRo7ajkAUf5wXCNRTDywyOer2yADDKu
-         8AjQ+2/FNRZ7YoU/lgkwG5DyM9ddnvJzBT67RLwsCFL0//HaR4TkuHeCqPZoHTmAHxgy
-         1UyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736261896; x=1736866696;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Az2wVx1hCiPjzJ0BVL12MlXicctDopMjOkqCsQ4N3kk=;
-        b=Cd7FlIS958hfM8ma+alwiG3of1C4mtT7RI0EDyWSjhssQ/59wyIR0sEJCz98osgxLS
-         fQ2/GhITuDYTBFZcFN/WFClfTsyHgKlq8CKTpvi5dkRNYKR+WNhskljP4b+GgUDpYe/A
-         VuUynmJuYH/PfHmnkDkfylo4E/nA/W0lgCizazqvmfi1y3B8QQxzLiSWh/VCm5Y7Eyre
-         4ijUqUvMLYl65tHS2jT/u1dSEPCJXGdCZmQ9IsRsr4P1ns/UP5vVZQQijwywo8sMXCuu
-         crgJiJHz766QodnIZ1XJ78wyyEK4r5PVVuxpfnJOg/Ut2pBwfiOHLfn89kCrMZf1Cc5p
-         UqMA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+ShekjY4th4NVKhJLyOLFZ7L+AmDJvvru2Y3ydFUH5K/X1QQuDDlWbT01V+Es63hQR/bB0SfXjeNE@vger.kernel.org, AJvYcCXXs7mvchEn6g0LyFCX26unU7Er52aA8B1XtqWmZZfUdeMLUTNd5BK5ScLH2afM6LgUFCx8bUdq/0Jyv7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVAt5vOybrY/A/7bYs8IzG4tnSHYhF1gBMPTgWp6z7BVVKO6F4
-	hZzBTtRjFI5lwEZCLHmdxJ+Bc0TBEVyi5AtkgBksAFo5osW6o4ajz1A6C7Pg6ePD86vxAUkU2GD
-	M7tPECTz7ThI7T0VvLa79imC0zJQ=
-X-Gm-Gg: ASbGnctOyyjiZUUUELQtgX45VeFALt0FMyXRyt61Ba8i9MjCzSL+Kyfs088zoMmO0bj
-	YHbdETtEvZN/BPKnxYivmylVKMwDHZL5ccpYqOA==
-X-Google-Smtp-Source: AGHT+IHo/aaG2IRziYHWgdJTI7LpsNtYnkQPqpLDzk81p5lbFEu3We9AunbvRFqyiMLdOxqwHKgstcmD7QIW7IPgedI=
-X-Received: by 2002:a05:6402:1588:b0:5d3:ba42:e9e3 with SMTP id
- 4fb4d7f45d1cf-5d81dd9ce81mr153578555a12.13.1736261896167; Tue, 07 Jan 2025
- 06:58:16 -0800 (PST)
+	s=arc-20240116; t=1736264697; c=relaxed/simple;
+	bh=iBRA3KEjds+Lgv9ZZ0Pkdm2/FnLyFrBoFkka713gs9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b32mq+UOIcjAyfMup1WgcIFrSJ98t0MXQYdObYYlqoPfVwwJRVSdXlpZrNqczUChVwI9qZc/hOTEnCfa6CJt4vX6MohObQCcuhRXV+I3/gMqGd8qzWCXdJfftjBdS3vWlgoebZ0X2WrrfAjM2EtQJyo5msPpB0rqwXEbltRerQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YxrpOLzu; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=KVmPS4Fu+9irQI4b55mWsUJxhORx84MgcQmPcC5jsDw=;
+	b=YxrpOLzutg4OnpKzijw4gOfQ6reGLukHl17Al51I082Ytp0ZTgEvh5MoyYjSj5
+	xMe1M9REh6ueB+8YKMR3zSjhrbURJS2Kz4prTrR0PSUFVC5hW09fLZRUn7wAaEY/
+	tOr48flfCAr5tkvUs8BfleeOqCxbH0yUHr0m1Tc4AN270=
+Received: from [192.168.71.44] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDHGT3VS31nzeAWEg--.18654S2;
+	Tue, 07 Jan 2025 23:44:21 +0800 (CST)
+Message-ID: <4bfb6c46-6f93-431b-9a8c-038bc7f77241@163.com>
+Date: Tue, 7 Jan 2025 23:44:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240809073610.2517-1-linux.amoon@gmail.com> <Z3fKkTSFFcU9gQLg@ryzen>
- <CANAwSgS5ZWGTP+A11r_qFSrjWZH_DqsM89MLiP+1VAxhz+e+2A@mail.gmail.com>
- <5a3e8fda-f9e4-4c2f-847b-93f521b8313b@lunn.ch> <CANAwSgSUuEvJb2Vn58o0i7Soo3jGzM8EYHvDtUTPxRHekCpruA@mail.gmail.com>
- <c94570db-c0af-4d92-935c-5cc242356818@lunn.ch> <CANAwSgQ_gojVxvi_OyHTyTSdzRrno=Yymn0AdEXyTHTgDTyFcA@mail.gmail.com>
- <Z3vGXrUIII4ixNnF@ryzen> <b49e6147-32c6-4239-bdba-72f25ef04a9f@lunn.ch>
- <CANAwSgQqPREeFQisQZXqB52+w+j54Bwq4RMiHf3qUTXmnTxCAw@mail.gmail.com> <c08f3d69-1f3d-49a6-96ac-0c2f990f9a8d@lunn.ch>
-In-Reply-To: <c08f3d69-1f3d-49a6-96ac-0c2f990f9a8d@lunn.ch>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Tue, 7 Jan 2025 20:27:58 +0530
-Message-ID: <CANAwSgTWXBhhDk4Yq3U8qTTRBUOx24MvM7moWoKFkKU8Nn6eAw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Enable async probe by default
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Niklas Cassel <cassel@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v8] misc: pci_endpoint_test: Fix overflow of bar_size
+To: Niklas Cassel <cassel@kernel.org>
+Cc: manivannan.sadhasivam@linaro.org, kw@linux.com, kishon@kernel.org,
+ arnd@arndb.de, gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250104151652.1652181-1-18255117159@163.com>
+ <Z3vDLcq9kWL4ueq7@ryzen> <d79d5a72-d1b0-4442-a0a3-e53516726204@163.com>
+ <Z30CywAKGRYE_p28@ryzen> <96b3a0f7-f144-4f2a-9f84-82c31d8ec23e@163.com>
+ <Z30RFBcOI61784bI@ryzen> <270783b7-70c6-49d5-8464-fb542396e2dd@163.com>
+ <Z30UXDVZi3Re_J9p@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <Z30UXDVZi3Re_J9p@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDHGT3VS31nzeAWEg--.18654S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF1ktF4xZF1fXw1kJrykGrg_yoW8Wr1kpr
+	4Yy3yqvFWFvrWjya1kC3yUuF95t34fAry3Kas3X34rtF45Kr4jq3W29F4Svr1jyFWYka45
+	JF1fXa4q9345AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jTQ6dUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxHNo2d9Sh83tAAAs8
 
-Hi Andrew
 
-On Tue, 7 Jan 2025 at 18:43, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > I was just trying to understand the call trace for mdio bus which got
-> > me confused.
-> >
-> > [0] https://lore.kernel.org/all/Z3fKkTSFFcU9gQLg@ryzen/
->
-> There is nothing particularly unusual in there. We see PCI bus
-> enumeration has found a device and bound a driver to it. The driver
-> has instantiated an MDIO bus, which has scanned the MDIO bus and found
-> a PHY. The phylib core then tried to load the kernel module needed to
-> drive the PHY.
->
-> Just because it is a PCI device does not mean firmware has to control
-> all the hardware. Linux has no problems controlling all this, and it
-> saves reinventing the wheel in firmware, avoids firmware bugs, and
-> allows new features to be added etc.
->
->         Andrew
 
-Thanks for clarifying.
+On 2025/1/7 19:47, Niklas Cassel wrote:
 
--Anand
+Hi Niklas,
+
+> The error:
+> drivers/misc/pci_endpoint_test.c:315: undefined reference to `__udivmoddi4'
+> sounds like the compiler is using a specialized instruction to do both div
+> and mod in one. By removing the mod in patch 1/2, I expect that patch 2/2
+> will no longer get this error.
+
+The __udivmoddi4 may be the way div and mod are combined.
+
+Delete remain's patch 1/2 according to your suggestion. I compiled it as 
+a KO module for an experiment.
+
+There are still __udivdi3 errors, so the do_div API must be used.
+
+zhb@zhb:/media/zhb/hans/code/kernel_org/hans$ make
+make -C /media/zhb/hans/code/kernel_org/linux/ 
+M=/media/zhb/hans/code/kernel_org/hans modules
+make[1]: Entering directory '/media/zhb/hans/code/kernel_org/linux'
+make[2]: Entering directory '/media/zhb/hans/code/kernel_org/hans'
+   CC [M]  pci_endpoint_test.o
+   MODPOST Module.symvers
+ERROR: modpost: "__udivdi3" [pci_endpoint_test.ko] undefined!
+make[4]: *** 
+[/media/zhb/hans/code/kernel_org/linux/scripts/Makefile.modpost:145: 
+Module.symvers] Error 1
+make[3]: *** [/media/zhb/hans/code/kernel_org/linux/Makefile:1939: 
+modpost] Error 2
+make[2]: *** [/media/zhb/hans/code/kernel_org/linux/Makefile:251: 
+__sub-make] Error 2
+make[2]: Leaving directory '/media/zhb/hans/code/kernel_org/hans'
+make[1]: *** [Makefile:251: __sub-make] Error 2
+make[1]: Leaving directory '/media/zhb/hans/code/kernel_org/linux'
+make: *** [Makefile:10: kernel_modules] Error 2
+
+Best regards
+Hans
+
 
