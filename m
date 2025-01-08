@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-19499-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04B1AA05452
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 08:16:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F3DCA0545C
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 08:19:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6D107A1FA7
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 07:16:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0116E3A33AA
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 07:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B671A9B55;
-	Wed,  8 Jan 2025 07:16:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E741A9B5B;
+	Wed,  8 Jan 2025 07:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLsyw3M+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJG9+hRn"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382451A7264;
-	Wed,  8 Jan 2025 07:16:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51401A7264;
+	Wed,  8 Jan 2025 07:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736320579; cv=none; b=IM9UF7dFUadreAt5vQKb6lKf+AcwWi2e4VcHfS2hoR11zUlE/a9QA9ubjnN2e/BCzgfZ4NuARE3JKdgJtBDK6y8jYPVIprJahzQy9Q13qCuRwEqSDF0cb3o4y0pxLis9QqAiTuceFN84jizcLQVvTUzgmLPeeHbMrwpne5mIQsU=
+	t=1736320770; cv=none; b=J27CVsQnFojL/MtX9sG4TwXu0yY3y8UePB7YW2+1sMEnhpd4Y0klM7KjdFT4q17/nK2sh61rS6KEba5LO2Mvy8ppYer9N/S368iGP9ugN2XW8mam61w2bPQTWtfsfHmWnuBjRoBjzgArsy1oOWVTBdLes4g/k64UEhyuAKPxsvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736320579; c=relaxed/simple;
-	bh=/nZWOZiAApJjEeZw8vk1otC1prkpz+lJLIdowQPpjys=;
+	s=arc-20240116; t=1736320770; c=relaxed/simple;
+	bh=NOjxFjPiFxT527PiGFoNNkAPVLdtxQhUm1eAB4jinV4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dHZshh7ROcs8R3GiU2D2xZhAlBImKqCMEAZzwRCL1EEn/yEbwpxM4RHfw+ehSN6FpPyW4RNvgaCmmIgTJsk8iGoPCQkqgeRcuf1iC6UqZoerqmXD6o/o1m09ad6YkEz4J2AeKQOWpFtF29aKZOmGhKaGHD4Uz20nAe0i4bjkyCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLsyw3M+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C136C4CEE0;
-	Wed,  8 Jan 2025 07:16:13 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=DY157uzmeSmcNznR4AsbpTepQ3hKTRHyhdfHUlC4atpg73qN8A7me5sdtgpH3PywxDpUZS7P8+WTAfBzoUv55fsVrZhG3p8EXDZbEZ5dy8FmKPbf421z/0GcUrE4wUJ6AxoNJWevzKFVYAjr7A4jcxw/nb3WHGP47v6EQN2Qko8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJG9+hRn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17374C4CEE4;
+	Wed,  8 Jan 2025 07:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736320578;
-	bh=/nZWOZiAApJjEeZw8vk1otC1prkpz+lJLIdowQPpjys=;
+	s=k20201202; t=1736320768;
+	bh=NOjxFjPiFxT527PiGFoNNkAPVLdtxQhUm1eAB4jinV4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HLsyw3M+3Pa17joy1bRfI9u5T7eGbFbYAN7qMyv6s4H7l3qY/73g5yCdSRi0ekuGu
-	 BcbvrPAYZARHS91tJHAZZFjSU/aStVwPmvzvSiOaDYAB4fJYVLCBGb65dNvncQJ8Gn
-	 SG8RV9/wt2UiEgcRioOKfDjOMJii6lKSDksNKz1pVgppcgBxPCkNkp73PWIryu5Dah
-	 grvp4BEdC82tXh7y/aps8o7mLM+nUGgu9vJn+19Y4Z7j1X0hkfUOKP41nnCsPzkQpO
-	 gD2O0A4As1KPr8uxaBKr+NaGsGjwTZayoEuIslvDtFbFqABWqdGezA/IGO2yCZg6X+
-	 ttyihQrsxJRLg==
-Message-ID: <14a456bd-3f24-4daf-9329-873d0f051a83@kernel.org>
-Date: Wed, 8 Jan 2025 08:16:10 +0100
+	b=tJG9+hRnGDNq+vhWALx7FsdTKpnNlnHL6tXXxbCg72zHQpe02Ebidj2hWgEP/54uA
+	 yrxW/BLctFhgtLzjQyOu786+WvYImwCfyaIuOoxmK6pj983neNQwgINtRs618X3/T4
+	 zBt6KW0G4hlPGvILcImAYGz0+5u7ykNd0PBuqx9NFx90PFI5uFX/GX0MCHlYGuwvqx
+	 bhdh4WxHzjp2smOhATJXnMUhDu8SqF3EHswuQr9w33/yT5bxou+1zNGZymRSu20Y3j
+	 SQOrcYPhZB3k5pcQTe+ezzM8COGKbmVIcwcLKm0g2JdWyPNBcbAFv0LJvvlhs2w2ci
+	 mX0TwgtKfu3Cw==
+Message-ID: <50b03189-bf2c-46c8-b7c2-4aa5eed97c35@kernel.org>
+Date: Wed, 8 Jan 2025 08:19:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,30 +50,21 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: PCI: mediatek-gen3: Add MT8196 support
-To: =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= <Jianjun.Wang@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- Ryder Lee <Ryder.Lee@mediatek.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- =?UTF-8?B?WGF2aWVyIENoYW5nICjlvLXnjbvmlocp?= <Xavier.Chang@mediatek.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>
-References: <20250103060035.30688-1-jianjun.wang@mediatek.com>
- <20250103060035.30688-2-jianjun.wang@mediatek.com>
- <ndj6j2mmylipr7mxg42f3lcwgx55cvcjnuuofmlk6n6t5uz5pr@bxugolyfublc>
- <04ae2a07e2c2d3c03e82596034b1b7711450a0ae.camel@mediatek.com>
- <eb2088d3-81f6-4cb8-a4d7-6ef985aedbda@kernel.org>
- <9b0a463312702fb78e4ca2ba79c9ec6b62e33c58.camel@mediatek.com>
+Subject: Re: [PATCH v5 3/5] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe
+ controller
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, p.zabel@pengutronix.de,
+ quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org
+References: <20250102113019.1347068-1-quic_varada@quicinc.com>
+ <20250102113019.1347068-4-quic_varada@quicinc.com>
+ <4hwclzotaowog6rzfejiixqvvg7iumg4udbvq3h72mmh42dbki@piphsf37vhpv>
+ <Z30KZM1RGdFvB1dy@hu-varada-blr.qualcomm.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,84 +110,57 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <9b0a463312702fb78e4ca2ba79c9ec6b62e33c58.camel@mediatek.com>
+In-Reply-To: <Z30KZM1RGdFvB1dy@hu-varada-blr.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 07/01/2025 09:43, Jianjun Wang (王建军) wrote:
-> On Mon, 2025-01-06 at 13:27 +0100, Krzysztof Kozlowski wrote:
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> On 06/01/2025 10:26, Jianjun Wang (王建军) wrote:
->>> On Fri, 2025-01-03 at 10:10 +0100, Krzysztof Kozlowski wrote:
->>>> External email : Please do not click links or open attachments
->>>> until
->>>> you have verified the sender or the content.
->>>>
->>>>
->>>> On Fri, Jan 03, 2025 at 02:00:11PM +0800, Jianjun Wang wrote:
->>>>> +        clock-names:
->>>>> +          items:
->>>>> +            - const: pl_250m
->>>>> +            - const: tl_26m
->>>>> +            - const: peri_26m
->>>>> +            - const: peri_mem
->>>>> +            - const: ahb_apb
->>>>> +            - const: low_power
->>>>> +
->>>>> +        resets:
->>>>> +          minItems: 1
->>>>> +          maxItems: 2
->>>>> +
->>>>> +        reset-names:
->>>>> +          minItems: 1
->>>>> +          maxItems: 2
->>>>
->>>> Why resets are flexible?
+On 07/01/2025 12:05, Varadarajan Narayanan wrote:
+>>> ---
+>>>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 10 ++++++++--
+>>>  1 file changed, 8 insertions(+), 2 deletions(-)
 >>>
->>> There are two resets, one for MAC and another for PHY, some
->>> platforms
->>> may only use one of them.
+>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> index bd87f6b49d68..9f37eca1ce0d 100644
+>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> @@ -26,7 +26,6 @@ properties:
+>>>            - qcom,pcie-ipq8064-v2
+>>>            - qcom,pcie-ipq8074
+>>>            - qcom,pcie-ipq8074-gen3
+>>> -          - qcom,pcie-ipq9574
 >>
->> Even more questions. What does it mean use? Is it there or is it not?
+>> I don't understand this change at all and your commit msg explains
+>> here nothing.
 > 
-> It will be used by calling the reset controller's APIs in the PCIe
-> controller driver. Ideally, it should be de-asserted before PCIe
-> initialization and should be asserted if PCIe powers down or the driver
-> is removed.
-
-So it is there? Then drop minItems.
-
+> All DT entries except "reg" is similar between ipq5332 and
+> ipq9574. ipq9574 has 5 registers while ipq5332 has 6. MHI is the
+> additional (i.e. sixth) entry for ipq5332.
 > 
->> Platform like SoC? But this is one specific SoC, it cannot be used on
->> different SoC.
+> If ipq9574 is not removed from here, dt_binding_check gives the
+> following errors
 > 
-> Yes, it should be SoC, each SoC have its own resets, and the number of
-> resets for each SoC is defined by the hardware design, most SoCs should
-> have one reset for MAC and one reset for PHY.
-
-You respond with some obvious things, so this review won't work.
-Properties are supposed to be constrained. Your arguments that something
-else has something else, do not apply. It does not matter what something
-else has.
-
+> 1.	/local/mnt/workspace/varada/upstream/pci-v6/arch/arm64/boot/dts/qcom/ipq5332-rdp474.dtb: pcie@18000000: reg: [[557056, 12288], [402653184, 3869], [402657056, 168], [402657280, 4096], [403701760, 4096], [569344, 4096]] is too long
 > 
->>
->>>
->>> Would you prefer to set the number of resets to a fixed value for
->>> specific platforms?
->>
->> Everything should be constrained to match hardware.
+> 	Failed validating 'maxItems' in schema['allOf'][2]['then']['properties']['reg']:
+> 	    {'maxItems': 5, 'minItems': 5}
 > 
-> For MT8196, there are 2 resets. Should I use a fixed item in this case?
+> 2.	/local/mnt/workspace/varada/upstream/pci-v6/arch/arm64/boot/dts/qcom/ipq5332-rdp474.dtb: pcie@18000000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'config', 'mhi'] is too long
+> 
+> 	Failed validating 'maxItems' in schema['allOf'][2]['then']['properties']['reg-names']:
+> 	    {'items': [{'const': 'dbi'},
+> 		       {'const': 'elbi'},
+> 		       {'const': 'atu'},
+> 		       {'const': 'parf'},
+> 		       {'const': 'config'}],
+> 	     'maxItems': 5,
+> 	     'minItems': 5,
+> 	     'type': 'array'}
+> 
+> Hence had to remove it from here and add it to the sdx55 reg
+> definition.
 
-Yes. I asked why this soc has this flexible and you speak about some
-other socs.
-
-
-
+So you entirely dropped constrain for regs. No. This has to be fixed,
+not dropped.
 Best regards,
 Krzysztof
 
