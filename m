@@ -1,321 +1,127 @@
-Return-Path: <linux-pci+bounces-19549-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19550-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B18D6A061D3
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 17:27:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF644A062DD
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 18:02:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B68591621B1
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 16:27:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A964B167C52
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 17:02:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 179722EAE5;
-	Wed,  8 Jan 2025 16:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730241FF1BB;
+	Wed,  8 Jan 2025 17:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PgVXMwxc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SxCghsmN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B62414A82;
-	Wed,  8 Jan 2025 16:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736353620; cv=fail; b=NhmeE17jS8Zq/gf71ppfnw7SvdRcdubfGyPMP+GBQMdDk0mitJVky42Y2VlW7WbjbXhrJ8aPo4V1WOUMhVNh0Fu1EMlWt55F7XDzr5dIQ6nRag/8HoON3aJdvGNkmU6RomQDGLm5Bv4DZoUK8F/grMXXkbSqKzpfjFGfDus0AwU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736353620; c=relaxed/simple;
-	bh=jELDZBTbuiDLj0b/wasoDoMgq5QJAPniNbpzhUXLxCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ur5xW/8reigMzDmd8Knx7XaTqIroZlI471bZ3g6UEPjEChu7Q72negVuH2kHnek/NCbo1iJEORCh9DoE5sjzVVYZqJY/pcSL0m0lbNnYKkPscJQMOlDIjung47mJSYLcUJIasHapb2y6vme18+UKdUWprzqYtTfBzAvGuB5rAXc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PgVXMwxc reason="signature verification failed"; arc=fail smtp.client-ip=40.107.220.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zRNqSTQ2Fz3xAW0zYc59sHS6J+GM7ZxDYOrfrT1VK9FqUVljT/pAZstPhvRWBwkDN+b057olqGGpM610qCMnYOlz+hOkVocanQ0PVbLn7VEsm+R9sOXQkAiV7pZUpWQ+5/8GHyZsmG1+Hi1J0aWOD1vMl68BviWaQRsJsVk5FVwa/CTP8hbGQQrHogX6GCuJCyUtenrb7yYHRx6kSM1hCuj77Oxg+V9uGNLQiC3aAxi75JhdKqsPcaUxqCn+hpNXZwR+PW5eXn7VFFJcOAqCnfh2m/+w9rmOkHyPTTr72pDIzCWgMp+9hD7I3UG1m8HFpuuqTeMgSf/1QMTZgld/Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wPtZA5owjjLGtqAZ9n9Vp5KD86FZbi6SjGLcehoNt9g=;
- b=GbI4aS63zvP14UmU1eJbkWrlQVofbf43uk5cQahmzrp0FqMoSGo8Mt2OhNc3XQ/vpMEr8jy+mFlPcvSjmUWFMSDadYP+gE1ir8JRioUI2Aco+yO9LygIul1j0SRTIIIo/aqrtG6kWJjI/UrLF48o6aVGQWkpd5oMj79nEqFOhOpGFt2NKoNTA3WwLQa9dKB9tuCJifEdJ1eJUYhtNd9uGK18ovjBJ06LT7CCpu7RxatHL/G2rux8ccgpva0OvwFHMrC9yZ9jj7xvCzfd2kRX4yVv+iojG0oP6COS0FY7WXWq5pj3CsDTe3J3liW0nad8tj5I9/2P+IJjtNCPLesUGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wPtZA5owjjLGtqAZ9n9Vp5KD86FZbi6SjGLcehoNt9g=;
- b=PgVXMwxcKce2ejq2KoWL8p0QBFZMdvL0DDPfnboi5eEAj/keZoWWRFt8MzgWsidoHBdR3EqlYvo7X90pqlTjmOJ59jGwsYwMc5VM5/JHxn1ehO4pFkDk5DLzmwaLxb93sma2E/xXKeOJ23f8qFFwHSaX4yXYdsifJYzrcIUW4Ek=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- PH0PR12MB7981.namprd12.prod.outlook.com (2603:10b6:510:26c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.11; Wed, 8 Jan
- 2025 16:26:56 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.8335.010; Wed, 8 Jan 2025
- 16:26:55 +0000
-Date: Wed, 8 Jan 2025 11:26:48 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v8 2/7] PCI: Move TLP Log handling to own file
-Message-ID: <20250108162648.GD1221136@yaz-khff2.amd.com>
-References: <20241218143747.3159-1-ilpo.jarvinen@linux.intel.com>
- <20241218143747.3159-3-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241218143747.3159-3-ilpo.jarvinen@linux.intel.com>
-X-ClientProxiedBy: BN0PR04CA0022.namprd04.prod.outlook.com
- (2603:10b6:408:ee::27) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7962418D;
+	Wed,  8 Jan 2025 17:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736355750; cv=none; b=cNCM6292PJPVgWGgYPPCYm4Ol3OgbKxeVms7tWraslaFC/cRjHXVY10TbkM+NSo5f/wKEGbkOZuW+vZzDBIzv49I6bUScEEWvzkdd1uV9sZvZ+P9NEXR0GBCTF6JFeS7Q2Y5LArY0h9GQvij4eDsu+vKXb+VNtbZGJLrG2gEy+4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736355750; c=relaxed/simple;
+	bh=UBJk50aqPFRsYCDE6I6ZQQ4Ca3AbJ9eF3VwQyfa2yYU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k8G/8DCExONQDVYuBNC0re9QLXwMk9czx5KtGFBfSxdguERQNf5ANb2UFkyPHE0bDW0IOH1woFXAMXnt0JSCX4UtTEgFnbqTDGovkMgOZK0SHuwqLky47xKmZ79AV/nAlyik80uSW8TkttoBw+PRbgJzyatsDqfRE6IVM3OqxNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SxCghsmN; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736355748; x=1767891748;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UBJk50aqPFRsYCDE6I6ZQQ4Ca3AbJ9eF3VwQyfa2yYU=;
+  b=SxCghsmNm6sIPuSSsnWUflHShtQCYdxSJ0wWj+2OS0bC1khNbKG4Oqfd
+   Xs88Psofrqds5LuFNTIf2CWMepvpl5uG0MMo8VTQ3CXJYrlbSeiQ4F+Uu
+   jaYoWYUI0xYajvVJqSdqYWvjMy2Kqf7JA/9DSZ8cQ4nQGtBjNdO5fEe+u
+   iXTGGmu6guZwZAml6cuI/kuPmK8qtYBBbxw/tg6H7+asmeSdrfRjfV5/B
+   wwsmf38ya7mZ/dvfMhdSlDPtGPb9FJIkewrTK7L77k15KVuTXZgGj+zqo
+   1B2IqsfjWqd+/kza7Ggj0CSxRuv5KReN9QQ2BgiTwOV3pLH9+1bRU/TYf
+   A==;
+X-CSE-ConnectionGUID: kzyLEHrvTf2IPnjJ7IFe0g==
+X-CSE-MsgGUID: BWy/gjpbSXSmb9dYJE++Dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11309"; a="35882059"
+X-IronPort-AV: E=Sophos;i="6.12,298,1728975600"; 
+   d="scan'208";a="35882059"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2025 09:02:26 -0800
+X-CSE-ConnectionGUID: sZ7gosjmQFS8U/DC0xwvQQ==
+X-CSE-MsgGUID: 5Ojd4IXjTdaZ2vsoDzZPPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="108255814"
+Received: from test2-linux-lab.an.altera.com ([10.244.156.200])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2025 09:02:25 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dinguyen@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matthew.gerlach@altera.com,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v3 0/5] Add PCIe Root Port support for Agilex family of chips
+Date: Wed,  8 Jan 2025 10:59:04 -0600
+Message-Id: <20250108165909.3344354-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|PH0PR12MB7981:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e8905f4-736b-4c3c-22d6-08dd30014451
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?4GZKIUe7a/f4BDfblfr501tv/wVKASLiDgJSOk5wN9XjTcbTv5g9skO/IF?=
- =?iso-8859-1?Q?08Q5eskFthTeA4reSL64M1PjAsL5GdGci5hXzIRo81CUKYgW64OV5o2BNd?=
- =?iso-8859-1?Q?3tcqvBqvYmc56jkbHVbeFOnIeEMoyxDbEJa9/isuGBJ8fp3OxlIikvpaGC?=
- =?iso-8859-1?Q?mgbr2fSLO4WEbjb1HvvSCYJ5+CfOzOPk9hOJPOt3e+18VV1E71F44yOmak?=
- =?iso-8859-1?Q?EtiFyr2jqKwbSMDcoxdUhIE5bticv+MPu1FoJJ6CsQTPB3bX8BD1xyXNJz?=
- =?iso-8859-1?Q?iCOVtKy1BRfCa9CoQyomW7N6JGofFhKsssiFWlnh5exptBF7rRchpZ+N86?=
- =?iso-8859-1?Q?wd7a4gA+QeswmrQ93XIaU0u0PHzw6idkijg4XSJX1bMiuuE2fJAtdfXsOI?=
- =?iso-8859-1?Q?tgPb1S/nfqjWSAYovEZPmi1xkVEyuV38kyZRr4GvSD3nnyR4d9JA1eUhse?=
- =?iso-8859-1?Q?MzdduxP3llryRxHX/D000Qjhld4GTBqluLGVQmLPOJgxhj508UtJkQ4SJq?=
- =?iso-8859-1?Q?VU09D9rrLq+cnnu1HT3lyaOh01qvnmLOt1mrPnBJqH4CcPmY+sI6opBIg2?=
- =?iso-8859-1?Q?ieBeg3G0wRyq0hRFmp0UVZ7EGnWMEHpNirsXetcBUna4DqoBznFHMMZBDS?=
- =?iso-8859-1?Q?oxow80quzile2N3M+9U2mgzwk1rL4M4fpUP749pw6rFwuenhkeBKJIH6Ym?=
- =?iso-8859-1?Q?u99aSF8W5nbVsjyaPCRvvRaO5w8yR7qkMvkLR8SZVXiOkCF1rVBkpvLT/D?=
- =?iso-8859-1?Q?8M1tNjevSDF7wmI2jNUGiauH44asRcAyF55SxE3CcK/sDWNnqjwuUTrZJe?=
- =?iso-8859-1?Q?j1SNhADSatoMKJ/EW0atI5+7LvbDtzoaeM60OM6waqYVChSqfyxeA24pU6?=
- =?iso-8859-1?Q?KFGATK4pYsmp++rXOpq0woDouMZ0rXFO/cozgoRh2IkLaIQPewtE47fg+m?=
- =?iso-8859-1?Q?DDjLa1q6t/CEZzXWCCkxuZn2jipMoL3PkoipEJ1BMW89Fw2TT9he+k4mQE?=
- =?iso-8859-1?Q?r4PGDxadxAKZyOksL87senRDN90Sl8In9cPaqTcIFYEzCJG7ZPNrcqpjRm?=
- =?iso-8859-1?Q?72KiMTK7/gij3ti6hOnfCIcfzV00t3YJL4JE+UMmWYxPfHtSbdeTKGBX7P?=
- =?iso-8859-1?Q?XlvUAchnSMOo2Oielw4sv+emp9I3wrbAEU2Y2x327Xuk6eMOEyXD9PvGDn?=
- =?iso-8859-1?Q?pX0Na25Cb2fg3M4fGrb/f0WajvQz5/YssMS7ExeUczLSz28e6SJ/VU5g18?=
- =?iso-8859-1?Q?lC6ZVNbjWsOLcpONK+T7Z0n4duus+KWDf8mRBUvvcIxnoKxp0UmjpvThwB?=
- =?iso-8859-1?Q?CKeZdhuCOdjUlYlGgokeOYBbag94PSi4r/CzgZJGPmiezeMc/T+gge8bag?=
- =?iso-8859-1?Q?jQp4tg/gX5JssEbML3rAQcJsKYToO/n2C283L3FffjucLRcQdzIcURg3tc?=
- =?iso-8859-1?Q?J0LGQAiIcrkfS+9I?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?raLeDLdROigzVNESmYDRzCql4yfgLyE99Z4x+2kBRVqxfM/0VlnYBDU5/c?=
- =?iso-8859-1?Q?Z/Aen3kVW1Iv/nGUIll6CGK8J/KChugFPgE1MlG0JjZT9swIBBtzdWYZJ6?=
- =?iso-8859-1?Q?y5SzUe46xRALWs/X4rXfxCOQDKs1s7iOh1x9MOi4Di7/t/li8x/Abk+9An?=
- =?iso-8859-1?Q?UPFM1XqCEyN47GCKQItE6xngX3HqZhFH25Bx5YjsrGBu6NsRHNQuYuEQJ8?=
- =?iso-8859-1?Q?5FxV8sKjs0/z0JvBJ8g2mRA7764lfBx/UE/r06FApLRFN/Ms+LGDotLu/s?=
- =?iso-8859-1?Q?vlk6Z97sjCCBzrRbyFcnOBCwZWqo9fk4ybzxJAnENHm5h+TXtMng79y0Qg?=
- =?iso-8859-1?Q?wpeoraDtfhn/Rh+3Gh7qwH7FMAdDSZ6SQWpyEmeujSHe63N2eCXGe2VMFN?=
- =?iso-8859-1?Q?99x6yOUR5f/7CJExwnLq2Ue6Ps1g4B6w+M0lqb9hBMJsRUqgQX8d3e2XVQ?=
- =?iso-8859-1?Q?C+S9C1t/aL7dxW3xlh4cmvK+Re8sgniS8eohlgcAjXRrKb6ptSgQzLHwg/?=
- =?iso-8859-1?Q?CFBOGPS9p2H88e+hU92w7YRGABQArvNFrNeLjqZzxdqGPECaC/rk7YGcOU?=
- =?iso-8859-1?Q?VYzYEShg294nudo0hye8shV/oTMG7YmkyA/TL2dbSl2/qjxn5E0RDYe2Qp?=
- =?iso-8859-1?Q?GPV/5rtI1SOXr76BUr8OFAn5KGlPhpsV3G/8xxUzcWSSa9jtB/yREaXF3O?=
- =?iso-8859-1?Q?m7x5EpHJjgq16PozwNqZIBmxaXYUIWZndWwYC2Ao40oQadBfttrM8vlm6y?=
- =?iso-8859-1?Q?EEm1saGhdOThAJLXDKBWh1QFBJfkTNRyiH54cOOnk1Q7nex5AoKxC0skKO?=
- =?iso-8859-1?Q?vG7MJEbp9FWyZvm8izmzngOoaCgjMUqExg1LeSROLSLzLajlk6L05Jt4TW?=
- =?iso-8859-1?Q?JESnTzL6R1j4rfQC82gn3/B9dsA96QOlpNAGCRsfXOHw7Oru5NcQNmFg+y?=
- =?iso-8859-1?Q?56wUxWtNSR7s6YX1Yp0piDWkbY2Fg4+dMLoEoArJDVCL0e4oQroeLer64B?=
- =?iso-8859-1?Q?mp2DHPDUuYqBhzkqvYXmL3N7Cr+QmoeUMVaFImXBF9lx+DEMocwb08l35A?=
- =?iso-8859-1?Q?lRat0ZfiTrRKf31TJOUwjk7aL+7cRxc6KPvJGFyqEyWYDH6bR1FEdR6lbb?=
- =?iso-8859-1?Q?sbdbWdRPJril8XkXXMvCQ9Fk/gS0zJT7oxV8j5DU0D/ktcSxbYjTSgmxc/?=
- =?iso-8859-1?Q?obIhwECiS8lo3+Vg80pN3iej/2lUyi451cAO8dY7XuucJj2Q5tCYiwyBV4?=
- =?iso-8859-1?Q?e65KHP/BzX9g1vEPTrdu2xbjhYmphJV3x8VUYBXo2/nvDnw+dPCWbhm0a+?=
- =?iso-8859-1?Q?HKPChtJ10m8Xo3Jf63fbt4xCpAnO1Nh3uthg4EtQRQ4ntLNA/ED4IoxN+K?=
- =?iso-8859-1?Q?YfHwEujbC036eJMd65ufKoU4V4mtIEjDOx1e07SE2VSBjtUQqVsd4N0Dny?=
- =?iso-8859-1?Q?FtY1QciaLZ+TgWA+w121LyZg82v6GG1+4wR7sxMmXvg+cBpFaGhWbzMCiF?=
- =?iso-8859-1?Q?PL4FMKNG0i0bS+MR/fMa32nyersbFzzFD7IUeMj9caB3fvxicBLHZqiEYA?=
- =?iso-8859-1?Q?Jx4o+fVl3XxQR5dXxpnKn5AVejZSHyhTWPMiuWrwCNlLm0lDhiOdrOi5DH?=
- =?iso-8859-1?Q?borudfHb0PgeAxrDGrdwRN4ByBrNHBgo/X?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e8905f4-736b-4c3c-22d6-08dd30014451
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2025 16:26:55.7669
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8DHL3R7TlD3EV6E2pcPzvAYOMGuYkbolqhhZJBmYtfFFVTAQ2Sn9HGSECbxfU9Db9EljuZoDRsHlaKL+0UjWoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7981
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 18, 2024 at 04:37:42PM +0200, Ilpo Järvinen wrote:
-> TLP Log is PCIe feature and is processed only by AER and DPC.
-> Configwise, DPC depends AER being enabled. In lack of better place, the
-> TLP Log handling code was initially placed into pci.c but it can be
-> easily placed in a separate file.
-> 
-> Move TLP Log handling code to own file under pcie/ subdirectory and
-> include it only when AER is enabled.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
+Version 3 of this patch set removes patches that have been accepted.
 
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Patch 1:
+  Add new compatible strings for the three variants of the Agilex PCIe controller IP.
 
-Overall, looks good to me, but I have one idea below.
+Patch 2:
+  Add a label to the soc@0 device tree node to be used by patch 5.
 
->  drivers/pci/pci.c         | 27 ---------------------------
->  drivers/pci/pci.h         |  2 +-
->  drivers/pci/pcie/Makefile |  2 +-
->  drivers/pci/pcie/tlp.c    | 39 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 41 insertions(+), 29 deletions(-)
->  create mode 100644 drivers/pci/pcie/tlp.c
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e0fdc9d10f91..02cd4c7eb80b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1099,33 +1099,6 @@ static void pci_enable_acs(struct pci_dev *dev)
->  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
->  }
->  
-> -/**
-> - * pcie_read_tlp_log - read TLP Header Log
-> - * @dev: PCIe device
-> - * @where: PCI Config offset of TLP Header Log
-> - * @tlp_log: TLP Log structure to fill
-> - *
-> - * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
-> - *
-> - * Return: 0 on success and filled TLP Log structure, <0 on error.
-> - */
-> -int pcie_read_tlp_log(struct pci_dev *dev, int where,
-> -		      struct pcie_tlp_log *tlp_log)
-> -{
-> -	int i, ret;
-> -
-> -	memset(tlp_log, 0, sizeof(*tlp_log));
-> -
-> -	for (i = 0; i < 4; i++) {
-> -		ret = pci_read_config_dword(dev, where + i * 4,
-> -					    &tlp_log->dw[i]);
-> -		if (ret)
-> -			return pcibios_err_to_errno(ret);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  /**
->   * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
->   * @dev: PCI device to have its BARs restored
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 8a60fc9e7786..55fcf3bac4f7 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -549,9 +549,9 @@ struct aer_err_info {
->  
->  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
-> -#endif	/* CONFIG_PCIEAER */
->  
->  int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
-> +#endif	/* CONFIG_PCIEAER */
->  
->  #ifdef CONFIG_PCIEPORTBUS
->  /* Cached RCEC Endpoint Association */
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index 53ccab62314d..173829aa02e6 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -7,7 +7,7 @@ pcieportdrv-y			:= portdrv.o rcec.o
->  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o bwctrl.o
->  
->  obj-y				+= aspm.o
-> -obj-$(CONFIG_PCIEAER)		+= aer.o err.o
-> +obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
->  obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
->  obj-$(CONFIG_PCIE_PME)		+= pme.o
->  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
-> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-> new file mode 100644
-> index 000000000000..3f053cc62290
-> --- /dev/null
-> +++ b/drivers/pci/pcie/tlp.c
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe TLP Log handling
-> + *
-> + * Copyright (C) 2024 Intel Corporation
-> + */
-> +
-> +#include <linux/aer.h>
-> +#include <linux/pci.h>
-> +#include <linux/string.h>
-> +
-> +#include "../pci.h"
-> +
-> +/**
-> + * pcie_read_tlp_log - read TLP Header Log
-> + * @dev: PCIe device
-> + * @where: PCI Config offset of TLP Header Log
-> + * @tlp_log: TLP Log structure to fill
-> + *
-> + * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
-> + *
-> + * Return: 0 on success and filled TLP Log structure, <0 on error.
-> + */
-> +int pcie_read_tlp_log(struct pci_dev *dev, int where,
-> +		      struct pcie_tlp_log *tlp_log)
-> +{
-> +	int i, ret;
-> +
-> +	memset(tlp_log, 0, sizeof(*tlp_log));
-> +
+Patch 3:
+  Add base dtsi for PCIe Root Port support of the Agilex family of chips.
 
-Can we include a define for the number of registers? 
+Patch 4:
+  Add dts enabling PCIe Root Port support on an Agilex F-series Development Kit.
 
-> +	for (i = 0; i < 4; i++) {
+Patch 5:
+  Update Altera PCIe controller driver to support the Agilex family of chips.
 
-This '4' is "MIN_TLP_REGS" or something similar.
+D M, Sharath Kumar (1):
+  PCI: altera: Add Agilex support
 
-> +		ret = pci_read_config_dword(dev, where + i * 4,
+Matthew Gerlach (4):
+  dt-bindings: PCI: altera: Add binding for Agilex
+  arm64: dts: agilex: add soc0 label
+  arm64: dts: agilex: add dtsi for PCIe Root Port
+  arm64: dts: agilex: add dts enabling PCIe Root Port
 
-This '4' is the register offset factor.
+ .../bindings/pci/altr,pcie-root-port.yaml     |   9 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |   2 +-
+ .../socfpga_agilex7f_socdk_pcie_root_port.dts |  16 ++
+ .../intel/socfpga_agilex_pcie_root_port.dtsi  |  55 ++++
+ drivers/pci/controller/pcie-altera.c          | 246 +++++++++++++++++-
+ 6 files changed, 319 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
 
-Another thought is to make the offset a variable and adjust it in the
-for-loop conditions.
+-- 
+2.34.1
 
-	int i, ret, offset = where;
-
-	for (i = 0; i < MIN_TLP_REGS; i++, offset += 4) {
-		ret = pci_read_config_dword(dev, offset, &tlp_log->dw[i]);
-
-I think this will help as variable-size TLP logs are added in later
-patches.
-
-> +					    &tlp_log->dw[i]);
-> +		if (ret)
-> +			return pcibios_err_to_errno(ret);
-> +	}
-> +
-> +	return 0;
-> +}
-
-Thanks,
-Yazen
 
