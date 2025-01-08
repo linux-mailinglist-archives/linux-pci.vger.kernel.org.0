@@ -1,61 +1,62 @@
-Return-Path: <linux-pci+bounces-19548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2120DA06113
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 17:05:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B18D6A061D3
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 17:27:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69E583A12E4
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 16:05:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B68591621B1
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 16:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 949451A8F6B;
-	Wed,  8 Jan 2025 16:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 179722EAE5;
+	Wed,  8 Jan 2025 16:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TfJ6A2Ge"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PgVXMwxc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D786215B99E;
-	Wed,  8 Jan 2025 16:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B62414A82;
+	Wed,  8 Jan 2025 16:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736352343; cv=fail; b=bR6Xiihv8szcMeQvKGU/wIjLt6K2G3IKwSo6fCZ68r46KFECRp0VWZ/SS9ITkx0wUSQvdyI8CUw9H5tCYUvds/kC+6fIhfj4lvhuVRBX0QWmsZmin26ijyozLoWSRYGAGcsp1bMgn2wOttrR/5TGyIn3Z+wfpminKhGEJUpjwkw=
+	t=1736353620; cv=fail; b=NhmeE17jS8Zq/gf71ppfnw7SvdRcdubfGyPMP+GBQMdDk0mitJVky42Y2VlW7WbjbXhrJ8aPo4V1WOUMhVNh0Fu1EMlWt55F7XDzr5dIQ6nRag/8HoON3aJdvGNkmU6RomQDGLm5Bv4DZoUK8F/grMXXkbSqKzpfjFGfDus0AwU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736352343; c=relaxed/simple;
-	bh=wAMpyabjoYpeaKBb7XiHJDSzdHOYORbXaXcyOjT1+To=;
+	s=arc-20240116; t=1736353620; c=relaxed/simple;
+	bh=jELDZBTbuiDLj0b/wasoDoMgq5QJAPniNbpzhUXLxCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Gr5r38WCP2MG/JEpUJoBXaULddNL0MFsbLFx6cJi3omeygNOGmTF/030JPVHpCceGT2NZURK5pUh5UYsCm7sj4LTJQYwB2voJhk6mJ+wLMuUnNywebjYT+fSiY3qMK0bUlcjfJoDvcjL0kPMxzHPF2MriKUshyOKI5hK+D416OQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TfJ6A2Ge reason="signature verification failed"; arc=fail smtp.client-ip=40.107.93.69
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ur5xW/8reigMzDmd8Knx7XaTqIroZlI471bZ3g6UEPjEChu7Q72negVuH2kHnek/NCbo1iJEORCh9DoE5sjzVVYZqJY/pcSL0m0lbNnYKkPscJQMOlDIjung47mJSYLcUJIasHapb2y6vme18+UKdUWprzqYtTfBzAvGuB5rAXc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PgVXMwxc reason="signature verification failed"; arc=fail smtp.client-ip=40.107.220.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzM8vIDpHxdHxbhVahWqaX9IsD0+OmQIK6MFId3ahwBpaCtFNRQxUd7euJzYRvDRWNithM1mN0WAJUSRyz0zPW1x69yneUGQpYXmu3TCg71LisTiSKrRbP5yfsDPp0Uyny8BslgBBnmw6OIwav5J9Ydv19TZyf2ShcRtd6Jcilh1nQZ9Mf5lE4r2W+9uuka+AX0uSY5CpaNwlsoSMObuOmTd5cysr/TEoJPNalm2a0VCfN7q3E+p77wTgfdAhnxlRy56SSnN6r3EpCzyy3QGihk49w9f/XS+QGrVFBsTP3vWXGCDOlpQ6Z+1t7R+W2E5G1yJLmfBgUcNdcSIU11H7Q==
+ b=zRNqSTQ2Fz3xAW0zYc59sHS6J+GM7ZxDYOrfrT1VK9FqUVljT/pAZstPhvRWBwkDN+b057olqGGpM610qCMnYOlz+hOkVocanQ0PVbLn7VEsm+R9sOXQkAiV7pZUpWQ+5/8GHyZsmG1+Hi1J0aWOD1vMl68BviWaQRsJsVk5FVwa/CTP8hbGQQrHogX6GCuJCyUtenrb7yYHRx6kSM1hCuj77Oxg+V9uGNLQiC3aAxi75JhdKqsPcaUxqCn+hpNXZwR+PW5eXn7VFFJcOAqCnfh2m/+w9rmOkHyPTTr72pDIzCWgMp+9hD7I3UG1m8HFpuuqTeMgSf/1QMTZgld/Jg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JNRER4e4mLrF55o4DjplUU27MM3IpEv3OTG4dNc+3Lg=;
- b=nPhCa9lBDpdfR5FQOWrfHF7LBV9ZZ5cVtHYmSw4RENa8E0w0wJOrPPTjfm+gwRqWCuDyImJs8eqsiXH2sHGxlOgCLx3MoIgyvGoSWNy0/gu9FXxIyePh1TFwy5j3LxaEYKZW63VsH80kjqqVPjuH/2pgpt988GtKjWV4AJrclReiV76bgS0VORHlk3hByl4gPk5jjQu4t/kRPumoRf5IF22Enk6StO252vndtnyz1d8BQJIK1IGlUAGpGnTPGb6DUjY+SCGfHu1WbTs6kBpvCs3G3/UK+xVLvjBiI/5P6FlNlZv+IMy88wDFzbju6txFu0s8F85BRpzMPKjC6qkc9g==
+ bh=wPtZA5owjjLGtqAZ9n9Vp5KD86FZbi6SjGLcehoNt9g=;
+ b=GbI4aS63zvP14UmU1eJbkWrlQVofbf43uk5cQahmzrp0FqMoSGo8Mt2OhNc3XQ/vpMEr8jy+mFlPcvSjmUWFMSDadYP+gE1ir8JRioUI2Aco+yO9LygIul1j0SRTIIIo/aqrtG6kWJjI/UrLF48o6aVGQWkpd5oMj79nEqFOhOpGFt2NKoNTA3WwLQa9dKB9tuCJifEdJ1eJUYhtNd9uGK18ovjBJ06LT7CCpu7RxatHL/G2rux8ccgpva0OvwFHMrC9yZ9jj7xvCzfd2kRX4yVv+iojG0oP6COS0FY7WXWq5pj3CsDTe3J3liW0nad8tj5I9/2P+IJjtNCPLesUGA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JNRER4e4mLrF55o4DjplUU27MM3IpEv3OTG4dNc+3Lg=;
- b=TfJ6A2GepfPZYCkayya43IZQce2yCmAQCHFiIQ1irdsuWxyUi5l/NNvuNGtONyYWtkxA5KoxFm2j2ysQ2TrOErhp4qHFBFYSUun59qGqYVsQq7G0LLeOTjbMvK+fDrs7GzpldI4GNDktuO4RCWTSbJsr05hpjo1kLoItpXq/qWA=
+ bh=wPtZA5owjjLGtqAZ9n9Vp5KD86FZbi6SjGLcehoNt9g=;
+ b=PgVXMwxcKce2ejq2KoWL8p0QBFZMdvL0DDPfnboi5eEAj/keZoWWRFt8MzgWsidoHBdR3EqlYvo7X90pqlTjmOJ59jGwsYwMc5VM5/JHxn1ehO4pFkDk5DLzmwaLxb93sma2E/xXKeOJ23f8qFFwHSaX4yXYdsifJYzrcIUW4Ek=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- CY5PR12MB6550.namprd12.prod.outlook.com (2603:10b6:930:42::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8335.11; Wed, 8 Jan 2025 16:05:39 +0000
+ PH0PR12MB7981.namprd12.prod.outlook.com (2603:10b6:510:26c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.11; Wed, 8 Jan
+ 2025 16:26:56 +0000
 Received: from DM4PR12MB6373.namprd12.prod.outlook.com
  ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
  ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.8335.010; Wed, 8 Jan 2025
- 16:05:39 +0000
-Date: Wed, 8 Jan 2025 11:05:35 -0500
+ 16:26:55 +0000
+Date: Wed, 8 Jan 2025 11:26:48 -0500
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
@@ -65,17 +66,16 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
 	Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v8 1/7] PCI: Don't expose pcie_read_tlp_log() outside of
- PCI subsystem
-Message-ID: <20250108160535.GC1221136@yaz-khff2.amd.com>
+Subject: Re: [PATCH v8 2/7] PCI: Move TLP Log handling to own file
+Message-ID: <20250108162648.GD1221136@yaz-khff2.amd.com>
 References: <20241218143747.3159-1-ilpo.jarvinen@linux.intel.com>
- <20241218143747.3159-2-ilpo.jarvinen@linux.intel.com>
+ <20241218143747.3159-3-ilpo.jarvinen@linux.intel.com>
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241218143747.3159-2-ilpo.jarvinen@linux.intel.com>
-X-ClientProxiedBy: BN0PR04CA0159.namprd04.prod.outlook.com
- (2603:10b6:408:eb::14) To DM4PR12MB6373.namprd12.prod.outlook.com
+In-Reply-To: <20241218143747.3159-3-ilpo.jarvinen@linux.intel.com>
+X-ClientProxiedBy: BN0PR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:408:ee::27) To DM4PR12MB6373.namprd12.prod.outlook.com
  (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -84,100 +84,237 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|CY5PR12MB6550:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c63129c-7fd8-447a-67d7-08dd2ffe4b8f
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|PH0PR12MB7981:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e8905f4-736b-4c3c-22d6-08dd30014451
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?WVf7hL3pb6oPHLT2low2x+syLBkdHFz9uAWjmrl8/Zqqf4QK5h7NNPPtcH?=
- =?iso-8859-1?Q?cPab0CPnsfosCh58MpmoCmL9DQSDEiec0gHX+3fLWLlL77SWUqwehKVw2s?=
- =?iso-8859-1?Q?LGXyh49HHR9DyRaYq9ApyBm9pi1EReC5NtR4GzUYLL3KizjuYhBqITvkox?=
- =?iso-8859-1?Q?jEhz40ILMs0WxE5kXrTfx96bSXf2GmSsjgP+c+fptAl4VZ11EjonqXdOm7?=
- =?iso-8859-1?Q?ql8OWO7Ry84ZU6Xre39Qhn5NUzuMiYzfj9RLPBsONm1scmG5DichGORoNU?=
- =?iso-8859-1?Q?FuPKAEz4JcjRMxJCLv4H0zjJ44NmQuQ64p3i9+hWvoxWIeooJ/gfgk22S0?=
- =?iso-8859-1?Q?+Tbc10ofXWCoYjOzX9ioH3zpFsyDlUVoyRysqq0W5cg/xbK1dB+bCQpq9Z?=
- =?iso-8859-1?Q?GhBBtgTX1jtUuOH+AXGsaxX3XpHvV2spnS4742VtKQKYYH32N/rUvCFjTj?=
- =?iso-8859-1?Q?qRhGZ95lSd1x4yGM48xf1CsZMkj2EIaExqn4hkXiiVyKCMmYl5+PoA3dDZ?=
- =?iso-8859-1?Q?MDe4VkpHpLcAICuWB5AWa/jzcDn6+yldb5KpT0dBmSPI38yLupjd6fqlEU?=
- =?iso-8859-1?Q?IT4Y7vhqnW1tlcJcZ0tA2QilCvab2X3G+Ob/mMq76zRBT7bdB6aCzpDR5/?=
- =?iso-8859-1?Q?MlNnzRRhimYNaxGluyqBP9eueFBmP92soXr0PVKb5sL7/ZVxsODTXI/LEW?=
- =?iso-8859-1?Q?H49XL4Q8V7IOnbe1/gb1U4EfU2hmaWNKleQQ3xtauVQknxtRQQNUm3/KF5?=
- =?iso-8859-1?Q?KRuZzsQHjc12g2tKdn6S1HVuL7lUkBIYmyWA4oU4jkNRHSYIC6Jyfz6S17?=
- =?iso-8859-1?Q?MdsV4Ghy+RVhBSRlw8nwM9bwHMl7Bqx1Ju1qsDskmmQdENawD+R2OssYvz?=
- =?iso-8859-1?Q?AhrlZgFErdld3XgclqxK7uLd4W6N2fR6cCATmk9Etp3bRry2Ans+VhnBmX?=
- =?iso-8859-1?Q?U42HLq1+415fdnrkrD/VTALXrLq4ha9GGy1zQiweFDn3Caf77sUEj4/7BK?=
- =?iso-8859-1?Q?UiBi1yPCebQVjciNVhlPurCQJfl6/y0rdrhfbw0aaazPeSvIytN3Va2PDc?=
- =?iso-8859-1?Q?CfEJKz2tBEvRCbnYzXDDpnUCGYlcomCQCFuXM2P01VlPXBmsJLLn9YY12S?=
- =?iso-8859-1?Q?rqFjYvY9nGV+FzjlyM8yFvuMazUN7Sr+z4qkFaGGZqSRyDcBaj/4szL48b?=
- =?iso-8859-1?Q?EOdMvrD9Qq14IfgWp5UgXqIzFITbSFGGK4F8itZIgBsrJ/Ilx3xC8CuYcd?=
- =?iso-8859-1?Q?aapNqhKsEHcPYHx0aW4oEQbcGhrW+3q2vDRvTnf5Fosb3l95xqYxnhvwrw?=
- =?iso-8859-1?Q?TLYEwJTYChPDZCSvsiqW8xMMPUvKsSwcO8sSf8vJCpWo5l0YKxoXZLLtco?=
- =?iso-8859-1?Q?sE8xb1UJZm6XRQqE5BVzGbt41W5vHM3TDaDmK82Eaj61YCEZCzjHRYjQYd?=
- =?iso-8859-1?Q?QugOpoUSFN9WlIHD?=
+	=?iso-8859-1?Q?4GZKIUe7a/f4BDfblfr501tv/wVKASLiDgJSOk5wN9XjTcbTv5g9skO/IF?=
+ =?iso-8859-1?Q?08Q5eskFthTeA4reSL64M1PjAsL5GdGci5hXzIRo81CUKYgW64OV5o2BNd?=
+ =?iso-8859-1?Q?3tcqvBqvYmc56jkbHVbeFOnIeEMoyxDbEJa9/isuGBJ8fp3OxlIikvpaGC?=
+ =?iso-8859-1?Q?mgbr2fSLO4WEbjb1HvvSCYJ5+CfOzOPk9hOJPOt3e+18VV1E71F44yOmak?=
+ =?iso-8859-1?Q?EtiFyr2jqKwbSMDcoxdUhIE5bticv+MPu1FoJJ6CsQTPB3bX8BD1xyXNJz?=
+ =?iso-8859-1?Q?iCOVtKy1BRfCa9CoQyomW7N6JGofFhKsssiFWlnh5exptBF7rRchpZ+N86?=
+ =?iso-8859-1?Q?wd7a4gA+QeswmrQ93XIaU0u0PHzw6idkijg4XSJX1bMiuuE2fJAtdfXsOI?=
+ =?iso-8859-1?Q?tgPb1S/nfqjWSAYovEZPmi1xkVEyuV38kyZRr4GvSD3nnyR4d9JA1eUhse?=
+ =?iso-8859-1?Q?MzdduxP3llryRxHX/D000Qjhld4GTBqluLGVQmLPOJgxhj508UtJkQ4SJq?=
+ =?iso-8859-1?Q?VU09D9rrLq+cnnu1HT3lyaOh01qvnmLOt1mrPnBJqH4CcPmY+sI6opBIg2?=
+ =?iso-8859-1?Q?ieBeg3G0wRyq0hRFmp0UVZ7EGnWMEHpNirsXetcBUna4DqoBznFHMMZBDS?=
+ =?iso-8859-1?Q?oxow80quzile2N3M+9U2mgzwk1rL4M4fpUP749pw6rFwuenhkeBKJIH6Ym?=
+ =?iso-8859-1?Q?u99aSF8W5nbVsjyaPCRvvRaO5w8yR7qkMvkLR8SZVXiOkCF1rVBkpvLT/D?=
+ =?iso-8859-1?Q?8M1tNjevSDF7wmI2jNUGiauH44asRcAyF55SxE3CcK/sDWNnqjwuUTrZJe?=
+ =?iso-8859-1?Q?j1SNhADSatoMKJ/EW0atI5+7LvbDtzoaeM60OM6waqYVChSqfyxeA24pU6?=
+ =?iso-8859-1?Q?KFGATK4pYsmp++rXOpq0woDouMZ0rXFO/cozgoRh2IkLaIQPewtE47fg+m?=
+ =?iso-8859-1?Q?DDjLa1q6t/CEZzXWCCkxuZn2jipMoL3PkoipEJ1BMW89Fw2TT9he+k4mQE?=
+ =?iso-8859-1?Q?r4PGDxadxAKZyOksL87senRDN90Sl8In9cPaqTcIFYEzCJG7ZPNrcqpjRm?=
+ =?iso-8859-1?Q?72KiMTK7/gij3ti6hOnfCIcfzV00t3YJL4JE+UMmWYxPfHtSbdeTKGBX7P?=
+ =?iso-8859-1?Q?XlvUAchnSMOo2Oielw4sv+emp9I3wrbAEU2Y2x327Xuk6eMOEyXD9PvGDn?=
+ =?iso-8859-1?Q?pX0Na25Cb2fg3M4fGrb/f0WajvQz5/YssMS7ExeUczLSz28e6SJ/VU5g18?=
+ =?iso-8859-1?Q?lC6ZVNbjWsOLcpONK+T7Z0n4duus+KWDf8mRBUvvcIxnoKxp0UmjpvThwB?=
+ =?iso-8859-1?Q?CKeZdhuCOdjUlYlGgokeOYBbag94PSi4r/CzgZJGPmiezeMc/T+gge8bag?=
+ =?iso-8859-1?Q?jQp4tg/gX5JssEbML3rAQcJsKYToO/n2C283L3FffjucLRcQdzIcURg3tc?=
+ =?iso-8859-1?Q?J0LGQAiIcrkfS+9I?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?bBMrq1p//ckVncgCovf4xDcGVIlZ+HscIl5opg/uqu+QW8J9JV7pd+yZlD?=
- =?iso-8859-1?Q?zznxtFxfMEfQ2vsJ/KP0lI9w2g/oTSH/MlExm6YcwIiSaVZ7jeViF/WBbW?=
- =?iso-8859-1?Q?g0O+pjmoEs3SQb2sV2wsGbiDNrTA7goHWSRnYifnPtyAMfvebjAMuaJg1k?=
- =?iso-8859-1?Q?9LlQYtBeUQQ/nMIOADsc90m5C/bJwbPDkH+6LsH+1FrucUGIm2+RoISEPD?=
- =?iso-8859-1?Q?8NqE+s7eLJmcfTpVEEtEuh8LU6OV+E5t2h9oV+llR4/K3V+mHbLWNzbDsd?=
- =?iso-8859-1?Q?sndaVKXjuBIZlkMOYlC7MeS1dI17CoapKwyyg4B3fhtv7pdPlN4A7/gdH1?=
- =?iso-8859-1?Q?m8Vp02USaCeP6z2pOwRdKUEWouO69Qi1QAtGZsbSH1Uuosq+KRB/AAJ+ww?=
- =?iso-8859-1?Q?WqMqewTZhWHmaknfhpBtHNYRokn68NYhXiv6oStzBYa2KrcwiILbdVgX7M?=
- =?iso-8859-1?Q?gKfHb+z51rVbVlY0pap+hJ/ZyxedwoZIaV5avgjWBdRgvccfniQSBTUkRH?=
- =?iso-8859-1?Q?kb1itt10DrQ+eg/26FYzi+V5BQH1m9fcMb06FphY/SbO8GzYPfLFy0rMxe?=
- =?iso-8859-1?Q?jaIOAfJDdbScTdNexaTAIcQk3c9Zn675afy5JqWDLIqijk3pq1vUtuM1Jl?=
- =?iso-8859-1?Q?zQ/EkB2k0Ss7PCEAQFVzs6qSA/dMAH8EJzZl9CsTZ2Hy783REOlyMuVfWe?=
- =?iso-8859-1?Q?lSrHmaMPgRG36cNb0J6At18QvuZGCboiH3Bf6FJ9OhihSC7YxOptk/Ol9f?=
- =?iso-8859-1?Q?CuuQeRhMN/StaypsZKMse4MmvfXwjzgJBohYoy7L1U9+cZcKdWT4rlffSD?=
- =?iso-8859-1?Q?JgPLK50X22//aucMOStuohYMkhSVtLc7WlkZNamkLpdP+CY8kzBfvVeFUy?=
- =?iso-8859-1?Q?hLrnG8L4JLDKXePng4SC2a8JknEf8zSodNPE9JpDaMhy//+KAAjCCzryKP?=
- =?iso-8859-1?Q?4snVz08pq8rjr2GqSPTQRY/YxX0+Y26p8bLLbAXnvgsS2aLN14cCoBqoT0?=
- =?iso-8859-1?Q?r/34FwhKeCxwyvqEc62W7MwY60IMnY5HEUZINreNyXKH6tqnefTAb0zJrF?=
- =?iso-8859-1?Q?xLqzcm7CMjRLTvXMkc/SDStqIhJs5qq6m1s28jBeLEbtbxMTNjcoX+bu8F?=
- =?iso-8859-1?Q?D24gnXck9Ld2SutKutT0eaSaXhoO/MteufvFrOZ5Yaknu5FpAAaOUSqjuF?=
- =?iso-8859-1?Q?ndcedjzK5oPO6VEBNhXXAcYuk+/bU9G2ZaIN4SONJtKO5z9OzWrC3EEI6T?=
- =?iso-8859-1?Q?wa4crPaYokd9vcUSEzDMLdcUayJ+vmHYHgG8lGpZu5djHGaVOJx1+5APsz?=
- =?iso-8859-1?Q?f95/H38Mnwth0wYVzVjx5+PEjRtRFG7I59SjSRhI1WLRe1isB8TyFYMi1T?=
- =?iso-8859-1?Q?fRHOdLDMuIMEJnkN3j+nxIvdmpFsMtWEP86eCNtQTEPjv4GtNd6qMcZf0f?=
- =?iso-8859-1?Q?49qseVZlUwv6awWHQHawitTNVn02HicxEoRLFJJ+MAaytUzFDbggjkS/cS?=
- =?iso-8859-1?Q?1v92d5KKFTP3fL2pfR8LMSAt8yzpqIEHRWS0v5vMjmH131fyfT0mN4t8Im?=
- =?iso-8859-1?Q?gfO3Qt+OW+FPRLsnWDRv0JLMcnH8kgBepQx9gVzlHm1+mntslIYReUnxrm?=
- =?iso-8859-1?Q?YJ6ALgKa+jmb0xD2ZC6AATNNls9o6mUVUL?=
+	=?iso-8859-1?Q?raLeDLdROigzVNESmYDRzCql4yfgLyE99Z4x+2kBRVqxfM/0VlnYBDU5/c?=
+ =?iso-8859-1?Q?Z/Aen3kVW1Iv/nGUIll6CGK8J/KChugFPgE1MlG0JjZT9swIBBtzdWYZJ6?=
+ =?iso-8859-1?Q?y5SzUe46xRALWs/X4rXfxCOQDKs1s7iOh1x9MOi4Di7/t/li8x/Abk+9An?=
+ =?iso-8859-1?Q?UPFM1XqCEyN47GCKQItE6xngX3HqZhFH25Bx5YjsrGBu6NsRHNQuYuEQJ8?=
+ =?iso-8859-1?Q?5FxV8sKjs0/z0JvBJ8g2mRA7764lfBx/UE/r06FApLRFN/Ms+LGDotLu/s?=
+ =?iso-8859-1?Q?vlk6Z97sjCCBzrRbyFcnOBCwZWqo9fk4ybzxJAnENHm5h+TXtMng79y0Qg?=
+ =?iso-8859-1?Q?wpeoraDtfhn/Rh+3Gh7qwH7FMAdDSZ6SQWpyEmeujSHe63N2eCXGe2VMFN?=
+ =?iso-8859-1?Q?99x6yOUR5f/7CJExwnLq2Ue6Ps1g4B6w+M0lqb9hBMJsRUqgQX8d3e2XVQ?=
+ =?iso-8859-1?Q?C+S9C1t/aL7dxW3xlh4cmvK+Re8sgniS8eohlgcAjXRrKb6ptSgQzLHwg/?=
+ =?iso-8859-1?Q?CFBOGPS9p2H88e+hU92w7YRGABQArvNFrNeLjqZzxdqGPECaC/rk7YGcOU?=
+ =?iso-8859-1?Q?VYzYEShg294nudo0hye8shV/oTMG7YmkyA/TL2dbSl2/qjxn5E0RDYe2Qp?=
+ =?iso-8859-1?Q?GPV/5rtI1SOXr76BUr8OFAn5KGlPhpsV3G/8xxUzcWSSa9jtB/yREaXF3O?=
+ =?iso-8859-1?Q?m7x5EpHJjgq16PozwNqZIBmxaXYUIWZndWwYC2Ao40oQadBfttrM8vlm6y?=
+ =?iso-8859-1?Q?EEm1saGhdOThAJLXDKBWh1QFBJfkTNRyiH54cOOnk1Q7nex5AoKxC0skKO?=
+ =?iso-8859-1?Q?vG7MJEbp9FWyZvm8izmzngOoaCgjMUqExg1LeSROLSLzLajlk6L05Jt4TW?=
+ =?iso-8859-1?Q?JESnTzL6R1j4rfQC82gn3/B9dsA96QOlpNAGCRsfXOHw7Oru5NcQNmFg+y?=
+ =?iso-8859-1?Q?56wUxWtNSR7s6YX1Yp0piDWkbY2Fg4+dMLoEoArJDVCL0e4oQroeLer64B?=
+ =?iso-8859-1?Q?mp2DHPDUuYqBhzkqvYXmL3N7Cr+QmoeUMVaFImXBF9lx+DEMocwb08l35A?=
+ =?iso-8859-1?Q?lRat0ZfiTrRKf31TJOUwjk7aL+7cRxc6KPvJGFyqEyWYDH6bR1FEdR6lbb?=
+ =?iso-8859-1?Q?sbdbWdRPJril8XkXXMvCQ9Fk/gS0zJT7oxV8j5DU0D/ktcSxbYjTSgmxc/?=
+ =?iso-8859-1?Q?obIhwECiS8lo3+Vg80pN3iej/2lUyi451cAO8dY7XuucJj2Q5tCYiwyBV4?=
+ =?iso-8859-1?Q?e65KHP/BzX9g1vEPTrdu2xbjhYmphJV3x8VUYBXo2/nvDnw+dPCWbhm0a+?=
+ =?iso-8859-1?Q?HKPChtJ10m8Xo3Jf63fbt4xCpAnO1Nh3uthg4EtQRQ4ntLNA/ED4IoxN+K?=
+ =?iso-8859-1?Q?YfHwEujbC036eJMd65ufKoU4V4mtIEjDOx1e07SE2VSBjtUQqVsd4N0Dny?=
+ =?iso-8859-1?Q?FtY1QciaLZ+TgWA+w121LyZg82v6GG1+4wR7sxMmXvg+cBpFaGhWbzMCiF?=
+ =?iso-8859-1?Q?PL4FMKNG0i0bS+MR/fMa32nyersbFzzFD7IUeMj9caB3fvxicBLHZqiEYA?=
+ =?iso-8859-1?Q?Jx4o+fVl3XxQR5dXxpnKn5AVejZSHyhTWPMiuWrwCNlLm0lDhiOdrOi5DH?=
+ =?iso-8859-1?Q?borudfHb0PgeAxrDGrdwRN4ByBrNHBgo/X?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c63129c-7fd8-447a-67d7-08dd2ffe4b8f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e8905f4-736b-4c3c-22d6-08dd30014451
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2025 16:05:39.4182
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2025 16:26:55.7669
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JlKeloK1KNxdUBNfL/SO4Dz7M0onY2UWNTuUIAnm7O8Oh1SlPqfNhUQewutY2ob80ZGdftptgonSDCTjwd4c/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6550
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8DHL3R7TlD3EV6E2pcPzvAYOMGuYkbolqhhZJBmYtfFFVTAQ2Sn9HGSECbxfU9Db9EljuZoDRsHlaKL+0UjWoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7981
 
-On Wed, Dec 18, 2024 at 04:37:41PM +0200, Ilpo Järvinen wrote:
-> pcie_read_tlp_log() was exposed by the commit 0a5a46a6a61b ("PCI/AER:
-> Generalize TLP Header Log reading") but this is now considered a
-> mistake. No drivers outside of PCI subsystem should build their own
-> diagnostic logging but should rely on PCI core doing it for them.
+On Wed, Dec 18, 2024 at 04:37:42PM +0200, Ilpo Järvinen wrote:
+> TLP Log is PCIe feature and is processed only by AER and DPC.
+> Configwise, DPC depends AER being enabled. In lack of better place, the
+> TLP Log handling code was initially placed into pci.c but it can be
+> easily placed in a separate file.
 > 
-> There's currently one driver (ixgbe) doing it independently which was
-> the initial reason why the export was added but it was decided by the
-> PCI maintainer that it's something that should be eliminated.
+> Move TLP Log handling code to own file under pcie/ subdirectory and
+> include it only when AER is enabled.
 > 
-> Remove the unwanted EXPORT of pcie_read_tlp_log() and remove it from
-> include/linux/aer.h.
-> 
-> Link: https://lore.kernel.org/all/20240322193011.GA701027@bhelgaas/
 > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
 Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+
+Overall, looks good to me, but I have one idea below.
+
+>  drivers/pci/pci.c         | 27 ---------------------------
+>  drivers/pci/pci.h         |  2 +-
+>  drivers/pci/pcie/Makefile |  2 +-
+>  drivers/pci/pcie/tlp.c    | 39 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 41 insertions(+), 29 deletions(-)
+>  create mode 100644 drivers/pci/pcie/tlp.c
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e0fdc9d10f91..02cd4c7eb80b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1099,33 +1099,6 @@ static void pci_enable_acs(struct pci_dev *dev)
+>  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
+>  }
+>  
+> -/**
+> - * pcie_read_tlp_log - read TLP Header Log
+> - * @dev: PCIe device
+> - * @where: PCI Config offset of TLP Header Log
+> - * @tlp_log: TLP Log structure to fill
+> - *
+> - * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
+> - *
+> - * Return: 0 on success and filled TLP Log structure, <0 on error.
+> - */
+> -int pcie_read_tlp_log(struct pci_dev *dev, int where,
+> -		      struct pcie_tlp_log *tlp_log)
+> -{
+> -	int i, ret;
+> -
+> -	memset(tlp_log, 0, sizeof(*tlp_log));
+> -
+> -	for (i = 0; i < 4; i++) {
+> -		ret = pci_read_config_dword(dev, where + i * 4,
+> -					    &tlp_log->dw[i]);
+> -		if (ret)
+> -			return pcibios_err_to_errno(ret);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  /**
+>   * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
+>   * @dev: PCI device to have its BARs restored
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 8a60fc9e7786..55fcf3bac4f7 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -549,9 +549,9 @@ struct aer_err_info {
+>  
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> -#endif	/* CONFIG_PCIEAER */
+>  
+>  int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
+> +#endif	/* CONFIG_PCIEAER */
+>  
+>  #ifdef CONFIG_PCIEPORTBUS
+>  /* Cached RCEC Endpoint Association */
+> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+> index 53ccab62314d..173829aa02e6 100644
+> --- a/drivers/pci/pcie/Makefile
+> +++ b/drivers/pci/pcie/Makefile
+> @@ -7,7 +7,7 @@ pcieportdrv-y			:= portdrv.o rcec.o
+>  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o bwctrl.o
+>  
+>  obj-y				+= aspm.o
+> -obj-$(CONFIG_PCIEAER)		+= aer.o err.o
+> +obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
+>  obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+>  obj-$(CONFIG_PCIE_PME)		+= pme.o
+>  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> new file mode 100644
+> index 000000000000..3f053cc62290
+> --- /dev/null
+> +++ b/drivers/pci/pcie/tlp.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe TLP Log handling
+> + *
+> + * Copyright (C) 2024 Intel Corporation
+> + */
+> +
+> +#include <linux/aer.h>
+> +#include <linux/pci.h>
+> +#include <linux/string.h>
+> +
+> +#include "../pci.h"
+> +
+> +/**
+> + * pcie_read_tlp_log - read TLP Header Log
+> + * @dev: PCIe device
+> + * @where: PCI Config offset of TLP Header Log
+> + * @tlp_log: TLP Log structure to fill
+> + *
+> + * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
+> + *
+> + * Return: 0 on success and filled TLP Log structure, <0 on error.
+> + */
+> +int pcie_read_tlp_log(struct pci_dev *dev, int where,
+> +		      struct pcie_tlp_log *tlp_log)
+> +{
+> +	int i, ret;
+> +
+> +	memset(tlp_log, 0, sizeof(*tlp_log));
+> +
+
+Can we include a define for the number of registers? 
+
+> +	for (i = 0; i < 4; i++) {
+
+This '4' is "MIN_TLP_REGS" or something similar.
+
+> +		ret = pci_read_config_dword(dev, where + i * 4,
+
+This '4' is the register offset factor.
+
+Another thought is to make the offset a variable and adjust it in the
+for-loop conditions.
+
+	int i, ret, offset = where;
+
+	for (i = 0; i < MIN_TLP_REGS; i++, offset += 4) {
+		ret = pci_read_config_dword(dev, offset, &tlp_log->dw[i]);
+
+I think this will help as variable-size TLP logs are added in later
+patches.
+
+> +					    &tlp_log->dw[i]);
+> +		if (ret)
+> +			return pcibios_err_to_errno(ret);
+> +	}
+> +
+> +	return 0;
+> +}
 
 Thanks,
 Yazen
