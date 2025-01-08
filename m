@@ -1,216 +1,178 @@
-Return-Path: <linux-pci+bounces-19564-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3C6AA065EE
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 21:18:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD774A06645
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 21:40:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DE841889D1C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 20:18:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C237F7A0672
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 20:40:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F1DF202C3E;
-	Wed,  8 Jan 2025 20:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CD41DFE06;
+	Wed,  8 Jan 2025 20:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iANCfvr/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2047.outbound.protection.outlook.com [40.107.244.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DA91ABED9;
-	Wed,  8 Jan 2025 20:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736367507; cv=none; b=ZbwLbf1sXGHw3avxltW2crD5p9n3jas1xgFBLcnQh6LIrA2f+rAhwv08ocpIXVHtVl/Gs3mncjWBtG/nZEKAzjNb+NUVDVnFQzJ9w5yq+ucRz6Ei/0hMI2D7nDgsxRPRCDepXHZnpoDp1dMQrHjy6kuUJBn5wCoCtrkM6WeOWC8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736367507; c=relaxed/simple;
-	bh=eQvOD5oObR9xJhsrh/E1FQya3AOWCKVE8dKE+vvzmTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k4Vt1RlfAa6K5RLUAabIqJUKfyvT7C2TFe2odAa+DckagYFgQt2MjI1+Au+e5rTkzSvsRk0JSHH6t6FT5H8cQzED7dR5OZ4Md4JEKfM7nllnfKKPGbLBrvG0+bUcOZbiWb0eZAFw5grMWiiLdt+Jt93tde+O02H+FVl57Nv1XKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
-Received: from MUA
-	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.98)
-	(envelope-from <mhej@vps-ovh.mhejs.net>)
-	id 1tVcVM-00000005Q2v-1LVe;
-	Wed, 08 Jan 2025 21:18:16 +0100
-Message-ID: <db2575ca-e287-4911-97f9-50570aeece41@maciej.szmigiero.name>
-Date: Wed, 8 Jan 2025 21:18:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239ED1A841B;
+	Wed,  8 Jan 2025 20:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736368822; cv=fail; b=qk09NX7aG/uzntfdMc+/iS+bex2nfFcp9CBNDhaZomS/mk/wSGxnnzpu9wbf6nr+X8xKklIt5wVsXUgVUgtgK3ha6emT0UFV53jzEbhAsUIzLMNTv6Vx1Caqqjy7UuDMGhEnpVc1MBk4VGxfGM+jMPPzH8mn+s11OxISaPnF0xM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736368822; c=relaxed/simple;
+	bh=M5Wtv5OsZtTKkCnweGljI/6Pua2iWsZervHa0lmzpOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LUhAHnLn5ao7UvxomgK1ppI79visEcb5bX1VCoKzZKvVNTr28G6lhyPmUcqV68ijVxnFhL8YhpH5uWskyxL6plAo9GL9Ihd8Wm466a3CYGOmmzx9n6oCG/qZ31g1GNzp4Jtj/dwZ+UXiGsXqjhHzbU6t4ZZe9rg1lhgD5PYg99E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iANCfvr/ reason="signature verification failed"; arc=fail smtp.client-ip=40.107.244.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gi/IXW8jvfsFkft3EK2sKCftT+YNVlvO7Dy0xcDdqZqmhVPDOAcYBftm0dxD/hDVyy4F8eITjaEYyKFqD8F+UrN3xQI81ThW8mv7G+JC4KBTM+qQxhbxfVqputND0w8M7PxAUg9WrPblQmP6Qppk5VX8Zuljs7nvk5Y6wyMX7q6GQN/mJsv38OSwhcwWbRW61YJDxNolov9/R/5eEuYX81OPo0od2hikQG7YoQzPmXCheWlx8xKZcacPQdq2hno5J9Zw6BHblLQo63xVz+sn3VnyJVYZsLHHzP4FLooGlabSgZevKKGektUgRtYz91OiJElxwSIyAJfWDUSEvsX+sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZfylhOeVB3Iz2n8eqJZYT0nIxHV8ZRiuZHIzYHJoPfU=;
+ b=utX6sly4Hydc0mrWn5yoUKMli6Jv5CraNeWhDQZcd58B9WcqiFGFTEIHvIX3pcL3J7wKw19B2TwXv7zwQIhkxkrov2dTf1Edor3SjRm1kCJLNP+gMQYH7/qPdAvHc0D5Y1uTA1rHeP728Ydggx82bRhWK5tQajGp7zn0MCo183bVqAsuADk6g5wtV7xlVwpzRoFUxh5A0lWvhfunOXSCBjYQzsVfTfGPr0z+IwXbJVVEd3evoWqgnYxHSJhAaNywItD7XiX/jk/bdb6HNr65i2hO0Fp5qPrQ/vGgaFIe7FbksofUK5UJpK/LDZhIbjAKkRbvHsubZfAfXlffwnld6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZfylhOeVB3Iz2n8eqJZYT0nIxHV8ZRiuZHIzYHJoPfU=;
+ b=iANCfvr/S9BGvZdmP+E4DkF3HMs7vV2kbX0fJb8IiRN2KECvR+GDcum0layOIvpkbVJkgxlccFCy2rGtJBUotzqf4TY0H38SOLkaxmgonOk8zZ0sJZp9UTm7ovA4yVwQlBGFghamfl5SNsotxLfPW20yqN1pAm1tMd3KxPFgmZM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ DS0PR12MB8247.namprd12.prod.outlook.com (2603:10b6:8:f5::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8335.11; Wed, 8 Jan 2025 20:40:15 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.8335.010; Wed, 8 Jan 2025
+ 20:40:15 +0000
+Date: Wed, 8 Jan 2025 15:40:11 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v8 3/7] PCI: Make pcie_read_tlp_log() signature same
+Message-ID: <20250108204011.GA1342186@yaz-khff2.amd.com>
+References: <20241218143747.3159-1-ilpo.jarvinen@linux.intel.com>
+ <20241218143747.3159-4-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241218143747.3159-4-ilpo.jarvinen@linux.intel.com>
+X-ClientProxiedBy: BN9PR03CA0721.namprd03.prod.outlook.com
+ (2603:10b6:408:110::6) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net: wwan: iosm: Fix hibernation by re-binding the
- driver around it
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
- M Chetan Kumar <m.chetan.kumar@intel.com>,
- Sergey Ryazanov <ryazanov.s.a@gmail.com>,
- Loic Poulain <loic.poulain@linaro.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- Bjorn Helgaas <bhelgaas@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- linux-pm@vger.kernel.org
-References: <20250108195109.GA224965@bhelgaas>
- <5df4a525-dc5d-405a-be07-5b33e94f5a4f@maciej.szmigiero.name>
- <CAJZ5v0hU8=h2QLQ+JDoTb28uWFH=r=PsCSGjgs+Mv4_ax-rrAg@mail.gmail.com>
-Content-Language: en-US, pl-PL
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Autocrypt: addr=mail@maciej.szmigiero.name; keydata=
- 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
-Disposition-Notification-To: "Maciej S. Szmigiero"
- <mail@maciej.szmigiero.name>
-In-Reply-To: <CAJZ5v0hU8=h2QLQ+JDoTb28uWFH=r=PsCSGjgs+Mv4_ax-rrAg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Sender: mhej@vps-ovh.mhejs.net
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|DS0PR12MB8247:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa41c2e9-c156-4a10-dc8f-08dd3024a7d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?flQDXN2MckuKYZgJGzGvlOZZVMPd7OO0x8KrH7IYNdovlAugFyznpmL+L3?=
+ =?iso-8859-1?Q?3P1FjbRXPSndTVa8kPckP1cEE6XlIpuf8durI+4KQv0/s+lkkliF4yne+K?=
+ =?iso-8859-1?Q?O/xtpfXlw03NQLt1JvVLHmmMO9Kb2UJHW6Pa5TXg0fFpFX3027veKYK10k?=
+ =?iso-8859-1?Q?FulkOpjVo0tOONO8eEzOXPUbWmCxf/4Vma4PFCZrWlEByKmkUlsgNxi/Sm?=
+ =?iso-8859-1?Q?oVHwU1o2PgDKrZ5ZfbT4kN3XIBQO8uCvmBXa9samfN9Fizg7BFeM+6Agoz?=
+ =?iso-8859-1?Q?8151lHHIUcHLEJkD8nsMRGU8YqitNi2t72S3f0/aZcCzW0UdLR5wj6OUx2?=
+ =?iso-8859-1?Q?iyQHQcfjfsmucM/dhCOODvcPZekDo8vHjQSAWMaK8/oTUTWk4/LXvhOJue?=
+ =?iso-8859-1?Q?qRul22boXoSoFpjrQmYoseEKnQvhLSuvmArZUYawjlQ6tAhc9UNXabs30D?=
+ =?iso-8859-1?Q?nHQEAL+zjAdaWNWNjpvzTYfv43eJwbgwlo/rS+bHJvWlQUQFVSxWNwFvzg?=
+ =?iso-8859-1?Q?Yxnq0Pc2VSnIRmOh6ZBHnZ7LGZFZmsKnI5lqWyZFgAXJa9IjqYiFtkDcex?=
+ =?iso-8859-1?Q?1dFqENDm+zvKR3mGq+r2A/A1H7jQxoyK2l1Vfuw6XXdYC+y+ZKOfAIq2qS?=
+ =?iso-8859-1?Q?ZbLwCGxinSJpm/YVU/luRkO3lTZUXSHAfptfyLWKbTTPc/SdOfMLqmfvny?=
+ =?iso-8859-1?Q?QfqPj7leVJWwI7O17JLw5wo8KO2n8dcOlijDoXXbuVz08FCbrCmTdRkPKT?=
+ =?iso-8859-1?Q?8U7Qs93E6sKPK4InE8whz7muqc9r0WM/fyfcHyzUneFuvlS0But10+zaCQ?=
+ =?iso-8859-1?Q?toOdGO4bBKdjk/kMEtbmtiZEFYlGhdIaGlxo1NQjkXWs2oFoq2A/+ZIi62?=
+ =?iso-8859-1?Q?HnHsMDt8wiI1BLdgq8n2ZgcwOcDJ7jMbNFJ+4oMiLF+GQkFBFItkfvuHD8?=
+ =?iso-8859-1?Q?am1dXzC+1+9aVl9o21I2oQIf0OBlRRuv9ltafMUGtCrfMTcCBF6pQQIHIe?=
+ =?iso-8859-1?Q?WRr2ramk/BgTFURTvlUlEBrQhkvLY6+MHGCTQLXdqVaUKyMkuU1L3Ip9Ey?=
+ =?iso-8859-1?Q?UeHmxCkCwN6ONMbsFn8tK+2+PmbdiZv08TTvLGaMs22PS7ixzlrxS9XCAm?=
+ =?iso-8859-1?Q?gGVhhHsJzpWLtzsb9oUPRB6h8C/NBIDejyY6yxMVCEDkazXALw8zEXQSXT?=
+ =?iso-8859-1?Q?THs7H2MrH2uL6Tv4gGfWOvGcWLWZ/KHmnTzajJJje89AUUTxC7a/4Nc/rq?=
+ =?iso-8859-1?Q?MRUvEsXSHhm9CemlI02DTawIGTT79ll4/hJRAcdKXzVHpazbQsBbH/wIen?=
+ =?iso-8859-1?Q?FrnjBc+ToJAWNibJMai05SQmRlXhWXuOOSbDNFscuyYFNTYeVsGt72vJWh?=
+ =?iso-8859-1?Q?1V2U9R8SpjKVJ07ZrHp/ut18VHbvfwDKdUKvyfL0Ix5T4sNPyQ57fgVeAp?=
+ =?iso-8859-1?Q?M5Js7OfQdX9jFXtZ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?bh7Uicmvwa2652lIb9EPbc+NqTKTixQVxz93/vFIhu9GMgAa1mDyOx7BM6?=
+ =?iso-8859-1?Q?JLOl3QfaNGbLFWQJoRGq/ObD3cAUyQs2Me1NMOtWuE+1tYh2d7tSyO2DdL?=
+ =?iso-8859-1?Q?1QE8XzKEyOAuHVO9Cjb28w//I2Eda3jHUG5o4n7tdvcS4YHfz/tessTgB/?=
+ =?iso-8859-1?Q?FHfXwzXiGDrrFGxO0L41+SpnOE2J05XGy1ZKwZYUSfVkfILjSvAcQTK4Be?=
+ =?iso-8859-1?Q?KKChVH9KcB0MC1pn6qkG58sEghOj5QeG7MgnNoLY2ArWhyNWIreF5bVvtU?=
+ =?iso-8859-1?Q?vj3EUpwJuUDYAlpvPUNi9r4K1VkoExAMLFTY7z+RGhqwrDmB8hvM6Pc0yy?=
+ =?iso-8859-1?Q?0VQY1VFeG1fatEeSqxVtVQoR5FCLFvo/qTMb/F9AxFNeqYFCaHHZse64Gq?=
+ =?iso-8859-1?Q?flebN6nktoDBBQoZ+fHcY7nHjYDE8kW2VhH/7zWQcpQltNopCQvj3pR/dX?=
+ =?iso-8859-1?Q?C28bFZpB2CQxWFrFppEM4o05NO5f9TG3rzZ0OeCE8Q4EPZdjzfme2WTqzq?=
+ =?iso-8859-1?Q?Kes9lhboOPZp8BfFVqUHWoqKOS9TOcbxpHUxRPvsRIaksgcfy2FpYbxJQp?=
+ =?iso-8859-1?Q?NtxUrTWpA6FP0JifL4PI53yk6gbOsAARiQlxatQ6b7co76spJh9ZkoznX8?=
+ =?iso-8859-1?Q?8hpT3ZOpFkBorKs8HMu0/i/9EWo5wkvl8ifAmIpUyTYF4r97Egjw1F3fjU?=
+ =?iso-8859-1?Q?qwJeFSKFEj1BqL4jb/8pP2eSvJpbEifa1JQ0ekTwd2qW21GhbnKN9lXiC0?=
+ =?iso-8859-1?Q?BYNLXBceMHWBTUQdwKFYzpSbx0rIsoSn/TqPW7Z/R3o+0qQ83zpggg6BW6?=
+ =?iso-8859-1?Q?0xlHLkLyV1+X8NcR6G24ccYllEtDSJ/gp7+zKe+6bhMOXDxKBPWg0OC6Oq?=
+ =?iso-8859-1?Q?ysoSah9b1yeMhga+klkiacOF/GVZmt33d45dw4Vw/hoMKthgJlXSgxWRYK?=
+ =?iso-8859-1?Q?50ludLmLj/sBxXtNz32ALwhXcAeg3AQkJeJqlqLSqKKkvFg8I4lXxwkgWn?=
+ =?iso-8859-1?Q?Mc8OUXQtVZvG1SqKHP1rUCI5vtw5JBRy/m3MYuiZJJDKxHI7uZT0/mAADY?=
+ =?iso-8859-1?Q?e0WRMs551UuP2ci+eLqgrra8KMneo0/NBhrdSSAxUe5BVQUtIgrL6AyiNH?=
+ =?iso-8859-1?Q?gPgVdfMVuBBD22+Z8PAcupu4C8wtJqupNC+bgZEj6nBAD/EOcFyzrh1r/5?=
+ =?iso-8859-1?Q?3EzfmOPZltGbJTiizRHxjL+ITsM4WSHRJkLvACBcW7iOaXhExbciABUpE4?=
+ =?iso-8859-1?Q?8Rlo03hxoaEW7CHB4JGs12eYOQxhBy9TXy1Y1wT8R4ysPN00kvyyicQz94?=
+ =?iso-8859-1?Q?xBpfKX8EeimIxu5jwoyAnG/xc5kdizXjwJoQWL1Tq334LjdopcucYfjqTQ?=
+ =?iso-8859-1?Q?F5GvdgrztE/okcslZW1Z76Eg8lfP5O+iu9WO73mIYGy0J7iJR07UtIElPf?=
+ =?iso-8859-1?Q?i/IzuRfTHw4GfDzDbNE3QiWWYq8QRVTaLbd8PMtqHhCcCfZJU3K+l57KKu?=
+ =?iso-8859-1?Q?eGeRb7s6+Mn83gNy1NZWBedr15h81Chl7ky2EhjN2rmvTuooUGRPtThXIb?=
+ =?iso-8859-1?Q?qtsmhDnzUrs5oSWOjDw2N+BhhHUpNGSxMisvHG/0Zq8QHo7Uou0HuSJ/ae?=
+ =?iso-8859-1?Q?yKT442CFWiVtrFdZere+47emJ0Xd8M1M8T?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa41c2e9-c156-4a10-dc8f-08dd3024a7d7
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2025 20:40:15.0921
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b/EAVjDEVQecD19K//E3lh2oRor1wjchOe1ywpw4gpmz+qiNmoUDfdDBY/dWfgRwY08/UQ3GkWwEuGhIiMUaLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8247
 
-On 8.01.2025 21:17, Rafael J. Wysocki wrote:
-> On Wed, Jan 8, 2025 at 9:04â€¯PM Maciej S. Szmigiero
-> <mail@maciej.szmigiero.name> wrote:
->>
->> On 8.01.2025 20:51, Bjorn Helgaas wrote:
->>> [+cc Rafael, linux-pm because they *are* PM experts :)]
->>>
->>> On Wed, Jan 08, 2025 at 02:15:28AM +0200, Sergey Ryazanov wrote:
->>>> On 08.01.2025 01:45, Bjorn Helgaas wrote:
->>>>> On Wed, Jan 08, 2025 at 01:13:41AM +0200, Sergey Ryazanov wrote:
->>>>>> On 05.01.2025 19:39, Maciej S. Szmigiero wrote:
->>>>>>> Currently, the driver is seriously broken with respect to the
->>>>>>> hibernation (S4): after image restore the device is back into
->>>>>>> IPC_MEM_EXEC_STAGE_BOOT (which AFAIK means bootloader stage) and needs
->>>>>>> full re-launch of the rest of its firmware, but the driver restore
->>>>>>> handler treats the device as merely sleeping and just sends it a
->>>>>>> wake-up command.
->>>>>>>
->>>>>>> This wake-up command times out but device nodes (/dev/wwan*) remain
->>>>>>> accessible.
->>>>>>> However attempting to use them causes the bootloader to crash and
->>>>>>> enter IPC_MEM_EXEC_STAGE_CD_READY stage (which apparently means "a crash
->>>>>>> dump is ready").
->>>>>>>
->>>>>>> It seems that the device cannot be re-initialized from this crashed
->>>>>>> stage without toggling some reset pin (on my test platform that's
->>>>>>> apparently what the device _RST ACPI method does).
->>>>>>>
->>>>>>> While it would theoretically be possible to rewrite the driver to tear
->>>>>>> down the whole MUX / IPC layers on hibernation (so the bootloader does
->>>>>>> not crash from improper access) and then re-launch the device on
->>>>>>> restore this would require significant refactoring of the driver
->>>>>>> (believe me, I've tried), since there are quite a few assumptions
->>>>>>> hard-coded in the driver about the device never being partially
->>>>>>> de-initialized (like channels other than devlink cannot be closed,
->>>>>>> for example).
->>>>>>> Probably this would also need some programming guide for this hardware.
->>>>>>>
->>>>>>> Considering that the driver seems orphaned [1] and other people are
->>>>>>> hitting this issue too [2] fix it by simply unbinding the PCI driver
->>>>>>> before hibernation and re-binding it after restore, much like
->>>>>>> USB_QUIRK_RESET_RESUME does for USB devices that exhibit a similar
->>>>>>> problem.
->>>>>>>
->>>>>>> Tested on XMM7360 in HP EliteBook 855 G7 both with s2idle (which uses
->>>>>>> the existing suspend / resume handlers) and S4 (which uses the new code).
->>>>>>>
->>>>>>> [1]: https://lore.kernel.org/all/c248f0b4-2114-4c61-905f-466a786bdebb@leemhuis.info/
->>>>>>> [2]:
->>>>>>> https://github.com/xmm7360/xmm7360-pci/issues/211#issuecomment-1804139413
->>>>>>>
->>>>>>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
->>>>>>
->>>>>> Generally looks good to me. Lets wait for approval from PCI
->>>>>> maintainers to be sure that there no unexpected side effects.
->>>>>
->>>>> I have nothing useful to contribute here.  Seems like kind of a
->>>>> mess.  But Intel claims to maintain this, so it would be nice if
->>>>> they would step up and make this work nicely.
->>>>
->>>> Suddenly, Intel lost their interest in the modems market and, as
->>>> Maciej mentioned, the driver was abandon for a quite time now. The
->>>> author no more works for Intel. You will see the bounce.
->>>
->>> Well, that's unfortunate :)  Maybe step 0 is to remove the Intel
->>> entry from MAINTAINERS for this driver.
->>>
->>>> Bjorn, could you suggest how to deal easily with the device that is
->>>> incapable to seamlessly recover from hibernation? I am totally
->>>> hopeless regarding the PM topic. Or is the deep driver rework the
->>>> only option?
->>>
->>> I'm pretty PM-illiterate myself.  Based on
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/pm/sleep-states.rst?id=v6.12#n109,
->>> I assume that when we resume after hibernate, devices are in the same
->>> state as after a fresh boot, i.e., the state driver .probe() methods
->>> see.
->>>
->>> So I assume that some combination of dev_pm_ops methods must be able
->>> to do basically the same as .probe() to get the device usable again
->>> after it was completely powered off and back on.
->>
->> You are right that it should be theoretically possible to fix this issue
->> by re-initializing the driver in the hibernation restore/thaw callbacks
->> and I even have tried to do so in the beginning.
->>
->> But as I wrote in this patch description, doing so would need significant
->> refactoring of the driver as it is not currently capable of being
->> de-initialized and re-initialized partially.
->>
->> Hence this patch approach of simply re-binding the driver which also
->> seemed safer in the absence of any real programming docs for this hardware.
+On Wed, Dec 18, 2024 at 04:37:43PM +0200, Ilpo Järvinen wrote:
+> pcie_read_tlp_log()'s prototype and function signature diverged due to
+> changes made while applying.
 > 
-> While this may not be elegant, it may actually get the job done.
+> Make the parameters of pcie_read_tlp_log() named identically.
 > 
-> Can you please resend the patch with a CC to linux-pm@vger.kernel.org?
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Will do.
+Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+
+Just wondering, could this be squashed into the previous patch? Or is
+the goal to be strict with one logical change per patch?
 
 Thanks,
-Maciej
-
+Yazen
 
