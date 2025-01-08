@@ -1,179 +1,122 @@
-Return-Path: <linux-pci+bounces-19521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19522-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44321A05722
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 10:42:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8261A05759
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 10:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4123B1619D3
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 09:42:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8FFE3A4ED1
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 09:50:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E5B61F3D54;
-	Wed,  8 Jan 2025 09:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC981A2395;
+	Wed,  8 Jan 2025 09:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmBJBt3y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJFG92gz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85D71A0BED;
-	Wed,  8 Jan 2025 09:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871CA17C20F;
+	Wed,  8 Jan 2025 09:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736329313; cv=none; b=ZXgezme6HQh0gFZI5wAWYCUPUBKOilDxnazr6XSN8pvt/xidde9LlU1jvEt/UxcWPvBMVXVMiOUts58dOOffrBUGEHaQ//F5ptAwWfMoiwhldHYMgdoUCZf6j2KzMswanO4mCiJ5BW8PbhI3J4ClozHo1AISGZj5s6qFcblAsU4=
+	t=1736329860; cv=none; b=h+OZ4mDOptQ4gb1ycRynNofERAW8xAKCYlSjAPPVCX/Bbp2CD2IFwGuWvypszgMmums+d9j4oM3JctYeXihxcaq8lDPWDGcKCuIP5crffeLTfa/uDUdV/z5kNzjZpWgAy9h4C9AkOR6NmdChzZ4kPUQNkR+1d0m48glqSuHvJTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736329313; c=relaxed/simple;
-	bh=EntXp4xoflKbAqPs1HYoj7ukYN+nnJIPOzYENz4cHvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HG2gT/1aGak9QnLpGTE4NStPQOrEgGKRl90HLPhr7tltmrcej3MbVBQ8lRNHz9Ef+s4/6PkykxqmuEtFiFOUEDhtRKhPlhjdVnj3wiNVDz0+8swb6JHqg3Au7Akz+0aYmTm7zH0NEIOD1rZJNyWmSweAgks5NeyZJU1CwSA1+H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmBJBt3y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF3EC4CEE0;
-	Wed,  8 Jan 2025 09:41:51 +0000 (UTC)
+	s=arc-20240116; t=1736329860; c=relaxed/simple;
+	bh=fUoWeZRO/HpW76L68BYVrr8hfn5nR1LoYeez3wpOXUg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J88m3QbcH/4OA0fQJn62xZ7bOrA1umyYwPZjD2hGeoV2Q+Jg2fNZPg6YhadA/L1BxE8BCgiNg0eR/y10BFAeF60NX+TsN8/2jEvg2of0oIs+y8dJ3QkWWk0r+iX6NxkMPanhS9lhJ88zqu7PdvhzMfx/MV7/XsaU27dvCpOYVRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJFG92gz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE7BC4CEE1;
+	Wed,  8 Jan 2025 09:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736329312;
-	bh=EntXp4xoflKbAqPs1HYoj7ukYN+nnJIPOzYENz4cHvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZmBJBt3ye5TWgQ2ebPu+INxrnEO7li5c1DTwrmISGqEEPqqEJbpeHBgfqe+0wxPYb
-	 l/sISxNY67Y+aQ85lTp78YdVXn7i3WjvUjRjOqIaVWyp9l42NN2lnJGlJX6LSwbHkP
-	 FKRQq/N4Gg6pE0NgXR9vPAi7cl9RuLQwKKR/kUOQeleLZ+8pNAYZLJTjci/2zlxh0G
-	 ajkzB8tcdSN9v7z5QOl6TlroM9nC4lhKTuD1F6hQeR/1d0oIYpuGHESFsCjseXxmtp
-	 dIcziBACMLrsq9c7A3mn6gHWqWohkKzW7L4WD8IiboSaDR1A8e8rqNGGMqsHFH5jwf
-	 zVwMC/GGy2BmQ==
-Date: Wed, 8 Jan 2025 10:41:49 +0100
+	s=k20201202; t=1736329860;
+	bh=fUoWeZRO/HpW76L68BYVrr8hfn5nR1LoYeez3wpOXUg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=iJFG92gz+jc4FqLGAbBNKQL3bo3cAYGD9Ol/xK1HqXkvE1NPhed37KLtNQY2GXR5q
+	 lstqk+zktqh0F2H2VcMpjwJwdPwPnweQWLT0i0VA9fnrVoEtEzREDolzVyVUxHxIYV
+	 ei7X2zCJfZ1/C5BwhnCFU5UseygPTlDMuzYmaUBWMEZcN1mchB07Lt9MJYbUnMpvUn
+	 4xXTPl0BysZUakTTQRyZxIaX+SKb1rU5NgcgZwBKdd31o285kMU7YYndzhYg5Th4cv
+	 vzDCpJydaZeTvGvMaVwDP1sfxyNrbCvdvaz+pTGIELBHVHaxGeKr44R9psZ2VloThY
+	 r+frWP+b5YpLA==
 From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 5/6] PCI: mediatek-gen3: Add reset delay in
- mtk_pcie_en7581_power_up()
-Message-ID: <Z35IXRLX0xDX7Kr7@lore-desk>
-References: <20241130-pcie-en7581-fixes-v5-5-dbffe41566b3@kernel.org>
- <20250103183527.GA3959656@bhelgaas>
+Subject: [PATCH v6 0/5] PCI: mediatek-gen3: mtk_pcie_en7581_power_up() code
+Date: Wed, 08 Jan 2025 10:50:39 +0100
+Message-Id: <20250108-pcie-en7581-fixes-v6-0-21ac939a3b9b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UfOoG4Z6S4fyWZJw"
-Content-Disposition: inline
-In-Reply-To: <20250103183527.GA3959656@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG9KfmcC/x3LQQqAIBBG4avIrBvQyLKuEi1E/2o2FgoRRHdPW
+ n483kMFWVBoUg9lXFLkSBV9oyjsPm1gidXU6tZqox2fQcBIg3WGV7lRWHdxNA7W295Q/c6MP9R
+ tXt73AwVH/KhjAAAA
+X-Change-ID: 20250108-pcie-en7581-fixes-04d918e5a561
+To: Ryder Lee <ryder.lee@mediatek.com>, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+ Lorenzo Bianconi <lorenzo@kernel.org>
+X-Mailer: b4 0.14.2
 
+Minor fixes and code refactoring in mtk_pcie_en7581_power_up() routine
 
---UfOoG4Z6S4fyWZJw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in v6:
+- remove mac_rst support for EN7581 since it is not needed by the SoC
+- fix typos
+- Link to v5: https://lore.kernel.org/r/20241130-pcie-en7581-fixes-v5-0-dbffe41566b3@kernel.org
 
->=20
-> If you repost this series, here are a few comments/typos.  Otherwise
-> we can do the trivial updates on the branch.
->=20
-> In subject: this patch doesn't *add* a delay; it *moves* it.
+Changes in v5:
+- fix comment in patch 3/6
+- fix commit log in patch 5/6
+- Link to v4: https://lore.kernel.org/r/20241118-pcie-en7581-fixes-v4-0-24bb61703ad7@kernel.org
 
-ack, I will fix it.
+Changes in v4:
+- fix comment in patch 4/6
+- Link to v3: https://lore.kernel.org/r/20241116-pcie-en7581-fixes-v3-0-f7add3afc27e@kernel.org
 
->=20
-> On Sat, Nov 30, 2024 at 12:20:14AM +0100, Lorenzo Bianconi wrote:
-> > Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
-> > causing occasional PCIe link down issues. In order to overcome the
-> > problem, PCIe block is reset using REG_PCI_CONTROL (0x88) and
-> > REG_RESET_CONTROL (0x834) registers available in the clock module
-> > running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
->=20
-> Add parens after clk_bulk_prepare_enable.
+Changes in v3:
+- add trivial patches 5/6 and 6/6 to the series
+- rename err_clk_init in err_clk_prepare_enable
+- fix commit log for patches 2/6 and 3/6
+- Link to v2: https://lore.kernel.org/r/20241109-pcie-en7581-fixes-v2-0-0ea3a4af994f@kernel.org
 
-ack, I will fix it.
+Changes in v2:
+- added trivial patch 4/4
+- improved commit logs and comments
+- introduced PCIE_MTK_RESET_TIME_US macro
+- Link to v1: https://lore.kernel.org/r/20241107-pcie-en7581-fixes-v1-0-af0c872323c7@kernel.org
 
->=20
-> > In order to make the code more readable, move the wait for the time
-> > needed to complete the PCIe reset from en7581_pci_enable() to
-> > mtk_pcie_en7581_power_up().
-> > Reduce reset timeout from 250ms to the standard PCIE_T_PVPERL_MS value
-> > (100ms) since it has no impact on the driver behavior.
-> >
-> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  drivers/clk/clk-en7523.c                    | 1 -
-> >  drivers/pci/controller/pcie-mediatek-gen3.c | 7 +++++++
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
-> > index 22fbea61c3dcc05e63f8fa37e203c62b2a6fe79e..bf9d9594bef8a54316e28e5=
-6a1642ecb0562377a 100644
-> > --- a/drivers/clk/clk-en7523.c
-> > +++ b/drivers/clk/clk-en7523.c
-> > @@ -393,7 +393,6 @@ static int en7581_pci_enable(struct clk_hw *hw)
-> >  	       REG_PCI_CONTROL_PERSTOUT;
-> >  	val =3D readl(np_base + REG_PCI_CONTROL);
-> >  	writel(val | mask, np_base + REG_PCI_CONTROL);
-> > -	msleep(250);
-> > =20
-> >  	return 0;
-> >  }
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
-controller/pcie-mediatek-gen3.c
-> > index 01e8fde96080fa55f6c23c7d1baab6e22c49fcff..da01e741ff290464d28e172=
-879520dbe0670cc41 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -977,6 +977,13 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen=
-3_pcie *pcie)
-> >  		goto err_clk_prepare_enable;
-> >  	}
-> > =20
-> > +	/*
-> > +	 * Airoha EN7581 performs PCIe reset via clk callabacks since it has a
-> > +	 * hw issue with PCIE_PE_RSTB signal. Add wait for the time needed to
-> > +	 * complete the PCIe reset.
->=20
-> s/callabacks/callbacks/
+---
+Lorenzo Bianconi (5):
+      PCI: mediatek-gen3: rely on clk_bulk_prepare_enable() in mtk_pcie_en7581_power_up()
+      PCI: mediatek-gen3: Move reset/assert callbacks in .power_up()
+      PCI: mediatek-gen3: Add comment about initialization order in mtk_pcie_en7581_power_up()
+      PCI: mediatek-gen3: Move reset delay in mtk_pcie_en7581_power_up()
+      PCI: mediatek-gen3: rely on msleep() in mtk_pcie_en7581_power_up()
 
-ack, I will fix it.
+ drivers/clk/clk-en7523.c                    |  1 -
+ drivers/pci/controller/pcie-mediatek-gen3.c | 57 +++++++++++++++++------------
+ 2 files changed, 34 insertions(+), 24 deletions(-)
+---
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+change-id: 20250108-pcie-en7581-fixes-04d918e5a561
 
-Regards,
-Lorenzo
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
 
->=20
-> > +	 */
-> > +	msleep(PCIE_T_PVPERL_MS);
-> > +
-> >  	return 0;
-> > =20
-> >  err_clk_prepare_enable:
-> >=20
-> > --=20
-> > 2.47.0
-> >=20
-
---UfOoG4Z6S4fyWZJw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ35IXQAKCRA6cBh0uS2t
-rNfuAP95qW2o5+5pMdA45lJJrd8AAwCrPov/N/UcDypJjjfnsQEAlJiNopVu7YmP
-HOKH4pXQZe272nswX6233GV357WPqwk=
-=k4Zn
------END PGP SIGNATURE-----
-
---UfOoG4Z6S4fyWZJw--
 
