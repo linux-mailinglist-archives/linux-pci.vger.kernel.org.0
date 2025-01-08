@@ -1,157 +1,179 @@
-Return-Path: <linux-pci+bounces-19520-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19521-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05E8CA05611
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 10:04:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44321A05722
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 10:42:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 035E1164036
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 09:04:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4123B1619D3
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 09:42:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A73481E9B2B;
-	Wed,  8 Jan 2025 09:04:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E5B61F3D54;
+	Wed,  8 Jan 2025 09:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XN+6NTKr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmBJBt3y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E4014B95A;
-	Wed,  8 Jan 2025 09:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85D71A0BED;
+	Wed,  8 Jan 2025 09:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736327080; cv=none; b=gRiuHL/99mMdeEVWkp+0+R668cMgl0IjL1zJb3HWz1RtzEOcjG8XmTFVtfjOQAHR+ES4VHT7vxrAdmXmw5nCDanWZyNqNgtu6543W6fF7+e3V2TYaA74wWZEVM7mIIs775ERmut3S4xg8K7OyW9IHfCOQYzEi6gKOL9WC6l6Edw=
+	t=1736329313; cv=none; b=ZXgezme6HQh0gFZI5wAWYCUPUBKOilDxnazr6XSN8pvt/xidde9LlU1jvEt/UxcWPvBMVXVMiOUts58dOOffrBUGEHaQ//F5ptAwWfMoiwhldHYMgdoUCZf6j2KzMswanO4mCiJ5BW8PbhI3J4ClozHo1AISGZj5s6qFcblAsU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736327080; c=relaxed/simple;
-	bh=xNR/nXvwFudfyaWoOBM9ZGvzX6rok5QN+Q64OKRxbZw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KJYfO2K+o1lask7x9bD+5xJh97I0S1cYkcoiR0bumfYx43L0/wK3+Xb2rF+cuc243dcySmoGbowGm8m/7O2jmIQapkdYxCvEAzaxPo4+ko8W4LlSV1jDSHJKKeMJ1McFq4jnseO8QXDaPLKQyV/syDlmsHRXoiQ2B2BVYdJBJgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XN+6NTKr; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1736327068; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=ijIs5T/si3GfhX3wBZjJciP7Ftp7BZ+lLRzqIm/A8wc=;
-	b=XN+6NTKrDrsIMMrwOM9OKRS6VRdU4tXnj9nhNbV6Kq2paYwS3N97iqeXqtVDrfqd2EJOJiWpN2uLwoZYeW9HmJrHszPZgIpy57vt0TiJcFeUrysif85uDfijRYItYsLTiNsNFrG+wQf6Z8/ySk/MRSYLoiZIUBEgWU4siWka4AU=
-Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNDVWZy_1736327065 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 08 Jan 2025 17:04:27 +0800
-Message-ID: <309dd6e6-53ec-4f82-94ca-242941bd7136@linux.alibaba.com>
-Date: Wed, 8 Jan 2025 17:04:25 +0800
+	s=arc-20240116; t=1736329313; c=relaxed/simple;
+	bh=EntXp4xoflKbAqPs1HYoj7ukYN+nnJIPOzYENz4cHvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HG2gT/1aGak9QnLpGTE4NStPQOrEgGKRl90HLPhr7tltmrcej3MbVBQ8lRNHz9Ef+s4/6PkykxqmuEtFiFOUEDhtRKhPlhjdVnj3wiNVDz0+8swb6JHqg3Au7Akz+0aYmTm7zH0NEIOD1rZJNyWmSweAgks5NeyZJU1CwSA1+H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmBJBt3y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF3EC4CEE0;
+	Wed,  8 Jan 2025 09:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736329312;
+	bh=EntXp4xoflKbAqPs1HYoj7ukYN+nnJIPOzYENz4cHvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZmBJBt3ye5TWgQ2ebPu+INxrnEO7li5c1DTwrmISGqEEPqqEJbpeHBgfqe+0wxPYb
+	 l/sISxNY67Y+aQ85lTp78YdVXn7i3WjvUjRjOqIaVWyp9l42NN2lnJGlJX6LSwbHkP
+	 FKRQq/N4Gg6pE0NgXR9vPAi7cl9RuLQwKKR/kUOQeleLZ+8pNAYZLJTjci/2zlxh0G
+	 ajkzB8tcdSN9v7z5QOl6TlroM9nC4lhKTuD1F6hQeR/1d0oIYpuGHESFsCjseXxmtp
+	 dIcziBACMLrsq9c7A3mn6gHWqWohkKzW7L4WD8IiboSaDR1A8e8rqNGGMqsHFH5jwf
+	 zVwMC/GGy2BmQ==
+Date: Wed, 8 Jan 2025 10:41:49 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] PCI: mediatek-gen3: Add reset delay in
+ mtk_pcie_en7581_power_up()
+Message-ID: <Z35IXRLX0xDX7Kr7@lore-desk>
+References: <20241130-pcie-en7581-fixes-v5-5-dbffe41566b3@kernel.org>
+ <20250103183527.GA3959656@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v4] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
- tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org
-References: <20250107231943.GA189869@bhelgaas>
-In-Reply-To: <20250107231943.GA189869@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UfOoG4Z6S4fyWZJw"
+Content-Disposition: inline
+In-Reply-To: <20250103183527.GA3959656@bhelgaas>
 
 
+--UfOoG4Z6S4fyWZJw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/1/8 07:19, Bjorn Helgaas 写道:
-> On Sat, Nov 23, 2024 at 07:31:08PM +0800, Shuai Xue wrote:
->> Hotplug events are critical indicators for analyzing hardware health,
->> particularly in AI supercomputers where surprise link downs can
->> significantly impact system performance and reliability. The failure
->> characterization analysis illustrates the significance of failures
->> caused by the Infiniband link errors. Meta observes that 2% in a machine
->> learning cluster and 6% in a vision application cluster of Infiniband
->> failures co-occur with GPU failures, such as falling off the bus, which
->> may indicate a correlation with PCIe.[1]
->>
->> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
->> tracepoint for hotplug event to help healthy check, and generate
->> tracepoints for pcie hotplug event. To monitor these tracepoints in
->> userspace, e.g. with rasdaemon, put `enum pci_hotplug_event` in uapi
->> header.
->>
->> The output like below:
->> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
->> $ cat /sys/kernel/debug/tracing/trace_pipe
->>             <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
->>
->>             <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
->>
->> [1]https://arxiv.org/abs/2410.21680
-> 
-> Doesn't apply on pci/main (v6.13-rc1); can you rebase it?
+>=20
+> If you repost this series, here are a few comments/typos.  Otherwise
+> we can do the trivial updates on the branch.
+>=20
+> In subject: this patch doesn't *add* a delay; it *moves* it.
 
-Sure. Do you mean Git repository at:
+ack, I will fix it.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-   branch main
+>=20
+> On Sat, Nov 30, 2024 at 12:20:14AM +0100, Lorenzo Bianconi wrote:
+> > Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
+> > causing occasional PCIe link down issues. In order to overcome the
+> > problem, PCIe block is reset using REG_PCI_CONTROL (0x88) and
+> > REG_RESET_CONTROL (0x834) registers available in the clock module
+> > running clk_bulk_prepare_enable in mtk_pcie_en7581_power_up().
+>=20
+> Add parens after clk_bulk_prepare_enable.
 
-> 
-> s/pcie/PCIe/ in English text.
+ack, I will fix it.
 
-Will fix it.
+>=20
+> > In order to make the code more readable, move the wait for the time
+> > needed to complete the PCIe reset from en7581_pci_enable() to
+> > mtk_pcie_en7581_power_up().
+> > Reduce reset timeout from 250ms to the standard PCIE_T_PVPERL_MS value
+> > (100ms) since it has no impact on the driver behavior.
+> >
+> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  drivers/clk/clk-en7523.c                    | 1 -
+> >  drivers/pci/controller/pcie-mediatek-gen3.c | 7 +++++++
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
+> > index 22fbea61c3dcc05e63f8fa37e203c62b2a6fe79e..bf9d9594bef8a54316e28e5=
+6a1642ecb0562377a 100644
+> > --- a/drivers/clk/clk-en7523.c
+> > +++ b/drivers/clk/clk-en7523.c
+> > @@ -393,7 +393,6 @@ static int en7581_pci_enable(struct clk_hw *hw)
+> >  	       REG_PCI_CONTROL_PERSTOUT;
+> >  	val =3D readl(np_base + REG_PCI_CONTROL);
+> >  	writel(val | mask, np_base + REG_PCI_CONTROL);
+> > -	msleep(250);
+> > =20
+> >  	return 0;
+> >  }
+> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
+controller/pcie-mediatek-gen3.c
+> > index 01e8fde96080fa55f6c23c7d1baab6e22c49fcff..da01e741ff290464d28e172=
+879520dbe0670cc41 100644
+> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > @@ -977,6 +977,13 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen=
+3_pcie *pcie)
+> >  		goto err_clk_prepare_enable;
+> >  	}
+> > =20
+> > +	/*
+> > +	 * Airoha EN7581 performs PCIe reset via clk callabacks since it has a
+> > +	 * hw issue with PCIE_PE_RSTB signal. Add wait for the time needed to
+> > +	 * complete the PCIe reset.
+>=20
+> s/callabacks/callbacks/
 
-> 
-> Probably more detail than necessary about AI supercomputers,
-> Infiniband, vision applications, etc.  This is a very generic issue.
+ack, I will fix it.
 
-Agreed. It is generic. Are you asking for the first background paragraph to be
-deleted?
+Regards,
+Lorenzo
 
-> 
-> "Falling off the bus" doesn't really mean anything to me.  I suppose
-> it's another way to describe a "link down" event that leads to UR
-> errors when trying to access the device?
+>=20
+> > +	 */
+> > +	msleep(PCIE_T_PVPERL_MS);
+> > +
+> >  	return 0;
+> > =20
+> >  err_clk_prepare_enable:
+> >=20
+> > --=20
+> > 2.47.0
+> >=20
 
-Sorry for the confusion. "Falling off the bus" is a common error for NVIDIA GPU
-observed in production. The GPU driver will log a such message when GPU is not
-accessible. And we also see many hotplug event like bellow:
+--UfOoG4Z6S4fyWZJw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[12945750.691652] pcieport 0000:42:02.0: pciehp: Slot(65): Link Down
-[12945750.691655] pcieport 0000:42:02.0: pciehp: Slot(65): Card not present
+-----BEGIN PGP SIGNATURE-----
 
-> https://docs.nvidia.com/deploy/xid-errors/index.html#xid-79-gpu-has-fallen-off-the-bus
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ35IXQAKCRA6cBh0uS2t
+rNfuAP95qW2o5+5pMdA45lJJrd8AAwCrPov/N/UcDypJjjfnsQEAlJiNopVu7YmP
+HOKH4pXQZe272nswX6233GV357WPqwk=
+=k4Zn
+-----END PGP SIGNATURE-----
 
-> 
-> I'm guessing that monitoring these via rasdaemon requires more than
-> just adding "enum pci_hotplug_event"?  Or does rasdaemon read
-> include/uapi/linux/pci.h and automagically incorporate new events?
-> Maybe there's at least a rebuild involved?
-
-Yes, a rebuild is needed. Rasdaemon has a basic infrastructure to manually
-register a tracepoint event handler. For example, for this new event, we can
-register to handle pci_hp_event:
-
-     rc = add_event_handler(ras, pevent, page_size, "pci", "pci_hp_event",
-			   ras_pci_hp_event_handler, NULL, PCI_HOTPLUG_EVENT);
-
-> 
-> Anything in the arxiv link that is specifically relevant to this patch
-> needs to be in the commit log itself.  But I think there's already
-> enough information here to motivate this change, and whatever is in
-> the arxiv link may be of general interest, but is probably not
-> required to justify, understand, or debug this useful functionality.
-
-I see, will remove the arxiv link.
-
-> 
-> Bjorn
-
-Thank you for quick reply.
-
-Best Regards,
-Shuai
+--UfOoG4Z6S4fyWZJw--
 
