@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-19500-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19501-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F3DCA0545C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 08:19:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB2BFA05465
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 08:21:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0116E3A33AA
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 07:19:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 798E8160D87
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 07:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E741A9B5B;
-	Wed,  8 Jan 2025 07:19:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAF61AA1DE;
+	Wed,  8 Jan 2025 07:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJG9+hRn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkS8y5nX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51401A7264;
-	Wed,  8 Jan 2025 07:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E4C1A76BC;
+	Wed,  8 Jan 2025 07:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736320770; cv=none; b=J27CVsQnFojL/MtX9sG4TwXu0yY3y8UePB7YW2+1sMEnhpd4Y0klM7KjdFT4q17/nK2sh61rS6KEba5LO2Mvy8ppYer9N/S368iGP9ugN2XW8mam61w2bPQTWtfsfHmWnuBjRoBjzgArsy1oOWVTBdLes4g/k64UEhyuAKPxsvY=
+	t=1736320907; cv=none; b=pWPByPTZ6sifRHAyN/ddOwOaSPrKNplHMD/4pYUSfgUljho+k6TxLBsJXYorobtIuhXMYi6atH4f6/kaZA1ry2X7es7HLL+zi/dya4b9kzgjwmkZRIKpD2Hd3/HKErqOk/FMMVxsSbV33E/fKyy0VhYYq2DFsqpPUcKQc1+nHRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736320770; c=relaxed/simple;
-	bh=NOjxFjPiFxT527PiGFoNNkAPVLdtxQhUm1eAB4jinV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DY157uzmeSmcNznR4AsbpTepQ3hKTRHyhdfHUlC4atpg73qN8A7me5sdtgpH3PywxDpUZS7P8+WTAfBzoUv55fsVrZhG3p8EXDZbEZ5dy8FmKPbf421z/0GcUrE4wUJ6AxoNJWevzKFVYAjr7A4jcxw/nb3WHGP47v6EQN2Qko8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJG9+hRn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17374C4CEE4;
-	Wed,  8 Jan 2025 07:19:21 +0000 (UTC)
+	s=arc-20240116; t=1736320907; c=relaxed/simple;
+	bh=6GatgfphCSW18nxaoIV/bjoS8pB7cEEZx2f4eDRHW30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MnOErHwX25fiCeI9GOvGMFajX9tbchDSBYI0Y1L1JjRJk1T+FCNY+420pwq2nTiKnVuBnnAGUwan1XBMXzmNm+8c4gLCbEbNupLGKuPrioCuth7F2yI7oYlu4WDEMoXpk3JmW0nYZay1n17PRdjWUmpKj3m/nRLA+iqDiu5L9l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkS8y5nX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5E5EC4CEE0;
+	Wed,  8 Jan 2025 07:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736320768;
-	bh=NOjxFjPiFxT527PiGFoNNkAPVLdtxQhUm1eAB4jinV4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tJG9+hRnGDNq+vhWALx7FsdTKpnNlnHL6tXXxbCg72zHQpe02Ebidj2hWgEP/54uA
-	 yrxW/BLctFhgtLzjQyOu786+WvYImwCfyaIuOoxmK6pj983neNQwgINtRs618X3/T4
-	 zBt6KW0G4hlPGvILcImAYGz0+5u7ykNd0PBuqx9NFx90PFI5uFX/GX0MCHlYGuwvqx
-	 bhdh4WxHzjp2smOhATJXnMUhDu8SqF3EHswuQr9w33/yT5bxou+1zNGZymRSu20Y3j
-	 SQOrcYPhZB3k5pcQTe+ezzM8COGKbmVIcwcLKm0g2JdWyPNBcbAFv0LJvvlhs2w2ci
-	 mX0TwgtKfu3Cw==
-Message-ID: <50b03189-bf2c-46c8-b7c2-4aa5eed97c35@kernel.org>
-Date: Wed, 8 Jan 2025 08:19:19 +0100
+	s=k20201202; t=1736320907;
+	bh=6GatgfphCSW18nxaoIV/bjoS8pB7cEEZx2f4eDRHW30=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=CkS8y5nXbVTj4Ex+UNUPRIvRs8ZObRoP37fMcm8ZxHMF5j/xkx0xFSCMfvSgF4Yoe
+	 U1tC/Ihs6LrBx0t9pNOIfHOrHrN0IwBeaLgNRavpPCeSk2PW0k2GqQakYMIwxEdUFW
+	 LDYEEUcVCm8BUgNQWlVpfxQYxFM8/IWc/6AS8UgYLKV8LTt/C1bQBiDeUjrI6MG8bP
+	 rKindE0Nuaj/zwgZSrt+1qJgR2usHa7PEymU3ITVXOVd35FHyDZ+FePepmF88lvpmb
+	 7+tsE2OlLqWXbeiHx5swIrSgRpK00B4YvOcWY1L8yhyvyzUlCyVHDdILF+tIDYGM0v
+	 Jj6X6SKny9r6g==
+Message-ID: <e39ee309-a8cd-4e65-b37a-74afb215c3b6@kernel.org>
+Date: Wed, 8 Jan 2025 08:21:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,21 +50,18 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe
+Subject: Re: [PATCH v6 3/5] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe
  controller
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, p.zabel@pengutronix.de,
- quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org
-References: <20250102113019.1347068-1-quic_varada@quicinc.com>
- <20250102113019.1347068-4-quic_varada@quicinc.com>
- <4hwclzotaowog6rzfejiixqvvg7iumg4udbvq3h72mmh42dbki@piphsf37vhpv>
- <Z30KZM1RGdFvB1dy@hu-varada-blr.qualcomm.com>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
+ kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+ p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org,
+ quic_nsekar@quicinc.com, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20250108055842.2042876-1-quic_varada@quicinc.com>
+ <20250108055842.2042876-4-quic_varada@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,57 +107,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <Z30KZM1RGdFvB1dy@hu-varada-blr.qualcomm.com>
+In-Reply-To: <20250108055842.2042876-4-quic_varada@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/01/2025 12:05, Varadarajan Narayanan wrote:
->>> ---
->>>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 10 ++++++++--
->>>  1 file changed, 8 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>> index bd87f6b49d68..9f37eca1ce0d 100644
->>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>> @@ -26,7 +26,6 @@ properties:
->>>            - qcom,pcie-ipq8064-v2
->>>            - qcom,pcie-ipq8074
->>>            - qcom,pcie-ipq8074-gen3
->>> -          - qcom,pcie-ipq9574
->>
->> I don't understand this change at all and your commit msg explains
->> here nothing.
+On 08/01/2025 06:58, Varadarajan Narayanan wrote:
+> Document the PCIe controller on IPQ5332 platform. IPQ5332 will
+> use IPQ9574 as the fall back compatible.
 > 
 > All DT entries except "reg" is similar between ipq5332 and
 > ipq9574. ipq9574 has 5 registers while ipq5332 has 6. MHI is the
-> additional (i.e. sixth) entry for ipq5332.
+> additional (i.e. sixth entry). Since this matches with the
+> sdx55's "reg" definition which allows for 5 or 6 registers,
+> combine ipq9574 and ipq5332 with sdx55. Without this
+> dt_binding_check fails.
 > 
-> If ipq9574 is not removed from here, dt_binding_check gives the
-> following errors
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
+> v6: Commit message update only. Add info regarding the moving of
+>     ipq9574 from 5 "reg" definition to 5 or 6 reg definition.
 > 
-> 1.	/local/mnt/workspace/varada/upstream/pci-v6/arch/arm64/boot/dts/qcom/ipq5332-rdp474.dtb: pcie@18000000: reg: [[557056, 12288], [402653184, 3869], [402657056, 168], [402657280, 4096], [403701760, 4096], [569344, 4096]] is too long
-> 
-> 	Failed validating 'maxItems' in schema['allOf'][2]['then']['properties']['reg']:
-> 	    {'maxItems': 5, 'minItems': 5}
-> 
-> 2.	/local/mnt/workspace/varada/upstream/pci-v6/arch/arm64/boot/dts/qcom/ipq5332-rdp474.dtb: pcie@18000000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'config', 'mhi'] is too long
-> 
-> 	Failed validating 'maxItems' in schema['allOf'][2]['then']['properties']['reg-names']:
-> 	    {'items': [{'const': 'dbi'},
-> 		       {'const': 'elbi'},
-> 		       {'const': 'atu'},
-> 		       {'const': 'parf'},
-> 		       {'const': 'config'}],
-> 	     'maxItems': 5,
-> 	     'minItems': 5,
-> 	     'type': 'array'}
-> 
-> Hence had to remove it from here and add it to the sdx55 reg
-> definition.
+You gave yourself 4 days to respond to my comment.
 
-So you entirely dropped constrain for regs. No. This has to be fixed,
-not dropped.
+To me, you gave around 18h, through most of the time I was offline or
+sleeping, and then sent new version.
+
+NAK, implement the feedback and keep discussing in the previous version.
+
 Best regards,
 Krzysztof
 
