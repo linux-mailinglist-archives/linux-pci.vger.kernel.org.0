@@ -1,279 +1,309 @@
-Return-Path: <linux-pci+bounces-19537-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19538-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EF7AA05C28
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 13:55:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16C79A05CAD
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 14:23:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 25AA67A01D0
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 12:55:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99E4E1887CDB
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 13:23:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84D791F942F;
-	Wed,  8 Jan 2025 12:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7556A1FBC94;
+	Wed,  8 Jan 2025 13:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ntV+OGu5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hI4ejmQU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7991ABECA
-	for <linux-pci@vger.kernel.org>; Wed,  8 Jan 2025 12:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4F01FBC92
+	for <linux-pci@vger.kernel.org>; Wed,  8 Jan 2025 13:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736340923; cv=none; b=LO0OvywUqvUrn+8oL3QS19opZSchcVn4/s+10356qWMRzPomujLqFNiwpXdGc1bohKKAjRvKHtyckPiJXZc/exFVCHz0SF8+MgtQlaILYBPD9H5MyXPj7hnoKQMD2H9lm19rEESYoFCnYKxhJTreL1H+d+8DirZqFTVJLBH7woc=
+	t=1736342569; cv=none; b=LQoJ4PKruHsgc9Gq6LRmSFziILW4OjM0HMeg9xRfZBolE6ecl4n2r4Y6zKCkw37Skxu14TJHcASUh9nJYVuRivdpx/C5OXwTg+MVFenkyID9c74pNFsozipvl/u8J3jm7YfTRpfxEPMi7b0xqAIaz00bFBQj6piioRcc75ePNeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736340923; c=relaxed/simple;
-	bh=pIyNoK1Ji+9gN6h0twjFK9XwCUvUdZ5bIgS+UjHi2pg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rIDuq8nHe+bPFYygCfSRMu6DmjiFUHgri0u985KEzuNrIu9lPUZb5rDo5bCwUD+Cbtsq+P3qauXXsQGtuZ2/79U/w42CNx1SDQnOKDb9QOgVRac3b1yh/NpqX7gMxqMzSuMoeNlFjUKqTw0K0KVvNRQqeXlDrEW/lElYTptQhwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ntV+OGu5; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736340921; x=1767876921;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pIyNoK1Ji+9gN6h0twjFK9XwCUvUdZ5bIgS+UjHi2pg=;
-  b=ntV+OGu5bEfcOFu1JXxtZN+bnrjO/FyM8kFRwLSjYsPehxduQnFjQ4kc
-   349YZkww3h/fj1vLgf2XnlVcbLCAJrUjNTdU+75w3TJzHNm6ykld9uTP2
-   QcfTgao0DVJCYcNlfMdv6tDsnL5wZY/t2mFIry6km5giF0lnfhb56W2RR
-   X9cxQkO+5ESaHZyE2UUcp4bhIuOvOglP+Ap3sePzOjqKuBCbPS7yXWAOW
-   890esb/367Lab6tFO0a9CS4N0Z4X50OqqxvorJdv1FT5qc3iooz/WpJy8
-   +yaCGqKwtfXHetacu+YkJLF4pbdcO8qbDkMWKhZwoDy4ocSjluZ1jdGNb
-   g==;
-X-CSE-ConnectionGUID: Oqkq0He1SF+NUWbBKlhPew==
-X-CSE-MsgGUID: 1o3Nt2GiRC2KNBhTSi0KBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11309"; a="24168489"
-X-IronPort-AV: E=Sophos;i="6.12,298,1728975600"; 
-   d="scan'208";a="24168489"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2025 04:55:21 -0800
-X-CSE-ConnectionGUID: t0IabEpJRf+DXmu0S/WfqQ==
-X-CSE-MsgGUID: 1EIRcUduQHyI5Wn8qr05qA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="102953375"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.87])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2025 04:55:18 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 Jan 2025 14:55:14 +0200 (EET)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <helgaas@kernel.org>, 
-    Krzysztof Wilczynski <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, 
-    Niklas Schnelle <niks@kernel.org>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Evert Vorster <evorster@gmail.com>
-Subject: Re: [PATCH for-linus] PCI/bwctrl: Fix NULL pointer deref on unbind
- and bind
-In-Reply-To: <Z35qJ3H_8u5LQDJ6@wunner.de>
-Message-ID: <60f0479e-7aac-1f6e-b667-605e283244e4@linux.intel.com>
-References: <0ee5faf5395cad8d29fb66e1ec444c8d882a4201.1735852688.git.lukas@wunner.de> <e08d30b5-50e0-4381-d2e7-61c2da12966f@linux.intel.com> <Z3ytsSBP3FzuFLRj@wunner.de> <ad5154b6-0e7c-ab80-fd96-c3f6418f20e5@linux.intel.com> <Z35qJ3H_8u5LQDJ6@wunner.de>
+	s=arc-20240116; t=1736342569; c=relaxed/simple;
+	bh=Dpg2Wb5I47smoJMY9zxlEd9D/QcsYMbGnyKqAhDGG88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VJhbmA0rZGIM40sJ5H+5qmZe4rhvHhVWeQccq29eTXgEo1t+AV2xeSMJ4r6uzjaAvKZFy2cMPy3061ss7kt8D2WIVoY3k2P+c/tDP3q8t6oe6ehFA9ojdmlnN6p3cj1kOiIFgCeNFMVXREwQs56ek3r0kOSewAjHYdaF6F83BgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hI4ejmQU; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2163b0c09afso246605165ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 08 Jan 2025 05:22:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736342566; x=1736947366; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uGQ6gTUaI3ZQFf1nCYXuOnJ+ZKOpQdsJP9iOpS9TOig=;
+        b=hI4ejmQUnfASu1kUE7slRbne0vD0YZoF29Gwo0k/siTAMksZXChQETizCheoJWHgyd
+         lGWTzC6gHEInqHuy7zK6gQB/r18MFozGjRgX0aq53yL5cqncZjsl3sEjlRN4/339kVjS
+         2pnqJIO+r+hriKv2WKMrcZH/O/TSYdtpMKZ99chE+0AmOC76/THfOLfuUL3KmEX110XZ
+         UvoxA6nYPGa4RgAXIP7xFr7zH2warQ6iecOnBkpVoPo2u/YnQeC1D9kUVceV/Rs0xdP+
+         Y9xqAM7l/tyjTsKrgEVt3cQTx2iKz7hjVVaZDKCbz4H41OhBu9CjEAp2HIEozXIDMFJO
+         TPjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736342566; x=1736947366;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uGQ6gTUaI3ZQFf1nCYXuOnJ+ZKOpQdsJP9iOpS9TOig=;
+        b=SFK+1PY9/64gORFPkpQZWBG/WVpfmkgopFPtPPMvVHrrrq9Z6hDVpU52NST0rZ3j/v
+         CroBy4UiHKLvQ+idTJdU/l4TMaqRbjgmJZEcYHUMZBokPbqWRhVGAhyaYwz8T1ErSwkM
+         7wrxEfTcwxmVD9Vunu5XMiA8RS81b7VSoAu0VXejtty2nDgpIcQmShi8UxmkuAansGA2
+         bSCnOSjU8WRwXE5qzF/5Ad7KofrnjGDgI4ygZIp0jHweLbneYXNL9BJ9fnmy29yBeBNA
+         34hhmNN5BrS1OmJ9YTXBOu1WsTl5ufqhVJHXy1l66+au/TjWB+NLl6HDEZvSc4oa/7+C
+         tMig==
+X-Forwarded-Encrypted: i=1; AJvYcCVFNHbT1q2kCzMf4h0rYD+dd5u0C/v5mjQdVawItTTreEgDyoKd7/JmZYXeonilG/hsPHC19ryo9Ms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBxgdkcS0Q/pMgVjUmqyLqYSupDBNrLyqa0UD9BYElW60EoTE/
+	J9t12+BPfuqarJ2eepw+Y/WERYXWF2qh2U2bznncPJqjMaL6kv8WoQCyRiDOZA==
+X-Gm-Gg: ASbGnctWRBNemRK/r8yBxkl+zLHdkqciRXdYpGc9VpnD/8dLfnChSDqgFdT9tkW8QGk
+	Rn7RDHerx5/1zUSwAT0XrDMa3i/jbYvK4aJVru8Kf7DeTWnBJJnIMHiU5RFURdVKKo2b9xNrhgr
+	LhSFwUDvOf5F0quroGZ9zqrMI2fx+I27yC3v/Ot91CJ80lfKJw6DEbDCNRlE1tfndkz0Tx/BWr7
+	ePzyvUKj/PJoXBtPLNkdp62vmzv0tPjvCVs0S1lcSXrwfT2dc3+dISf0izFdPimwX+X
+X-Google-Smtp-Source: AGHT+IECtsM/gRYWLFY3hTWl1Cc6HjpXQcF89x7voGNTV2OpqZVBPzam7oV8L4vtfZfa5pZdqlOIuA==
+X-Received: by 2002:a17:903:2b08:b0:216:70b6:8723 with SMTP id d9443c01a7336-21a83fb5af8mr47573525ad.44.1736342566329;
+        Wed, 08 Jan 2025 05:22:46 -0800 (PST)
+Received: from thinkpad ([117.213.97.234])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc970c8fsm327792835ad.60.2025.01.08.05.22.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2025 05:22:45 -0800 (PST)
+Date: Wed, 8 Jan 2025 18:52:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, p.zabel@pengutronix.de,
+	quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	Praveenkumar I <quic_ipkumar@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Message-ID: <20250108132235.gh6p5d6t7wklzpm7@thinkpad>
+References: <20250102113019.1347068-1-quic_varada@quicinc.com>
+ <20250102113019.1347068-5-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1163775918-1736340914=:1082"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250102113019.1347068-5-quic_varada@quicinc.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Jan 02, 2025 at 05:00:18PM +0530, Varadarajan Narayanan wrote:
+> From: Praveenkumar I <quic_ipkumar@quicinc.com>
+> 
+> Add phy and controller nodes for pcie0_x1 and pcie1_x2.
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
+> v5: Add 'num-lanes' to "pcie1_phy: phy@4b1000"
+>     Make ipq5332 as main and ipq9574 as fallback compatible
+>     Move controller nodes per address
+>     Having Konrad's Reviewed-By
+> 
+> v4: Remove 'reset-names' as driver uses bulk APIs
+>     Remove 'clock-output-names' as driver uses bulk APIs
+>     Add missing reset for pcie1_phy
+>     Convert 'reg-names' to a vertical list
+>     Move 'msi-map' before interrupts
+> 
+> v3: Fix compatible string for phy nodes
+>     Use ipq9574 as backup compatible instead of new compatible for ipq5332
+>     Fix mixed case hex addresses
+>     Add "mhi" space
+>     Removed unnecessary comments and stray blank lines
+> 
+> v2: Fix nodes' location per address
+> ---
+>  arch/arm64/boot/dts/qcom/ipq5332.dtsi | 221 +++++++++++++++++++++++++-
+>  1 file changed, 219 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5332.dtsi b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+> index d3c3e215a15c..89daf955e4bd 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
+> @@ -186,6 +186,43 @@ rng: rng@e3000 {
+>  			clock-names = "core";
+>  		};
+>  
+> +		pcie0_phy: phy@4b0000 {
+> +			compatible = "qcom,ipq5332-uniphy-pcie-phy";
+> +			reg = <0x004b0000 0x800>;
+> +
+> +			clocks = <&gcc GCC_PCIE3X1_0_PIPE_CLK>,
+> +				 <&gcc GCC_PCIE3X1_PHY_AHB_CLK>;
+> +
+> +			resets = <&gcc GCC_PCIE3X1_0_PHY_BCR>,
+> +				 <&gcc GCC_PCIE3X1_PHY_AHB_CLK_ARES>,
+> +				 <&gcc GCC_PCIE3X1_0_PHY_PHY_BCR>;
+> +
+> +			#clock-cells = <0>;
+> +
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie1_phy: phy@4b1000 {
+> +			compatible = "qcom,ipq5332-uniphy-pcie-phy";
+> +			reg = <0x004b1000 0x1000>;
+> +
+> +			clocks = <&gcc GCC_PCIE3X2_PIPE_CLK>,
+> +				 <&gcc GCC_PCIE3X2_PHY_AHB_CLK>;
+> +
+> +			resets = <&gcc GCC_PCIE3X2_PHY_BCR>,
+> +				 <&gcc GCC_PCIE3X2_PHY_AHB_CLK_ARES>,
+> +				 <&gcc GCC_PCIE3X2PHY_PHY_BCR>;
+> +
+> +			#clock-cells = <0>;
+> +
+> +			#phy-cells = <0>;
+> +
+> +			num-lanes = <2>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+>  		tlmm: pinctrl@1000000 {
+>  			compatible = "qcom,ipq5332-tlmm";
+>  			reg = <0x01000000 0x300000>;
+> @@ -212,8 +249,8 @@ gcc: clock-controller@1800000 {
+>  			#interconnect-cells = <1>;
+>  			clocks = <&xo_board>,
+>  				 <&sleep_clk>,
+> -				 <0>,
+> -				 <0>,
+> +				 <&pcie1_phy>,
+> +				 <&pcie0_phy>,
+>  				 <0>;
+>  		};
+>  
+> @@ -479,6 +516,186 @@ frame@b128000 {
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		pcie1: pcie@18000000 {
 
---8323328-1163775918-1736340914=:1082
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+pcie@
 
-On Wed, 8 Jan 2025, Lukas Wunner wrote:
-> On Tue, Jan 07, 2025 at 04:29:18PM +0200, Ilpo J=E4rvinen wrote:
-> > On Tue, 7 Jan 2025, Lukas Wunner wrote:
-> > > It seems pcie_bwctrl_setspeed_rwsem is only needed because
-> > > pcie_retrain_link() calls pcie_reset_lbms_count(), which
-> > > would recursively acquire pcie_bwctrl_lbms_rwsem.
-> > >
-> > > There are only two callers of pcie_retrain_link(), so I'm
-> > > wondering if the invocation of pcie_reset_lbms_count()
-> > > can be moved to them, thus avoiding the recursive lock
-> > > acquisition and allowing to get rid of pcie_bwctrl_setspeed_rwsem.
-> > >
-> > > An alternative would be to have a __pcie_retrain_link() helper
-> > > which doesn't call pcie_reset_lbms_count().
-> >=20
-> > I considered __pcie_retrain_link() variant but it felt like locking=20
-> > details that are internal to bwctrl would be leaking into elsewhere in =
-the=20
-> > code so I had some level of dislike towards this solution, but I'm not=
-=20
-> > strictly against it.
->=20
-> That's a fair argument.
->=20
-> It seems the reason you're acquiring pcie_bwctrl_lbms_rwsem in
-> pcie_reset_lbms_count() is because you need to dereference
-> port->link_bwctrl so that you can access port->link_bwctrl->lbms_count.
->=20
-> If you get rid of lbms_count and instead use a flag in pci_dev->priv_flag=
-s,
-> then it seems you won't need to acquire the lock and this problem
-> solves itself.
+> +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
+> +			reg = <0x00088000 0x3000>,
+> +			      <0x18000000 0xf1d>,
+> +			      <0x18000f20 0xa8>,
+> +			      <0x18001000 0x1000>,
+> +			      <0x18100000 0x1000>,
+> +			      <0x0008b000 0x1000>;
+> +			reg-names = "parf",
+> +				    "dbi",
+> +				    "elbi",
+> +				    "atu",
+> +				    "config",
+> +				    "mhi";
+> +			device_type = "pci";
+> +			linux,pci-domain = <1>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <2>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			ranges = <0x01000000 0 0x18200000 0x18200000 0 0x00100000>,
 
-Agreed on both points.
+I/O address space should start from 0. Please refer other SoCs.
 
-> > > I'm also wondering if the IRQ handler really needs to run in
-> > > hardirq context.  Is there a reason it can't run in thread
-> > > context?  Note that CONFIG_PREEMPT_RT=3Dy (as well as the
-> > > "threadirqs" command line option) cause the handler to be run
-> > > in thread context, so it must work properly in that situation
-> > > as well.
-> >=20
-> > If thread context would work now, why was the fix in the commit=20
-> > 3e82a7f9031f ("PCI/LINK: Supply IRQ handler so level-triggered IRQs are=
-=20
-> > acked")) needed (the commit is from the bwnotif era)? What has changed=
-=20
-> > since that fix?
->=20
-> Nothing has changed, I had forgotten about that commit.
->=20
-> Basically you could move everything in pcie_bwnotif_irq() after clearing
-> the interrupt into an IRQ thread, but that would just be the access to th=
-e
-> atomic variable and the pcie_update_link_speed() call.  That's not worth =
-it
-> because the overhead to wake the IRQ thread is bigger than just executing
-> those things in the hardirq handler.
->=20
-> So please ignore my comment.
->=20
->=20
-> > > Another oddity that caught my eye is the counting of the
-> > > interrupts.  It seems the only place where lbms_count is read
-> > > is the pcie_failed_link_retrain() quirk, and it only cares
-> > > about the count being non-zero.  So this could be a bit in
-> > > pci_dev->priv_flags that's accessed with set_bit() / test_bit()
-> > > similar to pci_dev_assign_added() / pci_dev_is_added().
-> > >=20
-> > > Are you planning on using the count for something else in the
-> > > future?  If not, using a flag would be simpler and more economical
-> > > memory-wise.
-> >=20
-> > Somebody requested having the count exposed. For troubleshooting HW=20
-> > problems (IIRC), it was privately asked from me when I posted one of=20
-> > the early versions of the bwctrl series (so quite long time ago). I've
-> > just not created that change yet to put it under sysfs.
->=20
-> There's a patch pending to add trace events support to native PCIe hotplu=
-g:
->=20
-> https://lore.kernel.org/all/20241123113108.29722-1-xueshuai@linux.alibaba=
-=2Ecom/
->=20
-> If that somebody thinks they need to know how often LBMS triggered,
-> we could just add similar trace events for bandwidth notifications.
-> That gives us not only the count but also the precise time when the
-> bandwidth change happened, so it's arguably more useful for debugging.
->=20
-> Trace points are patched in and out of the code path at runtime,
-> so they have basically zero cost when not enabled (which would be the
-> default).
->=20
->=20
-> > > I'm also worried about the lbms_count overflowing.
-> >
-> > Should I perhaps simply do pci_warn() if it happens?
->=20
-> I'd prefere getting rid of the counter altogether. :)
+Also, use 0x0 for consistency.
 
-Okay, it's a good suggestion. Trace events seem like a much better=20
-approach to the problem.
+> +				 <0x02000000 0 0x18300000 0x18300000 0 0x07d00000>;
+> +
+> +			msi-map = <0x0 &v2m0 0x0 0xffd>;
+> +
+> +			interrupts = <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi0",
+> +					  "msi1",
+> +					  "msi2",
+> +					  "msi3",
+> +					  "msi4",
+> +					  "msi5",
+> +					  "msi6",
+> +					  "msi7";
 
-> > > Because there's hardware which signals an interrupt before actually
-> > > setting one of the two bits in the Link Status Register, I'm
-> > > wondering if it would make sense to poll the register a couple
-> > > of times in the irq handler.  Obviously this is only an option
-> > > if the handler is running in thread context.  What was the maximum
-> > > time you saw during testing that it took to set the LBMS bit belatedl=
-y?
-> >=20
-> > Is there some misunderstanding here between us because I don't think I'=
-ve=20
-> > noticed delayed LBMS assertion? What I saw was the new Link Speed not y=
-et=20
-> > updated when Link Training was already 0. In that case, the Link Status=
-=20
-> > register was read inside the handler so I'd assume LBMS was set to=20
-> > actually trigger the interrupt, thus, not set belatedly.
->=20
-> Evert's laptop has BWMgmt+ ABWMgmt+ bits set on Root Port 00:02.1
-> in this lspci dump:
->=20
-> https://bugzilla.kernel.org/attachment.cgi?id=3D307419&action=3Dedit
->=20
-> 00:02.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ri=
-dge GPP Bridge (prog-if 00 [Normal decode])
->                 LnkSta: Speed 8GT/s, Width x4
->                         TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt+
->=20
-> How can it be that BWMgmt+ is set?  I would have expected the bandwidth
-> controller to clear that interrupt.  I can only think of two explanations=
-:
-> Either BWMgmt+ was set but no interrupt was signaled.  Or the interrupt
-> was signaled and handled before BWMgmt+ was set.
+Is there a 'global' interrupt? If so, please add it.
 
-Either one of those, or third alternative that it's set more than once=20
-and no interrupt occurs on the second assertion (could be e.g. some race=20
-due to write-1-to-clear and reasserting LBMS).
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 0 412 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 2 &intc 0 0 413 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 3 &intc 0 0 414 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 4 &intc 0 0 415 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			clocks = <&gcc GCC_PCIE3X2_AXI_M_CLK>,
+> +				 <&gcc GCC_PCIE3X2_AXI_S_CLK>,
+> +				 <&gcc GCC_PCIE3X2_AXI_S_BRIDGE_CLK>,
+> +				 <&gcc GCC_PCIE3X2_RCHG_CLK>,
+> +				 <&gcc GCC_PCIE3X2_AHB_CLK>,
+> +				 <&gcc GCC_PCIE3X2_AUX_CLK>;
+> +			clock-names = "axi_m",
+> +				      "axi_s",
+> +				      "axi_bridge",
+> +				      "rchng",
+> +				      "ahb",
+> +				      "aux";
+> +
+> +			resets = <&gcc GCC_PCIE3X2_PIPE_ARES>,
+> +				 <&gcc GCC_PCIE3X2_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE3X2_AXI_S_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE3X2_AXI_S_CLK_ARES>,
+> +				 <&gcc GCC_PCIE3X2_AXI_M_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE3X2_AXI_M_CLK_ARES>,
+> +				 <&gcc GCC_PCIE3X2_AUX_CLK_ARES>,
+> +				 <&gcc GCC_PCIE3X2_AHB_CLK_ARES>;
+> +			reset-names = "pipe",
+> +				      "sticky",
+> +				      "axi_s_sticky",
+> +				      "axi_s",
+> +				      "axi_m_sticky",
+> +				      "axi_m",
+> +				      "aux",
+> +				      "ahb";
+> +
+> +			phys = <&pcie1_phy>;
+> +			phy-names = "pciephy";
+> +
+> +			interconnects = <&gcc MASTER_SNOC_PCIE3_2_M &gcc SLAVE_SNOC_PCIE3_2_M>,
+> +					<&gcc MASTER_ANOC_PCIE3_2_S &gcc SLAVE_ANOC_PCIE3_2_S>;
+> +			interconnect-names = "pcie-mem", "cpu-pcie";
 
-But, I've not seen this behavior before that report so I cannot answer to=
-=20
-your question about how long it took for LBMS to get asserted.
+Can you check if the controller supports cache coherency? If so, you need to add
+'dma-coherent'.
 
-This misbehavior is a bit problematic because those same bits are used to=
-=20
-identify if the interrupt belongs for bwctrl or not. So if they're not=20
-set by the time the handler runs, I don't have a way to identify I'd need=
-=20
-to poll those bits in the first place (and it's also known the interrupt=20
-is shared with other stuff :-().
+> +
+> +			status = "disabled";
 
-> I'm guessing the latter is the case because /proc/irq/33/spurious
-> indicates 1 unhandled interrupt.
->=20
-> Back in March 2023 when you showed me your results with various Intel
-> chipsets, I thought you mentioned that you witnessed this too-early
-> interrupt situation a couple of times.  But I may be misremembering.
+Please define the root port node as well.
 
-I've seen interrupts occur before the new Link Speed has been updated but=
-=20
-those still had LT=3D1 and there was _another_ interrupt later. Handling
-that later interrupt read the new Link Speed and LT=3D0 so effectively=20
-there was just one extra interrupt. I assume it's because LBMS is simply=20
-asserted twice and the extra interrupt seemed harmless (no idea why HW=20
-ends up doing it though).
+All the above comments applies to 2nd controller node as well.
 
-The other case, which is a real problem, had LT=3D0 but no new link speed=
-=20
-in the Current Link Speed field. So it is "premature" in a sense but=20
-seemingly the training had completed. In that case, there was no second=20
-interrupt so the handler could not acquire the new link speed.
+- Mani
 
-bwctrl does read the new link speed outside the handler by calling=20
-pcie_update_link_speed() which is mainly to handle misbehaviors where
-BW notifications are not coming at all (if the link speed changes=20
-outside of bwctrl setting speed, those changes won't be detected). It will=
-=20
-still be racy though if LT is deasserted before the Current Link Speed is=
-=20
-set (I've not seen it to fail to get the new speed but I've not tried to=20
-stress test it either).
-
---=20
- i.
-
---8323328-1163775918-1736340914=:1082--
+-- 
+மணிவண்ணன் சதாசிவம்
 
