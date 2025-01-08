@@ -1,143 +1,115 @@
-Return-Path: <linux-pci+bounces-19556-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19557-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25E78A063E0
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 18:59:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34C06A0647D
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 19:33:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C46A7A1FDC
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 17:59:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B38C53A6DCD
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2025 18:33:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986C62010E2;
-	Wed,  8 Jan 2025 17:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57501202F8F;
+	Wed,  8 Jan 2025 18:32:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0W61zLs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHD4sULt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3259200BA1;
-	Wed,  8 Jan 2025 17:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C72D202F80;
+	Wed,  8 Jan 2025 18:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736359148; cv=none; b=bEpPDmtPbyG7Rfan2QrriG4VjtbXrOSMgICC1ljTm3KOUI+exRCdXlYHkeaMiykmq4+Lyad9qcHEaoZuQb+d9cQh9gn9wu8GiNwDKsGgjTFMVKmidg95AiBlbDqPcpndalhhfOhazw+RC06kHcPdxvQqonpbDu3rE0DKOhYozio=
+	t=1736361158; cv=none; b=GQIbNoh+LyaTjMdumW7/xRlLUhAk7Bb5Y2XmOoh2o4PpUQFVgdWOwnYud+hxcF+U2gZtavDITfV35CSHod5Y1R2HgBS9UIibylh+sxV+IqbMCAkzYmCuzSDGpuD2sGxANri76oELlMCawen8yWwRL145+H41CJy0VqUd914tV1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736359148; c=relaxed/simple;
-	bh=O2XDXD8Xm7GHb5KI+CthKfj6xXSH1ionPxcoedIrqco=;
+	s=arc-20240116; t=1736361158; c=relaxed/simple;
+	bh=Z/FqmlnQQ8Fa68j6bChFWC2DGBjzCnP8xsatoFHrFa0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Qo2kpn26HzrkN0n+hGBFJb/zE9dozuXr6/fPjZhmv/4rPgSmUYvx/7yQbRF6Ui0yuDohh4enUoXOwpH2I030riUYPdiQfb3hwC7i3EzNNFKXlyPXCGylg3z43Kk/vAeIBjTZhEkK2jVCTJBFaR7U6IhH7Et0Ms33Ry2bsE3xgRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0W61zLs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85CDC4CED3;
-	Wed,  8 Jan 2025 17:59:07 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=TP4d3E7eLHVsalBM7d/FfRHyF5hyJ1CN4USzwgPkMwTYmlxXNGyLH4I/7UmIljSbj3WZRfHEaKYvMpsvwF34OefmgD9GR7MfBtqbouZ9ukwJavpn0iuFX8v4T82txlezueFNjJ4+aAHGrSrH0xHeqpXu08cLq8586VMbONtv0wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHD4sULt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552D0C4CED3;
+	Wed,  8 Jan 2025 18:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736359148;
-	bh=O2XDXD8Xm7GHb5KI+CthKfj6xXSH1ionPxcoedIrqco=;
+	s=k20201202; t=1736361157;
+	bh=Z/FqmlnQQ8Fa68j6bChFWC2DGBjzCnP8xsatoFHrFa0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=r0W61zLsjnC0R+u4ELOMlREs7x0YRTCqSnja79nlKb58/aTvmXArPcGnISdzO1Qxn
-	 jZB2lrpWgmZ3AD9LgO4GxXidw0oIlugy+DXhH5yDOa7sRuLz2u2W9paMA1bTwGQewt
-	 lMuzaAviw34ypwJt5wni6iOH+mDzXdQ7SU/cKdUELl+EpA9/acSfrAdBOV0KZRG3Y3
-	 /jYxHR8SSIujXliosSCm6RfSpRkVkLAd+IXKUax+viwxlWz4UyF96TcPn+oKaxsQeG
-	 i2A2KWaH33atYBsYj8NY7aWbDJb7fUnC22ZguEpq8oOYkNmiyeZc8Wg9WnD6MRTwY2
-	 qKghQVkR44NLg==
-Date: Wed, 8 Jan 2025 11:59:06 -0600
+	b=iHD4sULtcyZpUayPhFv//GcGoNSqVRYgJYE9OKm5cbptvdlJ25utVjJ16eJHkr8q7
+	 YQaZkhGDSMeS+BDw39V0F8H4M55gcqks3fNM8e+ugbd6/fv+LHq/x2SGRwHfJ1rnpn
+	 iijBj0rfqdehYltGY6K2pGlFEyz1hfNGslo3V/tAdm8QMTswXGIteTclvIwz4zNKuH
+	 n4kItXVF/sjHioGsqhafWgZzQP7UtYfQ2tBXTxwmjwzyVPrZD36YQJGgFcGR4w/fPy
+	 MieYAlJNDLzlSAq70NftG/76gIto5sLe6w/j4KxIgHPIDMxBkO/kZhBU18/Tqppuvd
+	 z+BDbheJqLOdQ==
+Date: Wed, 8 Jan 2025 12:32:35 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
-	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com, peterz@infradead.org
-Subject: Re: [PATCH v4] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250108175906.GA219807@bhelgaas>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
+	kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+	p.zabel@pengutronix.de, quic_nsekar@quicinc.com,
+	dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	Praveenkumar I <quic_ipkumar@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Message-ID: <20250108183235.GA220566@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <309dd6e6-53ec-4f82-94ca-242941bd7136@linux.alibaba.com>
+In-Reply-To: <20250102113019.1347068-5-quic_varada@quicinc.com>
 
-On Wed, Jan 08, 2025 at 05:04:25PM +0800, Shuai Xue wrote:
-> 在 2025/1/8 07:19, Bjorn Helgaas 写道:
-> > On Sat, Nov 23, 2024 at 07:31:08PM +0800, Shuai Xue wrote:
-> > > Hotplug events are critical indicators for analyzing hardware health,
-> > > particularly in AI supercomputers where surprise link downs can
-> > > significantly impact system performance and reliability. The failure
-> > > characterization analysis illustrates the significance of failures
-> > > caused by the Infiniband link errors. Meta observes that 2% in a machine
-> > > learning cluster and 6% in a vision application cluster of Infiniband
-> > > failures co-occur with GPU failures, such as falling off the bus, which
-> > > may indicate a correlation with PCIe.[1]
-> > > 
-> > > To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-> > > tracepoint for hotplug event to help healthy check, and generate
-> > > tracepoints for pcie hotplug event. To monitor these tracepoints in
-> > > userspace, e.g. with rasdaemon, put `enum pci_hotplug_event` in uapi
-> > > header.
-> > > 
-> > > The output like below:
-> > > $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-> > > $ cat /sys/kernel/debug/tracing/trace_pipe
-> > >             <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
-> > > 
-> > >             <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
-> > > 
-> > > [1]https://arxiv.org/abs/2410.21680
-> > 
-> > Doesn't apply on pci/main (v6.13-rc1); can you rebase it?
+On Thu, Jan 02, 2025 at 05:00:18PM +0530, Varadarajan Narayanan wrote:
+> From: Praveenkumar I <quic_ipkumar@quicinc.com>
 > 
-> Sure. Do you mean Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
->   branch main
+> Add phy and controller nodes for pcie0_x1 and pcie1_x2.
 
-Yes.  The most recent -rc1 is generally a safe bet for basing patches.
+> +		pcie1: pcie@18000000 {
+> +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
+> +			reg = <0x00088000 0x3000>,
+> +			      <0x18000000 0xf1d>,
+> +			      <0x18000f20 0xa8>,
+> +			      <0x18001000 0x1000>,
+> +			      <0x18100000 0x1000>,
+> +			      <0x0008b000 0x1000>;
+> +			reg-names = "parf",
+> +				    "dbi",
+> +				    "elbi",
+> +				    "atu",
+> +				    "config",
+> +				    "mhi";
+> +			device_type = "pci";
+> +			linux,pci-domain = <1>;
+> +			bus-range = <0x00 0xff>;
 
-> > Probably more detail than necessary about AI supercomputers,
-> > Infiniband, vision applications, etc.  This is a very generic issue.
-> 
-> Agreed. It is generic. Are you asking for the first background paragraph to be
-> deleted?
+This bus-range isn't needed, is it?  pci_parse_request_of_pci_ranges()
+should default to 0x00-0xff if no bus-range property is present.
 
-I think the important part is that hotplug and link down events are
-critical indicators of hardware health.  That's enough to motivate
-this patch.
+> +			num-lanes = <2>;
+> +			phys = <&pcie1_phy>;
+> +			phy-names = "pciephy";
 
-> > "Falling off the bus" doesn't really mean anything to me.  I suppose
-> > it's another way to describe a "link down" event that leads to UR
-> > errors when trying to access the device?
-> 
-> Sorry for the confusion. "Falling off the bus" is a common error for
-> NVIDIA GPU observed in production. The GPU driver will log a such
-> message when GPU is not accessible.
+I think num-lanes and PHY info are per-Root Port properties, not a
+host controller properties, aren't they?  Some of the clock and reset
+properties might also be per-Root Port.
 
-Yep, I see those too, and I wish the message weren't phrased so
-casually.  IIRC this is typically logged when an MMIO read returns ~0,
-which happens when a UR or similar error occurs.
+Ideally, I think per-Root Port properties should be in a child device
+as they are here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mvebu-pci.txt?id=v6.12#n137
+but it looks like the num-lanes parsing is done in
+dw_pcie_get_resources(), which can only handle a single num-lanes per
+DWC controller, so maybe it's impractical to add a child device here.
 
-> > I'm guessing that monitoring these via rasdaemon requires more than
-> > just adding "enum pci_hotplug_event"?  Or does rasdaemon read
-> > include/uapi/linux/pci.h and automagically incorporate new events?
-> > Maybe there's at least a rebuild involved?
-> 
-> Yes, a rebuild is needed. Rasdaemon has a basic infrastructure to manually
-> register a tracepoint event handler. For example, for this new event, we can
-> register to handle pci_hp_event:
-> 
->     rc = add_event_handler(ras, pevent, page_size, "pci", "pci_hp_event",
-> 			   ras_pci_hp_event_handler, NULL, PCI_HOTPLUG_EVENT);
-
-I would say something like "Add enum pci_hotplug_event in
-include/uapi/linux/pci.h so applications like rasdaemon can register
-tracepoint event handlers for it."
+But I wonder if it would be useful to at least group the per-Root Port
+things together in the binding to help us start thinking about the
+difference between the controller and the Root Port(s).
 
 Bjorn
 
