@@ -1,149 +1,203 @@
-Return-Path: <linux-pci+bounces-19602-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19603-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77241A0720E
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 10:51:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7136A077E1
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 14:42:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3AFA3A8891
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 09:50:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C04FB7A1E7F
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 13:40:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F8F6218EBD;
-	Thu,  9 Jan 2025 09:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 448A521D594;
+	Thu,  9 Jan 2025 13:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZbNDgBYA"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oSCB82nU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D8E219A88;
-	Thu,  9 Jan 2025 09:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736415995; cv=none; b=hw+Y39T4I1uG7EErb1LBNhLQyK8Kq+Z/yclv5it9tODU4CYdiZN4NuVFFf+bGfHe6V84ak7i3BiLcTjdfJyMTu2ZzMsYoksGtkfuSim6oaB7p5Cq+C/9q48JQ32uvmCdsPGNdo+AXZkRbTIRHsDyXIh+w3rFOLYX3ltW03GgQYI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736415995; c=relaxed/simple;
-	bh=ypd63jAWFgGd4MmKm0Z+Xw0QkKUUyoS50twh06kC5xA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UJfc7G7AOjTZsaatoWcw/tdBmOKlgLeCj2CHvgi2GA1lPFSqjhxoOzUISDVcH2VpGOcS+kBF0SBvbtlQiT7ifOu4Wy8AFNsgVw4XDsVjOmB05WLpxVxS4jtrrRi/1Kt4oD3XIEGY2RVHfifxkAHrwNNQIcpPpFZuzEgzws2UTn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZbNDgBYA; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=aNhJQ
-	pggggx1i44cb3KmGFJzk7TZjsfL4u/0L0GAGCA=; b=ZbNDgBYAhBO3XMAQmgJu2
-	hY7n74H8VNcqQdiGCxZBF2lAZQNgDuTZfyZdVx0INiebqWq1Ga2gJdjoXpePSNjS
-	gc9+55xjxjJXfrJer9Cc8eMRAldS6nl4dNUM8xe286/e8lyS35H0Pq+cKFO9biFK
-	JecM7dgax4S4hJuu5fsndU=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3t7rYmn9nRKzYEw--.38788S4;
-	Thu, 09 Jan 2025 17:46:02 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: manivannan.sadhasivam@linaro.org
-Cc: kw@linux.com,
-	kishon@kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	Hans Zhang <18255117159@163.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [v11 2/2] misc: pci_endpoint_test: Fix overflow of bar_size
-Date: Thu,  9 Jan 2025 17:45:56 +0800
-Message-Id: <20250109094556.1724663-3-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250109094556.1724663-1-18255117159@163.com>
-References: <20250109094556.1724663-1-18255117159@163.com>
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E336218AC2;
+	Thu,  9 Jan 2025 13:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736429901; cv=fail; b=HDgTjLMX83IamsKRwQD5+Q9tDllNEG/dGVE6uDsFWwvzFkMx/8/DhPmBtuhccVpRG2fZB1weH8KLq9KbddVrWHgiZysg3B37RcSh+8SF2RhQSLtUT/m4Y5Vi+Gmk2pkIC4szg6WrhqBbcgtq7XrLucyWnff4zW4mUKOYRRdAqp4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736429901; c=relaxed/simple;
+	bh=5pVMbY+umyNo24XyGFHYKbMZEYhOgmdIeUgQIjJHme4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=e/mWlX38Qamw+5KHmuB3zTxMg5F+EpuS5TspgImh2HxkJe3nx6Uj4tHP5jTWMIZ5o+AiMuse0+nE39WsA8JG7O/RmR9rScGiIKGei90LhUgnH3RAzHoUiAs7l9lM/2bqnRBElQe8oKsZMmO5FYuPalGhL6Gek+iBk/YVwTsuwSw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oSCB82nU; arc=fail smtp.client-ip=40.107.92.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=niiz+VpPLz6vwF/AdT8VhuUWfnHspLa80vbEgmbANtzOYBj4klgRnqNmuljR3yIf2IeGE85+RZbdevL/So/EfxgMN2Kx4xc7dvqqO/0DQyF2CGDl6HIlrecdirsg+6dGdLYMcheXcfD6Mq+sPNNWJGfA6nfssGQeTqtwZHCXnEXNYax43nL/3WN2cWXpvw6vlqZYyxiapkRNh0Q9EmwoQa0VlVLm9IGq+uLOTw58Yp/viPbqtni7WzwRgSt+CZhErZclCGRWRtvtzoWJ/HBflKZIhxLA5hs/UJNV0E8T2XE9ZBc1ORNftL32A5HTWiXRwtbNtowxGZ43bJezL2iteg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pOpq6ykjwweqGxQezZEa3yH+icaaxnYitGLrh2jZXaY=;
+ b=yTHMl3mLhoLuOZZYvoZsiv8hjre51mmcZ2WskoG45VlBCcPI4dPRpvho9JLQl6+2CggEl6worixcTb/Dy8yWMCfPrzl2hetjxSRGRI23TjMWiZ4CqjJ6KaUrQMKmW+oDUhg/dUyUYDNc3hex2GRHwiT+nImaG7LVcr3VK1A911dir4xiyrFK8uCIekSzl8ECX/+2aEH1s8MnJTjRLY6lVc+heCRiC7Wa8LoF5aFcv2z8pOYuD3bYEtmADOqBGBesghQNm8nDu8iLjCIah7jO17TQP6MQZzzwSCdRt7U8HEJFSPEfvfFDUdwnGL90Hj0LsJJy2t0DZBDkwgsfsVWQjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pOpq6ykjwweqGxQezZEa3yH+icaaxnYitGLrh2jZXaY=;
+ b=oSCB82nU6yuED7POWwOB7Ed2PxE5BsixSkMNu9HrRjIT8inU11dT9il32l5nkWXvGLq365ge62dlbAMiK3ml/vT/33FQp2izph0A8vma3BsFNta3jFes9sSwMLMRJIOau2abVEgqe8Rwml6MoJG/Dt5r1shGiL6J/rpXLlGjgq9JZlmmtQOnx7BCc+GGsM7GhGL96K554NRS8y4aOeKe3jSeHvB2jMOUC6SpAhykb2aGdHjEvk830iRe047eJIDrniUFaVs5sMcVTDKqc8eM4pi1v9hmeW1L8Ti4zbZPaDQZqfWWEnGzOJ0d7faJvpImzNeCwc2JBOvSIkyJQEcaZA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DS0PR12MB8318.namprd12.prod.outlook.com (2603:10b6:8:f6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.11; Thu, 9 Jan
+ 2025 13:38:16 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8314.015; Thu, 9 Jan 2025
+ 13:38:16 +0000
+Date: Thu, 9 Jan 2025 09:38:15 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>
+Cc: Jeremy Linton <Jeremy.Linton@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"robert.moore@intel.com" <robert.moore@intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"wei.huang2@amd.com" <wei.huang2@amd.com>,
+	Honnappa Nagarahalli <Honnappa.Nagarahalli@arm.com>,
+	Dhruv Tripathi <Dhruv.Tripathi@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>, nd <nd@arm.com>
+Subject: Re: [RFC 0/2] GENL interface for ACPI _DSM methods
+Message-ID: <20250109133815.GV5556@nvidia.com>
+References: <20250106163045.508959-1-wathsala.vithanage@arm.com>
+ <20250106180140.00005132@huawei.com>
+ <85fb2b19-9d15-44ea-8f76-b3cac14e2810@arm.com>
+ <20250107174842.GN5556@nvidia.com>
+ <d35924de-a560-40aa-a99d-7278009c5ff3@arm.com>
+ <20250108205030.GU5556@nvidia.com>
+ <PAWPR08MB8909F2373F84E4951F74A79C9F132@PAWPR08MB8909.eurprd08.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAWPR08MB8909F2373F84E4951F74A79C9F132@PAWPR08MB8909.eurprd08.prod.outlook.com>
+X-ClientProxiedBy: BN9PR03CA0939.namprd03.prod.outlook.com
+ (2603:10b6:408:108::14) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3t7rYmn9nRKzYEw--.38788S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAw1rCF1fKFWUWr18CFWxZwb_yoW5Gry7pF
-	Z0kr1vvF4jqry8Gan7G3ZrCFyqya9rJry7WFW5Aw1FvFnxZFn5t3W0grWYgrnruFsF9r18
-	A3ZIya1vgw1jyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jrrcfUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDw7Po2d-kzQzswAGsU
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB8318:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75290dc6-21ab-4222-4fd8-08dd30b2df4f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?keNj0S25F+x0XAYhj4nKvYQeP2fBD7+B340ca0y8O2hwM4w7/VwtTQr/+zZQ?=
+ =?us-ascii?Q?yAa5W+0Tq+Z8Y7OU1n2nRdcjVsDpqjw40Xq4xFwyy9HRL4np4jaPRVAguXBh?=
+ =?us-ascii?Q?flngLqNN1ZULdiXcPX82qyrsZ2jk11KO69roG2cMkMryLpGnebAOKZXXbkZW?=
+ =?us-ascii?Q?PQ8uuKQZB+Zufb23IxVSeub0+x1juZRNW00oPMmyprDzFNgFOhovloWEAgcb?=
+ =?us-ascii?Q?gvFFPjhUq7T4Q461Q6xnx8f+LA85ejz29bdaE+A0TrLlV2K7Xg3M2umHvYcQ?=
+ =?us-ascii?Q?Jne9lHSH1kDllFydhrZLAPuqSPTY6w5FM1o4SNRm+pi/yAw7kREK25M949+8?=
+ =?us-ascii?Q?KSZhRZaCZj0w/jJWla2rW0BEK2Q4GbFAu+PbiqXCBI0VqimxZ+VPWUUFNLK/?=
+ =?us-ascii?Q?0+BHU4bKFaHDoqy2GFVRlUvti5vEb1vAAqNiVzGeShJedZMddOqAKct+QWzg?=
+ =?us-ascii?Q?q5lAfTRSjyJY/IRt67zDiYaLtMBOZMABzTtD1Y1UDHmxnagNeQSe9XWJWiOr?=
+ =?us-ascii?Q?uXLZfwzHwrUmSGzPVdiI4+EaQW380YHEwBTs02UQFuyvXv9XEY6m9K/6JbGa?=
+ =?us-ascii?Q?S5uQQ0DAN1EZOopdGfowIBhrceEspkqmt+ACvR/GJqHuJNb3sXbTvpm+pbsJ?=
+ =?us-ascii?Q?h2ahyf/XY7LAHVLbckeNYWwkTgrgarc2XMnQblr3KLua/o4sX6F3SUIYozM7?=
+ =?us-ascii?Q?aakbyyUa2WcCMUWgO38SespvH6r4si6ck9fAsX3JUykLHZqOA5+bGfcTun55?=
+ =?us-ascii?Q?K4pGFIz/Z8n339v4u6qTx3tRqixwwAad1nlVhVMUb9g1TEyJi/Dt7MFlJwyv?=
+ =?us-ascii?Q?7pm1/oBVdTsuYM+4qJ703FMyP19WF/QkYTQOqaiECL5KCSiDLHNDxNKHdwyZ?=
+ =?us-ascii?Q?VJhoZs4c4qFNs7PibOA3XDs5oA6rSgFDcQ5m55uSXgVTb69h3CKedltG7MBI?=
+ =?us-ascii?Q?7s6M9cvApZZLvn7PDJLOpvvECTNy/vnSvEcxMrY0EP8phFrrgGtThOMp8crz?=
+ =?us-ascii?Q?oNiKIz0imXDbYv1oL5Vjs6+1PqLwTdcsZv9q+5Ncq71SvrOWkTuPhVcIfPd/?=
+ =?us-ascii?Q?Z32I+0IWxGfUWklMa0EDnj2D8S7DF4k2ZPegn3R4Np9ohut5EwUG97EGjTP7?=
+ =?us-ascii?Q?8s7PNsPZ1jJf733SgPDS63qP8vWcNRecsq/dy6/m+TufQBTtFfNuvzlz81so?=
+ =?us-ascii?Q?dwHeQzuYl2tYhCay3LIltD7rNN54KZLQcWCTpRIdzZVewBH3fjnvJkEdzYZP?=
+ =?us-ascii?Q?uo2fW6uDTxB7Hk/v/bkCbM/jJiOwj/pBvmQpVzZMxyVIRo8qtUKYqPf7hRi+?=
+ =?us-ascii?Q?dwSbXZOq1h9w0CJuzGrtP5i0uStecDdbeiy09hxvFJ87ZP3DfEIBdOtOrvyO?=
+ =?us-ascii?Q?EuZj9S5/QzjykZBmsiohXct5Jv/Q?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?L69dnntU9b2b2+lVCLWG7jqYYf3KsrEkaDj99p9DYKlm6GBS+aanq6IpYum9?=
+ =?us-ascii?Q?GEixqupnmgEheVDuZ6S84tMKsGJrZkR3QlN5RNfJqkdkhFq292pcPoTGJU+0?=
+ =?us-ascii?Q?aY+kcwcQMFDVJdbQtz/Gpk6dgFXXMaqHAmCA7hTGnkAEyPUvktBXvmg3BKJi?=
+ =?us-ascii?Q?A8B6rgw2mfw8f3iLB5nNbF1rmFzWkDag2AtjkVdsFtKGmQyKR/1nWu3T4o3m?=
+ =?us-ascii?Q?hB9kIIDdJmo6n5tf8wyrPS/9L93pybGZfS987NpNBeRAk8Rk7cmwToM53Rqp?=
+ =?us-ascii?Q?yh2/Z2MBKQFvAP/lSG40O4+iAM9khh5HGJI8eVb1quyz+HPY3HaQSwxnaGB3?=
+ =?us-ascii?Q?DbV9OzXIxrBVoGL68om5Y5xLmA3Y55QKp3YZJHFAoJEoOf5zLR7W4dur8l4L?=
+ =?us-ascii?Q?EA8L+YvCjsvmS4OrqS8VA1qQmFPgH9Gf8q6jdv5lLGwamrkJeGTJlBzRL4wS?=
+ =?us-ascii?Q?KeUD9De6Xz4oT1q2KQjGVPKokSPHGN6DWLwBIBLNwDaylWHiDcG/14elieFZ?=
+ =?us-ascii?Q?foR638P7bhDK8bJs9j3nrtYptT6x1EM1EUhO1yYApYiSKrMoHBIwHn80eC1u?=
+ =?us-ascii?Q?6cj+R5iW32e03Ez0K7w0Ui2DJqBiiNrD5HJBxlP3D87D3G+30Pz43jVhKgS4?=
+ =?us-ascii?Q?HkoEPWUKb6c+jRZ/mN+o5/iBXH+//RgWg6Oi1+LpFtJv5H7OQ8rEvpYPlHA3?=
+ =?us-ascii?Q?sPEEVRv7QPMfqF52mOGmsEhYahkiRFqkj8YpcSNOlVirSxfnOH0ro2u7hr2N?=
+ =?us-ascii?Q?luQtNhZjKf6hbLznErZbjb0ez/b/+70heft5c0ZD1LV/MfVTgUOEoZALkIe3?=
+ =?us-ascii?Q?DbKNy8fJGqNGuyj1D+oR2S2CpMHSJNxzfpi/q6C1v+Py26VXCA7Av7dCwgEk?=
+ =?us-ascii?Q?DrqE6AvdCIK/FcS0N3pSdUGv63pAz/vxYGoiC5VfeLhnd8Si5nija4zbTM9+?=
+ =?us-ascii?Q?LOR7HCm6cmwogD80rIyfF+8rm8m+49a3W0OS9iYtt9IiJPzTfe5zAQsvN6LX?=
+ =?us-ascii?Q?dnbB/2KPnuX7wZuxVfm3VrlFrcZiWighukwQv4+MKQS2AvvP7vKVvyp3itPL?=
+ =?us-ascii?Q?pnzOVJZLqk3x7SKEyKTMJ1ZE1Vzz5Evua+ngsoNHKd8y1aqrWB81wb7Pb3af?=
+ =?us-ascii?Q?EsTePCyG5Uxknv3sIVI9J4O9w68LJUuEHJCb/3MgqKKr3AEsqbxwQeruv2Fu?=
+ =?us-ascii?Q?KCPzzPDT9k5xElLyKCLYKsFDYBSjA1otZfh6Wt2nMOo68ld0HzcHfNagbsPe?=
+ =?us-ascii?Q?ivIa8TW+SWF16QkyzABDAtLRZ9oALR9DB/W3M7d6NdmaPY9YuYKNucqTx2xm?=
+ =?us-ascii?Q?eICsKOMXHVs3UZyIwArOSxzBUEIW4zslBSUTG5u9fNFlvru8wCryRfAzTcUN?=
+ =?us-ascii?Q?hPLNOGxuPpqNqhifadQv7tWgTyIffwb53fYw+IrfkYv562RJfBnkcFW1pAjM?=
+ =?us-ascii?Q?LoecuYbxaT+TLob+qSvR6zSvvMOoIwR8aY5wyX7kBAljljMQwMtKE04W1vKJ?=
+ =?us-ascii?Q?UaDD+c234eIkNpFVFVk0nw1i0QxZEm1ZpBq3TdJCbOYvxoMwRoa0NjcgnoxH?=
+ =?us-ascii?Q?+uxjW49Kost5uLB+i0U=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75290dc6-21ab-4222-4fd8-08dd30b2df4f
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 13:38:16.6815
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A8rjPNVLmMWylbqZq1e8ichePdqH7hnVZUUSkeDhq+JfSfrD+k51lQauwDVbnmiy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8318
 
-With 8GB BAR2, running pcitest -b 2 fails with "TEST FAILED".
+On Thu, Jan 09, 2025 at 12:34:31AM +0000, Wathsala Wathawana Vithanage wrote:
 
-The return value of the `pci_resource_len` interface is not an integer.
-Using `pcitest` with an 8GB BAR2, the bar_size of integer type will
-overflow.
+> > > I'm under the impression this is a similar problem to cpu/irq/numa
+> > > affinity where the driver/subsystem should be making the choice, but
+> > > the user is provided the opportunity to override the defaults if they
+> > > think there is benefit in their environment.
+> > 
+> > Which I think has been proven to have been a mistake. Instead over overriding irq
+> > affinity though proc/irq under the covers of the driver and hoping for the best the
+> > driver itself should have the opportinuty to set the affinity for its objects directly.
+> 
+> Do you mean that the driver should handle affinity requests from the user directly
+> as per its policy?
 
-Change the data type of bar_size from integer to resource_size_t, to fix
-the above issue.
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
-Suggested-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
----
-Changes since v10:
-https://lore.kernel.org/linux-pci/20250108080951.1700230-3-18255117159@163.com/
-
-- Replace do_div with the div_u64 API.
-
-Changes since v8-v9:
-https://lore.kernel.org/linux-pci/20250104151652.1652181-1-18255117159@163.com/
-
-- Split the patch.
-
-Changes since v4-v7:
-https://lore.kernel.org/linux-pci/20250102120222.1403906-1-18255117159@163.com/
-
-- Fix 32-bit OS warnings and errors.
-- Fix undefined reference to `__udivmoddi4`
-
-Changes since v3:
-https://lore.kernel.org/linux-pci/20241221141009.27317-1-18255117159@163.com/
-
-- The patch subject were modified.
-
-Changes since v2:
-https://lore.kernel.org/linux-pci/20241220075253.16791-1-18255117159@163.com/
-
-- Fix "changes" part goes below the --- line
-- The patch commit message were modified.
-
-Changes since v1:
-https://lore.kernel.org/linux-pci/20241217121220.19676-1-18255117159@163.com/
-
-- The patch subject and commit message were modified.
----
- drivers/misc/pci_endpoint_test.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index f78c7540c52c..0f6291801078 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
- static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 				  enum pci_barno barno)
- {
--	int j, bar_size, buf_size, iters;
-+	int j, buf_size, iters;
- 	void *write_buf __free(kfree) = NULL;
- 	void *read_buf __free(kfree) = NULL;
- 	struct pci_dev *pdev = test->pdev;
-+	resource_size_t bar_size;
+Yes, not every driver has tidy mappings of objects to interrupts
+vectors.
  
- 	if (!test->bar[barno])
- 		return false;
-@@ -307,7 +308,7 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 	if (!read_buf)
- 		return false;
- 
--	iters = bar_size / buf_size;
-+	iters = div_u64(bar_size, buf_size);
- 	for (j = 0; j < iters; j++)
- 		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
- 						 write_buf, read_buf, buf_size))
--- 
-2.25.1
+> > Lets us not repeat this mistake with steering tag. The driver should always be
+> > involved in this stuff, if you want it to work with DPDK then go through the kernel
+> > driver that DPDK is running on top of (VFIO or RDMA)
+>
+> This RFC is only about acquiring the steering tag from the ACPI _DSM, which the DPDK
+> user space driver will set in the queue context of the device it manages.
+> Setting of the steering tag part happens in the DPDK device driver.
+> Are you suggesting that I should instead pass a CPU and a cache ID to VFIO and let VFIO
+> decide what's right for the application?
 
+I think that would be better, yes. Get VFIO to give you the steering
+tag information, and any related control of the config space you may
+need, via an IOCTL.
+
+Jason
 
