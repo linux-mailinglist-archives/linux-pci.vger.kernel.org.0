@@ -1,213 +1,216 @@
-Return-Path: <linux-pci+bounces-19608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCFE8A07C8E
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 16:53:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60B68A08073
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 20:10:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 612E13A80C8
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 15:53:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2C7117A2898
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 19:09:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C92632206BB;
-	Thu,  9 Jan 2025 15:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E2F119C556;
+	Thu,  9 Jan 2025 19:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Bl/mYVoK"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4AZE0/4j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976DE22068A
-	for <linux-pci@vger.kernel.org>; Thu,  9 Jan 2025 15:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736437988; cv=none; b=qqj6MMRY9VeQ0MFEkHeSGNv+bc+LWWxU66XxM24KhnaKwrNs8aKQlymZ2hVBbnhDuKPaDfOfwHtSGNZ3BNImgmIlCquLwx8a8T9cH1a7DSLuSSi1jwNm+dvDc/+7crHh6i3agJtGlGbFogAt1Q6q3ve+wcfUZW4Y/Npi6UtXY98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736437988; c=relaxed/simple;
-	bh=pJgGVj88K8V7gJ0zgIUhUwlsCxKgV+W4Ci2hCN34mIY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7lo93uN4xkqPBa8UuyG0LZ9h8ZAw6FVwE6yHgWBQIiaJWf5J8vIYbhYyoz3yHVXBNKkcR16HLSdGMiYD00BrzCMYt7sC8XO2TY2CNF4hDaHRWF53pscIcqtTasDGEs0sp3wIHgBYGOf/RfryEOufrGTgteylVS5z12wsAJti5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Bl/mYVoK; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-aaf60d85238so215308466b.0
-        for <linux-pci@vger.kernel.org>; Thu, 09 Jan 2025 07:53:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1736437985; x=1737042785; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aiM8y2KF3+onAr2SvicvIVsqQjxBJ+k4H+eZXUhohgA=;
-        b=Bl/mYVoKctKrr4gURZuPaipQQxFpkN47P0NlpCMfjizKqQNYQVhLEN+Rrs1NmO6Bbl
-         Pk0gJ699p+KTMEwouYyn5iWanH06Zfa8lCBNjlTFl7Vsb1+MZr/5bicGx9uRLFleFiT9
-         rgTppDeph9xyTknOcMsi/Zma8kkEErYrwCbAfR1jbPcBNswOMQzcWUXL1mXsaCVhauMl
-         fUvIGf+9SAIUDmL+1Y+f+DiF9C7JPvtot6yczg+M574vA9tgtRKVZ84mdAClQqcWYUrP
-         Jiag7lXRPPPKmsgTX0C42XLBThXjXic+pkAAjgFyP0NONL0CF0HPhMXwbySw60jCxTvB
-         vQIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736437985; x=1737042785;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aiM8y2KF3+onAr2SvicvIVsqQjxBJ+k4H+eZXUhohgA=;
-        b=jWDGl1kaIiBRtRyyVsmBZKkCVWLqNA4T86Oa+yrWnH7061Zo7UEbSN1/O1N0nEW5Ao
-         0lmOqCW3p+fqOOSwpqgGKwhYjl8VJhg32c5afjkIjeaNcyVkDQnHo+4fdBdMdNd3+JIa
-         nbg6Z89WT49pAmo5MvWoMw+sJeevIK1JymzFmorgE1Wgb4ezvAflPguGmL/KNNMSqCCy
-         7tJ11Tu7r4pol5mOwgulmXYPa8ALtk7WrNHDJNcFQ/DHkEnLZkL4grX2/J/XGDTzVWwP
-         yGqBgqlNJkGkvhRZOnQ8vTpzpHuNUnQtW3TCxaP/d5budu4Fj/PD+r0xG8+K5l/ZsXLM
-         Hxkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVm5uqF5RYATFSu7C8uTuIEw9cXnBQ+19P+b1skvt6O4TXsia/s/FAS5FyAZUzR+2+xMesEVsPryhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhSqrX/uI8IfbHd5gXJhx6t5aSGDC451a/oWcHegnN7DJ+HRaX
-	ezeJn9LO2N/57tZeYP4J/oDTEf/nUCecHTxxwA0MY4rCFfh0vMBb9vXmsf68Z3Q=
-X-Gm-Gg: ASbGncvPmG6aCHXKYoF1lrV8wLdooagZ4tgT4q6bLGi4kA2koxVRI6mCD8aIewMoWSu
-	9bFv8Oypo1vcplA2ObraoqQcytQ4KPLW2iHr5gBR6NSUig3z5vnYE+pZJxkCTKqsxHE9GtZs3rw
-	cfWoLdhfsk6ZnixJr2+gstUoT+6Q9zzw5IRatH4sfG17IxzKuIAlUHrwFJhH5wCwGkyt40e7GwK
-	1VehbQkFkr1bPmvMcMJ095lnZQRM14x1fMlIkZd0ip1PTydg/cZFGUcGlfQTRrRa4H5CUbfcT7C
-	qEDqCcj08DaQyo/X9QpXBdCFV7jkSA==
-X-Google-Smtp-Source: AGHT+IHcBvpBouxzG2xA8PisFV1s3Jhs8UiQjwM9GQq0MdUzIaP9cn8QbUIcgBfqgLqpN4NyhXITew==
-X-Received: by 2002:a17:906:fd87:b0:aab:cce0:f8b4 with SMTP id a640c23a62f3a-ab2abc9ed6cmr644656666b.52.1736437984935;
-        Thu, 09 Jan 2025 07:53:04 -0800 (PST)
-Received: from localhost (host-79-40-232-186.business.telecomitalia.it. [79.40.232.186])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c9563b32sm82250366b.122.2025.01.09.07.53.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 07:53:04 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 9 Jan 2025 16:53:52 +0100
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Rob Herring <robh@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v5 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z3_xEEGVWFu-bDjT@apocalypse>
-References: <cover.1733136811.git.andrea.porta@suse.com>
- <28fe72eec1c08781770cee65032bb10a6d5994a9.1733136811.git.andrea.porta@suse.com>
- <20241210224837.GA702616-robh@kernel.org>
- <Z2A0aAPotT0NvoCl@apocalypse>
- <Z3_ZlvbszezcanA4@apocalypse>
- <20250109155036.27b82b7e@bootlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B42AF07;
+	Thu,  9 Jan 2025 19:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736449800; cv=fail; b=EAo8JqQ7m+ubi8FaxhgPqB6w4bmVxCgF4Ah3jwN/y1AiRXS1hKJC7ZyJf/loKR8FwvL2XXZMjlaLKkMVtOsrq5suc7RugKo0MKUfj7GMN8z1eknlmsH5sQvFC1hSG8X9/u+0lGGamZyJwj/pzaoOtWFZMCrM0IsL4Dmcrj4qtyY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736449800; c=relaxed/simple;
+	bh=10LB8VRVGYmF0F1hCUq1Q084Fdw4kYhmMwx4S46Nv1Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=he5maivd5XCfBzqRczzaNw3IIzdwypjjDSqYud8YBkUTaBK0R+DACVSyprIC0sV0/1FqXfFB5ZeeDM1TtAqtldVnfLR0zhKFBBinb/umLLa4o9rz1vS2FSmu3beH7soziBXXWNbO/erAPYrCUT9cm3uGjgtlPvBbOMGmK31wMQE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4AZE0/4j; arc=fail smtp.client-ip=40.107.237.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lPPGhS2gfXdtYtO4pwrTNjQ2z/rJDz4d7xKrS8s0kkOJkiUf03Uzna9Sq4w3+KJX84qbwalr97cCpig4JEPuj2e7oEUBt5gr7pYL73rm4dGVifHbwqtN7jV+gmUEoEtF1N841cOBAiPR1X2n019f5zgRjruzyn+61jgzzP+5PDcg4lZIcVGJv8C1rROPUrpwRYazqBRDsiLQECjgZ14L4Mj+B6QZbvqCd2ANaC8Q5kgXBt1DPPM3V7cfGRUA6Nsw9ce1U8SEkGkuPbENLWMFOQEWWqK1q+Qa1fXqss9kUxelIfRkjzWZI79PwEYD6V+PXgU0G9Qn5lRf/l1ES0u7Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r2ib+5Kv2WuA7TjYOTmT4cjFNUrRVdrwoFZHFfRuyVU=;
+ b=am/D5Rn803Uaq+efrehX8X0Bp/urWdURefGWKGSn52HPhP/sfu/dM1ffqsveabxYFgc0umxiUZP/0GTwqGGKZeM60O/bx4ZmIzZjcuMFDR81IcKDxMPRoPQpk/J+7bwgklfW5HszAjllDgHUXNzfRN9OK0iO6K5+akO/bT6gyMMiKAOLgoQ4Ye+qebcevfBd6e+UGVzmGYqnaFm9ylkA6S5n4eKJFFHS3WvRQ0YpPix3RBG8k0EdzFSDEsuDRtIchIzkAbLWn1ZCHBlNvb0AUkJxjfkJTJZmHEYG3I3Ukw0x2hhTY10sLhewi1DN5Zb5f+K7er0klBPyzMGisQXOrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r2ib+5Kv2WuA7TjYOTmT4cjFNUrRVdrwoFZHFfRuyVU=;
+ b=4AZE0/4jClAHDtmjh7ouQK9zRjbtCFRrPPrRQrWHWucUKkWqqo/3QFCJA8VSaqN8kdfvp/MavkQeTMCHLlRXBmOjcHYOeuKxJWOz8pPHKa4pcOyHhfMdXcJFDChNfyBZcQfEyrzOSxaU4VUHaNcEiMjKGH5U/1EatkI9YNKbxqM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4877.namprd12.prod.outlook.com (2603:10b6:5:1bb::24)
+ by CH3PR12MB7521.namprd12.prod.outlook.com (2603:10b6:610:143::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.13; Thu, 9 Jan
+ 2025 19:09:54 +0000
+Received: from DM6PR12MB4877.namprd12.prod.outlook.com
+ ([fe80::92ad:22ff:bff2:d475]) by DM6PR12MB4877.namprd12.prod.outlook.com
+ ([fe80::92ad:22ff:bff2:d475%6]) with mapi id 15.20.8335.011; Thu, 9 Jan 2025
+ 19:09:54 +0000
+Message-ID: <f1f6af31-7667-4416-95d0-2f59c91a1b62@amd.com>
+Date: Thu, 9 Jan 2025 13:09:52 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 1/2] bnxt_en: Add TPH support in BNXT driver
+To: Jiri Slaby <jirislaby@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+ bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, helgaas@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, asml.silence@gmail.com,
+ almasrymina@google.com, gospo@broadcom.com, michael.chan@broadcom.com,
+ ajit.khaparde@broadcom.com, somnath.kotur@broadcom.com,
+ andrew.gospodarek@broadcom.com, manoj.panicker2@amd.com,
+ Eric.VanTassell@amd.com
+References: <20241115200412.1340286-1-wei.huang2@amd.com>
+ <20241115200412.1340286-2-wei.huang2@amd.com>
+ <20241115140434.50457691@kernel.org>
+ <68e23536-5295-4ae0-94c9-691a74339de0@kernel.org>
+Content-Language: en-US
+From: Wei Huang <wei.huang2@amd.com>
+In-Reply-To: <68e23536-5295-4ae0-94c9-691a74339de0@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR11CA0206.namprd11.prod.outlook.com
+ (2603:10b6:806:1bc::31) To DM6PR12MB4877.namprd12.prod.outlook.com
+ (2603:10b6:5:1bb::24)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250109155036.27b82b7e@bootlin.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|CH3PR12MB7521:EE_
+X-MS-Office365-Filtering-Correlation-Id: 313e7727-2ffb-4a73-fc8b-08dd30e1333d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OSs3SlBJU1VOamtrcHZVNTBLQTdKSXk5SFViZTZqOThUaEJHMkRQWjZWVkEr?=
+ =?utf-8?B?NFZiaFo3eXJHL2ljWFlYa2N3Uy9VL2crNDhnTC9hRHk1VWpTTHpXT08vbTVU?=
+ =?utf-8?B?RFJpV0w2UlN3TE4zbzRBb2hjZW1YUTJDYXJrQVlQK0orYnI4bnZBZjRlVmth?=
+ =?utf-8?B?THdBTUtsbVI2dEJjOW1BZDNnZnpsaXkrVTlmY3RWZFpZWUFVRXN6M1NSMDNL?=
+ =?utf-8?B?ZVB0ejAzWFhrMFBySktKS0xDRDFlM1lUd1RGQnhNUEM2L1N2SkcvbE1aNWx1?=
+ =?utf-8?B?N0hELzJ5YXVtdnljeEsxcWxGTjAzeDRoeFBSQTBWL2RFa25CNW5jeU5TVW1M?=
+ =?utf-8?B?YnN6VmlPTHVYY1dXZUc1L291NHY1T3h6WGFLcGUxMVJROTNWM1EzUE9VQW9R?=
+ =?utf-8?B?UTNOd2RGbDIxYzdTZ2cyL2VPTndFcndrbkpFdnZ0OTJlbDB6aUFTdDRQTW5N?=
+ =?utf-8?B?emZTUWE1SHQ5S0Z5SHRwS1dkWTUvOFNGVjh6TjVBYUEyZDJDK1ZTTW8wWlhY?=
+ =?utf-8?B?S1JrOGJDMlg4QVRIOGJ2NWRjcXBvOTF6d1VRRTRraHVwQ1d1cFBPdWhuWTg3?=
+ =?utf-8?B?TEpndFBmeG10UUNUWFFCUS90Tjg3K2w2eGpuUklpRjhPY3VKY0RJbXE1dWFS?=
+ =?utf-8?B?eG5jejJrc2h1QTNoZVlVSVhmdS9FandoZTdUZ1lld2RXbVpsVW82Q3FodnY3?=
+ =?utf-8?B?aG1LVUdZeGptbWp5UTlDako4dEgweGtDR2wrUTN3UFRWSm9oY1lKR2Izc3J6?=
+ =?utf-8?B?Y2xGWi9kb0o5dTJTeldVNEFRTUQzR2FVSXIxOFpzSkNGaEhCaUtIemJZZzFu?=
+ =?utf-8?B?Qk5od2dlZkRUR04rdWdJV1BpTmF4WU1zdmFRRXFEWVhiMVV5V0tTMEVZTnVl?=
+ =?utf-8?B?V1lqYktyUStWZ0VxaTNaWkVIdkpuNkRDcSsvZFB5b1E1aTQvdUp6MlJGZ0Fp?=
+ =?utf-8?B?Tm5MRmlXbktraTVZUDJ5K2s1VmZheUdBMmJRYnl4Z0ROSm51bE9tcWxySUFi?=
+ =?utf-8?B?UTBQVFFzcGIrMnJ6dXg1WGNGZGNnb1BNcmFEMU9ybVJYR1hYdEJlWFJrNVFZ?=
+ =?utf-8?B?QU8za2c1OUROZUxwQ3ZFTlpIc3B3NFdUWGlLQk1sS09YcW0xWlJXajZUWWtt?=
+ =?utf-8?B?QW9heEJ4dkFHdnFJNUlpWVlKbElsb2R1WEFWbUhqdG4wQ3BJNDJwaFFubXI3?=
+ =?utf-8?B?dWNrbTFqK1NGWVlTcndVOFpjL0crUnhpWUFKWHpCMHF5bmhKMWt1Y0NRYkhM?=
+ =?utf-8?B?K042ZHA4enA2ZjFrYVBXSTgwQmFWOENhOGw0V1RNY1ZDd1l2UGM0MTVveDNG?=
+ =?utf-8?B?aWloUkxwSlVXODRpQ0VZVXZjNVRrbDBhcFpUNXUyMXowWEFZbjVFRnhNemtk?=
+ =?utf-8?B?R1FDTm4yaEQyZWNpeTl4Qk9UVC9UUEhtTGtMYmVzcDVTd1ZnREdkbVJjZW1n?=
+ =?utf-8?B?RXpyZlRhMmRuQTgyQjBaWEk2aU9XNktSYmdUbGxsVktqcmgrbGw2QmhWeVds?=
+ =?utf-8?B?eEVmZ081YnIwSmhQclNvbFJ1L1dGcUV1UVJ6RCtKUFcvTThud015aWNMQXdi?=
+ =?utf-8?B?cHR2amFmaXRNdjZ0QTdKL05KM2Yzamg5cHpRUTYxVWxGQi9MVmRWWFdza0NM?=
+ =?utf-8?B?S2RieFg5czEvYitDaFRtY1lWK0hDbG5Pa1BnWnRBQjV3R3l4d2J2MFh1Y3Ex?=
+ =?utf-8?B?UzNhc3ZxaTZJYTBEbU9kd2xPODZ2MTgvSTYxb1c1dklSOVdObHRmb3grZ3l4?=
+ =?utf-8?B?dDFLT1hLcGpsTGZ1U3gxTHFiOGRjYjFMQlZPOTNOejhIZmYxdy84OTZkZUVk?=
+ =?utf-8?B?M1NVa0wyWXBENENOdDhxamJqMHRCY280QmV3cnk1OUNLNmtCVllWUFlHSUpB?=
+ =?utf-8?Q?DiJkp6kOgOEOB?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SUlLMWdyUGVHVHY1OXFCMExPeENicGhhOWxsRDlFcnZLZ1NRNS9rWHBrV2dw?=
+ =?utf-8?B?dkU1TjE1WmJPYkwyTjlwbE9SOTZ4blFML0FyaGJLVEZTY0ZkTGNheWFGMU96?=
+ =?utf-8?B?dlhZL01TRjJQL3dQb3U5SCtLcFluUUZVNlZKR0NjWWkxV2t0Skh0TklhVHBD?=
+ =?utf-8?B?c1Bac2ZqL255bGVrVVNEajFRSXEway9ZUStxZTAzd0tVaEhMMVlGTUdZL3R1?=
+ =?utf-8?B?QmtlRWMyTW94aDN0TkNFQkdzYTJtT2dKb2ZyUHZKTmpFYTR0NTVJdnFnMEJS?=
+ =?utf-8?B?TW1KM2J3UFhybFJ5dWp6V2s3Mk41UzNGbTBQQXdFaFN1ZkIvbHVZSHY1cmo4?=
+ =?utf-8?B?OC9hend3MEdvQ2x5WHFLQTJSd2RMblMvSWZBcUp6MlJDVStUNzBBbWRTMm52?=
+ =?utf-8?B?MGhTc054TzFrWlI1YVJmSTNVekNyUmlBSXdyUTFGenhValBJL3VONjBuRTZF?=
+ =?utf-8?B?eUF4Lzhtd1NHeVBROVhiallTMVBOdjRKMVZBa2Nzd2oydTBRazJNdjRmbjFr?=
+ =?utf-8?B?cFJ5K1ZxNmtjdngwTXFtUG05a0l3OTVxT2hqOThHdStQNlUySkREOVozMjZ1?=
+ =?utf-8?B?VUlwWWJ6TnNFNVdTcFBXalpreDVnc3R2dHNFSUJDS3M3ZGE3bm5WbkZzT2FF?=
+ =?utf-8?B?MHpnSng1eXowT2NMWkxvSUkxbm1OQnpmK3hTUEFoaGtmMklLM213SUlJM2xm?=
+ =?utf-8?B?OXdGOGE3WWZxN2FKRGxkMm1tbGYybEZJc3Y3d015dmlkb28xUzFhaEY3cmVX?=
+ =?utf-8?B?bUUxbHpEV3BCYlJ5QjN1eHJ3MngvWEFINmN5WGNuUXJNUU5xY1BON2V1Nyt1?=
+ =?utf-8?B?cEROWWJGUDZqNzB0eHRKR1diR0ZGRU5yWUZFbFZQeEovOE9KNGtPamxLVDZT?=
+ =?utf-8?B?dVdBSW4wYzRXMnlheVVUajhia2ZVUUYyUTM3dVdkOEFVYWFEekJNYXR4R04r?=
+ =?utf-8?B?VlhBMkNTYkZPZm0wdzgydVNlTDc2U253SVMxY1RON0p3THdvZUxUNldobWdZ?=
+ =?utf-8?B?Z2RMSkhUNnJJVWxkQ3pYS0ZTL1JaRE9hbWg2cSt4WWVNRG14ZzNPY001UG1H?=
+ =?utf-8?B?a3ErenF4Y0tGcHdGbHp0YXhDZm5kakVlTjZ3bG1PZnlQSExLS2J2OGNPeHAv?=
+ =?utf-8?B?QlN6UFljS0p4eHl3bmdBN2dqZ0VhTXAxWEd1V0RiSVN6QTc4VE1ibUhkc3l2?=
+ =?utf-8?B?NHFVSTlQSlNaT2tzYkJBdkZPQWozd1J4NEJ2VjF6VUtUNCtlc2x0ZUhqSlY0?=
+ =?utf-8?B?UXM2RzJMSXFBaXpleVQrbTZYOEZmS1dtVkxBc0xpWXUzeVRwZmViclRhblRo?=
+ =?utf-8?B?SHdjZ1FURTBUZG5GVnZFemM1b1oxT0RJQTFTbThLdkdzSk50YTFFWEF6azV0?=
+ =?utf-8?B?OVREMTRDcFV6YmgrWmZGYnErbTNzVHN3U1FrRHBGZUJXTnJHenE5ZmtzN0Qy?=
+ =?utf-8?B?bzJScUFoOGh1d2VhS21EM2hyY1pYZTBoRWJMV285YTI2blVBUTMwZ3FEMDJx?=
+ =?utf-8?B?S0ZSMTVkYWg1RW83WmdEWW1GdE1EUUs3YytVTXMwa0ZLT2R2K0FLd1p3OTNi?=
+ =?utf-8?B?bmNCSms5UVFDeWFFMjlsRWpuWXM0d1gyM2pOZkRRTmZCNktPMjlMUXdkRkV1?=
+ =?utf-8?B?MzMzak16QUVvMll4UjRnaDFqS0R4U3B6R0JQaVNIWW9rSVBXblRuS2ZUZFJh?=
+ =?utf-8?B?aU9UckZ5WStWUzNlR1h3aG80TXJQOGs4Vk40NzRPU1dMSXlVZWh4VEhGWG9o?=
+ =?utf-8?B?NFp3VkxUU05aODJOQ3kwbHlRSTlGWlp6Vktlb2lwYlkybHZrTXVZd3MweGZp?=
+ =?utf-8?B?VGtTUjREb3FyL3kzNkwyeHB1V3pEc0JjSjBocVF0ajVoQVhGbHNtU0dLWGI1?=
+ =?utf-8?B?cTUwRXBjSkpNWDdsV3VtdWJkeGdEamg5SWtIZHQvQ2pIRW1DSU5nVXFaaXE3?=
+ =?utf-8?B?WEovcjR6U2NhazZzRit3dmdlOVZobmJnc250bkd1OUJwcGFweW1WMHZtVVdY?=
+ =?utf-8?B?a2ZJRnRGTk9nWlVTN1VzUlJvenJXbklJK1ppTmJIbXc2WEJ0WFNOdzZhWXFj?=
+ =?utf-8?B?N1RSdTkvWDlTZVVVWW96SFNPbWFBck4vSTRNVTdvSFhxSE92S3JXdENrenJR?=
+ =?utf-8?Q?HoMmMiK4G5+n2ENDUlV/IXVl5?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 313e7727-2ffb-4a73-fc8b-08dd30e1333d
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4877.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 19:09:54.3573
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qYeheZHUFP/g0k58w29dVSTMmgOf1SJa5oyH8HptTzuPAHoloI8JrGb7rNIjTP9k
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7521
 
-Hi Herve,
 
-On 15:50 Thu 09 Jan     , Herve Codina wrote:
-> Hi Andrea,
-> 
-> On Thu, 9 Jan 2025 15:13:42 +0100
-> Andrea della Porta <andrea.porta@suse.com> wrote:
-> 
-> > Hi Rob,
-> > 
-> > On 15:08 Mon 16 Dec     , Andrea della Porta wrote:
-> > > Hi Rob,
-> > > 
-> > > On 16:48 Tue 10 Dec     , Rob Herring wrote:  
-> > > > On Mon, Dec 02, 2024 at 12:19:32PM +0100, Andrea della Porta wrote:  
-> > > > > The RaspberryPi RP1 is a PCI multi function device containing
-> > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > > and others.  
-> > 
-> > ...
-> > 
-> > > > > +#define RP1_INT_ADC_FIFO	52
-> > > > > +#define RP1_INT_PCIE_OUT	53
-> > > > > +#define RP1_INT_SPI6		54
-> > > > > +#define RP1_INT_SPI7		55
-> > > > > +#define RP1_INT_SPI8		56
-> > > > > +#define RP1_INT_SYSCFG		58
-> > > > > +#define RP1_INT_CLOCKS_DEFAULT	59
-> > > > > +#define RP1_INT_VBUSCTRL	60
-> > > > > +#define RP1_INT_PROC_MISC	57  
-> > > > 
-> > > > Why all these defines which will never be used because they come from 
-> > > > DT?
-> > > >  
-> > > 
-> > > Right, those defines where originally designed to be included from dts, but
-> > > previous discussion deemed interrupt numbers to be hardcoded instead of being
-> > > specified as mnemonics. In the driver source code I just use RP1_INT_END as the
-> > > number of interrupts but I thought that the specific interrupt numbers should
-> > > be documented in some way or another. Since no one is currently referencing
-> > > those defines, would it be better to just turn those in a multiline comment
-> > > just to describe them in a more compact form?  
-> > 
-> > So, here's a couple of proposals about the interrupt defines:
-> > 
-> > - since they were banned from devicetree, and are not used anywhere in the code,
-> >   turn them into a (admittedly long) multiline comment, so they are still at
-> >   least documented
-> > 
-> > - since they were banned from devicetree, and are not use anywhere in the code,
-> >   just drop them, we don't currently need them after all
-> > 
-> > Not sure what's the best way here, anyone can advise?
-> 
-> Maybe in the #interrupt-cells description in the device-tree binding?
-> 
-> In your patch 4, you describe this interrupt controller and you have:
->   '#interrupt-cells':
->     const: 2
->     description:
->       Specifies respectively the interrupt number and flags as defined
->       in include/dt-bindings/interrupt-controller/irq.h.
-> 
-> In this description, why not add the supported interrupt number values?
->     description: |
->       Specifies respectively the interrupt number and flags as defined
->       in include/dt-bindings/interrupt-controller/irq.h.
->       The supported values for the interrupt number are:
->         - IO BANK0: 0
->         - IO BANK1: 1
-> ...
-> 
-> Or something similar.
-> 
-> This kind of description is already available. For instance:
->   https://elixir.bootlin.com/linux/v6.13-rc1/source/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml#L64
-> 
-> Does it make sense?
 
-Seems fine to me, if there's no concern from anyone I will procede like that.
-Thanks for the suggestion.
+On 1/8/25 05:33, Jiri Slaby wrote:
+> On 15. 11. 24, 23:04, Jakub Kicinski wrote:
+>> On Fri, 15 Nov 2024 14:04:11 -0600 Wei Huang wrote:
+>>> +static void bnxt_irq_affinity_release(struct kref __always_unused *ref)
+>>
+>> unused? you're using it now
+>>
+>>> +{
+>>> +    struct irq_affinity_notify *notify =
+>>> +        (struct irq_affinity_notify *)
+>>> +        container_of(ref, struct irq_affinity_notify, kref);
+>>
+>> this is ugly, and cast is unnecessary.
+>>
+>>> +    struct bnxt_irq *irq;
+>>> +
+>>> +    irq = container_of(notify, struct bnxt_irq, affinity_notify);
+>>
+>> since you init irq out of line you can as well init notify here
+>>
+>>> +    if (pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, 0)) {
+>>
+>> You checked this function can sleep, right? Because rtnl_lock()
+>> will sleep.
+> 
+> Based on the above, I assume a new version was expected, but I cannot
+> find any. So, Wei Huang, what's the status of this?
 
-Andrea
+Currently the Broadcom team is driving the changes for upstream bnxt. I
+will leave this question to them (Andy, Somnath, Michael).
 
 > 
-> Best regards,
-> Herv�
+> thanks,
 
