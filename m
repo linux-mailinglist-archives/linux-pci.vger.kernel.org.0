@@ -1,145 +1,133 @@
-Return-Path: <linux-pci+bounces-19590-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19591-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C5DA06FB7
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 09:07:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87962A070D9
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 10:07:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A599188900C
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 08:07:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 856A3161BB1
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2025 09:07:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1676F214819;
-	Thu,  9 Jan 2025 08:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275FB2010FD;
+	Thu,  9 Jan 2025 09:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mB+C8Sz2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTDqH0AH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA8310A3E;
-	Thu,  9 Jan 2025 08:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9157214A70
+	for <linux-pci@vger.kernel.org>; Thu,  9 Jan 2025 09:07:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736410069; cv=none; b=JsTzVSodFSUVckY+ZBUbSX/onmBez4nfDg0DnEICAlTqnbEfPGyqECEwPdidqwV+5GM1WTY4YznQohraklL+mSuAp9kOuvjufCojpUw7iGnnmtR8EiyL1ok2B6dt7MXQBeLi2R9NOIzuvJOCybcnQBpf6IdjsDNvhOyPfW7oZkY=
+	t=1736413631; cv=none; b=UI/QYN7xsT3QYvamdDorhYv/zYmOu1Mtxgn17kip2wzkQ/RuXVKqXK/FlCKctponJMe8dz1a2Ql49Io6Z8vdUxvl0vfIBfPEaNOyAHARS6x0L/DSSQZtvQSfH2iMxooujiiIwDA5lFlqyGp7mNk9idVltEA23JtI/n94uhriuSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736410069; c=relaxed/simple;
-	bh=B2yoJq6pKJpHj/MqGKeZtQFZAWjREci13lLhyUBacuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OO5ae0PcpiH7WfvUDdsIQneSBwh66H+zfwrY5LbAdOEEib0m5/VCARfnIbGgB3dQ+TV41C3nNRFNFhIGh4uNoDFwsIF0eQ8iWtzhTlovDvwuQdrdO8ZwD1bB0/tLpvEziW5+JD2FSVvU7N3QLlec4YrAkbYN/0FkL+4ctV1quOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mB+C8Sz2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD2BC4CEDF;
-	Thu,  9 Jan 2025 08:07:45 +0000 (UTC)
+	s=arc-20240116; t=1736413631; c=relaxed/simple;
+	bh=6KlrG7UfxSvJaPknWB0rSoQau5l3FVtxo3MXEwgzCUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bUjXAhCIKk7uUnFdgErlUV1LwDV73liux7XTLJsRX7vRLlAiwHskdefvI1XAK6PqNhljidROi1GzusvZD7HNvJZK2tfBsQ/S8AJ5hvbiNSgDt2AcuS2tPIx9hI4CU5cbaSxF+dMvIGJazLUfRgthECbOmMveBumeravT4AYJLVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTDqH0AH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B31CDC4CED2;
+	Thu,  9 Jan 2025 09:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736410068;
-	bh=B2yoJq6pKJpHj/MqGKeZtQFZAWjREci13lLhyUBacuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mB+C8Sz2tSXvTKvPfuJsGUFL7ArL6jt7VRSWoyZFLnro5PLQcdE2l5JJXVF+6ZLBD
-	 xsApdJBRyArxWyvL6IB5BFv2dry33odbPDPqid2mL7bh50cZ/zbCRCm9DWLAP5XXkK
-	 q5xsW8uxL8Av4CRJSdHca2OAPLXnxPKCUAEEyzzkMG/AIWCfQ+V+TVuC5pV5w7V5Ax
-	 vgwVV4RljpUyqnmBn9EiqZ4sLKwmr5qG7UuaeCrhBA6EElIb07j2HKUddlLDGa/kkz
-	 fMA0m6/K+DlY3KlJ5BFEWRvVcdFtGUbVaAWCTCapTBh9CPTQCA1aaGuW2vEcTXInxb
-	 WrXd69qmsYkoQ==
-Date: Thu, 9 Jan 2025 09:07:43 +0100
+	s=k20201202; t=1736413630;
+	bh=6KlrG7UfxSvJaPknWB0rSoQau5l3FVtxo3MXEwgzCUE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rTDqH0AHJ6nvoW+VFen417Pt0QdHWMJKtH/3GbENGtF1YnfNr21m63oE82LyJFKyB
+	 9Wv+IUH8j+y3h/EW+g7rbgXlD6L4lBj+Qfcrybeaivm8AkvHlgnzipn48QwTNX/uou
+	 jRPNhpkzWipvTz0E17r1VAwS9HwN/jAD+DnArnt+bbH/w7ryJUk2YRj2VTxdtFcqEA
+	 nrjkLfxPPs/NI1VehquHkbYo6aV4FqxmtLUDPDMPtaGEYqqb225YaH+qAR1SWgztLp
+	 5PRdw8Z+6gK7d/sGodEs7QKm2YZ9F65tnsYEYmx1H1fLxUoChAq2h5e4+GolToi2r9
+	 1Q8Hf70hQ4eDw==
 From: Niklas Cassel <cassel@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/6] PCI: dwc: endpoint: Add support for BAR type
- BAR_RESIZABLE
-Message-ID: <Z3-Dz42s7uYoNCuV@ryzen>
-References: <20250107181450.3182430-11-cassel@kernel.org>
- <202501090927.zMSzHORM-lkp@intel.com>
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH v2 0/6] PCI: endpoint: Add support for resizable BARs
+Date: Thu,  9 Jan 2025 10:06:52 +0100
+Message-ID: <20250109090652.110905-8-cassel@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202501090927.zMSzHORM-lkp@intel.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2645; i=cassel@kernel.org; h=from:subject; bh=6KlrG7UfxSvJaPknWB0rSoQau5l3FVtxo3MXEwgzCUE=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLrJ65RSb/AZanz+7n7qnvJ8btNVvKedXny6KGVRuqeN 3a7Hzz831HKwiDGxSArpsji+8Nlf3G3+5TjindsYOawMoEMYeDiFICJXHJl+Cu+UtuJ3Usif/4K pWvfsquab/QlPV/h79s55Z9l5gG7ZUIM/4tajh9dLf5mu+YqsZ83XlQ1cR0X8fdR1EkVXRWspFo wiwsA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 09, 2025 at 10:22:07AM +0800, kernel test robot wrote:
-> Hi Niklas,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on pci/next]
-> [also build test WARNING on next-20250108]
-> [cannot apply to pci/for-linus linus/master v6.13-rc6]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Niklas-Cassel/PCI-endpoint-Add-BAR-type-BAR_RESIZABLE/20250108-021844
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-> patch link:    https://lore.kernel.org/r/20250107181450.3182430-11-cassel%40kernel.org
-> patch subject: [PATCH 3/6] PCI: dwc: endpoint: Add support for BAR type BAR_RESIZABLE
-> config: arm-randconfig-003-20250109 (https://download.01.org/0day-ci/archive/20250109/202501090927.zMSzHORM-lkp@intel.com/config)
-> compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 096551537b2a747a3387726ca618ceeb3950e9bc)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250109/202501090927.zMSzHORM-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501090927.zMSzHORM-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/pci/controller/dwc/pcie-designware-ep.c:14:
->    In file included from drivers/pci/controller/dwc/pcie-designware.h:17:
->    In file included from include/linux/dma-mapping.h:8:
->    In file included from include/linux/scatterlist.h:8:
->    In file included from include/linux/mm.h:2223:
->    include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
->      518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
->          |                               ~~~~~~~~~~~ ^ ~~~
-> >> drivers/pci/controller/dwc/pcie-designware-ep.c:259:27: warning: result of comparison of constant 140737488355328 with expression of type 'size_t' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
->      259 |         if (size < SZ_1M || size > (SZ_128G * 1024))
->          |                             ~~~~ ^ ~~~~~~~~~~~~~~~~
->    2 warnings generated.
->
+The PCI endpoint framework currently does not support resizable BARs.
 
-The compiler is correct that this condition can never happen on 32-bit,
-but the code is correct, and the compiler will be able to optimize the
-check away on 32-bit, so I will simply add a cast to shut up the warning.
+Add a new BAR type BAR_RESIZABLE, so that EPC drivers can support resizable
+BARs properly.
+
+For a resizable BAR, we will only allow a single supported size.
+This is by design, as we do not need/want the complexity of the host side
+resizing our resizable BAR.
+
+In the DWC driver specifically, the DWC driver currently handles resizable
+BARs using an ugly hack where a resizable BAR is force set to a fixed size
+BAR with 1 MB size if detected. This is bogus, as a resizable BAR can be
+configured to sizes other than 1 MB.
+
+With these changes, an EPF driver will be able to call pci_epc_set_bar()
+to configure a resizable BAR to an arbitrary size, just like for
+BAR_PROGRAMMABLE. Thus, DWC based EPF drivers will no longer be forced to
+a bogus 1 MB forced size for resizable BARs.
+
+
+Tested/verified on a Radxa Rock 5b (rk3588) by:
+-Modifying pci-epf-test.c to request BAR sizes that are larger than 1 MB:
+ -static size_t bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 };
+ +static size_t bar_size[] = { SZ_1M, SZ_1M, SZ_2M, SZ_2M, SZ_4M, SZ_4M };
+ (Make sure to set CONFIG_CMA_ALIGNMENT=10 such that dma_alloc_coherent()
+  calls are aligned even for allocations larger than 1 MB.)
+-Rebooting the host to make sure that the DWC EP driver configures the BARs
+ correctly after receiving a link down event.
+-Modifying EPC features to configure a BAR as 64-bit, to make sure that we
+ handle 64-bit BARs correctly.
+-Modifying the DWC EP driver to set a size larger than 2 GB, to make sure
+ we handle BAR sizes larger than 2 GB (for 64-bit BARs) correctly.
+-Running the consecutive BAR test in pci_endpoint_test.c to make sure that
+ the address translation works correctly.
+
+
+Changes since V1:
+-Fix Wtautological-constant-out-of-range-compare compiler warning on
+ 32-bit builds.
 
 
 Kind regards,
 Niklas
 
-> 
-> vim +259 drivers/pci/controller/dwc/pcie-designware-ep.c
-> 
->    249	
->    250	static u32 dw_pcie_ep_bar_size_to_rebar_cap(size_t size)
->    251	{
->    252		u32 val;
->    253	
->    254		/*
->    255		 * According to PCIe base spec, min size for a resizable BAR is 1 MB,
->    256		 * thus disallow a requested BAR size smaller than 1 MB.
->    257		 * Disallow a requested BAR size larger than 128 TB.
->    258		 */
->  > 259		if (size < SZ_1M || size > (SZ_128G * 1024))
->    260			return 0;
->    261	
->    262		val = ilog2(size);
->    263		val -= 20;
->    264	
->    265		/* Sizes in REBAR_CAP start at BIT(4). */
->    266		return BIT(val + 4);
->    267	}
->    268	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+Niklas Cassel (6):
+  PCI: endpoint: Add BAR type BAR_RESIZABLE
+  PCI: dwc: ep: Move dw_pcie_ep_find_ext_capability()
+  PCI: dwc: endpoint: Add support for BAR type BAR_RESIZABLE
+  PCI: keystone: Describe resizable BARs as resizable BARs
+  PCI: keystone: Specify correct alignment requirement
+  PCI: dw-rockchip: Describe resizable BARs as resizable BARs
+
+ drivers/pci/controller/dwc/pci-keystone.c     |   6 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   | 228 +++++++++++++++---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |  22 +-
+ drivers/pci/endpoint/pci-epf-core.c           |   4 +
+ include/linux/pci-epc.h                       |   3 +
+ 5 files changed, 216 insertions(+), 47 deletions(-)
+
+-- 
+2.47.1
+
 
