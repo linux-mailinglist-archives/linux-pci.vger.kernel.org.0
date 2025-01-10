@@ -1,207 +1,135 @@
-Return-Path: <linux-pci+bounces-19625-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07DFFA0925A
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 14:45:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FEEBA092CF
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:02:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C837D1693F3
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 13:45:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E5EC7A3C22
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 14:02:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 860FA20E6F6;
-	Fri, 10 Jan 2025 13:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2130D210190;
+	Fri, 10 Jan 2025 14:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="CGHVal+M"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="S+hzhv5r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B3720E6FD;
-	Fri, 10 Jan 2025 13:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400EE20FAAF
+	for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 14:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736516678; cv=none; b=lpHoU53wjnSCEinfANwQkcpsk25eH5XmYzWynwQ592LDvQa4/Jo/ijMuKafTY6qeJNAeD5al1eYQ2b6mJGFf5qGFP0roi/1NzbXK1AIaiiodaWbfeFgLNk8bD/p/62C/D/FHwcOqCCdiPolQCtTCIP+POwhXmcPJfXGj1HozFlc=
+	t=1736517723; cv=none; b=uNo+rM0IJPN8l9tzyNoDRzPv0cJES+KPHGBTRr4kZUkjSMfJd8Dd/1TUu2D+iqRSYlgCRu1Otwpz+6cPmzFB0qnWDLYpk2DXZIc5Um3+kBlSHt7qG065aSrhNvxV7jMMu//mCFlffwIWMN71NPb6HAKfYK/OZitGDPAGfR1pr9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736516678; c=relaxed/simple;
-	bh=zcQi3cuOjY7oReka/rBrEqA89SqAZdFQ6huk/mtxaEQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=f0OI0NLvKVDSsgL/RUwt/SRrChD6TbwzOvtC/E81n3eM1ddQTDKVtNrF1NkiGLfiJUrEzW5kOfhMPxUA7eOsG23g3GtrCRL6lAHXCvl6b6Lb1odjLO1lTvvzuetdKXjbq4h74VuaAmdagFLFeILyE6rmkDcmuMl1lVOEjhXuH/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=CGHVal+M; arc=none smtp.client-ip=43.163.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1736516652; bh=P6tCNUHde1VgBvC9lRDHDfls7Ec2MDCLShQjnJL9+A4=;
-	h=From:To:Cc:Subject:Date;
-	b=CGHVal+Mn5xZ+AFsWRMn2NB5S/yd67B6w+BDub/EhpWpEvVUGNB/vRYPali1GhmLK
-	 KfQ7/g3sz73yCLs9qWxnRzRaZFQUxMag293lnfxR3kmO1QbtzgeElBYM8yBpJE6nK6
-	 LpCWQ/8HCx/uaBQF1aO5JB5vQYGMx+cGSl93G8Xk=
-Received: from jiwei-VirtualBox.lenovo.com ([120.244.62.107])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id B0917AA7; Fri, 10 Jan 2025 21:44:09 +0800
-X-QQ-mid: xmsmtpt1736516649tiqcnmc0i
-Message-ID: <tencent_B9290375427BDF73A2DC855F50397CC9FA08@qq.com>
-X-QQ-XMAILINFO: NHgT31LhP5vDVpQVMa1QnVviXB6yxDexdxjEMrfVy/qUCxjbm/I8heaHhEWOP4
-	 +Bj9y/FS18EVNdUBsNiTszpl8Y0rhWgUuVxJNewzD3kI7fGWR1917aY4EZ6RlVvPMbapiHToQDDY
-	 2lclmMHcDHzJO9aLsNzLS/MfgxkWhLFTmaj3Artokq5VJfzJd3rQNgxio9j/6xygDrbLvoMXYJuf
-	 xNY4RzlRzhTvboEqzSCH3UCRL0H2x/eMMU9muGBmqtUMog23+yiONs8t8v4mV2GnMYOjGQFGm0i9
-	 U0oMn6VfLWxIRWlBgrsrxbUZ2Jzzhfi4RJaIL1zPt9i0iyGLPpuCHpQEvGFfpkMYRHHvxPEeJnRR
-	 BzUSZ9xwY9IvRtidNIpsjyYh601VWvSmFwel5eOC75WoY+M1NwYJ9HjRHlrSmy+RhADVwHAhvPPW
-	 MKGXDDYxQIeD4QVC03BYhnGzQQRZGqET3VE4BRjDHS+Snk8VM2YAGe93mF4O3Dv9u+wURgo4NjZH
-	 7Kda7ZW3iATiFVQSeGA1hw4KTZsRgD5/VBampea6o27YNtuhUVry0x3TaQ+IEbrJyu5Z+woWeokZ
-	 tzNbJHqbfIGYbPaOspmDNyra682+nHrsyRBik7+ZgErWNWQxSAS4vsXNweI47EBfknURy2BmqXEo
-	 njRUVAXOt+MDiJ0/lFdIzsc2p9fJSnbKMN1+xrT6GUPs8EI9Vp8Z5HkJNbnkXL5kRVgtbnyc2LIo
-	 H0mdVhKbNpO8NgITHn2jpEnL3KL2AYoD/sdsZ1YWGh8CTarWKXISqve0esYGIqCkhlPy+4buFhRm
-	 7PzWqy9wQMgAYRRJRyMw5X28KZDKU9Ggg23jiHlAM3a4t9R9gFiRKuiLAFNt14Wa0Njp7U9HCyOO
-	 r3CU2XJp7lpNFCDUqZE6C6xgBcBjHQ5QXbK4Jx7pwmbHjHx2qVopSmt9la5tCH/NcoWydTnpXBWp
-	 YYCHygMHkscX9Y/sfNWL3bK4pJR3+1OFuYoTZ5N3A3rK5ZFrb0krSiInLhEa8e6d4/pYreplFeXk
-	 TD07XAtqX+il3dpVmlsSwxszVozUZanSQpsdzii88wxi6dYtmvxPk7EiVsGGsvX0qSy4wvKWhtiz
-	 ktIw0cGkIa8TNASM1IdVb8PdJj33VNwlIucHVL
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Jiwei Sun <jiwei.sun.bj@qq.com>
-To: macro@orcam.me.uk,
-	ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	guojinhui.liam@bytedance.com,
-	helgaas@kernel.org,
-	lukas@wunner.de,
-	ahuang12@lenovo.com,
-	sunjw10@lenovo.com,
-	jiwei.sun.bj@qq.com
-Subject: [PATCH 2/2] PCI: Fix the PCIe bridge decreasing to Gen 1 during hotplug testing
-Date: Fri, 10 Jan 2025 21:44:01 +0800
-X-OQ-MSGID: <20250110134401.34536-1-jiwei.sun.bj@qq.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1736517723; c=relaxed/simple;
+	bh=jkblsDlsUSxYsT+VxyH05FNCYvRrKBfkKwtrrzDlM7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l1p4Xl9UG77bNZ9qEVhLxW8LkcMb3kUPVK224yzS1WRsvvyoTPIjU6UCXJ7nyjIGHCZN92moZh39O4xazC9niOAB7QwMDzCiD1VT/Ou2T+gV8uqszXW+CBYO4plfBDx1YJlpjCmJbIZwFmMBd2E7QYFrT6ctMW9kiJmMRv8yNVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=S+hzhv5r; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaeec07b705so338208066b.2
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 06:02:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1736517719; x=1737122519; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/I7HoDRHZV0XTx2nTCcpli5SpYI0/lHKSshoL/AVNY=;
+        b=S+hzhv5rircbWM0IFWempym1Mth+Urk9ahOV/UUkFYoik9QDdmdU2Zme+JVf//ftNP
+         OYX+gwnPKh/2K/YUry34z7gkV+/mtrAsjPXUybeMCGXWvdUkdaJmgOarQgnycHMTpPRz
+         zBkFHEFhkvWMSdj6rwrnsm5yLi04+UObVaVx4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736517719; x=1737122519;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c/I7HoDRHZV0XTx2nTCcpli5SpYI0/lHKSshoL/AVNY=;
+        b=QRSramFGFkG5cvxEyV7V201ku6PdGoYWK0ZikEoTvJRdjTxjMSBXRQVUJM57ETmZk0
+         1jhSC8RuyDOkHpXLfP1BqUS7Yhtr1IgalJF/QI2AIIqmUZqPTg+G87xRh9vOoglyCk9W
+         mC4TadkYhrpJgU5O2HshADx7KLfq7AYp1aIxOpAeRPSfUYld29Q+2YyhsfvFCSGQPaN4
+         7LvJrqDxpLPRzDz4cl6jPN523i6nA3O1qx6XulyZvUNQEY8BwDL8IL/56K31b2f/s3Ae
+         0HRsP7smV+Aw51nIWcxo/YX6WHsDK98/o6IJfxIlZqvZCGoaol8kzGvi0gB1QltirKeU
+         J5kA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRP8u6A2drZkJxxvZS7GtG45gWHn2oQ5C5qkS4V+syUvaCa0AssILIYSwMUxRqsSGqb830k2GN3pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6dWSQLOHi0qkjvKcFDFgmaFXeVAcyPG87XnnW5cAuGhKaIEq7
+	+kgoL9vAm5GojM5xzkzXouRZirw/ISFsafjfF0Xeoa8kklX0hAarWqkp5Zt8aXw=
+X-Gm-Gg: ASbGncv0OHhMwITgPg40u2O5hBSnO7ht6JwSrQVlTBvJmcSd+Mbi3csoKSbqo40L3A/
+	l4R3ntsOkokW8dnePdAAuGhzCNLjRE+i6esbBURRROEsjsV2WMbGQQZgh7wzcusj/60U2NcvpTi
+	o2rWRlXq/e6bP10Q9y5ZcuAxEcaOtjQ3na9X1NXVBzdMAGb92dphUN4gpD4EVAf+vsI97Zom9H1
+	7+3Rc1bzctwv3kJoWwCtwy/hjvIe0lX8vcTYFHRDW0Byuz6FNZKx7+TlqP4vaYfjIU=
+X-Google-Smtp-Source: AGHT+IHQABlx0ljsChy/AaNgLOa5tG+fbxwnozWPPmywCwKrdUKAOZN8SDFE4NcVHC8wzrW5y/A8Dw==
+X-Received: by 2002:a17:907:c588:b0:ab2:c208:732d with SMTP id a640c23a62f3a-ab2c2087cbbmr743393166b.40.1736517719125;
+        Fri, 10 Jan 2025 06:01:59 -0800 (PST)
+Received: from localhost ([84.78.159.3])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c95af680sm172606166b.141.2025.01.10.06.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2025 06:01:58 -0800 (PST)
+From: Roger Pau Monne <roger.pau@citrix.com>
+To: linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-pci@vger.kernel.org
+Cc: Roger Pau Monne <roger.pau@citrix.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 2/3] vmd: disable MSI remapping bypass under Xen
+Date: Fri, 10 Jan 2025 15:01:49 +0100
+Message-ID: <20250110140152.27624-3-roger.pau@citrix.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250110140152.27624-1-roger.pau@citrix.com>
+References: <20250110140152.27624-1-roger.pau@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Jiwei Sun <sunjw10@lenovo.com>
+MSI remapping bypass (directly configuring MSI entries for devices on the VMD
+bus) won't work under Xen, as Xen is not aware of devices in such bus, and
+hence cannot configure the entries using the pIRQ interface in the PV case, and
+in the PVH case traps won't be setup for MSI entries for such devices.
 
-When we do the quick hot-add/hot-remove test (within 1 second) with a PCIE
-Gen 5 NVMe disk, there is a possibility that the PCIe bridge will decrease
-to 2.5GT/s from 32GT/s
+Until Xen is aware of devices in the VMD bus prevent the
+VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as any
+kind of Xen guest.
 
-pcieport 10002:00:04.0: pciehp: Slot(75): Link Down
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-...
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: broken device, retraining non-functional downstream link at 2.5GT/s
-pcieport 10002:00:04.0: pciehp: Slot(75): No link
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): Link Up
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pcieport 10002:00:04.0: pciehp: Slot(75): No device found
-pcieport 10002:00:04.0: pciehp: Slot(75): Card present
-pci 10002:02:00.0: [144d:a826] type 00 class 0x010802 PCIe Endpoint
-pci 10002:02:00.0: BAR 0 [mem 0x00000000-0x00007fff 64bit]
-pci 10002:02:00.0: VF BAR 0 [mem 0x00000000-0x00007fff 64bit]
-pci 10002:02:00.0: VF BAR 0 [mem 0x00000000-0x001fffff 64bit]: contains BAR 0 for 64 VFs
-pci 10002:02:00.0: 8.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x4 link at 10002:00:04.0 (capable of 126.028 Gb/s with 32.0 GT/s PCIe x4 link)
-
-If a NVMe disk is hot removed, the pciehp interrupt will be triggered, and
-the kernel thread pciehp_ist will be woken up, the
-pcie_failed_link_retrain() will be called as the following call trace.
-
-   irq/87-pciehp-2524    [121] ..... 152046.006765: pcie_failed_link_retrain <-pcie_wait_for_link
-   irq/87-pciehp-2524    [121] ..... 152046.006782: <stack trace>
- => [FTRACE TRAMPOLINE]
- => pcie_failed_link_retrain
- => pcie_wait_for_link
- => pciehp_check_link_status
- => pciehp_enable_slot
- => pciehp_handle_presence_or_link_change
- => pciehp_ist
- => irq_thread_fn
- => irq_thread
- => kthread
- => ret_from_fork
- => ret_from_fork_asm
-
-Accorind to investigation, the issue is caused by the following scenerios,
-
-NVMe disk	pciehp hardirq
-hot-remove 	top-half		pciehp irq kernel thread
-======================================================================
-pciehp hardirq
-will be triggered
-	    	cpu handle pciehp
-		hardirq
-		pciehp irq kthread will
-		be woken up
-					pciehp_ist
-					...
-					  pcie_failed_link_retrain
-					    read PCI_EXP_LNKCTL2 register
-					    read PCI_EXP_LNKSTA register
-If NVMe disk
-hot-add before
-calling pcie_retrain_link()
-					    set target speed to 2_5GT
-					      pcie_bwctrl_change_speed
-	  				        pcie_retrain_link
-						: the retrain work will be
-						  successful, because
-						  pci_match_id() will be
-						  0 in
-						  pcie_failed_link_retrain()
-						  the target link speed
-						  field of the Link Control
-						  2 Register will keep 0x1.
-
-In order to fix the issue, don't do the retraining work except ASMedia
-ASM2824.
-
-Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
-Reported-by: Adrian Huang <ahuang12@lenovo.com>
-Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
 ---
- drivers/pci/quirks.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/controller/vmd.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 605628c810a5..ff04ebd9ae16 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -104,6 +104,9 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
- 	u16 lnksta, lnkctl2;
- 	int ret = -ENOTTY;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 264a180403a0..d9b7510ace29 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -965,6 +965,15 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	struct vmd_dev *vmd;
+ 	int err;
  
-+	if (!pci_match_id(ids, dev))
-+		return 0;
++	if (xen_domain())
++		/*
++		 * Xen doesn't have knowledge about devices in the VMD bus.
++		 * Bypass of MSI remapping won't work in that case as direct
++		 * write to the MSI entries won't result in functional
++		 * interrupts.
++		 */
++		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
 +
- 	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
- 	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
- 		return ret;
-@@ -129,8 +132,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
- 	}
+ 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+ 		return -ENOMEM;
  
- 	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
--	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
--	    pci_match_id(ids, dev)) {
-+	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT) {
- 		u32 lnkcap;
- 
- 		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
 -- 
-2.34.1
+2.46.0
 
 
