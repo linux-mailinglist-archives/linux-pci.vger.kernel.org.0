@@ -1,110 +1,133 @@
-Return-Path: <linux-pci+bounces-19623-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19624-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD27EA091D7
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 14:25:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89E00A091D9
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 14:25:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E25C33A729F
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 13:25:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F5103A7577
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 13:25:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF97220DD68;
-	Fri, 10 Jan 2025 13:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FC6720E002;
+	Fri, 10 Jan 2025 13:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="X3QMvEeq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ux87nqez"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710CF20B80D;
-	Fri, 10 Jan 2025 13:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1591E20DD68;
+	Fri, 10 Jan 2025 13:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736515524; cv=none; b=hr5IzWRnKvv6y/Mw/u+BRrxG1GQUVMLy8w+i9zkMK7zRDBwqlmLbjtJbJPplepTTvUCdVwUpawVGU0HF6FCNM3NNsUPyx+yZopMXfbdv4cv8YFXYf/Me24hYqUjfQd3o7CzGjNwHFwdYS6/gSNueboYfH0zBAg4nMz1ohB3f90A=
+	t=1736515536; cv=none; b=MKXSx9hLbGcoTnMyCSLExLZRwVDlM/N/j5ZY09+yDoB2CX3FbKgexsqzGpNJx5iIc8p7nfAgEw+7Ha62ybRAbCvVTTQbn4cq8QWw9Yi7UAWmKgx5O1weXHQjAGZ+ZnkYuvsaGFI9s5WIfzOzXKDLLDzU+pMi9bH0oB5AR/UcUuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736515524; c=relaxed/simple;
-	bh=L1R2/2TNpjJyLVgCMWQ8uw7m8h8+4HRcAAljh4SEe3k=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=A2qJkVxuTvdUw55D3VFEuVC0ajyiJrwXLfX0yQ/UIxzraxW/c1ckzkunVd/mwZLsBIr0HP998T6H/RZiJG4/rwAGtsfq3NBEgZZ+dlORTSbG6CGQWpmI3YKHYxwqw+o/nQBXeIXlVN3ZtfajIMROcn8pmmL2Buw6jrE9JsVqtqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=X3QMvEeq; arc=none smtp.client-ip=43.163.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1736515507; bh=mptHu4g9IUyvhR2U1UoZgt0nySKY4QynTmjkqWx4Ytg=;
-	h=From:To:Cc:Subject:Date;
-	b=X3QMvEeqgHz8ACyCcMu+pOzwLehOsEIma71RzUTvnbptjeYNpmc9HJWVtH45V1vyn
-	 E0YGuf9lq1J6UhdR9W0IUW6z6LuA6RCmWZLfXR8co91i4Zfrc28cV8y8ehImwxQALk
-	 5KU40Rm/nBHdusXJYwH4wPu0bPgmUk9cIwKfVtsk=
-Received: from jiwei-VirtualBox.lenovo.com ([120.244.62.107])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id 59F0B279; Fri, 10 Jan 2025 21:22:31 +0800
-X-QQ-mid: xmsmtpt1736515351tmufw2cfz
-Message-ID: <tencent_DD9CBE5B44210B43A04EF8DAF52506A08509@qq.com>
-X-QQ-XMAILINFO: Mrv6PNPZjcp6a91DUZs8PePgthbjV6CVvu4Xi8jKhsYMfbz7dAHy7L2fU3ncD6
-	 tagbGB5GC/zqh/4GcDLExlG4SAdz8bnFAlkb5F2JqOOANSTAV7of3j194+AP9DBh6TVAR8FQCiAI
-	 u2HppvnIyBIjYIiB20vxSSUQXEaZJCXRlQK5DMyvnsIQCcligxGrxxMECqR4tPg5FzRYWnL8Wwe9
-	 dn7AwKWt/GcXFzAQm8ReyFXvcj9fHqVZskLMRmGRLUu34o2md0xFVJZdxmSDU0olpmkohH5lThuq
-	 Pxt1yjLh7JoaG6D1ythSIw+4GN9+mgZnJNtf+SS5zucq5bfF5OJ+HVWSaKzYTyHTR5YByA28cNNp
-	 /YCsv1VPWtXJV9c15+mW7hbCJRpd+4ZLhpyuwss9L//O+5I5ZmmAmuOwdNMB8+ucLlVjtBqqqMkV
-	 3apxD3i8lXwGNrrAaWaVtcqUiXbAwN61+aA4J66vbzUwGE84AXkFDGMK4t+FEzbFrNbrA0PQq3DI
-	 bf8yLxi4klBSWQ1mleM8JTfBiLM/iLO2dmOCzsNL0tAbLr2qe0aISzkhSOI8kKiZyhoQs5v9itOU
-	 lDJSpK2F+18M5KQdLx1uxlXOD/ZKPglT3l2hKhGKf/miK2O57xaat5d0VMxcKSPXBLoXZFanyKUA
-	 sxTrPs9TVhk9BKrwrkkFLdTK9po3/lP9qFa0mRgeeqweJK+cwNQ5R2mLwZno+9ogrEdAy0nBPOfd
-	 Kq9RfiJuNjrt9Az1dtz7MJEibK0o0VQNy+WJvhsEfORhSEdVbZIJjU6qe5lPeJf990r5vyyC3Vdi
-	 I9dGF2GaRQ3ny6KQXTOnR2sVIydu2y8bSvImpbvUw8dZ388svSV7yw37Y4jY6WySwwrWiRGmw3hv
-	 m+I8RtAQ3beV6Jk92QGbjpQwl27pONKrbgrLOfY95s9bG6QEMG8K5QFrl870NYSMzadMC1xjabxU
-	 9iXh25pc4CBRgcDYHWpy4+U6jSjV6MIG8RJU3nWKvTvFu2FAdvO1IabkzGwMrQ
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Jiwei Sun <jiwei.sun.bj@qq.com>
-To: macro@orcam.me.uk,
-	ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	guojinhui.liam@bytedance.com,
-	helgaas@kernel.org,
-	lukas@wunner.de,
-	ahuang12@lenovo.com,
-	sunjw10@lenovo.com,
-	jiwei.sun.bj@qq.com
-Subject: [PATCH 0/2] PCI: Fix the PCIe bridge decreasing to Gen 1 during
-Date: Fri, 10 Jan 2025 21:21:52 +0800
-X-OQ-MSGID: <20250110132154.28732-1-jiwei.sun.bj@qq.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1736515536; c=relaxed/simple;
+	bh=sMtcZsY0SZYMt1hGhUZLsdz7uwQzU4ojyFbYBXSdqHw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=p7ju5jnWCGb7qPMidkneCeaPzUpXJ8T6MijzsFi4+gR6QE2QjVlO6LY/yDDH5xZ9OiMcIge+uvjuqCDd5rtaKQ0OCXrcB1tQsR7VLsT+bX23IeAUq43RwhRiWOxR4yHG443isZu+N+thgSQxweDhzPT6GBcuXEb0BWivie+s5JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux87nqez; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A17C4CED6;
+	Fri, 10 Jan 2025 13:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736515535;
+	bh=sMtcZsY0SZYMt1hGhUZLsdz7uwQzU4ojyFbYBXSdqHw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Ux87nqezhclH1L67RzAEyK7azsLRr9kifb0yatBEQ/J8dMrrKEGx4DELdou38B7kz
+	 +GL2Xm/HBgF9jaE4hYVQ+4NDqCPEQZmygo6gx/EClxgXuEW2+tUQz5R5gVQlTNPrHV
+	 e5K+Y3CqSsoyUJOoNUNMWGere6+UhaWizTX6A5AvjHb+LjjhKwQxhjeyD/KBuNSXDW
+	 UxGNCoy5gA6puAlHL7fAj7Buz8XQRS1LDBv67hNdPabvnxg4rBetZe152vdiOZN5xu
+	 Dnwi2V9F5z6YdYRnc4x8vfutCk+cwXulphlbM1Umne+5L/v5T0mgU6bMECo+BP/ihw
+	 O7wxrq+o9bLlA==
+X-Mailer: emacs 31.0.50 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>, linux-pci@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
+In-Reply-To: <Z32MUFBIyp0IKyzC@yilunxu-OptiPlex-7050>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+ <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
+ <yq5ay10oz0kz.fsf@kernel.org> <Z32MUFBIyp0IKyzC@yilunxu-OptiPlex-7050>
+Date: Fri, 10 Jan 2025 18:55:29 +0530
+Message-ID: <yq5aplkuu7g6.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Jiwei Sun <sunjw10@lenovo.com>
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-When we do the quick hot-add/hot-remove test with a PCIE Gen 5 NVMe disk,
-there is a possibility that the PCIe bridge will decrease to 2.5GT/s from
-32GT/s.
+> On Tue, Dec 10, 2024 at 08:49:40AM +0530, Aneesh Kumar K.V wrote:
+>> 
+>> Hi Dan,
+>> 
+>> Dan Williams <dan.j.williams@intel.com> writes:
+>> > +int pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide,
+>> > +			 enum pci_ide_flags flags)
+>> > +{
+>> > +	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
+>> > +	struct pci_dev *rp = pcie_find_root_port(pdev);
+>> > +	int mem = 0, rc;
+>> > +
+>> > +	if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
+>> > +		pci_err(pdev, "Setup fail: Invalid stream id: %d\n", ide->stream_id);
+>> > +		return -ENXIO;
+>> > +	}
+>> > +
+>> > +	if (test_and_set_bit_lock(ide->stream_id, hb->ide_stream_ids)) {
+>> > +		pci_err(pdev, "Setup fail: Busy stream id: %d\n",
+>> > +			ide->stream_id);
+>> > +		return -EBUSY;
+>> > +	}
+>> > +
+>> 
+>> Considering we are using the hostbridge ide_stream_ids bitmap, why is
+>> the stream_id allocation not generic? ie, any reason why a stream id alloc
+>> like below will not work?
+>
+> Should be illustrating in commit log.
+>
+> "The other design detail for TSM-coordinated IDE establishment is that
+> the TSM manages allocation of stream-ids, this is why the stream_id is
+> passed in to pci_ide_stream_setup()."
+>
+> This is true for Intel TDX.
+>
 
-The issue is caused by commit a89c82249c37 ("PCI: Work around PCIe link
-training failures"). Although the commit 712e49c96706 ("PCI: Correct error
-reporting with PCIe failed link retraining") and the commit f68dea13405c
-("PCI: Revert to the original speed after PCIe failed link retraining")
-have tried to fix the similar issue. However, there is still a window for
-triggering the issue within 1-second hot-add/hot-remove test.
+IIUC ide->stream_id is going to be set by SVE or TDX backend. But then
+we also expect the below.
 
-Besides, the commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed()
-introduces two potential issues might cause that the removing 2.5GT/s
-downstream link speed restriction works fail.
+	if (test_and_set_bit_lock(ide->stream_id, hb->ide_stream_ids)) {
+		pci_err(pdev, "Setup fail: Busy stream id: %d\n",
 
-Jiwei Sun (2):
-  PCI: Fix the wrong reading of register fields
-  PCI: Fix the PCIe bridge decreasing to Gen 1 during hotplug testing
 
- drivers/pci/quirks.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Hence the confusion why the stream-id cannot be allocated by the generic
+TSM module as below
 
--- 
-2.34.1
+>> 
+>> static int pcie_ide_sel_streamid_alloc(struct pci_dev *pdev)
+>> {
+>> 	int stream_id;
+>> 	struct pci_host_bridge *hb;
+>> 
+>> 	hb = pci_find_host_bridge(pdev->bus);
+>> 
+>> 	stream_id = find_first_zero_bit(hb->ide_stream_ids, hb->nr_ide_streams);
+>> 	if (stream_id >= hb->nr_ide_streams)
+>> 		return -EBUSY;
+>> 
+>> 	return stream_id;
+>> }
+>
 
+-aneesh
 
