@@ -1,296 +1,264 @@
-Return-Path: <linux-pci+bounces-19631-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19632-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C453A09473
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:56:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB973A09465
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:55:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 102B67A559A
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 14:54:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B16418816C6
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 14:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930AF21170A;
-	Fri, 10 Jan 2025 14:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2406D211A08;
+	Fri, 10 Jan 2025 14:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qGesxML4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dDAGFcLt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2044.outbound.protection.outlook.com [40.107.101.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FB4211269;
-	Fri, 10 Jan 2025 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736520785; cv=none; b=r4/qli9DJg9MFOIFKIsuW8vAAys/mCyh1v3Ql3cXMjFAhYn+Cvf0zkN5gwEv6b6VCN61H/nDF3dx4JVkCHV2D8CyLhFTE7zppSA3YXHTI7Ir4kWv1rz7o7KrHr1RsPH3SG1A903tvd8BmH1ECKJCdD/6Yxq81WIB3qhv6IApiNk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736520785; c=relaxed/simple;
-	bh=P4t/tEUQoMbF/8wW1ZECbtczywActzXW4/QEauRY3pY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KN9xsNvNDTl1Ugm0/65LMQJPTUcvFv1pgP3p28XThxZGtE0a+TdcL2BuWkYL0i/YyVkFwv9+sJbXczITk9U8CggR+DRYN9zWfdDkI6Q8m8/fVYnSBBzM2Zzx1LhJdtF7df/4UXWsy/K3iMiLSwYVI08c++706/WT9k4F8uESScQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qGesxML4; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50ABpGCR019273;
-	Fri, 10 Jan 2025 15:51:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	7Qc8B9n8Wk0ETebdx29AGZE+bnYd24Q0I0YVr1DZ2f0=; b=qGesxML4Mz6fX7wF
-	GEzxs2lDns+ZtEKh+nByR5NtjNc78e35EGatN7/MaD6LQcwyZPw6s94uUTQsGLbP
-	pCfTZGu6AuaSY3bYm7g5rOVIXmdMK+sctCkDjm4q/LgoYHAZADhFMPegvHnqkbP2
-	ld3V+KO0gxHMm9XCMDlFmWM1ec/Pu3JwLrWK51wIUovyeZOzTt2JU/n2yzeezO1U
-	jp1w35ELvKmPfJxrHCSYbp2k+L0yeF15E90eOh53PaBsgROP4rnAf6YfEPy3ft3I
-	Yytr5vGRxFRR9o2AH4YAu74OuNH25z19redaPRy0Q4W/WFu2kaMDfK6iQMOG1N+r
-	0AQZ3A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44331t8pn5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 15:51:43 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6672D4004F;
-	Fri, 10 Jan 2025 15:50:26 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ECCF12BC88C;
-	Fri, 10 Jan 2025 15:49:19 +0100 (CET)
-Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 10 Jan
- 2025 15:49:18 +0100
-Message-ID: <181e2e45-9d00-414e-a0cb-60f61afa488f@foss.st.com>
-Date: Fri, 10 Jan 2025 15:49:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC2A21147A;
+	Fri, 10 Jan 2025 14:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736520897; cv=fail; b=mRwnRrVWKjJ6rqtQSO4gQj+1GaUXGbpLIyDd2QzjBb0wSPvAlE4J6ZvnG1I69USKFdGgsljZZM1e9z1fsURurukRMSoDf6FoazDM5G1wuHhFXZ3Sd+sse2MzjIgyh8YaSX8QrU+4ChWoHVSYdHek4Dwjn73VUsDvoc4Rknej624=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736520897; c=relaxed/simple;
+	bh=2kuuFJPhJUZyoqB3hWL3ftwMJRoVZYGUS/8rB39t6vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=m9rs1chsadaOXNVoY57J3PI524uu4OvMW/E19HRzbejFQRIPv5WBrn/K/+Aq6TPp3SOJx2drb0H04inuaIUnbkHAhgcBdkpwOtDGYU3RCM2S285OkLi2jNOKgGAwu0IHKBF1sj13LQDeYuRgmNWmzlmuxY1rZcPXiL3FVYt7pFA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dDAGFcLt reason="signature verification failed"; arc=fail smtp.client-ip=40.107.101.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GU7aSp/0BSONj2cKEtss5QCeBvT59R6eJdkEf0nnXBdJ4ieJ+s0Je4mkT2BciKbHd9qu+mO5/hcZBFFWQpGCkYlWk+MEICuPrltxjnRRFzKADDwLWYVEBW8hVK6Pg+PPoa3XpIcZmqZiaUtv2DMQo/QhIMNSAAjCxUkKDnUBVjFscx47/ZyG8wygX+eW3Sq4mqL0xB2MZAaUr55Dv/zV+omEtwFf9MxdfhSwhLZwdfFqSWS5+c2BeXGxDQI3uS0MfOHzMfVGG4am9HnuaXfglxUxsCuDtF7MxlC/lGWUP0wdcEyEtTOs6R5Hb4uxwMMmU5mtHRk2BJ941+ShwZ0zWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sse+MQ+xWp8189NueQOl5KfL7D1Oubq+2VGsc4k6ook=;
+ b=VoBiO+BJ7PB5QRSbODnoQ45gvC4Y2yInWVtr6nU1bWTs4ZghRhXRdI5pvi6he4PpKAPA9fWl8D1Row5D7QO8ghzU47SnNe/FU5k7mDk8K8nMTkGmAiCtfkyiJo8Ohw+vwCRKjBVaCVXir2y8cfsmTuTthonIfoqhjzN26KAgtW9VHZEidxeriQXD62jNXmXleL6QzznAB4XW2Vb2OWI+GOmVMGQ+V03zkEGodBKKXVgPmj3r3vDD6NvvYGmB1DYLGoNhy+LOSIfELOsvKFN1oeF9+XXOFP+C5rfmbbRW3LovH/2sijYZa2nlA7OofVJGMGRENtfbfVpDbMYSdGnFgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sse+MQ+xWp8189NueQOl5KfL7D1Oubq+2VGsc4k6ook=;
+ b=dDAGFcLtMksThFQ+tiRllPWG38vomZ8dHZQ1TIG+uj+E37ngN+/NQ3H1GCTVazcVAWMPb6KSjYFLc9XbcvUJTdK2cWmuUWIJYIPrskalnQ7NJW0fpI6WvxYbnhf9z/NUfARaTEI9LDOhOg1ZO5UaqEbjNtQKi7y0WpD66G6+5YI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ DS0PR12MB8444.namprd12.prod.outlook.com (2603:10b6:8:128::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8335.11; Fri, 10 Jan 2025 14:54:53 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.8335.010; Fri, 10 Jan 2025
+ 14:54:53 +0000
+Date: Fri, 10 Jan 2025 09:54:49 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v8 6/7] PCI: Add TLP Prefix reading into
+ pcie_read_tlp_log()
+Message-ID: <20250110145449.GB1641025@yaz-khff2.amd.com>
+References: <20241218143747.3159-1-ilpo.jarvinen@linux.intel.com>
+ <20241218143747.3159-7-ilpo.jarvinen@linux.intel.com>
+ <20250108213359.GC1342186@yaz-khff2.amd.com>
+ <a7a769c6-0a4d-0e50-f2d7-6556db0fa7bf@linux.intel.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a7a769c6-0a4d-0e50-f2d7-6556db0fa7bf@linux.intel.com>
+X-ClientProxiedBy: BN0PR02CA0023.namprd02.prod.outlook.com
+ (2603:10b6:408:e4::28) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
- STM32MP25
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
-        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
- <20241126155119.1574564-5-christian.bruel@foss.st.com>
- <20241203152230.5mdrt27u5u5ecwcz@thinkpad>
-Content-Language: en-US
-From: Christian Bruel <christian.bruel@foss.st.com>
-In-Reply-To: <20241203152230.5mdrt27u5u5ecwcz@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|DS0PR12MB8444:EE_
+X-MS-Office365-Filtering-Correlation-Id: be965d05-aa98-4a03-3783-08dd3186bdaa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?8t0g3MqpIXc1/f5zuK3M53ef+y0pIhb4hEYyPFvWHTnEIVJt07bfZLxHGa?=
+ =?iso-8859-1?Q?i+3E26W5UMf81RLYxtAAwt6lHq4mzanrQWap07NuIxbIR5gCNagIx7nkR9?=
+ =?iso-8859-1?Q?M/2zEwEsJi7A/qepZPXvaRlObvw8Nfxnx5cKvAObtSII/UegYMbgqwL5Pf?=
+ =?iso-8859-1?Q?z42OS3ud+VR0SyOHwtsp3iNo1LBNWB0qYDShHVDwSlCTI7kQr+rdR72mH0?=
+ =?iso-8859-1?Q?d5NBaDFJlHXHNym9SHkqtZ1WvS0jRrL9jL1/xGTEObE0G4Uyh7B8bCf2eK?=
+ =?iso-8859-1?Q?MHGK+rUcpCTJhSRj/BKyOVW4lp6XeLEE3uMkOMp8pwNa/yuYG0j4rWmXmY?=
+ =?iso-8859-1?Q?S4Pmrmj9RiV5DsMG+hMui1xXzp0Kixu7YM+jTXeenTAxiZLTdkwUGAzX7/?=
+ =?iso-8859-1?Q?ILlB8+MNLw2QJE7zhyjYeXuJ9v2lxlA48XzliZ4uRKaE2GnquBtiVOC3yu?=
+ =?iso-8859-1?Q?Nhck1FnY1qxwOB97Yw8ds9coYmRjK4ahNK5wwNd5/R2Uqn3kcDHqCVR/le?=
+ =?iso-8859-1?Q?w+SYpkjp1AVJv+qdM1lP3b/nhZCL6g1q49eVEPnmibg3mpE8iaZhZBlsZl?=
+ =?iso-8859-1?Q?5RrSM3XBLixwlZEYZrYamZH2beUy7tCInOGmTt20QYXVc55nOo6s0fAqRE?=
+ =?iso-8859-1?Q?y8S5HHQoMDY0AZS1tk2F0ioeUgjFt6na6vOV85rq/i0FKYczJK24toQnu8?=
+ =?iso-8859-1?Q?r5uAICOviO1cuSMDEoc2KrGDx/aamgiXtYxZyj2to0PudYFlCtzH7UxOpA?=
+ =?iso-8859-1?Q?/0n1N6e6RcUgYUbTbVfwRIRpYASPbVfflsOGTcCLPeFkm75OgSoYok1u7Z?=
+ =?iso-8859-1?Q?b7Qc7Zu5FusT53BjCqqiwYOlbtfAFfRUXRby+wgOc7oHTnGy/Sz9ioQiCu?=
+ =?iso-8859-1?Q?IzYGYFlAPKZY6aOP+snmVLwJMje84eH6TDrA/qLjwcQh6Ml5Nw+rvdG+KN?=
+ =?iso-8859-1?Q?MuyAaV7GCJYp6oZYTSnQrZWMwA1T5DPlVAj17F7fo73J3WCcnN5W2n1qL5?=
+ =?iso-8859-1?Q?rXsyI42CqEosdJfK3RXxrJmk/rlbV8OtcxHpdOUy7bOMqbaLgaPdSk8qpz?=
+ =?iso-8859-1?Q?jDOs4NSIsNLtCXbe5U86PgsrhgBNPluGGI/zVIWpAfbkGQG675WY5aSxsN?=
+ =?iso-8859-1?Q?jezR1ztngM2YRqin99o+jK24nOc/tizt1SjvE8Sj5NGIHJemlQ+UIxbHc2?=
+ =?iso-8859-1?Q?zN74Wtcx32bqfPV7X4dagospDWQLocExjtWyNUnBdJ7tm8ij7Lrg65ov6M?=
+ =?iso-8859-1?Q?8JeHbOjAd5JeMHzIiyvaxe8COnW8SQsuCpFZu+VtqjLbd4tXHtreVnSDMB?=
+ =?iso-8859-1?Q?5wJ1Pl+RFwLkydFuhHlOcG1r1BN46HIIf+W1NqfhZTiCW6JQ3rx8CJsRAC?=
+ =?iso-8859-1?Q?TI39ju1RHGv2YZR64ywbgM7neeESZgwmgIGCRc4jtADScknRl2JsRTLgzf?=
+ =?iso-8859-1?Q?zsJLdLFfp+fI+i/i?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?bC/yaBdKjG5DWB5qNpEoBG4M2pRee905Dy5DxXwLPkMLsVs/BGKM3jZvYF?=
+ =?iso-8859-1?Q?FKUVR4oFs6xH9ge3nGmGxD2BIOqn2D3TM0GlA4vHkKXyF1w+/FHr1ZTWmq?=
+ =?iso-8859-1?Q?5mFICXqt3XxM2FkYpcxE90RD6/VxL+IkiqNOj8l16akqmzxE3gyKSd06GI?=
+ =?iso-8859-1?Q?60F2SLXP4n7UxmLx/I2+OzXYyF+vZBtZXanU4Rmm694gw8bvV00aEnmE20?=
+ =?iso-8859-1?Q?AOosLuIF8gZnhnFYSHvvi/4JPeaQlAMvJ9YJGu/7vhbHd3nC2RyEmIKius?=
+ =?iso-8859-1?Q?1lit01YeEhc0grzZbWICl2VnYPDkqUAS8eFzEA8dT/um2QLcQMe0jP1YHD?=
+ =?iso-8859-1?Q?mPODkhom/bDMUKw4pggniZLTWistwbFTDEVtMhgRmGSOSuppGU2Lkqcgv0?=
+ =?iso-8859-1?Q?3Wzo6vEsGqkSCVOLfmd6cFWaESEEg8TJ6o11v9rbJOAZZ3JffpGXRYIuM4?=
+ =?iso-8859-1?Q?zcI0glCyKopiulRH6kxuBUbwYFXPin+zfAOcaJwIqFL03GeD8MeWacWFS4?=
+ =?iso-8859-1?Q?ZcLSiduqYWErkGCNDdVix8Y6LLHZDi7Y0g1QHotvbQ538xww4GZVIv3FmM?=
+ =?iso-8859-1?Q?j9Xd8aflVeIJa+q2rzZoFGCBv4SpiihnDd6BvjiKIGoC+Fv4fUxE3VZUqJ?=
+ =?iso-8859-1?Q?JmfqHVCy42Jo/ek0jHp0kTgBKnryF3EkSPEeeoelztomVCpJPxim6VE8et?=
+ =?iso-8859-1?Q?shVPHVINlo8hvFUHiEsC8WcnKhv9p+xmK80JL7CN4cqx0hmhrCNz+K1hZV?=
+ =?iso-8859-1?Q?t5/CUgIbtV0LX6hZ2YtEeWS/3Pu6ho8ES1P9YrzIFkK3rtw4Q1UIQ5beQm?=
+ =?iso-8859-1?Q?eUQq5iz3SVYZD1VE+juSjYsVm3JtgH0FSXNVrSZ1GTAC9GxXTprT85Co3n?=
+ =?iso-8859-1?Q?VlABDJLCMfhFuOwjTR1gWHXAFNuLFTkUbKeostDxLofxdSWC+qdxWLih1s?=
+ =?iso-8859-1?Q?LaCamXIIUlFy60Gg+V41z5nxmRrVG5Ud+DQRIJN6pcB1cVEVpNMmjI0Kmh?=
+ =?iso-8859-1?Q?u8l+lTo7rA/pBpl3BUe8mr9asAacaF5VxNusDGqHZPKzbFVG7dAhA1g/FR?=
+ =?iso-8859-1?Q?4guVG5onZE2gvrbSSyrtD3o6aR5JCHW4M4SYLLRa+CI+MbT1lWbch4OK3U?=
+ =?iso-8859-1?Q?zHrSlGqksp/qOFIVeyvnD19SpT2MZeEBRFNHSCcCRolajJJbdUAyI7aTvT?=
+ =?iso-8859-1?Q?Rgv3WT1Tcwr1qeNeTzqYfdpdN3imoWAwRdmRk7XqJZMbKUiNJc489gh0GM?=
+ =?iso-8859-1?Q?g4FfMdixMxnZ5B7FbDRwYnnOY/2/jDwplOabgT+y0SVzgZ0Wh+VTmbnbkt?=
+ =?iso-8859-1?Q?6WN0Rkwpzzce1y9xZWoRSzIrKyENGrm+JK7hDx0lDA8ist4FhtvHPBafyw?=
+ =?iso-8859-1?Q?sxOtYcNcOuhdTdORxepgULQqt6vmEgXf6hmB1Qc3BohuLR1JLyYYdVaHV9?=
+ =?iso-8859-1?Q?cd55DTeD+B0c/GmhdD24IQ3PHUHZYoEeELTXVyc8Gy74kHGG6rUWhcdTEk?=
+ =?iso-8859-1?Q?cfcYlJuF91tHFWlIkAiPhs8OkjYV3OS+ziyL3Z2MgbXWnF+4Z3mAW3As3E?=
+ =?iso-8859-1?Q?cXYKEYuMddkGPtyKYot01Cyybc62sYUUhHsawG3/+nV1fgpmCcc1/XdIAr?=
+ =?iso-8859-1?Q?HCiTsiRt5mBaklkXZk+SM+8aF8DuXIBGZ6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be965d05-aa98-4a03-3783-08dd3186bdaa
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2025 14:54:53.5647
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ttXiTYbXYbDMfMQ7/gPWOvfFJ0foBpi31ury4dZzSZzB15n5OtrtS5aJwbCvL8vPvTtwHdBCFuK7DQnpx7EHKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8444
 
-Hi Mani,
+On Thu, Jan 09, 2025 at 11:36:17AM +0200, Ilpo Järvinen wrote:
 
-On 12/3/24 16:22, Manivannan Sadhasivam wrote:
-> On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
-> 
-> [...]
-> 
->> +static int stm32_pcie_start_link(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +	int ret;
->> +
->> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
->> +		dev_dbg(pci->dev, "Link is already enabled\n");
->> +		return 0;
->> +	}
->> +
->> +	ret = stm32_pcie_enable_link(pci);
->> +	if (ret) {
->> +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
->> +		return ret;
->> +	}
-> 
-> How the REFCLK is supplied to the endpoint? From host or generated locally?
+[...]
 
-The REFCLK is supplied from the host, it does not support separated clocks
+> > > -int pcie_read_tlp_log(struct pci_dev *dev, int where,
+> > > -		      struct pcie_tlp_log *log)
+> > > +int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+> > > +		      unsigned int tlp_len, struct pcie_tlp_log *log)
+> > >  {
+> > >  	unsigned int i;
+> > > -	int ret;
+> > > +	int off, ret;
+> > > +	u32 *to;
+> > >  
+> > >  	memset(log, 0, sizeof(*log));
+> > >  
+> > > -	for (i = 0; i < 4; i++) {
+> > > -		ret = pci_read_config_dword(dev, where + i * 4, &log->dw[i]);
+> > > +	for (i = 0; i < tlp_len; i++) {
+> > > +		if (i < 4) {
+> > > +			off = where + i * 4;
+> > > +			to = &log->dw[i];
+> > > +		} else {
+> > > +			off = where2 + (i - 4) * 4;
+> > > +			to = &log->prefix[i - 4];
+> > > +		}
+> > > +
+> > > +		ret = pci_read_config_dword(dev, off, to);
+> > >  		if (ret)
+> > >  			return pcibios_err_to_errno(ret);
+> > 
+> > Could we do two loops? Sorry if this was already discussed.
+> > 
+> > 	for (i = 0; i < min(tlp_len, BASE_NR_TLP); i++, where += 4, tlp_len--) {
+> > 		ret = pci_read_config_dword(dev, where, &log->dw[i]);
+> > 		if (ret)
+> > 			return pcibios_err_to_errno(ret);
+> > 	}
+> > 
+> > 	for (i = 0; i < tlp_len; i++, where2 += 4) {
+> > 		ret = pci_read_config_dword(dev, where2, &log->prefix[i]);
+> > 		if (ret)
+> > 			return pcibios_err_to_errno(ret);
+> > 	}
 > 
->> +
->> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
->> +
->> +	enable_irq(stm32_pcie->perst_irq);
->> +
->> +	return 0;
->> +}
->> +
->> +static void stm32_pcie_stop_link(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +
->> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
->> +		dev_dbg(pci->dev, "Link is already disabled\n");
->> +		return;
->> +	}
->> +
->> +	disable_irq(stm32_pcie->perst_irq);
->> +
->> +	stm32_pcie_disable_link(pci);
->> +
->> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
->> +}
->> +
->> +static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
->> +				unsigned int type, u16 interrupt_num)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->> +
->> +	switch (type) {
->> +	case PCI_IRQ_INTX:
->> +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
->> +	case PCI_IRQ_MSI:
->> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->> +	default:
->> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static const struct pci_epc_features stm32_pcie_epc_features = {
->> +	.msi_capable = true,
->> +	.align = 1 << 16,
-> 
-> Use SZ_64K
-> 
->> +};
->> +
-> 
-> [...]
-> 
->> +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
->> +			     struct platform_device *pdev)
->> +{
->> +	struct dw_pcie *pci = stm32_pcie->pci;
->> +	struct dw_pcie_ep *ep = &pci->ep;
->> +	struct device *dev = &pdev->dev;
->> +	int ret;
->> +
->> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
->> +				 STM32MP25_PCIECR_TYPE_MASK,
->> +				 STM32MP25_PCIECR_EP);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
->> +		return ret;
->> +	}
-> 
-> You might want to do runtime resume before accessing regmap.
+> I'm not convinced splitting it would be clearly better. After the flit 
+> mode patch, only variation that will remain is the offset calculation 
+> (extended ->dw[] entires will be overlapping with ->prefix[] using union 
+> trickery so I can just use ->dw[i] in the loop).
+>
 
-ok
+Ah okay, no problem.
 
+> > >  	}
+> > > diff --git a/include/linux/aer.h b/include/linux/aer.h
+> > > index 190a0a2061cd..dc498adaa1c8 100644
+> > > --- a/include/linux/aer.h
+> > > +++ b/include/linux/aer.h
+> > > @@ -20,6 +20,7 @@ struct pci_dev;
+> > >  
+> > >  struct pcie_tlp_log {
+> > >  	u32 dw[4];
+> > > +	u32 prefix[4];
+> > 
+> > Another place for "BASE_NR_*".
+> > 
+> > >  };
+> > >  
+> > >  struct aer_capability_regs {
+> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > > index 14a6306c4ce1..82866ac0bda7 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -790,10 +790,11 @@
+> > >  	/* Same bits as above */
+> > >  #define PCI_ERR_CAP		0x18	/* Advanced Error Capabilities & Ctrl*/
+> > >  #define  PCI_ERR_CAP_FEP(x)	((x) & 0x1f)	/* First Error Pointer */
+> > > -#define  PCI_ERR_CAP_ECRC_GENC	0x00000020	/* ECRC Generation Capable */
+> > > -#define  PCI_ERR_CAP_ECRC_GENE	0x00000040	/* ECRC Generation Enable */
+> > > -#define  PCI_ERR_CAP_ECRC_CHKC	0x00000080	/* ECRC Check Capable */
+> > > -#define  PCI_ERR_CAP_ECRC_CHKE	0x00000100	/* ECRC Check Enable */
+> > > +#define  PCI_ERR_CAP_ECRC_GENC		0x00000020 /* ECRC Generation Capable */
+> > > +#define  PCI_ERR_CAP_ECRC_GENE		0x00000040 /* ECRC Generation Enable */
+> > > +#define  PCI_ERR_CAP_ECRC_CHKC		0x00000080 /* ECRC Check Capable */
+> > > +#define  PCI_ERR_CAP_ECRC_CHKE		0x00000100 /* ECRC Check Enable */
+> > > +#define  PCI_ERR_CAP_PREFIX_LOG_PRESENT	0x00000800 /* TLP Prefix Log Present */
+> > 
+> > I didn't think to mention this in a previous patch, but could/should we
+> > use GENMASK() for bitmasks updates? I know it's a break from the current
+> > style though.
 > 
->> +
->> +	reset_control_assert(stm32_pcie->rst);
->> +	reset_control_deassert(stm32_pcie->rst);
->> +
->> +	ep->ops = &stm32_pcie_ep_ops;
->> +
->> +	ret = dw_pcie_ep_init(ep);
->> +	if (ret) {
->> +		dev_err(dev, "failed to initialize ep: %d\n", ret);
->> +		goto err_init;
->> +	}
->> +
->> +	ret = stm32_pcie_enable_resources(stm32_pcie);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable resources: %d\n", ret);
->> +		goto err_clk;
->> +	}
->> +
->> +	ret = dw_pcie_ep_init_registers(ep);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
->> +		goto err_init_regs;
->> +	}
->> +
->> +	pci_epc_init_notify(ep->epc);
->> +
->> +	return 0;
->> +
->> +err_init_regs:
->> +	stm32_pcie_disable_resources(stm32_pcie);
->> +
->> +err_clk:
->> +	dw_pcie_ep_deinit(ep);
->> +
->> +err_init:
->> +	pm_runtime_put_sync(dev);
->> +	return ret;
->> +}
->> +
->> +static int stm32_pcie_probe(struct platform_device *pdev)
->> +{
->> +	struct stm32_pcie *stm32_pcie;
->> +	struct dw_pcie *dw;
->> +	struct device *dev = &pdev->dev;
->> +	int ret;
->> +
->> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
->> +	if (!stm32_pcie)
->> +		return -ENOMEM;
->> +
->> +	dw = devm_kzalloc(dev, sizeof(*dw), GFP_KERNEL);
->> +	if (!dw)
->> +		return -ENOMEM;
+> Bjorn called himself "a dinosaur" when it comes to GENMASK() :-):
 > 
-> Why can't you allocate it statically inside 'struct stm32_pcie'?
+> https://lore.kernel.org/linux-pci/20231031200312.GA25127@bhelgaas/
 > 
 
-will do, as for the rc
+I'll try to remember. :)
 
->> +
->> +	stm32_pcie->pci = dw;
->> +
->> +	dw->dev = dev;
->> +	dw->ops = &dw_pcie_ops;
->> +
->> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
->> +	if (IS_ERR(stm32_pcie->regmap))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
->> +				     "No syscfg specified\n");
->> +
->> +	stm32_pcie->phy = devm_phy_get(dev, "pcie-phy");
->> +	if (IS_ERR(stm32_pcie->phy))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
->> +				     "failed to get pcie-phy\n");
->> +
->> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(stm32_pcie->clk))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
->> +				     "Failed to get PCIe clock source\n");
->> +
->> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
->> +	if (IS_ERR(stm32_pcie->rst))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
->> +				     "Failed to get PCIe reset\n");
->> +
->> +	stm32_pcie->perst_gpio = devm_gpiod_get(dev, "reset", GPIOD_IN);
->> between PCIE and USB3+	if (IS_ERR(stm32_pcie->perst_gpio))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
->> +				     "Failed to get reset GPIO\n");
->> +
->> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
-> 
-> Hmm, so PHY mode is common for both endpoint and host?
-
-the COMBOPHY MODESEL sysconf takes PCIE or USB3 as value
-> 
-> - Mani
-> 
+Thanks,
+Yazen
 
