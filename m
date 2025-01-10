@@ -1,245 +1,180 @@
-Return-Path: <linux-pci+bounces-19620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 665D5A08C3C
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 10:35:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97C5FA08CBF
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 10:48:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57A113A27B9
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 09:31:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE23A169472
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 09:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C262B20CCD9;
-	Fri, 10 Jan 2025 09:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE94520B80C;
+	Fri, 10 Jan 2025 09:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CuFrd8HU"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vM8M40Zx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pUT0HKTf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FiTLtD9J";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cR7s4WMM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F8A209F56
-	for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 09:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B9B20D504;
+	Fri, 10 Jan 2025 09:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736501382; cv=none; b=OXtOz89LZx4S0tmEYVK0rcdPFUTzDk5n/ZKTx0achmISTnMOKgaDzjcnSBZvtjdDbTnUKVylTqIBBB3fuWMhIbfN9DXWKL6DI751ceJsRU5j2tL6T6+Ckrr3rHcToKnMhA/Bidh+cQtweRAzNJOMfMg58YsM568+IAE4BzQwC0Q=
+	t=1736502358; cv=none; b=nvZPqgkfIwZOr39eYnoAPsXeK3SjyXBjY2857dc8hN908/CtpzbvhotRqJoqcQUmm7GalNFUjARtqb10XJUGcbWj+FZXDKJgzdih5yg6/6r8dexqfN62Jf/Swj3xNhWMRTDy/uwSaOR2xPY4rU0t3ISMoy8JN5a4DDgFpZhNZqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736501382; c=relaxed/simple;
-	bh=6+odOW9J5AxdrGgIHYh9PZ0RZzvlAD2SrSXnzkcC8A8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGkKa7EvGI0gtLeHJfJeI7ekW44qIff2D82r93nN2n5rf3BbXXmE4zz9NDkRvIkHXJS06QnDDLvX31g2bJnhkjLV6k4VG//FE8K0n9YYmwFkRdYb3+vqnSalk50TrYwRkUzt6mYe9XUGPSZ0SyzD/BAHRnvL4M12xCHm59f0DTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CuFrd8HU; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736501381; x=1768037381;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=6+odOW9J5AxdrGgIHYh9PZ0RZzvlAD2SrSXnzkcC8A8=;
-  b=CuFrd8HURbFPKb8YyiavHzMJMlJLL1BXhEHPPOJmxo0YyhvpGsdjRWuq
-   7ALa5ef9FjYy01ar8pvVe2CmAPjddEZ44aXxumAwW00UcwdYs/mw9BUSW
-   gtnTpRVBfFoRQIC4oTJbvVFhw97K4oZ6vpUxO1z9xScMlBo8iEkXotK9M
-   3boI3Q3L8xEfHDt/mln/6WjnqOQhNvQk5j/FP0DKCpyzM6VWsQdCKgjb6
-   R++dbRjWzmTPUMmhI5lF+4qqXqGdAWDUCrPEW2YU6sMVIeT7RzGlyXI5M
-   PBDgqdSOtGqY82FLZXzSCt1XlJ21tL/ItyORBf/63mDlYK6EXr16c9MBz
-   w==;
-X-CSE-ConnectionGUID: EN8wg/XGQWOt8lDIWQ88cg==
-X-CSE-MsgGUID: Thc943yMTEGlUqHVYdiVrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11310"; a="62161196"
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="62161196"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 01:29:40 -0800
-X-CSE-ConnectionGUID: vlJlS4ksS4eV/KQbhZ484w==
-X-CSE-MsgGUID: 2IAuBw7SSECCXUd7BJeXHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="103738097"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa006.jf.intel.com with ESMTP; 10 Jan 2025 01:29:38 -0800
-Date: Fri, 10 Jan 2025 05:28:35 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Samuel Ortiz <sameo@rivosinc.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
-Message-ID: <Z4A/g5Yyu4Whncuu@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
- <9f151a74-cc5c-4a7c-8304-1714159e4b2c@amd.com>
- <6d50f215-93c4-49a5-9ee2-f9775b740f92@amd.com>
- <Z32H2Tzd1UHCQEt5@yilunxu-OptiPlex-7050>
- <d71dd5c5-4c20-4e8e-abaa-fe2cdea4f3b2@amd.com>
+	s=arc-20240116; t=1736502358; c=relaxed/simple;
+	bh=Q2/3kmT/vyx6pmcI/hZczofTzEzaiq2O2rTHpBaYHAk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tol6D0XYmxNL0yAGLJl+HZO00n9T3vXBscHc0gml9/UZJl7LfiWEtySOTK+9r+9x4JqmkKTixQGjA+ucbwvNFaomK0qyuLXelnmt4voXg7UWrLx9Fq6X3D6b1rr3FNaOfDCC9riGxHNzjGsxi7E8u0V/nIYr+3TXh+ifR6xgl3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vM8M40Zx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pUT0HKTf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FiTLtD9J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cR7s4WMM; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E82DC1F394;
+	Fri, 10 Jan 2025 09:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1736502355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UjaBQWC2anXgz9BOymTHSSrozji+GZUUIHOTSaG9d8k=;
+	b=vM8M40Zx16oCWRTzPnzEA9d3SIXaXAqP/nLt8Nqnru5k1XMO6PkOJOCcSepwUIXmb9zZW4
+	dQUMRdIKw75OoF6xCrs/1B8cN/3eVWuokkFmBENG1abx5rywQdeH+U4lUpf9yqjAIhkhBB
+	gOojkOpXLU/Cu9bihmsxz9iMSX4GB+c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1736502355;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UjaBQWC2anXgz9BOymTHSSrozji+GZUUIHOTSaG9d8k=;
+	b=pUT0HKTfzR14Mma39HjR4num6MAo/mvL/41eypl6jlESZqrv1BPFhz4nLIyfVFNEp1SMZX
+	hXa861+5qstnJCDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=FiTLtD9J;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cR7s4WMM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1736502354; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UjaBQWC2anXgz9BOymTHSSrozji+GZUUIHOTSaG9d8k=;
+	b=FiTLtD9Jdwxa+MxOY9sE5U7pp3IJP0wtFsl709yKPh7/mz3G8yJHquzw41BJWL+p+9g+RQ
+	0GA3cRKopMvQrN2YCeFs9tYPxtkBScPf3H8i5sxB9tBRhRitSMZ4JLeebMrhsBCGbYsDYQ
+	dQRcSiZIZIIS4c6tjhl5sUSXRBlqkow=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1736502354;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UjaBQWC2anXgz9BOymTHSSrozji+GZUUIHOTSaG9d8k=;
+	b=cR7s4WMMAxglBulE7TbG/7BxQ00MUIem0byBECIFFLlQxVb7ERaAZ1ZEcOA8QWuTnoonE4
+	Unh57STZTiaL2RBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB2BE13A86;
+	Fri, 10 Jan 2025 09:45:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uL//J1LsgGenGAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 10 Jan 2025 09:45:54 +0000
+Date: Fri, 10 Jan 2025 10:45:54 +0100
+Message-ID: <87ldvjuhm5.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,	Takashi Iwai <tiwai@suse.de>,	Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,	Kuppuswamy
+ Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,	Keith Busch
+ <keith.busch@intel.com>,	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/DPC: Yet another quirk for PIO log size on Intel Raptor Lake-P
+In-Reply-To: <20250105082520.GT3713119@black.fi.intel.com>
+References: <20250102164315.7562-1-tiwai@suse.de>
+	<20250103225315.GA12322@bhelgaas>
+	<20250105082520.GT3713119@black.fi.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d71dd5c5-4c20-4e8e-abaa-fe2cdea4f3b2@amd.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: E82DC1F394
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-On Thu, Jan 09, 2025 at 01:35:58PM +1100, Alexey Kardashevskiy wrote:
+On Sun, 05 Jan 2025 09:25:20 +0100,
+Mika Westerberg wrote:
 > 
+> Hi,
 > 
-> On 8/1/25 07:00, Xu Yilun wrote:
-> > > > > +static void __pci_ide_stream_setup(struct pci_dev *pdev, struct
-> > > > > pci_ide *ide)
-> > > > > +{
-> > > > > +    int pos;
-> > > > > +    u32 val;
-> > > > > +
-> > > > > +    pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
-> > > > > +                 pdev->nr_ide_mem);
-> > > > > +
-> > > > > +    val = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT_MASK, ide->devid_end);
-> > > > > +    pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, val);
-> > > > > +
-> > > > > +    val = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
-> > > > > +          FIELD_PREP(PCI_IDE_SEL_RID_2_BASE_MASK, ide->devid_start) |
-> > > > > +          FIELD_PREP(PCI_IDE_SEL_RID_2_SEG_MASK, ide->domain);
-> > > > > +    pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
-> > > > > +
-> > > > > +    for (int i = 0; i < ide->nr_mem; i++) {
-> > > > 
-> > > > 
-> > > > This needs to test that (pdev->nr_ide_mem >= ide->nr_mem), easy to miss
-> > > > especially when PCI_IDE_SETUP_ROOT_PORT. Thanks,
-> > 
-> > Yes, but nr_ide_mem is limited HW resource and may easily smaller than
-> > device memory region number.
-> 
-> My rootport does not have any range (instead, it relies on C-bit in MMIO
-
-It seems strange, then how the RP decide which stream id to use.
-
-> access to set T-bit). The device got just one (which is no use here as I
-> understand).
-
-I also have no idea from SPEC how to use the IDE register blocks on EP,
-except stream ENABLE bit.
-
-And no matter how I program the RID/ADDR association registers, it
-always work...
-
-Call for help.
-
-> 
-> 
-> > In this case, maybe we have to merge the
-> > memory regions into one big range.
-> 
-> > > > 
-> > > > 
-> > > > 
-> > > > > +        val = FIELD_PREP(PCI_IDE_SEL_ADDR_1_VALID, 1) |
-> > > > > +              FIELD_PREP(PCI_IDE_SEL_ADDR_1_BASE_LOW_MASK,
-> > > > > +                 lower_32_bits(ide->mem[i].start) >>
-> > > > > +                     PCI_IDE_SEL_ADDR_1_BASE_LOW_SHIFT) |
-> > > > > +              FIELD_PREP(PCI_IDE_SEL_ADDR_1_LIMIT_LOW_MASK,
-> > > > > +                 lower_32_bits(ide->mem[i].end) >>
-> > > > > +                     PCI_IDE_SEL_ADDR_1_LIMIT_LOW_SHIFT);
-> > > > > +        pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i), val);
-> > > > > +
-> > > > > +        val = upper_32_bits(ide->mem[i].end);
-> > > > > +        pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i), val);
-> > > > > +
-> > > > > +        val = upper_32_bits(ide->mem[i].start);
-> > > > > +        pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i), val);
-> > > > > +    }
-> > > > > +}
-> > > > > +
-> > > > > +/*
-> > > > > + * Establish IDE stream parameters in @pdev and, optionally, its
-> > > > > root port
-> > > > > + */
-> > > > > +int pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide,
-> > > > > +             enum pci_ide_flags flags)
-> > > > > +{
-> > > > > +    struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
-> > > > > +    struct pci_dev *rp = pcie_find_root_port(pdev);
-> > > > > +    int mem = 0, rc;
-> > > > > +
-> > > > > +    if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
-> > > > > +        pci_err(pdev, "Setup fail: Invalid stream id: %d\n",
-> > > > > ide->stream_id);
-> > > > > +        return -ENXIO;
-> > > > > +    }
-> > > > > +
-> > > > > +    if (test_and_set_bit_lock(ide->stream_id, hb->ide_stream_ids)) {
-> > > > > +        pci_err(pdev, "Setup fail: Busy stream id: %d\n",
-> > > > > +            ide->stream_id);
-> > > > > +        return -EBUSY;
-> > > > > +    }
-> > > > > +
-> > > > > +    ide->name = kasprintf(GFP_KERNEL, "stream%d:%s", ide->stream_id,
-> > > > > +                  dev_name(&pdev->dev));
-> > > > > +    if (!ide->name) {
-> > > > > +        rc = -ENOMEM;
-> > > > > +        goto err_name;
-> > > > > +    }
-> > > > > +
-> > > > > +    rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, ide->name);
-> > > > > +    if (rc)
-> > > > > +        goto err_link;
-> > > > > +
-> > > > > +    for (mem = 0; mem < ide->nr_mem; mem++)
-> > > > > +        if (!__request_region(&hb->ide_stream_res, ide->mem[mem].start,
-> > > > > +                      range_len(&ide->mem[mem]), ide->name,
-> > > > > +                      0)) {
-> > > > > +            pci_err(pdev,
-> > > > > +                "Setup fail: stream%d: address association conflict
-> > > > > [%#llx-%#llx]\n",
-> > > > > +                ide->stream_id, ide->mem[mem].start,
-> > > > > +                ide->mem[mem].end);
-> > > > > +
-> > > > > +            rc = -EBUSY;
-> > > > > +            goto err;
-> > > > > +        }
-> > > > > +
-> > > > > +    __pci_ide_stream_setup(pdev, ide);
-> > > > > +    if (flags & PCI_IDE_SETUP_ROOT_PORT)
-> > > > > +        __pci_ide_stream_setup(rp, ide);
+> On Fri, Jan 03, 2025 at 04:53:15PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Jan 02, 2025 at 05:43:13PM +0100, Takashi Iwai wrote:
+> > > There is yet another PCI entry for Intel Raptor Lake-P that shows the
+> > >   error "DPC: RP PIO log size 0 is invalid":
+> > >   0000:00:07.0 PCI bridge [0604]: Intel Corporation Raptor Lake-P Thunderbolt 4 PCI Express Root Port #0 [8086:a76e]
+> > >   0000:00:07.2 PCI bridge [0604]: Intel Corporation Raptor Lake-P Thunderbolt 4 PCI Express Root Port #2 [8086:a72f]
 > > > 
-> > > Oh, when we do this, the root port gets the same devid_start/end as the
-> > > device which is not correct, what should be there, the rootport bdfn? Need
-> > 
-> > "Indicates the lowest/highest value RID in the range
-> > associated with this Stream ID at the IDE *Partner* Port"
-> > 
-> > My understanding is that device should fill the RP bdfn, and the RP
-> > should fill the device bdfn for RID association registers. Same for Addr
-> > association registers.
-> 
-> Oh. Yeah, this sounds right. So most of the setup needs to be done on the
-> root port and not on the device (which only needs to enable the stream),
-> which is not what the patch does. Or I got it wrong? Thanks,
-
-I don't get you. This patch does IDE setup for 2 partners:
-
-__pci_ide_stream_setup(pdev, ide);  This is the setup on RP
-__pci_ide_stream_setup(rp, ide);    This is the setup on device
-
-unless AMD setup IDE by firmware, and didn't set the PCI_IDE_SETUP_ROOT_PORT flag.
-
-Thanks,
-Yilun
-
-> 
-> > 
-> > Thanks,
-> > Yilun
-> > 
-> > > to dig that but PCI_IDE_SETUP_ROOT_PORT should detect that it is a root
-> > > port. Thanks,
+> > > Add the corresponding quirk entry for 8086:a72f.
 > > > 
+> > > Note that the one for 8086:a76e has been already added by the commit
+> > > 627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root
+> > > Ports").
+> > 
+> > Intel folks, what's the long-term resolution of this?  I'm kind of
+> > tired of adding quirks like this.  So far we have these (not including
+> > the current patch), dating back to Aug 2022:
+> > 
+> >   627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports")
+> >   3b8803494a06 ("PCI/DPC: Quirk PIO log size for Intel Ice Lake Root Ports")
+> >   5459c0b70467 ("PCI/DPC: Quirk PIO log size for certain Intel Root Ports")
+> > 
+> > I *thought* this problem was caused by BIOS defects that were supposed
+> > to be fixed, but nothing seems to be happening.
 > 
-> -- 
-> Alexey
-> 
+> As far as I know it should be fixed already. I just checked my MTLP and PTL
+> systems (both with integrated TBT PCIe root ports) and I don't see the
+> message anymore. I don't have RPL system though. This is on reference
+> hardware and BIOS so it is possible that the fix has not been taken into
+> the OEM BIOS.
+
+The reporter verified that the issue persists with the latest BIOS.
+Sigh.
+
+
+Takashi
 
