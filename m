@@ -1,189 +1,179 @@
-Return-Path: <linux-pci+bounces-19635-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19636-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 477CBA094DD
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 16:18:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7711A095D6
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 16:37:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 602AD3A594B
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:18:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D803116AF82
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:37:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE20020B80D;
-	Fri, 10 Jan 2025 15:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC64220FAB5;
+	Fri, 10 Jan 2025 15:37:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wjLp7ZJN"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VKOOHwJa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01DFB674
-	for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 15:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A2D1DA3D;
+	Fri, 10 Jan 2025 15:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736522305; cv=none; b=GGDs0wxJuvQQYwfLh1oVI1VDQtEBXngEj+BOjPB76jMjHMk9Gb/gnrsnR+3AtKzBx+S2eeaQgsVPBSsgATpXODcfquQKBPpxDxC+WUOU11s72M5MmjwCza/VUyf+1eTbNclK4EAyM/h4u7J/8dkye3Xrmz2hglMtRPe7TO33esY=
+	t=1736523429; cv=none; b=lDf3v5REZdamiLbSt68G+Uf42ifxlc91Aw5swlKP7suKCkSmqJcztJSqyA2Za/q0/BngLfGXamoHFOs1fmkHj/6rDhchjiUxGz28iUtlpPTEZCs3/GFJMPx5iOYkUpFop6N/Ek5kLLiLPFCe5acziIsArKSY5fPmb0hArE9ARwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736522305; c=relaxed/simple;
-	bh=3k/6C4IOPkst9v6SI7hmSGk+CC05gKRYp5oOCEvjPvc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pf0Vc/9xKViwzg7ayWXCBM7zjDpPCH881zi4CFy1iEvXo/FbdFsyr5ei5GNxVVWGeL5C1xcrIBqxPI8fwL2mHfRkj4g3f75Gsnluw41L+6Vp433NutBgQhxbT2PTE8gshRM19PU4c17YSPasavrOCCjX6cBD+AsPfNvj9dtckyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wjLp7ZJN; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30227ccf803so17485611fa.2
-        for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 07:18:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736522302; x=1737127102; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lvU2hdWd7beRebcISyx42mfoyChNjr0m1w4bF78Ijl0=;
-        b=wjLp7ZJNKZICz9aW8++zVadb2RM4sin4qW3KFzZcHZJ1oEH1HfAr3wLTYX+GsLSi+o
-         9ciilSpKApVEOZTzBji88q2O55mx3l43UgEkJrAQ9MDWq1HMRIVa/BJPT+qdo8EWZoLL
-         JI6qNhGO98yOoxbAOMXaLqqa8gGusZ4l/a0R+9DLdLnXVKBzRHpkmiP21BJ3z7Ubsl59
-         JJfdjDMXI3NNVm2sUIURtvvWnG5+5Re0fSunWQirwdw48oaPgroFAjIa4UefmWSjA/ih
-         5xeHqXqNkVof0joV3mcXkYuGF/DJZgQL+auTY38bE5bxu6M8E3iITuex4ME7sq1FVZ50
-         GgQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736522302; x=1737127102;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lvU2hdWd7beRebcISyx42mfoyChNjr0m1w4bF78Ijl0=;
-        b=JQIP3MJ4WnD2I22TZsykOPViQ/M5hAgPO4JiU+hDfNngNuVRVG91i/G6QcBDXSTfHA
-         KqGDoVUI6lon7dosiuv08riikyR+PboPquUJf/GJlzi+YjAF6XNr7twmm/vS31NLy/FI
-         rmD2cNN4qGNaZfQcXfxeO06sa9uRaxQA1annVkxIIO8TuqTy1q4xujnXg5WPrCktE8cb
-         6bsnfnWQVXKHChwoZMXREg6XaeAMcnRjT3lnNGnMMjDFSYuNZ7ef/fKyCNeJ2IvIRYNT
-         ZccKrzHB0qNpZIVprhLze1K3Bzspk1k/bilhVUhG6edOyf9axP+SuqCMRhP9j5fEjKZp
-         nszQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXl37LRKT1y0BXzWmcoxgJEWqyFQc1tuX4fodrNL/Zmc5AwCgwQFMeREDLr9l3koJ4AHZdzB3dqCwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRkpROqbAqTwQHl9D0tkToSAK+9t0cazXEMtQYZvWOx6zM0lhQ
-	ajHdamUAocv/R+Nh8T0uVxEXPTARyw24j1owtz2PCWMvxdcLyKiiktlMPHmA0H5QLhlJN4UTTle
-	YLT4QRF1JsJMdtLiLSkbRppHYcQHnfF6VSeJc
-X-Gm-Gg: ASbGncu8IRisLpfKqqIldXcQvvA6KnUMapj5Ml68GxcRWNbfr2hfEpN9/U3wBXN/Mi+
-	Z6IkbykpJ2AnIls0xPv2gOtvQDOFBA9GVLHAilIGqhtrFXkcRxl0yurF0dGPARNE0aAF9d4c=
-X-Google-Smtp-Source: AGHT+IEXsjxGiWp1Mz3PQuijSEFGZHLybs6WyDS+8gn6UJbniG3B7nHuPpSAGZ+kBjxdfk9eiNLDzIMu3c70xof3VJA=
-X-Received: by 2002:a05:651c:2222:b0:300:38ff:f8e2 with SMTP id
- 38308e7fff4ca-305f453f9d5mr34475281fa.10.1736522301917; Fri, 10 Jan 2025
- 07:18:21 -0800 (PST)
+	s=arc-20240116; t=1736523429; c=relaxed/simple;
+	bh=n4tdxyCF3JYvVTJ8ok+wFQDptiJ3aQFnTaM4GSLNOBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eHsIXPqDHKSuk3xW1L/HggulVuNXionyIW7RnU9+CRfVPGn578/KdYtLD8Y1kaLHgogh0hxQQU8wgQzC25a44nwSyXTIYH289yKkwBcWoGhgLI9mqpVArQsrRFkBwPY0OToGfkzAT3aRoGelnqlDA1R0Hn7Ok7IUgaL5AQSq6UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VKOOHwJa; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50ABpdGv019917;
+	Fri, 10 Jan 2025 16:36:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	c/Qxz5rQoH3z73VG+7QliAVS43rJ+oVZjv3N8LtNERY=; b=VKOOHwJaVzU8zyc3
+	Uk9mCiTKiBn1qwVaMlM4DE41fylBp7Puq5fLrwLYv8Y1j4qfDi8bCNLq/F6b7Axu
+	hJsSgAEs5FaNiK7HnvLIuwGn0NP+hwJgk7ZxgL+rxy5uYLbEDeQoT2YYzWLgNtko
+	S4ECUMMopB0lUXNyAl2QBvB5mRZyGID237XbR7xFGEbrHWVBz362SkNVhj6fMzaE
+	eC1bt81A0XlHltOab7UVE9HmRGeCACRfUtCva8nLiZdo7PkWcsbKX2xBi8e1VAPA
+	cr3CiQ2XLg/jj+87txfqVvfYjkqAETA2ZE46FAH4moL0GpTKOgrn9PzzNUwdyxwf
+	WtKY7g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44331t8vb8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Jan 2025 16:36:20 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EB3CC40092;
+	Fri, 10 Jan 2025 16:34:55 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF63C2954B8;
+	Fri, 10 Jan 2025 16:33:12 +0100 (CET)
+Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 10 Jan
+ 2025 16:33:12 +0100
+Message-ID: <96492d7e-8039-43be-9f63-eff81083f790@foss.st.com>
+Date: Fri, 10 Jan 2025 16:33:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <678136f7.050a0220.216c54.0015.GAE@google.com>
-In-Reply-To: <678136f7.050a0220.216c54.0015.GAE@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 10 Jan 2025 16:18:10 +0100
-X-Gm-Features: AbW1kvaSvDEGClZPZVPY1bseLlLUhY4gsiIRWgU0qUVBvyrmRQu-0-Vu4EjQ9y4
-Message-ID: <CACT4Y+YAXoB+GeA2dQODzDz0u3Z2Dmh98bFHT4Y0Tdi7ZFUT9A@mail.gmail.com>
-Subject: Re: [syzbot] [pci?] KCSAN: data-race in vga_arb_write / vga_arb_write (4)
-To: syzbot <syzbot+2699c160471dfeee2644@syzkaller.appspotmail.com>
-Cc: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, 10 Jan 2025 at 16:04, syzbot
-<syzbot+2699c160471dfeee2644@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    9b2ffa6148b1 Merge tag 'mtd/fixes-for-6.13-rc5' of git://g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12aac0b0580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=87d3cfca6847d1fa
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2699c160471dfeee2644
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/8f3f5cceed80/disk-9b2ffa61.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/1ba00b70d91e/vmlinux-9b2ffa61.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/b99c1bb4d63f/bzImage-9b2ffa61.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+2699c160471dfeee2644@syzkaller.appspotmail.com
-
-This is a race between io_cnt++ and io_cnt--.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/vgaarb.c?id=9b2ffa6148b1e4468d08f7e0e7e371c43cac9ffe#n1204
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/vgaarb.c?id=9b2ffa6148b1e4468d08f7e0e7e371c43cac9ffe#n1263
-
-Later io_cnt is used to drop references:
-
-while (uc->io_cnt--)
-    vga_put(uc->pdev, VGA_RSRC_LEGACY_IO);
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/vgaarb.c?id=9b2ffa6148b1e4468d08f7e0e7e371c43cac9ffe#n1454
-
-So this will corrupt memory.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
+ STM32MP25
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
+        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
+ <20241126155119.1574564-5-christian.bruel@foss.st.com>
+ <20241203152230.5mdrt27u5u5ecwcz@thinkpad>
+ <4e257489-4d90-4e47-a4d9-a2444627c356@foss.st.com>
+ <20241216161700.dtldi7fari6kafrr@thinkpad>
+Content-Language: en-US
+From: Christian Bruel <christian.bruel@foss.st.com>
+In-Reply-To: <20241216161700.dtldi7fari6kafrr@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
 
 
+On 12/16/24 17:17, Manivannan Sadhasivam wrote:
+> On Mon, Dec 16, 2024 at 11:02:07AM +0100, Christian Bruel wrote:
+>> Hi Manivanna,
+>>
+>> On 12/3/24 16:22, Manivannan Sadhasivam wrote:
+>>> On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
+>>>
+>>> [...]
+>>>
+>>>> +static int stm32_pcie_start_link(struct dw_pcie *pci)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+>>>> +	int ret;
+>>>> +
+>>>> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
+>>>> +		dev_dbg(pci->dev, "Link is already enabled\n");
+>>>> +		return 0;
+>>>> +	}
+>>>> +
+>>>> +	ret = stm32_pcie_enable_link(pci);
+>>>> +	if (ret) {
+>>>> +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>
+>>> How the REFCLK is supplied to the endpoint? From host or generated locally?
+>>
+>>  From Host only, we don't support the separated clock model.
+>>
+> 
+> OK. So even without refclk you are still able to access the controller
+> registers? So the controller CSRs should be accessible by separate local clock I
+> believe.
+> 
+> Anyhow, please add this limitation (refclk dependency from host) in commit
+> message.
+> 
+> [...]
+> 
+>>>> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
+>>>
+>>> Hmm, so PHY mode is common for both endpoint and host?
+>>
+>> Yes it is. We need to init the phy here because it is a clock source for the
+>> PCIe core clk
+>>
+> 
+> Clock source? Is it coming directly to PCIe or through RCC? There is no direct
+> clock representation from PHY to PCIe in DT binding.
+
+We have the following simplified clock dependencies (details in the RM)
+
+                                 _____________
+RCC  ck_icn_pcie--- ------------|-> dbi_clk  |
+                     _________   |            |
+      ck_icn_phy ---|->       |  |            |
+                    |  pipe0--|--|->core_clk  |
+      ck_ker ----- -|->       |  |            |
+                    |         |  |            |
+      100mhz pad ---|-> pll   |  |            |
+                    |_________|  |____________|
+                      COMBOPHY      PCIE
 
 
-> ==================================================================
-> BUG: KCSAN: data-race in vga_arb_write / vga_arb_write
->
-> read-write to 0xffff88814f612424 of 4 bytes by task 17707 on cpu 0:
->  vga_arb_write+0x11fa/0x1410 drivers/pci/vgaarb.c:1204
->  vfs_write+0x281/0x920 fs/read_write.c:677
->  ksys_write+0xe8/0x1b0 fs/read_write.c:731
->  __do_sys_write fs/read_write.c:742 [inline]
->  __se_sys_write fs/read_write.c:739 [inline]
->  __x64_sys_write+0x42/0x50 fs/read_write.c:739
->  x64_sys_call+0x287e/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:2
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> read-write to 0xffff88814f612424 of 4 bytes by task 17708 on cpu 1:
->  vga_arb_write+0xf45/0x1410 drivers/pci/vgaarb.c:1263
->  vfs_write+0x281/0x920 fs/read_write.c:677
->  ksys_write+0xe8/0x1b0 fs/read_write.c:731
->  __do_sys_write fs/read_write.c:742 [inline]
->  __se_sys_write fs/read_write.c:739 [inline]
->  __x64_sys_write+0x42/0x50 fs/read_write.c:739
->  x64_sys_call+0x287e/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:2
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> value changed: 0x00000001 -> 0x00000007
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 1 UID: 0 PID: 17708 Comm: syz.4.3325 Not tainted 6.13.0-rc4-syzkaller-00012-g9b2ffa6148b1 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-> ==================================================================
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion visit https://groups.google.com/d/msgid/syzkaller-bugs/678136f7.050a0220.216c54.0015.GAE%40google.com.
+I considered adding the COMBOPHY pipe0 as the clock provider for the 
+PCIe core_clk, but this did not provide any advantage since the PLL 
+needs to be locked first and all settings need to be completed. 
+Therefore, using clock_prepare_enable(pipe0) would be redundant with 
+what phy_init already accomplishes. The phy_init function is necessary 
+because it is used by the USB3 driver.
+
+Since the core_clk is operational when all three other clocks are 
+enabled and the PLL is locked, modeling pipe0 had minimal value, 
+especially considering the dependencies of the USB3 driver.
+
+I will add a comment in the code to explain this.
+
+> 
+> - Mani
+> 
 
