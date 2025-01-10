@@ -1,166 +1,144 @@
-Return-Path: <linux-pci+bounces-19633-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19634-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90FC4A09490
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 16:02:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A445DA094A0
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 16:04:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 991EC3A6C51
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:02:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E6C1188DB5E
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2DD420DD79;
-	Fri, 10 Jan 2025 15:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="JFXUDb0T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE2620DD79;
+	Fri, 10 Jan 2025 15:04:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53176204C38;
-	Fri, 10 Jan 2025 15:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A59B20551A
+	for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 15:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736521363; cv=none; b=Epuqlq/2FWw9Bc5fepuR7F79Hne9N9sUUd8CbnzljW6oDk5Y9iDXNFVpjjljMaPOxOlyyMg3guoxCsX4ssI0/IFOpt+egfvLbb4VQgAFlLohgNvQNxIaKQKnokAYWpLptcfAArCc+nGHi6tFj7zCC+p9B1FRk5lU9l/GcULJ14I=
+	t=1736521467; cv=none; b=Zl1I6yaC47hxFqDHXEIlf66yF7Nl7ZKjo/gghVGVzVfgW381Mc1CMdBggB9pmnxEiIkzZgSw6MPWfhNlWplV4KTLjtRwTmnBO8c7H3VmBytAjB/adBZOGcMzEcg6ZH0vXVVOHfb77IRIlANbzGXSA7BBLwjis4mUNNmqt3cRK3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736521363; c=relaxed/simple;
-	bh=hbTLAwap1ERaUj61vRQjfmkIkdglH9vCpT3rmte63VY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjXpNfITVTtQarlrwW/ZeTRT+hib53It9uOzsANLoDg9nRuo3ZWgjm6Tv4Jht09GFI87dHdq6Ye82HRDZsnZlDGcbesCJlquFpzm/zM7QQycwwHVHoS7kE+z2ySEeB+q15voxCPYAcFAdVHcxtHSx32iTR/hpJ7TB2SHTTeSZ4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=JFXUDb0T; arc=none smtp.client-ip=43.163.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1736521012; bh=9cG6NxmaDJfrUJLD4LYO3WW0HhNZZL7z1s8zjnItsTg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JFXUDb0TfkfE6tlaJBn33MD8jbob77Womn+MnYA3G/lR2zFBjafpKfMJtSGGpEXlm
-	 DYvtHW8aZ9/tGSfW+f+DvkKVks2U7vRoSv34iD8Z1WgG6DwULNFkDNNXTeG9POsqY/
-	 liH9owyoyMTS4tQ8ft4wELLRKJSv7zgSnJUmjqIQ=
-Received: from [192.168.31.193] ([120.244.62.107])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id E31A24AD; Fri, 10 Jan 2025 22:56:49 +0800
-X-QQ-mid: xmsmtpt1736521009tzqcsf8pm
-Message-ID: <tencent_4C4084D8BFF745FD0B5FA028F820F4F50609@qq.com>
-X-QQ-XMAILINFO: NV9lVvsB36OpCcUeJqb5PZj3j3BXx7aCcO4ZSoRT9oObZaasmz/TWJCTX5e5FP
-	 G48klItuM//o0SQtl4GkP55BzaoxpP1dLHwoTec1cdGGNVgsoI6L36u8MyrTqcc8/vDQWXbYg6eX
-	 SG5+klPUI6i02Hzx37QFSv+NjejfhVqQsfy3Z3EnwEMW7vOvMr/mwDC2HFEGZcxnS/bRHzmgwtH9
-	 iqflFUEJXPzELziumtEMmjr2U0ah5zFO+OV2xts/IPOhSxF2sfjA/6bUEG+rpLQArLWfIoAKbtxX
-	 SZN02LxVWYxwMYDeOuiweR9RdyPsNEWuk7xHHc6voFKshDrk4O0Ud4vSpT214h1bBTRJww5GBMiQ
-	 YVu9Yem3ysMyt7tZUQZSQZSllj1weD9ZKN9jL4Hrra1OfEXFZ0EONlsQ3cafht6RSl9bfd1ze10E
-	 5ZOGqTo43vLdjI3uo6Gl0sGosi/wS3Zcxc2pK9Jeytos3DZPlkZ4mwBqe1wuD5v05t6gMeTFhbAH
-	 GPArAJF410m8x/UcMTNrd9MD0QQgnmcgpDRTcMHAheYwbWsHBIKG0DEuwHXX2kHOLi0N2BK92Er1
-	 si+2m1CSGj+HxQ2bj4v35ftM+c9ZzSN8gum9WfIsLG5XobKs7h0Y+g6P9rC4e8ngUVE87slis/ho
-	 2fVweQSvS1OTEAagAD0cx3YaBPvrFQ62KGwyCob6XjNZAxLeBQFOQmjImXSNvSyRNS5zL8V0xjKz
-	 fGC7Ncl+zT9DfsQRCN6wSuh1YyCp5S4UqN+C+doU8g0g5nXJFfIbjak3M6rk9Sa7ghKfQkW+JD1c
-	 y6xrUrzBs62epTbLlXlV1s1KDqvDU3LrDo1hBaOgMvW6YJ09tjBNIo1sbjFlfCVE77tvdtJn7hB3
-	 R6Iq4ktaGtwRnKKJBZCDcyPU6Dyj5FNAavEf0rMh1catV5lQ1U1k6llc50u7NIoTzL/Fduw1QD6c
-	 udbVXQNS8sP00ugUJe4EJJybHjMWZ7j8EsYOCYG0gCVTUCT+PTFxAPmWBjU0OQo5+rLtvW59QYoo
-	 PBY2g50Ugi89Ckongi2iJiErBFH1V1yISdl/MhNg==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-OQ-MSGID: <6613905d-aa40-4718-8786-5a94044ee487@qq.com>
-Date: Fri, 10 Jan 2025 22:56:49 +0800
+	s=arc-20240116; t=1736521467; c=relaxed/simple;
+	bh=cZNoZyzQipnDLfLyvupbWpNsGByiZ0QB+EvyB2q1xFc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MeSZ/rsfPZmWrdvfLjJ92Adc7tW+BDSClTQDW07JTSeJtRPC755VLwNSVkbiRkX95fYHgizn/f9k4o1xfzwm+8JNDLqWYn97A/AnO4fXn54vrcGSK15gkRvqie+YWnGoDbURpXhIn0A17v6ElmVojDwUEMHEViYOpj+EY/UbjLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3a819a4e83dso21095725ab.1
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 07:04:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736521464; x=1737126264;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qUQpPs0FcZM7FnINVbur4ebsmx4AO4ji16mjkxHBtU0=;
+        b=sydUtTSkzJ1B+zvnLqNKIhSwbyDRNjsBPgRumPR49qYKW+lECbaEUo4rVmgQ3CO6ie
+         1Rto+/Jv5CORx8P02F9vMoep8I27gunCRcTMxUyIisYKDr0kmhxQ5FQFhPH7CwzMOWfg
+         Yo9VvbgfWHNpoiAsiM8qhjq4tGLuIPGLwuYmBXwBHb7n67XDxPXMyI18LlKcOQCGNsvG
+         NLrFoYfIRDhKXrmiE2Ygz89TeOB6iZ696BXFpifkrWtQ+Uy63h40o5c2Fduas04fsUlg
+         hGjNYjnKwwcYn5rQIc1mZQYEZQNNXPd9CbHqs1LKoWZVATDpPnlNedAL/nQ7Ar5bUiOP
+         YbTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVx7fJMYBxDXhLYKtCwcCAW2OKPz/PcgSrRM8TI2Yf4vHS/JKuBQytTYiBGgQG4X6WKmCiuKG62gTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzehM8Y7vFBOUzF8PxZJGiumnAYjlEIlPrZS255oy3etF15KVkh
+	k3Tq9VbIzW/JE96d9mecj72ROFnKn7BKw152m4xLtf+Fjhc8Wlt6cNqTyC/eIl6eLEvkWvyfbeC
+	c8xVTeBdzOicGzJL40lca64goAF1ZdImgT2lyZaUpnRto+Nx6oB7qsAE=
+X-Google-Smtp-Source: AGHT+IFxKsndZNjMMYvGkFtZDpe3/ZM1i2fsaN86NSLcTYILqVrHceO7dhD2dvlo7M0C2RLLTW6k3NRhLx/rsfwwKz1zJGGL6nUH
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] PCI: Fix the wrong reading of register fields
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- macro@orcam.me.uk
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, guojinhui.liam@bytedance.com,
- helgaas@kernel.org, Lukas Wunner <lukas@wunner.de>, ahuang12@lenovo.com,
- sunjw10@lenovo.com
-References: <tencent_753C9F9DFEC140A750F2778E6879E1049406@qq.com>
- <d3129f85-eeb4-021c-09d2-5877c9671a8d@linux.intel.com>
-Content-Language: en-US
-From: Jiwei <jiwei.sun.bj@qq.com>
-In-Reply-To: <d3129f85-eeb4-021c-09d2-5877c9671a8d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:cdab:0:b0:3a7:c5b1:a55c with SMTP id
+ e9e14a558f8ab-3ce3a8936efmr79923075ab.0.1736521463064; Fri, 10 Jan 2025
+ 07:04:23 -0800 (PST)
+Date: Fri, 10 Jan 2025 07:04:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <678136f7.050a0220.216c54.0015.GAE@google.com>
+Subject: [syzbot] [pci?] KCSAN: data-race in vga_arb_write / vga_arb_write (4)
+From: syzbot <syzbot+2699c160471dfeee2644@syzkaller.appspotmail.com>
+To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    9b2ffa6148b1 Merge tag 'mtd/fixes-for-6.13-rc5' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12aac0b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87d3cfca6847d1fa
+dashboard link: https://syzkaller.appspot.com/bug?extid=2699c160471dfeee2644
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8f3f5cceed80/disk-9b2ffa61.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1ba00b70d91e/vmlinux-9b2ffa61.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b99c1bb4d63f/bzImage-9b2ffa61.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2699c160471dfeee2644@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in vga_arb_write / vga_arb_write
+
+read-write to 0xffff88814f612424 of 4 bytes by task 17707 on cpu 0:
+ vga_arb_write+0x11fa/0x1410 drivers/pci/vgaarb.c:1204
+ vfs_write+0x281/0x920 fs/read_write.c:677
+ ksys_write+0xe8/0x1b0 fs/read_write.c:731
+ __do_sys_write fs/read_write.c:742 [inline]
+ __se_sys_write fs/read_write.c:739 [inline]
+ __x64_sys_write+0x42/0x50 fs/read_write.c:739
+ x64_sys_call+0x287e/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:2
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read-write to 0xffff88814f612424 of 4 bytes by task 17708 on cpu 1:
+ vga_arb_write+0xf45/0x1410 drivers/pci/vgaarb.c:1263
+ vfs_write+0x281/0x920 fs/read_write.c:677
+ ksys_write+0xe8/0x1b0 fs/read_write.c:731
+ __do_sys_write fs/read_write.c:742 [inline]
+ __se_sys_write fs/read_write.c:739 [inline]
+ __x64_sys_write+0x42/0x50 fs/read_write.c:739
+ x64_sys_call+0x287e/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:2
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0x00000001 -> 0x00000007
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 UID: 0 PID: 17708 Comm: syz.4.3325 Not tainted 6.13.0-rc4-syzkaller-00012-g9b2ffa6148b1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+==================================================================
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On 1/10/25 22:06, Ilpo Järvinen wrote:
-> On Fri, 10 Jan 2025, Jiwei Sun wrote:
-> 
->> From: Jiwei Sun <sunjw10@lenovo.com>
->>
->> Since commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set
->> PCIe Link Speed"), there are two potential issues in the function
->> pcie_failed_link_retrain().
->>
->> (1) The macro PCIE_LNKCTL2_TLS2SPEED() and PCIE_LNKCAP_SLS2SPEED() just
->> uses the link speed field of the registers. However, there are many other
->> different function fields in the Link Control 2 Register or the Link
->> Capabilities Register. If the register value is directly used by the two
->> macros, it may cause getting an error link speed value (PCI_SPEED_UNKNOWN).
->>
->> (2) In the pcie_failed_link_retrain(), the local variable lnkctl2 is not
->> changed after reading from PCI_EXP_LNKCTL2. It might cause that the
->> removing 2.5GT/s downstream link speed restriction codes are not executed.
-> 
-> Thanks for finding these issues and coming up with a patch.
-> 
-> These cases seem two different problems to me so I'd put them into
-> different patches, which would also make it easeir focus on
-> describing the issue in case 2 which is currently a bit vague (when
-> looking how de9a6c8d5dbf managed to break it by removing the lnkctl2
-> change prior to writing into the reg).
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Thanks for your suggestion. I will divide them into different patches.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-> 
->> In order to avoid the above-mentioned potential issues, only keep link
->> speed field of the two registers before using by pcie_set_target_speed()
->> and reread the Link Control 2 Register before using.
->>
->> Fixes: de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed")
->> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
->> ---
->>   drivers/pci/quirks.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 76f4df75b08a..605628c810a5 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -118,11 +118,13 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
->>   		ret = pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false);
->>   		if (ret) {
->>   			pci_info(dev, "retraining failed\n");
->> +			oldlnkctl2 &= PCI_EXP_LNKCTL2_TLS;
->>   			pcie_set_target_speed(dev, PCIE_LNKCTL2_TLS2SPEED(oldlnkctl2),
->>   					      true);
-> 
-> I'd prefer these get fixed inside the macros so that the callers don't
-> need to take handle what seem something that is always needed.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-It is a good idea,  I will do that in the following patch.
-
-
-Thanks,
-Regards,
-Jiwei
-
-> 
->>   			return ret;
->>   		}
->>   
->> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
->>   		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->>   	}
->>   
->> @@ -133,6 +135,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
->>   
->>   		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
->>   		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
->> +		lnkcap &= PCI_EXP_LNKCAP_SLS;
->>   		ret = pcie_set_target_speed(dev, PCIE_LNKCAP_SLS2SPEED(lnkcap), false);
-> 
-
+If you want to undo deduplication, reply with:
+#syz undup
 
