@@ -1,65 +1,54 @@
-Return-Path: <linux-pci+bounces-19636-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19637-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7711A095D6
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 16:37:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71660A09845
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 18:15:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D803116AF82
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 15:37:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CAC4168998
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 17:15:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC64220FAB5;
-	Fri, 10 Jan 2025 15:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2977E2135A5;
+	Fri, 10 Jan 2025 17:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VKOOHwJa"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="BTuekJi+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A2D1DA3D;
-	Fri, 10 Jan 2025 15:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ECB21170B;
+	Fri, 10 Jan 2025 17:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736523429; cv=none; b=lDf3v5REZdamiLbSt68G+Uf42ifxlc91Aw5swlKP7suKCkSmqJcztJSqyA2Za/q0/BngLfGXamoHFOs1fmkHj/6rDhchjiUxGz28iUtlpPTEZCs3/GFJMPx5iOYkUpFop6N/Ek5kLLiLPFCe5acziIsArKSY5fPmb0hArE9ARwY=
+	t=1736529352; cv=none; b=TC/2v493U5LMGXapk87ttVx/url5U6WhKcDv5PDiyVUnESSwb+Y5r0S4azwjY4Ys73Jzy/JKdNh6JDOQTlUgB6h2dWQ3Bpq6r53FcV0CVuEGa2oewuWSCXQMum7wMgZLzg0GzmZB6NwaU4MixuH7dKPUrL3YhvXfKc7rqD+IHOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736523429; c=relaxed/simple;
-	bh=n4tdxyCF3JYvVTJ8ok+wFQDptiJ3aQFnTaM4GSLNOBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eHsIXPqDHKSuk3xW1L/HggulVuNXionyIW7RnU9+CRfVPGn578/KdYtLD8Y1kaLHgogh0hxQQU8wgQzC25a44nwSyXTIYH289yKkwBcWoGhgLI9mqpVArQsrRFkBwPY0OToGfkzAT3aRoGelnqlDA1R0Hn7Ok7IUgaL5AQSq6UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VKOOHwJa; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50ABpdGv019917;
-	Fri, 10 Jan 2025 16:36:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	c/Qxz5rQoH3z73VG+7QliAVS43rJ+oVZjv3N8LtNERY=; b=VKOOHwJaVzU8zyc3
-	Uk9mCiTKiBn1qwVaMlM4DE41fylBp7Puq5fLrwLYv8Y1j4qfDi8bCNLq/F6b7Axu
-	hJsSgAEs5FaNiK7HnvLIuwGn0NP+hwJgk7ZxgL+rxy5uYLbEDeQoT2YYzWLgNtko
-	S4ECUMMopB0lUXNyAl2QBvB5mRZyGID237XbR7xFGEbrHWVBz362SkNVhj6fMzaE
-	eC1bt81A0XlHltOab7UVE9HmRGeCACRfUtCva8nLiZdo7PkWcsbKX2xBi8e1VAPA
-	cr3CiQ2XLg/jj+87txfqVvfYjkqAETA2ZE46FAH4moL0GpTKOgrn9PzzNUwdyxwf
-	WtKY7g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44331t8vb8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 16:36:20 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EB3CC40092;
-	Fri, 10 Jan 2025 16:34:55 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF63C2954B8;
-	Fri, 10 Jan 2025 16:33:12 +0100 (CET)
-Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 10 Jan
- 2025 16:33:12 +0100
-Message-ID: <96492d7e-8039-43be-9f63-eff81083f790@foss.st.com>
-Date: Fri, 10 Jan 2025 16:33:05 +0100
+	s=arc-20240116; t=1736529352; c=relaxed/simple;
+	bh=RwPURd0aOOjRYdeo8M7dMFqdhxCV8Y7M4x33YcRcvOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WSp88lOAJvCv3YyUvLmvNhUfd3QWW+buMLXKYwHknTnFEAnBAOwNstW/Edczjn91xKNqK7QckbEXHyQFNlEQY8dySX+B36cxMmjuUJenQS1tVDDLrxDCbRQ2YGHe0lPhkOrEWFlLzKAGwcjv0yY1r0dCc20oLDWFfxeyDx9oGhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=BTuekJi+; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+Received: from [192.168.42.116] (pd9e5946e.dip0.t-ipconnect.de [217.229.148.110])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 483D42FC007B;
+	Fri, 10 Jan 2025 18:15:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1736529345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RPHpHZUnv7Hmk+SNRM9KybxR/caWEm1B3cMCQ39n37w=;
+	b=BTuekJi+hPR0t8ncUDS40Xiio0tkOsHJFOKsvH+fn3nOUQlZPJ54/UDqfEVExGJhgrYevV
+	27pkWTJy7ePX5bLIWTQ92aaCGZiLS+Xz+xY+mHcb/anL5lGveCakm9R9Ao9NAgpn0HhgRp
+	v1gRxU6SG/2f+HGTrmAlLss5up7/Kfc=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <8b28076c-7273-429e-97a9-05a8c670f171@tuxedocomputers.com>
+Date: Fri, 10 Jan 2025 18:15:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,113 +56,115 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
- STM32MP25
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
-        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20241126155119.1574564-1-christian.bruel@foss.st.com>
- <20241126155119.1574564-5-christian.bruel@foss.st.com>
- <20241203152230.5mdrt27u5u5ecwcz@thinkpad>
- <4e257489-4d90-4e47-a4d9-a2444627c356@foss.st.com>
- <20241216161700.dtldi7fari6kafrr@thinkpad>
+Subject: Re: [PATCH v4] PCI: Avoid putting some root ports into D3 on TUXEDO
+ Sirius Gen1
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241220113618.779699-1-wse@tuxedocomputers.com>
+ <959c10ce-9f84-4dd5-8506-9d094f0d6762@amd.com>
 Content-Language: en-US
-From: Christian Bruel <christian.bruel@foss.st.com>
-In-Reply-To: <20241216161700.dtldi7fari6kafrr@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <959c10ce-9f84-4dd5-8506-9d094f0d6762@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-
-On 12/16/24 17:17, Manivannan Sadhasivam wrote:
-> On Mon, Dec 16, 2024 at 11:02:07AM +0100, Christian Bruel wrote:
->> Hi Manivanna,
+Am 08.01.25 um 22:26 schrieb Mario Limonciello:
+> On 12/20/2024 05:35, Werner Sembach wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
 >>
->> On 12/3/24 16:22, Manivannan Sadhasivam wrote:
->>> On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
->>>
->>> [...]
->>>
->>>> +static int stm32_pcie_start_link(struct dw_pcie *pci)
->>>> +{
->>>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->>>> +	int ret;
->>>> +
->>>> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
->>>> +		dev_dbg(pci->dev, "Link is already enabled\n");
->>>> +		return 0;
->>>> +	}
->>>> +
->>>> +	ret = stm32_pcie_enable_link(pci);
->>>> +	if (ret) {
->>>> +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
->>>> +		return ret;
->>>> +	}
->>>
->>> How the REFCLK is supplied to the endpoint? From host or generated locally?
+>> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend") sets the
+>> policy that all PCIe ports are allowed to use D3.  When the system is
+>> suspended if the port is not power manageable by the platform and won't be
+>> used for wakeup via a PME this sets up the policy for these ports to go
+>> into D3hot.
 >>
->>  From Host only, we don't support the separated clock model.
+>> This policy generally makes sense from an OSPM perspective but it leads to
+>> problems with wakeup from suspend on the TUXEDO Sirius 16 Gen 1 with a
+>> specific old BIOS. This manifests as a system hang.
 >>
-> 
-> OK. So even without refclk you are still able to access the controller
-> registers? So the controller CSRs should be accessible by separate local clock I
-> believe.
-> 
-> Anyhow, please add this limitation (refclk dependency from host) in commit
-> message.
-> 
-> [...]
-> 
->>>> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
->>>
->>> Hmm, so PHY mode is common for both endpoint and host?
+>> On the affected Device + BIOS combination, add a quirk for the root port of
+>> the problematic controller to ensure that these root ports are not put into
+>> D3hot at suspend.
 >>
->> Yes it is. We need to init the phy here because it is a clock source for the
->> PCIe core clk
+>> This patch is based on
+>> https://lore.kernel.org/linux-pci/20230708214457.1229-2-mario.limonciello@amd.com/ 
 >>
-> 
-> Clock source? Is it coming directly to PCIe or through RCC? There is no direct
-> clock representation from PHY to PCIe in DT binding.
+>> but with the added condition both in the documentation and in the code to
+>> apply only to the TUXEDO Sirius 16 Gen 1 with a specific old BIOS and only
+>> the affected root ports.
+>>
+>> Co-developed-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+>> Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+>> Co-developed-by: Werner Sembach <wse@tuxedocomputers.com>
+>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>> Cc: stable@vger.kernel.org # 6.1+
+>> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>
+> So I don't think this should have my S-o-b.  At most it should Suggested-by: 
+> or Co-developed-by: since it was based on my original patch.
+kk
+>
+>> ---
+>>   drivers/pci/quirks.c | 30 ++++++++++++++++++++++++++++++
+>
+> I think a better location for this is arch/x86/pci/fixup.c, similar to how we 
+> have https://git.kernel.org/torvalds/c/7d08f21f8c630
+>
+> thoughts?
 
-We have the following simplified clock dependencies (details in the RM)
+Fine with me
 
-                                 _____________
-RCC  ck_icn_pcie--- ------------|-> dbi_clk  |
-                     _________   |            |
-      ck_icn_phy ---|->       |  |            |
-                    |  pipe0--|--|->core_clk  |
-      ck_ker ----- -|->       |  |            |
-                    |         |  |            |
-      100mhz pad ---|-> pll   |  |            |
-                    |_________|  |____________|
-                      COMBOPHY      PCIE
+I will make a v5
 
-
-I considered adding the COMBOPHY pipe0 as the clock provider for the 
-PCIe core_clk, but this did not provide any advantage since the PLL 
-needs to be locked first and all settings need to be completed. 
-Therefore, using clock_prepare_enable(pipe0) would be redundant with 
-what phy_init already accomplishes. The phy_init function is necessary 
-because it is used by the USB3 driver.
-
-Since the core_clk is operational when all three other clocks are 
-enabled and the PLL is locked, modeling pipe0 had minimal value, 
-especially considering the dependencies of the USB3 driver.
-
-I will add a comment in the code to explain this.
-
-> 
-> - Mani
-> 
+>
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 76f4df75b08a1..d2f45c3e24c0a 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>
+>> @@ -3908,6 +3908,36 @@ static void quirk_apple_poweroff_thunderbolt(struct 
+>> pci_dev *dev)
+>>   DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
+>>                      PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
+>>                      quirk_apple_poweroff_thunderbolt);
+>> +
+>> +/*
+>> + * Putting PCIe root ports on Ryzen SoCs with USB4 controllers into D3hot
+>> + * may cause problems when the system attempts wake up from s2idle.
+>> + *
+>> + * On the TUXEDO Sirius 16 Gen 1 with a specific old BIOS this manifests as
+>> + * a system hang.
+>> + */
+>> +static const struct dmi_system_id quirk_ryzen_rp_d3_dmi_table[] = {
+>> +    {
+>> +        .matches = {
+>> +            DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+>> +            DMI_EXACT_MATCH(DMI_BOARD_NAME, "APX958"),
+>> +            DMI_EXACT_MATCH(DMI_BIOS_VERSION, "V1.00A00_20240108"),
+>> +        },
+>> +    },
+>> +    {}
+>> +};
+>> +
+>> +static void quirk_ryzen_rp_d3(struct pci_dev *pdev)
+>> +{
+>> +    struct pci_dev *root_pdev;
+>> +
+>> +    if (dmi_check_system(quirk_ryzen_rp_d3_dmi_table)) {
+>> +        root_pdev = pcie_find_root_port(pdev);
+>> +        if (root_pdev && !acpi_pci_power_manageable(root_pdev))
+>> +            root_pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
+>> +    }
+>> +}
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_ryzen_rp_d3);
+>>   #endif
+>>     /*
+>
 
