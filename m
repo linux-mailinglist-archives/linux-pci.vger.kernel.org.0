@@ -1,102 +1,134 @@
-Return-Path: <linux-pci+bounces-19641-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19642-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71A2AA09E1B
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 23:36:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92D97A0A0EE
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 06:02:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79CD0188DAB2
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2025 22:35:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 971F73AB32D
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 05:02:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2805C215F40;
-	Fri, 10 Jan 2025 22:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B37322A;
+	Sat, 11 Jan 2025 05:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQhgmR2k"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C0zezy5P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA5C2080D3;
-	Fri, 10 Jan 2025 22:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B47E2114
+	for <linux-pci@vger.kernel.org>; Sat, 11 Jan 2025 05:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736548260; cv=none; b=W2qYgHZv3QCfExT8KEd6tpXTR5yKw8m8BiKzUqPb+hNKvg8RRSiwFV0J+hwrTDQCNYK/cVljuEx6sfqUglApJHBlDMYwaxIZX6gwIPx6+zVZ5zHvGLeFE0/yLcsVKOwH7XqTzTLIX8gWVK6Km5rWQWjTD0C2rF5oHJWoLd8ytso=
+	t=1736571738; cv=none; b=tPcxpuHjW0i/310XZT/I/VseuBiT54gqkeQ5UKuhvyVOBJkFM6md2OluHuA2yJr9V1+S6Hu/lIECx0ec3vurmZpxn1fgjjHj8Hmg5KqXkOwkPo5YnsQwKCbdYV7YweXNHiZlYD8/9m/FOvXfOiK6JKLsCT6y7TsWLzIfxFMjDAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736548260; c=relaxed/simple;
-	bh=9WkF6n5RBjRD1mrwR6nxL/hU9QiyhVm6Z4mOb8csuoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HTguapegnEwDohFXonTJCKu3Q3nGY+qZ4MqY0XnwZax/0qLbQ/buxxaTHuz0RuwWacNoHL0VYCsIl2csLdqYMr6lCbnBFZPwbHgKL4TgeTHCs8XnV2eOno8WwYkVoAmMRjCQn6XZpAoXOul4Zm4Eo87NRjm6oBUJR79XIMLYMOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQhgmR2k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BCAC4CED6;
-	Fri, 10 Jan 2025 22:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736548259;
-	bh=9WkF6n5RBjRD1mrwR6nxL/hU9QiyhVm6Z4mOb8csuoU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rQhgmR2kSJPEviIMFBfSc+Z4Hchk6wciqoxq1D4PiiU2z+OXyngOrFXHmHSoTBD5y
-	 sbrreH+lcvENWHkIyIzaxaX8C25ii1YOZqw2VyaaJQfTYL2+gMI4I9rXwiMD2txSUK
-	 8QvNBNsuAfy5UaWrcvKFE/XCLn0J7RN7prRrAUcf7/kNHZx/sXU9N8AmIgEDAG9X+p
-	 7M1zVVllWvmwGL9AJptwUutps9Txtg/gpYcYE8MwZrAZyS76HmrKZjdykYw0XCp0AT
-	 ef3YzF9qvceS75EskXpOYtlaxhQPzb4PXV6UM0tvX810HEQu14+DoOmSEjliUbi0ot
-	 T8HFuK07K2Y1Q==
-Date: Fri, 10 Jan 2025 16:30:57 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Roger Pau Monne <roger.pau@citrix.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 3/3] pci/msi: remove pci_msi_ignore_mask
-Message-ID: <20250110223057.GA318711@bhelgaas>
+	s=arc-20240116; t=1736571738; c=relaxed/simple;
+	bh=lXQ+4fameH3M8MHVRJJmDZ81eufW0DFRjZ9ZkSbUcN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WVA4qRpEzwZ55VGOVgq55wyMZR/bcZHUDYjlsrcErHw39JK/L5wbfaG3gu38glb/y7u0IDRhtLqzRYxRuXgc5EXmNNkCUmfSxsW+1Q0XHXlXrZk2fiy//M1M9fel0OeYMrAiLL9n6nHRMSRgT/8MFK70LK5sIvEV/vV561b/3xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C0zezy5P; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <bcb30b80-0902-4561-94f9-a6e451702138@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1736571726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87PFbocV5iG/YEPJ261ZyupRxofHWTgUBw6ylFg04/A=;
+	b=C0zezy5PH3NjJJ3rja00SNNPSHRoK8WteCqC6PRIpIiAhISp3YUvWQ6F/rB5uExooUh/5q
+	P2EgIwDrZfl5AnTomUIUOUbdH0GAEdogAHNXGVJotDgyAgAaSj8KKZ/4nFsHh5KpBP06Dd
+	B4MOur/ybskGrVPM4vzws7U/dGEGsbw=
+Date: Fri, 10 Jan 2025 22:02:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110140152.27624-4-roger.pau@citrix.com>
+Subject: Re: [PATCH 2/3] vmd: disable MSI remapping bypass under Xen
+To: Bjorn Helgaas <helgaas@kernel.org>, Roger Pau Monne <roger.pau@citrix.com>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-pci@vger.kernel.org, Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250110222525.GA318386@bhelgaas>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jonathan Derrick <jonathan.derrick@linux.dev>
+In-Reply-To: <20250110222525.GA318386@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Match subject line style again.
+Hi Bjorn,
 
-On Fri, Jan 10, 2025 at 03:01:50PM +0100, Roger Pau Monne wrote:
-> Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both MSI
-> and MSI-X entries globally, regardless of the IRQ chip they are using.  Only
-> Xen sets the pci_msi_ignore_mask when routing physical interrupts over event
-> channels, to prevent PCI code from attempting to toggle the maskbit, as it's
-> Xen that controls the bit.
+On 1/10/25 3:25 PM, Bjorn Helgaas wrote:
+> Match historical subject line style for prefix and capitalization:
 > 
-> However, the pci_msi_ignore_mask being global will affect devices that use MSI
-> interrupts but are not routing those interrupts over event channels (not using
-> the Xen pIRQ chip).  One example is devices behind a VMD PCI bridge.  In that
-> scenario the VMD bridge configures MSI(-X) using the normal IRQ chip (the pIRQ
-> one in the Xen case), and devices behind the bridge configure the MSI entries
-> using indexes into the VMD bridge MSI table.  The VMD bridge then demultiplexes
-> such interrupts and delivers to the destination device(s).  Having
-> pci_msi_ignore_mask set in that scenario prevents (un)masking of MSI entries
-> for devices behind the VMD bridge.
+>    PCI: vmd: Set devices to D0 before enabling PM L1 Substates
+>    PCI: vmd: Add DID 8086:B06F and 8086:B60B for Intel client SKUs
+>    PCI: vmd: Fix indentation issue in vmd_shutdown()
 > 
-> Move the signaling of no entry masking into the MSI domain flags, as that
-> allows setting it on a per-domain basis.  Set it for the Xen MSI domain that
-> uses the pIRQ chip, while leaving it unset for the rest of the cases.
+> On Fri, Jan 10, 2025 at 03:01:49PM +0100, Roger Pau Monne wrote:
+>> MSI remapping bypass (directly configuring MSI entries for devices on the VMD
+>> bus) won't work under Xen, as Xen is not aware of devices in such bus, and
+>> hence cannot configure the entries using the pIRQ interface in the PV case, and
+>> in the PVH case traps won't be setup for MSI entries for such devices.
+>>
+>> Until Xen is aware of devices in the VMD bus prevent the
+>> VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as any
+>> kind of Xen guest.
 > 
-> Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
-> with Xen dropping usage the variable is unneeded.
+> Wrap to fit in 75 columns.
 > 
-> This fixes using devices behind a VMD bridge on Xen PV hardware domains.
+> Can you include a hint about *why* Xen is not aware of devices below
+> VMD?  That will help to know whether it's a permanent unfixable
+> situation or something that could be done eventually.
+> 
+I wasn't aware of the Xen issue with VMD but if I had to guess it's 
+probably due to the special handling of the downstream device into the 
+dmar table.
 
-Wrap to fit in 75 columns.
+[1] 4fda230ecddc2
+[2] 9b4a824b889e1
 
-The first two patches talk about devices behind VMD not being usable
-for Xen, but this one says they now work.  But this doesn't undo the
-code changes or comments added by the first two, so the result is a
-bit confusing (probably because I know nothing about Xen).
 
-Bjorn
+>> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+>> ---
+>>   drivers/pci/controller/vmd.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+>> index 264a180403a0..d9b7510ace29 100644
+>> --- a/drivers/pci/controller/vmd.c
+>> +++ b/drivers/pci/controller/vmd.c
+>> @@ -965,6 +965,15 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>>   	struct vmd_dev *vmd;
+>>   	int err;
+>>   
+>> +	if (xen_domain())
+>> +		/*
+>> +		 * Xen doesn't have knowledge about devices in the VMD bus.
+> 
+> Also here.
+> 
+>> +		 * Bypass of MSI remapping won't work in that case as direct
+>> +		 * write to the MSI entries won't result in functional
+>> +		 * interrupts.
+>> +		 */
+>> +		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
+>> +
+>>   	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+>>   		return -ENOMEM;
+>>   
+>> -- 
+>> 2.46.0
+>>
+
 
