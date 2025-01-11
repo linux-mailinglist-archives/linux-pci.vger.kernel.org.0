@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-19644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19645-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3080EA0A339
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 12:09:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDE3AA0A397
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 13:25:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F418016B0A4
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 11:09:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A83E3A6147
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 12:25:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 113CF18FDDF;
-	Sat, 11 Jan 2025 11:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD20198848;
+	Sat, 11 Jan 2025 12:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdFNufYb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YcDfaBly"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05E71917F9;
-	Sat, 11 Jan 2025 11:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE51922E1;
+	Sat, 11 Jan 2025 12:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736593786; cv=none; b=gb7uabl42Qb9TijNxcB+pkRYenZULhCzh9tg8k5HiZYLCYkS09lHa7uYSPVRbFrU7EEwBtuEAM+Gz76py2fwYa+PfLugpchlkaH6yZElHM0E6ahdpo7RnSoiMDBUnpsrOR4qdKYz2D3UEiUMkqnkPw3QOl9i/AjW6gwMRnFCMQQ=
+	t=1736598303; cv=none; b=dh/y93PnkGtNPQOk9rCtpEZp8AnjD37FW5pNxc9xvMlJi8opgScl+hQppyGZFpH4eiaq1BbDYjinxeiBtalosz04XQ5AVW0slCNTB6w5CMIEZVhXZqcmwton8n0dXH3LL8Vown5/QWAszu+InHUidYJtYOrpWV7cIfLgXMog7Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736593786; c=relaxed/simple;
-	bh=EPRt+kkcZBvWzhnBv8y7+iUHRzGlu9gQ1lTAJLYHr68=;
+	s=arc-20240116; t=1736598303; c=relaxed/simple;
+	bh=A/8dZvb4PodA5W5f8//xP4ydt9geI9IEAZNNNqDbBBk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FrW6w2T0aG3hWX19Hm8MeXCxJk9+Dp/YbxFRA9ok3KbBUDcooBAp2nGVfBbkPZW9WQiVS6MAT3Yx2D2nTrY9N5Jm3I68iYydNG7vxgR1120pIkg0bf+mtarkLzeGtGUSSjCuXVcLffkZHE+YquUHB0yh4lfI7+cEz5gNUJ6VYZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdFNufYb; arc=none smtp.client-ip=192.198.163.13
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIV0W2tgAbwGpmxHGpR+lpYdPFeD368hnQ/ah1SQvB7EeRRA6dz8gHYKLAUbR9h6TqsZW37Cp/p9reMNMtiLRosBLHX1hA23FKUtoRlADv4ML6vfGcT5EI1Ez15n7T8VpqhsZP+jF2JHxAboJjeVUNfJemF52VEqejT4rd8tXTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YcDfaBly; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736593783; x=1768129783;
+  t=1736598301; x=1768134301;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=EPRt+kkcZBvWzhnBv8y7+iUHRzGlu9gQ1lTAJLYHr68=;
-  b=kdFNufYborH24+L5R5XKIFSBjbS/lQu1jJyD4U7cYjjw9YYKvmLGeW2z
-   0bRTPz2wL8s+vGlixlgpayGVHQauuBCFOhZOmaiX26y1p7VnllfCpk1BR
-   lsgoX4RZLW5qWWP4Yg1ErnG7motcoE89QhxtZkX5IjOu4ApP6yqPrfNWC
-   2xj/Raz7k8detE39su7zAizjCeKAdq0+Ns2C0Jw0Xv5Tdi3DvjFvhZx8s
-   /owmIkvLTBfUea+civO+HrGfvlbdn1eb059fK380r9tczwF18Y3/PAOf2
-   ytLKw1R/Nl1Bn9VU9RtAebhPdJP+A9wlmlw59wUBj9jFSw7dLa8eHGsS+
-   A==;
-X-CSE-ConnectionGUID: TKHh4Z0xQGC8/1TMOLKE+A==
-X-CSE-MsgGUID: +p8YwKNATBWvGkOox2CC/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="39698422"
+  bh=A/8dZvb4PodA5W5f8//xP4ydt9geI9IEAZNNNqDbBBk=;
+  b=YcDfaBly4P8jB4e0lZzQ435U8eBYocjlxC5FUroKVJyGAA1hr/agbpZG
+   KrPfkqJSz/aTOfW8Akn5Z6Kl0cEbHksYYvSu5QitF4vSOwuXvQFZVMBcW
+   x96/bmuPsiZhmZK9WZY+eXo5gxUt4caraYHBWiqnPpFDQ/v+Kb2tES26v
+   tXktuRosOmNx7x3c9qU0pOOX4ik5w6X6Jwp9ARyt28npNHI2HjWvFmFPI
+   5/a5wmxreaPxhD1bxjCpBL5feUR3+1FLuyoZBiVLYvxu2eFthrsKm8GSk
+   CBPuT4mukP82XaMlNjIUklb0f5u6TzCAyHgfd8YyuI7ia/yougGw7lxuS
+   g==;
+X-CSE-ConnectionGUID: bpYfLJM3TXqNk2+5WKLCDA==
+X-CSE-MsgGUID: NDJOIFJKTrSP0c7oX4DNuA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11312"; a="36568764"
 X-IronPort-AV: E=Sophos;i="6.12,307,1728975600"; 
-   d="scan'208";a="39698422"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2025 03:09:42 -0800
-X-CSE-ConnectionGUID: tgfbQNgiRQWNL1IdbkLGug==
-X-CSE-MsgGUID: zWHsp1HuRgmlsZU4b7yXxg==
+   d="scan'208";a="36568764"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2025 04:24:59 -0800
+X-CSE-ConnectionGUID: s7uiThp/StuhE0Qw+ZroYg==
+X-CSE-MsgGUID: wIRlLujDR0CozHf5o3+rzQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,307,1728975600"; 
-   d="scan'208";a="104150974"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="127260895"
 Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 11 Jan 2025 03:09:39 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 11 Jan 2025 04:24:56 -0800
 Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tWZN2-000KZD-0q;
-	Sat, 11 Jan 2025 11:09:36 +0000
-Date: Sat, 11 Jan 2025 19:08:50 +0800
+	id 1tWaXu-000Kcp-06;
+	Sat, 11 Jan 2025 12:24:54 +0000
+Date: Sat, 11 Jan 2025 20:24:15 +0800
 From: kernel test robot <lkp@intel.com>
 To: Roger Pau Monne <roger.pau@citrix.com>, linux-kernel@vger.kernel.org,
 	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org
@@ -74,7 +74,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>
 Subject: Re: [PATCH 3/3] pci/msi: remove pci_msi_ignore_mask
-Message-ID: <202501111839.HXJGe5FL-lkp@intel.com>
+Message-ID: <202501112048.6yCFh2ma-lkp@intel.com>
 References: <20250110140152.27624-4-roger.pau@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -100,36 +100,45 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Roger-Pau-Monne/xen-pci-d
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
 patch link:    https://lore.kernel.org/r/20250110140152.27624-4-roger.pau%40citrix.com
 patch subject: [PATCH 3/3] pci/msi: remove pci_msi_ignore_mask
-config: arm64-randconfig-003-20250111 (https://download.01.org/0day-ci/archive/20250111/202501111839.HXJGe5FL-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501111839.HXJGe5FL-lkp@intel.com/reproduce)
+config: riscv-defconfig (https://download.01.org/0day-ci/archive/20250111/202501112048.6yCFh2ma-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501112048.6yCFh2ma-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501111839.HXJGe5FL-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501112048.6yCFh2ma-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/pci/msi/msi.c:288:40: error: incomplete definition of type 'struct irq_domain'
+   In file included from drivers/pci/msi/msi.c:12:
+   In file included from include/linux/irq.h:23:
+   In file included from arch/riscv/include/asm/irq.h:10:
+   In file included from include/linux/interrupt.h:22:
+   In file included from arch/riscv/include/asm/sections.h:9:
+   In file included from include/linux/mm.h:2223:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/pci/msi/msi.c:288:40: error: incomplete definition of type 'const struct irq_domain'
      288 |         const struct msi_domain_info *info = d->host_data;
          |                                              ~^
    include/linux/irq.h:130:8: note: forward declaration of 'struct irq_domain'
      130 | struct irq_domain;
          |        ^
-   drivers/pci/msi/msi.c:604:40: error: incomplete definition of type 'struct irq_domain'
+   drivers/pci/msi/msi.c:604:40: error: incomplete definition of type 'const struct irq_domain'
      604 |         const struct msi_domain_info *info = d->host_data;
          |                                              ~^
    include/linux/irq.h:130:8: note: forward declaration of 'struct irq_domain'
      130 | struct irq_domain;
          |        ^
-   drivers/pci/msi/msi.c:714:40: error: incomplete definition of type 'struct irq_domain'
+   drivers/pci/msi/msi.c:714:40: error: incomplete definition of type 'const struct irq_domain'
      714 |         const struct msi_domain_info *info = d->host_data;
          |                                              ~^
    include/linux/irq.h:130:8: note: forward declaration of 'struct irq_domain'
      130 | struct irq_domain;
          |        ^
-   3 errors generated.
+   1 warning and 3 errors generated.
 
 
 vim +288 drivers/pci/msi/msi.c
