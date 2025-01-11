@@ -1,134 +1,138 @@
-Return-Path: <linux-pci+bounces-19642-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19643-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92D97A0A0EE
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 06:02:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1CC9A0A0F7
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 06:20:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 971F73AB32D
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 05:02:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5088E188E22B
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2025 05:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B37322A;
-	Sat, 11 Jan 2025 05:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 346511547FB;
+	Sat, 11 Jan 2025 05:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C0zezy5P"
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="bOfXdCai"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B47E2114
-	for <linux-pci@vger.kernel.org>; Sat, 11 Jan 2025 05:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B711154449
+	for <linux-pci@vger.kernel.org>; Sat, 11 Jan 2025 05:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736571738; cv=none; b=tPcxpuHjW0i/310XZT/I/VseuBiT54gqkeQ5UKuhvyVOBJkFM6md2OluHuA2yJr9V1+S6Hu/lIECx0ec3vurmZpxn1fgjjHj8Hmg5KqXkOwkPo5YnsQwKCbdYV7YweXNHiZlYD8/9m/FOvXfOiK6JKLsCT6y7TsWLzIfxFMjDAU=
+	t=1736572845; cv=none; b=MFQD9pz1dWpUrvJ7dL3E/66ftwDbUvOOKU9t18z0+wm8RtWKhNo1h710kBnm8iy9ZR62dr2gl0r/uSzzDMWhSMrg3tcEINI8uZv4fNdjTd/WITa08gjrGCcUpWfdOcPwMP4BhDavHpzheTwhVHC6mlbZM3M3kOdO51IjfBlCT1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736571738; c=relaxed/simple;
-	bh=lXQ+4fameH3M8MHVRJJmDZ81eufW0DFRjZ9ZkSbUcN4=;
+	s=arc-20240116; t=1736572845; c=relaxed/simple;
+	bh=XVHylNyHspfxsR5nvSnwfDtdr3rAkF+h/5oVprq5HmI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WVA4qRpEzwZ55VGOVgq55wyMZR/bcZHUDYjlsrcErHw39JK/L5wbfaG3gu38glb/y7u0IDRhtLqzRYxRuXgc5EXmNNkCUmfSxsW+1Q0XHXlXrZk2fiy//M1M9fel0OeYMrAiLL9n6nHRMSRgT/8MFK70LK5sIvEV/vV561b/3xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C0zezy5P; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <bcb30b80-0902-4561-94f9-a6e451702138@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1736571726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=87PFbocV5iG/YEPJ261ZyupRxofHWTgUBw6ylFg04/A=;
-	b=C0zezy5PH3NjJJ3rja00SNNPSHRoK8WteCqC6PRIpIiAhISp3YUvWQ6F/rB5uExooUh/5q
-	P2EgIwDrZfl5AnTomUIUOUbdH0GAEdogAHNXGVJotDgyAgAaSj8KKZ/4nFsHh5KpBP06Dd
-	B4MOur/ybskGrVPM4vzws7U/dGEGsbw=
-Date: Fri, 10 Jan 2025 22:02:00 -0700
+	 In-Reply-To:Content-Type; b=IDyNsIAGcXYJUFGAmnLRcJk1Wn8baCgENU4AncK4OqHo2fcoFPdDcWz2kINIaFU34CbA70K4xtwvv9A0nlG20LyVID+OPAi5VNc/TA/YMBkszV86coIPm2TNZ8fVz35gNRkT3ZyPjo+xphCvmk3d6eXMdny0dnGm/ju8Y95i24c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=bOfXdCai; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21628b3fe7dso46121995ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2025 21:20:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736572843; x=1737177643; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pK2F+RBTaMSDxoEAtE8SM5XYDPlI0601AzyscCoxm2I=;
+        b=bOfXdCai1SgljamBeP8QyR/JOQ4FbYnxuK7GlXHkGsDCeuRp9U+8zmW3OJUq30S6B1
+         SLa6ui19ir6Lii6Trn9iWYfLppdt2W2DT2w6uVPu0JmvrGjHdcHfvfUrxUEcU8uJkXXL
+         xL/mJqYiE8jR0eGvLV3CTmAFFoj8P0gn+JzbOc8tBxXMdCQwURAHVbMQTA6y3sf/fsrC
+         XgLfftoWAKAE0rZKBAgYfjfI7C5co3rTYyLJZD2h2FcVghQVngthc0nH6jU9roNHK12Z
+         wgCM/ETTekDHCgV/LyvrzNM1jNLyws6i6E1Km7UE513DdwrEWS8JILzSAYFUjCM9ksyk
+         jLog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736572843; x=1737177643;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pK2F+RBTaMSDxoEAtE8SM5XYDPlI0601AzyscCoxm2I=;
+        b=up9oHS2pzVn3nzeYpJ2YZbgXKjEOt4WHgpXemw7IqcFJkV34OU06m/6/QVM+iJ/6aN
+         Goac9zsD6Ttr7qdSQLrPpdWrYNW+ywWuM28mZy6Mut/0I1i5WIYTrT5/kdBcWbke0fOk
+         VRX6LTtnegdylJduWsWJTqiAmBiM80CFUtNyFVTwSKSFycjO8OF1nRs9TSvo8uIKccye
+         x+1zUPdm+ZiUQdTgXCs31WRc5fWJMPphQiTx4obyk4v/fjRedGiZHHM5h/oAsVSnEzZ0
+         ZXL/1sNu50H74xyRTwdsPQ8mhxCn7c/cL6WgjEkvtwRcny6tqmqyPbNvwwjbx3DBxeW2
+         gOcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJg2Sw6RHErRMoSem5tMS4MY5X8ItMW4lwePR8sgNxqRcW8cYfZlJ6U6XYPcXdAEYoWWK5icCQIW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5KeBnLh9bPPiBDqXfTh90Y+3/ylD1XBQNINa5AzdMbA8ksAWP
+	/RUGigzeuPgjXPcIviagO1uShFq2eXBgV8G4GU+w2ADWwJ3lz+hOPOJXVJve5BVExgslooKx10B
+	iYZU=
+X-Gm-Gg: ASbGnctUIo0YZS/mkLaxUFqJcdlVOKAMru56W5cWC+fW+tSNpfqT4GEbnrmctgrCzCN
+	KfOM7nO8gOl6DLDzPjwulbdMifOiny1QMDLqr2S0sfHVcodoo9ukZon0SNwrQKgrVKGmtL7jQqS
+	/lO3KesuXZQQjgKi2NAjZ7Lwz6J0KeNdH9Xh61BDm6LaMKiPoV8RYdvCPzb83TuoCRrSuldncxL
+	1j2pLZjwzUBzdrTX7PG+iMqbg1n+id6N8t9aWnElGM4ChpUFjoIwKoFDoLrJuiyyGU=
+X-Google-Smtp-Source: AGHT+IGBR3qO11ykBQufc7YwvifpdR2xYxMPWXbJI07PD0vx+LDE0o4MSNzVKFuQj6IitF6hcz/7jA==
+X-Received: by 2002:a05:6a00:858a:b0:727:d55e:4bee with SMTP id d2e1a72fcca58-72d21f112c8mr16427488b3a.1.1736572842758;
+        Fri, 10 Jan 2025 21:20:42 -0800 (PST)
+Received: from [157.82.203.37] ([157.82.203.37])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a3c259314b1sm3095729a12.9.2025.01.10.21.20.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 21:20:42 -0800 (PST)
+Message-ID: <5f689383-055e-4140-8b87-1f1fa92634e8@daynix.com>
+Date: Sat, 11 Jan 2025 14:20:39 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] vmd: disable MSI remapping bypass under Xen
-To: Bjorn Helgaas <helgaas@kernel.org>, Roger Pau Monne <roger.pau@citrix.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-pci@vger.kernel.org, Nirmal Patel <nirmal.patel@linux.intel.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250110222525.GA318386@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: Fix config_acs= example
+To: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20240915-acs-v1-1-b9ee536ee9bd@daynix.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <20250110222525.GA318386@bhelgaas>
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <20240915-acs-v1-1-b9ee536ee9bd@daynix.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Hi Bjorn,
+Hi,
 
-On 1/10/25 3:25 PM, Bjorn Helgaas wrote:
-> Match historical subject line style for prefix and capitalization:
-> 
->    PCI: vmd: Set devices to D0 before enabling PM L1 Substates
->    PCI: vmd: Add DID 8086:B06F and 8086:B60B for Intel client SKUs
->    PCI: vmd: Fix indentation issue in vmd_shutdown()
-> 
-> On Fri, Jan 10, 2025 at 03:01:49PM +0100, Roger Pau Monne wrote:
->> MSI remapping bypass (directly configuring MSI entries for devices on the VMD
->> bus) won't work under Xen, as Xen is not aware of devices in such bus, and
->> hence cannot configure the entries using the pIRQ interface in the PV case, and
->> in the PVH case traps won't be setup for MSI entries for such devices.
->>
->> Until Xen is aware of devices in the VMD bus prevent the
->> VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as any
->> kind of Xen guest.
-> 
-> Wrap to fit in 75 columns.
-> 
-> Can you include a hint about *why* Xen is not aware of devices below
-> VMD?  That will help to know whether it's a permanent unfixable
-> situation or something that could be done eventually.
-> 
-I wasn't aware of the Xen issue with VMD but if I had to guess it's 
-probably due to the special handling of the downstream device into the 
-dmar table.
+It seems this patch has been forgotten for a while but it is still 
+valid. Can anyone take a look at this?
 
-[1] 4fda230ecddc2
-[2] 9b4a824b889e1
-
-
->> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
->> ---
->>   drivers/pci/controller/vmd.c | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index 264a180403a0..d9b7510ace29 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -965,6 +965,15 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->>   	struct vmd_dev *vmd;
->>   	int err;
->>   
->> +	if (xen_domain())
->> +		/*
->> +		 * Xen doesn't have knowledge about devices in the VMD bus.
+On 2024/09/15 10:36, Akihiko Odaki wrote:
+> The documentation used to say:
+>> For example,
+>>    pci=config_acs=10x
+>> would configure all devices that support ACS to enable P2P Request
+>> Redirect, disable Translation Blocking, and leave Source Validation
+>> unchanged from whatever power-up or firmware set it to.
 > 
-> Also here.
+> However, a flag specification always needs to be suffixed with "@" and a
+> PCI device string, which is missing in this example. It needs to be
+> suffixed with "@pci:0:0" to configure all devices that support ACS in
+> particular.
 > 
->> +		 * Bypass of MSI remapping won't work in that case as direct
->> +		 * write to the MSI entries won't result in functional
->> +		 * interrupts.
->> +		 */
->> +		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
->> +
->>   	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
->>   		return -ENOMEM;
->>   
->> -- 
->> 2.46.0
->>
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> ---
+>   Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ee2984e46c06..5611903c27a9 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4604,7 +4604,7 @@
+>   				  '1' – force enabled
+>   				  'x' – unchanged
+>   				For example,
+> -				  pci=config_acs=10x
+> +				  pci=config_acs=10x@pci:0:0
+>   				would configure all devices that support
+>   				ACS to enable P2P Request Redirect, disable
+>   				Translation Blocking, and leave Source
+> 
+> ---
+> base-commit: 46a0057a5853cbdb58211c19e89ba7777dc6fd50
+> change-id: 20240911-acs-3043a2737cc9
+> 
+> Best regards,
 
 
