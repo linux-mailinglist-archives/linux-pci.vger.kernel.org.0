@@ -1,78 +1,80 @@
-Return-Path: <linux-pci+bounces-19649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5B7DA0A9AB
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 14:39:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60893A0A9B0
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 14:39:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B19AD1885B54
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 13:39:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4480B1885DC1
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 13:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877AA1B6D0B;
-	Sun, 12 Jan 2025 13:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1C11B85D3;
+	Sun, 12 Jan 2025 13:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plXFvkcA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LLg2OqoW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6921B6CF0
-	for <linux-pci@vger.kernel.org>; Sun, 12 Jan 2025 13:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0A51B6D02
+	for <linux-pci@vger.kernel.org>; Sun, 12 Jan 2025 13:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736689153; cv=none; b=bWQMxFlskpnJTEsuTm+5R59SnYEN1VB2/0uPmgwAK5ZvLo/1V+ob6Ew6iSjOXTn8XS/kVRxNZdVFnTUL1NgTHfKrhH3X2M0p3mxGq7l3otyL33VnkJCp6h85qM+dS7MmZuKG/jjqZxOHVEuA+DfMRU4cS8X1O1xk4bPAgTYSPLQ=
+	t=1736689155; cv=none; b=bkIMEWhvUHmD97YDC0OUh38W54GwgLWf/Lx9eQdWZCHvHw8e7SiEVAZSWyvQ6jLsh4cbydgUI+8uS5X1CnkOONkaFK75M7exkNXxrTOadlL6dY0da8B2Hvd3qMdeoWSrEyYchS6dk7wARq3kVNty/apVwJFbohERnB2LBthbkio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736689153; c=relaxed/simple;
-	bh=x+i17n32J9BE3xJWGZWzaweD1AZbhL+oqQjbrPfkdJw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OOH9O6q4//DPDBtaKIOpeXg4QQFIfIgqTFdEkZwkB8X94Jv1n1CpxhXe+GLmfxeSsYH5eXugqMg9KGtxDLRViR+fEozAqxWWB2uKNQy0tCAlPi/lalzQnFLu7G2j/9/F0ay/iaPG1KGdZIHg/Oc7BwK+9gruJmim+xF/SmlUHco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=plXFvkcA; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1736689155; c=relaxed/simple;
+	bh=O/NOpD3CQ/1x8q7Y6t4lRJsHtiSHlvyOKne/i9Zp+mw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=P8DlduIgyP2txOAzrj25nZVSkVpw2My+Y/g4eqCs9xQFZZqMh9cXb4Owfp1Vfaee1VYMdNG8h5e5OKu6QFevTN65MCwo9r0sw69/xIpqPVw6hCBbCRc6aWLrhB5HhKB7kK8zP2L4PmTgGZ+LEMnHWX1F8/Z0ezsepwf9kZ+K7rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LLg2OqoW; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4361aa6e517so4502015e9.2
-        for <linux-pci@vger.kernel.org>; Sun, 12 Jan 2025 05:39:11 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-436381876e2so2936975e9.1
+        for <linux-pci@vger.kernel.org>; Sun, 12 Jan 2025 05:39:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736689150; x=1737293950; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W7Ty18ut1e9jMhl/AkSFuE2MdVzmvveKnbQmIojHQTU=;
-        b=plXFvkcAr08Itb+/GUOkY8J0o8txl5R0vmZscL5/TEdvj3rsLTBzzI8yjUQNbIMD5w
-         kpzEOOR/dTZO9+amLQZOleZwUPlpl3353len9xsaZegznCQgJcsOWNDHw8ZpLiwF6gPE
-         dYZvTKL2L4JTHUChX63CA94+EOecNwPkwbaspupDiyvk8z/wL9EP8mNSL74RT4fDh12g
-         mCwCmOTpx/QW/WOCb9ivM7FfqwbAYMruHbrn6sriTlTHJ3mh7Qknsm1AZR3m+A8HtZw5
-         oIaAXB4+iejsWB/zBU2RbVR46l3hJTwmUM7FR5cT1DUlTKvx8guIoWAxh0+4DuUfm+VR
-         31Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736689150; x=1737293950;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1736689151; x=1737293951; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=W7Ty18ut1e9jMhl/AkSFuE2MdVzmvveKnbQmIojHQTU=;
-        b=wn/m5A41lAghemMh6DMs5tfagopmZ/bWTzWVwPfZHvcKL3yJkjsFe0XUNeSBogRjiC
-         DZP/Eeay4WG9wh217jWd27w61+iG3YktZaW/VaA+lYH8xdqgU3Ugv2MD3ExWxwtcRsdg
-         tLRuZJgzYIcSJgsALaLpmNFwwZ3yq/8we5h3UissIDKiqzADigewFALl8AxLCmXqq/rJ
-         3FNzV9VjFnoLkU5lMHsr81xskJxxOKTvFTFHoZnkRdoR43JuGQ48HLqEv8OoTLTUOjFL
-         Pv6D1iKsi5LdgEQoyVvgEARWr7PmiaJiQWCWvHFp46Ln5Lwp/aWyotdUOKqnIkGIUuNp
-         bi0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWrAOJUsg5FXuxcNw2WDo0s+hE0dkb7V81iZ3PZkUr3YdRtpkipLtJfLycQ0PuIJu8pKVO0WkZE45Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF/KHkYSkCF/OsEIBhc1fzaegdLhe7JspN0epYzupogvDZwRi0
-	PiVMVMKXxx+Ww64IWRvq/l9Hz/U4XHEA/TfYm7SRMViLJ2COGJwJ7WdmzMuA6RQ=
-X-Gm-Gg: ASbGncthP4KYsRiDD/ewvdY/1hCMRnzGBrQH+AlddIDO7093ZgQFEkt1S3FkCKZHDGb
-	RQcSbA7PP9XhGU11/T2k+qKKH688qPmH0VlFhYz8CErG/aM2q1DhC3mXk/boQUEbTgziwPFOZle
-	By1S6TFmXqfGwJ+F5Wa1OOjL1qSV0RlaetQEuW1niHNCMvqFJ+U5AHqrg7Lftj8YVkaVXnzmfY0
-	BZO+e0G2QIiCbK+x/zPkqxpJZ/42PGL1cEx7pVGCdE7GLbrkhfvtpROR3VVldHlZ+EykI7b
-X-Google-Smtp-Source: AGHT+IHhfop11bEN74u0ET9V0abdMLDcSBys+gSbyZcc1Oyi50RffMGbjeAYxlnbPrRkwqyrU0ID3Q==
-X-Received: by 2002:a05:600c:a09:b0:434:f1d5:144a with SMTP id 5b1f17b1804b1-436e2557087mr63456395e9.0.1736689150005;
-        Sun, 12 Jan 2025 05:39:10 -0800 (PST)
+        bh=nQ3Whnc9k1Q+1OLPMm8+x6IOLTpBlsEtmK8zovMkXoM=;
+        b=LLg2OqoWo331EgOB/4golxzlFLg90rauHU/W6xHlKbTNLq26bMQFU9d7JzUSSFIjUT
+         18UKCIojpzCo7txOInWhsEq5nRRj+QIQoyasUw8I9Pv+aIyXoEKT7CK2v5s4F1shv+4u
+         IfSOO2gRRsSaM+4HPwHZaFFO/MUHkaZ2sOE3g+ciIUOhj7z3PzFx/aRC69KVYBMzcPuO
+         LNwIivb/QouNvhxjN0sieX/YEKgBWEL0x6G6W2Zc0CgrB8UdLnjKUW0R1YVN8AC+sCdI
+         9CGedP1oqu25zoXfLCDAQ6wn6T7lkB+NM2vV0NtC6GrOE4sKpfSMc7CzNwtFAxGqIDaw
+         EKfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736689151; x=1737293951;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nQ3Whnc9k1Q+1OLPMm8+x6IOLTpBlsEtmK8zovMkXoM=;
+        b=LE9H1e2TzEVRrvFfnlEOKt+qQB/ekVNSMvp05/qREXpSZfiSqkAVJXPYdyVHJNfGcG
+         7XS9GKQATWmZhETlgLlpLxiQ3JuuoJVkOxo4Son7nrCqwLEHb2GGj4mlRKo3LZe1sKUj
+         CwLbj7mVQ3MALZTdPdadGMvLj0aHJsABoLt0bJ6HnD8JEt63u2zbbGRm/9jI4Sy9O2TW
+         BdDsjFvTaBo3S/v9/UHdpfki4MzQI41xrlTqfDgMGNXzCkRdFQ3OihK24ZEElmiyk21z
+         7EbLLus/3WgIWk+LZvwlDq2ijrcDDxU3gbmU5x+gs0j/rh0SHX0RIU8k3UBDMZWIEQXP
+         oebQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHDCA8xGsfQyZnm2AJNQl8paeHMK+MKDjPpvAFyNHMnRwCA+m1z8BoPOxWKe3uao0eOGcLeqy91u0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5dv7oSreQHAdYvft2oefmBZkeGe0K4BEzcDLk3HK+3zlklcKt
+	F7mTNFUbJK2Z6l+PBeEazXjxE6E0jJmwOW8V4P1eTrtQhCcMoE/I7vnrcszDCNE=
+X-Gm-Gg: ASbGncvg1DNYWakcFb77NlUkjJyqcST2i1OLMpfYTCIlbfYeUTkwlXn5gArMvVRBTS2
+	we/K+sJhDGPbs8xJiEV97CBGYR0skTv1vAgFGxaAGWf63RekiBSd0B/ue8ty28352BdTqYm+Bka
+	MlWn+VUv+81L6iqw4oNpy7J/CLSEqTEmXUK7cGsHwanKbeAR+eRW060DiRJClLdEa/n+VLt/wU4
+	HmJ17FryBmQhZf7ZmjCkStKt8X/I6e/2gaAURjZYXXtQ2QsKT9Pq2h29mlggU+AtcXNDh3Z
+X-Google-Smtp-Source: AGHT+IHlqQUT4nJ5SQNBM6sybXZwL+bzxz0Y9M1+BN250gX4iG9BJx5WOU34PwgsHmMccXztrJhIFg==
+X-Received: by 2002:a05:600c:35c2:b0:434:941c:9df2 with SMTP id 5b1f17b1804b1-436e272c89cmr62461175e9.8.1736689151481;
+        Sun, 12 Jan 2025 05:39:11 -0800 (PST)
 Received: from [127.0.1.1] ([178.197.223.165])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c006sm9581924f8f.46.2025.01.12.05.39.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c006sm9581924f8f.46.2025.01.12.05.39.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2025 05:39:08 -0800 (PST)
+        Sun, 12 Jan 2025 05:39:10 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 0/2] PCI: Simplify few things
-Date: Sun, 12 Jan 2025 14:39:01 +0100
-Message-Id: <20250112-syscon-phandle-args-pci-v1-0-fcb6ebcc0afc@linaro.org>
+Date: Sun, 12 Jan 2025 14:39:02 +0100
+Subject: [PATCH 1/2] PCI: dwc: dra7xx: Use
+ syscon_regmap_lookup_by_phandle_args
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,10 +83,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPXFg2cC/x2MQQqAMAzAviI9W3AVEf2KeJC1akHmWEEU2d8dH
- kNIXjBJKgZj9UKSS03PUMDVFfh9CZugcmGghrrGOUJ7zJ8BY5F8CC5pM4xekYe+a/uBiJmh1DH
- Jqvd/nuacP7HF0+1pAAAA
-X-Change-ID: 20250112-syscon-phandle-args-pci-d97537922ddd
+Message-Id: <20250112-syscon-phandle-args-pci-v1-1-fcb6ebcc0afc@linaro.org>
+References: <20250112-syscon-phandle-args-pci-v1-0-fcb6ebcc0afc@linaro.org>
+In-Reply-To: <20250112-syscon-phandle-args-pci-v1-0-fcb6ebcc0afc@linaro.org>
 To: Vignesh Raghavendra <vigneshr@ti.com>, 
  Siddharth Vadapalli <s-vadapalli@ti.com>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -98,44 +99,101 @@ Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=666;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2790;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=x+i17n32J9BE3xJWGZWzaweD1AZbhL+oqQjbrPfkdJw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBng8X3fpKo9Fo2SJTRBmFQDvDSbyoSOE5+H61jh
- WVIyJ+vkH2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ4PF9wAKCRDBN2bmhouD
- 1wnKD/4gxTfv+tXPYb5SNsiZrYl54aARJsvzHavNU/1Oep+K0WSyRw+jj2XwM3C+OYsw4RhApPR
- 2OoXL0k+JjPCwoDdX5E3hGTdIpJR3TrixOEteHnc3xs2lxeeHh3nt9iRGa2ZjMlE+5p12BDy8K4
- hnhqOE8qIT5+j7vsJwTJt/7nQqwgCvBRY9JvlaKfc1TRRIY7Y4dOzvSSKhjA/KQrO18YaybJ3qq
- Bnace1Td91tf1hDQwMy6d/pmermVgtYHqtY84HNY7Rcqyul7VtiTmoXXPSqruEIKxupAoJie3T8
- hHv1Lj0AeEV3geNQ8/CviDs5+fHAt9ybjCdLevrdhunHcEic2U9dlpx0+Dn1rthZJj3oeXMdMno
- iWT6sI7VL+wUD7SrQBWQlst3HfwCKkQqj03Leh90PKuvyIeRaqgp+ZokavbtdyO4Mpd0gMgrL7Y
- gNBtIAMICO559+r6VpoXytH7OdIJKJ0Z7Ohn+sKk7PBh8kHMkC3+JTjNtSWQhyDNOcmh7Tu42DV
- 2njcZXMQksL97QcbGfAcgi8U+WsG3HeITLzJVuNq8e8YHOuyjLNHhmeJ/axSTjMc0n5uiT61P4p
- 6Il0Pk1UozPnyoc+VNNbPIYwGwkJ3S//dY8kkyV+srFvKF8rARseRo4CqNKvnnfVky4ozzDmdXA
- lSYkUsupahUkEmQ==
+ bh=O/NOpD3CQ/1x8q7Y6t4lRJsHtiSHlvyOKne/i9Zp+mw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBng8X4L014og7m5GFccNS9Q1a7ef8G6dskIt37N
+ AtuFjYZz3GJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ4PF+AAKCRDBN2bmhouD
+ 1zdhD/9GJ5EK0dF1XS8FiJAKuNvLC2/kqb5mlabJRSMHZdEJCZ/GL7iydkfU9R1IKDjA66xKDmm
+ hlNvjnRKN/hieQdFKqBKkIaX7u1J8XN81DlqeApDDVAvXODx9YSIhO9ohNVyS2TKVr8ijveqHRV
+ xf1hkYIqg3PI+4hoBI19dAtKTe5fMuYqNGAef1GQif0M7Ft7R4pwIy8GOzXcwEwN/w2sxCihHI0
+ dFdgfMR8fpJlfVyXIzExgvbuAQHETHiDkWsEMuFk026YaBiYaNFUUySyGVGlkMOA9W6sDHzBTVd
+ dMq7AR+B+9ieQF6+urHXKTHdEulrR6e5GzgbtB/HP6Lg7moaY3WQWo55ApZSRtX3pIKxpkCCR5a
+ sVwl4OKXXouOWzWCjNZJtSHMln7mbZL0AtDRu3woJlZLn3gfL+EPeSBbJUnzgUcOIfZ9eo8GAsG
+ ntmiIBueXybLz+sA/pd+O1rFk5mWLdE9/SO4XfQmTTAcUSw7ZgxdlM1gGc3f7BNNSZZSBSRunX0
+ 2YlqC5NDhKq0MCNb9E3HwtK5DDgD0VRrfxyjd7wpqx/nWmLxq0+A1CtnkXo5AKgDBofZrafaiPD
+ BFSuFhJASUudUf8dUahKZZsyJMXG063citE9ertMgorxFBCJvwmvganrycsTWi47bthL/d4KAxB
+ REoi4dl1sllDW8g==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Few code simplifications without functional impact.  Not tested on
-hardware.
+Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
+syscon_regmap_lookup_by_phandle() combined with getting the syscon
+argument.  Except simpler code this annotates within one line that given
+phandle has arguments, so grepping for code would be easier.
 
-Best regards,
-Krzysztof
+There is also no real benefit in printing errors on missing syscon
+argument, because this is done just too late: runtime check on
+static/build-time data.  Dtschema and Devicetree bindings offer the
+static/build-time check for this already.
 
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (2):
-      PCI: dwc: dra7xx: Use syscon_regmap_lookup_by_phandle_args
-      PCI: dwc: layerscape: Use syscon_regmap_lookup_by_phandle_args
+ drivers/pci/controller/dwc/pci-dra7xx.c | 27 ++++++---------------------
+ 1 file changed, 6 insertions(+), 21 deletions(-)
 
- drivers/pci/controller/dwc/pci-dra7xx.c     | 27 ++++++---------------------
- drivers/pci/controller/dwc/pci-layerscape.c | 10 ++++------
- 2 files changed, 10 insertions(+), 27 deletions(-)
----
-base-commit: 2ddfbff29a2d45551e8c3e4f0c6b7c4618de24b7
-change-id: 20250112-syscon-phandle-args-pci-d97537922ddd
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 5c62e1a3ba52919afe96fbcbc6edaf70775a69cb..33d6bf460ffe5bb724a061558dd93ec7bdadc336 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -635,30 +635,20 @@ static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
+ {
+ 	int ret;
+ 	struct device_node *np = dev->of_node;
+-	struct of_phandle_args args;
++	unsigned int args[2];
+ 	struct regmap *regmap;
+ 
+-	regmap = syscon_regmap_lookup_by_phandle(np,
+-						 "ti,syscon-unaligned-access");
++	regmap = syscon_regmap_lookup_by_phandle_args(np, "ti,syscon-unaligned-access",
++						      2, args);
+ 	if (IS_ERR(regmap)) {
+ 		dev_dbg(dev, "can't get ti,syscon-unaligned-access\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = of_parse_phandle_with_fixed_args(np, "ti,syscon-unaligned-access",
+-					       2, 0, &args);
+-	if (ret) {
+-		dev_err(dev, "failed to parse ti,syscon-unaligned-access\n");
+-		return ret;
+-	}
+-
+-	ret = regmap_update_bits(regmap, args.args[0], args.args[1],
+-				 args.args[1]);
++	ret = regmap_update_bits(regmap, args[0], args[1], args[1]);
+ 	if (ret)
+ 		dev_err(dev, "failed to enable unaligned access\n");
+ 
+-	of_node_put(args.np);
+-
+ 	return ret;
+ }
+ 
+@@ -671,18 +661,13 @@ static int dra7xx_pcie_configure_two_lane(struct device *dev,
+ 	u32 mask;
+ 	u32 val;
+ 
+-	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "ti,syscon-lane-sel");
++	pcie_syscon = syscon_regmap_lookup_by_phandle_args(np, "ti,syscon-lane-sel",
++							   1, &pcie_reg);
+ 	if (IS_ERR(pcie_syscon)) {
+ 		dev_err(dev, "unable to get ti,syscon-lane-sel\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	if (of_property_read_u32_index(np, "ti,syscon-lane-sel", 1,
+-				       &pcie_reg)) {
+-		dev_err(dev, "couldn't get lane selection reg offset\n");
+-		return -EINVAL;
+-	}
+-
+ 	mask = b1co_mode_sel_mask | PCIE_B0_B1_TSYNCEN;
+ 	val = PCIE_B1C0_MODE_SEL | PCIE_B0_B1_TSYNCEN;
+ 	regmap_update_bits(pcie_syscon, pcie_reg, mask, val);
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.43.0
 
 
