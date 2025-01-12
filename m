@@ -1,197 +1,141 @@
-Return-Path: <linux-pci+bounces-19648-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19649-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90914A0A705
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 03:58:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B7DA0A9AB
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 14:39:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8AE381654F7
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 02:58:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B19AD1885B54
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jan 2025 13:39:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C93CE56A;
-	Sun, 12 Jan 2025 02:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877AA1B6D0B;
+	Sun, 12 Jan 2025 13:39:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nLnj8OoW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plXFvkcA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1998A2CA6;
-	Sun, 12 Jan 2025 02:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6921B6CF0
+	for <linux-pci@vger.kernel.org>; Sun, 12 Jan 2025 13:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736650698; cv=none; b=iO5CnXesJR9AxP142Nrme0V3GFrpjOa/ubr6rhwfTwrgY0E3A7rNa90sZelK7gci5OqBJs+ylKmcVSEnYuPIeHE3gyLpr8/DdLRSYPAiUSjDglPaNj04dt8uwXwtSSjsntMbrygsrGp2TR/NR3nvT4DSH5QYg2n1EieawmlrI9Y=
+	t=1736689153; cv=none; b=bWQMxFlskpnJTEsuTm+5R59SnYEN1VB2/0uPmgwAK5ZvLo/1V+ob6Ew6iSjOXTn8XS/kVRxNZdVFnTUL1NgTHfKrhH3X2M0p3mxGq7l3otyL33VnkJCp6h85qM+dS7MmZuKG/jjqZxOHVEuA+DfMRU4cS8X1O1xk4bPAgTYSPLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736650698; c=relaxed/simple;
-	bh=P6HmMuEanbN2AbJSaR7/q6oJzdrrcsN9KTJG/tRphkg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRvDAYHmacx5FaTq9r9eHl93ijUatHk8h2OK2Pb3IIcAPkXHvLxBBWA7G9QGEyBAnIjanA/71IBWyd8WetU+meZDeU8kZyAjRatu8M7KhP4qwj5Bbbedx2rKm5iiRCUY3sYfHYKzILegq3cSgGbnZxQC3qD8BV4oQp8uBSKPJVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nLnj8OoW; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736650695; x=1768186695;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P6HmMuEanbN2AbJSaR7/q6oJzdrrcsN9KTJG/tRphkg=;
-  b=nLnj8OoWYgW/4MCP54N3auTCHhVO+abdCi3uwtzyvkEN/IpmaJBWnr82
-   q1MNKI6iWAuO8f6uJ63VeHWusDu3E8zhMa0lYmsVPhh/Q62EzfCFMY3jC
-   nF0Q/A+DU3tZb4HfUBOz9u63Px00cvrez9rA1FJHaAdkpm83ioeb1VsG8
-   geXg+svRSUxl3eBbEJ62QEDNsKUPrkONao3FC2+rHRsYBxXyz0tOddG6C
-   WcjlmSY6bUNwYiucp0GXcWMC8cEdiiKLGmhe9n46UnG15jm5mZQbD+Jj4
-   48egnXoq5T7ueroD7OSV6A7qRbM3DN0zpq/XL4PLju0FIeKKl85V/y4+h
-   Q==;
-X-CSE-ConnectionGUID: 7WWKo9XqTu+pzgP2K19JQw==
-X-CSE-MsgGUID: hHJc9r2uSgSn1Qi7c3OMVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11312"; a="47567862"
-X-IronPort-AV: E=Sophos;i="6.12,308,1728975600"; 
-   d="scan'208";a="47567862"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2025 18:58:14 -0800
-X-CSE-ConnectionGUID: /Oq5OKv5Spuy/fOjb2Q2bw==
-X-CSE-MsgGUID: 0+LuP4+JQZaN13IodNqk0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="141387405"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 11 Jan 2025 18:58:12 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tWoAy-000LVj-34;
-	Sun, 12 Jan 2025 02:58:08 +0000
-Date: Sun, 12 Jan 2025 10:57:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Roger Pau Monne <roger.pau@citrix.com>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Roger Pau Monne <roger.pau@citrix.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 2/3] vmd: disable MSI remapping bypass under Xen
-Message-ID: <202501121029.dJk0TBPr-lkp@intel.com>
-References: <20250110140152.27624-3-roger.pau@citrix.com>
+	s=arc-20240116; t=1736689153; c=relaxed/simple;
+	bh=x+i17n32J9BE3xJWGZWzaweD1AZbhL+oqQjbrPfkdJw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OOH9O6q4//DPDBtaKIOpeXg4QQFIfIgqTFdEkZwkB8X94Jv1n1CpxhXe+GLmfxeSsYH5eXugqMg9KGtxDLRViR+fEozAqxWWB2uKNQy0tCAlPi/lalzQnFLu7G2j/9/F0ay/iaPG1KGdZIHg/Oc7BwK+9gruJmim+xF/SmlUHco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=plXFvkcA; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4361aa6e517so4502015e9.2
+        for <linux-pci@vger.kernel.org>; Sun, 12 Jan 2025 05:39:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736689150; x=1737293950; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W7Ty18ut1e9jMhl/AkSFuE2MdVzmvveKnbQmIojHQTU=;
+        b=plXFvkcAr08Itb+/GUOkY8J0o8txl5R0vmZscL5/TEdvj3rsLTBzzI8yjUQNbIMD5w
+         kpzEOOR/dTZO9+amLQZOleZwUPlpl3353len9xsaZegznCQgJcsOWNDHw8ZpLiwF6gPE
+         dYZvTKL2L4JTHUChX63CA94+EOecNwPkwbaspupDiyvk8z/wL9EP8mNSL74RT4fDh12g
+         mCwCmOTpx/QW/WOCb9ivM7FfqwbAYMruHbrn6sriTlTHJ3mh7Qknsm1AZR3m+A8HtZw5
+         oIaAXB4+iejsWB/zBU2RbVR46l3hJTwmUM7FR5cT1DUlTKvx8guIoWAxh0+4DuUfm+VR
+         31Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736689150; x=1737293950;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W7Ty18ut1e9jMhl/AkSFuE2MdVzmvveKnbQmIojHQTU=;
+        b=wn/m5A41lAghemMh6DMs5tfagopmZ/bWTzWVwPfZHvcKL3yJkjsFe0XUNeSBogRjiC
+         DZP/Eeay4WG9wh217jWd27w61+iG3YktZaW/VaA+lYH8xdqgU3Ugv2MD3ExWxwtcRsdg
+         tLRuZJgzYIcSJgsALaLpmNFwwZ3yq/8we5h3UissIDKiqzADigewFALl8AxLCmXqq/rJ
+         3FNzV9VjFnoLkU5lMHsr81xskJxxOKTvFTFHoZnkRdoR43JuGQ48HLqEv8OoTLTUOjFL
+         Pv6D1iKsi5LdgEQoyVvgEARWr7PmiaJiQWCWvHFp46Ln5Lwp/aWyotdUOKqnIkGIUuNp
+         bi0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWrAOJUsg5FXuxcNw2WDo0s+hE0dkb7V81iZ3PZkUr3YdRtpkipLtJfLycQ0PuIJu8pKVO0WkZE45Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF/KHkYSkCF/OsEIBhc1fzaegdLhe7JspN0epYzupogvDZwRi0
+	PiVMVMKXxx+Ww64IWRvq/l9Hz/U4XHEA/TfYm7SRMViLJ2COGJwJ7WdmzMuA6RQ=
+X-Gm-Gg: ASbGncthP4KYsRiDD/ewvdY/1hCMRnzGBrQH+AlddIDO7093ZgQFEkt1S3FkCKZHDGb
+	RQcSbA7PP9XhGU11/T2k+qKKH688qPmH0VlFhYz8CErG/aM2q1DhC3mXk/boQUEbTgziwPFOZle
+	By1S6TFmXqfGwJ+F5Wa1OOjL1qSV0RlaetQEuW1niHNCMvqFJ+U5AHqrg7Lftj8YVkaVXnzmfY0
+	BZO+e0G2QIiCbK+x/zPkqxpJZ/42PGL1cEx7pVGCdE7GLbrkhfvtpROR3VVldHlZ+EykI7b
+X-Google-Smtp-Source: AGHT+IHhfop11bEN74u0ET9V0abdMLDcSBys+gSbyZcc1Oyi50RffMGbjeAYxlnbPrRkwqyrU0ID3Q==
+X-Received: by 2002:a05:600c:a09:b0:434:f1d5:144a with SMTP id 5b1f17b1804b1-436e2557087mr63456395e9.0.1736689150005;
+        Sun, 12 Jan 2025 05:39:10 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.223.165])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c006sm9581924f8f.46.2025.01.12.05.39.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2025 05:39:08 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/2] PCI: Simplify few things
+Date: Sun, 12 Jan 2025 14:39:01 +0100
+Message-Id: <20250112-syscon-phandle-args-pci-v1-0-fcb6ebcc0afc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110140152.27624-3-roger.pau@citrix.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPXFg2cC/x2MQQqAMAzAviI9W3AVEf2KeJC1akHmWEEU2d8dH
+ kNIXjBJKgZj9UKSS03PUMDVFfh9CZugcmGghrrGOUJ7zJ8BY5F8CC5pM4xekYe+a/uBiJmh1DH
+ Jqvd/nuacP7HF0+1pAAAA
+X-Change-ID: 20250112-syscon-phandle-args-pci-d97537922ddd
+To: Vignesh Raghavendra <vigneshr@ti.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
+ Roy Zang <roy.zang@nxp.com>
+Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=666;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=x+i17n32J9BE3xJWGZWzaweD1AZbhL+oqQjbrPfkdJw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBng8X3fpKo9Fo2SJTRBmFQDvDSbyoSOE5+H61jh
+ WVIyJ+vkH2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ4PF9wAKCRDBN2bmhouD
+ 1wnKD/4gxTfv+tXPYb5SNsiZrYl54aARJsvzHavNU/1Oep+K0WSyRw+jj2XwM3C+OYsw4RhApPR
+ 2OoXL0k+JjPCwoDdX5E3hGTdIpJR3TrixOEteHnc3xs2lxeeHh3nt9iRGa2ZjMlE+5p12BDy8K4
+ hnhqOE8qIT5+j7vsJwTJt/7nQqwgCvBRY9JvlaKfc1TRRIY7Y4dOzvSSKhjA/KQrO18YaybJ3qq
+ Bnace1Td91tf1hDQwMy6d/pmermVgtYHqtY84HNY7Rcqyul7VtiTmoXXPSqruEIKxupAoJie3T8
+ hHv1Lj0AeEV3geNQ8/CviDs5+fHAt9ybjCdLevrdhunHcEic2U9dlpx0+Dn1rthZJj3oeXMdMno
+ iWT6sI7VL+wUD7SrQBWQlst3HfwCKkQqj03Leh90PKuvyIeRaqgp+ZokavbtdyO4Mpd0gMgrL7Y
+ gNBtIAMICO559+r6VpoXytH7OdIJKJ0Z7Ohn+sKk7PBh8kHMkC3+JTjNtSWQhyDNOcmh7Tu42DV
+ 2njcZXMQksL97QcbGfAcgi8U+WsG3HeITLzJVuNq8e8YHOuyjLNHhmeJ/axSTjMc0n5uiT61P4p
+ 6Il0Pk1UozPnyoc+VNNbPIYwGwkJ3S//dY8kkyV+srFvKF8rARseRo4CqNKvnnfVky4ozzDmdXA
+ lSYkUsupahUkEmQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi Roger,
+Few code simplifications without functional impact.  Not tested on
+hardware.
 
-kernel test robot noticed the following build errors:
+Best regards,
+Krzysztof
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus tip/irq/core linus/master v6.13-rc6 next-20250110]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+---
+Krzysztof Kozlowski (2):
+      PCI: dwc: dra7xx: Use syscon_regmap_lookup_by_phandle_args
+      PCI: dwc: layerscape: Use syscon_regmap_lookup_by_phandle_args
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Roger-Pau-Monne/xen-pci-do-not-register-devices-outside-of-PCI-segment-scope/20250110-220331
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250110140152.27624-3-roger.pau%40citrix.com
-patch subject: [PATCH 2/3] vmd: disable MSI remapping bypass under Xen
-config: x86_64-buildonly-randconfig-001-20250112 (https://download.01.org/0day-ci/archive/20250112/202501121029.dJk0TBPr-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250112/202501121029.dJk0TBPr-lkp@intel.com/reproduce)
+ drivers/pci/controller/dwc/pci-dra7xx.c     | 27 ++++++---------------------
+ drivers/pci/controller/dwc/pci-layerscape.c | 10 ++++------
+ 2 files changed, 10 insertions(+), 27 deletions(-)
+---
+base-commit: 2ddfbff29a2d45551e8c3e4f0c6b7c4618de24b7
+change-id: 20250112-syscon-phandle-args-pci-d97537922ddd
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501121029.dJk0TBPr-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/controller/vmd.c: In function 'vmd_probe':
->> drivers/pci/controller/vmd.c:973:13: error: implicit declaration of function 'xen_domain' [-Werror=implicit-function-declaration]
-     973 |         if (xen_domain())
-         |             ^~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/xen_domain +973 drivers/pci/controller/vmd.c
-
-   966	
-   967	static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
-   968	{
-   969		unsigned long features = (unsigned long) id->driver_data;
-   970		struct vmd_dev *vmd;
-   971		int err;
-   972	
- > 973		if (xen_domain())
-   974			/*
-   975			 * Xen doesn't have knowledge about devices in the VMD bus.
-   976			 * Bypass of MSI remapping won't work in that case as direct
-   977			 * write to the MSI entries won't result in functional
-   978			 * interrupts.
-   979			 */
-   980			features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
-   981	
-   982		if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
-   983			return -ENOMEM;
-   984	
-   985		vmd = devm_kzalloc(&dev->dev, sizeof(*vmd), GFP_KERNEL);
-   986		if (!vmd)
-   987			return -ENOMEM;
-   988	
-   989		vmd->dev = dev;
-   990		vmd->instance = ida_alloc(&vmd_instance_ida, GFP_KERNEL);
-   991		if (vmd->instance < 0)
-   992			return vmd->instance;
-   993	
-   994		vmd->name = devm_kasprintf(&dev->dev, GFP_KERNEL, "vmd%d",
-   995					   vmd->instance);
-   996		if (!vmd->name) {
-   997			err = -ENOMEM;
-   998			goto out_release_instance;
-   999		}
-  1000	
-  1001		err = pcim_enable_device(dev);
-  1002		if (err < 0)
-  1003			goto out_release_instance;
-  1004	
-  1005		vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
-  1006		if (!vmd->cfgbar) {
-  1007			err = -ENOMEM;
-  1008			goto out_release_instance;
-  1009		}
-  1010	
-  1011		pci_set_master(dev);
-  1012		if (dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64)) &&
-  1013		    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32))) {
-  1014			err = -ENODEV;
-  1015			goto out_release_instance;
-  1016		}
-  1017	
-  1018		if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
-  1019			vmd->first_vec = 1;
-  1020	
-  1021		spin_lock_init(&vmd->cfg_lock);
-  1022		pci_set_drvdata(dev, vmd);
-  1023		err = vmd_enable_domain(vmd, features);
-  1024		if (err)
-  1025			goto out_release_instance;
-  1026	
-  1027		dev_info(&vmd->dev->dev, "Bound to PCI domain %04x\n",
-  1028			 vmd->sysdata.domain);
-  1029		return 0;
-  1030	
-  1031	 out_release_instance:
-  1032		ida_free(&vmd_instance_ida, vmd->instance);
-  1033		return err;
-  1034	}
-  1035	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
