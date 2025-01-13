@@ -1,74 +1,77 @@
-Return-Path: <linux-pci+bounces-19664-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19665-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4EA9A0BAE2
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 16:02:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D62DBA0BB12
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 16:05:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C64F1885439
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 15:01:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 303FB3AB635
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 15:01:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2AE922F825;
-	Mon, 13 Jan 2025 14:57:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED0E22DFBD;
+	Mon, 13 Jan 2025 14:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="W63xq+uU"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gPhz1r/r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A666522DFB5
-	for <linux-pci@vger.kernel.org>; Mon, 13 Jan 2025 14:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE40B22DFB7
+	for <linux-pci@vger.kernel.org>; Mon, 13 Jan 2025 14:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736780247; cv=none; b=pJSRzeTdrerE8bBOwdDsNYr2pGhTCaQtkhTehIe2WOQGhQoYangDSSGQnFp9QAEU0slq7XBeLjjS1lvsgHAvJmxMTWUtLKdS70hIxJbMSPKynnTWNUX5BeTbx/OU8+uLmjBcPlcTkBseZSDJPiGuLSMXhUby/DDg+GOZoDoRYEM=
+	t=1736780249; cv=none; b=S4koGiCe/TDQb9uQAV2/0felWorRPYUGxHG6dZNqfgeHeGv7Jch8CmZejSQVdGile89hkE3Yu+1L4Jy9W/QcJExpeALQX1wBAMJwlug8n6nBrILd6KlWLXMRiGWn+mNCAXpKSfwLwrAWYe7/lnQeptZXOwlMnUSwZOnMF8b7F7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736780247; c=relaxed/simple;
-	bh=ZC8TFqmEccx1T/wjcHtffQmZC5UCagFKPztnEc0J07w=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=dCX4+nhOUKAJtjoGf6DG5ErjYVaCAQQSyLHGe+F+TSQC9mJLBRINYoX/aw2Ma8GkebZQY8cZhlKkEuu0xR4xwptWvPIJUYKYGiHEQ+2X0fMrrrdkMV1gYM0AE9wELnW0gQfTaekmjzaIO35u3JH7tCnO70nB9Vifj7uTUzq4mwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=W63xq+uU; arc=none smtp.client-ip=209.85.218.67
+	s=arc-20240116; t=1736780249; c=relaxed/simple;
+	bh=eLVVhfnyMIbO184s+FRnyqaburk4vHa6mrusOYiCVoY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rImtt74kjz2gEQIF3c1GJp/SQl4cLo6clZJ+Me4tpE3FvkLlJ7/ypHcsVOK1/VcxOQUtjoUkgmXtalyvPt+hFFxLwX8WDmm9lRii6cjHtq/mx3pzVwFLjjMyXsf9bk18ZAOpa5MuzRR/nSu78PKiCOBof5kQ+0x++Eua95a5pUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gPhz1r/r; arc=none smtp.client-ip=209.85.208.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-aaee0b309adso723960266b.3
-        for <linux-pci@vger.kernel.org>; Mon, 13 Jan 2025 06:57:24 -0800 (PST)
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5d3e6f6cf69so7402576a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 13 Jan 2025 06:57:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1736780243; x=1737385043; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FwnS3vaGfU2joF6cYNFfsBCgKjyVEnMzRnIWwalUQU8=;
-        b=W63xq+uUluv93Q6rqgQolyyslqu5eu6i1ALH0BDGjyLzj83EvgeqyXJZhVTxaj6j6h
-         fiBO0rlahklJPg8nv0lEKSUDOqZ8I6Yt6uR25VqZ1jagfYumxbzzxrL/C//fI9+HyGZV
-         XPBhiuSW5RQRoeIddb26ZpZO5ColTTKLN20/vJAuaGqVF2evdFGbaJ9Xoe3nKcSNl9j3
-         8P0HsESCgIiq2vvvoBg+2QoESQqcPPMg6eim1dMmL0QMwdbRZ7qKuApMinHRxg4VSqQQ
-         ijzJ8yV3aS8iVlR24ZXjgu+JQNOZ/TzJAE/2HBK0mwf6IVBMlLETFmRSFL/2CXK85Me3
-         bPgg==
+        d=suse.com; s=google; t=1736780244; x=1737385044; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5oL+ODcQasvCBAzRTJ+DvIqFD3YhC5IBkuyemaByobY=;
+        b=gPhz1r/rBUuZNHpiQKHXYyNjwXnG0OLkRAMlsbt11vFHq7qBGqGlnDinQbhj4hVqwn
+         zOfgyaSs5Yt3UeoVYikjxAq+Yj2UT07e0nI18ljN+kfqIg1l3rypULzppZIRPHFG7plP
+         wUOvtLdNUyAfkOnCsioNRlm1o5VOy3soU/6Jat+xa0EmyRWh0/y/KMOEUN+W615iqY9K
+         IIhQy8q4SZpVKT2Z/OJ+8s+KvbnOAbTN71w4MZnQKq11h5JccrCcVfi4geD/EPonumn+
+         FAygIVWsapF9ZpDBSLUmYo2wgyAcDf5MpSGa2bAkSEaVjnT0or0Eccw2/L02/cWzlUmN
+         zWYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736780243; x=1737385043;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FwnS3vaGfU2joF6cYNFfsBCgKjyVEnMzRnIWwalUQU8=;
-        b=JCt217QWh9u6bnifJp6eMbPK/UCp3xCqbwOPw2hvadchMl3YZ1uRo0SrtAhf4HzB0A
-         S3OyP4/OMNfCMSR/QAJsvkhgqrs/Oym7ATLP2e1Zd2NCpHectc+3goTDiyRH9d2ezxUk
-         guELWhh+jSjs++0edYqOY1waJjJ5H3sZyMKeKFl1G5AGwnG56VjWWrjIcK5QjYl7fTig
-         r5lYCqboQpjB5x9bszDu3TrC3X1iMM3deVTiM9ag1NPJZESMh20iQe+4UtV67W48pC8e
-         7R6yh4om97mamcqGrSjOA6MzVhGtnGSKQdqCDPp42djuKDTYnNyxsVuqUtzU63G4LvFK
-         j2Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCXX0s0lBrEbVRs0g6FDtDV5CX1Sf/Ja6zEcoWm6Q3kmcMbu3JrdaOC+uakL89HTNlWt9C5MFof/GTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwndmUEiqZ5dmkDW+tmAuDjezuOl3c28YgRRbJQT+W+JRBWPKJQ
-	y/S/mgpZLI24fvRY8v+mJgSwoq5vvZnL1G4dQdRIXMptbQGcsC3naeTA3y3HzDg=
-X-Gm-Gg: ASbGnctHFhcwu+v/GMgo3wjcGN/KSgjGnrwYdUxWGDQAuxL6Anuvkjf+PWqWxH3svWe
-	AqjHygS58VK34m4qaWARAmGYPMIExk1kwCqo03JQXawFRSDTWCs+H1XolG7sTpQsTwdFaUN5gn9
-	C9nSjQ///gwI1ph522JyddpEfD6UD+H3j/lxIlXAmTCVDqLVbglBYtCoD90QckUtIKyzRZ9O3Q+
-	JkOOJUG7+0+NQmWYOMxZzFhtWbe+9Mz12R6XSjJ35tqroFfWgO1HcxYXSjxxNKtxTtW8cofS4Dr
-	pdZPoyQ8QzZCGoeMm9VF0sHPqdc=
-X-Google-Smtp-Source: AGHT+IF+dQmIb1tSxF2qnawRLekJBTCQVTuDzMZWssaSx8RiWN62SO954NQh7GFSKEfS+l/Tll7rpQ==
-X-Received: by 2002:a17:906:ef0d:b0:aab:d7ef:d44 with SMTP id a640c23a62f3a-ab2ab6c1ad2mr2040825166b.24.1736780242877;
-        Mon, 13 Jan 2025 06:57:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736780244; x=1737385044;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5oL+ODcQasvCBAzRTJ+DvIqFD3YhC5IBkuyemaByobY=;
+        b=lbAZnW26VN0wvcrXzKiTed5HrfTq2EKV/sX+JLcFoJZwFgHMozAAC4/pO9Heer5Uo9
+         O4i36Ub+a0uN71y03adqbs4LQoOzgp6tEEZHlS74obQN3ywKfisT+uVS0KzFnPNKpUU5
+         QP30PYKRow+CquLjuXagoHVgSL6b3dw+jrWt+jq3gzOFnoIkT7ELxYZlQFcZnyShskVd
+         D3gvaW7PbPAsD8uP9AApQyyu18RG5nORjWT9sitBuVfJKafVdP6t9BSShkgbCQ7xG9Wk
+         xmAvfPd5CVMd3qSiSMkWXmhTI46r4iDtLl/CO/g/3LdvHnhp37uwgD7RqxBeURZGpcMc
+         Dxuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNIE7vmPIBfYVLeuSd8RCzzdF0mzhz2FdDGlUNklFIMlB8dLPbOF/xZNk6W46KOluNKnYEGdavvHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTjiouC2zB47gc0ss4ctK2gW1k3YGR0la/vcWnj4jep2/wu81G
+	L75jmaW0ehM6OW4ZoGgwiEy/0cwxfuew6g9aAyKw6h/D57Gk5hd918dInqMLSqg=
+X-Gm-Gg: ASbGncsWBxydc77w/HuYhJtyIQgqhuG6S72/shHGk206Zy0MP3p7Y6uulpalulKBmgb
+	H/qXke2Ds04RsBPMNqvScdl9vBwS2e3I3lnMoPEVBppkFSnXB0SAGoc6HU3S5emsHV+57G3h/k1
+	WBR+7RZrNBk6yHcEoZn/d5t5AvFRfcegLXhe+votD5WNWdx2qieG0m10vROJmwzny5N0Q+lrbJC
+	5ZceCZ/0TtXCwdMUP2nckwBsnvCNRYSwdwcxIajysPK1Vo6Y8Sn04/GTe7bClMOkade78QK1SZE
+	1Ucf/zZIFOckALGHivuXm1naG7M=
+X-Google-Smtp-Source: AGHT+IF1eb9wjyemuA/CkQvKrnWPvUi+BW6RlRVhXADP33sG5miX/dPcvtlInui9RO166jo+y/C63Q==
+X-Received: by 2002:a05:6402:3585:b0:5d9:f1f8:e726 with SMTP id 4fb4d7f45d1cf-5d9f1f8ed05mr270635a12.2.1736780244150;
+        Mon, 13 Jan 2025 06:57:24 -0800 (PST)
 Received: from localhost (host-87-14-236-197.retail.telecomitalia.it. [87.14.236.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c90da2c8sm516494166b.62.2025.01.13.06.57.22
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d99046a05asm5069944a12.67.2025.01.13.06.57.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2025 06:57:22 -0800 (PST)
+        Mon, 13 Jan 2025 06:57:23 -0800 (PST)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -104,10 +107,13 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using a DT overlay
-Date: Mon, 13 Jan 2025 15:57:59 +0100
-Message-ID: <cover.1736776658.git.andrea.porta@suse.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 01/10] dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+Date: Mon, 13 Jan 2025 15:58:00 +0100
+Message-ID: <ae94e78443099cb6c48528ac8b18daaaae41419a.1736776658.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1736776658.git.andrea.porta@suse.com>
+References: <cover.1736776658.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -116,141 +122,167 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
-a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
-etc.) whose registers are all reachable starting from an offset from the
-BAR address.  The main point here is that while the RP1 as an endpoint
-itself is discoverable via usual PCI enumeraiton, the devices it contains
-are not discoverable and must be declared e.g. via the devicetree.
+Add device tree bindings for the clock generator found in RP1 multi
+function device, and relative entries in MAINTAINERS file.
 
-This patchset is an attempt to provide a minimum infrastructure to allow
-the RP1 chipset to be discovered and perpherals it contains to be added
-from a devictree overlay loaded during RP1 PCI endpoint enumeration.
-Followup patches should add support for the several peripherals contained
-in RP1.
-
-This work is based upon dowstream drivers code and the proposal from RH
-et al. (see [1] and [2]). A similar approach is also pursued in [3].
-
-The patches are ordered as follows:
-
--PATCHES 1 to 4: add binding schemas for clock, gpio and RP1 peripherals.
- They are needed to support the other peripherals, e.g. the ethernet mac
- depends on a clock generated by RP1 and the phy is reset though the
- on-board gpio controller.
-
--PATCH 5 and 6: add clock and gpio device drivers.
-
--PATCH 7: the devicetree overlay describing the RP1 chipset. Please
- note that this patch should be taken by the same maintainer that will
- also take patch 11, since txeieh dtso is compiled in as binary blob and is
- closely coupled to the driver.
-
--PATCH 8: this is the main patch to support RP1 chipset and peripherals
- enabling through dtb overlay. The dtso since is intimately coupled with
- the driver and will be linked in as binary blob in the driver obj.
- The real dtso is in devicetree folder while the dtso in driver folder is
- just a placeholder to include the real dtso.
- In this way it is possible to check the dtso against dt-bindings.
- The reason why drivers/misc has been selected as containing folder
- for this driver can be seen in [6], [7] and [8].
-
--PATCH 9: add the external clock node (used by RP1) to the main dts.
-
--PATCH 10: add the relevant kernel CONFIG_ options to defconfig.
-
-This patchset is also a first attempt to be more agnostic wrt hardware
-description standards such as OF devicetree and ACPI, where 'agnostic'
-means "using DT in coexistence with ACPI", as been already promoted
-by e.g. AL (see [4]). Although there's currently no evidence it will also
-run out of the box on purely ACPI system, it is a first step towards
-that direction.
-
-Please note that albeit this patchset has no prerequisites in order to
-be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
-PCIe controller (see [5]) in order to work at runtime.
-
-Many thanks,
-Andrea della Porta
-
-Links:
-- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
-- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
-- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
-- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
-- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
-- [6]: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-- [7]: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-- [8]: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-
-CHANGES IN V6:
-
-PATCH RELATED -------------------------------------------------
-
-- patch 2: added: Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-- patch 3 and 4: added: 'Reviewed-by: Rob Herring (Arm) <robh@kernel.org>'
-- patch 8: removed a stale paragraph from git commit message regarding
-  gpio renaming through configfs
-
-
-RP1 MISC DRIVER -----------------------------------
-
-- interrupts definitions moved as documentation from rp1_pci.c to
-  pci1de4,1.yaml binding schema
-
-
-Andrea della Porta (10):
-  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
-  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
-  dt-bindings: pci: Add common schema for devices accessible through PCI
-    BARs
-  dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
-  clk: rp1: Add support for clocks provided by RP1
-  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
-  arm64: dts: rp1: Add support for RaspberryPi's RP1 device
-  misc: rp1: RaspberryPi RP1 misc driver
-  arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
-  arm64: defconfig: Enable RP1 misc/clock/gpio drivers
-
- .../clock/raspberrypi,rp1-clocks.yaml         |   58 +
- .../devicetree/bindings/misc/pci1de4,1.yaml   |  135 ++
- .../devicetree/bindings/pci/pci-ep-bus.yaml   |   58 +
- .../pinctrl/raspberrypi,rp1-gpio.yaml         |  198 +++
- MAINTAINERS                                   |   14 +
- .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |    7 +
- arch/arm64/boot/dts/broadcom/rp1.dtso         |   58 +
- arch/arm64/configs/defconfig                  |    3 +
- drivers/clk/Kconfig                           |    9 +
- drivers/clk/Makefile                          |    1 +
- drivers/clk/clk-rp1.c                         | 1527 +++++++++++++++++
- drivers/misc/Kconfig                          |    1 +
- drivers/misc/Makefile                         |    1 +
- drivers/misc/rp1/Kconfig                      |   21 +
- drivers/misc/rp1/Makefile                     |    3 +
- drivers/misc/rp1/rp1-pci.dtso                 |    8 +
- drivers/misc/rp1/rp1_pci.c                    |  305 ++++
- drivers/misc/rp1/rp1_pci.h                    |   14 +
- drivers/pci/quirks.c                          |    1 +
- drivers/pinctrl/Kconfig                       |   11 +
- drivers/pinctrl/Makefile                      |    1 +
- drivers/pinctrl/pinctrl-rp1.c                 |  789 +++++++++
- .../clock/raspberrypi,rp1-clocks.h            |   61 +
- include/linux/pci_ids.h                       |    3 +
- 24 files changed, 3287 insertions(+)
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../clock/raspberrypi,rp1-clocks.yaml         | 58 ++++++++++++++++++
+ MAINTAINERS                                   |  6 ++
+ .../clock/raspberrypi,rp1-clocks.h            | 61 +++++++++++++++++++
+ 3 files changed, 125 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
- create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
- create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
- create mode 100644 drivers/clk/clk-rp1.c
- create mode 100644 drivers/misc/rp1/Kconfig
- create mode 100644 drivers/misc/rp1/Makefile
- create mode 100644 drivers/misc/rp1/rp1-pci.dtso
- create mode 100644 drivers/misc/rp1/rp1_pci.c
- create mode 100644 drivers/misc/rp1/rp1_pci.h
- create mode 100644 drivers/pinctrl/pinctrl-rp1.c
  create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
 
+diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+new file mode 100644
+index 000000000000..b2670cf7403a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RaspberryPi RP1 clock generator
++
++maintainers:
++  - Andrea della Porta <andrea.porta@suse.com>
++
++description: |
++  The RP1 contains a clock generator designed as three PLLs (CORE, AUDIO,
++  VIDEO), and each PLL output can be programmed though dividers to generate
++  the clocks to drive the sub-peripherals embedded inside the chipset.
++
++  Link to datasheet:
++  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
++
++properties:
++  compatible:
++    const: raspberrypi,rp1-clocks
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++    description:
++      The available clocks are defined in
++      include/dt-bindings/clock/raspberrypi,rp1-clocks.h.
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/raspberrypi,rp1-clocks.h>
++
++    rp1 {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        clocks@c040018000 {
++            compatible = "raspberrypi,rp1-clocks";
++            reg = <0xc0 0x40018000 0x0 0x10038>;
++            #clock-cells = <1>;
++            clocks = <&clk_rp1_xosc>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1e930c7a58b1..8ced4ed32c00 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19574,6 +19574,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
+ F:	drivers/media/platform/raspberrypi/rp1-cfe/
+ 
++RASPBERRY PI RP1 PCI DRIVER
++M:	Andrea della Porta <andrea.porta@suse.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
++F:	include/dt-bindings/clock/rp1.h
++
+ RC-CORE / LIRC FRAMEWORK
+ M:	Sean Young <sean@mess.org>
+ L:	linux-media@vger.kernel.org
+diff --git a/include/dt-bindings/clock/raspberrypi,rp1-clocks.h b/include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+new file mode 100644
+index 000000000000..248efb895f35
+--- /dev/null
++++ b/include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+@@ -0,0 +1,61 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2021 Raspberry Pi Ltd.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_RASPBERRYPI_RP1
++#define __DT_BINDINGS_CLOCK_RASPBERRYPI_RP1
++
++#define RP1_PLL_SYS_CORE		0
++#define RP1_PLL_AUDIO_CORE		1
++#define RP1_PLL_VIDEO_CORE		2
++
++#define RP1_PLL_SYS			3
++#define RP1_PLL_AUDIO			4
++#define RP1_PLL_VIDEO			5
++
++#define RP1_PLL_SYS_PRI_PH		6
++#define RP1_PLL_SYS_SEC_PH		7
++#define RP1_PLL_AUDIO_PRI_PH		8
++
++#define RP1_PLL_SYS_SEC			9
++#define RP1_PLL_AUDIO_SEC		10
++#define RP1_PLL_VIDEO_SEC		11
++
++#define RP1_CLK_SYS			12
++#define RP1_CLK_SLOW_SYS		13
++#define RP1_CLK_DMA			14
++#define RP1_CLK_UART			15
++#define RP1_CLK_ETH			16
++#define RP1_CLK_PWM0			17
++#define RP1_CLK_PWM1			18
++#define RP1_CLK_AUDIO_IN		19
++#define RP1_CLK_AUDIO_OUT		20
++#define RP1_CLK_I2S			21
++#define RP1_CLK_MIPI0_CFG		22
++#define RP1_CLK_MIPI1_CFG		23
++#define RP1_CLK_PCIE_AUX		24
++#define RP1_CLK_USBH0_MICROFRAME	25
++#define RP1_CLK_USBH1_MICROFRAME	26
++#define RP1_CLK_USBH0_SUSPEND		27
++#define RP1_CLK_USBH1_SUSPEND		28
++#define RP1_CLK_ETH_TSU			29
++#define RP1_CLK_ADC			30
++#define RP1_CLK_SDIO_TIMER		31
++#define RP1_CLK_SDIO_ALT_SRC		32
++#define RP1_CLK_GP0			33
++#define RP1_CLK_GP1			34
++#define RP1_CLK_GP2			35
++#define RP1_CLK_GP3			36
++#define RP1_CLK_GP4			37
++#define RP1_CLK_GP5			38
++#define RP1_CLK_VEC			39
++#define RP1_CLK_DPI			40
++#define RP1_CLK_MIPI0_DPI		41
++#define RP1_CLK_MIPI1_DPI		42
++
++/* Extra PLL output channels - RP1B0 only */
++#define RP1_PLL_VIDEO_PRI_PH		43
++#define RP1_PLL_AUDIO_TERN		44
++
++#endif
 -- 
 2.35.3
 
