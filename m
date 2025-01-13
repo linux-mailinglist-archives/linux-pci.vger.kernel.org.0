@@ -1,179 +1,141 @@
-Return-Path: <linux-pci+bounces-19690-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19691-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7932A0C2CF
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 21:55:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B953FA0C35B
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 22:14:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81EF43A6AAD
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 20:55:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2BE318885C4
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 21:14:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 466901CD1E4;
-	Mon, 13 Jan 2025 20:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60C31CACF3;
+	Mon, 13 Jan 2025 21:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5oaJTcF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCEB1C3038;
-	Mon, 13 Jan 2025 20:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E211BD504;
+	Mon, 13 Jan 2025 21:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736801707; cv=none; b=CPISBkXK30ak+SzGFl22Hk2YrOLaNEFiznWTTyRqKfEynI646TXnWqpVmDxwYoSxIQMxhzFg6FViQh20rTHloSV9gyKOI0OFS1zCK2RNsMQlUi5yrD4N11KEFOERK5SZj1UTrBfLc33Ym1axx8c8BV99HcwcluHWqZsIoBUoT/E=
+	t=1736802863; cv=none; b=PZ+9e9mZGA823ZgyHHOhvYA/lgv4Mtce0FwZP7GsXmLuz6eFnWk6eBmI+wp6+cmwtL0jNL5v4UDUXoP/v6r351Cb9UQxN/iFH7hL9CR7rqvIscYz4rCJMP4UmEfGdgf0bwl7rmL3mKjmAw6DuRb/dGkqshC/C5LXjkToZ5xdjAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736801707; c=relaxed/simple;
-	bh=6bMWu777N3S6Mqw6qsW3g6f/h0LX2c+kc+7vAg5rOD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EtpD2I27O7i/Ye+mOAiED6HYLQymwmoLG5loCduIuuV0RjrzzN/xpH3W6PxR+KSfBcjqfm35A9Tgyx4lrnlUyuAj3aC8lceFFDiRoh/GCvIzWo479szlkwc03lWdTkBQkU9LMfA+YOwtRStO61oaHZO6OqY+tnAJfJtMqSBPzKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BFCC4CEDD;
-	Mon, 13 Jan 2025 20:55:04 +0000 (UTC)
-Date: Mon, 13 Jan 2025 15:55:03 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250113155503.71467082@gandalf.local.home>
-In-Reply-To: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736802863; c=relaxed/simple;
+	bh=gDVjIyupViTpLPklirSL7vMmnWCg3s/D6lSP9P/hdQc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=qkSjfSyoemQPlxTh5izaaQUVQieN4IisntanwtqohZV+YVNUt7VUvbcN+p7J0CPsr9Qh6BPc6qXj+SnpLuC/r6KLkxY8BAi6DpxGDDdhpElroHmYxhP6QCcOdBcIAqBN9KPSi0yReLRlRqRswoW4oIZpZ672bUllXzqPbgeJFa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5oaJTcF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730F8C4CED6;
+	Mon, 13 Jan 2025 21:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736802863;
+	bh=gDVjIyupViTpLPklirSL7vMmnWCg3s/D6lSP9P/hdQc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=G5oaJTcFq5M3jNV++eaOd54kuVJ5pQNfaTo89sE0C2bDs/iHFwjjYh0sevVzjSeNl
+	 nYpcpOSj2KdnRFs6HhPbK67oomSYO+mH29A1GnH28Q+ITnIp4sXRz4xVyakAQBBPBw
+	 3UrH7cewXKklCZJLb5YE7ejzrzh/4TQrOqC5AUA2H2NdKx1U1CGJ3DMX+ay0dWyllf
+	 C6a6DiFFOMa0cmbaUidBkmBkqCtyIqft7y961ocZ6ydGTXSuzWztvkEgM5XlM8VaL+
+	 DS3tJGaSSGLNM26YAQLATdTz7YKb0J9v0s/M3R7nwROkXeK9YOiVDdivDNMoYxGDNW
+	 GORX2gXhkukgQ==
+Date: Mon, 13 Jan 2025 22:14:21 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, Damien Le Moal <dlemoal@kernel.org>,
+ Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250113192720.GA414640@bhelgaas>
+References: <20250113192720.GA414640@bhelgaas>
+Message-ID: <5EFEAC8C-6BAA-46BC-9EED-F0D89952D3E5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu,  9 Jan 2025 10:55:43 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-> new file mode 100644
-> index 000000000000..5b60cd7bcffb
-> --- /dev/null
-> +++ b/drivers/pci/hotplug/trace.h
-> @@ -0,0 +1,68 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_HW_EVENT_PCI_HP_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM pci
-> +
-> +#define PCI_HOTPLUG_EVENT					\
-> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 
-Since you are creating these enums in this patch, you can also do a
-shortcut here too. Instead of doing the define here, move it to
-include/uapi/linux/pci.h:
+On 13 January 2025 20:27:20 CET, Bjorn Helgaas <helgaas@kernel=2Eorg> wrot=
+e:
+>On Mon, Jan 13, 2025 at 11:59:34AM +0100, Niklas Cassel wrote:
+>> The Root Complex specific device tree binding for pcie-dw-rockchip has =
+the
+>> 'sys' interrupt marked as required=2E
+>>=20
+>> The driver requests the 'sys' IRQ unconditionally, and errors out if no=
+t
+>> provided=2E
+>>=20
+>> Thus, we can unconditionally set use_linkup_irq before calling
+>> dw_pcie_host_init()=2E
+>>=20
+>> This will skip the wait for link up (since the bus will be enumerated o=
+nce
+>> the link up IRQ is triggered), which reduces the bootup time=2E
+>>=20
+>> Signed-off-by: Niklas Cassel <cassel@kernel=2Eorg>
+>
+>Thanks!  I was just reviewing the addition of your dll_link_up IRQ
+>handler, and was about to ask whether you wanted to set use_linkup_irq
+>to avoid the wait, but here's the patch already :)
 
-> +
-> +/* Enums require being exported to userspace, for user tool parsing */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-> +
-> +PCI_HOTPLUG_EVENT
-> +
-> +/*
-> + * Now redefine the EM() and EMe() macros to map the enums to the strings
-> + * that will be printed in the output.
-> + */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)	{a, b},
-> +#define EMe(a, b)	{a, b}
-> +
-> +TRACE_EVENT(pci_hp_event,
-> +
-> +	TP_PROTO(const char *port_name,
-> +		 const char *slot,
-> +		 const int event),
-> +
-> +	TP_ARGS(port_name, slot, event),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(	port_name,	port_name	)
-> +		__string(	slot,		slot		)
-> +		__field(	int,		event	)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(port_name);
-> +		__assign_str(slot);
-> +		__entry->event = event;
-> +	),
-> +
-> +	TP_printk("%s slot:%s, event:%s\n",
-> +		__get_str(port_name),
-> +		__get_str(slot),
-> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
-> +	)
-> +);
-> +
-> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
-> +
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE trace
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-> index a769eefc5139..4f150028965d 100644
-> --- a/include/uapi/linux/pci.h
-> +++ b/include/uapi/linux/pci.h
-> @@ -39,4 +39,11 @@
->  #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
->  #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
->  
-> +enum pci_hotplug_event {
-> +	PCI_HOTPLUG_LINK_UP,
-> +	PCI_HOTPLUG_LINK_DOWN,
-> +	PCI_HOTPLUG_CARD_PRESENT,
-> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
-> +};
+:)
 
-Instead of defining the enum as you did above, if you have the define of
-the enums here, you could do:
+>
+>I think I'll sort out the branches so the dll_link_up IRQ handler,
+>this patch, and the corresponding qcom change go on the same branch as
+>Krishna's patch to skip waiting if pp->use_linkup_irq=2E
 
-#define PCI_HOTPLUG_EVENT					\
-	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+That sounds like a good idea=2E
 
-#undef EM
-#undef EMe
-#define EM(a, b)	a,
-#define EMe(a, b)	a,
+Thank you!
 
-enum pci_hotplug_event {
-	PCI_HOTPLUG_EVENT
-};
 
-Then you only have one place to worry about adding new enums ;-)
+Kind regards,
+Niklas
 
--- Steve
-
-> +
->  #endif /* _UAPILINUX_PCI_H */
-
+>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec | 1 +
+>>  1 file changed, 1 insertion(+)
+>>=20
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec b/drivers/=
+pci/controller/dwc/pcie-dw-rockchip=2Ec
+>> index 1170e1107508bd793b610949b0afe98516c177a4=2E=2E62034affb95fbb965aa=
+d3cebc613a83e31c90aee 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec
+>> @@ -435,6 +435,7 @@ static int rockchip_pcie_configure_rc(struct rockch=
+ip_pcie *rockchip)
+>> =20
+>>  	pp =3D &rockchip->pci=2Epp;
+>>  	pp->ops =3D &rockchip_pcie_host_ops;
+>> +	pp->use_linkup_irq =3D true;
+>> =20
+>>  	return dw_pcie_host_init(pp);
+>>  }
+>>=20
+>> ---
+>> base-commit: 2adda4102931b152f35d054055497631ed97fe73
+>> change-id: 20250113-rockchip-no-wait-403ffbc42313
+>>=20
+>> Best regards,
+>> --=20
+>> Niklas Cassel <cassel@kernel=2Eorg>
+>>=20
 
