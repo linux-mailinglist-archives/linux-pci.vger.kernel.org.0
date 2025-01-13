@@ -1,141 +1,152 @@
-Return-Path: <linux-pci+bounces-19691-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19692-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B953FA0C35B
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 22:14:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBF7FA0C4F8
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 23:59:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2BE318885C4
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 21:14:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D0F718805CB
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2025 22:59:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60C31CACF3;
-	Mon, 13 Jan 2025 21:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60D291F9AAF;
+	Mon, 13 Jan 2025 22:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5oaJTcF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxAXjVFF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E211BD504;
-	Mon, 13 Jan 2025 21:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6F71F9A8E;
+	Mon, 13 Jan 2025 22:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736802863; cv=none; b=PZ+9e9mZGA823ZgyHHOhvYA/lgv4Mtce0FwZP7GsXmLuz6eFnWk6eBmI+wp6+cmwtL0jNL5v4UDUXoP/v6r351Cb9UQxN/iFH7hL9CR7rqvIscYz4rCJMP4UmEfGdgf0bwl7rmL3mKjmAw6DuRb/dGkqshC/C5LXjkToZ5xdjAY=
+	t=1736809147; cv=none; b=jKAPX04P/G1T8k60IBF5HZCS36OUYGYeS7/Z32OWoz42rPmKMDZKl5v+aa2q3w2ZoWxSiIiPtX6P0lrQ1IAFJ2agC/Busju9ATWuLCZVw1N0gFELndF9AQuXrwNHJRH39Ybk15o7vIcqzOjsCkRLqrmTCbtSE7juYyyf5QzZkCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736802863; c=relaxed/simple;
-	bh=gDVjIyupViTpLPklirSL7vMmnWCg3s/D6lSP9P/hdQc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=qkSjfSyoemQPlxTh5izaaQUVQieN4IisntanwtqohZV+YVNUt7VUvbcN+p7J0CPsr9Qh6BPc6qXj+SnpLuC/r6KLkxY8BAi6DpxGDDdhpElroHmYxhP6QCcOdBcIAqBN9KPSi0yReLRlRqRswoW4oIZpZ672bUllXzqPbgeJFa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5oaJTcF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730F8C4CED6;
-	Mon, 13 Jan 2025 21:14:22 +0000 (UTC)
+	s=arc-20240116; t=1736809147; c=relaxed/simple;
+	bh=n1oeyvHgtjf48GNwmyAUR0RM/+tJ12mmaPeKvDNvC7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QuPxB3DwMj9z/HcaCi6dvRmNbPceBD1J/YblREgV2G5E45I/eGzb+OxLw/HyVSmLWr96H9fjFcCaU+wbVW0OCbfYmOU3911gWo2wgKVzE/2BcUmChHO1WC67rM4U1igY+OQ6YWu4nAo3wqKjIdbm5XteS/b+ql2bX6xBabStZkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxAXjVFF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9E6C4CED6;
+	Mon, 13 Jan 2025 22:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736802863;
-	bh=gDVjIyupViTpLPklirSL7vMmnWCg3s/D6lSP9P/hdQc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=G5oaJTcFq5M3jNV++eaOd54kuVJ5pQNfaTo89sE0C2bDs/iHFwjjYh0sevVzjSeNl
-	 nYpcpOSj2KdnRFs6HhPbK67oomSYO+mH29A1GnH28Q+ITnIp4sXRz4xVyakAQBBPBw
-	 3UrH7cewXKklCZJLb5YE7ejzrzh/4TQrOqC5AUA2H2NdKx1U1CGJ3DMX+ay0dWyllf
-	 C6a6DiFFOMa0cmbaUidBkmBkqCtyIqft7y961ocZ6ydGTXSuzWztvkEgM5XlM8VaL+
-	 DS3tJGaSSGLNM26YAQLATdTz7YKb0J9v0s/M3R7nwROkXeK9YOiVDdivDNMoYxGDNW
-	 GORX2gXhkukgQ==
-Date: Mon, 13 Jan 2025 22:14:21 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, Damien Le Moal <dlemoal@kernel.org>,
- Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250113192720.GA414640@bhelgaas>
-References: <20250113192720.GA414640@bhelgaas>
-Message-ID: <5EFEAC8C-6BAA-46BC-9EED-F0D89952D3E5@kernel.org>
+	s=k20201202; t=1736809146;
+	bh=n1oeyvHgtjf48GNwmyAUR0RM/+tJ12mmaPeKvDNvC7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BxAXjVFFtgapVMyWqFQYJtaM4MjM0tbw6wKmn+XgfwlbqQ6jPsB+X/SMPGVa2ko9j
+	 CklKrIu3MjvLQNtceyTQpyiRkJv73BirjTlPmeuBc0dUXqe5EyoLn8IuztY8Irka68
+	 EiLU31oGONV2tbJERUANVagQ1i/owH2gYY7OJPDFG8PsYBl+BKzxrg2IaA7lYPIcJF
+	 e9ITlaxl8E8pdUYxv2Y7knrMKNAllvHOHaYgV+9MqvbSACPYlVNvrmrt1hStGZfFhH
+	 7bajJw04rwyhQ6ewVi5wU9Dwo0XR54KcyfNyRzbnkhLew3N25h1oN/0ENEd61VGpMt
+	 F0Hi06lcQsHoA==
+Date: Mon, 13 Jan 2025 16:59:05 -0600
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, robin.murphy@arm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	will@kernel.org
+Subject: Re: [PATCH v8 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
+ i.MX95
+Message-ID: <20250113225905.GA3325507-robh@kernel.org>
+References: <20241210-imx95_lut-v8-0-2e730b2e5fde@nxp.com>
+ <20241210-imx95_lut-v8-2-2e730b2e5fde@nxp.com>
+ <Z1sTUaoA5yk9RcIc@lpieralisi>
+ <Z1sdbH7N1Ly9eXc0@lizhi-Precision-Tower-5810>
+ <Z1v/LCHsGOgnasuf@lpieralisi>
+ <Z1xs6GkcdTg2c73F@lizhi-Precision-Tower-5810>
+ <Z2FDp1zQ7JzxQKJT@lpieralisi>
+ <Z2GdvpzT6MOygG4W@lizhi-Precision-Tower-5810>
+ <Z256NxZF/+jO2bkR@lpieralisi>
+ <Z31eaxD1h3Om3bHS@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z31eaxD1h3Om3bHS@lizhi-Precision-Tower-5810>
 
+On Tue, Jan 07, 2025 at 12:03:39PM -0500, Frank Li wrote:
+> On Fri, Dec 27, 2024 at 10:58:15AM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Dec 17, 2024 at 10:50:22AM -0500, Frank Li wrote:
+> >
+> > [...]
+> >
+> > > > > > Right. Question: what happens if DT shows that there are SMMU and/or
+> > > > > > ITS bindings/mappings but the SMMU driver and ITS driver are either not
+> > > > > > enabled or have not probed ?
+> > > > >
+> > > > > It is little bit complex.
+> > > > > iommu:
+> > > > > Case 1:
+> > > > > 	iommu{
+> > > > > 		status = "disabled"
+> > > > > 	};
+> > > > >
+> > > > > 	PCI driver normal probed. if RID is in range of iommu-map, not
+> > > > > any functional impact and harmless.
+> > > > > 	If RID is out of range of iommu-map, "false alarm" will return.
+> > > > > enable PCI EP device failure, but actually it can work without IOMMU.
+> > > >
+> > > > What does "false alarm" mean in practice ? PCI device enable fails
+> > > > but actually it should not ?
+> > >
+> > > Yes, you are right. It should work without iommu. but return failure for
+> > > this case.
+> >
+> > Rob, Robin, are you OK with this patch DT bindings usage (and the
+> > related dependencies described in Frank's reply) ?
+> >
+> > I am referring to "iommu-map" and "msi-map" usage, everything else
+> > is platform specific code.
+> >
+> > It looks like things can break in multiple ways but I don't want
+> > to hold up this series forever.
+> 
+> Rob and Robin:
+> 
+> 	Let me simple summary situation. PCIe controler driver need config
+> "stream id" for each PCI endpoint devices for IOMMU and MSI.
+> 
+> 	So add callback for host bridge enable/disable an endpoint devices.
+> In callback function, call of_map_id("iommu-map" | "msi-map") to get
+> devices's "stream id" from pci's rid.  Then config hardware.
+> 
+> 	The limiation is, if smmu/its controller's "status" is disabled
+> and rid is out of the range of "iommu-map" and "msi-map". Enable device
+> will be fail although it should be success because "stream id" will not be
+> used at all at this case. The out of range of "iommu-map" and "msi-map" is
+> rare.
+> 
+> 	dwc common pci driver simple check "msi-map", which should be
+> another limition and not related this patch.
+> 
+> 	In many dwc platform (like qcom) need config "stream id" also. But
+> that direct parse "iommu-map" and "msi-map" by their drivers, which is not
+> prefered by Rob now when I try to upstream at v3
+> https://lore.kernel.org/imx/20240429150842.GC1709920-robh@kernel.org/
+> 
+> 	Rob: can you help check if this is correct direction?
 
+My objection was only parsing the property yourself rather than using 
+existing functions. So it looks fine to me now. Though you might 
+consider if there is something to be shared with QCom driver.
 
-On 13 January 2025 20:27:20 CET, Bjorn Helgaas <helgaas@kernel=2Eorg> wrot=
-e:
->On Mon, Jan 13, 2025 at 11:59:34AM +0100, Niklas Cassel wrote:
->> The Root Complex specific device tree binding for pcie-dw-rockchip has =
-the
->> 'sys' interrupt marked as required=2E
->>=20
->> The driver requests the 'sys' IRQ unconditionally, and errors out if no=
-t
->> provided=2E
->>=20
->> Thus, we can unconditionally set use_linkup_irq before calling
->> dw_pcie_host_init()=2E
->>=20
->> This will skip the wait for link up (since the bus will be enumerated o=
-nce
->> the link up IRQ is triggered), which reduces the bootup time=2E
->>=20
->> Signed-off-by: Niklas Cassel <cassel@kernel=2Eorg>
->
->Thanks!  I was just reviewing the addition of your dll_link_up IRQ
->handler, and was about to ask whether you wanted to set use_linkup_irq
->to avoid the wait, but here's the patch already :)
-
-:)
-
->
->I think I'll sort out the branches so the dll_link_up IRQ handler,
->this patch, and the corresponding qcom change go on the same branch as
->Krishna's patch to skip waiting if pp->use_linkup_irq=2E
-
-That sounds like a good idea=2E
-
-Thank you!
-
-
-Kind regards,
-Niklas
-
->
->> ---
->>  drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec | 1 +
->>  1 file changed, 1 insertion(+)
->>=20
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec b/drivers/=
-pci/controller/dwc/pcie-dw-rockchip=2Ec
->> index 1170e1107508bd793b610949b0afe98516c177a4=2E=2E62034affb95fbb965aa=
-d3cebc613a83e31c90aee 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip=2Ec
->> @@ -435,6 +435,7 @@ static int rockchip_pcie_configure_rc(struct rockch=
-ip_pcie *rockchip)
->> =20
->>  	pp =3D &rockchip->pci=2Epp;
->>  	pp->ops =3D &rockchip_pcie_host_ops;
->> +	pp->use_linkup_irq =3D true;
->> =20
->>  	return dw_pcie_host_init(pp);
->>  }
->>=20
->> ---
->> base-commit: 2adda4102931b152f35d054055497631ed97fe73
->> change-id: 20250113-rockchip-no-wait-403ffbc42313
->>=20
->> Best regards,
->> --=20
->> Niklas Cassel <cassel@kernel=2Eorg>
->>=20
+Rob
 
