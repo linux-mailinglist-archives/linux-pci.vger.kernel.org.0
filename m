@@ -1,117 +1,165 @@
-Return-Path: <linux-pci+bounces-19738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A57B8A10CFA
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 18:05:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3A3CA10D0A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 18:08:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D57BA7A10AD
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 17:05:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C34691887461
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 17:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A891AA1DC;
-	Tue, 14 Jan 2025 17:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D38192B76;
+	Tue, 14 Jan 2025 17:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDVH8Lkq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GftmBiyW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C201E529;
-	Tue, 14 Jan 2025 17:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F340314B97E;
+	Tue, 14 Jan 2025 17:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736874334; cv=none; b=YxW66L+c0BnMcJo+T+pX1jU5kYo3dmsrWYToJFrx15FdM3XDasRu8xiXgLNY23Za2sBfN+66IAXSbHg6Gw4GFeBiMdEatQC4A3g8HFKqFOi39kezKmbkEa7OnV0mlYFCukBhoHH55xZRln/ydqLe3ldXije+fRcOMDOHqS8RhGc=
+	t=1736874531; cv=none; b=UQZHlmccuLoafsEp5a+jqm0wR4TnJjy5N5ZA85Ml99szQPxKtEus/e69DzzSitxSTFiAmrXrvo4u568JfNXFQowRvOKYO/Cl+75z75dV8sDXBjgFqNOIDZG9p3KYsyrZcaD3Cb7l+t/9jVGDSuaLnvt0Bw61N9Bopk32BGCp9H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736874334; c=relaxed/simple;
-	bh=4l1I+oCpVV7aVqBA/IRj6rgmTYIBnLenVcNim925x0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bM8wDhYK9uKMIzo3DQmeTlguKB8IQ3yrqlMgqDMlLjh48FqXo4IKKEH8c4hEfhhvG7CZnFFBI1leRnBIMnJNV12EIv8q+TgOvpUN2LUhHqW+05UxiINOA0M0OQ52qmHR9icgTduEIpz0gTAjHV68di4PCSBTcrzcDPgQHon2qPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDVH8Lkq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AF4C4CEDD;
-	Tue, 14 Jan 2025 17:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736874333;
-	bh=4l1I+oCpVV7aVqBA/IRj6rgmTYIBnLenVcNim925x0E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lDVH8LkqBChhnuAGdV3aOQRdWR9sekjlr8og2bRGHplaBVZoyD1txgGW1pwALmvQq
-	 Hk1pk0EOjmzDMuh8/NRG65sEqF9Zwc0gX7ZSucljn7YKUxU88Cu6j9F2fMYpBKNHNN
-	 PqON+4tUWgo/5Dye6ShWYBh9PLNgsMKL6iYUwXOTED7Zf77Wsw8p8TmBJ/zR/X6uRA
-	 zFEtYX0laUVdmC3xya+m5cgWeu5KI1rhgVN8bF3loS+XAGJa7YZoaWYUKaWs2ZE3cW
-	 5sCdeKVBH8rbx29Dajlly0m5urNK3D3iTGsi5VlgvyP7nNh1EKXi9FSBRCftlmEDh9
-	 TIqh1LgB7cS+g==
-Date: Tue, 14 Jan 2025 11:05:30 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, p.zabel@pengutronix.de,
-	cassel@kernel.org, quic_schintav@quicinc.com,
-	fabrice.gasnier@foss.st.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
- STM32MP25
-Message-ID: <20250114170530.GA464935@bhelgaas>
+	s=arc-20240116; t=1736874531; c=relaxed/simple;
+	bh=QoAbELA2hs+ktMu/3uW492VdOm9IyqJhwn5EdVVM7mI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SKcnKC1QssuacX9mrWbmMtszXfS63VLZOXMvM8Qc6Dighntq+V9D2/R+qPChRjJr+go01x0nxDfA7bbqXOPH4ZtG88hOchQvtdnl59nQcBHCGZ6gD5FE8t/e+l9yDF8KMtYfXKFEGjtMX6kEdeSZFj7TqqyOMpsr7dua5DPk/ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GftmBiyW; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736874530; x=1768410530;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QoAbELA2hs+ktMu/3uW492VdOm9IyqJhwn5EdVVM7mI=;
+  b=GftmBiyW1npoFHSiL3Bc38k1KUX3LBJ2rZeQm7AVL3RK8gw0bXXyjQb2
+   jbdj0oPSw5d+PhBxdXzkKafk4fiG0lrWdkJCZ9V+53yQEiwG2sG0ofkBw
+   J7owPYgEEXrCMUMb5ZPUj+ycvxVPlQe/7DJmhv4YmLobTye00Dvm0ryNx
+   V9tSrW2j5gpAlPlReOrLD23bK4++bWbR8KCND04aN3QWSfdAgufg4qD/E
+   l1CAmQSn57YogAspFoMXrtojaPDnmO3HnSccXYA40krOuuDDg9zdnTVFE
+   lpTrR+YcEqZY75FMaf7wSn42TunPHV6+SLjtMBZYpkSshWVDLEjFPTgzz
+   A==;
+X-CSE-ConnectionGUID: 8zfdUJ6ASl6P7c8MVo3zBA==
+X-CSE-MsgGUID: 3Kue+DC3TlSpsS7Chha43w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="24783638"
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="24783638"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:08:49 -0800
+X-CSE-ConnectionGUID: YlLpw4xMTxWet7T/w8XAHQ==
+X-CSE-MsgGUID: SIWtfQiCSp+OuqElbEBLNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="105377249"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:08:45 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v9 0/8] PCI: Consolidate TLP Log reading and printing
+Date: Tue, 14 Jan 2025 19:08:32 +0200
+Message-Id: <20250114170840.1633-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef02ddbf-0838-4616-a3c5-ef7ab55de3c9@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 16, 2024 at 03:00:58PM +0100, Christian Bruel wrote:
-> On 12/5/24 18:27, Bjorn Helgaas wrote:
-> > On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
-> > > Add driver to configure the STM32MP25 SoC PCIe Gen2 controller based on the
-> > > DesignWare PCIe core in endpoint mode.
+This series has the remaining patches of the AER & DPC TLP Log handling
+consolidation and now includes a few minor improvements to the earlier
+accepted TLP Logging code.
 
-> > > +static void stm32_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > +{
-> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> > > +	enum pci_barno bar;
-> > > +
-> > > +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
-> > > +		dw_pcie_ep_reset_bar(pci, bar);
-> > > +
-> > > +	/* Defer Completion Requests until link started */
-> > 
-> > I asked about this before [1] but didn't finish the conversation.  My
-> > main point is that I think "Completion Request" is a misnomer.
-> > There's a "Configuration Request" and a "Completion," but no such
-> > thing as a "Completion Request."
-> > 
-> > Based on your previous response, I think this should say something
-> > like "respond to config requests with Request Retry Status (RRS) until
-> > we're prepared to handle them."
-> 
-> OK thanks for the phrasing. This is inline with the DWC doc:
-> "... controller completes incoming configuration requests with a
-> configuration request retry status."
-> The only thing is that the PCIe specs talks about CRS, not RRS.
-> 
-> so slightly change to
-> "respond to config requests with Configuration Request Retry Status (CRS)
-> until we're prepared to handle them."
+v9:
+- Added patch to define header logging register sizes.
 
-This terminology between PCIe r5.0 and r6.0.  In r5.0, sec 2.2.9
-labels Completion Status value 010b as "Configuration Request Retry
-Status (CRS)", but in r6.0, sec 2.2.9.1 labels that same value as
-"Request Retry Status (RRS)".
+v8:
+- Added missing parameter to kerneldoc.
+- Dropped last patch due to conflict with the pci_printk() cleanup
+  series (will move the patch into that series).
 
-We changed most usage inside drivers/pci/ to align with the r6.0 term
-with https://git.kernel.org/linus/87f10faf166a ("PCI: Rename CRS
-Completion Status to RRS").
+v7:
+- Explain in commit message reasoning why eetlp_prefix_max stores Max
+  End-End TLP Prefixes value instead of limiting it by the bridge/RP
+  imposed limits
+- Take account TLP Prefix Log Present flag.
+- Align PCI_ERR_CAP_* flags in pci_regs.h
+- Add EE_PREFIX_STR define to be able to take its sizeof() for output
+  char[] sizing.
 
-But with respect to this patch, changing "Completion Request" to
-"Configuration Request" is the main thing.
+v6:
+- Preserve "AER:"/"DPC:" prefix on the printed TLP line
+- New patch to add "AER:" also  on other lines of the AER error dump
 
-Bjorn
+v5:
+- Fix build with AER=y and DPC=n
+- Match kerneldoc and function parameter name
+
+v4:
+- Added patches:
+	- Remove EXPORT of pcie_read_tlp_log()
+	- Moved code to pcie/tlp.c and build only with AER enabled
+	- Match variables in prototype and function
+	- int -> unsigned int conversion
+	- eetlp_prefix_max into own patch
+- struct pcie_tlp_log param consistently called "log" within tlp.c
+- Moved function prototypes into drivers/pci/pci.h
+- Describe AER/DPC differences more clearly in one commit message
+
+v3:
+- Small rewording in a commit message
+
+v2:
+- Don't add EXPORT()s
+- Don't include igxbe changes
+- Don't use pr_cont() as it's incompatible with pci_err() and according
+  to Andy Shevchenko should not be used in the first place
+
+
+Ilpo Järvinen (8):
+  PCI: Don't expose pcie_read_tlp_log() outside of PCI subsystem
+  PCI: Move TLP Log handling to own file
+  PCI: Add defines for TLP Header/Prefix log sizes
+  PCI: Make pcie_read_tlp_log() signature same
+  PCI: Use unsigned int i in pcie_read_tlp_log()
+  PCI: Store # of supported End-End TLP Prefixes
+  PCI: Add TLP Prefix reading into pcie_read_tlp_log()
+  PCI: Create helper to print TLP Header and Prefix Log
+
+ drivers/pci/ats.c             |   2 +-
+ drivers/pci/pci.c             |  28 ---------
+ drivers/pci/pci.h             |   9 +++
+ drivers/pci/pcie/Makefile     |   2 +-
+ drivers/pci/pcie/aer.c        |  15 ++---
+ drivers/pci/pcie/dpc.c        |  22 +++----
+ drivers/pci/pcie/tlp.c        | 115 ++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c           |  14 +++--
+ drivers/pci/quirks.c          |   6 +-
+ include/linux/aer.h           |  12 +++-
+ include/linux/pci.h           |   2 +-
+ include/uapi/linux/pci_regs.h |  11 ++--
+ 12 files changed, 172 insertions(+), 66 deletions(-)
+ create mode 100644 drivers/pci/pcie/tlp.c
+
+
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+-- 
+2.39.5
+
 
