@@ -1,130 +1,242 @@
-Return-Path: <linux-pci+bounces-19718-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19719-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E75BA104F7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:04:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2DD0A1052C
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:20:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4F1F1881C97
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:04:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2936165028
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:20:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBEF71ADC9B;
-	Tue, 14 Jan 2025 11:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="YtGFyGJs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D37428EC83;
+	Tue, 14 Jan 2025 11:20:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD8722DC44
-	for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 11:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1672628EC81;
+	Tue, 14 Jan 2025 11:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736852630; cv=none; b=EUToyBEp1QXM8JBvRdXJMhDDtcyGtuPlYTSMpRruApizu/bJoeR6L4fJ+R+OtslyJcbbUj94tdXAxH1UcIB7VNi3gZc7nisy8xy3FfDsVaYm7pfzRtbdg3JdYhrjwgXjmspxWNY1fWoR+ePH15D0Ha8Bs+98AeiEOie/PZmuDKY=
+	t=1736853616; cv=none; b=N7sctalQKj6UO4PWU3MEDUldpPgOWPZADuxs5Oek7gAxJ12fCvx1xbAM8il+8IRGmv6nnudlE9HeJ7Lz/Y/1oI3qVgArLfUAI2z1ezi6lMYxQwOFEMh6T+WGY5Hrh2KvTJbxND5ZCCh9UemNfM6KKsQ8uHWjTALbdAosHLrwCmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736852630; c=relaxed/simple;
-	bh=aSmMng9eKf26wg1r0aBPpvYHaZZwRH/rGIiKvyzJ/Ic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=navO0nvEH7s3H21nP1prXr9l3AfEsROVNtWYspO9wRmbsyAAxZRWQSLVSCpNP3qxfxQgocyUSFzuiXPkLB+hud9NIp/Z5aO+ORz6JKTHh5uEYIW5EUN2fHB8wMQnBkzFIPKmU03Ro8Nd0LPUuRfs6WOGALF1Fid6DRWO6tumt2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=YtGFyGJs; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d932eac638so10312937a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 03:03:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1736852627; x=1737457427; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=35mB+QjxPdevR8046RphJsKVW0nB2adhW14D5bTUKJg=;
-        b=YtGFyGJsjnPHz6MMsJLiS/r2KPd6LGWylHGYVFGc9FICGaj6bB3CpWlQVEQ8B4fHry
-         zgcKbxIKC3Eyc9b9PGxfONxzSpMtvEid0vtZ57K4P/RBb/E5XY2xC7FqV8bdirQ8JcSH
-         MYutwfjdStDVdLG7k1O6hiAvQPl3exMq4rYTw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736852627; x=1737457427;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=35mB+QjxPdevR8046RphJsKVW0nB2adhW14D5bTUKJg=;
-        b=vHlGacXC2pSj6nVnUMzO56HKTy8HdblOf9E0b1CVSTjx9hWQztVoNTFo6tVY0/99Eo
-         jQjhpNu7UluwwPZ/jKqIFRDxdNV3dcxETn7hrmUo9uJ4+k5aCk18HCyTZ+RdvYgB3p4f
-         ecKzU2goqzUm//YDiDqjGEpaVWkY6ZDupL1nQ5UEdZAA9Kci9YW+guLgz18ILSBxAkcO
-         yP3c4xMzrSe3tlPesoPmv+SRJKe1r+3LWIlL7oVLz56mn/rRuGmOdG+nFSW6/OAc53ob
-         5JL0tBrECQ1JERKanojrwpU8SdnLXvgIO0MFpKRMgpKt3xS/Sezm2WqABnsK3ZkwcmsK
-         h+9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoZuw5H8H/Qy9df0E17EzpQOAR5qMBwS5f9CIdfTXZYwtAtppqnDhD2n1r5T8AI//YkXZMtd1NbNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKWwbh9tRR4NPTS9K8RBVQ+qOAc1g3qfoea/jpVVgE7TKBFtia
-	GDs1+5Vft5FBLNiGRatSXYh3020c9eMzf5k6ZCZ2pT09lCPIosQQKNMNDDw6w/g=
-X-Gm-Gg: ASbGnctnZJQDjqHXp2hSRkRVBsC6t/xq0xPy8533JWt4t+Y5unOnjzRxmYP+WH0Lq7z
-	cWzNZzbufiya6nv4Awh5qhnwQebe4T601AP5hBBzu7T9Ap6vIoHGRN+4F9HfABBBOj07quEFTXv
-	j46VFEbHDX9G6/35Hq/vBSJC5flWnbW06/V94smdTVM2Bn+XN4XL6UE2lkC7OK7lku9LcxPrSxu
-	zEFdeSG4cNsyuW+F7Wah1h2vzvAz3n1tJeZWubJEhYGLCyNPPWBGraFsnEQxJqWY5E=
-X-Google-Smtp-Source: AGHT+IGJNe0LSVA3nGJ258TjPthdYloWMFdub4oksN9mfoT80xGa7EGoGjJP2iGpXQ9PWDACteVGUg==
-X-Received: by 2002:a17:907:d89:b0:ab3:3aa6:7d69 with SMTP id a640c23a62f3a-ab33aa681a2mr240126566b.41.1736852625094;
-        Tue, 14 Jan 2025 03:03:45 -0800 (PST)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c9646bf9sm619310866b.175.2025.01.14.03.03.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 03:03:44 -0800 (PST)
-Date: Tue, 14 Jan 2025 12:03:43 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C2=B4nski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/3] vmd: disable MSI remapping bypass under Xen
-Message-ID: <Z4ZEj3i71TTPkuwc@macbook.local>
-References: <20250110140152.27624-3-roger.pau@citrix.com>
- <20250110222525.GA318386@bhelgaas>
- <Z4TlDhBNn8TMipdB@macbook.local>
- <Z4UtF737b3QFGnY0@kbusch-mbp>
- <Z4VDIPorOWD-FY-9@macbook.local>
- <Z4VFAZnQ_09cdexm@kbusch-mbp>
+	s=arc-20240116; t=1736853616; c=relaxed/simple;
+	bh=NpvpajmbrS04XL8WksqCx+pwslDua4mTHgIgalfJwI0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bLHi4jWifL+YBOX06VPRxPMSddGW0ILIhBjiMtOzxTnQVQENqvaKHUEFEr3Sbouu+Zf9SxnYPJS3IA1CuJXfd/tg+3h0Cg43Xb28Y4T8j+WkXnuUdLZs53KFobJW6eIbTbHhheqyQEO1WnxNisdjVh4+zb5OqOrcoxo3xkwPu2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXRTJ2gMDz6L5Bm;
+	Tue, 14 Jan 2025 19:18:44 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A3B31402C6;
+	Tue, 14 Jan 2025 19:20:11 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
+ 2025 12:20:10 +0100
+Date: Tue, 14 Jan 2025 11:20:08 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Li Ming <ming.li@zohomail.com>
+CC: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
+	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
+	<rrichter@amd.com>, <nathan.fontenot@amd.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
+Subject: Re: [PATCH v5 05/16] PCI/AER: Add CXL PCIe Port correctable error
+ support in AER service driver
+Message-ID: <20250114112008.0000167f@huawei.com>
+In-Reply-To: <cb087065-f2f3-481c-84cf-aca2c5fd5ac4@zohomail.com>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+	<20250107143852.3692571-6-terry.bowman@amd.com>
+	<cb087065-f2f3-481c-84cf-aca2c5fd5ac4@zohomail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4VFAZnQ_09cdexm@kbusch-mbp>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Jan 13, 2025 at 09:53:21AM -0700, Keith Busch wrote:
-> On Mon, Jan 13, 2025 at 05:45:20PM +0100, Roger Pau Monné wrote:
-> > On Mon, Jan 13, 2025 at 08:11:19AM -0700, Keith Busch wrote:
-> > > On Mon, Jan 13, 2025 at 11:03:58AM +0100, Roger Pau Monné wrote:
-> > > > 
-> > > > Hm, OK, but isn't the limit 80 columns according to the kernel coding
-> > > > style (Documentation/process/coding-style.rst)?
-> > > 
-> > > That's the coding style. The commit message style is described in a
-> > > different doc:
-> > > 
-> > >   https://docs.kernel.org/process/submitting-patches.html#the-canonical-patch-format
-> > 
-> > It's quite confusing to have different line length for code vs commit
-> > messages, but my fault for not reading those. Will adjust to 75
-> > columns them.
+On Tue, 14 Jan 2025 14:54:23 +0800
+Li Ming <ming.li@zohomail.com> wrote:
+
+> On 1/7/2025 10:38 PM, Terry Bowman wrote:
+> > The AER service driver supports handling Downstream Port Protocol Errors in
+> > Restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
+> > functionality for CXL PCIe Ports operating in Virtual Hierarchy (VH)
+> > mode.[1]
+> >
+> > CXL and PCIe Protocol Error handling have different requirements that
+> > necessitate a separate handling path. The AER service driver may try to
+> > recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
+> > suitable for CXL PCIe Port devices because of potential for system memory
+> > corruption. Instead, CXL Protocol Error handling must use a kernel panic
+> > in the case of a fatal or non-fatal UCE. The AER driver's PCIe Protocol
+> > Error handling does not panic the kernel in response to a UCE.
+> >
+> > Introduce a separate path for CXL Protocol Error handling in the AER
+> > service driver. This will allow CXL Protocol Errors to use CXL specific
+> > handling instead of PCIe handling. Add the CXL specific changes without
+> > affecting or adding functionality in the PCIe handling.
+> >
+> > Make this update alongside the existing Downstream Port RCH error handling
+> > logic, extending support to CXL PCIe Ports in VH mode.
+> >
+> > is_internal_error() is currently limited by CONFIG_PCIEAER_CXL kernel
+> > config. Update is_internal_error()'s function declaration such that it is
+> > always available regardless if CONFIG_PCIEAER_CXL kernel config is enabled
+> > or disabled.
+> >
+> > The uncorrectable error (UCE) handling will be added in a future patch.
+> >
+> > [1] CXL 3.1 Spec, 12.2.2 CXL Root Ports, Downstream Switch Ports, and
+> > Upstream Switch Ports
+> >
+> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > ---
+> >  drivers/pci/pcie/aer.c | 61 +++++++++++++++++++++++++++---------------
+> >  1 file changed, 40 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index f8b3350fcbb4..62be599e3bee 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -942,8 +942,15 @@ static bool find_source_device(struct pci_dev *parent,
+> >  	return true;
+> >  }
+> >  
+> > -#ifdef CONFIG_PCIEAER_CXL
+> > +static bool is_internal_error(struct aer_err_info *info)
+> > +{
+> > +	if (info->severity == AER_CORRECTABLE)
+> > +		return info->status & PCI_ERR_COR_INTERNAL;
+> >  
+> > +	return info->status & PCI_ERR_UNC_INTN;
+> > +}
+> > +
+> > +#ifdef CONFIG_PCIEAER_CXL
+> >  /**
+> >   * pci_aer_unmask_internal_errors - unmask internal errors
+> >   * @dev: pointer to the pcie_dev data structure
+> > @@ -995,14 +1002,6 @@ static bool cxl_error_is_native(struct pci_dev *dev)
+> >  	return (pcie_ports_native || host->native_aer);
+> >  }
+> >  
+> > -static bool is_internal_error(struct aer_err_info *info)
+> > -{
+> > -	if (info->severity == AER_CORRECTABLE)
+> > -		return info->status & PCI_ERR_COR_INTERNAL;
+> > -
+> > -	return info->status & PCI_ERR_UNC_INTN;
+> > -}
+> > -
+> >  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+> >  {
+> >  	struct aer_err_info *info = (struct aer_err_info *)data;
+> > @@ -1034,14 +1033,23 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+> >  
+> >  static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> >  {
+> > -	/*
+> > -	 * Internal errors of an RCEC indicate an AER error in an
+> > -	 * RCH's downstream port. Check and handle them in the CXL.mem
+> > -	 * device driver.
+> > -	 */
+> > -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> > -	    is_internal_error(info))
+> > -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> > +		return pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+> > +
+> > +	if (info->severity == AER_CORRECTABLE) {
+> > +		struct pci_driver *pdrv = dev->driver;
+> > +		int aer = dev->aer_cap;
+> > +
+> > +		if (aer)
+> > +			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+> > +					       info->status);
+> > +
+> > +		if (pdrv && pdrv->cxl_err_handler &&
+> > +		    pdrv->cxl_err_handler->cor_error_detected)
+> > +			pdrv->cxl_err_handler->cor_error_detected(dev);
+> > +
+> > +		pcie_clear_device_status(dev);
+> > +	}
+> >  }
+> >  
+> >  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> > @@ -1059,9 +1067,13 @@ static bool handles_cxl_errors(struct pci_dev *dev)
+> >  {
+> >  	bool handles_cxl = false;
+> >  
+> > -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> > -	    pcie_aer_is_native(dev))
+> > +	if (!pcie_aer_is_native(dev))
+> > +		return false;
+> > +
+> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> >  		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
+> > +	else
+> > +		handles_cxl = pcie_is_cxl_port(dev);  
 > 
-> The output of 'git log' prepends spaces to the subject and body of the
-> listed commits. The lower limit for commit messages vs. code makes the
-> change log look readable in an 80-char terminal.
+> My understanding is if a cxl RP/USP/DSP is working on PCIe mode, they are also possible to expose a DVSEC ID 3(CXL r3.1 section 9.12.3). In such case, the AER handler should be pci_aer_handle_error() rather than cxl_handle_error().
+> 
+> pcie_is_cxl_port() only checks if there is a DVSEC ID 3, but I think it should also check if the cxl port is working on CXL mode, does it make more sense?
+> 
+> 
+Good spot.
 
-Oh, I see, thanks for explaining.
+Agreed a check on the mode makes sense.
 
-The 80 column limit for code mean the resulting diff (and `git log`
-output) could have a maximum width of 81 characters (because of the
-prepended +,-, ), but since Linux uses hard tabs for indentation this
-is not really an issue as it would be if using spaces.
+Jonathan
 
-Regards, Roger.
+> Ming
+> 
+> >  
+> >  	return handles_cxl;
+> >  }
+> > @@ -1079,6 +1091,10 @@ static void cxl_enable_internal_errors(struct pci_dev *dev)
+> >  static inline void cxl_enable_internal_errors(struct pci_dev *dev) { }
+> >  static inline void cxl_handle_error(struct pci_dev *dev,
+> >  				    struct aer_err_info *info) { }
+> > +static bool handles_cxl_errors(struct pci_dev *dev)
+> > +{
+> > +	return false;
+> > +}
+> >  #endif
+> >  
+> >  /**
+> > @@ -1116,8 +1132,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> >  
+> >  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+> >  {
+> > -	cxl_handle_error(dev, info);
+> > -	pci_aer_handle_error(dev, info);
+> > +	if (is_internal_error(info) && handles_cxl_errors(dev))
+> > +		cxl_handle_error(dev, info);
+> > +	else
+> > +		pci_aer_handle_error(dev, info);
+> > +
+> >  	pci_dev_put(dev);
+> >  }
+> >    
+> 
+> 
+> 
+
 
