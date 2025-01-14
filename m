@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-19721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51922A1057E
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:32:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 869BEA10589
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:33:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 049C43A18D5
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:32:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A26A3167055
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:33:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A381F234CF6;
-	Tue, 14 Jan 2025 11:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68A5234D00;
+	Tue, 14 Jan 2025 11:33:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FA0234CE3;
-	Tue, 14 Jan 2025 11:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F88F234D01;
+	Tue, 14 Jan 2025 11:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736854335; cv=none; b=cf9aC5n7NOqDayqd9yzvwDVE/Vl39a7g0pwu618BxO98qAklp4HaShb5O87fidjiASM6I2UntWIuDqViBO394Kxu/U8o8sk1d+K5IgqGkCCG5u6uR1Mc9bDyQTLCfvbiOEeluWJ0dXeUqQlLlYrVYunDcwE7D5LlYEv65MRtaJs=
+	t=1736854433; cv=none; b=WTUa/tug+FTEJeV82tNsvufB1VvjQa+LTuMbvPOdErq8OeevxwqZp+rfg56u83sWd1Af4MhbZEENL65GcLdjKS5Qm14HQeamBuLKlRwCqNgOe1J1qWdzkjYJkgK/l74YzMEAusf0AE1woImj1twS1q7lDJF2QZlSyqTfaL5QOxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736854335; c=relaxed/simple;
-	bh=7jPp419Qe6meKDsK8Bcn1TmJbIEIVl3XYa8cPrzSUnM=;
+	s=arc-20240116; t=1736854433; c=relaxed/simple;
+	bh=LMKICDRm1i5WBh0PZvbV99bSGJukLifqdeM1w6UioDQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=agR4eMDLpAq0QG9KRut/bxQAmWxC/zunDxN0aYjdVbRlDkGWGc4uLMQUHCMFun3VkuvGSt1JbyOwn226MsmGawTLsV/yTQGrvV7qD1cjQ1JMCIeRTebO2NVrz8hP5KmGilzG33bXYRRIbl/EiPV8zZ85s7mosueDvcYNF+g5NBU=
+	 MIME-Version:Content-Type; b=oYXVM7Z9LqTpNtMg6nhzTDHFRw4JYQqqi2UiUeBoTEoOCDNB2I4Z5D2XOIKJ3vLDfZV4sYA1vAcYPADYtoPcv68oyvzVwSe9EF3mK4vGhb1Lhip8+IYeVen6dMAqtgawyIUXENlaynLhznlMlM3DLR6WKvRptwLTFNpRpTAquPw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXRgB4mkCz6K9HR;
-	Tue, 14 Jan 2025 19:27:18 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXRn24hqpz6L5J4;
+	Tue, 14 Jan 2025 19:32:22 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CF6C7140A86;
-	Tue, 14 Jan 2025 19:32:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CA9E14022E;
+	Tue, 14 Jan 2025 19:33:49 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
- 2025 12:32:09 +0100
-Date: Tue, 14 Jan 2025 11:32:08 +0000
+ 2025 12:33:48 +0100
+Date: Tue, 14 Jan 2025 11:33:47 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Terry Bowman <terry.bowman@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -50,14 +50,13 @@ CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
 	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>, Shuai Xue
-	<xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v5 06/16] PCI/AER: Change AER driver to read UCE fatal
- status for all CXL PCIe Port devices
-Message-ID: <20250114113208.00006d08@huawei.com>
-In-Reply-To: <20250107143852.3692571-7-terry.bowman@amd.com>
+	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
+Subject: Re: [PATCH v5 07/16] PCI/AER: Add CXL PCIe Port uncorrectable error
+ recovery in AER service driver
+Message-ID: <20250114113347.00006865@huawei.com>
+In-Reply-To: <20250107143852.3692571-8-terry.bowman@amd.com>
 References: <20250107143852.3692571-1-terry.bowman@amd.com>
-	<20250107143852.3692571-7-terry.bowman@amd.com>
+	<20250107143852.3692571-8-terry.bowman@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -70,45 +69,39 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 7 Jan 2025 08:38:42 -0600
+On Tue, 7 Jan 2025 08:38:43 -0600
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The AER service driver's aer_get_device_error_info() function doesn't read
-> uncorrectable (UCE) fatal error status from PCIe Upstream Port devices,
-> including CXL Upstream Switch Ports. As a result, fatal errors are not
-> logged or handled as needed for CXL PCIe Upstream Switch Port devices.
+> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
+> apply to CXL devices. Recovery can not be used for CXL devices because of
+> potential corruption on what can be system memory. Also, current PCIe UCE
+> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
+> does not begin at the RP/DSP but begins at the first downstream device.
+> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
+> CXL recovery is needed because of the different handling requirements
 > 
-> Update the aer_get_device_error_info() function to read the UCE fatal
-> status for all CXL PCIe devices. Make the change such that non-CXL devices
-> are not affected.
+> Add a new function, cxl_do_recovery() using the following.
 > 
-> The fatal error status will be used in future patches implementing
-> CXL PCIe Port uncorrectable error handling and logging.
+> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
+> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
+> will begin iteration at the RP or DSP rather than beginning at the
+> first downstream device.
+
+I'm still holding out for making pci_walk_bridge() do the same and seeing
+what if anything breaks.
+
+Other than that I'm fine with this patch.
+
+> 
+> Add cxl_report_error_detected() as an analog to report_error_detected().
+> It will call pci_driver::cxl_err_handlers for each iterated downstream
+> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
+> indicating if there was a UCE error detected during handling.
+> 
+> cxl_do_recovery() uses the status from cxl_report_error_detected() to
+> determine how to proceed. Non-fatal CXL UCE errors will be treated as
+> fatal. If a UCE was present during handling then cxl_do_recovery()
+> will kernel panic.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-This clashes with Shuai's series adding link healthy checks.
-Maybe we can reuse that logic to incorporate the condition we
-care about here?
-
-
-> ---
->  drivers/pci/pcie/aer.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 62be599e3bee..79c828bdcb6d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1253,7 +1253,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->  		   type == PCI_EXP_TYPE_RC_EC ||
->  		   type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -		   info->severity == AER_NONFATAL) {
-> +		   info->severity == AER_NONFATAL ||
-> +		   (pcie_is_cxl(dev) && type == PCI_EXP_TYPE_UPSTREAM)) {
->  
->  		/* Link is still healthy for IO reads */
->  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
-
 
