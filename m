@@ -1,199 +1,213 @@
-Return-Path: <linux-pci+bounces-19727-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19728-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78420A105D0
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:47:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2C7FA105E3
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:49:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34F613A3B52
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:47:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BBA4E7A23DB
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:49:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D47B1ADC60;
-	Tue, 14 Jan 2025 11:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fJ6C6Gjd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E6D229629;
+	Tue, 14 Jan 2025 11:49:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707E9234CE0;
-	Tue, 14 Jan 2025 11:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9168234D1C;
+	Tue, 14 Jan 2025 11:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736855265; cv=none; b=dvS+ofN+u/UNpEPQStdPfbjB+D8iyCb6y5JS6MgjAayFeCUt3979BzDpCqKe48RwmqzcicSyyQ/SOYE8R5P8dJ6TECBjquaC1TB8c5fHcJlYG4vq5qCv1pD4xPr49QM4NL2nDTRM7OsMfYRsEaqxajltJVMF94+eGfj7LnKbw2g=
+	t=1736855374; cv=none; b=UaBDUo81xRth12KA0DBAWAL5N7mgZeNQ2xUmA6fjDly5+ohn9KMMXvs3pM1HK/zS49S/X5Sw7+QSRx4r2rKDPnvq318A+umWKU+83UwQwk8AjP7B33b47zbdrDvggqM6TwP4idHvalSAYL0o1IYigNMKXb0/vpHLAEf9D9NCFHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736855265; c=relaxed/simple;
-	bh=4tAwsFeqnGlo7hrHXLcMASY1gmPfNgzKJ7nzcdo4WQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=etILWN0MDBNwpggrz8ss/wpislsf0dX7hDhoBocGRS0bfS58dJU5GabpEgyxOidvrMj1NPT5Qo7OTlA/LUO57x+pbJaJdlbMxcuk5SOgLW/dmuYbBlUWfX0UoO7CGpw1mp49hRIzqATnfvD8SXQU1m/oqwTeOfpVdYDpnl0G+y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fJ6C6Gjd; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1736855253; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Rbo5LYY+2tH8hjW2dw93X1Z+DEEm32sPT0fjtGGAcWw=;
-	b=fJ6C6GjdUkBvYhUN3Qb6hYHDvgirOryrENLEq0ClDjZ8poWFRE+z6/kdJj6LYc8mptw903W4jKxe3/ovJ3iJqUdyq3Ejq3QxecJ1V0kIIQyMQzmxnS54VFY8MjADf/hCis/1LKqcPA376JEXfA2HgiR9YV1GU939/w4I0Qol6Gw=
-Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNfDxEn_1736855182 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 14 Jan 2025 19:47:32 +0800
-Message-ID: <fbee3b88-3a7c-48a6-9d79-570251237a9c@linux.alibaba.com>
-Date: Tue, 14 Jan 2025 19:47:30 +0800
+	s=arc-20240116; t=1736855374; c=relaxed/simple;
+	bh=OV6Yx25XvPvYV+BBmLCr5k/iNkK3kHQo4rNSwW7uB04=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DDMO7fI60U8Yn20HJw4YhtunOKcyJtAI8zvKYkGc2x+n5NQaeNqM9eekTJtg1wogOdptVemqB801P8wihy4xFPZiG3kPQ1ggKFHylFQdauRueMxss76JbSza6toelAMgQReJg92m1mHBGXZQdPzYgXK0OGDaj8lf0W+jsk8erLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXS6n72Dkz6M4N5;
+	Tue, 14 Jan 2025 19:47:45 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 89F2D140A86;
+	Tue, 14 Jan 2025 19:49:29 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
+ 2025 12:49:28 +0100
+Date: Tue, 14 Jan 2025 11:49:27 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
+Subject: Re: [PATCH v5 14/16] cxl/pci: Add trace logging for CXL PCIe Port
+ RAS errors
+Message-ID: <20250114114927.000022ef@huawei.com>
+In-Reply-To: <20250107143852.3692571-15-terry.bowman@amd.com>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+	<20250107143852.3692571-15-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
- <20250113155503.71467082@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250113155503.71467082@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Tue, 7 Jan 2025 08:38:50 -0600
+Terry Bowman <terry.bowman@amd.com> wrote:
+
+> The CXL drivers use kernel trace functions for logging endpoint and
+> Restricted CXL host (RCH) Downstream Port RAS errors. Similar functionality
+> is required for CXL Root Ports, CXL Downstream Switch Ports, and CXL
+> Upstream Switch Ports.
+> 
+> Introduce trace logging functions for both RAS correctable and
+> uncorrectable errors specific to CXL PCIe Ports. Additionally, update
+> the CXL Port Protocol Error handlers to invoke these new trace functions.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+An example print in commit message would help understand what the tracepoints
+look like.
+
+Few more things inline following on from earlier comments.
+
+Jonathan
+> ---
+>  drivers/cxl/core/pci.c   | 17 +++++++++++----
+>  drivers/cxl/core/trace.h | 47 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 411834f7efe0..3e87fe54a1a2 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -663,10 +663,15 @@ static void __cxl_handle_cor_ras(struct device *dev,
+>  
+>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+>  	status = readl(addr);
+> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
+> +		return;
+> +
+> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> +
+> +	if (is_cxl_memdev(dev))
+As below. Drag to earlier patch.
+>  		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
+> -	}
+> +	else
+
+and perhaps check it's a port mostly for documentation purposes.
 
 
+> +		trace_cxl_port_aer_correctable_error(dev, status);
+>  }
+>  
+>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+> @@ -724,7 +729,11 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  	}
+>  
+>  	header_log_copy(ras_base, hl);
+> -	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+> +	if (is_cxl_memdev(dev))
 
-在 2025/1/14 04:55, Steven Rostedt 写道:
-> On Thu,  9 Jan 2025 10:55:43 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> 
->> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
->> new file mode 100644
->> index 000000000000..5b60cd7bcffb
->> --- /dev/null
->> +++ b/drivers/pci/hotplug/trace.h
->> @@ -0,0 +1,68 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
->> +#define _TRACE_HW_EVENT_PCI_HP_H
->> +
->> +#include <linux/tracepoint.h>
->> +
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM pci
->> +
->> +#define PCI_HOTPLUG_EVENT					\
->> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
->> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
->> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
->> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-> 
-> Since you are creating these enums in this patch, you can also do a
-> shortcut here too. Instead of doing the define here, move it to
-> include/uapi/linux/pci.h:
-> 
->> +
->> +/* Enums require being exported to userspace, for user tool parsing */
->> +#undef EM
->> +#undef EMe
->> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
->> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
->> +
->> +PCI_HOTPLUG_EVENT
->> +
->> +/*
->> + * Now redefine the EM() and EMe() macros to map the enums to the strings
->> + * that will be printed in the output.
->> + */
->> +#undef EM
->> +#undef EMe
->> +#define EM(a, b)	{a, b},
->> +#define EMe(a, b)	{a, b}
->> +
->> +TRACE_EVENT(pci_hp_event,
->> +
->> +	TP_PROTO(const char *port_name,
->> +		 const char *slot,
->> +		 const int event),
->> +
->> +	TP_ARGS(port_name, slot, event),
->> +
->> +	TP_STRUCT__entry(
->> +		__string(	port_name,	port_name	)
->> +		__string(	slot,		slot		)
->> +		__field(	int,		event	)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__assign_str(port_name);
->> +		__assign_str(slot);
->> +		__entry->event = event;
->> +	),
->> +
->> +	TP_printk("%s slot:%s, event:%s\n",
->> +		__get_str(port_name),
->> +		__get_str(slot),
->> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
->> +	)
->> +);
->> +
->> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
->> +
->> +#undef TRACE_INCLUDE_PATH
->> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
->> +#undef TRACE_INCLUDE_FILE
->> +#define TRACE_INCLUDE_FILE trace
->> +
->> +/* This part must be outside protection */
->> +#include <trace/define_trace.h>
->> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
->> index a769eefc5139..4f150028965d 100644
->> --- a/include/uapi/linux/pci.h
->> +++ b/include/uapi/linux/pci.h
->> @@ -39,4 +39,11 @@
->>   #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
->>   #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
->>   
->> +enum pci_hotplug_event {
->> +	PCI_HOTPLUG_LINK_UP,
->> +	PCI_HOTPLUG_LINK_DOWN,
->> +	PCI_HOTPLUG_CARD_PRESENT,
->> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
->> +};
-> 
-> Instead of defining the enum as you did above, if you have the define of
-> the enums here, you could do:
-> 
-> #define PCI_HOTPLUG_EVENT					\
-> 	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-> 	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-> 
-> #undef EM
-> #undef EMe
-> #define EM(a, b)	a,
-> #define EMe(a, b)	a,
-> 
-> enum pci_hotplug_event {
-> 	PCI_HOTPLUG_EVENT
-> };
-> 
-> Then you only have one place to worry about adding new enums ;-)
+As mentioned above, drag this if to the earlier patch.
 
-Will do.
+> +		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+> +	else
 
+For documentation purposes mostly I'd be tempted to have an is_cxl_port() check
+before calling the following.
 
-> 
-> -- Steve
-> 
-
-Thanks for valuable comments.
-
-Best Regards,
-Shuai
+> +		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
+> +
+>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>  
+>  	return true;
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 8389a94adb1a..681e415ac8f5 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -48,6 +48,34 @@
+>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+>  )
+>  
+> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+> +	TP_ARGS(dev, status, fe, hl),
+> +	TP_STRUCT__entry(
+> +		__string(devname, dev_name(dev))
+> +		__string(host, dev_name(dev->parent))
+What is host in this case? Perhaps a comment.
+> +		__field(u32, status)
+> +		__field(u32, first_error)
+> +		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(devname);
+> +		__assign_str(host);
+> +		__entry->status = status;
+> +		__entry->first_error = fe;
+> +		/*
+> +		 * Embed the 512B headerlog data for user app retrieval and
+> +		 * parsing, but no need to print this in the trace buffer.
+> +		 */
+> +		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> +	),
+> +	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
+> +		  __get_str(devname), __get_str(host),
+> +		  show_uc_errs(__entry->status),
+> +		  show_uc_errs(__entry->first_error)
+> +	)
+> +);
+> +
+>  TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
+>  	TP_ARGS(cxlmd, status, fe, hl),
+> @@ -96,6 +124,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+>  )
+>  
+> +TRACE_EVENT(cxl_port_aer_correctable_error,
+> +	TP_PROTO(struct device *dev, u32 status),
+> +	TP_ARGS(dev, status),
+> +	TP_STRUCT__entry(
+> +		__string(devname, dev_name(dev))
+> +		__string(host, dev_name(dev->parent))
+> +		__field(u32, status)
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(devname);
+> +		__assign_str(host);
+> +		__entry->status = status;
+> +	),
+> +	TP_printk("device=%s host=%s status='%s'",
+> +		  __get_str(devname), __get_str(host),
+> +		  show_ce_errs(__entry->status)
+> +	)
+> +);
+> +
+>  TRACE_EVENT(cxl_aer_correctable_error,
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+>  	TP_ARGS(cxlmd, status),
 
 
