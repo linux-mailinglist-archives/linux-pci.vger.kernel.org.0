@@ -1,228 +1,192 @@
-Return-Path: <linux-pci+bounces-19773-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19774-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91022A11321
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 22:38:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A728A11349
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 22:44:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5BDA188A866
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 21:38:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D6777A171E
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 21:44:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD96C20A5D2;
-	Tue, 14 Jan 2025 21:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE6861D516A;
+	Tue, 14 Jan 2025 21:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DyppnMzH"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="GXDRBhDw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4309E2080DA;
-	Tue, 14 Jan 2025 21:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736890686; cv=fail; b=YE9LlkeH/Nv7S2sYk3clryr/ilrkVI5mO4+cO8txEYXAutYl/AhqdY915wckdANN3W/QDZU16zHJx+1pTNvfS2eI3jRZ8pgL9m+QbrZqiRNH+ubTYfGtEPCIUc5HLR1b9ClRY4PV4b+Tq65Z25UFzzcZGt3Abt0MYw3jLsPVEI4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736890686; c=relaxed/simple;
-	bh=MhyTe9Pm08POdRiLyG35Cp0KWmmK87M6KEiC3p9ijl0=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XmmMrDiISAZCbAAgQxwJADToMcF8TkQml5rrLTdaBQJW7A7uYyZ584qoqL05KrLLDVh85gu8qdW3OVd05VBDDQcYxKf8IIdqdGRuMVmVue05bKzQYxsROFvChcZoPBmNVGyQV8rL0ZhAy/uNmi/qy9c9ytZ8wJy54j5vTg6Hzc8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DyppnMzH; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736890684; x=1768426684;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=MhyTe9Pm08POdRiLyG35Cp0KWmmK87M6KEiC3p9ijl0=;
-  b=DyppnMzHVYu2mjd2PfCS7vgIMEXAg4p7A1wgPk7eKXfDmKxw4p/jYZEr
-   Z8Ml0Ffgk9c+F06aAbscsVQQgZrae1UGMiIMrlmimON4kQ1kqHTXMzrLX
-   hcvMFjkZ/eAyH7HxheXqzu0Tai4gsvYoQNK43if8kMBFr62lkHGoFf/zs
-   Tz9X/YVliFN3KewZkzw8V80t2KYxzs9rv2bBmFWcQPqKlnir2fSog3mWQ
-   OBNHIttlC6KqyDbEh/aLPOBPAKEmP41pjG36pia7q0qocyndgc+qXwEDW
-   pamVS2sCG5RupNSYzVvFcBBr8td/M9ZhxhMzAb6oq3oHcrdxQSFAd2dnt
-   A==;
-X-CSE-ConnectionGUID: aDqIKey+QZWk3zmeXHpZwQ==
-X-CSE-MsgGUID: J9pum+ZPScivhyEurcv1rQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="37436912"
-X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
-   d="scan'208";a="37436912"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 13:38:03 -0800
-X-CSE-ConnectionGUID: W2Q5wj7jQuuzUX9H0HhNuA==
-X-CSE-MsgGUID: URmQ3s4rROuCBCIhIBgPVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
-   d="scan'208";a="109874313"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Jan 2025 13:38:03 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 14 Jan 2025 13:38:02 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 14 Jan 2025 13:38:02 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 14 Jan 2025 13:38:02 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TTzflgZ8hLjje54rMCgZ1MFRChBC1Q4mPH1KkwWkor49jbqULUlnQ1MVdODonNldR07dik83BPCt02HnjbOdqytlV8er+sDN8IzxZIUBpIxXbpLZtVgApvQ7us9ZytiToOtSGzRiezoRnthYn1YKksGxRHuPY9yxlUDEIUW2BeWJH4fUaIP5/nuTMd8jlYYLPMOVyGHtUZspxwu1HE0oE7FOxu2XpkPtUZ9AF3CV1FlMgBc6NEniJ73/GceHqPk9h5ZX4lqMtqy7QsFZxmSerYL/mUoe62ld1WZNFCTc1RUGfz0IvSD0PaASHbDfP5qjqJcOuBdtUBblFAZMRfm3rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OaphfFqfr/St28aLCpPO1atk7w/k680hqW6rbODrJhI=;
- b=A5iP7V2aI442omTswQhA0dFJ3wA3fVPbx5InnPHBGKJXoCkqB/uNRIYDhmQwTPPxZz1d7qqTBs0Ugwldj/aedk6NQJ4x3Dq8v3pFJo6Mk1fWvnVUcJXVLWeRMfIJRmV8+doJKxso+NjR/fBQSrzzWivIqO8KNFtbp5vJzhhU/QGb5HpfgPij184bLzwIyAjK/DIyVP35hlXmLLt6ZkSf+C7wDYbhylI2ZpBUCHOji3cptFlEXohK75qXQGmuQ16z920p1FbTb6u0GW2Ivyse8RjaF01WnG6UOEsKGsSgObybrzcbUYKZiCaQn0uSEaIt+zssHPeKl0zybwXgeTUUdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SJ0PR11MB4893.namprd11.prod.outlook.com (2603:10b6:a03:2ac::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.19; Tue, 14 Jan
- 2025 21:38:00 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8335.012; Tue, 14 Jan 2025
- 21:38:00 +0000
-Date: Tue, 14 Jan 2025 15:37:53 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
-Subject: Re: [PATCH v5 08/16] cxl/pci: Map CXL PCIe Root Port and Downstream
- Switch Port RAS registers
-Message-ID: <6786d9313b98a_186d9b29432@iweiny-mobl.notmuch>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-9-terry.bowman@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-9-terry.bowman@amd.com>
-X-ClientProxiedBy: MW4PR03CA0176.namprd03.prod.outlook.com
- (2603:10b6:303:8d::31) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2CE29406;
+	Tue, 14 Jan 2025 21:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736891091; cv=none; b=cqBE1B4x04+PAlVjyP9/1boziTCbO0/iDnBwoLeJ3fQdQuko3kf7M65mxvb6ypX4R/sQ+xGSiNk35tR2fQDFfU+97gPuWeUHolQ/IaSwU6TU5p4X9x/WyL4P95yzSdNETIVqiB+LPKHv5jLV1FxlNoZ2Ve8OEalv/aY/P1zsXJU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736891091; c=relaxed/simple;
+	bh=O1hAAl5P+0iRTGoAfosgUSSzJbjhMliEMziVsK3KZiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aV8T7Gi31nYmUBNO9nogEzQIfMk+qF1pilO+6WdfQ0hLcuzHQBYt4Pv5fGjR0husLfe3kIoh8TT+p2WKNLvvkO5ZyfIDjqIWxpubToE/xaz19Y7dZae8MWwYqH3x44zAFf/SWimsTZ5oNpIawMkPp8AtiwOdL8bwN3lhYh2b+Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=GXDRBhDw; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+Received: from [192.168.42.116] (pd9e5946e.dip0.t-ipconnect.de [217.229.148.110])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 319AC2FC005B;
+	Tue, 14 Jan 2025 22:44:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1736891085;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mLpcmFkQzGAjgM7Y28lW6NnQxQ8avWfi50Ef6SmXD9U=;
+	b=GXDRBhDwxV1us8WYnTT7VNDPeDQMy14ltL0lkaJJt5MokNOsGMJwqNGf+nGzab9o2bETZB
+	TW3LlUGI6s1W7wLiOdoG3+Si7zhsYm4cvqWAkWpwSSPxTIt/RwKMIuDTkKpToGKXPR9imo
+	oA15ua9HU5fuQLerrGqWbtLGhge1RDE=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <321d3aff-da98-457a-9e3b-165334c765eb@tuxedocomputers.com>
+Date: Tue, 14 Jan 2025 22:44:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ0PR11MB4893:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7873fd1d-361a-4b49-75f9-08dd34e3b7c6
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?y8+0+qvqGB7ShYAsYsbx8OriyrbTktDJmSrympajXJPoSVwkgu11aLYCCuvw?=
- =?us-ascii?Q?542jgTrVpVK16hlI3/ZPspSV7XxloS56AWzDbD3mP5JUSWzIvvIg8VcOv0IF?=
- =?us-ascii?Q?cNfRf4SagIdf3kaABnrHybmcEwN9mDM3AvPtJgNuulistnvfFtyZ80oo1JKy?=
- =?us-ascii?Q?JZQem6iNWdgZ06CJiYapjDaOkzupClaSvjIWj1jkXERLBjbeWZNC6jDZxbcl?=
- =?us-ascii?Q?Vio+l6CV4WcEX9qrPlOlD7Kjx9xkc5DGMymXBMYu6qX0ovI3GmVeBvTesKvo?=
- =?us-ascii?Q?bJDGkEW/cIx74BGOhq1wPawC1tfKtn5q1h+B+NtuD4UK0Y+n92gg7Fka2NxP?=
- =?us-ascii?Q?J2oESXWaLRwDdhFYAtjEuBliuwTVMIBwo50NvQYauATCH8h7273URI1O3p2I?=
- =?us-ascii?Q?bA5/Tdm27JDH+Q71ZgoC1HLWYcwAfGujz/sq2PLLxFy1U7mr2LJ197S7H/LD?=
- =?us-ascii?Q?poIXOhs1uZwG5bKOkrDlaK1zGmBMOMEFKfa7FHF8K5vfLL88cL06qsY7Qfd1?=
- =?us-ascii?Q?zem4bKM5BYP3lMrpa8TzXnOYvS8+pi908/lclrsEhociMNvMsJzS+lkTIeUD?=
- =?us-ascii?Q?tvp2je3rCqIvl590he165BDcZc3bzY0C6ea/TvjKWPEBUyMLTOHWMgybVeUz?=
- =?us-ascii?Q?gvB5UqruYI9/oAxt63OGyi0ZxcHcFZ4fujrrur3vowTmMeb972T1uctsJ4cu?=
- =?us-ascii?Q?+KN/BPlAoGxmOru9lHPgzSCVGjAYMEhRS6P9Oji378MufrLJ1LwHV/WFbHtC?=
- =?us-ascii?Q?lY7QLuoZN2wBIC+avnE1nM4YYXZGrNizAwZGPcoHzl6m7Qq9FrJl7SFUh/3Y?=
- =?us-ascii?Q?MiPkoax//0m3E3EQefZUOZP1f1+eIEO7NMkLguA8wpAJE7plXjhBhrs9lSdK?=
- =?us-ascii?Q?i1+/gkCNF9UnEv0omrf+Q6FX3s3WhDVHJ8USVbzcJ5xfBAn93yJA3UOgRjl4?=
- =?us-ascii?Q?xkrY9JVawdPOqCb1PldT+lCTreJz+VV1r4TzEhoJo3rDSBbv8/iIF2LbIT2k?=
- =?us-ascii?Q?xTTMn/04RPnjGVmVsmbiYkxtm+BUnMnlxRQlKuXDDDGg8OXggj7EsQ51iXPw?=
- =?us-ascii?Q?HL1lGNR7rju+ipFZfLd6KELytE2Yd965ZVx52UGbmo1JxbLfqpkh35i36jj7?=
- =?us-ascii?Q?1JvYozxYFKkbKhCXu8oYeGUwWawbOYpnC8HLtGQpkcvhpNRCE4zssilOW14D?=
- =?us-ascii?Q?y+8RPum6UpbVMk5SYOoF76OoN/3VhPqeQ0ygvMB4SV8VOzsJ801T/L/n51/9?=
- =?us-ascii?Q?X0CW/EWiySKEOUlaDTDWNPShfLBJ6agzb3i3CFA9ZhtcvALd0w7z+5+qXoxU?=
- =?us-ascii?Q?7c5/lEdgpSIwe8oL0ostB8tS7sihiAXzesXwFUQsVpiuRu/6/mG4rILzQehi?=
- =?us-ascii?Q?UPw2Wsdhlzvh8fPEyTmIwokawicOKBozLL8YyBAX0aGUMkJwetojCMRemmGN?=
- =?us-ascii?Q?Hsqo0RSmdjw=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zk0mcdGLXrlrHckbevAGPoHrOsR/iZaUylsgHoDmXEARKfaR7smtEHSVljO0?=
- =?us-ascii?Q?bRJJNeC+nRWv33dvhcsN2Z3Hy1goMnwavZLXdfk02Abh1Ew9r3dMqp1tff/o?=
- =?us-ascii?Q?BnzwY7TbK9JBevUlmVKyhffKcTfMcs72Q2Xmrzj3OeA/X8iyTc2fgrEDjbeZ?=
- =?us-ascii?Q?OMOsw81/I+11FVzMpQihKMszu84p4JnPM4irGUjZLQlTAGXZbb8FhF8U3hcC?=
- =?us-ascii?Q?dRzFjhdQcg10phsXbRPEzuS8hHbqL6hPRTqiEqKfhjN+G5OwQ3Kt9lCKugHr?=
- =?us-ascii?Q?fi/Rqq7Dzazk6h7z6JCYrj2m89r2s0GGYTtjmHueU3NYOSc/TpZqzosjzghm?=
- =?us-ascii?Q?7805NcIXROW65lrO9zU919DvC9jgyRfIBG8b+JXRevPxIOUi5jPWGw28zYHh?=
- =?us-ascii?Q?kEhL/oncUvz4LD6/A3xhXv5nU3ZCxa5NV11+eEbNXf4H6qXdqV1G3xWl4lrK?=
- =?us-ascii?Q?E0gEngBdtGge9w57Wh+BBS+bcFJB4G7fS3RV/zP5UHd5QMg9ytcK9j0rNOxr?=
- =?us-ascii?Q?pHPCn+lcMLCzq4jPYsChO3UctkZ2ygpcxEWOJd9gzl/zg+DwDaf6NGytcr3f?=
- =?us-ascii?Q?qZnuf+q83fYw+KOJ+SR53ks4i0OnV9zMQVAuetA0UIoF/l93cc24P1XmxLhM?=
- =?us-ascii?Q?rCpV9VIQAsgijLsDRj9pOQJWUqKKYi8sciIir0adbTYu8VbRzS2NgmUSPY/B?=
- =?us-ascii?Q?SU4T4ARO4t9nWj/wWfgFm4XkNE0wfCds1cmuvEKtznPDadVk/hOb8HO0HIPh?=
- =?us-ascii?Q?5IsjJ4T9jvc/5Ewh7Zbobci2T9nhRGbSrloFx7o3SeTURkH3cH+hYVFAa9ua?=
- =?us-ascii?Q?v3pejbRnRNIAQbA2k+p/+4ERdBc30iWOnRqUXelKo4w+Kk131RMnxMsGOSGI?=
- =?us-ascii?Q?B4gJ6s/quAuo4IwlJhNoe/i8QejUYVe7Z9ipS21YXONbXLUqlX7S+mYk9JQh?=
- =?us-ascii?Q?MvABb9pqzIaFuEn1uBag5AUnM49vJs4y84tIDSRayxG4zLsa9fwriRuRt5KA?=
- =?us-ascii?Q?hbsyQuNKtSSzo6GncJ0c2Ddp9YE0xgXLY5VEhwd3UFJRmoBu4pnfk3gSxhzE?=
- =?us-ascii?Q?JSgh6lFfQUMZjM61aXnM/9eEUxFh0QTqjyGyHajL8qWU2ZE30OHzHstOmVAn?=
- =?us-ascii?Q?nb30YnicRUFRheM2glCbI1pAK2QCfQdzX9xwfzUztayVuCsuaw9+baOppZD8?=
- =?us-ascii?Q?L0G+LH5flAbVh1d4gF/h7n3oj/HKz60lTOlHFOpwDVDhqa5f7U1Q6aJoo6cw?=
- =?us-ascii?Q?WzbY13bsAvNoUz7GhHiHyXhCRzOvfFTf43YwQqc55okas9lZfeR9Toj9oPSA?=
- =?us-ascii?Q?41rfNn8LbPPjh0yAT9vkL1QMGN3lAnAE8UrvC4aDlXGcyTjTKqbGkbiyGfC3?=
- =?us-ascii?Q?h9e8AiRwFY0J3VhieIfSeZHWERixgJ9tZSB/sf0QwCJle9PhVPZy1iAuJDpt?=
- =?us-ascii?Q?6i9BaQ345FVJI5LSE9h1csIVghHxo0KM9PyaGVYqWhi/Ckz+QyMWeX6wqIqW?=
- =?us-ascii?Q?KPCk+DxtNbj4JXCxbiJUJ8ougIctzWGIwYY77fCGLxjXWCeTbjhghpc7R3eq?=
- =?us-ascii?Q?3U7p98MYawApT4Y2Fcqc7mFq31v3/U8cbyiZ3WE+?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7873fd1d-361a-4b49-75f9-08dd34e3b7c6
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 21:38:00.3788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7JGhDOnaO0lqAusGZcD5BZneHCf6zc4RgJrnElyIK7t7AXC96FNcQ05aEDw13//SRTFcS8vZwTBQbANU6Gkqnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4893
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] PCI: Avoid putting some root ports into D3 on TUXEDO
+ Sirius Gen1
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241220113618.779699-1-wse@tuxedocomputers.com>
+ <959c10ce-9f84-4dd5-8506-9d094f0d6762@amd.com>
+ <8b28076c-7273-429e-97a9-05a8c670f171@tuxedocomputers.com>
+ <a769622e-9e5b-4ad8-9474-5c5f935270b2@tuxedocomputers.com>
+ <02b8cc7d-4514-42ae-b3af-e22f7e7b8351@amd.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <02b8cc7d-4514-42ae-b3af-e22f7e7b8351@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Terry Bowman wrote:
-> The CXL mem driver (cxl_mem) currently maps and caches a pointer to RAS
-> registers for the endpoint's Root Port. The same needs to be done for
-> each of the CXL Downstream Switch Ports and CXL Root Ports found between
-> the endpoint and CXL Host Bridge.
-> 
-> Introduce cxl_init_ep_ports_aer() to be called for each CXL Port in the
-> sub-topology between the endpoint and the CXL Host Bridge. This function
-> will determine if there are CXL Downstream Switch Ports or CXL Root Ports
-> associated with this Port. The same check will be added in the future for
-> upstream switch ports.
-> 
-> Move the RAS register map logic from cxl_dport_map_ras() into
-> cxl_dport_init_ras_reporting(). This eliminates the need for the helper
-> function, cxl_dport_map_ras().
-> 
-> cxl_init_ep_ports_aer() calls cxl_dport_init_ras_reporting() to map
-> the RAS registers for CXL Downstream Switch Ports and CXL Root Ports.
-> 
-> cxl_dport_init_ras_reporting() must check for previously mapped registers
-> before mapping. This is required because multiple endpoints under a CXL
-> switch may share an upstream CXL Root Port, CXL Downstream Switch Port,
-> or CXL Downstream Switch Port. Ensure the RAS registers are only mapped
-> once.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
-[snip]
+Am 10.01.25 um 19:20 schrieb Mario Limonciello:
+> On 1/10/2025 12:15, Werner Sembach wrote:
+>>
+>> Am 10.01.25 um 18:15 schrieb Werner Sembach:
+>>>
+>>> Am 08.01.25 um 22:26 schrieb Mario Limonciello:
+>>>> On 12/20/2024 05:35, Werner Sembach wrote:
+>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>
+>>>>> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend") sets the
+>>>>> policy that all PCIe ports are allowed to use D3.  When the system is
+>>>>> suspended if the port is not power manageable by the platform and won't be
+>>>>> used for wakeup via a PME this sets up the policy for these ports to go
+>>>>> into D3hot.
+>>>>>
+>>>>> This policy generally makes sense from an OSPM perspective but it leads to
+>>>>> problems with wakeup from suspend on the TUXEDO Sirius 16 Gen 1 with a
+>>>>> specific old BIOS. This manifests as a system hang.
+>>>>>
+>>>>> On the affected Device + BIOS combination, add a quirk for the root port of
+>>>>> the problematic controller to ensure that these root ports are not put into
+>>>>> D3hot at suspend.
+>>>>>
+>>>>> This patch is based on
+>>>>> https://lore.kernel.org/linux-pci/20230708214457.1229-2- 
+>>>>> mario.limonciello@amd.com/
+>>>>> but with the added condition both in the documentation and in the code to
+>>>>> apply only to the TUXEDO Sirius 16 Gen 1 with a specific old BIOS and only
+>>>>> the affected root ports.
+>>>>>
+>>>>> Co-developed-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+>>>>> Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+>>>>> Co-developed-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>> Cc: stable@vger.kernel.org # 6.1+
+>>>>> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> So I don't think this should have my S-o-b.  At most it should 
+>>>> Suggested-by: or Co-developed-by: since it was based on my original patch.
+>>> kk
+>>>>
+>>>>> ---
+>>>>>   drivers/pci/quirks.c | 30 ++++++++++++++++++++++++++++++
+>>>>
+>>>> I think a better location for this is arch/x86/pci/fixup.c, similar to how 
+>>>> we have https://git.kernel.org/torvalds/c/7d08f21f8c630
+>>>>
+>>>> thoughts?
+>>>
+>>> Fine with me
+>>>
+>>> I will make a v5
+>> In fixup.c i don't have access to acpi_pci_power_manageable, but since 
+>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_ryzen_rp_d3); 
+>> matches to only one device anyways can i just skip it?
+>
+> Is it just a header problem?  Maybe you can just add the header?
+It's a local header to the other folder. so no.
+>
+> I think if you want to drop it that should be ok, but as it's a problem in 
+> your BIOS (specifically) and only matching your platform combo I would suggest 
+> renaming the function and struct to quirk_tuxeo_rp_d3 and 
+> quirk_tuxedo_rp_d3_dmi_table.
+Forgot this in v5. I will send a v6.
+>
+>>>
+>>>>
+>>>>>   1 file changed, 30 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>>> index 76f4df75b08a1..d2f45c3e24c0a 100644
+>>>>> --- a/drivers/pci/quirks.c
+>>>>> +++ b/drivers/pci/quirks.c
+>>>>
+>>>>> @@ -3908,6 +3908,36 @@ static void quirk_apple_poweroff_thunderbolt(struct 
+>>>>> pci_dev *dev)
+>>>>>   DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
+>>>>>                      PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
+>>>>>                      quirk_apple_poweroff_thunderbolt);
+>>>>> +
+>>>>> +/*
+>>>>> + * Putting PCIe root ports on Ryzen SoCs with USB4 controllers into D3hot
+>>>>> + * may cause problems when the system attempts wake up from s2idle.
+>>>>> + *
+>>>>> + * On the TUXEDO Sirius 16 Gen 1 with a specific old BIOS this manifests as
+>>>>> + * a system hang.
+>>>>> + */
+>>>>> +static const struct dmi_system_id quirk_ryzen_rp_d3_dmi_table[] = {
+>>>>> +    {
+>>>>> +        .matches = {
+>>>>> +            DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+>>>>> +            DMI_EXACT_MATCH(DMI_BOARD_NAME, "APX958"),
+>>>>> +            DMI_EXACT_MATCH(DMI_BIOS_VERSION, "V1.00A00_20240108"),
+>>>>> +        },
+>>>>> +    },
+>>>>> +    {}
+>>>>> +};
+>>>>> +
+>>>>> +static void quirk_ryzen_rp_d3(struct pci_dev *pdev)
+>>>>> +{
+>>>>> +    struct pci_dev *root_pdev;
+>>>>> +
+>>>>> +    if (dmi_check_system(quirk_ryzen_rp_d3_dmi_table)) {
+>>>>> +        root_pdev = pcie_find_root_port(pdev);
+>>>>> +        if (root_pdev && !acpi_pci_power_manageable(root_pdev))
+>>>>> +            root_pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
+>>>>> +    }
+>>>>> +}
+>>>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_ryzen_rp_d3);
+>>>>>   #endif
+>>>>>     /*
+>>>>
+>
 
