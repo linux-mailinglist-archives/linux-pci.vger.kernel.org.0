@@ -1,124 +1,163 @@
-Return-Path: <linux-pci+bounces-19715-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19716-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C78F0A10358
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 10:53:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A117BA1044A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:35:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03E921886182
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 09:54:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEF6E1685F8
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 10:35:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C05C9240229;
-	Tue, 14 Jan 2025 09:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC53E28EC73;
+	Tue, 14 Jan 2025 10:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="jJySU+1K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B3C22DC43;
-	Tue, 14 Jan 2025 09:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D523B22DC48
+	for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 10:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736848432; cv=none; b=ZNJBFrztzboVDXqNEEi4gvOXReeJWyIZW/ECkbUOdLSXOCZ0arpKsYdn57gcSfAIaYtpH5Qpgn976jKkV8B8/yIW3V8jZ/IEvbLbJlWFtBP8JSIoBni35t3yHwMH01Y38WkaBQVpJnJFwz1V0Y72Ayb5QQWCFpxTfYUGp2jtWpo=
+	t=1736850893; cv=none; b=prh1E5QHKkbAM3QqKUhr6R0btIJUaykLK7FPIut9mM0G6YZg3VJb1eGtOVx6lOmbbf26LSgong+EceKVpy8j05L43B/figAPmrwyji+9dAMPiy7hAbvA9+lQzzOuNB/sCC+VeBy08b9s1BqiLH8KIs0acvHEKJ7XG2ZsEefBW58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736848432; c=relaxed/simple;
-	bh=QernjPqux5TLywytSMeNCq/y0tyjCAqIRMJpaKFr7ZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HUO9Nont2fFRSM2kiBuutlAPytfUvsdddZeesUpyFeNSvAYpcE4hTpcVqI/sCaQRE/ac6MkO0CJ2BMy4qomRBU3AEwwNia/iPgWzkINaAdV+Vv6jfwcLMQjeSlrfUHAcDFSzFn/ml+X1tzQkLhfXhCF4bZpstt7ofWNWhrs8z20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21669fd5c7cso94481615ad.3;
-        Tue, 14 Jan 2025 01:53:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736848430; x=1737453230;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1736850893; c=relaxed/simple;
+	bh=VSqmcVBfwXIY69B6YqMhcuiidU9hF5xOgQJpsgmErXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UTpYZQUhEH7TFHi4quwT2jIV8sXpm6aqqAhxlb+OrVnwWa19U4uPyYedv8KCASZivadLp8AAlyomRVy5ltiJiEzWH6baESv62OftayV3k76sxU6h93eF5TydP+8upqDtqkzYKpcV8+i0PZQKcgQ2gOTfiBk/F42rGbzRPFzAlcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=jJySU+1K; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso938602066b.1
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 02:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1736850889; x=1737455689; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nSeUkptft34AkNx4jU0RBWebPqQDxIe1uPszewCoC+U=;
-        b=vUlXjZYtEv6gXEiFWS6OgZOXx1qYXiwxyAoRuEPbZOjyUteHfs15nkS2m9tL5YyKPB
-         zEu39MBkr2Dfw+ZrQ+B0GgCOxHruwghyR3+z+AgfmZz1nmZJTwKS9+oLggj8pY6LksG+
-         9DPWdLpOu0nUtdj8xFU2B9vK+2Z+adThBkNJ9SPTXq8owFuMucBMa6WZ8rqNRdBfpS9Z
-         nBmXF7IF0CZNjfBbAbgLsAiqvwjSpl3AUOIQgwh9MN72Gs6bz2c/2/pDmMqDytV/9CX1
-         N3NbnJbcWE/tyCOih8LbPY0iXJyFcldraX89N4k2PrEsIVThTt5CuAPCOM5m4L4KxywR
-         GFRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwCB4LfcoQLAsD5bNX1H4g+xOMAkIYLxufgsQy62hwBImu5AGcOF/QLFPTD4ll7cnhbLxVd3BV5vo=@vger.kernel.org, AJvYcCWEatJea49OV6aHBOmBHFn2POYDkJz5a1bXBvz/A+KzCi9XltmFeXRvCfvn+KFy2Ow7PU8jV5Kz0+Ppswk=@vger.kernel.org, AJvYcCXmMCY1M9aQnOBuJyR1oHHw8+lT3jsC36Hn/cyfEABRkAdPGRJZ/DmXinfB6x9tj661cTVm1BRa/CKe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxzAilkk1HM0Ca5LiakFzOkH8x3IRR3Wdjlh/jh8K7Q6+EZYOH
-	R1yU/2IDa9YOKvdP+06AdpN5YagRYYQNEpArZb6Mq4Ee1lTTOlLm
-X-Gm-Gg: ASbGncu+84a3oB3HQCtsBUxcWW7dFNZHWyjOlQEyK6M7mZrVxNBfgdyp2HsXcOVdxOg
-	SFUY+hdCA6ZJZCsRcgFThv666gOr3GS9L5XBFtSE2a2e+oKr1GWThpa4ZeZM+hQVgRPaViMenaj
-	6L8RekQCcg2r3J5zZBt5Ehrhaqn/B9nKNNIJIxsiyTGUuWCC0AZbWxGiV/VgL6qzcc2VWf/eISz
-	fmQ/g6X3K6sD8Pa3Caqkmw8S9+4EYo69KeBIWo962IB8Dh1zBo6UQbESIIXFUs4GT6aM8yeJ89O
-	iFu0gd5QshXSVNg=
-X-Google-Smtp-Source: AGHT+IEcTQwpsnVXURxRYFuDX1xTBQOSvGJ+8G1/e7z3DcKHqB/DRr0X3DJGiJVousekFSPpJVY1Ww==
-X-Received: by 2002:a05:6a00:9294:b0:72a:a7a4:9b21 with SMTP id d2e1a72fcca58-72d21f16046mr30678516b3a.5.1736848430124;
-        Tue, 14 Jan 2025 01:53:50 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d40658d2bsm7274298b3a.107.2025.01.14.01.53.49
+        bh=8aKUOtOG9BVgReGI+Nw2NzmnaZPU8conWgd+JDzRbKo=;
+        b=jJySU+1KCSAaJcLXDvlC0zF7jGDof+k0ld6Ex7CHTEhONmyml9pp2Fvqyl/oOl5bs2
+         HKboPPde3o2hSvv+jhcTWf/eoHF+sLsQpTvssqJPjNKrCuHdAxASCUqjj/6JEfyJ+pqm
+         0ssLfkTHOIRHZp/4S0BcrOtq2YSuXOGiYVCy8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736850889; x=1737455689;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8aKUOtOG9BVgReGI+Nw2NzmnaZPU8conWgd+JDzRbKo=;
+        b=Jik8I7eLl1g8ePQ57QghbEOwmuNTaRVHNpm6t3PaxNaSMglzGIHDxs/4iUGs5ZQ7Fe
+         OrC1k8FKmidp9m8zdDyW/+HY1wtoybWS9wD4dzIlKyhR0kil8OuzJdNe3S2mBO6c7ot1
+         gkInmx8MjanWtCbLPpYKdAs2fhmNM7TQXCzKcxFP3j2iNPtawVhtmznFFGPRKzW3s1ER
+         CdAsk30YDptxdhzRY5az2gBhTd2wkolBhJzht3Tfp7rxKfYK6qJ70iPi3JVo5+qksUPz
+         5HL8y4QE/7ATWQTUPK+/XLN8ihXhuY/gPaEGPD1Olt2yhzrrVyH79a8YmSr+Qp+YUgfL
+         MhKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNkXNQ/5UQsHMoUauQfXYnui4h+7l19d+/Tesh5EX5M2Z0b8Z3XF816CUHn8Tx9LgShQBs67mlMV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJqdRJTdPuYSTb0TV6qzkO0BztSAl5qO3Wm1juh2wdMAo4ptqu
+	S48s/dibh/79AVd3V2Qy67uZk3c87TzCZOoL9kakZ5XwOtwCqbWHnW/yCFudb1k=
+X-Gm-Gg: ASbGncvdttFhuhoWDDf/QqxZyQGFtTslx8PpnpICHWRnASxMOsUn9RvH3ife6BMjJVM
+	HCE8Wt8bTnfIAyStd7V08qCcKUaFLKL5EAdPOfyTcBiYqQRdtrOUMgGeqNw4XIlZXkQYcZmyUwH
+	flKXpPzlYb/xErtn8kE84t4CCFpllJcueeANZhZF/pIbcTgYTtPgzGwgllUG3FCtF50csB020AQ
+	T8oUNGmoL4InJadxRL1Gu/3MoB0hIuQpUUm8QirAcb6zDUA+yMakmwqdc4Nu1Xua1I=
+X-Google-Smtp-Source: AGHT+IHu5De2z/QFEQRsmLROwHRAnH4F5r3sr8PBreqTBE5z0L97HWAie9gr7imKD5uPM/cH1y3q+A==
+X-Received: by 2002:a17:906:4fcb:b0:ab2:fefe:7156 with SMTP id a640c23a62f3a-ab2fefe94f8mr1052272666b.43.1736850889114;
+        Tue, 14 Jan 2025 02:34:49 -0800 (PST)
+Received: from localhost ([84.78.159.3])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c913605csm608116266b.82.2025.01.14.02.34.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 01:53:49 -0800 (PST)
-Date: Tue, 14 Jan 2025 18:53:47 +0900
-From: Krzysztof Wilczy??ski <kw@linux.com>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Niklas Schnelle <niks@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-kernel@vger.kernel.org,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Tue, 14 Jan 2025 02:34:48 -0800 (PST)
+From: Roger Pau Monne <roger.pau@citrix.com>
+To: linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-pci@vger.kernel.org
+Cc: Roger Pau Monne <roger.pau@citrix.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v2] PCI/portdrv: Disable bwctrl service if port is fixed
- at 2.5 GT/s
-Message-ID: <20250114095347.GA953333@rocinante>
-References: <20241213-fix_bwctrl_thunderbolt-v2-1-b52fef641dfc@kernel.org>
- <CAMuHMdVtpVTtUEX=hF+r+rt_awk=w8iYWHd5yzZYGUpKoyYcgA@mail.gmail.com>
- <0a053cef86001953b34fd199b551b96100fcca70.camel@linux.ibm.com>
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 2/3] vmd: disable MSI remapping bypass under Xen
+Date: Tue, 14 Jan 2025 11:33:12 +0100
+Message-ID: <20250114103315.51328-3-roger.pau@citrix.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250114103315.51328-1-roger.pau@citrix.com>
+References: <20250114103315.51328-1-roger.pau@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a053cef86001953b34fd199b551b96100fcca70.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+MSI remapping bypass (directly configuring MSI entries for devices on the
+VMD bus) won't work under Xen, as Xen is not aware of devices in such bus,
+and hence cannot configure the entries using the pIRQ interface in the PV
+case, and in the PVH case traps won't be setup for MSI entries for such
+devices.
 
-[...]
-> > This is now commit e50e27a613db6f18 ("PCI/portdrv: Disable bwctrl
-> > service if port is fixed at 2.5 GT/s") in pci/next, which conflicts
-> > with  commit 774c71c52aa48700 ("PCI/bwctrl: Enable only if more than
-> > one speed is supported") in v6.13-rc4.
-> > 
-> > Gr{oetje,eeting}s,
-> > 
-> >                         Geert
-> 
-> Oh, that's not right, good catch. This patch is superseded by
-> "PCI/bwctrl: Enable only if more than one speed is supported" and
-> should be dropped.
+Until Xen is aware of devices in the VMD bus prevent the
+VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as
+any kind of Xen guest.
 
-Done.
+The MSI remapping bypass is an optional feature of VMD bridges, and hence
+when running under Xen it will be masked and devices will be forced to
+redirect its interrupts from the VMD bridge.  That mode of operation must
+always be supported by VMD bridges and works when Xen is not aware of
+devices behind the VMD bridge.
 
-> Sorry if that wasn't clear from the the limited context of this patch
-> discussion. @Bjorn I think this needs to be taken care of by you?
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+---
+Changes since v1:
+ - Add xen header.
+ - Expand comment.
+---
+ drivers/pci/controller/vmd.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-No worries.  I removed it from our next branch and marked accordingly in
-Patchwork.
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 264a180403a0..33c9514bd926 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -17,6 +17,8 @@
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ 
++#include <xen/xen.h>
++
+ #include <asm/irqdomain.h>
+ 
+ #define VMD_CFGBAR	0
+@@ -965,6 +967,23 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	struct vmd_dev *vmd;
+ 	int err;
+ 
++	if (xen_domain())
++		/*
++		 * Xen doesn't have knowledge about devices in the VMD bus
++		 * because the config space of devices behind the VMD bridge is
++		 * not known to Xen, and hence Xen cannot discover or configure
++		 * them in any way.
++		 *
++		 * Bypass of MSI remapping won't work in that case as direct
++		 * write by Linux to the MSI entries won't result in functional
++		 * interrupts, as it's Xen the entity that manages the host
++		 * interrupt controller and must configure interrupts.
++		 * However multiplexing of interrupts by the VMD bridge will
++		 * work under Xen, so force the usage of that mode which must
++		 * always be supported by VMD bridges.
++		 */
++		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
++
+ 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+ 		return -ENOMEM;
+ 
+-- 
+2.46.0
 
-	Krzysztof
 
