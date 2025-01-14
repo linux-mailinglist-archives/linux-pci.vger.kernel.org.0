@@ -1,85 +1,84 @@
-Return-Path: <linux-pci+bounces-19768-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19769-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD41CA11295
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 21:56:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9A7DA112A8
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 22:01:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2DE5188A56B
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 20:56:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 674803A3699
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 21:00:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5742207643;
-	Tue, 14 Jan 2025 20:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC9C1CDFCC;
+	Tue, 14 Jan 2025 21:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eqs7QIO3"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GIha6MwC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2052.outbound.protection.outlook.com [40.107.236.52])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2061.outbound.protection.outlook.com [40.107.21.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDFD8493;
-	Tue, 14 Jan 2025 20:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6074820767A;
+	Tue, 14 Jan 2025 21:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736888209; cv=fail; b=Q4RfLmBJJw+o9+zRXhb6jt0jBpHuGuYDpL4FT+n/Y7b+Q8ObIVtyimmuiLSoXGa1rYs+nhi4jJXGg37JbY3ii864F/9/8t3m9OgCuPscmr+EZRUmfcMJ9K4SvwXylpc8KhRj7MLUdQ0NGPT+mD/oeHORkTUBqOQ5cYQI67nAAVM=
+	t=1736888446; cv=fail; b=VO/NkGQuc8SnK5MshNUuSMXrx8QTQi7fWbb3UPEP/fGVpZ4fsJmiRRVMpeRTtlKeHpsWAJoqCN+wwBcEE/Gr14F/+A818aeW5wAEJRDlzrSzfBB4LsYDORfnWS8kGhT9gbnoNHS/GuPqC6u0yuoHmXob8ZBu6F3VZhWlFNcyGiY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736888209; c=relaxed/simple;
-	bh=IlELOCz27boMHHJRgwgPXG3whrAgp18lojI4lriCF3I=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qHeFT+FGGqEhvsCpbTvGX3KXSdrfJ1FCQoxkW4Q42Ty/2loOGFh7m7DVpeoPk6cgsRuHQQwQ+7sJrADg1h6t9FwQyr3f1FK5B9wL/2e+lKwhnb5M3tvfua+g5fC0OPE1kgfhYEz3KNzMbNLBrXqWyQnTtp12HcQW1C6nZD75zBc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eqs7QIO3; arc=fail smtp.client-ip=40.107.236.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1736888446; c=relaxed/simple;
+	bh=Lmn38N/YfnR79oBagdEXfLyuWyWm8wZ69LrsJLGxSo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lET/2RLQTPIkJdLwifmQszPSy0p3PCGiLcpzYpqvIx7QlEClzk3pxZg8G+JLxeX8/xntZmth7VWvw9YllQwdf3f8kQfgySvgv0ZttcAZlv5H/Zj34JReVFiqz78fho8P5/5mol9PuyAtcGyPJBq90+xaJ8rub7fTDk1px9pu4A0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GIha6MwC; arc=fail smtp.client-ip=40.107.21.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Cbik9YfSN06ZZR88aT9SxJQW5PLDtT6cEBhBIuoKzCf+P3jkHUN6aq0Hciwq/lCVV3i8I20hyF6ejZSD9cznIw6ycNe8LYLOeyaITbHUhV82itwuhK9xP/KkHcqlZvZ2eyX0HdizMq9LkQj5xkMnhC9KX/6n8EVPTmxReQfR72XL9z+LWKob3MxRb5TRa8JjhofyiA1VFow1IkUENfxITG5NzsvjPjWUk016Uqmn5utb59qNjzzDcaH5/hg6F9OIWSP2j+efWNkBkr4lGL3ieq35DfJz6pU70zslmfh4SNTiIj6Tz+s9wIXjxJOR/2n86WDpdX8n64ec+dfXEf0HSw==
+ b=DqUqZJbNliQhL/Qquq6uAL8sJT6dDsPWkm6ZVB2PGW2N9beapLS4UdXYa2TWmfP94v4Ae8aizuNc0IvQnLXQnAIFYyq4vN2vU46Rl9VK19Cpnv0nEztg5fdaJb3XEY2nHZ0EBEhJpMPVp3+38bcZifMw5gCXwiGd64IjnqtTdea3O7MjWRi0WxvaKVYdhFDlzAR9YTC3harEiWiD7L7Egn7D8IKsAXH6cPccI/qucuCmfCk6e2bQWRhFfrfliVdpGCFVfWc/GBpeFVkRpNmxl21yJ1r32qC1MTKUZzOh/g+718W8/OqVfXg9y5iwn3TT5btbOnkGqkAQKAdd5xSIBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/yz49ctg8vcmAfa7dvD6okzOaFHRgC0FJ4bOZ1Ptrcw=;
- b=BEI03kRNXCauA4DDK3Ha8w63Y27zwe2k7hY+IxuS/0wQ4GeRXJwmqeaXv9e6UL6/UoFSOht/cAr1Y8DE09I9N1kiPr3oHN4XTujqtb2tnE9efnma47e4cOgYz2pXel38tvufnc7jOrcK407cU4SbGAK7NE8uOErsNkrkGPLhLuOu67tJhEG4YW59NHGlpzoiWlf2heBFHAoJ24xBquI09AND1Jc5qa45RWjo5D8DKaGYQy80tGO1qbt1E34TE9vxTZ5XtF1CWbxWhxPfVItCC1Hey1UmLo1hMRt4iecviJjSeGpv6rYKONOuhaiFdqoJXEdYTL5vDARfCc8roDIATQ==
+ bh=djRgRrlPXo7Cg/pOVv3l+R+uoG0PzOnuy9iKcfbxO3Y=;
+ b=JM5uvIluNFlb0HYunin440V/fDD+S7s3X40B8tVzQ9XH9DhrHdcQDDN/D157C5a3N9rHJ0tStDWsGSnnvPoVBzxYVYoxNu+YjaIHyA3cf/BDQM9ReGA4Zf3+uXvczNoTwMz+VVfV18+Nh6n7fq3sk+NoOBamRIJLdn8L3c7kJpB/O+nCo8f/pfCgXf+OJEWmUvzPye10CLg+KSaUZ2M699P+oVNcP9e+7GDeQf/F4zb7Lu/gFzBqg8hHsxXasnQ7jWb8AJeaamd3f5t/GGtZkdxmu7l5tR171N2Fd+QitLRLJvkAfc8nqmptHmQewXb2UT2Tn+4HAOhVc7dPxqow/w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/yz49ctg8vcmAfa7dvD6okzOaFHRgC0FJ4bOZ1Ptrcw=;
- b=eqs7QIO3WNE87C9Aab09w55/36wsdJOvK/AsbKvPLpNmtVtWoh0LTg+kOTvhJNt/tjsz4nKgdmegAjtwmA1sSNTDe5IRJEE+BnPQuDsEyMXkvp6mc8iJz79WoFxz79UsUlwlkCtGaoxZcftdffV1ntCmcuGE4/pEuigSNlta6e0=
+ bh=djRgRrlPXo7Cg/pOVv3l+R+uoG0PzOnuy9iKcfbxO3Y=;
+ b=GIha6MwCXL4gnyFE5gWTW24kyNZJxsnrzWAT86W1kd0Mxpa4Uti5RTtiOns9x9kuhKCh9xwZsZWjjv3qRRJ4pR+nKCNNHNaNYAhJLkB1sI/dQPuR8g5DAEbBHM3K7KKuM7f9P6Ov3n/Aq9G5zjfLJpFbxNA1ZDgBjHtMQsdBH7Kvbmi1MqMBJHF5jVJ79ARnHbFAUb0pw8/A6QAF46ZwKGVotE2jGKDPMu93WBLK0VP+DJGIC8BkZ1TNoFdRpOtdNuuAWthybWwjG/07y/oGaBhPbn9gXy51/uzHNAk+V4WqfAWC3LvELKpqzSQMx82eTPWBNYJlepRXJPHmZ3O1oA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- CYYPR12MB8653.namprd12.prod.outlook.com (2603:10b6:930:c5::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8335.17; Tue, 14 Jan 2025 20:56:45 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%4]) with mapi id 15.20.8335.017; Tue, 14 Jan 2025
- 20:56:45 +0000
-Message-ID: <ede2efa6-1f67-466b-9f86-883b25092d2c@amd.com>
-Date: Tue, 14 Jan 2025 14:56:41 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 14/16] cxl/pci: Add trace logging for CXL PCIe Port RAS
- errors
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-15-terry.bowman@amd.com>
- <20250114114927.000022ef@huawei.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20250114114927.000022ef@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0159.namprd04.prod.outlook.com
- (2603:10b6:806:125::14) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB8028.eurprd04.prod.outlook.com (2603:10a6:10:1e0::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.12; Tue, 14 Jan
+ 2025 21:00:39 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8335.017; Tue, 14 Jan 2025
+ 21:00:39 +0000
+Date: Tue, 14 Jan 2025 16:00:30 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?B?V2lsY3p5xYRza2kgIDxrd0BsaW51eC5jb20+O0Jqb3I=?=
+	=?utf-8?Q?n?= Helgaas <bhelgaas@google.com>
+Cc: l.stach@pengutronix.de, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev,
+	kernel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/10] A bunch of changes to refine i.MX PCIe driver
+Message-ID: <Z4bQbosV+gMBEs9D@lizhi-Precision-Tower-5810>
+References: <20241126075702.4099164-1-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241126075702.4099164-1-hongxing.zhu@nxp.com>
+X-ClientProxiedBy: BY3PR03CA0013.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::18) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,250 +86,178 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CYYPR12MB8653:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d80ff51-5cf5-48b1-4980-08dd34ddf466
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB8028:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6736202f-ced9-4e0e-871a-08dd34de8043
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QVZ0QVhKeEMycDNqVk5CZTJqSEhOYlhxY1dycUlEaU53ZzNpdzI5RW9LU21I?=
- =?utf-8?B?SEJ6a3Q3MDBrSzdVeDJKQ1d5REVxdnErMWJBMFVrdWJ5bFk1Y2FwR3RpbDZF?=
- =?utf-8?B?VlZNMXpMOGxsWktJL3BWem8xcnlXcmhvalRZSW45TlVnT2p4aWNaK3AyeGky?=
- =?utf-8?B?SHgrWTBiSHhnRkJ5TW9TV253RTdIcTA3RUoydXlDK2tmWGFCUDV2WnlRMEE3?=
- =?utf-8?B?MmowM3dicVdpN09rU1RrM0p5K2VTMHA0dHk0cXAvWTV3b3dEZEFvZ052RnlR?=
- =?utf-8?B?V1pMSDhDMXh0Tmhla08vSW1YWWxod2VzTFNMdzVRb05sSllnYUZUQ1VoRnlm?=
- =?utf-8?B?WkE4ZUJKTjNDQWpzUDJwYkVXSFpNZE9qMFR4ZlprS21PL2VDTHg4c0VITlQ5?=
- =?utf-8?B?WUtPQUlTUFdIeGJFbEZsWEpIc3BDTXMxaG53bWY1ZmVlTjB4ZVR4enhiL0Fr?=
- =?utf-8?B?VVpkalJiNFpoTjZMYmtVRDh5aFFMZmExSVVIRnp0cnFNZ2dncTRJajZFbklm?=
- =?utf-8?B?My82RTJMQnZ1QXlSS0RkekRFeGJjNEZMUWdoTURTSFNFZkZCdHlrWWplckEw?=
- =?utf-8?B?ZFl3bWRBc0o2UmJqWjRPT0h5aXN1ay90ZmNpZnI2eUMvMXNyOGFRUWYxQUlw?=
- =?utf-8?B?a1V6Q0JyaG95UWkrTEFIVEZiek5FdTA3U2xEOUhLb2xGd0NkMWNnWiszRzFG?=
- =?utf-8?B?MFdlT1R2U3hheVRxUENoOWhMb3A2aURCVjJDTlJYdUcvaDBCZVpqOTBVRkxH?=
- =?utf-8?B?Yy9Ja2VBUjk4TmQvcTRBWCtIV0VheUlVSzJsTGtzV3FpVjYzVHN5eW9Pc3hD?=
- =?utf-8?B?VEliQWpaUCtseE1mMTZSTUZpNVlkNVJIWlUwWmUzYmhoTk1nR2ZCOTJsLzJZ?=
- =?utf-8?B?bnAvczVJMzNZTm9CYlFSQUVlVkk0cS9PUEpvWHhBZ1ZaNUxlL3dHQlI1K0NV?=
- =?utf-8?B?UE9hYVF6N1lQZnVab1V1bDZ3TTlSNHlhKzgycW5YVGs3ZUZueVpaUHdmaVRo?=
- =?utf-8?B?Zi9RSzcrMjduYnc5YnNwL1grWjlJQW92T2xXSmtZMGVxajRtMXlNbmZDUytF?=
- =?utf-8?B?K3JoTFlaM2VUU0NVZVBuNjRZYW1wUDMxRmYyZWE0c0lhKzZKVzNJcktaS3dw?=
- =?utf-8?B?dGw4WkNyTHdCaXpRVGljdzF4ZUs2QzZTbTRCRVVEdmM0RDJPQ3NTTG83OXJF?=
- =?utf-8?B?ZGY2d2MwR3lrYVF2TnFoS3ZKOWZSSFZneEZ3Qm5waGV6b1FZNFBOZ3dKaFcw?=
- =?utf-8?B?MmR2SFN5eGtSeUJXM3pYMUFaVVlDdTdnWGNqL1JJN0pydnR1ZGRERWRQaTMy?=
- =?utf-8?B?a0ZZRVBqY3RybkhiUzRhTzliRFh1Y0FmVVZOTE1odUxLcXFkaytodVRXM2xa?=
- =?utf-8?B?RUk2MzdCTUpuVG1FUHg0Z1VQWnlkb3ZMZnc5RzJmRnl2SkJFTjI3V09VK1R1?=
- =?utf-8?B?MmdoM2JWSFpHbFV2Z1JVSUV2VFNYWnQyV250M1JBT1A3eHREdUFlYU83dFJX?=
- =?utf-8?B?SUFpRXpEVnplSzBjeC9XYWMyQUc1RjJDY0wzZXhVMmZVZ1J4OEl0cWtNMkE0?=
- =?utf-8?B?b1JkZHpIdy9CR29vOFBiNHdWSFJhVTYva2FkWUdUOXBsK05tZExDdUJyK1FP?=
- =?utf-8?B?UzFPZGYrUnlnbFU1eXhHbzZ2MDd4aFFaendPenU2U0NhaUsyVjVoRGdWaUh5?=
- =?utf-8?B?M0xjZzRjQ2Q2NjBUYzNmK0x5dUs3eXQ0eFBrZlh0RVhmZ1VEU1RpMG1iQUhM?=
- =?utf-8?B?RGg2VFFYeVVrNzQzdlRGMmp1SHlaRTNqSDh3SHMrOWlNUDRGOUliY2UzdFhv?=
- =?utf-8?B?bjI3czhXV1ErK0ppNG55VTkrYUFFS0JTNll2VGNCMk1vWjRKdDU4L3Y1YWc2?=
- =?utf-8?Q?d8j1oRAFWCVsa?=
+	=?utf-8?B?ZjBDNWtpdjVYdEx4WVc2Wlh3M00yZHpLdHhLRjRBK2hJWkkzaTF2SlRYOU5C?=
+ =?utf-8?B?QnlCK3lXU0NNOHYwa2VFYjRBdURxUjRBM2h6dHRyak4wYWd2dHhWQXFBcDI4?=
+ =?utf-8?B?UU8yeFE2ZmlBSHdrYUQ3ZXFUdVV0eWxiVGdtQnNEeWpGc1RwQ1NVQys0d3Mr?=
+ =?utf-8?B?NGhiakYycnBMcndOMG9hRCtCcEJLSXc0aXJYRlpBUDBVWjZXWE1qSFFWaG5t?=
+ =?utf-8?B?RUg4WTY4TzFSS2RmOG9pbFlKektLV1BTOEp3S0Yyb0pYNUtUWVV4NUtjZ0pj?=
+ =?utf-8?B?ZTl4T0pSQUphNlk2bEtGT0FlVDczN3JFNGNGMjhRWDZ6dUF2ZHB3TDVEb2VQ?=
+ =?utf-8?B?S2Z6dW5ZRzgvVjgxS1BjakJhcTJWbWZzcTh0QlZQV1VTT1Y0UlBjb1dzNXdp?=
+ =?utf-8?B?SEpMTHlwNjhBVzZtQWlsRjM3QS8weTdrZTJGWXhjbE0zWTdTS2w1aW1EM0VI?=
+ =?utf-8?B?VDdWMjJKVDhCMlNYanZsRWtjdncrNExJWnFDQUxIcXVoeUxJLzdWTG5zaFhZ?=
+ =?utf-8?B?Wmp3bG1VdkpzQ1RCS0FGc1hueUMza1FUNHYzWVdjZ0RyVld5RHpoTVV1RGNX?=
+ =?utf-8?B?dW1LVEI1bVlFbFl1T3VEYngwc2JkOGtsL0pNOXVnNDFMQ0hFUnZjN2x6OWJ4?=
+ =?utf-8?B?eGZxVGNNZkNhVlFab3M5RTQ3anIwd0FDalhZSEEwTUY0T1QxemQyNmNySDFU?=
+ =?utf-8?B?LzVnYTZ3TXRNS3BSTDUrdWJ5TERsSmJaYmNqQWExbTBRaWh3OWx2cFhOenBY?=
+ =?utf-8?B?enJzTmJOQmpOenBNdHEvNGVmeXpPVG02a0x5V0xMS0RIZWtqL1Fvd21tREpB?=
+ =?utf-8?B?Q2pRUkdDTXlxbEsvV1hEdERFN0s0VTdhSjhBa0lTb0ExM2lnTGpuOGRxdERa?=
+ =?utf-8?B?UU5oK3NsUEIzV0NSbTRnaUVPM1RrMlFJNXZyTVBHbWd2eVZqTmJHclQwaE1i?=
+ =?utf-8?B?RVZRTGk3U05SN2thS1ZTVFhnSHBmbS9rVEdQRXdQM2hESVlLUDBxOFNhWkVG?=
+ =?utf-8?B?U1AyMXhyQ0xSdE85M0RtRHdwK04razFhWDVxbTdhTmFkNnJSMzR3cnIxUmxB?=
+ =?utf-8?B?ZTYyVk0wTDdDam9nYjJkcC8zcG5iZHA0VHlJQitteTk2cFRaUGJhdi84UVht?=
+ =?utf-8?B?eXRXRkJhUURjUVZyNnN1YlhOZWcxNkdFNDFRTm0vQU9oVmxYRnAycXZwTERU?=
+ =?utf-8?B?blk1ZVdydzhHS0JDTTJ4TlVnTVNqT2w0ZGwwV3ZXMEFoWVZNSTdpNWptNUVt?=
+ =?utf-8?B?U21hYjlERkp0aTVrci9KL3p5OU11ZGpraDNMQ0x5MkFybjlUWW5UZUhmM1o0?=
+ =?utf-8?B?Y29abXBnN2FyM2pBL3p0RW05QmNXaktMemJ1WDMvRHloMTRDdXVGb0p3Njda?=
+ =?utf-8?B?SHd4YVNieHR2T1I5eTZVRjNoY1pSNVFzRnprZXM1Lys0dTI5SXpoU3pwZkdZ?=
+ =?utf-8?B?ekZCbGxOcWI0R20yREFLVm1QN2I4QjhMaVZLcGNYSzh3RGRqa1VZWTFiMCtZ?=
+ =?utf-8?B?TW1Cc0huQm95c3VDbWFIeERGNzZVOEVSeUNOZ2ZDaHJZamlVOFlWTU9taGFu?=
+ =?utf-8?B?WkxTUHhXUTExRkFaRkJPV0U0bStBZThIenNoVW9kUzdId2VsRGI5Y1JhOFdO?=
+ =?utf-8?B?U1hXYkVyVGsybEtTTGVVMWJ2dW8rdXRSSVVUNExVMmxEMmpRbDdDV1dJS2ht?=
+ =?utf-8?B?b2QrSjhYZWVGZUxDTHY2SWZTc0RCT0o5Mm5lMDZ0d2lSakxkSHBmSDE0NUsz?=
+ =?utf-8?B?QUczYnFicm9sV3ZpVFdGdGp4U1NYZGRhanR2VlRvUnRMSkJ1cXVheW9CMUZ1?=
+ =?utf-8?B?eEt3MVNHRWVWODFZVjVlM0JjdGlsbm5DcE12QWs2aW9uWWZlc3JQbjVpMzdq?=
+ =?utf-8?B?K1lMUzdaT2IxMXU2MGxkVzVKTHZsdnQzVDlHdElYZVc3Rmc9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?clgrV050VkZkeDNZYnVvM0U0QXZxVDdXUGIrWG12OUxrTEFXcUJjRVBrS3V1?=
- =?utf-8?B?RHhKWjBNMHFZSUpIOUxzaWpwVEVvSzFkWGJuSmxoeHVlVm9GeWRuK3lmYU5B?=
- =?utf-8?B?T2ZoT1FBM293bnQyK21MTFVBQlEvVS9iRGc4TWdpRlcxa2Rxb0lhUDBLNjBx?=
- =?utf-8?B?bWNrWmpzbFpxOStOT0xxOHFQMHRnNFp4a1ZTKzQxR1dvekFlQllSQ3o2K2Er?=
- =?utf-8?B?QmtJdzFrMldEbUkzTHBmUUhkK01ZY2t3UGVsbjhjYXRQZkZYR1VsRHliVWZU?=
- =?utf-8?B?YzZmbkFMOW9xZW9lejdhbW82ajJ1NkkvdU5ML3NabFkvaUZITWlsRmFkTDdz?=
- =?utf-8?B?Q3pSRnVTZHFvS25iektsVm13SG5RejZMTHhJbzY5cXJ6NU1hWWlNbXNXWWsw?=
- =?utf-8?B?MUx5Y3RIV3FNMFpITzZDYlhZdlQyM09ad3ZRQlF3K1dhRTFLeUNEV3JCS0pk?=
- =?utf-8?B?TWpSMi9paG1FcXc1QnE1dXlNMGIwbHV0RVFteUx0cnZQdjBxT1FhM1lyNE56?=
- =?utf-8?B?NStyUG5NcnRUbSt6RGt2Q3g5OXViWWxQOVVibFV5SlhCZVNxTVp5a0Y4K3JV?=
- =?utf-8?B?ZEh6bDdQZ2hERUx6bUZUOG1UNkwwc2RncWVxNGhWWVp4b3FLcUVjaVBBNmJS?=
- =?utf-8?B?a3Uvc3QyOGVOMEM0aXcvUG5meTZyeWFsaGREb3lHZzFieStoTysxUHpBd1B5?=
- =?utf-8?B?QzVCaVhvOW5NTFZpUU8yMW9mNUlqNWtISmlzdnJQaFNwMGxZMERNbm4wQXFj?=
- =?utf-8?B?Ymx6RnhUQzRrTW51QXg1ZkN1ODZXWG9xd04rT2F4L3JuNEg0ZUxyOWxNY3hJ?=
- =?utf-8?B?eHNQcFdPQUdDN0tNL3RLekNMWDdwbXU1TVFnR1hKdk0wYkNqUVhER3ozUUZF?=
- =?utf-8?B?NW51STRhOTNqNllNdVVOMy95dktTM1dxcnhhN3cvTDh3emk4VUpoOU9td3V6?=
- =?utf-8?B?QlJtSGJvbjZjdW9FK0ZEdHQwSzNUWm52UlkrS0hpUGpXTDFCdStMemd6eExk?=
- =?utf-8?B?K3ZkTjV6QTZrZC9LZ2FXTjdOTy9PNjNrbkllUjQ0aEhYdUc2RHNZUGZ4aGph?=
- =?utf-8?B?bHZ4OWhBL3dHT2dvK3NNaDc5a1ZQYm9RQ1JhUTl0MmhTdnZ0blVWamFyY2hv?=
- =?utf-8?B?cnpYY2dEOGZiK2Q0c3RMWUNia1F5cVZJSGcvWm1WditiWm14OXZYOTZLdW1O?=
- =?utf-8?B?Ync5QmQ3R3AxQjdvQlE0SExqMjd1QTdyQ0pjV1ZTS2RqL21sYmpsRnZBazNS?=
- =?utf-8?B?cjVOdmZQZ3ZXTFUvTkRuS2N0MC81ZVpSUWdQVjVtVVRKRmVxY015Z2xnQXVO?=
- =?utf-8?B?bkJXaFVtNHZFSjYvZGNodFBER2FnWWNIT3dUZ04yQXg4UTBPby9hRGc4TGZn?=
- =?utf-8?B?NEV1ZFNvK1lwYzR4OEdDZ200bEdjYjFQSVcwM2FMeEtVbmVxcUlCWXhadHJF?=
- =?utf-8?B?L3UrZHRuRkM4WTluMDNNeldzU1VYekVzZXlUQzhJYmx4NjZrTVo5Q3RrK2JB?=
- =?utf-8?B?YXVMRldvYkVQbExjOFNsS1Q4MFBrcnJ1Z2NGeW91V0NvbGZYS1pIL0tIMXFX?=
- =?utf-8?B?OXlsOVoxWHZKK1ZyYkd0c3lUZVlqUmVxMGV5dXgxS3k4TlE3bUJ3RmEvVjhR?=
- =?utf-8?B?dERVOTF0cS9ITTNsVEpHUEJweTQ3eG5KYW9Qbms3ZHpGTm5jdXplcUd1TWov?=
- =?utf-8?B?azZVZDBPNW1TQUptQUprbUJsR1UvZ05ITlh0NE1zc3ZIYnp3NTUxNzRYV0Ey?=
- =?utf-8?B?eXZ6djdFejhFSU0zS014em9rOUx2OHhZL3BxaFJSMGhQZ2xQdmdaL0FaQUEr?=
- =?utf-8?B?UjVEZ2lUcUlRR0phTXRGWFp0NEtDSDkwMHFaMVVYOFl5UUlqbUp5WUNobmJ6?=
- =?utf-8?B?SmtjVUxZcWo5c1A2OUlIeW5uRm45WDdxMFlyeW1CVmxDcTZHTUI3WERUQzNP?=
- =?utf-8?B?aWJzclM5andDeE42K0t6ZHlEZnUrSW9KeXl4aE1hd0M1OTRiVk1LeWVQQ1ZF?=
- =?utf-8?B?bEo0NGlrNHI0OHAyN0xzZFBUY09vSElJMnViOXVxWkovblFUcnBwdmsrenhY?=
- =?utf-8?B?U1BUa2x4VkZzYWlnaXpDMnVTOTlyV00zSE1NNTd4YU5scXZOZENKLzljckhO?=
- =?utf-8?Q?pTYFREOdWsC5CpRUOS7tGCyGs?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d80ff51-5cf5-48b1-4980-08dd34ddf466
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+	=?utf-8?B?b2ZWTXpZejFuei91M3dLc09nbUlsbzFOWVk4V0M2cEpuUkp3dDBOWnJUZUUx?=
+ =?utf-8?B?Q0NNQjZFaDdiSTdhOFR1TUF3MUNQay9BT0FMZ3Bxc09BbTRZN2lQRjRVR3dy?=
+ =?utf-8?B?NTd3dnhERmRJWnhxNmx0V0JTTTg3bDI3a0E4bjUrZ1ptQkhtZCt4K2tsaHVj?=
+ =?utf-8?B?T3BxSU56RUZWNVNoUWJUTU9TZzZDcldZazBSQ0M2YnpOcUs1WHdwa0gyN3lO?=
+ =?utf-8?B?emdqYnloNW96NmNRaHJiWDZJYXIyWGI4aXZJaHVkemwvekFSVWs5NCt5ZU1a?=
+ =?utf-8?B?SFF1R2JneGJ4eVdSbzltUGNtdXQvRmlXUGF0TzZjYk5tMHJEVDd6V1Zwajkv?=
+ =?utf-8?B?OXczb0djUS9FZEtOZVRnMEw2Yk9haGRYUDhsSnFYeG9rNWtxak1nWjU4bzhk?=
+ =?utf-8?B?VG1mbitoYTJnUEhMRVYyWFBsTCsvbHBFWEpCRGdxekNETGNVMGRwMmN2Znho?=
+ =?utf-8?B?T2NrM3JpVDhadDVzcGI3djZxaGhkd0c5RVVrZDhCUGN5aTE5TlB5WDZSRWly?=
+ =?utf-8?B?QkYydU1OWjBDSkdFdU1GRWVLaG5WZXhCQkh0eGVCZnVFNFEwMGhjSk56eE1Y?=
+ =?utf-8?B?YmoxMEdiMXZLSDl0NkthSlJObUNZQTFhL2VVZld0Qm1iTnRBUm9DRHFiUHkw?=
+ =?utf-8?B?QXdWRHBQdHpwVndzeTNFUm15V0x2SFc0a3JsTmdXcnNFK1BPQ25aMHRablVR?=
+ =?utf-8?B?VUlrUS9QYXdiNWEySEdkRFUxTG1jY1g0R0NvSDhoQlE3Qm8rU0tOTzc5VEJX?=
+ =?utf-8?B?SVk5dkxubG9jQ0tPd0g2bzNmMDRlc05WZ29PdjNLQm10UU4rcFpFRHBBU0o5?=
+ =?utf-8?B?RkJqYndvSVljZEpsaU5uVDhSTEdyaWhTUjV1M0NEeWtmTkJLKzlGNFE1OHNN?=
+ =?utf-8?B?WmZqbnVZZitVZk1zRkF0RFRQN0FRempjZmxuamQyZmZxQWtsSSt0bXcrM09h?=
+ =?utf-8?B?UkZoYll1YmUxc0Z0aW56RmtaZVE4QkFlVzBJalJ0dHN4ZjRnbFY1cGdrY3I2?=
+ =?utf-8?B?Yk5BT3NXMFlqVjJDYmxWRkZFQ3Erd1g2ZElpVFBvWnpUSkVCS2lNa0Qwclcr?=
+ =?utf-8?B?ZXVMb3B4VnE1VGY2VjBMa0xzRGhwZFNScCt1RWtpKzU5aEttZ1lrL08vZHhK?=
+ =?utf-8?B?b0hFTnE2Q0xhSkFrSVBuc0lRNWgwbHZjaUZ5ZkZvL1p5MGVMQ2IxOEozemJZ?=
+ =?utf-8?B?TzB4WjBMN3FVM0dPTHRCS3dZTFY4Ulo0VUJrQXZwR2Fqek5KOHpaVXk3bzB6?=
+ =?utf-8?B?cGdDRXFEMHRjM1FtRE1zaVlHQjJJRzZVblV2TmtodERFMzcwVGpSN2tCbm4x?=
+ =?utf-8?B?ZU5QM2Zyek1FNjVaM004YVU3OVBKcjBQME1KQ2FuOHIwWkkzc3FZQTlFMm5k?=
+ =?utf-8?B?ekE2VUJML01OUHNBUlF6U3djbytoc3lBWEYxVy9Na0N3aXk1Y05HNkg2cU1i?=
+ =?utf-8?B?TmlVUUp1NW1hRmp5UHpMY3h5aThGUVRsNzRHTDlTbk80aFRoK0RBdkxvVEFu?=
+ =?utf-8?B?VXJ3MUN2dEdnclVLTmpTamlmOVR6UEdISzBFRTllVlNNWTU4WXBBU2tZUWcr?=
+ =?utf-8?B?V3RKc0ZTYnAwbWpKYitzMFF4SjlZcG9UQkxTTk1ETHlCcTZqOG9IaG1hQU1X?=
+ =?utf-8?B?Zi9ESXlVcEtBSGY5Ri84OGVHakRrZlh0anFhRmZMYWpoTHJvVUJ4TTl6OXkv?=
+ =?utf-8?B?NFZnZEhzNXg0NzlEVjJSUXNvU3NYN1pKWWdnNlNON2N2M1BmT1QrWVpKSjIx?=
+ =?utf-8?B?TGY4bDIzQ0lsd0ZZeXVwZ1I3bXIweUoxNzRQZGhmVTd4QkFyY1A3T1JuQ0VW?=
+ =?utf-8?B?QnI5NE56WGo1M1JXaFJ6SEdKOGZtbVNOK3VmV1VIYmVzV1V4RXllZ1g0QUxi?=
+ =?utf-8?B?L0Q2L21FZE9oWHhoc3Y3T0kzcGZtWXdrVDRnWW4xTWRMdlkxNE8yeks1VU9l?=
+ =?utf-8?B?V2laTk5wWGtwYU9TVTNFa3VjUzNWRHVPZ0l0bEZtczFPVU5VUE1pSGNrQ1Np?=
+ =?utf-8?B?cHNndTVYbm9IL0ZQR0FNSHJod0Y1Z0sxWUVFZms5RnlacVMrRW1rS2I5NUZL?=
+ =?utf-8?B?YTJzbWp1amtsdFVrQ1dWYzIzTmhvcm9yMWVlVVBBa0hQQ245RXZrdDFNcU9M?=
+ =?utf-8?Q?+yNmpGFb33FxXBo/nkrsOukWJ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6736202f-ced9-4e0e-871a-08dd34de8043
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 20:56:45.0828
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 21:00:39.7149
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LGYIAFj3TpA7gvTUDE/zCM9//4kPwlJE8J2BAGVs/sLfsZan4QnUV0E5JKK0vbYX/nh53HIHxNNaWq6oJ69FPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8653
+X-MS-Exchange-CrossTenant-UserPrincipalName: FXB3VXhY7N5C+eczkupNmKQZsY0zGjDVm85jVxl0G8TWQ/HgFp3Owttiu4Gd279VmVvAa2u3SUJfKuatoIGXwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB8028
 
-
-
-
-On 1/14/2025 5:49 AM, Jonathan Cameron wrote:
-> On Tue, 7 Jan 2025 08:38:50 -0600
-> Terry Bowman <terry.bowman@amd.com> wrote:
+On Tue, Nov 26, 2024 at 03:56:52PM +0800, Richard Zhu wrote:
+> A bunch of changes to refine i.MX PCIe driver.
+> - Add ref clock gate for i.MX95 PCIe.
+>   The changes of clock part are here [1], and had been applied by Abel.
+>   [1] https://lkml.org/lkml/2024/10/15/390
+> - Clean i.MX PCIe driver by removing useless codes.
+>   Patch #3 depends on dts changes. And the dts changes had been applied
+>   by Shawn, there is no dependecy now.
+> - Make core reset and enable_ref_clk symmetric for i.MX PCIe driver.
+> - Use dwc common suspend resume method, and enable i.MX8MQ, i.MX8Q and
+>   i.MX95 PCIe PM supports.
 >
->> The CXL drivers use kernel trace functions for logging endpoint and
->> Restricted CXL host (RCH) Downstream Port RAS errors. Similar functionality
->> is required for CXL Root Ports, CXL Downstream Switch Ports, and CXL
->> Upstream Switch Ports.
->>
->> Introduce trace logging functions for both RAS correctable and
->> uncorrectable errors specific to CXL PCIe Ports. Additionally, update
->> the CXL Port Protocol Error handlers to invoke these new trace functions.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> An example print in commit message would help understand what the tracepoints
-> look like.
+> v7 changes:
+> Thanks a lot for Manivannan's kindly review.
+> - Rebase to latest pcie/next with "tag: pci-v6.13-changes", and with Frank's v8
+> "PCI: dwc: opitimaze RC Host/EP pci_fixup_addr()" patch-set applied.
+> https://patchwork.kernel.org/project/linux-pci/cover/20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com/
+> - #2 patch.
+>   - Update the commit message
+>   - Use devm_clk_get_optional(dev, "ref"); to get the optional clock directly.
+> - #3 patch: Update the commit message.
+> - #4 patch: Add one Fixes tag.
+> - #5&#6&9 patches: Update commit message.
+> - #7 patch: Refine the subject, and the commit message.
+> - #10 patch: Replace the dummp_clk by one fixed clock.
+> - Add Manivannan's reviewed-by tag into #3, #4, #5, #6, #7, and #9 patches.
+
+Mani and Krzysztof Wilczyński:
+
+	Could you please help review these patches, it was posted at
+Nov 26.
+
+Frank
+
 >
-> Few more things inline following on from earlier comments.
+> v6 changes:
+> Thanks for Frank's comments.
+> - Add optional clk fetch, without losting safty check.
+> - Update commit message in #3 and #8 patch of v6
+> - Add previous discussion as annotation into #4 patch.
 >
-> Jonathan
->> ---
->>  drivers/cxl/core/pci.c   | 17 +++++++++++----
->>  drivers/cxl/core/trace.h | 47 ++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 60 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index 411834f7efe0..3e87fe54a1a2 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -663,10 +663,15 @@ static void __cxl_handle_cor_ras(struct device *dev,
->>  
->>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->>  	status = readl(addr);
->> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
->> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
->> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
->> +		return;
->> +
->> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
->> +
->> +	if (is_cxl_memdev(dev))
-> As below. Drag to earlier patch.
-
-Ok
-
->>  		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
->> -	}
->> +	else
-> and perhaps check it's a port mostly for documentation purposes.
+> v5 changes:
+> Thanks for Manivannan's review.
+> - To avoid the DT compatibility on i.MX95, let to fetch i.MX95 PCIe clocks be
+>   optinal in driver.
+> - Add Fixes tags into #5 and #6 patches.
+> - Split the clean up codes into #7 in v5.
+> - Update the commit message in #10, and #8
+>   "PCI: imx6: Use dwc common suspend resume method" patches.
 >
-
-Ok
-
->> +		trace_cxl_port_aer_correctable_error(dev, status);
->>  }
->>  
->>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
->> @@ -724,7 +729,11 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->>  	}
->>  
->>  	header_log_copy(ras_base, hl);
->> -	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
->> +	if (is_cxl_memdev(dev))
-> As mentioned above, drag this if to the earlier patch.
-
-Ok
-
->> +		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
->> +	else
-> For documentation purposes mostly I'd be tempted to have an is_cxl_port() check
-> before calling the following.
+> v4 changes:
+> It's my fault that I missing Manivanna in the reviewer list.
+> I'm sorry about that.
+> - Rebase to v6.12-rc3, and resolve the dtsi conflictions.
+>   Add Manivanna into reviewer list.
 >
->> +		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
->> +
->>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
->>  
->>  	return true;
->> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
->> index 8389a94adb1a..681e415ac8f5 100644
->> --- a/drivers/cxl/core/trace.h
->> +++ b/drivers/cxl/core/trace.h
->> @@ -48,6 +48,34 @@
->>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
->>  )
->>  
->> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
->> +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
->> +	TP_ARGS(dev, status, fe, hl),
->> +	TP_STRUCT__entry(
->> +		__string(devname, dev_name(dev))
->> +		__string(host, dev_name(dev->parent))
-> What is host in this case? Perhaps a comment.
-host is a string initialized with value from dev_name(dev->parent). What
-kind of comment would you like to see here?
-
-Regards,
-Terry
-
->> +		__field(u32, status)
->> +		__field(u32, first_error)
->> +		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
->> +	),
->> +	TP_fast_assign(
->> +		__assign_str(devname);
->> +		__assign_str(host);
->> +		__entry->status = status;
->> +		__entry->first_error = fe;
->> +		/*
->> +		 * Embed the 512B headerlog data for user app retrieval and
->> +		 * parsing, but no need to print this in the trace buffer.
->> +		 */
->> +		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
->> +	),
->> +	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
->> +		  __get_str(devname), __get_str(host),
->> +		  show_uc_errs(__entry->status),
->> +		  show_uc_errs(__entry->first_error)
->> +	)
->> +);
->> +
->>  TRACE_EVENT(cxl_aer_uncorrectable_error,
->>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
->>  	TP_ARGS(cxlmd, status, fe, hl),
->> @@ -96,6 +124,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
->>  	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
->>  )
->>  
->> +TRACE_EVENT(cxl_port_aer_correctable_error,
->> +	TP_PROTO(struct device *dev, u32 status),
->> +	TP_ARGS(dev, status),
->> +	TP_STRUCT__entry(
->> +		__string(devname, dev_name(dev))
->> +		__string(host, dev_name(dev->parent))
->> +		__field(u32, status)
->> +	),
->> +	TP_fast_assign(
->> +		__assign_str(devname);
->> +		__assign_str(host);
->> +		__entry->status = status;
->> +	),
->> +	TP_printk("device=%s host=%s status='%s'",
->> +		  __get_str(devname), __get_str(host),
->> +		  show_ce_errs(__entry->status)
->> +	)
->> +);
->> +
->>  TRACE_EVENT(cxl_aer_correctable_error,
->>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
->>  	TP_ARGS(cxlmd, status),
-
+> v3 changes:
+> - Update EP binding refer to comments provided by Krzysztof Kozlowski.
+>   Thanks.
+>
+> v2 changes:
+> - Add the reasons why one more clock is added for i.MX95 PCIe in patch #1.
+> - Add the "Reviewed-by: Frank Li <Frank.Li@nxp.com>" into patch #2, #4, #5,
+>   #6, #8 and #9.
+>
+> [PATCH v7 01/10] dt-bindings: imx6q-pcie: Add ref clock for i.MX95
+> [PATCH v7 02/10] PCI: imx6: Add ref clock for i.MX95 PCIe
+> [PATCH v7 03/10] PCI: imx6: Fetch dbi2 and iATU base addesses from DT
+> [PATCH v7 04/10] PCI: imx6: Correct controller_id generation logic
+> [PATCH v7 05/10] PCI: imx6: Deassert apps_reset in
+> [PATCH v7 06/10] PCI: imx6: Fix the missing reference clock disable
+> [PATCH v7 07/10] PCI: imx6: Remove imx7d_pcie_init_phy() function
+> [PATCH v7 08/10] PCI: imx6: Use dwc common suspend resume method
+> [PATCH v7 09/10] PCI: imx6: Add i.MX8MQ i.MX8Q and i.MX95 PM support
+> [PATCH v7 10/10] arm64: dts: imx95: Add ref clock for i.MX95 PCIe
+>
+> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml |   4 +-
+> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml     |   1 +
+> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml        |  25 +++++++++--
+> arch/arm64/boot/dts/freescale/imx95.dtsi                         |  25 +++++++++--
+> drivers/pci/controller/dwc/pci-imx6.c                            | 178 ++++++++++++++++++++++++++++------------------------------------------------
+> 5 files changed, 110 insertions(+), 123 deletions(-)
+>
 
