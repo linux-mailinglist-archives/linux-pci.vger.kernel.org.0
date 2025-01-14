@@ -1,173 +1,199 @@
-Return-Path: <linux-pci+bounces-19726-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19727-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32685A105CC
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:46:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78420A105D0
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:47:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6438F1886F37
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:46:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34F613A3B52
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:47:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF37224D6;
-	Tue, 14 Jan 2025 11:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D47B1ADC60;
+	Tue, 14 Jan 2025 11:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fJ6C6Gjd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFDB234CE0;
-	Tue, 14 Jan 2025 11:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707E9234CE0;
+	Tue, 14 Jan 2025 11:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736855190; cv=none; b=FIUWPS41Bw36NoO6YVcrPkcaLcZPFZoEILzwy/2PE0vBUE0Pi2MIhAkBqdmeGLWiSkQQT3oYcevAa4wsBdUwF8hX38WWVBFDff87emGcg2I/y/+kJyUeZ/w/Jp+eg4BV5zKqO4VZ3DuLuAy/82lCCZFCmRNM9R3j96gyjs3hiZY=
+	t=1736855265; cv=none; b=dvS+ofN+u/UNpEPQStdPfbjB+D8iyCb6y5JS6MgjAayFeCUt3979BzDpCqKe48RwmqzcicSyyQ/SOYE8R5P8dJ6TECBjquaC1TB8c5fHcJlYG4vq5qCv1pD4xPr49QM4NL2nDTRM7OsMfYRsEaqxajltJVMF94+eGfj7LnKbw2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736855190; c=relaxed/simple;
-	bh=lwGJWsu4RM6fGqu8erF8lK/vr0xR6ZiYV8NemhmnHtU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LrDmHS5wQEhq40dEhYpcheV8cJx3cn0CAZlSXbqfHc5sMieYRp7tJYC350mz+yI08FVU+F5eBKM02I/CupD2iAjew3YJh9un63uB7omXUg2879saCql9IXDut/GPho0L9e19BAhe8nFX2AA7lm1EL6Vq9sgGIodL75krU1rHs+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXRzb5d2Vz6K9H0;
-	Tue, 14 Jan 2025 19:41:31 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id F2EC5140A86;
-	Tue, 14 Jan 2025 19:46:23 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
- 2025 12:46:23 +0100
-Date: Tue, 14 Jan 2025 11:46:21 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
-Subject: Re: [PATCH v5 13/16] cxl/pci: Add error handler for CXL PCIe Port
- RAS errors
-Message-ID: <20250114114621.00007c08@huawei.com>
-In-Reply-To: <20250107143852.3692571-14-terry.bowman@amd.com>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
-	<20250107143852.3692571-14-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736855265; c=relaxed/simple;
+	bh=4tAwsFeqnGlo7hrHXLcMASY1gmPfNgzKJ7nzcdo4WQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=etILWN0MDBNwpggrz8ss/wpislsf0dX7hDhoBocGRS0bfS58dJU5GabpEgyxOidvrMj1NPT5Qo7OTlA/LUO57x+pbJaJdlbMxcuk5SOgLW/dmuYbBlUWfX0UoO7CGpw1mp49hRIzqATnfvD8SXQU1m/oqwTeOfpVdYDpnl0G+y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fJ6C6Gjd; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1736855253; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Rbo5LYY+2tH8hjW2dw93X1Z+DEEm32sPT0fjtGGAcWw=;
+	b=fJ6C6GjdUkBvYhUN3Qb6hYHDvgirOryrENLEq0ClDjZ8poWFRE+z6/kdJj6LYc8mptw903W4jKxe3/ovJ3iJqUdyq3Ejq3QxecJ1V0kIIQyMQzmxnS54VFY8MjADf/hCis/1LKqcPA376JEXfA2HgiR9YV1GU939/w4I0Qol6Gw=
+Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNfDxEn_1736855182 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 14 Jan 2025 19:47:32 +0800
+Message-ID: <fbee3b88-3a7c-48a6-9d79-570251237a9c@linux.alibaba.com>
+Date: Tue, 14 Jan 2025 19:47:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
+ <20250113155503.71467082@gandalf.local.home>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250113155503.71467082@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 7 Jan 2025 08:38:49 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> Introduce correctable and uncorrectable CXL PCIe Port Protocol Error
-> handlers.
+
+在 2025/1/14 04:55, Steven Rostedt 写道:
+> On Thu,  9 Jan 2025 10:55:43 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 > 
-> The handlers will be called with a 'struct pci_dev' parameter
-> indicating the CXL Port device requiring handling. The CXL PCIe Port
-> device's underlying 'struct device' will match the port device in the
-> CXL topology.
+>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+>> new file mode 100644
+>> index 000000000000..5b60cd7bcffb
+>> --- /dev/null
+>> +++ b/drivers/pci/hotplug/trace.h
+>> @@ -0,0 +1,68 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_HW_EVENT_PCI_HP_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM pci
+>> +
+>> +#define PCI_HOTPLUG_EVENT					\
+>> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 > 
-> Use the PCIe Port's device object to find the matching CXL Upstream Switch
-> Port, CXL Downstream Switch Port, or CXL Root Port in the CXL topology. The
-> matching CXL Port device should contain a cached reference to the RAS
-> register block. The cached RAS block will be used handling the error.
+> Since you are creating these enums in this patch, you can also do a
+> shortcut here too. Instead of doing the define here, move it to
+> include/uapi/linux/pci.h:
 > 
-> Invoke the existing __cxl_handle_ras() or __cxl_handle_cor_ras() using
-> a reference to the RAS registers as a parameter. These functions will use
-> the RAS register reference to indicate an error and clear the device's RAS
-> status.
+>> +
+>> +/* Enums require being exported to userspace, for user tool parsing */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+>> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+>> +
+>> +PCI_HOTPLUG_EVENT
+>> +
+>> +/*
+>> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+>> + * that will be printed in the output.
+>> + */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	{a, b},
+>> +#define EMe(a, b)	{a, b}
+>> +
+>> +TRACE_EVENT(pci_hp_event,
+>> +
+>> +	TP_PROTO(const char *port_name,
+>> +		 const char *slot,
+>> +		 const int event),
+>> +
+>> +	TP_ARGS(port_name, slot, event),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(	port_name,	port_name	)
+>> +		__string(	slot,		slot		)
+>> +		__field(	int,		event	)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__assign_str(port_name);
+>> +		__assign_str(slot);
+>> +		__entry->event = event;
+>> +	),
+>> +
+>> +	TP_printk("%s slot:%s, event:%s\n",
+>> +		__get_str(port_name),
+>> +		__get_str(slot),
+>> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
+>> +	)
+>> +);
+>> +
+>> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
+>> +
+>> +#undef TRACE_INCLUDE_PATH
+>> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
+>> +#undef TRACE_INCLUDE_FILE
+>> +#define TRACE_INCLUDE_FILE trace
+>> +
+>> +/* This part must be outside protection */
+>> +#include <trace/define_trace.h>
+>> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+>> index a769eefc5139..4f150028965d 100644
+>> --- a/include/uapi/linux/pci.h
+>> +++ b/include/uapi/linux/pci.h
+>> @@ -39,4 +39,11 @@
+>>   #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+>>   #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+>>   
+>> +enum pci_hotplug_event {
+>> +	PCI_HOTPLUG_LINK_UP,
+>> +	PCI_HOTPLUG_LINK_DOWN,
+>> +	PCI_HOTPLUG_CARD_PRESENT,
+>> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
+>> +};
 > 
-> Future patches will assign the error handlers and add trace logging.
+> Instead of defining the enum as you did above, if you have the define of
+> the enums here, you could do:
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/pci.c | 63 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
+> #define PCI_HOTPLUG_EVENT					\
+> 	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+> 	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 8275b3dc3589..411834f7efe0 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -776,6 +776,69 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
->  }
->  
-> +static int match_uport(struct device *dev, const void *data)
-> +{
-> +	struct device *uport_dev = (struct device *)data;
+> #undef EM
+> #undef EMe
+> #define EM(a, b)	a,
+> #define EMe(a, b)	a,
+> 
+> enum pci_hotplug_event {
+> 	PCI_HOTPLUG_EVENT
+> };
+> 
+> Then you only have one place to worry about adding new enums ;-)
 
-It should be const and then no need to cast explicitly.
+Will do.
 
 
-> +	struct cxl_port *port;
-> +
-> +	if (!is_cxl_port(dev))
-> +		return 0;
-> +
-> +	port = to_cxl_port(dev);
-> +
-> +	return port->uport_dev == uport_dev;
-> +}
-> +
-> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev)
-> +{
-> +	struct cxl_port *port;
-> +
-> +	if (!pdev)
-> +		return NULL;
-> +
-> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
-> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
-> +		struct cxl_dport *dport;
-> +		void __iomem *ras_base;
-> +
-> +		port = find_cxl_port(&pdev->dev, &dport);
-Maybe some __free magic on port as then can just
-return dport ? dport->regs.ras : NULL;
-> +		ras_base = dport ? dport->regs.ras : NULL;
-> +		if (port)
-> +			put_device(&port->dev);
-> +		return ras_base;
-> +	} else if (pci_pcie_type(pdev) == PCI_EXP_TYPE_UPSTREAM) {
+> 
+> -- Steve
+> 
 
-	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_UPSTREAM) {
+Thanks for valuable comments.
 
-or maybe just make it a switch statement?
-
-> +		struct device *port_dev;
-> +
-> +		port_dev = bus_find_device(&cxl_bus_type, NULL, &pdev->dev,
-> +					   match_uport);
-Likewise on __free magic to automate the put.
-
-> +		if (!port_dev)
-> +			return NULL;
-> +
-> +		port = to_cxl_port(port_dev);
-> +		if (!port)
-
-why no put of the port_dev?
-
-> +			return NULL;
-> +
-> +		put_device(port_dev);
-> +		return port->uport_regs.ras;
-> +	}
-> +
-> +	return NULL;
-> +}
+Best Regards,
+Shuai
 
 
