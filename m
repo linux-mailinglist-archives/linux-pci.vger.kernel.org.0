@@ -1,93 +1,176 @@
-Return-Path: <linux-pci+bounces-19729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19730-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0A34A105F3
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:52:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4835DA1065A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 13:14:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D27D2188816A
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 11:52:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04FFA3A843B
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2025 12:14:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D97E234CF2;
-	Tue, 14 Jan 2025 11:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8E3236ED6;
+	Tue, 14 Jan 2025 12:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kIy0G59J"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE20234CE3;
-	Tue, 14 Jan 2025 11:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C23236EB3;
+	Tue, 14 Jan 2025 12:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736855519; cv=none; b=lXm5uPKuCl877OP+IZDocmdr9KerQKByUezLPNTuHkAh5vjTjUBi1FNnHT7LLFSfqJQ8b9XDObig+MNUKn4aIdvRdIdo+PvunJ5R6yCsoQuq31rS0ITvArFtxlH8RM6aYzA4zi0/xakYXwW1+tqJCnwtGXHeZCgLOJ2ZmCf0JpY=
+	t=1736856864; cv=none; b=O/dbSDvbic1s/WC9b51cvOH0srZK9LV9iV62nMgeQtFBCAi6gkma6u7w04sgNbN6oBgWd58QZJPzEL7SPWY1XMF+HYzaJJZ+v5ATJPgiJIvpmO2Tlb+nfdPIlycpF3j4bVkWhSKrIYX9He5KGbXw/VtDqJx6RFWuEQGKti8ACos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736855519; c=relaxed/simple;
-	bh=I8SJAsayV7zRhDA4LzwWdJa/lzX4dIAIsBycqL2fk80=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BAIYVwfTegqzcL6Q9P4vUg6T1ZOCr5GkTQGmJBcNiRTWLWnt4yNARNEyiuDKRJIhW2Dkxe2D0YCcWnO54QknnqbENliRp9fddC6WVVzhNOOnLQUEcirBscNUDCvld0/XgWE1rhKSZV5wRM/nBgvOWPN4kyMTQcwlZyY6zOhgfUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXS9w0PLHz67Cx4;
-	Tue, 14 Jan 2025 19:50:28 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BCA3D140A86;
-	Tue, 14 Jan 2025 19:51:54 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
- 2025 12:51:53 +0100
-Date: Tue, 14 Jan 2025 11:51:52 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
-Subject: Re: [PATCH v5 15/16] cxl/pci: Add support to assign and clear
- pci_driver::cxl_err_handlers
-Message-ID: <20250114115152.0000754d@huawei.com>
-In-Reply-To: <20250107143852.3692571-16-terry.bowman@amd.com>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
-	<20250107143852.3692571-16-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736856864; c=relaxed/simple;
+	bh=nkEZI+Mih7ssNn9jD9GJ6XhtAwIBP7qJkakJUVsoFB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BVdPubP6CYU2W8cdFwfz2iWQfZwQS19dUEknZ3pkFavyxSXcxk3uka4EbnNUnzBCEIUaln4bAhzQp5+aKVBob7NDuapDYY12ZJwMHZmAX9w1qLoHZ5W+P+WP0Ir2OW1u0bRPFZ/CISPbNwaN65IIUBgVsZGEJvIk9JT30Y2KwvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kIy0G59J; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50EALNs7026707;
+	Tue, 14 Jan 2025 13:13:39 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	xl+nX529n8UyoO0y0l/TMia7BBc8N084qojjlS7Yf84=; b=kIy0G59JVkFMnw7y
+	y783Or0jfu3+ENUvpX4ZGBPs66MxleRo9U0jfvLstvaBmEGHenA2oG8c7jj7fTAi
+	0K/Nw8RWP58CA/1V+Uu1eJUSrBiFP2crZX84D64zBKKKq2putS+7vsQ7bJ1n4QSB
+	pkvI9VRlwMoZIRAO27TdmxNEnPNIcgJlqsilw2inz2TdtvhDAEjvtcpYeYBmMI93
+	ghLl8CGSwnrwQkmlyU8y1UwP7HTIvQoRYTufbPewdJ+71J8GzoaYLROmBuvC5Jf+
+	GuBD1vOM6gIJM9Cu9tAbyzPD6KD8AoJaYl5O8GLrNYMkmrVAn5/19OgabbMNz0T8
+	ZL0ldw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 445p3p0fjj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 Jan 2025 13:13:39 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A420B40045;
+	Tue, 14 Jan 2025 13:12:12 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 44211298E15;
+	Tue, 14 Jan 2025 13:10:54 +0100 (CET)
+Received: from [10.129.178.212] (10.129.178.212) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 14 Jan
+ 2025 13:10:53 +0100
+Message-ID: <092f5cd4-ff29-4a70-82ca-6044a72d5f11@foss.st.com>
+Date: Tue, 14 Jan 2025 13:10:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] PCI: stm32: Add PCIe endpoint support for
+ STM32MP25
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <cassel@kernel.org>,
+        <quic_schintav@quicinc.com>, <fabrice.gasnier@foss.st.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20241205172738.GA3054352@bhelgaas>
+Content-Language: en-US
+From: Christian Bruel <christian.bruel@foss.st.com>
+In-Reply-To: <20241205172738.GA3054352@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-On Tue, 7 Jan 2025 08:38:51 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> pci_driver::cxl_err_handlers are not currently assigned handler callbacks.
-> The handlers can't be set in the pci_driver static definition because the
-> CXL PCIe Port devices are bound to the portdrv driver which is not CXL
-> driver aware.
-> 
-> Add cxl_assign_port_error_handlers() in the cxl_core module. This
-> function will assign the default handlers for a CXL PCIe Port device.
-> 
-> When the CXL Port (cxl_port or cxl_dport) is destroyed the device's
-> pci_driver::cxl_err_handlers must be set to NULL indicating they should no
-> longer be used.
-> 
-> Create cxl_clear_port_error_handlers() and register it to be called
-> when the CXL Port device (cxl_port or cxl_dport) is destroyed.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+On 12/5/24 18:27, Bjorn Helgaas wrote:
+> On Tue, Nov 26, 2024 at 04:51:18PM +0100, Christian Bruel wrote:
+
+>> +static void stm32_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+>> +	enum pci_barno bar;
+>> +
+>> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
+>> +		dw_pcie_ep_reset_bar(pci, bar);
+>> +
+>> +	/* Defer Completion Requests until link started */
+> 
+> I asked about this before [1] but didn't finish the conversation.  My
+> main point is that I think "Completion Request" is a misnomer.
+> There's a "Configuration Request" and a "Completion," but no such
+> thing as a "Completion Request."
+> 
+> Based on your previous response, I think this should say something
+> like "respond to config requests with Request Retry Status (RRS) until
+> we're prepared to handle them."
+> 
+>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +			   STM32MP25_PCIECR_REQ_RETRY_EN,
+>> +			   STM32MP25_PCIECR_REQ_RETRY_EN);
+>> +}
+>> +
+>> +static int stm32_pcie_enable_link(struct dw_pcie *pci)
+>> +{
+>> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+>> +	int ret;
+>> +
+>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +			   STM32MP25_PCIECR_LTSSM_EN,
+>> +			   STM32MP25_PCIECR_LTSSM_EN);
+>> +
+>> +	ret = dw_pcie_wait_for_link(pci);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +			   STM32MP25_PCIECR_REQ_RETRY_EN,
+>> +			   0);
+> 
+> And I assume this means the endpoint will accept config requests and
+> handle them normally instead of responding with RRS.
+> 
+> Strictly speaking this is a different condition than "the link is up"
+> because the link must be up in order to even receive a config request.
+> The purpose of RRS is for devices that need more initialization time
+> after the link is up before they can respond to config requests.
+> 
+> The fact that the hardware provides this bit makes me think the
+> designer anticipated that the link might come up before the rest of
+> the device is fully initialized.
+
+You are correct and I am unable to reproduce a scenario where this is 
+still required.
+
+Upon reviewing the history, I initially implemented this to address a 
+dependency issue in the original code, where enable_link was invoked 
+prematurely following the deassertion of PERST, as soon as the host was 
+ready but before the device configuration space was initialized, so host 
+enumeration was wrong.
+
+Since then, the perst_irq is enabled by start_link. Consequently, the 
+initialization, enable_link, and enumeration sequence is now correct
+
+This bit is useless and can be dropped
+
+Thank you for identifying it.
+
+Christian
+
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/r/20241112203846.GA1856246@bhelgaas
+> 
 
