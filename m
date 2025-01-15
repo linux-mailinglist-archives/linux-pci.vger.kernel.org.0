@@ -1,252 +1,256 @@
-Return-Path: <linux-pci+bounces-19849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25649A11BAF
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 09:17:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B3D7A11C0D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 09:33:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34A6416665F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:17:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E088B3A6140
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:33:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412CA236EC9;
-	Wed, 15 Jan 2025 08:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3C11E7C03;
+	Wed, 15 Jan 2025 08:33:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtS4YogD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UStlwaza"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30DC1DB150;
-	Wed, 15 Jan 2025 08:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4958B1DB133
+	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 08:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736929052; cv=none; b=Y/zBce6A2YuCB7Wwb36PZweG4WOEh4vIBW/6KXdRAZ/h+vh29ZzT/5b3gcA+gWLMZxWEto0Cc4NdjBz1SA3ZaUjMRgcajoGfi9cTZTXQPqVWpBcjwevoKKXsJgdksWzSH9heuW+h8VOLyZG5LD1V/uFpbL/BRiUnChJelBtNIzo=
+	t=1736930018; cv=none; b=aR3/l37wh50vrH293GVo2GRGtZ8eOl1DV/5COKxcprfgiOUQptj/BmXLVkC2tXLrdWZL/6kMK+gRlQE5sU3mpPsNnKyRt2aOM7ToTGYSfTxvtdLpGYWRXYbFCDxDp1H8r5JpDeCru+AFDS0alxfxEFmbxS16jE7OqUl2ATtrKPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736929052; c=relaxed/simple;
-	bh=Yu7S/jLyUGhfFZjVFlk4eprtZYRxfla2Nw7nZEhy9no=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHYM0FRi8hR27xAay804JFfYHPqR3c82VSXMvKjfyg+QXHjtLGrSfPvg8YvzraFY5uzrD+nzXRJ6oU7mjTcCMC3SERRuwDd4M0aNXS3AyQiTjotk7MOkQPXV/DVsOZp9i4u8hGXSvOLfaJewEvIVI8kh67Xrz2ckXvM+4NASUl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtS4YogD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD6DC4CEDF;
-	Wed, 15 Jan 2025 08:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736929050;
-	bh=Yu7S/jLyUGhfFZjVFlk4eprtZYRxfla2Nw7nZEhy9no=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jtS4YogDlGBJKPE4uxCOLjxH7XCi5QYsOo4leoD+xgmN8tj70qVx5829WIg+sShgX
-	 yiakEsBadvxORmzL2tNvh64PTbxN2Yn7ZjPr4SYb84VfV3NxFD7kGP/KdoZOcX+tov
-	 rQJGthlfV+pWswtBJZw2US2akwQ3E9tQt/jwG/ICtUFlz/2ySVXe68KJv7W8xdw1OU
-	 pIcG2l3K1LSF8572QwfNaFSMofL4ExapBuk12HqOU0whbiq9SaXUul7IQT4rV47kiH
-	 Y6/VezMg1RWwWJ+XN6OfK0HDAZ0irI3FF3+Tw83vfWul8FBVAnUy0tZrZ3zZK1Ybu0
-	 cyRrXOGYV/nDQ==
-Date: Wed, 15 Jan 2025 10:17:26 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v5 05/17] dma-mapping: Provide an interface to allow
- allocate IOVA
-Message-ID: <20250115081726.GK3146852@unreal>
-References: <cover.1734436840.git.leon@kernel.org>
- <fac6bc6fdcf8e13bd5668386d36289ee38a8a95b.1734436840.git.leon@kernel.org>
- <ecb59036-b279-4412-9a09-40e05af3b9ea@arm.com>
+	s=arc-20240116; t=1736930018; c=relaxed/simple;
+	bh=OLV44hQwSkTwfh1ZuTQ5b5xC0Pp4SOufeb2WtRRywRU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=egARJWI+gRCHUj0GW6NeA6b3d27tXtXT7jq+6vVEBOUzy/20AWOFkT/DYUjQlZuUzT97NE3MrwY3F30ZiZxFGwVKcHefYZXSnl++ykZXK2LaqTU6nM+ysLvaX6oCvj82AIh0zb1UrD+zLit4tUblsAPjiWDjrHQ8bDzCWi7xCzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--danielsftsai.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UStlwaza; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--danielsftsai.bounces.google.com
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef91d5c863so11614615a91.2
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 00:33:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736930016; x=1737534816; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FsAiUdba5Mucqo50oO6EIg3p9URSe0dEK+Xh8dUE2cE=;
+        b=UStlwaza0+cCvXea2ndQMiGFOpj8oszJQ3AB9vttQscjHuj13wvOK4p7CUNGMeiC9g
+         xdY2mJrbnwTqCFNL8wpQgQ+WfYht8F923B2msKTOr1+DW2du3gPBRdmQC3gQTMPfJjye
+         ChucVmjqCh4Uw40hH1k9IBp8GZNxEa0jViGc7ZXJbbNFKh5pNyhhLzetHtWFr9ZLAwU+
+         GFwDrdc+6VBOYKYd4WVtj+jgFbmUGOI62FiVXCdSVnbLVjQC76LXcRJpGtICk0q94kze
+         kSKddObh1FzeUL/0xyVVOot1pBBGgUEn3xk7q9ygZA9S4bINB4n0fvHO+AK6dfoXUXVC
+         u2Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736930016; x=1737534816;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FsAiUdba5Mucqo50oO6EIg3p9URSe0dEK+Xh8dUE2cE=;
+        b=JyrmIlxIZiyXYyfRqoUmrtWwmkt1zdnnr13Wa9wPUsUN/2oQp4CMendHrc7sJpSbSl
+         2+sc8yi0jwqIAK7Q2CNj8CNkDfuGCH5XLusceXSaJxvfjzIYIk+s4HcZ0kiT1ht0zt38
+         QAUfO5Ypq/unG5ajYNxhWyuwynC7TzKBMHrawSBb5Ceh7G7aIB270kNHPh1vs012wX9m
+         vd6PU798pq0mHt9LeRw3i4A9Mar2D+KY64nFOotVUCcqmSLtH+BXRKSHogBh7BV2POEQ
+         HdJDjJo7nf2R/DfGc9npLybj39LUTB5KrtdCk6TmP7iN1WN4ZD95rNtHGM3D5lIo61I4
+         eFGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAFTe79YC+Wg2vJP4vIvy6Jr4ZrsRcnrFrOg8DraA35mlWzgO89iaW63rq8MzMZnC3VHHTky1f9Ko=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5PJoAeAl/NegbszEIqKt5E1Y0M62sUnRbrZ0PD8L9jCou4MiQ
+	AqIHfouwGU4W/egHfux7T1rliFLbOADSNBRO/IP6fpTLkwNCe+0Vi3025l09xbosRL/ffyutz/k
+	6intP9PojlzsVmTM2mZ8/66l0gw==
+X-Google-Smtp-Source: AGHT+IHn00OwbuG3HUBN6piQN5R2qfT1W3uqqRLmC4NHhKa11yICw++JD6EczvUSI21a/LlVMWMFv0huHeYaEPtHvIo=
+X-Received: from pjbsz8.prod.google.com ([2002:a17:90b:2d48:b0:2e0:9fee:4b86])
+ (user=danielsftsai job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90a:d00c:b0:2ee:c5ea:bd91 with SMTP id 98e67ed59e1d1-2f548f1d783mr39875970a91.29.1736930016608;
+ Wed, 15 Jan 2025 00:33:36 -0800 (PST)
+Date: Wed, 15 Jan 2025 08:32:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ecb59036-b279-4412-9a09-40e05af3b9ea@arm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
+Message-ID: <20250115083215.2781310-1-danielsftsai@google.com>
+Subject: [PATCH] PCI: dwc: Separate MSI out to different controller
+From: Daniel Tsai <danielsftsai@google.com>
+To: Jingoo Han <jingoohan1@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	"=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Tsai Sung-Fu <danielsftsai@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jan 14, 2025 at 08:50:28PM +0000, Robin Murphy wrote:
-> On 17/12/2024 1:00 pm, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > The existing .map_page() callback provides both allocating of IOVA
-> > and linking DMA pages. That combination works great for most of the
-> > callers who use it in control paths, but is less effective in fast
-> > paths where there may be multiple calls to map_page().
-> > 
-> > These advanced callers already manage their data in some sort of
-> > database and can perform IOVA allocation in advance, leaving range
-> > linkage operation to be in fast path.
-> > 
-> > Provide an interface to allocate/deallocate IOVA and next patch
-> > link/unlink DMA ranges to that specific IOVA.
-> > 
-> > In the new API a DMA mapping transaction is identified by a
-> > struct dma_iova_state, which holds some recomputed information
-> > for the transaction which does not change for each page being
-> > mapped, so add a check if IOVA can be used for the specific
-> > transaction.
-> > 
-> > The API is exported from dma-iommu as it is the only implementation
-> > supported, the namespace is clearly different from iommu_* functions
-> > which are not allowed to be used. This code layout allows us to save
-> > function call per API call used in datapath as well as a lot of boilerplate
-> > code.
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >   drivers/iommu/dma-iommu.c   | 74 +++++++++++++++++++++++++++++++++++++
-> >   include/linux/dma-mapping.h | 49 ++++++++++++++++++++++++
-> >   2 files changed, 123 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > index 853247c42f7d..5906b47a300c 100644
-> > --- a/drivers/iommu/dma-iommu.c
-> > +++ b/drivers/iommu/dma-iommu.c
-> > @@ -1746,6 +1746,80 @@ size_t iommu_dma_max_mapping_size(struct device *dev)
-> >   	return SIZE_MAX;
-> >   }
-> > +/**
-> > + * dma_iova_try_alloc - Try to allocate an IOVA space
-> > + * @dev: Device to allocate the IOVA space for
-> > + * @state: IOVA state
-> > + * @phys: physical address
-> > + * @size: IOVA size
-> > + *
-> > + * Check if @dev supports the IOVA-based DMA API, and if yes allocate IOVA space
-> > + * for the given base address and size.
-> > + *
-> > + * Note: @phys is only used to calculate the IOVA alignment. Callers that always
-> > + * do PAGE_SIZE aligned transfers can safely pass 0 here.
-> > + *
-> > + * Returns %true if the IOVA-based DMA API can be used and IOVA space has been
-> > + * allocated, or %false if the regular DMA API should be used.
-> > + */
-> > +bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
-> > +		phys_addr_t phys, size_t size)
-> > +{
-> > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-> > +	struct iova_domain *iovad = &cookie->iovad;
-> > +	size_t iova_off = iova_offset(iovad, phys);
-> > +	dma_addr_t addr;
-> > +
-> > +	memset(state, 0, sizeof(*state));
-> > +	if (!use_dma_iommu(dev))
-> > +		return false;
-> 
-> Can you guess why that return won't ever be taken?
+From: Tsai Sung-Fu <danielsftsai@google.com>
 
-I will move references to pointers after this check, but like Christoph
-said, this "if ..." is taken a lot and we didn't see any issues with
-inbox GCC versions.
+Setup the struct irq_affinity at EP side, and passing that as 1 of the
+function parameter when endpoint calls pci_alloc_irq_vectors_affinity,
+this could help to setup non-default irq_affinity for target irq (end up
+in irq_desc->irq_common_data.affinity), and we can make use of that to
+separate msi vector out to bind to other msi controller.
 
-> 
-> > +	if (static_branch_unlikely(&iommu_deferred_attach_enabled) &&
-> > +	    iommu_deferred_attach(dev, iommu_get_domain_for_dev(dev)))
-> > +		return false;
-> > +
-> > +	if (WARN_ON_ONCE(!size))
-> > +		return false;
-> > +	if (WARN_ON_ONCE(size & DMA_IOVA_USE_SWIOTLB))
-> 
-> This looks weird. Why would a caller ever set an effectively-private flag in
-> the first place? If it's actually supposed to be a maximum size check,
-> please make it look like a maximum size check.
+In current design, we have 8 msi controllers, and each of them own up to
+32 msi vectors, layout as below
 
-It is in-kernel API and the idea is to warn developers of something that
-is not right and not perform defensive programming by doing size checks.
+msi_controller0 <- msi_vector0 ~ 31
+msi_controller1 <- msi_vector32 ~ 63
+msi_controller2 <- msi_vector64 ~ 95
+.
+.
+.
+msi_controller7 <- msi_vector224 ~ 255
 
-<...>
+dw_pcie_irq_domain_alloc is allocating msi vector number in a contiguous
+fashion, that would end up those allocated msi vectors all handled by
+the same msi_controller, which all of them would have irq affinity in
+equal. To separate out to different CPU, we need to distribute msi
+vectors to different msi_controller, which require to allocate the msi
+vector in a stride fashion.
 
-> > +/**
-> > + * dma_iova_free - Free an IOVA space
-> > + * @dev: Device to free the IOVA space for
-> > + * @state: IOVA state
-> > + *
-> > + * Undoes a successful dma_try_iova_alloc().
-> > + *
-> > + * Note that all dma_iova_link() calls need to be undone first.  For callers
-> > + * that never call dma_iova_unlink(), dma_iova_destroy() can be used instead
-> > + * which unlinks all ranges and frees the IOVA space in a single efficient
-> > + * operation.
-> 
-> That's only true if they *also* call dma_iova_link() in just the right way
-> too.
+To do that, the CL make use the cpumask_var_t setup by the endpoint,
+compare against to see if the affinities are the same, if they are,
+bind to msi controller which previously allocated msi vector goes to, if
+they are not, assign to new msi controller.
 
-We can update the comment section to any wording, feel free to propose.
+Signed-off-by: Tsai Sung-Fu <danielsftsai@google.com>
+---
+ .../pci/controller/dwc/pcie-designware-host.c | 80 +++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+ 2 files changed, 67 insertions(+), 15 deletions(-)
 
-> 
-> > + */
-> > +void dma_iova_free(struct device *dev, struct dma_iova_state *state)
-> > +{
-> > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-> > +	struct iova_domain *iovad = &cookie->iovad;
-> > +	size_t iova_start_pad = iova_offset(iovad, state->addr);
-> > +	size_t size = dma_iova_size(state);
-> > +
-> > +	iommu_dma_free_iova(cookie, state->addr - iova_start_pad,
-> > +			iova_align(iovad, size + iova_start_pad), NULL);
-> > +}
-> > +EXPORT_SYMBOL_GPL(dma_iova_free);
-> > +
-> >   void iommu_setup_dma_ops(struct device *dev)
-> >   {
-> >   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> > index b79925b1c433..55899d65668b 100644
-> > --- a/include/linux/dma-mapping.h
-> > +++ b/include/linux/dma-mapping.h
-> > @@ -7,6 +7,8 @@
-> >   #include <linux/dma-direction.h>
-> >   #include <linux/scatterlist.h>
-> >   #include <linux/bug.h>
-> > +#include <linux/mem_encrypt.h>
-> > +#include <linux/iommu.h>
-> 
-> Why are these being pulled in here?
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d2291c3ceb8be..192d05c473b3b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -181,25 +181,75 @@ static int dw_pcie_irq_domain_alloc(struct irq_domain *domain,
+ 				    void *args)
+ {
+ 	struct dw_pcie_rp *pp = domain->host_data;
+-	unsigned long flags;
+-	u32 i;
+-	int bit;
++	const struct cpumask *mask;
++	unsigned long flags, index, start, size;
++	int irq, ctrl, p_irq, *msi_vec_index;
++	unsigned int controller_count = (pp->num_vectors / MAX_MSI_IRQS_PER_CTRL);
++
++	/*
++	 * All IRQs on a given controller will use the same parent interrupt,
++	 * and therefore the same CPU affinity. We try to honor any CPU spreading
++	 * requests by assigning distinct affinity masks to distinct vectors.
++	 * So instead of always allocating the msi vectors in a contiguous fashion,
++	 * the algo here honor whoever comes first can bind the msi controller to
++	 * its irq affinity mask, or compare its cpumask against
++	 * currently recorded to decide if binding to this msi controller.
++	 */
++
++	msi_vec_index = kcalloc(nr_irqs, sizeof(*msi_vec_index), GFP_KERNEL);
++	if (!msi_vec_index)
++		return -ENOMEM;
+ 
+ 	raw_spin_lock_irqsave(&pp->lock, flags);
+ 
+-	bit = bitmap_find_free_region(pp->msi_irq_in_use, pp->num_vectors,
+-				      order_base_2(nr_irqs));
++	for (irq = 0; irq < nr_irqs; irq++) {
++		mask = irq_get_affinity_mask(virq + irq);
++		for (ctrl = 0; ctrl < controller_count; ctrl++) {
++			start = ctrl * MAX_MSI_IRQS_PER_CTRL;
++			size = start + MAX_MSI_IRQS_PER_CTRL;
++			if (find_next_bit(pp->msi_irq_in_use, size, start) >= size) {
++				cpumask_copy(&pp->msi_ctrl_to_cpu[ctrl], mask);
++				break;
++			}
+ 
+-	raw_spin_unlock_irqrestore(&pp->lock, flags);
++			if (cpumask_equal(&pp->msi_ctrl_to_cpu[ctrl], mask) &&
++			    find_next_zero_bit(pp->msi_irq_in_use, size, start) < size)
++				break;
++		}
+ 
+-	if (bit < 0)
+-		return -ENOSPC;
++		/*
++		 * no msi controller matches, we would error return (no space) and
++		 * clear those previously allocated bit, because all those msi vectors
++		 * didn't really successfully allocated, so we shouldn't occupied that
++		 * position in the bitmap in case other endpoint may still make use of
++		 * those. An extra step when choosing to not allocate in contiguous
++		 * fashion.
++		 */
++		if (ctrl == controller_count) {
++			for (p_irq = irq - 1; p_irq >= 0; p_irq--)
++				bitmap_clear(pp->msi_irq_in_use, msi_vec_index[p_irq], 1);
++			raw_spin_unlock_irqrestore(&pp->lock, flags);
++			kfree(msi_vec_index);
++			return -ENOSPC;
++		}
++
++		index = bitmap_find_next_zero_area(pp->msi_irq_in_use,
++						   size,
++						   start,
++						   1,
++						   0);
++		bitmap_set(pp->msi_irq_in_use, index, 1);
++		msi_vec_index[irq] = index;
++	}
+ 
+-	for (i = 0; i < nr_irqs; i++)
+-		irq_domain_set_info(domain, virq + i, bit + i,
++	raw_spin_unlock_irqrestore(&pp->lock, flags);
++
++	for (irq = 0; irq < nr_irqs; irq++)
++		irq_domain_set_info(domain, virq + irq, msi_vec_index[irq],
+ 				    pp->msi_irq_chip,
+ 				    pp, handle_edge_irq,
+ 				    NULL, NULL);
++	kfree(msi_vec_index);
+ 
+ 	return 0;
+ }
+@@ -207,15 +257,15 @@ static int dw_pcie_irq_domain_alloc(struct irq_domain *domain,
+ static void dw_pcie_irq_domain_free(struct irq_domain *domain,
+ 				    unsigned int virq, unsigned int nr_irqs)
+ {
+-	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
++	struct irq_data *d;
+ 	struct dw_pcie_rp *pp = domain->host_data;
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&pp->lock, flags);
+-
+-	bitmap_release_region(pp->msi_irq_in_use, d->hwirq,
+-			      order_base_2(nr_irqs));
+-
++	for (int i = 0; i < nr_irqs; i++) {
++		d = irq_domain_get_irq_data(domain, virq + i);
++		bitmap_clear(pp->msi_irq_in_use, d->hwirq, 1);
++	}
+ 	raw_spin_unlock_irqrestore(&pp->lock, flags);
+ }
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 347ab74ac35aa..95629b37a238e 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -14,6 +14,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/clk.h>
++#include <linux/cpumask.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dma/edma.h>
+ #include <linux/gpio/consumer.h>
+@@ -373,6 +374,7 @@ struct dw_pcie_rp {
+ 	struct irq_chip		*msi_irq_chip;
+ 	u32			num_vectors;
+ 	u32			irq_mask[MAX_MSI_CTRLS];
++	struct cpumask		msi_ctrl_to_cpu[MAX_MSI_CTRLS];
+ 	struct pci_host_bridge  *bridge;
+ 	raw_spinlock_t		lock;
+ 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+-- 
+2.48.0.rc2.279.g1de40edade-goog
 
-It is rebase leftover.
-
-> 
-> >   /**
-> >    * List of possible attributes associated with a DMA mapping. The semantics
-> > @@ -72,6 +74,21 @@
-> >   #define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-> > +struct dma_iova_state {
-> > +	dma_addr_t addr;
-> > +	size_t __size;
-> > +};
-> > +
-> > +/*
-> > + * Use the high bit to mark if we used swiotlb for one or more ranges.
-> > + */
-> > +#define DMA_IOVA_USE_SWIOTLB		(1ULL << 63)
-> 
-> This will give surprising results for 32-bit size_t (in fact I guess it
-> might fire some build warnings already).
-
-We got none, I will change to u64.
-
-> 
-> Thanks,
-> Robin.
-
-Thanks
 
