@@ -1,64 +1,64 @@
-Return-Path: <linux-pci+bounces-19867-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19868-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 144CBA1222B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 12:12:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F747A12247
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 12:15:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABFF03A86D4
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 11:12:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B78CC3AD3F7
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 11:15:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A096A20764C;
-	Wed, 15 Jan 2025 11:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42D3120DD66;
+	Wed, 15 Jan 2025 11:14:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB4E20F999;
-	Wed, 15 Jan 2025 11:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B242063C3
+	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 11:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736939545; cv=none; b=DyxyrL1F7yMvN5OBwMUaS7oFciRe40m9fDXXr7twMTWG8CfVo23cCut6faZMcP8pkthMn2Zu1J1lxyGUnlKGbaO0eqGJ4Mm90KhsLyNs05tSutPcIaKaSM+0rLbaW8F3eqNAQdpBvbpSnShrDrN1wL9WOaTQcn427twvwmSRXgI=
+	t=1736939683; cv=none; b=XGzzQUj+SAzyeYnqnBtprlQTK5PZ27+n07KwjjcUBGS+D51DVzQ/CoVQwjkEZzOjt+jT1g6M1YcFKVAKlRWvpcWrHnQnBoNPNFhfwB5coFQsteEP/R/VOYdlqk4njeFZ74d+KfPJf3CIl8cvK9wTSQfa9V6H/0v9fDiEM9h/g3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736939545; c=relaxed/simple;
-	bh=dMdJyo2ocCibz5X8C6KWjWTCyqIS+CPtK9iGS3MlpcE=;
+	s=arc-20240116; t=1736939683; c=relaxed/simple;
+	bh=LIOOZSicKPW5eyg0Ppshh70j76aKyelwZwXVlWpiZD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EZV0gp0s6MBAVdgGQBuHSdqGfJwTyisionUKSRGluWbhCGZBBwVYQ9FEhOW5nziE6tk7rLz32jgEZ6besK3tLoEK5WifSiVUIek6h0v2oDkA6dD5x+uZQOutRU64r/4SSilspLJO6qcmvD1ldASHoRE9Aff7frCQ8f2wOki8RDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=FrBCCeBT/Z63NI7Y3/70i7nPtC14i9TnYNbZIBP4ZkjT90SAcy78Bf8GJ14yf8Yxe6Ogsr7k8kMJOPziL1ctFtF4EQoP5Sy3urd13Q+gYz0Up0W322FOG34At5BjL80U9tpS1qa4xN+dS11UEQX6JRcc8vvMkUvzNgmNuvRlAmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21654fdd5daso111719995ad.1;
-        Wed, 15 Jan 2025 03:12:23 -0800 (PST)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2efd81c7ca4so8637968a91.2
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 03:14:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736939543; x=1737544343;
+        d=1e100.net; s=20230601; t=1736939681; x=1737544481;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YWwH1bDPMW4sIvL8kmJCxcSzCH8Ejrs1sg9Vv46J164=;
-        b=aZzKG5+7JIzXVh2dEw+m/Q6KwEhZP+oXr3tw2L/y+ghiPwHtrNQeoctZ7vd1ZR64LI
-         0hK7QrQLHMnzvVIjr5wC+Gd8IRM3q+Zw1fNshIv9s3kPDttmnUe8DGjI5smNyPdEmtsq
-         Caxwjtg0L5JoBt1s3qVJ0WHkiK8G91OiCnzkttQRzTovAvTjjtVwT895Z5+UcK7NeqB+
-         Me26f7MoWEHTMV/UkaVWH0+MLOBo5OYTR3/67daRCkaGj5YUo7bn+27SkwiQJY6DwJYD
-         lLFL6vivTWNkOHSZG7PRFGIUB74Zhf/GVTUjn2S5c8mN6o8M7Je6EnlUb9OPTBP9lb9V
-         gkEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpePSztA++PSzHOR4Vu9AMQtUeKzNnbUNFtJJ55XinT1O6CQeWaJTBP1YvdjZbOayw+cblH7vEBEo=@vger.kernel.org, AJvYcCVCsi/jT0mJiQdIG11RVfw0LtoVTghvvKkOY+Tr7HTlGzoDRI62934ohowfIjqVVQBt3ryOVpGXdxba@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+L7RB3IBrxi8Uq5Ag8spFwCY9lgU0nOhS1BGaES1/AGJOKiUc
-	2LA1VoJYX/9z4RJ4ytUeyI1Y5d3dYOpt7B2LgnEAm6apqeHd2gFm
-X-Gm-Gg: ASbGnctrwuUi8B7v8utV6caYtJa0hlh8bP/X20UXXoV38N8qpuzRZimDvZQSBNlOSD0
-	JcwZI0tYEihjqeNViDn2xIVcoXQzgOMQopmrm2VpKGraospVo/vZorkmR3ZOatNenRWuK619o91
-	L7l40Ia5sbz+G++zG+WbQbxIwrh/BshEveDtdY8zakzfREfTzI8+fnE2xcUA7B9WBfB8j6S/3MD
-	9VtRzFjsrtnjC/Qgrydc6pSXvab7bxA+AeGiM+cKUsz9+qqzrgMcyf3MbVKxe6yCkm9r0HflMzI
-	95fWtdAZ4M/7kB8=
-X-Google-Smtp-Source: AGHT+IHFoca7ZCISTDX0mGzInAWIQ58L8qkZmkBMA3Zf+oFefoTlL/1UC9F+En3y5YImzKRbiXnU4Q==
-X-Received: by 2002:a05:6a21:a4a:b0:1e1:c8f5:19ee with SMTP id adf61e73a8af0-1e88cfe2ce4mr44391726637.25.1736939543365;
-        Wed, 15 Jan 2025 03:12:23 -0800 (PST)
+        bh=sz8qYCut2vMXxqWmWVOJ5WSfbE/dmnJ2d6EiHkz1mpE=;
+        b=Ay57hrO0vKr61f3dwTIkJIEgBj4C0qGyAZQE4Brk/lc0wal1TZQGz736Iu66iCq0dO
+         5emFKNSSL1N0/o4CPFqfa7cqAXm5H9YdYffyewjr0tvmREzKhdyIlj3B2dvBMr7LhNV2
+         nUdFu579bQXkH1Imtj9XK2MZ6wrADkoLsW8IrWLm3emQTuuwGQKH5Xse9OZKQzb/fdQb
+         vNXTGnwT0aT8Fu1tvZZSnFGgEsNDQMqMA03CG4HPw3ZLVQfVzd7F6NVCA1pHLE3ZMoh6
+         NwsVgwCOWMQ4QlyWEOr2lhisDW6/4MNbuOwmPwgSesi+nOYGh69/sU5BU3LsxJeCT5PW
+         SuUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCfq0Iexkja8E9p8HUCt6/cA+IzBldcQHvU9Dut/ZLp5yW5L9QH82hjF3cOG4N2grANcKxYtZPOQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaQqScn+3dPDA4ieH1v8KeEdlLJD5BcCbit+f35qADYiQp9VLP
+	3yMqDXaeP1KGdUPuER+m6JtG0nABUOJgArPih9eOhamVLB40AXI/
+X-Gm-Gg: ASbGnctsim7f7d2UZiFF9J9NP+fdtV745yP5mnoxpdgAWgBv5c/qhKFN4WSkcFqrX/V
+	2VISRvzcRJgVcBs/yxfRGspLnWdi+m1zfXpLIqzyw1nx6+Jp5B8JQs0paEkCjCOEb1ouVH0GdFx
+	uxeR/eSLYC4VtFxqV/krmv0L7chc6iidP6dvRwLSjH3OZA746O+pSNQud1kWbFRUV5YZRxSe6bk
+	OBmNAPQmLmZ2fJ7jf0mURILY2RXhz9pZwV5cAFaZPh/v+1IWB0+iPifwdyTwT0+Y8zLvMh8UZ8E
+	rTJPYj4CfVc0TD8=
+X-Google-Smtp-Source: AGHT+IHBi1TpzbH8P/aWhdgwF4SFs6U00POoo7gCP6dZ7wsv46DHk24a0naYWm/T9JwxKv4fWUwHVA==
+X-Received: by 2002:a17:90b:3bc3:b0:2ee:bbd8:2b9d with SMTP id 98e67ed59e1d1-2f548f75de6mr34988834a91.34.1736939680740;
+        Wed, 15 Jan 2025 03:14:40 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a31902b137bsm9540020a12.35.2025.01.15.03.12.22
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7085261dcsm1908286a91.0.2025.01.15.03.14.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 03:12:22 -0800 (PST)
-Date: Wed, 15 Jan 2025 20:12:20 +0900
+        Wed, 15 Jan 2025 03:14:40 -0800 (PST)
+Date: Wed, 15 Jan 2025 20:14:38 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Lorenzo Bianconi <lorenzo@kernel.org>
 Cc: Ryder Lee <ryder.lee@mediatek.com>,
@@ -68,15 +68,12 @@ Cc: Ryder Lee <ryder.lee@mediatek.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] PCI: mediatek-gen3: mtk_pcie_en7581_power_up()
- code
-Message-ID: <20250115111220.GA4176564@rocinante>
-References: <20250108-pcie-en7581-fixes-v6-0-21ac939a3b9b@kernel.org>
+	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, Hui Ma <hui.ma@airoha.com>
+Subject: Re: [PATCH v4] PCI: mediatek-gen3: Avoid PCIe resetting via PERST#
+ for Airoha EN7581 SoC
+Message-ID: <20250115111438.GB4176564@rocinante>
+References: <20250109-pcie-en7581-rst-fix-v4-1-4a45c89fb143@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,16 +82,18 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250108-pcie-en7581-fixes-v6-0-21ac939a3b9b@kernel.org>
+In-Reply-To: <20250109-pcie-en7581-rst-fix-v4-1-4a45c89fb143@kernel.org>
 
 Hello,
 
-> Minor fixes and code refactoring in mtk_pcie_en7581_power_up() routine
+> Airoha EN7581 has a hw bug asserting/releasing PERST# signal causing
+> occasional PCIe link down issues. In order to overcome the problem,
+> PERST# signal is not asserted/released during device probe or
+> suspend/resume phase and the PCIe block is reset using
+> en7523_reset_assert() and en7581_pci_enable().
 > 
-> Changes in v6:
-> - remove mac_rst support for EN7581 since it is not needed by the SoC
-> - fix typos
-> - Link to v5: https://lore.kernel.org/r/20241130-pcie-en7581-fixes-v5-0-dbffe41566b3@kernel.org
+> Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
+> specify per-SoC capabilities.
 
 Applied to controller/mediatek for v6.14, thank you!
 
