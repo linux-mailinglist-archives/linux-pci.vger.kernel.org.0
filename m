@@ -1,174 +1,125 @@
-Return-Path: <linux-pci+bounces-19825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25862A11A08
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:48:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7168A11A23
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:53:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE7723A8B8C
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:48:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B1FB18898C4
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:53:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617A023026F;
-	Wed, 15 Jan 2025 06:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51F922F837;
+	Wed, 15 Jan 2025 06:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D0/XwgmE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLOf31fG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF075223;
-	Wed, 15 Jan 2025 06:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193A322F3B0
+	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 06:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736923706; cv=none; b=BaiiwvllARwPTF1l/WCY1v+fXiLUjKC8BryrICAwKGHXw7t5RWnargI8TAQoaa/h2wz5lLswm41aLo7MGcYLNYZoDtgeMi8HtJXA+I/bU6Mn9t+HKJSdJftipre/YNzFKRPv16/KFhWGsK6XCymz05bekhsy3DrNIYjHV/qv8j0=
+	t=1736924004; cv=none; b=ZYpIcJ5oMlTR82eUCxBGo2KK8+/TY997mwMIZ0dBxiY52W+5nwAr7m8gsUL756Hmi4/CsxGLGIcTkaBOPAgoFlOjESvsrSjVeml4O4MfeyvZfGilZ8CEQ4HBjU33IgWJh1dRUEFi5gbgZyU8ETTlA3ZZlI42sFWYZCOVLXwX9+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736923706; c=relaxed/simple;
-	bh=m5OEpVoI63DZwcR9TguGmDDONdRscwKlIGU+8JvzPu8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h9tFc1NfzMX5k/aiUznasCYpyHi1zgrEvYfn/eS66gL7O7hbTr3ypikmB8atzzRD6ckLfIpbPiip3Mzzl14hpnSrC2n2Y1bM2kyvjD0Id++nFSrjYEyGG+GzXrXR4Yfw74wNWcNT5xIqtMWXnZRbcyaYs9ujsc5uSx2+Msve20M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D0/XwgmE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F0bhPn002544;
-	Wed, 15 Jan 2025 06:48:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	U7y5XI/ogBdlpYlDZW9rMCcRFyBZScGo6nZIm6wSEyU=; b=D0/XwgmEfXOtkGgp
-	kxTaZpQm6d6xEzmMvi7RJRpZB56Ux8HLW/dSih2WDuJBZu+eDIvZfQuZJ0t7VXiq
-	jKwvjtapTqDyjHRcAGL6NrDntJq17gpyOuru9vckc3Y/yXaPpnfDkNebJmxQD9I5
-	Vz0hNYjcFahM0cxq/XuF/ASnVwrY83OSBAN1pRskGl2zsP6h1xfJ+EQlwvCdGo7v
-	GY8srbz6MzIPs6TMgChjyQJnpk3lE9kHZXnndz1oOikPKG9EHSEi4WmccVAWkA4T
-	nq1aPza4TNqvfzbcI+PPoIFE19bPNVHd4SC6tk2CQeYSZFtERcvaFiVvhr7q+9LT
-	FFBftg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4462mkgr5x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 06:48:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50F6mH3s019382
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 06:48:17 GMT
-Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 14 Jan 2025 22:48:12 -0800
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-Subject: [PATCH v2 3/3] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and controllers
-Date: Wed, 15 Jan 2025 12:17:47 +0530
-Message-ID: <20250115064747.3302912-4-quic_mmanikan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250115064747.3302912-1-quic_mmanikan@quicinc.com>
-References: <20250115064747.3302912-1-quic_mmanikan@quicinc.com>
+	s=arc-20240116; t=1736924004; c=relaxed/simple;
+	bh=lZtdYvwm0/D+wrEsjVubJTTYAK+wxUZeR9nJ3jVsGl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PvNtqAXRYaTd68E2VnpTjNDonDb2XW/9UM2u47LVh3g4ws76D3lI3qS7eGJP/GPK+QXS8FH71Rld0sM66qywUmiW1OyQLPUwGc9dd2/ED6V6Gl7Er9Yo2ODQGPeoxmR+/5djtTz92qPvLjWtmiVTWz7dIrdnG8LrR2RC5KXs0XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XLOf31fG; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d647d5df90so10743379a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 22:53:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736924000; x=1737528800; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1jHKviSWbOJnThNL+BRNc29xaYnK5sB8qfkKjQ020pY=;
+        b=XLOf31fGgX/FS5ncmoLi84Csb4BAl3+99Eu2RWNBz/HZZKXx7tFbk4vkvP6gQ+a6uU
+         HGBEdEVqUzh1dIFzfAD6rppY6Ot2wIM/jZM55GbVqVJWPwu08/qXZhxgF5eLnzCZfVpN
+         6VLp9XayHP5ZTaqV+04cguwo8YbI7qYbWkJU6J0hO5AguzDoIe4mDg4IXVdTnuB7Zuhp
+         AyaX7oky33O/E1S2RyPEQCdVUlm7tvLSnNRioamXBUJ/QaIY5o3x5QQZTzI9ofNMBAde
+         C9pGUyv3vePMsQDXb1cEBSzke43LeUpAOldPAURV1DDe2hi0JAPWgxKMhy+5cGgdC7Ot
+         uAkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736924000; x=1737528800;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1jHKviSWbOJnThNL+BRNc29xaYnK5sB8qfkKjQ020pY=;
+        b=LcwYmhhf0eU23TkzJATauXtQzDaCNI+cn/kzXxaq6MvbG/818f6NiQJNDokLr+2SeW
+         gZZYQ44nb9+IPDLZ8TQHVXKm6532KMs4rmWfqRozH8LZCn/IdEbFZgadLKa7ppzRafVF
+         N02JpDE6ADIr97xs7gZrF5MG05g7PwequXOdGTTGk1MvKZ0wUI6sV6NyTGcabQfKLHr0
+         ri8RARUrGTR6VxOWWZeX4AlnJhFaXo4povKlnIhL/ZfDf01YKz9PsxyEyUu8zqEjxuUG
+         4MRa2VOfTqvp/KZcJVM8LXfX7sG60+BUgaGOCCRkllfp595ZQvaXudyw6srxJAk7WG+n
+         dRvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfWpj0PMqZ4EdpBXRelgRKGmpgl75voxSrRNPAZ8zEvbY8XqsVh3lPzhG76KFExWXF+OeKRWd5P8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNLt3BJ9xYado8iADZQ5OmGdGahiMbaQR8g7J1GKWMGS0WUB0H
+	SjdXExuuUX4HPs55Qrbpx0bNFKI4b32PN6oDWXjZm6ralue+Mj2/1FWYURJogQw=
+X-Gm-Gg: ASbGncvkfIEkRe7b6QdAHCbxmms2+uBr7rpdenbVK9uNaWvRTdmfePQfbnwP/Xj9qM3
+	icSQGQoS28L20khJjuXoP5fcwctR+cKTlwU/y0zLyka8ZkNKTa3MMzAoc30ejNw/nwpR3hsjym7
+	ScWDzTBnIzL7R9qjugTLNiJ9QnUvvYC7XkWQjpqylkK5/GnnJoZB2UY2CRIgyxqjtVps+y5GDBI
+	yncKezycIaniyi9SRBBTivsaZgSQ9cSV4lf+6HG2+IgNpTssmGVll/lS5ku9g==
+X-Google-Smtp-Source: AGHT+IE9P5PDtBvyWPxhRNEsLiyx/nfhdVfXbwMkWhpN/F7zwvZlvMv1+220NOQBetuNrhffj43vww==
+X-Received: by 2002:a05:6402:518b:b0:5d3:baa3:29f with SMTP id 4fb4d7f45d1cf-5d972e06740mr26199332a12.9.1736924000495;
+        Tue, 14 Jan 2025 22:53:20 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d99008c371sm7145838a12.11.2025.01.14.22.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2025 22:53:20 -0800 (PST)
+Date: Wed, 15 Jan 2025 09:53:16 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] PCI: rockchip: Clean up on error in
+ rockchip_pcie_init_port()
+Message-ID: <7da6ac56-af55-4436-9597-6af24df8122c@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dP9mHta9VrNqYQmOW1yL5c6jodqISBvi
-X-Proofpoint-GUID: dP9mHta9VrNqYQmOW1yL5c6jodqISBvi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-15_02,2025-01-13_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- impostorscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=827 clxscore=1015 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501150049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Enable the PCIe controller and PHY nodes corresponding to RDP466.
+Call phy_exit() before returning on this error path.
 
-Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+Fixes: 853c711e2caf ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
-Changes in V2:
-	- Drop the inner wrapper in pcie2_default_state and
-	  pcie3_default_state nodes.
-	- Reordered the pcie nodes.
+ drivers/pci/controller/pcie-rockchip.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 41 ++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-index b6e4bb3328b3..73e6b38ecc26 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-@@ -53,6 +53,30 @@ &dwc_1 {
- 	dr_mode = "host";
- };
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index fea867c24f75..35bfdf3e17a3 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -132,8 +132,10 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
  
-+&pcie2 {
-+	pinctrl-0 = <&pcie2_default_state>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie2_phy {
-+	status = "okay";
-+};
-+
-+&pcie3 {
-+	pinctrl-0 = <&pcie3_default_state>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie3_phy {
-+	status = "okay";
-+};
-+
- &qusb_phy_0 {
- 	vdd-supply = <&vreg_misc_0p925>;
- 	vdda-pll-supply = <&vreg_misc_1p8>;
-@@ -147,6 +171,22 @@ data-pins {
- 			bias-pull-up;
- 		};
- 	};
-+
-+	pcie2_default_state: pcie2-default-state {
-+		pins = "gpio31";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+		output-low;
-+	};
-+
-+	pcie3_default_state: pcie3-default-state {
-+		pins = "gpio34";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+		output-low;
-+	};
- };
+ 	err = reset_control_bulk_assert(ROCKCHIP_NUM_CORE_RSTS,
+ 					rockchip->core_rsts);
+-	if (err)
+-		return dev_err_probe(dev, err, "Couldn't assert Core resets\n");
++	if (err) {
++		dev_err_probe(dev, err, "Couldn't assert Core resets\n");
++		goto err_exit_phy;
++	}
  
- &uart1 {
-@@ -166,4 +206,3 @@ &usb3 {
- &xo_board {
- 	clock-frequency = <24000000>;
- };
--
+ 	udelay(10);
+ 
 -- 
-2.34.1
+2.45.2
 
 
