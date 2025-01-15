@@ -1,205 +1,278 @@
-Return-Path: <linux-pci+bounces-19810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53F25A116AA
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 02:33:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE8D3A116B0
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 02:38:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B369F7A33F3
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 01:33:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 101D67A3659
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 01:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB8F22066;
-	Wed, 15 Jan 2025 01:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CEE35976;
+	Wed, 15 Jan 2025 01:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FS9hT8vS"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fxBZrX/s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBC3F9D6
-	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 01:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AC11805E;
+	Wed, 15 Jan 2025 01:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736904807; cv=none; b=f/HSi+raR3vS/fA1zJ/yaoYGmdjp6pkoRAqcmuyD4vxPbbK+RmgHLDWiw4w1aoJgRN4gTP2wEBFlyjOKRpUFj6HwJ9itza3PM43zqr6SSKKd3rfSU0tYNMJrnl07io2NaoJBupbdgUOxxOyQ61jv56JAG84fSUeXLEKTqgEo0Wk=
+	t=1736905083; cv=none; b=jEMSlXZ3iyvnu08j3njqzgbSrN+FYbGZdZ1NkC/h3IQELAmNBvO0GzyDgwtgnjfb+9t+EMTLjI1/YRWKUdH+pp7SD5IFKPEaDABAWp7Q84DMZgMnXqYzE3/OZOSU+OfUjyeIgdv0L178TQyAZTypXUvuWb1yzanYPK1dMkrPoH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736904807; c=relaxed/simple;
-	bh=6wHAoF46nsl3Yrnk9jczQewZBXK85Ks9SvaYwjoKvP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Tn3z2xFWG9H84M9BMxCD7Yij2EqoJ9CJHlWrXvPPk6TdYIgnsyqQObHKwA4SbfnPKzSs38O0yfpDn2bh1cg94hHIjh6UfemeWSseqV7hFxK/b1n2+TikqtbcpQOoN6nMV+xdEitKexbzhagJnvsEkLys/MlSSpZIeUXuMaUYdvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FS9hT8vS; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736904806; x=1768440806;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=6wHAoF46nsl3Yrnk9jczQewZBXK85Ks9SvaYwjoKvP0=;
-  b=FS9hT8vSCTCmRy4cXiJbdriuQZAd3MzKK5nFtL0pQzQPLBL5Ghrxu50z
-   KnG4ttgWZxRU8USM587SVFdSdBjyXXtgCJBGKZHqX58IGG6D/PrDRjQoB
-   ul2/joVe80lJXMxP1f+KOTb5oJ8nMJ3XdbvkD4Ff7C/vhhINTlx9WkhqM
-   KrBjE84EDvmBJstiapbjFruV1YK7LHIUqDZ+ZKevbEvFm7J4UbYIaJXBv
-   UWTthTmwUJKPMQjTUXawzfreaIuNkLBs7BLpZf77IO+yFNpfKebhMXFa7
-   uNK5OjP3fXWp+dj9ST3efMeHwBawg53blPGiKp+F0vGDsUwhiY+oYtmSz
-   w==;
-X-CSE-ConnectionGUID: 2BPlSrcXR6qOBWkcqh0iHQ==
-X-CSE-MsgGUID: PThcgx2QRzyxJcSL71ppuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="47715850"
-X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
-   d="scan'208";a="47715850"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 17:33:26 -0800
-X-CSE-ConnectionGUID: 8rx8xSGxRqyr6VQmNRbJ2g==
-X-CSE-MsgGUID: 1L7Sy1NhSYW4vSSHEocEUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="105467579"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 14 Jan 2025 17:33:25 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tXsHa-000PGR-0L;
-	Wed, 15 Jan 2025 01:33:22 +0000
-Date: Wed, 15 Jan 2025 09:32:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:bwctrl] BUILD SUCCESS
- e50e27a613db6f18e228437f89e352a6ccc6ef6a
-Message-ID: <202501150946.lPZmswp6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1736905083; c=relaxed/simple;
+	bh=4z1JHFeQYC5Z21yMA37gQAzI9JfFdQ/OIyWvOjs3rTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=apDf4zt3lzEt+cAsmVL2tCWJ3XaYIsAd0SE22Ls40jCp3CPx1XGqDDll/BflEf96CjbQg0kUuHyHDKVL7xF1iZChgBD3N7Ukt7BhEJf/QCz4csuELF81lHe13l6ZvxORBYQCI/2LdqUlZRxDsta8iYdFh2ElFWOwls37tDHqmPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fxBZrX/s; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1736905077; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Z8qXy5zmITI8hVehqAxqobTPALn8z23GzRWEWUmxmAE=;
+	b=fxBZrX/spJAJ2boIE5DOsVEsDfobDfbDKozO3dxnL3fiN/NIvcCQU8fzqQe22Hh4zaG0D3ATQZ1p1M0uRX7dtG5VPz5f5vKwjwrehyWDIg+QycDK18tTZvmVDLFO4LAIErgtIZUwKk7XcOrPByMkU3PxMqyOfDR3TE2IBtn+ofc=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNgdGTg_1736905073 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Jan 2025 09:37:55 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: rostedt@goodmis.org,
+	lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org
+Cc: bhelgaas@google.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	xueshuai@linux.alibaba.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	oleg@redhat.com,
+	naveen@kernel.org,
+	davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
+Date: Wed, 15 Jan 2025 09:37:53 +0800
+Message-ID: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git bwctrl
-branch HEAD: e50e27a613db6f18e228437f89e352a6ccc6ef6a  PCI/portdrv: Disable bwctrl service if port is fixed at 2.5 GT/s
+Hotplug events are critical indicators for analyzing hardware health,
+particularly in AI supercomputers where surprise link downs can
+significantly impact system performance and reliability.
 
-elapsed time: 1448m
+To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+tracepoint for hotplug event to help healthy check, and generate
+tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+include/uapi/linux/pci.h so applications like rasdaemon can register
+tracepoint event handlers for it.
 
-configs tested: 110
-configs skipped: 5
+The output like below:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+$ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+$ cat /sys/kernel/debug/tracing/trace_pipe
+    <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                          axs101_defconfig    gcc-13.2.0
-arc                            hsdk_defconfig    gcc-13.2.0
-arc                   randconfig-001-20250114    gcc-13.2.0
-arc                   randconfig-002-20250114    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                      integrator_defconfig    clang-15
-arm                   randconfig-001-20250114    clang-15
-arm                   randconfig-002-20250114    clang-20
-arm                   randconfig-003-20250114    gcc-14.2.0
-arm                   randconfig-004-20250114    gcc-14.2.0
-arm                             rpc_defconfig    clang-17
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250114    clang-17
-arm64                 randconfig-002-20250114    clang-19
-arm64                 randconfig-003-20250114    gcc-14.2.0
-arm64                 randconfig-004-20250114    clang-20
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250114    gcc-14.2.0
-csky                  randconfig-002-20250114    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon               randconfig-001-20250114    clang-20
-hexagon               randconfig-002-20250114    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250114    gcc-12
-i386        buildonly-randconfig-002-20250114    clang-19
-i386        buildonly-randconfig-003-20250114    clang-19
-i386        buildonly-randconfig-004-20250114    gcc-12
-i386        buildonly-randconfig-005-20250114    clang-19
-i386        buildonly-randconfig-006-20250114    clang-19
-i386                                defconfig    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250114    gcc-14.2.0
-loongarch             randconfig-002-20250114    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                         amcore_defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath25_defconfig    clang-16
-mips                            gpr_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250114    gcc-14.2.0
-nios2                 randconfig-002-20250114    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250114    gcc-14.2.0
-parisc                randconfig-002-20250114    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250114    gcc-14.2.0
-powerpc               randconfig-002-20250114    clang-20
-powerpc               randconfig-003-20250114    gcc-14.2.0
-powerpc                     stx_gp3_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250114    clang-20
-powerpc64             randconfig-002-20250114    clang-15
-powerpc64             randconfig-003-20250114    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250114    gcc-14.2.0
-riscv                 randconfig-002-20250114    clang-20
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250114    clang-18
-s390                  randconfig-002-20250114    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                ecovec24-romimage_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250114    gcc-14.2.0
-sh                    randconfig-002-20250114    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250114    gcc-14.2.0
-sparc                 randconfig-002-20250114    gcc-14.2.0
-sparc64               randconfig-001-20250114    gcc-14.2.0
-sparc64               randconfig-002-20250114    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250114    clang-17
-um                    randconfig-002-20250114    gcc-11
-x86_64                           alldefconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250114    clang-19
-x86_64      buildonly-randconfig-002-20250114    clang-19
-x86_64      buildonly-randconfig-003-20250114    clang-19
-x86_64      buildonly-randconfig-004-20250114    clang-19
-x86_64      buildonly-randconfig-005-20250114    clang-19
-x86_64      buildonly-randconfig-006-20250114    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                  nommu_kc705_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250114    gcc-14.2.0
-xtensa                randconfig-002-20250114    gcc-14.2.0
+    <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+---
+changes since v5:
+- move define of enum to include/uapi/linux/pci.h
+---
+ drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++++++++-----
+ drivers/pci/hotplug/trace.h       | 45 +++++++++++++++++++++++++++++++
+ include/uapi/linux/pci.h          | 31 +++++++++++++++++++++
+ 3 files changed, 103 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/pci/hotplug/trace.h
+
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index d603a7aa7483..f9beb4d3a9b8 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -23,6 +23,9 @@
+ #include "../pci.h"
+ #include "pciehp.h"
+ 
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
+ /* The following routines constitute the bulk of the
+    hotplug controller logic
+  */
+@@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	case ON_STATE:
+ 		ctrl->state = POWEROFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+-		if (events & PCI_EXP_SLTSTA_DLLSC)
++		if (events & PCI_EXP_SLTSTA_DLLSC) {
+ 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+ 				  slot_name(ctrl));
+-		if (events & PCI_EXP_SLTSTA_PDC)
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_LINK_DOWN);
++		}
++		if (events & PCI_EXP_SLTSTA_PDC) {
+ 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+ 				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_NOT_PRESENT);
++		}
+ 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+ 		break;
+ 	default:
+@@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 					      INDICATOR_NOOP);
+ 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+ 				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+ 		}
+ 		mutex_unlock(&ctrl->state_lock);
+ 		return;
+@@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	case OFF_STATE:
+ 		ctrl->state = POWERON_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+-		if (present)
++		if (present) {
+ 			ctrl_info(ctrl, "Slot(%s): Card present\n",
+ 				  slot_name(ctrl));
+-		if (link_active)
+-			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+-				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_PRESENT);
++		}
++		if (link_active) {
++			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_LINK_UP);
++		}
+ 		ctrl->request_result = pciehp_enable_slot(ctrl);
+ 		break;
+ 	default:
+diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+new file mode 100644
+index 000000000000..1415ac505cb5
+--- /dev/null
++++ b/drivers/pci/hotplug/trace.h
+@@ -0,0 +1,45 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_HW_EVENT_PCI_HP_H
++
++#include <linux/tracepoint.h>
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM pci
++
++TRACE_EVENT(pci_hp_event,
++
++	TP_PROTO(const char *port_name,
++		 const char *slot,
++		 const int event),
++
++	TP_ARGS(port_name, slot, event),
++
++	TP_STRUCT__entry(
++		__string(	port_name,	port_name	)
++		__string(	slot,		slot		)
++		__field(	int,		event	)
++	),
++
++	TP_fast_assign(
++		__assign_str(port_name);
++		__assign_str(slot);
++		__entry->event = event;
++	),
++
++	TP_printk("%s slot:%s, event:%s\n",
++		__get_str(port_name),
++		__get_str(slot),
++		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
++	)
++);
++
++#endif /* _TRACE_HW_EVENT_PCI_HP_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE trace
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+index a769eefc5139..58a8ad9389e3 100644
+--- a/include/uapi/linux/pci.h
++++ b/include/uapi/linux/pci.h
+@@ -19,6 +19,7 @@
+ #define _UAPILINUX_PCI_H
+ 
+ #include <linux/pci_regs.h>	/* The pci register defines */
++#include <linux/tracepoint.h>
+ 
+ /*
+  * The PCI interface treats multi-function devices as independent
+@@ -39,4 +40,34 @@
+ #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+ #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+ 
++#define PCI_HOTPLUG_EVENT					\
++	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
++	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
++	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
++	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
++
++/* Enums require being exported to userspace, for user tool parsing */
++#undef EM
++#undef EMe
++#define EM(a, b)	TRACE_DEFINE_ENUM(a);
++#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
++
++enum pci_hotplug_event {
++	PCI_HOTPLUG_LINK_UP,
++	PCI_HOTPLUG_LINK_DOWN,
++	PCI_HOTPLUG_CARD_PRESENT,
++	PCI_HOTPLUG_CARD_NOT_PRESENT,
++};
++
++PCI_HOTPLUG_EVENT
++
++/*
++ * Now redefine the EM() and EMe() macros to map the enums to the strings
++ * that will be printed in the output.
++ */
++#undef EM
++#undef EMe
++#define EM(a, b)	{a, b},
++#define EMe(a, b)	{a, b}
++
+ #endif /* _UAPILINUX_PCI_H */
+-- 
+2.39.3
+
 
