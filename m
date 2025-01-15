@@ -1,99 +1,204 @@
-Return-Path: <linux-pci+bounces-19885-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19886-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AED2A122E5
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 12:42:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18333A122F1
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 12:43:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BECA3A2D08
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 11:42:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 156E916BD67
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 11:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B7323F275;
-	Wed, 15 Jan 2025 11:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D69E23F293;
+	Wed, 15 Jan 2025 11:43:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B71B248BB5;
-	Wed, 15 Jan 2025 11:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0E723F266;
+	Wed, 15 Jan 2025 11:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736941345; cv=none; b=O4GrbhQw1+5tfcIfFt5iJpB/8Io/v61LwFaHZzmvUJKcyngJcRvOMUbPVuz2tk4bXlJS8+3q0d3cR3Vj+WtWiZRvfrJVHL8qnSHnBrFN32yovh0rhfd3oVqGh/xNKjim3B+J7/qGe8kg0tM3ZP0JDIj180CesAvF4+n8/ZMbx7A=
+	t=1736941384; cv=none; b=LHraWV4TVgXt7xBRnyEbAarJTpDvGiVNKvTo2Rjg5QMZeyJ8zUFdmFRHp1VEQiiLaCozr1M+4JBv9zraubz2gANXI/7nNMCmeb0piKZVYAW09VdrMkHRsi1uqwSTl0fqjAmTvXrDdpi+4uUnzwM3WbkA99MV7WW5OybqQaM1wtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736941345; c=relaxed/simple;
-	bh=ELJs6KSAk9xQhpVupr7ov/U89hmZ3QN8zl1/Nr+NF9c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q1Q29rnpSIBFczs5eEU0QFY+xndtlClkILI7U7LewM67qDTfxWkHIA7wxo7/zVW3P5K1KZagBsyO1VGhKb+hrKd0agtD2fATKKxV/QG9L6dG5nlTkIPhdPb7Rgfeokcku78Zq7lf/KLs5llyduhmdhcldiH/u5ZqjObxiqb19I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YY3w40Crhz6M4Qs;
-	Wed, 15 Jan 2025 19:40:36 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0D4B41400F4;
-	Wed, 15 Jan 2025 19:42:21 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 15 Jan
- 2025 12:42:20 +0100
-Date: Wed, 15 Jan 2025 11:42:19 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
-Subject: Re: [PATCH v5 14/16] cxl/pci: Add trace logging for CXL PCIe Port
- RAS errors
-Message-ID: <20250115114219.00003946@huawei.com>
-In-Reply-To: <ede2efa6-1f67-466b-9f86-883b25092d2c@amd.com>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
-	<20250107143852.3692571-15-terry.bowman@amd.com>
-	<20250114114927.000022ef@huawei.com>
-	<ede2efa6-1f67-466b-9f86-883b25092d2c@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736941384; c=relaxed/simple;
+	bh=InqappHPXxwAr+7XartCJ+X8hEIz7bXePnlvQCf8JEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfDYkL/zqfT33zmVGu1gbgyfrcLWDAdIa+vBhaAQEYZdrLef4Ql9fr9OYrvLCCeEmrsUdw3z2X9MtNrYDaa+a8334ln9q3c7apMz5PpzDCyBAFKmDpSm5Bu8XMjikihsXaRljufh8zS8wwio9ka6MEPCHC3BbSOENulypF24q3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21644aca3a0so144989395ad.3;
+        Wed, 15 Jan 2025 03:43:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736941382; x=1737546182;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aCinpPyq6kUzNoKBfO2/OVSn+RgG9IGx3IVY4KpK3Ug=;
+        b=ra4u6ERPsO8NUo4E2uKt4RyW1d66tH9q7IGaYRHR8IErH0XaQ5VJofWLRyWV69HubG
+         4e9pvMn5OdwZF7NhMqWZB/kqP0KdnI3iQIxrcGy6H5dbLn5CAF/wYfh4wtrTqPyLVC1i
+         rNRwRmec9oPWGF/IJhQ+t1wUvbSjVapoKfjWQqjGw0wN4YglYPT3ASuaVN/aKOuTRE9l
+         6Ahxo2K8ROMm3Aaa6MCAjq8XUkGfn79+OY8DtnzYEIOhAinvD/7wUxt55hjfKKLxoP7b
+         9tpALksRHviZNgZRlE5+f5Tiew4RJ0EyplGqW9EVHkQCvb5ipxp4SEbF1BZQfv7Ko6yP
+         L8pA==
+X-Forwarded-Encrypted: i=1; AJvYcCWN0aZkPzjj/JVmH3+9f62Jsa8ylemHQ4HRdsUBExvpEWkbWCkmUeTmNjm/oYzc0cxhDTceR1F/RpgMrJwo@vger.kernel.org, AJvYcCWfxbwzbjaRl/vip+hAOqOzyE7b6UUkd+yEDXwDpcYHW0nJ14ff2MxVyE6xUD6J94tnhTNt8lkMLty9@vger.kernel.org, AJvYcCXOB8aG7lfbZQKb/WWe+tQWLX6MJFvhcJ0b/Oa1QHMxTF/1tjkqfiWEbjaHHu/8klIEdNoC526/zTDo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX5Ouyqkp+TDOg2GSrPjcxMxWE5u1WpphF9WCU1rKKrTFhkngQ
+	B+Omf9JTlyxo12hzmeymY32w/MwbbRPuHAy58lrDlePFEDsjQon+
+X-Gm-Gg: ASbGnctbGahR56omOc6WtwIM2bY950Dsk699ekOFWXF6giNtQ7xp21/NVpoT5OW1TTq
+	cbtspOAcJp/lQ9mVVSBIYneBOwMnC/jbfY2p+vOvuXd/wveBUkVDd7XJlnjkDysFK5hoTrRYTjo
+	ElE85ROXMg+c9ezWRu7X2oPQpdFyVrbpyxr9TtS0Td/naCdsMCIgqxb8wSoQ409qNdwpZ2CmxHv
+	8Ya1xn87S3i3qIZ1CeambIwaBrMxzwn+I1kQtv1eLfyqODy0rHbM+1VY/nUv7vl+OaIRav9qxjZ
+	ipKnM07q6oTVyvU=
+X-Google-Smtp-Source: AGHT+IHQawHUCYw2ob/UyXfWjtyHo9HpYp1N2sGEBkA9xtrXsmWo2Qf3wAOlf+UJO53bmKCDDt6eBQ==
+X-Received: by 2002:a17:902:ea03:b0:216:2d42:2e05 with SMTP id d9443c01a7336-21a83f6fa87mr547916735ad.22.1736941381887;
+        Wed, 15 Jan 2025 03:43:01 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f21e279sm81344075ad.134.2025.01.15.03.43.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 03:43:01 -0800 (PST)
+Date: Wed, 15 Jan 2025 20:42:59 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v8 0/7] PCI: dwc: opitimaze RC Host/EP pci_fixup_addr()
+Message-ID: <20250115114259.GP4176564@rocinante>
+References: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
 
+Hello,
 
-> >> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> >> index 8389a94adb1a..681e415ac8f5 100644
-> >> --- a/drivers/cxl/core/trace.h
-> >> +++ b/drivers/cxl/core/trace.h
-> >> @@ -48,6 +48,34 @@
-> >>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
-> >>  )
-> >>  
-> >> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
-> >> +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
-> >> +	TP_ARGS(dev, status, fe, hl),
-> >> +	TP_STRUCT__entry(
-> >> +		__string(devname, dev_name(dev))
-> >> +		__string(host, dev_name(dev->parent))  
-> > What is host in this case? Perhaps a comment.  
-> host is a string initialized with value from dev_name(dev->parent). What
-> kind of comment would you like to see here?
-What is that parent in practice?  A port, an EP, a PCI device?
-
+> == RC side:
 > 
-> Regards,
-> Terry
+>             ┌─────────┐                    ┌────────────┐
+>  ┌─────┐    │         │ IA: 0x8ff8_0000    │            │
+>  │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
+>  └─────┘    │   │     │ IA: 0x8ff0_0000 │  │            │
+>   CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
+> 0x7ff8_0000─┼───┘  │  │             │   │  │            │
+>             │      │  │             │   │  │            │   PCI Addr
+> 0x7ff0_0000─┼──────┘  │             │   └──► IOSpace   ─┼────────────►
+>             │         │             │      │            │    0
+> 0x7000_0000─┼────────►├─────────┐   │      │            │
+>             └─────────┘         │   └──────► CfgSpace  ─┼────────────►
+>              BUS Fabric         │          │            │    0
+>                                 │          │            │
+>                                 └──────────► MemSpace  ─┼────────────►
+>                         IA: 0x8000_0000    │            │  0x8000_0000
+>                                            └────────────┘
+> 
+> Current dwc implimemnt, pci_fixup_addr() call back is needed when bus
+> fabric convert cpu address before send to PCIe controller.
+> 
+>     bus@5f000000 {
+>             compatible = "simple-bus";
+>             #address-cells = <1>;
+>             #size-cells = <1>;
+>             ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+> 
+>             pcie@5f010000 {
+>                     compatible = "fsl,imx8q-pcie";
+>                     reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
+>                     reg-names = "dbi", "config";
+>                     #address-cells = <3>;
+>                     #size-cells = <2>;
+>                     device_type = "pci";
+>                     bus-range = <0x00 0xff>;
+>                     ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
+>                              <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+>             ...
+>             };
+>     };
+> 
+> Device tree already can descript all address translate. Some hardware
+> driver implement fixup function by mask some bits of cpu address. Last
+> pci-imx6.c are little bit better by fetch memory resource's offset to do
+> fixup.
+> 
+> static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+> {
+> 	...
+> 	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> 	return cpu_addr - entry->offset;
+> }
+> 
+> But it is not good by using IORESOURCE_MEM to fix up io/cfg address map
+> although address translate is the same as IORESOURCE_MEM.
+> 
+> This patches to fetch untranslate range information for PCIe controller
+> (pcie@5f010000: ranges). So current config ATU without cpu_fixup_addr().
+> 
+> == EP side:
+> 
+>                    Endpoint
+>   ┌───────────────────────────────────────────────┐
+>   │                             pcie-ep@5f010000  │
+>   │                             ┌────────────────┐│
+>   │                             │   Endpoint     ││
+>   │                             │   PCIe         ││
+>   │                             │   Controller   ││
+>   │           bus@5f000000      │                ││
+>   │           ┌──────────┐      │                ││
+>   │           │          │ Outbound Transfer     ││
+>   │┌─────┐    │  Bus     ┼─────►│ ATU  ──────────┬┬─────►
+>   ││     │    │  Fabric  │Bus   │                ││PCI Addr
+>   ││ CPU ├───►│          │Addr  │                ││0xA000_0000
+>   ││     │CPU │          │0x8000_0000            ││
+>   │└─────┘Addr└──────────┘      │                ││
+>   │       0x7000_0000           └────────────────┘│
+>   └───────────────────────────────────────────────┘
+> 
+> bus@5f000000 {
+>         compatible = "simple-bus";
+>         ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+> 
+>         pcie-ep@5f010000 {
+>                 reg = <0x5f010000 0x00010000>,
+>                       <0x80000000 0x10000000>;
+>                 reg-names = "dbi", "addr_space";
+>                 ...                ^^^^
+>         };
+>         ...
+> };
+> 
+> Add `bus_addr_base` to configure the outbound window address for CPU write.
+> The BUS fabric generally passes the same address to the PCIe EP controller,
+> but some BUS fabrics convert the address before sending it to the PCIe EP
+> controller.
+> 
+> Above diagram, CPU write data to outbound windows address 0x7000_0000,
+> Bus fabric convert it to 0x8000_0000. ATU should use BUS address
+> 0x8000_0000 as input address and convert to PCI address 0xA000_0000.
+> 
+> Previously, `cpu_addr_fixup()` was used to handle address conversion. Now,
+> the device tree provides this information.
+> 
+> The both pave the road to eliminate ugle cpu_fixup_addr() callback function.
 
+Applied to controller/dwc for v6.14, thank you!
 
+	Krzysztof
 
