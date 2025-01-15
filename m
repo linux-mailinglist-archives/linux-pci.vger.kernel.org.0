@@ -1,116 +1,155 @@
-Return-Path: <linux-pci+bounces-19847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 966CDA11B58
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:56:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9528A11B61
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:59:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A88761888D95
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:56:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86A053A7DAD
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC62522DFA5;
-	Wed, 15 Jan 2025 07:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E6722F152;
+	Wed, 15 Jan 2025 07:58:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jP3aZsZv"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dhtbnpdR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE9D1DB123
-	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 07:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7234B236A61;
+	Wed, 15 Jan 2025 07:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736927757; cv=none; b=bAVi/v0mz2VrP/rGc282vlV7zraAbtfhEcKuPJhXV4Px2naXUTEsUSFi+s/ApHyRpbfUhUuzS1+1voixg0yxT8xNao8Bd1d38S3zduozcwmQdUtgMtC0mASF1sIWShvB3+2FxPQf5O3KkP1V0FTTOBu0p1vlqreHRfZJa4ZTbm4=
+	t=1736927929; cv=none; b=U/sCnZpNbbpKeW3m25f3QjYutg21p1cyjwdCTuNrXMum/BHQXXZ4CW+ae9b2gZhkN4iTFE+BR9FhMjzpkmP5E9Yip3VZXjHUB83eaDmcqWQupks5+pqz/OZvbVfp19ZKPi6jqQUlm2bj0oAut3Y/7x7Vea8GIftprnR7JpJB43g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736927757; c=relaxed/simple;
-	bh=8cc6q30HINn+H8F4o6tidpxGU7o+77JG4MGNhkD3R4U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sDXYX79MQ5XvlYXzikxxb/YH+Vb9nplY0FI6ULMQafj6ekQCVMtZ/4tgsKrfFRyUzztbqAgy8ZJ0t/7rtFSJNAi5yEYK/TsCwhYXlMIGuRKUZLIiZmFO5yV974Ehetge2tH4g30l1TS5VLQM9MQgplkD+4EJ0aJRAL9UXXJghC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jP3aZsZv; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2178115051dso117582735ad.1
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 23:55:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736927756; x=1737532556; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aauZSnjY7VuRJhoKYPbfgJ+Y/MzZjQ6GOIEoElbLNHs=;
-        b=jP3aZsZve7Q/5WAvVEn2K1BJX3XqRj6c2IPAszJts0N+zaOCMPJY5Rqj3PI3d8ApY6
-         hURGPi06tLHkh/tmA/NMbQIhCuI5z8KKeoHGL8tFSwaxlE09NlfNyN17VjKdyT/+1sIY
-         OTu2Ly/YpnCzgoDCwrFao3xP3r+jN5J5wjdsy4HohpypbCeWhrJJN9ZD+fItrkWUAaAd
-         1wGnmPFb9J9duqdVS2v3Rp+hK2q/65SSuB91i2Q9/iUz2PbXbeQE5aFB9qUewRifJm2q
-         Gyewr0yrtqP1QyIBEfp+TV4OSDS+gX+iDKgYxa5X3rFJyGc1TEgqBf4eHy75pwdk5xnL
-         ASvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736927756; x=1737532556;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aauZSnjY7VuRJhoKYPbfgJ+Y/MzZjQ6GOIEoElbLNHs=;
-        b=v4vQbaR/Hyq7mR77cUJy3ZLFIdDlvJgEDjslLjDAeO79AafwV+MGAOL7W02JwwKvCV
-         KTlfDbSml/Fc5QlFtWtCEtWfiTc4MUdbQyTnawHWiF7mj1z2bYyz4mL+6l+mUkboyAP4
-         CRC5cDkhH4+gzwhRuw4YuHy/Vf0hGJaGKTWTXvJt9kFmxnVVoQNo9fDNBFrmiaPihJYO
-         tiqhUfyG2eTNX77VwPFbRzYUAseC+21uTA9mcZl+m9JfPN3mMmEZiH5yWC+2JTJ//b1v
-         0q1GmoWsar/SwO8t7YU86PSKFzP78yU7OQVc5KxX969XzL6e4dHAe7QOjtyOfxj+QF95
-         jl4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXmXt0Vc6mNVAjWUDBCHzdrLYdIxFNHq/xYKpXAiNrH7hJ9MKJPtsze0chQ9v1+CH9BkhIbY1TPaZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVjAo/ZRBvz2NBKhe83Hlv6XW+pb5pcU9Drr8CyQl43AT1JZMn
-	pqUMG/El2t36xAVTtrrUelb9yBqBolZDufWA5zlQoeR4kfdrWY1CAlZSlFP3Cdmqj0tcgyHwajI
-	+cw==
-X-Google-Smtp-Source: AGHT+IE4II7/t4slcIGxdy+Nt4/8uptoTJw0BLzw8WGi86ZzO9v8NlFN3nQrVcNqtFQ8hUpfN3idXRccwLU=
-X-Received: from pgbgc5.prod.google.com ([2002:a05:6a02:4b85:b0:800:502a:791e])
- (user=pandoh job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:2d09:b0:1e1:ba54:ffee
- with SMTP id adf61e73a8af0-1e88cfd3f88mr41494971637.21.1736927755947; Tue, 14
- Jan 2025 23:55:55 -0800 (PST)
-Date: Tue, 14 Jan 2025 23:55:53 -0800
-In-Reply-To: <cover.1736341506.git.karolina.stolarek@oracle.com>
+	s=arc-20240116; t=1736927929; c=relaxed/simple;
+	bh=/dJoj0mqOTmkoV3UXIGqPt6FEKyI9UYbUD8611H/sMw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xl5nUMdwWmYnG5fM/Sqe/CYzWjJm2T2LR0xUDMb2zazqGL6VicEKFiPIDQOCACxxvyBqg1rZrVf7MGhxU4F4x6EAQdoaHFLyB0uLHb/+I/8aiuTOpxmZHrldTZ0oQm62TSz6JvcRVuSkJap+eNV+1KKexYsz0qllBFb0OyjAdow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dhtbnpdR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F5cPBr013921;
+	Wed, 15 Jan 2025 07:58:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=sLwXMdQzvWOJb4WsDCioa7Jt
+	yHeUekEJUQu8MLw0PwA=; b=dhtbnpdRaLQZUPFuV2cZaSiWLROQ0s1I2Y1ZzWvw
+	39TsTQsfepXYWwpH2whs6VPVPVoFQQFdXAEIZBAlPd/6h3zbjwmhq1RWeWRF5VsF
+	ZTo6PJiEshco8oaA9dDdw7oSZFRH92Lxdn238GsfUnjDExRWHAiW90Lw7CLhU0/R
+	jj5ZlydOr4w3LDukgWW+bokC/tjXF9G/XQIYAgDBz786uOm+EFc8lLVWv1zwZmL2
+	KTkd2MhBXlQdZH9OyeYoFXiZOFGN0Sxlra3I3zX+2Di3gcXPkDaC1EM1kiQDqpna
+	bRV2IvxeDMhX0aB69kd13gUK9hB9QhOaYt9RUBR6SWlwPw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44671q0asn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 07:58:33 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50F7wXvk031194
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 07:58:33 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 14 Jan 2025 23:58:26 -0800
+Date: Wed, 15 Jan 2025 13:28:22 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        Praveenkumar I <quic_ipkumar@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Message-ID: <Z4dqnr9+MTue3VbX@hu-varada-blr.qualcomm.com>
+References: <20250102113019.1347068-5-quic_varada@quicinc.com>
+ <20250108183235.GA220566@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1736341506.git.karolina.stolarek@oracle.com>
-X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Message-ID: <20250115075553.3518103-1-pandoh@google.com>
-Subject: [PATCH RESEND 0/4] Rate limit reporting of Correctable Errors
-From: Jon Pan-Doh <pandoh@google.com>
-To: karolina.stolarek@oracle.com
-Cc: ben.fuller@oracle.com, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	martin.petersen@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250108183235.GA220566@bhelgaas>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yEiBqHoUvMPVEeVoNLX-JJ4sCL9GcypG
+X-Proofpoint-ORIG-GUID: yEiBqHoUvMPVEeVoNLX-JJ4sCL9GcypG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-15_03,2025-01-15_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1011 priorityscore=1501
+ suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501150059
 
-On Wed, 8 Jan 2025 13:55:30 +0000
-Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
-> TL;DR
-> ====
-> 
-> We are getting multiple reports about excessive logging of Correctable
-> Errors with no clear common root cause. As these errors are already
-> corrected by hardware, it makes sense to limit them. Introduce
-> a ratelimit state definition to pci_dev to control the number of
-> messages reported by a Root Port within a specified time interval.
-> The series adds other improvements in the area, as outlined in the
-> Proposal section.
+On Wed, Jan 08, 2025 at 12:32:35PM -0600, Bjorn Helgaas wrote:
+> On Thu, Jan 02, 2025 at 05:00:18PM +0530, Varadarajan Narayanan wrote:
+> > From: Praveenkumar I <quic_ipkumar@quicinc.com>
+> >
+> > Add phy and controller nodes for pcie0_x1 and pcie1_x2.
+>
+> > +		pcie1: pcie@18000000 {
+> > +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
+> > +			reg = <0x00088000 0x3000>,
+> > +			      <0x18000000 0xf1d>,
+> > +			      <0x18000f20 0xa8>,
+> > +			      <0x18001000 0x1000>,
+> > +			      <0x18100000 0x1000>,
+> > +			      <0x0008b000 0x1000>;
+> > +			reg-names = "parf",
+> > +				    "dbi",
+> > +				    "elbi",
+> > +				    "atu",
+> > +				    "config",
+> > +				    "mhi";
+> > +			device_type = "pci";
+> > +			linux,pci-domain = <1>;
+> > +			bus-range = <0x00 0xff>;
+>
+> This bus-range isn't needed, is it?  pci_parse_request_of_pci_ranges()
+> should default to 0x00-0xff if no bus-range property is present.
 
-Hi Karolina,
+Ok.
 
-This is a common impediment for many folks that want to enable AER. The
-excessive logging stalls execution, making machines unusable. I've been
-working on a similar solution[1] to yours (i.e. ratelimiting) with a few
-differences:
+>
+> > +			num-lanes = <2>;
+> > +			phys = <&pcie1_phy>;
+> > +			phy-names = "pciephy";
+>
+> I think num-lanes and PHY info are per-Root Port properties, not a
+> host controller properties, aren't they?  Some of the clock and reset
+> properties might also be per-Root Port.
+>
+> Ideally, I think per-Root Port properties should be in a child device
+> as they are here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mvebu-pci.txt?id=v6.12#n137
+> but it looks like the num-lanes parsing is done in
+> dw_pcie_get_resources(), which can only handle a single num-lanes per
+> DWC controller, so maybe it's impractical to add a child device here.
+>
+> But I wonder if it would be useful to at least group the per-Root Port
+> things together in the binding to help us start thinking about the
+> difference between the controller and the Root Port(s).
 
-- ratelimit uncorrectable errors
-- ratelimit IRQs
-- configure ratelimits from userspace (sysfs knobs)
+This looks like a big change and might impact the existing
+SoCs/platforms. To minimize the impact, should we continue
+supporting the legacy method in addition to the new per-Root port
+approach. Should we take this up separately? Kindly advice.
 
-Hoping we can collaborate on a solution (i.e. take best parts of both patch
-series).
-
-Thanks,
-Jon
-
-[1] https://lore.kernel.org/linux-pci/20250115074301.3514927-1-pandoh@google.com/
+Thanks
+Varada
 
