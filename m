@@ -1,188 +1,205 @@
-Return-Path: <linux-pci+bounces-19812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EBDDA11764
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 03:41:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED533A1178B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 03:57:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 564AF167D9A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 02:41:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 939333A1146
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 02:57:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF8922E3F1;
-	Wed, 15 Jan 2025 02:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8215422DFA2;
+	Wed, 15 Jan 2025 02:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kfLC3/kC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF96022DFBD;
-	Wed, 15 Jan 2025 02:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CAF481AF
+	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 02:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736908865; cv=none; b=enQjb7VPGl76UVtZKb5NCBJGT4yZbU0IboweevHLVFcq8XvBJYc9wwD2Rsz5Bs4Kn5HxRqorOOzQJNdfAzmN5FacBK/5gYBvo4GLkF3aoIUhYU236Wx0e1tCCjya9ICllHvsbztuqmJqKpNQrrdF/dWlW5ZYIll/jtjNA6vmwbU=
+	t=1736909864; cv=none; b=nlSyDls/ZZjpnwW80prDz2NjH3swkNGfk/pcF+OdgmVDV52JiLtxNgJGZvq2kQGCqS4l51lnny+3kXcIfeUFcoEgYc2DaZF8mPGo+bfhHm3viQCLeNHWDi32tjiu+TTFAhzNubbGwdwNFa3k4pQf+O15SQPgA/ZT2PI+fLNe/vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736908865; c=relaxed/simple;
-	bh=0i4i5AR6EKnFcI8ynzDn8NozpqizG1CnJGcPxIm9I9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CSjHxneB/cpcQRP9eCqCAopHnLmx72w0Mbl9sHdw4FIrIcwiqzZQBHtP41FZfBSXeC/M1zFP16CGaXsGknK9NQxfYQ5dnFK5nRyhiAY1TvyADZWfNJPG/biJUHgbI8wGB3Klf2tkaF8PSgboljLbJELelIgcvLXRH6CMsN0TEEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68205C4CEDD;
-	Wed, 15 Jan 2025 02:41:02 +0000 (UTC)
-Date: Tue, 14 Jan 2025 21:41:03 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250114214103.6b45d30d@gandalf.local.home>
-In-Reply-To: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
-References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736909864; c=relaxed/simple;
+	bh=ZplmC8FIRDEFBgT83wPmPjre9T1U897FPqnTWy3oy1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YVX2rOTPpJGMgOH6u/Zr2AZ6B7oLH+ZpLfJs9N/Yj526nMbDruFZX0BQGQygUha86RNdGe4I9unNz+WOyZodXAeYkdWijJH0cPcRgTVmvTh1fd/+WCj6s1ocdsApjYbyPw4duChwd8dzEiq34UE5Rat8UIuwrPlWCFDLpulzmic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kfLC3/kC; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736909863; x=1768445863;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=ZplmC8FIRDEFBgT83wPmPjre9T1U897FPqnTWy3oy1I=;
+  b=kfLC3/kCWpTl30Fj3T6pQdZsORrcT05QBesi7e6dSzDeJiCztOT1klj9
+   l3CVaP8Sk6IF8QzbnJXut4Y6Ouz5qmGKHhBU4nESpVqr94NMBjuo6DoNc
+   1hwFSh5p4y0AhtHoxCkL/ZV5uLb1BdmNt6wzZLAhQ/GimfoOBJHd6mFIc
+   1/+q4RdPKDDHfHcHNqC+twjjdI+GgnDcpXgH1aqflKtWM3eHPz7jQxOed
+   VHcEYUzYr+7LciGqOnGAQpx9sNRROaX9yKCCyIKHzVPcf4ysZ/yGBYmPl
+   gBZTLE6Fy5TzrTkQLA/CT+lOGJVlBoORLRvFxY/FOSnqb4dQuPUDZHCwF
+   w==;
+X-CSE-ConnectionGUID: +OXbL22mRde4VLdAgBoPEg==
+X-CSE-MsgGUID: +P2KdHNkR1uGuBEmoJ+KGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="37257277"
+X-IronPort-AV: E=Sophos;i="6.12,316,1728975600"; 
+   d="scan'208";a="37257277"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 18:57:42 -0800
+X-CSE-ConnectionGUID: rMUep6dQQ4yQKg/1A1jERQ==
+X-CSE-MsgGUID: J/zrkZjDQMOr4JKXElM0FA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="142281069"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 14 Jan 2025 18:57:41 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tXtb8-000PLP-0h;
+	Wed, 15 Jan 2025 02:57:38 +0000
+Date: Wed, 15 Jan 2025 10:57:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ c44901c62cd4b6cec45c5d5b739f2ff3e1554cfe
+Message-ID: <202501151019.8TyPxHWz-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 
-On Wed, 15 Jan 2025 09:37:53 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: c44901c62cd4b6cec45c5d5b739f2ff3e1554cfe  dt-bindings: PCI: qcom: Document the IPQ5424 PCIe controller
 
-> +#define CREATE_TRACE_POINTS
-> +#include "trace.h"
-> +
->  /* The following routines constitute the bulk of the
->     hotplug controller logic
->   */
-> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	case ON_STATE:
->  		ctrl->state = POWEROFF_STATE;
->  		mutex_unlock(&ctrl->state_lock);
-> -		if (events & PCI_EXP_SLTSTA_DLLSC)
-> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
->  			ctrl_info(ctrl, "Slot(%s): Link Down\n",
->  				  slot_name(ctrl));
-> -		if (events & PCI_EXP_SLTSTA_PDC)
-> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-> +					   slot_name(ctrl),
-> +					   PCI_HOTPLUG_LINK_DOWN);
+elapsed time: 1455m
 
-Hmm, can't you just pass in the ctrl pointer to the tracepoint?
+configs tested: 110
+configs skipped: 1
 
-			trace_pci_hp_event(ctrl, PCI_HOTPLUG_LINK_DOWN);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +		}
-> +		if (events & PCI_EXP_SLTSTA_PDC) {
->  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->  				  slot_name(ctrl));
-> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-> +					   slot_name(ctrl),
-> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
-> +		}
->  		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
->  		break;
->  	default:
-> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  					      INDICATOR_NOOP);
->  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->  				  slot_name(ctrl));
-> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-> +					   slot_name(ctrl),
-> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
->  		}
->  		mutex_unlock(&ctrl->state_lock);
->  		return;
-> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	case OFF_STATE:
->  		ctrl->state = POWERON_STATE;
->  		mutex_unlock(&ctrl->state_lock);
-> -		if (present)
-> +		if (present) {
->  			ctrl_info(ctrl, "Slot(%s): Card present\n",
->  				  slot_name(ctrl));
-> -		if (link_active)
-> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
-> -				  slot_name(ctrl));
-> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-> +					   slot_name(ctrl),
-> +					   PCI_HOTPLUG_CARD_PRESENT);
-> +		}
-> +		if (link_active) {
-> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
-> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-> +					   slot_name(ctrl),
-> +					   PCI_HOTPLUG_LINK_UP);
-> +		}
->  		ctrl->request_result = pciehp_enable_slot(ctrl);
->  		break;
->  	default:
-> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-> new file mode 100644
-> index 000000000000..1415ac505cb5
-> --- /dev/null
-> +++ b/drivers/pci/hotplug/trace.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_HW_EVENT_PCI_HP_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM pci
-> +
-> +TRACE_EVENT(pci_hp_event,
-> +
-> +	TP_PROTO(const char *port_name,
-> +		 const char *slot,
-> +		 const int event),
-> +
-> +	TP_ARGS(port_name, slot, event),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(	port_name,	port_name	)
-> +		__string(	slot,		slot		)
-> +		__field(	int,		event	)
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250114    gcc-13.2.0
+arc                   randconfig-002-20250114    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                         bcm2835_defconfig    clang-16
+arm                        neponset_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250114    clang-15
+arm                   randconfig-002-20250114    clang-20
+arm                   randconfig-003-20250114    gcc-14.2.0
+arm                   randconfig-004-20250114    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250114    clang-17
+arm64                 randconfig-002-20250114    clang-19
+arm64                 randconfig-003-20250114    gcc-14.2.0
+arm64                 randconfig-004-20250114    clang-20
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250114    gcc-14.2.0
+csky                  randconfig-002-20250114    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon               randconfig-001-20250114    clang-20
+hexagon               randconfig-002-20250114    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250114    gcc-12
+i386        buildonly-randconfig-002-20250114    clang-19
+i386        buildonly-randconfig-003-20250114    clang-19
+i386        buildonly-randconfig-004-20250114    gcc-12
+i386        buildonly-randconfig-005-20250114    clang-19
+i386        buildonly-randconfig-006-20250114    clang-19
+i386                                defconfig    clang-19
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250114    gcc-14.2.0
+loongarch             randconfig-002-20250114    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                  cavium_octeon_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250114    gcc-14.2.0
+nios2                 randconfig-002-20250114    gcc-14.2.0
+openrisc                          allnoconfig    clang-20
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                 simple_smp_defconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-20
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250114    gcc-14.2.0
+parisc                randconfig-002-20250114    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-20
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc                 mpc834x_itx_defconfig    clang-20
+powerpc                      pcm030_defconfig    clang-17
+powerpc               randconfig-001-20250114    gcc-14.2.0
+powerpc               randconfig-002-20250114    clang-20
+powerpc               randconfig-003-20250114    gcc-14.2.0
+powerpc64             randconfig-001-20250114    clang-20
+powerpc64             randconfig-002-20250114    clang-15
+powerpc64             randconfig-003-20250114    clang-20
+riscv                             allnoconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250114    gcc-14.2.0
+riscv                 randconfig-002-20250114    clang-20
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250114    clang-18
+s390                  randconfig-002-20250114    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250114    gcc-14.2.0
+sh                    randconfig-002-20250114    gcc-14.2.0
+sh                   sh7724_generic_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250114    gcc-14.2.0
+sparc                 randconfig-002-20250114    gcc-14.2.0
+sparc64               randconfig-001-20250114    gcc-14.2.0
+sparc64               randconfig-002-20250114    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                                allnoconfig    clang-20
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250114    clang-17
+um                    randconfig-002-20250114    gcc-11
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250114    clang-19
+x86_64      buildonly-randconfig-002-20250114    clang-19
+x86_64      buildonly-randconfig-003-20250114    clang-19
+x86_64      buildonly-randconfig-004-20250114    clang-19
+x86_64      buildonly-randconfig-005-20250114    clang-19
+x86_64      buildonly-randconfig-006-20250114    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250114    gcc-14.2.0
+xtensa                randconfig-002-20250114    gcc-14.2.0
 
-Then the above would be:
-
-	TP_PROTO(struct controller *ctrl, int event),
-
-// don't really need a const int there
-
-	TP_ARGS(ctrl, event),
-
-	TP_STRUCT__entry(
-		__string(	port_name,	pci_name(ctrl->pcie->port)	)
-		__string(	slot,		slot_name(ctrl)			)
-		__field(	int,		event				)
-
-and everything else could be the same.
-
--- Steve
-
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(port_name);
-> +		__assign_str(slot);
-> +		__entry->event = event;
-> +	),
-> +
-> +	TP_printk("%s slot:%s, event:%s\n",
-> +		__get_str(port_name),
-> +		__get_str(slot),
-> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
-> +	)
-> +);
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
