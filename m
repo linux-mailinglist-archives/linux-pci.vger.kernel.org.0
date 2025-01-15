@@ -1,125 +1,210 @@
-Return-Path: <linux-pci+bounces-19826-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19827-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7168A11A23
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:53:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEE80A11A5A
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:06:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B1FB18898C4
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:53:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ED1C3A8C29
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:06:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51F922F837;
-	Wed, 15 Jan 2025 06:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5E822FACE;
+	Wed, 15 Jan 2025 07:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLOf31fG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rfe7+HPs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193A322F3B0
-	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 06:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4718D22E3E1;
+	Wed, 15 Jan 2025 07:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736924004; cv=none; b=ZYpIcJ5oMlTR82eUCxBGo2KK8+/TY997mwMIZ0dBxiY52W+5nwAr7m8gsUL756Hmi4/CsxGLGIcTkaBOPAgoFlOjESvsrSjVeml4O4MfeyvZfGilZ8CEQ4HBjU33IgWJh1dRUEFi5gbgZyU8ETTlA3ZZlI42sFWYZCOVLXwX9+8=
+	t=1736924765; cv=none; b=p4kqeaB8xqDwr4kLLEQMgMUHqkxfIz+ZaEpTBLwnaiyycWVJ9NoNkAnA8wZwhpccoEejFry5hA5n0dwgag3yh60bfJ49YCvv6RfIlRYazl48eE5MbfkKGsyLcXLhK1Cd+8k3Li6D43Mwv+nXaOxMpXgWDMWPCzzLT/p1eMSpAe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736924004; c=relaxed/simple;
-	bh=lZtdYvwm0/D+wrEsjVubJTTYAK+wxUZeR9nJ3jVsGl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PvNtqAXRYaTd68E2VnpTjNDonDb2XW/9UM2u47LVh3g4ws76D3lI3qS7eGJP/GPK+QXS8FH71Rld0sM66qywUmiW1OyQLPUwGc9dd2/ED6V6Gl7Er9Yo2ODQGPeoxmR+/5djtTz92qPvLjWtmiVTWz7dIrdnG8LrR2RC5KXs0XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XLOf31fG; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d647d5df90so10743379a12.2
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2025 22:53:22 -0800 (PST)
+	s=arc-20240116; t=1736924765; c=relaxed/simple;
+	bh=pAGdabZkwYiFEeXRaPXEn8T+VPtNpxHNcGYYo35edqk=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=kuIKN5pNuZbJL7LOd6BrkFwGMU76OuBTfDpl2FOMmRHJ6HV3va4T0wDdnAmTdbGRQlU3wM2GUhsxKCeJ55flDOY+xKHPCtAVPZXlk1X+8kfrqQ6TV6wX0xidtW4MmlXfGrJjapj1heACjstvR9MWtt4qKDZkaTLl7NIT/Vy5xfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rfe7+HPs; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3eba50d6da7so1585140b6e.2;
+        Tue, 14 Jan 2025 23:06:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736924000; x=1737528800; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1jHKviSWbOJnThNL+BRNc29xaYnK5sB8qfkKjQ020pY=;
-        b=XLOf31fGgX/FS5ncmoLi84Csb4BAl3+99Eu2RWNBz/HZZKXx7tFbk4vkvP6gQ+a6uU
-         HGBEdEVqUzh1dIFzfAD6rppY6Ot2wIM/jZM55GbVqVJWPwu08/qXZhxgF5eLnzCZfVpN
-         6VLp9XayHP5ZTaqV+04cguwo8YbI7qYbWkJU6J0hO5AguzDoIe4mDg4IXVdTnuB7Zuhp
-         AyaX7oky33O/E1S2RyPEQCdVUlm7tvLSnNRioamXBUJ/QaIY5o3x5QQZTzI9ofNMBAde
-         C9pGUyv3vePMsQDXb1cEBSzke43LeUpAOldPAURV1DDe2hi0JAPWgxKMhy+5cGgdC7Ot
-         uAkw==
+        d=gmail.com; s=20230601; t=1736924763; x=1737529563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oI5ZjcuPckd6Ch/6DIyVBb1ek8gxp9mfdlh3C8bbL+g=;
+        b=Rfe7+HPs2SXJdzllKEv0i9kditr0LM8PZ57nK/hbBfSJjhdd++Vowe163OwyxU9bpr
+         7vZ7l5Hy9iQvzVDbAKC9nt6aeMXPlf58VYOh9hR048xGzQJRrFixsc7VOtHTEgO72WU3
+         8sfuif4WvZyhRA9Fnpv2uXfD4dNr0FbQcHO/lMmUN3tk7FpYVrUoYFVYHbiugVjLQApT
+         jwzsTB8pFS8k88ptxmAqOLunb9n82EMNal8h884FDLJrZWPdGRoasvWGZ5Ss8Cd3aaWt
+         x1/+lHjl/QWzJoZoHazTQU4UG0/26ILb/xn56zIMg9IPdXipywekf8jP8DQn41+87mBC
+         pVNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736924000; x=1737528800;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1jHKviSWbOJnThNL+BRNc29xaYnK5sB8qfkKjQ020pY=;
-        b=LcwYmhhf0eU23TkzJATauXtQzDaCNI+cn/kzXxaq6MvbG/818f6NiQJNDokLr+2SeW
-         gZZYQ44nb9+IPDLZ8TQHVXKm6532KMs4rmWfqRozH8LZCn/IdEbFZgadLKa7ppzRafVF
-         N02JpDE6ADIr97xs7gZrF5MG05g7PwequXOdGTTGk1MvKZ0wUI6sV6NyTGcabQfKLHr0
-         ri8RARUrGTR6VxOWWZeX4AlnJhFaXo4povKlnIhL/ZfDf01YKz9PsxyEyUu8zqEjxuUG
-         4MRa2VOfTqvp/KZcJVM8LXfX7sG60+BUgaGOCCRkllfp595ZQvaXudyw6srxJAk7WG+n
-         dRvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfWpj0PMqZ4EdpBXRelgRKGmpgl75voxSrRNPAZ8zEvbY8XqsVh3lPzhG76KFExWXF+OeKRWd5P8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNLt3BJ9xYado8iADZQ5OmGdGahiMbaQR8g7J1GKWMGS0WUB0H
-	SjdXExuuUX4HPs55Qrbpx0bNFKI4b32PN6oDWXjZm6ralue+Mj2/1FWYURJogQw=
-X-Gm-Gg: ASbGncvkfIEkRe7b6QdAHCbxmms2+uBr7rpdenbVK9uNaWvRTdmfePQfbnwP/Xj9qM3
-	icSQGQoS28L20khJjuXoP5fcwctR+cKTlwU/y0zLyka8ZkNKTa3MMzAoc30ejNw/nwpR3hsjym7
-	ScWDzTBnIzL7R9qjugTLNiJ9QnUvvYC7XkWQjpqylkK5/GnnJoZB2UY2CRIgyxqjtVps+y5GDBI
-	yncKezycIaniyi9SRBBTivsaZgSQ9cSV4lf+6HG2+IgNpTssmGVll/lS5ku9g==
-X-Google-Smtp-Source: AGHT+IE9P5PDtBvyWPxhRNEsLiyx/nfhdVfXbwMkWhpN/F7zwvZlvMv1+220NOQBetuNrhffj43vww==
-X-Received: by 2002:a05:6402:518b:b0:5d3:baa3:29f with SMTP id 4fb4d7f45d1cf-5d972e06740mr26199332a12.9.1736924000495;
-        Tue, 14 Jan 2025 22:53:20 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d99008c371sm7145838a12.11.2025.01.14.22.53.19
+        d=1e100.net; s=20230601; t=1736924763; x=1737529563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oI5ZjcuPckd6Ch/6DIyVBb1ek8gxp9mfdlh3C8bbL+g=;
+        b=qP0e3/QZBHSfs0TUNXtIXEqJ4wWvYbs3mTSYRRVvWe2HpjZE7dbu6Z3R5zALGCMAZg
+         K3kdTxvi5Z5BOKZFKu1d2Qp8QgPBcGxpH+oPuvEi6T4/w9JWLYgrj1ngVouon0vVLQow
+         SqfvLHIRCMmE6Dr264oL83Rj9jgs4wM1WM3ivXVoeWihywrLG4gcwmovCoz7W85o589d
+         aAxy2bZLuCSGDz1DIInCH9g1BjGsNjX0+DbfvdbKhi6YsRxVhiI4QdyhoOpkFIPAlLaj
+         OUArIyMQ8VzgbPuZwjOt/cWMrNrG+xcq7aqclsVMpa4D/ltEeynlIxgm5/zvdD8gKoJw
+         wd+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWxqx1w/rQg216maaPQ5rQ4WE+ZssYEzHFl+Nzrun/zUcPkSDjypp6eLOIJOFNU/6ApxFxs6yl/0V9QNrUD@vger.kernel.org, AJvYcCX0Ay5V45dlLy3sls3DtBENRT5pAUMKjq0sUi8guHxgQj9eIr/1GCIZspLPnC3ELcClDgHQPkii/ssB@vger.kernel.org, AJvYcCX1FkuVEIf5SYwn/eqn//iONc4HmX0YMVmvqR0/1nhMQMs1Adu10ggdHuUIh9w1hlOzwinfSzgo54Z1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU2ZZOOZU7MBJz12EMi8X1e75OvluwmIl3QxX2hvOo/SMfflnI
+	yvMNmOqFbuV6zqPBURTLDiUPkyvCvT+J5nYCCeFDmKq3wbi3AjNF
+X-Gm-Gg: ASbGncsRVm9BuT7brBugG0GoOG6OH6A3uX7u0LCUNmM+PJ8mIiTMsvXISX/0vmMsJoC
+	lTNeRKUbePkmPsSFLlIHkr3k538uoVElHt5rUg2XXY8XNDU1COxYXmOc1BkPi5c7MsoXh7EmDtd
+	oaktqmi6+iiUlw9ObRAVaQHfeJ5VcMsKf0XCGcjIvgJYK/rmx7/iVnai9HuOD34Mi2653GrPfIx
+	npvlbi4eIY/8k5kFk+O0A0z4ACxZHjGe1Pw5gY6vRU2tRhqvaK3nbLEY2+DHDUayJM=
+X-Google-Smtp-Source: AGHT+IFkR6nnCpwOXELoB6VRu3HqkfESX5AtlZc9JkL6/31ySuvemmaJeL/mLBsU0qBVg79TjKGu2w==
+X-Received: by 2002:a05:6808:398c:b0:3ea:6149:d6fd with SMTP id 5614622812f47-3ef2ebb9028mr20514321b6e.2.1736924763079;
+        Tue, 14 Jan 2025 23:06:03 -0800 (PST)
+Received: from localhost.localdomain ([122.8.183.87])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f0379eff52sm4779278b6e.40.2025.01.14.23.05.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 22:53:20 -0800 (PST)
-Date: Wed, 15 Jan 2025 09:53:16 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] PCI: rockchip: Clean up on error in
- rockchip_pcie_init_port()
-Message-ID: <7da6ac56-af55-4436-9597-6af24df8122c@stanley.mountain>
+        Tue, 14 Jan 2025 23:06:01 -0800 (PST)
+From: Chen Wang <unicornxw@gmail.com>
+To: kw@linux.com,
+	u.kleine-koenig@baylibre.com,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	bhelgaas@google.com,
+	unicorn_wang@outlook.com,
+	conor+dt@kernel.org,
+	guoren@kernel.org,
+	inochiama@outlook.com,
+	krzk+dt@kernel.org,
+	lee@kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pbrobinson@gmail.com,
+	robh@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com,
+	xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com,
+	helgaas@kernel.org
+Subject: [PATCH v3 0/5] Add PCIe support to Sophgo SG2042 SoC
+Date: Wed, 15 Jan 2025 15:05:52 +0800
+Message-Id: <cover.1736923025.git.unicorn_wang@outlook.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-Call phy_exit() before returning on this error path.
+From: Chen Wang <unicorn_wang@outlook.com>
 
-Fixes: 853c711e2caf ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Sophgo's SG2042 SoC uses Cadence PCIe core to implement RC mode.
+
+SG2042 PCIe controller supports two ways to report MSI:
+
+Method A, the PICe controller implements an MSI interrupt controller
+inside, and connect to PLIC upward through one interrupt line. Provides
+memory-mapped msi address, and by programming the upper 32 bits of the
+address to zero, it can be compatible with old pcie devices that only
+support 32-bit msi address.
+
+Method B, the PICe controller connects to PLIC upward through an
+independent MSI controller "sophgo,sg2042-msi" on the SOC. The MSI
+controller provides multiple(up to 32) interrupt sources to PLIC.
+Compared with the first method, the advantage is that the interrupt
+source is expanded, but because for SG2042, the msi address provided
+by the MSI controller is fixed and only supports 64-bit address(> 2^32),
+it is not compatible with old pcie devices that only support 32-bit
+msi address.
+
+This patchset depends on another patchset for the SG2042 MSI controller[msi].
+If you want to have a test, you need to apply the corresponding patchset.
+
+Link: https://lore.kernel.org/linux-riscv/cover.1736921549.git.unicorn_wang@outlook.com/ [msi]
+
+Thanks,
+Chen
+
 ---
- drivers/pci/controller/pcie-rockchip.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index fea867c24f75..35bfdf3e17a3 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -132,8 +132,10 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 
- 	err = reset_control_bulk_assert(ROCKCHIP_NUM_CORE_RSTS,
- 					rockchip->core_rsts);
--	if (err)
--		return dev_err_probe(dev, err, "Couldn't assert Core resets\n");
-+	if (err) {
-+		dev_err_probe(dev, err, "Couldn't assert Core resets\n");
-+		goto err_exit_phy;
-+	}
- 
- 	udelay(10);
- 
+Changes in v3:
+
+  The patch series is based on v6.13-rc7.
+
+  Fixed following issues as per comments from Rob Herring, Bjorn Helgaas, thanks.
+
+  - Driver binding:
+    - Fallback to still using "sophgo,link-id" instead of "sophgo,pcie-port",
+      and improve the description of this property.
+    - Some text improvements.
+  - Improve driver code:
+    - Removed CONFIG_SMP.
+    - Removed checking of CONFIG_PCIE_CADENCE_HOST
+    - Improved Kconfig to select some dependencies explicitly.
+    - Some text improvements.
+
+Changes in v2:
+
+  The patch series is based on v6.13-rc2. You can simply review or test the
+  patches at the link [2].
+
+  Fixed following issues as per comments from Rob Herring, Bjorn Helgaas, thanks.
+
+  - Improve driver binding description
+    - Define a new embeded object property msi to replace the "sophgo,internal-msi".
+    - Rename "sophgo,link-id" to "sophgo,pcie-port" as per suggestion from Bjorn,
+      and add more explanaion for this property.
+    - Use msi-parent.
+  - Improve driver code:
+    - Improve coding style.
+    - Fix a bug and make sure num_applied_vecs updated with the max value.
+    - Use the MSI parent model.
+    - Remove .cpu_addr_fixup.
+    - Reorder Kconfig menu item to keep them in alphabetical order by vendor.
+
+Changes in v1:
+
+  The patch series is based on v6.12-rc7. You can simply review or test the
+  patches at the link [1].
+
+Link: https://lore.kernel.org/linux-riscv/cover.1731303328.git.unicorn_wang@outlook.com/ [1]
+Link: https://lore.kernel.org/linux-riscv/cover.1733726572.git.unicorn_wang@outlook.com/ [2]
+---
+
+Chen Wang (5):
+  dt-bindings: pci: Add Sophgo SG2042 PCIe host
+  PCI: sg2042: Add Sophgo SG2042 PCIe driver
+  dt-bindings: mfd: syscon: Add sg2042 pcie ctrl compatible
+  riscv: sophgo: dts: add pcie controllers for SG2042
+  riscv: sophgo: dts: enable pcie for PioneerBox
+
+ .../devicetree/bindings/mfd/syscon.yaml       |   2 +
+ .../bindings/pci/sophgo,sg2042-pcie-host.yaml | 147 +++++
+ .../boot/dts/sophgo/sg2042-milkv-pioneer.dts  |  12 +
+ arch/riscv/boot/dts/sophgo/sg2042.dtsi        |  89 +++
+ drivers/pci/controller/cadence/Kconfig        |  13 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pcie-sg2042.c  | 528 ++++++++++++++++++
+ 7 files changed, 792 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pcie-sg2042.c
+
+
+base-commit: 5bc55a333a2f7316b58edc7573e8e893f7acb532
+prerequisite-patch-id: d3c733a9ccc3fb4c62f145edcc692a0ca9484e53
+prerequisite-patch-id: bd8d797ce40a6c2b460872eda31a7685ddba0d67
+prerequisite-patch-id: f9b3c6061c52320f85ca4144e3d580fa6d0e54ef
 -- 
-2.45.2
+2.34.1
 
 
