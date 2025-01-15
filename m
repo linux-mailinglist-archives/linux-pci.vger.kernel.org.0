@@ -1,63 +1,67 @@
-Return-Path: <linux-pci+bounces-19820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 046C3A11995
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:26:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91AEFA119DF
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:42:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A77D27A3254
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:26:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 391843A25B5
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:42:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AE7C22F3BB;
-	Wed, 15 Jan 2025 06:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7048622F85F;
+	Wed, 15 Jan 2025 06:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAIS5RJ+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EDD2D05E;
-	Wed, 15 Jan 2025 06:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3952222FAE9;
+	Wed, 15 Jan 2025 06:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736922397; cv=none; b=CTnBD1P/t1W6PEyF3PR4OVbEVY/XN9XaGM27Xmr317K4RvkCmEHCMVq+gGGZHTb7ziKjRavVN+BaXJTAv5FXwbkkH1T/74wsTUTSPziv0cLarKEwYHi6yJyeYDoJGoqV3N7J9k1RuV8E4HALpbCRoXpdkHUy2QNk8Df9Aa/mO7k=
+	t=1736923323; cv=none; b=T75O4P19THSzJr6UXro+fQNGpYLnrGG1uJu2ka3Hg2sJD1dAODls/LM5Axtqu1ZhfE6NFW7NP9hEyBztWPMSjr9hrTB3C3XV3h5tQcXc0TQJI09Q8unADff3Wh2jlMPGcZVZkVUMJ0efz57NojON8zrEfA//XBc2KeUy2qMLZ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736922397; c=relaxed/simple;
-	bh=xFSna/f7xJGH8y4tKSVlhCPS16R70dhbYvwgmnPhA4c=;
+	s=arc-20240116; t=1736923323; c=relaxed/simple;
+	bh=bgY+YVYRDmnRUhd9hC0XPzyVCgfpIC4kE0RT+1d1CSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpMUQ9XUZ77834EeK0PQ5ALgjvtVXVld4v4x/SzNEzWiEtf49415INYfTOa6d5CgJsyPiEVEgyjeyw0ejg8fTAGtc5juyZRMUOa3HJrE6TiE0iWRYP/ybHLdrF9WoER3SxX2u1zHBalJfxKckqFQ395rCFgdXjKmfccbD6+AIMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id A1F9068B05; Wed, 15 Jan 2025 07:26:28 +0100 (CET)
-Date: Wed, 15 Jan 2025 07:26:28 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v5 07/17] dma-mapping: Implement link/unlink ranges API
-Message-ID: <20250115062628.GA29782@lst.de>
-References: <cover.1734436840.git.leon@kernel.org> <fa43307222f263e65ae0a84c303150def15e2c77.1734436840.git.leon@kernel.org> <ad2312e0-10d5-467a-be5e-75e80805b311@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XeWxXINzupzsis8jEJ+WHbXN5/wJUpaLyiDf1lNBSmB8RYis3He0a9/xmxL33TXgIyJ8nd10NMpeLplWnYTOnSNVK5s/Y0HXQ8tC+YoFGVVKAWTNtzU7roue0071c4yFHXBvBSl/c2jYouL9uzxe3Xr4AH3LmPtpZAtqCy24hMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAIS5RJ+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC216C4CEDF;
+	Wed, 15 Jan 2025 06:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736923322;
+	bh=bgY+YVYRDmnRUhd9hC0XPzyVCgfpIC4kE0RT+1d1CSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WAIS5RJ+HciZXjtPxrtNebxVZbWYP1lfFRhP/crDreCXBFfUDrzK0wNb9glRR1qZl
+	 LW53WAm4IeNqKEnkKyzUSBnah+iQpY2qOINnoyyWnnZhasfIq5mLTCffq7FrITc8et
+	 CHC+MzefHzpBM9jDk7P/AhZJ4sswnjwFIXLYhHxAfs9Di3Nj0tY/o1f1IPZKaoDeaF
+	 EqavdYtUzKy9yDL5PrOfLolemyOdXs+Io1rWeiqYb7jiYSMyTVzPMwJcC9ZNhtfrUE
+	 /UQK1QoKSCrXiCxQ6/ZLX2Rr14aplknkYmSWbTW1Ra9cB4FiYmkxEuqdan3fBbHjJx
+	 8bn90llk/oU1w==
+Date: Wed, 15 Jan 2025 07:41:54 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Gary Guo <gary@garyguo.net>, gregkh@linuxfoundation.org
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
+	chrisi.schrefl@gmail.com, paulmck@kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	rcu@vger.kernel.org
+Subject: Re: [PATCH v7 08/16] rust: add devres abstraction
+Message-ID: <Z4dYsoKrbP4_Nz_v@pollux>
+References: <20241219170425.12036-1-dakr@kernel.org>
+ <20241219170425.12036-9-dakr@kernel.org>
+ <20241224215323.560f17a9.gary@garyguo.net>
+ <Z4aR4OrCQMoF6Boo@pollux>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,90 +70,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ad2312e0-10d5-467a-be5e-75e80805b311@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <Z4aR4OrCQMoF6Boo@pollux>
 
-On Tue, Jan 14, 2025 at 08:50:35PM +0000, Robin Murphy wrote:
->>   EXPORT_SYMBOL_GPL(dma_iova_free);
->>   +static int __dma_iova_link(struct device *dev, dma_addr_t addr,
->> +		phys_addr_t phys, size_t size, enum dma_data_direction dir,
->> +		unsigned long attrs)
->> +{
->> +	bool coherent = dev_is_dma_coherent(dev);
->> +
->> +	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
->> +		arch_sync_dma_for_device(phys, size, dir);
->
-> Again, if we're going to pretend to support non-coherent devices, where are 
-> the dma_sync_for_{device,cpu} calls that work for a dma_iova_state? It 
-> can't be the existing dma_sync_single ops since that would require the user 
-> to keep track of every mapping to sync them individually, and the whole 
-> premise is to avoid doing that (not to mention dma-debug wouldn't like it). 
-> Same for anything coherent but SWIOTLB-bounced.
+On Tue, Jan 14, 2025 at 05:33:45PM +0100, Danilo Krummrich wrote:
+> > > +impl<T> Drop for Devres<T> {
+> > > +    fn drop(&mut self) {
+> > > +        // Revoke the data, such that it gets dropped already and the actual resource is freed.
+> > > +        //
+> > > +        // `DevresInner` has to stay alive until the devres callback has been called. This is
+> > > +        // necessary since we don't know when `Devres` is dropped and calling
+> > > +        // `devm_remove_action()` instead could race with `devres_release_all()`.
+> > 
+> > IIUC, the outcome of that race is the `WARN` if
+> > devres_release_all takes the spinlock first and has already remvoed the
+> > action?
+> > 
+> > Could you do a custom devres_release here that mimick
+> > `devm_remove_action` but omit the `WARN`? This way it allows the memory
+> > behind DevresInner to be freed early without keeping it allocated until
+> > the end of device lifetime.
+> 
+> Better late than never, I now remember what's the *actual* race I was preventing
+> here:
+> 
+>   | Task 0                               | Task 1
+> --|----------------------------------------------------------------------------
+> 1 | Devres::drop() {                     | devres_release_all() {
+> 2 |    DevresInner::remove_action() {    |    spin_lock_irqsave();
+> 3 |                                      |    remove_nodes(&todo);
+> 4 |                                      |    spin_unlock_irqrestore();
+> 5 |       devm_remove_action_nowarn();   |
+> 6 |       let _ = Arc::from_raw();       |
+> 7 |    }                                 |
+> 8 | }                                    |
+> 9 |                                      |    release_nodes(&todo);
+> 10|                                      | }
+> 
+> So, if devres_release_all() wins the race it stores the devres action within the
+> temporary todo list. Which means that in 9 we enter
+> DevresInner::devres_callback() even though DevresInner has been freed already.
+> 
+> Unfortunately, this race can happen with [1], but not with this original version
+> of Devres.
 
-That assumes you actually need to sync them.  Many DMA mapping if not
-most dma mappings are one shots - map and unmap, no sync.  And these
-will work fine here.
+Well, actually this can't happen, since obviously we know whether Devres:drop
+removed it or whether it will be released by devres_release_all() and we only
+free DevresInner conditionally.
 
-But I guess the documentation needs to spell that out.  While I don't
-have a good non-coherent system to test, swiotlb has actually been
-tested with nvme when I implemented this part.
+So, the code in [1] is fine; I somehow managed to confuse myself.
 
->> +{
->> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
->> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
->> +	struct iova_domain *iovad = &cookie->iovad;
->> +	size_t iova_start_pad = iova_offset(iovad, phys);
->> +	size_t iova_end_pad = iova_offset(iovad, phys + size);
->
-> "end_pad" implies a length of padding from the unaligned end address to 
-> reach the *next* granule boundary, but it seems this is actually the 
-> unaligned tail length of the data itself. That's what confused me last 
-> time, since in the map path that post-data padding region does matter in 
-> its own right.
+Sorry for the noise.
 
-Yeah.  Do you have a suggestion for a better name?
+- Danilo
 
->> +		phys_addr_t phys, size_t offset, size_t size,
->> +		enum dma_data_direction dir, unsigned long attrs)
->> +{
->> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
->> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
->> +	struct iova_domain *iovad = &cookie->iovad;
->> +	size_t iova_start_pad = iova_offset(iovad, phys);
->> +
->> +	if (WARN_ON_ONCE(iova_start_pad && offset > 0))
->
-> "iova_start_pad == 0" still doesn't guarantee that "phys" and "offset" are 
-> appropriately aligned to each other.
-
->> +	if (dev_use_swiotlb(dev, size, dir) && iova_offset(iovad, phys | size))
->
-> Again, why are we supporting non-granule-aligned mappings in the middle of 
-> a range when the documentation explicitly says not to?
-
-It's not trying to support that, but checking that this is guaranteed
-to be the last one is harder than handling it like this.  If you have
-a suggestion for better checks that would be very welcome.
-
->> +		if (!dev_is_dma_coherent(dev) &&
->> +		    !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
->> +			arch_sync_dma_for_cpu(phys, len, dir);
->
-> Hmm, how do attrs even work for a bulk unlink/destroy when the individual 
-> mappings could have been linked with different values?
-
-They shouldn't.  Just like randomly mixing flags doesn't work for the
-existing APIs.
-
-> (So no, irrespective of how conceptually horrid it is, clearly it's not 
-> even functionally viable to open-code abuse of DMA_ATTR_SKIP_CPU_SYNC in 
-> callers to attempt to work around P2P mappings...)
-
-What do you mean with "work around"?  I guess Leon added it to the hmm
-code based on previous feedback, but I still don't think any of our P2P
-infrastructure works reliably with non-coherent devices as
-iommu_dma_map_sg gets this wrong.  So despite the earlier comments I
-suspect this should stick to the state of the art even if that is broken.
-
+> 
+> I see two ways to fix it:
+> 
+> 1) Just revert [1] and stick with the original version.
+> 
+> 2) Use devm_release_action() instead of devm_remove_action() and don't drop the
+>    reference in DevresInner::remove_action() (6). This way the reference is
+>    always dropped from the callback.
+> 
+> With 2) we still have an unnecessary call to revoke() if Devres is dropped
+> before the device is detached from the driver, but that's still better than
+> keeping DevresInner alive until the device is detached from the driver, which
+> the original version did. Hence, I'll go ahead and prepare a patch for this,
+> unless there are any concerns.
+> 
+> - Danilo
+> 
+> [1] https://lore.kernel.org/rust-for-linux/20250107122609.8135-2-dakr@kernel.org/
 
