@@ -1,155 +1,252 @@
-Return-Path: <linux-pci+bounces-19848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9528A11B61
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:59:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25649A11BAF
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 09:17:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86A053A7DAD
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:58:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34A6416665F
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 08:17:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E6722F152;
-	Wed, 15 Jan 2025 07:58:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412CA236EC9;
+	Wed, 15 Jan 2025 08:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dhtbnpdR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtS4YogD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7234B236A61;
-	Wed, 15 Jan 2025 07:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30DC1DB150;
+	Wed, 15 Jan 2025 08:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736927929; cv=none; b=U/sCnZpNbbpKeW3m25f3QjYutg21p1cyjwdCTuNrXMum/BHQXXZ4CW+ae9b2gZhkN4iTFE+BR9FhMjzpkmP5E9Yip3VZXjHUB83eaDmcqWQupks5+pqz/OZvbVfp19ZKPi6jqQUlm2bj0oAut3Y/7x7Vea8GIftprnR7JpJB43g=
+	t=1736929052; cv=none; b=Y/zBce6A2YuCB7Wwb36PZweG4WOEh4vIBW/6KXdRAZ/h+vh29ZzT/5b3gcA+gWLMZxWEto0Cc4NdjBz1SA3ZaUjMRgcajoGfi9cTZTXQPqVWpBcjwevoKKXsJgdksWzSH9heuW+h8VOLyZG5LD1V/uFpbL/BRiUnChJelBtNIzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736927929; c=relaxed/simple;
-	bh=/dJoj0mqOTmkoV3UXIGqPt6FEKyI9UYbUD8611H/sMw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xl5nUMdwWmYnG5fM/Sqe/CYzWjJm2T2LR0xUDMb2zazqGL6VicEKFiPIDQOCACxxvyBqg1rZrVf7MGhxU4F4x6EAQdoaHFLyB0uLHb/+I/8aiuTOpxmZHrldTZ0oQm62TSz6JvcRVuSkJap+eNV+1KKexYsz0qllBFb0OyjAdow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dhtbnpdR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F5cPBr013921;
-	Wed, 15 Jan 2025 07:58:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=sLwXMdQzvWOJb4WsDCioa7Jt
-	yHeUekEJUQu8MLw0PwA=; b=dhtbnpdRaLQZUPFuV2cZaSiWLROQ0s1I2Y1ZzWvw
-	39TsTQsfepXYWwpH2whs6VPVPVoFQQFdXAEIZBAlPd/6h3zbjwmhq1RWeWRF5VsF
-	ZTo6PJiEshco8oaA9dDdw7oSZFRH92Lxdn238GsfUnjDExRWHAiW90Lw7CLhU0/R
-	jj5ZlydOr4w3LDukgWW+bokC/tjXF9G/XQIYAgDBz786uOm+EFc8lLVWv1zwZmL2
-	KTkd2MhBXlQdZH9OyeYoFXiZOFGN0Sxlra3I3zX+2Di3gcXPkDaC1EM1kiQDqpna
-	bRV2IvxeDMhX0aB69kd13gUK9hB9QhOaYt9RUBR6SWlwPw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44671q0asn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 07:58:33 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50F7wXvk031194
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 07:58:33 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 14 Jan 2025 23:58:26 -0800
-Date: Wed, 15 Jan 2025 13:28:22 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        Praveenkumar I <quic_ipkumar@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: ipq5332: Add PCIe related nodes
-Message-ID: <Z4dqnr9+MTue3VbX@hu-varada-blr.qualcomm.com>
-References: <20250102113019.1347068-5-quic_varada@quicinc.com>
- <20250108183235.GA220566@bhelgaas>
+	s=arc-20240116; t=1736929052; c=relaxed/simple;
+	bh=Yu7S/jLyUGhfFZjVFlk4eprtZYRxfla2Nw7nZEhy9no=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nHYM0FRi8hR27xAay804JFfYHPqR3c82VSXMvKjfyg+QXHjtLGrSfPvg8YvzraFY5uzrD+nzXRJ6oU7mjTcCMC3SERRuwDd4M0aNXS3AyQiTjotk7MOkQPXV/DVsOZp9i4u8hGXSvOLfaJewEvIVI8kh67Xrz2ckXvM+4NASUl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtS4YogD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD6DC4CEDF;
+	Wed, 15 Jan 2025 08:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736929050;
+	bh=Yu7S/jLyUGhfFZjVFlk4eprtZYRxfla2Nw7nZEhy9no=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jtS4YogDlGBJKPE4uxCOLjxH7XCi5QYsOo4leoD+xgmN8tj70qVx5829WIg+sShgX
+	 yiakEsBadvxORmzL2tNvh64PTbxN2Yn7ZjPr4SYb84VfV3NxFD7kGP/KdoZOcX+tov
+	 rQJGthlfV+pWswtBJZw2US2akwQ3E9tQt/jwG/ICtUFlz/2ySVXe68KJv7W8xdw1OU
+	 pIcG2l3K1LSF8572QwfNaFSMofL4ExapBuk12HqOU0whbiq9SaXUul7IQT4rV47kiH
+	 Y6/VezMg1RWwWJ+XN6OfK0HDAZ0irI3FF3+Tw83vfWul8FBVAnUy0tZrZ3zZK1Ybu0
+	 cyRrXOGYV/nDQ==
+Date: Wed, 15 Jan 2025 10:17:26 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5 05/17] dma-mapping: Provide an interface to allow
+ allocate IOVA
+Message-ID: <20250115081726.GK3146852@unreal>
+References: <cover.1734436840.git.leon@kernel.org>
+ <fac6bc6fdcf8e13bd5668386d36289ee38a8a95b.1734436840.git.leon@kernel.org>
+ <ecb59036-b279-4412-9a09-40e05af3b9ea@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250108183235.GA220566@bhelgaas>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yEiBqHoUvMPVEeVoNLX-JJ4sCL9GcypG
-X-Proofpoint-ORIG-GUID: yEiBqHoUvMPVEeVoNLX-JJ4sCL9GcypG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-15_03,2025-01-15_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxlogscore=999 adultscore=0 clxscore=1011 priorityscore=1501
- suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501150059
+In-Reply-To: <ecb59036-b279-4412-9a09-40e05af3b9ea@arm.com>
 
-On Wed, Jan 08, 2025 at 12:32:35PM -0600, Bjorn Helgaas wrote:
-> On Thu, Jan 02, 2025 at 05:00:18PM +0530, Varadarajan Narayanan wrote:
-> > From: Praveenkumar I <quic_ipkumar@quicinc.com>
-> >
-> > Add phy and controller nodes for pcie0_x1 and pcie1_x2.
->
-> > +		pcie1: pcie@18000000 {
-> > +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
-> > +			reg = <0x00088000 0x3000>,
-> > +			      <0x18000000 0xf1d>,
-> > +			      <0x18000f20 0xa8>,
-> > +			      <0x18001000 0x1000>,
-> > +			      <0x18100000 0x1000>,
-> > +			      <0x0008b000 0x1000>;
-> > +			reg-names = "parf",
-> > +				    "dbi",
-> > +				    "elbi",
-> > +				    "atu",
-> > +				    "config",
-> > +				    "mhi";
-> > +			device_type = "pci";
-> > +			linux,pci-domain = <1>;
-> > +			bus-range = <0x00 0xff>;
->
-> This bus-range isn't needed, is it?  pci_parse_request_of_pci_ranges()
-> should default to 0x00-0xff if no bus-range property is present.
+On Tue, Jan 14, 2025 at 08:50:28PM +0000, Robin Murphy wrote:
+> On 17/12/2024 1:00 pm, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > The existing .map_page() callback provides both allocating of IOVA
+> > and linking DMA pages. That combination works great for most of the
+> > callers who use it in control paths, but is less effective in fast
+> > paths where there may be multiple calls to map_page().
+> > 
+> > These advanced callers already manage their data in some sort of
+> > database and can perform IOVA allocation in advance, leaving range
+> > linkage operation to be in fast path.
+> > 
+> > Provide an interface to allocate/deallocate IOVA and next patch
+> > link/unlink DMA ranges to that specific IOVA.
+> > 
+> > In the new API a DMA mapping transaction is identified by a
+> > struct dma_iova_state, which holds some recomputed information
+> > for the transaction which does not change for each page being
+> > mapped, so add a check if IOVA can be used for the specific
+> > transaction.
+> > 
+> > The API is exported from dma-iommu as it is the only implementation
+> > supported, the namespace is clearly different from iommu_* functions
+> > which are not allowed to be used. This code layout allows us to save
+> > function call per API call used in datapath as well as a lot of boilerplate
+> > code.
+> > 
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> >   drivers/iommu/dma-iommu.c   | 74 +++++++++++++++++++++++++++++++++++++
+> >   include/linux/dma-mapping.h | 49 ++++++++++++++++++++++++
+> >   2 files changed, 123 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 853247c42f7d..5906b47a300c 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -1746,6 +1746,80 @@ size_t iommu_dma_max_mapping_size(struct device *dev)
+> >   	return SIZE_MAX;
+> >   }
+> > +/**
+> > + * dma_iova_try_alloc - Try to allocate an IOVA space
+> > + * @dev: Device to allocate the IOVA space for
+> > + * @state: IOVA state
+> > + * @phys: physical address
+> > + * @size: IOVA size
+> > + *
+> > + * Check if @dev supports the IOVA-based DMA API, and if yes allocate IOVA space
+> > + * for the given base address and size.
+> > + *
+> > + * Note: @phys is only used to calculate the IOVA alignment. Callers that always
+> > + * do PAGE_SIZE aligned transfers can safely pass 0 here.
+> > + *
+> > + * Returns %true if the IOVA-based DMA API can be used and IOVA space has been
+> > + * allocated, or %false if the regular DMA API should be used.
+> > + */
+> > +bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
+> > +		phys_addr_t phys, size_t size)
+> > +{
+> > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> > +	struct iova_domain *iovad = &cookie->iovad;
+> > +	size_t iova_off = iova_offset(iovad, phys);
+> > +	dma_addr_t addr;
+> > +
+> > +	memset(state, 0, sizeof(*state));
+> > +	if (!use_dma_iommu(dev))
+> > +		return false;
+> 
+> Can you guess why that return won't ever be taken?
 
-Ok.
+I will move references to pointers after this check, but like Christoph
+said, this "if ..." is taken a lot and we didn't see any issues with
+inbox GCC versions.
 
->
-> > +			num-lanes = <2>;
-> > +			phys = <&pcie1_phy>;
-> > +			phy-names = "pciephy";
->
-> I think num-lanes and PHY info are per-Root Port properties, not a
-> host controller properties, aren't they?  Some of the clock and reset
-> properties might also be per-Root Port.
->
-> Ideally, I think per-Root Port properties should be in a child device
-> as they are here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mvebu-pci.txt?id=v6.12#n137
-> but it looks like the num-lanes parsing is done in
-> dw_pcie_get_resources(), which can only handle a single num-lanes per
-> DWC controller, so maybe it's impractical to add a child device here.
->
-> But I wonder if it would be useful to at least group the per-Root Port
-> things together in the binding to help us start thinking about the
-> difference between the controller and the Root Port(s).
+> 
+> > +	if (static_branch_unlikely(&iommu_deferred_attach_enabled) &&
+> > +	    iommu_deferred_attach(dev, iommu_get_domain_for_dev(dev)))
+> > +		return false;
+> > +
+> > +	if (WARN_ON_ONCE(!size))
+> > +		return false;
+> > +	if (WARN_ON_ONCE(size & DMA_IOVA_USE_SWIOTLB))
+> 
+> This looks weird. Why would a caller ever set an effectively-private flag in
+> the first place? If it's actually supposed to be a maximum size check,
+> please make it look like a maximum size check.
 
-This looks like a big change and might impact the existing
-SoCs/platforms. To minimize the impact, should we continue
-supporting the legacy method in addition to the new per-Root port
-approach. Should we take this up separately? Kindly advice.
+It is in-kernel API and the idea is to warn developers of something that
+is not right and not perform defensive programming by doing size checks.
+
+<...>
+
+> > +/**
+> > + * dma_iova_free - Free an IOVA space
+> > + * @dev: Device to free the IOVA space for
+> > + * @state: IOVA state
+> > + *
+> > + * Undoes a successful dma_try_iova_alloc().
+> > + *
+> > + * Note that all dma_iova_link() calls need to be undone first.  For callers
+> > + * that never call dma_iova_unlink(), dma_iova_destroy() can be used instead
+> > + * which unlinks all ranges and frees the IOVA space in a single efficient
+> > + * operation.
+> 
+> That's only true if they *also* call dma_iova_link() in just the right way
+> too.
+
+We can update the comment section to any wording, feel free to propose.
+
+> 
+> > + */
+> > +void dma_iova_free(struct device *dev, struct dma_iova_state *state)
+> > +{
+> > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> > +	struct iova_domain *iovad = &cookie->iovad;
+> > +	size_t iova_start_pad = iova_offset(iovad, state->addr);
+> > +	size_t size = dma_iova_size(state);
+> > +
+> > +	iommu_dma_free_iova(cookie, state->addr - iova_start_pad,
+> > +			iova_align(iovad, size + iova_start_pad), NULL);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dma_iova_free);
+> > +
+> >   void iommu_setup_dma_ops(struct device *dev)
+> >   {
+> >   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> > index b79925b1c433..55899d65668b 100644
+> > --- a/include/linux/dma-mapping.h
+> > +++ b/include/linux/dma-mapping.h
+> > @@ -7,6 +7,8 @@
+> >   #include <linux/dma-direction.h>
+> >   #include <linux/scatterlist.h>
+> >   #include <linux/bug.h>
+> > +#include <linux/mem_encrypt.h>
+> > +#include <linux/iommu.h>
+> 
+> Why are these being pulled in here?
+
+It is rebase leftover.
+
+> 
+> >   /**
+> >    * List of possible attributes associated with a DMA mapping. The semantics
+> > @@ -72,6 +74,21 @@
+> >   #define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+> > +struct dma_iova_state {
+> > +	dma_addr_t addr;
+> > +	size_t __size;
+> > +};
+> > +
+> > +/*
+> > + * Use the high bit to mark if we used swiotlb for one or more ranges.
+> > + */
+> > +#define DMA_IOVA_USE_SWIOTLB		(1ULL << 63)
+> 
+> This will give surprising results for 32-bit size_t (in fact I guess it
+> might fire some build warnings already).
+
+We got none, I will change to u64.
+
+> 
+> Thanks,
+> Robin.
 
 Thanks
-Varada
 
