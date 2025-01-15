@@ -1,144 +1,133 @@
-Return-Path: <linux-pci+bounces-19818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7DD9A11971
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:10:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4EE8A1197C
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:13:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07CEE188B446
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:10:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 230E618854FB
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:13:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA47A22E419;
-	Wed, 15 Jan 2025 06:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Mjuq66HM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D583222F3B2;
+	Wed, 15 Jan 2025 06:13:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E0A22F170;
-	Wed, 15 Jan 2025 06:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C2A22E41E;
+	Wed, 15 Jan 2025 06:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736921429; cv=none; b=HUb/sieOn3WXY77mxV+1ym1HCWDxgn0+jcQ4aY9cM+PTldWimbFlZe+k8/Tpo8hvPSO8JZY6V4kkUCUp/xUrbaerFKJIGxUGaAOiqIqMRSwQn9sLioS4az4REQ6VrnylGAMTbH7FfIfH4O26sF7J2hUaC9L7D96gRHRKA0QwHUM=
+	t=1736921615; cv=none; b=hExpO6q1Q+yh8+k7NV0x+FPQElQ3ruoKlkkQrov2JKeKqzAi8yAsYjY6MdeK67MMuKQi2KKJ13UP688dXOgi1PX0K+JoEtJTK3JUUW+XHT6ov8IzM3fZzkkHxX5Vsdaa3mJJouQVnDTWUgAndK21Off+cDZjufY3s9qoCkjylN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736921429; c=relaxed/simple;
-	bh=z4VHK5uGowUa8n6Wog/xwzapsHoZeeV3ojloTxWM0GQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iBGu24MEr9pJW1IoeejZzLjnqGYvAwHjxUxFoIBffFN9d3B1Wv9nSQRFCU2WMV097KX86fytOy7RvOjim0m4K8yS6lCqYcSLSS96Z6bcX58jMbng5j4xb3G9a/ETBgfp0V9U4eQxrB5SdEMzLsOkMBW1lh83Z+PigO9Mu/HbK4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Mjuq66HM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F1tdxs027718;
-	Wed, 15 Jan 2025 06:10:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+wZ9OFW6Tocm/ovdJVpmpMjm4fWamKruQF9KhEGEvys=; b=Mjuq66HM4wiSIAag
-	AaPNNDHXCkLYyISdbidG27oa8U2bplL0Ssk3Kk/iO57rbCU1EGXx2bPREk6KmMVs
-	a3x4Mbqj/6bKxJ7VH8dBZZTwvD4disQYyGm7MqM30gxiyp5pDpgAHE05FtE1OV7g
-	yqacfl/Xle3NEscABuuT2m228E157NeV8Ot77TDIM4iCAtvU7iibAZqxBL+OO48n
-	4esSuRzURythA42+Hs98eMCCwrDZc7llKk/hzN6WVI5OQIrXTQs8R5vQP4ZwvnDr
-	jDCmWFGFLr2ylSkgtpbdgcnPkJhANWYrgCQeWzGM1e0ahbppHtqtAphR795ojypd
-	dCrigQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4463sm0g8w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 06:10:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50F6ADsi021363
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 06:10:14 GMT
-Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 Jan
- 2025 22:10:08 -0800
-Message-ID: <de564e46-4a6e-4393-b754-34b35bae5599@quicinc.com>
-Date: Wed, 15 Jan 2025 11:40:05 +0530
+	s=arc-20240116; t=1736921615; c=relaxed/simple;
+	bh=IJpGGqTdTn3Pi3/xnnXvoMDIxvhrzP92PeGu0JYmNS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHlyHNBz+cC3GVDmLNT/HaXc5j7TbusI2Las05Fu6JqjKT760uw4h0vJcWNkaopdTRiXkFqOGCwC5KLWAKYFCyqr0P8FOLF/wGCHb9QUxY84yDva8+L+1kSkEhzXO64bObSgM3iZ1ypqk2WoIaWHAaw+T+cCwfhaU0jdEovDveE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id F412068B05; Wed, 15 Jan 2025 07:13:26 +0100 (CET)
+Date: Wed, 15 Jan 2025 07:13:26 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5 05/17] dma-mapping: Provide an interface to allow
+ allocate IOVA
+Message-ID: <20250115061326.GA29643@lst.de>
+References: <cover.1734436840.git.leon@kernel.org> <fac6bc6fdcf8e13bd5668386d36289ee38a8a95b.1734436840.git.leon@kernel.org> <ecb59036-b279-4412-9a09-40e05af3b9ea@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
- controllers
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <quic_srichara@quicinc.com>
-References: <20241213134950.234946-1-quic_mmanikan@quicinc.com>
- <20241213134950.234946-5-quic_mmanikan@quicinc.com>
- <Z3eJQyJXSBG+oFF4@hu-varada-blr.qualcomm.com>
-Content-Language: en-US
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-In-Reply-To: <Z3eJQyJXSBG+oFF4@hu-varada-blr.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 3_2duaB9QtO-ValdXUL5KxjW83haJFRj
-X-Proofpoint-ORIG-GUID: 3_2duaB9QtO-ValdXUL5KxjW83haJFRj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-15_02,2025-01-13_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=713
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1015 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501150043
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecb59036-b279-4412-9a09-40e05af3b9ea@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
+On Tue, Jan 14, 2025 at 08:50:28PM +0000, Robin Murphy wrote:
+>> +bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
+>> +		phys_addr_t phys, size_t size)
+>> +{
+>> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+>> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+>> +	struct iova_domain *iovad = &cookie->iovad;
+>> +	size_t iova_off = iova_offset(iovad, phys);
+>> +	dma_addr_t addr;
+>> +
+>> +	memset(state, 0, sizeof(*state));
+>> +	if (!use_dma_iommu(dev))
+>> +		return false;
+>
+> Can you guess why that return won't ever be taken?
 
+It is regularly taken.  Now that it's quoted this way it would probably
+good to split the thing up to not do the deferferences above, as they
+might cause problems if the compiler wasn't smart enough to only
+perform them after the check..
 
-On 1/3/2025 12:22 PM, Varadarajan Narayanan wrote:
-> On Fri, Dec 13, 2024 at 07:19:50PM +0530, Manikanta Mylavarapu wrote:
-> 
-> [ .  .  . ]
-> 
->> +&pcie2_phy {
->> +	status = "okay";
+>> +	if (static_branch_unlikely(&iommu_deferred_attach_enabled) &&
+>> +	    iommu_deferred_attach(dev, iommu_get_domain_for_dev(dev)))
+>> +		return false;
+>> +
+>> +	if (WARN_ON_ONCE(!size))
+>> +		return false;
+>> +	if (WARN_ON_ONCE(size & DMA_IOVA_USE_SWIOTLB))
+>
+> This looks weird. Why would a caller ever set an effectively-private flag 
+> in the first place? If it's actually supposed to be a maximum size check, 
+> please make it look like a maximum size check.
+
+As the person who added it - this is to catch a user passing in a value
+that would set it.  To me this looks obvious, but should we add a
+comment?
+
+> (Which also makes me consider iommu_dma_max_mapping_size() returning 
+> SIZE_MAX isn't strictly accurate, ho hum...)
+
+You can still map SIZE_MAX, just not using this interface.  Assuming
+no other real life limitations get in way, which I bet they will.
+
+>> @@ -72,6 +74,21 @@
+>>     #define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+>>   +struct dma_iova_state {
+>> +	dma_addr_t addr;
+>> +	size_t __size;
 >> +};
 >> +
->> +&pcie2 {
->> +	pinctrl-0 = <&pcie2_default_state>;
->> +	pinctrl-names = "default";
->> +
->> +	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
->> +	status = "okay";
->> +};
-> 
-> pcie2 should come before pcie2_phy
-> 
+>> +/*
+>> + * Use the high bit to mark if we used swiotlb for one or more ranges.
+>> + */
+>> +#define DMA_IOVA_USE_SWIOTLB		(1ULL << 63)
+>
+> This will give surprising results for 32-bit size_t (in fact I guess it 
+> might fire some build warnings already).
 
-Okay, i will update in the next version.
+Good point.  I guess __size should simply become a u64.
 
->> +
->> +&pcie3_phy {
->> +	status = "okay";
->> +};
->> +
->> +&pcie3 {
->> +	pinctrl-0 = <&pcie3_default_state>;
->> +	pinctrl-names = "default";
->> +
->> +	perst-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
->> +	status = "okay";
->> +};
-> 
-> same here.
-
-Okay, i will update in the next version.
-
-Thanks & Regards,
-Manikanta.
 
