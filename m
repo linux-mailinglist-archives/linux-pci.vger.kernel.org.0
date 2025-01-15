@@ -1,55 +1,63 @@
-Return-Path: <linux-pci+bounces-19928-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19929-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6DB6A12DAD
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 22:29:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95D1EA12EF8
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 00:04:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FA673A4BBC
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 21:29:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAA061886AFA
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 23:04:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0247A1DA62E;
-	Wed, 15 Jan 2025 21:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CF61DD9AB;
+	Wed, 15 Jan 2025 23:04:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLTsSBZY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndMSRS4a"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94214D599;
-	Wed, 15 Jan 2025 21:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E20D1DD9A6;
+	Wed, 15 Jan 2025 23:04:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736976560; cv=none; b=PP/wEmZcHheeP1ra10twVmBNEk0npIXXGuSVAbrq+150TDFVxmniUkb0kNcwNJlflH49y+qulR2BguUG/DQUTXtfgc/8KsLV5PwbYVsWApMTsr9pX47Y14aDcY+6Ysbu8mb+V0mul05gyK6LDzeNpAXCmWxCP3ApNiZ+IQKjgLo=
+	t=1736982272; cv=none; b=gqKzne3WTxVui4vOU0LgUtxG1uYQY9HMJUP8GXqjCi0C3ddg9AAXv502zB7tBXPinfw2yaB6fhdNHZDH54nl7cTXIRywC2aemj2hu35yapSlrGLHf76AGVAF8Grygsim/VKoREvlo+RDygXW4jAmDQpkbO/Du+LLGWqhIVlOQR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736976560; c=relaxed/simple;
-	bh=Q0R9yzx2IdDjM84ZdIhit3Ub3eTS5HNerUhf13EGlHI=;
+	s=arc-20240116; t=1736982272; c=relaxed/simple;
+	bh=wXuBoyyk9ETcMFkcjs1CAzvucCe5P+ktEzNq56RKFKc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=i02IkrHRkC5RwIrGEaQWgrllFKK1EvD1W2CjRB1idWSzdi8Buoiasav8GTXRj34x90v07lyf5SC815z4Q3gccORfBsHR+iPqQO3Kn6bYKTf3Q+2av/dAgE7r+gtQjVuCsq0nGg8wBSqAsRuV6fRZiJwz4V/wPkGpGpfcn+qXPAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLTsSBZY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A6BC4CED1;
-	Wed, 15 Jan 2025 21:29:20 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=No/NU1gruIXVQkKC8VFhv5m1hLXq0OyIZEGJJL0hUWEUhshUrhtozO8nGunHLoFCE70WzaF9sYC1NxP4AMwBl7wNT24vyXCkIVvLJvzY8ly2HxRkRGh5GbgXlx5xOjyCNdLls+J1zADsbV6Pmz6EhlV3no+nA00jC/nAzN2k+3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndMSRS4a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EF6C4CED1;
+	Wed, 15 Jan 2025 23:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736976560;
-	bh=Q0R9yzx2IdDjM84ZdIhit3Ub3eTS5HNerUhf13EGlHI=;
+	s=k20201202; t=1736982272;
+	bh=wXuBoyyk9ETcMFkcjs1CAzvucCe5P+ktEzNq56RKFKc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sLTsSBZY8I41548whX0cnkjIV5sreItAraP2dYpE1APrWd5dQpMNOgR6zperJ66Xu
-	 b0b1E4beNO3X97HrGqpdjtUWgVz7nl8pIsYZBnuqfQsW9egAXGGngsfHGB6hNoewcO
-	 bC5ySvxTKyVgyVQHK42z4N7kOAfh0jTc84XAItT+BjepykdjjN8ZgMUTbkpvEBMwe2
-	 L2pMOEDnNBaLdtHU3DusdJlRRaE03tdBXNpTExnhYO20dm+NGoBB9z2+btkXaa/PRN
-	 XmQ29JRMIaGM1fe8FoKaW4Lu5yppkNz9VFyaY5UtGY1YKOGnk+RRO8iotcVAhgmQtr
-	 rJmqGGkAlMkpA==
-Date: Wed, 15 Jan 2025 15:29:18 -0600
+	b=ndMSRS4aPOQkcBRM8NZ8koAU62dLa6PMuBifPbWPnqACBtNUs7AkyKfx3Ng/ZaVHa
+	 b/TPH3VpMkqnRFVnjBO9OfxflS9K7ZA9gYYrMy8V0YbO4mTbrf6x8whUPSok08TE64
+	 E1qG2kySB8p3WLmzqXPakm9gS4SF6cI3x1FRKAxd4z6ovPSwnsh1ZHoTo2Kw67J/U9
+	 UWHXiZBMXR/buiJsuaNEWw3/vRb/KFCKk/XbzAMDL3YN4eFDGZTYjPP8pdAahioTw1
+	 8KzQdBlCVlpgm83ybNQPfdNWrjE147p9LYRlSPmZXEa3pKZsjTq74/r3ZYZfZJgSJ6
+	 4e3/DcgTV8OkQ==
+Date: Wed, 15 Jan 2025 17:04:30 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 0/4] PCI: Simplify bus range parsing
-Message-ID: <20250115212918.GA555721@bhelgaas>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev
+Subject: Re: [PATCH 1/2] PCI: dwc: dra7xx: Use
+ syscon_regmap_lookup_by_phandle_args
+Message-ID: <20250115230430.GA560547@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,41 +66,92 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250113231557.441289-1-helgaas@kernel.org>
+In-Reply-To: <20250112-syscon-phandle-args-pci-v1-1-fcb6ebcc0afc@linaro.org>
 
-On Mon, Jan 13, 2025 at 05:15:53PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Sun, Jan 12, 2025 at 02:39:02PM +0100, Krzysztof Kozlowski wrote:
+> Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
+> syscon_regmap_lookup_by_phandle() combined with getting the syscon
+> argument.  Except simpler code this annotates within one line that given
+> phandle has arguments, so grepping for code would be easier.
 > 
-> Unexport of_pci_parse_bus_range() since it's only used in drivers/pci/of.c.
+> There is also no real benefit in printing errors on missing syscon
+> argument, because this is done just too late: runtime check on
+> static/build-time data.  Dtschema and Devicetree bindings offer the
+> static/build-time check for this already.
 > 
-> Drop the "No bus range found" message since host bridges typically lead to
-> [bus 00-ff], and we already default to that if there is no "bus-range" DT
-> property, so there's no point in requiring it in DT or complaining if it's
-> not there.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 27 ++++++---------------------
+>  1 file changed, 6 insertions(+), 21 deletions(-)
 > 
-> Drop bus range parameters from devm_of_pci_get_host_bridge_resources()
-> since they're always the same values.
-> 
-> Update a sparc comment that referred to of_pci_get_host_bridge_resources(),
-> which no longer exists.
-> 
-> Bjorn Helgaas (4):
->   PCI: Unexport of_pci_parse_bus_range()
->   PCI: of: Drop 'No bus range found' message
->   PCI: of: Simplify devm_of_pci_get_host_bridge_resources() interface
->   sparc/PCI: Update reference to devm_of_pci_get_host_bridge_resources()
-> 
->  arch/sparc/kernel/pci_common.c |  2 +-
->  drivers/pci/of.c               | 22 ++++++++++------------
->  drivers/pci/pci.h              |  7 -------
->  3 files changed, 11 insertions(+), 20 deletions(-)
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 5c62e1a3ba52919afe96fbcbc6edaf70775a69cb..33d6bf460ffe5bb724a061558dd93ec7bdadc336 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -635,30 +635,20 @@ static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
+>  {
+>  	int ret;
+>  	struct device_node *np = dev->of_node;
+> -	struct of_phandle_args args;
+> +	unsigned int args[2];
+>  	struct regmap *regmap;
+>  
+> -	regmap = syscon_regmap_lookup_by_phandle(np,
+> -						 "ti,syscon-unaligned-access");
+> +	regmap = syscon_regmap_lookup_by_phandle_args(np, "ti,syscon-unaligned-access",
+> +						      2, args);
+>  	if (IS_ERR(regmap)) {
+>  		dev_dbg(dev, "can't get ti,syscon-unaligned-access\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	ret = of_parse_phandle_with_fixed_args(np, "ti,syscon-unaligned-access",
+> -					       2, 0, &args);
+> -	if (ret) {
+> -		dev_err(dev, "failed to parse ti,syscon-unaligned-access\n");
+> -		return ret;
+> -	}
+> -
+> -	ret = regmap_update_bits(regmap, args.args[0], args.args[1],
+> -				 args.args[1]);
+> +	ret = regmap_update_bits(regmap, args[0], args[1], args[1]);
+>  	if (ret)
+>  		dev_err(dev, "failed to enable unaligned access\n");
+>  
+> -	of_node_put(args.np);
+> -
+>  	return ret;
+>  }
+>  
+> @@ -671,18 +661,13 @@ static int dra7xx_pcie_configure_two_lane(struct device *dev,
+>  	u32 mask;
+>  	u32 val;
+>  
+> -	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "ti,syscon-lane-sel");
+> +	pcie_syscon = syscon_regmap_lookup_by_phandle_args(np, "ti,syscon-lane-sel",
+> +							   1, &pcie_reg);
+>  	if (IS_ERR(pcie_syscon)) {
+>  		dev_err(dev, "unable to get ti,syscon-lane-sel\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (of_property_read_u32_index(np, "ti,syscon-lane-sel", 1,
+> -				       &pcie_reg)) {
+> -		dev_err(dev, "couldn't get lane selection reg offset\n");
+> -		return -EINVAL;
+> -	}
 
-Applied to pci/of for v6.14.
+Wow.  I believe you that syscon_regmap_lookup_by_phandle_args() is
+equivalent to both:
 
-> Changes since v1
-> (https://lore.kernel.org/r/20250103213129.5182-1-helgaas@kernel.org):
->   - Fix compile error
->   - Drop 'No bus range found' message
->   - Add Ack from Andreas for the sparc/PCI comment update
->   - Add Reviewed-by from Rob for the unexport patch
+  - syscon_regmap_lookup_by_phandle() followed by
+    of_parse_phandle_with_fixed_args(), and
+
+  - syscon_regmap_lookup_by_phandle() followed by
+    of_property_read_u32_index()
+
+but I can't say it's obvious to this syscon- and OF-naive reviewer,
+even after tracing a few layers in :)
+
+Bjorn
 
