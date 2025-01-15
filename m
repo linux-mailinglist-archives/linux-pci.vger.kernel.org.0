@@ -1,46 +1,63 @@
-Return-Path: <linux-pci+bounces-19817-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19818-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2B06A1182D
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 04:59:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7DD9A11971
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 07:10:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 903331886963
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 03:59:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07CEE188B446
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 06:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43CA322E3F0;
-	Wed, 15 Jan 2025 03:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA47A22E419;
+	Wed, 15 Jan 2025 06:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Z1RGllAp"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Mjuq66HM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCEE15250F;
-	Wed, 15 Jan 2025 03:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E0A22F170;
+	Wed, 15 Jan 2025 06:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736913564; cv=none; b=O75EVqIQIkMQ72l4iT75rU2Gk/kOB4F8r+XefiO2x4/nkshLmdGnwDvsV468rYDH3ZmlCgyMSm7ar2ZuLiIPXbN7N2+vOsnsgl4uHCN0ggFe62IMDwVNUjgn6KImAjeyl0KITAFu6vu+/CkvHaeclGXvrMCiyjStYI50O3VKRkY=
+	t=1736921429; cv=none; b=HUb/sieOn3WXY77mxV+1ym1HCWDxgn0+jcQ4aY9cM+PTldWimbFlZe+k8/Tpo8hvPSO8JZY6V4kkUCUp/xUrbaerFKJIGxUGaAOiqIqMRSwQn9sLioS4az4REQ6VrnylGAMTbH7FfIfH4O26sF7J2hUaC9L7D96gRHRKA0QwHUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736913564; c=relaxed/simple;
-	bh=YSMVJrCT/K9bRLlVREyx8tgq/wp+53dMWevCY5rjL7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WT+FaPEYQGYlMx9PCV5xbUnyIR7/q5Df8WMrcCxV/kSkqAMIc67etdW0Xs4EaA0+hofsKCig+QqkycAgJfbxTBUH4sSmNKYvcOgeiAGEXGa9x8u1U5ZY73TNTTDvukKgOSpstscFhG8RCUR8mjJ2JlLBDjyOnk5ghkmD58CxszQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Z1RGllAp; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1736913558; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=sLPV+YjmBUB7qzPZOw2oCEKHmFVeZyvMf7EqOBBlrrQ=;
-	b=Z1RGllAp6JlgwNT+kR1iUYdVwdql1nnuCnHbEXG2bvnz3YEeJ44tyI0tb5adKQp32swL01W2CpoUSrZm90CPDi6ley0N+pyx0gciBb1RagaTb5XWXG4l01dkTYPyEyIh8ztajJN4DgWaEovXvgPnLB2oRm+TKyo9N0rudylFH10=
-Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNh5jLY_1736913554 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 15 Jan 2025 11:59:15 +0800
-Message-ID: <7b482de1-fa19-45d6-bd05-f1c3ebb77192@linux.alibaba.com>
-Date: Wed, 15 Jan 2025 11:59:13 +0800
+	s=arc-20240116; t=1736921429; c=relaxed/simple;
+	bh=z4VHK5uGowUa8n6Wog/xwzapsHoZeeV3ojloTxWM0GQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iBGu24MEr9pJW1IoeejZzLjnqGYvAwHjxUxFoIBffFN9d3B1Wv9nSQRFCU2WMV097KX86fytOy7RvOjim0m4K8yS6lCqYcSLSS96Z6bcX58jMbng5j4xb3G9a/ETBgfp0V9U4eQxrB5SdEMzLsOkMBW1lh83Z+PigO9Mu/HbK4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Mjuq66HM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F1tdxs027718;
+	Wed, 15 Jan 2025 06:10:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+wZ9OFW6Tocm/ovdJVpmpMjm4fWamKruQF9KhEGEvys=; b=Mjuq66HM4wiSIAag
+	AaPNNDHXCkLYyISdbidG27oa8U2bplL0Ssk3Kk/iO57rbCU1EGXx2bPREk6KmMVs
+	a3x4Mbqj/6bKxJ7VH8dBZZTwvD4disQYyGm7MqM30gxiyp5pDpgAHE05FtE1OV7g
+	yqacfl/Xle3NEscABuuT2m228E157NeV8Ot77TDIM4iCAtvU7iibAZqxBL+OO48n
+	4esSuRzURythA42+Hs98eMCCwrDZc7llKk/hzN6WVI5OQIrXTQs8R5vQP4ZwvnDr
+	jDCmWFGFLr2ylSkgtpbdgcnPkJhANWYrgCQeWzGM1e0ahbppHtqtAphR795ojypd
+	dCrigQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4463sm0g8w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 06:10:15 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50F6ADsi021363
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 06:10:14 GMT
+Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 Jan
+ 2025 22:10:08 -0800
+Message-ID: <de564e46-4a6e-4393-b754-34b35bae5599@quicinc.com>
+Date: Wed, 15 Jan 2025 11:40:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,169 +65,80 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>, Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
- <20250114214103.6b45d30d@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250114214103.6b45d30d@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
+ controllers
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <quic_srichara@quicinc.com>
+References: <20241213134950.234946-1-quic_mmanikan@quicinc.com>
+ <20241213134950.234946-5-quic_mmanikan@quicinc.com>
+ <Z3eJQyJXSBG+oFF4@hu-varada-blr.qualcomm.com>
+Content-Language: en-US
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+In-Reply-To: <Z3eJQyJXSBG+oFF4@hu-varada-blr.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3_2duaB9QtO-ValdXUL5KxjW83haJFRj
+X-Proofpoint-ORIG-GUID: 3_2duaB9QtO-ValdXUL5KxjW83haJFRj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-15_02,2025-01-13_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=713
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501150043
 
 
 
-在 2025/1/15 10:41, Steven Rostedt 写道:
-> On Wed, 15 Jan 2025 09:37:53 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+On 1/3/2025 12:22 PM, Varadarajan Narayanan wrote:
+> On Fri, Dec 13, 2024 at 07:19:50PM +0530, Manikanta Mylavarapu wrote:
 > 
->> +#define CREATE_TRACE_POINTS
->> +#include "trace.h"
+> [ .  .  . ]
+> 
+>> +&pcie2_phy {
+>> +	status = "okay";
+>> +};
 >> +
->>   /* The following routines constitute the bulk of the
->>      hotplug controller logic
->>    */
->> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->>   	case ON_STATE:
->>   		ctrl->state = POWEROFF_STATE;
->>   		mutex_unlock(&ctrl->state_lock);
->> -		if (events & PCI_EXP_SLTSTA_DLLSC)
->> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
->>   			ctrl_info(ctrl, "Slot(%s): Link Down\n",
->>   				  slot_name(ctrl));
->> -		if (events & PCI_EXP_SLTSTA_PDC)
->> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->> +					   slot_name(ctrl),
->> +					   PCI_HOTPLUG_LINK_DOWN);
-> 
-> Hmm, can't you just pass in the ctrl pointer to the tracepoint?
-> 
-> 			trace_pci_hp_event(ctrl, PCI_HOTPLUG_LINK_DOWN);
-> 
->> +		}
->> +		if (events & PCI_EXP_SLTSTA_PDC) {
->>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->>   				  slot_name(ctrl));
->> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->> +					   slot_name(ctrl),
->> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
->> +		}
->>   		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
->>   		break;
->>   	default:
->> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->>   					      INDICATOR_NOOP);
->>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->>   				  slot_name(ctrl));
->> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->> +					   slot_name(ctrl),
->> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
->>   		}
->>   		mutex_unlock(&ctrl->state_lock);
->>   		return;
->> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->>   	case OFF_STATE:
->>   		ctrl->state = POWERON_STATE;
->>   		mutex_unlock(&ctrl->state_lock);
->> -		if (present)
->> +		if (present) {
->>   			ctrl_info(ctrl, "Slot(%s): Card present\n",
->>   				  slot_name(ctrl));
->> -		if (link_active)
->> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
->> -				  slot_name(ctrl));
->> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->> +					   slot_name(ctrl),
->> +					   PCI_HOTPLUG_CARD_PRESENT);
->> +		}
->> +		if (link_active) {
->> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
->> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->> +					   slot_name(ctrl),
->> +					   PCI_HOTPLUG_LINK_UP);
->> +		}
->>   		ctrl->request_result = pciehp_enable_slot(ctrl);
->>   		break;
->>   	default:
->> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
->> new file mode 100644
->> index 000000000000..1415ac505cb5
->> --- /dev/null
->> +++ b/drivers/pci/hotplug/trace.h
->> @@ -0,0 +1,45 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
->> +#define _TRACE_HW_EVENT_PCI_HP_H
+>> +&pcie2 {
+>> +	pinctrl-0 = <&pcie2_default_state>;
+>> +	pinctrl-names = "default";
 >> +
->> +#include <linux/tracepoint.h>
+>> +	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
+>> +	status = "okay";
+>> +};
+> 
+> pcie2 should come before pcie2_phy
+> 
+
+Okay, i will update in the next version.
+
 >> +
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM pci
+>> +&pcie3_phy {
+>> +	status = "okay";
+>> +};
 >> +
->> +TRACE_EVENT(pci_hp_event,
+>> +&pcie3 {
+>> +	pinctrl-0 = <&pcie3_default_state>;
+>> +	pinctrl-names = "default";
 >> +
->> +	TP_PROTO(const char *port_name,
->> +		 const char *slot,
->> +		 const int event),
->> +
->> +	TP_ARGS(port_name, slot, event),
->> +
->> +	TP_STRUCT__entry(
->> +		__string(	port_name,	port_name	)
->> +		__string(	slot,		slot		)
->> +		__field(	int,		event	)
+>> +	perst-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
+>> +	status = "okay";
+>> +};
 > 
-> Then the above would be:
-> 
-> 	TP_PROTO(struct controller *ctrl, int event),
-> 
-> // don't really need a const int there
-> 
-> 	TP_ARGS(ctrl, event),
-> 
-> 	TP_STRUCT__entry(
-> 		__string(	port_name,	pci_name(ctrl->pcie->port)	)
-> 		__string(	slot,		slot_name(ctrl)			)
-> 		__field(	int,		event				)
-> 
-> and everything else could be the same.
+> same here.
 
-Maybe it's not a good idea.
+Okay, i will update in the next version.
 
-I think pci_hp_event is a generic event for pciehp, shpchp, octep_hp, etc. But
-each hotplug driver has different `struct controller` and slot_name(). For
-example:
-
-// drivers/pci/hotplug/pciehp.h
-static inline const char *slot_name(struct controller *ctrl)
-{
-	return hotplug_slot_name(&ctrl->hotplug_slot);
-}
-
-// drivers/pci/hotplug/shpchp.h
-static inline const char *slot_name(struct slot *slot)
-{
-	return hotplug_slot_name(&slot->hotplug_slot);
-}
-
-So, IMHO, pass port_name and slot_name from each driver is more simple.
-
-+ @Lukas for hotplug part.
-
-> 
-> -- Steve
-> 
-> 
-
-Thanks.
-
-Best Regards,
-Shuai
-
+Thanks & Regards,
+Manikanta.
 
