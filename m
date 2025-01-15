@@ -1,73 +1,76 @@
-Return-Path: <linux-pci+bounces-19891-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19892-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E63ADA12430
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 13:55:09 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9815DA12457
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 14:04:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2464416492B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 12:55:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 073B67A0600
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 13:04:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85CAC241683;
-	Wed, 15 Jan 2025 12:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fKptHkba"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3EC2459BD;
+	Wed, 15 Jan 2025 13:04:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469671E9911
-	for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 12:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F802459B0;
+	Wed, 15 Jan 2025 13:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736945642; cv=none; b=o4Ot0YS4C07PcAATEmmBJChdHRCE0HChyHuQ6gsRrk4StJE8pn2oTmEWsog72EA/jsFmapwphtFzPESm/1785ZKIwgZF8fQc73MdMmJDTf0JcPkvywhhNKcOiivke+13vF7++6ykTlVd3F/s/ZP5Jnu+fzgtGbIYOeldM0SE74g=
+	t=1736946251; cv=none; b=sXweyiKQ9NrgoeW3qHNP65lukjbakO6feiy3oVAQtzqmKioG65RSXJOyps9KRqrgGXVZ9aQxSpj20M+ESqfIhfETEQjMggEaAwj+aPWHROzaBcM47PAhuksRcracsdOEsEnGqb2dfH68Nb/3ayMoHibfHUfEYVgHddfEOzZuMSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736945642; c=relaxed/simple;
-	bh=KYBTSrU4D0P9uPuMhMszKxKquA7FVkeKmsXmnMzabe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IIX37T2rZ1+rv29ip5jiktNvaS5ZVlGNPTaf5ULpwoPHFZjxvmBBU9ke3dN91deui8qzUQj11PaqK+8C8Nqvnxz6W/eX6mfr4v66uuyjh1t9AjNtAkbIgF60nnPTLnUq0BI5lzGRAropMMZOh6zPrMO0RluzQGnktZEHv6xXkJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fKptHkba; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736945640; x=1768481640;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=KYBTSrU4D0P9uPuMhMszKxKquA7FVkeKmsXmnMzabe4=;
-  b=fKptHkbaqFrzSLmXC2OGrPZ8MgHL6kkfB2TkZ8+D9C8ewhNoSFMiarwS
-   nKG747Qzai1AZhsWr7P1qojzB4JfYIteMoiQmJ5eh1Cs3wzqnEqvlfFuN
-   saItG024PFq7ehPQ/+tjJCrzFzPYqFNjwSaCusOQE+4wNvpWVy8g4jd6W
-   njKqSQvGmb1ZDdDqfIr61wgpBjqFODHNCox5w/mZrfFD8BpvN53d9Ytd1
-   KZKlI1gaiZOILHm44cIFfgc6zQ2HwzVw7YKD8r8UgVhmOAYgfX/JIyFe4
-   eDLJNPTwCLL+yzE6yCYzFrnsIdefqHGKvfU5jgFpXmttFe3xyq/bBq+h8
-   w==;
-X-CSE-ConnectionGUID: T70ZCkGUS02DAW5Gas1JFw==
-X-CSE-MsgGUID: Q6hJy7goSqatqnq65kzpqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="54820886"
-X-IronPort-AV: E=Sophos;i="6.13,206,1732608000"; 
-   d="scan'208";a="54820886"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 04:53:59 -0800
-X-CSE-ConnectionGUID: 0A3XcKV9TOyUZDrbRP1XpA==
-X-CSE-MsgGUID: yx+PLy25RLWu97qnJqpJfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="128385402"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 15 Jan 2025 04:53:58 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tY2uC-000QLN-0W;
-	Wed, 15 Jan 2025 12:53:56 +0000
-Date: Wed, 15 Jan 2025 20:53:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org
-Subject: [pci:next 15/20] drivers/pci/controller/dwc/pci-imx6.c:1218:12:
- warning: 'imx_pcie_cpu_addr_fixup' defined but not used
-Message-ID: <202501152029.fuNA3kqE-lkp@intel.com>
+	s=arc-20240116; t=1736946251; c=relaxed/simple;
+	bh=FbLUcEIiJh+jtgdTTb4glrRZOazsjj7x/E+5iF5lUbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jXW7KTMcnZzTPu2kgVrqqQ7RYbM+o0i00IRJPFt1jMeetrJGSoSHv8iURW2U8pkiNV5x2EPrYGWt02dkva+QTY7G/QmywxgH5m+4kCBryZOdKLNC3MD+vKvMvmZBBZnHYzxgnpV0ZP3U8n1FenogqbB90xYLiHVr8St13vbL6EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-219f8263ae0so110322035ad.0;
+        Wed, 15 Jan 2025 05:04:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736946249; x=1737551049;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cU3e/n6KhYgwGmV111UKdccXNVZHL0iNnBKvqCJS5vk=;
+        b=Fn68I4i9tpMUU65/X51XdFj7u1YJsOt5lcnJzXHWiHfoXgw18ZrjiKfJLyQknlTjYw
+         nF0Q6E77EZl4bQzRMNBPuaNAWsoSax9guJ14UZyvq4Mu+uFQMY9SXlkKeKqI+YhcEtmw
+         0v1orrafaUluazEgpHmeFEES8sbXfFnnR9cST0b42fWrf5lrBEQQASdWsFLz/RiUzy2f
+         vIKuRy9Pd0R6z0+2XYtQJc+ParSyKO2KHuJWryZEb49osGm35RSBGTeUI8MeFqgR5sgo
+         AybgET8FZMOCl6zhvne/x1Z/SCNjQkrF661Az9MqgjjXj9b5lJnX+EqYPYA1YtgvvP4b
+         LG6A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/khHaybr66rW939u9n/8lyHxvrQFk4WHd8E29VBwC7WPYo+cXkn3QXz70x2HPi0AoTW8w/2qN7gVe@vger.kernel.org, AJvYcCUkEt0MESbFMf8WqY/Jt8EL11ADcy4yOE+ppTrfMMuQKcm5DI8WGn+e3uVeHzvvyRylweiQER4AROje@vger.kernel.org, AJvYcCVfT4hIBi+xT1NRSjCSm8ea9GTnGQ0ELkVMdluFmsAo4xeUDUuW/r13mJhmS9+WeEF8Et22Xo1y3iO98Ifp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf6QzKxKjNdHUAHX5R5/EcoGESAqmFtUsv03O6BmK4DwT2uNZ1
+	CscaKLBF+2YzB3LswjuX37wJyeigZ57dcPxOIUjDGXfDpcMZSu+B
+X-Gm-Gg: ASbGncv3BmtoB+9KBCby5xgmKz7vKDQNTYQcoHASyvr1dyKFMVVEYLQNHoNG8vP+eFz
+	nWWPm7bUyLG/m4lO3C8TouPXroT45KKoz6fe4JvZ6zQWDwjO+Uz7Fx1L9o/2RGYbns7RUvS0Egw
+	fc0MOPn9G+qBrcKW9u6OzJ1zayyuzjjA8IdXHMrQwuiC49ATK/IG8vt6ooodXQrAE49cBIuDnSn
+	PNvoZBkJ6ITsLsCqp+okmTYEGy0LnUzqO+68fPXZLTjauMsM1A3KT0Bz3uUEweqArTDxruknXVe
+	BSlY/5i4ntrbrJw=
+X-Google-Smtp-Source: AGHT+IGJ0xkBFQDRoR8kdZYAlnl/B+msy18AyfBuH1HwSbOm/KPPtntHdjqM9javko0XPog/mwl9og==
+X-Received: by 2002:a17:902:da84:b0:216:501e:e314 with SMTP id d9443c01a7336-21a83f54b4bmr429475315ad.20.1736946249035;
+        Wed, 15 Jan 2025 05:04:09 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f219f0dsm81875515ad.139.2025.01.15.05.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 05:04:08 -0800 (PST)
+Date: Wed, 15 Jan 2025 22:04:06 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: l.stach@pengutronix.de, bhelgaas@google.com, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+	frank.li@nxp.com, s.hauer@pengutronix.de, festevam@gmail.com,
+	imx@lists.linux.dev, kernel@pengutronix.de,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/10] A bunch of changes to refine i.MX PCIe driver
+Message-ID: <20250115130406.GS4176564@rocinante>
+References: <20241126075702.4099164-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,62 +79,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20241126075702.4099164-1-hongxing.zhu@nxp.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-head:   19501c8805572d695bc694a761b3e61f0aa32ae4
-commit: 7a6f84fed4abbee48ea03897340040dfced9ceee [15/20] Merge branch 'controller/imx6'
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250115/202501152029.fuNA3kqE-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250115/202501152029.fuNA3kqE-lkp@intel.com/reproduce)
+Hello,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501152029.fuNA3kqE-lkp@intel.com/
+> A bunch of changes to refine i.MX PCIe driver.
+> - Add ref clock gate for i.MX95 PCIe.
+>   The changes of clock part are here [1], and had been applied by Abel.
+>   [1] https://lkml.org/lkml/2024/10/15/390
+> - Clean i.MX PCIe driver by removing useless codes.
+>   Patch #3 depends on dts changes. And the dts changes had been applied
+>   by Shawn, there is no dependecy now.
+> - Make core reset and enable_ref_clk symmetric for i.MX PCIe driver.
+> - Use dwc common suspend resume method, and enable i.MX8MQ, i.MX8Q and
+>   i.MX95 PCIe PM supports.
 
-All warnings (new ones prefixed by >>):
+Applied to controller/imx6 for v6.14, thank you!
 
-   drivers/pci/controller/dwc/pci-imx6.c: In function 'imx_pcie_cpu_addr_fixup':
-   drivers/pci/controller/dwc/pci-imx6.c:1224:42: error: 'IMX_PCIE_FLAG_CPU_ADDR_FIXUP' undeclared (first use in this function)
-    1224 |         if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
-         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pci-imx6.c:1224:42: note: each undeclared identifier is reported only once for each function it appears in
-   drivers/pci/controller/dwc/pci-imx6.c: At top level:
-   drivers/pci/controller/dwc/pci-imx6.c:1790:26: error: 'IMX_PCIE_FLAG_CPU_ADDR_FIXUP' undeclared here (not in a function)
-    1790 |                          IMX_PCIE_FLAG_CPU_ADDR_FIXUP |
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/pci/controller/dwc/pci-imx6.c:1218:12: warning: 'imx_pcie_cpu_addr_fixup' defined but not used [-Wunused-function]
-    1218 | static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
-         |            ^~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/imx_pcie_cpu_addr_fixup +1218 drivers/pci/controller/dwc/pci-imx6.c
-
-835a345b18b013c Richard Zhu 2022-07-14  1217  
-c2699778e6be475 Richard Zhu 2024-07-29 @1218  static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
-c2699778e6be475 Richard Zhu 2024-07-29  1219  {
-c2699778e6be475 Richard Zhu 2024-07-29  1220  	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
-c2699778e6be475 Richard Zhu 2024-07-29  1221  	struct dw_pcie_rp *pp = &pcie->pp;
-c2699778e6be475 Richard Zhu 2024-07-29  1222  	struct resource_entry *entry;
-c2699778e6be475 Richard Zhu 2024-07-29  1223  
-c2699778e6be475 Richard Zhu 2024-07-29  1224  	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
-c2699778e6be475 Richard Zhu 2024-07-29  1225  		return cpu_addr;
-c2699778e6be475 Richard Zhu 2024-07-29  1226  
-c2699778e6be475 Richard Zhu 2024-07-29  1227  	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-c2699778e6be475 Richard Zhu 2024-07-29  1228  	if (!entry)
-c2699778e6be475 Richard Zhu 2024-07-29  1229  		return cpu_addr;
-c2699778e6be475 Richard Zhu 2024-07-29  1230  
-c2699778e6be475 Richard Zhu 2024-07-29  1231  	return cpu_addr - entry->offset;
-c2699778e6be475 Richard Zhu 2024-07-29  1232  }
-c2699778e6be475 Richard Zhu 2024-07-29  1233  
-
-:::::: The code at line 1218 was first introduced by commit
-:::::: c2699778e6be4757ee0b16449ab8777c6b46e6d0 PCI: imx6: Add i.MX8Q PCIe Root Complex (RC) support
-
-:::::: TO: Richard Zhu <hongxing.zhu@nxp.com>
-:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	Krzysztof
 
