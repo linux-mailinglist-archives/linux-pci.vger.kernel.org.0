@@ -1,123 +1,153 @@
-Return-Path: <linux-pci+bounces-19922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 856B5A12ACB
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 19:23:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7452BA12D10
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 22:00:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FF823A63B8
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 18:22:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80E6C165E8E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 21:00:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FAE9199244;
-	Wed, 15 Jan 2025 18:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF6421DAC9D;
+	Wed, 15 Jan 2025 21:00:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2MO15j+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLrz2I58"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7401D24A7D5;
-	Wed, 15 Jan 2025 18:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4511DA60F;
+	Wed, 15 Jan 2025 21:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736965376; cv=none; b=KwjMH5YMwVQAb1w8kER3J6vSaqTxrNmyNwqxHbAM5I1wQbbxGxS7feHbh3U1D0BO2uz/1LG4XFe+V2DWB8baKOZT2nTxtDGZfJxVEsJQKuMVWLjfL+bTNQRd2j0yKYbC8Zm0tbLa85Itkk/pclrmpGS8b6Z5f6j9Fq6IUQlLFFo=
+	t=1736974812; cv=none; b=OKO7qgN43UjfACEybSiylAXNpkXzMliTJzvZCrIRMHMxOazQCqNh4vliSJzlfDZ9VqZkgvWHxndtgrkzGPG6elfyeHAcOyTqMjAxNBoW2DtufNrXg12Ax5LH0vw4/1HGC5k1UW8CHv3Vv1SrN1PT+cC4X+KvYKgfyXJjkVFBlQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736965376; c=relaxed/simple;
-	bh=wtFOqkBVbdu6zNF6h4YnkKJZaUS0WkW/Wxv1qDA9ygA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qTC7D1YHL4emieasR22UKx+sstgfEm/fUu1W5mufPUnAiU/LGaBDZExihjc5yaW+myWUTR3aD6oApdo/Q5700lc5tcPkEU2CykmIxF5jt3sVzxQM84DhCGh4eN1Y+mI2pZhtvZ3o2F02U1Gcug44EM6haogjEz/c4vpJNpS8YL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2MO15j+; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5d982de9547so53764a12.2;
-        Wed, 15 Jan 2025 10:22:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736965373; x=1737570173; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wtFOqkBVbdu6zNF6h4YnkKJZaUS0WkW/Wxv1qDA9ygA=;
-        b=R2MO15j+VBYNeZPGQDw+4s6Dcmc4taiWJ2IHRZ1txxCqyHfW/RcUm8X0rc5say7Fue
-         QlwmcFMmeyVRVU63WikdxEzT6bfILzRu/WgxDcIE9PrhU+tHuHLrJasqzrPHKRW7gUDo
-         vWNil1mpW+gPPzwyiZpxGxn8LoHWn+iHInLdMUdvtxBYPGCbUSg3hxwrVjZcvZrE16vb
-         wcJoNhsDIwncWvFo5o+ynH6Tiro3+IJ02/dh4lKwQeSAhYiHGn23dKL4UAqU8p7A/LgJ
-         dfKX8lP1u1iRpXmZ6136EQQddeKv8dw5im5AB7/IUWsJHG+Qc9XShFj73cezPWtq4bE0
-         Fsdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736965373; x=1737570173;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wtFOqkBVbdu6zNF6h4YnkKJZaUS0WkW/Wxv1qDA9ygA=;
-        b=oiXF4xacgbj0ZnIvi8HvnamjHHVde9bDqnKE03+Ld2/gidbtcN5XqAskn1i+Ij4LH9
-         XLCnygSjmhRmk0LZ0OhRbTCK6d7BYTtBVVOiLDA9YRiQDxmktkThUiVEQRRYyPnCk1Jj
-         cJAVQI8ZRecYRaH1q4J+CMu0CGQnSge3cD0uyUddDwt18mKeQIZseaPYClZizpZwno/D
-         MJAjOhQ+MpLdqTcDFA2VQ6Ow9Pm3Bz4lbt7GJ4zI8Fly4qf9q19Lr5Ax78mAxTsJahw1
-         e8ulrBt+QpCfrnXENRpMPoy5nZXCv5d0T5fodPCXjs7iLW5RKqcd8Qv2/8YdrVTht1Dt
-         ouAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpxs7w291b66B+pwlvdy5XuvxYUabmiNWeCftNoNFzu4ImOepSeSDAfjdv8tvfN9S4ImcLFqjzP2Cy@vger.kernel.org, AJvYcCWF0c3EQrwm2IuiBIhfn31l7S9fj6y8MG1pjSCgE6xMLty9MrY/Rh8HFFLgugNVAqxGtkCnZGaX4GlQIco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyblklhnOebYAvpTsVsrZ0dvbYiKxhC4Vcc3RTJMGn/nOEETNP
-	T5of/hD17nUwXrNPRzKJ9pWCC+rxrVh6fZGHQZAQopF8OfCxvqByHWSO+8i+w01JSBqOG0p0YXQ
-	UHhjcO+UmJcxVMKkGw/+u6cnGt3A=
-X-Gm-Gg: ASbGncs6gMHfa7hFSCzBqor4FNlhIuOLzmSb2HE6DbolBFkOWv8IGsyFiEt6tCgkXZB
-	2XTg1ELDKjo+UKZVEaVp7wP2DajtlwnAfMciXBw==
-X-Google-Smtp-Source: AGHT+IH4ZBPCX1+Zs+u6aD4i/Mk+EEOp4Zxu5uuiRB2111BunzMgKFahuNg0HGJ0e/tCZoud1qbk+dK1yM9Wb1ed+A8=
-X-Received: by 2002:a05:6402:4023:b0:5d3:ba97:527e with SMTP id
- 4fb4d7f45d1cf-5d972e47717mr27159444a12.25.1736965370851; Wed, 15 Jan 2025
- 10:22:50 -0800 (PST)
+	s=arc-20240116; t=1736974812; c=relaxed/simple;
+	bh=RlPD0kUWIPW5R0PKSVU27JaRoL2dMi9vvo/1Qhhlx7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MCUbaDarjwH5dmHKNN+ciLjZ7+83Bw1jm8n+TM/OCKldju5m8fihkwUL5m1XekXpa/RdZWnHKt+zA3u+/QqDfCbhPUVdQPIvdAB17erujKj82N/6aw4ICBr4soO8j/7aIIMkBrOSTshVX2/0upKcimjLQnuA43FU/eIohwmaAyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLrz2I58; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDFEC4CED1;
+	Wed, 15 Jan 2025 21:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736974811;
+	bh=RlPD0kUWIPW5R0PKSVU27JaRoL2dMi9vvo/1Qhhlx7Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=JLrz2I58zheY19rQK47qVvp+t77dq2WMCZsCyasfRIy09JD1KERUCk98ZXRnBnnvG
+	 o7i50NxFKCdsWe97sGCjZhlF6XwW1zEDJRH0wrr0gFCuGRAWnkC65twQLcDXMPuFCP
+	 dUsqKh2CRhaPyNAWNMp+Nqi/XqvCIcJ8FWTpAKMeCg5a3W6E+pLdwuwFwOi77PL86R
+	 hqoA1YQBuH6l7LcEbZ5tawJpXZ4cBt72pebRmdZ1982K6PkrkOMgDLAOnQg+B40PJC
+	 6aj1IEJuKx5Ry8+YO4jwPUQZk+LO8utjRG6HdPnM2cq+Y53kNwPOAoch6Mlx9YCGqg
+	 uQwV5KiA3sbsQ==
+Date: Wed, 15 Jan 2025 15:00:10 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, p.zabel@pengutronix.de, robin.murphy@arm.com,
+	will@kernel.org
+Subject: Re: [PATCH v9 0/2] PCI: add enabe(disable)_device() hook for bridge
+Message-ID: <20250115210010.GA551375@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115174012.bdny6nxxr4tuzyis@thinkpad> <20250115174834.GA538101@bhelgaas>
-In-Reply-To: <20250115174834.GA538101@bhelgaas>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Wed, 15 Jan 2025 23:52:33 +0530
-X-Gm-Features: AbW1kvZ50fXNCVlx0U9GjzuVih3n2_IhFXemWMJd-_PuYqVJD6pFzYzcMcNZWiA
-Message-ID: <CANAwSgQ2-r5gHmNwf9YTWXEU-mQ6dVpjFV4gzM+sVGsTUit7ew@mail.gmail.com>
-Subject: Re: [PATCH linux-next v1] PCI: rockchip: Improve error handling in
- clock return value
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86bjw8wj05.wl-maz@kernel.org>
 
-Hi Mani/ Bjon,
+On Wed, Jan 15, 2025 at 08:58:50AM +0000, Marc Zyngier wrote:
+> On Tue, 14 Jan 2025 22:33:41 +0000,
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > On Tue, Jan 14, 2025 at 03:37:07PM -0500, Frank Li wrote:
+> > > Some system's IOMMU stream(master) ID bits(such as 6bits) less than
+> > > pci_device_id (16bit). It needs add hardware configuration to enable
+> > > pci_device_id to stream ID convert.
+> > > 
+> > > https://lore.kernel.org/imx/20240622173849.GA1432357@bhelgaas/
+> > > This ways use pcie bus notifier (like apple pci controller), when new PCIe
+> > > device added, bus notifier will call register specific callback to handle
+> > > look up table (LUT) configuration.
+> > > 
+> > > https://lore.kernel.org/imx/20240429150842.GC1709920-robh@kernel.org/
+> > > which parse dt's 'msi-map' and 'iommu-map' property to static config LUT
+> > > table (qcom use this way). This way is rejected by DT maintainer Rob.
+> > > 
+> > > Above ways can resolve LUT take or stream id out of usage the problem. If
+> > > there are not enough stream id resource, not error return, EP hardware
+> > > still issue DMA to do transfer, which may transfer to wrong possition.
+> > > 
+> > > Add enable(disable)_device() hook for bridge can return error when not
+> > > enough resource, and PCI device can't enabled.
+> > > 
+> > > Basicallly this version can match Bjorn's requirement:
+> > > 1: simple, because it is rare that there are no LUT resource.
+> > > 2: EP driver probe failure when no LUT, but lspci can see such device.
+> > > 
+> > > [    2.164415] nvme nvme0: pci function 0000:01:00.0
+> > > [    2.169142] pci 0000:00:00.0: Error enabling bridge (-1), continuing
+> > > [    2.175654] nvme 0000:01:00.0: probe with driver nvme failed with error -12
+> > > 
+> > > > lspci
+> > > 0000:00:00.0 PCI bridge: Philips Semiconductors Device 0000
+> > > 0000:01:00.0 Non-Volatile memory controller: Micron Technology Inc 2100AI NVMe SSD [Nitro] (rev 03)
+> > > 
+> > > To: Bjorn Helgaas <bhelgaas@google.com>
+> > > To: Richard Zhu <hongxing.zhu@nxp.com>
+> > > To: Lucas Stach <l.stach@pengutronix.de>
+> > > To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > To: Krzysztof Wilczyński <kw@linux.com>
+> > > To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > To: Rob Herring <robh@kernel.org>
+> > > To: Shawn Guo <shawnguo@kernel.org>
+> > > To: Sascha Hauer <s.hauer@pengutronix.de>
+> > > To: Pengutronix Kernel Team <kernel@pengutronix.de>
+> > > To: Fabio Estevam <festevam@gmail.com>
+> > > Cc: linux-pci@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: imx@lists.linux.dev
+> > > Cc: Frank.li@nxp.com \
+> > > Cc: alyssa@rosenzweig.io \
+> > > Cc: bpf@vger.kernel.org \
+> > > Cc: broonie@kernel.org \
+> > > Cc: jgg@ziepe.ca \
+> > > Cc: joro@8bytes.org \
+> > > Cc: l.stach@pengutronix.de \
+> > > Cc: lgirdwood@gmail.com \
+> > > Cc: maz@kernel.org \
+> > > Cc: p.zabel@pengutronix.de \
+> > > Cc: robin.murphy@arm.com \
+> > > Cc: will@kernel.org \
+> > > Cc: Robin Murphy <robin.murphy@arm.com>
+> > > Cc: Marc Zyngier <maz@kernel.org>
+> > > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > 
+> > Applied to pci/controller/imx6 for v6.14, thanks!  And thanks for your
+> > patience.
+> 
+> While you're at it, could you please consider [1], which builds on top
+> of the same infrastructure to remove the Apple PCIe IOMMU hack?
+> 
+> [1] https://lore.kernel.org/linux-pci/20241204150145.800408-1-maz@kernel.org/
 
-On Wed, 15 Jan 2025 at 23:18, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Jan 15, 2025 at 11:10:12PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Jan 06, 2025 at 09:00:38PM +0530, Anand Moon wrote:
-> >
-> > Subject should include the word 'fix' not 'improve'
-> >
-> > > Updates the error message to include the actual return value of
-> >
-> > s/Updates/Update (imperative form)
-> >
-> > > devm_clk_bulk_get_all, which provides more context for debugging
-> > > and troubleshooting the root cause of clock retrieval failures.
-> >
-> > Btw, it is not just updating the error message, it also returns the
-> > actual error code.
-correct.
->
-> Already squashed into
-> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=abdd4c8ea7d7,
-> sorry I didn't mention that here.
->
-Thanks,
-
-I will focus on improving my communication skills and delivering impactful
-commit messages in the future.
-
-Thank
--Anand
+Done, thanks for the reminder!
 
