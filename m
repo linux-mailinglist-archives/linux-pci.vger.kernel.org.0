@@ -1,97 +1,102 @@
-Return-Path: <linux-pci+bounces-19866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 978F5A11F53
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 11:26:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 144CBA1222B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 12:12:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E35A7A2BFB
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 10:26:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABFF03A86D4
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2025 11:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DB2A231A49;
-	Wed, 15 Jan 2025 10:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A096A20764C;
+	Wed, 15 Jan 2025 11:12:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758C01F9F41;
-	Wed, 15 Jan 2025 10:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB4E20F999;
+	Wed, 15 Jan 2025 11:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736936802; cv=none; b=hCACBALuePhnKUvAmck8G9vSmHLKryLCrZI9pAfngus7UPhVQnABxfME6T88/CE69hKyysvlHdJoeTrLhpOEJYsYgKxp0rGu5kbZUMo9Zu9quJsQSuN2NsisOovKiKIpdx0f1GPSZiaadM+NAGTqne+Hq7epZTrGyvQSkKhUIF4=
+	t=1736939545; cv=none; b=DyxyrL1F7yMvN5OBwMUaS7oFciRe40m9fDXXr7twMTWG8CfVo23cCut6faZMcP8pkthMn2Zu1J1lxyGUnlKGbaO0eqGJ4Mm90KhsLyNs05tSutPcIaKaSM+0rLbaW8F3eqNAQdpBvbpSnShrDrN1wL9WOaTQcn427twvwmSRXgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736936802; c=relaxed/simple;
-	bh=OH42/fP7OUQN7pGxUSj67l+ZT4GC8a5m1Ndy2FdYJwQ=;
+	s=arc-20240116; t=1736939545; c=relaxed/simple;
+	bh=dMdJyo2ocCibz5X8C6KWjWTCyqIS+CPtK9iGS3MlpcE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBvO49+cGIqrjIpXqbEeps4rtNEN4hzFZwO1vSUwhWc8mA9QMiCXvMenntiy3Koa5vHo/ZtgIDLKX5VVGPCjtLfd9wM9Vfay+lkPhpFDPxEA+zrPDdkgTSDS7ygSgsGD3m6ZvmJlXaiE0wnCG6fAHgrr35ktsNJAoBbn7MBnXbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 768EB100DE9E0;
-	Wed, 15 Jan 2025 11:18:47 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 50675577CC4; Wed, 15 Jan 2025 11:18:47 +0100 (CET)
-Date: Wed, 15 Jan 2025 11:18:47 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jiwei <jiwei.sun.bj@qq.com>, macro@orcam.me.uk, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	guojinhui.liam@bytedance.com, helgaas@kernel.org,
-	ahuang12@lenovo.com, sunjw10@lenovo.com
-Subject: Re: [PATCH 2/2] PCI: Fix the PCIe bridge decreasing to Gen 1 during
- hotplug testing
-Message-ID: <Z4eLh24IkDrAm6cm@wunner.de>
-References: <tencent_B9290375427BDF73A2DC855F50397CC9FA08@qq.com>
- <3fe7b527-5030-c916-79fe-241bf37e4bab@linux.intel.com>
- <tencent_4514111F8A3EF9408C50D9379FE847610206@qq.com>
- <3d7c3904-a52e-9602-3ad2-29b5981729c7@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZV0gp0s6MBAVdgGQBuHSdqGfJwTyisionUKSRGluWbhCGZBBwVYQ9FEhOW5nziE6tk7rLz32jgEZ6besK3tLoEK5WifSiVUIek6h0v2oDkA6dD5x+uZQOutRU64r/4SSilspLJO6qcmvD1ldASHoRE9Aff7frCQ8f2wOki8RDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21654fdd5daso111719995ad.1;
+        Wed, 15 Jan 2025 03:12:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736939543; x=1737544343;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YWwH1bDPMW4sIvL8kmJCxcSzCH8Ejrs1sg9Vv46J164=;
+        b=aZzKG5+7JIzXVh2dEw+m/Q6KwEhZP+oXr3tw2L/y+ghiPwHtrNQeoctZ7vd1ZR64LI
+         0hK7QrQLHMnzvVIjr5wC+Gd8IRM3q+Zw1fNshIv9s3kPDttmnUe8DGjI5smNyPdEmtsq
+         Caxwjtg0L5JoBt1s3qVJ0WHkiK8G91OiCnzkttQRzTovAvTjjtVwT895Z5+UcK7NeqB+
+         Me26f7MoWEHTMV/UkaVWH0+MLOBo5OYTR3/67daRCkaGj5YUo7bn+27SkwiQJY6DwJYD
+         lLFL6vivTWNkOHSZG7PRFGIUB74Zhf/GVTUjn2S5c8mN6o8M7Je6EnlUb9OPTBP9lb9V
+         gkEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpePSztA++PSzHOR4Vu9AMQtUeKzNnbUNFtJJ55XinT1O6CQeWaJTBP1YvdjZbOayw+cblH7vEBEo=@vger.kernel.org, AJvYcCVCsi/jT0mJiQdIG11RVfw0LtoVTghvvKkOY+Tr7HTlGzoDRI62934ohowfIjqVVQBt3ryOVpGXdxba@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+L7RB3IBrxi8Uq5Ag8spFwCY9lgU0nOhS1BGaES1/AGJOKiUc
+	2LA1VoJYX/9z4RJ4ytUeyI1Y5d3dYOpt7B2LgnEAm6apqeHd2gFm
+X-Gm-Gg: ASbGnctrwuUi8B7v8utV6caYtJa0hlh8bP/X20UXXoV38N8qpuzRZimDvZQSBNlOSD0
+	JcwZI0tYEihjqeNViDn2xIVcoXQzgOMQopmrm2VpKGraospVo/vZorkmR3ZOatNenRWuK619o91
+	L7l40Ia5sbz+G++zG+WbQbxIwrh/BshEveDtdY8zakzfREfTzI8+fnE2xcUA7B9WBfB8j6S/3MD
+	9VtRzFjsrtnjC/Qgrydc6pSXvab7bxA+AeGiM+cKUsz9+qqzrgMcyf3MbVKxe6yCkm9r0HflMzI
+	95fWtdAZ4M/7kB8=
+X-Google-Smtp-Source: AGHT+IHFoca7ZCISTDX0mGzInAWIQ58L8qkZmkBMA3Zf+oFefoTlL/1UC9F+En3y5YImzKRbiXnU4Q==
+X-Received: by 2002:a05:6a21:a4a:b0:1e1:c8f5:19ee with SMTP id adf61e73a8af0-1e88cfe2ce4mr44391726637.25.1736939543365;
+        Wed, 15 Jan 2025 03:12:23 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a31902b137bsm9540020a12.35.2025.01.15.03.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 03:12:22 -0800 (PST)
+Date: Wed, 15 Jan 2025 20:12:20 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] PCI: mediatek-gen3: mtk_pcie_en7581_power_up()
+ code
+Message-ID: <20250115111220.GA4176564@rocinante>
+References: <20250108-pcie-en7581-fixes-v6-0-21ac939a3b9b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d7c3904-a52e-9602-3ad2-29b5981729c7@linux.intel.com>
+In-Reply-To: <20250108-pcie-en7581-fixes-v6-0-21ac939a3b9b@kernel.org>
 
-On Tue, Jan 14, 2025 at 08:25:04PM +0200, Ilpo Järvinen wrote:
-> On Tue, 14 Jan 2025, Jiwei wrote:
-> > [  539.362400] ==== pcie_bwnotif_irq 269(stop running),link_status:0x7841
-> > [  539.395720] ==== pcie_bwnotif_irq 247(start running),link_status:0x1041
+Hello,
+
+> Minor fixes and code refactoring in mtk_pcie_en7581_power_up() routine
 > 
-> DLLLA=0
-> 
-> But LBMS did not get reset.
-> 
-> So is this perhaps because hotplug cannot keep up with the rapid 
-> remove/add going on, and thus will not always call the remove_board() 
-> even if the device went away?
-> 
-> Lukas, do you know if there's a good way to resolve this within hotplug 
-> side?
+> Changes in v6:
+> - remove mac_rst support for EN7581 since it is not needed by the SoC
+> - fix typos
+> - Link to v5: https://lore.kernel.org/r/20241130-pcie-en7581-fixes-v5-0-dbffe41566b3@kernel.org
 
-I believe the pciehp code is fine and suspect this is an issue
-in the quirk.  We've been dealing with rapid add/remove in pciehp
-for years without issues.
+Applied to controller/mediatek for v6.14, thank you!
 
-I don't understand the quirk sufficiently to make a guess
-what's going wrong, but I'm wondering if there could be
-a race accessing the lbms_count?
-
-Maybe if lbms_count is replaced by a flag in pci_dev->priv_flags
-as we've discussed, with proper memory barriers where necessary,
-this problem will solve itself?
-
-Thanks,
-
-Lukas
+	Krzysztof
 
