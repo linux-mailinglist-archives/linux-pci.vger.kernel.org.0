@@ -1,54 +1,50 @@
-Return-Path: <linux-pci+bounces-19939-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19940-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F687A13181
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 03:42:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F88BA1318F
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 03:51:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 653AB1684BC
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 02:41:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45D93164008
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 02:51:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB636374C4;
-	Thu, 16 Jan 2025 02:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08A7E78F40;
+	Thu, 16 Jan 2025 02:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcGWGV/n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B5FB24A7EE;
-	Thu, 16 Jan 2025 02:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79ABE555;
+	Thu, 16 Jan 2025 02:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736995314; cv=none; b=sjVBAhUPoApRRQEaa7r8y3RtWxOrTaKiLm7JaNCnN4e9mCJ+cKcsTRjBD3zy1rDtV6L6H+GsL4Hc8oxQ3ewB98PaFwgzW33rEkNR/Yy0bR/WtDxAkr72iGzF95Rz/hqR3SdCLgMbQAkFoCqCZ9rh+I8sAZe31wtikzS0G+cpBb8=
+	t=1736995859; cv=none; b=oFt579jMBy3/xLcPsvqaIimeUKoEmv3XZP6VgYFC6GJuT51Xuc62VVjUc+45VNGLZgXYGAJ8BznnM1sqpht0x+FwCjPOIIaVw60Fr1uvJJ5ouUHcR5ccHA6dLliqxM0HKFfpD54bhfvjE2yW0aPuieATYEQ1eEV9hzn8oDIHm0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736995314; c=relaxed/simple;
-	bh=Pm+axbHeP0nV/usgyJWkc8plA1L2nEaoLn6geLvLeNk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TRC6wyEeNKjnnVr2hmuPRrPyGaSQbh5h1OsGmT6Qu+V7H0TCztj2xcwUkYe0ELr+1G5xA6NbwZPsHArfL3em1gGtMiohNtY4KINrraj867z4nDSf48Dar5+94eN4WfwXK2OlscHXYz/E35w1Imgr8ZIbR80TKVLNmFs1teN8reQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 16 Jan 2025 11:41:51 +0900
-Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 9C0442006E93;
-	Thu, 16 Jan 2025 11:41:51 +0900 (JST)
-Received: from kinkan2.css.socionext.com ([172.31.9.51]) by m-FILTER with ESMTP; Thu, 16 Jan 2025 11:41:51 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.245.39])
-	by kinkan2.css.socionext.com (Postfix) with ESMTP id D7A20AB187;
-	Thu, 16 Jan 2025 11:41:50 +0900 (JST)
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [RESEND PATCH v1] misc: pci_endpoint_test: Fix irq_type to convey the correct type
-Date: Thu, 16 Jan 2025 11:41:45 +0900
-Message-Id: <20250116024145.2836349-1-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1736995859; c=relaxed/simple;
+	bh=+ZYNwZATOq0t2LdGXDouWYN7G+SKSyQoiBOOSmTuqyA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DCvA3da8HQCVMv7ptXMzVcoU3BnfkerDp15Mje5RNW/1HxhHWxsXZ/0sgw/nN1uUkEDPZ1tx0EbmuAFhiEY09zzEpX7U4fJZ47BwqL7IIgrf0uqoMWURWP8teHgeyLtDOrhumuVW88CZeIdLsOSgVjN7FCsc2MgpLPQUL4lHEIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcGWGV/n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EFFC4CED1;
+	Thu, 16 Jan 2025 02:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736995859;
+	bh=+ZYNwZATOq0t2LdGXDouWYN7G+SKSyQoiBOOSmTuqyA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=VcGWGV/nnfVGLM4fXGW5RSC/Xei+1ResxNcw3ICxmalD15Skcrz6hFpF4iJ97/asV
+	 fD3GEBmm5G6tw0DStQQEtaUi1hprYUF8WjLzzQtN+Hs4tVlq4cbvKPlEwYNP/PW9sO
+	 3ZlAMcNZrpX2p47LRcsqAGG+vHFfgHloDgjsSNH+17/Bx69su/JE59/U+OUsan7Jun
+	 EmXc9ekXUp6xxsR2sIY6fQtoOGLwNz/2ewU+LIowhYuBLzDQCFY241LrwcPmEKE9Nl
+	 3OEPo0h6xeqtMSnEnOA9/GEPsP6eK+npDHooDglX0bO4oVxployOg1NYctRcmL4nhJ
+	 amInC/r1aaanA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 712EE380AA5F;
+	Thu, 16 Jan 2025 02:51:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,51 +52,44 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] net: wwan: iosm: Fix hibernation by re-binding the driver
+ around it
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173699588213.987898.18343161167546299162.git-patchwork-notify@kernel.org>
+Date: Thu, 16 Jan 2025 02:51:22 +0000
+References: <e60287ebdb0ab54c4075071b72568a40a75d0205.1736372610.git.mail@maciej.szmigiero.name>
+In-Reply-To: <e60287ebdb0ab54c4075071b72568a40a75d0205.1736372610.git.mail@maciej.szmigiero.name>
+To: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Cc: m.chetan.kumar@intel.com, loic.poulain@linaro.org, ryazanov.s.a@gmail.com,
+ johannes@sipsolutions.net, bhelgaas@google.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ rafael@kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 
-There are two variables that indicate the interrupt type to be used
-in the next test execution, global "irq_type" and test->irq_type.
+Hello:
 
-The former is referenced from pci_endpoint_test_get_irq() to preserve
-the current type for ioctl(PCITEST_GET_IRQTYPE).
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-In pci_endpoint_test_request_irq(), since this global variable is
-referenced when an error occurs, the unintended error message is
-displayed.
+On Thu,  9 Jan 2025 00:33:50 +0100 you wrote:
+> Currently, the driver is seriously broken with respect to the
+> hibernation (S4): after image restore the device is back into
+> IPC_MEM_EXEC_STAGE_BOOT (which AFAIK means bootloader stage) and needs
+> full re-launch of the rest of its firmware, but the driver restore
+> handler treats the device as merely sleeping and just sends it a
+> wake-up command.
+> 
+> [...]
 
-And the type set in pci_endpoint_test_set_irq() isn't reflected in
-the global "irq_type", so ioctl(PCITEST_GET_IRQTYPE) returns the previous
-type. As a result, the wrong type will be displayed in "pcitest".
+Here is the summary with links:
+  - [v3] net: wwan: iosm: Fix hibernation by re-binding the driver around it
+    https://git.kernel.org/netdev/net-next/c/0b6f6593aa8c
 
-This patch fixes these two issues.
-
-Fixes: b2ba9225e031 ("misc: pci_endpoint_test: Avoid using module parameter to determine irqtype")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/misc/pci_endpoint_test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index e73b3078cdb6..854480921470 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -235,7 +235,7 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
- 	return true;
- 
- fail:
--	switch (irq_type) {
-+	switch (test->irq_type) {
- 	case IRQ_TYPE_INTX:
- 		dev_err(dev, "Failed to request IRQ %d for Legacy\n",
- 			pci_irq_vector(pdev, i));
-@@ -739,6 +739,7 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
- 	if (!pci_endpoint_test_request_irq(test))
- 		goto err;
- 
-+	irq_type = test->irq_type;
- 	return true;
- 
- err:
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
