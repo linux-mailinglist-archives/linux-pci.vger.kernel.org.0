@@ -1,174 +1,170 @@
-Return-Path: <linux-pci+bounces-19963-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19966-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A09E5A13B41
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 14:53:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61EA2A13BCE
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 15:10:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63AB93A64C5
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 13:52:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0CCF1882466
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 14:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC95022ACCF;
-	Thu, 16 Jan 2025 13:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2841F22B8C0;
+	Thu, 16 Jan 2025 14:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KT9SeX88"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoKgPhtQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1FD22A7E9;
-	Thu, 16 Jan 2025 13:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BEE22B8A0;
+	Thu, 16 Jan 2025 14:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737035556; cv=none; b=gIqkwSdSu8+LOOcVY34JVouBSe2JNw1yPbqSHE3VOLw9zGkqljUGGoZbfVhOeRxLVLnSTtR0jHmJnfoUZnPjXqISSfquYQ9IhwG+FNvFxsG/VBgwGwQdqpXYMppvIxvUMBhD4WNXW7GRETYeFCaNa3WNPVUF9wTl6I2+3+zikmg=
+	t=1737036560; cv=none; b=CBSFQDjVTGADRaiGu2F0FUkVocQfK5QPGWaNN3lEbZef550t0V9uT44P6QMfzEEk7kFjpFIrc2BqYehVSAJoWbshAwiEQ+HLgF8vJenRo13ddOvT6KQyJPXaI9HBOhOQCUUKGNQkEUYy0v+p52vAu/QH3v/OdPL5GUBodLE8HuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737035556; c=relaxed/simple;
-	bh=GmMZGm+EJvJa00cjNmjRzRyY+cidd/NriOcOvG5pad4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GITOEe26uu0vK/e4c7BR/RRagN0C5Eus+fj4/ZXEiPNCBK/FvV6q62tWwCoKtt3FJKmjxS759Hi70j4LI/R483Ach0Aj3mS9mxuonBNit5l/IdncWNdQhjyU6PKqj/EG5hczpEyKlcPrnA49iF9vCL0Dh5IoaXiLjJ2DBWMLth8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KT9SeX88; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737035556; x=1768571556;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GmMZGm+EJvJa00cjNmjRzRyY+cidd/NriOcOvG5pad4=;
-  b=KT9SeX88/vE/hANZl+9RWOXPm6gcZEBuS/bP/CAhWUsDN4mX5wv1GbjR
-   BQhP1IfacsllnDhvCdIjKhCa1SudNkm9ci59rqxM1rzbtNP6ilr3xFVI3
-   iaySxq0ZTY27DPbdxrmAXsir4C1IH2JfUWMPJrwFNzVz30g5X0OFNh65w
-   nYVeJpSU74FsNhUQDx5YtpOeyUyeLzCHMrSYgg68DkG3t7pQFZh8q0G9B
-   wsTjMeLCtHwV1fKwlICa8MWM6CGPTzwGNBkerQ/TaJg+Fbx4pf7WSHU9Z
-   wdTSARNeemOVm6sqRwPXBozVmFYFf1k8NWdABRGLrVFYrL2m1riFYIKL6
-   Q==;
-X-CSE-ConnectionGUID: kkhnuDxqT/WrM36hw5WJ7Q==
-X-CSE-MsgGUID: hrOfqje7SCKLxaENbClqHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="41185259"
-X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
-   d="scan'208";a="41185259"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 05:52:34 -0800
-X-CSE-ConnectionGUID: qZRWdrVkSRKQ+usnV9prBA==
-X-CSE-MsgGUID: 8QHx7i2USlGehLFVBYDJkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
-   d="scan'208";a="110518556"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.116])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 05:52:29 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 16 Jan 2025 15:52:26 +0200 (EET)
-To: Jiwei Sun <sjiwei@163.com>
-cc: macro@orcam.me.uk, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, helgaas@kernel.org, 
-    Lukas Wunner <lukas@wunner.de>, ahuang12@lenovo.com, sunjw10@lenovo.com, 
-    jiwei.sun.bj@qq.com, sunjw10@outlook.com
-Subject: Re: [PATCH v2 1/2] PCI: Fix the wrong reading of register fields
-In-Reply-To: <20250115134154.9220-2-sjiwei@163.com>
-Message-ID: <8441fdc4-de28-a3ba-27d6-8a5351d4ea19@linux.intel.com>
-References: <20250115134154.9220-1-sjiwei@163.com> <20250115134154.9220-2-sjiwei@163.com>
+	s=arc-20240116; t=1737036560; c=relaxed/simple;
+	bh=d32Y8ya8jL+ULXXbLr4QB/QI6XLp7Oo0AcqFQN1IDQw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oL+ienSkp2fnUOtStAIBIxG8PXkhbVqtpq66GWd7082F/3Uq4xFM0uGvMphsL695UHT+en7Lhqzry6M7PmNyvbB/CJ7QfjoHOGSYs8VYGOeMeDbAG9C559007NLod34N5DmccVNTjoul/7I8MZldxA847RVN3//F1UFJ35oHcQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoKgPhtQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 793CCC4CED6;
+	Thu, 16 Jan 2025 14:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737036559;
+	bh=d32Y8ya8jL+ULXXbLr4QB/QI6XLp7Oo0AcqFQN1IDQw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=aoKgPhtQAcJq/C5L121gyCDVgQqboGFbXDPTBvv0WHAkNFErIV4+tXK5IYzdG2VzF
+	 mJQqQQSdO9NtGNAn187f4T7NLDqXjUu2T4FMuQ+vVF5tXgdA728D0BfPyGQcsx9XYd
+	 feFwqqQ3T5ydsc2aPhu9Vhuawp1K6ROCR/daaT2YFTyvVwFO6M7c7cixbMA+beosMS
+	 loXSWlgdHr3gtYKfkunDLH3+dUAUWtBoeThK2MYsbFfLN3KxipE8ZnJB5cxqzJa+lY
+	 wK+jE+eHIbbG19RI6pJCh5lBXddMdJgZyAxAy6ua8ONgR8JcqzEf63Liea7B8hKJig
+	 n9f4o5WyA7esQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BD7C02187;
+	Thu, 16 Jan 2025 14:09:19 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Subject: [PATCH v3 0/5] PCI/pwrctrl: Rework pwrctrl driver integration and
+ add driver for PCI slot
+Date: Thu, 16 Jan 2025 19:39:10 +0530
+Message-Id: <20250116-pci-pwrctrl-slot-v3-0-827473c8fbf4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2131764559-1737035546=:933"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAYTiWcC/32NQQ6CMBBFr0Jm7ZhpqUpccQ/DoqkDTEIomZKqI
+ dzdygFcvpf89zdIrMIJ7tUGylmSxLlAfaogjH4eGOVZGCxZZ6whXILg8tKw6oRpiiuSDcThWpu
+ b7aHMFuVe3kfy0RUeJa1RP8dDNj/7J5YNErJnd2HXNOSonWT2Gs9RB+j2ff8CtdsNkrEAAAA=
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lukas Wunner <lukas@wunner.de>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3486;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=d32Y8ya8jL+ULXXbLr4QB/QI6XLp7Oo0AcqFQN1IDQw=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBniRML9/YkDU3ck+xoWOFje58AxDDajMHV6pMrD
+ Jvob5t/DNaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ4kTCwAKCRBVnxHm/pHO
+ 9WFLB/43+VASUO9CgoplbEcO9UQM06la6OubEUHjeuwMQrmK8fJO1mrPtr7adDeHPkmWv1ri6Oj
+ 4Qk/34QC1sVj0PHLFiQttDyyhr2InEdT8sfUS9opkurbNMNnmTW9GoeFHfzc9MT+zLFywbi3i5l
+ dw5VxBLsYTkHwg65Xj4hTW+j6XRXhwP7prXomRwvnSYHo2bDmTFZIDPl8w7e7rA0E9okCuYRRHA
+ fZ2UODNyHnUECFpp5YePR/Ylxi8NdHsd5q9heHfHxNWKVjrt1A8aZZ22ghB2qP5qGDqRNVsqJ9b
+ OVgmNt7S57PqB/cgPgQ4b9ril0eVCTwpmCRJ+x4Wkjp2iPyX
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-2131764559-1737035546=:933
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This series reworks the PCI pwrctrl integration (again) by moving the creation
+and removal of pwrctrl devices to pci_scan_device() and pci_destroy_dev() APIs.
+This is based on the suggestion provided by Lukas Wunner [1][2]. With this
+change, it is now possible to create pwrctrl devices for PCI bridges as well.
+This is required to control the power state of the PCI slots in a system. Since
+the PCI slots are not explicitly defined in devicetree, the agreement is to
+define the supplies for PCI slots in PCI bridge nodes itself [3].
 
-On Wed, 15 Jan 2025, Jiwei Sun wrote:
+Based on this, a pwrctrl driver to control the supplies of PCI slots are also
+added in patch 4. With this driver, it is now possible to control the voltage
+regulators powering the PCI slots defined in PCI bridge nodes as below:
 
-> From: Jiwei Sun <sunjw10@lenovo.com>
->=20
-> The macro PCIE_LNKCTL2_TLS2SPEED() and PCIE_LNKCAP_SLS2SPEED() just uses
-> the link speed field of the registers. However, there are many other
-> different function fields in the Link Control 2 Register or the Link
-> Capabilities Register. If the register value is directly used by the two
-> macros, it may cause getting an error link speed value (PCI_SPEED_UNKNOWN=
-).
->=20
-> In order to avoid the above-mentioned potential issue, only keep link
-> speed field of the two registers before using.
->
-> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+```
+pcie@0 {
+	compatible "pciclass,0604"
+	...
 
-Missing Fixes tag.
+	vpcie12v-supply = <&vpcie12v_reg>;
+	vpcie3v3-supply = <&vpcie3v3_reg>;
+	vpcie3v3aux-supply = <&vpcie3v3aux_reg>;
+};
+```
 
-> ---
->  drivers/pci/pci.h | 30 +++++++++++++++++-------------
->  1 file changed, 17 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2e40fc63ba31..b7e5af859517 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -337,12 +337,13 @@ void pci_bus_put(struct pci_bus *bus);
-> =20
->  #define PCIE_LNKCAP_SLS2SPEED(lnkcap)=09=09=09=09=09\
->  ({=09=09=09=09=09=09=09=09=09\
-> -=09((lnkcap) =3D=3D PCI_EXP_LNKCAP_SLS_64_0GB ? PCIE_SPEED_64_0GT :=09\
-> -=09 (lnkcap) =3D=3D PCI_EXP_LNKCAP_SLS_32_0GB ? PCIE_SPEED_32_0GT :=09\
-> -=09 (lnkcap) =3D=3D PCI_EXP_LNKCAP_SLS_16_0GB ? PCIE_SPEED_16_0GT :=09\
-> -=09 (lnkcap) =3D=3D PCI_EXP_LNKCAP_SLS_8_0GB ? PCIE_SPEED_8_0GT :=09\
-> -=09 (lnkcap) =3D=3D PCI_EXP_LNKCAP_SLS_5_0GB ? PCIE_SPEED_5_0GT :=09\
-> -=09 (lnkcap) =3D=3D PCI_EXP_LNKCAP_SLS_2_5GB ? PCIE_SPEED_2_5GT :=09\
-> +=09u32 __lnkcap =3D (lnkcap) & PCI_EXP_LNKCAP_SLS;=09=09\
-> +=09(__lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_64_0GB ? PCIE_SPEED_64_0GT :=09\
+To make use of this driver, the PCI bridge DT node should also have the
+compatible "pciclass,0604". But adding this compatible triggers the following
+checkpatch warning:
 
-It would be nice to have an empty line here and below as is in "normal=20
-functions" (obviously the \ continuation at the end of the line is=20
-required).
+WARNING: DT compatible string vendor "pciclass" appears un-documented --
+check ./Documentation/devicetree/bindings/vendor-prefixes.yaml
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+For fixing it, I added patch 3. But due to some reason, checkpatch is not
+picking the 'pciclass' vendor prefix alone, and requires adding the full
+compatible 'pciclass,0604' in the vendor-prefixes list. Since my perl skills are
+not great, I'm leaving it in the hands of Rob to fix the checkpatch script.
 
-This is quite important fix IMO.
+[1] https://lore.kernel.org/linux-pci/Z0yLDBMAsh0yKWf2@wunner.de
+[2] https://lore.kernel.org/linux-pci/Z0xAdQ2ozspEnV5g@wunner.de
+[3] https://github.com/devicetree-org/dt-schema/issues/145
 
-> +=09 __lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_32_0GB ? PCIE_SPEED_32_0GT :=09\
-> +=09 __lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_16_0GB ? PCIE_SPEED_16_0GT :=09\
-> +=09 __lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_8_0GB ? PCIE_SPEED_8_0GT :=09\
-> +=09 __lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_5_0GB ? PCIE_SPEED_5_0GT :=09\
-> +=09 __lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_2_5GB ? PCIE_SPEED_2_5GT :=09\
->  =09 PCI_SPEED_UNKNOWN);=09=09=09=09=09=09\
->  })
-> =20
-> @@ -357,13 +358,16 @@ void pci_bus_put(struct pci_bus *bus);
->  =09 PCI_SPEED_UNKNOWN)
-> =20
->  #define PCIE_LNKCTL2_TLS2SPEED(lnkctl2) \
-> -=09((lnkctl2) =3D=3D PCI_EXP_LNKCTL2_TLS_64_0GT ? PCIE_SPEED_64_0GT : \
-> -=09 (lnkctl2) =3D=3D PCI_EXP_LNKCTL2_TLS_32_0GT ? PCIE_SPEED_32_0GT : \
-> -=09 (lnkctl2) =3D=3D PCI_EXP_LNKCTL2_TLS_16_0GT ? PCIE_SPEED_16_0GT : \
-> -=09 (lnkctl2) =3D=3D PCI_EXP_LNKCTL2_TLS_8_0GT ? PCIE_SPEED_8_0GT : \
-> -=09 (lnkctl2) =3D=3D PCI_EXP_LNKCTL2_TLS_5_0GT ? PCIE_SPEED_5_0GT : \
-> -=09 (lnkctl2) =3D=3D PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT : \
-> -=09 PCI_SPEED_UNKNOWN)
-> +({=09=09=09=09=09=09=09=09=09\
-> +=09u16 __lnkctl2 =3D (lnkctl2) & PCI_EXP_LNKCTL2_TLS;=09\
-> +=09(__lnkctl2 =3D=3D PCI_EXP_LNKCTL2_TLS_64_0GT ? PCIE_SPEED_64_0GT : \
-> +=09 __lnkctl2 =3D=3D PCI_EXP_LNKCTL2_TLS_32_0GT ? PCIE_SPEED_32_0GT : \
-> +=09 __lnkctl2 =3D=3D PCI_EXP_LNKCTL2_TLS_16_0GT ? PCIE_SPEED_16_0GT : \
-> +=09 __lnkctl2 =3D=3D PCI_EXP_LNKCTL2_TLS_8_0GT ? PCIE_SPEED_8_0GT : \
-> +=09 __lnkctl2 =3D=3D PCI_EXP_LNKCTL2_TLS_5_0GT ? PCIE_SPEED_5_0GT : \
-> +=09 __lnkctl2 =3D=3D PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT : \
-> +=09 PCI_SPEED_UNKNOWN);=09=09=09=09=09=09\
-> +})
-> =20
->  /* PCIe speed to Mb/s reduced by encoding overhead */
->  #define PCIE_SPEED2MBS_ENC(speed) \
->=20
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v3:
+- Fixed the Kbuild bot issue with a regulator patch and submitted it separately
+  along with one more regulator patch from this series. Both patches got merged
+  and are in linux-next.
+- Collected tags
+
+Changes in v2:
+- Added new patch to skip the device scan if pwrctrl device is found
+- Added a new patch to fix the build issue
+- Collected tags
+- Link to v1: https://lore.kernel.org/r/20241210-pci-pwrctrl-slot-v1-0-eae45e488040@linaro.org
+
+---
+Manivannan Sadhasivam (5):
+      PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()
+      PCI/pwrctrl: Move pci_pwrctrl_unregister() to pci_destroy_dev()
+      PCI/pwrctrl: Skip scanning for the device further if pwrctrl device is created
+      dt-bindings: vendor-prefixes: Document the 'pciclass' prefix
+      PCI/pwrctrl: Add pwrctrl driver for PCI Slots
+
+ .../devicetree/bindings/vendor-prefixes.yaml       |  2 +-
+ drivers/pci/bus.c                                  | 43 ----------
+ drivers/pci/probe.c                                | 41 ++++++++++
+ drivers/pci/pwrctrl/Kconfig                        | 11 +++
+ drivers/pci/pwrctrl/Makefile                       |  3 +
+ drivers/pci/pwrctrl/core.c                         |  2 +-
+ drivers/pci/pwrctrl/slot.c                         | 93 ++++++++++++++++++++++
+ drivers/pci/remove.c                               |  2 +-
+ 8 files changed, 151 insertions(+), 46 deletions(-)
+---
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+change-id: 20241210-pci-pwrctrl-slot-02c0ec63172f
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 
---=20
- i.
-
---8323328-2131764559-1737035546=:933--
 
