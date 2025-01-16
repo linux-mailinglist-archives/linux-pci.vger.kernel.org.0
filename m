@@ -1,104 +1,105 @@
-Return-Path: <linux-pci+bounces-19950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CC4FA13786
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 11:12:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 81A80A137C7
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 11:26:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE74A163F39
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 10:12:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B42E164283
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 10:26:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED4CC1A0731;
-	Thu, 16 Jan 2025 10:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933DD1DA2E5;
+	Thu, 16 Jan 2025 10:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aeq/ocav";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QYVdlyfi"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YIQd5wN7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="VUT92fUM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EFA1DDA35
-	for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 10:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707FD19006B
+	for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 10:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737022333; cv=fail; b=O/RpJrWzVB8V16zmUUBSc3sdbQHv7f428Y2D7DR3NryBO0huwMPt5eTEOh5kAuEMvlK8QqFf8BSB+Pz2GOcaCRebTtRWdv8LCCkqzMayz/4OEbMtetANDLZU1QRvavjr/6lsTUrHAJOH3fSgpCqce7Gc9XUJ1oWd5YIPrHWhWiE=
+	t=1737023201; cv=fail; b=Sll/v9Q6uLeaLO2vOk1VPzEHbMI3+Er31CjT0NkniMYBhBjy48ZRtNMLkeh4yO93i1DLtMGOCHpjEtVQh38niM0P2ZGoE8JR/uAg0pHW6UmnEwDlsDbDDBToy0vaI89DECvq6z7QOhFdGP77lP6pwRJ1iDmWq4o5wWpUHnDT1GE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737022333; c=relaxed/simple;
-	bh=IEjD2UacCe6pznSTWv6EJrX4IooZk6/agMqoMqpE/Qc=;
+	s=arc-20240116; t=1737023201; c=relaxed/simple;
+	bh=fWlwmybwbvtcs+sQT8uLOsSMupNl8SgjRANRtsw7cJg=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AoqMHiU9X4JXid1lDlZTw+BPJxvAW424Nggng8gPj3mipUtqxqNRCUxMBbluSLJ+0iCCcFUJkDu7Mlp3Elixa7xmvDZz68YYhJwzwGpL7FgUd6h4iNDWTvPLfuAmXN+RaNWUA3RAyj05hsR3hBubFhuR1WFqdkK96R0q9V5PwV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aeq/ocav; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QYVdlyfi; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=WMJE8c8L0i96oU1bo6c00B49TLYTtD5gTCJmBcZ6PJMIrRlugNOd82WBnpIKxzGHOVV6ivEMW+GhNOSHIBFKVXiQlOh41OfzlWtKYt68tTtWcZBy0sQudpopsih0cuw4rR645+Y/cRkzLLNpYYKQG19rBbuB3zSyYK1gavoVdMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YIQd5wN7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=VUT92fUM; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50G9Mtlj028837;
-	Thu, 16 Jan 2025 10:12:06 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50G9NLYI021814;
+	Thu, 16 Jan 2025 10:26:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=CIH1gye6XCLdYqbnna+vtIT5GHBneIeuAk9HolxM5ns=; b=
-	aeq/ocavaUZ/OyPvguiqaR+897kIT2mSjmXptL13IJ6wRHp7yuMX+4WnsWW19/pL
-	guBJMYD8f9y3DdFVDPcx3zzuVbXNyotx/EleAbwUc1wfScp5ZZ5rd2OBTOY1KIXu
-	zou/NmRDnMaUHH4oVw1+KcbQEEWS50oWiwU75yWP/5DcBd1KuPhwT4YIxkd16nTK
-	7askyvJPiId9Zz8BzavDS10oBQ71Wm8CuwE/uJIm/c0SONC9eJEiD2FtYjhW3xcU
-	JSXDRemThyxk+5tsqIg3LjuMou/obCgXVg23HU6PoI0iJX/3YqRLKOLdu8uu+apt
-	/0l/iuzXQQfDDfojE0x70w==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 443gpct5w5-1
+	corp-2023-11-20; bh=2YQhmwqSgk1XXwcKeKoRdDhioBKBTwwO1Bh/a14rrhw=; b=
+	YIQd5wN7i+p8izZ+JPvrtQO5L/7V5M/KFqG5lXWFR/LaHKmVyRO3gzXCmDBtuoz8
+	Bu+oFIcenEreMVF7tAsnHqYvs+2VSHIGvLSPnEVqNAuRYF1cwK3jjvSFUj0oalA+
+	olE7uFd001OuCe8b1pAc8Effh+00czenjcn37AbFAjKkHSrlA/Q/CDJe8V7ESesv
+	+0Ot3WdCwoPIiTzVYHRrp+PUL1oPPNPKChnwmg1ZW2tGMhiGFM9RyAueXTU8HUX9
+	VAul6993qcDTuuLV3mGtaBDmzw0fwTh3n+/+0hnyU6Hg4OMOy5nrXPUfNuwf/a1k
+	hL/UIgVGoNj6MXuq3fT5Uw==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 443f7y9xy7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Jan 2025 10:12:05 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50G99fft037156;
-	Thu, 16 Jan 2025 10:12:05 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 443f3b5xjv-1
+	Thu, 16 Jan 2025 10:26:35 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50G8lCAf020430;
+	Thu, 16 Jan 2025 10:26:33 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2048.outbound.protection.outlook.com [104.47.55.48])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 443f3gyn67-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Jan 2025 10:12:05 +0000
+	Thu, 16 Jan 2025 10:26:33 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dPBbWEW8lFT1kj5rjwTQIA6mBDdiAFcHPmU4cUN4xxYDbinDJ3p3+JKCf+vDcMF4WOpb5CVi/zg6ehppYNk1HHT8YrACv2Od8JPsDNV0t9COw+C1TbzMNWbRfdGyFB7qXTGC0bgcjk1oBw6p8H3b/kOSPz4z9qzZXhb1Wl7GqYQO7c6uJYk+yrqHIyBHxknAN0ruOPjBcAfmWAiNa8hmEyPhy+ifEKwPSNRoVRNgkHSdz2vzXEfVBt1EkLDB+yncCJ5hH452ZaqmKa6PwZ/ErTZcP8msCNdvjHCo6ugiCv20/KXICyS07kuFT7tZRSnZZCZ5n15GYQXGyE0fpeGWFQ==
+ b=xDSIKkCnsVOxZH5sEDMB2I4u9Xm0yB8oWGeSgW93fCPtVN75EMl4/Xo8wYy8Os/Duk3BV/r8i0+lHLaGpIzgn94K5woUHbDL+TGlA6LXAULJmzf35y7RD8N+MR2KquY7NzCZcNR7H2SjBDreeGeROWtoZHyUy5kRakJg9LKfgnMLFWn44ypAKhAb0jKxJf1N+erhBltaGOZgCnJPUmF6L7YgRyPGvVNepfvb7ksDkIG6H7bjdmfWZhzAmZPW+Fh4rPnJmgZ4XQbkKSrJpqMYA90t5c9Ud6OUiFO+Qg4EOfBiJSru+yuVuBaSIu8ywimNtC0jtYfaeEcrYQgsTHb5Iw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CIH1gye6XCLdYqbnna+vtIT5GHBneIeuAk9HolxM5ns=;
- b=NFIu+WfmaSkq861LRjwZHOSA6z37jfVzsXoY7lUsDJT4qDC+70OwNS5134oaY6hBva9OKRzm1rrHTqNPdeOWI1tmIOfnXzPNkgAEYfzw4x4bOYaOfv34S2fTxdKITl/jeOwRew/56/UyTPp3soM1ZRipRjSx5TvUsR6fLTC6TDdlorAPOW1zrAAbrHAi+GBciPNP5l4i2WsvoryEWkcx8ZvBaILByMmPbKKDPDgKXmp4IEboaHR38EaNxaDKwHUlEtQVzWLDstdvhJ2vZ6uGfP1mP0ITF8U3B48ORXVxKncNipkhRCqJhNuIHiuhMdZvWHTgYjWYHrM0zNDOEDK5hQ==
+ bh=2YQhmwqSgk1XXwcKeKoRdDhioBKBTwwO1Bh/a14rrhw=;
+ b=sANsmO4xsiLN8UVSJxGSDmy+E+QhyXPH4FmfBcAJ06xzgqvtjHAgvuMOTCMOu0m3CY/zCtrDPQzbctYi/7NyAm+KFfIi9Z1pf2hy4qE8zGZ1nigcqEbAOrDNYHb4YRn4IWf4j1rE085X/kEXf+8Qx4mnUpK4iwifatfacSg8pUi+VtdioaGryfAzTNe3SgGFtM3SjfAeQHhQeO4y+RkLwushw0o4K+qWUuNYJ8R5U38h9MPjpyLOJDGOMX3t+2TblXuD2DgXScyLkUqem/EGVJ8P/OTPGPWXehtfPRR9+pAHjW/0aWN55Jy/DFX16PtHZEAEye7giwr5xRddTqB4LA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CIH1gye6XCLdYqbnna+vtIT5GHBneIeuAk9HolxM5ns=;
- b=QYVdlyfijqUGwYeaCcXYr31z+6FqFmvXAC2mnxPCHXL86JZnbsTYi4icPiew6nL147zB/f1nza2FyypF7mDAKX68rD794fXaz9/mvOrCYjTrtTcZrMOksCl/PW5PKgtIndgOj9mCZOZcmF+NOVcCV7SAhw5vf8Dc6lVvcCQlqgM=
-Received: from SJ0PR10MB5407.namprd10.prod.outlook.com (2603:10b6:a03:302::7)
- by CY8PR10MB6516.namprd10.prod.outlook.com (2603:10b6:930:5c::19) with
+ bh=2YQhmwqSgk1XXwcKeKoRdDhioBKBTwwO1Bh/a14rrhw=;
+ b=VUT92fUMY5YDSVtQjEjLmER8Om9WjMqeqaMY7Cjw1RWyjWOiO6PCYVNOupBN3CaB0FHvJp9zdSBF7dUFHxrrNJK4C3BzwWL813cEZ6Zpw/lXl8ZLajI5wdfeS9dK+ipO697y1E/WcIX8mavLafWHkjrO+O9mRXhoCfOMugB0RJE=
+Received: from CO6PR10MB5396.namprd10.prod.outlook.com (2603:10b6:303:13c::9)
+ by PH0PR10MB5731.namprd10.prod.outlook.com (2603:10b6:510:149::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Thu, 16 Jan
- 2025 10:12:02 +0000
-Received: from SJ0PR10MB5407.namprd10.prod.outlook.com
- ([fe80::7503:9552:fdde:7d4a]) by SJ0PR10MB5407.namprd10.prod.outlook.com
- ([fe80::7503:9552:fdde:7d4a%4]) with mapi id 15.20.8314.015; Thu, 16 Jan 2025
- 10:12:02 +0000
-Message-ID: <b04d2fc4-6b64-4d44-9af1-31e05918e196@oracle.com>
-Date: Thu, 16 Jan 2025 11:11:55 +0100
+ 2025 10:26:31 +0000
+Received: from CO6PR10MB5396.namprd10.prod.outlook.com
+ ([fe80::4487:ae4:5f2d:d555]) by CO6PR10MB5396.namprd10.prod.outlook.com
+ ([fe80::4487:ae4:5f2d:d555%5]) with mapi id 15.20.8356.014; Thu, 16 Jan 2025
+ 10:26:30 +0000
+Message-ID: <620bbbde-35a9-4232-9cf9-a1fa1e899f8a@oracle.com>
+Date: Thu, 16 Jan 2025 11:26:17 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] PCI/AER: Rename struct aer_stats to aer_info
+Subject: Re: [PATCH 8/8] PCI/AER: Move AER sysfs attributes into separate
+ directory
 To: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
         Ben Fuller <ben.fuller@oracle.com>,
         Drew Walton <drewwalton@microsoft.com>,
         Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>
 References: <20250115074301.3514927-1-pandoh@google.com>
- <20250115074301.3514927-4-pandoh@google.com>
+ <20250115074301.3514927-9-pandoh@google.com>
 Content-Language: en-US
 From: Karolina Stolarek <karolina.stolarek@oracle.com>
 Organization: Oracle Corporation
-In-Reply-To: <20250115074301.3514927-4-pandoh@google.com>
+In-Reply-To: <20250115074301.3514927-9-pandoh@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0089.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:190::22) To SJ0PR10MB5407.namprd10.prod.outlook.com
+X-ClientProxiedBy: SI1PR02CA0046.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::14) To SJ0PR10MB5407.namprd10.prod.outlook.com
  (2603:10b6:a03:302::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -107,293 +108,368 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB5407:EE_|CY8PR10MB6516:EE_
-X-MS-Office365-Filtering-Correlation-Id: 763d0df6-1a33-4c8c-ea36-08dd36163841
+X-MS-TrafficTypeDiagnostic: CO6PR10MB5396:EE_|PH0PR10MB5731:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7accafd0-61dc-46ea-5486-08dd36183bf5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WlFlUklNbWdMVVVXNkxnRTBEeEt0aHJ0bXBPeExBTkpNMXNEUkorYytKWGlN?=
- =?utf-8?B?aS93VkRzZnBuYUg2dno3ZDZqV3RzVVdSbXZ5LzJ4dUtUS1JpcTNEQTNBL3d4?=
- =?utf-8?B?NWRTK2l3VzJvZUZROGlyNkZmaVlidkFpUmlPS1loM1A2U2xWOEJ0R0JzZ2xu?=
- =?utf-8?B?dU4rOVZwNCtpNnM3OGkwZDl5VE00bzAyQ2JZbDR4eGFZc1lHdkIrUmJWSURY?=
- =?utf-8?B?YTBubCt4MlVLRmhTRE9kc0dCOWhuNkh3K3NGL2ZSNE1OYWNRNXp6QXN4UGZK?=
- =?utf-8?B?K3Z3WGRITjUybkRua0IwWnhCSHE0Vk9uek0xZ1BaMjlCaVpNKzFrR1RUY1Ra?=
- =?utf-8?B?TkM2bkRWd1JMY0NydDhud2lLYURISjB6WnZyMlludE1NWlE1NklxRVkybmxv?=
- =?utf-8?B?OFE2OHN0T21RaGZJREpHQ2t1enNKbTNlVituR2RQN2FqZVBvOGNPV2pZUGZt?=
- =?utf-8?B?TXNtZ0hOVUl3UzRIS2E3cWZ2UXBNRjJwV3dOcWZwUlFlTDNzc3JYVGx3MUhu?=
- =?utf-8?B?MkVpaDNNblpvd1dmU0tpSVVienZtdEwvbndCcWhicHkvNWJnVzVyYlQ0VUpp?=
- =?utf-8?B?S3RQWDJqRDQzak1oVFdTRkxmNEtMYVZDWkl2ZVFKb3FwMkdnOVRvU1Z3bnlu?=
- =?utf-8?B?MjdkMVhnWGJhN2dkblVUa0Q2Z0p1VTkwSTRpTG43L3pEMGh5T0diSlg5U3pI?=
- =?utf-8?B?QTMrRVlNODNIY1VQY2w1UHJ0SW5mZHp5T051TUIyL3h1WUdsWlZqTCtxV2g5?=
- =?utf-8?B?NkVjWGhHOXVEdk05WFM5azc2NDM2QmRyRTQrSjM0QjExaGpQMnkxUjdGTnpF?=
- =?utf-8?B?U1pHK2hJcUE4YjFjVTZsTlJ5NGF2VmFwNFJkU1VyeHZIQTJsWlNkMTIrZ2dG?=
- =?utf-8?B?NkFQZnV0Ri9QVUZKNTJpZnlBOW1lVldDODB6K3BJSVgwS2N5RFA1MUU2YWxY?=
- =?utf-8?B?TEFueFo0elhwUHl5aXdwRkZ0L0hpTFYrTEdrWWdHVEtnSElVc1ZIZzBPWUVE?=
- =?utf-8?B?dzZkYmRaZm4rays3UURBZWpEN2JzdXNCV0Y4STZEQm5JZWpGS0Y5UHg4Qmtz?=
- =?utf-8?B?dWlaaXNHOTZtNVh3UTR6bzdUcUlTQU9ydUxROFNvSjhLN2NOQTF2K3lrRGlp?=
- =?utf-8?B?bXNiTFloaVVTMHNOZm5hQ0dSTWpWSDByTlRyVDU0QWV4QkFORHhwcFZlcXc2?=
- =?utf-8?B?SHBJL3VaMVY0anhUa1VLM24wSUIzQkljdnR0SEJZSUVjUFBKWEdESU9ZclBT?=
- =?utf-8?B?N1pkc3F1Z3VTQS8yc1BjOWNCZXhOZHpWc3FFcHVGdmFZbHNVdWQxSzkwcHBV?=
- =?utf-8?B?THlqRU9lQmU5akJydThmRzJjZ2VGTU1ZUnFHc3RDd3NyMjB5ZkEwMWRaQklp?=
- =?utf-8?B?eThlM0tBT0cvcFJvdnRjU21zL1ZBMlIxTE1MZ2hoMklyOVZKYngybk9GN0FF?=
- =?utf-8?B?QkNENUc1YTNlb3VkKzZJRmZtRng5Q3FzVnBOVWRkWmdkWGhxRzgrVG5JeTgw?=
- =?utf-8?B?WjUwOUswWDZNa1ByNlVVdklyRzZSUVVZMExGYmp5UTlXVVdEaWNkeDFVTWNa?=
- =?utf-8?B?TC9sbmxGL0pwdzI0Rk9lbEJCMjZQM0Y0TmtWTjhiK1NrSFgwS21zZ1A4V1Rm?=
- =?utf-8?B?NjRUVzFGZHZESll5aVM5WitWWFZZdmhqWnZZcHhrYnNNNG1aSlBZQUJaRjVS?=
- =?utf-8?B?RDlOSHQwU2pmMVdWSVVqQ3NWSC9HSjlBRElaVHZveXR2dDVlQndRbHZGcEs4?=
- =?utf-8?B?R3ZhRm9tWFd6elFrYTlNVFJ3UFVNYjRVQXBQTGhFQW9xeE1ZQnlDWGNJbytm?=
- =?utf-8?B?T1YzanNBVCtFYUlweVRWamZWaUxQVC9CSUpPSUdCTzllSFpoUVBWWk1DWTZE?=
- =?utf-8?Q?eKliZAiSI22sF?=
+	=?utf-8?B?ZFdNUXZJbThVOFlSbW9sR2grcjZSTW1ISVBhRUo2MjZ1VjB2eWVSQnpwd1ds?=
+ =?utf-8?B?L0lrbGF6MkVkS1Y1SFlHcVBaZ0VhSURkdS9JcE9IY3MxWXVFUkJFQXBvTit5?=
+ =?utf-8?B?V2FXZmpkNE5TbnJCaGJDalNDeHF4b0VkR21oTnJxM05kbGJZOFA0dnFsQjAw?=
+ =?utf-8?B?Sm9DcVNTVndHMHRYek80ZUxQWWxkZTNtZ2RsSEFvaUxEd2FqUGVtc21YeTFw?=
+ =?utf-8?B?aThSVURqK2U4czB6VHlkTFUydGtZQmlaTUthUEgwbzF6OG1PZHlpcVRjWWhZ?=
+ =?utf-8?B?eTk3Ylp3ZXJXVDBZTm9UUFFkSVQ5U0VqbVRJNGQyQnhBVXg2ZEJ1MC94ZUYv?=
+ =?utf-8?B?OC9reUNVY1BpelY4UVNFSEFSa1RFWHNOMnd2M3hMcE1hM01EdFJvMjVnRjVJ?=
+ =?utf-8?B?dDZMZXZIcFJQWmZreTVzUkdMUTk3SmtQT0ZYUkg1bHhlWjdUNW9hQWhQWVZz?=
+ =?utf-8?B?Q1h4WEpicyt5UDFITWYreVdLKzl0YTNoMzhJd00yU1FHY0NRNks1RWIyZ3RN?=
+ =?utf-8?B?TEFpUXF2RmRCV3FhbjdCWWJqTDA4Ni9BenlYWjZ4THU0ZEtRNU81SUtmdVZ4?=
+ =?utf-8?B?M0Y5TnUxL2FrajZOQW05OXhUZyt5U1YvWU0zY0l4WVZjLzdWTm5YUzF3OVVi?=
+ =?utf-8?B?U09ObW93OHFNTVlNSUVMZnJxTFgzcWdmaVBaYVhTZHNPZ2tyRVdsU3FRUG9z?=
+ =?utf-8?B?dzhOTUZOZEZRa3JQZ212UGF0RklZUUNDeE9TeU9RM29xM2poYy9XdmtOd3VL?=
+ =?utf-8?B?bkpleFRmZkVJTXMvekllK0YxNDdmMVdic2wxL3lZN1pUODFLTHcyb1h6cFA4?=
+ =?utf-8?B?bGFkQmNqTERQT3NzV0V2QTd2ZVl0RUFhcFRMWnAzZmR5M3hHRi9ZaXdwNXF3?=
+ =?utf-8?B?SzROQzE2MENwcXVmeWdWbXB0VmNicXZuTDVwRnNEaUFQSnJKVzRpcmJPTFJw?=
+ =?utf-8?B?OHJHd3A1UVhzZDdscDRYSjFCdDJrbnBjUmwzMS8zaFQ5ZEgxbWFGVi9ROC9S?=
+ =?utf-8?B?ekExay94SXZPWWJ4eHdneldVak41SnI1czFZcGttM1kvUHRoc0Y1SktoWG9m?=
+ =?utf-8?B?MFJ5MzIwaDBKN3lZRGVWQ0ovL3lPakVuVnFHSFRxVC9hSFJXMEFKNFFaUGV1?=
+ =?utf-8?B?eGFlS05kV0ZZaXpteUJ1Ymw1SSs2Rnl1bFUyU2NET2FkSFhmZS85eVlvS3ZY?=
+ =?utf-8?B?TTk3dS90bE5RbzFOMVdwZG94VWtxMWNRVzJaV1E4Nk1kdGl0eitiYnl6cURM?=
+ =?utf-8?B?REtlZkVlU1IyZW9ONTRkYlRJZHd0TTQ5aGgyUXhhMnc2RWx0cjJmdmdQa0ZT?=
+ =?utf-8?B?WjRLUTl1Y21iOTRUWmFqMk5qVkVoSE91UFJmMzBaN1NpOUdUWSt0VkNtU2ll?=
+ =?utf-8?B?OWlCK0hIQzRxYUphdy9YUVdGZ1IxcTBWNXlJbWVHeUdDc2R6THFPT0ZZOWRh?=
+ =?utf-8?B?Z1BKbmJudHc5ZWx4bElxNkpER2pEZ0h4djZHN2VrdkJCSjN6ODFTL2xZV1Jj?=
+ =?utf-8?B?aGU2SFVrRVFrbm1yY0ZsbW5JUjl0RTNrYWI3aWJ5Ti9JTUp2bUpkWmZwZ2hs?=
+ =?utf-8?B?bUtiZnQ3dCtFZXpnbjc3QjM3Ui9TbWlsbU5tZzlRVXlLZmJYbjF4NXZKQWhs?=
+ =?utf-8?B?ajc2bE0rMzV4R1hxN0t5cVNxREVWYjA2SmxaU1BnOWw2NkVRWEhJUGtEYnpz?=
+ =?utf-8?B?elhYQWsyMnlKWUN6NG5yb2xFZU5TdGtEWnc4R3VCUDZQc21hN1gyeVE1ZjdB?=
+ =?utf-8?B?OHBmTDJTZEpLd1pCaDhJdWRodGU4TkExa3ZjWGpCY3Y0UHJsd1RGMG4yL1l0?=
+ =?utf-8?B?SEpLamVkODBOWWpCNXEra0tUKzZUTUd2Ri9ZbldWMFM5bzEyN0t3d1FLVFB1?=
+ =?utf-8?Q?HItNl7vSIZd/U?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5407.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5396.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TXlhYUdncFhzSHk0elE4cGpaSnBxWDJHYUJxYWpiRURwMUJtbm9CVVVxMloz?=
- =?utf-8?B?Ri94WEdGdCtOeTlIcE5QV3B5UzlLcXpJcEpPNE9Ld3BjUzF0MlVmMWphOU9S?=
- =?utf-8?B?aG10RVVMRGNaQ1ZQNHNCcVNyL2RvWG1VbGtmdk9kS2VYQWhhb3l0dUlxN1Jq?=
- =?utf-8?B?RUhaSDlSMFIrUVRjbWV6eG81bjJhN1E0SHRyQk55NTExZG9xZzJFREIvQytt?=
- =?utf-8?B?T3V5WEZlTzRoNFZGbXFPdDQvb3FWTG1uOE14M3prV3ZCRnl3Y2drQnpESnYz?=
- =?utf-8?B?TTJDa2NsNGUvRkZKS3NGVGhaWEdJamlhMFNoNUMwb3Y5QXdkR0hNS0h1R00v?=
- =?utf-8?B?ZmxOaW1pV3huK09CY2RDZU45aEdGUkxQVUpwaXlDTFBBSTcvMkk3RE5LZDZE?=
- =?utf-8?B?SG1hV2ZrSmhUWVFZdXEzcmpmblY3WU1TSzR5cFVPdk1YYStvV3N5UGVIbFBS?=
- =?utf-8?B?dUpwT0VER2pNcXZXcDdzR2VFenhHa3BLMUN3L2J6cSt3Wnd3QS9TdjdjNHk3?=
- =?utf-8?B?NjhMWFRpbnMxNEJxcEhBRFFxeGcxL3JOd2VXb2VNbkxqa01FbTBZQ2RNRGxo?=
- =?utf-8?B?bU9pTEJKRkxGVndjc1dzQm9NTkVaNEs3NTVBQVQwTVBEVk5sN1FkVjl6c0Mx?=
- =?utf-8?B?T1lsM1QwM2xqYjhiL0RaSElDVTFFTVBTWG1RbWY2bVFtTGxxMFFMVEsyVlVm?=
- =?utf-8?B?ZXlwbzFkcDBEQjZuNUw5YmRZclJ4cWx2WUYyM2VHclpqSVdRZUtrYXJMZ1o3?=
- =?utf-8?B?eGV0UzlYZHEzZ3FRRTExVjJaTDg1ZFU1Qy9jTHdpTEcwWlpIYTV5L2JWOGIx?=
- =?utf-8?B?MTZyUXc1RG1QRGszL0Vubmc2OHRlV0FmeEJtVlZtWGUyMWdoRUJrcFp1VEkx?=
- =?utf-8?B?T3dqdFNjc3JPZTB3OXUxaFVqaCtURjJFbzRoeERXTE4xZGNyUzJVaTBpUTE5?=
- =?utf-8?B?L0owTnBzZlNrLzJlYlk0ZzRKZjRBenh2L2Izbko4WXhQVkxpVmdTN25iQnVV?=
- =?utf-8?B?YWNmeExBbGdjUFBnRko3cjhVNWxkSHVTeFhXOFJGWkk4Q0RmdTRRWFZ2eTkv?=
- =?utf-8?B?cjVLVVlBbVh0aGRPdDJHYU42R2NSSVNnQjdIdkwyUS9qd2tjbXpITHZkR0NH?=
- =?utf-8?B?QlN4eTlyenZTUVVxSXluakltZ0Q3TCt0bDZicVNicVhJbkk0UmZmMFV5Rlpj?=
- =?utf-8?B?cEREcUhVMmxVeHphYWhSMGxCRzYwYk9JdnFDak9IdXhrTXFPME4zUWx6YmtV?=
- =?utf-8?B?T1Q2ckFRRTBoWW5SckFHaXI4LzYwVzB4ZWFWUzNFVFd5aVRueDZhU1ZiMjBT?=
- =?utf-8?B?SUNFRXpUcEFmWnVQTXk2U3Eya2tLbzVsMzE2YU5vL1p0OHB4aDZvUE1oS096?=
- =?utf-8?B?Mk5PeXI2cXJwRkpYRjlkNVJVY0I5WWtkRUxQY1hVUEZkbHo4bFBXQ1dRUFox?=
- =?utf-8?B?T1NYbVhBbnBENkJnL0Ura2xuMHFiMzNVY21UWTNHemJ6eTdIbitjQWdjbWtH?=
- =?utf-8?B?cGtIVHhWNEs4Nzh6VkR6TmwzeTNlQjVoaUw5dzFxY1RsbVhKcFpvZlRxdkpY?=
- =?utf-8?B?WmEwNFJ4MGdXVHI0cCtyT1BjbmczL0dJODdSMkt1T3UyUzhqbkE5c21VUHBK?=
- =?utf-8?B?QlVwdm9WM2ZZU2pjUXZTMitUV0Y3UFlzd3VFMHdCSGxUaS9lZ21iL1NzVHZx?=
- =?utf-8?B?UU5MQ1hicjcweGw4REdGWFJXdWFWVFQvaGpaTGpXNzAzWFVsVlRWWUJqRlRU?=
- =?utf-8?B?UUg3YkRjYVF0VWtrRDU4UDVhNjhqYmp4T2Z0UERNRVBsdjhid2UvUUhMa0Nq?=
- =?utf-8?B?NERtSGNZdXk2a2QwYURSeG54bmc1ZlZQVm9YUjZSQlJtSVhHZTJJZk1qY3B5?=
- =?utf-8?B?T1o3YTljV09aUWVBSHY5dFBWQzFJTzJPQ3c5M2VvM0ZKWHlZNEpOQnNqa2ww?=
- =?utf-8?B?TERCSDVlcjdOcCtPSW5XZ0svN0R6dVluemFIeloyWnlhZXcxUjMrYWNvYnhR?=
- =?utf-8?B?NjNTTkdRQzY2eXN0RHV4RWpYcVV3QWhReHdQN0lVOVNsR3N6c29BNEJRbUtS?=
- =?utf-8?B?dHVQZWxQckg1RThQcG9QcllVbFFUMjUyaFM2eHJndWlwb1BVc2pFUTdkVS9G?=
- =?utf-8?B?OUsyUnU3VWZJczEwREcrYnBUVC9zYXpQcERMK0c2RldJN2VRQXc5d2hCU0h1?=
- =?utf-8?B?YlE9PQ==?=
+	=?utf-8?B?Vm1GRUR0WjNMcDlSMUhmdGlzM2lBM2FqV2QxOFlRSnR5dFg1ZG1iZkFjcThM?=
+ =?utf-8?B?MmVNQ1dBN3hJaS9uMGRNd1dpWkhzUWZBRlhQRWxMY2U2SXpIczdJMldpcHo1?=
+ =?utf-8?B?TTN3RTlzeHVYdmlsUnA2bWVaRDdwbE13di94RW1iOXdjOXhRRzRPU0VGaWRh?=
+ =?utf-8?B?UDZzY2dXdkprZ1VLeHVJRnhITzNKbmxWUEc2WGRHelB4MnFMUHFhZUYvWmZu?=
+ =?utf-8?B?OXNlVUY2b0JqemtPb2lYMG5ITzlpYXRoZlhIb0VQTmRUOUJPR1FHcnFOUjl5?=
+ =?utf-8?B?KzdiWEJYbkhBZ3JibEFNRlBDV05DaUVxMUIxdU4vY3JpS3RpSWZqbjlCTDJj?=
+ =?utf-8?B?cFFENEdYZXYxWnZEYVFqZEtXU0VaaDN4VFlQdkpxY1dmeVlITjA1ZUV2RGRV?=
+ =?utf-8?B?V1VkM1dXeXFjOUw3SEJrSG5QTlhKZnNHNllBN1JmbXFCOUNjL3VIaTFzQnRZ?=
+ =?utf-8?B?NU5SU09VMkdUdjlhNzI5bm0zTmVVU3BKUVJPdnBuSnBQMmJrYk9SYVVnaGVt?=
+ =?utf-8?B?NmM1Nk1XN3hiazF5M0phdTlRc3hRM08xK2EvTFdRS2JDcmxGd2tZaWk0TEdJ?=
+ =?utf-8?B?L0taZTBJRWZwTXlUeFZoL2Rob2hlVFFFeU1RRWFhbWdNeEJmUUpLdURKdk9v?=
+ =?utf-8?B?bWRXN2gxSFpSN24yTWltTTdFWDh4aG5tMndOQ2JOQVMxVVJOWFVyYitnbTFP?=
+ =?utf-8?B?eHFhZWtJRGtBd0hMM1VKMldudzVSRDBsVXlyTGNTNkMweXlJSDNDRXdWSm9p?=
+ =?utf-8?B?T3k1NzRSZUFYWUVueUgycTlaZ1JYVWVVeVFFbFVQcVRrTkJIaCtTWXd6OFJi?=
+ =?utf-8?B?SjlScTM3Z2JEK2hXcktVNFd6dFZRTzMvMjNVZkUza0dReTdVSUYrek1YejRJ?=
+ =?utf-8?B?R1diVWNXcHlDb3hOZVNUUXViYXhRT3FTSUVMWWtqellORC9YRTNPL2daNjZo?=
+ =?utf-8?B?aEhlTGh2SUx3cTc4NmNnVmYwYm5KV1ljUnlkZ1k0MDRYYmk4VFdoZHZIQWk2?=
+ =?utf-8?B?UnJ1aTF2aGw0blFXaHhQa0xSamQrRzByT0gyditpUmUxSG10THRBekxIdEs1?=
+ =?utf-8?B?Sm5sZm1iNVA1cHBLM2RmK2xCN2piYUxkakFVZlJPMGhJcjQrcnEyWGZEY3E4?=
+ =?utf-8?B?ekx1MHF5dUV0Sm9xWCtTdU92b3hEckVSWVEzYU50ZHhINFRNK2ppQm5NMDZC?=
+ =?utf-8?B?ZFBWLzNUR0NkWGVXamN3RmY2dTkrZkFoVGc4emxqNlpPV3lvUHhtSCtWTkRm?=
+ =?utf-8?B?WjY4SWx1SWN6d1F3Yzh4bzc2MExzWkZKUHQwZ0Q0dFMvbHBoZlN1N2NUTHo2?=
+ =?utf-8?B?R1JoT2E4WDZYT3JnMlJXaWdDc2xjVXp6ajhtWnpXNVZrazZkSDh6eVFuL2xY?=
+ =?utf-8?B?R3dYUDluY2pvZndIRFhoUThWQTRwWkwzQjRabGJJMDhDV1dZVXIycVF5bFdU?=
+ =?utf-8?B?bE5HRW8wM3RPa1hKTTBhclp4WStJeEV0VEdmVXRkNVg3RCt4L0xodElhd1dV?=
+ =?utf-8?B?NW1nVGE5OHZLdXJVSWpPcmNnR1UyRHdlOWR2U0E0RHdGc1QxVlRiU3lSVXQ1?=
+ =?utf-8?B?d0kxL0RJR2poUXdTR3kvRG16d1h0aWVDL2MxSVd1RTdZZ2NuMmdPQzZxcWl0?=
+ =?utf-8?B?ckZjamtGbmtvYmgvZ1NZRzV2V3ZBYms0bjFqVXhZb2VXU3BEWnlORE1NVzVt?=
+ =?utf-8?B?cDkxbjdjY2JsNHZ4bGkySjViN1RHN0VublcvQTBqMURGMUc2MmRKS2lUZklY?=
+ =?utf-8?B?RmowZVR2UFBzOXhhbHRscmxGbXFxM3RTdXI2MENPcW11Sk1iVjJLM2l4SEZy?=
+ =?utf-8?B?TENMZzJ2enRHMHBWdnYrUGhCWVdhcTJ0T0JSRm1HNFNsaVlNTlBUWXN1Y0Ju?=
+ =?utf-8?B?NGFqRkJzN2c2aExpN2Zlbm5nZ2NxbzJCNTFpaXYweUV1aWIrdmNRVjF6Tm5K?=
+ =?utf-8?B?NGpmcCtJVk45eXd4M3BkY1o0TithaEhFTForUGJ1Mk9CdWFJaVMxUVZHY2Fa?=
+ =?utf-8?B?bDR1c2NWbFBBZE13SUlPVmFZK3YybFNMT29MVWpXK2src3g0SWUzMUpyQjVw?=
+ =?utf-8?B?cENocEFkOTNnTFJ2aktSaDNWOVpmUDdiK1FiVkQ0YVI4Vkd6cklKSldkeTlK?=
+ =?utf-8?B?V1BFcXl6Vk90NEFZR0w5U3AwOFlIUjdDN2E4UU1LaUdYREpCT21ERzhuSUhj?=
+ =?utf-8?B?Wnc9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	d1ih17HKjHV4pxmSsJkKefEhlRK2TtIWJ+001agLmYZtG3z44xl6Y8cfGfcTUQLfeQXkyhaQ/2UI1Z5rMAJE51SOflkreDYd2kreuBEd7DZpsAjYPR6oP6ccjxtwJtdU/P/qohnOr+rc++DrsXoQmHmwsvu0R8bxGP0XqfZpfE3NMO+pqEu+OuMZW0yDACMrj5TqFe4AsahKACOZn/TOtc1+lqS4Ds1CKVVolJqS4Uo+u+/KRQbkQSxfNTlBiCom1QX5w1vtQHAQMCfT4hIyfOPEiZEa6JXmctk7c37HIk1xeNCX9ZeT7N9MXxtVV8bWttIwpM1N9b8DW+jv778VaHwFXWMtKk1jaNUaICIxaVPgCFtyxSP+b284YcmPIvNIc7JD64e8e1Q3dsmjgDDhTyOg8X1G5ivn2BMrfyb+yOTGodI4eKmceOOgD82nmPKjllnurHe98wSRLOoufeCkjy/sBQRPBzqpLUXTH8s3l4HUvt3SXhkTILu2kAgI4JCnefZwqfq2BZs/TRBwvkhc6y7u3iNM2ZTO44MPDrXwDQdXH6clb+9qREIKwq+lePM6keNMvek9K2AqxEW36HmQCuTm+q0wWtsP00WncbuCZes=
+	3L7d6uOLykibXIx94scv8UFMiYqpbG3JFw/yIQhwnBrY5F9lAB2kqKvq+a0FzSNs/V5xmTM9xUP+SznnlVy3M3usMAGyK7/S3DnGwInAIxGCdB2+/Q/FXIiiGry5Bri7FATWq3xVxQaIEWeDWll9ieJ860SXPok2ECpICSVJMKUyf6B7Ycz63BeqH+ghJOXMT2BKjIm0C9s7fUTvSs2xQQQbwFxDCROTzPZN06MlsZYn8hGXC8ouy/kUbhnlPEeECFhvKZWXxs8dQ81HwmbtlklI5zqCmjDAO5eyTiuJXoN9c8NFfD4nQDnuUd/qpzMccm9MpzUeNhU/jZP7LVflcd9lRh94Sukqh7XEYmufwAdufPNPq4LC/+zpn8kDLkZiAoS5C/hUxEvKPLpXKll6IaPAZmliUTTR9dMLgL2AhXAojqrn5U8lPgKHAlznYeMzCbHxCYsaQglAxDnhChE+YMejFV2qxehwSeUIS/6UwoHlnwUWjACzq7ChGMNVGTkZcHBuUdH1fdT0aNe+SMHw9yuhDU+LMfbiF7jcC4Mmlmb8Ugo2qqyrDpB/pyV+/3/XgYCtHEjhJgd3zMqGprvQsb0ZrQ0Qe8xVT7tt3NKcjos=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 763d0df6-1a33-4c8c-ea36-08dd36163841
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7accafd0-61dc-46ea-5486-08dd36183bf5
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5407.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 10:12:02.0849
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 10:26:30.3077
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RzCmoplWl0VZAuZGdmB0tHgSmqhO/haxouhxirc/r/9WtkTS98PETTQMwffOEZ2Gps4VrBOiLDde3EkAwxTa7iy394hMSsqM8Gq4A6AzIVM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6516
+X-MS-Exchange-CrossTenant-UserPrincipalName: rmHYYF1/1jmcQ65JA/tg4BiKABaU31sjBzk/VB+P4yQORO5B1f1xN+nkVUvH2TLfYwL31A32cm6gRoiJ95RnRhSPRN5uEWTYanS0oMng+KY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5731
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-16_04,2025-01-16_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2411120000 definitions=main-2501160075
-X-Proofpoint-GUID: 08CQItRoECaMUhCeWY0c2pDe1z0scCzA
-X-Proofpoint-ORIG-GUID: 08CQItRoECaMUhCeWY0c2pDe1z0scCzA
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 spamscore=0
+ suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501160077
+X-Proofpoint-ORIG-GUID: EEMMU1l63DcplHEatDAzKEZa6ET_YlJt
+X-Proofpoint-GUID: EEMMU1l63DcplHEatDAzKEZa6ET_YlJt
 
-On 15/01/2025 08:42, Jon Pan-Doh wrote:
-> Update name to reflect the broader definition of structs/variables that
-> are stored (e.g. ratelimits).
+On 15/01/2025 08:43, Jon Pan-Doh wrote:
+> Prepare for the addition of new AER sysfs attributes (e.g. ratelimits)
+> by moving them into their own directory. Update naming to reflect
+> broader definition and for consistency.
+> 
+> /sys/bus/pci/devices/<dev>/aer_dev_correctable
+> /sys/bus/pci/devices/<dev>/aer_dev_fatal
+> /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> /sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
+> /sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
+> /sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
+> ->
+> /sys/bus/pci/devices/<dev>/aer/err_cor
+> /sys/bus/pci/devices/<dev>/aer/err_fatal
+> /sys/bus/pci/devices/<dev>/aer/err_nonfatal
+> /sys/bus/pci/devices/<dev>/aer/rootport_total_err_cor
+> /sys/bus/pci/devices/<dev>/aer/rootport_total_err_fatal
+> /sys/bus/pci/devices/<dev>/aer/rootport_total_err_nonfatal
+> 
+> Tested using aer-inject[1] tool. Sent 1 AER error. Observed AER stats
+> correctedly logged (cat /sys/bus/pci/devices/<dev>/aer/dev_err_cor).
 
-I understand the intention behind this change, but I'm not fully 
-convinced if we should mix AER error attributes with the tools to 
-control error reporting/generation (ratelimits). I'd argue that 
-"aer_info" name still doesn't express what the structure does.
+I'm not a sysfs expert but my understanding is that we shouldn't do 
+major changes in the existing hierarchies.
 
-aer_stats sits in pci_dev, so I can see why you decided to use it; it's 
-one of the few available places where we could keep a stateful ratelimit.
-
-How about creating a struct to keep all the ratelimits in one place and 
-embedding that in the pci_dev?
+On one hand, I think it would be nice to extract out AER-specific info 
+and knobs into a subdirectory (e.g., using attribute_group with name 
+"aer"), but on the other this would be disruptive to the userspace. I 
+can imagine that there are tools that watch these values that would 
+break after this change.
 
 All the best,
 Karolina
 
 > 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+> 
 > Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 > ---
->   drivers/pci/pcie/aer.c | 50 +++++++++++++++++++++---------------------
->   include/linux/pci.h    |  2 +-
->   2 files changed, 26 insertions(+), 26 deletions(-)
+>   .../ABI/testing/sysfs-bus-pci-devices-aer     | 18 +++---
+>   drivers/pci/pci-sysfs.c                       |  1 -
+>   drivers/pci/pci.h                             |  1 -
+>   drivers/pci/pcie/aer.c                        | 64 +++++++------------
+>   4 files changed, 32 insertions(+), 52 deletions(-)
 > 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+> index c680a53af0f4..e1472583207b 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+> @@ -9,7 +9,7 @@ errors may be "seen" / reported by the link partner and not the
+>   problematic endpoint itself (which may report all counters as 0 as it never
+>   saw any problems).
+>   
+> -What:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
+> +What:		/sys/bus/pci/devices/<dev>/aer/err_cor
+>   Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+> @@ -19,7 +19,7 @@ Description:	List of correctable errors seen and reported by this
+>   		TOTAL_ERR_COR at the end of the file may not match the actual
+>   		total of all the errors in the file. Sample output::
+>   
+> -		    localhost /sys/devices/pci0000:00/0000:00:1c.0 # cat aer_dev_correctable
+> +		    localhost /sys/devices/pci0000:00/0000:00:1c.0/aer # cat err_cor
+>   		    Receiver Error 2
+>   		    Bad TLP 0
+>   		    Bad DLLP 0
+> @@ -30,7 +30,7 @@ Description:	List of correctable errors seen and reported by this
+>   		    Header Log Overflow 0
+>   		    TOTAL_ERR_COR 2
+>   
+> -What:		/sys/bus/pci/devices/<dev>/aer_dev_fatal
+> +What:		/sys/bus/pci/devices/<dev>/aer/err_fatal
+>   Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+> @@ -40,7 +40,7 @@ Description:	List of uncorrectable fatal errors seen and reported by this
+>   		TOTAL_ERR_FATAL at the end of the file may not match the actual
+>   		total of all the errors in the file. Sample output::
+>   
+> -		    localhost /sys/devices/pci0000:00/0000:00:1c.0 # cat aer_dev_fatal
+> +		    localhost /sys/devices/pci0000:00/0000:00:1c.0/aer # cat err_fatal
+>   		    Undefined 0
+>   		    Data Link Protocol 0
+>   		    Surprise Down Error 0
+> @@ -60,7 +60,7 @@ Description:	List of uncorrectable fatal errors seen and reported by this
+>   		    TLP Prefix Blocked Error 0
+>   		    TOTAL_ERR_FATAL 0
+>   
+> -What:		/sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> +What:		/sys/bus/pci/devices/<dev>/aer/err_nonfatal
+>   Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+> @@ -70,7 +70,7 @@ Description:	List of uncorrectable nonfatal errors seen and reported by this
+>   		TOTAL_ERR_NONFATAL at the end of the file may not match the
+>   		actual total of all the errors in the file. Sample output::
+>   
+> -		    localhost /sys/devices/pci0000:00/0000:00:1c.0 # cat aer_dev_nonfatal
+> +		    localhost /sys/devices/pci0000:00/0000:00:1c.0/aer # cat err_nonfatal
+>   		    Undefined 0
+>   		    Data Link Protocol 0
+>   		    Surprise Down Error 0
+> @@ -100,19 +100,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+>   device, so these counters include them and are thus cumulative of all the error
+>   messages on the PCI hierarchy originating at that root port.
+>   
+> -What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
+> +What:		/sys/bus/pci/devices/<dev>/aer/rootport_total_err_cor
+>   Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+>   Description:	Total number of ERR_COR messages reported to rootport.
+>   
+> -What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
+> +What:		/sys/bus/pci/devices/<dev>/aer/rootport_total_err_fatal
+>   Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+>   Description:	Total number of ERR_FATAL messages reported to rootport.
+>   
+> -What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
+> +What:		/sys/bus/pci/devices/<dev>/aer/rootport_total_err_nonfatal
+>   Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 41acb6713e2d..e16b92edf3bd 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1692,7 +1692,6 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>   	&pci_bridge_attr_group,
+>   	&pcie_dev_attr_group,
+>   #ifdef CONFIG_PCIEAER
+> -	&aer_stats_attr_group,
+>   	&aer_attr_group,
+>   #endif
+>   #ifdef CONFIG_PCIEASPM
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 9d0272a890ef..a80cfc08f634 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -880,7 +880,6 @@ static inline void of_pci_remove_node(struct pci_dev *pdev) { }
+>   void pci_no_aer(void);
+>   void pci_aer_init(struct pci_dev *dev);
+>   void pci_aer_exit(struct pci_dev *dev);
+> -extern const struct attribute_group aer_stats_attr_group;
+>   extern const struct attribute_group aer_attr_group;
+>   void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>   int pci_aer_clear_status(struct pci_dev *dev);
 > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 4bb0b3840402..5ab5cd7368bc 100644
+> index e48e2951baae..68850525cc8d 100644
 > --- a/drivers/pci/pcie/aer.c
 > +++ b/drivers/pci/pcie/aer.c
-> @@ -50,11 +50,11 @@ struct aer_rpc {
->   	DECLARE_KFIFO(aer_fifo, struct aer_err_source, AER_ERROR_SOURCES_MAX);
+> @@ -569,13 +569,13 @@ static const char *aer_agent_string[] = {
+>   }									\
+>   static DEVICE_ATTR_RO(name)
+>   
+> -aer_stats_dev_attr(aer_dev_correctable, dev_cor_errs,
+> +aer_stats_dev_attr(err_cor, dev_cor_errs,
+>   		   aer_correctable_error_string, "ERR_COR",
+>   		   dev_total_cor_errs);
+> -aer_stats_dev_attr(aer_dev_fatal, dev_fatal_errs,
+> +aer_stats_dev_attr(err_fatal, dev_fatal_errs,
+>   		   aer_uncorrectable_error_string, "ERR_FATAL",
+>   		   dev_total_fatal_errs);
+> -aer_stats_dev_attr(aer_dev_nonfatal, dev_nonfatal_errs,
+> +aer_stats_dev_attr(err_nonfatal, dev_nonfatal_errs,
+>   		   aer_uncorrectable_error_string, "ERR_NONFATAL",
+>   		   dev_total_nonfatal_errs);
+>   
+> @@ -589,47 +589,13 @@ aer_stats_dev_attr(aer_dev_nonfatal, dev_nonfatal_errs,
+>   }									\
+>   static DEVICE_ATTR_RO(name)
+>   
+> -aer_stats_rootport_attr(aer_rootport_total_err_cor,
+> +aer_stats_rootport_attr(rootport_total_err_cor,
+>   			 rootport_total_cor_errs);
+> -aer_stats_rootport_attr(aer_rootport_total_err_fatal,
+> +aer_stats_rootport_attr(rootport_total_err_fatal,
+>   			 rootport_total_fatal_errs);
+> -aer_stats_rootport_attr(aer_rootport_total_err_nonfatal,
+> +aer_stats_rootport_attr(rootport_total_err_nonfatal,
+>   			 rootport_total_nonfatal_errs);
+>   
+> -static struct attribute *aer_stats_attrs[] __ro_after_init = {
+> -	&dev_attr_aer_dev_correctable.attr,
+> -	&dev_attr_aer_dev_fatal.attr,
+> -	&dev_attr_aer_dev_nonfatal.attr,
+> -	&dev_attr_aer_rootport_total_err_cor.attr,
+> -	&dev_attr_aer_rootport_total_err_fatal.attr,
+> -	&dev_attr_aer_rootport_total_err_nonfatal.attr,
+> -	NULL
+> -};
+> -
+> -static umode_t aer_stats_attrs_are_visible(struct kobject *kobj,
+> -					   struct attribute *a, int n)
+> -{
+> -	struct device *dev = kobj_to_dev(kobj);
+> -	struct pci_dev *pdev = to_pci_dev(dev);
+> -
+> -	if (!pdev->aer_info)
+> -		return 0;
+> -
+> -	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
+> -	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
+> -	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&
+> -	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> -	     (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
+> -		return 0;
+> -
+> -	return a->mode;
+> -}
+> -
+> -const struct attribute_group aer_stats_attr_group = {
+> -	.attrs  = aer_stats_attrs,
+> -	.is_visible = aer_stats_attrs_are_visible,
+> -};
+> -
+>   #define aer_ratelimit_attr(name, ratelimit)				\
+>   	static ssize_t							\
+>   	name##_show(struct device *dev, struct device_attribute *attr,	\
+> @@ -662,6 +628,14 @@ aer_ratelimit_attr(ratelimit_cor_log, cor_log_ratelimit);
+>   aer_ratelimit_attr(ratelimit_uncor_log, uncor_log_ratelimit);
+>   
+>   static struct attribute *aer_attrs[] __ro_after_init = {
+> +	/* Stats */
+> +	&dev_attr_err_cor.attr,
+> +	&dev_attr_err_fatal.attr,
+> +	&dev_attr_err_nonfatal.attr,
+> +	&dev_attr_rootport_total_err_cor.attr,
+> +	&dev_attr_rootport_total_err_fatal.attr,
+> +	&dev_attr_rootport_total_err_nonfatal.attr,
+> +	/* Ratelimits */
+>   	&dev_attr_ratelimit_cor_irq.attr,
+>   	&dev_attr_ratelimit_uncor_irq.attr,
+>   	&dev_attr_ratelimit_cor_log.attr,
+> @@ -670,13 +644,21 @@ static struct attribute *aer_attrs[] __ro_after_init = {
 >   };
 >   
-> -/* AER stats for the device */
-> -struct aer_stats {
-> +/* AER info for the device */
-> +struct aer_info {
->   
->   	/*
-> -	 * Fields for all AER capable devices. They indicate the errors
-> +	 * Stats for all AER capable devices. They indicate the errors
->   	 * "as seen by this device". Note that this may mean that if an
->   	 * end point is causing problems, the AER counters may increment
->   	 * at its link partner (e.g. root port) because the errors will be
-> @@ -76,7 +76,7 @@ struct aer_stats {
->   	u64 dev_total_nonfatal_errs;
->   
->   	/*
-> -	 * Fields for Root ports & root complex event collectors only, these
-> +	 * Stats for Root ports & root complex event collectors only, these
->   	 * indicate the total number of ERR_COR, ERR_FATAL, and ERR_NONFATAL
->   	 * messages received by the root port / event collector, INCLUDING the
->   	 * ones that are generated internally (by the rootport itself)
-> @@ -373,7 +373,7 @@ void pci_aer_init(struct pci_dev *dev)
->   	if (!dev->aer_cap)
->   		return;
->   
-> -	dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
-> +	dev->aer_info = kzalloc(sizeof(struct aer_info), GFP_KERNEL);
->   
->   	/*
->   	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
-> @@ -394,8 +394,8 @@ void pci_aer_init(struct pci_dev *dev)
->   
->   void pci_aer_exit(struct pci_dev *dev)
+>   static umode_t aer_attrs_are_visible(struct kobject *kobj,
+> -				     struct attribute *a, int n)
+> +					   struct attribute *a, int n)
 >   {
-> -	kfree(dev->aer_stats);
-> -	dev->aer_stats = NULL;
-> +	kfree(dev->aer_info);
-> +	dev->aer_info = NULL;
->   }
->   
->   #define AER_AGENT_RECEIVER		0
-> @@ -533,10 +533,10 @@ static const char *aer_agent_string[] = {
->   {									\
->   	unsigned int i;							\
->   	struct pci_dev *pdev = to_pci_dev(dev);				\
-> -	u64 *stats = pdev->aer_stats->stats_array;			\
-> +	u64 *stats = pdev->aer_info->stats_array;			\
->   	size_t len = 0;							\
->   									\
-> -	for (i = 0; i < ARRAY_SIZE(pdev->aer_stats->stats_array); i++) {\
-> +	for (i = 0; i < ARRAY_SIZE(pdev->aer_info->stats_array); i++) {\
->   		if (strings_array[i])					\
->   			len += sysfs_emit_at(buf, len, "%s %llu\n",	\
->   					     strings_array[i],		\
-> @@ -547,7 +547,7 @@ static const char *aer_agent_string[] = {
->   					     i, stats[i]);		\
->   	}								\
->   	len += sysfs_emit_at(buf, len, "TOTAL_%s %llu\n", total_string,	\
-> -			     pdev->aer_stats->total_field);		\
-> +			     pdev->aer_info->total_field);		\
->   	return len;							\
->   }									\
->   static DEVICE_ATTR_RO(name)
-> @@ -568,7 +568,7 @@ aer_stats_dev_attr(aer_dev_nonfatal, dev_nonfatal_errs,
->   		     char *buf)						\
->   {									\
->   	struct pci_dev *pdev = to_pci_dev(dev);				\
-> -	return sysfs_emit(buf, "%llu\n", pdev->aer_stats->field);	\
-> +	return sysfs_emit(buf, "%llu\n", pdev->aer_info->field);	\
->   }									\
->   static DEVICE_ATTR_RO(name)
->   
-> @@ -595,7 +595,7 @@ static umode_t aer_stats_attrs_are_visible(struct kobject *kobj,
 >   	struct device *dev = kobj_to_dev(kobj);
 >   	struct pci_dev *pdev = to_pci_dev(dev);
 >   
-> -	if (!pdev->aer_stats)
-> +	if (!pdev->aer_info)
+>   	if (!pdev->aer_info)
 >   		return 0;
->   
->   	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
-> @@ -619,25 +619,25 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->   	unsigned long status = info->status & ~info->mask;
->   	int i, max = -1;
->   	u64 *counter = NULL;
-> -	struct aer_stats *aer_stats = pdev->aer_stats;
-> +	struct aer_info *aer_info = pdev->aer_info;
->   
-> -	if (!aer_stats)
-> +	if (!aer_info)
->   		return;
->   
->   	switch (info->severity) {
->   	case AER_CORRECTABLE:
-> -		aer_stats->dev_total_cor_errs++;
-> -		counter = &aer_stats->dev_cor_errs[0];
-> +		aer_info->dev_total_cor_errs++;
-> +		counter = &aer_info->dev_cor_errs[0];
->   		max = AER_MAX_TYPEOF_COR_ERRS;
->   		break;
->   	case AER_NONFATAL:
-> -		aer_stats->dev_total_nonfatal_errs++;
-> -		counter = &aer_stats->dev_nonfatal_errs[0];
-> +		aer_info->dev_total_nonfatal_errs++;
-> +		counter = &aer_info->dev_nonfatal_errs[0];
->   		max = AER_MAX_TYPEOF_UNCOR_ERRS;
->   		break;
->   	case AER_FATAL:
-> -		aer_stats->dev_total_fatal_errs++;
-> -		counter = &aer_stats->dev_fatal_errs[0];
-> +		aer_info->dev_total_fatal_errs++;
-> +		counter = &aer_info->dev_fatal_errs[0];
->   		max = AER_MAX_TYPEOF_UNCOR_ERRS;
->   		break;
->   	}
-> @@ -649,19 +649,19 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->   static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
->   				 struct aer_err_source *e_src)
->   {
-> -	struct aer_stats *aer_stats = pdev->aer_stats;
-> +	struct aer_info *aer_info = pdev->aer_info;
->   
-> -	if (!aer_stats)
-> +	if (!aer_info)
->   		return;
->   
->   	if (e_src->status & PCI_ERR_ROOT_COR_RCV)
-> -		aer_stats->rootport_total_cor_errs++;
-> +		aer_info->rootport_total_cor_errs++;
->   
->   	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
->   		if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
-> -			aer_stats->rootport_total_fatal_errs++;
-> +			aer_info->rootport_total_fatal_errs++;
->   		else
-> -			aer_stats->rootport_total_nonfatal_errs++;
-> +			aer_info->rootport_total_nonfatal_errs++;
->   	}
+> +
+> +	if ((a == &dev_attr_rootport_total_err_cor.attr ||
+> +	     a == &dev_attr_rootport_total_err_fatal.attr ||
+> +	     a == &dev_attr_rootport_total_err_nonfatal.attr) &&
+> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> +	     (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
+> +		return 0;
+> +
+>   	return a->mode;
 >   }
 >   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index db9b47ce3eef..72e6f5560164 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -346,7 +346,7 @@ struct pci_dev {
->   	u8		hdr_type;	/* PCI header type (`multi' flag masked out) */
->   #ifdef CONFIG_PCIEAER
->   	u16		aer_cap;	/* AER capability offset */
-> -	struct aer_stats *aer_stats;	/* AER stats for this device */
-> +	struct aer_info *aer_info;	/* AER info for this device */
->   #endif
->   #ifdef CONFIG_PCIEPORTBUS
->   	struct rcec_ea	*rcec_ea;	/* RCEC cached endpoint association */
 
 
