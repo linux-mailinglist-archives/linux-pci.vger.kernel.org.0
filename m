@@ -1,179 +1,121 @@
-Return-Path: <linux-pci+bounces-19943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E328A1321D
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 05:47:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96F05A132D8
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 06:55:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C88243A5347
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 04:47:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A78211881AF7
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 05:55:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA4113B58A;
-	Thu, 16 Jan 2025 04:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A64418DF62;
+	Thu, 16 Jan 2025 05:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rp9kWckM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnakeHV6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521C5EC4
-	for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 04:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D980215886C
+	for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 05:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737002856; cv=none; b=hvQt5hZzELAOT74Wn/fHW27JrXvlC7CseX8y66m2jYIfDmfjDersMU8G2UFAV7dakw4HuDp3BzciWmxKfU0Byp9IwK2zGwhmqimom65kq9VWssb5QiNHZbU97ZbxV+yZ1ssKRuJC+Fh/2avZEHTngxTvw0h4Yhk3QVl6lNaPOJs=
+	t=1737006916; cv=none; b=GYKXb1/UZ5wZoYjh+uST0hhr3MU3rxxO9cEKP3HhJFmx2SyuFrQwrk4QWQzpyD35MSAXTWlyWff1dYx0cRzUXXbyVzGWiLIhfhqffjZEsg3K2q/x8CDaFvVt7j/X+UkHuNYnWSMmbRPRmJzLOp0+kk5VuJf0rzDjorKB1ZLXjmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737002856; c=relaxed/simple;
-	bh=LX6Kpof3GqQFlFOI2OjFz/Xlb/CA76NP/oUe2XWNbz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FG0EC/1cHGtfiAWBbJNXSrmihD6gEF/vlAinscfePSmFWsz6FkVz0DF+c+0vkulrUMKFvAKAzr55VOHNraSI0Dg0Ye39/D4hRDyyEM79AdFg/5NiOzghUFXm7aSLgDqkY59uIIlfFUqL3Vq0EMvCVvCEHtLS1QydXjAqzX17+QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rp9kWckM; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2161eb95317so7488105ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2025 20:47:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737002855; x=1737607655; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=V01nO0SZ37R+JBLX/uBesYNHFkKJgAfRsOpWZID4QTg=;
-        b=Rp9kWckMO21zjCKeZ20RT0ABHl4/CQNKJQ2k3VnYGwBhVjLUD6seewsC5av6ORSgls
-         fQo4mPWBqhwxn2jMpAMlfxMkeZby16GBrq7agYxNQfm4l2Q4LDGr2ldq5SUv9BMGESd1
-         /mBSvyWdI2gH5MA5flhZ46IbxFAdcAz3YJrbIvBeTqaUotIYt7hT8D+DLQvB6X2cbfvR
-         vR1Bw7tKK7yBLeXpZY/ySUA2Ehr1A7Gm1id2rvgjU1G1PMO4jpOaVzp8N2vLA9YlOZdG
-         PHCo/F3avssvx38FHTmmQcrYOPkpvkKpHfCrlmF96VbfQXBMHyGUajUUmH9KDrecugoB
-         HVvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737002855; x=1737607655;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V01nO0SZ37R+JBLX/uBesYNHFkKJgAfRsOpWZID4QTg=;
-        b=Dj/0pB9st5fp1OXXwtEtCooD2g7f9RNwpoS6tfUUa8/Y85yL2mdlyGLr38hdLm0J3d
-         6/TLomexKUukUeygC2pRjqEwZK61XA+P3KFKKfMmQbxU1+cjnO0vZ/UuiIaWisAXue+V
-         UGGqp8BlWxFt1CPsf+ZRIuR+3FSPg8FJe9EmzyTJHASrSczou4zxmpsVQWJI6RZVqe4q
-         x9x/BOoyYeQe/HO6F9VIgIvW9eAzi+rDWCkO76cQEX/U2YnUB4dNKaSHawIUOt4hhHzI
-         YW+Lx/HEK1I9LlrYLF1k72I3AQElDopWhYKBZSWHauQ5sqM7XTHoOoK0TBJ1V/zRehOk
-         h+9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWyfUZoDRNAPeTexAh7eluNfStg/zYLUkgRWlAEKsey+aXoaUsHIt55xZSd+iB8RZJAqP7ZJZuqMqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycGMj0gaUA/fseZmVTP6zuBa+DiilGufiCNmsDTLLURvneX8WS
-	jyTH9b6oo8NN4RTopLBFai1UYUVoXr0BC9PA4numQKwu9AOThRVBUP6dTRuSUw==
-X-Gm-Gg: ASbGncv0j9CVu9cr0jpiF+DrDpJL/cFt62ldVin4IQmB0EJ5BMU7aqxlP0525s0k/mt
-	E+SlEwmKnMDfIc/8oldnz/+65afUhyC1C2HU1feCd2Y6E0wSGksPHrCUVQd+9MrUs8wN2SAjiex
-	fK3Q0oMIRsj29Cd/jCR0EAZ16S/EZnEUC/utY1fblHpHOVHQU50muet4d0sZ5BjOOru0BKBhtXh
-	wrQsvRXyHbtYzAN16lvRGmXGe6OBXdrEx4T7VxzwFo5WgkTl8Ftb7bBEnoSN1JjvHc=
-X-Google-Smtp-Source: AGHT+IHwfbiGq5loLxwv4zEURJyYuoHb37VHX9d1McOu5eZZj9jVra5zahjjNYA5h9O2VRKhhlx4Rg==
-X-Received: by 2002:a05:6a00:392a:b0:725:b347:c3cc with SMTP id d2e1a72fcca58-72d2200273bmr45899486b3a.23.1737002854546;
-        Wed, 15 Jan 2025 20:47:34 -0800 (PST)
-Received: from thinkpad ([120.60.139.68])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d405943c2sm9984852b3a.79.2025.01.15.20.47.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 20:47:34 -0800 (PST)
-Date: Thu, 16 Jan 2025 10:17:25 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, kw@linux.com, gregkh@linuxfoundation.org,
-	arnd@arndb.de, lpieralisi@kernel.org, shuah@kernel.org,
-	kishon@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org, robh@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Aman Gupta <aman1.gupta@samsung.com>,
-	Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-Subject: Re: [PATCH v4 3/3] selftests: pci_endpoint: Migrate to Kselftest
- framework
-Message-ID: <20250116044725.ooskvqlh2lpdr2xx@thinkpad>
-References: <20241231131341.39292-1-manivannan.sadhasivam@linaro.org>
- <20241231131341.39292-4-manivannan.sadhasivam@linaro.org>
- <Z3QtEihbiKIGogWA@ryzen>
- <20241231191812.ymyss2dh7naz4oda@thinkpad>
- <2C16240A-28F8-4D9B-9FD7-33E4E6F0879E@kernel.org>
- <20250102070404.aempesitsqktfnle@thinkpad>
- <Z3ahUuSjRv66L_g9@ryzen>
+	s=arc-20240116; t=1737006916; c=relaxed/simple;
+	bh=dHSCQh2hpv7uTp+4wlZs5fCctZWZTZ1ZqOWdbFjmwCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=KkwDvncWa3aLlZ0UiHpLYsq7xO/GQeHQg1xqMkuidCUw4Fk0Afp0jszLCrELUZEMNtIVROaN0brTLrjxz2qNLQvu6+8H0+9UwVu6oHhuAxyLv6dcFHlXiR/8ruywc3kAAP3Cx0Sx4ZL0bai8d2DEnLFV1Tfh3KNsBJHd9d11PqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnakeHV6; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737006915; x=1768542915;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=dHSCQh2hpv7uTp+4wlZs5fCctZWZTZ1ZqOWdbFjmwCA=;
+  b=dnakeHV6Ok/LiY57BHTJeyrVq4DZ6XedlcnMyQFoiwJZp052u0qb9r9h
+   Opn7rL1zVHpQUgjFQuYG/KiQF86Ehj3AbzmG0PlvMi2rMTvlWThW9hOyY
+   v0gLukFOCFCXQnuErsPDzGDn47Qa8DLea55g5GfodgJXsakim5h/34QoG
+   quDbmhKej0xyYz14QpuKLlglfnMgtJVq45FefSh0N03wVFDGFH/3U/Y1g
+   ANaCBzLcGBTVEU0n0UbHkmz+KvgUO9EDaY7XinwaW/jj3db2F1Wdzzf8Z
+   62WbYyLbBz1egPLr29CrrQTK7Y1FoV4AsYl9r6lwLcLGl6IgDPTBLNZQY
+   g==;
+X-CSE-ConnectionGUID: gz0PQhfWTT2tMDlEPHSLRA==
+X-CSE-MsgGUID: owd4nZWtREKu4BSdAmxNdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="37256233"
+X-IronPort-AV: E=Sophos;i="6.13,208,1732608000"; 
+   d="scan'208";a="37256233"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 21:55:14 -0800
+X-CSE-ConnectionGUID: s9hP6bYiSsKlnOp2H/TDmA==
+X-CSE-MsgGUID: 0/jrmtBNR++0ESCWTlfuCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="109409167"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 15 Jan 2025 21:55:12 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tYIqU-000RSp-1A;
+	Thu, 16 Jan 2025 05:55:10 +0000
+Date: Thu, 16 Jan 2025 13:54:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:pci-fixup] BUILD SUCCESS
+ b1049f2d68693c80a576c4578d96774a68df2bad
+Message-ID: <202501161324.INhLkLd1-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z3ahUuSjRv66L_g9@ryzen>
+Content-Type: text/plain; charset=us-ascii
 
-On Thu, Jan 02, 2025 at 03:23:14PM +0100, Niklas Cassel wrote:
-> Hello Mani, Vinod,
-> 
-> On Thu, Jan 02, 2025 at 12:34:04PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Dec 31, 2024 at 08:33:57PM +0100, Niklas Cassel wrote:
-> > > 
-> > > I have some patches that adds DMA_MEMCPY to dw-edma, but I'm not sure if the DWC eDMA hardware supports having both src and dst as PCI addresses, or if only one of them can be a PCI address (with the other one being a local address).
-> > > 
-> > > If only one of them can be a PCI address, then I'm not sure if your suggested patch is correct.
-> > > 
-> > 
-> > I don't see why that would be an issue. DMA_MEMCPY is independent of PCI/local
-> > addresses. If a dmaengine driver support doing MEMCPY, then the dma cap should
-> > be sufficient. As you said, if a controller supports both SLAVE and MEMCPY, the
-> > test currently errors out, which is wrong.
-> 
-> While I am okay with your suggested change to pci-epf-test.c:
-> > >-               if (epf_test->dma_private) {
-> > >+               if (!dma_has_cap(DMA_MEMCPY, epf_test->dma_chan_tx->device->cap_mask)) {
-> 
-> Since this will ensure that a DMA driver implementing DMA_MEMCPY,
-> which cannot be shared (has DMA_PRIVATE set), will not error out.
-> 
-> 
-> What I'm trying to explain is that in:
-> https://lore.kernel.org/linux-pci/Z2BW4CjdE1p50AhC@vaman/
-> https://lore.kernel.org/linux-pci/20241217090129.6dodrgi4tn7l3cod@thinkpad/
-> 
-> Vinod (any you) suggested that we should add support for prep_memcpy()
-> (which implies also setting cap DMA_MEMCPY) in the dw-edma DMA driver.
-> 
-> However, from section "6.3 Using the DMA" in the DWC databook,
-> the DWC eDMA hardware only supports:
-> - Transfer (copy) of a block of data from local memory to remote memory.
-> - Transfer (copy) of a block of data from remote memory to local memory.
-> 
-> 
-> Currently, we have:
-> https://github.com/torvalds/linux/blob/v6.13-rc5/include/linux/dmaengine.h#L843-L844
-> https://github.com/torvalds/linux/blob/v6.13-rc5/drivers/dma/dw-edma/dw-edma-core.c#L215-L231
-> 
-> Where we can expose per-channel capabilities, so we set MEM_TO_DEV/DEV_TO_MEM
-> per channel, however, these are returned in a struct dma_slave_caps *caps,
-> so this is AFAICT only for DMA_SLAVE, not for DMA_MEMCPY.
-> 
-> Looking at:
-> https://github.com/torvalds/linux/blob/v6.13-rc5/include/linux/dmaengine.h#L975-L979
-> it seems that DMA_MEMCPY is always assumed to be MEM_TO_MEM.
-> 
-> To me, it seems that we would either need a new dma_transaction_type (e.g. DMA_COPY)
-> where we can set dir:
-> MEM_TO_DEV, DEV_TO_MEM, or DEV_TO_DEV. (dw-edma would not support DEV_TO_DEV.)
-> 
-> Or, if we should stick with DMA_MEMCPY, we would need another way of telling
-> client drivers that only src or dst can be a remote address.
-> 
-> Until this is solved, I think I will stop my work on adding DMA_MEMCPY to the
-> dw-edma driver.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pci-fixup
+branch HEAD: b1049f2d68693c80a576c4578d96774a68df2bad  PCI: Avoid putting some root ports into D3 on TUXEDO Sirius Gen1
 
-I think your concern is regarding setting the DMA transfer direction for MEMCPY,
-right? And you are saying that even if we use tx/rx channels, currently we
-cannot set DEV_TO_DEV like directions?
+elapsed time: 1451m
 
-But I'm somewhat confused about what is blocking you from adding MEMCPY support
-to the dw-edma driver since that driver cannot support DEV_TO_DEV. In your WIP
-driver, you were setting the direction based on the channel. Isn't that
-sufficient enough?
+configs tested: 26
+configs skipped: 222
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-மணிவண்ணன் சதாசிவம்
+tested configs:
+i386    buildonly-randconfig-001-20250115    clang-19
+i386    buildonly-randconfig-001-20250116    clang-19
+i386    buildonly-randconfig-002-20250115    gcc-12
+i386    buildonly-randconfig-002-20250116    clang-19
+i386    buildonly-randconfig-003-20250115    gcc-12
+i386    buildonly-randconfig-003-20250116    clang-19
+i386    buildonly-randconfig-004-20250115    gcc-12
+i386    buildonly-randconfig-004-20250116    clang-19
+i386    buildonly-randconfig-005-20250115    gcc-12
+i386    buildonly-randconfig-005-20250116    clang-19
+i386    buildonly-randconfig-006-20250115    gcc-12
+i386    buildonly-randconfig-006-20250116    clang-19
+x86_64                        allnoconfig    clang-19
+x86_64  buildonly-randconfig-001-20250115    gcc-12
+x86_64  buildonly-randconfig-001-20250116    gcc-12
+x86_64  buildonly-randconfig-002-20250115    gcc-12
+x86_64  buildonly-randconfig-002-20250116    gcc-12
+x86_64  buildonly-randconfig-003-20250115    clang-19
+x86_64  buildonly-randconfig-003-20250116    gcc-12
+x86_64  buildonly-randconfig-004-20250115    clang-19
+x86_64  buildonly-randconfig-004-20250116    clang-19
+x86_64  buildonly-randconfig-005-20250115    gcc-12
+x86_64  buildonly-randconfig-005-20250116    clang-19
+x86_64  buildonly-randconfig-006-20250115    clang-19
+x86_64  buildonly-randconfig-006-20250116    clang-19
+x86_64                          defconfig    gcc-11
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
