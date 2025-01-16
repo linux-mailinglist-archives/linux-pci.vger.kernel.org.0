@@ -1,59 +1,91 @@
-Return-Path: <linux-pci+bounces-19992-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19993-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 821E2A14054
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 18:09:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F362A14066
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 18:11:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 062443A17EA
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 17:09:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4340A7A1F39
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 17:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A88022DC41;
-	Thu, 16 Jan 2025 17:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E14822BAB0;
+	Thu, 16 Jan 2025 17:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PX3bO30m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OZHiaE2r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D702AE96;
-	Thu, 16 Jan 2025 17:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983E714F9E7
+	for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 17:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737047245; cv=none; b=lxne3YBeIc02w3X4rmqLj5dWuQ1ggwDARHxvccofYX6C9kHApYEY1j7Bx9S2mOrrUGfIKgAiWGDy5IzcWtX7+n9BadlI8Y/AAT0e7Jt7vPcnky/NrwBYQZ88Is2ODu/hNhsWSByajsHQFUMufwpx0E84oDR0FvliO9y8+LZ34Rw=
+	t=1737047425; cv=none; b=uKQKbW3uYMC4j82FWQr1lvmmi3q+BA3KN9Z7cgKQWXsY1TtH9TyF4VaJJGg3YzvZCN5oJludXbvMDElz/PG7/3jjAEDPcVtVJ+y74PM/7QEJXejgR+XB4NDK9Uihv0W/USMJRiiZD3q4D6jeGlJHH9vT508Xdsz0Rn4HUJ3bc2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737047245; c=relaxed/simple;
-	bh=pHmOcJZOrilTdmTARnJBuK8Ee8LYE3oxweFl53AmY6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mLiQIkV0ajAxEJfuxapR027QhHaQWfQuEsJf7xRg8v2n8IV1zJDNXTv6t4+nztFyQF0J/6cbFS7Gif7E8ebx/GtmGr/exmYy770HY9qt1jVkf3HM0vfA8hUe1cufmbpEkdPofXh9Du+YSjw8PcCWqiIb7G1TzSzAI+gR+kYos6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PX3bO30m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725C4C4CED6;
-	Thu, 16 Jan 2025 17:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737047244;
-	bh=pHmOcJZOrilTdmTARnJBuK8Ee8LYE3oxweFl53AmY6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PX3bO30mgoYZOP5FVB/STh23OfeV/3vROEx2TAAi/MVWbjPdtXiXZB2XAHpBz2OHg
-	 ybmG1cGM854smS23RtuJG7xsVwg8MLL/wb1vTMvRJHWocQfyr+M5FS8xlEyCigcTej
-	 uM7DR200XMszSGAjxh0747KYtMCfqXsTdQkvRGYd/vfYFOyYLIwG0wTgtHXoLZOuug
-	 we6iZJMcjIKjYUpX4Y5cR0T9IMktkGZ1RMuVO8C9PXu09ZQvj4iqxhoXWM28u+WN8p
-	 Fv/BlqeB6H92yF6biuUVoWRuVBqg6+P806aazHrXbmmXPElYKKbN0uc5hIR1Etv8fG
-	 jo9cbjgQwT0gg==
-Date: Thu, 16 Jan 2025 11:07:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: daire.mcnamara@microchip.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, conor.dooley@microchip.com,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ilpo.jarvinen@linux.intel.com,
-	kevin.xie@starfivetech.com, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v10 1/3] PCI: microchip: Fix outbound address translation
- tables
-Message-ID: <20250116170722.GA589558@bhelgaas>
+	s=arc-20240116; t=1737047425; c=relaxed/simple;
+	bh=0+csCrr4692adIibOQFpvzflsWpcZWDhPh+l7iT1Y+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hv0x+v2mC4fGZJo3ZdKM5vYltmbvEosUEd7Zbe/jcK8QtZNXAo4Ernhe1y4fDilQxsB7IYHE3edNrlzOsxnol8A+lbkMtn2HCvWYtJSTv0LNcCnfAb5ItGE93391eelVR5mv2uhT/nJySpZUgauZtfHajKwY9nN3rdEpn++AnTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OZHiaE2r; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21654fdd5daso21102515ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 09:10:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737047423; x=1737652223; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3a4fDQ0edVO3KpLvTInYDMVl/7bZp9NSvT62CDgMNsw=;
+        b=OZHiaE2rbNS1j7Yja9O1128UWg6xu6AsmoQu95fwchLzny59DkMqHjuhcZ5ATgOwPL
+         e2QUc9NlqvH/w60MgqttRvAl7ZZ4LK4SB8g6CObFPCEpwRZTDh3ARl/fcN8Hpzh786m5
+         qgH3q5ekB1Lwoe/2+99qDmll6WG8CLqpzj3C4JsOm0RAeao218ipawLCRiBZ7TSWSJpu
+         uE64STa4Z7nQXMf1E90bNAL9DDLT+S+pfI7mNJQNhk3m+D+k6UaF9ri0gxLBG5GCnGDT
+         NCIi9DXZECwGNwuk61INsP1viXm74lktMzJZYmgwoORMZnJM46HGAOFUFk0Ce98p62Il
+         02Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737047423; x=1737652223;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3a4fDQ0edVO3KpLvTInYDMVl/7bZp9NSvT62CDgMNsw=;
+        b=VwBJt6qOSuTExodb3A9F+VU+ame78bLLB9PPy2mQj3zmLUM2CMdGs+8hzC/Bhb24YB
+         U3+PsxL3Uxzqm7uUQWEEAc+aKFFwD13ve0i8Fk4P+YcXivC6G9x0aFQcaKRNPUzob8g4
+         jrgQLnFSZRpcl951GpWEOrWP35fYvM6Rjrd55KQVxiUu4BlJSsDeETQFSYa8PenX5rrh
+         b35koxg0WUq7uvPPfKNtFZpNp3l7ihoOiY6tFPpwcBHIT5VYL1/2O5I9uti9OPeM5DcH
+         iqhh6K4HCDweve5zC9cjVIMMWk3X/nkk9VV2GGleIFCIJBIbH7ORFWtbXAWELnKilbif
+         MNKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKwJqFqkxKwPSTvaDtf9P1b71jQ8AH/cE2TS9iTHW3OoENjASGEKInp8Lp5v93T/zCaFx33tgJ3Ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw7L2NlU7hWaY+6ZrQnDoGoU0JJlCL23lEfLezSptasGeXFRKv
+	4eyf0HvEl61Q98AAgolehuCJdVDyvX6aZvvLizKHD0gpVkJbZc9j0dJlkTyob3XTMMmXXYYebro
+	=
+X-Gm-Gg: ASbGnctW6K5BFqWaUMEgaX5bFTlQgJ0AEp9SWb2vK3GeafaVw3cUBKLizwWWS7bUU19
+	L6XDQm+eZ4e8bF1Yl+QEMnzWH6vQHQ92yvJaDYNN6y2VoDwAMzGJ41VMvyo8L0UCuHbSHSHB0cw
+	eo9Iy6ZbcmsPcP+sylJAbU5oxje6sjc87aTlX3Pb8rzGKYNl14wtuZ5suXgJreAtHOiNRy6CL0r
+	AmpUecbxRDZMEXcjJPywpE8zLSMNPhKJu4wxyYWQGa6MzCsO5637Fwnzr/dziOF/bI=
+X-Google-Smtp-Source: AGHT+IE6z2dUwqkoyAySw2Q7XUlUMsfTswTyuxhk+t0IYd3aWtK0Xli9iFaSAAV9AWhDsimgl8t/JQ==
+X-Received: by 2002:a17:902:d510:b0:216:5568:38c9 with SMTP id d9443c01a7336-21a83f765dbmr532412725ad.31.1737047423008;
+        Thu, 16 Jan 2025 09:10:23 -0800 (PST)
+Received: from thinkpad ([120.60.79.208])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a9bdf0b5153sm243379a12.70.2025.01.16.09.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2025 09:10:22 -0800 (PST)
+Date: Thu, 16 Jan 2025 22:40:15 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
+	lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, linux-arm-msm@vger.kernel.org, robh@kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] Migrate PCI Endpoint Subsystem tests to Kselftest
+Message-ID: <20250116171015.oe67k57qkrg4p3f7@thinkpad>
+References: <20250116135106.19143-1-manivannan.sadhasivam@linaro.org>
+ <Z4knZyKrEvVNopeX@ryzen>
+ <20250116161227.gk2psmbzpexswgrm@thinkpad>
+ <CCADFA64-D3BD-4972-994A-48E2606CCC66@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,97 +95,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250116-debatable-hazelnut-6501986373fa@spud>
+In-Reply-To: <CCADFA64-D3BD-4972-994A-48E2606CCC66@kernel.org>
 
-[+cc Frank, original patch at
-https://lore.kernel.org/r/20241011140043.1250030-2-daire.mcnamara@microchip.com]
+On Thu, Jan 16, 2025 at 05:39:30PM +0100, Niklas Cassel wrote:
+> 
 
-On Thu, Jan 16, 2025 at 04:46:19PM +0000, Conor Dooley wrote:
-> On Thu, Jan 16, 2025 at 09:42:53AM -0600, Bjorn Helgaas wrote:
-> > On Tue, Jan 14, 2025 at 06:13:10PM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Oct 11, 2024 at 03:00:41PM +0100, daire.mcnamara@microchip.com wrote:
-> > > > From: Daire McNamara <daire.mcnamara@microchip.com>
-> > > > 
-> > > > On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
-> > > > three general-purpose Fabric Interface Controller (FIC) buses that
-> > > > encapsulate an AXI-M interface. That FIC is responsible for managing
-> > > > the translations of the upper 32-bits of the AXI-M address. On MPFS,
-> > > > the Root Port driver needs to take account of that outbound address
-> > > > translation done by the parent FIC bus before setting up its own
-> > > > outbound address translation tables.  In all cases on MPFS,
-> > > > the remaining outbound address translation tables are 32-bit only.
-> > > > 
-> > > > Limit the outbound address translation tables to 32-bit only.
-> > > 
-> > > I don't quite understand what this is saying.  It seems like the code
-> > > keeps only the low 32 bits of a PCI address and throws away any
-> > > address bits above the low 32.
-> > > 
-> > > If that's what the FIC does, I wouldn't describe the FIC as
-> > > "translating the upper 32 bits" since it sounds like the translation
-> > > is just truncation.
-> > > 
-> > > I guess it must be more complicated than that?  I assume you can still
-> > > reach BARs that have PCI addresses above 4GB using CPU loads/stores?
-> > > 
-> > > The apertures through the host bridge for MMIO access are described by
-> > > DT ranges properties, so this must be something that can't be
-> > > described that way?
-> > 
-> > Ping?  I'd really like to understand this before the v6.14 merge
-> > window opens on Sunday.
-> 
-> Daire's been having some issues getting onto the corporate VPN to send
-> his reply, I've pasted it below on his behalf:
-> 
-> There are 3 Fabric Inter Connect (FIC) buses on PolarFire SoC - each of
-> these FIC buses contain an AXI master bus and are 64-bits wide. These
-> AXI-Masters (each with an individual 64-bit AXI base address – for example
-> FIC1’s AXI Master has a base address of 0x2000000000) are connected to
-> general purpose FPGA logic. This FPGA logic is, in turn, connected to a
-> 2nd 32-bit AXI master which is attached to the PCIe block in RootPort mode.
-> Conceptually, on the other side of this configurable logic, there is a
-> 32-bit bus to a hard PCIe rootport.  So, again conceptually, outbound address
-> translation looks like this:
-> 
->                  Processor Complex à FIC (64-bit AXI-M) à Configurable Logic à 32-bit AXI-M à PCIe Rootport
-> 		 (This how it came to me from Daire, I think the á is meant to
-> 		 be an arrow)
-> 
->  This allows a designer two broad choices:
-> 
->     Choice of FIC (effectively choice of AXI bus)
->     Ability to offset the AXI address of any peripherals they add in the
->     Fabric.
-> 
-> So, for the case of an outbound AXI address, from the processors’ point
-> of view (or Linux’ point of view if you prefer), the processor uses a
-> 64-bit AXI address, then – in a very general way of viewing the process
-> and thinking only about accessing the PCIe device – the FPGA logic can
-> be configured to adjust that AXI-M address to any arbitrary “address”
-> before it passes that new “address” to the Root Port over a second 32-bit
-> AXI bus (the main constraint is that the FPGA logic can only use a 32-bit
-> address on that AXI-M interface to the Root Port).
-> 
-> To manage this complexity, Microchip have design rules for customers
-> building their FPGA logic where we strongly recommend that they only
-> interact with  the upper 32 bits of the 64-bit address in the FPGA logic
-> and pass the lower 32 bits through (unmodified) to the AXI-M side of the
-> PCIe Root Port. This allows them to “move” a 64-bit AXI-M window for their
-> PCIe Root Port (as viewed by the processor) for their particular design –
-> if they need to - so that they can also access any other AXI-M windows
-> associated with any other peripherals they might add to their design.
-> 
-> In practise, so far, all customers, and our own internal boards have all
-> started by using one of two major reference designs from us (one using FIC1
-> where the AXI-M window destined for the PCIe Root Port starts at 0x2000000000
-> and one using FIC2 where its AXI-M window, again destined for the PCIe Root
-> Port starts at 0x3000000000).
+[...]
 
-Is there something special about this that cannot be described by a DT
-'ranges' property?  This sounds conceptually similar to Frank's nice
-picture at
-https://lore.kernel.org/r/20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.com
+> So the output matched the suggested values in the documentation.
+> 
+> After this series, the documentation still suggests msi == 16 and msi-x == 8,
+> but the example output now shows that
+> there was no failures.
+> 
 
-Bjorn
+Ah, I misunderstood what you meant.
+
+> 
+> So I think it is most consistent to just update the example in the same commit (in this series) that updates the output to show everything as good.
+> 
+
+Yeah, makes sense. Let me change it in next revision, thanks!
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
