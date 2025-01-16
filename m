@@ -1,257 +1,245 @@
-Return-Path: <linux-pci+bounces-20002-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20003-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7215FA14119
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 18:45:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26F68A1411D
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 18:45:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6C023AAA17
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 17:45:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75D3C3AACBB
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 17:45:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4CA522CBC4;
-	Thu, 16 Jan 2025 17:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8738322CBF0;
+	Thu, 16 Jan 2025 17:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BQcXoKlQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ucq6Fxsp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2051.outbound.protection.outlook.com [40.107.241.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4002B14B094;
-	Thu, 16 Jan 2025 17:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737049532; cv=fail; b=P8bemYXOb1JnBUuDHy18cfNzv8wM2YspY4un7dwABaoyTe8xZTkp0ZVPDlnHbUm+pDPG7IXOz69SYZIm8X53dOAiwD2RxSNlXhGrrjXdYA2uCJK0Zp1qmprMDbgxdW698yPaCTZm77NZoB9hp/a8SjAXVNjBrdc2ITOZy000UIE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737049532; c=relaxed/simple;
-	bh=emdeXCSPxiWRPdNurFo9UOpMj4URIplViahjVW0sH1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OtDX8gFK2KwHSUVnt3yr4Yi0gw4cbLY+ALq5fajhwDqKorRb2gDzKHtSa0Y5ZuJ16ynvKzC2GNCL8GSsl5Kq/ow4oLD41FKtgkuCtwUZG16MNLx4p8nWs0RXrAq7ke0iQwwXO+9Sv1Y93aVNYcD8FBtVVpRFSfqW14GMRuKxyG8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BQcXoKlQ; arc=fail smtp.client-ip=40.107.241.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gPTIwYF9/FwNxZFax3GpYcgbc2x6Q+8HoT4S/yMjB/4uLlrjYNndqwZxYWHWfKNDeiUxsHAAXkO3ydZ8qdRnCCNIFChRLoC+s/qUOpls8T7NxilJ/SMWZ3CKVx+2+kU1T75n9KEIfwQCEK0MHBsLf69Ge28qZoVZeyW9p9FYfFXCdTWtKII9jOxPgCFkfoyz+2SKbK++vAjCdSXiA05bTt5cTtzL7P77gr4sW8RCoSPGNzakLw9wCYQo6Oxfsn7VHzQ9dT0x876K3WJfd10fpXcLT4yt5PdUHD57qnWKdHIIU79vaXc+EOAvheAEm97XGKEocVsYYEtBn77HZOXhng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=azVeL2bz4LUhacvYEVfGTYA8cFluyzZMef9q5esnBT4=;
- b=dfX2dEot2vHTpdkXeeJAiOuJmTAFJaGllH4Sn6cvfhVp5V1LhKUlanqSFtgJ2uF7a7UuR+dBzDXc32WzCPgfMbsweg/mc2cc+AUuAaMQxp4t89DWy5oDIpnte+3PYtQ5xRLtCwy7sAGpbhK9ks8XCRew+ELGQX2FEW1NUZSD2UlOxhXWubSsUVx+27+JIGe18vnROEaHSAyCKF+gBvA/89dCm1XcttGYFDMt2bmYjSX8otrHhMbCQ6M4+ZlsUZGyb7D1OIRsWFXqAPLktl5irEn1cjf0uLr5X/zLkxYnWMOj7PqbFpxsQMKEIPzrCXsPAWJGZ7TnrkgXZP9/FNP9TQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=azVeL2bz4LUhacvYEVfGTYA8cFluyzZMef9q5esnBT4=;
- b=BQcXoKlQXI9dcYDNygQzx1Wraq4ZTT1WDK2+IiXchp8uxrD34dJUQ1BJV5NP7f+7piNJ26oupcZqiKuQV3io6ycKL0alIgcuoH/F7VzFqfdUYsllYXU6sJ99sLOzLSW5nM25M78nn013EwJjWcZa1mrpIjYHQ4Lh6HR8LfS7mUxDMdjU6T8K0j6R7Er7LEZHTUkIU738J+fHWfEBlop1zyUt1SihMKS9ZSup0Kud73N2xNegvQmlR5BISxraLCPlw2ALSQSxrqzDIGNWKQsBCGWTs/wJs29PqfGWSjG36zk1UOQZWcweOhVIpvF+awm/XPeaXLtg52RRdTMTmOsPWA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PAXPR04MB9593.eurprd04.prod.outlook.com (2603:10a6:102:24f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.14; Thu, 16 Jan
- 2025 17:45:27 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%7]) with mapi id 15.20.8356.010; Thu, 16 Jan 2025
- 17:45:27 +0000
-Date: Thu, 16 Jan 2025 12:45:16 -0500
-From: Frank Li <Frank.li@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0CD14B094;
+	Thu, 16 Jan 2025 17:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737049539; cv=none; b=Ai17fsilk3DIaMEdSjAYtY0dH74yv70SQ1467qQFzs+K87NE6W3fRxDc1DxmCclZTqJilvngfjd/fFxIaY82h5HGE0ETKVV77SgwVkrV6OnG8rSQljhRmTLFsRyjPTROzr5cAfXQad9c2plufq2MWo/MgcNXqUND4hkkPkD2EMY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737049539; c=relaxed/simple;
+	bh=qOP/8quEcjkZRdzXe+Lb3c+dZNV8PtSVtkdwFebc86U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IpCK/8rL1LHBKLQmPmT2YfRvjKfkAKN1D2JysSXStg5EUZYOeE+1FZJeJ9JUuG97YnjPJZpMyWzlQ6CAO1K5lse9JXxrVhRUhKlAM3zBYx9txDtGcw8zoLb6UoSF6ve9WB8dXebLPaiHBl3RRe7fwEPr0GWJIVt66gxuF5GhBvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ucq6Fxsp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB72C4CEE3;
+	Thu, 16 Jan 2025 17:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737049538;
+	bh=qOP/8quEcjkZRdzXe+Lb3c+dZNV8PtSVtkdwFebc86U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ucq6Fxsp3FaH9qF1zKC7O752HhKjVflCMr7HG6CEY28cdgbyyGfIj90PidSNJ9X8K
+	 LdrloCEKQNLLcihvhXUDdj0Snb2k5oNExy1Dd9bihoNkRaFnp4YB02HO01Yn3205GY
+	 R6dpXDb7+lRfsrQWEHtjXSC9vYFbSq9qgLa/U2RqeXaGX9/xAoxV56NY8U9XRu6zbP
+	 MODAVVfE2OKoEqZLEU1KLW3PHjrk0EhONL0vI1A9y5csqNaMKNKdfj9qEyd7RFUlBz
+	 haDVmJ7EQ1FnzAh3Z3lQgU9BrG2Zx81zMypJMgA6+R4z4LGG2+bomk21cmJ/EAFgkJ
+	 z79sGq50Wi4vg==
+Date: Thu, 16 Jan 2025 17:45:33 +0000
+From: Conor Dooley <conor@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
-	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev,
-	kernel@pengutronix.de, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 06/10] PCI: imx6: Fix the missing reference clock
- disable logic
-Message-ID: <Z4lFrNNkwhl+PuXz@lizhi-Precision-Tower-5810>
-References: <20241126075702.4099164-7-hongxing.zhu@nxp.com>
- <20250116170114.GA561930@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250116170114.GA561930@bhelgaas>
-X-ClientProxiedBy: BY5PR04CA0024.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::34) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+Cc: daire.mcnamara@microchip.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, conor.dooley@microchip.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ilpo.jarvinen@linux.intel.com,
+	kevin.xie@starfivetech.com, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v10 1/3] PCI: microchip: Fix outbound address translation
+ tables
+Message-ID: <20250116-removed-evoke-1908811ab92a@spud>
+References: <20250116-debatable-hazelnut-6501986373fa@spud>
+ <20250116170722.GA589558@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PAXPR04MB9593:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc1a2daf-b944-477c-84ef-08dd36558fd0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2eK+6XM7rhlo1bDiUuW7303hcthSlEgLZgr+a8Lvegb8F5VKvmpjdaQ501+p?=
- =?us-ascii?Q?UWk9QMyewP2Kn7xD/lIBonNJNjEoS3xuDnU+IrXod6ckp40b3ofKJAMhhXbB?=
- =?us-ascii?Q?XASIl0SZZoRB6EkCADARx536qunvVFxA7jH1uNNfEiEUXl2Ntx++A+WggtAr?=
- =?us-ascii?Q?aVVC9OqviBaNdt3cDIl4a8kvo46LfqG8gPxt7C/syEsNFfiFMh5+hgLHhRD5?=
- =?us-ascii?Q?louQFPPtSjqXaTnUpio+jImLpjEPr9Djc0SwuxAE6s9bRtm7gKNVXWH+yOvH?=
- =?us-ascii?Q?Ubqf+xAQcUbJINmE54lnOGtDmgj2Uric+UYkpYGbNCFiaOoNwkkPhpUK2PYg?=
- =?us-ascii?Q?sg10F7Ra2Xl7BHTykorYHWXinpQJHOrhG1hlaLET4YJXfmpw2g51va6OuIBw?=
- =?us-ascii?Q?Z+A/0leNsj63e7xkvoBakiLmpt99fF4K2CcQCZIK6QlxbhMOsPRhPxS2zuhm?=
- =?us-ascii?Q?OCmasj4ZWOx2XHdidDFg6O9AyCyWPfBwog6EM1u+ZPutmemSHJP6Bb3PGupJ?=
- =?us-ascii?Q?KMmoppUt4ASHN2YIJxCVnocdvdPBe1Lkjr1bhbga105hTXyy4DIUbAXAdweb?=
- =?us-ascii?Q?OSSoY4zUXA/j9u9KhcvfeK8HOnFwGAbi6Xp/QzsZQo/ls9wyCSK0+L1CScnF?=
- =?us-ascii?Q?+UEu/0CliHO8pnrYE7RUurjX1FfPOm0/o47LLey+9gs4vQk+1lWcnX2a3XOp?=
- =?us-ascii?Q?cPPbz56I4gGO6bYQ3bzmIC/vAeiKPD6p9CENsniN9kWB9fKVuQQ7F3TC3vUR?=
- =?us-ascii?Q?j/VhGipUUKtFRVZOoi/cqcgHr+MnTpy3Mu9+INN7LV2iT2eZqfnzk5GA77Lf?=
- =?us-ascii?Q?WDCOjebehPSV9QWFMbIOSJlVc8u6fksoo33y0okm59dli78ktLIU0E3n/bjd?=
- =?us-ascii?Q?eaurkr/RBXd7ASuBN//2UQECAwEZEk8k16ZOnateGSSYgkEalfOFWJRB9Xcf?=
- =?us-ascii?Q?0TWI/jScK0Rp4lqMknFKmEz8smss7qqg2wyxjlsvgJaLmZXhsakYDsMtL0eX?=
- =?us-ascii?Q?uN1ln3PlsK3/8pOBcK3Web8xHpU3tJNVD+GoaqK4+3Jzxq31zKKnQwmOusXL?=
- =?us-ascii?Q?pUSuZ5jCQrJknEWTkNJdAiAfz8zlLa4HqK+1sV/uX02cx3Zxi7kL64fvdTcv?=
- =?us-ascii?Q?EZiKRl3LtW4LfyWSIjlxpm+C0rsWVskCZPIblWWbeFj6ZcOy/OcghM3I3zBk?=
- =?us-ascii?Q?JzkRfwwrHl1qQpzw0V8Sr03se8uns5VSeeu8XkYRWsi6Lq+K29014GJjAH1V?=
- =?us-ascii?Q?VLPpIzwgDNzzjNVFBqGRIzIQfFTvSYI5LBci0FGggUQ18wm/EVLtiiBDK0DI?=
- =?us-ascii?Q?Ld+kE106l2OvrFeLbX6FXDzncaBz1e23Hk5ojdArmepfX8hXk8MeBTUAbMth?=
- =?us-ascii?Q?ShE75tbYaPPo4MHOhFRjceKws51qMQutPANqvFu9lQ/lRo5ZiN6/V9UahQua?=
- =?us-ascii?Q?ZC+KoHmYXAfj/PE7XYXo9WosF1PvHXkW?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?U8ohhuC9PmRbkOdcdahK+Of675EfsLgL+cAEeK3lox4VfyKCW24DyyhfY9Vw?=
- =?us-ascii?Q?Et3G097XZu7Ey92I6p8d5zxw7DzEkQToMKSWr+QHR+fnJyQaKUIEPqGW7dPT?=
- =?us-ascii?Q?DVeO8ZENF6JazFWmH73HxaUkyy5sRcCRs5x/yyQGBigKDYbonm55SABzqknU?=
- =?us-ascii?Q?3hOkCpalcZU1IpRAY1We/QbY91mYHi/Ib9mkRXXKxYFrvgc6lKnYhlmu0Tls?=
- =?us-ascii?Q?EZE8Xw5FRzxoROspCJ7HYqRUbzIw/flhG7EmO4NYea57Iz5l2zd2jwPa5qCa?=
- =?us-ascii?Q?JyfvvQLVMmNeToQR0dyFC++6wA9ImVUFkpgktUqJ/o33sTdfph/g1fh4hxwt?=
- =?us-ascii?Q?mRUYwdhi+i2tnd/IHunKGTySSTNWkCG0LK+4r+VsaByDs2WZkjHHnzDJoADN?=
- =?us-ascii?Q?7xfeH3DTccV/TEyItM31L+nBYbfWTCmo3N7fbfW0vgbIQpG9Ub/LgUmN9Z3W?=
- =?us-ascii?Q?xp5eWiEIebEjIbLG2iwNEw1a74WBCVg4vbHMcQ4/migizOrSoiZJniYkYeRm?=
- =?us-ascii?Q?2qHCgRNkrAWOh6Ds4vtlffe4wlA5eeO3b4GR8M5H9Oks+igZ5POl/yt+5xPI?=
- =?us-ascii?Q?WU5A5JCm23uh7oak3P+oRytEfF3WjA75hkT7AVzvEcfg1kDUTMJOt4fK4xum?=
- =?us-ascii?Q?6ygkS/EpB/Uz6GjuCqJpzgJ/4BaWCOe55YJLxHcM5C45bIHtY7fDRZfhHUej?=
- =?us-ascii?Q?SPXxy2ecgwrjqxlKLBpB8d1FKgOEeFcJ1KcJgNIAjJItr4Y380m279gsxozr?=
- =?us-ascii?Q?aTj8bG1BP/li9lJEbqH9sfr7y/FTBt9zJpCqmkyaLZUOSu/J3Ns3mTTfJG75?=
- =?us-ascii?Q?GzNAzhJV284hpyy+LzAv3aZ0FeRmqpCaCZII++jgub0z8F+Wgwlu9rBnQ6eN?=
- =?us-ascii?Q?eW9NQ433ZxaTzqOTfogJMhS3Mh4F87RzHYqZB/ANo2VC4or6/IMs7dm0GwQ/?=
- =?us-ascii?Q?+zlJVq/VNxNWuypOct54ODcUvj2Tl3rKyKaZP6KV0nw/GGO1LGkoX3ocB9Oq?=
- =?us-ascii?Q?mmAKpGqi4WEfWKF5Yd5WEH+98Dc80Q+/zPeDNEBzU1KDfYPkuVjChHE9fDfN?=
- =?us-ascii?Q?3J8vkYxgtzpAXbQNPZqeY8T5YMVLGEbF7DRFQ9ZOoa49t07OTd//wRihxh/H?=
- =?us-ascii?Q?r9IcxZrnt3sKu4HSvyWaKDHTQ7UaArYLShZENV/RnF/DA5OOZWs7uQH+Sqdj?=
- =?us-ascii?Q?K28wzZH5N2gBetVflClKzddaIYoRBBLMZPamr3uZFNdbORraURF0nMpOimKK?=
- =?us-ascii?Q?6TQlc8l8yNZlWNLaxGk/OcZZ6nPTZlxWShxPdcS73MdUS8tQwAnU2oFepbFw?=
- =?us-ascii?Q?jczvhCmpRDtMdSwLTdxX28KQ5FOEzwAj9JIkIhA654C+9T+aD3kV9fgwCiVu?=
- =?us-ascii?Q?D08C61LgkatXXWAhrhml88AkMPQX1GEHc5kFWfPLtVqxb+/OvxuUvYd+c4J6?=
- =?us-ascii?Q?2cRyyCQbrsUdq4GzBAjSMdKGujlHOOovlQ7ILQaVzhMpOWjEgw2p9XJI8FzF?=
- =?us-ascii?Q?m2UNC73q1Gy4AXHHTNfZmPmgN5EgPXDOeOh0XmTlSaiIe/ccDKuRd7ztXiOg?=
- =?us-ascii?Q?Ae0BXFATXWCy0/l+UPGv43rL37Z0/aMh5XL6oYox?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc1a2daf-b944-477c-84ef-08dd36558fd0
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 17:45:27.0552
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NZvrkA9BwZYip8afeNqJl4YWMwMLBIMUu3zMGkHJaMWeoAHpS4yzFHzhHEaufWCfnrBapdGlIhFf/QrUefkI0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9593
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yFBjah3xDxz6Ta9d"
+Content-Disposition: inline
+In-Reply-To: <20250116170722.GA589558@bhelgaas>
 
-On Thu, Jan 16, 2025 at 11:01:14AM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 26, 2024 at 03:56:58PM +0800, Richard Zhu wrote:
-> > Ensure the *_enable_ref_clk() function is symmetric by addressing missing
-> > disable parts on some platforms.
-> >
-> > Fixes: d0a75c791f98 ("PCI: imx6: Factor out ref clock disable to match enable")
->
-> The patch below looks fine to me, and I guess it's more than just
-> making the code prettier; it also actually *fixes* something, right?
->
-> It looks like a functional change because imx_pcie_clk_enable() will
-> now enable the IMX7D refclk when it didn't before, and
-> imx_pcie_clk_disable() will disable the IMX6SX and IMX8M* refclk when
-> it didn't before?
->
-> But I don't think the Fixes: tag is correct.  I looked at uses of
-> these symbols:
->
->   IMX6SX_GPR12_PCIE_TEST_POWERDOWN
->     enabled by imx6_pcie_enable_ref_clk()
->     disabled by imx6_pcie_assert_core_reset()
->
->   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL
->     enabled by imx6_pcie_init_phy()
->     disabled by imx6_pcie_clk_disable()
->
->   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE
->     enabled by imx6_pcie_enable_ref_clk()
->
-> As far as I can tell, these uses are identical before and after
-> d0a75c791f98 ("PCI: imx6: Factor out ref clock disable to match
-> enable").
 
-You can drop fixes tags
+--yFBjah3xDxz6Ta9d
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Frank
->
-> > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >  drivers/pci/controller/dwc/pci-imx6.c | 24 ++++++++++++------------
-> >  1 file changed, 12 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> > index 413db182ce9f..ab2c97a8c327 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -599,10 +599,9 @@ static int imx_pcie_attach_pd(struct device *dev)
-> >
-> >  static int imx6sx_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
-> >  {
-> > -	if (enable)
-> > -		regmap_clear_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> > -				  IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
-> > -
-> > +	regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> > +			   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-> > +			   enable ? 0 : IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
-> >  	return 0;
-> >  }
-> >
-> > @@ -631,19 +630,20 @@ static int imx8mm_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
-> >  {
-> >  	int offset = imx_pcie_grp_offset(imx_pcie);
-> >
-> > -	if (enable) {
-> > -		regmap_clear_bits(imx_pcie->iomuxc_gpr, offset, IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE);
-> > -		regmap_set_bits(imx_pcie->iomuxc_gpr, offset, IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN);
-> > -	}
-> > -
-> > +	regmap_update_bits(imx_pcie->iomuxc_gpr, offset,
-> > +			   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE,
-> > +			   enable ? 0 : IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE);
-> > +	regmap_update_bits(imx_pcie->iomuxc_gpr, offset,
-> > +			   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN,
-> > +			   enable ? IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN : 0);
-> >  	return 0;
-> >  }
-> >
-> >  static int imx7d_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
-> >  {
-> > -	if (!enable)
-> > -		regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> > -				IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
-> > +	regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> > +			   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
-> > +			   enable ? 0 : IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
-> >  	return 0;
-> >  }
-> >
-> > --
-> > 2.37.1
-> >
+On Thu, Jan 16, 2025 at 11:07:22AM -0600, Bjorn Helgaas wrote:
+> [+cc Frank, original patch at
+> https://lore.kernel.org/r/20241011140043.1250030-2-daire.mcnamara@microch=
+ip.com]
+>=20
+> On Thu, Jan 16, 2025 at 04:46:19PM +0000, Conor Dooley wrote:
+> > On Thu, Jan 16, 2025 at 09:42:53AM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Jan 14, 2025 at 06:13:10PM -0600, Bjorn Helgaas wrote:
+> > > > On Fri, Oct 11, 2024 at 03:00:41PM +0100, daire.mcnamara@microchip.=
+com wrote:
+> > > > > From: Daire McNamara <daire.mcnamara@microchip.com>
+> > > > >=20
+> > > > > On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behin=
+d one of
+> > > > > three general-purpose Fabric Interface Controller (FIC) buses that
+> > > > > encapsulate an AXI-M interface. That FIC is responsible for manag=
+ing
+> > > > > the translations of the upper 32-bits of the AXI-M address. On MP=
+FS,
+> > > > > the Root Port driver needs to take account of that outbound addre=
+ss
+> > > > > translation done by the parent FIC bus before setting up its own
+> > > > > outbound address translation tables.  In all cases on MPFS,
+> > > > > the remaining outbound address translation tables are 32-bit only.
+> > > > >=20
+> > > > > Limit the outbound address translation tables to 32-bit only.
+> > > >=20
+> > > > I don't quite understand what this is saying.  It seems like the co=
+de
+> > > > keeps only the low 32 bits of a PCI address and throws away any
+> > > > address bits above the low 32.
+> > > >=20
+> > > > If that's what the FIC does, I wouldn't describe the FIC as
+> > > > "translating the upper 32 bits" since it sounds like the translation
+> > > > is just truncation.
+> > > >=20
+> > > > I guess it must be more complicated than that?  I assume you can st=
+ill
+> > > > reach BARs that have PCI addresses above 4GB using CPU loads/stores?
+> > > >=20
+> > > > The apertures through the host bridge for MMIO access are described=
+ by
+> > > > DT ranges properties, so this must be something that can't be
+> > > > described that way?
+> > >=20
+> > > Ping?  I'd really like to understand this before the v6.14 merge
+> > > window opens on Sunday.
+> >=20
+> > Daire's been having some issues getting onto the corporate VPN to send
+> > his reply, I've pasted it below on his behalf:
+> >=20
+> > There are 3 Fabric Inter Connect (FIC) buses on PolarFire SoC - each of
+> > these FIC buses contain an AXI master bus and are 64-bits wide. These
+> > AXI-Masters (each with an individual 64-bit AXI base address =E2=80=93 =
+for example
+> > FIC1=E2=80=99s AXI Master has a base address of 0x2000000000) are conne=
+cted to
+> > general purpose FPGA logic. This FPGA logic is, in turn, connected to a
+> > 2nd 32-bit AXI master which is attached to the PCIe block in RootPort m=
+ode.
+> > Conceptually, on the other side of this configurable logic, there is a
+> > 32-bit bus to a hard PCIe rootport.  So, again conceptually, outbound a=
+ddress
+> > translation looks like this:
+> >=20
+> >                  Processor Complex =C3=A0 FIC (64-bit AXI-M) =C3=A0 Con=
+figurable Logic =C3=A0 32-bit AXI-M =C3=A0 PCIe Rootport
+> > 		 (This how it came to me from Daire, I think the =C3=A1 is meant to
+> > 		 be an arrow)
+> >=20
+> >  This allows a designer two broad choices:
+> >=20
+> >     Choice of FIC (effectively choice of AXI bus)
+> >     Ability to offset the AXI address of any peripherals they add in the
+> >     Fabric.
+> >=20
+> > So, for the case of an outbound AXI address, from the processors=E2=80=
+=99 point
+> > of view (or Linux=E2=80=99 point of view if you prefer), the processor =
+uses a
+> > 64-bit AXI address, then =E2=80=93 in a very general way of viewing the=
+ process
+> > and thinking only about accessing the PCIe device =E2=80=93 the FPGA lo=
+gic can
+> > be configured to adjust that AXI-M address to any arbitrary =E2=80=9Cad=
+dress=E2=80=9D
+> > before it passes that new =E2=80=9Caddress=E2=80=9D to the Root Port ov=
+er a second 32-bit
+> > AXI bus (the main constraint is that the FPGA logic can only use a 32-b=
+it
+> > address on that AXI-M interface to the Root Port).
+> >=20
+> > To manage this complexity, Microchip have design rules for customers
+> > building their FPGA logic where we strongly recommend that they only
+> > interact with  the upper 32 bits of the 64-bit address in the FPGA logic
+> > and pass the lower 32 bits through (unmodified) to the AXI-M side of the
+> > PCIe Root Port. This allows them to =E2=80=9Cmove=E2=80=9D a 64-bit AXI=
+-M window for their
+> > PCIe Root Port (as viewed by the processor) for their particular design=
+ =E2=80=93
+> > if they need to - so that they can also access any other AXI-M windows
+> > associated with any other peripherals they might add to their design.
+> >=20
+> > In practise, so far, all customers, and our own internal boards have all
+> > started by using one of two major reference designs from us (one using =
+FIC1
+> > where the AXI-M window destined for the PCIe Root Port starts at 0x2000=
+000000
+> > and one using FIC2 where its AXI-M window, again destined for the PCIe =
+Root
+> > Port starts at 0x3000000000).
+>=20
+> Is there something special about this that cannot be described by a DT
+> 'ranges' property?  This sounds conceptually similar to Frank's nice
+> picture at
+> https://lore.kernel.org/r/20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.c=
+om
+
+
+Aye, it is similar, it is described using ranges properties, will end
+up looking something like:
+
+	fabric-pcie-bus@3000000000 {
+		compatible =3D "simple-bus";
+		#address-cells =3D <2>;
+		#size-cells =3D <2>;
+		ranges =3D <0x0 0x40000000 0x0 0x40000000 0x0 0x20000000>,
+			 <0x30 0x0 0x30 0x0 0x10 0x0>;
+		dma-ranges =3D <0x0 0x0 0x0 0x80000000 0x0 0x4000000>,
+			     <0x0 0x4000000 0x0 0xc4000000 0x0 0x6000000>,
+			     <0x0 0xa000000 0x0 0x8a000000 0x0 0x8000000>,
+			     <0x0 0x12000000 0x14 0x12000000 0x0 0x10000000>,
+			     <0x0 0x22000000 0x10 0x22000000 0x0 0x5e000000>;
+
+		pcie: pcie@3000000000 {
+			compatible =3D "microchip,pcie-host-1.0";
+			#address-cells =3D <0x3>;
+			#interrupt-cells =3D <0x1>;
+			#size-cells =3D <0x2>;
+			device_type =3D "pci";
+
+			dma-noncoherent;
+			reg =3D <0x30 0x0 0x0 0x8000000>, <0x0 0x43008000 0x0 0x2000>, <0x0 0x43=
+00a000 0x0 0x2000>;
+
+			ranges =3D <0x43000000 0x0 0x9000000 0x30 0x9000000 0x0 0xf000000>,
+				 <0x1000000 0x0 0x8000000 0x30 0x8000000 0x0 0x1000000>,
+				 <0x3000000 0x0 0x18000000 0x30 0x18000000 0x0 0x70000000>;
+			dma-ranges =3D <0x3000000 0x0 0x80000000 0x0 0x0 0x0 0x4000000>,
+				     <0x3000000 0x0 0x84000000 0x0 0x4000000 0x0 0x6000000>,
+				     <0x3000000 0x0 0x8a000000 0x0 0xa000000 0x0 0x8000000>,
+				     <0x3000000 0x0 0x92000000 0x0 0x12000000 0x0 0x10000000>,
+				     <0x3000000 0x0 0xa2000000 0x0 0x22000000 0x0 0x5e000000>;
+
+		};
+	}
+
+--yFBjah3xDxz6Ta9d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ4lFvQAKCRB4tDGHoIJi
+0qtcAP49fmVAgECTuswfawK4vHkMxyczR291gBQanA8nSsCuPAD/aWEAeO/P2KKi
+U+3aGKeRF4LybysHe9WUxd2mcXFQHwo=
+=66OP
+-----END PGP SIGNATURE-----
+
+--yFBjah3xDxz6Ta9d--
 
