@@ -1,89 +1,85 @@
-Return-Path: <linux-pci+bounces-19933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D312EA130E3
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 02:44:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D57EA130EB
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 02:47:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6010A3A5A98
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 01:44:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67329161B0A
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 01:47:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33BB2A1CF;
-	Thu, 16 Jan 2025 01:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E7F228E37;
+	Thu, 16 Jan 2025 01:47:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5958022612;
-	Thu, 16 Jan 2025 01:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BDECA4E;
+	Thu, 16 Jan 2025 01:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736991894; cv=none; b=SVjFBACSGnvBDJPCHD3W04aDJX4E2yFk/uBaYNsxf2pW1aIPx1Fk/BJpU0f6eFOxi0axmT84YqM7CchCfqDYCe5n38OGXP9bBL49Qq/PV0yVW5zJrUu6Vrr1Frfjde27yl4dx49na7WlXWg7TTo73A/6S+0qtPMA5SAoS5a7CkU=
+	t=1736992071; cv=none; b=jCzJXObo1VMbzbknNoATTI2aqYu6jSH0rYhAJwLzYvFmSWnP1JwKsxS7vtyrEdrUok+JWhsCn1Il5tbrNBN+rVDWTN30rFgMxPYxnf9/fYwMF8TzPgSyEgEp1NobUN4zPwttKyyv8truxwoJB2FU913WdGKyG7CVdJu1mfewQZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736991894; c=relaxed/simple;
-	bh=4BUCba/+fEkyAPQFGiidqmmL2WMf8cW+5Cxd3Mv84Ow=;
+	s=arc-20240116; t=1736992071; c=relaxed/simple;
+	bh=4mQyNmO8TAipm+1tJsd/yT/ncWCjs1Dsr5OhE7y2EOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FUybbsI4OhlWXz0h8K5wyIp88vxiK4ViwtQzvq5LvBoc5ihb7wSsl/EQ1j1eAfMjCNlzQHe4GYxDa1UQ2RBSQ2PFvJCIHgPHjVz4FqSFA+eU72Jhfhg4evtcYI8U+TdLcJpQ8/tTm8pOZ+W9YDfAugU0ABKVDBgQlIL8gXfKgtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXRtAvLjl30OV7HVIgJu/zTMGEL1Inslyl0s0V/8BnSUebUfB5hPzQR1/IEKBPj/IikENn+UkICK0+fh2FBTvIjNqMUYki807SZaLLV5y8mxz2sr3jfrHrOWnNPL/Ujljn1SzXeZAdT8PtChXg44+aAV0/atv7K8WOJtdtgJ/4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-218c8aca5f1so8218695ad.0;
-        Wed, 15 Jan 2025 17:44:53 -0800 (PST)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21661be2c2dso6019585ad.1;
+        Wed, 15 Jan 2025 17:47:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736991892; x=1737596692;
+        d=1e100.net; s=20230601; t=1736992069; x=1737596869;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+IxnCSmHJcqdacHXHVn26Xp3ngLM6GH49N7wfCQU1L0=;
-        b=alMljgyp9+LbTkGHgvYIuY3+t26oqYQCpPZZ8UDLqVM8Fd9kO9/cHk2iFFpkNqzM+u
-         vfp5jQH9EaN2DzFz5g2hla/F1g9NnuK7QQugNaMDN9KSklO/TXczyYnYUpPV/ojhCy+D
-         1MvHWj2aDCiDyc3YbksV1HLwBUfHustJgJ5Sf/l9UKd/bDMc2GHqvrhWPPZlAWV4ltnW
-         3+Z4XcHmNlFSV8wOL0DQg+h1QdxDrEABvwcYPcgNuWFm0gaMbxhAXcDeVFsKg3lJT4fM
-         i/3vZBxeGhNWtONN12euPtIw2qv75+Q3vEVpd1ebTs/LTT+4XyZ22JpM+J4P2DDIsw7+
-         K33A==
-X-Forwarded-Encrypted: i=1; AJvYcCVNHoWwKA7kXxZ0SMjMM+wLI69zC6si+Xoc3xSMN1SOJNhn84vik58eZ4g97yQ6KJZZk5epajQgpp9z@vger.kernel.org, AJvYcCWflUDAzSmTQTe1uLy5bP8CPqoiBXZ77V+RS1CUVxHQ3aNv9HHdAcW8RckdTJZo4J4CdmgT1QfL6mPj@vger.kernel.org, AJvYcCXZJ95YQgSJlWJHL0QgOAD3oxvvbyRQcV1tQ7xSVyiWKT9tdBfvtiKLu/ZcXPgwNKNKtT0Lk/JiM05e9ZRa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZomX4F4u7P/Vv9Of5H5usKQ4VkH0zLwXCEx2Hfqp3haxHTn1K
-	dxlRsPXH1rPLRkKEeV7RKc/9hyC1is0SywgtL8gd6zZ1aC/atf26
-X-Gm-Gg: ASbGncsxYlLK9g9wuClj/YCh8HBaM/upOnmw7f1VupiQ18LouVsEnivN+uE5B/ZAhdH
-	FUYKPCjarEvFDio+qvm9dlV2f585y4K8Xq2uWHonhJz+pSWtaw6uF+csm3NOtW65PwPA+a19/GN
-	L2+Py2LE5G6nCW216pkJs0sAa664DHmpOYExh8sT27wgZfjOW1nItSEJ9wZKXc/ajM5jkN4hK5P
-	96vgOFynTnCkHsjAQehDaz5nEtQzx9B+YhbDxawCO1YBA0CVzUTehMXxvbQDAPDGTASX2BJ+VSU
-	q4AEwUAYiEOlSYY=
-X-Google-Smtp-Source: AGHT+IGGiOe+Hpc0pTCxovPJPJMYD6+JInJoiYZN0S/mOekGvxlc2y5Gy3dg47SbKjnI78xknytLhA==
-X-Received: by 2002:a05:6a21:328c:b0:1d9:c78f:4207 with SMTP id adf61e73a8af0-1e88d18b316mr46931346637.11.1736991892554;
-        Wed, 15 Jan 2025 17:44:52 -0800 (PST)
+        bh=+QNPVQXecLokCMBNU0Zpch+WkI0Q+RjsM7OPeRvuUd8=;
+        b=Hzfx2NAGUMteVFS4ObaOBuOYlVL4nCcSJgiTtaITCi7LYcnvjU5D6By9i1Tii2fDTd
+         23v/UY835A9roS32XzQmc90CNP6pbj/z+AfT5jUQ8vm/Ze9pBAdQZws2g047YB9VVxQz
+         sabUJCWgPE3NvHekJULSNvJFMCwvLlaOK+h6SuotPMy7kpwiyAyONM+h3Do5SsFOPXCf
+         1WwAOvqPlc8m3T4OWgh5xfwUH6UATsuSa7HII1Gq0yyFsNvt95NOTFN7olnqigkPd502
+         n8cPZLtgygreiUXQgn8QYM0gFh33t32dxJQj8LJg35O6EGBG94D+GRtJP6s16FIh1+RO
+         Rm7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAYM7Q6hf9i35Envczmf2Djl7KI0nsXYtHrJMZUmsIBpW7zz2oInETEtLvtcfIN5fcbx7A3vjzZiBn@vger.kernel.org, AJvYcCWpT25pWVFXXz1Z+wGjfDVQ9aPcqb9mX/uzncxolooBOKkEsd+US0emOZ+3ullKjcdZYbIY/9Cb0uhoRQHH@vger.kernel.org, AJvYcCXaTsln5MVBpDH/tdU2wHH9dMeOAOX8SOkQ4xOHWIZc4dsE3oIcHDCucH2PLESn7DlcgOWQ3sGSFt64@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIo8J+4/ksBdww/x0n9qJMf8Kn8VlIqmDeIr2mQhgp6x5ArSs0
+	6gBz93qL5Vt5lFhN+DJkG23EQD0fRZvPToc+2OjBbeqPnkRBPQVC
+X-Gm-Gg: ASbGncvIlP7mBAzOHFA1pzVm+D8iEJe+hbKrkuTu8BoB63xFQ4dotnC7aQGUcBTpkf/
+	JXJ8FUzhgdSOVpYK+AE8DbVRwVLYGK2pAmVgjIK8HVTqGSxWounLlQT1bV5nvmoStM084iy/QuT
+	aimhHY6ZFHQBmDHAfEVxAvMNiDRYoeKvZoEiBmAh1l6Pyl+YvWjDil0EzrnynXYBYPBWwTH1zLT
+	FNpwAiOfW1lioaysPiJQMCTedmCg8y5XpIaFBlG5Y+/B/wCJIPkoYJHM7N2+lqKhuwIyi4R0TcL
+	RpWzTEwH/KVfhjQ=
+X-Google-Smtp-Source: AGHT+IHIPg+1+HCTsuijQC+DWu9OaoAsxoCVaqGsJ9zBPENZpCBH7mo8AWX3+7KImg14FW/XnuOBQg==
+X-Received: by 2002:a17:90b:2642:b0:2ea:aa56:499 with SMTP id 98e67ed59e1d1-2f548e9aed3mr41058488a91.1.1736992069406;
+        Wed, 15 Jan 2025 17:47:49 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a3130d2eea3sm10500937a12.0.2025.01.15.17.44.51
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f72c1ccf46sm2071655a91.22.2025.01.15.17.47.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 17:44:51 -0800 (PST)
-Date: Thu, 16 Jan 2025 10:44:49 +0900
-From: Krzysztof =?utf-8?B?V2lsY3p577+977+9c2tp?= <kw@linux.com>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	Frank Li <frank.li@nxp.com>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 0/10] A bunch of changes to refine i.MX PCIe driver
-Message-ID: <20250116014449.GA2111792@rocinante>
-References: <20241126075702.4099164-1-hongxing.zhu@nxp.com>
- <20250115130406.GS4176564@rocinante>
- <20250115130609.GT4176564@rocinante>
- <AS8PR04MB8676BD2E443B72DFECAEFEE18C1A2@AS8PR04MB8676.eurprd04.prod.outlook.com>
+        Wed, 15 Jan 2025 17:47:48 -0800 (PST)
+Date: Thu, 16 Jan 2025 10:47:47 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v8 2/7] PCI: dwc: Use devicetree 'ranges' property to get
+ rid of cpu_addr_fixup() callback
+Message-ID: <20250116014747.GB2111792@rocinante>
+References: <20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com>
+ <20241119-pci_fixup_addr-v8-2-c4bfa5193288@nxp.com>
+ <20241124143327.6cuxrw76pr6olfor@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,25 +88,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR04MB8676BD2E443B72DFECAEFEE18C1A2@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <20241124143327.6cuxrw76pr6olfor@thinkpad>
 
 Hello,
 
-[...]
-> Thanks for your kindly help to pick up this series.
+> The newly added warning should be mentioned in the commit message. But no need
+> to respin just for this. I hope Krzysztof can add it while applying.
 
-No problem.  Thank you for persevering.
+The commit message will include the following:
 
-I apologise for letting this fall through the cracks.
+  To expedite deprecation of the cpu_addr_fixup() callback, warn its users
+  if the 'ranges' property is missing from the Devicetree or the address
+  translation information is somewhat incorrect.
 
-> I checked the patches, they are fine to me.
-
-Thank you for double-checking things for me.  Much appreciated.
-
-> BTW, I saw the dts patch had been queued into pcie/next too.
-> It's better let Shawn merge the dts changes after the driver patches are merged.
-
-No worries.  I will drop the patch.
+Let me know if anything needs to be changed.
 
 	Krzysztof
 
