@@ -1,304 +1,194 @@
-Return-Path: <linux-pci+bounces-19988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-19989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17C89A13F9F
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 17:39:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3A36A13FCD
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 17:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BD35188DF3B
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 16:39:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDBFC16A964
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2025 16:46:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3F722CBDD;
-	Thu, 16 Jan 2025 16:39:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C432122A7E1;
+	Thu, 16 Jan 2025 16:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XN9e+NKj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOfFT6hz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2656C22CA0D;
-	Thu, 16 Jan 2025 16:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9748E13959D;
+	Thu, 16 Jan 2025 16:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737045575; cv=none; b=Sm3o1CBYjP1lY0891mN8BoIc8ka2vrP+SmbtvwGd0Auvo/OFxBcV87vqjWa6MMUHfPLmZLISgHKPAWBET/or7yLcna9XE5eCWd4dEUDA+bBL0n2wpeiuXgBuNkoXX1QzXSMxIyzhein3PV+XPh/e223q19OYm1nKO/RFqh5WwO0=
+	t=1737045984; cv=none; b=qFOBgJvyBjQSOKp7OfvwhOdire1ZGJV3L2GnpyA4ZLipVI81veBa/rk/TrRJAE4Qkc0/3zgBCqJa9IW+JnDryzpSjMzZvbyPQ66GY78oHC8WHElsswbFi6Smv8JJnZrhUFDdnCF5KySJM1HDUJ7eDRf1xFcUnOu03p0SBKjLn2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737045575; c=relaxed/simple;
-	bh=/nZUdW72FcnZOB/BHR1IUXdW0+ZY5TCdthQyv6g7CNE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=E/uuOrj+v9tEbe7oxneRfyLgHme6ttq9eGEYvMrxKTeXqxqSbnXXGbUIqqKzMGD07O6i6ExEjWnGLY1gqapFt5IkyhUr2Ez5cz7saLl/8fyYevY1qzAkuSYIUyDeVksljwWdyqZtzeeGbV/2pP7JNxUjRAPuURbdGLOIeli2YJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XN9e+NKj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF37C4CEE2;
-	Thu, 16 Jan 2025 16:39:33 +0000 (UTC)
+	s=arc-20240116; t=1737045984; c=relaxed/simple;
+	bh=L/KZG4Pm9PuHsf+j03WeS+nOje6TuEkm+2ySm7d+8gE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuCPLy10ohKHOa525NSqDn00NFGgPJOncmKX5OuBnkI7UsRaTZZ7E6qnGGJq/K8a0ciuDvuN3+pybhE/Z94pPN18ElGEGx+VeAAo0qd7QArJv/I520epDamNdBgR8Cbe+CSbd/nXv22DAcWB9aIFOi67elj3auqHos/pdTs6Azc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOfFT6hz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A581DC4CED6;
+	Thu, 16 Jan 2025 16:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737045574;
-	bh=/nZUdW72FcnZOB/BHR1IUXdW0+ZY5TCdthQyv6g7CNE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=XN9e+NKjyKXJLkJc+cv+vxeeK7Ycpt/TX+nyqdAAIN5yVOi2QsaxhIV8li4uikr3o
-	 +zjD6P6bKVwM8AZgGI+nX1UPBbGV5YQ2Jz7E0aUPyrgQJJjdiT5Xt1xXi9xtLvbGSM
-	 HpmPZgg+vix5liWk23TS7kbOMRMCVWrXhl15QJbrM4srCzNCcuZqU3J24NW9c8tOpk
-	 Gg01oz+7Zr6TxSv8rzccyoHX706qE67wrizCKrOgdtDJEwSvgMB+flCD+WIbV6dXgo
-	 yZqn7leOD8VkjCNvWfkzjiFnfG0Cjg8ym1pHl5Ihw3foW/rANYPMpWM/W4FH32xkGq
-	 pY7Pj/oIda0FQ==
-Date: Thu, 16 Jan 2025 17:39:30 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: kw@linux.com, gregkh@linuxfoundation.org, arnd@arndb.de,
- lpieralisi@kernel.org, shuah@kernel.org, kishon@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com,
- linux-arm-msm@vger.kernel.org, robh@kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] Migrate PCI Endpoint Subsystem tests to Kselftest
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250116161227.gk2psmbzpexswgrm@thinkpad>
-References: <20250116135106.19143-1-manivannan.sadhasivam@linaro.org> <Z4knZyKrEvVNopeX@ryzen> <20250116161227.gk2psmbzpexswgrm@thinkpad>
-Message-ID: <CCADFA64-D3BD-4972-994A-48E2606CCC66@kernel.org>
+	s=k20201202; t=1737045984;
+	bh=L/KZG4Pm9PuHsf+j03WeS+nOje6TuEkm+2ySm7d+8gE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rOfFT6hzINfBNG2t5Ib7U6Py9ZdRmVfFv4p5E5ARNWl0UfYKz+JM87qYpw114/8v7
+	 +OM7BfMT183k0cdGd6LHwGhxgZmUY+rO/OeOiNM221osCENMeW2mfIwdVCYj235ZEA
+	 CQgCTLnmrB+XOQXQinlOsrRxxWKGN3tEvHL1Er1dnRrycMJ0VcKeqYHL+uwFWXltKC
+	 vXgGHMG9+4GtMN1LqLStiFDs7bYVq1/e/oVp4K9Xt03l/0DyvbEzlBDj2i2gDczd0S
+	 ZhyY/jPEyrdgM6ISRnREe77DVAOIm4CYrKwKFrwi3oA9Pr58m8+9c22zz9C57K78xO
+	 NRdOteiiOwIJA==
+Date: Thu, 16 Jan 2025 16:46:19 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: daire.mcnamara@microchip.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, conor.dooley@microchip.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ilpo.jarvinen@linux.intel.com,
+	kevin.xie@starfivetech.com
+Subject: Re: [PATCH v10 1/3] PCI: microchip: Fix outbound address translation
+ tables
+Message-ID: <20250116-debatable-hazelnut-6501986373fa@spud>
+References: <20250115001309.GA508227@bhelgaas>
+ <20250116154253.GA584488@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dISYL3zSj/IQb+CW"
+Content-Disposition: inline
+In-Reply-To: <20250116154253.GA584488@bhelgaas>
+
+
+--dISYL3zSj/IQb+CW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jan 16, 2025 at 09:42:53AM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 14, 2025 at 06:13:10PM -0600, Bjorn Helgaas wrote:
+> > On Fri, Oct 11, 2024 at 03:00:41PM +0100, daire.mcnamara@microchip.com =
+wrote:
+> > > From: Daire McNamara <daire.mcnamara@microchip.com>
+> > >=20
+> > > On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind on=
+e of
+> > > three general-purpose Fabric Interface Controller (FIC) buses that
+> > > encapsulate an AXI-M interface. That FIC is responsible for managing
+> > > the translations of the upper 32-bits of the AXI-M address. On MPFS,
+> > > the Root Port driver needs to take account of that outbound address
+> > > translation done by the parent FIC bus before setting up its own
+> > > outbound address translation tables.  In all cases on MPFS,
+> > > the remaining outbound address translation tables are 32-bit only.
+> > >=20
+> > > Limit the outbound address translation tables to 32-bit only.
+> >=20
+> > I don't quite understand what this is saying.  It seems like the code
+> > keeps only the low 32 bits of a PCI address and throws away any
+> > address bits above the low 32.
+> >=20
+> > If that's what the FIC does, I wouldn't describe the FIC as
+> > "translating the upper 32 bits" since it sounds like the translation
+> > is just truncation.
+> >=20
+> > I guess it must be more complicated than that?  I assume you can still
+> > reach BARs that have PCI addresses above 4GB using CPU loads/stores?
+> >=20
+> > The apertures through the host bridge for MMIO access are described by
+> > DT ranges properties, so this must be something that can't be
+> > described that way?
+>=20
+> Ping?  I'd really like to understand this before the v6.14 merge
+> window opens on Sunday.
 
+Daire's been having some issues getting onto the corporate VPN to send
+his reply, I've pasted it below on his behalf:
 
-On 16 January 2025 17:12:27 CET, Manivannan Sadhasivam <manivannan=2Esadha=
-sivam@linaro=2Eorg> wrote:
->On Thu, Jan 16, 2025 at 04:36:07PM +0100, Niklas Cassel wrote:
->> On Thu, Jan 16, 2025 at 07:21:02PM +0530, Manivannan Sadhasivam wrote:
->> > Hi,
->> >=20
->> > This series carries forward the effort to add Kselftest for PCI Endpo=
-int
->> > Subsystem started by Aman Gupta [1] a while ago=2E I reworked the ini=
-tial version
->> > based on another patch that fixes the return values of IOCTLs in
->> > pci_endpoint_test driver and did many cleanups=2E Since the resulting=
- work
->> > modified the initial version substantially, I took over the authorshi=
-p=2E
->> >=20
->> > This series also incorporates the review comment by Shuah Khan [2] to=
- move the
->> > existing tests from 'tools/pci' to 'tools/testing/kselftest/pci_endpo=
-int' before
->> > migrating to Kselftest framework=2E I made sure that the tests are ex=
-ecutable in
->> > each commit and updated documentation accordingly=2E
->> >=20
->> > - Mani
->> >=20
->> > [1] https://lore=2Ekernel=2Eorg/linux-pci/20221007053934=2E5188-1-ama=
-n1=2Egupta@samsung=2Ecom
->> > [2] https://lore=2Ekernel=2Eorg/linux-pci/b2a5db97-dc59-33ab-71cd-f59=
-1e0b1b34d@linuxfoundation=2Eorg
->> >=20
->> > Changes in v5:
->> >=20
->> > * Incorporated comments from Niklas
->> > * Added a patch to fix the DMA MEMCPY check in pci-epf-test driver
->> > * Collected tags
->> > * Rebased on top of pci/next 0333f56dbbf7ef6bb46d2906766c3e1b2a04a94d
->> >=20
->> > Changes in v4:
->> >=20
->> > * Dropped the BAR fix patches and submitted them separately:
->> >   https://lore=2Ekernel=2Eorg/linux-pci/20241231130224=2E38206-1-mani=
-vannan=2Esadhasivam@linaro=2Eorg/
->> > * Rebased on top of pci/next 9e1b45d7a5bc0ad20f6b5267992da422884b916e
->> >=20
->> > Changes in v3:
->> >=20
->> > * Collected tags=2E
->> > * Added a note about failing testcase 10 and command to skip it in
->> >   documentation=2E
->> > * Removed Aman Gupta and Padmanabhan Rajanbabu from CC as their addre=
-sses are
->> >   bouncing=2E
->> >=20
->> > Changes in v2:
->> >=20
->> > * Added a patch that fixes return values of IOCTL in pci_endpoint_tes=
-t driver
->> > * Moved the existing tests to new location before migrating
->> > * Added a fix for BARs on Qcom devices
->> > * Updated documentation and also added fixture variants for memcpy & =
-DMA modes
->> >=20
->> >=20
->> > Manivannan Sadhasivam (4):
->> >   PCI: endpoint: pci-epf-test: Fix the check for DMA MEMCPY test
->> >   misc: pci_endpoint_test: Fix the return value of IOCTL
->> >   selftests: Move PCI Endpoint tests from tools/pci to Kselftests
->> >   selftests: pci_endpoint: Migrate to Kselftest framework
->> >=20
->> >  Documentation/PCI/endpoint/pci-test-howto=2Erst | 170 +++++------
->> >  MAINTAINERS                                   |   2 +-
->> >  drivers/misc/pci_endpoint_test=2Ec              | 255 +++++++++-----=
----
->> >  drivers/pci/endpoint/functions/pci-epf-test=2Ec |   4 +-
->> >  tools/pci/Build                               |   1 -
->> >  tools/pci/Makefile                            |  58 ----
->> >  tools/pci/pcitest=2Ec                           | 264 --------------=
-----
->> >  tools/pci/pcitest=2Esh                          |  73 -----
->> >  tools/testing/selftests/Makefile              |   1 +
->> >  =2E=2E=2E/testing/selftests/pci_endpoint/=2Egitignore |   2 +
->> >  tools/testing/selftests/pci_endpoint/Makefile |   7 +
->> >  tools/testing/selftests/pci_endpoint/config   |   4 +
->> >  =2E=2E=2E/pci_endpoint/pci_endpoint_test=2Ec          | 221 ++++++++=
-+++++++
->> >  13 files changed, 435 insertions(+), 627 deletions(-)
->> >  delete mode 100644 tools/pci/Build
->> >  delete mode 100644 tools/pci/Makefile
->> >  delete mode 100644 tools/pci/pcitest=2Ec
->> >  delete mode 100644 tools/pci/pcitest=2Esh
->> >  create mode 100644 tools/testing/selftests/pci_endpoint/=2Egitignore
->> >  create mode 100644 tools/testing/selftests/pci_endpoint/Makefile
->> >  create mode 100644 tools/testing/selftests/pci_endpoint/config
->> >  create mode 100644 tools/testing/selftests/pci_endpoint/pci_endpoint=
-_test=2Ec
->> >=20
->> > --=20
->> > 2=2E25=2E1
->> >=20
->>=20
->> I ran the test using simply:
->>=20
->> $ =2E/pci_endpoint_test
->>=20
->> and got:
->>=20
->> #  RUN           pci_ep_basic=2EMSIX_TEST =2E=2E=2E
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X33
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X34
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X35
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X36
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X37
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X38
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Expected 0 (0) =3D=3D ret (-110)
->> # pci_endpoint_test=2Ec:129:MSIX_TEST:Test failed for MSI-X39
->>=20
->>=20
->> I think that you should also do:
->>=20
->> diff --git a/Documentation/PCI/endpoint/pci-test-howto=2Erst b/Document=
-ation/PCI/endpoint/pci-test-howto=2Erst
->> index 7d0dbad61456=2E=2E7d5049c884dd 100644
->> --- a/Documentation/PCI/endpoint/pci-test-howto=2Erst
->> +++ b/Documentation/PCI/endpoint/pci-test-howto=2Erst
->> @@ -81,8 +81,8 @@ device, the following commands can be used::
->> =20
->>         # echo 0x104c > functions/pci_epf_test/func1/vendorid
->>         # echo 0xb500 > functions/pci_epf_test/func1/deviceid
->> -       # echo 16 > functions/pci_epf_test/func1/msi_interrupts
->> -       # echo 8 > functions/pci_epf_test/func1/msix_interrupts
->> +       # echo 32 > functions/pci_epf_test/func1/msi_interrupts
->> +       # echo 2048 > functions/pci_epf_test/func1/msix_interrupts
->> =20
->>=20
->> Such that the documentation suggests values that will actually make the
->> pci_endpoint_test pass without any special parameters set=2E
->>=20
->
->Agree and this is what I am doing locally, but that change is not really =
-related
->to this series=2E So I'll submit it separately=2E
+There are 3 Fabric Inter Connect (FIC) buses on PolarFire SoC - each of
+these FIC buses contain an AXI master bus and are 64-bits wide. These
+AXI-Masters (each with an individual 64-bit AXI base address =E2=80=93 for =
+example
+FIC1=E2=80=99s AXI Master has a base address of 0x2000000000) are connected=
+ to
+general purpose FPGA logic. This FPGA logic is, in turn, connected to a
+2nd 32-bit AXI master which is attached to the PCIe block in RootPort mode.
+Conceptually, on the other side of this configurable logic, there is a
+32-bit bus to a hard PCIe rootport.  So, again conceptually, outbound addre=
+ss
+translation looks like this:
 
-I don't not agree that it is not related,
-before this series the example output was:
+                 Processor Complex =C3=A0 FIC (64-bit AXI-M) =C3=A0 Configu=
+rable Logic =C3=A0 32-bit AXI-M =C3=A0 PCIe Rootport
+		 (This how it came to me from Daire, I think the =C3=A1 is meant to
+		 be an arrow)
 
+ This allows a designer two broad choices:
 
-MSI1:           OKAY
--	MSI2:           OKAY
--	MSI3:           OKAY
--	MSI4:           OKAY
--	MSI5:           OKAY
--	MSI6:           OKAY
--	MSI7:           OKAY
--	MSI8:           OKAY
--	MSI9:           OKAY
--	MSI10:          OKAY
--	MSI11:          OKAY
--	MSI12:          OKAY
--	MSI13:          OKAY
--	MSI14:          OKAY
--	MSI15:          OKAY
--	MSI16:          OKAY
--	MSI17:          NOT OKAY
--	MSI18:          NOT OKAY
--	MSI19:          NOT OKAY
--	MSI20:          NOT OKAY
--	MSI21:          NOT OKAY
--	MSI22:          NOT OKAY
--	MSI23:          NOT OKAY
--	MSI24:          NOT OKAY
--	MSI25:          NOT OKAY
--	MSI26:          NOT OKAY
--	MSI27:          NOT OKAY
--	MSI28:          NOT OKAY
--	MSI29:          NOT OKAY
--	MSI30:          NOT OKAY
--	MSI31:          NOT OKAY
--	MSI32:          NOT OKAY
--	SET IRQ TYPE TO MSI-X:          OKAY
--	MSI-X1:         OKAY
--	MSI-X2:         OKAY
--	MSI-X3:         OKAY
--	MSI-X4:         OKAY
--	MSI-X5:         OKAY
--	MSI-X6:         OKAY
--	MSI-X7:         OKAY
--	MSI-X8:         OKAY
--	MSI-X9:         NOT OKAY
--	MSI-X10:        NOT OKAY
--	MSI-X11:        NOT OKAY
--	MSI-X12:        NOT OKAY
--	MSI-X13:        NOT OKAY
--	MSI-X14:        NOT OKAY
--	MSI-X15:        NOT OKAY
--	MSI-X16:        NOT OKAY
+    Choice of FIC (effectively choice of AXI bus)
+    Ability to offset the AXI address of any peripherals they add in the
+    Fabric.
 
+=20
 
-So the output matched the suggested values in the documentation=2E
+So, for the case of an outbound AXI address, from the processors=E2=80=99 p=
+oint
+of view (or Linux=E2=80=99 point of view if you prefer), the processor uses=
+ a
+64-bit AXI address, then =E2=80=93 in a very general way of viewing the pro=
+cess
+and thinking only about accessing the PCIe device =E2=80=93 the FPGA logic =
+can
+be configured to adjust that AXI-M address to any arbitrary =E2=80=9Caddres=
+s=E2=80=9D
+before it passes that new =E2=80=9Caddress=E2=80=9D to the Root Port over a=
+ second 32-bit
+AXI bus (the main constraint is that the FPGA logic can only use a 32-bit
+address on that AXI-M interface to the Root Port).
 
-After this series, the documentation still suggests msi =3D=3D 16 and msi-=
-x =3D=3D 8,
-but the example output now shows that
-there was no failures=2E
+=20
 
+To manage this complexity, Microchip have design rules for customers
+building their FPGA logic where we strongly recommend that they only
+interact with  the upper 32 bits of the 64-bit address in the FPGA logic
+and pass the lower 32 bits through (unmodified) to the AXI-M side of the
+PCIe Root Port. This allows them to =E2=80=9Cmove=E2=80=9D a 64-bit AXI-M w=
+indow for their
+PCIe Root Port (as viewed by the processor) for their particular design =E2=
+=80=93
+if they need to - so that they can also access any other AXI-M windows
+associated with any other peripherals they might add to their design.
 
-So I think it is most consistent to just update the example in the same co=
-mmit (in this series) that updates the output to show everything as good=2E
+=20
 
+In practise, so far, all customers, and our own internal boards have all
+started by using one of two major reference designs from us (one using FIC1
+where the AXI-M window destined for the PCIe Root Port starts at 0x20000000=
+00
+and one using FIC2 where its AXI-M window, again destined for the PCIe Root
+Port starts at 0x3000000000).
 
+best,
 
-Kind regards,
-Niklas
+daire
 
+--dISYL3zSj/IQb+CW
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
->
->>=20
->> Other than that small nit, for the series:
->> Tested-by: Niklas Cassel <cassel@kernel=2Eorg>
->
->Thanks a lot!
->
->- Mani
->
->--=20
->=E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ4k32wAKCRB4tDGHoIJi
+0r8aAP9OljF2t/djmQEXjTcwQv5O/kjOlC4cmIz8YFYInFE7uQEAir30agpuqLBv
+IoeWvvIUCLBDbl111pYfb88kL/pz0gY=
+=NBkU
+-----END PGP SIGNATURE-----
+
+--dISYL3zSj/IQb+CW--
 
