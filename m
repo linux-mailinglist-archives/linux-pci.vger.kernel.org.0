@@ -1,232 +1,450 @@
-Return-Path: <linux-pci+bounces-20074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25E50A15767
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 19:47:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4168A157CE
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 20:09:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3CB63A4A1B
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 18:46:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C49BD167CC7
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 19:09:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E5DE1AA7A9;
-	Fri, 17 Jan 2025 18:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72C701A841E;
+	Fri, 17 Jan 2025 19:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AArNDjEM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E1f9MScT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87EE1A8401;
-	Fri, 17 Jan 2025 18:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737139293; cv=fail; b=XeYcdlQwp8bxXmLWyq3lRCO5yEa8ryrrNFjflYhJdgO7IoRASPhMoprsvb94nxMoXnN+eTT311EQqPS5tZxaSTaw0r3/DEjq3Hjmq9SVMM8vnJtjtTQOON09wRnvppme8sOU8DBkSV6vBJPSCIFYIZyM6fODGgikpLU7JrzU0o0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737139293; c=relaxed/simple;
-	bh=ueCI2p+LoXmgZlRTbEP1IN1uTMqHRkPcrB3g/U1s+No=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RyiTkJoUxxg78ojaIkKYBkawE6YuaLyOE+aAvliOJIwMdIkY1cwP1ob9s1fYxHLGASY+2wPbVNpisrW5I5qEIGmHGpXExfPbhC9vlVZlL6fBItGHqB0z7GugRC3hQcMWYpIHocuhoN2Kal4/iYc7tfi3IBsAo6KxkUZ7FZ+n4jk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AArNDjEM; arc=fail smtp.client-ip=40.107.236.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q/+lXxB7CxtRDEgEP/4FWoi9xIkAlrysuJxRjZFADN+8zGep83z8c+u718C5ccEBZekFeYWq78Mr7rs2NqXrijrgWFJHG8s6gbHgkxACbsrJ4ADjpU997F/gPG7xDW9q5ZTa984SIg3WE7XoZpO3qEMSZzpZzhpaA4sqMEtCU1mNlvROw0rP3yNiLU0uc8W6aKnpHMx0bcE5iOHXCyXnbcYm3nrC1ODdl/DpIr0JmF1cCEiOj1K5wkBnNwVV/kbRSSgR/84/wxaGroEDWX1qe0TDarsvbAXAcAR7bQn/2FNwDCPV2d6PyRnelAB+mbxJIT3+sRfA+gyCYw8aMhZU4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ptDKbcjABbgkZzTDx7uVQ+WCUN8Swo7WInQox8Cuq3s=;
- b=ty2A9Lg69rNzb4pi22OBmXLfsBuu2QPO9l6tbDJFnxp3SWbqlXz2Gxfl+9t42ufCgoQty2qseyAIjtuwG6fr+8V7kBudech6HsFIisqpk9WvKKLWJe5u4LBXL8zH06aOn4nFVugwxWipc3HIKuice2v6zhAwwBFf7qU1ZGHnTSzpX4MImFQuGcDlObat1T893970kdkoYMQS4EBTJziwxdUugtqnkHrTktkpzbdb808ZbefxCK5MtUy9uhSNguItoyxrpKvKcCXkNdRFD++RV2oLqV0Y7onb/sgs289aFzaNanJvhJs76XK7BLyuqcrfw3milpdbdYolLcJpKM2wIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ptDKbcjABbgkZzTDx7uVQ+WCUN8Swo7WInQox8Cuq3s=;
- b=AArNDjEMxMavVbgynn/hC88t52Lgsqd5INL3Hfm/uBtTdu4ExDhakk4oSHiOLfL8WG5ZohElI4/1W5tMND34NtLvd2mbX0L5q7nVnxHf4ZNMaVg6oKlhgbSITClXdJlf3kbDawCFaaBu/xiPTQ8N/lRQJIXIIRbP3laC+RZvcv0Bb2ywbYvW1qLQiYepXlyPXtsWR36P51uSEOOW8xf+GSsWMKyvkdQqKoLrASkZ7UnppV8bG3X17M8Mtm+Ev5+GXFCWmtMygHEZ4tePz4ciLtI/fzWUdT6WRtFUVm9fAHtTarnAwjxvgNw7s6X3fy+Kbwvmu7YaMr0CedYBjrphkA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB6657.namprd12.prod.outlook.com (2603:10b6:510:1fe::7)
- by SJ2PR12MB8717.namprd12.prod.outlook.com (2603:10b6:a03:53d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.17; Fri, 17 Jan
- 2025 18:41:28 +0000
-Received: from PH7PR12MB6657.namprd12.prod.outlook.com
- ([fe80::e1a7:eda7:8475:7e0a]) by PH7PR12MB6657.namprd12.prod.outlook.com
- ([fe80::e1a7:eda7:8475:7e0a%6]) with mapi id 15.20.8356.010; Fri, 17 Jan 2025
- 18:41:28 +0000
-Message-ID: <02c3adb0-ff46-45ea-a67f-8d4728302b3b@nvidia.com>
-Date: Fri, 17 Jan 2025 10:41:26 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] PCI: Fix Extend ACS configurability
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: corbet@lwn.net, bhelgaas@google.com, paulmck@kernel.org,
- akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
- xiongwei.song@windriver.com, vidyas@nvidia.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, vsethi@nvidia.com,
- sdonthineni@nvidia.com
-References: <20250102184009.GD5556@nvidia.com>
- <2676cf6e-d9eb-4a34-be5e-29824458f92f@nvidia.com>
- <20250107001015.GM5556@nvidia.com>
- <c9aeb7a0-5fef-49a5-9ebb-c0e7f3b0fd3e@nvidia.com>
- <20250108151021.GS5556@nvidia.com>
- <0ea48a2b-0b6d-49e2-b3f7-ab4deef90696@nvidia.com>
- <20250113200749.GW5556@nvidia.com>
- <6ea9260b-f9cd-4128-b424-11afe6579fdc@nvidia.com>
- <20250116190118.GW5556@nvidia.com>
- <4d5224c6-bc0b-4ca9-9f1a-71d701554b3d@nvidia.com>
- <20250117132802.GB5556@nvidia.com>
-Content-Language: en-US
-From: Tushar Dave <tdave@nvidia.com>
-In-Reply-To: <20250117132802.GB5556@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0138.namprd03.prod.outlook.com
- (2603:10b6:303:8c::23) To PH7PR12MB6657.namprd12.prod.outlook.com
- (2603:10b6:510:1fe::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39551A83FB;
+	Fri, 17 Jan 2025 19:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737140967; cv=none; b=mmU35NOKkg3lMkQzMrz8nx+4vvSG57KI20WTAOWt7IcH0rQr0yq2BM69P+wVA91OVNB8hF4jy05HpQpAVoFLrZltlngj4fTnbvCMVQIf6r6Kjw//5+XdbOfCb4fvQ4aJAsNu+TGQVDV1/65fEq6nJsjZ4gvu1GmwYzzBgvAFmM0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737140967; c=relaxed/simple;
+	bh=TJ05x5bOrvaXfdFdGKWpesAZi7qvS27Khy69EY/c4Ww=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=D50M+165jfrwWD5mvdMt5LD10I23f5GPwZatnLDTTIKIA7kWvrLbc8z1LY+ya9VnExY+/G8+llWszZ27giOkNViqu7WRxEDFSd/EnFFNsbDR/qkzLYHkA3EKBpXMEkRwXb7i/1UAbpMyx3UD2tQxMm77tISQTyWxWaCaVfC5WuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E1f9MScT; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737140965; x=1768676965;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TJ05x5bOrvaXfdFdGKWpesAZi7qvS27Khy69EY/c4Ww=;
+  b=E1f9MScTNl50f56rc5uKKCy4aUynCUKkjuHBoqY8ynXTYdwWeReKiPXT
+   UTula9cFF6iXYUlDQNBUFft3Ff0vT0g6/1jfQSdx2ogfV0ockfOi/HLDe
+   RXKix10sVuMNwR6i6h6pMFI+pbXNoNNxxS3nLvyHpqNxqqsO1KtdDl8ka
+   JWTKSEMBO2SHih+b2/vR2AMt/weznB9jRIT0w+EacO/bxGrXR5SHedIoo
+   ebrmTOdjdLN8Vs4BgvpiKHbNXgxFx2cld5Yq6R7BpphAOCk09DOAuTg1N
+   IKoeauITsSkTwTYI4hPJNQNt9unQRY9iIaN3Y7g30WgLKnbzP7aVQsCK0
+   g==;
+X-CSE-ConnectionGUID: KIsDEinYSYqCjooxEAh2dQ==
+X-CSE-MsgGUID: d75K9T7wS9ias0p7t/F7Ug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="25179007"
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="25179007"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 11:09:24 -0800
+X-CSE-ConnectionGUID: 4MRzdKKPRJ2c3L8mv9GICg==
+X-CSE-MsgGUID: KFBMRRp0T8SlPIH5R4sZQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="136717269"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 11:09:24 -0800
+Date: Fri, 17 Jan 2025 11:09:23 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	dinguyen@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	matthew.gerlach@altera.com,
+	"D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>,
+	D@thinkpad.smtp.subspace.kernel.org,
+	M@thinkpad.smtp.subspace.kernel.org
+Subject: Re: [PATCH v3 5/5] PCI: altera: Add Agilex support
+In-Reply-To: <20250116170541.sszekk76qhvleay6@thinkpad>
+Message-ID: <eaa5dd6b-e9bb-42a1-d249-b4ee1d97613@linux.intel.com>
+References: <20250108165909.3344354-1-matthew.gerlach@linux.intel.com> <20250108165909.3344354-6-matthew.gerlach@linux.intel.com> <20250116170541.sszekk76qhvleay6@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6657:EE_|SJ2PR12MB8717:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8dbaadaf-e5aa-4c04-22c7-08dd37268dc3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c1BzbW1kOXN5clpFQWYwMlNzZGdzZlBoUGZwL0tmMVdjU1ltY0Eya3BQaTVp?=
- =?utf-8?B?Mjhlb2dlck1TWkxzK0o0ZlpKckdqc1NGTjZNa2wreWN4eHJ5YVNCVTRZT1Jz?=
- =?utf-8?B?WWhHU25uYkxRZ2Y0S3BJZWxtZnEwWGYyYW9JekpWb2gwR1czRGtHQTdNNnpH?=
- =?utf-8?B?SHJ2WnNTeUtqbXRvQ0Eya2M5UFlmSjd3K2tIOVM4T041TU1KQ3RaVGZCTjJv?=
- =?utf-8?B?RERTeFZVSWtDckI5QWt3WDhSc1Evcm11Qk1OTFNSWXZVcG5IWENadHF5MlUr?=
- =?utf-8?B?N1dMYjNSUTVlc3lVUTJkdnlBeW55bmxLclNTcjlyMWVaa2ZiWGwrMVVqNnJ1?=
- =?utf-8?B?bWorWERiS1JzejZTMkloYUJ5NXllZGd5elNlbEhyWlI4Mzh4SXpTU2h0R1Zx?=
- =?utf-8?B?UjYzK1FhWlE2VzhrZEVoeUNaQ1JuN3RpMHJ3ZWlWM1ltMFdCMkpNbWljWTFz?=
- =?utf-8?B?aHc0UjcxYVVpNWkvazBpaFJFN2QxVWRDU0RZVXlOTEdmY2N3WWErdlNGM1Nk?=
- =?utf-8?B?TmE0STBmN2ZFUzJyZjN5MDl4RDVCUkltNThSUVp2bHVwMGtDOVBwWXZGaVVz?=
- =?utf-8?B?UUFUa25oQy9jRytDZ2VzTWJEc0IxbHNkRGdZbEJtWGRObS80a0EzeS9IWEM3?=
- =?utf-8?B?c1czMGtEaEJjQXFSeERnQXgrVjRXUGt0cFVYM0kwM0xsZ1h0a2NnMmk2Vlk0?=
- =?utf-8?B?NXpzN1h1L0hDT2Jndk43b2h3SVFJZWRidmtmUnBVQldseHhjNTdsdDJueFdw?=
- =?utf-8?B?ZG9IVU55dVV1SGpZZjFDSm91aG1ML1k4NzI2aVRacjBacFR1czdnZVlhUGxv?=
- =?utf-8?B?OXN5UnpYVWFjS0plUTJodEZIQklMdW82VzlUM2Rjb3BRZXZuRjdRTjZXRXIr?=
- =?utf-8?B?WFZtaVl5YzNYK1JpdTNSa3l0QzB1T1BrUFZHRjNQTUorSFVkNENtcEpqck5C?=
- =?utf-8?B?V1N0VUt4UjZIREJjZFh1NEJNa3J0WGxVRjR2K1JUWHlRV2dsOUhaQTdaOVNt?=
- =?utf-8?B?Zk9CZ1hEQkhpYlV4U1NaNTFmR056SGNzT2M2OGxPbENhYWhvSy9iZUw1UmZB?=
- =?utf-8?B?TUNBVE1rMTI1OGNHa3JJdFh2ZEVVRDRidGw1SS9UWXFBT2ZobFE4Q1Bwd1Qx?=
- =?utf-8?B?U1d5VEFRZEhENXpKazBsMmlqUkw1VUhhN3l1eUk0bHFlYmpKTzRoNldyajBQ?=
- =?utf-8?B?UHBsUTNMVlF5SVJwdXcrUVAxR1NCNjdhdG93SEVNZUE0dFd5VER5WDl0MUdr?=
- =?utf-8?B?bWpvWmt6aVB4TVZMMTVHcHg1ZEFnVW5wMHpKYzhBTmZnTXc1aE9sekdWSldk?=
- =?utf-8?B?Yis0NU13bzF1U1hrdmFxUTUyVEtBOFozeG1SRDJIamZmN2luNVpFb2VXenM2?=
- =?utf-8?B?NW1YdzA3c21vaHdGMTNUMk81QjUyVXNCN3BUaVVjNGNMRktkMTJWdXdiUUh5?=
- =?utf-8?B?dlpjTFJtbEZ6Q09FdHZnUlM0SFRIb3pGWjlONnRFNUhCbHlMbURxL3haNGd4?=
- =?utf-8?B?Z1BLeS9zR1NQdjdyV242Y1NqVmpDRVQvbVYwenpNUzhobExTODluRnRHdE9o?=
- =?utf-8?B?QklBdEZZdWg2SVNGcFhla3EvYTJOeUdMeDM3Y3pST1BRRi80RGFpZitWNklO?=
- =?utf-8?B?eE1nbXFFcmNjbkM0U2pyTkVpUEJYQXRKTVdtQkk4ZHRhVDR4R2EycjhDT2ts?=
- =?utf-8?B?cDVIaHVWRmZHWFFMZXNWRlJmQ0pnUDVGNE9lS2ZTR3VmRVRvaXl3aE55ZEFx?=
- =?utf-8?B?cXlBMzNTWEdTSnNZT2x2eW00SWNuQU5iZVcxVUxpV2tReGwycXlJNW1nSTNy?=
- =?utf-8?B?c1owSk5SUThIVEd4SW9oZW9QVld0T3VFVUo2NFUvb1RKczVzSHgwRElnTnl4?=
- =?utf-8?Q?OZiAP+cbA8pvR?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NFdTRXQ2RUVQQUJXb1VkUFNNSE5NZEJjdkpyR1BrY2NKbVorZzg1dEUzaFVQ?=
- =?utf-8?B?ZWtWcE90ejhFdjk3aXQrblBHN25qaUhYL00wd0FxTWJnaGZUMlVDU0VHaTh0?=
- =?utf-8?B?ejk4ZURVbDJ3Nzg2c1krTDhOYXRpUWVqb0s0RzIwV3ZrRnRxSGVNTmtGQXR3?=
- =?utf-8?B?QnpNUHlweWhKZ3BQdytCdHNOUDkrSEJXQXVSVHZQc1BaMzJKUmxrUzRibXc4?=
- =?utf-8?B?RThKemJUSHcvQXlPYlJIOFFsS3dUdVV4Y3NXT2VHcVFYb3VDNHhXekZJcDAy?=
- =?utf-8?B?c2NCUDhRTm90dnZqYWxjRkIvaVk2VHJNSGVhNjhtWkU1OVdsMXBWSEt4MGRv?=
- =?utf-8?B?RmNNdlRIWlJ6YVU5ZTRKTXFwS2MwdEFuNVliWTFzajFCUDQ2ZHRwTFMwU3VE?=
- =?utf-8?B?VmtLMlBwMVFrVmxuWnpOWWVWVzgrUmFBdVQ0eVN4b1dEN3hYQW5uNFJldHFU?=
- =?utf-8?B?Z0tlYktLMWkzbmdpYmFxRWw2SEVnYldjMXUrY2Z2UHlRNXNuYk1hdmI2VVEx?=
- =?utf-8?B?WDBLR2YzLzR3V1R5SHUvQzk2eHN4UjNyc1E5YTNCVWdZazl2V1ZWUnVuSEVh?=
- =?utf-8?B?eW11aHRtTEt4dkg0YnhBMnhWakFmOHJrSTRkcFo5VEU0TzZ4TCs5MHdsQUlP?=
- =?utf-8?B?U21FaXNnQTB3bjVkcDhmdmd2WGpwMGZyQ1orZHVNOUU2dHRtckFJaGRzaGVL?=
- =?utf-8?B?NkdoK3lTME8zL3RpSWgvRjE2aFBNMjVMWGlTR3hJdlJEZm94eFdVMkVEU29Z?=
- =?utf-8?B?cTkwRHN2SEVOaXRWMk0vTlV2d3hhL0tYQVdON21Lb3lOeWR6VEFPVnQ2bVdX?=
- =?utf-8?B?bjJ5RzQrTzFkeDdHd2prQ3ZONWpXb1JZVTBrN2lIUGhGVldpSkpCVWZMOWxa?=
- =?utf-8?B?ajdGVHdCSGhBZGVxeVhEaEEza2ViRmtBZk9rUTM3WUhwVjFHK3R1ckxEK3dR?=
- =?utf-8?B?a1ZLcytJYTl3UG5KZ1cyODFCNGdDTm5yS0ZNd05kK0pIYXY4Q2hYY0tTQjQ0?=
- =?utf-8?B?OERqNDhmWngyL29ObjNGd2hHeThGUTNhRW9vMkNuSHo1TDVDVDAzdEdzVTYr?=
- =?utf-8?B?bHF5ZGpzZFk1aG5FU3JTZTArQ1NZUm1nQVluZ3VueEFzOWtPSXpyV2QvSHQw?=
- =?utf-8?B?aE4wclJkN1RPY1praWYwalJoMmVqQzB3SCtwRGR1d1NaTkZTYlg2czBaOEVV?=
- =?utf-8?B?TUg2bngveG1Ob3BMVGhUc010L25wMGZhSGI0MUw2Z0NOTVhYS2RzdDdoSENG?=
- =?utf-8?B?WnNBempGNjVjYkNVdWhMVDY2MDVaSTNlV2s5ck01OWRodHF5QjA2TEJYL3pX?=
- =?utf-8?B?OHlkMm1IdWZKY2F2aWFldnhwVnlyVUJLaThFVFBJOGxoVnYvL2owb25Wb0tE?=
- =?utf-8?B?SHRoaU9oOGtaSHVFaG5TS01pRktVS2RSaXJyZk10a1gyNXc1cXdlcmZLb293?=
- =?utf-8?B?UmdHNXoxeURuTHNYZWY3VVlZOUpIeDlvMTBsNE02TGxmUTlZMTdxQWxlcDJD?=
- =?utf-8?B?KzNSVnNvc0F3NnpycGkyZXhQSE5SNWUza2xqTFhMREhWemh5SjFRQ2gxQ2JL?=
- =?utf-8?B?Y2huTXg3TjdrNVd3UW5qOHlxU2VONzVQd0U1RG1jL0czNU5QMmpTVyt2czhM?=
- =?utf-8?B?dlFISERoUFg1Wkx2MzFLWWpnSW40UTRnOW4yWERuYkNUVzBWNENja0Fkd2tQ?=
- =?utf-8?B?Y2FWM1JlMEFodlFMRUpFcFlvTWdqUlg1a1YydzFyMmtOUTZPY0ZON3pYNVRV?=
- =?utf-8?B?Z1hIWXZPcnFHU2UrUWhrcVhJbVlPVzhTYm5XdTRzMkg0S0F6WEE5ZGN1eWIy?=
- =?utf-8?B?VzAxZk10dVUxYXhXOE8vTVJ6d1BPRVlreHlSMm1hUEx1WFBvTXZySHlKQ2hK?=
- =?utf-8?B?cTl0UjhoSTZlK3BhMEN5U1JjK0F0UEVNVW1wZStmTHlDenRpeTFKNGhEYnk4?=
- =?utf-8?B?R2hyeExkeXRYOEx3WlQ2NlhXaUduYzBiRFFvOFJhUUVyYklwa3cyMHVock9j?=
- =?utf-8?B?RXB4eWl3RW1leVlGaVl2S0VaTWxDc1g2MEY1TGZQMFB1S0V5UUtuSG93YVND?=
- =?utf-8?B?TktWOVZZM3g0dmxLNTN5YS91a0w2ZDBHeE1GQlNTb3ZWSzhtMm1YZGUxNmN2?=
- =?utf-8?Q?XspSk2LtFwRDoDzsy9hvSd9F9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8dbaadaf-e5aa-4c04-22c7-08dd37268dc3
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6657.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 18:41:28.4728
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lffzdIcb5hvgpySURO/wdHiEUjt+wCY8DUM4JyQT7zTNSBUiRD4BQJbdJ2laPq0Tcy24Ie0BXNI+axuEWyCedw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8717
+Content-Type: multipart/mixed; boundary="8323329-176960017-1737140963=:1784667"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-176960017-1737140963=:1784667
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
 
 
-On 1/17/25 05:28, Jason Gunthorpe wrote:
-> On Thu, Jan 16, 2025 at 05:21:29PM -0800, Tushar Dave wrote:
-> 
->> -       /* If mask is 0 then we copy the bit from the firmware setting. */
->> -       caps->ctrl = (caps->ctrl & ~mask) | (caps->fw_ctrl & mask);
->> -       caps->ctrl |= flags;
->> +       /* For mask bits that are 0 copy them from the firmware setting
->> +        * and apply flags for all the mask bits that are 1.
->> +        */
->> +       caps->ctrl = (caps->fw_ctrl & ~mask) | (flags & mask);
+On Thu, 16 Jan 2025, Manivannan Sadhasivam wrote:
+
+> On Wed, Jan 08, 2025 at 10:59:09AM -0600, Matthew Gerlach wrote:
+>> From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
 >>
+>> Add PCIe root port controller support Agilex family of chips.
 >>
->> I ran some sanity tests and looks good. Can I send V2 now?
-> 
-> I think so, I'm just wondering if this is not quite it either - this
-> will always throw away any changes any of the other calls made to
-> ctrl prior to getting here.
+>
+> Please add more info about the PCIe controller in description. Like speed,
+> lanes, IP revision etc... Also, you are introducing ep_{read/write}_cfg()
+> callbacks, so they should also be described here.
 
-Yes.
-
-> 
-> So we skip the above if the kernel command line does not refer to the
-> device?
-
-That is correct as well.
-
-> 
-> Ie if the command line refers to the device then it always superceeds
-> everything, otherwise the other stuff keeps working the way it worked
-> before??
-
-Yup.
-If kernel commandline is present (either config_acs or disable_acs_redir) and 
-device match occurs in function '__pci_config_acs', we discard any changes done 
-to ctrl by kernel prior to this call. Else we do not touch ctrl and it works as 
-before.
-
-And IMO, that is how it should be. This gives admin a control to configure ACS 
-using kernel parameter based on ACS value that FW has set (and not kernel).
-
--Tushar
+I will add more info about the Agilex PCIe controller and describe 
+ep_{read/write}_cfg() callbacks.
 
 >
-> Jason
+>> Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>> v3:
+>>  - Remove accepted patches from patch set.
+>>
+>> v2:
+>>  - Match historical style of subject.
+>>  - Remove unrelated changes.
+>>  - Fix indentation.
+>> ---
+>>  drivers/pci/controller/pcie-altera.c | 246 ++++++++++++++++++++++++++-
+>>  1 file changed, 237 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+>> index eb55a7f8573a..da4ae21d661d 100644
+>> --- a/drivers/pci/controller/pcie-altera.c
+>> +++ b/drivers/pci/controller/pcie-altera.c
+>> @@ -77,9 +77,19 @@
+>>  #define S10_TLP_FMTTYPE_CFGWR0		0x45
+>>  #define S10_TLP_FMTTYPE_CFGWR1		0x44
+>>
+>> +#define AGLX_RP_CFG_ADDR(pcie, reg)	(((pcie)->hip_base) + (reg))
+>> +#define AGLX_RP_SECONDARY(pcie)		\
+>> +	readb(AGLX_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
+>> +
+>> +#define AGLX_BDF_REG			0x00002004
+>> +#define AGLX_ROOT_PORT_IRQ_STATUS	0x14c
+>> +#define AGLX_ROOT_PORT_IRQ_ENABLE	0x150
+>> +#define CFG_AER				BIT(4)
+>> +
+>>  enum altera_pcie_version {
+>>  	ALTERA_PCIE_V1 = 0,
+>>  	ALTERA_PCIE_V2,
+>> +	ALTERA_PCIE_V3,
+>>  };
+>>
+>>  struct altera_pcie {
+>> @@ -102,6 +112,11 @@ struct altera_pcie_ops {
+>>  			   int size, u32 *value);
+>>  	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 busno,
+>>  			    int where, int size, u32 value);
+>> +	int (*ep_read_cfg)(struct altera_pcie *pcie, u8 busno,
+>> +			   unsigned int devfn, int where, int size, u32 *value);
+>> +	int (*ep_write_cfg)(struct altera_pcie *pcie, u8 busno,
+>> +			    unsigned int devfn, int where, int size, u32 value);
+>> +	void (*rp_isr)(struct irq_desc *desc);
+>>  };
+>>
+>>  struct altera_pcie_data {
+>> @@ -112,6 +127,9 @@ struct altera_pcie_data {
+>>  	u32 cfgrd1;
+>>  	u32 cfgwr0;
+>>  	u32 cfgwr1;
+>> +	u32 port_conf_offset;
+>> +	u32 port_irq_status_offset;
+>> +	u32 port_irq_enable_offset;
+>>  };
+>>
+>>  struct tlp_rp_regpair_t {
+>> @@ -131,6 +149,28 @@ static inline u32 cra_readl(struct altera_pcie *pcie, const u32 reg)
+>>  	return readl_relaxed(pcie->cra_base + reg);
+>>  }
+>>
+>> +static inline void cra_writew(struct altera_pcie *pcie, const u32 value,
+>> +			      const u32 reg)
+>
+> No need to add inline keyword to .c files. Compiler will inline the function
+> anyway if needed.
+
+Using inline is consistent with existing cra_writel and cra_readl.
+
+>
+>> +{
+>> +	writew_relaxed(value, pcie->cra_base + reg);
+>> +}
+>> +
+>> +static inline u32 cra_readw(struct altera_pcie *pcie, const u32 reg)
+>> +{
+>> +	return readw_relaxed(pcie->cra_base + reg);
+>> +}
+>> +
+>> +static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
+>> +			      const u32 reg)
+>> +{
+>> +	writeb_relaxed(value, pcie->cra_base + reg);
+>> +}
+>> +
+>> +static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
+>> +{
+>> +	return readb_relaxed(pcie->cra_base + reg);
+>> +}
+>> +
+>>  static bool altera_pcie_link_up(struct altera_pcie *pcie)
+>>  {
+>>  	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
+>> @@ -145,6 +185,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+>>  	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+>>  }
+>>
+>> +static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
+>> +{
+>> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
+>> +				   pcie->pcie_data->cap_offset +
+>> +				   PCI_EXP_LNKSTA);
+>> +
+>> +	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+>
+> Why this can't be readw_relaxed()?
+
+This can be changed to readw_relaxed().
+
+>
+>> +}
+>> +
+>>  /*
+>>   * Altera PCIe port uses BAR0 of RC's configuration space as the translation
+>>   * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
+>> @@ -425,6 +474,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+>>  	return PCIBIOS_SUCCESSFUL;
+>>  }
+>>
+>> +static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
+>> +			    int size, u32 *value)
+>> +{
+>> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		*value = readb(addr);
+>
+> Same question as above. Why the relaxed variant is not used here?
+
+Yes, the relaxed variant can be used here too.
+
+>
+>> +		break;
+>> +	case 2:
+>> +		*value = readw(addr);
+>> +		break;
+>> +	default:
+>> +		*value = readl(addr);
+>> +		break;
+>> +	}
+>> +
+>> +	/* interrupt pin not programmed in hardware, set to INTA */
+>> +	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
+>> +		*value = 0x01;
+>> +	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
+>> +		*value |= 0x0100;
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+>> +			     int where, int size, u32 value)
+>> +{
+>> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		writeb(value, addr);
+>> +		break;
+>> +	case 2:
+>> +		writew(value, addr);
+>> +		break;
+>> +	default:
+>> +		writel(value, addr);
+>> +		break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+>> +	 * and update local copy of root bus number accordingly.
+>> +	 */
+>> +	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+>> +		pcie->root_bus_nr = value & 0xff;
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
+>> +			     unsigned int devfn, int where, int size, u32 value)
+>> +{
+>> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+>> +	if (busno > AGLX_RP_SECONDARY(pcie))
+>> +		where |= (1 << 12); /* type 1 */
+>
+> Can you use macro definition for this?
+
+Use a macro like BIT(12)?
+
+>
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		cra_writeb(pcie, value, where);
+>> +		break;
+>> +	case 2:
+>> +		cra_writew(pcie, value, where);
+>> +		break;
+>> +	default:
+>> +		cra_writel(pcie, value, where);
+>> +			break;
+>> +	}
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
+>> +			    unsigned int devfn, int where, int size, u32 *value)
+>> +{
+>> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+>> +	if (busno > AGLX_RP_SECONDARY(pcie))
+>> +		where |= (1 << 12); /* type 1 */
+>
+> Same here.
+>
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		*value = cra_readb(pcie, where);
+>> +		break;
+>> +	case 2:
+>> +		*value = cra_readw(pcie, where);
+>> +		break;
+>> +	default:
+>> +		*value = cra_readl(pcie, where);
+>> +		break;
+>> +	}
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>>  static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>>  				 unsigned int devfn, int where, int size,
+>>  				 u32 *value)
+>> @@ -437,6 +583,10 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>>  		return pcie->pcie_data->ops->rp_read_cfg(pcie, where,
+>>  							 size, value);
+>>
+>> +	if (pcie->pcie_data->ops->ep_read_cfg)
+>> +		return pcie->pcie_data->ops->ep_read_cfg(pcie, busno, devfn,
+>> +							where, size, value);
+>
+> Why do you need to call both rp_read_cfg() and ep_read_cfg()? This looks wrong.
+>
+>> +
+>>  	switch (size) {
+>>  	case 1:
+>>  		byte_en = 1 << (where & 3);
+>> @@ -481,6 +631,10 @@ static int _altera_pcie_cfg_write(struct altera_pcie *pcie, u8 busno,
+>>  		return pcie->pcie_data->ops->rp_write_cfg(pcie, busno,
+>>  						     where, size, value);
+>>
+>> +	if (pcie->pcie_data->ops->ep_write_cfg)
+>> +		return pcie->pcie_data->ops->ep_write_cfg(pcie, busno, devfn,
+>> +						     where, size, value);
+>> +
+>>  	switch (size) {
+>>  	case 1:
+>>  		data32 = (value & 0xff) << shift;
+>> @@ -659,7 +813,30 @@ static void altera_pcie_isr(struct irq_desc *desc)
+>>  				dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n", bit);
+>>  		}
+>>  	}
+>> +	chained_irq_exit(chip, desc);
+>> +}
+>> +
+>> +static void aglx_isr(struct irq_desc *desc)
+>> +{
+>> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +	struct altera_pcie *pcie;
+>> +	struct device *dev;
+>> +	u32 status;
+>> +	int ret;
+>> +
+>> +	chained_irq_enter(chip, desc);
+>> +	pcie = irq_desc_get_handler_data(desc);
+>> +	dev = &pcie->pdev->dev;
+>>
+>> +	status = readl(pcie->hip_base + pcie->pcie_data->port_conf_offset +
+>> +		       pcie->pcie_data->port_irq_status_offset);
+>> +	if (status & CFG_AER) {
+>> +		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
+>> +		if (ret)
+>> +			dev_err_ratelimited(dev, "unexpected IRQ\n");
+>
+> It'd be good to print the IRQ number in error log.
+
+Adding the IRQ number to the error log would be helpful.
+
+>
+>> +	}
+>> +	writel(CFG_AER, (pcie->hip_base + pcie->pcie_data->port_conf_offset +
+>> +			 pcie->pcie_data->port_irq_status_offset));
+>
+> You should clear the IRQ before handling it.
+
+Yes, the IRQ should be cleared before handling it.
+
+>
+>>  	chained_irq_exit(chip, desc);
+>>  }
+>>
+>
+> [...]
+>
+>> -	/* clear all interrupts */
+>> -	cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+>> -	/* enable all interrupts */
+>> -	cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+>> -	altera_pcie_host_init(pcie);
+>> +	if (pcie->pcie_data->version == ALTERA_PCIE_V1 ||
+>> +	    pcie->pcie_data->version == ALTERA_PCIE_V2) {
+>> +		/* clear all interrupts */
+>> +		cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+>> +		/* enable all interrupts */
+>> +		cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+>> +		altera_pcie_host_init(pcie);
+>> +	} else if (pcie->pcie_data->version == ALTERA_PCIE_V3) {
+>> +		writel(CFG_AER,
+>> +		       pcie->hip_base + pcie->pcie_data->port_conf_offset +
+>> +		       pcie->pcie_data->port_irq_enable_offset);
+>
+> Why altera_pcie_host_init() is not called for ALTERA_PCIE_V3?
+
+The V3 hardware does not need to perform a link retraining in order to 
+establish link at higher speeds.
+
+>
+> - Mani
+
+Thank you for your feedback,
+Matthew Gerlach
+
+>
+> -- 
+> மணிவண்ணன் சதாசிவம்
+>
+--8323329-176960017-1737140963=:1784667--
 
