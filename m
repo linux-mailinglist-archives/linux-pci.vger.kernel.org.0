@@ -1,162 +1,207 @@
-Return-Path: <linux-pci+bounces-20070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ECF7A154E6
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 17:52:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60D6DA155BD
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 18:30:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F6E116551F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 16:52:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80A00164837
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 17:30:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 154131A01B0;
-	Fri, 17 Jan 2025 16:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E96E19ADA4;
+	Fri, 17 Jan 2025 17:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TB05YIK3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GC6Srpee"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533D719F495
-	for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 16:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345A8A95C;
+	Fri, 17 Jan 2025 17:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737132747; cv=none; b=iDH9VWMsToBeljgnI5dW5rSqT9Zrk5puh/sGLTY21+S1Q18hvhrmQdTZeCp9VVPDns4j2HNFmw/+ZPWTR3XQWi7D3DL+fLw7t0GUxgSIzoq4V9NaidkA9ML0xjjIvhBUKj4K1F9HU3pGwiuav3E7v5lA9yOkK5IACy+h3pKzemU=
+	t=1737135033; cv=none; b=ddUTmK7FyiQyBmkEohqUg3TwLZLHLpHU+7fl5ap1vWxRE3dLednoqxgkRqCZMNi3qN7XSL1CgtyCDNIB4XQqirfH71e4IzwgMKlMipRgLsCCDnpkxLdB99duP9Dx7N749Ba7gUoP9CnGunUHy4vsoA9g1XvIt5EYAg9SEjhaeZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737132747; c=relaxed/simple;
-	bh=GxqGfy7DCS0v9UvoUQoflUG7DqaWios1qCm/ssJ4Cws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BNlf/JaVj4E2W0gmWTOub/+xaEvIEV9U+3JdFxW/B1AOxGjQBxR2cXdCR1ji9l4CPy8eO8NMF/qtNAENevVH4LqeXlomaKzJC/TjqGL9xGt/y0R20zoCst0+89LfBkMSZRyP+BMKL3JqLoaHW8bSh00VJiMDLFb4bYJ3HpNJvFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=TB05YIK3; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2a8690dcb35so830343fac.3
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 08:52:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1737132744; x=1737737544; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbPn385nmxgkLr2JTs9xLHKsJGuOpLTuKBJgMVB8y7A=;
-        b=TB05YIK3fOSwj0FoijFUNpWv8xRxA2K/B9Xs/Yv0yxohn+TFlU3NVtFh0R1xw2IML0
-         WVLjlLD8Ph4sU8XJUdg0BMdrm09LWaL0xweWz/n+Sh2zFNUCQS7FqNs9NztF1xLwiXhe
-         63CJKPO+AVZuHlP+6a8Kojb6jZP4w5K8K6aD4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737132744; x=1737737544;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gbPn385nmxgkLr2JTs9xLHKsJGuOpLTuKBJgMVB8y7A=;
-        b=uh1P6WzJia/PLGD/xmyWjHQ9auaBsk3BpcjeOBpbCYWtcHeSBcqKVIkGzX8j0aOpTd
-         H67zo2CFtlzsBlyD18tLyKTcGvTjJ6bZaEbaTqwDQhZw6CW3cHnVe7cbEs08sqTUTCTQ
-         kSwAyBuShPd0emYdGQ81CUge7LrEUcqMwt7otLtPIA/AK3QBx5sXTVvz0CHfiZIVE6IJ
-         kVa/6ZtBe04dPVX71rxd64mWpgRBlrXnH1LHYQ3PSsUeI0LGQ2z9lrLu8iLS30HDyWMH
-         Jarn/3kqpOht+eDsRp0FMAWpyQdIxCmbbcpYv820b/dM2XJcyPqMNFdmCeBJ/upESJKl
-         3gHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWc2izVka03A5WcW6NMhUKA0++qbfvKxhVTvGrZT88WySMR96eFrETyNStS00n7GkvICABko1XvE4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPHhD5GIynzSFNfDLwfg0AYKZWWeuCVpJmPgpOykKaLp3cY+O9
-	1Uj7eSGxamf4d2/whuIFTAexgqN6EeGm25u1fRVuqwAQKFHIn5vY9Xwf3r1SaQ==
-X-Gm-Gg: ASbGncupn74OXg73V08rSlGd3OOLPkoCnF/yPB6RRmIpTXz75zNSnd70JRc8jyetsNj
-	ecH01vlfUZXmci7cf7Ka/QKGGCgtRG+MAfXpxuAZByN+NnSEmC5Cg82wG9I0gf7wNLOn7K98BC1
-	oZOPx4Op9yws8dVGLWCzLJRCGgMOBbewYtR4uHVw0SfACMiWiBQymjRPLuccTxTdymBFfy7ABf+
-	LCilyXHj69g5ou7srrvsLOsv5gXY+w0Cg4FUuG0fShpXK4B2f4UKcctv18om7x526QlXTwi/XJJ
-	93Oalxx0ennjRfEnZSWc+wW06rD4yWA=
-X-Google-Smtp-Source: AGHT+IEPQ2tZri6LlF68yq4mtGcTHaoltWas3irZkTK8fHqf2B06a/y/jkJBQakfa1Dd4rkmWpYZuw==
-X-Received: by 2002:a05:6870:4e0d:b0:29e:2f3a:761a with SMTP id 586e51a60fabf-2b1c0a349f5mr2131118fac.20.1737132744451;
-        Fri, 17 Jan 2025 08:52:24 -0800 (PST)
-Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b8d4b3c9sm1131584fac.25.2025.01.17.08.52.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2025 08:52:23 -0800 (PST)
-Message-ID: <339e2337-850c-4201-83ea-eca59e297396@broadcom.com>
-Date: Fri, 17 Jan 2025 08:52:20 -0800
+	s=arc-20240116; t=1737135033; c=relaxed/simple;
+	bh=NwGjIFCOVGOFl9+7A1WEpEUNm8Gy0ODwXSeX7ZV4b0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ilHlpSVXQLwcOHnI2C6i1OhlN9RHccZZ4+7aP+45lLEEZ+l31TaQlK/GQXPqsb1F06cdNkIW8rtHNceeT4/4EE4Sfat8gfARM8jET9K8tuk0PFAMDNqEcRvugGiqmjgXRKOoiYzfLABWRDkO0D55rpzEl4PiSxOj7jk1s4zgCg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GC6Srpee; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A801C4CEDD;
+	Fri, 17 Jan 2025 17:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737135032;
+	bh=NwGjIFCOVGOFl9+7A1WEpEUNm8Gy0ODwXSeX7ZV4b0Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GC6SrpeeYdhVCw5M4Tolff+jxWARkXQQMX6zF3nIdU1Db7XkFGodK5kG41/mq6F+P
+	 isEia74xwAal9dsd67usF0gIRBoDTsIHcgA4NxR10BseJRZ5YvOoVKSrzcZm96FEuH
+	 o77MHPoKvjhmxrz1INycVBC3aAePsP+C9xkxi3mVXEWsDT3kMgXcuJcBUX7HgCidll
+	 T+pELHwxcPF86lkI57b1a/LPoum9N5jHZquFnZSO2irhfmrVAsOQn84o8Gr9htrejl
+	 UlGHQtwwYnEI3PM3eyuudTH9NDIeW+0fwnCvfyENC3819oAvpQ5o6QJt1MCHzZqSKn
+	 k8eJEgfwD0lxg==
+Date: Fri, 17 Jan 2025 11:30:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: daire.mcnamara@microchip.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, conor.dooley@microchip.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ilpo.jarvinen@linux.intel.com,
+	kevin.xie@starfivetech.com, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v10 1/3] PCI: microchip: Fix outbound address translation
+ tables
+Message-ID: <20250117173031.GA644050@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/10] dt-bindings: misc: Add device specific bindings
- for RaspberryPi RP1
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
- Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
- Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
-References: <cover.1736776658.git.andrea.porta@suse.com>
- <c22fa1e06926cf946ea3cb6647e9e27441f26398.1736776658.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <c22fa1e06926cf946ea3cb6647e9e27441f26398.1736776658.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250117-curliness-flashback-83519e708b52@spud>
 
+On Fri, Jan 17, 2025 at 10:53:01AM +0000, Conor Dooley wrote:
+> On Thu, Jan 16, 2025 at 12:02:55PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Jan 16, 2025 at 05:45:33PM +0000, Conor Dooley wrote:
+> > > On Thu, Jan 16, 2025 at 11:07:22AM -0600, Bjorn Helgaas wrote:
+> > > > [+cc Frank, original patch at
+> > > > https://lore.kernel.org/r/20241011140043.1250030-2-daire.mcnamara@microchip.com]
+> > > > 
+> > > > On Thu, Jan 16, 2025 at 04:46:19PM +0000, Conor Dooley wrote:
+> > > > > On Thu, Jan 16, 2025 at 09:42:53AM -0600, Bjorn Helgaas wrote:
+> > > > > > On Tue, Jan 14, 2025 at 06:13:10PM -0600, Bjorn Helgaas wrote:
+> > > > > > > On Fri, Oct 11, 2024 at 03:00:41PM +0100, daire.mcnamara@microchip.com wrote:
+> > > > > > > > From: Daire McNamara <daire.mcnamara@microchip.com>
+> > > > > > > > 
+> > > > > > > > On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
+> > > > > > > > three general-purpose Fabric Interface Controller (FIC) buses that
+> > > > > > > > encapsulate an AXI-M interface. That FIC is responsible for managing
+> > > > > > > > the translations of the upper 32-bits of the AXI-M address. On MPFS,
+> > > > > > > > the Root Port driver needs to take account of that outbound address
+> > > > > > > > translation done by the parent FIC bus before setting up its own
+> > > > > > > > outbound address translation tables.  In all cases on MPFS,
+> > > > > > > > the remaining outbound address translation tables are 32-bit only.
+> > > > > > > > 
+> > > > > > > > Limit the outbound address translation tables to 32-bit only.
+> > > > > > > 
+> > > > > > > I don't quite understand what this is saying.  It seems like the code
+> > > > > > > keeps only the low 32 bits of a PCI address and throws away any
+> > > > > > > address bits above the low 32.
+> > > > > > > 
+> > > > > > > If that's what the FIC does, I wouldn't describe the FIC as
+> > > > > > > "translating the upper 32 bits" since it sounds like the translation
+> > > > > > > is just truncation.
+> > > > > > > 
+> > > > > > > I guess it must be more complicated than that?  I assume you can still
+> > > > > > > reach BARs that have PCI addresses above 4GB using CPU loads/stores?
+> > > > > > > 
+> > > > > > > The apertures through the host bridge for MMIO access are described by
+> > > > > > > DT ranges properties, so this must be something that can't be
+> > > > > > > described that way?
+> > > > > 
+> > > > > Daire's been having some issues getting onto the corporate VPN to send
+> > > > > his reply, I've pasted it below on his behalf:
+> > > > > 
+> > > > > There are 3 Fabric Inter Connect (FIC) buses on PolarFire SoC - each of
+> > > > > these FIC buses contain an AXI master bus and are 64-bits wide. These
+> > > > > AXI-Masters (each with an individual 64-bit AXI base address – for example
+> > > > > FIC1’s AXI Master has a base address of 0x2000000000) are connected to
+> > > > > general purpose FPGA logic. This FPGA logic is, in turn, connected to a
+> > > > > 2nd 32-bit AXI master which is attached to the PCIe block in RootPort mode.
+> > > > > Conceptually, on the other side of this configurable logic, there is a
+> > > > > 32-bit bus to a hard PCIe rootport.  So, again conceptually, outbound address
+> > > > > translation looks like this:
+> > > > > 
+> > > > >                  Processor Complex à FIC (64-bit AXI-M) à Configurable Logic à 32-bit AXI-M à PCIe Rootport
+> > > > > 		 (This how it came to me from Daire, I think the á is meant to
+> > > > > 		 be an arrow)
 
+I'm trying to match this up with the DT snippet you included earlier:
 
-On 1/13/2025 6:58 AM, Andrea della Porta wrote:
-> The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-> schema is intended as minimal support for the clock generator and
-> gpio controller peripherals which are accessible through BAR1.
+  fabric-pcie-bus@3000000000 {
+    compatible = "simple-bus";
+    #address-cells = <2>;
+    #size-cells = <2>;
+    ranges = <0x00 0x40000000 0x00 0x40000000 0x00 0x20000000>,
+	     <0x30 0x00000000 0x30 0x00000000 0x10 0x00000000>;
+
+IIUC, this describes these regions, so there's no address translation
+at this point:
+
+  [parent 0x00_40000000-0x00_5fffffff] -> [child 0x00_40000000-0x00_5fffffff]
+  [parent 0x30_00000000-0x3f_ffffffff] -> [child 0x30_00000000-0x3f_ffffffff]
+
+Here's the PCI controller:
+
+    pcie: pcie@3000000000 {
+      compatible = "microchip,pcie-host-1.0";
+      #address-cells = <0x3>;
+      #size-cells = <0x2>;
+      device_type = "pci";
+
+      reg = <0x30 0x00000000 0x0 0x08000000>,
+	    <0x00 0x43008000 0x0 0x00002000>,
+	    <0x00 0x4300a000 0x0 0x00002000>;
+
+which has this register space (in the fabric-pcie-bus@3000000000
+address space):
+
+  [0x30_00000000-0x30_07ffffff] (128MB)
+  [0x00_43008000-0x00_43009fff]   (8KB)
+  [0x00_4300a000-0x00_4300bfff]   (8KB)
+
+So if I'm reading this right (and I'm not at all sure I am), the PCI
+controller a couple 8KB register regions below 4GB, and also 128MB of
+register space at [0x30_00000000-0x30_07ffffff] (maybe ECAM?).  I
+don't know how to reconcile this one with the 32-bit AXI-M bus leading
+to it.
+
+And it has these ranges, which *do* look like they translate
+addresses:
+
+      ranges = <0x43000000 0x0 0x09000000 0x30 0x09000000 0x0 0x0f000000>,
+	       <0x01000000 0x0 0x08000000 0x30 0x08000000 0x0 0x01000000>,
+	       <0x03000000 0x0 0x18000000 0x30 0x18000000 0x0 0x70000000>;
+
+  [parent 0x30_09000000-0x30_17ffffff] -> [pci 0x09000000-0x17ffffff pref 64bit mem]
+  [parent 0x30_08000000-0x30_08ffffff] -> [pci 0x08000000-0x08ffffff io]
+  [parent 0x30_18000000-0x30_87ffffff] -> [pci 0x18000000-0x87ffffff 64bit mem]
+
+    };
+  }
+
+These look like three apertures to PCI, all of which are below 4GB on
+PCI (I'm not sure why the space code is 11b, which indicates 64-bit
+memory space).  But all of these are *above* 4GB on the upstream side
+of the PCI controller, so I have the same question about the 32-bit
+AXI-M bus.
+
+Maybe the translation in the pcie@3000000000 'ranges' should be in the 
+fabric-pcie-bus@3000000000 'ranges' instead?
+
+> > So is this patch a symptom that is telling us we're not paying
+> > attention to 'ranges' correctly?
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Sounds to me like there's something missing core wise, if you've got
+> several drivers having to figure it out themselves.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Yeah, this doesn't seem like something each driver should have to do
+by itself.
 
+> Daire seems to think what Frank's done should work here, but it'd need
+> to be looked into of course. Devicetree should look the same in both
+> cases, do you want it as a new version or as a follow up?
+
+I'd prefer if we could sort this out before merging this if we can.
+I'm not sure we can squeeze Frank's work in this cycle; it seems like
+we might be able to massage it and figure out some sort of common
+strategy for this situation even if DesignWare, Cadence, Microchip,
+etc need slightly different implementations.
+
+Bjorn
 
