@@ -1,169 +1,87 @@
-Return-Path: <linux-pci+bounces-20030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F40A14A0D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 08:20:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA53A14A30
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 08:36:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16B223A4799
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 07:20:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 794C43AAAAF
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 07:36:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46D91F7586;
-	Fri, 17 Jan 2025 07:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1273D1E1C2B;
+	Fri, 17 Jan 2025 07:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvZWLzNV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailproxy01.manitu.net (mailproxy01.manitu.net [217.11.48.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB5B22619
-	for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 07:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.11.48.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D235E155300;
+	Fri, 17 Jan 2025 07:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737098412; cv=none; b=NoXT+gnfP35IAEuBTVvmuarm/P9i7Fcelmg3UPVT3i0/Xqmr35BI6mgnKXNK+TJHeMVpXxnCm29M0wZlNe7gOMj4ovweOTkB1juUhataVY33mxzvGuYzI4g1ONIfnUzhewD34ZesZ7chU8yXnETTq77Qg99OrkGK4bO/PwNkmm8=
+	t=1737099364; cv=none; b=qSiDblXl2smEgHUOBgIxd/9tZeBN9RzEzshU77wWNxWWxiNWl57oPWXEq6RuLq8lx5tdwvFKORwWQasAgl2QP64d9bt3kpX3mDFrAupoUd0kInM/+9OuBftU5NGzsHvJhiMousdUK/C0pra91e08JXtpc5mLsrDT/QXqgFozbGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737098412; c=relaxed/simple;
-	bh=dPmrakCeozE0ryUZncHOhA07D6ydvd4OH7duHGDHXos=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=GF9dFyLf5O6Dx3V0bc+pIG16dICRla85EwiFzGf7xAzMYELO1WeaWhjmEhNSCwL9pxoaBTHDlefr96KtxNKG7G6cR/6UBDECVCIGKZ3ev3S6XaGOZzdPlYKicndMKzxAlgrB8xcfoP8y8/LWfvqy2kfWDnoGfxZ43NlOc8OJyZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mehrfeuer.de; spf=pass smtp.mailfrom=mehrfeuer.de; arc=none smtp.client-ip=217.11.48.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mehrfeuer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mehrfeuer.de
-From: Dennis Thase <dennis@mehrfeuer.de>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1737099364; c=relaxed/simple;
+	bh=9rLx3+q2I7YhaRy+3wWC+fJ4u9j5KzJ/7HObezKZmEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nshv4DivC9yjeWydhNI3GOa01wrV4Ntt2Cum3rjmxoeuKiIZXxVONNPVx5Yn4OiIxs8Eaquegdf7NllFRuENxU6PZEXWT80pgig8L8SkHdP9Xy5bQ1Yo9CKGSgctjOKLjTGR4DVkevaR7bv6ggWn2U3sxsKP/+xuAknhS8oU5RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvZWLzNV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75C6BC4CEDD;
+	Fri, 17 Jan 2025 07:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737099363;
+	bh=9rLx3+q2I7YhaRy+3wWC+fJ4u9j5KzJ/7HObezKZmEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nvZWLzNVprCTnh5J+bcC85LIvSzBxCJDK0QtqenJSMSUw1lwJk5o8myPfMLb+xVmt
+	 qiTZ6rzKZ3tdrLat4HhHM6dMwO+uFpWQGF2MJsVjs34KuuEWZtzggchLrqZbMs3Wcp
+	 stG8PNylJglFFiOeMRqwC65kaSw1jLxm847ni7jQUWWQm9B2+Aap0L3JqGUYyLglws
+	 BhzqYn06JfXRkK7wUNx2vdLGMGWDSrmiYQlpPSgqDZeL8dQEeTnzqGsJlBkVZncSzT
+	 ZI0nmOX5JW4QVEv95+0l3ekYRfNZPSxUE0PT+qS2YM7ZgmPZx1VEWdnU3lzdNtZF9j
+	 pu4NI29O4yoJw==
+Date: Fri, 17 Jan 2025 08:36:00 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, 
+	Simon Xue <xxm@rock-chips.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+Message-ID: <20250117-gray-falcon-of-ampleness-03be68@krzk-bin>
+References: <20250117032742.2990779-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6.1.9\))
-Subject: nointxmask RME audio pcie devices
-Message-Id: <7CF56E21-ACC5-48D2-AD6C-8FBE8916DAF3@mehrfeuer.de>
-Date: Fri, 17 Jan 2025 08:14:16 +0100
-To: linux-pci@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250117032742.2990779-1-kever.yang@rock-chips.com>
 
-Greetings,
-i try to use two different pcie audio devices manufactured by RME on =
-proxmox ve with vfio. They only work fine with nointxmask option. =
-Otherwise there are hearable audio gaps. The disadvantage is that i =
-cannot passthrough any other device to another vm in pve because the =
-intx device is busy with nointxmask enabled. I attached the lspci of =
-both RME devices.
-Thanks for support.
-Regards,
-Dennis
-
-07:00.0 Multimedia audio controller: Xilinx Corporation RME Hammerfall =
-DSP MADI (rev d2)
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- =
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- =
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0, Cache Line Size: 64 bytes
-        Interrupt: pin A routed to IRQ 19
-        IOMMU group: 22
-        Region 0: Memory at 81a00000 (32-bit, non-prefetchable) =
-[size=3D64K]
-        Capabilities: [40] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA =
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D1 =
-PME-
-        Capabilities: [48] MSI: Enable- Count=3D1/1 Maskable- 64bit+
-                Address: 0000000000000000  Data: 0000
-        Capabilities: [58] Express (v1) Endpoint, MSI 00
-                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s =
-<64ns, L1 <1us
-                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- =
-SlotPowerLimit 10W
-                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                        RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-                        MaxPayload 128 bytes, MaxReadReq 512 bytes
-                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- =
-AuxPwr- TransPend-
-                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit =
-Latency L0s <4us
-                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 2.5GT/s, Width x1
-                        TrErr- Train- SlotClk- DLActive- BWMgmt- =
-ABWMgmt-
-        Capabilities: [100 v1] Device Serial Number =
-00-00-00-01-01-00-0a-35
-        Kernel driver in use: vfio-pci
-        Kernel modules: snd_hdspm
-00: ee 10 c6 3f 06 00 10 00 d2 00 01 04 10 00 00 00
-10: 00 00 a0 81 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
-40: 01 48 03 00 08 20 00 1e 05 58 80 00 00 00 00 00
-50: 00 00 00 00 00 00 00 00 10 00 01 00 20 80 90 05
-60: 10 29 00 00 11 64 03 00 00 00 11 00 00 00 00 00
-70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+On Fri, Jan 17, 2025 at 11:27:41AM +0800, Kever Yang wrote:
+> rk3576 is using dwc controller, with msi interrupt directly to gic instead
+> of to gic its, so
+> - no its support is required and the 'msi-map' is not need anymore,
+> - a new 'msi' interrupt is needed.
+> 
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+> 
+> Changes in v5:
+> - Add constraints per device for interrupt-names due to the interrupt is
+> different from rk3588.
 
 
+Test your patches before sending. This one has obvious syntax errors, so
+you really never run a test. That's wasting our time.
 
-09:00.0 Multimedia audio controller: Xilinx Corporation Device 3fc7 (rev =
-d5)
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- =
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- =
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0, Cache Line Size: 64 bytes
-        Interrupt: pin A routed to IRQ 16
-        IOMMU group: 24
-        Region 0: Memory at 81900000 (32-bit, non-prefetchable) =
-[size=3D128K]
-        Capabilities: [40] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA =
-PME(D0-,D1+,D2+,D3hot+,D3cold-)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D1 =
-PME-
-        Capabilities: [48] MSI: Enable- Count=3D1/1 Maskable- 64bit+
-                Address: 0000000000000000  Data: 0000
-        Capabilities: [58] Express (v1) Endpoint, MSI 00
-                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s =
-<64ns, L1 <1us
-                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- =
-SlotPowerLimit 25W
-                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                        RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-                        MaxPayload 128 bytes, MaxReadReq 512 bytes
-                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- =
-AuxPwr- TransPend-
-                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit =
-Latency L0s unlimited
-                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 2.5GT/s, Width x1
-                        TrErr- Train- SlotClk- DLActive- BWMgmt- =
-ABWMgmt-
-        Kernel driver in use: vfio-pci
-00: ee 10 c7 3f 06 00 10 00 d5 00 01 04 10 00 00 00
-10: 00 00 90 81 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
-40: 01 48 03 70 08 20 00 1e 05 58 80 00 00 00 00 00
-50: 00 00 00 00 00 00 00 00 10 00 01 00 20 80 e8 07
-60: 10 29 00 00 11 f4 03 00 00 00 11 00 00 00 00 00
-70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=
+Best regards,
+Krzysztof
+
 
