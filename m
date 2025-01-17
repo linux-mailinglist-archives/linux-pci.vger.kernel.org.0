@@ -1,107 +1,213 @@
-Return-Path: <linux-pci+bounces-20026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1704AA1485D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 03:52:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F02D5A148F0
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 05:43:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 726513A9851
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 02:51:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68EB0188C8AD
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 04:43:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42E01DE4F9;
-	Fri, 17 Jan 2025 02:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E44A1F63FD;
+	Fri, 17 Jan 2025 04:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qc1uBM6j"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="SSQIn1G6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m3272.qiye.163.com (mail-m3272.qiye.163.com [220.197.32.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1EB17084F
-	for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 02:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143041F63C6;
+	Fri, 17 Jan 2025 04:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737082319; cv=none; b=lpbvBDqF/GnaaXocIaxJeZFZIpUYUR8FupAR5hjkcHQso2fXRaZ6cYoJTzjdRXtq5jznaq9HwJ3zUyGLX5szMGW1U4l72+M9i16E3oWK/181RbFCnrJVJvuUNeaFu37k3uuZs6QBuF97CQnc99kfa2s6WSrBGRSa5L1LDQU9Cu4=
+	t=1737089017; cv=none; b=JVYk/CnJ36ui0+jFkKKDGuFInngXaBV1hbaz+zfOTsYtkpftKQbgThTGRyHdqaMT07thk1QCKYcCpShJBOHjbOQpa0QAxwS7/6CNQMtmkInTJL5XfnsXIeUT9XdFm3Jtzocf95O7jgc98G3TAZaOVJcbqo3iS/1x0vm9/29hr/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737082319; c=relaxed/simple;
-	bh=GlXugIQp6WJ2PxP0qElQk+LyISfmltufC3bBjrtcRs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s4CXBJ14j6+1+Yi6PHTCcQ9fSuihcWUKbBZDMSYLYrOTXa35gGJfzvtEG3vnH8I+zTSDVH7gu5g4BPIxQ8eeZ/uTcOZU8vrDq8YyQar5LKVJQtP0WhQjfo+tMmwMnaktoq37v6h7H9C4lCBGfZRnNbZL32MTEOV/j+h+Z4OvwjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qc1uBM6j; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaecf50578eso346079766b.2
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 18:51:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737082316; x=1737687116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GlXugIQp6WJ2PxP0qElQk+LyISfmltufC3bBjrtcRs0=;
-        b=Qc1uBM6jJN7z3+ja04VIV53kdu9+1heKZvJz8BnJOxMkL8+G/jjWKKaChlEzWWqsqB
-         MsbIcmwDy0nsX9G9ORkCZi3KhpGV9ZDNpxqpNMk73aOu+W4X1QTWpP/5S8HQcqqaWM+w
-         1OnrIi3EXizCndTLuEugI0pFGf1GnG8WhO72voqQJgu31uVVnh5bZNoJ+szx9qqWPccT
-         6PTwCvDvud/PuMyC9VpENdTFpYoClvRRzOm544Wa/Dr5SUXNeOzEZGPf5kF5tESAJfAD
-         SGij+IoZVpnCeISdYHiuXaYf01dEAv1u0tE90w7o9/sgz96IP01erXlOJCn61r7BKgO1
-         FXtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737082316; x=1737687116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GlXugIQp6WJ2PxP0qElQk+LyISfmltufC3bBjrtcRs0=;
-        b=aWvBFtVF5mLYUKS1D2Ri9t+hJB7B44D7rb20pfTHCwzUQV9ITsC6ZGmz+JRXJRI8X/
-         T/vCq5We++QoE3ZaLGBDm8aygTXhfywnLSQqtYuIA+LgtRpD35kgNU6nx94graRe3WTI
-         5qTCIXBRJ6UxRMPkYwFW3wEY1aI8PLfy67kwDLl2IaBisdnuCjp9in1mcLSiF/6GYMrf
-         dlZXeBseSbs2gO2uCnhzBu8rZvXAXLIpLRswL/ukVOWTAfO6Vll6+3JEFmFGVsRvUVai
-         MXZUSpyb6QjAl1/i9fsIo/UHBHwLuU7b5Bl7/4WL6uYpdMelFS/QfPSiKhS92XMCAtlT
-         VEPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQxmvXOO9rDlHjwsfDd/Nixx9g1X3BPf7ltdFgj2bOsXbHbMgjJwwqqi63CNP/Jh/3gXSwdslSEYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn7xE4P6EA6YeTo7mckmUDCYmvkWP5SEU404L1D/Ump94kPhfo
-	t3FkzvgfmwVeHuMH/e5GcJo6a+VYpNhcFvUA0e31AjZYlXoB1XkKKGooByzMXcL+21rj45GcfSR
-	YIDyOl1AGcUnuirei3D6gjn7KqC88l/7WXONi
-X-Gm-Gg: ASbGnct3degOeeRac+8OVTufkXPc8OrfrOCmR4TcoygmSHzMMi+mqdcjyL+fipEsqVs
-	MUh6p6U6JUO9R7FJTMdR2IHaYfXFgplzGugF/5rFjTmc+Ox++apUeI3drY49LGVy65Hg=
-X-Google-Smtp-Source: AGHT+IEf4Vaa3C/EW4lUJUC4dWGK68YcuOkmusTZL78zroc0nSR1PDByNx3AeuIeSaO5ICppzrFCteEtXbJsWcU5i/M=
-X-Received: by 2002:a17:906:dc8c:b0:ab2:debf:8992 with SMTP id
- a640c23a62f3a-ab38b3d5ecamr108573366b.50.1737082316333; Thu, 16 Jan 2025
- 18:51:56 -0800 (PST)
+	s=arc-20240116; t=1737089017; c=relaxed/simple;
+	bh=y8RuriOS2ja4SiOfa72cFSdYPjP1BtVBWSYrhVdMUP0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZkcrAVM28cbMMojidzZEi7059sykwEOf0aFlY+PMOs7ice6fafmXYvqi/dijmazJHk1O74M9a23tmiLjFxWg5LEU7eDFQlr4AsrnSO1INrITFvRgfpbaTPxYMKYUdELowXN/xFn9MB6TFo+Kdi/sLEnatuJHYSGBcvqundnETtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=SSQIn1G6; arc=none smtp.client-ip=220.197.32.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 8f2239f3;
+	Fri, 17 Jan 2025 11:27:45 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+Date: Fri, 17 Jan 2025 11:27:41 +0800
+Message-Id: <20250117032742.2990779-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1736341506.git.karolina.stolarek@oracle.com>
- <20250115075553.3518103-1-pandoh@google.com> <8be04d4f-c9e8-4ed2-bf6a-3550d51eb972@oracle.com>
-In-Reply-To: <8be04d4f-c9e8-4ed2-bf6a-3550d51eb972@oracle.com>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 16 Jan 2025 18:51:45 -0800
-X-Gm-Features: AbW1kvZkWhLjSY2C1EMu8jXzK1uCzLs0l0i2BHfvHrws5mMplo8hG9MZnR4RVVI
-Message-ID: <CAMC_AXXvTgEaMSBsmr_eS7=8gCcmn5ep3f88kc=SjfmsRvNQYQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND 0/4] Rate limit reporting of Correctable Errors
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: ben.fuller@oracle.com, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	martin.petersen@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZH0hIVkxITEpIHkoYTE5OTlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
+X-HM-Tid: 0a94724d735c03afkunm8f2239f3
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nwg6KQw5TTIcOD8jES8sCR9C
+	Fy0wCk9VSlVKTEhMS0NPT01DS01IVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUhDSko3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=SSQIn1G6Ajd3TooJmtM6vPtgaM8iirnAcYMHDd6c5OBEL/va29VvQohMa7+Gf5Ah2nGLqaRbWLLheucTYzF9IznOpv6HYfZ+XLTB79X9ydhtb1ea6kWa+g9zy+2trw0Mgr7RO9LxDcO8X/d6NY1m802k9rH1YjN/dv14kdw0b3E=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=nWUOXgGr1bJtNx1vYM6geNONWF/tpXFfL8Oby3eDDFE=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, Jan 15, 2025 at 6:18=E2=80=AFAM Karolina Stolarek
-<karolina.stolarek@oracle.com> wrote:
-> Feel free to incorporate the 1/4 patch into your series. I plan to do a
-> proper review tomorrow.
+rk3576 is using dwc controller, with msi interrupt directly to gic instead
+of to gic its, so
+- no its support is required and the 'msi-map' is not need anymore,
+- a new 'msi' interrupt is needed.
 
-Ack.
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
 
-> Out of curiosity, do your patches apply to cleanly to pci/err and/or
-> pci-next branches? From what I can see, "PCI: Consolidate TLP Log
-> reading and printing" series[1] had been just merged, so there could be
-> conflicts.
+Changes in v5:
+- Add constraints per device for interrupt-names due to the interrupt is
+different from rk3588.
 
-Good catch. I rebased off of Linus' master branch so it's unlikely to
-be clean. I'll rebase off of pci-next in the next version.
+Changes in v4:
+- Fix wrong indentation in dt_binding_check report by Rob
 
-Thanks,
-Jon
+Changes in v3:
+- Fix dtb check broken on rk3588
+- Update commit message
+
+Changes in v2:
+- remove required 'msi-map'
+- add interrupt name 'msi'
+
+ .../bindings/pci/rockchip-dw-pcie-common.yaml | 53 +++++++++++++++----
+ .../bindings/pci/rockchip-dw-pcie.yaml        |  4 +-
+ 2 files changed, 44 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
+index cc9adfc7611c..eef108037184 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
+@@ -40,6 +40,7 @@ properties:
+ 
+   interrupts:
+     minItems: 5
++    maxItems: 9
+     items:
+       - description:
+           Combined system interrupt, which is used to signal the following
+@@ -64,6 +65,10 @@ properties:
+           interrupts - aer_rc_err, aer_rc_err_msi, rx_cpl_timeout,
+           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
+           nf_err_rx, f_err_rx, radm_qoverflow
++      - description:
++          Combinded MSI line interrupt, which is to support MSI interrupts
++          output to GIC controller via GIC SPI interrupt instead of GIC its
++          interrupt.
+       - description:
+           eDMA write channel 0 interrupt
+       - description:
+@@ -75,16 +80,7 @@ properties:
+ 
+   interrupt-names:
+     minItems: 5
+-    items:
+-      - const: sys
+-      - const: pmc
+-      - const: msg
+-      - const: legacy
+-      - const: err
+-      - const: dma0
+-      - const: dma1
+-      - const: dma2
+-      - const: dma3
++    maxItems: 9
+ 
+   num-lanes: true
+ 
+@@ -123,4 +119,41 @@ required:
+ 
+ additionalProperties: true
+ 
++allOf:
++  - if:
++      compatible:
++        contains:
++          enum:
++            - rockchip,rk3568-pcie
++            - rockchip,rk3588-pcie
++    then:
++      properties:
++        interrupts:
++          min-items: 5
++          max-Items: 9
++        interrupt-names:
++          items:
++            - const: sys
++            - const: pmc
++            - const: msg
++            - const: legacy
++            - const: err
++            - const: dma0
++            - const: dma1
++            - const: dma2
++            - const: dma3
++    else:
++      properties:
++        interrupts:
++          min-items: 6
++          max-Items: 6
++        interrupt-names:
++          items:
++            - const: sys
++            - const: pmc
++            - const: msg
++            - const: legacy
++            - const: err
++            - const: msi
++
+ ...
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 550d8a684af3..9a464731fa4a 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -26,6 +26,7 @@ properties:
+       - const: rockchip,rk3568-pcie
+       - items:
+           - enum:
++              - rockchip,rk3576-pcie
+               - rockchip,rk3588-pcie
+           - const: rockchip,rk3568-pcie
+ 
+@@ -71,9 +72,6 @@ properties:
+ 
+   vpcie3v3-supply: true
+ 
+-required:
+-  - msi-map
+-
+ unevaluatedProperties: false
+ 
+ examples:
+-- 
+2.25.1
+
 
