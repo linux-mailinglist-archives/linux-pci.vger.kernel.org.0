@@ -1,192 +1,197 @@
-Return-Path: <linux-pci+bounces-20057-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20058-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51D33A1508A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 14:28:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAF4DA1510B
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 14:55:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 713BA165DE9
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 13:28:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36DC93A98A7
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 13:55:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA3691F9F55;
-	Fri, 17 Jan 2025 13:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142A51FF618;
+	Fri, 17 Jan 2025 13:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lkrrLF5k"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eAd96aZj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2551FFC5C;
-	Fri, 17 Jan 2025 13:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737120487; cv=fail; b=R6bGfzMIRhyFxF4BkHkhjAdqBLE4/xihceMUc5jTEKRGdrcmCoH+gAN5AQ5i9k/EW85tVKY7oNzCQFq4LvL1Zccal8+c7T6r1DvpRYkWllnkhMrnT/1yo5e4DZ/qCy8MbaKV8ki5ObF7EGaEZPKPouLnb/+k18Xex2qmRRDPVlY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737120487; c=relaxed/simple;
-	bh=yDO6n0Tm4DpBqRM/FmxFFvOFKdSRlmtZwgi/SZ3Emkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sAmEeQlIMfcpWcBXLrVPKV0pAe3XuRBNACZhBTvxz4Uo0u/VrDxyGLEry8+gF6IRvWSGBbnT7gQbPGNWZNMUZLVBAKuCEnWtCJ+EbFiqWcL1NMmTBXHHHWf2WTGQgdzcJFgd2Un3tw2qoXWmkN692/RVmN3zWYdIGkCPkkoYxUk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lkrrLF5k; arc=fail smtp.client-ip=40.107.223.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dl5d1vqD1L2j9wHZxMwiF7uz0cHe/8L/PJwoLI8y3boHg6bhwcIWte6Q1cAJJAJeacL6/Tgi0uUE6XTpzhT0D7aLkPB2e2++4dbph9x8dHmCWmxZysec9F0K3upMUQvRNPYVtc9fnwRuWeWPywWdH7hZYDkxBZCdLVmMsFJvNpinyMyqei/Cx/8ylG1CPXcsvPQOcNYc9E5eaPPOgMfmntyLzyxLL5vbPbehkMic3E88fjIVL6Z7G/FVeEi2B0WZfNJYuPE1baR7cOr6/iPF7t2dpFx9E8VK7fDWC2iWdtmiCTNBjQslEqT6ssQzKpkY+yKAgf2v0DZZKIu85J2aUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1cy2nkjRU9MKLTjqXLgvFHuDIfkYQ8E9FEce0szHWt4=;
- b=o1Y3bdy69TE3eiMWH9SQ6/P1TEwWKWLJ5NOgQHyApxg22jxEcp9RmL9NjMXP1YBMPxOiATZ5Vd8VW4SyctlyVKLs7deEBHWpRWh5RONPntuAaalD1qqZR1HSPRefVnAqX6xe+jAGThU3My018064fahlYVG7djcbfQ/+rhngjE7TqAfu6K4j5+TjEvfwomFaYync8ejpdp+1YNeyN9FwRartszTj5Oa1IpemZs5pHCEg+CkRMhNMk1O/Ol74EhbcSlq1D+vKw+R7Tsa2AeRLut1v4XGEeSp+iO+j78+PuBxmV6zMT8HJ1Tlvxm0+UjWQSXdPpD2E1T+n4UfxDwbq/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1cy2nkjRU9MKLTjqXLgvFHuDIfkYQ8E9FEce0szHWt4=;
- b=lkrrLF5kBRu9rR93NIhpzld4+qrb0h+Qfqy3vOwyS+n6+HhctWrFI2I2KR9dBfTcHBn42ZVG3sTLsJ4d2xb4IJGZag/JkYnvZqORFOYVAmZvEd5b+dirnuy9ztMjlysIPEF3Zt7q1rhZRJ2CwuC72iC3aCphft2snDTjd0cHwHuSMSrtSGGwqIAeFin3ze43FsiYq2VVwpwPuTfPz+xPdMqziwHB6/nZycRo0436EVl39h6A8xfYMAIZ8V1GjEIsF1KkxiH9TSq7rCGTIf1f9Mepnb1vVWDY+7suqfMVGsOeQPtk7x20FJjMCuR8r3c88HX3+N/8RqwPOBhAYLHeJw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by MN2PR12MB4111.namprd12.prod.outlook.com (2603:10b6:208:1de::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.16; Fri, 17 Jan
- 2025 13:28:03 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%5]) with mapi id 15.20.8356.010; Fri, 17 Jan 2025
- 13:28:03 +0000
-Date: Fri, 17 Jan 2025 09:28:02 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Tushar Dave <tdave@nvidia.com>
-Cc: corbet@lwn.net, bhelgaas@google.com, paulmck@kernel.org,
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
-	xiongwei.song@windriver.com, vidyas@nvidia.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, vsethi@nvidia.com,
-	sdonthineni@nvidia.com
-Subject: Re: [PATCH 1/1] PCI: Fix Extend ACS configurability
-Message-ID: <20250117132802.GB5556@nvidia.com>
-References: <20250102184009.GD5556@nvidia.com>
- <2676cf6e-d9eb-4a34-be5e-29824458f92f@nvidia.com>
- <20250107001015.GM5556@nvidia.com>
- <c9aeb7a0-5fef-49a5-9ebb-c0e7f3b0fd3e@nvidia.com>
- <20250108151021.GS5556@nvidia.com>
- <0ea48a2b-0b6d-49e2-b3f7-ab4deef90696@nvidia.com>
- <20250113200749.GW5556@nvidia.com>
- <6ea9260b-f9cd-4128-b424-11afe6579fdc@nvidia.com>
- <20250116190118.GW5556@nvidia.com>
- <4d5224c6-bc0b-4ca9-9f1a-71d701554b3d@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d5224c6-bc0b-4ca9-9f1a-71d701554b3d@nvidia.com>
-X-ClientProxiedBy: MN0PR02CA0017.namprd02.prod.outlook.com
- (2603:10b6:208:530::35) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1FD71F957;
+	Fri, 17 Jan 2025 13:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737122150; cv=none; b=Tjh6xdMDkd0PES4Sv0HRUgPRbbNK5qLwYFLZgBQTQWUZ8b9G2Eq8xKhpbPT1McWV07IB2jjWkG06a/YsLhZz+VqA0Y35SaU8cnhJLD3njyWEzDZ0HD/jCujcEpsXxHMOw4BzfQ+0izi3/GiW0MivhIIpIE0ZYImByrfa9ZWCp2I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737122150; c=relaxed/simple;
+	bh=Xb/EwJx8cYzyfsX97qqfhtH0U5tFSjwQi6dyUInZWhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VbHB1mWAihNVLxs1XJ8b9WG0OHzSBV99EjB7JYIMOkj8liBiGkm0wQ22PWicA2fLT22tAQfTmforZTLGWy+NfPV+C8DWzIKj0FgRnk2KpYSFJJcQNyU/SZlAhxYgIjF1q/JWtvsKMy2+I+kD9KkWiJd+PbIVtGhifJui/W28tqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eAd96aZj; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=0ysGIoZ4NZ7E9Ad6yIq65d/mO8sayRFgvH4aJQOXIvY=;
+	b=eAd96aZjh/8PFTW4LY+TQg/+4potNHJk9CEdpuQjvWpKvo7g3fG7krwvNEozBl
+	zYnowN4Tu3aMagKB0aIMI0KFSSje1toTXCx4CMk4/QFS8YClvXetcW2UALn3jhuE
+	MlEJAcKDWEinPSGG58nCIBxscBb+WinH/HumvTlo8pNEM=
+Received: from [192.168.31.193] (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDHD_XFYIpnV1bpGQ--.32780S2;
+	Fri, 17 Jan 2025 21:53:10 +0800 (CST)
+Message-ID: <417720e7-c793-4c36-a542-a7e937e5a3cf@163.com>
+Date: Fri, 17 Jan 2025 21:53:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN2PR12MB4111:EE_
-X-MS-Office365-Filtering-Correlation-Id: dff643d8-03ae-4551-ecd0-08dd36fac513
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DD6Tkaoy03wEJqKh3+a27sFrJp7gtmdbjnBHx1sb2FMBZp7hqNHKFyUO1wHc?=
- =?us-ascii?Q?4H+TdzFBUBdGbds1PCcY4uS4rN8Sh24nonAK809h+QilCMiJANs/zSQyEkZZ?=
- =?us-ascii?Q?Wp8BoS2mk40JUnhyxTKQkrqCggiyCKzwPN9CE3XfQw1GeqOYwD8FY/qd3Q8q?=
- =?us-ascii?Q?AZqimYkMoPVixT7zrGOA/K3Bwn4sN1nm0oJ/pFFzODZSdL9BfF0M3nYR6fxQ?=
- =?us-ascii?Q?+NkKqhCudYKaec0cka66HSa7XdR1vg9MW5XE0mNIplr96/4zxRRKDHLgFf34?=
- =?us-ascii?Q?FFu/8+UT3K5d8QUv9cUG1fTtsgJjJZkmpbqvxGIGAOvWEIQzIl9XjYFZObEK?=
- =?us-ascii?Q?psWevXcSzCJqx5s/OH/PFZ7HpCrpwJUqYlAIDhPHKQTbeByXqyB1Wqmq2YLI?=
- =?us-ascii?Q?M0feqlI0ujDVJVgy95fYURxQE1LodOUeTYHWfNhgGC12c5N5gpakFmk2o0qG?=
- =?us-ascii?Q?pwn7rDAlZ40lETAf1FtxIp6RpDME1Nx5MtZaeOynKrTlEVtw86yNPvhBuD1a?=
- =?us-ascii?Q?msALd+W0GLkKJ/JOomFAs6sTpbDpLLm/xIevdRTiGwUWw2uBiHnCjvJ1BoMI?=
- =?us-ascii?Q?GqJD6de/KWkevvvT/XJfppuAFnndgyf4aapcmKoIkAQCuo3m0leL7VqpTNQH?=
- =?us-ascii?Q?SORrXSGpftYURZMgkV03vOHHu2WFsSi0IQ0cPVpc/C23XEkTioG3F5FqEm/Z?=
- =?us-ascii?Q?COBtIWFnhspR2H+gPe3DjJB7enn7cazCUC+9AqP0om5xzS2yScTRNrZJRN0b?=
- =?us-ascii?Q?CD/ql0eK2x0Q6wx68a5ZS4ZSy2iZ4wlcQeFvZf+CyGuZu1eX7BJ8hBnFNanS?=
- =?us-ascii?Q?fQE7KoslyW5uC6+ZqArb/vbM9RQUDL6F6sENnUk9tUnDT26mQyGUAlfW8pqD?=
- =?us-ascii?Q?cEf+XiAM271UP4swx245IaoMnLiEt9XIfzIfYrHTa9RUsXNOi4zrbJP02ie/?=
- =?us-ascii?Q?hhNcRroU7AKx06jyCA1VpEFzu/Ik9Au6kjwAuhFFT7IkOv6fTrcZAO4RWKSI?=
- =?us-ascii?Q?YPlgP9lG7ILQwluGvg6ad6eg09E5nX72qFIKcXNWI95UirWtAnN7s+mBl1d5?=
- =?us-ascii?Q?xJBU58qVkV08HgQ9Mp51se0Qn1ate2jVit/Fz6X22r2VcILBztkUeAregzTD?=
- =?us-ascii?Q?uR+KJpEAn+4auMMK9OvKKUQ1I+/xAjrQcNP8tq2xVrC8ER15ev7/OPEkkHIB?=
- =?us-ascii?Q?MSdUlA7z8dJJNuk3og0ZFkf92FKsLVtl5mA7AwKL2ZxdLXz0XmCBpPbbzWmn?=
- =?us-ascii?Q?5cXr5MtEsby42FBO7JMS75Mt/MKuimDqdW0ji8yMV37HBzcAblRB2Rf+Sehk?=
- =?us-ascii?Q?AQnxQhE5ztS6lrogQ9m993oXAThTUafOSjHrCFvDV1stVElLRKdnSIQ/BtAP?=
- =?us-ascii?Q?hkoT5xMe+HwOaH2KIjAyNGv5Y4eD?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EBR5E1QdEuBEnYCelbDFFB736ppKF/BF9R5DWoYlmpey99L0Ly3d3R1+KmAw?=
- =?us-ascii?Q?4EHzE3g+JLWgvcZ+HlaUAMsTGCN2yAoO5bvLZ4CiNkLdlL4F+iaFMfquhZDJ?=
- =?us-ascii?Q?hOtAzSHwuX7aO2EjkRDJUjUYFZTdnZLrqxPpCtg8DGF6FWdzT957hVxhtkRw?=
- =?us-ascii?Q?/xEi77d5slQkqYWzRYzHVtYQI+B4tU0gpRVueimTnofKf7g45wK+1r0BhI/G?=
- =?us-ascii?Q?EyitxhczBZ3DB63KYcIwitk8DS7czko22LCuQzlJINW7dcJDP7WGjuIQpzg7?=
- =?us-ascii?Q?kF1bNw6VcjFmICjbjJvACOV8uWNDhK8o2X55eAYgkdsW150J9KbxMXGZaa6c?=
- =?us-ascii?Q?D36KNR1jl6k6WNuwfzy0EfTLLyn6DSHBo0BXFQvTsrOmDcetW3gv4MYf/ul+?=
- =?us-ascii?Q?oLDERQOiT8Dp6ZAVKC9azSs7/5n+WwqB66lvwJYT1z3jXdYUi6o4J+NhHTe5?=
- =?us-ascii?Q?1doCCh0naFHgi1TePYcqttXNiqDkDmKEgoCBOiU4j1fDZeux2mHGy76IW0vU?=
- =?us-ascii?Q?KtCXRGPEectpk4O7rlV1avp3oB9EvRkpjKoeLByzmM4/MwdbDf/2Uzabn9Ew?=
- =?us-ascii?Q?j+5XSIrotaQ4e84ZNCkLuto0dNv7dln3YIYJfAl2bo9I+UjzGR2ekOPukHdl?=
- =?us-ascii?Q?MEFYr4QN4gSMJtedEVDgXU8x3U27lyQYc86T28daU3M2CIZEE+lt1xLMRi6V?=
- =?us-ascii?Q?cvM4Hyca1udcpotK0l13VO1tSG+xcH76WeB2mWMDWixI7lTLSmqTGSc5vIZQ?=
- =?us-ascii?Q?jraaNPXo6fQgrSEZVanUMKvO1hKMs6xLKYxj54WNS+QSbbVpaNoK8zI83553?=
- =?us-ascii?Q?aw2O6v4eZPDdXeZxZqPRtRhn+CyW2pOuH8TSvwRB492DLCddPX2TrsW+tLF8?=
- =?us-ascii?Q?E12LCvvLYVbIpHqTvQ0MOeKNmkwrpyN9HxAkcFQ7bQCmI27UolXNIJuHdrck?=
- =?us-ascii?Q?AKXdm9EG3VVi8d2dTG2NucAjXMIJ/pVc9NBd2WXO48oEjtESX96QMSnaLkmz?=
- =?us-ascii?Q?C0TW98nDCIz7PBWmaId25zVXwThbNaHiiyGkIuV5bsUx1aLy762FjsrQzBLg?=
- =?us-ascii?Q?74ItfWkRw9pLBmIW6ehnZydONoLrow+F6iqaSbad38TCmRWYsqAGUHiLmodZ?=
- =?us-ascii?Q?PmP9prUFb1ZltYgRXl+GF8awib6dNfMMHizpv+qwearOKoVmbLEh/UUwVsHr?=
- =?us-ascii?Q?cBlg2vS9AyfKVP864qBNGJvuljktpiEMQTahoJbUHCBoU/Ypfyg2uDCuSC/A?=
- =?us-ascii?Q?YQwE952qhVQBCoglRiio0FEKTgIngmUTeAzD5769UX57SjaT8ih1lX4PAoQt?=
- =?us-ascii?Q?DFcafwDLDwk4G2FuQSIvqzW2dR1YsqJoLz3Gn4YG7DbreDEpn5XATJehMukx?=
- =?us-ascii?Q?vjAbyNPNiRnql6OwhQRaSzzfsJHjghFBydEqmYQ8L06anH6/nP8O1xnc6gXD?=
- =?us-ascii?Q?cTajxOevY5J1E4FOsASXM7sbVkolNzfCOcV6axxvdxUJR3HfSYvMJmz8OOd4?=
- =?us-ascii?Q?0gSTYlnIoXzUMn4GC+VRVP9BQtK6vPPNBKr+ijmbCSzMJVh7Q4CRoTYJxJyc?=
- =?us-ascii?Q?syssu3txTwZX3rqV1xTGfcaSLTBkrpkwetOf8HBp?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dff643d8-03ae-4551-ecd0-08dd36fac513
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 13:28:03.4531
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6LQo1hPSmDyECUk0Ze/MKMpjPyyq2qKToxqmzIrkO98EQO3NI+Y63yg458CP+2Qo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: reread the Link Control 2 Register before
+ using
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: macro@orcam.me.uk, bhelgaas@google.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, helgaas@kernel.org,
+ Lukas Wunner <lukas@wunner.de>, ahuang12@lenovo.com, sunjw10@lenovo.com,
+ jiwei.sun.bj@qq.com, sunjw10@outlook.com
+References: <20250115134154.9220-1-sjiwei@163.com>
+ <20250115134154.9220-3-sjiwei@163.com>
+ <4df1849e-c56e-b889-8807-437aab637112@linux.intel.com>
+Content-Language: en-US
+From: Jiwei Sun <sjiwei@163.com>
+In-Reply-To: <4df1849e-c56e-b889-8807-437aab637112@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHD_XFYIpnV1bpGQ--.32780S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKF4rAFykZr4Dtw1Dtry8uFg_yoW7Xr48pF
+	W5Ga4ayr4DGrWfuF1DWa1xXFyUZ3ZayFW5J34xKrW5ZFy3Aa9YvF1jkF4Sv3WUZr4kZ34Y
+	va4ayr48Aa1YvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRec_fUUUUU=
+X-CM-SenderInfo: 5vml4vrl6rljoofrz/xtbBDxfXmWeKWeZ3nwAAss
 
-On Thu, Jan 16, 2025 at 05:21:29PM -0800, Tushar Dave wrote:
 
-> -       /* If mask is 0 then we copy the bit from the firmware setting. */
-> -       caps->ctrl = (caps->ctrl & ~mask) | (caps->fw_ctrl & mask);
-> -       caps->ctrl |= flags;
-> +       /* For mask bits that are 0 copy them from the firmware setting
-> +        * and apply flags for all the mask bits that are 1.
-> +        */
-> +       caps->ctrl = (caps->fw_ctrl & ~mask) | (flags & mask);
+
+On 1/16/25 22:12, Ilpo Järvinen wrote:
+> On Wed, 15 Jan 2025, Jiwei Sun wrote:
+> 
+>> From: Jiwei Sun <sunjw10@lenovo.com>
+>>
+>> Since commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set
+>> PCIe Link Speed"), the local variable "lnkctl2" is not changed after
+>> reading from PCI_EXP_LNKCTL2 in the pcie_failed_link_retrain(). It might
+>> cause that the removing 2.5GT/s downstream link speed restriction codes
+>> are not executed.
+>>
+>> Reread the Link Control 2 Register before using.
+>>
+>> Fixes: de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed")
+>> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+>> ---
+>>  drivers/pci/quirks.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 76f4df75b08a..02d2e16672a8 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -123,6 +123,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+>>  			return ret;
+>>  		}
+>>  
+>> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+>>  		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+>>  	}
+> 
+> I started to wonder if there would be a better way to fix this. If I've 
+> understood Maciej's intent correctly, there are two cases when the 2nd 
+> step (the one lifting the 2.5GT/s restriction) should be used:
+> 
+> 1) TLS is 2.5GT/s at the entry to the quirk and it's an ASMedia switch.
+> 
+> 2) If the quirk lowered TLS to 2.5GT/s and the link became up fine 
+> because of that. This also currently checks for ASMedia but in the v1 you 
+> also proposed to change that. We know it works in some cases with ASMedia 
+> but are unsure what happens with other switches.
+> 
+> In the case 2, we don't need to check TLS since the function itself asked 
+> TLS to be lowered which did not return an error, so we know the speed was 
+> lowered so why spend time on rereading the register? A simple local 
+> variable could convey the same information.
+
+Uh, maybe my commit messages wasn't clear. My understanding is as
+following,
+
+  98 int pcie_failed_link_retrain(struct pci_dev *dev)
+  99 {  
+			 ...
+ 111         pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+ 112         pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+ 113         if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
+ 114                 u16 oldlnkctl2 = lnkctl2;
+ 115         
+ 116                 pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
+ 117         
+ 118                 ret = pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false);
+ 119                 if (ret) {
+ 120                         pci_info(dev, "retraining failed\n");
+ 121                         pcie_set_target_speed(dev, PCIE_LNKCTL2_TLS2SPEED(oldlnkctl2),
+ 122                                               true);
+ 123                         return ret;
+ 124                 }
+ 125         
+ 126                 pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+ 127         }
+ 128         
+ 129         if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+ 130             (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+ 131             pci_match_id(ids, dev)) {
+ 132                 u32 lnkcap;
+ 133         
+ 134                 pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
+ 135                 pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+ 136                 ret = pcie_set_target_speed(dev, PCIE_LNKCAP_SLS2SPEED(lnkcap), false);
+
+
+Consider the following scenario:
+After the execution of line 111, lnkctl2.tls is 0x3 (Gen 3, such as
+for the device ASMedia ASM2824). The function call
+pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false) on line 118 returns 0,
+and the tls field of the link control 2 register is modified to 0x1 
+(corresponding to 2.5GT/s).
+﻿
+However, within this section of code, lnkctl2 is not modified (after 
+reading from register on line 111) at all and remains 0x5. This results 
+in the condition on line 130 evaluating to 0 (false), which in turn 
+prevents the code from line 132 onward from being executed. The removing
+2.5GT/s downstream link speed restriction work can not be done.
+﻿
+Before the commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed()
+to set PCIe Link Speed"), after setting the minimum speed and successfully
+completing retraining, an attempt would be made to clear the minimum speed.
+IIUC, even for this device ASMedia ASM2824, it is necessary to reread the
+link control 2 register after successful retraining on line 118.
+
+> 
+> In case 1, I don't think ASMedia check should be removed. It was about a 
+> case where FW has a workaround to lower the speed (IIRC). If Link Speed is 
+> 2.5GT/s at entry but it's not ASMedia switch, there's no 2.5GT/s 
+> restriction to lift.
 > 
 > 
-> I ran some sanity tests and looks good. Can I send V2 now?
+> As a general comment abouth your test case, I don't think this Target 
+> Speed quirk really is compatible with your test case. The quirk makes 
+> assumption that the Link Up/Down status changes are because of the changes 
+> the quirk made itself but your rapid add/remove test alters the 
+> environment, which produces unrelated Link Up/Down status changes that get 
+> picked up by the quirk (a false signal).
 
-I think so, I'm just wondering if this is not quite it either - this
-will always throw away any changes any of the other calls made to
-ctrl prior to getting here.
+Yes, it seems that our testing has entered an inappropriate code flow, 
+but how to avoid it is a troublesome issue.
 
-So we skip the above if the kernel command line does not refer to the
-device?
+Thanks,
+Regards,
+Jiwei
+> 
 
-Ie if the command line refers to the device then it always superceeds
-everything, otherwise the other stuff keeps working the way it worked
-before??
-
-Jason
 
