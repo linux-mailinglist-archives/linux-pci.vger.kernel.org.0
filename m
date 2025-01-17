@@ -1,134 +1,169 @@
-Return-Path: <linux-pci+bounces-20029-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A081AA14932
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 06:26:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2F40A14A0D
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 08:20:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BD52188D795
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 05:26:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16B223A4799
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 07:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083311F7574;
-	Fri, 17 Jan 2025 05:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PSsaLtcp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46D91F7586;
+	Fri, 17 Jan 2025 07:20:12 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailproxy01.manitu.net (mailproxy01.manitu.net [217.11.48.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214ED8C11
-	for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 05:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB5B22619
+	for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 07:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.11.48.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737091559; cv=none; b=OIMKim9HJoNiTSZ+E2EoAuEanrvHRqsdn1TdyfoRgghnVFXmOi6h0vmgiIyWmgO/P6waDX9BrldY8rWJh3BDC320CAI5BdYME4Yb3l0dvs1n21Ux17dzvV+aH6lTnJCjrgLomjSS84ZDTqmayQo3ItaMJZPmLGg4kReY+zsQdWk=
+	t=1737098412; cv=none; b=NoXT+gnfP35IAEuBTVvmuarm/P9i7Fcelmg3UPVT3i0/Xqmr35BI6mgnKXNK+TJHeMVpXxnCm29M0wZlNe7gOMj4ovweOTkB1juUhataVY33mxzvGuYzI4g1ONIfnUzhewD34ZesZ7chU8yXnETTq77Qg99OrkGK4bO/PwNkmm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737091559; c=relaxed/simple;
-	bh=DGgHReRoxV/+DmamGVoxWAyOfGnMynXqub0Abuj3F4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g4v/BncUfUZEHZ9FukKgkKU80+yqtHF+udc50gPGfOS5StOQyBxVLvLreap2cViyTtnZzdfaSp7hZ23BTMHnzyO9+62nH2AKgVT+O4lJFua+DNVboBJ10a+HeQMjkfbzuF7aeCw4/2PinmLGp3amoB5MEnmCgXm/I/feo87f4H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PSsaLtcp; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso10453015e9.3
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2025 21:25:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737091555; x=1737696355; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pgp2+IMXxJqntfEcanaBoZCtUVslmuF+HfybjYKMqH8=;
-        b=PSsaLtcp9/7l1mCRevhmjLIT9wr1OZLjIRDhZ6mW91Q6pws+vA+aVMbeWETapsxuqt
-         dBP9jVmHIiTfuBV57jkzeuFMPscfvWot5BqCfcNhxE9t8M6ppJAIaVIJtjzS0sEt5UDF
-         HFe6Ib1xs9C/MxLibePOh47f3Uu6v6sKjxX/M2v9KK1LLv85qO5ZU4DQ/gVaJjMjEQ9G
-         ddeZYgX3VZnX56GPgJUlB56QaTx/LAVthGxDBlsU2AoIIuBHphTryxzPVS9ey7N4R2HE
-         1eiOaNXqovDZ2aMPAWFSRcEzQCZaNkkzOoEfPDhxQc5NC0hx88wLMapP+RNJDkh8/+XZ
-         AT5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737091555; x=1737696355;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pgp2+IMXxJqntfEcanaBoZCtUVslmuF+HfybjYKMqH8=;
-        b=FK3w0Gj80++i3llClyu7THWPboV9CyDRsXKg5yzndaeCKGaPKBn+GcsNJssaeeY9ZJ
-         xAbHE/CGPzLuczm52qnK9fGdEEFfYmBIcaVwzfuaNzPkKcVxmtlpHz0u27LvUMk+tWkO
-         mR/oevcn2ke9XE8c7Hoz9RYZ36G8YhjF0ArXRHLsHUDVilOo71+HQNq7Ma6l6n6Z0RO6
-         NULkrNIUnHFQ0xG8lP5KmYzfEoh90fe6gNzYJB/1fd19Z114j8aujQBjcVWL/31/rI0Z
-         uz4vE52ZtyQO6HjdI95THf5y86CrmjMyzTzEMZB/gbVTsvCQuzi/AdB9WW3N4fQ7M154
-         QxcA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfafavBivndNwq1RQgWlWwjnGab3di1rXNLppNsGBV1PA8mm1pK0JsfmTicsY8MbeVF4XnyfV3LWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOZ9eq1FQz7oxHYD12onded2ekfcH/rvfS3Xka5Vuyzlaa5Vgd
-	Ek5ddIk8vFwFB+8uuOgiovx3MjctHgLc2YTbsGcyJ0Y5C1n3xijj5AkW/PZnGWA=
-X-Gm-Gg: ASbGncs3fP6wxXRy7pPnyNMturnUx8TW6UatNYhA0/5WAjCKzb8hPdxcMBB4pm73EUT
-	Gt2wcxmnqiV4LV+eRhotJ1huIlPu6YSU+/HhtxLdWMr5TPhHu2TwheOu9meL98iFYNRB5G9zcU+
-	AEM4LOys02Hc30Iht+F4ZirXRprVgVmILAO/lesifRB9ufIvw8xJfCzv6chxKKk7YIjSlPTZPNp
-	rb/qSzH/IljAuw4VCEPDCk0EZBHz8aij8YpHCl3YpL0O6PJMZLP+u6JIQp3+Q==
-X-Google-Smtp-Source: AGHT+IHv7DJAAYThC9GNwDlLUZxVW1EfKgbU1RsWLT2vIWkxB/JLRBW88SN+q/9DKAm8e5HkbQzR7g==
-X-Received: by 2002:a05:600c:3b29:b0:434:fe4b:be18 with SMTP id 5b1f17b1804b1-438913ef951mr9742005e9.18.1737091555500;
-        Thu, 16 Jan 2025 21:25:55 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf322a838sm1501717f8f.48.2025.01.16.21.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2025 21:25:54 -0800 (PST)
-Date: Fri, 17 Jan 2025 08:25:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Colin Ian King <colin.i.king@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: Fix ternary operator that never returns 0
-Message-ID: <b0d6ea82-c979-447a-9e63-0dbdbf23d411@stanley.mountain>
-References: <20250116172019.88116-1-colin.i.king@gmail.com>
- <20250116224944.283e14fb@pumpkin>
+	s=arc-20240116; t=1737098412; c=relaxed/simple;
+	bh=dPmrakCeozE0ryUZncHOhA07D6ydvd4OH7duHGDHXos=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=GF9dFyLf5O6Dx3V0bc+pIG16dICRla85EwiFzGf7xAzMYELO1WeaWhjmEhNSCwL9pxoaBTHDlefr96KtxNKG7G6cR/6UBDECVCIGKZ3ev3S6XaGOZzdPlYKicndMKzxAlgrB8xcfoP8y8/LWfvqy2kfWDnoGfxZ43NlOc8OJyZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mehrfeuer.de; spf=pass smtp.mailfrom=mehrfeuer.de; arc=none smtp.client-ip=217.11.48.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mehrfeuer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mehrfeuer.de
+From: Dennis Thase <dennis@mehrfeuer.de>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250116224944.283e14fb@pumpkin>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6.1.9\))
+Subject: nointxmask RME audio pcie devices
+Message-Id: <7CF56E21-ACC5-48D2-AD6C-8FBE8916DAF3@mehrfeuer.de>
+Date: Fri, 17 Jan 2025 08:14:16 +0100
+To: linux-pci@vger.kernel.org
 
-On Thu, Jan 16, 2025 at 10:49:44PM +0000, David Laight wrote:
-> On Thu, 16 Jan 2025 17:20:19 +0000
-> Colin Ian King <colin.i.king@gmail.com> wrote:
-> 
-> > The left hand size of the ? operator is always true because of the addition
-> > of PCIE_STD_NUM_TLP_HEADERLOG and so dev->eetlp_prefix_max is always being
-> > returned and the 0 is never returned (dead code). Fix this by adding the
-> > required parentheses around the ternary operator.
-> > 
-> > Fixes: 00048c2d5f11 ("PCI: Add TLP Prefix reading to pcie_read_tlp_log()")
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> > ---
-> >  drivers/pci/pcie/tlp.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-> > index 9b9e348fb1a0..0860b5da837f 100644
-> > --- a/drivers/pci/pcie/tlp.c
-> > +++ b/drivers/pci/pcie/tlp.c
-> > @@ -22,8 +22,8 @@
-> >  unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc)
-> >  {
-> >  	return PCIE_STD_NUM_TLP_HEADERLOG +
-> > -	       (aercc & PCI_ERR_CAP_PREFIX_LOG_PRESENT) ?
-> > -	       dev->eetlp_prefix_max : 0;
-> > +	       ((aercc & PCI_ERR_CAP_PREFIX_LOG_PRESENT) ?
-> 
-> You can remove the extra set around the condition itself as well.
-> They are a good hint the writer doesn't know their operator
-> precedences :-)
+Greetings,
+i try to use two different pcie audio devices manufactured by RME on =
+proxmox ve with vfio. They only work fine with nointxmask option. =
+Otherwise there are hearable audio gaps. The disadvantage is that i =
+cannot passthrough any other device to another vm in pve because the =
+intx device is busy with nointxmask enabled. I attached the lspci of =
+both RME devices.
+Thanks for support.
+Regards,
+Dennis
 
-Please leave them as-is...  I obsolutely do not remember the operator
-precedences between & and ? and I have to look it up every time I see
-it.
+07:00.0 Multimedia audio controller: Xilinx Corporation RME Hammerfall =
+DSP MADI (rev d2)
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- =
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- =
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 19
+        IOMMU group: 22
+        Region 0: Memory at 81a00000 (32-bit, non-prefetchable) =
+[size=3D64K]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA =
+PME(D0-,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D1 =
+PME-
+        Capabilities: [48] MSI: Enable- Count=3D1/1 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [58] Express (v1) Endpoint, MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s =
+<64ns, L1 <1us
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- =
+SlotPowerLimit 10W
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+                        MaxPayload 128 bytes, MaxReadReq 512 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- =
+AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit =
+Latency L0s <4us
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s, Width x1
+                        TrErr- Train- SlotClk- DLActive- BWMgmt- =
+ABWMgmt-
+        Capabilities: [100 v1] Device Serial Number =
+00-00-00-01-01-00-0a-35
+        Kernel driver in use: vfio-pci
+        Kernel modules: snd_hdspm
+00: ee 10 c6 3f 06 00 10 00 d2 00 01 04 10 00 00 00
+10: 00 00 a0 81 00 00 00 00 00 00 00 00 00 00 00 00
+20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
+40: 01 48 03 00 08 20 00 1e 05 58 80 00 00 00 00 00
+50: 00 00 00 00 00 00 00 00 10 00 01 00 20 80 90 05
+60: 10 29 00 00 11 64 03 00 00 00 11 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
-regards,
-dan carpenter
 
+
+09:00.0 Multimedia audio controller: Xilinx Corporation Device 3fc7 (rev =
+d5)
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- =
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- =
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 16
+        IOMMU group: 24
+        Region 0: Memory at 81900000 (32-bit, non-prefetchable) =
+[size=3D128K]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA =
+PME(D0-,D1+,D2+,D3hot+,D3cold-)
+                Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D1 =
+PME-
+        Capabilities: [48] MSI: Enable- Count=3D1/1 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [58] Express (v1) Endpoint, MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s =
+<64ns, L1 <1us
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- =
+SlotPowerLimit 25W
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+                        MaxPayload 128 bytes, MaxReadReq 512 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- =
+AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit =
+Latency L0s unlimited
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s, Width x1
+                        TrErr- Train- SlotClk- DLActive- BWMgmt- =
+ABWMgmt-
+        Kernel driver in use: vfio-pci
+00: ee 10 c7 3f 06 00 10 00 d5 00 01 04 10 00 00 00
+10: 00 00 90 81 00 00 00 00 00 00 00 00 00 00 00 00
+20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
+40: 01 48 03 70 08 20 00 1e 05 58 80 00 00 00 00 00
+50: 00 00 00 00 00 00 00 00 10 00 01 00 20 80 e8 07
+60: 10 29 00 00 11 f4 03 00 00 00 11 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=
 
