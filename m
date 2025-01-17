@@ -1,109 +1,154 @@
-Return-Path: <linux-pci+bounces-20033-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20034-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80446A14B70
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 09:49:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C58AA14BDA
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 10:11:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E377318885A5
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 08:49:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85D921887C4F
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2025 09:11:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E0D1F8929;
-	Fri, 17 Jan 2025 08:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEEFC1F7918;
+	Fri, 17 Jan 2025 09:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="zTStbaWd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50241F754C;
-	Fri, 17 Jan 2025 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680CB35960;
+	Fri, 17 Jan 2025 09:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737103763; cv=none; b=hwBUWgfvcgaoMPqfd3JajpaagZWOZ4omG4fxXjpmeknX0h4wEECzrKeGBPd6+QbBiCyOSVejrHQmapAWtWuFBbtcqeAw/rIqe+wSW15Ua9If5shkDKgWv++AQ2NHW60bxnvpgKu/TRDDeRbFAaVdb8VMb2RTypQznTGT15EIMz4=
+	t=1737105095; cv=none; b=b8F5XMw51Jz0d0wia+aQIg76NNRdCkSV1Vr/sG9YID4sBafXNkbCEpwW6auq/xrTyO52EOSdox9b6c2IA+q18yrxUrukB59J9Rkrp3/BncPNyQjfI+KF1HTsA63nKkVD9MKVenAWpoQrSuVHxzKRhs+kqymHJN34iTllgEoAXSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737103763; c=relaxed/simple;
-	bh=s7G/qPNiNIZCio7a0paecCg+GfNDiRDAxjizD8U2HgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pTytyYnvd7QBj+waZRdQ4Rj17Xuqjx37Eli8DHFgFoIZRubwMqN2bNeIJ6iao+s1jttzQuehsCt0qVg+bAnF8k/6pO1OnE+1+xGZO/TKMatEFOKNo5wSv5Y3VDgmXoeUIeXECFyojVPO70fV96dSW7XSBz81ZH28DIhJA2IMG0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21661be2c2dso34393605ad.1;
-        Fri, 17 Jan 2025 00:49:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737103761; x=1737708561;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RNe2Mfr29R/zYf3qwVvobOjMU1dExp8rH5mTUwQWtzU=;
-        b=UB7WQS6HCCrdy+sg35/3AaLRnlqSZD8GzmUQxgpFmvawPEUPVcAoHTH1DM5G25fnSB
-         pR1KA9k+rndimrw53H8wwc2qvTaR9+OxoPxQRLdfBz2T9xyXJsaWBU6NTaa3lbUufBiB
-         pI4yxLH46nUGGlkHY60ZQSmgNPsb+s7a6PQU/wiqxMbZX9HLjLqMoI0HDUtYNpbk/6ho
-         r7IH2u58vPCl6bKLuZkW9ESaeg5JvZxR4wiYsF7ZAQZczcUim38UtU7yUWsrViTYlqfQ
-         UxQKhtBtP1P/y7iL0ykQ302w1O+HlreTdZiuLhrCwxZzAAADIDAw1qB4g98z5n02rx/q
-         8hHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV53IhhrLKciYY/Nk+QOM0eChAUMXCSGA3CWWgnFMmpZ+UAu8QR3Q3YIcXhCayuBpywsaBXTg0dY87c@vger.kernel.org, AJvYcCWcaNG381m6I1rgnT5ajjI5fFGOWAPONLL2vIhQGkCvtsZzDce9iXlzKzBrY5SbI8KBayx6s4feGxCTKig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQZRwRMj5ZEbRkbTyW2SpzAZtaxFj0TpWiJKRbyaF7OiFJBSsW
-	dvg4Q7TYsag5jpKadgfh7mpL33LeqPYXUZCpvMK0jOvFD3mpAXB6
-X-Gm-Gg: ASbGncvUkvdIv2Li2wGXSSv0HkW0g+nVbk5dtYnS5cb8zXTmJt8EEtF1xUACn0yujZE
-	/ziVgKPvu1lJs3jQnOHzLsXr/GDvTYrvLPBmbHzDog/t7c8aKSwojeCNXR1C/3J7surAr1Piurw
-	yUWLnwSkGi0NpUV9DQQ/FnCINxvCAPR0odZTlxd/jn+MxMtzCbGSeKIlnTL9qUIWfW5cBVkDpLr
-	ohL467nSjuCDeN2xdSfJxcxJU2koWuYGTZigqylRc+Ymd2iDoeZtp0sybYi1TVTBVVJL6ZWgaBE
-	Ea+y5HwUNAa8mJM=
-X-Google-Smtp-Source: AGHT+IHqX3NznBtXRpmnickrBgahYA318cY6l4oSXzjs71zkhtdWA1ivRpyOlkUrRPDMFBqVdt87Gw==
-X-Received: by 2002:a17:903:947:b0:216:5b64:90f6 with SMTP id d9443c01a7336-21c355fa2eamr29723975ad.45.1737103760869;
-        Fri, 17 Jan 2025 00:49:20 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2cea073csm11518305ad.48.2025.01.17.00.49.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 00:49:20 -0800 (PST)
-Date: Fri, 17 Jan 2025 17:49:18 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Hans Zhang <18255117159@163.com>, kishon@kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [v11 2/2] misc: pci_endpoint_test: Fix overflow of bar_size
-Message-ID: <20250117084918.GA1752843@rocinante>
-References: <20250109094556.1724663-1-18255117159@163.com>
- <20250109094556.1724663-3-18255117159@163.com>
- <20250115165842.p7vo24zwjvej2tbc@thinkpad>
- <Z4fq6XU650iOsFZe@ryzen>
- <20250116020300.GE2111792@rocinante>
- <Z4jTEkznMUcApzbe@ryzen>
- <Z4jTeNjl7ddfcQl1@ryzen>
+	s=arc-20240116; t=1737105095; c=relaxed/simple;
+	bh=kgL3fTL5EN0FWmEPQhlZsAZQUi9WJf80xzmIDYnjNhc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RVdpDF4xW/nj81KZSm/TBJ16JAT0eDzYw/x2dnQ8XHPAaY2vaWJPP1yV6RBQ2UEFMJGDNkPO3A9uDyGVpPiHmMGBKByPumyCDYz/iApMR9HreRbdAK6JLNLEEDJ9mLa25MsH3jQ6hnX7m+Qrf2GIIWvOt0W9eaOJIuXqvjia+5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=zTStbaWd; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50H7318g003891;
+	Fri, 17 Jan 2025 10:11:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=DIOjUT0QD2aDf1f9Bx0P56
+	QpbttpXVW567xaLcOd9ds=; b=zTStbaWd/prdaDSA2ezJ/4DtYhdg9u0bREeCAd
+	JccllCGoV70G2UsR0cmxsrwFmi5rIpssgf8TM4vlI77gtFBN10rg1xJDCECawP3y
+	hUMo0U/jnY94M2cIgputKtpWTck+DFEFqnNBPTcN35ehb4VUynBKwyjRVsCG41Qt
+	/QlcA94J2NQBfmiNAohg+PDkpgSaMEGy8qDccXzN7CY/9xBiq46CCobO0mKd+Trq
+	D3US7rUGttJwzncLP9jqhQ332S1jOyH/fz7Z74s4A/NblCJxz2fzOuQ8B+DEeLxD
+	m1yrwdNy9Wtoc7ED7UaLs4Qi6/djjg8DNPB+oKeSxyqEKNRQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4477k52c29-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Jan 2025 10:11:09 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1EF1B4002D;
+	Fri, 17 Jan 2025 10:10:00 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CF9E726818A;
+	Fri, 17 Jan 2025 10:09:21 +0100 (CET)
+Received: from localhost (10.129.178.212) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 17 Jan
+ 2025 10:09:21 +0100
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <manivannan.sadhasivam@linaro.org>, <kw@linux.com>, <kishon@kernel.org>,
+        <bhelgaas@google.com>, <cassel@kernel.org>, <Frank.Li@nxp.com>,
+        <dlemoal@kernel.org>, <fabrice.gasnier@foss.st.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christian
+ Bruel <christian.bruel@foss.st.com>
+Subject: [PATCH] PCI: endpoint: pci-epf-test: Fix double free Oops
+Date: Fri, 17 Jan 2025 10:09:03 +0100
+Message-ID: <20250117090903.3329039-1-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4jTeNjl7ddfcQl1@ryzen>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-17_03,2025-01-16_01,2024-11-22_01
 
-Hello,
+Fixes an oops found while testing the stm32_pcie ep driver with handling
+of PERST# deassertion:
 
-> > Since you have already applied this series, with my comment fixed up,
-> > could your perhaps add the following (or similar) to the commit message
-> > in patch 2/2:
-> > 
-> > 
-> > "
-> > By changing the type to resource_size_t, which is a typedef to phys_addr_t,
-> > which can be 64-bit in certain configurations (e.g. X86_PAE selects
-> > PHYS_ADDR_T_64BIT), even when the compiler is 32-bit. Thus, we also need to
-> > change the division to do_div(), to properly perform a 64-bit division when
-> > the compiler is 32-bit.
-> > "
-> 
-> s/do_div()/div_u64()/
+[   92.154549] ------------[ cut here ]------------
+[   92.159093] Trying to vunmap() nonexistent vm area (0000000031e0f06f)
+...
+[   92.288763]  vunmap+0x58/0x60 (P)
+[   92.292096]  dma_direct_free+0x88/0x18c
+[   92.295932]  dma_free_attrs+0x84/0xf8
+[   92.299664]  pci_epf_free_space+0x48/0x78
+[   92.303698]  pci_epf_test_epc_init+0x184/0x3c0 [pci_epf_test]
+[   92.309446]  pci_epc_init_notify+0x70/0xb4
+[   92.313578]  stm32_pcie_ep_perst_irq_thread+0xf8/0x24c
+...
 
-Will do.  Sounds good!
+During EP initialization, pci_epf_test_alloc_space allocates all BARs,
+which are further freed if epc_set_bar fails (for instance, due to
+no free inbound window).
 
-Thank you!
+However, when pci_epc_set_bar fails, the error path:
+     pci_epc_set_bar -> pci_epf_free_space
+does not reset epf_test->reg[bar].
 
-	Krzysztof
+Then, if the host reboots, PERST# deassertion restarts the BAR allocation
+sequence with the same allocation failure (no free inbound window).
+
+So, two subsequent calls to the sequence:
+
+  if (!epf_test->reg[bar])
+      continue;
+
+  ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &epf->bar[bar]);
+  if (ret) {
+      pci_epf_free_space(epf, epf_test->reg[bar], bar, PRIMARY_INTERFACE);
+  }
+
+create a double free situation since epf_test->reg[bar] was deallocated
+and is still non-NULL.
+
+This patch makes pci_epf_alloc_space/pci_epf_free_space symmetric
+by resetting epf_test->reg[bar] when memory is deallocated.
+
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index ffb534a8e50a..b29e938ee16a 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -718,6 +718,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ 		if (ret) {
+ 			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+ 					   PRIMARY_INTERFACE);
++			epf_test->reg[bar] = NULL;
+ 			dev_err(dev, "Failed to set BAR%d\n", bar);
+ 			if (bar == test_reg_bar)
+ 				return ret;
+@@ -909,6 +910,7 @@ static void pci_epf_test_free_space(struct pci_epf *epf)
+ 
+ 		pci_epf_free_space(epf, epf_test->reg[bar], bar,
+ 				   PRIMARY_INTERFACE);
++		epf_test->reg[bar] = NULL;
+ 	}
+ }
+ 
+-- 
+2.34.1
+
 
