@@ -1,87 +1,87 @@
-Return-Path: <linux-pci+bounces-20090-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20091-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30511A15AF6
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 02:58:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC000A15AF7
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 02:59:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C7F0188C0A5
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 01:58:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07794168DD3
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 01:59:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD8B17C61;
-	Sat, 18 Jan 2025 01:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECC317548;
+	Sat, 18 Jan 2025 01:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FRpNMRzg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b/kwgp8H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C50517548
-	for <linux-pci@vger.kernel.org>; Sat, 18 Jan 2025 01:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0C117C61
+	for <linux-pci@vger.kernel.org>; Sat, 18 Jan 2025 01:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737165492; cv=none; b=sUVCAvXHp/j6m4W9P045eOXuDTQB6xh0jmc9wqi11IsaSNoqDRK8D8u+5yVUQgJxVctL5fRwTMbEOcWBDIkXWcrSow3Mrh+3b0DMneBPed6mVtHAsOWLXaflV9vD9WD6Kos7+hi6DmGTl0uir7m/BB++T2m92eg2Ppv2kiCN59s=
+	t=1737165545; cv=none; b=WS+GVcmPQAzB6lqufF9Wbn3BAyGdEIknxYg/Ap4RbumWT+q7ls5ygYmvq6hQlMo0Y8+4mJV3CRwfhlDwgv8rbbHeoOUwXl44zs5P3SOYbjKmsN/9NWvaR4W+lqFVm9rElaHi8b5Ro2ccJwDNc6lIxidEBdaUyDR1H/fxOXOCn2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737165492; c=relaxed/simple;
-	bh=7SOFGRAIgoDsNaQJM0HxvTUx+ax9KaKHr/RqsShnp9k=;
+	s=arc-20240116; t=1737165545; c=relaxed/simple;
+	bh=7lA1be/MjnpDtG8ak2aEKoSWJu90/PqOCkthVEr1s50=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hIbOCyhoQnVnnj08In2Q9OPIejbKH+Pyl2Nl8JPtThgs6liCyQeidQN35bA3husaxpYLxc3n6KkweoTXOES69LkgH25/68/57JVEvm/margVBmOtgvzykqeIHhz1IHLm6l55Ay1J73TV0r2HX/igxfkRd48YAoDtesT+sR99340=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FRpNMRzg; arc=none smtp.client-ip=209.85.218.47
+	 To:Cc:Content-Type; b=JphaRfltpEdRUUfuWZt1lqVJmkPWf9XVzKdcGZaTmy3j6EK3e0rJsS0txqDlButwU3X0h2nYLjsJwGVNUy1qPnswf+4qTioIf/l6DdycRo+I7kR+trJ0st4pauNMpG5Y0YUnEWW6f6x48dYfGq/hGOlXIwAkYMQC1FE9LFEzQ9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b/kwgp8H; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaf57c2e0beso548116666b.3
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 17:58:10 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aab925654d9so475458566b.2
+        for <linux-pci@vger.kernel.org>; Fri, 17 Jan 2025 17:59:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737165489; x=1737770289; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737165542; x=1737770342; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0AqK5PWDZ5qZg5raaBW9bm/fk8lexvPRX3BbaFhyngc=;
-        b=FRpNMRzgqfKIPCB6mO/O8WTe/wlUwuKvEEWTDXaXEt42ODFWKaMjt5TOZ1c1aJYDlM
-         puWUXG4hNxbD0ODyEHDATkwWYNaQT9ICQZHwZxPmUwFeBkDDoJbXFgKF94xlCvtMCcfq
-         29LG6rlrsbo658Io/4vA33j1Wc+IMJuJxQ2K9NZgES0Xvm+qt/GF0rdTQB4fyMrPd9UQ
-         zNs7VPNDUIBU8s42awwTOJdQVuP9PRZQtMdv1RYMq+8W7pxGGMoWcGPhK8/ey8ZEzxVb
-         /Jj7ik+of0pOtsKU54Fje5Fn1kjiWBVmvHDBDiwJUGlzpxAN2cLqi3NPVCZDK4Ipgj45
-         Xn+g==
+        bh=hgR9td71rsrVK7AqX7TY+6fXAEKn6zvcj65L8wXX+vU=;
+        b=b/kwgp8HQJQ6iuU5UC6QbUeebbs2a8Tw38isVRyJK68jy3iRsHcyHErar+7Lnv+6sv
+         XG9EQj9h0VJU3KkRMuxSEY81nNu5+SpZEfkFENksELPLVtRhnHjV+/aMTtJ2HiC47MvA
+         RxIJ8O32lPIqXOeN2I0uL9RW5MJAmFFrKp3v8teoaTfYhT8rIHS0OZ65uJ9XkfJehQvw
+         i+03vWBXU4AGXWoqEfRHTFBr+dvzJ4Tj/WDrMNEmSp+W2E3LkDFVDYa7B5n8I1cf26jc
+         500QECyf91SIrHwv6ej4mdjozdHvdMug8n/sDebCcBWKuHX5BxgxVs4txT6IQtK8Jkhn
+         M9nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737165489; x=1737770289;
+        d=1e100.net; s=20230601; t=1737165542; x=1737770342;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0AqK5PWDZ5qZg5raaBW9bm/fk8lexvPRX3BbaFhyngc=;
-        b=sQ3XvWsOAFWU8IkNTCIhFFsnZzW4w5tuQgk2PeVog5qUPUZlG6OWjsOrKHMiI4B/vJ
-         GZ2BfZPbvzY1sXMORltd83OiXKX6siWufIY7ftaZJWIkGEVCxSvo0FWHQzSKbGsnkAIr
-         1u2AQv64H/PRfk0AhK426PyxcuErUVQdY+4CDqUi7632XCzLnY95mRHL/DoapNzo0YLR
-         ut/Yb9uTW9A3aVKhjDnfPlrcbvUgJlKnRFV/VUDvlLVUqBNlDVxHj9/di+hYcnVOsqQ6
-         YmKhx6PBbveAgaSjADy+XbJtX0xCR+eP/5ymolfLxZO8sX9R58RKnxM7aZksyNLTkPKu
-         7UMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJNXYw3Ckfa8MtbgyWA+GJdtLU8Fd2jY/zRYblhTfMYLd8TTn1uERBV5FKWJHnVeksO8pqxCfHEvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuXUirDuEOo8u+hWLrglwAA2jOyJmRu7kWl5zDIZBSHHFXB1B/
-	51NvqFoObro1DId/cbCmEWUCqWZG/SaewyGokU7LpiyC+NIeMGLvsIr2q9DLg2Ugsqo/LaIYhi5
-	Lif+HOku4dHoQkff95Pg7Cq3If1rBfIzxkni3oFaA7yN/OcNDbg==
-X-Gm-Gg: ASbGncv8y1dhs2Sxqxlg8Wz3wxbIiNNWbfU/MgC/wVGmLNrkk+oqRAm+curQhnKhNEx
-	3v4Kh+GBSFFSIvkTTT8aWf03DarG4pejVDBLzdTloe+LzI9n++Qz8ETBjphM7QZqVWpV293nshr
-	h02VGplA==
-X-Google-Smtp-Source: AGHT+IEylzsG7V/4W4ORPM/dO8qZbuFqOfHmootNbP6QXeFJyQIqes3nkbf5P0xbSOwwEfq3adhAYQKI+7AFsUlE1x4=
-X-Received: by 2002:a17:907:1b05:b0:ab2:b936:f110 with SMTP id
- a640c23a62f3a-ab38b27a470mr410310966b.20.1737165488797; Fri, 17 Jan 2025
- 17:58:08 -0800 (PST)
+        bh=hgR9td71rsrVK7AqX7TY+6fXAEKn6zvcj65L8wXX+vU=;
+        b=n9fKL4DNqcOfpcGkLkcCNLNtkl8HLsTlt+TGZ6EZnhFifmC6M9YcIGSvXtKccvJ5g9
+         wSBb2THuDyJEwmVNlB3LSol0LzD5KLDX/AHaypVF/LtpmDXyNpBHb5mI5tDjTS8ntNKt
+         xdC0gas7ud2NGnVFMqBT4uRzSwiyIpol6X25i5EavjBV1J8fg2kupDzioyLpXOoz4c5H
+         bnWi0RN7rRGX69/qP1wOHTT1VQwu5kltCKUCytn/u99p6cuc8emvhlV2ENJgHzhbOhi4
+         5770UFHju9ALfhLFFlEA/QFJqGZmmXLN9sK0D5cwoAk0TBZu4NmeCJSCIRYXFHo1hljw
+         7XMg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8aEDsVCR2u83t8E8WywkEcE3cjfoJXCCb9EY/3Un2bjpgo1bTUhIXRhm8SsoCf0v9FEGWILdVJo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsCS6hxVhqKXzGwjxEYMRTMFT9Z8JWHMDVHTc1BdQUaMmilJDP
+	Jxd3DdYrw7+rRYYaYbjLIY9cOJlMNRN+S7+1nMj+LoNsvyWDKOijWLpGEWWM821Dm3Xa0bZLt81
+	uMKYe56dFrnpg09J6i3lP+HOR3PeU/68F4bZL8/iGlDD9jA1t2Q==
+X-Gm-Gg: ASbGnctsAwH/NboT2hTay2q1Gh2sD+iB3MC96Uak3Se0o45yOVigmLpwL1ZCrtTrg2x
+	gyCZ9UQyA0VplDxjwY8b1HimKczXahZFRKJSgrrq8aZvaK+zRv6jC5GOaBz/wxNam4RUbgCrwYH
+	qLlA/tkQ==
+X-Google-Smtp-Source: AGHT+IGJ/LB7885y5n5pJP3ZnSkCUHBZXB2eXelZEjx6T2jNKRLKq2NKjf9VU+P3/3YBf0XfYEa7e6FG8XK1KxfTRtc=
+X-Received: by 2002:a17:907:6094:b0:aa6:33cf:b389 with SMTP id
+ a640c23a62f3a-ab38b321474mr438061866b.34.1737165541683; Fri, 17 Jan 2025
+ 17:59:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115074301.3514927-1-pandoh@google.com> <20250115074301.3514927-2-pandoh@google.com>
- <f9ccc68c-216d-4cb5-9e0d-d2b49854f06c@oracle.com>
-In-Reply-To: <f9ccc68c-216d-4cb5-9e0d-d2b49854f06c@oracle.com>
+References: <20250115074301.3514927-1-pandoh@google.com> <20250115074301.3514927-6-pandoh@google.com>
+ <8b6796a1-5504-4d95-a565-a19272d04350@oracle.com>
+In-Reply-To: <8b6796a1-5504-4d95-a565-a19272d04350@oracle.com>
 From: Jon Pan-Doh <pandoh@google.com>
-Date: Fri, 17 Jan 2025 17:57:57 -0800
-X-Gm-Features: AbW1kvYw_TVLlavuMQ9t11oUX64stdimx305OAFXZG7iXV8rS0SuctEV6HiaBKc
-Message-ID: <CAMC_AXU2TtkO0cn3Yh4CVpaQC-D6eWo-yZmPKkLZJcAhnFA7iA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] PCI/AER: Remove aer_print_port_info
+Date: Fri, 17 Jan 2025 17:58:50 -0800
+X-Gm-Features: AbW1kvb8_Uzvy4dm7HyIWYzJ0WJs1jXfCZ6ktzTToHaooCx-UQYJ_CHH3wD0ukY
+Message-ID: <CAMC_AXUeUqxaqd9_rAx4cYq6D9QCEkxUS6p4Sx24xZL4TQ831w@mail.gmail.com>
+Subject: Re: [PATCH 5/8] PCI/AER: Introduce ratelimit for AER IRQs
 To: Karolina Stolarek <karolina.stolarek@oracle.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
 	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
@@ -90,22 +90,33 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 16, 2025 at 6:27=E2=80=AFAM Karolina Stolarek
+On Thu, Jan 16, 2025 at 4:02=E2=80=AFAM Karolina Stolarek
 <karolina.stolarek@oracle.com> wrote:
-> On 15/01/2025 08:42, Jon Pan-Doh wrote:
-> > aer_print_port_info():
-> > [   21.596150] pcieport 0000:00:04.0: Correctable error message receive=
-d
-> > from 0000:01:00.0
->
-> I agree that the bus, device and function info is repeated later, but
-> isn't this line also about the fact we deal with one or multiple errors
-> in a message? The question is how valuable this information, in itself, i=
-s.
+> To confirm that I understand the flow -- when we're processing
+> aer_err_info, that potentially carries a couple of errors, and we hit a
+> ratelimit, we mask the error bits in Error Status Register and print
+> a warning. After doing so, we won't see these types of errors reported
+> again. What if some time passes (let's say, 2 mins), and we hit a
+> condition that would normally generate an error but it's now masked? Are
+> we fine with missing it? I think we should be informed about
+> Uncorrectable errors as much as possible, as they indicate Link
+> integrity issues.
 
-I think whether or not there are multiple errors can be gleaned from
-__aer_print_error(). It prints out all fields of the status register
-(as well as denotes the first error).
+Your understanding is correct. There's definitely more nuance/tradeoff
+with uncorrectable errors (likelihood of uncorrectable spam vs.
+missing critical errors). At the minimum, I think the uncorrectable
+IRQ default should be higher (semi-arbitrarily chose defaults for
+IRQs).
+
+I think a dynamic (un)masking in the kernel is a bit too much and
+punted the decision to userspace (e.g. rasdaemon et al.) to manage
+(part of OCP Fault Management groups roadmap).
+
+Other options include:
+- only focus on correctable errors
+    - seen uncorrectable spam e.g. new HW bringup but it is rarer
+- some type of system-wide toggle (sysfs, kernel config/cmdline) for
+uncorrectable spam handling (may be clunky)
 
 Thanks,
 Jon
