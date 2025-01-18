@@ -1,83 +1,57 @@
-Return-Path: <linux-pci+bounces-20097-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20098-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E64A5A15E69
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 18:52:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B01AFA15ECB
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 21:34:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 398C33A7A03
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 17:52:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 367C61886DC3
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 20:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F36E61A0BE1;
-	Sat, 18 Jan 2025 17:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA273398B;
+	Sat, 18 Jan 2025 20:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEPiUoif"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJWbtYzw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C42B126C03;
-	Sat, 18 Jan 2025 17:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1CC1A304A
+	for <linux-pci@vger.kernel.org>; Sat, 18 Jan 2025 20:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737222770; cv=none; b=I/KpmJT0IotgxJnbLb3jFUTA0GL5Jut8SF+IyM3wSlfisw48wN/VDc2dXKmElQliNkHHrFnLBN+QeCRTLI9i3b+UG3YqTn0FChU4GYgUdsb4EiGPWUqR+qmlSzcQr6T5iWtLSumbIL4tVNPDPuXVRLz0tMuBANXTZqz3RSUxC9I=
+	t=1737232464; cv=none; b=uZXCKGI53BHDPqA9dSabfOB3DJis9tkfwab1blhoGW4cjvo8cMYKBbDw++OB2t7Jpf12EL9YE3gNRJJNqgEgF4t9EOoXyHpqPIvdWaK4mvwMbJVFnAlHHuAsu2gw6chW/bQU9A6L43P/RTStPWF4VnVJfWxa63OsKzSKukrUfzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737222770; c=relaxed/simple;
-	bh=MqQa2haTPDBqjkN4qsoe8jXlHi9SBeRvVhURc5EoEiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r6Of59vwMLTF8ktM+/0QG45EodXDElZx8leUTIFZabIpI/DaWILV84YEOos56qkHYq6RCbT++44Jyo2/qby502FUhX6IYhjkgeF369lCvBQMxM56I3zfMKZ3qTSVcCGT7/WT61lcZxLEpWCpRHIjfQTX3q3KCROFiphbr8SDfdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEPiUoif; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737222770; x=1768758770;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MqQa2haTPDBqjkN4qsoe8jXlHi9SBeRvVhURc5EoEiE=;
-  b=IEPiUoifK9Wz3O3C4yDqpD2h9RhUW3IazOPehqzfZ0JjllP2Cia4Jhsl
-   ihZhL8JWXkYzXOi3HrJIOtIWS6mzaF4Zt1bJefnhYrB6SU4b5ZflCI0Ct
-   NAdzcBk4jHdcF0sBWwyEDXQuInMRS47Zcy8qj3+AVXINVN+gyNJxwomA8
-   tbos9gZNhfnxQXXWh/Va9qH8rlJa3iZAokudhdfzPQDxbwhdB9Q9hKKsM
-   gYyekjYYlJm8VUjIBgMSybklIC4139TQQ4XAnbvWjYTv4cfNNnytSq4Gs
-   i5nietq/nVTAviDKLg5ogsRUO8Pb4sK5hteNGaKVWC+UKmN7b81sTye6t
-   Q==;
-X-CSE-ConnectionGUID: /0H9JjR9R0mksIL48MNRYg==
-X-CSE-MsgGUID: EGefKL58S0mu8tyyacVR2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11319"; a="41398684"
-X-IronPort-AV: E=Sophos;i="6.13,215,1732608000"; 
-   d="scan'208";a="41398684"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2025 09:52:49 -0800
-X-CSE-ConnectionGUID: hPt2FJGlRR2pAyqTZTZbwA==
-X-CSE-MsgGUID: C+71uOlhR3KzOgpmVdqw2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="111069689"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 18 Jan 2025 09:52:44 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tZCzx-000Ugh-39;
-	Sat, 18 Jan 2025 17:52:41 +0000
-Date: Sun, 19 Jan 2025 01:52:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
-	lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, helgaas@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, tony.luck@intel.com,
-	bp@alien8.de, xueshuai@linux.alibaba.com, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com, peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <202501190108.tRReJA1Z-lkp@intel.com>
-References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1737232464; c=relaxed/simple;
+	bh=eiD4UGClhjsiTVa/nd6yhJ1rkdaTST+Rd+5CMAJzpWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=T0gnfmRePUtFejjfEKYlmrlDXxX/+G2AX2vwNdHv+8SyXalJEArEvoVyj3Vuki64iCZsUtkGA7FRU0PjtAeLVWagQ6BXh/UHhKS6uLW4Rg6Y8JcnNVd+x8YmElTZg2VF+VCOupLJufg72wOzvvwur4xaChUuzuwQ4uFt9C4SzRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJWbtYzw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED1EBC4CED1;
+	Sat, 18 Jan 2025 20:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737232464;
+	bh=eiD4UGClhjsiTVa/nd6yhJ1rkdaTST+Rd+5CMAJzpWM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GJWbtYzwrplGyZ/tWSMYVWjKX8kveXj+mpCOoYQy5hS7MJjuVlW9gpDxP1vUykBf+
+	 XizyoEs+ii9/bVKhkIZqSYuMdkFVh6kLdZTv719NEWq8e3/8ZXpfOSKza0vqQhBTKd
+	 bECApajAghu0xMYcdWUlY+J3VKwHHtAqKfr+oEocmTJ57tZabbmpi9Ecpqp9BpGDmw
+	 6hbNl5Lk944SnsXIxmlhuq4AaNYZ1Zwmo8gQZwO5VjuxbQC7ELnu/T9932QKTpjodV
+	 /PL6NE8oVOG/kpySDoUsXT1iysV615RFP4DKoD+TExq9yisyYTjjv9Cv8fhf1Z61iM
+	 R0wuwuR59M6uA==
+Date: Sat, 18 Jan 2025 14:34:21 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/2] PCI: endpoint: pci-epf-test: Add support for
+ capabilities
+Message-ID: <20250118203421.GA790917@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,40 +60,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <20241203063851.695733-5-cassel@kernel.org>
 
-Hi Shuai,
+On Tue, Dec 03, 2024 at 07:38:53AM +0100, Niklas Cassel wrote:
+> The test BAR is on the EP side is allocated using pci_epf_alloc_space(),
+> which allocates the backing memory using dma_alloc_coherent(), which will
+> return zeroed memory regardless of __GFP_ZERO was set or not.
 
-kernel test robot noticed the following build errors:
+> +static void pci_epf_test_set_capabilities(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> +	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	struct pci_epc *epc = epf->epc;
+> +	u32 caps = 0;
+> +
+> +	if (epc->ops->align_addr)
+> +		caps |= CAP_UNALIGNED_ACCESS;
+> +
+> +	reg->caps = cpu_to_le32(caps);
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.13-rc7 next-20250117]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+"make C=2 drivers/pci/" complains about this:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-hotplug-Add-a-generic-RAS-tracepoint-for-hotplug-event/20250115-094016
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250115013753.49126-1-xueshuai%40linux.alibaba.com
-patch subject: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250119/202501190108.tRReJA1Z-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250119/202501190108.tRReJA1Z-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501190108.tRReJA1Z-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from <command-line>:
->> ./usr/include/linux/pci.h:22:10: fatal error: linux/tracepoint.h: No such file or directory
-      22 | #include <linux/tracepoint.h>
-         |          ^~~~~~~~~~~~~~~~~~~~
-   compilation terminated.
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  drivers/pci/endpoint/functions/pci-epf-test.c:756:19: warning: incorrect type in assignment (different base types)
+  drivers/pci/endpoint/functions/pci-epf-test.c:756:19:    expected unsigned int [usertype] caps
+  drivers/pci/endpoint/functions/pci-epf-test.c:756:19:    got restricted __le32 [usertype]
 
