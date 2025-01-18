@@ -1,142 +1,125 @@
-Return-Path: <linux-pci+bounces-20096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34D12A15DDC
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 16:59:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E64A5A15E69
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 18:52:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6806C162C3A
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 15:59:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 398C33A7A03
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jan 2025 17:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBD8B194147;
-	Sat, 18 Jan 2025 15:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F36E61A0BE1;
+	Sat, 18 Jan 2025 17:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTkF5yqs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEPiUoif"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9139C1422A8;
-	Sat, 18 Jan 2025 15:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C42B126C03;
+	Sat, 18 Jan 2025 17:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737215969; cv=none; b=qipdyGrR3mS/Zy0TmGtNgsv6Wvns/DuoTAqXUYoGBgIxGaKvDfTwvcXwahuzX3AFpvwtfzK2ks7hrobdKAzkcV6cVaC219jhGlPVFwCAAXnotERUF3B7MXsL28IOoVowrM+bxyvEZLM/3o6ggKeYKUDOxrPHm8rX43z2G7DEJpI=
+	t=1737222770; cv=none; b=I/KpmJT0IotgxJnbLb3jFUTA0GL5Jut8SF+IyM3wSlfisw48wN/VDc2dXKmElQliNkHHrFnLBN+QeCRTLI9i3b+UG3YqTn0FChU4GYgUdsb4EiGPWUqR+qmlSzcQr6T5iWtLSumbIL4tVNPDPuXVRLz0tMuBANXTZqz3RSUxC9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737215969; c=relaxed/simple;
-	bh=IaiMji2J+wNsi+lZF9jRgBbHV0fmgZ5Rfl2G9E8eLog=;
+	s=arc-20240116; t=1737222770; c=relaxed/simple;
+	bh=MqQa2haTPDBqjkN4qsoe8jXlHi9SBeRvVhURc5EoEiE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzA4iPOqN/x7OSE5eAou7kEwcyCsoSD3oX6zvInNUlZHlT2EEOqTAk/wejjxeUPOfxxsJxZQLRJun7BR99cMajzq7+5xPid0sv80cNFIFUvFGftqo5rvYpzRfHhDKPyXJ1M/VcfC2b1W2ifaYThxZf4Yyg4OPk+A7YyBADxqoy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTkF5yqs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D378C4CEE2;
-	Sat, 18 Jan 2025 15:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737215969;
-	bh=IaiMji2J+wNsi+lZF9jRgBbHV0fmgZ5Rfl2G9E8eLog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cTkF5yqsyfeRrQm301uBUPxhaSQuHtzFBfEVrQAg7/21BZDHf7rj7f4pi6vhzojPh
-	 B32/5BE0XLVoaLvHOQdlx2OaA6txzIhURWVuhuUd1Ihlj6X//hQmoI1x5AxW60lVaH
-	 S1hb3zvx+zWEqqNkas1PXHcfU4ouTixJU3mpL94nE2L4zNHtIiv+GR800dOVVcJ+Cr
-	 wd7Qe4x48pqUf7rQpB9NEdPL1v/SYSd7VrZ1uu/lde9SaBlmHFggEcd85W7KWg7v9w
-	 0+8uieX50dWUCOLE6OJ5dQDiGgbR8fFy40dG+t9bNljEhOZcnUYnCwRXFlmhz/bd0/
-	 yWdAYmCgIlCdA==
-Date: Sat, 18 Jan 2025 16:59:26 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] PCI: mediatek-gen3: Configure PBUS_CSR registers for
- EN7581 SoC
-Message-ID: <20250118-astonishing-ermine-of-painting-4d3eaa@krzk-bin>
-References: <20250115-en7581-pcie-pbus-csr-v1-0-40d8fcb9360f@kernel.org>
- <20250115-en7581-pcie-pbus-csr-v1-2-40d8fcb9360f@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r6Of59vwMLTF8ktM+/0QG45EodXDElZx8leUTIFZabIpI/DaWILV84YEOos56qkHYq6RCbT++44Jyo2/qby502FUhX6IYhjkgeF369lCvBQMxM56I3zfMKZ3qTSVcCGT7/WT61lcZxLEpWCpRHIjfQTX3q3KCROFiphbr8SDfdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEPiUoif; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737222770; x=1768758770;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MqQa2haTPDBqjkN4qsoe8jXlHi9SBeRvVhURc5EoEiE=;
+  b=IEPiUoifK9Wz3O3C4yDqpD2h9RhUW3IazOPehqzfZ0JjllP2Cia4Jhsl
+   ihZhL8JWXkYzXOi3HrJIOtIWS6mzaF4Zt1bJefnhYrB6SU4b5ZflCI0Ct
+   NAdzcBk4jHdcF0sBWwyEDXQuInMRS47Zcy8qj3+AVXINVN+gyNJxwomA8
+   tbos9gZNhfnxQXXWh/Va9qH8rlJa3iZAokudhdfzPQDxbwhdB9Q9hKKsM
+   gYyekjYYlJm8VUjIBgMSybklIC4139TQQ4XAnbvWjYTv4cfNNnytSq4Gs
+   i5nietq/nVTAviDKLg5ogsRUO8Pb4sK5hteNGaKVWC+UKmN7b81sTye6t
+   Q==;
+X-CSE-ConnectionGUID: /0H9JjR9R0mksIL48MNRYg==
+X-CSE-MsgGUID: EGefKL58S0mu8tyyacVR2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11319"; a="41398684"
+X-IronPort-AV: E=Sophos;i="6.13,215,1732608000"; 
+   d="scan'208";a="41398684"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2025 09:52:49 -0800
+X-CSE-ConnectionGUID: hPt2FJGlRR2pAyqTZTZbwA==
+X-CSE-MsgGUID: C+71uOlhR3KzOgpmVdqw2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="111069689"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 18 Jan 2025 09:52:44 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tZCzx-000Ugh-39;
+	Sat, 18 Jan 2025 17:52:41 +0000
+Date: Sun, 19 Jan 2025 01:52:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
+	lukas@wunner.de, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, helgaas@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, tony.luck@intel.com,
+	bp@alien8.de, xueshuai@linux.alibaba.com, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com, peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <202501190108.tRReJA1Z-lkp@intel.com>
+References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250115-en7581-pcie-pbus-csr-v1-2-40d8fcb9360f@kernel.org>
+In-Reply-To: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
 
-On Wed, Jan 15, 2025 at 06:32:31PM +0100, Lorenzo Bianconi wrote:
-> Configure PBus base address and address mask in order to allow the hw
-> detecting if a given address is on PCIE0, PCIE1 or PCIE2.
-> 
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  drivers/pci/controller/pcie-mediatek-gen3.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index aa24ac9aaecc749b53cfc4faf6399913d20cdbf2..b172a46cf95a9c728291c5b7a88457d3b725681a 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -15,6 +15,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/of_device.h>
-> @@ -24,6 +25,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
->  #include <linux/reset.h>
->  
->  #include "../pci.h"
-> @@ -127,6 +129,13 @@
->  
->  #define PCIE_MTK_RESET_TIME_US		10
->  
-> +#define PCIE_EN7581_PBUS_ADDR(_n)	(0x00 + ((_n) << 3))
-> +#define PCIE_EN7581_PBUS_ADDR_MASK(_n)	(0x04 + ((_n) << 3))
-> +#define PCIE_EN7581_PBUS_BASE_ADDR(_n)	\
-> +	((_n) == 2 ? 0x28000000 :	\
-> +	 (_n) == 1 ? 0x24000000 : 0x20000000)
-> +#define PCIE_EN7581_PBUS_BASE_ADDR_MASK	GENMASK(31, 26)
-> +
->  /* Time in ms needed to complete PCIe reset on EN7581 SoC */
->  #define PCIE_EN7581_RESET_TIME_MS	100
->  
-> @@ -931,7 +940,8 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
->  static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
-> -	int err;
-> +	struct regmap *map;
-> +	int err, slot;
->  	u32 val;
->  
->  	/*
-> @@ -945,6 +955,23 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
->  	/* Wait for the time needed to complete the reset lines assert. */
->  	msleep(PCIE_EN7581_RESET_TIME_MS);
->  
-> +	map = syscon_regmap_lookup_by_compatible("airoha,en7581-pbus-csr");
+Hi Shuai,
 
-No, don't sprinkle compatibles in other drivers. It does not scale, does
-not allow reuse and you kind of try to escape ABI break, but you won't.
-This is still clear ABI break without any statement in commit msg and
-without explanation.
+kernel test robot noticed the following build errors:
 
-NAK.
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.13-rc7 next-20250117]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Relationship between devices is expressed with phandles. There are
-plenty of examples how to do that with syscon.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-hotplug-Add-a-generic-RAS-tracepoint-for-hotplug-event/20250115-094016
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250115013753.49126-1-xueshuai%40linux.alibaba.com
+patch subject: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250119/202501190108.tRReJA1Z-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250119/202501190108.tRReJA1Z-lkp@intel.com/reproduce)
 
-Best regards,
-Krzysztof
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501190108.tRReJA1Z-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   In file included from <command-line>:
+>> ./usr/include/linux/pci.h:22:10: fatal error: linux/tracepoint.h: No such file or directory
+      22 | #include <linux/tracepoint.h>
+         |          ^~~~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
