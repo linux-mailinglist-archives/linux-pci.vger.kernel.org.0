@@ -1,49 +1,71 @@
-Return-Path: <linux-pci+bounces-20111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20112-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 245CDA160A9
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 08:06:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD0F0A160B8
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 08:28:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7503C7A25B1
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 07:06:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4898E1886869
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 07:28:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DDB188714;
-	Sun, 19 Jan 2025 07:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E1741632E6;
+	Sun, 19 Jan 2025 07:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiBYwuzW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7398E1FB4;
-	Sun, 19 Jan 2025 07:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1638143888;
+	Sun, 19 Jan 2025 07:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737270378; cv=none; b=T0L19van+UbRJFbcipdGzc+1JwqLv+1h6jBK6P7Y2o/t+WMvMgTzG5ERzGXZVyLbrfmP49dDEtijBraMpKV9bzarB43wOL8Geo5aDzofhUl34MpDfdwuaRifgHvuKNfgsqai1hwGY4MQ92dpwgfi58Qh2svdv1fLdy2OAHirqEQ=
+	t=1737271690; cv=none; b=VZF96ivak1UYNn9n8LwV2S1jCQx5M6l9ahRJc1f29rTwTawR96Y6ONCLehfYBfuQM7IUs9Rl2spUmUophKgrSYR6VLvBZjA6LD7SjlLR2e26Md9eFlX2/GqA6w3kGJ+GoTAwcLzPfFn0MCwmq+fyoELMBFjexIoLYuB1EOGRJzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737270378; c=relaxed/simple;
-	bh=cSjPzIwSf6STSPIyu5L+H3gShh7nVHaQevsZxMB2pk4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o/oiWaoYlrYiwXQXofHTQbUpFQHbQRT/8L3iI0QZMUlRXXQkEmvTrcb2U43VmFjS+0tNRkKHoTbzF44tdGgy2RyOuKxQhVEn06AzKP+FjxQCuwOaOQl49M0fiMVeLpYCJ0vBMHTOCemLLDQpBGT93wyde7kuxyHHIuNBA6GABVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowAD3_KBQpIxnb7YHCA--.54944S2;
-	Sun, 19 Jan 2025 15:06:02 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: bhelgaas@google.com,
-	yinghai@kernel.org,
-	rafael.j.wysocki@intel.com,
-	akpm@linux-foundation.org
-Cc: linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1737271690; c=relaxed/simple;
+	bh=vyuqq862oTZFHsXsWE32eHjyKNnZNBjzLLQ1+k0W1yA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kXtmHW9QXRK2HiY+LFkLIqQrV/QKY62kIoU5H+GMxC1POi0eg23MmJOemcw2V/3qsqMu291JEIYXQWPv6cSUYtnDBEKSt5QfUSEv9NBGW65lazOZajgGuiniBIwofkkv4hOLMI8j2TNGSg63BIFXM9mCDSuZjNLv/RPQKGyiXaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiBYwuzW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB621C4CED6;
+	Sun, 19 Jan 2025 07:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737271689;
+	bh=vyuqq862oTZFHsXsWE32eHjyKNnZNBjzLLQ1+k0W1yA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hiBYwuzW9awygvQMjoTkoB15QUXgn2LxPEfi3HQWH0qSrEXE0UJEQ3IVSWnho/gsV
+	 G6o4xJV7JGilKdTR8JFfHXmu9n7JPYDjFmZ57ZtwYsFh1ZJeKK1JqC3J3j6kVMgwHn
+	 mqaxXr/ow2q/Z76g1z9Sf9PKuyYXDFvPlfg2IHGzOWStI1ZPfIu/6bij2lJJB2u1Z4
+	 D+vGC3+HC5tsOuavbK3ZGyLY1o6joXmAmckMcEVeW42v+jt+gdpsSx5qeipL/KvCRc
+	 6BCkiqJHk5lum83VNXiRj+Q9cwxpLNG1w7PEqtP+wZzVBBBClCBjC5xcWAooFTEqDO
+	 KKCfUXarGIL+Q==
+From: Leon Romanovsky <leon@kernel.org>
+To: 
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org,
+	Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>,
+	Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 RESEND] PCI: fix reference leak in pci_alloc_child_bus()
-Date: Sun, 19 Jan 2025 15:05:50 +0800
-Message-Id: <20250119070550.2278800-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Subject: [PATCH v4] PCI/sysfs: Change read permissions for VPD attributes
+Date: Sun, 19 Jan 2025 09:27:54 +0200
+Message-ID: <c93a253b24701513dbeeb307cb2b9e3afd4c74b5.1737271118.git.leon@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -51,65 +73,70 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAD3_KBQpIxnb7YHCA--.54944S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww45AF4xGr4kZFy7WFyrCrg_yoW8JFyfpa
-	srGayYkrW8JrnrCw4kZF10vF9YkanFya4F9r4rGw12ka9xuryFqa4aqFy5G3WDAws2yF1U
-	XF17Jry8GF4UJw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbE1v3UUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-When device_register(&child->dev) failed, calling put_device() to
-explicitly release child->dev. Otherwise, it could cause double free
-problem.
+From: Leon Romanovsky <leonro@nvidia.com>
 
-device_register() includes device_add(). As comment of device_add()
-says, 'if device_add() succeeds, you should call device_del() when you
-want to get rid of it. If device_add() has not succeeded, use only
-put_device() to drop the reference count'.
+The Vital Product Data (VPD) attribute is not readable by regular
+user without root permissions. Such restriction is not needed at
+all for Mellanox devices, as data presented in that VPD is not
+sensitive and access to the HW is safe and well tested.
 
-Found by code review.
+This change changes the permissions of the VPD attribute to be accessible
+for read by all users for Mellanox devices, while write continue to be
+restricted to root only.
 
-Cc: stable@vger.kernel.org
-Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+The main use case is to remove need to have root/setuid permissions
+while using monitoring library [1].
+
+[leonro@vm ~]$ lspci |grep nox
+00:09.0 Ethernet controller: Mellanox Technologies MT2910 Family [ConnectX-7]
+
+Before:
+[leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+-rw------- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+After:
+[leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+-rw-r--r-- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+
+[1] https://developer.nvidia.com/management-library-nvml
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
-Changes in v2:
-- added the bug description about the comment of device_add();
-- fixed the patch as suggestions;
-- added Cc and Fixes table.
+Changelog:
+v4:
+ * Change comment to the variant suggested by Stephen
+v3: https://lore.kernel.org/all/18f36b3cbe2b7e67eed876337f8ba85afbc12e73.1733227737.git.leon@kernel.org
+ * Used | to change file attributes
+ * Remove WARN_ON
+v2: https://lore.kernel.org/all/61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org
+ * Another implementation to make sure that user is presented with
+   correct permissions without need for driver intervention.
+v1: https://lore.kernel.org/all/cover.1731005223.git.leonro@nvidia.com
+ * Changed implementation from open-read-to-everyone to be opt-in
+ * Removed stable and Fixes tags, as it seems like feature now.
+v0: https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
 ---
- drivers/pci/probe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/vpd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2e81ab0f5a25..ae12f92c6a9d 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
- add_dev:
- 	pci_set_bus_msi_domain(child);
- 	ret = device_register(&child->dev);
--	WARN_ON(ret < 0);
-+	if (WARN_ON(ret < 0)) {
-+		put_device(&child->dev);
-+		return NULL;
-+	}
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index a469bcbc0da7..c873ab47526b 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -332,6 +332,13 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+ 	if (!pdev->vpd.cap)
+ 		return 0;
  
- 	pcibios_add_bus(child);
++	/*
++	 * On Mellanox devices reading VPD is safe for unprivileged users,
++	 * so just add needed bits to allow read.
++	 */
++	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
++		return a->attr.mode | 0044;
++
+ 	return a->attr.mode;
+ }
  
 -- 
-2.25.1
+2.47.1
 
 
