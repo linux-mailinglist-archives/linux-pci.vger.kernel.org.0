@@ -1,94 +1,94 @@
-Return-Path: <linux-pci+bounces-20120-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20121-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C09D3A162A1
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 16:27:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D8EBA162AA
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 16:30:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0317B3A4F41
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 15:27:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C687163EE5
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 15:30:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 990241DF747;
-	Sun, 19 Jan 2025 15:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E601DF74B;
+	Sun, 19 Jan 2025 15:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NaVBpdMZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvH1/fz6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DDE1DF731
-	for <linux-pci@vger.kernel.org>; Sun, 19 Jan 2025 15:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B96D1DF974
+	for <linux-pci@vger.kernel.org>; Sun, 19 Jan 2025 15:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737300425; cv=none; b=a+MqvThYSQId98uxx0uWYzJMJ4xHjGhKNmhGmQ5qoSaJb+Axzb4J0Ee860j1ZsevckvTveJseASBQHzppbVtaCawaLL07arz43JS8Gfl0/d6X7HzhThOc+/gJ1H3aiFQWm6JU5u042PS7bZasmTDop+k6r9E5Xy9dLzwR5gd2Jw=
+	t=1737300590; cv=none; b=juzXaB0G0fp98ypBRlbmW6Soski9X4Tl51m9HbdImdFnyyu8wgmTceikPKA0Wtu/nDcK0inqKk5Vfs5bKG9NIpl61FhK1vh8i39Z+S45/AAtV60RLxuE2wtQe6WCrLTrDo5wmHlSP/v+WBzoH/0hf4/+st/eWlVZRrtflx23PDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737300425; c=relaxed/simple;
-	bh=PWQpcLhH7Zeo4/EFrlP2gfivfal9zzDPsCLUkRO16zE=;
+	s=arc-20240116; t=1737300590; c=relaxed/simple;
+	bh=swaz8J39JWbNjUdvDsHZIZnG7Dgw0RPv7HFdMhQYV/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXDrDycT7m7tYQdkDGdPIyw+Wfi+hN4CodgpNUWcK7YY7noFVKty+otfGwsJX3wPBgb9zS1Zzk5H654b4mBA9l63weV+Pd49R5Slce+TFF8/4EQDRsyPr6CnaiKrorNfvyO9lcgIUxTfkcM8ZH3zdFd3vYWF2ICxC4RoTeSqAdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NaVBpdMZ; arc=none smtp.client-ip=209.85.216.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=AesiCiO24r7q36YvcBlqFqpx1zmbCDh6/6q5TsPrXu7Cs6rTSzD8RzypRT57oapKgezss4iGocFKRGfhGyu0XiZdUOEW8ubAiPTOo9cKTEwwda3RESt9QXhMpO7EDidZsZQFBp7al+psqpNWGpTsZFsv3L2fAwwEzt8loCa3bg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wvH1/fz6; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ef748105deso4712135a91.1
-        for <linux-pci@vger.kernel.org>; Sun, 19 Jan 2025 07:27:03 -0800 (PST)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ee50ffcf14so7395235a91.0
+        for <linux-pci@vger.kernel.org>; Sun, 19 Jan 2025 07:29:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737300423; x=1737905223; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1737300588; x=1737905388; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=gWLJNtDh2M0LrWGMJ4uX5maH7/SrzMNwJbKx9WRcHPQ=;
-        b=NaVBpdMZI071+K9NmczBY5/PxLIwgGaruZottqEB8NFCgAq8RhXj954FscI2pRExkb
-         p0LSrisa6Mg/UaptV6v3Sgh7rcGu9AEm5ycGJP4ibVVsWolIVH8Z6fByE96OWSvUqTiR
-         +G6ErRdgHBotP7cPXALTm1IjdCusqq9IdvglxWMvw/Ehhh8noMJAQ+Y5VdJoJpgrUuJb
-         zwaQQgwQqff+35EoUXqqZbwUpq9sWOcu0y9QPi1yjt5uxJN9LVYlqnkHwk7mQnFtpTHp
-         ay94PoY4+VX3Zy29LJF7gpyVa9G63ljcrOzXXx+khLrbjQOhcWjOj+lIkE0bgHNTXfm1
-         AIkA==
+        bh=C/nzl3YeZxFKHcxSAxwA8cJyhGMSaJuP514szE3idkQ=;
+        b=wvH1/fz6nksJTRWHjoTjNv+H3IxRiHTDkGHba7dNL3hyRYTxQ1qRpr2D08g2jMxko+
+         qRU081iXRsXd6szqbCpqPj5wmE5QB1whuKnBN9zQYwMBskNngZ/wXIE+Lhu3jkxwT73v
+         zRM2gnrGDnwsNS//L37IqLIsyRIudznwUaMMMLf91e6WwMSNHJrsNcOo1VROzobgX3Kp
+         1GYRWfbla/dMTHCvysgLxwv1htPcoyqPmxmv+n87rgfvUUec5/jMIVJGD7nvi9AJ8giO
+         JQDlWol4mAIZpzQQVPkjDauK7LuCSO1AIUYrWrmZ81bw/Pmn/dI3WewN0ybu/vFxgBpe
+         Hnpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737300423; x=1737905223;
+        d=1e100.net; s=20230601; t=1737300588; x=1737905388;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gWLJNtDh2M0LrWGMJ4uX5maH7/SrzMNwJbKx9WRcHPQ=;
-        b=CCu+YgDVOfCFHuxhITYY+iTpVPxD5kc14QVFAeSi82zqbfg6lrjXKx08wqC/E02CJo
-         vOFmwJ2S4RQ/pnGa27ws68Fsm/pfVO7g+NVhr+s0cAdE02bshLBZBV3WgBkiFF5zGaFi
-         i2HAdCMK9uqN5+fjwmjzmfNj6dGSN2vWrTFGOFqGKpEG85IJkrfX0gErEIUTE/nxF2kk
-         Agn0qqyi6V0ed6+yhXkkJdtuFoF9iubDM6ilokQh2MuDZ0dSqun9uNQnCUeKLS/T/n99
-         knVZblVgjQktPwxT+WITkL6C3JpA4ZFTbsjYnr6cS3BQwRDia1/Uo651T56LdafHaHhz
-         qmWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkW4nbJwABbd7NLtYR31/pDYUVmHBWWZ+E5ZygiO54W6//eVU4JQLq3JoMepMDLk/EQ9pSSerQHi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKz+XIl9HeHLt2xD01kLE9Dgs7+cfxMAvfZYYT7TPblVdUYhUh
-	0kU1HQvRFRo/i0MHdaeF/FuCSeNs1OWmPo0lu4aXhllpC2R/61OTXdToc0UDeQ==
-X-Gm-Gg: ASbGnctinFfFY+LF9zpjNOAV03yqTQaWPg4WQu5OZ0I3h1EjQSC8PGhoaqaxh8+Zwer
-	uT5HV5MmNBQIoZXI2guPQdoJaCEgPtneO3aeVLmLGsKn30H7zA4F2ir1uLlaiKX1UkeBs1ZQj7p
-	dXhPMpFLrC+zYt1KHjZ3XrxE3mjEFJXAZxqrF2gsXvYHmZMZKmQw7vKbXHLGichd2+JPfXekZwQ
-	0ZHmsbF0mr78/FKPEVHgtP0CrSxWA7zVHPgjsjum+KevsYsLJk0ak7vOLogAJd63FytvwDU7zlJ
-	fyMEqQ==
-X-Google-Smtp-Source: AGHT+IENWqIH7vPK9qo4kAByRAYKRm1YyPEDyBpffvJczNdBlZH+Y7lmOf7IJkBmPUxBttv2OPLC8A==
-X-Received: by 2002:a17:90a:7141:b0:2ee:dd9b:e402 with SMTP id 98e67ed59e1d1-2f782c70237mr16844568a91.12.1737300423171;
-        Sun, 19 Jan 2025 07:27:03 -0800 (PST)
+        bh=C/nzl3YeZxFKHcxSAxwA8cJyhGMSaJuP514szE3idkQ=;
+        b=CoZrXGs3bFe9azWXCOIIBMcxNroYs7h+1d4WfgwoKh0IiopGF/rXCvzq6QNwIN3CPc
+         HcQtRNRQCGRKd253pR/krsf7BlnGoMcnR6ox4Y9j6aKcgpwg5QDfb+amJd8q72iYLdTC
+         6HRPvAyLX98R9oXx/NwTg30dxKRE2eUYrozEZotViKmwcQhnR1ZN0bhJ3djEpBIxNep+
+         LE5wfkLACaUTP77xKRYEtr5P0ft00hIBn9FACDoWqwWhL/Lar92gQ+n/T1T1to6qs0BS
+         nOzW8LHpONL/ZMeFW4fe0NGXIkJNCMY6mSy9w/ZvkRvkwl1OWllLChO7HCLFfflV+72T
+         9gVw==
+X-Forwarded-Encrypted: i=1; AJvYcCULgzAawOYs7IU4PuVTRflbsDRl/sNSbl95508BoNXWWa7ldYRfehKFEYXjAc+aJIoMKreozYp7UCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcrObCavbDG/I35hhKunS22gpJWWcSAf8/Ii8CieUAA0QVPD+m
+	oLJiumVtkmJMvx5oMr5ssTw0yyat2rBCRKG+V9kpIkND6L/oSe6KmcCIjZtckg==
+X-Gm-Gg: ASbGncvcdRW1xmfZcyC7PuXslHtm57xLnynLVkgt4etUzoCT0/0HHP1JgfNfSV1fHJR
+	mXxfTj7e95TWTHh/qwbQD8SSJsfeDFj3x+ugw9O1U7+kLwp2vhMJoUmR/yehHtFn9bFezAdOvMS
+	lDRcWj2BE2kRwCFm4e3LOk+M3T9IYBYd3gSM37I9RF6oQQTVUMU5jbTRTy3/ROmImGdL5i1oE4C
+	ylPoucXobv+aKASGZRw1CyqXacqnEFJsaMrSwh7X6L18sA8xVtck90GrjAS6cpDSYuams8Fj33Y
+	jH3JwA==
+X-Google-Smtp-Source: AGHT+IHH9RyAJaMDiBIUlzUSo3FIv4IGvtL2SuNMtfMDQuSucT5oNUrpDoMY714iHbFDGPzis+NQTg==
+X-Received: by 2002:a05:6a00:8c0b:b0:725:e386:3c5b with SMTP id d2e1a72fcca58-72d8c4ae2b5mr25269277b3a.5.1737300587656;
+        Sun, 19 Jan 2025 07:29:47 -0800 (PST)
 Received: from thinkpad ([120.56.195.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f77611a162sm5861697a91.2.2025.01.19.07.26.57
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72dab9b9b1esm5463049b3a.99.2025.01.19.07.29.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2025 07:27:02 -0800 (PST)
-Date: Sun, 19 Jan 2025 20:56:55 +0530
+        Sun, 19 Jan 2025 07:29:47 -0800 (PST)
+Date: Sun, 19 Jan 2025 20:59:40 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, rafael@kernel.org,
+	ulf.hansson@linaro.org, Johan Hovold <johan@kernel.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: qcom-sm8[56]50: document and add 'global'
- interrupt
-Message-ID: <20250119152655.g2w4evteqqastil2@thinkpad>
-References: <20241126-topic-sm8x50-pcie-global-irq-v1-0-4049cfccd073@linaro.org>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Markus.Elfring@web.de, quic_mrana@quicinc.com,
+	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+Message-ID: <20250119152940.6yum3xnrvqx2xjme@thinkpad>
+References: <20250113162549.a2y7dlwnsfetryyw@thinkpad>
+ <20250114211653.GA487608@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,40 +98,128 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241126-topic-sm8x50-pcie-global-irq-v1-0-4049cfccd073@linaro.org>
+In-Reply-To: <20250114211653.GA487608@bhelgaas>
 
-On Tue, Nov 26, 2024 at 11:22:48AM +0100, Neil Armstrong wrote:
-> Following [1], document the global irq for the PCIe RC and
-> add the interrupt for the SM8550 & SM8650 PCIe RC nodes.
+On Tue, Jan 14, 2025 at 03:16:53PM -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 13, 2025 at 09:55:49PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
+> > > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
+> > > 
+> > > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+> > > > >>   		pcie_bus_configure_settings(child);
+> > > > >>   
+> > > > >>   	pci_bus_add_devices(bus);
+> > > > >> +
+> > > > >> +	/*
+> > > > >> +	 * Ensure pm_runtime_enable() is called for the controller drivers,
+> > > > >> +	 * before calling pci_host_probe() as pm frameworks expects if the
+> > > > >> +	 * parent device supports runtime pm then it needs to enabled before
+> > > > >> +	 * child runtime pm.
+> > > > >> +	 */
+> > > > >> +	pm_runtime_set_active(&bridge->dev);
+> > > > >> +	pm_runtime_no_callbacks(&bridge->dev);
+> > > > >> +	devm_pm_runtime_enable(&bridge->dev);
+> > > > >> +
+> > > > >>   	return 0;
+> > > > >>   }
+> > > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
+> > > > > 
+> > > > > I just noticed that this change in 6.13-rc1 is causing the
+> > > > > following warning on resume from suspend on machines like the
+> > > > > Lenovo ThinkPad X13s:
+> > > 
+> > > > Can you confirm if you are seeing this issue is seen in the
+> > > > boot-up case also. As this part of the code executes only at the
+> > > > boot time and will not have effect in resume from suspend.
+> > > 
+> > > No, I only see it during resume. And enabling runtime PM can (and
+> > > in this case, obviously does) impact system suspend as well. 
+> > > 
+> > > > > 	pci0004:00: pcie4: Enabling runtime PM for inactive device with active children
+> > > 
+> > > > I believe this is not causing any functional issues.
+> > > 
+> > > It still needs to be fixed.
+> > > 
+> > > > > which may have unpopulated ports (this laptop SKU does not
+> > > > > have a modem).
+> > > 
+> > > > Can you confirm if this warning goes away if there is some
+> > > > endpoint connected to it.
+> > > 
+> > > I don't have anything to connect to the slot in this machine, but
+> > > this seems to be the case as I do not see this warning for the
+> > > populated slots, nor on the CRD reference design which has a modem
+> > > on PCIe4.
+> > 
+> > Yes, this is only happening for unpopulated slots and the warning
+> > shows up only if runtime PM is enabled for both PCI bridge and host
+> > bridge. This patch enables the runtime PM for host bridge and if the
+> > PCI bridge runtime PM is also enabled (only happens now for
+> > ACPI/BIOS based platforms), then the warning shows up only if the
+> > PCI bridge was RPM suspended (mostly happens if there was no device
+> > connected) during the system wide resume time.
+> > 
+> > For the sake of reference, PCI host bridge is the parent of PCI
+> > bridge.
+> > 
+> > Looking at where the warning gets triggered (in
+> > pm_runtime_enable()), we have the below checks:
+> > 
+> > dev->power.runtime_status == RPM_SUSPENDED
+> > !dev->power.ignore_children
+> > atomic_read(&dev->power.child_count) > 0
+> > 
+> > When pm_runtime_enable() gets called for PCI host bridge:
+> > 
+> > dev->power.runtime_status = RPM_SUSPENDED
+> > dev->power.ignore_children = 0
+> > dev->power.child_count = 1
+> > 
+> > First 2 passes seem legit, but the issue is with the 3rd one. Here,
+> > the child_count of 1 means that the PCI host bridge has an 'active'
+> > child (which is the PCI bridge). The PCI bridge was supposed to be
+> > RPM_SUSPENDED as the resume process should first resume the parent
+> > (PCI host bridge). But this is not the case here.
+> > 
+> > Then looking at where the child_count gets incremented, it leads to
+> > pm_runtime_set_active() of device_resume_noirq().
+> > pm_runtime_set_active() is only called for a device if
+> > dev_pm_skip_suspend() succeeds, which requires
+> > DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtime
+> > suspended.
+> > 
+> > This criteria matches for PCI bridge. So its status was set to
+> > 'RPM_ACTIVE' even though the parent PCI host bridge was still in the
+> > RPM_SUSPENDED state. I don't think this is a valid condition as seen
+> > from the warning triggered for PCI host bridge when
+> > pm_runtime_enable() is called from device_resume_early():
+> > 
+> > pci0004:00: pcie4: Enabling runtime PM for inactive device with
+> > active children
+> > 
+> > I'm not sure of what the fix is in this case. But removing the
+> > DPM_FLAG_SMART_SUSPEND flag from PCI bridge driver (portdrv) makes
+> > the warning go away. This indicates that something is wrong with the
+> > DPM_FLAG_SMART_SUSPEND flag handling in PM core.
+> > 
+> > Ulf/Rafael, thoughts?
 > 
-> Tested on SM8550-QRD, SM8650-QRD and SM8650-HDK.
+> What's the plan for this?  Does anybody have a proposal?
 > 
-> [1] https://lore.kernel.org/all/20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org/
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+TBH, I don't know how to fix this issue in a proper way. I need inputs from
+Rafael/Ulf.
+
+> IIUC there is no functional issue, but the new warning must be fixed,
+> and it would sure be nice to do it before v6.13.  If there *is* a
+> functional problem, we need to consider a revert ASAP.
+> 
+
+There is no functional problem that I'm aware of, so revert is not warranted.
 
 - Mani
-
-> ---
-> Neil Armstrong (3):
->       dt-bindings: PCI: qcom,pcie-sm8550: document 'global' interrupt
->       arm64: dts: qcom: sm8550: Add 'global' interrupt to the PCIe RC nodes
->       arm64: dts: qcom: sm8650: Add 'global' interrupt to the PCIe RC nodes
-> 
->  Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml |  9 ++++++---
->  arch/arm64/boot/dts/qcom/sm8550.dtsi                        | 12 ++++++++----
->  arch/arm64/boot/dts/qcom/sm8650.dtsi                        | 12 ++++++++----
->  3 files changed, 22 insertions(+), 11 deletions(-)
-> ---
-> base-commit: adc218676eef25575469234709c2d87185ca223a
-> change-id: 20241126-topic-sm8x50-pcie-global-irq-712d678b5226
-> 
-> Best regards,
-> -- 
-> Neil Armstrong <neil.armstrong@linaro.org>
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
