@@ -1,93 +1,91 @@
-Return-Path: <linux-pci+bounces-20102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55BFBA16047
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 06:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 43E46A1604B
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 06:15:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A121D1883FBF
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 05:09:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADF071886937
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jan 2025 05:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656391CD2B;
-	Sun, 19 Jan 2025 05:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27341369B6;
+	Sun, 19 Jan 2025 05:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hfuuSCkN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cT9Y+yQt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C21610F9
-	for <linux-pci@vger.kernel.org>; Sun, 19 Jan 2025 05:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1117E176AB5
+	for <linux-pci@vger.kernel.org>; Sun, 19 Jan 2025 05:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737263345; cv=none; b=SwZaSAXE+Nggad1xdS5brTIVBEuQM/jlFE8XBJi9YVlevhbZEeFRGf7qB3vqqn3mnjGQ4huu8MahF1RRYVB3pXmcDesO5qxGY/KFmti8ED3ij3ZLGVkyplCCFZ049E1HxxgLzS6Afx9DYxoK/H3dWVf4vtFnhRTGc4r6pihvgBY=
+	t=1737263705; cv=none; b=luqsFfJYwcUYef4zbttL6zJnkKC3u46pL/oFNDbs5yBOVF4mWoJBU8P4mPY0prHSXLqHRMEz3ZSHu8OeXf2U0pGVLonTObZg30I4eHrlWpL+6iraVnwrEEIptd0R4YXVSTdKfzFgwoIkJUIHtchsbH5AP7dtEbIjC2mlJKHBSFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737263345; c=relaxed/simple;
-	bh=qNKDtcytVHhmIFNag2V4Oay3L6Xwu5mlaXOBmoK2LKU=;
+	s=arc-20240116; t=1737263705; c=relaxed/simple;
+	bh=2Z45GvTJvxK6U658TMMQMsyn4j1q4xxHxt0dl27y+pQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=az9+WHjNtRhgYvbrXzKItmQKUrraqfUBclMW2tb3jSIiKkOLF2N3PSVhqg7Df+jLGbJZeGOaFPAaqH9us1Ly8tfOl6wiviSB5IFTjslFZRcbjiALpQf7bLZZCuOJQeBojUcBPZJTQLUPxu03B7zk5OgvewjTFGODZXh+3W8dpKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hfuuSCkN; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=pFnd+Ihnz8q7wg9MQcGcuf5bMEvhiFD6ChmnpzZ9UY1OKBMDHEg4u2HxMbgRzWHGfVrBtxrSnM6mKibhm8KCytNOKeIWvEIOUKKilppuOuzzmf8msned/GHpWBL6ZDDlKECVTI9Gd/tcTekHYmSN9JgXS9XD2RVITDcR2rbaXzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cT9Y+yQt; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-216728b1836so59135755ad.0
-        for <linux-pci@vger.kernel.org>; Sat, 18 Jan 2025 21:09:03 -0800 (PST)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2eed82ca5b4so5994327a91.2
+        for <linux-pci@vger.kernel.org>; Sat, 18 Jan 2025 21:15:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737263343; x=1737868143; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1737263703; x=1737868503; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=YvJecefk7RmS0IifJ26t3rGZLpvHVBi8QGp4fEpog/w=;
-        b=hfuuSCkNF3sE7K46TSS8QzNnsiK/QibDBmg2aEcgjL6rc/+fwokYmToIV1p3P5IWbc
-         91N2zZwrmZF7dSbro/s0WWry2kPYsH4JKyDrwassuIHmnaZTzczZ9j8kmQNCJj9Nbz5A
-         x8LEaBTtdMLXsgUmT4vlAV9bKi1Xi14UiP9qTb1HLJCMuRokTB1CGnmeczQsGgHsvOOb
-         eBC9y2JSfhLVGwM8XW4JHnICdc94X7Tt79CXyTyU/YEp6CS/kHMTE1qwZcmm5PA9OYLI
-         4wGh6gcCTH2anNl88h2A2olYfn2ozcexzMXoHEJuirdc7t0LDo07/4hGkaQDUyc+ZUpx
-         fMBA==
+        bh=qi3Sy7HRn8AKFIDjhshUgb9vs43N9el0e7NWUElQl/0=;
+        b=cT9Y+yQt7Ld8eVqvgezMkyFKrIERxV/S6725+/UO+jLffFT41iz9YBdPaiEc4X5/o5
+         DmyfMP5+yOlYGi3Miyom0Ucxnplj0Ri+2hdlAfS+UQmnRdrU91+keVAs14J/eIoTN112
+         BHZR63op+bQ5CLKd9tT6seEQoYM6x4FHTkvNmB4aya0B5xAPAiVxXMZB5Msneoz23TpO
+         ov4ph9eESGaqunndgnHMNit2uR3yLgHdnyMy429AQLPf2iEbKjb5ZhxjBmmGNdGm81tx
+         byjQKREKpS+wG0rPlhtyPoDpyyxQn0+BU/U9hEfVTJcYqNnsZNCbEajKIK4/kOMJB+Hp
+         vhBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737263343; x=1737868143;
+        d=1e100.net; s=20230601; t=1737263703; x=1737868503;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YvJecefk7RmS0IifJ26t3rGZLpvHVBi8QGp4fEpog/w=;
-        b=Y77qaL/lRLW9x3VDnRebbIe8j0LjHQWpTbYUBz0wyu1xBwvidvj9tJaLkdgRnYPot8
-         diCjSUu64d/C0fy5hoetjZj4nnqXpIe5zynKWrVmA8ELeBDRhIWk3JLjEDgtCiynhmY7
-         rhbGJ+CeJRptqrXo0NBT9XPGnawr1ryPUPGAMpsz7fEwJWMyM0nbSgbUUBZKCgoLjZMl
-         WDlB3Lg7LyM55+Qr7HVg6HbXkpX8jd0blQW1RklhrE7fbnaR0+BFwQZ6Csl3fZGMdaR1
-         joHWan7YMxx6RFWKpeCg2vEbhEq3cvyeqqD/jOxuIkcbsEaXz7p9ZvwvmE6ACKtH3yab
-         wc8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbkqBfmBFmnJolmnAPMxg03QKDxtx35eXnI1jcLlHBioR+r9H7LUiqKomrlmTem2qDP+Dr+UcoKos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzPo5VGzpHgpelmjIgffAZyBdjYxCn3gpe5amZ2tAjxATTCvCA
-	5sl4hy/Jfm34sO2y6rgBDPMan+Whr0ZEGzkZScb2lb/jFyNjoZV9LebAZ0LHEA==
-X-Gm-Gg: ASbGncvBzvA1kPobM4r/mq6ORT3np7vFv55F8hIeB6CyQuNK//ATAxEo/o1wb+ZUX90
-	ncWSmWHifgk+qOpyslr2FIYeWQk1giDI6HCi68UhWKV3SbGsg8rDlU17VDYljkcaWbWgnL+iEtF
-	DAFIBXx2IzPgZ4roKmdB7QfQk70jUIddUbTlTCH557z7dkH+f+W7iH/JQ9aLJ4Bi+ICEvQZ2wLc
-	OSCIzlfziOpEUxXFFBtLJ4D/f5Cx63XfhYDo+YGlKUYG9MIv7ngumjcGwRq3mduHXTnsleeDhqK
-	RG7EDA==
-X-Google-Smtp-Source: AGHT+IH56I3/tW+579vI6yiwAOJnC+RYQDWkaXTf+d9BkFZwz6flw0LrFdP//bjYLbRS+vchvwKt9g==
-X-Received: by 2002:a17:903:41c3:b0:216:728b:15d8 with SMTP id d9443c01a7336-21c3556b158mr128203955ad.30.1737263342699;
-        Sat, 18 Jan 2025 21:09:02 -0800 (PST)
+        bh=qi3Sy7HRn8AKFIDjhshUgb9vs43N9el0e7NWUElQl/0=;
+        b=coWf+3S0Vpb0ExXy1q42RKJjdQPrtxLyxbLUQppdoeTr9GrmWVyadNdU/pSOLlLrPO
+         HKYe5DKDR+a3r1HL3PtaJc5VS1ZI6UNkKC9r1MYh+j6fnwptThEeRGW7zTQjCuvcOJ+g
+         MChsEdeNhHTqR+jfL2kcZJ8vkjOpYz1+cpWw2547FUZRie8jtbn56esEXenkjylKJAcG
+         KnA+k274/rw5hGyEypZGTNil2TKRfccS1rbbaP4+6z8H7wbm3C4+xEO+6py/NqgjfP8I
+         2MXqrAK75mfShBoieC+CGJybALXgXLQ5N1EF1vCS+pNclfGRSOndJqqA4f6HaXc80dhC
+         tX2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWNvej6dx9qOZ9hX2RgVbIA19W4BahhJR27oDh8aimDW5TqAJ27grnhdh6gy/SG9h6FMCPFhO9+TKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNtyCW1MrGLVpzBobIgLvXCVY57Esk/T4X6SMuzzcF1xsKYGTO
+	ckTnDyPkMBu7die86VN4lfIS3r6RaEN6iZVfLCGi2tQk14RW6+n3MSyjR7Z1UQ==
+X-Gm-Gg: ASbGncvuakE6Jh9MAaxT+7n9Fcp9VMdo6l86GyLF1ovjuVDxL+nKqKP+KctyJpyUM6j
+	BV5KruYJhVnRDzhrgHkWWDYyzgGX7THv6D78n52GRvFTKyK27lcE1FAOlRNA3t64GACK3R0eqbY
+	nLol6a5G3oC25s49e2atGpYA1XXeryM/u4voyQT7QJ8+k/URvLA2zi4eK3Kvb143QBzmwy5ZfV0
+	QAdWEut/QaCY+A+sk+FXQHz3naXIi9Esg+NtjPFWi0GNv4du9lr+K8jUAAqQWFs3CroJWyw4Wg7
+	6gnMfg==
+X-Google-Smtp-Source: AGHT+IGZN5CZEfTEBeBQYdURl0oNEab8SuIK9gBxj27Qk5BfX+NZ6fMk+FojLLG4sGaNkdQtxei2WQ==
+X-Received: by 2002:a05:6a00:2914:b0:71e:4cff:2654 with SMTP id d2e1a72fcca58-72dafa00359mr10681430b3a.6.1737263703226;
+        Sat, 18 Jan 2025 21:15:03 -0800 (PST)
 Received: from thinkpad ([120.60.143.204])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2cea0934sm38612255ad.36.2025.01.18.21.08.57
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72dabac5a46sm4684875b3a.177.2025.01.18.21.15.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2025 21:09:01 -0800 (PST)
-Date: Sun, 19 Jan 2025 10:38:50 +0530
+        Sat, 18 Jan 2025 21:15:02 -0800 (PST)
+Date: Sun, 19 Jan 2025 10:44:55 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Siddharth Vadapalli <s-vadapalli@ti.com>,
 	Udit Kumar <u-kumar1@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 0/6] PCI: endpoint: Add support for resizable BARs
-Message-ID: <20250119050850.2kogtpl5hatpp2tv@thinkpad>
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] PCI: endpoint: Add BAR type BAR_RESIZABLE
+Message-ID: <20250119051455.r47zqiegom3o4olr@thinkpad>
 References: <20250113102730.1700963-8-cassel@kernel.org>
+ <20250113102730.1700963-9-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,81 +95,96 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250113102730.1700963-8-cassel@kernel.org>
+In-Reply-To: <20250113102730.1700963-9-cassel@kernel.org>
 
-On Mon, Jan 13, 2025 at 11:27:31AM +0100, Niklas Cassel wrote:
+On Mon, Jan 13, 2025 at 11:27:32AM +0100, Niklas Cassel wrote:
+> A resizable BAR is different from a normal BAR in a few ways:
+> -The minimum size of a resizable BAR is 1 MB.
+> -Each BAR that is resizable has a Capability and Control register in the
+>  Resizable BAR Capability structure.
+> 
+> These registers contain the supported sizes and the currently selected
+> size of a resizable BAR.
+> 
+> The supported sizes is a bitmap of the supported sizes. The selected size
+> is a single value that is equal to one of the supported sizes.
+> 
+> A resizable BAR thus has to be configured differently than a
+> BAR_PROGRAMMABLE BAR, which usually sets the BAR size/mask in a vendor
+> specific way.
+> 
 > The PCI endpoint framework currently does not support resizable BARs.
 > 
-> Add a new BAR type BAR_RESIZABLE, so that EPC drivers can support resizable
+> Add a BAR type BAR_RESIZABLE, so that an EPC driver can support resizable
 > BARs properly.
 > 
-> For a resizable BAR, we will only allow a single supported size.
-> This is by design, as we do not need/want the complexity of the host side
-> resizing our resizable BAR.
+> Note that the pci_epc_set_bar() API takes a struct pci_epf_bar which tells
+> the EPC driver how it wants to configure the BAR.
 > 
-> In the DWC driver specifically, the DWC driver currently handles resizable
-> BARs using an ugly hack where a resizable BAR is force set to a fixed size
-> BAR with 1 MB size if detected. This is bogus, as a resizable BAR can be
-> configured to sizes other than 1 MB.
+> struct pci_epf_bar only has a single size struct member.
 > 
-> With these changes, an EPF driver will be able to call pci_epc_set_bar()
-> to configure a resizable BAR to an arbitrary size, just like for
-> BAR_PROGRAMMABLE. Thus, DWC based EPF drivers will no longer be forced to
-> a bogus 1 MB forced size for resizable BARs.
+> This means that an EPC driver will only be able to set a single supported
+> size. This is perfectly fine, as we do not need the complexity of allowing
+> a host to change the size of the BAR. If someone ever wants to support
+> resizing a resizable BAR, the pci_epc_set_bar() API can be extended in the
+> future.
 > 
+> With these changes, an EPC driver will be able to support resizable BARs
+> (we intentionally only support a single supported resizable BAR size).
 
-The subject got me confused for a moment because, you are not really adding
-support for Resizable BARs as per the PCIe spec, but just allowing the EPF
-drivers to configure the size of the resizable BARs from fixed 1M. This is a
-good improvement btw, but the subject should be reworded as such.
+Again, this is a bit of ambiguity. Even with these changes, an EPC driver
+wouldn't be able to support resizable BARs which by the concept mean that the
+host would be able to resize the BARs dynamically. Even though you are writing
+the limitation in brackets, I think this sentence needs to be reworded.
+
+> 
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/pci/endpoint/pci-epf-core.c | 4 ++++
+>  include/linux/pci-epc.h             | 3 +++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 50bc2892a36c..394395c7f8de 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -274,6 +274,10 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>  	if (size < 128)
+>  		size = 128;
+>  
+> +	/* According to PCIe base spec, min size for a resizable BAR is 1 MB. */
+> +	if (epc_features->bar[bar].type == BAR_RESIZABLE && size < SZ_1M)
+> +		size = SZ_1M;
+> +
+>  	if (epc_features->bar[bar].type == BAR_FIXED && bar_fixed_size) {
+>  		if (size > bar_fixed_size) {
+>  			dev_err(&epf->dev,
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index e818e3fdcded..e9d5ed23914f 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -188,11 +188,14 @@ struct pci_epc {
+>   * enum pci_epc_bar_type - configurability of endpoint BAR
+>   * @BAR_PROGRAMMABLE: The BAR mask can be configured by the EPC.
+>   * @BAR_FIXED: The BAR mask is fixed by the hardware.
+> + * @BAR_RESIZABLE: The BAR implements the PCI-SIG Resizable BAR Capability.
+
+> + *                 An EPC driver can currently only set a single supported size.
+
+Could you please add 'NOTE' or 'TODO' so that this doesn't miss when a proper
+resizable BAR functionality added later?
 
 - Mani
 
-> 
-> Tested/verified on a Radxa Rock 5b (rk3588) by:
-> -Modifying pci-epf-test.c to request BAR sizes that are larger than 1 MB:
->  -static size_t bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 };
->  +static size_t bar_size[] = { SZ_1M, SZ_1M, SZ_2M, SZ_2M, SZ_4M, SZ_4M };
->  (Make sure to set CONFIG_CMA_ALIGNMENT=10 such that dma_alloc_coherent()
->   calls are aligned even for allocations larger than 1 MB.)
-> -Rebooting the host to make sure that the DWC EP driver configures the BARs
->  correctly after receiving a link down event.
-> -Modifying EPC features to configure a BAR as 64-bit, to make sure that we
->  handle 64-bit BARs correctly.
-> -Modifying the DWC EP driver to set a size larger than 2 GB, to make sure
->  we handle BAR sizes larger than 2 GB (for 64-bit BARs) correctly.
-> -Running the consecutive BAR test in pci_endpoint_test.c to make sure that
->  the address translation works correctly.
-> 
-> 
-> Texas Instruments kernel developers, if would be very nice if you could
-> help out with testing on Keystone.
-> 
-> 
-> Changes since V2:
-> -When looping in dw_pcie_ep_init_non_sticky_registers(), use the index
->  that we read from PCI_REBAR_CTRL (e.g. a platform could have BARs 0-2
->  as programmable, and BARs 3-5 resizable, so we need to read the index).
-> 
-> 
-> Kind regards,
-> Niklas
-> 
-> Niklas Cassel (6):
->   PCI: endpoint: Add BAR type BAR_RESIZABLE
->   PCI: dwc: ep: Move dw_pcie_ep_find_ext_capability()
->   PCI: dwc: endpoint: Add support for BAR type BAR_RESIZABLE
->   PCI: keystone: Describe resizable BARs as resizable BARs
->   PCI: keystone: Specify correct alignment requirement
->   PCI: dw-rockchip: Describe resizable BARs as resizable BARs
-> 
->  drivers/pci/controller/dwc/pci-keystone.c     |   6 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   | 231 +++++++++++++++---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c |  22 +-
->  drivers/pci/endpoint/pci-epf-core.c           |   4 +
->  include/linux/pci-epc.h                       |   3 +
->  5 files changed, 219 insertions(+), 47 deletions(-)
-> 
+>   * @BAR_RESERVED: The BAR should not be touched by an EPF driver.
+>   */
+>  enum pci_epc_bar_type {
+>  	BAR_PROGRAMMABLE = 0,
+>  	BAR_FIXED,
+> +	BAR_RESIZABLE,
+>  	BAR_RESERVED,
+>  };
+>  
 > -- 
 > 2.47.1
 > 
