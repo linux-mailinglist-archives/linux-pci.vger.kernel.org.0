@@ -1,169 +1,170 @@
-Return-Path: <linux-pci+bounces-20157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39248A16F32
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 16:27:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEB42A16F39
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 16:28:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4650A3A6569
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 15:27:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF6CC3A65BE
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 15:28:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89BF61E503D;
-	Mon, 20 Jan 2025 15:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3084F1E5729;
+	Mon, 20 Jan 2025 15:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lkMGZRFd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/SFFPdp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFC51E3DE4;
-	Mon, 20 Jan 2025 15:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9881E571F
+	for <linux-pci@vger.kernel.org>; Mon, 20 Jan 2025 15:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737386834; cv=none; b=sDl3m6apha/yW/Ys+aE3H6Qvx/1A2ocZCsvri+mgeHUV9SMwmy7mWpsHizQ4cZxrDvHl9OVXNeDBUOinzXQyDWFwFDdRuBX0XgjqmnprSwJG0Mo7hP75XzDoXwNHXC2rNpoi+nOM9+K7Hl3uyLgJrzzVm7Ew87eHt1gUJjfDdZ0=
+	t=1737386920; cv=none; b=dX4HDN5SygX18wPtWO9eU1k++IKAaDIDDTakJP9wIwIX04Hg4lgjnjsI0pMCe/K5Zu4e568ZAD6c7EAxdmE3dPRoVHUMnOGU4AN2PgKSXjN/+6IBbQaGv86gwfvg22VGSYWdj3vTgc+MwQwPtVuk/36yp9b8krI5L0sPglgyxQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737386834; c=relaxed/simple;
-	bh=VQvynbnRGrRMUEwbl6fkENt2Vyq/b6Pmd6EvkFbEB5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VExtbT+AKobGzzIMa0muTPoX7sEosIvBmTZ6B4ugfvP4sCYHoQaGLnilPTF4UoMwGFLuMiEEZoBAcLvZNL9CSaZC1zxbFlkfutdpU/Mb5xCYjKyc8OlLPG9YYFApXxN+W4apXTxWsQdzaAaSQydocAbRgioWEZl5va9vUVev7as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lkMGZRFd; arc=none smtp.client-ip=203.205.221.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1737386805; bh=1MFYJXZDNbBZjRNoGJC7eXt7K5pGRQV0zdRhzsdQzbc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lkMGZRFdLu+ZnK1x3Hwz2ChaZAPLDFdFOdHMjHnepc32pgmEf24OnM23/nvhT7ftT
-	 bQUEhSfn5NJw9Si87zFhxzGGeYmZQq8JtQG8BekvlmjOlbMDLtIpONa+qwbzv1ce0u
-	 XDi4Alz8X8TfZN6QbP9Nd0IOF9jQZybDU2tJ3vBc=
-Received: from [IPV6:2409:8a00:78e3:4720:c022:5e89:361b:6a74] ([2409:8a00:78e3:4720:c022:5e89:361b:6a74])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id 51B25E85; Mon, 20 Jan 2025 23:20:27 +0800
-X-QQ-mid: xmsmtpt1737386427tz6ynmbea
-Message-ID: <tencent_F1DFC27AA8603E10FDB0017CA1C4EF27D107@qq.com>
-X-QQ-XMAILINFO: NgEKQrOzHIjOdCXBmvyZNM7/BJfXzT9UvuNYyOwaxQGrUiqxaVus15JI5QuUJU
-	 8BEk9Lhtt/GCmytOwpr85OrlQwSsTc/pk/YS7yMdBR/v4fXuFfFxA0atuTzc7tUas6qpa4yhN+Mg
-	 COmi/Bt9YJLBPWnSjLUIEMghYIq/QilJyx3iZQkV9AlJ3gAXAvtnJ1lEL/Uhnqg8Kvileb17Hpnc
-	 TSsPUc89YjsVLdfKQh44BJsvMejMR08wtTcvP795lfbp6FlxrNkAGrLMBg5ClOScr+trWLEyuBkD
-	 nnb8E0YMq0V4ea75wjFmqq2/Hajlbyue9W/L+ddkdrwF5/BMXUQPyHtAoUEC4ItKtEpPBGRYTvtq
-	 ZIoHWuVBm7p4V4ZEkNVqTpKSdn8KHjVb3CFTfKF51ejmfBO/NX9YQ12gjl7NqLGZF2d/2zHfiKpu
-	 SjXAttZH0BDhz+doeKnvgvRXk5n5kBbR/IyTqEMM66Tuiz8OBXh0bqOGR7VBXho1rl884oKs2lE5
-	 bUBaiCLpeZ1dPZzGEpKV/c/R6Wvm0esUcdl2FZUak3b0KdJEJskjXKCEd867u2QJilgavGMsUVLo
-	 JknpAB0lY2QioCJx09+a9pa/jJ6jBqLe2KgG0Re4mBy3vaHZoHCNA/vzM8j0xb0ijte/m4dERBEH
-	 KFB/jpEShKHqZymARmLWgEQQkiUdQcQD28PE2uQ0wYWPmy3CCCH0Q2ZQrhduCLjQFLukHbHN7kgk
-	 aP8T/6XusmO25x4JqwFmtdaPthqywE92C62/IG5kHslpgPeJEgGTukVT7B3hIX8LuDNwICFzNwo2
-	 flaCQw9SETPjWsRoXpR+8zZVozKRh1vOdngXgmdj/tZ3ZO3DH2TNbazRkaoxXfPdz/0+aQDeVYe+
-	 ywPYUcO7UXy7g31Amw0Zcfv+8QJaQX34vnT6qeHu2/fLONYZsvBlKbFTegRao7Ali/SqBUDglCeZ
-	 KNIHgrWhe8spJ31WH/udeL3ekuvUYf9G/7Z7PWP4ZvWlnlqSwAVl9IuO7wpEQ2cWLv5xAg0Vj0z8
-	 2W9HIsog==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-OQ-MSGID: <8092312d-5031-4a69-abc6-7d6d454d7d3b@qq.com>
-Date: Mon, 20 Jan 2025 23:20:27 +0800
+	s=arc-20240116; t=1737386920; c=relaxed/simple;
+	bh=VAWkKFMuuvGFwc4lV9U8KFWWhfAs+x3tBpzqXY33AtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2BcQFc4kLe2pBSiLAVzJxQQemrwo3jSQuS79SOUGFIGuH1dB4wjBcxCQbiR0lVQDWXkrp5p6ya+xDjGorEYodcnuqfdqrt5SO1XBvycKbmuOK5kHLQdmm0Slc3mGxLT6I+U5xbOgxh1o1Qi1cH66x2iTa0nVKtXbmURJE6GJlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e/SFFPdp; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21bc1512a63so86736965ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jan 2025 07:28:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737386918; x=1737991718; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ge/AXIemwm1awQOTNlXpVZkK91To9JlcVieMAvqiKWA=;
+        b=e/SFFPdpfCxKnQ9Uhigb5Oa7CjJ6r5xJjQaUJpKjJXzBhBRKQRwV2kHerHuoJGmXBq
+         9fcWEIDZwaiM3KYLGKP5pqn2MygkXutilbNUQ6MEbpSlp5LolD4kNH4fwqcS1xLgWPIX
+         8BR6Bn5/MWoqlb633frJ8QJLrdM40Cehh6qvgQHZLS+Gt3/G14rDQjDerVpcwoIFNByp
+         2bplpGiz/L2BOKUgEWS2jPeKq9dp3MyHT4BAz02cq/oLLy6IVjJIBi8Q4zvsdY8Ohffx
+         OfPyV4OIjUG/jZ1alp8WDm2fpxy3AwALDtF9uConNkF7ZZfxFym8JKuj8vul98gDtsrr
+         8d8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737386918; x=1737991718;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ge/AXIemwm1awQOTNlXpVZkK91To9JlcVieMAvqiKWA=;
+        b=VogzM49yYi0iafRFH/vvCjHu5yiJ0VRT9tVU7h9m5shV6GouVk1q6rQWkunVxJb/eL
+         Zfq9/vsP6rzx7/SD3Yjv/JNzMN6EdC/ztpyixCGRc58Jveg44siO/GWLMjVawxMfPtsI
+         uKQLkzGQYEhRiCcYYT6WuLis8mxqbYdX0AboDm4q6cNZLcekLE2B/D5Ojjos9NmuTSBJ
+         hYM6S3dczIMvgPsWDCDFzmxKQrmbHIelu0cYHC1+kNSzGsJ2Uoc2ZHNB6Gh6vppHFiEc
+         t0L4p5yBvw3nCLAi6F9LHkrBCSZs+HTgIYsuM28ztXPByGukoIq75b6YvRmBK+nRp0EE
+         f60g==
+X-Forwarded-Encrypted: i=1; AJvYcCWyZDh/5UVYkHY7iDpgZeVBu6szopt3sYOSR2c/G/jEymAI64toNZvWXqg4nlJ16hpZygZ0qri8Mtc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYaPh2b3L/RaRwm8dtUC1oD1zQDHgcwoWK4BNUgkMoxZQX0r4k
+	PR9pWPp39iKSOBz7GSNJq50r422ZaSV6nxC0o5LPabLy+GwXtWdfh3l9VHNZi8xv8sNVIMzT1GY
+	=
+X-Gm-Gg: ASbGnctD8Fo6KDSjK3YtjmTkyufiVVg0itDTISwvt4Onqk9d3SnK/nE6w/AVAJqcdav
+	fNHKDl4yC4ubpL+FjVKY+nlDDjissE3HOwV53SavjlXBYT7f3pr62osaHyZsntM18q+1aia3qZb
+	DCXA7IKHGtsud7m44jxkH98VukO4LH6YTLcdLvp7qG7W5F6Jw4LM//mMq1jhJTGSe++jz4o/CDw
+	E44h2tPTj5wnvXXbK1ATEQ2A784o/si8xH0jSRTScYfHGcDcLhRFlc7zw44s1Z6Ynf6X2/1sP7J
+	s3J+q7g=
+X-Google-Smtp-Source: AGHT+IFEYzzBuALfLBnZY/0Oioq2g+BcnanbnfQw4KIaV+WjpwymnqzEgNX6z1yArWAvcbtux5os8A==
+X-Received: by 2002:a17:902:e546:b0:216:281f:820d with SMTP id d9443c01a7336-21c3553b6famr223740225ad.11.1737386917771;
+        Mon, 20 Jan 2025 07:28:37 -0800 (PST)
+Received: from thinkpad ([117.213.102.234])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2cea2caasm61864755ad.51.2025.01.20.07.28.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2025 07:28:37 -0800 (PST)
+Date: Mon, 20 Jan 2025 20:58:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+	rafael@kernel.org, ulf.hansson@linaro.org,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Markus.Elfring@web.de, quic_mrana@quicinc.com,
+	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+Message-ID: <20250120152829.7wrnwdji2bnfqrhw@thinkpad>
+References: <20250113162549.a2y7dlwnsfetryyw@thinkpad>
+ <20250114211653.GA487608@bhelgaas>
+ <20250119152940.6yum3xnrvqx2xjme@thinkpad>
+ <Z44llTKsKfbEcnnI@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI: reread the Link Control 2 Register before
- using
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Jiwei Sun <sjiwei@163.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- helgaas@kernel.org, Lukas Wunner <lukas@wunner.de>, ahuang12@lenovo.com,
- sunjw10@lenovo.com, sunjw10@outlook.com
-References: <20250115134154.9220-1-sjiwei@163.com>
- <20250115134154.9220-3-sjiwei@163.com>
- <4df1849e-c56e-b889-8807-437aab637112@linux.intel.com>
- <417720e7-c793-4c36-a542-a7e937e5a3cf@163.com>
- <alpine.DEB.2.21.2501180101360.27432@angie.orcam.me.uk>
- <tencent_DBC0851ABE9B45D70B4BA098F876F5F10609@qq.com>
- <alpine.DEB.2.21.2501201441590.27432@angie.orcam.me.uk>
-Content-Language: en-US
-From: Jiwei <jiwei.sun.bj@qq.com>
-In-Reply-To: <alpine.DEB.2.21.2501201441590.27432@angie.orcam.me.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z44llTKsKfbEcnnI@hovoldconsulting.com>
 
+On Mon, Jan 20, 2025 at 11:29:41AM +0100, Johan Hovold wrote:
+> On Sun, Jan 19, 2025 at 08:59:40PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Jan 14, 2025 at 03:16:53PM -0600, Bjorn Helgaas wrote:
+> > > On Mon, Jan 13, 2025 at 09:55:49PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
+> 
+> > > > > > > I just noticed that this change in 6.13-rc1 is causing the
+> > > > > > > following warning on resume from suspend on machines like the
+> > > > > > > Lenovo ThinkPad X13s:
+> 
+> > > > > > > 	pci0004:00: pcie4: Enabling runtime PM for inactive device with active children
+> 
+> > > > > > > which may have unpopulated ports (this laptop SKU does not
+> > > > > > > have a modem).
+> 
+> > > What's the plan for this?  Does anybody have a proposal?
+> > > 
+> > 
+> > TBH, I don't know how to fix this issue in a proper way. I need inputs from
+> > Rafael/Ulf.
+> > 
+> > > IIUC there is no functional issue, but the new warning must be fixed,
+> > > and it would sure be nice to do it before v6.13.  If there *is* a
+> > > functional problem, we need to consider a revert ASAP.
+> > > 
+> > 
+> > There is no functional problem that I'm aware of, so revert is not warranted.
+> 
+> I'd argue for reverting the offending commit as that is the only way to
+> make sure that the new warning is ever addressed.
+> 
 
+How come reverting becomes the *only* way to address the issue? There seems to
+be nothing wrong with the commit in question and the same pattern in being used
+in other drivers as well. The issue looks to be in the PM core.
 
-On 1/20/25 23:05, Maciej W. Rozycki wrote:
-> On Mon, 20 Jan 2025, Jiwei wrote:
-> 
->>>> However, within this section of code, lnkctl2 is not modified (after 
->>>> reading from register on line 111) at all and remains 0x5. This results 
->>>> in the condition on line 130 evaluating to 0 (false), which in turn 
->>>> prevents the code from line 132 onward from being executed. The removing
->>>> 2.5GT/s downstream link speed restriction work can not be done.
->>>
->>>  It seems like a regression from my original code indeed.
->>
->> Sorry, I am confused by this sentence.
-> 
->  Sorry to be unclear, it refers to the paragraph quoted.
-> 
->> IIUC, there is no regression regarding the lifting 2.5GT/s restriction in
->> the commit a89c82249c37 ("PCI: Work around PCIe link training failures").
-> 
->  That's my original code we have regressed from.
-> 
->> However, since commit de9a6c8d5dbf ("PCI/bwctrl: Add 
->> pcie_set_target_speed() to set PCIe Link Speed"), the code to lift the 
->> restriction is no longer executed. Therefore, commit de9a6c8d5dbf 
->> ("PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed") can be
->> considered a regression of commit a a89c82249c37 ("PCI: Work around PCIe
->> link training failures").
-> 
->  Yes, that accurately reflects the intent of what I wrote above.
-> 
->> So, this fix patch(PCI: reread the Link Control 2 Register before using) 
->> is required, right?
-> 
->  Original code just fiddled with `lnkctl2' already retrieved.  With that 
-> replaced by a call to `pcie_set_target_speed' I think rereading from Link 
-> Control 2 is probably the best fix, however I'd suggest to clean up all 
-> the leftovers from old code on this occasion, along the lines of the diff 
-> below (untested).
-> 
->   Maciej
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 76f4df75b08a..84267d7f847d 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -108,13 +108,13 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
->  	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
->  		return ret;
->  
-> -	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
->  	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->  	if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
-> -		u16 oldlnkctl2 = lnkctl2;
-> +		u16 oldlnkctl2;
->  
->  		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
->  
-> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &oldlnkctl2);
->  		ret = pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false);
->  		if (ret) {
->  			pci_info(dev, "retraining failed\n");
-> @@ -126,6 +126,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
->  		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->  	}
->  
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
->  	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
->  	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
->  	    pci_match_id(ids, dev)) {
+Moreover, the warning is not causing any functional issue as far as I know. So
+just reverting the commit that took so much effort to get merged for the sake of
+hiding a warning doesn't feel right to me.
 
-Thanks for your suggestion. The patch that you modified is better; I will
-do some tests tomorrow and send the v3 patch.
+> Vendors unfortunately do not a have a good track record of following up
+> and fixing issues like this.
+> 
 
-Thanks,
-Regards,
-Jiwei
+I'm not relying on vendors here. I am looking into this issue and would like to
+fix the warning/issue on my own. That's why I shared my observation with
+Ulf/Rafael.
 
+> Judging from a quick look at the code (and the commit message of the
+> patch in question), no host controller driver depends on the commit in
+> question as the ones that do enable runtime PM just resume
+> unconditionally at probe() currently (i.e. effectively ignores the state
+> of their children).
+> 
+
+Right. There are a couple of pieces that needs to be fixed to have the runtime
+PM working from top to bottom in the PCIe hierarchy. This is also one more
+reason why I believe that the commit wouldn't have caused any functional issue.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
