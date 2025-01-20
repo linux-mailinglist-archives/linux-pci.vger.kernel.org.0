@@ -1,197 +1,122 @@
-Return-Path: <linux-pci+bounces-20154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 835E7A16CDA
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 14:04:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 194B9A16E72
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 15:30:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3769163336
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 13:04:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF93B1884880
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 14:30:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6344C1E570D;
-	Mon, 20 Jan 2025 13:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC3E23596C;
+	Mon, 20 Jan 2025 14:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NMox36Nt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JH978ts6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NMox36Nt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JH978ts6"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="vyrnoiru"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9991E3DFD;
-	Mon, 20 Jan 2025 13:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2329450;
+	Mon, 20 Jan 2025 14:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737378120; cv=none; b=tiuUOh/DMg/sphDkJGtIovoQ+wBVd/RogVh6Ekc68PObXRBlY01WRh2Pg4DmDEaKZvcRxyi6hY4pI5d/IQgKp3Olkz0+64QdwVMbeAcyqDDXOq3m7MsJbzViQsMAAwYIY64ubo9N55Yz39kyCwgTI6SDjafOwYsg86rNSJpdDrA=
+	t=1737383435; cv=none; b=LvRwTr7C2kM8rRdGHVhcKjbDr8pPoCy87wuuxCclVT4s5bBEgcoGfhIwxyam5huHa9vu2Ccp4/CwXfy+hUZxe/qzkxOG14507jr8hxU+H7uk42q9MUvA65wRbBChwbCQurHG11+f+gkGLrzqqbJo351HtqAdDeKNUQWVR9Bz5pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737378120; c=relaxed/simple;
-	bh=nZOsnjd8nwdCowJxvP0IxpxCOPsM8Tj/+CwG14iSWfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bRuIFBzI/+5zmkownIRd8ny8WmIbt9zG5GRYK/vmdw3/9kZuKBRx5SPBhglcYO2O1EwWVKenXWWL1x79xwEk7283ajyRbz2T3Onpdu16bJiEhKZjLVUAOFRxNUkvlFxa44iBD+xO1BggpF9nzkyMP8EZDq471unX8gLujokUlNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NMox36Nt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JH978ts6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NMox36Nt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JH978ts6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 903E41F7B4;
-	Mon, 20 Jan 2025 13:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737378116; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+5HGetie6t659Fb3XNgykZ0MkWDCmc8MhVHZSndSw4g=;
-	b=NMox36Nt+7uzUFzcUgL1M/wkL4UfUixm1aaFxfkqmhpSMw6x0CL/7x2ARFIC8hmWOTxGOw
-	Bk7lrgKdINQwqi6R/N3D1R6hjwwWQwm+gJ9GMFVUk0eHp+1jKQOZY6TnMPr5tcWcNiLKY2
-	aLyEuzHHHaRtqGYOSnIWrKxCtV8oRUs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737378116;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+5HGetie6t659Fb3XNgykZ0MkWDCmc8MhVHZSndSw4g=;
-	b=JH978ts6GTl2S9W2Sy5/QNzXZZHyQuo/5tinHNMYNxy2aiXeIJYnz+9E9kEpg0NQkNMAHq
-	3KdUhYuJajQB1hCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NMox36Nt;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JH978ts6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737378116; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+5HGetie6t659Fb3XNgykZ0MkWDCmc8MhVHZSndSw4g=;
-	b=NMox36Nt+7uzUFzcUgL1M/wkL4UfUixm1aaFxfkqmhpSMw6x0CL/7x2ARFIC8hmWOTxGOw
-	Bk7lrgKdINQwqi6R/N3D1R6hjwwWQwm+gJ9GMFVUk0eHp+1jKQOZY6TnMPr5tcWcNiLKY2
-	aLyEuzHHHaRtqGYOSnIWrKxCtV8oRUs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737378116;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+5HGetie6t659Fb3XNgykZ0MkWDCmc8MhVHZSndSw4g=;
-	b=JH978ts6GTl2S9W2Sy5/QNzXZZHyQuo/5tinHNMYNxy2aiXeIJYnz+9E9kEpg0NQkNMAHq
-	3KdUhYuJajQB1hCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 98BF9139D2;
-	Mon, 20 Jan 2025 13:01:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aOX4IkNJjmc4XQAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 20 Jan 2025 13:01:55 +0000
-From: Stanimir Varbanov <svarbanov@suse.de>
-To: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	kw@linux.com,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH v5 -next 11/11] arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
-Date: Mon, 20 Jan 2025 15:01:19 +0200
-Message-ID: <20250120130119.671119-12-svarbanov@suse.de>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250120130119.671119-1-svarbanov@suse.de>
-References: <20250120130119.671119-1-svarbanov@suse.de>
+	s=arc-20240116; t=1737383435; c=relaxed/simple;
+	bh=qmTDwhVL1W44aWSyU9yNOlbmzOZv5rCUFdrYQjcJjCI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NRtPbPMm0wFe0ry98/aoY6tYJSkvExcIVoWYGVd2Fo9b9kRt5+K3RrdVqmQ4jCHVwQS+GHXPMbuRc75wNMCCC+QsoKir3LiwU2bqUpU1a7G1bc/42EslEfvK3QL/suaPFAsMnQaFelcIHAx+jFxpRcpxKF6Jh81p7kwWsL7sMcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=vyrnoiru; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1737383119; bh=67XJay9E8w2xGB4eA46TW3l1Brrz6HL7BURXEAD1+wI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=vyrnoiruEc80HsRvnxggExXu+fgvMma//6/D1wYTiJetyydEmCrONH3DtOSiwycUl
+	 9IoYOtQCvCLRhIok3YFye+yS6len1ol6W7SN8JmNuTgdKQ92gEJRcgmoWdcYmyPriO
+	 H5QdMVeJKbBqFMKNQMIoYa+wpsjQ0pM+8/AmsHOo=
+Received: from [IPV6:2409:8a00:78e3:4720:c022:5e89:361b:6a74] ([2409:8a00:78e3:4720:c022:5e89:361b:6a74])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 4C21B483; Mon, 20 Jan 2025 22:19:02 +0800
+X-QQ-mid: xmsmtpt1737382742t1jiue7qo
+Message-ID: <tencent_DBC0851ABE9B45D70B4BA098F876F5F10609@qq.com>
+X-QQ-XMAILINFO: MsIRozTmGo8X7Ok6d5GHidBYwKVjYI6X7mNTA4wvoMC8hr45h8gborcXh15dgs
+	 ULqTKWuXPcAQkyCReWTfNtJJnEojIET+f7bUyhs1GmVjZ5q2lod4Lxftqr240sfvLTQjfooT4pMc
+	 QBMauS/qcjKrXffHofv2SNOBYVF3jejOefRb2gGtXXq8KBHsTbn6/30IzUESpn4wcBX9rVatOSxh
+	 l7NRjrDcbJ/7MR3z0oTiI2GkZGNTWEPrn2yMyCCoj2dGDu0El9O3JpElW3u1jbXZBDEiUUW7LSdT
+	 B2mbETQKMVHj/QPFlZGqQ8URCa+YiBqftFFJipifRWFhe742Od3ybgGOnYQC61EJUH3q+AazoEJ5
+	 RiErXiiJOc9bGem30ROZQxvJ6dTQfQTRX32RPseWmUuhZR8iQrK5+hsJSv8FBfBdMkPJfTyAHlQC
+	 5CeVW5G+vDKqupfQVSZZKd0Dc7rUtChmVSI199qY8PNmX+eEYy7XdRAgfdPPzTBE9gYx/9zFaYyN
+	 TQhfvn80FeEgoVuHlUZ/rqw7Gc6sLLzF6ELzYYTKJhv36j2J4Wm7N90DLEPYbr+LXKuWrGWEb0+H
+	 Y6PAgbsdF+DLe6OZqse6iLT8LNEuWSzYcLy4gsSdoH8gXLv0lHZHT/CxUTvYotLHXsCDmSrmz57X
+	 +MhwDk6gkSxooiZi39nY1rzfw271cz02W2dsPdk3a+9z9oVHI+KKY5I2iv2brsTlaYDdvZrq5czU
+	 bxbYIUd7DL5qi5Kd+KpVjHHGu5+fu8S6vU7ABKCUUV2Gnm7QjKrVa1QC3Y0MRm/Y8aAplilQLKFZ
+	 2MILfk/RPnj611fv7eMm8zH7MKSIWPhMzpOBSbVDN1vPBrJsw7ccYYp4g5+AaB6WIf7+ILEMJXNX
+	 quR/dQRqF6ZnuvoTU0i2eSomPRJOLOLcpniZ9Nt517n3SbT+RSrIR34O6MSB2EU3OAuUlomtZFup
+	 q13kUyxDe52E0Ikhr98vO10xS2ql8Ah/KBJ2a4UfY=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-OQ-MSGID: <aa2705e8-fdeb-477c-8568-4e69575c7e79@qq.com>
+Date: Mon, 20 Jan 2025 22:19:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 903E41F7B4
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	TAGGED_RCPT(0.00)[dt];
-	R_RATELIMIT(0.00)[to_ip_from(RLw7mkaud87zuqqztkur5718rm)];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -1.51
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: reread the Link Control 2 Register before
+ using
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>, Jiwei Sun <sjiwei@163.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, helgaas@kernel.org,
+ Lukas Wunner <lukas@wunner.de>, ahuang12@lenovo.com, sunjw10@lenovo.com,
+ sunjw10@outlook.com
+References: <20250115134154.9220-1-sjiwei@163.com>
+ <20250115134154.9220-3-sjiwei@163.com>
+ <4df1849e-c56e-b889-8807-437aab637112@linux.intel.com>
+ <417720e7-c793-4c36-a542-a7e937e5a3cf@163.com>
+ <alpine.DEB.2.21.2501180101360.27432@angie.orcam.me.uk>
+Content-Language: en-US
+From: Jiwei <jiwei.sun.bj@qq.com>
+In-Reply-To: <alpine.DEB.2.21.2501180101360.27432@angie.orcam.me.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Enable pcie1 and pcie2 DT nodes. Pcie1 is used for the extension
-connector and pcie2 is used for RP1 south-bridge.
 
-Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
----
-v4 -> v5:
- - No changes.
 
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 1/18/25 09:03, Maciej W. Rozycki wrote:
+> On Fri, 17 Jan 2025, Jiwei Sun wrote:
+> 
+>> However, within this section of code, lnkctl2 is not modified (after 
+>> reading from register on line 111) at all and remains 0x5. This results 
+>> in the condition on line 130 evaluating to 0 (false), which in turn 
+>> prevents the code from line 132 onward from being executed. The removing
+>> 2.5GT/s downstream link speed restriction work can not be done.
+> 
+>  It seems like a regression from my original code indeed.
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index 1850a575e708..6ea3c102e0d6 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -111,3 +111,11 @@ &hdmi1 {
- 	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 1>, <&clk_27MHz>;
- 	clock-names = "hdmi", "bvb", "audio", "cec";
- };
-+
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+&pcie2 {
-+	status = "okay";
-+};
--- 
-2.47.0
+Sorry, I am confused by this sentence.
+
+IIUC, there is no regression regarding the lifting 2.5GT/s restriction in
+the commit a89c82249c37 ("PCI: Work around PCIe link training failures").
+However, since commit de9a6c8d5dbf ("PCI/bwctrl: Add 
+pcie_set_target_speed() to set PCIe Link Speed"), the code to lift the 
+restriction is no longer executed. Therefore, commit de9a6c8d5dbf 
+("PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed") can be
+considered a regression of commit a a89c82249c37 ("PCI: Work around PCIe
+link training failures").
+
+So, this fix patch(PCI: reread the Link Control 2 Register before using) 
+is required, right?
+
+Thanks,
+Regards,
+Jiwei
+
+> 
+>   Maciej
 
 
