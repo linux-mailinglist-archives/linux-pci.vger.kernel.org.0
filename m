@@ -1,93 +1,94 @@
-Return-Path: <linux-pci+bounces-20151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDAC7A16CD0
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 14:03:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 017A8A16CD4
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 14:03:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7156188A041
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 13:03:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 232381889BDC
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2025 13:03:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13B961E378C;
-	Mon, 20 Jan 2025 13:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D441E3DFE;
+	Mon, 20 Jan 2025 13:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RWAXdbFn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r4N0AN9m";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RWAXdbFn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r4N0AN9m"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r8slo6MB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RJNbFmPJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r8slo6MB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RJNbFmPJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E4D1E285A;
-	Mon, 20 Jan 2025 13:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C201E3770;
+	Mon, 20 Jan 2025 13:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737378117; cv=none; b=bHGsTOdJxqzrOkvniLfQiaqUaPhFsXHyqtKwHyBA02RnCnzoXie4eqfl+Av71fdCcls/eOph0KtR5BYqx2UIc7CgbbF3T0mOgJTNdto8iDs57qv98alZm3kG3QhTlZNOWsYheH+WQd8UfMcpaYoqNi5EDR60fumM3BDym7yURlk=
+	t=1737378118; cv=none; b=FvVfcL3dQjzwljOWZ9Letci2bpl59s8joGCdLNHw2YFP+297DviiMu5m7BZvXbaAykPwvCM8bFzCkNlvAMb85HjrOxwWFYo9UFcNvQPFEnP15shejLGRkMl87sUGOzx2gcZ5zmYSgGIjK/8OHFoGxpBs/OdJglYLms6nJNoig48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737378117; c=relaxed/simple;
-	bh=Gr1o32P7ugsCkmtktc4zxY9HtYGEGhFp0I2dJYdkerc=;
+	s=arc-20240116; t=1737378118; c=relaxed/simple;
+	bh=OvGyxJnRyha3uiyCUy3QRAIbE+N4hVHgdTlB+68Z8e4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lx8YvCeyq4KClGCuTz3YvhmSJmWsx0zKP0k4pKGOw5oYZ369/aka2lOdoCd2bofM7v+sujJtsPx6vlaFr84UwHlVJXe9y5Uh9y6ubeIb1ySM/rtFzujBu50ylCqSbwEMbfSMGxGQ6JZb2fqS/OS5qgxN7cOoitemNxoL39/35c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RWAXdbFn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r4N0AN9m; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RWAXdbFn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r4N0AN9m; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=NGlyTJk49WIX6JnswzzFZe81vLsmmtMw1TiXkL0L2fECDvfutl5NvArx08rKvdvyUp/aF1MWrwd9/MARZq5xkcPHhdVS+dM69ovYala/2Vpb8ojPmi0tKODHhZDAuTWTLjHwYjwcelBSgNcQ7V2YQYX25ykQXDD4i7riHc3gehc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r8slo6MB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RJNbFmPJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r8slo6MB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RJNbFmPJ; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 64C622118F;
-	Mon, 20 Jan 2025 13:01:53 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 769C71F7B8;
+	Mon, 20 Jan 2025 13:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737378113; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1737378114; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=THo/maIKfTzgN3WYKtKcKtsOTNaYojuut9E/X8nm/F0=;
-	b=RWAXdbFnYjtveYx1Q1z2cE6V6dPR6/oy21jEHeihv5z7RlHTkejoAc8BvFJA1AS6XYkXS9
-	RcGRT4HCIZW4TIziz7YZzmCepX3UFRlz6VgNhBs7+z0prsR3BSfOoC2uc5N/5unz/PEA2V
-	8JE1xpOA9PkQuHebXWj1Cn8ERgqn9OQ=
+	bh=sMuASHgpa8xlLCWpcGu3D5FxO0uCIpRpMtTeVpDuzaU=;
+	b=r8slo6MBReEKeRECYCX41llP2LPCBAFZh6gEpi9ZdA+ITFEXQUgjKAbvKG69Za3lIZ1mKh
+	bu/64xDeNym0OKbfbL2gaN9erykjSofV7gBOgdalESsB7BA3tEbBnifw9gZgAEYevh/o2e
+	gkbkkCyJOjuUkKgUweU6YpXAdY7CoZY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737378113;
+	s=susede2_ed25519; t=1737378114;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=THo/maIKfTzgN3WYKtKcKtsOTNaYojuut9E/X8nm/F0=;
-	b=r4N0AN9mjMEXwSAi2AjfZhCOoaNA/DDcj6Z/t0zzUZR7EAZF2YaFfR6uXodihzPjOscISX
-	po1+Ajxaw89xK7CA==
-Authentication-Results: smtp-out1.suse.de;
-	none
+	bh=sMuASHgpa8xlLCWpcGu3D5FxO0uCIpRpMtTeVpDuzaU=;
+	b=RJNbFmPJ0+AY6R0Zb4j9DtKQlZEZrZ+FhETFHabXXh3shH/iEhvX/ac9O0CT9XUYiuzl5E
+	ue995al4MEa35NCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=r8slo6MB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RJNbFmPJ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737378113; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1737378114; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=THo/maIKfTzgN3WYKtKcKtsOTNaYojuut9E/X8nm/F0=;
-	b=RWAXdbFnYjtveYx1Q1z2cE6V6dPR6/oy21jEHeihv5z7RlHTkejoAc8BvFJA1AS6XYkXS9
-	RcGRT4HCIZW4TIziz7YZzmCepX3UFRlz6VgNhBs7+z0prsR3BSfOoC2uc5N/5unz/PEA2V
-	8JE1xpOA9PkQuHebXWj1Cn8ERgqn9OQ=
+	bh=sMuASHgpa8xlLCWpcGu3D5FxO0uCIpRpMtTeVpDuzaU=;
+	b=r8slo6MBReEKeRECYCX41llP2LPCBAFZh6gEpi9ZdA+ITFEXQUgjKAbvKG69Za3lIZ1mKh
+	bu/64xDeNym0OKbfbL2gaN9erykjSofV7gBOgdalESsB7BA3tEbBnifw9gZgAEYevh/o2e
+	gkbkkCyJOjuUkKgUweU6YpXAdY7CoZY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737378113;
+	s=susede2_ed25519; t=1737378114;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=THo/maIKfTzgN3WYKtKcKtsOTNaYojuut9E/X8nm/F0=;
-	b=r4N0AN9mjMEXwSAi2AjfZhCOoaNA/DDcj6Z/t0zzUZR7EAZF2YaFfR6uXodihzPjOscISX
-	po1+Ajxaw89xK7CA==
+	bh=sMuASHgpa8xlLCWpcGu3D5FxO0uCIpRpMtTeVpDuzaU=;
+	b=RJNbFmPJ0+AY6R0Zb4j9DtKQlZEZrZ+FhETFHabXXh3shH/iEhvX/ac9O0CT9XUYiuzl5E
+	ue995al4MEa35NCg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 61AC31393E;
-	Mon, 20 Jan 2025 13:01:52 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7344E139D2;
+	Mon, 20 Jan 2025 13:01:53 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QH6BFUBJjmc4XQAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 20 Jan 2025 13:01:52 +0000
+	id qETRGUFJjmc4XQAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Mon, 20 Jan 2025 13:01:53 +0000
 From: Stanimir Varbanov <svarbanov@suse.de>
 To: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -110,10 +111,11 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Phil Elwell <phil@raspberrypi.com>,
 	Jonathan Bell <jonathan@raspberrypi.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH v5 -next 08/11] PCI: brcmstb: Adding a softdep to MIP MSI-X driver
-Date: Mon, 20 Jan 2025 15:01:16 +0200
-Message-ID: <20250120130119.671119-9-svarbanov@suse.de>
+	Stanimir Varbanov <svarbanov@suse.de>,
+	stable@vger.kernel.org
+Subject: [PATCH v5 -next 09/11] PCI: brcmstb: Fix for missing of_node_put
+Date: Mon, 20 Jan 2025 15:01:17 +0200
+Message-ID: <20250120130119.671119-10-svarbanov@suse.de>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250120130119.671119-1-svarbanov@suse.de>
 References: <20250120130119.671119-1-svarbanov@suse.de>
@@ -124,57 +126,73 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+X-Rspamd-Queue-Id: 769C71F7B8
+X-Spam-Score: -1.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
+	MX_GOOD(-0.01)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	R_RATELIMIT(0.00)[to_ip_from(RL7mwea5a3cdyragbzqhrtit3y)];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
+	TAGGED_RCPT(0.00)[dt];
+	R_RATELIMIT(0.00)[to_ip_from(RLw7mkaud87zuqqztkur5718rm)];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-In case brcmstb PCIe driver and MIP MSI-X interrupt controller
-drivers are built as modules there could be a race in probing.
-To avoid this add a softdep to MIP driver to guarantee that MIP
-driver will be load first.
+A call to of_parse_phandle() increments refcount, of_node_put must be
+called when done the work on it. Fix missing of_node_put() on the
+msi_np device node by using scope based of_node_put() cleanups.
 
+Cc: stable@vger.kernel.org # v5.10+
+Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
 Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
 ---
 v4 -> v5:
  - New patch in the series.
 
- drivers/pci/controller/pcie-brcmstb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 03396a9d97be..744fe1a4cf9c 100644
+index 744fe1a4cf9c..546056f7f0d3 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1997,3 +1997,4 @@ module_platform_driver(brcm_pcie_driver);
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
- MODULE_AUTHOR("Broadcom");
-+MODULE_SOFTDEP("pre: irq_bcm2712_mip");
+@@ -1844,7 +1844,8 @@ static struct pci_ops brcm7425_pcie_ops = {
+ 
+ static int brcm_pcie_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node, *msi_np;
++	struct device_node *msi_np __free(device_node) = NULL;
++	struct device_node *np = pdev->dev.of_node;
+ 	struct pci_host_bridge *bridge;
+ 	const struct pcie_cfg_data *data;
+ 	struct brcm_pcie *pcie;
 -- 
 2.47.0
 
