@@ -1,143 +1,251 @@
-Return-Path: <linux-pci+bounces-20171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20172-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4177CA176AE
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 05:50:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB95A1795E
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 09:42:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CAC267A3D35
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 04:49:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFAC0163D7B
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 08:42:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F4F9199924;
-	Tue, 21 Jan 2025 04:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 116B71B87DB;
+	Tue, 21 Jan 2025 08:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tZZi6saO"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HF5znpdU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB7C2CAB
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 04:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E221B85FD
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 08:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737434993; cv=none; b=j9IVmtPu2L7p5DUqS1cIMXTuTyDokRb9d5n+5JQe9sboGoZTpaYz3xQDpYwGynAhIYEjmlb3OSOEiloy6EYvlJ4VO0RPVlEFvFKaXwdk49nR4Yr455we3VqyKpv7wteyasBJWz/s6nROMLfpkbUJ8tB5SPU6FtsO0Ga5bLyp+uc=
+	t=1737448968; cv=none; b=PcT8lIjQ1qKktHF7oOWJh4NlpEFUCHVIsQOUWOzUa3vSM091s6XD3YQO93yCIhLtPpi1QyOyOz9ySRt3f8HLig/KAYSChkXbPCGt/9dNM0xAvnDaSqQrjxIVBtoiXLXpSyjVxAJwQMFbNK33dYo2YjkazlGC47TRkPx2WweEtm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737434993; c=relaxed/simple;
-	bh=N0tPs7ETfruUGNs2tLxE5jkCWSY6gqmP7OLpp7v/ulk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jMMqhb8Gm/LVKi0cpmTXG4BkAMtSD0UPE2wzbc2h5JFsy4X4jGMFE84Jzo8bnzYuvPwrKePEbsZgX7MjMETzgE5nUbPqhastLKJQaxSTh52ot8l3BJfXA/NHpkSTeE7J4MgWfhmQys0iRjQdlHniekMFRn96BU3XAdg2839GQR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tZZi6saO; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-216728b1836so87014045ad.0
-        for <linux-pci@vger.kernel.org>; Mon, 20 Jan 2025 20:49:50 -0800 (PST)
+	s=arc-20240116; t=1737448968; c=relaxed/simple;
+	bh=btTsSgCbAPnhnTrI4HdjrpnhkhsKx37tGtdBNk94yms=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMi/zbo3uFQ8falUHgVI5fR/ZeExilIkns3SxVXHrh662XBHQXovpdIFIeO32xlGVPh6l14AeyyFSNpx5Hsqf4pS1ZPDhdFixEn74ZCglH75iSmiayPFkvC8SU5bO+76+7Bj8awj7lZyg+4hYyfBg+oxAIY/eH6IZhJiZiZRY/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HF5znpdU; arc=none smtp.client-ip=209.85.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5d3f28a4fccso8288015a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 00:42:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737434990; x=1738039790; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CjRB5FGtCoUKj/Qn6JPgmzvgrR86ptoUBtvodY+wTzk=;
-        b=tZZi6saOaRqCp7Ehyo7IJZ/CqkR++V13v0Sd0/eO6N9tZ6I4RgxCLBtqUQ4ObCuDWh
-         tVL+GooSsXQ1ZD4fe0XDca++y1G8w7j64EuPXd1jj4+SOPA29cTjPTuAzyRZVPQneM3M
-         E34fYLTMX0VHsB/fJZEUilWbjOz4Z/8wacjCUwGlyi8HLYa6b9e8DKM+oKMm0ToroXlS
-         aqqgAEcSK6y9FASbTE8NzdzsJnmsgXqR6IFqyUOZ0JHibmuR2w6Uh1XJmJTweRUfAuZY
-         ENeuPFYuGiqbjIsaCQEtOxV5M25gEyODRoFWen1NgnTdHz+zDXm+F6v9Cq1Z9stdpl6/
-         xXSw==
+        d=suse.com; s=google; t=1737448965; x=1738053765; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WfyBwrVAKcG2iSXqbe+KfTaCoLpZROxE8VUSqF7vM6w=;
+        b=HF5znpdUsdaV6qLC9lBW25Mt4f8DohDD1Hv7Xil8TqKPGDeyrYwnuiHERZ9qsA7RFj
+         hzcjMIBllI4/HO1rhtP3NvR0q8s9VIEnk2B7BENXK4O2lkUH2zSeg9C4VRCmZYR+gCL8
+         eEOenBONGYMFWHn6QpvSJxeRafK7EEfASUC5nVZQyNLQkJz+Uj22VO3xI97fzlH45H5U
+         Wyxv0Qtca0MP8clcOQZK4qUVxSOKnuJBEHlSrhdpQEyf+3/rZRxKSQeVMOwYHjPxzgqE
+         uskuEfRKQTTd8/ZnfIQxJZXJ5pPnLZQBVqdg0jmA2dFEwb/YSTCqTqWzDTdtQXFD+BTx
+         FKbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737434990; x=1738039790;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjRB5FGtCoUKj/Qn6JPgmzvgrR86ptoUBtvodY+wTzk=;
-        b=w3289i8jdNyHRajXgUwSVyvUmXv4GxyDN4XJC2frDHRncRK6a77VBSp+2LFBet2KIi
-         pTbFeyzIXQIIY9Ex6pD2vDfG6UVh1NzNK4A0m0YiDUiAOaK+dqsdmWHrLeSd3gMJhPXz
-         xrf6U0lrVlIi6NeQGhLNwH4AnZ4niwgu1aiDNW5dCIGM1GwWN/+af6XNdRIdd4B7bUsL
-         ZngexsEv+amEHXkj9HEfdltE8YjL2M9J9b8RL3k6ckFJbuf/Z14CY6bWkUEUhsC8JWv6
-         vwiF/mh1qAZAKG/VDCZYG8EBxjKgIJ/i/seE9Qk933z/ulyTwC1g9vhj5qKb9T+4FA9W
-         lN7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVyEL7BY7z5jZ/VDpOVcqCyjlfFLB5o1aWbSHW4Sfgh3hLQs/UcgVMMxEZ27HDJX4BoZDoUJm9eKgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXgdTRS2j6qNTpryEDj46xADksk8ZAnLZDvOpXpMXgMnxQpR6w
-	kbtLuLF4Z/qllShXQrTwKdjaDw1xCWybG8tNHeald2mA81WigdjwdClcL5mM/g==
-X-Gm-Gg: ASbGnctlO8HQvqjv0GNbFV6RVaROTqnZ7MnGxmbcPVmBe0HyKVrIXWwEXoTdTXCy0HZ
-	lxgLvdUP4aqpKT1rDXfAdFgLw4022Ayn0gTXA+zMOZ4fre+YcX21NGjXyy+BloxhfcDOeuUOPcz
-	GUva5T91uy1lapPkGOgl47wF6t48Y1WANuuY7ycnxA3pgtuMTXVzMwITyKsBJnjjWxZYrMSYPsB
-	xuS4FJ6dgjvyIOpnGqcCPQwTZuHfLqlP2Di5RWuydRRTuHXBm5MRiCjqkbjXCDPnQw1PFLq5Ufn
-	7ycwBuo=
-X-Google-Smtp-Source: AGHT+IF67FzpL0/ep2wKr2SKX0WCmGAGc0SaMaYBS0rHLyEsUVb25qF3JlcE+li6la80AjHfaAh+xA==
-X-Received: by 2002:a05:6a21:998a:b0:1e1:b329:3cd with SMTP id adf61e73a8af0-1eb214daa70mr22113794637.20.1737434989787;
-        Mon, 20 Jan 2025 20:49:49 -0800 (PST)
-Received: from thinkpad ([117.213.102.234])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72dab81737asm8294159b3a.57.2025.01.20.20.49.45
+        d=1e100.net; s=20230601; t=1737448965; x=1738053765;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WfyBwrVAKcG2iSXqbe+KfTaCoLpZROxE8VUSqF7vM6w=;
+        b=KOzjjIt7cjE1hCcriwZm/c21otGa03YAh7uHzsFYIpcRh7SOUoZiqjXN8Feu4Faaze
+         a00pjKKPE7oQ5AX47kT0RRVFPLk/GZQJjqwgw3Wi3USjyMyc32nWKFAV4/7u42Ptpyqn
+         dzze7VbiR1FiI5y/oGGxs94Jci/Yse5hfFyIaah6ymKgRwe4kKjvVDa+SVkXgt+e3Gx6
+         tTh8fpZbEzsOM8BDNgGPsHXP+ou8K3pD8FHPN/L39WxAgZYF+BUiiM49K2llCpj2Dr8d
+         4nuQG/8YDZnCQa7XARUi6809viZ9+DQMrolrQ/H/Z9x8PB8oegfODtm0imP1VxSZvGc+
+         m37w==
+X-Forwarded-Encrypted: i=1; AJvYcCW0CTSgqvJFYtaUFBNsBSx5qUCHCVmliLC+JZc0lLcr/tr7amInPRssvigyaFIuL8/ScQnVANiWTDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZAiPM0FAQKprUjVGpiy+qBsJgKFd+LzEV2Q55MQ63ABe5bMma
+	IhqwUt5DfkX6LRcGTZgm1d7fdGSekqjP2EcT74kullI+nEOmlSmy5qZWYnvuvjQ=
+X-Gm-Gg: ASbGncsnZExjSm5Vq7AIjyw16masABbrKRc+Ik6wcEVuvZDr6cjT6LNlG1GBsLSotDq
+	gfmvPKpanmnwgNgj89QV6QXumJ/kJip2o9m4lrQZub4zTS1b1IIpcA8LY0sCB1xz6P9eWLm59IG
+	M6yYo1IiJNqnH0i60ta7DWgLCDWuD6rySibRLapM0jzVSz0m1modereNylbYB6JDeS2dv9FkPZI
+	w5LhWjmi7FzallmGb2jymIGtF2hPJX8EeZnSk/2Oa85QhOt5dyJvvKBwaz2u0iNd0ocpctOGPCW
+	DnRmvHntpSD/g8BN+BkUg//TwRBOSHAFzQPD89XX
+X-Google-Smtp-Source: AGHT+IHJoMEfBlMLvkr8KlEq8oWlxXFcL1m1dYtTgkFptyAjoAjldlyHkpeVawKUvQ8QmvdxpOWQWw==
+X-Received: by 2002:a17:906:5617:b0:ab2:b8c3:be3c with SMTP id a640c23a62f3a-ab38b3fb0dcmr1352712066b.51.1737448964785;
+        Tue, 21 Jan 2025 00:42:44 -0800 (PST)
+Received: from localhost (host-87-14-236-197.retail.telecomitalia.it. [87.14.236.197])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384c75baesm719449966b.1.2025.01.21.00.42.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 20:49:49 -0800 (PST)
-Date: Tue, 21 Jan 2025 10:19:41 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jingoohan1@gmail.com,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH v7 1/3] dt-bindings: PCI: dwc: Add AMD Versal2 mdb slcr
- support
-Message-ID: <20250121044941.coayhpkyrh7zhfnq@thinkpad>
-References: <20250119224305.4016221-1-thippeswamy.havalige@amd.com>
- <20250119224305.4016221-2-thippeswamy.havalige@amd.com>
+        Tue, 21 Jan 2025 00:42:44 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 21 Jan 2025 09:43:37 +0100
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v6 08/10] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Z49eOdVvwknOoD3E@apocalypse>
+References: <cover.1736776658.git.andrea.porta@suse.com>
+ <550590a5a0b80dd8a0c655921ec0aa41a67c8148.1736776658.git.andrea.porta@suse.com>
+ <2025011722-motocross-finally-e664@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250119224305.4016221-2-thippeswamy.havalige@amd.com>
+In-Reply-To: <2025011722-motocross-finally-e664@gregkh>
 
-On Mon, Jan 20, 2025 at 04:13:03AM +0530, Thippeswamy Havalige wrote:
-> Add support for mdb slcr aperture that is only supported for AMD Versal2
-> devices.
+Hi Greg,
+
+On 12:47 Fri 17 Jan     , Greg Kroah-Hartman wrote:
+> On Mon, Jan 13, 2025 at 03:58:07PM +0100, Andrea della Porta wrote:
+> > The RaspberryPi RP1 is a PCI multi function device containing
+> > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > and others.
+> > 
+> > Implement a bare minimum driver to operate the RP1, leveraging
+> > actual OF based driver implementations for the on-board peripherals
+> > by loading a devicetree overlay during driver probe.
+> > 
+> > The peripherals are accessed by mapping MMIO registers starting
+> > from PCI BAR1 region.
+> > 
+> > With the overlay approach we can achieve more generic and agnostic
+> > approach to managing this chipset, being that it is a PCI endpoint
+> > and could possibly be reused in other hw implementations. The
+> > presented approach is also used by Bootlin's Microchip LAN966x
+> > patchset (see link) as well, for a similar chipset.
+> > 
+> > For reasons why this driver is contained in drivers/misc, please
+> > check the links.
 > 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Links aren't always around all the time, please document it here why
+> this is needed, and then links can "add to" that summary.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Ack.
 
-- Mani
-
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> Changes in v3:
-> -------------
-> - Introduced below changes in dwc yaml schema.
-> Changes in v5:
-> -------------
-> - Modify mdb_pcie_slcr as constant.
-> Changes in v6:
-> -------------
-> -Modify slcr constant
-> ---
->  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 2 ++
->  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> index 205326fb2d75..fdecfe6ad5f1 100644
-> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> @@ -113,6 +113,8 @@ properties:
->                enum: [ smu, mpu ]
->              - description: Tegra234 aperture
->                enum: [ ecam ]
-> +            - description: AMD MDB PCIe slcr region
-> +              const: slcr
->      allOf:
->        - contains:
->            const: dbi
-> -- 
-> 2.34.1
-> 
+> > This driver is heavily based on downstream code from RaspberryPi
+> > Foundation, and the original author is Phil Elwell.
+> > 
+> > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
 
--- 
-மணிவண்ணன் சதாசிவம்
+...
+
+> > diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
+> > new file mode 100644
+> > index 000000000000..3e8ba3fa7fd5
+> > --- /dev/null
+> > +++ b/drivers/misc/rp1/rp1_pci.c
+> > @@ -0,0 +1,305 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
+> > + * All rights reserved.
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/irqchip/chained_irq.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/module.h>
+> > +#include <linux/msi.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include "rp1_pci.h"
+> 
+> Why does a self-contained .c file need a .h file?  Please put it all in
+> here.
+
+I agree with you. Indeed, the very first version of this patch had the header
+file placed inside the .c, but I received concerns about it and some advice to
+do it differently, as you can see here:
+https://lore.kernel.org/all/ZtWDpaqUG9d9yPPf@apocalypse/
+so I've changed it accordingly in V2. So right now I'm not sure what the
+acceptable behaviour should be ...
+
+> 
+> > +
+> > +#define RP1_DRIVER_NAME		"rp1"
+> 
+> KBUILD_MODNAME?
+
+Right. Thanks for pointing that out.
+
+> 
+> > +
+> > +#define RP1_HW_IRQ_MASK		GENMASK(5, 0)
+> > +
+> > +#define REG_SET			0x800
+> > +#define REG_CLR			0xc00
+> > +
+> > +/* MSI-X CFG registers start at 0x8 */
+> > +#define MSIX_CFG(x) (0x8 + (4 * (x)))
+> > +
+> > +#define MSIX_CFG_IACK_EN        BIT(3)
+> > +#define MSIX_CFG_IACK           BIT(2)
+> > +#define MSIX_CFG_ENABLE         BIT(0)
+> > +
+> > +/* Address map */
+> > +#define RP1_PCIE_APBS_BASE	0x108000
+> > +
+> > +/* Interrupts */
+> > +#define RP1_INT_END		61
+> 
+> 
+> 
+> > +
+> > +struct rp1_dev {
+> > +	struct pci_dev *pdev;
+> > +	struct irq_domain *domain;
+> > +	struct irq_data *pcie_irqds[64];
+> > +	void __iomem *bar1;
+> > +	int ovcs_id;	/* overlay changeset id */
+> > +	bool level_triggered_irq[RP1_INT_END];
+> > +};
+> > +
+> > +static void msix_cfg_set(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
+> > +{
+> > +	iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_SET + MSIX_CFG(hwirq));
+> 
+> Do your writes need a read to flush them properly?  Or can they handle
+> this automatically?
+>
+
+I had some thoughts with RaspberryPi foundation folks to double check it, and it
+seems that there should be no need to readback the value (unless we want to go
+really paranoid), so I would avoid that since in case of level handled interrupt
+we would end up reading the register on every triggering interrupts.
+
+Many thanks,
+Andrea
+ 
+> thanks,
+> 
+> greg k-h
 
