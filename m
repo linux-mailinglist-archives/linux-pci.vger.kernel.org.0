@@ -1,243 +1,161 @@
-Return-Path: <linux-pci+bounces-20191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 420C6A17F45
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 14:58:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 968F5A17F84
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 15:18:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED2383A5ED0
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 13:58:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EFCB3AB8B9
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 14:18:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 825BA1F2C5B;
-	Tue, 21 Jan 2025 13:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07BC71F12FF;
+	Tue, 21 Jan 2025 14:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T9e5cQEv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQ01S1Pp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1AF1119A
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 13:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7555563CF
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 14:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737467913; cv=none; b=XDCZo921Kgd/b7fKhbJzr+mTJkiqI+sJVXyPEnKCmPjGPNjPBQvt1jAIilIpZYeLS8P3tQgzM9paTMxLTONkuJnj4pLuc6o1mZcNCsiUEywiZNLD7zhLi0lUYVYljDkCYY0r9/W6vAyT3kxPkThs1UZrYz355/RVZ8z3pIoLV10=
+	t=1737469100; cv=none; b=Df7CapF0MQliOoXpHEEt6ZnCRyTTzCTiJgcWaZ1YQeFl7DgCd3KYe5rMjpWPwNpaTsrgSnzjYhGU6ZeDBwjPe/klyBZPzJCQiqCYmfYt6iSFsBEqKSGe3dvTHlBPP33IbdyFZThS3C171hYkEh6LzYCVMM7e6xLD4D37pZukV/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737467913; c=relaxed/simple;
-	bh=jQzXuU3BlH5a1zJ/BamQoNSatZlIbAHnl77mcwz9/Dk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MhuXOVBOY97QdGjB41v0eQ5xwA9tJyGwa2CYPqe7JGRhj7+tCRqtvlanrqxZbMsbJDEHpSLLc7zmefcorm7GS5mqkulRg8Z5SLtlTC87tRgv4ilq6rDd7tJvFZDXNnBC19PkS6+8GNY50pWRqLFvbpUTM2zF9Qgq10i0sGceWJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T9e5cQEv; arc=none smtp.client-ip=209.85.218.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-aae81f4fdc4so1120775666b.0
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 05:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1737467908; x=1738072708; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ndX+bS7mfcHIUz3eSPCBChEUR/+D/+QHPhUMGbWKkjw=;
-        b=T9e5cQEvREUvXyqRhhD5eAV2nfjPCGzjN++Tz2ucCQ7EEwC+FBjJPzHZ2XSKNI/9Fd
-         iFRIiYzEsSkQWN7ddx4YGD0EsgQPsKEHrkMz8Wz8CcBkdPIX+NIlzY+7GQnKoL9kzQV2
-         Ycc9fAejae0ZDTsB7rcWWGW++ZG9onozPvd924M9ZVE7shwggIYiivqwxknXTqrHK6hA
-         FSEGZ2jePN/9lImkKVkkW7dGqvjfM9zm58YEzyynNrIZSVM2NewPm+cW/U14SxGKHeMu
-         JBSaUewH1tQV3karBYsBn9sKMnGevJBdkS4XzSxNLlhVYTd3peAER5VwYOVAVt3Iajnf
-         0QCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737467908; x=1738072708;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ndX+bS7mfcHIUz3eSPCBChEUR/+D/+QHPhUMGbWKkjw=;
-        b=WsOSsq8m7j/U9D3sDk7mqKQTnEWKl4cIOxHVWfAAOXhig21PAtk9zuWLP+sE5glRlp
-         d2dq7fo7GUR4QEOV5v3igxTQrIpOfKPARfRCdd3118Zzy4Q4XF7p9oP6qWnpnMbthWyM
-         +JilJZKtEQ4CAQDgOtBbayJ8TtkKmH/CaSIa1CZ4r+mz4fL4YZi9Y+HzWIoQxiTDUiXp
-         LBwSbOwpgMZWlwdO9Td6nFsY2ZUnk5fULq32AUygrwGVaJtuCd/OcWlYM7s3MgSrFI8d
-         0L8285TOtu1jKmv51u+UGeXUnbPLYZGXcJpDXt8Tu5VyMgbOujvViw5nVNlGaIqTLXkc
-         GEnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUarZqliDzRryvURrhSd7cxhW5+w0qAyC4272IqhD9sh3OgsCfUnvg5CsY1YCb4YcS9DIB7tEisL6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvm1NsKC7017VP38iX1AKzceU3BUb0nzcJfGEm5xdLGLG9/eDt
-	poBgzWpZfCsF/wJLVw6okSaApGvZuBh4p4Go23kHV+fBFYWg5F7HN6xYzUKxT0I=
-X-Gm-Gg: ASbGncscAE1bQVA/Q3kr499fbAouHD/tSNcwliwNZhIYj6got7cEOS9CzD5juk6/a/y
-	RU6brHIH2DUxTKhNRPvJAeQV3xAL0v6CQGMNqI9VmvWt9cwor1u0dS7I79Tn+8XFWXwPjEh5qVt
-	0fktG3v3qdrmhoCwHY9Jl1VGmd6M4P5JcUYbxtI3ZRWhVsxAT1Ft3HAqKWHWsFlCKgbFMirM5jm
-	6UJj4HHl5yhlMgiqaxHvZ9FC2m0GdoZBgWVMNNTmnEFQsuXywZCR1f9485qq3xPVxtWx+z/oOVi
-	BlasgXmo1p1Svsl5EygI9WJMosz+TwwkLTpCEGNC
-X-Google-Smtp-Source: AGHT+IGUuk+xvGmbiQD3bRfCbckgBF2RVH3B6tetIFWqVCQnsVutS7iL+mu2n84MUq9YEhicZgprHw==
-X-Received: by 2002:a17:906:f58e:b0:ab2:f816:c5e0 with SMTP id a640c23a62f3a-ab38b1e569cmr1477479066b.12.1737467908253;
-        Tue, 21 Jan 2025 05:58:28 -0800 (PST)
-Received: from localhost (host-87-14-236-197.retail.telecomitalia.it. [87.14.236.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384c5ad98sm753624766b.28.2025.01.21.05.58.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 05:58:27 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 21 Jan 2025 14:59:21 +0100
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v6 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z4-oORWO4BgOqibB@apocalypse>
-References: <cover.1736776658.git.andrea.porta@suse.com>
- <550590a5a0b80dd8a0c655921ec0aa41a67c8148.1736776658.git.andrea.porta@suse.com>
- <2025011722-motocross-finally-e664@gregkh>
- <Z49eOdVvwknOoD3E@apocalypse>
- <2025012143-rippling-rehydrate-581b@gregkh>
+	s=arc-20240116; t=1737469100; c=relaxed/simple;
+	bh=TBM1w+Gom42UyOvKDQitTkrfL3XqZcy1rfjxGfVoqAY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BvN+GFhOsuk9ed79dZO3LWWfZJg0gtdSQX99jvlcV5MpuUajn38o7b7dTjnpGCl9T5vUcBvcEldqBHCldbeCvhsiqIQ09a70f7AAm0vkIzuMYspft/ws0PTunqngj29IrDpJM+zVsVJZefjCR7LmJy3V1SU8+9sfwwwuIZAvYvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQ01S1Pp; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737469100; x=1769005100;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TBM1w+Gom42UyOvKDQitTkrfL3XqZcy1rfjxGfVoqAY=;
+  b=BQ01S1Ppg7kBX0/pSxQfAcrsxitnmiA4XKCFD0SklIwl24DkBeaFkHLC
+   wsmB78M/nSR+ukqJUsqhTzd3NR8EKQlVRaUlzLDpV35IpPKad+kyYnCZW
+   937BhbeYCLFvAfgoMpUkPXjJOTQzzEhKhOP32TFKVCTngv8uWn25iD1Wm
+   BDQqnKZmcUVbf9yJ5XlBQPgrqgrT3zCuj/1QiJrtDUKheJwterHu2MyH/
+   v+/89qTb+EHrypO6tqxWwhH2jtaujlc0u1HTIZojxyYPwwAMukm9J8bJp
+   YRA08Voicwac6ajsIK1ctXZmrrdmyD0hprUsd2lWKuZQmRn4DkshA0OWc
+   w==;
+X-CSE-ConnectionGUID: d7ECeMCJSTeBYTi2WE5pRA==
+X-CSE-MsgGUID: 0uHzM2AsRSqCEXO2xstXmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37094490"
+X-IronPort-AV: E=Sophos;i="6.13,222,1732608000"; 
+   d="scan'208";a="37094490"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 06:18:19 -0800
+X-CSE-ConnectionGUID: lcb3KUHpRhmtdWrWZOCIdQ==
+X-CSE-MsgGUID: BK1NtJWeQ5Go8Vp8Xc6LdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,222,1732608000"; 
+   d="scan'208";a="111803211"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 06:18:15 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 21 Jan 2025 16:18:12 +0200 (EET)
+To: Jon Pan-Doh <pandoh@google.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH 1/8] PCI/AER: Remove aer_print_port_info
+In-Reply-To: <20250115074301.3514927-2-pandoh@google.com>
+Message-ID: <f1eb0909-b845-98c8-d81a-7069d352ffef@linux.intel.com>
+References: <20250115074301.3514927-1-pandoh@google.com> <20250115074301.3514927-2-pandoh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025012143-rippling-rehydrate-581b@gregkh>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Greg,
+On Tue, 14 Jan 2025, Jon Pan-Doh wrote:
 
-On 09:48 Tue 21 Jan     , Greg Kroah-Hartman wrote:
-> On Tue, Jan 21, 2025 at 09:43:37AM +0100, Andrea della Porta wrote:
-> > Hi Greg,
-> > 
-> > On 12:47 Fri 17 Jan     , Greg Kroah-Hartman wrote:
-> > > On Mon, Jan 13, 2025 at 03:58:07PM +0100, Andrea della Porta wrote:
-> > > > The RaspberryPi RP1 is a PCI multi function device containing
-> > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > and others.
-> > > > 
-> > > > Implement a bare minimum driver to operate the RP1, leveraging
-> > > > actual OF based driver implementations for the on-board peripherals
-> > > > by loading a devicetree overlay during driver probe.
-> > > > 
-> > > > The peripherals are accessed by mapping MMIO registers starting
-> > > > from PCI BAR1 region.
-> > > > 
-> > > > With the overlay approach we can achieve more generic and agnostic
-> > > > approach to managing this chipset, being that it is a PCI endpoint
-> > > > and could possibly be reused in other hw implementations. The
-> > > > presented approach is also used by Bootlin's Microchip LAN966x
-> > > > patchset (see link) as well, for a similar chipset.
-> > > > 
-> > > > For reasons why this driver is contained in drivers/misc, please
-> > > > check the links.
-> > > 
-> > > Links aren't always around all the time, please document it here why
-> > > this is needed, and then links can "add to" that summary.
-> > 
-> > Ack.
-> > 
-> > > 
-> > > > This driver is heavily based on downstream code from RaspberryPi
-> > > > Foundation, and the original author is Phil Elwell.
-> > > > 
-> > > > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> > 
-> > ...
-> > 
-> > > > diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
-> > > > new file mode 100644
-> > > > index 000000000000..3e8ba3fa7fd5
-> > > > --- /dev/null
-> > > > +++ b/drivers/misc/rp1/rp1_pci.c
-> > > > @@ -0,0 +1,305 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> > > > + * All rights reserved.
-> > > > + */
-> > > > +
-> > > > +#include <linux/err.h>
-> > > > +#include <linux/interrupt.h>
-> > > > +#include <linux/irq.h>
-> > > > +#include <linux/irqchip/chained_irq.h>
-> > > > +#include <linux/irqdomain.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/msi.h>
-> > > > +#include <linux/of_platform.h>
-> > > > +#include <linux/pci.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +
-> > > > +#include "rp1_pci.h"
-> > > 
-> > > Why does a self-contained .c file need a .h file?  Please put it all in
-> > > here.
-> > 
-> > I agree with you. Indeed, the very first version of this patch had the header
-> > file placed inside the .c, but I received concerns about it and some advice to
-> > do it differently, as you can see here:
-> > https://lore.kernel.org/all/ZtWDpaqUG9d9yPPf@apocalypse/
-> > so I've changed it accordingly in V2. So right now I'm not sure what the
-> > acceptable behaviour should be ...
+> Info logged is duplicated when either the source device is processed. If
+
+Is the first sentence lacking something, as "either" feels to require
+another option/alternative that is not present in the sentence? (I'm 
+non-native myself)
+
+> no source device is found, than an error is logged.
 > 
-> It's a pretty simple rule:
-> 	Only use a .h file if multiple .c files need to see the symbol.
+> Code flow:
+> aer_isr_one_error()
+> -> aer_print_port_info()
+> -> find_source_device()
+>    -> return/pci_info() if no device found else continue
+> -> aer_process_err_devices()
+>    -> aer_print_error()
 > 
-> So no .h file is needed here.
-
-Perfect, I'll revert back that two lines to V1 then. Please be aware
-though that this will trigger the following checkpatch warning:
-
-WARNING: externs should be avoided in .c files
-
+> aer_print_port_info():
+> [   21.596150] pcieport 0000:00:04.0: Correctable error message received
+> from 0000:01:00.0
 > 
-> > > > +struct rp1_dev {
-> > > > +	struct pci_dev *pdev;
-> > > > +	struct irq_domain *domain;
-> > > > +	struct irq_data *pcie_irqds[64];
-> > > > +	void __iomem *bar1;
-> > > > +	int ovcs_id;	/* overlay changeset id */
-> > > > +	bool level_triggered_irq[RP1_INT_END];
-> > > > +};
-> > > > +
-> > > > +static void msix_cfg_set(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
-> > > > +{
-> > > > +	iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_SET + MSIX_CFG(hwirq));
-> > > 
-> > > Do your writes need a read to flush them properly?  Or can they handle
-> > > this automatically?
-> > >
-> > 
-> > I had some thoughts with RaspberryPi foundation folks to double check it, and it
-> > seems that there should be no need to readback the value (unless we want to go
-> > really paranoid), so I would avoid that since in case of level handled interrupt
-> > we would end up reading the register on every triggering interrupts.
+> aer_print_error():
+> [   21.596163] e1000e 0000:01:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+> [   21.600575] e1000e 0000:01:00.0:   device [8086:10d3] error status/mask=00000040/0000e000
+> [   21.604707] e1000e 0000:01:00.0:    [ 6] BadTLP
 > 
-> Ok, if it passes testing, that's fine, hopefully it works properly, but
-> if not, you now have a trail to go and fix it in the future :)
-
-Sure :)
-
-Many thanks,
-Andrea
-
+> Tested using aer-inject[1] tool. No more root port log on dmesg.
 > 
-> thanks,
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
 > 
-> greg k-h
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> ---
+>  drivers/pci/pcie/aer.c | 15 ---------------
+>  1 file changed, 15 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 34ce9f834d0c..ba40800b5494 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -735,18 +735,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  			info->severity, info->tlp_header_valid, &info->tlp);
+>  }
+>  
+> -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
+> -{
+> -	u8 bus = info->id >> 8;
+> -	u8 devfn = info->id & 0xff;
+> -
+> -	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
+> -		 info->multi_error_valid ? "Multiple " : "",
+> -		 aer_error_severity_string[info->severity],
+> -		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
+> -		 PCI_FUNC(devfn));
+> -}
+> -
+>  #ifdef CONFIG_ACPI_APEI_PCIEAER
+>  int cper_severity_to_aer(int cper_severity)
+>  {
+> @@ -1295,7 +1283,6 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  			e_info.multi_error_valid = 1;
+>  		else
+>  			e_info.multi_error_valid = 0;
+> -		aer_print_port_info(pdev, &e_info);
+>  
+>  		if (find_source_device(pdev, &e_info))
+>  			aer_process_err_devices(&e_info);
+> @@ -1314,8 +1301,6 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  		else
+>  			e_info.multi_error_valid = 0;
+>  
+> -		aer_print_port_info(pdev, &e_info);
+> -
+>  		if (find_source_device(pdev, &e_info))
+>  			aer_process_err_devices(&e_info);
+>  	}
+> 
+
+-- 
+ i.
 
