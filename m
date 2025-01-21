@@ -1,276 +1,146 @@
-Return-Path: <linux-pci+bounces-20205-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20206-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92CE1A1832F
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:46:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9114A1852B
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:29:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B50F188399F
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 17:47:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2205163A63
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D45EA1F4E42;
-	Tue, 21 Jan 2025 17:46:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F73B1F55FA;
+	Tue, 21 Jan 2025 18:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dFtKQlWz"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="D5TO41D3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2043.outbound.protection.outlook.com [40.107.96.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1721E9B38;
-	Tue, 21 Jan 2025 17:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737481613; cv=fail; b=JHO9nvD7PRR1DlePVMrRDuP5u42SUGqO+HJrCBEGmwCbjZRDr0A4PeKYkHbi+kWOUh06ngPiHZZQWn/Q/3xR/He79GehiaNC1eYMGZh9Tdo2YKyGgiUhvI+D9CcHd/59/KAJ8JXrQXPZb1OcSzvgns/1UBU2TXT9vL4u9FnYkkE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737481613; c=relaxed/simple;
-	bh=qFAzJI8mHBZsUq9WOr+vM/fto4hMVwd94zaEPi/kg4g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lOxMKKXsa1wutNY/jwCf4nS0QzOQTjgY/O8haNKQUrfanjlV3tEmOHQ10sCguw99z2aw5JUGtFuo4k3wpMmIvkCIn4/gYJGmxytZlrBzw2R+ymRec5TxPOVs5LRt25OkRNIAgk9x8rm2yVK8SUsYMwzEc1dqT8mdw2mgpkTwbPY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dFtKQlWz; arc=fail smtp.client-ip=40.107.96.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d6V5cNS/gVe8RL+/JAZZyQJlSldR723EwwAXI9vfwmOk/vr8e0SKcVt6PG+F3y2ieJC2nAJed/gIs73Wqq455yqBxL9oetPybfhe7iaBDlc3IzDmmomuODKHHWixJ5Z9UJEnESggKe8Ic2QOc4QwgtYClKoLRvIYx4DcSKeV6nCKCRSDWPWk7P3gQDIbqI5A2JuZcGru4Lfb1f0B5b0GSaGTGUXKxI7sbfASWlLcVQ/R+P3/DPn3GY5prNl/4HQj5BDKzYA5BUhX09VWgNIMzNJ5bJpcDph/h2sk3a//ZBD9Lj6+7+IAEW50C7h7McGR/6oTbMCa7vB565fueQdgGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TRk7+7TndtlRkOIdhvP1b2qJxLT/IfcbBO8sv27kcC4=;
- b=PQw8nAHdlhY8aCshE1yUts09vNbZ/h/bGeVA21jwyiE3ILg/sAuHs3VUURt2KOaMmYSmcYcXakm9bGwHHkpJiYTbpHzs2dHBucXDJJ2T/08H903Szz1fnIysD7qRnDNUdBbti8Zpsx5FI11xL5mGxaahHi+DFcnjBL+RDXIbPBPJoNIRNIS/eQ/KpPob62YW2X80SwqDFjxHm49mqjGi/R+7Oh/NO0io41XMlrRMQD2TmNKZol5c72jZ8scAP8XN3chFiIWPfKS5ZzIWINznm8IGar3jIUVwcWMaAUdFrx4k7yITbKP/ejwN7bVzBj0WzvFJFHRt8x0P0wTQxutrjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TRk7+7TndtlRkOIdhvP1b2qJxLT/IfcbBO8sv27kcC4=;
- b=dFtKQlWzZbrWIQmgUp/prr+ASN0TgpK3jMlSQBRmIrdjV3RWe5+cdejqabsPT5SS8DzaRCm7l0kLbS8dOjh6J/bHwiMUgPzYUsnHQtYSGrNUHAS1X4AkPpKLwEGW3AuqZ/+KQJEytLCH7WU2Up6TQGSYgooOSlnSCqyD5WGBhHS4l3NwgQ/b0dSrwbGG4ntK/IwJE52qmcOUUh+hzGC7LYyPpkoarQWg53uVMjtnA8hS2fjr3fTVJfyEewmRUbVtQYbvPk9KIsqoDA7A7F8/Hw/mujKNcP5PzynUWgz9c+dQFLVPvRdcJR1v0UFthDAgIffbmiaQTqRq5+9ywmMKIQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
- by PH0PR12MB8005.namprd12.prod.outlook.com (2603:10b6:510:26c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.21; Tue, 21 Jan
- 2025 17:46:49 +0000
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9%4]) with mapi id 15.20.8356.020; Tue, 21 Jan 2025
- 17:46:49 +0000
-Message-ID: <7474af29-2995-48f6-830b-a23dad2d2bd1@nvidia.com>
-Date: Tue, 21 Jan 2025 17:46:43 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v11 2/2] misc: pci_endpoint_test: Fix overflow of bar_size
-To: Hans Zhang <18255117159@163.com>, manivannan.sadhasivam@linaro.org
-Cc: kw@linux.com, kishon@kernel.org, arnd@arndb.de,
- gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, rockswang7@gmail.com,
- Niklas Cassel <cassel@kernel.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20250109094556.1724663-1-18255117159@163.com>
- <20250109094556.1724663-3-18255117159@163.com>
-Content-Language: en-US
-From: Jon Hunter <jonathanh@nvidia.com>
-In-Reply-To: <20250109094556.1724663-3-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LNXP265CA0045.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5c::33) To SJ2PR12MB8784.namprd12.prod.outlook.com
- (2603:10b6:a03:4d0::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EF51AA1E8
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 18:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737484133; cv=none; b=ZJqThyOQ+mDNBZzW0V+SYGANZ09rIOqg2+BoM57DcpjtRBPya1gLlaQGfbZ3qZrP+ZUibOYI2QurpfH3CeIf842rOtr9EUzp2SCO9/rXuwT6paAeubayYwzTJ58PWWjH+dqEvbaMIcWdJyta/VN9j5SIpsFJ49PdiLgrjOMGq2A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737484133; c=relaxed/simple;
+	bh=opj286XvflPtVIldgEc6dWabAfSqs4zUeq2+7xMq0Xw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VfY8K++YqI0RPkt1cQHGiG4H7hcJ9nIHv6/ea9BfPYzkuVzDgE/Gj8+pmj5D66vG1N9L7+m2/8iZ3hVMZqi9ZyeH0Us0E8FLxgQWC5SKh/Ry7LT0ck3jjzZjfKJ8a5iWWa8Xw4JIXScYir6ZI0yvwM40lX6W3G+k12bPeNk2sKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=D5TO41D3; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3eb7ecc3c54so3366854b6e.0
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 10:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1737484130; x=1738088930; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=nPmI6P1yce0Rt1cYrZm/UVilLYiBEgksr3ZYl6OBta0=;
+        b=D5TO41D3XJzCl4RSUYq3BxXR9j+v84nYQXV9MP0mox4/3M6q5A7/L9oudlJ1475Ui7
+         tJB7z6SjLLtcS91obhvk0fw7WTXU99kcz4CXP+JmKGBJCResKvKWakUQNPBV3A2G0Iy8
+         eA4gGBvdxsJf4zy7IDii44AiIObyShibHJn1E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737484130; x=1738088930;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nPmI6P1yce0Rt1cYrZm/UVilLYiBEgksr3ZYl6OBta0=;
+        b=qQ9n0sIy/DnIbvUuV8S/vpjuyR/3eRYW93EDAChBFLWXIHnxck7Cn7ydwqp+ok4Rxs
+         9kN8wuj49XyTX16bCkF31ya0xmxlBG2P2F7Y4So8WG5uV99nus0ESLLOsvUOobvDHWkZ
+         7Dui1B27uHrU2zskkOyYkLDVzqmtreRzPQU/7j+tYWTbp30z56RJhReN3pnPELsbRRAn
+         Uk/xNcW93gZkIYjq0bgSlDWY2fKZeZ5HOxtdExj2UAl6a4p8FJcKncTTJT5S7dpeIUmB
+         fx62Makq//VU1eSldDIk/LSKkvDiroy7Rq2eA6Kr+eP2cXFcfrFQc2oalGz6jXDV+Vq2
+         reMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVHCh/Ot4vOV2QqgCkzVBhELlzEl1aTgFXn6uI2sJ1WGrImGUzMX7wmQ5E6ruzS9gtwNrZn5CHRN54=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6UJ6dLhAHCG1plhAC61h8vsZb0NGSWApUHzVQvFjTgAA5jDkq
+	nidwDJjMN3zomFuo+hIYFYOJes3bnCkwRy//4qxXYdGucWSNF+audDfDln1Iqw==
+X-Gm-Gg: ASbGnct8XnO2s0Pn88laNCVvZACL4D5OKX9tKxB4/VVQwra07shNKgqP5UQEE0/RwPk
+	kGhQI4wrwy2kPUws1RCUTsLBaCFv5zxOTFBOsjDhsVWaBOzSyLbTEC85cRu9b8/xyKzsPfZQMRO
+	64X2qdBn7AUT50GWz+Ao/5ch/cWy9ty9bBPM2cw9n61uRjBTyzoSxqZUYluaScYdpIKPvHJQSYz
+	Ufp6WnXFWqogB9z4+wNuo7i8afCZC3DXIJvcn+9gbyTV2W0yi+DsEsVXyeRwAkirr1HS8P7ffWt
+	HNeGM1Hz0J3dGHZJn1K5RSToVNG+2TI0Gg==
+X-Google-Smtp-Source: AGHT+IFjKKl0hAzIld/Bp9CKfd2qa5nPK0PXiRU/GqnggYe1x1c7HhQHt6C0F2hBru2e35XfOzkNaA==
+X-Received: by 2002:a05:6871:5317:b0:29e:d36:6e39 with SMTP id 586e51a60fabf-2b1c08c6401mr12423250fac.10.1737484129843;
+        Tue, 21 Jan 2025 10:28:49 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b9011b66sm3833108fac.44.2025.01.21.10.28.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2025 10:28:48 -0800 (PST)
+Message-ID: <641c46a0-6cd9-4d2e-8576-69900948029b@broadcom.com>
+Date: Tue, 21 Jan 2025 10:28:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|PH0PR12MB8005:EE_
-X-MS-Office365-Filtering-Correlation-Id: d50d0924-e925-4af6-cf91-08dd3a4394aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aVlFNHc1VTdEZHg5ZHNZNzlaTytlL0FUQ0NtN1Y1bk5EcHdLRENkazZaZ0I0?=
- =?utf-8?B?eXhOTHArTVBFcGJjd2xTbDZFaURTNjBTU3NTRGl6K0lrZ1BhaGlDempDOEJN?=
- =?utf-8?B?emtZZmJlSWgrcmxHR2ZXdmpSbEp0dFRIVE8wRi83d2RrWExoN3dkSzNmN2c0?=
- =?utf-8?B?Z04xc3U1dXBHbWd3ZU84UDhlWnBZM1NoemVzcWdOaUZjTFZFNUZmUzZxb1N0?=
- =?utf-8?B?Z0doWk40K0ROd2xHQXpYQW9rU2FCRWlBVFZDeXNxd0FNeHVYOEU1SEdxYmZi?=
- =?utf-8?B?R0svRlNBam8zbEZSMk9UNjhiQUYyRnU2Q3FYMkZiaUNXY0l3dmt3NDJqNjJR?=
- =?utf-8?B?eFZ4VE5RN21XTHRYQU0xaEIzRGxXR2dYZWkybGZLeTFVUFNnclUyOFVHRnVw?=
- =?utf-8?B?YlhQSTlaSThxc1BCNlEwOWlUcDBaa0pJdytXUGFsbzkzVzVPdUthazIxakNF?=
- =?utf-8?B?NzdFN0d4VWg4VHRNdWE1bklZQmVDQUNabEhFSjJCL09yejBKSXA4SG5TZ0Mx?=
- =?utf-8?B?VG1EczBaWFVQZm5VcklUYjlPR3lYMkVxeCtTMjB3Nk50YmhXTy9HaXJLQUJW?=
- =?utf-8?B?dEdhcEhhdmgxOWpzUUl2dnpSTStOKytNeGNHeHB5cUkydGM3US82Y0NMZVQx?=
- =?utf-8?B?WHhnM3JSMUE4Sk51T2xoMlVJdVVPVGdoQXo5aXAvS2ROSHJQd1RhZU16RXd2?=
- =?utf-8?B?cDJ3amZTcWQ4dWFyWUtXdEhMR2t3VnphZURXZk9KQy9TOEFGZmRzZkkzS1FT?=
- =?utf-8?B?RVNyRHJSVzQvT1Y1MDByaG0vcnRMUGp3VjlDd0ltNFhOcWtwaDkzTG9qYVI3?=
- =?utf-8?B?ODFZNWpDeVJhWUtSK3ovVDUxNGhlUzNpeWZJSkVleGlpZGdLbG9tV1pZMVlZ?=
- =?utf-8?B?dVhSQ2VTa3JtU1NENG13RWlISG8yZWZZS3J5LzBJZEtJbWVZRmpLSHk5Qmpm?=
- =?utf-8?B?cWlRZ3BWcGhOakloQkNIdnQ5QzdaekRQeXRqQ1dnTEFsRlpNK1BLK1FZNGpO?=
- =?utf-8?B?VmJxRy9yWEtWN2hiVU4xRGNWdXFLc3hIa2dFRm5XcG5wVXJEcmNtVGJGNmFr?=
- =?utf-8?B?UjVmaktBajRmYVpoLzFXWlIwVFpBUnorck5RMnF6SlhtaXhPZktnMXV1TW0r?=
- =?utf-8?B?bXVLQkxiOGJkdWRxK29UZGlvZStnaFFDR0N6Q2FIWkI0N0hDTEJWS3R5eHQw?=
- =?utf-8?B?N3RZOG16ZmZuQ1ZTQkNncmVjOXpkbW02VWpLUnFpSDJkZk8xQmhsMjl4UHFB?=
- =?utf-8?B?WVg1V1hISXFmdklXK2kzUFFyeXZKTEh0bkFLRDNBLzNtVTg1SG4vSWVLWXpD?=
- =?utf-8?B?L3VSVHluU0t0UkM3RDgxaTJXMXFXOUlZaFNtTTJ4bEx5T0w2eml2UnJYRmxv?=
- =?utf-8?B?RWhtck92UmNsVHdYSDN4NGVCT2pYUEZlY3ZURXNWRGxXblpmU1U5bG84T0w2?=
- =?utf-8?B?c0dNSXI0ZnhZU1Q3N0xBaTVqVllxVlRvWlFONmFBcVpOKytUa1NiYmFZK2FE?=
- =?utf-8?B?WXF0enRHU1E1S0ZFeHRlQ1l0TGJXOHU0YWJtcHE0NEFyZTR3KzI5WVVoR28y?=
- =?utf-8?B?YmN2ZmxSNTVoNmlwNGdLaSswN29Fc1NKdDIxZmZnYU5ndkdxL1hmQ25hOFRq?=
- =?utf-8?B?UFM0TFpPVFJDQ1ZaUTFQWHdRN0xWYkVyVFpydlNJSlBFTEY1WW9DK0ZUNlVW?=
- =?utf-8?B?S203VnVIUDVpZVZ1UmdBNDlWUld1KzZCbVV4MUs0Zy84ZzBXN251cERsWXdC?=
- =?utf-8?B?M2cwcjBxbnQ3T1haUW5Fc1pXY0trcVlLbnRwcU83K25uZnVORWZ0YmtvRU5H?=
- =?utf-8?B?Y0NrYlg3SmJZd2lGUytjTGxpN2dXNkl6Zkc2cjEraVphWFFOMEJkUDI2SG5i?=
- =?utf-8?Q?gE2OUgjoxkg3c?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MTBza1hPVSt4elVjb2QwMzNuK1NiVjQxNW1oaGY5RzUxRFMyaEJrL3owVTRy?=
- =?utf-8?B?UERpYU9ZVGZRVjhDUHl0Zm1JZE1XZ2YvdUNWMlVDdDR5S1lua1A0RVN4K1VY?=
- =?utf-8?B?enpmUGlUeUpRUERZN1FMOHZKVGlBRVFMaTZ5bkQ0bmlIR2JSak5lYjQ3NWlw?=
- =?utf-8?B?cXo5RGdOenZPRFV6YnhJMlNXQ1dQZE9ZOE5hQUpPaEYyd3dRU1hNSU5MN21m?=
- =?utf-8?B?RGwxYUNaUzNmUmpibUgrcEJKS1JQUXZidFYvU0xJNzJpNFBSUjB6N0FxUjNM?=
- =?utf-8?B?c0tlRnBoUjdNMytqeC90aW83a2ZPbXZWTFh2YVdaYS9sbTByWnpRWFQvZmtq?=
- =?utf-8?B?Q21hcFlZZ3IweGFZczk5WGZzQnQra0VHaFIwc0ZwR2VWYjIvMzcyRmRzYVc0?=
- =?utf-8?B?NlV1TFAzcmRnVDc5WDdXY0xFSjNvUFpyaEhBVFg3R25rMkFTaEZzSWtXZEZr?=
- =?utf-8?B?RUdjY3lROVJXbkNHWjJ2WDNodDh2TjE5alhuUEV3amUrTFdtZkZGb1kyVUwx?=
- =?utf-8?B?Ymp6V3E2cVpnbXVnNWRqemNDZUpET3F1WDVKWWNDM1VVTkVRMTRRZlpRR1lP?=
- =?utf-8?B?a3Z4Vkk0dkErZ1hJTGZ1UjBWNlUrS1Nka2hqUG5lZ3JkelpzZ1A4V0VFcFQw?=
- =?utf-8?B?UjhyaThjaUxpZUhjU05JNHVwVE5sbXVreGUvajlYeVNkRU1Qb3VIRXY2ZHRl?=
- =?utf-8?B?R2wwMEE0Sm0xUk0xTFR1NTdDa2YyYkp4aVY4RHd3MCtFYTZuSEVuUXdiTm9J?=
- =?utf-8?B?K0xCRkFDVjRnWElOcUtLU2RaMWN0bTBHVWZGWisyT3BwREhQVkkzRFBLUWh2?=
- =?utf-8?B?MEU1cHl3S0J0RGNwRXo4SGtvaVhMU2JrM1JFdEZmcUJwMHNMY01hekVySGNZ?=
- =?utf-8?B?MnVWdFhxTGRaa2R3Z0M3U1pPZEtKcVBWKzFCcHVzM1lzM3E3VlozeTNNeHVR?=
- =?utf-8?B?V2hHMTBBSGVaVW9XcnN2Z293L0x6THBSL2drc2pCd0diNTl6YTBMV2puUU0r?=
- =?utf-8?B?VTdYTnhaUlRDUWhla2ZDaGUzSm9EcEpEOFEwMm5DUytNajZTd01jOEV3T21M?=
- =?utf-8?B?cVk1eUlQVzgzRXNuTWRmTCszNVFkbW9sTndNZTA2TDJnS3cxaldHaC90djMw?=
- =?utf-8?B?TGpSeDllMWM0OGhCcmw1c08yVEo2enp2OXZOTWhmeXh2WTQzclV5ODVOQld6?=
- =?utf-8?B?VFEvYU5MdVA4K0ttYmdyc1lxdFVtL1VONDNmWWRiLzBVK2pnSG9odmRRR1Jv?=
- =?utf-8?B?V3hiZTZ2Zm5IRjZ4clhKcTdZbW4wRXlEcW4xTCtFUFE1L1Zna2xPeFhCYXlZ?=
- =?utf-8?B?YS8wdUxLQ2lwS0xHTGpQb0NJcXVEdzByUjZ1ODZHUys4cEV3Mkh5UFY5VS82?=
- =?utf-8?B?em1MNUpkdTdwVjdvQ1U0R0draVcrbk4rWllqZVVzOHZoUXYvMEZ4SkNNVzBQ?=
- =?utf-8?B?VlQrY2JBSmhKR0xvcS9mYmFabjh3clFXNFZsUnRsRGZSdE93K3JrWE9rZ0tX?=
- =?utf-8?B?aWFwb05CRVR5RCt0Uzc4Ty9kZ1B4c3IzYjdiVWp5ZVJmSnNMV3hMN3ZwOXVj?=
- =?utf-8?B?SFFkT3BPZFU2S3JjeEgvdVlRQWo3RXZ6TEloY2lFSUVFWTJqWkFzS3pkRG9H?=
- =?utf-8?B?T2FsUUFDSEdZSEZkSVpUMWRLM0xhRGtqVXFRK0RqVFErekJVa3ZxZVZ0clZm?=
- =?utf-8?B?anUvWlc3Wk5FQXptUm9WWnNSbFZmckp5T0NRdVJEOHZLSkFpNmFZQ1VoZHox?=
- =?utf-8?B?dTZ3SnNJbm9rOTdiWW9aRk9uWElXc2RrQ1BLMHFNU1Rkd1hOTWRlUHBSMXJZ?=
- =?utf-8?B?bzlWSGVJbTdleXJ2a3NXZlY1UFExMms5SVlic0JvSnAwOXlLKythUk5yN0M0?=
- =?utf-8?B?ZFhpWklpWVorcmRoVW4rRXpSQ3dvQ2VoSytXL0c5REp6RXdlNWJLS2l2QkJM?=
- =?utf-8?B?OFg0Yk0rOEJHYmt3d1dJTmwzaTUrc2w5UURDbUh6Q3pyaStXWmkzY3dSZStj?=
- =?utf-8?B?WDR1aUMwbGN6YlVLeEVNdUlkeTFsUWYvWSttdVR3TlNGMTB0YmxVbkdqNGdQ?=
- =?utf-8?B?N1ZUK011eXVDYW1WN1JwR0w2cFhqV1g2b3NqdHZGNUV0UklMeER1S0RTbTVw?=
- =?utf-8?B?L2RZaEV4anNZa2ZqdEM2WjdEMHVaMzRKakkvZnNqNWVSQ2lWdHJVTlNwZHZU?=
- =?utf-8?Q?nPLbUNaiTEQinQZeeECN7rYThaG6oR216cObl1T89vO1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d50d0924-e925-4af6-cf91-08dd3a4394aa
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2025 17:46:49.0677
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CQQ/FIhqyVboRmYB450b46hWz3n64p1tmtBdKZdb2osZK4GjttAPi/1c/H4LMqR0FG5TfuB6AAJWSiVg7tXfog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8005
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 -next 02/11] dt-bindings: PCI: brcmstb: Update bindings
+ for PCIe on bcm2712
+To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Andrea della Porta <andrea.porta@suse.com>,
+ Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
+ <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+References: <20250120130119.671119-1-svarbanov@suse.de>
+ <20250120130119.671119-3-svarbanov@suse.de>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250120130119.671119-3-svarbanov@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Hans,
+On 1/20/25 05:01, Stanimir Varbanov wrote:
+> Update brcmstb PCIe controller bindings with bcm2712 compatible.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
 
-On 09/01/2025 09:45, Hans Zhang wrote:
-> With 8GB BAR2, running pcitest -b 2 fails with "TEST FAILED".
-> 
-> The return value of the `pci_resource_len` interface is not an integer.
-> Using `pcitest` with an 8GB BAR2, the bar_size of integer type will
-> overflow.
-> 
-> Change the data type of bar_size from integer to resource_size_t, to fix
-> the above issue.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> Suggested-by: Niklas Cassel <cassel@kernel.org>
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> ---
-> Changes since v10:
-> https://lore.kernel.org/linux-pci/20250108080951.1700230-3-18255117159@163.com/
-> 
-> - Replace do_div with the div_u64 API.
-> 
-> Changes since v8-v9:
-> https://lore.kernel.org/linux-pci/20250104151652.1652181-1-18255117159@163.com/
-> 
-> - Split the patch.
-> 
-> Changes since v4-v7:
-> https://lore.kernel.org/linux-pci/20250102120222.1403906-1-18255117159@163.com/
-> 
-> - Fix 32-bit OS warnings and errors.
-> - Fix undefined reference to `__udivmoddi4`
-> 
-> Changes since v3:
-> https://lore.kernel.org/linux-pci/20241221141009.27317-1-18255117159@163.com/
-> 
-> - The patch subject were modified.
-> 
-> Changes since v2:
-> https://lore.kernel.org/linux-pci/20241220075253.16791-1-18255117159@163.com/
-> 
-> - Fix "changes" part goes below the --- line
-> - The patch commit message were modified.
-> 
-> Changes since v1:
-> https://lore.kernel.org/linux-pci/20241217121220.19676-1-18255117159@163.com/
-> 
-> - The patch subject and commit message were modified.
-> ---
->   drivers/misc/pci_endpoint_test.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index f78c7540c52c..0f6291801078 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -280,10 +280,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
->   static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->   				  enum pci_barno barno)
->   {
-> -	int j, bar_size, buf_size, iters;
-> +	int j, buf_size, iters;
->   	void *write_buf __free(kfree) = NULL;
->   	void *read_buf __free(kfree) = NULL;
->   	struct pci_dev *pdev = test->pdev;
-> +	resource_size_t bar_size;
->   
->   	if (!test->bar[barno])
->   		return false;
-> @@ -307,7 +308,7 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->   	if (!read_buf)
->   		return false;
->   
-> -	iters = bar_size / buf_size;
-> +	iters = div_u64(bar_size, buf_size);
->   	for (j = 0; j < iters; j++)
->   		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
->   						 write_buf, read_buf, buf_size))
-
-
-This change breaks building the kernel with GCC v7 and I see ...
-
-ERROR: modpost: "__aeabi_uldivmod" [drivers/misc/pci_endpoint_test.ko] 
-undefined!
-ERROR: modpost: "__aeabi_ldivmod" [drivers/misc/pci_endpoint_test.ko] 
-undefined!
-
-I know that this is an old GCC version, but this is a farm builder and 
-the kernel still indicates that GCC v5.1 is still supported [0].
-
-Jon
-
-[0] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/changes.rst
-
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-nvpublic
-
+Florian
 
