@@ -1,260 +1,193 @@
-Return-Path: <linux-pci+bounces-20201-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20202-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D360A180F7
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 16:18:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65C6CA18240
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 17:47:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A37EE162DEA
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 15:18:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AEB53AB4D4
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 16:47:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AB9414EC5B;
-	Tue, 21 Jan 2025 15:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21B119DFAB;
+	Tue, 21 Jan 2025 16:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EZaxkrJa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XG+eko3m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2397D27702
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 15:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EAC13BC0C;
+	Tue, 21 Jan 2025 16:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737472713; cv=none; b=O+p+JwurjM+vjI14GvjAGlZhLIgX3z+qtBrxZH5/1KER2eaXjxg/K7p87OXOhL9jaKaN0V2X7nz320IzCcFdDuVumWTWPLQlx4geem/m894SAa0IBTst6MI0M3NHLEfcGJl/lWgalpoTAqP83E7J5IbLinYpCIjBNNUW5PmKvNs=
+	t=1737478032; cv=none; b=b7F6Oz0mSC1A3M2R5sxCURoVNwSP5c8VO5MUU7zjwrOUAkC/0UHSftFgFL5scHD/uWywnDS+26nLGi4oZfPediiLJhkOf53MSdBD8OkriBqzcQ/8MFclZyzf3f5TmffzClHPzWPBBiwcM8HFo5oKtay4qf15KfPIJhlUeypA+08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737472713; c=relaxed/simple;
-	bh=kEgVkExfH/1SS4cPY3NYxa6EUyTc9fTeRJF/YTL0CNk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9H8AzKoEJj8Q7N9aukBUDB63pfIKLCZrCwm/F6k8KgXx0j6PcnGrc0S7eAjkxt7Wn6vEeH2eS/OwLmJFTijtMFxuJKFPYn4BY7uNomGWWWBeB8xtq8FEyeiHDE0Zmex48+1AYvrCFjfCqH2gc+2Yv+LT5xrkPfVfahJEz8oszM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EZaxkrJa; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so1100126766b.3
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 07:18:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1737472709; x=1738077509; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1vDXJK4KbYxcZJlt3fw7FKxfRAL1QGGnOoRjEgA9o2w=;
-        b=EZaxkrJaZheDjlj1/uQJdqnVaV8xxd3tLZYIF8Wxk0cdtCfyuv8c+yWmKQFR2ek3M9
-         VmDjeCxApNgs26wSUHadjB+tKpeJmhHeDimZGwYPN3OpcwF+HFjraF4Al6gqIX1PTd0U
-         wG8rMowK5bb5EZqAvyow547Q/uNbvognoCbL7o9zVOmRbqkviWXT8lQLsYlTBbh4DcC+
-         BPtnRdtrjwrlMdmq9AgruiOxzbgm9DhSX2sf1d2KyqgbbA0dDYH5NMzMvvLK9o0KdbvE
-         ymermP0IHsCNBDJv2BkUmQDmK1oZ3Kg4whKLqWhl3ovC+ruH0vEb4T3iqvP/o7ST6VlB
-         wpAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737472709; x=1738077509;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1vDXJK4KbYxcZJlt3fw7FKxfRAL1QGGnOoRjEgA9o2w=;
-        b=ca1Hd3olNYzPFT8dmxhrVE62ottYRwup3jFGThJ8e33sYmU1fb1V7wkCdjNQseI+gM
-         On08S7Cc33b2y5vcxnLHjFw/SoH4+jORgHaCuPsNU+VfQfOW0E7cWBe72z1ZFKRPyVPF
-         f0N+IPn4W1sem8Fp5wRNXA8UaEKdusPmEFaouXoHhFUj0/HA82pvOkQcheqEU+q9TCYl
-         r1FXXAVlTJaRakBEFzVJeqMX5DxASbJIHGg60nh+RyJl60Yf/bxv+iqTjvbtHiPwy9hH
-         lOEa4oqfLU+3GjbqMZT1GqrgcVE20AdrL393kBiRq9E/la7k8nFolJ/MlBFYe5iTknjd
-         hsiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUh29WEiOGkevgKRa8jRxqOgozKXx2LQAZmtsObj3bqCubBlegYQ5o9awjZ09CzaFW9k9UCC1W1h/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaN6JTq0QMHy59ctY9vP56uzd62MBerFBRwbmRfwROkScZzbNC
-	236IS8mS3fH2F6VAQNH4xlpR8JwxcU2K1Wb9MAMxwpf5tlsQqpTwHiUCC8pfshM=
-X-Gm-Gg: ASbGncsyr7ESZPjuGNKuBTmvHahjFnHfs/AFI1G5R2x823JU/pj1b4QUbKNvp9yU2MQ
-	bTf9Nq5lo+pTKNcTG6L4WcXLJxGL+v5NKWYBuQFUo/XaCsV0GArLSVJuxVXhg+Rf7wLmKvZN/qX
-	lSKCDv2rwWQMccuz7pFO+8OaCW5/9ljqh6jA6Hom2OpzFfpHku9pGBLPvXEhAv4EN+PKG+zoZO7
-	/Yc8ghSn2W8bCPkUqPBoRp2+8leF2bTVbZzoWnl1xpfnZwFdnnW3+Rr4BW/Q3SRk12/uC1wgKvX
-	yGrDa71Fds5zym8ktNq5spMWjUeNaP8Uqxfe3YOe
-X-Google-Smtp-Source: AGHT+IEAYrB4ZnhRxgxUfTTRbx252YKxI33JmIyfaSG0E9U1Xt61QWphw76hL6w5A49qZMtALYAPDg==
-X-Received: by 2002:a17:907:1b1c:b0:ab2:c0ba:519e with SMTP id a640c23a62f3a-ab38b3701d1mr1506057866b.35.1737472709292;
-        Tue, 21 Jan 2025 07:18:29 -0800 (PST)
-Received: from localhost (host-87-14-236-197.retail.telecomitalia.it. [87.14.236.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384fcb5desm755070666b.165.2025.01.21.07.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 07:18:28 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 21 Jan 2025 16:19:22 +0100
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v6 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z4-6-ifsuuKMHimq@apocalypse>
-References: <cover.1736776658.git.andrea.porta@suse.com>
- <550590a5a0b80dd8a0c655921ec0aa41a67c8148.1736776658.git.andrea.porta@suse.com>
- <2025011722-motocross-finally-e664@gregkh>
- <Z49eOdVvwknOoD3E@apocalypse>
- <2025012143-rippling-rehydrate-581b@gregkh>
- <Z4-oORWO4BgOqibB@apocalypse>
- <2025012157-bonsai-caddie-19b2@gregkh>
- <Z4-xcjov0HLivfVX@apocalypse>
- <2025012148-unused-winking-7d51@gregkh>
- <20250121161512.2a3ac703@bootlin.com>
+	s=arc-20240116; t=1737478032; c=relaxed/simple;
+	bh=fkWNTG28jA+g7ynKsm7I8oOQoUt6Fg3Trx1IPv30HoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lS9lu2G6780Ixri3g/YlAryP4w7+N/Vqf9GBFopOMqWlZaP3XA8Ck7Nh8ktsSt21noluvtk+K5BosVANLtVuBaf6YP5dpfVJb4UiEdmsJNZAQ3aWu0ncl7Rlpw574yFeqU08V5W9rrLteiyEJ1j99bsaJq5FXCN1CiiuictH+ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XG+eko3m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA65C4CEDF;
+	Tue, 21 Jan 2025 16:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737478032;
+	bh=fkWNTG28jA+g7ynKsm7I8oOQoUt6Fg3Trx1IPv30HoM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=XG+eko3m0xcB8W94gwYyzfI2tuW6qVnASXIHGBnV2Rh0hs/I0YSo1Wf5Voxd82qTY
+	 DLxf3XoVcuRQYv2bqsH0lr3AsnHR7hBKjqq7c7JJ5zM+pZOLtH6RPfwgsVjUC7wb0m
+	 I1QdGLfo2lHlcp6sc/zwmSOEAMXND1mH2m9ow6eSWv66wff08E4QsXVxl3KeqAwmc/
+	 lOxq4eo5mhClRGg7/4ltbz4DnDWvI2OfoJEcidBeo5FaULDBuLwnruwlmPzFhvgQ4X
+	 auL408GHJVZGn98XofRiAN5XJ4ZWWQhUbF7RlBSsGJFVnTV1aSaakuIdL9daCAKXLJ
+	 BbmrC074dQ5dw==
+Date: Tue, 21 Jan 2025 10:47:09 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Saladi.Rakeshbabu@microchip.com
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	linux-kernel@vger.kernel.org, logang@deltatee.com,
+	UNGLinuxDriver@microchip.com, kurt.schwemmer@microsemi.com
+Subject: Re: [PATCH] PCI: switchtec: Include PCI100X devices support
+Message-ID: <20250121164709.GA951990@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250121161512.2a3ac703@bootlin.com>
+In-Reply-To: <be829909194332808ab3ed4ad4fce4b488549e12.camel@microchip.com>
 
-Hi Herve,
-
-On 16:15 Tue 21 Jan     , Herve Codina wrote:
-> Hi Andrea,
-> 
-> On Tue, 21 Jan 2025 15:49:04 +0100
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Tue, Jan 21, 2025 at 03:38:42PM +0100, Andrea della Porta wrote:
-> > > Hi Greg,
-> > > 
-> > > On 15:18 Tue 21 Jan     , Greg Kroah-Hartman wrote:  
-> > > > On Tue, Jan 21, 2025 at 02:59:21PM +0100, Andrea della Porta wrote:  
-> > > > > Hi Greg,
-> > > > > 
-> > > > > On 09:48 Tue 21 Jan     , Greg Kroah-Hartman wrote:  
-> > > > > > On Tue, Jan 21, 2025 at 09:43:37AM +0100, Andrea della Porta wrote:  
-> > > > > > > Hi Greg,
-> > > > > > > 
-> > > > > > > On 12:47 Fri 17 Jan     , Greg Kroah-Hartman wrote:  
-> > > > > > > > On Mon, Jan 13, 2025 at 03:58:07PM +0100, Andrea della Porta wrote:  
-> > > > > > > > > The RaspberryPi RP1 is a PCI multi function device containing
-> > > > > > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > > > > > > and others.
-> > > > > > > > > 
-> > > > > > > > > Implement a bare minimum driver to operate the RP1, leveraging
-> > > > > > > > > actual OF based driver implementations for the on-board peripherals
-> > > > > > > > > by loading a devicetree overlay during driver probe.
-> > > > > > > > > 
-> > > > > > > > > The peripherals are accessed by mapping MMIO registers starting
-> > > > > > > > > from PCI BAR1 region.
-> > > > > > > > > 
-> > > > > > > > > With the overlay approach we can achieve more generic and agnostic
-> > > > > > > > > approach to managing this chipset, being that it is a PCI endpoint
-> > > > > > > > > and could possibly be reused in other hw implementations. The
-> > > > > > > > > presented approach is also used by Bootlin's Microchip LAN966x
-> > > > > > > > > patchset (see link) as well, for a similar chipset.
-> > > > > > > > > 
-> > > > > > > > > For reasons why this driver is contained in drivers/misc, please
-> > > > > > > > > check the links.  
-> > > > > > > > 
-> > > > > > > > Links aren't always around all the time, please document it here why
-> > > > > > > > this is needed, and then links can "add to" that summary.  
-> > > > > > > 
-> > > > > > > Ack.
-> > > > > > >   
-> > > > > > > >   
-> > > > > > > > > This driver is heavily based on downstream code from RaspberryPi
-> > > > > > > > > Foundation, and the original author is Phil Elwell.
-> > > > > > > > > 
-> > > > > > > > > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf  
-> > > > > > > 
-> > > > > > > ...
-> > > > > > >   
-> > > > > > > > > diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
-> > > > > > > > > new file mode 100644
-> > > > > > > > > index 000000000000..3e8ba3fa7fd5
-> > > > > > > > > --- /dev/null
-> > > > > > > > > +++ b/drivers/misc/rp1/rp1_pci.c
-> > > > > > > > > @@ -0,0 +1,305 @@
-> > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > +/*
-> > > > > > > > > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> > > > > > > > > + * All rights reserved.
-> > > > > > > > > + */
-> > > > > > > > > +
-> > > > > > > > > +#include <linux/err.h>
-> > > > > > > > > +#include <linux/interrupt.h>
-> > > > > > > > > +#include <linux/irq.h>
-> > > > > > > > > +#include <linux/irqchip/chained_irq.h>
-> > > > > > > > > +#include <linux/irqdomain.h>
-> > > > > > > > > +#include <linux/module.h>
-> > > > > > > > > +#include <linux/msi.h>
-> > > > > > > > > +#include <linux/of_platform.h>
-> > > > > > > > > +#include <linux/pci.h>
-> > > > > > > > > +#include <linux/platform_device.h>
-> > > > > > > > > +
-> > > > > > > > > +#include "rp1_pci.h"  
-> > > > > > > > 
-> > > > > > > > Why does a self-contained .c file need a .h file?  Please put it all in
-> > > > > > > > here.  
-> > > > > > > 
-> > > > > > > I agree with you. Indeed, the very first version of this patch had the header
-> > > > > > > file placed inside the .c, but I received concerns about it and some advice to
-> > > > > > > do it differently, as you can see here:
-> > > > > > > https://lore.kernel.org/all/ZtWDpaqUG9d9yPPf@apocalypse/
-> > > > > > > so I've changed it accordingly in V2. So right now I'm not sure what the
-> > > > > > > acceptable behaviour should be ...  
-> > > > > > 
-> > > > > > It's a pretty simple rule:
-> > > > > > 	Only use a .h file if multiple .c files need to see the symbol.
-> > > > > > 
-> > > > > > So no .h file is needed here.  
-> > > > > 
-> > > > > Perfect, I'll revert back that two lines to V1 then. Please be aware
-> > > > > though that this will trigger the following checkpatch warning:
-> > > > > 
-> > > > > WARNING: externs should be avoided in .c files  
-> > > > 
-> > > > Well where are those externs defined at?  Shouldn't there be a .h file
-> > > > for them somewhere in the tree if they really are global?  
-> > > 
-> > > Those symbols are deined in drivers/misc/rp1/rp1-pci.dtbo.S (added by
-> > > this patchset) and created by cmd_wrap_S_dtb in scripts/Makefile.lib.
-> > > They are just placeholders that contains rp1-pci.dtbo as
-> > > a binary blob, in order for the driver (rp1_pci.c) to be able to use
-> > > the binary buffer representing the overlay and address it from the
-> > > driver probe function.
-> > > So there's no other reference from outside rp1_pci.c to those two symbols.
-> > > In comparison, this is the very same approach used by a recently accepted
-> > > patch involving drivers/misc/lan966x_pci.c, which also has the two externs
-> > > in it and triggers the same checkpatch warning.  
+On Tue, Jan 21, 2025 at 01:16:05PM +0000, Saladi.Rakeshbabu@microchip.com wrote:
+> On Mon, 2025-01-20 at 16:56 -0600, Bjorn Helgaas wrote:
+> > [Some people who received this message don't often get email from
+> > helgaas@kernel.org. Learn why this is important at
+> > https://aka.ms/LearnAboutSenderIdentification ]
 > > 
-> > Ok, that's fine, checkpatch is just a hint, not a hard-and-fast-rule.
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > know the content is safe
 > > 
+> > On Mon, Jan 20, 2025 at 03:25:24PM +0530, Rakesh Babu Saladi wrote:
+> > > Add the Microchip Parts to the existing device ID
+> > > table so that the driver supports PCI100x devices too.
+> > > 
+> > > Add a new macro to quirk the Microchip switchtec PCI100x parts
+> > > to allow DMA access via NTB to work when the IOMMU is turned on.
+> > > 
+> > > PCI100x family has 6 variants, each variant is designed for
+> > > different
+> > > application usages, different port counts and lane counts.
+> > > 
+> > > PCI1001 has 1 x4 upstream port and 3 x4 downstream ports.
+> > > PCI1002 has 1 x4 upstream port and 4 x2 downstream ports.
+> > > PCI1003 has 2 x4 upstream ports, 2 x2 upstream ports and 2 x2
+> > > downstream ports.
+> > > PCI1004 has 4 x4 upstream ports.
+> > > PCI1005 has 1 x4 upstream port and 6 x2 downstream ports.
+> > > PCI1006 has 6 x2 upstream ports and 2 x2 downstream ports.
+> > > 
+> > > Signed-off-by: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>
+> > > ---
+> > >  drivers/pci/quirks.c           | 11 +++++++++++
+> > >  drivers/pci/switch/switchtec.c | 26 ++++++++++++++++++++++++++
+> > >  2 files changed, 37 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index eeec1d6f9023..266ab5f8c6e1 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -5906,6 +5906,17 @@ SWITCHTEC_QUIRK(0x5552);  /* PAXA 52XG5 */
+> > >  SWITCHTEC_QUIRK(0x5536);  /* PAXA 36XG5 */
+> > >  SWITCHTEC_QUIRK(0x5528);  /* PAXA 28XG5 */
+> > > 
+> > > +#define SWITCHTEC_PCI100X_QUIRK(vid) \
+> > > +     DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_EFAR, vid, \
+> > > +             PCI_CLASS_BRIDGE_OTHER, 8,
+> > > quirk_switchtec_ntb_dma_alias)
+> > > +SWITCHTEC_PCI100X_QUIRK(0x1001);  /* PCI1001XG4 */
+> > > +SWITCHTEC_PCI100X_QUIRK(0x1002);  /* PCI1002XG4 */
+> > > +SWITCHTEC_PCI100X_QUIRK(0x1003);  /* PCI1003XG4 */
+> > > +SWITCHTEC_PCI100X_QUIRK(0x1004);  /* PCI1004XG4 */
+> > > +SWITCHTEC_PCI100X_QUIRK(0x1005);  /* PCI1005XG4 */
+> > > +SWITCHTEC_PCI100X_QUIRK(0x1006);  /* PCI1006XG4 */
+> > > +
+> > > +
+> > >  /*
+> > >   * The PLX NTB uses devfn proxy IDs to move TLPs between NT
+> > > endpoints.
+> > >   * These IDs are used to forward responses to the originator on
+> > > the other
+> > > diff --git a/drivers/pci/switch/switchtec.c
+> > > b/drivers/pci/switch/switchtec.c
+> > > index 5b921387eca6..faaca76407c8 100644
+> > > --- a/drivers/pci/switch/switchtec.c
+> > > +++ b/drivers/pci/switch/switchtec.c
+> > > @@ -1726,6 +1726,26 @@ static void switchtec_pci_remove(struct
+> > > pci_dev *pdev)
+> > >               .driver_data = gen, \
+> > >       }
+> > > 
+> > > +#define SWITCHTEC_PCI100X_DEVICE(device_id, gen) \
+> > > +     { \
+> > > +             .vendor     = PCI_VENDOR_ID_EFAR, \
+> > > +             .device     = device_id, \
+> > > +             .subvendor  = PCI_ANY_ID, \
+> > > +             .subdevice  = PCI_ANY_ID, \
+> > > +             .class      = (PCI_CLASS_MEMORY_OTHER << 8), \
+> > > +             .class_mask = 0xFFFFFFFF, \
+> > > +             .driver_data = gen, \
+> > > +     }, \
+> > > +     { \
+> > > +             .vendor     = PCI_VENDOR_ID_EFAR, \
+> > > +             .device     = device_id, \
+> > > +             .subvendor  = PCI_ANY_ID, \
+> > > +             .subdevice  = PCI_ANY_ID, \
+> > > +             .class      = (PCI_CLASS_BRIDGE_OTHER << 8), \
+> > > +             .class_mask = 0xFFFFFFFF, \
+> > > +             .driver_data = gen, \
+> > 
+> > We have this:
+> > 
+> >   #define PCI_VENDOR_ID_EFAR              0x1055
+> > 
+> > but searching the PCI-SIG Vendor ID database for 0x1055 doesn't find
+> > anything:
+> > 
+> >   https://pcisig.com/membership/member-companies
+> > 
+> > You mention "Microchip", and it looks like Microchip is assigned
+> > Vendor ID 0x11f8:
+> > 
+> >   https://pcisig.com/membership/member-companies?combine=microchip
+> > 
+> > which we also have defined:
+> > 
+> >   #define PCI_VENDOR_ID_PMC_Sierra        0x11f8
+> >   #define PCI_VENDOR_ID_MICROSEMI         0x11f8
+> > 
+> > Can you clarify what's going on here?  I assume these parts actually
+> > do have Vendor ID 0x1055.  But the PCI-SIG really should know about
+> > the usage of this ID.  There's an email contact address on that web
+> > page; can you straighten this out?
 > 
-> Maybe just to avoid confusion for future readers, you can add a comment as I
-> did for the lan966x:
->   https://elixir.bootlin.com/linux/v6.13-rc3/source/drivers/misc/lan966x_pci.c#L21
+> PMC, Microsemi are now part of Microchip. The switchtec products are
+> from Microsemi and so the vendor ID is 0x11f8. EFAR is also part of
+> Microchip. For PCI100x product parts we intended to use the VID 0x1055
+> which is of EFAR's VID. PMC, Microsemi and EFAR product parts all are
+> now part of Microchip.
 > 
-> This will not avoid the warning but will give an explanation to people
-> looking closer at this checkpatch warning.
-
-Good advice, thanks Herve! Added...
-
-Regards,
-Andrea
-
+> The reason why EFAR VID (0x1055) is not listed in the website is
+> becuase the site can list only one VID per company.
 > 
-> Best regards,
-> Herv�
+> For further information, please refer to Steen's reply of
+> https://lore.kernel.org/linux-pci/f695618054232c5f43c2148c5e6551f3ab318792.camel@microchip.com/to
+> https://lore.kernel.org/linux-pci/20240621184923.GA1398370@bhelgaas/
+
+Thanks.  What an annoyance that the PCI-SIG can't expose Vendor IDs
+that are allocated but no longer correspond to the original vendor.
+I'll complain to the SIG again.
+
+Bjorn
 
