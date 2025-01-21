@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-20206-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20207-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9114A1852B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:29:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F8E5A1852D
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:29:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2205163A63
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:28:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 696AA3AA7D8
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:29:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F73B1F55FA;
-	Tue, 21 Jan 2025 18:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BFEE1F542E;
+	Tue, 21 Jan 2025 18:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="D5TO41D3"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MNhkCG75"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EF51AA1E8
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 18:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F381C1741
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 18:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737484133; cv=none; b=ZJqThyOQ+mDNBZzW0V+SYGANZ09rIOqg2+BoM57DcpjtRBPya1gLlaQGfbZ3qZrP+ZUibOYI2QurpfH3CeIf842rOtr9EUzp2SCO9/rXuwT6paAeubayYwzTJ58PWWjH+dqEvbaMIcWdJyta/VN9j5SIpsFJ49PdiLgrjOMGq2A=
+	t=1737484142; cv=none; b=qwDGLlIIX/iLGjF1l9GpL6TbALeXIz/xzFUemW/tUEjNuYcSDcVrn0J9dXC3mTm1BN8XPKJ8nSXbYiycl+UIL7qYLVZsU7ehelSWatO2HmG0vm08yAITM7vNEao09CrUxdT/7pJ1ObKDrb7c58UeLSQ/6nYl95vnTuX9fHaP4eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737484133; c=relaxed/simple;
-	bh=opj286XvflPtVIldgEc6dWabAfSqs4zUeq2+7xMq0Xw=;
+	s=arc-20240116; t=1737484142; c=relaxed/simple;
+	bh=h4E0VFpKCg1na7/lhIoFpPlkzTp4AxH8aWKRNN0cAzM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VfY8K++YqI0RPkt1cQHGiG4H7hcJ9nIHv6/ea9BfPYzkuVzDgE/Gj8+pmj5D66vG1N9L7+m2/8iZ3hVMZqi9ZyeH0Us0E8FLxgQWC5SKh/Ry7LT0ck3jjzZjfKJ8a5iWWa8Xw4JIXScYir6ZI0yvwM40lX6W3G+k12bPeNk2sKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=D5TO41D3; arc=none smtp.client-ip=209.85.167.176
+	 In-Reply-To:Content-Type; b=rrqLsOgIfeNgSiidJp2tJfdhdLQevlu+zUiOxbVfr37XUr82ijVnZ6Uwmqflqa8aQ6Dc5c7BqltoI3uDxsH/4dbaGvHwYV7RQABSZCs+Nsl/9eEYaT9Evono10wHpyIW4dbVBKd8Bvcbw0C7UHQj9GmMp7H12A65kzkUCgW62o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MNhkCG75; arc=none smtp.client-ip=209.85.210.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3eb7ecc3c54so3366854b6e.0
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 10:28:50 -0800 (PST)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-71fbb0d035dso3184079a34.2
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 10:29:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1737484130; x=1738088930; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1737484140; x=1738088940; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=nPmI6P1yce0Rt1cYrZm/UVilLYiBEgksr3ZYl6OBta0=;
-        b=D5TO41D3XJzCl4RSUYq3BxXR9j+v84nYQXV9MP0mox4/3M6q5A7/L9oudlJ1475Ui7
-         tJB7z6SjLLtcS91obhvk0fw7WTXU99kcz4CXP+JmKGBJCResKvKWakUQNPBV3A2G0Iy8
-         eA4gGBvdxsJf4zy7IDii44AiIObyShibHJn1E=
+        bh=lphuxEBOTKwaeIsn4ZxAyXhOMS7H5NX6cm7O5tAhiPY=;
+        b=MNhkCG753eaJ7duA7HDBn/uSOtbFnpJ0JYmrpOzUImjKxHH//4cyU1Ng9ddkRgG928
+         0cdZuqsDRXSoqqp4SXepEFwWn0GTvIM8qiTkK+Oj/Qq+w76mqyMubQZCqk6dAwfrnj2G
+         fKKNGsxbqCWAOG3I9EFAAtdyhJmofYJ8ynxyc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737484130; x=1738088930;
+        d=1e100.net; s=20230601; t=1737484140; x=1738088940;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nPmI6P1yce0Rt1cYrZm/UVilLYiBEgksr3ZYl6OBta0=;
-        b=qQ9n0sIy/DnIbvUuV8S/vpjuyR/3eRYW93EDAChBFLWXIHnxck7Cn7ydwqp+ok4Rxs
-         9kN8wuj49XyTX16bCkF31ya0xmxlBG2P2F7Y4So8WG5uV99nus0ESLLOsvUOobvDHWkZ
-         7Dui1B27uHrU2zskkOyYkLDVzqmtreRzPQU/7j+tYWTbp30z56RJhReN3pnPELsbRRAn
-         Uk/xNcW93gZkIYjq0bgSlDWY2fKZeZ5HOxtdExj2UAl6a4p8FJcKncTTJT5S7dpeIUmB
-         fx62Makq//VU1eSldDIk/LSKkvDiroy7Rq2eA6Kr+eP2cXFcfrFQc2oalGz6jXDV+Vq2
-         reMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHCh/Ot4vOV2QqgCkzVBhELlzEl1aTgFXn6uI2sJ1WGrImGUzMX7wmQ5E6ruzS9gtwNrZn5CHRN54=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6UJ6dLhAHCG1plhAC61h8vsZb0NGSWApUHzVQvFjTgAA5jDkq
-	nidwDJjMN3zomFuo+hIYFYOJes3bnCkwRy//4qxXYdGucWSNF+audDfDln1Iqw==
-X-Gm-Gg: ASbGnct8XnO2s0Pn88laNCVvZACL4D5OKX9tKxB4/VVQwra07shNKgqP5UQEE0/RwPk
-	kGhQI4wrwy2kPUws1RCUTsLBaCFv5zxOTFBOsjDhsVWaBOzSyLbTEC85cRu9b8/xyKzsPfZQMRO
-	64X2qdBn7AUT50GWz+Ao/5ch/cWy9ty9bBPM2cw9n61uRjBTyzoSxqZUYluaScYdpIKPvHJQSYz
-	Ufp6WnXFWqogB9z4+wNuo7i8afCZC3DXIJvcn+9gbyTV2W0yi+DsEsVXyeRwAkirr1HS8P7ffWt
-	HNeGM1Hz0J3dGHZJn1K5RSToVNG+2TI0Gg==
-X-Google-Smtp-Source: AGHT+IFjKKl0hAzIld/Bp9CKfd2qa5nPK0PXiRU/GqnggYe1x1c7HhQHt6C0F2hBru2e35XfOzkNaA==
-X-Received: by 2002:a05:6871:5317:b0:29e:d36:6e39 with SMTP id 586e51a60fabf-2b1c08c6401mr12423250fac.10.1737484129843;
-        Tue, 21 Jan 2025 10:28:49 -0800 (PST)
+        bh=lphuxEBOTKwaeIsn4ZxAyXhOMS7H5NX6cm7O5tAhiPY=;
+        b=RgksbL/zU/rLByHMWJ5XJ1cqd8v0br/TEXotTqql6XkRrn6EPzdzcLOu3EMORygFqS
+         6gxNxAUdH2fd/PMYqdqF2Jt/xOFNHuv+i8tCMG9a/9IGNS0rN5pORfbxuuP5lLDhdMCL
+         5Ie7AkZzBPKoCUEkEwTLGBBjG/a8abWJ4iUwZpRZz3grNb3PMpZunuVW+c3asDw7TSNV
+         CeSwGuvTJ8NXdndr72quY+jMfdzh1NBcb/wHYeQGOTQar4iftFkrffoLLAAswbGasVcE
+         YQaFtrLkA80aQvkpz1Xk98tlKVqnsSVEBFIsTsUZol6eMMlCKnZMaI4EPrbpVIIdroSu
+         Hn/g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8oBxW3ndtgAlYezB19B/XObgam829PxdZPCJu3cNAm9SM/Du8NzTzQGLAgJuvURehkHq6/epDwWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9zIDbyvxOF2N80y5Dpgr9mZG9hxksQpXFiDhR9NliJQNDTsrH
+	2CLIC17/ZV8EfxzMOD4K1XDY/C8aZ8PK4pQRftk5IIbp0hbkbab9KGqB+t/WTQ==
+X-Gm-Gg: ASbGncvvrIsygBhFCVjEbpSaQPIu1wbNYP0Z73OfeWI6nx4ekR/j8wWULUZfwnDWIgM
+	3JOyc8O7xmg0U3G1Va6yKx7FTQmbMTWivYpNo8zdbC8ZENHu00hSVA/Y8QvJXIb9WoTSCFEWnez
+	Z13guLFPPjOHiDqv1+4EIrl3C94YeanlC1zKQ8/V36E0un4cufEta8/tcp8IACgyc5NB4/dHtYS
+	uv95L+QcUxfvX+8t7v7sDMCRs4vYnBWBGBPvJSluF5qLfBnAM0bph6ajRuj8E50eKFgjFtRFNvM
+	pOhSjau8ZwxtYqEfHzT9zhfZv9M5k7vZog==
+X-Google-Smtp-Source: AGHT+IEMDQQA7uXEUvvs2Yxi9Rw/8/nVfXYv+l+nzcRAMtxy6O0OkHj5qGEgblrUmVLbE6CdOhZ2xQ==
+X-Received: by 2002:a05:6870:9e49:b0:29e:18cc:276f with SMTP id 586e51a60fabf-2b1c0a24a1cmr10758963fac.11.1737484139842;
+        Tue, 21 Jan 2025 10:28:59 -0800 (PST)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b9011b66sm3833108fac.44.2025.01.21.10.28.47
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b900ec2fsm3814393fac.46.2025.01.21.10.28.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2025 10:28:48 -0800 (PST)
-Message-ID: <641c46a0-6cd9-4d2e-8576-69900948029b@broadcom.com>
-Date: Tue, 21 Jan 2025 10:28:46 -0800
+        Tue, 21 Jan 2025 10:28:59 -0800 (PST)
+Message-ID: <7e42c339-aa12-47b1-a5a7-5d445459a489@broadcom.com>
+Date: Tue, 21 Jan 2025 10:28:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,8 +79,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 02/11] dt-bindings: PCI: brcmstb: Update bindings
- for PCIe on bcm2712
+Subject: Re: [PATCH v5 -next 01/11] dt-bindings: interrupt-controller: Add
+ bcm2712 MSI-X DT bindings
 To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -96,7 +96,7 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
  Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
  <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
 References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-3-svarbanov@suse.de>
+ <20250120130119.671119-2-svarbanov@suse.de>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -131,14 +131,15 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250120130119.671119-3-svarbanov@suse.de>
+In-Reply-To: <20250120130119.671119-2-svarbanov@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 1/20/25 05:01, Stanimir Varbanov wrote:
-> Update brcmstb PCIe controller bindings with bcm2712 compatible.
+> Adds DT bindings for bcm2712 MSI-X interrupt peripheral controller.
 > 
 > Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
