@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-20208-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2D86A18534
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:29:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52F35A1853E
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:32:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84DB2188A73D
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:29:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 476083A10C1
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666801F7064;
-	Tue, 21 Jan 2025 18:29:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1052C1F473E;
+	Tue, 21 Jan 2025 18:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aeFdr0k7"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YfhaSojQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885481F4E50
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 18:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0831537D4
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 18:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737484163; cv=none; b=ozDa/KDTId4z5yRFddQu5G8CAoO9vh0EvFL475goUszHvxN0nGUo3GlG8FZ3Ba5oKI5LhPFsOj+a2gt5sC+vdoBFsul8M1z+T19I0GwcDAOaXVKA53UrH+KQe51dLi0Tk6SE6j0Src6n1vfJQ9MqCLiJknlCGUd5UKp2nu8YwvI=
+	t=1737484345; cv=none; b=tA1GZFtNl/GlG+T/kQ1mkFgR6fRu51bq7b9sKdg991U8Ha5xl8G4niEJiULnYbacrhBCvqXqGhZ9AOj+1tAHjInNvEeUVkiSPVBUp+mu3fTm4NpidJDeNL86o8T51p8YjhZnp1V6gOK0fPIqd3IPfhFN6acUzmtFfCeObA+J1pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737484163; c=relaxed/simple;
-	bh=Hab+TsOD/rAlksUb5f98aFac0T41/XCfFHsdkOJ7D6U=;
+	s=arc-20240116; t=1737484345; c=relaxed/simple;
+	bh=Zicm6hmx+Ya5yupv+MwT6SD1/ZogZGxbyz7z3euwhls=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eN8j4YmA+rEOXpFglb1czspmk7vGO4l3aA04u+GPqAOqKtrEbyiSfzrqgnDZxetZUL7hT81a0vEYmJfXk8O5/T2YPzqXEbfeBOfPGznxLYoH7K973M0hxme/QubxVquS8Bl4P6RdA3G+Ka0fhOIJY6yd8eC+JFnpVxy6Hrd4Snw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=aeFdr0k7; arc=none smtp.client-ip=209.85.160.49
+	 In-Reply-To:Content-Type; b=CCvE4fGTtP72kOCfmcOQ8zus3Q/dnqlj3KLzDgmrkwy5ytv/1FiefDluAo5wSXidEUbz4J7cNJybvBNtrUU9PgtTdH4NQsumK7Mk2O826kFcnLRNK3xMmV9L22jiPAmnG+Y9ljLHe87izRBWVzv42I72N3HWfFUBw0dkCwnBgBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YfhaSojQ; arc=none smtp.client-ip=209.85.161.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2aa17010cbcso2461300fac.3
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 10:29:20 -0800 (PST)
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5f32fab5de9so1350340eaf.2
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 10:32:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1737484159; x=1738088959; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1737484342; x=1738089142; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=CAvOK/vXUJ3DR3zGC7PEbA5edbkAP+/9CECVTn9NqUM=;
-        b=aeFdr0k7AkUyHiB+VX4qHV2kdfFP1NVH/uk3cF69c3/3diuydzL0bt8QZObEjGagFE
-         EQ7GTaVJJDZZuCRkkyi+3VdxcahxIixsTG7NC7nyT2JKIt16mjCaQsUmm2R3wl5lL5Gt
-         koRAEaMRWT657lq0FUbb/JMf1fNZS55XrJX8M=
+        bh=I6g/CX+/dSwtyMMTLVD/KiU50D2jdXyznwECf80QCyY=;
+        b=YfhaSojQz3ZC1U7/d1TlBrV+83po+BkDcy6D0YmTuGOZV85lRIIiA6+6H/Sg5yrRYo
+         SSUBnoy8Y3JlCKEhWiWftCwcQWTfjBAB/Gp7R3bXdQ2BXt7xiEeeQIBSDwaj1agNtCBs
+         AbBWHWqlFrsP9EmLJ9KPFxkIEsNOj2oGFxpkU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737484159; x=1738088959;
+        d=1e100.net; s=20230601; t=1737484342; x=1738089142;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CAvOK/vXUJ3DR3zGC7PEbA5edbkAP+/9CECVTn9NqUM=;
-        b=YQgs2GJhXbqmTIFBddnF3TYgc69awQo9+H4cFXW8t3j6N3iBuwrVO3Sm7+DnAwcLPW
-         Gzf/3oHat/3UNxrukTSXrCGlZG1htZyanlDsqi4bNQ108wBpZUWCNgPEZnuPZPjZSgCS
-         5rhFSriabh0A67bV4Qtv4uRYVYh9Z+m4+PvmRPbUPTRuzIFvGQEJYfxRPivYHlKyviGu
-         bPce5JHxN3XehzsZdpSZwvInvBY2G0dp6Os1Q5fZTkpkfEuhDId51IN8mM2jdC/dk6wn
-         070q8FlS9We59MtjKy2JVj/3NN/Dqx1CYHYIf1XKhTGzjTQjO2KHl/8xQgWX43yET9AZ
-         ICGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmcl7xQ16e+VDGofvapjsN+r1rSUvDq5JlqWhTmotftODrDJwayvT08R3uQc+zOzIXsnU9SWKsjCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNwZfC3dgU3oSwzUD3wh5+uRXDLWmEiyEwrdoDp7oZcvNBmPR1
-	lrasfADCBzCS0n2iJeUjJSn/4Za9b3tv+dquJ0DJTidQC/7oQVg4J8uYiKA7TA==
-X-Gm-Gg: ASbGncuhWzszU1xGcIRyh38m5pB5RxCfdD9aXfPnG+9vkYzvLtWFh+QABWzOx53JD8L
-	DggFxQFx8mWTwhr+L47+FQzOeBObwe0tWXQ5F6IYhNyguwSEUgN6xX3FFklBp2jHoAHC+eWeN6p
-	e0uchEt7jYPObEO+UOFxmb6nr//S4XmnNSJEBL6SA1VUT6+XkwwiWiODy8K0Jhxr2RG8ct/vXzE
-	RzLPxyWNDBGNQVTs4jFJGpbSREjtzXVD2gfSHFmn2B9nPB+rYDkrEAht8EqDM9D82Vj0ocCwohN
-	XIkJZsggnrvWloS+oaL/ytR24GLpjLLZZQ==
-X-Google-Smtp-Source: AGHT+IFSsOMr97oNRmSERDhQ0fDUB3aBFX5IWM/A/ZTN4m/C1LuCKfN/vp7fge9pEMOwqfeC94zaTA==
-X-Received: by 2002:a05:6871:538e:b0:29e:5894:9de7 with SMTP id 586e51a60fabf-2b1c0cd8350mr10775730fac.33.1737484159544;
-        Tue, 21 Jan 2025 10:29:19 -0800 (PST)
+        bh=I6g/CX+/dSwtyMMTLVD/KiU50D2jdXyznwECf80QCyY=;
+        b=Lqq90Fr/TnQxyh44XH+X9Q6G//v6n4pSwBBYW+6nimflVK6q8uYZk9mrBjHLqjGGxR
+         nYv99pvPu/gfHBxD8n+5iEWOAn+8Fcf8dNu1UqVaKELTZfqkqryGGyDdjTX7w2+x2DAF
+         PyIhq71QpnfhuH8ul/YsUlyEk4i7Itp2uCMubJI3JIr/sQmEhgqWkf1Q3AL3CfuMjoHq
+         LxwAT6YD1dUGOY8SMsJY+TqGNOoB7/XJApgoOPBvQKeKW6mayrT8Gbj/oKaTqDrdjOwl
+         IfC+LsQvGlxjpBJE5DG7hqyN1Yjf4d1zyIS28TeQhcmF/rabWFwaUrmZIEw47w6768Sy
+         nQDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHBiULR5LN9yMZbha6kiSc9fgySmSnpRuJpCH8XipIa31A47yDu/PTmUsXSQxz5dviEsIrvWOg9Ho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKSOLt67QhR9UcHVweKOweQfq+3Upl3+4E5Fzlo+OxLcvCNVao
+	7O/Z7E65+lnuwiFjttoOUJpMCfWQAO6yR9iUgJCo06VBWcFoiMF9zqckj6kHPg==
+X-Gm-Gg: ASbGnctBTxB319HhVUaOqdQmYuVY95qCKcc3R3Nvg7IbAc57TBrt25U3EFuuDMY3cya
+	ZypCrPKVI9MQ1FY09GoFj7i2o2bXDRGqkQTaHnHVXwfzmj0w7D08uuS5JM5FBk1vAWoia/B0Ygc
+	2rQuUDkoVYwkEuI/gWj2czKc0xKllBDVym8sI7xrGaFPYVheETlS/9SBUl8dKoT4ep+HCAtPeOK
+	RSvHZDvVWi8wO3RIKO5JWSxPac0wi8SubITUJ6UDV8+5xEzlElMG8EiimIJ2B5UpYA3Smmn2RBv
+	2wQE5M4D8eXPDsXSoox0r3mmJr/IxK1kkg==
+X-Google-Smtp-Source: AGHT+IEdmBRPRkWmokta3IssK592zHSuLuOAdbq0f0sxdCFGkG6xlMjxeEXZTzeb5T9HD5OCPu6HQw==
+X-Received: by 2002:a05:6870:4f17:b0:29e:5df2:3e50 with SMTP id 586e51a60fabf-2b1c09c5d8fmr10307404fac.15.1737484342205;
+        Tue, 21 Jan 2025 10:32:22 -0800 (PST)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b8f75872sm3864256fac.36.2025.01.21.10.29.16
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b8cef45bsm3757647fac.20.2025.01.21.10.32.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2025 10:29:18 -0800 (PST)
-Message-ID: <be8fdeba-4707-467b-be18-d132de9f89f7@broadcom.com>
-Date: Tue, 21 Jan 2025 10:29:16 -0800
+        Tue, 21 Jan 2025 10:32:19 -0800 (PST)
+Message-ID: <1abdd175-280a-442a-a27a-9bc01c0a04c0@broadcom.com>
+Date: Tue, 21 Jan 2025 10:32:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,8 +79,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 08/11] PCI: brcmstb: Adding a softdep to MIP
- MSI-X driver
+Subject: Re: [PATCH v5 -next 09/11] PCI: brcmstb: Fix for missing of_node_put
 To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -94,9 +93,10 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
  Philipp Zabel <p.zabel@pengutronix.de>,
  Andrea della Porta <andrea.porta@suse.com>,
  Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+ <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ stable@vger.kernel.org
 References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-9-svarbanov@suse.de>
+ <20250120130119.671119-10-svarbanov@suse.de>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -131,19 +131,42 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250120130119.671119-9-svarbanov@suse.de>
+In-Reply-To: <20250120130119.671119-10-svarbanov@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 1/20/25 05:01, Stanimir Varbanov wrote:
-> In case brcmstb PCIe driver and MIP MSI-X interrupt controller
-> drivers are built as modules there could be a race in probing.
-> To avoid this add a softdep to MIP driver to guarantee that MIP
-> driver will be load first.
+> A call to of_parse_phandle() increments refcount, of_node_put must be
+> called when done the work on it. Fix missing of_node_put() on the
+> msi_np device node by using scope based of_node_put() cleanups.
 > 
+> Cc: stable@vger.kernel.org # v5.10+
+> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
 > Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> ---
+> v4 -> v5:
+>   - New patch in the series.
+> 
+>   drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 744fe1a4cf9c..546056f7f0d3 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1844,7 +1844,8 @@ static struct pci_ops brcm7425_pcie_ops = {
+>   
+>   static int brcm_pcie_probe(struct platform_device *pdev)
+>   {
+> -	struct device_node *np = pdev->dev.of_node, *msi_np;
+> +	struct device_node *msi_np __free(device_node) = NULL;
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+In the interest of making this a straight back port to 5.10 that does 
+not have all of the __free() goodies, I would just add the missing 
+of_node_put() where necessary.
+
+Also, since this is a bug fix, you should probably make it appear 
+earlier in the patch series, or even sent it as a separate fix entirely.
 -- 
 Florian
 
