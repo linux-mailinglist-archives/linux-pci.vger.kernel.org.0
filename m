@@ -1,251 +1,228 @@
-Return-Path: <linux-pci+bounces-20172-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20173-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAB95A1795E
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 09:42:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D331CA17978
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 09:46:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFAC0163D7B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 08:42:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BBA03AB505
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 08:46:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 116B71B87DB;
-	Tue, 21 Jan 2025 08:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB631DEFE2;
+	Tue, 21 Jan 2025 08:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HF5znpdU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gcL6XBAP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E221B85FD
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 08:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62B41C07F1
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 08:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737448968; cv=none; b=PcT8lIjQ1qKktHF7oOWJh4NlpEFUCHVIsQOUWOzUa3vSM091s6XD3YQO93yCIhLtPpi1QyOyOz9ySRt3f8HLig/KAYSChkXbPCGt/9dNM0xAvnDaSqQrjxIVBtoiXLXpSyjVxAJwQMFbNK33dYo2YjkazlGC47TRkPx2WweEtm8=
+	t=1737449127; cv=none; b=beTq7wvzAc/lYgeS/0p7bdKQimgXfMqIaZELkcYH4SRvMdHku5X/VWI50J/AQJSNFPyP28HhRs75U1XR/+9D6FuO8vkWj/cxrF9R3ALjZc2Bj2z1hhwZUEvjf77edFiOvI9iePIcKTGfAjcmwfxLoGiNBRglHT/wZwoZBErb8Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737448968; c=relaxed/simple;
-	bh=btTsSgCbAPnhnTrI4HdjrpnhkhsKx37tGtdBNk94yms=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fMi/zbo3uFQ8falUHgVI5fR/ZeExilIkns3SxVXHrh662XBHQXovpdIFIeO32xlGVPh6l14AeyyFSNpx5Hsqf4pS1ZPDhdFixEn74ZCglH75iSmiayPFkvC8SU5bO+76+7Bj8awj7lZyg+4hYyfBg+oxAIY/eH6IZhJiZiZRY/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HF5znpdU; arc=none smtp.client-ip=209.85.208.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5d3f28a4fccso8288015a12.2
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 00:42:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1737448965; x=1738053765; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WfyBwrVAKcG2iSXqbe+KfTaCoLpZROxE8VUSqF7vM6w=;
-        b=HF5znpdUsdaV6qLC9lBW25Mt4f8DohDD1Hv7Xil8TqKPGDeyrYwnuiHERZ9qsA7RFj
-         hzcjMIBllI4/HO1rhtP3NvR0q8s9VIEnk2B7BENXK4O2lkUH2zSeg9C4VRCmZYR+gCL8
-         eEOenBONGYMFWHn6QpvSJxeRafK7EEfASUC5nVZQyNLQkJz+Uj22VO3xI97fzlH45H5U
-         Wyxv0Qtca0MP8clcOQZK4qUVxSOKnuJBEHlSrhdpQEyf+3/rZRxKSQeVMOwYHjPxzgqE
-         uskuEfRKQTTd8/ZnfIQxJZXJ5pPnLZQBVqdg0jmA2dFEwb/YSTCqTqWzDTdtQXFD+BTx
-         FKbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737448965; x=1738053765;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WfyBwrVAKcG2iSXqbe+KfTaCoLpZROxE8VUSqF7vM6w=;
-        b=KOzjjIt7cjE1hCcriwZm/c21otGa03YAh7uHzsFYIpcRh7SOUoZiqjXN8Feu4Faaze
-         a00pjKKPE7oQ5AX47kT0RRVFPLk/GZQJjqwgw3Wi3USjyMyc32nWKFAV4/7u42Ptpyqn
-         dzze7VbiR1FiI5y/oGGxs94Jci/Yse5hfFyIaah6ymKgRwe4kKjvVDa+SVkXgt+e3Gx6
-         tTh8fpZbEzsOM8BDNgGPsHXP+ou8K3pD8FHPN/L39WxAgZYF+BUiiM49K2llCpj2Dr8d
-         4nuQG/8YDZnCQa7XARUi6809viZ9+DQMrolrQ/H/Z9x8PB8oegfODtm0imP1VxSZvGc+
-         m37w==
-X-Forwarded-Encrypted: i=1; AJvYcCW0CTSgqvJFYtaUFBNsBSx5qUCHCVmliLC+JZc0lLcr/tr7amInPRssvigyaFIuL8/ScQnVANiWTDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZAiPM0FAQKprUjVGpiy+qBsJgKFd+LzEV2Q55MQ63ABe5bMma
-	IhqwUt5DfkX6LRcGTZgm1d7fdGSekqjP2EcT74kullI+nEOmlSmy5qZWYnvuvjQ=
-X-Gm-Gg: ASbGncsnZExjSm5Vq7AIjyw16masABbrKRc+Ik6wcEVuvZDr6cjT6LNlG1GBsLSotDq
-	gfmvPKpanmnwgNgj89QV6QXumJ/kJip2o9m4lrQZub4zTS1b1IIpcA8LY0sCB1xz6P9eWLm59IG
-	M6yYo1IiJNqnH0i60ta7DWgLCDWuD6rySibRLapM0jzVSz0m1modereNylbYB6JDeS2dv9FkPZI
-	w5LhWjmi7FzallmGb2jymIGtF2hPJX8EeZnSk/2Oa85QhOt5dyJvvKBwaz2u0iNd0ocpctOGPCW
-	DnRmvHntpSD/g8BN+BkUg//TwRBOSHAFzQPD89XX
-X-Google-Smtp-Source: AGHT+IHJoMEfBlMLvkr8KlEq8oWlxXFcL1m1dYtTgkFptyAjoAjldlyHkpeVawKUvQ8QmvdxpOWQWw==
-X-Received: by 2002:a17:906:5617:b0:ab2:b8c3:be3c with SMTP id a640c23a62f3a-ab38b3fb0dcmr1352712066b.51.1737448964785;
-        Tue, 21 Jan 2025 00:42:44 -0800 (PST)
-Received: from localhost (host-87-14-236-197.retail.telecomitalia.it. [87.14.236.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384c75baesm719449966b.1.2025.01.21.00.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 00:42:44 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 21 Jan 2025 09:43:37 +0100
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v6 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z49eOdVvwknOoD3E@apocalypse>
-References: <cover.1736776658.git.andrea.porta@suse.com>
- <550590a5a0b80dd8a0c655921ec0aa41a67c8148.1736776658.git.andrea.porta@suse.com>
- <2025011722-motocross-finally-e664@gregkh>
+	s=arc-20240116; t=1737449127; c=relaxed/simple;
+	bh=5Qq11hBuoHnsXvksvSWFRdWfLV550bui7BweL789nJI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Paso7f9ojlfCxNbvv91U+LQrT2Jxma2m5ZkRqirehx6LM3a5raelObNoLkxF8DTO4G4q8UIG6y47sAIRmdgMrCPkLISBeKASekUPnF94PSz2MWJ4J8vNgRFiYpLLRq7l71z3Zt/zk5wFiDS6aQkgt4Gr+qOOXuYpZVR5Kjh8T1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gcL6XBAP; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737449125; x=1768985125;
+  h=date:from:to:cc:subject:message-id;
+  bh=5Qq11hBuoHnsXvksvSWFRdWfLV550bui7BweL789nJI=;
+  b=gcL6XBAPIxRdo+ihwXsWbRRDERVKpnF5kFtzKTAT8bl3SfnTLD2MFDAB
+   C3fnnwrPQW3x6Z9Vao6izCz9b2tjhdzEXjy/8JFAIVNWR8kuwypAQhbrT
+   KiE+E6NSgNaWtvi7AE6cOljl4aHbAxmIaZ6RDP28OjHIOpw8lBDr+sh07
+   qe71SMT9CmzsgY5h1FQbvfAbjn40WYNpT1NieWAdlnq8j8S1gMikv/tZo
+   Up/h+Rpjmwm/7J6zGkMGZrE7C27/i2j3imH86y7ZuPMlBBAj8hZ+OCMy+
+   AmF9Vk/XoBXWW+a3mIuCuoPyRD1JWjgsgap0g2WgNV/bO7Vq1SeChoKCj
+   g==;
+X-CSE-ConnectionGUID: A3icYZqfQJaRiAscsqwUoA==
+X-CSE-MsgGUID: hh4n/CTRRo2yRKAziMRPtA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="48345013"
+X-IronPort-AV: E=Sophos;i="6.13,221,1732608000"; 
+   d="scan'208";a="48345013"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 00:45:25 -0800
+X-CSE-ConnectionGUID: r5n9oz+YR9OdQNyf7YDC+w==
+X-CSE-MsgGUID: p+E0te6gS8y5bxubxx1cXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,221,1732608000"; 
+   d="scan'208";a="106541496"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 21 Jan 2025 00:45:24 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ta9sw-000XrB-08;
+	Tue, 21 Jan 2025 08:45:22 +0000
+Date: Tue, 21 Jan 2025 16:45:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/imx6] BUILD SUCCESS
+ b881532991f81f5e3a069fe6d1a3e091400042b5
+Message-ID: <202501211606.oEZrZ9ux-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025011722-motocross-finally-e664@gregkh>
 
-Hi Greg,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/imx6
+branch HEAD: b881532991f81f5e3a069fe6d1a3e091400042b5  PCI: imx6: Clean up comments and whitespace
 
-On 12:47 Fri 17 Jan     , Greg Kroah-Hartman wrote:
-> On Mon, Jan 13, 2025 at 03:58:07PM +0100, Andrea della Porta wrote:
-> > The RaspberryPi RP1 is a PCI multi function device containing
-> > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > and others.
-> > 
-> > Implement a bare minimum driver to operate the RP1, leveraging
-> > actual OF based driver implementations for the on-board peripherals
-> > by loading a devicetree overlay during driver probe.
-> > 
-> > The peripherals are accessed by mapping MMIO registers starting
-> > from PCI BAR1 region.
-> > 
-> > With the overlay approach we can achieve more generic and agnostic
-> > approach to managing this chipset, being that it is a PCI endpoint
-> > and could possibly be reused in other hw implementations. The
-> > presented approach is also used by Bootlin's Microchip LAN966x
-> > patchset (see link) as well, for a similar chipset.
-> > 
-> > For reasons why this driver is contained in drivers/misc, please
-> > check the links.
-> 
-> Links aren't always around all the time, please document it here why
-> this is needed, and then links can "add to" that summary.
+Warning ids grouped by kconfigs:
 
-Ack.
+recent_errors
+|-- arm64-randconfig-051-20250121
+|   `-- arch-arm64-boot-dts-freescale-imx95-19x19-evk.dtb:pcie-4c300000:clock-names:pcie-pcie_bus-pcie_phy-pcie_aux-is-too-short
+|-- arm64-randconfig-052-20250121
+|   `-- arch-arm64-boot-dts-freescale-imx95-19x19-evk.dtb:pcie-4c300000:clock-names:pcie-pcie_bus-pcie_phy-pcie_aux-is-too-short
+|-- arm64-randconfig-053-20250121
+|   `-- arch-arm64-boot-dts-freescale-imx95-19x19-evk.dtb:pcie-4c300000:clock-names:pcie-pcie_bus-pcie_phy-pcie_aux-is-too-short
+|-- arm64-randconfig-054-20250121
+|   `-- arch-arm64-boot-dts-freescale-imx95-19x19-evk.dtb:pcie-4c300000:clock-names:pcie-pcie_bus-pcie_phy-pcie_aux-is-too-short
+`-- arm64-randconfig-055-20250121
+    `-- arch-arm64-boot-dts-freescale-imx95-19x19-evk.dtb:pcie-4c300000:clock-names:pcie-pcie_bus-pcie_phy-pcie_aux-is-too-short
 
-> 
-> > This driver is heavily based on downstream code from RaspberryPi
-> > Foundation, and the original author is Phil Elwell.
-> > 
-> > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+elapsed time: 802m
 
-...
+configs tested: 121
+configs skipped: 4
 
-> > diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
-> > new file mode 100644
-> > index 000000000000..3e8ba3fa7fd5
-> > --- /dev/null
-> > +++ b/drivers/misc/rp1/rp1_pci.c
-> > @@ -0,0 +1,305 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> > + * All rights reserved.
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/irqchip/chained_irq.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/module.h>
-> > +#include <linux/msi.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include "rp1_pci.h"
-> 
-> Why does a self-contained .c file need a .h file?  Please put it all in
-> here.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I agree with you. Indeed, the very first version of this patch had the header
-file placed inside the .c, but I received concerns about it and some advice to
-do it differently, as you can see here:
-https://lore.kernel.org/all/ZtWDpaqUG9d9yPPf@apocalypse/
-so I've changed it accordingly in V2. So right now I'm not sure what the
-acceptable behaviour should be ...
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250121    gcc-13.2.0
+arc                   randconfig-002-20250121    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                           imxrt_defconfig    clang-19
+arm                   randconfig-001-20250121    clang-18
+arm                   randconfig-002-20250121    gcc-14.2.0
+arm                   randconfig-003-20250121    gcc-14.2.0
+arm                   randconfig-004-20250121    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250121    gcc-14.2.0
+arm64                 randconfig-002-20250121    gcc-14.2.0
+arm64                 randconfig-003-20250121    gcc-14.2.0
+arm64                 randconfig-004-20250121    clang-18
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250121    gcc-14.2.0
+csky                  randconfig-002-20250121    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon               randconfig-001-20250121    clang-19
+hexagon               randconfig-002-20250121    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250121    gcc-12
+i386        buildonly-randconfig-002-20250121    clang-19
+i386        buildonly-randconfig-003-20250121    gcc-12
+i386        buildonly-randconfig-004-20250121    gcc-12
+i386        buildonly-randconfig-005-20250121    gcc-12
+i386        buildonly-randconfig-006-20250121    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250121    gcc-14.2.0
+loongarch             randconfig-002-20250121    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                     loongson1b_defconfig    clang-20
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250121    gcc-14.2.0
+nios2                 randconfig-002-20250121    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250121    gcc-14.2.0
+parisc                randconfig-002-20250121    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                  iss476-smp_defconfig    gcc-14.2.0
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc                         ps3_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250121    clang-20
+powerpc               randconfig-002-20250121    gcc-14.2.0
+powerpc               randconfig-003-20250121    gcc-14.2.0
+powerpc                     tqm8541_defconfig    clang-15
+powerpc64             randconfig-001-20250121    gcc-14.2.0
+powerpc64             randconfig-002-20250121    clang-20
+powerpc64             randconfig-003-20250121    clang-16
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250121    gcc-14.2.0
+riscv                 randconfig-002-20250121    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250121    clang-15
+s390                  randconfig-002-20250121    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250121    gcc-14.2.0
+sh                    randconfig-002-20250121    gcc-14.2.0
+sh                           se7780_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250121    gcc-14.2.0
+sparc                 randconfig-002-20250121    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250121    gcc-14.2.0
+sparc64               randconfig-002-20250121    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-20
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250121    clang-16
+um                    randconfig-002-20250121    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250121    gcc-12
+x86_64      buildonly-randconfig-002-20250121    clang-19
+x86_64      buildonly-randconfig-003-20250121    gcc-12
+x86_64      buildonly-randconfig-004-20250121    clang-19
+x86_64      buildonly-randconfig-005-20250121    clang-19
+x86_64      buildonly-randconfig-006-20250121    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250121    gcc-14.2.0
+xtensa                randconfig-002-20250121    gcc-14.2.0
 
-> 
-> > +
-> > +#define RP1_DRIVER_NAME		"rp1"
-> 
-> KBUILD_MODNAME?
-
-Right. Thanks for pointing that out.
-
-> 
-> > +
-> > +#define RP1_HW_IRQ_MASK		GENMASK(5, 0)
-> > +
-> > +#define REG_SET			0x800
-> > +#define REG_CLR			0xc00
-> > +
-> > +/* MSI-X CFG registers start at 0x8 */
-> > +#define MSIX_CFG(x) (0x8 + (4 * (x)))
-> > +
-> > +#define MSIX_CFG_IACK_EN        BIT(3)
-> > +#define MSIX_CFG_IACK           BIT(2)
-> > +#define MSIX_CFG_ENABLE         BIT(0)
-> > +
-> > +/* Address map */
-> > +#define RP1_PCIE_APBS_BASE	0x108000
-> > +
-> > +/* Interrupts */
-> > +#define RP1_INT_END		61
-> 
-> 
-> 
-> > +
-> > +struct rp1_dev {
-> > +	struct pci_dev *pdev;
-> > +	struct irq_domain *domain;
-> > +	struct irq_data *pcie_irqds[64];
-> > +	void __iomem *bar1;
-> > +	int ovcs_id;	/* overlay changeset id */
-> > +	bool level_triggered_irq[RP1_INT_END];
-> > +};
-> > +
-> > +static void msix_cfg_set(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
-> > +{
-> > +	iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_SET + MSIX_CFG(hwirq));
-> 
-> Do your writes need a read to flush them properly?  Or can they handle
-> this automatically?
->
-
-I had some thoughts with RaspberryPi foundation folks to double check it, and it
-seems that there should be no need to readback the value (unless we want to go
-really paranoid), so I would avoid that since in case of level handled interrupt
-we would end up reading the register on every triggering interrupts.
-
-Many thanks,
-Andrea
- 
-> thanks,
-> 
-> greg k-h
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
