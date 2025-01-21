@@ -1,172 +1,393 @@
-Return-Path: <linux-pci+bounces-20209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52F35A1853E
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:32:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC49DA18570
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 20:02:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 476083A10C1
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 18:32:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C068316792C
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 19:01:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1052C1F473E;
-	Tue, 21 Jan 2025 18:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4501186294;
+	Tue, 21 Jan 2025 19:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YfhaSojQ"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="rFh7AtXj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0831537D4
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 18:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0075CE57D
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 19:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737484345; cv=none; b=tA1GZFtNl/GlG+T/kQ1mkFgR6fRu51bq7b9sKdg991U8Ha5xl8G4niEJiULnYbacrhBCvqXqGhZ9AOj+1tAHjInNvEeUVkiSPVBUp+mu3fTm4NpidJDeNL86o8T51p8YjhZnp1V6gOK0fPIqd3IPfhFN6acUzmtFfCeObA+J1pU=
+	t=1737486116; cv=none; b=sVz9E6a5veTckc1x04ftYuGNofCPgKeCOo5uvB+TOro8Pv7zBM27c7/BrFNfNLWNrIlap2e5rxYEj9t6/seAQluFn4903qpthVrPKWXsqvQrnJGTxhkry3waayvJhB/+ZcZpS6J+8JygQOOUYnJHGxKh9u3A8mAyPvaFTUbeXwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737484345; c=relaxed/simple;
-	bh=Zicm6hmx+Ya5yupv+MwT6SD1/ZogZGxbyz7z3euwhls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CCvE4fGTtP72kOCfmcOQ8zus3Q/dnqlj3KLzDgmrkwy5ytv/1FiefDluAo5wSXidEUbz4J7cNJybvBNtrUU9PgtTdH4NQsumK7Mk2O826kFcnLRNK3xMmV9L22jiPAmnG+Y9ljLHe87izRBWVzv42I72N3HWfFUBw0dkCwnBgBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YfhaSojQ; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5f32fab5de9so1350340eaf.2
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 10:32:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1737484342; x=1738089142; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6g/CX+/dSwtyMMTLVD/KiU50D2jdXyznwECf80QCyY=;
-        b=YfhaSojQz3ZC1U7/d1TlBrV+83po+BkDcy6D0YmTuGOZV85lRIIiA6+6H/Sg5yrRYo
-         SSUBnoy8Y3JlCKEhWiWftCwcQWTfjBAB/Gp7R3bXdQ2BXt7xiEeeQIBSDwaj1agNtCBs
-         AbBWHWqlFrsP9EmLJ9KPFxkIEsNOj2oGFxpkU=
+	s=arc-20240116; t=1737486116; c=relaxed/simple;
+	bh=CAWxStfiwMZ75bFGshhNosdyaxzjH5KgoH3YUBHIzyk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HKTalKqMg7XvIt5GKrHIonfCrCUAQsnAErEFr67rS44ct6D8NmBBpCTsxV6Ovq4fs0yKEkLT0MHei8c+Q1JrzuAwmQKxkyG+tlNZimxBCIqpSdvr95QRm5hOuYB7VUUCjOQ7jKCOdr4u7Rlz9oUf1xjX1UlAYT9UbF+/DZigpD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=rFh7AtXj; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 25B3A3F181
+	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 19:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1737486112;
+	bh=GMzw9GXlDyvS/BSEbrNLg/9Jk00HsS1BvVcf82jJIfg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=rFh7AtXjPwRdfNOrB5ogRt2w746KCSqE4uzElBOaTZ9M4wSo3eJ4Ri4RJbsN4RyIY
+	 qPnzYyN14vWSg80yQSCE71dl8y6eYSBpr26/MYsLPjC+m9XvJyNJnOBA42bJmIP3sq
+	 il9Aus3YwZ6PLeNzppz3BjZXQdPw/3H/xh2NeLoBKNPhQMiAHACncu+6mTv5BWhvPC
+	 IfR4/Ec1jXTaV0Doej2ynZ8zA4HyHPsZ68SKjLaae4KhDoPlrPwHIFFs/e3F+Gl2sP
+	 chsDKcgYYCI/J82zk2h+pFZLdAgBAP8h7aT1Mfvqe2vthRMQiCBrUPDrkjuTyh9gq0
+	 SXbXDlDuMmWPA==
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5dbaaed8aeeso3905903a12.1
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 11:01:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737484342; x=1738089142;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I6g/CX+/dSwtyMMTLVD/KiU50D2jdXyznwECf80QCyY=;
-        b=Lqq90Fr/TnQxyh44XH+X9Q6G//v6n4pSwBBYW+6nimflVK6q8uYZk9mrBjHLqjGGxR
-         nYv99pvPu/gfHBxD8n+5iEWOAn+8Fcf8dNu1UqVaKELTZfqkqryGGyDdjTX7w2+x2DAF
-         PyIhq71QpnfhuH8ul/YsUlyEk4i7Itp2uCMubJI3JIr/sQmEhgqWkf1Q3AL3CfuMjoHq
-         LxwAT6YD1dUGOY8SMsJY+TqGNOoB7/XJApgoOPBvQKeKW6mayrT8Gbj/oKaTqDrdjOwl
-         IfC+LsQvGlxjpBJE5DG7hqyN1Yjf4d1zyIS28TeQhcmF/rabWFwaUrmZIEw47w6768Sy
-         nQDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHBiULR5LN9yMZbha6kiSc9fgySmSnpRuJpCH8XipIa31A47yDu/PTmUsXSQxz5dviEsIrvWOg9Ho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKSOLt67QhR9UcHVweKOweQfq+3Upl3+4E5Fzlo+OxLcvCNVao
-	7O/Z7E65+lnuwiFjttoOUJpMCfWQAO6yR9iUgJCo06VBWcFoiMF9zqckj6kHPg==
-X-Gm-Gg: ASbGnctBTxB319HhVUaOqdQmYuVY95qCKcc3R3Nvg7IbAc57TBrt25U3EFuuDMY3cya
-	ZypCrPKVI9MQ1FY09GoFj7i2o2bXDRGqkQTaHnHVXwfzmj0w7D08uuS5JM5FBk1vAWoia/B0Ygc
-	2rQuUDkoVYwkEuI/gWj2czKc0xKllBDVym8sI7xrGaFPYVheETlS/9SBUl8dKoT4ep+HCAtPeOK
-	RSvHZDvVWi8wO3RIKO5JWSxPac0wi8SubITUJ6UDV8+5xEzlElMG8EiimIJ2B5UpYA3Smmn2RBv
-	2wQE5M4D8eXPDsXSoox0r3mmJr/IxK1kkg==
-X-Google-Smtp-Source: AGHT+IEdmBRPRkWmokta3IssK592zHSuLuOAdbq0f0sxdCFGkG6xlMjxeEXZTzeb5T9HD5OCPu6HQw==
-X-Received: by 2002:a05:6870:4f17:b0:29e:5df2:3e50 with SMTP id 586e51a60fabf-2b1c09c5d8fmr10307404fac.15.1737484342205;
-        Tue, 21 Jan 2025 10:32:22 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b1b8cef45bsm3757647fac.20.2025.01.21.10.32.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2025 10:32:19 -0800 (PST)
-Message-ID: <1abdd175-280a-442a-a27a-9bc01c0a04c0@broadcom.com>
-Date: Tue, 21 Jan 2025 10:32:16 -0800
+        d=1e100.net; s=20230601; t=1737486111; x=1738090911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GMzw9GXlDyvS/BSEbrNLg/9Jk00HsS1BvVcf82jJIfg=;
+        b=g1DkLCg2eorZvkDddkU/JoGVPIwCScBMN65MiBTYCok/Z/FTHwSHDOrdM8pZnefBDZ
+         uqS4gpNsxBgN3D9Axpd1TxatFZ12FFQIpy1IOwBTMsmP4WijWXgWoKFWwsoJL0PUwTPu
+         crzjlbbldZtNVdFi/zlyEIqnIciRQhF7GflY6OAx/LAmCQu9GLGrEthVwC+YGYrRjYEm
+         kpfNSWurlKLxJxDF3beTQk55uftAGoGpb3wIP7U3xt9wzFbPFKQ/mflFq3W5wFjIJ9Im
+         wDDn1cDUQv4XuQnAcv3VBaXVRVnnIKqNp5Mk7e62rlCtSoXe+fgddqtEHA1rJr3vVu7N
+         EK3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVpnnCvk3n5nAHazJcB209hruPR3gOp98DjkRpOUlmqTP5je5K5QRwBD0Tu+9U4Ey90lgWLlK/AXQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZQX1zixyGMfk1uZjR0bXe+oEzP3g8Wx0eMyKGEy5mDGS82CBa
+	Lzf2NVQ2nxCsfOcj6nSuudU4WYy+kIKNOISebOjCMZOFmOZx5Q3Yez5Payvdipse0BH1BsCA67h
+	PTmd+ClQEuGcCiT7LWHt7mMk1rxpyg622Td/MxTMVuPuBv6hFZ/mgJc2/b3HHfVapnrStBf1uAS
+	fN/X3e/o2R5T2rTgpTuq7viKiE+CrslGlhsbKjVaTui4Cj+7hR
+X-Gm-Gg: ASbGncun4HkZIYW7OAsftnFqIEEhJvW3K4XiSf/PyPMEqf2kcD3iBK2wcPCqFIMx1tN
+	sELCD93NmZX8uhxb6EWVQboyoMvM3zF5Bn7w3PbjqBOqvKdi8KQ==
+X-Received: by 2002:a05:6402:2349:b0:5d9:a61:ed1c with SMTP id 4fb4d7f45d1cf-5db7d2f5794mr16967998a12.11.1737486111431;
+        Tue, 21 Jan 2025 11:01:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHjSR7v4NE4zxVOWRUqyW6akAXN9rnUkckA64I0H70QyFQnv8H+8sZEogdsaupItQ5gZ8LqsAfzjnqlli29AZU=
+X-Received: by 2002:a05:6402:2349:b0:5d9:a61:ed1c with SMTP id
+ 4fb4d7f45d1cf-5db7d2f5794mr16967930a12.11.1737486110901; Tue, 21 Jan 2025
+ 11:01:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 09/11] PCI: brcmstb: Fix for missing of_node_put
-To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
- stable@vger.kernel.org
-References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-10-svarbanov@suse.de>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250120130119.671119-10-svarbanov@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250120182202.1878581-1-alex.williamson@redhat.com> <20250120224418.GA906057@bhelgaas>
+In-Reply-To: <20250120224418.GA906057@bhelgaas>
+From: Mitchell Augustin <mitchell.augustin@canonical.com>
+Date: Tue, 21 Jan 2025 13:01:39 -0600
+X-Gm-Features: AbW1kvZfBLhqzngDqNjzT3WgJLVDlLzaeJwbEsZAcahljmKdrSJ6_TA1yeCBu8c
+Message-ID: <CAHTA-ubVtNfT9-MW=ts7LGN8apOhV8Yr3iv-Pv3-75E=0c0=7w@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Batch BAR sizing operations
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/20/25 05:01, Stanimir Varbanov wrote:
-> A call to of_parse_phandle() increments refcount, of_node_put must be
-> called when done the work on it. Fix missing of_node_put() on the
-> msi_np device node by using scope based of_node_put() cleanups.
-> 
-> Cc: stable@vger.kernel.org # v5.10+
-> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> ---
-> v4 -> v5:
->   - New patch in the series.
-> 
->   drivers/pci/controller/pcie-brcmstb.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 744fe1a4cf9c..546056f7f0d3 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -1844,7 +1844,8 @@ static struct pci_ops brcm7425_pcie_ops = {
->   
->   static int brcm_pcie_probe(struct platform_device *pdev)
->   {
-> -	struct device_node *np = pdev->dev.of_node, *msi_np;
-> +	struct device_node *msi_np __free(device_node) = NULL;
+Thanks Alex,
 
-In the interest of making this a straight back port to 5.10 that does 
-not have all of the __free() goodies, I would just add the missing 
-of_node_put() where necessary.
+I just verified that v2 of the patch causes no regressions and
+performs just as well as v1 and my original patch on my hardware.
 
-Also, since this is a bug fix, you should probably make it appear 
-earlier in the patch series, or even sent it as a separate fix entirely.
--- 
-Florian
+Reviewed-by: "Mitchell Augustin" <mitchell.augustin@canonical.com>
+Tested-by: "Mitchell Augustin" <mitchell.augustin@canonical.com>
+
+
+On Mon, Jan 20, 2025 at 4:44=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Mon, Jan 20, 2025 at 11:21:59AM -0700, Alex Williamson wrote:
+> > Toggling memory enable is free on bare metal, but potentially expensive
+> > in virtualized environments as the device MMIO spaces are added and
+> > removed from the VM address space, including DMA mapping of those space=
+s
+> > through the IOMMU where peer-to-peer is supported.  Currently memory
+> > decode is disabled around sizing each individual BAR, even for SR-IOV
+> > BARs while VF Enable is cleared.
+> >
+> > This can be better optimized for virtual environments by sizing a set
+> > of BARs at once, stashing the resulting mask into an array, while only
+> > toggling memory enable once.  This also naturally improves the SR-IOV
+> > path as the caller becomes responsible for any necessary decode disable=
+s
+> > while sizing BARs, therefore SR-IOV BARs are sized relying only on the
+> > VF Enable rather than toggling the PF memory enable in the command
+> > register.
+> >
+> > Reported-by: Mitchell Augustin <mitchell.augustin@canonical.com>
+> > Link: https://lore.kernel.org/all/CAHTA-uYp07FgM6T1OZQKqAdSA5JrZo0ReNEy=
+ZgQZub4mDRrV5w@mail.gmail.com
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>
+> Updated pci/enumeration with this v2, thanks, Alex!
+>
+> > ---
+> >
+> > v2:
+> >  - Move PCI_POSSIBLE_ERROR() test back to original location such that i=
+t
+> >    only tests the lower half of 64-bit BARs as noted by Ilpo J=C3=A4rvi=
+nen.
+> >  - Reduce delta from original code by retaining the local @sz variable
+> >    filled from the @sizes array and keep location of parsing upper half
+> >    of 64-bit BARs.
+> >
+> >  drivers/pci/iov.c   |  8 +++-
+> >  drivers/pci/pci.h   |  4 +-
+> >  drivers/pci/probe.c | 93 +++++++++++++++++++++++++++++++++------------
+> >  3 files changed, 78 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 4be402fe9ab9..9e4770cdd4d5 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -747,6 +747,7 @@ static int sriov_init(struct pci_dev *dev, int pos)
+> >       struct resource *res;
+> >       const char *res_name;
+> >       struct pci_dev *pdev;
+> > +     u32 sriovbars[PCI_SRIOV_NUM_BARS];
+> >
+> >       pci_read_config_word(dev, pos + PCI_SRIOV_CTRL, &ctrl);
+> >       if (ctrl & PCI_SRIOV_CTRL_VFE) {
+> > @@ -783,6 +784,10 @@ static int sriov_init(struct pci_dev *dev, int pos=
+)
+> >       if (!iov)
+> >               return -ENOMEM;
+> >
+> > +     /* Sizing SR-IOV BARs with VF Enable cleared - no decode */
+> > +     __pci_size_stdbars(dev, PCI_SRIOV_NUM_BARS,
+> > +                        pos + PCI_SRIOV_BAR, sriovbars);
+> > +
+> >       nres =3D 0;
+> >       for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
+> >               res =3D &dev->resource[i + PCI_IOV_RESOURCES];
+> > @@ -796,7 +801,8 @@ static int sriov_init(struct pci_dev *dev, int pos)
+> >                       bar64 =3D (res->flags & IORESOURCE_MEM_64) ? 1 : =
+0;
+> >               else
+> >                       bar64 =3D __pci_read_base(dev, pci_bar_unknown, r=
+es,
+> > -                                             pos + PCI_SRIOV_BAR + i *=
+ 4);
+> > +                                             pos + PCI_SRIOV_BAR + i *=
+ 4,
+> > +                                             &sriovbars[i]);
+> >               if (!res->flags)
+> >                       continue;
+> >               if (resource_size(res) & (PAGE_SIZE - 1)) {
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 2e40fc63ba31..6f27651c2a70 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -315,8 +315,10 @@ bool pci_bus_generic_read_dev_vendor_id(struct pci=
+_bus *bus, int devfn, u32 *pl,
+> >  int pci_idt_bus_quirk(struct pci_bus *bus, int devfn, u32 *pl, int rrs=
+_timeout);
+> >
+> >  int pci_setup_device(struct pci_dev *dev);
+> > +void __pci_size_stdbars(struct pci_dev *dev, int count,
+> > +                     unsigned int pos, u32 *sizes);
+> >  int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+> > -                 struct resource *res, unsigned int reg);
+> > +                 struct resource *res, unsigned int reg, u32 *sizes);
+> >  void pci_configure_ari(struct pci_dev *dev);
+> >  void __pci_bus_size_bridges(struct pci_bus *bus,
+> >                       struct list_head *realloc_head);
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 2e81ab0f5a25..bf6aec555044 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -164,41 +164,67 @@ static inline unsigned long decode_bar(struct pci=
+_dev *dev, u32 bar)
+> >
+> >  #define PCI_COMMAND_DECODE_ENABLE    (PCI_COMMAND_MEMORY | PCI_COMMAND=
+_IO)
+> >
+> > +/**
+> > + * __pci_size_bars - Read the raw BAR mask for a range of PCI BARs
+> > + * @dev: the PCI device
+> > + * @count: number of BARs to size
+> > + * @pos: starting config space position
+> > + * @sizes: array to store mask values
+> > + * @rom: indicate whether to use ROM mask, which avoids enabling ROM B=
+ARs
+> > + *
+> > + * Provided @sizes array must be sufficiently sized to store results f=
+or
+> > + * @count u32 BARs.  Caller is responsible for disabling decode to spe=
+cified
+> > + * BAR range around calling this function.  This function is intended =
+to avoid
+> > + * disabling decode around sizing each BAR individually, which can res=
+ult in
+> > + * non-trivial overhead in virtualized environments with very large PC=
+I BARs.
+> > + */
+> > +static void __pci_size_bars(struct pci_dev *dev, int count,
+> > +                         unsigned int pos, u32 *sizes, bool rom)
+> > +{
+> > +     u32 orig, mask =3D rom ? PCI_ROM_ADDRESS_MASK : ~0;
+> > +     int i;
+> > +
+> > +     for (i =3D 0; i < count; i++, pos +=3D 4, sizes++) {
+> > +             pci_read_config_dword(dev, pos, &orig);
+> > +             pci_write_config_dword(dev, pos, mask);
+> > +             pci_read_config_dword(dev, pos, sizes);
+> > +             pci_write_config_dword(dev, pos, orig);
+> > +     }
+> > +}
+> > +
+> > +void __pci_size_stdbars(struct pci_dev *dev, int count,
+> > +                     unsigned int pos, u32 *sizes)
+> > +{
+> > +     __pci_size_bars(dev, count, pos, sizes, false);
+> > +}
+> > +
+> > +static void __pci_size_rom(struct pci_dev *dev, unsigned int pos, u32 =
+*sizes)
+> > +{
+> > +     __pci_size_bars(dev, 1, pos, sizes, true);
+> > +}
+> > +
+> >  /**
+> >   * __pci_read_base - Read a PCI BAR
+> >   * @dev: the PCI device
+> >   * @type: type of the BAR
+> >   * @res: resource buffer to be filled in
+> >   * @pos: BAR position in the config space
+> > + * @sizes: array of one or more pre-read BAR masks
+> >   *
+> >   * Returns 1 if the BAR is 64-bit, or 0 if 32-bit.
+> >   */
+> >  int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+> > -                 struct resource *res, unsigned int pos)
+> > +                 struct resource *res, unsigned int pos, u32 *sizes)
+> >  {
+> > -     u32 l =3D 0, sz =3D 0, mask;
+> > +     u32 l =3D 0, sz;
+> >       u64 l64, sz64, mask64;
+> > -     u16 orig_cmd;
+> >       struct pci_bus_region region, inverted_region;
+> >       const char *res_name =3D pci_resource_name(dev, res - dev->resour=
+ce);
+> >
+> > -     mask =3D type ? PCI_ROM_ADDRESS_MASK : ~0;
+> > -
+> > -     /* No printks while decoding is disabled! */
+> > -     if (!dev->mmio_always_on) {
+> > -             pci_read_config_word(dev, PCI_COMMAND, &orig_cmd);
+> > -             if (orig_cmd & PCI_COMMAND_DECODE_ENABLE) {
+> > -                     pci_write_config_word(dev, PCI_COMMAND,
+> > -                             orig_cmd & ~PCI_COMMAND_DECODE_ENABLE);
+> > -             }
+> > -     }
+> > -
+> >       res->name =3D pci_name(dev);
+> >
+> >       pci_read_config_dword(dev, pos, &l);
+> > -     pci_write_config_dword(dev, pos, l | mask);
+> > -     pci_read_config_dword(dev, pos, &sz);
+> > -     pci_write_config_dword(dev, pos, l);
+> > +     sz =3D sizes[0];
+> >
+> >       /*
+> >        * All bits set in sz means the device isn't working properly.
+> > @@ -238,18 +264,13 @@ int __pci_read_base(struct pci_dev *dev, enum pci=
+_bar_type type,
+> >
+> >       if (res->flags & IORESOURCE_MEM_64) {
+> >               pci_read_config_dword(dev, pos + 4, &l);
+> > -             pci_write_config_dword(dev, pos + 4, ~0);
+> > -             pci_read_config_dword(dev, pos + 4, &sz);
+> > -             pci_write_config_dword(dev, pos + 4, l);
+> > +             sz =3D sizes[1];
+> >
+> >               l64 |=3D ((u64)l << 32);
+> >               sz64 |=3D ((u64)sz << 32);
+> >               mask64 |=3D ((u64)~0 << 32);
+> >       }
+> >
+> > -     if (!dev->mmio_always_on && (orig_cmd & PCI_COMMAND_DECODE_ENABLE=
+))
+> > -             pci_write_config_word(dev, PCI_COMMAND, orig_cmd);
+> > -
+> >       if (!sz64)
+> >               goto fail;
+> >
+> > @@ -320,7 +341,11 @@ int __pci_read_base(struct pci_dev *dev, enum pci_=
+bar_type type,
+> >
+> >  static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, =
+int rom)
+> >  {
+> > +     u32 rombar, stdbars[PCI_STD_NUM_BARS];
+> >       unsigned int pos, reg;
+> > +     u16 orig_cmd;
+> > +
+> > +     BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
+> >
+> >       if (dev->non_compliant_bars)
+> >               return;
+> > @@ -329,10 +354,28 @@ static void pci_read_bases(struct pci_dev *dev, u=
+nsigned int howmany, int rom)
+> >       if (dev->is_virtfn)
+> >               return;
+> >
+> > +     /* No printks while decoding is disabled! */
+> > +     if (!dev->mmio_always_on) {
+> > +             pci_read_config_word(dev, PCI_COMMAND, &orig_cmd);
+> > +             if (orig_cmd & PCI_COMMAND_DECODE_ENABLE) {
+> > +                     pci_write_config_word(dev, PCI_COMMAND,
+> > +                             orig_cmd & ~PCI_COMMAND_DECODE_ENABLE);
+> > +             }
+> > +     }
+> > +
+> > +     __pci_size_stdbars(dev, howmany, PCI_BASE_ADDRESS_0, stdbars);
+> > +     if (rom)
+> > +             __pci_size_rom(dev, rom, &rombar);
+> > +
+> > +     if (!dev->mmio_always_on &&
+> > +         (orig_cmd & PCI_COMMAND_DECODE_ENABLE))
+> > +             pci_write_config_word(dev, PCI_COMMAND, orig_cmd);
+> > +
+> >       for (pos =3D 0; pos < howmany; pos++) {
+> >               struct resource *res =3D &dev->resource[pos];
+> >               reg =3D PCI_BASE_ADDRESS_0 + (pos << 2);
+> > -             pos +=3D __pci_read_base(dev, pci_bar_unknown, res, reg);
+> > +             pos +=3D __pci_read_base(dev, pci_bar_unknown,
+> > +                                    res, reg, &stdbars[pos]);
+> >       }
+> >
+> >       if (rom) {
+> > @@ -340,7 +383,7 @@ static void pci_read_bases(struct pci_dev *dev, uns=
+igned int howmany, int rom)
+> >               dev->rom_base_reg =3D rom;
+> >               res->flags =3D IORESOURCE_MEM | IORESOURCE_PREFETCH |
+> >                               IORESOURCE_READONLY | IORESOURCE_SIZEALIG=
+N;
+> > -             __pci_read_base(dev, pci_bar_mem32, res, rom);
+> > +             __pci_read_base(dev, pci_bar_mem32, res, rom, &rombar);
+> >       }
+> >  }
+> >
+> > --
+> > 2.47.1
+> >
+
+
+
+--=20
+Mitchell Augustin
+Software Engineer - Ubuntu Partner Engineering
 
