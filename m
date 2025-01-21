@@ -1,235 +1,185 @@
-Return-Path: <linux-pci+bounces-20194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61674A17FF6
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 15:38:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7C37A18053
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 15:48:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FDEA166F59
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 14:38:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A56683A3E37
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2025 14:48:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C11D11F3FC0;
-	Tue, 21 Jan 2025 14:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729251F2C47;
+	Tue, 21 Jan 2025 14:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V7Jh7V3C"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="da0YGBJW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382651F1508
-	for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 14:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737470274; cv=none; b=TzugwJ19q+Tj7218JL09z0yTTX8EbsCw05d6M1hcCyiIPuqn0mxnnLoW//NkWMBuevQfBXte8nBjfcrp7fMG3BRq4pTfY9T5cWGyOi556Yvu5jtc0H+ADjwn1x9+sjXzoqyrpz0XdKWfkxXsVd84Sj5tSdsJgUrigk7ScxDftCU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737470274; c=relaxed/simple;
-	bh=dSRv4Z+gtUFCtc/LYOBMFVK+8Os64RgJXKR8uIWokc8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vmyij9onV2Ph1/ksVXX6diirfDdHL1/QuIeQqsFqBz7UklIcyKR2qJ0diY+yT8Vmdr+8Yyk9VT17ESAVyEwTXxQB7u/VwqQ6ZDrMBaS7kKV4dk7+1t7QaCEkCVuwF3u85whbXgN3TW8MVkIGAWVGOX36HI1WpmDoGJhZFqoXx6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V7Jh7V3C; arc=none smtp.client-ip=209.85.208.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so8482515a12.2
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jan 2025 06:37:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1737470269; x=1738075069; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OP+yLZsGZnxZl3XcQ+L57qZeoo+bUmeJesOySRXDb2M=;
-        b=V7Jh7V3CnncDJtbb8BG8tMUpk7GbX2Mhe20YwMr1qfCPFx6/n22zmyEIHvET25lmk7
-         BOZ6oSV1el/JTWGFIx1SScJNEgAB4vo/kZaYVlKJDY/VCYj+vwdwJjKDU53kwpjoIemN
-         TZoy6ZwsWi7B7N6jzZV4JZhhuzD3Ko3DlyrWsrqd9nw7iLYDxtr+1/qk8V8ookkYqQLf
-         E9TnLsbRqfwWMElnqhy+pEje8fN7HuzSY1PhvKkK3GVK3E8EMY3dxhP3ugGYRgVmrzpJ
-         Twf7FUqZTf1j4vAdHg6h1BTKAcomstHvuf1vPvCsEbyCtViG7sbvdSn+e8JXVxi7Pe3Q
-         ldGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737470269; x=1738075069;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OP+yLZsGZnxZl3XcQ+L57qZeoo+bUmeJesOySRXDb2M=;
-        b=DkOwnRf5faH5WuuV2oMNUTvee2WshjDzRm4m2kOfMABDj9ZBmwv+cUKCVM1hQv3vMQ
-         2KVOpt/yQvMpYr/2rrF1BN/wcMBd6BIHbb9JA+vs78iRTc/CAuE27ONHnLxxyGis4ijM
-         IxdT1UGgpIwwQno6NMEFqLahsxnvv3XnDM/2SXObaxzpp2OmPJpcHXkNc4Xh8FuDMKtH
-         XEFvLRa78ft7/7D8hwAlxZ2tkSTMneOyS9ezgL9FIspiK9dcwH5ucb2jP8fvYItptMws
-         vXE4Ye/3B+pDDi4xAoESnwXM+4UdLSujmqz0vLHNHy5wvWKlg2DMtB4oYIjqUqz5T/Ev
-         jn0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXqQsghZYEG/Xh24U0xnECqmBYs3hEuKObGFhRerN39zDNxCstUEL5+LFFsPzpX+sd5Q1CmAxOnJ7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfraxJig8fZnAHjGj7V4Os0wGHp2lYGMr4lXJaUilF2gqWkhsp
-	jneLbkKM8rxlgUKj140VHlTCL4FhbVtGn1YH7zZzAabbWd2uN+dS6e2ofMYkXE8=
-X-Gm-Gg: ASbGnctCXWwvjg6W9+mN4UTHwSZ4IOPWnWzlFB7Vdlva22igm7fK+zlL7ruxPuSUWwA
-	TUgPYMbjdn57qjhWHKmfUPO2E4fLxIxPtQiY3nPbUEfGnbNGIiTMZ5D7c4tzsC3Jmq2NDqj9Mox
-	gw7rL9isBZtvgSa0kVTjotlaqtjzIC2uzVMeJuYt0EQwexAWxG3U9Be7SGMFIEv9ssWam/X5VWd
-	8JWQhS2lz0k9ElyNrYmPooPmhuMivSL61YHH6dj36r0sHIHquJ193sLvJFdr4WKkDH5tPDJwraC
-	emJsBSxv8mD1cvBVDWe60xInPhpC5hqndrCSlebI
-X-Google-Smtp-Source: AGHT+IHrdKVrwSeMZy2lajXUFaaswl4BBAIMKjnMweMj9CE4d/aKkVXO5Bbtz0sEBeHig2196Qh7kg==
-X-Received: by 2002:a05:6402:5106:b0:5d0:ced8:d22d with SMTP id 4fb4d7f45d1cf-5db7db07334mr41029714a12.22.1737470269436;
-        Tue, 21 Jan 2025 06:37:49 -0800 (PST)
-Received: from localhost (host-87-14-236-197.retail.telecomitalia.it. [87.14.236.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab64998511esm53461766b.68.2025.01.21.06.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 06:37:49 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 21 Jan 2025 15:38:42 +0100
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v6 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z4-xcjov0HLivfVX@apocalypse>
-References: <cover.1736776658.git.andrea.porta@suse.com>
- <550590a5a0b80dd8a0c655921ec0aa41a67c8148.1736776658.git.andrea.porta@suse.com>
- <2025011722-motocross-finally-e664@gregkh>
- <Z49eOdVvwknOoD3E@apocalypse>
- <2025012143-rippling-rehydrate-581b@gregkh>
- <Z4-oORWO4BgOqibB@apocalypse>
- <2025012157-bonsai-caddie-19b2@gregkh>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B0649641;
+	Tue, 21 Jan 2025 14:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737470915; cv=fail; b=lx72jWXsOgT18J6RjhJSEj1SMkavrddu87hFwuXQT8qG7gnL0bk7I9eTUOG8GS46Lqn3MfQ1v/3HPOOkQ37XbGR+BG7uTL/K9UP59g8oc4u8SXsWIKhHwPylPTdP8Oit36Q/cogkLR9Hv+qZLS2RmTQrDPZqG6nNICrhgiSLE6Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737470915; c=relaxed/simple;
+	bh=SgoG3RTpL+v4kIGXIEN9St6gSv0oPlJyL99gHJ/IhUo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HHSbO2ngny783hE97+7mFkL7gk8zLjO9tyEg2qPiyiYDDr9X/p8DdS25cXarXCB8y/TsB6AREUDePh7FAnlqsFzx40dGQ82YnJgfbKkmN9SM2X/4c2RPo8xPfpIASgvKooDbpiFw/6ao/F6H+jHlgW+hYrrisY7bd2h++5pTQ+U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=da0YGBJW; arc=fail smtp.client-ip=40.107.237.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=e1J8ZqWnbLT9EVY0cKfXv1Bff/VfRLBtktodzGAYRz+qfqrXfz6GbEp/i/yx/+5YaKjYweHFwyII4qJclZXSuo3r9WAEFw7kH2RnObqoDxwXMUy3DGz4uang9QCtSSkbl+xRTLCJMo13Dth32jFUunEgilWu6ffsnySgs4exWwytNmZ6pezWmoKXawgfX1s0nQVPiGe0KXJbFg9VmxGm4m0M3jOsoBFL+1RSiwGY9tiVIWVzuVqk1SmvWTFEZddyazEFDXMTJ2unGTMo2qivh9va84yfpsYdHzGx5DKnZgvB+fMYwMcrD8egaKS8ZuGGtyj7IozK18xXlAsl/drlkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SgoG3RTpL+v4kIGXIEN9St6gSv0oPlJyL99gHJ/IhUo=;
+ b=UUxLzMaLzcqWPZxomiGWRT7hqS+TrlphsshX0H8uFyRXjCXBmlN6i+uM1EzWT6eny7bdwFkKDIsywWEm3XNUJ+lRvZQ53LX37of/nvuR1mnMjDCbC+hEUdn82LG1tZuO348BcCLXSaaMtYW5cwQMDSc+B0bsiv0g4QT/n+nXtfiH/iVfM16iPou7TX3X0XhJn0dTePT7Rxijw/j6RDScpXJqXpJZrDSJZPgxCJRhb0bOQjFJ0kgPG5z3jLCGUwbGsIB2vAcdiUuH+wE1s7T/WtdKlkvGqPRRMVbaAK54j73pSE3xezuyyJa+vpUadPUQQr/V/sQ57VVMawheDHrxBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SgoG3RTpL+v4kIGXIEN9St6gSv0oPlJyL99gHJ/IhUo=;
+ b=da0YGBJWJ9F8+wW8oaq+m2wjOFJmiDCJn6dnTkM6ACP+JaYUuAsmlXmW5kbqYJntWKfCY1Wrap1OmFfNkbSmESBxEfR+8r+AmSKBanXdq+FVrXXtK/CIUrEh4jwdxlFp/DQ3QTnbOkjBYZ3vj6PxuUH0aongYL2IMi324fzwZ9iHDdso4wlY57FHCnkIc/JxVAQU9lBCG7dVV8cl/X2i7Be1irD4kZWenTm6shAEy+0XPskmejKrQOtq/t3+GnqPSeaSdV456iGZSKqPVxw6uy7xHoyPBkg4uQPO5nEzN+eUt5C+JmrhBMbIvZ4nZVHE+Qvje0mtSKCp0Gziz5k9AQ==
+Received: from BL0PR11MB2913.namprd11.prod.outlook.com (2603:10b6:208:79::29)
+ by CYXPR11MB8730.namprd11.prod.outlook.com (2603:10b6:930:e3::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.21; Tue, 21 Jan
+ 2025 14:48:29 +0000
+Received: from BL0PR11MB2913.namprd11.prod.outlook.com
+ ([fe80::3bc1:80d8:bfa5:e742]) by BL0PR11MB2913.namprd11.prod.outlook.com
+ ([fe80::3bc1:80d8:bfa5:e742%4]) with mapi id 15.20.8356.020; Tue, 21 Jan 2025
+ 14:48:29 +0000
+From: <Woojung.Huh@microchip.com>
+To: <Saladi.Rakeshbabu@microchip.com>, <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
+	<linux-kernel@vger.kernel.org>, <logang@deltatee.com>,
+	<UNGLinuxDriver@microchip.com>, <kurt.schwemmer@microsemi.com>
+Subject: RE: [PATCH] PCI: switchtec: Include PCI100X devices support
+Thread-Topic: [PATCH] PCI: switchtec: Include PCI100X devices support
+Thread-Index: AQHbayGB3hYd6pLhkU2olHysK+eh4LMgRuEAgADwHICAABlusA==
+Date: Tue, 21 Jan 2025 14:48:29 +0000
+Message-ID:
+ <BL0PR11MB291389A19D72075963A755D1E7E62@BL0PR11MB2913.namprd11.prod.outlook.com>
+References: <20250120225642.GA906528@bhelgaas>
+ <be829909194332808ab3ed4ad4fce4b488549e12.camel@microchip.com>
+In-Reply-To: <be829909194332808ab3ed4ad4fce4b488549e12.camel@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL0PR11MB2913:EE_|CYXPR11MB8730:EE_
+x-ms-office365-filtering-correlation-id: 69445731-35a9-44b8-5ee8-08dd3a2aab83
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2913.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?TWdDOGlFK0pTQklhaHdMcXBUWWxjaVBEa0xwRmVlV1NyOHIxVkRYTDA0TUY3?=
+ =?utf-8?B?NFAzc2h1SGYzUkJOUEFrNWszVzhYbUJBbllURW94Mmt3SVpNalc5Qkl6anQx?=
+ =?utf-8?B?VHhPTmErbVR6WVZBR3lNbnljSExlejdSSURMdGxMVlkrc0dWRmpOdUJrRjEw?=
+ =?utf-8?B?NkRUcCtZRWt2ZUtWUkwrZ3BPNGQwb2pFK0Y0bGFLeDA3dUxDU2ZjMnB0Q0JX?=
+ =?utf-8?B?OTByQnliNkxDOFRvcXF2MXdlWmNlMXBwVGx2bEhmbXlnQXNmdFU1Q1phM1Z6?=
+ =?utf-8?B?L2JJOGVwaWxLSVBiWmdqVVh5UG0zY3hoelVZU3M2VlQ2cnN5NDYwWG5wMzlJ?=
+ =?utf-8?B?SVpCMzdaRDVmQWpEVUxidm5HbWFMcHowdjV1OHNaZVB3ZzJYczk4UVpRUUpv?=
+ =?utf-8?B?SkJCVktYcWJmWmp0cnlUZXBZV1pqOGFKZTVTM3Y1TDVoMFlWbGpZckd1c21S?=
+ =?utf-8?B?UHVVVVVyUlg2b1RLT1pxYWE2SlFZRzBXaUxVTzgyalFjM1MvRWx6dm5qc3VT?=
+ =?utf-8?B?eEU3Q2MxMDhDRUd3TytSYnFJSThGeTl4ZjM1dFhFTVlMMHNCcG55bGxHNkhI?=
+ =?utf-8?B?Znh1a2I0QWErTVEvUG5INHlHbklYb0NaMjNZUGc5UHc5VDltOEkxZ1Z5bk1K?=
+ =?utf-8?B?OEdJZERVcEk2MmJ5SFA5VGlzU1d0WEg2Sk1XcVppWi96ODVlRU5tSmJFWHhZ?=
+ =?utf-8?B?cDZQbzZNM0E2SWFURjdmREFQMVVFQWxVN1o5enBiSm9GbERGY1V2bjd0R3pT?=
+ =?utf-8?B?ZUtTbTA2WUlaekRLWmNlWWxNRS9NTys3azU1blM3a0hPTGxjZnNOQXR6MmFJ?=
+ =?utf-8?B?T25ZdWc5eFQrVFFmTUNsT09uQ3VrVXdKcjR1L0ZpQVhMNWh5WEdNVUc4SzM4?=
+ =?utf-8?B?cFpaUzBaQkxmbnZZYnlnbmdqNFFZSTloOENGZnNrOWJMRWdTelh3S2tVVUxp?=
+ =?utf-8?B?MGtLS2xLOUdMQnlzSHcxc1VKazJEalpySXBjVnhhSysrd3NzQktpbVdWVjNq?=
+ =?utf-8?B?OHNmem9LY21ueGw5V0FKL0JKMXE4R2FCODNtVTVWSEh6enQzNkU0SWlEMU44?=
+ =?utf-8?B?RGwzejY5SjB3eXZVWkpjR3A5M1Q1ZDlJa09lVlNRQ3MyTitaclN5WDVUQzVh?=
+ =?utf-8?B?NDFzT00vSHZPVFdwaWNPV2ZZaVNyeHEveE1qMXJpNW9xUWxlOFU5Vy9uSkJw?=
+ =?utf-8?B?TC85Q0tjT3VsZVJSN2QzVkFsVGxuNnhRbm1sUENEZWFwb0JrNk8ybWtTSm5z?=
+ =?utf-8?B?RUxzNGcwd0p0Z3RnaC9Xem9VTjMzd3pDb2lHdEVOaENGVVFMMWRrK3pYNEU0?=
+ =?utf-8?B?QkFxSEdocWlJSnFVQjdwQmFRSEF4QXpNQ2J5NHA2Vm5ZMFcwYmNzNHVsWGFH?=
+ =?utf-8?B?dUdUNWRvZndCSjRlNjh4YzlUYmpLdDJQbi9SN1JCQWR5cHQvMk1SL1ZkUTB6?=
+ =?utf-8?B?N0ZaakIvRDVEY2RCR3JTZE9vYlE1bGNLY3A5cGg0SDBzYnE0YXlsbjBENXlE?=
+ =?utf-8?B?STlxd3p4U3dIcDVJN2hVaUU2UDFralViTkdiVXY5V0tndENSRWtsdzgxSkhv?=
+ =?utf-8?B?TVY0Q1dyNzhxeThmZVlGK0gxOGlHR21JYlBoZVkxaU02ZzM3SDMvRzRWVmZs?=
+ =?utf-8?B?YTlobHRPanJ3Z2RsczI1a3hCRWdkUy9mdjJpQUh1MzZsVjhZWHVKK0YwTjd5?=
+ =?utf-8?B?dWIzZjJRUzRtV1FOdDdmalVhWlF0WW5MMkE3cnZkYTRBZWtNclFNMUZZQnlZ?=
+ =?utf-8?B?Mm9ZcWp1YlJ4TjBVOHIzVHJTZjF4bDQ4QSt5cHYxem85UWxZU0t2WC94KzFN?=
+ =?utf-8?B?SjR4aUFnRDZQdmFwb0ZCZkF5YWU3K0Q4c3YyVmdLN2c5QjMzU2o4TUVkcURX?=
+ =?utf-8?B?bUkwbFJJMm9UUW9sVGJSY09WQTZCUC9vdm5LWDBUaGEzQlE9PQ==?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aCtRa3ZubzRGRVB3SjZyd1VUZkpNVlR4S1M4c2t1OExINkpXNEltR1BLbUo1?=
+ =?utf-8?B?TGVNNTk2eWVsYzBRUEdSdkFCUGpmSnRkK2cyQVZWdnE2aVRBYitvSVF2Ry9l?=
+ =?utf-8?B?TFBGZUE0dmcxaEp3MS9zMy9sVndYcGhRMFBmU09wbmRMY3F6Y25PNDFwNytn?=
+ =?utf-8?B?cmQrTFo0YzNIWEtJeko5OVJZeHFzeXR1ZjJpZ2w4Z2xwNTRvUTFpdXVWRGE0?=
+ =?utf-8?B?TFdWQnM3TXZhbDlGSVppcGc0OWU5aVJ3cm9nQUNwK2VJM3pDeUlieVVLMnZ2?=
+ =?utf-8?B?a0hjU2dqbERRdW5OWkRNM3hsRkJaLzdqb3dzc2QrUGY4Ky9lK3VTVEppY2tN?=
+ =?utf-8?B?ZUpQRXEwSWZCcXlTZmxUTXJ5NHh6Y3QxaWRJRnlweHZ3RThGWldsSFNvQTU2?=
+ =?utf-8?B?d041MDRFcVUvMkQweGk2b0JRaE9tSzBBTFlGTFV2UW82bnNpWHJtVUlVM3Fq?=
+ =?utf-8?B?NHMwVkpUUmtleGJYMUF3aktoQnlxZVNhV3EvVkdGTWozQnFocURSNUJWeU1a?=
+ =?utf-8?B?UVN3TjltME5sZGNsdTBWTWZYTXI3Rm9uREw5QmJVbEdVTnIvUWVQdFRkRWlR?=
+ =?utf-8?B?KzI3Slo2d2dWV2dWYmlMcTI5NU8zY3lMYjJiK0h1Sm5DOGpJWTc1KzhOTGZu?=
+ =?utf-8?B?NEFrN2tYWHBvdUNZU0FZVmlvSFRSUjV6VTZHUnVJS01UZHZBZmpXVEZpVFcy?=
+ =?utf-8?B?K3oyTXBBZExaR2w0c2JKUm12ZlcxU0Ridm51ZVFwZW9FMkhQN3J4K1g2TitP?=
+ =?utf-8?B?OFhDNEZuV2tEMUhiWHFrTnNzZnl2R3NqM2l4Q1VEZDByeDFiZ3VyR1pZYUd3?=
+ =?utf-8?B?OG94a2RqalQwTTU3U1Y5cmZodDJ3NDIwT2hiTnNpa0RZcUZEQmJIR3BsZzRy?=
+ =?utf-8?B?NjEwd21ncERVbEZVSEd0Wk8rSnlsa1BXaStuUTFzajJFaXFlblNWVGpRNE1w?=
+ =?utf-8?B?N2Qxd2V4MHJ6Rjdqb3dZdVU2OEFDeThCQlpjQzJjQTlwZUFHbElFWmwydUh0?=
+ =?utf-8?B?c1h0eTdHUlpxNTdMcTJURmxvbFJURTJDdVBUMllVRjJlTWVsQWEyNGNnZ1k3?=
+ =?utf-8?B?Z2wzR3VKVUZsend1eFREMWdFc1RqaStBVWx3TlF4cEs1NG1aTFV1ZHoyL0hG?=
+ =?utf-8?B?TWdaUEdLRGRZYjVtbFBibnF3SEE0eTNJREVnR090dnhnZUJoTFJUNGZIMzBL?=
+ =?utf-8?B?ZWZPWXBmS3JxdFYyYW5mUVdVeU1wMTdOQXRjTm56Z2FyWjExYzZXdTFrWk1m?=
+ =?utf-8?B?OFVnZ2djOHM5NFE2VU91M3A3alRkWGlnakFDTGZvRStUNHJOQ3FGMHBUZ0Ux?=
+ =?utf-8?B?cTJJQmJldm45VHkzamk3TVhGN1BuYjMxTWJRREFYSnZ6elpUQ00xdEFIQzZU?=
+ =?utf-8?B?bDlKK1FwRVZKVXlpNzJ1QkNVcTRhbFpFUGEvZU5xZ3VwY2FYVGtOd0l3dUNN?=
+ =?utf-8?B?UHNidldvZ242NldlcWZkMDNTTlZLQk8xMUplRkZKOFdWMWZqSSs5UjQweGVy?=
+ =?utf-8?B?ajZKeDlMd04yRGpDVUpSMlhOOHg3bVRGTXFaNWV1M2VhU2xUaXd1T1pQWHBv?=
+ =?utf-8?B?cGxEWE9CblNZR3VVS1lvNjkyay92MFlWYzFuM0ZLMkJIZmlKZDIvRlhuQTd1?=
+ =?utf-8?B?NUc2U0pLUjdlbG9QYVJEY2hNa25pSDdBWk05NTZML0tla3B6Q3RBdm1qRXI4?=
+ =?utf-8?B?Yk5SS2hOWnZoWklZY003Ymwza21jdTZTenVFNFloT0ZTSmw2dXJ6THArNGg3?=
+ =?utf-8?B?ZzBnclRSaVBzdDRzNG1ad0YrSDFrN2E1Ull1T0VsdDlpanVkUU5McFN6SDF1?=
+ =?utf-8?B?OWZNOG5rdXQ0ckN2a09pOTZoa0VnYVREVFRPVUxnQ2o0bDZVWjVKYmZ2c25M?=
+ =?utf-8?B?MTcwa09wYmpMY0JOa1dUM29PZU1mTFVVUTEwMVJ3TWdnN1JrM0FEL0UxdGIw?=
+ =?utf-8?B?MkxWRjQzbkxMQXgza2Q2enYwUk1SVm9Nc2RSTmlhRXNteDBVMmVpbjVRM0c3?=
+ =?utf-8?B?ZVBwNTNHWTB0a3psMDd4ZERDNnF1K3VtY2dUQnFLMUhvbFRMNWRoMEp3R3E3?=
+ =?utf-8?B?cmxHM2ZFRTNYU0xQaVZJbmsrR3d5ZGk2MHhqbVk0VjFIL2dBT3FZSXd3VDZV?=
+ =?utf-8?Q?XAqeFxblkHg6la2NliTlSX0LR?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025012157-bonsai-caddie-19b2@gregkh>
+X-OriginatorOrg: microchip.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB2913.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69445731-35a9-44b8-5ee8-08dd3a2aab83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2025 14:48:29.6934
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j8AzmfIzoYdb/bsZrAfXUC8ekeIqbQQBwb+TJVJ4q/ycb+Q2qnuMBY6phj2xR+y8Z64oLJH2oIddEk49sXV+7BPLRqaBmXmIBGGVlrpXs/4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8730
 
-Hi Greg,
-
-On 15:18 Tue 21 Jan     , Greg Kroah-Hartman wrote:
-> On Tue, Jan 21, 2025 at 02:59:21PM +0100, Andrea della Porta wrote:
-> > Hi Greg,
-> > 
-> > On 09:48 Tue 21 Jan     , Greg Kroah-Hartman wrote:
-> > > On Tue, Jan 21, 2025 at 09:43:37AM +0100, Andrea della Porta wrote:
-> > > > Hi Greg,
-> > > > 
-> > > > On 12:47 Fri 17 Jan     , Greg Kroah-Hartman wrote:
-> > > > > On Mon, Jan 13, 2025 at 03:58:07PM +0100, Andrea della Porta wrote:
-> > > > > > The RaspberryPi RP1 is a PCI multi function device containing
-> > > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > > > and others.
-> > > > > > 
-> > > > > > Implement a bare minimum driver to operate the RP1, leveraging
-> > > > > > actual OF based driver implementations for the on-board peripherals
-> > > > > > by loading a devicetree overlay during driver probe.
-> > > > > > 
-> > > > > > The peripherals are accessed by mapping MMIO registers starting
-> > > > > > from PCI BAR1 region.
-> > > > > > 
-> > > > > > With the overlay approach we can achieve more generic and agnostic
-> > > > > > approach to managing this chipset, being that it is a PCI endpoint
-> > > > > > and could possibly be reused in other hw implementations. The
-> > > > > > presented approach is also used by Bootlin's Microchip LAN966x
-> > > > > > patchset (see link) as well, for a similar chipset.
-> > > > > > 
-> > > > > > For reasons why this driver is contained in drivers/misc, please
-> > > > > > check the links.
-> > > > > 
-> > > > > Links aren't always around all the time, please document it here why
-> > > > > this is needed, and then links can "add to" that summary.
-> > > > 
-> > > > Ack.
-> > > > 
-> > > > > 
-> > > > > > This driver is heavily based on downstream code from RaspberryPi
-> > > > > > Foundation, and the original author is Phil Elwell.
-> > > > > > 
-> > > > > > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> > > > 
-> > > > ...
-> > > > 
-> > > > > > diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..3e8ba3fa7fd5
-> > > > > > --- /dev/null
-> > > > > > +++ b/drivers/misc/rp1/rp1_pci.c
-> > > > > > @@ -0,0 +1,305 @@
-> > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > +/*
-> > > > > > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> > > > > > + * All rights reserved.
-> > > > > > + */
-> > > > > > +
-> > > > > > +#include <linux/err.h>
-> > > > > > +#include <linux/interrupt.h>
-> > > > > > +#include <linux/irq.h>
-> > > > > > +#include <linux/irqchip/chained_irq.h>
-> > > > > > +#include <linux/irqdomain.h>
-> > > > > > +#include <linux/module.h>
-> > > > > > +#include <linux/msi.h>
-> > > > > > +#include <linux/of_platform.h>
-> > > > > > +#include <linux/pci.h>
-> > > > > > +#include <linux/platform_device.h>
-> > > > > > +
-> > > > > > +#include "rp1_pci.h"
-> > > > > 
-> > > > > Why does a self-contained .c file need a .h file?  Please put it all in
-> > > > > here.
-> > > > 
-> > > > I agree with you. Indeed, the very first version of this patch had the header
-> > > > file placed inside the .c, but I received concerns about it and some advice to
-> > > > do it differently, as you can see here:
-> > > > https://lore.kernel.org/all/ZtWDpaqUG9d9yPPf@apocalypse/
-> > > > so I've changed it accordingly in V2. So right now I'm not sure what the
-> > > > acceptable behaviour should be ...
-> > > 
-> > > It's a pretty simple rule:
-> > > 	Only use a .h file if multiple .c files need to see the symbol.
-> > > 
-> > > So no .h file is needed here.
-> > 
-> > Perfect, I'll revert back that two lines to V1 then. Please be aware
-> > though that this will trigger the following checkpatch warning:
-> > 
-> > WARNING: externs should be avoided in .c files
-> 
-> Well where are those externs defined at?  Shouldn't there be a .h file
-> for them somewhere in the tree if they really are global?
-
-Those symbols are deined in drivers/misc/rp1/rp1-pci.dtbo.S (added by
-this patchset) and created by cmd_wrap_S_dtb in scripts/Makefile.lib.
-They are just placeholders that contains rp1-pci.dtbo as
-a binary blob, in order for the driver (rp1_pci.c) to be able to use
-the binary buffer representing the overlay and address it from the
-driver probe function.
-So there's no other reference from outside rp1_pci.c to those two symbols.
-In comparison, this is the very same approach used by a recently accepted
-patch involving drivers/misc/lan966x_pci.c, which also has the two externs
-in it and triggers the same checkpatch warning.
-
-Many thanks,
-Andrea
-
-> 
-> thanks,
-> 
-> greg k-h
+SGkgUmFrZXNoLA0KDQo+IEZvciBmdXJ0aGVyIGluZm9ybWF0aW9uLCBwbGVhc2UgcmVmZXIgdG8g
+U3RlZW4ncyByZXBseSBvZg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC0NCj4gcGNp
+L2Y2OTU2MTgwNTQyMzJjNWY0M2MyMTQ4YzVlNjU1MWYzYWIzMTg3OTIuY2FtZWxAbWljcm9jaGlw
+LmNvbS90bw0KDQpCZWxpZXZlIHRoZXJlIGlzIGFuIGVycm9yIGF0IHRoZSBlbmQgb2YgdGhlIGxp
+bmsuIEl0IHNob3VsZCBiZQ0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtcGNpL2Y2OTU2
+MTgwNTQyMzJjNWY0M2MyMTQ4YzVlNjU1MWYzYWIzMTg3OTIuY2FtZWxAbWljcm9jaGlwLmNvbS8N
+Cg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1wY2kvMjAyNDA2MjExODQ5MjMuR0Ex
+Mzk4MzcwQGJoZWxnYWFzLw0KDQpUaGFua3MNCldvb2p1bmcNCg==
 
