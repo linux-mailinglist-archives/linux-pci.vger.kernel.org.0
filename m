@@ -1,41 +1,41 @@
-Return-Path: <linux-pci+bounces-20215-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20216-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7815A189DB
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 03:25:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8D13A189DE
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 03:25:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A777A3A5515
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 02:25:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC1CF162C47
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 02:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55F7149E17;
-	Wed, 22 Jan 2025 02:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9114714B08E;
+	Wed, 22 Jan 2025 02:25:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61426145324;
-	Wed, 22 Jan 2025 02:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0461494A3;
+	Wed, 22 Jan 2025 02:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737512704; cv=none; b=agQBrobSBri3LxFI/7kZMYmwHK31tmhASQwKHwH6oJzW+ViYm3FuHTqY1JCTCeE+X3c+IkIyXO3cC4Ncu8ZnLCQ1ZcqGDqiwSfkS5sGR9RllRKYJbVnlk7lduxJhPFPFR3F0/fYoB3UyTmBzdfUUSIQJblwrR2KazZxjQBGUfjs=
+	t=1737512705; cv=none; b=X4FCr4GOwyziCJPIk5OZuP8Wl70wDhAALx0eg74X5/YTnGyXMR+RoMxb/EgLYiek07bEIH59GkNMfr6pR4ZCv6/u4TCcfE9whZuFxqrAfZkoxzRQ6LCoyfg9DLzUxf4YPq3N5RZC0wbtbPBd0sgZ6KeCEv6IEZm/zNQtN/bBgDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737512704; c=relaxed/simple;
-	bh=/6U8WaefUiYDBAPIWBEtvBPVshgWitlCi0YZkJbyDCc=;
+	s=arc-20240116; t=1737512705; c=relaxed/simple;
+	bh=t/vh29f67FFXM/scGWVX11/EjOoNhgxeZRGL5kwotWo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jAGyZl+3RtmxJPEH1ooZR7Umvx0w+oJmWs+unVB98mDnxlLRrh+mDBpg/s+Pk8drXvDYtwNn/wWWFg/tKAwt+YsITMUnmxggWlvhkRiL+oM/EcUo1lBIf7JoV48PRN5ToaFV/maL643isTT0aVMCt/+mei3BUHvOoJ/Zzn3l6lU=
+	 MIME-Version; b=XkpCkkOL0xFbgmKLczK8Jk9fa3lelYfuRI5u+e1/gYuhUi6xq60c4wCeWWZ2CTr4NNE75olHJWH7560j3vLpEm/4Q7ozv7DXJLgiHs87xdJC/zU6G840YR4geDEW+rI/+90EgkA92cTwhJfsiT8i1U13ZwN1lJljPevlQvUrwXQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 22 Jan 2025 11:24:54 +0900
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 22 Jan 2025 11:24:55 +0900
 Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 0E2D12009097;
-	Wed, 22 Jan 2025 11:24:54 +0900 (JST)
-Received: from kinkan2.css.socionext.com ([172.31.9.51]) by m-FILTER with ESMTP; Wed, 22 Jan 2025 11:24:54 +0900
+	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 9492F2010183;
+	Wed, 22 Jan 2025 11:24:55 +0900 (JST)
+Received: from kinkan2.css.socionext.com ([172.31.9.51]) by m-FILTER with ESMTP; Wed, 22 Jan 2025 11:24:55 +0900
 Received: from plum.e01.socionext.com (unknown [10.212.245.39])
-	by kinkan2.css.socionext.com (Postfix) with ESMTP id E42363732;
-	Wed, 22 Jan 2025 11:24:52 +0900 (JST)
+	by kinkan2.css.socionext.com (Postfix) with ESMTP id 4CEE6C3C1E;
+	Wed, 22 Jan 2025 11:24:54 +0900 (JST)
 From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=8F=AB=CDski?= <kw@linux.com>,
@@ -49,9 +49,9 @@ Cc: Bjorn Helgaas <helgaas@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
 	stable@vger.kernel.org
-Subject: [PATCH v2 1/3] misc: pci_endpoint_test: Avoid issue of interrupts remaining after request_irq error
-Date: Wed, 22 Jan 2025 11:24:44 +0900
-Message-Id: <20250122022446.2898248-2-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 2/3] misc: pci_endpoint_test: Fix disyplaying irq_type after request_irq error
+Date: Wed, 22 Jan 2025 11:24:45 +0900
+Message-Id: <20250122022446.2898248-3-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
 References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
@@ -63,43 +63,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After devm_request_irq() fails with error,
-pci_endpoint_test_free_irq_vectors() is called to free allocated vectors
-with pci_free_irq_vectors().
+There are two variables that indicate the interrupt type to be used
+in the next test execution, global "irq_type" and test->irq_type.
 
-However some requested IRQs are still allocated, so there are still
-/proc/irq/* entries remaining and we encounters WARN() with the following
-message:
+The former is referenced from pci_endpoint_test_get_irq() to preserve
+the current type for ioctl(PCITEST_GET_IRQTYPE).
 
-    remove_proc_entry: removing non-empty directory 'irq/30', leaking at
-    least 'pci-endpoint-test.0'
-    WARNING: CPU: 0 PID: 80 at fs/proc/generic.c:717 remove_proc_entry
-    +0x190/0x19c
+In pci_endpoint_test_request_irq(), since this global variable is
+referenced when an error occurs, the unintended error message is
+displayed.
 
-To solve this issue, set the number of remaining IRQs and release the IRQs
-in advance by calling pci_endpoint_test_release_irq().
+For example, the following message shows "MSI 3" even if the current
+irq type becomes "MSI-X".
+
+    # pcitest -i 2
+    pci-endpoint-test 0000:01:00.0: Failed to request IRQ 30 for MSI 3
+    SET IRQ TYPE TO MSI-X:          NOT OKAY
+
+Fix this issue by using test->irq_type instead of global "irq_type".
 
 Cc: stable@vger.kernel.org
-Fixes: e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
+Fixes: b2ba9225e031 ("misc: pci_endpoint_test: Avoid using module parameter to determine irqtype")
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- drivers/misc/pci_endpoint_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 3702dcc89ab7..302955c20979 100644
+index 302955c20979..a342587fc78a 100644
 --- a/drivers/misc/pci_endpoint_test.c
 +++ b/drivers/misc/pci_endpoint_test.c
-@@ -252,6 +252,9 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
- 		break;
- 	}
+@@ -235,7 +235,7 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
+ 	return true;
  
-+	test->num_irqs = i;
-+	pci_endpoint_test_release_irq(test);
-+
- 	return false;
- }
- 
+ fail:
+-	switch (irq_type) {
++	switch (test->irq_type) {
+ 	case IRQ_TYPE_INTX:
+ 		dev_err(dev, "Failed to request IRQ %d for Legacy\n",
+ 			pci_irq_vector(pdev, i));
 -- 
 2.25.1
 
