@@ -1,196 +1,288 @@
-Return-Path: <linux-pci+bounces-20251-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20252-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E9B8A19A41
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 22:18:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96C23A19A6B
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 22:33:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A979188C8C7
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 21:18:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 659313A83A2
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 21:33:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA1F91C5D68;
-	Wed, 22 Jan 2025 21:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A0351BC9FB;
+	Wed, 22 Jan 2025 21:33:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8M1yWpD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/oDyyl2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E788F1C5D4A
-	for <linux-pci@vger.kernel.org>; Wed, 22 Jan 2025 21:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7228F7D;
+	Wed, 22 Jan 2025 21:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737580690; cv=none; b=mSA3sQXBhlSBGuOtfp3PQfYa7gF6KfVqxR+NRR6wEDvuRHaXEuLPBasoXC6jG/4aLUxmyY9MI1Dg+lsyGJJhy3Dds9AQvQLIsyev98y0Nh6LZrbF3OKrgdeZoXKGWpDVf2mam1nru1vZdWOk05gPNCrS/GYWUSEdWXNR5KzHnAM=
+	t=1737581586; cv=none; b=Dyzsw10uSKGYo/1tf8EB4qM5pBuDd8PA2kgykRyqxwUAJDZCAw4fwcKUdeTEne27J1/PBl595rrRhPkBG+wcV4oGudOdbhFN9iBRsGFv8pnytmCDo/u7naNeJRDUw+eArXIgNA5t02p7gJ0mViPLvlNrhzDDUtTZS2iEcHLb8YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737580690; c=relaxed/simple;
-	bh=0ItH+MgOI3zAMNgOxKzgSBcgNN/xcl6B16td7Q6mQ7U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NDcj5VkIifcXwwsCWVQlQc+ZCcoL/o2xCb8Cx+Gfisf0eVvMNk0b/5MkxWfgQzSdHwoUspmuDzjmXQiU+ISFb/JsC0ut1C2tw7eyMXA1xlFv2RaJr/v4+Qghp6BjWic6m8mo5kjmhdempg+1FfFPw643Vel/2trinFMYIn6dAsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8M1yWpD; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737580689; x=1769116689;
-  h=date:from:to:cc:subject:message-id;
-  bh=0ItH+MgOI3zAMNgOxKzgSBcgNN/xcl6B16td7Q6mQ7U=;
-  b=U8M1yWpDbManGjCDoyiqkwfHsUH88ZFkbXUjl07stTPlVyvzBf0RCelP
-   RptXLYUj+zUUd95i6TTViB1glPKas/d5eWv+FtJ8C+dqC/J9G2sOBfR4Q
-   M6hi7XrmqfwpIz31cAeWVGqUpjSTMvC8bFpz9nZbpnvf9E1ja9bbC2UN5
-   KkbEyxJygLcJRyaCH2n7qf0uC5BD1GoxQ0eSZgft08g93EnBpwseVLdYj
-   gEznQeZsZuhbtKWCEEPpBgr/C52+AtTGSVwMgKBsX5F2o6nXKX47uCF/H
-   8VAF7OnB9eHRLFXprNqmB8A6/qiBS7KCE6wsLaxSOuDbTNb3fPFuZ+dC7
-   w==;
-X-CSE-ConnectionGUID: ZG4gcsWfTFWTE7XmpMf0xg==
-X-CSE-MsgGUID: Rg6WU0trQ8KbT0tVRQg3eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="48725878"
-X-IronPort-AV: E=Sophos;i="6.13,226,1732608000"; 
-   d="scan'208";a="48725878"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 13:18:08 -0800
-X-CSE-ConnectionGUID: /W0pl/tcQaW1jtjlhTpEIQ==
-X-CSE-MsgGUID: kgiT7xL1RJe9TQV9/Htczg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,226,1732608000"; 
-   d="scan'208";a="107084828"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 22 Jan 2025 13:18:07 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tai6v-000aK8-25;
-	Wed, 22 Jan 2025 21:18:05 +0000
-Date: Thu, 23 Jan 2025 05:17:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint-test] BUILD SUCCESS
- 392188bb0f6ec5162edf457c062929a6abfa369a
-Message-ID: <202501230550.7vx1t3BQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1737581586; c=relaxed/simple;
+	bh=t/PUmyDqQjOM3NJQYXmc2AiphKcUaKRy63lOZHv1bSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KUEQzV3FdlezwRdqppfKyDVtgZUwdgxBvc2gFDpxZzUhnqw2Sv03b0GPYF+y1a0rQfiyIvHxCrvXoNO8ecP8v2H6Tm31loYC4Wcmhv4XQir3e+fCYZfjzEzSrJXs+sWFzTO+EvSn1/bb1g+sZm8EuA5KckbQV99+JhA41qY7cMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/oDyyl2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 427FFC4CED2;
+	Wed, 22 Jan 2025 21:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737581585;
+	bh=t/PUmyDqQjOM3NJQYXmc2AiphKcUaKRy63lOZHv1bSU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=G/oDyyl26vQOZBi7lsPKiHRP0D40odETzwNTgA6oJHXbngjSg31rCQ6ZuwYOK/dsp
+	 LfF7TcTdD+gh3/+tZFl6I9Tfb+S+fxhTgLhzNCXVMGF54RfDUOpdpt3M39nhX62n2e
+	 f7ujshMhbre7llf62XCeRxlVOY1pD+wDw3Y3ZbmM1zjZTckDCrDi0gnQAJ08hexBT6
+	 eAKVCaS5ejWE/gIn34C1LNIVmpSwMY3+j5tJxAQBn2QrENICUY7rqdQvGn/vx0VpOz
+	 bEDFi3jKn1N5/5Ms+ZLqyK1Do7/XmoBE/XClY3MlQVCxlJL1ujKQxVXGgBY1RX0X+y
+	 VuUDgjokNUMSQ==
+Date: Wed, 22 Jan 2025 15:33:03 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Chen Wang <unicornxw@gmail.com>
+Cc: kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+	arnd@arndb.de, bhelgaas@google.com, unicorn_wang@outlook.com,
+	conor+dt@kernel.org, guoren@kernel.org, inochiama@outlook.com,
+	krzk+dt@kernel.org, lee@kernel.org, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com
+Subject: Re: [PATCH v3 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
+Message-ID: <20250122213303.GA1102149@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddedd8f76f83fea2c6d3887132d2fe6f2a6a02c1.1736923025.git.unicorn_wang@outlook.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint-test
-branch HEAD: 392188bb0f6ec5162edf457c062929a6abfa369a  selftests: pci_endpoint: Migrate to Kselftest framework
+On Wed, Jan 15, 2025 at 03:06:57PM +0800, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Add support for PCIe controller in SG2042 SoC. The controller
+> uses the Cadence PCIe core programmed by pcie-cadence*.c. The
+> PCIe controller will work in host mode only.
 
-elapsed time: 1445m
+> + * pcie-sg2042 - PCIe controller driver for Sophgo SG2042 SoC
 
-configs tested: 103
-configs skipped: 2
+I'm guessing this is the first of a *family* of Sophgo SoCs, so
+"sg2042" looks like it might be a little too specific if there will be
+things like "sg3042" etc added in the future.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +#include "../../../irqchip/irq-msi-lib.h"
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250122    gcc-13.2.0
-arc                   randconfig-002-20250122    gcc-13.2.0
-arm                               allnoconfig    clang-17
-arm                      integrator_defconfig    clang-15
-arm                   milbeaut_m10v_defconfig    clang-20
-arm                       omap2plus_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250122    clang-19
-arm                   randconfig-002-20250122    clang-20
-arm                   randconfig-003-20250122    gcc-14.2.0
-arm                   randconfig-004-20250122    gcc-14.2.0
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250122    clang-20
-arm64                 randconfig-002-20250122    clang-15
-arm64                 randconfig-003-20250122    clang-20
-arm64                 randconfig-004-20250122    clang-19
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250122    gcc-14.2.0
-csky                  randconfig-002-20250122    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon               randconfig-001-20250122    clang-20
-hexagon               randconfig-002-20250122    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250122    clang-19
-i386        buildonly-randconfig-002-20250122    gcc-12
-i386        buildonly-randconfig-003-20250122    gcc-12
-i386        buildonly-randconfig-004-20250122    clang-19
-i386        buildonly-randconfig-005-20250122    clang-19
-i386        buildonly-randconfig-006-20250122    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250122    gcc-14.2.0
-loongarch             randconfig-002-20250122    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       m5275evb_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-nios2                 randconfig-001-20250122    gcc-14.2.0
-nios2                 randconfig-002-20250122    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250122    gcc-14.2.0
-parisc                randconfig-002-20250122    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                      arches_defconfig    gcc-14.2.0
-powerpc                      cm5200_defconfig    clang-20
-powerpc                       ppc64_defconfig    clang-19
-powerpc               randconfig-001-20250122    gcc-14.2.0
-powerpc               randconfig-002-20250122    clang-17
-powerpc               randconfig-003-20250122    clang-15
-powerpc                     redwood_defconfig    clang-20
-powerpc64             randconfig-001-20250122    clang-20
-powerpc64             randconfig-002-20250122    clang-19
-powerpc64             randconfig-003-20250122    clang-20
-riscv                            allmodconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-20
-riscv                 randconfig-001-20250122    clang-20
-riscv                 randconfig-002-20250122    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250122    clang-18
-s390                  randconfig-002-20250122    clang-20
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250122    gcc-14.2.0
-sh                    randconfig-002-20250122    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250122    gcc-14.2.0
-sparc                 randconfig-002-20250122    gcc-14.2.0
-sparc64               randconfig-001-20250122    gcc-14.2.0
-sparc64               randconfig-002-20250122    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250122    gcc-12
-um                    randconfig-002-20250122    clang-20
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250122    gcc-12
-x86_64      buildonly-randconfig-002-20250122    clang-19
-x86_64      buildonly-randconfig-003-20250122    gcc-12
-x86_64      buildonly-randconfig-004-20250122    gcc-12
-x86_64      buildonly-randconfig-005-20250122    gcc-12
-x86_64      buildonly-randconfig-006-20250122    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                randconfig-001-20250122    gcc-14.2.0
-xtensa                randconfig-002-20250122    gcc-14.2.0
+I know you're using this path because you're relying on Marc's
+work in progress [1].
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+But I don't want to carry around an #include like this in drivers/pci
+while we're waiting for that, so I think you should use the existing
+published MSI model until after Marc's update is merged.  Otherwise we
+might end up with this ugly path here and no real path to migrate to
+the published, supported one.
+
+[1] https://lore.kernel.org/linux-riscv/20241204124549.607054-2-maz@kernel.org/
+
+> + * SG2042 PCIe controller supports two ways to report MSI:
+> + *
+> + * - Method A, the PCIe controller implements an MSI interrupt controller
+> + *   inside, and connect to PLIC upward through one interrupt line.
+> + *   Provides memory-mapped MSI address, and by programming the upper 32
+> + *   bits of the address to zero, it can be compatible with old PCIe devices
+> + *   that only support 32-bit MSI address.
+> + *
+> + * - Method B, the PCIe controller connects to PLIC upward through an
+> + *   independent MSI controller "sophgo,sg2042-msi" on the SOC. The MSI
+> + *   controller provides multiple(up to 32) interrupt sources to PLIC.
+
+Maybe expand "PLIC" the first time?
+
+s/SOC/SoC/ to match previous uses, e.g., in commit log
+s/multiple(up to 32)/up to 32/
+
+> + *   Compared with the first method, the advantage is that the interrupt
+> + *   source is expanded, but because for SG2042, the MSI address provided by
+> + *   the MSI controller is fixed and only supports 64-bit address(> 2^32),
+> + *   it is not compatible with old PCIe devices that only support 32-bit MSI
+> + *   address.
+
+"Supporting 64-bit address" means supporting any address from 0 to
+2^64 - 1, but I don't think that's what you mean here.
+
+I think what you mean here is that with Method B, the MSI address is
+fixed and it can only be above 4GB.
+
+> +#define REG_CLEAR_LINK0_BIT	2
+> +#define REG_CLEAR_LINK1_BIT	3
+> +#define REG_STATUS_LINK0_BIT	2
+> +#define REG_STATUS_LINK1_BIT	3
+
+> +static void sg2042_pcie_msi_clear_status(struct sg2042_pcie *pcie)
+> +{
+> +	u32 status, clr_msi_in_bit;
+> +
+> +	if (pcie->link_id == 1)
+> +		clr_msi_in_bit = BIT(REG_CLEAR_LINK1_BIT);
+> +	else
+> +		clr_msi_in_bit = BIT(REG_CLEAR_LINK0_BIT);
+
+Why not put the BIT() in the #defines for REG_CLEAR_LINK0_BIT,
+REG_STATUS_LINK0_BIT, ...?  Then this code is slightly simpler, and
+you can use similar style in sg2042_pcie_msi_chained_isr() instead of
+shifting there.
+
+> +	regmap_read(pcie->syscon, REG_CLEAR, &status);
+> +	status |= clr_msi_in_bit;
+> +	regmap_write(pcie->syscon, REG_CLEAR, status);
+
+> +static void sg2042_pcie_msi_irq_compose_msi_msg(struct irq_data *d,
+> +						struct msi_msg *msg)
+> +{
+> +	struct sg2042_pcie *pcie = irq_data_get_irq_chip_data(d);
+> +	struct device *dev = pcie->cdns_pcie->dev;
+> +
+> +	msg->address_lo = lower_32_bits(pcie->msi_phys) + BYTE_NUM_PER_MSI_VEC * d->hwirq;
+> +	msg->address_hi = upper_32_bits(pcie->msi_phys);
+
+This seems a little suspect because adding "BYTE_NUM_PER_MSI_VEC *
+d->hwirq" could cause overflow into the upper 32 bits.  I think you
+should add first, then take the lower/upper 32 bits of the 64-bit
+result.
+
+> +	if (d->hwirq > pcie->num_applied_vecs)
+> +		pcie->num_applied_vecs = d->hwirq;
+
+"num_applied_vecs" is a bit of a misnomer; it's actually the *max*
+hwirq.
+
+> +static const struct irq_domain_ops sg2042_pcie_msi_domain_ops = {
+> +	.alloc	= sg2042_pcie_irq_domain_alloc,
+> +	.free	= sg2042_pcie_irq_domain_free,
+
+Mention "msi" in these function names, e.g.,
+sg2042_pcie_msi_domain_alloc().
+
+> +static int sg2042_pcie_init_msi_data(struct sg2042_pcie *pcie)
+> +{
+> ...
+> +	/* Program the MSI address and size */
+> +	if (pcie->link_id == 1) {
+> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_LOW,
+> +			     lower_32_bits(pcie->msi_phys));
+> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_HIGH,
+> +			     upper_32_bits(pcie->msi_phys));
+> +
+> +		regmap_read(pcie->syscon, REG_LINK1_MSI_ADDR_SIZE, &value);
+> +		value = (value & REG_LINK1_MSI_ADDR_SIZE_MASK) | MAX_MSI_IRQS;
+> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_SIZE, value);
+> +	} else {
+> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_LOW,
+> +			     lower_32_bits(pcie->msi_phys));
+> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_HIGH,
+> +			     upper_32_bits(pcie->msi_phys));
+> +
+> +		regmap_read(pcie->syscon, REG_LINK0_MSI_ADDR_SIZE, &value);
+> +		value = (value & REG_LINK0_MSI_ADDR_SIZE_MASK) | (MAX_MSI_IRQS << 16);
+> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_SIZE, value);
+> +	}
+
+Would be nicer to set temporaries to the link_id-dependent values (as
+you did elsewhere) so it's obvious that the code is identical, e.g.,
+
+  if (pcie->link_id == 1) {
+    msi_addr = REG_LINK1_MSI_ADDR_LOW;
+    msi_addr_size = REG_LINK1_MSI_ADDR_SIZE;
+    msi_addr_size_mask = REG_LINK1_MSI_ADDR_SIZE;
+  } else {
+    ...
+  }
+
+  regmap_write(pcie->syscon, msi_addr, lower_32_bits(pcie->msi_phys));
+  regmap_write(pcie->syscon, msi_addr + 4, upper_32_bits(pcie->msi_phys));
+  ...
+
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t sg2042_pcie_msi_handle_irq(struct sg2042_pcie *pcie)
+
+Which driver are you using as a template for function names and code
+structure?  There are probably a dozen different names for functions
+that iterate like this around a call to generic_handle_domain_irq(),
+but you've managed to come up with a new one.  If you can pick a
+similar name to copy, it makes it easier to compare drivers and find
+and fix defects across them.
+
+> +{
+> +	u32 i, pos;
+> +	unsigned long val;
+> +	u32 status, num_vectors;
+> +	irqreturn_t ret = IRQ_NONE;
+> +
+> +	num_vectors = pcie->num_applied_vecs;
+> +	for (i = 0; i <= num_vectors; i++) {
+> +		status = readl((void *)(pcie->msi_virt + i * BYTE_NUM_PER_MSI_VEC));
+> +		if (!status)
+> +			continue;
+> +
+> +		ret = IRQ_HANDLED;
+> +		val = status;
+
+I don't think you need both val and status.
+
+> +		pos = 0;
+> +		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+> +					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+
+Most drivers use for_each_set_bit() here.
+
+> +			generic_handle_domain_irq(pcie->msi_domain,
+> +						  (i * MAX_MSI_IRQS_PER_CTRL) +
+> +						  pos);
+> +			pos++;
+> +		}
+> +		writel(0, ((void *)(pcie->msi_virt) + i * BYTE_NUM_PER_MSI_VEC));
+> +	}
+> +	return ret;
+> +}
+
+> +static int sg2042_pcie_setup_msi(struct sg2042_pcie *pcie,
+> +				 struct device_node *msi_node)
+> +{
+> +	struct device *dev = pcie->cdns_pcie->dev;
+> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> +	struct irq_domain *parent_domain;
+> +	int ret = 0;
+
+Pointless initialization of "ret".
+
+> +	if (!of_property_read_bool(msi_node, "msi-controller"))
+> +		return -ENODEV;
+> +
+> +	ret = of_irq_get_byname(msi_node, "msi");
+> +	if (ret <= 0) {
+> +		dev_err(dev, "%pOF: failed to get MSI irq\n", msi_node);
+> +		return ret;
+> +	}
+> +	pcie->msi_irq = ret;
+> +
+> +	irq_set_chained_handler_and_data(pcie->msi_irq,
+> +					 sg2042_pcie_msi_chained_isr, pcie);
+> +
+> +	parent_domain = irq_domain_create_linear(fwnode, MSI_DEF_NUM_VECTORS,
+> +						 &sg2042_pcie_msi_domain_ops, pcie);
+
+Wrap to fit in 80 columns like 99% of the rest of this file.
+
+Bjorn
 
