@@ -1,424 +1,258 @@
-Return-Path: <linux-pci+bounces-20240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F6F9A19269
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 14:28:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D046FA1930D
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 14:53:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E190B162224
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 13:28:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2B343AD2C9
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2025 13:53:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38607213242;
-	Wed, 22 Jan 2025 13:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288111E4AB;
+	Wed, 22 Jan 2025 13:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="hoX74Ptg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oJ5aZ6tr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010009.outbound.protection.outlook.com [52.103.68.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2D918E25;
-	Wed, 22 Jan 2025 13:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737552513; cv=fail; b=G2oZ/v1ACWZrHv5WD87s4qsoD18TDZhRccFV5QutQDPWu+W83ZVuldpYztxDVSVPDKTDj6s3NeT4V+ZvlOftIU0JPHjTz0JNRHDBtlTYZyIaqsdazRriAapGe4cmzzP0NnetUY/sV4vFWUp9OGjVPYsMmcfo9QKrcXZwK1Oh60s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737552513; c=relaxed/simple;
-	bh=MfH3NVWDuch499eH+nuGd/2UYnuORGKR5SjWAh8nnac=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lJ36Pn5wWA1QMpnyGXXQ4okOiayAZZ+knvqiKL7SVQrEHskpCzjrDMfYy7TsPNxz2kazWMcRykLCrv9MI9TebZ1IeBzZusVbH4kVtCYu0koAbti1odSHLmlT2I8RQXvYsGl0eSZCxGKXJGUtjhv1NPqCdIxmiD4KOk8HtmfyhJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=hoX74Ptg; arc=fail smtp.client-ip=52.103.68.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qUfL7/KqYebraOA6wBH/Qfj9oohcdQ9B4JoZ54QHRQrNFVRgGof70TO/xlm3TU91lSP0oiAhWkKpQX9xvbNheQnINgp3VfHQjpb/FGRJkeI6o2zV4Bmd2Ww0TwGQVNVJMrAgUXhv8qadyu/abYycsJJ/YzFutlsI/czlYZ1hVPmcnhBiSjikVE3KNRdB7b1uQhPs2dbelEzrNa6XMMPdSAE7Vg3IstY5AqNQ3/AS3KWrCeAY7d/lFQ/fZaesTHQtmRT8WITGdm9zq2nd55J/Z3St4wXoKf/lfZYc4pMaF8LnIhsUjpaC2BVFt7sG7h+XTamDSGghfTiIgs5P90XTww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OG3lTRz4WaQiThOuwDj0Py+GZ1rnbXkhMc2BaiKzLS4=;
- b=rw5XJ1TxlmE4Vcgcf1IAnbeqCbEFbQyJ3uTfE5tRaaDOYMkudOuNwoJE0Wd1jGnbflJtLAJrZLEjDASmsqi3zgggR7mpXScfz7tTAzJX0vzNpvr9jxHzeWgMI/JdlAbXxtgRRohWZVTQXLbd9c9cJnZh6qRgmmzkP1hWEp0+RHwi4rgBYAcI+AE3KoIJ9yh9howUl+U21f+bUWCWAT7kvv9PoBOVNMcM7Dx71+xnGvNbZtKPUKJFSHGY8ZSurZVW4o7tnkVY88gaNpV9HodBfOU6sKGknh54ROXS0LuPggtB/LnIgRdCgO0EGq4RNTmyiXjYhxakkpqNcp0RsPz5Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OG3lTRz4WaQiThOuwDj0Py+GZ1rnbXkhMc2BaiKzLS4=;
- b=hoX74PtgTmK60ijE3HucQ1bN3oxzJEvQyRyHMenxuBlMNQ2k7+eV35rCwerAXOO+m3r2Pnw8hMn+3lV5BKGTRxwlAR7WMO6SqL1I3odTpu0NFnT3MtWrkb+s9fKGmn41A4osGizXstAMNuB8lsW+ygJ9GOR4RMWDXOWkwGOWNly5bx2zFNJfje31TA/vIK1kkn6dGULzfh0+C4/6UC1JzLiYrxm1Hnc/4WqN7Xr1tce/3SUVq+SpsYvABy/I9IJInrLQ1R7Oys4+UaoSMIlmNHLW8oPccQrM99v9mBqeQeuBrHxsP2lyqABd7E8NKZh/k0I5VSlc8/il7nJ/IX1rDw==
-Received: from BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:44::15)
- by PN0PR01MB6461.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:72::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Wed, 22 Jan
- 2025 13:28:21 +0000
-Received: from BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::954a:952d:8108:b869]) by BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::954a:952d:8108:b869%3]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
- 13:28:21 +0000
-Message-ID:
- <BM1PR01MB254540560C1281CE9898A5A0FEE12@BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM>
-Date: Wed, 22 Jan 2025 21:28:12 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Chen Wang <unicornxw@gmail.com>
-Cc: kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
- arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
- inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
- lpieralisi@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- pbrobinson@gmail.com, robh@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
- xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com, helgaas@kernel.org
-References: <cover.1736923025.git.unicorn_wang@outlook.com>
- <ddedd8f76f83fea2c6d3887132d2fe6f2a6a02c1.1736923025.git.unicorn_wang@outlook.com>
- <20250119122353.v3tzitthmu5tu3dg@thinkpad>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250119122353.v3tzitthmu5tu3dg@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0025.apcprd02.prod.outlook.com
- (2603:1096:4:195::21) To BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:44::15)
-X-Microsoft-Original-Message-ID:
- <dbec589a-2a41-446b-a9a2-9d4906224866@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408902135C1
+	for <linux-pci@vger.kernel.org>; Wed, 22 Jan 2025 13:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737553985; cv=none; b=jbkFk4NkrRNZH+QwrPjknzOjaGluXVQzWHesWmLeDf7fGEppI+myrM08FoW1m9jgnrmuFL9+UqtdNWBGiyKuy8dfbj976VNDH4yx8Gx0euLzbCd7HUe1tU9qvxpwH322B6er9wuyt7u5rIacUJlQdSvZ+TusdjdA5vYpwMqQ9Is=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737553985; c=relaxed/simple;
+	bh=+0fZBaQxBo+lARs8voq7yOZKPATw2Q2lHj07tGeaX9A=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=fFV7X2hYtDWVpOSAFnagWEU11IJxs3gmrprIo0iMVKmfSI5rrz9CTtApwccbH/4ZpV7QTvZn7PvGW2IwWXm+OZUe8tAL0MW8PZ6if+X8KWGo3Y3DgdPCoWYqvQJEymiwy4ryj+YYC4YSD7qWm8bgZlwDj8HIqzUQ5TdVFryTkvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oJ5aZ6tr; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737553983; x=1769089983;
+  h=date:from:to:cc:subject:message-id;
+  bh=+0fZBaQxBo+lARs8voq7yOZKPATw2Q2lHj07tGeaX9A=;
+  b=oJ5aZ6trUxLP+zpTCknCfSUHCpl48JHh0C0w8Nk8cIqOtcl1Y1cOSlot
+   C60WvoA3umNVqmJPQnKf7Vx3opAM8u5Ztcm7NpTl6OzYFJ3UGBuQOjput
+   9+B9QGnWer4pSquPklHnZQ7fEcgvffYa2RIsCnsdIgKxeWNP130DugpLp
+   dWB/tQwFM1Kcijrx9pYYyKXLuIDxhfNX+fSseXc671p1CCgtmlqwP8qmA
+   LmnOwqyVHw2rDqPb5OxEUF5HQKcCjlZ8bi1QSTkOr9ZgIkXUPI7j+vTxC
+   7hvVVZM19j8sjUrK/zRVGTzGukjds9YmvNGj1//J1G13CIB8Gquw6luPs
+   Q==;
+X-CSE-ConnectionGUID: LduS+yjNRY2B3iDDubN8Zw==
+X-CSE-MsgGUID: IbStsbdIRQ+yILtsX3Za4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="38179017"
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="38179017"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 05:53:03 -0800
+X-CSE-ConnectionGUID: RUtIX4/uTu6XILlQ50QIpw==
+X-CSE-MsgGUID: 1dPkJIlUQgWQxDeOYD9CJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="106953647"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 22 Jan 2025 05:53:01 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tabAB-000ZvB-0m;
+	Wed, 22 Jan 2025 13:52:59 +0000
+Date: Wed, 22 Jan 2025 21:52:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:switchtec] BUILD SUCCESS
+ a3282f84b2151d254dc4abf24d1255c6382be774
+Message-ID: <202501222128.mnfzOf1u-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BM1PR01MB2545:EE_|PN0PR01MB6461:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02b491ee-9aa4-4f33-20c5-08dd3ae8a2fa
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|19110799003|5072599009|8060799006|461199028|6090799003|7092599003|15080799006|440099028|19111999003|41001999003|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Sk1TN2ZFZElOMnVleWk4d050OGhkVlROY1ZqV2x4Q2N6VmhhQXBlMlFkdWRK?=
- =?utf-8?B?ajg5UTRaNjdSS3JQcDZpbktiMks1eWNFM3JYdGNmQkVIc3JKRnl2YWIrUGhC?=
- =?utf-8?B?VzcrUkpUOTBTUFh5TVl1c2pzTCthNEpCUnR5RHZIVFRIK3BDRHVGUlV5Z3c4?=
- =?utf-8?B?UFVreDFaVXNkbWNkRWdScDFYZkphNG84dlpNc2N0dFFCemtUelFsQk5ES0VC?=
- =?utf-8?B?TG8vWWJLdDJQLzJTUGZ1T0RkbXNQOFd1UnlyR01GckdzWksrRzdlTEM2MHN2?=
- =?utf-8?B?SUQ2QmVKa3JjNnJDQjJXZGJJNk5MYkFaTlAvRXY4cXNNTWxyb0xTSW9BV01J?=
- =?utf-8?B?NmYrMEVSSkozQ0pyV1o5WldYRWc1TFZBWERxYktUVmlOV1YwN21CNVhmeTlq?=
- =?utf-8?B?OFdocVhaaWZZMGpwSllUanB5Wm1oOXpoK0VTVGl0YzlHUS9tbEFobmJBcWFl?=
- =?utf-8?B?R0NEdk5NWitDSjQ2cVJtZkdIM2tZSkJURStGQzJ1Y3BnSGhzZmtNM0VOd2ls?=
- =?utf-8?B?UGVCQzJlTXVDTnF5Um4wem0zaUdzekttcEl0QzlwbzRCL2tRZWpyWXB6aEwv?=
- =?utf-8?B?WGZYdS9tVWt6NWFLeHdPZGcxdzRDRlEydTNibmpQMzc4OFVKWU1qQk9NUC9m?=
- =?utf-8?B?TFBqTnZ0Tjl6cHFnQUhtWWtaQWdDWWJjZXpKRitOTzFTYjM4RnVrK2w5bGRQ?=
- =?utf-8?B?UWV3Ulp6MnBTeWEzcGxRelFwNXBzQ1J0Q21SWEorTVFENGZYMUczSTBGeWlo?=
- =?utf-8?B?aGVPUnE4MWhYTzRFVU9UNFA4ZXd3dFhXaGVUdVFETzk5dGxTZVljNU0wL3N2?=
- =?utf-8?B?OTNHUjRic01QRjUvaVVtV0xROXpnTG5paTRSbGNNa2s2NFZUeHFUVHNSVkl6?=
- =?utf-8?B?V0pSbG9QdXE4bEI1ZlpaQVRsR21EL0tZdFNaTWY2enlxN1RVeWk4ZkF5dzZr?=
- =?utf-8?B?YzByTDdRalpucE9zWjZOMDJQRjVuNnFOMlhiQzBnM0NWUk5RUmhsVGtPQWRO?=
- =?utf-8?B?b2xDZHRWaGRQQXVudjVudjFSRHNFMU5tQnF1bXhscHV3dHVIUldBTUgvR3ZX?=
- =?utf-8?B?c04rdUY3T2lDVUVuVkpjUlZoVEpQeUs5NHZIWVNpSXlmQnRHeGhIZDhjOTMy?=
- =?utf-8?B?ZVpsNFVsZkV3ditqRXRTdjZFcmZybWJtY1lyWUZRbjd5cUZSUGwxVVZUcEdP?=
- =?utf-8?B?L2lsZmh2bmx2WlJOaE9ZT0QycC9jckRNV21SL3FFS1I0Q3hWZWx6ZURLRGNN?=
- =?utf-8?B?dlhTbGtXdU1NVXozT1RHTkNTTWNLMWxTNTlieEptSEZ5UlBsRWlwSEJOTzZi?=
- =?utf-8?B?RC90VzU5QmdCR2FESm1OL0duQWRhWE5ucXNCWktZc3Rka3JEdmJzOFNrNFlH?=
- =?utf-8?B?Zit0NXpsdHkxSFEyb3MreEliaUlBa1htdHl2UWIveFhxSVFUOHd3LzZ1YTlx?=
- =?utf-8?B?ajJveWROVGZFaklRdzhWR1RmT1lodUExVGhhUk1sZGNXS0VoVFRZRVBlNjR5?=
- =?utf-8?B?SzF2R3NDVStyT1ZPUTJJaEVKZHpSVmZXbzBBS2FaYmZjbVpZbjhLYmxhNGpG?=
- =?utf-8?Q?nnwcD2brwSXYNVCyLz4qy0Ob4=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a0l0aitwaWlERXhSNFhHL3ZWdEI2UC9BY0tRa1hIOXNPckRnd1NsYlNKVEds?=
- =?utf-8?B?Zi9SMU1ISi9mQTdlMGJQS0VndktSRWIvVjZwZWVUZmljRmJCOERjWnlHeloy?=
- =?utf-8?B?T2lzT2h0bXhtN3hmZk1rWDZJeGdDNmJybDhHajc1Y3F6R1B1cWR5UFhXSUpt?=
- =?utf-8?B?Tis1dU5lUXNrQ01tNmpja21yMUdjR09XM0pnUHRZSkJYWW1hekkxcDdidzU2?=
- =?utf-8?B?RHMxTmxtMTh4MnZsM1pyZTJSYmV0eTJoem8wUHBmWmd1UGh5clFvSlpRWG1D?=
- =?utf-8?B?RXYxaTkvUTJ4ekNQZEhFbURqN2VEdzM3ZnlEZ0IxNDJmdTRDMTdTUjVqd1VU?=
- =?utf-8?B?WFBaMGprTGZubVhSM290MGJFM01rNHNvYW1UZ2hJUklFYThualp3eExYTlhp?=
- =?utf-8?B?Z2dMNlFQRDZvVVQydngzU1BXdm9sVE5qbzg4QzRLVmRmbGJZWUIzaERobHBI?=
- =?utf-8?B?QS8zRmEwdHRPdUdZQlI1VDdrVmFyY3ZxaW05a1k5MXlTRk1lTDhCQzF4TnJX?=
- =?utf-8?B?cHJsK252QUh4QkV4WTJnUWJhdnJIWnordGRpRVIzVi9jQVJTUGRhOHRIUkx1?=
- =?utf-8?B?bGg3WEl6ZFZvMkxkNWhIWXpUVi91bWdJQ28xMGNWTkxIbUw4dVZ6WVdCRE9N?=
- =?utf-8?B?cTg1b1UyK1ViM2tjeWNBVzEwVHB2Q2ExOXU5MlhQaTR2czNGa2g4RGFWTEhD?=
- =?utf-8?B?cUY1Y2NTdHUxRkJUNHNsVlNya3Q1MUEvL095d1Q1Z0JPMVByRDJkZmlQSFp6?=
- =?utf-8?B?b0oycVVVWkdzcVErWG5IaHFrRWl0VmxJUllzWFVuL05TVE9FQmJHdXBEYXdY?=
- =?utf-8?B?S09LZGo0RGtWWExrNGJqcEZsVTFoNlJFMjJlZzRHMjNqeGd1ak43TVB2VGZ0?=
- =?utf-8?B?Yk03U2l6K1NDWm5PNTVDSUx2TEZPUXFkSHUxZ01mNnVmVjI2OUF5aStiZWd3?=
- =?utf-8?B?TUswZVBaQXZLTnJ4OHNtTXhhRVJ6TW4zTmZxY1drK2czWXpnbFVFNVJzTjdG?=
- =?utf-8?B?NWhhT29tZ1RLcDhDVGdoeXdzVUNnT2xpNWp5WkdkUEo0ZVRCeHNYbE01d0Rt?=
- =?utf-8?B?TjZML2l2YUlNalZKYjg5TFEzanV6U3gwYWROQTF3d3RBNkU4SG9adVMxaTJS?=
- =?utf-8?B?WEtCWGJUYi9kR3hpYk5OYXI2S0piTTZ3VXA4TkVGeGVFT00rb2ZvcHhJWWtK?=
- =?utf-8?B?dm5kRkhzK0hlMmRFU3AxNlRubHRWZDdCZE5UeDFmTHpFV3lnWFJvQnkzdXNS?=
- =?utf-8?B?RVpMaU44MTUrSXhDaUVrNFAxMFUwWGJCUlhKSmNiU2Q5TmlDTUdRWDhDY1RH?=
- =?utf-8?B?K2pQZE5aT1ZIRDc4UWwwVFA4Nklzc0M4ZUJPeU82Zk10K1VIenJpZXpJYkw1?=
- =?utf-8?B?RythMDZadmtvNDNJZTRYdmxLa1RMbjBSdGtNeEwycnFsek1OMk9EdW84QVlU?=
- =?utf-8?B?d0R5VzV4Q1BSZ1VlUG00aUp0V1dmMlpKdjc5K2dIZXdUbnJwYUI2SEpiNG51?=
- =?utf-8?B?cDRlS2NVak9OSm41N1ZaU3M4TGVIWXdzSkQ3azVoa2VuMUQrVFcxSy9IT0Jj?=
- =?utf-8?B?SEpzTUUxdndBNUhvMXFJT2NaRmdpbjNoekJXSWhDdU83bys2L0hGRDQrM3o4?=
- =?utf-8?B?azgrZ0E1NVc4RGczWjFobXRxbnVPVWVUc0I0MjBBeGJRaXAydzduVHNranUw?=
- =?utf-8?B?VnJoWUtQNWhQVzBEQlFNbmUzUktiaERnY3R1cExjMHFJaEs2OTVlRTdEcjdm?=
- =?utf-8?Q?FIKR1mUkNRnwVPybRwX8Y/5wnJBDDvj79U8ViNz?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02b491ee-9aa4-4f33-20c5-08dd3ae8a2fa
-X-MS-Exchange-CrossTenant-AuthSource: BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 13:28:20.0158
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB6461
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git switchtec
+branch HEAD: a3282f84b2151d254dc4abf24d1255c6382be774  PCI: switchtec: Add Microchip PCI100X device IDs
 
-On 2025/1/19 20:23, Manivannan Sadhasivam wrote:
-> On Wed, Jan 15, 2025 at 03:06:57PM +0800, Chen Wang wrote:
->> From: Chen Wang <unicorn_wang@outlook.com>
->>
->> Add support for PCIe controller in SG2042 SoC. The controller
->> uses the Cadence PCIe core programmed by pcie-cadence*.c. The
->> PCIe controller will work in host mode only.
->>
-> Please add more info about the IP. Like IP revision, PCIe Gen, lane count,
-> etc...
-ok.
->> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
->> ---
->>   drivers/pci/controller/cadence/Kconfig       |  13 +
->>   drivers/pci/controller/cadence/Makefile      |   1 +
->>   drivers/pci/controller/cadence/pcie-sg2042.c | 528 +++++++++++++++++++
->>   3 files changed, 542 insertions(+)
->>   create mode 100644 drivers/pci/controller/cadence/pcie-sg2042.c
->>
->> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
->> index 8a0044bb3989..292eb2b20e9c 100644
->> --- a/drivers/pci/controller/cadence/Kconfig
->> +++ b/drivers/pci/controller/cadence/Kconfig
->> @@ -42,6 +42,18 @@ config PCIE_CADENCE_PLAT_EP
->>   	  endpoint mode. This PCIe controller may be embedded into many
->>   	  different vendors SoCs.
->>   
->> +config PCIE_SG2042
->> +	bool "Sophgo SG2042 PCIe controller (host mode)"
->> +	depends on ARCH_SOPHGO || COMPILE_TEST
->> +	depends on OF
->> +	select IRQ_MSI_LIB
->> +	select PCI_MSI
->> +	select PCIE_CADENCE_HOST
->> +	help
->> +	  Say Y here if you want to support the Sophgo SG2042 PCIe platform
->> +	  controller in host mode. Sophgo SG2042 PCIe controller uses Cadence
->> +	  PCIe core.
->> +
->>   config PCI_J721E
->>   	bool
->>   
->> @@ -67,4 +79,5 @@ config PCI_J721E_EP
->>   	  Say Y here if you want to support the TI J721E PCIe platform
->>   	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
->>   	  core.
->> +
-> Spurious newline.
+elapsed time: 1217m
 
-oops, I will fix this.
+configs tested: 165
+configs skipped: 3
 
-[......]
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->> +/*
->> + * SG2042 PCIe controller supports two ways to report MSI:
->> + *
->> + * - Method A, the PCIe controller implements an MSI interrupt controller
->> + *   inside, and connect to PLIC upward through one interrupt line.
->> + *   Provides memory-mapped MSI address, and by programming the upper 32
->> + *   bits of the address to zero, it can be compatible with old PCIe devices
->> + *   that only support 32-bit MSI address.
->> + *
->> + * - Method B, the PCIe controller connects to PLIC upward through an
->> + *   independent MSI controller "sophgo,sg2042-msi" on the SOC. The MSI
->> + *   controller provides multiple(up to 32) interrupt sources to PLIC.
->> + *   Compared with the first method, the advantage is that the interrupt
->> + *   source is expanded, but because for SG2042, the MSI address provided by
->> + *   the MSI controller is fixed and only supports 64-bit address(> 2^32),
->> + *   it is not compatible with old PCIe devices that only support 32-bit MSI
->> + *   address.
->> + *
->> + * Method A & B can be configured in DTS, default is Method B.
-> How to configure them? I can only see "sophgo,sg2042-msi" in the binding.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                        nsimosci_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250122    gcc-13.2.0
+arc                   randconfig-002-20250122    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                         assabet_defconfig    clang-20
+arm                         assabet_defconfig    gcc-14.2.0
+arm                         at91_dt_defconfig    clang-20
+arm                            hisi_defconfig    clang-20
+arm                       imx_v6_v7_defconfig    clang-20
+arm                        multi_v7_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250122    clang-19
+arm                   randconfig-002-20250122    clang-20
+arm                   randconfig-003-20250122    gcc-14.2.0
+arm                   randconfig-004-20250122    gcc-14.2.0
+arm                          sp7021_defconfig    clang-20
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250122    clang-20
+arm64                 randconfig-002-20250122    clang-15
+arm64                 randconfig-003-20250122    clang-20
+arm64                 randconfig-004-20250122    clang-19
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250122    gcc-14.2.0
+csky                  randconfig-002-20250122    gcc-14.2.0
+hexagon                          alldefconfig    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon               randconfig-001-20250122    clang-20
+hexagon               randconfig-001-20250122    gcc-14.2.0
+hexagon               randconfig-002-20250122    clang-20
+hexagon               randconfig-002-20250122    gcc-14.2.0
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250122    clang-19
+i386        buildonly-randconfig-001-20250122    gcc-12
+i386        buildonly-randconfig-002-20250122    gcc-12
+i386        buildonly-randconfig-003-20250122    gcc-12
+i386        buildonly-randconfig-004-20250122    clang-19
+i386        buildonly-randconfig-004-20250122    gcc-12
+i386        buildonly-randconfig-005-20250122    clang-19
+i386        buildonly-randconfig-005-20250122    gcc-12
+i386        buildonly-randconfig-006-20250122    clang-19
+i386        buildonly-randconfig-006-20250122    gcc-12
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250122    clang-19
+i386                  randconfig-002-20250122    clang-19
+i386                  randconfig-003-20250122    clang-19
+i386                  randconfig-004-20250122    clang-19
+i386                  randconfig-005-20250122    clang-19
+i386                  randconfig-006-20250122    clang-19
+i386                  randconfig-007-20250122    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250122    gcc-14.2.0
+loongarch             randconfig-002-20250122    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm63xx_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250122    gcc-14.2.0
+nios2                 randconfig-002-20250122    gcc-14.2.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250122    gcc-14.2.0
+parisc                randconfig-002-20250122    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    clang-16
+powerpc                     kmeter1_defconfig    gcc-14.2.0
+powerpc                   motionpro_defconfig    clang-17
+powerpc                       ppc64_defconfig    clang-20
+powerpc               randconfig-001-20250122    gcc-14.2.0
+powerpc               randconfig-002-20250122    clang-17
+powerpc               randconfig-002-20250122    gcc-14.2.0
+powerpc               randconfig-003-20250122    clang-15
+powerpc               randconfig-003-20250122    gcc-14.2.0
+powerpc                    sam440ep_defconfig    clang-20
+powerpc                     tqm8560_defconfig    gcc-14.2.0
+powerpc                         wii_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250122    clang-20
+powerpc64             randconfig-001-20250122    gcc-14.2.0
+powerpc64             randconfig-002-20250122    clang-19
+powerpc64             randconfig-002-20250122    gcc-14.2.0
+powerpc64             randconfig-003-20250122    clang-20
+powerpc64             randconfig-003-20250122    gcc-14.2.0
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    clang-20
+riscv                    nommu_virt_defconfig    clang-20
+riscv                 randconfig-001-20250122    clang-20
+riscv                 randconfig-002-20250122    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250122    clang-18
+s390                  randconfig-002-20250122    clang-20
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                            hp6xx_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250122    gcc-14.2.0
+sh                    randconfig-002-20250122    gcc-14.2.0
+sh                           se7705_defconfig    clang-20
+sh                           se7712_defconfig    gcc-14.2.0
+sh                             sh03_defconfig    clang-20
+sh                           sh2007_defconfig    clang-20
+sh                   sh7724_generic_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250122    gcc-14.2.0
+sparc                 randconfig-002-20250122    gcc-14.2.0
+sparc64               randconfig-001-20250122    gcc-14.2.0
+sparc64               randconfig-002-20250122    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250122    gcc-12
+um                    randconfig-002-20250122    clang-20
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250122    gcc-12
+x86_64      buildonly-randconfig-002-20250122    clang-19
+x86_64      buildonly-randconfig-003-20250122    gcc-12
+x86_64      buildonly-randconfig-004-20250122    gcc-12
+x86_64      buildonly-randconfig-005-20250122    gcc-12
+x86_64      buildonly-randconfig-006-20250122    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250122    gcc-12
+x86_64                randconfig-002-20250122    gcc-12
+x86_64                randconfig-003-20250122    gcc-12
+x86_64                randconfig-004-20250122    gcc-12
+x86_64                randconfig-005-20250122    gcc-12
+x86_64                randconfig-006-20250122    gcc-12
+x86_64                randconfig-007-20250122    gcc-12
+x86_64                randconfig-008-20250122    gcc-12
+x86_64                randconfig-071-20250122    clang-19
+x86_64                randconfig-072-20250122    clang-19
+x86_64                randconfig-073-20250122    clang-19
+x86_64                randconfig-074-20250122    clang-19
+x86_64                randconfig-075-20250122    clang-19
+x86_64                randconfig-076-20250122    clang-19
+x86_64                randconfig-077-20250122    clang-19
+x86_64                randconfig-078-20250122    clang-19
+x86_64                               rhel-9.4    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250122    gcc-14.2.0
+xtensa                randconfig-002-20250122    gcc-14.2.0
 
-
-The value of the msi-parent attribute is used in dts to distinguish 
-them, for example:
-
-```dts
-
-msi: msi-controller@7030010300 {
-     ......
-};
-
-pcie_rc0: pcie@7060000000 {
-     msi-parent = <&msi>;
-};
-
-pcie_rc1: pcie@7062000000 {
-     ......
-     msi-parent = <&msi_pcie>;
-     msi_pcie: interrupt-controller {
-         ......
-     };
-};
-
-```
-
-Which means:
-
-pcie_rc0 uses Method B
-
-pcie_rc1 uses Method A.
-
-[......]
-
->> +struct sg2042_pcie {
->> +	struct cdns_pcie	*cdns_pcie;
->> +
->> +	struct regmap		*syscon;
->> +
->> +	u32			link_id;
->> +
->> +	struct irq_domain	*msi_domain;
->> +
->> +	int			msi_irq;
->> +
->> +	dma_addr_t		msi_phys;
->> +	void			*msi_virt;
->> +
->> +	u32			num_applied_vecs; /* used to speed up ISR */
->> +
-> Get rid of the newline between struct members, please.
-ok
->> +	raw_spinlock_t		msi_lock;
->> +	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
->> +};
->> +
-> [...]
->
->> +static int sg2042_pcie_setup_msi(struct sg2042_pcie *pcie,
->> +				 struct device_node *msi_node)
->> +{
->> +	struct device *dev = pcie->cdns_pcie->dev;
->> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
->> +	struct irq_domain *parent_domain;
->> +	int ret = 0;
->> +
->> +	if (!of_property_read_bool(msi_node, "msi-controller"))
->> +		return -ENODEV;
->> +
->> +	ret = of_irq_get_byname(msi_node, "msi");
->> +	if (ret <= 0) {
->> +		dev_err(dev, "%pOF: failed to get MSI irq\n", msi_node);
->> +		return ret;
->> +	}
->> +	pcie->msi_irq = ret;
->> +
->> +	irq_set_chained_handler_and_data(pcie->msi_irq,
->> +					 sg2042_pcie_msi_chained_isr, pcie);
->> +
->> +	parent_domain = irq_domain_create_linear(fwnode, MSI_DEF_NUM_VECTORS,
->> +						 &sg2042_pcie_msi_domain_ops, pcie);
->> +	if (!parent_domain) {
->> +		dev_err(dev, "%pfw: Failed to create IRQ domain\n", fwnode);
->> +		return -ENOMEM;
->> +	}
->> +	irq_domain_update_bus_token(parent_domain, DOMAIN_BUS_NEXUS);
->> +
-> The MSI controller is wired to PLIC isn't it? If so, why can't you use
-> hierarchial MSI domain implementation as like other controller drivers?
-
-The method used here is somewhat similar to dw_pcie_allocate_domains() 
-in drivers/pci/controller/dwc/pcie-designware-host.c. This MSI 
-controller is about Method A, the PCIe controller implements an MSI 
-interrupt controller inside, and connect to PLIC upward through only ONE 
-interrupt line. Because MSI to PLIC is multiple to one, I use linear 
-mode here and use chained ISR to handle the interrupts.
-
-[......]
-
->> +/* Dummy ops which will be assigned to cdns_pcie.ops, which must be !NULL. */
-> Because cadence code driver doesn't check for !ops? Please fix it instead. And
-> the fix is trivial.
-
-ok, I will fix this for cadence code together in next version.
-
-[......]
-
->> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
->> +	if (!bridge) {
->> +		dev_err(dev, "Failed to alloc host bridge!\n");
-> Use dev_err_probe() throughout the probe function.
-Got it.
->> +		return -ENOMEM;
->> +	}
->> +
->> +	bridge->ops = &sg2042_pcie_host_ops;
->> +
->> +	rc = pci_host_bridge_priv(bridge);
->> +	cdns_pcie = &rc->pcie;
->> +	cdns_pcie->dev = dev;
->> +	cdns_pcie->ops = &sg2042_cdns_pcie_ops;
->> +	pcie->cdns_pcie = cdns_pcie;
->> +
->> +	np_syscon = of_parse_phandle(np, "sophgo,syscon-pcie-ctrl", 0);
->> +	if (!np_syscon) {
->> +		dev_err(dev, "Failed to get syscon node\n");
->> +		return -ENOMEM;
-> -ENODEV
-Got.
->> +	}
->> +	syscon = syscon_node_to_regmap(np_syscon);
-> You should drop the np reference count once you are done with it.
-ok, I will double check this through the file.
->> +	if (IS_ERR(syscon)) {
->> +		dev_err(dev, "Failed to get regmap for syscon\n");
->> +		return -ENOMEM;
-> PTR_ERR(syscon)
-
-yes.
-
-
->> +	}
->> +	pcie->syscon = syscon;
->> +
->> +	if (of_property_read_u32(np, "sophgo,link-id", &pcie->link_id)) {
->> +		dev_err(dev, "Unable to parse sophgo,link-id\n");
-> "Unable to parse \"sophgo,link-id\"\n"
-ok.
->> +		return -EINVAL;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, pcie);
->> +
->> +	pm_runtime_enable(dev);
->> +
->> +	ret = pm_runtime_get_sync(dev);
-> Use pm_runtime_resume_and_get().
-Got it.
->> +	if (ret < 0) {
->> +		dev_err(dev, "pm_runtime_get_sync failed\n");
->> +		goto err_get_sync;
->> +	}
->> +
->> +	msi_node = of_parse_phandle(dev->of_node, "msi-parent", 0);
->> +	if (!msi_node) {
->> +		dev_err(dev, "Failed to get msi-parent!\n");
->> +		return -1;
-> -ENODATA
-Thanks, this should be fixed.
->
->> +	}
->> +
->> +	if (of_device_is_compatible(msi_node, "sophgo,sg2042-pcie-msi")) {
->> +		ret = sg2042_pcie_setup_msi(pcie, msi_node);
-> Same as above. np leak here.
-ok, will check this through the file.
->
-> - Mani
-
-Thanks,
-
-Chen
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
