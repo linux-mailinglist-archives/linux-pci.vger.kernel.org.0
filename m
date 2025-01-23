@@ -1,201 +1,193 @@
-Return-Path: <linux-pci+bounces-20266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08613A19EAB
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 08:03:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 597BAA19EB9
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 08:12:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39A801624EA
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 07:03:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B3F4188E359
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 07:12:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 031F420B20A;
-	Thu, 23 Jan 2025 07:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E685120B20C;
+	Thu, 23 Jan 2025 07:12:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="M7WjAk5j"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iA79YljX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB8B1C1F0C;
-	Thu, 23 Jan 2025 07:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B117D13B7A3;
+	Thu, 23 Jan 2025 07:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737615798; cv=none; b=WOqEHcx2u+KlND7bTWPksgrLwlpBhtCS+gjI0EzmvR237deHSdnrys+9+5hQww8zFiD+xbQQg8CNBNizIoRIuS+qdL9mBzP3Y31GWnLAmF5/LEfxhsGDZ5xyr+/oCogYUdPsRM1E5dGHwoX1+gswrkwatQjMnt0rPk2Gg5UHBUI=
+	t=1737616365; cv=none; b=jjJh2/21nLBvi2FUBuOJ5MXSXeQp88fxg53S9ThjRhMJOgQffhun0LSkOUvVDT4zWvZbwskoGf9RfgDo6igXbVgSokm32ThxPGh63oMqS98ceeBu3k1jMlKmPlKhPkPKmjCbpfrB4oHIs5fWiGCaUBXBUatL0L9la8O6sZWyOFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737615798; c=relaxed/simple;
-	bh=8Dn29LZ9Oyr9Bztea4nHr1DZ24nI1+Mg4Ve3shUi25M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cVZOhYjApZXcayx/PLkiglcdAsvjo5Zheb+ckRlpKryWdpvlNJBiGSrv0H1iLeHvADOA0j/rD9LZqdN3Y06CKUECujdmPvz90nMV9vFP0e2zJbSOCCY7x97/oTqRfVLqCj2SsCtJ4nXf+IN6GtkiUolfD+dUYKta3sw4ktmoK+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=M7WjAk5j; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1737615786; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=5C8aHaYEcDBY6Hou9Ze7bldqFBZdSLiEfzvyyxIGjzc=;
-	b=M7WjAk5j6XUzdQ6PgukhQ6W6oLu+AgplZSA3OnubmuRVT49t0RPrV3SzH4SKGxsuITB04Qbl6lR3NKNrvshX92F3wHXEZIaBQ+cBXd4c8R52Qw4YMCa5tjUC161/eSFdsyuwLn+vk8nnKMAweqbkZYB/ko1iaW8+sYeXHOHGg2g=
-Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOAkbLF_1737615785 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 23 Jan 2025 15:03:05 +0800
-Message-ID: <3199a681-a31c-40c9-8a05-89cf38cd6eb8@linux.alibaba.com>
-Date: Thu, 23 Jan 2025 15:03:03 +0800
+	s=arc-20240116; t=1737616365; c=relaxed/simple;
+	bh=+m4kq9RhF0sySrXt/vast6hn5HGdBdRo79zy0v80Uvo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oqhc9mc77jx1FQAbrzgXp58KGSTf0/gBBDWq6YzKMAEqTF7w3PqQr4dFReEInozb2w5//iP7ItOYrumXBmgzLocY7WCa/PRCb+cUkXXvwhjwfrUI8ypt434nyZsukbGSlYN5H4JxJIEiEci8gNEVtcDlKaL2VVFaa0U/NZ9kWnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iA79YljX; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=TJEsf
+	mKAZNzobHSS3eFH81hG1bSBk5WyXde/ZAzioR0=; b=iA79YljXUHD8q0Jfl2miv
+	HbU75Cwk9FOVOaW+9QsXkDcPtESYSHoOHNv8SGL41v+oS+jghR8rEJunDkfygg1H
+	7rdx9XRk0+4r6trcFmD9nWnc8mhPioFZUUf73oePro02QTQEu4lWHyaRihIN3gDv
+	JQctoUl7Ztk48KsfkivS1k=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3vzsx65FnO_SuHw--.49387S2;
+	Thu, 23 Jan 2025 15:09:38 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	bwawrzyn@cisco.com,
+	s-vadapalli@ti.com,
+	thomas.richard@bootlin.com,
+	wojciech.jasko-EXT@continental-corporation.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [RESEND] PCI: cadence: Add configuration space capability search API
+Date: Thu, 23 Jan 2025 15:09:35 +0800
+Message-Id: <20250123070935.1810110-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI/DPC: Run recovery on device that detected the
- error
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com
-References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
- <20241112135419.59491-2-xueshuai@linux.alibaba.com>
- <b109aca6-1eb2-43d2-b9c9-fb014d00bf7d@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <b109aca6-1eb2-43d2-b9c9-fb014d00bf7d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3vzsx65FnO_SuHw--.49387S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZryDGFyxXw45uFW7XFW7CFg_yoW5tw1xpF
+	ykJFyfCF1rJr43uan3A3WYvr15GF9Yk34xJa92kry5ZF17CryUGF1IkFy5tF9xCrsrWF17
+	XrWDtFykCw1ftwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEzVb7UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx-do2eR6O4zFQAAs4
 
+Add configuration space capability search API using struct cdns_pcie*
+pointer.
 
+Similar patches below have been merged.
+commit 5b0841fa653f ("PCI: dwc: Add extended configuration space capability
+search API")
+commit 7a6854f6874f ("PCI: dwc: Move config space capability search API")
 
-在 2025/1/23 12:53, Sathyanarayanan Kuppuswamy 写道:
-> 
-> On 11/12/24 5:54 AM, Shuai Xue wrote:
->> The current implementation of pcie_do_recovery() assumes that the
->> recovery process is executed on the device that detected the error.
->> However, the DPC driver currently passes the error port that experienced
->> the DPC event to pcie_do_recovery().
->>
->> Use the SOURCE ID register to correctly identify the device that detected the
->> error. By passing this error device to pcie_do_recovery(), subsequent
->> patches will be able to accurately access AER status of the error device.
-> 
-> When passing the error device, I assume pcie_do_recovery() will find the
-> upstream bride and run the recovery logic .
-> 
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence.c | 80 +++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h |  3 +
+ 2 files changed, 83 insertions(+)
 
-Yes, the pcie_do_recovery() will find the upstream bridge and walk bridges
-potentially AER affected.
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 204e045aed8c..ebb4a0130145 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -8,6 +8,86 @@
+ 
+ #include "pcie-cadence.h"
+ 
++/*
++ * These interfaces resemble the pci_find_*capability() interfaces, but these
++ * are for configuring host controllers, which are bridges *to* PCI devices but
++ * are not PCI devices themselves.
++ */
++static u8 __cdns_pcie_find_next_cap(struct cdns_pcie *pcie, u8 cap_ptr,
++				    u8 cap)
++{
++	u8 cap_id, next_cap_ptr;
++	u16 reg;
++
++	if (!cap_ptr)
++		return 0;
++
++	reg = cdns_pcie_readl(pcie, cap_ptr);
++	cap_id = (reg & 0x00ff);
++
++	if (cap_id > PCI_CAP_ID_MAX)
++		return 0;
++
++	if (cap_id == cap)
++		return cap_ptr;
++
++	next_cap_ptr = (reg & 0xff00) >> 8;
++	return __cdns_pcie_find_next_cap(pcie, next_cap_ptr, cap);
++}
++
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	u8 next_cap_ptr;
++	u16 reg;
++
++	reg = cdns_pcie_readl(pcie, PCI_CAPABILITY_LIST);
++	next_cap_ptr = (reg & 0x00ff);
++
++	return __cdns_pcie_find_next_cap(pcie, next_cap_ptr, cap);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_find_capability);
++
++static u16 cdns_pcie_find_next_ext_capability(struct cdns_pcie *pcie,
++					      u16 start, u8 cap)
++{
++	u32 header;
++	int ttl;
++	int pos = PCI_CFG_SPACE_SIZE;
++
++	/* minimum 8 bytes per capability */
++	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
++
++	if (start)
++		pos = start;
++
++	header = cdns_pcie_readl(pcie, pos);
++	/*
++	 * If we have no capabilities, this is indicated by cap ID,
++	 * cap version and next pointer all being 0.
++	 */
++	if (header == 0)
++		return 0;
++
++	while (ttl-- > 0) {
++		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
++			return pos;
++
++		pos = PCI_EXT_CAP_NEXT(header);
++		if (pos < PCI_CFG_SPACE_SIZE)
++			break;
++
++		header = cdns_pcie_readl(pcie, pos);
++	}
++
++	return 0;
++}
++
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return cdns_pcie_find_next_ext_capability(pcie, 0, cap);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_find_ext_capability);
++
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+ {
+ 	u32 delay = 0x3;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index f5eeff834ec1..6f4981fccb94 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -557,6 +557,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+ }
+ #endif
+ 
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
++
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+ 
+ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+-- 
+2.25.1
 
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
-> 
-> IMO, moving the "err_port" rename to a separate patch will make this change
-> more clear.  But it is up to you.
-
-I see, I will add a separate patch.
-
-> 
->>   drivers/pci/pci.h      |  2 +-
->>   drivers/pci/pcie/dpc.c | 30 ++++++++++++++++++++++++------
->>   drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
->>   3 files changed, 43 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 14d00ce45bfa..0866f79aec54 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -521,7 +521,7 @@ struct rcec_ea {
->>   void pci_save_dpc_state(struct pci_dev *dev);
->>   void pci_restore_dpc_state(struct pci_dev *dev);
->>   void pci_dpc_init(struct pci_dev *pdev);
->> -void dpc_process_error(struct pci_dev *pdev);
->> +struct pci_dev *dpc_process_error(struct pci_dev *pdev);
->>   pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
->>   bool pci_dpc_recovered(struct pci_dev *pdev);
->>   #else
->> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->> index 2b6ef7efa3c1..62a68cde4364 100644
->> --- a/drivers/pci/pcie/dpc.c
->> +++ b/drivers/pci/pcie/dpc.c
->> @@ -257,10 +257,17 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
->>       return 1;
->>   }
->> -void dpc_process_error(struct pci_dev *pdev)
->> +/**
->> + * dpc_process_error - handle the DPC error status
-> 
-> Handling the DPC error status has nothing to do with finding
-> the error source. Why not add a new helper function?
-
-As PCIe Spec,
-
-     DPC Error Source ID - When the DPC Trigger Reason field indicates that DPC
-     was triggered due to the reception of an ERR_NONFATAL or ERR_FATAL, this
-     register contains the Requester ID of the received Message. Otherwise, the
-     value of this register is undefined.
-
-To find the error source, we need to
-
-   - check the error reason from PCI_EXP_DPC_STATUS,
-   - Identify the error device by PCI_EXP_DPC_SOURCE_ID for ERR_NONFATAL and
-     ERR_FATAL reason.
-
-The code will duplicate with dpc_process_error. Therefore, I directly reused
-dpc_process_error.
-
-> 
->> + * @pdev: the port that experienced the containment event
->> + *
->> + * Return the device that experienced the error.
-> detected the error?
-
-Will change it.
-
->> + */
->> +struct pci_dev *dpc_process_error(struct pci_dev *pdev)
->>   {
->>       u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
->>       struct aer_err_info info;
->> +    struct pci_dev *err_dev = NULL;
-> 
-> I don't think you need NULL initialization here.
-
-Will remove it.
-
-> 
->>       pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
->>       pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
->> @@ -283,6 +290,13 @@ void dpc_process_error(struct pci_dev *pdev)
->>            "software trigger" :
->>            "reserved error");
->> +    if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE ||
->> +        reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE)
->> +        err_dev = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
->> +                        PCI_BUS_NUM(source), source & 0xff);
->> +    else
->> +        err_dev = pci_dev_get(pdev);
->> +
->>       /* show RP PIO error detail information */
->>       if (pdev->dpc_rp_extensions &&
->>           reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT &&
->> @@ -295,6 +309,8 @@ void dpc_process_error(struct pci_dev *pdev)
->>           pci_aer_clear_nonfatal_status(pdev);
->>           pci_aer_clear_fatal_status(pdev);
->>       }
->> +
->> +    return err_dev;
->>   }
->>   static void pci_clear_surpdn_errors(struct pci_dev *pdev)
->> @@ -350,21 +366,23 @@ static bool dpc_is_surprise_removal(struct pci_dev *pdev)
->>   static irqreturn_t dpc_handler(int irq, void *context)
->>   {
->> -    struct pci_dev *pdev = context;
->> +    struct pci_dev *err_port = context, *err_dev = NULL;
-> 
-> NULL initialization is not needed.
-
-Will remove it.
-
-Thanks for valuable comments.
-
-Best Regards,
-Shuai
 
