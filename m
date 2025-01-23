@@ -1,110 +1,83 @@
-Return-Path: <linux-pci+bounces-20269-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20270-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6D76A19F35
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 08:41:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25E70A19F6F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 08:54:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 591C61697BE
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 07:41:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 706E716E0B1
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 07:54:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F7820B7F4;
-	Thu, 23 Jan 2025 07:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3704C20B802;
+	Thu, 23 Jan 2025 07:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ThqJFKEY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+Exsl4h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A76120B7F7;
-	Thu, 23 Jan 2025 07:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BCA1FF7B8;
+	Thu, 23 Jan 2025 07:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737618072; cv=none; b=O9pMVbpDqQNU/LlnjYOY3H8QTy8pXAeXt1Ka9M7SId+GOn6fXdSq0Bto/UHfsEtVkJ+Oi4RvnqJ/bbWsCiUFZzdgSqaoy8jy5HmfkkBtTTGJ0ZpCGS2Roj4hQKrB6yOfi8RF+6JB7GxTyIuX1pHFvFT3ZqM3YpNbtDW+bxyfWJI=
+	t=1737618881; cv=none; b=s5euWDv28S1I081hCAGXiP+1K3D6kgXzOOTe9dryuEd1WeCkU5ouglxDVsxR5ZhvWFSQ6DPrk6gfwPHzgyn3ISVlYNnkNydZfB0OJawK8HC80r5tx9zYttLh19c2Ze9VoysakKz/9tRAl54xOB8G9FCaBdd+fZFpQDV4y+ilFo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737618072; c=relaxed/simple;
-	bh=A12lfXcvcN2s65HoEcoW2XNgZeuA9GNGD5x2iTGNbT0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iT72fIqnz9Pmwk4RBeqjMwaaBmTqGhihOh2fQ2eB8l+QOY4NDN6SHzr8WTq//dVnrgwK1FsPfa9WXLrXTz583AfaPh4A4EHHaXXgYbdC54aedpHENmlphH6/g1XYtaf8md1WuhzBmcxOLZsyZIGydS3QRGgKOoRYmtDYmiact/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ThqJFKEY; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50N7eqkF334185
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jan 2025 01:40:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1737618052;
-	bh=A+QvJTJJzZOZxGo1UNItFpwgwpy8gVwzinFEFXYyTUc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=ThqJFKEYEorOjb8uu3Td7Rf5zCtEvj6QmXqFW1wr/48AuyqhUy5BpMEEn1L+lNZ7s
-	 80IDUVIegIcmCbQP4r0hPoRGgoSsmvVf7ADgG8XdDCwubUuI+7GbSnlJvrKliW/Cds
-	 7ZmLfzTYnw0P1dB7Nx/Qx/BfYGz9LQNbaeQvW2to=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 50N7eqkG028938
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 Jan 2025 01:40:52 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 23
- Jan 2025 01:40:51 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 23 Jan 2025 01:40:51 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.104])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50N7eoap094952;
-	Thu, 23 Jan 2025 01:40:50 -0600
-Date: Thu, 23 Jan 2025 13:10:49 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Hans Zhang <18255117159@163.com>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <bwawrzyn@cisco.com>, <s-vadapalli@ti.com>,
-        <thomas.richard@bootlin.com>,
-        <wojciech.jasko-EXT@continental-corporation.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND] PCI: cadence: Add configuration space capability search
- API
-Message-ID: <vj5skjgz4li2vit3xpr3ysldrcvzoglfycemki3yrzg4ocrrkc@isk7ytysgih7>
-References: <20250123070935.1810110-1-18255117159@163.com>
+	s=arc-20240116; t=1737618881; c=relaxed/simple;
+	bh=OrYcjJ5hzXu+46N9Vw6qrqFKTskY2lWjkvcWkrgGb0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebstOsk5gxjY2aeuC/W0VRb0AGpvTsCSLU3GqofxLXzKX/SyZn+mnFqKoT8dp1LVik3ke7MS8EnkA49uDiRb3AakCH/6sUP3krkS+lRgEjqy/xLzOVOu5N0HCXPU646uDdYoqDzQxw9UaLogPvHGwBbulRgZQ+HdX+zWoghG8Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+Exsl4h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BB1C4CED3;
+	Thu, 23 Jan 2025 07:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737618879;
+	bh=OrYcjJ5hzXu+46N9Vw6qrqFKTskY2lWjkvcWkrgGb0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W+Exsl4h6DMWnWCX1BbBSg9OMibYJglDCEoGX8rFhmA1WZtT3jVtpKv5WVPCnSkiU
+	 tFsgTfTWoHsKrZf0LrcTf1jGSoXAAtTEd+8zJ5NrXgGYLbeP8EdziU/5DA2XFHuEfr
+	 XoUYhOFG3k0E0RRrBRT6zGEXWZGbPdEIGz6GylgKg2x/QW4zlXHAGuTp6DOl4xngxX
+	 r9BamiDr88QmR76e0xVQXWvnUljatOeuS5RMbDGE5XHGHXXV6J1ljQV0y0qfNj2OGt
+	 xtuHlp1CrTsOFIWFnBrWAmqhHYx4GaoQydiCmqIWrzhho8vg6vJ8CKFZRs0UVxaCA4
+	 OakAcC9NnEgtA==
+Date: Thu, 23 Jan 2025 08:54:36 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
+	p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v7 1/7] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe
+ uniphy
+Message-ID: <20250123-analytic-pragmatic-bonobo-a0f5e1@krzk-bin>
+References: <20250122063411.3503097-1-quic_varada@quicinc.com>
+ <20250122063411.3503097-2-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250123070935.1810110-1-18255117159@163.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250122063411.3503097-2-quic_varada@quicinc.com>
 
-On Thu, Jan 23, 2025 at 03:09:35PM +0800, Hans Zhang wrote:
-> Add configuration space capability search API using struct cdns_pcie*
-> pointer.
+On Wed, Jan 22, 2025 at 12:04:05PM +0530, Varadarajan Narayanan wrote:
+> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 > 
-> Similar patches below have been merged.
-> commit 5b0841fa653f ("PCI: dwc: Add extended configuration space capability
-> search API")
-> commit 7a6854f6874f ("PCI: dwc: Move config space capability search API")
-
-Similar patches being merged doesn't sound like a proper reason for
-having a feature. Please provide details regarding why this is required.
-Assuming that the intent for introducing this feature is to use it
-later, it will be a good idea to post the patch for that as well in the
-same series.
-
+> Document the Qualcomm UNIPHY PCIe 28LP present in IPQ5332.
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence.c | 80 +++++++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h |  3 +
->  2 files changed, 83 insertions(+)
+> v7: * Add data type definition to 'num-lanes'
 
-[...]
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Regards,
-Siddharth.
+Best regards,
+Krzysztof
+
 
