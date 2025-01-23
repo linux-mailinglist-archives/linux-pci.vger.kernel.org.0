@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-20296-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20297-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA394A1A991
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 19:23:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6542EA1A994
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 19:23:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D63873A8CF7
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 18:23:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D679188DEF3
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 18:23:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CB1D19146E;
-	Thu, 23 Jan 2025 18:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E7F1ADC67;
+	Thu, 23 Jan 2025 18:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NxNL1bqG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TwdYqWt6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F2E15ECDF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DDF187859;
 	Thu, 23 Jan 2025 18:23:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737656585; cv=none; b=KCo2kOGQbbHRqkOU3pSRyJW8dBVebmBXkTnd26w/1td9CHetB3zW1smcOFj0qNPW12H6Sb/jGAbbsG+NvT5a1+eaKaznxtGjLACk/ij2+AHxBIe67UZbQV6n8s1KzlAd/KmHqsjx2QoTxJm4pdY/YSYNy4kqM3Rw1oXR+joWUR8=
+	t=1737656586; cv=none; b=kuSAsRLXnQv2NX+NZQTi9LybH0kuNFkAxIjtFBYeH+lUgNWhGdu/Yd7XgL7V8Jo171vQFi1NK/dxJmHbnBlV7HlS9CNXFTy0bNidbCGQkW9kQgDgFAOczUNTUp7Yb3mpVAIFI+2ZdftAs1dz+WSL3eox3ixiLZOEN1eHeDPQbm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737656585; c=relaxed/simple;
-	bh=lNb8JDsH41zRgxYMUIjSya9K5SMuyfqwPF7qvuGBD3Q=;
+	s=arc-20240116; t=1737656586; c=relaxed/simple;
+	bh=drh/z7zD0+60QnFsAarTd25/+YVNvVPBhmsNBAiGhzE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k/Vqj0K1qPgM6NiM2sdXZG+QRkdvlPWJSuFd92FLijUuh1Y9tWs0S2MvU5htV+r0L9PajZcl8U2sFSacYtQL8DuUvqyp92ZX7j1Ram3WJKIaR9KV6Uv9dN4m147zAKjFTLDLw+lBWp3LYy1DRi3EuhugiRObwrjfqWSmPoRKS38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NxNL1bqG; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=WpVyyTt+YNwKlGxWiBtJ5WyTYMtyKUQvRhZFxk2rPt+XsULrJM02WqDQlOa7aJgJF+GhYnx/26sL1Stfu/d7/M3Tnx5aGtDe708LtEZ2rlufaN07s6XUDMGIfRRSgI4qh5HWwOyl2oQaGoVjOcdMkmXQnlM+WXxW6kBtv+pDczw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TwdYqWt6; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737656584; x=1769192584;
+  t=1737656585; x=1769192585;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lNb8JDsH41zRgxYMUIjSya9K5SMuyfqwPF7qvuGBD3Q=;
-  b=NxNL1bqGV6J4epVmk5EPub1ha/3SoHvRWASI/KNIsQHsDMnpo+lTFYxu
-   MqXODhd1jYkpIazIbTPbt6IHVn7nN3NNo0yWPQDnFksnwMJoURTS0wXsB
-   TUrGDrPhaB3iiYGkzNhnCgekWLIhQpLx6SjyPDHCVMKaycFuFIauvEPPK
-   Hoka0czVVWMZg70XXwFDz02Zgdei+WYoE0IbNZkPUAJzpHbP4NEHkkLVf
-   PbqX/e/ArnTT+YpllQrd/UohxNNkLuNarYbjmBsEmw4yjfPSX0r7sBGTi
-   +KuuG01vFdGMwfuwOH498NRcx7x+XXPjeBhr/JnUaaibxpxGECYqUJB13
-   g==;
-X-CSE-ConnectionGUID: iG+d6U2+QvO+XvlMe9nJPg==
-X-CSE-MsgGUID: NHGTM6a8RiWdaPWiyT3Jlw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="49573247"
+  bh=drh/z7zD0+60QnFsAarTd25/+YVNvVPBhmsNBAiGhzE=;
+  b=TwdYqWt6LsjMwLOBhcJsnGaCy4mlGjyMwUdLNEL5MjUK92YPkcVMrlIb
+   eymg0N6Cbyb5F+xonScpDfO9V0oNj6wUP6zUyGaaOia++fjrSmbGO19G+
+   W+fBFVEEUhxneKrXopXt5JHneZAizJjL/9grzQtfdO0VlqlJra+pkwpwi
+   jdk+DptKIjFjL9ADEZAe0r7yQID8+tSCWKcHXyNpwr6ONwQPIF0LyVICt
+   8eTWnarvjI0Qo4/L7P1ckPytqnkyos52OpvR4NS+T+sFvWhoYCrdNTG1u
+   1ilgZz1SSL+EZUUoSKY9O5HWNBxSipwDQ/CdA6YQWY00AzuYZ4Mt7uMc4
+   Q==;
+X-CSE-ConnectionGUID: bg9HRrm6Q6KQIdlfmHp+HA==
+X-CSE-MsgGUID: R4XvHf8YT0G0Qljljay0YA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="49573254"
 X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="49573247"
+   d="scan'208";a="49573254"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:23:03 -0800
-X-CSE-ConnectionGUID: BVURNVXPQo2OtjxxlGCbnA==
-X-CSE-MsgGUID: ptl2HirKT6S+V1NPr+/jfQ==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:23:04 -0800
+X-CSE-ConnectionGUID: xnrFRXH4TdaCi4W7OzmEvg==
+X-CSE-MsgGUID: OhqhNaG3SbuWG+JqsLsGAw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111574816"
+   d="scan'208";a="111574823"
 Received: from test2-linux-lab.an.altera.com ([10.244.156.200])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:23:02 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:23:03 -0800
 From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -74,9 +74,9 @@ To: lpieralisi@kernel.org,
 Cc: matthew.gerlach@altera.com,
 	peter.colberg@altera.com,
 	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v4 2/5] arm64: dts: agilex: add soc0 label
-Date: Thu, 23 Jan 2025 12:19:29 -0600
-Message-Id: <20250123181932.935870-3-matthew.gerlach@linux.intel.com>
+Subject: [PATCH v4 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+Date: Thu, 23 Jan 2025 12:19:30 -0600
+Message-Id: <20250123181932.935870-4-matthew.gerlach@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250123181932.935870-1-matthew.gerlach@linux.intel.com>
 References: <20250123181932.935870-1-matthew.gerlach@linux.intel.com>
@@ -88,29 +88,82 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a label to the soc@0 device tree node.
+Add the base device tree for support of the PCIe Root Port
+for the Agilex family of chips.
 
 Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 ---
 v3:
  - Remove accepted patches from patch set.
----
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index 1235ba5a9865..144fe74e929e 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -152,7 +152,7 @@ usbphy0: usbphy {
- 		compatible = "usb-nop-xceiv";
- 	};
- 
--	soc@0 {
-+	soc0: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "simple-bus";
+v2:
+ - Rename node to fix schema check error.
+---
+ .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+new file mode 100644
+index 000000000000..50f131f5791b
+--- /dev/null
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier:     GPL-2.0
++/*
++ * Copyright (C) 2024, Intel Corporation
++ */
++&soc0 {
++	aglx_hps_bridges: fpga-bus@80000000 {
++		compatible = "simple-bus";
++		reg = <0x80000000 0x20200000>,
++		      <0xf9000000 0x00100000>;
++		reg-names = "axi_h2f", "axi_h2f_lw";
++		#address-cells = <0x2>;
++		#size-cells = <0x1>;
++		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
++			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
++			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
++			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
++			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
++			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
++
++		pcie_0_pcie_aglx: pcie@200000000 {
++			reg = <0x00000000 0x10000000 0x10000000>,
++			      <0x00000001 0x00010000 0x00008000>,
++			      <0x00000000 0x20000000 0x00200000>;
++			reg-names = "Txs", "Cra", "Hip";
++			interrupt-parent = <&intc>;
++			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <0x1>;
++			device_type = "pci";
++			bus-range = <0x0000000 0x000000ff>;
++			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
++			msi-parent = <&pcie_0_msi_irq>;
++			#address-cells = <0x3>;
++			#size-cells = <0x2>;
++			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
++					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
++					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
++					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
++			status = "disabled";
++		};
++
++		pcie_0_msi_irq: msi@10008080 {
++			compatible = "altr,msi-1.0";
++			reg = <0x00000001 0x00018080 0x00000010>,
++			      <0x00000001 0x00018000 0x00000080>;
++			reg-names = "csr", "vector_slave";
++			interrupt-parent = <&intc>;
++			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
++			msi-controller;
++			num-vectors = <0x20>;
++			status = "disabled";
++		};
++	};
++};
 -- 
 2.34.1
 
