@@ -1,244 +1,279 @@
-Return-Path: <linux-pci+bounces-20305-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20306-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EE36A1AAE6
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 21:11:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D43FA1ABFD
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 22:38:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FBE43ACB7F
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 20:10:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 004843ADD6F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 21:38:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CC511C3BEC;
-	Thu, 23 Jan 2025 20:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66BF71CBE94;
+	Thu, 23 Jan 2025 21:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dAV1O2qo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0Gl7ZvI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AF91B6CE4;
-	Thu, 23 Jan 2025 20:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3744B16EC19;
+	Thu, 23 Jan 2025 21:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737663049; cv=none; b=sltK9dbrJyr6+94Lv/IF06vPTPV1JesRGo7OGY8WWitFn2H53OXRrLRh3IL04GlCKpOUrTe0p5OhTgZWfwDWzpr4kN2UcPgH2tOlgY+TZtw2wgvHHEubHTyI5e5zwaOH2BZjeTMYQ4wn1o6HIEN+ZHhpXm9SyU+xQA1TrDKol94=
+	t=1737668300; cv=none; b=WAWetgBCxO39z08Bj98n6WJLAsMfk6HDqY4uu9NMxXqk31qnPHYb4fdf107BT4w3nh4qyEFkstm+pQN+hWil6mg6zou8D8HZjiMU9dSIpEBjly7Ppro7EHc9vm7KejLBARBjBRUI5rbCfGjE5sXDXrhwFkPDMIdUEjJyNlul/bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737663049; c=relaxed/simple;
-	bh=i00Df96kpTYh88wolV91mHKE7jCvN56hXQ7Oxg4LBio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a275p2wxtioo9CtiI/V3bs92gbougLMflCIyKNMKTYFextqbmIH5PTeg1WK6KfBINyVAYCpk5TY9Xd3ViXYLb5aCpoG9QXV+Bagk52qv64lo1CobNRhM3z6cp4NfE74iT1099P6v9PLjnLxktRzPsyO2XD1U6I6YwVBpU08juYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dAV1O2qo; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737663048; x=1769199048;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=i00Df96kpTYh88wolV91mHKE7jCvN56hXQ7Oxg4LBio=;
-  b=dAV1O2qobQYcQb4TxKAfc5IT5B3FvJTIxkUNYBEXHfTrVzjCiiNjv6c4
-   EM9wfRzavTCHkW66o8itJL1lfRT/0YazSz6l5HnAIrrevedMi5DFrB6aW
-   JG4OrncrMQLkI3x1wcVUM5qUVAO8UY7BAEdbgXbQ32dy36r35DkH7AHtM
-   Moki8hZycKM8cGGyhsWRl+0sSzCQxdyf4ziVkTf77n/28lOxzOYrIjz41
-   JRlx2ToDoJlYe3LKjwD9397Nd5cmWsMPMv9P+X5vApNfqK+TMLKxhaD5p
-   e8Q4l6FD6Xt6uUJIddofOYovHcXE4LufAWHrSQMpIprUF3AvAE/zTnCaf
-   A==;
-X-CSE-ConnectionGUID: 9FFhaUqxTzCFnayFJg0hFw==
-X-CSE-MsgGUID: dhV3wHqpTuCz8RvyudOI0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55599687"
-X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="55599687"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 12:10:46 -0800
-X-CSE-ConnectionGUID: DPdciZukRWqligHQknASow==
-X-CSE-MsgGUID: M4R5m23dQMuMGquFlmFLPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="144809297"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.223.78]) ([10.124.223.78])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 12:10:45 -0800
-Message-ID: <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
-Date: Thu, 23 Jan 2025 12:10:27 -0800
+	s=arc-20240116; t=1737668300; c=relaxed/simple;
+	bh=kIg09Min6QwFaovmaca18U9kozBuMZ1yuBDBVGZHNLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I34qNNqjq1AxcsoEqOjUqtO2+IZjH3V4XFvPBhA/byMcsjkec+lZo0MVPFUgIKey1esx+ra223by+QpVS6KXyZ9V4jJPeaNQd0hIf1dGjYQ5KoHh00n5aSH7pT08PcHE8kQ+P/CpiCyx7ZSDioE2k3Yj/Nrcs35IsX28JKpzQo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0Gl7ZvI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62AEAC4CED3;
+	Thu, 23 Jan 2025 21:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737668299;
+	bh=kIg09Min6QwFaovmaca18U9kozBuMZ1yuBDBVGZHNLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i0Gl7ZvIuWU4RspKumbfgiP3PSD4xH0Ac1OIpaIVQ7wbHfcXEC3xzHjRNNUWHhdT7
+	 EyaW8WmYu/8mNAO0/UoTeo6doKEkdNDD9Rwhr+0mXjYlAFMtI+gGkREM23XdLPIMjU
+	 nEJwGXzJPx7O+coBGU9aYtBGVTHO5ooI48pAiSQNTNuursXmYsfpOWgotEDgdA9Zf0
+	 CRwFe4bPhNhsE7BYcKc40iZpgKIgU6+jhC4JASdjys8GdiIjCvve0I63E564CgLPeE
+	 f9zGCoQGzFUV/QcOaJh87AfD2PYRljR8v2eQlYCVTW3G6PngfnG4Bv8L5ad7rCBpI6
+	 57cW6lsfZqCnw==
+Date: Thu, 23 Jan 2025 15:38:18 -0600
+From: Rob Herring <robh@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, jingoohan1@gmail.com,
+	p.zabel@pengutronix.de, johan+linaro@kernel.org,
+	quic_schintav@quicinc.com, cassel@kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	fabrice.gasnier@foss.st.com
+Subject: Re: [PATCH v3 01/10] dt-bindings: PCI: Add STM32MP25 PCIe Root
+ Complex bindings
+Message-ID: <20250123213818.GA401153-robh@kernel.org>
+References: <20250115092134.2904773-1-christian.bruel@foss.st.com>
+ <20250115092134.2904773-2-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com
-References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
- <20241112135419.59491-3-xueshuai@linux.alibaba.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20241112135419.59491-3-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250115092134.2904773-2-christian.bruel@foss.st.com>
 
-Hi,
-
-On 11/12/24 5:54 AM, Shuai Xue wrote:
-> The AER driver has historically avoided reading the configuration space of
-> an endpoint or RCiEP that reported a fatal error, considering the link to
-> that device unreliable. Consequently, when a fatal error occurs, the AER
-> and DPC drivers do not report specific error types, resulting in logs like:
->
->    pcieport 0000:30:03.0: EDR: EDR event received
->    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->    pcieport 0000:30:03.0: AER: broadcast error_detected message
->    nvme nvme0: frozen state error detected, reset controller
->    nvme 0000:34:00.0: ready 0ms after DPC
->    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->
-> AER status registers are sticky and Write-1-to-clear. If the link recovered
-> after hot reset, we can still safely access AER status of the error device.
-> In such case, report fatal errors which helps to figure out the error root
-> case.
->
-> After this patch, the logs like:
->
->    pcieport 0000:30:03.0: EDR: EDR event received
->    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->    pcieport 0000:30:03.0: AER: broadcast error_detected message
->    nvme nvme0: frozen state error detected, reset controller
->    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
->    nvme 0000:34:00.0: ready 0ms after DPC
->    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
->    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
->    nvme 0000:34:00.0:    [ 4] DLP                    (First)
->    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+On Wed, Jan 15, 2025 at 10:21:25AM +0100, Christian Bruel wrote:
+> Document the bindings for STM32MP25 PCIe Controller configured in
+> root complex mode.
+> 
+> Supports 4 INTx and MSI interrupts from the ARM GICv2m controller.
+> 
+> STM32 PCIe may be in a power domain which is the case for the STM32MP25
+> based boards.
+> 
+> Supports WAKE# from wake-gpios
+> 
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 > ---
->   drivers/pci/pci.h      |  3 ++-
->   drivers/pci/pcie/aer.c | 11 +++++++----
->   drivers/pci/pcie/dpc.c |  2 +-
->   drivers/pci/pcie/err.c |  9 +++++++++
->   4 files changed, 19 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 0866f79aec54..6f827c313639 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -504,7 +504,8 @@ struct aer_err_info {
->   	struct pcie_tlp_log tlp;	/* TLP Header */
->   };
->   
-> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
-> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
-> +			      bool link_healthy);
->   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->   #endif	/* CONFIG_PCIEAER */
->   
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 13b8586924ea..97ec1c17b6f4 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->    * aer_get_device_error_info - read error status from dev and store it to info
->    * @dev: pointer to the device expected to have a error record
->    * @info: pointer to structure to store the error record
-> + * @link_healthy: link is healthy or not
->    *
->    * Return 1 on success, 0 on error.
->    *
->    * Note that @info is reused among all error devices. Clear fields properly.
->    */
-> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
-> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
-> +			      bool link_healthy)
->   {
->   	int type = pci_pcie_type(dev);
->   	int aer = dev->aer_cap;
-> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->   	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->   		   type == PCI_EXP_TYPE_RC_EC ||
->   		   type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -		   info->severity == AER_NONFATAL) {
-> +		   info->severity == AER_NONFATAL ||
-> +		   (info->severity == AER_FATAL && link_healthy)) {
->   
->   		/* Link is still healthy for IO reads */
->   		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
-> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->   
->   	/* Report all before handle them, not to lost records by reset etc. */
->   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
-> -		if (aer_get_device_error_info(e_info->dev[i], e_info))
-> +		if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->   			aer_print_error(e_info->dev[i], e_info);
->   	}
->   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
-> -		if (aer_get_device_error_info(e_info->dev[i], e_info))
-> +		if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->   			handle_error_source(e_info->dev[i], e_info);
->   	}
->   }
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 62a68cde4364..b3f157a00405 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -304,7 +304,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
->   		dpc_process_rp_pio_error(pdev);
->   	else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
->   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
-> -		 aer_get_device_error_info(pdev, &info)) {
-> +		 aer_get_device_error_info(pdev, &info, false)) {
->   		aer_print_error(pdev, &info);
->   		pci_aer_clear_nonfatal_status(pdev);
->   		pci_aer_clear_fatal_status(pdev);
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 31090770fffc..462577b8d75a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	struct pci_dev *bridge;
->   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->   	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +	struct aer_err_info info;
->   
->   	/*
->   	 * If the error was detected by a Root Port, Downstream Port, RCEC,
-> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   			pci_warn(bridge, "subordinate device reset failed\n");
->   			goto failed;
->   		}
+>  .../bindings/pci/st,stm32-pcie-common.yaml    |  43 +++++++
+>  .../bindings/pci/st,stm32-pcie-host.yaml      | 120 ++++++++++++++++++
+>  2 files changed, 163 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml b/Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
+> new file mode 100644
+> index 000000000000..9ee25bb25aac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/st,stm32-pcie-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +		info.severity = AER_FATAL;
-> +		/* Link recovered, report fatal errors of RCiEP or EP */
-> +		if ((type == PCI_EXP_TYPE_ENDPOINT ||
-> +		     type == PCI_EXP_TYPE_RC_END) &&
-> +		    aer_get_device_error_info(dev, &info, true))
-> +			aer_print_error(dev, &info);
+> +title: STM32MP25 PCIe RC/EP controller
+> +
+> +maintainers:
+> +  - Christian Bruel <christian.bruel@foss.st.com>
+> +
+> +description:
+> +  STM32MP25 PCIe RC/EP common properties
+> +
+> +properties:
+> +  clocks:
+> +    maxItems: 1
+> +    description: PCIe system clock
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
 
-IMO, error device information is more like a debug info. Can we change
-the print level of this info to debug?
+You have phys in host bridge and the root ports?
 
->   	} else {
->   		pci_walk_bridge(bridge, report_normal_detected, &status);
->   	}
-> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	if (host->native_aer || pcie_ports_native) {
->   		pcie_clear_device_status(dev);
->   		pci_aer_clear_nonfatal_status(dev);
-> +		pci_aer_clear_fatal_status(dev);
+> +
+> +  phy-names:
+> +    const: pcie-phy
 
-I think we clear fatal status in DPC driver, why do it again?
+-names is unless when there is only 1 entry. We already know it's a 
+'phy' for 'pcie', so the whole string adds nothing.
 
->   	}
->   
->   	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  access-controllers:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO controlled connection to PERST# signal
+> +    maxItems: 1
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+You have multiple root ports, but only one PERST# signal?
 
+> +
+> +required:
+> +  - clocks
+> +  - resets
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml b/Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
+> new file mode 100644
+> index 000000000000..b5b8c92522e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
+> @@ -0,0 +1,120 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/st,stm32-pcie-host.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32MP25 PCIe Root Complex
+> +
+> +maintainers:
+> +  - Christian Bruel <christian.bruel@foss.st.com>
+> +
+> +description:
+> +  PCIe root complex controller based on the Synopsys DesignWare PCIe core.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> +  - $ref: /schemas/pci/st,stm32-pcie-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stm32mp25-pcie-rc
+> +
+> +  reg:
+> +    items:
+> +      - description: Data Bus Interface (DBI) registers.
+> +      - description: PCIe configuration registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +
+> +  msi-parent:
+> +    maxItems: 1
+> +
+> +  wake-gpios:
+> +    description: GPIO used as WAKE# input signal
+> +    maxItems: 1
+> +
+> +  wakeup-source: true
+> +
+> +dependentRequired:
+> +  wakeup-source: [ wake-gpios ]
+> +
+> +patternProperties:
+> +  '^pcie@[0-2],0$':
+> +    type: object
+> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +      phys:
+> +        maxItems: 1
+> +
+> +      phy-names:
+> +        const: pcie-phy
+> +
+> +    required:
+> +      - phys
+> +      - phy-names
+> +      - ranges
+> +
+> +    unevaluatedProperties: false
+> +
+> +required:
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +  - ranges
+> +  - dma-ranges
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/phy/phy.h>
+> +    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
+> +
+> +    pcie@48400000 {
+> +        compatible = "st,stm32mp25-pcie-rc";
+> +        device_type = "pci";
+> +        reg = <0x48400000 0x400000>,
+> +              <0x10000000 0x10000>;
+> +        reg-names = "dbi", "config";
+> +        #interrupt-cells = <1>;
+> +        interrupt-map-mask = <0 0 0 7>;
+> +        interrupt-map = <0 0 0 1 &intc 0 0 GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0 0 0 2 &intc 0 0 GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0 0 0 3 &intc 0 0 GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0 0 0 4 &intc 0 0 GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        ranges = <0x01000000 0x0 0x00000000 0x10010000 0x0 0x10000>,
+> +                 <0x02000000 0x0 0x10020000 0x10020000 0x0 0x7fe0000>,
+> +                 <0x42000000 0x0 0x18000000 0x18000000 0x0 0x8000000>;
+> +        dma-ranges = <0x42000000 0x0 0x80000000 0x80000000 0x0 0x80000000>;
+> +        clocks = <&rcc CK_BUS_PCIE>;
+> +        resets = <&rcc PCIE_R>;
+> +        msi-parent = <&v2m0>;
+> +        wakeup-source;
+> +        wake-gpios = <&gpioh 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+> +        reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
+> +        access-controllers = <&rifsc 68>;
+> +        power-domains = <&CLUSTER_PD>;
+> +
+> +        pcie@0,0 {
+> +          device_type = "pci";
+> +          reg = <0x0 0x0 0x0 0x0 0x0>;
+> +          phys = <&combophy PHY_TYPE_PCIE>;
+> +          phy-names = "pcie-phy";
+> +          #address-cells = <3>;
+> +          #size-cells = <2>;
+> +          ranges;
+> +        };
+> +
+> +    };
+> -- 
+> 2.34.1
+> 
 
