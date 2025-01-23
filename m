@@ -1,227 +1,244 @@
-Return-Path: <linux-pci+bounces-20304-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20305-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AEB9A1AA25
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 20:15:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EE36A1AAE6
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 21:11:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6090C1666A9
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 19:15:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FBE43ACB7F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 20:10:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246AD1BD9E7;
-	Thu, 23 Jan 2025 19:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CC511C3BEC;
+	Thu, 23 Jan 2025 20:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="edTmdIEQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dAV1O2qo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2081.outbound.protection.outlook.com [40.107.249.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BF915ECD7;
-	Thu, 23 Jan 2025 19:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737659725; cv=fail; b=bjsUGSAjf2cx6ow9/Og8vH7PaPjVk+u78CFiXaE6oA+OCM9uEcxK7mwM5qaqxV1wGxxpJk2qE2okfgyQFdUmF6PGPJF0RyvIUBss6VkntKW0ufYpthFhbs4zbOD2aarRlit90q1QLjUEW+t+BHXTo65R0GAeT21IE6boN0KLD8U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737659725; c=relaxed/simple;
-	bh=S1yr678ezWPo3ClMIVmgcrU1oiryCdYSL8KG3XN9h04=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EP3GC2guuKHv+smLetLuw53Dajp0oFqKq9ef6I778cNKj2ZnaGxJ8Iy97DCcbb0wSOM0861cenxtCyVJwAJv2ohVWXyPRwZz0fvTFs0OjPnx5W6NMk6GpPhR83YzNiUqPrsW/u0QB2t6FgZJYIixX5abp7ArJb8XLv9LNnRYG28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=edTmdIEQ; arc=fail smtp.client-ip=40.107.249.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uOoLkoiLVFdwljJ+ytyI1K8QohB95A3TAANFPxwNThDunKMWgan1kgxef73N5QnpFIgb0uZLVkc8AngqausJ8v/9iI6Qp1CkXuk0UCXK7TAOsu9Ag7ur9tbeGGV6xrd+5k5Tj1ua6j+LXGdJxcdZ9y8QBMRoWq5c8Pc6fxGKPD/KdQV7JdWlUCcNDaBlE7rCrJoch07UEtcj2s0mp2Bqv4ecjnrkgZ4twz/tN1Z5BNkgypoVHALSArlBWkRjx6U/xF2hs52AL5y9ncmV/T/I+D7unFKkfLQEkjN8kxdNmgiW4wCBv6WzcJtBJmOuh2yPwQBQ2tBkGyCJbO5wW/tqrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oEChO8CfT9er1OzC+iE2ALg9AVGN8eE8N6fJbM5jCWM=;
- b=vD0nKZ3+Cx9RA+HTnAG37lRrDhdhxTw7wDWNzOP8Urod+1yB//cPW3EwqKuDNUFLrremHcqJYKpdUIgWaJr1GUDT9Hms4AfpFRlRzCtB/jUPpUoGSdYxxsw2mmrqiGME32AWblARmfiFuGCb6Tqk8Rx9tF3G4YDGcl63uV8VZwHNVfuzyEaSVky+oqHA2otND8BYctrEyAFe0BSDJX/3APZMDpA1TOkOm+phiDho/LCCfLfLsz5FKLHLWW1Da+iuPr1jwCpesoAbqyERDUgceTSrTPFlUJMApu2MpIsBmD/dPPbOo9yRR1X0BR8+bFtpXEEQwa3O5ThdhaxCyFhoLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oEChO8CfT9er1OzC+iE2ALg9AVGN8eE8N6fJbM5jCWM=;
- b=edTmdIEQXrXzbTfAbBuHYFPiKRVZ/AHDMNW/XogGN0MXeTed4+G0ah89gT3l1avkRBde5jGhQgVb1NSRDoEyMw97tswjIAlVjeoiPLGNuzfqQaxQrNoV9Z1v5e7swrVHADfLOGiY8RzNehr6q5I7wVsAGzsXD8Ex23HLurwv5UR5HGZXtxhTkL//NGXj5efSvPM5XUOx5i7HgXWEvgisAma26xuZqGJ4r3DRWE+LUvQjfkqdJ40l/kb7WmJuDy//Lh16HvQr0lOmLnRYaxTAi7STCEIKf5d/EKrzf/8oGexxjJjtxhMQtLYU0bvHQFDfkQPMiuVQeVm9n9MpS4yfmg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV1PR04MB10870.eurprd04.prod.outlook.com (2603:10a6:150:20a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.16; Thu, 23 Jan
- 2025 19:15:20 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8377.009; Thu, 23 Jan 2025
- 19:15:20 +0000
-Date: Thu, 23 Jan 2025 14:15:10 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v8 2/7] PCI: dwc: Use devicetree 'ranges' property to get
- rid of cpu_addr_fixup() callback
-Message-ID: <Z5KVPg/DuJHci/77@lizhi-Precision-Tower-5810>
-References: <Z5JegF7i3Ig2pLYB@lizhi-Precision-Tower-5810>
- <20250123190422.GA1215672@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123190422.GA1215672@bhelgaas>
-X-ClientProxiedBy: BY3PR04CA0023.namprd04.prod.outlook.com
- (2603:10b6:a03:217::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AF91B6CE4;
+	Thu, 23 Jan 2025 20:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737663049; cv=none; b=sltK9dbrJyr6+94Lv/IF06vPTPV1JesRGo7OGY8WWitFn2H53OXRrLRh3IL04GlCKpOUrTe0p5OhTgZWfwDWzpr4kN2UcPgH2tOlgY+TZtw2wgvHHEubHTyI5e5zwaOH2BZjeTMYQ4wn1o6HIEN+ZHhpXm9SyU+xQA1TrDKol94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737663049; c=relaxed/simple;
+	bh=i00Df96kpTYh88wolV91mHKE7jCvN56hXQ7Oxg4LBio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a275p2wxtioo9CtiI/V3bs92gbougLMflCIyKNMKTYFextqbmIH5PTeg1WK6KfBINyVAYCpk5TY9Xd3ViXYLb5aCpoG9QXV+Bagk52qv64lo1CobNRhM3z6cp4NfE74iT1099P6v9PLjnLxktRzPsyO2XD1U6I6YwVBpU08juYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dAV1O2qo; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737663048; x=1769199048;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i00Df96kpTYh88wolV91mHKE7jCvN56hXQ7Oxg4LBio=;
+  b=dAV1O2qobQYcQb4TxKAfc5IT5B3FvJTIxkUNYBEXHfTrVzjCiiNjv6c4
+   EM9wfRzavTCHkW66o8itJL1lfRT/0YazSz6l5HnAIrrevedMi5DFrB6aW
+   JG4OrncrMQLkI3x1wcVUM5qUVAO8UY7BAEdbgXbQ32dy36r35DkH7AHtM
+   Moki8hZycKM8cGGyhsWRl+0sSzCQxdyf4ziVkTf77n/28lOxzOYrIjz41
+   JRlx2ToDoJlYe3LKjwD9397Nd5cmWsMPMv9P+X5vApNfqK+TMLKxhaD5p
+   e8Q4l6FD6Xt6uUJIddofOYovHcXE4LufAWHrSQMpIprUF3AvAE/zTnCaf
+   A==;
+X-CSE-ConnectionGUID: 9FFhaUqxTzCFnayFJg0hFw==
+X-CSE-MsgGUID: dhV3wHqpTuCz8RvyudOI0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55599687"
+X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
+   d="scan'208";a="55599687"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 12:10:46 -0800
+X-CSE-ConnectionGUID: DPdciZukRWqligHQknASow==
+X-CSE-MsgGUID: M4R5m23dQMuMGquFlmFLPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="144809297"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.223.78]) ([10.124.223.78])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 12:10:45 -0800
+Message-ID: <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
+Date: Thu, 23 Jan 2025 12:10:27 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10870:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0fafe5fa-f8a3-4e55-1039-08dd3be24735
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|1800799024|376014|366016|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NTECq5qcZIrYqKsh+v4XHFHGwSKGgU2PQRkR4Y21vPjSnCHPYhtNiuMXLOpw?=
- =?us-ascii?Q?MqdgiZz6kRI8AH5hK9onATdw45+eXUtJydwOlfThM3A3IxW8KnPsvDR9Wfj/?=
- =?us-ascii?Q?vFQehDh4V423ZVmfPu3Ro9CSI9HmH1rn00qj21FzZAshmtL5dub+wOzCcCQn?=
- =?us-ascii?Q?ACBNf1Hsy2GPevnFTiYX9wG+ptZePjvTCmJHnJJFvKppgqlihBFXw9otyT9M?=
- =?us-ascii?Q?7A/cj5EAwCAdMrkU4L0kM78UR2zuG2scwhOTTVgAH/1qy491Xb1ZUvZ09C9Y?=
- =?us-ascii?Q?xwtw/VL2GBT6Ma/YPD0dKTqKWAUNYrgWXf8QdcQRCc3VJUd8J02IiJUE4Txm?=
- =?us-ascii?Q?f2J5kLH+IgmiHCGNzQSoN7D2sqgQiZuvUH9BBemv3FifXpAsW+ErDFGANs9V?=
- =?us-ascii?Q?PIeE4Q2VSddZfO1n0wyqv86aXcwfhEy9fV61BPBPxgT6UXUR+mnEpRwK0sm4?=
- =?us-ascii?Q?667qdej+bi+9gamKuj/biQGKZJ7uZJU9c8hG7GQnYjk/3gfz7L7Jn1jS5CET?=
- =?us-ascii?Q?NdU3LbvSGMmfM7j1OGsBZclgifUXe442ykeljWal6Gz1rBG3Kol+IoijevJq?=
- =?us-ascii?Q?8NRVyf8MB69nbMHalzycz+mAv6VbO+3rMARMEhQpPn8XX9maz8JlpER9Evor?=
- =?us-ascii?Q?mfE4JZRoaBzb8TI8MaVlG1iotytRwz58b8KLmci5l7GtKzwp0pxsiLRQof+7?=
- =?us-ascii?Q?xFCJ4CURlHV/dDzHm03sTgJGrkgznXXR1Ucb4y28Dc1ffksmjRhJpIG0l8e+?=
- =?us-ascii?Q?4Owo1WQMccuDjciyVNsM93iyDR0cYYoCvp4cUtuMCO3xVP3mSTIKYCPmE/SH?=
- =?us-ascii?Q?eDrodJjW1gvvF7x+D8YbIxvvGTXKj0Yh8/6wwLiTyQy3cRWI7jLnuvjJdsE1?=
- =?us-ascii?Q?V6NsF3C+NxJEQoVIYuGT+euxgEpjEVN/mrz3Jfp2equ1U5vR6JKLeHBpXalx?=
- =?us-ascii?Q?MUPj0T6hPkzsbPuZGc+kLcHScB7Q4DcwkmviQ9ITMH6kgbvSMXJ73d7W1p3m?=
- =?us-ascii?Q?lDclAL9O9FJudTgK7KgCNTZxlKnOPT1HSRBuXkPYDxjIlD3x6cgk0KX+8u17?=
- =?us-ascii?Q?OwFlrmYrGw7YRzg5RWWHn4GPV2GZLP3FjGNhbxi89ook5uaHX6C9ao9c1/JL?=
- =?us-ascii?Q?r+N9LjPDWCihwjB92HbplwpX265/z2uu03wQFtEVQ3qUbbcyHjvgDQQNb4K7?=
- =?us-ascii?Q?HASyISrm3iWxY9f6MLeUjxRwnyiw8PrPFiSxkzwzWX1A5k663KU+OwDb8XEH?=
- =?us-ascii?Q?XeRk1Gv3zTBit7yFCOotha76TOtenYTQohAHoZ+PprmKPzq2tONyLkgqTFII?=
- =?us-ascii?Q?G4aA2rNG2d1AUtmzTYzBBS0SvMO0UExoV23yRFeSWMPf66XrFmpX6vrSEXDj?=
- =?us-ascii?Q?G+mM2elUSxvDI1d1V13TL+ZuAwr8pPycfuZLM39YTsHq+6vA/nihPuvcmB+H?=
- =?us-ascii?Q?9ke4X2vqjnJe/9dNWVKSjk626Bf324IW?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(366016)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HrtsvTZPGXcPrgR5x8F0Hw6GIaPTCqpYgt//U9uv6p1IJfejWzNWdJ1cd1R4?=
- =?us-ascii?Q?CQxixHYFOzA712qiv26ZRvUXL+w1uDZ7TvGNBVz4+5XWGiMXemhD3A7+sGRG?=
- =?us-ascii?Q?wvNMQnccvoyL7DUoXZr0ZIsCp3V7rQmVjDP+CVFKVpNIk6dS11sUndROOuBO?=
- =?us-ascii?Q?TuMyxdh5phARQ+FY7+DjPn7BXhxXrf0+Bga6bJyHnXkSAIFBpZ5xLvLbfKC5?=
- =?us-ascii?Q?ofmAO1KTqcmWqOmeNL3KIeDmIvfegxxeT0PmpjkH4SilVi8/ZqZYcI9B9wqT?=
- =?us-ascii?Q?VYZKo/OLfT/G9ldvPYUEfy9BwARpMLFf+D9rmWIBD3JWg5pXpVCzT5KCvhvT?=
- =?us-ascii?Q?pzgTSbGEPFHAcNKfcFDYitqtc8Aenp5mjU+0aUkvPk5M9RID7SBm8mTMCHGv?=
- =?us-ascii?Q?xpJYOd/4DBNecHmW31rYNsLVdaddfwlsWKJmvGwBOYo3CvZpPWfxl/0tfHv/?=
- =?us-ascii?Q?6BQk9Lz2GobavIruahbi4BmcYOvrbK7I9CI1XRLx0rqM0PzmMbLtAsmwjUF0?=
- =?us-ascii?Q?+PV0zkKRcgY0SLog5mvAzewbqflz26Ul6pRKMscmSs3ruS/fqfoBX+7N6fcy?=
- =?us-ascii?Q?YBnyhMCZkApMx8UyYmV7e94iSIEJOjNnQXV7On2d+d7D50Ri7lq38fzMiBa8?=
- =?us-ascii?Q?nFxP01ZKaBTWo3b6oLfuyqH47YD/Lo3ZVS5IMhXMT5V+ZiJMbr3Er4tTApBB?=
- =?us-ascii?Q?a/Ya/3cw8DnmX1i2GV+PG4NOg0K8I0fU5hzWqHqePhhTUGZCQ7D3I6/VQGib?=
- =?us-ascii?Q?DpCmLZtmtzyeH6qYsyFexZBw5whRczD3DiC/55MmzWhMk6HE2k/QIKH4qLhs?=
- =?us-ascii?Q?7q17aEuGHPjLFfcVW+eksl3SgFU5pkUBMKrOnIk7nSV5o0qGfVYeeYfYUD2V?=
- =?us-ascii?Q?S6xneAbUNt6ZIHHUqUbfAnNfJ7BgWxkIM2ZWR9AQJvhPEDGfnXbBsR2wDyqy?=
- =?us-ascii?Q?F6DOyagPGGxhhSlNLUscBHBfnQh+2aNJFdmlMORlgRQ7ABl6axxp2FQlsgG8?=
- =?us-ascii?Q?RKctND+ghGOQdFl+H3ifBgZ0I5qOooQIiNuE4lth7BzzSpD6VWZ+w9atBgYv?=
- =?us-ascii?Q?7l+1K48vbt/smqjQorMNpI1qQ6yNc/NPti+J/4COkrnCx0lSv7JyQYejEkjt?=
- =?us-ascii?Q?bCzywRYp3c2AVLYjnUgFgqUqFkfDJnDG3czDSSBPut/XAM+EyCK1LUwn/vDo?=
- =?us-ascii?Q?pMr01SySl5nsfCHVUGtzTIFxsp6A3iLFRNCKGX8EWKvAcyRvhig5pILQ0dUi?=
- =?us-ascii?Q?ivP/AYCIzmDVWJ6L2mslrW5um/Hnd5oMH63AowftT+ysHyYCUKFDaFghYg27?=
- =?us-ascii?Q?ZvZncrlpKjWimLZz1lkmtlw06YihB/HKr9bV7sLnl6XK5LrPJhDYlEzxAN+J?=
- =?us-ascii?Q?Idmt4ATg16jOvRmdJ5LBnL1WEp05k36cnScu3Y5J9dwrGM0777JAYo2qXLAI?=
- =?us-ascii?Q?Jg3a3zAZQ6M4MCGxpWHhS6UEZLgsY7J6g6HmiM8gi6GS0ihMvW9zNU37LKcx?=
- =?us-ascii?Q?V3pjZGJc2YzdrpGlJqxwZ3ckYfUqPCkBNY8SXWkntchxmz0D/el34w3GEHFJ?=
- =?us-ascii?Q?m71e2YhaRk7aEcclMQ0=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fafe5fa-f8a3-4e55-1039-08dd3be24735
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 19:15:20.0853
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /bIE/DD0s2RyIuw6lsVlyt+EQFdJNpBxE1z9ZRMRxWBpp5XNZG0yuXOsXjEYR/ykIgGjFcMFnqYY/Khi5Pdgow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10870
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+To: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ bhelgaas@google.com, kbusch@kernel.org
+Cc: mahesh@linux.ibm.com, oohall@gmail.com
+References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
+ <20241112135419.59491-3-xueshuai@linux.alibaba.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20241112135419.59491-3-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 23, 2025 at 01:04:22PM -0600, Bjorn Helgaas wrote:
-> On Thu, Jan 23, 2025 at 10:21:36AM -0500, Frank Li wrote:
-> > On Fri, Jan 17, 2025 at 10:42:37AM -0500, Frank Li wrote:
-> > > On Thu, Jan 16, 2025 at 05:29:16PM -0600, Bjorn Helgaas wrote:
-> > > > On Thu, Jan 16, 2025 at 05:14:00PM -0600, Bjorn Helgaas wrote:
-> > > > > On Tue, Nov 19, 2024 at 02:44:20PM -0500, Frank Li wrote:
-> > > > > > parent_bus_addr in struct of_range can indicate address information just
-> > > > > > ahead of PCIe controller. Most system's bus fabric use 1:1 map between
-> > > > > > input and output address. but some hardware like i.MX8QXP doesn't use 1:1
-> > > > > > map.
-> > ...
->
-> > 	I saw you have not picked all of these patches during you rework
-> > pci git branches.
-> >
-> > 	I know you are busy, do you have chance to pick left patch for 6.14.
->
-> This series had a mix of things: several patches related to
-> .cpu_addr_fixup(), plus several unrelated ones for PHY mode and i.MX8Q
-> support.  I think I picked up all the unrelated ones.
->
-> .cpu_addr_fixup() is a generic problem that affects dwc (dra7xx, imx6,
-> artpec6, intel-gw, visconti), cadence (cadence-plat), and now
-> apparently microchip.
->
-> I deferred these because I'm hoping we can come up with a more generic
-> solution that's easier to apply across all these cases.  I don't
-> really want to merge something that immediately needs to be reworked
-> for other drivers.
->
-> A few of the things I wonder about:
->
->   - dw_pcie_get_parent_addr() has no DWC dependencies, so it doesn't
->     make sense to me to have it be DWC-specific and copy and pasted
->     to other places that need something similar.
->
->   - It doesn't seem elegant to iterate through for_each_pci_range() in
->     devm_of_pci_get_host_bridge_resources(), then again in
->     dw_pcie_host_init() for io_bus_addr, then again in
->     dw_pcie_iatu_setup() for each window.  Maybe that's the best we
->     can do, but maybe there's a way to capture what we need on the
->     first time through.
->
->   - The connection between .cpu_addr_fixup() and use_parent_dt_ranges
->     is clear in the patches remove a .cpu_addr_fixup(), but not in the
->     DWC patches on the other end.
->
->   - Ideally, "use_parent_dt_ranges" would be the default and we
->     wouldn't have a flag to indicate that, and drivers would have to
->     opt out instead of opt in.  They basically already do that by
->     implementing .cpu_addr_fixup(), so maybe we can take advantage of
->     that fact.
+Hi,
 
-Okay, thanks. let me think how to improve it after 6.14.
-
-Frank
+On 11/12/24 5:54 AM, Shuai Xue wrote:
+> The AER driver has historically avoided reading the configuration space of
+> an endpoint or RCiEP that reported a fatal error, considering the link to
+> that device unreliable. Consequently, when a fatal error occurs, the AER
+> and DPC drivers do not report specific error types, resulting in logs like:
 >
-> Bjorn
+>    pcieport 0000:30:03.0: EDR: EDR event received
+>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>    nvme nvme0: frozen state error detected, reset controller
+>    nvme 0000:34:00.0: ready 0ms after DPC
+>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>
+> AER status registers are sticky and Write-1-to-clear. If the link recovered
+> after hot reset, we can still safely access AER status of the error device.
+> In such case, report fatal errors which helps to figure out the error root
+> case.
+>
+> After this patch, the logs like:
+>
+>    pcieport 0000:30:03.0: EDR: EDR event received
+>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>    nvme nvme0: frozen state error detected, reset controller
+>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>    nvme 0000:34:00.0: ready 0ms after DPC
+>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> ---
+>   drivers/pci/pci.h      |  3 ++-
+>   drivers/pci/pcie/aer.c | 11 +++++++----
+>   drivers/pci/pcie/dpc.c |  2 +-
+>   drivers/pci/pcie/err.c |  9 +++++++++
+>   4 files changed, 19 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 0866f79aec54..6f827c313639 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -504,7 +504,8 @@ struct aer_err_info {
+>   	struct pcie_tlp_log tlp;	/* TLP Header */
+>   };
+>   
+> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
+> +			      bool link_healthy);
+>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>   #endif	/* CONFIG_PCIEAER */
+>   
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 13b8586924ea..97ec1c17b6f4 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
+>    * aer_get_device_error_info - read error status from dev and store it to info
+>    * @dev: pointer to the device expected to have a error record
+>    * @info: pointer to structure to store the error record
+> + * @link_healthy: link is healthy or not
+>    *
+>    * Return 1 on success, 0 on error.
+>    *
+>    * Note that @info is reused among all error devices. Clear fields properly.
+>    */
+> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
+> +			      bool link_healthy)
+>   {
+>   	int type = pci_pcie_type(dev);
+>   	int aer = dev->aer_cap;
+> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>   	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>   		   type == PCI_EXP_TYPE_RC_EC ||
+>   		   type == PCI_EXP_TYPE_DOWNSTREAM ||
+> -		   info->severity == AER_NONFATAL) {
+> +		   info->severity == AER_NONFATAL ||
+> +		   (info->severity == AER_FATAL && link_healthy)) {
+>   
+>   		/* Link is still healthy for IO reads */
+>   		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
+> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
+>   
+>   	/* Report all before handle them, not to lost records by reset etc. */
+>   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+> -		if (aer_get_device_error_info(e_info->dev[i], e_info))
+> +		if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>   			aer_print_error(e_info->dev[i], e_info);
+>   	}
+>   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+> -		if (aer_get_device_error_info(e_info->dev[i], e_info))
+> +		if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>   			handle_error_source(e_info->dev[i], e_info);
+>   	}
+>   }
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 62a68cde4364..b3f157a00405 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -304,7 +304,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
+>   		dpc_process_rp_pio_error(pdev);
+>   	else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+>   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+> -		 aer_get_device_error_info(pdev, &info)) {
+> +		 aer_get_device_error_info(pdev, &info, false)) {
+>   		aer_print_error(pdev, &info);
+>   		pci_aer_clear_nonfatal_status(pdev);
+>   		pci_aer_clear_fatal_status(pdev);
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 31090770fffc..462577b8d75a 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	struct pci_dev *bridge;
+>   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>   	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> +	struct aer_err_info info;
+>   
+>   	/*
+>   	 * If the error was detected by a Root Port, Downstream Port, RCEC,
+> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   			pci_warn(bridge, "subordinate device reset failed\n");
+>   			goto failed;
+>   		}
+> +
+> +		info.severity = AER_FATAL;
+> +		/* Link recovered, report fatal errors of RCiEP or EP */
+> +		if ((type == PCI_EXP_TYPE_ENDPOINT ||
+> +		     type == PCI_EXP_TYPE_RC_END) &&
+> +		    aer_get_device_error_info(dev, &info, true))
+> +			aer_print_error(dev, &info);
+
+IMO, error device information is more like a debug info. Can we change
+the print level of this info to debug?
+
+>   	} else {
+>   		pci_walk_bridge(bridge, report_normal_detected, &status);
+>   	}
+> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	if (host->native_aer || pcie_ports_native) {
+>   		pcie_clear_device_status(dev);
+>   		pci_aer_clear_nonfatal_status(dev);
+> +		pci_aer_clear_fatal_status(dev);
+
+I think we clear fatal status in DPC driver, why do it again?
+
+>   	}
+>   
+>   	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
