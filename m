@@ -1,198 +1,191 @@
-Return-Path: <linux-pci+bounces-20258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06C05A19BFF
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 01:57:12 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC839A19D0F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 03:57:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE43B3ABADE
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 00:57:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31298162122
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 02:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37BDD8BF8;
-	Thu, 23 Jan 2025 00:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A240535972;
+	Thu, 23 Jan 2025 02:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXwWw2G7"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MXfl+GKX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1A5849C
-	for <linux-pci@vger.kernel.org>; Thu, 23 Jan 2025 00:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA29135953;
+	Thu, 23 Jan 2025 02:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737593828; cv=none; b=gJOCprj/h7mDxP1KcCoA4xx3pOVLmstcD3i2QFrQFYaQdhxraIxIpUspKjBdiltRqJOSoUAlJn1WP5FbkbckDW/2oZcUtR2ZNjBWKWcFWNObe/GwJj9hpLgiAWWGhx/jgcVy9/vvxGfFVqhrXpfc+XUMsiAbnzezSWuosDk85lo=
+	t=1737601020; cv=none; b=OvDK+ate5VPEuLi7vLSLTpQVSPXvkFdtufC1oGWFpG1lF3fYl7Vv9acsYzf7ZAovqUjKrZyYFYJrJpyOt6IyPzzGpt4OaFZcNuyHm7sL7gDnzg2R+jv9IF2bhOWhoAf6WJKGjqlcWIQXzZabWqaUquvquwLKAWKocuHN91zzAGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737593828; c=relaxed/simple;
-	bh=XKpwmKf2Q55uxi4tGN/2nqLkaJ4uRTkk6OJEnQJsnA0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=irKtnH3PXEmdV47ke2H0KUy/Lk56hnM8ythT5J2pxsIIbIujxXj/iLJEGBvmF4COQ3hLoJog9FvXD0RY32PGi+lYyVlqAz528OQaaMSIf2KhowV3RBY0Vbk13+mSNuww62JEQkZwaYSYTMpJgmCCpn07ppXDCteameNS+7KfFWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bXwWw2G7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737593827; x=1769129827;
-  h=date:from:to:cc:subject:message-id;
-  bh=XKpwmKf2Q55uxi4tGN/2nqLkaJ4uRTkk6OJEnQJsnA0=;
-  b=bXwWw2G7JPTNkNHvX1C7QC0E3m3lYewo2IXeCUvSGiWTUxvMgfLTKdrD
-   L43JJ/FWy/xIUaaqSGlLZawZk3I6YoGw0AoVuhTcQoosfTt/x7F6GFVbd
-   KWTstIq++zaF2rehOxcNpj8x7rxg+iECxYBHHxfTsJQeH//NiZM9uNCvE
-   C5KcsBWjLBKCU0Zc10pEltd00AqrYP7Vh0Ob5kOEPnVs5pA367OOxjtui
-   bZhL5FnE0i1CossLh7PrEBkM6x3YbZwYplKA+jnKiUCdu9CnAVX41aydo
-   X4A2qV/IB5aguCz6+QrRec0TmanHkDb1cE8xJ+rGXXQRCAvK7tUXngNgb
-   A==;
-X-CSE-ConnectionGUID: 67TWPoUBR4iNk1NHkw5vGA==
-X-CSE-MsgGUID: ACqysqdsQTehJJaPBG54IA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="37958619"
-X-IronPort-AV: E=Sophos;i="6.13,226,1732608000"; 
-   d="scan'208";a="37958619"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 16:57:06 -0800
-X-CSE-ConnectionGUID: FeHtyzFCTAW1u9nMC4ig5w==
-X-CSE-MsgGUID: ugUm4DF4SxWSHHonhhEBUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,226,1732608000"; 
-   d="scan'208";a="138159280"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 22 Jan 2025 16:57:05 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1talWo-000aUW-2M;
-	Thu, 23 Jan 2025 00:57:02 +0000
-Date: Thu, 23 Jan 2025 08:56:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 595383380cbda6697aa08debe8be7c75d78684f3
-Message-ID: <202501230809.QM5Dfoav-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1737601020; c=relaxed/simple;
+	bh=+m4kq9RhF0sySrXt/vast6hn5HGdBdRo79zy0v80Uvo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pzL5bwIyE9RwdINQo0wekOysvC5aNszVppfes/SxYtXUmqvC5XJZbp3lMXCVmr7UUvArSpnOJ7yTPOclb+oc/4C2ycU23moIs65kpOU0aX+fbdq718ag8SShvnRCCYAD05tvLEe6ESGZhlaIDRB/Hz6WWGwnos4ZkMuZYtGUoug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MXfl+GKX; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=TJEsf
+	mKAZNzobHSS3eFH81hG1bSBk5WyXde/ZAzioR0=; b=MXfl+GKXURwUdtLCXbW5w
+	2RjUZqX3ve27TUBsG/XWrJxFLEj+vtR7rz48ww+17+aSV7+AFyNN1R2WOOdYzBVK
+	4IwKnebNV75/EjiX1Brq076sXERGXp6XJSwpARinXX1+LE3oc/8wImtYu2xX9OBe
+	ebGJBfwde8Jne/IdihpPaQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDnv4Wzr5FnN1pBHg--.51404S2;
+	Thu, 23 Jan 2025 10:55:48 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: jingoohan1@gmail.com
+Cc: manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com,
+	Hans Zhang <18255117159@163.com>
+Subject: [RESEND] PCI: cadence: Add configuration space capability search API
+Date: Thu, 23 Jan 2025 10:54:38 +0800
+Message-Id: <20250123025438.1794810-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnv4Wzr5FnN1pBHg--.51404S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZryDGFyxXw45uFW7XFW7CFg_yoW5tw1xpF
+	ykJFyfCF1rJr43uan3A3WYvr15GF9Yk34xJa92kry5ZF17CryUGF1IkFy5tF9xCrsrWF17
+	XrWDtFykCw1ftwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pMHq4UUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxrdo2eRrJQyxgABsE
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 595383380cbda6697aa08debe8be7c75d78684f3  Merge branch 'pci/misc'
+Add configuration space capability search API using struct cdns_pcie*
+pointer.
 
-elapsed time: 1444m
+Similar patches below have been merged.
+commit 5b0841fa653f ("PCI: dwc: Add extended configuration space capability
+search API")
+commit 7a6854f6874f ("PCI: dwc: Move config space capability search API")
 
-configs tested: 105
-configs skipped: 3
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence.c | 80 +++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h |  3 +
+ 2 files changed, 83 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 204e045aed8c..ebb4a0130145 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -8,6 +8,86 @@
+ 
+ #include "pcie-cadence.h"
+ 
++/*
++ * These interfaces resemble the pci_find_*capability() interfaces, but these
++ * are for configuring host controllers, which are bridges *to* PCI devices but
++ * are not PCI devices themselves.
++ */
++static u8 __cdns_pcie_find_next_cap(struct cdns_pcie *pcie, u8 cap_ptr,
++				    u8 cap)
++{
++	u8 cap_id, next_cap_ptr;
++	u16 reg;
++
++	if (!cap_ptr)
++		return 0;
++
++	reg = cdns_pcie_readl(pcie, cap_ptr);
++	cap_id = (reg & 0x00ff);
++
++	if (cap_id > PCI_CAP_ID_MAX)
++		return 0;
++
++	if (cap_id == cap)
++		return cap_ptr;
++
++	next_cap_ptr = (reg & 0xff00) >> 8;
++	return __cdns_pcie_find_next_cap(pcie, next_cap_ptr, cap);
++}
++
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	u8 next_cap_ptr;
++	u16 reg;
++
++	reg = cdns_pcie_readl(pcie, PCI_CAPABILITY_LIST);
++	next_cap_ptr = (reg & 0x00ff);
++
++	return __cdns_pcie_find_next_cap(pcie, next_cap_ptr, cap);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_find_capability);
++
++static u16 cdns_pcie_find_next_ext_capability(struct cdns_pcie *pcie,
++					      u16 start, u8 cap)
++{
++	u32 header;
++	int ttl;
++	int pos = PCI_CFG_SPACE_SIZE;
++
++	/* minimum 8 bytes per capability */
++	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
++
++	if (start)
++		pos = start;
++
++	header = cdns_pcie_readl(pcie, pos);
++	/*
++	 * If we have no capabilities, this is indicated by cap ID,
++	 * cap version and next pointer all being 0.
++	 */
++	if (header == 0)
++		return 0;
++
++	while (ttl-- > 0) {
++		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
++			return pos;
++
++		pos = PCI_EXT_CAP_NEXT(header);
++		if (pos < PCI_CFG_SPACE_SIZE)
++			break;
++
++		header = cdns_pcie_readl(pcie, pos);
++	}
++
++	return 0;
++}
++
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return cdns_pcie_find_next_ext_capability(pcie, 0, cap);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_find_ext_capability);
++
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+ {
+ 	u32 delay = 0x3;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index f5eeff834ec1..6f4981fccb94 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -557,6 +557,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+ }
+ #endif
+ 
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
++
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+ 
+ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+-- 
+2.25.1
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                   randconfig-001-20250122    gcc-13.2.0
-arc                   randconfig-002-20250122    gcc-13.2.0
-arm                               allnoconfig    clang-17
-arm                   randconfig-001-20250122    clang-19
-arm                   randconfig-002-20250122    clang-20
-arm                   randconfig-003-20250122    gcc-14.2.0
-arm                   randconfig-004-20250122    gcc-14.2.0
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250122    clang-20
-arm64                 randconfig-002-20250122    clang-15
-arm64                 randconfig-003-20250122    clang-20
-arm64                 randconfig-004-20250122    clang-19
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250122    gcc-14.2.0
-csky                  randconfig-002-20250122    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon               randconfig-001-20250122    clang-20
-hexagon               randconfig-002-20250122    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250122    clang-19
-i386        buildonly-randconfig-002-20250122    gcc-12
-i386        buildonly-randconfig-003-20250122    gcc-12
-i386        buildonly-randconfig-004-20250122    clang-19
-i386        buildonly-randconfig-005-20250122    clang-19
-i386        buildonly-randconfig-006-20250122    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250122    gcc-14.2.0
-loongarch             randconfig-002-20250122    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                        stmark2_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250122    gcc-14.2.0
-nios2                 randconfig-002-20250122    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                  or1klitex_defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250122    gcc-14.2.0
-parisc                randconfig-002-20250122    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                     mpc512x_defconfig    clang-20
-powerpc               randconfig-001-20250122    gcc-14.2.0
-powerpc               randconfig-002-20250122    clang-17
-powerpc               randconfig-003-20250122    clang-15
-powerpc64             randconfig-001-20250122    clang-20
-powerpc64             randconfig-002-20250122    clang-19
-powerpc64             randconfig-003-20250122    clang-20
-riscv                            allmodconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-20
-riscv                 randconfig-001-20250122    clang-20
-riscv                 randconfig-002-20250122    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250122    clang-18
-s390                  randconfig-002-20250122    clang-20
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                          lboxre2_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250122    gcc-14.2.0
-sh                    randconfig-002-20250122    gcc-14.2.0
-sh                        sh7763rdp_defconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250122    gcc-14.2.0
-sparc                 randconfig-002-20250122    gcc-14.2.0
-sparc64               randconfig-001-20250122    gcc-14.2.0
-sparc64               randconfig-002-20250122    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250122    gcc-12
-um                    randconfig-002-20250122    clang-20
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250122    gcc-12
-x86_64      buildonly-randconfig-002-20250122    clang-19
-x86_64      buildonly-randconfig-003-20250122    gcc-12
-x86_64      buildonly-randconfig-004-20250122    gcc-12
-x86_64      buildonly-randconfig-005-20250122    gcc-12
-x86_64      buildonly-randconfig-006-20250122    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250122    gcc-14.2.0
-xtensa                randconfig-002-20250122    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
