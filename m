@@ -1,107 +1,128 @@
-Return-Path: <linux-pci+bounces-20293-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20294-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33ED0A1A894
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 18:13:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5E3CA1A98C
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 19:23:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 587B93AFF9A
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 17:09:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B3517A1648
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 18:23:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15AEC1465AC;
-	Thu, 23 Jan 2025 17:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 060BA14A4D1;
+	Thu, 23 Jan 2025 18:23:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2XnKDfy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U95CNjgz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE604146D68;
-	Thu, 23 Jan 2025 17:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672E615746B;
+	Thu, 23 Jan 2025 18:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737652114; cv=none; b=ewLCYnNMUOhG1dNILjA2MBdpIvdI6xBUlVqo9Zw7fzbK2KqM+VvmOHdq/nA7AFyjPGcHjE+h7l3F7+iBNHpn82ZXNBPlDZXqGaA4GDdVe83yKErlJgqdeL2eIk4gI3EFm++swDG0/ILriTAuXx8xL4l0AjBZWaIWahoo1MA3Ezo=
+	t=1737656583; cv=none; b=KM+w7sNAOE1yI0b+PEAFYjv13QktVrfjiianhobvGKEXxWR13flQ880AUSg4KvCSP330digcmj2xM7WOnbJi1eR+3dtlBpRC494qS/JI8mcNus+yyCkA6D/MKbZ+meut7TqPjRBn6WJI+cZaxX+CFvf9ugSoLVFDIEYFZYOcjx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737652114; c=relaxed/simple;
-	bh=uHFdtvUKM686hJ26eLLLR7g1uzApYotr6QctL8dyTWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HvP/DgTEJKDO8IflJXPFiaaRAWFVzugDODUElL9kyCtJH5y90exE50Eq2qI4Q3CcTC5tQh5xfhnj5rQwXaW6d/GW8Z/+7ilZkGD/QX5iP1NvFkhN9dIZnLr2DxnDnHSK4UCYof3zF1PF9vmxDpHKaMbeSkoLdiiPl+JknyoEQTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2XnKDfy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 196BEC4CED3;
-	Thu, 23 Jan 2025 17:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737652113;
-	bh=uHFdtvUKM686hJ26eLLLR7g1uzApYotr6QctL8dyTWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=o2XnKDfy7GVZNK0NxKILSxbB6Z9ogFvlNBcVZ8WEMoD5iuWCVB3jANyh/4JcTylME
-	 0nvhRplldtFJ+1y2gbgWDYIpbJpGmEAjFXAy0xzBdtgakUKiS2sYy8kbwmAaUy4kf3
-	 R9KQhiqJB/bet6JusoLY9dvABQNZgrsTElY5lK1IHa3EgylBnpTNVEhKTvzjOAA4FQ
-	 Lch4g/LYyPH8nrkJtxg1Z83Gnf0uhAaxmDbf8c1cJf43LGYqYq9Gxym2RztX+pClZ3
-	 MkaAGAAqbNUUTF8+JN3eUsl15aKHCJEmBtPyxh5qOvkRFY0PZyFVoZCsv2iu6poO9k
-	 n8yFzejdpJbBA==
-Date: Thu, 23 Jan 2025 11:08:31 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, bwawrzyn@cisco.com, thomas.richard@bootlin.com,
-	wojciech.jasko-EXT@continental-corporation.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND] PCI: cadence: Add configuration space capability search
- API
-Message-ID: <20250123170831.GA1226684@bhelgaas>
+	s=arc-20240116; t=1737656583; c=relaxed/simple;
+	bh=+vsdEJNW8UNjRvF7UCIpNPWK3eCwP5zuKBoxgzzvYBU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pouiQXCp1pUUkRPk3hLAxtPNfe7fXamTl9wuEqOmHfTQXQNpCwRGHdD48HCfZp+ekSdEbThLq88wKsRI49Wq7+TvTreXylEkJ3spD3rPvEiShHa7rtTXA58s/W8rrTufQ5EZJwGwGWp0fq5cmxeYO3eQJIWQxVWgLjlEl8M6E7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U95CNjgz; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737656583; x=1769192583;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+vsdEJNW8UNjRvF7UCIpNPWK3eCwP5zuKBoxgzzvYBU=;
+  b=U95CNjgz7OaTSTGAPLZnNUjnupNSs0qcyIvsCcWPjYUXwaamlf8/t7Q+
+   lOCeMaUV+7CFawWUQvPetmn6TzOAGB9Qaa6doCX7/wyp9Ri3GcnYeP7uY
+   PNtSpeKwPvyfIIrFegAg60s0IvGQ9uFukEkVu4qLFw+gfgx6Xn7u4kxJA
+   yAxfjFE8JhHnOeMzchBmDVKiHO9Q/Sdrl+JfLvzkP1pTzCB2whE2t/sRB
+   pEMHjGjfP790vRlSgmYeUcBIR0hFRQ9m4qsGaZdfI9zVh2ePUg/LmyL22
+   Q205gACcPPmzKUKCZov3bnCPLZq+gS16fwi6vZ7xsPI5tWMYEDpnSScS0
+   g==;
+X-CSE-ConnectionGUID: FbaVP699SlWKIvFwvLittQ==
+X-CSE-MsgGUID: QexcVjVuRB+ZYp1GBRAfHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="49573232"
+X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
+   d="scan'208";a="49573232"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:23:02 -0800
+X-CSE-ConnectionGUID: Hb0NhblZS2q88NF00ARGww==
+X-CSE-MsgGUID: Qg2w+YxHSJOYJNo700G6uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111574792"
+Received: from test2-linux-lab.an.altera.com ([10.244.156.200])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:23:01 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dinguyen@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matthew.gerlach@altera.com,
+	peter.colberg@altera.com
+Subject: [PATCH v4 0/5] Add PCIe Root Port support for Agilex family of chips
+Date: Thu, 23 Jan 2025 12:19:27 -0600
+Message-Id: <20250123181932.935870-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcfd4827-4d9e-4bcd-b1d0-8f9e349a6be7@163.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 23, 2025 at 04:15:12PM +0800, Hans Zhang wrote:
-> On 2025/1/23 15:40, Siddharth Vadapalli wrote:
-> > On Thu, Jan 23, 2025 at 03:09:35PM +0800, Hans Zhang wrote:
-> > > Add configuration space capability search API using struct cdns_pcie*
-> > > pointer.
-> > > 
-> > > Similar patches below have been merged.
-> > > commit 5b0841fa653f ("PCI: dwc: Add extended configuration space capability
-> > > search API")
-> > > commit 7a6854f6874f ("PCI: dwc: Move config space capability search API")
-> > 
-> > Similar patches being merged doesn't sound like a proper reason for
-> > having a feature. Please provide details regarding why this is required.
-> > Assuming that the intent for introducing this feature is to use it
-> > later, it will be a good idea to post the patch for that as well in the
-> > same series.
-> 
-> For our SOC platform, the offset of some capability needs to be found during
-> the initialization process, which I think should be put into the cadence
-> public code
-> 
-> eg:
-> 
-> For API: cdns_pcie_find_capability
-> Need to find PCI Express, then set link speed, retrain link, MaxPayload,
-> MaxReadReq, Enable Relaxed Ordering.
-> 
-> For API: cdns_pcie_find_ext_capability
-> Need to find the Secondary PCIe Capability and set the GEN3 preset value.
-> Find the Physical Layer 16.0 GT/s and set the GEN4 preset value.
-> 
-> Development board based on our SOC, Radxa Orinon O6.
-> https://radxa.com/products/orion/o6/
-> 
-> Our controller driver currently has no plans for upstream and needs to wait
-> for notification from the boss.
+From: Matthew Gerlach <matthew.gerlach@altera.com>
 
-If/when you upstream code that needs this interface, include this
-patch as part of the series.  As Siddharth pointed out, we avoid
-merging code that has no upstream users.
+This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
+Version 3 of this patch set removes patches that have been accepted.
 
-Bjorn
+Patch 1:
+  Add new compatible strings for the three variants of the Agilex PCIe controller IP.
+
+Patch 2:
+  Add a label to the soc@0 device tree node to be used by patch 5.
+
+Patch 3:
+  Add base dtsi for PCIe Root Port support of the Agilex family of chips.
+
+Patch 4:
+  Add dts enabling PCIe Root Port support on an Agilex F-series Development Kit.
+
+Patch 5:
+  Update Altera PCIe controller driver to support the Agilex family of chips.
+D M, Sharath Kumar (1):
+  PCI: altera: Add Agilex support
+
+Matthew Gerlach (4):
+  dt-bindings: PCI: altera: Add binding for Agilex
+  arm64: dts: agilex: add soc0 label
+  arm64: dts: agilex: add dtsi for PCIe Root Port
+  arm64: dts: agilex: add dts enabling PCIe Root Port
+
+ .../bindings/pci/altr,pcie-root-port.yaml     |   9 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |   2 +-
+ .../socfpga_agilex7f_socdk_pcie_root_port.dts |  16 ++
+ .../intel/socfpga_agilex_pcie_root_port.dtsi  |  55 ++++
+ drivers/pci/controller/pcie-altera.c          | 246 +++++++++++++++++-
+ 6 files changed, 319 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+
+-- 
+2.34.1
+
 
