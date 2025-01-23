@@ -1,116 +1,123 @@
-Return-Path: <linux-pci+bounces-20276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DADCA19FAA
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 09:16:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23275A19FE9
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 09:27:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C48DA16DDC4
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 08:16:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCC7D3A038C
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 08:27:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE7220B7FB;
-	Thu, 23 Jan 2025 08:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730EF20C02A;
+	Thu, 23 Jan 2025 08:27:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BmBymhmS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4HSz4dd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4EE136E21;
-	Thu, 23 Jan 2025 08:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF5E320B;
+	Thu, 23 Jan 2025 08:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737620173; cv=none; b=DC+3YtbUuOJUJfHfdpV6Zuc1fdbJV+kr+h1yfhcG4BHZfW7KZ/ZyvcHW7/s6VfMbQFv4dIGrBBNU9+Je2AeL4sPHad0NiYQoAQ3zj87HBUgswpqtCMz9ZP+EzWxdq7E6SMlPah5VE3C6JXBlziZfL3pEZtxuz5qWRIRLYQDG/FQ=
+	t=1737620873; cv=none; b=R7zP7tG0FyqpxQ2p32hhA3/xA0szYjEY8LnbWxlSq92Xf+VYM9u0tbbyGKrSmitEACgSIiBI1SK3BbAP7cQy2kkGtvIAR6hDU3OsaMU3C6azVt2+C4sSAJLxeJB8irO99qQ2gWK6bvqIJM1ge0/3kvd0rfO3wcuRbc55DwHeT4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737620173; c=relaxed/simple;
-	bh=04FgOiHblSUfFI91U8mRUSKvplRESzQSP7NiKX2rWdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZNBb7S/qUQiM32ggtVK+/Z/IdtnV6ZROkm7qvJBowp0HzQ9RStRari5JdA+Ihj/1cKm9fiRiFim2yAybKsrCz5te+MZgLHg8RH/2Bgylk59aAi2IbLC+MJcGDq9QwHk8cgjQxLeh84vOjl5ox+PauGuSqj7gQH0O1mC96rEL/TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BmBymhmS; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=K1td3T1Bnc43/lhC/qBz9yU1NVLBnzJNdIjT9DaCHrU=;
-	b=BmBymhmSQd62Ab8I3RCqkEAHC7Qp0IpMXPHwV2ye8u0RYUPyWOziHR+vUXRgXf
-	1Dkt9ekRcKASjPQO0JZT4IuIMRmCuntYMtIaLCiNeea/VVRgA3RM6/fdvP3oPCQr
-	NmRp+9KBM/dr8+tRFH47Gmb84Duv8yxi4a+WAAVsL2i40=
-Received: from [192.168.174.52] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wAHL2KQ+pFnG+OaHw--.16035S2;
-	Thu, 23 Jan 2025 16:15:13 +0800 (CST)
-Message-ID: <fcfd4827-4d9e-4bcd-b1d0-8f9e349a6be7@163.com>
-Date: Thu, 23 Jan 2025 16:15:12 +0800
+	s=arc-20240116; t=1737620873; c=relaxed/simple;
+	bh=vofYtrvUAsVCwLeaIG0II6eDROdU24GRLHxAawTP16s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SsUUl/sevgZgcSS2zU1/T+z+k8HojIwpmlhAe6LvzCidfghVO9FmJowuEyaSWxaKekoXwnVHT9BCCvGTZItYpD6sIv4WB09gQljr463a6/FqMR28XlAAXpPjqrPJJn9zMmk4X+KUOsITzr+HFura4mojdYl+7DSRPTgrp1P0crQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4HSz4dd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DB0C4CED3;
+	Thu, 23 Jan 2025 08:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737620872;
+	bh=vofYtrvUAsVCwLeaIG0II6eDROdU24GRLHxAawTP16s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S4HSz4ddizmKXlDfUpbexL5lqDvisjBwughjiTIiqpetYPrA0KTYHafRPjopFgPeq
+	 Dnrt9LMSzVtO5AGqPoJK61sy3jGz7f9HXGBTIhqldeJi0CWcBBqSsWHtksjOk0Xn+0
+	 25yghJlZrwZwtM5KzCjVaoiWTHpb8sgZdMEG1Dly2Ce3Ff7+dRWZV3v94hClNKnHUH
+	 W80Ow9VoChYP3gCRnpynbeK6rHMXNDks0t1stCSJAUHVW7P+zBgagGM4UTUXqEcxCc
+	 bcyvyzRSo93wrzlC+5/8N4+JF5GOEjea1o7f3jp9A8Ul0k0FWjL5QLTL38GjHyqrlG
+	 QwUkQlo4449yw==
+Date: Thu, 23 Jan 2025 09:27:49 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
+	p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v7 5/7] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe
+ controller
+Message-ID: <20250123-stereotyped-chupacabra-of-mathematics-10d9ce@krzk-bin>
+References: <20250122063411.3503097-1-quic_varada@quicinc.com>
+ <20250122063411.3503097-6-quic_varada@quicinc.com>
+ <20250123-red-unicorn-of-piety-3c7de5@krzk-bin>
+ <Z5H4UPhRjKhbbP9/@hu-varada-blr.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND] PCI: cadence: Add configuration space capability search
- API
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
- thomas.richard@bootlin.com, wojciech.jasko-EXT@continental-corporation.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250123070935.1810110-1-18255117159@163.com>
- <vj5skjgz4li2vit3xpr3ysldrcvzoglfycemki3yrzg4ocrrkc@isk7ytysgih7>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <vj5skjgz4li2vit3xpr3ysldrcvzoglfycemki3yrzg4ocrrkc@isk7ytysgih7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAHL2KQ+pFnG+OaHw--.16035S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr45Cr4fGr45Xw4rZw4Utwb_yoW8Xr1fpF
-	s0gw1UK34DJr13JFZrta1Y9FWfGrZYka42q3s8C34rAry3u3ZrGF4SkrWUJF97Cr4fG3WY
-	qrWYqF97Z3Z0yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UHrWwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx7do2eR7zrabAAAsu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z5H4UPhRjKhbbP9/@hu-varada-blr.qualcomm.com>
 
-
-
-On 2025/1/23 15:40, Siddharth Vadapalli wrote:
-> On Thu, Jan 23, 2025 at 03:09:35PM +0800, Hans Zhang wrote:
->> Add configuration space capability search API using struct cdns_pcie*
->> pointer.
->>
->> Similar patches below have been merged.
->> commit 5b0841fa653f ("PCI: dwc: Add extended configuration space capability
->> search API")
->> commit 7a6854f6874f ("PCI: dwc: Move config space capability search API")
+On Thu, Jan 23, 2025 at 01:35:36PM +0530, Varadarajan Narayanan wrote:
+> On Thu, Jan 23, 2025 at 08:58:29AM +0100, Krzysztof Kozlowski wrote:
+> > On Wed, Jan 22, 2025 at 12:04:09PM +0530, Varadarajan Narayanan wrote:
+> > > Document the PCIe controller on IPQ5332 platform. IPQ5332 will
+> > > use IPQ9574 as the fall back compatible.
+> > >
+> > > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > > ---
+> > > v7: Moved ipq9574 related changes to a separate patch
+> > >     Add 'global' interrupt
+> > >
+> > > v6: Commit message update only. Add info regarding the moving of
+> > >     ipq9574 from 5 "reg" definition to 5 or 6 reg definition.
+> > >
+> > > v5: Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
+> > >
+> > > v4: * v3 reused ipq9574 bindings for ipq5332. Instead add one for ipq5332
+> > >     * DTS uses ipq9574 compatible as fallback. Hence move ipq9574 to be able
+> > >       to use the 'reg' section for both ipq5332 and ipq9574. Else, dtbs_check
+> > >       and dt_binding_check flag errors.
+> > > ---
+> > >  .../devicetree/bindings/pci/qcom,pcie.yaml          | 13 +++++++++++--
+> > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > > index 413c6b76c26c..ead97286fd41 100644
+> > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > > @@ -34,6 +34,10 @@ properties:
+> > >        - items:
+> > >            - const: qcom,pcie-msm8998
+> > >            - const: qcom,pcie-msm8996
+> > > +      - items:
+> > > +          - enum:
+> > > +              - qcom,pcie-ipq5332
+> > > +          - const: qcom,pcie-ipq9574
+> >
+> > Repeated many times on reviews to qcom: don't add to the end of the
+> > lists. In case of multiple items, these are ordered by fallback, so this
+> > goes next to other ipq entry... wait, that's already qcom,pcie-ipq9574,
+> > so why are you duplicating?
+> >
+> > On what tree are you working?
 > 
-> Similar patches being merged doesn't sound like a proper reason for
-> having a feature. Please provide details regarding why this is required.
-> Assuming that the intent for introducing this feature is to use it
-> later, it will be a good idea to post the patch for that as well in the
-> same series.
-> 
+> Looks like ipq5424 changes got merged between the time I cloned
+> linux-next, tested and posted the patch. Will fix this and post
+> a new one.
 
-Hi Siddharth,
+Yeah, that would explain. Please grow the enum instead.
 
-For our SOC platform, the offset of some capability needs to be found 
-during the initialization process, which I think should be put into the 
-cadence public code
-
-eg:
-
-For API: cdns_pcie_find_capability
-Need to find PCI Express, then set link speed, retrain link, MaxPayload, 
-MaxReadReq, Enable Relaxed Ordering.
-
-For API: cdns_pcie_find_ext_capability
-Need to find the Secondary PCIe Capability and set the GEN3 preset 
-value. Find the Physical Layer 16.0 GT/s and set the GEN4 preset value.
-
-Development board based on our SOC, Radxa Orinon O6.
-https://radxa.com/products/orion/o6/
-
-Our controller driver currently has no plans for upstream and needs to 
-wait for notification from the boss.
-
-
-Best regards
-Hans
+Best regards,
+Krzysztof
 
 
