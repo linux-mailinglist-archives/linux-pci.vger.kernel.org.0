@@ -1,108 +1,167 @@
-Return-Path: <linux-pci+bounces-20281-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20282-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABC0EA1A3BC
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 13:02:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50D2CA1A3F9
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 13:12:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14CF53A81BB
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 12:01:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 193593A50D7
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 12:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78DD120E33F;
-	Thu, 23 Jan 2025 12:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C25120E6E5;
+	Thu, 23 Jan 2025 12:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJGmWo8r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIwhRLM4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E24820D51C;
-	Thu, 23 Jan 2025 12:02:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC7020CCCF;
+	Thu, 23 Jan 2025 12:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737633723; cv=none; b=BooLRig+Vw0laTxIZe8vjUoausGlkwZ1Z0FPMMaeJzYKu8JoTvw/XQ8ZR3LOZqPoALCpHSTRay7ALiQL7TjRA0qBQEooe2GjTPjjf6f17Bw0rHfPctkD4sp3yFgu0buxGHQ/psL4omfA4QopioURUO0hP6Zd979b+zqY1GXpwQA=
+	t=1737634328; cv=none; b=LyOiFQ0MIl/OA2uXi5Xo00+yqQQDb4RBTZsL43+aklusD9jpgrDYkK1VoLkYkZ1QhzqVdGKfkmXa0094/5/kLQcAxPz2njfj9F3kOreGmn1UckZ5AuRkP1JYuRhMOPeUe8MCp4EfhLFo7P9MakuVdgrG8arkS1kWRVQ7N4RubBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737633723; c=relaxed/simple;
-	bh=SJfDFslsBozN9KlVdyTBzI9flaqI0LLi8HWs05pUThE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MT+kISV4qSRro+bxNOfbeUgDrkCUBvRD67rIuoVU/firA8k/rRhkFCWkjDHATsuYSABQaV1uEFz3MQ88/ysjySBR3BEhXGBq5EQ2ngHHORF+dQcwWRPmJDUs8cBiIFW3wBCHefTs6PllIE97ze1j+rHbB53PretmJSzyctE3vPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJGmWo8r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0408BC4CEDF;
-	Thu, 23 Jan 2025 12:02:00 +0000 (UTC)
+	s=arc-20240116; t=1737634328; c=relaxed/simple;
+	bh=dKZvrf9HUMJiplbfkhdSNsOVNqxCZF9z5W+m6OzsrZE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ujpCPRpEVVaL5bavqPoweUZOfnQwvBZ4EeINvGVJhCoCBRKhq9kMzpoTaC1YkT/1zFoLKKFXOFrXTSm6pL7fgOiIxHGN2CcHqf5dxL8Z0ORskkZ7Sq7qfPagt8QcMnIUVpJ1UaCym676j751tjJpp8yjb34UOQkx/XCB2Ea/MWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIwhRLM4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 219C7C4CED3;
+	Thu, 23 Jan 2025 12:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737633722;
-	bh=SJfDFslsBozN9KlVdyTBzI9flaqI0LLi8HWs05pUThE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uJGmWo8rm5HV5aPCe2ZqxonDa1EiYFE2nf5xJXRlSYyjb9ASstAmR7m8jprTNw73g
-	 nRCppKb9/r0OYqiug+SP1x+56/XTZtG2QfEyQrEVKkP69HZycXtrTBwLjm/zNLauiT
-	 F5kUuKZj3w/v79yddMWyvSGlrQLOuAjq2RQlr0ombRiLzdjpJaqqkO9vtf5t586amK
-	 yeH5uJTjkQd/0yHjvHrdwlHzkqeghFA6iDiyGAWygS1JjGaup+qd6qcyGXSqHxz2Wt
-	 1fPKSZXOM9e7nQqoWvfQLp4mMlWekUy+mBruCVIecW3k4bJ+IfreUYKlEPneDxu3An
-	 8A32RsTS/3eqA==
-From: Niklas Cassel <cassel@kernel.org>
-To: bhelgaas@google.com,
-	kw@linux.com
-Cc: linux-pci@vger.kernel.org,
-	shuah@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH 2/2] selftests: pci_endpoint: Skip disabled BARs
-Date: Thu, 23 Jan 2025 13:01:49 +0100
-Message-ID: <20250123120147.3603409-4-cassel@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250123120147.3603409-3-cassel@kernel.org>
-References: <20250123120147.3603409-3-cassel@kernel.org>
+	s=k20201202; t=1737634327;
+	bh=dKZvrf9HUMJiplbfkhdSNsOVNqxCZF9z5W+m6OzsrZE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FIwhRLM4K50u5L38giWBy/7KLArFN7AgRp356rYlhbneQ5nn6vWiLWzONc0+oqd4Q
+	 vezI5X69TKBOd+hOr1OBaBz8RAH8ZMjWl4/aq1L15afgTysQ962hU1MCHwyyx+EBQP
+	 4ZCOY3ggy/87u2Bu/T7wm+Nult7kB+S8tmE416C8nCz0rizTvGibNSjZFaeV1op7Ha
+	 YsEBdwUR4LOPEYQIG9Wjzw+exhiN90ANsH2f3IEG18ppSdWVn8Ie3cNzoiNgus6eoq
+	 W6HOF6MGtPW/FglngQH+NeJRFOPlNK9VWoXkO38PHFFojFMlV4KOTpHVwyvLVzFMXz
+	 Pwr2mWDZWvJMg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1taw44-00EiS9-DM;
+	Thu, 23 Jan 2025 12:12:04 +0000
+Date: Thu, 23 Jan 2025 12:12:03 +0000
+Message-ID: <86msfhviek.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Chen Wang <unicorn_wang@outlook.com>,
+	Chen Wang <unicornxw@gmail.com>,
+	kw@linux.com,
+	u.kleine-koenig@baylibre.com,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	guoren@kernel.org,
+	inochiama@outlook.com,
+	krzk+dt@kernel.org,
+	lee@kernel.org,
+	lpieralisi@kernel.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pbrobinson@gmail.com,
+	robh@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com,
+	xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com,
+	helgaas@kernel.org
+Subject: Re: [PATCH v3 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
+In-Reply-To: <20250122173451.5c7pdchnyee7iy6t@thinkpad>
+References: <cover.1736923025.git.unicorn_wang@outlook.com>
+	<ddedd8f76f83fea2c6d3887132d2fe6f2a6a02c1.1736923025.git.unicorn_wang@outlook.com>
+	<20250119122353.v3tzitthmu5tu3dg@thinkpad>
+	<BM1PR01MB254540560C1281CE9898A5A0FEE12@BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM>
+	<20250122173451.5c7pdchnyee7iy6t@thinkpad>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1522; i=cassel@kernel.org; h=from:subject; bh=SJfDFslsBozN9KlVdyTBzI9flaqI0LLi8HWs05pUThE=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIn6W9oifA7ohJVL66rNJNR5uddG8YOk3dXOhRfarTb6 80+fXNHRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACZS9IOR4e8xnuiDAsz/VYTL p817EbZuvtmGg9E1t7mMz02s01mbe4WRYT/f/hWqHV7Zq54vWqG0Kuc07/1SE34fI5spbZ1XCk2 6+QA=
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: manivannan.sadhasivam@linaro.org, unicorn_wang@outlook.com, unicornxw@gmail.com, kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org, inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org, lpieralisi@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org, chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com, helgaas@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Currently BARs that have been disabled by the endpoint controller driver
-will result in a test FAIL.
+On Wed, 22 Jan 2025 17:34:51 +0000,
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> + Marc (for the IRQCHIP implementation review)
+> 
+> On Wed, Jan 22, 2025 at 09:28:12PM +0800, Chen Wang wrote:
+> > 
+> > > > +static int sg2042_pcie_setup_msi(struct sg2042_pcie *pcie,
+> > > > +				 struct device_node *msi_node)
+> > > > +{
+> > > > +	struct device *dev = pcie->cdns_pcie->dev;
+> > > > +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> > > > +	struct irq_domain *parent_domain;
+> > > > +	int ret = 0;
+> > > > +
+> > > > +	if (!of_property_read_bool(msi_node, "msi-controller"))
+> > > > +		return -ENODEV;
+> > > > +
+> > > > +	ret = of_irq_get_byname(msi_node, "msi");
+> > > > +	if (ret <= 0) {
+> > > > +		dev_err(dev, "%pOF: failed to get MSI irq\n", msi_node);
+> > > > +		return ret;
+> > > > +	}
+> > > > +	pcie->msi_irq = ret;
+> > > > +
+> > > > +	irq_set_chained_handler_and_data(pcie->msi_irq,
+> > > > +					 sg2042_pcie_msi_chained_isr, pcie);
+> > > > +
+> > > > +	parent_domain = irq_domain_create_linear(fwnode, MSI_DEF_NUM_VECTORS,
+> > > > +						 &sg2042_pcie_msi_domain_ops, pcie);
+> > > > +	if (!parent_domain) {
+> > > > +		dev_err(dev, "%pfw: Failed to create IRQ domain\n", fwnode);
+> > > > +		return -ENOMEM;
+> > > > +	}
+> > > > +	irq_domain_update_bus_token(parent_domain, DOMAIN_BUS_NEXUS);
+> > > > +
+> > > The MSI controller is wired to PLIC isn't it? If so, why can't you use
+> > > hierarchial MSI domain implementation as like other controller drivers?
+> > 
+> > The method used here is somewhat similar to dw_pcie_allocate_domains() in
+> > drivers/pci/controller/dwc/pcie-designware-host.c. This MSI controller is
+> > about Method A, the PCIe controller implements an MSI interrupt controller
+> > inside, and connect to PLIC upward through only ONE interrupt line. Because
+> > MSI to PLIC is multiple to one, I use linear mode here and use chained ISR
+> > to handle the interrupts.
+> > 
+> 
+> Hmm, ok. I'm not an IRQCHIP expert, but I'll defer to Marc to review the IRQCHIP
+> implementation part.
 
-Returning FAIL for a BAR that is disabled seems overly pessimistic.
+I don't offer this service anymore, I'm afraid.
 
-There are EPC that disables one or more BARs intentionally.
+As for the "I create my own non-hierarchical IRQ domain", this is
+something that happens for all completely mis-designed interrupt
+controllers, MSI or not, that multiplex interrupts.
 
-One reason for this is that there are certain EPCs that are hardwired to
-expose internal PCIe controller registers over a certain BAR, so the EPC
-driver disables such a BAR, such that the host will not overwrite random
-registers during testing.
+These implementations are stuck in the previous century, and seeing
+this on modern designs, for a "server SoC", is really pathetic.
 
-Such a BAR will be disabled by the EPC driver's init function, and the
-BAR will be marked as BAR_RESERVED, such that it will be unavailable to
-endpoint function drivers.
+maybe you now understand why I don't offer this sort of reviewing
+service anymore.
 
-Let's return FAIL only for BARs that are actually enabled and failed the
-test, and let's return skip for BARs that are not even enabled.
+	M.
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- tools/testing/selftests/pci_endpoint/pci_endpoint_test.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-index c267b822c108..576c590b277b 100644
---- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -65,6 +65,8 @@ TEST_F(pci_ep_bar, BAR_TEST)
- 	int ret;
- 
- 	pci_ep_ioctl(PCITEST_BAR, variant->barno);
-+	if (ret == -ENODATA)
-+		SKIP(return, "BAR is disabled");
- 	EXPECT_FALSE(ret) TH_LOG("Test failed for BAR%d", variant->barno);
- }
- 
 -- 
-2.48.1
-
+Without deviation from the norm, progress is not possible.
 
