@@ -1,152 +1,191 @@
-Return-Path: <linux-pci+bounces-20327-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C01DA1B353
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 11:11:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65A0FA1B4A6
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 12:23:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D01C33AD87A
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 10:11:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D03447A5448
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 11:23:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05C521A43A;
-	Fri, 24 Jan 2025 10:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 021A8219A89;
+	Fri, 24 Jan 2025 11:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q3hQPxrO"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EmLqHnf/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A00121A422
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 10:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323221CDA13
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737713461; cv=none; b=WM2JGZyAtaLQI0BExDZrwxOuQWNBa28ATDYDriTbuZ7qH+ZcA7aEnbb2BmopgQZehOGtgQl8wohCd/o67SliwxxuI5swNzvlpdC0HMYclbHYO8OSFLUT7NYRoS2kXwoNlJKP8rxjX9cOia6qjpjjw/C+jpJBbKFRRRxDK1ub4Xw=
+	t=1737717785; cv=none; b=pCfxkb7ov55GZkflj878Yn+7RXPd95W5YLnk9cJ+0h9FrE5gwbTDAqXcwiqXePbFAzGOvOrenLW9jhtwoewnoIQOw2jcK7OsO8VSeIumcKtwAJX8GLrkHoYMGgo6ZIBwfLe/gCI2BthVsajHM5ZGT0IfXQJzHpyG04KZFLDMhGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737713461; c=relaxed/simple;
-	bh=N2lF14aGwlo/azpWF8BRBrEW5+wH2aHyY+T2Zoz8R8E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ln/iVNyDMQjHcImk/0TK88wO68/vtUoU6FvJBCfHoKKxxMprOqsrWOt1XUYiTtAInjtJnnpRnHyVlHP95+omCwc1RZNTF7A/VyKzLRavACy5zQKQBD9UuMgkdilTbCC/J7/0Zb5bDQKGp57HHGNcJvlFyVMi4fHYUleLYScd5jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q3hQPxrO; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1737717785; c=relaxed/simple;
+	bh=DpZFnNMp3cO4OUAmgMvMghSHLjbZcw+carW7Us/j6OI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=F6h11MxFkSYQoyyF3vjUGm7EX/Q3n1lxMuObYV7MsrBiEatEnFfJft73dj0gEXBFH9TuD+JKxql5ZCj9O0vbBNi6LJSqDkEfujcC5x+e1hqT8p/mis1mAbCfml65CoZrnCTNlVY62nNfJTgKSLJkLK4N0F5gXPYng3LyHwL5ARc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EmLqHnf/; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50O6AnoP005676
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 10:10:59 GMT
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50O3ImK7027174
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=QTuzQaNN61y
-	5MqpLSwcmOsw3cjnsMlfMXyB5by59pS4=; b=Q3hQPxrOOGpKzb5YmLU2pPiHj43
-	rU9xFVN5EZaUW3EO4scLVnyRapoTSdivZhDxZ77e9D5sVxtmQNufOO6rQh7rwWaH
-	8kBKRWlc7T/CxtZoOATBbi+3hXK/nEUknCZ91PXHHL/I/wZoDP1cZKPDyNBQHncO
-	ph1K2SGB5y6zQooMj14HeOFVRFM1AXoq7/dBWWOxlfjSEpBuEi82WQr2nrahZ+ao
-	coQI8rqFEfgBNJ83DqJhRcF3O5z7Uu+tXEs3MEgYDx8lctLUa5Gct0txizabrsnq
-	xGQfTwFcC/cpWzyo3RhSOy8Y7IBGHCKS+ivxkNZvg5khSpLBHWDAQQI9glA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44c5c50kd8-1
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=3mi2/FOT+ZwP5xiq0yBz3H
+	cxfPxdLACnXcTnr7Krs/U=; b=EmLqHnf/GkGfSfhdAdz2oXVA/dLHwOTAJIgTCV
+	woPpnH5nPVPdvf7YhMq8dAYrIK/A+GX1ZAPF9zHcSscF2QlieMplY9OR3kGHxEqt
+	g/aYaKEdQJUyYE2mi0nuqvwxmEJ5E0r3YSy5pFnLK/KEs6Sy1JvrDA6FrG2hZod4
+	pHRUZ+NwFrreFCKGP9yEXyGUiHgqM/E9c+LtznwEJpa/52y/+q69Pa4fdCrWfXJZ
+	9uDYMWTb6iLJT+fmmRuqXfo1uskmKy+hhuxCeoeaCtm2nQ3wbcikE1gd8pOXfLPU
+	2fvhpRcMNd+h31qmYb+mURnCOaNgjikrZhUPRfsFQ234P44A==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44c2uj96f8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 10:10:59 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21655569152so36694005ad.2
-        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 02:10:59 -0800 (PST)
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:03 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-216750b679eso27507265ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 03:23:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737713458; x=1738318258;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QTuzQaNN61y5MqpLSwcmOsw3cjnsMlfMXyB5by59pS4=;
-        b=i2SFNZimqz0f0EzuXz+aBBE81wMdWdy54HGrlEqcJRhmv8AQxEDIbpwdARKwVJQYQJ
-         w15l7TNvf8m8ESz0u9FjpwTyM5rNBlBSHuQ/RIV7ilzyEnX3wN0d4PWz1Am3KRtyQu11
-         QSY5izKQylevErOyAgGkrp/LELmtZ2p4byNOZxUBrhmylYdWFABXGByZowvGmJjPvZp3
-         86eT+xC9k/D1G1vRk1bL07TUm5d8/qQNRP7/xtixIXbhmUaUFeggpjOha7LxnPR7yK+m
-         0GVTfgZMPvpH31c2hIlGDeQiDRFEBsDJ/0M9N68zB6ZHgsmkc6MvLLzQJSuWlcObBnG0
-         hZsw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2/Df7TSaOEBOpReRA6Yqh1pky7YgCZrxiIvzPh3ktOdFkUmV6r+v3iWlgzDpqeeWj5ulIVa58qM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+xPGKcd7qrhRY3B68GdMdEyBSLILnJp+zCzA3UknZ40ebot6r
-	stu9CZmFcIzGA7sY1wXUz0AJQsOLQrbQheTPvfGHCs4DR5acBqzm5sNsICSCQENWLC1oksQiHe0
-	SuMujJ7JMcs5ftYzYLQ1qgjDdv/6lvFezPkuy26XmvvnpzapR6r2hDZcx4jU=
-X-Gm-Gg: ASbGnctYkxMqLiwFGHRR/u5lLP2CRqkf3WkGE0FRUeuZ3a8UJO9cFvoiJb+3204Scuh
-	HGnCaSCUKp88jc7sFV/9TSTmdBY4s+5/suP9ESFb5x2lIecbT2DxerBjyTQAHgtJRBlLSXGnmy5
-	zsidxG49Km/bi2cbz9l+PagvXpWcPbLjQ4jM1zIDpPP/IfYKFQIDv7o6oOgYMQco2o2leNRfoXy
-	aXu+lZP7hSpX7WxUtrM2t4EGFe3b7R4OKhWCm5/ik68devJ9CfWvVV/xuSMuw2w+Uo42ZazRA2I
-	d0/UzmncBD3TZIoFbqoc1QFS8tqYQg==
-X-Received: by 2002:a17:902:cf0e:b0:212:4c82:e3d4 with SMTP id d9443c01a7336-21c356093bcmr449066635ad.46.1737713458441;
-        Fri, 24 Jan 2025 02:10:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEPdt/tWXnYv0ZJnPog4hmu7Y653tEvtmLqJ8rL0b6LAjLhAX1Bo1hz2SKucKP3+NMNwSY2mg==
-X-Received: by 2002:a17:902:cf0e:b0:212:4c82:e3d4 with SMTP id d9443c01a7336-21c356093bcmr449066285ad.46.1737713458082;
-        Fri, 24 Jan 2025 02:10:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737717782; x=1738322582;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3mi2/FOT+ZwP5xiq0yBz3HcxfPxdLACnXcTnr7Krs/U=;
+        b=A9scAogiVNhwFqYQISQC2nxnBjlK34RzDwgXb0Qg53c7W4fDbWjdmBDXzxsDGgqfP/
+         kTjyR54AEUUfUNPgrB0+SU96QAA3RAATftCzWKX4AjVyblQlOp6kibxsMi1QtqVf9Orz
+         1PCD8aINkgEKzGtH4r0gpiW/yqfeLZP48Fk6V0f5EY3pPxwOxSCd/PbYl5TaeHm5zyPl
+         7A9434KVCefh1BjccHJW2lsd8Fw/r0lbva+4B/F80cayKJI/mc3Ng6JoMX/RzrXRIwPj
+         bHZN9dHsvgvyRlfIeO76dIfLQd1qlF+bQeJKPQnbqj074NsHmHlxbGGbMO///XnS/6OK
+         oUhw==
+X-Forwarded-Encrypted: i=1; AJvYcCW78B57unVx39BWRct0lgc8C3A24A0TxWmbjWqV6lLVD3GVzOoY4MFhe+Te98wTCf9P5AjgSc6No+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7qePmoljO2RC+dhJcdVlO2JnXJ2Q9yIZJrmzxYRHQn8PQ1jD+
+	LIOR2H6hxfyG5e6FmnjQTRpT69v7N5D2Es8OH8DcMVij2Zn5LurDc9q4wWbVc93+Don4hS01mJ8
+	MnuyY86SWxv4HGB9UsfEfBVYKyJRwzSqWb3ydCzQm/f0LVxd1emowIHkymjM=
+X-Gm-Gg: ASbGnctRdgTY8Uczy6VwWezQvzJsX3V+p/HNuTDqs5g/HbyOCAr5R0vox37wtT+fC1B
+	3UQZm0sEdtl+ePTLvzUZ2CkdgnmCpLyl4sf23LynYmj7tyZcra9sV1fPivqpurhMyzbg6M3Ok1a
+	KIQZOj0FE3echenL/DjPT44IgNnaJACpNd9Qc/QkHiWYTEOlJii94pHewkLybFoXS/XDaRUVrAy
+	p9hRS54HQDrwt3EyB7Rb2sjHdH0G04XzM6Mv77DYh32ftEbLoKQVv2l7SKJ6fIEi45UYtO4Rsjf
+	0Hihu0v6TyP8Kdk1zqJ1ARr/Ru2GaA==
+X-Received: by 2002:a17:903:11d0:b0:215:b1a3:4701 with SMTP id d9443c01a7336-21c352ed490mr404143025ad.13.1737717782408;
+        Fri, 24 Jan 2025 03:23:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFiLWCijDXCj8ttRHTSiQ0uY4s++q43Ps4ZhiIGClibQ2ZxIuCxnlRpKYfB3B5HmtxRwP9HSg==
+X-Received: by 2002:a17:903:11d0:b0:215:b1a3:4701 with SMTP id d9443c01a7336-21c352ed490mr404142695ad.13.1737717781997;
+        Fri, 24 Jan 2025 03:23:01 -0800 (PST)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da4141dacsm12773825ad.133.2025.01.24.02.10.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da414cc20sm14025385ad.165.2025.01.24.03.22.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 02:10:57 -0800 (PST)
+        Fri, 24 Jan 2025 03:23:01 -0800 (PST)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-To: andersson@kernel.org, robh@kernel.org, dmitry.baryshkov@linaro.org,
-        manivannan.sadhasivam@linaro.org, krzk@kernel.org, helgaas@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: [PATCH V2 2/2] schemas: pci: bridge: Document PCIe N_FTS
-Date: Fri, 24 Jan 2025 15:40:38 +0530
-Message-Id: <20250124101038.3871768-3-krishna.chundru@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250124101038.3871768-1-krishna.chundru@oss.qualcomm.com>
-References: <20250124101038.3871768-1-krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v4 0/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+Date: Fri, 24 Jan 2025 16:52:46 +0530
+Message-Id: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: XdsalQeQUPV6f6H85MVXKVPtcVmvTAQU
-X-Proofpoint-ORIG-GUID: XdsalQeQUPV6f6H85MVXKVPtcVmvTAQU
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAZ4k2cC/23MwQqDMAwG4FeRnlepacW5095jjBFrOwvTutaVD
+ fHdFz15EELCn4RvZtEEZyK7ZDMLJrno/EBBnTKmOxyehruWMgMBqoAC+BhMNNMjAS9V3VSoW6T
+ B6J8u1n0363an3Lk4+fDb6ATr9kihEhwKoaSwjW7PePUx5u8PvrTv+5waW7EkdwDIPSAJQClrq
+ 6pSoy0PgGVZ/gjix3nqAAAA
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com,
+        quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1737717776; l=2904;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=DpZFnNMp3cO4OUAmgMvMghSHLjbZcw+carW7Us/j6OI=;
+ b=nBtnR8ZMQxp8i3AjvoBOYv5mGfLsxB1A2nKJD55i1qNfv0sbETbA62jNXWz1d7VjhCz/hbF3y
+ /5POaZy6FBsBLtAM4Bih8+4ZUp9VR1Z33tSTM+rxRHtEsJ+IRwAO2jg
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-ORIG-GUID: RV8rcRUXERMOm3KqQlmGQGJsEn5Svvse
+X-Proofpoint-GUID: RV8rcRUXERMOm3KqQlmGQGJsEn5Svvse
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-24_04,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- malwarescore=0 spamscore=0 adultscore=0 bulkscore=0 impostorscore=0
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501240073
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 impostorscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
+ mlxlogscore=932 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501240083
 
-Per PCIe r6.0, sec 4.2.5.1, during Link training, a PCIe component
-captures the N_FTS value it receives.  Per 4.2.5.6, when
-transitioning the Link from L0s to L0, it must transmit N_FTS Fast
-Training Sequences to enable the receiver to obtain bit and Symbol
-lock.
+PCIe equalization presets are predefined settings used to optimize
+signal integrity by compensating for signal loss and distortion in
+high-speed data transmission.
 
-Components may have device-specific ways to configure N_FTS values
-to advertise during Link training.  Define an n_fts array with an
-entry for each supported data rate.
+As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+configure lane equalization presets for each lane to enhance the PCIe
+link reliability. Each preset value represents a different combination
+of pre-shoot and de-emphasis values. For each data rate, different
+registers are defined: for 8.0 GT/s, registers are defined in section
+7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+an extra receiver preset hint, requiring 16 bits per lane, while the
+remaining data rates use 8 bits per lane.
+
+Based on the number of lanes and the supported data rate, read the
+device tree property and stores in the presets structure.
+
+Based upon the lane width and supported data rate update lane
+equalization registers.
+
+This patch depends on the this dt binding pull request which got recently
+merged: https://github.com/devicetree-org/dt-schema/pull/146
 
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- dtschema/schemas/pci/pci-bus-common.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes in v4:
+- use static arrays for storing preset values and use default value 0xff
+  to indicate the property is not present (Dimitry & konrad).
+- Link to v3: https://lore.kernel.org/r/20241223-preset_v2-v3-0-a339f475caf5@oss.qualcomm.com
 
-diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-index a9309af..968df43 100644
---- a/dtschema/schemas/pci/pci-bus-common.yaml
-+++ b/dtschema/schemas/pci/pci-bus-common.yaml
-@@ -128,6 +128,15 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     enum: [ 1, 2, 4, 8, 16, 32 ]
- 
-+  n-fts:
-+    description:
-+      The number of Fast Training Sequences (N_FTS) required by the
-+      Receiver (this component) when transitioning the Link from L0s
-+      to L0; advertised during initial Link training
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    minItems: 1
-+    maxItems: 5
-+
-   reset-gpios:
-     description: GPIO controlled connection to PERST# signal
-     maxItems: 1
+Changes in v3:
+- In previous series a wrong patch was attached, correct it
+- Link to v2: https://lore.kernel.org/r/20241212-preset_v2-v2-0-210430fbcd8a@oss.qualcomm.com
+
+Changes in v2:
+- Fix the kernel test robot error
+- As suggested by konrad use for loop and read "eq-presets-%ugts", (8 << i)
+- Link to v1: https://lore.kernel.org/r/20241116-presets-v1-0-878a837a4fee@quicinc.com
+
+---
+Krishna Chaitanya Chundru (4):
+      arm64: dts: qcom: x1e80100: Add PCIe lane equalization preset properties
+      PCI: of: Add API to retrieve equalization presets from device tree
+      PCI: dwc: Improve handling of PCIe lane configuration
+      PCI: dwc: Add support for configuring lane equalization presets
+
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi            |  8 ++++
+ drivers/pci/controller/dwc/pcie-designware-host.c | 44 +++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c      | 14 ++++++-
+ drivers/pci/controller/dwc/pcie-designware.h      |  4 ++
+ drivers/pci/of.c                                  | 47 +++++++++++++++++++++++
+ drivers/pci/pci.h                                 | 24 +++++++++++-
+ include/uapi/linux/pci_regs.h                     |  3 ++
+ 7 files changed, 142 insertions(+), 2 deletions(-)
+---
+base-commit: 87d6aab2389e5ce0197d8257d5f8ee965a67c4cd
+change-id: 20241212-preset_v2-549b7acda9b7
+
+Best regards,
 -- 
-2.34.1
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
 
