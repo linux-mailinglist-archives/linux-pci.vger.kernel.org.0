@@ -1,249 +1,206 @@
-Return-Path: <linux-pci+bounces-20333-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B8ACA1B4B6
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 12:24:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8557A1B4EB
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 12:42:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1ED151883419
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 11:24:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EFAA16C8B3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 11:42:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FCC221C179;
-	Fri, 24 Jan 2025 11:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E461CEAD4;
+	Fri, 24 Jan 2025 11:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jY85dQoY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMGVeq+r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84E321B181
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8BE1E495
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737717807; cv=none; b=ZqnG9S7u2ETglxsyJTKIR6PeFe8JrQ3+ctVMtg/elOPh0tkF1/ibs3E6EbDXSSCSH38YsJnwyf+ck7U5OMy9Yqdtrhv6HWdfFCAXY5iwg+gSbdnujFA6KZDqXFeKRzFouIy9S0LnmWKHMCiuBE8ttTqbHgKvzXHt8oGOR8K9CZs=
+	t=1737718956; cv=none; b=K1I50NQ8IwpwU5UeUcSTJTcY0hEHRvpO6STj2qP7zmWRaXlu+ZxjJUC4CbRZALTGUTi6wCCQ9ceh5htv6W/plmUIt7q1NS/iXKQFB89VCAEpKM1cyFg2DWYlxfofLRIIC6urJPEGTicYvRb98sfxrL4F8ie1VLyq42aGRyqUxgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737717807; c=relaxed/simple;
-	bh=aAQ+D093YPpgryfubEJA4YQRIxQgMZqUwYCwdO3dLmA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HDNnbPmKVUF+gfCYU7+nIaiD08G5ttQAfhlcLWOXD7+8Eb6iK9h2+XRONlbpVWyscxi81p+xiYHSMwHi06gQB9oPnDL6yjuAZ1h3sJHVd1N4HWYOGVjd+QHeTVsQgXTeC5EZcRMSVpAJzQoxJI8RDutx52ckdESacSRFDsoSZkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jY85dQoY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50OAkq16008021
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iDG9cPvoCK8z7X2aaaeCh0RKjsgrck+iVE1+Sq1KuNQ=; b=jY85dQoY1iihLG9Z
-	VN0RjJswK9xU36xn5wzhEL1JDkC12+wKM/pO5kmNnZk+TK0wqjoEog+C1iIz63ux
-	OZjPYcsVBH0IJZ5w7f0Dsherwz2Mgsr9jikMhkxblCviGJ86QVSX3EFCoQFsiFJE
-	yd4I+RHRse3byQGJVWIqXd7mlOLVi8HhiEcw+VF06Vnk8i67AARI6URwDLNaFczv
-	CXmCRhZeX0e/RqKlOhKOpXexsU3wfgQvnXa09qTXnadEjpZRSbsJmx/fu8XeYK9B
-	nvt3tnHQW9imFId4Eqf98EDOcckQocwKDFm289KH2sRVb9Ygs60CLqVceodDFmHb
-	e2yMnQ==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44c9djg4d6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:24 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-216405eea1fso41289055ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 03:23:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737717803; x=1738322603;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iDG9cPvoCK8z7X2aaaeCh0RKjsgrck+iVE1+Sq1KuNQ=;
-        b=sv+UNagwJkWtHyHZq9VBVMi47/The48cpTvdTu9Is2xvpZQ1y/oYuNnZNjX9kbujg7
-         Lbd7icN3r+78AvCh2Pud4b9w2onSr9OXTk+VfUKbz64lAqEnjdFZ/Rv0W3IrD3krSy9U
-         BqNaVUoGO4VG7vfVj0vJ88deA8JWJmi/HKAsw6n987LFDfSJmbqDcERdWbjKs9ujNTWC
-         gtvgdp+WGk87C5pFtK9mC3nvwpmdknlHW/eZIMfvzkttx0SbOZu+SgOu33JNP1ycWE6f
-         DqvPUZX9BZX+Hn14iMV08B2ktvaJ2HYf2uK0ztc8UDAroHSlQOIWMiz8rEuLbMtEKNri
-         lK2w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/T9xfbqRmXktLXWNYPZrfD3k0sZ9fu99p0FICCCSZC4cTnkIC/g61ZY7rYK/ZpRhU8uB4cQ8kUsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlCOKwhlc8QQG5il04NHvqdpc0FhAbrPBo30Xpd0uayzPA+xLE
-	MhDnxXlahGqY3uTLEUAThzDdERYkucX4kmc9xe37ihCO6QkV6ybTu9t5R1WOkXRym4Arwwj6IZa
-	S9jPhsnVAckEtHbghlpQEottM7OGw6XWgacLocelfTAD1qEjXhoRMB9nyT3Y=
-X-Gm-Gg: ASbGncuuVllB2vkcnYBvM7U9sKRW/YlvDqyBLMyqPFmLgmbSl7uZbbTh0mvj2xwKFFS
-	8FcwZG9VFBM7RHmY3CM6PqaVtbWJSQjB4wmP5u2fn/nJwUVW2ndNu79iu5Daee7eV7CnUva9cSh
-	HNptZvgZvgMqssMJOOIA/eiKzqPNF8be+xqsGS5VCGcgZBjmLTSwrNoWMyfZAzgmzHncXJgQYmb
-	KwwoT+rNw8hzY0BmSE8j9MWWzMb8Ctm+G9Hfd4ISCjqnINjM1gcd4D4rF8RjhQeDZH7ONyo1cCu
-	JF03SMqQxlhpGurS6+Z0fqdGA4oVLw==
-X-Received: by 2002:a17:902:eccd:b0:216:410d:4c67 with SMTP id d9443c01a7336-21c355c8efbmr494063045ad.41.1737717803177;
-        Fri, 24 Jan 2025 03:23:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFNcJImFw4UsAKq5Do4gBFlgHd9ffTPhv64PVSXU5XRkZR6vPBecdycKhiJ4wLS04GjTnsMOA==
-X-Received: by 2002:a17:902:eccd:b0:216:410d:4c67 with SMTP id d9443c01a7336-21c355c8efbmr494062655ad.41.1737717802771;
-        Fri, 24 Jan 2025 03:23:22 -0800 (PST)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da414cc20sm14025385ad.165.2025.01.24.03.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 03:23:22 -0800 (PST)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Fri, 24 Jan 2025 16:52:50 +0530
-Subject: [PATCH v4 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
+	s=arc-20240116; t=1737718956; c=relaxed/simple;
+	bh=Oekia56kBTtJyOwgakL1rXUfr/iX2KCAbaICaAfNMLc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=fjlMDSBEaSYy4tXrgoJ9MgGAefp5X/YPQYgK6MfRn3eMO2LURaiAMMq823qDPvCZMX3pm8fn1acubX6JcQhtG5Yecgl5wF5Vkj5wsZpZbtdYgqAwnrESSQy+3omECcTZEaqyO5p9653rhoo/B7kDwDaMq36ujLBEZt8mAgsKrZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMGVeq+r; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737718954; x=1769254954;
+  h=date:from:to:cc:subject:message-id;
+  bh=Oekia56kBTtJyOwgakL1rXUfr/iX2KCAbaICaAfNMLc=;
+  b=OMGVeq+rsJ/jLZRWCycNmIfv+HqlhPNFpYRZEwkrus5KwgeOhKE7zft5
+   dIZ1a3vlm4d7msCFiCD5UoFWra5wo1vdzc42OPP2V87fv8EQ1k9YcoEuX
+   JK+jz8e2VXM8wADaa+Go3yXl1jt8PDOLmLprqyUIpPwWdroG1HgL7m9Xc
+   A/iAs3PxpGaWTCFi1dNlwJrGkG2ubQ7/msLxrcSbIbBsmwK1OegAw6vhs
+   Y+6k3ksbr2AGxFkLiGEsbDiHQe+AmI6QfSr1D+DsNsyBhmmm75q8P1Lh3
+   gcL+9xHsrHGYxb5aDKJngLqTTBgwgWVo8FZeRIYnMEAxQLT5nCgr74Gl+
+   Q==;
+X-CSE-ConnectionGUID: XT7UTFkgRv2vT7u2CgAasQ==
+X-CSE-MsgGUID: 0LU9R7UoS62btECsSb1idg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38349677"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="38349677"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 03:42:34 -0800
+X-CSE-ConnectionGUID: 5nB039JHTSyrybGztqM87A==
+X-CSE-MsgGUID: 6F7o4S5MR2KVXd9mQjehYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="108647273"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 24 Jan 2025 03:42:32 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tbI50-000ccT-1U;
+	Fri, 24 Jan 2025 11:42:30 +0000
+Date: Fri, 24 Jan 2025 19:41:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 10ff5bbfd4b020e58fd8863e44ae59f0d4c337bf
+Message-ID: <202501241947.dTkmiEkL-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250124-preset_v2-v4-4-0b512cad08e1@oss.qualcomm.com>
-References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
-In-Reply-To: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com,
-        quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1737717776; l=4571;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=aAQ+D093YPpgryfubEJA4YQRIxQgMZqUwYCwdO3dLmA=;
- b=zCquekUDbmf6cUZgPiq91xAlARj7f0SrBOVKD9h7yHqvGVwQ4bbjaXOJlFfJEa9ac27BiOr/E
- j+BC9Oj5Gv5BW5Si3aH7b6v13mKdWRMRXkIAHpJtElNMyPS4taqzWpp
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: rOdjT3ckhQt2xuunnvyddcOigrQ02DhH
-X-Proofpoint-ORIG-GUID: rOdjT3ckhQt2xuunnvyddcOigrQ02DhH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-24_04,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 adultscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501240083
 
-PCIe equalization presets are predefined settings used to optimize
-signal integrity by compensating for signal loss and distortion in
-high-speed data transmission.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 10ff5bbfd4b020e58fd8863e44ae59f0d4c337bf  Merge branch 'pci/misc'
 
-Based upon the number of lanes and the data rate supported, write
-the preset data read from the device tree in to the lane equalization
-control registers.
+elapsed time: 988m
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 41 +++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
- include/uapi/linux/pci_regs.h                     |  3 ++
- 3 files changed, 47 insertions(+)
+configs tested: 113
+configs skipped: 3
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 2cd0acbf9e18..eced862fb8dd 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (pci->num_lanes < 1)
- 		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
- 
-+	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
-+	if (ret)
-+		goto err_free_msi;
-+
- 	/*
- 	 * Allocate the resource for MSG TLP before programming the iATU
- 	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-@@ -802,6 +806,42 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 	return 0;
- }
- 
-+static void dw_pcie_program_presets(struct dw_pcie *pci, u8 cap_id, u8 lane_eq_offset,
-+				    u8 lane_reg_size, u8 *presets, u8 num_lanes)
-+{
-+	u32 cap;
-+	int i;
-+
-+	cap = dw_pcie_find_ext_capability(pci, cap_id);
-+	if (!cap)
-+		return;
-+
-+	/*
-+	 * Write preset values to the registers byte-by-byte for the given
-+	 * number of lanes and register size.
-+	 */
-+	for (i = 0; i < num_lanes * lane_reg_size; i++)
-+		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
-+}
-+
-+static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
-+
-+	/* For data rate of 8 GT/S each lane equalization control is 16bits wide */
-+	if (speed >= PCIE_SPEED_8_0GT && pp->presets.eq_presets_8gts[0] != 0xff)
-+		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_SECPCI, PCI_SECPCI_LE_CTRL,
-+					0x2, (u8 *)pp->presets.eq_presets_8gts, pci->num_lanes);
-+
-+	/* For data rate of 16 GT/S each lane equalization control is 8bits wide */
-+	if (speed >= PCIE_SPEED_16_0GT &&
-+	    pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS][0] != 0xff)
-+		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_PL_16GT, PCI_PL_16GT_LE_CTRL,
-+					0x1, pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS],
-+					pci->num_lanes);
-+}
-+
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -855,6 +895,7 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
- 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
- 
-+	dw_pcie_config_presets(pp);
- 	/*
- 	 * If the platform provides its own child bus config accesses, it means
- 	 * the platform uses its own address translation component rather than
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 500e793c9361..b12b33944df4 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -25,6 +25,8 @@
- #include <linux/pci-epc.h>
- #include <linux/pci-epf.h>
- 
-+#include "../../pci.h"
-+
- /* DWC PCIe IP-core versions (native support since v4.70a) */
- #define DW_PCIE_VER_365A		0x3336352a
- #define DW_PCIE_VER_460A		0x3436302a
-@@ -379,6 +381,7 @@ struct dw_pcie_rp {
- 	bool			use_atu_msg;
- 	int			msg_atu_index;
- 	struct resource		*msg_res;
-+	struct pci_eq_presets	presets;
- };
- 
- struct dw_pcie_ep_ops {
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 12323b3334a9..68fc8873bc60 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1118,6 +1118,9 @@
- #define PCI_DLF_CAP		0x04	/* Capabilities Register */
- #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
- 
-+/* Secondary PCIe Capability 8.0 GT/s */
-+#define PCI_SECPCI_LE_CTRL	0x0c /* Lane Equalization Control Register */
-+
- /* Physical Layer 16.0 GT/s */
- #define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
- #define  PCI_PL_16GT_LE_CTRL_DSP_TX_PRESET_MASK		0x0000000F
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-2.34.1
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250124    gcc-13.2.0
+arc                   randconfig-002-20250124    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250124    clang-17
+arm                   randconfig-002-20250124    gcc-14.2.0
+arm                   randconfig-003-20250124    gcc-14.2.0
+arm                   randconfig-004-20250124    clang-19
+arm                             rpc_defconfig    clang-17
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250124    clang-20
+arm64                 randconfig-002-20250124    clang-20
+arm64                 randconfig-003-20250124    clang-19
+arm64                 randconfig-004-20250124    clang-20
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250124    gcc-14.2.0
+csky                  randconfig-002-20250124    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon               randconfig-001-20250124    clang-20
+hexagon               randconfig-002-20250124    clang-14
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250124    clang-19
+i386        buildonly-randconfig-002-20250124    clang-19
+i386        buildonly-randconfig-003-20250124    gcc-12
+i386        buildonly-randconfig-004-20250124    gcc-12
+i386        buildonly-randconfig-005-20250124    gcc-12
+i386        buildonly-randconfig-006-20250124    gcc-12
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250124    gcc-14.2.0
+loongarch             randconfig-002-20250124    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250124    gcc-14.2.0
+nios2                 randconfig-002-20250124    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250124    gcc-14.2.0
+parisc                randconfig-002-20250124    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                        fsp2_defconfig    gcc-14.2.0
+powerpc                          g5_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250124    gcc-14.2.0
+powerpc               randconfig-002-20250124    gcc-14.2.0
+powerpc               randconfig-003-20250124    clang-20
+powerpc                        warp_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250124    gcc-14.2.0
+powerpc64             randconfig-002-20250124    clang-20
+powerpc64             randconfig-003-20250124    clang-19
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                 randconfig-001-20250124    clang-19
+riscv                 randconfig-002-20250124    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250124    gcc-14.2.0
+s390                  randconfig-002-20250124    clang-20
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250124    gcc-14.2.0
+sh                    randconfig-002-20250124    gcc-14.2.0
+sh                        sh7757lcr_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250124    gcc-14.2.0
+sparc                 randconfig-002-20250124    gcc-14.2.0
+sparc64                          alldefconfig    gcc-14.2.0
+sparc64               randconfig-001-20250124    gcc-14.2.0
+sparc64               randconfig-002-20250124    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250124    gcc-12
+um                    randconfig-002-20250124    clang-20
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250124    gcc-12
+x86_64      buildonly-randconfig-002-20250124    gcc-12
+x86_64      buildonly-randconfig-003-20250124    clang-19
+x86_64      buildonly-randconfig-004-20250124    clang-19
+x86_64      buildonly-randconfig-005-20250124    clang-19
+x86_64      buildonly-randconfig-006-20250124    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250124    gcc-14.2.0
+xtensa                randconfig-002-20250124    gcc-14.2.0
+xtensa                         virt_defconfig    gcc-14.2.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
