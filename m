@@ -1,177 +1,226 @@
-Return-Path: <linux-pci+bounces-20319-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20320-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CABEA1B1B1
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 09:27:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2448EA1B23A
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 10:02:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CD0857A57D9
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 08:26:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44DB316DC00
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 09:01:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BB3219A63;
-	Fri, 24 Jan 2025 08:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCF2A218AD8;
+	Fri, 24 Jan 2025 09:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y7Nw/TS3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kJVSiE1S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D166218E99;
-	Fri, 24 Jan 2025 08:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA92219A89;
+	Fri, 24 Jan 2025 09:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737707204; cv=none; b=vBL/NMcsiTjXiKg+4E+AINPcpyOTO0aNbh9ilQiCHRzMBSHauCKPSFlBb0DyGCjw9exUibF8ziWBpSSNDiwk4VUvdHZEwu0KladOKG+yZxLFtSRlgQ4b3nemqsKsD8heozf4JpKyJo6Lz5Z2Uw5Vr8KXvVdd7/Fz/08P6Rx7fhY=
+	t=1737709202; cv=none; b=WMgbFheJhjZHmJL3y+m1LIgNRWl+SfZaWawlAEvjs63yw0cQa6lrLxZGqowRQqXN9cuCsZqXUdYW9DjIHVVX2Gq4uMfTMZ7ZmgZXWLuCuFpXtlWSOV4me8ENPiaFKD1WWCHpK5ybvsmkT9uRZ7ylDi1iyaKXUCJ8Ra8Wc0cR9NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737707204; c=relaxed/simple;
-	bh=Dv1vAXZI8vsRs4O+g2BpElnnLuNaKougAOdum6jfCUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=vBUDV3m/8AlswjZQ1tcYxg00LIbbDop3hCa20hRc2+KW5EUzBd3P8qMwei+0bv+Qzzs9TSMf2XWwce1W6bTeRCHEtjAIVz2gZyPlyZPYNkqUBH/Dv8B/egThLVzfJwFX6WAJknq1FP29WETznf78SnIicgh9egZzXQ7VWkxLt9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y7Nw/TS3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50O82bLg032689;
-	Fri, 24 Jan 2025 08:26:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sjbcESiU6USB4wlS8JMciyTQKB0lub0M2yPt8IZm/AE=; b=Y7Nw/TS3DMnI+06k
-	x4URVuBACUMf9aV7YXw1RbWp0ZWUuqR4gLMPgH5KFdEZC78k3DSetBSHmxSY8HZy
-	2GA5Id98KD5tdDHoDuSm8a7ndTMpkt6TYylrtN3gVH7imyt5X+QJ8R5JzSocLaF1
-	h+we/IkMWCHbYFWLOEHhmGFj526bawBOotijqztYrLMpSLzciniFq9ryxijR4mjQ
-	gjgofZV9AF9P4XnxOVSKroMEKD2jw2jRmQL7O+nhnLyuOpC9/8CMsR4sEheRzOlm
-	8JuAEM9hA+LmaazcM1QGO9p792efJX3OdQdRRCP/QaBFqJIr8j1+6Pwhi/POZNt/
-	Qr4kfA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44c70ng21w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Jan 2025 08:26:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50O8QYYr015205
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Jan 2025 08:26:34 GMT
-Received: from [10.216.14.228] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 24 Jan
- 2025 00:26:28 -0800
-Message-ID: <6e35eea5-2c7b-5d71-f39d-f9196a3c1b76@quicinc.com>
-Date: Fri, 24 Jan 2025 13:56:25 +0530
+	s=arc-20240116; t=1737709202; c=relaxed/simple;
+	bh=mmZFt69Qzgta/1mBLoi34q+l+yJxj/yyDWj0oHtn0VQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O9Bp8AHLG2ZAnurUq1789I5qe9iw0/CUMMBrDTWEJbUxLNRZqhAI5ytS+4XI/2XIWDYWeY9uSiIvcYE5nd/5dT218mHA80Yh0ooaMlPCoYX+B9C/43NUBfY7T5T8aasD6yjj+GsNLPBCBmavmboRuFJDgvltiBfXByyroDmPY8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kJVSiE1S; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737709201; x=1769245201;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mmZFt69Qzgta/1mBLoi34q+l+yJxj/yyDWj0oHtn0VQ=;
+  b=kJVSiE1SJA30ULyx5rXaRSAvC3h023algK0q0EI/LFR2YFIp6cehki76
+   4Z9lEGAiH1KcWwqa5I0VdToLb6UPNfJJbL6R8/46Ks44NY0dMeUxDz6j5
+   t2zDDDeWGNmHlK8aWCvU79SKBdrcSiYy7WyESoPNGEHmIh7k/rMvGW4zr
+   b7bxuk6A6RcCtycuiE2Y7NCh5Hf91MXIBwhhZvU0ALgVggqo+ixXbSUdw
+   jTteOTW4j1PJln9tLyN1J8uw/7X5xkpPGxiO6mPMAtPgKvWMYnGqBN3DC
+   dh2ya24N4ePB69VvFKrA6TLdy+jKokv4cP3fHs8X+L4dlR7sNzPQ1Qz+8
+   w==;
+X-CSE-ConnectionGUID: S9Mli3AjT7Oo3CQs8b85ZQ==
+X-CSE-MsgGUID: KtE2a3x+RTqOmlLPk18aGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55651353"
+X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
+   d="scan'208";a="55651353"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 01:00:00 -0800
+X-CSE-ConnectionGUID: hQkSYB4pRd6jIWl994dauA==
+X-CSE-MsgGUID: I3my9BlWR/qWbIjB338kug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="131006301"
+Received: from unknown (HELO BSINU234.iind.intel.com) ([10.66.226.146])
+  by fmviesa002.fm.intel.com with ESMTP; 24 Jan 2025 00:59:57 -0800
+From: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+To: linux-bluetooth@vger.kernel.org
+Cc: linux-pci@vger.kernel.org,
+	bhelgaas@google.com,
+	ravishankar.srivatsa@intel.com,
+	chethan.tumkur.narayan@intel.com,
+	ChandraShekar Devegowda <chandrashekar.devegowda@intel.com>,
+	Kiran K <kiran.k@intel.com>
+Subject: [PATCH v3] Bluetooth: btintel_pcie: Support suspend-resume
+Date: Fri, 24 Jan 2025 16:45:27 +0200
+Message-Id: <20250124144527.3159972-1-chandrashekar.devegowda@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 3/4] PCI: dwc: Reduce DT reads by allocating host
- bridge via DWC glue driver
-Content-Language: en-US
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Krishna Chaitanya Chundru
-	<krishna.chundru@oss.qualcomm.com>
-CC: <cros-qcom-dts-watchers@chromium.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_vpernami@quicinc.com>,
-        <quic_mrana@quicinc.com>, <mmareddy@quicinc.com>
-References: <20250121-enable_ecam-v3-0-cd84d3b2a7ba@oss.qualcomm.com>
- <20250121-enable_ecam-v3-3-cd84d3b2a7ba@oss.qualcomm.com>
- <20250124061828.ncycdpxqd6fqpjib@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20250124061828.ncycdpxqd6fqpjib@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KzrbjIr4tr0Nq9uV4eq3G75CKKG6k1P0
-X-Proofpoint-ORIG-GUID: KzrbjIr4tr0Nq9uV4eq3G75CKKG6k1P0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-24_03,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- bulkscore=0 spamscore=0 mlxlogscore=984 clxscore=1015 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501240060
+Content-Transfer-Encoding: 8bit
 
+From: ChandraShekar Devegowda <chandrashekar.devegowda@intel.com>
 
+This patch contains the changes in driver for vendor specific handshake
+during enter of D3 and D0 exit.
 
-On 1/24/2025 11:48 AM, Manivannan Sadhasivam wrote:
-> On Tue, Jan 21, 2025 at 02:32:21PM +0530, Krishna Chaitanya Chundru wrote:
->> Allow DWC glue drivers to allocate the host bridge, avoiding redundant
->> device tree reads primarily in dw_pcie_ecam_supported().
->>
-> 
-> I don't understand what you mean by 'redundant device tree reads'. Please
-> explain.
-> 
-In dw_pcie_ecam_supported () we are trying to read bus-range to find
-maximum bus range value. devm_pci_alloc_host_bridge() is already reading
-bus range it. If we move devm_pci_alloc_host_bridge() to start of the
-controller probe we can avoid reading the dt and use values stored in 
-the host bridge.
-This was recommended by bjorn in the v2.
+The implementation is as per the Intel SAS document:
+BT Platform Power Management SAS - IOSF and the specific sections are
+3.1 D0Exit (D3 Entry) Flow
+3.2 D0Entry (D3 Exit) Flow
 
-I will update the commit text in the next series.
-> - Mani
-> 
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware-host.c | 13 +++++++------
->>   1 file changed, 7 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index 3888f9fe5af1..0acf9db44f2c 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -484,8 +484,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   	struct device *dev = pci->dev;
->>   	struct device_node *np = dev->of_node;
->>   	struct platform_device *pdev = to_platform_device(dev);
->> +	struct pci_host_bridge *bridge = pp->bridge;
->>   	struct resource_entry *win;
->> -	struct pci_host_bridge *bridge;
->>   	struct resource *res;
->>   	int ret;
->>   
->> @@ -497,11 +497,12 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   		return -ENODEV;
->>   	}
->>   
->> -	bridge = devm_pci_alloc_host_bridge(dev, 0);
->> -	if (!bridge)
->> -		return -ENOMEM;
->> -
->> -	pp->bridge = bridge;
->> +	if (!pp->bridge) {
->> +		bridge = devm_pci_alloc_host_bridge(dev, 0);
->> +		if (!bridge)
->> +			return -ENOMEM;
->> +		pp->bridge = bridge;
->> +	}
->>   
->>   	pp->cfg0_size = resource_size(res);
->>   	pp->cfg0_base = res->start;
->>
->> -- 
->> 2.34.1
->>
-> 
+Command to test host initiated wakeup after 60 seconds
+    sudo rtcwake -m mem -s 60
+
+logs from testing:
+    Bluetooth: hci0: BT device resumed to D0 in 1016 usecs
+
+Signed-off-by: ChandraShekar Devegowda <chandrashekar.devegowda@intel.com>
+Signed-off-by: Kiran K <kiran.k@intel.com>
+---
+changes in v3:
+    - Corrected the typo's
+    - Updated the CC list as suggested.
+    - Corrected the format specifiers in the logs.
+
+changes in v2:
+    - Updated the commit message with test steps and logs.
+    - Added logs to include the timeout message.
+    - Fixed a potential race condition during suspend and resume.
+
+ drivers/bluetooth/btintel_pcie.c | 58 ++++++++++++++++++++++++++++++++
+ drivers/bluetooth/btintel_pcie.h |  4 +++
+ 2 files changed, 62 insertions(+)
+
+diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
+index 63eca52c0e0b..9e1d2a999f2f 100644
+--- a/drivers/bluetooth/btintel_pcie.c
++++ b/drivers/bluetooth/btintel_pcie.c
+@@ -274,6 +274,12 @@ static int btintel_pcie_reset_bt(struct btintel_pcie_data *data)
+ 	return reg == 0 ? 0 : -ENODEV;
+ }
+ 
++static void btintel_pcie_set_persistence_mode(struct btintel_pcie_data *data)
++{
++	btintel_pcie_set_reg_bits(data, BTINTEL_PCIE_CSR_HW_BOOT_CONFIG,
++				  BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON);
++}
++
+ /* This function enables BT function by setting BTINTEL_PCIE_CSR_FUNC_CTRL_MAC_INIT bit in
+  * BTINTEL_PCIE_CSR_FUNC_CTRL_REG register and wait for MSI-X with
+  * BTINTEL_PCIE_MSIX_HW_INT_CAUSES_GP0.
+@@ -298,6 +304,8 @@ static int btintel_pcie_enable_bt(struct btintel_pcie_data *data)
+ 	 */
+ 	data->boot_stage_cache = 0x0;
+ 
++	btintel_pcie_set_persistence_mode(data);
++
+ 	/* Set MAC_INIT bit to start primary bootloader */
+ 	reg = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_FUNC_CTRL_REG);
+ 	reg &= ~(BTINTEL_PCIE_CSR_FUNC_CTRL_FUNC_INIT |
+@@ -1649,11 +1657,61 @@ static void btintel_pcie_remove(struct pci_dev *pdev)
+ 	pci_set_drvdata(pdev, NULL);
+ }
+ 
++static int btintel_pcie_suspend(struct device *dev)
++{
++	struct btintel_pcie_data *data;
++	int err;
++	struct  pci_dev *pdev = to_pci_dev(dev);
++
++	data = pci_get_drvdata(pdev);
++	data->gp0_received = false;
++	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D3_HOT);
++	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
++				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
++	if (!err) {
++		bt_dev_err(data->hdev, "failed to receive gp0 interrupt for suspend in %d msecs",
++			   BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
++		return -EBUSY;
++	}
++	return 0;
++}
++
++static int btintel_pcie_resume(struct device *dev)
++{
++	struct btintel_pcie_data *data;
++	struct  pci_dev *pdev = to_pci_dev(dev);
++	ktime_t calltime, delta, rettime;
++	unsigned long long duration;
++	int err;
++
++	data = pci_get_drvdata(pdev);
++	data->gp0_received = false;
++	calltime = ktime_get();
++	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
++	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
++				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
++	if (!err) {
++		bt_dev_err(data->hdev, "failed to receive gp0 interrupt for resume in %d msecs",
++			   BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
++		return -EBUSY;
++	}
++	rettime = ktime_get();
++	delta = ktime_sub(rettime, calltime);
++	duration = (unsigned long long)ktime_to_ns(delta) >> 10;
++	bt_dev_info(data->hdev, "BT device resumed to D0 in %llu usecs", duration);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(btintel_pcie_pm_ops, btintel_pcie_suspend,
++		btintel_pcie_resume);
++
+ static struct pci_driver btintel_pcie_driver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = btintel_pcie_table,
+ 	.probe = btintel_pcie_probe,
+ 	.remove = btintel_pcie_remove,
++	.driver.pm = &btintel_pcie_pm_ops,
+ };
+ module_pci_driver(btintel_pcie_driver);
+ 
+diff --git a/drivers/bluetooth/btintel_pcie.h b/drivers/bluetooth/btintel_pcie.h
+index f9aada0543c4..38d0c8ea2b6f 100644
+--- a/drivers/bluetooth/btintel_pcie.h
++++ b/drivers/bluetooth/btintel_pcie.h
+@@ -8,6 +8,7 @@
+ 
+ /* Control and Status Register(BTINTEL_PCIE_CSR) */
+ #define BTINTEL_PCIE_CSR_BASE			(0x000)
++#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG		(BTINTEL_PCIE_CSR_BASE + 0x000)
+ #define BTINTEL_PCIE_CSR_FUNC_CTRL_REG		(BTINTEL_PCIE_CSR_BASE + 0x024)
+ #define BTINTEL_PCIE_CSR_HW_REV_REG		(BTINTEL_PCIE_CSR_BASE + 0x028)
+ #define BTINTEL_PCIE_CSR_RF_ID_REG		(BTINTEL_PCIE_CSR_BASE + 0x09C)
+@@ -48,6 +49,9 @@
+ #define BTINTEL_PCIE_CSR_MSIX_IVAR_BASE		(BTINTEL_PCIE_CSR_MSIX_BASE + 0x0880)
+ #define BTINTEL_PCIE_CSR_MSIX_IVAR(cause)	(BTINTEL_PCIE_CSR_MSIX_IVAR_BASE + (cause))
+ 
++/* CSR HW BOOT CONFIG Register */
++#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON		(BIT(31))
++
+ /* Causes for the FH register interrupts */
+ enum msix_fh_int_causes {
+ 	BTINTEL_PCIE_MSIX_FH_INT_CAUSES_0	= BIT(0),	/* cause 0 */
+-- 
+2.34.1
+
 
