@@ -1,130 +1,128 @@
-Return-Path: <linux-pci+bounces-20322-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20323-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B5A3A1B279
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 10:19:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 369C0A1B298
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 10:29:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80A17188F919
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 09:19:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0A953A7E6B
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 09:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65AA31DB144;
-	Fri, 24 Jan 2025 09:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03520218EAB;
+	Fri, 24 Jan 2025 09:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HeX8lRsg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="klvwWPSF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B19B320B;
-	Fri, 24 Jan 2025 09:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39D9218EA7
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 09:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737710382; cv=none; b=rUE7sAd1QWsVEnj8e1vGYsIO8e9RvohQGcT1E/oZ0nOgZqV0sRPQYSfLk0G07T5uP1evthKYOtiJE0+sUYRxOehbtp0Ni0lSi2ReKnK16HYKrY3jGiywEZfp0dNXlxLrUuTAQNexrsNfHcn92PezsMHHrV+wN+Do03BcPesRTLQ=
+	t=1737710955; cv=none; b=BR9UALUru25cbwdtmXPYkmWlBanrA/onfzZAe8Kjdgm7XLM8DN+F74BwKUNGPXOwolD7iRl44s27maR8SvcAjV+HoDFUPu5ec7HM1cwDflgS5kuoHIKz92Eh5xkvlFmambj+W3QgNrVEPV3J9IXEbx2nK5RsowDns2A+65/whKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737710382; c=relaxed/simple;
-	bh=A1cfsVXr7AvdNLQPHVsurlhZ45q/aSIpKhMicMhh7to=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hBeRRK6bog/FypPRxfBU20/O4iacuwOVDb40JQA+6+OE/v4oRpa7zjZzKQHY/JPoPorQqCQxalBZjh7THpU62JF/VSVYBiKBLLdlJuJFwMwgUV9KqSP1TJQXP1w/QQOZ77dgDaSVX+cc5PAePuPiJLXsi+9YVAOaw5vR5Cghg48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HeX8lRsg; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737710381; x=1769246381;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=A1cfsVXr7AvdNLQPHVsurlhZ45q/aSIpKhMicMhh7to=;
-  b=HeX8lRsgAAH0VAkUifbfPuFCLlodCyfiDmjPU9MsKsKlqiSZjnaD+uif
-   AD9kYhhZzD5P35uWNwQ5HDPd0UhbThfjjpVf/zFHlE2zecTJiBZ3Z4gyF
-   pa6UGqjkoxEnAalmBQAZHxrFz2Ok+D1KakWdC0dIgDySbqUkdromMgVVQ
-   2KLe4Lxz5ecF9FiQNnAQeYmLeP7gN/IJh/exBPLp1OFmTjQTW7H8o/E9E
-   1Yu/UysEEEw0VAO2hAAfW4o03MeeLpGJAMI7cV+4c6Fpqw1WvDnMiOVLR
-   1VVn/y1pOVevLEy4J8IrCFHuS0SUdpxGJLMCL6WlJvTksid9EG1oR3urE
-   w==;
-X-CSE-ConnectionGUID: rNEtfK/bRKe3l65v9K0WGQ==
-X-CSE-MsgGUID: b1TevFXiTKG/K+T2wyQt6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="60704099"
-X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
-   d="scan'208";a="60704099"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 01:19:41 -0800
-X-CSE-ConnectionGUID: 9Bu5H3ndR7CU2ohHg1dEtw==
-X-CSE-MsgGUID: BhGLZww2S2OA64ZDYqJtpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
-   d="scan'208";a="107842091"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.158])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 01:19:36 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 24 Jan 2025 11:19:33 +0200 (EET)
-To: Ma Ke <make24@iscas.ac.cn>
-cc: bhelgaas@google.com, yinghai@kernel.org, rafael.j.wysocki@intel.com, 
-    akpm@linux-foundation.org, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND] PCI: fix reference leak in
- pci_alloc_child_bus()
-In-Reply-To: <20250119070550.2278800-1-make24@iscas.ac.cn>
-Message-ID: <46c252b0-880c-aca1-f6e5-c78ebe28a7a0@linux.intel.com>
-References: <20250119070550.2278800-1-make24@iscas.ac.cn>
+	s=arc-20240116; t=1737710955; c=relaxed/simple;
+	bh=NG6H0nzNi1H7cZ9MPb4c2f2Rjj27yK60bq+x6Rtu3rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gwEwbpb+hnu4b64IT49wwXzpWTNTj8xcgh0NCCtND7EMfoqWmCoBG314QCe9rWeAisM/hsmb7thro/hjTvD8zPTNsZze0yDpKj4Lpdk/0/UxIN+9OJ0cyVuOv9od3HE6aU58U8r1P6agxFHNXZuRgC4RsmQvjrW1j1nMyIVkRVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=klvwWPSF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 891D1C4CED2;
+	Fri, 24 Jan 2025 09:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737710955;
+	bh=NG6H0nzNi1H7cZ9MPb4c2f2Rjj27yK60bq+x6Rtu3rg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=klvwWPSFC2zoJrB/q84Kxl8lpJzV0mVNlMUn4R3Ypc3m+OOPn70bsfyGkyX9AUyGB
+	 NaP5fu/herFwGgQKOtOKveaKyxpj+MGX6yQX4sl7iiDCZW9EZUZDRxiwOPWCGhqZkz
+	 b3d5I0TrxJEPywljo8IKPb0+pEWaT25dyzc9lY4J7Z0qn6tXr6POqY9yoUlV1sqdJP
+	 43pu9Pt3xiMw0kIo7+cv47gGs2Niz3KCDM5khFRBslqOeqRIhPO1opu7yUR39Tl5cQ
+	 bXZ5dWHdC3zPTXrKOfe1O9Ftt25gbuG/wDeAPqIKs8ATJe19yBGgpvfOx9AXx2MQZJ
+	 evnRnJ+8VI7aQ==
+Date: Fri, 24 Jan 2025 10:29:10 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jon Hunter <jonathanh@nvidia.com>, Hans Zhang <18255117159@163.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] misc: pci_endpoint_test: Handle BAR sizes larger than
+ INT_MAX
+Message-ID: <Z5NdZvFC1uwjrMX5@ryzen>
+References: <20250123095906.3578241-2-cassel@kernel.org>
+ <Z5JmK3tAtNi2K2bO@lizhi-Precision-Tower-5810>
+ <Z5KL2o0hREaVDiTC@ryzen>
+ <Z5KT5GZH4VEpz430@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5KT5GZH4VEpz430@lizhi-Precision-Tower-5810>
 
-On Sun, 19 Jan 2025, Ma Ke wrote:
-
-> When device_register(&child->dev) failed, calling put_device() to
-> explicitly release child->dev. Otherwise, it could cause double free
-> problem.
-
-While the code fix seem okay, this double free part in the problem 
-description isn't. The reference is held w/o this fix so it's not getting 
-freed at all, let alone freed twice.
-
-> device_register() includes device_add(). As comment of device_add()
-> says, 'if device_add() succeeds, you should call device_del() when you
-> want to get rid of it. If device_add() has not succeeded, use only
-> put_device() to drop the reference count'.
+On Thu, Jan 23, 2025 at 02:09:24PM -0500, Frank Li wrote:
+> On Thu, Jan 23, 2025 at 07:35:06PM +0100, Niklas Cassel wrote:
+> > >
+> > > Actually, you change code logic although functionality is the same. I feel
+> > > like you should mention at commit message or use origial code by just
+> > > change variable type.
+> > >
+> > > #ifdef CONFIG_PHYS_ADDR_T_64BIT
+> > > typedef u64 phys_addr_t;
+> > > #else
+> > > typedef u32 phys_addr_t;
+> > > #endif
+> >
+> > Hello Frank,
+> >
+> > I personally think that is a horrible idea :)
+> >
+> > We do not want to introduce ifdefs in the middle of the code, unless
+> > in exceptional circumstances, like architecture specific optimized code.
 > 
-> Found by code review.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possible")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
-> Changes in v2:
-> - added the bug description about the comment of device_add();
-> - fixed the patch as suggestions;
-> - added Cc and Fixes table.
-> ---
->  drivers/pci/probe.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2e81ab0f5a25..ae12f92c6a9d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
->  add_dev:
->  	pci_set_bus_msi_domain(child);
->  	ret = device_register(&child->dev);
-> -	WARN_ON(ret < 0);
-> +	if (WARN_ON(ret < 0)) {
-> +		put_device(&child->dev);
-> +		return NULL;
-> +	}
->  
->  	pcibios_add_bus(child);
->  
-> 
+> You miss understand what my means. I copy it from type.h to indicate
+> resource_size_t is not 64bit at all platforms.
 
--- 
- i.
+I know that resource_size_t is typedefed to phys_addr_t, which can be 32-bit
+or 64-bit. (I compile tested this patch on 32-bit both with and without PAE.)
 
+resource_size_t is the type returned by pci_resource_len().
+That is why the patch in subject changes the type to use resource_size_t.
+IMO, it does not make sense to use any other type (e.g. u64), since the
+value returned by pci_resource_len() will still be limited to what can be
+represented by resource_size_t.
+
+A BARs larger than 4GB, on systems with 32-bit resource_size_t, will get
+disabled by PCI core:
+https://github.com/torvalds/linux/blob/v6.13/drivers/pci/probe.c#L265-L270
+
+So all good.
+
+
+
+As for your question why I don't keep the division, please read the comment
+section in this patch (where the changelog usually is), or read the thread:
+https://lore.kernel.org/linux-pci/20250109094556.1724663-1-18255117159@163.com/T/#t
+
+I guess I could have added:
+"
+In order to handle 64-bit resource_type_t on 32-bit platforms, we would
+have needed to use a function like div_u64() or similar. Instead, change
+the code to use addition instead of division. This avoids the need for
+div_u64() or similar, while also simplifying the code.
+"
+
+Let me send a V2 with that senctence added to address your review comment.
+
+
+Kind regards,
+Niklas
 
