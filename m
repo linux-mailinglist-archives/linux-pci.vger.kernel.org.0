@@ -1,269 +1,298 @@
-Return-Path: <linux-pci+bounces-20314-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20315-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C660A1B090
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 07:59:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0AF4A1B0A3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 08:03:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E323188641B
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 06:59:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9AB23A7A21
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 07:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C0561D90BE;
-	Fri, 24 Jan 2025 06:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B8EE1D90A2;
+	Fri, 24 Jan 2025 07:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYtsc1+C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1eBDxbD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D3E1D63DF;
-	Fri, 24 Jan 2025 06:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAFC33998;
+	Fri, 24 Jan 2025 07:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737701937; cv=none; b=ktTDbcfQGkgOZuBOiYTRfqfj+0viaINtQi9+bwG9pYrInd2apFHlQq90NJWHB5f0O0LR8GcP8cWbMjVPhcfXN077Fi4XP8+gGhBZITYuwalVK3incYQ21GeB895ueiFWFTWbAeYY/KWsO2Bt7PZ4vbCcFGeG6vPoblvKYekYVFQ=
+	t=1737702189; cv=none; b=RdcjvLLf8w+Vh3+28dycbrZWxt9PzeVq177TcNmriIF4qXQ2ivhmU9SZmoztIQjmiYYYqfYxdn6Uzc8ix3IuJT/kBh0g64ci7o1Kb2pwGyE1z46XjmLETyzrMBUFcRRq74tHmsilYMTDxACh2ApqmAlJOhNUyS77xHf6wlzB/e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737701937; c=relaxed/simple;
-	bh=rPt77Coe5Zulhw136U/oU/5suFRS1l65UL3xb7q2sKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/sH54Nnu3RVcjMZ5raD1XJejkkRZ3A3ft4092kguRzXOBJLWWD9uYGAHuTfYsuoF5FlV8Dc9mdWa+eLffAGuyaVqS+h54kraLzk1UoZruLb2BQIfATcs7yAaPyALKS1e6ZVM8XtORQYFA9oZPAVjI4//nc5SboJSsqTmUS4ic0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYtsc1+C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE05C4CED2;
-	Fri, 24 Jan 2025 06:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737701937;
-	bh=rPt77Coe5Zulhw136U/oU/5suFRS1l65UL3xb7q2sKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FYtsc1+CjrhyXgLIpObYL9lZrs4rBJnutVvjXNg3dWdNEq/nEPcV1QdeJleis1L87
-	 PJK/gQGgF8N3bLgncRCAcweCJRHgohSwLEJmGaXww5GDbzTfixmAGauLCWoRtdQVLS
-	 vqVcdFJmz1JBFmJGmuVB5QHOTNakbrzNOWfCN8PvWVIqX9yfRkRZXn24fXOgvpKyZp
-	 0sMlhFf5P7/ecKJ+YMMFkRQf4AJ9FfF0ds/QZS3PmHIqSxpyHtYEIfEBUgSIAQc7Tg
-	 KIZU3ohAGHJx4ys8jlfmiqsuByidAKucfNmbj55bH3Sa0HDMocTboiH0zYXvcnHbXK
-	 FJxBrobQV102A==
-Date: Fri, 24 Jan 2025 12:28:43 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-	mmareddy@quicinc.com,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: Re: [PATCH v3 4/4] PCI: qcom: Enable ECAM feature
-Message-ID: <20250124065843.te5p55qgjyina53z@thinkpad>
-References: <20250121-enable_ecam-v3-0-cd84d3b2a7ba@oss.qualcomm.com>
- <20250121-enable_ecam-v3-4-cd84d3b2a7ba@oss.qualcomm.com>
+	s=arc-20240116; t=1737702189; c=relaxed/simple;
+	bh=Llbekx6bX89AfTZu4sCypFqE7Uy/xa6KsXk1K4aEzq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uYxpwUMM73y9xqadCAAZZIr+FxrYzymFTcwRoMD471/itOah539e5L+PSnu8fXTkgOOyh9n/godCoNCTKbLgQ+8R3kA4V6kbAkGJxbI4ID16llzTzvBKvohJGKGaJHzkht0hvl9M+mZd03CLGC1lHWV/js6JWfOPzroKCBlar/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1eBDxbD; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737702187; x=1769238187;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Llbekx6bX89AfTZu4sCypFqE7Uy/xa6KsXk1K4aEzq8=;
+  b=P1eBDxbDZM7db6YcTgYdG4F68fa6GTy4FyHpsbqo5VEDsH/p3snrtvrd
+   lgziP6aSkTp6FM23FVsVJvfDqJzSSMhm/6FZ6LWlhofYML83OljM9HHo7
+   1cksVXUrex6nLIsmVxdqTbE+Yb7ew0geQPWvKDGgHBzM58qWfaBswOKR/
+   0mXCFZ32j36mutZBsqZoU49F0u1X+/ToExisvq2BxW2YkJXcM9uR4M2Lh
+   +GkObn28/HP1z4znZ+YPAaqYFr7fzYl+0Mzszu288Ar+PUZUS8olxf1ck
+   le1WvASEjje/i7cu5N+dYHIyEU94On9nGedYGHbajDJDAyxlnwCl6cDqA
+   Q==;
+X-CSE-ConnectionGUID: Axe1IIaeQzuJGVqwSLxnxA==
+X-CSE-MsgGUID: eGkQtJWsT7GYfVJ+bIY05w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="41062518"
+X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
+   d="scan'208";a="41062518"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 23:03:06 -0800
+X-CSE-ConnectionGUID: +OjaeZPBSQKZy3lGwSwTsg==
+X-CSE-MsgGUID: POkXwHSOSHuj7fKCcMzfwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
+   d="scan'208";a="107609917"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.223.184]) ([10.124.223.184])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 23:03:06 -0800
+Message-ID: <88127007-4351-4d8d-ab7c-3f5ae9d36139@linux.intel.com>
+Date: Thu, 23 Jan 2025 23:03:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+To: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ bhelgaas@google.com, kbusch@kernel.org
+Cc: mahesh@linux.ibm.com, oohall@gmail.com
+References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
+ <20241112135419.59491-3-xueshuai@linux.alibaba.com>
+ <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
+ <9f8653ef-81e3-4ce9-9c11-78d694f2a52b@linux.alibaba.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <9f8653ef-81e3-4ce9-9c11-78d694f2a52b@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250121-enable_ecam-v3-4-cd84d3b2a7ba@oss.qualcomm.com>
 
-On Tue, Jan 21, 2025 at 02:32:22PM +0530, Krishna Chaitanya Chundru wrote:
-> The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
-> gives us the offset from which ELBI starts. so use this offset and cfg
-> win to map these regions instead of doing the ioremap again.
-> 
-> On root bus, we have only the root port. Any access other than that
-> should not go out of the link and should return all F's. Since the iATU
-> is configured for the buses which starts after root bus, block the
-> transactions starting from function 1 of the root bus to the end of
-> the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
-> outside the link through ECAM blocker through PARF registers.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 81 ++++++++++++++++++++++++++++++++--
->  1 file changed, 77 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index dc102d8bd58c..cf94718d3059 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -52,6 +52,7 @@
->  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
->  #define PARF_Q2A_FLUSH				0x1ac
->  #define PARF_LTSSM				0x1b0
-> +#define PARF_SLV_DBI_ELBI			0x1b4
->  #define PARF_INT_ALL_STATUS			0x224
->  #define PARF_INT_ALL_CLEAR			0x228
->  #define PARF_INT_ALL_MASK			0x22c
-> @@ -61,6 +62,17 @@
->  #define PARF_DBI_BASE_ADDR_V2_HI		0x354
->  #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
->  #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
-> +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
-> +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
-> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
-> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
-> +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
-> +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
-> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
-> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
-> +#define PARF_ECAM_BASE				0x380
-> +#define PARF_ECAM_BASE_HI			0x384
-> +
->  #define PARF_NO_SNOOP_OVERIDE			0x3d4
->  #define PARF_ATU_BASE_ADDR			0x634
->  #define PARF_ATU_BASE_ADDR_HI			0x638
-> @@ -84,6 +96,7 @@
->  
->  /* PARF_SYS_CTRL register fields */
->  #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
-> +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
->  #define MST_WAKEUP_EN				BIT(13)
->  #define SLV_WAKEUP_EN				BIT(12)
->  #define MSTR_ACLK_CGC_DIS			BIT(10)
-> @@ -294,15 +307,60 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
->  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
->  }
->  
-> +static int qcom_pci_config_ecam(struct dw_pcie_rp *pp)
-> +{
 
-void qcom_pci_config_ecam()?
+On 1/23/25 5:45 PM, Shuai Xue wrote:
+>
+>
+> 在 2025/1/24 04:10, Sathyanarayanan Kuppuswamy 写道:
+>> Hi,
+>>
+>> On 11/12/24 5:54 AM, Shuai Xue wrote:
+>>> The AER driver has historically avoided reading the configuration 
+>>> space of
+>>> an endpoint or RCiEP that reported a fatal error, considering the 
+>>> link to
+>>> that device unreliable. Consequently, when a fatal error occurs, the 
+>>> AER
+>>> and DPC drivers do not report specific error types, resulting in 
+>>> logs like:
+>>>
+>>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 
+>>> source:0x3400
+>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>>    nvme nvme0: frozen state error detected, reset controller
+>>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>>
+>>> AER status registers are sticky and Write-1-to-clear. If the link 
+>>> recovered
+>>> after hot reset, we can still safely access AER status of the error 
+>>> device.
+>>> In such case, report fatal errors which helps to figure out the 
+>>> error root
+>>> case.
+>>>
+>>> After this patch, the logs like:
+>>>
+>>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 
+>>> source:0x3400
+>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>>    nvme nvme0: frozen state error detected, reset controller
+>>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after 
+>>> activation
+>>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable 
+>>> (Fatal), type=Data Link Layer, (Receiver ID)
+>>>    nvme 0000:34:00.0:   device [144d:a804] error 
+>>> status/mask=00000010/00504000
+>>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>>
+>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>> ---
+>>>   drivers/pci/pci.h      |  3 ++-
+>>>   drivers/pci/pcie/aer.c | 11 +++++++----
+>>>   drivers/pci/pcie/dpc.c |  2 +-
+>>>   drivers/pci/pcie/err.c |  9 +++++++++
+>>>   4 files changed, 19 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>> index 0866f79aec54..6f827c313639 100644
+>>> --- a/drivers/pci/pci.h
+>>> +++ b/drivers/pci/pci.h
+>>> @@ -504,7 +504,8 @@ struct aer_err_info {
+>>>       struct pcie_tlp_log tlp;    /* TLP Header */
+>>>   };
+>>> -int aer_get_device_error_info(struct pci_dev *dev, struct 
+>>> aer_err_info *info);
+>>> +int aer_get_device_error_info(struct pci_dev *dev, struct 
+>>> aer_err_info *info,
+>>> +                  bool link_healthy);
+>>>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>>>   #endif    /* CONFIG_PCIEAER */
+>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>>> index 13b8586924ea..97ec1c17b6f4 100644
+>>> --- a/drivers/pci/pcie/aer.c
+>>> +++ b/drivers/pci/pcie/aer.c
+>>> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
+>>>    * aer_get_device_error_info - read error status from dev and 
+>>> store it to info
+>>>    * @dev: pointer to the device expected to have a error record
+>>>    * @info: pointer to structure to store the error record
+>>> + * @link_healthy: link is healthy or not
+>>>    *
+>>>    * Return 1 on success, 0 on error.
+>>>    *
+>>>    * Note that @info is reused among all error devices. Clear fields 
+>>> properly.
+>>>    */
+>>> -int aer_get_device_error_info(struct pci_dev *dev, struct 
+>>> aer_err_info *info)
+>>> +int aer_get_device_error_info(struct pci_dev *dev, struct 
+>>> aer_err_info *info,
+>>> +                  bool link_healthy)
+>>>   {
+>>>       int type = pci_pcie_type(dev);
+>>>       int aer = dev->aer_cap;
+>>> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev 
+>>> *dev, struct aer_err_info *info)
+>>>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>>>              type == PCI_EXP_TYPE_RC_EC ||
+>>>              type == PCI_EXP_TYPE_DOWNSTREAM ||
+>>> -           info->severity == AER_NONFATAL) {
+>>> +           info->severity == AER_NONFATAL ||
+>>> +           (info->severity == AER_FATAL && link_healthy)) {
+>>>           /* Link is still healthy for IO reads */
+>>>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
+>>> @@ -1258,11 +1261,11 @@ static inline void 
+>>> aer_process_err_devices(struct aer_err_info *e_info)
+>>>       /* Report all before handle them, not to lost records by reset 
+>>> etc. */
+>>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
+>>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>>>               aer_print_error(e_info->dev[i], e_info);
+>>>       }
+>>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
+>>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>>>               handle_error_source(e_info->dev[i], e_info);
+>>>       }
+>>>   }
+>>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>>> index 62a68cde4364..b3f157a00405 100644
+>>> --- a/drivers/pci/pcie/dpc.c
+>>> +++ b/drivers/pci/pcie/dpc.c
+>>> @@ -304,7 +304,7 @@ struct pci_dev *dpc_process_error(struct pci_dev 
+>>> *pdev)
+>>>           dpc_process_rp_pio_error(pdev);
+>>>       else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+>>>            dpc_get_aer_uncorrect_severity(pdev, &info) &&
+>>> -         aer_get_device_error_info(pdev, &info)) {
+>>> +         aer_get_device_error_info(pdev, &info, false)) {
+>>>           aer_print_error(pdev, &info);
+>>>           pci_aer_clear_nonfatal_status(pdev);
+>>>           pci_aer_clear_fatal_status(pdev);
+>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>> index 31090770fffc..462577b8d75a 100644
+>>> --- a/drivers/pci/pcie/err.c
+>>> +++ b/drivers/pci/pcie/err.c
+>>> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
+>>> *dev,
+>>>       struct pci_dev *bridge;
+>>>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>>>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>>> +    struct aer_err_info info;
+>>>       /*
+>>>        * If the error was detected by a Root Port, Downstream Port, 
+>>> RCEC,
+>>> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct 
+>>> pci_dev *dev,
+>>>               pci_warn(bridge, "subordinate device reset failed\n");
+>>>               goto failed;
+>>>           }
+>>> +
+>>> +        info.severity = AER_FATAL;
+>>> +        /* Link recovered, report fatal errors of RCiEP or EP */
+>>> +        if ((type == PCI_EXP_TYPE_ENDPOINT ||
+>>> +             type == PCI_EXP_TYPE_RC_END) &&
+>>> +            aer_get_device_error_info(dev, &info, true))
+>>> +            aer_print_error(dev, &info);
+>>
+>> IMO, error device information is more like a debug info. Can we change
+>> the print level of this info to debug?
+>
+> Yes, but error device information is quite important for user to 
+> figure out the
+> device status and should not been ignored. We need it in production to 
+> analysis
+> server healthy.
 
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> +	u64 addr, addr_end;
-> +	u32 val;
-> +
-> +	/* Set the ECAM base */
-> +	writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
 
-You can use _relaxed variants in this function.
+IMO, such information is needed for debugging repeated DPC event 
+occurrences.
+So when encountering repeated failures, interested party can increase 
+log level
+and gather this data. I personally think this is too much detail for a 
+kernel info
+messages. Lets see what others and Bjorn think.
 
-> +	writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
-> +
-> +	/*
-> +	 * The only device on root bus is the Root Port. Any access other than that
-> +	 * should not go out of the link and should return all F's. Since the iATU
-> +	 * is configured for the buses which starts after root bus, block the transactions
-> +	 * starting from function 1 of the root bus to the end of the root bus (i.e from
-> +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
 
-Why can't you impose this limitation with the iATU mapping itself? I mean, why
-can't the mapping be limited to 4K to cover only device 00.0? I believe the min
-iATU window size is 4K on all platforms.
+>
+>>
+>>>       } else {
+>>>           pci_walk_bridge(bridge, report_normal_detected, &status);
+>>>       }
+>>> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
+>>> *dev,
+>>>       if (host->native_aer || pcie_ports_native) {
+>>>           pcie_clear_device_status(dev);
+>>>           pci_aer_clear_nonfatal_status(dev);
+>>> +        pci_aer_clear_fatal_status(dev);
+>>
+>> I think we clear fatal status in DPC driver, why do it again?
+>
+> DPC driver only clear fatal status for the err_port, but not the err_dev.
+> err_dev and err_port are indeed easy to confuse, so I have 
+> differentiated them
+> again in patch1.
+>
 
-> +	 */
-> +	addr = pci->dbi_phys_addr + SZ_4K;
-> +	writel(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
-> +	writel(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
-> +
-> +	writel(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
-> +	writel(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
-> +
-> +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
-> +
-> +	writel(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
-> +	writel(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
-> +
-> +	writel(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
-> +	writel(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
-> +
-> +	val = readl(pcie->parf + PARF_SYS_CTRL);
-> +	val |= PCIE_ECAM_BLOCKER_EN;
-> +	writel(val, pcie->parf + PARF_SYS_CTRL);
+Got it.
 
-nit; newline
-
-> +	return 0;
-> +}
-> +
->  static int qcom_pcie_start_link(struct dw_pcie *pci)
->  {
->  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> +	int ret;
->  
->  	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
->  		qcom_pcie_common_set_16gt_equalization(pci);
->  		qcom_pcie_common_set_16gt_lane_margining(pci);
->  	}
->  
-> +	if (pci->pp.ecam_mode) {
-> +		ret = qcom_pci_config_ecam(&pci->pp);
-> +		if (ret)
-> +			return ret;
-> +	}
->  	/* Enable Link Training state machine */
->  	if (pcie->cfg->ops->ltssm_enable)
->  		pcie->cfg->ops->ltssm_enable(pcie);
-> @@ -1233,6 +1291,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> +	u16 offset;
->  	int ret;
->  
->  	qcom_ep_reset_assert(pcie);
-> @@ -1241,6 +1300,11 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (ret)
->  		return ret;
->  
-> +	if (pp->ecam_mode) {
-> +		offset = readl(pcie->parf + PARF_SLV_DBI_ELBI);
-> +		pcie->elbi = pci->dbi_base + offset;
-
-Can't you derive this offset for non-ECAM mode also?
-
-> +	}
-> +
->  	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
->  	if (ret)
->  		goto err_deinit;
-> @@ -1613,6 +1677,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	pci->ops = &dw_pcie_ops;
->  	pp = &pci->pp;
->  
-> +	pp->bridge = devm_pci_alloc_host_bridge(dev, 0);
-> +	if (!pp->bridge) {
-> +		ret = -ENOMEM;
-> +		goto err_pm_runtime_put;
-> +	}
-> +
-> +	pci->pp.ecam_mode = dw_pcie_ecam_supported(pp);
-
-you should be able to set this in designware-host.c
-
->  	pcie->pci = pci;
->  
->  	pcie->cfg = pcie_cfg;
-> @@ -1629,10 +1700,12 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> -	pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
-> -	if (IS_ERR(pcie->elbi)) {
-> -		ret = PTR_ERR(pcie->elbi);
-> -		goto err_pm_runtime_put;
-> +	if (!pp->ecam_mode) {
-> +		pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
-> +		if (IS_ERR(pcie->elbi)) {
-> +			ret = PTR_ERR(pcie->elbi);
-> +			goto err_pm_runtime_put;
-
-You can drop this if the ELBI offset can be derived from PARF register on all
-platforms.
-
-- Mani
-
+>>
+>>>       }
+>>>       pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
+>>
 -- 
-மணிவண்ணன் சதாசிவம்
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
