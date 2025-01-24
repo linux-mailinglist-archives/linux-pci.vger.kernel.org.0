@@ -1,266 +1,307 @@
-Return-Path: <linux-pci+bounces-20338-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20339-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D295CA1B6CB
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 14:29:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07F80A1B799
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 15:11:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CDCF188B1C4
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 13:29:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E46C7A04C9
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 14:10:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EB6535966;
-	Fri, 24 Jan 2025 13:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E6082D98;
+	Fri, 24 Jan 2025 14:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YN7YPoBq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TySTprhq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434B917BD9;
-	Fri, 24 Jan 2025 13:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D3A78C6C;
+	Fri, 24 Jan 2025 14:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737725373; cv=none; b=O6En3inkIWj8LM+7bA7odIv4qJjG+43sAevyZer5nWw+ekGjB2OX0ta10n4NztNGQcroQ3Bt5CqsuZ0ejFkyi7PcEDWq7i4MgnOyB0q/uAlxWsbYutU/D4uzo9JwXTtnGhbhXOZfyDhL/EGM/1LEtNL5Ha7n9d+fYbA+Dvmy+Xw=
+	t=1737727853; cv=none; b=XB5SS++DU5XR/dR3y1Tx+EgOBOe58YRw38U71GXbOr9jNndHaMneYePmY4myuYIXI/XIm+uo+vlblHWfhnJNfVdqkVEJN/o1uvmBGHKfukPqQ38HyNYqUOZcfjMGTCwgO8zOBTUb2q79N9BlTHrijcQdcBoAGS+xNXKUQpSUwoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737725373; c=relaxed/simple;
-	bh=4heCCrCqVl8n73yBX5t/wcp3nIN76ROm745Y3+JNXP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vE9p7tCyUeAE121UYsPPTwLUlo/boY3+sytMrVBV4MhWyQV/eRSsZDT7i+P/NWxuqUp0MCfeBbQaPqVFMd5l5TMuC815s8glRnLm8v+29DBcYZk3gm3vRXJxYMH8mkTj6pM9Lr3TxkygTrDBIS9eV17d/QAHpH0Can+wUymfmcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YN7YPoBq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F895C4CED2;
-	Fri, 24 Jan 2025 13:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737725372;
-	bh=4heCCrCqVl8n73yBX5t/wcp3nIN76ROm745Y3+JNXP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YN7YPoBq8oKPfKHsQFE7rb0uoA78VHk7xq7k6ZNSMz6bXq3CCuj0/JnflrERMYdL3
-	 4yIoflK8W/id8sNl0atVMsQmmqogqIEXx/+GDBA0yT5SZ/PcB1bd0+hZjBkJXkLX+s
-	 bSTsdMbQb3u59/oABJ7PgClKhPVoKvG0773Wr42jijqWzhomBd6mgVeahV70angHvQ
-	 20UfRAMkgc5FIPBJL9fPX99sAGEq0ljmVsS5Rjg9eRZPdkghjyXkZ2U2nFFEJpaOYs
-	 kQDsKwQYUMPaEtmIc9eafQJvcvsKS5/Y5jsWlPEUIe8I5Bbr2kvB+gaNNbxJX5pTNa
-	 Vp+izkGQdZzQQ==
-Date: Fri, 24 Jan 2025 18:59:16 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [PATCH] PCI: dwc: Add the sysfs property to provide the LTSSM
- status of the PCIe link
-Message-ID: <20250124132916.ufkbj5bmormychrq@thinkpad>
-References: <20250123071326.1810751-1-18255117159@163.com>
+	s=arc-20240116; t=1737727853; c=relaxed/simple;
+	bh=jKE9lKHrjkZzP78M/SgJD68HrzGInex5tVTvPpaxYAI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=e6FCDjI4HxlKFugUJUDI9gAypr74TUVVAcWKIpOzb1xndozN2qJBUzVZKf1TlmgptSokXLksJyxmVKI9RFZYT/hCp8V9VNzqklKfqrtiRIG6kVLAO6BN9ovW9vl0rMVYx+U7jM+Y6wGlqERhbSTthX9c0ECaDG9VAhFWn3dUhCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TySTprhq; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737727852; x=1769263852;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jKE9lKHrjkZzP78M/SgJD68HrzGInex5tVTvPpaxYAI=;
+  b=TySTprhqcgtJX2P6nT7OiSFFDGrT13iZYrZzLfNrO2X7a5+hs9fP6SbM
+   nfwv5aSwdBJ23N0zkkbpeJkpyms2hrEUDTJBVbmy76UsRhm9uLqmO/RWe
+   Mn6uUIw79KuuS2LYwkT6VTMpsoinX3btc5+uj0R+AZ6HPEVz1LeX1op7X
+   hBBMknMz1Q9Ha0q3Tlq7fHJ+KMAY1kP7VUJHgd7BIy86FFSCandNAWonw
+   8JwKPYhJh7gDszaMPnPwAccblfZIuBdYyWlXzJjtXQUVQOwTfyLnexv1+
+   d4X2Bb5O3CM1LpIpgk18JlGBME880gJVqtItQpB/wLq3aecvv7EZRNF4p
+   A==;
+X-CSE-ConnectionGUID: 1sU8w4JVSIeESXrJqguYTA==
+X-CSE-MsgGUID: tpHvUMFHS2ar8S/kfPpSWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11325"; a="42187475"
+X-IronPort-AV: E=Sophos;i="6.13,231,1732608000"; 
+   d="scan'208";a="42187475"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 06:10:51 -0800
+X-CSE-ConnectionGUID: WBV4gBmiTcC10zjutJY66Q==
+X-CSE-MsgGUID: 7+r6j3eSQzm1EOi+EI/uJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="107628895"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.158])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 06:10:44 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 24 Jan 2025 16:10:41 +0200 (EET)
+To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com, 
+    "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>, D@web.codeaurora.org, 
+    M@web.codeaurora.org
+Subject: Re: [PATCH v4 5/5] PCI: altera: Add Agilex support
+In-Reply-To: <20250123181932.935870-6-matthew.gerlach@linux.intel.com>
+Message-ID: <f2c9061a-6a9c-4cd1-8a3f-a286a2eb30a8@linux.intel.com>
+References: <20250123181932.935870-1-matthew.gerlach@linux.intel.com> <20250123181932.935870-6-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123071326.1810751-1-18255117159@163.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Jan 23, 2025 at 03:13:26PM +0800, Hans Zhang wrote:
-> Add the sysfs property to provide a view of the current link's LTSSM
-> status from the root port device.
+On Thu, 23 Jan 2025, Matthew Gerlach wrote:
+
+> From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
 > 
->   /sys/bus/pci/devices/<dev>/ltssm_status
+> Add PCIe root port controller support for the Agilex family of chips.
+> The Agilex PCIe IP has three variants that are mostly sw compatible,
+> except for a couple register offsets. The P-Tile variant supports
+> Gen3/Gen4 1x16. The F-Tile variant supports Gen3/Gen4 4x4, 4x8, and 4x16.
+> The R-Tile variant improves on the F-Tile variant by adding Gen5 support.
 > 
-
-The LTSSM values coming out of DWC is related to host bridgei, isn't it? If so,
-you cannot expose them under generic PCI sysfs. You should expose these as
-debugfs attributes as done in DWC glue drivers like pcie-qcom.
-
-- Mani
-
-> Signed-off-by: Hans Zhang <18255117159@163.com>
+> To simplify the implementation of pci_ops read/write functions,
+> ep_{read/write}_cfg() callbacks were added to struct altera_pci_ops
+> to easily distinguish between hardware variants.
+> 
+> Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > ---
->  .../pci/controller/dwc/pcie-designware-host.c | 86 +++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  | 32 +++++++
->  drivers/pci/pci-sysfs.c                       |  3 +
->  drivers/pci/pci.h                             |  4 +
->  4 files changed, 125 insertions(+)
+> v4:
+>  - Add info to commit message.
+>  - Use {read/write}?_relaxed where appropriate.
+>  - Use BIT(12) instead of (1 << 12).
+>  - Clear IRQ before handling it.
+>  - add interrupt number to unexpected IRQ messge.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d2291c3ceb8b..8ec0e35cca8f 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -418,6 +418,92 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
->  	}
+> v3:
+>  - Remove accepted patches from patch set.
+> 
+> v2:
+>  - Match historical style of subject.
+>  - Remove unrelated changes.
+>  - Fix indentation.
+> ---
+>  drivers/pci/controller/pcie-altera.c | 246 ++++++++++++++++++++++++++-
+>  1 file changed, 237 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index eb55a7f8573a..59cad9a84900 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -77,9 +77,19 @@
+>  #define S10_TLP_FMTTYPE_CFGWR0		0x45
+>  #define S10_TLP_FMTTYPE_CFGWR1		0x44
+>  
+> +#define AGLX_RP_CFG_ADDR(pcie, reg)	(((pcie)->hip_base) + (reg))
+> +#define AGLX_RP_SECONDARY(pcie)		\
+> +	readb(AGLX_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
+> +
+> +#define AGLX_BDF_REG			0x00002004
+> +#define AGLX_ROOT_PORT_IRQ_STATUS	0x14c
+> +#define AGLX_ROOT_PORT_IRQ_ENABLE	0x150
+> +#define CFG_AER				BIT(4)
+> +
+>  enum altera_pcie_version {
+>  	ALTERA_PCIE_V1 = 0,
+>  	ALTERA_PCIE_V2,
+> +	ALTERA_PCIE_V3,
+>  };
+>  
+>  struct altera_pcie {
+> @@ -102,6 +112,11 @@ struct altera_pcie_ops {
+>  			   int size, u32 *value);
+>  	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 busno,
+>  			    int where, int size, u32 value);
+> +	int (*ep_read_cfg)(struct altera_pcie *pcie, u8 busno,
+> +			   unsigned int devfn, int where, int size, u32 *value);
+> +	int (*ep_write_cfg)(struct altera_pcie *pcie, u8 busno,
+> +			    unsigned int devfn, int where, int size, u32 value);
+> +	void (*rp_isr)(struct irq_desc *desc);
+>  };
+>  
+>  struct altera_pcie_data {
+> @@ -112,6 +127,9 @@ struct altera_pcie_data {
+>  	u32 cfgrd1;
+>  	u32 cfgwr0;
+>  	u32 cfgwr1;
+> +	u32 port_conf_offset;
+> +	u32 port_irq_status_offset;
+> +	u32 port_irq_enable_offset;
+>  };
+>  
+>  struct tlp_rp_regpair_t {
+> @@ -131,6 +149,28 @@ static inline u32 cra_readl(struct altera_pcie *pcie, const u32 reg)
+>  	return readl_relaxed(pcie->cra_base + reg);
 >  }
 >  
-> +static char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm)
+> +static inline void cra_writew(struct altera_pcie *pcie, const u32 value,
+> +			      const u32 reg)
 > +{
-> +	char *str;
+> +	writew_relaxed(value, pcie->cra_base + reg);
+> +}
 > +
-> +	switch (ltssm) {
-> +#define DW_PCIE_LTSSM_NAME(n) case n: str = #n; break
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_QUIET);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_ACT);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_ACTIVE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_COMPLIANCE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_CONFIG);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_PRE_DETECT_QUIET);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_WAIT);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_START);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_ACEPT);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_WAI);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_ACEPT);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_COMPLETE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_IDLE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_LOCK);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_SPEED);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_RCVRCFG);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_IDLE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0S);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L123_SEND_EIDLE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L1_IDLE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_IDLE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_WAKE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_ENTRY);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_IDLE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ENTRY);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ACTIVE);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET_ENTRY);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ0);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ1);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ2);
-> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ3);
+> +static inline u32 cra_readw(struct altera_pcie *pcie, const u32 reg)
+> +{
+> +	return readw_relaxed(pcie->cra_base + reg);
+> +}
+> +
+> +static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
+> +			      const u32 reg)
+> +{
+> +	writeb_relaxed(value, pcie->cra_base + reg);
+> +}
+> +
+> +static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
+> +{
+> +	return readb_relaxed(pcie->cra_base + reg);
+> +}
+> +
+>  static bool altera_pcie_link_up(struct altera_pcie *pcie)
+>  {
+>  	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
+> @@ -145,6 +185,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+>  	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+>  }
+>  
+> +static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
+> +{
+> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
+> +				   pcie->pcie_data->cap_offset +
+> +				   PCI_EXP_LNKSTA);
+> +
+> +	return !!(readw_relaxed(addr) & PCI_EXP_LNKSTA_DLLLA);
+
+This returns bool so double negations are not necessary.
+
+> +}
+> +
+>  /*
+>   * Altera PCIe port uses BAR0 of RC's configuration space as the translation
+>   * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
+> @@ -425,6 +474,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> +static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
+> +			    int size, u32 *value)
+> +{
+> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		*value = readb_relaxed(addr);
+> +		break;
+> +	case 2:
+> +		*value = readw_relaxed(addr);
+> +		break;
 > +	default:
-> +		str = "DW_PCIE_LTSSM_UNKNOWN";
+> +		*value = readl_relaxed(addr);
 > +		break;
 > +	}
 > +
-> +	return str;
+> +	/* interrupt pin not programmed in hardware, set to INTA */
+> +	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
+> +		*value = 0x01;
+> +	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
+> +		*value |= 0x0100;
+> +
+> +	return PCIBIOS_SUCCESSFUL;
 > +}
 > +
-> +static ssize_t ltssm_status_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
+> +static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+> +			     int where, int size, u32 value)
 > +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> +	struct dw_pcie_rp *pp = bridge->sysdata;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
 > +
-> +	return sysfs_emit(buf, "%s\n",
-> +			  dw_ltssm_sts_string(dw_pcie_get_ltssm(pci)));
+> +	switch (size) {
+> +	case 1:
+> +		writeb_relaxed(value, addr);
+> +		break;
+> +	case 2:
+> +		writew_relaxed(value, addr);
+> +		break;
+> +	default:
+> +		writel_relaxed(value, addr);
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+> +	 * and update local copy of root bus number accordingly.
+> +	 */
+> +	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+> +		pcie->root_bus_nr = value & 0xff;
+> +
+> +	return PCIBIOS_SUCCESSFUL;
 > +}
-> +static DEVICE_ATTR_RO(ltssm_status);
 > +
-> +static struct attribute *ltssm_status_attrs[] __ro_after_init = {
-> +	&dev_attr_ltssm_status.attr, NULL
-> +};
-> +
-> +static umode_t ltssm_status_attrs_are_visible(struct kobject *kobj,
-> +					      struct attribute *a, int n)
+> +static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
+> +			     unsigned int devfn, int where, int size, u32 value)
 > +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+> +	if (busno > AGLX_RP_SECONDARY(pcie))
+> +		where |= BIT(12); /* type 1 */
+
+Add a define to replace the comment?
+
 > +
-> +	if ((a == &dev_attr_ltssm_status.attr) &&
-> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> +	     (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
-> +		return 0;
+> +	switch (size) {
+> +	case 1:
+> +		cra_writeb(pcie, value, where);
+> +		break;
+> +	case 2:
+> +		cra_writew(pcie, value, where);
+> +		break;
+> +	default:
+> +		cra_writel(pcie, value, where);
+> +			break;
+> +	}
 > +
-> +	return a->mode;
+> +	return PCIBIOS_SUCCESSFUL;
 > +}
 > +
-> +const struct attribute_group dw_ltssm_status_attr_group = {
-> +	.attrs = ltssm_status_attrs,
-> +	.is_visible = ltssm_status_attrs_are_visible,
-> +};
-> +
->  int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 347ab74ac35a..fb7e3c14e523 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -330,8 +330,40 @@ enum dw_pcie_ltssm {
->  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
->  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
->  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
-> +	DW_PCIE_LTSSM_POLL_ACTIVE = 0x2,
-> +	DW_PCIE_LTSSM_POLL_COMPLIANCE = 0x3,
-> +	DW_PCIE_LTSSM_POLL_CONFIG = 0x4,
-> +	DW_PCIE_LTSSM_PRE_DETECT_QUIET = 0x5,
-> +	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
-> +	DW_PCIE_LTSSM_CFG_LINKWD_START = 0x7,
-> +	DW_PCIE_LTSSM_CFG_LINKWD_ACEPT = 0x8,
-> +	DW_PCIE_LTSSM_CFG_LANENUM_WAI = 0x9,
-> +	DW_PCIE_LTSSM_CFG_LANENUM_ACEPT = 0xa,
-> +	DW_PCIE_LTSSM_CFG_COMPLETE = 0xb,
-> +	DW_PCIE_LTSSM_CFG_IDLE = 0xc,
-> +	DW_PCIE_LTSSM_RCVRY_LOCK = 0xd,
-> +	DW_PCIE_LTSSM_RCVRY_SPEED = 0xe,
-> +	DW_PCIE_LTSSM_RCVRY_RCVRCFG = 0xf,
-> +	DW_PCIE_LTSSM_RCVRY_IDLE = 0x10,
->  	DW_PCIE_LTSSM_L0 = 0x11,
-> +	DW_PCIE_LTSSM_L0S = 0x12,
-> +	DW_PCIE_LTSSM_L123_SEND_EIDLE = 0x13,
-> +	DW_PCIE_LTSSM_L1_IDLE = 0x14,
->  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
-> +	DW_PCIE_LTSSM_L2_WAKE = 0x16,
-> +	DW_PCIE_LTSSM_DISABLED_ENTRY = 0x17,
-> +	DW_PCIE_LTSSM_DISABLED_IDLE = 0x18,
-> +	DW_PCIE_LTSSM_DISABLED = 0x19,
-> +	DW_PCIE_LTSSM_LPBK_ENTRY = 0x1a,
-> +	DW_PCIE_LTSSM_LPBK_ACTIVE = 0x1b,
-> +	DW_PCIE_LTSSM_LPBK_EXIT = 0x1c,
-> +	DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT = 0x1d,
-> +	DW_PCIE_LTSSM_HOT_RESET_ENTRY = 0x1e,
-> +	DW_PCIE_LTSSM_HOT_RESET = 0x1f,
-> +	DW_PCIE_LTSSM_RCVRY_EQ0 = 0x20,
-> +	DW_PCIE_LTSSM_RCVRY_EQ1 = 0x21,
-> +	DW_PCIE_LTSSM_RCVRY_EQ2 = 0x22,
-> +	DW_PCIE_LTSSM_RCVRY_EQ3 = 0x23,
->  
->  	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
->  };
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 7679d75d71e5..c23d188323f4 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1696,6 +1696,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->  #endif
->  #ifdef CONFIG_PCIEASPM
->  	&aspm_ctrl_attr_group,
-> +#endif
-> +#ifdef CONFIG_PCIE_DW_HOST
-> +	&dw_ltssm_status_attr_group,
->  #endif
->  	NULL,
->  };
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2e40fc63ba31..3775841b5714 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -960,6 +960,10 @@ static inline pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
->  extern const struct attribute_group aspm_ctrl_attr_group;
->  #endif
->  
-> +#ifdef CONFIG_PCIE_DW_HOST
-> +extern const struct attribute_group dw_ltssm_status_attr_group;
-> +#endif
-> +
->  extern const struct attribute_group pci_dev_reset_method_attr_group;
->  
->  #ifdef CONFIG_X86_INTEL_MID
-> 
-> base-commit: 7004a2e46d1693848370809aa3d9c340a209edbb
-> -- 
-> 2.25.1
-> 
+> +static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
+> +			    unsigned int devfn, int where, int size, u32 *value)
+> +{
+> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+> +	if (busno > AGLX_RP_SECONDARY(pcie))
+> +		where |= BIT(12); /* type 1 */
+
+Same here?
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
 
