@@ -1,89 +1,89 @@
-Return-Path: <linux-pci+bounces-20332-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20333-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4938A1B4B2
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 12:24:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B8ACA1B4B6
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 12:24:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A5D23ADC9B
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 11:23:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1ED151883419
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 11:24:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 218A121ADCE;
-	Fri, 24 Jan 2025 11:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FCC221C179;
+	Fri, 24 Jan 2025 11:23:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="D5NYFeEC"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jY85dQoY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F62921A449
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84E321B181
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737717802; cv=none; b=rEwyr8qL3gsg8o0DYOcBN3AKzr8hiI5qPH12HU4IpbKUpm4KlwvjTU2FIcSSuiyBO84p/N5H5hj2kQFTIbh/ROlq1NZhNd/0qtdrNceqj12GEv97UbctYWr1fP4hRqeeWvA3sU5LNyoI5z3ds1MJeYskdyAiCDceXzqou+XqAbs=
+	t=1737717807; cv=none; b=ZqnG9S7u2ETglxsyJTKIR6PeFe8JrQ3+ctVMtg/elOPh0tkF1/ibs3E6EbDXSSCSH38YsJnwyf+ck7U5OMy9Yqdtrhv6HWdfFCAXY5iwg+gSbdnujFA6KZDqXFeKRzFouIy9S0LnmWKHMCiuBE8ttTqbHgKvzXHt8oGOR8K9CZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737717802; c=relaxed/simple;
-	bh=5rxRkPnumzzfAdemdZBFDf4pCGC4z3dLReWUJOLysOk=;
+	s=arc-20240116; t=1737717807; c=relaxed/simple;
+	bh=aAQ+D093YPpgryfubEJA4YQRIxQgMZqUwYCwdO3dLmA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pfRpp8faaTbHj+lgrfpwmFIJSLSw/621Kx9qpCdNomggttoFTMwkyNXPzopnFbbavKDzlPaU13sl1XioP4j0fINyTFn8gNdKYkzWKFdRHLNgy8EuFJyjIBed+0qyd6kOVHlkfla4yLsm8eEC63bV0zuA5x+JgJYEpXQ1oiqt+Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=D5NYFeEC; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=HDNnbPmKVUF+gfCYU7+nIaiD08G5ttQAfhlcLWOXD7+8Eb6iK9h2+XRONlbpVWyscxi81p+xiYHSMwHi06gQB9oPnDL6yjuAZ1h3sJHVd1N4HWYOGVjd+QHeTVsQgXTeC5EZcRMSVpAJzQoxJI8RDutx52ckdESacSRFDsoSZkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jY85dQoY; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50OA5Ykw010917
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:19 GMT
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50OAkq16008021
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yQsJM/reDtTZynjk4EeE4bMecMMhIsTfkx5E7VPjZRU=; b=D5NYFeECrB+NIu2h
-	0RjuRpUEOxguxk9hUACSGBKDDxE71BQn0PWFc6KO3j7zTlHLAt0o2ky4Ao+8XKtl
-	2zQ3rWfdUNtddM9z9k+5HCD01oknrLI6JnEe+Do7/vrQTCRlrRR8uGCUlVUrx0nR
-	7kveaNHmapp4HOqsWjmk/IpidsBSKmIh27p66QgDh5bd2FGJnGh8FUD0c16LYPhm
-	gMrp5OZot+3wCkSQ11hZsreTMgFhg82YxNs0b66bWkRdXo4whZ16DvHRjTdR5eJB
-	JuYwNnLNoaGk9V4bR7D9qVtt0aEpokDyNgPDskvkKymWdj2bQZ7k4Vw9+S/90VYJ
-	0R6Umw==
+	iDG9cPvoCK8z7X2aaaeCh0RKjsgrck+iVE1+Sq1KuNQ=; b=jY85dQoY1iihLG9Z
+	VN0RjJswK9xU36xn5wzhEL1JDkC12+wKM/pO5kmNnZk+TK0wqjoEog+C1iIz63ux
+	OZjPYcsVBH0IJZ5w7f0Dsherwz2Mgsr9jikMhkxblCviGJ86QVSX3EFCoQFsiFJE
+	yd4I+RHRse3byQGJVWIqXd7mlOLVi8HhiEcw+VF06Vnk8i67AARI6URwDLNaFczv
+	CXmCRhZeX0e/RqKlOhKOpXexsU3wfgQvnXa09qTXnadEjpZRSbsJmx/fu8XeYK9B
+	nvt3tnHQW9imFId4Eqf98EDOcckQocwKDFm289KH2sRVb9Ygs60CLqVceodDFmHb
+	e2yMnQ==
 Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44c8ta892w-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44c9djg4d6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:18 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-216750b679eso27508865ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 03:23:18 -0800 (PST)
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 11:23:24 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-216405eea1fso41289055ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 03:23:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737717798; x=1738322598;
+        d=1e100.net; s=20230601; t=1737717803; x=1738322603;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yQsJM/reDtTZynjk4EeE4bMecMMhIsTfkx5E7VPjZRU=;
-        b=WqtxOOU97uSlzkEgnHDD/TEyWZkE9x42yaYv5gm+xsbvzCwKmXWX7A+eWoF/eXYWgL
-         yIGzDVUnihAL1khVpTT+LJzvIVes3P1QmUrBm3WylH4i60cG0dC9SWkrs26IDOUkJgiA
-         VYQNAd9t8yFZ63rLsSe9JNN01mr50jFl8NHUwexS73JgE65mIYDsDZlnDDvSkqmQCbx6
-         n32Jrlol5uZbnh8MRkps++Fpp7kDlFGrqKhUQQMzlAB5PXvbT67mEfaw9Ox2g/jix6DE
-         ZNELoUy2iSsxXyKwqfhMjD7X16HZju8GFQj/V75eS62rZg29dYKnmyF+JrI8iu8nKUck
-         LaKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjQjP/Byd2qRxsRbtRJupsM6djO3VZQmFDZV41NjzCIHol20EEsax2lFYVS0LomzNJSBQlyqPr00c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx+pDj7vo//SFkeHiB+VlgxQ9tZpuhyIOdUR4Xq4PoMlBOXSkG
-	Uc4mJKIXsMIHV6GETf87BlAIrHo1/cVq97zcmOJ1tdHTbLYShNLotIUzzvKNlOGWTsaWUDF2I38
-	bLjhzYZ6munKo29TqYVl2cP3ExVhkfdeLH2wzWDFyc1WQ9xpsv2lGSQJa6G4=
-X-Gm-Gg: ASbGncvNbgbQDh3Irc1/Ziauc0h/B1m0hdSxfXDnTVLxgvV1spJ1ft4UtzuIHDEtpZX
-	4JK5pUnaacR/b2FQjQgRJRclN7ev4nAWowiZjOElG+eI4BRGA3kGi3/0U9KPdB97++UPBvHtSY5
-	X1uOlBV6D5Xjdji0tuk1hUmIbV/4sgXMillQPH8nqsqKkVTMuvaDHuCHTBr4iSjggRSlpS9SnXH
-	Qwwj77SRvC6gLRznhLQ/XpdZLndikNhNaNmcDYtElQwuHRPZjlmq37QxenH8c2lzt8QEXdS1Omq
-	07J44LEvpk2Q29nVSXmn3X67QP0lvQ==
-X-Received: by 2002:a17:902:ea11:b0:216:3889:6f6f with SMTP id d9443c01a7336-21c353ef827mr388132665ad.17.1737717797950;
-        Fri, 24 Jan 2025 03:23:17 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF3Jqk6JwmPr0oV22Ct9YC/haBNCR5+wlGUm1dWyD9lp1UJigU4ZqRujgW8yn5pehGWZ6HDsQ==
-X-Received: by 2002:a17:902:ea11:b0:216:3889:6f6f with SMTP id d9443c01a7336-21c353ef827mr388132335ad.17.1737717797512;
-        Fri, 24 Jan 2025 03:23:17 -0800 (PST)
+        bh=iDG9cPvoCK8z7X2aaaeCh0RKjsgrck+iVE1+Sq1KuNQ=;
+        b=sv+UNagwJkWtHyHZq9VBVMi47/The48cpTvdTu9Is2xvpZQ1y/oYuNnZNjX9kbujg7
+         Lbd7icN3r+78AvCh2Pud4b9w2onSr9OXTk+VfUKbz64lAqEnjdFZ/Rv0W3IrD3krSy9U
+         BqNaVUoGO4VG7vfVj0vJ88deA8JWJmi/HKAsw6n987LFDfSJmbqDcERdWbjKs9ujNTWC
+         gtvgdp+WGk87C5pFtK9mC3nvwpmdknlHW/eZIMfvzkttx0SbOZu+SgOu33JNP1ycWE6f
+         DqvPUZX9BZX+Hn14iMV08B2ktvaJ2HYf2uK0ztc8UDAroHSlQOIWMiz8rEuLbMtEKNri
+         lK2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW/T9xfbqRmXktLXWNYPZrfD3k0sZ9fu99p0FICCCSZC4cTnkIC/g61ZY7rYK/ZpRhU8uB4cQ8kUsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlCOKwhlc8QQG5il04NHvqdpc0FhAbrPBo30Xpd0uayzPA+xLE
+	MhDnxXlahGqY3uTLEUAThzDdERYkucX4kmc9xe37ihCO6QkV6ybTu9t5R1WOkXRym4Arwwj6IZa
+	S9jPhsnVAckEtHbghlpQEottM7OGw6XWgacLocelfTAD1qEjXhoRMB9nyT3Y=
+X-Gm-Gg: ASbGncuuVllB2vkcnYBvM7U9sKRW/YlvDqyBLMyqPFmLgmbSl7uZbbTh0mvj2xwKFFS
+	8FcwZG9VFBM7RHmY3CM6PqaVtbWJSQjB4wmP5u2fn/nJwUVW2ndNu79iu5Daee7eV7CnUva9cSh
+	HNptZvgZvgMqssMJOOIA/eiKzqPNF8be+xqsGS5VCGcgZBjmLTSwrNoWMyfZAzgmzHncXJgQYmb
+	KwwoT+rNw8hzY0BmSE8j9MWWzMb8Ctm+G9Hfd4ISCjqnINjM1gcd4D4rF8RjhQeDZH7ONyo1cCu
+	JF03SMqQxlhpGurS6+Z0fqdGA4oVLw==
+X-Received: by 2002:a17:902:eccd:b0:216:410d:4c67 with SMTP id d9443c01a7336-21c355c8efbmr494063045ad.41.1737717803177;
+        Fri, 24 Jan 2025 03:23:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFNcJImFw4UsAKq5Do4gBFlgHd9ffTPhv64PVSXU5XRkZR6vPBecdycKhiJ4wLS04GjTnsMOA==
+X-Received: by 2002:a17:902:eccd:b0:216:410d:4c67 with SMTP id d9443c01a7336-21c355c8efbmr494062655ad.41.1737717802771;
+        Fri, 24 Jan 2025 03:23:22 -0800 (PST)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da414cc20sm14025385ad.165.2025.01.24.03.23.12
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da414cc20sm14025385ad.165.2025.01.24.03.23.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 03:23:17 -0800 (PST)
+        Fri, 24 Jan 2025 03:23:22 -0800 (PST)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Fri, 24 Jan 2025 16:52:49 +0530
-Subject: [PATCH v4 3/4] PCI: dwc: Improve handling of PCIe lane
- configuration
+Date: Fri, 24 Jan 2025 16:52:50 +0530
+Subject: [PATCH v4 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,7 +92,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250124-preset_v2-v4-3-0b512cad08e1@oss.qualcomm.com>
+Message-Id: <20250124-preset_v2-v4-4-0b512cad08e1@oss.qualcomm.com>
 References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
 In-Reply-To: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -108,106 +108,140 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Konrad Dybcio <konradybcio@kernel.org>,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1737717776; l=3448;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1737717776; l=4571;
  i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=5rxRkPnumzzfAdemdZBFDf4pCGC4z3dLReWUJOLysOk=;
- b=DonzVQzdHIl/WfHGG9u0Cqbhe1IO8nnLwtceD1UvRCtOb+1eL/WEb1u3AvWnzxwtvnu2w+jjh
- /JUC2z5bR+ZBzFWy77WB08SVCXfQqFBvYWAlzX4NH0b3nqUKL7QSwTF
+ bh=aAQ+D093YPpgryfubEJA4YQRIxQgMZqUwYCwdO3dLmA=;
+ b=zCquekUDbmf6cUZgPiq91xAlARj7f0SrBOVKD9h7yHqvGVwQ4bbjaXOJlFfJEa9ac27BiOr/E
+ j+BC9Oj5Gv5BW5Si3aH7b6v13mKdWRMRXkIAHpJtElNMyPS4taqzWpp
 X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: boN4gLrWSaKWQ-6CzLFdSQ6nxHvmsgH0
-X-Proofpoint-ORIG-GUID: boN4gLrWSaKWQ-6CzLFdSQ6nxHvmsgH0
+X-Proofpoint-GUID: rOdjT3ckhQt2xuunnvyddcOigrQ02DhH
+X-Proofpoint-ORIG-GUID: rOdjT3ckhQt2xuunnvyddcOigrQ02DhH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-24_04,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 adultscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2411120000 definitions=main-2501240083
 
-Currently even if the number of lanes hardware supports is equal to
-the number lanes provided in the devicetree, the driver is trying to
-configure again the maximum number of lanes which is not needed.
+PCIe equalization presets are predefined settings used to optimize
+signal integrity by compensating for signal loss and distortion in
+high-speed data transmission.
 
-Update number of lanes only when it is not equal to hardware capability.
-
-And also if the num-lanes property is not present in the devicetree
-update the num_lanes with the maximum hardware supports.
-
-Introduce dw_pcie_link_get_max_link_width() to get the maximum lane
-width the hardware supports.
+Based upon the number of lanes and the data rate supported, write
+the preset data read from the device tree in to the lane equalization
+control registers.
 
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c |  3 +++
- drivers/pci/controller/dwc/pcie-designware.c      | 14 +++++++++++++-
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 41 +++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
+ include/uapi/linux/pci_regs.h                     |  3 ++
+ 3 files changed, 47 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 3e41865c7290..2cd0acbf9e18 100644
+index 2cd0acbf9e18..eced862fb8dd 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -504,6 +504,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+@@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (pci->num_lanes < 1)
+ 		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
  
- 	dw_pcie_iatu_detect(pci);
- 
-+	if (pci->num_lanes < 1)
-+		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
++	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
++	if (ret)
++		goto err_free_msi;
 +
  	/*
  	 * Allocate the resource for MSG TLP before programming the iATU
  	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 6d6cbc8b5b2c..acb2a963ae1a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -736,6 +736,16 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci)
- 
+@@ -802,6 +806,42 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	return 0;
  }
  
-+int dw_pcie_link_get_max_link_width(struct dw_pcie *pci)
++static void dw_pcie_program_presets(struct dw_pcie *pci, u8 cap_id, u8 lane_eq_offset,
++				    u8 lane_reg_size, u8 *presets, u8 num_lanes)
 +{
-+	u32 lnkcap;
-+	u8 cap;
++	u32 cap;
++	int i;
 +
-+	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-+	return FIELD_GET(PCI_EXP_LNKCAP_MLW, lnkcap);
++	cap = dw_pcie_find_ext_capability(pci, cap_id);
++	if (!cap)
++		return;
++
++	/*
++	 * Write preset values to the registers byte-by-byte for the given
++	 * number of lanes and register size.
++	 */
++	for (i = 0; i < num_lanes * lane_reg_size; i++)
++		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
 +}
 +
- static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
++static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
++
++	/* For data rate of 8 GT/S each lane equalization control is 16bits wide */
++	if (speed >= PCIE_SPEED_8_0GT && pp->presets.eq_presets_8gts[0] != 0xff)
++		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_SECPCI, PCI_SECPCI_LE_CTRL,
++					0x2, (u8 *)pp->presets.eq_presets_8gts, pci->num_lanes);
++
++	/* For data rate of 16 GT/S each lane equalization control is 8bits wide */
++	if (speed >= PCIE_SPEED_16_0GT &&
++	    pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS][0] != 0xff)
++		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_PL_16GT, PCI_PL_16GT_LE_CTRL,
++					0x1, pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS],
++					pci->num_lanes);
++}
++
+ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
  {
- 	u32 lnkcap, lwsc, plc;
-@@ -1069,6 +1079,7 @@ void dw_pcie_edma_remove(struct dw_pcie *pci)
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+@@ -855,6 +895,7 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+ 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+ 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
  
- void dw_pcie_setup(struct dw_pcie *pci)
- {
-+	int num_lanes = dw_pcie_link_get_max_link_width(pci);
- 	u32 val;
- 
- 	dw_pcie_link_set_max_speed(pci);
-@@ -1102,5 +1113,6 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 	val |= PORT_LINK_DLL_LINK_EN;
- 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
- 
--	dw_pcie_link_set_max_link_width(pci, pci->num_lanes);
-+	if (num_lanes != pci->num_lanes)
-+		dw_pcie_link_set_max_link_width(pci, pci->num_lanes);
- }
++	dw_pcie_config_presets(pp);
+ 	/*
+ 	 * If the platform provides its own child bus config accesses, it means
+ 	 * the platform uses its own address translation component rather than
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 347ab74ac35a..500e793c9361 100644
+index 500e793c9361..b12b33944df4 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -486,6 +486,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
- int dw_pcie_link_up(struct dw_pcie *pci);
- void dw_pcie_upconfig_setup(struct dw_pcie *pci);
- int dw_pcie_wait_for_link(struct dw_pcie *pci);
-+int dw_pcie_link_get_max_link_width(struct dw_pcie *pci);
- int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
- 			      const struct dw_pcie_ob_atu_cfg *atu);
- int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+@@ -25,6 +25,8 @@
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
+ 
++#include "../../pci.h"
++
+ /* DWC PCIe IP-core versions (native support since v4.70a) */
+ #define DW_PCIE_VER_365A		0x3336352a
+ #define DW_PCIE_VER_460A		0x3436302a
+@@ -379,6 +381,7 @@ struct dw_pcie_rp {
+ 	bool			use_atu_msg;
+ 	int			msg_atu_index;
+ 	struct resource		*msg_res;
++	struct pci_eq_presets	presets;
+ };
+ 
+ struct dw_pcie_ep_ops {
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 12323b3334a9..68fc8873bc60 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1118,6 +1118,9 @@
+ #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+ #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+ 
++/* Secondary PCIe Capability 8.0 GT/s */
++#define PCI_SECPCI_LE_CTRL	0x0c /* Lane Equalization Control Register */
++
+ /* Physical Layer 16.0 GT/s */
+ #define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+ #define  PCI_PL_16GT_LE_CTRL_DSP_TX_PRESET_MASK		0x0000000F
 
 -- 
 2.34.1
