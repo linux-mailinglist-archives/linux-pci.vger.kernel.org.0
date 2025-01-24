@@ -1,143 +1,111 @@
-Return-Path: <linux-pci+bounces-20324-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20325-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0C9BA1B2A9
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 10:33:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 621E7A1B2C3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 10:36:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 862E33A8341
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 09:33:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6739D18862DA
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 09:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 991C01D417C;
-	Fri, 24 Jan 2025 09:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B332B219A81;
+	Fri, 24 Jan 2025 09:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNHPeuRg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pN45VQ0R"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BCE23A0
-	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 09:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7B4219A80;
+	Fri, 24 Jan 2025 09:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737711186; cv=none; b=mBWRM2RnUbfPHf+uJR0fE9QLzz4GogmdpiXUNPzned1QAeS8ijDKe6UpuzYJLRGcb7uv8JiiTdGPpfwqYyK5YJGHOpO9T2lE5OoM9bEyul87zepMeJ8KX1VB/k/tMYaqZdM2O3t6ba/A2wMY/FJAEqUl4MGZP3Koood+IIEaApw=
+	t=1737711409; cv=none; b=OKEk+37+jw/N9kXOG4jM4g9JgYmgxS374q44lGj0p6ixjPeN844rwss+zsrD9fznDl0iGixOn94uel4EIhaRe9tEHGAUCnR1fp5S/moJoLlMvkymFzwHZT1gBRnj3VUzD/ZQKvnWhargcXnmQoUb5P+xr4jJG/C0vuKgL6YURn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737711186; c=relaxed/simple;
-	bh=lhztTSuFmyr0wxDvsbY5/F+/4AQtRTxxTucS/qEDPus=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPNHxTY16Rh2hmvRfriX3H97ZeIYau4O/MBkbVpC/xvyJmbhb4I2yzMCj6cGJZQfUWX43nDmC0PrFhYX6tgeUlGDUQd4Q3XJf641haMrZdBJmdS+y1YG4VBBj3QZlLQ8fmn2BJKM+4+TVny3jYAShNp9PCUfOht0aXtekFngKto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNHPeuRg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE79C4CEDD;
-	Fri, 24 Jan 2025 09:33:03 +0000 (UTC)
+	s=arc-20240116; t=1737711409; c=relaxed/simple;
+	bh=paiwEemACLboxuhXkc9atWcC/vkc9CreQx/qAH5ctVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OxWPMa9qYWSLUvTCTcaRodPiGBMwKYperFY0Q6yijP2R0EH7AoM+oBhX9h6ta+WAl/sGeIM3XEa3ywc+NHQt2TPyip2LY106PGKLECJLt685lZUrfVJwNiZjEHn99RaxwB56iJ03Vgu9cnLv+xzfl7WlInsqAkQG5sUWmtozi9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pN45VQ0R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26864C4CED2;
+	Fri, 24 Jan 2025 09:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737711185;
-	bh=lhztTSuFmyr0wxDvsbY5/F+/4AQtRTxxTucS/qEDPus=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MNHPeuRgikyX7L7rNxiT3h8TY4Wf4Kl1bc0M+fqLHVD7qvEPrDgd1UshDhndV53Yp
-	 E96yestQt8ze2wDdLlzeX/JQT+wfrX8pCzs85a5mOoWlZqAyZ5SUOEzk3bNG1o9EN6
-	 QQOVcfcT3hzSs3ISZtHxJwXR3ZHo6vtJDyIr0I5YHmkeIFLlX+K2HKzznnR1N22vKn
-	 J6Rkn/swF+C/CPcNK0sM6nWwu6v7k72zWn/dD186SeH5B4kzmHl3m/77lz183b6xy3
-	 bt2nrquPsGSPAMfuq9ijpoPslzukUsemktaZP9yGzoGp7BogmUE0r5Lt3OYKiUfTaF
-	 r6A7QEA3LFRbQ==
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>,
-	Frank Li <Frank.li@nxp.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Hans Zhang <18255117159@163.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2] misc: pci_endpoint_test: Handle BAR sizes larger than INT_MAX
-Date: Fri, 24 Jan 2025 10:33:01 +0100
-Message-ID: <20250124093300.3629624-2-cassel@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=k20201202; t=1737711409;
+	bh=paiwEemACLboxuhXkc9atWcC/vkc9CreQx/qAH5ctVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pN45VQ0Rc4zIKxXq+UqwyVTilgXlc5TA1gFL7ricIgR+d/Uvr4GqZ9nLMml/W9YNG
+	 2aCX3Vv0UsYERoJ2KaMQI+I137G6Q33qnHRohGhTJ45xBUZRFDqxuA72M6b6rksGSv
+	 YtQWRB/gzBgokZbmbPbJTq2DURcPxs+oLvy+2QUonWokcw7+0ZAsW2r6BdP+Lkv9a+
+	 AmL6nTL97W66xooJJI5676rUZmd49LeIyMf/E8PPv9CZiOeB4uGKOdRmPq1ZZmh+I2
+	 OFfpd2OlxQ37YsAhpq907aNIhinsgooj5cD8yZZkRYB6tfveQW1N+A9UGlq+ApBI4i
+	 T8sE0Y43Dgd4w==
+Date: Fri, 24 Jan 2025 15:06:35 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	cros-qcom-dts-watchers@chromium.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v3 3/4] PCI: dwc: Reduce DT reads by allocating host
+ bridge via DWC glue driver
+Message-ID: <20250124093635.hemydca7d7zeajaa@thinkpad>
+References: <20250121-enable_ecam-v3-0-cd84d3b2a7ba@oss.qualcomm.com>
+ <20250121-enable_ecam-v3-3-cd84d3b2a7ba@oss.qualcomm.com>
+ <20250124061828.ncycdpxqd6fqpjib@thinkpad>
+ <6e35eea5-2c7b-5d71-f39d-f9196a3c1b76@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2676; i=cassel@kernel.org; h=from:subject; bh=lhztTSuFmyr0wxDvsbY5/F+/4AQtRTxxTucS/qEDPus=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNInx/m0F9ir8EZ1bQry/dMsZbZWa9+Bt6cz1vvOuhAvF nqRdVFPRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACZiacfIcOUKb72yX5b0tNnV BwoX/r4vez2ubbLNM9WvTxiXOD/IeMDIcG+plILkHJa5L/rNpt36oHltTcne/yKvj76Mmreb+1y UHwcA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6e35eea5-2c7b-5d71-f39d-f9196a3c1b76@quicinc.com>
 
-Running 'pcitest -b 0' fails with "TEST FAILED" when the BAR0 size
-is e.g. 8 GB.
+On Fri, Jan 24, 2025 at 01:56:25PM +0530, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 1/24/2025 11:48 AM, Manivannan Sadhasivam wrote:
+> > On Tue, Jan 21, 2025 at 02:32:21PM +0530, Krishna Chaitanya Chundru wrote:
+> > > Allow DWC glue drivers to allocate the host bridge, avoiding redundant
+> > > device tree reads primarily in dw_pcie_ecam_supported().
+> > > 
+> > 
+> > I don't understand what you mean by 'redundant device tree reads'. Please
+> > explain.
+> > 
+> In dw_pcie_ecam_supported () we are trying to read bus-range to find
+> maximum bus range value. devm_pci_alloc_host_bridge() is already reading
+> bus range it. If we move devm_pci_alloc_host_bridge() to start of the
+> controller probe we can avoid reading the dt and use values stored in the
+> host bridge.
 
-The return value of the pci_resource_len() macro can be larger than that
-of a signed integer type. Thus, when using 'pcitest' with an 8 GB BAR,
-the bar_size of the integer type will overflow.
+This is the exact information you should put into the description. Do not assume
+that the readers will have the background.
 
-Change bar_size from integer to resource_size_t to prevent integer
-overflow for large BAR sizes with 32-bit compilers.
+> This was recommended by bjorn in the v2.
+> 
 
-In order to handle 64-bit resource_type_t on 32-bit platforms, we would
-have needed to use a function like div_u64() or similar. Instead, change
-the code to use addition instead of division. This avoids the need for
-div_u64() or similar, while also simplifying the code.
+Then you should add 'Suggested-by' tag.
 
-Co-developed-by: Hans Zhang <18255117159@163.com>
-Signed-off-by: Hans Zhang <18255117159@163.com>
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
-Changes since v1:
--Add reason for why division was changed to addition in commit log.
+- Mani
 
- drivers/misc/pci_endpoint_test.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index d5ac71a49386..8e48a15100f1 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -272,9 +272,9 @@ static const u32 bar_test_pattern[] = {
- };
- 
- static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
--					enum pci_barno barno, int offset,
--					void *write_buf, void *read_buf,
--					int size)
-+					enum pci_barno barno,
-+					resource_size_t offset, void *write_buf,
-+					void *read_buf, int size)
- {
- 	memset(write_buf, bar_test_pattern[barno], size);
- 	memcpy_toio(test->bar[barno] + offset, write_buf, size);
-@@ -287,10 +287,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
- static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 				  enum pci_barno barno)
- {
--	int j, bar_size, buf_size, iters;
-+	resource_size_t bar_size, offset = 0;
- 	void *write_buf __free(kfree) = NULL;
- 	void *read_buf __free(kfree) = NULL;
- 	struct pci_dev *pdev = test->pdev;
-+	int buf_size;
- 
- 	if (!test->bar[barno])
- 		return -ENOMEM;
-@@ -314,11 +315,12 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 	if (!read_buf)
- 		return -ENOMEM;
- 
--	iters = bar_size / buf_size;
--	for (j = 0; j < iters; j++)
--		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
--						 write_buf, read_buf, buf_size))
-+	while (offset < bar_size) {
-+		if (pci_endpoint_test_bar_memcmp(test, barno, offset, write_buf,
-+						 read_buf, buf_size))
- 			return -EIO;
-+		offset += buf_size;
-+	}
- 
- 	return 0;
- }
 -- 
-2.48.1
-
+மணிவண்ணன் சதாசிவம்
 
