@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-20336-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20337-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA947A1B68D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 14:01:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 132BFA1B6AB
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 14:13:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25B6F16BBFD
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 13:01:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7ED13ADED3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 13:13:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF1D0524F;
-	Fri, 24 Jan 2025 13:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07C681BC4E;
+	Fri, 24 Jan 2025 13:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LvTTE0IL"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="akL7thqL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACBF235945;
-	Fri, 24 Jan 2025 13:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32E5544360;
+	Fri, 24 Jan 2025 13:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737723713; cv=none; b=EO4UNmxKkzKYzYKIoMyKHc2UnCHQQONJXslvCNSahDS2EoX6CkQM+wHd0f+iGkGTFEEdXzPvFD0/kmubsJiojhbhPXNJS01wleLLmBwwnkh/UvvgvqJfIeA+qFf3RBFzxrS/NDDl/9NfL5z4ONXQXeqkwrdLZBv8ks6gaHKNMZ0=
+	t=1737724408; cv=none; b=EWhG0hbxnFn84JAoanpFSxp/PCPlOLmWpp9uywLijDntUvLTBPZK6nmlEm9sCQi9j+Yiux32naWXVqcQy64sRpWKhNdnmJpp9ZrK3VG7hOnW3T4fcQUNdKFKZjmTChq0w52+lja5BTjr2k3u0TigIB5nxXM+Bvh0UT2/7GEPHDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737723713; c=relaxed/simple;
-	bh=GpAPZF03nG38ZHDy9iMjo29tVDDLE1ABFiD7wZCZgrQ=;
+	s=arc-20240116; t=1737724408; c=relaxed/simple;
+	bh=jrj5PupWIyrkrHe98fBSBGYFpRqxofDNG0tCqSMDXXk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CQDb1hYpqgaLTsL68rwwuMFDhGN4qqKAeio7vNfpueh5HNZbDPMvik9tVu5HdJINS7xEoatMzZ9IYfq1zfWQgrUnHOkBigtZEPnwTzYk1bvUER0nLEreURwIQmSyPJgWKtxXEqHXWHROXnXwCzwfQ0GQpS+8Y9xFA/ps4JBY0EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LvTTE0IL; arc=none smtp.client-ip=220.197.31.3
+	 In-Reply-To:Content-Type; b=umjb4eK4jk/DG2aw90EAyEqAPNPHrUOix5++s3wbKoqaQqFhRUPIfhf/ugWxECbTOrmo3jnVaXGiCMdbRQ2ms/3+MB1ZiEo4XeHbMdnlPTvyibzgNQPDAa/YVO9g7Rayh26fmJDZAc9utDidfEY8gduNmdruPtRuWYwT3jAaoxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=akL7thqL; arc=none smtp.client-ip=220.197.31.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=TN1EfBgDx1eDHQBugFEedOW2gvOChBEEF6T8sRNHNSI=;
-	b=LvTTE0ILAsPE2Qwt6JUiI6eZYdblwTUWLond+f5LUb//6LAw800vTBBfOivPcv
-	rUYjCYDw5EQm4M0SxNtU3GNt3Y/QIkupw57dEmQ4DnBSF7AZTg1PekfdsrnwaIEt
-	F7+eK9ZAxvDRgoc5Z0ENXTehJpwY8svlztntcXTAFvHpM=
+	Content-Type; bh=wzzwLLCEHHI+i1O7CxJizo8RxcqgB8u+ySyrx51GTkk=;
+	b=akL7thqL+BijPNnn2jQYmFEZ7bhfYyN4Z56rUhfSlw/Xa862qniaaKSg2yZPRz
+	YO6cWN9pKvE2+3pgl7Y5s2JjyyLQZAKPWCnZcI5+g+chdZixaqlirSifUBQGUDPX
+	A4TmLQOqgHR9GOcFOlRNstQa5P4LxAOq8dX2/FmOSsDB4=
 Received: from [192.168.174.52] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDn3hLYjpNnPjW1FQ--.57031S2;
-	Fri, 24 Jan 2025 21:00:09 +0800 (CST)
-Message-ID: <79dc276d-7154-4b83-9dc5-dfdd65d89ad5@163.com>
-Date: Fri, 24 Jan 2025 21:00:09 +0800
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wA3QizPkZNnBWFgHw--.41190S2;
+	Fri, 24 Jan 2025 21:12:48 +0800 (CST)
+Message-ID: <54428aa3-2178-45d0-83d3-0b6254347bb5@163.com>
+Date: Fri, 24 Jan 2025 21:12:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,74 +47,98 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND] PCI: cadence: Add configuration space capability search
- API
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
- kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- bhelgaas@google.com, bwawrzyn@cisco.com, thomas.richard@bootlin.com,
- wojciech.jasko-EXT@continental-corporation.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250123170831.GA1226684@bhelgaas>
+Subject: Re: [PATCH] PCI: dwc: Add the sysfs property to provide the LTSSM
+ status of the PCIe link
+To: Frank Li <Frank.li@nxp.com>
+Cc: jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org,
+ lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250123071326.1810751-1-18255117159@163.com>
+ <Z5JrXsDDM2IManp+@lizhi-Precision-Tower-5810>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250123170831.GA1226684@bhelgaas>
+In-Reply-To: <Z5JrXsDDM2IManp+@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PSgvCgDn3hLYjpNnPjW1FQ--.57031S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KFy5Wry7Gr1UAr43GFyDKFg_yoW8CrWxpF
-	WDW3W5Kw4DJr4SyFZ7tw40gayagr95Za47X3s8G34rAr9I9rnxKF4SkrWUCF92kr4fW3WY
-	vrWYqas7Za1YvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UOzV8UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDxzeo2eTVielogABst
+X-CM-TRANSID:_____wA3QizPkZNnBWFgHw--.41190S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WF1UXr18Cr4kWr4rKF1xZrb_yoW8Zw17pa
+	y8AayFyF47Zr10v3W5XF4DXry5tFn3CF4DKrW5tFWSga4vvr9rKFWrJ3y8tr95JrsrGry3
+	Aw15Arn5GryrGa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UY0PhUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxLeo2eTgkO3tQABsW
 
 
 
-On 2025/1/24 01:08, Bjorn Helgaas wrote:
-> On Thu, Jan 23, 2025 at 04:15:12PM +0800, Hans Zhang wrote:
->> On 2025/1/23 15:40, Siddharth Vadapalli wrote:
->>> On Thu, Jan 23, 2025 at 03:09:35PM +0800, Hans Zhang wrote:
->>>> Add configuration space capability search API using struct cdns_pcie*
->>>> pointer.
->>>>
->>>> Similar patches below have been merged.
->>>> commit 5b0841fa653f ("PCI: dwc: Add extended configuration space capability
->>>> search API")
->>>> commit 7a6854f6874f ("PCI: dwc: Move config space capability search API")
->>>
->>> Similar patches being merged doesn't sound like a proper reason for
->>> having a feature. Please provide details regarding why this is required.
->>> Assuming that the intent for introducing this feature is to use it
->>> later, it will be a good idea to post the patch for that as well in the
->>> same series.
->>
->> For our SOC platform, the offset of some capability needs to be found during
->> the initialization process, which I think should be put into the cadence
->> public code
->>
->> eg:
->>
->> For API: cdns_pcie_find_capability
->> Need to find PCI Express, then set link speed, retrain link, MaxPayload,
->> MaxReadReq, Enable Relaxed Ordering.
->>
->> For API: cdns_pcie_find_ext_capability
->> Need to find the Secondary PCIe Capability and set the GEN3 preset value.
->> Find the Physical Layer 16.0 GT/s and set the GEN4 preset value.
->>
->> Development board based on our SOC, Radxa Orinon O6.
->> https://radxa.com/products/orion/o6/
->>
->> Our controller driver currently has no plans for upstream and needs to wait
->> for notification from the boss.
+On 2025/1/24 00:16, Frank Li wrote:
+>> +static char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm)
+>> +{
+>> +	char *str;
+>> +
+>> +	switch (ltssm) {
+>> +#define DW_PCIE_LTSSM_NAME(n) case n: str = #n; break
+>> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_QUIET);
+>> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_ACT);
+>> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_ACTIVE);
+>> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_COMPLIANCE);
+>> +	...
+>> +	default:
+>> +		str = "DW_PCIE_LTSSM_UNKNOWN";
+>> +		break;
 > 
-> If/when you upstream code that needs this interface, include this
-> patch as part of the series.  As Siddharth pointed out, we avoid
-> merging code that has no upstream users.
+> I prefer
+> const char * str[] =
+> {
+> 	"detect_quitet",
+> 	"detect_act",
+> 	...
+> }
 > 
-> Bjorn
+> 	return str[ltssm];
+> 
+> Or
+> 	#define DW_PCIE_LTSSM_NAME(n) case n: return #n;
+> 	...
+> 	default:
+> 		return "DW_PCIE_LTSSM_UNKNOWN";
+Hi Frank,
 
-I got it. Thank you Siddharth and Bjorn.
+I considered the two methods you mentioned before I submitted this patch.
+
+The first, I think, will increase the memory overhead.
+
++static const char * const dw_pcie_ltssm_str[] = {
++	[DW_PCIE_LTSSM_DETECT_QUIET] = "DETECT_QUIET",
++	[DW_PCIE_LTSSM_DETECT_ACT] = "DETECT_ACT",
++	[DW_PCIE_LTSSM_POLL_ACTIVE] = "POLL_ACTIVE",
++	[DW_PCIE_LTSSM_POLL_COMPLIANCE] = "POLL_COMPLIANCE",
+	...
+
+
+The second, ./scripts/checkpatch.pl checks will have a warning
+
+WARNING: Macros with flow control statements should be avoided
+#121: FILE: drivers/pci/controller/dwc/pcie-designware.h:329:
++#define DW_PCIE_LTSSM_NAME(n) case n: return #n
+
+
+>> +static ssize_t ltssm_status_show(struct device *dev,
+>> +				 struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+>> +	struct dw_pcie_rp *pp = bridge->sysdata;
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +
+>> +	return sysfs_emit(buf, "%s\n",
+>> +			  dw_ltssm_sts_string(dw_pcie_get_ltssm(pci)));
+> 
+> Suggest dump raw value also
+> 
+> val = dw_pcie_get_ltssm(pci);
+> return sysfs_emit(buf, "%s (0x%02x)\n",
+> 		  dw_ltssm_sts_string(val), val);
+
+Thanks, i think it's a good idea.
 
 Best regards
 Hans
