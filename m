@@ -1,65 +1,46 @@
-Return-Path: <linux-pci+bounces-20307-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20308-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B5D5A1ACA1
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 23:25:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32D43A1AE45
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 02:45:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D1CD7A19A3
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2025 22:25:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E381E3A41B5
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 01:45:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871F01CF5F2;
-	Thu, 23 Jan 2025 22:25:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3CC60890;
+	Fri, 24 Jan 2025 01:45:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JAxbiRPT"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="k+fTAhSw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EF21B0F2F;
-	Thu, 23 Jan 2025 22:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53654157E82;
+	Fri, 24 Jan 2025 01:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737671113; cv=none; b=DGhE8nKQ6TU+D2HiC6K1KUEaOrVOIytX60nYmpwqu92FOzaceAdd2GVqjwlJl6EwbM5QBp8hTJeKz0IrJbLZxlEf6HBlzbom9EVaVJH8aMyesE+lUWMTH/um0Eqq391ogUrUmE/ooKDs+pw66XSvg19ZmiAJu8EsLDvGg9M3sYg=
+	t=1737683124; cv=none; b=aZle/3ub82K9DenxCzUfapQAGnjQNCsfb4DFxH0YEtXQebuNqLxiv4/olKcaassWetP1oBKf0k1XilWFrEAPfZ63x5Lv93nOdlPVS5qZdvKqDVdisE4CJao44bRsk9Lx7l9jZr5v6BK+wTGRqbOiBUDIt0GvhpSU/BFRhwv18/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737671113; c=relaxed/simple;
-	bh=2jb7XVwyxsYRUqUbjVpdYJ8DEJERMyMgxxHC3BUJAgI=;
+	s=arc-20240116; t=1737683124; c=relaxed/simple;
+	bh=Q51vu2T/2dBc9o0n8ln3Jp2MqkcHD+TQVTlmj/FyoW4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=atZoAV2WJrvyKZoH7SnTK7s6JGVBcdFrtSbjAPObDlmdXnIkTJs2IRpQExbrVUONVgU98iOOhjN1hWsiK54zfFseIejRtx0mQhb27xnqEtZ3uWQ10A0t8kI646/6A/TuL5gnqESJcS5xYCI3N1dX46EOEpWUV97jnDlC2e60gFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JAxbiRPT; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737671111; x=1769207111;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2jb7XVwyxsYRUqUbjVpdYJ8DEJERMyMgxxHC3BUJAgI=;
-  b=JAxbiRPT3772D9G0l5Imfbofq0IKfSvD+lXnTpJreMjKSCfqWpAOBHCh
-   b8sq4eTMC5HFrnWBy6CI1YZsCc2K0rBo+GECkE8eneW35HpFpnLsIXpb5
-   juq6y4eZAj//CfCpQKtuYCWXJhC8b2O5BNC10wQDMgudsDC7PL8PBKLd5
-   RyOukX7TsOb/csEUOfP9l7DboSvnXCUZPx4Ivn9gl2AX//YRR86cGw0mP
-   KkkpL9+YRHfvsHYC0q+fgKR3YPoznriC+BlTdfgNUb48FNZFZ6RFQc/pP
-   MCfNkmtRKBZqn9HXIyGEfGmgSPxcGDrdx+TtoEXwUJ0GOTvVYFSX3eARr
-   w==;
-X-CSE-ConnectionGUID: Ts/Oziz2SbKMCl5NEl5JXg==
-X-CSE-MsgGUID: eZT7cursR/qDooBfaGGgbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="38227048"
-X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="38227048"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 14:25:11 -0800
-X-CSE-ConnectionGUID: AY6H+YdiQ5i6gkVhSE0x/g==
-X-CSE-MsgGUID: MUuxFnpBSYSX25N0YEIOfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="138464018"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.223.78]) ([10.124.223.78])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 14:25:10 -0800
-Message-ID: <98e3eda7-4d8c-46af-b8ae-9bdcdce33608@linux.intel.com>
-Date: Thu, 23 Jan 2025 14:24:52 -0800
+	 In-Reply-To:Content-Type; b=Ajv5md2aXzwyLHcOQ9vS/bX0XHQloAms+1CU7m84bPvsFPLNDrDSHDShllApO7UNOdww+oIeOxAKJEPHQZXUMEW5HcMGS/ev1Cv+IQJFqwt28i/cIZzAyY93Gxw8En09eCGYrCqcE0IaWBTcO1fhMR5g/lDCefrLv4Bq7IXlmWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=k+fTAhSw; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1737683110; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=HefF1VgobYNw/buVdtIHwLUtKr4Okxq/b4dWX4SMuHU=;
+	b=k+fTAhSwS8qc631HkTBW2QAtU6KvVGRaZWZSFzHsrTLBeUar40Cfe6IeP4QfiM3ywLCP1ME2mIWj5654vaWixhMgh76Okp7bNhBitpjZe9UDHZ/BN6DP5qdP7txWfo2QV8OIbykAnjZ8nqAIfmsd8ihcf7oSNZwEMRWYRKZoNT0=
+Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOCwDqx_1737683109 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 24 Jan 2025 09:45:10 +0800
+Message-ID: <9f8653ef-81e3-4ce9-9c11-78d694f2a52b@linux.alibaba.com>
+Date: Fri, 24 Jan 2025 09:45:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,161 +48,181 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Fix Extend ACS configurability
-To: Tushar Dave <tdave@nvidia.com>, jgg@nvidia.com, corbet@lwn.net,
- bhelgaas@google.com, paulmck@kernel.org, akpm@linux-foundation.org,
- thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com,
- vidyas@nvidia.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-Cc: vsethi@nvidia.com, sdonthineni@nvidia.com
-References: <20250123033716.112115-1-tdave@nvidia.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250123033716.112115-1-tdave@nvidia.com>
+Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
+Cc: mahesh@linux.ibm.com, oohall@gmail.com
+References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
+ <20241112135419.59491-3-xueshuai@linux.alibaba.com>
+ <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-On 1/22/25 7:37 PM, Tushar Dave wrote:
-> Commit 47c8846a49ba ("PCI: Extend ACS configurability") introduced
-> bugs that fail to configure ACS ctrl to the value specified by the
-> kernel parameter. Essentially there are two bugs.
->
-> First, when ACS is configured for multiple PCI devices using
-> 'config_acs' kernel parameter, it results into error "PCI: Can't parse
-> ACS command line parameter". This is due to the bug in code that doesn't
-> preserve the ACS mask instead overwrites the mask with value 0.
->
-> For example, using 'config_acs' to configure ACS ctrl for multiple BDFs
-> fails:
->
-> 	Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-> 	PCI: Can't parse ACS command line parameter
-> 	pci 0020:02:00.0: ACS mask  = 0x007f
-> 	pci 0020:02:00.0: ACS flags = 0x007b
-> 	pci 0020:02:00.0: Configured ACS to 0x007b
->
-> After this fix:
->
-> 	Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-> 	pci 0020:02:00.0: ACS mask  = 0x007f
-> 	pci 0020:02:00.0: ACS flags = 0x007b
-> 	pci 0020:02:00.0: ACS control = 0x005f
-> 	pci 0020:02:00.0: ACS fw_ctrl = 0x0053
-> 	pci 0020:02:00.0: Configured ACS to 0x007b
-> 	pci 0039:00:00.0: ACS mask  = 0x0070
-> 	pci 0039:00:00.0: ACS flags = 0x0050
-> 	pci 0039:00:00.0: ACS control = 0x001d
-> 	pci 0039:00:00.0: ACS fw_ctrl = 0x0000
-> 	pci 0039:00:00.0: Configured ACS to 0x0050
->
-> Second bug is in the bit manipulation logic where we copy the bit from
-> the firmware settings when mask bit 0.
->
-> For example, 'disable_acs_redir' fails to clear all three ACS P2P redir
-> bits due to the wrong bit fiddling:
->
-> 	Kernel command line: pci=disable_acs_redir=0020:02:00.0;0030:02:00.0;0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-> 	pci 0020:02:00.0: ACS mask  = 0x002c
-> 	pci 0020:02:00.0: ACS flags = 0xffd3
-> 	pci 0020:02:00.0: Configured ACS to 0xfffb
-> 	pci 0030:02:00.0: ACS mask  = 0x002c
-> 	pci 0030:02:00.0: ACS flags = 0xffd3
-> 	pci 0030:02:00.0: Configured ACS to 0xffdf
-> 	pci 0039:00:00.0: ACS mask  = 0x002c
-> 	pci 0039:00:00.0: ACS flags = 0xffd3
-> 	pci 0039:00:00.0: Configured ACS to 0xffd3
->
-> After this fix:
->
-> 	Kernel command line: pci=disable_acs_redir=0020:02:00.0;0030:02:00.0;0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-> 	pci 0020:02:00.0: ACS mask  = 0x002c
-> 	pci 0020:02:00.0: ACS flags = 0xffd3
-> 	pci 0020:02:00.0: ACS control = 0x007f
-> 	pci 0020:02:00.0: ACS fw_ctrl = 0x007b
-> 	pci 0020:02:00.0: Configured ACS to 0x0053
-> 	pci 0030:02:00.0: ACS mask  = 0x002c
-> 	pci 0030:02:00.0: ACS flags = 0xffd3
-> 	pci 0030:02:00.0: ACS control = 0x005f
-> 	pci 0030:02:00.0: ACS fw_ctrl = 0x005f
-> 	pci 0030:02:00.0: Configured ACS to 0x0053
-> 	pci 0039:00:00.0: ACS mask  = 0x002c
-> 	pci 0039:00:00.0: ACS flags = 0xffd3
-> 	pci 0039:00:00.0: ACS control = 0x001d
-> 	pci 0039:00:00.0: ACS fw_ctrl = 0x0000
-> 	pci 0039:00:00.0: Configured ACS to 0x0000
->
-> Fixes: 47c8846a49ba ("PCI: Extend ACS configurability")
-> Signed-off-by: Tushar Dave <tdave@nvidia.com>
-> ---
 
-LGTM
+在 2025/1/24 04:10, Sathyanarayanan Kuppuswamy 写道:
+> Hi,
+> 
+> On 11/12/24 5:54 AM, Shuai Xue wrote:
+>> The AER driver has historically avoided reading the configuration space of
+>> an endpoint or RCiEP that reported a fatal error, considering the link to
+>> that device unreliable. Consequently, when a fatal error occurs, the AER
+>> and DPC drivers do not report specific error types, resulting in logs like:
+>>
+>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>    nvme nvme0: frozen state error detected, reset controller
+>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>
+>> AER status registers are sticky and Write-1-to-clear. If the link recovered
+>> after hot reset, we can still safely access AER status of the error device.
+>> In such case, report fatal errors which helps to figure out the error root
+>> case.
+>>
+>> After this patch, the logs like:
+>>
+>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>    nvme nvme0: frozen state error detected, reset controller
+>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> ---
+>>   drivers/pci/pci.h      |  3 ++-
+>>   drivers/pci/pcie/aer.c | 11 +++++++----
+>>   drivers/pci/pcie/dpc.c |  2 +-
+>>   drivers/pci/pcie/err.c |  9 +++++++++
+>>   4 files changed, 19 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 0866f79aec54..6f827c313639 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -504,7 +504,8 @@ struct aer_err_info {
+>>       struct pcie_tlp_log tlp;    /* TLP Header */
+>>   };
+>> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
+>> +                  bool link_healthy);
+>>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>>   #endif    /* CONFIG_PCIEAER */
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index 13b8586924ea..97ec1c17b6f4 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
+>>    * aer_get_device_error_info - read error status from dev and store it to info
+>>    * @dev: pointer to the device expected to have a error record
+>>    * @info: pointer to structure to store the error record
+>> + * @link_healthy: link is healthy or not
+>>    *
+>>    * Return 1 on success, 0 on error.
+>>    *
+>>    * Note that @info is reused among all error devices. Clear fields properly.
+>>    */
+>> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
+>> +                  bool link_healthy)
+>>   {
+>>       int type = pci_pcie_type(dev);
+>>       int aer = dev->aer_cap;
+>> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>>              type == PCI_EXP_TYPE_RC_EC ||
+>>              type == PCI_EXP_TYPE_DOWNSTREAM ||
+>> -           info->severity == AER_NONFATAL) {
+>> +           info->severity == AER_NONFATAL ||
+>> +           (info->severity == AER_FATAL && link_healthy)) {
+>>           /* Link is still healthy for IO reads */
+>>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
+>> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
+>>       /* Report all before handle them, not to lost records by reset etc. */
+>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
+>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>>               aer_print_error(e_info->dev[i], e_info);
+>>       }
+>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
+>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
+>>               handle_error_source(e_info->dev[i], e_info);
+>>       }
+>>   }
+>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>> index 62a68cde4364..b3f157a00405 100644
+>> --- a/drivers/pci/pcie/dpc.c
+>> +++ b/drivers/pci/pcie/dpc.c
+>> @@ -304,7 +304,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
+>>           dpc_process_rp_pio_error(pdev);
+>>       else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+>>            dpc_get_aer_uncorrect_severity(pdev, &info) &&
+>> -         aer_get_device_error_info(pdev, &info)) {
+>> +         aer_get_device_error_info(pdev, &info, false)) {
+>>           aer_print_error(pdev, &info);
+>>           pci_aer_clear_nonfatal_status(pdev);
+>>           pci_aer_clear_fatal_status(pdev);
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 31090770fffc..462577b8d75a 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>       struct pci_dev *bridge;
+>>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>> +    struct aer_err_info info;
+>>       /*
+>>        * If the error was detected by a Root Port, Downstream Port, RCEC,
+>> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>               pci_warn(bridge, "subordinate device reset failed\n");
+>>               goto failed;
+>>           }
+>> +
+>> +        info.severity = AER_FATAL;
+>> +        /* Link recovered, report fatal errors of RCiEP or EP */
+>> +        if ((type == PCI_EXP_TYPE_ENDPOINT ||
+>> +             type == PCI_EXP_TYPE_RC_END) &&
+>> +            aer_get_device_error_info(dev, &info, true))
+>> +            aer_print_error(dev, &info);
+> 
+> IMO, error device information is more like a debug info. Can we change
+> the print level of this info to debug?
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-> changes in v2:
->   - Addressed review comments by Jason and Bjorn.
->   - Removed Documentation changes (already taken care by other patch).
->   - Amended commit description.
->
->   drivers/pci/pci.c | 17 ++++++++++++-----
->   1 file changed, 12 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 0b29ec6e8e5e..19fbdd8643bc 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -955,8 +955,10 @@ struct pci_acs {
->   };
->   
->   static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
-> -			     const char *p, u16 mask, u16 flags)
-> +			     const char *p, const u16 acs_mask, const u16 acs_flags)
->   {
-> +	u16 flags = acs_flags;
-> +	u16 mask = acs_mask;
->   	char *delimit;
->   	int ret = 0;
->   
-> @@ -964,7 +966,7 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
->   		return;
->   
->   	while (*p) {
-> -		if (!mask) {
-> +		if (!acs_mask) {
->   			/* Check for ACS flags */
->   			delimit = strstr(p, "@");
->   			if (delimit) {
-> @@ -972,6 +974,8 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
->   				u32 shift = 0;
->   
->   				end = delimit - p - 1;
-> +				mask = 0;
-> +				flags = 0;
->   
->   				while (end > -1) {
->   					if (*(p + end) == '0') {
-> @@ -1028,10 +1032,13 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
->   
->   	pci_dbg(dev, "ACS mask  = %#06x\n", mask);
->   	pci_dbg(dev, "ACS flags = %#06x\n", flags);
-> +	pci_dbg(dev, "ACS control = %#06x\n", caps->ctrl);
-> +	pci_dbg(dev, "ACS fw_ctrl = %#06x\n", caps->fw_ctrl);
->   
-> -	/* If mask is 0 then we copy the bit from the firmware setting. */
-> -	caps->ctrl = (caps->ctrl & ~mask) | (caps->fw_ctrl & mask);
-> -	caps->ctrl |= flags;
-> +	/* For mask bits that are 0 copy them from the firmware setting
-> +	 * and apply flags for all the mask bits that are 1.
-> +	 */
-> +	caps->ctrl = (caps->fw_ctrl & ~mask) | (flags & mask);
->   
->   	pci_info(dev, "Configured ACS to %#06x\n", caps->ctrl);
->   }
+Yes, but error device information is quite important for user to figure out the
+device status and should not been ignored. We need it in production to analysis
+server healthy.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> 
+>>       } else {
+>>           pci_walk_bridge(bridge, report_normal_detected, &status);
+>>       }
+>> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>       if (host->native_aer || pcie_ports_native) {
+>>           pcie_clear_device_status(dev);
+>>           pci_aer_clear_nonfatal_status(dev);
+>> +        pci_aer_clear_fatal_status(dev);
+> 
+> I think we clear fatal status in DPC driver, why do it again?
 
+DPC driver only clear fatal status for the err_port, but not the err_dev.
+err_dev and err_port are indeed easy to confuse, so I have differentiated them
+again in patch1.
+
+> 
+>>       }
+>>       pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
+> 
 
