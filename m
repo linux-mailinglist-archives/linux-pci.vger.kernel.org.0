@@ -1,298 +1,146 @@
-Return-Path: <linux-pci+bounces-20315-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20316-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0AF4A1B0A3
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 08:03:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C266DA1B11C
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 08:48:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9AB23A7A21
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 07:03:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DD1316B804
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 07:48:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B8EE1D90A2;
-	Fri, 24 Jan 2025 07:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A33D71D9A6E;
+	Fri, 24 Jan 2025 07:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1eBDxbD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QydKEcNG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAFC33998;
-	Fri, 24 Jan 2025 07:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B28A1D95A2;
+	Fri, 24 Jan 2025 07:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737702189; cv=none; b=RdcjvLLf8w+Vh3+28dycbrZWxt9PzeVq177TcNmriIF4qXQ2ivhmU9SZmoztIQjmiYYYqfYxdn6Uzc8ix3IuJT/kBh0g64ci7o1Kb2pwGyE1z46XjmLETyzrMBUFcRRq74tHmsilYMTDxACh2ApqmAlJOhNUyS77xHf6wlzB/e4=
+	t=1737704892; cv=none; b=aiSmXUPuIfqD+lKu1SlaGuEHlgVXOEut/UGo+XByAOb9gNE6XmMaI2aU+eIBFFO0Ywjc7nOgLGIONiTweu9iHsb0+AbTATXclVnUglpa2EgRP8m59XEFawwthPTelGvz8cHpC9IL+uJrcM1BuyvdFLpjUC91HpELMdyDE+AzcNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737702189; c=relaxed/simple;
-	bh=Llbekx6bX89AfTZu4sCypFqE7Uy/xa6KsXk1K4aEzq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uYxpwUMM73y9xqadCAAZZIr+FxrYzymFTcwRoMD471/itOah539e5L+PSnu8fXTkgOOyh9n/godCoNCTKbLgQ+8R3kA4V6kbAkGJxbI4ID16llzTzvBKvohJGKGaJHzkht0hvl9M+mZd03CLGC1lHWV/js6JWfOPzroKCBlar/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1eBDxbD; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737702187; x=1769238187;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Llbekx6bX89AfTZu4sCypFqE7Uy/xa6KsXk1K4aEzq8=;
-  b=P1eBDxbDZM7db6YcTgYdG4F68fa6GTy4FyHpsbqo5VEDsH/p3snrtvrd
-   lgziP6aSkTp6FM23FVsVJvfDqJzSSMhm/6FZ6LWlhofYML83OljM9HHo7
-   1cksVXUrex6nLIsmVxdqTbE+Yb7ew0geQPWvKDGgHBzM58qWfaBswOKR/
-   0mXCFZ32j36mutZBsqZoU49F0u1X+/ToExisvq2BxW2YkJXcM9uR4M2Lh
-   +GkObn28/HP1z4znZ+YPAaqYFr7fzYl+0Mzszu288Ar+PUZUS8olxf1ck
-   le1WvASEjje/i7cu5N+dYHIyEU94On9nGedYGHbajDJDAyxlnwCl6cDqA
-   Q==;
-X-CSE-ConnectionGUID: Axe1IIaeQzuJGVqwSLxnxA==
-X-CSE-MsgGUID: eGkQtJWsT7GYfVJ+bIY05w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="41062518"
-X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
-   d="scan'208";a="41062518"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 23:03:06 -0800
-X-CSE-ConnectionGUID: +OjaeZPBSQKZy3lGwSwTsg==
-X-CSE-MsgGUID: POkXwHSOSHuj7fKCcMzfwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
-   d="scan'208";a="107609917"
-Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.223.184]) ([10.124.223.184])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 23:03:06 -0800
-Message-ID: <88127007-4351-4d8d-ab7c-3f5ae9d36139@linux.intel.com>
-Date: Thu, 23 Jan 2025 23:03:05 -0800
+	s=arc-20240116; t=1737704892; c=relaxed/simple;
+	bh=6YUzo/lqjG9MtMlkc1Jiy04MrgOEco72woPzQZQNnYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhfcRw9ysXZFEPFtcKuVh1SAxBv4bLGOExb7M8G1ckx8RTwqWmaWr9Z1t7cbZXo+NrjVniQ6UV84LTKShxJvkXJ3rNgzrXGR6LKyS2J3hzTvBCuxAQdf+aO268g3CaAICJGgi/6Q/OCaDlI0juUVTD7tY0oel7r7j+vfBdupqAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QydKEcNG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44291C4CEE1;
+	Fri, 24 Jan 2025 07:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737704891;
+	bh=6YUzo/lqjG9MtMlkc1Jiy04MrgOEco72woPzQZQNnYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QydKEcNG8vjV3nbKCbEhP8WMoKs33/K78l2nlv6Jhzjcszi6GG222fPL7sf+/W332
+	 iX096oEO7yl8CzVwmvq8Suta7PVMxyFrhUeri20mYOp19173y+/R2ZBhAiVKOse5T0
+	 5ZymshiswSd0YaMj4nkteFVJD6F8fez7hh5hyn1TE6uUUCKjTpw4NdkLxJDji9Kv3w
+	 0BOIbkN+svILCjwehrgbzhtBTe7faHlT5rDnv8Al4/wfID0sfinjwy3ujFlhSqBwEV
+	 xiEgAqFXbVHyq/eZDIr8TkcGXC7xonYZ/a9j1kCiNI6mzUuQuXeCIeLiCmvYYCiKuz
+	 zeI58/ncr9UJQ==
+Date: Fri, 24 Jan 2025 13:18:02 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: manivannan.sadhasivam@linaro.org, kw@linux.com, kishon@kernel.org,
+	bhelgaas@google.com, cassel@kernel.org, Frank.Li@nxp.com,
+	dlemoal@kernel.org, fabrice.gasnier@foss.st.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Fix double free Oops
+Message-ID: <20250124074802.txe5kpvpw3b4nfbq@thinkpad>
+References: <20250117090903.3329039-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com
-References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
- <20241112135419.59491-3-xueshuai@linux.alibaba.com>
- <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
- <9f8653ef-81e3-4ce9-9c11-78d694f2a52b@linux.alibaba.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <9f8653ef-81e3-4ce9-9c11-78d694f2a52b@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250117090903.3329039-1-christian.bruel@foss.st.com>
 
+On Fri, Jan 17, 2025 at 10:09:03AM +0100, Christian Bruel wrote:
+> Fixes an oops found while testing the stm32_pcie ep driver with handling
+> of PERST# deassertion:
+> 
+> [   92.154549] ------------[ cut here ]------------
+> [   92.159093] Trying to vunmap() nonexistent vm area (0000000031e0f06f)
+> ...
+> [   92.288763]  vunmap+0x58/0x60 (P)
+> [   92.292096]  dma_direct_free+0x88/0x18c
+> [   92.295932]  dma_free_attrs+0x84/0xf8
+> [   92.299664]  pci_epf_free_space+0x48/0x78
+> [   92.303698]  pci_epf_test_epc_init+0x184/0x3c0 [pci_epf_test]
+> [   92.309446]  pci_epc_init_notify+0x70/0xb4
+> [   92.313578]  stm32_pcie_ep_perst_irq_thread+0xf8/0x24c
+> ...
+> 
+> During EP initialization, pci_epf_test_alloc_space allocates all BARs,
+> which are further freed if epc_set_bar fails (for instance, due to
+> no free inbound window).
+> 
+> However, when pci_epc_set_bar fails, the error path:
+>      pci_epc_set_bar -> pci_epf_free_space
+> does not reset epf_test->reg[bar].
+> 
+> Then, if the host reboots, PERST# deassertion restarts the BAR allocation
+> sequence with the same allocation failure (no free inbound window).
+> 
+> So, two subsequent calls to the sequence:
+> 
+>   if (!epf_test->reg[bar])
+>       continue;
+> 
+>   ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &epf->bar[bar]);
+>   if (ret) {
+>       pci_epf_free_space(epf, epf_test->reg[bar], bar, PRIMARY_INTERFACE);
+>   }
+> 
+> create a double free situation since epf_test->reg[bar] was deallocated
+> and is still non-NULL.
+> 
+> This patch makes pci_epf_alloc_space/pci_epf_free_space symmetric
+> by resetting epf_test->reg[bar] when memory is deallocated.
+> 
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 
-On 1/23/25 5:45 PM, Shuai Xue wrote:
->
->
-> 在 2025/1/24 04:10, Sathyanarayanan Kuppuswamy 写道:
->> Hi,
->>
->> On 11/12/24 5:54 AM, Shuai Xue wrote:
->>> The AER driver has historically avoided reading the configuration 
->>> space of
->>> an endpoint or RCiEP that reported a fatal error, considering the 
->>> link to
->>> that device unreliable. Consequently, when a fatal error occurs, the 
->>> AER
->>> and DPC drivers do not report specific error types, resulting in 
->>> logs like:
->>>
->>>    pcieport 0000:30:03.0: EDR: EDR event received
->>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 
->>> source:0x3400
->>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>>    nvme nvme0: frozen state error detected, reset controller
->>>    nvme 0000:34:00.0: ready 0ms after DPC
->>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>>
->>> AER status registers are sticky and Write-1-to-clear. If the link 
->>> recovered
->>> after hot reset, we can still safely access AER status of the error 
->>> device.
->>> In such case, report fatal errors which helps to figure out the 
->>> error root
->>> case.
->>>
->>> After this patch, the logs like:
->>>
->>>    pcieport 0000:30:03.0: EDR: EDR event received
->>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 
->>> source:0x3400
->>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>>    nvme nvme0: frozen state error detected, reset controller
->>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after 
->>> activation
->>>    nvme 0000:34:00.0: ready 0ms after DPC
->>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable 
->>> (Fatal), type=Data Link Layer, (Receiver ID)
->>>    nvme 0000:34:00.0:   device [144d:a804] error 
->>> status/mask=00000010/00504000
->>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
->>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>>
->>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>> ---
->>>   drivers/pci/pci.h      |  3 ++-
->>>   drivers/pci/pcie/aer.c | 11 +++++++----
->>>   drivers/pci/pcie/dpc.c |  2 +-
->>>   drivers/pci/pcie/err.c |  9 +++++++++
->>>   4 files changed, 19 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->>> index 0866f79aec54..6f827c313639 100644
->>> --- a/drivers/pci/pci.h
->>> +++ b/drivers/pci/pci.h
->>> @@ -504,7 +504,8 @@ struct aer_err_info {
->>>       struct pcie_tlp_log tlp;    /* TLP Header */
->>>   };
->>> -int aer_get_device_error_info(struct pci_dev *dev, struct 
->>> aer_err_info *info);
->>> +int aer_get_device_error_info(struct pci_dev *dev, struct 
->>> aer_err_info *info,
->>> +                  bool link_healthy);
->>>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->>>   #endif    /* CONFIG_PCIEAER */
->>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>> index 13b8586924ea..97ec1c17b6f4 100644
->>> --- a/drivers/pci/pcie/aer.c
->>> +++ b/drivers/pci/pcie/aer.c
->>> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->>>    * aer_get_device_error_info - read error status from dev and 
->>> store it to info
->>>    * @dev: pointer to the device expected to have a error record
->>>    * @info: pointer to structure to store the error record
->>> + * @link_healthy: link is healthy or not
->>>    *
->>>    * Return 1 on success, 0 on error.
->>>    *
->>>    * Note that @info is reused among all error devices. Clear fields 
->>> properly.
->>>    */
->>> -int aer_get_device_error_info(struct pci_dev *dev, struct 
->>> aer_err_info *info)
->>> +int aer_get_device_error_info(struct pci_dev *dev, struct 
->>> aer_err_info *info,
->>> +                  bool link_healthy)
->>>   {
->>>       int type = pci_pcie_type(dev);
->>>       int aer = dev->aer_cap;
->>> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev 
->>> *dev, struct aer_err_info *info)
->>>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>>              type == PCI_EXP_TYPE_RC_EC ||
->>>              type == PCI_EXP_TYPE_DOWNSTREAM ||
->>> -           info->severity == AER_NONFATAL) {
->>> +           info->severity == AER_NONFATAL ||
->>> +           (info->severity == AER_FATAL && link_healthy)) {
->>>           /* Link is still healthy for IO reads */
->>>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->>> @@ -1258,11 +1261,11 @@ static inline void 
->>> aer_process_err_devices(struct aer_err_info *e_info)
->>>       /* Report all before handle them, not to lost records by reset 
->>> etc. */
->>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>>               aer_print_error(e_info->dev[i], e_info);
->>>       }
->>>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->>> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->>> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>>               handle_error_source(e_info->dev[i], e_info);
->>>       }
->>>   }
->>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->>> index 62a68cde4364..b3f157a00405 100644
->>> --- a/drivers/pci/pcie/dpc.c
->>> +++ b/drivers/pci/pcie/dpc.c
->>> @@ -304,7 +304,7 @@ struct pci_dev *dpc_process_error(struct pci_dev 
->>> *pdev)
->>>           dpc_process_rp_pio_error(pdev);
->>>       else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
->>>            dpc_get_aer_uncorrect_severity(pdev, &info) &&
->>> -         aer_get_device_error_info(pdev, &info)) {
->>> +         aer_get_device_error_info(pdev, &info, false)) {
->>>           aer_print_error(pdev, &info);
->>>           pci_aer_clear_nonfatal_status(pdev);
->>>           pci_aer_clear_fatal_status(pdev);
->>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>> index 31090770fffc..462577b8d75a 100644
->>> --- a/drivers/pci/pcie/err.c
->>> +++ b/drivers/pci/pcie/err.c
->>> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->>> *dev,
->>>       struct pci_dev *bridge;
->>>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->>> +    struct aer_err_info info;
->>>       /*
->>>        * If the error was detected by a Root Port, Downstream Port, 
->>> RCEC,
->>> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct 
->>> pci_dev *dev,
->>>               pci_warn(bridge, "subordinate device reset failed\n");
->>>               goto failed;
->>>           }
->>> +
->>> +        info.severity = AER_FATAL;
->>> +        /* Link recovered, report fatal errors of RCiEP or EP */
->>> +        if ((type == PCI_EXP_TYPE_ENDPOINT ||
->>> +             type == PCI_EXP_TYPE_RC_END) &&
->>> +            aer_get_device_error_info(dev, &info, true))
->>> +            aer_print_error(dev, &info);
->>
->> IMO, error device information is more like a debug info. Can we change
->> the print level of this info to debug?
->
-> Yes, but error device information is quite important for user to 
-> figure out the
-> device status and should not been ignored. We need it in production to 
-> analysis
-> server healthy.
+With comments from Niklas addressed,
 
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-IMO, such information is needed for debugging repeated DPC event 
-occurrences.
-So when encountering repeated failures, interested party can increase 
-log level
-and gather this data. I personally think this is too much detail for a 
-kernel info
-messages. Lets see what others and Bjorn think.
+- Mani
 
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index ffb534a8e50a..b29e938ee16a 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -718,6 +718,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  		if (ret) {
+>  			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+>  					   PRIMARY_INTERFACE);
+> +			epf_test->reg[bar] = NULL;
+>  			dev_err(dev, "Failed to set BAR%d\n", bar);
+>  			if (bar == test_reg_bar)
+>  				return ret;
+> @@ -909,6 +910,7 @@ static void pci_epf_test_free_space(struct pci_epf *epf)
+>  
+>  		pci_epf_free_space(epf, epf_test->reg[bar], bar,
+>  				   PRIMARY_INTERFACE);
+> +		epf_test->reg[bar] = NULL;
+>  	}
+>  }
+>  
+> -- 
+> 2.34.1
+> 
 
->
->>
->>>       } else {
->>>           pci_walk_bridge(bridge, report_normal_detected, &status);
->>>       }
->>> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->>> *dev,
->>>       if (host->native_aer || pcie_ports_native) {
->>>           pcie_clear_device_status(dev);
->>>           pci_aer_clear_nonfatal_status(dev);
->>> +        pci_aer_clear_fatal_status(dev);
->>
->> I think we clear fatal status in DPC driver, why do it again?
->
-> DPC driver only clear fatal status for the err_port, but not the err_dev.
-> err_dev and err_port are indeed easy to confuse, so I have 
-> differentiated them
-> again in patch1.
->
-
-Got it.
-
->>
->>>       }
->>>       pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
->>
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+மணிவண்ணன் சதாசிவம்
 
