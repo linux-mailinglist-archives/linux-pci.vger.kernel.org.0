@@ -1,307 +1,281 @@
-Return-Path: <linux-pci+bounces-20339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07F80A1B799
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 15:11:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4F94A1B7E5
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 15:29:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E46C7A04C9
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 14:10:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 48D197A4214
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 14:29:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E6082D98;
-	Fri, 24 Jan 2025 14:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA23978F4E;
+	Fri, 24 Jan 2025 14:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TySTprhq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mjXOjXeo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D3A78C6C;
-	Fri, 24 Jan 2025 14:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C475A132105
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 14:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737727853; cv=none; b=XB5SS++DU5XR/dR3y1Tx+EgOBOe58YRw38U71GXbOr9jNndHaMneYePmY4myuYIXI/XIm+uo+vlblHWfhnJNfVdqkVEJN/o1uvmBGHKfukPqQ38HyNYqUOZcfjMGTCwgO8zOBTUb2q79N9BlTHrijcQdcBoAGS+xNXKUQpSUwoU=
+	t=1737728993; cv=none; b=Gl4RuVCLzQh0VW0SfHe/lwqMpQ5L2Fwao/u1BZ2fFVCRjkXnUfpbwAUuq9HNc2Ib75f9jwPBNrNYkjwVB8reGJQzO+86/vcZpd4mGztPwwuMf35M7MOqUBbJQZ8//5dfYjCoWVeqJ+ZDEOfWWo0vSckgHVKvwT3t8SIMKWBwz/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737727853; c=relaxed/simple;
-	bh=jKE9lKHrjkZzP78M/SgJD68HrzGInex5tVTvPpaxYAI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=e6FCDjI4HxlKFugUJUDI9gAypr74TUVVAcWKIpOzb1xndozN2qJBUzVZKf1TlmgptSokXLksJyxmVKI9RFZYT/hCp8V9VNzqklKfqrtiRIG6kVLAO6BN9ovW9vl0rMVYx+U7jM+Y6wGlqERhbSTthX9c0ECaDG9VAhFWn3dUhCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TySTprhq; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737728993; c=relaxed/simple;
+	bh=/i+TaX2ZfvadLiZYx16mxKfckCNeomhi+I4NijXsAQA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=BLUUMH9pJkZdYI68E4WDnTgCP6w9gRU0hcgqDDRV5OiN5KgKin8cdwYon20yZbTWKbMFx2ySco8sXumkrCBtEgsGdQt206I9aLcSBCGA6l5WQLlW0MOvSWzkFJ1rjMiE8RfCclh7BwpUwRlN9lD0NOAoaA5iZ5GRCyzuuItXmzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mjXOjXeo; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737727852; x=1769263852;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jKE9lKHrjkZzP78M/SgJD68HrzGInex5tVTvPpaxYAI=;
-  b=TySTprhqcgtJX2P6nT7OiSFFDGrT13iZYrZzLfNrO2X7a5+hs9fP6SbM
-   nfwv5aSwdBJ23N0zkkbpeJkpyms2hrEUDTJBVbmy76UsRhm9uLqmO/RWe
-   Mn6uUIw79KuuS2LYwkT6VTMpsoinX3btc5+uj0R+AZ6HPEVz1LeX1op7X
-   hBBMknMz1Q9Ha0q3Tlq7fHJ+KMAY1kP7VUJHgd7BIy86FFSCandNAWonw
-   8JwKPYhJh7gDszaMPnPwAccblfZIuBdYyWlXzJjtXQUVQOwTfyLnexv1+
-   d4X2Bb5O3CM1LpIpgk18JlGBME880gJVqtItQpB/wLq3aecvv7EZRNF4p
-   A==;
-X-CSE-ConnectionGUID: 1sU8w4JVSIeESXrJqguYTA==
-X-CSE-MsgGUID: tpHvUMFHS2ar8S/kfPpSWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11325"; a="42187475"
+  t=1737728991; x=1769264991;
+  h=date:from:to:cc:subject:message-id;
+  bh=/i+TaX2ZfvadLiZYx16mxKfckCNeomhi+I4NijXsAQA=;
+  b=mjXOjXeoE27K7ay/UuxnIugPNzxDpeaMfeWO+ccfuuARLAmPvEi2XLGq
+   iWjShXbDaRPH7NdGH2/6ALGlH2kDpxt2iQ2rPx7xJUP0rxEBfSCNKjyif
+   Ig+4bhrGyAWBUtNZIKd3c+2rkHN1TN0GcDxJ/pMNvXOd9yC7F/m86B/2G
+   ICRqQAvdNGbhieszhMRUgk03/JG934eNS3iluNggeRj8532ZhJ9GO1Sn3
+   SJ6W0ImM0GM7GmIcv5DsN4jmaJdYhYEIOP9zg2qKrSAPvnecqZJQqXult
+   INybmS3s5/Y6/adA40W7P461vz+HiznURqCZUsWWXcn5xrzfAKo51NRO3
+   w==;
+X-CSE-ConnectionGUID: 8M5m0YjpS8efaOg+PeWMcQ==
+X-CSE-MsgGUID: P0syAOkcQbeuSd3X7Q96Ww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11325"; a="41097563"
 X-IronPort-AV: E=Sophos;i="6.13,231,1732608000"; 
-   d="scan'208";a="42187475"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 06:10:51 -0800
-X-CSE-ConnectionGUID: WBV4gBmiTcC10zjutJY66Q==
-X-CSE-MsgGUID: 7+r6j3eSQzm1EOi+EI/uJw==
+   d="scan'208";a="41097563"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 06:29:51 -0800
+X-CSE-ConnectionGUID: bkhFCnN/STalEOmrAOA7MA==
+X-CSE-MsgGUID: SwxvyfZcTVW+EFay30EvkA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107628895"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.158])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 06:10:44 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 24 Jan 2025 16:10:41 +0200 (EET)
-To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com, 
-    "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>, D@web.codeaurora.org, 
-    M@web.codeaurora.org
-Subject: Re: [PATCH v4 5/5] PCI: altera: Add Agilex support
-In-Reply-To: <20250123181932.935870-6-matthew.gerlach@linux.intel.com>
-Message-ID: <f2c9061a-6a9c-4cd1-8a3f-a286a2eb30a8@linux.intel.com>
-References: <20250123181932.935870-1-matthew.gerlach@linux.intel.com> <20250123181932.935870-6-matthew.gerlach@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="6.13,231,1732608000"; 
+   d="scan'208";a="107592729"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Jan 2025 06:29:50 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tbKgu-000ckj-0W;
+	Fri, 24 Jan 2025 14:29:48 +0000
+Date: Fri, 24 Jan 2025 22:29:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ 4453f360862e5d9f0807941d613162c3f7a36559
+Message-ID: <202501242259.aB4HmYcu-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 23 Jan 2025, Matthew Gerlach wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: 4453f360862e5d9f0807941d613162c3f7a36559  PCI: Batch BAR sizing operations
 
-> From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
-> 
-> Add PCIe root port controller support for the Agilex family of chips.
-> The Agilex PCIe IP has three variants that are mostly sw compatible,
-> except for a couple register offsets. The P-Tile variant supports
-> Gen3/Gen4 1x16. The F-Tile variant supports Gen3/Gen4 4x4, 4x8, and 4x16.
-> The R-Tile variant improves on the F-Tile variant by adding Gen5 support.
-> 
-> To simplify the implementation of pci_ops read/write functions,
-> ep_{read/write}_cfg() callbacks were added to struct altera_pci_ops
-> to easily distinguish between hardware variants.
-> 
-> Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> ---
-> v4:
->  - Add info to commit message.
->  - Use {read/write}?_relaxed where appropriate.
->  - Use BIT(12) instead of (1 << 12).
->  - Clear IRQ before handling it.
->  - add interrupt number to unexpected IRQ messge.
-> 
-> v3:
->  - Remove accepted patches from patch set.
-> 
-> v2:
->  - Match historical style of subject.
->  - Remove unrelated changes.
->  - Fix indentation.
-> ---
->  drivers/pci/controller/pcie-altera.c | 246 ++++++++++++++++++++++++++-
->  1 file changed, 237 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index eb55a7f8573a..59cad9a84900 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -77,9 +77,19 @@
->  #define S10_TLP_FMTTYPE_CFGWR0		0x45
->  #define S10_TLP_FMTTYPE_CFGWR1		0x44
->  
-> +#define AGLX_RP_CFG_ADDR(pcie, reg)	(((pcie)->hip_base) + (reg))
-> +#define AGLX_RP_SECONDARY(pcie)		\
-> +	readb(AGLX_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
-> +
-> +#define AGLX_BDF_REG			0x00002004
-> +#define AGLX_ROOT_PORT_IRQ_STATUS	0x14c
-> +#define AGLX_ROOT_PORT_IRQ_ENABLE	0x150
-> +#define CFG_AER				BIT(4)
-> +
->  enum altera_pcie_version {
->  	ALTERA_PCIE_V1 = 0,
->  	ALTERA_PCIE_V2,
-> +	ALTERA_PCIE_V3,
->  };
->  
->  struct altera_pcie {
-> @@ -102,6 +112,11 @@ struct altera_pcie_ops {
->  			   int size, u32 *value);
->  	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 busno,
->  			    int where, int size, u32 value);
-> +	int (*ep_read_cfg)(struct altera_pcie *pcie, u8 busno,
-> +			   unsigned int devfn, int where, int size, u32 *value);
-> +	int (*ep_write_cfg)(struct altera_pcie *pcie, u8 busno,
-> +			    unsigned int devfn, int where, int size, u32 value);
-> +	void (*rp_isr)(struct irq_desc *desc);
->  };
->  
->  struct altera_pcie_data {
-> @@ -112,6 +127,9 @@ struct altera_pcie_data {
->  	u32 cfgrd1;
->  	u32 cfgwr0;
->  	u32 cfgwr1;
-> +	u32 port_conf_offset;
-> +	u32 port_irq_status_offset;
-> +	u32 port_irq_enable_offset;
->  };
->  
->  struct tlp_rp_regpair_t {
-> @@ -131,6 +149,28 @@ static inline u32 cra_readl(struct altera_pcie *pcie, const u32 reg)
->  	return readl_relaxed(pcie->cra_base + reg);
->  }
->  
-> +static inline void cra_writew(struct altera_pcie *pcie, const u32 value,
-> +			      const u32 reg)
-> +{
-> +	writew_relaxed(value, pcie->cra_base + reg);
-> +}
-> +
-> +static inline u32 cra_readw(struct altera_pcie *pcie, const u32 reg)
-> +{
-> +	return readw_relaxed(pcie->cra_base + reg);
-> +}
-> +
-> +static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
-> +			      const u32 reg)
-> +{
-> +	writeb_relaxed(value, pcie->cra_base + reg);
-> +}
-> +
-> +static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
-> +{
-> +	return readb_relaxed(pcie->cra_base + reg);
-> +}
-> +
->  static bool altera_pcie_link_up(struct altera_pcie *pcie)
->  {
->  	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
-> @@ -145,6 +185,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
->  	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
->  }
->  
-> +static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
-> +{
-> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
-> +				   pcie->pcie_data->cap_offset +
-> +				   PCI_EXP_LNKSTA);
-> +
-> +	return !!(readw_relaxed(addr) & PCI_EXP_LNKSTA_DLLLA);
+elapsed time: 1229m
 
-This returns bool so double negations are not necessary.
+configs tested: 188
+configs skipped: 6
 
-> +}
-> +
->  /*
->   * Altera PCIe port uses BAR0 of RC's configuration space as the translation
->   * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
-> @@ -425,6 +474,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
->  	return PCIBIOS_SUCCESSFUL;
->  }
->  
-> +static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
-> +			    int size, u32 *value)
-> +{
-> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
-> +
-> +	switch (size) {
-> +	case 1:
-> +		*value = readb_relaxed(addr);
-> +		break;
-> +	case 2:
-> +		*value = readw_relaxed(addr);
-> +		break;
-> +	default:
-> +		*value = readl_relaxed(addr);
-> +		break;
-> +	}
-> +
-> +	/* interrupt pin not programmed in hardware, set to INTA */
-> +	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
-> +		*value = 0x01;
-> +	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
-> +		*value |= 0x0100;
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
-> +			     int where, int size, u32 value)
-> +{
-> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
-> +
-> +	switch (size) {
-> +	case 1:
-> +		writeb_relaxed(value, addr);
-> +		break;
-> +	case 2:
-> +		writew_relaxed(value, addr);
-> +		break;
-> +	default:
-> +		writel_relaxed(value, addr);
-> +		break;
-> +	}
-> +
-> +	/*
-> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
-> +	 * and update local copy of root bus number accordingly.
-> +	 */
-> +	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
-> +		pcie->root_bus_nr = value & 0xff;
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
-> +			     unsigned int devfn, int where, int size, u32 value)
-> +{
-> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
-> +	if (busno > AGLX_RP_SECONDARY(pcie))
-> +		where |= BIT(12); /* type 1 */
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Add a define to replace the comment?
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-20
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250124    gcc-13.2.0
+arc                   randconfig-002-20250124    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250124    clang-17
+arm                   randconfig-002-20250124    gcc-14.2.0
+arm                   randconfig-003-20250124    gcc-14.2.0
+arm                   randconfig-004-20250124    clang-19
+arm                           tegra_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250124    clang-20
+arm64                 randconfig-002-20250124    clang-20
+arm64                 randconfig-003-20250124    clang-19
+arm64                 randconfig-004-20250124    clang-20
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250124    gcc-14.2.0
+csky                  randconfig-002-20250124    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-20
+hexagon               randconfig-001-20250124    clang-20
+hexagon               randconfig-001-20250124    gcc-14.2.0
+hexagon               randconfig-002-20250124    clang-14
+hexagon               randconfig-002-20250124    gcc-14.2.0
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250124    clang-19
+i386        buildonly-randconfig-002-20250124    clang-19
+i386        buildonly-randconfig-003-20250124    clang-19
+i386        buildonly-randconfig-003-20250124    gcc-12
+i386        buildonly-randconfig-004-20250124    clang-19
+i386        buildonly-randconfig-004-20250124    gcc-12
+i386        buildonly-randconfig-005-20250124    clang-19
+i386        buildonly-randconfig-005-20250124    gcc-12
+i386        buildonly-randconfig-006-20250124    clang-19
+i386        buildonly-randconfig-006-20250124    gcc-12
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250124    clang-19
+i386                  randconfig-002-20250124    clang-19
+i386                  randconfig-003-20250124    clang-19
+i386                  randconfig-004-20250124    clang-19
+i386                  randconfig-005-20250124    clang-19
+i386                  randconfig-006-20250124    clang-19
+i386                  randconfig-007-20250124    clang-19
+i386                  randconfig-011-20250124    gcc-12
+i386                  randconfig-012-20250124    gcc-12
+i386                  randconfig-013-20250124    gcc-12
+i386                  randconfig-014-20250124    gcc-12
+i386                  randconfig-015-20250124    gcc-12
+i386                  randconfig-016-20250124    gcc-12
+i386                  randconfig-017-20250124    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250124    gcc-14.2.0
+loongarch             randconfig-002-20250124    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                        m5272c3_defconfig    gcc-14.2.0
+m68k                       m5275evb_defconfig    gcc-14.2.0
+m68k                          multi_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                       rbtx49xx_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250124    gcc-14.2.0
+nios2                 randconfig-002-20250124    gcc-14.2.0
+openrisc                          allnoconfig    clang-20
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-20
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250124    gcc-14.2.0
+parisc                randconfig-002-20250124    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-20
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                    amigaone_defconfig    gcc-14.2.0
+powerpc                      katmai_defconfig    gcc-14.2.0
+powerpc                      mgcoge_defconfig    gcc-14.2.0
+powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
+powerpc                 mpc836x_rdk_defconfig    clang-18
+powerpc               randconfig-001-20250124    gcc-14.2.0
+powerpc               randconfig-002-20250124    gcc-14.2.0
+powerpc               randconfig-003-20250124    clang-20
+powerpc               randconfig-003-20250124    gcc-14.2.0
+powerpc                    sam440ep_defconfig    gcc-14.2.0
+powerpc                         wii_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250124    gcc-14.2.0
+powerpc64             randconfig-002-20250124    clang-20
+powerpc64             randconfig-002-20250124    gcc-14.2.0
+powerpc64             randconfig-003-20250124    clang-19
+powerpc64             randconfig-003-20250124    gcc-14.2.0
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250124    clang-19
+riscv                 randconfig-001-20250124    gcc-14.2.0
+riscv                 randconfig-002-20250124    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250124    gcc-14.2.0
+s390                  randconfig-002-20250124    clang-20
+s390                  randconfig-002-20250124    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                     magicpanelr2_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250124    gcc-14.2.0
+sh                    randconfig-002-20250124    gcc-14.2.0
+sh                   rts7751r2dplus_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250124    gcc-14.2.0
+sparc                 randconfig-002-20250124    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250124    gcc-14.2.0
+sparc64               randconfig-002-20250124    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250124    gcc-12
+um                    randconfig-001-20250124    gcc-14.2.0
+um                    randconfig-002-20250124    clang-20
+um                    randconfig-002-20250124    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250124    gcc-12
+x86_64      buildonly-randconfig-002-20250124    gcc-12
+x86_64      buildonly-randconfig-003-20250124    clang-19
+x86_64      buildonly-randconfig-003-20250124    gcc-12
+x86_64      buildonly-randconfig-004-20250124    clang-19
+x86_64      buildonly-randconfig-004-20250124    gcc-12
+x86_64      buildonly-randconfig-005-20250124    clang-19
+x86_64      buildonly-randconfig-005-20250124    gcc-12
+x86_64      buildonly-randconfig-006-20250124    clang-19
+x86_64      buildonly-randconfig-006-20250124    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250124    clang-19
+x86_64                randconfig-002-20250124    clang-19
+x86_64                randconfig-003-20250124    clang-19
+x86_64                randconfig-004-20250124    clang-19
+x86_64                randconfig-005-20250124    clang-19
+x86_64                randconfig-006-20250124    clang-19
+x86_64                randconfig-007-20250124    clang-19
+x86_64                randconfig-008-20250124    clang-19
+x86_64                randconfig-071-20250124    gcc-12
+x86_64                randconfig-072-20250124    gcc-12
+x86_64                randconfig-073-20250124    gcc-12
+x86_64                randconfig-074-20250124    gcc-12
+x86_64                randconfig-075-20250124    gcc-12
+x86_64                randconfig-076-20250124    gcc-12
+x86_64                randconfig-077-20250124    gcc-12
+x86_64                randconfig-078-20250124    gcc-12
+x86_64                               rhel-9.4    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250124    gcc-14.2.0
+xtensa                randconfig-002-20250124    gcc-14.2.0
 
-> +
-> +	switch (size) {
-> +	case 1:
-> +		cra_writeb(pcie, value, where);
-> +		break;
-> +	case 2:
-> +		cra_writew(pcie, value, where);
-> +		break;
-> +	default:
-> +		cra_writel(pcie, value, where);
-> +			break;
-> +	}
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
-> +			    unsigned int devfn, int where, int size, u32 *value)
-> +{
-> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
-> +	if (busno > AGLX_RP_SECONDARY(pcie))
-> +		where |= BIT(12); /* type 1 */
-
-Same here?
-
--- 
- i.
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
