@@ -1,228 +1,166 @@
-Return-Path: <linux-pci+bounces-20308-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20309-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32D43A1AE45
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 02:45:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12664A1AFC2
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 06:15:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E381E3A41B5
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 01:45:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 512D816D6BC
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2025 05:15:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3CC60890;
-	Fri, 24 Jan 2025 01:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C817B1D7982;
+	Fri, 24 Jan 2025 05:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="k+fTAhSw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sKUdHu1U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53654157E82;
-	Fri, 24 Jan 2025 01:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B10C3B2BB
+	for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2025 05:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737683124; cv=none; b=aZle/3ub82K9DenxCzUfapQAGnjQNCsfb4DFxH0YEtXQebuNqLxiv4/olKcaassWetP1oBKf0k1XilWFrEAPfZ63x5Lv93nOdlPVS5qZdvKqDVdisE4CJao44bRsk9Lx7l9jZr5v6BK+wTGRqbOiBUDIt0GvhpSU/BFRhwv18/E=
+	t=1737695720; cv=none; b=fIGIYHWetKNMYL1vGVhONGlryWNK3GZ3xZQ25Qmf13yhA2xUQiKdELAkkQ1IYHNPKtCXmYKMxJqOcekLs0SR2I3Dd1s1kUtct/Y2VXVUPQ8AlaFp/KNaakrlfq5PittkJ5LWYy/W6eUY619RB2jCK8WUiLyn1TPcR3JR2d4xCrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737683124; c=relaxed/simple;
-	bh=Q51vu2T/2dBc9o0n8ln3Jp2MqkcHD+TQVTlmj/FyoW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ajv5md2aXzwyLHcOQ9vS/bX0XHQloAms+1CU7m84bPvsFPLNDrDSHDShllApO7UNOdww+oIeOxAKJEPHQZXUMEW5HcMGS/ev1Cv+IQJFqwt28i/cIZzAyY93Gxw8En09eCGYrCqcE0IaWBTcO1fhMR5g/lDCefrLv4Bq7IXlmWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=k+fTAhSw; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1737683110; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=HefF1VgobYNw/buVdtIHwLUtKr4Okxq/b4dWX4SMuHU=;
-	b=k+fTAhSwS8qc631HkTBW2QAtU6KvVGRaZWZSFzHsrTLBeUar40Cfe6IeP4QfiM3ywLCP1ME2mIWj5654vaWixhMgh76Okp7bNhBitpjZe9UDHZ/BN6DP5qdP7txWfo2QV8OIbykAnjZ8nqAIfmsd8ihcf7oSNZwEMRWYRKZoNT0=
-Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOCwDqx_1737683109 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 24 Jan 2025 09:45:10 +0800
-Message-ID: <9f8653ef-81e3-4ce9-9c11-78d694f2a52b@linux.alibaba.com>
-Date: Fri, 24 Jan 2025 09:45:08 +0800
+	s=arc-20240116; t=1737695720; c=relaxed/simple;
+	bh=C94Z0eniOrhY8vfSK2Shz75ZMGzMu8k4tzHOc3eDo0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JwxirnfYYMniwggesR/NRVFLWn3XijZZ7zjyhIXY+sEGIWihv/wWkUcbA+B3qAbu8wkBA+Q+pkZlUb9p+RafQqV5iM4a0VaKThQpzSehn41/quTAutgz/FnyuxwPOq8r1CtAJ5XKAFSIHkvIQk40iJgkGZFlMoDbuFx7CSwO3G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sKUdHu1U; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21a7ed0155cso28989215ad.3
+        for <linux-pci@vger.kernel.org>; Thu, 23 Jan 2025 21:15:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737695718; x=1738300518; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5V8IjvQyQoDv88IF/KIjDx1xtX5os/gbeTbjuMxwHYo=;
+        b=sKUdHu1UozfZdnDVbbLT9DjhSSA24jndPO1PJVFU9WaZ5Jv3vrPk0TNsW953poesQO
+         /g2ApDpYIN79R+ihLEGORpgbe0PAm36Q+PpiEi4+uW2BIx73bI7555019oOvuQSEHv4s
+         LLemgnjCWVogoZgrDU95dQnTSDVJ+Mri6rLv62xLFpV5DE68JT18ro1VbnNB0pcMLHlZ
+         c61J0E00KsRfIh7dkk5sr9EpE5TiASGN6/7SbgIM+TeeV+8vdc0TCuG4cPZD2broyb4o
+         xdc59wQDpcXKSt8tfug4Um81MGcoxbZheZ3XH1+/L8ZR74BA+JCRs6uw1eFXVVnfmQOi
+         OwJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737695718; x=1738300518;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5V8IjvQyQoDv88IF/KIjDx1xtX5os/gbeTbjuMxwHYo=;
+        b=PtzkR6k3Q1kutKlfpfMR0TWNoOy18w2nMXqAkqO39NRoTKJElKbkbPO/7yOsxi5xgz
+         hHYPuEA3mRrBNSYhqksLI+cz7zC+iEhkq5J7aAy5RUbYuw4+Zn+QStvMYcHvjxxZc1bH
+         snE1xmTdJ0ezjqUdPznCCCUCFm3Ew/ZughLx728387jdowCCZgc7/WrQ0Gd3iLUDimgi
+         jDFs/aPm685hsUTLgjpOrqkmVhRtSrxrn/auWg3Pl7RchdmUu3Gb5uxTcq9Acw48Hd49
+         uuktNWbBlY3X6gvyXbfw8fEvpiwmm5lDP1kGMhSkGsv6YRMrv1xVm9EXWtr0xxxSVEk4
+         cZmg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7T3MXXZQ1AIEUACpM+8mpzfy60j3CtZ0Nk7oeWZdy5Gkg/V0X5kj06bSXxnnlA9bEvdVhODdHW/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCNhUF1l6XlvP1oFQKHiaVS1kQf5uwcOV+jPMnltvLFdsI1OHa
+	6ra7t8omAJwVBX73HXf8B43blCxYRAceT2r6h9wlv3RbtMOrYQZuPYzj9Jc7QQ==
+X-Gm-Gg: ASbGncsKA26VeBRtEHKiPL4rSt0GKOUv4HZrrg0Q8PmSST0jp60R/nnqFpTtS7dkrQ5
+	zww6xvAFmQKQfyhRhcGXXJRT1CvheGGxjBYfrcrU6DJeSjcz4cnKZocl3L8Y+xIxIKBw41szeYq
+	1hiNzcaGAnYBVxaRut3U8vL4vswBTSdMThbuB7zd7tLekS7MWwv8mH4TYqwl16knxAuZb7CsHDy
+	GATLF1q6WkZ/BiTel1LIrRaf+HVZ+b63hmo49lebtAto/XWIiYweOt2v8uRqHkrlpxawfjV7Y0V
+	uNTfPZKsbziaKMY=
+X-Google-Smtp-Source: AGHT+IEDPeDAS7uVIV0ZkrrydW8dzxtvB6pScgknE489KkEpgCZmqJC4AgG/7nH7vooXPlAoLJr2Sw==
+X-Received: by 2002:a17:902:e54d:b0:216:39fa:5cb4 with SMTP id d9443c01a7336-21c3556155cmr444408595ad.25.1737695718282;
+        Thu, 23 Jan 2025 21:15:18 -0800 (PST)
+Received: from thinkpad ([120.60.136.37])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da3ea2844sm7898155ad.57.2025.01.23.21.15.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2025 21:15:17 -0800 (PST)
+Date: Fri, 24 Jan 2025 10:45:09 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+	rafael@kernel.org, ulf.hansson@linaro.org,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Markus.Elfring@web.de, quic_mrana@quicinc.com,
+	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+Message-ID: <20250124051509.djzjoml2zcq2xvvz@thinkpad>
+References: <20250113162549.a2y7dlwnsfetryyw@thinkpad>
+ <20250114211653.GA487608@bhelgaas>
+ <20250119152940.6yum3xnrvqx2xjme@thinkpad>
+ <Z44llTKsKfbEcnnI@hovoldconsulting.com>
+ <20250120152829.7wrnwdji2bnfqrhw@thinkpad>
+ <Z4-eufq4M04XHjck@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com
-References: <20241112135419.59491-1-xueshuai@linux.alibaba.com>
- <20241112135419.59491-3-xueshuai@linux.alibaba.com>
- <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <4b5230a1-26fd-4594-9daf-5df314c6b4c6@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4-eufq4M04XHjck@hovoldconsulting.com>
 
-
-
-在 2025/1/24 04:10, Sathyanarayanan Kuppuswamy 写道:
-> Hi,
+On Tue, Jan 21, 2025 at 02:18:49PM +0100, Johan Hovold wrote:
+> On Mon, Jan 20, 2025 at 08:58:29PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jan 20, 2025 at 11:29:41AM +0100, Johan Hovold wrote:
 > 
-> On 11/12/24 5:54 AM, Shuai Xue wrote:
->> The AER driver has historically avoided reading the configuration space of
->> an endpoint or RCiEP that reported a fatal error, considering the link to
->> that device unreliable. Consequently, when a fatal error occurs, the AER
->> and DPC drivers do not report specific error types, resulting in logs like:
->>
->>    pcieport 0000:30:03.0: EDR: EDR event received
->>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>    nvme nvme0: frozen state error detected, reset controller
->>    nvme 0000:34:00.0: ready 0ms after DPC
->>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>
->> AER status registers are sticky and Write-1-to-clear. If the link recovered
->> after hot reset, we can still safely access AER status of the error device.
->> In such case, report fatal errors which helps to figure out the error root
->> case.
->>
->> After this patch, the logs like:
->>
->>    pcieport 0000:30:03.0: EDR: EDR event received
->>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>    nvme nvme0: frozen state error detected, reset controller
->>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
->>    nvme 0000:34:00.0: ready 0ms after DPC
->>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
->>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
->>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
->>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   drivers/pci/pci.h      |  3 ++-
->>   drivers/pci/pcie/aer.c | 11 +++++++----
->>   drivers/pci/pcie/dpc.c |  2 +-
->>   drivers/pci/pcie/err.c |  9 +++++++++
->>   4 files changed, 19 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 0866f79aec54..6f827c313639 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -504,7 +504,8 @@ struct aer_err_info {
->>       struct pcie_tlp_log tlp;    /* TLP Header */
->>   };
->> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->> +                  bool link_healthy);
->>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->>   #endif    /* CONFIG_PCIEAER */
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 13b8586924ea..97ec1c17b6f4 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1200,12 +1200,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->>    * aer_get_device_error_info - read error status from dev and store it to info
->>    * @dev: pointer to the device expected to have a error record
->>    * @info: pointer to structure to store the error record
->> + * @link_healthy: link is healthy or not
->>    *
->>    * Return 1 on success, 0 on error.
->>    *
->>    * Note that @info is reused among all error devices. Clear fields properly.
->>    */
->> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->> +                  bool link_healthy)
->>   {
->>       int type = pci_pcie_type(dev);
->>       int aer = dev->aer_cap;
->> @@ -1229,7 +1231,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>              type == PCI_EXP_TYPE_RC_EC ||
->>              type == PCI_EXP_TYPE_DOWNSTREAM ||
->> -           info->severity == AER_NONFATAL) {
->> +           info->severity == AER_NONFATAL ||
->> +           (info->severity == AER_FATAL && link_healthy)) {
->>           /* Link is still healthy for IO reads */
->>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->>       /* Report all before handle them, not to lost records by reset etc. */
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>               aer_print_error(e_info->dev[i], e_info);
->>       }
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>               handle_error_source(e_info->dev[i], e_info);
->>       }
->>   }
->> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->> index 62a68cde4364..b3f157a00405 100644
->> --- a/drivers/pci/pcie/dpc.c
->> +++ b/drivers/pci/pcie/dpc.c
->> @@ -304,7 +304,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
->>           dpc_process_rp_pio_error(pdev);
->>       else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
->>            dpc_get_aer_uncorrect_severity(pdev, &info) &&
->> -         aer_get_device_error_info(pdev, &info)) {
->> +         aer_get_device_error_info(pdev, &info, false)) {
->>           aer_print_error(pdev, &info);
->>           pci_aer_clear_nonfatal_status(pdev);
->>           pci_aer_clear_fatal_status(pdev);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 31090770fffc..462577b8d75a 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       struct pci_dev *bridge;
->>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->> +    struct aer_err_info info;
->>       /*
->>        * If the error was detected by a Root Port, Downstream Port, RCEC,
->> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>               pci_warn(bridge, "subordinate device reset failed\n");
->>               goto failed;
->>           }
->> +
->> +        info.severity = AER_FATAL;
->> +        /* Link recovered, report fatal errors of RCiEP or EP */
->> +        if ((type == PCI_EXP_TYPE_ENDPOINT ||
->> +             type == PCI_EXP_TYPE_RC_END) &&
->> +            aer_get_device_error_info(dev, &info, true))
->> +            aer_print_error(dev, &info);
+> > > I'd argue for reverting the offending commit as that is the only way to
+> > > make sure that the new warning is ever addressed.
 > 
-> IMO, error device information is more like a debug info. Can we change
-> the print level of this info to debug?
+> > How come reverting becomes the *only* way to address the issue?
+> 
+> I didn't say it was the only way to address the issue, just that it's
+> the only way to make sure that the new warning gets addressed. Once code
+> is upstream, some vendors tend to lose interest.
+> 
+> > There seems to
+> > be nothing wrong with the commit in question and the same pattern in being used
+> > in other drivers as well. The issue looks to be in the PM core.
+> 
+> After taking a closer look now, I agree that the underlying issue seems
+> to be in PM core.
+> 
+> Possibly introduced by Rafael's commit 6e176bf8d461 ("PM: sleep: core:
+> Do not skip callbacks in the resume phase") which moved the set_active()
+> call from resume_noirq() to resume_early().
+> 
+> > Moreover, the warning is not causing any functional issue as far as I know. So
+> > just reverting the commit that took so much effort to get merged for the sake of
+> > hiding a warning doesn't feel right to me.
+> 
+> My point was simply that this commit introduced a new warning in 6.13,
+> and there is still no fix available. The code is also effectively dead,
+> well aside from triggering the warning, and runtime suspending the host
+> controller cannot even be tested with mainline yet (and this was
+> unfortunately not made clear in the commit message).
+> 
+> The change should have been part of a series that actually enabled the
+> functionality and not just a potential piece of it which cannot yet be
+> tested. Also, for Qualcomm controllers, we don't even yet have proper
+> suspend so it's probably not a good idea to throw runtime PM into the
+> mix there just yet.
+> 
 
-Yes, but error device information is quite important for user to figure out the
-device status and should not been ignored. We need it in production to analysis
-server healthy.
+There are multiple pieces needed to be stitch together to enable runtime PM in
+the PCIe topology. And each one of them seemed to be controversial enough (due
+to common code etc...). So that's the reason they were sent separately. Though
+I must admit that the full picture and the limitation of not being able to
+exercise the runtime PM should've been mentioned.
 
+> But, sure, a revert would have made more sense last week. I guess you
+> have a few more weeks to address this now. We can always backport a
+> revert once rc1 is out.
 > 
->>       } else {
->>           pci_walk_bridge(bridge, report_normal_detected, &status);
->>       }
->> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       if (host->native_aer || pcie_ports_native) {
->>           pcie_clear_device_status(dev);
->>           pci_aer_clear_nonfatal_status(dev);
->> +        pci_aer_clear_fatal_status(dev);
-> 
-> I think we clear fatal status in DPC driver, why do it again?
 
-DPC driver only clear fatal status for the err_port, but not the err_dev.
-err_dev and err_port are indeed easy to confuse, so I have differentiated them
-again in patch1.
+Sure. I've pinged Ulf offline and he promised to look into it asap.
 
-> 
->>       }
->>       pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
