@@ -1,216 +1,259 @@
-Return-Path: <linux-pci+bounces-20357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB7D5A1C358
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 13:52:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDBD2A1C449
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 17:16:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30A627A3793
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 12:51:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BD003A7880
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 16:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6EBC20765E;
-	Sat, 25 Jan 2025 12:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A12622098;
+	Sat, 25 Jan 2025 16:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FiqXKMm0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IsOUjW+S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C881FC7C3
-	for <linux-pci@vger.kernel.org>; Sat, 25 Jan 2025 12:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8815C1372;
+	Sat, 25 Jan 2025 16:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737809515; cv=none; b=iNaWa3bzaWnNX/IVoPOdnkGKpgzmYOuJR0VI1i1r5BPUc6M0ssdrZu+uY4katzQ6/JpiXTrTNHdxmtCR9BJSla+sTPw1cLAd8Ad4Id/wAqNUV6Ieg06LQKEZzTKDqnzpMHJRP383qIEcLwIdOpRV3+HeHZbRQhEOThLBmd/cNZM=
+	t=1737821800; cv=none; b=aBr0VYn8NDKH9buO7Di3nX7u6dKepEvt2+uyPDbNakvYPdeou++5yH6lFCD1ZTScdYY1y5YGs2UQ+Sj+LNnlS/eRzm7O58Rk98rBo5WO1PMuMhss+xpLiEY2x2WkNlLnG6EgC7pa/T/jEHcop5xj3nuQlLq69fhJobzL1lRL+F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737809515; c=relaxed/simple;
-	bh=86QVJcp7+Wpb1h56kTcVv3nN2lg8fSxxUT5DE2OEIwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kWLp7Phw7O++SgAwhpsA0d+zdwQkCE6NXdEZT2NYKQESIcg0ntLKWB2CqWVz8kb3ZZkv8MK3zaDI+/hIXrmsv5Dt/klD9ipNAtydTcTIJJgpa7npnprlXSzXLnFVVLPhLgIvcqOyACX7VQfOmRp1XztHuxUxJqV6CN6FuuDAb4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FiqXKMm0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50PCbVVc000870
-	for <linux-pci@vger.kernel.org>; Sat, 25 Jan 2025 12:51:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	CWziA7aUdOr4gS8lvvWsqKbJ5Nzxb5TboxzkZ56gBtY=; b=FiqXKMm0wQShkz4q
-	nOQOWrda0vMsz9UXlynj2imlecUhsyfA1AjKKzT3TfpIxHFKnosRakQogRolApnR
-	Xc7AFDFACBEcQiL3Qzn2EGKmKChuLRcbU2Me8JrpxfKD07cAJhGjzhfWDbYppVxz
-	g4hZUpmT0Q2DxCkKsEJMroa2HYdPtZYYD95fx+cNKE90FRjrcc/69UFwxQkxqPtm
-	ysIalOZnBlYjLA9bIGTCfZ691n4lghATUUNTfkU/XxIx4O4V7MEojXvGZ+WPGQm8
-	DEfYY8eF+JLXpCIp7FbR/75htxmWemu0F1QgbA+b0iaNqpBRP70Oc1i0d+XO2z9w
-	A8bL+g==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44cryr8gph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sat, 25 Jan 2025 12:51:52 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b6e5c3a933so47991685a.3
-        for <linux-pci@vger.kernel.org>; Sat, 25 Jan 2025 04:51:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737809511; x=1738414311;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CWziA7aUdOr4gS8lvvWsqKbJ5Nzxb5TboxzkZ56gBtY=;
-        b=wlfu8GK1qzHPbGweujkNiQjV8Wn2dQhJyHJAOLp+nMlsbVfxOPhbE8kgYIyU7sukH4
-         wo1Ksjz5dPHSfxv8KciIBIo+MOldFeyDeV9KIgo9h6mDGAkB33WbxVB82WB6N9ZOV2Ju
-         V090i98KSDdBF6c8igOGlx+1ivHAN9El2/6u6hLZgkeHOoVf0HGEc4hmAqLwu7Ix44Ou
-         KU9qJHMRDEjEBHpU6xCy00AwH8iEzrdfDhUBTxZWCxYl1SWBRN8c3MpDGK0E0z4OO7FX
-         LY0KkZTcwXh9fA0J9xL2ocDiH6jSI50TUfdsRMlpewdkrDv1c0/72gsyteRIqA1lRRYU
-         4X0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXxnVxty36IUNCxC2tAUmDZgeYZKMxGDQnmRj9rgSP9N36huy/s0IzJmD6q0xlupMjQtWCA0wModNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyehRzb8HAZh5ixiNdCLJv1ajVm2S4CqBtpsCWbn5/sQ345tVcr
-	FZw5/VfH9tFfvHjTCQQEjqXu54itwSrK0oBTuvEav3NDMfGVtfSlsUUbOQtka3Fy/moWF8VxSNT
-	NBeB4Omz6abzRUR9rzeCxOeQtTrxq6oe0vsqviCdrDsi+mFGjpFMry/do77o=
-X-Gm-Gg: ASbGncvhJRNdmm0+ZoCjcqcfBDttB7HZ65TR1jRQ7T1kKYGMsUBTw1DUiSf8eq1EaRg
-	CufhPpzRPUDn8PDRkJOw/Ifc61Fe76i0HT/L3vsD00Qcsx9RCim6E06jhTh+bquUAf944umP9jm
-	ghIjv8s/9TkfmtIEB0fAJ+GaQmPAB+5KW1QRHRx+3LUTT/jzENDgUZZjzMOWi2Bpq0XGkJCMnTh
-	M/MPG9g3w+n/4TjHvbHWrpecdveUsrMr+pgQf6O1I4BYbv2bGSf49zOaIotFbDjFQupmlvtJqjW
-	7rbSYVZgvOmFQf60rF77KblRm2E1eKZG57oyHEYbqT2oHyI4GwbbP4+g2bU=
-X-Received: by 2002:a05:620a:450e:b0:7b6:dc5c:de5 with SMTP id af79cd13be357-7be631e6b5emr2052213785a.1.1737809511545;
-        Sat, 25 Jan 2025 04:51:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF+UQrv1kM0ZKAZiqODKXjGLwGCixqQRdnXMHLQHxrdyBaXBM/t1cXrqvIOKkD+dJIF7eR9gA==
-X-Received: by 2002:a05:620a:450e:b0:7b6:dc5c:de5 with SMTP id af79cd13be357-7be631e6b5emr2052211885a.1.1737809511100;
-        Sat, 25 Jan 2025 04:51:51 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc18640df4sm2507590a12.48.2025.01.25.04.51.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2025 04:51:49 -0800 (PST)
-Message-ID: <653c86f8-30d3-4ffe-aa2d-ffb37b7b5bb2@oss.qualcomm.com>
-Date: Sat, 25 Jan 2025 13:51:46 +0100
+	s=arc-20240116; t=1737821800; c=relaxed/simple;
+	bh=yWJEn8zBPCM+vhRHeZAqLPayrGku3Jj0hMOlqCwBIaI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jrXyp87IrtTrz346vrnCSTNPSsInDWqUIWE7stMPe+Y3qVUQfAK3joMpTYW6BoSicDVhs+WzrJo9ZulyaNbKYtbMXN5Ai07V6zPeiKWXV1VDKUtxN/EHi6IpJZosyxu1SCUtfb/TRuyU5FHmJLSCh2/F5r0WeNAK+7UtZHG/OkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IsOUjW+S; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737821799; x=1769357799;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=yWJEn8zBPCM+vhRHeZAqLPayrGku3Jj0hMOlqCwBIaI=;
+  b=IsOUjW+SH7jWHIPCGKPmeJyaCqupnREAnmM/MB1wC52Q3qdzRiKC7JvL
+   v7OrfP3wsVbcGwov30QVWRUKgkw0FRRY8Af+clOHRwk0ac/XxElXFq+BM
+   5a8tXnZaHGXU2ZwepjkhwSsGxoyRJEh7HYqEKjdTbuZag/k8s623qAppD
+   MUbdBOARftmvMGxcbCSKBT7oPWFNx9MDjULoReLh1srYihKpNtWS5zawo
+   QGGOYt9hCPY4klvbtb7dHvudVCjO2CXhq+4WEicLc3gjiDm4Kh73KHBq5
+   vLUDRb1mwvQy3wbTgcbZiFu3lRTQQTOjNdjNJ3LulJWoZ6pbKFFTXOil2
+   Q==;
+X-CSE-ConnectionGUID: 2yetf9cmQhOzea3+jcNVVg==
+X-CSE-MsgGUID: jRfwRC8eQv29jWnQsbgPBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11326"; a="38507305"
+X-IronPort-AV: E=Sophos;i="6.13,234,1732608000"; 
+   d="scan'208";a="38507305"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2025 08:16:38 -0800
+X-CSE-ConnectionGUID: S7gogHSVQVKTN9VtzmLy6w==
+X-CSE-MsgGUID: mV6XjxVbSbOvGEvgMQpeDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,234,1732608000"; 
+   d="scan'208";a="107837842"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2025 08:16:37 -0800
+Date: Sat, 25 Jan 2025 08:16:37 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com, 
+    "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>, D@web.codeaurora.org, 
+    M@web.codeaurora.org
+Subject: Re: [PATCH v4 5/5] PCI: altera: Add Agilex support
+In-Reply-To: <f2c9061a-6a9c-4cd1-8a3f-a286a2eb30a8@linux.intel.com>
+Message-ID: <e3e95c4b-9b71-c2f5-4c83-2e4048627d89@linux.intel.com>
+References: <20250123181932.935870-1-matthew.gerlach@linux.intel.com> <20250123181932.935870-6-matthew.gerlach@linux.intel.com> <f2c9061a-6a9c-4cd1-8a3f-a286a2eb30a8@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] PCI: of: Add API to retrieve equalization presets
- from device tree
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
- <20250124-preset_v2-v4-2-0b512cad08e1@oss.qualcomm.com>
- <79281aca-c275-4055-8d2c-d2407b0f9811@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <79281aca-c275-4055-8d2c-d2407b0f9811@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: JQD26N2yEB0d2EomTQiarbkzrj-2_s_a
-X-Proofpoint-ORIG-GUID: JQD26N2yEB0d2EomTQiarbkzrj-2_s_a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-25_05,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 spamscore=0
- clxscore=1015 mlxlogscore=999 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501250093
+Content-Type: multipart/mixed; boundary="8323329-1565007811-1737821797=:3336834"
 
-On 25.01.2025 1:47 PM, Konrad Dybcio wrote:
-> On 24.01.2025 12:22 PM, Krishna Chaitanya Chundru wrote:
->> PCIe equalization presets are predefined settings used to optimize
->> signal integrity by compensating for signal loss and distortion in
->> high-speed data transmission.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1565007811-1737821797=:3336834
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 8BIT
+
+
+
+On Fri, 24 Jan 2025, Ilpo Järvinen wrote:
+
+> On Thu, 23 Jan 2025, Matthew Gerlach wrote:
+>
+>> From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
 >>
->> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
->> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
->> configure lane equalization presets for each lane to enhance the PCIe
->> link reliability. Each preset value represents a different combination
->> of pre-shoot and de-emphasis values. For each data rate, different
->> registers are defined: for 8.0 GT/s, registers are defined in section
->> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
->> an extra receiver preset hint, requiring 16 bits per lane, while the
->> remaining data rates use 8 bits per lane.
+>> Add PCIe root port controller support for the Agilex family of chips.
+>> The Agilex PCIe IP has three variants that are mostly sw compatible,
+>> except for a couple register offsets. The P-Tile variant supports
+>> Gen3/Gen4 1x16. The F-Tile variant supports Gen3/Gen4 4x4, 4x8, and 4x16.
+>> The R-Tile variant improves on the F-Tile variant by adding Gen5 support.
 >>
->> Based on the number of lanes and the supported data rate, this function
->> reads the device tree property and stores in the presets structure.
+>> To simplify the implementation of pci_ops read/write functions,
+>> ep_{read/write}_cfg() callbacks were added to struct altera_pci_ops
+>> to easily distinguish between hardware variants.
 >>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->>  drivers/pci/of.c  | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/pci/pci.h | 24 +++++++++++++++++++++++-
->>  2 files changed, 70 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index dacea3fc5128..7aa17c0042c5 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -826,3 +826,50 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->>  	return slot_power_limit_mw;
->>  }
->>  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+>> Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+
+
+[snip]
+
+>> +}
 >> +
->> +/**
->> + * of_pci_get_equalization_presets - Parses the "eq-presets-ngts" property.
->> + *
->> + * @dev: Device containing the properties.
->> + * @presets: Pointer to store the parsed data.
->> + * @num_lanes: Maximum number of lanes supported.
->> + *
->> + * If the property is present read and store the data in the preset structure
->> + * assign default value 0xff to indicate property is not present.
->> + *
->> + * If the property is not found or is invalid, returns 0.
->> + */
->> +int of_pci_get_equalization_presets(struct device *dev,
->> +				    struct pci_eq_presets *presets,
->> +				    int num_lanes)
+>> +static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
+>> +			      const u32 reg)
 >> +{
->> +	char name[20];
->> +	int ret;
+>> +	writeb_relaxed(value, pcie->cra_base + reg);
+>> +}
 >> +
->> +	presets->eq_presets_8gts[0] = 0xff;
+>> +static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
+>> +{
+>> +	return readb_relaxed(pcie->cra_base + reg);
+>> +}
+>> +
+>>  static bool altera_pcie_link_up(struct altera_pcie *pcie)
+>>  {
+>>  	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
+>> @@ -145,6 +185,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+>>  	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+>>  }
+>>
+>> +static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
+>> +{
+>> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
+>> +				   pcie->pcie_data->cap_offset +
+>> +				   PCI_EXP_LNKSTA);
+>> +
+>> +	return !!(readw_relaxed(addr) & PCI_EXP_LNKSTA_DLLLA);
+>
+> This returns bool so double negations are not necessary.
 
-Also please #define 0xff as a reserved value
+I will remove unecessary !!
 
-Konrad
-
->> +	if (of_property_present(dev->of_node, "eq-presets-8gts")) {
->> +		ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
->> +						 presets->eq_presets_8gts, num_lanes);
->> +		if (ret) {
->> +			dev_err(dev, "Error reading eq-presets-8gts %d\n", ret);
->> +			return ret;
->> +		}
+>
+>> +}
+>> +
+>>  /*
+>>   * Altera PCIe port uses BAR0 of RC's configuration space as the translation
+>>   * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
+>> @@ -425,6 +474,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+>>  	return PCIBIOS_SUCCESSFUL;
+>>  }
+>>
+>> +static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
+>> +			    int size, u32 *value)
+>> +{
+>> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		*value = readb_relaxed(addr);
+>> +		break;
+>> +	case 2:
+>> +		*value = readw_relaxed(addr);
+>> +		break;
+>> +	default:
+>> +		*value = readl_relaxed(addr);
+>> +		break;
 >> +	}
 >> +
->> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX; i++) {
->> +		presets->eq_presets_Ngts[i][0] = 0xff;
->> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
->> +		if (of_property_present(dev->of_node, name)) {
-> 
-> of_property_count_u8_elems returns -EINVAL if the property does not exist
-> 
-> you can then drop a level of indentation:
-> 
-> ret = of_property_read_u8_array...;
-> if (ret == -EINVAL) {
-> 	continue;
-> } else {
-> 	...
-> }
-> 
-> 
-> similarly above for 8gts
-> 
-> Konrad
+>> +	/* interrupt pin not programmed in hardware, set to INTA */
+>> +	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
+>> +		*value = 0x01;
+>> +	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
+>> +		*value |= 0x0100;
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+>> +			     int where, int size, u32 value)
+>> +{
+>> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		writeb_relaxed(value, addr);
+>> +		break;
+>> +	case 2:
+>> +		writew_relaxed(value, addr);
+>> +		break;
+>> +	default:
+>> +		writel_relaxed(value, addr);
+>> +		break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+>> +	 * and update local copy of root bus number accordingly.
+>> +	 */
+>> +	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+>> +		pcie->root_bus_nr = value & 0xff;
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
+>> +			     unsigned int devfn, int where, int size, u32 value)
+>> +{
+>> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+>> +	if (busno > AGLX_RP_SECONDARY(pcie))
+>> +		where |= BIT(12); /* type 1 */
+>
+> Add a define to replace the comment?
+
+I will create a suitably name macro; so that a comment won't be necessary.
+
+>
+>> +
+>> +	switch (size) {
+>> +	case 1:
+>> +		cra_writeb(pcie, value, where);
+>> +		break;
+>> +	case 2:
+>> +		cra_writew(pcie, value, where);
+>> +		break;
+>> +	default:
+>> +		cra_writel(pcie, value, where);
+>> +			break;
+>> +	}
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
+>> +			    unsigned int devfn, int where, int size, u32 *value)
+>> +{
+>> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+>> +	if (busno > AGLX_RP_SECONDARY(pcie))
+>> +		where |= BIT(12); /* type 1 */
+>
+> Same here?
+
+Yes, use a better macro here too.
+
+>
+> -- 
+> i.
+
+Thanks for the review,
+Matthew Gerlach
+
+>
+>
+--8323329-1565007811-1737821797=:3336834--
 
