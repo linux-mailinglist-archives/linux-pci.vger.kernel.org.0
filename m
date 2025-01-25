@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-20351-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20352-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3BC0A1C0E7
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 05:16:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76816A1C0F1
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 05:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E720E1887984
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 04:16:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDE843AC08F
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jan 2025 04:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859CA205E1B;
-	Sat, 25 Jan 2025 04:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0457184D29;
+	Sat, 25 Jan 2025 04:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nrBpmdJR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ne6/HIk+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF27482EB
-	for <linux-pci@vger.kernel.org>; Sat, 25 Jan 2025 04:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CD21D6DA8
+	for <linux-pci@vger.kernel.org>; Sat, 25 Jan 2025 04:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737778559; cv=none; b=dYS50V4Xrxif2pQHUaMKa6CnQnSems0PZJEfZkL+3IEmlD2cy8EACQcq1iClE1UsWeQwkWRgDjH2Wj8nEE9aoRmZz84NhgTcaZaaZZa20z2PmpZZMgWzKC69MzqdUZPe0X9ShxKlcFh+6/l3bKFxndzj853wQ59VwPcuyjHQAig=
+	t=1737779874; cv=none; b=expGbtUV1YjkBmPWa5oDkm790G8/IAmfLrml/wbfQabKHP6CELSFAGxydDPf/tYtnRLFwLfvZ9ICv6rhEMbiNDxQZbvAkPemJKYmshnBsjoKXXEttq2h32aRbVxgP2cJfqqblwIfhWwlk9BR6usaPU2qx/mKeQ1SzbrqLW5C6Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737778559; c=relaxed/simple;
-	bh=kwTIkyS4UCmM2ULab6nrfhTqrECq/aArpDodqlUPP2c=;
+	s=arc-20240116; t=1737779874; c=relaxed/simple;
+	bh=y0Yf4dv3EApdgW/5YdafrSjV4T+ztcgnOQJd1+lhbRI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dF8nWOSo96MplFSYo2LpbYscQx0qIBODPj/xjUsZKdi4yNF5vdYEodcs6dpoMBomEyzRZ6w8+4gqkslsL5rGKGDWRB5Jv53vmvqqn0yrIiVefd7LbJmF9MmmIDYVVb55Qw4ns1+3qu3WWEAwMRIVz4uHCnU9k4LXJ6HnGNx8rvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nrBpmdJR; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=lCo0jrv/fX6w2qS3+zD3ZEOwfxFufWyFN2EV8Ep/6CdejuUCJ+kQ7VVpAzGJxoN7FZ5mpFRaSd6QsljvZkeUtaasv9cDK0sVLbRTdCG6OeA10OWu9C/YC+SrMZXOlZSZoIlegpByIZf2TwtbEV7QlqhiKH/NpSTNYs7Qh6UkTAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ne6/HIk+; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737778558; x=1769314558;
+  t=1737779873; x=1769315873;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=kwTIkyS4UCmM2ULab6nrfhTqrECq/aArpDodqlUPP2c=;
-  b=nrBpmdJRSOvt30Oktg3cqFboiQLlMX/oaBv7Eq33xOtNU2Y1j20QQ9Tb
-   RV0IyMPQLAZs1eyoA/zVV4ll8/zh+vyIYXRAhSowqSzqN8y0RnVP6G2Jj
-   P6/blDDYmmfG6brfCzbL+CVnL+eW4FlGZKxzCk79mDXQ5cxSiOVqsxD54
-   lez+GIzCOY9yXCpjzd2BEpVi0BFzz+9GC/2xVmYPCK0VxzOeaNeh0I9Vn
-   +VmchT1mmY+JyHK0WCnn5yY5IDzYmtDLhVVHVyhAQXR2namUCEWhc/3aI
-   RFQlEJA51oEAWcvKvU3h7rHQ/YY/0W+nPa03rPOqyMbBpDy73XrwmnPKz
-   A==;
-X-CSE-ConnectionGUID: ejt6Kur+R/egVSqZUU5VWA==
-X-CSE-MsgGUID: l1fHhR0qSH+cSsyG/101IQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11325"; a="38020593"
+  bh=y0Yf4dv3EApdgW/5YdafrSjV4T+ztcgnOQJd1+lhbRI=;
+  b=ne6/HIk+pvE+MrYnfPVhpPnZqSFMcpt6yb/Ly0jhAI8xZQgsEH/3xJTu
+   ZlwEXOyWFWBizxpYIcQJVkb2pXnv4qTDppHB4aHwtJ2o7FzkRXBCG72MB
+   w9YDKq8VeaoorUoflDW2o5A/wOoNwtV/89Q0PgyG6J5dtJlOvJDHvq7eD
+   0W1h1TIwZ7kZlBVI6OgwtzV52//zXksI7041M6EubdZtWiDGTFd8aYYLi
+   8Bh9iQQb3YXV3T99pS7DJ4nvODI69e0/1XnKhVUwq0QNRRFQO7glZefCm
+   r7wiFvN2Bdyu20ifvWXka2d4P+BWNp/8TeKLJxPJJNzXQ8Zw3wZBb9els
+   w==;
+X-CSE-ConnectionGUID: Z1NOb07MSyeZxWj6xglaLw==
+X-CSE-MsgGUID: HoAAFZfaSpi+/+kkYuaN5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11325"; a="48981817"
 X-IronPort-AV: E=Sophos;i="6.13,233,1732608000"; 
-   d="scan'208";a="38020593"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 20:15:57 -0800
-X-CSE-ConnectionGUID: sokoM3kMTNuVrwqrMiJQoQ==
-X-CSE-MsgGUID: Ho5yXnumQSuL+6I9DivgeQ==
+   d="scan'208";a="48981817"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 20:37:53 -0800
+X-CSE-ConnectionGUID: V0SsHOoXSaaH2QZulIUvjA==
+X-CSE-MsgGUID: 3ALKT5XJTC+xsxSF+5NQKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="138808168"
+   d="scan'208";a="113087679"
 Received: from dgramcko-desk.amr.corp.intel.com (HELO [10.124.223.250]) ([10.124.223.250])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 20:15:56 -0800
-Message-ID: <696e0a5c-5d5d-4a58-b00e-7c678290713e@linux.intel.com>
-Date: Fri, 24 Jan 2025 20:15:55 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2025 20:37:51 -0800
+Message-ID: <a41ccd31-5d0f-40e2-863d-5a4548d98064@linux.intel.com>
+Date: Fri, 24 Jan 2025 20:37:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,98 +67,76 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] PCI/AER: Remove aer_print_port_info
+Subject: Re: [PATCH 2/8] PCI/AER: Move AER stat collection out of
+ __aer_print_error
 To: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
  Karolina Stolarek <karolina.stolarek@oracle.com>
 Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
  Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
  Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>
 References: <20250115074301.3514927-1-pandoh@google.com>
- <20250115074301.3514927-2-pandoh@google.com>
+ <20250115074301.3514927-3-pandoh@google.com>
 Content-Language: en-US
 From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250115074301.3514927-2-pandoh@google.com>
+In-Reply-To: <20250115074301.3514927-3-pandoh@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 On 1/14/25 11:42 PM, Jon Pan-Doh wrote:
-> Info logged is duplicated when either the source device is processed. If
-> no source device is found, than an error is logged.
+> Decouple stat collection from internal AER print functions. AERs from ghes
+> or cxl drivers have stat collection in pci_print_aer as that is where
+> aer_err_info is populated.
 
-Any issue with logging when no source device is found in device
-hierarchy?
-
->
-> Code flow:
-> aer_isr_one_error()
-> -> aer_print_port_info()
-> -> find_source_device()
->     -> return/pci_info() if no device found else continue
-> -> aer_process_err_devices()
->     -> aer_print_error()
->
-> aer_print_port_info():
-> [   21.596150] pcieport 0000:00:04.0: Correctable error message received
-> from 0000:01:00.0
->
-> aer_print_error():
-> [   21.596163] e1000e 0000:01:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-> [   21.600575] e1000e 0000:01:00.0:   device [8086:10d3] error status/mask=00000040/0000e000
-> [   21.604707] e1000e 0000:01:00.0:    [ 6] BadTLP
-
-Please remove time stamp from dmesg log.
+Isn't pci_print_ear() internally calls __aer_print_error()? So the stat 
+collection
+should work fine even now. Can you give more info on why you want to
+decouple here.
 
 >
-> Tested using aer-inject[1] tool. No more root port log on dmesg.
+> Tested using aer-inject[1] tool. AER sysfs counters still updated
+> correctly.
 >
 > [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
 >
 > Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 > ---
->   drivers/pci/pcie/aer.c | 15 ---------------
->   1 file changed, 15 deletions(-)
+>   drivers/pci/pcie/aer.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
 >
 > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 34ce9f834d0c..ba40800b5494 100644
+> index ba40800b5494..4bb0b3840402 100644
 > --- a/drivers/pci/pcie/aer.c
 > +++ b/drivers/pci/pcie/aer.c
-> @@ -735,18 +735,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->   			info->severity, info->tlp_header_valid, &info->tlp);
+> @@ -695,7 +695,6 @@ static void __aer_print_error(struct pci_dev *dev,
+>   		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+>   				info->first_error == i ? " (First)" : "");
+>   	}
+> -	pci_dev_aer_stats_incr(dev, info);
 >   }
 >   
-> -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
-> -{
-> -	u8 bus = info->id >> 8;
-> -	u8 devfn = info->id & 0xff;
-> -
-> -	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> -		 info->multi_error_valid ? "Multiple " : "",
-> -		 aer_error_severity_string[info->severity],
-> -		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> -		 PCI_FUNC(devfn));
-> -}
-> -
->   #ifdef CONFIG_ACPI_APEI_PCIEAER
->   int cper_severity_to_aer(int cper_severity)
->   {
-> @@ -1295,7 +1283,6 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   			e_info.multi_error_valid = 1;
->   		else
->   			e_info.multi_error_valid = 0;
-> -		aer_print_port_info(pdev, &e_info);
+>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+> @@ -775,6 +774,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	info.mask = mask;
+>   	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
 >   
->   		if (find_source_device(pdev, &e_info))
->   			aer_process_err_devices(&e_info);
-> @@ -1314,8 +1301,6 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->   		else
->   			e_info.multi_error_valid = 0;
+> +	pci_dev_aer_stats_incr(dev, &info);
+> +
+>   	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>   	__aer_print_error(dev, &info);
+>   	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
+> @@ -1249,8 +1250,10 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
 >   
-> -		aer_print_port_info(pdev, &e_info);
-> -
->   		if (find_source_device(pdev, &e_info))
->   			aer_process_err_devices(&e_info);
+>   	/* Report all before handle them, not to lost records by reset etc. */
+>   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+> -		if (aer_get_device_error_info(e_info->dev[i], e_info))
+> +		if (aer_get_device_error_info(e_info->dev[i], e_info)) {
+> +			pci_dev_aer_stats_incr(e_info->dev[i], e_info);
+>   			aer_print_error(e_info->dev[i], e_info);
+> +		}
 >   	}
+>   	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>   		if (aer_get_device_error_info(e_info->dev[i], e_info))
 
 -- 
 Sathyanarayanan Kuppuswamy
