@@ -1,62 +1,63 @@
-Return-Path: <linux-pci+bounces-20412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CCA9A1DB69
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 18:39:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99BD2A1DB70
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 18:39:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8AF3E1663D2
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 17:39:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8315318879FC
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 17:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129BA18B476;
-	Mon, 27 Jan 2025 17:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D57E218DF73;
+	Mon, 27 Jan 2025 17:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXo0scUS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Onr2/c+L"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A36E186E26;
-	Mon, 27 Jan 2025 17:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA71291E;
+	Mon, 27 Jan 2025 17:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737999563; cv=none; b=uEeaPD5YMhUVxD81HCLEExTGLXYE4xIlPeGQ5si43IQ2M8V1KkXfaHV2SkRiMmvNwrg2wjc4rpYATyid60wqVlExkvK0ywZtM0yGqSgAA3vmJ1r3cknI3P0Kav9r2xrjR6mU/UxM5GAN9PSblL4RuMWTcvDUAlVS0wvM8OByNTc=
+	t=1737999564; cv=none; b=ZXgzpUtN6SSGVHoaUVGjBpH+R6ULpI7Xh1kaPZZLICmkFEBbwHY6es+Y6cYivdffB/jMfBoYkCwVH4uVP14Kjp3WvxpKTjDtCLlApDTtx5FHqWR+Qx6B92tYc03ILH4yp9qJO7HQ2+NJ65didaUQdy6iU5ODyVlyyO9zslcl50Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737999563; c=relaxed/simple;
-	bh=vUl3BBblF1TpZhv6GejNg8E3VUJoE5Ss3qGOnHYq+yg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jtsTUUvDPlL/qhZWKS2TNRTESgfBGU8cEjW3Js0alrDbMEVeJF+tWY6KwxoMH5P2/GVOdYGikWabIOaXWJbNVT6PlSxaieb4axETf36sUWEbMJHL2fGSE6FH6ZKCM9P9tngquFCy+QsvfPU2jHeZkz/igIyGXaBqT+odwLrt2zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXo0scUS; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1737999564; c=relaxed/simple;
+	bh=to0ZeiQxfpnAdykX/BD3biuLk5m1jC1vJ3CulYg8LzU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MFQx37GOO157jlMhWz+sZX2BF9GT3D8s4IkKpwvhYWixz4kFxPc01E+vOiwWEaFxPawmkWRu1hHulM4EThefQ4AWVE2Hdi0Qg31GtSVe5E/x8dX7qadRvYAi/YESGjNdgkfPYmnnyfmsM31sXolu+sMygd/XH9N5SI7qB1ePUMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Onr2/c+L; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737999561; x=1769535561;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vUl3BBblF1TpZhv6GejNg8E3VUJoE5Ss3qGOnHYq+yg=;
-  b=EXo0scUSVRIPdQeLp5DrNqd1eI6xAE0ZOcHtFlfAgIluUhrfBfa8iIU2
-   doeCoo9ATmb01FB1L/5vNvIU8RI4Rs1OHiqPq/Qz1hPbAaVA0+BpjucQC
-   /QcJsYLt6VbCw+MgDwPpdy2Swwgdms3U3wLVo7bwn0CLmsUIRfmyrAM6x
-   AuegvZzkq8cpHvETQcW3F4IVrRSaOkayY3bVnhlW4GgIMz34MYQHff95t
-   hXXw5uw4NtMtXLoXuawKAXGBdqUVo5LjFv3EqQx5IVmVgY9bxI7UbpWbv
-   zdOpgonIi36ffyxiP6pAlXqhUXA5kE4H/MjMcZAAGnMLlXOwlnHD6mROX
+  t=1737999563; x=1769535563;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=to0ZeiQxfpnAdykX/BD3biuLk5m1jC1vJ3CulYg8LzU=;
+  b=Onr2/c+L7mXfnIDMGb54GjgIQ6dvXDzU89vNhaBoWGVoJbPfO7tGyKJ8
+   0tvUO0J2nWc7ZqLIzjd9yTlBGgPg7JEHceqQ3Ii82Jox0vVfPwN7ge0eC
+   iKLMzKqAjntj1WJlI43IzgulRhkl6RQtymDH731Qv4qWPxs6f1ObOBEwM
+   0AgOqqy4R9ABaGvJ80jn1a12MCJ87K3rL04cnQHOdo2HuODyj1fSTDGbw
+   T3YBGWFksf4D0JCPWjmbchODshdhf3TFQDHhB4wSgeu5GzNuLtGbMzBiy
+   YYpi4erZA4fm3KIP8Lgx2sOEnCgYEmCWX2G3k6xmIg2BQOLfTp4OxqKuI
    Q==;
-X-CSE-ConnectionGUID: GowW+wz5SRaZSrfAquZ6rA==
-X-CSE-MsgGUID: ab+op6geTcmOlqP20KRZiA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11328"; a="26069464"
+X-CSE-ConnectionGUID: hwzQNW3gRYqSI2h8SzCJng==
+X-CSE-MsgGUID: j+4dWEvqRyKKdBBqA1OhfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11328"; a="26069470"
 X-IronPort-AV: E=Sophos;i="6.13,239,1732608000"; 
-   d="scan'208";a="26069464"
+   d="scan'208";a="26069470"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 09:39:20 -0800
-X-CSE-ConnectionGUID: ln/ONh/aQbaIIl+GU7Zb1w==
-X-CSE-MsgGUID: valmFYn6QiyBo2t3dMPTFw==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 09:39:21 -0800
+X-CSE-ConnectionGUID: mpntEkj3Ss+g0s4/cgJcww==
+X-CSE-MsgGUID: QRAOZRcpQi2unbwXHPilfw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113124887"
+   d="scan'208";a="113124901"
 Received: from test2-linux-lab.an.altera.com ([10.244.156.200])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 09:39:19 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 09:39:20 -0800
 From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -73,10 +74,12 @@ To: lpieralisi@kernel.org,
 Cc: matthew.gerlach@altera.com,
 	peter.colberg@altera.com,
 	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v5 0/5] Add PCIe Root Port support for Agilex family of chips
-Date: Mon, 27 Jan 2025 11:35:45 -0600
-Message-Id: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+Subject: [PATCH v5 1/5] dt-bindings: PCI: altera: Add binding for Agilex
+Date: Mon, 27 Jan 2025 11:35:46 -0600
+Message-Id: <20250127173550.1222427-2-matthew.gerlach@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,43 +88,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
-Version 3 of this patch set removes patches that have been accepted.
+Add the compatible bindings for the three variants of Agilex
+PCIe Hard IP.
 
-Patch 1:
-  Add new compatible strings for the three variants of the Agilex PCIe controller IP.
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+v3:
+ - Remove accepted patches from patch set.
+---
+ .../devicetree/bindings/pci/altr,pcie-root-port.yaml     | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Patch 2:
-  Add a label to the soc@0 device tree node to be used by patch 3.
-
-Patch 3:
-  Add base dtsi for PCIe Root Port support of the Agilex family of chips.
-
-Patch 4:
-  Add dts enabling PCIe Root Port support on an Agilex F-series Development Kit.
-
-Patch 5:
-  Update Altera PCIe controller driver to support the Agilex family of chips.
-
-D M, Sharath Kumar (1):
-  PCI: altera: Add Agilex support
-
-Matthew Gerlach (4):
-  dt-bindings: PCI: altera: Add binding for Agilex
-  arm64: dts: agilex: add soc0 label
-  arm64: dts: agilex: add dtsi for PCIe Root Port
-  arm64: dts: agilex: add dts enabling PCIe Root Port
-
- .../bindings/pci/altr,pcie-root-port.yaml     |   9 +
- arch/arm64/boot/dts/intel/Makefile            |   1 +
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |   2 +-
- .../socfpga_agilex7f_socdk_pcie_root_port.dts |  16 ++
- .../intel/socfpga_agilex_pcie_root_port.dtsi  |  55 ++++
- drivers/pci/controller/pcie-altera.c          | 253 +++++++++++++++++-
- 6 files changed, 326 insertions(+), 10 deletions(-)
- create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
- create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
-
+diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+index 52533fccc134..ca9691ec87d2 100644
+--- a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
++++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+@@ -12,9 +12,18 @@ maintainers:
+ 
+ properties:
+   compatible:
++    description: altr,pcie-root-port-1.0 is used for the Cyclone5
++      family of chips. The Stratix10 family of chips is supported
++      by altr,pcie-root-port-2.0. The Agilex family of chips has
++      three variants of PCIe Hard IP referred to as the f-tile, p-tile,
++      and r-tile.
++
+     enum:
+       - altr,pcie-root-port-1.0
+       - altr,pcie-root-port-2.0
++      - altr,pcie-root-port-3.0-f-tile
++      - altr,pcie-root-port-3.0-p-tile
++      - altr,pcie-root-port-3.0-r-tile
+ 
+   reg:
+     items:
 -- 
 2.34.1
 
