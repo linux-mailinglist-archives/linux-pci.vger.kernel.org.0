@@ -1,251 +1,173 @@
-Return-Path: <linux-pci+bounces-20404-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20405-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A206A1D878
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 15:32:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21195A1D958
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 16:17:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D460F3A302B
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 14:32:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 756393A7D95
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 15:16:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D57747F;
-	Mon, 27 Jan 2025 14:32:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD60413B5AE;
+	Mon, 27 Jan 2025 15:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vbqyFxMe"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lRybVIDH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69742824A3
-	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 14:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4BD2AD31
+	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 15:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737988347; cv=none; b=S7KnQkUwy58oRMneqv367LWgccj8kes4F0z3d/DS4hpkJ4L3wSU4bbAdepREGzyFAoGtUrXC3414Co0nnAwfaX1eL2ETvFU5fcBLM9fjL1Gw2mLRN+v/iRJc5tOAgdHC2zJ634YUSX6xfWLzTrjKJoYTm59BOezA8FVvHp9AvW8=
+	t=1737990999; cv=none; b=TrMNNvZPmyQf/0QzNl7TzoIBB0NtofbooKxiMB8c/ifOKPycgEuFs4gIqM100WdzKRocTi2SWWhqjWqOtzLsVHeBgAvKgIS1kn4Has27zTH0Zf9t+DrjVS4z720e7OZ3D08gMQ+UcYvXfdIVSLW72zZL4Rp5sQG2mp5IZNOgyq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737988347; c=relaxed/simple;
-	bh=3U+wlxERzTd4gFnK7jQrkNNuYzZ0sx8jHZtQKz8HwtY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TkQNDaTsb7YLvc0TmI5HRlL4okzbLaFI3DTP9+/C6wEA0AFw+bAL03HkDccoH04u2GkPF9B6jXEmUr1ZQoWeGN07KHGe74wViYiQiATOGh0lm8ETslAu4nEX1Kv8BCgIGWwMjy9tXwhIWbKacuVe18FgU8hOXp1s5sm1qUjq3Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vbqyFxMe; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e3a0acba5feso6077214276.2
-        for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 06:32:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737988344; x=1738593144; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MiD54sGKGVL3KpLtkR/LjHneucqmwIVXNUd8n+WxgHk=;
-        b=vbqyFxMeZ2jQCiwp7WgJCDm9dyj9Z1RX6chfWR+KzlBJ34oiANA4IsAadDLh/9jGNC
-         O20xTF5exF7ued3Jkv3LhIeCqAm+AaNMprRTSt54Z4rr758WzmgNNA9mPHWTagC5wQJH
-         wTQQvYlAmpVmxv7acfdq+nzrWXdquRyhGT8zedSE3PWCEFLSHsxRonz8g7vbjmNWG4e5
-         6Y9XyHARYmbaTLvsbcwZZjvVx+taq8m3+jlQmORdSDzwJEmyHFAnuPbNspMGTQj7ra7A
-         7/EvIcS227YtObYzTatcU5nv5BR26xJDaRZSZnKlecefKvfR2VqxPWzrjCcEcUXt95zu
-         etSw==
+	s=arc-20240116; t=1737990999; c=relaxed/simple;
+	bh=XXWwenXnSMIfC4eeFgueYgwPm2Um/6LbxvB2XdF7djg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DlKL7xMw4EHGRdnLM40HOpBIl0KdYcHYLhAWduKbRqWT0PWuo4YpPBcxMocFmduI43j53MY7YJaVP4/mg/C6U8VjmXEaJs8M3qQZr7R3DKTWk4hSRkJbEgEjNNZe2iMmH0NpdVra5BNlHe+2DS7PcI3uVfRCVI3E3HvQRIYT2C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lRybVIDH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50R6Kc89032396
+	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 15:16:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eiOVlvy8O2sljdqhnTACcFcT/c+BYziyN9TVv9igCSg=; b=lRybVIDH/erv8Rke
+	Huf178CITEZwh89jtxljjRNIzq6MtfNnY4DVt2h63q73kCiKDAD/gTfsXj+FB+Uj
+	pRbtnxm1o92a6I+EFD3TM09Vl7nAXJuH6mKMZ5PGytMUDTvq+2CAZuF1SYuMOHAJ
+	3CXyD920lvofbQB5GAEUzG5ZirwLhTgj/puBfkJ78x47kTAiGvsiitML7n/CuW3c
+	MFnJ9bhqy8rx+Z5eo4VWGUIKTRuBQZE3Di5UNlz41238pNf3f9R1k3OZGYZUw3ZT
+	sjp7NRj0cfSNM5IKTMushd+UqASJL0axMZz1mxgfknjiaetChpWnxHoIKfIDhw6L
+	b/jS6g==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44e4su13mt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 15:16:37 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b6e43ed084so90808085a.0
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 07:16:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737988344; x=1738593144;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MiD54sGKGVL3KpLtkR/LjHneucqmwIVXNUd8n+WxgHk=;
-        b=anVOmtzRd3u94/hHXMZpERlw68v/fKXhjb07gGFsf+i3/i4FFCrlhs49ACXM23YR+X
-         pGdW7Pn3HB0j1oLz5BBaN91Mq8IG0MUgpWA8vL8v+Z74YGVZ3OiCgNlfmAnRh7SrDQFh
-         /uJ7gPBPICMjiaWiNoqiWXRAcDGP1nD2v+O2e9mOSctxquY57aHy6GpuQV81JeV+NHE0
-         TP+P83XDLKZHQwz2cqxZCQnzndajITvDRSGM3bqqYX2e1Q/HzYWbean5klSzgu3vsqqa
-         eOBHVFCFCuqFSDpjBSL3x75a+vBlgmtSH0hufaeF8gJeFJqL5uH7X+fPeLbprizqg2gs
-         /rwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqSsiUiDuoi25zKhKdzPK1dF3VFf58DEjaUjWbu3H2RpyTIuiVfXnX1wLd/PZpboz1dwPP6TdWmgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUtfHcM3b/XdrgEOKkYSetBCfiYG2rlN8LJaydPz6magDoeuRA
-	T0TkVEnGUFSeklaMg+4l4FoJctZ8KNWDYavjJKuH8aXT7mNbsO1DawRlicCOEc37+e6REdyjd3S
-	RgQ1ClzJMSZWu1Z9qGiX7q4QWAYrnIsCvM9fn+Q==
-X-Gm-Gg: ASbGncvtyb5fSCNCpUy0ahF8eZfSdfOo9ROK35/lmPvVMF8o8pNKxF07yavZC3GD07D
-	Gf+VbAlJQVxrvivdAf01dwhO6B7HfRVch4sl3SnsE0AzO4BI7NvXLjQ5zvxba8/I=
-X-Google-Smtp-Source: AGHT+IF2qrhalK8dXiECwjNhaJHAeaiUoKN7zzq1rqCSPzHfhyiJHCMonXt6f6hVNH1MR53EK038D1HbRMWujS1dltY=
-X-Received: by 2002:a05:6902:15ca:b0:e58:dbf:ed05 with SMTP id
- 3f1490d57ef6-e580dbfefa4mr19756443276.10.1737988344256; Mon, 27 Jan 2025
- 06:32:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737990996; x=1738595796;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eiOVlvy8O2sljdqhnTACcFcT/c+BYziyN9TVv9igCSg=;
+        b=lQDwsAnEvtKB6AOhZoGksjmux70tDiIWfowF7JMD15L0+DeH7K3q/ZQkTu81qmnJum
+         5OBFdgAm7kVEU4ps3mOTH0LFmp5Ttrqba9rn+mUiUcAMPDKWTiBBkGqE0cxLJ7zj0zL5
+         r3vzVf4v6shawxjXsuewNfyXIt2Z8RvUN4ex/UDBtk2GZTZPedAwP4JfVJIIc0oiYnoR
+         gnPVFE5MZWxFJQjDyPxWox2bNs+Hye2nSoVvaPOmBWESiFLVfKYOUJin5ubeRDg8FRQS
+         Q3yvmf0LMQBbaDF6DK79mCp69WE33+OdH8E0KmZGK/TG0NR1LAx3a+f0S4ypA8V8HAOL
+         TI5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXpHn6zgPr6OzVFt6YH3XZmOaQIAM143kzO9Qk7q7dh/TsWmNS8KNdjVgyV0xkxvg45rqNIgSPbM18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8ef8pKn1HvVMX32auH+qAwwPHgTKousf3mdb+hNyUKbvEFQjP
+	XTS9+7yxtW4geBlJvtl+uhh34Ufk0B8U1kvDgazrbwvnrPO+t2yNmv3dINZPUWBO0MHNg9blClA
+	6gqMuyBckZcknz+pS1cNnMMYKntww5joqSItQ/1lNMAGfCRUqKdqpIt261lw=
+X-Gm-Gg: ASbGncsQsevIFFD+ZHcjHMCfFdS12GyOarGRAwFQ4xItH0CQA2g1gsbyoOd0EMLg/99
+	8hpU9XGz4WR98DizGqv1LMOCjTQL48CEsEqDwc39KVTq1yOvmxwZ9HT8GkPYuDELICbvA9okE57
+	+Q/5RfuAx/bYhg5IBIbTWicwZIYrn9e/fvtT2g9mXrpyFwX7rlamix7Od7bHiMlgh/K66v/zuqN
+	zICAliO0j1H7a64dT7RMJ0q/euBoBucLog8+xuXwTXAOqlHj4ATCooLZMEDegvWF7aF4uu+j1gG
+	s88GTlHAthz141gy8X0nghJc+qBrx/ikJ0Tbno8fteptGM6S9T5jDcrWHUY=
+X-Received: by 2002:a05:622a:1a23:b0:467:85f9:2a67 with SMTP id d75a77b69052e-46e12a940b8mr232903841cf.8.1737990995969;
+        Mon, 27 Jan 2025 07:16:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHHbQBaClGLDjf47vJiIgHk5bysqAnHMsfctaPHSAVkHPdBSwDmwLdwjqjUQMvLgQ8TfbrmWw==
+X-Received: by 2002:a05:622a:1a23:b0:467:85f9:2a67 with SMTP id d75a77b69052e-46e12a940b8mr232903471cf.8.1737990995484;
+        Mon, 27 Jan 2025 07:16:35 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc186b37b6sm5388019a12.56.2025.01.27.07.16.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2025 07:16:35 -0800 (PST)
+Message-ID: <60d02c55-0d18-4704-9126-8b8ffef5bd68@oss.qualcomm.com>
+Date: Mon, 27 Jan 2025 16:16:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
- <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com> <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
- <7882105f-93a3-fab9-70a2-2dc55d6becfc@quicinc.com> <Z3057yuNjnn0NPqk@hovoldconsulting.com>
- <20250113162549.a2y7dlwnsfetryyw@thinkpad>
-In-Reply-To: <20250113162549.a2y7dlwnsfetryyw@thinkpad>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 27 Jan 2025 15:31:48 +0100
-X-Gm-Features: AWEUYZkcntMtoxK0sNVjcPqv6JHNvnG4HSn-DiU03ZeCG_vNSYm_EBMz2h3QCfM
-Message-ID: <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, rafael@kernel.org
-Cc: Johan Hovold <johan@kernel.org>, Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, 
-	Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Markus.Elfring@web.de, 
-	quic_mrana@quicinc.com, m.szyprowski@samsung.com, linux-pm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/7] phy: qcom: Introduce PCIe UNIPHY 28LP driver
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, lpieralisi@kernel.org,
+        kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+        bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+        vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+        konradybcio@kernel.org, p.zabel@pengutronix.de,
+        dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+References: <20250127072850.3777975-1-quic_varada@quicinc.com>
+ <20250127072850.3777975-3-quic_varada@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250127072850.3777975-3-quic_varada@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: PzXSj8545zKe-Bcu2XLmOT5IKamJZOhg
+X-Proofpoint-GUID: PzXSj8545zKe-Bcu2XLmOT5IKamJZOhg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-27_07,2025-01-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 suspectscore=0 impostorscore=0 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501270122
 
-On Mon, 13 Jan 2025 at 17:25, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> + Ulf (for the runtime PM related question)
->
-> On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
-> > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chundru wro=
-te:
-> > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
-> >
-> > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge *=
-bridge)
-> > > >>                  pcie_bus_configure_settings(child);
-> > > >>
-> > > >>          pci_bus_add_devices(bus);
-> > > >> +
-> > > >> +        /*
-> > > >> +         * Ensure pm_runtime_enable() is called for the controlle=
-r drivers,
-> > > >> +         * before calling pci_host_probe() as pm frameworks expec=
-ts if the
-> > > >> +         * parent device supports runtime pm then it needs to ena=
-bled before
-> > > >> +         * child runtime pm.
-> > > >> +         */
-> > > >> +        pm_runtime_set_active(&bridge->dev);
-> > > >> +        pm_runtime_no_callbacks(&bridge->dev);
-> > > >> +        devm_pm_runtime_enable(&bridge->dev);
-> > > >> +
-> > > >>          return 0;
-> > > >>   }
-> > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
-> > > >
-> > > > I just noticed that this change in 6.13-rc1 is causing the followin=
-g
-> > > > warning on resume from suspend on machines like the Lenovo ThinkPad
-> > > > X13s:
-> >
-> > > Can you confirm if you are seeing this issue is seen in the boot-up
-> > > case also. As this part of the code executes only at the boot time an=
-d
-> > > will not have effect in resume from suspend.
-> >
-> > No, I only see it during resume. And enabling runtime PM can (and in
-> > this case, obviously does) impact system suspend as well.
-> >
-> > > >   pci0004:00: pcie4: Enabling runtime PM for inactive device with a=
-ctive children
-> >
-> > > I believe this is not causing any functional issues.
-> >
-> > It still needs to be fixed.
-> >
-> > > > which may have unpopulated ports (this laptop SKU does not have a m=
-odem).
-> >
-> > > Can you confirm if this warning goes away if there is some endpoint
-> > > connected to it.
-> >
-> > I don't have anything to connect to the slot in this machine, but this
-> > seems to be the case as I do not see this warning for the populated
-> > slots, nor on the CRD reference design which has a modem on PCIe4.
-> >
->
-> Yes, this is only happening for unpopulated slots and the warning shows u=
-p only
-> if runtime PM is enabled for both PCI bridge and host bridge. This patch =
-enables
-> the runtime PM for host bridge and if the PCI bridge runtime PM is also e=
-nabled
-> (only happens now for ACPI/BIOS based platforms), then the warning shows =
-up only
-> if the PCI bridge was RPM suspended (mostly happens if there was no devic=
-e
-> connected) during the system wide resume time.
->
-> For the sake of reference, PCI host bridge is the parent of PCI bridge.
->
-> Looking at where the warning gets triggered (in pm_runtime_enable()), we =
-have
-> the below checks:
->
-> dev->power.runtime_status =3D=3D RPM_SUSPENDED
-> !dev->power.ignore_children
-> atomic_read(&dev->power.child_count) > 0
->
-> When pm_runtime_enable() gets called for PCI host bridge:
->
-> dev->power.runtime_status =3D RPM_SUSPENDED
-> dev->power.ignore_children =3D 0
-> dev->power.child_count =3D 1
->
-> First 2 passes seem legit, but the issue is with the 3rd one. Here, the
-> child_count of 1 means that the PCI host bridge has an 'active' child (wh=
-ich is
-> the PCI bridge). The PCI bridge was supposed to be RPM_SUSPENDED as the r=
-esume
-> process should first resume the parent (PCI host bridge). But this is not=
- the
-> case here.
->
-> Then looking at where the child_count gets incremented, it leads to
-> pm_runtime_set_active() of device_resume_noirq(). pm_runtime_set_active()=
- is
-> only called for a device if dev_pm_skip_suspend() succeeds, which require=
-s
-> DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtime suspen=
-ded.
->
-> This criteria matches for PCI bridge. So its status was set to 'RPM_ACTIV=
-E' even
-> though the parent PCI host bridge was still in the RPM_SUSPENDED state. I=
- don't
-> think this is a valid condition as seen from the warning triggered for PC=
-I host
-> bridge when pm_runtime_enable() is called from device_resume_early():
->
-> pci0004:00: pcie4: Enabling runtime PM for inactive device with active ch=
-ildren
+On 27.01.2025 8:28 AM, Varadarajan Narayanan wrote:
+> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> 
+> Add Qualcomm PCIe UNIPHY 28LP driver support present
+> in Qualcomm IPQ5332 SoC and the phy init sequence.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
 
-Thanks for the detailed analysis, much appreciated.
+[...]
 
-So this seems to boil down to the fact that the PM core calls
-pm_runtime_set_active() for a device, when it really should not. If
-there is a clever way to avoid that, I think we need Rafael's opinion
-on.
+> +	usleep_range(CLK_EN_DELAY_MIN_US, CLK_EN_DELAY_MAX_US);
+> +
+> +	qcom_uniphy_pcie_init(phy);
+> +	return 0;
 
->
-> I'm not sure of what the fix is in this case. But removing the
-> DPM_FLAG_SMART_SUSPEND flag from PCI bridge driver (portdrv) makes the wa=
-rning
-> go away. This indicates that something is wrong with the DPM_FLAG_SMART_S=
-USPEND
-> flag handling in PM core.
+Please add a newline before the return statement
 
-As an intermediate step, perhaps the easiest thing here is to remove
-the DPM_FLAG_SMART_SUSPEND flag from the PCI bridge? Ideally it should
-not break anything, but we probably would lose some optimizations.
+[...]
 
-Another option would be to use pm_suspend_ignore_children(), but I am
-not sure if that would be the correct thing to do here.
+> +static int qcom_uniphy_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *phy_provider;
+> +	struct device *dev = &pdev->dev;
+> +	struct qcom_uniphy_pcie *phy;
+> +	struct phy *generic_phy;
+> +	int ret;
+> +
+> +	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, phy);
+> +	phy->dev = &pdev->dev;
+> +
+> +	phy->data = of_device_get_match_data(dev);
+> +	if (!phy->data)
+> +		return -EINVAL;
+> +
+> +	phy->lanes = 1;
+> +	if (of_property_read_u32(dev_of_node(dev), "num-lanes", &phy->lanes))
+> +		dev_info(dev, "Not able to get num-lanes. Assuming 1\n");
 
->
-> Ulf/Rafael, thoughts?
->
-> - Mani
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+return dev_err_probe(dev, ret, "Couldn't read num-lanes\n");
 
-Kind regards
-Uffe
+And please make num-lanes required in bindings there
+
+We don't want silent fallbacks in such cases, as it's easy to miss those and
+e.g. ship a product which would then run the PCIe link at half the speed
+
+Konrad
 
