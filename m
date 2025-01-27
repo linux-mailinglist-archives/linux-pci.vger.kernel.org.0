@@ -1,217 +1,238 @@
-Return-Path: <linux-pci+bounces-20396-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20397-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD67FA1D185
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 08:33:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B151A1D252
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 09:27:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 242DF1888313
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 07:33:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 034661658B3
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 08:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A470C1FF1AE;
-	Mon, 27 Jan 2025 07:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oh8GVWXs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65FBC1FC0ED;
+	Mon, 27 Jan 2025 08:26:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E388E1FECDC;
-	Mon, 27 Jan 2025 07:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF48183CB0;
+	Mon, 27 Jan 2025 08:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737963005; cv=none; b=fkmZaRNs3qE/1BBakm5OBLzxPbJvN3DBa62I5eNCFRyFd3SLuYwMjiJqtrLDEmZYasWcOTl0HzPHV4unaBrCGgzhHioiMmZHpejXCJcYZTOwzy5rr2R8400TqF+LEb9LaoSyMoL2ZAi6CjQD8yKZ/0dmx1hvDAQOum6jra88fYM=
+	t=1737966417; cv=none; b=j1EjZro4hHOuKuhKOgYRhr3z7PIDn0wmEOgL8dzMfEw8RotaZlsgQT+8tQ5wVIlbPtfDCJVe6HnJNXMzWhb2n9fubu/FZNfGBTZs37zlxwcpJo7UjWrfNgsQZCb/jfU3o+hw5gx6/s5xRtA5nmnaJ7VBshdttx2b9FCq8WH+Asg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737963005; c=relaxed/simple;
-	bh=HK0bcts3/EOI3z/YtbcXBJ51jSGmA7iuDWXhbO0n+lc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ssBMqhh8MBtOnQ4hEuXIxkhW+gxpbCbTeDomuKsP02AoLbdzkcNg0ThP7d9uddP+xSsHD9YQt8u+iYz+Pd8ik5D/X+NuBkPc7eNBvn4+Yx1qzGqweYrTQ2kZnA6eq3+GEjeN9idzPYX0jQE4i1XArCm1BZCUNVkH3DkL2yCQHDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oh8GVWXs; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50R0ppLq012193;
-	Mon, 27 Jan 2025 07:29:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hhl8LhVLSIOFxcEP2RPodjO6sTk2njoaqUrh5OIEc1k=; b=oh8GVWXsyaUUlLeC
-	Cj5+xtIV2qn0YZailb10OPtK8N68HkQdWPB3hMZMRKZSdz1pITX2Gxo5jlYxhKbR
-	e0zvXlrqrJAk+EJnVH+EVUQgtExGeOtuJ7TeF39CMaBkCqBR0uVf8MyWBKNCSYDE
-	MkG/Gscaj0hE3oPLL6hTcEbtky83frC9LsSvHvhK4iPgRcImEb4m4icvAo7uR4r5
-	fOB3mG3E+0AMIBLwSv9PejX25ySfqTAkVwVZbKwXoedmsi3EehtMJLL9NoPSTo8a
-	m0o7HN1iqOK2s5F7QjguMdEcAgGFAwfnKAMCCV3twRFUCcxqYIjx3Zwk1UyROEOA
-	6Qcpqg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44dsav0yjq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Jan 2025 07:29:50 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50R7TnmU006087
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Jan 2025 07:29:49 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 26 Jan 2025 23:29:43 -0800
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <vkoul@kernel.org>, <kishon@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <p.zabel@pengutronix.de>,
-        <quic_varada@quicinc.com>, <dmitry.baryshkov@linaro.org>,
-        <quic_nsekar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>
-CC: Praveenkumar I <quic_ipkumar@quicinc.com>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v8 7/7] arm64: dts: qcom: ipq5332-rdp441: Enable PCIe phys and controllers
-Date: Mon, 27 Jan 2025 12:58:50 +0530
-Message-ID: <20250127072850.3777975-8-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250127072850.3777975-1-quic_varada@quicinc.com>
-References: <20250127072850.3777975-1-quic_varada@quicinc.com>
+	s=arc-20240116; t=1737966417; c=relaxed/simple;
+	bh=H0/Ezlx02x4YqZXtnWLu8vBQIVRh2TGu1v9oSd8ge7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A9KAftRl2wDABg0S18+O9fU7Kvdpx5TTrW07cTCyZbJv0DtdmnYNSC7PR0uTZFfq1lxp3PBLn/aFp2Ixsbel1bqvO3V26txvQdo0MUlGN/xSjEo+eFflacBk2v502Fj5GcF4+8dLK2v1w78BAgS8ROzau4WozJ9lv6XkdRxA874=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.224] (ip5f5aeeed.dynamic.kabel-deutschland.de [95.90.238.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id A397861E64869;
+	Mon, 27 Jan 2025 09:26:31 +0100 (CET)
+Message-ID: <4dbe15ea-eb68-4096-b900-e30c3d114735@molgen.mpg.de>
+Date: Mon, 27 Jan 2025 09:26:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Y7fgq10Q4sDPYuUA5qoCcbt5SkWZw9Tc
-X-Proofpoint-ORIG-GUID: Y7fgq10Q4sDPYuUA5qoCcbt5SkWZw9Tc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-27_03,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015 mlxscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501270059
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] Bluetooth: btintel_pcie: Support suspend-resume
+To: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-pci@vger.kernel.org,
+ bhelgaas@google.com, ravishankar.srivatsa@intel.com,
+ chethan.tumkur.narayan@intel.com, Kiran K <kiran.k@intel.com>
+References: <20250127124908.1510559-1-chandrashekar.devegowda@intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20250127124908.1510559-1-chandrashekar.devegowda@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Praveenkumar I <quic_ipkumar@quicinc.com>
+Dear Chandrashekar,
 
-Enable the PCIe controller and PHY nodes for RDP 441.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v5: Add 'Reviewed-by: Konrad Dybcio'
+Thank you for your patch. Some more minor things.
 
-v4: Fix nodes sort order
-    Use property-n followed by property-names
 
-v3: Reorder nodes alphabetically
-    Fix commit subject
----
- arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts | 76 +++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+Am 27.01.25 um 13:49 schrieb Chandrashekar Devegowda:
+> From: chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-index 846413817e9a..79ec77cfe552 100644
---- a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-@@ -32,6 +32,34 @@ &sdhc {
- 	status = "okay";
- };
- 
-+&pcie0 {
-+	pinctrl-0 = <&pcie0_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 38 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 39 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&pcie0_phy {
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	pinctrl-0 = <&pcie1_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 47 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 48 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&pcie1_phy {
-+	status = "okay";
-+};
-+
- &tlmm {
- 	i2c_1_pins: i2c-1-state {
- 		pins = "gpio29", "gpio30";
-@@ -40,6 +68,54 @@ i2c_1_pins: i2c-1-state {
- 		bias-pull-up;
- 	};
- 
-+	pcie0_default: pcie0-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio37";
-+			function = "pcie0_clk";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio38";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio39";
-+			function = "pcie0_wake";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie1_default: pcie1-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio46";
-+			function = "pcie1_clk";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio47";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio48";
-+			function = "pcie1_wake";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	sdc_default_state: sdc-default-state {
- 		clk-pins {
- 			pins = "gpio13";
--- 
-2.34.1
+Please capatilize the first name.
 
+> This patch contains the changes in driver for vendor specific handshake
+> during enter of D3 and D0 exit.
+
+Maybe state the problem at the very beginning, and say that all Intel 
+Bluetooth devices do not enter D0.
+
+> Command to test host initiated wakeup after 60 seconds
+>      sudo rtcwake -m mem -s 60
+> 
+> logs from testing:
+>      Bluetooth: hci0: BT device resumed to D0 in 1016 usecs
+
+On what device did you test this? Were you able to measure a power 
+consumption reduction?
+
+I am also asking this, thinking that recent Intel devices only support 
+ACPI S0ix and not ACPI S3.
+
+> Signed-off-by: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+> Signed-off-by: Kiran K <kiran.k@intel.com>
+> ---
+> changes in v4:
+>      - Moved document and section details from the commit message as comment in code.
+> 
+> changes in v3:
+>      - Corrected the typo's
+>      - Updated the CC list as suggested.
+>      - Corrected the format specifiers in the logs.
+> 
+> changes in v2:
+>      - Updated the commit message with test steps and logs.
+>      - Added logs to include the timeout message.
+>      - Fixed a potential race condition during suspend and resume.
+> 
+>   drivers/bluetooth/btintel_pcie.c | 66 ++++++++++++++++++++++++++++++++
+>   drivers/bluetooth/btintel_pcie.h |  4 ++
+>   2 files changed, 70 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
+> index 63eca52c0e0b..4627544a2a52 100644
+> --- a/drivers/bluetooth/btintel_pcie.c
+> +++ b/drivers/bluetooth/btintel_pcie.c
+> @@ -274,6 +274,12 @@ static int btintel_pcie_reset_bt(struct btintel_pcie_data *data)
+>   	return reg == 0 ? 0 : -ENODEV;
+>   }
+>   
+> +static void btintel_pcie_set_persistence_mode(struct btintel_pcie_data *data)
+> +{
+> +	btintel_pcie_set_reg_bits(data, BTINTEL_PCIE_CSR_HW_BOOT_CONFIG,
+> +				  BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON);
+> +}
+> +
+>   /* This function enables BT function by setting BTINTEL_PCIE_CSR_FUNC_CTRL_MAC_INIT bit in
+>    * BTINTEL_PCIE_CSR_FUNC_CTRL_REG register and wait for MSI-X with
+>    * BTINTEL_PCIE_MSIX_HW_INT_CAUSES_GP0.
+> @@ -298,6 +304,8 @@ static int btintel_pcie_enable_bt(struct btintel_pcie_data *data)
+>   	 */
+>   	data->boot_stage_cache = 0x0;
+>   
+> +	btintel_pcie_set_persistence_mode(data);
+> +
+>   	/* Set MAC_INIT bit to start primary bootloader */
+>   	reg = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_FUNC_CTRL_REG);
+>   	reg &= ~(BTINTEL_PCIE_CSR_FUNC_CTRL_FUNC_INIT |
+> @@ -1649,11 +1657,69 @@ static void btintel_pcie_remove(struct pci_dev *pdev)
+>   	pci_set_drvdata(pdev, NULL);
+>   }
+>   
+> +static int btintel_pcie_suspend(struct device *dev)
+> +{
+> +	struct btintel_pcie_data *data;
+> +	int err;
+> +	struct  pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	data = pci_get_drvdata(pdev);
+> +	data->gp0_received = false;
+> +	/* The implementation is as per the Intel SAS document:
+> +	 * BT Platform Power Management SAS - IOSF and the specific sections are
+> +	 * 3.1 D0Exit (D3 Entry) Flow.
+> +	 */
+> +	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D3_HOT);
+> +	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
+> +				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
+> +	if (!err) {
+> +		bt_dev_err(data->hdev, "failed to receive gp0 interrupt for suspend in %d msecs",
+> +			   BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
+> +		return -EBUSY;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int btintel_pcie_resume(struct device *dev)
+> +{
+> +	struct btintel_pcie_data *data;
+> +	struct  pci_dev *pdev = to_pci_dev(dev);
+> +	ktime_t calltime, delta, rettime;
+> +	unsigned long long duration;
+> +	int err;
+> +
+> +	data = pci_get_drvdata(pdev);
+> +	data->gp0_received = false;
+> +	/* The implementation is as per the Intel SAS document:
+> +	 * BT Platform Power Management SAS - IOSF and the specific sections are
+> +	 * 3.2 D0Entry (D3 Exit) Flow
+
+Missing space in D0 Entry.
+
+> +	 */
+> +	calltime = ktime_get();
+> +	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
+> +	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
+> +				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
+> +	if (!err) {
+> +		bt_dev_err(data->hdev, "failed to receive gp0 interrupt for resume in %d msecs",
+> +			   BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
+> +		return -EBUSY;
+> +	}
+> +	rettime = ktime_get();
+> +	delta = ktime_sub(rettime, calltime);
+> +	duration = (unsigned long long)ktime_to_ns(delta) >> 10;
+> +	bt_dev_info(data->hdev, "BT device resumed to D0 in %llu usecs", duration);
+
+Maybe also add *from D3*.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(btintel_pcie_pm_ops, btintel_pcie_suspend,
+> +		btintel_pcie_resume);
+> +
+>   static struct pci_driver btintel_pcie_driver = {
+>   	.name = KBUILD_MODNAME,
+>   	.id_table = btintel_pcie_table,
+>   	.probe = btintel_pcie_probe,
+>   	.remove = btintel_pcie_remove,
+> +	.driver.pm = &btintel_pcie_pm_ops,
+>   };
+>   module_pci_driver(btintel_pcie_driver);
+>   
+> diff --git a/drivers/bluetooth/btintel_pcie.h b/drivers/bluetooth/btintel_pcie.h
+> index f9aada0543c4..38d0c8ea2b6f 100644
+> --- a/drivers/bluetooth/btintel_pcie.h
+> +++ b/drivers/bluetooth/btintel_pcie.h
+> @@ -8,6 +8,7 @@
+>   
+>   /* Control and Status Register(BTINTEL_PCIE_CSR) */
+>   #define BTINTEL_PCIE_CSR_BASE			(0x000)
+> +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG		(BTINTEL_PCIE_CSR_BASE + 0x000)
+>   #define BTINTEL_PCIE_CSR_FUNC_CTRL_REG		(BTINTEL_PCIE_CSR_BASE + 0x024)
+>   #define BTINTEL_PCIE_CSR_HW_REV_REG		(BTINTEL_PCIE_CSR_BASE + 0x028)
+>   #define BTINTEL_PCIE_CSR_RF_ID_REG		(BTINTEL_PCIE_CSR_BASE + 0x09C)
+> @@ -48,6 +49,9 @@
+>   #define BTINTEL_PCIE_CSR_MSIX_IVAR_BASE		(BTINTEL_PCIE_CSR_MSIX_BASE + 0x0880)
+>   #define BTINTEL_PCIE_CSR_MSIX_IVAR(cause)	(BTINTEL_PCIE_CSR_MSIX_IVAR_BASE + (cause))
+>   
+> +/* CSR HW BOOT CONFIG Register */
+> +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON		(BIT(31))
+> +
+>   /* Causes for the FH register interrupts */
+>   enum msix_fh_int_causes {
+>   	BTINTEL_PCIE_MSIX_FH_INT_CAUSES_0	= BIT(0),	/* cause 0 */
+
+
+Kind regards,
+
+Paul
 
