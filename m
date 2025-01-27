@@ -1,210 +1,170 @@
-Return-Path: <linux-pci+bounces-20420-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20421-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFB54A1DC4F
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 19:59:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CFD5A1DC9B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 20:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05B4B1881D7C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 18:59:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1B3E1885448
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 19:19:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8202218D649;
-	Mon, 27 Jan 2025 18:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F6618B470;
+	Mon, 27 Jan 2025 19:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRdDu4I8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJtK6kBZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E9518A6A9;
-	Mon, 27 Jan 2025 18:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735B517B50A;
+	Mon, 27 Jan 2025 19:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738004336; cv=none; b=NegThC0vVC/3SmIRwXxHdYDiXyPZjgLXox573+smNl+wvbRIiBiXNebe7TCcxKShMxyBM83MtfdQk8Yns1JtnRksbuoEMx5GgFfZRTogWcaOwzzn6UUSgUBkwFW7j+H5YP/ZYY45tkkfyFXjsf4jF+ceEq7z0otjjtIbq1MtoLk=
+	t=1738005548; cv=none; b=aRFLr4BYkSPz4TJb11IwIAMrrb+P37BAYUypdpcKpPnY1La9JIBYU6dOn41Eh+fM4MybHTxQVjLQ701gHdgfnbtYV4k4otMrpXqH1Zm7TAXZM4iVE4IeRBdr9Sc+2f/ohLZFvbkddzVODdWqPTwInpvoT/iRctyYZeO73H11iXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738004336; c=relaxed/simple;
-	bh=8po7i00y17RimMFDy23j4ASQpjy8d79DKdJpOqhfyq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NPfNdoVzyVqNaHNAojdyQhtegbHFIFMIxWnZhGnXaIyJzUsMiCsEI8rq25uj2D57byhAxbysTbnyg+HEbTw0PLy8w4CeL0NmamLc0ruft6ZZFgkziuFIap8RTZMeNncc5hnTzYmeUH0kZLzo5Oo3oBoxrzz33hxaRaql6eO2x/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRdDu4I8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83D8C4CED2;
-	Mon, 27 Jan 2025 18:58:55 +0000 (UTC)
+	s=arc-20240116; t=1738005548; c=relaxed/simple;
+	bh=SqI1KbVFdalLEwk0SH3vc66dMLl3ElqNrXqEzL5h/HM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+MJ9auLEuVO+XYmDa2BVqimJVo+ZjUTmQQnNedlAzWQhFR1/mf4EUZFHac1f8zLLFbtwga84uhEm/PWY8Utv83Ftrnm/2UqcIgLSxCtqy+HHQQ5QBCZ7tBE/lJYYgSUBr5ggwpjFWMFXCXWlFaMkFfs2vWhEWEht2F/xGc3ap0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJtK6kBZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9ACEC4CED2;
+	Mon, 27 Jan 2025 19:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738004335;
-	bh=8po7i00y17RimMFDy23j4ASQpjy8d79DKdJpOqhfyq4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VRdDu4I8nuHM7MUVcG6r3jUjt2XHRFqB0XJdrXGqwaELjYZW4K/mBYzrQR2BuvbZf
-	 SryIu59ShYlQVD2Qax597Z7EF4CJm/ljvwOe7nhlcxdekDu03957/yW+O3ZFzEoAHm
-	 +N1uLz5pH5cGX/pfabczE2FkH5mUuC99wYrmDbn+sJKAj3KeqEeINbadul0ah+n8AJ
-	 LsOVtcEkKtwXE+Yqf5Sktt9ORIm/RTXo5SbsRwhdpprhy/I9+zrJzcaCATgg+V3xml
-	 Y7AqySZ3RgWohMDwUbldMKiXieUTRsIbbm1yFaY0edlgmumjo5bHQ6I0gcRxlQbYGi
-	 KxnkfeNusJ06Q==
-Date: Mon, 27 Jan 2025 12:58:53 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Stanner <pstanner@redhat.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Restore the original INTX_DISABLE bit by
- pcim_intx()
-Message-ID: <20250127185853.GA127679@bhelgaas>
+	s=k20201202; t=1738005547;
+	bh=SqI1KbVFdalLEwk0SH3vc66dMLl3ElqNrXqEzL5h/HM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BJtK6kBZpRiUGZfqgbJTc/udEd1XWuf9oMolAVnW/3MUyzr/VpFnPVC5/7Z+C2ZW5
+	 H4xZFEKHvEL65IT298wqlKAk3od1QxNgzouDgBSEeezkJbzO8kmxz9+NxJTx6B4tW7
+	 sMPLHejjRK8U2J4OwZ61VrWD9wWrOA2NfkU2kByBK8PffuDP1uFcznH4clbYjJEZx/
+	 F6I1dI+eNv6P4r5ejps4HQ4IN2q8nzIcnt32TPj5Rhf8JOwkT2YqxGvad8PCYYksIz
+	 xXMPOS3cEykoIugGXphW0ZcZhtLKSzPkYBsstJiJq7GcxhKdNyYUseaBsC3ASg/OlG
+	 zRQSVTyOCzqiQ==
+Date: Mon, 27 Jan 2025 13:19:06 -0600
+From: Rob Herring <robh@kernel.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, p.zabel@pengutronix.de,
+	dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH v8 5/7] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe
+ controller
+Message-ID: <20250127191906.GA704182-robh@kernel.org>
+References: <20250127072850.3777975-1-quic_varada@quicinc.com>
+ <20250127072850.3777975-6-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ikq0b61y.wl-tiwai@suse.de>
+In-Reply-To: <20250127072850.3777975-6-quic_varada@quicinc.com>
 
-On Mon, Jan 27, 2025 at 05:00:25PM +0100, Takashi Iwai wrote:
-> On Mon, 09 Dec 2024 14:15:19 +0100,
-> Philipp Stanner wrote:
-> > 
-> > On Mon, 2024-11-04 at 10:14 +0100, Philipp Stanner wrote:
-> > > On Thu, 2024-10-31 at 14:42 +0100, Takashi Iwai wrote:
-> > > > pcim_intx() tries to restore the INTx bit at removal via devres,
-> > > > but
-> > > > there is a chance that it restores a wrong value.
-> > > > Because the value to be restored is blindly assumed to be the
-> > > > negative
-> > > > of the enable argument, when a driver calls pcim_intx()
-> > > > unnecessarily
-> > > > for the already enabled state, it'll restore to the disabled state
-> > > > in
-> > > > turn.  That is, the function assumes the case like:
-> > > > 
-> > > >   // INTx == 1
-> > > >   pcim_intx(pdev, 0); // old INTx value assumed to be 1 -> correct
-> > > > 
-> > > > but it might be like the following, too:
-> > > > 
-> > > >   // INTx == 0
-> > > >   pcim_intx(pdev, 0); // old INTx value assumed to be 1 -> wrong
-> > > > 
-> > > > Also, when a driver calls pcim_intx() multiple times with different
-> > > > enable argument values, the last one will win no matter what value
-> > > > it
-> > > > is.  This can lead to inconsistency, e.g.
-> > > > 
-> > > >   // INTx == 1
-> > > >   pcim_intx(pdev, 0); // OK
-> > > >   ...
-> > > >   pcim_intx(pdev, 1); // now old INTx wrongly assumed to be 0
-> > > > 
-> > > > This patch addresses those inconsistencies by saving the original
-> > > > INTx state at the first pcim_intx() call.  For that,
-> > > > get_or_create_intx_devres() is folded into pcim_intx() caller side;
-> > > > it allows us to simply check the already allocated devres and
-> > > > record
-> > > > the original INTx along with the devres_alloc() call.
-> > > > 
-> > > > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
-> > > > Cc: stable@vger.kernel.org # 6.11+
-> > > > Link: https://lore.kernel.org/87v7xk2ps5.wl-tiwai@suse.de
-> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > > 
-> > > Reviewed-by: Philipp Stanner <pstanner@redhat.com>
-> > 
-> > Hello,
-> > 
-> > it seems we forgot about this patch.
-> > 
-> > Regards,
-> > P.
+On Mon, Jan 27, 2025 at 12:58:48PM +0530, Varadarajan Narayanan wrote:
+> Document the PCIe controller on IPQ5332 platform. IPQ5332 will
+> use IPQ9574 as the fall back compatible.
 > 
-> This has fallen through the cracks.
-> Do I need to resubmit?
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
+> v8: Use ipq9574 as fallback compatible for ipq5332 along with ipq5424
+> 
+> v7: Moved ipq9574 related changes to a separate patch
+>     Add 'global' interrupt
+> 
+> v6: Commit message update only. Add info regarding the moving of
+>     ipq9574 from 5 "reg" definition to 5 or 6 reg definition.
+> 
+> v5: Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
+> 
+> v4: * v3 reused ipq9574 bindings for ipq5332. Instead add one for ipq5332
+>     * DTS uses ipq9574 compatible as fallback. Hence move ipq9574 to be able
+>       to use the 'reg' section for both ipq5332 and ipq9574. Else, dtbs_check
+>       and dt_binding_check flag errors.
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index 4b4927178abc..2ffa8480a665 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -33,6 +33,7 @@ properties:
+>            - qcom,pcie-sdx55
+>        - items:
+>            - enum:
+> +              - qcom,pcie-ipq5332
+>                - qcom,pcie-ipq5424
+>            - const: qcom,pcie-ipq9574
+>        - items:
+> @@ -49,11 +50,11 @@ properties:
+>  
+>    interrupts:
+>      minItems: 1
+> -    maxItems: 8
+> +    maxItems: 9
+>  
+>    interrupt-names:
+>      minItems: 1
+> -    maxItems: 8
+> +    maxItems: 9
+>  
+>    iommu-map:
+>      minItems: 1
+> @@ -209,6 +210,7 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> +              - qcom,pcie-ipq5332
+>                - qcom,pcie-ipq9574
 
-Oops, sorry, I did miss this.  I added to pci/for-linus for v6.14.  It
-didn't apply quite cleanly, so take a look and make sure I resolved it
-correctly:
+As both of these compatibles will be present, you don't need to add 
+ipq5332 here.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=d555ed45a5a10a813528c7685f432369d536ae3d
+>                - qcom,pcie-sdx55
+>      then:
+> @@ -411,6 +413,7 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> +              - qcom,pcie-ipq5332
+>                - qcom,pcie-ipq9574
 
-> > > Nice!
-> > > 
-> > > > ---
-> > > > v1->v2: refactoring, fold get_or_create_intx_devres() into the
-> > > > caller
-> > > > instead of retrieving the original INTx there.
-> > > > Also add comments and improve the patch description.
-> > > > 
-> > > >  drivers/pci/devres.c | 34 +++++++++++++++++++---------------
-> > > >  1 file changed, 19 insertions(+), 15 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> > > > index b133967faef8..c93d4d4499a0 100644
-> > > > --- a/drivers/pci/devres.c
-> > > > +++ b/drivers/pci/devres.c
-> > > > @@ -438,19 +438,12 @@ static void pcim_intx_restore(struct device
-> > > > *dev, void *data)
-> > > >  	__pcim_intx(pdev, res->orig_intx);
-> > > >  }
-> > > >  
-> > > > -static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> > > > device *dev)
-> > > > +static void save_orig_intx(struct pci_dev *pdev, struct
-> > > > pcim_intx_devres *res)
-> > > >  {
-> > > > -	struct pcim_intx_devres *res;
-> > > > +	u16 pci_command;
-> > > >  
-> > > > -	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
-> > > > -	if (res)
-> > > > -		return res;
-> > > > -
-> > > > -	res = devres_alloc(pcim_intx_restore, sizeof(*res),
-> > > > GFP_KERNEL);
-> > > > -	if (res)
-> > > > -		devres_add(dev, res);
-> > > > -
-> > > > -	return res;
-> > > > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> > > > +	res->orig_intx = !(pci_command &
-> > > > PCI_COMMAND_INTX_DISABLE);
-> > > >  }
-> > > >  
-> > > >  /**
-> > > > @@ -466,12 +459,23 @@ static struct pcim_intx_devres
-> > > > *get_or_create_intx_devres(struct device *dev)
-> > > >  int pcim_intx(struct pci_dev *pdev, int enable)
-> > > >  {
-> > > >  	struct pcim_intx_devres *res;
-> > > > +	struct device *dev = &pdev->dev;
-> > > >  
-> > > > -	res = get_or_create_intx_devres(&pdev->dev);
-> > > > -	if (!res)
-> > > > -		return -ENOMEM;
-> > > > +	/*
-> > > > +	 * pcim_intx() must only restore the INTx value that
-> > > > existed
-> > > > before the
-> > > > +	 * driver was loaded, i.e., before it called pcim_intx()
-> > > > for
-> > > > the
-> > > > +	 * first time.
-> > > > +	 */
-> > > > +	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
-> > > > +	if (!res) {
-> > > > +		res = devres_alloc(pcim_intx_restore,
-> > > > sizeof(*res),
-> > > > GFP_KERNEL);
-> > > > +		if (!res)
-> > > > +			return -ENOMEM;
-> > > > +
-> > > > +		save_orig_intx(pdev, res);
-> > > > +		devres_add(dev, res);
-> > > > +	}
-> > > >  
-> > > > -	res->orig_intx = !enable;
-> > > >  	__pcim_intx(pdev, enable);
-> > > >  
-> > > >  	return 0;
-> > > 
-> > 
+Same here.
+
+>      then:
+>        properties:
+> @@ -443,6 +446,7 @@ allOf:
+>          interrupts:
+>            minItems: 8
+>          interrupt-names:
+> +          minItems: 8
+>            items:
+>              - const: msi0
+>              - const: msi1
+> @@ -452,6 +456,7 @@ allOf:
+>              - const: msi5
+>              - const: msi6
+>              - const: msi7
+> +            - const: global
+>  
+>    - if:
+>        properties:
+> @@ -559,6 +564,7 @@ allOf:
+>                enum:
+>                  - qcom,pcie-apq8064
+>                  - qcom,pcie-ipq4019
+> +                - qcom,pcie-ipq5332
+>                  - qcom,pcie-ipq8064
+>                  - qcom,pcie-ipq8064v2
+>                  - qcom,pcie-ipq8074
+> -- 
+> 2.34.1
+> 
 
