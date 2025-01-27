@@ -1,212 +1,400 @@
-Return-Path: <linux-pci+bounces-20409-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20410-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE529A1DA22
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 17:05:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C497AA1DA4A
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 17:13:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 499623A800D
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 16:05:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1731A1656EC
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 16:13:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C327215B54A;
-	Mon, 27 Jan 2025 16:04:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5755513B298;
+	Mon, 27 Jan 2025 16:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ySTOmZoW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bK2PMFIk";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zawGZfuv";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r1CyFRsS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWnKkO7Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01415155C87;
-	Mon, 27 Jan 2025 16:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333385672
+	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 16:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737993889; cv=none; b=Y9IrfPJj8gw3V+UKKsOeZ1vVmPJnWkpt8j6aeMEmU+IHcE4ZnfP1O+MEirAKziL2eXAva0xntqLtWt1SUzIp9usv4mz7+vsNLuk6U/52lo7HsUS8X4ds1AnT81f0u73DOfPlmInxesjgFLFxSD7YOFWFKjI71n0j+6O94wyrMRY=
+	t=1737994393; cv=none; b=sdfGl1XCf3plis1vA3XZYvILbZwLvicW+ANVBFuX7gGOCh8mkN2RSFxG8mhjDPVfRRAwFzd3R6y75Exv6HvNmFn0oALeSnH4T4S2+yeEzZEJU6M3b/LE8pwJnwrcuVkjB3D6Rpnit5YEQ8rVBITaZke72QLdnBwafAJpWOpcLgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737993889; c=relaxed/simple;
-	bh=7ET6BVX8ZQhudY1LxhOtxAAF9CiLaN5bQ+Ej7qLPLaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=quyfaTwrZ7Yv1YT13emitjgFLkYZubuHM0oNDkzNjXthZMeaj8Nzr8ZPRcXFcIhXCYLAYWuXd6KpYJ22pbNl74MJZdyn+RZ5tfbZD0HDIdFPO4SWtjule5qnu1GMk2RH4rDCRdH325pZJidq/1tkgYbWUvBAerV1vwc3mOqFM6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ySTOmZoW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bK2PMFIk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zawGZfuv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r1CyFRsS; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C7E151F383;
-	Mon, 27 Jan 2025 16:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737993886; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Doi5XPUCZ2nG9x2OZWRFRlVh/JHCmgk5nDDgwb+TmJ4=;
-	b=ySTOmZoWjM9vn3Ai0JpWG/MEbXtGIx3QuCFgr84chqXUhAcq4KFxnUFae0Yjnl92eXBaos
-	uLNNi0UM3iCtUzVQTcVFYkj8p1no/Fdg+1N+uScvB0z4IVHhcQRP//BJCz+aJUPTvJJl6P
-	cXe9CrklU5oR/zJkSB1b+emHjQ7wCgI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737993886;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Doi5XPUCZ2nG9x2OZWRFRlVh/JHCmgk5nDDgwb+TmJ4=;
-	b=bK2PMFIki3eN7lB4Dr/NooL5SoFp6WG57uigv4ncJ4eo378O/zP1UDABJXv7pRouFCEC2+
-	6iKXZ/akLAcoIfBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zawGZfuv;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=r1CyFRsS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737993885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Doi5XPUCZ2nG9x2OZWRFRlVh/JHCmgk5nDDgwb+TmJ4=;
-	b=zawGZfuv/UK6W2qQnAZ6mHhuWVeIfI02zDZPTgJhyo7iGRdoXE1YxoR7ydWwnFwR+n8uaX
-	8EcqH94DkSCDR+KOYAqUxrTVlYOqHW9hmFjIEzXMHfuxop+1+vHXUpMhCEvUb0ck+d6IiY
-	pej6CFJktO2jqBNk2wfQ65wevsQSSXc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737993885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Doi5XPUCZ2nG9x2OZWRFRlVh/JHCmgk5nDDgwb+TmJ4=;
-	b=r1CyFRsSi47QzxDz6FwCN6RR5cZLpphnfIDc7bLuWLwPyN3LmWrjVjt9ziO69eAFB6iqa4
-	XOorc8/TjCZjv3Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8CA3137C0;
-	Mon, 27 Jan 2025 16:04:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id H3d+Lpuul2e6egAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 27 Jan 2025 16:04:43 +0000
-Message-ID: <151116ad-b671-4f4d-a231-6b2288d08158@suse.de>
-Date: Mon, 27 Jan 2025 18:04:39 +0200
+	s=arc-20240116; t=1737994393; c=relaxed/simple;
+	bh=sKhiCUuFf0V5QkJDWqckUKQulVMLNCswDwVOpKs0QiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NIzLoViG4Bj6FMj+ag6kS7qjxMJ+C4tl0Nxe7qs1lqn2SRdTQM1SEzoVxSrwbwLggYpUPyC+jy8fA34UM9nhZDIcQ16oRnQH0FFg/6f0jwQA1fo8dY2sM3svj5XFgTUyu9lWMqfIQSLFwkpXZSdklElO5/T501M7SQGkLULDg98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWnKkO7Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F138C4CED2;
+	Mon, 27 Jan 2025 16:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737994392;
+	bh=sKhiCUuFf0V5QkJDWqckUKQulVMLNCswDwVOpKs0QiI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OWnKkO7QaaFx9RAWic89/y3jxybRVjWwjhrQxKW/RS4djZpnNTeAE3R8MPFgVXlVp
+	 UPDSWSiRq2NViPsq2nsMlIju96JXW/dlbvKV3rbdAVydP5+OZMPMYaGQYwAiCNcK76
+	 V8i2q36TQdBs1ZpVV8UnOnXoo79KL5SVaJRCzVsT/aUApjIqQe4fjDuCWh8PgpfzX+
+	 bGIWhZ7+9vhEp6yE0ayU7TTcn5yFd6plRqhMN8te6iiSlSjqBKHZSZ6cmKQl0QkFC3
+	 IDbjtYQgs+vZaV/Q2DvdQVpWJCwcKAa2BooCa20pH5pS9HKdeay1gsP2dbmuoDXvwF
+	 Nloz/4YHgrpWQ==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2] PCI: endpoint: pci-epf-test: Handle endianness properly
+Date: Mon, 27 Jan 2025 17:12:42 +0100
+Message-ID: <20250127161242.104651-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 09/11] PCI: brcmstb: Fix for missing of_node_put
-To: Stanimir Varbanov <svarbanov@suse.de>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
- stable@vger.kernel.org
-References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-10-svarbanov@suse.de>
- <1abdd175-280a-442a-a27a-9bc01c0a04c0@broadcom.com>
- <d8c0f79f-1896-4afa-86e3-bd330218f362@suse.de>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <d8c0f79f-1896-4afa-86e3-bd330218f362@suse.de>
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11260; i=cassel@kernel.org; h=from:subject; bh=sKhiCUuFf0V5QkJDWqckUKQulVMLNCswDwVOpKs0QiI=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNKnb6h6OMe6r/iBitWSmtUhvafiTEzXTO10tPjpaC+cs eOPQsrdjlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExEo52R4bC0n8kO95cfay+/ j0hr/SPP45v3QGnWkYPrV5xm/M767DHDf3/pxX6Bn9sn2m6MCdnDn8V4o+HltKndv0IuFLdHsdv IcgMA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: C7E151F383
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-Hi,
+The struct pci_epf_test_reg is the actual data in pci-epf-test's test_reg
+BAR (usually BAR0), which the host uses to send commands (etc.), and which
+pci-epf-test uses to send back status codes.
 
-On 1/22/25 6:20 PM, Stanimir Varbanov wrote:
-> Hi Florian,
-> 
-> On 1/21/25 8:32 PM, Florian Fainelli wrote:
->> On 1/20/25 05:01, Stanimir Varbanov wrote:
->>> A call to of_parse_phandle() increments refcount, of_node_put must be
->>> called when done the work on it. Fix missing of_node_put() on the
->>> msi_np device node by using scope based of_node_put() cleanups.
->>>
->>> Cc: stable@vger.kernel.org # v5.10+
->>> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
->>> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
->>> ---
->>> v4 -> v5:
->>>   - New patch in the series.
->>>
->>>   drivers/pci/controller/pcie-brcmstb.c | 3 ++-
->>>   1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/
->>> controller/pcie-brcmstb.c
->>> index 744fe1a4cf9c..546056f7f0d3 100644
->>> --- a/drivers/pci/controller/pcie-brcmstb.c
->>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->>> @@ -1844,7 +1844,8 @@ static struct pci_ops brcm7425_pcie_ops = {
->>>     static int brcm_pcie_probe(struct platform_device *pdev)
->>>   {
->>> -    struct device_node *np = pdev->dev.of_node, *msi_np;
->>> +    struct device_node *msi_np __free(device_node) = NULL;
->>
->> In the interest of making this a straight back port to 5.10 that does
->> not have all of the __free() goodies, I would just add the missing
->> of_node_put() where necessary.
-> 
-> Good point. Thank you.
-> 
->>
->> Also, since this is a bug fix, you should probably make it appear
->> earlier in the patch series, or even sent it as a separate fix entirely.
-> 
-> OK, will send it as a standalone patch (as v2 with your comment addressed).
+pci-epf-test currently reads and writes this data without any endianness
+conversion functions, which means that pci-epf-test is completely broken
+on big-endian endpoint systems.
 
-Sent here [1], now separate from this series.
+PCI devices are inherently little-endian, and the data stored in the PCI
+BARs should be in little-endian.
 
-~Stan
+Use endianness conversion functions when reading and writing data to
+struct pci_epf_test_reg so that pci-epf-test will behave correctly on
+big-endian endpoint systems.
 
-[1]
-https://lore.kernel.org/lkml/20250122222955.1752778-1-svarbanov@suse.de/T/
+Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 126 ++++++++++--------
+ 1 file changed, 73 insertions(+), 53 deletions(-)
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index b94e205ae10b..2409787cf56d 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -66,17 +66,17 @@ struct pci_epf_test {
+ };
+ 
+ struct pci_epf_test_reg {
+-	u32	magic;
+-	u32	command;
+-	u32	status;
+-	u64	src_addr;
+-	u64	dst_addr;
+-	u32	size;
+-	u32	checksum;
+-	u32	irq_type;
+-	u32	irq_number;
+-	u32	flags;
+-	u32	caps;
++	__le32 magic;
++	__le32 command;
++	__le32 status;
++	__le64 src_addr;
++	__le64 dst_addr;
++	__le32 size;
++	__le32 checksum;
++	__le32 irq_type;
++	__le32 irq_number;
++	__le32 flags;
++	__le32 caps;
+ } __packed;
+ 
+ static struct pci_epf_header test_header = {
+@@ -324,13 +324,17 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 	struct pci_epc *epc = epf->epc;
+ 	struct device *dev = &epf->dev;
+ 	struct pci_epc_map src_map, dst_map;
+-	u64 src_addr = reg->src_addr;
+-	u64 dst_addr = reg->dst_addr;
+-	size_t copy_size = reg->size;
++	u64 src_addr = le64_to_cpu(reg->src_addr);
++	u64 dst_addr = le64_to_cpu(reg->dst_addr);
++	size_t orig_size, copy_size;
+ 	ssize_t map_size = 0;
++	u32 flags = le32_to_cpu(reg->flags);
++	u32 status = 0;
+ 	void *copy_buf = NULL, *buf;
+ 
+-	if (reg->flags & FLAG_USE_DMA) {
++	orig_size = copy_size = le32_to_cpu(reg->size);
++
++	if (flags & FLAG_USE_DMA) {
+ 		if (!dma_has_cap(DMA_MEMCPY, epf_test->dma_chan_tx->device->cap_mask)) {
+ 			dev_err(dev, "DMA controller doesn't support MEMCPY\n");
+ 			ret = -EINVAL;
+@@ -350,7 +354,7 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 				      src_addr, copy_size, &src_map);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to map source address\n");
+-			reg->status = STATUS_SRC_ADDR_INVALID;
++			status = STATUS_SRC_ADDR_INVALID;
+ 			goto free_buf;
+ 		}
+ 
+@@ -358,7 +362,7 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 					   dst_addr, copy_size, &dst_map);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to map destination address\n");
+-			reg->status = STATUS_DST_ADDR_INVALID;
++			status = STATUS_DST_ADDR_INVALID;
+ 			pci_epc_mem_unmap(epc, epf->func_no, epf->vfunc_no,
+ 					  &src_map);
+ 			goto free_buf;
+@@ -367,7 +371,7 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 		map_size = min_t(size_t, dst_map.pci_size, src_map.pci_size);
+ 
+ 		ktime_get_ts64(&start);
+-		if (reg->flags & FLAG_USE_DMA) {
++		if (flags & FLAG_USE_DMA) {
+ 			ret = pci_epf_test_data_transfer(epf_test,
+ 					dst_map.phys_addr, src_map.phys_addr,
+ 					map_size, 0, DMA_MEM_TO_MEM);
+@@ -391,8 +395,8 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 		map_size = 0;
+ 	}
+ 
+-	pci_epf_test_print_rate(epf_test, "COPY", reg->size, &start,
+-				&end, reg->flags & FLAG_USE_DMA);
++	pci_epf_test_print_rate(epf_test, "COPY", orig_size, &start, &end,
++				flags & FLAG_USE_DMA);
+ 
+ unmap:
+ 	if (map_size) {
+@@ -405,9 +409,10 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 
+ set_status:
+ 	if (!ret)
+-		reg->status |= STATUS_COPY_SUCCESS;
++		status |= STATUS_COPY_SUCCESS;
+ 	else
+-		reg->status |= STATUS_COPY_FAIL;
++		status |= STATUS_COPY_FAIL;
++	reg->status = cpu_to_le32(status);
+ }
+ 
+ static void pci_epf_test_read(struct pci_epf_test *epf_test,
+@@ -423,9 +428,14 @@ static void pci_epf_test_read(struct pci_epf_test *epf_test,
+ 	struct pci_epc *epc = epf->epc;
+ 	struct device *dev = &epf->dev;
+ 	struct device *dma_dev = epf->epc->dev.parent;
+-	u64 src_addr = reg->src_addr;
+-	size_t src_size = reg->size;
++	u64 src_addr = le64_to_cpu(reg->src_addr);
++	size_t orig_size, src_size;
+ 	ssize_t map_size = 0;
++	u32 flags = le32_to_cpu(reg->flags);
++	u32 checksum = le32_to_cpu(reg->checksum);
++	u32 status = 0;
++
++	orig_size = src_size = le32_to_cpu(reg->size);
+ 
+ 	src_buf = kzalloc(src_size, GFP_KERNEL);
+ 	if (!src_buf) {
+@@ -439,12 +449,12 @@ static void pci_epf_test_read(struct pci_epf_test *epf_test,
+ 					   src_addr, src_size, &map);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to map address\n");
+-			reg->status = STATUS_SRC_ADDR_INVALID;
++			status = STATUS_SRC_ADDR_INVALID;
+ 			goto free_buf;
+ 		}
+ 
+ 		map_size = map.pci_size;
+-		if (reg->flags & FLAG_USE_DMA) {
++		if (flags & FLAG_USE_DMA) {
+ 			dst_phys_addr = dma_map_single(dma_dev, buf, map_size,
+ 						       DMA_FROM_DEVICE);
+ 			if (dma_mapping_error(dma_dev, dst_phys_addr)) {
+@@ -481,11 +491,11 @@ static void pci_epf_test_read(struct pci_epf_test *epf_test,
+ 		map_size = 0;
+ 	}
+ 
+-	pci_epf_test_print_rate(epf_test, "READ", reg->size, &start,
+-				&end, reg->flags & FLAG_USE_DMA);
++	pci_epf_test_print_rate(epf_test, "READ", orig_size, &start, &end,
++				flags & FLAG_USE_DMA);
+ 
+-	crc32 = crc32_le(~0, src_buf, reg->size);
+-	if (crc32 != reg->checksum)
++	crc32 = crc32_le(~0, src_buf, orig_size);
++	if (crc32 != checksum)
+ 		ret = -EIO;
+ 
+ unmap:
+@@ -497,9 +507,10 @@ static void pci_epf_test_read(struct pci_epf_test *epf_test,
+ 
+ set_status:
+ 	if (!ret)
+-		reg->status |= STATUS_READ_SUCCESS;
++		status |= STATUS_READ_SUCCESS;
+ 	else
+-		reg->status |= STATUS_READ_FAIL;
++		status |= STATUS_READ_FAIL;
++	reg->status = cpu_to_le32(status);
+ }
+ 
+ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+@@ -514,9 +525,13 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+ 	struct pci_epc *epc = epf->epc;
+ 	struct device *dev = &epf->dev;
+ 	struct device *dma_dev = epf->epc->dev.parent;
+-	u64 dst_addr = reg->dst_addr;
+-	size_t dst_size = reg->size;
++	u64 dst_addr = le64_to_cpu(reg->dst_addr);
++	size_t orig_size, dst_size;
+ 	ssize_t map_size = 0;
++	u32 flags = le32_to_cpu(reg->flags);
++	u32 status = 0;
++
++	orig_size = dst_size = le32_to_cpu(reg->size);
+ 
+ 	dst_buf = kzalloc(dst_size, GFP_KERNEL);
+ 	if (!dst_buf) {
+@@ -524,7 +539,7 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+ 		goto set_status;
+ 	}
+ 	get_random_bytes(dst_buf, dst_size);
+-	reg->checksum = crc32_le(~0, dst_buf, dst_size);
++	reg->checksum = cpu_to_le32(crc32_le(~0, dst_buf, dst_size));
+ 	buf = dst_buf;
+ 
+ 	while (dst_size) {
+@@ -532,12 +547,12 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+ 					   dst_addr, dst_size, &map);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to map address\n");
+-			reg->status = STATUS_DST_ADDR_INVALID;
++			status = STATUS_DST_ADDR_INVALID;
+ 			goto free_buf;
+ 		}
+ 
+ 		map_size = map.pci_size;
+-		if (reg->flags & FLAG_USE_DMA) {
++		if (flags & FLAG_USE_DMA) {
+ 			src_phys_addr = dma_map_single(dma_dev, buf, map_size,
+ 						       DMA_TO_DEVICE);
+ 			if (dma_mapping_error(dma_dev, src_phys_addr)) {
+@@ -576,8 +591,8 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+ 		map_size = 0;
+ 	}
+ 
+-	pci_epf_test_print_rate(epf_test, "WRITE", reg->size, &start,
+-				&end, reg->flags & FLAG_USE_DMA);
++	pci_epf_test_print_rate(epf_test, "WRITE", orig_size, &start, &end,
++				flags & FLAG_USE_DMA);
+ 
+ 	/*
+ 	 * wait 1ms inorder for the write to complete. Without this delay L3
+@@ -594,9 +609,10 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+ 
+ set_status:
+ 	if (!ret)
+-		reg->status |= STATUS_WRITE_SUCCESS;
++		status |= STATUS_WRITE_SUCCESS;
+ 	else
+-		reg->status |= STATUS_WRITE_FAIL;
++		status |= STATUS_WRITE_FAIL;
++	reg->status = cpu_to_le32(status);
+ }
+ 
+ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
+@@ -605,39 +621,42 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
+ 	struct pci_epf *epf = epf_test->epf;
+ 	struct device *dev = &epf->dev;
+ 	struct pci_epc *epc = epf->epc;
+-	u32 status = reg->status | STATUS_IRQ_RAISED;
++	u32 status = le32_to_cpu(reg->status);
++	u32 irq_number = le32_to_cpu(reg->irq_number);
++	u32 irq_type = le32_to_cpu(reg->irq_type);
+ 	int count;
+ 
+ 	/*
+ 	 * Set the status before raising the IRQ to ensure that the host sees
+ 	 * the updated value when it gets the IRQ.
+ 	 */
+-	WRITE_ONCE(reg->status, status);
++	status |= STATUS_IRQ_RAISED;
++	WRITE_ONCE(reg->status, cpu_to_le32(status));
+ 
+-	switch (reg->irq_type) {
++	switch (irq_type) {
+ 	case IRQ_TYPE_INTX:
+ 		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
+ 				  PCI_IRQ_INTX, 0);
+ 		break;
+ 	case IRQ_TYPE_MSI:
+ 		count = pci_epc_get_msi(epc, epf->func_no, epf->vfunc_no);
+-		if (reg->irq_number > count || count <= 0) {
++		if (irq_number > count || count <= 0) {
+ 			dev_err(dev, "Invalid MSI IRQ number %d / %d\n",
+-				reg->irq_number, count);
++				irq_number, count);
+ 			return;
+ 		}
+ 		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
+-				  PCI_IRQ_MSI, reg->irq_number);
++				  PCI_IRQ_MSI, irq_number);
+ 		break;
+ 	case IRQ_TYPE_MSIX:
+ 		count = pci_epc_get_msix(epc, epf->func_no, epf->vfunc_no);
+-		if (reg->irq_number > count || count <= 0) {
++		if (irq_number > count || count <= 0) {
+ 			dev_err(dev, "Invalid MSIX IRQ number %d / %d\n",
+-				reg->irq_number, count);
++				irq_number, count);
+ 			return;
+ 		}
+ 		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
+-				  PCI_IRQ_MSIX, reg->irq_number);
++				  PCI_IRQ_MSIX, irq_number);
+ 		break;
+ 	default:
+ 		dev_err(dev, "Failed to raise IRQ, unknown type\n");
+@@ -654,21 +673,22 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+ 	struct device *dev = &epf->dev;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
++	u32 irq_type = le32_to_cpu(reg->irq_type);
+ 
+-	command = READ_ONCE(reg->command);
++	command = le32_to_cpu(READ_ONCE(reg->command));
+ 	if (!command)
+ 		goto reset_handler;
+ 
+ 	WRITE_ONCE(reg->command, 0);
+ 	WRITE_ONCE(reg->status, 0);
+ 
+-	if ((READ_ONCE(reg->flags) & FLAG_USE_DMA) &&
++	if ((le32_to_cpu(READ_ONCE(reg->flags)) & FLAG_USE_DMA) &&
+ 	    !epf_test->dma_supported) {
+ 		dev_err(dev, "Cannot transfer data using DMA\n");
+ 		goto reset_handler;
+ 	}
+ 
+-	if (reg->irq_type > IRQ_TYPE_MSIX) {
++	if (irq_type > IRQ_TYPE_MSIX) {
+ 		dev_err(dev, "Failed to detect IRQ type\n");
+ 		goto reset_handler;
+ 	}
+-- 
+2.48.1
+
 
