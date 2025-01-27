@@ -1,265 +1,251 @@
-Return-Path: <linux-pci+bounces-20403-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20404-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB00A1D6F8
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 14:37:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A206A1D878
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 15:32:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 004B37A393B
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 13:37:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D460F3A302B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2025 14:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930471FF1C4;
-	Mon, 27 Jan 2025 13:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D57747F;
+	Mon, 27 Jan 2025 14:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ocDqO8Vh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vbqyFxMe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2073.outbound.protection.outlook.com [40.107.92.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83CF1FDA84
-	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 13:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737985070; cv=fail; b=EbmD2E0n4PXuhS3T+/Nw+tKBfGXTkF6WqcbAuZEM/+4MgK/ScR+7w49CbzBGxmUyus8N+imWwO24tij05hXd10AOK/Os8ICVFB+T77BU4ioPyC/TJwrNWcnA6/F6kABcI0SjZmEZyS1n7BE6Mo3Jr6fPirRcKfm63w+xqf4IFdU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737985070; c=relaxed/simple;
-	bh=h7bDZtKlbejtJ7p/M93wDm8EcVLmsbK/AtvVNyKpNrE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UJ0hU3o35cenYde3AuR+PugubXMShi9DgCGVk9fcBXnnf0M3uyaPMYK32WGlil7AsHBJxNCpfo8CRTk4oUHjnvStD5Ik9QTmWwT/jAJG29g2qI4wmzgRipH0sCJABuVDDFeN4NgrbaD6uC2PNwJibJCJkg8s6kq87qgfIrK3vrs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ocDqO8Vh; arc=fail smtp.client-ip=40.107.92.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c0oeKFnxlvEJADEFdsSVati7nWVwgcbZkgxm5MXouygZV/7N4a/EdU1oi/BY7MSHJZBl6KhKEVIf9ZiHY91SScKUL6fcf+Tb0EOYbFi0ID43C249RJPk36WFiUzhUwvBnW7U2bnBKn6ADmdePQCSo4QMDTXgqd0Eex6+d2rU/f2HKx9KFBvJ7yT/UWWJrTUTeKm7NbFd0/a6ch39gwudlH4UBTXv0SJtlko6BbYMr+RWV6cxA1MPbMXo0pNMQt7IiYQi3sR+SOMFnCz6JGxYjZUlyHOYe4rEyvmN0ieDQCBpvrPpS6h8eiuXDDPLQzx9mlj0jGHKSXOIYXNbspLf2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4J9Ubij2vAAkaK908lxvjE8/TbPtV+z0Inz4d+9oV84=;
- b=jlCjv1I4+1KFumXo60Vcv/hY/cx22KBaZFNlGQgBO3h0lKYPkiLVq9vJheMLWxmqXKXYcjqQ1P4Sx0kA/Wgp3IOZfRSp5EQ/oNehk5ZrPPnA1S9Fjdg0dUOoI1Wtxq8tF4fqxKQp499rjSrkl3SwWnFb+RwsMC6jFVc4b5Y5IvuTm3JubAnPQjD/h9xRy/9gwgxfPU21B0Ct/ExuTu9NexanRjkmu1kIh6t8k43jIvM59jrMdRJCWoe/mkYnI9vqS9Azb9K6/sTD/OSSwdUQckWpNkYtsv0Y2JVtRUaLq3n4d2fhbJanwArS/Ytt6PfFXnMuNe+vmjUJzQ1wlOsvYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4J9Ubij2vAAkaK908lxvjE8/TbPtV+z0Inz4d+9oV84=;
- b=ocDqO8Vhx2bhZyBH8GY+Yfv9/afLt8SWCvvppjQV9A8H9jwWDTyBHIQj9bS0oXB6hTnuS+dVrmRZqEV4wxkObMYegyQMFrhEdp5J849CpoFOWKmoLLQ9VMN1or6sF8LUUMHItsZPmKiIRE4ezfaiD2YE6YnjliVSi9dmH2DD0XHlS8ReE5LdEGWfS41WPOCldJssStcclJTBwhtf/kIbvL1l1ZcNC2m5YC/F3fwy8nlo5mFNzVhq8Hjja3Wr2JwwKrZK16YRYKB0A9lsXJfu9j8TjGtlLAGoFrlU61r+MQ0m1hb8lAzr/AL3QKfjB6oQ9yF7+JIPfXtPtAj+qkrlVw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
- by BL1PR12MB5947.namprd12.prod.outlook.com (2603:10b6:208:39a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Mon, 27 Jan
- 2025 13:37:43 +0000
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9%4]) with mapi id 15.20.8377.021; Mon, 27 Jan 2025
- 13:37:43 +0000
-Message-ID: <b324a46f-faf0-480a-a8ed-d6dc9b171ead@nvidia.com>
-Date: Mon, 27 Jan 2025 13:37:38 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] misc: pci_endpoint_test: Handle BAR sizes larger than
- INT_MAX
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Li <Frank.li@nxp.com>, Hans Zhang <18255117159@163.com>,
- linux-pci@vger.kernel.org
-References: <20250124093300.3629624-2-cassel@kernel.org>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <20250124093300.3629624-2-cassel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO3P265CA0027.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:387::17) To SJ2PR12MB8784.namprd12.prod.outlook.com
- (2603:10b6:a03:4d0::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69742824A3
+	for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 14:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737988347; cv=none; b=S7KnQkUwy58oRMneqv367LWgccj8kes4F0z3d/DS4hpkJ4L3wSU4bbAdepREGzyFAoGtUrXC3414Co0nnAwfaX1eL2ETvFU5fcBLM9fjL1Gw2mLRN+v/iRJc5tOAgdHC2zJ634YUSX6xfWLzTrjKJoYTm59BOezA8FVvHp9AvW8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737988347; c=relaxed/simple;
+	bh=3U+wlxERzTd4gFnK7jQrkNNuYzZ0sx8jHZtQKz8HwtY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TkQNDaTsb7YLvc0TmI5HRlL4okzbLaFI3DTP9+/C6wEA0AFw+bAL03HkDccoH04u2GkPF9B6jXEmUr1ZQoWeGN07KHGe74wViYiQiATOGh0lm8ETslAu4nEX1Kv8BCgIGWwMjy9tXwhIWbKacuVe18FgU8hOXp1s5sm1qUjq3Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vbqyFxMe; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e3a0acba5feso6077214276.2
+        for <linux-pci@vger.kernel.org>; Mon, 27 Jan 2025 06:32:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737988344; x=1738593144; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MiD54sGKGVL3KpLtkR/LjHneucqmwIVXNUd8n+WxgHk=;
+        b=vbqyFxMeZ2jQCiwp7WgJCDm9dyj9Z1RX6chfWR+KzlBJ34oiANA4IsAadDLh/9jGNC
+         O20xTF5exF7ued3Jkv3LhIeCqAm+AaNMprRTSt54Z4rr758WzmgNNA9mPHWTagC5wQJH
+         wTQQvYlAmpVmxv7acfdq+nzrWXdquRyhGT8zedSE3PWCEFLSHsxRonz8g7vbjmNWG4e5
+         6Y9XyHARYmbaTLvsbcwZZjvVx+taq8m3+jlQmORdSDzwJEmyHFAnuPbNspMGTQj7ra7A
+         7/EvIcS227YtObYzTatcU5nv5BR26xJDaRZSZnKlecefKvfR2VqxPWzrjCcEcUXt95zu
+         etSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737988344; x=1738593144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MiD54sGKGVL3KpLtkR/LjHneucqmwIVXNUd8n+WxgHk=;
+        b=anVOmtzRd3u94/hHXMZpERlw68v/fKXhjb07gGFsf+i3/i4FFCrlhs49ACXM23YR+X
+         pGdW7Pn3HB0j1oLz5BBaN91Mq8IG0MUgpWA8vL8v+Z74YGVZ3OiCgNlfmAnRh7SrDQFh
+         /uJ7gPBPICMjiaWiNoqiWXRAcDGP1nD2v+O2e9mOSctxquY57aHy6GpuQV81JeV+NHE0
+         TP+P83XDLKZHQwz2cqxZCQnzndajITvDRSGM3bqqYX2e1Q/HzYWbean5klSzgu3vsqqa
+         eOBHVFCFCuqFSDpjBSL3x75a+vBlgmtSH0hufaeF8gJeFJqL5uH7X+fPeLbprizqg2gs
+         /rwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqSsiUiDuoi25zKhKdzPK1dF3VFf58DEjaUjWbu3H2RpyTIuiVfXnX1wLd/PZpboz1dwPP6TdWmgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUtfHcM3b/XdrgEOKkYSetBCfiYG2rlN8LJaydPz6magDoeuRA
+	T0TkVEnGUFSeklaMg+4l4FoJctZ8KNWDYavjJKuH8aXT7mNbsO1DawRlicCOEc37+e6REdyjd3S
+	RgQ1ClzJMSZWu1Z9qGiX7q4QWAYrnIsCvM9fn+Q==
+X-Gm-Gg: ASbGncvtyb5fSCNCpUy0ahF8eZfSdfOo9ROK35/lmPvVMF8o8pNKxF07yavZC3GD07D
+	Gf+VbAlJQVxrvivdAf01dwhO6B7HfRVch4sl3SnsE0AzO4BI7NvXLjQ5zvxba8/I=
+X-Google-Smtp-Source: AGHT+IF2qrhalK8dXiECwjNhaJHAeaiUoKN7zzq1rqCSPzHfhyiJHCMonXt6f6hVNH1MR53EK038D1HbRMWujS1dltY=
+X-Received: by 2002:a05:6902:15ca:b0:e58:dbf:ed05 with SMTP id
+ 3f1490d57ef6-e580dbfefa4mr19756443276.10.1737988344256; Mon, 27 Jan 2025
+ 06:32:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|BL1PR12MB5947:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc9bfc29-5c77-4f18-c622-08dd3ed7c702
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aktFSDRGL1NIeEd6NjY0Y09tVStHMG5QSFJHOVJPa0tuRFNkQm5pekEveUY0?=
- =?utf-8?B?R1I3Qm1CbWt0SmY2TnpuVHZUS3Zwd3hpa0NPUzMvd3orSTVJZEtDQmpjNmxE?=
- =?utf-8?B?R29hUWliTS8vUXlmaGlVTDNNN29rRFhUb1o2cVVvL3ZJbmVYWHJNSFU3Q05j?=
- =?utf-8?B?YzR1L09qb0dLMmpsTEV3dzRrUmJ0Tno4WGdoamJ4OHN3dXE1OHY1djYvNkZH?=
- =?utf-8?B?bWYrZWJqTmFMS2pncmZhZWJwTERHZ3h4OUppZk1ZVnVlOUJQdCtTYmxwUHhT?=
- =?utf-8?B?L1FTUWpsa0ZBWGVGTmNFTTNxa25hOGdkakhwQmM2Ny92ZExscm9pbGQ5Nmx3?=
- =?utf-8?B?N0hRRjJLeFVZYXJtSk5tTGJLMzkxZU9YSTNINS9WYkk1QWlpSVVsZHBLcUN0?=
- =?utf-8?B?dEdYRFlsYzlFZ0hUZzkwZmtuL21xNzZib2Y1RUMzOFdpbmtLa2JHRTArVjhi?=
- =?utf-8?B?L2RJa2x2NzNmbEhzUjh3NUZFQjl5blFNRlJ0eGEyMlVEK3dMeGtJOFVHeE9V?=
- =?utf-8?B?dTA2ZlE3UWh4cGp2ZDBiS1NTbXZoWE05S1VNb2FaVmIyNXg0SkdVZExObGtE?=
- =?utf-8?B?K2h4a0dlck1jeURHcmJlQ3ZnZEJNdlVLNDgxNXd3RC9FWFB0YWRBbG5oR2FK?=
- =?utf-8?B?NUJtVVpjTkJXQk1MU3dGOC9VTS9zcTAvRUl4eTB3NW0yVGJTeFVnSjlXZk1q?=
- =?utf-8?B?S2FYSDA3eWlGVFlIVVhMS3NlQ3lHM2dlNTdMazMzb0paUHp0SlhNRWpSVmlI?=
- =?utf-8?B?dk52dTNkcnJHczRNeVpiSXM1OGxmeUx1YVBHWGZEbkFRUmxlLzEwSVk0MW1V?=
- =?utf-8?B?bmFud1lPUFdZVmFtUy9xYkYranI2UFNrM2NCaEpldEF2QUlVMVJwNW12ZW94?=
- =?utf-8?B?OEg0TTZ2V0FQVDBOVjhyenNUeis2M29UMUcxVUZBSDNHZVFFajZjc1JYY1pK?=
- =?utf-8?B?Q1VwRStNTXdmeGdXanJCdjE0TDNEQTNyU3l6VjZpTkRsTyszN1NMN0t6ZGlk?=
- =?utf-8?B?elNucHNDb2xXRDF6NEgveGExRE51NHFhV3l2aXdrSFJIRndsSEd0VHNGRjln?=
- =?utf-8?B?d3o0dkZSWnM5Z0MzWnNZMU5ZUG1vdWdDTWxBdVZvRk8rQ1EzWm44NGZQUjBa?=
- =?utf-8?B?bzhIZStqOGlnZjVpK3lRYzMzL3N1aURBbjc1QjVJeUorZGp2cVBBaG5uQzcw?=
- =?utf-8?B?MGMxT1FxQVZveHdlaCszRDlUM0l5ajl0SERVMVlKc0dwYkVOd2VBd3VQaG1l?=
- =?utf-8?B?M3pnWTFwQnZydnU5dlRXYy9XV1lzem54Sjh1M2hKaHhCVlhqRHpFb1NOaXRQ?=
- =?utf-8?B?RmZNQlZ3dE50UnR2dlQwOFpKVTZOaE1pcEIyblZWNlZMQytiL0xLVzQvWmpE?=
- =?utf-8?B?eHB1dlZzODhIZ0JaaHlndUxZOG8zZGJqQWRJSEJJMHFYYU9xOVdqL0FSeHgz?=
- =?utf-8?B?cmZDQUFQaXhPSXRTZ0UxdWdVaURyR1lnN3ZKSEo0b2R2OGhsM3IyUTErVVBs?=
- =?utf-8?B?R0p6ZjFBTms5WkNvZnE5Zlhncm41OHJVNjJ0bnkrem5Yc0F1SUwybk41QzNH?=
- =?utf-8?B?c1lLWkozc1dSU3dvKzBqZUNFL214UTV4M252dk8zZjh6aHVOV29FOVlIMklJ?=
- =?utf-8?B?M1liOFlBblp6dm03NEcwZEIwUWlJVzVIVmpmYzN5QTA5YWVoVnlwWGZ1T0hs?=
- =?utf-8?B?TitqL0tuWGJwZTQvWHR6K2dscnBCa1gxMzBFZDNDT3RNUDlCTDZsRElOU2RZ?=
- =?utf-8?B?WXN3R205d1gvRkgwMmRvUTFodnZlbW5YT2ozcmJxZy8wRnZaVmRvc1cyUW9u?=
- =?utf-8?B?U3NIaDM3Q1VIbVZydmpjYytMSGwrVm9ST2JsYkpKcjc5d3g5WWpXcWx1RVFV?=
- =?utf-8?Q?uHGP12NwjdNL/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TS94TXNhMjROTjNNWi8zTEo5S0hXQUV3VjYzaTZ1RTd0WHJXd0lBNUtUakVH?=
- =?utf-8?B?dldUUjhaTjQ5NDMrMXBNRXV0NWtLd0RERVFERWt4VjZkMVJmcVhTaGJKYzdO?=
- =?utf-8?B?NGlXeXBQSlNIZVhZNVQ4ZitFekE4WDhBTzNHUDVqekowRTlCS2EwK1U2eGNs?=
- =?utf-8?B?MlRTenU0ODJCT3ZtMmFRNHRtSlFmMmVRTGtPcjF1VGhRZExKSGJoeGNxOTJq?=
- =?utf-8?B?M1dsSVhpb3FiK1pycGJIYWg0TkRwR1YrblVWYndLYnB5V3JuNnJwR1E2ZnBl?=
- =?utf-8?B?MHkxTTRVL2orcDZuRGoyM1ZOR3ZMWWRXQkZiSlBuWko2UWxaaG5kSDlBZHpn?=
- =?utf-8?B?NVF6Wm0zdGE4U2dOZkJjemk0UExpSUxvTjJhOHYwOUYvUnh4eGhsWllNbXNX?=
- =?utf-8?B?dzdCODh5VDV0b1djZXpCQTRiRmU2ZlFUaGx1ek4ySURtNW83YUliV0VYZ210?=
- =?utf-8?B?bnAwQlU3Z3c2R0VkTkFzbGxpL2MrdUpXeU1iMG5EOXV3TUlBQVB2RGNCOTNJ?=
- =?utf-8?B?Y3A2VVc0WU5KYVFwWFhFNis3MUowUVhpRytoa0ZoVm12bTR0VmFEYU1VV1dR?=
- =?utf-8?B?Y29rZk5YSWRwTzlJRFk2aTluK1J1aGQ0Um9ydEZKd25UcEppSWNPbWo3R2lY?=
- =?utf-8?B?MCt3a3A1c3QyNURMVlpBTFQ3ZWU5bUxtYmJGcVdGcUM0V2RHUXEwc2pOU1NG?=
- =?utf-8?B?K1JXVTluVHB3L3B1Zk9LK2FNa3hiZmltYi8vT0hYRFVBRmVUd0pmZU9oQjB6?=
- =?utf-8?B?Wk1JM3R6U1VlZUZvRldBSmZFUHI1eFNaNlBTZm00K0YxYU5iNHpLbm9mWTZO?=
- =?utf-8?B?ZURPTzRDMXNsYjhFaWQxR2ErZFp3L2F6K1NqQmpteVFJbWVmL0paOC83R3Jn?=
- =?utf-8?B?enR5djRSZ0tEOHV4b2JTUjc3SEZDa2paZjQ3RklZbWxoUzA1UUd2QityQnN1?=
- =?utf-8?B?REs3WTNVZmJyZjJ2WHpvWHRhOEM4cUQ1YWx0dldmWDJHNkl5T2JNV0ppVkI5?=
- =?utf-8?B?QVBwSW9NZEF0U08yQ2xEMno0bFdROTlZUEg5cVFnKy8zUW9Iaks5cTZhTGVv?=
- =?utf-8?B?eDhiclRJaWVmVFBiRGVJZUNTTk5PSXJFRzExTXk4U0QzTndyQkVOREMzQmJ2?=
- =?utf-8?B?WE42bXNOeHArOUtZYTkvT2pldHd0eHNzTGNIcHFZa0VxWWJJQnRsWk03ckVW?=
- =?utf-8?B?RlZ1dHdMR25TdVBGZG4xSVNCU3UzVWdCTHgxbGo5ZTVyNVZkSXNTc2dZamhF?=
- =?utf-8?B?QkRjeGoyd1JEL09kSTJ5V3BFc3QxOER5eGl5Q1hubUJPTE5YSENFWC92c3ZO?=
- =?utf-8?B?NnJnR1E4QlcwdGFaT05jUmVoOUVJUmFUWlpyNUZabUtBdjJwK0kzR0d3K0xE?=
- =?utf-8?B?ZGxWcy9VN2tTVWZFemtGdGhyaFpucHpYYndYM3RFOG02cU5WTjhRcXNPRFNE?=
- =?utf-8?B?OHhIaHA4Q3IyRGRMU0QxcGQzajBKQm9ueE4yNzNsRVZ5dzBtcnRNWVBndXNV?=
- =?utf-8?B?K01ZUldOYUpkWW9wbHZKdFVjTUFMOTdOYjlWM0VZb0k3cm83TU9RN09VZWNF?=
- =?utf-8?B?ZURteUJCUWQ5WE14VENYUzJPVWNDTDVXSi9oUHlTYzM5b0VNdlJjWjhuTEtH?=
- =?utf-8?B?bHlVampTbDJXY3lKWHF4L0NaRXc5NjBxR0RMSHFEOWhJayswWTFwRXNjU2pm?=
- =?utf-8?B?Qzl4NW1mUXBkczF3V05nbVVwWDc0N2dPNmx3dG1mNWpURzFkM01mUUljWTZk?=
- =?utf-8?B?dkIvUlhrVmhJYk1rQkdyRXlmRWhJRkJTRDJZcWVFU0tCMElUcUlzdDlvdVQw?=
- =?utf-8?B?QUl1OTZkbVhjcElDRVlpYXlCSytJR2EvUC9HeTBHYlhWZWUxOEJNVk1kSmll?=
- =?utf-8?B?c1hqdTV4dzQ4V2tlS3FrSjVtYmNydzNWOHFld1kxRXpybFBTVHhYMzlJbkZa?=
- =?utf-8?B?RUF3dGVqZ2tkZmlHbVdHV3NRb0haQnJ1azBKVi9vYmIvMlBBOHVMUzFOS0h6?=
- =?utf-8?B?WXNwTEVLTjhhMUR2enhsZnpHUkhUdEZsU2xHTm4yekpDa3F6RHpiY2Fmd0VG?=
- =?utf-8?B?U0NCaVZKazFWTTIzUm1TZ21sWm83ajQrRFJvN3V3NEhIOGNQVGVpOEJ4TTF6?=
- =?utf-8?B?S1habVpEd1N5cUdmdFBUUGtlZjlqak1rUzB5Tjk1Y3pxSitTVEwzSXdXTW1Z?=
- =?utf-8?Q?tmKw+4Yse8KhCLOPI8oMYrWd4UJxcSyv98etAktZpwyn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc9bfc29-5c77-4f18-c622-08dd3ed7c702
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2025 13:37:43.7010
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1c2P7H0DRW/3+20mX/S5xY1CO6g8E/ojA2GNpjDnSKbdZoy2PddcQ+oJZ1V6R9t7X+xYxESCLlYppJ/rFM/ESQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5947
+References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
+ <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com> <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
+ <7882105f-93a3-fab9-70a2-2dc55d6becfc@quicinc.com> <Z3057yuNjnn0NPqk@hovoldconsulting.com>
+ <20250113162549.a2y7dlwnsfetryyw@thinkpad>
+In-Reply-To: <20250113162549.a2y7dlwnsfetryyw@thinkpad>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 27 Jan 2025 15:31:48 +0100
+X-Gm-Features: AWEUYZkcntMtoxK0sNVjcPqv6JHNvnG4HSn-DiU03ZeCG_vNSYm_EBMz2h3QCfM
+Message-ID: <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, rafael@kernel.org
+Cc: Johan Hovold <johan@kernel.org>, Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, 
+	Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Markus.Elfring@web.de, 
+	quic_mrana@quicinc.com, m.szyprowski@samsung.com, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 13 Jan 2025 at 17:25, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> + Ulf (for the runtime PM related question)
+>
+> On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
+> > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chundru wro=
+te:
+> > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
+> >
+> > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge *=
+bridge)
+> > > >>                  pcie_bus_configure_settings(child);
+> > > >>
+> > > >>          pci_bus_add_devices(bus);
+> > > >> +
+> > > >> +        /*
+> > > >> +         * Ensure pm_runtime_enable() is called for the controlle=
+r drivers,
+> > > >> +         * before calling pci_host_probe() as pm frameworks expec=
+ts if the
+> > > >> +         * parent device supports runtime pm then it needs to ena=
+bled before
+> > > >> +         * child runtime pm.
+> > > >> +         */
+> > > >> +        pm_runtime_set_active(&bridge->dev);
+> > > >> +        pm_runtime_no_callbacks(&bridge->dev);
+> > > >> +        devm_pm_runtime_enable(&bridge->dev);
+> > > >> +
+> > > >>          return 0;
+> > > >>   }
+> > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
+> > > >
+> > > > I just noticed that this change in 6.13-rc1 is causing the followin=
+g
+> > > > warning on resume from suspend on machines like the Lenovo ThinkPad
+> > > > X13s:
+> >
+> > > Can you confirm if you are seeing this issue is seen in the boot-up
+> > > case also. As this part of the code executes only at the boot time an=
+d
+> > > will not have effect in resume from suspend.
+> >
+> > No, I only see it during resume. And enabling runtime PM can (and in
+> > this case, obviously does) impact system suspend as well.
+> >
+> > > >   pci0004:00: pcie4: Enabling runtime PM for inactive device with a=
+ctive children
+> >
+> > > I believe this is not causing any functional issues.
+> >
+> > It still needs to be fixed.
+> >
+> > > > which may have unpopulated ports (this laptop SKU does not have a m=
+odem).
+> >
+> > > Can you confirm if this warning goes away if there is some endpoint
+> > > connected to it.
+> >
+> > I don't have anything to connect to the slot in this machine, but this
+> > seems to be the case as I do not see this warning for the populated
+> > slots, nor on the CRD reference design which has a modem on PCIe4.
+> >
+>
+> Yes, this is only happening for unpopulated slots and the warning shows u=
+p only
+> if runtime PM is enabled for both PCI bridge and host bridge. This patch =
+enables
+> the runtime PM for host bridge and if the PCI bridge runtime PM is also e=
+nabled
+> (only happens now for ACPI/BIOS based platforms), then the warning shows =
+up only
+> if the PCI bridge was RPM suspended (mostly happens if there was no devic=
+e
+> connected) during the system wide resume time.
+>
+> For the sake of reference, PCI host bridge is the parent of PCI bridge.
+>
+> Looking at where the warning gets triggered (in pm_runtime_enable()), we =
+have
+> the below checks:
+>
+> dev->power.runtime_status =3D=3D RPM_SUSPENDED
+> !dev->power.ignore_children
+> atomic_read(&dev->power.child_count) > 0
+>
+> When pm_runtime_enable() gets called for PCI host bridge:
+>
+> dev->power.runtime_status =3D RPM_SUSPENDED
+> dev->power.ignore_children =3D 0
+> dev->power.child_count =3D 1
+>
+> First 2 passes seem legit, but the issue is with the 3rd one. Here, the
+> child_count of 1 means that the PCI host bridge has an 'active' child (wh=
+ich is
+> the PCI bridge). The PCI bridge was supposed to be RPM_SUSPENDED as the r=
+esume
+> process should first resume the parent (PCI host bridge). But this is not=
+ the
+> case here.
+>
+> Then looking at where the child_count gets incremented, it leads to
+> pm_runtime_set_active() of device_resume_noirq(). pm_runtime_set_active()=
+ is
+> only called for a device if dev_pm_skip_suspend() succeeds, which require=
+s
+> DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtime suspen=
+ded.
+>
+> This criteria matches for PCI bridge. So its status was set to 'RPM_ACTIV=
+E' even
+> though the parent PCI host bridge was still in the RPM_SUSPENDED state. I=
+ don't
+> think this is a valid condition as seen from the warning triggered for PC=
+I host
+> bridge when pm_runtime_enable() is called from device_resume_early():
+>
+> pci0004:00: pcie4: Enabling runtime PM for inactive device with active ch=
+ildren
 
-On 24/01/2025 09:33, Niklas Cassel wrote:
-> Running 'pcitest -b 0' fails with "TEST FAILED" when the BAR0 size
-> is e.g. 8 GB.
-> 
-> The return value of the pci_resource_len() macro can be larger than that
-> of a signed integer type. Thus, when using 'pcitest' with an 8 GB BAR,
-> the bar_size of the integer type will overflow.
-> 
-> Change bar_size from integer to resource_size_t to prevent integer
-> overflow for large BAR sizes with 32-bit compilers.
-> 
-> In order to handle 64-bit resource_type_t on 32-bit platforms, we would
-> have needed to use a function like div_u64() or similar. Instead, change
-> the code to use addition instead of division. This avoids the need for
-> div_u64() or similar, while also simplifying the code.
-> 
-> Co-developed-by: Hans Zhang <18255117159@163.com>
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
-> Changes since v1:
-> -Add reason for why division was changed to addition in commit log.
-> 
->   drivers/misc/pci_endpoint_test.c | 18 ++++++++++--------
->   1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index d5ac71a49386..8e48a15100f1 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -272,9 +272,9 @@ static const u32 bar_test_pattern[] = {
->   };
->   
->   static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
-> -					enum pci_barno barno, int offset,
-> -					void *write_buf, void *read_buf,
-> -					int size)
-> +					enum pci_barno barno,
-> +					resource_size_t offset, void *write_buf,
-> +					void *read_buf, int size)
->   {
->   	memset(write_buf, bar_test_pattern[barno], size);
->   	memcpy_toio(test->bar[barno] + offset, write_buf, size);
-> @@ -287,10 +287,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
->   static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
->   				  enum pci_barno barno)
->   {
-> -	int j, bar_size, buf_size, iters;
-> +	resource_size_t bar_size, offset = 0;
->   	void *write_buf __free(kfree) = NULL;
->   	void *read_buf __free(kfree) = NULL;
->   	struct pci_dev *pdev = test->pdev;
-> +	int buf_size;
->   
->   	if (!test->bar[barno])
->   		return -ENOMEM;
-> @@ -314,11 +315,12 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
->   	if (!read_buf)
->   		return -ENOMEM;
->   
-> -	iters = bar_size / buf_size;
-> -	for (j = 0; j < iters; j++)
-> -		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
-> -						 write_buf, read_buf, buf_size))
-> +	while (offset < bar_size) {
-> +		if (pci_endpoint_test_bar_memcmp(test, barno, offset, write_buf,
-> +						 read_buf, buf_size))
->   			return -EIO;
-> +		offset += buf_size;
-> +	}
->   
->   	return 0;
->   }
+Thanks for the detailed analysis, much appreciated.
 
+So this seems to boil down to the fact that the PM core calls
+pm_runtime_set_active() for a device, when it really should not. If
+there is a clever way to avoid that, I think we need Rafael's opinion
+on.
 
-This builds fine for me! I have ran through our testsuite and so ...
+>
+> I'm not sure of what the fix is in this case. But removing the
+> DPM_FLAG_SMART_SUSPEND flag from PCI bridge driver (portdrv) makes the wa=
+rning
+> go away. This indicates that something is wrong with the DPM_FLAG_SMART_S=
+USPEND
+> flag handling in PM core.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+As an intermediate step, perhaps the easiest thing here is to remove
+the DPM_FLAG_SMART_SUSPEND flag from the PCI bridge? Ideally it should
+not break anything, but we probably would lose some optimizations.
 
-Jon
+Another option would be to use pm_suspend_ignore_children(), but I am
+not sure if that would be the correct thing to do here.
 
--- 
-nvpublic
+>
+> Ulf/Rafael, thoughts?
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
+Kind regards
+Uffe
 
