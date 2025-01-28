@@ -1,192 +1,145 @@
-Return-Path: <linux-pci+bounces-20468-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20469-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 473BFA20AC6
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 13:53:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BD0FA20BCB
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 15:12:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 560E57A0814
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 12:53:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B1B23A514C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 14:12:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC631A256B;
-	Tue, 28 Jan 2025 12:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41751A9B3B;
+	Tue, 28 Jan 2025 14:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GfLKuMW+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/XkcIn0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7441A23A4
-	for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 12:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D0819E96D
+	for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 14:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738068812; cv=none; b=RH7hm2M36lQZjnGX+syauCLv60yagqjWTFZhKSN6jnCkISxZQJHbhXSztZRfBmsmCegj2yh6sQCHDUqR1FB5MvTVUz2xzU2oubY1E1quc05Kv3sZW5zDyAV+rF9IFiabYmPczhNl4jWwktr+Ne71wnfcwbkalxr/obEdMG2NrI4=
+	t=1738073569; cv=none; b=GEx45vkgdApU1woakThA1arqxC9REI2YcS7CZP95un74ebXEPRArpxI1MgWWd3DRZEkfIlZ+IziBb2Wg+xFzMcJF0FtTTuu1g5ErNtvwBvTKJXYgSvjMXMHAIadje0BETXclleIG6SQfabaMJmjrCAhdG7njL2tj0CtSyCXon/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738068812; c=relaxed/simple;
-	bh=AmKBEMYbq3C1waUn1c3i1+nqUIo9we6DMiSCNRCXMuo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bi11ZCpL0SFDEUDJ/gudPMgrYFGqjpfA4rFzUEg8TryODSGPnG82FNP3P1IeLgRgOAi81tn3UBtPtFQyZZNG9WDL/d1Vz87J/B+X5UuU1lSWNAxUXjuBmCbavWtRtQ7yUhs8XEiRJks3z2k5aKbAzBYBG9NLdDwpgJIf9R6479A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GfLKuMW+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50S8hDUc014844
-	for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 12:53:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MV9sHX+bNUWcHes1enc1kOVtoMjibHPlM6e++jnw3fA=; b=GfLKuMW+eJwMrVKK
-	C4dzxdizExOpdLHR7oO9iv0y7WSELr6pViZR1rDuSXfVG0C+kFLZDwXb5eWRv3Y9
-	Ompc/HUe68D2Q/UoJ5S0gZJ5xJRwQ01sZjtwGgq1XONW7kvDtzagfg5mDvPjIimV
-	dAZAYoXnXVa6k9kPiaJSlY3sz2/Ucr6aXI2LFGaN1lmClelEEiBUzrDBLQddhwq0
-	VF+i/Nv8FVdsz+blETVhh6HMTbVPVpXRXZ1dW9xCKLzKJxvCY+nGIJXfaa4VnAGF
-	LrQ5tAZh9hUa+JCXckjwLApIIzJe/95G3v9+sm0XMSKXHSaqBUZOlFlXDPAAHqyd
-	TR0zXw==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44euyq8hkj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 12:53:30 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-467a437e5feso15364401cf.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 04:53:29 -0800 (PST)
+	s=arc-20240116; t=1738073569; c=relaxed/simple;
+	bh=yn26uxdUejJFoJ0PZH7zJ3oCuCmVZlc9RaH/CiDlxq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EVeSUmboEhEFlUhPbv/+cju0Vvvg9MUgIZ5mL7+MH46ax1WBWi75oWRtFIY5xUEas08NMe3G+Kq6PFh3YfRic1g6AdYb05QpV3Rskd3DaAP/z1otGz3VyWzITFj3jKrnzwGcVBJ6fqO05Xj22FFVUS7qPh/A8muL2etx+XPljYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o/XkcIn0; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21c2f1b610dso132500835ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 06:12:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738073567; x=1738678367; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PXDfra07WHKzdDWwIeK5+DGSQEf0MtRujOHeerUffjY=;
+        b=o/XkcIn0YEraR43tdorLNNoOJcKU4FM0Upgar+1aCmjdlPW2yEZG1/25dZxV8oQmoJ
+         4Nf8n1ZfQnM5kzea1JRIqf1bFvjUug8qQjHT7zx/wPxK5hwj2akKemYTWSyayX6lVROf
+         5pfWOkF+6/o5Qy1DYtMaVCLMJe32w3e2uN7mycZR1JBlbkVxoXYZpqM1mhzm20Rea0Z1
+         sDtJBZ9KEVgCPiKE3C+Ifc6/KoYrTGpph2dYi8m86d3r4VlSivATT7Rv8KZyNjkJdJbO
+         Mgc/LWAHt7Ena+ULis9rYGKjLdoO0VXMb074BUqo3dBVIPBZTx8NAoaLgodV9fFLbtBQ
+         Bt1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738068809; x=1738673609;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738073567; x=1738678367;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MV9sHX+bNUWcHes1enc1kOVtoMjibHPlM6e++jnw3fA=;
-        b=P896285CnJp2B8srf0BBnQOayUtrNSuEsuGA+G+KX/B2k3OUlyWDrUMiBX4v7EaPQF
-         3nwyePTe3LFngVb/4azOyL3xkBD5Ha+jifePakwtozwcSn0ziO1VhQ8BPJpY3v8MYgen
-         nNvRaADQr3Xei/7iMvVE5F09xzsdX6KI5JK3Q854uBu6zZtmSGWvnHCpO75RSSyySDH4
-         FsBhZ67qC7+x9F81L+syvtUdVVkI7rifRgVGZW12YxEWmThLc+VUYwfwdppmviJq8kPN
-         unzz50c4Sd02ZoWTfWm1inda8CnTSKREhvh3c3HM7vy9an1FtRMgHX4TpUKdN50J4a1A
-         836A==
-X-Forwarded-Encrypted: i=1; AJvYcCWWO3VM2t+ehEk/vbqoV+0S4fmjaxA+GA7khxseXNQZr9Ls3VvrttAO2JyGjFka4QPC4asj1AqD6Pk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuKs8561WqpNZs9pok4mUEb3C9pg+prAJm6UgPlWRS3/CZey3/
-	kDsoJ/G6rDEHTfoNENBr0YC/L/7KUXVr+xh9LNJtmCNg1wrkhheRFUkDsP0sNiw1tcQfdiXuDwl
-	KTUzQNBE1mDcevV0F8viv5zUgyGVrHSDoMJ717zb+WZ156XcKx1DOebzSphA=
-X-Gm-Gg: ASbGnct194+DBiy2GpmbFUoP6tbFR/oDNiEQ8+j8NIM+Iq1iRs3sQsTuhS1R7kbw3Uq
-	X8DXZ8wMaHnLTYRodhDkiDIcf8D7qF8CvrnwIHuzJpZRCAn2Ycrz7oiOIw75YsaKZDhH3Wpvld7
-	8n2tOrbrH7ZEKnpVH87gZ8yZFcGoEEKC6d1cORRaSIAKgmuFuSesuDN/zvtO5INrkUw9bvh9Wvj
-	vExCC6+Mkdq950FVLF9JWHRCZP2LThYHhfr0uaShELhOLODOTcC4i+vBQz7A3rd1sfppIZBgbCc
-	XVbltbEFyPZcC193hFd5+Xi7Ow/Df+OsCW5Og9NGQYU5CNQlVxc5WIOwgus=
-X-Received: by 2002:a05:622a:242:b0:462:b46b:8bf8 with SMTP id d75a77b69052e-46e12bb2f1amr255168701cf.14.1738068808695;
-        Tue, 28 Jan 2025 04:53:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGm5ay2LvDoijzjcNRhCGL+J9QvFyvGFGKVSlosrn3eTzj4AlErQXYlgeiM6A+1c4sLY5PPLg==
-X-Received: by 2002:a05:622a:242:b0:462:b46b:8bf8 with SMTP id d75a77b69052e-46e12bb2f1amr255168571cf.14.1738068808299;
-        Tue, 28 Jan 2025 04:53:28 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e66860246sm50383761cf.11.2025.01.28.04.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2025 04:53:27 -0800 (PST)
-Message-ID: <b074baa0-07c5-450d-8531-e2b1d706df0b@oss.qualcomm.com>
-Date: Tue, 28 Jan 2025 13:53:21 +0100
+        bh=PXDfra07WHKzdDWwIeK5+DGSQEf0MtRujOHeerUffjY=;
+        b=bHPLysaD+Jp0PtFV2zZtMYm90lbWLQuidnkowVpv6LGzabWj0YrRW5EIEQ90iP06qR
+         TuRqa4jNnAIfhE2MnH+po0UcRzYaCP1EUgyY3NwhW425fCmXwoSjcNuseuvEq9plR44z
+         b2NRK4xm4Wgftbg6RklCWN1DpCkPCyPqsblHtCN2LIgXuR3yY+EngD2JJjK2f8z8PBbQ
+         dUSxBqWqWMXAXaBad4Be1Mnh/8XjufQfBgJTAfohd4T+U0pmWDGSs06GpFuaVQHXm1i9
+         cUxUIphBSITdSX7M2t8PoVj3s+YJVxhRHHkyCQdIgLAHHdv5kDQi3J0Wa8xsc6DxB0Yb
+         5KCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCirqxMv+Ttwumo+iR25se16f+9lgY8qB8m+bn743iY5WSTp5whvauK0yReaHYgexns7nowlOOPy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytNNORQ8VQnyRGD4VvqU4yDvgCSIw2qdCmjrmELDGd5XipsaJQ
+	p4hkIamjGYDZIgC/tSgoCqlAQemW3kuC0fBpfde94ZHb3zvAn0bUVaE/JS7R/Q==
+X-Gm-Gg: ASbGnctSlOSV0BYWKzFvPV3kHagAgPop31cYeNZCqWYv+C4ENoaBB+aUgjvofKodL2U
+	fPJqmxO9M3WmgBe9Hn3kgyY3IqHQJbtwuUF+r4VgXkTxcbcrhzgrkQg/Vg2ztYORiZhe9sQhNpq
+	OMR9PEdeOdgCF8Qz/VqHgnJq/7qnrYOywTdGqDjLRmfgu7xKHNyijBL6vLJpl2IxH2vLP1Nor0M
+	n8Ek6Kbc29M0Nv6EeD7vbREJLzuKLHDdpI3EWAYaC5vMQUKdLIEI+DogjZDfcH8aJmliPePlcLw
+	lfw/K2tfywAeBwZMRR+FZS18JQw=
+X-Google-Smtp-Source: AGHT+IFugNHTESDdvy1aJKYszFZHQc3MsPWo016YwDGUhS0yiprn9wYgeiw7fydV3lTNoZrAswQLCA==
+X-Received: by 2002:a05:6a21:3285:b0:1e1:f281:8cec with SMTP id adf61e73a8af0-1eb21498383mr67710934637.10.1738073567270;
+        Tue, 28 Jan 2025 06:12:47 -0800 (PST)
+Received: from thinkpad ([120.60.131.121])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72f8a69fdd5sm9498571b3a.10.2025.01.28.06.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2025 06:12:46 -0800 (PST)
+Date: Tue, 28 Jan 2025 19:42:42 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Krzysztof =?utf-8?B?V2lsY3p577+977+977+9c2tp?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] misc: pci_endpoint_test: Avoid issue of
+ interrupts remaining after request_irq error
+Message-ID: <20250128141242.pog2tuorvqmobain@thinkpad>
+References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
+ <20250122022446.2898248-2-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] PCI: dwc: Add ECAM support with iATU configuration
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
-        quic_mrana@quicinc.com, mmareddy@quicinc.com,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>
-References: <20250121-enable_ecam-v3-0-cd84d3b2a7ba@oss.qualcomm.com>
- <20250121-enable_ecam-v3-2-cd84d3b2a7ba@oss.qualcomm.com>
- <20250124061237.he34clwukqwzqx2t@thinkpad>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250124061237.he34clwukqwzqx2t@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 42DRp3vPQwSixVohD9Yj29wyqRfG-J9I
-X-Proofpoint-GUID: 42DRp3vPQwSixVohD9Yj29wyqRfG-J9I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-28_04,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501280097
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250122022446.2898248-2-hayashi.kunihiko@socionext.com>
 
-On 24.01.2025 7:12 AM, Manivannan Sadhasivam wrote:
-> On Tue, Jan 21, 2025 at 02:32:20PM +0530, Krishna Chaitanya Chundru wrote:
->> The current implementation requires iATU for every configuration
->> space access which increases latency & cpu utilization.
->>
->> Designware databook 5.20a, section 3.10.10.3 says about CFG Shift Feature,
->> which shifts/maps the BDF (bits [31:16] of the third header DWORD, which
->> would be matched against the Base and Limit addresses) of the incoming
->> CfgRd0/CfgWr0 down to bits[27:12]of the translated address.
->>
->> Configuring iATU in config shift feature enables ECAM feature to access the
->> config space, which avoids iATU configuration for every config access.
->>
->> Add "ctrl2" into struct dw_pcie_ob_atu_cfg  to enable config shift feature.
->>
->> As DBI comes under config space, this avoids remapping of DBI space
->> separately. Instead, it uses the mapped config space address returned from
->> ECAM initialization. Change the order of dw_pcie_get_resources() execution
->> to achieve this.
->>
->> Enable the ECAM feature if the config space size is equal to size required
->> to represent number of buses in the bus range property, add a function
->> which checks this. The DWC glue drivers uses this function and decide to
->> enable ECAM mode or not.
->>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+On Wed, Jan 22, 2025 at 11:24:44AM +0900, Kunihiko Hayashi wrote:
+> After devm_request_irq() fails with error,
+> pci_endpoint_test_free_irq_vectors() is called to free allocated vectors
+> with pci_free_irq_vectors().
 > 
-> Some minor comments inline. Overall, the patch LGTM!
+
+You should mention the function name which you are referring to. Here it is,
+pci_endpoint_test_request_irq().
+
+> However some requested IRQs are still allocated, so there are still
+
+This is confusing. Are you saying that the previously requested IRQs are not
+freed when an error happens during the for loop in
+pci_endpoint_test_request_irq()?
+
+> /proc/irq/* entries remaining and we encounters WARN() with the following
+> message:
 > 
->> ---
+>     remove_proc_entry: removing non-empty directory 'irq/30', leaking at
+>     least 'pci-endpoint-test.0'
+>     WARNING: CPU: 0 PID: 80 at fs/proc/generic.c:717 remove_proc_entry
+>     +0x190/0x19c
 
-[...]
+When did you encounter this WARN?
 
->> +bool dw_pcie_ecam_supported(struct dw_pcie_rp *pp)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct platform_device *pdev = to_platform_device(pci->dev);
->> +	struct resource *config_res, *bus_range;
->> +	u64 bus_config_space_count;
->> +
->> +	bus_range = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
->> +	if (!bus_range)
->> +		return false;
->> +
->> +	config_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
->> +	if (!config_res)
->> +		return false;
->> +
->> +	bus_config_space_count = resource_size(config_res) >> PCIE_ECAM_BUS_SHIFT;
->> +
->> +	return bus_config_space_count >= resource_size(bus_range);
 > 
-> return !!(bus_config_space_count >= resource_size(bus_range));
+> To solve this issue, set the number of remaining IRQs and release the IRQs
+> in advance by calling pci_endpoint_test_release_irq().
+> 
 
-You made me think that there's some weird interaction here, but C99 says
+First of all, using devm_request_irq() is wrong here as
+pci_endpoint_test_request_irq() might be called multiple times by the userspace.
+So we cannot use managed version of request_irq(). It is infact pointless since
+pci_endpoint_test_clear_irq() would free them anyway. Instead we should just use
+request_irq() and call pci_endpoint_test_clear_irq() in the error path as like
+this patch does.
 
-"Each of the operators < (less than), > (greater than), <= (less than or equal to),
-and >= (greater than or equal to) shall yield 1 if the specified relation is true and
-0 if it is false.89) The result has type int"
+But this should be a separate patch.
 
-so I'm not sure this is necessary
+- Mani
 
-Konrad
+-- 
+மணிவண்ணன் சதாசிவம்
 
