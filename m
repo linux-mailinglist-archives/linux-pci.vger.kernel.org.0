@@ -1,164 +1,250 @@
-Return-Path: <linux-pci+bounces-20495-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20496-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7490A21059
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 19:05:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EDBCA2106E
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 19:07:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA87616294C
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:05:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4F891882A60
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:06:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 372E41DE8AA;
-	Tue, 28 Jan 2025 17:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E7F01DE4D0;
+	Tue, 28 Jan 2025 18:00:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="e80Ewpma"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgUY2lPK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6B1DE8AC
-	for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 17:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B1C1DE4C8;
+	Tue, 28 Jan 2025 18:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086964; cv=none; b=oly02co6HtSyL8It+tp7h+vX1oXOdaVSjp/tYDTEi6jXhn8dEAVXZpMBtNQF8s7f9H+TGjhe14tu8RoUzBu5WiZmoSrAmWfnx4XnW/Rm8DWtz2x5yqIyxepAOYtEA5wd/QAWXOckpWHc1P9pI+G/xfjUnIjggy6O2YnsHHOa57Y=
+	t=1738087247; cv=none; b=cC8CItS3GG0S8xOpnazL/xEwewOBul5I9v25KDzsW1tBfzewCNntlbKF2ZazjVR6EoCfiHZh2NqQQ+5QXjjWaBzXMPW7oNW++oGK8u2fkKguGX92Fr/zpqBBQQFp/ER6OfZoutZ2bBfXYNflweHHw3RqE5EszoeKsmkHx0ZNiy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086964; c=relaxed/simple;
-	bh=0KIzvD9qn4+fPI0OodAupunvDVg6ki0rugVJSiFUeUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rx7WZW9oTSTAHSNp+DGpzp7bsXyKN9lpBIEWz6tnZ77RMh37V76tMui3wtPdqiPRPxGv8nTvKt7iJsm0hgHzwxxzrVGcbGarEobvSSRaLsYs7hM+wJBkj+D4HBi30qOInuk5cPXCrrwlVXjsJb7YOHVUOIZcHKAgfm1vhNhM6LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=e80Ewpma; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3eba50d6da7so1468284b6e.2
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 09:56:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738086961; x=1738691761; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFaFXtulxARpixggrH83x42Uo27jjPVjXCZSK7e+S2w=;
-        b=e80EwpmaJsa1eU39Gsx+5WJnu/HyPCcFXZ7b/UF06PEY5WvoHUJjHWG8ige8oMZqmj
-         t4M8oLvZnMqvhZYegak+w6wamJ9YYy6rizfUk55yHZvdMdRZ22tULTwyy6bvKshWlYIZ
-         2LHdr+n1gUOEWSJLreTLRjk24b/Tp7HTb4pWc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738086961; x=1738691761;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WFaFXtulxARpixggrH83x42Uo27jjPVjXCZSK7e+S2w=;
-        b=G49PowgF7u61CpF2eCZJ4W2h6miPQkCZO6TDH1o52QkCv8zVjZFpt1leh7D1rb4gtw
-         yvT+e0fVWaHekViOggTJYsB6KCBfY4Q2Rb+9Usa3rqHECjuforiyyc7RywagXlLJGcaA
-         M2kSsgiPs2et3HzSsbhxRNKTH6d8+fuP0GEW8R3hlk1v35y5dTFy3tqjhHe70ADq8Twi
-         VSgD+4bQSsXQaKASdxFuchlnRgBhKySW3eCKytPlMuhXJaDDyFCg13d/Jx7QnDGyOu6R
-         NnISXH+HIQ42cdjO8J2fbl0VjY+H3qEPtpoc9sEvn7o5Ql2R/RLX7cKU0iZXclGk+srQ
-         H24Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWxHFgPkRmq/qb5nJBksl66qg2UzQPmlhxFuIWMW3qeqqX5ipq/qTP2dg4QMu1vQmdLmONLulY4PFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS8Hn0w1ui165ReI0oOsGcK+tZ3QTF/X52tEIlMEOMnbUTqsnW
-	lll0QFb2SZ6liGN6sjDMcV/cXapDLbAl3FK/5rCYbi5h7T27+czRG3qBbhw17Q==
-X-Gm-Gg: ASbGnct8Xs+tDlyobkLWQgm5TayIILXeVZKpXGI++BYVDeECU5CRbrToxjB3l3B+EuT
-	EF8GFwa3U2NQTNrhhjGEQNgdarpgIV5mvljEhaSQ1HWuruTxrbBM85kkz9i1p6DGTz4vQUHAmWd
-	jbSDJxoW159HVTtR6+nZjXf8DovaW7sSmukSvMCzeJNTOSAyPm2/U2K1DzTYXXVLWswOGQ6lxO7
-	W0DLLNook9YL6emP6sqNMgiMTJ+auApFBv9KKVNpesuHvEBQL0MQ5A5mb83gOC7qvHSP+KrAArN
-	LKorXIzU9naeTsXngPvHq96q3WV65t0FQJjmggY2162eKQA4seis3tA=
-X-Google-Smtp-Source: AGHT+IHonHcVzin7MrMAMt5oJ799fuBp9FUDl5Ft2PJO7WbyjEeyBqzZqyWPnMPg9enCe9wWUd+Yxg==
-X-Received: by 2002:a05:6871:a9cc:b0:296:e366:28ea with SMTP id 586e51a60fabf-2b32f3084demr35249fac.33.1738086960734;
-        Tue, 28 Jan 2025 09:56:00 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b28f16aa2bsm3683130fac.13.2025.01.28.09.55.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2025 09:56:00 -0800 (PST)
-Message-ID: <b1009877-6749-4bb1-95b9-ae976bef591c@broadcom.com>
-Date: Tue, 28 Jan 2025 09:55:57 -0800
+	s=arc-20240116; t=1738087247; c=relaxed/simple;
+	bh=VXAfVuETim54AIO9RvnU7S5vrBW08hU1VDFbFRd4JRc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=G95gR7QJEzTKsT7KHUfzbQJXw/0F/Y73IOL9y4IVYz1aZw87whfaPxK7rzFiXSWWYY6s0nRu+EP9w+99bwo+v+YsiTE89gONdIkkPC73AyPILRGJ+uYwqoQe0JV3Qixl21a5b++l00tG8cnaR/HcHUKq9Sjt93ghGbwRlZ2u98Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgUY2lPK; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738087245; x=1769623245;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=VXAfVuETim54AIO9RvnU7S5vrBW08hU1VDFbFRd4JRc=;
+  b=jgUY2lPKKBmPctezYEsJAtXA6yGlu737w3RR+jmAZnE6Bjq9mfsTeOxx
+   MfweXt9nSo7jGsNkwRFriZ428787bP7zG12KrTjELJnySNMI/6Km781kz
+   pk8moPtK7MfCxDe7VM1G+CwjjPdQul1AIAvLS++CKPXdnl4AUg5DklMMV
+   sZISB5Dq9R+18zWdfOfRRd9lCIbxY7KoPS8P/lptvEueItS/Is+6vgzxa
+   cSRP8eKUIseqbLoBTLL98blzQcc6VIH+JvgFbJHnnIyq5nXY/EfA1d0b2
+   60roHvtYUdjb7i+r5fqfAZPKuIQTe2mcQo7H2gPWL/IkifPhth1S8+G1w
+   A==;
+X-CSE-ConnectionGUID: 479O+8cySUGkDpJ387lW3A==
+X-CSE-MsgGUID: 0LVMiuzHR3mORNMjeJohJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11329"; a="49568476"
+X-IronPort-AV: E=Sophos;i="6.13,241,1732608000"; 
+   d="scan'208";a="49568476"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2025 10:00:44 -0800
+X-CSE-ConnectionGUID: VcNpFGWUSPuran+Rp+sfMg==
+X-CSE-MsgGUID: 8ySRey2DSlaqZyOBOwS7dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="109727772"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.65])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2025 10:00:42 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 28 Jan 2025 20:00:39 +0200 (EET)
+To: Sasha Levin <sashal@kernel.org>
+cc: LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Yazen Ghannam <yazen.ghannam@amd.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.13 13/15] PCI: Store number of supported End-End
+ TLP Prefixes
+In-Reply-To: <20250128175346.1197097-13-sashal@kernel.org>
+Message-ID: <19475994-b606-604e-f17d-a5251026c4df@linux.intel.com>
+References: <20250128175346.1197097-1-sashal@kernel.org> <20250128175346.1197097-13-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 03/11] irqchip: Add Broadcom bcm2712 MSI-X
- interrupt controller
-To: Thomas Gleixner <tglx@linutronix.de>,
- Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas
- <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-4-svarbanov@suse.de> <87bjvs86w8.ffs@tglx>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <87bjvs86w8.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-125273046-1738087063=:943"
+Content-ID: <a454467e-f70e-ab10-5504-a40b0a0459fb@linux.intel.com>
 
-On 1/27/25 10:10, Thomas Gleixner wrote:
-> On Mon, Jan 20 2025 at 15:01, Stanimir Varbanov wrote:
-> 
->> Add an interrupt controller driver for MSI-X Interrupt Peripheral (MIP)
->> hardware block found in bcm2712. The interrupt controller is used to
->> handle MSI-X interrupts from peripherials behind PCIe endpoints like
->> RP1 south bridge found in RPi5.
->>
->> There are two MIPs on bcm2712, the first has 64 consecutive SPIs
->> assigned to 64 output vectors, and the second has 17 SPIs, but only
->> 8 of them are consecutive starting at the 8th output vector.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> As this is a new controller and required for the actual PCI muck, I
-> think the best way is to take it through the PCI tree, unless someone
-> wants me to pick the whole lot up.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Agreed, the PCI maintainers should take patches 1 through 9 inclusive, 
-and I will take patches 10-11 through the Broadcom ARM SoC tree, Bjorn, 
-KW, does that work?
--- 
-Florian
+--8323328-125273046-1738087063=:943
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <82fe2192-25e5-7250-8d48-307f2f8ebcd3@linux.intel.com>
+
+On Tue, 28 Jan 2025, Sasha Levin wrote:
+
+> From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> [ Upstream commit e5321ae10e1323359a5067a26dfe98b5f44cc5e6 ]
+>=20
+> eetlp_prefix_path in the struct pci_dev tells if End-End TLP Prefixes
+> are supported by the path or not, and the value is only calculated if
+> CONFIG_PCI_PASID is set.
+>=20
+> The Max End-End TLP Prefixes field in the Device Capabilities Register 2
+> also tells how many (1-4) End-End TLP Prefixes are supported (PCIe r6.2 s=
+ec
+> 7.5.3.15). The number of supported End-End Prefixes is useful for reading
+> correct number of DWORDs from TLP Prefix Log register in AER capability
+> (PCIe r6.2 sec 7.8.4.12).
+>=20
+> Replace eetlp_prefix_path with eetlp_prefix_max and determine the number =
+of
+> supported End-End Prefixes regardless of CONFIG_PCI_PASID so that an
+> upcoming commit generalizing TLP Prefix Log register reading does not hav=
+e
+> to read extra DWORDs for End-End Prefixes that never will be there.
+>=20
+> The value stored into eetlp_prefix_max is directly derived from device's
+> Max End-End TLP Prefixes and does not consider limitations imposed by
+> bridges or the Root Port beyond supported/not supported flags. This is
+> intentional for two reasons:
+>=20
+>   1) PCIe r6.2 spec sections 2.2.10.4 & 6.2.4.4 indicate that a TLP is
+>      malformed only if the number of prefixes exceed the number of Max
+>      End-End TLP Prefixes, which seems to be the case even if the device
+>      could never receive that many prefixes due to smaller maximum impose=
+d
+>      by a bridge or the Root Port. If TLP parsing is later added, this
+>      distinction is significant in interpreting what is logged by the TLP
+>      Prefix Log registers and the value matching to the Malformed TLP
+>      threshold is going to be more useful.
+>=20
+>   2) TLP Prefix handling happens autonomously on a low layer and the valu=
+e
+>      in eetlp_prefix_max is not programmed anywhere by the kernel (i.e.,
+>      there is no limiter OS can control to prevent sending more than N TL=
+P
+>      Prefixes).
+>=20
+> Link: https://lore.kernel.org/r/20250114170840.1633-7-ilpo.jarvinen@linux=
+=2Eintel.com
+> Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+Hi,
+
+Why is this being auto selected? It's not a fix nor do I see any=20
+dependency related tags. Unless the entire TLP consolidation would be=20
+going into stable, I don't see much value for this change in stable=20
+kernels.
+
+--=20
+ i.
+
+> ---
+>  drivers/pci/ats.c             |  2 +-
+>  drivers/pci/probe.c           | 14 +++++++++-----
+>  include/linux/pci.h           |  2 +-
+>  include/uapi/linux/pci_regs.h |  1 +
+>  4 files changed, 12 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index 6afff1f1b1430..c6b266c772c81 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -410,7 +410,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int featur=
+es)
+>  =09if (WARN_ON(pdev->pasid_enabled))
+>  =09=09return -EBUSY;
+> =20
+> -=09if (!pdev->eetlp_prefix_path && !pdev->pasid_no_tlp)
+> +=09if (!pdev->eetlp_prefix_max && !pdev->pasid_no_tlp)
+>  =09=09return -EINVAL;
+> =20
+>  =09if (!pasid)
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2e81ab0f5a25c..381c22e3ccdbf 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2251,8 +2251,8 @@ static void pci_configure_relaxed_ordering(struct p=
+ci_dev *dev)
+> =20
+>  static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+>  {
+> -#ifdef CONFIG_PCI_PASID
+>  =09struct pci_dev *bridge;
+> +=09unsigned int eetlp_max;
+>  =09int pcie_type;
+>  =09u32 cap;
+> =20
+> @@ -2264,15 +2264,19 @@ static void pci_configure_eetlp_prefix(struct pci=
+_dev *dev)
+>  =09=09return;
+> =20
+>  =09pcie_type =3D pci_pcie_type(dev);
+> +
+> +=09eetlp_max =3D FIELD_GET(PCI_EXP_DEVCAP2_EE_PREFIX_MAX, cap);
+> +=09/* 00b means 4 */
+> +=09eetlp_max =3D eetlp_max ?: 4;
+> +
+>  =09if (pcie_type =3D=3D PCI_EXP_TYPE_ROOT_PORT ||
+>  =09    pcie_type =3D=3D PCI_EXP_TYPE_RC_END)
+> -=09=09dev->eetlp_prefix_path =3D 1;
+> +=09=09dev->eetlp_prefix_max =3D eetlp_max;
+>  =09else {
+>  =09=09bridge =3D pci_upstream_bridge(dev);
+> -=09=09if (bridge && bridge->eetlp_prefix_path)
+> -=09=09=09dev->eetlp_prefix_path =3D 1;
+> +=09=09if (bridge && bridge->eetlp_prefix_max)
+> +=09=09=09dev->eetlp_prefix_max =3D eetlp_max;
+>  =09}
+> -#endif
+>  }
+> =20
+>  static void pci_configure_serr(struct pci_dev *dev)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index db9b47ce3eefd..21be5a1edf1ad 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -407,7 +407,7 @@ struct pci_dev {
+>  =09=09=09=09=09   supported from root to here */
+>  #endif
+>  =09unsigned int=09pasid_no_tlp:1;=09=09/* PASID works without TLP Prefix=
+ */
+> -=09unsigned int=09eetlp_prefix_path:1;=09/* End-to-End TLP Prefix */
+> +=09unsigned int=09eetlp_prefix_max:3;=09/* Max # of End-End TLP Prefixes=
+, 0=3Dnot supported */
+> =20
+>  =09pci_channel_state_t error_state;=09/* Current connectivity state */
+>  =09struct device=09dev;=09=09=09/* Generic device interface */
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.=
+h
+> index 1601c7ed5fab7..14a6306c4ce18 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -665,6 +665,7 @@
+>  #define  PCI_EXP_DEVCAP2_OBFF_MSG=090x00040000 /* New message signaling =
+*/
+>  #define  PCI_EXP_DEVCAP2_OBFF_WAKE=090x00080000 /* Re-use WAKE# for OBFF=
+ */
+>  #define  PCI_EXP_DEVCAP2_EE_PREFIX=090x00200000 /* End-End TLP Prefix */
+> +#define  PCI_EXP_DEVCAP2_EE_PREFIX_MAX=090x00c00000 /* Max End-End TLP P=
+refixes */
+>  #define PCI_EXP_DEVCTL2=09=090x28=09/* Device Control 2 */
+>  #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT=090x000f=09/* Completion Timeout V=
+alue */
+>  #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS=090x0010=09/* Completion Timeout=
+ Disable */
+>=20
+--8323328-125273046-1738087063=:943--
 
