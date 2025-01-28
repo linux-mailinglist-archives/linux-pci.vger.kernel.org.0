@@ -1,60 +1,66 @@
-Return-Path: <linux-pci+bounces-20479-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20480-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D55B6A20FCF
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:54:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F0BDA20FF2
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:56:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7FDE11884DF8
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:54:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A8013A8AC6
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:56:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737A91DE8AA;
-	Tue, 28 Jan 2025 17:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE2911F560F;
+	Tue, 28 Jan 2025 17:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mV/Bj6oK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6HDviyG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7381DE8A6;
-	Tue, 28 Jan 2025 17:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14BC1DED48;
+	Tue, 28 Jan 2025 17:54:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086831; cv=none; b=RDhAmw+7wDp9Vxa6X3w1OB/EnI80pCVmxOSIYT+LZZLJamrPaSAuLuumGOZwCWZs3h2yCzlJySWF7BcX09i6/rhcxZXvgAU+bUvR1o8OIdbtmb48GiLLoTL1MUfqsR/W9yeYby+dHs9rNCQqz74htvIpQQkcSWOpXscN3qsnJos=
+	t=1738086850; cv=none; b=K3DiWR/ZcoyZlU3Gk+pKmFptyHh3Vwy1yX+o8Mp0ukA6S5RUgQ9Zu9Y66DGKBdEmsIFQTHwoHGpxO8N0Gz5qrrStCDitCTGq9ZRtZjymNTotqQ6KwCXzxTi5KpqM0iIx+Q2PBbOdCe330ln7yoVmfvX8SHZAueVgu+Yh7z9GFiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086831; c=relaxed/simple;
-	bh=CDOs8WP2JNN/dHAwgr95DyRHckyBFA1Uf2K4mS/it3Y=;
+	s=arc-20240116; t=1738086850; c=relaxed/simple;
+	bh=uTwbAGSjoYcmoPMQdSqt8uRACDufhTf/5L9rzTY3n90=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gOd3ctWKPxQOvarFIlR40FAD+HJHL9keK1X6PAEfyDexEqKKkwcBM96jQE74DivKoiU4+v4JiyXx8Df62Q6aIcW1YEnUbfmP4HsBTQF9Jcxu5lKoDw703dP4hqhEQkdRaoinT+0xnDqmVzcripdKT19e2HfA4zcrhl/NGOT1HVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mV/Bj6oK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99342C4CEE1;
-	Tue, 28 Jan 2025 17:53:49 +0000 (UTC)
+	 MIME-Version:Content-Type; b=FUWHcK1tC7ubzp6PXckU1mHxQfRbp/AiBQ+VGifoV32m6LWARdIwR4zkjQEHe9rgRFlRSRMAmt+nTYX0PvvDdlYSJ5CjZdQJtByoq4F4yI5EN0ortvAHAvN/kIe8ioP5pR/p7KlZCcfB/9JdrnI9ueGbSnhDyi8X6d8VaXjzHQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6HDviyG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B1F7C4CEE1;
+	Tue, 28 Jan 2025 17:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738086830;
-	bh=CDOs8WP2JNN/dHAwgr95DyRHckyBFA1Uf2K4mS/it3Y=;
+	s=k20201202; t=1738086849;
+	bh=uTwbAGSjoYcmoPMQdSqt8uRACDufhTf/5L9rzTY3n90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mV/Bj6oKixuq61K/2pm3gYPQ+tJTmDje8N3xpzt1wHQ4jODmhaC363xoJeOXsE/fC
-	 VMr1bpuTCRA4Jwt6BNU+WrqNC192lROxJf0v5+Pf1ppmFI6TsPn6K6gf7IhhCVVlBz
-	 NMot0Rhntmfu5BRdmZuGqET2nU2f4cydLNDUnbqL44r2jVNLHBE+q305O4Q4qHwMTC
-	 9W2gf78+w+1hAOGtT9NG8pbujbnvStA9s6/SIU28wF1eKQKphqJBwYlsALsEA7B1dg
-	 wODPftWLN4XxLVWtF8amBoG/hr8x7mJ3xXsbyjK3DcfnHUIyaZi1u2Mtr93KKoQWYF
-	 wqOi8prq93z7A==
+	b=a6HDviyGfVHeSrpIL5DkIp26a2Blcsnv2V4ming+k5LEF7HvMT3jqTMQ4aXbjYsjz
+	 a62l+Rqv6WxxoMUa9FQH/GclxE234l3DNZIVwst5j/XaZx5MFgkcKoE/n2+41i+0zO
+	 mmkXYGK0T86xnR8b/zMe9216xMfHCWcX/+RSDvElhN9izQdTYkKP98st3QVsdoBWHY
+	 ClldlPPcTcjmIFWkeSl0pmnBnylkZ3tJCVoUIHL8sJLqEK4yYoUMYwRgCxoKxEwPF0
+	 BQ8Tyb9WhImr/rk0LLAYai1p/oqVK0TfYjGzX7EqKlCbLJxZRqY6mI18auONhZwa5n
+	 1dXEM/v+eB8FA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Niklas Cassel <cassel@kernel.org>,
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Hui Ma <hui.ma@airoha.com>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
+	ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com,
+	lpieralisi@kernel.org,
 	kw@linux.com,
 	bhelgaas@google.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 02/15] PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()
-Date: Tue, 28 Jan 2025 12:53:33 -0500
-Message-Id: <20250128175346.1197097-2-sashal@kernel.org>
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.13 12/15] PCI: mediatek-gen3: Avoid PCIe resetting via PERST# for Airoha EN7581 SoC
+Date: Tue, 28 Jan 2025 12:53:43 -0500
+Message-Id: <20250128175346.1197097-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250128175346.1197097-1-sashal@kernel.org>
 References: <20250128175346.1197097-1-sashal@kernel.org>
@@ -70,59 +76,132 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13
 Content-Transfer-Encoding: 8bit
 
-From: Niklas Cassel <cassel@kernel.org>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit f015b53d634a10fbceba545de70c3e109665c379 ]
+[ Upstream commit 491cb9c5084790aafa02e843349492c284373231 ]
 
-A BAR of type BAR_FIXED has a fixed BAR size (the size cannot be changed).
+Airoha EN7581 has a hw bug asserting/releasing PERST# signal causing
+occasional PCIe link down issues. In order to overcome the problem,
+PERST# signal is not asserted/released during device probe or
+suspend/resume phase and the PCIe block is reset using
+en7523_reset_assert() and en7581_pci_enable().
 
-When using pci_epf_alloc_space() to allocate backing memory for a BAR,
-pci_epf_alloc_space() will always set the size to the fixed BAR size if
-the BAR type is BAR_FIXED (and will give an error if you the requested size
-is larger than the fixed BAR size).
+Introduce flags field in the mtk_gen3_pcie_pdata struct in order to
+specify per-SoC capabilities.
 
-However, some drivers might not call pci_epf_alloc_space() before calling
-pci_epc_set_bar(), so add a check in pci_epc_set_bar() to ensure that an
-EPF driver cannot set a size different from the fixed BAR size, if the BAR
-type is BAR_FIXED.
-
-The pci_epc_function_is_valid() check is removed because this check is now
-done by pci_epc_get_features().
-
-Link: https://lore.kernel.org/r/20241213143301.4158431-13-cassel@kernel.org
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
+Link: https://lore.kernel.org/r/20250109-pcie-en7581-rst-fix-v4-1-4a45c89fb143@kernel.org
+Tested-by: Hui Ma <hui.ma@airoha.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mediatek-gen3.c | 59 ++++++++++++++-------
+ 1 file changed, 41 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index bed7c7d1fe3c3..c69c133701c92 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -609,10 +609,17 @@ EXPORT_SYMBOL_GPL(pci_epc_clear_bar);
- int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		    struct pci_epf_bar *epf_bar)
- {
--	int ret;
-+	const struct pci_epc_features *epc_features;
-+	enum pci_barno bar = epf_bar->barno;
- 	int flags = epf_bar->flags;
-+	int ret;
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index be52e3a123abd..74dfef8ce9ec1 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -133,10 +133,18 @@ struct mtk_gen3_pcie;
+ #define PCIE_CONF_LINK2_CTL_STS		(PCIE_CFG_OFFSET_ADDR + 0xb0)
+ #define PCIE_CONF_LINK2_LCR2_LINK_SPEED	GENMASK(3, 0)
  
--	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
-+	epc_features = pci_epc_get_features(epc, func_no, vfunc_no);
-+	if (!epc_features)
-+		return -EINVAL;
++enum mtk_gen3_pcie_flags {
++	SKIP_PCIE_RSTB	= BIT(0), /* Skip PERST# assertion during device
++				   * probing or suspend/resume phase to
++				   * avoid hw bugs/issues.
++				   */
++};
 +
-+	if (epc_features->bar[bar].type == BAR_FIXED &&
-+	    (epc_features->bar[bar].fixed_size != epf_bar->size))
- 		return -EINVAL;
+ /**
+  * struct mtk_gen3_pcie_pdata - differentiate between host generations
+  * @power_up: pcie power_up callback
+  * @phy_resets: phy reset lines SoC data.
++ * @flags: pcie device flags.
+  */
+ struct mtk_gen3_pcie_pdata {
+ 	int (*power_up)(struct mtk_gen3_pcie *pcie);
+@@ -144,6 +152,7 @@ struct mtk_gen3_pcie_pdata {
+ 		const char *id[MAX_NUM_PHY_RESETS];
+ 		int num_resets;
+ 	} phy_resets;
++	u32 flags;
+ };
  
- 	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
+ /**
+@@ -438,22 +447,33 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+ 	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
+ 	writel_relaxed(val, pcie->base + PCIE_MISC_CTRL_REG);
+ 
+-	/* Assert all reset signals */
+-	val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
+-	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
+-	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
+-
+ 	/*
+-	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
+-	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
+-	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
+-	 * for the power and clock to become stable.
++	 * Airoha EN7581 has a hw bug asserting/releasing PCIE_PE_RSTB signal
++	 * causing occasional PCIe link down. In order to overcome the issue,
++	 * PCIE_RSTB signals are not asserted/released at this stage and the
++	 * PCIe block is reset using en7523_reset_assert() and
++	 * en7581_pci_enable().
+ 	 */
+-	msleep(100);
+-
+-	/* De-assert reset signals */
+-	val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB);
+-	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
++	if (!(pcie->soc->flags & SKIP_PCIE_RSTB)) {
++		/* Assert all reset signals */
++		val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
++		val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
++		       PCIE_PE_RSTB;
++		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
++
++		/*
++		 * Described in PCIe CEM specification revision 6.0.
++		 *
++		 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
++		 * for the power and clock to become stable.
++		 */
++		msleep(PCIE_T_PVPERL_MS);
++
++		/* De-assert reset signals */
++		val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
++			 PCIE_PE_RSTB);
++		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
++	}
+ 
+ 	/* Check if the link is up or not */
+ 	err = readl_poll_timeout(pcie->base + PCIE_LINK_STATUS_REG, val,
+@@ -1231,10 +1251,12 @@ static int mtk_pcie_suspend_noirq(struct device *dev)
+ 		return err;
+ 	}
+ 
+-	/* Pull down the PERST# pin */
+-	val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
+-	val |= PCIE_PE_RSTB;
+-	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
++	if (!(pcie->soc->flags & SKIP_PCIE_RSTB)) {
++		/* Assert the PERST# pin */
++		val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
++		val |= PCIE_PE_RSTB;
++		writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
++	}
+ 
+ 	dev_dbg(pcie->dev, "entered L2 states successfully");
+ 
+@@ -1285,6 +1307,7 @@ static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_en7581 = {
+ 		.id[2] = "phy-lane2",
+ 		.num_resets = 3,
+ 	},
++	.flags = SKIP_PCIE_RSTB,
+ };
+ 
+ static const struct of_device_id mtk_pcie_of_match[] = {
 -- 
 2.39.5
 
