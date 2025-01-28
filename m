@@ -1,273 +1,215 @@
-Return-Path: <linux-pci+bounces-20474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C23A20E05
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:07:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63D72A20EEA
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:47:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E86F3A5FD0
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 16:07:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF0621679C6
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 16:47:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0EDA1B2EF2;
-	Tue, 28 Jan 2025 16:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 359321A38F9;
+	Tue, 28 Jan 2025 16:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXT5VuPU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PywFc3sI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41BF1ACED3;
-	Tue, 28 Jan 2025 16:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700892904;
+	Tue, 28 Jan 2025 16:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738080441; cv=none; b=qZJ3cvMwOkvsY1U0c9WltNTSlqc2fVlmkPUKgWEMmg6zqinikJcDAcEmBp6qewm/KWwmQdlfSQq+WRHTeLCR5e9j0ZNr1jIjzpEVKPHl39w2o/t4yti9LZ4vbJsmpkt7raWL6Vx4Qy4yYfJgJ8Dk6Qpbi/uzwgu9dH66yW5Pk/s=
+	t=1738082815; cv=none; b=T4PJRgH+7zsceXUgCb0no4Vmx9DPtZCLBJVpaCXHdz6lEudr2Mr9KNmJyooPWyNVagxiJBgKi84oizDrMetThKylUYxXy83aPxGTnEGSQ9tYI03eCMnIHxN0G/lrJMrU2qA1Tl99MlAnknMij7qt2Itm1B/E9dF9pJveY9dARL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738080441; c=relaxed/simple;
-	bh=KZcE1bukQorwGQCYZJKJZzamF7Is7wgBgtj2gMrFu7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DYefy02ifROt+nLpBtqTckZ2nXBVgvS1i7EY6MtFZbuW0p1vze971BCrJDgbd9D1l2YcHWwn0EStUWbt8/GZosHC7aRzI/nZ5JUceoj9QbvoJ3S8ahF4mRs2IvQHFr249dok/a9BXyllfzM4mR7xSTfMvlM0XHVycgNqXfeJWYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXT5VuPU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C7CDC4CEE8;
-	Tue, 28 Jan 2025 16:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738080441;
-	bh=KZcE1bukQorwGQCYZJKJZzamF7Is7wgBgtj2gMrFu7U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QXT5VuPUkPFrTNsXMBCgL/4JEjK3LimZ7Cqd8yBIpszco7wflbiRcn0RACxL+AwWv
-	 BUAKiyCeysqDqXs8hjID4AUi2fCdrWCVf3JDJQvNy4MgAa1W1+IrmRdyK+lBQzqkLO
-	 Fr4hTtHY7OGqWiAGjbKiix4JII/o0UVMLbI+0prt1ccdOPlrfeeAXTYe9FEan3qI6o
-	 X/2MhZKfxPM3UHxZFTFilI8hAezvgg7moEifAICCSuc90WFY7Z8WErlFSJgFp9VI6N
-	 n89HnJC5mGsuJblsILhO0tWogckgigHTkP1YbJ8XLH15dnPUy45MDlJkr1zijJgULu
-	 mJMh1Et54IcJA==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5f321876499so3074440eaf.1;
-        Tue, 28 Jan 2025 08:07:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVjONS9uxajHLs7pLpBavQFhezw/gzRkcMZxLYCfOTCITrIf2rh25uircJHwNK9GHHXIT4MQSCVXII=@vger.kernel.org, AJvYcCXcWWiJFjvhpatdNgbh97x9JlvUQC7AL0AdK4G01McgutJ0UrpueOke/JWB/hU1Rr9QwY59yUD7ohRsPzk=@vger.kernel.org, AJvYcCXuzYvkB0gZbXEOj0L6peXKTsuj6pxFD+pqL5NJIx6ryxo1ggVnQa7mf5UjwjdiyWbien4hiUSqiNOs@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe490DjMNKdiaio4HJNotTSJlPco78CrJj4bsqgP2AzAt4YfYs
-	ivhT1laBP+NOZveIH5NHYqtjsLa+rcq+v3gjxtGt9nysCVta1i3fEKABG/0YDOSM+MOTuTvNtth
-	e8XKUzBNfSFwQO3IhK8BB/a7L4XY=
-X-Google-Smtp-Source: AGHT+IFppnrp+e0tvUYXh1qQv3AmDN9KyKq0jV/1mxaQcS7c99bB3bgMMoQyY9H+pYrZo17m5R0do2ONTCA2fS7+yYU=
-X-Received: by 2002:a05:6820:503:b0:5fa:3ba7:d27 with SMTP id
- 006d021491bc7-5fbf5168bdcmr2118524eaf.4.1738080440777; Tue, 28 Jan 2025
- 08:07:20 -0800 (PST)
+	s=arc-20240116; t=1738082815; c=relaxed/simple;
+	bh=MnNisqc0NqM7r0VRLdYxL9biktVBMmD/OyitwnsNYBQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=n2NFDmO4g907QLI9+Rl4GLTpewG+m1dZVGJPOdTMdPg4BAUsWtLUI6iZmpnxOp80CzAT1+6Rh9Jz12KpCby7uJCGA+aZvSXSNpas+/iNsruAbC6bW1ovuz9OzhGu+3bVhLf6Qb0GMkGlZJiEnZW6MswMg+o+peDLFKiL1cDJXt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PywFc3sI; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e53a5ff2233so10578620276.3;
+        Tue, 28 Jan 2025 08:46:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738082812; x=1738687612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7I3FQn+a3IeKpvoyXVLY346phLoqlukuEhizyoucyY=;
+        b=PywFc3sI7IvCYfljupHJDeqTN0qgHFuNtm2sh616Yi8HMGe2uxDSrhfnaTmR9sg7vQ
+         6ast+9ATzSkJ3NlSFXzTAo2bhl7P5evAdCuyTOgOxOFJEULLPZ+35CwXDkjsXi9N01iO
+         11ZXNqCgIg0hMSYsOxxKFzmlqsrB2cLYt4VyXBOp6SajaegBWAn9ZGn2IejJ1U1KrlRR
+         YEY6BMmnxLUeFIvcoD9Uv+yHiIS1k8B26GdLmR925inSOod88Dg3/3alN9VKd8/aB3dS
+         +mz70cyQvZLp3MqNQT7L8inlKyB6EOg0bZF2mpmr35eBUdxtue7z/kQKv3zUHWuN6Oxc
+         55DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738082812; x=1738687612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7I3FQn+a3IeKpvoyXVLY346phLoqlukuEhizyoucyY=;
+        b=u2JorK4Vnik8rYcCOp4uMQ8ZAKh3jjQEm914r9ZMQMbJLX2fWTrPSzGXrhgkdsDchW
+         4Mq5I2CamEzSyRI5iXOoAvNMcH1QCzVCEfpo/2/llO3zjna9dVAqowVS9Hd16By6sZGt
+         X5jzvrzouqnwS/Q0xqt6jau/anRShgoL983+0MBjKrFI/CmkDqQuzBH1enN2ul1GDXMl
+         bOrfCAxvkCCoN4v0d5V/uDCWsHfbG/9wtlakGNF2fBvtpu0yAgnYa8B23dpxKdABd1r/
+         u6S56tLJ01scBuKsGqAgm3DupUqnYILcCfcbzYm9QS+NubYDmk2B5Qck0qc2+h5SaWBw
+         6d8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUw7A4/aKodNnfvJHQ9JFMNzR3F2GOT4qtClourtrtGxU5WXERiJTuFnJ0d7VKf7eierPEZ8y7W4Sxb4A==@vger.kernel.org, AJvYcCV3QVjvxW205kpZNF74ZCGay4xwepFP0ZT+W/GWCPrncTH5Qo3tVZBS782yjvzL3nd9e0lrTfY7@vger.kernel.org, AJvYcCWuh9YLWqNU+pS2jYMh7lExdNi5NKoIG1Y7AjyNwoOz8sHPM84dDuZlXV/0PW9UEX9+xBKqXX0oq2d46pMZ@vger.kernel.org, AJvYcCWulg7RuwxTFIT+30FXb1AI8UnASifUSUqn1fzIpcMKlEWEEZ9+LuIVPaP2V9gWNh96StgLW9/34VVw@vger.kernel.org, AJvYcCX1HbcttBIKrNALy0J9adrE0rj+9P2QYOaBNBW+JSowLrDufexrqfLsDJOMuP+oGm7VbF/uQTGO08bS81Q=@vger.kernel.org, AJvYcCXqK43iZzu1fqPj4nVKYyfryRzLnMFbjlm3Ys2mUZRkHvT60NvIt2gEODfD1fD6BsSp2JIBas5Pyx8wdw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjo2ljoqSVzCl6flbi/G8VHhaHbEsQBqLWSSE6l/W1ZVFhFb6Q
+	n1iL+GisL04b+8zPZhhgXujr4kHhKK3WoyCJSRX5X32tpJ6ZCfPyCVomGxa1/Ao=
+X-Gm-Gg: ASbGncuBMGFLWFBJEjwXGljiZN+hN4PXJTkMqLfvMVQg+5kEG6DGk7aemKsJLfBuyE6
+	AWHEQFd7im1O5LwqrTpuVlEuR5gFnthWrBs/3kpzW4p1hAeugRNDXV+JiXabqhxdr2eDRMkI/Jn
+	21ayFxP8xiHMzyZjK0QPyeW0oEN4sXfmDs7aLH9R0xHCBfSUmHoaOEKxvaNWsFzKeX/O5w2/HdU
+	vmiMM+Nn3gZVeWOhMao1xAPt0iKJYriGSe5tibfo0JBu520VFMi0YT/a7BVSihEvd40sUHPHbM5
+	po/lcQKWxEdfIhpmCFU2gvf8/rUXkQK6UxNipyBj3i6qzdexi5w=
+X-Google-Smtp-Source: AGHT+IFvmgf54bypeg06iXMG7R6vW3zKyn1725RIYJUIjUALciExdJNbHjTn7B/5gtx7qirVGTp6aA==
+X-Received: by 2002:a05:6902:70c:b0:e58:5a:7694 with SMTP id 3f1490d57ef6-e58005a7945mr26770575276.20.1738082811957;
+        Tue, 28 Jan 2025 08:46:51 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e583b7697c9sm2098812276.16.2025.01.28.08.46.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2025 08:46:51 -0800 (PST)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Rick Lindsley <ricklind@linux.ibm.com>,
+	Nick Child <nnac123@linux.ibm.com>,
+	Thomas Falcon <tlfalcon@linux.ibm.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Matt Wu <wuqiang.matt@bytedance.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kurz <groug@kaod.org>,
+	Peter Xu <peterx@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>
+Subject: [PATCH v2 00/13] cpumask: cleanup cpumask_next_wrap() implementation and usage
+Date: Tue, 28 Jan 2025 11:46:29 -0500
+Message-ID: <20250128164646.4009-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
- <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com> <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
- <7882105f-93a3-fab9-70a2-2dc55d6becfc@quicinc.com> <Z3057yuNjnn0NPqk@hovoldconsulting.com>
- <20250113162549.a2y7dlwnsfetryyw@thinkpad> <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
- <CAJZ5v0h-NrdoAdJ5ZTC1wZhh2BzonSW6ek1ux01-c7L5SLby8A@mail.gmail.com>
- <CAJZ5v0iAa8r9F8MMt7WhbfSRF5MeWnrDRUTeG5HrY5TBHtfZaw@mail.gmail.com> <20250128155830.xc6y2swqqw5okt32@thinkpad>
-In-Reply-To: <20250128155830.xc6y2swqqw5okt32@thinkpad>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 28 Jan 2025 17:07:09 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0imDLwgP+d753s5dVG9cybbK+PFiKwoYmsC13AhjWJ8EQ@mail.gmail.com>
-X-Gm-Features: AWEUYZnjD4AXkuQo0i_7dvCWA9QyU7OzVrOMlqY1zImHh0g0icCNwlXFK9LDjsc
-Message-ID: <CAJZ5v0imDLwgP+d753s5dVG9cybbK+PFiKwoYmsC13AhjWJ8EQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Johan Hovold <johan@kernel.org>, Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, 
-	Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Markus.Elfring@web.de, 
-	quic_mrana@quicinc.com, m.szyprowski@samsung.com, linux-pm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 28, 2025 at 4:58=E2=80=AFPM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Tue, Jan 28, 2025 at 12:47:09PM +0100, Rafael J. Wysocki wrote:
-> > On Mon, Jan 27, 2025 at 8:57=E2=80=AFPM Rafael J. Wysocki <rafael@kerne=
-l.org> wrote:
-> > >
-> > > On Mon, Jan 27, 2025 at 3:32=E2=80=AFPM Ulf Hansson <ulf.hansson@lina=
-ro.org> wrote:
-> > > >
-> > > > On Mon, 13 Jan 2025 at 17:25, Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > + Ulf (for the runtime PM related question)
-> > > > >
-> > > > > On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
-> > > > > > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chu=
-ndru wrote:
-> > > > > > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
-> > > > > >
-> > > > > > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_=
-bridge *bridge)
-> > > > > > > >>                  pcie_bus_configure_settings(child);
-> > > > > > > >>
-> > > > > > > >>          pci_bus_add_devices(bus);
-> > > > > > > >> +
-> > > > > > > >> +        /*
-> > > > > > > >> +         * Ensure pm_runtime_enable() is called for the c=
-ontroller drivers,
-> > > > > > > >> +         * before calling pci_host_probe() as pm framewor=
-ks expects if the
-> > > > > > > >> +         * parent device supports runtime pm then it need=
-s to enabled before
-> > > > > > > >> +         * child runtime pm.
-> > > > > > > >> +         */
-> > > > > > > >> +        pm_runtime_set_active(&bridge->dev);
-> > > > > > > >> +        pm_runtime_no_callbacks(&bridge->dev);
-> > > > > > > >> +        devm_pm_runtime_enable(&bridge->dev);
-> > > > > > > >> +
-> > > > > > > >>          return 0;
-> > > > > > > >>   }
-> > > > > > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
-> > > > > > > >
-> > > > > > > > I just noticed that this change in 6.13-rc1 is causing the =
-following
-> > > > > > > > warning on resume from suspend on machines like the Lenovo =
-ThinkPad
-> > > > > > > > X13s:
-> > > > > >
-> > > > > > > Can you confirm if you are seeing this issue is seen in the b=
-oot-up
-> > > > > > > case also. As this part of the code executes only at the boot=
- time and
-> > > > > > > will not have effect in resume from suspend.
-> > > > > >
-> > > > > > No, I only see it during resume. And enabling runtime PM can (a=
-nd in
-> > > > > > this case, obviously does) impact system suspend as well.
-> > > > > >
-> > > > > > > >   pci0004:00: pcie4: Enabling runtime PM for inactive devic=
-e with active children
-> > > > > >
-> > > > > > > I believe this is not causing any functional issues.
-> > > > > >
-> > > > > > It still needs to be fixed.
-> > > > > >
-> > > > > > > > which may have unpopulated ports (this laptop SKU does not =
-have a modem).
-> > > > > >
-> > > > > > > Can you confirm if this warning goes away if there is some en=
-dpoint
-> > > > > > > connected to it.
-> > > > > >
-> > > > > > I don't have anything to connect to the slot in this machine, b=
-ut this
-> > > > > > seems to be the case as I do not see this warning for the popul=
-ated
-> > > > > > slots, nor on the CRD reference design which has a modem on PCI=
-e4.
-> > > > > >
-> > > > >
-> > > > > Yes, this is only happening for unpopulated slots and the warning=
- shows up only
-> > > > > if runtime PM is enabled for both PCI bridge and host bridge. Thi=
-s patch enables
-> > > > > the runtime PM for host bridge and if the PCI bridge runtime PM i=
-s also enabled
-> > > > > (only happens now for ACPI/BIOS based platforms), then the warnin=
-g shows up only
-> > > > > if the PCI bridge was RPM suspended (mostly happens if there was =
-no device
-> > > > > connected) during the system wide resume time.
-> > > > >
-> > > > > For the sake of reference, PCI host bridge is the parent of PCI b=
-ridge.
-> > > > >
-> > > > > Looking at where the warning gets triggered (in pm_runtime_enable=
-()), we have
-> > > > > the below checks:
-> > > > >
-> > > > > dev->power.runtime_status =3D=3D RPM_SUSPENDED
-> > > > > !dev->power.ignore_children
-> > > > > atomic_read(&dev->power.child_count) > 0
-> > > > >
-> > > > > When pm_runtime_enable() gets called for PCI host bridge:
-> > > > >
-> > > > > dev->power.runtime_status =3D RPM_SUSPENDED
-> > > > > dev->power.ignore_children =3D 0
-> > > > > dev->power.child_count =3D 1
-> > > > >
-> > > > > First 2 passes seem legit, but the issue is with the 3rd one. Her=
-e, the
-> > > > > child_count of 1 means that the PCI host bridge has an 'active' c=
-hild (which is
-> > > > > the PCI bridge). The PCI bridge was supposed to be RPM_SUSPENDED =
-as the resume
-> > > > > process should first resume the parent (PCI host bridge). But thi=
-s is not the
-> > > > > case here.
-> > > > >
-> > > > > Then looking at where the child_count gets incremented, it leads =
-to
-> > > > > pm_runtime_set_active() of device_resume_noirq(). pm_runtime_set_=
-active() is
-> > > > > only called for a device if dev_pm_skip_suspend() succeeds, which=
- requires
-> > > > > DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtim=
-e suspended.
-> > > > >
-> > > > > This criteria matches for PCI bridge. So its status was set to 'R=
-PM_ACTIVE' even
-> > > > > though the parent PCI host bridge was still in the RPM_SUSPENDED =
-state. I don't
-> > > > > think this is a valid condition as seen from the warning triggere=
-d for PCI host
-> > > > > bridge when pm_runtime_enable() is called from device_resume_earl=
-y():
-> > > > >
-> > > > > pci0004:00: pcie4: Enabling runtime PM for inactive device with a=
-ctive children
-> > > >
-> > > > Thanks for the detailed analysis, much appreciated.
-> > > >
-> > > > So this seems to boil down to the fact that the PM core calls
-> > > > pm_runtime_set_active() for a device, when it really should not. If
-> > > > there is a clever way to avoid that, I think we need Rafael's opini=
-on
-> > > > on.
-> > >
-> > > Actually, not really.
-> > >
-> > > The status of the child and the child count of the parent have no
-> > > meaning until runtime PM is enabled for the parent.  They can be
-> > > manipulated freely before this happens with no consequences and all
-> > > will be fine as long as those settings are consistent when runtime PM
-> > > is enabled for the parent.
-> > >
-> > > Now, they aren't consistent at that point because
-> > > dev_pm_skip_suspend() returns false for the parent as it has
-> > > DPM_FLAG_SMART_SUSPEND clear.
-> > >
-> > > To me, this looks like a coding mistake because all devices that have
-> > > power.must_resume set should also be set to RPM_ACTIVE before
-> > > re-enabling runtime PM for them, so the attached patch should work.
-> >
-> > Having reflected on it a bit I think that it's better to avoid
-> > changing the existing behavior too much, so attached is a new version
-> > of the patch.
-> >
-> > It is along the same lines as before, but it doesn't go as far as the
-> > previous version.  Namely, in addition to what the existing code does,
-> > it will cause the runtime PM status to be set to RPM_ACTIVE for the
-> > devices whose dependents will have it set which should address the
-> > problem at hand if I'm not mistaken.
-> >
-> > I'd appreciated giving it a go on a system where the warning is printed=
-.
-> >
->
-> This patch indeed makes the warning go away and I don't spot any other is=
-sues.
-> So you can add my Tested-by tag while submitting the fix.
->
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> Thanks a lot!
+cpumask_next_wrap() is overly complicated, comparing to it's generic
+version find_next_bit_wrap(), not mentioning it duplicates the above.
+It roots to the times when the function was used in the implementation
+of for_each_cpu_wrap() iterator. The function has 2 additional parameters
+that were used to catch loop termination condition for the iterator.
+(Although, only one is needed.)
 
-Thank you!
+Since 4fe49b3b97c262 ("lib/bitmap: introduce for_each_set_bit_wrap()
+macro"), for_each_cpu_wrap() is wired to corresponding generic
+wrapping bitmap iterator, and additional complexity of
+cpumask_next_wrap() is not needed anymore.
+
+All existing users call cpumask_next_wrap() in a manner that makes
+it possible to turn it to a straight and simple alias to
+find_next_bit_wrap().
+
+This series replaces historical 4-parameter cpumask_next_wrap() with a
+thin 2-parameter wrapper around find_next_bit_wrap().
+
+Where it's possible to use for_each_cpu_wrap() iterator, the code is
+switched to use it because it's always preferable to use iterators over
+open loops.
+
+This series touches various scattered subsystems and To-list for the
+whole series is quite a long. To minimize noise, I send cover-letter and
+key patches #5 and 6 to every person involved. All other patches are sent
+individually to those pointed by scripts/get_maintainers.pl.
+
+I'd like to move the series with my bitmap-for-next branch as a whole.
+
+v1: https://lore.kernel.org/netdev/20241228184949.31582-1-yury.norov@gmail.com/T/
+v2:
+ - rebase on top of today's origin/master;
+ - drop #v1-10: not needed since v6.14 @ Sagi Grinberg;
+ - #2, #3: fix picking next unused CPU @ Nick Child;
+ - fix typos, cleanup comments @ Bjorn Helgaas, Alexander Gordeev;
+ - CC Christoph Hellwig for the whole series.
+
+Yury Norov (13):
+  objpool: rework objpool_pop()
+  virtio_net: simplify virtnet_set_affinity()
+  ibmvnic: simplify ibmvnic_set_queue_affinity()
+  powerpc/xmon: simplify xmon_batch_next_cpu()
+  cpumask: deprecate cpumask_next_wrap()
+  cpumask: re-introduce cpumask_next{,_and}_wrap()
+  cpumask: use cpumask_next_wrap() where appropriate
+  padata: switch padata_find_next() to using cpumask_next_wrap()
+  s390: switch stop_machine_yield() to using cpumask_next_wrap()
+  scsi: lpfc: switch lpfc_irq_rebalance() to using cpumask_next_wrap()
+  scsi: lpfc: rework lpfc_next_{online,present}_cpu()
+  PCI: hv: Switch hv_compose_multi_msi_req_get_cpu() to using
+    cpumask_next_wrap()
+  cpumask: drop cpumask_next_wrap_old()
+
+ arch/powerpc/xmon/xmon.c            |  6 +--
+ arch/s390/kernel/processor.c        |  2 +-
+ drivers/net/ethernet/ibm/ibmvnic.c  | 18 +++++---
+ drivers/net/virtio_net.c            | 12 ++---
+ drivers/pci/controller/pci-hyperv.c |  3 +-
+ drivers/scsi/lpfc/lpfc.h            | 23 +++-------
+ drivers/scsi/lpfc/lpfc_init.c       |  2 +-
+ include/linux/cpumask.h             | 69 ++++++++++++++++++++---------
+ include/linux/objpool.h             |  7 ++-
+ kernel/padata.c                     |  2 +-
+ lib/cpumask.c                       | 37 +---------------
+ 11 files changed, 81 insertions(+), 100 deletions(-)
+
+-- 
+2.43.0
+
 
