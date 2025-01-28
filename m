@@ -1,154 +1,85 @@
-Return-Path: <linux-pci+bounces-20471-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20472-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0942AA20C1D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 15:32:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56A7FA20DCA
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 16:58:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ADF0164577
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 14:32:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79FCD165EC4
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 15:58:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE8751AA7BA;
-	Tue, 28 Jan 2025 14:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75C0C1D9587;
+	Tue, 28 Jan 2025 15:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wgO12zhB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUilUWy+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10EF9F8
-	for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 14:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484AF1D9337;
+	Tue, 28 Jan 2025 15:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738074760; cv=none; b=acqlKeyR/aG2OyRx00/+6XZTEHX3FYyfHTQNfwqNvjDkgL8ZLSH/01w5UyoOX/ZsBOWoa4fkjfCwtwITcq/Xtnv2Evybg+lDKtooob0T8rfKXzTsiDhCRIjWq5/I6qWQtxv4n+H7PKsOStrVeFqUKH49h7Pk4ODg714XYym8Z0w=
+	t=1738079897; cv=none; b=VpymrGEXtNojz5ecvk4sBvNro7yG+td6p8jRvSoPHif/msPguNMO+YY7PQSJGmtt+6EqWpYUmnRRLwgthndRppvPmHyJGFM136ZL28TPhNY/7a/0sAJoPHQOvVjgacHZArl9CFij3sZjm6CFE+6JEr1wVYJwKtfWkvclLy0l9Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738074760; c=relaxed/simple;
-	bh=DfF6AKkeQJ9s39d0qnwtzoPNsU1jU/ex2kbKT0qqLWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4Bz9YNtJzGCGEGzImvqoUqKsuT/TmDhditzfUeF9TIilwadLNrp6zz+pbS6c3VfRZ6tSZ15GjoChRtH/tJWragNf1XIYj37vL9FnhPSx8dCeCMeClY2BNcRJN979B3B6gNkszd6nLWL4AsgPMJ4Yv7mO1j1t/kpTrWFR7N6+qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wgO12zhB; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2eeb4d643a5so10016381a91.3
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2025 06:32:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738074757; x=1738679557; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9ytGFSJelmfyAbIZkJrfrYgDzAu7eCY7yXn28mYqrVA=;
-        b=wgO12zhBLqpvEu4Fsrh3MATw6dZ1XDirTdbnO13JWWu/cHQhIa8xLwUIRUlS0eTiaX
-         5ip80LX3mA0+nwyxEcbvxGsWsGOHWNY71GZfOV64ayLnDiBi6Ok0vX4N5k3BIWSuaZ1M
-         b3anb7u/TTTw/scL6JO424zRd29KRGYKBoaOY+yZ48lzhFqE+QZWMZVOWuIGiuNR9Ft/
-         IVBlgUSbCOegtxzmjXOV7KyQBeI6Vbi9jyz0+ek3ZVDmMd8MF3rDiKDXAYxhQRR7jt1h
-         XpHGsHHAOuRE/X+3Ld5UBER1Ic8EsfqmYsz+kE16tiSYGpxYk+x5ugOfSjqcCvdAB8pU
-         cu7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738074757; x=1738679557;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ytGFSJelmfyAbIZkJrfrYgDzAu7eCY7yXn28mYqrVA=;
-        b=Xb82Gq2I1asyb53ku0HwCCSkpMtrZg1YfdJmbvKrhReG3bnvN+SJs+eMbgltFBJoAP
-         hXNYh55Pgs4yNiLT3QNrvvMSbsib3MdGqvr+Mn0jma/TAi+nDLiYG1g9tpRuzPfCmAer
-         WK57yeOQZAmERRlM352DpdCCP9r7hKqGKokzKUu+0nE0QkRRojWOf6flUjDb/GjVKccM
-         ZEBdrUSht7TqUU+ykfLgxUzUlNVtfJKKh+2QZ3919tb0kyDM9GiXlWZMUmqlwNimwKhM
-         7X89O3Wmle1JsIeouEjQ+UssdQJ4wi6CUvEp8eGxfbLKg5muwYsTyMT2Dih14F6zZ/JI
-         IZWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRm3dTCKQozkqcQwAIf0O5BVZh7y5OdAW1HR3G7KIyffSKBJ1kyQplf2Wp7o/QdMvOLBMK0t+JzsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdr5y1QSF3sbY6DfgUSVK+2T+qQOKocBlp3Z22PIvStRPzCGt1
-	XOAj40Voo1GkDXXVh/TNwb0nGzZA7ErERuH1aPghVgLzZRzQDic3sHsPrOeDX6HB+5oMygJvhDM
-	=
-X-Gm-Gg: ASbGncsQ1zkJCbFbOlUaewBfIzpAO2GWasU6jNYLDNMOSOUD1OLD6O0QoJDJ1F5w8op
-	gFY3B/gpg4qZ+mjuJ8tXUgnWjQQkkkppXGdcXpJ/diU7Ng0EJ/30RN8774Xd4L6IjD5c4U4fBGa
-	8ROMcPA8FPKF7+sA+06ugAzv0hcadSeaad+aIGcNU1iDESEuGv3LoPfc7GDoDlE47wTWAyE3uOU
-	UewUOwD/nhI/rOtT7ubh7Bx930LfRJmiWqFZfC1AdntZ8EsuGvbDFZ14ElRNjDE6BFIxPCkpHtW
-	9eFutJ0X2OtFsazASWRwIxmBPk/af5cN+8X3EA==
-X-Google-Smtp-Source: AGHT+IHHBcGLSrZYOToWg7qO3bGQZT+tJEWzrK5gis2zSKbuc5s4OL8oEbmzqnJFR3zhwx01FGI87Q==
-X-Received: by 2002:a17:90b:364c:b0:2f8:34df:564e with SMTP id 98e67ed59e1d1-2f834df6095mr1800399a91.14.1738074757024;
-        Tue, 28 Jan 2025 06:32:37 -0800 (PST)
-Received: from thinkpad ([120.60.131.121])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7ffb1c2b3sm9357049a91.48.2025.01.28.06.32.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2025 06:32:36 -0800 (PST)
-Date: Tue, 28 Jan 2025 20:02:31 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Krzysztof =?utf-8?B?V2lsY3p577+977+977+9c2tp?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-Message-ID: <20250128143231.ondpjpugft37qwo5@thinkpad>
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
+	s=arc-20240116; t=1738079897; c=relaxed/simple;
+	bh=Qgub7L8IxfW+PRP2oZAlDUpvBChuqQgMm+DjK3mH7YI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=P7NQR1dpKTu3lcml7XKSDjOMs4sd6f1UERVPfzOMRjSeP1HPb9P3jG9L7hCTLnqk2ueYHuRLDqfbMHAqzXxQzE/QMzhPWiNtByIcMBPBuE4B7gyM5rw+2eUfvXe9sLGJi2RFhpPOC4PIj2bg2dJLQKsHeTsnTnOtmHckrJDAvF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUilUWy+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B61EC4CEDF;
+	Tue, 28 Jan 2025 15:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738079895;
+	bh=Qgub7L8IxfW+PRP2oZAlDUpvBChuqQgMm+DjK3mH7YI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kUilUWy+tXakeFW+vpV+p4em1aqpjIOmnWN/S1eM2/F1tRHU+2U02dA6u6wQTbcZv
+	 Pt6E3Vgw9/sc7KOrzEnAOJVqBguWXbsFBJkdYBE/BW/5lrHia1/L+IAv+WS/dYYXXe
+	 V6ep6Vyi5buOChiY8l5No5lggtrSPXjFhLDJNyX4n2E160+iNI1Whb9iHnTbfUY5ei
+	 qbdt+rPiNJsEWq9P3qqKoWmZchIv/9Km8Fdvf73CYYKXqjZp3tk1zTBr6XvtnESHfK
+	 JguZponaT/iNLKasblxMDEv/Ag8I4+5envuiPCtGMkwiHclGmAMyz466mYqAIOGNDP
+	 LMDxo98gwe0Xg==
+Date: Tue, 28 Jan 2025 09:58:13 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] HID: intel-thc-hid: Remove deprecated PCI API calls
+Message-ID: <20250128155813.GA318665@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20250128101156.77868-2-phasta@kernel.org>
 
-On Wed, Jan 22, 2025 at 11:24:46AM +0900, Kunihiko Hayashi wrote:
-> There are two variables that indicate the interrupt type to be used
-> in the next test execution, "irq_type" as global and test->irq_type.
+On Tue, Jan 28, 2025 at 11:11:57AM +0100, Philipp Stanner wrote:
+> intel-thc-hid reintroduced the already deprecated PCI API functions
 > 
-> The global is referenced from pci_endpoint_test_get_irq() to preserve
-> the current type for ioctl(PCITEST_GET_IRQTYPE).
+> 	pcim_iomap_table(),
+> 	pcim_iomap_regions(),
+> 	pcim_iounmap_regions(),
 > 
-> The type set in this function isn't reflected in the global "irq_type",
-> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
-> As a result, the wrong type will be displayed in "pcitest" as follows:
-> 
->     # pcitest -i 0
->     SET IRQ TYPE TO LEGACY:         OKAY
->     # pcitest -I
->     GET IRQ TYPE:           MSI
-> 
-> Fix this issue by propagating the current type to the global "irq_type".
-> 
+> none of which should be used anymore.
+> ...
 
-This is becoming a nuisance. I think we should get rid of the global 'irq_type'
-and just stick to the one that is configurable using IOCTL command. Even if the
-user has configured the global 'irq_type' it is bound to change with IOCTL
-command.
+> I'm trying to remove this API since a year. Please pay attention to the
+> docstrings in PCI which mark certain functions as deprecated.
 
-- Mani
+If you don't use it already, lei is a great tool that can help watch
+for things like this:
+https://people.kernel.org/monsieuricon/lore-lei-part-1-getting-started
 
-> Cc: stable@vger.kernel.org
-> Fixes: b2ba9225e031 ("misc: pci_endpoint_test: Avoid using module parameter to determine irqtype")
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/misc/pci_endpoint_test.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index a342587fc78a..33058630cd50 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -742,6 +742,7 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
->  	if (!pci_endpoint_test_request_irq(test))
->  		goto err;
->  
-> +	irq_type = test->irq_type;
->  	return true;
->  
->  err:
-> -- 
-> 2.25.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Or lore queries along this line:
+https://lore.kernel.org/all/?q=rt%3A1.month.ago..+dfb%3Apcim_iomap_table
 
