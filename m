@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-20432-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20433-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D61A2045D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 07:28:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2467A20463
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 07:29:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FE831626A8
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 06:28:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC5F57A4512
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 06:29:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86A2018DF86;
-	Tue, 28 Jan 2025 06:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A574D1DDA09;
+	Tue, 28 Jan 2025 06:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kCJVQxsO"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OksHRIkQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025C61DF26E;
-	Tue, 28 Jan 2025 06:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2505C1DD0EF;
+	Tue, 28 Jan 2025 06:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738045681; cv=none; b=ghpOL5gvFCysdFug6HcxL7gBzrmI4LcdMpCp/rrJbkTehdTbwxrC09D4cdv8U0E8X/MYcs5AO02YyuVpPX1G5NXygvJgePcmdVNK/jPew231QFTJq7seklXKPxVqjlrCXrMvYY3Cq8MNRIcd9fXP0VEUVPASZnJUjgrHRgd3xM4=
+	t=1738045692; cv=none; b=V5p7jWSEuKNXZa1zuo1SOJ6Xf7qsmB5J6010Peba6ndF3sv4SIKXO9r7Ej4iXN6mHxAbqXFk4sS8C+ivNynjPlezS8KlEIY7pRKVLg0XwRGKnHzzz7kMF7WKr6RjMRYLoE2SKrtmUdbJkL0W8BfDeDN0pGtjsEssTymosRN/CEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738045681; c=relaxed/simple;
-	bh=PTtXveJGpKTPAOO5eFIO3l0XibHGUgbcLt8NefvZSyo=;
+	s=arc-20240116; t=1738045692; c=relaxed/simple;
+	bh=fkbrOpaW76BA9/XX4YbjOKpgb/ZrhwyXbvW8VEky9Js=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fUhb2TCcrkVxXbNUYXa7Jg6Q1XaiGPRP5g6CHME1hqcFhFpgWXKKTGzejYX8cwcedEUaipRb42ht2dAj6n0xuOFjRqDavDyu/EoD2DhDkuNQgqW0t+wsHq/zWAYMsJYdBthry1SJvVBRiNHPUeoKLNRtivKz/Upv8KiuzFy7Xpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kCJVQxsO; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=mXMrw3p5J387ME1/puBHnbSg5YGywlZ1zm87/RomwWa4VEml9YjOftZg54SYmC/g/Xzd36HJ7ujuvRtrxCu6xGQMf2tlsXa1fDa/eRY4RfIyBLS4dUvADpj1HtwBFEOTuHWWH2o/VBTTWKULmKR2WBXlWD1H1dCbwK7Pv2eYcmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OksHRIkQ; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50S2Cend009658;
-	Tue, 28 Jan 2025 06:27:50 GMT
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50S1sg2b032251;
+	Tue, 28 Jan 2025 06:27:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QXpJ7kICsLJNBbrzS/vhBa+nKtc/mprBYbiUOfy5GP8=; b=kCJVQxsOfDr7okzN
-	VMG5ODtgweXWbVcpxqcoGBLioYBdLserO+Z/tz8tutnNMclbeWM4KFAQiyzYxoMH
-	3kBru2uo1YSNgwJzy/GV7reUC+L5dcO7mYGe8x/Xpzi/Otpj/NYtPbtPfUkg9Qzz
-	b/CMmBu1ELngpP6y686Wpe3rp0CSGZuXPUd9A7U/wNzj1Sl8yNPfwvR9+jVvRhTz
-	k8Fwk6geeOR6pes3xWWOo72eEV9SCXHEADE4xmIugbCEM9KeQD2l7cBZd/RxPAHr
-	NEGepOhUrtenIEFggyFcJgG/d4uM4f+OAY1voDi9ADUHGV3rOSBZsovOMitNz4E/
-	EnDApw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44envv8dyg-1
+	YgA7MqkWfEWtf9D7EueHOeV13JMP0Da35X+DQUFpZF0=; b=OksHRIkQAeWT5FL8
+	Cm6u4Un+eiI9MqTyyDYhMdRsUYk7QPfXCw0i0cwjnkF9Ydqj25FBSpKsaqtksHqO
+	18GhUxdk3Uk3u0yh+Vp4jhO2mObO1Win/iOPpk9sH7bsOuYtbOBC+cjMuaQ2KPlD
+	3dzTvh0DzB16iBUpdmJb7B1A1W216kX1J6DcJKjTvhu/702WqGxMDT/8VvpDiDV0
+	AdAKSKTm6ufPAw83WcIFGmLyIeBnNSiQP3X35+rS5cHL1da37CMDoOLE5MyzckRT
+	dykgEskuocgZ9HZwicjFn4EXHx97xsSC19KQ+Rh1fvkazo9UX2Dnyr/oRnu4o74V
+	+8dFRw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44enyq0dtn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 06:27:50 +0000 (GMT)
+	Tue, 28 Jan 2025 06:27:56 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50S6RovR003105
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50S6Rte9021525
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 06:27:50 GMT
+	Tue, 28 Jan 2025 06:27:56 GMT
 Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 27 Jan 2025 22:27:44 -0800
+ 15.2.1544.9; Mon, 27 Jan 2025 22:27:50 -0800
 From: Varadarajan Narayanan <quic_varada@quicinc.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
@@ -66,9 +66,9 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-phy@lists.infradead.org>
-Subject: [PATCH v9 4/7] arm64: dts: qcom: ipq9574: Reorder reg and reg-names
-Date: Tue, 28 Jan 2025 11:57:05 +0530
-Message-ID: <20250128062708.573662-5-quic_varada@quicinc.com>
+Subject: [PATCH v9 5/7] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
+Date: Tue, 28 Jan 2025 11:57:06 +0530
+Message-ID: <20250128062708.573662-6-quic_varada@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250128062708.573662-1-quic_varada@quicinc.com>
 References: <20250128062708.573662-1-quic_varada@quicinc.com>
@@ -84,118 +84,92 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -vHd8l_9CrHaBbPSxY5uWUsVeb12QSFh
-X-Proofpoint-ORIG-GUID: -vHd8l_9CrHaBbPSxY5uWUsVeb12QSFh
+X-Proofpoint-ORIG-GUID: 4Qd7S7TzPghTjtCTULhfLgJBQGoVTQI7
+X-Proofpoint-GUID: 4Qd7S7TzPghTjtCTULhfLgJBQGoVTQI7
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-28_02,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 mlxscore=0 phishscore=0 clxscore=1015
- mlxlogscore=700 impostorscore=0 lowpriorityscore=0 suspectscore=0
- malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ mlxscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ mlxlogscore=932 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2411120000 definitions=main-2501280048
 
-The 'reg' & 'reg-names' constraints used in the bindings and dtsi
-are different resulting in dt_bindings_check errors. Re-order
-them to address following errors.
-
-	arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@20000000: reg-names:0: 'parf' was expected
+Document the PCIe controller on IPQ5332 platform. IPQ5332 will
+use IPQ9574 as the fall back compatible.
 
 Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 52 +++++++++++++++++----------
- 1 file changed, 34 insertions(+), 18 deletions(-)
+v9: Remove superfluous ipq5332 constraint since the fallback is present
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 942290028972..d27c55c7f6e4 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -876,12 +876,16 @@ frame@b128000 {
+v8: Use ipq9574 as fallback compatible for ipq5332 along with ipq5424
+
+v7: Moved ipq9574 related changes to a separate patch
+    Add 'global' interrupt
+
+v6: Commit message update only. Add info regarding the moving of
+    ipq9574 from 5 "reg" definition to 5 or 6 reg definition.
+
+v5: Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
+
+v4: * v3 reused ipq9574 bindings for ipq5332. Instead add one for ipq5332
+    * DTS uses ipq9574 compatible as fallback. Hence move ipq9574 to be able
+      to use the 'reg' section for both ipq5332 and ipq9574. Else, dtbs_check
+      and dt_binding_check flag errors.
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 4b4927178abc..f7ea865f56bc 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -33,6 +33,7 @@ properties:
+           - qcom,pcie-sdx55
+       - items:
+           - enum:
++              - qcom,pcie-ipq5332
+               - qcom,pcie-ipq5424
+           - const: qcom,pcie-ipq9574
+       - items:
+@@ -49,11 +50,11 @@ properties:
  
- 		pcie1: pcie@10000000 {
- 			compatible = "qcom,pcie-ipq9574";
--			reg =  <0x10000000 0xf1d>,
--			       <0x10000f20 0xa8>,
--			       <0x10001000 0x1000>,
--			       <0x000f8000 0x4000>,
--			       <0x10100000 0x1000>;
--			reg-names = "dbi", "elbi", "atu", "parf", "config";
-+			reg = <0x000f8000 0x4000>,
-+			      <0x10000000 0xf1d>,
-+			      <0x10000f20 0xa8>,
-+			      <0x10001000 0x1000>,
-+			      <0x10100000 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config";
- 			device_type = "pci";
- 			linux,pci-domain = <1>;
- 			bus-range = <0x00 0xff>;
-@@ -956,12 +960,16 @@ pcie1: pcie@10000000 {
+   interrupts:
+     minItems: 1
+-    maxItems: 8
++    maxItems: 9
  
- 		pcie3: pcie@18000000 {
- 			compatible = "qcom,pcie-ipq9574";
--			reg =  <0x18000000 0xf1d>,
--			       <0x18000f20 0xa8>,
--			       <0x18001000 0x1000>,
--			       <0x000f0000 0x4000>,
--			       <0x18100000 0x1000>;
--			reg-names = "dbi", "elbi", "atu", "parf", "config";
-+			reg = <0x000f0000 0x4000>,
-+			      <0x18000000 0xf1d>,
-+			      <0x18000f20 0xa8>,
-+			      <0x18001000 0x1000>,
-+			      <0x18100000 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config";
- 			device_type = "pci";
- 			linux,pci-domain = <3>;
- 			bus-range = <0x00 0xff>;
-@@ -1036,12 +1044,16 @@ pcie3: pcie@18000000 {
+   interrupt-names:
+     minItems: 1
+-    maxItems: 8
++    maxItems: 9
  
- 		pcie2: pcie@20000000 {
- 			compatible = "qcom,pcie-ipq9574";
--			reg =  <0x20000000 0xf1d>,
-+			reg =  <0x00088000 0x4000>,
-+			       <0x20000000 0xf1d>,
- 			       <0x20000f20 0xa8>,
- 			       <0x20001000 0x1000>,
--			       <0x00088000 0x4000>,
- 			       <0x20100000 0x1000>;
--			reg-names = "dbi", "elbi", "atu", "parf", "config";
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config";
- 			device_type = "pci";
- 			linux,pci-domain = <2>;
- 			bus-range = <0x00 0xff>;
-@@ -1116,12 +1128,16 @@ pcie2: pcie@20000000 {
+   iommu-map:
+     minItems: 1
+@@ -443,6 +444,7 @@ allOf:
+         interrupts:
+           minItems: 8
+         interrupt-names:
++          minItems: 8
+           items:
+             - const: msi0
+             - const: msi1
+@@ -452,6 +454,7 @@ allOf:
+             - const: msi5
+             - const: msi6
+             - const: msi7
++            - const: global
  
- 		pcie0: pci@28000000 {
- 			compatible = "qcom,pcie-ipq9574";
--			reg =  <0x28000000 0xf1d>,
-+			reg =  <0x00080000 0x4000>,
-+			       <0x28000000 0xf1d>,
- 			       <0x28000f20 0xa8>,
- 			       <0x28001000 0x1000>,
--			       <0x00080000 0x4000>,
- 			       <0x28100000 0x1000>;
--			reg-names = "dbi", "elbi", "atu", "parf", "config";
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config";
- 			device_type = "pci";
- 			linux,pci-domain = <0>;
- 			bus-range = <0x00 0xff>;
+   - if:
+       properties:
+@@ -559,6 +562,7 @@ allOf:
+               enum:
+                 - qcom,pcie-apq8064
+                 - qcom,pcie-ipq4019
++                - qcom,pcie-ipq5332
+                 - qcom,pcie-ipq8064
+                 - qcom,pcie-ipq8064v2
+                 - qcom,pcie-ipq8074
 -- 
 2.34.1
 
