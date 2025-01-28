@@ -1,136 +1,129 @@
-Return-Path: <linux-pci+bounces-20478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FDBDA20F1E
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:50:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D55B6A20FCF
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:54:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95ED5188AAA1
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 16:50:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7FDE11884DF8
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:54:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18BE01F543C;
-	Tue, 28 Jan 2025 16:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737A91DE8AA;
+	Tue, 28 Jan 2025 17:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcG1JrdC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mV/Bj6oK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BC51F3D22;
-	Tue, 28 Jan 2025 16:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7381DE8A6;
+	Tue, 28 Jan 2025 17:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738082831; cv=none; b=tjFRNIPkjujgXKOj3p5m7krBIgujiuDOr4hji+2hi3vCrB+N+pcVQmKFt9rXvyI+vrqOtLcYGBZ5qfWjZG/8cb3rtlATarWC37ddasHT5CthAL21YyQv9IqopDn48/NZeE/XngyMTOaQ+0vI4oL5AfhoxRw6ncU737mVp8X/UfQ=
+	t=1738086831; cv=none; b=RDhAmw+7wDp9Vxa6X3w1OB/EnI80pCVmxOSIYT+LZZLJamrPaSAuLuumGOZwCWZs3h2yCzlJySWF7BcX09i6/rhcxZXvgAU+bUvR1o8OIdbtmb48GiLLoTL1MUfqsR/W9yeYby+dHs9rNCQqz74htvIpQQkcSWOpXscN3qsnJos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738082831; c=relaxed/simple;
-	bh=0apevGxU/vjXUpALtZpvGMtdZWEFFMKEjme9pPLPLUc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RfV28NOlKf54wdskNZtoIIRj7uJwvNxpXjc+ItyHl4u1QehQ1/kSNvLh/2ho/+FlRzHgf7tZSI0nlzVJ7TINszzkpR0OgMZpeosgijc3s6AYfYagTMrIJF2dS4mvIoSOOJWeW6eptkhVNhjYpH7ZxJMCdMSuYwW+s0XV60eZ3CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcG1JrdC; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e46ebe19489so8046111276.2;
-        Tue, 28 Jan 2025 08:47:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738082828; x=1738687628; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eMvm/r15/IoRSGXQB6/DA+TEMaJ7ANsfTm/M8ejHi4g=;
-        b=JcG1JrdCVLojMviXIlcYu0/9NQrUSinV4+OtWo7PQA7usDayAJOlobYlGRIPF/bAn5
-         vnvAFuJF11TWv6VGs1Exz03uC/sSA6cc7Rkt6ZYBK0LXoincgQUlvP0k9MuK8UY4VMmn
-         t+de0CCb1Xq7LLk4DCL+4HNiOltYZPEXsYC8vQi1bWOToMNM2M91i17RBG4mvOjW5Cfr
-         KhiOSf+hErclbnZ7q+irtlU7rrwdmBxXmb5QzaWk+Wn9AxVpxW11XOyO0YDemQw3wLpB
-         T6OvP/g3cUsTj6p8xEdKcAEBTERCDrG/Z8KyZlEY9JcDVmGrdrvaN3SiJ8aO0ALvmP5c
-         X75A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738082828; x=1738687628;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eMvm/r15/IoRSGXQB6/DA+TEMaJ7ANsfTm/M8ejHi4g=;
-        b=ZUbDRi7nuVdwlmyeTjRyFJAczOQgRhHUdkNhi+TXvR5n2exP5qyO9XrYUcUvOglsJC
-         Lprh2SNRI0yL2vFSGE51nec8Pxu9edu3TEvtc8GIifKdqZ1PLlsFQ2PC1J4w07/ydTJx
-         Tvks67sSWjvjFpHp5/+wwKt9Qc2mMa+IUrpDBtIKQ9hjYKRmqIstfGh3NQv8rzqFDfgB
-         stp5KT7pSDhBZy6T2UNoXi46LNjFK2J7CNkIDrN8POk1EBJhp32/xidVtDlFNJMjwSzv
-         kS/iTojIGz0GaTbNMXG49UzeH+jZCx/dOhwGwUyG5WY3QpmqTK39rGq0/30VC019QMFC
-         JXEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZxtqTXNsg1Uz4Vjr0VFHDaIQS+frp/jLwz4VFfQAbVd9juPN9AK/JhMfRrPib8oxjZwwxi9H5RsU8@vger.kernel.org, AJvYcCXfT86TJ3YZXuRqatVHCajDssJrROClNm64fhQiuLUAh030JvVqVCYmfn0J96rTtFXfoj9GLTXFaoeckMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2VF8M1E6ls31P82PljtwwH0u5tCIqqmocuiySFijEj3l9LyfH
-	ULyZlJYTQDdhm5BXoBVD9hUWwZfIxukDH8dS/adFEiqg9qDImd8QY//i9hql
-X-Gm-Gg: ASbGncuHvmjUTiZnP9mPlqxpRjpWv/e7uwAFLrGcF8mxrIdy/HAgR9Yk/rz9cyrK+hH
-	a4LaWJA3bfh+kjlqOlWycpEWmXD3A6hywjYNKs1Kd19bRNeyCtXk4b52jqDF7k6IDniTauQPhQa
-	kvUjcHs2qKIA3lrGVbbxOIJ+ykjMbFM6fKODyMyAhnzt/9XDsAgl6EoFA5LnKzGg+Wh2xEHbvW/
-	YB63LkQQlAcE6pQSYLJbCdHTf2uV484WfVb6SYBnFyHIc0yIIwTtvpZHH2412bKWbibCakv71zw
-	YJ/EQjdE1fHgKmSCFWzyXeEb9s8HZyYt1pnoskzOJSzGrM1oTIKFS0cCEWq+BQ==
-X-Google-Smtp-Source: AGHT+IGRPj3/cc5+8Iz+fYUcf8o4fSPeh9b5K+i2Rg5PPrIKaCamFUEL1iBnWZ+nQqwSgF6c0Ldf6Q==
-X-Received: by 2002:a05:690c:a91:b0:6f0:22d3:e142 with SMTP id 00721157ae682-6f6eb677d1fmr332227657b3.9.1738082828372;
-        Tue, 28 Jan 2025 08:47:08 -0800 (PST)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f78953b155sm7926567b3.24.2025.01.28.08.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2025 08:47:08 -0800 (PST)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	s=arc-20240116; t=1738086831; c=relaxed/simple;
+	bh=CDOs8WP2JNN/dHAwgr95DyRHckyBFA1Uf2K4mS/it3Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gOd3ctWKPxQOvarFIlR40FAD+HJHL9keK1X6PAEfyDexEqKKkwcBM96jQE74DivKoiU4+v4JiyXx8Df62Q6aIcW1YEnUbfmP4HsBTQF9Jcxu5lKoDw703dP4hqhEQkdRaoinT+0xnDqmVzcripdKT19e2HfA4zcrhl/NGOT1HVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mV/Bj6oK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99342C4CEE1;
+	Tue, 28 Jan 2025 17:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738086830;
+	bh=CDOs8WP2JNN/dHAwgr95DyRHckyBFA1Uf2K4mS/it3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mV/Bj6oKixuq61K/2pm3gYPQ+tJTmDje8N3xpzt1wHQ4jODmhaC363xoJeOXsE/fC
+	 VMr1bpuTCRA4Jwt6BNU+WrqNC192lROxJf0v5+Pf1ppmFI6TsPn6K6gf7IhhCVVlBz
+	 NMot0Rhntmfu5BRdmZuGqET2nU2f4cydLNDUnbqL44r2jVNLHBE+q305O4Q4qHwMTC
+	 9W2gf78+w+1hAOGtT9NG8pbujbnvStA9s6/SIU28wF1eKQKphqJBwYlsALsEA7B1dg
+	 wODPftWLN4XxLVWtF8amBoG/hr8x7mJ3xXsbyjK3DcfnHUIyaZi1u2Mtr93KKoQWYF
+	 wqOi8prq93z7A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Niklas Cassel <cassel@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: [PATCH v2 12/13] PCI: hv: Switch hv_compose_multi_msi_req_get_cpu() to using cpumask_next_wrap()
-Date: Tue, 28 Jan 2025 11:46:41 -0500
-Message-ID: <20250128164646.4009-13-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250128164646.4009-1-yury.norov@gmail.com>
-References: <20250128164646.4009-1-yury.norov@gmail.com>
+	Sasha Levin <sashal@kernel.org>,
+	kw@linux.com,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 02/15] PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()
+Date: Tue, 28 Jan 2025 12:53:33 -0500
+Message-Id: <20250128175346.1197097-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250128175346.1197097-1-sashal@kernel.org>
+References: <20250128175346.1197097-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13
 Content-Transfer-Encoding: 8bit
 
-Calling cpumask_next_wrap_old() with starting CPU == nr_cpu_ids
-is effectively the same as request to find first CPU, starting
-from a given one and wrapping around if needed.
+From: Niklas Cassel <cassel@kernel.org>
 
-cpumask_next_wrap() is a proper replacement for that.
+[ Upstream commit f015b53d634a10fbceba545de70c3e109665c379 ]
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
+A BAR of type BAR_FIXED has a fixed BAR size (the size cannot be changed).
+
+When using pci_epf_alloc_space() to allocate backing memory for a BAR,
+pci_epf_alloc_space() will always set the size to the fixed BAR size if
+the BAR type is BAR_FIXED (and will give an error if you the requested size
+is larger than the fixed BAR size).
+
+However, some drivers might not call pci_epf_alloc_space() before calling
+pci_epc_set_bar(), so add a check in pci_epc_set_bar() to ensure that an
+EPF driver cannot set a size different from the fixed BAR size, if the BAR
+type is BAR_FIXED.
+
+The pci_epc_function_is_valid() check is removed because this check is now
+done by pci_epc_get_features().
+
+Link: https://lore.kernel.org/r/20241213143301.4158431-13-cassel@kernel.org
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-hyperv.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/endpoint/pci-epc-core.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index c39316966de5..44d7f4339306 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1757,8 +1757,7 @@ static int hv_compose_multi_msi_req_get_cpu(void)
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index bed7c7d1fe3c3..c69c133701c92 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -609,10 +609,17 @@ EXPORT_SYMBOL_GPL(pci_epc_clear_bar);
+ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		    struct pci_epf_bar *epf_bar)
+ {
+-	int ret;
++	const struct pci_epc_features *epc_features;
++	enum pci_barno bar = epf_bar->barno;
+ 	int flags = epf_bar->flags;
++	int ret;
  
- 	spin_lock_irqsave(&multi_msi_cpu_lock, flags);
+-	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
++	epc_features = pci_epc_get_features(epc, func_no, vfunc_no);
++	if (!epc_features)
++		return -EINVAL;
++
++	if (epc_features->bar[bar].type == BAR_FIXED &&
++	    (epc_features->bar[bar].fixed_size != epf_bar->size))
+ 		return -EINVAL;
  
--	cpu_next = cpumask_next_wrap_old(cpu_next, cpu_online_mask, nr_cpu_ids,
--				     false);
-+	cpu_next = cpumask_next_wrap(cpu_next, cpu_online_mask);
- 	cpu = cpu_next;
- 
- 	spin_unlock_irqrestore(&multi_msi_cpu_lock, flags);
+ 	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
 -- 
-2.43.0
+2.39.5
 
 
