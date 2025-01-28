@@ -1,58 +1,57 @@
-Return-Path: <linux-pci+bounces-20481-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20482-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93125A20FF1
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:56:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C3C3A20FEF
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:56:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D088D1889F70
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:56:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C44016780E
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 17:56:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992A31F63CA;
-	Tue, 28 Jan 2025 17:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8770C1F63E3;
+	Tue, 28 Jan 2025 17:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCrDMQdo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3W8HJ25"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6915B1F561F;
-	Tue, 28 Jan 2025 17:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3B91F63DD;
+	Tue, 28 Jan 2025 17:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086851; cv=none; b=ttCleLWxgRL0Zg8ETTupcmSP/1qQPRctMd9kz5m7ymZ2Oa0aDeuda070NfKUZA4Wiuf8CLPCCsCMmqjMpUgLA1haU9Gg+yDpAXe6Cp1zxRLrPito119DyNJfQSY5fKkJi004dur+j+yDxT1kvTXr0rt7pJwMVyRwbVDBBbwa/FE=
+	t=1738086852; cv=none; b=nD6wj6DTL3xXyRhwBqBWO4BiRTMbZNFdCvFAR67FSeIlx2FGGsIUE6DHpKsXhbXZaYAcnbQ1x6R6eGVZAOVHkkB2Bf1m3y14WsoJwSWT2YAKEEqYjQCh3vHQYAnzEJY/HzOYaD0ilqpq5umfT/PBf/k9Nu3yRKhe1OzjQ3xHSno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086851; c=relaxed/simple;
-	bh=BPBtpN1werz/RsoyCrPQiUkIJ+pSBXSZkdgQsTSCZzo=;
+	s=arc-20240116; t=1738086852; c=relaxed/simple;
+	bh=nZgPIW+RCsGcgKd9OIKtj0HgzoUPCojhk/sJO9mSDAU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l/2QOftzxbJar2d1G4t79k0O/AnvlD1knLJMrPzTHxVGB8cVcE+tOz0gu9VdMLv9/kJ9AOLf3qK/CrdMQMasGYM8yM877NvAYxggJujgMQ91Fpxa4UCb1cZHoflF9oZXktqljtR2tZOv0Ki/jk6do1qGtFJcd0EjVxlF72VVZeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCrDMQdo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E36A5C4CED3;
-	Tue, 28 Jan 2025 17:54:09 +0000 (UTC)
+	 MIME-Version:Content-Type; b=K5fR6nuSOJIdCFnFLRDJVVIv02yU8/RVttqTLijKTgyV/oZT/irywaxbGrPfEtQ8ByiXPIGzl8pSobGX8/Kca8lXPxP0tiVxA36Ef0euzfFauLvT0qNadVwn828TNalBE00TrRdH0VN9gSp5udeoKtnXUvnsQ7CKPsgb9QyahDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3W8HJ25; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC92C4CEE2;
+	Tue, 28 Jan 2025 17:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738086850;
-	bh=BPBtpN1werz/RsoyCrPQiUkIJ+pSBXSZkdgQsTSCZzo=;
+	s=k20201202; t=1738086852;
+	bh=nZgPIW+RCsGcgKd9OIKtj0HgzoUPCojhk/sJO9mSDAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oCrDMQdonFSI99Ty89AEh1BLoGon6m1X5X6lHYaAdV0RXXCFMg08fwl6g+a5X7X3B
-	 0b9ZuRUtBJjHQ3NVa/tsj5PyDARmH6PTNKvcT1axh6hsLj6LSEAbwqbRroW2RYkUxm
-	 J/gfFqW/2OSyPKS8M1rBqvA172NLHDwXu75XRGqA7jy45+l0MtxP4ytknnwKmRAjb+
-	 FeUe0gOKp3NnYR8Q/kj/Vci9yDZBpRC2pZKjLyY405xNuu7idgkisLrvRcmQf43OI/
-	 mxbj+eZPDwcSCoT4mwJz3LR1lIDTUR5OwlL0yAnYRpmK235Z7NBPxXodSGBzeEOXJL
-	 9lSJvxICN94dg==
+	b=j3W8HJ25WnjXJAiEJS0w8r+ApskzTTt8m1L9uvh6ZonTQR6vX7tswRwRYCaDTdjfK
+	 +W9C1ah0mXadkeZpnAjuzeyCXMF5BpRo7sseDLzTw+3pIqqaV2KWQQCIvYuUD5Fr1/
+	 shUXEE0XHCH3o5eL5wH6P7JSujjC0nDK9qyJGZ3CGM2DKDzGy+vAq4BhjNMnfLIlho
+	 xAoP1EnG1vXZCpBPPr8FF2MOoHeFTLnaPdh0qaecu+FYbUtwzol+De1xr3BB1FbF//
+	 QdNzCkoOBBz5AZWxNUcWRwaek/Ljt4PWQn7gNxL58V6dEgTTEOGHxfsYFZ7bCtKaLE
+	 KwcxzReN06jWw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+Cc: Takashi Iwai <tiwai@suse.de>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 13/15] PCI: Store number of supported End-End TLP Prefixes
-Date: Tue, 28 Jan 2025 12:53:44 -0500
-Message-Id: <20250128175346.1197097-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 14/15] PCI/DPC: Quirk PIO log size for Intel Raptor Lake-P
+Date: Tue, 28 Jan 2025 12:53:45 -0500
+Message-Id: <20250128175346.1197097-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250128175346.1197097-1-sashal@kernel.org>
 References: <20250128175346.1197097-1-sashal@kernel.org>
@@ -68,133 +67,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit e5321ae10e1323359a5067a26dfe98b5f44cc5e6 ]
+[ Upstream commit b198499c7d2508a76243b98e7cca992f6fd2b7f7 ]
 
-eetlp_prefix_path in the struct pci_dev tells if End-End TLP Prefixes
-are supported by the path or not, and the value is only calculated if
-CONFIG_PCI_PASID is set.
+Apparently the Raptor Lake-P reference firmware configures the PIO log size
+correctly, but some vendor BIOSes, including at least ASUSTeK COMPUTER INC.
+Zenbook UX3402VA_UX3402VA, do not.
 
-The Max End-End TLP Prefixes field in the Device Capabilities Register 2
-also tells how many (1-4) End-End TLP Prefixes are supported (PCIe r6.2 sec
-7.5.3.15). The number of supported End-End Prefixes is useful for reading
-correct number of DWORDs from TLP Prefix Log register in AER capability
-(PCIe r6.2 sec 7.8.4.12).
+Apply the quirk for Raptor Lake-P.  This prevents kernel complaints like:
 
-Replace eetlp_prefix_path with eetlp_prefix_max and determine the number of
-supported End-End Prefixes regardless of CONFIG_PCI_PASID so that an
-upcoming commit generalizing TLP Prefix Log register reading does not have
-to read extra DWORDs for End-End Prefixes that never will be there.
+  DPC: RP PIO log size 0 is invalid
 
-The value stored into eetlp_prefix_max is directly derived from device's
-Max End-End TLP Prefixes and does not consider limitations imposed by
-bridges or the Root Port beyond supported/not supported flags. This is
-intentional for two reasons:
+and also enables the DPC driver to dump the RP PIO Log registers when DPC
+is triggered.
 
-  1) PCIe r6.2 spec sections 2.2.10.4 & 6.2.4.4 indicate that a TLP is
-     malformed only if the number of prefixes exceed the number of Max
-     End-End TLP Prefixes, which seems to be the case even if the device
-     could never receive that many prefixes due to smaller maximum imposed
-     by a bridge or the Root Port. If TLP parsing is later added, this
-     distinction is significant in interpreting what is logged by the TLP
-     Prefix Log registers and the value matching to the Malformed TLP
-     threshold is going to be more useful.
+Note that the bug report also mentions 8086:a76e, which has been already
+added by 627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake
+Root Ports").
 
-  2) TLP Prefix handling happens autonomously on a low layer and the value
-     in eetlp_prefix_max is not programmed anywhere by the kernel (i.e.,
-     there is no limiter OS can control to prevent sending more than N TLP
-     Prefixes).
-
-Link: https://lore.kernel.org/r/20250114170840.1633-7-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20250102164315.7562-1-tiwai@suse.de
+Link: https://bugzilla.suse.com/show_bug.cgi?id=1234623
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[bhelgaas: commit log]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/ats.c             |  2 +-
- drivers/pci/probe.c           | 14 +++++++++-----
- include/linux/pci.h           |  2 +-
- include/uapi/linux/pci_regs.h |  1 +
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index 6afff1f1b1430..c6b266c772c81 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -410,7 +410,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	if (WARN_ON(pdev->pasid_enabled))
- 		return -EBUSY;
- 
--	if (!pdev->eetlp_prefix_path && !pdev->pasid_no_tlp)
-+	if (!pdev->eetlp_prefix_max && !pdev->pasid_no_tlp)
- 		return -EINVAL;
- 
- 	if (!pasid)
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2e81ab0f5a25c..381c22e3ccdbf 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2251,8 +2251,8 @@ static void pci_configure_relaxed_ordering(struct pci_dev *dev)
- 
- static void pci_configure_eetlp_prefix(struct pci_dev *dev)
- {
--#ifdef CONFIG_PCI_PASID
- 	struct pci_dev *bridge;
-+	unsigned int eetlp_max;
- 	int pcie_type;
- 	u32 cap;
- 
-@@ -2264,15 +2264,19 @@ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
- 		return;
- 
- 	pcie_type = pci_pcie_type(dev);
-+
-+	eetlp_max = FIELD_GET(PCI_EXP_DEVCAP2_EE_PREFIX_MAX, cap);
-+	/* 00b means 4 */
-+	eetlp_max = eetlp_max ?: 4;
-+
- 	if (pcie_type == PCI_EXP_TYPE_ROOT_PORT ||
- 	    pcie_type == PCI_EXP_TYPE_RC_END)
--		dev->eetlp_prefix_path = 1;
-+		dev->eetlp_prefix_max = eetlp_max;
- 	else {
- 		bridge = pci_upstream_bridge(dev);
--		if (bridge && bridge->eetlp_prefix_path)
--			dev->eetlp_prefix_path = 1;
-+		if (bridge && bridge->eetlp_prefix_max)
-+			dev->eetlp_prefix_max = eetlp_max;
- 	}
--#endif
- }
- 
- static void pci_configure_serr(struct pci_dev *dev)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index db9b47ce3eefd..21be5a1edf1ad 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -407,7 +407,7 @@ struct pci_dev {
- 					   supported from root to here */
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 76f4df75b08a1..4ed3704ce92e8 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6253,6 +6253,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2b, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa72f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa73f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
  #endif
- 	unsigned int	pasid_no_tlp:1;		/* PASID works without TLP Prefix */
--	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
-+	unsigned int	eetlp_prefix_max:3;	/* Max # of End-End TLP Prefixes, 0=not supported */
- 
- 	pci_channel_state_t error_state;	/* Current connectivity state */
- 	struct device	dev;			/* Generic device interface */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 1601c7ed5fab7..14a6306c4ce18 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -665,6 +665,7 @@
- #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
- #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
- #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
-+#define  PCI_EXP_DEVCAP2_EE_PREFIX_MAX	0x00c00000 /* Max End-End TLP Prefixes */
- #define PCI_EXP_DEVCTL2		0x28	/* Device Control 2 */
- #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT	0x000f	/* Completion Timeout Value */
- #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS	0x0010	/* Completion Timeout Disable */
 -- 
 2.39.5
 
