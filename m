@@ -1,176 +1,200 @@
-Return-Path: <linux-pci+bounces-20489-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20490-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A83A21050
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 19:04:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4049A2103B
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 19:02:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F114B3AA26B
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:01:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 567721629C0
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:02:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE2241FBEAA;
-	Tue, 28 Jan 2025 17:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329571FDE1B;
+	Tue, 28 Jan 2025 17:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raDUyqg/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGiLuQQA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EBE1FBC89;
-	Tue, 28 Jan 2025 17:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049511FDA9C;
+	Tue, 28 Jan 2025 17:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086894; cv=none; b=jR0qSrttjAETHU+xWRv7P55KZb2IFSM3nv/yynfpyxbY7AfVEl/0sDe0Ie0BuJ4JD4EhKpi2lW9x8ON+EzTRXtrbXJZVWi+Ii95vMECfgjtnGjLpl0FMaeYt7geu1Ba79AGPsmKWbIqO3U/qBClMdtNWO2lugFssH9XGzzHno5Q=
+	t=1738086901; cv=none; b=gsyz6nYWrOQUfJxYiNOlA6cHjRgI+lv2Mx8+SzIWYoT1fCgNj8guoyPTbAavsooj9vBLiZpRCVdeSSNxLBvvyNvO6p7ZIZr6q9wW6na6TzFmEPcn3eJ9Vati5bUTxpLclZ35JEJZ9G+yDXhJRxu2eSa+7jESZGyUmTWzyq3hDrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086894; c=relaxed/simple;
-	bh=c7GpGV2WfVCigO6DAYXGLCcLdWNmU1CowOOiHpYaRu0=;
+	s=arc-20240116; t=1738086901; c=relaxed/simple;
+	bh=41k5cj7AEMve9i0ebSaiso/rkjB3H3AQI/vu2YvHX1o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d93zU1wPRbqkHLjIh5hDrZBIthI6ZP15d38oYT7+pXv/zNLYcL/GpNsIMe2EcASN5nvBcAyPxWiiNi5bOFyXf96r1+wc6UjdJRWq0pM/o5OV1DYOJt69CvfY/9I+JTXBHmRLm67ND/zcpGALECVAvKTJymoraThLOV7S3o9YW1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raDUyqg/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86CACC4CED3;
-	Tue, 28 Jan 2025 17:54:53 +0000 (UTC)
+	 MIME-Version:Content-Type; b=hhLAd77Y2ILYG7eKEQP19ssZOHTwxXStrD2RpoZyYN+QZXPJHjaMp1ACfuIlaANGd9BRGOVHPt45K4lss6zuFbT8zd0cL4FSwnl0/n7QpIzyp5y59rNnShC/zVlFhleQ/A3Hw/DsFahTea401NAUBWH+45DHN2C969AyoPd1zWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGiLuQQA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2225C4CED3;
+	Tue, 28 Jan 2025 17:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738086894;
-	bh=c7GpGV2WfVCigO6DAYXGLCcLdWNmU1CowOOiHpYaRu0=;
+	s=k20201202; t=1738086900;
+	bh=41k5cj7AEMve9i0ebSaiso/rkjB3H3AQI/vu2YvHX1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=raDUyqg/bQH2gGLTgmJ0C8us3L/iRWpjEjMsky1Pjhdz1A5JyHB/rpz/KUiRXjiQQ
-	 eqCloTUd/x+DxdX44iirM8BVSkOQx+tK6j1tGHMLP5WM1VwevLz9djCixfjaxCT4LD
-	 VAaXsZ0sjaKEX3yuEMsRnnGjg08xMTFb9TYJ+7gWuK80a0wT385cZCQHX/zmWBcRCU
-	 L/cNYZz/XaZQMJ3+FStQnnfQAR7khAmQU+y4I9FjSVfb+BoB4DPd0BYrgf7btouTqo
-	 RV8CdeHM3imTraRKKFPi1v67u8GxeBzFi3KQynkglFNaop3R3R09ILhHj8ulevQOf2
-	 99eYYR3ictacg==
+	b=BGiLuQQAb21wHUOh+UZj0+J3ynttzsMQu3QUEIqrg9Lz2oamFIvcm+47KnUCFpJPW
+	 PGZjQkXN4h0YXw8HZARJqM7j6iR1/MN9TLssDImyVEi5c238/hl1/jX/OnYnLuUvd0
+	 OL5TBZyrSQYjw4fyvuCPESBv6xahW9S3LgMHWWqUy+GaK1YiIrxyk2opInDsjlodY0
+	 XMXCVn7taA1ozf8mCCqK2AydPmXY4tFCZKGFJgCd/+MuN99KpUaWhtVuYvZ8eol1Cx
+	 wMnbyLv0bMCsKW6Ta/VjCvc8pRxjSYFPRGGBIab2VUQSu3Wk3QYSuAxB8aASb5pDf6
+	 xb8JmAla6TXJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>,
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	kurt.schwemmer@microsemi.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 11/11] PCI: switchtec: Add Microchip PCI100X device IDs
-Date: Tue, 28 Jan 2025 12:54:35 -0500
-Message-Id: <20250128175435.1197457-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 3/5] PCI: Store number of supported End-End TLP Prefixes
+Date: Tue, 28 Jan 2025 12:54:52 -0500
+Message-Id: <20250128175455.1197603-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250128175435.1197457-1-sashal@kernel.org>
-References: <20250128175435.1197457-1-sashal@kernel.org>
+In-Reply-To: <20250128175455.1197603-1-sashal@kernel.org>
+References: <20250128175455.1197603-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.74
+X-stable-base: Linux 6.1.127
 Content-Transfer-Encoding: 8bit
 
-From: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>
+From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-[ Upstream commit a3282f84b2151d254dc4abf24d1255c6382be774 ]
+[ Upstream commit e5321ae10e1323359a5067a26dfe98b5f44cc5e6 ]
 
-Add Microchip parts to the Device ID table so the driver supports PCI100x
-devices.
+eetlp_prefix_path in the struct pci_dev tells if End-End TLP Prefixes
+are supported by the path or not, and the value is only calculated if
+CONFIG_PCI_PASID is set.
 
-Add a new macro to quirk the Microchip Switchtec PCI100x parts to allow DMA
-access via NTB to work when the IOMMU is turned on.
+The Max End-End TLP Prefixes field in the Device Capabilities Register 2
+also tells how many (1-4) End-End TLP Prefixes are supported (PCIe r6.2 sec
+7.5.3.15). The number of supported End-End Prefixes is useful for reading
+correct number of DWORDs from TLP Prefix Log register in AER capability
+(PCIe r6.2 sec 7.8.4.12).
 
-PCI100x family has 6 variants; each variant is designed for different
-application usages, different port counts and lane counts:
+Replace eetlp_prefix_path with eetlp_prefix_max and determine the number of
+supported End-End Prefixes regardless of CONFIG_PCI_PASID so that an
+upcoming commit generalizing TLP Prefix Log register reading does not have
+to read extra DWORDs for End-End Prefixes that never will be there.
 
-  PCI1001 has 1 x4 upstream port and 3 x4 downstream ports
-  PCI1002 has 1 x4 upstream port and 4 x2 downstream ports
-  PCI1003 has 2 x4 upstream ports, 2 x2 upstream ports, and 2 x2
-    downstream ports
-  PCI1004 has 4 x4 upstream ports
-  PCI1005 has 1 x4 upstream port and 6 x2 downstream ports
-  PCI1006 has 6 x2 upstream ports and 2 x2 downstream ports
+The value stored into eetlp_prefix_max is directly derived from device's
+Max End-End TLP Prefixes and does not consider limitations imposed by
+bridges or the Root Port beyond supported/not supported flags. This is
+intentional for two reasons:
 
-[Historical note: these parts use PCI_VENDOR_ID_EFAR (0x1055), from EFAR
-Microsystems, which was acquired in 1996 by Standard Microsystems Corp,
-which was acquired by Microchip Technology in 2012.  The PCI-SIG confirms
-that Vendor ID 0x1055 is assigned to Microchip even though it's not
-visible via https://pcisig.com/membership/member-companies]
+  1) PCIe r6.2 spec sections 2.2.10.4 & 6.2.4.4 indicate that a TLP is
+     malformed only if the number of prefixes exceed the number of Max
+     End-End TLP Prefixes, which seems to be the case even if the device
+     could never receive that many prefixes due to smaller maximum imposed
+     by a bridge or the Root Port. If TLP parsing is later added, this
+     distinction is significant in interpreting what is logged by the TLP
+     Prefix Log registers and the value matching to the Malformed TLP
+     threshold is going to be more useful.
 
-Link: https://lore.kernel.org/r/20250120095524.243103-1-Saladi.Rakeshbabu@microchip.com
-Signed-off-by: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>
-[bhelgaas: Vendor ID history]
+  2) TLP Prefix handling happens autonomously on a low layer and the value
+     in eetlp_prefix_max is not programmed anywhere by the kernel (i.e.,
+     there is no limiter OS can control to prevent sending more than N TLP
+     Prefixes).
+
+Link: https://lore.kernel.org/r/20250114170840.1633-7-ilpo.jarvinen@linux.intel.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-By: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c           | 11 +++++++++++
- drivers/pci/switch/switchtec.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+ drivers/pci/ats.c             |  2 +-
+ drivers/pci/probe.c           | 14 +++++++++-----
+ include/linux/pci.h           |  2 +-
+ include/uapi/linux/pci_regs.h |  1 +
+ 4 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index a256928fb126c..70f484b811dea 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5978,6 +5978,17 @@ SWITCHTEC_QUIRK(0x5552);  /* PAXA 52XG5 */
- SWITCHTEC_QUIRK(0x5536);  /* PAXA 36XG5 */
- SWITCHTEC_QUIRK(0x5528);  /* PAXA 28XG5 */
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index c967ad6e26267..17a3894baf6be 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -376,7 +376,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 	if (WARN_ON(pdev->pasid_enabled))
+ 		return -EBUSY;
  
-+#define SWITCHTEC_PCI100X_QUIRK(vid) \
-+	DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_EFAR, vid, \
-+		PCI_CLASS_BRIDGE_OTHER, 8, quirk_switchtec_ntb_dma_alias)
-+SWITCHTEC_PCI100X_QUIRK(0x1001);  /* PCI1001XG4 */
-+SWITCHTEC_PCI100X_QUIRK(0x1002);  /* PCI1002XG4 */
-+SWITCHTEC_PCI100X_QUIRK(0x1003);  /* PCI1003XG4 */
-+SWITCHTEC_PCI100X_QUIRK(0x1004);  /* PCI1004XG4 */
-+SWITCHTEC_PCI100X_QUIRK(0x1005);  /* PCI1005XG4 */
-+SWITCHTEC_PCI100X_QUIRK(0x1006);  /* PCI1006XG4 */
+-	if (!pdev->eetlp_prefix_path && !pdev->pasid_no_tlp)
++	if (!pdev->eetlp_prefix_max && !pdev->pasid_no_tlp)
+ 		return -EINVAL;
+ 
+ 	if (!pasid)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 5c1ab9ee65eb3..b47b33c48f33f 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2227,8 +2227,8 @@ static void pci_configure_ltr(struct pci_dev *dev)
+ 
+ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+ {
+-#ifdef CONFIG_PCI_PASID
+ 	struct pci_dev *bridge;
++	unsigned int eetlp_max;
+ 	int pcie_type;
+ 	u32 cap;
+ 
+@@ -2240,15 +2240,19 @@ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+ 		return;
+ 
+ 	pcie_type = pci_pcie_type(dev);
 +
++	eetlp_max = FIELD_GET(PCI_EXP_DEVCAP2_EE_PREFIX_MAX, cap);
++	/* 00b means 4 */
++	eetlp_max = eetlp_max ?: 4;
 +
- /*
-  * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
-  * These IDs are used to forward responses to the originator on the other
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 5a4adf6c04cf8..455fa5035a245 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1737,6 +1737,26 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
- 		.driver_data = gen, \
+ 	if (pcie_type == PCI_EXP_TYPE_ROOT_PORT ||
+ 	    pcie_type == PCI_EXP_TYPE_RC_END)
+-		dev->eetlp_prefix_path = 1;
++		dev->eetlp_prefix_max = eetlp_max;
+ 	else {
+ 		bridge = pci_upstream_bridge(dev);
+-		if (bridge && bridge->eetlp_prefix_path)
+-			dev->eetlp_prefix_path = 1;
++		if (bridge && bridge->eetlp_prefix_max)
++			dev->eetlp_prefix_max = eetlp_max;
  	}
+-#endif
+ }
  
-+#define SWITCHTEC_PCI100X_DEVICE(device_id, gen) \
-+	{ \
-+		.vendor     = PCI_VENDOR_ID_EFAR, \
-+		.device     = device_id, \
-+		.subvendor  = PCI_ANY_ID, \
-+		.subdevice  = PCI_ANY_ID, \
-+		.class      = (PCI_CLASS_MEMORY_OTHER << 8), \
-+		.class_mask = 0xFFFFFFFF, \
-+		.driver_data = gen, \
-+	}, \
-+	{ \
-+		.vendor     = PCI_VENDOR_ID_EFAR, \
-+		.device     = device_id, \
-+		.subvendor  = PCI_ANY_ID, \
-+		.subdevice  = PCI_ANY_ID, \
-+		.class      = (PCI_CLASS_BRIDGE_OTHER << 8), \
-+		.class_mask = 0xFFFFFFFF, \
-+		.driver_data = gen, \
-+	}
-+
- static const struct pci_device_id switchtec_pci_tbl[] = {
- 	SWITCHTEC_PCI_DEVICE(0x8531, SWITCHTEC_GEN3),  /* PFX 24xG3 */
- 	SWITCHTEC_PCI_DEVICE(0x8532, SWITCHTEC_GEN3),  /* PFX 32xG3 */
-@@ -1831,6 +1851,12 @@ static const struct pci_device_id switchtec_pci_tbl[] = {
- 	SWITCHTEC_PCI_DEVICE(0x5552, SWITCHTEC_GEN5),  /* PAXA 52XG5 */
- 	SWITCHTEC_PCI_DEVICE(0x5536, SWITCHTEC_GEN5),  /* PAXA 36XG5 */
- 	SWITCHTEC_PCI_DEVICE(0x5528, SWITCHTEC_GEN5),  /* PAXA 28XG5 */
-+	SWITCHTEC_PCI100X_DEVICE(0x1001, SWITCHTEC_GEN4),  /* PCI1001 16XG4 */
-+	SWITCHTEC_PCI100X_DEVICE(0x1002, SWITCHTEC_GEN4),  /* PCI1002 12XG4 */
-+	SWITCHTEC_PCI100X_DEVICE(0x1003, SWITCHTEC_GEN4),  /* PCI1003 16XG4 */
-+	SWITCHTEC_PCI100X_DEVICE(0x1004, SWITCHTEC_GEN4),  /* PCI1004 16XG4 */
-+	SWITCHTEC_PCI100X_DEVICE(0x1005, SWITCHTEC_GEN4),  /* PCI1005 16XG4 */
-+	SWITCHTEC_PCI100X_DEVICE(0x1006, SWITCHTEC_GEN4),  /* PCI1006 16XG4 */
- 	{0}
- };
- MODULE_DEVICE_TABLE(pci, switchtec_pci_tbl);
+ static void pci_configure_serr(struct pci_dev *dev)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 28f91982402aa..25deb09f9fce9 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -396,7 +396,7 @@ struct pci_dev {
+ 	u16		l1ss;		/* L1SS Capability pointer */
+ #endif
+ 	unsigned int	pasid_no_tlp:1;		/* PASID works without TLP Prefix */
+-	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
++	unsigned int	eetlp_prefix_max:3;	/* Max # of End-End TLP Prefixes, 0=not supported */
+ 
+ 	pci_channel_state_t error_state;	/* Current connectivity state */
+ 	struct device	dev;			/* Generic device interface */
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 3325155036c80..1426896f4625b 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -659,6 +659,7 @@
+ #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
+ #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
+ #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
++#define  PCI_EXP_DEVCAP2_EE_PREFIX_MAX	0x00c00000 /* Max End-End TLP Prefixes */
+ #define PCI_EXP_DEVCTL2		0x28	/* Device Control 2 */
+ #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT	0x000f	/* Completion Timeout Value */
+ #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS	0x0010	/* Completion Timeout Disable */
 -- 
 2.39.5
 
