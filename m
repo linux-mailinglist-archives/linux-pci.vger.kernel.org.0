@@ -1,57 +1,58 @@
-Return-Path: <linux-pci+bounces-20491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0DC4A2104E
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 19:04:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5515A21065
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 19:06:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C47DD188BFDB
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:03:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB9303AA141
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2025 18:03:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6BFC1FECCB;
-	Tue, 28 Jan 2025 17:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE801FE477;
+	Tue, 28 Jan 2025 17:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p166GXig"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmqx/NX8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4721FECB3;
-	Tue, 28 Jan 2025 17:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C0E1FF1AD;
+	Tue, 28 Jan 2025 17:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086902; cv=none; b=ZT5Q3yHChzvQCo7W1vTYU+ACMWHtvzihHpmXRV52nlDQibxe1J6rBUprB6YyawjXzMspYUUKf/k1DhWXEBKYZq8Rc/zVc5GkZ3gFeCfs7wQorxMLt02iiEBbY87gS6GSeXU5NILVVFcZfSZGuKqlwlgH+NyD8pbF55xZfOMtNHE=
+	t=1738086903; cv=none; b=CqPYER8Y0YToYkYhk9insmo1e7n6YI1tuZoRAp1dOQUI0cpvTvKTLPF0jciGKsWpxMqAkyJMVVngcyOuI/195/KZsIGBvK+AKmXYwKsvBpdKmO8Pv0oN6axlzC28ACf37ZkQvNmF0m1h52wZLwve2T5HV2cGW8vDrArUyGupPrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086902; c=relaxed/simple;
-	bh=CNsadC8V9B6Syy/lwZQYWENgWCXq6Tw16VLsDS8HRYg=;
+	s=arc-20240116; t=1738086903; c=relaxed/simple;
+	bh=U9VMtZgW8NRnGnh8IfJUmBl4wGAg2sYgQb/YFUQj5Tk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uCwxKBQ5MQTIbMh5GCqzihsBjrP/SVGZfOYSm/zgDN1QJ08/GSTvUncw6pgGEKw6JN5j21HSBzYydNswvAVSUMzwIxQDgIX0OB03Dy/67Nf0jbQAg49T5Sb8V6vSyhfGe2ixyFCp8iFw9S+X8n5BEjL0jMhC2sXqbezGRMUf8+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p166GXig; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CEE3C4CEE2;
-	Tue, 28 Jan 2025 17:55:01 +0000 (UTC)
+	 MIME-Version; b=CtEblvhf64E/3OE+Q8eaqaqIhpp9Pk4k/tUrEj1+HZ7rMBN+OSm+zoqRgvKc87XAQqh0QXSuPGTN1MoIzH18TFY6ZFRvBJcwt52vEOsIz0w9fbPjOZS0Rvwc87yH+1/j17PlXz5CkCX0mNF01LS55gR31qLBMum/jucbKqQ5hDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmqx/NX8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7581C4CED3;
+	Tue, 28 Jan 2025 17:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738086902;
-	bh=CNsadC8V9B6Syy/lwZQYWENgWCXq6Tw16VLsDS8HRYg=;
+	s=k20201202; t=1738086903;
+	bh=U9VMtZgW8NRnGnh8IfJUmBl4wGAg2sYgQb/YFUQj5Tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p166GXigdGf5a6OvA3sjCxq6oDqfKWStOxObQ1t8aZF/440LSFftP+rhxBgqlfzme
-	 WpZXoVUE6rmRlULSEf+SWETMeRYQpr6Xxj2819b0PzHwTmtASjMOE0Vb6qN5tKIuva
-	 dzv5+bcex6wHyGCpXbDzeAxyk8UZ73NBsrpemprY/bsL6fjaPTs3ATftEKGaKg9hul
-	 0UyTWNd81ehQXYs9bqY3I6MVYtNgRTXoBARIm5LTvD9yZMJZN7fKXNiUC3isiPyu66
-	 1i2xsKqVJiWI6VkKNkYvJsSERQrwgdwoPKDPTO7nN1KfTueSeAuQ4m0BQAvBl97jsg
-	 HGsnPO3i5Qpng==
+	b=gmqx/NX8RCLJBEbOT70lOJGKHCSLL3BvGOeKwrzcQlh/wUYsCmLye+Rv8NPtztxKb
+	 uj8ar8Dd8Drl5s/sgQnCGQIztQ+hOktBkDyYsHPc5aRcPqxBzqVMkiZOnu7wzDC/5W
+	 LOKJ96IvPSTR/thVqT0Ru2hl3AxQF1uCXKKFgfV55bZXjUlLyBPwzrk+DeEUvkDXtl
+	 u5g2EY94gKjP0yL/qhKStuw335VZ+cflk+nKuxnVpJ76vFyyU3nYXdqC8jLsYlZ/8U
+	 YhL5JPsKEaW5kumHlsZYeCvkoXJJ/wqugRg92IPfbjESoyF7RJrzoFa4MgWn+Hqi9E
+	 eC8ujOlzKYZ/g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.de>,
+Cc: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
 	Sasha Levin <sashal@kernel.org>,
+	kurt.schwemmer@microsemi.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 4/5] PCI/DPC: Quirk PIO log size for Intel Raptor Lake-P
-Date: Tue, 28 Jan 2025 12:54:53 -0500
-Message-Id: <20250128175455.1197603-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 5/5] PCI: switchtec: Add Microchip PCI100X device IDs
+Date: Tue, 28 Jan 2025 12:54:54 -0500
+Message-Id: <20250128175455.1197603-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250128175455.1197603-1-sashal@kernel.org>
 References: <20250128175455.1197603-1-sashal@kernel.org>
@@ -61,54 +62,115 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.127
 Content-Transfer-Encoding: 8bit
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>
 
-[ Upstream commit b198499c7d2508a76243b98e7cca992f6fd2b7f7 ]
+[ Upstream commit a3282f84b2151d254dc4abf24d1255c6382be774 ]
 
-Apparently the Raptor Lake-P reference firmware configures the PIO log size
-correctly, but some vendor BIOSes, including at least ASUSTeK COMPUTER INC.
-Zenbook UX3402VA_UX3402VA, do not.
+Add Microchip parts to the Device ID table so the driver supports PCI100x
+devices.
 
-Apply the quirk for Raptor Lake-P.  This prevents kernel complaints like:
+Add a new macro to quirk the Microchip Switchtec PCI100x parts to allow DMA
+access via NTB to work when the IOMMU is turned on.
 
-  DPC: RP PIO log size 0 is invalid
+PCI100x family has 6 variants; each variant is designed for different
+application usages, different port counts and lane counts:
 
-and also enables the DPC driver to dump the RP PIO Log registers when DPC
-is triggered.
+  PCI1001 has 1 x4 upstream port and 3 x4 downstream ports
+  PCI1002 has 1 x4 upstream port and 4 x2 downstream ports
+  PCI1003 has 2 x4 upstream ports, 2 x2 upstream ports, and 2 x2
+    downstream ports
+  PCI1004 has 4 x4 upstream ports
+  PCI1005 has 1 x4 upstream port and 6 x2 downstream ports
+  PCI1006 has 6 x2 upstream ports and 2 x2 downstream ports
 
-Note that the bug report also mentions 8086:a76e, which has been already
-added by 627c6db20703 ("PCI/DPC: Quirk PIO log size for Intel Raptor Lake
-Root Ports").
+[Historical note: these parts use PCI_VENDOR_ID_EFAR (0x1055), from EFAR
+Microsystems, which was acquired in 1996 by Standard Microsystems Corp,
+which was acquired by Microchip Technology in 2012.  The PCI-SIG confirms
+that Vendor ID 0x1055 is assigned to Microchip even though it's not
+visible via https://pcisig.com/membership/member-companies]
 
-Link: https://lore.kernel.org/r/20250102164315.7562-1-tiwai@suse.de
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1234623
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[bhelgaas: commit log]
+Link: https://lore.kernel.org/r/20250120095524.243103-1-Saladi.Rakeshbabu@microchip.com
+Signed-off-by: Rakesh Babu Saladi <Saladi.Rakeshbabu@microchip.com>
+[bhelgaas: Vendor ID history]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Acked-By: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/quirks.c           | 11 +++++++++++
+ drivers/pci/switch/switchtec.c | 26 ++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 2b3df65005ca8..c16c8507d048e 100644
+index c16c8507d048e..fb115b8ba342d 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -6139,6 +6139,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2b, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa72f, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa73f, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
- #endif
+@@ -5870,6 +5870,17 @@ SWITCHTEC_QUIRK(0x5552);  /* PAXA 52XG5 */
+ SWITCHTEC_QUIRK(0x5536);  /* PAXA 36XG5 */
+ SWITCHTEC_QUIRK(0x5528);  /* PAXA 28XG5 */
+ 
++#define SWITCHTEC_PCI100X_QUIRK(vid) \
++	DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_EFAR, vid, \
++		PCI_CLASS_BRIDGE_OTHER, 8, quirk_switchtec_ntb_dma_alias)
++SWITCHTEC_PCI100X_QUIRK(0x1001);  /* PCI1001XG4 */
++SWITCHTEC_PCI100X_QUIRK(0x1002);  /* PCI1002XG4 */
++SWITCHTEC_PCI100X_QUIRK(0x1003);  /* PCI1003XG4 */
++SWITCHTEC_PCI100X_QUIRK(0x1004);  /* PCI1004XG4 */
++SWITCHTEC_PCI100X_QUIRK(0x1005);  /* PCI1005XG4 */
++SWITCHTEC_PCI100X_QUIRK(0x1006);  /* PCI1006XG4 */
++
++
+ /*
+  * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
+  * These IDs are used to forward responses to the originator on the other
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 332af6938d7fd..9011518b1d132 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1739,6 +1739,26 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
+ 		.driver_data = gen, \
+ 	}
+ 
++#define SWITCHTEC_PCI100X_DEVICE(device_id, gen) \
++	{ \
++		.vendor     = PCI_VENDOR_ID_EFAR, \
++		.device     = device_id, \
++		.subvendor  = PCI_ANY_ID, \
++		.subdevice  = PCI_ANY_ID, \
++		.class      = (PCI_CLASS_MEMORY_OTHER << 8), \
++		.class_mask = 0xFFFFFFFF, \
++		.driver_data = gen, \
++	}, \
++	{ \
++		.vendor     = PCI_VENDOR_ID_EFAR, \
++		.device     = device_id, \
++		.subvendor  = PCI_ANY_ID, \
++		.subdevice  = PCI_ANY_ID, \
++		.class      = (PCI_CLASS_BRIDGE_OTHER << 8), \
++		.class_mask = 0xFFFFFFFF, \
++		.driver_data = gen, \
++	}
++
+ static const struct pci_device_id switchtec_pci_tbl[] = {
+ 	SWITCHTEC_PCI_DEVICE(0x8531, SWITCHTEC_GEN3),  /* PFX 24xG3 */
+ 	SWITCHTEC_PCI_DEVICE(0x8532, SWITCHTEC_GEN3),  /* PFX 32xG3 */
+@@ -1833,6 +1853,12 @@ static const struct pci_device_id switchtec_pci_tbl[] = {
+ 	SWITCHTEC_PCI_DEVICE(0x5552, SWITCHTEC_GEN5),  /* PAXA 52XG5 */
+ 	SWITCHTEC_PCI_DEVICE(0x5536, SWITCHTEC_GEN5),  /* PAXA 36XG5 */
+ 	SWITCHTEC_PCI_DEVICE(0x5528, SWITCHTEC_GEN5),  /* PAXA 28XG5 */
++	SWITCHTEC_PCI100X_DEVICE(0x1001, SWITCHTEC_GEN4),  /* PCI1001 16XG4 */
++	SWITCHTEC_PCI100X_DEVICE(0x1002, SWITCHTEC_GEN4),  /* PCI1002 12XG4 */
++	SWITCHTEC_PCI100X_DEVICE(0x1003, SWITCHTEC_GEN4),  /* PCI1003 16XG4 */
++	SWITCHTEC_PCI100X_DEVICE(0x1004, SWITCHTEC_GEN4),  /* PCI1004 16XG4 */
++	SWITCHTEC_PCI100X_DEVICE(0x1005, SWITCHTEC_GEN4),  /* PCI1005 16XG4 */
++	SWITCHTEC_PCI100X_DEVICE(0x1006, SWITCHTEC_GEN4),  /* PCI1006 16XG4 */
+ 	{0}
+ };
+ MODULE_DEVICE_TABLE(pci, switchtec_pci_tbl);
 -- 
 2.39.5
 
