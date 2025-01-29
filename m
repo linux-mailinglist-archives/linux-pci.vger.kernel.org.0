@@ -1,226 +1,241 @@
-Return-Path: <linux-pci+bounces-20543-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20544-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2B6FA2203A
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 16:27:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBC95A22045
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 16:28:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2F91188859F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 15:26:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24F5418882AF
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 15:29:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F96118C31;
-	Wed, 29 Jan 2025 15:26:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B8A1DE2AA;
+	Wed, 29 Jan 2025 15:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXf8OwFe"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mofr66Fp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2080.outbound.protection.outlook.com [40.107.22.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82E91DE2AD;
-	Wed, 29 Jan 2025 15:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738164384; cv=none; b=Afmz0CFTBDTYRmxlOwf++2fCeIoBJwjPvzM23h1l9nivTMG15csNrBjGHiJol9WxaE7Gupgn3WLNCnQNsnF2DHcAnJPsRFLuiQb0rEXoQ1GlPwDnYcqyU1R+niIon766WIiD4SAjypK2XKalVnfgS3cuChGEcp9RxWaTGx3/WKU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738164384; c=relaxed/simple;
-	bh=tz3T+9HteEyjT/4VKQ8qcZv7lWOxkVPuHGOChgt/kZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rY3wsC4rtCXE8lGpee29Ndp0DGcSXfTrQ22E+ZGDJH8U2KxwJWipre96v5DEgWnCrmnZTuB6y0rmquV1T7puEd9W+yKDGFjbR9xbjD32YcU+1kwAZ02Fk4vw8zbhzYzmUY2Qu7ukWiF0f005DGlLf5a63wmdsDNDjAZWJ7iO5NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXf8OwFe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A66C4CED1;
-	Wed, 29 Jan 2025 15:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738164383;
-	bh=tz3T+9HteEyjT/4VKQ8qcZv7lWOxkVPuHGOChgt/kZI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KXf8OwFeS8XdgGcnkBbyXCNGL1rYa1dLKsOLAIwc92FGMG7FG5Z8YOLG4RH/qkri4
-	 d0kjWLq/APXvt9OvBWEKBC8WQc0Qi69APk4lP4cXNYwyxMPnvOxXFU68fypqRe38VD
-	 U5I2uf60IWCjCEhjDLQxwVzolI3XUp2BTaouUebmKOEo7IIJdnPK3mMno4v/LMYKLd
-	 /o2mT/llVwb9JFNUC1TnrSZIO2l+FiE8Sr9Ie4XB1m7T6jka4enZCxZ7aERhjLYoEN
-	 oIQdD//zICCWcg1gq5x/WNrOUQxnxTV6UiMAEHt14y4y5iPauNJnzaENShIDw8nEU6
-	 lr+SlDSuBshPw==
-Date: Wed, 29 Jan 2025 09:26:21 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] Enhance PCIe cadence controller driver for supporting
- HPA architecture
-Message-ID: <20250129152621.GA460594@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E960315B102;
+	Wed, 29 Jan 2025 15:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738164520; cv=fail; b=QzPYyQUwjCRQduZ+xWb5d+oTysK3QhDE5vIVXp0GyTHBj9/PhnvtA9kxmPZusEyXUeGWgTVHHeZTbJkWSGQ+XmS810KSVFPFeKmc1d4rqkfMmQhcdQjCdrRvK7/hk3YVd8DPDmg2RpimNW5gfgDsnBCliSeXL9r6ebfkhFxHU6I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738164520; c=relaxed/simple;
+	bh=/JsFHSs36jEEjCJO6QxYhL5kSRA59bZMZmAmvfNsvbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eh1P2oI/ZUuCSgSJTLSGVS0a0pF3Qc5uTWTF1eUJmxNZLkUK/sJVYQDYhLmvkcZj3KLCqstXSi+taKuOH3Zewlyl7Gme3BFkoBjsJm4LvQxmHKmZsB3vxbwpw0KTi5lzHBE7iG2UfjBgRFCfp/zlttK/maTdTRqBzvbOxSCIY5A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mofr66Fp; arc=fail smtp.client-ip=40.107.22.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Tid1fCj8k5KvbgG6r8zRx0u9Ad110yMQx6Sy7D8kg2CFjQYP625hjZVYA3kw85/vNOk27SJupEvOtoZWkKQ/iHlVdgnpxAf611hHbQwD4T0ahvg2z4dSZMc24+WfFgp5/cWxsQ3Z2K4qphxrSAfesFYjTPWTbtJyrLKyqKv24aM1euaUR63dnx51yf9Lximm3aJSXpg2oQm9HwHhmTtbd2hAQNYDbI5m87ABTuf4UzCzEaN6pSMsiUwAIjqnbgcqYIVyQYH/B+pE+suTcSsMlb9hgEfdkU6rM/SA++g5LBXj28TJWjOpoRexc5lXPTAtwzTqkC/Yy45MBtq2nW+j1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1WLoGXo8FV0VgYhcQySSGNhTayNQPR82EobdqU4u7FE=;
+ b=qYgItB9jrF7SxnAhBw6VuZkJchbGe5j/bYXunmIN/b2c8BfhQAP0IwWyFjxXQ/T+8u3PaKCaU2XFuH4qbpY0zXarB7x6+DSuJX6jRzHqXj82GUql4shpSE4rJvj5Dic7jw1vZHBtr4/9X5b0o7S0ulFjGD9/5Nl3Tfnp2v9uwwG3qo/Z/xWhv4gQ1shpFEq1W8KICGIKbcEdgYONrnqC+p6VfgVL2TrRnnKdTwVk20ufF9YNX27DEHiIzWA6hx6b8AqnPQ5/QVkgw2omWfzQJ9MDwN+8wQunLu7RxwivM4019SxTkKGhyv4yvQK3RiX0wbOx78ivg4k0xl09Uz+/tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1WLoGXo8FV0VgYhcQySSGNhTayNQPR82EobdqU4u7FE=;
+ b=mofr66Fpqawnn8W9s8cgDNcFkcGFbTGCuwqkuGJbso1pAYYga6puhqZUMJkWwq0ej/DVOvwPQSR3N0Ee9RibnbCg+niJ9DO4onrZ4s15o8GHV6IVRQBBpBkQSIRHbAo+94XwMQTMf5JjO9XU2giAv8xdP3gf9R8rS6ZImqqBFmlkQet6TTunhDHHwRYmllVAH2fS/An86w2Nr4o0wK/GXIGvqhhkC5gTDm+GuzTpa8CqOWfjutHilfUdkLRue2Sopl9bZdjVS/KhNYmfQaOixezLzM00S1BkIOtJJosGf/rXT7T75dXQf3Zzle1wDnAMaPaUDQs0lZDHtoHHN77z0Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS4PR04MB9337.eurprd04.prod.outlook.com (2603:10a6:20b:4e5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.23; Wed, 29 Jan
+ 2025 15:28:32 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
+ 15:28:32 +0000
+Date: Wed, 29 Jan 2025 10:28:23 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v9 0/7] PCI: dwc: opitimaze RC Host/EP pci_fixup_addr()
+Message-ID: <Z5pJF9MGENNDqq/O@lizhi-Precision-Tower-5810>
+References: <20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com>
+ <Z5n_VrN8HUmdVPUq@ryzen>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5n_VrN8HUmdVPUq@ryzen>
+X-ClientProxiedBy: SJ0PR03CA0235.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::30) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PPF4D26F8E1CB68755477DCA7AA9C6EBA2EE2@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS4PR04MB9337:EE_
+X-MS-Office365-Filtering-Correlation-Id: b9a5ed4f-f1fe-4d62-10f2-08dd407996e4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PMpXDznDYElczh3qQwn3J3XS8sgd9wSct431+mROCS89MlTQE5RldJTntAkZ?=
+ =?us-ascii?Q?iqsA2pb9UjWL2wRWoVjehPrKDL362ba1VZLglsjRfB+ylMUISlPWsVth+mfV?=
+ =?us-ascii?Q?RFy0SzK2dXqBE7eKSQliP+9j/9zXf7Ibi2Tl1g+t2PnpyUsColyBw2hQkvJe?=
+ =?us-ascii?Q?vVS2Oa01u2VJyWStJihBIcHsdN7QcZ13KTpBp9xQvYs86Sgh8LRDNV7rQEMP?=
+ =?us-ascii?Q?qL+cNOJN0xg+tyrj/eFvxQ9/0x2EiAMsu3rEOuZW3+755pbzeW+GLhZk0NII?=
+ =?us-ascii?Q?fAODHBp4bdSBYQ4BS0UzhfFQY2eNcAW5wyfF858o8WjtqGAiTVVdck1bddAT?=
+ =?us-ascii?Q?v4riXd/mgML4ylfGVeUVHXg+zv/5F07OduV+zaWynFMg7UV3TTKQ8x7Fq6eR?=
+ =?us-ascii?Q?4es793mpmUpFwcQAMSsfWHbEMPMKD201EL6mlchE47qr9bq10kex3sqC8KpV?=
+ =?us-ascii?Q?0f0XzvwDw18UyCX/aGpcBJF9khylXkCGzCn6QixZ606RdOFFEr/ZTGGxvXw6?=
+ =?us-ascii?Q?6OExUtH2Ij2DFKwdeDCO/WXGif+uyQ9M/2/qAUqVGEvh/SE48l4eqCb/D6pD?=
+ =?us-ascii?Q?ejW4TBDnvTmLB8325b159HbHzvXvv2qT5jZ9BNlNTOqcLFjsL1VSz7O1fEl+?=
+ =?us-ascii?Q?fpJqbvew7lH4CLkLw36/JlLmVLOPuJQ+z4RDo1EjIr+1NqxcBaClj3UVpXy1?=
+ =?us-ascii?Q?fp9X1vX/ICyb9pClKhX27Cb/U+WFE+wZIc+BjZiHQAwuwwl1k8Z5Su9HeRaE?=
+ =?us-ascii?Q?/YacVQYxwe8uhmgXS4D9WC36M7Y+uFYNwo3tI+Krw+w3xb+NvmpU1TkEOkuG?=
+ =?us-ascii?Q?6cp6Io6JqmY5XqhRqu0QnAJKkjf4kzokEkYF7EkQ6ah0EBVlQYCoJbO+mPVl?=
+ =?us-ascii?Q?/CQEO90/4lLeTgmaFdHpXoEb4ljn6fnLL7HgYikPArXeQuTQdbTgD+G6Uvqj?=
+ =?us-ascii?Q?K4RgU09GdRkjQBIt0ktWoGGWkBrGu2POxaPR/uUur9NU9+amzcdgmoEdGxgF?=
+ =?us-ascii?Q?ltCGwdGfFEwgNxREqfjzZrSZAbgMfHAWUKohyxti9QhiTCB95ST/Wtlxd4kQ?=
+ =?us-ascii?Q?NYDI+ekItP9dEl+A0atEUCWz6ssCw1ZgJUh7fRpeZjIUEsTM2J3QfuioFMyH?=
+ =?us-ascii?Q?ZCy2QSx3aUrCLCfN31a953FkXZTs5S42zxbD2lcScPqSSVkaUgPFZRcEEcWD?=
+ =?us-ascii?Q?l6Mtpajo/qTmZ78al1uX541aMXE4a3RtSrPrBEamJEZKeh1kyC5SWmRcT8Nt?=
+ =?us-ascii?Q?uc6EIwRjKqGYbECnD/hH1HIXApN1FsFYQAOg80u4zjCZTPRhSGIge3rLqUTl?=
+ =?us-ascii?Q?0bqgyIU4vQvuhRCschSpLBUT0A/0uY6L3SjbsoqxZ0FkHWlfO9Svi6bRlRtE?=
+ =?us-ascii?Q?cXgjlul/smTw9gbyVzwfUjSLz99GoEALNysOT6FJW5oZ1l2Jow=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?cYxOU4mtDNpqxMg9ckUbEH8Db2J8wf4oDpj17T3m/qkJdOPbOMhvdc7hmVwU?=
+ =?us-ascii?Q?DA3f+csmsJStyp/mQ53+oUaJbctYxBmgvWKnJI4pNdxXyk7PM1/bQZo9hNxR?=
+ =?us-ascii?Q?9Ms5zTgVa/AqIhmKgnBv/VNuWnakgxWX3TQoJzYFQF7F/UwHHGN7DlDgpaW/?=
+ =?us-ascii?Q?JB94qbUzpi0HAI0cCgKLyZWXVdX4Gjz91/fAJ0ML1Iv6oCsNWyiP/Z4M2nq/?=
+ =?us-ascii?Q?IqEyM4T0+j0pMhbOO7pH0RsKfA0ugRf3HbnMrfuwwHQduBDDFHgBcKyYFCAs?=
+ =?us-ascii?Q?YYjT7qZKHeWRq5oFoHRe4GV7xWSGmLyLSwxNAvxXbDSsFHJFQVWZKKcPTL1I?=
+ =?us-ascii?Q?F0IFawnJrTR86lh4RBsWeiEEDB86aJw1ZMCHTJgn5yKm49SQw7noDj00t6vh?=
+ =?us-ascii?Q?lrpZ9z1Uttbl+XN9pvqFa5vtIvac8gapeSR5Q2O3F+mbnbEZdIm8RJ1txC+d?=
+ =?us-ascii?Q?GIsCFVF1pQxTOdL2fr6bXokPPmzfxdQzRUHYmSTd1jwdc+k4iYOda4iku+X1?=
+ =?us-ascii?Q?CByH0RUXzPHY/NC0wD5mDdt1bDKswYqRvuKjCinL04DtG+OPg5EW8PHMnr7A?=
+ =?us-ascii?Q?0ZQ+DNZ1hUY8Ak7Yt16X+d16Q4ekiEBhy/37BaNFLDik+ajZvZ35Y5wkzkro?=
+ =?us-ascii?Q?t/BytTto5cmum5twyMgsZASE+FIv9nYPzqaHXU6qsWjRh06dgtC+znbm1y3o?=
+ =?us-ascii?Q?YfEEIUZvf65tXGX8JDh0rEMN0oPAqLyegIPB+/w9XgEmTDyMu7EQdZoRFBeG?=
+ =?us-ascii?Q?IQhjxYS+n/wiPVR3zhnWvHu12Dd5EmMxOAdnmISYDj0OMDg3OlYcMwQiLW6B?=
+ =?us-ascii?Q?Teq2tMaKMmvFxPkVQmgAYukjwzNjNtwf/UQu0v2it7R64U2DKKNsxnmrISDT?=
+ =?us-ascii?Q?lZaV4BAsAy7T9S2XPYsOG+CMxesG/RftLWKqp5vJbS+3AWJ9w80tFSNNvojK?=
+ =?us-ascii?Q?ONv3H9SvGOhO8eioI498GvBSSIMrsMZAcnrfSo5KGNxyd9eqMN6ccijNB2cC?=
+ =?us-ascii?Q?+tMBVXjpIxsIdytu9ERD84vVEZr7IS1ySFutGk4dYkwZd+BEzC9kvS4nyWY0?=
+ =?us-ascii?Q?NkY54VFSpALm/9VCDrLfRDrBE69xfbNPIgQeVanRa+uBFLyNXZQhoe1tNczb?=
+ =?us-ascii?Q?LPBJ4mbxi7TyWZHLQc9AUpxgOmu8hD+DXH9c51P7ufG8YS85YaMe1PxVCTCE?=
+ =?us-ascii?Q?ThD7bDMMGozLepzP6XZ2wYxP5CIhAJkU1WrhUH198+FGD9Fgdne35hx1v7LJ?=
+ =?us-ascii?Q?LDUhVYu1rbK4OJBQt15tboiMbKOKTYwRnRfxJCebHgEr7BtfzPFURwVKd4Fd?=
+ =?us-ascii?Q?AwoLPGjkISR417WsL4AFXwjQFiAwP6hkf/Y8jBzmkTP2J9VdaS0Nwmqnvpl9?=
+ =?us-ascii?Q?qltMpsRxyoGJ3ZAtwaOg9txHjDE80sSVQlpZJxmhcyfyVA0N9dKPKGwDe6M4?=
+ =?us-ascii?Q?ZxLwHUcaDeWOMtiFBy7dohu50mmyw+X4dveKqpfr0ENPJoj74IE85kKijsmq?=
+ =?us-ascii?Q?1w7+OGNREObKIZM0pZN6gDi+paCWrv8laLygguzP7DHCepsWivM+y5d87T4/?=
+ =?us-ascii?Q?YqAxjgZLo9Dfi/OpXQ8wbvDy+0ah4MzEUhxlm/bY?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9a5ed4f-f1fe-4d62-10f2-08dd407996e4
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 15:28:32.4593
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tWhVJ2Ihp00LYNsIS2rGB8WsrpetYJU4qdb15/qubbzdan70WcUVrH/mjfVZtFynxovnaH1/LUU7rtnfRfSEzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9337
 
-Take a look at the additions of previous drivers and follow the style.
-For example:
+On Wed, Jan 29, 2025 at 11:13:42AM +0100, Niklas Cassel wrote:
+> Hello Frank,
+>
+> Typo in subject:
+> s/opitimaze/optimize/
+>
+>
+> On Tue, Jan 28, 2025 at 05:07:33PM -0500, Frank Li wrote:
+> >
+> > Bjorn's comments in https://lore.kernel.org/imx/20250123190900.GA650360@bhelgaas/
+> >
+> > > After all cpu_address_fixup() removed, we can remove use_parent_dt_ranges
+> > > in one clean up patches.
+> > >
+> > >
+> >   ...
+> > >  dw_pcie_rd_other_conf
+> > >  dw_pcie_wr_other_conf
+> > >    dw_pcie_prog_outbound_atu() only called if pp->cfg0_io_shared,
+> > >    after an ECAM map via dw_pcie_other_conf_map_bus() and subsequent
+> > >    successful access; atu.cpu_addr came from pp->io_base, set by
+> > >    dw_pcie_host_init() from pci_pio_to_address(), which I'm pretty
+> > >    sure returns a CPU address.
+> >
+> > io_base is parent_bus_address
+> >
+> > >    So this still looks wrong to me.  In addition, I think doing the
+> > >    ATU setup in *_map() and restore in *rd/wr_other_conf() is ugly
+> > >    and looks unreliable.
+> >
+> > ....
+> >
+> > >  dw_pcie_pme_turn_off
+> > >    atu.cpu_addr came from pp.msg_res, set by
+> > >    dw_pcie_host_request_msg_tlp_res() to a CPU address at the end of
+> > >    the first MMIO bridge window.  This one also looks wrong to me.
+> >
+> > Fixed at this version.
+>
+>
+> I feel like it would have been easier if you replied to Bjorn's comments
+> directly in the thread instead of pasting them here (to a cover letter).
+>
+>
+> Please don't shoot the messenger, but I don't see any reply to (what I
+> assume is the biggest reason why Bjorn did not merge this series):
+>
+> ""
+> .cpu_addr_fixup() is a generic problem that affects dwc (dra7xx, imx6,
+> artpec6, intel-gw, visconti), cadence (cadence-plat), and now
+> apparently microchip.
+>
+> I deferred these because I'm hoping we can come up with a more generic
+> solution that's easier to apply across all these cases.  I don't
+> really want to merge something that immediately needs to be reworked
+> for other drivers.
+> ""
+>
+> It should probably state in the cover letter how v9 addresses Bjorn's
+> concern when it comes to other PCI controller drivers, especially those
+> that are not DWC based.
 
-  2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
-  0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-  da36024a4e83 ("PCI: visconti: Add Toshiba Visconti PCIe host controller driver")
-  f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
+Thank you for your reminder, I forget mentions this in cover letter. I
+create new patch to figure out this Bjorn's problem.
 
-After skimming the patch, it looks like this doesn't actually add a
-new driver, but adds support to an existing driver for some kind of
-different surrounding platform architecture.
+PCI: Add parent_bus_offset to resource_entry
 
-On Wed, Jan 29, 2025 at 07:24:04AM +0000, Manikandan Karunakaran Pillai wrote:
-> This patch enhances the Cadence PCIe controller driver to support HPA
-> architecture. The Kconfig is added for PCIE_CADENCE_HPA config, which
-> needs to be selected when HPA compatible PCIe controller is supported.
-> The support for Legacy PCIe controller does not change.
+With above patch, other platform will be easy apply the same method.
 
-Use imperative mood ("Enhance" instead of "This patch enhances ...").
-
-Expand "HPA".
-
->  drivers/pci/controller/cadence/Kconfig        |   8 +
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  12 +-
->  .../controller/cadence/pcie-cadence-host.c    |  44 ++-
->  .../pci/controller/cadence/pcie-cadence-hpa.h | 260 ++++++++++++++++++
->  .../controller/cadence/pcie-cadence-legacy.h  | 243 ++++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.c |  42 ++-
->  drivers/pci/controller/cadence/pcie-cadence.h | 230 +---------------
-
-This looks like it should be 5+ separate patches to make this
-reviewable.  Each patch should do only *one* thing.  Obviously
-everything must build and work correctly after each patch is added.
-
-> +++ b/drivers/pci/controller/cadence/Kconfig
-> @@ -6,6 +6,14 @@ menu "Cadence-based PCIe controllers"
->  config PCIE_CADENCE
->  	bool
->  
-> +config PCIE_CADENCE_HPA
-> +	bool "PCIE controller HPA architecture"
-
-s/PCIE/PCIe/ to match other entries.
-
-Change the menu item to match surrounding entries (include vendor,
-host/endpoint, etc).
-
-But I don't think this is a *new* driver; it looks like it might be
-optional functionality for the PCIE_CADENCE_PLAT and/or PCI_J721E
-drivers?  Maybe it needs to depend on PCIE_CADENCE?
-
-> +	help
-> +	  Say Y here if you want to support Cadence PCIe Platform controller
-> +	  on HPA architecture
-> +	  The option should be deselected if the Cadence PCIe controller
-> +	  is of legacy architecture
-
-"HPA" must be expanded here too.
-
-Omit the "deselect part".  A user has no way to identify what "legacy
-architecture" means here.
-
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -121,7 +121,11 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
->  		reg = CDNS_PCIE_LM_EP_VFUNC_BAR_CFG(bar, fn);
->  	else
->  		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG(bar, fn);
-> +#ifdef CONFIG_PCIE_CADENCE_HPA
-
-Nope.  I don't want #ifdefs like this littered through the cadence
-generic code.  The driver should be able to support both HPA and
-non-HPA in the same kernel image.  You should be able to decide at
-run-time, not at build-time.
-
-> +	b = (bar < BAR_3) ? bar : bar - BAR_3;
-> +#else
->  	b = (bar < BAR_4) ? bar : bar - BAR_4;
-> +#endif
-
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-hpa.h
-> @@ -0,0 +1,260 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +// Copyright (c) 2017 Cadence
-> +// Cadence PCIe Gen5(HPA) controller driver defines
-
-Space before "(".  Expand HPA.
-
-> + * This file contains the updates/changes for PCIE Gen5 Controller
-
-s/PCIE/PCIe/ everywhere in commit logs and comments.
-
-> +#define CDNS_PCIE_IP_REG_BANK           (0x01000000)
-> +#define CDNS_PCIE_IP_CFG_CTRL_REG_BANK  (0x01003C00)
-> +#define CDNS_PCIE_IP_AXI_MASTER_COMMON  (0x02020000)
-
-No parens needed for bare numbers.
-
-> +/* Vendor ID Register */
-> +#define CDNS_PCIE_LM_ID		        (CDNS_PCIE_IP_REG_BANK + 0x1420)
-> +#define  CDNS_PCIE_LM_ID_VENDOR_MASK    GENMASK(15, 0)
-> +#define  CDNS_PCIE_LM_ID_VENDOR_SHIFT   0
-
-Omit _SHIFT definitions and use GENMASK()/FIELD_PREP()/FIELD_GET()
-instead.
-
-But it looks like this is mainly a move from one file to another.  A
-move like that should be strictly a move and shouldn't change the
-content at the same time.
-
-The move should be in its own patch that does nothing other than the
-move, so you can ignore some of these comments for now.
-
-> +#define CDNS_PCIE_LM_EP_FUNC_CFG	(CDNS_PCIE_IP_REG_BANK + 0x02c0)
-
-Pick either upper-case or lower-case for hex numbers and stick to it.
-
-> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_ENABLE BIT(0)
-> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_IO BIT(1)
-> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_MEM (0)
-> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_32BITS (0)
-> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_PREFETCH_MEM_DISABLE (0)
-
-These are unused.  Don't add #defines that are not used.
-
-When you do add them, indent the BIT() parts to they line up.
-
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> ...
->  	/*
->  	 * Whatever Bit [23] is set or not inside DESC0 register of the outbound
->  	 * PCIe descriptor, the PCI function number must be set into
->  	 * Bits [26:24] of DESC0 anyway.
-> +	 * for HPA, Bit [26] is set or not inside CTRL0 register of the outbound
-> +	 * PCI descriptor, the PCI function num must be set into Bits [31:24]
-> +	 * of DESC1 anyway.
-
-Start sentences with a capital letter.
-
-Add blank lines between paragraphs.
-
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -10,213 +10,11 @@
->  #include <linux/pci.h>
->  #include <linux/pci-epf.h>
->  #include <linux/phy/phy.h>
-> -
-> -/* Parameters for the waiting for link up routine */
-> -#define LINK_WAIT_MAX_RETRIES	10
-> -#define LINK_WAIT_USLEEP_MIN	90000
-> -#define LINK_WAIT_USLEEP_MAX	100000
-
-This looks like a move of a lot of things out of pcie-cadence.h to
-somewhere else.  A move like this should be its own patch with its own
-commit log.
-
-It looks suspect because this is a generic header used by several
-drivers.
-
-Bjorn
+Frank
+>
+>
+> Kind regards,
+> Niklas
 
