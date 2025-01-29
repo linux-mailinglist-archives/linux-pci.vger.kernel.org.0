@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-20523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73AAEA21A4E
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 10:49:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6638DA21A53
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 10:50:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7B5A1884E30
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 09:49:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD71618850C3
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 09:50:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E2C71AC448;
-	Wed, 29 Jan 2025 09:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89811AB6D4;
+	Wed, 29 Jan 2025 09:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWecTmt+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cm/V3GYB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411901AB52F;
-	Wed, 29 Jan 2025 09:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B015194C78;
+	Wed, 29 Jan 2025 09:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738144162; cv=none; b=RwwPI73khPLOVNCzP98zS4Cig7K3ascifTUlEaPwOyMgHcn01M9T3v9T+PIMe7Y48q3ak0Wenl+VxEhVWQumdSZiu9Trs+7dnz/IsafDOT977+jG+wilZ0zEY+mcZAipJnKZ4obMvti365PxCW3IFHIO4RtGcN8pIyFI8qhQuF8=
+	t=1738144217; cv=none; b=ZNScH5OO0iQA7fNEnGWxnlM9vF/Ar879eKSBSRXpm3AukMRhoHi/qjrCK+IcWnO+ibAsa7FNfvY5oBJpvVS66FdGF3luyhxaS9FVtMw0LvVWSBxysfEbG8vN3NLMm61lo+ROKZcz7A8rf1ovESKYzk3pwFfXvsheA/H3J1lI/MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738144162; c=relaxed/simple;
-	bh=hC0oCgUsXZ4CQQ7lc1VT2CcGCSVsiYIyPEr91Za9mN0=;
+	s=arc-20240116; t=1738144217; c=relaxed/simple;
+	bh=Cz52OxGaARRnQyQZs069qHZhxPa9aaxbpi5KnxhTfGg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FkpRsA2Ur4yQxMc/f276ZEYBJnN6QbN5JA1/NLL6zg96Svq0U+mNNV1/ASfN0qVKIrzYgogw5lvL32lNfaee+y7yRQYrDWLmfV5w2O0HQCq/vLh+8ovZb28Nzf9+o6aQxP0s8Zgc52TkXhRLoxEe/TlltcPLdeyEwVwVvmeDLUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWecTmt+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70324C4CED3;
-	Wed, 29 Jan 2025 09:49:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=uIuvmL6tUTiuie/sYXDVka4cLVZusJ4Fx6P8Z00vgEVuxoENA+fDtvFoE2PQ+zoe/fRmHIhKsunr4fBuTw6zi4J6zHQ7J4y7J0jWT0D/7B4C8KhrTlfp3zKSdCTM54qhQV4P60HSiWLzchwTJk9jJ48WMmJnUN6HKdGTEkbduxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cm/V3GYB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715BDC4CED3;
+	Wed, 29 Jan 2025 09:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738144161;
-	bh=hC0oCgUsXZ4CQQ7lc1VT2CcGCSVsiYIyPEr91Za9mN0=;
+	s=k20201202; t=1738144216;
+	bh=Cz52OxGaARRnQyQZs069qHZhxPa9aaxbpi5KnxhTfGg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YWecTmt+Gz8BwXFQXYJlhJXy0h8ckYy027X9v67LGUUEwWqmDHA+rWKwLAlwe5lso
-	 svYJIi7two/MSeaFFJK4w3eA0pA6E2y/edQjvabiYQhfGHt2sw7yKXMaYh0mSZiU06
-	 9hx3PEkjk0oPoF6MjJEHv0TOx9bxIMtle3MnKmYOSZf2i4jWr8KNL3vgglchI/Sfj4
-	 QWqAv2b75GLGIFXUj/R0rVVwbvGejLr/u33kCmjZjLshr14riUroBS6Px1Ojrb0U0O
-	 7pLDtzsLju5gx45FcFZdfYyOnLd49u+msnMgFTXxssXLu2s7CW/9FyGH80CDgIx2Ik
-	 UcXa8cMwEZqmw==
-Message-ID: <58f7925c-dbed-4a5e-8e7d-095bef197931@kernel.org>
-Date: Wed, 29 Jan 2025 10:49:15 +0100
+	b=cm/V3GYB7DTIXhnC/T8e1H974fWmmS9ulbb1WIO5ohYpAmRk6GY10nCtPHRS55K+2
+	 G7jq5dppsMhxyJ+uafBbxFViFUUVnPcxyKF2A89tczdialHM8OVpvxzN3iOr54ArZQ
+	 +0CJEhE5Rp7d23kG0PQFtocvHTgMdIYCaSpLyjcZcMKIXE5lxG1X/eA3sKlAWTairq
+	 63FtZhea9qzD6wFLhWx8QsXSPe6Bt0UtYF2jeSgWHE+EKuLIEAWLyjTZmPGnKSgNw/
+	 LaX17iYz9OM87jQ4wRmLuHvzM9DYpKPRRiSLC8Jd0VaQavZVxf+ie62M21V9H+GYZG
+	 M+FbIaXofwxsg==
+Message-ID: <793b4cf1-bdf4-4010-aece-79c720ed05ad@kernel.org>
+Date: Wed, 29 Jan 2025 10:50:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,16 +50,16 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] arm64: dts: agilex: add dts enabling PCIe Root
- Port
+Subject: Re: [PATCH v5 5/5] PCI: altera: Add Agilex support
 To: Matthew Gerlach <matthew.gerlach@linux.intel.com>, lpieralisi@kernel.org,
  kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
  bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
  dinguyen@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: matthew.gerlach@altera.com, peter.colberg@altera.com
+Cc: matthew.gerlach@altera.com, peter.colberg@altera.com,
+ "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
 References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-5-matthew.gerlach@linux.intel.com>
+ <20250127173550.1222427-6-matthew.gerlach@linux.intel.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,85 +105,29 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250127173550.1222427-5-matthew.gerlach@linux.intel.com>
+In-Reply-To: <20250127173550.1222427-6-matthew.gerlach@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27/01/2025 18:35, Matthew Gerlach wrote:
-> Add a device tree enabling PCIe Root Port support on
-> an Agilex F-series Development Kit which has the
-> P-tile variant PCIe IP.
-
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> ---
-> v3:
->  - Remove accepted patches from patch set.
-> ---
->  arch/arm64/boot/dts/intel/Makefile               |  1 +
->  .../socfpga_agilex7f_socdk_pcie_root_port.dts    | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
-> 
-> diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
-> index d39cfb723f5b..737e81c3c3f7 100644
-> --- a/arch/arm64/boot/dts/intel/Makefile
-> +++ b/arch/arm64/boot/dts/intel/Makefile
-> @@ -2,6 +2,7 @@
->  dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
->  				socfpga_agilex_socdk.dtb \
->  				socfpga_agilex_socdk_nand.dtb \
-> +				socfpga_agilex7f_socdk_pcie_root_port.dtb \
->  				socfpga_agilex5_socdk.dtb \
->  				socfpga_n5x_socdk.dtb
->  dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
-> new file mode 100644
-> index 000000000000..76a989ba6a44
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
-> @@ -0,0 +1,16 @@
-> +// SPDX-License-Identifier:     GPL-2.0
-> +/*
-> + * Copyright (C) 2024, Intel Corporation
-> + */
 > +
-> +#include "socfpga_agilex_socdk.dts"
-> +#include "socfpga_agilex_pcie_root_port.dtsi"
-> +
-
-Missing board compatible, missing bindings.
-
-> +&pcie_0_pcie_aglx {
-> +	status = "okay";
-> +	compatible = "altr,pcie-root-port-3.0-p-tile";
-
-Why do you define the compatible here, not in DTSI? This is highly
-unusual and confusing. Also, compatible is never the last property, but
-opposite.
-
-Plus:
+>  static const struct of_device_id altera_pcie_of_match[] = {
+>  	{.compatible = "altr,pcie-root-port-1.0",
+>  	 .data = &altera_pcie_1_0_data },
+>  	{.compatible = "altr,pcie-root-port-2.0",
+>  	 .data = &altera_pcie_2_0_data },
+> +	{.compatible = "altr,pcie-root-port-3.0-f-tile",
+> +	 .data = &altera_pcie_3_0_f_tile_data },
+> +	{.compatible = "altr,pcie-root-port-3.0-p-tile",
+> +	 .data = &altera_pcie_3_0_p_tile_data },
+> +	{.compatible = "altr,pcie-root-port-3.0-r-tile",
+> +	 .data = &altera_pcie_3_0_r_tile_data },
 
 Please run scripts/checkpatch.pl and fix reported warnings. After that,
 run also `scripts/checkpatch.pl --strict` and (probably) fix more
 warnings. Some warnings can be ignored, especially from --strict run,
 but the code here looks like it needs a fix. Feel free to get in touch
 if the warning is not clear.
-
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
-Maybe you need to update your dtschema and yamllint. Don't rely on
-distro packages for dtschema and be sure you are using the latest
-released dtschema.
-
-
 
 Best regards,
 Krzysztof
