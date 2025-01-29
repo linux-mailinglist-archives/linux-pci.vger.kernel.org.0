@@ -1,184 +1,138 @@
-Return-Path: <linux-pci+bounces-20525-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20526-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8878CA21AC0
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 11:11:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2B78A21ACD
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 11:13:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDAB71649C8
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 10:11:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B9351888C87
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 10:13:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 316FC1A9B40;
-	Wed, 29 Jan 2025 10:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFBFC1A9B40;
+	Wed, 29 Jan 2025 10:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hqiu30rH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OaQKGXun"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7630D16C854;
-	Wed, 29 Jan 2025 10:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC7D16C854;
+	Wed, 29 Jan 2025 10:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738145512; cv=none; b=U+tgHr5M7Rp/2kaTjpRpybl1h1twn1H+M0TiYe1fd/fjjhPZhYmdcTyDGIdX0rGh1X8npRV/WzBHe4iP9CtPnrcQr6G/QqSyoEK4F2CbihKECti/+62GA1cI6uLj7gDkMHgWSjjB+t771sUwfnPiMDs5/mUgDCL9ivBIx3RWeWk=
+	t=1738145629; cv=none; b=jUpBUmzoE+E9T3/ZK3fuMT9OfZItHRbasjzT8lR1nPuV/plj8G651LlgOYA9zGc4OxAVbHhwHpLGtqKX6/AOFTJL4Tv9MnZya0IqsQyGfV9E09fkp/8oS9As06jvZ9oq9pZ7aFDeDJl69AY8dS9cPuDF0lijdXKQSE+gSOQokMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738145512; c=relaxed/simple;
-	bh=tBkppjVXsn9B2MEol1Nn2brAXT24xOJpyu7reeKlEI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eCulsgPXgXXFAIRchEtZd8SVmKjuj8hMaeD0YEBeVj0/AoJl4+pSumM/f1RzU4NTmdYDDMRRe0ziKJXSco4Dpxgab6jpM8DUlcsUB7XqUOJiJoNTvk1+ywYt69EzQt9lXEWT9LhoWOHmc9NM/rF8prK6xYjxIdI/qBQ9tdE5hvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hqiu30rH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50T8Sodc012740;
-	Wed, 29 Jan 2025 10:11:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/bT1gqjk4MonCeC0VkfnwWluu7UqtmxAs1W41GSbqFY=; b=hqiu30rHF3VqJpVG
-	DFZuy2vPxanMzwwxWoh+VyvNC/XAM+UtOxfuFKZaD4hxOJOX9iRbYKexgniCiaYx
-	vbt8UQj2gxuU2f7eqXJccG4XelgEbdNa87jTiQIjGHCISuTOfv9k/g4JvoW5Uefm
-	gRXrnsUEh3GKFy0qmUw9sIOudM32UJdILNh8qj8p8sYtRr4TQ/E2PTcge4Uigx7G
-	SAn426HpkQExMUJnfnzrOmqeJbxhgX3Gj6iFGWpM+69oZqfKAa9QweJtDXwwUqmV
-	9Lj5s7hYmACVeu4qTkqeBuy0qRUaQHMFUXhpQvcaYT82ZCLaoZSAvPQN5h53sgFR
-	TytNJA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44fguvg5rr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 10:11:39 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50TABc0E005382
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 10:11:38 GMT
-Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 Jan
- 2025 02:11:32 -0800
-Message-ID: <a6d01332-1f3a-483e-ad32-49265bdda4b0@quicinc.com>
-Date: Wed, 29 Jan 2025 15:41:29 +0530
+	s=arc-20240116; t=1738145629; c=relaxed/simple;
+	bh=h+J5mA+WmvhsE8mIU9p7eCMpAO/Myt/o9nAE8zizNZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GOESfpW9ezTfSkOhCOix7vBDjnQDbkYNjTlswhu/NYAbVfvTixNLCgFS3a7d6odXj6bAuz6AWaZkRN97fmem/HLAFWZRKYDDGxDHm9lOX8CwjvBXIwob/exsN8YhoBWFuqybe742tMozQVKB9qCZc0q0QJCmtk9L3ZFIQRa1R1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OaQKGXun; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D92FC4CEE4;
+	Wed, 29 Jan 2025 10:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738145629;
+	bh=h+J5mA+WmvhsE8mIU9p7eCMpAO/Myt/o9nAE8zizNZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OaQKGXuncS+9M95nztFSZNUpOV/3xkX1UIn8ndUKBemW5eEaO9TD1i0DV60imXHOv
+	 /RD5qK8IbnevUYj2u2/clYCmOF20OBp8XC57IjvKh6nCMqMIRlPBEaSSwKcMQV3ld4
+	 +yeEwdtCsJ/zWz3naxUTsCivcDuAFXJ6bcgg5Z2+aiXH/eguM2bl9tiwiQNuFpvPOl
+	 dO4kBbiljuDVaak1TvmjTwsZmALIu4yRpGMaWhFqK1o497PpG+O654aT3oRGduWm4v
+	 UGJyOScDxBfu/lW67/i8zfOOK3NUfqGIbrJVgo7bDGH7kSxgzmXTR7FFZ5GHDu8Fic
+	 oP6HHKeTWuaCQ==
+Date: Wed, 29 Jan 2025 11:13:42 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v9 0/7] PCI: dwc: opitimaze RC Host/EP pci_fixup_addr()
+Message-ID: <Z5n_VrN8HUmdVPUq@ryzen>
+References: <20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
- controllers
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <manivannan.sadhasivam@linaro.org>,
-        <bhelgaas@google.com>, <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-References: <20250125035920.2651972-1-quic_mmanikan@quicinc.com>
- <20250125035920.2651972-5-quic_mmanikan@quicinc.com>
- <3e92c8e2-7745-4205-8a48-5ef783b098a2@oss.qualcomm.com>
-Content-Language: en-US
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-In-Reply-To: <3e92c8e2-7745-4205-8a48-5ef783b098a2@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: JACaO_Pl-Hfslr77pklejouLWdAfKZs7
-X-Proofpoint-GUID: JACaO_Pl-Hfslr77pklejouLWdAfKZs7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-28_04,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 mlxlogscore=933 bulkscore=0 suspectscore=0
- mlxscore=0 adultscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501290083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com>
+
+Hello Frank,
+
+Typo in subject:
+s/opitimaze/optimize/
 
 
-
-On 1/28/2025 5:09 PM, Konrad Dybcio wrote:
-> On 25.01.2025 4:59 AM, Manikanta Mylavarapu wrote:
->> Enable the PCIe controller and PHY nodes corresponding to RDP466.
->>
->> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->> ---
->> Changes in V3:
->> 	- No change.
->>
->>  arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 41 ++++++++++++++++++++-
->>  1 file changed, 40 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->> index b6e4bb3328b3..73e6b38ecc26 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->> @@ -53,6 +53,30 @@ &dwc_1 {
->>  	dr_mode = "host";
->>  };
->>  
->> +&pcie2 {
->> +	pinctrl-0 = <&pcie2_default_state>;
->> +	pinctrl-names = "default";
->> +
->> +	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
->> +	status = "okay";
+On Tue, Jan 28, 2025 at 05:07:33PM -0500, Frank Li wrote:
 > 
-> Please add a new line before 'status'
+> Bjorn's comments in https://lore.kernel.org/imx/20250123190900.GA650360@bhelgaas/
 > 
-
-Okay, sure.
-
->> +};
->> +
->> +&pcie2_phy {
->> +	status = "okay";
->> +};
->> +
->> +&pcie3 {
->> +	pinctrl-0 = <&pcie3_default_state>;
->> +	pinctrl-names = "default";
->> +
->> +	perst-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
->> +	status = "okay";
->> +};
->> +
->> +&pcie3_phy {
->> +	status = "okay";
->> +};
->> +
->>  &qusb_phy_0 {
->>  	vdd-supply = <&vreg_misc_0p925>;
->>  	vdda-pll-supply = <&vreg_misc_1p8>;
->> @@ -147,6 +171,22 @@ data-pins {
->>  			bias-pull-up;
->>  		};
->>  	};
->> +
->> +	pcie2_default_state: pcie2-default-state {
->> +		pins = "gpio31";
->> +		function = "gpio";
->> +		drive-strength = <8>;
->> +		bias-pull-up;
->> +		output-low;
->> +	};
->> +
->> +	pcie3_default_state: pcie3-default-state {
->> +		pins = "gpio34";
->> +		function = "gpio";
->> +		drive-strength = <8>;
->> +		bias-pull-up;
->> +		output-low;
+> > After all cpu_address_fixup() removed, we can remove use_parent_dt_ranges
+> > in one clean up patches.
+> >
+> >
+>   ...
+> >  dw_pcie_rd_other_conf
+> >  dw_pcie_wr_other_conf
+> >    dw_pcie_prog_outbound_atu() only called if pp->cfg0_io_shared,
+> >    after an ECAM map via dw_pcie_other_conf_map_bus() and subsequent
+> >    successful access; atu.cpu_addr came from pp->io_base, set by
+> >    dw_pcie_host_init() from pci_pio_to_address(), which I'm pretty
+> >    sure returns a CPU address.
 > 
-> The GPIO APIs are in control of in/out state instead, please remove the
-> last property from both entries
+> io_base is parent_bus_address
+> 
+> >    So this still looks wrong to me.  In addition, I think doing the
+> >    ATU setup in *_map() and restore in *rd/wr_other_conf() is ugly
+> >    and looks unreliable.
+> 
+> ....
+> 
+> >  dw_pcie_pme_turn_off
+> >    atu.cpu_addr came from pp.msg_res, set by
+> >    dw_pcie_host_request_msg_tlp_res() to a CPU address at the end of
+> >    the first MMIO bridge window.  This one also looks wrong to me.
+> 
+> Fixed at this version.
 
-Okay, sure.
 
-Thanks & Regards,
-Manikanta.
+I feel like it would have been easier if you replied to Bjorn's comments
+directly in the thread instead of pasting them here (to a cover letter).
+
+
+Please don't shoot the messenger, but I don't see any reply to (what I
+assume is the biggest reason why Bjorn did not merge this series):
+
+""
+.cpu_addr_fixup() is a generic problem that affects dwc (dra7xx, imx6,
+artpec6, intel-gw, visconti), cadence (cadence-plat), and now
+apparently microchip.
+
+I deferred these because I'm hoping we can come up with a more generic
+solution that's easier to apply across all these cases.  I don't
+really want to merge something that immediately needs to be reworked
+for other drivers.
+""
+
+It should probably state in the cover letter how v9 addresses Bjorn's
+concern when it comes to other PCI controller drivers, especially those
+that are not DWC based.
+
+
+Kind regards,
+Niklas
 
