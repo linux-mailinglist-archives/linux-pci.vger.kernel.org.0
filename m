@@ -1,263 +1,177 @@
-Return-Path: <linux-pci+bounces-20555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20556-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 493E8A22535
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 21:43:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3575A225AA
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 22:29:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0210164DEB
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 20:43:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F0893A19AC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 21:29:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6587719CC3C;
-	Wed, 29 Jan 2025 20:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB7001E3DCD;
+	Wed, 29 Jan 2025 21:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YgW6kVL8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMN7eKQH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2057.outbound.protection.outlook.com [40.107.241.57])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2076129A2;
-	Wed, 29 Jan 2025 20:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738183399; cv=fail; b=WpffyfZmSNaS8iuFlzpeWK1SuJw8KxZXVo5w/RLyv+zLE94GJ3D8cHCifQlzRsEXnCsko8r3RF0d/iitSKOJCIQkLGVvC+71s5d95VmyiEjZHKywARXXPb6Mrs3SrdXJGQcy0mVJHvkW2YlbRQPPnbw5QW1JJoFLgB94pViiPIc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738183399; c=relaxed/simple;
-	bh=kV0lIZTfl2kySBoybfWKkXO8aSLdZ7/F0Pg/1n3rCO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=l/+atlbn+vMbkeeFoYoCyIsu8XhkOJfKyRhyvoN1e7VeMKzBOaQ0BCb89sumaS1jSWqKDIduqc/2fQl+yjEGfgCX14XEt1elQKzY1vW557Hb8gW5wtmFZQ4YAgACa10uKq6EMYBws2BvwyAWq40tl1i1ZCVJM8O+wuhTUCYFSK8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YgW6kVL8; arc=fail smtp.client-ip=40.107.241.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nDVNvCbvFuoDSmvi2osKyEmBMEmRyXm43Jj7029qkIbhqsuWneU+BJDimgweKK1+l15/wyy0Ifg0MbbnTpuckn+FlIG+DRJeBLt0R6YwznwP7PGPB4Am5lB6nYAPbhrTpB+cyY94ow2aaLNhVtCf69ASmYCFqKMlbwQcnwxaeLpShe7zyFz5RKUzU9Vr+aKXLKRonr2hQV2WFSKyPYu9ThYsUrDFTzC1o92XJxiM1fXu3pCEpYj1WU8H9l8zHwoi6Xl/HORdo79xNOYZwCyr+oGuqS4UPh6mjTCtQo3jxIZR7XezJwbFngkBZT9Emm5dWTyMT16rgY4dJTPuYhisyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BP42Xi8gjMco36VAmiQoNklkbYGR/s0cu/3jUd2xCDE=;
- b=QeqeQnrPCthLzViBTjg0lpCKuiZtWYq3+T6IRAq4hP7ed3PSDqWQth+I3I5AVsmj3Cg2qJlO9mgAPShcSQ+EDnrApstHWiD8KjUXpoOBrccDwnnAIsOxklIaHlSZVwZxXx3ilRVJAxwVTJhJyF7lzsyCnOuQG/rkC1OYl7ak/F3qmCnNMngYfZd6wiJFr4oqPtT57Xlrt5I+LDcllL34oYmdEL1VpH69rYwDk8AS4P0ax8pgXrgJTI/0dDxVDNL5ZIrUm+5/aFNOf3dxbCCshbicXWXofJhS2k/4YVeEKDlcrN3G6P9qUmEWs07Nj9BZxtEE0ubQHWvMf4mmg5cYPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BP42Xi8gjMco36VAmiQoNklkbYGR/s0cu/3jUd2xCDE=;
- b=YgW6kVL8GyjrkEZPHBzGMFJjP+LPZCzkc8CzBiVSf4atRRNqt4dKqGlUqqNrul6jDVI7MIyJXi0RCb2y66OLWEHlUWMxqGgS3Wg0c7leVk9f0ylJlrLFi4N58mBXGp96FInWYTmGgTU5f5wQECnh787yKpbmsI74H8vkq3+j4KZd3GDTzL/2K1JWxF/cLjztapGVKv1FwyB2+7XfAeXnvAMxkPJDabSwYNBZ8tpRDG7qvgCR06Tt3HfBxw+6Q2zUEl4dsSKPSeaVnZDrw6VZsefWZ0E2WlDyGO4pf0s2Lb2exEGMh26MsldHeTZMTEsK4nblj5RuraFNAWsrQ4RhPA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI2PR04MB10954.eurprd04.prod.outlook.com (2603:10a6:800:278::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Wed, 29 Jan
- 2025 20:43:12 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
- 20:43:06 +0000
-Date: Wed, 29 Jan 2025 15:43:00 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
-	peter.colberg@altera.com
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-Message-ID: <Z5qS1NKSRn8pSqg1@lizhi-Precision-Tower-5810>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
-X-ClientProxiedBy: SA1PR03CA0007.namprd03.prod.outlook.com
- (2603:10b6:806:2d3::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85C51E3DC6
+	for <linux-pci@vger.kernel.org>; Wed, 29 Jan 2025 21:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738186154; cv=none; b=q4oZm98my1S/iZBr6pZ9lp8oRmkyj4cbtJQCbQYf0n6reuNdQhPykOeY3ywDmQdc5/yoYXRkE/lFkkj57d2l1L75YZ/Q6ZSFQv5xQjHc9K4puRkzeW2VIyY9c4ywDcrHouEgsW+yRytg+ZmFmBsdHcci8NcBjsEfv2GRGw6GsNg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738186154; c=relaxed/simple;
+	bh=P+h3+WMMqW1h+Os3rDcyrKh6SzSIMqvFhL3sJMTZ7PM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=V4gWmaGkL3/zS5uQqh3XLRt1vN5oUOszSUjUabHyqibMWHsvyiAlTNzOrvEo1YmyTfQYc25SGK1qAVM4wxpTavUe1CYDV7ZiR/YngaUIOMoRHU+jZc4RlDZhnoYC5m/HAP/xArJ+iG3Ne9OYFUVhOSolOjF/78Ydi+4P3F9J67A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMN7eKQH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F885C4CED1;
+	Wed, 29 Jan 2025 21:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738186154;
+	bh=P+h3+WMMqW1h+Os3rDcyrKh6SzSIMqvFhL3sJMTZ7PM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=bMN7eKQHsezazzvdmU1fXf4NDkIU2cPvpXHEOGCsV1yCug2H2kz02mC4H/hdlrcCV
+	 DgHVnBaF/+meWOXHj0AYMUYiwVuXxnlBuX5c8aQ4bWwQjikoCSJMyC9W7sThsnMpoQ
+	 lvNrXZkNKlUKeVYwmp6y02DVrPYz2oTdY3l8OCFv2xthTGkCCVtxfqjfKpLYI7iEyc
+	 9W1EOEvqxKfsCKJ9YFYMrm/spqKkU7+I2klrE4UcViaZCsCR3jdMO4oOYMuck7RKmV
+	 5e4TWv63FUbWfeGwNeE6mI2Pl8rzCsexZmjb0CgMLqo2yU5N+jycoNKUAdSR+wieTC
+	 /FB9ZvwkA7RHg==
+Date: Wed, 29 Jan 2025 15:29:12 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Daniel Stodden <dns@arista.com>
+Cc: dinghui@sangfor.com.cn, Daniel Stodden <daniel.stodden@gmail.com>,
+	bhelgaas@google.com, david.e.box@linux.intel.com,
+	kai.heng.feng@canonical.com, linux-pci@vger.kernel.org,
+	michael.a.bottini@linux.intel.com, qinzongquan@sangfor.com.cn,
+	rajatja@google.com, refactormyself@gmail.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com
+Subject: Re: [PATCH 1/1] PCI/ASPM: fix link state exit during switch upstream
+ function removal.
+Message-ID: <20250129212912.GA502577@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI2PR04MB10954:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1a306ce-01ef-4585-d769-08dd40a588df
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+AhdBsZiC9BRZY46xcFysWKsL/rzeQhw/Lw5sfepNAlejD52KAzqvdwjIEZl?=
- =?us-ascii?Q?d8i88Wf/nRqgrEBrC+JpIUlYWLLtyi8tieCBHQvh6hz8XZYHac9bXOjIk0Mr?=
- =?us-ascii?Q?ZdCUhiGjkwfC+oY1ZchJZOhr5X39ALPNCwODP94jU6i8o3h/b7AL9gHisG5M?=
- =?us-ascii?Q?cU3GiFohp3RP6kVEolrCJdJNN1+yL4bQHTH2Z/RAbq7fVUoFq4H83ZhxjVxG?=
- =?us-ascii?Q?TybD0HAycFNgBUyZm30J0FCKPYgej1N5WEWkHe0ksB4//fOLDH1QUicR+p5E?=
- =?us-ascii?Q?0WszL4FZbnGkFjEJ3MkY7kevghjYNv8CBs27zfiLJchUROGGX4yqX2RxrIJ0?=
- =?us-ascii?Q?+wh8+/oRwJhId/Ms/PbX+WM870ZUU3ITv3Zp44rL4+RJFe+0HQrOy39gyL4h?=
- =?us-ascii?Q?aqpJvokiHTctcYqPPVSwgjbYj9nVXJbXtPgu3hy0avTvRSiXO9xKWnw+ESuR?=
- =?us-ascii?Q?kMR0gUhCLKGiEDfF/QSY4USZ55L8w7Fp1YWpit6nqMvNDYRkTyP65SmQB1C+?=
- =?us-ascii?Q?qwbBIXGUOBEovB8gBS/8LGhO/ZjmED3XkVR7Qu5WTa/VFBDDOB+XgK6Pm55e?=
- =?us-ascii?Q?oPEmLwruw4HerzFdNutZvaVModuoRuc5FVL8w33TL6d108Wxn4uHmoDiJG61?=
- =?us-ascii?Q?8wUTXymOGNbViQY4uAltE3Hf16r9JtHNDAKKZ/mFiwJRVcAR/638nqiAlHlg?=
- =?us-ascii?Q?7db1mm/AGNbL/x8KjQO7JxlBcshnAXVNt4r24CSHtu1r2Wbq62SuAWB8v/aW?=
- =?us-ascii?Q?2aGZUjh9e4fg9zaxgF3Q8nl6xW1+BFB0NG1KEempa8fq/760xBC9af0WDDm6?=
- =?us-ascii?Q?lfjETkeoW4HBSXiQCdr8M9kBSR56VyrtpyzuKIEmjngO5Bd5TtWTPC+xYEEl?=
- =?us-ascii?Q?GQVaaqAmA42uwW9/PgzF0zpOzKqPsJFcj7ayWUENf4p82BHpNRPprU0yw/JW?=
- =?us-ascii?Q?ApwZNSZANHMm42KSwqB7AkoBXCnrzdchCczK7b6yTYeXYggFeAuEsGvHzHxH?=
- =?us-ascii?Q?T8L2YKS12ZNjAA9Nkp0tLyg5fwJhLLFlwrL/ONg/najzVGB4401AWZMmylLf?=
- =?us-ascii?Q?9MbuES91tYlmZkl1UWnNvQBFgxRUUOwfKXukWK73ZQ9jRvrfeWckZBuJNPJp?=
- =?us-ascii?Q?xsg0bZ1C8TmLyvb2UXVCe2a9+NUb+PY8zh6NmtUx2mhK/0+KtYfxrUoZ5wfL?=
- =?us-ascii?Q?ry5b+dYzHPIepl69jgOXC2ZkkYXAkbRF569nYFWmv/EvRF4RfN4ZubRX2WyO?=
- =?us-ascii?Q?KiP8QsKQJ1184GCoxelEMI+llbemlLDlPBOX5kCkS74Fe0hd0gX+REjvvWey?=
- =?us-ascii?Q?f2z2avS5P34UvOTnrw4qj2N3SmjFKlt4xIEf4Cl1PrSOtHrkX42mv6tcXkbF?=
- =?us-ascii?Q?wocNcN6ocdGqo6abl59FUktOvCf4qC69rTQ1fXcGEIZiaOQ+rNJ6Fx06Oth6?=
- =?us-ascii?Q?ockjdFbunvPkPe/fMVpa1RIBg7i8jKDL?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lpc9fxoITW6gspZcfcPuOlp9vbyb5P8Q3aJ5F0ZK6NFMCEHJMgC6/Q07mI6u?=
- =?us-ascii?Q?Lyy5VJXbmrnVzJ071HaUNNSseW2QXCmxAZ+EvVyIBq8c4DVHfP+pYVwpWzIJ?=
- =?us-ascii?Q?ODEEvlnTTR7/ogMdoSEEPR+8FyvGM8Q/W7EkLQyTAmZqABiTm6gJS6ZzF7mr?=
- =?us-ascii?Q?eUglq2BgQCXu6+KI2N3ByhiMdKpnaB5O9udHtXLUOkdCqdZ/PAii0znK+Oru?=
- =?us-ascii?Q?OqV0KRDdBtMAoO/Uko7lCwPPGogt4olvD70wdDO1C3c6UC+jcgAXuHPdmpUQ?=
- =?us-ascii?Q?dsTf/Trg0SwvK2cFmrVzJL4pIGW9tkpZcDL2ciSj6Gbr7/d5iGKPnpAgKGUf?=
- =?us-ascii?Q?qH4xOlnmDnneTwaxODnrP8LYif5UL0LLpN/vlMu4EgIflHtD3UIGugLZu7ri?=
- =?us-ascii?Q?o//An1YLHNMdPGizoCt6SLsZrZaH3J08l/Y4m7ip7F2eyL76ICzIWi4iVozo?=
- =?us-ascii?Q?1Tj7ZWll2ohd2yFzzh/sKhA1+rpIGs1Z4r6YMClRSNS01MH5XOJK35wNvIbP?=
- =?us-ascii?Q?ynM4d6XKh9f0bLc6M+Zu3mEccowUe7cfHtNn0F2VLahmPF4kM/Utg6yN8xbs?=
- =?us-ascii?Q?KayBQbG/NZQvwml5rTvrN6n3yCMpAg0Q8+tk1F8mse5jSENG6HDOwA0SWDeW?=
- =?us-ascii?Q?TC3oPKxyulLMnxPb/3iPjx+ABzrOZt88wZm8TQN+p5EX3jwMqyVVuLIFusiV?=
- =?us-ascii?Q?LgIlAc3NGu5cr3LkizjuFGh05RRthvI9/fXeq0XtVHyue3k2xasKjnLxLRmp?=
- =?us-ascii?Q?SNoYjJ21dOjJGmFdFbvmPDddG5Wqvh80RwV0D01/OhD1YavvK17Lead7ivCh?=
- =?us-ascii?Q?kXA7oTtbSItt63cpWX9TyDR17UsdkDwtiimdVs+tnIJ0TCxEYhcu3LMacKXW?=
- =?us-ascii?Q?wf6yBHS/VqVxMEJRPNjEj6XvgABXIKYfGNgZ16ty8h1xb2cuGwIg7IgmaAzu?=
- =?us-ascii?Q?jtoYUWk5jwef82UO2zCnjm4JNDu7N+wh1uIgZOfYWTavGN7HyiOctRGRN/hJ?=
- =?us-ascii?Q?pF/LI8rbUSAhnc6QXKyG+sEVNWkMqm7qNYdQSk5iy0wsPB7/4MHVLPGmd0pY?=
- =?us-ascii?Q?9ZmsQti3ijIxjAsSVcZJiWmT5X0IR1UJEtw3V0tqwBeQ9EU+p9Q/QQnhlaJL?=
- =?us-ascii?Q?0MKyn+H7EKb4spTflAajh1cwLAlfWMFog3ymayidFHLBiOHeYHCEv68cyIRj?=
- =?us-ascii?Q?IR8OMobXbAlZ76ITnLq/UEEGrMVo3TCaYnf7/xrk66bl2zyhB4/5C9JgQVUT?=
- =?us-ascii?Q?c1j2eCSlj27IBPnv/EZI58n43yT7wvYVCuWleP2nyYVhce2YTbsxui59eFQz?=
- =?us-ascii?Q?PtitUsg0F00yhLRGJyEq5V04kFd9fAnomXHufOJnaJPfvzDRvr6mYrPFxIFz?=
- =?us-ascii?Q?844sRl9HzrOJ+MgZ/a2Oy0GWDq6MS8nwNY62N8gteerubBXKPeG1iAlX3jiy?=
- =?us-ascii?Q?qnKEjDvOMTIf1gfKHiZeiA79YhTUrjjOUadRdYSfvMZNMAkZ6H91VGH77iVv?=
- =?us-ascii?Q?1bL9avfL/WMeEnX+lYChko4fKjMUa3QZlxbkaVakU02epUx2tWNii86m7bzP?=
- =?us-ascii?Q?SLkntqR9tcs5YNx+XsRJlNYlkGeRA8N/rSECkJyD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1a306ce-01ef-4585-d769-08dd40a588df
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 20:43:06.9285
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bhzF4PD/UFhOI5UJTAlBYm3+hCHB8L6I8w6Ja+DBrAcKaa6Mqs3TqX1FdO9RB3pTVOzlXx/9MVvACcg95vBgPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10954
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e12898835f25234561c9d7de4435590d957b85d9.1734924854.git.dns@arista.com>
 
-On Mon, Jan 27, 2025 at 11:35:48AM -0600, Matthew Gerlach wrote:
-> Add the base device tree for support of the PCIe Root Port
-> for the Agilex family of chips.
->
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On Sun, Dec 22, 2024 at 07:39:08PM -0800, Daniel Stodden wrote:
+> From: Daniel Stodden <daniel.stodden@gmail.com>
+> 
+> Before change 456d8aa37d0f "Disable ASPM on MFD function removal to
+> avoid use-after-free", we would free the ASPM link only after the last
+> function on the bus pertaining to the given link was removed.
+> 
+> That was too late. If function 0 is removed before sibling function,
+> link->downstream would point to free'd memory after.
+> 
+> After above change, we freed the ASPM parent link state upon any
+> function removal on the bus pertaining to a given link.
+> 
+> That is too early. If the link is to a PCIe switch with MFD on the
+> upstream port, then removing functions other than 0 first would free a
+> link which still remains parent_link to the remaining downstream
+> ports.
+
+Is this specific to a Switch?  It seems like removal of any
+multi-function device might trip over this.
+
+> The resulting GPFs are especially frequent during hot-unplug, because
+> pciehp removes devices on the link bus in reverse order.
+
+Do you have a sample GPF?  If we can include a few pertinent lines
+here it may help people connect a problem with this fix.
+
+> On that switch, function 0 is the virtual P2P bridge to the internal
+> bus. Free exactly when function 0 is removed -- before the parent link
+> is obsolete, but after all subordinate links are gone.
+
+I agree this is a problem.
+
+IIUC we allocate pcie_link_state when enumerating a device on the
+upstream end of a link, i.e., a Root Port or Switch Downstream Port,
+but we deallocate it when removing a device on the downstream end of
+the link, i.e., an Endpoint or Switch Upstream Port.  This asymmetry
+seems kind of prone to error.
+
+Also, struct pcie_link_state contains redundant information, e.g., the
+pdev, downstream, parent, and sibling members basically duplicate the
+hierarchy already described by the struct pci_bus parent, self, and
+devices members.  Redundancy like this is also error prone.
+
+This patch is attractive because it's a very small fix, and maybe we
+should use it for that reason.  But I do think we're basically
+papering over a pretty serious design defect in ASPM.
+
+I think we'd ultimately be better off if we allocated pcie_link_state
+either as a member of struct pci_dev (instead of using a pointer), or
+perhaps in pci_setup_device() when we set up the rest of the
+bridge-related things and made it live as long as the bridge device.
+
+Actually, if we removed all the redundant pointers in struct
+pcie_link_state, it would be smaller than a single pointer, so there'd
+be no reason to allocate it dynamically.
+
+Of course this would be a much bigger change to aspm.c.
+
+> Fixes: 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal to avoid use-after-free")
+
+Do we have any public problem reports we could mention here?  I'm
+actually a little surprised that this hasn't been a bigger problem,
+given that 456d8aa37d0f appeared in v6.5 in Aug 2023.  But maybe there
+is some unusual topology or hot-unplug involved?
+
+> Signed-off-by: Daniel Stodden <dns@arista.com>
 > ---
-> v3:
->  - Remove accepted patches from patch set.
->
-> v2:
->  - Rename node to fix schema check error.
-> ---
->  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
-> new file mode 100644
-> index 000000000000..50f131f5791b
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
-> @@ -0,0 +1,55 @@
-> +// SPDX-License-Identifier:     GPL-2.0
-> +/*
-> + * Copyright (C) 2024, Intel Corporation
-> + */
-> +&soc0 {
-> +	aglx_hps_bridges: fpga-bus@80000000 {
-> +		compatible = "simple-bus";
-> +		reg = <0x80000000 0x20200000>,
-> +		      <0xf9000000 0x00100000>;
-> +		reg-names = "axi_h2f", "axi_h2f_lw";
-> +		#address-cells = <0x2>;
-> +		#size-cells = <0x1>;
-> +		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
-> +			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
-> +			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
-> +			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
-> +			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
-> +			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
+>  drivers/pci/pcie/aspm.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index e0bc90597dca..8ae7c75b408c 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1273,16 +1273,16 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>  	parent_link = link->parent;
+>  
+>  	/*
+> -	 * link->downstream is a pointer to the pci_dev of function 0.  If
+> -	 * we remove that function, the pci_dev is about to be deallocated,
+> -	 * so we can't use link->downstream again.  Free the link state to
+> -	 * avoid this.
+> +	 * Free the parent link state, no later than function 0 (i.e.
+> +	 * link->downstream) being removed.
+>  	 *
+> -	 * If we're removing a non-0 function, it's possible we could
+> -	 * retain the link state, but PCIe r6.0, sec 7.5.3.7, recommends
+> -	 * programming the same ASPM Control value for all functions of
+> -	 * multi-function devices, so disable ASPM for all of them.
+> +	 * Do not free free the link state any earlier. If function 0
+> +	 * is a switch upstream port, this link state is parent_link
+> +	 * to all subordinate ones.
+>  	 */
+> +	if (pdev != link->downstream)
+> +		goto out;
 > +
-> +		pcie_0_pcie_aglx: pcie@200000000 {
-> +			reg = <0x00000000 0x10000000 0x10000000>,
-> +			      <0x00000001 0x00010000 0x00008000>,
-> +			      <0x00000000 0x20000000 0x00200000>;
-> +			reg-names = "Txs", "Cra", "Hip";
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <0x1>;
-> +			device_type = "pci";
-> +			bus-range = <0x0000000 0x000000ff>;
-> +			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
-
-This convert to pci address 0x0010_0000..0x1000_0000 from parent bus address
-0x1000_0000..0x1ff0_0000
-
-aglx_hps_bridges bridge convert 0x90100000..0xa000_0000 (cpu address) to
-0x1000_0000..0x1ff0_0000 according to ranges[1](second entry).
-
-Just want to confirm that "0x1000_0000..0x1ff0_0000" is actually reflect
-hardware behavior.
-
-On going a thread
-https://lore.kernel.org/linux-pci/Z5pfiJyXB3NtGSfe@lizhi-Precision-Tower-5810/T/#t
-
-Try to clean up all cpu_addr_fixup() or similar fixup() in pci root complex
-drivers, but which require dtsi reflect the real hardware behavior.
-
-In most current pci driver, even "0x1000_0000..0x1ff0_0000" is wrong, it
-still work by drivers' fixup. If dts correct descript hardware, these
-fixup can be removed.
-
-best regards
-Frank
-
-> +			msi-parent = <&pcie_0_msi_irq>;
-> +			#address-cells = <0x3>;
-> +			#size-cells = <0x2>;
-> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
-> +					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
-> +					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
-> +					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie_0_msi_irq: msi@10008080 {
-> +			compatible = "altr,msi-1.0";
-> +			reg = <0x00000001 0x00018080 0x00000010>,
-> +			      <0x00000001 0x00018000 0x00000080>;
-> +			reg-names = "csr", "vector_slave";
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
-> +			msi-controller;
-> +			num-vectors = <0x20>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> --
-> 2.34.1
->
+>  	pcie_config_aspm_link(link, 0);
+>  	list_del(&link->sibling);
+>  	free_link_state(link);
+> @@ -1293,6 +1293,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>  		pcie_config_aspm_path(parent_link);
+>  	}
+>  
+> + out:
+>  	mutex_unlock(&aspm_lock);
+>  	up_read(&pci_bus_sem);
+>  }
+> -- 
+> 2.47.0
+> 
 
