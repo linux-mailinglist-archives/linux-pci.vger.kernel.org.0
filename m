@@ -1,210 +1,199 @@
-Return-Path: <linux-pci+bounces-20533-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFBF6A21C87
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 12:53:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58E91A21C85
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 12:53:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 424DB3A62AD
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 11:53:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 093221649F4
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 11:53:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF391DACB8;
-	Wed, 29 Jan 2025 11:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827B71D90B1;
+	Wed, 29 Jan 2025 11:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yqpfxZQh"
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="NB+xIyjG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IjVVgQeY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9E41DA0E0
-	for <linux-pci@vger.kernel.org>; Wed, 29 Jan 2025 11:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140481D8E10;
+	Wed, 29 Jan 2025 11:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738151609; cv=none; b=bv1kYHdM5VhoM9dF5bQAYYJ14i6hfQS0DL1SnoaVJszu6QjtUlsuxsLUU8ccgT7SJblfeKiQLIwf2eQnKSueCKMxz1VfcIUVzxBMAynxUIsHR5mR6RnvxSYnfm/Y9p87wwagstQLMgx4b1oKjXU00v9mebR+2y41iEzn2Ef0ZrM=
+	t=1738151604; cv=none; b=N0RhDJxWaI+iadn5FndE/iJqDRN+w9a4eYyECD1KSr3Ck1FuDjE2Ej5VOlW8hZngeUolJ3H+IIu5b+Wm6s9Vjf/h02t16CRjc46WQ7sZBMEsyeYu4E/+8nvGOypLcXFW1mvjtcaqqFJhYpdrS1nFYMwhGdetjbXI9nxM897mvqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738151609; c=relaxed/simple;
-	bh=XtDw2SqloVGWLdyoYXtBDSN/KgfOBaAkiZ9kK5rq1js=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=McJJSrjTe8DzfAfNO0vpyv2/54GCKmKMZ5sbM+AZXi/R9QKu6+RqtY+3fJwaFeqHWP6qSPKpkrc7Fnv+iOwZOSmM2IfsCknSUMWe/rCnh8lZygRS+/YPGjrio5a2vApMMQYUprFUx63U0IcdmUyntqaYmpVQ0RrTDQyXhF+adw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yqpfxZQh; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e460717039fso9371451276.0
-        for <linux-pci@vger.kernel.org>; Wed, 29 Jan 2025 03:53:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738151606; x=1738756406; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgXniuQQ9m2oAxcAeny2BUJWoO/7cSc1XmBp/yMJbeo=;
-        b=yqpfxZQhIkPsZL2fee/TwSb8qoS1hGFofaQ0Kn2u7P/EiSCWDLJE/yElW3V82qv9sn
-         GLonBHY5ZskyuV7N9ytJzlSvcYRucDjifN+rs9K4sX/zzUG9yLslBOxfGZrMA9z1cqZ+
-         9urMoSXksoevQcLX4qnqkJQc4bPfHBg8R/sE3OsN0bQ6HKDDttKy/o/dSGZ3VZlmLi8Q
-         6Cfa5IP7ITUjUefLGhSRQMf3uu2zgo4YQFvNh/2cM1AHsxPEjO2hPoJG8D3jeMPfqGnt
-         nf5F1DRreQQUL0DVeg3ASO0KBGRjIVPslTYG7RhWkIs8rmSvh5VPUJyDAHPGhhKYIqWE
-         vzHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738151606; x=1738756406;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zgXniuQQ9m2oAxcAeny2BUJWoO/7cSc1XmBp/yMJbeo=;
-        b=oeK9/C9M9d99q18kAwayQKGFYNpBSBN1tGyYPwASunwq4a4IBcjojevl26J0BDqm+t
-         u0eeqDf31PEuWn+WNbIk5M7m1Oj+3rsSb2GkO1e60yX2OxbxyAD5+tX7RqcLF0LfFDG6
-         p4VtG5605ud6Hm7pZSANliqr2fdGHjwRpcG/oUO047y9II8etmUerqMa7N/1IGq3toeh
-         0kUsifkCvTl8H41vFyJ90WZKRlkHMZ284B4XNgZOVuKBIUFPujiMYZQrrmI6pPaTy/GT
-         1S1mkqzVZBKs7c9lhK62ZzjAAwv+Rxx9jy0mAliaRMQxhDXX78pd0sC40RMgymosQ9vM
-         3Qxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXapYGV+UrSbbgqxWc7ztsxoOXaiCZw3LgJSbBPKMNkmcEIVwWuODwt5bJ643E/OsSbpTkDDUzCLkM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5/Ed1lACIGHXlVn2DpifRVoNzSmUAHGqF6bn665xXb1A8KPVW
-	kBtizfnLCdVCmlarGXLPtdwId0+as3qRVbgA+POC8WqfWZHWxiUS2suclosQklykjUZglrC7rqR
-	aQ2rsXazTX8p465DerDYqWkrSGFB89sgnj6dYSQ==
-X-Gm-Gg: ASbGnctKImm8ZHb1J+6kpsIDIdabeQm0mOMmZt4lF++tYJ/Zy1BXAsEB+PtBZFAQmiC
-	65V4pQCMdSjnkIZ7H7Yu7s+ghUH9X4NUFHyIlCOiqsyVmrMaRZZLRMV9Sc/FvEieygk8kcqWERf
-	rFFyYOVJtn
-X-Google-Smtp-Source: AGHT+IFOHmbvgvshGtMkNv+jvcXgtH6+9miganRxYSomVNknKphc2UXbh7Vq6ykg+Azcv4Te5xpKA4aFJH7j/0NsslM=
-X-Received: by 2002:a05:6902:2009:b0:e58:ac80:348b with SMTP id
- 3f1490d57ef6-e58ac8035c2mr739345276.36.1738151606586; Wed, 29 Jan 2025
- 03:53:26 -0800 (PST)
+	s=arc-20240116; t=1738151604; c=relaxed/simple;
+	bh=kjClw47FHDQHlQQV0V96Wr3SEi2HA2uZHAK1YtvAQLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GR0DqFXtHWZsFietix92M2KxUtOoF9Adh6CgCnRyssIEWuxigMv6QvLicUzQ88rWzwZRfNOa8fsH6oq7rdIjtzMBhwLAiAHwFVwmsuO+RBE9OSTARR27bfSi7u6SnrIVGcvaYyDaC9mTSTbzbUlZwJaUTdceeHrjvz7bTgvntsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=NB+xIyjG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IjVVgQeY; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 923C31140142;
+	Wed, 29 Jan 2025 06:53:20 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 29 Jan 2025 06:53:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1738151600;
+	 x=1738238000; bh=5kVjsOjJ1lV0xf8PMGyEsjXHM5+QwpgL4ePKOXTO7Gw=; b=
+	NB+xIyjGD2gE9KRKrDaxud6TIUdIG1QSObSAQ9M3vAtucwPxhjGblTtuQSJvGVWy
+	ndVPifH5YN1yhfBT+2lPAk1PQQdhCfpOJX5FeaU7oFust2aNlAk5MEpYe8uUvm/y
+	KvjdAklO5cUcMzhF3VfkFnJcryeOg5ChWKfSv/tvdZIl89P8IbOMoZVB3zClWsby
+	q6yCVtxGqOrufdW5mYdLVc5V80Z8z0A/uu3ysZvc2IKEmB5b5FHoD/+lhojZOlNq
+	vZH9U9ruW0il/Dg8YbkhzwU7Dsp1B1C3dEdaHdxjOYJ11QxS4yUMlMcRuPoUp+Y/
+	lBAlAOLzwlaCTF7/o0rZAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738151600; x=1738238000; bh=5kVjsOjJ1lV0xf8PMGyEsjXHM5+QwpgL4eP
+	KOXTO7Gw=; b=IjVVgQeYtvf6xJclgFgzYn4q4xdff5x8LH0/x3m/Ks+X6mzqUy8
+	Spn0KawrTC1u6+JuRsSyeuMjX2mFJIpI7BRvhL/MY6zle5kyDzBIy0WsPbbn5we/
+	d82fXF/dBmEbzXPmzZAoXVdYlv8J9D+3FfUuLwDPApXb9ENm7PvQcZu3FmSUOTn9
+	rtVoF3ayXZ+SyhDDYdxoUafO1B2M0AozfCSLBUd3+fRtDiREwgu/yJ8En2WdBZTY
+	yHDMZwjXBUVSY63tZq+4YgEKP1BDW+ORHHw1x3I1NbGflRkrDfg+JSCQ1W/29/1+
+	uODGXGjFnBuuZMHJeXXbE51LfNu5zbn7afQ==
+X-ME-Sender: <xms:rxaaZxZHIhPNfz9J7puVjg0g-XbQhGEV4mw8LhRtIO2uUmuGbkOdUg>
+    <xme:rxaaZ4YktNWiCg_5XxfU_9Mx8-UQyqULE9inctYc1Qs2AD7rkbpxkjYNimRKTHLSC
+    BdpnWGXM7geEQ>
+X-ME-Received: <xmr:rxaaZz9JbK0JxP83b6LWLXBxVtmvSThIFhiKHeZqFTwKg7X87NikVRWKKA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeen
+    ucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomh
+    grrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggft
+    rfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettddvge
+    euteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhdpnh
+    gspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjsggv
+    uhhlihgthhesshhushgvrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhogh
+    hlvgdrtghomhdprhgtphhtthhopehjghhrohhsshesshhushgvrdgtohhmpdhrtghpthht
+    oheprhhoghgvrhdrphgruhestghithhrihigrdgtohhmpdhrtghpthhtohepsghorhhish
+    drohhsthhrohhvshhkhiesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepgigvnhdquggv
+    vhgvlheslhhishhtshdrgigvnhhprhhojhgvtghtrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgv
+    ghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehnsg
+    gusehnsggurdhnrghmvg
+X-ME-Proxy: <xmx:rxaaZ_o14Y1yYSHINJ9lVdCij1hHDGJS00znShf0NjFe1WjVNb3HYA>
+    <xmx:rxaaZ8pbHoprt6ZkjabWHGfbHbJso-CoBM7yp-91YaBaM_QWI6OsCg>
+    <xmx:rxaaZ1Qtg2BTUuYw-qyH0eOUvmvmW0h5Z75JtwutuAbyEhG7skIiRA>
+    <xmx:rxaaZ0pWoQYrxpW1Qkjonw9uwntE0msRt4vCjY7Z27VW-S7GDqWGzQ>
+    <xmx:sBaaZ561c46PVu3fMc4UG3ul1Y9PryvVUZgBzi3sKqsBcp5BAgtaD89n>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 29 Jan 2025 06:53:17 -0500 (EST)
+Date: Wed, 29 Jan 2025 12:53:15 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
+Message-ID: <Z5oWq4YgMgwWvl2G@mail-itl>
+References: <Z5mOKQUrgeF_r6te@mail-itl>
+ <20250129030315.GA392478@bhelgaas>
+ <Z5mfA32bvEn6yD-C@mail-itl>
+ <22ad7276-624d-49fb-a2bb-1b7908318a4e@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net>
-In-Reply-To: <12619233.O9o76ZdvQC@rjwysocki.net>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 29 Jan 2025 12:52:50 +0100
-X-Gm-Features: AWEUYZmwExy8dn5Px9QpzPP3otEZVwMtQLjO2zzVYB2DYID2YIuVPj5RX0qo4M8
-Message-ID: <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="a+GZJj6pK/SHY+Cv"
+Content-Disposition: inline
+In-Reply-To: <22ad7276-624d-49fb-a2bb-1b7908318a4e@suse.com>
 
-On Tue, 28 Jan 2025 at 20:24, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the
-> resume phase") overlooked the case in which the parent of a device with
-> DPM_FLAG_SMART_SUSPEND set did not use that flag and could be runtime-
-> suspended before a transition into a system-wide sleep state.  In that
-> case, if the child is resumed during the subsequent transition from
-> that state into the working state, its runtime PM status will be set to
-> RPM_ACTIVE, but the runtime PM status of the parent will not be updated
-> accordingly, even though the parent will be resumed too, because of the
-> dev_pm_skip_suspend() check in device_resume_noirq().
->
-> Address this problem by tracking the need to set the runtime PM status
-> to RPM_ACTIVE during system-wide resume transitions for devices with
-> DPM_FLAG_SMART_SUSPEND set and all of the devices depended on by them.
->
-> Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the resume phase")
-> Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovoldconsulting.com/
-> Reported-by: Johan Hovold <johan@kernel.org>
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/base/power/main.c |   29 ++++++++++++++++++++---------
->  include/linux/pm.h        |    1 +
->  2 files changed, 21 insertions(+), 9 deletions(-)
->
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -656,13 +656,15 @@
->          * so change its status accordingly.
->          *
->          * Otherwise, the device is going to be resumed, so set its PM-runtime
-> -        * status to "active", but do that only if DPM_FLAG_SMART_SUSPEND is set
-> -        * to avoid confusing drivers that don't use it.
-> +        * status to "active" unless its power.set_active flag is clear, in
-> +        * which case it is not necessary to update its PM-runtime status.
->          */
-> -       if (skip_resume)
-> +       if (skip_resume) {
->                 pm_runtime_set_suspended(dev);
-> -       else if (dev_pm_skip_suspend(dev))
-> +       } else if (dev->power.set_active) {
->                 pm_runtime_set_active(dev);
-> +               dev->power.set_active = false;
-> +       }
->
->         if (dev->pm_domain) {
->                 info = "noirq power domain ";
-> @@ -1189,18 +1191,24 @@
->         return PMSG_ON;
->  }
->
-> -static void dpm_superior_set_must_resume(struct device *dev)
-> +static void dpm_superior_set_must_resume(struct device *dev, bool set_active)
->  {
->         struct device_link *link;
->         int idx;
->
-> -       if (dev->parent)
-> +       if (dev->parent) {
->                 dev->parent->power.must_resume = true;
-> +               if (set_active)
-> +                       dev->parent->power.set_active = true;
-> +       }
->
->         idx = device_links_read_lock();
->
-> -       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
-> +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
->                 link->supplier->power.must_resume = true;
-> +               if (set_active)
-> +                       link->supplier->power.set_active = true;
 
-If I understand correctly, the suppliers are already handled when the
-pm_runtime_set_active() is called for consumers, so the above should
-not be needed.
+--a+GZJj6pK/SHY+Cv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 29 Jan 2025 12:53:15 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
 
-That said, maybe we instead allow parent/child to work in the similar
-way as for consumer/suppliers, when pm_runtime_set_active() is called
-for the child. In other words, when pm_runtime_set_active() is called
-for a child and the parent is runtime PM enabled, let's runtime resume
-it too, as we do for suppliers. Would that work, you think?
+On Wed, Jan 29, 2025 at 10:17:20AM +0100, Jan Beulich wrote:
+> On 29.01.2025 04:22, Marek Marczykowski-G=C3=B3recki wrote:
+> > On Tue, Jan 28, 2025 at 09:03:15PM -0600, Bjorn Helgaas wrote:
+> >> The report claims the problem only happens with Xen.  I'm not a Xen
+> >> person, and I don't know how to find the relevant config accessors.
+> >> The snippets of kernel messages I see at [1] all mention pciback, so
+> >> that's my only clue of where to look.  Bottom line, I have no idea
+> >> what the config accessor path is, and maybe we could learn something
+> >> by looking at whatever it is.
+> >=20
+> > AFAIK there are no separate config accessors under Xen dom0, the default
+> > ones are used. xen-pcifront takes over PCI config space access (and few
+> > more) only in a domU (and only for PV), when PCI passthrough is used.
+> > Here, it didn't went that far...
+> >=20
+> > But then, Xen may intercept such access [2]. If I read it right, it
+> > should allow all access (is_hardware_domain(dom0)=3D=3Dtrue, and also t=
+he
+> > device is not on ro_map - otherwise reset wouldn't work at all).
+>=20
+> The other day you mentioned (on Matrix I think) that you observe mmcfg
+> not being used on that system. Am I misremembering? (Since the capability
+> where the control bit lives is an extended one, that capability would
+> neither be read nor modified when mmcfg is unavailable.)
 
-> +       }
->
->         device_links_read_unlock(idx);
->  }
-> @@ -1278,8 +1286,11 @@
->               dev->power.may_skip_resume))
->                 dev->power.must_resume = true;
->
-> -       if (dev->power.must_resume)
-> -               dpm_superior_set_must_resume(dev);
-> +       if (dev->power.must_resume) {
-> +               dev->power.set_active = dev->power.set_active ||
-> +                       dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
-> +               dpm_superior_set_must_resume(dev, dev->power.set_active);
-> +       }
->
->  Complete:
->         complete_all(&dev->power.completion);
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -683,6 +683,7 @@
->         bool                    no_pm_callbacks:1;      /* Owned by the PM core */
->         bool                    async_in_progress:1;    /* Owned by the PM core */
->         bool                    must_resume:1;          /* Owned by the PM core */
-> +       bool                    set_active:1;           /* Owned by the PM core */
->         bool                    may_skip_resume:1;      /* Set by subsystems */
->  #else
->         bool                    should_wakeup:1;
->
->
->
+Yes, but later (once dom0 starts) it switched back to mmcfg. Now I see
+this:
+(XEN) PCI: MCFG configuration 0: base e0000000 segment 0000 buses 00 - ff
+(XEN) PCI: Using MCFG for segment 0000 bus 00-ff
 
-Kind regards
-Uffe
+Another thing I noticed in the bug report - the reporter says warm
+reboot from 6.11 (where it works) to 6.12 avoids the issue (not sure
+about further reboots). Cold boot directly to 6.12 results in this buggy
+behavior.
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--a+GZJj6pK/SHY+Cv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmeaFqsACgkQ24/THMrX
+1ywvTQf/YYurxRaUAGuLjE9v/1EfWAM03m/V7lXiOvaN91b2+QkGZhFeQjEnpgwC
+1y+Qyhfyd/CYfTs5pX/3OJ2PvGHDOMBaRKHrPer+C31qBYf2025xPK/M345aLiHp
+XMjaIaI6JCVvVO718jleh/+mqtCGCPW4VB4liMmyHGquUrs72mBacofGKYEgh149
+sL3UEpSrAoFmy9mxVkNdGJLSZp6oW6zuXpkAJx4QeW5TzgY0F26BZUCDi5Py1R0m
+DvDmauAZRPKJH6/7lpw4aacRrLk9Y/dIbX51ELBxP1n3BcDmyHLEw1TECE+NPTGX
+HOfpgyyvw+YPtsG6sbXgLqYOoyZsaQ==
+=uRq/
+-----END PGP SIGNATURE-----
+
+--a+GZJj6pK/SHY+Cv--
 
