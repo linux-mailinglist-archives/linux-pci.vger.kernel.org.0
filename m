@@ -1,203 +1,170 @@
-Return-Path: <linux-pci+bounces-20527-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1304A21B1F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 11:43:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98B7DA21C4B
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 12:31:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C57543A34B4
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 10:43:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFD3D3A3685
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 11:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2AE11B0435;
-	Wed, 29 Jan 2025 10:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B87819597F;
+	Wed, 29 Jan 2025 11:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="U/lnCV4G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VaZKT8hY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wArQ3UD8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MUSweoG3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uSdn7ibq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D041AAA10;
-	Wed, 29 Jan 2025 10:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738147419; cv=none; b=QJ5LFMRuyIfur4jlhdbMNXp0wb46NNMbYWA3u3Dnd2EFsMISO6QVq7ck4V3tJxdyg+v8w5ohhiKhjLu1sKEFHeNAQNhfXPTpnYVVwVX25UAXb5xKjNYN3n20iKRYI4pWgHaVt+Asco/PKKVcCygbFUsFXuW/z/0A6CgnxpNgq+w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738147419; c=relaxed/simple;
-	bh=CC343mfD0okuki1r57crt4ti98EOIoVeWw0sI+C/c/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WUVDhd2r99CEDl5PWCV8C1urI7sImoMMt7/O462irpxfMfe9UYUVX+vEfQWg8Co/nCe4hcR9VXshhnGYHz1C1EL7oP+YyHw4dYedu8KJ9IWsGSCMqlyluGFvplU4eK+QPzkE9rHU9G4Cb16mDFYDsKKQ71lPPa43Mc2tYJoQXeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=U/lnCV4G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VaZKT8hY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wArQ3UD8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MUSweoG3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EB6801F365;
-	Wed, 29 Jan 2025 10:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738147416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tnS1z33E1lmdARbRZJZY1baV7i5IrhBmmqgHqbmlVM=;
-	b=U/lnCV4GBIZG9GbQ1SLwed6PEFOLa2KtiY6O7akzy8ThP6T1VqE5oYuGdqn4uKfnAqC/k1
-	KCLe8/AKMCU6a4ptb2qA4+1jPr9Y2ovmlTZmOlIZgji2XQKurkAnusdTuaa0Bx6Zg062/S
-	6nT6jznqT6s44t3SkfFVyXd3U1tdxxQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738147416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tnS1z33E1lmdARbRZJZY1baV7i5IrhBmmqgHqbmlVM=;
-	b=VaZKT8hYvx0LvDaL9DncH7hgceQXTxV/NUnlHukMowsinbc2G6ukDey/6e71smi6XHiIWi
-	I9IwBRm8e3VqvNAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=wArQ3UD8;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MUSweoG3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738147414; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tnS1z33E1lmdARbRZJZY1baV7i5IrhBmmqgHqbmlVM=;
-	b=wArQ3UD8ofb8Duq+Uqy67bpUSGreo6Hiqr8UM04g7f2MxsC9UKifObCDP+OnI0zlBXChlu
-	dYnzMI2mTY7jJMElIN4x44gRClFguzJgUeCXVK8+jHFM081mnCG0Sv4/PA39GANzMBwQ0y
-	nTNXNR115MEBd2mbOvIjX3hlN9E33rU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738147414;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tnS1z33E1lmdARbRZJZY1baV7i5IrhBmmqgHqbmlVM=;
-	b=MUSweoG3CdRus8S/4/g34ZtCsJ7NIYPezhBni7oNh8xix67Dfx0INn6LKOumml603x7ipq
-	Simvrq8afwjaDBBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F3CD6137D2;
-	Wed, 29 Jan 2025 10:43:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KhYhOVUGmmfeWQAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Wed, 29 Jan 2025 10:43:33 +0000
-Message-ID: <320db9bc-3610-4336-a691-a8926cdb7e24@suse.de>
-Date: Wed, 29 Jan 2025 12:43:25 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA66186615;
+	Wed, 29 Jan 2025 11:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738150245; cv=fail; b=cOTnZiv2udxv3DkLdFaXL4t4zFzjbTLl1F/xeisCELSOe53bgd/MflvRfxTPgnqh47863JjA6vKHuzChwIdVrmQnHmCe85lG51w3xUuhBwm98oGeOZFMhSahgJ+2DI3zOb9eifVzCa/f1zDVCTywzL63F53hfeFeTSqTw94Eey4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738150245; c=relaxed/simple;
+	bh=288cl/RGcs5+EeU3jOg0ygRMsckXMW2CrRJOAE/7l8M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=crLJyUoD3fU9AWeE3IefpSMx6Ay/FFj2DTfEccSmwHkgUnYeKArbDb9eoDQ6ddyqelLqUJnRvilTDh27/oMu6ibTAvVvbA9BYv2YDLn9HP9L6Rbwc0EQn98jOQlJc7GIVw5ixerXRL8tv/p/OSK/m1v8FVYAkyQU+PteFriKZvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uSdn7ibq; arc=fail smtp.client-ip=40.107.94.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eND5NLwJ4P4oD3qP2xddxBaNpzr5GcmSKoP78elnq1MjQlDF98bvenhR69W6OGTiMUt2HI9tC8oWqPtp8085L6nIX2pYxfHVrOQQHrsJ5rv4scjMiUFEWNNdJh7kHjb9k+shqKBx13obaFbqDsSicKLos59aykq/x5QLAP8jROdlkJEbCJ3kkxMwmCvnd/GtWUyyveYJdZLpfdlZTvqsT3HT3JRbKZXQGdeE2rmOLS+a61A4/iw5bQCUdCO2D3q0SjCxh91pOotM4Djxhy0wE7NJQNk5OClXCUtns7QV/wnjEBwucunrSyycpftlacuUZFsVfoZA8EbD5O4OJbs9yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2UMW6OOl6ggSWfMMV8BxocWiYH0+5Ekh8QSNqNSJfU8=;
+ b=QqAOyUpDMxg3BqeQ8qHORIzdck/pDS0VCsHWtE2LTdZ7wjjjRxSXFvSLQM9XmiWMdYx7Lu4oDawDMEq5gAzqnqF3svMR9d0dvT+fIKi3WV5tYV8rw1V3c0m+WR+KosWln2NTmnAQZXa2T4GFmnh51Ff/tCod2YJ+B17sZrsCCPmxm/iHkF3rMO7A/UTdESQn9xYnPV2u6Q1AdHyC2cBZBrX/Hsfv1N/+HWsmFMn+c50k0HuQSCTMEjXK1rGJgBoMClGfHVRTPxQM9n9cejEmUX6P00h5SJ0397BxBH9RUxuGfeUYx5kMtS8RFyS2lAU9KYiNb3r5GnNdCH24lLANSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2UMW6OOl6ggSWfMMV8BxocWiYH0+5Ekh8QSNqNSJfU8=;
+ b=uSdn7ibqnKluTHlcwOtiKoBjuZ5enn8b8ihXLXiomX1p3D40DSVKsOCwdpwqNRRDkM7YBlxX2RXPYqh2JAu/VSM8zoPfMEDxnxWSoS5Cvc4f+2vFzVpTSzB9fFVIuaqczX4YuPSimAq2sLOtfv3ZYHmfeedYFeQ8rjehL4O7Dww=
+Received: from BN8PR03CA0009.namprd03.prod.outlook.com (2603:10b6:408:94::22)
+ by CY8PR12MB7292.namprd12.prod.outlook.com (2603:10b6:930:53::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.23; Wed, 29 Jan
+ 2025 11:30:41 +0000
+Received: from BL02EPF00029927.namprd02.prod.outlook.com
+ (2603:10b6:408:94:cafe::d1) by BN8PR03CA0009.outlook.office365.com
+ (2603:10b6:408:94::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.22 via Frontend Transport; Wed,
+ 29 Jan 2025 11:30:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00029927.mail.protection.outlook.com (10.167.249.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Wed, 29 Jan 2025 11:30:39 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 29 Jan
+ 2025 05:30:39 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 29 Jan
+ 2025 05:30:38 -0600
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 29 Jan 2025 05:30:35 -0600
+From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <jingoohan1@gmail.com>,
+	<michal.simek@amd.com>, <bharat.kumar.gogada@amd.com>, Thippeswamy Havalige
+	<thippeswamy.havalige@amd.com>
+Subject: [PATCH v8 0/3] Add support for AMD MDB IP as Root Port
+Date: Wed, 29 Jan 2025 17:00:26 +0530
+Message-ID: <20250129113029.64841-1-thippeswamy.havalige@amd.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 03/11] irqchip: Add Broadcom bcm2712 MSI-X
- interrupt controller
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- Thomas Gleixner <tglx@linutronix.de>, Stanimir Varbanov <svarbanov@suse.de>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas
- <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-4-svarbanov@suse.de> <87bjvs86w8.ffs@tglx>
- <b1009877-6749-4bb1-95b9-ae976bef591c@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <b1009877-6749-4bb1-95b9-ae976bef591c@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: EB6801F365
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,pengutronix.de,suse.com,raspberrypi.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email,linutronix.de:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00029927:EE_|CY8PR12MB7292:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0338da0-f8fb-4fca-509d-08dd40585baf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PaFpt9wcHWYE7hBaA7bI4WJNWu0kF2j7taJOtQ39N5klqBYm2/CPocva5ASv?=
+ =?us-ascii?Q?sFvD4Ds91iHQBslss3wQp1FpleQ4fb73CA/tIOU3CicxzvEosnmjVTwsLekT?=
+ =?us-ascii?Q?JedYvckb3pE7rIYfy+4nwa4/p9JRQYJAs/4ZDYPvYJWVYdnTJlaw/CVWS84Z?=
+ =?us-ascii?Q?YUd5M2KVriFnqKeve0fqQd+w3W/uJYwAabR7k8278PRirxUNhQBBh5ARUE9X?=
+ =?us-ascii?Q?bgNRFycQeO+v9CAez4RGYhlqeSd0Q5Pi5sMBTjP36tdC2mwZOTXMnzzlvNUx?=
+ =?us-ascii?Q?yJk28T7+qtekiHjfQ1nw7okVPBqq5WrEv3cIpXf/Ry6uubBo4RjFLJ9wYDS/?=
+ =?us-ascii?Q?uHlch5Kv/ivNfP7goriUWYqAD4MhCb9PAwpp5JlTrklJUOZNWWeDi21UEh4j?=
+ =?us-ascii?Q?Cj2AeVh246lnKHNHxAiwK+wgRcecrD+//QoGgdNFRG9R4eyFpSiOJZ7SsGms?=
+ =?us-ascii?Q?pVFsOqQKTfMMRqFgLairpbdXd/GlUbnOS530FPz1F2pclr5/msHzH580WuSr?=
+ =?us-ascii?Q?oEWW0KRPqi9IdNWv7FYO2873J/9NXkTlAUcOM1XhJriHaZSgHM9VRbc9oKyL?=
+ =?us-ascii?Q?pwcYzksfwRC3m6S5w2fpNUD2Z/a0vZd5YGkFfb2IqEXxViKYgN+qVvapsOPg?=
+ =?us-ascii?Q?doNHnASkNsXzAxw7InJeGrMkIJVwij/xH48nV3jjO2qTIbkfR3Gw0lZ15Knc?=
+ =?us-ascii?Q?5OmVv6GIk5uru6Atc4lowMZ31v/FA7DRN+XKDy7F+Kw+L6IfI1JsK7QdRygZ?=
+ =?us-ascii?Q?TIkp/7s5WDhtHx6DQ4eMn8UawJ+34y9OrF4gXaR7uxSyTkbQQjf4Vk6gwFkb?=
+ =?us-ascii?Q?/re34WOUsQY9vtdNnW1HxUwCQwWgS/HH15m7e+YwMg55cocy8PitjjUccUDA?=
+ =?us-ascii?Q?QUZsn/lPL+G3lXCQhuFw16nLiTkicGcKAUyvm2X2fS/x7Qsi9g+oATObS4cg?=
+ =?us-ascii?Q?SwW4T1RoHTYId3mRLU4+DvU8caDuVarvsmfrjxWJjScHRZwkVySOuuZ7vtPc?=
+ =?us-ascii?Q?MD7zlIhYaEW8kSHKbuiQxEGKhnub6amWYfg0h7EJdj6VI8PAfiaTFmgp4Bv5?=
+ =?us-ascii?Q?nPOQpJIKoBo/ISVwV8iEk8w/LBVF6Zl0216rujoHnheJop5Gr30VS73r5XcB?=
+ =?us-ascii?Q?wasjwhPaH4bS9tK1stSu/7eu0a/ryNGAQfeRG9Q431lO6oL0LaPf+PLlg8kr?=
+ =?us-ascii?Q?ETA0oUmVPfapwIAgHq9TxclwxYe2afslP5IZuWI6gwoOeXqNKEEgPj1COXCf?=
+ =?us-ascii?Q?mmE6NGMlKP1DL6POoZX3d/m/VYAq6/Ddn+erTyxyJ3ugsjAJ9RnbiYu+wl0L?=
+ =?us-ascii?Q?vGC+bwOBCauFcKXCEvUzlMsz2ZbRy6LuM/PYZXw6dsRw0LGCKWvRbEwngTlG?=
+ =?us-ascii?Q?dosYmxUY5Xgz41j0wv39y2qYedAyfhScT97UzacM18nC4kq+EfTCE4o2VSHW?=
+ =?us-ascii?Q?3a9aU29L0l/+WDxa3jf6y7jG2C0ZgCj1JnODgYNvEYjk5Mvp1lna/cDWBiMR?=
+ =?us-ascii?Q?GfySCJJ1gZT+6xw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 11:30:39.5212
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0338da0-f8fb-4fca-509d-08dd40585baf
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00029927.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7292
 
-Hi,
+This series of patch add support for AMD MDB IP as Root Port.
 
-On 1/28/25 7:55 PM, Florian Fainelli wrote:
-> On 1/27/25 10:10, Thomas Gleixner wrote:
->> On Mon, Jan 20 2025 at 15:01, Stanimir Varbanov wrote:
->>
->>> Add an interrupt controller driver for MSI-X Interrupt Peripheral (MIP)
->>> hardware block found in bcm2712. The interrupt controller is used to
->>> handle MSI-X interrupts from peripherials behind PCIe endpoints like
->>> RP1 south bridge found in RPi5.
->>>
->>> There are two MIPs on bcm2712, the first has 64 consecutive SPIs
->>> assigned to 64 output vectors, and the second has 17 SPIs, but only
->>> 8 of them are consecutive starting at the 8th output vector.
->>>
->>> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
->>
->> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
->>
->> As this is a new controller and required for the actual PCI muck, I
->> think the best way is to take it through the PCI tree, unless someone
->> wants me to pick the whole lot up.
-> 
-> Agreed, the PCI maintainers should take patches 1 through 9 inclusive,
+The AMD MDB IP support's 32 bit and 64bit BAR's at Gen5 speed.
+As Root Port it supports MSI and legacy interrupts.
 
-Just small correction, patch 09/11 [1] has a new v2 at [2]. And I think
-PCI maintainer have to take v2.
+Thippeswamy Havalige (3):
+  dt-bindings: PCI: dwc: Add AMD Versal2 mdb slcr support
+  dt-bindings: PCI: amd-mdb: Add AMD Versal2 MDB PCIe Root Port Bridge
+  PCI: amd-mdb: Add AMD MDB Root Port driver
 
-> and I will take patches 10-11 through the Broadcom ARM SoC tree, Bjorn,
-> KW, does that work?
+ .../bindings/pci/amd,versal2-mdb-host.yaml    | 121 +++++
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   2 +
+ drivers/pci/controller/dwc/Kconfig            |  11 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-amd-mdb.c     | 476 ++++++++++++++++++
+ 5 files changed, 611 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-amd-mdb.c
 
-~Stan
-
-[1] [PATCH v5 -next 09/11] PCI: brcmstb: Fix for missing of_node_put
-
-[2]
-https://lore.kernel.org/lkml/20250122222955.1752778-1-svarbanov@suse.de/T/
-
+-- 
+2.44.1
 
 
