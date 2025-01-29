@@ -1,110 +1,105 @@
-Return-Path: <linux-pci+bounces-20517-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AA90A21859
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 08:55:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A5E9A21915
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 09:31:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDBA53A3EC9
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 07:55:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01DBB3A34C4
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 08:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358681946A2;
-	Wed, 29 Jan 2025 07:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E7A193409;
+	Wed, 29 Jan 2025 08:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbeITJ5A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874F8193084;
-	Wed, 29 Jan 2025 07:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9E12942A;
+	Wed, 29 Jan 2025 08:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738137326; cv=none; b=cPZv9ltHH5aWJhQXaTYRDB9Dk0YzdgafEEJz9q9J2sl11wm+MThMIwUq83fO4dQGcYspaqDMddCObuWKP6G+cK9NqBImWOn1GAms2kjwFp2rhrgVA4/xcvmJsV5t+gh06Q0pt9FXMWkvGXuCoqyO4DqROLDBI2V6knea308dKvE=
+	t=1738139493; cv=none; b=udqrYV+MljSaPuR0pQEBWJeYBEFFKTBPnTtSXdJKhU6XjPX4jGGJAOgYybn1t7G5bNSog6BjBSgkYUhexSe6POetZVxWbjftVFnVzAaa+tSwdK638buwW1hAhYjGRz4yirjtgeDPvrtp7NKWlnXCfG3cXlX1lmSmbUj2h0HB6NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738137326; c=relaxed/simple;
-	bh=XD8l01ExZgbhVpjeOW9xaqcJGtddBGV3FnIhVYcKqK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D73+fZlVMd6B4OdMHrVBUia6OnpV2QED+bWqen36TemOtpqVp5fF0jTCjLYHyaCuBkYMdY6MkJIP6Zvwtq14fckYbFkg9tA6M1T+e8tlPyoeoR3GUVMBT/U2FEklpTr12GbdCLx63WWHnlCnENNh8n2fAQVL7GEsgHMujk8JUZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 29 Jan 2025 16:55:22 +0900
-Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id A32732019755;
-	Wed, 29 Jan 2025 16:55:22 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Wed, 29 Jan 2025 16:55:22 +0900
-Received: from [10.212.246.222] (unknown [10.212.246.222])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id E6BA6AB186;
-	Wed, 29 Jan 2025 16:55:21 +0900 (JST)
-Message-ID: <710d45e2-c20d-4844-9352-94812b5c6ca2@socionext.com>
-Date: Wed, 29 Jan 2025 16:55:21 +0900
+	s=arc-20240116; t=1738139493; c=relaxed/simple;
+	bh=1i9xeWHCdj2kFFNXh4FS09VY47+eopjPE5WbdC/+VuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CEchgdy9hQ8qjXBWcCYjjtE8dqG5wtdlLLrRLYIhXzTedBTMEBIuV0aXcDbMZtj56s1gTR8HSVD7Xm8JifMpirqOk/+Z47IOr6zFu1l76SdS2ASdmuTPHvL990JilYAxFjMRZBmpKgHb/EWu8f3SglZjE2JjSvM6grIOqhhsc+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbeITJ5A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117EEC4CED3;
+	Wed, 29 Jan 2025 08:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738139493;
+	bh=1i9xeWHCdj2kFFNXh4FS09VY47+eopjPE5WbdC/+VuA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UbeITJ5A3aFsCDiJ0YtA+smR7T8RShy499XoMdRrgT7eC9F6bytcoa5S6jRtw1Yh3
+	 IKD3nnm2LY4CWJiQCJaxnbZ5pgyWesIyiFJZsPxyRH0PBIu7HUn6yWrDkPSGd/3pqs
+	 2mNE9dfZrmtS/n1y+HxUP6jF0sTOSGXtT9DfBtoAVCsQxhFBsJoOG7q1uoCg5TfCK8
+	 T/aHULTB9UJXQ0fo4mLsoi5nJUV3bP9l9TZSDeQQ4x75EIKdyKwcuCU+wO1ev2dDwk
+	 XWWQXz+oVCwsndzleIktZKAqfS+jGi5nmFjcMFBOGU9kZ3ZHarTTl5NuHrxlj4Ucqk
+	 L7lZKlMC2Df3Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1td3U1-000000004nP-0heR;
+	Wed, 29 Jan 2025 09:31:37 +0100
+Date: Wed, 29 Jan 2025 09:31:37 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+Message-ID: <Z5nnaU5VnDK9yNTW@hovoldconsulting.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
- <20250128143231.ondpjpugft37qwo5@thinkpad>
-Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <20250128143231.ondpjpugft37qwo5@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12619233.O9o76ZdvQC@rjwysocki.net>
 
-Hi Manivannan,
-
-On 2025/01/28 23:32, Manivannan Sadhasivam wrote:
-> On Wed, Jan 22, 2025 at 11:24:46AM +0900, Kunihiko Hayashi wrote:
->> There are two variables that indicate the interrupt type to be used
->> in the next test execution, "irq_type" as global and test->irq_type.
->>
->> The global is referenced from pci_endpoint_test_get_irq() to preserve
->> the current type for ioctl(PCITEST_GET_IRQTYPE).
->>
->> The type set in this function isn't reflected in the global "irq_type",
->> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
->> As a result, the wrong type will be displayed in "pcitest" as follows:
->>
->>      # pcitest -i 0
->>      SET IRQ TYPE TO LEGACY:         OKAY
->>      # pcitest -I
->>      GET IRQ TYPE:           MSI
->>
->> Fix this issue by propagating the current type to the global "irq_type".
->>
+On Tue, Jan 28, 2025 at 08:24:41PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> This is becoming a nuisance. I think we should get rid of the global 'irq_type'
-> and just stick to the one that is configurable using IOCTL command. Even if the
-> user has configured the global 'irq_type' it is bound to change with IOCTL
-> command.
+> Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the
+> resume phase") overlooked the case in which the parent of a device with
+> DPM_FLAG_SMART_SUSPEND set did not use that flag and could be runtime-
+> suspended before a transition into a system-wide sleep state.  In that
+> case, if the child is resumed during the subsequent transition from
+> that state into the working state, its runtime PM status will be set to
+> RPM_ACTIVE, but the runtime PM status of the parent will not be updated
+> accordingly, even though the parent will be resumed too, because of the
+> dev_pm_skip_suspend() check in device_resume_noirq().
+> 
+> Address this problem by tracking the need to set the runtime PM status
+> to RPM_ACTIVE during system-wide resume transitions for devices with
+> DPM_FLAG_SMART_SUSPEND set and all of the devices depended on by them.
+> 
+> Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the resume phase")
+> Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovoldconsulting.com/
+> Reported-by: Johan Hovold <johan@kernel.org>
+> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-We can add a new member of 'struct pci_endpoint_test' instead of the global
-'irq_type'.
+Thanks for tracking this down Mani, and thanks Rafael for the quick fix.
 
-If I remove the global 'irq_type', the following module parameter description
-will also be removed.
+As expected this makes the warning go away also in my setup, and the
+patch itself looks correct to me:
 
->> module_param(irq_type, int, 0444);
->> MODULE_PARM_DESC(irq_type, "IRQ mode selection in pci_endpoint_test (0 - Legacy, 1 - MSI, 2 - MSI-X)");
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
 
-I'm concerned about compatibility. Is there any problem with removing this?
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+Johan
 
