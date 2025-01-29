@@ -1,253 +1,222 @@
-Return-Path: <linux-pci+bounces-20550-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20551-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7987A2226C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 17:59:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC89AA2227D
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 18:04:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBE8818891AF
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 16:58:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A19371887239
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 17:04:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55F8A1DF99B;
-	Wed, 29 Jan 2025 16:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9CF042A8B;
+	Wed, 29 Jan 2025 17:04:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipJROHSe"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Kjep2I9q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2061.outbound.protection.outlook.com [40.107.105.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FEC1AD403;
-	Wed, 29 Jan 2025 16:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738169921; cv=none; b=O581QSwXqBSowTvXoIrOferh1JrGophiI///rLkkdi/u38Wvu070iRAChGjoBNTXIMLsc47xKsn+a6Sk+iimKhZrvtChiAoKOm/53cKel5kTjqIo3gwhq27So7qaeC70vhch8aVtOY8ZO9weaurIZHGowKAPCmromIgdjRNvyfA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738169921; c=relaxed/simple;
-	bh=qaxUN+/Y/uwHhbiXfnVR6P6P/xRg6IOiDfx03zNeL/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=skMzazRdqkOghXGuTamAj4C7etaq+Dl4dLzK8DD6L08wvpw1FJYivD10VaNZ6O3U5ywWjbWjxZT+QruyZtPCv4XZ961364IZOqE3jCjVYQOkTFnBhkawMxqfvcZQ2w26kkMSMoUOoshI7Q/4WVefgn7GkhFiWcWQ3CFhRIDnPik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipJROHSe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDFEC4CED1;
-	Wed, 29 Jan 2025 16:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738169920;
-	bh=qaxUN+/Y/uwHhbiXfnVR6P6P/xRg6IOiDfx03zNeL/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ipJROHSeiFO7p/TzGg4QA8AaEuQG7ugmr6JD7iF5B6CLbXZOMWvD3rVd7UAjRbR1j
-	 ck8Bkq759HSsNviMzBA78URVQ9O+a9IQVuUkGeb1Kim1TP5EnH+CqZRh6UWrRf7NQ6
-	 U/S9Pq1oXE2Y/lDePRG/rHknOYIXCulk1lhF08CtX42gfcmAzWN42bpvukudONSocn
-	 7CnbcF/R216z1HAAJ2ccYXNCiW3kmZIdzIR8GHgUcjX263K9aopW7DNOnVGGKQ8sYM
-	 nzvdjUCXxMNtUyD3yCoTSCHSz1luhR8x41KynENfSQNRuxwmdFPoRIOHS/2WHzvs4U
-	 vw+rEZEsrFO+w==
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f1c94936c5so506836b6e.1;
-        Wed, 29 Jan 2025 08:58:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW8IZxHhYz87+sz2rf1Qa8OIyH7ee0P7gslA8JJw5J2sJhlvh5YTvnvNBpcfAcuEbgmqun/zKCxBsqAk94=@vger.kernel.org, AJvYcCWa8ckxnLa87iLWAJmX9Z1tu9ICKlCiy9HUIH4rH3cZo+6VlQdA1BIMBuAsZY/a8p7pmGpgnxmT6bE=@vger.kernel.org, AJvYcCXkrB+MWpJc3zNvIQIKPKXtfstR70tnOnKL6W0xYPCCGYis64wt2fq4qADtlTcs9wMajpG8jtt21XHD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2D4dboLf9qDSXq85JiRupd6F0siu2agA54hzmwdfPMHdtBWXT
-	65pigbWTxwlqpos/ZiYKGj2KqgvkEwMEEcaz/f5gNz3zeDi5DN3hPFycWItPNsSM0KvPu6prjvz
-	HMkzowJipCKobAFeQE7XKNBpq5Jk=
-X-Google-Smtp-Source: AGHT+IFvXrlhL1uR98OSW+elA8MvVsTtI0kiMCzp6MNetwKUR4K11du3MyoasJ0464MBpvkhZkWGnI1HQQJ0dIXz/lc=
-X-Received: by 2002:a05:6808:3990:b0:3eb:615a:eccf with SMTP id
- 5614622812f47-3f330e71152mr16188b6e.10.1738169919812; Wed, 29 Jan 2025
- 08:58:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4A41E0DE8;
+	Wed, 29 Jan 2025 17:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738170262; cv=fail; b=R8ysmzZ0/I9vszCtPAE/zIRKEk2qgrVhvLeHnFDimowjvibAxQIqS/PjzYaipJGh4wMUZQtLDXm8B4fus5tTgBtSkBDkPKcIRzyLYL+c6NxI/KCtD3t5ZPW9hORGiry/PFHMSZsrDRgxCgjv2VsOlY9mtIPIuecRvvfblwj1cRI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738170262; c=relaxed/simple;
+	bh=iKoZGELovdoL43edvJsI0gb5UadaoVNHmnSh3Y+eKT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jGHbmglerc8Bjr9szYIlZIHcZ0vGfMWWm51BN2hU4Y/TDvaTRIoIzR+lPYw7t39IvFxldGTaWlBt4P7Mv4he3VAN3I5jwvhWwJRGIIWqCJ41rOQdmIgHtkDU/Pr5wB1+uyjUihfb61XmeOFpKG0r8lPF9WlvgMp3B1qf8Ngiqck=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Kjep2I9q; arc=fail smtp.client-ip=40.107.105.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RwpFu5QeJlQMg2r5pkIRRag7lAu2A03LpLxMZ+HJHhN8Dl1PE6WIl5ZdNFHOu3iZKXwbq5txmuybZscFwsEWtuZWzHbNmoWl4PhrwxBrOCw8IO24DgbphTF311KmCQT6RlgVM2ZFGAlTbURnXtqEjQTb3RvYAMgrlOt7HjsR0kDXwbWqw5SkYm053NHGik/wS3tWF5O6QSXH6yhdHwGsr2vcAX7257mqEztXfSmhEXrwHximfjUlDdNRh6do9MfUwDlE396Z5e9DGLpXMfUFwH7PE/gYdEQmLfm9JimY4YUkHBSAEoRsHu3824aysJ6sI6/lEU/f0YLKHYZMS4ACpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZfbmqNBDqrWOukxWZuC7AHUAnY9glJGXGa6b6YiMHZU=;
+ b=n9b2qjWIm+RkdNsqQndPQcPk6oWi5IwNYWf0DO1gMQXfR08YMhDfkfA/wtw8UN1ntr/Gz180XDpNzwCK2J+D/ZrVUZ2WYrIHj+ICX4r9ccnwcxc9qFTrT3nJNphSlN9HM5z9C4esZ10Pf1ciAUgEeeYbUEyoEfYma3QJ574CfnnlkwOCG8sHVyJU9iAxqNNHwCB+mw6M08MOCRw1VivvLwlq3qDhMLpZ+hKvjGS8ZcuraOFWS1hHLG9ZIqC/kLysbGYgHe3DxKDYi1/AII7G7Myqjlv85tPOV5LD+/Nk00Fzkz0hWsClYCRgAD70DduSaRgunufnY6/KwVMzuM3+MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZfbmqNBDqrWOukxWZuC7AHUAnY9glJGXGa6b6YiMHZU=;
+ b=Kjep2I9qjXVyC9eshQ+zd6fR8RGVnVLIjwXCARJimYT1gxJ6Zd023dqQgA2TWyy0VZ5puW/qd3BQoCr8Y1MyCtJnU/cizU/KDBN7/2p4tKDV8l2knPjSYYEP8y9KRiLwmFge0Jag7afm0dOIpTFuUovBf1HkeBFTFruukhKHbraH29qiQZLxv32ItCZvqzmXBexd68EHzHL18B+1qgos49+sbyZASC0eVEFb3qodaQzBwWGpIX5lOaQmND1paWx/94Z5oJDlPIyrNxpdYojO+vP5hOdOgw3jc8Qbc1lxlTmEOmev1vDca8a8p2g2oqvG/mcQGIkFXa9QlC+bIuJ1cQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB8371.eurprd04.prod.outlook.com (2603:10a6:20b:3b2::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Wed, 29 Jan
+ 2025 17:04:18 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
+ 17:04:18 +0000
+Date: Wed, 29 Jan 2025 12:04:08 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v9 0/7] PCI: dwc: opitimaze RC Host/EP pci_fixup_addr()
+Message-ID: <Z5pfiJyXB3NtGSfe@lizhi-Precision-Tower-5810>
+References: <20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com>
+ <Z5n_VrN8HUmdVPUq@ryzen>
+ <Z5pJF9MGENNDqq/O@lizhi-Precision-Tower-5810>
+ <Z5pZtsa4FFKq0AZD@ryzen>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5pZtsa4FFKq0AZD@ryzen>
+X-ClientProxiedBy: SJ0PR03CA0286.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
- <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com> <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
-In-Reply-To: <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 29 Jan 2025 17:58:27 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
-X-Gm-Features: AWEUYZkr-iKmQH46s-jjftIBAu31tZZjQuFbYM8a4rTD-Sjtk9eLSYyF8yZEFmw
-Message-ID: <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8371:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56210716-a4ad-4ad7-fc1c-08dd4086f75d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wu4n626ckwyl5lEoq5cizLh8sj8xNt8PRlTvRIgvPtSylBPZQ1PJwJZYt7sw?=
+ =?us-ascii?Q?v4zX5GAmQihQ4o97OGTn1yKJc6Rw1V2dZw4ti+YyVo4eIzxVBK7JthWPA+iy?=
+ =?us-ascii?Q?IzUlDa7/nVy3MXUB2IQ1qLguJM2JxxYJKyFHISCN05UMbpVoQCCFsQGCayOU?=
+ =?us-ascii?Q?HH3xBRqXC8fVr/PJvs4onHokgrNAQEkXfssA513P9sicVCM8ZXxHQ0cCNiYI?=
+ =?us-ascii?Q?8mRoCKppieHkd7aqEg5yyh6QMl+KZwhcz/bYFCTB/hrFqOvFsLOV4YjwvTvq?=
+ =?us-ascii?Q?l8YcCv2APQFNT9AZ6xDfI3GhU4SOvjbgJFa6dNtqcHTAySl/azovE8hRq/ru?=
+ =?us-ascii?Q?PAucTgGnL/97OP5wiqDmeidDghG5Sl9lvNJaBAhQJ15IeVX2WYcVmLZ7O088?=
+ =?us-ascii?Q?gIvrZ//3y7AwgmrtSTo+JeAuCoPxh6vVQGaUITI8bUl2FieEqJ6KBVLGvMyd?=
+ =?us-ascii?Q?KB12J+/yiL1DTqpviQbe2qIm5XXRgxVs+/Qq2K8tkZqs8PF45aOKf7QlzOjn?=
+ =?us-ascii?Q?y07i8oaRZAr+huACj8xGhjKpVoh6kcQr6zKbnTXxNM0greHvPxkmkRlNlv49?=
+ =?us-ascii?Q?Jz88Ck5axy61jrNYOKy+4Ldx9/tbROBi/CHx7l7Fokeda4QuccP56D7D8tzR?=
+ =?us-ascii?Q?XOzNOL8QcUHzsg2WoRcC8O64r/6k8jPuhBI+3VtuJ2eUW8tpHDtDFe0gnsL9?=
+ =?us-ascii?Q?cAe/UUy/XWnPcDoKgfQR39pAltZTynOd1USRSB1WnbXXuofQj7XwSI+O/1Bi?=
+ =?us-ascii?Q?EQ+hCTisyla7XbNXt1S4320bfRVv3FJUnQrJp5dycOda7e9DmkiqnV42JU/c?=
+ =?us-ascii?Q?35IV60gtC8MFaGJsdhLYcjWyebupdvg2iqilkzrk+BkFsPBmD24bGO9ovQiU?=
+ =?us-ascii?Q?j4tRqT7PZ32FRBNT+wNo6OjX52n3t5St99Gf2NX4xs81c+p6fCpPe1rDCpW6?=
+ =?us-ascii?Q?FRhg1r0YbG/R08djG/sJQgsR+onI2o114ffF9nhGxflTQCpxj6Zp3o423tCU?=
+ =?us-ascii?Q?4dcV0XqP0DgbayghBnzeGe1ZOO1ez4g+q6RFSfCA4s/rH6yiUyoIOdy9miz4?=
+ =?us-ascii?Q?5X3fLGPtvpsbxw4REVB7YxXQ6fi8Z1K1gLtstlg7yobYkiAITbqPl5SV/rKG?=
+ =?us-ascii?Q?quZS4YkeVRdNeTa39zXAbnaN2Im4r9Ud+Q0K0HrrjlVG7yHjjvJ9M9TnIUmQ?=
+ =?us-ascii?Q?7UHQ5NZiRNq/xJrOeOCXsTLeIF3MWK4TO85vvoQ/YCdqkXZowyY2s5UEFX4Z?=
+ =?us-ascii?Q?zkZy4D2L19H5+0gKvgG7SuOw1UAGZJTWbOIyJK+RN60sFJYSymBtAKF8ajAY?=
+ =?us-ascii?Q?n2yhFtH1jKvU1lG2B4FUvPhnpWW0aX5XVt8E4PgUzsexYRCgRC6JLEo+7yXx?=
+ =?us-ascii?Q?2Z8GWb8pSc9u5IHq9WXjpHzvofx8?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FTlrC4KHyKe1ppSdKp3kmwptVHPItySeVYhzy8R1ADN6NSI9RsGy08+9Wlnz?=
+ =?us-ascii?Q?gqcyHRcRUsnJckt8SQgDvks3SWgfikJtCINhuGgOjLhtYyG/SU80xgwpEohQ?=
+ =?us-ascii?Q?bmmHBvP8+CHj/Od9rFBYd6OZ3tue3M4+jy8XL4RtYukbjWhYDbE9czGZiDxP?=
+ =?us-ascii?Q?RJdAkHezD32YlXUehmFE8PibSWb01BUNNYhn2UYVRF4K2YMzmzyZKX483qKe?=
+ =?us-ascii?Q?G9m5LTeECuIGLRRm04X48xQqyOLpnSIk8mfDbT/v5ggXvXZ2es2rXPom894h?=
+ =?us-ascii?Q?IMnb5egyMQJdzNSkOB6iAoJZem8aHwAE+Z/v/rtaP3DC93C0G+cfE6mPjSlM?=
+ =?us-ascii?Q?F4vJqsStIlBBF+I1o/CzuArm2XFp03eSjisMqIsq1KOgVWY2AxvnKmCxnitp?=
+ =?us-ascii?Q?1ecFWJlvFFkDvaNn5ZF3kD3FzAXcA6ahj0F4h0NtzcMeFb/sLBEzY1ZoXjEZ?=
+ =?us-ascii?Q?jOHZ4DR78dQ/ylH0SWAXdMfd55wEEXruTDjQcZjFH4Jxf41DkazuMqItmBKk?=
+ =?us-ascii?Q?nsHWQlV3KBeDaK8vOY2yF1+iXyw5AwDvVtjd56LB64j54dlEivA9rFBuw3ES?=
+ =?us-ascii?Q?hpzk9O9ERKV/xpnx5LvR+YTAQ3z/PBh2sLQZ8x4yDOKdCqpXm3soZSi9t7Ml?=
+ =?us-ascii?Q?2Jcu3STCz39gs3iRmjgg9sey4EcyKQ7uTpSATOkL171Vemtaoj9/9lFUKNK/?=
+ =?us-ascii?Q?CrkyYiR/rB2U8MP3v6E2MA7lwWC+7Z+nDcBE+6IBdJsbNIjYc08j+TzTlp+a?=
+ =?us-ascii?Q?8/KXk0HF/GO0d7dZwwxAaZQDxW/N/6Ww5Lj36AOngkMVFuOF6NHAx42qoMO2?=
+ =?us-ascii?Q?chuC5L4usRKta3Bk6mchuCumWlsg4+0l+kn480hFmCHdYrMDXppSFL/fMY1E?=
+ =?us-ascii?Q?Sfclole0gEy82wxEljXrsIr25Edx4RjlExznBP7wO7YVP0irsEgv8vNUNY29?=
+ =?us-ascii?Q?npWV9AFtU1De0d5uXQBRCNID8IvW95Fkigk8Cu9z8MHGVSmW3ZO8kB37J+22?=
+ =?us-ascii?Q?Zf8+ySqnOv/gZgTVuNRjohc1SjhmHlbUVZOH3KX6zovXAypOuD8CHaNNCzXd?=
+ =?us-ascii?Q?jUQfMvxCOGoM0fcyQO9wsKMBuM2tLaXMu5/TWFcQVeXjVzWHLJeUd+83jOrO?=
+ =?us-ascii?Q?EuVme0JeqghWeqewffDm9kFhr+qMwKU78vqhg7Nqcp6CJ14U+F5vWOzN9Yf7?=
+ =?us-ascii?Q?hrr5P01injxNo/df5iIgfY7Vr10ajwTB8KjknEWv349ZK+CmD2TDrxnbrCq+?=
+ =?us-ascii?Q?70SDFrvghD+/2rLNLwrDiq/RJaj9Cr5z6u0Jlk1A8lDnjPJKzQvCxRt8q1Al?=
+ =?us-ascii?Q?NAXK6tUS5E1y4wbu0MSm5vR1B33/8WpJPcFausgco8eTYsU9PZ4YLWZQApUY?=
+ =?us-ascii?Q?jhR8NhltraJG4IRqXLwvWSRL/bhzBBWbkFD13P/lzPb9Rx6srbSH5+rqiMZF?=
+ =?us-ascii?Q?lpR5726q1wlqmgpkP9wl1AzOe5KcAfPuYBMsg9vj3IaoGPI47lhNYfyjuAl6?=
+ =?us-ascii?Q?wokBI8HcB9vuUjoEailRDmMwQibUeFXn8Es29jRZxGHbjmelLycMeYZLNK+t?=
+ =?us-ascii?Q?r6C2vF0Tgwqd+jqU+q7JGmLWdZhXROCuTmaJTR91?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56210716-a4ad-4ad7-fc1c-08dd4086f75d
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 17:04:17.9463
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KtODRuoQtkViVPPqAbzA8JAMkzlZGn4zqyyPf0Gli9QkhvTpO64x1ZzZMZj2ONSUdpNn4j0bKJlBGBurVtVYJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8371
 
-On Wed, Jan 29, 2025 at 5:42=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
+On Wed, Jan 29, 2025 at 05:39:18PM +0100, Niklas Cassel wrote:
+> Hello Frank,
 >
-> On Wed, 29 Jan 2025 at 16:55, Rafael J. Wysocki <rafael@kernel.org> wrote=
-:
-> >
-> > On Wed, Jan 29, 2025 at 12:53=E2=80=AFPM Ulf Hansson <ulf.hansson@linar=
-o.org> wrote:
+> On Wed, Jan 29, 2025 at 10:28:23AM -0500, Frank Li wrote:
+> > On Wed, Jan 29, 2025 at 11:13:42AM +0100, Niklas Cassel wrote:
 > > >
-> > > On Tue, 28 Jan 2025 at 20:24, Rafael J. Wysocki <rjw@rjwysocki.net> w=
-rote:
-> > > >
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the
-> > > > resume phase") overlooked the case in which the parent of a device =
-with
-> > > > DPM_FLAG_SMART_SUSPEND set did not use that flag and could be runti=
-me-
-> > > > suspended before a transition into a system-wide sleep state.  In t=
-hat
-> > > > case, if the child is resumed during the subsequent transition from
-> > > > that state into the working state, its runtime PM status will be se=
-t to
-> > > > RPM_ACTIVE, but the runtime PM status of the parent will not be upd=
-ated
-> > > > accordingly, even though the parent will be resumed too, because of=
- the
-> > > > dev_pm_skip_suspend() check in device_resume_noirq().
-> > > >
-> > > > Address this problem by tracking the need to set the runtime PM sta=
-tus
-> > > > to RPM_ACTIVE during system-wide resume transitions for devices wit=
-h
-> > > > DPM_FLAG_SMART_SUSPEND set and all of the devices depended on by th=
-em.
-> > > >
-> > > > Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the=
- resume phase")
-> > > > Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovoldcon=
-sulting.com/
-> > > > Reported-by: Johan Hovold <johan@kernel.org>
-> > > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >  drivers/base/power/main.c |   29 ++++++++++++++++++++---------
-> > > >  include/linux/pm.h        |    1 +
-> > > >  2 files changed, 21 insertions(+), 9 deletions(-)
-> > > >
-> > > > --- a/drivers/base/power/main.c
-> > > > +++ b/drivers/base/power/main.c
-> > > > @@ -656,13 +656,15 @@
-> > > >          * so change its status accordingly.
-> > > >          *
-> > > >          * Otherwise, the device is going to be resumed, so set its=
- PM-runtime
-> > > > -        * status to "active", but do that only if DPM_FLAG_SMART_S=
-USPEND is set
-> > > > -        * to avoid confusing drivers that don't use it.
-> > > > +        * status to "active" unless its power.set_active flag is c=
-lear, in
-> > > > +        * which case it is not necessary to update its PM-runtime =
-status.
-> > > >          */
-> > > > -       if (skip_resume)
-> > > > +       if (skip_resume) {
-> > > >                 pm_runtime_set_suspended(dev);
-> > > > -       else if (dev_pm_skip_suspend(dev))
-> > > > +       } else if (dev->power.set_active) {
-> > > >                 pm_runtime_set_active(dev);
-> > > > +               dev->power.set_active =3D false;
-> > > > +       }
-> > > >
-> > > >         if (dev->pm_domain) {
-> > > >                 info =3D "noirq power domain ";
-> > > > @@ -1189,18 +1191,24 @@
-> > > >         return PMSG_ON;
-> > > >  }
-> > > >
-> > > > -static void dpm_superior_set_must_resume(struct device *dev)
-> > > > +static void dpm_superior_set_must_resume(struct device *dev, bool =
-set_active)
-> > > >  {
-> > > >         struct device_link *link;
-> > > >         int idx;
-> > > >
-> > > > -       if (dev->parent)
-> > > > +       if (dev->parent) {
-> > > >                 dev->parent->power.must_resume =3D true;
-> > > > +               if (set_active)
-> > > > +                       dev->parent->power.set_active =3D true;
-> > > > +       }
-> > > >
-> > > >         idx =3D device_links_read_lock();
-> > > >
-> > > > -       list_for_each_entry_rcu_locked(link, &dev->links.suppliers,=
- c_node)
-> > > > +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers,=
- c_node) {
-> > > >                 link->supplier->power.must_resume =3D true;
-> > > > +               if (set_active)
-> > > > +                       link->supplier->power.set_active =3D true;
+> > > Please don't shoot the messenger, but I don't see any reply to (what I
+> > > assume is the biggest reason why Bjorn did not merge this series):
 > > >
-> > > If I understand correctly, the suppliers are already handled when the
-> > > pm_runtime_set_active() is called for consumers, so the above should
-> > > not be needed.
+> > > ""
+> > > .cpu_addr_fixup() is a generic problem that affects dwc (dra7xx, imx6,
+> > > artpec6, intel-gw, visconti), cadence (cadence-plat), and now
+> > > apparently microchip.
+> > >
+> > > I deferred these because I'm hoping we can come up with a more generic
+> > > solution that's easier to apply across all these cases.  I don't
+> > > really want to merge something that immediately needs to be reworked
+> > > for other drivers.
+> > > ""
+> > >
+> > > It should probably state in the cover letter how v9 addresses Bjorn's
+> > > concern when it comes to other PCI controller drivers, especially those
+> > > that are not DWC based.
 > >
-> > It is needed because pm_runtime_set_active() doesn't cause the setting
-> > to propagate to the parent's/suppliers of the suppliers AFAICS.
->
-> Hmm, even if that sounds reasonable, I don't think it's a good idea as
-> it may introduce interesting propagation problems between drivers.
->
-> For example, consider that Saravana is trying to enable runtime PM for
-> fw_devlinks. It would mean synchronization issues for the runtime PM
-> status, all over the place.
-
-What synchronization issues?
-
-> That said, is even consumer/suppliers part of the problem we are
-> trying to solve?
-
-They are in general.
-
-It's just that stuff that was runtime-suspended prior to a system-wide
-suspend may need to be resumed and marked as RPM_ACTIVE during
-system-wide resume because one of the devices wants/needs to be
-resumed then.
-
-If this turns out to be problematic, the problem will need to be
-addressed, but for now I'm not seeing why there would be a problem.
-
+> > Thank you for your reminder, I forget mentions this in cover letter. I
+> > create new patch to figure out this Bjorn's problem.
 > >
-> > > That said, maybe we instead allow parent/child to work in the similar
-> > > way as for consumer/suppliers, when pm_runtime_set_active() is called
-> > > for the child. In other words, when pm_runtime_set_active() is called
-> > > for a child and the parent is runtime PM enabled, let's runtime resum=
-e
-> > > it too, as we do for suppliers. Would that work, you think?
-> >
-> > The parent is not runtime-PM enabled when this happens.
+> > PCI: Add parent_bus_offset to resource_entry
 >
-> That sounds really weird to me.
+> I see.
 >
-> Does that mean that the parent has not been system resumed either?
+> If you are solving this problem in a generic way, then it would make sense
+> if the generic patch comes first in the series, and then the driver (DWC)
+> specific patches come after that.
+>
+> Your cover letter, including the subject is also written in a DWC specific
+> manner.
+>
+> If you are solving a generic problem, then describe first how you solve
+> the generic problem, followed by DWC specific details.
+>
+> See e.g. my cover letter here:
+> https://lore.kernel.org/linux-pci/20250119050850.2kogtpl5hatpp2tv@thinkpad/T/#t
 
-Yes.
+Thanks, let's wait for Bjorn's comments about new method. I will do that
+next time if need respin.
 
-It hasn't been resumed yet, but it is known that it will be resumed.
+Frank
 
-> If so, isn't that really the root cause for this problem,
-
-No, it is not.
-
-> or what am I missing?
-
-Essentially, what I said above.
-
-If a device that was suspended prior to a system-wide suspend
-wants/needs to be resumed during the subsequent system-wide resume,
-and it was runtime-PM-enabled before the suspend transition, it needs
-to (a) be runtime-PM-enabled during the subsequent system-wide resume
-transition and (b) it also needs to be marked as RPM_ACTIVE because in
-fact it is not suspended any more.  The existing code before the patch
-takes care of this for the device itself, but not for the devices it
-depends on which also need to be resumed (which happens) and marked as
-RPM_ACTIVE (which doesn't happen) and the patch just makes sure that
-the latter will happen.
-
-Actually, what happens now is that the actual state of the parent
-during the system-wide resume, right before re-enabling runtime PM for
-it, does not match its runtime PM status which is still RPM_SUSPENDED.
-That's what is fixed here and it applies to the parent as well as to
-all of the other devices depended on by the child and the parent.
+>
+>
+> Kind regards,
+> Niklas
 
