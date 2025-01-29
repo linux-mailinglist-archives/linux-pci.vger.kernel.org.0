@@ -1,829 +1,195 @@
-Return-Path: <linux-pci+bounces-20558-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20559-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88F7BA22671
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 23:52:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2C0DA2267B
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 23:54:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A28C41885463
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 22:53:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C81B161BD3
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2025 22:54:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC83D1B21BA;
-	Wed, 29 Jan 2025 22:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D736C1AF0BF;
+	Wed, 29 Jan 2025 22:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jf4XF8VZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GqUmt5a1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2053.outbound.protection.outlook.com [40.107.22.53])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF8519F116;
-	Wed, 29 Jan 2025 22:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738191170; cv=fail; b=u5ZGMi4gW9RWvgUvsPO487ThGbMFVtdnF3xYVV7fGq42E5YVIaiIBfh8a7ukq4tuayu/f78pPzl/ePs2WShAyEqLC4jpg/mcwHSgQ/TAfSgty2d7eyTMc3wbpzUwdI3aZs4gIUR8J157TF6PljoNEHY+ZdWy8z8mI/mqyBBpJts=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738191170; c=relaxed/simple;
-	bh=YwCZ+LFHZwV/Ytn6D7bZLaoNwAo1WnIWbxdh328qGbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=V9aCl+eaFbhuL23Vgifr6Ywe8MgKOKI7G6FacNsJwmPsjAagUIlkEbIrYT63NFtzfwRDyzpkij9oYzMAEraMT6Quu/d+zGRku7joOtKgeL7EOWeBXLBJF3SkeIq4M3O4IgW7R+GPNxE98LvAABkUK5JwgLO6bLfJtnZa+YPRkno=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Jf4XF8VZ reason="signature verification failed"; arc=fail smtp.client-ip=40.107.22.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HbxQgZhxI1d4WPHmJz1+QYn89OfhllpL9eBiEBLFqTaLkUupfDSLTzDOSLpZYficJCP1qSs0J3yhXwCha9B1cVmkz5lThWNwO1YOmHH3C/PTxKIYTgsKzynPU2RT3z3DrcEQZszIRt1JuCqSTyERMml3t47rPPpJdFer4LuIiBnI3UxR6dE+zKxi6fErY5baGH2Ddqo6H9ahGTCUCGOH+u4gqkjsoj7UxPOF3owOPWGkUxVaqAGBjXJqF98SwEz+MGSModSuaZ1tyo5VEouqDabiv1jNnl964u3ZQhNwsRf5awj+/AzrUr7SxaBpa60OGgME+i1jYssh2R6JsYvdKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TDrtkvHypkByOE371wT8Cyn/RWGp/oe5mZ0SFjdAZhY=;
- b=ZPAJ0lkkPIsvYaeb71iMmyYOG0Nb/LMpyjXedf19myfvcu6vsDNMlPAeCPem4DvdP+H/f0P+d+z3RU5E8PwQS/REehtwSZuy0Laf48pYfLIarx8oWtEjvy0r0t0g149s1wm/qpC41uwHnc5vGw6R4QFrdTZfWfnV3nHbM2Q1DRMVEaT+aL0Oa5fLIx8KhAZjV80P6bCRPO2M6O0euHxV1BHqk/l3+z9cYe4tGI652/7X+L7yHGcBqU2SZTsZw0wejJbJKUonSB8vrnWmjO9wvKaqa0uGi/66emw4nE/txiUs7djoj2Zw/hhvPmcSCq82zMBKC/GuaEFlH1P9EfxVcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TDrtkvHypkByOE371wT8Cyn/RWGp/oe5mZ0SFjdAZhY=;
- b=Jf4XF8VZDUqbuy6na9Zwl95DJtqwhdnuksakBJdwBDxTK/gRRFxQVWdglCK5uYMCkx/m2C+yvHKFfvfW25w2s+LWUcLP1zAIDUz2YlrciuBgUltwL/tnmlOSlDE8itA6f7n9sD/7GXAWHTUFHJTRgoXqYKzY2mhF5WnqstrRda/VA6liHgwQLxuCe+mAGjDUXQRHREZo2sYEuHEAlY4vJfvOqg1MlD2GaRvl5lbSbm32F5YdM7ehdP65LEJLtdYE65mJ4z5vt10kxC1WNaAd9gZFQoUiQtd7e5jytbjwpobSIE7L3Cw0TjVIbBt09PrrKVQyKY+8mHzDW7bsBOt2Sw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU6PR04MB11207.eurprd04.prod.outlook.com (2603:10a6:10:5c2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Wed, 29 Jan
- 2025 22:52:44 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
- 22:52:44 +0000
-Date: Wed, 29 Jan 2025 17:52:31 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
- YAML
-Message-ID: <Z5qxLxa7z22Fk+Dv@lizhi-Precision-Tower-5810>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
-X-ClientProxiedBy: BYAPR07CA0104.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::45) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221B199EBB;
+	Wed, 29 Jan 2025 22:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738191262; cv=none; b=Hp/seXTI0CdEauFSRpInvL56CjLsYAypn29yM+MovmErdoCMbE5KlqSuR/sQmAIdniwDK91KgJngM4fYOnIB50rq0uTo9MpvngW9EnwfDGwrellzDN2RSoRFnxQQfZ1sg1ya0cYbBkFuRNtnEDXsuXo9DoZqHRDsMrc+7UZWPlA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738191262; c=relaxed/simple;
+	bh=0GiNQekHdUNA2y6dcTt32YRSoavfN1TedMBkibNu9/o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iEFncvIDY7gyO9jJEGM8PZxMi1pkXVNcubDplCZlDaNePKN9kKA2qQQsrdEXZEjszqsi9Nx4wkNW/nZUFJDbNBba5bT6wCbo1VznmE5rSWYGymowmlOPJOiOT/vhZvQJYJQM4RfdnF+wTIsLKIn3t0bP2tRKNIyIw+fV4qBcDVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GqUmt5a1; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738191261; x=1769727261;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0GiNQekHdUNA2y6dcTt32YRSoavfN1TedMBkibNu9/o=;
+  b=GqUmt5a1d6BC0Xr71eSwgn8zjr6GPlz3lXIFiU9Z5M/VPWEuSTyZWsPn
+   E3Rhksx1ZBh8KDnGYQxBj5V+nA1eRroPWZBL3kZ1QxAmnHufDvjw9ut7L
+   vRbVBJ7vGtRidxL7QoVZME+NjHLlqYV/mTmmyQHhQ0XjaTaxSTwTPZUdc
+   NB5EqsIDs+vTAY857K6MknzVuJtHCBeFi7Qw8PhTpB6x0B/T7rYmSUlhE
+   TewSCcszdDR+o8UtD1hmfZFNNf0vslBQKRpFaDwmc9HgOuiXCTztq/LC9
+   3YRZqAQj5uZCDZJZx5RSuOZjtGZBH3jjAknjdxJS+bQAO9MkY57ERfkax
+   Q==;
+X-CSE-ConnectionGUID: +WgODY/JR36K44HS7mrX7A==
+X-CSE-MsgGUID: R2nbCBnLTnunkICznQE48g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="38866491"
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="38866491"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 14:54:21 -0800
+X-CSE-ConnectionGUID: T/I/jvI3QZSoMZBs0HqnOw==
+X-CSE-MsgGUID: /kwW0rF3RyCon6JaIzFPhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
+   d="scan'208";a="108969351"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 14:54:20 -0800
+Date: Wed, 29 Jan 2025 14:54:19 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v5 4/5] arm64: dts: agilex: add dts enabling PCIe Root
+ Port
+In-Reply-To: <58f7925c-dbed-4a5e-8e7d-095bef197931@kernel.org>
+Message-ID: <319e9f53-6910-a144-8752-4bcc47b7cba@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-5-matthew.gerlach@linux.intel.com> <58f7925c-dbed-4a5e-8e7d-095bef197931@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU6PR04MB11207:EE_
-X-MS-Office365-Filtering-Correlation-Id: c69ffaee-cc9b-40a6-cc88-08dd40b7a4b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|7416014|13003099007|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?8p6kwKhMLhSDFHVWkRcSTV2x1/Xx8MLGUveeU0X6AVYT1bZyFW1B5yApwj?=
- =?iso-8859-1?Q?koZQQoGK+VnskoBTEJ2XJ4lKiTRu8O1Tk1XoHSllWd9MTGUKv4+yQA/ZQh?=
- =?iso-8859-1?Q?cLWqKq/9iBB0foRCVisDK8ekN8DvfzbXIAx3YDKQ5Qo9GU9ZHW3gMIwKJV?=
- =?iso-8859-1?Q?p4TlWhrgReQpPXfPGBLL1YJa2YK5KXQqsyks3ZDYCpcH/U3ybOaJyH8jz0?=
- =?iso-8859-1?Q?2q/1tVgo9Ckkt8IsPN/9jWQc53stEiw4RQuTa4yAPHjk93WaJ9VvdhbcM5?=
- =?iso-8859-1?Q?PDootBZN30W8zzp3ZgfeZ5QZyWKMvptyiFy3KUdqlXnM7lQC2PnL0aTN8i?=
- =?iso-8859-1?Q?5FbTjeNtk2hrMbgYeTN0y0ZZFEJ+92ZS37yoxiD0ixXp3mEhwpDeeFFm/m?=
- =?iso-8859-1?Q?pq3MqIRzx7e6NJ7SLWGm217DsMwLHpXf4guWZH0KvAk4NE3qpHT4/E/ZrP?=
- =?iso-8859-1?Q?DLDfaqO5tKrYhUYaEwJYM3PIEw1yIy2PSIdpnVNcXwvV4+W9b1W8JAh9SA?=
- =?iso-8859-1?Q?No9LhKuJd07ZO9lPHfHfXZKbz0uewokGoCx2MTfsfFdwzF4728sSMLIRq3?=
- =?iso-8859-1?Q?9kpsGXobAg4+dHsLcjVwRP1kDWp8ZcnjrnS0ogpJDmRdkBWQlaGwCHp/MN?=
- =?iso-8859-1?Q?e+wLrGrlSoXickknmTx3ViF1befoce18gUj4CZznOX8zjeiy4YT203hmhE?=
- =?iso-8859-1?Q?ORQwsuZT+J3UF3RLMYAYMh5YPg6B/au6uLbR6PVJKZw0KWyUHnqW6fzKz7?=
- =?iso-8859-1?Q?7puHedg5GGkQV6/l9/L1bEQNK+3Xa6Xfqw8hU9uZWpwcATayj2hV0LTt41?=
- =?iso-8859-1?Q?p4ytCtR1/1Lbxb+KMeodWNLTyZ9s5B+nDIfCvwqY6IGpmnytKXKcYRiTqk?=
- =?iso-8859-1?Q?Cn5C1QhITeZ55qPNEnpvEWrAW/1NqeexLLNKSPLXQAb6RmWp183NOAHpXq?=
- =?iso-8859-1?Q?pNZ39Wpf2raxQ4BvkX7TRHV0vl/kwhtjrAcFHiIYToIq16vVbzSovnsICp?=
- =?iso-8859-1?Q?tSj91Bc/PXhwVXviEhAQwVJBcpqZ1fuLKDMABJPiFp4qPf/INus0o7s9qM?=
- =?iso-8859-1?Q?MaGMEXV/Ohz5rndUAgSjqMcnzQaJgsLx2etXn+03eMSyWeUqObf3cSENQd?=
- =?iso-8859-1?Q?ZVHEvwX5Aul/l8HHmMwYILTpObS8kfOaOquKc9Z+TMQcTmRtVNbo7CV4x8?=
- =?iso-8859-1?Q?c6+Rxu5WJqqx4aWWWpDT6wLvi9KLc8b/FD6N5G3Yopjln3fhWkXf6i64l8?=
- =?iso-8859-1?Q?p5vXbqQw3ZgoNVYcVFw8/IQsdHAqcEgpzZli49oFMRWIfLP3IgqHbfDLJ1?=
- =?iso-8859-1?Q?09zOH34EJZ46Rk+kFEkJSa9eUhvODnuHiuQDCKBKY2eMQcvPJEGCfmdf9l?=
- =?iso-8859-1?Q?qApn/U/02iO/sF+7U9p+7LvwpJUAmSKBBRuhEksu3JROWPCgicIThvdiDH?=
- =?iso-8859-1?Q?pJHW80mTGi9FfQA5?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(7416014)(13003099007)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?QzGQVj4zcXUOzghcIVHti/NXMOtdQJneCnpRWz21dJ+9XKVgZI8XUn+2oW?=
- =?iso-8859-1?Q?xVKuMJZqB5UGOfiTsDmx8Zbt3WRtKd//xYgtzwULcduJ5o/JTs/TH7kwE7?=
- =?iso-8859-1?Q?nwQN5FWghifjwXqAmmXFiZnWGhHJkbgXEtMGd19uFL2ke+cGwDb+21/hCY?=
- =?iso-8859-1?Q?ktcV9//uGSLzIp+DBhy7n40/LSnWm1+bUc71A+50ZZC0wpgycHYajKPgZq?=
- =?iso-8859-1?Q?roh1exsx3j8AjjA4SSykaOebODDhsu6DI59e+8VAe8RrjkoQv10ATxuxOL?=
- =?iso-8859-1?Q?WDEhgthhGN/RM2feqaPqDF+aD8gr7dk/xgjkAvWQwB+mRi991sWs1q9KMG?=
- =?iso-8859-1?Q?iE/53YExeMvCEv57awygBmnM1UlGAClzuLwRudCxrzwW9RrJ/iK1NXtbgK?=
- =?iso-8859-1?Q?ZNikjgarXaXDvVDjc5mNuFrnChBZSymboyushwwRiCl0bLzOLLNMD8aAAe?=
- =?iso-8859-1?Q?Juu6ImrIoxiJ2s667qUpDHUacHGE6FasZXGaQ9SO7M1ravhpoeBhrfzpf9?=
- =?iso-8859-1?Q?X5jW/cDknxboMYU+w8vMS8kmunjvjaOrcZbe4HRrU7+Cu5UJZxdvb4cXmH?=
- =?iso-8859-1?Q?hercJmMQMnt4sL2fLLy00oNZdfm6WIk4b4lrlYc/XdYzP3HsKJQOBUDkRK?=
- =?iso-8859-1?Q?kRkQ3IlMkHdgSj4vlDkD1RDbV6D4zhZs/lnBMy0rhlI4ClvQvoL84aZZTO?=
- =?iso-8859-1?Q?mJZnfbxUgfwsshgEb/taAVAQP3YjrQXULpsg4h02e7lbxTjL4SpUJaNc8b?=
- =?iso-8859-1?Q?lyQao8od8jf6sR/wHYxOTRVkZJ2cTorLqnSNAc2fxOtP6QKb+Is71y/pMZ?=
- =?iso-8859-1?Q?iM9h9k0IqbiaUpoTQw19PiCFe7Sq1Fw37XTcEzTOmkk1LuvarydD1POdlJ?=
- =?iso-8859-1?Q?VsrNA0rXdewadELDLz+qtgpsMz2IEYuTF6zabdTzfYMxmySn715jQCClQs?=
- =?iso-8859-1?Q?ChIFoecftbdnfQdsiz/ASTgU/o0oSV2BGXF4YaquSbN/Ql0zsvkZzE1aJF?=
- =?iso-8859-1?Q?lmxV1kSzjL/3VYUPXjJ8kRYicZJ3cvvtbFoIZ5foGe+UlSv7P78OLnHeUw?=
- =?iso-8859-1?Q?tK8Txv3iwdZehyXUoi8LeZFiNE+xgiy5F2kVk8C5HTC5FCkXtcceaQwYKo?=
- =?iso-8859-1?Q?pt/ae0fIFd/B/K9U2cq9jCq70EgMpzSks5h1mrfcrfCKbVf1NWNuzjjiPf?=
- =?iso-8859-1?Q?ZN/9kYoA2jhrQeVKPofzT8bMAxm/EN9mLRiaTRRol1CdW20XSr2aevxM6p?=
- =?iso-8859-1?Q?Dll2GMYOy7tqt5Yt3rhyEuzVhcISpTL+Kga7fw0hqyfI0oTiD+t/vIK0i0?=
- =?iso-8859-1?Q?rXuVLJDZNQzXLTO3fYJ99uDI/eYDugb5pnjF1ecVjyUea4H9CIQlTRb4KJ?=
- =?iso-8859-1?Q?B2EDgv+qLewDvEKkSSFXI6RUNz6MW6is6+PlPWGGd8FUifr07vmOgCufaO?=
- =?iso-8859-1?Q?ReCNQcEO7K0rkTj+MTyYf4OrC9YETBl28TJyL0nCjW13zmK3kJBhHrPkt7?=
- =?iso-8859-1?Q?nYmY+N5PT5/+bWbSOhwnG8Su3hTJ3BZ4ltTVgrUDyZUxb6IQiqc2X2n90E?=
- =?iso-8859-1?Q?+0tU+Oy9fiKGIZ2Z7k2Wt9A1qNUds8PCOOIzFItWni0tNdNhYB0N0HYLiR?=
- =?iso-8859-1?Q?zSLTMr9UhhotQrkGVa9rJA1eghEvT6+57p?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c69ffaee-cc9b-40a6-cc88-08dd40b7a4b7
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 22:52:44.5908
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d+Y1uCmVKQDuYw3PK36XRIs6OJVGFmUPpFAcwsdfFMlFutevaCG1hXR6b5mvCm0lg4+k3okZbCuRjGHFc6j81A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU6PR04MB11207
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
-> The devicetree bindings for Freescale DMA engines have so far existed as
-> a text file. This patch converts them to YAML, and specifies all the
-> compatible strings currently in use in arch/powerpc/boot/dts.
+
+
+On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
+
+> On 27/01/2025 18:35, Matthew Gerlach wrote:
+>> Add a device tree enabling PCIe Root Port support on
+>> an Agilex F-series Development Kit which has the
+>> P-tile variant PCIe IP.
 >
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
->  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
->  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
->  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
->  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
->  4 files changed, 354 insertions(+), 204 deletions(-)
+> Please wrap commit message according to Linux coding style / submission
+> process (neither too early nor over the limit):
+> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 >
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d1f4978a672c1217c322c27f243470b2de8c99d4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Elo DMA Controller
-> +
-> +maintainers:
-> +  - J. Neuschäfer <j.ne@posteo.net>
-> +
-> +description: |
+Thank you for the pointer. I will fix the commit message accordingly.
 
-needn't | here
-
-> +  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
-> +  series chips such as mpc8315, mpc8349, mpc8379 etc.
-> +
-> +  Note on DMA channel compatible properties: The compatible property must say
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
-
-There are not 'fsl,eloplus-dma-channel' under "^dma-channel@.*$". I suggest
-remove this because 'compatible': items already show such information.
-
-> +  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> +  DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any
-> +  DMA channel that should be used for another driver should not use
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
-> +  example, the compatible property should be "fsl,ssi-dma-channel".  See
-> +  ssi.txt for more information.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,mpc8313-dma
-> +          - fsl,mpc8315-dma
-> +          - fsl,mpc8323-dma
-> +          - fsl,mpc8347-dma
-> +          - fsl,mpc8349-dma
-> +          - fsl,mpc8360-dma
-> +          - fsl,mpc8377-dma
-> +          - fsl,mpc8378-dma
-> +          - fsl,mpc8379-dma
-> +      - const: fsl,elo-dma
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      DMA General Status Register, i.e. DGSR which contains status for
-> +      all the 4 DMA channels.
-> +
-> +  ranges: true
-> +
-> +  cell-index:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Controller index. 0 for controller @ 0x8100.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^dma-channel@.*$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        items:
-> +          - enum:
-> +              - fsl,mpc8315-dma-channel
-> +              - fsl,mpc8323-dma-channel
-> +              - fsl,mpc8347-dma-channel
-> +              - fsl,mpc8349-dma-channel
-> +              - fsl,mpc8360-dma-channel
-> +              - fsl,mpc8377-dma-channel
-> +              - fsl,mpc8378-dma-channel
-> +              - fsl,mpc8379-dma-channel
-> +          - const: fsl,elo-dma-channel
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      cell-index:
-> +        description: DMA channel index starts at 0.
-> +
-> +      interrupts: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    dma@82a8 {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
-> +        reg = <0x82a8 4>;
-
-compatible and reg should be first two property.
-
-> +        ranges = <0 0x8100 0x1a4>;
-> +        interrupt-parent = <&ipic>;
-> +        interrupts = <71 8>;
-> +        cell-index = <0>;
-
-need space line here.
-
-> +        dma-channel@0 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            cell-index = <0>;
-> +            reg = <0 0x80>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-
-need space line here. check other's example dts
-
-> +        dma-channel@80 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            cell-index = <1>;
-> +            reg = <0x80 0x80>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-> +        dma-channel@100 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            cell-index = <2>;
-> +            reg = <0x100 0x80>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-> +        dma-channel@180 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            cell-index = <3>;
-> +            reg = <0x180 0x80>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d4853ffd40dc75c7fcdc0dfb15e497ec56f3e1ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/fsl,elo3-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Elo3 DMA Controller
-> +
-> +maintainers:
-> +  - J. Neuschäfer <j.ne@posteo.net>
-> +
-> +description: |
-> +  DMA controller which has same function as EloPlus except that Elo3 has 8
-> +  channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
-> +  series chips, such as t1040, t4240, b4860.
-> +
-> +  Note on DMA channel compatible properties: The compatible property must say
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
-> +  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> +  DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any DMA
-> +  channel that should be used for another driver should not use
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
-> +  example, the compatible property should be "fsl,ssi-dma-channel".  See ssi.txt
-> +  for more information.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,elo3-dma
-> +
-> +  reg:
-> +    maxItems: 2
-> +    description: |
-> +      contains two entries for DMA General Status Registers, i.e. DGSR0 which
-> +      includes status for channel 1~4, and DGSR1 for channel 5~8
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^dma-channel@.*$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: fsl,eloplus-dma-channel
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      interrupts: true
-> +
-> +examples:
-> +  - |
-> +    dma@100300 {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        compatible = "fsl,elo3-dma";
-> +        reg = <0x100300 0x4>,
-> +              <0x100600 0x4>;
-> +        ranges = <0x0 0x100100 0x500>;
-> +        dma-channel@0 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x0 0x80>;
-> +            interrupts = <28 2 0 0>;
-> +        };
-> +        dma-channel@80 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x80 0x80>;
-> +            interrupts = <29 2 0 0>;
-> +        };
-> +        dma-channel@100 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x100 0x80>;
-> +            interrupts = <30 2 0 0>;
-> +        };
-> +        dma-channel@180 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x180 0x80>;
-> +            interrupts = <31 2 0 0>;
-> +        };
-> +        dma-channel@300 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x300 0x80>;
-> +            interrupts = <76 2 0 0>;
-> +        };
-> +        dma-channel@380 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x380 0x80>;
-> +            interrupts = <77 2 0 0>;
-> +        };
-> +        dma-channel@400 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x400 0x80>;
-> +            interrupts = <78 2 0 0>;
-> +        };
-> +        dma-channel@480 {
-> +            compatible = "fsl,eloplus-dma-channel";
-> +            reg = <0x480 0x80>;
-> +            interrupts = <79 2 0 0>;
-> +        };
-> +    };
-> +
-> +additionalProperties: true
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..680d64332ddf4d6d68ee8c607ac71211a7e19e6e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml
-> @@ -0,0 +1,120 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/fsl,eloplus-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale EloPlus DMA Controller
-> +
-> +maintainers:
-> +  - J. Neuschäfer <j.ne@posteo.net>
-> +
-> +description: |
-> +  This is a 4-channel DMA controller with extended addresses and chaining,
-> +  mainly used in Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as
-> +  mpc8540, mpc8641 p4080, bsc9131 etc.
-> +
-> +  Note on DMA channel compatible properties: The compatible property must say
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
-> +  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> +  DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any DMA
-> +  channel that should be used for another driver should not use
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
-> +  example, the compatible property should be "fsl,ssi-dma-channel".  See ssi.txt
-> +  for more information.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,mpc8540-dma
-> +              - fsl,mpc8541-dma
-> +              - fsl,mpc8548-dma
-> +              - fsl,mpc8555-dma
-> +              - fsl,mpc8560-dma
-> +              - fsl,mpc8572-dma
-> +              - fsl,mpc8641-dma
-> +          - const: fsl,eloplus-dma
-> +      - const: fsl,eloplus-dma
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      DMA General Status Register, i.e. DGSR which contains
-> +      status for all the 4 DMA channels
-> +
-> +  cell-index:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      controller index.  0 for controller @ 0x21000, 1 for controller @ 0xc000
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^dma-channel@.*$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        items:
-> +          - enum:
-> +              - fsl,mpc8540-dma-channel
-> +              - fsl,mpc8541-dma-channel
-> +              - fsl,mpc8548-dma-channel
-> +              - fsl,mpc8555-dma-channel
-> +              - fsl,mpc8560-dma-channel
-> +              - fsl,mpc8572-dma-channel
-> +          - const: fsl,eloplus-dma-channel
-
-I think you can merge this fsl,mpc83xx-dma yaml file
-
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: fsl,elo-dma
-+    then:
-+      patternProperties:
-+        "^dma-channel@.*$":
-+          properties:
-+            compatible:
-+              items:
-+                - enum:
-			....
-+    else
-+      patternProperties:
-+        "^dma-channel@.*$":
-+          properties:
-+            compatible:
-+              items:
-+                - enum:
-                        ....
-+                - const: fsl,eloplus-dma-channel
-
-Frank
-
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      cell-index:
-> +        description: DMA channel index starts at 0.
-> +
-> +      interrupts: true
-> +
-> +examples:
-> +  - |
-> +    dma@21300 {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
-> +        reg = <0x21300 4>;
-> +        ranges = <0 0x21100 0x200>;
-> +        cell-index = <0>;
-> +        dma-channel@0 {
-> +            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> +            reg = <0 0x80>;
-> +            cell-index = <0>;
-> +            interrupt-parent = <&mpic>;
-> +            interrupts = <20 2>;
-> +        };
-> +        dma-channel@80 {
-> +            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> +            reg = <0x80 0x80>;
-> +            cell-index = <1>;
-> +            interrupt-parent = <&mpic>;
-> +            interrupts = <21 2>;
-> +        };
-> +        dma-channel@100 {
-> +            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> +            reg = <0x100 0x80>;
-> +            cell-index = <2>;
-> +            interrupt-parent = <&mpic>;
-> +            interrupts = <22 2>;
-> +        };
-> +        dma-channel@180 {
-> +            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> +            reg = <0x180 0x80>;
-> +            cell-index = <3>;
-> +            interrupt-parent = <&mpic>;
-> +            interrupts = <23 2>;
-> +        };
-> +    };
-> +
-> +additionalProperties: true
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> deleted file mode 100644
-> index c11ad5c6db2190bf38c160632d9997122e169945..0000000000000000000000000000000000000000
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> +++ /dev/null
-> @@ -1,204 +0,0 @@
-> -* Freescale DMA Controllers
-> -
-> -** Freescale Elo DMA Controller
-> -   This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
-> -   series chips such as mpc8315, mpc8349, mpc8379 etc.
-> -
-> -Required properties:
-> -
-> -- compatible        : must include "fsl,elo-dma"
-> -- reg               : DMA General Status Register, i.e. DGSR which contains
-> -                      status for all the 4 DMA channels
-> -- ranges            : describes the mapping between the address space of the
-> -                      DMA channels and the address space of the DMA controller
-> -- cell-index        : controller index.  0 for controller @ 0x8100
-> -- interrupts        : interrupt specifier for DMA IRQ
-> -
-> -- DMA channel nodes:
-> -        - compatible        : must include "fsl,elo-dma-channel"
-> -                              However, see note below.
-> -        - reg               : DMA channel specific registers
-> -        - cell-index        : DMA channel index starts at 0.
-> -
-> -Optional properties:
-> -        - interrupts        : interrupt specifier for DMA channel IRQ
-> -                              (on 83xx this is expected to be identical to
-> -                              the interrupts property of the parent node)
-> -
-> -Example:
-> -	dma@82a8 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
-> -		reg = <0x82a8 4>;
-> -		ranges = <0 0x8100 0x1a4>;
-> -		interrupt-parent = <&ipic>;
-> -		interrupts = <71 8>;
-> -		cell-index = <0>;
-> -		dma-channel@0 {
-> -			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> -			cell-index = <0>;
-> -			reg = <0 0x80>;
-> -			interrupt-parent = <&ipic>;
-> -			interrupts = <71 8>;
-> -		};
-> -		dma-channel@80 {
-> -			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> -			cell-index = <1>;
-> -			reg = <0x80 0x80>;
-> -			interrupt-parent = <&ipic>;
-> -			interrupts = <71 8>;
-> -		};
-> -		dma-channel@100 {
-> -			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> -			cell-index = <2>;
-> -			reg = <0x100 0x80>;
-> -			interrupt-parent = <&ipic>;
-> -			interrupts = <71 8>;
-> -		};
-> -		dma-channel@180 {
-> -			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> -			cell-index = <3>;
-> -			reg = <0x180 0x80>;
-> -			interrupt-parent = <&ipic>;
-> -			interrupts = <71 8>;
-> -		};
-> -	};
-> -
-> -** Freescale EloPlus DMA Controller
-> -   This is a 4-channel DMA controller with extended addresses and chaining,
-> -   mainly used in Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as
-> -   mpc8540, mpc8641 p4080, bsc9131 etc.
-> -
-> -Required properties:
-> -
-> -- compatible        : must include "fsl,eloplus-dma"
-> -- reg               : DMA General Status Register, i.e. DGSR which contains
-> -                      status for all the 4 DMA channels
-> -- cell-index        : controller index.  0 for controller @ 0x21000,
-> -                                         1 for controller @ 0xc000
-> -- ranges            : describes the mapping between the address space of the
-> -                      DMA channels and the address space of the DMA controller
-> -
-> -- DMA channel nodes:
-> -        - compatible        : must include "fsl,eloplus-dma-channel"
-> -                              However, see note below.
-> -        - cell-index        : DMA channel index starts at 0.
-> -        - reg               : DMA channel specific registers
-> -        - interrupts        : interrupt specifier for DMA channel IRQ
-> -
-> -Example:
-> -	dma@21300 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
-> -		reg = <0x21300 4>;
-> -		ranges = <0 0x21100 0x200>;
-> -		cell-index = <0>;
-> -		dma-channel@0 {
-> -			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> -			reg = <0 0x80>;
-> -			cell-index = <0>;
-> -			interrupt-parent = <&mpic>;
-> -			interrupts = <20 2>;
-> -		};
-> -		dma-channel@80 {
-> -			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> -			reg = <0x80 0x80>;
-> -			cell-index = <1>;
-> -			interrupt-parent = <&mpic>;
-> -			interrupts = <21 2>;
-> -		};
-> -		dma-channel@100 {
-> -			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> -			reg = <0x100 0x80>;
-> -			cell-index = <2>;
-> -			interrupt-parent = <&mpic>;
-> -			interrupts = <22 2>;
-> -		};
-> -		dma-channel@180 {
-> -			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-> -			reg = <0x180 0x80>;
-> -			cell-index = <3>;
-> -			interrupt-parent = <&mpic>;
-> -			interrupts = <23 2>;
-> -		};
-> -	};
-> -
-> -** Freescale Elo3 DMA Controller
-> -   DMA controller which has same function as EloPlus except that Elo3 has 8
-> -   channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
-> -   series chips, such as t1040, t4240, b4860.
-> -
-> -Required properties:
-> -
-> -- compatible        : must include "fsl,elo3-dma"
-> -- reg               : contains two entries for DMA General Status Registers,
-> -                      i.e. DGSR0 which includes status for channel 1~4, and
-> -                      DGSR1 for channel 5~8
-> -- ranges            : describes the mapping between the address space of the
-> -                      DMA channels and the address space of the DMA controller
-> -
-> -- DMA channel nodes:
-> -        - compatible        : must include "fsl,eloplus-dma-channel"
-> -        - reg               : DMA channel specific registers
-> -        - interrupts        : interrupt specifier for DMA channel IRQ
-> -
-> -Example:
-> -dma@100300 {
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> -	compatible = "fsl,elo3-dma";
-> -	reg = <0x100300 0x4>,
-> -	      <0x100600 0x4>;
-> -	ranges = <0x0 0x100100 0x500>;
-> -	dma-channel@0 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x0 0x80>;
-> -		interrupts = <28 2 0 0>;
-> -	};
-> -	dma-channel@80 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x80 0x80>;
-> -		interrupts = <29 2 0 0>;
-> -	};
-> -	dma-channel@100 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x100 0x80>;
-> -		interrupts = <30 2 0 0>;
-> -	};
-> -	dma-channel@180 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x180 0x80>;
-> -		interrupts = <31 2 0 0>;
-> -	};
-> -	dma-channel@300 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x300 0x80>;
-> -		interrupts = <76 2 0 0>;
-> -	};
-> -	dma-channel@380 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x380 0x80>;
-> -		interrupts = <77 2 0 0>;
-> -	};
-> -	dma-channel@400 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x400 0x80>;
-> -		interrupts = <78 2 0 0>;
-> -	};
-> -	dma-channel@480 {
-> -		compatible = "fsl,eloplus-dma-channel";
-> -		reg = <0x480 0x80>;
-> -		interrupts = <79 2 0 0>;
-> -	};
-> -};
-> -
-> -Note on DMA channel compatible properties: The compatible property must say
-> -"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
-> -driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> -DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any DMA
-> -channel that should be used for another driver should not use
-> -"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
-> -example, the compatible property should be "fsl,ssi-dma-channel".  See ssi.txt
-> -for more information.
+>>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>> v3:
+>>  - Remove accepted patches from patch set.
+>> ---
+>>  arch/arm64/boot/dts/intel/Makefile               |  1 +
+>>  .../socfpga_agilex7f_socdk_pcie_root_port.dts    | 16 ++++++++++++++++
+>>  2 files changed, 17 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+>> index d39cfb723f5b..737e81c3c3f7 100644
+>> --- a/arch/arm64/boot/dts/intel/Makefile
+>> +++ b/arch/arm64/boot/dts/intel/Makefile
+>> @@ -2,6 +2,7 @@
+>>  dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
+>>  				socfpga_agilex_socdk.dtb \
+>>  				socfpga_agilex_socdk_nand.dtb \
+>> +				socfpga_agilex7f_socdk_pcie_root_port.dtb \
+>>  				socfpga_agilex5_socdk.dtb \
+>>  				socfpga_n5x_socdk.dtb
+>>  dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>> new file mode 100644
+>> index 000000000000..76a989ba6a44
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier:     GPL-2.0
+>> +/*
+>> + * Copyright (C) 2024, Intel Corporation
+>> + */
+>> +
+>> +#include "socfpga_agilex_socdk.dts"
+>> +#include "socfpga_agilex_pcie_root_port.dtsi"
+>> +
 >
-> --
-> 2.48.0.rc1.219.gb6b6757d772
+> Missing board compatible, missing bindings.
+
+The model and compatible bindings are inherited from socfpga_agilex_socdk.dts.
+
+>
+>> +&pcie_0_pcie_aglx {
+>> +	status = "okay";
+>> +	compatible = "altr,pcie-root-port-3.0-p-tile";
+>
+> Why do you define the compatible here, not in DTSI? This is highly
+> unusual and confusing. Also, compatible is never the last property, but
+> opposite.
+
+The current DTSI supports all three variants of the PCI hardware in the 
+Agilex family, referred to as P-Tile, F-Tile, and R-Tile. This particular 
+board has an Agilex chip with the P-Tile variant of the PCI hardware.
+
+I will move the compatible property to be the first property.
+
+>
+> Plus:
+>
+> Please run scripts/checkpatch.pl and fix reported warnings. After that,
+> run also `scripts/checkpatch.pl --strict` and (probably) fix more
+> warnings. Some warnings can be ignored, especially from --strict run,
+> but the code here looks like it needs a fix. Feel free to get in touch
+> if the warning is not clear.
+
+The only warning I see from scripts/checkpatch.pl --strict is "added, 
+moved or deleted file(s), does MAINTAINERS need updating?". The directory, 
+arch/arm64/boot/dts/intel/, is already mentioned in the MAINTAINERS file. 
+Do I need to do anything to resolve this?
+
+>
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check W=1` (see
+> Documentation/devicetree/bindings/writing-schema.rst or
+> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+> for instructions).
+> Maybe you need to update your dtschema and yamllint. Don't rely on
+> distro packages for dtschema and be sure you are using the latest
+> released dtschema.
+
+The dtschema check failures are inherited from socfpga_agilex_socdk.dts.
+Rob Herring's bot indicates that "Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not." Is this 
+applicable here? Is the correct way to fix the existing dtschema check 
+warnings is with their own patches, rather than adding to this PCIe Root 
+Port patchset?
+
+Thanks for the review,
+Matthew Gerlach
+
+>
+>
+>
+> Best regards,
+> Krzysztof
 >
 
