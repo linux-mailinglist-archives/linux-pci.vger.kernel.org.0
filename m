@@ -1,315 +1,303 @@
-Return-Path: <linux-pci+bounces-20574-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C84D0A22D87
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 14:19:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5A45A22D99
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 14:21:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30E0F165F16
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 13:19:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2213C1680B4
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 13:21:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A16FB1E2613;
-	Thu, 30 Jan 2025 13:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjnRDida"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7928819;
+	Thu, 30 Jan 2025 13:21:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BEE819;
-	Thu, 30 Jan 2025 13:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270EE1BEF85
+	for <linux-pci@vger.kernel.org>; Thu, 30 Jan 2025 13:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738243161; cv=none; b=kyZyyVACoo8kgThXrDF++IqbSCZgUW2GQRnzxMrkYAAC0kAXp2ZOKEzbvQsrjERAUL39q9D7TvJaFQjzKEzbzMGabHzSQyt6Rx3HW4gt2eTCKYPK+4uz4rGh+TNf+pH1NPJKeDLEIDfr6Jv0Gcklqg0IVKtS7sZMJ0sdJwtYmZ8=
+	t=1738243298; cv=none; b=N+4E5SEnXDyY1Xmjvvb3VLjFgWL8HG1us/VBHwbZq0+JQJmwnOz4AR/K7ncfyF1cerk/D6Wa4gJzuZtG55aeZhxcfQLROpRAnH8Cg803gMjYahf+54ESjgllm34p8CTvFt699rUlLG+nsBpLhpJV4hHOZOzYhcAjIpi1yUwGFyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738243161; c=relaxed/simple;
-	bh=d0fQXsgYaqdw22vo14ZJcic4Yd0EFPXGVcjLVtYasCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EhfS/2dqwzbWnYm6y89L+6ewIHT8v/aR1kKoBXSSZAEpMQdr6Z/jSsILvBvOZf7+84orT0M+l49yCFax31g+Nlr5smOUVAa/TAtsC3Je6aFKFB2UuZL1TmF1DZH02HGHXPOWSoY8JDRwsDN/EUVSE+FTXISJL6W2pm9+vRcJazg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjnRDida; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC94C4CEE0;
-	Thu, 30 Jan 2025 13:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738243160;
-	bh=d0fQXsgYaqdw22vo14ZJcic4Yd0EFPXGVcjLVtYasCs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pjnRDidavSlir7nsvL3qUhkCstiFPh3TgABu9pVx09NH+Gz+ZJehgGznftu27JA/r
-	 XuQRCSHfTEG5RFrv+FVRTlD8Ywjll5Mn6fjXIVz23JRex9UoAjhD2NuswAZaP/bzxU
-	 UMdZi1F0tUOz4cLtEpt2eSf7mdM9NymWAn6cp2jIFuWtqL4CinaFRruOFuKiaEtfle
-	 +mbdTxnVtBNnXu4MtjQpns+IQE9eBvML/9jvC+mwdBikNLTrBRLzPlOr2WYtAZzgBg
-	 mYQtDmk0s959TGdOmEEa19qQvgdq7ID12oe0jJqOUCcQxMgUdbjHbK/qYcLhB8yPMn
-	 2qUlCMB9ugtFA==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-71deb3745easo159443a34.3;
-        Thu, 30 Jan 2025 05:19:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVonIp/ght7llnadQtljcFtPJF9dSwcA6G18zidmzI2DXrsHsMoQv9jJkxYprIfgxQRyqIJCa0pUXE=@vger.kernel.org, AJvYcCWndxXSSIJDb1lj0gvd29gjDHNUcvWJVB9zDaMlYzCLdE8Mv+eFpbnEeyNUoC2D+4wSJOCP3WLBQIeXna8=@vger.kernel.org, AJvYcCXNlOPnnIYV6AldN4/4i8gsbTcziqAul1QALthCQrqxJ7MNTEm++belhWUK/vqgvY41GoSQ9wOmoe4g@vger.kernel.org
-X-Gm-Message-State: AOJu0YyygsIg1QCcZO+W/yy1bRg6q9KbIBMGCiWbipVDj4YNInfT6Qxm
-	mTnDUrI/8NhEmm+Bot9BDIc8WuRPmG1CFfnrf9ceTy12i73//pyh601ClS3oSD0yBqtvQH15L5b
-	T7C9uUHeZGyjSZFJJAhIu0NxxPT4=
-X-Google-Smtp-Source: AGHT+IHaApAH2151fdQMr2K/rWXcq1IdxdXfRWxi2MmSzy1jmhyjcfQCMBVbsYm7hN21Oljw+1RbMonmbAllyu9MA+o=
-X-Received: by 2002:a05:6870:4e07:b0:288:563b:e48d with SMTP id
- 586e51a60fabf-2b32f03426dmr4140022fac.10.1738243159985; Thu, 30 Jan 2025
- 05:19:19 -0800 (PST)
+	s=arc-20240116; t=1738243298; c=relaxed/simple;
+	bh=31Y1emdzOrUShI0eVABfQbVoSQkTdZAiLpsoJ9BbLDU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TkXAtGF7B7wJk7Jf6j1hve4hH2smjgPz+DpAbeOsRBNi8vWCweC4bYSkfvIFsIzlodkRo4eeXdN1x7ge/Mv2iLvyJO3HwJQp2ivx99YFqKHAGcrd8X11Dx6cGHe6sNGe7xQTlm2kKs3hgyF7hJfj/sl/iU2qh5pyho8q6Ibqmxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkKP95qptz6M4SL;
+	Thu, 30 Jan 2025 21:19:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BAD0A1400D4;
+	Thu, 30 Jan 2025 21:21:32 +0800 (CST)
+Received: from localhost (10.47.30.69) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 14:21:32 +0100
+Date: Thu, 30 Jan 2025 13:21:29 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-coco@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>, "Lukas
+ Wunner" <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, "Alexey
+ Kardashevskiy" <aik@amd.com>, Xu Yilun <yilun.xu@linux.intel.com>,
+	<linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 06/11] samples/devsec: PCI device-security bus /
+ endpoint sample
+Message-ID: <20250130132129.000027ad@huawei.com>
+In-Reply-To: <173343743095.1074769.17985181033044298157.stgit@dwillia2-xfh.jf.intel.com>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+	<173343743095.1074769.17985181033044298157.stgit@dwillia2-xfh.jf.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
- <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com>
- <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
- <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com> <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
-In-Reply-To: <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 30 Jan 2025 14:19:08 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
-X-Gm-Features: AWEUYZmtyfD-QjORpGH8sT5RY4RaUd5cb129O2vvjWcJUTrONPCuwcwwF2sdMz0
-Message-ID: <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Jan 30, 2025 at 12:11=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
-g> wrote:
->
-> On Wed, 29 Jan 2025 at 17:58, Rafael J. Wysocki <rafael@kernel.org> wrote=
-:
-> >
-> > On Wed, Jan 29, 2025 at 5:42=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro=
-.org> wrote:
-> > >
-> > > On Wed, 29 Jan 2025 at 16:55, Rafael J. Wysocki <rafael@kernel.org> w=
-rote:
-> > > >
-> > > > On Wed, Jan 29, 2025 at 12:53=E2=80=AFPM Ulf Hansson <ulf.hansson@l=
-inaro.org> wrote:
-> > > > >
-> > > > > On Tue, 28 Jan 2025 at 20:24, Rafael J. Wysocki <rjw@rjwysocki.ne=
-t> wrote:
-> > > > > >
-> > > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > >
-> > > > > > Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in=
- the
-> > > > > > resume phase") overlooked the case in which the parent of a dev=
-ice with
-> > > > > > DPM_FLAG_SMART_SUSPEND set did not use that flag and could be r=
-untime-
-> > > > > > suspended before a transition into a system-wide sleep state.  =
-In that
-> > > > > > case, if the child is resumed during the subsequent transition =
-from
-> > > > > > that state into the working state, its runtime PM status will b=
-e set to
-> > > > > > RPM_ACTIVE, but the runtime PM status of the parent will not be=
- updated
-> > > > > > accordingly, even though the parent will be resumed too, becaus=
-e of the
-> > > > > > dev_pm_skip_suspend() check in device_resume_noirq().
-> > > > > >
-> > > > > > Address this problem by tracking the need to set the runtime PM=
- status
-> > > > > > to RPM_ACTIVE during system-wide resume transitions for devices=
- with
-> > > > > > DPM_FLAG_SMART_SUSPEND set and all of the devices depended on b=
-y them.
-> > > > > >
-> > > > > > Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in=
- the resume phase")
-> > > > > > Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovol=
-dconsulting.com/
-> > > > > > Reported-by: Johan Hovold <johan@kernel.org>
-> > > > > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.=
-org>
-> > > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > > ---
-> > > > > >  drivers/base/power/main.c |   29 ++++++++++++++++++++---------
-> > > > > >  include/linux/pm.h        |    1 +
-> > > > > >  2 files changed, 21 insertions(+), 9 deletions(-)
-> > > > > >
-> > > > > > --- a/drivers/base/power/main.c
-> > > > > > +++ b/drivers/base/power/main.c
-> > > > > > @@ -656,13 +656,15 @@
-> > > > > >          * so change its status accordingly.
-> > > > > >          *
-> > > > > >          * Otherwise, the device is going to be resumed, so set=
- its PM-runtime
-> > > > > > -        * status to "active", but do that only if DPM_FLAG_SMA=
-RT_SUSPEND is set
-> > > > > > -        * to avoid confusing drivers that don't use it.
-> > > > > > +        * status to "active" unless its power.set_active flag =
-is clear, in
-> > > > > > +        * which case it is not necessary to update its PM-runt=
-ime status.
-> > > > > >          */
-> > > > > > -       if (skip_resume)
-> > > > > > +       if (skip_resume) {
-> > > > > >                 pm_runtime_set_suspended(dev);
-> > > > > > -       else if (dev_pm_skip_suspend(dev))
-> > > > > > +       } else if (dev->power.set_active) {
-> > > > > >                 pm_runtime_set_active(dev);
-> > > > > > +               dev->power.set_active =3D false;
-> > > > > > +       }
-> > > > > >
-> > > > > >         if (dev->pm_domain) {
-> > > > > >                 info =3D "noirq power domain ";
-> > > > > > @@ -1189,18 +1191,24 @@
-> > > > > >         return PMSG_ON;
-> > > > > >  }
-> > > > > >
-> > > > > > -static void dpm_superior_set_must_resume(struct device *dev)
-> > > > > > +static void dpm_superior_set_must_resume(struct device *dev, b=
-ool set_active)
-> > > > > >  {
-> > > > > >         struct device_link *link;
-> > > > > >         int idx;
-> > > > > >
-> > > > > > -       if (dev->parent)
-> > > > > > +       if (dev->parent) {
-> > > > > >                 dev->parent->power.must_resume =3D true;
-> > > > > > +               if (set_active)
-> > > > > > +                       dev->parent->power.set_active =3D true;
-> > > > > > +       }
-> > > > > >
-> > > > > >         idx =3D device_links_read_lock();
-> > > > > >
-> > > > > > -       list_for_each_entry_rcu_locked(link, &dev->links.suppli=
-ers, c_node)
-> > > > > > +       list_for_each_entry_rcu_locked(link, &dev->links.suppli=
-ers, c_node) {
-> > > > > >                 link->supplier->power.must_resume =3D true;
-> > > > > > +               if (set_active)
-> > > > > > +                       link->supplier->power.set_active =3D tr=
-ue;
-> > > > >
-> > > > > If I understand correctly, the suppliers are already handled when=
- the
-> > > > > pm_runtime_set_active() is called for consumers, so the above sho=
-uld
-> > > > > not be needed.
-> > > >
-> > > > It is needed because pm_runtime_set_active() doesn't cause the sett=
-ing
-> > > > to propagate to the parent's/suppliers of the suppliers AFAICS.
-> > >
-> > > Hmm, even if that sounds reasonable, I don't think it's a good idea a=
-s
-> > > it may introduce interesting propagation problems between drivers.
-> > >
-> > > For example, consider that Saravana is trying to enable runtime PM fo=
-r
-> > > fw_devlinks. It would mean synchronization issues for the runtime PM
-> > > status, all over the place.
-> >
-> > What synchronization issues?
->
-> Changing the runtime PM status for a parent/supplier that doesn't have
-> DPM_FLAG_SMART_SUSPEND, is likely to confuse their drivers.
+On Thu, 05 Dec 2024 14:23:51 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-I'm not sure why though.
+> Establish just enough emulated PCI infrastructure to register a sample
+> TSM (platform security manager) driver and have it discover an IDE + TEE
+> (link encryption + device-interface security protocol (TDISP)) capable
+> device.
+> 
+> Use the existing a CONFIG_PCI_BRIDGE_EMUL to emulate an IDE capable root
+> port, and open code the emulation of an endpoint device via simulated
+> configuration cycle responses.
+> 
+> The devsec_tsm driver responds to the PCI core TSM operations as if it
+> successfully exercised the given interface security protocol message.
+> 
+> The devsec_bus and devsec_tsm drivers can be loaded in either order to
+> reflect cases like SEV-TIO where the TSM is PCI-device firmware, and
+> cases like TDX Connect where the TSM is a software agent running on the
+> host CPU.
+> 
+> Follow-on patches add common code for TSM managed IDE establishment. For
+> now, just successfully complete setup and teardown of the DSM (device
+> security manager) context as a building block for management of TDI
+> (trusted device interface) instances.
+> 
+>  # modprobe devsec_bus
+>     devsec_bus devsec_bus: PCI host bridge to bus 10000:00
+>     pci_bus 10000:00: root bus resource [bus 00-01]
+>     pci_bus 10000:00: root bus resource [mem 0xf000000000-0xffffffffff 64bit]
+>     pci 10000:00:00.0: [8086:7075] type 01 class 0x060400 PCIe Root Port
+>     pci 10000:00:00.0: PCI bridge to [bus 00]
+>     pci 10000:00:00.0:   bridge window [io  0x0000-0x0fff]
+>     pci 10000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+>     pci 10000:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+>     pci 10000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>     pci 10000:01:00.0: [8086:ffff] type 00 class 0x000000 PCIe Endpoint
+>     pci 10000:01:00.0: BAR 0 [mem 0xf000000000-0xf0001fffff 64bit pref]
+>     pci_doe_abort: pci 10000:01:00.0: DOE: [100] Issuing Abort
+>     pci_doe_cache_protocols: pci 10000:01:00.0: DOE: [100] Found protocol 0 vid: 1 prot: 1
+>     pci 10000:01:00.0: disabling ASPM on pre-1.1 PCIe device.  You can enable it with 'pcie_aspm=force'
+>     pci 10000:00:00.0: PCI bridge to [bus 01]
+>     pci_bus 10000:01: busn_res: [bus 01] end is updated to 01
+>  # modprobe devsec_tsm
+>     devsec_tsm_pci_probe: pci 10000:01:00.0: devsec: tsm enabled
+>     __pci_tsm_init: pci 10000:01:00.0: TSM: Device security capabilities detected ( ide tee ), TSM attach
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Samuel Ortiz <sameo@rivosinc.com>
+> Cc: Alexey Kardashevskiy <aik@amd.com>
+> Cc: Xu Yilun <yilun.xu@linux.intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hi Dan,
 
-> You also removed that part of the comment a few lines above, in
-> device_resume_noirq(). I am not sure I understand why?
+A few minor comments as I was reading this. Mostly just trying
+to get my head around it hence they are all fairly superficial things.
 
-Not removed, but replaced.
+Jonathan
 
-The set_active flag is only set for devices with
-DPM_FLAG_SMART_SUSPEND set and devices depended on by them.  Also, it
-is only set for devices whose must_resume is set, which for devices
-with DPM_FLAG_SMART_SUSPEND means that they literally must be resumed.
-Consequently, the devices depended on by them also must be resumed.
+> diff --git a/samples/devsec/bus.c b/samples/devsec/bus.c
+> new file mode 100644
+> index 000000000000..47dbe4e1b648
+> --- /dev/null
+> +++ b/samples/devsec/bus.c
 
-> >
-> > > That said, is even consumer/suppliers part of the problem we are
-> > > trying to solve?
-> >
-> > They are in general.
-> >
-> > It's just that stuff that was runtime-suspended prior to a system-wide
-> > suspend may need to be resumed and marked as RPM_ACTIVE during
-> > system-wide resume because one of the devices wants/needs to be
-> > resumed then.
-> >
-> > If this turns out to be problematic, the problem will need to be
-> > addressed, but for now I'm not seeing why there would be a problem.
-> >
-> > > >
-> > > > > That said, maybe we instead allow parent/child to work in the sim=
-ilar
-> > > > > way as for consumer/suppliers, when pm_runtime_set_active() is ca=
-lled
-> > > > > for the child. In other words, when pm_runtime_set_active() is ca=
-lled
-> > > > > for a child and the parent is runtime PM enabled, let's runtime r=
-esume
-> > > > > it too, as we do for suppliers. Would that work, you think?
-> > > >
-> > > > The parent is not runtime-PM enabled when this happens.
-> > >
-> > > That sounds really weird to me.
-> > >
-> > > Does that mean that the parent has not been system resumed either?
-> >
-> > Yes.
-> >
-> > It hasn't been resumed yet, but it is known that it will be resumed.
-> >
-> > > If so, isn't that really the root cause for this problem,
-> >
-> > No, it is not.
-> >
-> > > or what am I missing?
-> >
-> > Essentially, what I said above.
-> >
-> > If a device that was suspended prior to a system-wide suspend
-> > wants/needs to be resumed during the subsequent system-wide resume,
-> > and it was runtime-PM-enabled before the suspend transition, it needs
-> > to (a) be runtime-PM-enabled during the subsequent system-wide resume
-> > transition and (b) it also needs to be marked as RPM_ACTIVE because in
-> > fact it is not suspended any more.  The existing code before the patch
-> > takes care of this for the device itself, but not for the devices it
-> > depends on which also need to be resumed (which happens) and marked as
-> > RPM_ACTIVE (which doesn't happen) and the patch just makes sure that
-> > the latter will happen.
->
-> Thanks for clarifying!
->
-> >
-> > Actually, what happens now is that the actual state of the parent
-> > during the system-wide resume, right before re-enabling runtime PM for
-> > it, does not match its runtime PM status which is still RPM_SUSPENDED.
-> > That's what is fixed here and it applies to the parent as well as to
-> > all of the other devices depended on by the child and the parent.
->
-> Well, unfortunately I don't think it will work to call
-> pm_runtime_set_active() for parents/suppliers like this.
 
-As stated above, if a device with DPM_FLAG_SMART_SUSPEND has
-power.must_resume set, it must be resumed.  Therefore, all of the
-devices depended on by it must be resumed (literally, they need to be
-powered up and configured to work).  This is already a rule without
-the patch.
+> +static void destroy_iomem_pool(void *data)
 
-Accordingly, they all effectively will be "active" and so their
-runtime PM status must reflect this.
+There is a devm_gen_pool_create you can probably use.
 
-I don't see anything that cannot work, but I see why it is broken
-without this patch.
+> +{
+> +	struct devsec *devsec = data;
+> +
+> +	gen_pool_destroy(devsec->iomem_pool);
+> +}
+> +
+> +static void destroy_bus(void *data)
+> +{
+> +	struct devsec *devsec = data;
+> +
+> +	pci_stop_root_bus(devsec->bus);
+> +	pci_remove_root_bus(devsec->bus);
+> +}
+> +
+> +static void destroy_devs(void *data)
+> +{
+> +	struct devsec *devsec = data;
+> +	int i;
+> +
+> +	for (i = ARRAY_SIZE(devsec->devsec_devs) - 1; i >= 0; i--) {
+> +		struct devsec_dev *devsec_dev = devsec->devsec_devs[i];
+> +
+> +		if (!devsec_dev)
+> +			continue;
+> +		gen_pool_free(devsec->iomem_pool, devsec_dev->mmio_range.start,
+> +			      range_len(&devsec_dev->mmio_range));
+> +		kfree(devsec_dev);
+> +		devsec->devsec_devs[i] = NULL;
+> +	}
+> +}
+> +
 
-> I think we need the drivers for the parents/suppliers to be in
-> agreement with the behaviour of DPM_FLAG_SMART_SUSPEND to allow the
-> propagation. Not sure how to best achieve this though.
+> +#define MMIO_SIZE SZ_2M
+> +
+> +static int alloc_devs(struct devsec *devsec)
+> +{
+> +	struct device *dev = devsec->dev;
+> +	int i, rc;
+> +
+> +	rc = devm_add_action_or_reset(dev, destroy_devs, devsec);
+> +	if (rc)
+> +		return rc;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(devsec->devsec_devs); i++) {
+> +		struct devsec_dev *devsec_dev __free(kfree) =
+> +			kzalloc(sizeof(*devsec_dev), GFP_KERNEL);
+> +		struct genpool_data_align data = {
+> +			.align = MMIO_SIZE,
+> +		};
+> +		u64 phys;
+> +
+> +		if (!devsec_dev)
+> +			return -ENOMEM;
+> +
+> +		phys = gen_pool_alloc_algo(devsec->iomem_pool, MMIO_SIZE,
+> +					   gen_pool_first_fit_align, &data);
+> +		if (!phys)
+> +			return -ENOMEM;
+> +
+> +		devsec_dev->mmio_range = (struct range) {
+> +			.start = phys,
+> +			.end = phys + MMIO_SIZE - 1,
+> +		};
+> +		init_dev_cfg(devsec_dev);
+> +		devsec->devsec_devs[i] = no_free_ptr(devsec_dev);
 
-It would be good to actually identify the cases in which it may not
-work and they can be fixed on top of this patch.
+Similar to the case below. I'd rather see a per dev devm_ cleanup
+than relying on unified cleanup and that array having null entrees.
+Should end up easier to follow.  Might require devsec dev to have
+a reference back to the pool though.
+
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void destroy_ports(void *data)
+> +{
+> +	struct devsec *devsec = data;
+> +	int i;
+> +
+> +	for (i = ARRAY_SIZE(devsec->devsec_ports) - 1; i >= 0; i--) {
+> +		struct devsec_port *devsec_port = devsec->devsec_ports[i];
+> +
+> +		if (!devsec_port)
+> +			continue;
+> +		pci_bridge_emul_cleanup(&devsec_port->bridge);
+> +		kfree(devsec_port);
+> +		devsec->devsec_ports[i] = NULL;
+
+Is this necessary? If so it wrecks suggestion to do per port devres cleanup.
+I don't think it is necessary though as we really should be touching that
+array after this function is done.
+
+
+> +	}
+> +}
+
+
+> +static int init_port(struct devsec_port *devsec_port)
+> +{
+> +	struct pci_bridge_emul *bridge = &devsec_port->bridge;
+> +	int rc;
+> +
+> +	bridge->conf.vendor = cpu_to_le16(0x8086);
+> +	bridge->conf.device = cpu_to_le16(0x7075);
+> +	bridge->subsystem_vendor_id = cpu_to_le16(0x8086);
+> +	bridge->conf.class_revision = cpu_to_le32(0x1);
+> +
+> +	bridge->conf.pref_mem_base = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+> +	bridge->conf.pref_mem_limit = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+> +
+> +	bridge->has_pcie = true;
+> +	bridge->pcie_conf.devcap = cpu_to_le16(PCI_EXP_DEVCAP_FLR);
+> +	bridge->pcie_conf.lnksta = cpu_to_le16(PCI_EXP_LNKSTA_CLS_2_5GB);
+> +
+> +	bridge->data = devsec_port;
+> +	bridge->ops = &devsec_bridge_ops;
+Maybe 
+	*bridge = (struct pci_bridge_emul) {
+	};
+appropriate here. 	
+> +
+> +	init_ide(&devsec_port->ide);
+> +
+> +	rc = pci_bridge_emul_init(bridge, 0);
+
+return pci_bridge_emul_init() unless a later patch is going to add more here.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static int alloc_ports(struct devsec *devsec)
+> +{
+> +	struct device *dev = devsec->dev;
+> +	int i, rc;
+> +
+> +	rc = devm_add_action_or_reset(dev, destroy_ports, devsec);
+> +	if (rc)
+> +		return rc;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(devsec->devsec_ports); i++) {
+> +		struct devsec_port *devsec_port __free(kfree) =
+> +			kzalloc(sizeof(*devsec_port), GFP_KERNEL);
+> +
+> +		if (!devsec_port)
+> +			return -ENOMEM;
+> +
+> +		rc = init_port(devsec_port);
+> +		if (rc)
+> +			return rc;
+
+I'd prefer to see a per port devm cleanup registered so that you don't
+have to register that before anything has happened leaving it only
+loosely associated with what it is doing.
+
+
+> +		devsec->devsec_ports[i] = no_free_ptr(devsec_port);
+> +	}
+> +
+> +	return 0;
+> +}
 
