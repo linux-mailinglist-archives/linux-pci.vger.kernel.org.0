@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-20568-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20569-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FE97A22921
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 08:26:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D09EA2292C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 08:32:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17D497A243E
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 07:25:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D99D316435D
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 07:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C061619DF60;
-	Thu, 30 Jan 2025 07:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A8C18872A;
+	Thu, 30 Jan 2025 07:32:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJUCz+xp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzFR7T3x"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E2A433B1;
-	Thu, 30 Jan 2025 07:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFFCC2FB;
+	Thu, 30 Jan 2025 07:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738221977; cv=none; b=D2yW++DTDMxYzcQxI4EnApzlnB+h81L96crnhIs7uE0B1fSy8W1EWqAfh/OulhzIpu9/SB146ay6Cvwcg6MoWtxBe9ES2vRzX7XqMhaKvycFtMJE7XlfELtpoAuhVnkItHL6BpbIoERKvymdXO7vNAClS8tcFstSApdafVbOzEs=
+	t=1738222320; cv=none; b=hEgmvCl3Ca07EmW/Vp794fWdIar0smmI8fIlNZafKfUvH1VzSO9KvTdAIuMXLE6IxknTUaXYIPC8pMlStsL8cpRleKHECii/7Geu4Df9N8Toe/427zBcVIl3FbS/52rjmt0zTJy8dEqhdAGcmdLS+71tDCjyCEi4kRGdbxBmPTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738221977; c=relaxed/simple;
-	bh=ZU/fxjXisLMnyON1qchdh4GygxZ4cUrjTB3cD3A/U2A=;
+	s=arc-20240116; t=1738222320; c=relaxed/simple;
+	bh=ZQjfUu1RLma4aRZgLxvQlnu8j8CI09Go6mEs8lxQdNw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NpfmajGx6oyDXn4pyhxxUgx0c526lMJZ7oxKZKSMHvr1gA5LMKo3RltyODDEVqZjthEfeugd45ZrbAxzf8LWi6ySRHFykrgSbdV/iv+BDUFPP6UYeQprJQdlpkhQ+mVuZTJOLTvpg/CCjngmDrlIG9+gC3gsOyzOp/pvoSmm1SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJUCz+xp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4782C4CED2;
-	Thu, 30 Jan 2025 07:26:09 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=j9AK2P0ivSsCKytZI7HrEaOAp6BCfwLL7TXABQeKK83+slFhnfXvbYSv69MVZ2lF7VaGvim0RrE/drceAVIU6BqvphKtz7fahtbZTPfmaRyqzPiwDjj+OO+lTBTLLkPVIyNiu0UUuxT4kgHKRR91TVqIF7o4YqIdqThKiuPfzjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzFR7T3x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2061BC4CED2;
+	Thu, 30 Jan 2025 07:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738221974;
-	bh=ZU/fxjXisLMnyON1qchdh4GygxZ4cUrjTB3cD3A/U2A=;
+	s=k20201202; t=1738222319;
+	bh=ZQjfUu1RLma4aRZgLxvQlnu8j8CI09Go6mEs8lxQdNw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tJUCz+xpg5g+kXWEG5k3Zc42O5EY/L1E2iHx4PNy9sTGAGoL67gwnVdEY+VooE/L/
-	 ZX1MTcJX9kO0zy5f6BR3L80uDp7/Hsbe2fZT7X4JPzdctxCv9xnJ8ulnQCIiR09H/o
-	 /ixs7JY+/UxylFiJhnjr/r268z8ZNkyQu1XofS4dg41rnaWBj8DCOiVV8LmFReOoFN
-	 1APBVU0MiGitnHqI4w8v3mJxAIsZHFiGKzc9j56XO2tbE5PBKWEMmxlPjy+qnyKIPX
-	 YMRW5iXSq0xKyTLmfsDPYoqalqL67J3JtGIeeumX9aBSDRKbt19QcMsrCN0fbqQmfr
-	 IfZK/FVvN6W7A==
-Message-ID: <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
-Date: Thu, 30 Jan 2025 08:26:07 +0100
+	b=gzFR7T3xQnx669U4rvYyVFCn6SqAgLVRDvJVDuiBkLVKxDcbn6/Q+49HGMEBsqkEa
+	 XOjMMg12PDLZIyLL5jUtJUPY+niXfPq/hhKE6rMj8XEvf/fQxWfBazCon2L+z/a0oN
+	 5DmikTGZ8n7HHP8QTmkyMvdRcEIJT1rH0cgQgsEkVjTQz/2RtJe5BfNsbv1FmZ3mhi
+	 B8xikN5yrCuLTFgduG5wAHW6qf4OLRD3caye5eNjBFNRSBBbS6RbrarWfQeNG2zJBu
+	 MbjqgScjo8xACDiM6FgteTQxH8zQnTN++roXnNexvMn5P2GK8gLMvZocP/+cdb0HXY
+	 RBo8MizgrNXKA==
+Message-ID: <eb77eec0-7d51-46a0-b5c6-83c68316ef32@kernel.org>
+Date: Thu, 30 Jan 2025 08:31:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+Subject: Re: [PATCH v5 4/5] arm64: dts: agilex: add dts enabling PCIe Root
+ Port
 To: matthew.gerlach@linux.intel.com
 Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
  robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
@@ -59,9 +60,9 @@ Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
  linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
  peter.colberg@altera.com
 References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
- <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
- <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+ <20250127173550.1222427-5-matthew.gerlach@linux.intel.com>
+ <58f7925c-dbed-4a5e-8e7d-095bef197931@kernel.org>
+ <319e9f53-6910-a144-8752-4bcc47b7cba@linux.intel.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,71 +108,143 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+In-Reply-To: <319e9f53-6910-a144-8752-4bcc47b7cba@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/01/2025 20:42, matthew.gerlach@linux.intel.com wrote:
+On 29/01/2025 23:54, matthew.gerlach@linux.intel.com wrote:
 > 
 > 
 > On Wed, 29 Jan 2025, Krzysztof Kozlowski wrote:
 > 
 >> On 27/01/2025 18:35, Matthew Gerlach wrote:
->>> Add the base device tree for support of the PCIe Root Port
->>> for the Agilex family of chips.
+>>> Add a device tree enabling PCIe Root Port support on
+>>> an Agilex F-series Development Kit which has the
+>>> P-tile variant PCIe IP.
+>>
+>> Please wrap commit message according to Linux coding style / submission
+>> process (neither too early nor over the limit):
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+>>
+> Thank you for the pointer. I will fix the commit message accordingly.
+> 
 >>>
 >>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 >>> ---
 >>> v3:
 >>>  - Remove accepted patches from patch set.
->>>
->>> v2:
->>>  - Rename node to fix schema check error.
 >>> ---
->>>  .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
->>>  1 file changed, 55 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>>  arch/arm64/boot/dts/intel/Makefile               |  1 +
+>>>  .../socfpga_agilex7f_socdk_pcie_root_port.dts    | 16 ++++++++++++++++
+>>>  2 files changed, 17 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
 >>>
->>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+>>> diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+>>> index d39cfb723f5b..737e81c3c3f7 100644
+>>> --- a/arch/arm64/boot/dts/intel/Makefile
+>>> +++ b/arch/arm64/boot/dts/intel/Makefile
+>>> @@ -2,6 +2,7 @@
+>>>  dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
+>>>  				socfpga_agilex_socdk.dtb \
+>>>  				socfpga_agilex_socdk_nand.dtb \
+>>> +				socfpga_agilex7f_socdk_pcie_root_port.dtb \
+>>>  				socfpga_agilex5_socdk.dtb \
+>>>  				socfpga_n5x_socdk.dtb
+>>>  dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+>>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
 >>> new file mode 100644
->>> index 000000000000..50f131f5791b
+>>> index 000000000000..76a989ba6a44
 >>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
->>> @@ -0,0 +1,55 @@
+>>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+>>> @@ -0,0 +1,16 @@
 >>> +// SPDX-License-Identifier:     GPL-2.0
->>
->> Odd spaces in SPDX tag.
-> 
-> Yes, there should only be one space.
-> 
->>
 >>> +/*
 >>> + * Copyright (C) 2024, Intel Corporation
 >>> + */
->>> +&soc0 {
->>> +	aglx_hps_bridges: fpga-bus@80000000 {
->>> +		compatible = "simple-bus";
->>> +		reg = <0x80000000 0x20200000>,
->>> +		      <0xf9000000 0x00100000>;
->>> +		reg-names = "axi_h2f", "axi_h2f_lw";
+>>> +
+>>> +#include "socfpga_agilex_socdk.dts"
+
+
+Nope, you cannot include a board in other board.
+
+>>> +#include "socfpga_agilex_pcie_root_port.dtsi"
+>>> +
 >>
->> Where is this binding defined?
+>> Missing board compatible, missing bindings.
 > 
-> The bindings for these reg-names are not currently defined anywhere, but 
+> The model and compatible bindings are inherited from socfpga_agilex_socdk.dts.
 
-Then you cannot use them.
+Then this is the same board, so entire DTS should be removed and instead
+merged into parent DTS. There is no such thing as "inherit" of an
+compatible.
 
-> they are also referenced in the following:
->      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
->      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
-> I am not exactly sure where the right place is to define them, maybe
-> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other 
-> hand, no code references these names; so it might make sense to just 
-> remove them.
+> 
+>>
+>>> +&pcie_0_pcie_aglx {
+>>> +	status = "okay";
+>>> +	compatible = "altr,pcie-root-port-3.0-p-tile";
+>>
+>> Why do you define the compatible here, not in DTSI? This is highly
+>> unusual and confusing. Also, compatible is never the last property, but
+>> opposite.
+> 
+> The current DTSI supports all three variants of the PCI hardware in the 
+> Agilex family, referred to as P-Tile, F-Tile, and R-Tile. This particular 
+> board has an Agilex chip with the P-Tile variant of the PCI hardware.
 
-In general: nowhere, because simple bus does not have such properties.
-It's not about reg-names only - you cannot have reg. You just did not
-define here simple-bus.
+And devices are not compatible? If they have common part in the DTSI, I
+would expect that. This is really unusual stuff and needs proper
+justifications, not just "DTSI support something". DTSI represents SoC
+and SoC either has p-tile or something else. It does not have a "wildcard".
+
+It's the same with that earlier simple-bus. You wrote DTS which does not
+represent real hardware.
+
+> 
+> I will move the compatible property to be the first property.
+> 
+>>
+>> Plus:
+>>
+>> Please run scripts/checkpatch.pl and fix reported warnings. After that,
+>> run also `scripts/checkpatch.pl --strict` and (probably) fix more
+>> warnings. Some warnings can be ignored, especially from --strict run,
+>> but the code here looks like it needs a fix. Feel free to get in touch
+>> if the warning is not clear.
+> 
+> The only warning I see from scripts/checkpatch.pl --strict is "added, 
+> moved or deleted file(s), does MAINTAINERS need updating?". The directory, 
+> arch/arm64/boot/dts/intel/, is already mentioned in the MAINTAINERS file. 
+> Do I need to do anything to resolve this?
+
+My mistake, I missed the first patch and assumed checkpatch will
+complain about this compatible.
+
+> 
+>>
+>> It does not look like you tested the DTS against bindings. Please run
+>> `make dtbs_check W=1` (see
+>> Documentation/devicetree/bindings/writing-schema.rst or
+>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+>> for instructions).
+>> Maybe you need to update your dtschema and yamllint. Don't rely on
+>> distro packages for dtschema and be sure you are using the latest
+>> released dtschema.
+> 
+> The dtschema check failures are inherited from socfpga_agilex_socdk.dts.
+
+New errors are not inherited from DTS/DTSI. Anyway, you cannot include
+other DTS. DTS is final board. You do not include C files in C code in
+Linux kernel.
+
+> Rob Herring's bot indicates that "Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not." Is this 
+> applicable here? Is the correct way to fix the existing dtschema check 
+> warnings is with their own patches, rather than adding to this PCIe Root 
+> Port patchset?
+
+Any new warning is on you and for example with that simple-bus, you
+brought new ones.
 
 Best regards,
 Krzysztof
