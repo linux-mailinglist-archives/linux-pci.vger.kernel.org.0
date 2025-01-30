@@ -1,198 +1,179 @@
-Return-Path: <linux-pci+bounces-20576-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20577-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F21DA22DF5
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 14:39:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC6F0A22E81
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 15:01:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA93516395E
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 13:39:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 403EB188A6F1
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 14:01:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7181E493C;
-	Thu, 30 Jan 2025 13:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54BA01E98E7;
+	Thu, 30 Jan 2025 14:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0axnlpw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1698462
-	for <linux-pci@vger.kernel.org>; Thu, 30 Jan 2025 13:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29121E7C08;
+	Thu, 30 Jan 2025 14:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738244365; cv=none; b=Z1yP/iyFvk0Y0/oqwStHwJAV3LSWoOVqq0gjhh0258zY73Yu5YPOElbmQGc54Z8FMYVaWDFTteViQOemZvH3jwloKXkgRM9NBdbQJDD3ZU+vl2eTAM6MbkR2/YT51DS7qNxQ3KWCynWRKXi9FWSI9wRIlcRP9YpwcPWYr2P43ss=
+	t=1738245701; cv=none; b=essETly2E3/AVSpyMjBDLlhPBLefXOcb/UVqDCDBNVjy5eplkg2Dqp85o8ohPqzrMcegaH3MXgnJvopRZOd3XEy8pbyOgu51zgRcDlJFd3yYaKXPOP6yGPYiTuFgitYaE8BFCTdG2xm6njpd4x8udsd/UR7cRar6ePAxOdGgjKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738244365; c=relaxed/simple;
-	bh=RIgKt8HHQqmlMNi4T8tsn4Qnv0Ra7e4iPjx6SVS2Esk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RaH7y42sr87REsLDmeapc5sQgDV0QXY4F8LqFtrVwQeetV2grQLWwngKaPT8Wlk4qKXESybw0fGH79DTQYjRNZyKjTM4DR3YoEzNvAU9SA1uUtLOX/3yvTE0DrEcbM7kElQWWpUG6m7BR3BcEspTI1ZK5QuHnNE5prtUNtFpc4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkKnj4ynPz6K8lH;
-	Thu, 30 Jan 2025 21:37:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9F066140B18;
-	Thu, 30 Jan 2025 21:39:20 +0800 (CST)
-Received: from localhost (10.47.30.69) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
- 2025 14:39:20 +0100
-Date: Thu, 30 Jan 2025 13:39:17 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>, "Lukas
- Wunner" <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, "Alexey
- Kardashevskiy" <aik@amd.com>, Xu Yilun <yilun.xu@linux.intel.com>,
-	<linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 11/11] samples/devsec: Add sample IDE establishment
-Message-ID: <20250130133917.0000539c@huawei.com>
-In-Reply-To: <173343745958.1074769.12896997365766327404.stgit@dwillia2-xfh.jf.intel.com>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
-	<173343745958.1074769.12896997365766327404.stgit@dwillia2-xfh.jf.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738245701; c=relaxed/simple;
+	bh=ch3lPgpH9FqpWF5yhIl3KdS/BSZwVZLBNQlPIEZ73z4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d6DxQnXUIJuuSutQ9m47KMCYpzuN2zstPnfje1zf7J6duG9gJMs0A8fFybpYsIHXw/SyhEMieFd2h7U0ndV3HWS2DhcVGRKM/5/j5rILITXhRD9fHP8w6N8l3EaEvWhcYNyQN1AHFpP5byZOtOE3iRnzTHSMn43KD5ql7Ht2BJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z0axnlpw; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21669fd5c7cso13685955ad.3;
+        Thu, 30 Jan 2025 06:01:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738245699; x=1738850499; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=Z0axnlpw9IHmmkrrUU6R8FLxPEbI4Nktv2a/tv1rwZbSA6woBYDSQcZknh+23o2FeL
+         z3G6Ugirq/WJIv8wfn64BJYL/xPpMmSSBPstIy8Hr7ROPnkB+Wgwg1l+8DzoP7Oiph7I
+         7IsZgqZ+b7CBvU9JNjyqDYwqtrRFhKBAUp7otkPF88bbKIRo78rLX6iPnvEFTmhqcPXl
+         vuGHe1t5oGbhEnsCP121nOQ1OiIxX7o1grQPhwTy6i2CMiNEjGzrhuQkw24cQWDtaT2P
+         YepKVExDffQsq4hePKorApWNw7qI7VwnFbZdypWDG2Kgs9q4RR/9aTXWHVjyi5UTR8m8
+         fS6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738245699; x=1738850499;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=VH4/1G+JfrEq8Hxk0JmSF4RHI9CrHJW7OTqlkvGu1ZKTBF1sFH5l7irEHGoSx/CGrA
+         1G0XOakA/4mcAu4M3ewLoroHC8okg3YJQrQ4Ubxc5tjNHMzujwBllKIHVbDTHQxhSOgt
+         AnCp7I54KCWdcZsJvQ/rUQEPeOmMSDT6PYnpMFTvG8ThVEDzo7XeRqUhI99EhT07I7Bn
+         X8+sXCs3cTYLvxkSDP4hXOPXgt9YGFMZQHxDNjV8KBoGK4k1m5xU3i6EoyQPeCOLM8KD
+         ZLVRLxH4mVvvGcvGduDu8EKUv+POQnxdKd4Cm4nhKXV606S75uql+gpd6vSKSFRTJOPp
+         CemA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1u3juS/Wm+C/mCX2loUVb8BPgf8XzyWJjc1OBQOpcQkmnX2oSHa7j6b2b8bNtKGpG+wuTof7lZK8uhZA=@vger.kernel.org, AJvYcCWRRmQzmTQMCNoT6/gntNuRSf9LqRRR/2xx82b813PH/csCJJrJjyXaUMlM9wSRUooMyRYOD0Mjzism@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPdDXegECE6j1e5BUFnon7eVhYhfjXix2MRklc432jxSlxkkQa
+	mR6PuhwSJMHigaJJkLSLn4tVH7pRLT6PS7HUCRGpIp3SIKStMWJO
+X-Gm-Gg: ASbGncuhWI/3Fqm97DxHHdILjaqw9VYGtmpake7Hb4hAEEN+JIj5Jc+8MD824TQBuIS
+	FJKIVzBMLTZat2Y5kPC+98VLm4aznC6zBv5Zuy6VWfr5TGrGyExwXt3pveEZ23B2LLuJd1LOSDs
+	Cewfo5c9bNUnEpj8u51K2MWU4bao0JiziIvcyO6RrfR7ExlaRuMZemWDoUJxFwoLqale4Li2VfE
+	znTQsGoGH/XpGu4WnjFQbK7VmpwtCV3/s3rjTpIGwVJOE1CAHS/B/3oSq4P9+a2Vlvl61uJuOXk
+	yDOy6wmqW/8vq5osqSd41EhS
+X-Google-Smtp-Source: AGHT+IHv9lGQn/s3vid5X1TDdjdBDQ1OqgW5b6PvrqI4oNlN3OUgEh429QSJ8PIvXZrIzok1AEsKXA==
+X-Received: by 2002:a17:902:da8c:b0:215:b468:1a33 with SMTP id d9443c01a7336-21dd7c356fcmr113793145ad.4.1738245698703;
+        Thu, 30 Jan 2025 06:01:38 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.154.251])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3300880sm14139635ad.168.2025.01.30.06.01.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 06:01:38 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: scott@spiteful.org,
+	bhelgaas@google.com
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] PCI: cpci: remove unused fields
+Date: Thu, 30 Jan 2025 11:01:29 -0300
+Message-Id: <20250130140129.19756-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 05 Dec 2024 14:24:19 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+The `get_power()` and `set_power()` function pointers in the
+`cpci_hp_controller ops` struct were declared but never implemented by
+any driver. To improve code readability and reduce resource usage,
+remove this pointers and replace with a `flags` field.
 
-> Exercise common setup and teardown flows for a sample platform TSM
-> driver that implements the TSM 'connect' and 'disconnect' flows.
-> 
-> This is both a template for platform specific implementations and a test
-> case for the shared infrastructure.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Samuel Ortiz <sameo@rivosinc.com>
-> Cc: Alexey Kardashevskiy <aik@amd.com>
-> Cc: Xu Yilun <yilun.xu@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Trivial comments inline.
+Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
+`cpci_get_power_s atus()` to track the slot's power state using the
+`SLOT_ENABLED` macro.
 
->  static int devsec_tsm_connect(struct pci_dev *pdev)
->  {
-> -	return -ENXIO;
-> +	struct pci_ide *ide;
-> +	int rc, stream_id;
-> +
-> +	stream_id =
-> +		find_first_zero_bit(devsec_stream_ids, DEVSEC_NR_IDE_STREAMS);
-> +	if (stream_id == DEVSEC_NR_IDE_STREAMS)
-> +		return -EBUSY;
-> +	set_bit(stream_id, devsec_stream_ids);
-> +	ide = &devsec_streams[stream_id].ide;
-> +	pci_ide_stream_probe(pdev, ide);
-> +
-> +	ide->stream_id = stream_id;
-> +	rc = pci_ide_stream_setup(pdev, ide, PCI_IDE_SETUP_ROOT_PORT);
-> +	if (rc)
-> +		return rc;
-> +	rc = tsm_register_ide_stream(pdev, ide);
-> +	if (rc)
-> +		goto err;
-> +
-> +	devsec_streams[stream_id].pdev = pdev;
-> +	pci_ide_enable_stream(pdev, ide);
-> +	return 0;
-> +err:
-> +	pci_ide_stream_teardown(pdev, ide, PCI_IDE_SETUP_ROOT_PORT);
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
+ drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
+ 2 files changed, 8 insertions(+), 16 deletions(-)
 
-I'd kind of expect to see more of what we have in disconnect here.
-Like clearing the bit.
-
-> +	return rc;
->  }
->  
->  static void devsec_tsm_disconnect(struct pci_dev *pdev)
->  {
-> +	struct pci_ide *ide;
-> +	int i;
-> +
-> +	for_each_set_bit(i, devsec_stream_ids, DEVSEC_NR_IDE_STREAMS)
-> +		if (devsec_streams[i].pdev == pdev)
-> +			break;
-> +
-> +	if (i >= DEVSEC_NR_IDE_STREAMS)
-> +		return;
-> +
-> +	ide = &devsec_streams[i].ide;
-> +	pci_ide_disable_stream(pdev, ide);
-> +	tsm_unregister_ide_stream(ide);
-> +	pci_ide_stream_teardown(pdev, ide, PCI_IDE_SETUP_ROOT_PORT);
-> +	devsec_streams[i].pdev = NULL;
-If this setting to NULL needs to be out of order wrt to what happens
-in probe, add a comment.  If not move it to after pci_ide_disable_steram()
-
-> +	clear_bit(i, devsec_stream_ids);
->  }
->  
->  static const struct pci_tsm_ops devsec_pci_ops = {
-> @@ -63,16 +113,44 @@ static void devsec_tsm_remove(void *tsm)
->  	tsm_unregister(tsm);
->  }
->  
-> +static void set_nr_ide_streams(int nr)
-> +{
-> +	struct pci_dev *pdev = NULL;
-> +
-> +	for_each_pci_dev(pdev) {
-> +		struct pci_host_bridge *hb;
-> +
-> +		if (pdev->sysdata != devsec_sysdata)
-> +			continue;
-> +		hb = pci_find_host_bridge(pdev->bus);
-> +		if (hb->nr_ide_streams >= 0)
-> +			continue;
-> +		pci_set_nr_ide_streams(hb, nr);
-> +	}
-> +}
-> +
-> +static void devsec_tsm_ide_teardown(void *data)
-> +{
-> +	set_nr_ide_streams(-1);
-> +}
-> +
->  static int devsec_tsm_probe(struct platform_device *pdev)
->  {
->  	struct tsm_subsys *tsm;
-> +	int rc;
->  
->  	tsm = tsm_register(&pdev->dev, NULL, &devsec_pci_ops);
->  	if (IS_ERR(tsm))
->  		return PTR_ERR(tsm);
->  
-> -	return devm_add_action_or_reset(&pdev->dev, devsec_tsm_remove,
-> -					tsm);
-> +	rc = devm_add_action_or_reset(&pdev->dev, devsec_tsm_remove, tsm);
-> +	if (rc)
-> +		return rc;
-> +
-> +	set_nr_ide_streams(DEVSEC_NR_IDE_STREAMS);
-> +
-> +	return devm_add_action_or_reset(&pdev->dev, devsec_tsm_ide_teardown,
-> +					NULL);
->  }
->  
->  static struct platform_driver devsec_tsm_driver = {
-> @@ -109,5 +187,6 @@ static void __exit devsec_tsm_exit(void)
->  }
->  module_exit(devsec_tsm_exit);
->  
-> +MODULE_IMPORT_NS(PCI_IDE);
->  MODULE_LICENSE("GPL");
->  MODULE_DESCRIPTION("Device Security Sample Infrastructure: Platform TSM Driver");
-> 
-> 
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index 03fa39ab0c88..c5cb12cad2b4 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
+ 	int (*enable_irq)(void);
+ 	int (*disable_irq)(void);
+ 	int (*check_irq)(void *dev_id);
+-	u8  (*get_power)(struct slot *slot);
+-	int (*set_power)(struct slot *slot, int value);
++	int flags;
+ };
+ 
+ struct cpci_hp_controller {
+diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+index d0559d2faf50..87a743c2a5f1 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_core.c
++++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+@@ -27,6 +27,8 @@
+ #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
+ #define DRIVER_DESC	"CompactPCI Hot Plug Core"
+ 
++#define SLOT_ENABLED 0x00000001
++
+ #define MY_NAME	"cpci_hotplug"
+ 
+ #define dbg(format, arg...)					\
+@@ -71,13 +73,12 @@ static int
+ enable_slot(struct hotplug_slot *hotplug_slot)
+ {
+ 	struct slot *slot = to_slot(hotplug_slot);
+-	int retval = 0;
+ 
+ 	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
+ 
+-	if (controller->ops->set_power)
+-		retval = controller->ops->set_power(slot, 1);
+-	return retval;
++	controller->ops->flags |= SLOT_ENABLED;
++
++	return 0;
+ }
+ 
+ static int
+@@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ 	}
+ 	cpci_led_on(slot);
+ 
+-	if (controller->ops->set_power) {
+-		retval = controller->ops->set_power(slot, 0);
+-		if (retval)
+-			goto disable_error;
+-	}
++	controller->ops->flags &= ~SLOT_ENABLED;
+ 
+ 	slot->adapter_status = 0;
+ 
+@@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ static u8
+ cpci_get_power_status(struct slot *slot)
+ {
+-	u8 power = 1;
+-
+-	if (controller->ops->get_power)
+-		power = controller->ops->get_power(slot);
+-	return power;
++	return controller->ops->flags & SLOT_ENABLED;
+ }
+ 
+ static int
+-- 
+2.34.1
 
 
