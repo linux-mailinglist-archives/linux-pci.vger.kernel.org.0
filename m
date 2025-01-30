@@ -1,145 +1,431 @@
-Return-Path: <linux-pci+bounces-20570-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20571-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8F8BA22932
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 08:34:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F08A2A22BDF
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 11:45:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B26E83A5E74
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 07:34:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 026F43A9219
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2025 10:45:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 956B419CC17;
-	Thu, 30 Jan 2025 07:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjgGviO6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F1319F120;
+	Thu, 30 Jan 2025 10:45:17 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D2CC2FB;
-	Thu, 30 Jan 2025 07:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C2A1A2543
+	for <linux-pci@vger.kernel.org>; Thu, 30 Jan 2025 10:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738222451; cv=none; b=IAHV45Llj8ZxGckIywCj1kpmmkLsfDBP5eQ0pL0U1qlGX0jjLOKgZ67VXJvYrPASJdWGT4CQamqEl71tXhtt6LB/PjmA70FvxfyeT1jXLtcGqlSKhFFyslgJ4JP7JiAKU/Y/CgTkovTV2nGdWypf7wPOM44XCikqNcfXnvhg2Pg=
+	t=1738233917; cv=none; b=Qcm6KXZuEUZa85Nmwtj1q5zmWgJRwZJMex8p1UkWR8J9w0FXU9lXntShdzZiTqiv+8pUVagaCPq+SgSTV9jh/d5YScxrplq21za/tw5BjXbOs+xdM5KcCXhEfOEn3oWUBnRuF7d8SZx3QUNz3We4ZLw9GOdVJEaLgz51MO495Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738222451; c=relaxed/simple;
-	bh=fuoI3H+uEt5cFuzKB/WfrfDnzCiYn1D5RYaUBHTm+Kw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oLelRrquV+kIIh0lQrkyooBQRPgPW7J8chs401Eel4DLKo23XqIptikXNVvJy3DAVDzfvSFZ70PmN2yTz9Y4/TwWoscKLOxcsHTqZ/i0sFWXIf+Rs/JqFC5oKhwfihD9+kFNWcB2wN5loUomVSBd/xjXd4LZlaAzJquc40xvIYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjgGviO6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28AEEC4CED2;
-	Thu, 30 Jan 2025 07:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738222451;
-	bh=fuoI3H+uEt5cFuzKB/WfrfDnzCiYn1D5RYaUBHTm+Kw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YjgGviO62GBrFAeDvU1KaUkkDlPUHG8kaVOcz0ZZxd+0n3nawdZpEIv09Z+seukD+
-	 2l8ehDFWXIWXv2HrBe+Q2m0i4vkMkQo+m1IVWBJthRUSt03L+CbDTVT3p9HM4WiCPV
-	 yVVekXVI4XH2vMhwEVoQ6yMW3hj+wyKXzhGSwEzrxaMkzS6xvadnSc+RGigoX9NmRm
-	 DviO0D86CtzJumI3heZ85JRmuTRMja/7q8K+ayJ4JvHrgaivUYxbvrBwQApZGrkMXL
-	 445yV0/EKr31csjgVcbMniIEx17iAIqVrsqPn2cJeOUxFMH7hYYUHQ1xJM3B6RgK82
-	 eP76S/RvGTE/w==
-Message-ID: <40adf7c3-7c02-4520-9e99-ea797143f454@kernel.org>
-Date: Thu, 30 Jan 2025 08:34:03 +0100
+	s=arc-20240116; t=1738233917; c=relaxed/simple;
+	bh=7zvxYvULpwgEd7FkEy0S6Y7wjqzcEy81A0/ncR+cIhE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L19JZm2lscPos4qMD6xx94BDRIRaRM26uM47dGRw74fn4qDHy2NFJiKPtakBraS2uBibwAb5oRyAlzSTp7ViX/88N799ozlxk6H5lbT2WRB6S8tRFUbEbnHQ+TvqvmWMBUIeAkQ/WujLGhAHkbG4G0OxeHZ029usl2/HMakDmwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkFyS2vDnz6K9BZ;
+	Thu, 30 Jan 2025 18:44:32 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D93781400DB;
+	Thu, 30 Jan 2025 18:45:10 +0800 (CST)
+Received: from localhost (10.47.30.69) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 11:45:10 +0100
+Date: Thu, 30 Jan 2025 10:45:07 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-coco@lists.linux.dev>, Alexey Kardashevskiy <aik@amd.com>,
+	<linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 04/11] PCI/IDE: Selective Stream IDE enumeration
+Message-ID: <20250130104507.00004446@huawei.com>
+In-Reply-To: <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+	<173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: altera: Add binding for Agilex
-To: Matthew Gerlach <matthew.gerlach@linux.intel.com>, lpieralisi@kernel.org,
- kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
- dinguyen@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: matthew.gerlach@altera.com, peter.colberg@altera.com
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-2-matthew.gerlach@linux.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250127173550.1222427-2-matthew.gerlach@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 27/01/2025 18:35, Matthew Gerlach wrote:
-> Add the compatible bindings for the three variants of Agilex
-> PCIe Hard IP.
+On Thu, 05 Dec 2024 14:23:39 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Link encryption is a new PCIe capability defined by "PCIe 6.2 section
+> 6.33 Integrity & Data Encryption (IDE)". While it is a standalone port
+> and endpoint capability, it is also a building block for device security
+> defined by "PCIe 6.2 section 11 TEE Device Interface Security Protocol
+> (TDISP)". That protocol coordinates device security setup between the
+> platform TSM (TEE Security Manager) and device DSM (Device Security
+> Manager). While the platform TSM can allocate resources like stream-ids
+> and manage keys, it still requires system software to manage the IDE
+> capability register block.
 > 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v3:
->  - Remove accepted patches from patch set.
-> ---
->  .../devicetree/bindings/pci/altr,pcie-root-port.yaml     | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Add register definitions and basic enumeration for a "selective-stream"
+> IDE capability, a follow on change will select the new CONFIG_PCI_IDE
+> symbol. Note that while the IDE specifications defines both a
+> point-to-point "Link" stream and a root-port-to-endpoint "Selective"
+> stream, only "Selective" is considered for now for platform TSM
+> coordination.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> index 52533fccc134..ca9691ec87d2 100644
-> --- a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> @@ -12,9 +12,18 @@ maintainers:
+> Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
+> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Some overlap in here with other reviews probably...
+
+Jonathan
+
+> ---
+>  drivers/pci/Kconfig           |    3 +
+>  drivers/pci/Makefile          |    1 
+>  drivers/pci/ide.c             |   73 ++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h             |    6 +++
+>  drivers/pci/probe.c           |    1 
+>  include/linux/pci.h           |    5 ++
+>  include/uapi/linux/pci_regs.h |   84 +++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 172 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pci/ide.c
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 2fbd379923fd..4e5236c456f5 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -121,6 +121,9 @@ config XEN_PCIDEV_FRONTEND
+>  config PCI_ATS
+>  	bool
 >  
->  properties:
->    compatible:
-> +    description: altr,pcie-root-port-1.0 is used for the Cyclone5
-> +      family of chips. The Stratix10 family of chips is supported
-> +      by altr,pcie-root-port-2.0. The Agilex family of chips has
-> +      three variants of PCIe Hard IP referred to as the f-tile, p-tile,
-> +      and r-tile.
+> +config PCI_IDE
+> +	bool
+> +
+>  config PCI_DOE
+>  	bool
+>  
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 67647f1880fb..6612256fd37d 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -34,6 +34,7 @@ obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
+>  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+>  obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
+>  obj-$(CONFIG_PCI_DOE)		+= doe.o
+> +obj-$(CONFIG_PCI_IDE)		+= ide.o
+>  obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
+>  obj-$(CONFIG_PCI_NPEM)		+= npem.o
+>  obj-$(CONFIG_PCIE_TPH)		+= tph.o
+> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
+> new file mode 100644
+> index 000000000000..a0c09d9e0b75
+> --- /dev/null
+> +++ b/drivers/pci/ide.c
+> @@ -0,0 +1,73 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+> +
+> +/* PCIe 6.2 section 6.33 Integrity & Data Encryption (IDE) */
+> +
+> +#define dev_fmt(fmt) "PCI/IDE: " fmt
+> +#include <linux/pci.h>
+> +#include "pci.h"
+> +
+> +static int sel_ide_offset(u16 cap, int stream_id, int nr_ide_mem)
+> +{
+> +	return cap + stream_id * PCI_IDE_SELECTIVE_BLOCK_SIZE(nr_ide_mem);
+
+I'd be tempted to have a define to go from base of the IDE extended cap
+directly to the sel_ide_offset rather than this use of a block based
+offset.  Maybe it ends up too complex though.
+
+> +}
+> +
+> +void pci_ide_init(struct pci_dev *pdev)
+> +{
+> +	u16 ide_cap, sel_ide_cap;
+> +	int nr_ide_mem = 0;
+> +	u32 val = 0;
+> +
+> +	if (!pci_is_pcie(pdev))
+> +		return;
+> +
+> +	ide_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
+> +	if (!ide_cap)
+> +		return;
+> +
+> +	/*
+> +	 * Check for selective stream capability from endpoint to root-port, and
+> +	 * require consistent number of address association blocks
+
+on the EP.
+(for avoidance of confusion).
+
+Also, from here just seems to mean at the RP and the EP.  Not seting a bus
+walk here to check anything else.  Note I'm not sure we need to but this
+comment is implying a 'from/to' aspect that this code doesn't seem to check.
+
+> +	 */
+> +	pci_read_config_dword(pdev, ide_cap + PCI_IDE_CAP, &val);
+> +	if ((val & PCI_IDE_CAP_SELECTIVE) == 0)
+> +		return;
+> +
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) {
+> +		struct pci_dev *rp = pcie_find_root_port(pdev);
+> +
+> +		if (!rp->ide_cap)
+> +			return;
+> +	}
+> +
+> +	if (val & PCI_IDE_CAP_LINK)
+> +		sel_ide_cap = ide_cap + PCI_IDE_LINK_STREAM +
+> +			      (PCI_IDE_CAP_LINK_TC_NUM(val) + 1) *
+> +				      PCI_IDE_LINK_BLOCK_SIZE;
+> +	else
+> +		sel_ide_cap = ide_cap + PCI_IDE_LINK_STREAM;
+Maybe cleaner as
+	int link_tc_count = 0;
+	if (val & PCI_IDE_CAP_LINK)
+		//see suggestion in header to make macro include +1.
+		link_tc_count = PCI_IDE_CAP_LINK_TC_NUM(val) + 1;
+
+	sel_ide_cap = ide_cap + PCI_IDE_LINK_STREAM +
+		      link_tc_count * PCI_IDE_LINK_BLOCK_SIZE;
+I'm not that bothered either way. Just didn't like that
+ide_cap + PIC_IDE_LINK_STREAM is in both legs.
+
+Or have a macro that always gets you to the selective part without
+using a zero length PCI_IDE_LINK_STREAM block.
 
 
-Has three in the same time? Or one of three? Your board DTS said you
-have exactly one, so this comment is confusing.
+> +
+> +	for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val); i++) {
+> +		if (i == 0) {
+> +			pci_read_config_dword(pdev, sel_ide_cap, &val);
+> +			nr_ide_mem = PCI_IDE_SEL_CAP_ASSOC_NUM(val);
+
+Yank out and index from 1 for the loop?
+Note though that PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val) of 1
+means 2 streams so you want <= or just +1 in the macro so the PCI
+header gets to deal with that!
 
 
-Best regards,
-Krzysztof
+> +		} else {
+> +			int offset = sel_ide_offset(sel_ide_cap, i, nr_ide_mem);
+> +
+> +			pci_read_config_dword(pdev, offset, &val);
+> +
+> +			/*
+> +			 * lets not entertain devices that do not have a
+> +			 * constant number of address association blocks
+> +			 */
+> +			if (PCI_IDE_SEL_CAP_ASSOC_NUM(val) != nr_ide_mem) {
+> +				pci_info(pdev, "Unsupported Selective Stream %d capability\n", i);
+> +				return;
+> +			}
+> +		}
+> +	}
+> +
+> +	pdev->ide_cap = ide_cap;
+> +	pdev->sel_ide_cap = sel_ide_cap;
+> +	pdev->nr_ide_mem = nr_ide_mem;
+> +}
+
+
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index db9b47ce3eef..50811b7655dd 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -530,6 +530,11 @@ struct pci_dev {
+>  #endif
+>  #ifdef CONFIG_PCI_NPEM
+>  	struct npem	*npem;		/* Native PCIe Enclosure Management */
+> +#endif
+> +#ifdef CONFIG_PCI_IDE
+> +	u16		ide_cap;	/* Link Integrity & Data Encryption */
+> +	u16		sel_ide_cap;	/* - Selective Stream register block */
+
+I'd not call it cap as people will go looking for a selective IDE extended capability.
+I'm a little dubious about it being necessary vs a helper function that grabs
+the necessary count info directly from the device.
+
+> +	int		nr_ide_mem;	/* - Address range limits for streams */
+>  #endif
+>  	u16		acs_cap;	/* ACS Capability offset */
+>  	u8		supported_speeds; /* Supported Link Speeds Vector */
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 1601c7ed5fab..9635b27d2485 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -748,7 +748,8 @@
+>  #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
+>  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+>  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+> +#define PCI_EXT_CAP_ID_IDE	0x30    /* Integrity and Data Encryption */
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
+>  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -1213,4 +1214,85 @@
+>  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+>  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+>  
+> +/* Integrity and Data Encryption Extended Capability */
+> +#define PCI_IDE_CAP			0x4
+> +#define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
+> +#define  PCI_IDE_CAP_SELECTIVE		0x2  /* Selective IDE Streams Supported */
+> +#define  PCI_IDE_CAP_FLOWTHROUGH	0x4  /* Flow-Through IDE Stream Supported */
+> +#define  PCI_IDE_CAP_PARTIAL_HEADER_ENC 0x8  /* Partial Header Encryption Supported */
+> +#define  PCI_IDE_CAP_AGGREGATION	0x10 /* Aggregation Supported */
+> +#define  PCI_IDE_CAP_PCRC		0x20 /* PCRC Supported */
+> +#define  PCI_IDE_CAP_IDE_KM		0x40 /* IDE_KM Protocol Supported */
+
+Looks like 3.2 has a bit 7 defined as well.  Selective IDE for configuration requests supported.
+Probably worth adding that.
+
+> +#define  PCI_IDE_CAP_ALG(x)		(((x) >> 8) & 0x1f) /* Supported Algorithms */
+> +#define  PCI_IDE_CAP_ALG_AES_GCM_256	0    /* AES-GCM 256 key size, 96b MAC */
+> +#define  PCI_IDE_CAP_LINK_TC_NUM(x)	(((x) >> 13) & 0x7) /* Link IDE TCs */
+Maybe add 1 here as the macro name kind of implies it is returning the number of link IDE TCs
+rather than 1 less that that. It is a little tricky given the spec calls this field "Number of"
+
+> +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Selective IDE Streams */
+
+Similar here. I'm not sure what precedence we have int his file. I can't immediately see any
+either way. 
+
+> +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_MASK	0xff0000
+Why have the mask if you are providing the macro above to get the value?
+
+> +#define  PCI_IDE_CAP_TEE_LIMITED	0x1000000 /* TEE-Limited Stream Supported */
+> +#define PCI_IDE_CTL			0x8
+> +#define  PCI_IDE_CTL_FLOWTHROUGH_IDE	0x4	/* Flow-Through IDE Stream Enabled */
+> +#define PCI_IDE_LINK_STREAM		0xc
+I couldn't find specific precedence for this but my gut would say add a _0 postfix
+to indicate it's the first of a number of these.
+All the similar cases seem to explicitly enumerate _0, _1 etc which makes little
+sense here.
+
+> +#define PCI_IDE_LINK_BLOCK_SIZE		8
+> +/* Link IDE Stream block, up to PCI_IDE_CAP_LINK_TC_NUM */
+> +/* Link IDE Stream Control Register */
+I'd expect a _0 define for the first ctrl and one for the first status.
+
+Then index each register via
+PCI_IDE_LINK_CTL_0 + i * PCIE_IDE_LINK_BLOCK_SIZE
+PCI_IDE_LINK_STS_0 + i * PCIE_IDE_LINK_BLOCK_SIZE
+
+Again, not immediately seeing precedence, but having register field defines without
+a register address define (even a constructed one as will be relevant
+for the selective IDE stream blocks) seems odd to me.
+
+> +#define  PCI_IDE_LINK_CTL_EN		 0x1	/* Link IDE Stream Enable */
+> +#define  PCI_IDE_LINK_CTL_TX_AGGR_NPR(x) (((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
+> +#define  PCI_IDE_LINK_CTL_TX_AGGR_PR(x)	 (((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
+> +#define  PCI_IDE_LINK_CTL_TX_AGGR_CPL(x) (((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
+> +#define  PCI_IDE_LINK_CTL_PCRC_EN	 0x100	/* PCRC Enable */
+> +#define  PCI_IDE_LINK_CTL_PART_ENC(x)	 (((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
+> +#define  PCI_IDE_LINK_CTL_ALG(x)	 (((x) >> 14) & 0x1f) /* Selected Algorithm */
+Perhaps nice to throw in a reference to the supported algs list above.
+
+> +#define  PCI_IDE_LINK_CTL_TC(x)		 (((x) >> 19) & 0x7)  /* Traffic Class */
+> +#define  PCI_IDE_LINK_CTL_ID(x)		 (((x) >> 24) & 0xff) /* Stream ID */
+> +#define  PCI_IDE_LINK_CTL_ID_MASK	 0xff000000
+> +
+> +
+> +/* Link IDE Stream Status Register */
+> +#define  PCI_IDE_LINK_STS_STATUS(x)	((x) & 0xf) /* Link IDE Stream State */
+> +#define  PCI_IDE_LINK_STS_RECVD_INTEGRITY_CHECK	0x80000000 /* Received Integrity Check Fail Msg */
+
+
+I'd put some white space here.
+
+> +/* Selective IDE Stream block, up to PCI_IDE_CAP_SELECTIVE_STREAMS_NUM */
+> +#define PCI_IDE_SELECTIVE_BLOCK_SIZE(x)  (20 + 12 * (x))
+
+Probably want a better name than 'x' for that parameter as it's not
+immediately obvious what it is. (number of IDE address association
+register blocks).
+Also that 12 probably wants a define. It's used a few times.
+
+> +/* Selective IDE Stream Capability Register */
+> +#define  PCI_IDE_SEL_CAP		 0
+> +#define  PCI_IDE_SEL_CAP_ASSOC_NUM(x)	 ((x) & 0xf) /* Address Association Register Blocks Number */
+> +#define  PCI_IDE_SEL_CAP_ASSOC_MASK	 0xf
+
+If the mask make sense to keep at all would be good to build
+the macro above using it.
+
+> +/* Selective IDE Stream Control Register */
+> +#define  PCI_IDE_SEL_CTL		 4
+> +#define   PCI_IDE_SEL_CTL_EN		 0x1	/* Selective IDE Stream Enable */
+> +#define   PCI_IDE_SEL_CTL_TX_AGGR_NPR(x) (((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
+> +#define   PCI_IDE_SEL_CTL_TX_AGGR_PR(x)	 (((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
+> +#define   PCI_IDE_SEL_CTL_TX_AGGR_CPL(x) (((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
+> +#define   PCI_IDE_SEL_CTL_PCRC_EN	 0x100	/* PCRC Enable */
+> +#define   PCI_IDE_SEL_CTL_CFG_EN	 0x200	/* Selective IDE for Configuration Requests */
+> +#define   PCI_IDE_SEL_CTL_PART_ENC(x)	 (((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
+This is a control register. Seems likely we'll mostly be writing these.
+So how useful is it to provide just a read macro?
+Maybe I'm missing something!
+> +#define   PCI_IDE_SEL_CTL_ALG(x)	 (((x) >> 14) & 0x1f) /* Selected Algorithm */
+> +#define   PCI_IDE_SEL_CTL_TC(x)		 (((x) >> 19) & 0x7)  /* Traffic Class */
+> +#define   PCI_IDE_SEL_CTL_DEFAULT	 0x400000 /* Default Stream */
+> +#define   PCI_IDE_SEL_CTL_TEE_LIMITED	 (1 << 23) /* TEE-Limited Stream */
+
+Why this one as a shift and all the rest as explicit hex values?
+
+> +#define   PCI_IDE_SEL_CTL_ID_MASK	 0xff000000
+> +#define   PCI_IDE_SEL_CTL_ID_MAX	 255
+> +/* Selective IDE Stream Status Register */
+> +#define  PCI_IDE_SEL_STS		 8
+> +#define   PCI_IDE_SEL_STS_STATUS(x)	((x) & 0xf) /* Selective IDE Stream State */
+> +#define   PCI_IDE_SEL_STS_RECVD_INTEGRITY_CHECK	0x80000000 /* Received Integrity Check Fail Msg */
+> +/* IDE RID Association Register 1 */
+> +#define  PCI_IDE_SEL_RID_1		 12
+> +#define   PCI_IDE_SEL_RID_1_LIMIT_MASK	 0xffff00
+> +/* IDE RID Association Register 2 */
+> +#define  PCI_IDE_SEL_RID_2		 16
+> +#define   PCI_IDE_SEL_RID_2_VALID	 0x1
+> +#define   PCI_IDE_SEL_RID_2_BASE_MASK	 0x00ffff00
+
+Why leading zeros on this one?
+
+> +#define   PCI_IDE_SEL_RID_2_SEG_MASK	 0xff000000
+> +/* Selective IDE Address Association Register Block, up to PCI_IDE_SEL_CAP_ASSOC_NUM */
+> +#define  PCI_IDE_SEL_ADDR_1(x)		     (20 + (x) * 12)
+> +#define   PCI_IDE_SEL_ADDR_1_VALID	     0x1
+> +#define   PCI_IDE_SEL_ADDR_1_BASE_LOW_MASK   0x000fff0
+
+more leading zeros which doesn't seem consistent. Also, as Alexey
+pointed out value is wrong as that's 4 bits in not 8.
+
+
+> +#define   PCI_IDE_SEL_ADDR_1_BASE_LOW_SHIFT  20
+8?
+
+> +#define   PCI_IDE_SEL_ADDR_1_LIMIT_LOW_MASK  0xfff0000
+> +#define   PCI_IDE_SEL_ADDR_1_LIMIT_LOW_SHIFT 20
+Also missing a zero (Alexey got this one as well I see)
+
+> +/* IDE Address Association Register 2 is "Memory Limit Upper" */
+> +/* IDE Address Association Register 3 is "Memory Base Upper" */
+> +#define  PCI_IDE_SEL_ADDR_2(x)		(24 + (x) * 12)
+> +#define  PCI_IDE_SEL_ADDR_3(x)		(28 + (x) * 12)
+> +
+>  #endif /* LINUX_PCI_REGS_H */
+> 
+> 
+
 
