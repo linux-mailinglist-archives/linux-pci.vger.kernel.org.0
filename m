@@ -1,61 +1,63 @@
-Return-Path: <linux-pci+bounces-20607-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20608-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73BEAA242A3
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 19:30:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14D92A242A4
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 19:31:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB462166F4A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 18:30:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8061418895F2
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 18:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D897F1F2C2E;
-	Fri, 31 Jan 2025 18:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 500801F1920;
+	Fri, 31 Jan 2025 18:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsEC0FJp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H96lAUHr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44AD1F2C33
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 18:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B5D4315A
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 18:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738348233; cv=none; b=le8PKyI8IGFd5glPDnX021lkkb16YPgRfmKGgh98YVKIgGoq6jMLbm8xgePpSAhTdby1Udq1PX5OtaU3QpWuaFkZ3cHy88jJSYk5oZK3x8+RyhOccwzaeSXj2oTqKG1Kg/upBJfaeWveO+HFLvI6kfY1gr3/KK5PTHgP5YGoLYk=
+	t=1738348237; cv=none; b=DoihIUAwQEFZM7fc5N2LPrV/fMdcYqXIEaX2rC9kegxR4eGLXzV2xp8GgQmPGmWCEzzkUsMM0CIeWW3vxPRgFzj+FbCbg1x7s2zfqMVM0Y3eh/2z6cMSubJ7euLtPgtANAb5Y+lAwH3uKk9XhvZPnW4jhnL9AnLWWVjrinVZzPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738348233; c=relaxed/simple;
-	bh=Bi1EDc1v8t/I1ufJIhDjHxnt+Ry1rozlhmo2/jK3fSQ=;
+	s=arc-20240116; t=1738348237; c=relaxed/simple;
+	bh=Dgj5VNoE5kVgWc76NDWLLdMQe5eoOJ8Xt5A76OaSvQs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EtTdJTm8z9ScdOWU/vG4ENTdWNw416E5AalWajX05wDXBeg+If3DudgBouY6AmQddDdLqWsXvOe7kkjg6FT+KXwBzJrQHEmrR9vrymC7cHfbJyTg1Gal1Ahu1Ldz/mZrBsY/PHhonFk9IdSH72RQ3m5xGELLExecTa+Oaw6ZgFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsEC0FJp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E697BC4CED1;
-	Fri, 31 Jan 2025 18:30:30 +0000 (UTC)
+	 MIME-Version; b=c0HrKgE5irgrKTJ30C+nqODTfZN6fZ82xk83nQZNLyWe+GGxLKzbqv4km+womt0KaO7avHALpjUhhVS8tKqj8Yio4V2SoN6IWiE24jeqGZ/dQj7UFiphdex/6BNqtRpCJVv4CwBl3+9zGvj0aB/yeE9B7b/lqH57CZ78DzUVsJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H96lAUHr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1BAFC4CED3;
+	Fri, 31 Jan 2025 18:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738348233;
-	bh=Bi1EDc1v8t/I1ufJIhDjHxnt+Ry1rozlhmo2/jK3fSQ=;
+	s=k20201202; t=1738348236;
+	bh=Dgj5VNoE5kVgWc76NDWLLdMQe5eoOJ8Xt5A76OaSvQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XsEC0FJpzfKnP9uc+4Yo38ZQXHaym3iM7LzL63lvkAffdXGalf83ctwIBsnk6Q91P
-	 e4oWrrb1sMucYni6EAnJP5gt5O3anGDDvjA133I2+UZyG/F9mH/vfApJt0RrDX1XdW
-	 MoTViE6qLnx+x46jkC0OyDYeT+gcFyf0E55HDPm7YEt6xBoqN/ZCKUsfrQyzuEBmT5
-	 N5PRT6lCsxooO73GcdVHUt/2z9apJlOZmFcqX512sw3lmh7zOoCgRpdnTegDKTNad9
-	 9Axp9KOna4IcR3KLdkXPrXcFp33xTkcXZFMUzaoaRkD7HGWUHzqyIGOmdQPQa3lIQ4
-	 1sT/GUyS5jy9w==
+	b=H96lAUHrcl0zDCcAiMi4BEDOCUJosQOK7GMWh16PB14yPPEqX/5Lawm95d3dH+Ral
+	 NeUeedwbltFM1WoOz+m2uZJjFA7ghbeXdFXyjJMTQDkvl+2X6MryMUF3cbbY9UJwij
+	 9/6x01CXlzO8jZ/zPHGjdzzzILofEgx2NrptPvUtsEBCIxAxCU1rj4YzfY5x9o58E1
+	 Chg7TZyhMXRxHjBLuuB2uZjzkVL0I1UkwhJ2z0QfvpTVU/9gE9M0ZnTLJgxTuyXDKN
+	 vV5K89CmsxH9DqHIEMkG6hKghpGTU12mhjvOuQqrQPJrQuqnT2KGwjZuOJIcM1AS0b
+	 dUZHNUKPwBFuA==
 From: Niklas Cassel <cassel@kernel.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
 Cc: Damien Le Moal <dlemoal@kernel.org>,
 	Siddharth Vadapalli <s-vadapalli@ti.com>,
 	Udit Kumar <u-kumar1@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Niklas Cassel <cassel@kernel.org>,
+	stable+noautosel@kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v4 5/7] PCI: keystone: Describe Resizable BARs as Resizable BARs
-Date: Fri, 31 Jan 2025 19:29:54 +0100
-Message-ID: <20250131182949.465530-14-cassel@kernel.org>
+Subject: [PATCH v4 6/7] PCI: keystone: Specify correct alignment requirement
+Date: Fri, 31 Jan 2025 19:29:55 +0100
+Message-ID: <20250131182949.465530-15-cassel@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250131182949.465530-9-cassel@kernel.org>
 References: <20250131182949.465530-9-cassel@kernel.org>
@@ -65,43 +67,49 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1357; i=cassel@kernel.org; h=from:subject; bh=Bi1EDc1v8t/I1ufJIhDjHxnt+Ry1rozlhmo2/jK3fSQ=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLniq1+/GhFlFxJSLDZRW+eS9taetxS5GeF/dc7JRzKZ PXJ9FJRRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACayYAfDH36leoZpFpXLjAyW Nu6MM3sS022tXRyak/GPQ+0cd2nAJkaGr4tnrr3twKsZf1d+09/9+pVZvVl/Kie3u245tMejsjG PDwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1769; i=cassel@kernel.org; h=from:subject; bh=Dgj5VNoE5kVgWc76NDWLLdMQe5eoOJ8Xt5A76OaSvQs=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLniq22c3ixsjnb+p6sz8HJ56pE9O71mvb1Skup7rSxi mz/8XV2RykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACZy9h0jw8zump2GK+69mx8o bTHb+W7OQcUC5nPbg6SvhC+5sMnLYwojw7Fvortvd0g1PDy0cq1k9bkJr5lmxxV92dWgNOPg5Jd TdzEDAA==
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Looking at "12.2.2.4.15 PCIe Subsystem BAR Configuration" in the
-AM65x TRM:
+The support for a specific iATU alignment was added in
+commit 2a9a801620ef ("PCI: endpoint: Add support to specify alignment for
+buffers allocated to BARs").
+
+This commit specifically mentions both that the alignment by each DWC
+based EP driver should match CX_ATU_MIN_REGION_SIZE, and that AM65x
+specifically has a 64 KB alignment.
+
+This also matches the CX_ATU_MIN_REGION_SIZE value specified by
+"12.2.2.4.7 PCIe Subsystem Address Translation" in the AM65x TRM:
 https://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
 
-We can see that BAR2 and BAR5 are not Fixed BARs, but actually Resizable
-BARs.
+This higher value, 1 MB, was obviously an ugly hack used to be able to
+handle Resizable BARs which have a minimum size of 1 MB.
 
-Now when we actually have support for Resizable BARs, let's configure
-these BARs as such.
+Now when we actually have support for Resizable BARs, let's configure the
+iATU alignment requirement to the actual requirement.
+(BARs described as Resizable will still get aligned to 1 MB.)
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: stable+noautosel@kernel.org # Depends on PCI endpoint Resizable BARs series
+Fixes: 23284ad677a9 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 63bd5003da45..fdc610ec7e5e 100644
+index fdc610ec7e5e..76a37368ae4f 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -966,10 +966,10 @@ static const struct pci_epc_features ks_pcie_am654_epc_features = {
- 	.msix_capable = true,
- 	.bar[BAR_0] = { .type = BAR_RESERVED, },
- 	.bar[BAR_1] = { .type = BAR_RESERVED, },
--	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_2] = { .type = BAR_RESIZABLE, },
+@@ -970,7 +970,7 @@ static const struct pci_epc_features ks_pcie_am654_epc_features = {
  	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_64K, },
  	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = 256, },
--	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
- 	.align = SZ_1M,
+ 	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
+-	.align = SZ_1M,
++	.align = SZ_64K,
  };
  
+ static const struct pci_epc_features*
 -- 
 2.48.1
 
