@@ -1,50 +1,52 @@
-Return-Path: <linux-pci+bounces-20604-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0F58A24297
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 19:30:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B841BA24299
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 19:30:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DB851888FFA
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 18:30:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9FEE3A21FC
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 18:30:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BED71E3784;
-	Fri, 31 Jan 2025 18:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB18F1E3784;
+	Fri, 31 Jan 2025 18:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OR+pqsl8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8PXNaIx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EE87081F
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 18:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8484F7081F
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 18:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738348224; cv=none; b=HcTtDyPAKj2TNWTwI1sqmdrLPE0DceSfOAIjTv5IOjk3Unuakc/XtMJdL4W5Nk5B6GwP5hFPwpaV0PsCdkwiqnVmi/wwVfeNCVj5QB9Baq3NQt2oXXv34YaF6tvrGRj0xKGveECwVxURm1D7AhV7V6EWESKBeiDmK/493PstLCc=
+	t=1738348227; cv=none; b=P2RP1xHtbD78iy8RnoENQzTd7Oq15bDvnB4PtjArMf1OswokUkp4muOEK2e/5qpOorJHy7X9ckna6eBXxpr8arxI8xEX6PtfeMSljLfCX0X/+4P8zuWgg2gyV06Anw0nTXWxexF9P/z/tQnEx1uUwOBw7gyhZcUVVlysYairM1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738348224; c=relaxed/simple;
-	bh=qqKbQsnS1YsboZzTev6G2t0ujPW9WQvQtYPjJ5GZ0zI=;
+	s=arc-20240116; t=1738348227; c=relaxed/simple;
+	bh=rO4LIJQIfHIs43mgpVGBJ2DomywdwncmsQISfke15cw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AUKL4hXxyylSDh5mCwCRpFOBtMqxf4rkEjxoaHspy/mXZ5dki8X8g/MQ55D7AoAzWzsbO71I/5EUy1RgbraMjJc279sqt5kNjY0mu1h787KDpdCjvsPnQTJ/oRpinSU1tDMcXy1mXdNQT1sEuvNDc4mNcIGmd8Msv7dapvWIk6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OR+pqsl8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CC7C4CED1;
-	Fri, 31 Jan 2025 18:30:21 +0000 (UTC)
+	 MIME-Version; b=R9HPTjLEORVTiKlKMl0sLa0FlhEbgiIwquZqCx4TAGZMIOO+QMG9HHkgDGCN5FXOGFJM+WbpKTXZN33rp7o+gLh3WSM4EwUF72Fy0habRz53oOWoLPxUdLjzZo0DuMUsv0fZNpMnbJRPMLpu3OQIT0Pe6xnjBcSb0UWH/UdUNe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8PXNaIx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DC4C4CED1;
+	Fri, 31 Jan 2025 18:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738348223;
-	bh=qqKbQsnS1YsboZzTev6G2t0ujPW9WQvQtYPjJ5GZ0zI=;
+	s=k20201202; t=1738348227;
+	bh=rO4LIJQIfHIs43mgpVGBJ2DomywdwncmsQISfke15cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OR+pqsl8PvzQMRwFIVBZdYsChlTCLMiRthGBGyAYGphaoHUHgjg5xjaUSby4sZ6pE
-	 2UdoCvrmNjdiuPTiPjcCamOnZNtnliIXcQ4VUPNYjF1qAiQwPgHufqhLo3zhU1dSxU
-	 Z+MV4V8y5N3zC/hNATeo3TMS5gBqciZEi5Ov/TOx5pfYr2EgKHY60j5bMPqiLRdIfE
-	 gn1IV5Z75lD5A9KS/fUSm5vLJwIjIikOrhatEvEp7KET5WEYn/fEg+J00GV5MSazdf
-	 Ow3j8H2nxgkkHCafjv2G03FFEX7fJRRQYrWRn0HXDUj+4hejLAFROM/f6FPZyglwJx
-	 l9JjE/MmFmQoQ==
+	b=m8PXNaIxHq0ZN+4KdVie3eFIgXDaq9Wo1b8/psvcPrpJmvi9/QKIaMp9BDfozJ+ak
+	 y9cc8tYMwIMSIu+GmzHLFwpizfDqWuB1dd23UV13VBLOepbCvSAIz45QSvCTJqyidq
+	 l7HCyyjUXGosUkTIeHe8IOr/o6W4i860VyPcP6Vpwt3iWSy89bK5JEBUzXNvXr+wRT
+	 Qr034lveoRPCPXjCq5Fh6hDIHMpksVZChrbaihpAmZvfrYrp8ulQntLUdo8NWljX9u
+	 NN3CCKGX1HPPMu7jkiWJqH1jYMYRogCesvAqIOn5balep2thB1MsfnKotuD85OzFrL
+	 onTZKAH1Xbgyw==
 From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>
 Cc: Damien Le Moal <dlemoal@kernel.org>,
 	Siddharth Vadapalli <s-vadapalli@ti.com>,
@@ -52,9 +54,9 @@ Cc: Damien Le Moal <dlemoal@kernel.org>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Niklas Cassel <cassel@kernel.org>,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v4 2/7] PCI: endpoint: Add pci_epc_bar_size_to_rebar_cap()
-Date: Fri, 31 Jan 2025 19:29:51 +0100
-Message-ID: <20250131182949.465530-11-cassel@kernel.org>
+Subject: [PATCH v4 3/7] PCI: dwc: ep: Move dw_pcie_ep_find_ext_capability()
+Date: Fri, 31 Jan 2025 19:29:52 +0100
+Message-ID: <20250131182949.465530-12-cassel@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250131182949.465530-9-cassel@kernel.org>
 References: <20250131182949.465530-9-cassel@kernel.org>
@@ -64,69 +66,76 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2290; i=cassel@kernel.org; h=from:subject; bh=qqKbQsnS1YsboZzTev6G2t0ujPW9WQvQtYPjJ5GZ0zI=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLniq06nT0/9NA+MbFHb4IFuPb+aDr1NjZMy0FE9CK/Y KRXgFBLRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACZiq8nwm01o/psMt8/fXjx+ 1RR8ReTD4QbHuWf3nDSc+vHxrMeV1ZMYfrNMZ53W2PaKMyAvc70V26PaVxG/TWzeF7441P3OS/F HBQMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1955; i=cassel@kernel.org; h=from:subject; bh=rO4LIJQIfHIs43mgpVGBJ2DomywdwncmsQISfke15cw=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLniq1aaZJ8aD+bSOC/wqilDs/+C0jPX5rKd8Zr0qebH nsm7bUI7ihlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBEtNgYGfak97dxT5GWZt54 b4POHAHPDxF8q+rm8pjfsVh7arpl7W6G/xHfpnoqL7IRfxq7XvLlfI77+pV7o98v/vz+/5GPhqX OsYwA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Add a helper function to convert a size to the representation used by the
-Resizable BAR Capability Register.
+Move dw_pcie_ep_find_ext_capability() so that it is located next to
+dw_pcie_ep_find_capability().
 
+Additionally, a follow-up commit requires this to be defined earlier
+in order to avoid a forward declaration.
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 27 +++++++++++++++++++++++++++
- include/linux/pci-epc.h             |  1 +
- 2 files changed, 28 insertions(+)
+ .../pci/controller/dwc/pcie-designware-ep.c   | 36 +++++++++----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 10dfc716328e..5d6aef956b13 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -638,6 +638,33 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 8e07d432e74f..6b494781da42 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -102,6 +102,24 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
+ 	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
  }
- EXPORT_SYMBOL_GPL(pci_epc_set_bar);
  
-+/**
-+ * pci_epc_bar_size_to_rebar_cap() - convert a size to the representation used
-+ *				     by the Resizable BAR Capability Register
-+ * @size: the size to convert
-+ * @cap: where to store the result
-+ *
-+ * Returns 0 on success and a negative error code in case of error.
-+ */
-+int pci_epc_bar_size_to_rebar_cap(size_t size, u32 *cap)
++static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
 +{
-+	/*
-+	 * According to PCIe base spec, min size for a resizable BAR is 1 MB,
-+	 * thus disallow a requested BAR size smaller than 1 MB.
-+	 * Disallow a requested BAR size larger than 128 TB.
-+	 */
-+	if (size < SZ_1M || (u64)size > (SZ_128G * 1024))
-+		return -EINVAL;
++	u32 header;
++	int pos = PCI_CFG_SPACE_SIZE;
 +
-+	*cap = ilog2(size) - ilog2(SZ_1M);
++	while (pos) {
++		header = dw_pcie_readl_dbi(pci, pos);
++		if (PCI_EXT_CAP_ID(header) == cap)
++			return pos;
 +
-+	/* Sizes in REBAR_CAP start at BIT(4). */
-+	*cap = BIT(*cap + 4);
++		pos = PCI_EXT_CAP_NEXT(header);
++		if (!pos)
++			break;
++	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(pci_epc_bar_size_to_rebar_cap);
 +
- /**
-  * pci_epc_write_header() - write standard configuration header
-  * @epc: the EPC device to which the configuration header should be written
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 91ce39dc0fd4..713348322dea 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -275,6 +275,7 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
- 			enum pci_epc_interface_type type);
- int pci_epc_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 			 struct pci_epf_header *hdr);
-+int pci_epc_bar_size_to_rebar_cap(size_t size, u32 *cap);
- int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		    struct pci_epf_bar *epf_bar);
- void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 				   struct pci_epf_header *hdr)
+ {
+@@ -690,24 +708,6 @@ void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_deinit);
+ 
+-static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+-{
+-	u32 header;
+-	int pos = PCI_CFG_SPACE_SIZE;
+-
+-	while (pos) {
+-		header = dw_pcie_readl_dbi(pci, pos);
+-		if (PCI_EXT_CAP_ID(header) == cap)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (!pos)
+-			break;
+-	}
+-
+-	return 0;
+-}
+-
+ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ {
+ 	unsigned int offset;
 -- 
 2.48.1
 
