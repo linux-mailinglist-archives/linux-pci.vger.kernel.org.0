@@ -1,174 +1,118 @@
-Return-Path: <linux-pci+bounces-20582-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67143A23C09
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 11:17:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59518A23D2A
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 12:33:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DED6E188A180
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 10:17:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBA1F1881FEB
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 11:34:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5F9171092;
-	Fri, 31 Jan 2025 10:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A360910E0;
+	Fri, 31 Jan 2025 11:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Mx0r3qb1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56DD9EED8;
-	Fri, 31 Jan 2025 10:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C942A1C07FE
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 11:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738318625; cv=none; b=jyMI1AL8ck4QVhnJHnHC7n4daNoPDFDgLQlFzp3Sadj88UCOVeBs86y8X6iP0rVZm6fial8G7PBES/+SGcplP7uZpThY7Ye4j9FyiyHeeLroThDXYAt3gmnoxzZI1xsH8j4IhEyOcH4O+8cX5rj2hQXFwY5qyMBnRiaTsm+69iM=
+	t=1738323235; cv=none; b=tSpNEwd8svI7mAjog0Cfk/NEHaGnFI9HqbfBUxwB9tq0vMCxoFKWDh1bFnbJQXfXMbSchixPGgNvuHSVY8Kd+TaSlqK1r8tmI2dDex8gsAaljop+Tah/nP+4E+N+4z5YVfnzxbOL6naNw6coAoAkP/w3mUnDj48mmD4xYhU7yFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738318625; c=relaxed/simple;
-	bh=HW5NlCZ6hpmmzwD/UeYkcnBJqeWue6YDR/Pb1Fco2yw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W4fsMZigmDz/frUJhS00aiXS/TY12mgkJX2XCK8M5Cd9ZnPLRu8vJrqx3XfeXvnT38kpgJPnr3D3fr1lEZWdG7Isnb2WI5FH50h5T4Ct2GOxdP76/JHccLjS6oCVLVleZexzvduL6uFXwzpG6JqXtkqGhJroaQEfiTy1Swf147Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 31 Jan 2025 19:16:55 +0900
-Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 5D64F20090BC;
-	Fri, 31 Jan 2025 19:16:55 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Fri, 31 Jan 2025 19:16:55 +0900
-Received: from [10.212.246.222] (unknown [10.212.246.222])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id 9C7C4AB186;
-	Fri, 31 Jan 2025 19:16:54 +0900 (JST)
-Message-ID: <fe8c2233-fa2a-4356-8005-6cbabf6a0e96@socionext.com>
-Date: Fri, 31 Jan 2025 19:16:54 +0900
+	s=arc-20240116; t=1738323235; c=relaxed/simple;
+	bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ch7ymDcpJ6ZtUs/+N9YwtDdS6ggF6zdm0SiQyXt3ByzNBNnG34P2p/9FPXxrqyLSyfTFnS5fwN8uyfg48basZGNXdyGlHw1U5OPxMcqo9x+j3izrEN3jIWNY3w2mIh3J1Alb+cUeLT1stoiOz6BQEHR8HhqfG2XGDJJs/vHQ95g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Mx0r3qb1; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id E83DA24002B
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 12:33:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738323225; bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=Mx0r3qb1A3UOSK2f5X2f8aZ/cla4BLWe91L6NYbDILMpq/Q2MMYQSatiaKTOK+wET
+	 j7OgiaufoPmoH/+Snv9ZwjkcNdXlH/NMIaqvl1zBf2tED2piB0SqSTRwBf6x2OjfzR
+	 /dFI1h+CGXmNQZh+TmIOXgNZuPk7SxlnDbT0VnojHMx/TWeOE4Q09ia2UYHvcIYMPJ
+	 mz6v71TLSUzt1+7woDn4qz/AL6OuEDPhJTIIEhPEA6CGUqUToYtXKGHt6s5x0xzKTw
+	 pHrCPKbTzrTKW3Fv4istIHCrFGWwa/sBMobWilniKzQXYhR2cfFyRi2ydyGf8uvOpu
+	 JEXELxAsRJREw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ykv0g42F0z9rxF;
+	Fri, 31 Jan 2025 12:33:39 +0100 (CET)
+Date: Fri, 31 Jan 2025 11:33:39 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 0/9] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <Z5y1E6TUclqzV2Rp@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
- <20250128143231.ondpjpugft37qwo5@thinkpad> <Z5oX5Fe5FY2Pym0u@ryzen>
-Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <Z5oX5Fe5FY2Pym0u@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
 
-Hi Niklas,
+On Wed, Jan 29, 2025 at 05:29:41PM -0500, Frank Li wrote:
+> On Sun, Jan 26, 2025 at 07:58:55PM +0100, J. Neuschäfer wrote:
+> > This is a spin-off of the series titled
+> > "powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
+> >
+> > During the development of that series, it became clear that many
+> > devicetree bindings for Freescale MPC8xxx platforms are still in the old
+> > plain-text format, or don't exist at all, and in any case don't mention
+> > all valid compatible strings.
+> >
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> 
+> Please cc imx@lists.linux.dev next time
+> 
+> Frank
 
-On 2025/01/29 20:58, Niklas Cassel wrote:
-> On Tue, Jan 28, 2025 at 08:02:31PM +0530, Manivannan Sadhasivam wrote:
->> On Wed, Jan 22, 2025 at 11:24:46AM +0900, Kunihiko Hayashi wrote:
->>> There are two variables that indicate the interrupt type to be used
->>> in the next test execution, "irq_type" as global and test->irq_type.
->>>
->>> The global is referenced from pci_endpoint_test_get_irq() to preserve
->>> the current type for ioctl(PCITEST_GET_IRQTYPE).
->>>
->>> The type set in this function isn't reflected in the global "irq_type",
->>> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
->>> As a result, the wrong type will be displayed in "pcitest" as follows:
->>>
->>>      # pcitest -i 0
->>>      SET IRQ TYPE TO LEGACY:         OKAY
->>>      # pcitest -I
->>>      GET IRQ TYPE:           MSI
->>>
->>> Fix this issue by propagating the current type to the global "irq_type".
->>>
->>
->> This is becoming a nuisance. I think we should get rid of the global
->> 'irq_type'
->> and just stick to the one that is configurable using IOCTL command. Even
->> if the
->> user has configured the global 'irq_type' it is bound to change with IOCTL
->> command.
-> 
-> +1
+Will do.
 
-After fixing the issue described in this patch,
-we can replace with a new member of 'struct pci_endpoint_test' instead.
-
-> But I also don't like how since we migrated to selftests:
-> READ_TEST / WRITE_TEST / COPY_TEST unconditionally call
-> ioctl(PCITEST_SET_IRQTYPE, MSI) before doing their thing.
-
-I think that it's better to prepare new patch series.
-
-> Will this cause the test case to fail for platforms that only support MSI-X?
-> (See e.g. dwc/pci-layerscape-ep.c where this could be the case.)
-> 
-> 
-> Sure, before, in pcitest.sh, we would do:
-> 
-> 
-> pcitest -i 2
->          pcitest -x $msix
-> 
-> 
-> pcitest -i 1
-> 
-> pcitest -r -s 1
-> pcitest -r -s 1024
-> pcitest -r -s 1025
-> pcitest -r -s 1024000
-> pcitest -r -s 1024001
-> 
-> 
-> Which would probably print an error if:
-> pcitest -i 1
-> failed.
-> 
-> but the READ_TEST / WRITE_TEST / COPY_TEST tests themselves
-> would not fail.
-> 
-> 
-> Perhaps we should rethink this, and introduce a new
-> PCITEST_SET_IRQTYPE, AUTO
-> 
-> I would be fine if
-> READ_TEST / WRITE_TEST / COPY_TEST
-> called PCITEST_SET_IRQTYPE, AUTO
-> before doing their thing.
-> 
-> 
-> 
-> How I suggest PCITEST_SET_IRQTYPE, AUTO
-> would work:
-> 
-> Since we now have capabilties merged:
-> https://lore.kernel.org/linux-pci/20241203063851.695733-4-cassel@kernel.org/
-> 
-> Add epc_features->msi_capable and epc->features->msix_capable
-> as two new bits in the PCI_ENDPOINT_TEST_CAPS register.
-> 
-> If PCITEST_SET_IRQTYPE, AUTO:
-> if EP CAP has msi_capable set: set IRQ type MSI
-> else if EP CAP has msix_capable set: set IRQ type MSI-X
-> else: set legacy/INTx
-
-There is something ambiguous about the behavior for me.
-
-The test->irq_type has a state "UNDEFINED".
-After issueing "Clear IRQ", test->irq_type becomes "UNDEFINED" currently,
-and all tests with IRQs will fail until new test->irq_type is set.
-
-If SET_IRQTYPE is AUTO, how will test->irq_type be set?
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+Best regards,
+J. Neuschäfer
 
