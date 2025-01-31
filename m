@@ -1,87 +1,86 @@
-Return-Path: <linux-pci+bounces-20598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27514A24000
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 17:04:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3847EA24004
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 17:05:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C4933A4794
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 16:03:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67D4E166BFE
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 16:05:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC3841CEAA3;
-	Fri, 31 Jan 2025 16:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731CE1E1C3A;
+	Fri, 31 Jan 2025 16:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqC03omq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZe9s3P0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E2E1AAC4;
-	Fri, 31 Jan 2025 16:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43821AAC4;
+	Fri, 31 Jan 2025 16:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738339437; cv=none; b=dwgnDqerSygF+M6VNLjwXMM7+Kr/vhGYxJN5X+ojClL+liIZ4BymfAS7qQ0KY8VJ+7EZUSlgqXQNqQhQsIOWhJ8k7xaw/XbHfv5NUZq9n11Et+7LigUZyzAF+LzhcBcuuJDblyrfdoYEpJacXdWuoN7F7MWZtuHwyiTmhrlDZTM=
+	t=1738339529; cv=none; b=GAVc8v55MMsz18KKE8bZ/6I2KDGolcpuFgNEv4ZVJgsA3e9fQEm3EykgKZejVhWWkjC83YHF6S2qmqEu21NEKOxX1w48+sfu2x5S/m1X3xrQwUcrD8n3L/GKFp9GYVmli+LMdMW5G1xrmFhiVmKYy/2fnbhCMOSaWy9xPNy0BC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738339437; c=relaxed/simple;
-	bh=ux+gB73rSCKrfeyxBw+k1sCb4qCht1gOxxonKumtdYs=;
+	s=arc-20240116; t=1738339529; c=relaxed/simple;
+	bh=gX4ag1AlV9dTSBogEeBHGkTAgAH/pVoq+dkZLcj3U0c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hygkqj7g9+beE1NpC5xQhg8jFVsoJ1Ud7WBpTF9J/bzZrzRePR8GRy146kxe6dCchfGmI7rhUbR6VFu/zT1UNPQ2irJvEGayJcqQ5WQsEk1WoEyWH1Ynlc/gF3xZMPzHQEPUPTx7VqXfq6+cEy4fK9t/QumJQbuvRFegzxzhHBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SqC03omq; arc=none smtp.client-ip=209.85.222.50
+	 To:Cc:Content-Type; b=cyGeWBfsDH2j88OozG+ZFS9BxoxyVkcs6RUv8xayZ2NPE8dFSSq9BiaVJ14m9IXuhZO2jZ6GEdKEt7NiD6O2px6DGnNCOTOLv070tXDi4ql3R9xP0FETe9G7IxKmoZ1SamQNAW60/uMJgD9gAsJQ9axNLioSs+z99h+c53gJRIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZe9s3P0; arc=none smtp.client-ip=209.85.221.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-860f0e91121so1717515241.0;
-        Fri, 31 Jan 2025 08:03:55 -0800 (PST)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-518954032b2so636131e0c.0;
+        Fri, 31 Jan 2025 08:05:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738339435; x=1738944235; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738339526; x=1738944326; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gAyBmC8BK8RqSQxjO0l92eUElKo+PkN36EJuLz3uhtk=;
-        b=SqC03omqCcCupy7eFTkYjRyuW9Zs8I01zUCI/mjlg0uzql4e2OQrTnAsCQdmWX7p5l
-         G2yCpcCK8CXhWI+RtoeRMe/S5rNK7uP/EBoDWbyp2SRRb+oaJmJtB1Az3/DlXQcFIqtE
-         TEHdQj/CT/0SkZ7OjmphualYEuUxJsaQZBZXU+zHkrD3azm4Onjp3Y2EsTqVndVtpW2c
-         2ARuJWmcoHCw3PjhVLjrg6yWMg6vPAB95GeTdQC/clhDRVZv3qb9Eexl/sdFnhBM7e18
-         FoBszL/ymQ46KIQu45OBnkkIvIagN2tILdn0X5uIyiGKjX8cqXCBp/D/0gPTUY1znfV7
-         +h4w==
+        bh=yinOq3BvFm8pbS0HIBonp/WO0nQAo4BYehd8oFIVqaA=;
+        b=nZe9s3P0Cpc0anllRk8SkWHEpImBoTC8fwprmxJC16eEStO7AH2/q+JlP+BhcdE3SC
+         rjds7buD3Ns6/JFCtuqlLELfu096rKYLTo6xyA5nSVylew+spgICd5yBnk8dZKMQSD7l
+         pemgZH2Jh85seuG1S9AlH+/0Ndcvyym7IzTRc7BXbef9IEMF69pQ58J17brRMD2BpstZ
+         lz2zQhCig3xa/oPmRoA9fkg+IH/89SdBdNXdu7UFjiX5oxSPq/avb8v1vZncXdT8rgyk
+         SvMYSKuq9dAKcY5Eb33QaHcZzxdBqHKx3SRPaoeChSrw3pWSszRpdiJHERXz4Ka7NyXX
+         2YPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738339435; x=1738944235;
+        d=1e100.net; s=20230601; t=1738339526; x=1738944326;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gAyBmC8BK8RqSQxjO0l92eUElKo+PkN36EJuLz3uhtk=;
-        b=pVN6quRKiuj68UxVvpwM7iqYUbCohlhsC2jYbht63YGMIqnzz02IOW/S04SfSST969
-         +3/fPeCk+V05Ip1GwEAwX11gUuA19dghbzeXq9WQZM0/947mfmHo+P3i2V5v1DB4ne74
-         0BvvYCPJVdDc2IEDXT7mTsSNY2e0zHuc8sy+0nXnFPFwCxrz7MUwGx+ucFT60yw/uqTq
-         iIzG/Sp548RULfK8JXRhNOJCzmMQR5UzhU+S+VFuS96Cx5otebEmgt4evNJUvZHOSlX+
-         uxdcvqNB1RYBbD3KiHnGf4IeQruB622ADVpMDqRAFVmO1t+6hblD5mnyYspOUxcFL477
-         uihg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEzAAa8JU7MrPYdYxMOgBJDTg2ExXfAHn5JJCJzl5ZfWpOMCqAAImSfjMVdT/i7/ZEvQqVrBFZDed+@vger.kernel.org, AJvYcCVEKoscJ+5utV9OENw+TsVEsx+yV7K8/iriYT2wAZGIBjmKwR3LkLFbO2Qh8GcoNodV35mtqFrVVapI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW4xAxyfCvEbwOUq4E4S3lqKvKuis0UAToWCf30sITIiv83fYA
-	OdK11oHViNAgTXze3VxcUUfWfK1nNxDKnO2/H2DEjIBUQ6mG1QS0OnWgUpOYi+6pjwNOUvEKoaa
-	o5bTvU8dmBI7uOdMytr8nsRG52Rw=
-X-Gm-Gg: ASbGnct5yzcVcgZ5g/nDLj8bihBCWPpAsZfdctzZDIZkXl3KIb6hum8F/e83iQMK8sX
-	fhnOyWM7jw+4hMT0u4kknEP+A8gtm/956G7HKgaQfgDQflJ+81Kq4Gq+w/jHPC4bJQ6SHGM/rxQ
+        bh=yinOq3BvFm8pbS0HIBonp/WO0nQAo4BYehd8oFIVqaA=;
+        b=ATd9e+lrb9DJAjJQ+w1MghVq0MpV+1b63HXDtYN+mif2CuW1mHMo+MLKv5sd2b4cx8
+         HfOzsfueytGAjQ30N0SOnWdTakzxi46a01m5Uh0te6QbxNx7KNm5c1vAS9+PZTPJ6V/v
+         ha/jDQ4fwwUGt8GFsWXxxfkgKCdlBkzVpsoXrh7RNVO+DQ5C2lEFUvbfm+iJnWMDeb3V
+         GGOuQoNq2wkZxzgYmh4oKv1saNo2XpqcuEFIcjxOs3Zn7brIfTTY9jvsac5gAAROWz4w
+         AgwYGsNJPBKG/XswHKOUwAfcvFaHMo1wIKjy20lUnBAa2jN/dleWYVPPblytu+4S2af0
+         MMdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPZ6bSd9C9PNYM6QEu6k6v1Y3GooQhosAsVKKbLYiIuD6dj4BQSRowWYio3DR4C2ckbzf4yRPZ0WpW@vger.kernel.org, AJvYcCXpiqLKgOexQkiVBC5hukjyEPV4bhO9tcw4wFDiMZNJ1ycuLCdoi922Td0Rgm2OuCYpZftHeAAgLW+Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGYBk/0H7FddKFp3Abgpu/280SG2hl4XhOPKe4gYlixfVmgoIW
+	6JOuBBOpu2BpU0GH7zy84m9K0SHZuV2nGkjIjH76Ydd6pjjTcBjPFFd7G2Jm72ARUb8VFy4yAaW
+	8dZSrrYoC7AOA9CNPAlMltTf2dR0=
+X-Gm-Gg: ASbGncsI5J1vMossPzQCnFP05FdciUgasi46QY0UsteXKaVe7m/EgQ8NUbnF8VJiPHM
+	QIZpejXnYQJa/62Kx0mypwz5v2PkxBF7aABY+/GluaC3o7vT3DtX1J2Ajq/NfBG6AEtfr1NBf2w
 	==
-X-Google-Smtp-Source: AGHT+IGVYpJEqeRGvHRVFOu+mqGM1cy9fp5OorflsRPh0dKlcs/2Fk1DjrNBh82WBXeKvz6ZGvvqQhpFan+we0SyLFI=
-X-Received: by 2002:a05:6122:2bd2:b0:517:e7b7:d04b with SMTP id
- 71dfb90a1353d-51ebe66645fmr1897860e0c.5.1738339434912; Fri, 31 Jan 2025
- 08:03:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEp7MtYTu6aLHmfoRZMuQIhdDIIlMcvFCUzckw2uCT/3cjD28n2Uuo9tiMWgYBKq7vRQxgRKyFa2i4Ck0/Q8yw=
+X-Received: by 2002:a05:6122:1826:b0:515:daa7:ed07 with SMTP id
+ 71dfb90a1353d-51e9e28a51amr9180667e0c.0.1738339526468; Fri, 31 Jan 2025
+ 08:05:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120130119.671119-1-svarbanov@suse.de> <20250120130119.671119-6-svarbanov@suse.de>
-In-Reply-To: <20250120130119.671119-6-svarbanov@suse.de>
+References: <20250120130119.671119-1-svarbanov@suse.de> <20250120130119.671119-7-svarbanov@suse.de>
+In-Reply-To: <20250120130119.671119-7-svarbanov@suse.de>
 From: Jim Quinlan <jim2101024@gmail.com>
-Date: Fri, 31 Jan 2025 11:03:43 -0500
-X-Gm-Features: AWEUYZli7pQbCxCkE2FzhKEzWWUvoQ8-B0Rzl4WvtuTu72KdBjpfuztyPC_Spuo
-Message-ID: <CANCKTBvy=eqEbBjGTB9_=1J1dv3LP1pr48cTA3e=x4p_DTnVOQ@mail.gmail.com>
-Subject: Re: [PATCH v5 -next 05/11] PCI: brcmstb: Expand inbound window size
- up to 64GB
+Date: Fri, 31 Jan 2025 11:05:14 -0500
+X-Gm-Features: AWEUYZlLglIi2jugpqje-hAPwOESpNgNxOWzCPUmbm1viKS3V0vfFHVWucL5CCE
+Message-ID: <CANCKTBtG14B7mqW3vjv557kHLfYkJtJiL+xu8f2siZ9_BuWPHg@mail.gmail.com>
+Subject: Re: [PATCH v5 -next 06/11] PCI: brcmstb: Add bcm2712 support
 To: Stanimir Varbanov <svarbanov@suse.de>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
@@ -100,39 +99,95 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Jan 20, 2025 at 8:01=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.d=
 e> wrote:
 >
-> BCM2712 memory map can support up to 64GB of system memory, thus expand
-> the inbound window size in calculation helper function.
->
-> The change is save for the currently supported SoCs that has smaller
-> inbound window sizes.
+> Add bare minimum amount of changes in order to support PCIe RC hardware
+> IP found on RPi5. The PCIe controller on bcm2712 is based on bcm7712 and
+> as such it inherits register offsets, perst, bridge_reset ops and inbound
+> windows count.
+> Although, the implementation for bcm2712 needs a workaround related to th=
+e
+> control of the bridge_reset where turning off of the root port must not
+> shutdown the bridge_reset and this must be avoided. To implement this
+> workaround a quirks field is introduced in pcie_cfg_data struct.
 >
 > Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
 > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
-
 > ---
 > v4 -> v5:
 >  - No changes.
 >
->  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/pcie-brcmstb.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
 >
 > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controll=
 er/pcie-brcmstb.c
-> index 48b2747d8c98..59190d8be0fb 100644
+> index 59190d8be0fb..50607df34a66 100644
 > --- a/drivers/pci/controller/pcie-brcmstb.c
 > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -304,8 +304,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
->         if (log2_in >=3D 12 && log2_in <=3D 15)
->                 /* Covers 4KB to 32KB (inclusive) */
->                 return (log2_in - 12) + 0x1c;
-> -       else if (log2_in >=3D 16 && log2_in <=3D 35)
-> -               /* Covers 64KB to 32GB, (inclusive) */
-> +       else if (log2_in >=3D 16 && log2_in <=3D 36)
-> +               /* Covers 64KB to 64GB, (inclusive) */
->                 return log2_in - 15;
->         /* Something is awry so disable */
->         return 0;
+> @@ -234,10 +234,20 @@ struct inbound_win {
+>         u64 cpu_addr;
+>  };
+>
+> +/*
+> + * The RESCAL block is tied to PCIe controller #1, regardless of the num=
+ber of
+> + * controllers, and turning off PCIe controller #1 prevents access to th=
+e RESCAL
+> + * register blocks, therefore no other controller can access this regist=
+er
+> + * space, and depending upon the bus fabric we may get a timeout (UBUS/G=
+ISB),
+> + * or a hang (AXI).
+> + */
+> +#define CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN                BIT(0)
+> +
+>  struct pcie_cfg_data {
+>         const int *offsets;
+>         const enum pcie_soc_base soc_base;
+>         const bool has_phy;
+> +       const u32 quirks;
+>         u8 num_inbound_wins;
+>         int (*perst_set)(struct brcm_pcie *pcie, u32 val);
+>         int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+> @@ -1488,8 +1498,9 @@ static int brcm_pcie_turn_off(struct brcm_pcie *pci=
+e)
+>         u32p_replace_bits(&tmp, 1, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_=
+IDDQ_MASK);
+>         writel(tmp, base + HARD_DEBUG(pcie));
+>
+> -       /* Shutdown PCIe bridge */
+> -       ret =3D pcie->bridge_sw_init_set(pcie, 1);
+> +       if (!(pcie->cfg->quirks & CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN))
+> +               /* Shutdown PCIe bridge */
+> +               ret =3D pcie->cfg->bridge_sw_init_set(pcie, 1);
+>
+>         return ret;
+>  }
+> @@ -1699,6 +1710,15 @@ static const struct pcie_cfg_data bcm2711_cfg =3D =
+{
+>         .num_inbound_wins =3D 3,
+>  };
+>
+> +static const struct pcie_cfg_data bcm2712_cfg =3D {
+> +       .offsets        =3D pcie_offsets_bcm7712,
+> +       .soc_base       =3D BCM7712,
+> +       .perst_set      =3D brcm_pcie_perst_set_7278,
+> +       .bridge_sw_init_set =3D brcm_pcie_bridge_sw_init_set_generic,
+> +       .quirks         =3D CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN,
+> +       .num_inbound_wins =3D 10,
+> +};
+> +
+>  static const struct pcie_cfg_data bcm4908_cfg =3D {
+>         .offsets        =3D pcie_offsets,
+>         .soc_base       =3D BCM4908,
+> @@ -1750,6 +1770,7 @@ static const struct pcie_cfg_data bcm7712_cfg =3D {
+>
+>  static const struct of_device_id brcm_pcie_match[] =3D {
+>         { .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
+> +       { .compatible =3D "brcm,bcm2712-pcie", .data =3D &bcm2712_cfg },
+>         { .compatible =3D "brcm,bcm4908-pcie", .data =3D &bcm4908_cfg },
+>         { .compatible =3D "brcm,bcm7211-pcie", .data =3D &generic_cfg },
+>         { .compatible =3D "brcm,bcm7216-pcie", .data =3D &bcm7216_cfg },
+Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
 > --
 > 2.47.0
 >
