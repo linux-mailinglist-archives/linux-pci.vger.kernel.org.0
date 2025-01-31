@@ -1,136 +1,129 @@
-Return-Path: <linux-pci+bounces-20609-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20610-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CAA2A242A7
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 19:31:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91432A242D6
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 19:38:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7F531670B5
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 18:31:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 137D0164A5D
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 18:38:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72541F2379;
-	Fri, 31 Jan 2025 18:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 678E61F2368;
+	Fri, 31 Jan 2025 18:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPjkBtf3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ev0A7oX1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B306A1F2C59
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 18:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3AA1F1525;
+	Fri, 31 Jan 2025 18:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738348240; cv=none; b=igBuYgaXbnt7ux9YRVtQrkfZDjDEviIcMqSR0YDAoWCsRLh9+XIMawcbfqfWQHz5GZu2J7nYpYIvlLFkg6Yrf9bF2ooSO3nxr2sYWNaDM5SdtTevu7PgPz2z0BU0l9HlxqPv4qfotY2Y/fNm43X2GqTUjO3Lwjm7uVYbLcxGewc=
+	t=1738348718; cv=none; b=EjLc3H0vbP6WMZughshCZl6Q63QtsIkJFFXjY49P03OfRc6zXK+Jke72UJ4uAEK1JomkV8W5NWwF/2xuKKvi6SRfxMltZxmGkpEYETg0RuiIrYtiFUKi4zesbRSbLVaIXdUtTEy4k7lNN/K8E6j/LqzPTfULT0O2TSbgUGAtp5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738348240; c=relaxed/simple;
-	bh=8uxTceNWzYFB2l9AWmmadxYKBiMHIPtgLjKZiK55GQA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqiwmY67yp/KnvdQVoGM3k32B8REfl59DM/B6UxhBqUOr91OaYE1RSPdGE5/ft80AUg/c/+SgdMvJ+fkYfZI/QtmECSYieEea9FGxbavu20bWwNXK6aKsGlzcR8Kn6RRSM82QUv/tlr9QfyfH1t4Q7TN3/8iGPw6IsTzjmUz+Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPjkBtf3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DE3C4CEE3;
-	Fri, 31 Jan 2025 18:30:37 +0000 (UTC)
+	s=arc-20240116; t=1738348718; c=relaxed/simple;
+	bh=uRi5jQVv4qDslxglfmTAuNpBXgflIayJuYcLhxVNoBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jvnxVTKUBMUrZc2g7Iat2/rSMTXcUICcFnyheScnfCHmFafoVD8sVlXXmCZHSXWXLI6TZUMkB+zeocazYW1ZJlNAVTgEiKPe1PW0Oe8ZTG9WoD1DhogD5iNjwtRalToeTWxQRq/0NOipHsApgmTttOOjaEg2CN61p2Axl4a1nu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ev0A7oX1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C98C4CED1;
+	Fri, 31 Jan 2025 18:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738348240;
-	bh=8uxTceNWzYFB2l9AWmmadxYKBiMHIPtgLjKZiK55GQA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NPjkBtf3Z+Va9MNfHHJ5iBM8ynQpSWaYrIsz7aRMuHfuBNn4tEjrrg5f3cZ995MZk
-	 GhIP87E9DbjRw83sOIO8nQFdYUy1lAZ9UQJR9GRTLGFrC/05qprvjyYY9pb0QUnG0N
-	 8Oq51XyUvTZVzbGNpmAsIdRZZSBMbnn7cv0vjH+BH4jnellZ6ujoroFGd8TbLh4n/k
-	 TPBn/bkKvKnqNHNffinvgH7BOfRdCD9cw0m7jWpyN91AMTNKXg9N32lje9GASYNB1O
-	 LzxPvvUcBZlOzxBETltdiRquh3P96ylkYt5SoDWhfwUKzRIuuaHJzVzJDn73XKx4b4
-	 BCvALBAR8A+UA==
-From: Niklas Cassel <cassel@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH v4 7/7] PCI: dw-rockchip: Describe Resizable BARs as Resizable BARs
-Date: Fri, 31 Jan 2025 19:29:56 +0100
-Message-ID: <20250131182949.465530-16-cassel@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131182949.465530-9-cassel@kernel.org>
-References: <20250131182949.465530-9-cassel@kernel.org>
+	s=k20201202; t=1738348717;
+	bh=uRi5jQVv4qDslxglfmTAuNpBXgflIayJuYcLhxVNoBE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Ev0A7oX1xkxerQHhFTMtkRJC1A9pZWZGzOtDH3fCv60Ss9lpg4V0qWlTyPttWdDGZ
+	 FbpfEY4MJnpd72sAyA8l9809G46hM2XlT0qLYQ+OiPpCbs5Eu66bFKLEdxVfxK0/8T
+	 sSCdLR/gPdt4+XFid367DeUNBB6qa+qbBLDEgY7ULTb0c9DdGMzd+darPZLjMOokw0
+	 FbiCuiQfcuGi9z0WV5obtCapFRGfM1NtshIXYgO4J6DSLLyBaD7DblRLeLBZfKMSVs
+	 Tnfoms86s8ZkxSuisUeYKeX5Z9FxLSOiZm0RZhYtKs2wPrJjIO/HZDt9FC5ZHnaRgZ
+	 jvcLBxmC6MBvA==
+Date: Fri, 31 Jan 2025 12:38:35 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pci: cdns : Function to read controller architecture
+Message-ID: <20250131183835.GA688678@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2591; i=cassel@kernel.org; h=from:subject; bh=8uxTceNWzYFB2l9AWmmadxYKBiMHIPtgLjKZiK55GQA=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLniq1pa9vTviDSx3VmySXBn+WLMpglij8XeR1y6j62r ovp+MMlHaUsDGJcDLJiiiy+P1z2F3e7TzmueMcGZg4rE8gQBi5OAZjIb3NGhof7lzHsYtnfGeL1 h4Or47r5Fja/u7v5j9j+VVvxKTUnsJKR4cLODVPXNL/qU508J/rJKc9ts16Uc7jIXFYwPuMgy3O igAUA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PPF4D26F8E1C5FA4D55D4271BA4F6F0DA2E82@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-Looking at "11.4.4.29 USP_PCIE_RESBAR Registers Summary" in the rk3588 TRM,
-we can see that none of the BARs are Fixed BARs, but actually Resizable
-BARs.
+Look at previous subject lines for changes to these files and follow
+the pattern.
 
-I couldn't find any reference in the rk3568 TRM, but looking at the
-downstream PCIe endpoint driver, rk3568 and rk3588 are treated as the same,
-so the BARs on rk3568 must also be Resizable BARs.
+On Fri, Jan 31, 2025 at 11:58:07AM +0000, Manikandan Karunakaran Pillai wrote:
+> Add support for getting the architecture for Cadence PCIe controllers
+> Store the architecture type in controller structure.
 
-Now when we actually have support for Resizable BARs, let's configure
-these BARs as such.
+This needs to be part of a series that uses pcie->is_hpa for
+something.  This patch all by itself isn't useful for anything.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 22 +++++++++----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Please post the resulting series with a cover letter and the patches
+as responses to it:
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 93698abff4d9..df2eaa35d045 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -273,12 +273,12 @@ static const struct pci_epc_features rockchip_pcie_epc_features_rk3568 = {
- 	.msi_capable = true,
- 	.msix_capable = true,
- 	.align = SZ_64K,
--	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_0] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_1] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_2] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_3] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_4] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
- };
- 
- /*
-@@ -293,12 +293,12 @@ static const struct pci_epc_features rockchip_pcie_epc_features_rk3588 = {
- 	.msi_capable = true,
- 	.msix_capable = true,
- 	.align = SZ_64K,
--	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
--	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_0] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_1] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_2] = { .type = BAR_RESIZABLE, },
-+	.bar[BAR_3] = { .type = BAR_RESIZABLE, },
- 	.bar[BAR_4] = { .type = BAR_RESERVED, },
--	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
- };
- 
- static const struct pci_epc_features *
--- 
-2.48.1
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=v6.13#n333
 
+You can look at previous postings to see the style, e.g.,
+https://lore.kernel.org/linux-pci/20250115074301.3514927-1-pandoh@google.com/T/#t
+
+> +static void cdns_pcie_ctlr_set_arch(struct cdns_pcie *pcie)
+> +{
+> +	/* Read register at offset 0xE4 of the config space
+> +	 * The value for architecture is in the lower 4 bits
+> +	 * Legacy-b'0010 and b'1111 for HPA-high performance architecture
+> +	 */
+
+Don't include the hex register offset in the comment.  That's what
+CDNS_PCIE_CTRL_ARCH is for.  It doesn't need the bit values either.
+
+Use the conventional comment style:
+
+  /*
+   * Text ...
+   */
+
+> +	u32 arch, reg;
+> +
+> +	reg = cdns_pcie_readl(pcie, CDNS_PCIE_CTRL_ARCH);
+> +	arch = FIELD_GET(CDNS_PCIE_CTRL_ARCH_MASK, reg);
+
+Thanks for using GENMASK() and FIELD_GET().
+
+> +	if (arch == CDNS_PCIE_CTRL_HPA) {
+> +		pcie->is_hpa = true;
+> +	} else {
+> +		pcie->is_hpa = false;
+> +	}
+> +}
+
+> +/*
+> + * Read completion time out reset value to decode controller architecture
+> + */
+> +#define CDNS_PCIE_CTRL_ARCH		0xE4
+
+Is this another name for the PCI_EXP_DEVCTL2 in the PCIe Capability?
+Or maybe PCI_EXP_DEVCAP2?  If so, use those existing #defines and the
+related masks (if it's DEVCAP2, you'd probably have to add a new one
+for the Completion Timeout Ranges Supported field).
+
+There's something similar in cdns_pcie_retrain(), where
+CDNS_PCIE_RP_CAP_OFFSET is apparently the config space offset of the
+PCIe Capability.
+
+> +#define CDNS_PCIE_CTRL_ARCH_MASK	GENMASK(3, 0)
+> +#define CDNS_PCIE_CTRL_HPA		0xF
 
