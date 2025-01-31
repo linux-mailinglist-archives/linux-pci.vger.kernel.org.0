@@ -1,89 +1,92 @@
-Return-Path: <linux-pci+bounces-20583-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20584-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59518A23D2A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 12:33:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FF4CA23D57
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 12:52:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBA1F1881FEB
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 11:34:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFFD6188488F
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 11:52:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A360910E0;
-	Fri, 31 Jan 2025 11:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECB931C1AC7;
+	Fri, 31 Jan 2025 11:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Mx0r3qb1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+Yp4+Hr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C942A1C07FE
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 11:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B4E148857
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 11:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738323235; cv=none; b=tSpNEwd8svI7mAjog0Cfk/NEHaGnFI9HqbfBUxwB9tq0vMCxoFKWDh1bFnbJQXfXMbSchixPGgNvuHSVY8Kd+TaSlqK1r8tmI2dDex8gsAaljop+Tah/nP+4E+N+4z5YVfnzxbOL6naNw6coAoAkP/w3mUnDj48mmD4xYhU7yFs=
+	t=1738324347; cv=none; b=Sz/B9AjW3Plb1xeeAn6JsTyPYGYGUcFQBHhJ2smtNk9UOlGoVVDIqp+Gm7HEzulIBZ0b2Z2ri/UtLJWtTeTMTpCJMdDdgHoEc0kPuKDDFWJVoMHOA+ZT2QVs2s/lQJz9BZb2NGfD3ixJRSrqtN+wmW92PJWpaBkRGFWktI8eUhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738323235; c=relaxed/simple;
-	bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
+	s=arc-20240116; t=1738324347; c=relaxed/simple;
+	bh=R7IUm3yNbdUQWx0gZ6ohVDqny0/UW1sc2ej1uPyjdY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ch7ymDcpJ6ZtUs/+N9YwtDdS6ggF6zdm0SiQyXt3ByzNBNnG34P2p/9FPXxrqyLSyfTFnS5fwN8uyfg48basZGNXdyGlHw1U5OPxMcqo9x+j3izrEN3jIWNY3w2mIh3J1Alb+cUeLT1stoiOz6BQEHR8HhqfG2XGDJJs/vHQ95g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Mx0r3qb1; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id E83DA24002B
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 12:33:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738323225; bh=476EBTGgcI5xdYOaJ6LQa3tfmwSruyF9mYzvA+HovWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=Mx0r3qb1A3UOSK2f5X2f8aZ/cla4BLWe91L6NYbDILMpq/Q2MMYQSatiaKTOK+wET
-	 j7OgiaufoPmoH/+Snv9ZwjkcNdXlH/NMIaqvl1zBf2tED2piB0SqSTRwBf6x2OjfzR
-	 /dFI1h+CGXmNQZh+TmIOXgNZuPk7SxlnDbT0VnojHMx/TWeOE4Q09ia2UYHvcIYMPJ
-	 mz6v71TLSUzt1+7woDn4qz/AL6OuEDPhJTIIEhPEA6CGUqUToYtXKGHt6s5x0xzKTw
-	 pHrCPKbTzrTKW3Fv4istIHCrFGWwa/sBMobWilniKzQXYhR2cfFyRi2ydyGf8uvOpu
-	 JEXELxAsRJREw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ykv0g42F0z9rxF;
-	Fri, 31 Jan 2025 12:33:39 +0100 (CET)
-Date: Fri, 31 Jan 2025 11:33:39 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Frank Li <Frank.li@nxp.com>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 0/9] YAML conversion of several Freescale/PowerPC DT
- bindings
-Message-ID: <Z5y1E6TUclqzV2Rp@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y1SJbLFpW55OzsQFOu7/G0YNQJ9PUxmaPAXvEqecS+ZW9me8RDBi+/dfCJLH0Tc2Pv2CTdCmoxgFq8Pr53H8VXi8KMSuZiGQp8sYiVfleDBUVEX6rJzqxI5d3Hd6DgT6HeILtmPKpIWkk+vw4uW/oTOZUmTfpPl4TGcXORR1ZSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z+Yp4+Hr; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f44353649aso2477194a91.0
+        for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 03:52:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738324345; x=1738929145; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=k7vfH4Sgbx8sGmHpacPWSYRXDbwnTm7hjUlAlA09Dfc=;
+        b=Z+Yp4+HrXLB2FGy1WpS4cVTavcovAXoSGUGzWUC56kiUV3P0hj7QWvZPiU+4j8ipeT
+         D9xrA+0st6EHyQgIctxDFdwakrTChJPiVdr+7+VhyOKM0CpXO91GTGc1T9E30bORGjwE
+         QZZV2ngayIInSlJi5pXo7TftodHs1WhGyFCL9hEHOvdSHBDlI44RqPdASVJUGkYVri0p
+         FhFRlK/pm4jUrfkrnDzCGUPq2tnUjXt3QwuNVGjN8cvn50ZT1s5ui6DBA347Buu8T73T
+         /TmPBdrmVZ6v1yOATUx5NUVNa7i7Rff4wKP29GhhHQECfsfde1pkrU9J7OjwIyTR7zgx
+         PbMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738324345; x=1738929145;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k7vfH4Sgbx8sGmHpacPWSYRXDbwnTm7hjUlAlA09Dfc=;
+        b=B33kPyCSneO7kDXXjAyBbYpYYfJXJiVFP0Olw6K139xpNj3Fk45XlEFSjsx89SNzz8
+         Z7o874aoq5xmQ7UjO3+e69tOQ1fLUIE4IQF1e4Wfef88u4+BZpUOlRPgRbQESFgwnMKd
+         2V1V1t2Grtrhre14s202nvobFu2aqOHfYTKNF6Hj9vTQ1uIJpjRvI7LmQgAW58PKAQTw
+         LyswBotQvYzQc4+IMQDmEcuUiWwQZnl+iALxYRqGzS6Cd1DNBK6Dfr/rJi044NnbukT9
+         Zwqlun8yyJ4PdCyN/Ff97sdbU0ahNPRKlAztThPxN3lzVwgjXDl+Z9OMmAIyogLu27hc
+         7GwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpbzLPGCT/lkcRJbGd30d4giXX6qiT1YgO+xS79H/Ms3kS8DVlnmK/ES7xYRxSKRMN0p/EEUUkrCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2y1yJNoL7AwXiXESL6E7F5hCVLrEFsXaEcARgxnxn3JvpGAr4
+	8PWx1lIsGFpKENEZhkvZhig+J1SFXMYcZgXl5HTVBfQzmwW+gDGOqs+ndue98g==
+X-Gm-Gg: ASbGncugEyu97AGtK9S0+gvPwnXeUbh40gpkIT8CMa4oaIESw61dF17RCywJ68hAM4n
+	mz/FIA9jpHWHVwkMzB1qPhBwneyBEwEyJaIzz3Ynf/zwpfjijcERg038FkfKYFs2D0bsUbIqCJj
+	oAxduow8vy0wcugIeD0A90uFWk+Sa3ZBTnwUBE7BskBYAlUAr5CGGsCyjB4jnOPm6WgQjC60pmf
+	aZOAbCSzW3TuVhJDKNXHk4/TLHrB0/1xcaU5pApb0yr5IH/5JxAqpUNHyn0AiW740bcYF90nCi3
+	Cf43ByhPUv252fJMrKj0WnNBlw==
+X-Google-Smtp-Source: AGHT+IH8kZTc6caDBWl7vN/cLXEXPX/ziS+zmhHeSacd6exwy3GZEb1SvfXm7pZ6ALinPkamOfpQog==
+X-Received: by 2002:a17:90b:520d:b0:2ee:dd9b:e3e8 with SMTP id 98e67ed59e1d1-2f83abd8adfmr15401669a91.8.1738324345440;
+        Fri, 31 Jan 2025 03:52:25 -0800 (PST)
+Received: from thinkpad ([120.60.68.107])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f8489d2c20sm3368655a91.22.2025.01.31.03.52.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 03:52:24 -0800 (PST)
+Date: Fri, 31 Jan 2025 17:22:17 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: brcmstb: Fix for missing of_node_put
+Message-ID: <20250131115217.qu4ue4cfmdt7gudf@thinkpad>
+References: <20250122222955.1752778-1-svarbanov@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,26 +96,64 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5qr1VkKSlyBE/E4@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250122222955.1752778-1-svarbanov@suse.de>
 
-On Wed, Jan 29, 2025 at 05:29:41PM -0500, Frank Li wrote:
-> On Sun, Jan 26, 2025 at 07:58:55PM +0100, J. Neuschäfer wrote:
-> > This is a spin-off of the series titled
-> > "powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
-> >
-> > During the development of that series, it became clear that many
-> > devicetree bindings for Freescale MPC8xxx platforms are still in the old
-> > plain-text format, or don't exist at all, and in any case don't mention
-> > all valid compatible strings.
-> >
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+On Thu, Jan 23, 2025 at 12:29:55AM +0200, Stanimir Varbanov wrote:
+> A call to of_parse_phandle() is incrementing the refcount, of_node_put
+> must be called when done the work on it. Add missing of_node_put() after
+> the check for msi_np == np and MSI initialization.
 > 
-> Please cc imx@lists.linux.dev next time
+> Cc: stable@vger.kernel.org # v5.10+
+> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+> v1 -> v2:
+>  - Use of_node_put instead of cleanups (Florian).
+>  - Sent the patch separately from PCIe 2712 series (Florian).
 > 
-> Frank
+>  drivers/pci/controller/pcie-brcmstb.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 744fe1a4cf9c..d171ee61eab3 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1844,7 +1844,7 @@ static struct pci_ops brcm7425_pcie_ops = {
+>  
+>  static int brcm_pcie_probe(struct platform_device *pdev)
+>  {
+> -	struct device_node *np = pdev->dev.of_node, *msi_np;
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct pci_host_bridge *bridge;
+>  	const struct pcie_cfg_data *data;
+>  	struct brcm_pcie *pcie;
+> @@ -1944,9 +1944,14 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  		goto fail;
+>  	}
+>  
+> -	msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
+> -	if (pci_msi_enabled() && msi_np == pcie->np) {
+> -		ret = brcm_pcie_enable_msi(pcie);
+> +	if (pci_msi_enabled()) {
+> +		struct device_node *msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
+> +
+> +		if (msi_np == pcie->np)
+> +			ret = brcm_pcie_enable_msi(pcie);
+> +
+> +		of_node_put(msi_np);
+> +
+>  		if (ret) {
+>  			dev_err(pcie->dev, "probe of internal MSI failed");
+>  			goto fail;
+> -- 
+> 2.47.0
+> 
 
-Will do.
-
-Best regards,
-J. Neuschäfer
+-- 
+மணிவண்ணன் சதாசிவம்
 
