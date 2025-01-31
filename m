@@ -1,315 +1,158 @@
-Return-Path: <linux-pci+bounces-20591-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20592-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EAB4A23E33
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 14:13:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB1AFA23EEE
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 15:03:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0266E3A315E
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 13:13:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54BAC3A9D77
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 14:03:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2151C1F0D;
-	Fri, 31 Jan 2025 13:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D82ED1D14FF;
+	Fri, 31 Jan 2025 14:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcvm43wf"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="rtUqgxeJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A337B1DFF0;
-	Fri, 31 Jan 2025 13:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3541C82F4
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 14:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738329190; cv=none; b=lUEc7rI03nALnuQBbv/LP5ygi6u0wBV/7plT8Sm9X3aNbqQkwOc5SFhtNajhbCdFrSZiIiBGFsRTQH+gnSSSnz/VkyuwbVc/bbxc38gGf93jh2D941rMWYm8unynomilIROiQhvEbGU7LLDbekr54MjGpvoC/vtzJhrmi0oxTR8=
+	t=1738332196; cv=none; b=LAXcbOR+TZSQvzCPxs4WxLX0mygnJ/Ja8TS11mDvfqMplB83XhoR9Az+aznlQT+EhTWKPIPghpaUBGri99Y9LWnwnS8VWx/uN5r/4n4tYeIsDMScYcn+sTmMUlLFgmcIp85KVf2P719dqMLt9tSEi5jGS3fHJm796OXbtc7VZTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738329190; c=relaxed/simple;
-	bh=/MUniiE0dGVEQ0M5rByOa3nWbgHI7zpjqSXKU9kQKe0=;
+	s=arc-20240116; t=1738332196; c=relaxed/simple;
+	bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crQU9BkNyDY4JmfExKPgTakSWoNYc2F1P9Zw6TVm8pmmF7RmDKqSUdhYRBX4BOZ2db+xraGZpDatb29UlZhZTMVVzyJXDK4SPXu4scYUc1OJDNi6PrxioBGIk5K+av9/Y7NBi2mWHSqu0yRbOoOoVllD4cMt9qyukd7EyZGyXnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcvm43wf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC6CC4CED1;
-	Fri, 31 Jan 2025 13:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738329190;
-	bh=/MUniiE0dGVEQ0M5rByOa3nWbgHI7zpjqSXKU9kQKe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hcvm43wf/U7ZRKf61BsOtETmytr+LoysnswBRuoQAECPYXmJOZbW6PGiWEoMH6WJB
-	 veZdYeQH0uebiH/DCxK9fx0tNXpemsa7I5rAYg8V+H8Tir8DAfi+uNzeNn3ejkQtrI
-	 7fdhSSjYx+ufOYCAxWRqoeTPfJenab9qUJIMmSyyTjrQbEW/TLSzOgF0LVWAFFlQTo
-	 qtVOHgxTJ49HehuMtNUCxWoRr+uM61Z0mmb1nLZLR10lI0qZ4PfXn175RnkKSflgEu
-	 ZpXSoSQ8umoml+88lrVRcYHw2zcvdR9yT4VaQzTgthoOvSW1her312rWnr7gR1CYjT
-	 P9aB2Z5EA/KXA==
-Date: Fri, 31 Jan 2025 14:13:05 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=iH6T3L915C3OWm6EEaiQ8JvXHMgzqsor5gHflYjNb+1+qmWGpz2aq25+8RVWKGdUZSKYawHTwLGvaovsU8qNvAmf7MUDlhxyB3rIh59NVeDXCWhyPWwhBrAddnAhKGNU99IW/yZjPziaX/rrssRJtBko84kwmdXyGNC+9DwKN70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=rtUqgxeJ; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id B516D240028
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 15:03:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738332191; bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=rtUqgxeJqyjfeci389WwyVR3ezEklT/hG71YuMEM/th4+OQ59ErBQRc/+lh1XpvEE
+	 ARpoFnYEIaLOsT8bfAf2MGITZGJJJnBqvY+i1tSSxHXmLoebinLWZIrjXBgSAUj3du
+	 UPFDJr+mS6r4SeVtaBKT7Y3I7HRaKADOT88LsZoSnGmZ9QZNYhd9ZLxg5GejJbaMj2
+	 rObowSmd9hkyrWs/4LhJj3LxbDSkWXNkeF/oty1/5J9X2CTACIl7pLuuGb1/Ql1nML
+	 eDRmowT95Q+BGvmfr9bEhksCP3PjPZk/SuM2qbQd2uouOpsET6v60CmGEvE/PVyKLh
+	 VqP7g55lON8xA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YkyK53T11z6v08;
+	Fri, 31 Jan 2025 15:03:05 +0100 (CET)
+Date: Fri, 31 Jan 2025 14:03:05 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-Message-ID: <Z5zMYQAduf58ZXPJ@ryzen>
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
- <20250128143231.ondpjpugft37qwo5@thinkpad>
- <Z5oX5Fe5FY2Pym0u@ryzen>
- <fe8c2233-fa2a-4356-8005-6cbabf6a0e96@socionext.com>
- <Z5y9zpFGkBnY2TG1@ryzen>
- <Z5zAFhEJzwOQUccM@ryzen>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
+ YAML
+Message-ID: <Z5zYGdZU-IXwIuR6@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
+ <20250127044735.GD3106458-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0zbjT5a9d7kNHMUA"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z5zAFhEJzwOQUccM@ryzen>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250127044735.GD3106458-robh@kernel.org>
 
-
---0zbjT5a9d7kNHMUA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jan 31, 2025 at 01:20:38PM +0100, Niklas Cassel wrote:
-> On Fri, Jan 31, 2025 at 01:10:54PM +0100, Niklas Cassel wrote:
-> > > 
-> > > If SET_IRQTYPE is AUTO, how will test->irq_type be set?
+On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
+> On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
 > > 
-> > I was thinking something like this:
-> > 
-> > pci_endpoint_test_set_irq()
-> > {
-> > 	u32 caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-> > 
-> > 	...
-> > 
-> > 	if (req_irq_type == IRQ_TYPE_AUTO) {
-> > 		if (caps & MSI_CAPABLE)
-> > 			test->irq_type = IRQ_TYPE_MSI;
-> > 		else if (caps & MSIX_CAPABLE)
-> > 			test->irq_type = IRQ_TYPE_MSIX;
-> > 		else
-> > 			test->irq_type = IRQ_TYPE_INTX;
-> > 
-> > 	}
-> > 
-> > 	...
-> > }
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 354 insertions(+), 204 deletions(-)
+[...]
+> > +patternProperties:
+> > +  "^dma-channel@.*$":
+> > +    type: object
 > 
+>        additionalProperties: false
+
+I'll add it.
+
+> (The tools should have highlighted this)
+
+With dtschema 2024.11 installed, "make dt_binding_check
+DT_SCHEMA_FILES=fsl,elo-dma.yaml" does not highlight this.
+
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - enum:
+> > +              - fsl,mpc8315-dma-channel
+> > +              - fsl,mpc8323-dma-channel
+> > +              - fsl,mpc8347-dma-channel
+> > +              - fsl,mpc8349-dma-channel
+> > +              - fsl,mpc8360-dma-channel
+> > +              - fsl,mpc8377-dma-channel
+> > +              - fsl,mpc8378-dma-channel
+> > +              - fsl,mpc8379-dma-channel
+> > +          - const: fsl,elo-dma-channel
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      cell-index:
+> > +        description: DMA channel index starts at 0.
+> > +
+> > +      interrupts: true
 > 
-> Or even simpler (since it requires less changes to
-> pci_endpoint_test_set_irq()):
-> 
-> 	if (req_irq_type == IRQ_TYPE_AUTO) {
-> 		if (caps & MSI_CAPABLE)
-> 			req_irq_type = IRQ_TYPE_MSI;
-> 		else if (caps & MSIX_CAPABLE)
-> 			req_irq_type = IRQ_TYPE_MSIX;
-> 		else
-> 			req_irq_type = IRQ_TYPE_INTX;
-> 
-> 	}
-> 
-> 	...
-> 
-> 	/* Sets test->irq_type = req_irq_type; on success */
-> 	pci_endpoint_test_alloc_irq_vectors();
+> You have to define how many interrupts and what they are.
+
+Will do.
+
+(and the same for the other two files)
 
 
-See attached patch.
-
-Mani, removing the global irq_type would go on top of this.
-
-
-Kind regards,
-Niklas
-
---0zbjT5a9d7kNHMUA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="auto_irq.patch"
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index d5ac71a49386..5e42930124e2 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -32,6 +32,7 @@
- #define IRQ_TYPE_INTX				0
- #define IRQ_TYPE_MSI				1
- #define IRQ_TYPE_MSIX				2
-+#define IRQ_TYPE_AUTO				3
- 
- #define PCI_ENDPOINT_TEST_MAGIC			0x0
- 
-@@ -71,6 +72,8 @@
- 
- #define PCI_ENDPOINT_TEST_CAPS			0x30
- #define CAP_UNALIGNED_ACCESS			BIT(0)
-+#define CAP_MSI					BIT(1)
-+#define CAP_MSIX				BIT(2)
- 
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- #define PCI_DEVICE_ID_TI_J7200			0xb00f
-@@ -126,6 +129,7 @@ struct pci_endpoint_test {
- 	struct miscdevice miscdev;
- 	enum pci_barno test_reg_bar;
- 	size_t alignment;
-+	u32 ep_caps;
- 	const char *name;
- };
- 
-@@ -805,11 +809,20 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
--	if (req_irq_type < IRQ_TYPE_INTX || req_irq_type > IRQ_TYPE_MSIX) {
-+	if (req_irq_type < IRQ_TYPE_INTX || req_irq_type > IRQ_TYPE_AUTO) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		return -EINVAL;
- 	}
- 
-+	if (req_irq_type == IRQ_TYPE_AUTO) {
-+		if (test->ep_caps & CAP_MSI)
-+			req_irq_type = IRQ_TYPE_MSI;
-+		else if (test->ep_caps & CAP_MSIX)
-+			req_irq_type = IRQ_TYPE_MSIX;
-+		else
-+			req_irq_type = IRQ_TYPE_INTX;
-+	}
-+
- 	if (test->irq_type == req_irq_type)
- 		return 0;
- 
-@@ -895,13 +908,12 @@ static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
- {
- 	struct pci_dev *pdev = test->pdev;
- 	struct device *dev = &pdev->dev;
--	u32 caps;
- 
--	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
--	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", caps);
-+	test->ep_caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-+	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", test->ep_caps);
- 
- 	/* CAP_UNALIGNED_ACCESS is set if the EP can do unaligned access */
--	if (caps & CAP_UNALIGNED_ACCESS)
-+	if (test->ep_caps & CAP_UNALIGNED_ACCESS)
- 		test->alignment = 0;
- }
- 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index b94e205ae10b..8917f7c6c741 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -45,6 +45,8 @@
- #define TIMER_RESOLUTION		1
- 
- #define CAP_UNALIGNED_ACCESS		BIT(0)
-+#define CAP_MSI				BIT(1)
-+#define CAP_MSIX			BIT(2)
- 
- static struct workqueue_struct *kpcitest_workqueue;
- 
-@@ -753,6 +755,12 @@ static void pci_epf_test_set_capabilities(struct pci_epf *epf)
- 	if (epc->ops->align_addr)
- 		caps |= CAP_UNALIGNED_ACCESS;
- 
-+	if (epf_test->epc_features->msi_capable)
-+		caps |= CAP_MSI;
-+
-+	if (epf_test->epc_features->msix_capable)
-+		caps |= CAP_MSIX;
-+
- 	reg->caps = cpu_to_le32(caps);
- }
- 
-diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
-index acd261f49866..1edbd4357470 100644
---- a/include/uapi/linux/pcitest.h
-+++ b/include/uapi/linux/pcitest.h
-@@ -23,6 +23,11 @@
- #define PCITEST_BARS		_IO('P', 0xa)
- #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
- 
-+#define PCITEST_IRQ_TYPE_INTX	0
-+#define PCITEST_IRQ_TYPE_MSI	1
-+#define PCITEST_IRQ_TYPE_MSIX	2
-+#define PCITEST_IRQ_TYPE_AUTO	3
-+
- #define PCITEST_FLAGS_USE_DMA	0x00000001
- 
- struct pci_endpoint_test_xfer_param {
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-index c267b822c108..c820a67e6437 100644
---- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -97,7 +97,7 @@ TEST_F(pci_ep_basic, LEGACY_IRQ_TEST)
- {
- 	int ret;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 0);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_INTX);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set Legacy IRQ type");
- 
- 	pci_ep_ioctl(PCITEST_LEGACY_IRQ, 0);
-@@ -108,7 +108,7 @@ TEST_F(pci_ep_basic, MSI_TEST)
- {
- 	int ret, i;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
- 
- 	for (i = 1; i <= 32; i++) {
-@@ -121,7 +121,7 @@ TEST_F(pci_ep_basic, MSIX_TEST)
- {
- 	int ret, i;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 2);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSIX);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI-X IRQ type");
- 
- 	for (i = 1; i <= 2048; i++) {
-@@ -170,8 +170,8 @@ TEST_F(pci_ep_data_transfer, READ_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
--	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
- 		param.size = test_size[i];
-@@ -189,8 +189,8 @@ TEST_F(pci_ep_data_transfer, WRITE_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
--	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
- 		param.size = test_size[i];
-@@ -208,8 +208,8 @@ TEST_F(pci_ep_data_transfer, COPY_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
--	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
-+	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
- 		param.size = test_size[i];
-
---0zbjT5a9d7kNHMUA--
+Best regards,
+J. Neuschäfer
 
