@@ -1,158 +1,227 @@
-Return-Path: <linux-pci+bounces-20592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB1AFA23EEE
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 15:03:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBC3DA23F2C
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 15:32:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54BAC3A9D77
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 14:03:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DE36163534
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2025 14:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D82ED1D14FF;
-	Fri, 31 Jan 2025 14:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="rtUqgxeJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB5A1C3316;
+	Fri, 31 Jan 2025 14:32:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3541C82F4
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 14:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72831145324
+	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 14:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738332196; cv=none; b=LAXcbOR+TZSQvzCPxs4WxLX0mygnJ/Ja8TS11mDvfqMplB83XhoR9Az+aznlQT+EhTWKPIPghpaUBGri99Y9LWnwnS8VWx/uN5r/4n4tYeIsDMScYcn+sTmMUlLFgmcIp85KVf2P719dqMLt9tSEi5jGS3fHJm796OXbtc7VZTE=
+	t=1738333975; cv=none; b=YmocQIcCsbgThYrytjsIvgXukzFdLeXiC+yjyJFRhRbadhbb+yYxVaQd3B3SemNK5f/nG0u01jhcaZ9cXDxM60akvhGwWM6vUKGDV2WmPCMB2pW+E4DcXhbAc3I2Hqp2JGqQOCRBPnruJ74/4RoGHU2Q5Qjx11x9tcsifYiq2kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738332196; c=relaxed/simple;
-	bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iH6T3L915C3OWm6EEaiQ8JvXHMgzqsor5gHflYjNb+1+qmWGpz2aq25+8RVWKGdUZSKYawHTwLGvaovsU8qNvAmf7MUDlhxyB3rIh59NVeDXCWhyPWwhBrAddnAhKGNU99IW/yZjPziaX/rrssRJtBko84kwmdXyGNC+9DwKN70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=rtUqgxeJ; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id B516D240028
-	for <linux-pci@vger.kernel.org>; Fri, 31 Jan 2025 15:03:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738332191; bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=rtUqgxeJqyjfeci389WwyVR3ezEklT/hG71YuMEM/th4+OQ59ErBQRc/+lh1XpvEE
-	 ARpoFnYEIaLOsT8bfAf2MGITZGJJJnBqvY+i1tSSxHXmLoebinLWZIrjXBgSAUj3du
-	 UPFDJr+mS6r4SeVtaBKT7Y3I7HRaKADOT88LsZoSnGmZ9QZNYhd9ZLxg5GejJbaMj2
-	 rObowSmd9hkyrWs/4LhJj3LxbDSkWXNkeF/oty1/5J9X2CTACIl7pLuuGb1/Ql1nML
-	 eDRmowT95Q+BGvmfr9bEhksCP3PjPZk/SuM2qbQd2uouOpsET6v60CmGEvE/PVyKLh
-	 VqP7g55lON8xA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YkyK53T11z6v08;
-	Fri, 31 Jan 2025 15:03:05 +0100 (CET)
-Date: Fri, 31 Jan 2025 14:03:05 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
- YAML
-Message-ID: <Z5zYGdZU-IXwIuR6@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
- <20250127044735.GD3106458-robh@kernel.org>
+	s=arc-20240116; t=1738333975; c=relaxed/simple;
+	bh=a6YXLePIuW1xL2vCE3djiKsB007uorQ1dc5jwhlyXdE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JiaRX/ytz+N8AYA9VuAftly4u+pC6yYV2c+ZfTiq6Eis501ogkcvJXyHbG2BoEOJqktL0sk3HVworVsWjVnWks3Hwg6rglgCJkuafit0iwn0WVwdpUPTfyEwQiYLkYizBNxmPG2GKReh6pfd8YVtFGdaQM66tiSOz8yZ3KFRvTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ykyyb1HKZz6K7kc;
+	Fri, 31 Jan 2025 22:32:07 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id F1F4B140A9C;
+	Fri, 31 Jan 2025 22:32:48 +0800 (CST)
+Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
+ 2025 15:32:48 +0100
+Date: Fri, 31 Jan 2025 14:32:46 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Jon Pan-Doh <pandoh@google.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek
+	<karolina.stolarek@oracle.com>, <linux-pci@vger.kernel.org>, Martin Petersen
+	<martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, "Drew
+ Walton" <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, Tony
+ Luck <tony.luck@intel.com>
+Subject: Re: [PATCH 6/8] PCI/AER: Add AER sysfs attributes for ratelimits
+Message-ID: <20250131143246.000037a2@huawei.com>
+In-Reply-To: <20250115074301.3514927-7-pandoh@google.com>
+References: <20250115074301.3514927-1-pandoh@google.com>
+	<20250115074301.3514927-7-pandoh@google.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250127044735.GD3106458-robh@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
-> On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
-> > The devicetree bindings for Freescale DMA engines have so far existed as
-> > a text file. This patch converts them to YAML, and specifies all the
-> > compatible strings currently in use in arch/powerpc/boot/dts.
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
-> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
-> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
-> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
-> >  4 files changed, 354 insertions(+), 204 deletions(-)
-[...]
-> > +patternProperties:
-> > +  "^dma-channel@.*$":
-> > +    type: object
+On Tue, 14 Jan 2025 23:42:58 -0800
+Jon Pan-Doh <pandoh@google.com> wrote:
+
+> Allow userspace to read/write ratelimits per device. Create aer/ sysfs
+> directory to store them and any future aer configs.
 > 
->        additionalProperties: false
-
-I'll add it.
-
-> (The tools should have highlighted this)
-
-With dtschema 2024.11 installed, "make dt_binding_check
-DT_SCHEMA_FILES=fsl,elo-dma.yaml" does not highlight this.
-
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        items:
-> > +          - enum:
-> > +              - fsl,mpc8315-dma-channel
-> > +              - fsl,mpc8323-dma-channel
-> > +              - fsl,mpc8347-dma-channel
-> > +              - fsl,mpc8349-dma-channel
-> > +              - fsl,mpc8360-dma-channel
-> > +              - fsl,mpc8377-dma-channel
-> > +              - fsl,mpc8378-dma-channel
-> > +              - fsl,mpc8379-dma-channel
-> > +          - const: fsl,elo-dma-channel
-> > +
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +      cell-index:
-> > +        description: DMA channel index starts at 0.
-> > +
-> > +      interrupts: true
+> Tested using aer-inject[1] tool. Configured correctable log/irq ratelimits
+> to 5/10 respectively. Sent 12 AER errors. Observed 5 errors logged while
+> AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 11
+> (1 masked).
 > 
-> You have to define how many interrupts and what they are.
+> Before: CEMsk: BadTLP-
+> After:  CEMsk: BadTLP+.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+> 
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> ---
+>  .../testing/sysfs-bus-pci-devices-aer_stats   | 32 +++++++++++
+>  Documentation/PCI/pcieaer-howto.rst           |  4 +-
+>  drivers/pci/pci-sysfs.c                       |  1 +
+>  drivers/pci/pci.h                             |  1 +
+>  drivers/pci/pcie/aer.c                        | 56 +++++++++++++++++++
+>  5 files changed, 93 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> index d1f67bb81d5d..c680a53af0f4 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> @@ -117,3 +117,35 @@ Date:		July 2018
+>  KernelVersion:	4.19.0
+>  Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+>  Description:	Total number of ERR_NONFATAL messages reported to rootport.
+> +
+> +PCIe AER ratelimits
+> +----------------------------
 
-Will do.
+Purely from an rst formatting point of view (this gets picked up in the docs
+build) --- should extend I think only under the text.
 
-(and the same for the other two files)
+> +
+> +These attributes show up under all the devices that are AER capable. Provides
+> +configurable ratelimits of logs/irq per error type. Writing a nonzero value
+> +changes the number of errors (burst) allowed per 5 second window before
+> +ratelimiting. Reading gets the current ratelimits.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_cor_irq
+> +Date:		Jan 2025
+> +KernelVersion:	6.14.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	IRQ ratelimit for correctable errors.
+
+I would add enough info that we can understand what values to write and what
+to read to each description.  This doc didn't lead me to the comment below
+and it should have done...
+
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_uncor_irq
+> +Date:		Jan 2025
+> +KernelVersion:	6.14.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	IRQ ratelimit for uncorrectable errors.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_cor_log
+> +Date:		Jan 2025
+> +KernelVersion:	6.14.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Log ratelimit for correctable errors.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_uncor_log
+> +Date:		Jan 2025
+> +KernelVersion:	6.14.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Log ratelimit for uncorrectable errors.
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index d41272504b18..4d5b0638f120 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -89,7 +89,9 @@ AER Ratelimits
+>  -------------------------
+>  
+>  Errors, both at log and IRQ level, are ratelimited per device and error type.
+> -This prevents spammy devices from stalling execution.
+> +This prevents spammy devices from stalling execution. Ratelimits are exposed
+> +in the form of sysfs attributes and configurable. See
+> +Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+>  
+>  AER Statistics / Counters
+>  -------------------------
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 7679d75d71e5..41acb6713e2d 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1693,6 +1693,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>  	&pcie_dev_attr_group,
+>  #ifdef CONFIG_PCIEAER
+>  	&aer_stats_attr_group,
+> +	&aer_attr_group,
+>  #endif
+>  #ifdef CONFIG_PCIEASPM
+>  	&aspm_ctrl_attr_group,
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 2e40fc63ba31..9d0272a890ef 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -881,6 +881,7 @@ void pci_no_aer(void);
+>  void pci_aer_init(struct pci_dev *dev);
+>  void pci_aer_exit(struct pci_dev *dev);
+>  extern const struct attribute_group aer_stats_attr_group;
+> +extern const struct attribute_group aer_attr_group;
+>  void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>  int pci_aer_clear_status(struct pci_dev *dev);
+>  int pci_aer_raw_clear_status(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 1db70ae87f52..e48e2951baae 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -630,6 +630,62 @@ const struct attribute_group aer_stats_attr_group = {
+>  	.is_visible = aer_stats_attrs_are_visible,
+>  };
+>  
+> +#define aer_ratelimit_attr(name, ratelimit)				\
+> +	static ssize_t							\
+> +	name##_show(struct device *dev, struct device_attribute *attr,	\
+> +		     char *buf)						\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	return sysfs_emit(buf, "%u errors every %u seconds\n",	\
+> +			  pdev->aer_info->ratelimit.burst,		\
+> +			  pdev->aer_info->ratelimit.interval / HZ);	\
+
+Usual rule of thumb is you need a very strong reason to read something
+different from what was written to a sysfs file.
 
 
-Best regards,
-J. Neuschäfer
+I think your interval is fixed? If so name the files so that is apparent
+and just have a count returned here.  Or if you want to future proof
+add a read only ratelimit_period_secs file that prints 5
+
+
+ratelimit_in_5secs_uncor_log etc.
+
+
+> +}									\
+> +									\
+> +	static ssize_t							\
+> +	name##_store(struct device *dev, struct device_attribute *attr,	\
+> +		     const char *buf, size_t count)				\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	int burst;							\
+> +									\
+> +	if (kstrtoint(buf, 0, &burst) < 0)				\
+> +		return -EINVAL;						\
+> +									\
+> +	pdev->aer_info->ratelimit.burst = burst;			\
+> +	return count;							\
+> +}									\
+> +static DEVICE_ATTR_RW(name)
+
 
