@@ -1,280 +1,228 @@
-Return-Path: <linux-pci+bounces-20614-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20615-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 635B6A2462C
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 02:25:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB381A247D5
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 10:03:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 68CF77A3636
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 01:24:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 846433A5AF3
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 09:03:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B918D9461;
-	Sat,  1 Feb 2025 01:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EAB025760;
+	Sat,  1 Feb 2025 09:03:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="b95yke1d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPfltsev"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE103AD21;
-	Sat,  1 Feb 2025 01:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738373135; cv=fail; b=kDT8vifMX6bNbAvVozxiWoFNcJ9ZkZNV8ic2MQRmI2fd70UCjeLllkEjIWPQM8c7ZM29Op4tGmQ6DoqEtATcnG4CDz/Kg4gS1I++QoKMk7J9ENpFWTD9JOZ5ECh/prRwZaE/Vt7+0OiC4SQjfxbBjfGK3gSm4pL+9+TXsQMP4q8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738373135; c=relaxed/simple;
-	bh=zKKn58zWdN6d2Swk8jJfWMzy7sbxzNV0ZGyni/r6ctA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D7uK2h1qH3gQ554YdkKHZiMEvqmvDsr7/0J0jOJdO17uIeXZGRzVm4tE6i5qYoIYoZkIka1XRtDs0PMoBb2DBVZ9zO1JIxbRNAogAUUIKAsE/DOXIDpmcUMk0VIiUYIFDEb++rX5GJl5PzyuS5Epl3fj0blYHStKeFBz10DLZnY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=b95yke1d; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50VKtdnZ015508;
-	Fri, 31 Jan 2025 16:57:59 -0800
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2047.outbound.protection.outlook.com [104.47.66.47])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44h5y6raec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 16:57:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ITs4Q7GQmq1csxUKpns0GH1lZ3Ek0xHptw4YL76HfmMu8krTfrWF+TvPbzl/33y0GE/n+28+8WIIXEV0f5v/r+NZDepxLsSitvrg8OspzHNnvCv7vP4z+JSef889SQT9z5hN3pyQQwhcZ+5O2VtUXIhN6TuSSSEIVLzZgmr2w7wz7ynV+tHnyUCvtVKlkqMlwAWRj5cTO62z45Kp6vOJLXPZzegknRVfedIilyK3+7bXBK8JMdGxhU4fSlq0wnnUrys65BBTDapgk7PsWROh9wgGvvuPwAeLemUjwCKEws49iu8U8fqdQQa5naSCRhafcOW71eE+yt6blwpwTieemQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zKKn58zWdN6d2Swk8jJfWMzy7sbxzNV0ZGyni/r6ctA=;
- b=q9gkAm68itIQzxRqNfkGgMlC57qaHskprWCpD14zEAYDiBuiwpkFVrs5hNTWV1N15iQCS7inHKFvoDzDVLehlbTGrjxMclJ36YeCflYN2AnN+YUqrRBdp+ORDtXpCfuN2holzyQT/lJcmR4u/W2ZKyE2gyc5vL9TNiAhR/dkJRp6eEFZeko6/CDMtdBvCGIIHwGpPccAWWm0AK2odZGLu7FtwD+Bp8sO1BJ9bDJ6ksZlNJ0xgPHJ98/rJ3spAC2qTUnOFplGZLJoZHYIiTxaIthoFToBmE+q19QIQpTASd2Xph71BI1Wp18HACPFH7PkyFRmGXDlBFYydZ7l/3lYvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zKKn58zWdN6d2Swk8jJfWMzy7sbxzNV0ZGyni/r6ctA=;
- b=b95yke1dRkySPVf/WVNdWiyvrnx3bNa/yGev7by2+dCfkliSbhk5T15CDLetAarf9qL/SNsIisT9zCTZl7TMnmv88d5nrajpbTepfGrgFkSK5k6EX4rU5AkgHnpWAjGZSdIjzKNoN8wtero8rDuulU9xN6Vbvc7HWUh0EllTMd4=
-Received: from BY3PR18MB4673.namprd18.prod.outlook.com (2603:10b6:a03:3c4::20)
- by LV3PR18MB5637.namprd18.prod.outlook.com (2603:10b6:408:199::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Sat, 1 Feb
- 2025 00:57:56 +0000
-Received: from BY3PR18MB4673.namprd18.prod.outlook.com
- ([fe80::fbd6:a3a:9635:98b5]) by BY3PR18MB4673.namprd18.prod.outlook.com
- ([fe80::fbd6:a3a:9635:98b5%3]) with mapi id 15.20.8398.020; Sat, 1 Feb 2025
- 00:57:56 +0000
-From: Wilson Ding <dingwei@marvell.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "kw@linux.com"
-	<kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        Sanghoon Lee <salee@marvell.com>
-Subject: RE: [PATCH 1/1] PCI: armada8k: Disable LTSSM on link down interrupts
-Thread-Topic: [PATCH 1/1] PCI: armada8k: Disable LTSSM on link down interrupts
-Thread-Index: AQHbdD9nYBcYj0YRMUe5aGbFZQ/QD7Mxlmnw
-Date: Sat, 1 Feb 2025 00:57:56 +0000
-Message-ID:
- <BY3PR18MB467343D941D2F7706FD88FCBA7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
-References: <20241112064241.749493-1-jpatel2@marvell.com>
- <20241112214337.GA1861873@bhelgaas>
- <BY3PR18MB4673E2698A6F465FEB56B5A2A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
-In-Reply-To:
- <BY3PR18MB4673E2698A6F465FEB56B5A2A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY3PR18MB4673:EE_|LV3PR18MB5637:EE_
-x-ms-office365-filtering-correlation-id: 07399b29-53d2-4aae-3986-08dd425b7714
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|10070799003|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?VkhKZTl2bEluYzROSDhXRXY2eW5TZnhLMmE3bjNhRmc1NDMwNHkzVWVDdzBp?=
- =?utf-8?B?aHhoY3d3TU5xRGJyK0tFTzRiVHB2M3NlbmIrYk1wWHVHQVo1RlZxUUdyZU40?=
- =?utf-8?B?c2FBU0E3NHpzWVE1TE9BZkNOU3VlRlVYTk9tWXFvNzRXQllqRS9ISzNZM2l0?=
- =?utf-8?B?dkpiZUJNZTlma2JoSzZqU3VoSS9GUTY0Q2ZDb0paTVRVOHluMVJWdVJCYTFX?=
- =?utf-8?B?NmpPeC9tV2tJVHpmS2VxWEIxdmdZRTY0U2h4amd0cU1sRnZEUDY3UDNJQlJw?=
- =?utf-8?B?OEp6K0xPczBKUU40c3J0S2JlZTE2Z1Z5U2JUZC9MUmhZZWVZTlJJUlZmaHRj?=
- =?utf-8?B?Z09qcm1JVnRzV3pnVEZYMWVQYlNpTzZvWEZzRnhrbTZIbnN2NkZtazhPZnFz?=
- =?utf-8?B?S0NEUExLWTZNUVVGcUJndmU2aHZ2aTJ0K2ZQdkM1ZmVaRTR2LzF2WTN1eiti?=
- =?utf-8?B?YmhmQUFLRmdXSE8xVUpPcHozbmt1WWFnQ3kvU0NkSmQvczBnc3BjUEpyZW12?=
- =?utf-8?B?dGJIMmtpOElkOXF0SEluSVdPY0hPbG5KN09FazE4MWd3MDVlN3RXdXJRREZQ?=
- =?utf-8?B?WWlnS0sweERsRldDOC9HSHBvU2xSR3g5eSt4KzUxekNsOFJsdGZTQlJOdHE0?=
- =?utf-8?B?TXpreGR5eWpGd1l4YjRUaHpBNk5LWEEzSHcwbkZaZmJPdDZpeFprTlZDT1NX?=
- =?utf-8?B?bTFVMHZCbXdZbVdsNSswNitmQVhydzNpZjFvTWpOM1hrTE5mbWlyaWxGaUgx?=
- =?utf-8?B?TjJqQS9ILzB6dTFQT2FjZnR0UUdIdGZFWC9HL2ZlT3ZIcUxkWUJmMkJGNXF3?=
- =?utf-8?B?QlJhMjY5UXl4dUw0L2RkZFVQeXpVWnRreE14K2sxUDcvbzVxSEFaWWFPWlow?=
- =?utf-8?B?RDhxYmtvakxOdFZJa3NPaHVKcXA3MVM3THFFTmtvcnpuT3hCNGRENEk3WGVY?=
- =?utf-8?B?TDQzbER3WktHdkQ1aTI4bHBLN1plVFhHTTl1SDlOdzVGTzZzYmdGWFJQSXJt?=
- =?utf-8?B?MlJSS0VxcEhHM3JLMTZpYlQzcyt3NWMwdnBsNG04aWhXR0tvZEMxQlBhSEdF?=
- =?utf-8?B?Y1Z0RXVxcEEyak1jS2ZPNFhqamZXbE4xdUV6b25QazZpUmJJTFN0aTY3YnBv?=
- =?utf-8?B?dXZkVkhQUXhiZlhPZGxtOElLZGVqRHJiNy9uVUtQSUhaMTFKWC9EVUF0Z1Zh?=
- =?utf-8?B?bVdZNS94R1ExbGJ3aXowdC9CZk9sZkJHQmFkRjZ0dm5IWjQ3SDd0WGIyWnZP?=
- =?utf-8?B?UjVwM2Myd0h0R3RxbUFnN21nam1rbXhRcWljY0pock5VTFJoUDNGQk1GZ05J?=
- =?utf-8?B?aVg3eG0zTzFGSnNWQS9xb0lRRmlCVll1Rm5TdDNDSnV0bU5wcEhuUm1TOEsr?=
- =?utf-8?B?NSthV0JuN1RsSzJPT3JoV2RxczBGS0pXSzJjbnM5MWdyVElENmRMUDlCS1JU?=
- =?utf-8?B?L1VuRDNKL0x0cHpHSDhMalU5QmFzNFE4WUpKUG9RekhTeUl5QldoUFNkZS9y?=
- =?utf-8?B?ZHQxRzJEcDlQaGFYWjZDN2dUUXdheHhpV2JKT0svVFNsSWxSQVBSaXVNeG9M?=
- =?utf-8?B?MzlPUXBsQ2Q4d053MTREb09mUFlLTTkzWlRCOG9FRUlwRmVJZkhvZElQaDBM?=
- =?utf-8?B?WmpPT2xCdWRXRW02RDdSTVFVM1dTQzFmdGMwQU4yQjVUbmNuQ1g3d0MrOG40?=
- =?utf-8?B?d292b1RrS3ZPeGNGaExZcEpyOHVkckFjVW9oWFNibzRyblEzbWNQZDRqTlVu?=
- =?utf-8?B?N0ZQRno0ZDdob1Qwc0VhSVAzbHNHbTI1RXhYWU9ONkExOXZXdzhlY2huRmYw?=
- =?utf-8?B?ZnJYM0pOOFRpOHprWkUrMnZEcjFrVkYzMkIyem90V09VM0x2NVZIWUNCQUJq?=
- =?utf-8?B?QkJuZW5uS29RNW5YMVhzMVNnMnNLcW9BSUhmMmppVjd0S2JRWDdyWFlNOUxL?=
- =?utf-8?Q?W2zGlKR5fEvnvysI94lBUli7CApJde/i?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR18MB4673.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(10070799003)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VUwrN20velZrM05oSmsrV1l5Mnh3MmdIZFVrWklIK2RmcUF4VjA4OUZWdDdT?=
- =?utf-8?B?WEZpRnhyOC9GSVJLUEYwSjRhZ1BlUjZUNVRrbEVVZm9Bb1lEQlRSZkpoWnFN?=
- =?utf-8?B?ZkNlU1ZTMkNTT1AxSHBEQSticHViclNHNlpBL3ZsMm9tWTB4YzZqSkd6UmZU?=
- =?utf-8?B?R1E3S3VMb3habnN5OGtRQytLMENWalJnZ29HRVU5MVhTKzNOL0d6bVYrdWV0?=
- =?utf-8?B?c1lyYU1EaEVJVVBJR2UvanpWY2ZPckJjcGtZMWQzQUIvNTE2Z1plWml1TFo5?=
- =?utf-8?B?ZkdoaVpDeHpTM2UxQjlWc0xNd3pwV0pWOVRVWU5ya2NXREJIOVRGaW9YdFVE?=
- =?utf-8?B?V2o1RDJSSGpzdkNJcVlaekFmUWxtSVFOSWhQTFhpa0xueUROMWUvQk11YVpM?=
- =?utf-8?B?RFo3Mld6ajNVTFNrQkk2R3NIWTV0Njg3Ti9jU3Faei9DR2pqbTk0SWN2SUhu?=
- =?utf-8?B?cVNJOVhtQnZHZ0N2ZC9HUER2c3Fra015NHhLMHUrVFU3SUg3cWtuZ1hkZHJr?=
- =?utf-8?B?NFFyWExLMnJWakFiWXB5VmxiQ1IybC8vWVpMUjJPY2hOZ3BLTS9ldllsNmow?=
- =?utf-8?B?eXcvUzJpSWY1d2ZwTFJqTjFvZEEyc0ZaK0hOazBSenR3MWZxcW91Nnk4NVlv?=
- =?utf-8?B?TXJYQ2Y0emxlbVdLRi9oVlpnR09KZWlNYUowZEFGUncyMllTTnVvOEFtS1FQ?=
- =?utf-8?B?MzFWTytuS2daZy85b2pxeGdxcG1VVDdJODFUc2JmNy84ZU44L2pvdzFlMVU4?=
- =?utf-8?B?dm9WcXFaYUE3b29CSzJ1MHZCUkxJOU1Xdnd4N2M3NENMaHRKVHY0OEZJRkFB?=
- =?utf-8?B?UlVQRWpEL29Ya1lBZzRXNWl4WjlROGE4c0RXV3psRzd4WTUxRDY4cDVVak84?=
- =?utf-8?B?cXJ4L1ZyL0tLQzRtK211VzZoVGFkMTIwbFVFNDlmRHZBQWNwVWlFRVZhZnRm?=
- =?utf-8?B?RkZWMEcwcGlhUVdPSHJwMVZWMG9sRVlYQmFLY3IxWkJRQ1dlZExDY0tLa25V?=
- =?utf-8?B?bHBtay9MRXZzZGxoLzZlMXB5Mk9Oc2Q1MWlSS2ZoZkRzc1dMbjFiOVY5ejRn?=
- =?utf-8?B?ZXFtd0VkS2ZWWHY4LzdlMlBNMUJ5aWNNaURMVE45Q3hJUm9iajdscmQ4RWhR?=
- =?utf-8?B?T1BLc3VtVzVPNi9Xb0Z1SGVnTFBrRlpnYTBUQzhLaG55Y3NRN2lCaDlFbkt3?=
- =?utf-8?B?cStxV1NmdjY1Mm5XWEtrSlppeHN3SDVwaHFySUVQdXRTcGJVeDgwYW9MVTh4?=
- =?utf-8?B?di9JZnlkUytrVnZFT3NseGdIL0RZSExvcjBvN0Vkb04vdjA5cXRRcDZ6aWxB?=
- =?utf-8?B?S2k0SEdGM1NYVWx0RGpZOUlPR2h0VTFzMFk5dzJvU25wdllFOHQ0dVlkYkVT?=
- =?utf-8?B?VkNRdkxBakZISk1OSmlwdlhzT3ljb3ZlLytZWGJ3TFFUSUlqUHZBQnk0bEFr?=
- =?utf-8?B?cks3MGRjM1d3MTZqTXd2djJCMEVMZi8zVmplVU0yTENiV3VFeElQSzJwZkVW?=
- =?utf-8?B?VjBpdklReVdaL01rVEYrVWhqeUhyaUlIYXB6TzlQK3daQmEyVlUyaGp3N0Rq?=
- =?utf-8?B?c1Joam9SSzFwT2pBclZNdjB6aXdTS251Q1U1U1FxMkhTUDR0K0NXTktEMHQ1?=
- =?utf-8?B?Y1RZcUhGZVFjM2c1ZEtKRHUvZW1vT2dtWG90YzdrU29kWDFNcTduR0diVDdT?=
- =?utf-8?B?UXU2bUx0TjFpY1B0Z0NXZEFHKzk1eEJiYStDUWdaMjFOeGw1K0Y2TVc4OXhZ?=
- =?utf-8?B?LzR3WldFMTBmbmJvMWNsUUZOSVd6L1gxSWZXZjAyOFZrd09oZC9YYnY0T0Iv?=
- =?utf-8?B?aDVaVDZEemFCcFdQUm9Rd0dPU3h6cG9RQ3ZmQlg4UnhwSWxwOFR1VGRMcllx?=
- =?utf-8?B?cmZJY25xTEZCdCtIaDhma3RCV3UrSXZnbE5oZlpDNUd1bllBaDd3b0huNG13?=
- =?utf-8?B?RWpwTlZ0dEN0T3E5bjZXaFFDK1JsbzVHNDQwUEpqY3NyUTlNaEs0eG0wTTRI?=
- =?utf-8?B?azJnaGJjcFQxdG5uYnlBK05Hc0VrTWVreWhrdmNqRGdBUGg5VG9mbVdJZC9h?=
- =?utf-8?B?eCtQRlB1YkdnNXVTaHk2bFloQzJKN2kraVBBcEdMeXk5YjhLdGVtSmJONVY3?=
- =?utf-8?B?aHJ3UGdhN2NNWTI4VWNkajhLRHo3azU3Mm1JL0Z1bjFHdGpSZkJ6bHVxYVdp?=
- =?utf-8?Q?f8aIBw2Kp3vMoLjKzgMgyBhPO83qhjjeHoIJ5iontnOa?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBBE632;
+	Sat,  1 Feb 2025 09:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738400620; cv=none; b=Zec7U4lg6wnGjDpS0CwOnH5rUioZeCBy35eHLajXhomJ1vXPyYXGyNxlh3U6JU8+cE3fwKReQUWYlw8c1zLio/O7b25bl0ySOQOuTrFuvAyj/zyGDBvujnHNj5I9igkNtAa4pMxAQesoIMV0wZe/cv3UhSFIzvID+Nsv1fJu+TI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738400620; c=relaxed/simple;
+	bh=dCmznVGGpPhbq7aTQ3oKsuHwb4e+/C/exV6mgmYPB8w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SgLHq4A3G8jTKdcFsmQgZvZUu+s0qVkSOgtqXCzUvSUdeeVD12Rxw5iRiHcV/8VJkPfk9a6wiV80YHFR3UBOOG9RFQ5p8skt/qPBa6aui1g6yDEwFVykbekq6xFkQx5ng+SqmRLqKVJl7CQEqfWysrrTrKu/3nkzSDBEIuE0r0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPfltsev; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30613802a6bso27669871fa.1;
+        Sat, 01 Feb 2025 01:03:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738400615; x=1739005415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n9yS6i50fsDPXkXU4ztnrfoQWet2zHGrTDpq9W+LdBY=;
+        b=CPfltsev4XOXd48EBOcUApS2IDOiT/ooON5/e1ROFkIh6oBL2sR9jbJVLtRkavq8Zj
+         LaPOHTLq/jcHSVKYeSTEeJQUtyxT/zbAO28a/1Pogm/fDT+ykrLyxsEc2VZxqzUbxf6J
+         WBUpdjDzMgz5fdKcrPSvNMDe8dl6jsJRTtE1MVREx760qT4L4/gRbW9NNgcnCVXK+mkV
+         eQLnL3WKLehhXZOpHO3MFs9KH2tdoAwy1epKMnpdbwMaeeJdjbv17iyO0sBIEBbyVmVt
+         v0FoQK5yqFA5LnIjomLnvkrHW5uRTtK7YqThPjkZXT/LTa5UVHClJvpvCFvPENcJ2839
+         e4cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738400615; x=1739005415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n9yS6i50fsDPXkXU4ztnrfoQWet2zHGrTDpq9W+LdBY=;
+        b=c0BlDJi5oLhJpSY1m7btyCrfRqzcx1dUh1zxMkIwjTGE5eBncd+NBmeGL7JGji7nDJ
+         eLpHZlHzwFpTJ4Mxh/vBPKdzOHMlFuQExX+2yKeEbTAAreLnKq8jXqz6zJ9SdjgQHnxm
+         2yORVCyCsyD/NdGXc6p2YGhPBGm5EBOtZbHCvlvPUBC/R5iKCyiaoN/lB3HVDilSoSgR
+         4BVU+TjqsiAqDFQhxt4lQhpdr7b2qdLMjQmioAwnJIQQzhPXB0xb1R+TMRSS3Xz/owlu
+         IsETBQAScynF+mQ3uF2QxQsBls/DHYORc7vbMct6LtPUD7axuDaKQHNqlFO1pqDZ9Jpq
+         VsnQ==
+X-Gm-Message-State: AOJu0Yw64IrevJyA/EFXC9yzaYG9/dGa58jcn6PTqu6eEOa4/o5iNfUR
+	AB6nJEuTWd4bQa8yJ9D7rW7KmyyY3lFpdRg/nBvWD8gbrlWJQLygR30pYAOrQCFo9XWbwsJVquM
+	JGhIKOquAIZJZFIUyaOGOvXoCpm1aeC55dQ==
+X-Gm-Gg: ASbGncvfD9mmZ+m57/SzJCKEkgH+4dsGfhU8zw45LI2gUbLXy6+Dz1tuur95ix8v2YJ
+	6XMvWJu1VBe34rHM3AQN3e4icX3DmjuymP/JaUB/pstSrtIRg9e/EizSDFPUw7D+kF6OWqbX6EQ
+	==
+X-Google-Smtp-Source: AGHT+IG19bf2TA0IIVd+XMsIRlOrA60uehqCuZOGzORiPqBl0Mhro+mb2mSDopob354gWXP80LDade6/uJqaYpY+2PY=
+X-Received: by 2002:a2e:a104:0:b0:306:1397:d5ff with SMTP id
+ 38308e7fff4ca-307968f8e8fmr57198801fa.22.1738400615109; Sat, 01 Feb 2025
+ 01:03:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4673.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07399b29-53d2-4aae-3986-08dd425b7714
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2025 00:57:56.3369
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5C7Uqdn5LvE2QWgSxE3kn6t195IL9PqLoax6oeVKyDiZvtvjHie/WcfPGOtmp56EfP8WAS8oxOY1Ak+SRYLGBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR18MB5637
-X-Proofpoint-ORIG-GUID: dEkWLmpUkJaulDnbcTbkezkPzrtmjNQ3
-X-Proofpoint-GUID: dEkWLmpUkJaulDnbcTbkezkPzrtmjNQ3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_09,2025-01-31_02,2024-11-22_01
+References: <CAMciSVUzFL+myQTTRD-OZRf+o9UUPDE87SzUxQ2cYdjrfd7iHQ@mail.gmail.com>
+In-Reply-To: <CAMciSVUzFL+myQTTRD-OZRf+o9UUPDE87SzUxQ2cYdjrfd7iHQ@mail.gmail.com>
+From: Naveen Kumar P <naveenkumar.parna@gmail.com>
+Date: Sat, 1 Feb 2025 14:33:23 +0530
+X-Gm-Features: AWEUYZkl7qXY05qxjPCoXgIOxUmznIZ3iFQVpAlxDDtfyd1_72qEIaLGFHWGno0
+Message-ID: <CAMciSVXsuW7b=EKwS1mtNpANF+nRmH1-ofvDy6gp0jQ4jSwE+g@mail.gmail.com>
+Subject: Re: Assistance Needed: PCIe Device BAR Reset Issue
+To: linux-pci@vger.kernel.org, lukas@wunner.de
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SSBhbSB3cml0aW5nIHRvIGZvbGxvdyB1cCBvbiB0aGlzIHNlcmlvdXMgb2YgUENJZSBwYXRjaGVz
-IHN1Ym1pdHRlZCBieSBKZW5pc2guDQpVbmZvcnR1bmF0ZWx5LCBoZSBoYXMgc2luY2UgbGVmdCB0
-aGUgY29tcGFueSwgYW5kIHNvbWUgY29tbWVudHMgb24gdGhlc2UNCiBwYXRjaGVzIHdlcmUgbm90
-IGFkZHJlc3NlZCBpbiBhIHRpbWVseSBtYW5uZXIuIEkgYXBvbG9naXplIGZvciB0aGUgZGVsYXkN
-CmFuZCBhbnkgaW5jb252ZW5pZW5jZSB0aGlzIG1heSBoYXZlIGNhdXNlZC4gSSBoYXZlIHJldmll
-d2VkIHRoZSBmZWVkYmFjaw0KcHJvdmlkZWQgYW5kIGFtIG5vdyB0YWtpbmcgb3ZlciB0aGlzIHdv
-cmsuIEkgYXBwcmVjaWF0ZSB0aGUgdGltZSBhbmQgZWZmb3J0DQp5b3UgaGF2ZSBwdXQgaW50byBy
-ZXZpZXdpbmcgdGhlIHBhdGNoIGFuZCBwcm92aWRpbmcgdmFsdWFibGUgY29tbWVudHMuDQpJIHdp
-bGwgZW5zdXJlIHRoYXQgdGhlIG5lY2Vzc2FyeSBjaGFuZ2VzIGFyZSBtYWRlIGFuZCByZXN1Ym1p
-dCB0aGUgcGF0Y2gNCmluIHRoZSBwcm9wZXIgbWFubmVyLCBhcyBpdCB3YXMgbm90IGluaXRpYWxs
-eSBzdWJtaXR0ZWQgYXMgYSBzZXJpZXMuDQoNCj4gPiBXaGVuIGEgUENJIGxpbmsgZG93biBjb25k
-aXRpb24gaXMgZGV0ZWN0ZWQsIHRoZSBsaW5rIHRyYWluaW5nIHN0YXRlDQo+ID4gbWFjaGluZSBt
-dXN0IGJlIGRpc2FibGVkIGltbWVkaWF0ZWx5Lg0KPiANCj4gV2h5Pw0KPiANCj4gIkltbWVkaWF0
-ZWx5IiBoYXMgbm8gbWVhbmluZyBoZXJlLiAgQXJiaXRyYXJ5IGRlbGF5cyBhcmUgcG9zc2libGUg
-YW5kIG11c3QNCj4gbm90IGJyZWFrIGFueXRoaW5nLg0KDQpZZXMsIEkgYWdyZWUuIEEgZGVsYXkg
-Y2Fubm90IGJlIGF2b2lkZWQuIFRoZSBpc3N1ZSB3ZSBlbmNvdW50ZXJlZCBpcyB0aGF0DQp0aGUg
-UkMgbWF5IG5vdCBiZSBhd2FyZSBvZiB0aGUgbGluayBkb3duIHdoZW4gaXQgaGFwcGVucy4gSW4g
-dGhpcyBjYXNlLA0KYW55IGFjY2VzcyB0byB0aGUgUENJIGNvbmZpZyBzcGFjZSBtYXkgaGFuZyB1
-cCBQQ0kgYnVzLiBUaGUgb25seSB0aGluZyB3ZQ0KY2FuIGRvIGlzIHRvIHJlbHkgb24gdGhpcyBs
-aW5rIGRvd24gaW50ZXJydXB0LiBCeSBkaXNhYmxpbmcgQVBQX0xUU1NNX0VOLA0KUkMgd2lsbCBi
-eXBhc3MgYWxsIGRldmljZSBhY2Nlc3NlcyB3aXRoIHJldHVybmluZyBhbGwgb25lcyAoZm9yIHJl
-YWQpLg0KDQo+ID4gU2lnbmVkLW9mZi1ieTogSmVuaXNoa3VtYXIgTWFoZXNoYmhhaSBQYXRlbA0K
-PiA+IDxtYWlsdG86anBhdGVsMkBtYXJ2ZWxsLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpZS1hcm1hZGE4ay5jIHwgMzgNCj4gPiArKysrKysrKysrKysr
-KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspDQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1hcm1hZGE4ay5j
-DQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFybWFkYThrLmMNCj4gPiBp
-bmRleCBiNWM1OTljY2FhY2YuLjA3Nzc1NTM5YjMyMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFybWFkYThrLmMNCj4gPiArKysgYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9wY2llLWFybWFkYThrLmMNCj4gPiBAQCAtNTMsNiArNTMsMTAgQEAg
-c3RydWN0IGFybWFkYThrX3BjaWUgew0KPiA+ICAjZGVmaW5lIFBDSUVfSU5UX0NfQVNTRVJUX01B
-U0sJCUJJVCgxMSkNCj4gPiAgI2RlZmluZSBQQ0lFX0lOVF9EX0FTU0VSVF9NQVNLCQlCSVQoMTIp
-DQo+ID4NCj4gPiArI2RlZmluZSBQQ0lFX0dMT0JBTF9JTlRfQ0FVU0UyX1JFRwkoUENJRV9WRU5E
-T1JfUkVHU19PRkZTRVQNCj4gKyAweDI0KQ0KPiA+ICsjZGVmaW5lIFBDSUVfR0xPQkFMX0lOVF9N
-QVNLMl9SRUcJKFBDSUVfVkVORE9SX1JFR1NfT0ZGU0VUDQo+ICsgMHgyOCkNCj4gPiArI2RlZmlu
-ZSBQQ0lFX0lOVDJfUEhZX1JTVF9MSU5LX0RPV04JQklUKDEpDQo+ID4gKw0KPiA+ICAjZGVmaW5l
-IFBDSUVfQVJDQUNIRV9UUkNfUkVHCQkoUENJRV9WRU5ET1JfUkVHU19PRkZTRVQNCj4gKyAweDUw
-KQ0KPiA+ICAjZGVmaW5lIFBDSUVfQVdDQUNIRV9UUkNfUkVHCQkoUENJRV9WRU5ET1JfUkVHU19P
-RkZTRVQNCj4gKyAweDU0KQ0KPiA+ICAjZGVmaW5lIFBDSUVfQVJVU0VSX1JFRwkJCShQQ0lFX1ZF
-TkRPUl9SRUdTX09GRlNFVA0KPiArIDB4NUMpDQo+ID4gQEAgLTIwNCw2ICsyMDgsMTEgQEAgc3Rh
-dGljIGludCBhcm1hZGE4a19wY2llX2hvc3RfaW5pdChzdHJ1Y3QNCj4gZHdfcGNpZV9ycCAqcHAp
-DQo+ID4gIAkgICAgICAgUENJRV9JTlRfQ19BU1NFUlRfTUFTSyB8IFBDSUVfSU5UX0RfQVNTRVJU
-X01BU0s7DQo+ID4gIAlkd19wY2llX3dyaXRlbF9kYmkocGNpLCBQQ0lFX0dMT0JBTF9JTlRfTUFT
-SzFfUkVHLCByZWcpOw0KPiA+DQo+ID4gKwkvKiBBbHNvIGVuYWJsZSBsaW5rIGRvd24gaW50ZXJy
-dXB0cyAqLw0KPiA+ICsJcmVnID0gZHdfcGNpZV9yZWFkbF9kYmkocGNpLCBQQ0lFX0dMT0JBTF9J
-TlRfTUFTSzJfUkVHKTsNCj4gPiArCXJlZyB8PSBQQ0lFX0lOVDJfUEhZX1JTVF9MSU5LX0RPV047
-DQo+ID4gKwlkd19wY2llX3dyaXRlbF9kYmkocGNpLCBQQ0lFX0dMT0JBTF9JTlRfTUFTSzJfUkVH
-LCByZWcpOw0KPiA+ICsNCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiBAQCAtMjIx
-LDYgKzIzMCwzNSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgYXJtYWRhOGtfcGNpZV9pcnFfaGFuZGxl
-cihpbnQNCj4gaXJxLCB2b2lkICphcmcpDQo+ID4gIAl2YWwgPSBkd19wY2llX3JlYWRsX2RiaShw
-Y2ksIFBDSUVfR0xPQkFMX0lOVF9DQVVTRTFfUkVHKTsNCj4gPiAgCWR3X3BjaWVfd3JpdGVsX2Ri
-aShwY2ksIFBDSUVfR0xPQkFMX0lOVF9DQVVTRTFfUkVHLCB2YWwpOw0KPiA+DQo+ID4gKwl2YWwg
-PSBkd19wY2llX3JlYWRsX2RiaShwY2ksIFBDSUVfR0xPQkFMX0lOVF9DQVVTRTJfUkVHKTsNCj4g
-PiArDQo+ID4gKwlpZiAoUENJRV9JTlQyX1BIWV9SU1RfTElOS19ET1dOICYgdmFsKSB7DQo+ID4g
-KwkJdTMyIGN0cmxfcmVnID0gZHdfcGNpZV9yZWFkbF9kYmkocGNpLA0KPiBQQ0lFX0dMT0JBTF9D
-T05UUk9MX1JFRyk7DQo+IA0KPiBBZGQgYmxhbmsgbGluZS4NCj4gDQo+ID4gKwkJLyoNCj4gPiAr
-CQkgKiBUaGUgbGluayB3ZW50IGRvd24uIERpc2FibGUgTFRTU00gaW1tZWRpYXRlbHkuIFRoaXMN
-Cj4gPiArCQkgKiB1bmxvY2tzIHRoZSByb290IGNvbXBsZXggY29uZmlnIHJlZ2lzdGVycy4gRG93
-bnN0cmVhbQ0KPiA+ICsJCSAqIGRldmljZSBhY2Nlc3NlcyB3aWxsIHJldHVybiBhbGwtRnMNCj4g
-PiArCQkgKi8NCj4gPiArCQljdHJsX3JlZyAmPSB+KFBDSUVfQVBQX0xUU1NNX0VOKTsNCj4gPiAr
-CQlkd19wY2llX3dyaXRlbF9kYmkocGNpLCBQQ0lFX0dMT0JBTF9DT05UUk9MX1JFRywNCj4gY3Ry
-bF9yZWcpOw0KPiANCj4gQW5kIGhlcmUuDQo+IA0KPiA+ICsJCS8qDQo+ID4gKwkJICogTWFzayBs
-aW5rIGRvd24gaW50ZXJydXB0cy4gVGhleSBjYW4gYmUgcmUtZW5hYmxlZCBvbmNlDQo+ID4gKwkJ
-ICogdGhlIGxpbmsgaXMgcmV0cmFpbmVkLg0KPiA+ICsJCSAqLw0KPiA+ICsJCWN0cmxfcmVnID0g
-ZHdfcGNpZV9yZWFkbF9kYmkocGNpLA0KPiBQQ0lFX0dMT0JBTF9JTlRfTUFTSzJfUkVHKTsNCj4g
-PiArCQljdHJsX3JlZyAmPSB+UENJRV9JTlQyX1BIWV9SU1RfTElOS19ET1dOOw0KPiA+ICsJCWR3
-X3BjaWVfd3JpdGVsX2RiaShwY2ksIFBDSUVfR0xPQkFMX0lOVF9NQVNLMl9SRUcsDQo+IGN0cmxf
-cmVnKTsNCj4gDQo+IEFuZCBoZXJlLiAgRm9sbG93IGV4aXN0aW5nIGNvZGluZyBzdHlsZSBpbiB0
-aGlzIGZpbGUuDQo+IA0KPiA+ICsJCS8qDQo+ID4gKwkJICogQXQgdGhpcyBwb2ludCBhIHdvcmtl
-ciB0aHJlYWQgY2FuIGJlIHRyaWdnZXJlZCB0bw0KPiA+ICsJCSAqIGluaXRpYXRlIGEgbGluayBy
-ZXRyYWluLiBJZiBsaW5rIHJldHJhaW5zIHdlcmUNCj4gPiArCQkgKiBwb3NzaWJsZSwgdGhhdCBp
-cy4NCj4gPiArCQkgKi8NCj4gPiArCQlkZXZfZGJnKHBjaS0+ZGV2LCAiJXM6IGxpbmsgd2VudCBk
-b3duXG4iLCBfX2Z1bmNfXyk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJLyogTm93IGNsZWFyIHRo
-ZSBzZWNvbmQgaW50ZXJydXB0IGNhdXNlLiAqLw0KPiA+ICsJZHdfcGNpZV93cml0ZWxfZGJpKHBj
-aSwgUENJRV9HTE9CQUxfSU5UX0NBVVNFMl9SRUcsIHZhbCk7DQo+ID4gKw0KPiA+ICAJcmV0dXJu
-IElSUV9IQU5ETEVEOw0KPiA+ICB9DQo+ID4NCj4gPiAtLQ0KPiA+IDIuMjUuMQ0KPiA+DQo=
+Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr-
+Stepping- SERR- FastB2B- DisINTx-
+Does this indicates that memory space (Mem-) and bus mastering
+(BusMaster-) are disabled? Does it suggest the device might have
+entered a low-power state?
+
+I see runtime_status as active
+#cat /sys/bus/pci/devices/0000\:01\:00.0/power/runtime_status
+active
+
+
+On Fri, Jan 31, 2025 at 3:37=E2=80=AFPM Naveen Kumar P
+<naveenkumar.parna@gmail.com> wrote:
+>
+> Dear Linux Kernel Community,
+>
+> I hope this message finds you well. I am reaching out to seek assistance =
+with an issue I am experiencing with a PCIe device on my system.
+>
+> System Details:
+>
+> PCIe Device: PLDA Device 5555
+> Kernel Version: 5.4.0-148-generic
+> Distribution: Ubuntu 20.04.6 LTS
+>
+> After booting the system, I read the Base Address Register (BAR) of the P=
+CIe device using the following command:
+>
+> setpci -s 01:00.0 BASE_ADDRESS_0
+>
+> Initially, the BAR value is 0xb0400000. However, after some time, reading=
+ from the PCIe device's BAR memory fails and returns 0xffff (PCIe memory-ma=
+pped registers read via the readb(), readw(), and readl() kernel mode APIs =
+returned 0xff\0xffff\0xffffffff). Upon rechecking the BAR using the same se=
+tpci command, the result is 0x00000000. Additionally, I verified the BAR0 a=
+ddress using the kernel API pci_resource_start(), and it exhibited the same=
+ behavior.
+>
+> Steps Taken:
+>
+> Verified the device status using lspci -vvv -s 01:00.0:
+> # lspci -vvv -s 01:00.0
+> 01:00.0 RAM memory: PLDA Device 5555
+>         Subsystem: Device 4000:0000
+>         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParEr=
+r- Stepping- SERR- FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- =
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Interrupt: pin A routed to IRQ 16
+>         Region 0: Memory at b0400000 (32-bit, non-prefetchable) [virtual]=
+ [size=3D4M]
+>         Capabilities: [40] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0-,D1-,=
+D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 PME=
+-
+>         Capabilities: [48] MSI: Enable- Count=3D1/1 Maskable- 64bit-
+>                 Address: 00000000  Data: 0000
+>         Capabilities: [60] Express (v2) Endpoint, MSI 00
+>                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s un=
+limited, L1 unlimited
+>                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- S=
+lotPowerLimit 0.000W
+>                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+>                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+>                         MaxPayload 128 bytes, MaxReadReq 512 bytes
+>                 DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr-=
+ TransPend-
+>                 LnkCap: Port #0, Speed 2.5GT/s, Width x2, ASPM L0s, Exit =
+Latency L0s unlimited
+>                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 2.5GT/s (ok), Width x2 (ok)
+>                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+>                 DevCap2: Completion Timeout: Range B, TimeoutDis-, NROPrP=
+rP-, LTR-
+>                          10BitTagComp-, 10BitTagReq-, OBFF Not Supported,=
+ ExtFmt-, EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported, Emergency=
+PowerReductionInit-
+>                          FRS-, TPHComp-, ExtTPHComp-
+>                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, L=
+TR-, OBFF Disabled
+>                          AtomicOpsCtl: ReqEn-
+>                 LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- Spe=
+edDis+
+>                          Transmit Margin: Normal Operating Range, EnterMo=
+difiedCompliance- ComplianceSOS-
+>                          Compliance De-emphasis: -6dB
+>                 LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationC=
+omplete-, EqualizationPhase1-
+>                          EqualizationPhase2-, EqualizationPhase3-, LinkEq=
+ualizationRequest-
+>         Kernel driver in use: M1801 PCI
+>         Kernel modules: m1801_pci
+>
+> # lspci -xxx -s 01:00.0
+> 01:00.0 RAM memory: PLDA Device 5555
+> 00: 56 15 55 55 00 00 10 00 00 00 00 05 00 00 00 00
+> 10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 40 00 00
+> 30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
+> 40: 01 48 03 00 08 00 00 00 05 60 00 00 00 00 00 00
+> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 60: 10 00 02 00 c2 8f 00 00 10 28 01 00 21 f4 03 00
+> 70: 00 00 21 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 80: 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00
+> 90: 20 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+> a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>
+>
+> Verified power management settings:
+>
+> cat /sys/module/pcie_aspm/parameters/policy
+> Output: [default] performance powersave powersupersave
+>
+>
+> Request for Assistance: I would appreciate any guidance or suggestions on=
+ how to further debug this issue. Specifically, I am looking for:
+>
+> Potential causes for the BAR being reset to 0x00000000.
+> Steps to ensure the device is not being reset or put into a low-power sta=
+te unexpectedly.
+> Any additional diagnostic steps or tools that could help identify the roo=
+t cause.
+> Thank you for your time and assistance.
+>
+>
+> Best regards,
+> Naveen
+>
+>
+>
 
